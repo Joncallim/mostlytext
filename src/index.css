@@ -1919,6 +1919,7 @@ html { scroll-snap-type: y proximity; }
 .github-banner .section-number { color: color-mix(in srgb, var(--white) 78%, transparent); }
 .github-banner h2 { max-width: 13ch; margin: .45rem 0 .9rem; font-family: var(--sans); font-size: clamp(2.25rem, 4.6vw, 4.8rem); font-weight: 600; letter-spacing: -.06em; line-height: .98; }
 .github-banner p:not(.section-number) { max-width: 41rem; margin: 0; color: var(--white); font-size: 1.05rem; line-height: 1.55; }
+.github-banner code { padding: .08em .28em; background: color-mix(in srgb, var(--white) 16%, transparent); font: .86em var(--mono); }
 .github-banner-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
 .github-banner .primary-link { background: var(--white); color: var(--ink); }
 .github-banner .primary-link:hover { background: var(--ink); color: var(--white); }

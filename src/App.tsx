@@ -371,11 +371,11 @@ export default function App() {
           <div>
             <p className="section-number">Source &amp; development</p>
             <h2 id="github-banner-title">MostlyText is on GitHub.</h2>
-            <p>Read the website source, or follow the native app’s development in its public repository.</p>
+            <p>Read the website source, or follow the native app in its public repository. The app repository is currently named <code>macdown_2</code>; that name reflects its development lineage and has not been renamed.</p>
           </div>
           <div className="github-banner-actions">
             <a className="primary-link" href={SITE_SOURCE_URL}>Website source <ExternalArrow /></a>
-            <a className="text-link" href={SOURCE_URL}>Native app source <ExternalArrow /></a>
+            <a className="text-link" href={SOURCE_URL}>Native app source (macdown_2) <ExternalArrow /></a>
           </div>
         </aside>
       </main>}
