@@ -1,0 +1,1597 @@
+{
+  "asOf": "2026-10-15",
+  "sourceHead": "a2fe530dcc055b06cd8855c5fc9bc728406227d0",
+  "implementationRepository": "https://github.com/Joncallim/macdown_2",
+  "statusDefinitions": {
+    "implemented": "Merged development capability, still subject to release proof",
+    "development": "Implementation or hardening underway; open issue/PR",
+    "remaining": "Required pre-1.0 work or verification",
+    "deferred": "Explicitly outside 1.0; not a promised release/date",
+    "undecided": "Evaluation or decision required",
+    "planned": "Accepted outcome direction; detailed release scope not committed",
+    "provisional": "Revalidate after earlier releases prove the architecture",
+    "horizon": "Ambitious later idea; not implementation-ready",
+    "demand-gated": "Proceed only with demonstrated demand and capacity"
+  },
+  "notCommitted": [
+    "LSP/semantic IDE features, terminal, Git UI, debugger/build system, AI sidebar",
+    "Generic plugin/theme marketplace or remote theme gallery",
+    "Minimap, code folding, hex editor, log tail, SSH/SFTP, global keybinding editor, Unicode inspector",
+    "Full TextMate/VS Code snippet grammar",
+    "Generic source-file Quick Look, Spotlight, Share/Services/Finder Sync extensions",
+    "More diagram languages or new Markdown syntax",
+    "ePub and hosted rendering are not committed; DOCX is only a later conditional publication candidate.",
+    "Windows and Linux remain uncommitted."
+  ],
+  "openPullRequests": [
+    {
+      "number": 477,
+      "title": "Apply app theme colors to Graphviz diagrams",
+      "url": "https://github.com/Joncallim/macdown_2/pull/477",
+      "status": "open; not shipped"
+    },
+    {
+      "number": 476,
+      "title": "Apply app theme colors to Mermaid diagrams",
+      "url": "https://github.com/Joncallim/macdown_2/pull/476",
+      "status": "open; not shipped"
+    },
+    {
+      "number": 475,
+      "title": "Strengthen outline navigation focus acceptance (#88)",
+      "url": "https://github.com/Joncallim/macdown_2/pull/475",
+      "status": "open; not shipped"
+    },
+    {
+      "number": 474,
+      "title": "Make folder-search reveal lifecycle-safe",
+      "url": "https://github.com/Joncallim/macdown_2/pull/474",
+      "status": "open; not shipped"
+    },
+    {
+      "number": 473,
+      "title": "Bound TextFilter fixture ownership and PID readiness",
+      "url": "https://github.com/Joncallim/macdown_2/pull/473",
+      "status": "open; not shipped"
+    },
+    {
+      "number": 472,
+      "title": "H5 step 1: keystroke stall measurements; background reparse not shippable (evidence)",
+      "url": "https://github.com/Joncallim/macdown_2/pull/472",
+      "status": "open; not shipped"
+    },
+    {
+      "number": 462,
+      "title": "docs: architecture for safe syntax-highlighting edits (#459)",
+      "url": "https://github.com/Joncallim/macdown_2/pull/462",
+      "status": "open; not shipped"
+    }
+  ],
+  "openIssueInventory": [
+    {
+      "number": 459,
+      "title": "fix(P2): investigate SwiftTreeSitter Debug abort and harden syntax-highlight edit geometry",
+      "url": "https://github.com/Joncallim/macdown_2/issues/459",
+      "state": "open"
+    },
+    {
+      "number": 203,
+      "title": "Markdown incremental reparse is O(n): E05 50 ms keystroke budget not met for 1 MB documents",
+      "url": "https://github.com/Joncallim/macdown_2/issues/203",
+      "state": "open"
+    },
+    {
+      "number": 183,
+      "title": "Pre-1.0 merged-code audit: persistence, editing, lifecycle and resource authority",
+      "url": "https://github.com/Joncallim/macdown_2/issues/183",
+      "state": "open"
+    },
+    {
+      "number": 173,
+      "title": "Already-open document navigation: reproduce native activation/reveal and make reveal lifecycle-safe",
+      "url": "https://github.com/Joncallim/macdown_2/issues/173",
+      "state": "open"
+    },
+    {
+      "number": 159,
+      "title": "TextFilter lifecycle tests can crash on readiness timeout; fixture ownership/readiness needs hardening",
+      "url": "https://github.com/Joncallim/macdown_2/issues/159",
+      "state": "open"
+    },
+    {
+      "number": 158,
+      "title": "Pre-1.0 MostlyText identity: frozen product inputs and final repository cutover",
+      "url": "https://github.com/Joncallim/macdown_2/issues/158",
+      "state": "open"
+    },
+    {
+      "number": 155,
+      "title": "Local WebKit-dependent test hangs after extended sessions; root cause unresolved",
+      "url": "https://github.com/Joncallim/macdown_2/issues/155",
+      "state": "open"
+    },
+    {
+      "number": 148,
+      "title": "Pre-1.0: licensing, provenance and exact-artifact compliance gate",
+      "url": "https://github.com/Joncallim/macdown_2/issues/148",
+      "state": "open"
+    },
+    {
+      "number": 121,
+      "title": "Pre-1.0: close E11 HTML preview request/root and resource-read races",
+      "url": "https://github.com/Joncallim/macdown_2/issues/121",
+      "state": "open"
+    },
+    {
+      "number": 120,
+      "title": "Pre-1.0: close #57 Open/Save UI and latency carry-forwards",
+      "url": "https://github.com/Joncallim/macdown_2/issues/120",
+      "state": "open"
+    },
+    {
+      "number": 119,
+      "title": "Pre-1.0: close EPIC-18 external-file manual and performance evidence debt",
+      "url": "https://github.com/Joncallim/macdown_2/issues/119",
+      "state": "open"
+    },
+    {
+      "number": 118,
+      "title": "Pre-1.0: close EPIC-12 export residual security, parity and evidence debt",
+      "url": "https://github.com/Joncallim/macdown_2/issues/118",
+      "state": "open"
+    },
+    {
+      "number": 117,
+      "title": "Pre-1.0: close EPIC-14 contribution, TOC and palette residuals",
+      "url": "https://github.com/Joncallim/macdown_2/issues/117",
+      "state": "open"
+    },
+    {
+      "number": 116,
+      "title": "Pre-1.0: close residual EPIC-19 math correctness and accessibility debt",
+      "url": "https://github.com/Joncallim/macdown_2/issues/116",
+      "state": "open"
+    },
+    {
+      "number": 115,
+      "title": "Pre-1.0 gate: eliminate all carried-forward debt from closed epics",
+      "url": "https://github.com/Joncallim/macdown_2/issues/115",
+      "state": "open"
+    },
+    {
+      "number": 113,
+      "title": "[EPIC-23] Mac integration & personalisation: themes, Quick Look, Finder polish before macOS 1.0",
+      "url": "https://github.com/Joncallim/macdown_2/issues/113",
+      "state": "open"
+    },
+    {
+      "number": 112,
+      "title": "[EPIC-22] Editor essentials: power-text workflows before macOS 1.0",
+      "url": "https://github.com/Joncallim/macdown_2/issues/112",
+      "state": "open"
+    },
+    {
+      "number": 88,
+      "title": "Pre-1.0: triage and execute the remaining MacDown2UITests gaps",
+      "url": "https://github.com/Joncallim/macdown_2/issues/88",
+      "state": "open"
+    },
+    {
+      "number": 79,
+      "title": "Pre-1.0: make Mermaid/D2/Graphviz rendering theme-coherent",
+      "url": "https://github.com/Joncallim/macdown_2/issues/79",
+      "state": "open"
+    },
+    {
+      "number": 53,
+      "title": "Pre-1.0: legacy MacDown preference migration + MarkdownParseOptions cleanup",
+      "url": "https://github.com/Joncallim/macdown_2/issues/53",
+      "state": "open"
+    },
+    {
+      "number": 18,
+      "title": "[EPIC-17] Distribution & release: migration, Sparkle 2, signing, CLI, macOS 1.0 checklist",
+      "url": "https://github.com/Joncallim/macdown_2/issues/18",
+      "state": "open"
+    },
+    {
+      "number": 17,
+      "title": "[EPIC-16] Localization: String Catalogs + Transifex migration",
+      "url": "https://github.com/Joncallim/macdown_2/issues/17",
+      "state": "open"
+    }
+  ],
+  "sources": [
+    {
+      "title": "planning/epics/README.md",
+      "url": "https://github.com/Joncallim/macdown_2/blob/master/planning/epics/README.md"
+    },
+    {
+      "title": "planning/MIGRATION_PLAN.md",
+      "url": "https://github.com/Joncallim/macdown_2/blob/master/planning/MIGRATION_PLAN.md"
+    },
+    {
+      "title": "planning/RELEASE_EVIDENCE.md",
+      "url": "https://github.com/Joncallim/macdown_2/blob/master/planning/RELEASE_EVIDENCE.md"
+    },
+    {
+      "title": "planning/CLOSURE_REGISTER.md",
+      "url": "https://github.com/Joncallim/macdown_2/blob/master/planning/CLOSURE_REGISTER.md"
+    },
+    {
+      "title": "planning/RELEASE_SEQUENCE.md",
+      "url": "https://github.com/Joncallim/macdown_2/blob/master/planning/RELEASE_SEQUENCE.md"
+    },
+    {
+      "title": "planning/downstream/readiness.json",
+      "url": "https://github.com/Joncallim/macdown_2/blob/master/planning/downstream/readiness.json"
+    },
+    {
+      "title": "planning/RELEASE_PATH.md",
+      "url": "https://github.com/Joncallim/macdown_2/blob/master/planning/RELEASE_PATH.md"
+    },
+    {
+      "title": "planning/extension-api-design.md",
+      "url": "https://github.com/Joncallim/macdown_2/blob/master/planning/extension-api-design.md"
+    },
+    {
+      "title": "MacDown2/project.yml",
+      "url": "https://github.com/Joncallim/macdown_2/blob/master/MacDown2/project.yml"
+    },
+    {
+      "title": "Source-only testing alpha v0.1.0-alpha.1 · 15 October 2026",
+      "url": "https://github.com/Joncallim/macdown_2/releases/tag/v0.1.0-alpha.1"
+    }
+  ],
+  "upToOne": [
+    {
+      "id": "E00",
+      "title": "Project foundations",
+      "status": "implemented",
+      "features": [
+        "Swift/SwiftUI modular project, strict concurrency, CI, linting"
+      ],
+      "issues": [
+        {
+          "number": 1,
+          "url": "https://github.com/Joncallim/macdown_2/issues/1"
+        }
+      ],
+      "dependsOn": [],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E01",
+      "title": "File and format core",
+      "status": "implemented",
+      "features": [
+        "Text-first format registry, encoding-aware file I/O, atomic save, dirty tracking, recovery"
+      ],
+      "issues": [
+        {
+          "number": 2,
+          "url": "https://github.com/Joncallim/macdown_2/issues/2"
+        }
+      ],
+      "dependsOn": [
+        "E00"
+      ],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E02",
+      "title": "Workspace shell",
+      "status": "implemented",
+      "features": [
+        "Native document windows, per-window sidebar, menus and window restoration"
+      ],
+      "issues": [
+        {
+          "number": 3,
+          "url": "https://github.com/Joncallim/macdown_2/issues/3"
+        }
+      ],
+      "dependsOn": [
+        "E01"
+      ],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E03",
+      "title": "Native tabs and sessions",
+      "status": "implemented",
+      "features": [
+        "Native NSWindow tab groups, document deduplication, dirty-close flow, session restore"
+      ],
+      "issues": [
+        {
+          "number": 4,
+          "url": "https://github.com/Joncallim/macdown_2/issues/4"
+        }
+      ],
+      "dependsOn": [
+        "E01",
+        "E02"
+      ],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E04",
+      "title": "Native text editor",
+      "status": "implemented",
+      "features": [
+        "NSTextView/TextKit 2, viewport-lazy layout, per-document undo, wrap and selection"
+      ],
+      "issues": [
+        {
+          "number": 5,
+          "url": "https://github.com/Joncallim/macdown_2/issues/5"
+        }
+      ],
+      "dependsOn": [
+        "E01"
+      ],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E05",
+      "title": "Syntax highlighting",
+      "status": "implemented",
+      "features": [
+        "Tree-sitter language registry, Tomorrow themes and live switching"
+      ],
+      "issues": [
+        {
+          "number": 6,
+          "url": "https://github.com/Joncallim/macdown_2/issues/6"
+        }
+      ],
+      "dependsOn": [
+        "E04"
+      ],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E06",
+      "title": "Markdown engine",
+      "status": "implemented",
+      "features": [
+        "GFM parsing, YAML front matter, source ranges, debounced parse"
+      ],
+      "issues": [
+        {
+          "number": 7,
+          "url": "https://github.com/Joncallim/macdown_2/issues/7"
+        }
+      ],
+      "dependsOn": [
+        "E01"
+      ],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E07",
+      "title": "Native Markdown preview",
+      "status": "implemented",
+      "features": [
+        "Textual preview, editor-only/preview-only/split modes, scroll sync"
+      ],
+      "issues": [
+        {
+          "number": 8,
+          "url": "https://github.com/Joncallim/macdown_2/issues/8"
+        }
+      ],
+      "dependsOn": [
+        "E06",
+        "E04"
+      ],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E08",
+      "title": "Document outline",
+      "status": "implemented",
+      "features": [
+        "Heading tree, navigation and current section"
+      ],
+      "issues": [
+        {
+          "number": 9,
+          "url": "https://github.com/Joncallim/macdown_2/issues/9"
+        }
+      ],
+      "dependsOn": [
+        "E06",
+        "E02"
+      ],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E09",
+      "title": "Folder browser",
+      "status": "implemented",
+      "features": [
+        "Lazy folders, watching, create/rename/move/trash, root switching"
+      ],
+      "issues": [
+        {
+          "number": 10,
+          "url": "https://github.com/Joncallim/macdown_2/issues/10"
+        }
+      ],
+      "dependsOn": [
+        "E01",
+        "E02",
+        "E03"
+      ],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E10",
+      "title": "Markdown editing assists",
+      "status": "implemented",
+      "features": [
+        "Lists/tasks/quotes, delimiter pairing, formatting, indentation"
+      ],
+      "issues": [
+        {
+          "number": 11,
+          "url": "https://github.com/Joncallim/macdown_2/issues/11"
+        }
+      ],
+      "dependsOn": [
+        "E04"
+      ],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E11",
+      "title": "Multiple text formats",
+      "status": "implemented",
+      "features": [
+        "JSON validation/formatting/outline, HTML preview toggle, source-language registry"
+      ],
+      "issues": [
+        {
+          "number": 12,
+          "url": "https://github.com/Joncallim/macdown_2/issues/12"
+        }
+      ],
+      "dependsOn": [
+        "E05",
+        "E07"
+      ],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E12",
+      "title": "HTML and PDF export",
+      "status": "implemented",
+      "features": [
+        "Shared renderer-neutral output, local resources, standalone HTML and print-based PDF"
+      ],
+      "issues": [
+        {
+          "number": 13,
+          "url": "https://github.com/Joncallim/macdown_2/issues/13"
+        }
+      ],
+      "dependsOn": [
+        "E06",
+        "E11"
+      ],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E13",
+      "title": "Settings",
+      "status": "implemented",
+      "features": [
+        "Native settings and live application"
+      ],
+      "issues": [
+        {
+          "number": 14,
+          "url": "https://github.com/Joncallim/macdown_2/issues/14"
+        }
+      ],
+      "dependsOn": [
+        "E02"
+      ],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E14",
+      "title": "Contributions and text filters",
+      "status": "implemented",
+      "features": [
+        "First-party contribution registry, TOC, bounded local filters, command palette"
+      ],
+      "issues": [
+        {
+          "number": 15,
+          "url": "https://github.com/Joncallim/macdown_2/issues/15"
+        }
+      ],
+      "dependsOn": [
+        "E07",
+        "E12"
+      ],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E18",
+      "title": "External file changes",
+      "status": "implemented",
+      "features": [
+        "Live disk changes, conflict handling, reload with state preservation"
+      ],
+      "issues": [
+        {
+          "number": 30,
+          "url": "https://github.com/Joncallim/macdown_2/issues/30"
+        }
+      ],
+      "dependsOn": [
+        "E01",
+        "E03",
+        "E04"
+      ],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E19",
+      "title": "Math and scientific notation",
+      "status": "implemented",
+      "features": [
+        "Inline/display math, local derived rendering, export, diagnostics"
+      ],
+      "issues": [
+        {
+          "number": 44,
+          "url": "https://github.com/Joncallim/macdown_2/issues/44"
+        }
+      ],
+      "dependsOn": [
+        "E10",
+        "E12",
+        "E14"
+      ],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E20",
+      "title": "Mermaid diagrams",
+      "status": "implemented",
+      "features": [
+        "Native preview integration, local render pool, vector SVG export/copy, focused preview"
+      ],
+      "issues": [
+        {
+          "number": 45,
+          "url": "https://github.com/Joncallim/macdown_2/issues/45"
+        }
+      ],
+      "dependsOn": [
+        "E12",
+        "E14"
+      ],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E21",
+      "title": "D2 and Graphviz",
+      "status": "implemented",
+      "features": [
+        "Accepted local D2 and Graphviz/DOT renderers; WaveDrom rejected for 1.0"
+      ],
+      "issues": [
+        {
+          "number": 46,
+          "url": "https://github.com/Joncallim/macdown_2/issues/46"
+        }
+      ],
+      "dependsOn": [
+        "E20"
+      ],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E15",
+      "title": "Whole-app polish and first run",
+      "status": "implemented",
+      "features": [
+        "Native visual polish, accessibility code work, welcome/sample, fidelity tests"
+      ],
+      "issues": [
+        {
+          "number": 16,
+          "url": "https://github.com/Joncallim/macdown_2/issues/16"
+        }
+      ],
+      "dependsOn": [
+        "E09",
+        "E19",
+        "E21"
+      ],
+      "notes": [
+        "Implemented in the development code. Final release verification is tracked in #115."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E22",
+      "title": "Everyday editor essentials",
+      "status": "development",
+      "features": [
+        "Line numbers, status bar, Go to Line/Column, invisibles",
+        "Multi-cursor, occurrence selection, one-step undo",
+        "Document literal/regex find and replace; Cmd-F binding",
+        "Quick Open and recent files",
+        "Streaming folder search and previewed safe folder replacement",
+        "Line transforms, sort/deduplicate, whitespace, case, comments, indentation",
+        "Source editing profiles and syntax override",
+        "Explicit encoding reopen/save and undoable LF/CRLF/CR conversion",
+        "Scoped snippets with selection, clipboard and final caret",
+        "TeX/LaTeX source recognition with deliberate plain-styled fallback; no compilation",
+        "Parser-option cleanup and command-catalog consistency"
+      ],
+      "issues": [
+        {
+          "number": 112,
+          "url": "https://github.com/Joncallim/macdown_2/issues/112"
+        },
+        {
+          "number": 183,
+          "url": "https://github.com/Joncallim/macdown_2/issues/183"
+        },
+        {
+          "number": 203,
+          "url": "https://github.com/Joncallim/macdown_2/issues/203"
+        },
+        {
+          "number": 459,
+          "url": "https://github.com/Joncallim/macdown_2/issues/459"
+        }
+      ],
+      "dependsOn": [
+        "E15",
+        "E16-interim"
+      ],
+      "notes": [
+        "Feature slices implemented; release closure and remaining native/safety proof are open.",
+        "#173/#159/#155 remain open; #472 evidence-only experiment is not a shipped performance fix."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "identity",
+      "title": "MacDown 2 → MostlyText: brand and identity crossover",
+      "status": "remaining",
+      "features": [
+        "Apply MostlyText display/product identity, menus, About/Help and onboarding",
+        "Integrate accepted production icon/wordmark and document-icon assets; verify Finder/Dock/small sizes",
+        "Use app.mostlytext.MostlyText and consistent Quick Look/theme/document identifiers",
+        "Migrate preferences, Application Support, sessions, recovery, recent roots, snippets and custom themes without data loss",
+        "Adopt mostlytext CLI and decide compatibility alias/delivery topology",
+        "Align mostlytext.app, mostlytext.dev routing, downloads, docs, support, signing and updater identity",
+        "Mirror full repository history only at final cutover; preserve MIT, copyright and MacDown lineage"
+      ],
+      "issues": [
+        {
+          "number": 158,
+          "url": "https://github.com/Joncallim/macdown_2/issues/158"
+        }
+      ],
+      "dependsOn": [
+        "E22"
+      ],
+      "notes": [
+        "The identity is decided; integration and migration are still required. Fresh installs and upgrades from MacDown 2 must both be verified."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": true
+    },
+    {
+      "id": "E23",
+      "title": "Mac integration and personalisation",
+      "status": "remaining",
+      "features": [
+        "Shared semantic palette across editor/chrome/preview/export",
+        "At least 8 bundled themes: 4 light and 4 dark, contrast/provenance verified",
+        "Independent light/dark selection and safe data-only custom theme import/export",
+        "Mermaid/D2/Graphviz theme coherence or explicit safe neutral output",
+        "Markdown-only Quick Look: static safe HTML, local math/diagrams, bounded fallback",
+        "Safe resource authority shared with export/HTML preview",
+        "Finder Open With/UTI/handler-rank audit; final production app/document icon",
+        "Real Quick Look security, cancellation, performance and native registration evidence"
+      ],
+      "issues": [
+        {
+          "number": 113,
+          "url": "https://github.com/Joncallim/macdown_2/issues/113"
+        },
+        {
+          "number": 79,
+          "url": "https://github.com/Joncallim/macdown_2/issues/79"
+        }
+      ],
+      "dependsOn": [
+        "E22",
+        "identity",
+        "resource-security",
+        "anchors"
+      ],
+      "notes": [
+        "Final planned capability epic. PR #476 Mermaid and #477 Graphviz are open, not merged. D2 theming is unresolved against whole-epic neutral fallback criterion."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "resource-security",
+      "title": "HTML preview and export safety",
+      "status": "remaining",
+      "features": [
+        "Pinned descriptor resource opening; finish immutable per-load contexts, bounded executor/quotas and WebKit proof",
+        "Export source parity, escaped URL slots, resource budgets, asset ownership/retirement and publication safety",
+        "Real multipage PDF and app export-panel evidence"
+      ],
+      "issues": [
+        {
+          "number": 121,
+          "url": "https://github.com/Joncallim/macdown_2/issues/121"
+        },
+        {
+          "number": 118,
+          "url": "https://github.com/Joncallim/macdown_2/issues/118"
+        }
+      ],
+      "dependsOn": [
+        "E22"
+      ],
+      "notes": [
+        "#121 stage A implemented/probed on macOS 26.5.1; minimum 26.0 and downstream stages remain."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "anchors",
+      "title": "Contributions, anchors and math correctness",
+      "status": "remaining",
+      "features": [
+        "Navigable TOC/shared heading anchors and destination-capability rules",
+        "Consistent palette commands and export snapshot/extra parse cost",
+        "Math source-aware delimiters, currency/escaped dollars, structured diagnostics, accessibility and source navigation"
+      ],
+      "issues": [
+        {
+          "number": 117,
+          "url": "https://github.com/Joncallim/macdown_2/issues/117"
+        },
+        {
+          "number": 116,
+          "url": "https://github.com/Joncallim/macdown_2/issues/116"
+        }
+      ],
+      "dependsOn": [
+        "E22"
+      ],
+      "notes": [],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "safety",
+      "title": "File, settings and native hardening",
+      "status": "development",
+      "features": [
+        "Legacy-compatible settings decoding, complete key-by-key legacy import, idempotence and precedence",
+        "External-file manual/performance matrix and conflict-close flow",
+        "Open/Save progress, close-label race and latency evidence",
+        "Navigation reveal lifecycle, TextFilter fixture ownership and sustained test reliability",
+        "Editor/highlighter geometry, snapshot and stale-async correctness"
+      ],
+      "issues": [
+        {
+          "number": 53,
+          "url": "https://github.com/Joncallim/macdown_2/issues/53"
+        },
+        {
+          "number": 119,
+          "url": "https://github.com/Joncallim/macdown_2/issues/119"
+        },
+        {
+          "number": 120,
+          "url": "https://github.com/Joncallim/macdown_2/issues/120"
+        },
+        {
+          "number": 173,
+          "url": "https://github.com/Joncallim/macdown_2/issues/173"
+        },
+        {
+          "number": 159,
+          "url": "https://github.com/Joncallim/macdown_2/issues/159"
+        },
+        {
+          "number": 155,
+          "url": "https://github.com/Joncallim/macdown_2/issues/155"
+        },
+        {
+          "number": 459,
+          "url": "https://github.com/Joncallim/macdown_2/issues/459"
+        },
+        {
+          "number": 88,
+          "url": "https://github.com/Joncallim/macdown_2/issues/88"
+        },
+        {
+          "number": 183,
+          "url": "https://github.com/Joncallim/macdown_2/issues/183"
+        }
+      ],
+      "dependsOn": [
+        "E22"
+      ],
+      "notes": [],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E17-software",
+      "title": "Release-side software before UI freeze",
+      "status": "remaining",
+      "features": [
+        "Development/beta identity and recovery/session/snippet/theme-state migration",
+        "Legacy MacDown preferences import without clobbering configured new values",
+        "CLI open/stdin/--wait and final delivery topology",
+        "Sparkle 2 updater/settings and EdDSA update channel",
+        "About/licence surface and notices in catalogs"
+      ],
+      "issues": [
+        {
+          "number": 18,
+          "url": "https://github.com/Joncallim/macdown_2/issues/18"
+        },
+        {
+          "number": 53,
+          "url": "https://github.com/Joncallim/macdown_2/issues/53"
+        },
+        {
+          "number": 148,
+          "url": "https://github.com/Joncallim/macdown_2/issues/148"
+        }
+      ],
+      "dependsOn": [
+        "identity",
+        "E23",
+        "safety"
+      ],
+      "notes": [],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "S",
+      "title": "Software and UI stabilisation gate",
+      "status": "remaining",
+      "features": [
+        "Close required implemented behaviour and product corrections; retain exact baseline",
+        "Fresh post-E23 orthogonal review and no release-relevant P0/P1/P2"
+      ],
+      "issues": [
+        {
+          "number": 115,
+          "url": "https://github.com/Joncallim/macdown_2/issues/115"
+        },
+        {
+          "number": 183,
+          "url": "https://github.com/Joncallim/macdown_2/issues/183"
+        }
+      ],
+      "dependsOn": [
+        "E23",
+        "resource-security",
+        "anchors",
+        "safety",
+        "E17-software"
+      ],
+      "notes": [],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "V1",
+      "title": "Private candidate 1 and native verification",
+      "status": "remaining",
+      "features": [
+        "Sign/notarise private verification binary",
+        "Native UI, VoiceOver, file/recovery, export, technical content, themes, Finder/Quick Look",
+        "Clean install, state migration and signed update rehearsal"
+      ],
+      "issues": [
+        {
+          "number": 115,
+          "url": "https://github.com/Joncallim/macdown_2/issues/115"
+        },
+        {
+          "number": 18,
+          "url": "https://github.com/Joncallim/macdown_2/issues/18"
+        },
+        {
+          "number": 88,
+          "url": "https://github.com/Joncallim/macdown_2/issues/88"
+        }
+      ],
+      "dependsOn": [
+        "S"
+      ],
+      "notes": [
+        "A private verification build is a step toward release, not a public download."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "E16",
+      "title": "Final localisation and string freeze",
+      "status": "remaining",
+      "features": [
+        "Actual bundle-aware resource extraction and translation resolution",
+        "Plural/layout/pseudo-localisation, native-speaker QA and real non-English app journeys",
+        "Freeze exact source/translation/UI baseline after V1"
+      ],
+      "issues": [
+        {
+          "number": 17,
+          "url": "https://github.com/Joncallim/macdown_2/issues/17"
+        }
+      ],
+      "dependsOn": [
+        "V1"
+      ],
+      "notes": [
+        "fr/pl/ja seed catalogs and infrastructure exist; they are an interim baseline, not final language quality. Transifex access/project and reviewers need verification."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "sources",
+      "title": "Corresponding-source publication",
+      "status": "remaining",
+      "features": [
+        "Immutable source/patch/license archives and digests",
+        "Anonymous retrieval and exact URLs embedded in notices before final binary"
+      ],
+      "issues": [
+        {
+          "number": 148,
+          "url": "https://github.com/Joncallim/macdown_2/issues/148"
+        }
+      ],
+      "dependsOn": [
+        "identity"
+      ],
+      "notes": [
+        "This step publishes corresponding source archives only; it does not publish the application."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "RC2",
+      "title": "Final signed candidate and compliance",
+      "status": "remaining",
+      "features": [
+        "Build final frozen artifact with locked dependencies",
+        "Developer ID/hardened runtime/notarisation/stapling and DMG checks",
+        "LC-01 notices; LC-02 Graphviz; LC-03 D2; LC-04 parser provenance; LC-05 lock; LC-06 themes; LC-07 SBOM; LC-08 licence UI; LC-09 source offer; LC-10 MIT lineage",
+        "Repeat every artifact-/locale-sensitive native observation on the exact candidate"
+      ],
+      "issues": [
+        {
+          "number": 18,
+          "url": "https://github.com/Joncallim/macdown_2/issues/18"
+        },
+        {
+          "number": 148,
+          "url": "https://github.com/Joncallim/macdown_2/issues/148"
+        },
+        {
+          "number": 115,
+          "url": "https://github.com/Joncallim/macdown_2/issues/115"
+        }
+      ],
+      "dependsOn": [
+        "E16",
+        "sources"
+      ],
+      "notes": [],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "gate115",
+      "title": "Close all release-required debt",
+      "status": "remaining",
+      "features": [
+        "All required evidence complete, exact artifact hashes linked; no blocked/unverified residual rows"
+      ],
+      "issues": [
+        {
+          "number": 115,
+          "url": "https://github.com/Joncallim/macdown_2/issues/115"
+        }
+      ],
+      "dependsOn": [
+        "RC2"
+      ],
+      "notes": [
+        "Follows the 9 October two-candidate sequence, which supersedes the earlier ordering."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "cutover",
+      "title": "Final repository cutover",
+      "status": "remaining",
+      "features": [
+        "Freeze/tag exact release commit, mirror full history to Joncallim/mostlytext",
+        "Verify identical release SHA/tag, CI/builds and repository-only proof commit",
+        "Preserve provenance and archive old development repository"
+      ],
+      "issues": [
+        {
+          "number": 158,
+          "url": "https://github.com/Joncallim/macdown_2/issues/158"
+        }
+      ],
+      "dependsOn": [
+        "gate115"
+      ],
+      "notes": [
+        "Product-input changes after mirror reopen artifact verification."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "launch-surface",
+      "title": "Website, proof and launch readiness",
+      "status": "remaining",
+      "features": [
+        "Download-first canonical site with requirements, docs, privacy, licence/lineage and support",
+        "Real release-build screenshots and concise open/edit/preview/Quick Look/export demo",
+        "Small external beta and one feedback route before broad amplification",
+        "Verify install/download/update paths, known issues and concise launch notes"
+      ],
+      "issues": [],
+      "dependsOn": [
+        "RC2",
+        "identity"
+      ],
+      "notes": [
+        "Launch material will use real release-build evidence."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": true
+    },
+    {
+      "id": "commercial-direction",
+      "title": "Official distribution and support",
+      "status": "remaining",
+      "features": [
+        "Open-source MIT code with affordable paid official binaries",
+        "Direct DRM-free distribution and a Mac App Store direction",
+        "One-time purchase direction, without a subscription, account or activation",
+        "A clear support route for official builds"
+      ],
+      "issues": [],
+      "dependsOn": [
+        "identity"
+      ],
+      "notes": [
+        "Distribution timing and channel compatibility still need to be reconciled. The testing alpha is source-only; no purchase or signed app download is available."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": true
+    },
+    {
+      "id": "release",
+      "title": "Public macOS 1.0",
+      "status": "remaining",
+      "features": [
+        "Publish the same verified release files",
+        "Versioned GitHub Release/DMG and downloads verified; appcast last",
+        "Accurate public claims, installation/migration/update instructions"
+      ],
+      "issues": [
+        {
+          "number": 18,
+          "url": "https://github.com/Joncallim/macdown_2/issues/18"
+        }
+      ],
+      "dependsOn": [
+        "cutover"
+      ],
+      "notes": [
+        "No date is promised for stable 1.0. The source-only v0.1.0-alpha.1 testing prerelease is available; it does not complete the 1.0 release requirements."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    }
+  ],
+  "postOne": [
+    {
+      "id": "1.0.x",
+      "title": "Trust it",
+      "status": "planned",
+      "features": [
+        "Crash, save/recovery and security fixes",
+        "Install, updates, signing and compatibility",
+        "Support-led corrections before new architecture"
+      ],
+      "issues": [],
+      "dependsOn": [
+        "release"
+      ],
+      "notes": [],
+      "version": "1.0.x",
+      "promise": "Make the launch boringly reliable.",
+      "planningDirection": true
+    },
+    {
+      "id": "1.1",
+      "title": "Keep your place",
+      "status": "planned",
+      "features": [
+        "Toggleable Line Lock with stable source anchors",
+        "Active-line/document modes and one-/two-way following",
+        "Paired highlights and click/caret navigation",
+        "Free linked scrolling after mapping proof"
+      ],
+      "issues": [],
+      "dependsOn": [
+        "1.0.x"
+      ],
+      "notes": [],
+      "version": "1.1",
+      "promise": "Raw and Rendered stay together.",
+      "planningDirection": true
+    },
+    {
+      "id": "1.2",
+      "title": "Shape the structure",
+      "status": "planned",
+      "features": [
+        "Table-aware keyboard navigation",
+        "Add, remove and reorder rows/columns",
+        "Rectangular copy/paste and spreadsheet conversion",
+        "Explicit formatting, coherent undo, no unrelated normalization"
+      ],
+      "issues": [],
+      "dependsOn": [
+        "1.1"
+      ],
+      "notes": [],
+      "version": "1.2",
+      "promise": "Tables stop feeling like pipe syntax.",
+      "planningDirection": true
+    },
+    {
+      "id": "1.3",
+      "title": "Bring it in",
+      "status": "planned",
+      "features": [
+        "New from Clipboard with Markdown detection and plain-text escape",
+        "Paste/drag images into collision-safe local assets",
+        "Reviewable HTML/rich-text to Markdown",
+        "Copy As Rich Text/HTML"
+      ],
+      "issues": [],
+      "dependsOn": [
+        "1.2"
+      ],
+      "notes": [],
+      "version": "1.3",
+      "promise": "Turn clipboard and drag/drop content into clean local documents.",
+      "planningDirection": true
+    },
+    {
+      "id": "1.4",
+      "title": "Edit it naturally",
+      "status": "planned",
+      "features": [
+        "Rendered paragraph and heading editing",
+        "Basic formatting, links and task toggles where mapping is safe",
+        "Shared undo/dirty state and minimal source patches",
+        "Raw-only fallback for ambiguous edits"
+      ],
+      "issues": [],
+      "dependsOn": [
+        "1.1",
+        "1.2"
+      ],
+      "notes": [],
+      "version": "1.4",
+      "promise": "Edit the common case from either side.",
+      "planningDirection": true
+    },
+    {
+      "id": "1.5",
+      "title": "Edit more of it",
+      "status": "provisional",
+      "features": [
+        "Lists and quotes",
+        "Code and tables where safe",
+        "Broader selection/caret mapping",
+        "Expand only after 1.4 proves fidelity"
+      ],
+      "issues": [],
+      "dependsOn": [
+        "1.4"
+      ],
+      "notes": [],
+      "version": "1.5",
+      "promise": "Broaden Rendered editing without hiding or normalizing source.",
+      "planningDirection": true
+    },
+    {
+      "id": "1.6",
+      "title": "See it differently",
+      "status": "provisional",
+      "features": [
+        "CSV/TSV Raw ↔ Table",
+        "Cell, row/column operations and rectangular paste",
+        "Non-destructive view sorting/filtering and virtualization",
+        "Extract only the shared representation boundary proved by real formats"
+      ],
+      "issues": [],
+      "dependsOn": [
+        "1.4",
+        "1.5"
+      ],
+      "notes": [],
+      "version": "1.6",
+      "promise": "Text underneath; the representation that fits the job.",
+      "planningDirection": true
+    },
+    {
+      "id": "1.7",
+      "title": "Know what changed",
+      "status": "provisional",
+      "features": [
+        "Local save-boundary history",
+        "Compare current text with saves/snapshots",
+        "Restore or copy from history; changed-line gutter",
+        "Reuse diff for conflicts with bounded local retention"
+      ],
+      "issues": [],
+      "dependsOn": [
+        "1.4"
+      ],
+      "notes": [],
+      "version": "1.7",
+      "promise": "Review and recover without becoming a source-control client.",
+      "planningDirection": true
+    },
+    {
+      "id": "1.8",
+      "title": "Work across folders",
+      "status": "provisional",
+      "features": [
+        "Named multi-root workspaces",
+        "Quick Open and search across roots",
+        "Workspace recent state and moved/unavailable roots",
+        "No required vault or proprietary storage"
+      ],
+      "issues": [],
+      "dependsOn": [
+        "1.6"
+      ],
+      "notes": [],
+      "version": "1.8",
+      "promise": "One workspace, ordinary files.",
+      "planningDirection": true
+    },
+    {
+      "id": "1.9",
+      "title": "Follow the connections",
+      "status": "demand-gated",
+      "features": [
+        "Relative-link and heading completion/navigation",
+        "Broken-link detection",
+        "Optional wikilinks only with demand",
+        "Backlinks limited to already indexed files; no graph/vault/task model"
+      ],
+      "issues": [],
+      "dependsOn": [
+        "1.8"
+      ],
+      "notes": [],
+      "version": "1.9",
+      "promise": "Smarter links, still just files.",
+      "planningDirection": true
+    },
+    {
+      "id": "1.10",
+      "title": "Publish beautifully",
+      "status": "horizon",
+      "features": [
+        "Publication Profiles and true Print Layout",
+        "Typography, page geometry, headers/footers and generated numbering",
+        "Visual and declarative profile editing; same profile in preview/HTML/PDF",
+        "Portable Style Packages and gallery only after local model maturity"
+      ],
+      "issues": [],
+      "dependsOn": [
+        "1.4",
+        "1.6"
+      ],
+      "notes": [],
+      "version": "1.10",
+      "promise": "Write in text. Publish like a real document.",
+      "planningDirection": true
+    },
+    {
+      "id": "theme-refresh",
+      "title": "Theme System Refresh",
+      "status": "horizon",
+      "features": [
+        "Separate app chrome, Raw syntax, Rendered/Table appearance and publication styles",
+        "Visual editor plus readable theme source where round-trip is deterministic",
+        "Stable portable themes, accessibility and safe existing-theme migration",
+        "Community sharing only after the local theme model matures"
+      ],
+      "issues": [],
+      "dependsOn": [
+        "1.6"
+      ],
+      "notes": [],
+      "version": "",
+      "promise": "",
+      "planningDirection": true
+    },
+    {
+      "id": "later-adapters",
+      "title": "Other source-backed representations",
+      "status": "undecided",
+      "features": [
+        "JSON tree/table editing",
+        "YAML/TOML property views",
+        "Log/delimited column view",
+        "Source-mapped diagram interactions and front-matter metadata"
+      ],
+      "issues": [],
+      "dependsOn": [
+        "1.6"
+      ],
+      "notes": [
+        "Each representation must justify a useful, concrete workflow before it is committed."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": true
+    },
+    {
+      "id": "ipad",
+      "title": "iPhone / iPad exploration",
+      "status": "demand-gated",
+      "features": [
+        "Identify reusable engines only against a real iPad target",
+        "UIKit/SwiftUI document/editor shell and TextKit host",
+        "Preview, math, diagrams, themes and source navigation",
+        "iPad files/workspaces, multiwindow, keyboard and touch",
+        "iPad-specific accessibility, performance and release proof"
+      ],
+      "issues": [],
+      "dependsOn": [
+        "release"
+      ],
+      "notes": [
+        "Deferred until after macOS 1.0, then subject to demand. No assigned version; Mac editing remains the priority."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": true
+    },
+    {
+      "id": "jsc",
+      "title": "Evaluate JavaScriptCore extensions",
+      "status": "undecided",
+      "features": [
+        "Sandboxed derived-content contributions and diagnostics",
+        "No filesystem/network/process or AppKit access; bounded time/output",
+        "Decide manifests, discovery, trust, conflicts and enablement UI"
+      ],
+      "issues": [],
+      "dependsOn": [
+        "release"
+      ],
+      "notes": [
+        "Design document only. No loader, manifest format or public API is implemented; in-process NSBundle loading is excluded."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "extensionkit",
+      "title": "Evaluate out-of-process extensions",
+      "status": "undecided",
+      "features": [
+        "ExtensionKit only if real demand justifies it"
+      ],
+      "issues": [],
+      "dependsOn": [
+        "release"
+      ],
+      "notes": [],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "split",
+      "title": "Same-document split editing",
+      "status": "deferred",
+      "features": [
+        "Shared content with independent layout/viewport ownership"
+      ],
+      "issues": [
+        {
+          "number": 112,
+          "url": "https://github.com/Joncallim/macdown_2/issues/112"
+        }
+      ],
+      "dependsOn": [
+        "release"
+      ],
+      "notes": [
+        "Explicit legitimate post-1.0 feature; no schedule or epic commitment."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": false
+    },
+    {
+      "id": "demand-watchlist",
+      "title": "Demand-led possibilities",
+      "status": "undecided",
+      "features": [
+        "Optional local AI/semantic search",
+        "Plugin marketplace only if repeated demand justifies support cost",
+        "DOCX only after deterministic mapping from publication styles"
+      ],
+      "issues": [],
+      "dependsOn": [
+        "release"
+      ],
+      "notes": [
+        "Subject to demand; no committed scope. External CLI interoperability does not imply built-in AI or headless export."
+      ],
+      "version": "",
+      "promise": "",
+      "planningDirection": true
+    }
+  ]
+}
