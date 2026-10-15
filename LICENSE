@@ -4,4 +4,6 @@ All rights reserved.
 
 The source in this repository is published for transparency and reference. No permission is granted to copy, modify, distribute, sublicense, or use this material except as required by applicable law or with prior written permission from the copyright holder.
 
-The repository may include third-party software and materials governed by their own licences. In particular, the Inter font files in `public/fonts/` are distributed under the SIL Open Font License 1.1; see `public/fonts/Inter-OFL.txt`.
+The MostlyText brand assets and development-build screenshots in this repository are copyright (c) 2026 Jonathan Lim and are covered by this notice. The repository may also include third-party software and materials governed by their own licences. In particular, the Inter font files in `public/fonts/` are distributed under the SIL Open Font License 1.1; see `public/fonts/Inter-OFL.txt`.
+
+This website repository does not include or change the licence of the native application. Refer to the native application repository for its own source and licence notices.
