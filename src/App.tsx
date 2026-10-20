@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react"
 import Roadmap from "./Roadmap"
 import MarkdownDemo from "./MarkdownDemo"
-import { routeFromLocation } from "./route"
+import { isRoadmapPage, isRoadmapRoute, routeFromLocation, stageOf } from "./route"
 
 const ALPHA_URL = "https://github.com/Joncallim/macdown_2/releases/tag/v0.1.0-alpha.1"
 const RELEASES_URL = "https://github.com/Joncallim/macdown_2/releases"
@@ -206,13 +206,13 @@ function FeatureCards({ start, end, children }: { start: number; end: number; ch
   )}</div>
 }
 
-export default function App({ initialRoute }: { initialRoute?: string }) {
+export default function App({ initialRoute, roadmapPage }: { initialRoute?: string; roadmapPage?: boolean }) {
   // The build prerenders each page with an explicit route (scripts/prerender.mjs).
   const [route, setRoute] = useState(() => initialRoute ?? routeFromLocation())
-  const isRoadmap = route.startsWith("#/roadmap")
+  const [onRoadmapPage] = useState(() => roadmapPage ?? isRoadmapPage())
+  const isRoadmap = isRoadmapRoute(route)
   const [menuOpen, setMenuOpen] = useState(false)
   const [guideIndex, setGuideIndex] = useState(0)
-  const activeGuide = guideSections[guideIndex]
 
   useEffect(() => {
     const closeOnEscape = (event: KeyboardEvent) => {
@@ -284,7 +284,7 @@ export default function App({ initialRoute }: { initialRoute?: string }) {
           {navItems.map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>)}
         </nav>
       </header>
-      {isRoadmap ? <Roadmap route={route} /> : <main id="main-content" tabIndex={-1}>
+      {isRoadmap ? <Roadmap stage={stageOf(route)} roadmapPage={onRoadmapPage} /> : <main id="main-content" tabIndex={-1}>
         <section className="hero section-frame" id="home">
           <div className="hero-copy">
             <p className="eyebrow"><span />Native macOS editor · active prerelease</p>
@@ -392,10 +392,11 @@ export default function App({ initialRoute }: { initialRoute?: string }) {
               {guideSections.map((item, index) => <button key={item.id} type="button" aria-pressed={guideIndex === index} aria-controls="guide-detail" onClick={() => setGuideIndex(index)}><span>{item.marker}</span>{item.title}</button>)}
             </nav>
             <div className="guide-content" id="guide-detail" aria-live="polite" aria-atomic="true">
-              <article>
-                <div className="guide-body"><span className="guide-marker">{activeGuide.marker}</span><div><h3>{activeGuide.title}</h3><p>{activeGuide.text}</p></div><div className="guide-controls mobile-guide-controls">{guideControls}</div></div>
-                <div className="guide-note"><p className="mobile-guide-note-label">{activeGuide.title} · Note</p><p className="guide-note-text">{activeGuide.note}</p><div className="guide-controls mobile-guide-controls">{guideControls}</div></div>
-              </article>
+              {/* Every topic is in the HTML so it reads without JavaScript; with it, only the chosen one shows (index.css). */}
+              {guideSections.map((topic, index) => <article key={topic.id} className={index === guideIndex ? undefined : "guide-inactive"}>
+                <div className="guide-body"><span className="guide-marker">{topic.marker}</span><div><h3>{topic.title}</h3><p>{topic.text}</p></div><div className="guide-controls mobile-guide-controls">{guideControls}</div></div>
+                <div className="guide-note"><p className="mobile-guide-note-label">{topic.title} · Note</p><p className="guide-note-text">{topic.note}</p><div className="guide-controls mobile-guide-controls">{guideControls}</div></div>
+              </article>)}
               <div className="guide-controls desktop-guide-controls">{guideControls}</div>
             </div>
           </div>

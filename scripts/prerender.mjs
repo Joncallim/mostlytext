@@ -8,9 +8,9 @@ const { render } = await import(pathToFileURL("dist-ssr/entry-server.js").href)
 const template = fs.readFileSync("dist/index.html", "utf8")
 
 const pages = [
-  { file: "dist/index.html", route: "", view: "home", head: {} },
+  { file: "dist/index.html", route: "", view: "home", roadmapPage: false, head: {} },
   {
-    file: "dist/roadmap/index.html", route: "#/roadmap", view: "#/roadmap",
+    file: "dist/roadmap/index.html", route: "#/roadmap", view: "#/roadmap", roadmapPage: true,
     head: {
       title: "Roadmap — MostlyText",
       description: "The MostlyText roadmap: current work toward a verified macOS 1.0 release, followed by clearly provisional directions.",
@@ -30,7 +30,7 @@ function replaceOnce(html, pattern, replacement, label) {
 const attribute = value => value.replace(/&/g, "&amp;").replace(/"/g, "&quot;")
 
 for (const page of pages) {
-  let html = replaceOnce(template, /<div id="root"><\/div>/, `<div id="root">${render(page.route)}</div>`, "#root mount")
+  let html = replaceOnce(template, /<div id="root"><\/div>/, `<div id="root">${render(page.route, page.roadmapPage)}</div>`, "#root mount")
   html = replaceOnce(html, /<html lang="en">/, `<html lang="en" data-prerendered-view="${page.view}">`, "<html> tag")
   // The prerendered page is the no-JavaScript fallback, so the short <noscript>
   // summary in index.html would only repeat it.

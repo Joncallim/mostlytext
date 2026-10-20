@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import data from "./roadmap-data.json"
+import { stageHref, type RoadmapStage } from "./route"
 
 type Item = (typeof data.upToOne)[number]
 const labels: Record<string, string> = { implemented: "Implemented · prerelease", development: "In development", remaining: "Still required", deferred: "Deferred", undecided: "Undecided", planned: "Later · planned direction", provisional: "Exploring · provisional", horizon: "Exploring · longer term", "demand-gated": "Demand-led" }
@@ -42,8 +43,9 @@ function RoadmapItem({ item, expanded }: { item: Item; expanded: boolean }) {
   </details>
 }
 
-export default function Roadmap({ route }: { route: string }) {
-  const after = route.includes("after-1")
+export default function Roadmap({ stage, roadmapPage }: { stage: RoadmapStage; roadmapPage: boolean }) {
+  const after = stage === "after-1"
+  const toOneHref = stageHref("", roadmapPage), afterOneHref = stageHref("after-1", roadmapPage)
   const [query, setQuery] = useState("")
   const [status, setStatus] = useState("all")
   const [expanded, setExpanded] = useState(false)
@@ -60,8 +62,8 @@ export default function Roadmap({ route }: { route: string }) {
       <div className="roadmap-introduction"><p>A clear view of the work toward macOS 1.0, and the product chapters planned beyond it.</p><p>Evidence checked 15 October 2026. A <a href="https://github.com/Joncallim/macdown_2/releases/tag/v0.1.0-alpha.1">source-only testing alpha</a> is available to build yourself. No signed app download or stable 1.0 is available. “Implemented” means development code, not verified 1.0 functionality. No delivery dates are promised.</p></div>
     </header>
     <nav className="roadmap-stage-nav" aria-label="Roadmap stages">
-      <a href="#/roadmap" aria-current={!after ? "page" : undefined}>To 1.0 <span>{data.upToOne.length} work areas</span></a>
-      <a href="#/roadmap/after-1" aria-current={after ? "page" : undefined}>After 1.0 <span>1.0.x–1.10 &amp; later ideas</span></a>
+      <a href={toOneHref} aria-current={!after ? "page" : undefined}>To 1.0 <span>{data.upToOne.length} work areas</span></a>
+      <a href={afterOneHref} aria-current={after ? "page" : undefined}>After 1.0 <span>1.0.x–1.10 &amp; later ideas</span></a>
     </nav>
     {after && <p className="roadmap-stage-note">Version numbers mark the intended chapter sequence, not dates or paid-upgrade promises. Scope is provisional; 1.5 onward is exploratory and may change with evidence and demand.</p>}
     <div className="roadmap-toolbar">
@@ -94,6 +96,6 @@ export default function Roadmap({ route }: { route: string }) {
       <h3>Open development changes at the snapshot</h3><ul>{data.openPullRequests.map(pr => <li key={pr.number}><a href={pr.url}>#{pr.number}: {pr.title}</a> <span className="evidence-state">Open, not merged</span></li>)}</ul>
       <details className="roadmap-issue-index"><summary>Full open-work issue index ({data.openIssueInventory.length})</summary><ul>{data.openIssueInventory.map(issue => <li key={issue.number}><a href={issue.url}>#{issue.number}: {issue.title}</a></li>)}</ul></details>
     </details>
-    <p className="roadmap-bottom"><a href="#/roadmap">To 1.0</a><a href="#/roadmap/after-1">After 1.0</a><a href="/#home">Back to home ↑</a></p>
+    <p className="roadmap-bottom"><a href={toOneHref}>To 1.0</a><a href={afterOneHref}>After 1.0</a><a href="/#home">Back to home ↑</a></p>
   </main>
 }

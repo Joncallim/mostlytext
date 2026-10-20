@@ -149,6 +149,7 @@ export default function MarkdownDemo() {
           <div className="demo-preview" role="region" aria-labelledby="demo-preview-label" tabIndex={0}>{preview}</div>
         </div>}
       </div>
+      <p className="no-js-only demo-no-js">The live preview needs JavaScript. The sample above shows how it renders.</p>
       <div className="demo-status"><span>This demo does not save or send your text.</span><span id="demo-count">{source.length.toLocaleString("en-US")} / 12,000</span></div>
       <figcaption id="demo-scope">Browser workflow demo, not the native Mac app.<span>Basic Markdown: headings, lists, quotes, code, bold and emphasis. HTML stays text; links and images are inactive.</span></figcaption>
     </figure>

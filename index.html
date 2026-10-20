@@ -5,8 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/brand/slant-s16-outline.svg" />
-    <!-- If the URL asks for a different view than the prerendered one, hide it until the app renders (src/route.ts, src/main.tsx). -->
-    <script>(function (h, p, d) { var v = h.indexOf("#/roadmap") === 0 ? h.replace(/\/$/, "") : p.indexOf("/roadmap") === 0 ? "#/roadmap" : "home"; if (v !== d.getAttribute("data-prerendered-view")) d.classList.add("prerender-pending") })(location.hash, location.pathname, document.documentElement)</script>
+    <!-- Marks JavaScript as available (index.css styles the no-JS fallback), and hides prerendered HTML if the URL asks for another view until the app renders. Mirrors viewOf(routeFromLocation()) in src/route.ts. -->
+    <script>(function (l, d) { d.classList.add("js"); var s = /^#\/roadmap\/after-1\/?$/.test(l.hash) || (l.hash.indexOf("#/roadmap") !== 0 && /[?&]stage=after-1(&|$)/.test(l.search)) ? "/after-1" : ""; var v = l.hash.indexOf("#/roadmap") === 0 || l.pathname.indexOf("/roadmap") === 0 ? "#/roadmap" + s : "home"; if (v !== d.getAttribute("data-prerendered-view")) d.classList.add("prerender-pending") })(location, document.documentElement)</script>
     <style>.prerender-pending #root { visibility: hidden; }</style>
     <title>MostlyText — A text editor, mostly.</title>
     <meta name="description" content="A native macOS text and Markdown editor in active prerelease development. Explore its editing tools, preview, diagrams, export work, and roadmap." />

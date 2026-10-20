@@ -2160,12 +2160,43 @@ figcaption,
 
 .guide-note-text { margin-bottom: 0; }
 
-/* Phone subscreens keep their snap points, but panels whose content is far
-   shorter than a screen (the second card of each capability pair, the guide
-   detail and release status) size to their content instead of reserving one. */
+/* Without JavaScript (no "js" class on <html>) the prerendered page stays
+   usable: navigation shows as plain links, every guide topic is listed, and
+   controls that need scripting are hidden rather than left inert. */
+html.js .guide-inactive { display: none; }
+.no-js-only { display: none; }
+html:not(.js) .no-js-only { display: block; }
+html:not(.js) .menu-button,
+html:not(.js) .guide-nav,
+html:not(.js) .guide-controls,
+html:not(.js) .roadmap-toolbar,
+html:not(.js) .roadmap-result-count,
+html:not(.js) .markdown-demo .figure-toolbar { display: none; }
+html:not(.js) .guide-content article + article { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+.demo-no-js { margin: 0; padding: .7rem 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .8125rem; }
 @media (max-width: 44rem) {
-  .capability-page:last-child, .guide-content, .release.screen-panel { min-height: 0; }
+  html:not(.js) .site-header { position: static; flex-wrap: wrap; padding-block: .75rem; scroll-snap-align: start; }
+  html:not(.js) .site-header nav { position: static; display: flex; flex-wrap: wrap; gap: 0 1.25rem; width: 100%; padding: .5rem 0 0; border: 0; background: none; }
+  html:not(.js) .site-header nav a { padding: .6rem 0; border: 0; font-size: 1rem; }
+}
+
+/* Subscreens keep their snap points, but panels whose content is far shorter
+   than a screen size to their content instead of reserving one: release status
+   (the last, short section) everywhere, and on phones and short screens the
+   second card of each capability pair and the guide detail. */
+.release.screen-panel { min-height: 0; }
+@media (max-width: 44rem), (max-height: 46rem) {
+  .capability-page:last-child, .guide-content { min-height: 0; }
   .capability-page:last-child { padding-bottom: 2rem; }
+}
+
+/* On very short viewports (landscape phones, 200–400% zoom) a sticky header
+   would take a fifth to a third of the screen, so it scrolls with the page.
+   It stays positioned so the mobile menu panel still anchors to it, and is a
+   snap point so snapping to the first section can't hide it at the top. */
+@media (max-height: 26rem) {
+  .site-header { position: relative; scroll-snap-align: start; }
+  html { scroll-padding-top: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
