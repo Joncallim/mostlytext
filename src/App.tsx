@@ -106,6 +106,10 @@ function ExternalArrow() {
   return <span aria-hidden="true">↗︎</span>
 }
 
+function RouteArrow() {
+  return <span aria-hidden="true">→</span>
+}
+
 function DocumentMotif({ label }: { label: string }) {
   return <div className="document-motif" aria-hidden="true">
     <span className="document-motif-mark">¶</span>
@@ -155,7 +159,7 @@ function NativeAppScreenshot({ focused = false, priority = false }: { focused?: 
       </a>
       <figcaption>
         Actual MostlyText development build.
-        <span>This is ahead of the published alpha, and the interface may change. Select the image to view it full size.</span>
+        <span>This capture is ahead of the published alpha, and the interface may change. Select the image to view it full size.</span>
       </figcaption>
     </figure>
   )
@@ -212,8 +216,8 @@ export default function App() {
     document.documentElement.classList.toggle("roadmap-route", isRoadmap)
     document.title = isRoadmap ? "Roadmap — MostlyText" : "MostlyText — A text editor. Mostly."
     requestAnimationFrame(() => {
-      if (isRoadmap) window.scrollTo({ top: 0, behavior: "instant" })
-      else if (route) document.getElementById(route.slice(1))?.scrollIntoView({ behavior: "instant" })
+      if (isRoadmap) window.scrollTo({ top: 0, behavior: "auto" })
+      else if (route) document.getElementById(route.slice(1))?.scrollIntoView({ behavior: "auto" })
     })
   }, [route, isRoadmap])
 
@@ -221,7 +225,7 @@ export default function App() {
 
   return (
     <div className="site-shell">
-      <a className="skip-link" href="#main-content" onClick={event => { if (isRoadmap) { event.preventDefault(); document.getElementById("main-content")?.focus(); window.scrollTo({ top: 0, behavior: "instant" }) } }}>Skip to content</a>
+      <a className="skip-link" href="#main-content" onClick={event => { if (isRoadmap) { event.preventDefault(); document.getElementById("main-content")?.focus(); window.scrollTo({ top: 0, behavior: "auto" }) } }}>Skip to content</a>
       <header className="site-header">
         <a className="brand" href="#home" aria-label="MostlyText home" onClick={() => setMenuOpen(false)}>
           <BrandLockup /><small>for macOS</small>
@@ -241,9 +245,10 @@ export default function App() {
             <h1>A text editor. <em>Mostly.</em></h1>
             <p className="hero-support">For the note, the README, the idea that needs room. A native Mac editor for text and Markdown, with more there when you need it.</p>
             <div className="hero-actions">
-              <a className="primary-link" href={ALPHA_URL}>Build the alpha <span aria-hidden="true">→</span></a>
+              <a className="primary-link" href={ALPHA_URL}>Build the source alpha <ExternalArrow /></a>
               <a className="text-link" href="#roadmap">See the roadmap <span aria-hidden="true">↓</span></a>
             </div>
+            <p className="hero-release-note">Source-only, unsigned build. Verified instructions: macOS 26+, Apple Silicon, Xcode 26, and XcodeGen. It still opens as MacDown 2.</p>
             <DocumentMotif label="A place for the next thought" />
           </div>
           <div className="hero-visual snap-subpanel"><NativeAppScreenshot priority /></div>
@@ -328,17 +333,17 @@ export default function App() {
           <div className="roadmap-grid">{roadmap.map(([number, title, text]) =>
             <article className="snap-subpanel" key={number}><span className="entry-number">{number}</span><h3>{title}</h3><p>{text}</p></article>
           )}</div>
-          <a className="primary-link roadmap-source" href="#/roadmap">Explore the full roadmap <ExternalArrow /></a>
+          <a className="primary-link roadmap-source" href="#/roadmap">Explore the full roadmap <RouteArrow /></a>
           <NextSection destination={pageSections[8]} />
         </section>
 
         <section className="guide section-frame screen-panel" id="guide">
           <header className="section-heading guide-heading">
-            <p className="section-number">06 / Field guide</p><h2>Start with the task at hand.</h2>
-            <p>Choose a path through the current development capabilities.</p>
+            <p className="section-number">06 / Field guide overview</p><h2>Start with the task at hand.</h2>
+            <p>Choose what you want to do.</p>
           </header>
           <div className="guide-layout">
-            <nav className="guide-nav" aria-label="Choose a guide topic"><p>IN THIS GUIDE</p>
+            <nav className="guide-nav" aria-label="Choose an overview topic"><p>IN THIS OVERVIEW</p>
               {guideSections.map((item, index) => <button key={item.id} type="button" aria-pressed={guideIndex === index} aria-controls="guide-detail" onClick={() => setGuideIndex(index)}><span>{item.marker}</span>{item.title}</button>)}
             </nav>
             <div className="guide-content" id="guide-detail" aria-live="polite" aria-atomic="true">
@@ -364,7 +369,7 @@ export default function App() {
           <div className="release-status-line"><span className="status-dot" /><p>SOURCE-ONLY ALPHA</p><span>v0.1.0-alpha.1</span></div>
           <div className="release-grid">
             <div><p className="section-number">08 / Release status</p><h2>An alpha you can build.</h2></div>
-            <div className="release-copy"><p>The source-only testing alpha is available with self-build instructions. No prebuilt app, DMG, or CLI binary is included.</p><p>Targeting macOS 26 or later, the local build is unsigned and still named MacDown 2. Signed MostlyText copies are planned for later through the App Store and direct distribution; stable 1.0 is still ahead.</p><div className="release-links"><a className="primary-link" href={ALPHA_URL}>Build the alpha <ExternalArrow /></a><a className="text-link" href={ISSUES_URL}>View open issues <ExternalArrow /></a></div></div>
+            <div className="release-copy"><p>The source-only testing alpha is available with self-build instructions. No prebuilt app, DMG, or CLI binary is included.</p><p>Verified build instructions require macOS 26 or later, Apple Silicon, Xcode 26, and XcodeGen. The local build is unsigned and still named MacDown 2. Signed MostlyText copies are planned for later through the App Store and direct distribution; stable 1.0 is still ahead.</p><div className="release-links"><a className="primary-link" href={ALPHA_URL}>Build the source alpha <ExternalArrow /></a><a className="text-link" href={ISSUES_URL}>View open issues <ExternalArrow /></a></div></div>
           </div>
         </section>
         <aside className="github-banner section-frame" aria-labelledby="github-banner-title">

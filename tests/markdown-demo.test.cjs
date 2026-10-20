@@ -12,7 +12,8 @@ const moduleOutput = { exports: {} };
 vm.runInNewContext(compiled, { exports: moduleOutput.exports, require });
 const { MarkdownPreview, DEMO_LIMIT } = moduleOutput.exports;
 const render = source => renderToStaticMarkup(React.createElement(MarkdownPreview, { source }));
-assert.match(render('# Heading'), /<h1>Heading<\/h1>/);
+assert.match(render('# Heading'), /<h3 class="demo-heading demo-heading-level-1">Heading<\/h3>/);
+assert.match(render('## Heading'), /<h4 class="demo-heading demo-heading-level-2">Heading<\/h4>/);
 assert.match(render('**bold** *em* `code`'), /<strong>bold<\/strong> <em>em<\/em> <code>code<\/code>/);
 assert.equal(render('**bold**'), '<p><strong>bold</strong></p>');
 assert.equal((render('- first\n- second').match(/<li>/g)||[]).length, 2);
@@ -20,7 +21,7 @@ assert.match(render('1. first\n2. second'), /^<ol>/);
 assert.match(render('> quote\n> continues'), /<blockquote>quote continues<\/blockquote>/);
 assert.match(render('```html\n<img src=x>\n```'), /<pre><code>&lt;img src=x&gt;<\/code><\/pre>/);
 assert.match(render(''), /Your preview starts/);
-assert.match(render('## Windows\r\n\r\nParagraph'), /<h2>Windows<\/h2><p>Paragraph<\/p>/);
+assert.match(render('## Windows\r\n\r\nParagraph'), /<h4 class="demo-heading demo-heading-level-2">Windows<\/h4><p>Paragraph<\/p>/);
 const attacks = [
  '<script>alert(1)</script>',
  '<img src="https://attacker.invalid/leak" onerror="alert(1)">',

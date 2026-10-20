@@ -2090,3 +2090,91 @@ footer {
   .section-advance { transition: none; }
   .section-settled { animation: none; }
 }
+
+/* Final readability and interaction pass. These are intentionally late so the
+   compact, exported prototype rules above cannot reduce supporting copy again. */
+.eyebrow,
+.section-number,
+.entry-meta,
+figcaption,
+.hero-index,
+.footer-end,
+.pane-label,
+.preview-kicker,
+.editor-bar,
+.brand small {
+  font-size: .75rem;
+}
+
+.hero-release-note {
+  max-width: 43rem;
+  margin: 1rem 0 0;
+  color: var(--muted);
+  font: .8125rem/1.6 var(--sans);
+}
+
+.text-link {
+  min-height: 2.75rem;
+}
+
+.native-app-figure figcaption {
+  font-size: .8125rem;
+}
+
+/* The original capture remains available at full size; this presentation crop
+   removes the inactive lower canvas so the editor itself carries the proof. */
+.hero-visual .native-app-image-link {
+  aspect-ratio: 1.55 / 1;
+}
+
+.hero-visual .native-app-image-link img {
+  height: 100%;
+  max-height: none;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.demo-reset,
+.demo-intro,
+.demo-source-pane label,
+.demo-pane-label,
+.demo-status,
+.markdown-demo figcaption {
+  font-size: .75rem;
+}
+
+.demo-preview .demo-heading {
+  max-width: none;
+  font-family: var(--serif);
+  font-weight: 600;
+  letter-spacing: -.025em;
+  line-height: 1.2;
+  margin: 1.25rem 0 .7rem;
+}
+
+.demo-preview .demo-heading-level-1 { font-size: 1.8rem; }
+.demo-preview .demo-heading-level-2 { font-size: 1.35rem; }
+.demo-preview .demo-heading-level-3 { font-size: 1.15rem; }
+.demo-preview .demo-heading-level-4,
+.demo-preview .demo-heading-level-5,
+.demo-preview .demo-heading-level-6 { font-size: 1rem; }
+
+@media (max-width: 44rem) {
+  .hero-visual .native-app-image-link {
+    aspect-ratio: 1.32 / 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+    scroll-snap-type: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

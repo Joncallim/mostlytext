@@ -96,9 +96,11 @@ export function MarkdownPreview({ source }: { source: string }) {
     }
     const heading = /^(#{1,6})\s+(.+)$/.exec(line)
     if (heading) {
-      // Preserve authored heading levels within the labelled demo document region.
-      const Heading = `h${heading[1].length}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
-      blocks.push(<Heading key={key}>{inline(heading[2])}</Heading>)
+      // The preview is one labelled demo region inside a marketing page. Offset
+      // authored headings so its sample document does not restart the page outline.
+      const authoredLevel = heading[1].length
+      const Heading = `h${Math.min(6, authoredLevel + 2)}` as "h3" | "h4" | "h5" | "h6"
+      blocks.push(<Heading key={key} className={`demo-heading demo-heading-level-${authoredLevel}`}>{inline(heading[2])}</Heading>)
       continue
     }
     if (/^---\s*$/.test(line)) { blocks.push(<hr key={key} />); continue }
@@ -136,7 +138,7 @@ export default function MarkdownDemo() {
         </div>
         <button className="demo-reset" type="button" onClick={() => setSource(DEMO_SAMPLE)}>Reset sample</button>
       </div>
-      <div className="demo-intro"><span className="demo-live-dot" aria-hidden="true" />LIVE BROWSER DEMO <span>Edit the text. Watch it take shape.</span></div>
+      <div className="demo-intro"><span className="demo-live-dot" aria-hidden="true" />LIVE BROWSER DEMO <span>Browser only. Not the native Mac app.</span></div>
       <div className={`demo-panes demo-view-${view}`}>
         {view !== "preview" && <div className="demo-source-pane">
           <label htmlFor="demo-markdown-source">MARKDOWN / EDIT HERE</label>
