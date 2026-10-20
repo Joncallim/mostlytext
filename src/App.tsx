@@ -148,8 +148,10 @@ const screenshots = {
     stem: "mostlytext-development-editor-preview-hero", widths: [960, 1600, 2448], width: 2448, height: 1200,
     description: "Actual MostlyText development build: Markdown source with line numbers on the left and its live preview on the right.",
     note: "Cropped from a capture that is ahead of the published alpha; the interface may change. Select the image to view the full capture.",
-    // Below 44rem the whole window is too small to read, so phones get the
-    // window's top-left corner (title bar and the first source lines) at a legible scale.
+    // The whole window is only readable from about 75rem up. Narrower screens get
+    // tighter crops of the same capture: tablets and small laptops the source
+    // pane and the start of the preview, phones the window's top-left corner.
+    tablet: { stem: "mostlytext-development-editor-preview-tablet", widths: [960, 1730] },
     phone: { stem: "mostlytext-development-editor-preview-phone", widths: [400, 800],
       note: "Cropped to the Markdown source; the full capture shows the live preview beside it. It is ahead of the published alpha. Select the image to view it." },
   },
@@ -170,6 +172,8 @@ function NativeAppScreenshot({ variant }: { variant: keyof typeof screenshots })
         <picture>
           {"phone" in shot && <source media="(max-width: 44rem)" type="image/webp" sizes="calc(100vw - 2rem)"
             srcSet={shot.phone.widths.map(width => `/images/${shot.phone.stem}-${width}.webp ${width}w`).join(", ")} />}
+          {"tablet" in shot && <source media="(max-width: 75rem)" type="image/webp" sizes="(min-width: 62rem) calc(100vw - 3rem), calc(100vw - 2.5rem)"
+            srcSet={shot.tablet.widths.map(width => `/images/${shot.tablet.stem}-${width}.webp ${width}w`).join(", ")} />}
           <source type="image/webp" srcSet={shot.widths.map(width => `/images/${shot.stem}-${width}.webp ${width}w`).join(", ")}
             sizes={hero ? "(min-width: 62rem) min(100vw - 3rem, 87.5rem), (min-width: 44rem) min(100vw - 2.5rem, 60rem), calc(100vw - 2rem)" : "(min-width: 62rem) min(100vw - 3rem, 87.5rem), 100vw"} />
           <img src={`/images/${shot.original}`} width={shot.width} height={shot.height} loading={hero ? "eager" : "lazy"} fetchPriority={hero ? "high" : "auto"} decoding={hero ? "auto" : "async"} alt={shot.description} />

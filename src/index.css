@@ -2152,6 +2152,10 @@ figcaption,
      from <source media>; the ratio is reserved here to avoid layout shift. */
   .hero-visual .native-app-image-link img { aspect-ratio: 1 / 1; height: auto; }
 }
+/* Tablets and small laptops get the source-and-preview crop (1730×1150) from <source media>. */
+@media (min-width: 44.01rem) and (max-width: 75rem) {
+  .hero-visual .native-app-image-link img { aspect-ratio: 1730 / 1150; height: auto; }
+}
 .caption-phone { display: none; }
 @media (max-width: 44rem) {
   .caption-wide { display: none; }
