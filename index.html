@@ -5,6 +5,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/brand/slant-s16-outline.svg" />
+    <!-- The static HTML is the prerendered home page; hide it until the hash-routed roadmap renders (src/main.tsx). -->
+    <script>if (location.hash.indexOf("#/roadmap") === 0) document.documentElement.classList.add("prerender-pending")</script>
+    <style>.prerender-pending #root { visibility: hidden; }</style>
     <title>MostlyText — A text editor, mostly.</title>
     <meta name="description" content="A native macOS text and Markdown editor in active prerelease development. Explore its editing tools, preview, diagrams, export work, and roadmap." />
     <link rel="canonical" href="https://mostlytext.app/" />

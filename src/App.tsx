@@ -199,7 +199,8 @@ function FeatureCards({ start, end, children }: { start: number; end: number; ch
 }
 
 export default function App() {
-  const [route, setRoute] = useState(window.location.hash)
+  // The build prerenders the home page without a window (scripts/prerender.mjs).
+  const [route, setRoute] = useState(() => typeof window === "undefined" ? "" : window.location.hash)
   const isRoadmap = route.startsWith("#/roadmap")
   const [menuOpen, setMenuOpen] = useState(false)
   const [guideIndex, setGuideIndex] = useState(0)
