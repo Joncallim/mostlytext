@@ -147,6 +147,10 @@ const screenshots = {
     stem: "mostlytext-development-editor-preview-hero", widths: [960, 1600, 2448], width: 2448, height: 1200,
     description: "Actual MostlyText development build: Markdown source with line numbers on the left and its live preview on the right.",
     note: "Cropped from a capture that is ahead of the published alpha; the interface may change. Select the image to view the full capture.",
+    // Below 44rem the whole window is too small to read, so phones get the
+    // window's top-left corner (title bar and the first source lines) at a legible scale.
+    phone: { stem: "mostlytext-development-editor-preview-phone", widths: [400, 800],
+      note: "Cropped to the Markdown source; the full capture shows the live preview beside it. It is ahead of the published alpha. Select the image to view it." },
   },
   workspace: {
     original: "mostlytext-development-workspace.png",
@@ -163,6 +167,8 @@ function NativeAppScreenshot({ variant }: { variant: keyof typeof screenshots })
     <figure className={`workflow-figure native-app-figure${hero ? " native-app-figure-hero" : ""}`}>
       <a className="native-app-image-link" href={`/images/${shot.original}`} target="_blank" rel="noopener noreferrer" aria-label="Open the full-size MostlyText development-build screenshot (opens in a new tab)">
         <picture>
+          {"phone" in shot && <source media="(max-width: 44rem)" type="image/webp" sizes="calc(100vw - 2rem)"
+            srcSet={shot.phone.widths.map(width => `/images/${shot.phone.stem}-${width}.webp ${width}w`).join(", ")} />}
           <source type="image/webp" srcSet={shot.widths.map(width => `/images/${shot.stem}-${width}.webp ${width}w`).join(", ")}
             sizes={hero ? "(min-width: 62rem) min(100vw - 3rem, 87.5rem), (min-width: 44rem) min(100vw - 2.5rem, 60rem), calc(100vw - 2rem)" : "(min-width: 62rem) min(100vw - 3rem, 87.5rem), 100vw"} />
           <img src={`/images/${shot.original}`} width={shot.width} height={shot.height} loading={hero ? "eager" : "lazy"} fetchPriority={hero ? "high" : "auto"} decoding={hero ? "auto" : "async"} alt={shot.description} />
@@ -170,7 +176,8 @@ function NativeAppScreenshot({ variant }: { variant: keyof typeof screenshots })
       </a>
       <figcaption>
         Actual MostlyText development build.
-        <span>{shot.note}</span>
+        <span className={"phone" in shot ? "caption-wide" : undefined}>{shot.note}</span>
+        {"phone" in shot && <span className="caption-phone">{shot.phone.note}</span>}
       </figcaption>
     </figure>
   )
@@ -220,8 +227,22 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    for (const element of document.querySelectorAll("main, footer")) element.toggleAttribute("inert", menuOpen)
-  }, [menuOpen, isRoadmap])
+    if (!menuOpen) return
+    // Disclosure navigation: the panel closes once focus or a pointer leaves the
+    // header, so it never covers whatever has focus on the page below.
+    const header = document.querySelector(".site-header")
+    const closeOutside = (event: FocusEvent | PointerEvent) => {
+      const target = (event instanceof FocusEvent ? event.relatedTarget : event.target) as Node | null
+      if (event instanceof FocusEvent && !target) return
+      if (!header?.contains(target)) setMenuOpen(false)
+    }
+    header?.addEventListener("focusout", closeOutside as EventListener)
+    document.addEventListener("pointerdown", closeOutside as EventListener)
+    return () => {
+      header?.removeEventListener("focusout", closeOutside as EventListener)
+      document.removeEventListener("pointerdown", closeOutside as EventListener)
+    }
+  }, [menuOpen])
 
   useEffect(() => {
     // The menu is a compact-width overlay (index.css, 44rem); widening the window dismisses it.

@@ -2151,13 +2151,25 @@ figcaption,
   .hero-copy > .eyebrow { margin-bottom: 1.25rem; }
   .hero-copy > h1 { font-size: clamp(2.75rem, 14vw, 4rem); }
   .hero-actions { margin-top: 1.5rem; }
-  /* At phone width the whole window is too small to read; show the editor
-     half at a usable scale. The full capture is one tap away. */
-  .hero-visual .native-app-image-link { aspect-ratio: 4 / 3; overflow: hidden; border-radius: .5rem; }
-  .hero-visual .native-app-image-link img { height: 100%; object-fit: cover; object-position: left top; }
+  /* Phones get a separate square crop (window corner and the first source lines)
+     from <source media>; the ratio is reserved here to avoid layout shift. */
+  .hero-visual .native-app-image-link img { aspect-ratio: 1 / 1; height: auto; }
+}
+.caption-phone { display: none; }
+@media (max-width: 44rem) {
+  .caption-wide { display: none; }
+  .caption-phone { display: inline; }
 }
 
 .guide-note-text { margin-bottom: 0; }
+
+/* Phone subscreens keep their snap points, but panels whose content is far
+   shorter than a screen (the second card of each capability pair, the guide
+   detail and release status) size to their content instead of reserving one. */
+@media (max-width: 44rem) {
+  .capability-page:last-child, .guide-content, .release.screen-panel { min-height: 0; }
+  .capability-page:last-child { padding-bottom: 2rem; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   html {
