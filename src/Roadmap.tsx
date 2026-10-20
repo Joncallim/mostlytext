@@ -54,7 +54,7 @@ export default function Roadmap({ route }: { route: string }) {
   const count = items.filter(matches).length
 
   return <main className="roadmap-document section-frame" id="main-content" tabIndex={-1}>
-    <a className="roadmap-back text-link" href="#roadmap">← Back to MostlyText</a>
+    <a className="roadmap-back text-link" href="/#roadmap">← Back to MostlyText</a>
     <header className="roadmap-document-heading">
       <div><p className="section-number">The full roadmap</p><h1>One Mac release.<br /><em>Then what comes after.</em></h1></div>
       <div className="roadmap-introduction"><p>A clear view of the work toward macOS 1.0, and the product chapters planned beyond it.</p><p>Evidence checked 15 October 2026. A <a href="https://github.com/Joncallim/macdown_2/releases/tag/v0.1.0-alpha.1">source-only testing alpha</a> is available to build yourself. No signed app download or stable 1.0 is available. “Implemented” means development code, not verified 1.0 functionality. No delivery dates are promised.</p></div>
@@ -94,6 +94,6 @@ export default function Roadmap({ route }: { route: string }) {
       <h3>Open development changes at the snapshot</h3><ul>{data.openPullRequests.map(pr => <li key={pr.number}><a href={pr.url}>#{pr.number}: {pr.title}</a> <span className="evidence-state">Open, not merged</span></li>)}</ul>
       <details className="roadmap-issue-index"><summary>Full open-work issue index ({data.openIssueInventory.length})</summary><ul>{data.openIssueInventory.map(issue => <li key={issue.number}><a href={issue.url}>#{issue.number}: {issue.title}</a></li>)}</ul></details>
     </details>
-    <p className="roadmap-bottom"><a href="#/roadmap">To 1.0</a><a href="#/roadmap/after-1">After 1.0</a><a href="#home">Back to home ↑</a></p>
+    <p className="roadmap-bottom"><a href="#/roadmap">To 1.0</a><a href="#/roadmap/after-1">After 1.0</a><a href="/#home">Back to home ↑</a></p>
   </main>
 }

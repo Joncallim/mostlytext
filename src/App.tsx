@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react"
 import Roadmap from "./Roadmap"
 import MarkdownDemo from "./MarkdownDemo"
+import { routeFromLocation } from "./route"
 
 const ALPHA_URL = "https://github.com/Joncallim/macdown_2/releases/tag/v0.1.0-alpha.1"
 const RELEASES_URL = "https://github.com/Joncallim/macdown_2/releases"
@@ -9,12 +10,12 @@ const SOURCE_URL = "https://github.com/Joncallim/macdown_2#readme"
 const SITE_SOURCE_URL = "https://github.com/Joncallim/mostlytext"
 
 const navItems = [
-  ["Home", "#home"],
-  ["Features", "#features"],
-  ["Roadmap", "#/roadmap"],
-  ["Guide", "#guide"],
-  ["FAQ", "#faq"],
-  ["Release status", "#release-status"],
+  ["Home", "/#home"],
+  ["Features", "/#features"],
+  ["Roadmap", "/roadmap/"],
+  ["Guide", "/#guide"],
+  ["FAQ", "/#faq"],
+  ["Release status", "/#release-status"],
 ] as const
 
 const pageSections = [
@@ -205,9 +206,9 @@ function FeatureCards({ start, end, children }: { start: number; end: number; ch
   )}</div>
 }
 
-export default function App() {
-  // The build prerenders the home page without a window (scripts/prerender.mjs).
-  const [route, setRoute] = useState(() => typeof window === "undefined" ? "" : window.location.hash)
+export default function App({ initialRoute }: { initialRoute?: string }) {
+  // The build prerenders each page with an explicit route (scripts/prerender.mjs).
+  const [route, setRoute] = useState(() => initialRoute ?? routeFromLocation())
   const isRoadmap = route.startsWith("#/roadmap")
   const [menuOpen, setMenuOpen] = useState(false)
   const [guideIndex, setGuideIndex] = useState(0)
@@ -253,7 +254,7 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    const navigate = () => { setRoute(window.location.hash); setMenuOpen(false) }
+    const navigate = () => { setRoute(routeFromLocation()); setMenuOpen(false) }
     window.addEventListener("hashchange", navigate)
     return () => window.removeEventListener("hashchange", navigate)
   }, [])
@@ -272,7 +273,7 @@ export default function App() {
     <div className="site-shell">
       <a className="skip-link" href="#main-content" onClick={event => { if (isRoadmap) { event.preventDefault(); document.getElementById("main-content")?.focus(); window.scrollTo({ top: 0, behavior: "auto" }) } }}>Skip to content</a>
       <header className="site-header">
-        <a className="brand" href="#home" aria-label="MostlyText home" onClick={() => setMenuOpen(false)}>
+        <a className="brand" href="/#home" aria-label="MostlyText home" onClick={() => setMenuOpen(false)}>
           <BrandLockup /><small>for macOS</small>
         </a>
         <button className="menu-button" type="button" aria-expanded={menuOpen} aria-controls="primary-navigation"
@@ -377,7 +378,7 @@ export default function App() {
           <div className="roadmap-grid">{roadmap.map(([number, title, text]) =>
             <article className="snap-subpanel" key={number}><span className="entry-number">{number}</span><h3>{title}</h3><p>{text}</p></article>
           )}</div>
-          <a className="primary-link roadmap-source" href="#/roadmap">Explore the full roadmap <RouteArrow /></a>
+          <a className="primary-link roadmap-source" href="/roadmap/">Explore the full roadmap <RouteArrow /></a>
           <NextSection destination={pageSections[8]} />
         </section>
 
@@ -429,7 +430,7 @@ export default function App() {
         </aside>
       </main>}
       <footer><div className="section-frame footer-grid">
-        <div className="footer-brand"><a className="brand" href="#home" aria-label="MostlyText home"><BrandLockup /></a><p>For text, and what comes after.</p></div>
+        <div className="footer-brand"><a className="brand" href="/#home" aria-label="MostlyText home"><BrandLockup /></a><p>For text, and what comes after.</p></div>
         <div className="footer-links"><a href={RELEASES_URL}>Release status <ExternalArrow /></a><a href={ISSUES_URL}>Report an issue <ExternalArrow /></a><a href={SOURCE_URL}>Project &amp; source <ExternalArrow /></a></div>
         <div className="footer-legal"><p>Descended from MacDown. Built with a more native Mac feel.</p><p>Consult the repository for current licence and third-party notices. Final distribution terms remain subject to release review.</p></div>
         <p className="footer-end">NATIVE macOS TEXT EDITOR / PRERELEASE</p>

@@ -37,7 +37,7 @@ The repository intentionally does not contain Cloudflare account configuration, 
 
 ## Search and social metadata
 
-The static site includes a canonical URL, crawl directives, Open Graph/Twitter metadata, `robots.txt`, and `sitemap.xml`. The React application renders the full page after JavaScript loads. A concise `noscript` summary supplies the core product explanation and public source links for crawlers that do not run JavaScript. The detailed roadmap is a client-side hash view and is not treated as its own crawlable URL.
+The static site includes canonical URLs, crawl directives, Open Graph/Twitter metadata, `robots.txt`, and `sitemap.xml`. `npm run build` prerenders the home page (`dist/index.html`) and the roadmap (`dist/roadmap/index.html`) with React's server renderer (`scripts/prerender.mjs`), so both pages are complete HTML before JavaScript runs; the browser then hydrates them. The older `/#/roadmap` hash links still open the roadmap. Production redirects `/roadmap` to `/roadmap/` before serving assets; keep that behaviour when deploying.
 
 ## Licence
 

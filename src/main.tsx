@@ -1,14 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
+import { routeFromLocation, viewOf } from './route'
 import './index.css'
 
 const root = document.getElementById('root')!
 const app = <React.StrictMode><App /></React.StrictMode>
 
-// dist/index.html carries the prerendered home page. The hash-routed roadmap
-// renders fresh rather than hydrating markup that belongs to another view.
-if (root.firstElementChild && !window.location.hash.startsWith('#/roadmap')) {
+// The HTML is prerendered for one view (data-prerendered-view on <html>). Hydrate
+// it when the URL asks for that view; otherwise render fresh, e.g. for
+// /#/roadmap/after-1, rather than hydrate markup that belongs to another view.
+if (root.firstElementChild && viewOf(routeFromLocation()) === document.documentElement.dataset.prerenderedView) {
   ReactDOM.hydrateRoot(root, app)
 } else {
   root.replaceChildren()
