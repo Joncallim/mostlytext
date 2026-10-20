@@ -1,11 +1,24 @@
 @import "tailwindcss";
 
+/* Inter 4.001, split into a Latin/punctuation/arrows core and the remaining
+   glyphs (public/fonts/README.md). Browsers fetch a file only when the page
+   uses a character in its unicode-range, so no glyph is dropped. */
 @font-face {
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("/fonts/inter-regular.woff2") format("woff2"), url("/fonts/inter-regular.ttf") format("truetype");
+  src: url("/fonts/inter-regular-core.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2190-21FF, U+2212, U+2215, U+FE0E, U+FEFF, U+FF0B, U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/inter-regular-ext.woff2") format("woff2");
+  unicode-range: U+0100-0130, U+0132-0151, U+0154-02BA, U+02BD-02C5, U+02C7-02D9, U+02DB, U+02DD-1FFF, U+2070-2073, U+2075-20AB, U+20AD-2121, U+2123-218F, U+2200-2211, U+2213-2214, U+2216-FE0D, U+FE0F-FEFE, U+FF00-FF0A, U+FF0C-FFFC, U+FFFE-10FFFF;
 }
 
 @font-face {
@@ -13,7 +26,17 @@
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url("/fonts/inter-semibold.woff2") format("woff2"), url("/fonts/inter-semibold.ttf") format("truetype");
+  src: url("/fonts/inter-semibold-core.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2190-21FF, U+2212, U+2215, U+FE0E, U+FEFF, U+FF0B, U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/inter-semibold-ext.woff2") format("woff2");
+  unicode-range: U+0100-0130, U+0132-0151, U+0154-02BA, U+02BD-02C5, U+02C7-02D9, U+02DB, U+02DD-1FFF, U+2070-2073, U+2075-20AB, U+20AD-2121, U+2123-218F, U+2200-2211, U+2213-2214, U+2216-FE0D, U+FE0F-FEFE, U+FF00-FF0A, U+FF0C-FFFC, U+FFFE-10FFFF;
 }
 
 :root {
