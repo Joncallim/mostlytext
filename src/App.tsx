@@ -151,7 +151,7 @@ const screenshots = {
     // The whole window is only readable from about 75rem up. Narrower screens get
     // tighter crops of the same capture: tablets and small laptops the source
     // pane and the start of the preview, phones the window's top-left corner.
-    tablet: { stem: "mostlytext-development-editor-preview-tablet", widths: [960, 1730] },
+    tablet: { stem: "mostlytext-development-editor-preview-tablet", widths: [960, 1640] },
     phone: { stem: "mostlytext-development-editor-preview-phone", widths: [400, 800],
       note: "Cropped to the Markdown source; the full capture shows the live preview beside it. It is ahead of the published alpha. Select the image to view it." },
   },
