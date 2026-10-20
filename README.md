@@ -10,7 +10,7 @@ The native macOS application has its own source repository at [Joncallim/macdown
 
 ## Local development
 
-Requires Node.js 20+.
+Requires Node.js 20.19+ or 22.12+ (the minimum for the pinned Vite 8).
 
 ```sh
 npm install

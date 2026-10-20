@@ -110,14 +110,6 @@ function RouteArrow() {
   return <span aria-hidden="true">→</span>
 }
 
-function DocumentMotif({ label }: { label: string }) {
-  return <div className="document-motif" aria-hidden="true">
-    <span className="document-motif-mark">¶</span>
-    <span className="document-motif-line" />
-    <span>{label}</span>
-  </div>
-}
-
 function OriginComic() {
   const panels = [
     ["A familiar split", "A small editor window, source on one side and preview on the other."],
@@ -147,19 +139,38 @@ function NextSection({ destination }: { destination: readonly [string, string] }
   </a>
 }
 
-function NativeAppScreenshot({ focused = false, priority = false }: { focused?: boolean; priority?: boolean }) {
-  const image = focused ? "mostlytext-development-editor-preview.png" : "mostlytext-development-workspace.png"
-  const description = focused
-    ? "Actual MostlyText development build focused on the Markdown editor and live preview, with correctly aligned line-number gutters."
-    : "Actual MostlyText development build with a folder sidebar, heading outline, Markdown editor, and live preview, with correctly aligned line-number gutters."
+// WebP sizes are generated from the original captures; the hero file is a crop of
+// the editor-and-preview capture with its empty lower canvas removed.
+const screenshots = {
+  hero: {
+    original: "mostlytext-development-editor-preview.png",
+    stem: "mostlytext-development-editor-preview-hero", widths: [960, 1600, 2448], width: 2448, height: 1200,
+    description: "Actual MostlyText development build: Markdown source with line numbers on the left and its live preview on the right.",
+    note: "Cropped from a capture that is ahead of the published alpha; the interface may change. Select the image to view the full capture.",
+  },
+  workspace: {
+    original: "mostlytext-development-workspace.png",
+    stem: "mostlytext-development-workspace", widths: [960, 1600, 2624], width: 2624, height: 1928,
+    description: "Actual MostlyText development build with a folder sidebar, heading outline, Markdown editor, and live preview, with correctly aligned line-number gutters.",
+    note: "This capture is ahead of the published alpha, and the interface may change. Select the image to view it full size.",
+  },
+} as const
+
+function NativeAppScreenshot({ variant }: { variant: keyof typeof screenshots }) {
+  const shot = screenshots[variant]
+  const hero = variant === "hero"
   return (
-    <figure className={`workflow-figure native-app-figure${focused ? " native-app-figure-focused" : ""}${priority ? " native-app-figure-hero" : ""}`}>
-      <a className="native-app-image-link" href={`/images/${image}`} target="_blank" rel="noopener noreferrer" aria-label="Open the full-size MostlyText development-build screenshot">
-        <img src={`/images/${image}`} width={2624} height={1928} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} decoding="async" alt={description} />
+    <figure className={`workflow-figure native-app-figure${hero ? " native-app-figure-hero" : ""}`}>
+      <a className="native-app-image-link" href={`/images/${shot.original}`} target="_blank" rel="noopener noreferrer" aria-label="Open the full-size MostlyText development-build screenshot (opens in a new tab)">
+        <picture>
+          <source type="image/webp" srcSet={shot.widths.map(width => `/images/${shot.stem}-${width}.webp ${width}w`).join(", ")}
+            sizes={hero ? "(min-width: 62rem) min(100vw - 3rem, 87.5rem), (min-width: 44rem) min(100vw - 2.5rem, 60rem), calc(100vw - 2rem)" : "(min-width: 62rem) min(100vw - 3rem, 87.5rem), 100vw"} />
+          <img src={`/images/${shot.original}`} width={shot.width} height={shot.height} loading={hero ? "eager" : "lazy"} fetchPriority={hero ? "high" : "auto"} decoding={hero ? "auto" : "async"} alt={shot.description} />
+        </picture>
       </a>
       <figcaption>
         Actual MostlyText development build.
-        <span>This capture is ahead of the published alpha, and the interface may change. Select the image to view it full size.</span>
+        <span>{shot.note}</span>
       </figcaption>
     </figure>
   )
@@ -208,13 +219,25 @@ export default function App() {
   }, [])
 
   useEffect(() => {
+    for (const element of document.querySelectorAll("main, footer")) element.toggleAttribute("inert", menuOpen)
+  }, [menuOpen, isRoadmap])
+
+  useEffect(() => {
+    // The menu is a compact-width overlay (index.css, 44rem); widening the window dismisses it.
+    const compact = window.matchMedia("(max-width: 44rem)")
+    const close = () => { if (!compact.matches) setMenuOpen(false) }
+    compact.addEventListener("change", close)
+    return () => compact.removeEventListener("change", close)
+  }, [])
+
+  useEffect(() => {
     const navigate = () => { setRoute(window.location.hash); setMenuOpen(false) }
     window.addEventListener("hashchange", navigate)
     return () => window.removeEventListener("hashchange", navigate)
   }, [])
   useEffect(() => {
     document.documentElement.classList.toggle("roadmap-route", isRoadmap)
-    document.title = isRoadmap ? "Roadmap — MostlyText" : "MostlyText — A text editor. Mostly."
+    document.title = isRoadmap ? "Roadmap — MostlyText" : "MostlyText — A text editor, mostly."
     requestAnimationFrame(() => {
       if (isRoadmap) window.scrollTo({ top: 0, behavior: "auto" })
       else if (route) document.getElementById(route.slice(1))?.scrollIntoView({ behavior: "auto" })
@@ -240,19 +263,19 @@ export default function App() {
       </header>
       {isRoadmap ? <Roadmap route={route} /> : <main id="main-content" tabIndex={-1}>
         <section className="hero section-frame" id="home">
-          <div className="hero-copy snap-subpanel">
+          <div className="hero-copy">
             <p className="eyebrow"><span />Native macOS editor · active prerelease</p>
-            <h1>A text editor. <em>Mostly.</em></h1>
-            <p className="hero-support">For the note, the README, the idea that needs room. A native Mac editor for text and Markdown, with more there when you need it.</p>
-            <div className="hero-actions">
-              <a className="primary-link" href={ALPHA_URL}>Build the source alpha <ExternalArrow /></a>
-              <a className="text-link" href="#roadmap">See the roadmap <span aria-hidden="true">↓</span></a>
+            <h1>A text editor, <em>mostly.</em></h1>
+            <div className="hero-lede">
+              <p className="hero-support">For the note, the README, the idea that needs room. A native Mac editor for text and Markdown, with more there when you need it.</p>
+              <div className="hero-actions">
+                <a className="primary-link" href={ALPHA_URL}>Build the source alpha <ExternalArrow /></a>
+                <a className="text-link" href="#roadmap">See the roadmap <span aria-hidden="true">↓</span></a>
+              </div>
+              <p className="hero-release-note">Source-only, unsigned build. Verified instructions: macOS 26+, Apple Silicon, Xcode 26, and XcodeGen. It still opens as MacDown 2.</p>
             </div>
-            <p className="hero-release-note">Source-only, unsigned build. Verified instructions: macOS 26+, Apple Silicon, Xcode 26, and XcodeGen. It still opens as MacDown 2.</p>
-            <DocumentMotif label="A place for the next thought" />
           </div>
-          <div className="hero-visual snap-subpanel"><NativeAppScreenshot priority /></div>
-          <div className="hero-index" aria-hidden="true"><span>MT—01</span><span>TEXT / MARKDOWN / SOURCE</span></div>
+          <div className="hero-visual"><NativeAppScreenshot variant="hero" /></div>
           <NextSection destination={pageSections[1]} />
         </section>
 
@@ -306,7 +329,7 @@ export default function App() {
               <h2>For the part of coding that is mostly explaining.</h2>
               <p>The README somebody finds at 11pm. The setup note that outlives the setup. The design note that needs one diagram.</p>
             </header>
-            <div className="workflow-visual snap-subpanel"><NativeAppScreenshot /></div>
+            <div className="workflow-visual snap-subpanel"><NativeAppScreenshot variant="workspace" /></div>
           </div>
           <NextSection destination={pageSections[6]} />
         </section>
@@ -320,7 +343,6 @@ export default function App() {
             <div className="workflow-steps">{workflowSteps.map(([number, title, text]) =>
               <article className="snap-subpanel" key={number}><span>{number}</span><div><h3>{title}</h3><p>{text}</p></div></article>
             )}</div>
-            <div className="workflow-visual workflow-visual-focused snap-subpanel"><NativeAppScreenshot focused /></div>
           </div>
           <NextSection destination={pageSections[7]} />
         </section>
@@ -349,7 +371,7 @@ export default function App() {
             <div className="guide-content" id="guide-detail" aria-live="polite" aria-atomic="true">
               <article>
                 <div className="guide-body"><span className="guide-marker">{activeGuide.marker}</span><div><h3>{activeGuide.title}</h3><p>{activeGuide.text}</p></div><div className="guide-controls mobile-guide-controls">{guideControls}</div></div>
-                <div className="guide-note"><p className="mobile-guide-note-label">{activeGuide.title} · Note</p><aside>{activeGuide.note}</aside><div className="guide-controls mobile-guide-controls">{guideControls}</div></div>
+                <div className="guide-note"><p className="mobile-guide-note-label">{activeGuide.title} · Note</p><p className="guide-note-text">{activeGuide.note}</p><div className="guide-controls mobile-guide-controls">{guideControls}</div></div>
               </article>
               <div className="guide-controls desktop-guide-controls">{guideControls}</div>
             </div>
