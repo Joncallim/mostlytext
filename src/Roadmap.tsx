@@ -43,17 +43,53 @@ function RoadmapItem({ item, expanded }: { item: Item; expanded: boolean }) {
   </details>
 }
 
+type Filters = { query: string; status: string; expanded: boolean }
+const noFilters: Filters = { query: "", status: "all", expanded: false }
+const stages = [
+  { key: "to-1", after: false, title: "To 1.0", summary: `${data.upToOne.length} work areas` },
+  { key: "after-1", after: true, title: "After 1.0", summary: "1.0.x–1.10 & later ideas" },
+] as const
+
+// One stage's work. The active stage gets the visitor's filters; the other is
+// rendered unfiltered so the static page carries both stages.
+function StageWork({ after, filters, onClear }: { after: boolean; filters: Filters; onClear?: () => void }) {
+  const { query, status, expanded } = filters
+  const items = after ? data.postOne : data.upToOne
+  const sections = after ? laterGroups : groups
+  const matches = (item: Item) => (status === "all" || item.status === status) && `${item.title} ${item.features.join(" ")} ${item.notes.join(" ")} ${item.id}`.toLowerCase().includes(query.toLowerCase().trim())
+  const count = items.filter(matches).length
+  return <>
+    <div className="roadmap-groups">
+      {sections.map((group, index) => {
+        const visible = group.ids.map(id => items.find(item => item.id === id)).filter((item): item is Item => Boolean(item)).filter(matches)
+        if (!visible.length) return null
+        return <section className="roadmap-group" key={`${group.title}:${expanded}:${query}:${status}`}>
+          <header><span className="entry-number">0{index + 1}</span><div><h3>{group.title}</h3><p>{group.description}</p></div></header>
+          <details className="roadmap-group-work" open={after || expanded || Boolean(query) || status !== "all"}>
+            <summary>Explore {visible.length} work {visible.length === 1 ? "area" : "areas"}<span aria-hidden="true">＋</span></summary>
+            <div>{visible.map(item => <RoadmapItem key={item.id} item={item} expanded={expanded || Boolean(query)} />)}</div>
+          </details>
+        </section>
+      })}
+      {!count && onClear && <div className="roadmap-empty"><p>No matching work areas in this stage.</p><button type="button" onClick={onClear}>Clear filters</button></div>}
+    </div>
+    {!after && <div className="release-path"><p className="section-number">The path to release</p><h3>Features are only part of “ready.”</h3><ol><li>Finish features and stabilise the app</li><li>Verify a private signed candidate on Mac</li><li>Finish localisation and freeze the UI</li><li>Build the final candidate with source and licence evidence</li><li>Repeat checks on those exact release files</li><li>Close release requirements and move the repository</li><li>Publish the approved, verified release</li></ol><a className="text-link" href={releaseSequenceUrl}>Read the release sequence ↗</a></div>}
+    {after && <details className="roadmap-extra"><summary>Outside 1.0, with no commitment for later<span aria-hidden="true">＋</span></summary><p>These are explicitly excluded from 1.0. Listing them here does not turn them into a future promise.</p><ul>{data.notCommitted.map(item => <li key={item}>{item}</li>)}</ul></details>}
+  </>
+}
+
+// Both stages are in the HTML. With JavaScript, one shows at a time and the
+// stage links use the URL (/roadmap/?stage=after-1 or #/roadmap/after-1).
+// Without it, both show under their own headings with anchor links between them.
 export default function Roadmap({ stage, roadmapPage }: { stage: RoadmapStage; roadmapPage: boolean }) {
   const after = stage === "after-1"
-  const toOneHref = stageHref("", roadmapPage), afterOneHref = stageHref("after-1", roadmapPage)
+  const stageLink = (isAfter: boolean) => stageHref(isAfter ? "after-1" : "", roadmapPage)
   const [query, setQuery] = useState("")
   const [status, setStatus] = useState("all")
   const [expanded, setExpanded] = useState(false)
   useEffect(() => { setQuery(""); setStatus("all"); setExpanded(false) }, [after])
   const items = after ? data.postOne : data.upToOne
-  const sections = after ? laterGroups : groups
-  const matches = (item: Item) => (status === "all" || item.status === status) && `${item.title} ${item.features.join(" ")} ${item.notes.join(" ")} ${item.id}`.toLowerCase().includes(query.toLowerCase().trim())
-  const count = items.filter(matches).length
+  const count = items.filter(item => (status === "all" || item.status === status) && `${item.title} ${item.features.join(" ")} ${item.notes.join(" ")} ${item.id}`.toLowerCase().includes(query.toLowerCase().trim())).length
 
   return <main className="roadmap-document section-frame" id="main-content" tabIndex={-1}>
     <a className="roadmap-back text-link" href="/#roadmap">← Back to MostlyText</a>
@@ -61,33 +97,24 @@ export default function Roadmap({ stage, roadmapPage }: { stage: RoadmapStage; r
       <div><p className="section-number">The full roadmap</p><h1>One Mac release.<br /><em>Then what comes after.</em></h1></div>
       <div className="roadmap-introduction"><p>A clear view of the work toward macOS 1.0, and the product chapters planned beyond it.</p><p>Evidence checked 15 October 2026. A <a href="https://github.com/Joncallim/macdown_2/releases/tag/v0.1.0-alpha.1">source-only testing alpha</a> is available to build yourself. No signed app download or stable 1.0 is available. “Implemented” means development code, not verified 1.0 functionality. No delivery dates are promised.</p></div>
     </header>
-    <nav className="roadmap-stage-nav" aria-label="Roadmap stages">
-      <a href={toOneHref} aria-current={!after ? "page" : undefined}>To 1.0 <span>{data.upToOne.length} work areas</span></a>
-      <a href={afterOneHref} aria-current={after ? "page" : undefined}>After 1.0 <span>1.0.x–1.10 &amp; later ideas</span></a>
+    <nav className="roadmap-stage-nav js-only" aria-label="Roadmap stages">
+      {stages.map(s => <a key={s.key} href={stageLink(s.after)} aria-current={s.after === after ? "page" : undefined}>{s.title} <span>{s.summary}</span></a>)}
     </nav>
-    {after && <p className="roadmap-stage-note">Version numbers mark the intended chapter sequence, not dates or paid-upgrade promises. Scope is provisional; 1.5 onward is exploratory and may change with evidence and demand.</p>}
+    <nav className="roadmap-anchor-nav no-js-only" aria-label="Roadmap stages on this page">
+      <p>On this page</p>
+      {stages.map(s => <a key={s.key} href={`#stage-${s.key}`}>{s.title} <span>{s.summary}</span></a>)}
+    </nav>
     <div className="roadmap-toolbar">
       <label className="roadmap-search">Find a feature<input type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder="Try themes, PDF, iPad…" /></label>
       <label className="roadmap-filter">Status<select value={status} onChange={event => setStatus(event.target.value)}><option value="all">All statuses</option>{Array.from(new Set(items.map(item => item.status))).map(value => <option key={value} value={value}>{labels[value]}</option>)}</select></label>
       <button type="button" className="roadmap-expand" onClick={() => setExpanded(!expanded)}>{expanded ? "Collapse work" : "Expand all work"}</button>
     </div>
     <p className="roadmap-result-count" aria-live="polite">{count} of {items.length} work areas{query && ` matching “${query}”`}</p>
-    <div className="roadmap-groups">
-      {sections.map((group, index) => {
-        const visible = group.ids.map(id => items.find(item => item.id === id)).filter((item): item is Item => Boolean(item)).filter(matches)
-        if (!visible.length) return null
-        return <section className="roadmap-group" key={`${group.title}:${expanded}:${query}:${status}:${after}`}>
-          <header><span className="entry-number">0{index + 1}</span><div><h2>{group.title}</h2><p>{group.description}</p></div></header>
-          <details className="roadmap-group-work" open={after || expanded || Boolean(query) || status !== "all"}>
-            <summary>Explore {visible.length} work {visible.length === 1 ? "area" : "areas"}<span aria-hidden="true">＋</span></summary>
-            <div>{visible.map(item => <RoadmapItem key={item.id} item={item} expanded={expanded || Boolean(query)} />)}</div>
-          </details>
-        </section>
-      })}
-      {!count && <div className="roadmap-empty"><p>No matching work areas in this stage.</p><button type="button" onClick={() => { setQuery(""); setStatus("all") }}>Clear filters</button></div>}
-    </div>
-    {!after && <aside className="release-path"><p className="section-number">The path to release</p><h2>Features are only part of “ready.”</h2><ol><li>Finish features and stabilise the app</li><li>Verify a private signed candidate on Mac</li><li>Finish localisation and freeze the UI</li><li>Build the final candidate with source and licence evidence</li><li>Repeat checks on those exact release files</li><li>Close release requirements and move the repository</li><li>Publish the approved, verified release</li></ol><a className="text-link" href={releaseSequenceUrl}>Read the release sequence ↗</a></aside>}
-    {after && <details className="roadmap-extra"><summary>Outside 1.0, with no commitment for later<span aria-hidden="true">＋</span></summary><p>These are explicitly excluded from 1.0. Listing them here does not turn them into a future promise.</p><ul>{data.notCommitted.map(item => <li key={item}>{item}</li>)}</ul></details>}
+    {stages.map(s => <section key={s.key} id={`stage-${s.key}`} className={`roadmap-stage${s.after === after ? "" : " roadmap-stage-inactive"}`} aria-labelledby={`stage-${s.key}-title`}>
+      <h2 className="roadmap-stage-title" id={`stage-${s.key}-title`}>{s.title} <span>{s.summary}</span></h2>
+      {s.after && <p className="roadmap-stage-note">Version numbers mark the intended chapter sequence, not dates or paid-upgrade promises. Scope is provisional; 1.5 onward is exploratory and may change with evidence and demand.</p>}
+      <StageWork after={s.after} filters={s.after === after ? { query, status, expanded } : noFilters} onClear={s.after === after ? () => { setQuery(""); setStatus("all") } : undefined} />
+    </section>)}
     <details className="roadmap-extra"><summary>What the status labels mean<span aria-hidden="true">＋</span></summary><dl className="status-legend">{Object.entries(data.statusDefinitions).map(([key, definition]) => <div key={key}><dt>{labels[key]}</dt><dd>{definition}</dd></div>)}</dl></details>
     <details className="roadmap-extra"><summary>Development evidence &amp; source links<span aria-hidden="true">＋</span></summary>
       <p>This is a dated snapshot. The product direction is reconciled with development evidence. Open pull requests and issue acceptance are not release proof. Newer release-sequence and closure records take precedence where older summaries disagree.</p>
@@ -96,6 +123,10 @@ export default function Roadmap({ stage, roadmapPage }: { stage: RoadmapStage; r
       <h3>Open development changes at the snapshot</h3><ul>{data.openPullRequests.map(pr => <li key={pr.number}><a href={pr.url}>#{pr.number}: {pr.title}</a> <span className="evidence-state">Open, not merged</span></li>)}</ul>
       <details className="roadmap-issue-index"><summary>Full open-work issue index ({data.openIssueInventory.length})</summary><ul>{data.openIssueInventory.map(issue => <li key={issue.number}><a href={issue.url}>#{issue.number}: {issue.title}</a></li>)}</ul></details>
     </details>
-    <p className="roadmap-bottom"><a href={toOneHref}>To 1.0</a><a href={afterOneHref}>After 1.0</a><a href="/#home">Back to home ↑</a></p>
+    <p className="roadmap-bottom">
+      {stages.map(s => <a key={s.key} className="js-only" href={stageLink(s.after)}>{s.title}</a>)}
+      {stages.map(s => <a key={`${s.key}-anchor`} className="no-js-only" href={`#stage-${s.key}`}>{s.title}</a>)}
+      <a href="/#home">Back to home ↑</a>
+    </p>
   </main>
 }
