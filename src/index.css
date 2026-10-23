@@ -2230,3 +2230,35 @@ html:not(.js) .roadmap-anchor-nav { display: flex; flex-wrap: wrap; align-items:
     transition: none !important;
   }
 }
+
+/* GitHub links carry the GitHub mark before the label; the external arrow stays after it. */
+.link-label { display: inline-flex; align-items: center; gap: .55em; }
+.link-icon { flex: none; width: 1.15em; height: 1.15em; }
+.footer-links a { display: inline-flex; align-items: center; gap: .5rem; }
+
+/* Guided try: four small steps inside the demo, ending in the download prompt. */
+.demo-tour { display: grid; gap: .85rem; padding: 1rem; border-bottom: 1px solid var(--line); background: var(--white); }
+.demo-tour-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; }
+.demo-tour-kicker { margin: 0; color: var(--green-dark); font: 600 .75rem/1.5 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+.demo-tour-link { min-height: 44px; padding: .5rem 0; border: 0; background: transparent; color: var(--green-dark); cursor: pointer; font: .8125rem/1.4 var(--sans); text-decoration: underline; text-underline-offset: .2rem; }
+.demo-tour-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem; margin: 0; padding: 0; list-style: none; }
+.demo-tour-steps li { display: flex; align-items: center; gap: .5rem; min-width: 0; padding: .55rem .6rem; border: 1px solid var(--line); color: var(--muted); font: .8125rem/1.3 var(--sans); }
+.demo-tour-steps li.is-current { border-color: var(--ink); color: var(--ink); font-weight: 600; }
+.demo-tour-steps li.is-done { border-color: var(--green); color: var(--ink); }
+.demo-tour-mark { display: inline-grid; flex: none; place-items: center; width: 1.5rem; height: 1.5rem; border: 1px solid currentColor; border-radius: 50%; font: 600 .7rem/1 var(--mono); }
+.demo-tour-steps li.is-done .demo-tour-mark { border-color: var(--green); background: var(--green); color: var(--white); }
+.demo-tour-task { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1rem; padding: .75rem .9rem; background: var(--paper); }
+.demo-tour-task p { flex: 1 1 20rem; min-width: 0; margin: 0; color: var(--ink); font: .9375rem/1.55 var(--sans); }
+.demo-tour-show { min-height: 44px; padding: .5rem 1rem; border: 1px solid var(--ink); background: var(--white); color: var(--ink); cursor: pointer; font: 600 .8125rem/1 var(--sans); }
+.demo-tour-show:hover { background: var(--ink); color: var(--white); }
+.demo-tour-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.demo-tour-done { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem 2rem; align-items: center; padding: 1.25rem; background: var(--paper); }
+.demo-tour-done h3 { margin: .35rem 0 .5rem; font: 600 clamp(1.5rem, 2.6vw, 2.1rem)/1.1 var(--sans); letter-spacing: -.04em; }
+.demo-tour-done-copy > p:last-child { margin: 0; color: var(--ink); font: .9375rem/1.55 var(--sans); }
+.demo-tour-actions { display: grid; justify-items: start; gap: .65rem; }
+.demo-tour-note { margin: 0; color: var(--muted); font: .8125rem/1.55 var(--sans); }
+.demo-tour-secondary { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem 1.5rem; }
+@media (max-width: 52rem) {
+  .demo-tour-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .demo-tour-done { grid-template-columns: minmax(0, 1fr); }
+}

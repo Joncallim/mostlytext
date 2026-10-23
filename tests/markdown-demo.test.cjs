@@ -5,12 +5,17 @@ const vm = require('node:vm');
 const ts = require('typescript');
 const React = require('react');
 const { renderToStaticMarkup } = require('react-dom/server');
-const compiled = ts.transpileModule(fs.readFileSync('src/MarkdownDemo.tsx', 'utf8'), {
-  compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2022 },
-}).outputText;
-const moduleOutput = { exports: {} };
-vm.runInNewContext(compiled, { exports: moduleOutput.exports, require });
-const { MarkdownPreview, DEMO_LIMIT } = moduleOutput.exports;
+const load = file => {
+  const compiled = ts.transpileModule(fs.readFileSync(file, 'utf8'), {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2022 },
+  }).outputText;
+  const moduleOutput = { exports: {} };
+  // Local imports are the demo's own source files; everything else is a package.
+  const localRequire = name => name.startsWith('./') ? load(`src/${name.slice(2)}.tsx`) : require(name);
+  vm.runInNewContext(compiled, { exports: moduleOutput.exports, require: localRequire });
+  return moduleOutput.exports;
+};
+const { MarkdownPreview, DEMO_LIMIT, DEMO_SAMPLE, TOUR_STEPS } = load('src/MarkdownDemo.tsx');
 const render = source => renderToStaticMarkup(React.createElement(MarkdownPreview, { source }));
 assert.match(render('# Heading'), /<h3 class="demo-heading demo-heading-level-1">Heading<\/h3>/);
 assert.match(render('## Heading'), /<h4 class="demo-heading demo-heading-level-2">Heading<\/h4>/);
@@ -51,3 +56,25 @@ for (const length of [1000, 6000, DEMO_LIMIT]) {
 for (const source of ['*'.repeat(DEMO_LIMIT), '\\'.repeat(DEMO_LIMIT), '`'.repeat(DEMO_LIMIT), '\n'.repeat(DEMO_LIMIT), '# x\n'.repeat(DEMO_LIMIT/4), '# \n## \n>\n- \n1. \n```\n'.repeat(500)]) render(source);
 assert(performance.now() - started < 5000, 'Bounded adversarial inputs exceeded five seconds');
 console.log(`PASS: Markdown blocks/inlines, empty/CRLF, ${attacks.length} adversarial HTML/URL/image cases, ${DEMO_LIMIT}-character cap, bounded parser stress (${Math.round(performance.now()-started)} ms).`);
+
+// Guided try: the sample starts with no step done; "Show me" completes each step on the
+// sample, and also when the visitor has already rewritten or emptied the text.
+assert.equal(TOUR_STEPS.length, 4);
+assert.equal(JSON.stringify(TOUR_STEPS.map(step => step.done(DEMO_SAMPLE, 'split'))), '[false,false,false,false]');
+for (const start of [DEMO_SAMPLE, '', 'Just a sentence.', '## Only a subheading\n\n* star item']) {
+  let text = start;
+  TOUR_STEPS.slice(0, 3).forEach((step, index) => {
+    text = step.show(text);
+    assert.ok(step.done(text, 'split'), `step ${index + 1} done after Show me from ${JSON.stringify(start)}`);
+  });
+  assert.ok(TOUR_STEPS.slice(0, 3).every(step => step.done(text, 'split')), 'earlier steps stay done');
+}
+assert.ok(!TOUR_STEPS[3].done(DEMO_SAMPLE, 'split') && TOUR_STEPS[3].done(DEMO_SAMPLE, 'preview'));
+assert.ok(TOUR_STEPS[0].done(DEMO_SAMPLE.replace('# Field notes', '# Release checklist'), 'split'));
+assert.ok(!TOUR_STEPS[0].done('#\n\nNot a heading', 'split'));
+assert.ok(!TOUR_STEPS[0].done(DEMO_SAMPLE.replace('# Field notes', '#   Field notes  '), 'split'));
+assert.ok(TOUR_STEPS[1].done(DEMO_SAMPLE.replace('- Export only when useful', '- Export only when useful\n- Ship it'), 'split'));
+assert.ok(!TOUR_STEPS[1].done(DEMO_SAMPLE.replace('- Export only when useful', '- Export only when useful\n- '), 'split'));
+assert.ok(TOUR_STEPS[2].done(DEMO_SAMPLE + '\n\n**new**', 'split'));
+assert.ok(!TOUR_STEPS[2].done(DEMO_SAMPLE + '\n\n**unfinished', 'split'));
+console.log('Guided try tests passed.');

@@ -1,4 +1,5 @@
-import { useMemo, useState, type ReactNode } from "react"
+import { useEffect, useMemo, useState, type ReactNode } from "react"
+import { ALPHA_URL, GitHubLink, RELEASES_URL } from "./links"
 
 export const DEMO_LIMIT = 12000
 export const DEMO_SAMPLE = `# Field notes
@@ -126,19 +127,95 @@ export function MarkdownPreview({ source }: { source: string }) {
   return <>{blocks.length ? blocks : <p className="demo-empty">Your preview starts with your first word.</p>}</>
 }
 
+type DemoView = "split" | "source" | "preview"
+
+const SAMPLE_ITEMS = ["Keep the text close", "Reveal structure as needed", "Export only when useful"]
+const SAMPLE_BOLD = ["readable source", "bold"]
+const hasNew = (matches: IterableIterator<RegExpMatchArray>, sample: string[]) => [...matches].some(match => !sample.includes(match[1].trim()))
+
+// The guided try. Each step checks the text the visitor has written, so typing it and
+// pressing "Show me" both count, in any order. A list item or bold run counts when it
+// isn't one of the sample's own.
+export const TOUR_STEPS: { title: string, hint: string, done: (source: string, view: DemoView) => boolean, show: (source: string) => string }[] = [
+  {
+    title: "Make it yours",
+    hint: "Rewrite the first heading. Keep the # and the space before it.",
+    done: source => { const heading = /^#[ \t]+(.+)$/m.exec(source); return !!heading && !["", "Field notes"].includes(heading[1].trim()) },
+    show: source => /^#[ \t]+.*$/m.test(source) ? source.replace(/^#[ \t]+.*$/m, "# Project notes") : `# Project notes\n\n${source}`,
+  },
+  {
+    title: "Add to the list",
+    hint: "Start a new line under the list with a dash and a space.",
+    done: source => hasNew(source.matchAll(/^[-*+][ \t]+(\S.*)$/gm), SAMPLE_ITEMS),
+    show: source => {
+      const lines = source.split("\n"); let last = -1
+      lines.forEach((line, index) => { if (/^[-*+]\s+\S/.test(line)) last = index })
+      if (last === -1) return `${source.trimEnd()}\n\n- Write it down first`
+      lines.splice(last + 1, 0, "- Write it down first"); return lines.join("\n")
+    },
+  },
+  {
+    title: "Make a word bold",
+    hint: "Wrap a word in two asterisks on each side, **like this**.",
+    done: source => hasNew(source.matchAll(/\*\*([^*\n]+)\*\*/g), SAMPLE_BOLD),
+    show: source => `${source.trimEnd()}\n\nThat part is **important**.`,
+  },
+  {
+    title: "Read it back",
+    hint: "Switch to Read to see only the rendered document.",
+    done: (_source, view) => view === "preview",
+    show: source => source,
+  },
+]
+
 export default function MarkdownDemo() {
   const [source, setSource] = useState(DEMO_SAMPLE)
-  const [view, setView] = useState<"split" | "source" | "preview">("split")
+  const [view, setView] = useState<DemoView>("split")
+  const [finished, setFinished] = useState(false)
   const preview = useMemo(() => <MarkdownPreview source={source} />, [source])
+  const progress = TOUR_STEPS.map(step => step.done(source, view))
+  const doneCount = progress.filter(Boolean).length
+  const current = progress.indexOf(false)
+  // Once every step has been done the end card stays, even if the visitor switches back to Both.
+  useEffect(() => { if (current === -1) setFinished(true) }, [current])
+  const ended = finished || current === -1
+  const showMe = () => {
+    if (current === -1) return
+    if (current === TOUR_STEPS.length - 1) setView("preview")
+    else setSource(TOUR_STEPS[current].show(source).slice(0, DEMO_LIMIT))
+  }
+  const restart = () => { setSource(DEMO_SAMPLE); setView("split"); setFinished(false) }
   return (
     <figure className="product-figure markdown-demo" aria-label="Live Markdown browser workflow demo">
       <div className="figure-toolbar">
         <div className="segmented" role="group" aria-label="Demo view">
           {(["split", "source", "preview"] as const).map(mode => <button key={mode} type="button" className={view === mode ? "active" : ""} aria-pressed={view === mode} onClick={() => setView(mode)}>{mode === "split" ? "Both" : mode === "source" ? "Write" : "Read"}</button>)}
         </div>
-        <button className="demo-reset" type="button" onClick={() => setSource(DEMO_SAMPLE)}>Reset sample</button>
+        <button className="demo-reset" type="button" onClick={restart}>Reset sample</button>
       </div>
       <div className="demo-intro"><span className="demo-live-dot" aria-hidden="true" />LIVE BROWSER DEMO <span>Browser only. Not the native Mac app.</span></div>
+      {ended ? <section className="demo-tour demo-tour-done js-only" aria-labelledby="demo-tour-done-title">
+        <div className="demo-tour-done-copy">
+          <p className="demo-tour-kicker"><span aria-hidden="true">✓</span> Tour complete · 4 of 4</p>
+          <h3 id="demo-tour-done-title">That’s the shape of it.</h3>
+          <p>The Mac app keeps this side-by-side view and adds the heading outline, find and replace, diagrams, math and export.</p>
+        </div>
+        <div className="demo-tour-actions">
+          <GitHubLink className="primary-link" href={ALPHA_URL}>Download the source alpha</GitHubLink>
+          <p className="demo-tour-note">Source code only: you build it with Xcode 26 on macOS 26 and Apple Silicon, and it opens as MacDown 2. Signed downloads come later.</p>
+          <div className="demo-tour-secondary"><GitHubLink className="text-link" href={RELEASES_URL}>Follow releases</GitHubLink><button type="button" className="demo-tour-link" onClick={restart}>Try again</button></div>
+        </div>
+      </section> : <section className="demo-tour js-only" aria-labelledby="demo-tour-title">
+        <div className="demo-tour-head">
+          <p className="demo-tour-kicker" id="demo-tour-title">Guided try · step {current + 1} of {TOUR_STEPS.length}</p>
+          <button type="button" className="demo-tour-link" onClick={() => setFinished(true)}>Skip to download</button>
+        </div>
+        <ol className="demo-tour-steps">{TOUR_STEPS.map((step, index) => <li key={step.title} className={progress[index] ? "is-done" : index === current ? "is-current" : undefined} aria-current={index === current ? "step" : undefined}>
+          <span className="demo-tour-mark" aria-hidden="true">{progress[index] ? "✓" : index + 1}</span>{step.title}<span className="demo-tour-sr">{progress[index] ? " (done)" : ""}</span>
+        </li>)}</ol>
+        <div className="demo-tour-task"><p><strong>{TOUR_STEPS[current].title}.</strong> {TOUR_STEPS[current].hint}</p><button type="button" className="demo-tour-show" onClick={showMe}>Show me</button></div>
+      </section>}
+      <p className="demo-tour-sr" aria-live="polite">{ended ? "Tour complete. Download the source alpha from the link in the demo." : doneCount ? `${doneCount} of ${TOUR_STEPS.length} steps done.` : ""}</p>
       <div className={`demo-panes demo-view-${view}`}>
         {view !== "preview" && <div className="demo-source-pane">
           <label htmlFor="demo-markdown-source">MARKDOWN / EDIT HERE</label>

@@ -3,15 +3,12 @@ import Roadmap from "./Roadmap"
 import MarkdownDemo from "./MarkdownDemo"
 import { isRoadmapPage, isRoadmapRoute, routeFromLocation, stageOf } from "./route"
 
-const ALPHA_URL = "https://github.com/Joncallim/macdown_2/releases/tag/v0.1.0-alpha.1"
-const RELEASES_URL = "https://github.com/Joncallim/macdown_2/releases"
-const ISSUES_URL = "https://github.com/Joncallim/macdown_2/issues"
-const SOURCE_URL = "https://github.com/Joncallim/macdown_2#readme"
-const SITE_SOURCE_URL = "https://github.com/Joncallim/mostlytext"
+import { ALPHA_URL, GitHubLink, ISSUES_URL, RELEASES_URL, SITE_SOURCE_URL, SOURCE_URL } from "./links"
 
 const navItems = [
   ["Home", "/#home"],
   ["Features", "/#features"],
+  ["Try it", "/#demo"],
   ["Roadmap", "/roadmap/"],
   ["Guide", "/#guide"],
   ["FAQ", "/#faq"],
@@ -101,10 +98,6 @@ const faqs = [
 
 function BrandLockup() {
   return <img className="brand-lockup" src="/brand/mostlytext-lockup.svg" alt="" />
-}
-
-function ExternalArrow() {
-  return <span aria-hidden="true">↗︎</span>
 }
 
 function RouteArrow() {
@@ -296,8 +289,8 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
             <div className="hero-lede">
               <p className="hero-support">For the note, the README, the idea that needs room. A native Mac editor for text and Markdown, with more there when you need it.</p>
               <div className="hero-actions">
-                <a className="primary-link" href={ALPHA_URL}>Build the source alpha <ExternalArrow /></a>
-                <a className="text-link" href="#roadmap">See the roadmap <span aria-hidden="true">↓</span></a>
+                <GitHubLink className="primary-link" href={ALPHA_URL}>Build the source alpha</GitHubLink>
+                <a className="text-link" href="#demo">Try it in your browser <span aria-hidden="true">↓</span></a>
               </div>
               <p className="hero-release-note">Source-only, unsigned build. Verified instructions: macOS 26+, Apple Silicon, Xcode 26, and XcodeGen. It still opens as MacDown 2.</p>
             </div>
@@ -419,7 +412,7 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
           <div className="release-status-line"><span className="status-dot" /><p>SOURCE-ONLY ALPHA</p><span>v0.1.0-alpha.1</span></div>
           <div className="release-grid">
             <div><p className="section-number">08 / Release status</p><h2>An alpha you can build.</h2></div>
-            <div className="release-copy"><p>The source-only testing alpha is available with self-build instructions. No prebuilt app, DMG, or CLI binary is included.</p><p>Verified build instructions require macOS 26 or later, Apple Silicon, Xcode 26, and XcodeGen. The local build is unsigned and still named MacDown 2. Signed MostlyText copies are planned for later through the App Store and direct distribution; stable 1.0 is still ahead.</p><div className="release-links"><a className="primary-link" href={ALPHA_URL}>Build the source alpha <ExternalArrow /></a><a className="text-link" href={ISSUES_URL}>View open issues <ExternalArrow /></a></div></div>
+            <div className="release-copy"><p>The source-only testing alpha is available with self-build instructions. No prebuilt app, DMG, or CLI binary is included.</p><p>Verified build instructions require macOS 26 or later, Apple Silicon, Xcode 26, and XcodeGen. The local build is unsigned and still named MacDown 2. Signed MostlyText copies are planned for later through the App Store and direct distribution; stable 1.0 is still ahead.</p><div className="release-links"><GitHubLink className="primary-link" href={ALPHA_URL}>Build the source alpha</GitHubLink><GitHubLink className="text-link" href={ISSUES_URL}>View open issues</GitHubLink></div></div>
           </div>
         </section>
         <aside className="github-banner section-frame" aria-labelledby="github-banner-title">
@@ -429,14 +422,14 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
             <p>Read the website source, or follow the native app in its public repository. The app repository is currently named <code>macdown_2</code>; that name reflects its development lineage and has not been renamed.</p>
           </div>
           <div className="github-banner-actions">
-            <a className="primary-link" href={SITE_SOURCE_URL}>Website source <ExternalArrow /></a>
-            <a className="text-link" href={SOURCE_URL}>Native app source (macdown_2) <ExternalArrow /></a>
+            <GitHubLink className="primary-link" href={SITE_SOURCE_URL}>Website source</GitHubLink>
+            <GitHubLink className="text-link" href={SOURCE_URL}>Native app source (macdown_2)</GitHubLink>
           </div>
         </aside>
       </main>}
       <footer><div className="section-frame footer-grid">
         <div className="footer-brand"><a className="brand" href="/#home" aria-label="MostlyText home"><BrandLockup /></a><p>For text, and what comes after.</p></div>
-        <div className="footer-links"><a href={RELEASES_URL}>Release status <ExternalArrow /></a><a href={ISSUES_URL}>Report an issue <ExternalArrow /></a><a href={SOURCE_URL}>Project &amp; source <ExternalArrow /></a></div>
+        <div className="footer-links"><GitHubLink href={RELEASES_URL}>Release status</GitHubLink><GitHubLink href={ISSUES_URL}>Report an issue</GitHubLink><GitHubLink href={SOURCE_URL}>Project &amp; source</GitHubLink></div>
         <div className="footer-legal"><p>Descended from MacDown. Built with a more native Mac feel.</p><p>Consult the repository for current licence and third-party notices. Final distribution terms remain subject to release review.</p></div>
         <p className="footer-end">NATIVE macOS TEXT EDITOR / PRERELEASE</p>
       </div></footer>
