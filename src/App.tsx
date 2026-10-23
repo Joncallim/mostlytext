@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react"
+import { useEffect, useState } from "react"
 import Roadmap from "./Roadmap"
 import MarkdownDemo from "./MarkdownDemo"
 import { isRoadmapPage, isRoadmapRoute, routeFromLocation, stageOf } from "./route"
@@ -10,23 +10,8 @@ const navItems = [
   ["Features", "/#features"],
   ["Try it", "/#demo"],
   ["Roadmap", "/roadmap/"],
-  ["Guide", "/#guide"],
   ["FAQ", "/#faq"],
   ["Release status", "/#release-status"],
-] as const
-
-const pageSections = [
-  ["home", "Home"],
-  ["features", "Capabilities"],
-  ["render-share", "Render & share"],
-  ["origin", "Where it began"],
-  ["demo", "Browser demo"],
-  ["developers", "Developer workflow"],
-  ["editing-tools", "Editing tools"],
-  ["roadmap", "Roadmap"],
-  ["guide", "Field guide"],
-  ["faq", "FAQ"],
-  ["release-status", "Release status"],
 ] as const
 
 const workflowSteps = [
@@ -34,44 +19,6 @@ const workflowSteps = [
   ["02", "Make the change twelve times.", "Use literal find and replace for a product name, a regular expression for a pattern, or multiple cursors for repeated edits. Folder search-and-replace reaches beyond the current document."],
   ["03", "Keep the details deliberate.", "Choose encodings and line endings. Show line numbers and invisibles. Use built-in or scoped snippets for text you keep writing. These capabilities are in the current development build."],
 ] as const
-
-const guideSections = [
-  {
-    id: "getting-started",
-    marker: "01",
-    title: "Getting started",
-    text: "Start from the file, not a project wizard. Open a document from Finder or navigate to it from a folder. Choose a light or dark theme, then arrange the source, outline, and preview for the work at hand.",
-    note: "The project is prerelease software. Check release notes before depending on a particular workflow.",
-  },
-  {
-    id: "readme-docs",
-    marker: "02",
-    title: "Authoring README files and docs",
-    text: "Use syntax-highlighted Markdown source for precise edits and the heading outline to move through longer technical documents. Preview the rendered hierarchy beside the source, and use editing assists for common Markdown structures.",
-    note: "Literal and regular-expression replacement are available for targeted or repeated changes.",
-  },
-  {
-    id: "structured-notes",
-    marker: "03",
-    title: "Structured notes",
-    text: "Keep notes as ordinary text files and use headings as durable structure. File navigation supports a folder-based practice without requiring a proprietary notebook or database.",
-    note: "MostlyText also works with plain text, JSON, and HTML when the work extends beyond Markdown.",
-  },
-  {
-    id: "diagrams-math",
-    marker: "04",
-    title: "Diagrams and math",
-    text: "Write inline or display math directly in the document. The implementation includes Mermaid and D2 preview paths, Graphviz export rendering, and math scanning and rendering. Renderer and theme behavior still need release validation.",
-    note: "Rendering support is an implemented development capability, not a statement that final release gates have passed.",
-  },
-  {
-    id: "export",
-    marker: "05",
-    title: "Export",
-    text: "Choose HTML for a browser, self-contained HTML when you need a bundled document, or PDF for a fixed artifact. Keep the original source alongside anything you export.",
-    note: "Self-contained export cannot embed authored raw HTML; unresolved image paths need attention. Release samples and exact behavior are still pending.",
-  },
-]
 
 const faqs = [
   [
@@ -125,12 +72,6 @@ function OriginComic() {
     </div>
     <figcaption id="origin-comic-caption">A small origin story: familiar split view, a wish for something native, then MostlyText.</figcaption>
   </figure>
-}
-
-function NextSection({ destination }: { destination: readonly [string, string] }) {
-  return <a className="section-advance" href={`#${destination[0]}`} aria-label={`Next section: ${destination[1]}`}>
-    <span>Next section</span><strong>{destination[1]}</strong><i aria-hidden="true">↓</i>
-  </a>
 }
 
 // WebP sizes are generated from the original captures; the hero file is a crop of
@@ -194,12 +135,12 @@ const roadmap = [
   ["03", "After 1.0", "A chapter-by-chapter direction through 1.10: better tables, linked editing, local history, workspaces, and publishing. Later exploration stays clearly labelled."],
 ] as const
 
-function FeatureCards({ start, end, children }: { start: number; end: number; children: ReactNode }) {
-  return <div className="feature-ledger capability-pages">{featureCards.slice(start, end).map(([number, meta, title, text], index) =>
-    <div className="capability-page" key={number}>{index === 0 && children}<article className="feature-entry snap-subpanel" key={number}>
+function FeatureCards() {
+  return <div className="feature-ledger">{featureCards.map(([number, meta, title, text]) =>
+    <article className="feature-entry" key={number}>
       <span className="entry-number">{number}</span>
       <div><p className="entry-meta">{meta}</p><h3>{title}</h3><p>{text}</p></div>
-    </article></div>
+    </article>
   )}</div>
 }
 
@@ -209,7 +150,6 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
   const [onRoadmapPage] = useState(() => roadmapPage ?? isRoadmapPage())
   const isRoadmap = isRoadmapRoute(route)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [guideIndex, setGuideIndex] = useState(0)
 
   useEffect(() => {
     const closeOnEscape = (event: KeyboardEvent) => {
@@ -264,8 +204,6 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
     })
   }, [route, isRoadmap])
 
-  const guideControls = <><button type="button" onClick={() => setGuideIndex((guideIndex + guideSections.length - 1) % guideSections.length)}>← Previous</button><span>{guideIndex + 1} / {guideSections.length}</span><button type="button" onClick={() => setGuideIndex((guideIndex + 1) % guideSections.length)}>Next →</button></>
-
   return (
     <div className="site-shell">
       <a className="skip-link" href="#main-content" onClick={event => { if (isRoadmap) { event.preventDefault(); document.getElementById("main-content")?.focus(); window.scrollTo({ top: 0, behavior: "auto" }) } }}>Skip to content</a>
@@ -296,28 +234,15 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
             </div>
           </div>
           <div className="hero-visual"><NativeAppScreenshot variant="hero" /></div>
-          <NextSection destination={pageSections[1]} />
         </section>
 
         <section className="features section-frame screen-panel split-panel" id="features">
-          <FeatureCards start={0} end={2}>
           <header className="section-heading">
             <p className="section-number">01 / Capabilities</p>
             <h2>For the files around the code.</h2>
-            <p>Work on a README without opening your whole development setup. Write, read, and make precise changes in one place.</p>
+            <p>Work on a README without opening your whole development setup. Write, read, and make precise changes, and keep the diagram and the export beside the explanation.</p>
           </header>
-          </FeatureCards>
-          <NextSection destination={pageSections[2]} />
-        </section>
-        <section className="features section-frame screen-panel split-panel" id="render-share" aria-labelledby="render-title">
-          <FeatureCards start={2} end={4}>
-          <header className="section-heading">
-            <p className="section-number">01 / Render &amp; share</p>
-            <h2 id="render-title">A little more than words.</h2>
-            <p>The explanation and its diagram belong together. Keep the source; make a rendered artifact when someone needs one.</p>
-          </header>
-          </FeatureCards>
-          <NextSection destination={pageSections[3]} />
+          <FeatureCards />
         </section>
 
         <section className="intro-strip screen-panel" id="origin">
@@ -330,16 +255,14 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
             </div>
             <OriginComic />
           </div>
-          <NextSection destination={pageSections[4]} />
         </section>
         <section className="browser-demo section-frame screen-panel split-panel" id="demo" aria-labelledby="demo-title">
           <header className="section-heading">
-            <p className="section-number">03 / Browser demo</p>
+            <p className="section-number">03 / Try it</p>
             <h2 id="demo-title">Try the shape of a document.</h2>
             <p>A small, local Markdown preview for trying the workflow in a browser. It is separate from the native Mac app and never saves or sends your text.</p>
           </header>
           <div className="browser-demo-stage"><MarkdownDemo /></div>
-          <NextSection destination={pageSections[5]} />
         </section>
 
         <section className="workflow screen-panel split-panel" id="developers">
@@ -350,21 +273,10 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
               <p>The README somebody finds at 11pm. The setup note that outlives the setup. The design note that needs one diagram.</p>
             </header>
             <div className="workflow-visual snap-subpanel"><NativeAppScreenshot variant="workspace" /></div>
-          </div>
-          <NextSection destination={pageSections[6]} />
-        </section>
-        <section className="workflow screen-panel split-panel" id="editing-tools" aria-labelledby="editing-title">
-          <div className="section-frame">
-            <header className="section-heading workflow-heading">
-              <p className="section-number">04 / Editing tools</p>
-              <h2 id="editing-title">Small edits. Precise tools.</h2>
-              <p>Document-first work, with the controls that matter when the text is part of a repository.</p>
-            </header>
             <div className="workflow-steps">{workflowSteps.map(([number, title, text]) =>
               <article className="snap-subpanel" key={number}><span>{number}</span><div><h3>{title}</h3><p>{text}</p></div></article>
             )}</div>
           </div>
-          <NextSection destination={pageSections[7]} />
         </section>
 
         <section className="roadmap section-frame screen-panel split-panel" id="roadmap">
@@ -376,56 +288,22 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
             <article className="snap-subpanel" key={number}><span className="entry-number">{number}</span><h3>{title}</h3><p>{text}</p></article>
           )}</div>
           <a className="primary-link roadmap-source" href="/roadmap/">Explore the full roadmap <RouteArrow /></a>
-          <NextSection destination={pageSections[8]} />
-        </section>
-
-        <section className="guide section-frame screen-panel" id="guide">
-          <header className="section-heading guide-heading">
-            <p className="section-number">06 / Field guide overview</p><h2>Start with the task at hand.</h2>
-            <p>Choose what you want to do.</p>
-          </header>
-          <div className="guide-layout">
-            <nav className="guide-nav" aria-label="Choose an overview topic"><p>IN THIS OVERVIEW</p>
-              {guideSections.map((item, index) => <button key={item.id} type="button" aria-pressed={guideIndex === index} aria-controls="guide-detail" onClick={() => setGuideIndex(index)}><span>{item.marker}</span>{item.title}</button>)}
-            </nav>
-            <div className="guide-content" id="guide-detail" aria-live="polite" aria-atomic="true">
-              {/* Every topic is in the HTML so it reads without JavaScript; with it, only the chosen one shows (index.css). */}
-              {guideSections.map((topic, index) => <article key={topic.id} className={index === guideIndex ? undefined : "guide-inactive"}>
-                <div className="guide-body"><span className="guide-marker">{topic.marker}</span><div><h3>{topic.title}</h3><p>{topic.text}</p></div><div className="guide-controls mobile-guide-controls">{guideControls}</div></div>
-                <div className="guide-note"><p className="mobile-guide-note-label">{topic.title} · Note</p><p className="guide-note-text">{topic.note}</p><div className="guide-controls mobile-guide-controls">{guideControls}</div></div>
-              </article>)}
-              <div className="guide-controls desktop-guide-controls">{guideControls}</div>
-            </div>
-          </div>
-          <NextSection destination={pageSections[9]} />
         </section>
 
         <section className="faq-section screen-panel" id="faq">
           <div className="section-frame faq-layout">
-            <header className="section-heading"><p className="section-number">07 / FAQ</p><h2>Questions worth answering plainly.</h2><p>Start with repository releases and issues for current project facts.</p></header>
+            <header className="section-heading"><p className="section-number">06 / FAQ</p><h2>Questions worth answering plainly.</h2><p>Start with repository releases and issues for current project facts.</p></header>
             <div className="faq-list">{faqs.map(([question, answer], index) => <details key={question} name="mostlytext-faq"><summary><span>{String(index + 1).padStart(2, "0")}</span>{question}<i aria-hidden="true" /></summary><p>{answer}</p></details>)}</div>
           </div>
-          <NextSection destination={pageSections[10]} />
         </section>
 
         <section className="release section-frame screen-panel" id="release-status">
           <div className="release-status-line"><span className="status-dot" /><p>SOURCE-ONLY ALPHA</p><span>v0.1.0-alpha.1</span></div>
           <div className="release-grid">
-            <div><p className="section-number">08 / Release status</p><h2>An alpha you can build.</h2></div>
-            <div className="release-copy"><p>The source-only testing alpha is available with self-build instructions. No prebuilt app, DMG, or CLI binary is included.</p><p>Verified build instructions require macOS 26 or later, Apple Silicon, Xcode 26, and XcodeGen. The local build is unsigned and still named MacDown 2. Signed MostlyText copies are planned for later through the App Store and direct distribution; stable 1.0 is still ahead.</p><div className="release-links"><GitHubLink className="primary-link" href={ALPHA_URL}>Build the source alpha</GitHubLink><GitHubLink className="text-link" href={ISSUES_URL}>View open issues</GitHubLink></div></div>
+            <div><p className="section-number">07 / Release status</p><h2>An alpha you can build.</h2></div>
+            <div className="release-copy"><p>The source-only testing alpha is available with self-build instructions. No prebuilt app, DMG, or CLI binary is included.</p><p>Verified build instructions require macOS 26 or later, Apple Silicon, Xcode 26, and XcodeGen. The local build is unsigned and still named MacDown 2. Signed MostlyText copies are planned for later through the App Store and direct distribution; stable 1.0 is still ahead.</p><p>The app and this website are both on GitHub. The app repository is still named <code>macdown_2</code>, after its development lineage.</p><div className="release-links"><GitHubLink className="primary-link" href={ALPHA_URL}>Build the source alpha</GitHubLink><GitHubLink className="text-link" href={ISSUES_URL}>View open issues</GitHubLink><GitHubLink className="text-link" href={SITE_SOURCE_URL}>Website source</GitHubLink></div></div>
           </div>
         </section>
-        <aside className="github-banner section-frame" aria-labelledby="github-banner-title">
-          <div>
-            <p className="section-number">Source &amp; development</p>
-            <h2 id="github-banner-title">MostlyText is on GitHub.</h2>
-            <p>Read the website source, or follow the native app in its public repository. The app repository is currently named <code>macdown_2</code>; that name reflects its development lineage and has not been renamed.</p>
-          </div>
-          <div className="github-banner-actions">
-            <GitHubLink className="primary-link" href={SITE_SOURCE_URL}>Website source</GitHubLink>
-            <GitHubLink className="text-link" href={SOURCE_URL}>Native app source (macdown_2)</GitHubLink>
-          </div>
-        </aside>
       </main>}
       <footer><div className="section-frame footer-grid">
         <div className="footer-brand"><a className="brand" href="/#home" aria-label="MostlyText home"><BrandLockup /></a><p>For text, and what comes after.</p></div>

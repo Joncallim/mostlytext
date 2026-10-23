@@ -503,7 +503,6 @@ figcaption {
 }
 
 .features,
-.guide,
 .release {
   padding-block: clamp(6rem, 10vw, 10rem);
 }
@@ -563,8 +562,7 @@ figcaption {
   border-right: 0;
 }
 
-.entry-number,
-.guide-marker {
+.entry-number {
   color: var(--green);
   font-family: var(--serif);
   font-size: 1.5rem;
@@ -867,93 +865,6 @@ figcaption {
   line-height: 1.7;
 }
 
-.guide-heading {
-  margin-bottom: 5rem;
-}
-
-.guide-layout {
-  display: grid;
-  grid-template-columns: 0.55fr 1.45fr;
-  gap: 6vw;
-}
-
-.guide-nav {
-  position: sticky;
-  top: 7rem;
-  align-self: start;
-  border-top: 0.0625rem solid var(--ink);
-}
-
-.guide-nav > p {
-  margin: 1rem 0 2rem;
-  color: var(--muted);
-  font-family: var(--mono);
-  font-size: 0.57rem;
-  letter-spacing: 0.08em;
-}
-
-.guide-nav a {
-  display: flex;
-  gap: 1rem;
-  padding: 0.75rem 0;
-  border-bottom: 0.0625rem solid var(--line);
-  font-size: 0.78rem;
-  text-decoration: none;
-}
-
-.guide-nav a:hover {
-  color: var(--green);
-}
-
-.guide-nav a span {
-  color: var(--muted);
-  font-family: var(--mono);
-  font-size: 0.6rem;
-}
-
-.guide-content {
-  border-top: 0.0625rem solid var(--ink);
-}
-
-.guide-content article {
-  display: grid;
-  min-height: 23rem;
-  grid-template-columns: 4rem 1fr;
-  gap: 2rem;
-  padding: 3rem 0;
-  border-bottom: 0.0625rem solid var(--line);
-  scroll-margin-top: 6rem;
-}
-
-.guide-content h3 {
-  margin: 0 0 1.5rem;
-  font-family: var(--serif);
-  font-size: clamp(2rem, 3.2vw, 3.5rem);
-  font-weight: 400;
-  letter-spacing: -0.045em;
-}
-
-.guide-content article div > p {
-  max-width: 48rem;
-  margin: 0;
-  color: #3e423d;
-  font-family: var(--serif);
-  font-size: 1.25rem;
-  line-height: 1.6;
-}
-
-.guide-note-text {
-  max-width: 42rem;
-  margin-top: 2rem;
-  padding: 1rem 1.2rem;
-  border-left: 0.2rem solid var(--green);
-  background: var(--green-wash);
-  color: var(--green-dark);
-  font-family: var(--mono);
-  font-size: 0.64rem;
-  line-height: 1.7;
-}
-
 .faq-section {
   padding-block: clamp(6rem, 9vw, 9rem);
   border-block: 0.0625rem solid var(--ink);
@@ -1165,7 +1076,6 @@ footer {
     margin-left: auto;
   }
 
-
   .strip-grid {
     grid-template-columns: 0.7fr 1.3fr;
   }
@@ -1350,7 +1260,6 @@ footer {
 
   .strip-grid,
   .section-heading,
-  .guide-layout,
   .release-grid,
   .footer-grid {
     grid-template-columns: 1fr;
@@ -1433,21 +1342,6 @@ footer {
     grid-column: 1;
   }
 
-  .guide-nav {
-    position: static;
-    margin-bottom: 4rem;
-  }
-
-  .guide-content article {
-    min-height: auto;
-    grid-template-columns: 2.5rem 1fr;
-    gap: 1rem;
-  }
-
-  .guide-content article div > p {
-    font-size: 1.05rem;
-  }
-
   .faq-list summary {
     min-height: 5.5rem;
     grid-template-columns: 2rem 1fr 1rem;
@@ -1513,18 +1407,6 @@ main > section, footer { scroll-snap-align: start; scroll-margin-top: 0; }
 .roadmap-grid h3 { font-family: var(--serif); font-weight: 400; font-size: 2rem; line-height: 1.15; margin-block: 1.5rem 1rem; }
 .roadmap-grid p { color: var(--muted); }
 .roadmap-source { align-self: flex-start; margin-top: 1rem; }
-.guide-layout { gap: 4vw; }
-.guide-nav { position: static; }
-.guide-nav > p { margin-bottom: 1rem; }
-.guide-nav button { display: flex; width: 100%; gap: 1rem; padding: .85rem .5rem; border: 0; border-bottom: 1px solid var(--line); text-align: left; background: transparent; color: var(--ink); cursor: pointer; font-size: .95rem; }
-.guide-nav button span { font-family: var(--mono); color: var(--muted); font-size: .75rem; }
-.guide-nav button[aria-pressed="true"] { background: var(--green-wash); box-shadow: inset 3px 0 var(--green); }
-.guide-content article { min-height: 20rem; padding: 1.5rem 0; gap: 1rem; grid-template-columns: 2rem 1fr; }
-.guide-content h3 { font-size: clamp(1.8rem, 2.7vw, 2.8rem); margin-bottom: 1rem; }
-.guide-content article div > p { font-size: 1.12rem; }
-.guide-note-text { margin-top: 1.25rem; font-size: .78rem; }
-.guide-controls { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 1rem; font-family: var(--mono); font-size: .75rem; }
-.guide-controls button { min-height: 44px; padding: .6rem; background: transparent; border: 1px solid var(--line); cursor: pointer; color: var(--ink); }
 .faq-layout .section-heading { position: static; margin-bottom: 0; }
 .faq-list summary { min-height: 5rem; }
 .faq-list details > p { font-size: 1rem; }
@@ -1556,11 +1438,6 @@ main > section, footer { scroll-snap-align: start; scroll-margin-top: 0; }
   .feature-entry h3 { font-size: 2.1rem; }
   .origin-grid { grid-template-columns: 1fr; gap: 1rem; }
   .origin-copy { font-size: 1.25rem; }
-  .guide-layout { grid-template-columns: 1fr; gap: 2rem; }
-  .guide-nav { margin-bottom: 0; }
-  .guide-content { scroll-snap-align: start; min-height: var(--panel-height); display: flex; flex-direction: column; justify-content: center; padding-block: 2rem; }
-  .guide-content article { min-height: auto; }
-  .guide-content article div > p { font-size: 1.12rem; }
   .faq-list details { scroll-snap-align: start; }
   .faq-list summary { min-height: 5rem; font-size: 1.25rem; }
   .faq-list details > p { margin-inline: 0; margin-top: 0; }
@@ -1607,12 +1484,7 @@ main > section, footer { scroll-snap-align: start; scroll-margin-top: 0; }
 .footer-end { color: #b8c6bb; }
 figcaption, .footer-end, .pane-label, .preview-kicker, .editor-bar, .brand small { font-size: .65rem; }
 .footer-legal { font-size: .8rem; }
-/* Keep the guide's reading and reference note separate on compact screens. */
-.guide-content article { display: block; }
-.guide-body { display: grid; grid-template-columns: 2rem 1fr; gap: 1rem; }
-.guide-body > div > p { font-family: var(--serif); font-size: 1.12rem; line-height: 1.6; color: #3e423d; margin: 0; }
-.guide-note { margin-left: 3rem; }
-.mobile-guide-controls, .mobile-guide-note-label { display: none; }
+/* Compact screens: the origin story and release status read one part per screen. */
 @media (max-width: 44rem), (max-height: 36rem) {
   .origin-grid { gap: 0; }
   .origin-grid > div { min-height: var(--panel-height); display: flex; flex-direction: column; justify-content: center; padding-block: 2rem; scroll-snap-align: start; }
@@ -1628,13 +1500,6 @@ figcaption, .footer-end, .pane-label, .preview-kicker, .editor-bar, .brand small
   .faq-list details:not([open]) summary { min-height: var(--panel-height); }
   .faq-list details[open] { padding-block: 2rem; }
   .faq-list details[open] summary { min-height: 5rem; }
-  .guide-content, .guide-content article { padding-block: 0; }
-  .guide-body, .guide-note { min-height: var(--panel-height); padding-block: 2rem; scroll-snap-align: start; align-content: center; }
-  .guide-note { display: flex; flex-direction: column; justify-content: center; margin-left: 0; }
-  .guide-note-text { margin-top: 0; }
-  .mobile-guide-note-label { display: block; font-family: var(--mono); font-size: .8rem; line-height: 1.5; color: var(--green-dark); }
-  .mobile-guide-controls { display: flex; grid-column: 1 / -1; margin-top: 1.5rem; }
-  .desktop-guide-controls { display: none; }
 }
 /* Section landmarks are a light affordance, not a pagination lock: snapping is
    proximity-based and never forces a stop, so a fast scroll can pass sections. */
@@ -1684,25 +1549,6 @@ figcaption, .footer-end, .pane-label, .preview-kicker, .editor-bar, .brand small
   .faq-list details:not([open]) summary, .faq-list details[open] summary { min-height: 4.5rem; }
   .faq-list summary { font-size: 1.15rem; gap: .75rem; }
   .faq-list details > p { margin-bottom: 1.25rem; }
-  .guide-layout { gap: 1.5rem; }
-  .guide-nav > p { margin-block: .75rem; }
-  .guide-nav button { padding-block: .7rem; }
-  .guide-content { min-height: 0; justify-content: flex-start; }
-  .guide-content article { min-height: 0; }
-  .guide-body, .guide-note { min-height: 0; padding-block: 1.5rem; }
-  .guide-body { gap: .75rem; }
-  .guide-note { border-top: 1px solid var(--line); }
-  .guide-note-text { font-size: .8rem; }
-  .guide-body h3 { margin-bottom: .75rem; }
-  .mobile-guide-controls { margin-top: 1rem; }
-}
-/* Taller phones can keep the guide and its note together on one screen. */
-@media (max-width: 44rem) and (min-height: 42rem) {
-  .guide-content { min-height: var(--panel-height); justify-content: center; padding-block: 1.5rem; }
-  .guide-body, .guide-note { padding-block: 0; scroll-snap-align: none; }
-  .guide-note { margin-top: 1.25rem; border: 0; }
-  .mobile-guide-controls, .mobile-guide-note-label { display: none; }
-  .desktop-guide-controls { display: flex; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-snap-type: none; scroll-behavior: auto; }
@@ -1713,29 +1559,8 @@ figcaption, .footer-end, .pane-label, .preview-kicker, .editor-bar, .brand small
 /* Anchor and keyboard jumps should land promptly rather than glide through pages. */
 html { scroll-behavior: auto; }
 footer { display: flex; align-items: center; }
-/* Explicit capability pages: introduction + first card, then the second card. */
-.capability-pages { border-top: 0; }
-.capability-page { display: contents; }
-.capability-page > .section-heading { grid-column: 1 / -1; }
-.capability-page > .feature-entry { border-top: 1px solid var(--ink); }
 @media (max-width: 44rem), (max-height: 46rem) {
   .features.screen-panel { padding-block: 0; }
-  .capability-pages { display: block; }
-  .capability-page { display: flex; min-height: var(--panel-height); flex-direction: column; padding-block: 1rem; scroll-snap-align: start; }
-  .capability-page > .section-heading { margin-bottom: 1rem; padding-block: 0; min-height: 0; scroll-snap-align: none; }
-  .capability-page > .feature-entry { flex: 1; min-height: 0; padding-block: 1rem; align-content: center; scroll-snap-align: none; }
-}
-.capability-page:first-child > .feature-entry { border-right: 1px solid var(--line); }
-.capability-page:last-child > .feature-entry { border-right: 0; }
-@media (max-width: 44rem), (max-height: 46rem) {
-  .capability-page:first-child > .feature-entry { border-right: 0; }
-}
-@media (max-width: 22rem) {
-  .capability-page > .section-heading { gap: .65rem; margin-bottom: .75rem; }
-  .capability-page > .feature-entry { grid-template-columns: 1fr; padding-block: .75rem; }
-  .capability-page .entry-number { position: absolute; top: .6rem; left: 0; font-size: 1.1rem; }
-  .capability-page .entry-meta { margin-left: 1.75rem; }
-  .capability-page .feature-entry h3 { margin-bottom: .75rem; }
 }
 /* The full roadmap is a reading view: expandable evidence uses natural scroll. */
 html.roadmap-route { scroll-snap-type: none; }
@@ -1878,21 +1703,9 @@ html.roadmap-route { scroll-snap-type: none; }
   .native-app-image-link img { max-height: none; }
 }
 
-
 .browser-demo { align-items: stretch; }
 .browser-demo-stage { width: min(100%, 76rem); margin-inline: auto; }
 .browser-demo .markdown-demo { box-shadow: 1rem 1rem 0 var(--green-wash); }
-
-.github-banner { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(15rem, .8fr); gap: clamp(1.5rem, 5vw, 5rem); align-items: end; margin-block: clamp(3rem, 8vw, 7rem); padding: clamp(1.5rem, 4vw, 3.25rem); background: var(--green); color: var(--white); box-shadow: .75rem .75rem 0 var(--ink); }
-.github-banner .section-number { color: var(--white); }
-.github-banner h2 { max-width: 13ch; margin: .45rem 0 .9rem; font-family: var(--sans); font-size: clamp(2.25rem, 4.6vw, 4.8rem); font-weight: 600; letter-spacing: -.06em; line-height: .98; }
-.github-banner p:not(.section-number) { max-width: 41rem; margin: 0; color: var(--white); font-size: 1.05rem; line-height: 1.55; }
-.github-banner code { padding: .08em .28em; background: color-mix(in srgb, var(--ink) 30%, transparent); font: .86em var(--mono); }
-.github-banner-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
-.github-banner .primary-link { background: var(--white); color: var(--ink); }
-.github-banner .primary-link:hover { background: var(--ink); color: var(--white); }
-.github-banner .text-link { border-color: currentColor; color: var(--white); }
-@media (max-width: 44rem) { .github-banner { grid-template-columns: 1fr; } }
 
 .origin-comic { grid-column: 1 / -1; margin: 1.5rem 0 0; padding-top: 1.5rem; border-top: 1px solid color-mix(in srgb, var(--light-text) 34%, transparent); }
 .origin-comic-panels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
@@ -1912,21 +1725,16 @@ html.roadmap-route { scroll-snap-type: none; }
 .comic-head { fill: #ffffff; stroke: #11141a; stroke-width: 3; }
 .comic-bubble { fill: #ffffff; stroke: #11141a; stroke-linejoin: round; stroke-width: 2.5; }
 .comic-spark { fill: #ffffff; stroke: #11141a; stroke-linejoin: round; stroke-width: 2; }
+/* Phones keep the three panels in one row, as a strip, rather than three screens. */
 @media (max-width: 44rem) {
-  .origin-comic-panels { grid-template-columns: 1fr; }
+  .origin-comic-panels { gap: .4rem; }
+  .origin-comic-panel { padding: .3rem; }
+  .origin-comic-panel p { margin-inline: 0; text-transform: none; letter-spacing: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .origin-comic-panel { animation: none; transition: none; }
 }
 
-/* A visible, semantic alternative to gesture paging. */
-.section-advance { display: inline-grid; grid-template-columns: auto auto auto; align-items: center; justify-content: start; gap: .55rem; width: fit-content; min-height: 44px; margin-top: 2.25rem; padding: .7rem .85rem; border: 1px solid var(--line); background: var(--white); color: var(--ink); font: .68rem/1.2 var(--mono); letter-spacing: .04em; text-decoration: none; text-transform: uppercase; transition: transform 180ms cubic-bezier(.2, 1.45, .45, 1), border-color 180ms ease, box-shadow 180ms ease; }
-.section-advance > span { color: var(--muted); }
-.section-advance strong { font: inherit; color: var(--green-dark); }
-.section-advance i { font: 1rem/1 var(--serif); font-style: normal; color: var(--green-dark); }
-.section-advance:hover { border-color: var(--green-dark); box-shadow: 3px 3px 0 var(--green-wash); transform: translateY(-2px); }
-.section-advance:active { transform: translateY(1px) scale(.985); box-shadow: 1px 1px 0 var(--green-wash); }
-.section-advance:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
 
 /* Canonical MostlyText website identity: approved Figma tokens and Inter hierarchy. */
 .site-header {
@@ -1950,7 +1758,6 @@ html.roadmap-route { scroll-snap-type: none; }
 .origin-grid h2,
 .roadmap-document h1,
 .roadmap-grid h3,
-.guide-content h3,
 .workflow-steps h3,
 .release-path h3 {
   font-family: var(--sans);
@@ -1984,7 +1791,6 @@ html.roadmap-route { scroll-snap-type: none; }
 .hero-support,
 .release-copy > p,
 .origin-copy,
-.guide-body > div > p,
 .demo-preview {
   font-family: var(--sans);
   font-style: normal;
@@ -2037,13 +1843,6 @@ footer {
   border-color: var(--line);
 }
 
-@media (max-width: 44rem) {
-  .section-advance { margin-top: 1.5rem; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .section-advance { transition: none; }
-}
-
 /* Final readability and interaction pass. These are intentionally late so the
    compact, exported prototype rules above cannot reduce supporting copy again. */
 .eyebrow,
@@ -2055,11 +1854,9 @@ figcaption,
 .preview-kicker,
 .editor-bar,
 .brand small,
-.section-advance,
 .origin-comic-panel p,
 .segmented button,
 .workflow-steps article > span,
-.guide-nav > p,
 .faq-list summary > span,
 .release-status-line p,
 .release-status-line span,
@@ -2138,7 +1935,6 @@ figcaption,
 .hero-visual .native-app-image-link img { width: 100%; height: auto; max-height: none; }
 .hero-visual .native-app-figure figcaption { padding: .75rem 0 0; border: 0; color: var(--muted); font-size: .8125rem; }
 .hero-visual .native-app-figure figcaption span { color: var(--muted); }
-.hero > .section-advance { margin-top: 0; }
 @media (max-width: 62rem) {
   .hero-copy { grid-template-columns: minmax(0, 1fr); }
   .hero-copy > h1 { max-width: 12ch; margin-bottom: 1.5rem; font-size: clamp(3rem, 11vw, 5.5rem); }
@@ -2162,22 +1958,16 @@ figcaption,
   .caption-phone { display: inline; }
 }
 
-.guide-note-text { margin-bottom: 0; }
-
 /* Without JavaScript (no "js" class on <html>) the prerendered page stays
-   usable: navigation shows as plain links, every guide topic is listed, and
+   usable: navigation shows as plain links, and
    controls that need scripting are hidden rather than left inert. */
-html.js .guide-inactive { display: none; }
 .no-js-only { display: none; }
 html:not(.js) .no-js-only { display: revert; }
 html:not(.js) .js-only { display: none; }
 html:not(.js) .menu-button,
-html:not(.js) .guide-nav,
-html:not(.js) .guide-controls,
 html:not(.js) .roadmap-toolbar,
 html:not(.js) .roadmap-result-count,
 html:not(.js) .markdown-demo .figure-toolbar { display: none; }
-html:not(.js) .guide-content article + article { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--line); }
 .demo-no-js { margin: 0; padding: .7rem 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .8125rem; }
 @media (max-width: 44rem) {
   html:not(.js) .site-header { position: static; flex-wrap: wrap; padding-block: .75rem; scroll-snap-align: start; }
@@ -2198,15 +1988,8 @@ html:not(.js) .roadmap-anchor-nav { display: flex; flex-wrap: wrap; align-items:
 .roadmap-anchor-nav a { display: inline-flex; flex-direction: column; min-height: 44px; justify-content: center; font-weight: 600; }
 .roadmap-anchor-nav a span { color: var(--muted); font: .75rem/1.4 var(--mono); }
 
-/* Subscreens keep their snap points, but panels whose content is far shorter
-   than a screen size to their content instead of reserving one: release status
-   (the last, short section) everywhere, and on phones and short screens the
-   second card of each capability pair and the guide detail. */
+/* Release status is the last, short section, so it sizes to its content. */
 .release.screen-panel { min-height: 0; }
-@media (max-width: 44rem), (max-height: 46rem) {
-  .capability-page:last-child, .guide-content { min-height: 0; }
-  .capability-page:last-child { padding-bottom: 2rem; }
-}
 
 /* On very short viewports (landscape phones, 200–400% zoom) a sticky header
    would take a fifth to a third of the screen, so it scrolls with the page.
@@ -2261,4 +2044,25 @@ html:not(.js) .roadmap-anchor-nav { display: flex; flex-wrap: wrap; align-items:
 @media (max-width: 52rem) {
   .demo-tour-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .demo-tour-done { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* One section, one stop. Earlier rules gave phones and short screens a full
+   screen per card, step, roadmap entry and FAQ question; that made the page
+   about 16 screens long on a phone. Now each section is as tall as its content
+   and only a section's start is a (gentle, proximity) snap point. */
+@media (max-width: 62rem), (max-height: 46rem) {
+  .workflow-steps article, .workflow-steps article:nth-child(even),
+  .roadmap-grid article { min-height: 0; padding-block: 1.75rem; scroll-snap-align: none; }
+}
+@media (max-width: 44rem), (max-height: 46rem) {
+  .screen-panel { min-height: 0; padding-block: 3.5rem; }
+  .split-panel > .section-heading,
+  .split-panel > .section-frame > .section-heading { min-height: 0; padding-block: 0 1.5rem; scroll-snap-align: none; }
+  .feature-entry { min-height: 0; padding-block: 1.75rem; scroll-snap-align: none; }
+  .workflow-visual { min-height: 0; margin-block: 1rem 1.5rem; scroll-snap-align: none; }
+  .origin-grid > div, .release-grid > div,
+  .faq-layout .section-heading { min-height: 0; padding-block: 0; scroll-snap-align: none; }
+  .origin-grid, .release-grid { gap: 1.5rem; }
+  .faq-list details { min-height: 0; scroll-snap-align: none; }
+  #origin, #release-status, #faq { padding-block: 3.5rem; }
 }
