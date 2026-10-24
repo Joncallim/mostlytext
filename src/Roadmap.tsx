@@ -1,126 +1,82 @@
 import { useEffect, useState, type CSSProperties } from "react"
 import data from "./roadmap-data.json"
 import { ALPHA_URL } from "./links"
-import { stageHref, type RoadmapStage } from "./route"
-
-type Item = (typeof data.upToOne)[number]
-const labels: Record<string, string> = { implemented: "Merged", development: "Being built", remaining: "Still required", deferred: "Deferred", undecided: "Undecided", planned: "Planned", provisional: "Exploring", horizon: "Longer term", "demand-gated": "If there’s demand" }
-type Picture = { src: string; width: number; height: number; alt: string; caption: string; original: string; small?: boolean }
-const capture = "/images/mostlytext-development-workspace.png"
-const pictures: Record<string, Picture> = {
-  "Write, find and organise": { src: "/images/mostlytext-roadmap-sidebar.webp", width: 866, height: 669, original: capture,
-    caption: "Merged: the Folder, Outline and Search sidebar beside the source. Each heading is a place in the outline.",
-    alt: "MostlyText development build: the sidebar with Folder, Outline and Search sections beside the Markdown source, whose headings appear in the outline." },
-  "Explain the technical work": { src: "/images/mostlytext-roadmap-preview.webp", width: 945, height: 722, original: capture,
-    caption: "Merged: the native Markdown preview, with syntax-highlighted code. Diagrams and math also render; their correctness work is still required.",
-    alt: "MostlyText development build: the rendered preview with a heading, a bulleted checklist, a syntax-highlighted Swift code block and a quotation." },
-  "Feel at home on a Mac": { src: "/images/mostlytext-roadmap-titlebar.webp", width: 1200, height: 400, original: capture,
-    caption: "A native window and document: an untitled file offers Save As with the standard shortcut. Finder, Quick Look, themes and localisation are still ahead.",
-    alt: "MostlyText development build: the corner of a native macOS window with its controls, a document bar reading “Untitled — Save As… ⌘⇧S to name this document”, the folder panel and the first lines of Markdown." },
-  "The move to MostlyText": { src: "/images/mostlytext-development-finder-icon.png", width: 360, height: 322, small: true, original: "/images/mostlytext-development-finder-icon.png",
-    caption: "Done in September: the new MostlyText icon on a real build in Finder. The app is still called MacDown2.app; renaming it is this chapter’s work.",
-    alt: "A Finder window on a Mac showing the MostlyText icon, a slanted M and T, on an app still named MacDown2.app." },
-}
-const slug = (title: string) => "ch-" + title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
-const groups = [
-  { title: "Write, find and organise", description: "The everyday editor: files, native windows, precise edits, navigation and settings.", ids: ["E01", "E02", "E03", "E04", "E05", "E08", "E09", "E10", "E11", "E13", "E18", "E22"] },
-  { title: "Explain the technical work", description: "Markdown preview, diagrams, equations and export, with the correctness and safety work they still need.", ids: ["E06", "E07", "E12", "E14", "E19", "E20", "E21", "anchors", "resource-security"] },
-  { title: "Feel at home on a Mac", description: "Themes, Finder and Quick Look, accessibility, language quality and reliable document handling.", ids: ["E15", "E23", "safety", "E16"] },
-  { title: "The move to MostlyText", description: "MacDown 2 becomes MostlyText. The visible crossover: the app's name and icon, kept settings and documents, the CLI, distribution and the repository move. Still ahead.", ids: ["identity", "E17-software", "cutover", "launch-surface", "commercial-direction"] },
-  { title: "A verified release", description: "Build foundations, migration, updates, signed candidates, final evidence and the public release.", ids: ["E00", "S", "V1", "sources", "RC2", "gate115", "release"] },
-]
-const laterGroups = [
-  { title: "Make everyday work better", description: "Reliability, linked source and preview, tables, importing and careful rendered editing. Planned directions; the detail is still provisional.", ids: ["1.0.x", "1.1", "1.2", "1.3", "1.4"] },
-  { title: "Richer ways to work", description: "Broader editing, table views, history, workspaces, links and publishing. Each chapter depends on the earlier ones proving themselves.", ids: ["1.5", "1.6", "1.7", "1.8", "1.9", "1.10"] },
-  { title: "Let real workflows lead", description: "Longer-term themes, other representations and possibilities that wait for demand. No versions assigned.", ids: ["theme-refresh", "later-adapters", "ipad", "demand-watchlist"] },
-  { title: "Deferred or undecided", description: "Same-document split editing is deferred. Extension approaches need evaluating before any commitment.", ids: ["split", "jsc", "extensionkit"] },
-]
-const allItems = [...data.upToOne, ...data.postOne]
-const names = Object.fromEntries(allItems.map(item => [item.id, item.title]))
-const sourceNames: Record<string, string> = {
-  "planning/epics/README.md": "Epic index", "planning/MIGRATION_PLAN.md": "Overall development plan",
-  "planning/RELEASE_EVIDENCE.md": "Release evidence", "planning/CLOSURE_REGISTER.md": "Current closure register",
-  "planning/RELEASE_SEQUENCE.md": "Release sequence", "planning/downstream/readiness.json": "Readiness dependencies",
-  "planning/RELEASE_PATH.md": "Release path", "planning/extension-api-design.md": "Extension design exploration",
-  "MacDown2/project.yml": "Current build configuration",
-}
-const planUrl = "https://github.com/Joncallim/macdown_2/blob/master/planning/MIGRATION_PLAN.md"
-const extensionUrl = "https://github.com/Joncallim/macdown_2/blob/master/planning/extension-api-design.md"
-const releaseSequenceUrl = "https://github.com/Joncallim/macdown_2/blob/master/planning/RELEASE_SEQUENCE.md"
-const releaseSteps = ["Finish features and stabilise the app", "Verify a private signed candidate on a Mac", "Finish localisation and freeze the interface", "Build the final candidate with source and licence evidence", "Repeat the checks on those exact release files", "Close the release requirements and move the repository", "Publish the approved, verified release"]
-const asOf = new Date(`${data.asOf}T12:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })
-
-function RoadmapItem({ item, expanded }: { item: Item; expanded: boolean }) {
-  return <details className={`roadmap-work status-${item.status}`} open={expanded} data-reveal>
-    <summary>
-      {item.version && <span className="work-version">{item.version}</span>}
-      <span className="work-title">{item.title}</span>
-      <span className="work-status">{labels[item.status]}</span>
-      <i aria-hidden="true" />
-    </summary>
-    <div className="work-detail">
-      {item.promise && <p className="work-promise">{item.promise}</p>}
-      <ul>{item.features.map(feature => <li key={feature}>{feature}</li>)}</ul>
-      {item.notes.length > 0 && <div className="work-notes">{item.notes.map(note => <p key={note}>{note}</p>)}</div>}
-      {item.dependsOn.length > 0 && <p className="work-dependencies">Depends on {item.dependsOn.map(id => names[id] || (id === "E16-interim" ? "Interim localisation baseline" : id)).join("; ")}.</p>}
-      <p className="work-evidence">{item.issues.length ? item.issues.map(issue => <a key={issue.url} href={issue.url}>Issue {issue.number}</a>) : item.planningDirection ? <span>Product direction, October 2026</span> : <a href={item.id === "jsc" || item.id === "extensionkit" ? extensionUrl : planUrl}>Source plan</a>}<span className="work-ref">Plan reference {item.id}</span></p>
-    </div>
-  </details>
-}
-
-function ChapterPicture({ picture }: { picture: Picture }) {
-  return <figure className={`rm-picture${picture.small ? " is-small" : ""}`} data-reveal>
-    <a href={picture.original} target="_blank" rel="noopener noreferrer" aria-label="Open the full-size image (opens in a new tab)">
-      <img src={picture.src} width={picture.width} height={picture.height} loading="lazy" decoding="async" alt={picture.alt} />
-    </a>
-    <figcaption>{picture.caption}</figcaption>
-  </figure>
-}
+import { asOf, ChapterPicture, details, groups, labels, laterGroups, pictures, releaseSequenceUrl, releaseSteps, RoadmapItem, slug, sourceNames, type Detail, type Item } from "./roadmapParts"
+import { detailHref, stageHref, type RoadmapStage } from "./route"
 
 // The road in one picture: To 1.0 as chapters sized by their work areas and filled by
 // their state, then the 1.0 release, then After 1.0 as one stop per planned version.
-const laterStatus = (status: string) => status === "planned" ? "planned" : "exploring"
-function RoadmapMap({ roadmapPage }: { roadmapPage: boolean }) {
-  const to1 = groups.map(group => {
-    const items = group.ids.map(id => data.upToOne.find(item => item.id === id)).filter((item): item is Item => Boolean(item))
-    const count = (status: string) => items.filter(item => item.status === status).length
-    return { title: group.title, total: items.length, merged: count("implemented"), building: count("development") }
-  })
-  const total = to1.reduce((sum, g) => sum + g.total, 0), merged = to1.reduce((sum, g) => sum + g.merged, 0), building = to1.reduce((sum, g) => sum + g.building, 0)
-  const versions = data.postOne.filter(item => item.version)
-  const later = data.postOne.filter(item => !item.version)
-  const toLink = (title: string) => roadmapPage ? `/roadmap/#${slug(title)}` : stageHref("", false)
-  const afterLink = (id: string) => {
-    const group = laterGroups.find(g => g.ids.includes(id))
-    return roadmapPage ? `/roadmap/?stage=after-1#${slug(group ? group.title : "")}` : stageHref("after-1", false)
+// A short card for one chapter or version, shown while the pointer or focus is on it;
+// Escape hides it. The link itself opens the detail page.
+function MapTip({ detail, id, up }: { detail: Detail; id: string; up: boolean }) {
+  const item = detail.items[0]
+  return <span className={`rm-tip${up ? " is-up" : " is-down"}`} id={id} role="tooltip">
+    <strong>{detail.title}</strong>
+    <span className="rm-tip-state">{detail.state}</span>
+    <span className="rm-tip-text">{detail.summary}</span>
+    {detail.kind === "version" && item.features.length > 0 && <span className="rm-tip-list">{item.features.slice(0, 3).map(feature => <span key={feature}>{feature}</span>)}</span>}
+    <span className="rm-tip-more">{detail.kind === "chapter" ? `Open the chapter: ${detail.items.length} work areas` : detail.kind === "later" ? "Open the list of ideas" : `Open ${item.version}`}</span>
+  </span>
+}
+
+function RoadmapMap() {
+  // The open card, and whether it opens upwards: below when there is room, above otherwise.
+  const [tip, setTip] = useState({ name: "", up: false })
+  // Escape closes an open card wherever focus is, including a card opened by the pointer.
+  useEffect(() => {
+    if (!tip.name) return
+    const escape = (event: KeyboardEvent) => { if (event.key === "Escape") setTip({ name: "", up: false }) }
+    window.addEventListener("keydown", escape)
+    return () => window.removeEventListener("keydown", escape)
+  }, [tip.name])
+  const chapters = details.filter(detail => detail.kind === "chapter")
+  const stops = details.filter(detail => detail.kind !== "chapter")
+  const count = (status: string) => data.upToOne.filter(item => item.status === status).length
+  const total = data.upToOne.length, merged = count("implemented"), building = count("development")
+  const versions = stops.filter(detail => detail.kind === "version"), later = stops.find(detail => detail.kind === "later")!
+  // Hover, focus and Escape, shared by every chapter and stop.
+  const open = (name: string) => (event: { currentTarget: Element }) => {
+    const box = event.currentTarget.getBoundingClientRect()
+    setTip({ name, up: box.bottom + 280 > window.innerHeight && box.top > 280 })
   }
+  const close = (name: string) => () => setTip(current => current.name === name ? { name: "", up: false } : current)
+  const hover = (name: string) => ({ onPointerEnter: open(name), onPointerLeave: close(name), onFocus: open(name), onBlur: close(name) })
+  const tipFor = (detail: Detail) => tip.name === detail.name ? <MapTip detail={detail} id={`tip-${detail.name}`} up={tip.up} /> : null
+  const describedBy = (detail: Detail) => tip.name === detail.name ? `tip-${detail.name}` : undefined
   return <figure className="rm-map" aria-labelledby="rm-map-title">
     <h2 id="rm-map-title" className="rm-map-title">Where it stands</h2>
-    <p className="rm-map-summary">To 1.0: {merged} of {total} work areas are merged, {building} are being built and {total - merged - building} are still required. After 1.0: {versions.length} planned chapters, from {versions[0].version} to {versions[versions.length - 1].version}, then {later.length} ideas with no version yet.</p>
+    <p className="rm-map-summary">To 1.0: {merged} of {total} work areas are merged, {building} are being built and {total - merged - building} are still required. After 1.0: {versions.length} planned chapters, from {versions[0].items[0].version} to {versions[versions.length - 1].items[0].version}, then {later.items.length} ideas with no version yet. Point at any part for a summary; select it for the full detail.</p>
     <div className="rm-lane rm-lane-to1">
       <p className="rm-lane-start"><strong>Now</strong><span>Source alpha</span></p>
-      <ol className="rm-lane-chapters" style={{ "--cols": to1.map(g => `${g.total}fr`).join(" ") } as CSSProperties}>
-        {to1.map(g => <li key={g.title}>
-          <a href={toLink(g.title)} aria-label={`${g.title}: ${g.merged} of ${g.total} merged${g.building ? `, ${g.building} being built` : ""}`}>
-            <span className="rm-seg-name">{g.title}</span>
-            <span className="rm-seg-bar" aria-hidden="true"><i className="is-merged" style={{ width: `${(g.merged / g.total) * 100}%` }} /><i className="is-building" style={{ width: `${(g.building / g.total) * 100}%` }} /></span>
-            <span className="rm-seg-count" aria-hidden="true">{g.merged} of {g.total}</span>
-          </a>
-        </li>)}
+      <ol className="rm-lane-chapters" style={{ "--cols": chapters.map(c => `${c.items.length}fr`).join(" ") } as CSSProperties}>
+        {chapters.map((c, index) => {
+          const done = c.items.filter(item => item.status === "implemented").length, built = c.items.filter(item => item.status === "development").length
+          return <li key={c.name} className={index >= chapters.length - 2 ? "tip-end" : undefined} {...hover(c.name)}>
+            <a href={detailHref(c.name)} aria-label={`${c.title}: ${c.state}`} aria-describedby={describedBy(c)}>
+              <span className="rm-seg-name">{c.title}</span>
+              <span className="rm-seg-bar" aria-hidden="true"><i className="is-merged" style={{ width: `${(done / c.items.length) * 100}%` }} /><i className="is-building" style={{ width: `${(built / c.items.length) * 100}%` }} /></span>
+              <span className="rm-seg-count" aria-hidden="true">{done} of {c.items.length}</span>
+            </a>
+            {tipFor(c)}
+          </li>
+        })}
       </ol>
       <p className="rm-lane-end"><strong>1.0</strong><span>Verified Mac release</span></p>
     </div>
     <div className="rm-lane rm-lane-after">
       <p className="rm-lane-start"><strong>Then</strong><span>after 1.0</span></p>
       <ol className="rm-lane-stops">
-        {versions.map(item => <li key={item.id} className={`is-${laterStatus(item.status)}`}>
-          <a href={afterLink(item.id)} aria-label={`${item.version}, ${item.title}: ${laterStatus(item.status) === "planned" ? "planned" : "exploring"}`}>
-            <span className="rm-stop" aria-hidden="true" />
-            <span className="rm-stop-version" aria-hidden="true">{item.version}</span>
-            <span className="rm-stop-title" aria-hidden="true">{item.title}</span>
-          </a>
-        </li>)}
-        <li className="is-later"><a href={afterLink(later[0].id)} aria-label={`Later: ${later.length} ideas with no version yet`}><span className="rm-stop" aria-hidden="true" /><span className="rm-stop-version" aria-hidden="true">Later</span><span className="rm-stop-title" aria-hidden="true">{later.length} ideas</span></a></li>
+        {stops.map((d, index) => {
+          const isLater = d.kind === "later"
+          return <li key={d.name} className={`is-${isLater ? "later" : d.status}${index >= stops.length - 4 ? " tip-end" : ""}`} {...hover(d.name)}>
+            <a href={detailHref(d.name)} aria-label={isLater ? `Later: ${d.state} with no version yet` : `${d.title}: ${d.state}`} aria-describedby={describedBy(d)}>
+              <span className="rm-stop" aria-hidden="true" />
+              <span className="rm-stop-version" aria-hidden="true">{isLater ? "Later" : d.items[0].version}</span>
+              <span className="rm-stop-title" aria-hidden="true">{isLater ? d.state : d.items[0].title}</span>
+            </a>
+            {tipFor(d)}
+          </li>
+        })}
       </ol>
     </div>
     <ul className="rm-legend" aria-label="Key">
@@ -159,6 +115,7 @@ function StageWork({ after, filters, onClear }: { after: boolean; filters: Filte
             <h3>{chapter.title}</h3>
             <p className="rm-chapter-state">{state}</p>
             <p className="rm-chapter-text">{chapter.description}</p>
+            {!after && <a className="text-link rm-chapter-link" href={detailHref(slug(chapter.title).slice(3))}>The full chapter</a>}
             {!after && <p className="rm-meter" aria-hidden="true">{all.map(item => <span key={item.id} className={`is-${item.status}`} />)}</p>}
             {pictures[chapter.title] && <ChapterPicture picture={pictures[chapter.title]} />}
           </div>
@@ -203,7 +160,7 @@ export default function Roadmap({ stage, roadmapPage }: { stage: RoadmapStage; r
       <p className="rm-facts">Checked against the development repository on {asOf}. A <a href={ALPHA_URL}>source-only alpha</a> is available to build yourself; there is no ready-to-install app and no 1.0 yet. “Merged” means the work is in the development code, not that it is verified for 1.0. No dates are promised.</p>
     </header>
 
-    <RoadmapMap roadmapPage={roadmapPage} />
+    <RoadmapMap />
 
     <nav className="roadmap-stage-nav js-only" aria-label="Roadmap stages">
       {stages.map(s => <a key={s.key} href={stageLink(s.after)} aria-current={s.after === after ? "page" : undefined}><strong>{s.title}</strong><span>{s.summary}</span></a>)}

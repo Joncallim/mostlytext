@@ -37,16 +37,29 @@ const cases = [
   ['/roadmap/?stage=after-1#/roadmap', '#/roadmap', '#/roadmap'],
   ['/roadmap/#/roadmap/after-1', '#/roadmap/after-1', '#/roadmap/after-1'],
   ['/roadmap/#main-content', '#/roadmap', '#/roadmap'],
+  // Detail pages: one path segment of lower-case letters, digits and hyphens.
+  ['/roadmap/write-find-and-organise/', '#/roadmap/detail/write-find-and-organise', '#/roadmap/detail/write-find-and-organise'],
+  ['/roadmap/1-10', '#/roadmap/detail/1-10', '#/roadmap/detail/1-10'],
+  ['/roadmap/later/?stage=after-1', '#/roadmap/detail/later', '#/roadmap/detail/later'],
+  ['/roadmap/later/#work', '#/roadmap/detail/later', '#/roadmap/detail/later'],
+  ['/roadmap/index.html', '#/roadmap', '#/roadmap'],
+  ['/roadmap/Later/', '#/roadmap', '#/roadmap'],
+  ['/roadmap/a/b/', '#/roadmap', '#/roadmap'],
+  ['/roadmap/1-1/#/roadmap/after-1', '#/roadmap/after-1', '#/roadmap/after-1'],
+  // The hash form of a detail page (the legacy hash view and single-page previews).
+  ['/#/roadmap/detail/1-1', '#/roadmap/detail/1-1', '#/roadmap/detail/1-1'],
+  ['/roadmap/#/roadmap/detail/later', '#/roadmap/detail/later', '#/roadmap/detail/later'],
+  ['/#/roadmap/detail/Bad', '#/roadmap', '#/roadmap'],
 ];
 let count = 0;
 for (const [href, route, view] of cases) {
   const r = routeAt(href);
   assert.equal(r.routeFromLocation(), route, `route for ${href}`);
   assert.equal(r.viewOf(r.routeFromLocation()), view, `view for ${href}`);
-  for (const prerendered of ['home', '#/roadmap']) {
+  for (const prerendered of ['home', '#/roadmap', '#/roadmap/detail/later']) {
     assert.equal(pendingFor(href, prerendered), view !== prerendered, `head script for ${href} on the ${prerendered} page`);
   }
-  count += 4;
+  count += 5;
 }
 const r = routeAt('/');
 for (const [args, href] of [[['', true], '/roadmap/'], [['after-1', true], '/roadmap/?stage=after-1'], [['', false], '#/roadmap'], [['after-1', false], '#/roadmap/after-1']]) {
@@ -58,6 +71,13 @@ for (const stage of ['', ...r.ROADMAP_STAGES]) {
   assert.equal(routeAt('/' + r.stageHref(stage, false)).routeFromLocation(), r.roadmapRoute(stage));
   count += 2;
 }
+for (const name of ['write-find-and-organise', '1-0-x', '1-10', 'later']) {
+  // A detail link resolves to its own detail route and view.
+  const at = routeAt(r.detailHref(name));
+  assert.equal(at.routeFromLocation(), r.detailRoute(name)); assert.equal(at.detailOf(at.routeFromLocation()), name);
+  count += 2;
+}
+assert.equal(r.detailOf('#/roadmap'), ''); assert.equal(r.detailOf('#/roadmap/after-1'), ''); count += 2;
 assert.equal(routeAt(null).routeFromLocation(), ''); assert.equal(routeAt(null).isRoadmapPage(), false);
 assert.equal(routeAt('/roadmap/').isRoadmapPage(), true); assert.equal(routeAt('/#/roadmap').isRoadmapPage(), false);
 count += 4;

@@ -413,8 +413,8 @@ html.roadmap-route { scroll-padding-top: 1rem; }
   .rm-head { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: end; }
   .rm-back { grid-column: 1 / -1; }
   .rm-head h1 { grid-column: 1 / span 8; grid-row: 2; }
-  .rm-facts { grid-column: 9 / -1; grid-row: 2; align-self: end; padding-bottom: .6rem; }
-  .rm-lead { grid-column: 1 / span 6; grid-row: 3; }
+  .rm-head .rm-facts { grid-column: 9 / -1; grid-row: 2; align-self: end; padding-bottom: .6rem; }
+  .rm-head .rm-lead { grid-column: 1 / span 6; grid-row: 3; }
 }
 
 /* Stage tabs: two filled tiles; the current one in ink. */
@@ -574,4 +574,61 @@ html.js .roadmap-stage-title { position: absolute; width: 1px; height: 1px; over
   .rm-lane-stops { grid-column: 2 / -1; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; }
   .rm-lane-stops a { grid-template-columns: 1fr; grid-template-rows: 14px auto auto; align-items: start; justify-items: start; gap: .4rem; min-height: 0; padding-top: 0; }
   .rm-stop-title { font-size: var(--step-small); }
+}
+
+/* Hover and focus cards on the diagram: a summary of each chapter or version. */
+.rm-lane-chapters li, .rm-lane-stops li { position: relative; }
+.rm-tip { position: absolute; z-index: 5; top: calc(100% + 8px); left: 0; display: grid; gap: .4rem; width: min(20rem, calc(100vw - 2 * var(--margin))); padding: 1rem 1.1rem; border-radius: var(--radius); background: var(--ink); color: var(--snow); box-shadow: 0 18px 40px -16px rgb(17 20 26 / .45); font-size: var(--step-small); line-height: 1.45; pointer-events: auto; }
+.rm-tip::before { content: ""; position: absolute; top: -8px; left: 0; right: 0; height: 8px; }
+.tip-end .rm-tip { left: auto; right: 0; }
+/* Cards open upwards when there isn't room below on screen. */
+.rm-tip.is-up { top: auto; bottom: calc(100% + 8px); }
+.rm-tip.is-up::before { top: auto; bottom: -8px; }
+.rm-tip strong { font-size: 1rem; line-height: 1.25; }
+.rm-tip-state { font-weight: 600; color: var(--snow); }
+.rm-tip-text { color: var(--snow-muted); }
+.rm-tip-list { display: grid; gap: .2rem; padding-left: .9rem; color: var(--snow-muted); }
+.rm-tip-list span { display: list-item; list-style: disc; }
+.rm-tip-more { margin-top: .2rem; font-weight: 600; text-decoration: underline; text-decoration-thickness: .07em; text-underline-offset: .18em; }
+@media (prefers-reduced-motion: no-preference) {
+  .rm-tip { animation: tip-in 160ms var(--ease-out); }
+  @keyframes tip-in { from { opacity: 0; transform: translateY(-4px); } }
+}
+.rm-chapter-link { justify-self: start; }
+
+/* Detail pages: one chapter or version, written out. */
+.rm-crumbs { display: flex; flex-wrap: wrap; gap: .25rem 1.5rem; font-weight: 600; }
+.rm-crumbs a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+.rm-crumbs a + a::before { content: "›"; margin-right: 1.5rem; color: var(--muted); text-decoration: none; display: inline-block; }
+.rm-detail-head { display: grid; gap: 1rem; padding: 1.5rem 0 clamp(2rem, 4vw, 3.5rem); max-width: 52rem; }
+.rm-detail-head h1 { max-width: 16ch; font-size: var(--step-head); line-height: 1.02; letter-spacing: -.035em; }
+.rm-detail-state { font-size: var(--step-lead); font-weight: 600; letter-spacing: -.01em; }
+.rm-detail .rm-picture { max-width: 44rem; margin: 0 0 clamp(2.5rem, 5vw, 4rem); }
+.rm-detail-work { display: grid; gap: 8px; max-width: 52rem; }
+.rm-detail-work h2 { margin-bottom: 1rem; font-size: var(--step-lead); line-height: 1.2; letter-spacing: -.02em; }
+.rm-entry { display: grid; gap: .75rem; padding: 1.25rem 1.5rem 1.5rem; border-radius: var(--radius); background: var(--surface); }
+.rm-entry-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .25rem 1rem; }
+.rm-entry-head h3 { display: flex; align-items: baseline; gap: .75rem; font-size: 1.25rem; line-height: 1.25; }
+.rm-entry-status { color: var(--muted); font-size: var(--step-small); font-weight: 600; }
+.rm-entry-status.status-implemented { color: var(--ink); }
+.rm-entry-notes { color: var(--muted); }
+.rm-entry-notes p + p { margin-top: .5rem; }
+.rm-entry-features { padding-left: 1.2em; list-style: disc; }
+.rm-entry-features li + li { margin-top: .25rem; }
+.rm-pager { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-width: 52rem; margin-top: clamp(3rem, 6vw, 5rem); }
+.rm-pager a { display: grid; gap: .2rem; min-height: 5rem; align-content: center; padding: 1rem 1.25rem; border-radius: var(--radius); background: var(--surface); text-decoration: none; transition: background-color var(--t-hover) ease; }
+.rm-pager span { color: var(--muted); font-size: var(--step-small); }
+.rm-pager strong { line-height: 1.25; }
+.rm-pager-next { text-align: right; }
+@media (hover: hover) and (pointer: fine) { .rm-pager a:hover { background: var(--surface-2); } }
+@media (max-width: 44rem) { .rm-pager { grid-template-columns: 1fr; } .rm-pager-next { text-align: left; } }
+@media (min-width: 62rem) {
+  /* Two columns: the chapter or version holds on the left while its work areas pass on the right. */
+  .rm-detail { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: start; }
+  .rm-crumbs { grid-column: 1 / -1; }
+  .rm-detail-side { grid-column: 1 / span 5; position: sticky; top: 2rem; }
+  .rm-detail-head h1 { font-size: clamp(3rem, 1rem + 4vw, 5rem); line-height: .98; letter-spacing: -.045em; }
+  .rm-detail .rm-picture { margin-bottom: 0; }
+  .rm-detail-work, .rm-pager { grid-column: 7 / -1; max-width: none; }
+  .rm-detail-work { padding-top: 1.5rem; }
 }

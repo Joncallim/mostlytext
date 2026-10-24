@@ -1,10 +1,12 @@
 // Writes prerendered pages into dist/ after `vite build` and `vite build --ssr`:
-// the home page (dist/index.html) and the roadmap (dist/roadmap/index.html).
+// the home page (dist/index.html), the roadmap (dist/roadmap/index.html) and one
+// detail page per roadmap chapter or version (dist/roadmap/<name>/index.html),
+// then lists them all in dist/sitemap.xml.
 // The deployable output is still the static dist/ folder.
 import fs from "node:fs"
 import { pathToFileURL } from "node:url"
 
-const { render } = await import(pathToFileURL("dist-ssr/entry-server.js").href)
+const { render, details } = await import(pathToFileURL("dist-ssr/entry-server.js").href)
 const template = fs.readFileSync("dist/index.html", "utf8")
 
 const pages = [
@@ -20,6 +22,16 @@ const pages = [
     },
   },
 ]
+
+for (const detail of details) {
+  pages.push({
+    file: `dist/roadmap/${detail.name}/index.html`, route: `#/roadmap/detail/${detail.name}`, view: `#/roadmap/detail/${detail.name}`, roadmapPage: true,
+    head: {
+      title: `${detail.title} — MostlyText roadmap`, description: detail.summary, url: `https://mostlytext.app/roadmap/${detail.name}/`,
+      socialTitle: `MostlyText roadmap: ${detail.title}`, socialDescription: detail.summary,
+    },
+  })
+}
 
 function replaceOnce(html, pattern, replacement, label) {
   const matches = html.match(new RegExp(pattern.source, pattern.flags.includes("g") ? pattern.flags : pattern.flags + "g"))
@@ -54,4 +66,7 @@ for (const page of pages) {
   fs.writeFileSync(page.file, html)
   console.log(`prerendered ${page.view} into ${page.file} (${Math.round(html.length / 1024)} KiB)`)
 }
+const urls = pages.map(page => page.head.url ?? "https://mostlytext.app/")
+fs.writeFileSync("dist/sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(url => `  <url>\n    <loc>${url}</loc>\n  </url>`).join("\n")}\n</urlset>\n`)
+console.log(`wrote dist/sitemap.xml (${urls.length} URLs)`)
 fs.rmSync("dist-ssr", { recursive: true, force: true })
