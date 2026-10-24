@@ -55,6 +55,8 @@ function stateOf(ids: string[]) {
   return done === items.length ? `All ${items.length} merged` : done ? `${done} of ${items.length} merged` : `${items.length} still ahead`
 }
 const implemented = data.upToOne.filter(item => item.status === "implemented").length
+const releaseGroup = ["E00", "S", "V1", "sources", "RC2", "gate115", "release"].map(id => data.upToOne.find(item => item.id === id)).filter(Boolean) as typeof data.upToOne
+const epicIndexUrl = `${data.implementationRepository}/blob/${data.sourceHead}/planning/epics/README.md`
 const asOf = new Date(`${data.asOf}T12:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })
 
 function BrandLockup() {
@@ -119,8 +121,8 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
   }, [menuOpen])
 
   useEffect(() => {
-    // The menu is a compact-width overlay (index.css, 44rem); widening the window dismisses it.
-    const compact = window.matchMedia("(max-width: 44rem)")
+    // The menu is a compact-width overlay (index.css, 47.5rem); widening the window dismisses it.
+    const compact = window.matchMedia("(max-width: 47.5rem)")
     const close = () => { if (!compact.matches) setMenuOpen(false) }
     compact.addEventListener("change", close)
     return () => compact.removeEventListener("change", close)
@@ -201,7 +203,7 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
         <button className="menu-button" type="button" aria-expanded={menuOpen} aria-controls="primary-navigation" onClick={() => setMenuOpen(current => !current)}>{menuOpen ? "Close" : "Menu"}</button>
         <nav id="primary-navigation" className={menuOpen ? "nav-open" : ""} aria-label="Primary navigation">
           {navItems.map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>)}
-          <a className="button nav-action" href={ALPHA_URL} onClick={() => setMenuOpen(false)}><span className="link-label"><GitHubMark />Get the alpha</span></a>
+          <a className="button nav-action" href={ALPHA_URL} onClick={() => setMenuOpen(false)}><span className="link-label"><GitHubMark />Build the alpha from source</span></a>
         </nav>
       </header>
       {isRoadmap ? <Roadmap stage={stageOf(route)} roadmapPage={onRoadmapPage} /> : <main id="main-content" tabIndex={-1}>
@@ -211,12 +213,13 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
             <p className="hero-half hero-second" aria-hidden="true">mostly.</p>
             <Reel />
             <ReelCaption />
-            <div className="hero-foot">
-              <p>For the note, the README, the idea that needs room. A native Mac editor for text and Markdown, with more there when you need it.</p>
+            <p className="hero-lede">For the note, the README, the idea that needs room. A native Mac editor for text and Markdown, with more there when you need it.</p>
+            <div className="hero-cta">
               <div className="hero-actions">
-                <GitHubLink className="button" href={ALPHA_URL}>Get the alpha</GitHubLink>
+                <GitHubLink className="button" href={ALPHA_URL}>Build the alpha from source</GitHubLink>
                 <a className="text-link" href="#try">Try it in your browser</a>
               </div>
+              <p className="hero-note">No ready-to-install app yet. Use copies of documents while testing.</p>
             </div>
           </div>
         </section>
@@ -250,10 +253,10 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
         </section>
 
         <section className="plan" id="roadmap" aria-labelledby="plan-title">
-          <p className="plan-figure" data-reveal><strong>{implemented} of {data.upToOne.length}</strong><span>work areas on the way to 1.0 are already merged into the development code.</span></p>
+          <div className="plan-figure" data-reveal><p><strong>{implemented} of {data.upToOne.length}</strong></p><p>work areas in the 1.0 plan are merged, not yet verified for release.</p></div>
           <div className="plan-column">
             <h2 id="plan-title" data-reveal>What works, what’s next</h2>
-            <p className="plan-note" data-reveal>From the development repository, checked {asOf}. “Merged” means the work is in the development code, not that it is verified for 1.0.</p>
+            <p className="plan-note" data-reveal>The 37 are every work area in the 1.0 plan, including the {releaseGroup.length} release steps, of which {releaseGroup.filter(item => item.status === "implemented").length} is done. Counted from the <a href={epicIndexUrl}>epic index and release records at commit {data.sourceHead.slice(0, 7)}</a>, a snapshot of {asOf}; later work isn’t reconciled yet. “Merged” is the Implemented status in those records.</p>
             <p className="plan-group" data-reveal>To 1.0</p>
             <ul className="plan-rows">{groupRows.map(row => <li key={row.title} data-reveal><span>{row.title}</span><span>{stateOf(row.ids)}</span></li>)}</ul>
             <p className="plan-group" data-reveal>After 1.0</p>
@@ -271,8 +274,9 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
           <h2 id="release-title" data-reveal>The alpha is ready to build.</h2>
           <div className="release-body" data-reveal>
             <p>Version 0.1.0-alpha.1 is source code with build instructions: macOS 26 or later, Apple Silicon, Xcode 26 and XcodeGen. Your build is unsigned and opens as MacDown 2. Signed downloads come later, and 1.0 is still ahead.</p>
+            <p className="release-warning">No ready-to-install app yet. Use copies of documents while testing.</p>
             <div className="release-actions">
-              <GitHubLink className="button" href={ALPHA_URL}>Get the alpha</GitHubLink>
+              <GitHubLink className="button" href={ALPHA_URL}>Build the alpha from source</GitHubLink>
               <a className="text-link" href={ISSUES_URL}>Open issues</a>
               <a className="text-link" href={SITE_SOURCE_URL}>Website source</a>
             </div>

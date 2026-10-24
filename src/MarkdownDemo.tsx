@@ -177,14 +177,14 @@ export default function TryLine() {
       <h3>That’s the shape of it.</h3>
       <p>The Mac app keeps the source beside the page, with the heading outline, find and replace, diagrams, math and export.</p>
       <div className="try-actions">
-        <GitHubLink className="button" href={ALPHA_URL}>Get the alpha</GitHubLink>
+        <GitHubLink className="button" href={ALPHA_URL}>Build the alpha from source</GitHubLink>
         <button type="button" className="text-button" onClick={restart}>Try again</button>
       </div>
-      <p className="try-note">Source code only: you build it with Xcode 26 on macOS 26 and Apple Silicon, and it opens as MacDown 2. Signed downloads come later. <a href={RELEASES_URL}>Follow releases</a>.</p>
+      <p className="try-note">No ready-to-install app yet. Use copies of documents while testing. You build it with Xcode 26 on macOS 26 and Apple Silicon, and it opens as MacDown 2. Signed downloads come later. <a href={RELEASES_URL}>Follow releases</a>.</p>
     </div> : <div className="try-more js-only">
       <p className="try-progress" id="try-progress">{progress}</p>
       <div className="try-examples">
-        {TRY_KINDS.map(item => <button type="button" key={item.kind} className={tried.includes(item.kind) ? "is-done" : undefined} aria-pressed={tried.includes(item.kind)} onClick={() => take(item.example)}><code>{item.example}</code></button>)}
+        {TRY_KINDS.map(item => <button type="button" key={item.kind} onClick={() => take(item.example)}><code>{item.example}</code></button>)}
       </div>
       <button type="button" className="text-button" onClick={() => setFinished(true)}>Skip to the download</button>
     </div>}

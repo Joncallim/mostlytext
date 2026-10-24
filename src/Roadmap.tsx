@@ -143,7 +143,7 @@ export default function Roadmap({ stage, roadmapPage }: { stage: RoadmapStage; r
       <a className="text-link rm-back" href="/#roadmap">MostlyText home</a>
       <h1>The road to 1.0, and after</h1>
       <p className="rm-lead">Every piece of work between today’s source alpha and a verified Mac release, then the chapters planned beyond it.</p>
-      <p className="rm-facts">Checked against the development repository on {asOf}. A <a href={ALPHA_URL}>source-only alpha</a> is available to build yourself; there is no signed download and no 1.0 yet. “Merged” means the work is in the development code, not that it is verified for 1.0. No dates are promised.</p>
+      <p className="rm-facts">Checked against the development repository on {asOf}. A <a href={ALPHA_URL}>source-only alpha</a> is available to build yourself; there is no ready-to-install app and no 1.0 yet. “Merged” means the work is in the development code, not that it is verified for 1.0. No dates are promised.</p>
     </header>
 
     <nav className="roadmap-stage-nav js-only" aria-label="Roadmap stages">

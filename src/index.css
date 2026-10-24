@@ -114,7 +114,7 @@ main:focus { outline: none; }
 @media (hover: hover) and (pointer: fine) { #primary-navigation a:not(.button):hover { text-decoration-color: currentColor; } }
 #primary-navigation .nav-action { min-height: 2.5rem; padding: .5rem 1rem; font-size: .9375rem; }
 .menu-button { display: none; min-height: 2.75rem; padding: 0 .25rem; border: 0; background: none; color: var(--ink); font: 600 1rem/1 var(--sans); cursor: pointer; }
-@media (max-width: 44rem) {
+@media (max-width: 47.5rem) {
   .menu-button { display: inline-flex; align-items: center; }
   #primary-navigation { position: absolute; top: 100%; left: 0; right: 0; display: none; flex-direction: column; align-items: stretch; gap: 0; padding: .5rem var(--margin) 1.25rem; background: var(--bg); box-shadow: 0 18px 30px -18px rgb(17 20 26 / .35); }
   #primary-navigation.nav-open { display: flex; }
@@ -130,9 +130,12 @@ main:focus { outline: none; }
 .hero-first { grid-row: 1; margin-left: -.04em; }
 .hero-second { grid-row: 3; justify-self: end; }
 .reel { position: relative; z-index: 1; grid-column: 1; grid-row: 2; }
-.hero-foot { grid-row: 4; display: grid; gap: 1.25rem; max-width: 34rem; }
-.hero-foot > p { font-size: var(--step-lead); line-height: 1.35; }
+.hero-lede { grid-row: 4; max-width: 34rem; font-size: var(--step-lead); line-height: 1.35; }
+.hero-cta { grid-row: 5; display: grid; gap: 1rem; max-width: 34rem; }
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.5rem; }
+.hero-note, .release-warning { font-size: var(--step-small); font-weight: 600; }
+.hero-note { color: var(--ink); }
+.release-body .release-warning { color: var(--snow); }
 .reel-track { display: grid; gap: 24px; }
 .reel-frame { position: relative; margin: 0; overflow: hidden; border-radius: var(--radius); background: var(--surface); aspect-ratio: 4 / 3; }
 .reel-frame a { display: block; height: 100%; }
@@ -140,7 +143,7 @@ main:focus { outline: none; }
 .reel-frame img { object-fit: cover; }
 .reel-frame.is-whole img { object-fit: contain; object-position: center !important; padding: 4%; }
 .reel-frame:not(:first-child) { display: none; }
-.reel-caption { grid-row: 5; display: flex; justify-content: space-between; gap: 1rem; color: var(--muted); font-size: var(--step-small); }
+.reel-caption { grid-row: 6; display: flex; justify-content: space-between; gap: 1rem; color: var(--muted); font-size: var(--step-small); }
 .reel-count { white-space: nowrap; }
 
 @media (min-width: 62rem) {
@@ -150,8 +153,8 @@ main:focus { outline: none; }
   .hero-second { grid-column: 3; }
   .reel { grid-column: 2; grid-row: 1 / 4; align-self: center; }
   .reel-frame { aspect-ratio: 3 / 2; }
-  .hero-foot { grid-column: 1; grid-row: 3; align-self: end; padding-bottom: 2rem; max-width: 24rem; }
-  .hero-foot > p { font-size: var(--step-body); line-height: 1.5; }
+  .hero-lede { grid-column: 1; grid-row: 1; align-self: end; padding-bottom: 2rem; max-width: 24rem; font-size: var(--step-body); line-height: 1.5; }
+  .hero-cta { grid-column: 1; grid-row: 3; align-self: start; padding-top: 2rem; max-width: 24rem; }
   .hero-actions { flex-direction: column; align-items: flex-start; gap: .5rem; }
   /* Pinned: the stage holds while the reel advances one frame per screen. */
   .js .hero.is-pinned { height: 260svh; }
@@ -201,7 +204,6 @@ main:focus { outline: none; }
 .try-examples { display: flex; flex-wrap: wrap; gap: .5rem; }
 .try-examples button { min-height: 2.75rem; padding: .55rem .9rem; border: 0; border-radius: var(--radius); background: var(--surface); color: var(--ink); font: 400 1rem/1.3 var(--sans); cursor: pointer; transition: background-color var(--t-hover) ease, transform var(--t-press) var(--ease-out); }
 .try-examples button:active { transform: scale(.97); }
-.try-examples button.is-done { background: var(--surface-2); }
 .try-examples code { font: 400 .95rem/1.3 var(--code); }
 @media (hover: hover) and (pointer: fine) { .try-examples button:hover { background: var(--surface-2); } }
 .try-more .text-button { justify-self: start; }
@@ -306,8 +308,8 @@ main:focus { outline: none; }
 /* ---------- Roadmap summary: two-ended rows ---------- */
 .plan { display: grid; gap: 2.5rem; padding: var(--section) var(--margin) 0; }
 .plan-figure { display: grid; gap: .75rem; align-content: start; }
-.plan-figure strong { font-size: var(--step-display); line-height: .95; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
-.plan-figure span { max-width: 22rem; font-size: var(--step-lead); line-height: 1.3; }
+.plan-figure strong { display: block; font-size: var(--step-display); line-height: .95; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
+.plan-figure p + p { max-width: 30rem; font-size: var(--step-lead); line-height: 1.3; }
 .plan-column { max-width: 34rem; }
 .plan-note { margin-top: 1rem; color: var(--muted); }
 .plan-group { margin-top: 2.5rem; color: var(--muted); }
@@ -389,7 +391,7 @@ main:focus { outline: none; }
 .no-js-only { display: none; }
 html:not(.js) .no-js-only { display: revert; }
 html:not(.js) .js-only { display: none; }
-@media (max-width: 44rem) {
+@media (max-width: 47.5rem) {
   html:not(.js) .menu-button { display: none; }
   html:not(.js) .site-header { flex-wrap: wrap; }
   html:not(.js) #primary-navigation { position: static; display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 0 1.25rem; width: 100%; padding: .5rem 0 0; box-shadow: none; }
