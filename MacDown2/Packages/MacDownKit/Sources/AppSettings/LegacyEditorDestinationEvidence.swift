@@ -16,6 +16,9 @@ public struct LegacyEditorDestinationEvidence: Sendable, Equatable {
     }
 
     public let status: Status
+    /// The validated value for a compatible or current blob. Absent and
+    /// unsupported blobs have no value that startup may publish.
+    public let settings: EditorSettings?
     /// `absent`, or SHA-256 of the exact raw bytes. A later writer must
     /// recapture and compare this revision immediately before publication.
     public let rawRevision: String
@@ -25,11 +28,13 @@ public struct LegacyEditorDestinationEvidence: Sendable, Equatable {
     private init(
         status: Status,
         rawRevision: String,
+        settings: EditorSettings? = nil,
         persisted: [Destination: Bool] = [:],
         provenAbsent: Set<Destination> = []
     ) {
         self.status = status
         self.rawRevision = rawRevision
+        self.settings = settings
         self.persisted = persisted
         self.provenAbsent = provenAbsent
     }
@@ -49,14 +54,14 @@ public struct LegacyEditorDestinationEvidence: Sendable, Equatable {
             return Self(status: .unknownFuture, rawRevision: revision)
         }
         let missingStatusBar = fields["showsStatusBar"] == nil
-        guard validEditor(fields: fields, raw: raw), !(version == .valid && missingStatusBar) else {
+        guard let settings = validEditor(fields: fields, raw: raw), !(version == .valid && missingStatusBar) else {
             return Self(status: .malformed, rawRevision: revision)
         }
         let persisted = persistedValues(in: fields)
         let provenAbsent = Set(Destination.allCases).subtracting(persisted.keys)
         return Self(
             status: missingStatusBar ? .knownCompatible : .valid,
-            rawRevision: revision, persisted: persisted, provenAbsent: provenAbsent
+            rawRevision: revision, settings: settings, persisted: persisted, provenAbsent: provenAbsent
         )
     }
 
@@ -83,10 +88,10 @@ public struct LegacyEditorDestinationEvidence: Sendable, Equatable {
         return number > 1 ? .unknownFuture : .valid
     }
 
-    private static func validEditor(fields: [String: JSONNode], raw: Data) -> Bool {
+    private static func validEditor(fields: [String: JSONNode], raw: Data) -> EditorSettings? {
         guard let font = fields["font"], case let .object(fontMembers) = font.value,
-              Set(fontMembers.map(\.key)).isSubset(of: ["familyName", "size"]) else { return false }
-        return (try? JSONDecoder().decode(EditorSettings.self, from: raw)) != nil
+              Set(fontMembers.map(\.key)).isSubset(of: ["familyName", "size"]) else { return nil }
+        return try? JSONDecoder().decode(EditorSettings.self, from: raw)
     }
 
     private static func persistedValues(in fields: [String: JSONNode]) -> [Destination: Bool] {

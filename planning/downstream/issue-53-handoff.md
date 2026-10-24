@@ -124,7 +124,8 @@ protected-write contract remains required as described above.
 The first import-planning slice now has a pure editor-domain admission candidate.
 `LegacyEditorDestinationEvidence.decode(_:)` accepts caller-supplied raw bytes,
 classifies absence, historical/current valid data, malformed data and unknown
-future data, and binds its decision to the exact byte digest. It does not read
+future data, retains the decoded `EditorSettings` only for admitted bytes, and
+binds its decision to the exact byte digest. It does not read
 preferences or write settings. `LegacyImportPlan` accepts only this decoder's
 evidence, so a caller cannot invent field absence from a default-valued model.
 For an existing non-Data value, the eventual storage adapter must report an

@@ -27,6 +27,7 @@ struct LegacyEditorDestinationEvidenceTests {
     @Test func absentDomainHasNoInventedPersistedValues() {
         let evidence = LegacyEditorDestinationEvidence.decode(nil)
         #expect(evidence.status == .absent)
+        #expect(evidence.settings == nil)
         #expect(evidence.rawRevision == "absent")
         #expect(evidence.persisted.isEmpty)
         #expect(evidence.provenAbsent.isEmpty)
@@ -36,6 +37,8 @@ struct LegacyEditorDestinationEvidenceTests {
         let raw = try fixture(statusBar: nil)
         let evidence = LegacyEditorDestinationEvidence.decode(raw)
         #expect(evidence.status == .knownCompatible)
+        #expect(evidence.settings?.showsStatusBar == true)
+        #expect(evidence.settings?.smartHome == false)
         #expect(evidence.persisted == [
             .autoIncrementOrderedLists: true,
             .convertsTabsToSpaces: false,
@@ -48,6 +51,7 @@ struct LegacyEditorDestinationEvidenceTests {
         let raw = try fixture(version: 1)
         let evidence = LegacyEditorDestinationEvidence.decode(raw)
         #expect(evidence.status == .valid)
+        #expect(evidence.settings?.showsStatusBar == true)
         #expect(evidence.persisted[.smartHome] == false)
         #expect(evidence.persisted[.autoIncrementOrderedLists] == true)
         #expect(evidence.provenAbsent.isEmpty)
@@ -77,6 +81,7 @@ struct LegacyEditorDestinationEvidenceTests {
             let original = raw
             let evidence = LegacyEditorDestinationEvidence.decode(raw)
             #expect(evidence.status == expected)
+            #expect(evidence.settings == nil)
             #expect(evidence.persisted.isEmpty)
             #expect(evidence.provenAbsent.isEmpty)
             #expect(raw == original)
