@@ -1,4 +1,5 @@
-import { useMemo, useState, type ReactNode } from "react"
+import { useState, type ReactNode } from "react"
+import { ALPHA_URL, GitHubLink, RELEASES_URL } from "./links"
 
 export const DEMO_LIMIT = 12000
 export const DEMO_SAMPLE = `# Field notes
@@ -96,9 +97,11 @@ export function MarkdownPreview({ source }: { source: string }) {
     }
     const heading = /^(#{1,6})\s+(.+)$/.exec(line)
     if (heading) {
-      // Preserve authored heading levels within the labelled demo document region.
-      const Heading = `h${heading[1].length}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
-      blocks.push(<Heading key={key}>{inline(heading[2])}</Heading>)
+      // The preview is one labelled demo region inside a marketing page. Offset
+      // authored headings so its sample document does not restart the page outline.
+      const authoredLevel = heading[1].length
+      const Heading = `h${Math.min(6, authoredLevel + 2)}` as "h3" | "h4" | "h5" | "h6"
+      blocks.push(<Heading key={key} className={`demo-heading demo-heading-level-${authoredLevel}`}>{inline(heading[2])}</Heading>)
       continue
     }
     if (/^---\s*$/.test(line)) { blocks.push(<hr key={key} />); continue }
@@ -124,31 +127,68 @@ export function MarkdownPreview({ source }: { source: string }) {
   return <>{blocks.length ? blocks : <p className="demo-empty">Your preview starts with your first word.</p>}</>
 }
 
-export default function MarkdownDemo() {
-  const [source, setSource] = useState(DEMO_SAMPLE)
-  const [view, setView] = useState<"split" | "source" | "preview">("split")
-  const preview = useMemo(() => <MarkdownPreview source={source} />, [source])
-  return (
-    <figure className="product-figure markdown-demo" aria-label="Live Markdown browser workflow demo">
-      <div className="figure-toolbar">
-        <div className="segmented" role="group" aria-label="Demo view">
-          {(["split", "source", "preview"] as const).map(mode => <button key={mode} type="button" className={view === mode ? "active" : ""} aria-pressed={view === mode} onClick={() => setView(mode)}>{mode === "split" ? "Both" : mode === "source" ? "Write" : "Read"}</button>)}
-        </div>
-        <button className="demo-reset" type="button" onClick={() => setSource(DEMO_SAMPLE)}>Reset sample</button>
+// The live thing: a heading you can type into. Each line of Markdown renders at once
+// underneath. The starting line already shows a heading; trying a list item, some bold
+// and inline code ends in the download prompt.
+export type LineKind = "list" | "bold" | "code"
+export function kindOf(line: string): LineKind | null {
+  if (/^([-*+]|\d+\.)[ \t]+\S/.test(line)) return "list"
+  if (/`[^`\n]+`/.test(line)) return "code"
+  if (/\*\*[^*\n]+\*\*|\*[^*\n]+\*/.test(line)) return "bold"
+  return null
+}
+export const TRY_KINDS: { kind: LineKind, name: string, example: string }[] = [
+  { kind: "list", name: "a list item", example: "- Write the README first" },
+  { kind: "bold", name: "some bold", example: "Keep it **mostly** text" },
+  { kind: "code", name: "inline code", example: "Run `xcodegen generate` first" },
+]
+export const TRY_START = "# Release notes"
+
+export default function TryLine() {
+  const [line, setLine] = useState(TRY_START)
+  const [tried, setTried] = useState<LineKind[]>([])
+  const [finished, setFinished] = useState(false)
+  const take = (value: string) => {
+    const next = value.replace(/[\r\n]+/g, " ").slice(0, 160)
+    setLine(next)
+    const kind = kindOf(next)
+    if (kind && !tried.includes(kind)) {
+      const all = [...tried, kind]
+      setTried(all)
+      if (all.length === TRY_KINDS.length) setFinished(true)
+    }
+  }
+  const restart = () => { setLine(TRY_START); setTried([]); setFinished(false) }
+  const left = TRY_KINDS.filter(item => !tried.includes(item.kind))
+  const progress = tried.length === 0
+    ? "Change the line, or pick an example. Try a list item, some bold and inline code."
+    : `${tried.length} of ${TRY_KINDS.length} tried. Next, ${left.map(item => item.name).join(" or ")}.`
+  return <div className="try">
+    <label className="try-label" htmlFor="try-line">Your line of Markdown</label>
+    <div className="try-input" data-ui>
+      <input id="try-line" value={line} onChange={event => take(event.target.value)} spellCheck={false} autoComplete="off" autoCapitalize="off" maxLength={160} aria-describedby="try-progress" />
+    </div>
+    <div className="try-answer" data-ui>
+      <p className="try-file">notes.md</p>
+      <div className="try-page" aria-live="polite" aria-label="Rendered line">
+        <MarkdownPreview source={line} />
       </div>
-      <div className="demo-intro"><span className="demo-live-dot" aria-hidden="true" />LIVE BROWSER DEMO <span>Edit the text. Watch it take shape.</span></div>
-      <div className={`demo-panes demo-view-${view}`}>
-        {view !== "preview" && <div className="demo-source-pane">
-          <label htmlFor="demo-markdown-source">MARKDOWN / EDIT HERE</label>
-          <textarea id="demo-markdown-source" aria-describedby="demo-scope demo-count" value={source} maxLength={DEMO_LIMIT} onChange={event => setSource(event.target.value.slice(0, DEMO_LIMIT))} spellCheck={false} autoComplete="off" autoCapitalize="off" />
-        </div>}
-        {view !== "source" && <div className="demo-preview-pane">
-          <span className="demo-pane-label" id="demo-preview-label">PREVIEW / UPDATES AS YOU TYPE</span>
-          <div className="demo-preview" role="region" aria-labelledby="demo-preview-label" tabIndex={0}>{preview}</div>
-        </div>}
+    </div>
+    {finished ? <div className="try-end js-only">
+      <h3>That’s the shape of it.</h3>
+      <p>The Mac app keeps the source beside the page, with the heading outline, find and replace, diagrams, math and export.</p>
+      <div className="try-actions">
+        <GitHubLink className="button" href={ALPHA_URL}>Build the alpha from source</GitHubLink>
+        <button type="button" className="text-button" onClick={restart}>Try again</button>
       </div>
-      <div className="demo-status"><span>This demo does not save or send your text.</span><span id="demo-count">{source.length.toLocaleString("en-US")} / 12,000</span></div>
-      <figcaption id="demo-scope">Browser workflow demo, not the native Mac app.<span>Basic Markdown: headings, lists, quotes, code, bold and emphasis. HTML stays text; links and images are inactive.</span></figcaption>
-    </figure>
-  )
+      <p className="try-note">No ready-to-install app yet. Use copies of documents while testing. You build it with Xcode 26 on macOS 26 and Apple Silicon, and it opens as MacDown 2. Signed downloads come later. <a href={RELEASES_URL}>Follow releases</a>.</p>
+    </div> : <div className="try-more js-only">
+      <p className="try-progress" id="try-progress">{progress}</p>
+      <div className="try-examples">
+        {TRY_KINDS.map(item => <button type="button" key={item.kind} onClick={() => take(item.example)}><code>{item.example}</code></button>)}
+      </div>
+      <button type="button" className="text-button" onClick={() => setFinished(true)}>Skip to the download</button>
+    </div>}
+    <p className="no-js-only try-no-js">The live preview needs JavaScript. Without it, this shows how the starting line renders.</p>
+  </div>
 }

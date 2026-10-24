@@ -1,194 +1,95 @@
-import { useEffect, useState, type ReactNode } from "react"
+import { useEffect, useState } from "react"
 import Roadmap from "./Roadmap"
-import MarkdownDemo from "./MarkdownDemo"
-
-const ALPHA_URL = "https://github.com/Joncallim/macdown_2/releases/tag/v0.1.0-alpha.1"
-const RELEASES_URL = "https://github.com/Joncallim/macdown_2/releases"
-const ISSUES_URL = "https://github.com/Joncallim/macdown_2/issues"
-const SOURCE_URL = "https://github.com/Joncallim/macdown_2#readme"
-const SITE_SOURCE_URL = "https://github.com/Joncallim/mostlytext"
+import RoadmapDetail from "./RoadmapDetail"
+import { detailNamed } from "./roadmapParts"
+import TryLine from "./MarkdownDemo"
+import Capabilities from "./Capabilities"
+import data from "./roadmap-data.json"
+import { ALPHA_URL, GitHubLink, GitHubMark, ISSUES_URL, RELEASES_URL, SITE_SOURCE_URL, SOURCE_URL } from "./links"
+import { detailOf, isRoadmapPage, isRoadmapRoute, routeFromLocation, stageOf } from "./route"
 
 const navItems = [
-  ["Home", "#home"],
-  ["Features", "#features"],
-  ["Roadmap", "#/roadmap"],
-  ["Guide", "#guide"],
-  ["FAQ", "#faq"],
-  ["Release status", "#release-status"],
+  ["Try it", "/#try"],
+  ["Features", "/#features"],
+  ["Roadmap", "/roadmap/"],
+  ["FAQ", "/#faq"],
 ] as const
 
-const pageSections = [
-  ["home", "Home"],
-  ["features", "Capabilities"],
-  ["render-share", "Render & share"],
-  ["origin", "Where it began"],
-  ["demo", "Browser demo"],
-  ["developers", "Developer workflow"],
-  ["editing-tools", "Editing tools"],
-  ["roadmap", "Roadmap"],
-  ["guide", "Field guide"],
-  ["faq", "FAQ"],
-  ["release-status", "Release status"],
-] as const
-
-const workflowSteps = [
-  ["01", "Find the file in your head.", "Open from the active folder, or use Cmd-P Quick Open when you remember part of a filename. Keep the heading outline nearby for the section you need."],
-  ["02", "Make the change twelve times.", "Use literal find and replace for a product name, a regular expression for a pattern, or multiple cursors for repeated edits. Folder search-and-replace reaches beyond the current document."],
-  ["03", "Keep the details deliberate.", "Choose encodings and line endings. Show line numbers and invisibles. Use built-in or scoped snippets for text you keep writing. These capabilities are in the current development build."],
-] as const
-
-const guideSections = [
-  {
-    id: "getting-started",
-    marker: "01",
-    title: "Getting started",
-    text: "Start from the file, not a project wizard. Open a document from Finder or navigate to it from a folder. Choose a light or dark theme, then arrange the source, outline, and preview for the work at hand.",
-    note: "The project is prerelease software. Check release notes before depending on a particular workflow.",
-  },
-  {
-    id: "readme-docs",
-    marker: "02",
-    title: "Authoring README files and docs",
-    text: "Use syntax-highlighted Markdown source for precise edits and the heading outline to move through longer technical documents. Preview the rendered hierarchy beside the source, and use editing assists for common Markdown structures.",
-    note: "Literal and regular-expression replacement are available for targeted or repeated changes.",
-  },
-  {
-    id: "structured-notes",
-    marker: "03",
-    title: "Structured notes",
-    text: "Keep notes as ordinary text files and use headings as durable structure. File navigation supports a folder-based practice without requiring a proprietary notebook or database.",
-    note: "MostlyText also works with plain text, JSON, and HTML when the work extends beyond Markdown.",
-  },
-  {
-    id: "diagrams-math",
-    marker: "04",
-    title: "Diagrams and math",
-    text: "Write inline or display math directly in the document. The implementation includes Mermaid and D2 preview paths, Graphviz export rendering, and math scanning and rendering. Renderer and theme behavior still need release validation.",
-    note: "Rendering support is an implemented development capability, not a statement that final release gates have passed.",
-  },
-  {
-    id: "export",
-    marker: "05",
-    title: "Export",
-    text: "Choose HTML for a browser, self-contained HTML when you need a bundled document, or PDF for a fixed artifact. Keep the original source alongside anything you export.",
-    note: "Self-contained export cannot embed authored raw HTML; unresolved image paths need attention. Release samples and exact behavior are still pending.",
-  },
+// The hero's reel: crops of one real capture of the development build. The frame
+// sits inside the headline; with JavaScript and motion allowed, the reel advances as
+// the hero is scrolled (the stage is sticky; nothing captures the wheel).
+const ORIGINAL = "mostlytext-development-editor-preview.png"
+const reel = [
+  { caption: "The Markdown source, with line numbers.", src: "mostlytext-development-editor-preview-tablet", widths: [960, 1640], width: 1640, height: 1093, position: "left top",
+    alt: "Actual MostlyText development build: the Markdown source pane with line numbers and syntax highlighting." },
+  { caption: "The page it makes, beside it.", src: "mostlytext-development-editor-preview-hero", widths: [960, 1600, 2448], width: 2448, height: 1200, position: "right top",
+    alt: "Actual MostlyText development build: the rendered preview pane, with a heading, a checklist and a code block." },
+  { caption: "One window, source and page together.", src: "mostlytext-development-editor-preview-hero", widths: [960, 1600, 2448], width: 2448, height: 1200, position: "center", whole: true,
+    alt: "Actual MostlyText development build: the whole window, Markdown source on the left and its live preview on the right." },
 ]
 
 const faqs = [
-  [
-    "Can I download MostlyText now?",
-    "A source-only testing alpha is available with self-build instructions. There is no prebuilt app, DMG, or CLI binary. Your local build is unsigned and still named MacDown 2; signed MostlyText copies are planned for later through the App Store and direct distribution.",
-  ],
-  [
-    "Which macOS versions are supported?",
-    "The project targets macOS 26 or later. Final compatibility is confirmed only with a release, so consult the release notes for the requirements attached to a specific build.",
-  ],
-  [
-    "What file types does it work with?",
-    "The current format registry includes Markdown, plain text, HTML, JSON, YAML, TOML, and several code formats. This is development evidence, not a final support matrix.",
-  ],
-  [
-    "Where should I ask for help or report a problem?",
-    "Review the release notes first, then use the repository issues page to report reproducible problems or add relevant technical context. No response time is promised.",
-  ],
-  [
-    "Is MostlyText open source?",
-    "The project source is available in the MacDown 2 repository. Consult its current licence and third-party notices; final distribution terms are still subject to release review.",
-  ],
+  ["Can I download MostlyText now?", "A source-only testing alpha is available with build instructions. There is no prebuilt app, DMG or CLI binary yet. Your build is unsigned and still named MacDown 2; signed MostlyText copies are planned for later through the App Store and direct download."],
+  ["Which Macs does it run on?", "The verified build instructions need macOS 26 or later, Apple Silicon, Xcode 26 and XcodeGen. Final compatibility is set by each release, so check the release notes for the build you use."],
+  ["Why does it open as MacDown 2?", "MostlyText descends from MacDown, and the development app and its repository still carry the MacDown 2 name. The rename to MostlyText, with its own icon and settings migration, is on the roadmap before 1.0."],
+  ["What files does it work with?", "Markdown first, plus plain text, HTML, JSON, YAML, TOML and several code formats in the current format registry. That list is development evidence, not a final support matrix."],
+  ["Do I need to import my documents?", "No. A file stays a file in the folder or repository where it already lives. Open it from Finder, or from the folder sidebar."],
+  ["Where do I ask for help or report a problem?", "Read the release notes first, then use the repository's issues page for reproducible problems. No response time is promised."],
+  ["Is it open source?", "The source is public in the MacDown 2 repository. Check its current licence and third-party notices there; final distribution terms are still subject to release review."],
 ] as const
 
+// The roadmap's own groups, summarised as rows: the group on the left, its state on the right.
+const groupRows = [
+  { title: "Write, find and organise", ids: ["E01", "E02", "E03", "E04", "E05", "E08", "E09", "E10", "E11", "E13", "E18", "E22"] },
+  { title: "Explain the technical work", ids: ["E06", "E07", "E12", "E14", "E19", "E20", "E21", "anchors", "resource-security"] },
+  { title: "Feel at home on a Mac", ids: ["E15", "E23", "safety", "E16"] },
+  { title: "MacDown 2 becomes MostlyText", ids: ["identity", "E17-software", "cutover", "launch-surface", "commercial-direction"] },
+  { title: "A verified release", ids: ["E00", "S", "V1", "sources", "RC2", "gate115", "release"] },
+]
+const laterRows = [
+  { title: "Make everyday work better", value: "1.0.x to 1.4" },
+  { title: "Richer ways to work", value: "1.5 to 1.10" },
+  { title: "Let real workflows lead", value: "No version yet" },
+]
+function stateOf(ids: string[]) {
+  const items = ids.map(id => data.upToOne.find(item => item.id === id)).filter(Boolean) as typeof data.upToOne
+  const done = items.filter(item => item.status === "implemented").length
+  return done === items.length ? `All ${items.length} merged` : done ? `${done} of ${items.length} merged` : `${items.length} still ahead`
+}
+const implemented = data.upToOne.filter(item => item.status === "implemented").length
+const releaseGroup = ["E00", "S", "V1", "sources", "RC2", "gate115", "release"].map(id => data.upToOne.find(item => item.id === id)).filter(Boolean) as typeof data.upToOne
+const epicIndexUrl = `${data.implementationRepository}/blob/${data.sourceHead}/planning/epics/README.md`
+const asOf = new Date(`${data.asOf}T12:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })
+
 function BrandLockup() {
-  return <img className="brand-lockup" src="/brand/mostlytext-lockup.svg" alt="" />
+  return <img className="brand-lockup" src="/brand/mostlytext-lockup.svg" width="146" height="24" alt="" />
 }
 
-function ExternalArrow() {
-  return <span aria-hidden="true">↗︎</span>
-}
-
-function DocumentMotif({ label }: { label: string }) {
-  return <div className="document-motif" aria-hidden="true">
-    <span className="document-motif-mark">¶</span>
-    <span className="document-motif-line" />
-    <span>{label}</span>
+function Reel() {
+  return <div className="reel" aria-roledescription="carousel" aria-label="The development build">
+    <div className="reel-track">
+      {reel.map((frame, index) => <figure className={`reel-frame${index === 0 ? " is-on" : ""}${frame.whole ? " is-whole" : ""}`} key={frame.caption} aria-hidden={index === 0 ? undefined : true}>
+        <a href={`/images/${ORIGINAL}`} target="_blank" rel="noopener noreferrer" tabIndex={index === 0 ? undefined : -1} aria-label="Open the full-size capture of the development build (opens in a new tab)">
+          <picture>
+            <source type="image/webp" sizes="(min-width: 62rem) 50vw, calc(100vw - 2rem)" srcSet={frame.widths.map(width => `/images/${frame.src}-${width}.webp ${width}w`).join(", ")} />
+            <img src={`/images/${ORIGINAL}`} width={frame.width} height={frame.height} style={{ objectPosition: frame.position }} loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} decoding="async" alt={frame.alt} />
+          </picture>
+        </a>
+      </figure>)}
+    </div>
   </div>
 }
 
-function OriginComic() {
-  const panels = [
-    ["A familiar split", "A small editor window, source on one side and preview on the other."],
-    ["A native-feeling wish", "The old tool retires; the desk stays ready for the next note."],
-    ["MostlyText", "A fresh, native Mac editor for the files that explain the work."],
-  ] as const
-  return <figure className="origin-comic" aria-labelledby="origin-comic-caption">
-    <div className="origin-comic-panels">
-      {panels.map(([caption, description], index) => <article className="origin-comic-panel" key={caption}>
-        <svg viewBox="0 0 240 154" role="img" aria-label={description}>
-          <rect x="1" y="1" width="238" height="152" rx="4" className="comic-frame" />
-          <circle cx="30" cy="24" r="5" className="comic-dot" /><circle cx="47" cy="24" r="5" className="comic-dot" /><circle cx="64" cy="24" r="5" className="comic-dot" />
-          {index === 0 && <><rect x="25" y="42" width="190" height="82" rx="3" className="comic-window" /><path d="M39 58h60M39 70h37M39 82h52" className="comic-lines" /><path d="M132 59h57M132 73h43M132 87h52M132 101h34" className="comic-preview-lines" /><path d="M119 43v80" className="comic-divider" /></>}
-          {index === 1 && <><path d="M38 115h164" className="comic-desk" /><rect x="93" y="55" width="64" height="47" rx="3" className="comic-window comic-window-muted" /><path d="M102 67h46M102 78h30" className="comic-lines" /><circle cx="72" cy="91" r="16" className="comic-head" /><path d="M60 113c4-15 20-15 25 0" className="comic-person" /><path d="M177 48c10 0 17 7 17 16s-7 16-17 16h-9l-8 8 2-12c-3-3-4-7-4-12 0-9 8-16 19-16Z" className="comic-bubble" /><path d="M169 64h16" className="comic-lines" /></>}
-          {index === 2 && <><path d="M33 115h174" className="comic-desk" /><rect x="62" y="47" width="118" height="66" rx="4" className="comic-window comic-window-blue" /><path d="M77 64h37M77 76h60M77 88h45" className="comic-lines-light" /><path d="M125 48v64" className="comic-divider-light" /><circle cx="46" cy="105" r="13" className="comic-head" /><path d="M35 121c4-13 17-13 22 0" className="comic-person" /><path d="M187 61l5 9 10 2-8 7 2 10-9-5-9 5 2-10-8-7 10-2 5-9Z" className="comic-spark" /></>}
-        </svg>
-        <p>{caption}</p>
-      </article>)}
-    </div>
-    <figcaption id="origin-comic-caption">A small origin story: familiar split view, a wish for something native, then MostlyText.</figcaption>
-  </figure>
+function ReelCaption() {
+  return <p className="reel-caption"><span className="reel-text">{reel[0].caption}</span> <span className="reel-count">1 of {reel.length}</span></p>
 }
 
-function NextSection({ destination }: { destination: readonly [string, string] }) {
-  return <a className="section-advance" href={`#${destination[0]}`} aria-label={`Next section: ${destination[1]}`}>
-    <span>Next section</span><strong>{destination[1]}</strong><i aria-hidden="true">↓</i>
-  </a>
-}
-
-function NativeAppScreenshot({ focused = false, priority = false }: { focused?: boolean; priority?: boolean }) {
-  const image = focused ? "mostlytext-development-editor-preview.png" : "mostlytext-development-workspace.png"
-  const description = focused
-    ? "Actual MostlyText development build focused on the Markdown editor and live preview, with correctly aligned line-number gutters."
-    : "Actual MostlyText development build with a folder sidebar, heading outline, Markdown editor, and live preview, with correctly aligned line-number gutters."
-  return (
-    <figure className={`workflow-figure native-app-figure${focused ? " native-app-figure-focused" : ""}${priority ? " native-app-figure-hero" : ""}`}>
-      <a className="native-app-image-link" href={`/images/${image}`} target="_blank" rel="noopener noreferrer" aria-label="Open the full-size MostlyText development-build screenshot">
-        <img src={`/images/${image}`} width={2624} height={1928} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} decoding="async" alt={description} />
-      </a>
-      <figcaption>
-        Actual MostlyText development build.
-        <span>This is ahead of the published alpha, and the interface may change. Select the image to view it full size.</span>
-      </figcaption>
-    </figure>
-  )
-}
-
-const featureCards = [
-  ["A", "WRITE / READ", "Keep the page beside the source.", "Write Markdown with syntax highlighting, read its rendered form alongside it, and use headings to jump through longer documents. Files stay in their existing folders and repositories."],
-  ["B", "FIND / CHANGE", "A name changed. Everywhere.", "Correct a word with literal find and replace. Match a pattern with regular expressions. Use multiple cursors or folder search-and-replace when the change goes beyond one place."],
-  ["C", "DIAGRAMS / MATH", "That box needs an arrow.", "Keep Mermaid, D2, or Graphviz source beside the explanation. Development renderer paths include Mermaid and D2 preview, Graphviz export, and inline and display math."],
-  ["D", "EXPORT / SHARE", "Please send a PDF.", "HTML for a browser. PDF for a fixed artifact. Self-contained HTML is also in development, with limits: authored raw HTML cannot be embedded, and unresolved image paths need attention. Keep the Markdown alongside the export."],
-] as const
-
-const roadmap = [
-  ["01", "In development", "A native editor, source and preview, precise text tools, diagrams, and export. Implemented work is still subject to release verification."],
-  ["02", "To macOS 1.0", "Finish editor hardening, themes and Finder integration, accessibility and localisation, then verify the signed release and update path."],
-  ["03", "After 1.0", "A chapter-by-chapter direction through 1.10: better tables, linked editing, local history, workspaces, and publishing. Later exploration stays clearly labelled."],
-] as const
-
-function FeatureCards({ start, end, children }: { start: number; end: number; children: ReactNode }) {
-  return <div className="feature-ledger capability-pages">{featureCards.slice(start, end).map(([number, meta, title, text], index) =>
-    <div className="capability-page" key={number}>{index === 0 && children}<article className="feature-entry snap-subpanel" key={number}>
-      <span className="entry-number">{number}</span>
-      <div><p className="entry-meta">{meta}</p><h3>{title}</h3><p>{text}</p></div>
-    </article></div>
-  )}</div>
-}
-
-export default function App() {
-  const [route, setRoute] = useState(window.location.hash)
-  const isRoadmap = route.startsWith("#/roadmap")
+export default function App({ initialRoute, roadmapPage }: { initialRoute?: string; roadmapPage?: boolean }) {
+  // The build prerenders each page with an explicit route (scripts/prerender.mjs).
+  const [route, setRoute] = useState(() => initialRoute ?? routeFromLocation())
+  const [onRoadmapPage] = useState(() => roadmapPage ?? isRoadmapPage())
+  const isRoadmap = isRoadmapRoute(route)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [guideIndex, setGuideIndex] = useState(0)
-  const activeGuide = guideSections[guideIndex]
 
   useEffect(() => {
     const closeOnEscape = (event: KeyboardEvent) => {
@@ -204,187 +105,199 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    const navigate = () => { setRoute(window.location.hash); setMenuOpen(false) }
+    if (!menuOpen) return
+    // Disclosure navigation: the panel closes once focus or a pointer leaves the
+    // header, so it never covers whatever has focus on the page below.
+    const header = document.querySelector(".site-header")
+    const closeOutside = (event: FocusEvent | PointerEvent) => {
+      const target = (event instanceof FocusEvent ? event.relatedTarget : event.target) as Node | null
+      if (event instanceof FocusEvent && !target) return
+      if (!header?.contains(target)) setMenuOpen(false)
+    }
+    header?.addEventListener("focusout", closeOutside as EventListener)
+    document.addEventListener("pointerdown", closeOutside as EventListener)
+    return () => {
+      header?.removeEventListener("focusout", closeOutside as EventListener)
+      document.removeEventListener("pointerdown", closeOutside as EventListener)
+    }
+  }, [menuOpen])
+
+  useEffect(() => {
+    // The menu is a compact-width overlay (index.css, 47.5rem); widening the window dismisses it.
+    const compact = window.matchMedia("(max-width: 47.5rem)")
+    const close = () => { if (!compact.matches) setMenuOpen(false) }
+    compact.addEventListener("change", close)
+    return () => compact.removeEventListener("change", close)
+  }, [])
+
+  useEffect(() => {
+    const navigate = () => { setRoute(routeFromLocation()); setMenuOpen(false) }
     window.addEventListener("hashchange", navigate)
     return () => window.removeEventListener("hashchange", navigate)
   }, [])
   useEffect(() => {
     document.documentElement.classList.toggle("roadmap-route", isRoadmap)
-    document.title = isRoadmap ? "Roadmap — MostlyText" : "MostlyText — A text editor. Mostly."
+    const detail = detailOf(route)
+    document.title = detail ? `${detailNamed(detail)?.title ?? "Roadmap"} — MostlyText roadmap` : isRoadmap ? "Roadmap — MostlyText" : "MostlyText — A text editor, mostly."
     requestAnimationFrame(() => {
-      if (isRoadmap) window.scrollTo({ top: 0, behavior: "instant" })
+      // A chapter link (/roadmap/#ch-…) lands on its chapter; any other roadmap view starts at the top.
+      const anchor = isRoadmap && window.location.hash && !window.location.hash.startsWith("#/") ? document.getElementById(window.location.hash.slice(1)) : null
+      // "instant": arriving from a link jumps straight there, overriding the page's smooth scrolling.
+      if (anchor) anchor.scrollIntoView({ behavior: "instant" })
+      else if (isRoadmap) window.scrollTo({ top: 0, behavior: "instant" })
       else if (route) document.getElementById(route.slice(1))?.scrollIntoView({ behavior: "instant" })
     })
   }, [route, isRoadmap])
 
-  const guideControls = <><button type="button" onClick={() => setGuideIndex((guideIndex + guideSections.length - 1) % guideSections.length)}>← Previous</button><span>{guideIndex + 1} / {guideSections.length}</span><button type="button" onClick={() => setGuideIndex((guideIndex + 1) % guideSections.length)}>Next →</button></>
+  useEffect(() => {
+    // Entrances: each part arrives once as it nears the viewport. Everything is visible
+    // without JavaScript, under reduced motion, and if the observer never runs.
+    const parts = [...document.querySelectorAll<HTMLElement>("[data-reveal]")]
+    const io = "IntersectionObserver" in window ? new IntersectionObserver(entries => {
+      for (const entry of entries) if (entry.isIntersecting) { entry.target.classList.add("is-in"); io?.unobserve(entry.target) }
+    }, { rootMargin: "0px 0px -12% 0px", threshold: 0.05 }) : null
+    const watch = (part: Element) => io ? io.observe(part) : part.classList.add("is-in")
+    parts.forEach(watch)
+    // Parts that mount later (a roadmap chapter coming back after a search) arrive the same way.
+    const added = new MutationObserver(() => document.querySelectorAll("[data-reveal]:not(.is-in)").forEach(watch))
+    added.observe(document.getElementById("root") ?? document.body, { childList: true, subtree: true })
+    document.documentElement.classList.add("reveals")
+
+    // The hero reel follows the scroll position through the sticky hero.
+    const hero = document.querySelector<HTMLElement>(".hero")
+    const track = hero?.querySelector<HTMLElement>(".reel-track")
+    const frames = [...(hero?.querySelectorAll<HTMLElement>(".reel-frame") ?? [])]
+    const text = hero?.querySelector(".reel-text"), count = hero?.querySelector(".reel-count")
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)"), wide = window.matchMedia("(min-width: 62rem)")
+    let frame = 0, shown = 0
+    const update = () => {
+      frame = 0
+      if (!hero || !track || !frames.length) return
+      const moving = wide.matches && !still.matches
+      hero.classList.toggle("is-pinned", moving)
+      let index = 0
+      if (moving) {
+        // The stage sticks below the header, so the pin runs while the hero's top travels from there.
+        const stage = hero.querySelector<HTMLElement>(".hero-stage")
+        const top = stage ? parseFloat(getComputedStyle(stage).top) || 0 : 0
+        const travel = hero.offsetHeight - (stage?.offsetHeight ?? window.innerHeight)
+        const progress = travel > 0 ? Math.min(1, Math.max(0, (top - hero.getBoundingClientRect().top) / travel)) : 0
+        const step = frames[1] ? frames[1].offsetTop - frames[0].offsetTop : 0
+        track.style.transform = `translate3d(0, ${(-progress * (frames.length - 1) * step).toFixed(1)}px, 0)`
+        index = Math.min(frames.length - 1, Math.round(progress * (frames.length - 1)))
+      } else track.style.transform = ""
+      if (index !== shown) {
+        shown = index
+        frames.forEach((el, k) => { el.classList.toggle("is-on", k === index); el.toggleAttribute("aria-hidden", k !== index); el.querySelector("a")?.setAttribute("tabindex", k === index ? "0" : "-1") })
+        if (text) text.textContent = reel[index].caption
+        if (count) count.textContent = `${index + 1} of ${reel.length}`
+      }
+    }
+    const request = () => { if (!frame) frame = requestAnimationFrame(update) }
+    window.addEventListener("scroll", request, { passive: true })
+    window.addEventListener("resize", request)
+    still.addEventListener("change", request); wide.addEventListener("change", request)
+    update()
+    return () => {
+      io?.disconnect(); added.disconnect(); if (frame) cancelAnimationFrame(frame)
+      window.removeEventListener("scroll", request); window.removeEventListener("resize", request)
+      still.removeEventListener("change", request); wide.removeEventListener("change", request)
+    }
+  }, [isRoadmap, route])
 
   return (
     <div className="site-shell">
-      <a className="skip-link" href="#main-content" onClick={event => { if (isRoadmap) { event.preventDefault(); document.getElementById("main-content")?.focus(); window.scrollTo({ top: 0, behavior: "instant" }) } }}>Skip to content</a>
+      <a className="skip-link" href="#main-content" onClick={event => { if (isRoadmap) { event.preventDefault(); document.getElementById("main-content")?.focus(); window.scrollTo({ top: 0, behavior: "auto" }) } }}>Skip to content</a>
       <header className="site-header">
-        <a className="brand" href="#home" aria-label="MostlyText home" onClick={() => setMenuOpen(false)}>
-          <BrandLockup /><small>for macOS</small>
-        </a>
-        <button className="menu-button" type="button" aria-expanded={menuOpen} aria-controls="primary-navigation"
-          aria-label={menuOpen ? "Close navigation" : "Open navigation"} onClick={() => setMenuOpen(current => !current)}>
-          <span className={`menu-icon ${menuOpen ? "is-open" : ""}`} aria-hidden="true"><span /><span /></span>
-        </button>
+        <a className="brand" href="/#home" aria-label="MostlyText home" onClick={() => setMenuOpen(false)}><BrandLockup /></a>
+        <button className="menu-button" type="button" aria-expanded={menuOpen} aria-controls="primary-navigation" onClick={() => setMenuOpen(current => !current)}>{menuOpen ? "Close" : "Menu"}</button>
         <nav id="primary-navigation" className={menuOpen ? "nav-open" : ""} aria-label="Primary navigation">
           {navItems.map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>)}
+          <a className="button nav-action" href={ALPHA_URL} onClick={() => setMenuOpen(false)}><span className="link-label"><GitHubMark />Build the alpha from source</span></a>
         </nav>
       </header>
-      {isRoadmap ? <Roadmap route={route} /> : <main id="main-content" tabIndex={-1}>
-        <section className="hero section-frame" id="home">
-          <div className="hero-copy snap-subpanel">
-            <p className="eyebrow"><span />Native macOS editor · active prerelease</p>
-            <h1>A text editor. <em>Mostly.</em></h1>
-            <p className="hero-support">For the note, the README, the idea that needs room. A native Mac editor for text and Markdown, with more there when you need it.</p>
-            <div className="hero-actions">
-              <a className="primary-link" href={ALPHA_URL}>Build the alpha <span aria-hidden="true">→</span></a>
-              <a className="text-link" href="#roadmap">See the roadmap <span aria-hidden="true">↓</span></a>
-            </div>
-            <DocumentMotif label="A place for the next thought" />
-          </div>
-          <div className="hero-visual snap-subpanel"><NativeAppScreenshot priority /></div>
-          <div className="hero-index" aria-hidden="true"><span>MT—01</span><span>TEXT / MARKDOWN / SOURCE</span></div>
-          <NextSection destination={pageSections[1]} />
-        </section>
-
-        <section className="features section-frame screen-panel split-panel" id="features">
-          <FeatureCards start={0} end={2}>
-          <header className="section-heading">
-            <p className="section-number">01 / Capabilities</p>
-            <h2>For the files around the code.</h2>
-            <p>Work on a README without opening your whole development setup. Write, read, and make precise changes in one place.</p>
-          </header>
-          </FeatureCards>
-          <NextSection destination={pageSections[2]} />
-        </section>
-        <section className="features section-frame screen-panel split-panel" id="render-share" aria-labelledby="render-title">
-          <FeatureCards start={2} end={4}>
-          <header className="section-heading">
-            <p className="section-number">01 / Render &amp; share</p>
-            <h2 id="render-title">A little more than words.</h2>
-            <p>The explanation and its diagram belong together. Keep the source; make a rendered artifact when someone needs one.</p>
-          </header>
-          </FeatureCards>
-          <NextSection destination={pageSections[3]} />
-        </section>
-
-        <section className="intro-strip screen-panel" id="origin">
-          <div className="section-frame origin-grid">
-            <div><p className="section-number">02 / Where it began</p><h2>Built for the files that explain the work.</h2></div>
-            <div className="origin-copy">
-              <p>I liked MacDown’s simple, side-by-side layout. When it was retired, I wanted to keep that approach and give it a more native Mac feel. That’s where MostlyText began.</p>
-              <p>Keep the source, rendered preview, and heading outline close together. Write in Markdown, check how it reads, and move straight to the section you need.</p>
-              <p>The file remains a Markdown file in the repository or folder where it already lives.</p>
-            </div>
-            <OriginComic />
-          </div>
-          <NextSection destination={pageSections[4]} />
-        </section>
-        <section className="browser-demo section-frame screen-panel split-panel" id="demo" aria-labelledby="demo-title">
-          <header className="section-heading">
-            <p className="section-number">03 / Browser demo</p>
-            <h2 id="demo-title">Try the shape of a document.</h2>
-            <p>A small, local Markdown preview for trying the workflow in a browser. It is separate from the native Mac app and never saves or sends your text.</p>
-          </header>
-          <div className="browser-demo-stage"><MarkdownDemo /></div>
-          <NextSection destination={pageSections[5]} />
-        </section>
-
-        <section className="workflow screen-panel split-panel" id="developers">
-          <div className="section-frame">
-            <header className="section-heading workflow-heading">
-              <p className="section-number">04 / Developer workflow</p>
-              <h2>For the part of coding that is mostly explaining.</h2>
-              <p>The README somebody finds at 11pm. The setup note that outlives the setup. The design note that needs one diagram.</p>
-            </header>
-            <div className="workflow-visual snap-subpanel"><NativeAppScreenshot /></div>
-          </div>
-          <NextSection destination={pageSections[6]} />
-        </section>
-        <section className="workflow screen-panel split-panel" id="editing-tools" aria-labelledby="editing-title">
-          <div className="section-frame">
-            <header className="section-heading workflow-heading">
-              <p className="section-number">04 / Editing tools</p>
-              <h2 id="editing-title">Small edits. Precise tools.</h2>
-              <p>Document-first work, with the controls that matter when the text is part of a repository.</p>
-            </header>
-            <div className="workflow-steps">{workflowSteps.map(([number, title, text]) =>
-              <article className="snap-subpanel" key={number}><span>{number}</span><div><h3>{title}</h3><p>{text}</p></div></article>
-            )}</div>
-            <div className="workflow-visual workflow-visual-focused snap-subpanel"><NativeAppScreenshot focused /></div>
-          </div>
-          <NextSection destination={pageSections[7]} />
-        </section>
-
-        <section className="roadmap section-frame screen-panel split-panel" id="roadmap">
-          <header className="section-heading">
-            <p className="section-number">05 / Roadmap</p><h2>What works. What’s next.</h2>
-            <p>The full plan, from today’s development work to 1.0 and the ideas held for later. Evidence checked 15 October 2026.</p>
-          </header>
-          <div className="roadmap-grid">{roadmap.map(([number, title, text]) =>
-            <article className="snap-subpanel" key={number}><span className="entry-number">{number}</span><h3>{title}</h3><p>{text}</p></article>
-          )}</div>
-          <a className="primary-link roadmap-source" href="#/roadmap">Explore the full roadmap <ExternalArrow /></a>
-          <NextSection destination={pageSections[8]} />
-        </section>
-
-        <section className="guide section-frame screen-panel" id="guide">
-          <header className="section-heading guide-heading">
-            <p className="section-number">06 / Field guide</p><h2>Start with the task at hand.</h2>
-            <p>Choose a path through the current development capabilities.</p>
-          </header>
-          <div className="guide-layout">
-            <nav className="guide-nav" aria-label="Choose a guide topic"><p>IN THIS GUIDE</p>
-              {guideSections.map((item, index) => <button key={item.id} type="button" aria-pressed={guideIndex === index} aria-controls="guide-detail" onClick={() => setGuideIndex(index)}><span>{item.marker}</span>{item.title}</button>)}
-            </nav>
-            <div className="guide-content" id="guide-detail" aria-live="polite" aria-atomic="true">
-              <article>
-                <div className="guide-body"><span className="guide-marker">{activeGuide.marker}</span><div><h3>{activeGuide.title}</h3><p>{activeGuide.text}</p></div><div className="guide-controls mobile-guide-controls">{guideControls}</div></div>
-                <div className="guide-note"><p className="mobile-guide-note-label">{activeGuide.title} · Note</p><aside>{activeGuide.note}</aside><div className="guide-controls mobile-guide-controls">{guideControls}</div></div>
-              </article>
-              <div className="guide-controls desktop-guide-controls">{guideControls}</div>
+      {detailOf(route) ? <RoadmapDetail name={detailOf(route)} /> : isRoadmap ? <Roadmap stage={stageOf(route)} roadmapPage={onRoadmapPage} /> : <main id="main-content" tabIndex={-1}>
+        <section className="hero" id="home" aria-labelledby="hero-title">
+          <div className="hero-stage">
+            <h1 id="hero-title" className="hero-half hero-first">A text editor,<span className="visually-hidden"> mostly.</span></h1>
+            <p className="hero-half hero-second" aria-hidden="true">mostly.</p>
+            <Reel />
+            <ReelCaption />
+            <p className="hero-lede">For the note, the README, the idea that needs room. A native Mac editor for text and Markdown, with more there when you need it.</p>
+            <div className="hero-cta">
+              <div className="hero-actions">
+                <GitHubLink className="button" href={ALPHA_URL}>Build the alpha from source</GitHubLink>
+                <a className="text-link" href="#try">Try it in your browser</a>
+              </div>
+              <p className="hero-note">No ready-to-install app yet. Use copies of documents while testing.</p>
             </div>
           </div>
-          <NextSection destination={pageSections[9]} />
         </section>
 
-        <section className="faq-section screen-panel" id="faq">
-          <div className="section-frame faq-layout">
-            <header className="section-heading"><p className="section-number">07 / FAQ</p><h2>Questions worth answering plainly.</h2><p>Start with repository releases and issues for current project facts.</p></header>
-            <div className="faq-list">{faqs.map(([question, answer], index) => <details key={question} name="mostlytext-faq"><summary><span>{String(index + 1).padStart(2, "0")}</span>{question}<i aria-hidden="true" /></summary><p>{answer}</p></details>)}</div>
+        <section className="origin" id="origin" aria-labelledby="origin-title">
+          <div className="origin-copy" data-reveal>
+            <h2 id="origin-title">Where it began</h2>
+            <p className="origin-first">MostlyText began with MacDown’s side-by-side layout: Markdown on the left, the page it makes on the right.</p>
+            <p>When MacDown was retired, I wanted to keep that shape and give it a more native Mac feel.</p>
+            <p>The file stays a Markdown file, in the folder or repository where it already lives. Open it from Finder, or press Command-P and type part of its name.</p>
+            <p>The heading outline sits beside it, so a long README becomes a list of places to go. <a href="/roadmap/">See what’s planned</a>.</p>
           </div>
-          <NextSection destination={pageSections[10]} />
+          <figure className="origin-picture" data-reveal>
+            <a href="/images/mostlytext-development-workspace.png" target="_blank" rel="noopener noreferrer" aria-label="Open the full-size capture of the development build workspace (opens in a new tab)">
+              <picture>
+                <source type="image/webp" sizes="(min-width: 62rem) 56vw, calc(100vw - 2rem)" srcSet={[960, 1600, 2624].map(width => `/images/mostlytext-development-workspace-${width}.webp ${width}w`).join(", ")} />
+                <img src="/images/mostlytext-development-workspace.png" width="2624" height="1928" loading="lazy" decoding="async" alt="Actual MostlyText development build with a folder sidebar, heading outline, Markdown editor and live preview." />
+              </picture>
+            </a>
+            <figcaption>The development build: folders, the heading outline, the source and its preview. It is ahead of the published alpha and may change.</figcaption>
+          </figure>
         </section>
 
-        <section className="release section-frame screen-panel" id="release-status">
-          <div className="release-status-line"><span className="status-dot" /><p>SOURCE-ONLY ALPHA</p><span>v0.1.0-alpha.1</span></div>
-          <div className="release-grid">
-            <div><p className="section-number">08 / Release status</p><h2>An alpha you can build.</h2></div>
-            <div className="release-copy"><p>The source-only testing alpha is available with self-build instructions. No prebuilt app, DMG, or CLI binary is included.</p><p>Targeting macOS 26 or later, the local build is unsigned and still named MacDown 2. Signed MostlyText copies are planned for later through the App Store and direct distribution; stable 1.0 is still ahead.</p><div className="release-links"><a className="primary-link" href={ALPHA_URL}>Build the alpha <ExternalArrow /></a><a className="text-link" href={ISSUES_URL}>View open issues <ExternalArrow /></a></div></div>
+        <section className="try-section" id="try" aria-labelledby="try-title">
+          <h2 id="try-title" data-reveal>Type a line of Markdown</h2>
+          <TryLine />
+        </section>
+
+        <section className="features" id="features" aria-labelledby="features-title">
+          <Capabilities />
+        </section>
+
+        <section className="plan" id="roadmap" aria-labelledby="plan-title">
+          <div className="plan-figure" data-reveal><p><strong>{implemented} of {data.upToOne.length}</strong></p><p>work areas in the 1.0 plan are merged, not yet verified for release.</p></div>
+          <div className="plan-column">
+            <h2 id="plan-title" data-reveal>What works, what’s next</h2>
+            <p className="plan-note" data-reveal>The 37 are every work area in the 1.0 plan, including the {releaseGroup.length} release steps, of which {releaseGroup.filter(item => item.status === "implemented").length} is done. Counted from the <a href={epicIndexUrl}>epic index and release records at commit {data.sourceHead.slice(0, 7)}</a>, a snapshot of {asOf}; later work isn’t reconciled yet. “Merged” is the Implemented status in those records.</p>
+            <p className="plan-group" data-reveal>To 1.0</p>
+            <ul className="plan-rows">{groupRows.map(row => <li key={row.title} data-reveal><span>{row.title}</span><span>{stateOf(row.ids)}</span></li>)}</ul>
+            <p className="plan-group" data-reveal>After 1.0</p>
+            <ul className="plan-rows">{laterRows.map(row => <li key={row.title} data-reveal><span>{row.title}</span><span>{row.value}</span></li>)}</ul>
+            <a className="text-link plan-link" href="/roadmap/" data-reveal>The full roadmap</a>
           </div>
         </section>
-        <aside className="github-banner section-frame" aria-labelledby="github-banner-title">
-          <div>
-            <p className="section-number">Source &amp; development</p>
-            <h2 id="github-banner-title">MostlyText is on GitHub.</h2>
-            <p>Read the website source, or follow the native app in its public repository. The app repository is currently named <code>macdown_2</code>; that name reflects its development lineage and has not been renamed.</p>
+
+        <section className="faq" id="faq" aria-labelledby="faq-title">
+          <h2 id="faq-title">Questions</h2>
+          <div className="faq-list">{faqs.map(([question, answer]) => <details key={question} name="mostlytext-faq" data-reveal><summary>{question}<i aria-hidden="true" /></summary><p>{answer}</p></details>)}</div>
+        </section>
+
+        <section className="release" id="release-status" aria-labelledby="release-title">
+          <h2 id="release-title" data-reveal>The alpha is ready to build.</h2>
+          <div className="release-body" data-reveal>
+            <p>Version 0.1.0-alpha.1 is source code with build instructions: macOS 26 or later, Apple Silicon, Xcode 26 and XcodeGen. Your build is unsigned and opens as MacDown 2. Signed downloads come later, and 1.0 is still ahead.</p>
+            <p className="release-warning">No ready-to-install app yet. Use copies of documents while testing.</p>
+            <div className="release-actions">
+              <GitHubLink className="button" href={ALPHA_URL}>Build the alpha from source</GitHubLink>
+              <a className="text-link" href={ISSUES_URL}>Open issues</a>
+              <a className="text-link" href={SITE_SOURCE_URL}>Website source</a>
+            </div>
           </div>
-          <div className="github-banner-actions">
-            <a className="primary-link" href={SITE_SOURCE_URL}>Website source <ExternalArrow /></a>
-            <a className="text-link" href={SOURCE_URL}>Native app source (macdown_2) <ExternalArrow /></a>
-          </div>
-        </aside>
+        </section>
       </main>}
-      <footer><div className="section-frame footer-grid">
-        <div className="footer-brand"><a className="brand" href="#home" aria-label="MostlyText home"><BrandLockup /></a><p>For text, and what comes after.</p></div>
-        <div className="footer-links"><a href={RELEASES_URL}>Release status <ExternalArrow /></a><a href={ISSUES_URL}>Report an issue <ExternalArrow /></a><a href={SOURCE_URL}>Project &amp; source <ExternalArrow /></a></div>
-        <div className="footer-legal"><p>Descended from MacDown. Built with a more native Mac feel.</p><p>Consult the repository for current licence and third-party notices. Final distribution terms remain subject to release review.</p></div>
-        <p className="footer-end">NATIVE macOS TEXT EDITOR / PRERELEASE</p>
-      </div></footer>
+      <footer className="site-footer">
+        <p>A text editor, mostly.</p>
+        <p className="footer-links"><a href={RELEASES_URL}>Releases</a><a href={ISSUES_URL}>Issues</a><a href={SOURCE_URL}>Source</a></p>
+        <p>Descended from MacDown. Licence and notices in the repository.</p>
+      </footer>
     </div>
   )
 }
