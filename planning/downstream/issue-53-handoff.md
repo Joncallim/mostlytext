@@ -1,5 +1,20 @@
 # Issue #53 — Compatible settings and deliberate legacy import
 
+## 2026-10-25 local admission slice
+
+An isolated local #53 branch based on release-debt candidate `e2434fab` now has a pure
+`LegacyPreferenceSnapshot(domain:)` value. It copies an explicitly supplied domain,
+preserves property-list value kinds (including Boolean versus number), rejects unsupported
+objects and non-finite numbers, and bounds depth, entries, strings, aggregate admitted bytes and the
+canonical encoded form. Its sorted typed digest can identify a frozen source snapshot for
+a later plan. It does not access the original MacDown preferences, apply a setting, grant
+file access, or implement consent, journaling or import. This is preparation for the
+existing immutable-plan contract below, not evidence that #53 can close.
+
+Four synthetic-domain snapshot tests pass with locked Swift packages. Real-domain
+disposition, precedence, settings migration, the E23 theme destination and the
+E17 isolated-account rehearsal remain separate acceptance gates.
+
 ## Owner summary
 
 Import useful original-MacDown preferences without changing that app, reviving inert parser toggles or overwriting the new editor's deliberate choices. First preserve development/beta settings across schema changes; then perform the separate opt-in original-MacDown import. Every legacy key receives an explicit disposition.
