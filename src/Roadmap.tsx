@@ -1,19 +1,27 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, type CSSProperties } from "react"
 import data from "./roadmap-data.json"
 import { ALPHA_URL } from "./links"
 import { stageHref, type RoadmapStage } from "./route"
 
 type Item = (typeof data.upToOne)[number]
 const labels: Record<string, string> = { implemented: "Merged", development: "Being built", remaining: "Still required", deferred: "Deferred", undecided: "Undecided", planned: "Planned", provisional: "Exploring", horizon: "Longer term", "demand-gated": "If there’s demand" }
-type Picture = { src: string; widths: number[]; width: number; height: number; original: string; position: string; alt: string; caption: string }
-const editor = { original: "mostlytext-development-editor-preview.png", width: 2448, height: 1200 }
-const workspace = { original: "mostlytext-development-workspace.png", width: 2624, height: 1928 }
+type Picture = { src: string; width: number; height: number; alt: string; caption: string; original: string; small?: boolean }
+const capture = "/images/mostlytext-development-workspace.png"
 const pictures: Record<string, Picture> = {
-  "Write, find and organise": { ...workspace, src: "mostlytext-development-workspace", widths: [960, 1600, 2624], position: "0% 30%", caption: "The folder sidebar and heading outline in the development build.", alt: "Actual MostlyText development build: the folder sidebar, the heading outline and the start of the Markdown editor." },
-  "Explain the technical work": { ...editor, src: "mostlytext-development-editor-preview-hero", widths: [960, 1600, 2448], position: "100% 20%", caption: "The rendered preview, with a checklist and a code block.", alt: "Actual MostlyText development build: the rendered preview with a heading, a checklist and a highlighted code block." },
-  "Feel at home on a Mac": { ...editor, src: "mostlytext-development-editor-preview-hero", widths: [960, 1600, 2448], position: "0% 0%", caption: "A native window, with the standard Mac title bar and controls.", alt: "Actual MostlyText development build: the top of a native macOS window with its title bar and the source pane." },
-  "A verified release": { ...workspace, src: "mostlytext-development-workspace", widths: [960, 1600, 2624], position: "100% 100%", caption: "The status bar of the build that the release checks will prove.", alt: "Actual MostlyText development build: the preview pane and the window's status bar." },
+  "Write, find and organise": { src: "/images/mostlytext-roadmap-sidebar.webp", width: 866, height: 669, original: capture,
+    caption: "Merged: the Folder, Outline and Search sidebar beside the source. Each heading is a place in the outline.",
+    alt: "MostlyText development build: the sidebar with Folder, Outline and Search sections beside the Markdown source, whose headings appear in the outline." },
+  "Explain the technical work": { src: "/images/mostlytext-roadmap-preview.webp", width: 945, height: 722, original: capture,
+    caption: "Merged: the native Markdown preview, with syntax-highlighted code. Diagrams and math also render; their correctness work is still required.",
+    alt: "MostlyText development build: the rendered preview with a heading, a bulleted checklist, a syntax-highlighted Swift code block and a quotation." },
+  "Feel at home on a Mac": { src: "/images/mostlytext-roadmap-titlebar.webp", width: 1200, height: 400, original: capture,
+    caption: "A native window and document: an untitled file offers Save As with the standard shortcut. Finder, Quick Look, themes and localisation are still ahead.",
+    alt: "MostlyText development build: the corner of a native macOS window with its controls, a document bar reading “Untitled — Save As… ⌘⇧S to name this document”, the folder panel and the first lines of Markdown." },
+  "The move to MostlyText": { src: "/images/mostlytext-development-finder-icon.png", width: 360, height: 322, small: true, original: "/images/mostlytext-development-finder-icon.png",
+    caption: "Done in September: the new MostlyText icon on a real build in Finder. The app is still called MacDown2.app; renaming it is this chapter’s work.",
+    alt: "A Finder window on a Mac showing the MostlyText icon, a slanted M and T, on an app still named MacDown2.app." },
 }
+const slug = (title: string) => "ch-" + title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
 const groups = [
   { title: "Write, find and organise", description: "The everyday editor: files, native windows, precise edits, navigation and settings.", ids: ["E01", "E02", "E03", "E04", "E05", "E08", "E09", "E10", "E11", "E13", "E18", "E22"] },
   { title: "Explain the technical work", description: "Markdown preview, diagrams, equations and export, with the correctness and safety work they still need.", ids: ["E06", "E07", "E12", "E14", "E19", "E20", "E21", "anchors", "resource-security"] },
@@ -61,14 +69,63 @@ function RoadmapItem({ item, expanded }: { item: Item; expanded: boolean }) {
 }
 
 function ChapterPicture({ picture }: { picture: Picture }) {
-  return <figure className="rm-picture" data-reveal>
-    <a href={`/images/${picture.original}`} target="_blank" rel="noopener noreferrer" aria-label="Open the full-size capture of the development build (opens in a new tab)">
-      <picture>
-        <source type="image/webp" sizes="(min-width: 62rem) 36vw, calc(100vw - 2rem)" srcSet={picture.widths.map(width => `/images/${picture.src}-${width}.webp ${width}w`).join(", ")} />
-        <img src={`/images/${picture.original}`} width={picture.width} height={picture.height} style={{ objectPosition: picture.position }} loading="lazy" decoding="async" alt={picture.alt} />
-      </picture>
+  return <figure className={`rm-picture${picture.small ? " is-small" : ""}`} data-reveal>
+    <a href={picture.original} target="_blank" rel="noopener noreferrer" aria-label="Open the full-size image (opens in a new tab)">
+      <img src={picture.src} width={picture.width} height={picture.height} loading="lazy" decoding="async" alt={picture.alt} />
     </a>
-    <figcaption>{picture.caption} It is ahead of the published alpha.</figcaption>
+    <figcaption>{picture.caption}</figcaption>
+  </figure>
+}
+
+// The road in one picture: To 1.0 as chapters sized by their work areas and filled by
+// their state, then the 1.0 release, then After 1.0 as one stop per planned version.
+const laterStatus = (status: string) => status === "planned" ? "planned" : "exploring"
+function RoadmapMap({ roadmapPage }: { roadmapPage: boolean }) {
+  const to1 = groups.map(group => {
+    const items = group.ids.map(id => data.upToOne.find(item => item.id === id)).filter((item): item is Item => Boolean(item))
+    const count = (status: string) => items.filter(item => item.status === status).length
+    return { title: group.title, total: items.length, merged: count("implemented"), building: count("development") }
+  })
+  const total = to1.reduce((sum, g) => sum + g.total, 0), merged = to1.reduce((sum, g) => sum + g.merged, 0), building = to1.reduce((sum, g) => sum + g.building, 0)
+  const versions = data.postOne.filter(item => item.version)
+  const later = data.postOne.filter(item => !item.version)
+  const toLink = (title: string) => roadmapPage ? `/roadmap/#${slug(title)}` : stageHref("", false)
+  const afterLink = (id: string) => {
+    const group = laterGroups.find(g => g.ids.includes(id))
+    return roadmapPage ? `/roadmap/?stage=after-1#${slug(group ? group.title : "")}` : stageHref("after-1", false)
+  }
+  return <figure className="rm-map" aria-labelledby="rm-map-title">
+    <h2 id="rm-map-title" className="rm-map-title">Where it stands</h2>
+    <p className="rm-map-summary">To 1.0: {merged} of {total} work areas are merged, {building} are being built and {total - merged - building} are still required. After 1.0: {versions.length} planned chapters, from {versions[0].version} to {versions[versions.length - 1].version}, then {later.length} ideas with no version yet.</p>
+    <div className="rm-lane rm-lane-to1">
+      <p className="rm-lane-start"><strong>Now</strong><span>Source alpha</span></p>
+      <ol className="rm-lane-chapters" style={{ "--cols": to1.map(g => `${g.total}fr`).join(" ") } as CSSProperties}>
+        {to1.map(g => <li key={g.title}>
+          <a href={toLink(g.title)} aria-label={`${g.title}: ${g.merged} of ${g.total} merged${g.building ? `, ${g.building} being built` : ""}`}>
+            <span className="rm-seg-name">{g.title}</span>
+            <span className="rm-seg-bar" aria-hidden="true"><i className="is-merged" style={{ width: `${(g.merged / g.total) * 100}%` }} /><i className="is-building" style={{ width: `${(g.building / g.total) * 100}%` }} /></span>
+            <span className="rm-seg-count" aria-hidden="true">{g.merged} of {g.total}</span>
+          </a>
+        </li>)}
+      </ol>
+      <p className="rm-lane-end"><strong>1.0</strong><span>Verified Mac release</span></p>
+    </div>
+    <div className="rm-lane rm-lane-after">
+      <p className="rm-lane-start"><strong>Then</strong><span>after 1.0</span></p>
+      <ol className="rm-lane-stops">
+        {versions.map(item => <li key={item.id} className={`is-${laterStatus(item.status)}`}>
+          <a href={afterLink(item.id)} aria-label={`${item.version}, ${item.title}: ${laterStatus(item.status) === "planned" ? "planned" : "exploring"}`}>
+            <span className="rm-stop" aria-hidden="true" />
+            <span className="rm-stop-version" aria-hidden="true">{item.version}</span>
+            <span className="rm-stop-title" aria-hidden="true">{item.title}</span>
+          </a>
+        </li>)}
+        <li className="is-later"><a href={afterLink(later[0].id)} aria-label={`Later: ${later.length} ideas with no version yet`}><span className="rm-stop" aria-hidden="true" /><span className="rm-stop-version" aria-hidden="true">Later</span><span className="rm-stop-title" aria-hidden="true">{later.length} ideas</span></a></li>
+      </ol>
+    </div>
+    <ul className="rm-legend" aria-label="Key">
+      <li><i className="is-merged" />Merged</li><li><i className="is-building" />Being built</li><li><i className="is-required" />Still required</li><li><i className="is-planned" />Planned</li><li><i className="is-exploring" />Exploring</li>
+    </ul>
   </figure>
 }
 
@@ -97,7 +154,7 @@ function StageWork({ after, filters, onClear }: { after: boolean; filters: Filte
         if (!visible.length) return null
         const done = all.filter(item => item.status === "implemented").length
         const state = after ? (all[0].version ? `${all[0].version}${all.length > 1 && all[all.length - 1].version ? ` to ${all[all.length - 1].version}` : ""}` : "No version yet") : `${done} of ${all.length} merged`
-        return <section className="rm-chapter" key={chapter.title} aria-label={chapter.title}>
+        return <section className="rm-chapter" id={slug(chapter.title)} key={chapter.title} aria-label={chapter.title}>
           <div className="rm-chapter-head" data-reveal>
             <h3>{chapter.title}</h3>
             <p className="rm-chapter-state">{state}</p>
@@ -145,6 +202,8 @@ export default function Roadmap({ stage, roadmapPage }: { stage: RoadmapStage; r
       <p className="rm-lead">Every piece of work between today’s source alpha and a verified Mac release, then the chapters planned beyond it.</p>
       <p className="rm-facts">Checked against the development repository on {asOf}. A <a href={ALPHA_URL}>source-only alpha</a> is available to build yourself; there is no ready-to-install app and no 1.0 yet. “Merged” means the work is in the development code, not that it is verified for 1.0. No dates are promised.</p>
     </header>
+
+    <RoadmapMap roadmapPage={roadmapPage} />
 
     <nav className="roadmap-stage-nav js-only" aria-label="Roadmap stages">
       {stages.map(s => <a key={s.key} href={stageLink(s.after)} aria-current={s.after === after ? "page" : undefined}><strong>{s.title}</strong><span>{s.summary}</span></a>)}

@@ -137,8 +137,12 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
     document.documentElement.classList.toggle("roadmap-route", isRoadmap)
     document.title = isRoadmap ? "Roadmap — MostlyText" : "MostlyText — A text editor, mostly."
     requestAnimationFrame(() => {
-      if (isRoadmap) window.scrollTo({ top: 0, behavior: "auto" })
-      else if (route) document.getElementById(route.slice(1))?.scrollIntoView({ behavior: "auto" })
+      // A chapter link (/roadmap/#ch-…) lands on its chapter; any other roadmap view starts at the top.
+      const anchor = isRoadmap && window.location.hash && !window.location.hash.startsWith("#/") ? document.getElementById(window.location.hash.slice(1)) : null
+      // "instant": arriving from a link jumps straight there, overriding the page's smooth scrolling.
+      if (anchor) anchor.scrollIntoView({ behavior: "instant" })
+      else if (isRoadmap) window.scrollTo({ top: 0, behavior: "instant" })
+      else if (route) document.getElementById(route.slice(1))?.scrollIntoView({ behavior: "instant" })
     })
   }, [route, isRoadmap])
 
