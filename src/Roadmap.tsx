@@ -11,8 +11,8 @@ import { detailHref, stageHref, type RoadmapStage } from "./route"
 function MapTip({ detail, id, up }: { detail: Detail; id: string; up: boolean }) {
   // A teaser: what it is and where it stands. The page behind it carries the rest.
   const more = detail.kind === "chapter" ? `Open for why it matters, how it will be checked and its ${detail.items.length} work areas`
-    : detail.kind === "later" ? `Open for the ${detail.items.length} ideas, and what isn’t on the roadmap at all`
-    : "Open for an example, what it won’t do and where it fits"
+    : detail.kind === "later" ? `Open for the ${detail.items.length} ideas, why they’re hard and what isn’t on the roadmap`
+    : "Open for an example, why it isn’t simple and where it fits"
   return <span className={`rm-tip${up ? " is-up" : " is-down"}`} id={id} role="tooltip">
     <strong>{detail.title}</strong>
     <span className="rm-tip-state">{detail.state}</span>

@@ -87,9 +87,17 @@ export default function RoadmapDetail({ name }: { name: string }) {
         <h2 id="rm-story-title">In short</h2>
         {story.intro.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
       </section>}
+      {story.aside && <section className="rm-story" aria-labelledby="rm-aside-title" data-reveal>
+        <h2 id="rm-aside-title">{story.aside.title}</h2>
+        {story.aside.paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+      </section>}
       {story.practice && <section className="rm-practice" aria-labelledby="rm-practice-title" data-reveal>
         <h2 id="rm-practice-title">In practice</h2>
         <p>{story.practice}</p>
+      </section>}
+      {story.hard && <section className="rm-hard" aria-labelledby="rm-hard-title" data-reveal>
+        <h2 id="rm-hard-title">Why it isn’t simple</h2>
+        <ul>{story.hard.map(reason => <li key={reason.lead}><strong>{reason.lead}</strong> {reason.text}</li>)}</ul>
       </section>}
       {chapter && <section aria-labelledby="rm-standing-title" data-reveal>
         <h2 id="rm-standing-title">Where it stands</h2>

@@ -17,9 +17,9 @@ export const pictures: Record<string, Picture> = {
   "Feel at home on a Mac": { src: "/images/mostlytext-roadmap-titlebar.webp", width: 1200, height: 400, original: capture,
     caption: "A native window and document: an untitled file offers Save As with the standard shortcut. Finder, Quick Look, themes and localisation are still ahead.",
     alt: "MostlyText development build: the corner of a native macOS window with its controls, a document bar reading “Untitled — Save As… ⌘⇧S to name this document”, the folder panel and the first lines of Markdown." },
-  "The move to MostlyText": { src: "/images/mostlytext-development-finder-icon.png", width: 360, height: 322, small: true, original: "/images/mostlytext-development-finder-icon.png",
-    caption: "Done in September: the new MostlyText icon on a real build in Finder. The app is still called MacDown2.app; renaming it is this chapter’s work.",
-    alt: "A Finder window on a Mac showing the MostlyText icon, a slanted M and T, on an app still named MacDown2.app." },
+  "The move to MostlyText": { src: "/images/mostlytext-roadmap-identity.webp", width: 1200, height: 600, original: "/images/mostlytext-roadmap-identity.webp",
+    caption: "The MostlyText identity: the Slant mark in one colour, on light and on dark. The website already uses it; the app still runs as MacDown 2 until this chapter renames it.",
+    alt: "The MostlyText mark, a forward-leaning M and T that share one stem, shown in dark ink on a light ground and in white on a near-black ground." },
 }
 export const slug = (title: string) => "ch-" + title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
 export const groups = [
