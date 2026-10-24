@@ -2,6 +2,18 @@
 
 ## 2026-10-25 local admission slice
 
+The next pure `LegacyImportPlan` step classifies only the three verified editor
+Boolean suggestions. A missing destination domain or a field whose absence was
+proved by a future protected decoder may be proposed as a default fill. Every
+valid persisted value wins, including a value equal to the current default;
+unreadable, future-version and unknown-presence destinations block automatic
+fills. The plan carries source and destination revision identities for a later
+write-boundary recheck. Its classifier consumes explicitly supplied states;
+it does **not** parse or write a persisted destination blob and cannot itself
+prove that a field is absent. Thirteen focused plan/conversion/snapshot tests
+pass with locked dependencies; strict lint and format checks pass. This is
+not consent, a serialized writer, journaling, recovery or a migration run.
+
 The next isolated, read-only fixture slice classifies three direct editor Boolean
 keys: `editorAutoIncrementNumberedLists`, `editorConvertTabs`, and
 `editorSmartHome`. `LegacyEditorBooleanConversion` preserves explicit true and
