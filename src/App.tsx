@@ -177,8 +177,11 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
       hero.classList.toggle("is-pinned", moving)
       let index = 0
       if (moving) {
-        const travel = hero.offsetHeight - window.innerHeight
-        const progress = travel > 0 ? Math.min(1, Math.max(0, -hero.getBoundingClientRect().top / travel)) : 0
+        // The stage sticks below the header, so the pin runs while the hero's top travels from there.
+        const stage = hero.querySelector<HTMLElement>(".hero-stage")
+        const top = stage ? parseFloat(getComputedStyle(stage).top) || 0 : 0
+        const travel = hero.offsetHeight - (stage?.offsetHeight ?? window.innerHeight)
+        const progress = travel > 0 ? Math.min(1, Math.max(0, (top - hero.getBoundingClientRect().top) / travel)) : 0
         const step = frames[1] ? frames[1].offsetTop - frames[0].offsetTop : 0
         track.style.transform = `translate3d(0, ${(-progress * (frames.length - 1) * step).toFixed(1)}px, 0)`
         index = Math.min(frames.length - 1, Math.round(progress * (frames.length - 1)))

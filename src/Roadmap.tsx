@@ -9,13 +9,15 @@ import { detailHref, stageHref, type RoadmapStage } from "./route"
 // A short card for one chapter or version, shown while the pointer or focus is on it;
 // Escape hides it. The link itself opens the detail page.
 function MapTip({ detail, id, up }: { detail: Detail; id: string; up: boolean }) {
-  const item = detail.items[0]
+  // A teaser: what it is and where it stands. The page behind it carries the rest.
+  const more = detail.kind === "chapter" ? `Open for why it matters, how it will be checked and its ${detail.items.length} work areas`
+    : detail.kind === "later" ? `Open for the ${detail.items.length} ideas, and what isn’t on the roadmap at all`
+    : "Open for an example, what it won’t do and where it fits"
   return <span className={`rm-tip${up ? " is-up" : " is-down"}`} id={id} role="tooltip">
     <strong>{detail.title}</strong>
     <span className="rm-tip-state">{detail.state}</span>
     <span className="rm-tip-text">{detail.summary}</span>
-    {detail.kind === "version" && item.features.length > 0 && <span className="rm-tip-list">{item.features.slice(0, 3).map(feature => <span key={feature}>{feature}</span>)}</span>}
-    <span className="rm-tip-more">{detail.kind === "chapter" ? `Open the chapter: ${detail.items.length} work areas` : detail.kind === "later" ? "Open the list of ideas" : `Open ${item.version}`}</span>
+    <span className="rm-tip-more">{more}</span>
   </span>
 }
 
@@ -37,7 +39,9 @@ function RoadmapMap() {
   // Hover, focus and Escape, shared by every chapter and stop.
   const open = (name: string) => (event: { currentTarget: Element }) => {
     const box = event.currentTarget.getBoundingClientRect()
-    setTip({ name, up: box.bottom + 280 > window.innerHeight && box.top > 280 })
+    // A sticky header covers the top of the window on wide screens; a card above must clear it.
+    const header = document.querySelector(".site-header")?.getBoundingClientRect().bottom ?? 0
+    setTip({ name, up: box.bottom + 240 > window.innerHeight && box.top - Math.max(0, header) > 240 })
   }
   const close = (name: string) => () => setTip(current => current.name === name ? { name: "", up: false } : current)
   const hover = (name: string) => ({ onPointerEnter: open(name), onPointerLeave: close(name), onFocus: open(name), onBlur: close(name) })

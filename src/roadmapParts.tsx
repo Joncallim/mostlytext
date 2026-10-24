@@ -99,3 +99,20 @@ export const details: Detail[] = [
   })(),
 ]
 export const detailNamed = (name: string) => details.find(detail => detail.name === name)
+
+// Which detail page a work area belongs to, so dependencies can link page to page.
+const pageOf: Record<string, string> = Object.fromEntries(details.flatMap(detail => detail.items.map(item => [item.id, detail.name])))
+const unique = (list: Detail[]) => list.filter((detail, index) => list.indexOf(detail) === index)
+export function relations(detail: Detail) {
+  const own = new Set(detail.items.map(item => item.id))
+  const buildsOn = unique(detail.items.flatMap(item => item.dependsOn).filter(id => !own.has(id) && pageOf[id]).map(id => detailNamed(pageOf[id])!).filter(other => other !== detail))
+  const leadsTo = unique(details.filter(other => other !== detail && other.items.some(item => item.dependsOn.some(id => own.has(id)))))
+  return { buildsOn, leadsTo }
+}
+export function openWork(detail: Detail, pullRequests: number[] = []) {
+  const numbers = new Set(detail.items.flatMap(item => item.issues.map(issue => issue.number)))
+  return {
+    issues: data.openIssueInventory.filter(issue => numbers.has(issue.number)),
+    pullRequests: pullRequests.map(number => data.openPullRequests.find(pull => pull.number === number)).filter(pull => pull !== undefined),
+  }
+}
