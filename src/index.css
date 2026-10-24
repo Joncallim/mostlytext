@@ -229,6 +229,9 @@ main:focus { outline: none; }
 .demo-heading-level-3, .demo-heading-level-4, .demo-heading-level-5, .demo-heading-level-6 { font-size: 1.1em; }
 .try-page p, .cap-page p { margin: 0 0 .75em; }
 .try-page ul, .try-page ol, .cap-page ul, .cap-page ol { margin: 0 0 .75em; padding-left: 1.25em; }
+/* Tailwind's reset removes list markers; rendered Markdown and running lists keep them. */
+.try-page ul, .cap-page ul, .work-detail ul, .roadmap-extra ul { list-style: disc; }
+.try-page ol, .cap-page ol { list-style: decimal; }
 .try-page code, .cap-page code { padding: .1em .3em; border-radius: 3px; background: #eef1f6; font-size: .88em; }
 .try-page pre, .cap-page pre { margin: 0 0 .75em; padding: .6em .75em; border-radius: 4px; background: #f3f5f9; font-size: .85em; white-space: pre-wrap; }
 .try-page pre code, .cap-page pre code { padding: 0; background: none; }

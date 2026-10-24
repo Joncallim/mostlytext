@@ -128,18 +128,19 @@ export function MarkdownPreview({ source }: { source: string }) {
 }
 
 // The live thing: a heading you can type into. Each line of Markdown renders at once
-// underneath; trying a heading, a list item and some emphasis ends in the download prompt.
-export type LineKind = "heading" | "list" | "emphasis"
+// underneath. The starting line already shows a heading; trying a list item, some bold
+// and inline code ends in the download prompt.
+export type LineKind = "list" | "bold" | "code"
 export function kindOf(line: string): LineKind | null {
-  if (/^#{1,6}[ \t]+\S/.test(line)) return "heading"
   if (/^([-*+]|\d+\.)[ \t]+\S/.test(line)) return "list"
-  if (/\*\*[^*\n]+\*\*|\*[^*\n]+\*|`[^`\n]+`/.test(line)) return "emphasis"
+  if (/`[^`\n]+`/.test(line)) return "code"
+  if (/\*\*[^*\n]+\*\*|\*[^*\n]+\*/.test(line)) return "bold"
   return null
 }
 export const TRY_KINDS: { kind: LineKind, name: string, example: string }[] = [
-  { kind: "heading", name: "a heading", example: "## Ship it on Friday" },
   { kind: "list", name: "a list item", example: "- Write the README first" },
-  { kind: "emphasis", name: "some bold", example: "Keep it **mostly** text" },
+  { kind: "bold", name: "some bold", example: "Keep it **mostly** text" },
+  { kind: "code", name: "inline code", example: "Run `xcodegen generate` first" },
 ]
 export const TRY_START = "# Release notes"
 
@@ -160,7 +161,7 @@ export default function TryLine() {
   const restart = () => { setLine(TRY_START); setTried([]); setFinished(false) }
   const left = TRY_KINDS.filter(item => !tried.includes(item.kind))
   const progress = tried.length === 0
-    ? "Change the line, or pick an example. Try a heading, a list item and some bold."
+    ? "Change the line, or pick an example. Try a list item, some bold and inline code."
     : `${tried.length} of ${TRY_KINDS.length} tried. Next, ${left.map(item => item.name).join(" or ")}.`
   return <div className="try">
     <label className="try-label" htmlFor="try-line">Your line of Markdown</label>

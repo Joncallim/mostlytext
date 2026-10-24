@@ -57,19 +57,20 @@ for (const source of ['*'.repeat(DEMO_LIMIT), '\\'.repeat(DEMO_LIMIT), '`'.repea
 assert(performance.now() - started < 5000, 'Bounded adversarial inputs exceeded five seconds');
 console.log(`PASS: Markdown blocks/inlines, empty/CRLF, ${attacks.length} adversarial HTML/URL/image cases, ${DEMO_LIMIT}-character cap, bounded parser stress (${Math.round(performance.now()-started)} ms).`);
 
-// The type-a-line demo: each example is the kind it teaches, the starting line is a
-// heading, and lines that are none of the three kinds don't count.
+// The type-a-line demo: each example is the kind it teaches; the starting line (a
+// heading) and lines that are none of the three kinds don't count.
 assert.equal(TRY_KINDS.length, 3);
 for (const { kind, example } of TRY_KINDS) assert.equal(kindOf(example), kind, example);
-assert.equal(kindOf(TRY_START), 'heading');
-assert.equal(kindOf('#'), null);
-assert.equal(kindOf('#NoSpace'), null);
-assert.equal(kindOf('###   Spaced heading'), 'heading');
+assert.equal(kindOf(TRY_START), null);
+assert.equal(kindOf('## Another heading'), null);
 assert.equal(kindOf('1. First'), 'list');
 assert.equal(kindOf('* star item'), 'list');
+assert.equal(kindOf('- Run `make` first'), 'list');
 assert.equal(kindOf('- '), null);
-assert.equal(kindOf('Use `code` here'), 'emphasis');
-assert.equal(kindOf('An *emphasised* word'), 'emphasis');
+assert.equal(kindOf('Use `code` here'), 'code');
+assert.equal(kindOf('Both **bold** and `code`'), 'code');
+assert.equal(kindOf('An *emphasised* word'), 'bold');
 assert.equal(kindOf('**unfinished'), null);
+assert.equal(kindOf('`unfinished'), null);
 assert.equal(kindOf('Just a sentence.'), null);
 console.log('Type-a-line tests passed.');
