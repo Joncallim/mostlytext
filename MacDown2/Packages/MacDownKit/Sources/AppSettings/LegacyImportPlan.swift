@@ -1,9 +1,8 @@
 import Foundation
 
-/// A destination classification supplied by a future protected decoder. The
-/// classification is deliberately not inferred from in-memory default values:
-/// an explicit persisted false has the same precedence as an explicit true.
-public enum LegacyEditorDestinationDomain: Sendable, Equatable {
+/// Internal form of decoder-produced destination evidence. An import caller
+/// cannot assert that an in-memory default represents an absent stored value.
+enum LegacyEditorDestinationDomain: Sendable, Equatable {
     case absent
     case valid(persisted: [LegacyEditorBooleanConversion.Destination: Bool],
                provenAbsent: Set<LegacyEditorBooleanConversion.Destination>)
@@ -32,18 +31,17 @@ public struct LegacyImportPlan: Sendable, Equatable {
     public let entries: [Entry]
     public let invalidSourceKeys: [String]
 
-    public init(
-        source: LegacyPreferenceSnapshot,
-        destination: LegacyEditorDestinationDomain,
-        destinationRevision: String
-    ) {
+    public init(source: LegacyPreferenceSnapshot, destination: LegacyEditorDestinationEvidence) {
         let conversion = LegacyEditorBooleanConversion(snapshot: source)
         sourceDigest = source.canonicalDigest
-        self.destinationRevision = destinationRevision
+        destinationRevision = destination.rawRevision
         invalidSourceKeys = conversion.invalidSourceKeys
         entries = conversion.proposedValues.keys.sorted { $0.rawValue < $1.rawValue }.compactMap { key in
             guard let suggested = conversion.proposedValues[key] else { return nil }
-            return Entry(destination: key, disposition: Self.classify(key, suggested: suggested, in: destination))
+            return Entry(
+                destination: key,
+                disposition: Self.classify(key, suggested: suggested, in: destination.domain)
+            )
         }
     }
 
@@ -58,8 +56,8 @@ public struct LegacyImportPlan: Sendable, Equatable {
         }
     }
 
-    public func matches(source: LegacyPreferenceSnapshot, destinationRevision: String) -> Bool {
-        source.canonicalDigest == sourceDigest && destinationRevision == self.destinationRevision
+    public func matches(source: LegacyPreferenceSnapshot, destination: LegacyEditorDestinationEvidence) -> Bool {
+        source.canonicalDigest == sourceDigest && destination.rawRevision == destinationRevision
     }
 
     private static func classify(

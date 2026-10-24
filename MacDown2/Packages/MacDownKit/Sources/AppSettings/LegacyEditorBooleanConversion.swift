@@ -5,7 +5,7 @@ import Foundation
 /// destination precedence or write a preference. Every other legacy key stays
 /// with the complete #53 disposition plan.
 public struct LegacyEditorBooleanConversion: Sendable, Equatable {
-    public enum Destination: String, Sendable, Hashable {
+    public enum Destination: String, CaseIterable, Sendable, Hashable {
         case autoIncrementOrderedLists
         case convertsTabsToSpaces
         case smartHome

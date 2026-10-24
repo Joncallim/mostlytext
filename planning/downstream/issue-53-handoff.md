@@ -121,6 +121,24 @@ protected-write contract remains required as described above.
 
 ## Settings compatibility — first executable unit
 
+The first import-planning slice now has a pure editor-domain admission candidate.
+`LegacyEditorDestinationEvidence.decode(_:)` accepts caller-supplied raw bytes,
+classifies absence, historical/current valid data, malformed data and unknown
+future data, and binds its decision to the exact byte digest. It does not read
+preferences or write settings. `LegacyImportPlan` accepts only this decoder's
+evidence, so a caller cannot invent field absence from a default-valued model.
+For an existing non-Data value, the eventual storage adapter must report an
+unreadable domain rather than call `decode(nil)`; nil means proven absence.
+
+This candidate adds the local, Foundation-only `AppSettings` → `JSONSupport`
+dependency. Its purpose is duplicate-key admission before Foundation decoding;
+Foundation's JSON deserializer can silently collapse duplicate keys. The
+dependency is acyclic and carries no renderer, document or network capability.
+The typed decoder and ordinary `UserDefaultsAppSettingsStore` startup path
+are **not yet shared**. Review must reconcile that boundary before wiring the
+decoder into normal startup, the serialized writer or consent flow. Passing
+the pure tests is not migration completion.
+
 AppSettings owns a typed versioned decode/migration adapter, used by normal startup AND the importer. Do not implement a one-off importer decoder while ordinary startup still falls back destructively. Inspect raw persisted data before constructing mutable models or writing defaults. Distinguish absent, known-compatible older schema, valid current, malformed and unknown future data.
 
 For a known older editor blob missing showsStatusBar, preserve every present valid field and supply true ONLY for the missing new field. A present false remains false. Apply the same additive-field discipline to every final E22/E23 setting. Validate ranges explicitly during decode; constructor clamping is not automatically invoked by synthesized Decodable. Known removed parser keys receive the final E22 disposition, not a fake stored control.
