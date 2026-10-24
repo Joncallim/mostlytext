@@ -49,6 +49,23 @@ struct LegacyImportPlanTests {
         #expect(plan.entries.allSatisfy { $0.disposition == .blockedUnknownPresence })
     }
 
+    @Test func persistedValueWinsOverContradictoryAbsenceEvidence() throws {
+        let plan = try LegacyImportPlan(
+            source: source(),
+            destination: .valid(
+                persisted: [.smartHome: false],
+                provenAbsent: [.smartHome, .convertsTabsToSpaces]
+            ),
+            destinationRevision: "conflicted-classification"
+        )
+
+        #expect(plan.defaultFills == [.convertsTabsToSpaces: true])
+        #expect(plan.entries.first { $0.destination == .smartHome }?.disposition ==
+            .retainPersisted(false, suggested: false))
+        #expect(plan.entries.first { $0.destination == .autoIncrementOrderedLists }?.disposition ==
+            .blockedUnknownPresence)
+    }
+
     @Test(arguments: [LegacyEditorDestinationDomain.unreadable, .futureVersion])
     func unsupportedPrimaryBlocksAllAutomaticFills(_ destination: LegacyEditorDestinationDomain) throws {
         let plan = try LegacyImportPlan(source: source(), destination: destination, destinationRevision: "raw-4")
