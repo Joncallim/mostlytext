@@ -2,6 +2,19 @@
 
 ## 2026-10-25 local admission slice
 
+The next isolated, read-only fixture slice classifies three direct editor Boolean
+keys: `editorAutoIncrementNumberedLists`, `editorConvertTabs`, and
+`editorSmartHome`. `LegacyEditorBooleanConversion` preserves explicit true and
+false, distinguishes absent keys from false, and reports present non-Boolean
+values instead of coercing numeric or string lookalikes. It produces proposals
+only; it does not persist them or infer that a default-valued destination is
+absent. The three conversion fixtures and 44 adjacent snapshot/editor-behavior
+tests pass on the locked package build; strict lint and format checks pass. The
+font, prefix-continuation, and matching-character candidates remain
+unmapped pending their respective value or behavioral fixtures. Destination
+precedence, consent, E17 journaling, E23 theme IDs, and real-domain rehearsal
+remain outside this slice.
+
 An isolated local #53 branch based on release-debt candidate `e2434fab` now has a pure
 `LegacyPreferenceSnapshot(domain:)` value. It copies an explicitly supplied domain,
 preserves property-list value kinds (including Boolean versus number), rejects unsupported
