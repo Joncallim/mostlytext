@@ -54,7 +54,7 @@ public struct LegacyEditorDestinationEvidence: Sendable, Equatable {
             return Self(status: .unknownFuture, rawRevision: revision)
         }
         let missingStatusBar = fields["showsStatusBar"] == nil
-        guard let settings = validEditor(fields: fields, raw: raw), !(version == .valid && missingStatusBar) else {
+        guard let settings = validEditor(fields: fields, raw: raw) else {
             return Self(status: .malformed, rawRevision: revision)
         }
         let persisted = persistedValues(in: fields)

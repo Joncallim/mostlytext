@@ -135,10 +135,14 @@ This candidate adds the local, Foundation-only `AppSettings` → `JSONSupport`
 dependency. Its purpose is duplicate-key admission before Foundation decoding;
 Foundation's JSON deserializer can silently collapse duplicate keys. The
 dependency is acyclic and carries no renderer, document or network capability.
-The typed decoder and ordinary `UserDefaultsAppSettingsStore` startup path
-are **not yet shared**. Review must reconcile that boundary before wiring the
-decoder into normal startup, the serialized writer or consent flow. Passing
-the pure tests is not migration completion.
+The ordinary `UserDefaultsAppSettingsStore` editor load and write-protection
+check now use this same admission result. A read-only `editorStoredDomain`
+snapshot exposes the decoded evidence to a future importer; it distinguishes
+an absent key from a present non-Data value before any Data cast. Unsupported
+bytes remain at the primary key and startup exposes only a session-safe
+default. This does not migrate or rewrite stored data. The serialized writer,
+consent flow and execution journal remain separate review gates. Passing
+these compatibility tests is not migration completion.
 
 AppSettings owns a typed versioned decode/migration adapter, used by normal startup AND the importer. Do not implement a one-off importer decoder while ordinary startup still falls back destructively. Inspect raw persisted data before constructing mutable models or writing defaults. Distinguish absent, known-compatible older schema, valid current, malformed and unknown future data.
 

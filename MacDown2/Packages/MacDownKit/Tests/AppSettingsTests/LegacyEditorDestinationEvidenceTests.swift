@@ -34,17 +34,19 @@ struct LegacyEditorDestinationEvidenceTests {
     }
 
     @Test func historicalSchemaKeepsPersistedBooleansAndOnlyDefaultsAdditiveField() throws {
-        let raw = try fixture(statusBar: nil)
-        let evidence = LegacyEditorDestinationEvidence.decode(raw)
-        #expect(evidence.status == .knownCompatible)
-        #expect(evidence.settings?.showsStatusBar == true)
-        #expect(evidence.settings?.smartHome == false)
-        #expect(evidence.persisted == [
-            .autoIncrementOrderedLists: true,
-            .convertsTabsToSpaces: false,
-            .smartHome: false,
-        ])
-        #expect(evidence.provenAbsent.isEmpty)
+        for version in [nil, 1] {
+            let raw = try fixture(statusBar: nil, version: version)
+            let evidence = LegacyEditorDestinationEvidence.decode(raw)
+            #expect(evidence.status == .knownCompatible)
+            #expect(evidence.settings?.showsStatusBar == true)
+            #expect(evidence.settings?.smartHome == false)
+            #expect(evidence.persisted == [
+                .autoIncrementOrderedLists: true,
+                .convertsTabsToSpaces: false,
+                .smartHome: false,
+            ])
+            #expect(evidence.provenAbsent.isEmpty)
+        }
     }
 
     @Test func currentSchemaPreservesExplicitFalseAndDefaultEqualValues() throws {

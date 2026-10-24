@@ -27,6 +27,22 @@ public struct UserDefaultsAppSettingsStore: AppSettingsStoring {
         set { save(newValue, key: .editor) }
     }
 
+    /// A read-only snapshot for import planning. A present value of the wrong
+    /// property-list type is distinct from a genuinely absent editor domain.
+    /// The importer must not turn `.unreadableNonData` into `.decode(nil)`.
+    public enum EditorStoredDomain: Sendable, Equatable {
+        case decoded(LegacyEditorDestinationEvidence)
+        case unreadableNonData
+    }
+
+    public var editorStoredDomain: EditorStoredDomain {
+        guard let object = defaults.object(forKey: Key.editor.rawValue) else {
+            return .decoded(.decode(nil))
+        }
+        guard let data = object as? Data else { return .unreadableNonData }
+        return .decoded(.decode(data))
+    }
+
     public var markdown: MarkdownSettings {
         get { load(.markdown) }
         set { save(newValue, key: .markdown) }
@@ -49,7 +65,16 @@ public struct UserDefaultsAppSettingsStore: AppSettingsStoring {
     /// are copied to the existing one-time preserved key when a later save is refused (#53).
     /// A backup never authorizes replacement of an unreadable primary value.
     private func load<T: AppSettingsDomain>(_ key: Key) -> T {
-        guard let data = defaults.data(forKey: key.rawValue), let value = Self.decode(T.self, from: data)
+        if key == .editor {
+            if case let .decoded(evidence) = editorStoredDomain,
+               let settings = evidence.settings as? T {
+                return settings
+            }
+            return T.defaultValue
+        }
+        guard let object = defaults.object(forKey: key.rawValue),
+              let data = object as? Data,
+              let value = Self.decode(T.self, from: data)
         else { return T.defaultValue }
         return value
     }
@@ -148,7 +173,7 @@ public struct UserDefaultsAppSettingsStore: AppSettingsStoring {
         func decodes(_ data: Data) -> Bool {
             switch self {
             case .general: UserDefaultsAppSettingsStore.decode(GeneralSettings.self, from: data) != nil
-            case .editor: UserDefaultsAppSettingsStore.decode(EditorSettings.self, from: data) != nil
+            case .editor: LegacyEditorDestinationEvidence.decode(data).settings != nil
             case .markdown: UserDefaultsAppSettingsStore.decode(MarkdownSettings.self, from: data) != nil
             case .previewExport: UserDefaultsAppSettingsStore.decode(PreviewExportSettings.self, from: data) != nil
             case .formats: UserDefaultsAppSettingsStore.decode(FormatSettings.self, from: data) != nil
