@@ -18,7 +18,7 @@ export default function BlogPost() {
         <ul>
           <li>a native editor with Tree-sitter syntax highlighting and themes;</li>
           <li>a native preview, beside the source or on its own, that scrolls with you;</li>
-          <li>equations, plus Mermaid, D2 and Graphviz diagrams, rendered locally on your Mac;</li>
+          <li>Mermaid, D2 and Graphviz diagrams rendered locally on your Mac, plus equation support that is still being verified;</li>
           <li>HTML and PDF export from the same renderer as the preview; and</li>
           <li>a heading outline, a folder sidebar, and list-continuing and bracket-pairing assists.</li>
         </ul>
@@ -35,8 +35,8 @@ export default function BlogPost() {
         <h3>A preview with no web page in it</h3>
         <p>MostlyText’s Markdown preview is native SwiftUI, built with Textual, with native Markdown rendering and selection. The Markdown engine—swift-markdown, with cmark-gfm underneath—parses off the main thread with a short debounce and records which source lines each block came from. That map drives scroll sync today, and is the foundation for roadmap work such as editing in the preview.</p>
 
-        <h3>Diagrams and maths, offline</h3>
-        <p>Mermaid, D2 and Graphviz fences render locally, in preview and in export. Nothing is sent anywhere. WaveDrom was evaluated and deferred because its documented rendering path relies on <code>eval()</code>; I didn’t want arbitrary code execution as the price of timing diagrams.</p>
+        <h3>Local diagrams, and maths still under verification</h3>
+        <p>Mermaid, D2 and Graphviz fences render locally, in preview and in export. Equation rendering is also local, but it is still under verification: development builds have known inline-math issues. Nothing is sent anywhere. WaveDrom was evaluated and deferred because its documented rendering path relies on <code>eval()</code>; I didn’t want arbitrary code execution as the price of timing diagrams.</p>
 
         <h3>Documents behave like Mac documents</h3>
         <p>I planned an in-app tab bar and a single workspace window. Building it showed that was the wrong call, and the app now uses native window tabs: one window per document, grouped by macOS, with a sidebar per window. The development work includes atomic saves, recovery and external-file conflict handling. These are behaviours to test, not a blanket guarantee that the alpha cannot lose work. Please use copies of documents while testing.</p>

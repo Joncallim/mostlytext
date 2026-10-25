@@ -14,7 +14,9 @@ and its final alt text. Its caption must say:
 > the public alpha tag or a signed release.
 
 The recording must not be described as `v0.1.0-alpha.1`, a signed binary, or a
-1.0 release. The post itself makes no benchmark or superiority claim.
+1.0 release. It is review-quality development footage only until the visible
+inline-math defect is fixed and re-recorded. The post itself makes no benchmark
+or superiority claim.
 
 ## Release follow action
 
