@@ -6,6 +6,7 @@ export default function BlogPost() {
       <header className="blog-header">
         <p className="blog-kicker">Notes from MostlyText</p>
         <h1>Rebuilding MacDown as a native Mac app</h1>
+        <p className="blog-byline">Jonathan, developer of MostlyText</p>
         <p className="blog-intro">MostlyText continues MacDown’s source-and-preview workflow in a new native implementation.</p>
       </header>
 
