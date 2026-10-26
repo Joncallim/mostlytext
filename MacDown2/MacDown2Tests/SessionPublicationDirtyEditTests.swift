@@ -18,12 +18,12 @@ extension SessionViewStateRoundTripTests {
         sessions.session = nil
         sessions.publicationCount = 0
         let firstDocument = try #require(controller.model.activeDocument)
-        let firstGate = FirstCallGate()
-        let secondGate = FirstCallGate()
-        defer {
-            firstGate.release()
-            secondGate.release()
+        let (firstGate, secondGate) = (FirstCallGate(), FirstCallGate())
+        var rejectedSnapshots: [(superseded: Bool, documentChanged: Bool)] = []
+        coordinator.afterSessionPublicationRejected = { superseded, documentChanged in
+            rejectedSnapshots.append((superseded, documentChanged))
         }
+        defer { [firstGate, secondGate].forEach { $0.release() } }
         var recoveryPasses = 0
         coordinator.afterSessionRecoveryPersisted = {
             recoveryPasses += 1
@@ -57,7 +57,7 @@ extension SessionViewStateRoundTripTests {
         #expect(recovered?.isExactlyEqual(to: "second edit") == true)
         secondGate.release()
 
-        #expect(await termination.value.persisted)
+        #expect(await termination.value.persisted, "Publication rejections: \(rejectedSnapshots)")
         #expect(sessions.publicationCount == 1)
         #expect(sessions.session?.tabs.first?.documentRecoveryEpoch == currentDocument.recoveryEpoch)
     }

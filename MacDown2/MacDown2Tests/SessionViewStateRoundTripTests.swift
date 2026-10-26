@@ -310,6 +310,12 @@ extension SessionViewStateRoundTripTests {
         defer { try? FileManager.default.removeItem(at: directory) }
         let sessions = MemorySessionStore()
         let coordinator = try coordinatorWithOneTab(sessions: sessions, directory: directory)
+        var rejectionCount = 0
+        coordinator.afterSessionPublicationRejected = { superseded, documentChanged in
+            #expect(superseded)
+            #expect(!documentChanged)
+            rejectionCount += 1
+        }
         coordinator.afterSessionRecoveryPersisted = { [weak coordinator] in
             guard let coordinator else { return }
             coordinator.sessionPublicationOrder.invalidateCapturedSnapshots()
@@ -318,6 +324,7 @@ extension SessionViewStateRoundTripTests {
         let result = await coordinator.saveSessionResult()
 
         #expect(!result.persisted)
+        #expect(rejectionCount == 2)
         #expect(sessions.session == nil)
     }
 

@@ -132,7 +132,11 @@ extension WindowCoordinator {
             // document lifetime and generation too, after recovery and before the synchronous canonical write.
             // Scheduling a changed session invalidates A while B is debounced.
             // Beginning B also invalidates A if B fails.
-            if sessionPublicationOrder.isSuperseded(sequence) || !capturedDocumentsRemainCurrent(snapshot) {
+            let superseded = sessionPublicationOrder.isSuperseded(sequence)
+            let documentChanged = (!superseded || afterSessionPublicationRejected != nil)
+                && !capturedDocumentsRemainCurrent(snapshot)
+            if superseded || documentChanged {
+                afterSessionPublicationRejected?(superseded, documentChanged)
                 if isAutosave {
                     return .saved
                 }
