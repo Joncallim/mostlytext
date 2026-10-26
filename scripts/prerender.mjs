@@ -25,10 +25,10 @@ const pages = [
     file: "dist/blog/rebuilding-macdown-native-mac-app/index.html", route: "#/blog/rebuilding-macdown-native-mac-app", view: "#/blog/rebuilding-macdown-native-mac-app", roadmapPage: false,
     head: {
       title: "Rebuilding MacDown as a native Mac app — MostlyText",
-      description: "Why MostlyText is rebuilding MacDown’s source-and-preview workflow as a native macOS editor, and what is still ahead.",
+      description: "Write Markdown, check the preview and edit a Mermaid diagram in MostlyText. An honest look at a private development build and the source alpha you can test.",
       url: "https://mostlytext.app/blog/rebuilding-macdown-native-mac-app/",
       socialTitle: "Rebuilding MacDown as a native Mac app",
-      socialDescription: "Why MostlyText is rebuilding MacDown’s source-and-preview workflow as a native macOS editor, and what is still ahead.",
+      socialDescription: "Write Markdown, check the preview and edit a Mermaid diagram in MostlyText. Source alpha, build requirements and feedback links.",
     },
   },
 ]
