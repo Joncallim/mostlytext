@@ -378,6 +378,30 @@ main:focus { outline: none; }
 }
 .roadmap-route .site-footer { padding-top: 6rem; }
 
+/* ---------- Blog: one readable technical note ---------- */
+.blog-post { padding: clamp(3rem, 6vw, 7rem) var(--margin) 0; }
+.blog-post article { max-width: 46rem; margin: 0 auto; }
+.blog-header { max-width: 42rem; margin-bottom: clamp(3rem, 6vw, 6rem); }
+.blog-header h1 { max-width: 12ch; font-size: var(--step-head); line-height: 1; letter-spacing: -.045em; }
+.blog-byline { margin-top: 1.25rem; color: var(--muted); font-size: var(--step-small); font-weight: 600; }
+.blog-intro { max-width: 38rem; margin-top: 1.5rem; font-size: var(--step-lead); line-height: 1.3; }
+.blog-status { display: grid; gap: .75rem; margin-bottom: 2.5rem; padding: 1.25rem; background: var(--surface); }
+.blog-copy { display: grid; gap: 1.25rem; }
+.blog-copy h2 { margin-top: clamp(2.5rem, 5vw, 5rem); font-size: var(--step-head); line-height: 1.05; letter-spacing: -.035em; }
+.blog-copy h3 { margin-top: 1.5rem; font-size: clamp(1.25rem, 1.1rem + .6vw, 1.6rem); line-height: 1.2; }
+.blog-copy ul { display: grid; gap: .5rem; padding-left: 1.25rem; }
+.blog-copy code { padding: .1em .3em; border-radius: 3px; background: var(--surface); font-size: .9em; }
+.blog-figure { margin: 1rem 0; min-width: 0; }
+.blog-figure > a { display: block; background: var(--surface); }
+.blog-figure figcaption { margin-top: .75rem; color: var(--muted); font-size: var(--step-small); }
+.blog-post a { overflow-wrap: anywhere; }
+.blog-callout { display: grid; gap: 1.25rem; margin-top: clamp(4rem, 8vw, 8rem); padding: clamp(2rem, 5vw, 4rem); background: var(--night); color: var(--snow); }
+.blog-callout h2 { max-width: 14ch; font-size: var(--step-head); line-height: 1.02; letter-spacing: -.04em; }
+.blog-callout p { max-width: 36rem; color: var(--snow-muted); }
+.blog-callout .button { background: var(--snow); color: var(--ink); }
+.blog-callout a:focus-visible { outline-color: var(--snow); }
+@media (hover: hover) and (pointer: fine) { .blog-callout .button:hover { background: #fff; } }
+
 /* ---------- Entrances (once, below the fold; never hiding content without JS) ---------- */
 @media (prefers-reduced-motion: no-preference) {
   .js.reveals [data-reveal]:not(.is-in) { opacity: 0; transform: translateY(24px); }

@@ -4,9 +4,10 @@ import RoadmapDetail from "./RoadmapDetail"
 import { detailNamed } from "./roadmapParts"
 import TryLine from "./MarkdownDemo"
 import Capabilities from "./Capabilities"
+import BlogPost from "./BlogPost"
 import data from "./roadmap-data.json"
 import { ALPHA_URL, GitHubLink, GitHubMark, ISSUES_URL, RELEASES_URL, SITE_SOURCE_URL, SOURCE_URL } from "./links"
-import { detailOf, isRoadmapPage, isRoadmapRoute, routeFromLocation, stageOf } from "./route"
+import { blogHref, detailOf, isBlogRoute, isRoadmapPage, isRoadmapRoute, routeFromLocation, stageOf } from "./route"
 
 const navItems = [
   ["Try it", "/#try"],
@@ -89,6 +90,7 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
   const [route, setRoute] = useState(() => initialRoute ?? routeFromLocation())
   const [onRoadmapPage] = useState(() => roadmapPage ?? isRoadmapPage())
   const isRoadmap = isRoadmapRoute(route)
+  const isBlog = isBlogRoute(route)
   const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
@@ -138,7 +140,7 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
   useEffect(() => {
     document.documentElement.classList.toggle("roadmap-route", isRoadmap)
     const detail = detailOf(route)
-    document.title = detail ? `${detailNamed(detail)?.title ?? "Roadmap"} — MostlyText roadmap` : isRoadmap ? "Roadmap — MostlyText" : "MostlyText — A text editor, mostly."
+    document.title = detail ? `${detailNamed(detail)?.title ?? "Roadmap"} — MostlyText roadmap` : isBlog ? "Rebuilding MacDown as a native Mac app — MostlyText" : isRoadmap ? "Roadmap — MostlyText" : "MostlyText — A text editor, mostly."
     requestAnimationFrame(() => {
       // A chapter link (/roadmap/#ch-…) lands on its chapter; any other roadmap view starts at the top.
       const anchor = isRoadmap && window.location.hash && !window.location.hash.startsWith("#/") ? document.getElementById(window.location.hash.slice(1)) : null
@@ -216,7 +218,7 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
           <a className="button nav-action" href={ALPHA_URL} onClick={() => setMenuOpen(false)}><span className="link-label"><GitHubMark />Build the alpha from source</span></a>
         </nav>
       </header>
-      {detailOf(route) ? <RoadmapDetail name={detailOf(route)} /> : isRoadmap ? <Roadmap stage={stageOf(route)} roadmapPage={onRoadmapPage} /> : <main id="main-content" tabIndex={-1}>
+      {isBlog ? <BlogPost /> : detailOf(route) ? <RoadmapDetail name={detailOf(route)} /> : isRoadmap ? <Roadmap stage={stageOf(route)} roadmapPage={onRoadmapPage} /> : <main id="main-content" tabIndex={-1}>
         <section className="hero" id="home" aria-labelledby="hero-title">
           <div className="hero-stage">
             <h1 id="hero-title" className="hero-half hero-first">A text editor,<span className="visually-hidden"> mostly.</span></h1>
@@ -295,8 +297,8 @@ export default function App({ initialRoute, roadmapPage }: { initialRoute?: stri
       </main>}
       <footer className="site-footer">
         <p>A text editor, mostly.</p>
-        <p className="footer-links"><a href={RELEASES_URL}>Releases</a><a href={ISSUES_URL}>Issues</a><a href={SOURCE_URL}>Source</a></p>
-        <p>Descended from MacDown. Licence and notices in the repository.</p>
+        <p className="footer-links"><a href={RELEASES_URL}>Releases</a><a href={ISSUES_URL}>Issues</a><a href={SOURCE_URL}>Source</a><a href={blogHref()}>Writing</a></p>
+        <p>Descended from MacDown. Licence and notices in the repository. This site uses Cloudflare Web Analytics for aggregate traffic measurement; EU visitors are excluded.</p>
       </footer>
     </div>
   )

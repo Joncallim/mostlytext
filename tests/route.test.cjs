@@ -26,6 +26,10 @@ const pendingFor = (href, prerenderedView) => {
 // [URL, expected route, expected view]; unknown or malformed stages fall back to "To 1.0".
 const cases = [
   ['/', '', 'home'], ['/#faq', '#faq', 'home'],
+  ['/blog/rebuilding-macdown-native-mac-app/', '#/blog/rebuilding-macdown-native-mac-app', '#/blog/rebuilding-macdown-native-mac-app'],
+  ['/blog/rebuilding-macdown-native-mac-app', '#/blog/rebuilding-macdown-native-mac-app', '#/blog/rebuilding-macdown-native-mac-app'],
+  ['/#/blog/rebuilding-macdown-native-mac-app', '#/blog/rebuilding-macdown-native-mac-app', '#/blog/rebuilding-macdown-native-mac-app'],
+  ['/blog/unknown/', '', 'home'],
   ['/#/roadmap', '#/roadmap', '#/roadmap'], ['/#/roadmap/', '#/roadmap', '#/roadmap'],
   ['/#/roadmap/after-1', '#/roadmap/after-1', '#/roadmap/after-1'], ['/#/roadmap/after-1/', '#/roadmap/after-1', '#/roadmap/after-1'],
   ['/#/roadmap/bogus', '#/roadmap', '#/roadmap'], ['/#/roadmapafter-1', '#/roadmap', '#/roadmap'],
@@ -56,7 +60,7 @@ for (const [href, route, view] of cases) {
   const r = routeAt(href);
   assert.equal(r.routeFromLocation(), route, `route for ${href}`);
   assert.equal(r.viewOf(r.routeFromLocation()), view, `view for ${href}`);
-  for (const prerendered of ['home', '#/roadmap', '#/roadmap/detail/later']) {
+  for (const prerendered of ['home', '#/roadmap', '#/roadmap/detail/later', '#/blog/rebuilding-macdown-native-mac-app']) {
     assert.equal(pendingFor(href, prerendered), view !== prerendered, `head script for ${href} on the ${prerendered} page`);
   }
   count += 5;
@@ -78,6 +82,7 @@ for (const name of ['write-find-and-organise', '1-0-x', '1-10', 'later']) {
   count += 2;
 }
 assert.equal(r.detailOf('#/roadmap'), ''); assert.equal(r.detailOf('#/roadmap/after-1'), ''); count += 2;
+assert.equal(r.isBlogRoute('#/blog/rebuilding-macdown-native-mac-app'), true); assert.equal(r.blogHref(), '/blog/rebuilding-macdown-native-mac-app/'); count += 2;
 assert.equal(routeAt(null).routeFromLocation(), ''); assert.equal(routeAt(null).isRoadmapPage(), false);
 assert.equal(routeAt('/roadmap/').isRoadmapPage(), true); assert.equal(routeAt('/#/roadmap').isRoadmapPage(), false);
 count += 4;

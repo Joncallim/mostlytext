@@ -8,6 +8,8 @@
 // Roadmap stages that URLs can name. Anything else shows "To 1.0", as in production.
 export const ROADMAP_STAGES = ["after-1"] as const
 export type RoadmapStage = "" | (typeof ROADMAP_STAGES)[number]
+export const BLOG_SLUG = "rebuilding-macdown-native-mac-app"
+const BLOG_ROUTE = "#/blog/rebuilding-macdown-native-mac-app"
 
 function knownStage(value: string | null | undefined): RoadmapStage {
   return (ROADMAP_STAGES as readonly string[]).includes(value ?? "") ? value as RoadmapStage : ""
@@ -34,6 +36,14 @@ export function isRoadmapRoute(route: string) {
   return route.startsWith("#/roadmap")
 }
 
+export function isBlogRoute(route: string) {
+  return route === BLOG_ROUTE
+}
+
+export function blogHref() {
+  return `/blog/${BLOG_SLUG}/`
+}
+
 export function stageOf(route: string): RoadmapStage {
   const match = /^#\/roadmap\/([^/]+)\/?$/.exec(route)
   return match ? knownStage(match[1]) : ""
@@ -50,6 +60,7 @@ export function isRoadmapPage() {
 export function routeFromLocation() {
   if (typeof window === "undefined") return ""
   const { pathname, search, hash } = window.location
+  if (hash === BLOG_ROUTE || new RegExp(`^/blog/${BLOG_SLUG}/?$`).test(pathname)) return BLOG_ROUTE
   if (detailOf(hash)) return hash
   if (isRoadmapRoute(hash)) return roadmapRoute(stageOf(hash))
   const detail = DETAIL_PATH.exec(pathname)
@@ -60,6 +71,7 @@ export function routeFromLocation() {
 
 export function viewOf(route: string) {
   if (detailOf(route)) return route
+  if (isBlogRoute(route)) return route
   return isRoadmapRoute(route) ? roadmapRoute(stageOf(route)) : "home"
 }
 

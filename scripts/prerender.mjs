@@ -21,6 +21,16 @@ const pages = [
       socialDescription: "Current work toward a verified macOS 1.0 release, followed by clearly provisional directions.",
     },
   },
+  {
+    file: "dist/blog/rebuilding-macdown-native-mac-app/index.html", route: "#/blog/rebuilding-macdown-native-mac-app", view: "#/blog/rebuilding-macdown-native-mac-app", roadmapPage: false,
+    head: {
+      title: "Rebuilding MacDown as a native Mac app — MostlyText",
+      description: "Write Markdown, check the preview and edit a Mermaid diagram in MostlyText. An honest look at a private development build and the source alpha you can test.",
+      url: "https://mostlytext.app/blog/rebuilding-macdown-native-mac-app/",
+      socialTitle: "Rebuilding MacDown as a native Mac app",
+      socialDescription: "Write Markdown, check the preview and edit a Mermaid diagram in MostlyText. Source alpha, build requirements and feedback links.",
+    },
+  },
 ]
 
 for (const detail of details) {
