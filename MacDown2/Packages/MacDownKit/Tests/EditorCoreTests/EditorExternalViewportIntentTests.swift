@@ -27,7 +27,8 @@ struct EditorExternalViewportIntentTests {
 
     @Test("new navigation supersedes either reload pass", arguments: Navigation.allCases, [false, true])
     func navigationSupersedesReload(navigation: Navigation, afterFirstPass: Bool) throws {
-        let (system, _) = try pendingReload()
+        let (system, scroll) = try pendingReload()
+        defer { withExtendedLifetime(scroll) {} }
         if afterFirstPass {
             system.syncFrameHeightToContent()
             #expect(system.applyPendingExternalViewport())
@@ -53,7 +54,8 @@ struct EditorExternalViewportIntentTests {
 
     @Test("only changed native selections revoke the reload")
     func changedSelectionSupersedesReload() throws {
-        let (system, _) = try pendingReload()
+        let (system, scroll) = try pendingReload()
+        defer { withExtendedLifetime(scroll) {} }
         let coordinator = EditingAssistIntegrationSupport.makeCoordinator(system: system)
         let notification = Notification(name: NSTextView.didChangeSelectionNotification, object: system.textView)
         coordinator.textViewDidChangeSelection(notification)
