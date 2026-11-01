@@ -70,7 +70,8 @@ STUBS = {
         fi
         out="$dd/Build/Products/Release"; mkdir -p "$out"
         if [ "$scheme" = MacDown2 ]; then mkdir -p "$out/MacDown2.app/Contents"; touch "$out/MacDown2.app/Contents/Info"
-        else touch "$out/macdown2"; fi"""),
+        elif [ "$scheme" = MacDown2CLI ]; then touch "$out/macdown2"
+        else echo "Unknown build scheme: $scheme" >&2; exit 65; fi"""),
     "xcrun": textwrap.dedent("""\
         echo "xcrun $*" >> "$CALLS"
         case "$1 $2" in
@@ -155,6 +156,9 @@ class ReleaseScriptModeTests(unittest.TestCase):
         self.assertEqual(workspace.read_text(), source.read_text())
         builds = [line for line in self.calls.read_text().splitlines() if line.startswith("xcodebuild ")]
         self.assertEqual(len(builds), 2)
+        schemes = [build.split("-scheme ", 1)[1].split()[0] for build in builds]
+        self.assertEqual(set(schemes), {"MacDown2", "MacDown2CLI"})
+        self.assertEqual(len({scheme.casefold() for scheme in schemes}), 2)
         self.assertTrue(all("-onlyUsePackageVersionsFromResolvedFile" in build for build in builds))
 
     def test_release_build_stops_before_notarisation_when_xcode_rewrites_the_lock(self) -> None:
