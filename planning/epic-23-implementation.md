@@ -227,3 +227,46 @@ external corruption/deletion/recovery and actor serialization. Internal test
 hooks model the exact syscall boundaries; no sleep-based race test or real
 user preference store is needed. The app-wide watcher, preference coordination,
 Appearance management controls and native journeys remain subsequent work.
+
+## Live catalog selection integration
+
+ThemeController remains the sole MainActor appearance/selection owner. Preserve
+saved preferred light/dark IDs separately from temporary displayed fallbacks,
+so a catalog loaded asynchronously can restore an existing custom selection
+without rewriting preferences. A user choice made while loading wins; saving
+one slot must preserve the other slot's still-unloaded preferred ID.
+
+Apply only strictly newer immutable catalog revisions. Keep bundled fallbacks
+available even for an empty custom catalog. When a previously available,
+correct-appearance selected custom theme is removed from a confirmed snapshot,
+fallback and persist that slot once. An unknown/future choice that was never
+available is displayed with a safe fallback but retained in preferences. A
+custom theme changing appearance invalidates only its old slot, not the other
+choice. Accept menu selection only from the current validated catalog, using
+its current value rather than a stale captured Theme. Reset both choices in
+one controller operation without changing the appearance mode.
+
+Test delayed catalog load, user choices during load, preservation of the other
+unknown slot, stale reload suppression, selected deletion/appearance change,
+empty fallback, reset and stale/foreign menu values. These are selection-value
+regressions; source/undo/viewport retention and real switching latency still
+require CORTANA native verification.
+
+### Reproduced theme-preference compatibility correction
+
+Synthetic-suite tests found that a partially stored theme pair was discarded
+by loadSelection, and a later choice replaced its valid saved slot. Numeric
+and Boolean objects were coerced into IDs by string(forKey:); ordinary saves
+also replaced unreadable raw values and unknown future appearance modes.
+The failing-before log records 16 issues in six preference tests; no real
+user preference domain was opened.
+
+Apply the existing AppSettings no-clobber rule to the theme-owned keys: admit
+only absent or bounded clean String IDs, preserve a present valid slot when
+the other is absent, and refuse an ordinary pair save when either existing
+value is unreadable. An unknown/malformed mode blocks that mode's writes while
+leaving a readable selection pair writable. Recheck at the write boundary.
+Report the persistence problem through the existing settings warning so an
+ephemeral UI choice is not mistaken for a successful save. This does not create
+a legacy importer or claim UserDefaults is a multi-key transaction; E17's
+journal/before-desired checks remain required for migration.

@@ -4,11 +4,12 @@ import SwiftUI
 struct SettingsView: View {
     static let contentSize = CGSize(width: 580, height: 480)
     @Environment(\.appSettings) private var appSettings
+    @Environment(\.themeController) private var themeController
 
     var body: some View {
         VStack(spacing: 0) {
             settingsTabs
-            if appSettings?.hasUnreadableSettings == true {
+            if appSettings?.hasUnreadableSettings == true || themeController?.hasUnreadablePreferences == true {
                 Divider()
                 Text(
                     """

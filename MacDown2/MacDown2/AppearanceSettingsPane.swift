@@ -30,8 +30,7 @@ private struct AppearanceSettingsForm: View {
                 themePicker(.light)
                 themePicker(.dark)
                 Button("Reset Theme Choices") {
-                    controller.selectLight(id: BundledThemes.light.id)
-                    controller.selectDark(id: BundledThemes.dark.id)
+                    controller.resetThemeChoices()
                 }
                 .accessibilityIdentifier("resetThemeChoices")
             }
