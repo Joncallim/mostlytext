@@ -10,10 +10,19 @@ import Foundation
 /// `WorkspaceStateStore`; tests pass a uniquely named suite.
 @MainActor
 public struct UserDefaultsAppSettingsStore: AppSettingsStoring {
-    private let defaults: UserDefaults
+    let defaults: UserDefaults
+    let persistenceDomainName: String?
 
     public init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
+        persistenceDomainName = nil
+    }
+
+    /// Internal injection keeps failure testing possible without publicly allowing
+    /// a defaults object and an unrelated persistent-domain identity.
+    init(defaults: UserDefaults, persistenceDomainName: String) {
+        self.defaults = defaults
+        self.persistenceDomainName = persistenceDomainName
     }
 
     public var general: GeneralSettings {
@@ -35,7 +44,7 @@ public struct UserDefaultsAppSettingsStore: AppSettingsStoring {
     }
 
     public var editorStoredDomain: EditorStoredDomain {
-        guard let object = defaults.object(forKey: Key.editor.rawValue) else {
+        guard let object = storedObject(for: .editor) else {
             return .decoded(.decode(nil))
         }
         guard let data = object as? Data else { return .unreadableNonData }
@@ -71,7 +80,7 @@ public struct UserDefaultsAppSettingsStore: AppSettingsStoring {
             }
             return T.defaultValue
         }
-        guard let object = defaults.object(forKey: key.rawValue),
+        guard let object = storedObject(for: key),
               let data = object as? Data,
               let value = Self.decode(T.self, from: data)
         else { return T.defaultValue }
@@ -82,7 +91,7 @@ public struct UserDefaultsAppSettingsStore: AppSettingsStoring {
         guard let data = try? JSONEncoder().encode(value) else { return }
         // Recheck at the write boundary: another store or a newer build may have replaced
         // the value since this session loaded it. Preserve every present value we cannot read.
-        if let existing = defaults.object(forKey: key.rawValue) {
+        if let existing = storedObject(for: key) {
             guard let current = existing as? Data, key.decodes(current) else {
                 preserveUnreadableBytes(for: key, ifDifferentFrom: data)
                 return
@@ -113,7 +122,7 @@ public struct UserDefaultsAppSettingsStore: AppSettingsStoring {
     /// these domains are refused; other domains remain writable. Includes non-Data values.
     public var unreadableDomains: [String] {
         Key.allCases.compactMap { key in
-            guard let value = defaults.object(forKey: key.rawValue) else { return nil }
+            guard let value = storedObject(for: key) else { return nil }
             guard let data = value as? Data else { return key.rawValue }
             return key.decodes(data) ? nil : key.rawValue
         }
@@ -121,7 +130,7 @@ public struct UserDefaultsAppSettingsStore: AppSettingsStoring {
 
     /// The first unreadable blob for `key`, kept verbatim (never overwritten once present).
     public func preservedUnreadableData(forDomain name: String) -> Data? {
-        defaults.data(forKey: Self.preservedKey(for: name))
+        storedObject(forName: Self.preservedKey(for: name)) as? Data
     }
 
     private static func preservedKey(for name: String) -> String {
@@ -129,14 +138,23 @@ public struct UserDefaultsAppSettingsStore: AppSettingsStoring {
     }
 
     private func preserveUnreadableBytes(for key: Key, ifDifferentFrom replacement: Data) {
-        guard let existing = defaults.data(forKey: key.rawValue), existing != replacement,
+        guard let existing = storedObject(for: key) as? Data, existing != replacement,
               !key.decodes(existing),
-              defaults.data(forKey: Self.preservedKey(for: key.rawValue)) == nil
+              storedObject(forName: Self.preservedKey(for: key.rawValue)) == nil
         else { return }
         defaults.set(existing, forKey: Self.preservedKey(for: key.rawValue))
     }
 
-    private enum Key: String, CaseIterable {
+    private func storedObject(for key: Key) -> Any? {
+        storedObject(forName: key.rawValue)
+    }
+
+    private func storedObject(forName name: String) -> Any? {
+        guard let persistenceDomainName else { return defaults.object(forKey: name) }
+        return defaults.persistentDomain(forName: persistenceDomainName)?[name]
+    }
+
+    enum Key: String, CaseIterable {
         case general = "appSettings.general"
         case editor = "appSettings.editor"
         case markdown = "appSettings.markdown"
