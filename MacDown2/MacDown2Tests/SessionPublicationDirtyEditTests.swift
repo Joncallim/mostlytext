@@ -42,20 +42,14 @@ extension SessionViewStateRoundTripTests {
         }
 
         let termination = Task { @MainActor in await coordinator.saveSessionForTermination() }
-        for _ in 0 ..< 1000 where !firstGate.entered {
-            try await Task.sleep(for: .milliseconds(10))
-        }
-        try #require(firstGate.entered)
+        try await waitForCondition { firstGate.entered }
 
         // This is the ordinary editor-binding path: dirty -> dirty does not schedule a coordinator session save.
         controller.model.tabStore.updateActiveDocument { $0.edited(text: "second edit") }
         let currentDocument = try #require(controller.model.activeDocument)
         #expect(currentDocument.mutationGeneration > firstDocument.mutationGeneration)
         firstGate.release()
-        for _ in 0 ..< 1000 where !secondGate.entered {
-            try await Task.sleep(for: .milliseconds(10))
-        }
-        try #require(secondGate.entered)
+        try await waitForCondition { secondGate.entered }
 
         #expect(sessions.publicationCount == 0)
         let recovered = try await currentDocument.recoveryBuffer.load(
@@ -63,32 +57,12 @@ extension SessionViewStateRoundTripTests {
         )
         #expect(recovered?.isExactlyEqual(to: "second edit") == true)
         if injectBaselineObservation {
-            // Reproduce the uncontrolled startup-observer schedule deliberately:
-            // unchanged disk content still advances a dirty document's metadata.
-            controller.externalFileController.handle(.available(baselineSnapshot))
-            for _ in 0 ..< 1000
-                where controller.model.activeDocument?.mutationGeneration == currentDocument.mutationGeneration {
-                try await Task.sleep(for: .milliseconds(10))
-            }
-            let observed = try #require(controller.model.activeDocument)
-            #expect(observed.id == currentDocument.id)
-            #expect(observed.recoveryEpoch == currentDocument.recoveryEpoch)
-            #expect(observed.text.isExactlyEqual(to: "second edit"))
-            #expect(observed.mutationGeneration > currentDocument.mutationGeneration)
+            try await applyBaselineObservation(baselineSnapshot, to: controller, expecting: currentDocument)
         }
         secondGate.release()
 
         let result = await termination.value
-        if injectBaselineObservation {
-            #expect(!result.persisted)
-            #expect(sessions.publicationCount == 0)
-            #expect(sessions.session == nil)
-            #expect(rejectedSnapshots.contains { $0.superseded && $0.documentChanged })
-        } else {
-            #expect(result.persisted, "Publication rejections: \(rejectedSnapshots)")
-            #expect(sessions.publicationCount == 1)
-            #expect(sessions.session?.tabs.first?.documentRecoveryEpoch == currentDocument.recoveryEpoch)
-        }
+        expectPublication(result, sessions, currentDocument, rejectedSnapshots, injectBaselineObservation)
     }
 
     @Test func terminationOwnsTheSessionLaneWhenAnotherSaveIsScheduled() async throws {
@@ -166,6 +140,37 @@ extension SessionViewStateRoundTripTests {
         #expect(sessions.publicationCount == 1)
         let currentDocument = try #require(coordinator.controllers.first?.model.activeDocument)
         #expect(sessions.session?.tabs.first?.documentRecoveryEpoch == currentDocument.recoveryEpoch)
+    }
+
+    private func applyBaselineObservation(
+        _ snapshot: FileSnapshot, to controller: WindowController, expecting document: FileDocument
+    ) async throws {
+        // The unchanged disk baseline still advances dirty-document metadata.
+        controller.externalFileController.handle(.available(snapshot))
+        try await waitForCondition {
+            controller.model.activeDocument?.mutationGeneration != document.mutationGeneration
+        }
+        let observed = try #require(controller.model.activeDocument)
+        #expect(observed.id == document.id)
+        #expect(observed.recoveryEpoch == document.recoveryEpoch)
+        #expect(observed.text.isExactlyEqual(to: "second edit"))
+        #expect(observed.mutationGeneration > document.mutationGeneration)
+    }
+
+    private func expectPublication(
+        _ result: SessionSaveResult, _ sessions: MemorySessionStore, _ currentDocument: FileDocument,
+        _ rejectedSnapshots: [(superseded: Bool, documentChanged: Bool)], _ injectBaselineObservation: Bool
+    ) {
+        if injectBaselineObservation {
+            #expect(!result.persisted)
+            #expect(sessions.publicationCount == 0)
+            #expect(sessions.session == nil)
+            #expect(rejectedSnapshots.contains { $0.superseded && $0.documentChanged })
+        } else {
+            #expect(result.persisted, "Publication rejections: \(rejectedSnapshots)")
+            #expect(sessions.publicationCount == 1)
+            #expect(sessions.session?.tabs.first?.documentRecoveryEpoch == currentDocument.recoveryEpoch)
+        }
     }
 
     private func waitForCondition(_ condition: @MainActor () -> Bool) async throws {
