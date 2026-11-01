@@ -13,6 +13,7 @@ import Workspace
 extension EnvironmentValues {
     @Entry var windowCoordinator: WindowCoordinator?
     @Entry var themeController: ThemeController?
+    @Entry var themeCatalog: ThemeCatalogModel?
     @Entry var appSettings: AppSettingsModel?
 }
 

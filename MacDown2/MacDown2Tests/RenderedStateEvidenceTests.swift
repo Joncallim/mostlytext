@@ -217,7 +217,7 @@ struct RenderedStateEvidenceTests {
 
     @Test func settingsStateRenders() throws {
         let view = SettingsView()
-        let result = try Self.renderPNG(view, named: "08-settings", size: CGSize(width: 480, height: 360))
+        let result = try Self.renderPNG(view, named: "08-settings", size: SettingsView.contentSize)
         #expect(result.nonBlank, "settings view rendered a uniformly blank image")
     }
 

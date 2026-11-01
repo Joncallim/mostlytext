@@ -1,0 +1,17 @@
+{
+  "command": [
+    "swift",
+    "test",
+    "--scratch-path",
+    "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-palette",
+    "--force-resolved-versions",
+    "--no-parallel",
+    "--jobs",
+    "2",
+    "--filter",
+    "ThemeDirectoryACLTests"
+  ],
+  "exit": 1,
+  "elapsed": 52.5,
+  "applicationLaunched": false
+}

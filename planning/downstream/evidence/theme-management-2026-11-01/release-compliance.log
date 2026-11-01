@@ -1,0 +1,7 @@
+FAIL: d2: source location https://mostlytext.app/opensource/1.0.0/d2/ is 'planned', not verified by anonymous retrieval
+FAIL: d2: open item: LC-03: complete independent review of the recorded D2 Go/WASM source graph, including the embedded Liberation Mono WOFF's Reserved Font Name treatment, and publish the upstream package plus the one-line patch through LC-09.
+FAIL: mermaid: open item: mermaid.min.js is a single-file bundle of the runtime dependencies listed in `nested` (from mermaid@11.17.2 package.json). Resolve their exact bundled versions from the mermaid v11.17.2 release lockfile, record each licence (dompurify is MPL-2.0 OR Apache-2.0; d3 is ISC; most others MIT) and add the required texts.
+FAIL: viz-js: source location https://mostlytext.app/opensource/1.0.0/graphviz/ is 'planned', not verified by anonymous retrieval
+FAIL: viz-js: open item: LC-02: exact Graphviz 16.0.0, Viz.js 3.30.0 and Expat 2.8.4 source/build inputs are hashed in compliance/evidence/viz-js-3.30.0; assemble and review the complete corresponding-source offer, then publish it through LC-09.
+FAIL: viz-js: open item: Expat 2.8.4, Graphviz's red-black tree, Luc Maisonobe-derived ellipse routine and Random kit source linkage and notices are recorded. Complete the remaining embedded Graphviz and Emscripten runtime attribution audit, including generated Bison parser skeleton exceptions; the source linker chains alone are not a complete linked-code inventory.
+compliance check (release): 6 failure(s)

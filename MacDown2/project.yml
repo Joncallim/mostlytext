@@ -175,6 +175,13 @@ targets:
           - tex
           - latex
         UTExportedTypeDeclarations:
+        - UTTypeIdentifier: app.mostlytext.theme
+          UTTypeDescription: MostlyText Theme
+          UTTypeConformsTo:
+          - public.json
+          UTTypeTagSpecification:
+            public.filename-extension:
+            - mostlytext-theme
         - UTTypeIdentifier: com.joncallim.macdown2.file-tree-item
           UTTypeDescription: MostlyText File Tree Item
           UTTypeConformsTo:
