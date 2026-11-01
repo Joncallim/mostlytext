@@ -925,25 +925,25 @@
         }
       }
     },
-    "Find in Licenses…": {
+    "Find…": {
       "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
       "localizations": {
         "fr": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Rechercher dans les licences…"
+            "value": "Rechercher…"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "ライセンス内を検索…"
+            "value": "検索…"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Znajdź w licencjach…"
+            "value": "Znajdź…"
           }
         }
       }

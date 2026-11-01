@@ -285,19 +285,13 @@ struct WorkspaceCommands: Commands {
             // ⌘F previously did nothing in the editor); this replaces the
             // original Slice 5a ⌃F binding (a second, hidden ⌃F item does not
             // register its shortcut in a SwiftUI command).
-            Button(action: {
+            Button("Find…") {
                 if let licenseFindAction {
                     licenseFindAction.perform()
                 } else {
                     coordinator?.toggleFind()
                 }
-            }, label: {
-                if licenseFindAction != nil {
-                    Text("Find in Licenses…")
-                } else {
-                    Text("Find in Document…")
-                }
-            })
+            }
             .keyboardShortcut("f", modifiers: [.command])
             .disabled(licenseFindAction == nil && coordinator?.keyModel?.hasActiveDocument != true)
         }

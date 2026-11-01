@@ -18,11 +18,13 @@ struct CommandRegistryConsistencyTests {
     /// this scan; they sit inside menus that are catalogued as containers.
     private static func sourceMenuTitles() throws -> Set<String> {
         let files = try FileManager.default.contentsOfDirectory(atPath: sourceDirectory.path)
-            .filter { $0.hasPrefix("WorkspaceCommands") || $0 == "TextFilterCommands.swift" }
+            .filter { $0.hasSuffix(".swift") }
         let pattern = try Regex(#"\b(?:Button|Menu|CommandMenu)\("((?:[^"\\]|\\.)*)""#)
+        let declaration = try Regex(#"\b(?:struct|class)\s+\w+\s*:\s*[^\{]*\bCommands\b"#)
         var titles: Set<String> = []
         for file in files {
             let text = try String(contentsOf: sourceDirectory.appendingPathComponent(file), encoding: .utf8)
+            guard file.hasPrefix("WorkspaceCommands") || text.firstMatch(of: declaration) != nil else { continue }
             // The catalog describes shipped commands. The native acceptance
             // menu exists only in a separately flagged test build.
             var acceptanceBlockDepth = 0
@@ -74,6 +76,9 @@ struct CommandRegistryConsistencyTests {
         #expect(titles.count > 40, "scan found only \(titles.count) titles; the source location is probably wrong")
         #expect(titles.contains("Save As…"))
         #expect(titles.contains("Sort Lines"))
+        #expect(titles.contains("Find…"))
+        #expect(titles.contains("About MostlyText"))
+        #expect(titles.contains("Open Source Licenses…"))
         #expect(!titles.contains("Validate Export… (#117 Test Build)"))
         #expect(!titles.contains("Show #117 Acceptance Log"))
     }

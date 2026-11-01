@@ -15,6 +15,8 @@ struct CommandDescriptor: Equatable {
         case debugOnly
         /// The command that opens the palette itself.
         case paletteItself
+        /// App information and license readers remain in the application menu.
+        case informational
         /// Palette-eligible in principle, but not yet wired: doing so needs
         /// explicit origin-window capture (the palette is the key window
         /// while a command runs). Carried forward in the EPIC-22 tracker.
@@ -66,7 +68,9 @@ extension CommandDescriptor {
         CommandDescriptor("Focus Outline", .excluded(.notYetWired)),
         CommandDescriptor("Reveal Active File", .excluded(.notYetWired)),
         CommandDescriptor("Go to Line/Column…", .excluded(.notYetWired)),
-        CommandDescriptor("Find in Document…", .excluded(.notYetWired)),
+        CommandDescriptor("Find…", .excluded(.notYetWired)),
+        CommandDescriptor("About MostlyText", .excluded(.informational)),
+        CommandDescriptor("Open Source Licenses…", .excluded(.informational)),
         CommandDescriptor("Debug", .excluded(.debugOnly)),
         CommandDescriptor("Mark Active Tab Dirty", .excluded(.debugOnly)),
         CommandDescriptor("Reopen with Encoding", .excluded(.menuContainer)),
