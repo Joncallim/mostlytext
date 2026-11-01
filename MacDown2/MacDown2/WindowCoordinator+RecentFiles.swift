@@ -24,8 +24,11 @@ extension WindowCoordinator {
     /// the menu itself from offering a dead entry in the first place, so
     /// this is only reachable via a stale menu snapshot from just before a
     /// concurrent deletion.
-    func openRecentFile(_ url: URL) {
-        guard let resolution = recentFileDocuments.resolve(url) else { return }
+    /// The returned task completes after document admission and recent-file
+    /// publication. Menu callers may discard it; lifecycle tests await it.
+    @discardableResult
+    func openRecentFile(_ url: URL) -> Task<Void, Never>? {
+        guard let resolution = recentFileDocuments.resolve(url) else { return nil }
         // `lexicalURL`, not `accessURL` -- matching `openRecentFolder`'s own
         // choice of `resolution.lexicalURL` for `openFolder`'s primary
         // argument. An independent review of this slice caught this: for a
@@ -36,6 +39,6 @@ extension WindowCoordinator {
         // changing its window title, its `fileURL`, and (via
         // `openDocument`'s own `recentFileDocuments.record(url)`) even which
         // path gets re-recorded, all without the user asking for that.
-        Task { await openDocument(at: resolution.lexicalURL) }
+        return Task { await openDocument(at: resolution.lexicalURL) }
     }
 }
