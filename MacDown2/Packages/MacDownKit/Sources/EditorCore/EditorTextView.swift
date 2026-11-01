@@ -68,9 +68,7 @@ public final class EditorTextView: NSTextView {
     /// plain Option-click (since a real click's own mouseUp always fires,
     /// even with zero mouse movement) and silently overwrite
     /// `mouseDown(with:)`'s own toggle-caret result the instant the button
-    /// is released — turning a working single-click toggle into a feature
-    /// that never visibly does anything in practice. Caught in review
-    /// before this shipped, not found by an external hostile review.
+    /// is released — turning a working single-click toggle into a no-op.
     private var didDragRectangularSelection = false
 
     /// Minimum view-space distance from the anchor before an Option-drag
