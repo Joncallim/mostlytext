@@ -1,0 +1,473 @@
+{
+  "configuration" : "Release",
+  "fixture_cache" : "freshly written local files; no cold-cache claim",
+  "results" : [
+    {
+      "bytes" : 1000000,
+      "observation_trace" : [
+        {
+          "after_bind_start_ms" : 3.8975420000000001,
+          "digest" : "1eb900a4e642baf017ccd378d0b05aedd2c66bba0e9421c19c080960255c3b6e",
+          "request_generation" : 1
+        },
+        {
+          "after_bind_start_ms" : 1226.4164169999999,
+          "digest" : "81a160ec6067a9da8578de8a23a66625a760976940eda379b3bf7667f926f98f",
+          "request_generation" : 4
+        },
+        {
+          "after_bind_start_ms" : 1230.0850419999999,
+          "digest" : "81a160ec6067a9da8578de8a23a66625a760976940eda379b3bf7667f926f98f",
+          "request_generation" : 5
+        },
+        {
+          "after_bind_start_ms" : 1389.8353750000001,
+          "digest" : "37925babcd7a7ca03ca10869c8af6d970f03892f5d9f677f4d0216fa094d5a4f",
+          "request_generation" : 8
+        },
+        {
+          "after_bind_start_ms" : 1393.549542,
+          "digest" : "37925babcd7a7ca03ca10869c8af6d970f03892f5d9f677f4d0216fa094d5a4f",
+          "request_generation" : 9
+        },
+        {
+          "after_bind_start_ms" : 1552.2456670000001,
+          "digest" : "345cb7cff7363b9d7dc96167b8b8916af24d4deeaf43ad8337d34e8ae877ac4e",
+          "request_generation" : 12
+        },
+        {
+          "after_bind_start_ms" : 1712.740667,
+          "digest" : "206500f88d3aedaa7a4634a0c343e65f70a96c42cba4fc079145162e7d3f006e",
+          "request_generation" : 16
+        },
+        {
+          "after_bind_start_ms" : 1718.901333,
+          "digest" : "206500f88d3aedaa7a4634a0c343e65f70a96c42cba4fc079145162e7d3f006e",
+          "request_generation" : 17
+        },
+        {
+          "after_bind_start_ms" : 1876.7396250000002,
+          "digest" : "723f403c8eccfabba8a0025baf65c882cca55e3a06236115f327549f26431e88",
+          "request_generation" : 20
+        },
+        {
+          "after_bind_start_ms" : 1882.8379169999998,
+          "digest" : "723f403c8eccfabba8a0025baf65c882cca55e3a06236115f327549f26431e88",
+          "request_generation" : 21
+        }
+      ],
+      "one_second_after_last_matching_observation_callbacks" : 1,
+      "one_second_after_last_matching_observation_new_sleeps" : 0,
+      "one_second_untouched_baseline_debounce_sleeps" : 0,
+      "one_second_untouched_baseline_observations" : 0,
+      "read_revision" : {
+        "max_ms" : 1.5732079999999999,
+        "median_ms" : 0.55249999999999999,
+        "p95_ms" : 0.66366700000000001,
+        "samples_ms" : [
+          1.5732079999999999,
+          0.58091700000000002,
+          0.62312500000000004,
+          0.56020899999999996,
+          0.55579100000000004,
+          0.55479100000000003,
+          0.55025000000000002,
+          0.54341700000000004,
+          0.66366700000000001,
+          0.55154099999999995,
+          0.60250000000000004,
+          0.56641699999999995,
+          0.54562500000000003,
+          0.54341700000000004,
+          0.54866599999999999,
+          0.53833299999999995,
+          0.55912499999999998,
+          0.54716699999999996,
+          0.59950000000000003,
+          0.55174999999999996,
+          0.55325000000000002,
+          0.54012499999999997,
+          0.54233299999999995,
+          0.53854199999999997,
+          0.56441699999999995,
+          0.55658300000000005,
+          0.57941699999999996,
+          0.546875,
+          0.53587499999999999,
+          0.53349999999999997
+        ]
+      },
+      "read_snapshot" : {
+        "max_ms" : 3.7242500000000001,
+        "median_ms" : 3.643167,
+        "p95_ms" : 3.678458,
+        "samples_ms" : [
+          3.7242500000000001,
+          3.6701670000000002,
+          3.651875,
+          3.647875,
+          3.6454170000000001,
+          3.640917,
+          3.6347499999999999,
+          3.639167,
+          3.6461250000000001,
+          3.6678329999999999,
+          3.6496249999999999,
+          3.6557089999999999,
+          3.6322909999999999,
+          3.635167,
+          3.622042,
+          3.6565840000000001,
+          3.6152500000000001,
+          3.678458,
+          3.6331250000000002,
+          3.6464590000000001,
+          3.621375,
+          3.6379579999999998,
+          3.6274169999999999,
+          3.654458,
+          3.635583,
+          3.6535000000000002,
+          3.6325829999999999,
+          3.6480830000000002,
+          3.6231249999999999,
+          3.638792
+        ]
+      },
+      "watcher_atomic_replacement_samples" : [
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.69720800000000005,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.0024589999999999998,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 153.89345900000001,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 0.89433300000000004,
+          "write_start_to_matching_observation_ms" : 158.55416700000001
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.40849999999999997,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.0044999999999999997,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 154.07262499999999,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 0.53349999999999997,
+          "write_start_to_matching_observation_ms" : 158.228542
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.67516699999999996,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.0035829999999999998,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 151.04320799999999,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 0.79612499999999997,
+          "write_start_to_matching_observation_ms" : 157.99445900000001
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.68091699999999999,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.010666999999999999,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 151.12929099999999,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 0.98266600000000004,
+          "write_start_to_matching_observation_ms" : 158.06399999999999
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.98233300000000001,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.0038340000000000002,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 150.50912500000001,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 1.276875,
+          "write_start_to_matching_observation_ms" : 157.71954199999999
+        }
+      ]
+    },
+    {
+      "bytes" : 10000000,
+      "observation_trace" : [
+        {
+          "after_bind_start_ms" : 36.417124999999999,
+          "digest" : "e4bc9b197e008dfb367d0ca86a888523638f0ced7b71864e071a44b630144406",
+          "request_generation" : 1
+        },
+        {
+          "after_bind_start_ms" : 1301.395417,
+          "digest" : "9ac33850d7ad78ce3ea2ec70375423d3316abe11f324b12bfdec0e90211a7af0",
+          "request_generation" : 4
+        },
+        {
+          "after_bind_start_ms" : 1504.585834,
+          "digest" : "ec93bb9157b79d9fe0f34ef5960510ea768ab8dca27f808f82f3b3a90031e37f",
+          "request_generation" : 8
+        },
+        {
+          "after_bind_start_ms" : 1707.9882499999999,
+          "digest" : "12211e033fa5c48ed4f3a7eb8b0222de5aaa48d386f6db51c482c9e79d4265be",
+          "request_generation" : 12
+        },
+        {
+          "after_bind_start_ms" : 1903.3563340000001,
+          "digest" : "e67b53cc9c393688befb9436bf37f4f2959959cc7ad2b570ab259bf6bdeea036",
+          "request_generation" : 16
+        },
+        {
+          "after_bind_start_ms" : 2106.521334,
+          "digest" : "7fcabf8ca29ec25214c3f7a1ed13150dbcab2cbeefdadda05e8445e9ded30083",
+          "request_generation" : 20
+        },
+        {
+          "after_bind_start_ms" : 2143.490084,
+          "digest" : "7fcabf8ca29ec25214c3f7a1ed13150dbcab2cbeefdadda05e8445e9ded30083",
+          "request_generation" : 21
+        }
+      ],
+      "one_second_after_last_matching_observation_callbacks" : 1,
+      "one_second_after_last_matching_observation_new_sleeps" : 0,
+      "one_second_untouched_baseline_debounce_sleeps" : 0,
+      "one_second_untouched_baseline_observations" : 0,
+      "read_revision" : {
+        "max_ms" : 5.4515000000000002,
+        "median_ms" : 5.1547079999999994,
+        "p95_ms" : 5.2512080000000001,
+        "samples_ms" : [
+          5.4515000000000002,
+          5.0728749999999998,
+          5.154458,
+          5.0980840000000001,
+          5.1577919999999997,
+          5.1549579999999997,
+          5.1077919999999999,
+          5.2202909999999996,
+          5.0898329999999996,
+          5.1269580000000001,
+          5.1762920000000001,
+          5.1601249999999999,
+          5.094125,
+          5.0892080000000002,
+          5.1203329999999996,
+          5.1364999999999998,
+          5.079917,
+          5.1227919999999996,
+          5.0917079999999997,
+          5.1103750000000003,
+          5.1329589999999996,
+          5.2035,
+          5.1609999999999996,
+          5.1802919999999997,
+          5.2512080000000001,
+          5.1963340000000002,
+          5.1836250000000001,
+          5.1799999999999997,
+          5.1973750000000001,
+          5.2448750000000004
+        ]
+      },
+      "read_snapshot" : {
+        "max_ms" : 36.426417000000001,
+        "median_ms" : 36.070500000000003,
+        "p95_ms" : 36.416249999999998,
+        "samples_ms" : [
+          36.416249999999998,
+          35.759917000000002,
+          36.077834000000003,
+          36.426417000000001,
+          35.880499999999998,
+          35.942791999999997,
+          36.143124999999998,
+          35.929667000000002,
+          35.999541999999998,
+          35.959708999999997,
+          36.118709000000003,
+          35.967542000000002,
+          35.913874999999997,
+          35.847375,
+          35.813415999999997,
+          36.079208999999999,
+          35.886457999999998,
+          36.054082999999999,
+          35.823250000000002,
+          36.145541999999999,
+          35.991833,
+          36.128791999999997,
+          36.097250000000003,
+          36.274000000000001,
+          36.063166000000002,
+          36.182291999999997,
+          36.153584000000002,
+          36.162666999999999,
+          36.09825,
+          36.320500000000003
+        ]
+      },
+      "watcher_atomic_replacement_samples" : [
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 3.2385410000000001,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.02725,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 150.05812499999999,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 3.5191669999999999,
+          "write_start_to_matching_observation_ms" : 194.98162500000001
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 2.4634589999999998,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.028416,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 153.53579099999999,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 2.6202909999999999,
+          "write_start_to_matching_observation_ms" : 192.73637500000001
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 2.5978330000000001,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.002875,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 154.36279200000001,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 2.739125,
+          "write_start_to_matching_observation_ms" : 192.60354100000001
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 2.4840840000000002,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.0084169999999999991,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 150.35245800000001,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 2.6259579999999998,
+          "write_start_to_matching_observation_ms" : 189.13912500000001
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 2.4216669999999998,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.023833,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 154.00645800000001,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 2.5661670000000001,
+          "write_start_to_matching_observation_ms" : 192.45708400000001
+        }
+      ]
+    }
+  ],
+  "scope" : "FileCore component only; no app\/controller reconciliation, native UI or OS wakeup-profile claim",
+  "timed_read_loops_on_main_thread" : false
+}

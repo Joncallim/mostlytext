@@ -1,0 +1,43 @@
+Building for production...
+[0/4] Write sources
+[1/4] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Compiling FileCorePerfProbe DestinationBaseline.swift
+/Volumes/Fast SSD/CORTANA-Builds/external-file-perf-20261101/Sources/FileCorePerfProbe/PerfProbeMain.swift:140:32: error: type 'Any' does not conform to the 'Sendable' protocol
+138 | 
+139 |     static func main() async throws {
+140 |         let result = try await Task.detached { try await run() }.value
+    |                                `- error: type 'Any' does not conform to the 'Sendable' protocol
+141 |         let data = try JSONSerialization.data(withJSONObject: result, options: [.prettyPrinted, .sortedKeys])
+142 |         print(String(decoding: data, as: UTF8.self))
+
+/Volumes/Fast SSD/CORTANA-Builds/external-file-perf-20261101/Sources/FileCorePerfProbe/PerfProbeMain.swift:140:37: error: type 'Any' does not conform to the 'Sendable' protocol
+138 | 
+139 |     static func main() async throws {
+140 |         let result = try await Task.detached { try await run() }.value
+    |                                     `- error: type 'Any' does not conform to the 'Sendable' protocol
+141 |         let data = try JSONSerialization.data(withJSONObject: result, options: [.prettyPrinted, .sortedKeys])
+142 |         print(String(decoding: data, as: UTF8.self))
+
+/Volumes/Fast SSD/CORTANA-Builds/external-file-perf-20261101/Sources/FileCorePerfProbe/PerfProbeMain.swift:140:66: error: type 'Any' does not conform to the 'Sendable' protocol
+138 | 
+139 |     static func main() async throws {
+140 |         let result = try await Task.detached { try await run() }.value
+    |                                                                  `- error: type 'Any' does not conform to the 'Sendable' protocol
+141 |         let data = try JSONSerialization.data(withJSONObject: result, options: [.prettyPrinted, .sortedKeys])
+142 |         print(String(decoding: data, as: UTF8.self))
+
+/Volumes/Fast SSD/CORTANA-Builds/external-file-perf-20261101/Sources/FileCorePerfProbe/PerfProbeMain.swift:140:32: error: non-Sendable type 'Task<[String : Any], any Error>' cannot exit main actor-isolated context in call to nonisolated property 'value'
+138 | 
+139 |     static func main() async throws {
+140 |         let result = try await Task.detached { try await run() }.value
+    |                                `- error: non-Sendable type 'Task<[String : Any], any Error>' cannot exit main actor-isolated context in call to nonisolated property 'value'
+141 |         let data = try JSONSerialization.data(withJSONObject: result, options: [.prettyPrinted, .sortedKeys])
+142 |         print(String(decoding: data, as: UTF8.self))
+
+/Volumes/Fast SSD/CORTANA-Builds/external-file-perf-20261101/Sources/FileCorePerfProbe/PerfProbeMain.swift:140:66: error: non-Sendable type '[String : Any]' of nonisolated property 'value' cannot be sent to main actor-isolated context
+138 | 
+139 |     static func main() async throws {
+140 |         let result = try await Task.detached { try await run() }.value
+    |                                                                  `- error: non-Sendable type '[String : Any]' of nonisolated property 'value' cannot be sent to main actor-isolated context
+141 |         let data = try JSONSerialization.data(withJSONObject: result, options: [.prettyPrinted, .sortedKeys])
+142 |         print(String(decoding: data, as: UTF8.self))
