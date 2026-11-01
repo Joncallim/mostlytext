@@ -141,7 +141,7 @@ extension SessionViewStateRoundTripTests {
     private func baselineSnapshot(of controller: WindowController) throws -> FileSnapshot {
         let baseline = try #require(controller.model.activeDocument)
         return try FileSnapshot(
-            text: baseline.text, encoding: baseline.encoding,
+            text: baseline.text, encoding: baseline.encoding.encoding, bom: baseline.encoding.bom,
             revision: #require(baseline.lastKnownRevision)
         )
     }
