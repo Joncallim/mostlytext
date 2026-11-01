@@ -118,34 +118,6 @@ public final class CommandSocketConnection {
     }
 
     private func ready(for event: Int16, deadline: ContinuousClock.Instant?, isCancelled: () -> Bool) throws {
-        while true {
-            try check(deadline: deadline, isCancelled: isCancelled)
-            var item = pollfd(fd: descriptor, events: event, revents: 0)
-            let count = poll(&item, 1, Self.pollMilliseconds(until: deadline))
-            if count > 0 {
-                try check(deadline: deadline, isCancelled: isCancelled)
-                guard item.revents & Int16(POLLNVAL) == 0 else { throw CommandSocketError.closed }
-                // recv/send distinguish buffered bytes, EOF and the actual
-                // pending error after POLLHUP/POLLERR.
-                if item.revents & (event | Int16(POLLHUP | POLLERR)) != 0 {
-                    return
-                }
-            } else if count < 0, errno != EINTR {
-                throw CommandSocketError.unavailable(errno)
-            }
-        }
-    }
-
-    private static func pollMilliseconds(until deadline: ContinuousClock.Instant?) -> Int32 {
-        guard let deadline else { return 50 }
-        let remaining = ContinuousClock.now.duration(to: deadline)
-        if remaining <= .zero {
-            return 0
-        }
-        if remaining >= .milliseconds(50) {
-            return 50
-        }
-        let perMillisecond: Int64 = 1_000_000_000_000_000
-        return Int32((remaining.components.attoseconds + perMillisecond - 1) / perMillisecond)
+        try CommandSocketPolling.wait(descriptor, event: event, deadline: deadline, cancelled: isCancelled)
     }
 }

@@ -6,6 +6,8 @@ public enum CommandEndpointError: Error, Sendable, Equatable {
     case invalidLocation
     case insecureDirectory
     case insecureLock
+    case insecureSocket
+    case instanceChanged
     case instanceBusy
     case identityChanged
     case ownershipNotEnforced
