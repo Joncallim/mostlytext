@@ -12,8 +12,9 @@ Block and inline Markdown grammars used for editor syntax highlighting.
 | Licence | MIT, Copyright (c) 2021 Matthias Deiml (`LICENSE`, copied verbatim from that commit) |
 | Verified | 2026-09-28, by comparing the Git blob hash of every vendored file with the upstream history |
 
-Every parser, scanner, header and injection-query file is byte-identical to
-the upstream file at `v0.5.3`:
+Every parser, header and injection-query file, and the inline scanner, is
+byte-identical to the upstream file at `v0.5.3`. The block scanner carries the
+exact upstream safety backport described below:
 
 | Vendored file | Upstream file |
 |---|---|
@@ -26,7 +27,19 @@ The generated `parser.c` files declare tree-sitter `LANGUAGE_VERSION 15`.
 
 ## Local modifications
 
-Only the two `highlights.scm` query files differ from upstream. They were
+The block `Sources/TreeSitterMarkdown/src/scanner.c` is the exact upstream blob
+`e8d87eec1f8f6dbddd987df43097195e8d790c78` at merge commit
+`38dc6f5297551f070d15a33fda3da89f01863a04` from
+[upstream PR 279](https://github.com/tree-sitter-grammars/tree-sitter-markdown/pull/279),
+merged 22 October 2026. Its SHA-256 is
+`25b9020542e35492bde8f1b9ae3fe498a29f3c5130c40c8ffdbfb67e7882acf1`.
+It bounds block state to the tree-sitter serialization capacity and classifies
+ordered-list digits with ASCII comparisons. Beyond that capacity, additional
+block markers are highlighted as text; authored bytes remain unchanged. The
+parser and queries retain the v0.5.3 grammar. This backport does not address the
+Markdown incremental parsing performance tracked in application issue #203.
+
+The two `highlights.scm` query files also differ from upstream. They were
 rewritten to emit this app's canonical capture names (for example
 `@text.title` became `@markup.heading`, `@text.literal` became `@markup.raw`
 and `@punctuation.special` became `@punctuation`). Two pattern changes go with
