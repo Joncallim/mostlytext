@@ -2,6 +2,7 @@ import SwiftUI
 
 /// The `Settings { }` scene's pane container (`⌘,` / "MacDown 2 → Settings…").
 struct SettingsView: View {
+    static let contentSize = CGSize(width: 580, height: 480)
     @Environment(\.appSettings) private var appSettings
 
     var body: some View {
@@ -21,13 +22,16 @@ struct SettingsView: View {
                 .accessibilityIdentifier("settingsPersistenceWarning")
             }
         }
-        .frame(width: 480)
+        .frame(width: Self.contentSize.width)
     }
 
     private var settingsTabs: some View {
         TabView {
             Tab("General", systemImage: "gearshape") {
                 GeneralSettingsPane()
+            }
+            Tab("Appearance", systemImage: "paintpalette") {
+                AppearanceSettingsPane()
             }
             Tab("Editor", systemImage: "character.cursor.ibeam") {
                 EditorSettingsPane()
@@ -42,6 +46,6 @@ struct SettingsView: View {
                 FormatSettingsPane()
             }
         }
-        .frame(width: 480, height: 360)
+        .frame(width: Self.contentSize.width, height: Self.contentSize.height)
     }
 }

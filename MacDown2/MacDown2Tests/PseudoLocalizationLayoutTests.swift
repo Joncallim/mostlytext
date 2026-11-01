@@ -141,7 +141,7 @@ struct PseudoLocalizationLayoutTests {
         let result = try Self.renderPNG(
             view.environment(\.locale, Locale(identifier: localeIdentifier)),
             named: "loc-\(localeIdentifier)-03-settings",
-            size: CGSize(width: 480, height: 360)
+            size: SettingsView.contentSize
         )
         #expect(result.nonBlank, "\(localeIdentifier) settings view rendered a uniformly blank image")
     }

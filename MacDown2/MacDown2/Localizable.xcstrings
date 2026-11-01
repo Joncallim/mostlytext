@@ -312,6 +312,75 @@
         }
       }
     },
+    "A place for your words": {
+      "comment": "Appearance settings. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Un espace pour vos mots"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Miejsce na Twoje słowa"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "言葉をつづる場所"
+          }
+        }
+      }
+    },
+    "A quotation keeps its own voice.": {
+      "comment": "Appearance settings. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Une citation garde sa propre voix."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cytat zachowuje własny głos."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "引用文には独自の声があります。"
+          }
+        }
+      }
+    },
+    "Appearance": {
+      "comment": "Appearance settings. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Apparence"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Wygląd"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "外観"
+          }
+        }
+      }
+    },
     "Applies the next time a new, untitled document is saved. Open documents keep their own encoding.": {
       "localizations": {
         "fr": {
@@ -396,6 +465,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tworzenie dokumentu…"
+          }
+        }
+      }
+    },
+    "Dark Theme": {
+      "comment": "Appearance settings. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Thème sombre"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ciemny motyw"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ダークテーマ"
           }
         }
       }
@@ -528,6 +620,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "HTML"
+          }
+        }
+      }
+    },
+    "Light Theme": {
+      "comment": "Appearance settings. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Thème clair"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Jasny motyw"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ライトテーマ"
           }
         }
       }
@@ -956,6 +1071,29 @@
         }
       }
     },
+    "Prose and": {
+      "comment": "Appearance settings. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Du texte et"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Tekst i"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "文章と"
+          }
+        }
+      }
+    },
     "Recovery cleanup for %@ needs attention. Reveal it, retry, or use Save As.": {
       "localizations": {
         "fr": {
@@ -1044,6 +1182,29 @@
         }
       }
     },
+    "Reset Theme Choices": {
+      "comment": "Appearance settings. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Réinitialiser les thèmes"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Przywróć domyślne motywy"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "テーマの選択をリセット"
+          }
+        }
+      }
+    },
     "Save Changes": {
       "extractionState": "manual"
     },
@@ -1068,6 +1229,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zapisywanie…"
+          }
+        }
+      }
+    },
+    "Selected text": {
+      "comment": "Appearance settings. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Texte sélectionné"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Zaznaczony tekst"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "選択されたテキスト"
           }
         }
       }
@@ -1156,6 +1340,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tabele, listy zadań i przekreślenia są zawsze analizowane i nie można ich wyłączyć. Automatyczne odnośniki są rozpoznawane tylko w postaci <https://…>, a przypisy nie są jeszcze obsługiwane."
+          }
+        }
+      }
+    },
+    "Theme Preview": {
+      "comment": "Appearance settings. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Aperçu du thème"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Podgląd motywu"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "テーマのプレビュー"
           }
         }
       }
@@ -1382,6 +1589,29 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "a link": {
+      "comment": "Appearance settings. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "un lien"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "odnośnik"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "リンク"
           }
         }
       }
