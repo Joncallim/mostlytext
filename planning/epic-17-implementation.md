@@ -105,7 +105,10 @@ is permitted between that validation/binding and its owning window operation.
 Paths/Save As IDs are not lifetime IDs. Closing an unbound obsolete controller
 cannot be repaired by this reducer; native integration must enforce the ordering.
 
-Reservations bind an opaque ledger-instance token and canonical request digest.
+Reservations bind an opaque ledger-instance token, a fresh per-reservation UUID
+and canonical request digest. Same-entry replay retains its reservation token;
+after expiry, reusing a request UUID creates a distinct token, so an obsolete
+reservation cannot bind or reject the replacement request.
 Same-UUID/same-payload retry joins the existing receipt; a changed payload fails.
 Every requested target (path index, stdin or bare activation) must be bound or
 explicitly failed before opening completes. Deduplicated targets may share one

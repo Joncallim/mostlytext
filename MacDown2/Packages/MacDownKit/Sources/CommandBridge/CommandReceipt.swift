@@ -20,6 +20,7 @@ public struct CommandOpenFailure: Sendable, Equatable {
 public struct CommandReceiptToken: Sendable, Hashable {
     public let requestID: UUID
     let ledgerID: UUID
+    let reservationID: UUID
 }
 
 public enum CommandReservation: Sendable, Equatable {

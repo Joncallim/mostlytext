@@ -52,7 +52,7 @@ public struct CommandReceiptLedger: Sendable {
         let declared = request.stdin?.byteCount ?? 0
         guard declared <= Self.maximumInputBytes - inputBytes else { throw CommandProtocolError.inputCapacity }
         guard subscriberCount < Self.maximumSubscribers else { throw CommandProtocolError.subscriberCapacity }
-        let token = CommandReceiptToken(requestID: request.id, ledgerID: identity)
+        let token = CommandReceiptToken(requestID: request.id, ledgerID: identity, reservationID: UUID())
         var targets = Set(request.paths.indices.map(CommandOpenTarget.path))
         if request.stdin != nil {
             targets.insert(.stdin)

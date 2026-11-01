@@ -3,6 +3,49 @@ import Foundation
 import Testing
 
 struct CommandReceiptCapacityTests {
+    @Test func expiredReservationCannotMutateAReusedRequestID() throws {
+        var ledger = CommandReceiptLedger()
+        let now = ContinuousClock.now
+        let requestID = UUID()
+        let oldSubscriber = UUID()
+        let original = try CommandOpenRequest(id: requestID, paths: ["/old"])
+        let obsolete = try ledger.reserve(original, subscriber: oldSubscriber, now: now).token
+        try ledger.reject(obsolete, reason: .unavailable, now: now)
+        try ledger.acknowledgeDelivery(obsolete, subscriber: oldSubscriber, terminal: true, now: now)
+        let later = now.advanced(by: .seconds(301))
+        #expect(ledger.prune(now: later) == 1)
+
+        let subscriber = UUID()
+        let replacement = try CommandOpenRequest(id: requestID, paths: ["/new"],
+                                                 stdin: CommandStdinDescriptor(bytes: Data("pending".utf8)), wait: true)
+        let current = try ledger.reserve(replacement, subscriber: subscriber, now: later).token
+        #expect(current != obsolete)
+        #expect(try ledger.reserve(replacement, subscriber: subscriber, now: later).token == current)
+        #expect(throws: CommandProtocolError.invalidReceipt) {
+            try ledger.bind(obsolete, target: .path(0), lifetime: UUID(), now: later)
+        }
+        #expect(throws: CommandProtocolError.invalidReceipt) {
+            try ledger.reject(obsolete, reason: .unavailable, now: later)
+        }
+        #expect(throws: CommandProtocolError.invalidReceipt) {
+            try ledger.snapshot(obsolete, subscriber: subscriber)
+        }
+        #expect(ledger.preparingRequests == 1)
+        #expect(ledger.inputBytes == 7)
+        #expect(ledger.subscriberCount == 1)
+        #expect(try ledger.snapshot(current, subscriber: subscriber).events.isEmpty)
+
+        let lifetime = UUID()
+        try ledger.bind(current, target: .path(0), lifetime: lifetime, now: later)
+        try ledger.bind(current, target: .stdin, lifetime: lifetime, now: later)
+        try ledger.completeOpening(current, now: later)
+        #expect(ledger.preparingRequests == 0)
+        #expect(ledger.inputBytes == 0)
+        #expect(try !ledger.snapshot(current, subscriber: subscriber).isTerminal)
+        ledger.documentClosed(lifetime, now: later)
+        #expect(try ledger.snapshot(current, subscriber: subscriber).isTerminal)
+    }
+
     @Test func preparingCapacityIsReleasedOnlyByActualCompletion() throws {
         var ledger = CommandReceiptLedger(); var tokens: [CommandReceiptToken] = []
         let client = UUID()
