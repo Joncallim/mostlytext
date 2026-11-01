@@ -144,7 +144,7 @@ extension SessionViewStateRoundTripTests {
     func coordinatorWithOneTab(
         sessions: MemorySessionStore,
         directory: URL
-    ) async throws -> WindowCoordinator {
+    ) throws -> WindowCoordinator {
         // Recovery creation must not generate signals in the watched document
         // directory while a test is controlling the publication interleaving.
         let documents = directory.appendingPathComponent("Documents", isDirectory: true)
@@ -163,28 +163,43 @@ extension SessionViewStateRoundTripTests {
             fileTreePreferences: FileTreePreferences()
         )
         coordinator.controllers = [controller]
-        // bindTask only queues the nested MainActor observation task. Wait for
-        // that context's actual handling before draining its resulting save.
-        var initialObservationHandled = false
-        controller.externalFileController.afterObservationContextHandled = { context in
-            if context.expectedURL.standardizedFileURL == fileURL.standardizedFileURL {
-                initialObservationHandled = true
+        return coordinator
+    }
+
+    func settleInitialMonitoring(of coordinator: WindowCoordinator) async throws {
+        let controller = try #require(coordinator.controllers.first)
+        let document = try #require(controller.model.activeDocument)
+        let fileURL = try #require(document.fileURL)
+        let revision = try #require(document.lastKnownRevision)
+        let external = controller.externalFileController
+        // bindTask only queues the nested observation task. The handling seam
+        // also acknowledges stale drops, so require the current baseline context.
+        var handled: DocumentFileObservationContext?
+        external.afterObservationContextHandled = { handled = $0 }
+        defer { external.afterObservationContextHandled = nil }
+        var settled = false
+        for _ in 0 ..< 1000 {
+            if let context = handled,
+               context.bindingGeneration == external.lifecycleGeneration,
+               context.expectedURL.standardizedFileURL == fileURL.standardizedFileURL,
+               await context.requestGeneration == (external.monitor.currentRequestGeneration()),
+               case let .available(snapshot) = context.observation,
+               snapshot.revision == revision,
+               snapshot.text.isExactlyEqual(to: document.text) {
+                settled = true
+                break
             }
-        }
-        defer { controller.externalFileController.afterObservationContextHandled = nil }
-        for _ in 0 ..< 1000 where !initialObservationHandled {
             try await Task.sleep(for: .milliseconds(10))
         }
-        try #require(initialObservationHandled)
+        try #require(settled)
         await coordinator.awaitScheduledSessionSaveForTesting()
-        return coordinator
     }
 
     @Test func aCancelledAutosaveNeverPublishesItsObsoleteSnapshot() async throws {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
         let sessions = MemorySessionStore()
-        let coordinator = try await coordinatorWithOneTab(sessions: sessions, directory: directory)
+        let coordinator = try coordinatorWithOneTab(sessions: sessions, directory: directory)
 
         let autosave = Task { @MainActor in await coordinator.saveSessionResult(isAutosave: true) }
         autosave.cancel()
@@ -197,7 +212,7 @@ extension SessionViewStateRoundTripTests {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
         let sessions = MemorySessionStore()
-        let coordinator = try await coordinatorWithOneTab(sessions: sessions, directory: directory)
+        let coordinator = try coordinatorWithOneTab(sessions: sessions, directory: directory)
 
         #expect(await coordinator.saveSessionResult(isAutosave: true).persisted)
 
@@ -208,7 +223,7 @@ extension SessionViewStateRoundTripTests {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
         let sessions = MemorySessionStore()
-        let coordinator = try await coordinatorWithOneTab(sessions: sessions, directory: directory)
+        let coordinator = try coordinatorWithOneTab(sessions: sessions, directory: directory)
 
         let explicit = Task { @MainActor in await coordinator.saveSessionResult() }
         explicit.cancel()
@@ -241,7 +256,7 @@ extension SessionViewStateRoundTripTests {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
         let sessions = MemorySessionStore()
-        let coordinator = try await coordinatorWithOneTab(sessions: sessions, directory: directory)
+        let coordinator = try coordinatorWithOneTab(sessions: sessions, directory: directory)
         let controller = try #require(coordinator.controllers.first)
         let tabID = try #require(controller.model.tabStore.activeTabID)
         let system = try #require(controller.editorStore.existingSystem(for: tabID.uuidString))
@@ -271,7 +286,7 @@ extension SessionViewStateRoundTripTests {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
         let sessions = MemorySessionStore()
-        let coordinator = try await coordinatorWithOneTab(sessions: sessions, directory: directory)
+        let coordinator = try coordinatorWithOneTab(sessions: sessions, directory: directory)
         let controller = try #require(coordinator.controllers.first)
         let tabID = try #require(controller.model.tabStore.activeTabID)
         let system = try #require(controller.editorStore.existingSystem(for: tabID.uuidString))
@@ -297,7 +312,7 @@ extension SessionViewStateRoundTripTests {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
         let sessions = MemorySessionStore()
-        let coordinator = try await coordinatorWithOneTab(sessions: sessions, directory: directory)
+        let coordinator = try coordinatorWithOneTab(sessions: sessions, directory: directory)
         let controller = try #require(coordinator.controllers.first)
         let tabID = try #require(controller.model.tabStore.activeTabID)
         let system = try #require(controller.editorStore.existingSystem(for: tabID.uuidString))
@@ -326,7 +341,7 @@ extension SessionViewStateRoundTripTests {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
         let sessions = MemorySessionStore()
-        let coordinator = try await coordinatorWithOneTab(sessions: sessions, directory: directory)
+        let coordinator = try coordinatorWithOneTab(sessions: sessions, directory: directory)
         var rejectionCount = 0
         coordinator.afterSessionPublicationRejected = { superseded, documentChanged in
             #expect(superseded)
@@ -351,7 +366,7 @@ extension SessionViewStateRoundTripTests {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
         let sessions = MemorySessionStore()
-        let coordinator = try await coordinatorWithOneTab(sessions: sessions, directory: directory)
+        let coordinator = try coordinatorWithOneTab(sessions: sessions, directory: directory)
         let controller = try #require(coordinator.controllers.first)
         let latin1 = FileEncodingMetadata(encoding: .isoLatin1, bom: .none)
         controller.model.tabStore.updateActiveDocument {

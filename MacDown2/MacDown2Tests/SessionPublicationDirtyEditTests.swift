@@ -9,8 +9,9 @@ extension SessionViewStateRoundTripTests {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
         let sessions = MemorySessionStore()
-        let coordinator = try await coordinatorWithOneTab(sessions: sessions, directory: directory)
+        let coordinator = try coordinatorWithOneTab(sessions: sessions, directory: directory)
         let controller = try #require(coordinator.controllers.first)
+        try await settleInitialMonitoring(of: coordinator)
         let baseline = try #require(controller.model.activeDocument)
         let baselineSnapshot = try FileSnapshot(
             text: baseline.text, encoding: baseline.encoding,
@@ -69,7 +70,11 @@ extension SessionViewStateRoundTripTests {
                 where controller.model.activeDocument?.mutationGeneration == currentDocument.mutationGeneration {
                 try await Task.sleep(for: .milliseconds(10))
             }
-            #expect(controller.model.activeDocument?.mutationGeneration != currentDocument.mutationGeneration)
+            let observed = try #require(controller.model.activeDocument)
+            #expect(observed.id == currentDocument.id)
+            #expect(observed.recoveryEpoch == currentDocument.recoveryEpoch)
+            #expect(observed.text.isExactlyEqual(to: "second edit"))
+            #expect(observed.mutationGeneration > currentDocument.mutationGeneration)
         }
         secondGate.release()
 
@@ -90,7 +95,7 @@ extension SessionViewStateRoundTripTests {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
         let sessions = MemorySessionStore()
-        let coordinator = try await coordinatorWithOneTab(sessions: sessions, directory: directory)
+        let coordinator = try coordinatorWithOneTab(sessions: sessions, directory: directory)
         await coordinator.awaitScheduledSessionSaveForTesting()
         sessions.session = nil
         sessions.publicationCount = 0
@@ -116,7 +121,7 @@ extension SessionViewStateRoundTripTests {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
         let sessions = MemorySessionStore()
-        let coordinator = try await coordinatorWithOneTab(sessions: sessions, directory: directory)
+        let coordinator = try coordinatorWithOneTab(sessions: sessions, directory: directory)
         await coordinator.awaitScheduledSessionSaveForTesting()
         sessions.session = nil
         sessions.publicationCount = 0
