@@ -4,12 +4,18 @@ import Foundation
 import Testing
 
 extension SessionViewStateRoundTripTests {
-    @Test func dirtyEditDuringRecoveryCannotPublishAnOlderTerminationSnapshot() async throws {
+    @Test(arguments: [false, true])
+    func dirtyEditDuringRecoveryCannotPublishAnOlderTerminationSnapshot(injectBaselineObservation: Bool) async throws {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
         let sessions = MemorySessionStore()
-        let coordinator = try coordinatorWithOneTab(sessions: sessions, directory: directory)
+        let coordinator = try await coordinatorWithOneTab(sessions: sessions, directory: directory)
         let controller = try #require(coordinator.controllers.first)
+        let baseline = try #require(controller.model.activeDocument)
+        let baselineSnapshot = try FileSnapshot(
+            text: baseline.text, encoding: baseline.encoding,
+            revision: #require(baseline.lastKnownRevision)
+        )
         await coordinator.awaitScheduledSessionSaveForTesting()
         controller.model.tabStore.updateActiveDocument { $0.edited(text: "first edit") }
         controller.updateTitleAndEditedState()
@@ -55,18 +61,36 @@ extension SessionViewStateRoundTripTests {
             for: currentDocument.id, epoch: currentDocument.recoveryEpoch
         )
         #expect(recovered?.isExactlyEqual(to: "second edit") == true)
+        if injectBaselineObservation {
+            // Reproduce the uncontrolled startup-observer schedule deliberately:
+            // unchanged disk content still advances a dirty document's metadata.
+            controller.externalFileController.handle(.available(baselineSnapshot))
+            for _ in 0 ..< 1000
+                where controller.model.activeDocument?.mutationGeneration == currentDocument.mutationGeneration {
+                try await Task.sleep(for: .milliseconds(10))
+            }
+            #expect(controller.model.activeDocument?.mutationGeneration != currentDocument.mutationGeneration)
+        }
         secondGate.release()
 
-        #expect(await termination.value.persisted, "Publication rejections: \(rejectedSnapshots)")
-        #expect(sessions.publicationCount == 1)
-        #expect(sessions.session?.tabs.first?.documentRecoveryEpoch == currentDocument.recoveryEpoch)
+        let result = await termination.value
+        if injectBaselineObservation {
+            #expect(!result.persisted)
+            #expect(sessions.publicationCount == 0)
+            #expect(sessions.session == nil)
+            #expect(rejectedSnapshots.contains { $0.superseded && $0.documentChanged })
+        } else {
+            #expect(result.persisted, "Publication rejections: \(rejectedSnapshots)")
+            #expect(sessions.publicationCount == 1)
+            #expect(sessions.session?.tabs.first?.documentRecoveryEpoch == currentDocument.recoveryEpoch)
+        }
     }
 
     @Test func terminationOwnsTheSessionLaneWhenAnotherSaveIsScheduled() async throws {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
         let sessions = MemorySessionStore()
-        let coordinator = try coordinatorWithOneTab(sessions: sessions, directory: directory)
+        let coordinator = try await coordinatorWithOneTab(sessions: sessions, directory: directory)
         await coordinator.awaitScheduledSessionSaveForTesting()
         sessions.session = nil
         sessions.publicationCount = 0
@@ -92,7 +116,7 @@ extension SessionViewStateRoundTripTests {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
         let sessions = MemorySessionStore()
-        let coordinator = try coordinatorWithOneTab(sessions: sessions, directory: directory)
+        let coordinator = try await coordinatorWithOneTab(sessions: sessions, directory: directory)
         await coordinator.awaitScheduledSessionSaveForTesting()
         sessions.session = nil
         sessions.publicationCount = 0
