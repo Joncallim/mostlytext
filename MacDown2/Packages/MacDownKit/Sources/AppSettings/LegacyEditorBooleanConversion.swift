@@ -15,14 +15,9 @@ public struct LegacyEditorBooleanConversion: Sendable, Equatable {
     public let invalidSourceKeys: [String]
 
     public init(snapshot: LegacyPreferenceSnapshot) {
-        let mappings: [(String, Destination)] = [
-            ("editorAutoIncrementNumberedLists", .autoIncrementOrderedLists),
-            ("editorConvertTabs", .convertsTabsToSpaces),
-            ("editorSmartHome", .smartHome),
-        ]
         var proposed: [Destination: Bool] = [:]
         var invalid: [String] = []
-        for (key, destination) in mappings {
+        for (key, destination) in Self.mappings {
             guard let value = snapshot.values[key] else { continue }
             if case let .boolean(boolean) = value {
                 proposed[destination] = boolean
@@ -33,4 +28,14 @@ public struct LegacyEditorBooleanConversion: Sendable, Equatable {
         proposedValues = proposed
         invalidSourceKeys = invalid
     }
+
+    static func destination(for key: String) -> Destination? {
+        mappings.first { $0.0 == key }?.1
+    }
+
+    private static let mappings: [(String, Destination)] = [
+        ("editorAutoIncrementNumberedLists", .autoIncrementOrderedLists),
+        ("editorConvertTabs", .convertsTabsToSpaces),
+        ("editorSmartHome", .smartHome),
+    ]
 }
