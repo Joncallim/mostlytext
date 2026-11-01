@@ -169,3 +169,13 @@ Existing rendered-state/pseudo-localization fixtures consume that same declared
 size rather than retaining a stale fixed capture rectangle. Compile and lint the
 view, retain native focus, resizing and VoiceOver/pseudo-localization review as
 real CORTANA gates, and do not claim those outcomes from compilation alone.
+
+## Shipping-SDK declaration reconciliation
+
+The current macOS 26.5 SDK requires explicit QLPreviewingController conformance
+on the QLPreviewProvider subclass. The older handoff's contrary instruction is
+corrected with a failing inherited-method control and passing explicit-protocol
+control in evidence/quicklook-api-2026-11-01. The async providePreview method,
+HTML reply, String.Encoding property and PNG attachment compile into a library
+without packaging/registration. Runtime QL-REPLY remains held; this declaration
+correction does not answer callback placement, cancellation, grants or timing.
