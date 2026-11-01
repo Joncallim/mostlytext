@@ -290,7 +290,7 @@ schemes:
       targets:
       - MacDown2UITests
       - MacDown2Tests
-  macdown2:
+  MacDown2CLI:
     build:
       targets:
         macdown2: all
