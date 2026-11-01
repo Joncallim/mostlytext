@@ -1,0 +1,35 @@
+{
+  "sourceSHA": "81f34378e603a8256031bd82491125793366d95a",
+  "checks": [
+    {
+      "command": [
+        "swiftformat",
+        "--lint",
+        "MacDown2"
+      ],
+      "exit": 0,
+      "filesNeedingFormat": 0,
+      "filesChecked": 1059
+    },
+    {
+      "command": [
+        "swiftlint",
+        "lint",
+        "--strict",
+        "--quiet",
+        "MacDown2"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0
+    }
+  ],
+  "nativeApplicationTests": "NOT_RUN",
+  "independentReview": "PENDING"
+}
