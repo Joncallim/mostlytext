@@ -35,7 +35,25 @@ The prior diagnostic hook records rejection reasons on a future failed assertion
 
 ## Validation and limits
 
-Independent source review and exact-head hosted CI are required before integration.
+Independent source re-review and [exact-head CI 41289671790](https://github.com/Joncallim/macdown_2/actions/runs/41289671790)
+passed at `31344a7c8d9c9fb70958ba839eca5b80614ac162`. Implementation merge
+`54e78ab5f77fada6482587428bc1a5ad96429ecb` has the same tree. The run passed
+3,038 package tests in 417 suites with the two existing Neon known issues,
+and 535 app tests in 110 suites. Both dirty-edit cases executed successfully,
+as did repeated invalidation. Debug/Release app and CLI builds, test compilation,
+lint, Compliance and dependency-lock checks passed.
+
+Two additional failed attempts remain preserved. Run 41285945707 failed app-test
+compilation because FileEncodingMetadata was passed instead of String.Encoding;
+6eeefaf2 projects its encoding and carries its BOM. No app-case pass is claimed
+from that attempt. Run 41288423185 exposed the older offscreen viewport test's
+150 ms assumption: selection and viewport passed, but the pending snapshot was
+not yet consumed. 31344a7c requires and awaits the actual frame-sync task and
+retains its scroll view through unchanged assertions. That case passed in the
+final package run. Neither production timer delays nor assertions were relaxed.
+Raw logs are retained beside pr532-job-failure.log as
+pr533-first-full-failure.log, pr533-package-failure.log and pr533-final-job.log.
+
 No local app or native UI journey was executed. This fixes fixture ownership of
 the controlled schedule; it does not claim every historical session failure is
 explained, remove the deliberate metadata transition, or close #183/#115.
