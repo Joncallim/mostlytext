@@ -9,6 +9,9 @@ public extension EditorView {
     /// detach what this mount still owns.
     static func dismantleNSView(_ scrollView: NSScrollView, coordinator: Coordinator) {
         NotificationCenter.default.removeObserver(
+            coordinator, name: NSScrollView.didLiveScrollNotification, object: scrollView
+        )
+        NotificationCenter.default.removeObserver(
             coordinator,
             name: NSView.boundsDidChangeNotification,
             object: scrollView.contentView
@@ -31,6 +34,7 @@ public extension EditorView {
             system.isDetachedFromEditorView = true
         }
         if system.scrollView === scrollView {
+            system.cancelPendingExternalViewport()
             system.scrollView = nil
         }
     }

@@ -1,0 +1,5 @@
+Full source log retained at /tmp/mostlytext-119-acceptance-20261029/package-full-after.log
+━ Test typingThenDeletingABlockInOneTurnMatchesAFreshHighlighter() passed after 10.078 seconds with 1 known issue.
+━ Test replacingASelectionContainingInlineRangesMatchesAFreshHighlighter() passed after 8.136 seconds with 1 known issue.
+━ Suite NeonReplacementEditTests passed after 36.233 seconds with 2 known issues.
+━ Test run with 2812 tests in 384 suites passed after 261.138 seconds with 2 known issues.

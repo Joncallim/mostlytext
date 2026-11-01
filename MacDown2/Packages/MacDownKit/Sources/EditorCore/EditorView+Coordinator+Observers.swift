@@ -6,6 +6,11 @@ import AppKit
 // limit, mirroring the established per-feature extension-file precedent.
 
 extension EditorView.Coordinator {
+    @objc @MainActor func userDidScroll(_ notification: Notification) {
+        guard let system, notification.object as AnyObject === system.scrollView else { return }
+        system.cancelPendingExternalViewport()
+    }
+
     @objc @MainActor func scrollViewDidScroll(_: Notification) {
         guard let system else { return }
         onScrollChange?(system.topVisibleUTF16Offset)
@@ -77,6 +82,14 @@ extension EditorView {
     /// `system.undoManager` fresh and checks the notification's sender
     /// against it instead.
     func registerCoordinatorObservers(scrollView: NSScrollView, coordinator: Coordinator) {
+        // This denotes user scrolling, including legacy mice which may omit
+        // willStart/didEnd. Layout/restoration bounds changes are informational.
+        NotificationCenter.default.addObserver(
+            coordinator,
+            selector: #selector(Coordinator.userDidScroll(_:)),
+            name: NSScrollView.didLiveScrollNotification,
+            object: scrollView
+        )
         scrollView.documentView?.postsFrameChangedNotifications = true
         NotificationCenter.default.addObserver(
             coordinator,

@@ -1,0 +1,23 @@
+[0/1] Planning build
+Building for debugging...
+[0/3] Write sources
+[1/3] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Emitting module FileCoreTests
+[4/5] Compiling FileCoreTests DocumentFileMonitorCallbackLifetimeTests.swift
+[4/6] Write Objects.LinkFileList
+[5/6] Linking MacDownKitPackageTests
+Build complete! (16.87s)
+Test Suite 'Selected tests' started at 2026-10-29 18:24:54.097.
+Test Suite 'MacDownKitPackageTests.xctest' started at 2026-10-29 18:24:54.105.
+Test Suite 'MacDownKitPackageTests.xctest' passed at 2026-10-29 18:24:54.105.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-29 18:24:54.105.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.007) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Document file monitor callback lifetime" started.
+◇ Test cancelReleasesCallbacksBeforeARetiredEventProbeDrains() started.
+✔ Test cancelReleasesCallbacksBeforeARetiredEventProbeDrains() passed after 0.001 seconds.
+✔ Suite "Document file monitor callback lifetime" passed after 0.001 seconds.
+✔ Test run with 1 test in 1 suite passed after 0.001 seconds.

@@ -1,0 +1,99 @@
+[0/1] Planning build
+Building for debugging...
+[0/3] Write sources
+[1/3] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Compiling FileCore DocumentFileMonitor.swift
+[4/5] Emitting module FileCore
+[4/6] Write Objects.LinkFileList
+[5/6] Linking MacDownKitPackageTests
+Build complete! (10.09s)
+Test Suite 'Selected tests' started at 2026-10-29 17:42:35.701.
+Test Suite 'MacDownKitPackageTests.xctest' started at 2026-10-29 17:42:35.708.
+Test Suite 'MacDownKitPackageTests.xctest' passed at 2026-10-29 17:42:35.708.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-29 17:42:35.708.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.007) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite DocumentFileMonitorBaselineRaceTests started.
+◇ Test aBaselineChangeWhileTheInitialProbeIsInFlightDiscardsItsStaleAnswerAndPublishesAFreshOne() started.
+✔ Test aBaselineChangeWhileTheInitialProbeIsInFlightDiscardsItsStaleAnswerAndPublishesAFreshOne() passed after 0.003 seconds.
+◇ Test anUnchangedBaselineDoesNotProbeAgain() started.
+✔ Test anUnchangedBaselineDoesNotProbeAgain() passed after 0.002 seconds.
+◇ Test anIdentityOnlyBaselineChangeRetiresAProbeAlreadyInFlight() started.
+✔ Test anIdentityOnlyBaselineChangeRetiresAProbeAlreadyInFlight() passed after 0.002 seconds.
+◇ Test anIdentityOnlyBaselineChangeNeverProbes() started.
+✔ Test anIdentityOnlyBaselineChangeNeverProbes() passed after 0.002 seconds.
+✔ Suite DocumentFileMonitorBaselineRaceTests passed after 0.010 seconds.
+◇ Suite "Document file monitor callback lifetime" started.
+◇ Test cancelReleasesCallbacksBeforeARetiredEventProbeDrains() started.
+✔ Test cancelReleasesCallbacksBeforeARetiredEventProbeDrains() passed after 0.001 seconds.
+✔ Suite "Document file monitor callback lifetime" passed after 0.001 seconds.
+◇ Suite "Document file monitor — real watcher (#59)" started.
+◇ Test realWatcherDetectsExternalDeletionWithinAFewSeconds() started.
+✔ Test realWatcherDetectsExternalDeletionWithinAFewSeconds() passed after 0.234 seconds.
+◇ Test externalFileControllerStyleBindingDetectsExternalDeletion() started.
+✔ Test externalFileControllerStyleBindingDetectsExternalDeletion() passed after 0.236 seconds.
+◇ Test realWatcherDetectsAtomicReplacement() started.
+✔ Test realWatcherDetectsAtomicReplacement() passed after 0.163 seconds.
+✔ Suite "Document file monitor — real watcher (#59)" passed after 0.634 seconds.
+◇ Suite "Document file monitor missing-file recovery" started.
+◇ Test missingFileKeepsParentWatchAndRearmsFileWatchWhenRecreated() started.
+✔ Test missingFileKeepsParentWatchAndRearmsFileWatchWhenRecreated() passed after 0.002 seconds.
+✔ Suite "Document file monitor missing-file recovery" passed after 0.002 seconds.
+◇ Suite "Document file monitor parent recovery" started.
+◇ Test replacementWatcherProbesAReappearedFileWithoutAnotherEvent() started.
+✔ Test replacementWatcherProbesAReappearedFileWithoutAnotherEvent() passed after 0.002 seconds.
+◇ Test parentVanishedLatchSurvivesAChangedEventDuringDebounce() started.
+✔ Test parentVanishedLatchSurvivesAChangedEventDuringDebounce() passed after 0.006 seconds.
+◇ Test changedEventDuringAnInFlightParentProbeKeepsTheRecoveryLatch() started.
+✔ Test changedEventDuringAnInFlightParentProbeKeepsTheRecoveryLatch() passed after 0.009 seconds.
+◇ Test parentVanishedReinstallsTheDirectoryWatcherAfterTheProbe() started.
+✔ Test parentVanishedReinstallsTheDirectoryWatcherAfterTheProbe() passed after 0.002 seconds.
+◇ Test parentRecoveryRetriesBeyondTheInitialQuarterSecondWindow() started.
+✔ Test parentRecoveryRetriesBeyondTheInitialQuarterSecondWindow() passed after 0.002 seconds.
+◇ Test exhaustedParentRecoveryCanBeExplicitlyRetriedOnActivation() started.
+✔ Test exhaustedParentRecoveryCanBeExplicitlyRetriedOnActivation() passed after 0.002 seconds.
+✔ Suite "Document file monitor parent recovery" passed after 0.026 seconds.
+◇ Suite DocumentFileMonitorRetiredProbeTests started.
+◇ Test aRetiredSlowProbeDoesNotReviveTheFeedbackLoop() started.
+✔ Test aRetiredSlowProbeDoesNotReviveTheFeedbackLoop() passed after 0.309 seconds.
+✔ Suite DocumentFileMonitorRetiredProbeTests passed after 0.309 seconds.
+◇ Suite "Document file monitor" started.
+◇ Test bindWatchesTheParentAndPerformsAnInitialProbe() started.
+✔ Test bindWatchesTheParentAndPerformsAnInitialProbe() passed after 0.001 seconds.
+◇ Test rapidSignalsCoalesceToOneLatestProbe() started.
+✔ Test rapidSignalsCoalesceToOneLatestProbe() passed after 0.005 seconds.
+◇ Test fileLevelWatcherReportsAnInPlaceChildWrite() started.
+✔ Test fileLevelWatcherReportsAnInPlaceChildWrite() passed after 0.002 seconds.
+◇ Test transientMissingIsConfirmedBeforeItIsEmitted() started.
+✔ Test transientMissingIsConfirmedBeforeItIsEmitted() passed after 0.002 seconds.
+◇ Test rebindAndCancelRejectLateCallbacksFromEarlierGenerations() started.
+✔ Test rebindAndCancelRejectLateCallbacksFromEarlierGenerations() passed after 0.001 seconds.
+◇ Test newerSignalRejectsAnOlderInFlightProbe() started.
+✔ Test newerSignalRejectsAnOlderInFlightProbe() passed after 0.005 seconds.
+◇ Test observationContextRejectsAStaleMovedOrMissingProbeAfterANewSignal() started.
+✔ Test observationContextRejectsAStaleMovedOrMissingProbeAfterANewSignal() passed after 0.008 seconds.
+◇ Test delayedPriorIdentityUpdateCannotCrossABindingChange() started.
+✔ Test delayedPriorIdentityUpdateCannotCrossABindingChange() passed after 0.001 seconds.
+◇ Test movedObservationDoesNotRetargetMonitoringBeforeControllerAcceptsIt() started.
+✔ Test movedObservationDoesNotRetargetMonitoringBeforeControllerAcceptsIt() passed after 0.002 seconds.
+◇ Test realProbeFollowsAProvenSameParentRename() started.
+✔ Test realProbeFollowsAProvenSameParentRename() passed after 0.008 seconds.
+✔ Suite "Document file monitor" passed after 0.039 seconds.
+◇ Suite DocumentFileMonitorBindingTokenTests started.
+◇ Test theCallersBindingTokenIsEchoedInEveryContext() started.
+✔ Test theCallersBindingTokenIsEchoedInEveryContext() passed after 0.001 seconds.
+◇ Test withoutATokenTheMonitorsOwnGenerationIsUsedAsBefore() started.
+✔ Test withoutATokenTheMonitorsOwnGenerationIsUsedAsBefore() passed after 0.001 seconds.
+✔ Suite DocumentFileMonitorBindingTokenTests passed after 0.001 seconds.
+◇ Suite DocumentFileProbeBackupTests started.
+◇ Test aBackupMadeByRenamingAndRecreatingTheFileIsNotAMove() started.
+✔ Test aBackupMadeByRenamingAndRecreatingTheFileIsNotAMove() passed after 0.003 seconds.
+◇ Test aFileThatReallyMovedAwayIsStillFollowed() started.
+✔ Test aFileThatReallyMovedAwayIsStillFollowed() passed after 0.003 seconds.
+✔ Suite DocumentFileProbeBackupTests passed after 0.007 seconds.
+◇ Test moveProbePrefiltersLargeSiblingDirectoryByPhysicalMetadata() started.
+✔ Test moveProbePrefiltersLargeSiblingDirectoryByPhysicalMetadata() passed after 2.920 seconds.
+✔ Test run with 31 tests in 9 suites passed after 3.951 seconds.

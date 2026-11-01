@@ -48,10 +48,10 @@ struct EditorTextSystemTests {
     @Test("external replacement retains a pending scroll offset before mounting")
     func externalReplacementRetainsPendingScrollOffset() {
         let system = makeSystem(text: "old")
-        let snapshot = EditorViewportSnapshot(
-            selectedRange: NSRange(location: 0, length: 0),
-            scrollOffset: 42
-        )
+        system.scrollOffset = 42
+        let snapshot = system.viewportSnapshot()
+        #expect(snapshot.topVisibleUTF16Offset == nil)
+        #expect(snapshot.topVisibleFragmentOffset == nil)
 
         system.replaceTextFromExternal("new", preserving: snapshot, clearUndo: false)
 
@@ -81,6 +81,115 @@ struct EditorTextSystemTests {
 
         #expect(system.selectedRange == viewport.selectedRange)
         #expect(abs(system.scrollOffset - viewport.scrollOffset) < 0.5)
+    }
+
+    @Test("mounted external replacement preserves an off-screen selection and viewport")
+    func mountedExternalReplacementPreservesOffScreenViewport() async throws {
+        let text = (1 ... 180)
+            .map { "LINE_\(String(format: "%03d", $0)) selection and scroll preservation marker" }
+            .joined(separator: "\n")
+        let system = makeSystem(text: text)
+        let scrollView = NSScrollView(frame: NSRect(x: 0, y: 0, width: 420, height: 180))
+        scrollView.documentView = system.textView
+        system.scrollView = scrollView
+        system.textView.frame = NSRect(x: 0, y: 0, width: 420, height: 180)
+        system.syncFrameHeightToContent()
+
+        let selectedLine = (text as NSString).range(of: "LINE_120")
+        system.selectedRange = selectedLine
+        let topLocation = (text as NSString).range(of: "LINE_070").location
+        let topFrame = try #require(system.layoutFragmentFrame(atUTF16Location: topLocation))
+        system.scrollOffset = topFrame.minY + system.textView.textContainerInset.height
+        let viewport = system.viewportSnapshot()
+        #expect(viewport.scrollOffset > 0)
+        #expect(viewport.topVisibleUTF16Offset == topLocation)
+        system.replaceTextFromExternal(
+            text.replacingOccurrences(
+                of: "LINE_180 selection and scroll preservation marker",
+                with: "LINE_180 refreshed from disk"
+            ),
+            preserving: viewport,
+            clearUndo: true
+        )
+        try? await Task.sleep(for: .milliseconds(150))
+
+        #expect(system.selectedRange == selectedLine)
+        #expect(system.topVisibleUTF16Offset == viewport.topVisibleUTF16Offset)
+        #expect(system.pendingExternalViewport == nil)
+        #expect(system.pendingExternalViewportRevision == nil)
+    }
+
+    @Test("external replacement preserves the visible row within a wrapped source line")
+    func wrappedExternalReplacementPreservesIntraFragmentOffset() throws {
+        let text = (1 ... 100)
+            .map { "LINE_\(String(format: "%03d", $0)) " + String(repeating: "wrapped source text ", count: 8) }
+            .joined(separator: "\n")
+        let system = makeSystem(text: text)
+        let scrollView = NSScrollView(frame: NSRect(x: 0, y: 0, width: 220, height: 180))
+        scrollView.documentView = system.textView
+        system.scrollView = scrollView
+        system.textView.frame = NSRect(x: 0, y: 0, width: 220, height: 180)
+        system.syncFrameHeightToContent()
+        let selectedRange = (text as NSString).range(of: "LINE_080")
+        system.selectedRange = selectedRange
+        let sourceLocation = (text as NSString).range(of: "LINE_040").location
+        let frame = try #require(system.layoutFragmentFrame(atUTF16Location: sourceLocation))
+        #expect(frame.height > 40)
+        system.scrollOffset = frame.minY + system.textView.textContainerInset.height + frame.height * 0.65
+        let viewport = system.viewportSnapshot()
+        #expect(viewport.topVisibleUTF16Offset == sourceLocation)
+        #expect(try #require(viewport.topVisibleFragmentOffset) > 20)
+        system.replaceTextFromExternal(
+            text.replacingOccurrences(of: "LINE_100", with: "DISK_100"),
+            preserving: viewport,
+            clearUndo: true
+        )
+        system.frameSyncTask?.cancel()
+        // Drive both deferred restore passes without a timing dependency.
+        for _ in 0 ..< 2 {
+            system.syncFrameHeightToContent()
+            #expect(system.applyPendingExternalViewport())
+            #expect(abs(system.scrollOffset - viewport.scrollOffset) < 0.5)
+        }
+        #expect(system.selectedRange == selectedRange)
+        #expect(system.topVisibleUTF16Offset == viewport.topVisibleUTF16Offset)
+    }
+
+    @Test("later content changes discard a reload viewport before scrolling", arguments: [false, true])
+    func laterContentChangesDiscardPendingReloadViewport(modelReplacement: Bool) {
+        let text = Array(repeating: "A line that makes the editor scroll.", count: 160)
+            .joined(separator: "\n")
+        let system = makeSystem(text: text)
+        let scrollView = NSScrollView(frame: NSRect(x: 0, y: 0, width: 420, height: 180))
+        scrollView.documentView = system.textView
+        system.scrollView = scrollView
+        system.textView.frame = NSRect(x: 0, y: 0, width: 420, height: 180)
+        system.syncFrameHeightToContent()
+        system.scrollOffset = 1000
+        let viewport = system.viewportSnapshot()
+        system.replaceTextFromExternal(text, preserving: viewport, clearUndo: true)
+        // Drive the deferred seam directly so this tests invalidation without
+        // depending on the timing of the frame-sync task.
+        system.frameSyncTask?.cancel()
+        if modelReplacement {
+            system.setText(text + "\nNew model content")
+        } else {
+            system.noteTextEdit()
+        }
+        system.syncFrameHeightToContent()
+        // Change the live clip origin directly, retaining the reload's raw
+        // pending offset so the fallback must also reject stale state.
+        scrollView.contentView.scroll(to: NSPoint(x: 0, y: 40))
+        let currentOffset = system.scrollOffset
+        #expect(currentOffset != viewport.scrollOffset)
+
+        #expect(!system.applyPendingExternalViewport())
+        system.applyPendingScrollOffset()
+
+        #expect(system.scrollOffset == currentOffset)
+        #expect(system.pendingExternalViewport == nil)
+        #expect(system.pendingExternalViewportRevision == nil)
+        #expect(system.pendingScrollOffset == nil)
     }
 
     @Test("selectedRange can be read and written")

@@ -111,7 +111,7 @@ struct WorkspaceCommands: Commands {
             Divider()
 
             Button("Export…") {
-                Task { await coordinator?.exportCoordinator.exportActiveDocument() }
+                coordinator?.exportCoordinator.beginExportActiveDocument()
             }
             .keyboardShortcut("e", modifiers: [.command, .shift])
             .disabled(coordinator?.exportCoordinator.canExportActiveDocument != true)

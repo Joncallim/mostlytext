@@ -38,7 +38,24 @@ existing contracts. Source review, actual native outcomes, linguistic review,
 exact signed-artifact qualification and action-specific publication approval
 remain required before final issue closure or public delivery.
 
+## Historical execution baseline — 1 November 2026
+
+The owner approved the complete macOS 1.0 convergence plan and implementation.
+Live `master` is `15c0fae22f7618e94c82681227057c66011be2a9`; live
+`integration-final` is `7b8b4055796d7452fc6dd1b27ced71470c92623c` (21 commits
+ahead, none behind master). There are 18 open application issues and five draft
+application PRs. Earlier counts, pause statements and branch checkpoints below
+are historical. Existing safety/review/evidence gates remain required.
+
+The [execution contract](downstream/COMPLETION_EXECUTION_2026-11-01.md) records
+the approved scope, dependency order, current native-test isolation incident,
+and release boundaries. Source changes begin with #88's startup guard and
+non-launch verification. No candidate has passed the complete final native
+matrix. The earlier private #88 source and patches were preserved on the Fast
+SSD before importing them; the original checkout remains untouched.
+
 ## Historical owner summary
+
 
 MostlyText has 22 open issues. The integration candidate is locally preserved on
 `fix/ci-timing-contracts`; it is not approved for merging or release. The immediate

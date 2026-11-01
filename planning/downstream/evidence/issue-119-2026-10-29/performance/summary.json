@@ -1,0 +1,206 @@
+[
+  {
+    "sizeBytes": 1048576,
+    "operation": "snapshot",
+    "cacheLabel": "first-read-fresh-process-cache-uncontrolled",
+    "count": 20,
+    "apiMilliseconds": {
+      "p50": 7.87575,
+      "p95": 8.910708,
+      "max": 9.169792
+    },
+    "outerMilliseconds": {
+      "p50": 7.961833,
+      "p95": 9.131542,
+      "max": 9.264291
+    },
+    "maxProcessPeakResidentBytes": 12320768
+  },
+  {
+    "sizeBytes": 1048576,
+    "operation": "snapshot",
+    "cacheLabel": "warm-same-process",
+    "count": 50,
+    "apiMilliseconds": {
+      "p50": 3.244083,
+      "p95": 4.443875,
+      "max": 4.836667
+    },
+    "outerMilliseconds": {
+      "p50": 3.260375,
+      "p95": 4.470375,
+      "max": 4.869625
+    },
+    "maxProcessPeakResidentBytes": 12484608
+  },
+  {
+    "sizeBytes": 1048576,
+    "operation": "revision",
+    "cacheLabel": "first-read-fresh-process-cache-uncontrolled",
+    "count": 20,
+    "apiMilliseconds": {
+      "p50": 2.139542,
+      "p95": 2.395958,
+      "max": 2.560625
+    },
+    "outerMilliseconds": {
+      "p50": 2.213292,
+      "p95": 2.480375,
+      "max": 2.629959
+    },
+    "maxProcessPeakResidentBytes": 11288576
+  },
+  {
+    "sizeBytes": 1048576,
+    "operation": "revision",
+    "cacheLabel": "warm-same-process",
+    "count": 50,
+    "apiMilliseconds": {
+      "p50": 0.515625,
+      "p95": 0.617792,
+      "max": 0.62575
+    },
+    "outerMilliseconds": {
+      "p50": 0.530833,
+      "p95": 0.639625,
+      "max": 0.679959
+    },
+    "maxProcessPeakResidentBytes": 11534336
+  },
+  {
+    "sizeBytes": 1048576,
+    "operation": "probe",
+    "cacheLabel": "first-read-fresh-process-cache-uncontrolled",
+    "count": 20,
+    "apiMilliseconds": {
+      "p50": 4.91525,
+      "p95": 5.127125,
+      "max": 5.189042
+    },
+    "outerMilliseconds": {
+      "p50": 4.978792,
+      "p95": 5.197667,
+      "max": 5.259125
+    },
+    "maxProcessPeakResidentBytes": 12271616
+  },
+  {
+    "sizeBytes": 1048576,
+    "operation": "probe",
+    "cacheLabel": "warm-same-process",
+    "count": 50,
+    "apiMilliseconds": {
+      "p50": 3.373292,
+      "p95": 3.559416,
+      "max": 3.575375
+    },
+    "outerMilliseconds": {
+      "p50": 3.387042,
+      "p95": 3.576625,
+      "max": 3.601166
+    },
+    "maxProcessPeakResidentBytes": 12517376
+  },
+  {
+    "sizeBytes": 10485760,
+    "operation": "snapshot",
+    "cacheLabel": "first-read-fresh-process-cache-uncontrolled",
+    "count": 20,
+    "apiMilliseconds": {
+      "p50": 34.836,
+      "p95": 35.532584,
+      "max": 35.823709
+    },
+    "outerMilliseconds": {
+      "p50": 34.899458,
+      "p95": 35.605042,
+      "max": 35.899167
+    },
+    "maxProcessPeakResidentBytes": 31178752
+  },
+  {
+    "sizeBytes": 10485760,
+    "operation": "snapshot",
+    "cacheLabel": "warm-same-process",
+    "count": 50,
+    "apiMilliseconds": {
+      "p50": 32.432791,
+      "p95": 33.551667,
+      "max": 33.825791
+    },
+    "outerMilliseconds": {
+      "p50": 32.470083,
+      "p95": 33.586875,
+      "max": 33.874125
+    },
+    "maxProcessPeakResidentBytes": 31490048
+  },
+  {
+    "sizeBytes": 10485760,
+    "operation": "revision",
+    "cacheLabel": "first-read-fresh-process-cache-uncontrolled",
+    "count": 20,
+    "apiMilliseconds": {
+      "p50": 9.099167,
+      "p95": 10.021167,
+      "max": 10.075042
+    },
+    "outerMilliseconds": {
+      "p50": 9.179791,
+      "p95": 10.148958,
+      "max": 10.182334
+    },
+    "maxProcessPeakResidentBytes": 20692992
+  },
+  {
+    "sizeBytes": 10485760,
+    "operation": "revision",
+    "cacheLabel": "warm-same-process",
+    "count": 50,
+    "apiMilliseconds": {
+      "p50": 5.379667,
+      "p95": 6.835542,
+      "max": 7.507416
+    },
+    "outerMilliseconds": {
+      "p50": 5.411875,
+      "p95": 6.86825,
+      "max": 7.55975
+    },
+    "maxProcessPeakResidentBytes": 20987904
+  },
+  {
+    "sizeBytes": 10485760,
+    "operation": "probe",
+    "cacheLabel": "first-read-fresh-process-cache-uncontrolled",
+    "count": 20,
+    "apiMilliseconds": {
+      "p50": 34.167375,
+      "p95": 34.938333,
+      "max": 35.117208
+    },
+    "outerMilliseconds": {
+      "p50": 34.225667,
+      "p95": 34.999792,
+      "max": 35.175042
+    },
+    "maxProcessPeakResidentBytes": 31211520
+  },
+  {
+    "sizeBytes": 10485760,
+    "operation": "probe",
+    "cacheLabel": "warm-same-process",
+    "count": 50,
+    "apiMilliseconds": {
+      "p50": 32.784917,
+      "p95": 34.156792,
+      "max": 34.327625
+    },
+    "outerMilliseconds": {
+      "p50": 32.80975,
+      "p95": 34.184417,
+      "max": 34.351833
+    },
+    "maxProcessPeakResidentBytes": 31490048
+  }
+]

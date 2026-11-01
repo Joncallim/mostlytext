@@ -1,4 +1,8 @@
 name: MacDown2
+configs:
+  Debug: debug
+  Release: release
+  UITestIsolated: debug
 options:
   bundleIdPrefix: com.joncallim
   deploymentTarget:
@@ -78,11 +82,15 @@ targets:
       configs:
         Release:
           ENABLE_TESTABILITY: 'YES'
+        UITestIsolated:
+          PRODUCT_BUNDLE_IDENTIFIER: '$(MOSTLYTEXT_UI_TEST_BUNDLE_ID)'
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: '$(inherited) UITEST_ISOLATED'
     info:
       path: MacDown2/Info.plist
       properties:
         CFBundleName: MacDown 2
         CFBundleDisplayName: MacDown 2
+        MostlyTextUITestOwnerUID: '$(MOSTLYTEXT_UI_TEST_OWNER_UID)'
         CFBundleIconName: AppIcon
         CFBundleShortVersionString: 0.1.0
         CFBundleVersion: '1'
@@ -204,6 +212,10 @@ targets:
     - package: MacDownKit
       product: Workspace
     settings:
+      configs:
+        UITestIsolated:
+          PRODUCT_BUNDLE_IDENTIFIER: '$(MOSTLYTEXT_UI_TEST_BUNDLE_ID).UITests'
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: '$(inherited) UITEST_ISOLATED'
       base:
         GENERATE_INFOPLIST_FILE: 'YES'
         TEST_TARGET_NAME: MacDown2
@@ -263,6 +275,17 @@ targets:
         GENERATE_INFOPLIST_FILE: 'YES'
         TEST_TARGET_NAME: MacDown2
 schemes:
+  Issue88Isolated:
+    build:
+      targets:
+        MacDown2: all
+    run:
+      config: UITestIsolated
+      executable: MacDown2
+    test:
+      config: UITestIsolated
+      targets:
+      - MacDown2UITests
   MacDown2:
     build:
       targets:

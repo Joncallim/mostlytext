@@ -1,0 +1,19 @@
+{
+  "sourceHead": "6a915a08a81adb63bbecbdbb75c612f9d4574f9c",
+  "filecorePatchSHA256": "2fe48f6e8ccc5f3cbbb9018921912af7ebf391ef63c3b56bc939181007e5814d",
+  "filecoreFrameworkSHA256": "514402c591ab12c17e1156a89623e54f9409d60ba5e2b6cc663f611df6b4a638",
+  "appExecutableSHA256": "badf4fc7c88dd6fd474dfa5b5bbc2260fcc2cfe7587fe89049ae596cb8f8e463",
+  "harnessSourceSHA256": "6e7e3d08fe53f53dc1acd969c99d120675e30d0191daa16619fc4b2c4e6a7b3c",
+  "harnessExecutableSHA256": "98b834d7a6a0a98b2c7e6e392a505377c1d8ee089fdaba4da66b5093ab694ac0",
+  "lockfileSHA256": "7e065900332e02d784b98579400c8dec1967098884db9206acd4d6bd3bcc3d1d",
+  "os": "macOS26.5.1 (25F80)",
+  "hardwareModel": "Mac15,6",
+  "memoryBytes": 19327352832,
+  "logicalCPUs": 11,
+  "physicalCPUs": 11,
+  "measuredArchitecture": "arm64",
+  "optimization": "Release -O -whole-module-optimization -enable-testing; private ISSUE117_NATIVE_ACCEPTANCE startup",
+  "cacheControl": "uncontrolled filesystem cache; first fresh process is not cold storage",
+  "population": "6serialAPI/sizecells; each20freshprocessreads,1primingand50warmreads",
+  "boundary": "componentonly; no admission, native50window,mainActorIOorforegroundproof"
+}

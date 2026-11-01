@@ -1,0 +1,5 @@
+Running SwiftFormat...
+(lint mode - no files will be changed.)
+Reading config file at /Users/jonathanlim/GitHub/macdown_2-issue119-scroll-reload/.swiftformat
+SwiftFormat completed in 0.27s.
+0/1049 files require formatting, 8 files skipped.

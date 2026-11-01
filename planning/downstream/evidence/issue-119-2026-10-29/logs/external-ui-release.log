@@ -1,0 +1,617 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -xctestrun /tmp/mt119-scroll-reload-derived/Build/Products/Issue119ExternalUI_macosx26.5-arm64.xctestrun -destination platform=macOS,arch=arm64 -parallel-testing-enabled NO "-only-testing:MacDown2UITests/ExternalFileChangesUITests" -test-timeouts-enabled YES -default-test-execution-time-allowance 60 -maximum-test-execution-time-allowance 120 -resultBundlePath /tmp/mostlytext-119-acceptance-20261029/external-ui-release.xcresult
+
+2026-10-29 17:52:42.211 xcodebuild[3286:73522593] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+Writing result bundle at path:
+	/tmp/mostlytext-119-acceptance-20261029/external-ui-release.xcresult
+
+2026-10-29 17:52:42.215 xcodebuild[3286:73522593] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00006030-0012446C0E83001C, name:My Mac }
+{ platform:macOS, arch:arm64, variant:Mac Catalyst, id:00006030-0012446C0E83001C, name:My Mac }
+{ platform:macOS, arch:arm64, variant:DriverKit, id:00006030-0012446C0E83001C, name:My Mac }
+{ platform:macOS, arch:arm64, variant:Designed for [iPad,iPhone], id:00006030-0012446C0E83001C, name:My Mac }
+2026-10-29 17:52:43.541 xcodebuild[3286:73522593] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+2026-10-29 17:52:43.706 xcodebuild[3286:73522593] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+2026-10-29 17:52:44.583901+0800 MacDown2UITests-Runner[3312:73522872] [Default] Running tests...
+Test Suite 'Selected tests' started at 2026-10-29 17:52:51.345.
+Test Suite 'MacDown2UITests.xctest' started at 2026-10-29 17:52:51.346.
+Test Suite 'ExternalFileChangesUITests' started at 2026-10-29 17:52:51.346.
+Test Case '-[MacDown2UITests.ExternalFileChangesUITests testCancelThenUseDiskRevalidatesAgainstTheLatestDiskVersion]' started.
+    t =     0.00s Start Test at 2026-10-29 17:52:51.347
+    t =     0.52s Set Up
+    t =     0.58s Open com.joncallim.MacDown2
+    t =     0.58s     Launch com.joncallim.MacDown2
+2026-10-29 17:52:52.239 xcodebuild[3286:73522593] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-29 17:52:52.239 xcodebuild[3286:73522593] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     2.10s         Wait for accessibility to load
+    t =     2.23s         Setting up automation session
+    t =     2.25s         Wait for com.joncallim.MacDown2 to idle
+    t =     2.66s Open com.joncallim.MacDown2
+    t =     2.67s     Activate com.joncallim.MacDown2
+    t =     2.67s         Wait for com.joncallim.MacDown2 to idle
+    t =     2.73s Waiting 5.0s for TextView (First Match) to exist
+    t =     3.78s     Checking `Expect predicate `existsNoRetry == 1` for object TextView (First Match)`
+    t =     3.78s         Checking existence of `TextView (First Match)`
+    t =     4.02s Click TextView (First Match)
+    t =     4.02s     Wait for com.joncallim.MacDown2 to idle
+    t =     4.02s     Find the TextView (First Match)
+    t =     4.06s     Check for interrupting elements affecting "# Original
+" TextView
+    t =     4.18s     Found 1 interrupting element:
+    t =     4.18s Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =     4.18s     Invoking UI interruption monitors for Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =     4.18s Checking for user permission dialogs...
+    t =     4.18s             Checking existence of `StaticText (Elements matching predicate 'value MATCHES[c] ".+ would like ((to|full) access|to find) .+"')`
+    t =     5.25s             Checking existence of `StaticText (Elements matching predicate 'title CONTAINS[c] "Trust This "')`
+    t =     6.02s Checking for Bluetooth Setup Assistant...
+    t =     6.02s             Find the Window at {{45.0, 39.0}, {1533.0, 984.0}}
+    t =     6.82s Checking for Notification Center Banners...
+    t =     6.82s Checking for basic alerts
+    t =     6.83s             Checking existence of `"janet" Window`
+    t =     7.59s             Find the "janet" Window
+    t =     8.38s             Find the "janet" Window
+    t =     9.14s No monitors handled UI interruption, checking to see if element still exists...
+    t =     9.34s             Checking existence of `"janet" Window`
+    t =    10.36s Did not handle the interruption, but will attempt to continue…
+    t =    10.36s     Synthesize event
+    t =    10.76s     Wait for com.joncallim.MacDown2 to idle
+    t =    10.77s Type ' local edit' into "# Original
+" TextView
+    t =    10.77s     Wait for com.joncallim.MacDown2 to idle
+    t =    10.77s     Find the "# Original
+" TextView
+    t =    10.85s     Check for interrupting elements affecting "# Original
+" TextView
+    t =    10.87s     Found 1 interrupting element:
+    t =    10.87s Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =    10.87s     Invoking UI interruption monitors for Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =    10.87s Checking for user permission dialogs...
+    t =    10.87s             Checking existence of `StaticText (Elements matching predicate 'value MATCHES[c] ".+ would like ((to|full) access|to find) .+"')`
+    t =    11.54s             Checking existence of `StaticText (Elements matching predicate 'title CONTAINS[c] "Trust This "')`
+    t =    12.31s Checking for Bluetooth Setup Assistant...
+    t =    12.32s             Find the Window at {{45.0, 39.0}, {1533.0, 984.0}}
+    t =    13.05s Checking for Notification Center Banners...
+    t =    13.05s Checking for basic alerts
+    t =    13.16s             Checking existence of `"janet" Window`
+    t =    13.88s             Find the "janet" Window
+    t =    14.61s             Find the "janet" Window
+    t =    15.36s No monitors handled UI interruption, checking to see if element still exists...
+    t =    15.36s             Checking existence of `"janet" Window`
+    t =    16.09s Did not handle the interruption, but will attempt to continue…
+    t =    16.09s     Synthesize event
+    t =    16.50s     Wait for com.joncallim.MacDown2 to idle
+    t =    16.52s Waiting 8.0s for "externalChangeBanner" Any to exist
+    t =    17.55s     Checking `Expect predicate `existsNoRetry == 1` for object "externalChangeBanner" Any`
+    t =    17.56s         Checking existence of `"externalChangeBanner" Any`
+    t =    17.67s Click "externalConflictNotNowButton" Button
+    t =    17.68s     Wait for com.joncallim.MacDown2 to idle
+    t =    17.68s     Find the "externalConflictNotNowButton" Button
+    t =    17.96s     Check for interrupting elements affecting "externalConflictNotNowButton" Button
+    t =    17.98s     Found 1 interrupting element:
+    t =    17.99s Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =    17.99s     Invoking UI interruption monitors for Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =    17.99s Checking for user permission dialogs...
+    t =    17.99s             Checking existence of `StaticText (Elements matching predicate 'value MATCHES[c] ".+ would like ((to|full) access|to find) .+"')`
+    t =    18.75s             Checking existence of `StaticText (Elements matching predicate 'title CONTAINS[c] "Trust This "')`
+    t =    19.54s Checking for Bluetooth Setup Assistant...
+    t =    19.54s             Find the Window at {{45.0, 39.0}, {1533.0, 984.0}}
+    t =    20.27s Checking for Notification Center Banners...
+    t =    20.28s Checking for basic alerts
+    t =    20.38s             Checking existence of `"janet" Window`
+    t =    21.11s             Find the "janet" Window
+    t =    21.84s             Find the "janet" Window
+    t =    22.60s No monitors handled UI interruption, checking to see if element still exists...
+    t =    22.61s             Checking existence of `"janet" Window`
+    t =    23.34s Did not handle the interruption, but will attempt to continue…
+    t =    23.34s     Synthesize event
+    t =    23.74s     Wait for com.joncallim.MacDown2 to idle
+    t =    23.74s Checking existence of `"externalChangeBanner" Any`
+    t =    23.86s Click "externalConflictUseDiskButton" Button
+    t =    23.86s     Wait for com.joncallim.MacDown2 to idle
+    t =    23.86s     Find the "externalConflictUseDiskButton" Button
+    t =    23.97s     Check for interrupting elements affecting "externalConflictUseDiskButton" Button
+    t =    23.99s     Found 1 interrupting element:
+    t =    23.99s Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =    23.99s     Invoking UI interruption monitors for Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =    23.99s Checking for user permission dialogs...
+    t =    23.99s             Checking existence of `StaticText (Elements matching predicate 'value MATCHES[c] ".+ would like ((to|full) access|to find) .+"')`
+    t =    24.77s             Checking existence of `StaticText (Elements matching predicate 'title CONTAINS[c] "Trust This "')`
+    t =    25.57s Checking for Bluetooth Setup Assistant...
+    t =    25.57s             Find the Window at {{45.0, 39.0}, {1533.0, 984.0}}
+    t =    26.32s Checking for Notification Center Banners...
+    t =    26.32s Checking for basic alerts
+    t =    26.33s             Checking existence of `"janet" Window`
+    t =    27.10s             Find the "janet" Window
+    t =    27.86s             Find the "janet" Window
+    t =    28.63s No monitors handled UI interruption, checking to see if element still exists...
+    t =    28.63s             Checking existence of `"janet" Window`
+    t =    29.37s Did not handle the interruption, but will attempt to continue…
+    t =    29.37s     Synthesize event
+    t =    29.77s     Wait for com.joncallim.MacDown2 to idle
+    t =    30.84s Checking `Expect predicate `value == "# Latest Disk Version
+"` for object "# Original
+" TextView`
+    t =    30.84s     Find the "# Original
+" TextView
+    t =    31.98s Checking `Expect predicate `exists == 0` for object "externalChangeBanner" Any`
+    t =    31.98s     Checking existence of `"externalChangeBanner" Any`
+    t =    32.15s Tear Down
+    t =    32.15s     Terminate com.joncallim.MacDown2:3366
+Test Case '-[MacDown2UITests.ExternalFileChangesUITests testCancelThenUseDiskRevalidatesAgainstTheLatestDiskVersion]' passed (33.546 seconds).
+Test Case '-[MacDown2UITests.ExternalFileChangesUITests testCleanExternalReplacementReloadsWithoutAConflictSheet]' started.
+    t =     0.00s Start Test at 2026-10-29 17:53:24.894
+    t =     0.18s Set Up
+    t =     0.18s Open com.joncallim.MacDown2
+    t =     0.18s     Launch com.joncallim.MacDown2
+2026-10-29 17:53:25.076 xcodebuild[3286:73522593] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-29 17:53:25.076 xcodebuild[3286:73522593] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     0.64s         Wait for accessibility to load
+    t =     0.79s         Setting up automation session
+    t =     0.80s         Wait for com.joncallim.MacDown2 to idle
+    t =     1.13s Open com.joncallim.MacDown2
+    t =     1.13s     Activate com.joncallim.MacDown2
+    t =     1.14s         Wait for com.joncallim.MacDown2 to idle
+    t =     1.18s Waiting 5.0s for TextView (First Match) to exist
+    t =     2.28s     Checking `Expect predicate `existsNoRetry == 1` for object TextView (First Match)`
+    t =     2.28s         Checking existence of `TextView (First Match)`
+    t =     2.44s Waiting 8.0s for "externalReloadStatus" Any to exist
+    t =     3.48s     Checking `Expect predicate `existsNoRetry == 1` for object "externalReloadStatus" Any`
+    t =     3.48s         Checking existence of `"externalReloadStatus" Any`
+    t =     3.60s Find the TextView (First Match)
+    t =     3.63s Checking existence of `"externalChangeBanner" Any`
+    t =     3.92s Tear Down
+    t =     3.92s     Terminate com.joncallim.MacDown2:3413
+Test Case '-[MacDown2UITests.ExternalFileChangesUITests testCleanExternalReplacementReloadsWithoutAConflictSheet]' passed (5.219 seconds).
+Test Case '-[MacDown2UITests.ExternalFileChangesUITests testConflictCloseUseDiskClosesWithoutDiscardingTheExternalVersion]' started.
+    t =     0.00s Start Test at 2026-10-29 17:53:30.114
+    t =     0.18s Set Up
+    t =     0.18s Open com.joncallim.MacDown2
+    t =     0.18s     Launch com.joncallim.MacDown2
+2026-10-29 17:53:30.298 xcodebuild[3286:73522593] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-29 17:53:30.298 xcodebuild[3286:73522593] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     0.53s         Wait for accessibility to load
+    t =     0.68s         Setting up automation session
+    t =     0.69s         Wait for com.joncallim.MacDown2 to idle
+    t =     0.92s Open com.joncallim.MacDown2
+    t =     0.92s     Activate com.joncallim.MacDown2
+    t =     0.93s         Wait for com.joncallim.MacDown2 to idle
+    t =     1.00s Waiting 5.0s for TextView (First Match) to exist
+    t =     2.02s     Checking `Expect predicate `existsNoRetry == 1` for object TextView (First Match)`
+    t =     2.02s         Checking existence of `TextView (First Match)`
+    t =     2.15s Click TextView (First Match)
+    t =     2.16s     Wait for com.joncallim.MacDown2 to idle
+    t =     2.16s     Find the TextView (First Match)
+    t =     2.20s     Check for interrupting elements affecting "# Original
+" TextView
+    t =     2.24s     Found 1 interrupting element:
+    t =     2.24s Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =     2.24s     Invoking UI interruption monitors for Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =     2.24s Checking for user permission dialogs...
+    t =     2.24s             Checking existence of `StaticText (Elements matching predicate 'value MATCHES[c] ".+ would like ((to|full) access|to find) .+"')`
+    t =     3.19s             Checking existence of `StaticText (Elements matching predicate 'title CONTAINS[c] "Trust This "')`
+    t =     3.99s Checking for Bluetooth Setup Assistant...
+    t =     3.99s             Find the Window at {{45.0, 39.0}, {1533.0, 984.0}}
+    t =     4.76s Checking for Notification Center Banners...
+    t =     4.76s Checking for basic alerts
+    t =     4.76s             Checking existence of `"janet" Window`
+    t =     5.54s             Find the "janet" Window
+    t =     6.28s             Find the "janet" Window
+    t =     7.07s No monitors handled UI interruption, checking to see if element still exists...
+    t =     7.18s             Checking existence of `"janet" Window`
+    t =     7.94s Did not handle the interruption, but will attempt to continue…
+    t =     7.95s     Synthesize event
+    t =     8.30s     Wait for com.joncallim.MacDown2 to idle
+    t =     8.30s Type ' local edit' into "# Original
+" TextView
+    t =     8.30s     Wait for com.joncallim.MacDown2 to idle
+    t =     8.31s     Find the "# Original
+" TextView
+    t =     8.37s     Check for interrupting elements affecting "# Original
+" TextView
+    t =     8.39s     Found 1 interrupting element:
+    t =     8.39s Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =     8.40s     Invoking UI interruption monitors for Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =     8.40s Checking for user permission dialogs...
+    t =     8.40s             Checking existence of `StaticText (Elements matching predicate 'value MATCHES[c] ".+ would like ((to|full) access|to find) .+"')`
+    t =     9.07s             Checking existence of `StaticText (Elements matching predicate 'title CONTAINS[c] "Trust This "')`
+    t =     9.89s Checking for Bluetooth Setup Assistant...
+    t =     9.89s             Find the Window at {{45.0, 39.0}, {1533.0, 984.0}}
+    t =    10.65s Checking for Notification Center Banners...
+    t =    10.65s Checking for basic alerts
+    t =    10.66s             Checking existence of `"janet" Window`
+    t =    11.39s             Find the "janet" Window
+    t =    12.15s             Find the "janet" Window
+    t =    12.94s No monitors handled UI interruption, checking to see if element still exists...
+    t =    12.95s             Checking existence of `"janet" Window`
+    t =    13.71s Did not handle the interruption, but will attempt to continue…
+    t =    13.71s     Synthesize event
+    t =    14.12s     Wait for com.joncallim.MacDown2 to idle
+    t =    14.13s Waiting 8.0s for "externalChangeBanner" Any to exist
+    t =    15.16s     Checking `Expect predicate `existsNoRetry == 1` for object "externalChangeBanner" Any`
+    t =    15.17s         Checking existence of `"externalChangeBanner" Any`
+    t =    15.28s Type 'w' key with modifiers '⌘' (0x10)
+    t =    15.28s     Wait for com.joncallim.MacDown2 to idle
+    t =    15.29s     Find the Target Application 'com.joncallim.MacDown2'
+    t =    15.50s     Check for interrupting elements affecting "MacDown 2" Application
+    t =    15.50s     Synthesize event
+    t =    15.98s     Wait for com.joncallim.MacDown2 to idle
+    t =    15.98s Waiting 5.0s for Sheet (First Match) to exist
+    t =    17.01s     Checking `Expect predicate `existsNoRetry == 1` for object Sheet (First Match)`
+    t =    17.02s         Checking existence of `Sheet (First Match)`
+    t =    17.03s Waiting 3.0s for "Use Disk Version and Close" Button to exist
+    t =    18.06s     Checking `Expect predicate `existsNoRetry == 1` for object "Use Disk Version and Close" Button`
+    t =    18.06s         Checking existence of `"Use Disk Version and Close" Button`
+    t =    18.07s Click "Use Disk Version and Close" Button
+    t =    18.07s     Wait for com.joncallim.MacDown2 to idle
+    t =    18.07s     Find the "Use Disk Version and Close" Button
+    t =    18.08s     Check for interrupting elements affecting "action-button-2" Button
+    t =    18.10s     Found 1 interrupting element:
+    t =    18.10s Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =    18.10s     Invoking UI interruption monitors for Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =    18.10s Checking for user permission dialogs...
+    t =    18.10s             Checking existence of `StaticText (Elements matching predicate 'value MATCHES[c] ".+ would like ((to|full) access|to find) .+"')`
+    t =    18.78s             Checking existence of `StaticText (Elements matching predicate 'title CONTAINS[c] "Trust This "')`
+    t =    19.45s Checking for Bluetooth Setup Assistant...
+    t =    19.45s             Find the Window at {{45.0, 39.0}, {1533.0, 984.0}}
+    t =    20.09s Checking for Notification Center Banners...
+    t =    20.09s Checking for basic alerts
+    t =    20.09s             Checking existence of `"janet" Window`
+    t =    20.72s             Find the "janet" Window
+    t =    21.45s             Find the "janet" Window
+    t =    22.16s No monitors handled UI interruption, checking to see if element still exists...
+    t =    22.16s             Checking existence of `"janet" Window`
+    t =    22.84s Did not handle the interruption, but will attempt to continue…
+    t =    22.84s     Synthesize event
+    t =    23.51s     Wait for com.joncallim.MacDown2 to idle
+    t =    24.55s Checking `Expect predicate `exists == 0` for object "# Original
+" TextView`
+    t =    24.55s     Checking existence of `"# Original
+" TextView`
+    t =    24.65s Tear Down
+    t =    24.66s     Terminate com.joncallim.MacDown2:3436
+Test Case '-[MacDown2UITests.ExternalFileChangesUITests testConflictCloseUseDiskClosesWithoutDiscardingTheExternalVersion]' passed (25.992 seconds).
+Test Case '-[MacDown2UITests.ExternalFileChangesUITests testDirtyExternalReplacementKeepsLocalTextUntilDiskVersionIsChosen]' started.
+    t =     0.00s Start Test at 2026-10-29 17:53:56.106
+    t =     0.14s Set Up
+    t =     0.15s Open com.joncallim.MacDown2
+    t =     0.15s     Launch com.joncallim.MacDown2
+2026-10-29 17:53:56.254 xcodebuild[3286:73522593] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-29 17:53:56.254 xcodebuild[3286:73522593] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     0.53s         Wait for accessibility to load
+    t =     0.68s         Setting up automation session
+    t =     0.69s         Wait for com.joncallim.MacDown2 to idle
+    t =     0.95s Open com.joncallim.MacDown2
+    t =     0.95s     Activate com.joncallim.MacDown2
+    t =     0.95s         Wait for com.joncallim.MacDown2 to idle
+    t =     1.02s Waiting 5.0s for TextView (First Match) to exist
+    t =     2.10s     Checking `Expect predicate `existsNoRetry == 1` for object TextView (First Match)`
+    t =     2.10s         Checking existence of `TextView (First Match)`
+    t =     2.21s Click TextView (First Match)
+    t =     2.21s     Wait for com.joncallim.MacDown2 to idle
+    t =     2.21s     Find the TextView (First Match)
+    t =     2.26s     Check for interrupting elements affecting "# Original
+" TextView
+    t =     2.31s     Found 1 interrupting element:
+    t =     2.31s Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =     2.31s     Invoking UI interruption monitors for Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =     2.31s Checking for user permission dialogs...
+    t =     2.31s             Checking existence of `StaticText (Elements matching predicate 'value MATCHES[c] ".+ would like ((to|full) access|to find) .+"')`
+    t =     3.25s             Checking existence of `StaticText (Elements matching predicate 'title CONTAINS[c] "Trust This "')`
+    t =     4.06s Checking for Bluetooth Setup Assistant...
+    t =     4.06s             Find the Window at {{45.0, 39.0}, {1533.0, 984.0}}
+    t =     4.81s Checking for Notification Center Banners...
+    t =     4.81s Checking for basic alerts
+    t =     4.81s             Checking existence of `"janet" Window`
+    t =     5.56s             Find the "janet" Window
+    t =     6.32s             Find the "janet" Window
+    t =     7.08s No monitors handled UI interruption, checking to see if element still exists...
+    t =     7.09s             Checking existence of `"janet" Window`
+    t =     7.82s Did not handle the interruption, but will attempt to continue…
+    t =     7.82s     Synthesize event
+    t =     8.16s     Wait for com.joncallim.MacDown2 to idle
+    t =     8.16s Type 'local edit' into "# Original
+" TextView
+    t =     8.16s     Wait for com.joncallim.MacDown2 to idle
+    t =     8.17s     Find the "# Original
+" TextView
+    t =     8.23s     Check for interrupting elements affecting "# Original
+" TextView
+    t =     8.27s     Found 1 interrupting element:
+    t =     8.27s Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =     8.27s     Invoking UI interruption monitors for Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =     8.27s Checking for user permission dialogs...
+    t =     8.27s             Checking existence of `StaticText (Elements matching predicate 'value MATCHES[c] ".+ would like ((to|full) access|to find) .+"')`
+    t =     8.95s             Checking existence of `StaticText (Elements matching predicate 'title CONTAINS[c] "Trust This "')`
+    t =     9.72s Checking for Bluetooth Setup Assistant...
+    t =     9.72s             Find the Window at {{45.0, 39.0}, {1533.0, 984.0}}
+    t =    10.46s Checking for Notification Center Banners...
+    t =    10.46s Checking for basic alerts
+    t =    10.46s             Checking existence of `"janet" Window`
+    t =    11.22s             Find the "janet" Window
+    t =    11.96s             Find the "janet" Window
+    t =    12.72s No monitors handled UI interruption, checking to see if element still exists...
+    t =    12.83s             Checking existence of `"janet" Window`
+    t =    13.57s Did not handle the interruption, but will attempt to continue…
+    t =    13.57s     Synthesize event
+    t =    13.92s     Wait for com.joncallim.MacDown2 to idle
+    t =    13.94s Waiting 8.0s for "externalChangeBanner" Any to exist
+    t =    14.97s     Checking `Expect predicate `existsNoRetry == 1` for object "externalChangeBanner" Any`
+    t =    14.97s         Checking existence of `"externalChangeBanner" Any`
+    t =    15.10s Checking existence of `"externalConflictNotNowButton" Button`
+    t =    15.35s Click "externalConflictNotNowButton" Button
+    t =    15.35s     Wait for com.joncallim.MacDown2 to idle
+    t =    15.35s     Find the "externalConflictNotNowButton" Button
+    t =    15.45s     Check for interrupting elements affecting "externalConflictNotNowButton" Button
+    t =    15.47s     Found 1 interrupting element:
+    t =    15.47s Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =    15.47s     Invoking UI interruption monitors for Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =    15.47s Checking for user permission dialogs...
+    t =    15.47s             Checking existence of `StaticText (Elements matching predicate 'value MATCHES[c] ".+ would like ((to|full) access|to find) .+"')`
+    t =    16.25s             Checking existence of `StaticText (Elements matching predicate 'title CONTAINS[c] "Trust This "')`
+    t =    17.05s Checking for Bluetooth Setup Assistant...
+    t =    17.05s             Find the Window at {{45.0, 39.0}, {1533.0, 984.0}}
+    t =    17.80s Checking for Notification Center Banners...
+    t =    17.80s Checking for basic alerts
+    t =    17.80s             Checking existence of `"janet" Window`
+    t =    18.55s             Find the "janet" Window
+    t =    19.40s             Find the "janet" Window
+    t =    20.13s No monitors handled UI interruption, checking to see if element still exists...
+    t =    20.13s             Checking existence of `"janet" Window`
+    t =    20.87s Did not handle the interruption, but will attempt to continue…
+    t =    20.87s     Synthesize event
+    t =    21.23s     Wait for com.joncallim.MacDown2 to idle
+    t =    21.23s Checking existence of `"externalChangeBanner" Any`
+    t =    21.34s Click "externalConflictUseDiskButton" Button
+    t =    21.34s     Wait for com.joncallim.MacDown2 to idle
+    t =    21.34s     Find the "externalConflictUseDiskButton" Button
+    t =    21.45s     Check for interrupting elements affecting "externalConflictUseDiskButton" Button
+    t =    21.47s     Found 1 interrupting element:
+    t =    21.47s Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =    21.47s     Invoking UI interruption monitors for Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =    21.47s Checking for user permission dialogs...
+    t =    21.47s             Checking existence of `StaticText (Elements matching predicate 'value MATCHES[c] ".+ would like ((to|full) access|to find) .+"')`
+    t =    22.24s             Checking existence of `StaticText (Elements matching predicate 'title CONTAINS[c] "Trust This "')`
+    t =    23.06s Checking for Bluetooth Setup Assistant...
+    t =    23.06s             Find the Window at {{45.0, 39.0}, {1533.0, 984.0}}
+    t =    23.82s Checking for Notification Center Banners...
+    t =    23.82s Checking for basic alerts
+    t =    23.82s             Checking existence of `"janet" Window`
+    t =    24.60s             Find the "janet" Window
+    t =    25.38s             Find the "janet" Window
+    t =    26.16s No monitors handled UI interruption, checking to see if element still exists...
+    t =    26.17s             Checking existence of `"janet" Window`
+    t =    26.91s Did not handle the interruption, but will attempt to continue…
+    t =    26.91s     Synthesize event
+    t =    27.29s     Wait for com.joncallim.MacDown2 to idle
+    t =    28.35s Checking `Expect predicate `value == "# New Disk Version
+"` for object "# Original
+" TextView`
+    t =    28.35s     Find the "# Original
+" TextView
+    t =    28.45s Checking existence of `"externalChangeBanner" Any`
+    t =    28.60s Tear Down
+    t =    28.60s     Terminate com.joncallim.MacDown2:3467
+Test Case '-[MacDown2UITests.ExternalFileChangesUITests testDirtyExternalReplacementKeepsLocalTextUntilDiskVersionIsChosen]' passed (30.162 seconds).
+Test Case '-[MacDown2UITests.ExternalFileChangesUITests testKeepMyChangesDismissesConflictAndPreservesEditorText]' started.
+    t =     0.00s Start Test at 2026-10-29 17:54:26.269
+    t =     0.18s Set Up
+    t =     0.18s Open com.joncallim.MacDown2
+    t =     0.18s     Launch com.joncallim.MacDown2
+2026-10-29 17:54:26.452 xcodebuild[3286:73522593] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-29 17:54:26.452 xcodebuild[3286:73522593] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     0.97s         Wait for accessibility to load
+    t =     1.14s         Setting up automation session
+    t =     1.15s         Wait for com.joncallim.MacDown2 to idle
+    t =     1.53s Open com.joncallim.MacDown2
+    t =     1.53s     Activate com.joncallim.MacDown2
+    t =     1.54s         Wait for com.joncallim.MacDown2 to idle
+    t =     1.60s Waiting 5.0s for TextView (First Match) to exist
+    t =     2.70s     Checking `Expect predicate `existsNoRetry == 1` for object TextView (First Match)`
+    t =     2.70s         Checking existence of `TextView (First Match)`
+    t =     2.82s Click TextView (First Match)
+    t =     2.82s     Wait for com.joncallim.MacDown2 to idle
+    t =     2.83s     Find the TextView (First Match)
+    t =     2.87s     Check for interrupting elements affecting "# Original
+" TextView
+    t =     2.93s     Found 1 interrupting element:
+    t =     2.93s Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =     2.93s     Invoking UI interruption monitors for Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =     2.93s Checking for user permission dialogs...
+    t =     2.93s             Checking existence of `StaticText (Elements matching predicate 'value MATCHES[c] ".+ would like ((to|full) access|to find) .+"')`
+    t =     3.86s             Checking existence of `StaticText (Elements matching predicate 'title CONTAINS[c] "Trust This "')`
+    t =     4.66s Checking for Bluetooth Setup Assistant...
+    t =     4.66s             Find the Window at {{45.0, 39.0}, {1533.0, 984.0}}
+    t =     5.43s Checking for Notification Center Banners...
+    t =     5.43s Checking for basic alerts
+    t =     5.43s             Checking existence of `"janet" Window`
+    t =     6.21s             Find the "janet" Window
+    t =     7.16s             Find the "janet" Window
+    t =     7.94s No monitors handled UI interruption, checking to see if element still exists...
+    t =     8.05s             Checking existence of `"janet" Window`
+    t =     8.81s Did not handle the interruption, but will attempt to continue…
+    t =     8.81s     Synthesize event
+    t =     9.17s     Wait for com.joncallim.MacDown2 to idle
+    t =     9.17s Type ' local edit' into "# Original
+" TextView
+    t =     9.17s     Wait for com.joncallim.MacDown2 to idle
+    t =     9.18s     Find the "# Original
+" TextView
+    t =     9.24s     Check for interrupting elements affecting "# Original
+" TextView
+    t =     9.26s     Found 1 interrupting element:
+    t =     9.26s Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =     9.26s     Invoking UI interruption monitors for Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =     9.26s Checking for user permission dialogs...
+    t =     9.26s             Checking existence of `StaticText (Elements matching predicate 'value MATCHES[c] ".+ would like ((to|full) access|to find) .+"')`
+    t =     9.91s             Checking existence of `StaticText (Elements matching predicate 'title CONTAINS[c] "Trust This "')`
+    t =    10.69s Checking for Bluetooth Setup Assistant...
+    t =    10.69s             Find the Window at {{45.0, 39.0}, {1533.0, 984.0}}
+    t =    11.42s Checking for Notification Center Banners...
+    t =    11.42s Checking for basic alerts
+    t =    11.54s             Checking existence of `"janet" Window`
+    t =    12.27s             Find the "janet" Window
+    t =    13.01s             Find the "janet" Window
+    t =    13.76s No monitors handled UI interruption, checking to see if element still exists...
+    t =    13.77s             Checking existence of `"janet" Window`
+    t =    14.54s Did not handle the interruption, but will attempt to continue…
+    t =    14.54s     Synthesize event
+    t =    14.95s     Wait for com.joncallim.MacDown2 to idle
+    t =    14.96s Waiting 8.0s for "externalChangeBanner" Any to exist
+    t =    15.98s     Checking `Expect predicate `existsNoRetry == 1` for object "externalChangeBanner" Any`
+    t =    15.98s         Checking existence of `"externalChangeBanner" Any`
+    t =    16.10s Click "externalConflictKeepMineButton" Button
+    t =    16.10s     Wait for com.joncallim.MacDown2 to idle
+    t =    16.10s     Find the "externalConflictKeepMineButton" Button
+    t =    16.35s     Check for interrupting elements affecting "externalConflictKeepMineButton" Button
+    t =    16.39s     Found 1 interrupting element:
+    t =    16.39s Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =    16.39s     Invoking UI interruption monitors for Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =    16.39s Checking for user permission dialogs...
+    t =    16.39s             Checking existence of `StaticText (Elements matching predicate 'value MATCHES[c] ".+ would like ((to|full) access|to find) .+"')`
+    t =    17.19s             Checking existence of `StaticText (Elements matching predicate 'title CONTAINS[c] "Trust This "')`
+    t =    17.99s Checking for Bluetooth Setup Assistant...
+    t =    17.99s             Find the Window at {{45.0, 39.0}, {1533.0, 984.0}}
+    t =    18.74s Checking for Notification Center Banners...
+    t =    18.74s Checking for basic alerts
+    t =    18.85s             Checking existence of `"janet" Window`
+    t =    19.58s             Find the "janet" Window
+    t =    20.33s             Find the "janet" Window
+    t =    21.08s No monitors handled UI interruption, checking to see if element still exists...
+    t =    21.09s             Checking existence of `"janet" Window`
+    t =    21.83s Did not handle the interruption, but will attempt to continue…
+    t =    21.83s     Synthesize event
+    t =    22.18s     Wait for com.joncallim.MacDown2 to idle
+    t =    23.23s Checking `Expect predicate `value == "# Original
+ local edit"` for object "# Original
+" TextView`
+    t =    23.23s     Find the "# Original
+" TextView
+    t =    24.35s Checking `Expect predicate `exists == 0` for object "externalChangeBanner" Any`
+    t =    24.35s     Checking existence of `"externalChangeBanner" Any`
+    t =    24.57s Tear Down
+    t =    24.57s     Terminate com.joncallim.MacDown2:3552
+Test Case '-[MacDown2UITests.ExternalFileChangesUITests testKeepMyChangesDismissesConflictAndPreservesEditorText]' passed (25.889 seconds).
+Test Case '-[MacDown2UITests.ExternalFileChangesUITests testUseDiskResolutionShowsUnavailableStateWhenBackingFileVanishes]' started.
+    t =     0.00s Start Test at 2026-10-29 17:54:52.159
+    t =     0.17s Set Up
+    t =     0.18s Open com.joncallim.MacDown2
+    t =     0.18s     Launch com.joncallim.MacDown2
+2026-10-29 17:54:52.339 xcodebuild[3286:73522593] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-29 17:54:52.339 xcodebuild[3286:73522593] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     0.71s         Wait for accessibility to load
+    t =     0.88s         Setting up automation session
+    t =     0.88s         Wait for com.joncallim.MacDown2 to idle
+    t =     1.22s Open com.joncallim.MacDown2
+    t =     1.22s     Activate com.joncallim.MacDown2
+    t =     1.25s         Wait for com.joncallim.MacDown2 to idle
+    t =     1.27s Waiting 5.0s for TextView (First Match) to exist
+    t =     2.36s     Checking `Expect predicate `existsNoRetry == 1` for object TextView (First Match)`
+    t =     2.36s         Checking existence of `TextView (First Match)`
+    t =     2.49s Click TextView (First Match)
+    t =     2.49s     Wait for com.joncallim.MacDown2 to idle
+    t =     2.50s     Find the TextView (First Match)
+    t =     2.55s     Check for interrupting elements affecting "# Original
+" TextView
+    t =     2.58s     Found 1 interrupting element:
+    t =     2.58s Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =     2.58s     Invoking UI interruption monitors for Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =     2.58s Checking for user permission dialogs...
+    t =     2.58s             Checking existence of `StaticText (Elements matching predicate 'value MATCHES[c] ".+ would like ((to|full) access|to find) .+"')`
+    t =     3.49s             Checking existence of `StaticText (Elements matching predicate 'title CONTAINS[c] "Trust This "')`
+    t =     4.31s Checking for Bluetooth Setup Assistant...
+    t =     4.31s             Find the Window at {{45.0, 39.0}, {1533.0, 984.0}}
+    t =     5.07s Checking for Notification Center Banners...
+    t =     5.07s Checking for basic alerts
+    t =     5.07s             Checking existence of `"janet" Window`
+    t =     5.86s             Find the "janet" Window
+    t =     6.65s             Find the "janet" Window
+    t =     7.44s No monitors handled UI interruption, checking to see if element still exists...
+    t =     7.45s             Checking existence of `"janet" Window`
+    t =     8.22s Did not handle the interruption, but will attempt to continue…
+    t =     8.22s     Synthesize event
+    t =     8.62s     Wait for com.joncallim.MacDown2 to idle
+    t =     8.63s Type ' local edit' into "# Original
+" TextView
+    t =     8.63s     Wait for com.joncallim.MacDown2 to idle
+    t =     8.63s     Find the "# Original
+" TextView
+    t =     8.71s     Check for interrupting elements affecting "# Original
+" TextView
+    t =     8.73s     Found 1 interrupting element:
+    t =     8.73s Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =     8.73s     Invoking UI interruption monitors for Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =     8.73s Checking for user permission dialogs...
+    t =     8.73s             Checking existence of `StaticText (Elements matching predicate 'value MATCHES[c] ".+ would like ((to|full) access|to find) .+"')`
+    t =     9.39s             Checking existence of `StaticText (Elements matching predicate 'title CONTAINS[c] "Trust This "')`
+    t =    10.18s Checking for Bluetooth Setup Assistant...
+    t =    10.18s             Find the Window at {{45.0, 39.0}, {1533.0, 984.0}}
+    t =    10.92s Checking for Notification Center Banners...
+    t =    10.92s Checking for basic alerts
+    t =    10.92s             Checking existence of `"janet" Window`
+    t =    11.68s             Find the "janet" Window
+    t =    12.43s             Find the "janet" Window
+    t =    13.19s No monitors handled UI interruption, checking to see if element still exists...
+    t =    13.20s             Checking existence of `"janet" Window`
+    t =    13.93s Did not handle the interruption, but will attempt to continue…
+    t =    13.93s     Synthesize event
+    t =    14.31s     Wait for com.joncallim.MacDown2 to idle
+    t =    14.32s Waiting 8.0s for "externalChangeBanner" Any to exist
+    t =    15.35s     Checking `Expect predicate `existsNoRetry == 1` for object "externalChangeBanner" Any`
+    t =    15.35s         Checking existence of `"externalChangeBanner" Any`
+    t =    15.69s         Capturing element debug description
+    t =    16.40s     Checking `Expect predicate `existsNoRetry == 1` for object "externalChangeBanner" Any`
+    t =    16.40s         Checking existence of `"externalChangeBanner" Any`
+    t =    16.57s         Capturing element debug description
+    t =    17.39s     Checking `Expect predicate `existsNoRetry == 1` for object "externalChangeBanner" Any`
+    t =    17.39s         Checking existence of `"externalChangeBanner" Any`
+    t =    17.46s Click "externalConflictUseDiskButton" Button
+    t =    17.46s     Wait for com.joncallim.MacDown2 to idle
+    t =    17.47s     Find the "externalConflictUseDiskButton" Button
+    t =    17.59s     Check for interrupting elements affecting "externalConflictUseDiskButton" Button
+    t =    17.61s     Found 1 interrupting element:
+    t =    17.61s Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =    17.61s     Invoking UI interruption monitors for Window at {{45.0, 39.0}, {1533.0, 984.0}} from Application 'com.openai.codex'
+    t =    17.61s Checking for user permission dialogs...
+    t =    17.61s             Checking existence of `StaticText (Elements matching predicate 'value MATCHES[c] ".+ would like ((to|full) access|to find) .+"')`
+    t =    18.28s             Checking existence of `StaticText (Elements matching predicate 'title CONTAINS[c] "Trust This "')`
+    t =    19.06s Checking for Bluetooth Setup Assistant...
+    t =    19.06s             Find the Window at {{45.0, 39.0}, {1533.0, 984.0}}
+    t =    19.79s Checking for Notification Center Banners...
+    t =    19.80s Checking for basic alerts
+    t =    19.80s             Checking existence of `"janet" Window`
+    t =    20.55s             Find the "janet" Window
+    t =    21.29s             Find the "janet" Window
+    t =    22.05s No monitors handled UI interruption, checking to see if element still exists...
+    t =    22.06s             Checking existence of `"janet" Window`
+    t =    22.80s Did not handle the interruption, but will attempt to continue…
+    t =    22.80s     Synthesize event
+    t =    22.88s         Falling back to element center point: {1490.75, 357}
+    t =    23.22s     Wait for com.joncallim.MacDown2 to idle
+    t =    23.22s Waiting 8.0s for "externalBackingSaveAsButton" Button to exist
+    t =    24.25s     Checking `Expect predicate `existsNoRetry == 1` for object "externalBackingSaveAsButton" Button`
+    t =    24.25s         Checking existence of `"externalBackingSaveAsButton" Button`
+    t =    25.42s Checking `Expect predicate `value == "# Original
+ local edit"` for object "# Original
+" TextView`
+    t =    25.42s     Find the "# Original
+" TextView
+    t =    25.51s Tear Down
+    t =    25.51s     Terminate com.joncallim.MacDown2:3600
+Test Case '-[MacDown2UITests.ExternalFileChangesUITests testUseDiskResolutionShowsUnavailableStateWhenBackingFileVanishes]' passed (26.851 seconds).
+Test Suite 'ExternalFileChangesUITests' passed at 2026-10-29 17:55:19.010.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 147.659 (147.664) seconds
+Test Suite 'MacDown2UITests.xctest' passed at 2026-10-29 17:55:19.011.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 147.659 (147.665) seconds
+Test Suite 'Selected tests' passed at 2026-10-29 17:55:19.011.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 147.659 (147.666) seconds
+2026-10-29 17:55:19.302 xcodebuild[3286:73522593] [MT] IDETestOperationsObserverDebug: 155.758 elapsed -- Testing started completed.
+2026-10-29 17:55:19.302 xcodebuild[3286:73522593] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-29 17:55:19.302 xcodebuild[3286:73522593] [MT] IDETestOperationsObserverDebug: 155.758 sec, +155.758 sec -- end
+
+Test session results, code coverage, and logs:
+	/tmp/mostlytext-119-acceptance-20261029/external-ui-release.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

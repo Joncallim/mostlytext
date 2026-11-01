@@ -207,7 +207,7 @@ enum ExportComposer {
         let revision = Int(exactly: request.sourceGeneration) ?? Int.max
         let document: MarkdownDocument
         do {
-            document = try await engine.parse(request.text, options: .default, revision: revision)
+            document = try await engine.parse(request.text, options: request.parseOptions, revision: revision)
         } catch {
             if error is CancellationError {
                 throw error

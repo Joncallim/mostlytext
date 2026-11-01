@@ -351,6 +351,7 @@ public struct EditorView: NSViewRepresentable {
 
         public func textViewDidChangeSelection(_: Notification) {
             guard let system else { return }
+            system.cancelExternalViewportForChangedSelection()
             // Proactively invalidates a stale `selectionSet` cache for
             // every selection change EXCEPT the ones `selectionSet`'s own
             // setter itself just posted (`isUpdatingSelectionSet` guards

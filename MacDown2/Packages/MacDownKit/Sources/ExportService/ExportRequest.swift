@@ -1,4 +1,5 @@
 import Foundation
+import MarkdownEngine
 import Themes
 
 /// A self-contained export request: the live editor snapshot plus the inputs
@@ -14,6 +15,10 @@ public struct ExportRequest: Sendable, Equatable {
 
     /// The preview/export theme. Supplies the CSS variable block.
     public let theme: Theme
+
+    /// The exact editor Markdown parse settings captured for this export.
+    /// Existing callers retain the standard behavior unless they opt in.
+    public let parseOptions: MarkdownParseOptions
 
     /// The saved document's own file URL, or `nil` for an untitled document.
     ///
@@ -33,11 +38,13 @@ public struct ExportRequest: Sendable, Equatable {
         sourceGeneration: UInt,
         theme: Theme,
         documentURL: URL? = nil,
+        parseOptions: MarkdownParseOptions = .default,
         contributions: [ExportDerivedContribution] = []
     ) {
         self.text = text
         self.sourceGeneration = sourceGeneration
         self.theme = theme
+        self.parseOptions = parseOptions
         self.documentURL = documentURL
         self.contributions = contributions
     }

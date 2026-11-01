@@ -68,9 +68,7 @@ public final class EditorTextView: NSTextView {
     /// plain Option-click (since a real click's own mouseUp always fires,
     /// even with zero mouse movement) and silently overwrite
     /// `mouseDown(with:)`'s own toggle-caret result the instant the button
-    /// is released — turning a working single-click toggle into a feature
-    /// that never visibly does anything in practice. Caught in review
-    /// before this shipped, not found by an external hostile review.
+    /// is released — turning a working single-click toggle into a no-op.
     private var didDragRectangularSelection = false
 
     /// Minimum view-space distance from the anchor before an Option-drag
@@ -215,7 +213,13 @@ public final class EditorTextView: NSTextView {
     /// `EditorTextSystem+Scroll.swift`'s `topVisibleUTF16Offset`, which only
     /// ever needed fragment-level granularity, not an exact character
     /// position within a line.
+    override public func keyDown(with event: NSEvent) {
+        owningSystem?.cancelPendingExternalViewport()
+        super.keyDown(with: event)
+    }
+
     override public func mouseDown(with event: NSEvent) {
+        owningSystem?.cancelPendingExternalViewport()
         // Reset defensively at the top of every mouseDown, regardless of
         // branch, so a gesture that ends without ever reaching
         // `mouseUp(with:)` (never actually observed, but not provable
