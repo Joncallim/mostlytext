@@ -110,6 +110,22 @@ struct CommandSocketConnectionTests {
         }
     }
 
+    @Test func peerClosedBeforeAdoptionStillAllowsBufferedInputAndSafeWrite() throws {
+        var descriptors: [Int32] = [-1, -1]
+        try #require(socketpair(AF_UNIX, SOCK_STREAM, 0, &descriptors) == 0)
+        let payload = Data("hello before disconnect".utf8)
+        let framed = try CommandFrameDecoder.encode(payload)
+        let sent = framed.withUnsafeBytes { send(descriptors[1], $0.baseAddress, $0.count, MSG_NOSIGNAL) }
+        Darwin.close(descriptors[1])
+        let connection = try CommandSocketConnection(adopting: descriptors[0])
+        defer { connection.close() }
+        #expect(sent == framed.count)
+        #expect(try connection.readFrame(until: .now.advanced(by: .seconds(1))) == payload)
+        #expect(throws: CommandSocketError.self) {
+            try connection.writeFrame(Data([65]), until: .now.advanced(by: .seconds(1)))
+        }
+    }
+
     @Test func cancelledAndOversizedWritesDoNotRemainUsable() throws {
         let pair = try Pair()
         #expect(throws: CommandSocketError.cancelled) {
