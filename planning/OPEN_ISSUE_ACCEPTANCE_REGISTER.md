@@ -1,6 +1,37 @@
 # MostlyText open-issue acceptance register
 
-## Resumption checkpoint — 1 November 2026
+## Issue reconciliation — 1 November 2026
+
+All 18 remaining issues were inspected against live GitHub state, merged source
+and their recorded acceptance criteria. Seventeen issue bodies now distinguish
+completed implementation/controls from remaining acceptance; 35 existing
+criteria were checked, and #53's completed parser-model cleanup was recorded.
+No whole issue met its closure criteria, so none was closed.
+
+PRs #544, #545, #532, #543, #541 and #533 are merged into integration-final.
+Implementation merge `54e78ab5` has exactly the source tree tested at `31344a7c`
+by CI 41289671790: 3,038 package tests in 417 suites (two existing Neon known
+issues), 535 app tests in 110 suites, Debug/Release app and CLI builds, test
+compilation, lint, Compliance and locked-resolution verification passed. Master
+remains `15c0fae2`. This documentation reconciliation changes no runtime input.
+
+Earlier #532/#543 runs failed the same intermittent session-publication
+assertions. Their logs remain preserved under #183; the passing stack is not
+claimed to identify those historical callbacks. PR #533 acknowledges current
+startup monitoring before its controlled recovery gates and proves the late
+baseline observation's safe rejection separately. It also awaits the owned
+viewport restoration task instead of assuming completion within 150 ms. Both
+publication cases, repeated invalidation and the offscreen viewport control
+passed. Production guards, two-attempt limit and timer delays are unchanged.
+
+PR #519 retains its explicit native folder-panel/WebKit/signed-app hold. PR #520
+retains the architecture's source/native presentation hold; its diagnostic runs
+are not a native pass. Quick Look, the complete legacy/state migration, native
+UI/runtime isolation, Release performance, final localization and exact signed
+artifact/source-offer qualification remain open in their owning issues. No local
+app/UI test or public release was performed by this reconciliation.
+
+## Earlier resumption checkpoint — 1 November 2026
 
 The owner requested resumption of all work independent of Daybreak hardware-key
 authentication. Live application master remains
