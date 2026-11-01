@@ -1,6 +1,59 @@
 # MostlyText open-issue acceptance register
 
-## Issue reconciliation — 1 November 2026
+## Code continuation and native access — 1 November 2026
+
+The owner authorized computer use for native acceptance, then chose to stay in
+the current account and continue code work. At the access check, the separate
+non-admin `mostlytexttest` UID 502 existed but had no GUI session; the current
+console belonged to the owner's UID 501. No local app or UI suite was launched.
+The isolation runner's unconditional execution hold remains, and any later
+candidate requires its own matching source/build receipt before native use.
+
+[PR #550](https://github.com/Joncallim/macdown_2/pull/550) is merged at
+`74fd1cfb4a83149feb978473485ebc3e77816556`. All 58 legacy declarations have an
+executable data-only report, and the three verified Boolean suggestions produce
+consent-bound deterministic editor bytes with safe replay decisions. Exact-head
+CI 41308380669 passed 3,056 package tests in 419 suites (two existing Neon known
+issues), 535 app tests in 110 suites, Debug/Release builds, test compilation,
+lint and dependency-lock verification; Compliance also passed. Thirty-eight
+pure focused tests and five catalog controls pass. Font/theme/policy binding and
+actual consent/writer/journal/E17 migration remain open in #53/#18.
+
+[PR #552](https://github.com/Joncallim/macdown_2/pull/552) is merged at
+`92ddddf396b144fd0c323c6c18946cc629255e87`. The
+[FileCore component evidence](downstream/evidence/external-file-perf-2026-11-01/README.md)
+retains all three
+Release runs, full samples, exact source/driver hashes and the initial
+compilation/exploratory results. Digest/snapshot costs and actual monitor waits
+are measured without an application host. They do not replace #119's native
+controller latency, window/resource accounting or OS idle-wakeup profiling.
+
+[PR #551](https://github.com/Joncallim/macdown_2/pull/551) is merged at
+`9a7a08ba5c678e954f00f366f6b8df712d467b57`. It implements About -> Open Source
+Licenses using canonical bundled files, read-only native text, one focused Find
+command and draft localized surrounding strings. Exact-head CI 41311494804
+passed 3,056 package tests in 419 suites (two existing Neon known issues), 542 app
+tests in 111 suites, Debug/Release builds, test compilation, lint and locks.
+Compliance 41311494676 passed. All seven new license tests and the shipped
+menu/palette consistency test explicitly executed and passed. The merge adds only
+#552's planning/evidence files to the tested implementation tree.
+
+Source review corrected competing Find shortcuts, remount replay and catalog
+drift; the standalone catalog control failed before correction and passes after
+it. Five Foundation-only loader tests pass locally. No keyboard/VoiceOver/
+readability or final signed-artifact result is inferred. LC-08 and #148 remain open.
+
+Eight issue bodies (#17/#53/#88/#115/#117/#119/#148/#183) distinguish these
+bounded completed units from whole acceptance. Six newly recorded implementation/
+measurement progress items were checked in #53/#119/#148; earlier original
+acceptance checkboxes remain intact. No additional whole issue is closed; all
+18 remain open. The two older native-held drafts #519/#520 retain their recorded
+holds. Master remains `15c0fae2`; public source offers,
+release signing/promotion, final localization, migration and Quick Look still
+follow their existing prerequisites. Self-reviews are explicitly recorded as
+self-reviews.
+
+## Earlier issue reconciliation — 1 November 2026
 
 All 18 remaining issues were inspected against live GitHub state, merged source
 and their recorded acceptance criteria. Seventeen issue bodies now distinguish
