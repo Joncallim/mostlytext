@@ -605,3 +605,98 @@ compile condition as shipping commands. The scan now excludes that specific
 conditional block and asserts both labels are absent from the shipping
 inventory. The focused catalog suite passed locally against the pinned
 dependencies; normal exact-head hosted validation is still required.
+
+## Rebaseline 2026-10-26 — ordinary Export snapshot and publication
+
+### Owner summary
+
+Choosing Export in document A must never save document B after focus moves, mix
+two edits or themes, or publish a file after A closes. A saved document's
+relative images must come only from its own admitted directory. This corrects
+the ordinary HTML/PDF operation; it does not enable the separate validated-SVG
+route, infer folder permission from an open file, or add another chooser.
+
+### Current implementation boundary
+
+The ordinary command starts an asynchronous task before it captures a window.
+`ExportCoordinator` then consults the ambient key/main window, attaches its
+sheet to the ambient key window, holds a pre-panel `FileDocument`, reads the
+theme later, and sends errors to whichever window is current. Its contribution
+parse and `ExportComposer` both use default Markdown options even when E22's
+editor has block directives enabled. `ExportRequest.documentURL` is also used
+as a resource root: `ExportResourceResolver` derives its parent pathname and
+later reopens children by path. A frozen URL is not a retained directory grant
+or a pinned directory identity. Ordinary HTML primary promotion has no
+lifetime cutoff, and ordinary PDF calls its adapter without a lease. The
+disabled validated operation has useful identity and publication primitives,
+but its distinct feature policy is not activated by this correction.
+
+### Binding implementation order
+
+1. At command dispatch on the main actor, resolve one visible document window,
+   reserve its existing per-document Export guard, and capture its controller,
+   document ID, recovery epoch and operation identity before starting a task.
+   Present and dismiss the sheet on that window only. Cancellation, origin
+   loss and errors release the guard once; alerts never retarget another
+   window. A pre-panel replacement cancels before reading or publishing.
+2. After panel acceptance, revalidate that origin and read the completed
+   editor-published document value. Freeze source, generation, file URL, the
+   current Theme, `MarkdownParseOptions` derived from E22 settings, format,
+   style and destination together. Add a value parse-options field to
+   `ExportRequest` (defaulting to the former policy for other callers), and
+   pass the frozen value to both the contribution parse and
+   `ExportComposer.parse`. Do not consult live window, text, theme or options
+   again during rendering.
+3. Open and retain an explicit source-directory capability from the saved
+   document's parent under the process's existing access at freeze time.
+   `ExportRequest.documentURL` remains title/metadata, not read authority.
+   Thread a separate capability through composition so the resource resolver
+   reads bounded relative image references through
+   `LocalResourceAccess.DirectoryLease` and `ContainedResourceReader`, with
+   the same MIME, count and byte budgets. A missing, changed or inaccessible
+   directory follows the existing unresolved-resource policy: warning for
+   ordinary standalone HTML, rejection for self-contained HTML/PDF. A file
+   open alone does not grant its parent; do not reuse the preview-only
+   “Allow preview resources” choice or request broader folder access here.
+   Retain the admitted capability through a later Save As rather than
+   recomputing the root from the live window.
+4. Carry an Export lifetime lease through ordinary HTML and PDF output.
+   A different document ID or recovery epoch **before** the freeze cancels.
+   After the freeze, Export does not reread live identity: Save As changes
+   both ID and recovery epoch in `FileDocument`, but the already admitted
+   source/root and selected destination still belong to this operation.
+   The export may finish from those frozen values after Save As or a focus
+   change. Origin-window close, explicit cancellation or task cancellation
+   revokes publication; it never retargets the replacement document. The
+   disabled validated operation's active-identity-change revocation cannot
+   be reused unchanged after this freeze: Save As itself mints a new URL,
+   document ID and recovery epoch.
+   Check cancellation during work and use the lease at each final primary
+   promotion cutoff. Preserve HTML's companions-before-primary ownership,
+   PDF's validated vector/scratch path and both HTML modes. Cancellation is
+   not a new multi-file transaction: only owned temporary files may be
+   cleaned, previous user output must remain intact, and an unrelated file
+   must never be deleted to make a retry pass.
+
+The package interface changes in steps 2–4 are part of this issue's
+cross-module architecture. They require independent engineering review before
+shipping; no new dependency or owner product choice is implied. A folder
+chooser, a new security scope, or a change to #121's preview grant would be a
+separate product/security decision.
+
+### Discriminating acceptance
+
+Use controlled suspension at the sheet, contribution parse, resource read,
+HTML staging and PDF promotion. Test A/B focus changes, an edit and theme
+change before acceptance, and an edit and Save As after freezing. A Save As
+before freeze cancels because its new ID/epoch is not the captured origin;
+after freeze it must finish from the old pinned source/root and selected
+destination, without adopting the new URL. Also test origin close,
+cancellation and failure alerts. Assert that HTML and PDF
+consume identical frozen source, generation, options and origin, that B never
+receives A's sheet or output, and that no primary file appears after revocation.
+Package tests cover block directives on/off, absent and swapped directory
+capabilities, symlinks, budget/MIME policy, prior-output preservation and
+late HTML/PDF cancellation. Then run locked package/app CI and a Release-build
+two-window native check. Signed sandbox resource access remains a separate
+release acceptance item; source tests alone do not close #117 or #115.
