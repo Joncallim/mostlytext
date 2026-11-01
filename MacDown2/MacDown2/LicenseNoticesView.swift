@@ -57,8 +57,9 @@ struct LicenseTextView: NSViewRepresentable {
         Coordinator()
     }
 
-    func makeNSView(context _: Context) -> NSScrollView {
-        Self.makeScrollView(text: text, label: label)
+    func makeNSView(context: Context) -> NSScrollView {
+        context.coordinator.lastFindRequest = findRequest
+        return Self.makeScrollView(text: text, label: label)
     }
 
     func updateNSView(_ scrollView: NSScrollView, context: Context) {

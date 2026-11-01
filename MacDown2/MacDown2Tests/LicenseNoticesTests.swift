@@ -112,7 +112,13 @@ struct LicenseNoticesTests {
         #expect(view.textContainer?.widthTracksTextView == true)
         #expect(view.accessibilityLabel() == "License text")
         #expect(view.accessibilityIdentifier() == "licenses.content")
-        let attributes = try #require(view.textStorage).attributes(at: 0, effectiveRange: nil)
-        #expect(attributes[.link] == nil)
+        let storage = try #require(view.textStorage)
+        var linkCount = 0
+        storage.enumerateAttribute(.link, in: NSRange(location: 0, length: storage.length)) { value, _, _ in
+            if value != nil {
+                linkCount += 1
+            }
+        }
+        #expect(linkCount == 0)
     }
 }
