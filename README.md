@@ -95,7 +95,7 @@ xcodegen generate
 
 # 3. Build the app and the CLI
 xcodebuild -project MacDown2.xcodeproj -scheme MacDown2  -destination 'platform=macOS' build
-xcodebuild -project MacDown2.xcodeproj -scheme macdown2  -destination 'platform=macOS' build
+xcodebuild -project MacDown2.xcodeproj -scheme MacDown2CLI  -destination 'platform=macOS' build
 ```
 
 ## Linting
