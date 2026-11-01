@@ -133,9 +133,6 @@
         }
       }
     },
-    "%@ is unavailable for this export; authored source preserved": {
-      "extractionState": "manual"
-    },
     "%@ is stale; authored source preserved": {
       "localizations": {
         "fr": {
@@ -157,6 +154,9 @@
           }
         }
       }
+    },
+    "%@ is unavailable for this export; authored source preserved": {
+      "extractionState": "manual"
     },
     "%@ overlaps another placement; authored source preserved": {
       "localizations": {
@@ -400,6 +400,52 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "引用文には独自の声があります。"
+          }
+        }
+      }
+    },
+    "About MostlyText": {
+      "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "À propos de MostlyText"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText について"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "O MostlyText"
+          }
+        }
+      }
+    },
+    "An editor descended from MacDown. Free software under the MIT license.": {
+      "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Un éditeur issu de MacDown. Logiciel libre sous licence MIT."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MacDown を基にしたエディタです。MIT ライセンスのフリーソフトウェアです。"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Edytor wywodzący się z MacDown. Wolne oprogramowanie na licencji MIT."
           }
         }
       }
@@ -879,6 +925,29 @@
         }
       }
     },
+    "Find in Licenses…": {
+      "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Rechercher dans les licences…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ライセンス内を検索…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Znajdź w licencjach…"
+          }
+        }
+      }
+    },
     "Folder actions": {
       "localizations": {
         "fr": {
@@ -988,6 +1057,52 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "読み込む…"
+          }
+        }
+      }
+    },
+    "License document": {
+      "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Document de licence"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ライセンス文書"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Dokument licencyjny"
+          }
+        }
+      }
+    },
+    "License texts could not be loaded from this application.": {
+      "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Impossible de charger les textes des licences depuis cette application."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "このアプリケーションからライセンスのテキストを読み込めませんでした。"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nie można wczytać tekstów licencji z tej aplikacji."
           }
         }
       }
@@ -1129,6 +1244,52 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "テーマを管理"
+          }
+        }
+      }
+    },
+    "MostlyText": {
+      "comment": "Canonical product name. Preserve MostlyText capitalization in every language.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText"
+          }
+        }
+      }
+    },
+    "MostlyText license": {
+      "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Licence de MostlyText"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText のライセンス"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Licencja MostlyText"
           }
         }
       }
@@ -1415,6 +1576,52 @@
           "stringUnit": {
             "state": "translated",
             "value": "Otwórz plik"
+          }
+        }
+      }
+    },
+    "Open Source Licenses": {
+      "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Licences open source"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "オープンソースライセンス"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Licencje open source"
+          }
+        }
+      }
+    },
+    "Open Source Licenses…": {
+      "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Licences open source…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "オープンソースライセンス…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Licencje open source…"
           }
         }
       }
@@ -2079,6 +2286,29 @@
         }
       }
     },
+    "Third-party notices": {
+      "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Mentions des tiers"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "サードパーティに関する通知"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Informacje o oprogramowaniu stron trzecich"
+          }
+        }
+      }
+    },
     "This diagram could not be rendered.": {
       "localizations": {
         "fr": {
@@ -2209,6 +2439,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "UTF-8"
+          }
+        }
+      }
+    },
+    "Version": {
+      "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Version"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "バージョン"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Wersja"
           }
         }
       }

@@ -13,10 +13,24 @@ struct MacDown2App: App {
         .commands {
             WorkspaceCommands(themeController: appDelegate.themeController)
             TextFilterCommands()
+            AboutCommands()
         }
         .environment(\.windowCoordinator, appDelegate.coordinator)
         .environment(\.themeController, appDelegate.themeController)
         .environment(\.appSettings, appDelegate.appSettings)
+
+        Window("About MostlyText", id: "about") {
+            AboutMostlyTextView()
+        }
+        .windowResizability(.contentSize)
+        .restorationBehavior(.disabled)
+
+        Window("Open Source Licenses", id: "licenses") {
+            LicenseNoticesView()
+        }
+        .commands { LicenseFindCommands() }
+        .defaultSize(width: 760, height: 600)
+        .restorationBehavior(.disabled)
 
         Settings {
             SettingsView()
