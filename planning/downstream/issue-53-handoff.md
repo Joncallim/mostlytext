@@ -1,5 +1,53 @@
 # Issue #53 — Compatible settings and deliberate legacy import
 
+## 1 November 2026: exhaustive report and consent-bound write preparation
+
+Baseline: integration `1b79485699199509ec15e0baa34906e5ffd4b63e`; master
+`15c0fae22f7618e94c82681227057c66011be2a9`. The executable data-only report
+now covers all 52 stored, four calculated and two transient declarations. The
+source-backed JSON record and a Compliance test bind every key, value kind and
+report policy to the Swift catalog. Unknown keys, exact legacy misspellings,
+Boolean/numeric distinctions, invalid enums and malformed fonts have explicit
+outcomes. No report entry reads a URL, unarchives data or applies a preference.
+
+The three reviewed editor Boolean conversions now produce deterministic desired
+editor bytes after exact source/destination revalidation. Selection is explicit;
+replacing any persisted field requires separate consent for that field, including
+when the existing value equals the default. Every unselected editor value is
+retained. Unsupported/future/non-Data destinations are blocked. A proposal binds
+mapping version, source digest, before/desired raw revisions and selected fields.
+Replay distinguishes captured-before, already-desired and a conflicting third
+value; the last is preserved. These are pure writer inputs and replay decisions,
+not an executed or atomic preference transaction.
+
+Source reconciliation found two earlier candidate equivalents were not exact:
+
+- In upstream `MPDocument.m:774–781` at pinned `3e2a2bf`, disabling
+  `editorInsertPrefixInBlock` stops list/quote continuation but still calls
+  `completeNextIndentedLine`. Current `continuesMarkdownPrefixes` also gates
+  indentation. The legacy value is reported unsupported rather than silently
+  changing its meaning.
+- The old matching-character switch also controls the original character map and
+  strikethrough selection wrapping (`NSTextView+Autocomplete.m:99–122,208–233`).
+  Current structural/Markdown pairing does not reproduce that whole policy.
+  It is reported unsupported; no partial conversion is advertised as exact.
+
+The font row validates the exact legacy `name`/`size` shape and produces an
+unresolved PostScript-name request. E17 must resolve the installed font and prove
+that the current family-based destination reproduces it before offering an
+applicable change; missing or nonrepresentable faces remain unsupported. Theme
+aliases, renderer/update-policy rows, actual consent UI, shared serialized writer,
+transaction journal and isolated native/live-apply migration remain outstanding.
+The frozen plan never grants file authority or replays IPC. #53 remains open.
+
+A local Foundation-only harness uses copied unmodified AppSettings/JSONSupport
+sources and six pure test files, without an application host or a real preferences
+domain. Its first setup lacked JSONSupport's resource declaration; after fixing
+that harness, compilation found a missing static qualifier in the shared mapping.
+Both failed logs are retained. Final focused and full hosted results belong in
+the PR verification record; this section does not infer native acceptance.
+
+
 ## 2026-10-25 local admission slice
 
 The next pure `LegacyImportPlan` step classifies only the three verified editor
@@ -184,8 +232,8 @@ Preserve exact legacy spellings. This table is exhaustive for the stored keys de
 | editorBaseFontInfo | Validate name/size; resolve installed PostScript name through NSFont to the final FontDescriptor on MainActor. Preserve current font and warn if unavailable; never download. |
 | editorAutoIncrementNumberedLists | Boolean -> editor.autoIncrementOrderedLists. |
 | editorConvertTabs | Boolean -> editor.convertsTabsToSpaces; does not encode indentation width. |
-| editorInsertPrefixInBlock | Boolean -> editor.continuesMarkdownPrefixes after semantic list/quote fixture. |
-| editorCompleteMatchingCharacters | Boolean -> editor.completesMatchingCharacters. |
+| editorInsertPrefixInBlock | Unsupported: legacy false retains indentation continuation, while the current prefix setting also disables it. |
+| editorCompleteMatchingCharacters | Unsupported: the legacy character map/strikethrough wrapping is not the complete current pairing policy. |
 | editorSyncScrolling | Only an exact final scroll-sync preference; not preview layout or an invented switch. |
 | editorSmartHome | Boolean -> editor.smartHome. |
 | editorStyleName | Only curated exact compatible theme aliases; no nearest-name guess or executable old-style import. Unknown/custom style remains unsupported with safe explicit conversion outside this import. |
