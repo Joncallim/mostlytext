@@ -26,11 +26,6 @@ public final class CommandSocketConnection {
                   fcntl(descriptor, F_SETFD, flags | FD_CLOEXEC) == 0 else {
                 throw CommandSocketError.unavailable(errno)
             }
-            var enabled: Int32 = 1
-            guard setsockopt(descriptor, SOL_SOCKET, SO_NOSIGPIPE, &enabled,
-                             socklen_t(MemoryLayout.size(ofValue: enabled))) == 0 else {
-                throw CommandSocketError.unavailable(errno)
-            }
         } catch {
             close()
             throw error
@@ -91,7 +86,9 @@ public final class CommandSocketConnection {
                 var offset = 0
                 while offset < bytes.count {
                     try ready(for: Int16(POLLOUT), deadline: deadline, isCancelled: isCancelled)
-                    let count = send(descriptor, base.advanced(by: offset), bytes.count - offset, 0)
+                    // Per-send protection also works if the peer closed before
+                    // adoption; SO_NOSIGPIPE can fail with EINVAL in that race.
+                    let count = send(descriptor, base.advanced(by: offset), bytes.count - offset, MSG_NOSIGNAL)
                     if count > 0 {
                         offset += count
                     } else if count == 0 {
@@ -118,34 +115,6 @@ public final class CommandSocketConnection {
     }
 
     private func ready(for event: Int16, deadline: ContinuousClock.Instant?, isCancelled: () -> Bool) throws {
-        while true {
-            try check(deadline: deadline, isCancelled: isCancelled)
-            var item = pollfd(fd: descriptor, events: event, revents: 0)
-            let count = poll(&item, 1, Self.pollMilliseconds(until: deadline))
-            if count > 0 {
-                try check(deadline: deadline, isCancelled: isCancelled)
-                guard item.revents & Int16(POLLNVAL) == 0 else { throw CommandSocketError.closed }
-                // recv/send distinguish buffered bytes, EOF and the actual
-                // pending error after POLLHUP/POLLERR.
-                if item.revents & (event | Int16(POLLHUP | POLLERR)) != 0 {
-                    return
-                }
-            } else if count < 0, errno != EINTR {
-                throw CommandSocketError.unavailable(errno)
-            }
-        }
-    }
-
-    private static func pollMilliseconds(until deadline: ContinuousClock.Instant?) -> Int32 {
-        guard let deadline else { return 50 }
-        let remaining = ContinuousClock.now.duration(to: deadline)
-        if remaining <= .zero {
-            return 0
-        }
-        if remaining >= .milliseconds(50) {
-            return 50
-        }
-        let perMillisecond: Int64 = 1_000_000_000_000_000
-        return Int32((remaining.components.attoseconds + perMillisecond - 1) / perMillisecond)
+        try CommandSocketPolling.wait(descriptor, event: event, deadline: deadline, cancelled: isCancelled)
     }
 }

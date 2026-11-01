@@ -212,7 +212,7 @@ CLI/app claim follows from same-user socket-pair controls.
 
 CommandSocketConnection takes exclusive ownership of an already connected Unix
 stream descriptor, verifies its kernel peer, sets nonblocking/close-on-exec and
-per-socket SIGPIPE protection, then supplies framed reads/writes. It has one
+per-send SIGPIPE protection, then supplies framed reads/writes. It has one
 serialized off-main owner and is not Sendable. It creates/connects/listens on no
 endpoint. Read one frame at a time through the shared decoder and retain at most
 one 4 KiB unread chunk; writes retain one bounded encoded frame. Partial I/O,
@@ -237,3 +237,70 @@ lint and source compliance pass. The exact commands and manifests are in
 `CORTANA-Builds/resume-20261101-command-replies/receipt-socket-io-final.json`.
 Endpoint listener/connect ownership, stale-endpoint handshake, request admission
 workers and native CLI/application journeys remain subsequent units.
+
+## Endpoint transport and instance identity
+
+Baseline for this unit: integration `fdee161354050d19cbb91736eea04de9786b7bbc`,
+master `15c0fae22f7618e94c82681227057c66011be2a9`. Deliver a usable private
+listener/client boundary without activating an application listener at startup.
+No signing, test account, ordinary app or real preference domain is required.
+
+CommandEndpointListener exclusively owns its lease and listening descriptor.
+Before binding, validate the held namespace and any existing socket's owner,
+type, mode, link count and ACL. A held competing lease always wins. If an
+unleased existing socket accepts a connection, preserve it as possibly live.
+Only a definite kernel ECONNREFUSED under the exclusive lease permits stale
+retirement; timeout, cancellation, unknown errors and protocol incompatibility
+never authorize deletion. Recheck namespace and exact device/inode/birth identity
+before retirement. Rename the object to an unpredictable quarantine name without
+replacement, verify the moved object, then remove only that same owned socket.
+Preserve/restore unexpected objects without overwriting a newer path. Never
+unlink a lock or directory. This isolates other users, not hostile same-UID code.
+
+Bind before listen, set/verify 0600 and close-on-exec/nonblocking flags, and keep
+the parent 0700 ownership checks. The backlog is eight; this is not a claim that
+application admission slots/bytes have been reserved. Accept one peer at a time
+under a finite monotonic deadline. Both directions verify kernel peer UID.
+Connection ownership transfers exactly once, including constructor failures.
+
+Each listener lifetime has one random instance UUID. On accept, write a bounded
+version-1 `hello` frame with that UUID. Client connection validates exact fields,
+types/version and UUID before returning the existing framed connection plus
+instance identity. A caller-supplied expected instance must match on reconnect;
+otherwise close and report instanceChanged, with no replay, relaunch or retry.
+The hello is compatibility/instance data, not same-UID application authentication.
+Use the existing strict JSON admission and frame caps. Poll at most 50 ms for
+cancellation; connect, accept and hello all consume the caller's finite deadline.
+
+Allow changes in CommandBridge endpoint/polling/hello code and its tests only.
+Keep classes non-Sendable with one serialized off-main owner. Tests exercise real
+private pathname sockets, hello/frame exchange, live/unleased/refused endpoints,
+contenders, replacement/symlink/hard-link/ACL/mode refusal, bounded timeout and
+cancellation, instance changes, repeated close and retention of foreign objects.
+Run focused Debug/Release controls, full hosted regression/build/lint/compliance,
+then source review before merge. Application worker admission, CLI arguments,
+bootstrap and native document-lifetime journeys remain later E17 integration.
+
+Endpoint transport controls: 87 CommandBridge tests in ten suites pass in both
+Debug and Release in the dependency-free Foundation/Darwin harness. This includes
+real pathname hello/frame exchange, refused/live/leased endpoints, socket ACLs,
+namespace replacement and a deterministic replace-before-quarantine control.
+Source review added an accepted-peer identity recheck after polling, with a
+regression that changes the path during that wait and proves closure before any
+hello. Strict lint/format and ordinary Compliance pass. Initial expanded-test
+compilation errors (Duration negation and a nested throwing #require expression)
+and the test-file type-length correction remain in the retained logs under
+`CORTANA-Builds/command-transport-20261101`. Full hosted execution is required
+before integration; no public CLI/application or cross-user GUI journey ran.
+
+A combined optimized test run subsequently exposed a fast-peer-disconnect race:
+Darwin can reject setting SO_NOSIGPIPE with EINVAL after the peer has already
+closed. Writes now use MSG_NOSIGNAL on every send, as supported by the macOS SDK,
+so initialization can retain buffered final bytes without relying on a late
+socket-option mutation. A closed-before-adoption regression reads those bytes
+and verifies that the subsequent write throws without SIGPIPE. All 88 transport
+tests pass in Debug and Release; the failing combined run and instrumented
+reproduction are retained rather than retried away.
+An optimized diagnostic harness also completes 2,000 repeated timeout/cancel/
+reconnect exchanges with the corrected source. This is a stress control for the
+observed disconnect race, not a replacement for full hosted or native acceptance.

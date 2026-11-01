@@ -66,7 +66,7 @@ public final class CommandEndpointLease {
         }
     }
 
-    private static func openDirectory(_ path: String) throws -> Int32 {
+    static func openDirectory(_ path: String) throws -> Int32 {
         var current = Darwin.open("/", O_RDONLY | O_DIRECTORY | O_CLOEXEC)
         guard current >= 0 else { throw CommandEndpointError.unavailable(errno) }
         for component in path.split(separator: "/", omittingEmptySubsequences: true) {
@@ -79,7 +79,7 @@ public final class CommandEndpointLease {
         return current
     }
 
-    private static func requirePrivateDirectory(_ descriptor: Int32) throws {
+    static func requirePrivateDirectory(_ descriptor: Int32) throws {
         var attributes = stat()
         guard fstat(descriptor, &attributes) == 0 else { throw CommandEndpointError.unavailable(errno) }
         guard attributes.st_mode & S_IFMT == S_IFDIR, attributes.st_uid == geteuid(),
@@ -120,7 +120,7 @@ public final class CommandEndpointLease {
         return Identity(device: attributes.st_dev, inode: attributes.st_ino)
     }
 
-    private static func hasOnlyDenyACL(_ descriptor: Int32) throws -> Bool {
+    static func hasOnlyDenyACL(_ descriptor: Int32) throws -> Bool {
         guard let acl = acl_get_fd_np(descriptor, ACL_TYPE_EXTENDED) else {
             if errno == ENOATTR || errno == ENOENT {
                 return true
@@ -128,6 +128,10 @@ public final class CommandEndpointLease {
             throw CommandEndpointError.unavailable(errno)
         }
         defer { acl_free(UnsafeMutableRawPointer(acl)) }
+        return try hasOnlyDenyEntries(acl)
+    }
+
+    static func hasOnlyDenyEntries(_ acl: acl_t) throws -> Bool {
         guard acl_valid(acl) == 0 else { throw CommandEndpointError.unavailable(errno) }
         var entry: acl_entry_t?
         var selector: Int32 = 0 // Darwin ACL_FIRST_ENTRY.
