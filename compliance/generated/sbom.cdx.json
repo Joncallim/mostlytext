@@ -1028,7 +1028,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "51d3e2059e7a2f7616a89cae0f384cb94b7c1a97f97e88846f34b28c87ac665a"
+          "content": "b415691a3ab4f6bb7cc6b78dc74799a6b302da57c481a8bd3bebabe24dee728e"
         }
       ],
       "licenses": [
@@ -1038,7 +1038,7 @@
       ],
       "name": "tree-sitter-markdown",
       "pedigree": {
-        "notes": "Capture names in the two highlights.scm query files rewritten to this app's theme key space; see the package README."
+        "notes": "Block scanner is the exact upstream PR 279 safety backport at 38dc6f5297551f070d15a33fda3da89f01863a04 (blob e8d87eec1f8f6dbddd987df43097195e8d790c78); capture names in the two highlights.scm query files are rewritten to this app's theme key space. See the package README."
       },
       "properties": [
         {
@@ -1466,7 +1466,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:8538bbe2-e3fe-5a6a-ad27-c59de8edcb5d",
+  "serialNumber": "urn:uuid:85fd471c-c547-528e-b9ce-00283391831b",
   "specVersion": "1.5",
   "version": 1
 }
