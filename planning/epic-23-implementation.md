@@ -84,3 +84,24 @@ Live switching, selection/viewport retention, eight-theme visual review,
 settings controls, custom-theme lifecycle, Quick Look and exact signed-artifact
 verification remain required before E23 closes. No public release follows
 from this foundation unit.
+
+## Custom-theme file admission unit
+
+The next unit adds ThemeFile v1 as a validated value codec, without file-system
+writes or a new UI. Its envelope is schemaVersion, UUID stableID, displayName,
+appearance, chrome and tokenStyles. Constructing a custom copy generates one
+UUID; encoding/restart/reimport retains it. Its Theme ID is the lowercase UUID,
+so imported data cannot claim a bundled theme ID or become a filesystem path.
+
+Limit input and canonical output to 64 KiB, object nesting to eight, token
+styles to 512, capture names to 96 ASCII bytes and display names to 80 Unicode
+scalars. Require opaque base backgrounds and finite 0...1 color channels.
+Reject unknown/duplicate/escaped-duplicate keys, arrays, wrong field types,
+invalid UTF-8, future schemas and invalid IDs. Preserve caller bytes on every
+failure; the codec performs no I/O. Custom poor contrast is not prohibited;
+Appearance UI will warn without silently changing intentional colors.
+
+Only the codec exposes untrusted-data admission; its private Codable envelope
+cannot bypass validation through a public synthesized Decodable initializer.
+The catalog writer, explicit Replace/Copy/no-op flow, imported-file grants,
+watcher, migration integration and native evidence remain subsequent units.
