@@ -20,6 +20,7 @@ final class ThemeDirectory: Sendable {
         var volume = statfs()
         guard fstat(descriptor, &info) == 0, fstatfs(descriptor, &volume) == 0,
               info.st_uid == geteuid(), info.st_mode & 0o077 == 0,
+              (try? ThemeDirectoryAccess.hasOnlyDenyACL(descriptor)) == true,
               volume.f_flags & UInt32(MNT_IGNORE_OWNERSHIP) == 0 else {
             close(descriptor)
             throw ThemeStorageError.invalidDirectory
@@ -50,6 +51,7 @@ final class ThemeDirectory: Sendable {
         var volume = statfs()
         guard fstat(current, &info) == 0, fstatfs(current, &volume) == 0,
               info.st_dev == device, info.st_ino == inode, info.st_uid == geteuid(), info.st_mode & 0o077 == 0,
+              (try? ThemeDirectoryAccess.hasOnlyDenyACL(current)) == true,
               volume.f_flags & UInt32(MNT_IGNORE_OWNERSHIP) == 0 else { throw ThemeStorageError.directoryChanged }
     }
 

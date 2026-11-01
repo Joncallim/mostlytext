@@ -52,6 +52,7 @@ extension ThemeCatalogStore {
         var volume = statfs()
         guard fstat(descriptor, &info) == 0, fstatfs(descriptor, &volume) == 0,
               info.st_mode & S_IFMT == S_IFDIR, info.st_uid == geteuid(), info.st_mode & 0o022 == 0,
+              (try? ThemeDirectoryAccess.hasOnlyDenyACL(descriptor)) == true,
               volume.f_flags & UInt32(MNT_IGNORE_OWNERSHIP) == 0 else { throw ThemeStorageError.invalidDirectory }
     }
 }

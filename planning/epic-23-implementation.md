@@ -348,3 +348,16 @@ drafts. Controls use native keyboard/VoiceOver semantics and stable identifiers;
 poor custom text contrast is warned without rejecting intentional choices.
 Native import/copy/replace/cancel/export/delete/reveal, delayed external edits,
 accessibility and final identity migration remain required CORTANA evidence.
+
+
+## Extended ACL admission correction
+
+A CORTANA fixture reproduced that mode 0700 can coexist with an extended ACL
+granting another account directory access. Root admission and revalidation,
+and every fixed bootstrap ancestor, now require a readable empty or deny-only
+extended ACL as well as owned POSIX permissions. An allow entry is refused
+conservatively, including an owner-only allow entry; existing ACLs are never
+removed or rewritten. Unknown ACL enforcement fails closed. Normal inherited
+deny-delete protections remain valid. Reproduce initial/later granting ACLs
+and safe deny-only ACLs on disposable owned fixtures before rerunning storage
+and app integration checks. These are not same-UID adversary fences.
