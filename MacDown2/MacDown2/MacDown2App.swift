@@ -23,6 +23,7 @@ struct MacDown2App: App {
                 .environment(\.appSettings, appDelegate.appSettings)
                 .environment(\.windowCoordinator, appDelegate.coordinator)
                 .environment(\.themeController, appDelegate.themeController)
+                .environment(\.themeCatalog, appDelegate.themeCatalog)
         }
     }
 }

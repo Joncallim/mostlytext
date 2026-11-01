@@ -17,8 +17,14 @@ This file is generated from `compliance/inventory.json` by
 | Component | Version | Licence |
 |---|---|---|
 | D2 (@terrastruct/d2) | 0.1.33 | MPL-2.0 |
+| Editor theme “Daybreak” | 1.0.0 | MIT |
+| Editor theme “GitHub Light” (legacy tomorrow-light identifier) | n/a | MIT |
+| Editor theme “High Contrast Dark” | 1.0.0 | MIT |
+| Editor theme “High Contrast Light” | 1.0.0 | MIT |
+| Editor theme “Midnight” | 1.0.0 | MIT |
+| Editor theme “Paper” | 1.0.0 | MIT |
+| Editor theme “Slate” | 1.0.0 | MIT |
 | Editor theme “Tomorrow Dark” (colour values) | n/a | MIT |
-| Editor theme “Tomorrow Light” (colour values) | n/a | MIT |
 | Expat (embedded in Viz.js WebAssembly) | 2.8.4 | MIT |
 | Graphviz red-black tree library (via Viz.js) | Graphviz 16.0.0 source snapshot | LicenseRef-Graphviz-RBTree |
 | Liberation Mono WOFF (embedded in D2 WebAssembly via Chroma) | bundled in Chroma v2.14.0 | OFL-1.1 |
@@ -483,6 +489,283 @@ written from.
 
 ---
 
+## Editor theme “Daybreak”
+
+- Version: 1.0.0
+- Upstream: https://github.com/Joncallim/macdown_2
+- Licence: MIT
+- Copyright (c) 2026 Joncallim
+
+### LICENSE
+
+```text
+MIT License
+
+MacDown 2 is free and open-source software. It is a fork and successor of MacDown
+(https://github.com/MacDownApp/macdown), the original open-source Markdown editor for
+macOS, and is likewise released under the MIT License.
+
+Copyright (c) 2026 Joncallim
+Copyright (c) 2014 Tzu-ping Chung and MacDown contributors (original MacDown)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+```
+
+---
+
+## Editor theme “GitHub Light” (legacy tomorrow-light identifier)
+
+- Version: n/a
+- Upstream: https://github.com/primer/github-syntax-light
+- Revision: `9b5f41973c9d804164b52a99d3adb61c56c29d36`
+- Licence: MIT
+- Copyright (c) 2016 GitHub, Inc.
+- Local modifications: Token colours taken from GitHub Light syntax v0.4.1; chrome colours (#2d2d2d text, #6c4f6c caret, #b4d7ff selection) are local choices with no identified upstream. Display name corrected to GitHub Light; stable ID and resource filename retained for settings compatibility.
+
+### github-syntax-light--LICENSE.txt
+
+```text
+The MIT License (MIT)
+
+Copyright (c) 2016 GitHub, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+---
+
+## Editor theme “High Contrast Dark”
+
+- Version: 1.0.0
+- Upstream: https://github.com/Joncallim/macdown_2
+- Licence: MIT
+- Copyright (c) 2026 Joncallim
+
+### LICENSE
+
+```text
+MIT License
+
+MacDown 2 is free and open-source software. It is a fork and successor of MacDown
+(https://github.com/MacDownApp/macdown), the original open-source Markdown editor for
+macOS, and is likewise released under the MIT License.
+
+Copyright (c) 2026 Joncallim
+Copyright (c) 2014 Tzu-ping Chung and MacDown contributors (original MacDown)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+```
+
+---
+
+## Editor theme “High Contrast Light”
+
+- Version: 1.0.0
+- Upstream: https://github.com/Joncallim/macdown_2
+- Licence: MIT
+- Copyright (c) 2026 Joncallim
+
+### LICENSE
+
+```text
+MIT License
+
+MacDown 2 is free and open-source software. It is a fork and successor of MacDown
+(https://github.com/MacDownApp/macdown), the original open-source Markdown editor for
+macOS, and is likewise released under the MIT License.
+
+Copyright (c) 2026 Joncallim
+Copyright (c) 2014 Tzu-ping Chung and MacDown contributors (original MacDown)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+```
+
+---
+
+## Editor theme “Midnight”
+
+- Version: 1.0.0
+- Upstream: https://github.com/Joncallim/macdown_2
+- Licence: MIT
+- Copyright (c) 2026 Joncallim
+
+### LICENSE
+
+```text
+MIT License
+
+MacDown 2 is free and open-source software. It is a fork and successor of MacDown
+(https://github.com/MacDownApp/macdown), the original open-source Markdown editor for
+macOS, and is likewise released under the MIT License.
+
+Copyright (c) 2026 Joncallim
+Copyright (c) 2014 Tzu-ping Chung and MacDown contributors (original MacDown)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+```
+
+---
+
+## Editor theme “Paper”
+
+- Version: 1.0.0
+- Upstream: https://github.com/Joncallim/macdown_2
+- Licence: MIT
+- Copyright (c) 2026 Joncallim
+
+### LICENSE
+
+```text
+MIT License
+
+MacDown 2 is free and open-source software. It is a fork and successor of MacDown
+(https://github.com/MacDownApp/macdown), the original open-source Markdown editor for
+macOS, and is likewise released under the MIT License.
+
+Copyright (c) 2026 Joncallim
+Copyright (c) 2014 Tzu-ping Chung and MacDown contributors (original MacDown)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+```
+
+---
+
+## Editor theme “Slate”
+
+- Version: 1.0.0
+- Upstream: https://github.com/Joncallim/macdown_2
+- Licence: MIT
+- Copyright (c) 2026 Joncallim
+
+### LICENSE
+
+```text
+MIT License
+
+MacDown 2 is free and open-source software. It is a fork and successor of MacDown
+(https://github.com/MacDownApp/macdown), the original open-source Markdown editor for
+macOS, and is likewise released under the MIT License.
+
+Copyright (c) 2026 Joncallim
+Copyright (c) 2014 Tzu-ping Chung and MacDown contributors (original MacDown)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+```
+
+---
+
 ## Editor theme “Tomorrow Dark” (colour values)
 
 - Version: n/a
@@ -546,43 +829,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-```
-
----
-
-## Editor theme “Tomorrow Light” (colour values)
-
-- Version: n/a
-- Upstream: https://github.com/primer/github-syntax-light
-- Revision: `9b5f41973c9d804164b52a99d3adb61c56c29d36`
-- Licence: MIT
-- Copyright (c) 2016 GitHub, Inc.
-- Local modifications: Token colours taken from GitHub Light syntax v0.4.1; chrome colours (#2d2d2d text, #6c4f6c caret, #b4d7ff selection) are local choices with no identified upstream.
-
-### github-syntax-light--LICENSE.txt
-
-```text
-The MIT License (MIT)
-
-Copyright (c) 2016 GitHub, Inc.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 ```
 
 ---

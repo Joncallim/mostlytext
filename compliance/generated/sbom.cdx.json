@@ -694,6 +694,252 @@
       "version": "d3ddabb"
     },
     {
+      "bom-ref": "theme-daybreak",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/Joncallim/macdown_2"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "e5eb46dbc9b13b63d41847f0d9255c3de9bd3add7e8157e5c4472192afa71d28"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "Editor theme “Daybreak”",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "data"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact"
+        },
+        {
+          "name": "mostlytext:file-count",
+          "value": "1"
+        }
+      ],
+      "type": "data",
+      "version": "1.0.0"
+    },
+    {
+      "bom-ref": "theme-high-contrast-dark",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/Joncallim/macdown_2"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "46473a3fab271988c6bb9b199c18438d8e55b44a3ec84b54086e91a0b8321448"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "Editor theme “High Contrast Dark”",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "data"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact"
+        },
+        {
+          "name": "mostlytext:file-count",
+          "value": "1"
+        }
+      ],
+      "type": "data",
+      "version": "1.0.0"
+    },
+    {
+      "bom-ref": "theme-high-contrast-light",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/Joncallim/macdown_2"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "3b27e4e656c1bd08ba9c492cd60276a2953366a5de3f405d6d79ebcc8bcdaff5"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "Editor theme “High Contrast Light”",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "data"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact"
+        },
+        {
+          "name": "mostlytext:file-count",
+          "value": "1"
+        }
+      ],
+      "type": "data",
+      "version": "1.0.0"
+    },
+    {
+      "bom-ref": "theme-midnight",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/Joncallim/macdown_2"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "601665e146a5f3043693f15ada60f7d9ce2a161dde73dc52baa5fce390bcfb3d"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "Editor theme “Midnight”",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "data"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact"
+        },
+        {
+          "name": "mostlytext:file-count",
+          "value": "1"
+        }
+      ],
+      "type": "data",
+      "version": "1.0.0"
+    },
+    {
+      "bom-ref": "theme-paper",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/Joncallim/macdown_2"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a29083bde1e85fe9c2c2f90688ae366c7fda017e71d2de97bf1ec9b545fb0351"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "Editor theme “Paper”",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "data"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact"
+        },
+        {
+          "name": "mostlytext:file-count",
+          "value": "1"
+        }
+      ],
+      "type": "data",
+      "version": "1.0.0"
+    },
+    {
+      "bom-ref": "theme-slate",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/Joncallim/macdown_2"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "91532df8b6581d2e57eb9965eaab0fb252086ee2f390b01e0ede59378070e293"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "Editor theme “Slate”",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "data"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact"
+        },
+        {
+          "name": "mostlytext:file-count",
+          "value": "1"
+        }
+      ],
+      "type": "data",
+      "version": "1.0.0"
+    },
+    {
       "bom-ref": "theme-tomorrow-dark",
       "externalReferences": [
         {
@@ -749,7 +995,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "e69b56879eda7abdcc84a51158ae5a3c4669aad4343e7631298f35329412e3e6"
+          "content": "2f30d40d9694a35b0aeb104a0e1431b1c718c5663cc160e6c50f1a8363315d0b"
         }
       ],
       "licenses": [
@@ -757,9 +1003,9 @@
           "expression": "MIT"
         }
       ],
-      "name": "Editor theme “Tomorrow Light” (colour values)",
+      "name": "Editor theme “GitHub Light” (legacy tomorrow-light identifier)",
       "pedigree": {
-        "notes": "Token colours taken from GitHub Light syntax v0.4.1; chrome colours (#2d2d2d text, #6c4f6c caret, #b4d7ff selection) are local choices with no identified upstream."
+        "notes": "Token colours taken from GitHub Light syntax v0.4.1; chrome colours (#2d2d2d text, #6c4f6c caret, #b4d7ff selection) are local choices with no identified upstream. Display name corrected to GitHub Light; stable ID and resource filename retained for settings compatibility."
       },
       "properties": [
         {
@@ -1427,6 +1673,12 @@
         "swiftui-math",
         "swiftui-math-fonts",
         "textual",
+        "theme-daybreak",
+        "theme-high-contrast-dark",
+        "theme-high-contrast-light",
+        "theme-midnight",
+        "theme-paper",
+        "theme-slate",
         "theme-tomorrow-dark",
         "theme-tomorrow-light",
         "tree-sitter",
@@ -1466,7 +1718,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:85fd471c-c547-528e-b9ce-00283391831b",
+  "serialNumber": "urn:uuid:dcf23b50-dd22-55ad-8978-dcb3a8aea786",
   "specVersion": "1.5",
   "version": 1
 }

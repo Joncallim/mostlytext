@@ -11,12 +11,16 @@ public final class ThemeController {
     public private(set) var appearanceMode: ThemeAppearanceMode
     public private(set) var appearance: ThemeAppearance
     public private(set) var current: Theme
+    public private(set) var hasUnreadablePreferences: Bool
 
     /// AppKit owns the actual application appearance. The app assigns this
     /// callback after construction so Themes stays platform-neutral.
     public var appearanceModeDidChange: ((ThemeAppearanceMode) -> Void)?
 
-    private let availableThemes: [Theme]
+    private var availableThemes: [Theme]
+    private var preferredLightID: String
+    private var preferredDarkID: String
+    private var latestCatalogRevision: UInt64?
     private let preferenceStore: ThemePreferenceStoring
 
     public init(
@@ -26,6 +30,7 @@ public final class ThemeController {
     ) {
         availableThemes = available
         self.preferenceStore = preferenceStore
+        hasUnreadablePreferences = preferenceStore.hasUnreadablePreferences
         let initialAppearanceMode = preferenceStore.loadAppearanceMode() ?? .system
         systemAppearance = appearance
         appearanceMode = initialAppearanceMode
@@ -35,9 +40,12 @@ public final class ThemeController {
         let defaultLight = available.first { $0.appearance == .light } ?? BundledThemes.light
         let defaultDark = available.first { $0.appearance == .dark } ?? BundledThemes.dark
 
+        let selection = preferenceStore.loadSelection()
+        preferredLightID = selection?.lightID ?? defaultLight.id
+        preferredDarkID = selection?.darkID ?? defaultDark.id
         let initialLight: Theme
         let initialDark: Theme
-        if let selection = preferenceStore.loadSelection() {
+        if let selection {
             initialLight = available.first { $0.id == selection.lightID && $0.appearance == .light } ?? defaultLight
             initialDark = available.first { $0.id == selection.darkID && $0.appearance == .dark } ?? defaultDark
         } else {
@@ -66,6 +74,7 @@ public final class ThemeController {
         guard appearanceMode != mode else { return }
         appearanceMode = mode
         preferenceStore.saveAppearanceMode(mode)
+        refreshPreferenceStatus()
         apply(mode.resolvedAppearance(systemAppearance: systemAppearance))
         appearanceModeDidChange?(mode)
     }
@@ -76,33 +85,82 @@ public final class ThemeController {
     /// `current` immediately. Otherwise the slot is saved so that future
     /// `setAppearance` calls use the user's choice for that appearance.
     public func select(_ theme: Theme) {
-        if theme.appearance == .dark {
-            dark = theme
+        guard availableThemes.contains(where: { $0.id == theme.id && $0.appearance == theme.appearance })
+        else { return }
+        if theme.appearance == .light {
+            selectLight(id: theme.id)
         } else {
-            light = theme
+            selectDark(id: theme.id)
         }
-        if theme.appearance == appearance {
-            current = theme
-        }
-        preferenceStore.saveSelection(lightID: light.id, darkID: dark.id)
     }
 
     public func selectLight(id: String) {
         guard let theme = availableThemes.first(where: { $0.id == id && $0.appearance == .light }) else { return }
         light = theme
+        preferredLightID = theme.id
         if appearance == .light {
             current = theme
         }
-        preferenceStore.saveSelection(lightID: light.id, darkID: dark.id)
+        persistSelection()
     }
 
     public func selectDark(id: String) {
         guard let theme = availableThemes.first(where: { $0.id == id && $0.appearance == .dark }) else { return }
         dark = theme
+        preferredDarkID = theme.id
         if appearance == .dark {
             current = theme
         }
-        preferenceStore.saveSelection(lightID: light.id, darkID: dark.id)
+        persistSelection()
+    }
+
+    /// Accept revisions from the single app-wide catalog owner. Pending invalid
+    /// writes retain their known-good values in that owner's snapshot.
+    @discardableResult
+    public func applyCustomCatalog(_ snapshot: ThemeCatalogSnapshot) -> Bool {
+        refreshPreferenceStatus()
+        if let latestCatalogRevision, snapshot.revision <= latestCatalogRevision {
+            return false
+        }
+        let knownLight = availableThemes.contains { $0.id == preferredLightID && $0.appearance == .light }
+        let knownDark = availableThemes.contains { $0.id == preferredDarkID && $0.appearance == .dark }
+        availableThemes = snapshot.available
+        latestCatalogRevision = snapshot.revision
+        let nextLight = availableThemes.first { $0.id == preferredLightID && $0.appearance == .light }
+        let nextDark = availableThemes.first { $0.id == preferredDarkID && $0.appearance == .dark }
+        light = nextLight ?? BundledThemes.light
+        dark = nextDark ?? BundledThemes.dark
+        let lostLight = knownLight && nextLight == nil
+        let lostDark = knownDark && nextDark == nil
+        if lostLight {
+            preferredLightID = light.id
+        }
+        if lostDark {
+            preferredDarkID = dark.id
+        }
+        current = appearance == .dark ? dark : light
+        if lostLight || lostDark {
+            persistSelection()
+        }
+        return true
+    }
+
+    public func resetThemeChoices() {
+        light = availableThemes.first { $0.id == BundledThemes.light.id } ?? BundledThemes.light
+        dark = availableThemes.first { $0.id == BundledThemes.dark.id } ?? BundledThemes.dark
+        preferredLightID = light.id
+        preferredDarkID = dark.id
+        current = appearance == .dark ? dark : light
+        persistSelection()
+    }
+
+    public func refreshPreferenceStatus() {
+        hasUnreadablePreferences = preferenceStore.hasUnreadablePreferences
+    }
+
+    private func persistSelection() {
+        preferenceStore.saveSelection(lightID: preferredLightID, darkID: preferredDarkID)
+        refreshPreferenceStatus()
     }
 
     private func apply(_ appearance: ThemeAppearance) {

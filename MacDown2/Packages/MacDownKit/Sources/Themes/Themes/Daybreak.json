@@ -1,0 +1,216 @@
+{
+  "id": "daybreak",
+  "name": "Daybreak",
+  "appearance": "light",
+  "chrome": {
+    "background": {
+      "red": 1.0,
+      "green": 0.96862745,
+      "blue": 0.93333333,
+      "alpha": 1
+    },
+    "foreground": {
+      "red": 0.24705882,
+      "green": 0.18823529,
+      "blue": 0.15686275,
+      "alpha": 1
+    },
+    "caret": {
+      "red": 0.62745098,
+      "green": 0.23137255,
+      "blue": 0.16862745,
+      "alpha": 1
+    },
+    "selection": {
+      "red": 0.94901961,
+      "green": 0.81960784,
+      "blue": 0.76078431,
+      "alpha": 1
+    },
+    "currentLine": {
+      "red": 0.24705882,
+      "green": 0.18823529,
+      "blue": 0.15686275,
+      "alpha": 0.05
+    },
+    "invisibles": {
+      "red": 0.24705882,
+      "green": 0.18823529,
+      "blue": 0.15686275,
+      "alpha": 0.45
+    }
+  },
+  "tokenStyles": {
+    "keyword": {
+      "color": {
+        "red": 0.60784314,
+        "green": 0.19607843,
+        "blue": 0.11372549,
+        "alpha": 1
+      }
+    },
+    "string": {
+      "color": {
+        "red": 0.25490196,
+        "green": 0.37647059,
+        "blue": 0.21960784,
+        "alpha": 1
+      }
+    },
+    "comment": {
+      "color": {
+        "red": 0.24705882,
+        "green": 0.18823529,
+        "blue": 0.15686275,
+        "alpha": 1
+      }
+    },
+    "number": {
+      "color": {
+        "red": 0.4627451,
+        "green": 0.31764706,
+        "blue": 0.13333333,
+        "alpha": 1
+      }
+    },
+    "constant": {
+      "color": {
+        "red": 0.60784314,
+        "green": 0.19607843,
+        "blue": 0.11372549,
+        "alpha": 1
+      }
+    },
+    "function": {
+      "color": {
+        "red": 0.25490196,
+        "green": 0.37647059,
+        "blue": 0.21960784,
+        "alpha": 1
+      }
+    },
+    "type": {
+      "color": {
+        "red": 0.40392157,
+        "green": 0.32941176,
+        "blue": 0.5372549,
+        "alpha": 1
+      }
+    },
+    "variable": {
+      "color": {
+        "red": 0.24705882,
+        "green": 0.18823529,
+        "blue": 0.15686275,
+        "alpha": 1
+      }
+    },
+    "property": {
+      "color": {
+        "red": 0.24705882,
+        "green": 0.18823529,
+        "blue": 0.15686275,
+        "alpha": 1
+      }
+    },
+    "operator": {
+      "color": {
+        "red": 0.25490196,
+        "green": 0.37647059,
+        "blue": 0.21960784,
+        "alpha": 1
+      }
+    },
+    "punctuation": {
+      "color": {
+        "red": 0.24705882,
+        "green": 0.18823529,
+        "blue": 0.15686275,
+        "alpha": 1
+      }
+    },
+    "tag": {
+      "color": {
+        "red": 0.4627451,
+        "green": 0.31764706,
+        "blue": 0.13333333,
+        "alpha": 1
+      }
+    },
+    "markup.heading": {
+      "color": {
+        "red": 0.60784314,
+        "green": 0.19607843,
+        "blue": 0.11372549,
+        "alpha": 1
+      },
+      "bold": true
+    },
+    "markup.bold": {
+      "color": {
+        "red": 0.25490196,
+        "green": 0.37647059,
+        "blue": 0.21960784,
+        "alpha": 1
+      },
+      "bold": true
+    },
+    "markup.italic": {
+      "color": {
+        "red": 0.40392157,
+        "green": 0.32941176,
+        "blue": 0.5372549,
+        "alpha": 1
+      },
+      "italic": true
+    },
+    "markup.link": {
+      "color": {
+        "red": 0.4627451,
+        "green": 0.31764706,
+        "blue": 0.13333333,
+        "alpha": 1
+      }
+    },
+    "markup.raw": {
+      "color": {
+        "red": 0.24705882,
+        "green": 0.18823529,
+        "blue": 0.15686275,
+        "alpha": 1
+      }
+    },
+    "markup.list": {
+      "color": {
+        "red": 0.25490196,
+        "green": 0.37647059,
+        "blue": 0.21960784,
+        "alpha": 1
+      }
+    },
+    "markup.quote": {
+      "color": {
+        "red": 0.40392157,
+        "green": 0.32941176,
+        "blue": 0.5372549,
+        "alpha": 1
+      }
+    },
+    "label": {
+      "color": {
+        "red": 0.4627451,
+        "green": 0.31764706,
+        "blue": 0.13333333,
+        "alpha": 1
+      }
+    },
+    "embedded": {
+      "color": {
+        "red": 0.24705882,
+        "green": 0.18823529,
+        "blue": 0.15686275,
+        "alpha": 1
+      }
+    }
+  }
+}

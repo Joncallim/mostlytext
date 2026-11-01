@@ -147,15 +147,12 @@ public final class NeonSyntaxHighlighter: SyntaxHighlighting {
 
     private func applyChrome(theme: Theme) {
         let textView = textSystem.textView
-        textView.backgroundColor = theme.chrome.background.nsColor
-        textView.textColor = theme.chrome.foreground.nsColor
-        textView.insertionPointColor = theme.chrome.caret.nsColor
-        textView.selectedTextAttributes = [.backgroundColor: theme.chrome.selection.nsColor]
-        // A theme without an explicit `invisibles` color still gets a
-        // sensible, low-contrast default rather than an invisible-by-
-        // coincidence one (epic-22-implementation.md §6.8).
-        (textView as? EditorTextView)?.invisiblesColor = theme.chrome.invisibles?.nsColor
-            ?? theme.chrome.foreground.nsColor.withAlphaComponent(0.35)
+        let palette = ResolvedPresentationPalette(theme: theme)
+        textView.backgroundColor = palette.background.nsColor
+        textView.textColor = palette.foreground.nsColor
+        textView.insertionPointColor = palette.caret.nsColor
+        textView.selectedTextAttributes = [.backgroundColor: palette.selectionBackground.nsColor]
+        (textView as? EditorTextView)?.invisiblesColor = palette.invisibles.nsColor
     }
 
     /// Builds Neon's highlighter for `config` and puts the gate back in front

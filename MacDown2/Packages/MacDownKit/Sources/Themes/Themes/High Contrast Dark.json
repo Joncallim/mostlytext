@@ -1,0 +1,216 @@
+{
+  "id": "high-contrast-dark",
+  "name": "High Contrast Dark",
+  "appearance": "dark",
+  "chrome": {
+    "background": {
+      "red": 0.0,
+      "green": 0.0,
+      "blue": 0.0,
+      "alpha": 1
+    },
+    "foreground": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "alpha": 1
+    },
+    "caret": {
+      "red": 1.0,
+      "green": 0.8745098,
+      "blue": 0.0,
+      "alpha": 1
+    },
+    "selection": {
+      "red": 0.26666667,
+      "green": 0.26666667,
+      "blue": 0.26666667,
+      "alpha": 1
+    },
+    "currentLine": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "alpha": 0.05
+    },
+    "invisibles": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "alpha": 0.45
+    }
+  },
+  "tokenStyles": {
+    "keyword": {
+      "color": {
+        "red": 0.45098039,
+        "green": 0.84313725,
+        "blue": 1.0,
+        "alpha": 1
+      }
+    },
+    "string": {
+      "color": {
+        "red": 0.49803922,
+        "green": 1.0,
+        "blue": 0.76862745,
+        "alpha": 1
+      }
+    },
+    "comment": {
+      "color": {
+        "red": 1.0,
+        "green": 1.0,
+        "blue": 1.0,
+        "alpha": 1
+      }
+    },
+    "number": {
+      "color": {
+        "red": 0.89803922,
+        "green": 0.67058824,
+        "blue": 1.0,
+        "alpha": 1
+      }
+    },
+    "constant": {
+      "color": {
+        "red": 0.45098039,
+        "green": 0.84313725,
+        "blue": 1.0,
+        "alpha": 1
+      }
+    },
+    "function": {
+      "color": {
+        "red": 0.49803922,
+        "green": 1.0,
+        "blue": 0.76862745,
+        "alpha": 1
+      }
+    },
+    "type": {
+      "color": {
+        "red": 1.0,
+        "green": 0.84313725,
+        "blue": 0.46666667,
+        "alpha": 1
+      }
+    },
+    "variable": {
+      "color": {
+        "red": 1.0,
+        "green": 1.0,
+        "blue": 1.0,
+        "alpha": 1
+      }
+    },
+    "property": {
+      "color": {
+        "red": 1.0,
+        "green": 1.0,
+        "blue": 1.0,
+        "alpha": 1
+      }
+    },
+    "operator": {
+      "color": {
+        "red": 0.49803922,
+        "green": 1.0,
+        "blue": 0.76862745,
+        "alpha": 1
+      }
+    },
+    "punctuation": {
+      "color": {
+        "red": 1.0,
+        "green": 1.0,
+        "blue": 1.0,
+        "alpha": 1
+      }
+    },
+    "tag": {
+      "color": {
+        "red": 0.89803922,
+        "green": 0.67058824,
+        "blue": 1.0,
+        "alpha": 1
+      }
+    },
+    "markup.heading": {
+      "color": {
+        "red": 0.45098039,
+        "green": 0.84313725,
+        "blue": 1.0,
+        "alpha": 1
+      },
+      "bold": true
+    },
+    "markup.bold": {
+      "color": {
+        "red": 0.49803922,
+        "green": 1.0,
+        "blue": 0.76862745,
+        "alpha": 1
+      },
+      "bold": true
+    },
+    "markup.italic": {
+      "color": {
+        "red": 1.0,
+        "green": 0.84313725,
+        "blue": 0.46666667,
+        "alpha": 1
+      },
+      "italic": true
+    },
+    "markup.link": {
+      "color": {
+        "red": 0.89803922,
+        "green": 0.67058824,
+        "blue": 1.0,
+        "alpha": 1
+      }
+    },
+    "markup.raw": {
+      "color": {
+        "red": 1.0,
+        "green": 1.0,
+        "blue": 1.0,
+        "alpha": 1
+      }
+    },
+    "markup.list": {
+      "color": {
+        "red": 0.49803922,
+        "green": 1.0,
+        "blue": 0.76862745,
+        "alpha": 1
+      }
+    },
+    "markup.quote": {
+      "color": {
+        "red": 1.0,
+        "green": 0.84313725,
+        "blue": 0.46666667,
+        "alpha": 1
+      }
+    },
+    "label": {
+      "color": {
+        "red": 0.89803922,
+        "green": 0.67058824,
+        "blue": 1.0,
+        "alpha": 1
+      }
+    },
+    "embedded": {
+      "color": {
+        "red": 1.0,
+        "green": 1.0,
+        "blue": 1.0,
+        "alpha": 1
+      }
+    }
+  }
+}
