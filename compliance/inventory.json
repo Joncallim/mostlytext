@@ -1491,7 +1491,7 @@
         },
         {
           "path": "MacDown2/Packages/TreeSitterMarkdown/README.md",
-          "sha256": "14fdd99d79f3858573ee9955c2220c8877545bcf798cb025675cbc5fa2442b04"
+          "sha256": "747e349cc242ac1fa603b444ee7e4877814aa7a8ae9c0c2c853c0dca8f89e14f"
         },
         {
           "path": "MacDown2/Packages/TreeSitterMarkdown/Sources/TreeSitterMarkdown/bindings/swift/TreeSitterMarkdown/markdown.h",
@@ -1503,7 +1503,7 @@
         },
         {
           "path": "MacDown2/Packages/TreeSitterMarkdown/Sources/TreeSitterMarkdown/src/scanner.c",
-          "sha256": "02834bcbaf0cf51178e74450d487cc0231b9a52541cd374527ee35cfaf17fd4a"
+          "sha256": "25b9020542e35492bde8f1b9ae3fe498a29f3c5130c40c8ffdbfb67e7882acf1"
         },
         {
           "path": "MacDown2/Packages/TreeSitterMarkdown/Sources/TreeSitterMarkdown/src/tree_sitter/alloc.h",
@@ -1566,9 +1566,9 @@
           "sha256": "64b1a6006b40176d8db986cc41350e4f9b292fd06bfedb0abfcdb1fb989aca3e"
         }
       ],
-      "modifications": "Capture names in the two highlights.scm query files rewritten to this app's theme key space; see the package README.",
+      "modifications": "Block scanner is the exact upstream PR 279 safety backport at 38dc6f5297551f070d15a33fda3da89f01863a04 (blob e8d87eec1f8f6dbddd987df43097195e8d790c78); capture names in the two highlights.scm query files are rewritten to this app's theme key space. See the package README.",
       "provenance": "verified",
-      "evidence": "Git blob hash of every parser, scanner, header and injection-query file equals upstream tag v0.5.3 (2026-09-28). Package README records the table.",
+      "evidence": "Base parser, inline scanner, headers and injection queries match upstream v0.5.3 (2026-09-28). Block scanner matches upstream merge commit 38dc6f5297551f070d15a33fda3da89f01863a04 byte-for-byte (2026-11-01); SHA-256 25b9020542e35492bde8f1b9ae3fe498a29f3c5130c40c8ffdbfb67e7882acf1. Package README records provenance and limits.",
       "lc": [
         "LC-01",
         "LC-04",

@@ -1,6 +1,44 @@
 # MostlyText open-issue acceptance register
 
-## Owner summary
+## Resumption checkpoint — 1 November 2026
+
+The owner requested resumption of all work independent of Daybreak hardware-key
+authentication. Live application master remains
+`15c0fae22f7618e94c82681227057c66011be2a9`; integration is
+`9de81f5ff5222138a210472f2def33de01df6c8c`. GitHub has 18 open application
+issues. Older counts, pause statements and branch baselines below are historical.
+The existing release sequence, performance budgets and acceptance rules remain
+binding; no issue or native journey is waived by this checkpoint.
+
+| Work | Current evidence | Remaining boundary |
+| --- | --- | --- |
+| [CLI foundations #546](https://github.com/Joncallim/macdown_2/pull/546) | 71 locked CommandBridge tests and the Release CommandBridge target pass with unchanged source hashes. Framing, requests, replies, retained receipts, endpoint leases, peer checks and bounded connected-socket I/O are implemented. | Actual listener/connect orchestration, request admission workers, public arguments, document/window admission, bootstrap migration, updater and native CLI evidence remain. |
+| [Scanner backport #547](https://github.com/Joncallim/macdown_2/pull/547) | Exact upstream scanner bytes, corrected attribution/notices/SBOM and 36 focused package tests in seven suites. Combined immutable snapshot builds the Release app/CLI and Debug test targets with locked dependencies and unchanged inputs. | Independent integration review, native editor acceptance and the separate #203 performance target remain. |
+| [Recent-file completion #548](https://github.com/Joncallim/macdown_2/pull/548) | Tests await the existing open task and retire all fixture controllers. Combined snapshot compilation passes. | Hosted execution must establish the actual corrected outcome. Settings #545's previous 515-test app run failed two recent-file assertions; that failure is retained. |
+| Existing theme/settings/isolation drafts | #544 and #543 had passing hosted checks at resumption. #545 passed package/build stages but failed the app-target run described above. | Each draft retains its own native, review and owning-issue criteria. A source/build check is not acceptance. |
+
+Local command evidence is retained under `CORTANA-Builds/resume-20261101-*` on
+the Fast SSD. The application compilation receipt is
+`resume-20261101-scanner-recent-app/receipt.json`; it records both source
+overlays and zero application tests run. CLI evidence is
+`resume-20261101-command-replies/receipt-socket-io-final.json`. Initial failed
+controls remain beside corrected results. Hosted results are read from each
+PR's actual tested head rather than inferred from these local passes.
+
+The separate non-admin `mostlytexttest` account exists as UID 502. A live
+`launchctl print gui/502` check found no GUI bootstrap. Local app/native runs
+therefore remain NOT_RUN until the safe GUI lane and positive control are
+verified. Daybreak session authentication and macOS GUI authentication are
+separate dependencies. Neither blocks ordinary source implementation, package
+tests or build verification. The owner will handle the hardware key separately.
+
+Continue #18 transport/admission and #53's serialized migration writer, then
+the remaining #113 application integration and #148 attribution work under their
+existing contracts. Source review, actual native outcomes, linguistic review,
+exact signed-artifact qualification and action-specific publication approval
+remain required before final issue closure or public delivery.
+
+## Historical owner summary
 
 MostlyText has 22 open issues. The integration candidate is locally preserved on
 `fix/ci-timing-contracts`; it is not approved for merging or release. The immediate
