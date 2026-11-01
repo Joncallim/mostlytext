@@ -204,3 +204,33 @@ failing and corrected runs remain in
 `receipt-endpoint-corrected.json` recording the final tests/build. Formatting,
 strict lint and ordinary source compliance pass. No cross-user GUI or native
 CLI/app claim follows from same-user socket-pair controls.
+
+## Connected-socket I/O unit
+
+CommandSocketConnection takes exclusive ownership of an already connected Unix
+stream descriptor, verifies its kernel peer, sets nonblocking/close-on-exec and
+per-socket SIGPIPE protection, then supplies framed reads/writes. It has one
+serialized off-main owner and is not Sendable. It creates/connects/listens on no
+endpoint. Read one frame at a time through the shared decoder and retain at most
+one 4 KiB unread chunk; writes retain one bounded encoded frame. Partial I/O,
+EINTR and EAGAIN are handled without treating them as message boundaries.
+
+Handshake/input/ack callers supply finite monotonic deadlines. Only the eventual
+client document-wait phase may omit its deadline. Poll in at most 50 ms slices
+to observe cancellation without a helper thread. Clean EOF is distinct from an
+empty frame; a partial frame at EOF is an error. Timeout, cancellation, malformed
+input and system errors close the owned descriptor and clear held bytes. They
+never report document completion or remove a receipt/document. Transport callers
+still reserve capacity before reading and drain their actual admission workers.
+
+Use socket-pair controls for coalesced/empty frames, partial EOF, oversized
+headers, exact outgoing bytes, deadlines, cancellation and peer-closed writes.
+No network endpoint or application is started for this unit.
+
+Connected-I/O verification: all 71 CommandBridge tests in nine suites pass with
+unchanged source hashes, including real socket backpressure and partial-input
+timeout controls. The CommandBridge target builds in Release. Formatting, strict
+lint and source compliance pass. The exact commands and manifests are in
+`CORTANA-Builds/resume-20261101-command-replies/receipt-socket-io-final.json`.
+Endpoint listener/connect ownership, stale-endpoint handshake, request admission
+workers and native CLI/application journeys remain subsequent units.

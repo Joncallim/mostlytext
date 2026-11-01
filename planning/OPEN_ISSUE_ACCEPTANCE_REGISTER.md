@@ -12,7 +12,7 @@ binding; no issue or native journey is waived by this checkpoint.
 
 | Work | Current evidence | Remaining boundary |
 | --- | --- | --- |
-| [CLI foundations #546](https://github.com/Joncallim/macdown_2/pull/546) | 62 locked CommandBridge tests and the Release CommandBridge target pass with unchanged source hashes. Framing, requests, replies, retained receipts, endpoint leases and kernel peer checks are implemented. | Actual listener/client transport, public arguments, document/window admission, bootstrap migration, updater and native CLI evidence remain. |
+| [CLI foundations #546](https://github.com/Joncallim/macdown_2/pull/546) | 71 locked CommandBridge tests and the Release CommandBridge target pass with unchanged source hashes. Framing, requests, replies, retained receipts, endpoint leases, peer checks and bounded connected-socket I/O are implemented. | Actual listener/connect orchestration, request admission workers, public arguments, document/window admission, bootstrap migration, updater and native CLI evidence remain. |
 | [Scanner backport #547](https://github.com/Joncallim/macdown_2/pull/547) | Exact upstream scanner bytes, corrected attribution/notices/SBOM and 36 focused package tests in seven suites. Combined immutable snapshot builds the Release app/CLI and Debug test targets with locked dependencies and unchanged inputs. | Independent integration review, native editor acceptance and the separate #203 performance target remain. |
 | [Recent-file completion #548](https://github.com/Joncallim/macdown_2/pull/548) | Tests await the existing open task and retire all fixture controllers. Combined snapshot compilation passes. | Hosted execution must establish the actual corrected outcome. Settings #545's previous 515-test app run failed two recent-file assertions; that failure is retained. |
 | Existing theme/settings/isolation drafts | #544 and #543 had passing hosted checks at resumption. #545 passed package/build stages but failed the app-target run described above. | Each draft retains its own native, review and owning-issue criteria. A source/build check is not acceptance. |
@@ -21,7 +21,7 @@ Local command evidence is retained under `CORTANA-Builds/resume-20261101-*` on
 the Fast SSD. The application compilation receipt is
 `resume-20261101-scanner-recent-app/receipt.json`; it records both source
 overlays and zero application tests run. CLI evidence is
-`resume-20261101-command-replies/receipt-endpoint-corrected.json`. Initial failed
+`resume-20261101-command-replies/receipt-socket-io-final.json`. Initial failed
 controls remain beside corrected results. Hosted results are read from each
 PR's actual tested head rather than inferred from these local passes.
 
