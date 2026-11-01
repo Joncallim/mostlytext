@@ -179,3 +179,51 @@ control in evidence/quicklook-api-2026-11-01. The async providePreview method,
 HTML reply, String.Encoding property and PNG attachment compile into a library
 without packaging/registration. Runtime QL-REPLY remains held; this declaration
 correction does not answer callback placement, cancellation, grants or timing.
+
+## Managed custom-theme persistence unit
+
+ThemeCatalogStore is one actor in Themes; it owns a pinned descriptor for an
+existing private, owned directory supplied by bootstrap. Internal filenames are
+lowercase UUID.json, independent of the still-frozen public theme extension.
+Do not read the real Application Support directory in tests. Open the root
+without following symlink components, require owner-only permissions and refuse
+ownership-ignoring volumes. Bound a scan to 1,024 entries and 256 managed UUID
+files, and each regular single-link file to 64 KiB. Read descriptor-backed owned
+bytes, compare object metadata before/after and validate UUID/filename identity.
+
+Prepare imports from caller-admitted immutable bytes. The app will use its
+existing LocalResourceAccess single-file reader under the explicit panel grant;
+the store never retains an external URL. Reuse ThemeImportPlan for choices,
+with store identity and current raw-file baselines bound to prepared operations.
+Serialize reload, import and delete inside the actor. No await occurs between
+baseline verification and publication. Cancellation can stop admission before
+mutation; it cannot turn an already-published success into a reported rollback.
+
+A staged managed file is exclusive-created through the root descriptor, mode
+0600, fully written/flushed, then atomically published. New IDs use exclusive
+rename. Replace uses atomic exchange on supporting filesystems, verifies the
+displaced object and raw digest, and rolls back if a competing edit won. Never
+fall back to an unchecked replacing rename. Preserve displaced bytes under a
+reported recovery filename if another writer makes rollback unsafe. Delete
+first moves a target to an exclusive private staging name, verifies it, then
+removes only the unchanged object; preserve/restore unexpected bytes instead.
+Root-name changes, symlinks, hardlinks and stale baselines refuse publication.
+Directory-flush failure after successful publication is a durability warning,
+not a false claim that the old state remains on disk.
+
+Reload returns immutable revisioned themes and bounded diagnostics. During an
+incomplete external write or transient deletion, retain the last known good
+value for a 750 ms confirmation window; a stable repeated invalid/missing
+observation then excludes it without deleting any bytes. A valid observation
+clears the diagnostic. Return a recheck request while confirmation is pending.
+One later app-level watcher will debounce directory events and schedule that
+recheck; per-window watchers are forbidden. Count admission includes retained
+entries so transient failures cannot exceed 256 app-owned theme values.
+
+Test exclusive creation, restart/export identity, real replace/copy/no-op,
+interrupted publication, exact stale-before/exchange/rollback interleavings,
+symlink/hardlink/directory/oversized rejection, root replacement, bounded scans,
+external corruption/deletion/recovery and actor serialization. Internal test
+hooks model the exact syscall boundaries; no sleep-based race test or real
+user preference store is needed. The app-wide watcher, preference coordination,
+Appearance management controls and native journeys remain subsequent work.
