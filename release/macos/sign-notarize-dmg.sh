@@ -63,6 +63,7 @@ EVIDENCE="$OUT/evidence"
 DERIVED="$OUT/DerivedData"
 APP_NAME="MacDown2"   # becomes MostlyText at the #158/E17 cutover
 CLI_NAME="macdown2"   # becomes mostlytext at the #158/E17 cutover
+CLI_SCHEME="MacDown2CLI" # distinct from the app scheme on case-insensitive volumes
 mkdir -p "$EVIDENCE"
 exec > >(tee -a "$EVIDENCE/run.log") 2>&1
 
@@ -164,7 +165,7 @@ build() {  # $1 scheme, $2 "app" to apply ENTITLEMENTS
 step "Release build: $APP_NAME"
 build "$APP_NAME" app
 step "Release build: $CLI_NAME"
-build "$CLI_NAME"
+build "$CLI_SCHEME"
 
 # Do not package a release if either Xcode build rewrote or removed the
 # generated workspace lock.  This is intentionally after both builds: it

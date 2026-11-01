@@ -269,7 +269,7 @@ jobs:
       - name: Build app + CLI
         run: |
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 -destination 'platform=macOS' -onlyUsePackageVersionsFromResolvedFile build
-          xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme macdown2 -destination 'platform=macOS' -onlyUsePackageVersionsFromResolvedFile build
+          xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2CLI -destination 'platform=macOS' -onlyUsePackageVersionsFromResolvedFile build
       - name: Build app + CLI (Release)
         # EPIC-14B second-adversarial-pass finding #6: the DoD evidence
         # claimed "app/CLI/Release all green" without this ever actually
@@ -281,7 +281,7 @@ jobs:
         run: |
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 -configuration Release \
             -destination 'platform=macOS' -onlyUsePackageVersionsFromResolvedFile build
-          xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme macdown2 -configuration Release \
+          xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2CLI -configuration Release \
             -destination 'platform=macOS' -onlyUsePackageVersionsFromResolvedFile build
       - name: Build for testing (app + UI tests; UI tests run requires macOS 26+ GUI)
         # -enableCodeCoverage NO: documented in planning/epic-10-implementation.md
