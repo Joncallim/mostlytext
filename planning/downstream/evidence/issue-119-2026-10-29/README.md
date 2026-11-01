@@ -47,3 +47,21 @@ Local evidence root: `/tmp/mostlytext-119-acceptance-20261029`; full package log
 See [the deterministic admission design](admission-test-design.md). Current tracking is accounting, not a queue; snapshotNow bypasses even that tracking. The one-active/one-latest-pending and shared four-worker requirements are **unimplemented/unverified here**. Cancellation now releases contextCallback; that fix must not be represented as admission completion.
 
 Still required: the rest of the real behavior and encoding/view-state corpus, own-save/subsequent external edits, rename/cross-parent/ambiguous identity, permission/non-regular-file cases, pending close/recovery states, formatter storms and final-revision publication; native foreground/total latency, MainActor conflict/close I/O, same-parent search, idle activity and 1/10/50-window handle/memory evidence. Cold-storage measurements were not obtained. No issue closure, formal PR approval, merge or gate waiver accompanies this checkpoint.
+
+
+## New navigation supersedes reload restoration — 1 November 2026
+
+Source review found that editRevision alone did not distinguish a pending disk
+reload from a later navigation action. Both delayed passes could restore the old
+viewport after an outline jump, selection movement or user scroll. The correction
+clears the reload snapshot and its own raw fallback at explicit navigation APIs,
+keyboard/mouse input, changed native selection and user-live-scroll notifications.
+Ordinary layout/bounds notifications and the unchanged replacement selection do
+not revoke restoration. Unrelated session offsets and frame-height sync survive.
+The live-scroll observer is removed on dismantle and ignores an older scroll view.
+
+EditorExternalViewportIntentTests drives the restoration seam without sleeps,
+before and between passes, plus selection, user-scroll and raw-offset ownership
+controls. Hosted validation and independent source re-review are required on the
+corrected head. The historical native evidence above remains attached to its
+original source; no new native journey or #119 closure is claimed by this fix.

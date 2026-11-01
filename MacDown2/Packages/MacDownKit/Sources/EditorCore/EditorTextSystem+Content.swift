@@ -6,6 +6,7 @@ public extension EditorTextSystem {
     /// Replaces the entire document text. This is intended for external reloads
     /// and conflict resolution; it resets selection and scroll.
     func setText(_ text: String) {
+        cancelPendingExternalViewport()
         textView.string = text
         // The undo history addresses ranges of the text just replaced; undoing into the new
         // text raised NSRangeException (a crash) once the string was shorter.
@@ -61,6 +62,7 @@ public extension EditorTextSystem {
         preserving snapshot: EditorViewportSnapshot,
         clearUndo: Bool
     ) {
+        cancelPendingExternalViewport()
         isPerformingProgrammaticTextUpdate = true
         defer { isPerformingProgrammaticTextUpdate = false }
 

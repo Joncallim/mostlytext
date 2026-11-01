@@ -215,7 +215,13 @@ public final class EditorTextView: NSTextView {
     /// `EditorTextSystem+Scroll.swift`'s `topVisibleUTF16Offset`, which only
     /// ever needed fragment-level granularity, not an exact character
     /// position within a line.
+    override public func keyDown(with event: NSEvent) {
+        owningSystem?.cancelPendingExternalViewport()
+        super.keyDown(with: event)
+    }
+
     override public func mouseDown(with event: NSEvent) {
+        owningSystem?.cancelPendingExternalViewport()
         // Reset defensively at the top of every mouseDown, regardless of
         // branch, so a gesture that ends without ever reaching
         // `mouseUp(with:)` (never actually observed, but not provable

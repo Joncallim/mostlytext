@@ -81,6 +81,7 @@ public extension EditorTextSystem {
                 EditorSelectionSet(single: selectedRange)
         }
         set {
+            cancelPendingExternalViewport()
             isUpdatingSelectionSet = true
             defer { isUpdatingSelectionSet = false }
             storedSelectionSet = newValue
