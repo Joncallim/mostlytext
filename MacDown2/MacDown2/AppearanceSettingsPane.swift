@@ -15,6 +15,12 @@ struct AppearanceSettingsPane: View {
 
 private struct AppearanceSettingsForm: View {
     let controller: ThemeController
+    @Environment(\.themeCatalog) private var themeCatalog
+    @State private var selectedID = ""
+
+    private var previewTheme: Theme {
+        controller.available.first { $0.id == selectedID } ?? controller.current
+    }
 
     var body: some View {
         Form {
@@ -31,15 +37,26 @@ private struct AppearanceSettingsForm: View {
                 themePicker(.dark)
                 Button("Reset Theme Choices") {
                     controller.resetThemeChoices()
+                    selectedID = controller.current.id
                 }
                 .accessibilityIdentifier("resetThemeChoices")
             }
+            .disabled(themeCatalog?.isBusy == true)
+            if let themeCatalog {
+                ThemeManagementSection(model: themeCatalog, controller: controller, selectedID: $selectedID)
+            }
             Section("Theme Preview") {
-                ThemePreviewSample(theme: controller.current)
+                ThemePreviewSample(theme: previewTheme)
             }
         }
         .formStyle(.grouped)
         .padding()
+        .onAppear {
+            if selectedID.isEmpty {
+                selectedID = controller.current.id
+            }
+        }
+        .onChange(of: controller.current.id) { _, id in selectedID = id }
     }
 
     private func themePicker(_ appearance: ThemeAppearance) -> some View {
@@ -47,6 +64,7 @@ private struct AppearanceSettingsForm: View {
                selection: Binding(
                    get: { appearance == .light ? controller.light.id : controller.dark.id },
                    set: { id in
+                       selectedID = id
                        if appearance == .light {
                            controller.selectLight(id: id)
                        } else {

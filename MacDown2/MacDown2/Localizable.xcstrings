@@ -290,6 +290,52 @@
         }
       }
     },
+    "A competing version was preserved in the Themes folder as %@. Review it before continuing.": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Une version concurrente a été conservée dans le dossier des thèmes sous le nom %@. Examinez-la avant de continuer."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Konkurencyjna wersja została zachowana w folderze motywów jako %@. Sprawdź ją przed kontynuowaniem."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "競合するバージョンがテーマフォルダに%@として保持されています。続行する前に確認してください。"
+          }
+        }
+      }
+    },
+    "A different version of this theme is already installed. Replace it or import a separate copy.": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Une autre version de ce thème est déjà installée. Remplacez-la ou importez une copie distincte."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Inna wersja tego motywu jest już zainstalowana. Zastąp ją lub zaimportuj osobną kopię."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "このテーマの別のバージョンがすでにインストールされています。置き換えるか、別のコピーとして読み込んでください。"
+          }
+        }
+      }
+    },
     "A fast, native Markdown editor for Mac, with live preview, math, and diagrams built right in.": {
       "localizations": {
         "fr": {
@@ -403,6 +449,52 @@
         }
       }
     },
+    "Bundled with MostlyText": {
+      "comment": "Theme provenance. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Fourni avec MostlyText"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Dołączony do MostlyText"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyTextに同梱"
+          }
+        }
+      }
+    },
+    "Cancel": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Annuler"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Anuluj"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "キャンセル"
+          }
+        }
+      }
+    },
     "Command": {
       "localizations": {
         "fr": {
@@ -421,6 +513,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "Polecenie"
+          }
+        }
+      }
+    },
+    "Copy": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Copie"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Kopia"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "コピー"
           }
         }
       }
@@ -469,6 +584,75 @@
         }
       }
     },
+    "Custom Theme": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Thème personnalisé"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Własny motyw"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "カスタムテーマ"
+          }
+        }
+      }
+    },
+    "Custom theme stored in the Themes folder": {
+      "comment": "Theme provenance. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Thème personnalisé stocké dans le dossier des thèmes"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Własny motyw zapisany w folderze motywów"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "テーマフォルダに保存されたカスタムテーマ"
+          }
+        }
+      }
+    },
+    "Custom themes are unavailable. Check access to the Themes folder.": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Les thèmes personnalisés sont indisponibles. Vérifiez l’accès au dossier des thèmes."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Własne motywy są niedostępne. Sprawdź dostęp do folderu motywów."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "カスタムテーマを使用できません。テーマフォルダへのアクセスを確認してください。"
+          }
+        }
+      }
+    },
     "Dark Theme": {
       "comment": "Appearance settings. Translation draft; native-speaker review remains required.",
       "localizations": {
@@ -488,6 +672,98 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "ダークテーマ"
+          }
+        }
+      }
+    },
+    "Delete Theme": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Supprimer le thème"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Usuń motyw"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "テーマを削除"
+          }
+        }
+      }
+    },
+    "Delete this custom theme?": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Supprimer ce thème personnalisé ?"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Usunąć ten własny motyw?"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "このカスタムテーマを削除しますか？"
+          }
+        }
+      }
+    },
+    "Delete…": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Supprimer…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Usuń…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "削除…"
+          }
+        }
+      }
+    },
+    "Duplicate": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Dupliquer"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Powiel"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "複製"
           }
         }
       }
@@ -580,6 +856,29 @@
         }
       }
     },
+    "Export…": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Exporter…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Eksportuj…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "書き出す…"
+          }
+        }
+      }
+    },
     "Folder actions": {
       "localizations": {
         "fr": {
@@ -620,6 +919,75 @@
           "stringUnit": {
             "state": "translated",
             "value": "HTML"
+          }
+        }
+      }
+    },
+    "If this theme is selected, its appearance will return to a bundled theme.": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Si ce thème est sélectionné, son apparence reviendra à un thème fourni avec l’application."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Jeśli ten motyw jest wybrany, zostanie zastąpiony motywem dołączonym do aplikacji."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "このテーマが選択されている場合は、同梱のテーマに戻ります。"
+          }
+        }
+      }
+    },
+    "Import Copy": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Importer une copie"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Importuj kopię"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "コピーを読み込む"
+          }
+        }
+      }
+    },
+    "Import…": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Importer…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Importuj…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "読み込む…"
           }
         }
       }
@@ -715,6 +1083,52 @@
           "stringUnit": {
             "state": "translated",
             "value": "Monitorowanie pliku na żywo jest niedostępne dla tego dokumentu."
+          }
+        }
+      }
+    },
+    "Loading themes…": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Chargement des thèmes…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Wczytywanie motywów…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "テーマを読み込み中…"
+          }
+        }
+      }
+    },
+    "Manage Themes": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Gérer les thèmes"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Zarządzaj motywami"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "テーマを管理"
           }
         }
       }
@@ -1005,6 +1419,29 @@
         }
       }
     },
+    "Open Themes Folder": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ouvrir le dossier des thèmes"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Otwórz folder motywów"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "テーマフォルダを開く"
+          }
+        }
+      }
+    },
     "PDF": {
       "localizations": {
         "fr": {
@@ -1182,6 +1619,52 @@
         }
       }
     },
+    "Replace Theme": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Remplacer le thème"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Zastąp motyw"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "テーマを置き換える"
+          }
+        }
+      }
+    },
+    "Replace the existing theme?": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Remplacer le thème existant ?"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Zastąpić istniejący motyw?"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "既存のテーマを置き換えますか？"
+          }
+        }
+      }
+    },
     "Reset Theme Choices": {
       "comment": "Appearance settings. Translation draft; native-speaker review remains required.",
       "localizations": {
@@ -1278,6 +1761,52 @@
         }
       }
     },
+    "Settings Unavailable": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Réglages indisponibles"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ustawienia niedostępne"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "設定を使用できません"
+          }
+        }
+      }
+    },
+    "Some custom themes could not be loaded. Their files were preserved.": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Certains thèmes personnalisés n’ont pas pu être chargés. Leurs fichiers ont été conservés."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nie można wczytać niektórych własnych motywów. Ich pliki zostały zachowane."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "一部のカスタムテーマを読み込めませんでした。ファイルは保持されています。"
+          }
+        }
+      }
+    },
     "Split Editor & Preview": {
       "localizations": {
         "fr": {
@@ -1344,6 +1873,144 @@
         }
       }
     },
+    "The Themes folder has reached its limit of 256 custom themes.": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Le dossier des thèmes a atteint sa limite de 256 thèmes personnalisés."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Folder motywów osiągnął limit 256 własnych motywów."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "テーマフォルダ内のカスタムテーマが上限の256個に達しました。"
+          }
+        }
+      }
+    },
+    "The Themes folder moved or changed. Restart the app to open the current folder.": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Le dossier des thèmes a été déplacé ou modifié. Relancez l’application pour ouvrir le dossier actuel."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Folder motywów został przeniesiony lub zmieniony. Uruchom aplikację ponownie, aby otworzyć aktualny folder."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "テーマフォルダが移動または変更されました。現在のフォルダを開くには、アプリを再起動してください。"
+          }
+        }
+      }
+    },
+    "The theme changed during this operation. Import it again to review the current version.": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Le thème a changé pendant cette opération. Importez-le à nouveau pour examiner la version actuelle."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Motyw zmienił się podczas tej operacji. Zaimportuj go ponownie, aby sprawdzić aktualną wersję."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "操作中にテーマが変更されました。現在のバージョンを確認するには、もう一度読み込んでください。"
+          }
+        }
+      }
+    },
+    "The theme file is invalid or uses unsupported settings.": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Le fichier de thème est invalide ou utilise des réglages non pris en charge."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Plik motywu jest nieprawidłowy lub używa nieobsługiwanych ustawień."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "テーマファイルが無効か、未対応の設定が含まれています。"
+          }
+        }
+      }
+    },
+    "The theme operation completed, but storage needs attention. Review the Themes folder.": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "L’opération sur le thème est terminée, mais le stockage nécessite une vérification. Examinez le dossier des thèmes."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Operacja na motywie została ukończona, ale pamięć masowa wymaga uwagi. Sprawdź folder motywów."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "テーマの操作は完了しましたが、保存先の確認が必要です。テーマフォルダを確認してください。"
+          }
+        }
+      }
+    },
+    "Theme": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Thème"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Motyw"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "テーマ"
+          }
+        }
+      }
+    },
     "Theme Preview": {
       "comment": "Appearance settings. Translation draft; native-speaker review remains required.",
       "localizations": {
@@ -1363,6 +2030,29 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "テーマのプレビュー"
+          }
+        }
+      }
+    },
+    "Theme files are limited to 64 KiB.": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Les fichiers de thème sont limités à 64 Kio."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Pliki motywów mogą mieć maksymalnie 64 KiB."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "テーマファイルの上限は64 KiBです。"
           }
         }
       }
@@ -1429,6 +2119,52 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ten plik zmienił się na dysku. Twoje lokalne zmiany są nadal bezpieczne."
+          }
+        }
+      }
+    },
+    "This theme has low-contrast text. You can keep using it or choose another theme.": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Le texte de ce thème présente un faible contraste. Vous pouvez continuer à l’utiliser ou choisir un autre thème."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Tekst w tym motywie ma niski kontrast. Możesz nadal go używać lub wybrać inny motyw."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "このテーマの文字はコントラストが低くなっています。そのまま使うか、別のテーマを選択できます。"
+          }
+        }
+      }
+    },
+    "This theme uses a newer file format. Its original file was preserved.": {
+      "comment": "Theme management. Translation draft; native-speaker review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ce thème utilise un format de fichier plus récent. Son fichier d’origine a été conservé."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ten motyw używa nowszego formatu pliku. Oryginalny plik został zachowany."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "このテーマは新しいファイル形式を使用しています。元のファイルは保持されています。"
           }
         }
       }

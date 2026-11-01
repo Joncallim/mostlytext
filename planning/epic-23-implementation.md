@@ -293,3 +293,58 @@ The app-level consumer will debounce wakes and serialize refreshes, with one
 in-place writes, root replacement, cancellation, repeated start/stop and
 second-observer refusal. These events remain advisory; descriptor/identity and
 byte validation are authoritative, including after dropped/coalesced events.
+
+## Managed-folder bootstrap
+
+Bootstrap supplies an existing trusted physical home/session parent plus fixed
+components. ThemeCatalogStore.prepareManagedDirectory opens that parent without
+following links, verifies ownership/no shared write/ownership enforcement, then
+creates/opens each child through its current directory descriptor. Never use
+recursive createDirectory on an unchecked path or chmod an existing user
+folder. Reopen the final named root and compare its identity with the walked
+capability before returning a store. Invalid parents/components, symlinked
+ancestors/leaves and non-private existing theme roots fail without following
+links or falling back to another namespace.
+
+The current development app uses Library/Application Support/MacDown 2/Themes;
+E17's identity bootstrap must move/include this authoritative state under the
+frozen MostlyText namespace. UI-test launches use only their explicit isolated
+session parent. Opening/catalog observation starts after app launch, not while
+constructing test AppDelegate objects. Tests use disposable parents and verify
+new private folders, idempotence, symlink refusal and no unrelated changes.
+
+## Appearance management integration and file identity
+
+The app owns one MainActor ThemeCatalogModel. It starts after application launch,
+opens the catalog off-main through bootstrap, starts observation before scanning,
+coalesces refresh requests and runs one refresh at a time. A newer mutation or
+reload revision cannot be replaced by an older completion. Pending invalid files
+get a bounded delayed recheck. Shutdown revokes publication, cancels consumers
+and waits for actual observer/worker drainage. No window creates a catalog.
+
+Appearance uses native fileImporter/fileExporter and standard confirmation
+controls. Imports take one bounded LocalResourceAccess FileLease snapshot under
+the explicit panel scope; that scope stays alive until the read drains. Identical
+reimport selects the existing record. A conflict offers Replace or Import Copy;
+Cancel changes nothing. Duplicate creates a new managed UUID and a bounded copy
+name. Delete requires confirmation and the unchanged prepared baseline.
+
+Export passes an immutable <=64 KiB envelope to SwiftUI FileDocument/fileExporter;
+the app never reopens the chosen destination or substitutes another path. The
+platform owns the Save/Cancel/overwrite workflow, which still requires real
+native acceptance. Display names are sanitized and byte-bounded only for the
+suggested filename, never turned into managed paths. Themes remain data, with
+no stylesheet/script/font/resource execution or automatic network request.
+
+The implementation derives the theme format's type `app.mostlytext.theme` and
+extension `.mostlytext-theme` from the owner-frozen `app.mostlytext.` prefix in
+RELEASE_PATH section 4. It conforms to public.json but claims only its own
+extension, not the application/json MIME tag or generic JSON ownership.
+Opening theme JSON as source does not install it; installation is explicit in
+Appearance. Runtime app/defaults/support migration remains E17-owned.
+
+New actions/status/errors enter the String Catalog as reviewable translation
+drafts. Controls use native keyboard/VoiceOver semantics and stable identifiers;
+poor custom text contrast is warned without rejecting intentional choices.
+Native import/copy/replace/cancel/export/delete/reveal, delayed external edits,
+accessibility and final identity migration remain required CORTANA evidence.

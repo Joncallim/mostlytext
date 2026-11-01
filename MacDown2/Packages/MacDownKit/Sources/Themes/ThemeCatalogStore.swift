@@ -38,6 +38,12 @@ public actor ThemeCatalogStore {
         self.now = now
     }
 
+    init(directory: ThemeDirectory) throws {
+        self.directory = directory
+        catalog = try ThemeCatalogSnapshot(revision: 0, customThemes: [])
+        now = { ContinuousClock.now }
+    }
+
     deinit { eventObserver?.cancel() }
 
     public func currentState() -> ThemeCatalogState {
