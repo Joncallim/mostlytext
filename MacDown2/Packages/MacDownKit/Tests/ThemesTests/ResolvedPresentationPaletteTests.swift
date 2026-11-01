@@ -92,6 +92,7 @@ struct ResolvedPresentationPaletteTests {
         #expect(theme.appearance == .dark)
         #expect(theme.chrome.background == ThemeColor(red: 0, green: 0, blue: 0))
         #expect(contrast(theme.chrome.foreground, on: theme.chrome.background) >= 7)
+        #expect(contrast(theme.chrome.foreground, on: theme.chrome.selection) >= 4.5)
     }
 
     private func contrast(_ foreground: ThemeColor, on background: ThemeColor) -> Double {

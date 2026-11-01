@@ -29,27 +29,19 @@ public enum BundledThemes {
     }
 
     static func minimalTheme(id: String, appearance: ThemeAppearance) -> Theme {
-        Theme(
+        let black = ThemeColor(red: 0, green: 0, blue: 0)
+        let white = ThemeColor(red: 1, green: 1, blue: 1)
+        return Theme(
             id: id,
             name: id,
             appearance: appearance,
             chrome: EditorChrome(
-                background: appearance == .dark ? ThemeColor(red: 0, green: 0, blue: 0) : ThemeColor(
-                    red: 1,
-                    green: 1,
-                    blue: 1
-                ),
-                foreground: appearance == .dark ? ThemeColor(red: 1, green: 1, blue: 1) : ThemeColor(
-                    red: 0,
-                    green: 0,
-                    blue: 0
-                ),
-                caret: appearance == .dark ? ThemeColor(red: 1, green: 1, blue: 1) : ThemeColor(
-                    red: 0,
-                    green: 0,
-                    blue: 0
-                ),
-                selection: ThemeColor(red: 0.7, green: 0.8, blue: 1)
+                background: appearance == .dark ? black : white,
+                foreground: appearance == .dark ? white : black,
+                caret: appearance == .dark ? white : black,
+                selection: appearance == .dark
+                    ? ThemeColor(red: 0.3, green: 0.3, blue: 0.3)
+                    : ThemeColor(red: 0.7, green: 0.8, blue: 1)
             ),
             tokenStyles: [:]
         )
