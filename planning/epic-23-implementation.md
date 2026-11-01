@@ -105,3 +105,24 @@ Only the codec exposes untrusted-data admission; its private Codable envelope
 cannot bypass validation through a public synthesized Decodable initializer.
 The catalog writer, explicit Replace/Copy/no-op flow, imported-file grants,
 watcher, migration integration and native evidence remain subsequent units.
+
+## Stateless byte-decoding unit
+
+Quick Look needs the editor's strict encoding policy without creating document,
+session, recovery or filesystem-observer objects. FileCore already has that
+policy in FileStore's value decoder. Expose FileByteDecoder.decode with an
+explicit caller-owned maximumBytes and FileDecodingPolicy, returning an
+immutable public FileDecodedPayload (text, encoding and BOM). Check the byte
+ceiling before copying/decoding. Reject negative limits explicitly. Normalize
+Data slice indices into an owned zero-based snapshot before the existing
+validator runs; do not add a second encoding detector or lossy conversion.
+
+This API performs no I/O and has no MainActor state, work queues or cancellation
+ownership. Its work is synchronous and bounded by the caller's admitted byte
+budget; consumers must run expensive admitted work off the reply/UI executor.
+Automatic decoding remains strict BOM/UTF-8. Legacy encodings require explicit
+policy and lossless round-trip. Preserve EOLs, BOM metadata and diagnostic byte
+offsets. Test empty/Unicode/mixed EOL/BOM/UTF-16/legacy/invalid byte cases,
+nonzero Data indices and exact/over-limit admission. Existing FileCore encoding
+regressions must remain green. This does not implement a filesystem reader,
+large-file prefix preview or prove Quick Look execution placement/timing.
