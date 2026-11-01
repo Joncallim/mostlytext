@@ -110,4 +110,11 @@ struct LegacyEditorDestinationEvidenceTests {
         let raw = try JSONSerialization.data(withJSONObject: object)
         #expect(LegacyEditorDestinationEvidence.decode(raw).status == .unknownFuture)
     }
+
+    @Test(arguments: ["1.0000000000000000001", "0.99999999999999999999", "1e-99999999999999999999"])
+    func fractionalVersionsCannotRoundIntoTheSupportedVersion(_ version: String) throws {
+        let valid = try #require(String(data: fixture(), encoding: .utf8))
+        let raw = Data((String(valid.dropLast()) + ",\"schemaVersion\":" + version + "}").utf8)
+        #expect(LegacyEditorDestinationEvidence.decode(raw).status == .malformed)
+    }
 }

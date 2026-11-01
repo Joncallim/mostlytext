@@ -1,4 +1,3 @@
-import CoreFoundation
 import Foundation
 
 /// `UserDefaults`-backed `AppSettingsStoring`. Each domain is one JSON blob
@@ -92,13 +91,12 @@ public struct UserDefaultsAppSettingsStore: AppSettingsStoring {
         defaults.set(data, forKey: key.rawValue)
     }
 
-    /// The highest settings schema this build understands. The historical schema has no version key (named
-    /// "schema-less"); a blob that declares a larger `schemaVersion` is rejected on read and protected from
-    /// ordinary writes. The first unreadable Data backup is retained for compatibility; the primary is also preserved.
-    nonisolated static let supportedSchemaVersion = 1
-
+    /// Schema-less and exact schema-1 objects are supported. Strict raw admission
+    /// happens before Foundation can merge duplicate keys or round a version.
     fileprivate nonisolated static func decode<T: AppSettingsDomain>(_: T.Type, from data: Data) -> T? {
-        guard let object = try? JSONSerialization.jsonObject(with: data),
+        guard let fields = StoredSettingsJSON.fields(in: data),
+              StoredSettingsJSON.version(in: fields) == nil || StoredSettingsJSON.version(in: fields) == .current,
+              let object = try? JSONSerialization.jsonObject(with: data),
               let object = object as? [String: Any]
         else { return nil }
 
@@ -108,32 +106,7 @@ public struct UserDefaultsAppSettingsStore: AppSettingsStoring {
         // optional because the historical compatible blobs were schema-less.
         guard T.admitsStoredObject(object) else { return nil }
 
-        if let declared = object["schemaVersion"] {
-            guard isSupportedSchemaVersion(declared) else { return nil }
-        }
         return try? JSONDecoder().decode(T.self, from: data)
-    }
-
-    private nonisolated static func isSupportedSchemaVersion(_ value: Any) -> Bool {
-        // JSON booleans bridge to NSNumber, but are not schema versions. Check
-        // the Core Foundation type identity before reading numeric accessors.
-        guard let number = value as? NSNumber,
-              CFGetTypeID(number) != CFBooleanGetTypeID()
-        else { return false }
-
-        let numericValue = number.doubleValue
-        guard numericValue.isFinite,
-              numericValue.rounded(.towardZero) == numericValue
-        else { return false }
-
-        // NSNumber's fixed-width accessors do not trap for oversized values;
-        // the explicit range and round-trip comparison reject values that
-        // saturate or lose precision during accessor conversion, without
-        // converting an untrusted value to Int. Lexical precision already
-        // discarded by JSONSerialization cannot be recovered here.
-        let version = number.int64Value
-        return (1 ... Int64(supportedSchemaVersion)).contains(version)
-            && Double(version) == numericValue
     }
 
     /// Domains whose stored values exist but cannot be read by this build. Ordinary writes to

@@ -45,7 +45,9 @@ public struct LegacyEditorDestinationEvidence: Sendable, Equatable {
     public static func decode(_ raw: Data?) -> Self {
         guard let raw else { return Self(status: .absent, rawRevision: "absent") }
         let revision = "sha256:" + SHA256.hash(data: raw).map { String(format: "%02x", $0) }.joined()
-        guard let fields = fields(in: raw) else { return Self(status: .malformed, rawRevision: revision) }
+        guard let fields = StoredSettingsJSON.fields(in: raw) else {
+            return Self(status: .malformed, rawRevision: revision)
+        }
         let version = versionStatus(in: fields)
         if version == .malformed || version == .unknownFuture {
             return Self(status: version ?? .malformed, rawRevision: revision)
@@ -65,27 +67,13 @@ public struct LegacyEditorDestinationEvidence: Sendable, Equatable {
         )
     }
 
-    private static func fields(in raw: Data) -> [String: JSONNode]? {
-        guard raw.count <= 1_048_576, let text = String(data: raw, encoding: .utf8) else { return nil }
-        guard case let .valid(root) = JSONParser.parse(text), case let .object(members) = root.value else {
-            return nil
-        }
-        // JSONParser rejects identical decoded keys. Swift Dictionary also
-        // considers canonically equivalent Unicode keys equal, so reject
-        // those explicitly rather than trapping during dictionary creation.
-        var fields: [String: JSONNode] = [:]
-        for member in members {
-            guard fields.updateValue(member.value, forKey: member.key) == nil else { return nil }
-        }
-        return fields
-    }
-
     private static func versionStatus(in fields: [String: JSONNode]) -> Status? {
-        guard let version = fields["schemaVersion"] else { return nil }
-        guard case let .number(rawVersion) = version.value,
-              let number = Double(rawVersion), number.isFinite,
-              number.rounded(.towardZero) == number, number >= 1 else { return .malformed }
-        return number > 1 ? .unknownFuture : .valid
+        switch StoredSettingsJSON.version(in: fields) {
+        case nil: nil
+        case .current: .valid
+        case .future: .unknownFuture
+        case .malformed: .malformed
+        }
     }
 
     private static func validEditor(fields: [String: JSONNode], raw: Data) -> EditorSettings? {
