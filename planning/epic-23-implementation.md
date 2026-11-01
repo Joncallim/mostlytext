@@ -126,3 +126,46 @@ offsets. Test empty/Unicode/mixed EOL/BOM/UTF-16/legacy/invalid byte cases,
 nonzero Data indices and exact/over-limit admission. Existing FileCore encoding
 regressions must remain green. This does not implement a filesystem reader,
 large-file prefix preview or prove Quick Look execution placement/timing.
+
+## Catalog import-decision unit
+
+Themes owns immutable ThemeCatalogSnapshot values (revision plus at most 256
+validated custom ThemeFile values, unique UUIDs) and a pure ThemeImportPlan.
+Preparing a plan validates input, then reports a same-content existing entry,
+a recognized-ID conflict requiring a choice, or a new import. Compare content
+without UUID so reimporting an unchanged external file is a no-op even when its
+first admission assigned a new managed UUID. Recognized IDs take precedence over
+other content matches. Import Copy always generates a fresh managed UUID;
+unrecognized external IDs never become implicit replacement authority.
+
+Resolving a plan requires the unchanged catalog revision and an explicit choice.
+A recognized conflict can produce Replace only with the original entry's exact
+canonical digest; Replace retains that managed UUID. New imports and copies get
+a generated UUID checked against the catalog. Return immutable proposed changes,
+not writes. The filesystem writer must independently verify current on-disk
+bytes immediately before publication; this pure check is not a filesystem
+transaction. Invalid choices, duplicate catalog IDs, a full catalog, stale
+revisions/digests and generated-ID collisions fail without mutation.
+
+Keep this unit in Themes, using CryptoKit only for deterministic SHA-256 of
+canonical bytes; no new package dependency or file access. Test new/copy/no-op/
+replace, restart-equivalent snapshots, foreign ID collisions, stale dialogs,
+count bounds and invalid choices. The actor writer, watcher, app-wide catalog
+publication and Appearance UI remain subsequent units, not fabricated passes.
+
+## Bundled-theme Appearance controls
+
+Add one native Appearance settings tab using the existing ThemeController and
+appearance-mode owner. Show separate light/dark pickers, the current semantic
+sample and a reset-to-bundled-defaults action; do not create another appearance
+preference or change document content. Use ordinary Form/Picker/Button controls,
+actual capture colors for representative code, and prose/heading/link/quote/
+selection samples. Theme names remain proper names; action/sample labels enter
+the app String Catalog with translations marked for review. Keep custom import,
+export and delete controls absent until their persistent implementation exists.
+
+Expand the shared settings content size to fit six native tabs and the sample.
+Existing rendered-state/pseudo-localization fixtures consume that same declared
+size rather than retaining a stale fixed capture rectangle. Compile and lint the
+view, retain native focus, resizing and VoiceOver/pseudo-localization review as
+real CORTANA gates, and do not claim those outcomes from compilation alone.
