@@ -30,6 +30,7 @@ public enum CommandProtocolError: Error, Sendable, Equatable {
     case inputCapacity
     case subscriberCapacity
     case receiptCapacity
+    case invalidResponse
 }
 
 public struct CommandFrameConsumption: Sendable {

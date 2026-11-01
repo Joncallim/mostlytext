@@ -132,3 +132,40 @@ to one live app instance and retained receipt; clients never blindly retry after
 instance loss or expiry. Tests inject a monotonic clock and cover foreign tokens,
 changed payloads, duplicate targets, close-before-ack, Save As lifetime stability,
 independent waiters, partial failure, actual resource release and bounded expiry.
+
+## Reply admission before transport
+
+The next shared-code unit encodes receipt events and validates their order at
+the client. It opens no endpoint or document. Use bounded strict JSON replies
+with version 1, type and request UUID. Accepted replies contain openedCount and
+failures; finished replies contain no additional members; rejected replies
+contain only a stable reason code. Each failure contains a target object and
+reason: path targets have kind `path` plus a canonical integer index, while
+stdin/activation targets contain only their kind. Human diagnostics remain a
+later localized CLI concern, not server-provided free text or source paths.
+
+Reject unknown/duplicate members, wrong types, unsupported versions, invalid
+UUIDs/reasons/targets, noncanonical numeric counts, out-of-range counts and
+duplicate failed targets. Replies share the 64 KiB frame ceiling. At most 33
+targets exist (32 paths plus stdin); activation is the sole bare-request target.
+
+CommandReplyStream binds one immutable original request. An accepted event must
+account for valid targets: failures refer only to requested targets, and the
+distinct opened lifetime count is positive and no greater than remaining
+targets, or zero exactly when all targets failed. A non-wait acceptance is
+terminal; a wait acceptance requires a following finished event. Rejection is
+terminal only before acceptance. Finished-before-accepted, duplicate acceptance,
+wrong UUID, impossible target accounting, data after terminal and EOF before
+terminal poison the stream. One fresh stream is required for a deliberate
+same-instance reconnect; this reducer never silently retries or relaunches.
+
+Tests cover round trips, malformed replies, byte/count limits, partial failure,
+deduplicated documents, activation, request binding, close-before-ack replay
+ordering, non-wait acceptance and premature EOF. Keep socket ownership, peer
+UID checks, deadlines and resource drainage in the subsequent transport unit.
+
+Reply-unit verification: the locked command-related run passed 75 tests in
+17 suites. After final formatting, all 51 CommandBridge tests passed with
+unchanged source hashes. Receipts and logs are retained in
+`CORTANA-Builds/resume-20261101-command-replies`; source compliance, formatting
+and strict lint pass. These are package controls, not CLI/app acceptance.
