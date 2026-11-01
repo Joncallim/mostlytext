@@ -165,7 +165,42 @@ ordering, non-wait acceptance and premature EOF. Keep socket ownership, peer
 UID checks, deadlines and resource drainage in the subsequent transport unit.
 
 Reply-unit verification: the locked command-related run passed 75 tests in
-17 suites. After final formatting, all 51 CommandBridge tests passed with
+17 suites. After final formatting, all 50 CommandBridge tests passed with
 unchanged source hashes. Receipts and logs are retained in
 `CORTANA-Builds/resume-20261101-command-replies`; source compliance, formatting
 and strict lint pass. These are package controls, not CLI/app acceptance.
+
+## Private endpoint ownership before listener activation
+
+CommandEndpointLocation derives a short per-product directory from SHA-256 of
+the exact product identity under a caller-supplied OS per-user runtime directory.
+It validates absolute file URLs, path components and sockaddr_un capacity before
+creating anything. CommandEndpointLease walks directories with no-follow file
+descriptors, requires the runtime and endpoint directories to be owned by the
+effective user with mode 0700, rejects allow ACLs and noowners filesystems, and
+holds an exclusive nonblocking advisory lock on an owned regular 0600 file.
+
+Never unlink a lock or endpoint on a failed acquisition. Compare the named
+directory and lock inode/device to the held descriptors before later activation;
+replacement is an error, not permission to delete a path. Release closes only
+owned descriptors. A separate peer check uses the kernel's Unix-socket peer UID
+in both future transport directions. This isolates other users; it is not
+authentication against hostile code running as the same user.
+
+This unit creates no listener, accepts no requests and removes no stale socket.
+Subsequent listener/client code must consume the lease, recheck its identities
+before bind/connect, set/verify 0600 socket permissions and implement the full
+bounded deadlines and stale-instance handshake contract. Tests use newly created
+private internal-disk directories and Unix socket pairs only. Verify contention,
+release/reacquisition, modes, symlinks, hard links, path replacement, long paths,
+ACL refusal and peer checks without starting an application.
+
+Endpoint-unit verification: all 62 CommandBridge tests pass with unchanged
+source hashes, and the CommandBridge target builds in Release. The expanded
+control caught Foundation reintroducing the `/var` alias into the OS temporary
+path; the resolver now uses POSIX realpath before no-follow traversal. The
+failing and corrected runs remain in
+`CORTANA-Builds/resume-20261101-command-replies`, with
+`receipt-endpoint-corrected.json` recording the final tests/build. Formatting,
+strict lint and ordinary source compliance pass. No cross-user GUI or native
+CLI/app claim follows from same-user socket-pair controls.
