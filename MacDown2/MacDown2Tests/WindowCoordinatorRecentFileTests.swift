@@ -47,16 +47,6 @@ struct WindowCoordinatorRecentFileTests {
         return (coordinator, controller)
     }
 
-    private static func waitUntil(
-        timeout: Duration = .seconds(3),
-        _ condition: () -> Bool
-    ) async {
-        let deadline = ContinuousClock.now.advanced(by: timeout)
-        while !condition(), ContinuousClock.now < deadline {
-            try? await Task.sleep(for: .milliseconds(10))
-        }
-    }
-
     @Test func openingARecentFileThroughASymlinkedParentDirectoryOpensTheLexicalPath() async throws {
         let base = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         try FileManager.default.createDirectory(at: base, withIntermediateDirectories: true)
@@ -72,6 +62,7 @@ struct WindowCoordinatorRecentFileTests {
         let lexicalFile = aliasDirectory.appendingPathComponent("note.md")
 
         let (coordinator, _) = Self.makeCoordinatorAndController()
+        defer { coordinator.controllers.forEach { $0.close() } }
         // Records against the lexical (through-the-symlinked-directory)
         // path, exactly like a real `openDocument(at: lexicalFile)` would
         // (`RecentFileDocuments.record(_:)` keys on whatever URL is passed
@@ -84,11 +75,11 @@ struct WindowCoordinatorRecentFileTests {
         #expect(resolution.accessURL.standardizedFileURL == realFile.standardizedFileURL)
 
         let controllersBefore = coordinator.controllers.count
-        coordinator.openRecentFile(lexicalFile)
-        await Self.waitUntil { coordinator.controllers.count > controllersBefore }
+        let opening = try #require(coordinator.openRecentFile(lexicalFile))
+        await opening.value
+        #expect(coordinator.controllers.count == controllersBefore + 1)
 
         let opened = try #require(coordinator.controllers.last)
-        defer { opened.close() }
         #expect(
             opened.model.activeDocument?.fileURL?.standardizedFileURL == lexicalFile.standardizedFileURL,
             "must reopen the lexical path, not silently resolve to its real target"
@@ -106,16 +97,17 @@ struct WindowCoordinatorRecentFileTests {
         try Data().write(to: fileB)
 
         let (coordinator, _) = Self.makeCoordinatorAndController()
+        defer { coordinator.controllers.forEach { $0.close() } }
         coordinator.recentFileDocuments.record(fileA)
         coordinator.recentFileDocuments.record(fileB)
         #expect(coordinator.recentFileDocuments.documents.first?.standardizedFileURL == fileB.standardizedFileURL)
 
         let controllersBefore = coordinator.controllers.count
-        coordinator.openRecentFile(fileA)
-        await Self.waitUntil { coordinator.controllers.count > controllersBefore }
+        let opening = try #require(coordinator.openRecentFile(fileA))
+        await opening.value
+        #expect(coordinator.controllers.count == controllersBefore + 1)
 
         let opened = try #require(coordinator.controllers.last)
-        defer { opened.close() }
         #expect(opened.model.activeDocument?.fileURL?.standardizedFileURL == fileA.standardizedFileURL)
         // Reopening re-promotes it to the front, the same MRU behavior
         // `openRecentFolder`/`openFolder` already give recent folders.
