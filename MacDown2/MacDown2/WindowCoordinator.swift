@@ -58,6 +58,7 @@ final class WindowCoordinator {
     @ObservationIgnored var terminationSaveInProgress = false
     var sessionPublicationOrder = SessionPublicationOrder()
     var afterSessionRecoveryPersisted: (@MainActor () async -> Void)? // test seam: before publishing
+    var afterSessionPublicationRejected: (@MainActor (_ superseded: Bool, _ documentChanged: Bool) -> Void)?
     /// Test seam: runs after a new controller's root/index rebuild and before publication.
     var afterFolderSearchRootRebuild: (@MainActor () async -> Void)?
     /// Test seam: runs after file loading and before the post-load continuation check.

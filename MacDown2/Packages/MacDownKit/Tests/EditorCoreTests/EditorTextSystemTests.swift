@@ -90,6 +90,7 @@ struct EditorTextSystemTests {
             .joined(separator: "\n")
         let system = makeSystem(text: text)
         let scrollView = NSScrollView(frame: NSRect(x: 0, y: 0, width: 420, height: 180))
+        defer { withExtendedLifetime(scrollView) {} }
         scrollView.documentView = system.textView
         system.scrollView = scrollView
         system.textView.frame = NSRect(x: 0, y: 0, width: 420, height: 180)
@@ -111,7 +112,9 @@ struct EditorTextSystemTests {
             preserving: viewport,
             clearUndo: true
         )
-        try? await Task.sleep(for: .milliseconds(150))
+        // Await the owned two-pass operation, not an assumed scheduler delay.
+        let restore = try #require(system.frameSyncTask)
+        await restore.value
 
         #expect(system.selectedRange == selectedLine)
         #expect(system.topVisibleUTF16Offset == viewport.topVisibleUTF16Offset)

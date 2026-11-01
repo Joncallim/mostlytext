@@ -4,12 +4,15 @@ import Foundation
 import Testing
 
 extension SessionViewStateRoundTripTests {
-    @Test func dirtyEditDuringRecoveryCannotPublishAnOlderTerminationSnapshot() async throws {
+    @Test(arguments: [false, true])
+    func dirtyEditDuringRecoveryCannotPublishAnOlderTerminationSnapshot(injectBaselineObservation: Bool) async throws {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
         let sessions = MemorySessionStore()
         let coordinator = try coordinatorWithOneTab(sessions: sessions, directory: directory)
         let controller = try #require(coordinator.controllers.first)
+        try await settleInitialMonitoring(of: coordinator)
+        let baselineSnapshot = try baselineSnapshot(of: controller)
         await coordinator.awaitScheduledSessionSaveForTesting()
         controller.model.tabStore.updateActiveDocument { $0.edited(text: "first edit") }
         controller.updateTitleAndEditedState()
@@ -18,12 +21,12 @@ extension SessionViewStateRoundTripTests {
         sessions.session = nil
         sessions.publicationCount = 0
         let firstDocument = try #require(controller.model.activeDocument)
-        let firstGate = FirstCallGate()
-        let secondGate = FirstCallGate()
-        defer {
-            firstGate.release()
-            secondGate.release()
+        let (firstGate, secondGate) = (FirstCallGate(), FirstCallGate())
+        var rejectedSnapshots: [(superseded: Bool, documentChanged: Bool)] = []
+        coordinator.afterSessionPublicationRejected = { superseded, documentChanged in
+            rejectedSnapshots.append((superseded, documentChanged))
         }
+        defer { [firstGate, secondGate].forEach { $0.release() } }
         var recoveryPasses = 0
         coordinator.afterSessionRecoveryPersisted = {
             recoveryPasses += 1
@@ -35,31 +38,27 @@ extension SessionViewStateRoundTripTests {
         }
 
         let termination = Task { @MainActor in await coordinator.saveSessionForTermination() }
-        for _ in 0 ..< 1000 where !firstGate.entered {
-            try await Task.sleep(for: .milliseconds(10))
-        }
-        try #require(firstGate.entered)
+        try await waitForCondition { firstGate.entered }
 
         // This is the ordinary editor-binding path: dirty -> dirty does not schedule a coordinator session save.
         controller.model.tabStore.updateActiveDocument { $0.edited(text: "second edit") }
         let currentDocument = try #require(controller.model.activeDocument)
         #expect(currentDocument.mutationGeneration > firstDocument.mutationGeneration)
         firstGate.release()
-        for _ in 0 ..< 1000 where !secondGate.entered {
-            try await Task.sleep(for: .milliseconds(10))
-        }
-        try #require(secondGate.entered)
+        try await waitForCondition { secondGate.entered }
 
         #expect(sessions.publicationCount == 0)
         let recovered = try await currentDocument.recoveryBuffer.load(
             for: currentDocument.id, epoch: currentDocument.recoveryEpoch
         )
         #expect(recovered?.isExactlyEqual(to: "second edit") == true)
+        if injectBaselineObservation {
+            try await applyBaselineObservation(baselineSnapshot, to: controller, expecting: currentDocument)
+        }
         secondGate.release()
 
-        #expect(await termination.value.persisted)
-        #expect(sessions.publicationCount == 1)
-        #expect(sessions.session?.tabs.first?.documentRecoveryEpoch == currentDocument.recoveryEpoch)
+        let result = await termination.value
+        expectPublication(result, sessions, currentDocument, rejectedSnapshots, injectBaselineObservation)
     }
 
     @Test func terminationOwnsTheSessionLaneWhenAnotherSaveIsScheduled() async throws {
@@ -137,6 +136,45 @@ extension SessionViewStateRoundTripTests {
         #expect(sessions.publicationCount == 1)
         let currentDocument = try #require(coordinator.controllers.first?.model.activeDocument)
         #expect(sessions.session?.tabs.first?.documentRecoveryEpoch == currentDocument.recoveryEpoch)
+    }
+
+    private func baselineSnapshot(of controller: WindowController) throws -> FileSnapshot {
+        let baseline = try #require(controller.model.activeDocument)
+        return try FileSnapshot(
+            text: baseline.text, encoding: baseline.encoding.encoding, bom: baseline.encoding.bom,
+            revision: #require(baseline.lastKnownRevision)
+        )
+    }
+
+    private func applyBaselineObservation(
+        _ snapshot: FileSnapshot, to controller: WindowController, expecting document: FileDocument
+    ) async throws {
+        // The unchanged disk baseline still advances dirty-document metadata.
+        controller.externalFileController.handle(.available(snapshot))
+        try await waitForCondition {
+            controller.model.activeDocument?.mutationGeneration != document.mutationGeneration
+        }
+        let observed = try #require(controller.model.activeDocument)
+        #expect(observed.id == document.id)
+        #expect(observed.recoveryEpoch == document.recoveryEpoch)
+        #expect(observed.text.isExactlyEqual(to: "second edit"))
+        #expect(observed.mutationGeneration > document.mutationGeneration)
+    }
+
+    private func expectPublication(
+        _ result: SessionSaveResult, _ sessions: MemorySessionStore, _ currentDocument: FileDocument,
+        _ rejectedSnapshots: [(superseded: Bool, documentChanged: Bool)], _ injectBaselineObservation: Bool
+    ) {
+        if injectBaselineObservation {
+            #expect(!result.persisted)
+            #expect(sessions.publicationCount == 0)
+            #expect(sessions.session == nil)
+            #expect(rejectedSnapshots.contains { $0.superseded && $0.documentChanged })
+        } else {
+            #expect(result.persisted, "Publication rejections: \(rejectedSnapshots)")
+            #expect(sessions.publicationCount == 1)
+            #expect(sessions.session?.tabs.first?.documentRecoveryEpoch == currentDocument.recoveryEpoch)
+        }
     }
 
     private func waitForCondition(_ condition: @MainActor () -> Bool) async throws {
