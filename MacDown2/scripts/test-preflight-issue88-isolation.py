@@ -7,6 +7,8 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest import mock
+from types import SimpleNamespace
 import uuid
 
 spec = importlib.util.spec_from_file_location('preflight', Path(__file__).with_name('preflight-issue88-isolation.py'))
@@ -91,5 +93,62 @@ class GuardTests(unittest.TestCase):
             link = root / 'link'; link.symlink_to(outside)
             self.assertEqual(p.checked_path(good, root), good.resolve())
             with self.assertRaises(p.Refusal): p.checked_path(link, root)
+
+    def test_complete_candidate_inventory_and_content(self):
+        with tempfile.TemporaryDirectory(prefix='issue88-candidate-') as tmp:
+            root = Path(tmp).resolve()
+            # This input was outside the former six-file comparison.
+            name = 'WindowCoordinator.swift'
+            source = root / name; source.write_text('reviewed')
+            manifest = {name: p.sha(source)}
+            p.validate_candidate_sources(manifest, root, [name])
+            for paths in ([], [name, 'extra.swift']):
+                with self.assertRaises(p.Refusal): p.validate_candidate_sources(manifest, root, paths)
+            source.write_text('changed')
+            with self.assertRaises(p.Refusal): p.validate_candidate_sources(manifest, root, [name])
+            source.unlink()
+            with self.assertRaises(OSError): p.validate_candidate_sources(manifest, root, [name])
+
+    def test_source_manifest_rejects_noncanonical_paths_duplicates_and_symlinks(self):
+        with tempfile.TemporaryDirectory(prefix='issue88-manifest-') as tmp:
+            root = Path(tmp).resolve(); source = root / 'source'; source.mkdir()
+            content = source / 'input.swift'; content.write_text('original')
+            manifest = root / 'source-manifest.json'
+            def check(text):
+                manifest.write_text(text)
+                return p.validate_source_manifest(root, {'sourceManifestSHA256': p.sha(manifest)})
+            for rel in ('/absolute', '', './input.swift', 'a//b', '../outside', 'a/../input.swift', 'a\\b'):
+                with self.subTest(rel=rel), self.assertRaises(p.Refusal):
+                    check(json.dumps({rel: 'a' * 64}))
+            for digest in ('wrong', 1, 'A' * 64):
+                with self.assertRaises(p.Refusal): check(json.dumps({'input.swift': digest}))
+            with self.assertRaises(p.Refusal): check('{"input.swift":"' + 'a'*64 + '","input.swift":"' + 'b'*64 + '"}')
+            for target in (content, root / 'outside'):
+                if not target.exists(): target.write_text('original')
+                alias = source / 'alias'; alias.symlink_to(target)
+                with self.assertRaises(p.Refusal): check(json.dumps({'alias': p.sha(content)}))
+                alias.unlink()
+
+    def test_git_adapter_checks_commit_root_and_all_inputs(self):
+        with tempfile.TemporaryDirectory(prefix='issue88-git-') as tmp:
+            root = Path(tmp).resolve()
+            (root / 'Package.resolved').write_text('locked')
+            manifest = {'Package.resolved': p.sha(root / 'Package.resolved')}
+            receipt = {'sourceSHA': 'a' * 40}
+            outputs = [str(root).encode() + b'\n', b'a' * 40 + b'\n', b'Package.resolved\0']
+            def run_with(values):
+                return mock.patch.object(p.subprocess, 'run', side_effect=[SimpleNamespace(stdout=value) for value in values])
+            with run_with(outputs) as git:
+                p.validate_candidate_identity(manifest, root, receipt)
+                self.assertEqual(git.call_args_list[-1].args[0][-5:],
+                                 ['ls-files', '--cached', '--others', '--exclude-standard', '-z'])
+            # Wrong root/commit, extra untracked input, or a missing tracked
+            # lock must all fail. Generated ignored products never enter the list.
+            for values in ([str(root.parent).encode()], [outputs[0], b'b'*40],
+                           [*outputs[:2], b'Package.resolved\0extra.swift\0'], [*outputs[:2], b'']):
+                with run_with(values), self.assertRaises(p.Refusal):
+                    p.validate_candidate_identity(manifest, root, receipt)
+            for value in (None, '', 'x'*40, 'A'*40):
+                with self.assertRaises(p.Refusal): p.validate_candidate_identity(manifest, root, {'sourceSHA': value})
 
 if __name__ == '__main__': unittest.main()

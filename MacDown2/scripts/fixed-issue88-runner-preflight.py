@@ -46,6 +46,8 @@ EXECUTION_HOLD = True
 
 def validate_manifest(manifest):
     require(manifest.get('version') == 1, 'Unknown binding manifest version')
+    require(isinstance(manifest.get('sourceSHA'), str)
+            and re.fullmatch(r'[0-9a-f]{40}', manifest['sourceSHA']), 'Invalid source commit in binding manifest')
     validate_request(manifest.get('bundleID', ''), manifest.get('selectedTest'))
     require(re.fullmatch(r'[0-9A-Fa-f]{8}-[0-9A-Fa-f]{16}', manifest.get('hostID', '')) is not None,
                       'Invalid host identity')
@@ -53,7 +55,7 @@ def validate_manifest(manifest):
                       'Invalid owner UID')
     require(isinstance(manifest.get('ownerHome'), str) and Path(manifest['ownerHome']).is_absolute(),
                       'Invalid protected owner home')
-    for value in [manifest.get('xctestrunSHA256'), manifest.get('sourcePatchSHA256'),
+    for value in [manifest.get('xctestrunSHA256'), manifest.get('sourcePatchSHA256'), manifest.get('sourceManifestSHA256'),
                   *manifest.get('binarySHA256', {}).values()]:
         require(isinstance(value, str) and re.fullmatch(r'[0-9a-f]{64}', value) is not None,
                           'Invalid digest in binding manifest')
@@ -143,7 +145,8 @@ def command_for(plan, result, host_id):
 
 
 def check_binding(manifest, actual):
-    for key in ('bundleID', 'ownerUID', 'selectedTest', 'xctestrunSHA256', 'binarySHA256', 'sourcePatchSHA256'):
+    for key in ('bundleID', 'ownerUID', 'selectedTest', 'xctestrunSHA256', 'binarySHA256', 'sourcePatchSHA256',
+                'sourceSHA', 'sourceManifestSHA256'):
         require(actual.get(key) == manifest.get(key), 'Build binding differs: ' + key)
 
 

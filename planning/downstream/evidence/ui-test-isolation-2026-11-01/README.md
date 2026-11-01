@@ -31,3 +31,22 @@ compilation pass separately. No DEBUG flag was added to Release.
 
 This is a partial #88 implementation and evidence record. It does not close
 #88, establish whole-app isolation, or satisfy a downstream native gate.
+
+## Complete source binding correction
+
+Review found that the advisory preflight checked the archive's complete source
+manifest, but compared only six candidate paths. It now requires the candidate
+worktree's HEAD to match the receipt and compares every tracked and nonignored
+untracked input, including package resources and the committed lockfile, against
+the complete archived manifest. Missing, extra or changed inputs fail closed.
+Noncanonical paths, duplicate members, invalid digests and symlinked inputs are
+rejected. Ignored generated products are omitted; tracked ignored inputs remain
+included. The fixed runner additionally requires and compares sourceSHA and
+sourceManifestSHA256. Historical receipts and logs above are unchanged; they do
+not validate a later candidate. A new build/receipt is required for that source.
+
+New fixture controls cover changes outside the former six paths, inventory
+changes, malformed/duplicate manifests, symlinks and fixed identity mismatch.
+They are included in hosted Compliance; their result must be recorded against
+the corrected head before integration. No new local application, UI test or
+owner-data probe is part of this correction. EXECUTION_HOLD remains unconditional.

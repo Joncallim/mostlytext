@@ -17,6 +17,7 @@ class FixedRunnerChecks(unittest.TestCase):
                          'hostID':'00006030-0012446C0E83001C','ownerUID':501,'ownerHome':'/Users/owner',
                          'selectedTest':r.EXPECTED_TEST,'xctestrunSHA256':'a'*64,
                          'sourcePatchSHA256':'b'*64,
+                         'sourceSHA':'f'*40, 'sourceManifestSHA256':'0'*64,
                          'binarySHA256':{'app':'c'*64,'runner':'d'*64,'test':'e'*64}}
 
     def test_exact_command_is_bounded_and_single_case(self):
@@ -36,13 +37,22 @@ class FixedRunnerChecks(unittest.TestCase):
         r.validate_manifest(self.manifest)
         actual = dict(self.manifest)
         r.check_binding(self.manifest, actual)
-        for key in ['selectedTest','bundleID','xctestrunSHA256','sourcePatchSHA256']:
+        for key in ['selectedTest','bundleID','xctestrunSHA256','sourcePatchSHA256','sourceSHA','sourceManifestSHA256']:
             altered = dict(actual); altered[key] = 'wrong'
             with self.assertRaises(r.Refusal): r.check_binding(self.manifest, altered)
         altered = dict(actual); altered['binarySHA256'] = dict(actual['binarySHA256'], app='f'*64)
         with self.assertRaises(r.Refusal): r.check_binding(self.manifest, altered)
         malformed = dict(self.manifest, hostID='platform=macOS')
         with self.assertRaises(r.Refusal): r.validate_manifest(malformed)
+
+    def test_missing_or_malformed_source_identities_are_refused(self):
+        for key, invalid in [('sourceSHA', ['x'*40, 'A'*40, '', None]),
+                             ('sourceManifestSHA256', ['x'*64, 'A'*64, '', None])]:
+            missing = dict(self.manifest); del missing[key]
+            with self.assertRaises(r.Refusal): r.validate_manifest(missing)
+            for value in invalid:
+                malformed = dict(self.manifest); malformed[key] = value
+                with self.assertRaises(r.Refusal): r.validate_manifest(malformed)
 
     @mock.patch.object(r.os, 'geteuid', return_value=501)
     @mock.patch.object(r.os, 'getuid', return_value=501)

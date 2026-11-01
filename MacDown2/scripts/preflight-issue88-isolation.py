@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 import plistlib
 import re
+import stat
 import subprocess
 import sys
 import uuid
@@ -105,30 +106,65 @@ def sha(path):
             h.update(block)
     return h.hexdigest()
 
+def source_path(root, rel):
+    require(isinstance(rel, str) and rel and '\\' not in rel
+            and all(part not in ('', '.', '..') for part in rel.split('/')),
+            'Invalid source manifest path')
+    path = root
+    for part in rel.split('/'):
+        path = path / part
+        require(not path.is_symlink(), 'Source input is a symlink: ' + rel)
+    require(stat.S_ISREG(path.stat().st_mode), 'Source input is not a regular file: ' + rel)
+    return checked_path(path, root)
+
+def unique_members(pairs):
+    result = {}
+    for key, value in pairs:
+        require(key not in result, 'Duplicate source manifest member')
+        result[key] = value
+    return result
+
 def validate_source_manifest(root, receipt):
     manifest_path = root / 'source-manifest.json'
     require(sha(manifest_path) == receipt.get('sourceManifestSHA256'), 'Source manifest differs from build receipt')
-    source_files = json.loads(manifest_path.read_text())
+    source_files = json.loads(manifest_path.read_text(), object_pairs_hook=unique_members)
     require(isinstance(source_files, dict) and source_files, 'Missing complete source manifest')
     for rel, expected in source_files.items():
-        relative = Path(rel)
-        require(not relative.is_absolute() and '..' not in relative.parts, 'Invalid source manifest path')
-        source = checked_path(root / 'source' / relative, root / 'source')
+        require(isinstance(expected, str) and re.fullmatch(r'[0-9a-f]{64}', expected),
+                'Invalid source manifest digest')
+        source = source_path(root / 'source', rel)
         require(sha(source) == expected, 'Build source changed: ' + rel)
+    return source_files
+
+def validate_candidate_sources(source_files, candidate, paths):
+    require(set(paths) == set(source_files), 'Candidate source inventory differs from build manifest')
+    for rel, expected in source_files.items():
+        require(sha(source_path(candidate, rel)) == expected,
+                'Build source differs from reviewed candidate: ' + rel)
+
+def validate_candidate_identity(source_files, candidate, receipt):
+    expected = receipt.get('sourceSHA')
+    require(isinstance(expected, str) and re.fullmatch(r'[0-9a-f]{40}', expected),
+            'Invalid source commit in build receipt')
+    def git(*args):
+        result = subprocess.run(['git', '-C', str(candidate), *args], capture_output=True, check=True)
+        return result.stdout
+    require(Path(os.fsdecode(git('rev-parse', '--show-toplevel')).strip()).resolve() == candidate,
+            'Candidate must be the complete worktree root')
+    require(git('rev-parse', 'HEAD').decode().strip() == expected, 'Candidate commit differs from build receipt')
+    # Include tracked inputs even when ignored, and all nonignored untracked
+    # inputs. Generated ignored products are not reviewed source inputs.
+    paths = [os.fsdecode(path) for path in git('ls-files', '--cached', '--others', '--exclude-standard', '-z').split(b'\0') if path]
+    validate_candidate_sources(source_files, candidate, paths)
 
 def inspect_build(args):
     root = args.build_root.resolve(strict=True)
     receipt = json.loads((root / 'receipt.json').read_text())
     require(receipt.get('state') in {'built', 'builds-and-static-preflight-passed'}, 'Build did not complete successfully')
     require(sha(args.expected_patch) == receipt.get('patchSHA256'), 'Patch differs from build receipt')
-    validate_source_manifest(root, receipt)
+    source_files = validate_source_manifest(root, receipt)
     candidate = args.candidate_root.resolve(strict=True)
-    for rel in ('MacDown2/project.yml', 'MacDown2/MacDown2/AppDelegate.swift',
-                'MacDown2/MacDown2/UITestLaunchGuard.swift',
-                'MacDown2/MacDown2/AppDelegate+UITestLaunch.swift',
-                'MacDown2/MacDown2/WindowController+FrameRestore.swift',
-                'MacDown2/MacDown2UITests/EditingAssistsUITests.swift'):
-        require(sha(root / 'source' / rel) == sha(candidate / rel), 'Build source differs from reviewed candidate: ' + rel)
+    validate_candidate_identity(source_files, candidate, receipt)
     bundle = receipt.get('bundleID', '')
     owner_uid = receipt.get('ownerUID')
     require(type(owner_uid) is int and owner_uid > 0, 'Missing protected owner UID')
@@ -226,6 +262,6 @@ def main():
 if __name__ == '__main__':
     try:
         main()
-    except (OSError, ValueError, KeyError, plistlib.InvalidFileException, Refusal) as error:
+    except (OSError, ValueError, KeyError, subprocess.SubprocessError, plistlib.InvalidFileException, Refusal) as error:
         print('Preflight refused: ' + str(error), file=sys.stderr)
         sys.exit(1)
