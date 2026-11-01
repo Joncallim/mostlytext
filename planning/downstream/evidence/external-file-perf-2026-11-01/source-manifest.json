@@ -1,0 +1,178 @@
+{
+  "source_head": "ec0c7860da1f79e3f5d1a44217a908a52a6a3413",
+  "sources": [
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/DestinationBaseline.swift",
+      "sha256": "b0cc649bff379eddcfb9733c41b61f3c93baf2d3be59ca154959c2f49a8b858e"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/DocumentDirectoryWatcher.swift",
+      "sha256": "2306070f4b77ef0b48a8cda92de19e23428049a204c12879dd5b3a55f6ce81c9"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/DocumentFileMonitor+Baseline.swift",
+      "sha256": "543edeec61adb91d631ae0fc321056083a32eacd5a2ec9af7b259363ebfcc478"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/DocumentFileMonitor+FileWatch.swift",
+      "sha256": "3ac7ebe04526b1339b9f18b638efe2bd23df4cef830e39af2f0944ece69c2d67"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/DocumentFileMonitor.swift",
+      "sha256": "8fab3ae29f48f9c0aca8e11f1852c0ed56a059435ef864fa96f3051ec14a4714"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/DocumentFileProbe.swift",
+      "sha256": "b3cad84a662810373472a88122159f4ec10121d7d2bcc13b3238bfc3250bfeae"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/DurableFileWriter.swift",
+      "sha256": "9632e36ce1c5c0b405a9854b5533fd445410c27deabba4f64f5c9acc47efd0ef"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileByteDecoder.swift",
+      "sha256": "929d5728eb9f1a133d5b0a09faa32fdb255bacd920c504be5ef657130f06230d"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileCore.swift",
+      "sha256": "c76f290dd5ee235ae7c81c8468d696e6348b45bfa340805b637db271f97b9c47"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileDocument+Edit.swift",
+      "sha256": "00690e71d54bdb749ae5a7b65d82cfa4c04b70dd5c4b96d506629cf9cbc59719"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileDocument+ExternalChanges.swift",
+      "sha256": "f36dce7a7de3c0ad1c7fa7bb8e6e46a32aa3dbcdfa0ad66c077186e62e432508"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileDocument+Format.swift",
+      "sha256": "05c4224916dc2409754c2ec84febcfcaa08cfcc987b578e66cc513fc394d2288"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileDocument+Lifetime.swift",
+      "sha256": "53929c186daee17b7c127638b3e95b41f608198297ca58d1150aa8b1e92ca53c"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileDocument+Recovery.swift",
+      "sha256": "ee8cdf45a78d94c1e7d3abbd6969cc5bc0f17ef1d681918875d038831bb01a03"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileDocument+RestoredBaseline.swift",
+      "sha256": "3f2f04a79cdf4f9d523841d8bd85727fbf926bc5d35306480da0cee68770d099"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileDocument.swift",
+      "sha256": "dad277e9051719ff3ef98d4f1fdbf91348bfe3059ffa075968761a54d4a60df0"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileDocumentState.swift",
+      "sha256": "b2f5581433073a23e35f4a9561d18d431325fd90302ba448d6e67b16e39f53a2"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileEncoding.swift",
+      "sha256": "9ebfd043659db44ec015258e49f6462856258beb6e6f31fdee38774f3f30c50b"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileEncodingCatalog.swift",
+      "sha256": "7ca94e6af1547ec904e1101bc0bc33243541a8c0065c8781988111e7dd430717"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileEncodingMetadata+DisplayName.swift",
+      "sha256": "f8b251f9ed2c602ff53a71e4ffa9c2534e0552f117623a1da4876c727bc95e6b"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileFormat.swift",
+      "sha256": "6227fd24519356a13545a591cc70dd2c5122cbb2c15b13168ac1454a5fd9dfcc"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileSnapshot.swift",
+      "sha256": "f6b88e5dbd8e76f493acf6f3b262400899597920f9a957af4772f8b5efd23b70"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileStore+CompanionNames.swift",
+      "sha256": "3d5600e67eb2d66d2fe6236d271eda578ef9a09b3fcb2f3d9817cb25d5f5ba0a"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileStore+ConditionalPublication.swift",
+      "sha256": "1123973277b6e22dc31d3eaee410e2042dd71ddf1f54faded3307a473b0c7bc3"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileStore+EncodedData.swift",
+      "sha256": "158ddec50cea8db7cc32cf05fdbe081e30dd8da71780c125c532a221fe375a99"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileStore+Encoding.swift",
+      "sha256": "f4b9b0a1fc483ae9822701f6ae0820627d2fc0466893419d6eaaed571f15ca2d"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileStore+EncodingDetection.swift",
+      "sha256": "7015e11ba79fb41bb0448ef69c13b3d5e0ae2296299829047a4fa399f816bf75"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileStore+ErrorMapping.swift",
+      "sha256": "c05cdd5a76eaf9ec468fc6f6e00879a77431a031dbaa69415b1765afc172acfc"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileStore.swift",
+      "sha256": "e48d73bac7e1fcbf3849b3d58dbddb18ca8fd24a3f4dccf852682a8b727821ca"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FormatManifest.swift",
+      "sha256": "baaebfafcb7b4dad9d258fc6bd1f351a66ec00614cf1130921e70ad5526b709e"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/LineEnding.swift",
+      "sha256": "3d4932a939a30236a5821de7d2690dc507ce92063f0aecb860aabb5968223968"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/PhysicalFileIdentity.swift",
+      "sha256": "f5bcea1835dcedc8a57d7181bb394b5c67be0e1a30d355977dd9526df09d7048"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/RecoveryBuffer+ExactRead.swift",
+      "sha256": "7fa8d8abbaee16c1d5193371b245df302edb0decc8acbb149bf9c5ae7650b9c5"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/RecoveryBuffer+Legacy.swift",
+      "sha256": "47cd20c63faa4892a0b71c2f9ee289d440bf86b6ff4db1f7fc50b314a8e49974"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/RecoveryBuffer+Migration.swift",
+      "sha256": "4c98449384305f2a1cfba00dd7e27ad6de70877d40a65e62c926bcdfc9d0fec1"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/RecoveryBuffer+Migrations.swift",
+      "sha256": "7c30c0b269696930830ccb44519a9520cb04f90530a632b363dd176155505770"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/RecoveryBuffer+Storage.swift",
+      "sha256": "ac99ed6d80d12559ba0bacb67e71bcd770f606116b4e4f880b2eb6d477d08243"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/RecoveryBuffer+StorageSupport.swift",
+      "sha256": "b1308c91bf90f8eae19efee236278947a8edc7aeeb6e18a00f61725c634deffd"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/RecoveryBuffer+Types.swift",
+      "sha256": "645adda79f137387cf8d7e1f77f0780971a0e9176accbca986a24672d6d4f6d9"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/RecoveryBuffer.swift",
+      "sha256": "9ccbc560bec7fd3ff608c1d55d9753655a97c32f15a6f1022888970a051f00da"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/String+ExactEquality.swift",
+      "sha256": "8f7275f85968b87eea88060afcabc8866d81d910d626f513a1fd49d5de062337"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/SyntaxModeOverride.swift",
+      "sha256": "305ffdb47b2377bd365c92beeef7d02232e0e608db06b1d9405a0f4a0ea90797"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/URL+ResolvingFinalSymlink.swift",
+      "sha256": "fe60e0fbac375235472d20c2eec57788bd4315f5856fe1a5c457cca6df810c79"
+    }
+  ],
+  "scope": "Unmodified FileCore sources in a Foundation-only executable; private synthetic fixtures only; no app or GUI host"
+}
