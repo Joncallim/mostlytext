@@ -1,0 +1,458 @@
+{
+  "configuration" : "Release",
+  "fixture_cache" : "freshly written local files; no cold-cache claim",
+  "results" : [
+    {
+      "bytes" : 1000000,
+      "observation_trace" : [
+        {
+          "after_bind_start_ms" : 3.9234170000000002,
+          "digest" : "1eb900a4e642baf017ccd378d0b05aedd2c66bba0e9421c19c080960255c3b6e",
+          "request_generation" : 1
+        },
+        {
+          "after_bind_start_ms" : 1230.798333,
+          "digest" : "81a160ec6067a9da8578de8a23a66625a760976940eda379b3bf7667f926f98f",
+          "request_generation" : 4
+        },
+        {
+          "after_bind_start_ms" : 1392.6124170000001,
+          "digest" : "37925babcd7a7ca03ca10869c8af6d970f03892f5d9f677f4d0216fa094d5a4f",
+          "request_generation" : 8
+        },
+        {
+          "after_bind_start_ms" : 1556.2500420000001,
+          "digest" : "345cb7cff7363b9d7dc96167b8b8916af24d4deeaf43ad8337d34e8ae877ac4e",
+          "request_generation" : 12
+        },
+        {
+          "after_bind_start_ms" : 1717.690625,
+          "digest" : "206500f88d3aedaa7a4634a0c343e65f70a96c42cba4fc079145162e7d3f006e",
+          "request_generation" : 16
+        },
+        {
+          "after_bind_start_ms" : 1878.2847919999999,
+          "digest" : "723f403c8eccfabba8a0025baf65c882cca55e3a06236115f327549f26431e88",
+          "request_generation" : 20
+        },
+        {
+          "after_bind_start_ms" : 1884.197375,
+          "digest" : "723f403c8eccfabba8a0025baf65c882cca55e3a06236115f327549f26431e88",
+          "request_generation" : 21
+        }
+      ],
+      "one_second_after_last_matching_observation_callbacks" : 0,
+      "one_second_after_last_matching_observation_new_sleeps" : 0,
+      "one_second_untouched_baseline_debounce_sleeps" : 0,
+      "one_second_untouched_baseline_observations" : 0,
+      "read_revision" : {
+        "max_ms" : 1.6580410000000001,
+        "median_ms" : 0.54716699999999996,
+        "p95_ms" : 0.63649999999999995,
+        "samples_ms" : [
+          1.6580410000000001,
+          0.57233299999999998,
+          0.63649999999999995,
+          0.58550000000000002,
+          0.54579200000000005,
+          0.565917,
+          0.54737499999999994,
+          0.55345800000000001,
+          0.53941700000000004,
+          0.55883400000000005,
+          0.58729200000000004,
+          0.55016699999999996,
+          0.53379200000000004,
+          0.54858300000000004,
+          0.544458,
+          0.53816699999999995,
+          0.53516600000000003,
+          0.56129200000000001,
+          0.59704100000000004,
+          0.54433299999999996,
+          0.53308299999999997,
+          0.53108299999999997,
+          0.53533299999999995,
+          0.53762500000000002,
+          0.52829099999999996,
+          0.56916699999999998,
+          0.59583399999999997,
+          0.54695899999999997,
+          0.53766700000000001,
+          0.53820900000000005
+        ]
+      },
+      "read_snapshot" : {
+        "max_ms" : 3.7529590000000002,
+        "median_ms" : 3.6452914999999999,
+        "p95_ms" : 3.7489170000000001,
+        "samples_ms" : [
+          3.7489170000000001,
+          3.7055419999999999,
+          3.7529590000000002,
+          3.6450420000000001,
+          3.6392500000000001,
+          3.6682079999999999,
+          3.6408330000000002,
+          3.6251669999999998,
+          3.6322909999999999,
+          3.7040000000000002,
+          3.6801249999999999,
+          3.6397080000000002,
+          3.6391249999999999,
+          3.6452909999999998,
+          3.6335839999999999,
+          3.6229589999999998,
+          3.6430829999999998,
+          3.6861670000000002,
+          3.70275,
+          3.6236250000000001,
+          3.6515409999999999,
+          3.646334,
+          3.645292,
+          3.6262500000000002,
+          3.6595409999999999,
+          3.6815419999999999,
+          3.6673339999999999,
+          3.6421670000000002,
+          3.6553330000000002,
+          3.6435
+        ]
+      },
+      "watcher_atomic_replacement_samples" : [
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 1.0036670000000001,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.028333000000000001,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 152.235625,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 1.3788339999999999,
+          "write_start_to_matching_observation_ms" : 159.75187500000001
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.91412499999999997,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.0087080000000000005,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 152.52758299999999,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 1.170625,
+          "write_start_to_matching_observation_ms" : 159.57179199999999
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 1.8631660000000001,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.015082999999999999,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 153.17112499999999,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 2.1329579999999999,
+          "write_start_to_matching_observation_ms" : 161.22241700000001
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.85191700000000004,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.0091660000000000005,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 152.00479200000001,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 1.1026659999999999,
+          "write_start_to_matching_observation_ms" : 159.06970799999999
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 1.861666,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.0037499999999999999,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 150.33295799999999,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 2.1365419999999999,
+          "write_start_to_matching_observation_ms" : 158.26779199999999
+        }
+      ]
+    },
+    {
+      "bytes" : 10000000,
+      "observation_trace" : [
+        {
+          "after_bind_start_ms" : 35.429166000000002,
+          "digest" : "e4bc9b197e008dfb367d0ca86a888523638f0ced7b71864e071a44b630144406",
+          "request_generation" : 1
+        },
+        {
+          "after_bind_start_ms" : 1308.139291,
+          "digest" : "9ac33850d7ad78ce3ea2ec70375423d3316abe11f324b12bfdec0e90211a7af0",
+          "request_generation" : 4
+        },
+        {
+          "after_bind_start_ms" : 1506.363625,
+          "digest" : "ec93bb9157b79d9fe0f34ef5960510ea768ab8dca27f808f82f3b3a90031e37f",
+          "request_generation" : 8
+        },
+        {
+          "after_bind_start_ms" : 1702.7812079999999,
+          "digest" : "12211e033fa5c48ed4f3a7eb8b0222de5aaa48d386f6db51c482c9e79d4265be",
+          "request_generation" : 12
+        },
+        {
+          "after_bind_start_ms" : 1906.08475,
+          "digest" : "e67b53cc9c393688befb9436bf37f4f2959959cc7ad2b570ab259bf6bdeea036",
+          "request_generation" : 16
+        },
+        {
+          "after_bind_start_ms" : 2110.3722910000001,
+          "digest" : "7fcabf8ca29ec25214c3f7a1ed13150dbcab2cbeefdadda05e8445e9ded30083",
+          "request_generation" : 20
+        },
+        {
+          "after_bind_start_ms" : 2148.4764999999998,
+          "digest" : "7fcabf8ca29ec25214c3f7a1ed13150dbcab2cbeefdadda05e8445e9ded30083",
+          "request_generation" : 21
+        }
+      ],
+      "one_second_after_last_matching_observation_callbacks" : 1,
+      "one_second_after_last_matching_observation_new_sleeps" : 0,
+      "one_second_untouched_baseline_debounce_sleeps" : 0,
+      "one_second_untouched_baseline_observations" : 0,
+      "read_revision" : {
+        "max_ms" : 5.2015830000000003,
+        "median_ms" : 5.0457715000000007,
+        "p95_ms" : 5.1830420000000004,
+        "samples_ms" : [
+          4.9244579999999996,
+          5.0534999999999997,
+          5.1233750000000002,
+          5.0935839999999999,
+          5.0865410000000004,
+          5.1060420000000004,
+          5.1204590000000003,
+          5.1501669999999997,
+          5.0453340000000004,
+          5.06975,
+          5.2015830000000003,
+          5.1168329999999997,
+          5.1602499999999996,
+          5.0881249999999998,
+          5.1830420000000004,
+          4.8309170000000003,
+          4.795458,
+          4.8984170000000002,
+          4.7586250000000003,
+          4.7700829999999996,
+          4.7696249999999996,
+          5.0462090000000002,
+          4.7661670000000003,
+          4.791417,
+          4.7599159999999996,
+          4.9426249999999996,
+          4.8314589999999997,
+          4.7774999999999999,
+          5.1073750000000002,
+          5.0032500000000004
+        ]
+      },
+      "read_snapshot" : {
+        "max_ms" : 36.567917000000001,
+        "median_ms" : 35.462936999999997,
+        "p95_ms" : 36.197915999999999,
+        "samples_ms" : [
+          36.567917000000001,
+          35.877415999999997,
+          36.197915999999999,
+          35.772041000000002,
+          35.877665999999998,
+          35.840083,
+          36.169167000000002,
+          35.927833,
+          35.883209000000001,
+          36.025624999999998,
+          36.110250000000001,
+          35.950208000000003,
+          35.895457999999998,
+          35.868167,
+          35.959000000000003,
+          34.891624999999998,
+          34.753791999999997,
+          34.725082999999998,
+          34.683124999999997,
+          34.729708000000002,
+          35.057333,
+          34.797874999999998,
+          34.775208999999997,
+          34.600875000000002,
+          34.663333000000002,
+          35.153832999999999,
+          34.948458000000002,
+          34.943249999999999,
+          35.052708000000003,
+          35.089084
+        ]
+      },
+      "watcher_atomic_replacement_samples" : [
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 5.6960420000000003,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.025957999999999998,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 152.72816700000001,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 6.0227079999999997,
+          "write_start_to_matching_observation_ms" : 200.158916
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 4.3205830000000001,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.010292000000000001,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 152.06883300000001,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 4.4519169999999999,
+          "write_start_to_matching_observation_ms" : 192.96383399999999
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 3.4605410000000001,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.0075420000000000001,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 150.40529100000001,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 3.579583,
+          "write_start_to_matching_observation_ms" : 190.26795799999999
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 4.6495420000000003,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.0085000000000000006,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 153.15270899999999,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 4.7654579999999997,
+          "write_start_to_matching_observation_ms" : 194.384792
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 3.962167,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.006084,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 152.758667,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 4.1097080000000004,
+          "write_start_to_matching_observation_ms" : 193.681333
+        }
+      ]
+    }
+  ],
+  "scope" : "FileCore component only; no app\/controller reconciliation, native UI or OS wakeup-profile claim",
+  "timed_read_loops_on_main_thread" : false
+}

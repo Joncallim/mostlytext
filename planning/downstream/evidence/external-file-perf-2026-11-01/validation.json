@@ -1,0 +1,38 @@
+{
+  "scope": "FileCore component performance and event delivery only; no application, controller, native UI or OS idle-wakeup profiling",
+  "source_head": "6a7329c940437b5bd5491b3454fd0e4b9df26ea4",
+  "component_source_matches_manifest": true,
+  "environment": {
+    "cpu": "Apple M3 Pro",
+    "memory_bytes": 19327352832,
+    "macOS": "26.5.1 (25F80)",
+    "Xcode": "26.6 (17F113)",
+    "swift": "Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)\nTarget: arm64-apple-macosx26.0"
+  },
+  "configuration": "Release",
+  "repetitions": 3,
+  "per_repetition": {
+    "digest_samples_per_size": 30,
+    "snapshot_samples_per_size": 30,
+    "atomic_replacements_per_size": 5,
+    "sizes_bytes": [
+      1000000,
+      10000000
+    ]
+  },
+  "driver_sha256": "c43f5fe0b26ca8d712018582ca87520ba0a91c62975803bf1ffa40c30cc16330",
+  "files": {
+    "source-manifest.json": "d273e2f1937321018bae487d16eb69f9d2aa426738725da3d0d81ab65df204ce",
+    "initial-result.json": "09ecdf713da8d45a9a178af22825299a62305c8efb3c7f49359a882ce4e77395",
+    "result-run1.json": "e1a1834aacd2a818212734b5b540d7a14fc2f294f60946e1c5c1025f85c0a431",
+    "result-run3.json": "e485d72567665b422b962ca01ac1bf0a8427b57a2d579e6e72868aabcfa5f1b3",
+    "result-run2.json": "81af115416a7c48abdc431c7a1da1a9d3d2c62740dc70ec6d02f4a451629445e"
+  },
+  "initial_evidence": {
+    "build_first": "Non-Sendable Any dictionary could not cross the detached task boundary; corrected by serializing to Data inside the worker. No product source changed.",
+    "initial_run": "Retained result-final.json used an upper-median summary and an immediate post-write observation window labelled idle. Subsequent driver computes the conventional median, measures untouched baseline separately, and retains full request-generation traces. No initial measurement was discarded or used as the minimum of retries."
+  },
+  "native_acceptance": "NOT_RUN",
+  "verified_against_integration": "74fd1cfb4a83149feb978473485ebc3e77816556",
+  "initial_build_log_sha256": "e4bf7fb108af97ce2cca4368e1fc3c808f31636b1ec002ddf47ba45f4a505c68"
+}
