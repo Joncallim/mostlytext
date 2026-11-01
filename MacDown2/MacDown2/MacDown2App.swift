@@ -28,7 +28,6 @@ struct MacDown2App: App {
         Window("Open Source Licenses", id: "licenses") {
             LicenseNoticesView()
         }
-        .commands { LicenseFindCommands() }
         .defaultSize(width: 760, height: 600)
         .restorationBehavior(.disabled)
 

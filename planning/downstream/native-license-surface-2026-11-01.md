@@ -20,7 +20,9 @@ version/build are informational; no runtime identifier or state migration change
 
 A segmented control selects the first-party license or third-party notices.
 An AppKit read-only, selectable NSTextView provides wrapping, native Find, Copy
-and accessibility text. No web view, Markdown/HTML execution or automatic links
+and accessibility text. The existing single Cmd-F command routes through the
+focused license action while that scene is active; no competing shortcut is
+registered. No web view, Markdown/HTML execution or automatic links
 are used. The surface has no document, workspace, recovery or settings model.
 Window restoration is disabled for both informational windows.
 

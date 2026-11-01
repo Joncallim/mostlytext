@@ -14,15 +14,3 @@ extension FocusedValues {
         set { self[LicenseFindActionKey.self] = newValue }
     }
 }
-
-struct LicenseFindCommands: Commands {
-    @FocusedValue(\.licenseFindAction) private var action
-
-    var body: some Commands {
-        CommandGroup(after: .textEditing) {
-            Button("Find in Licenses…") { action?.perform() }
-                .keyboardShortcut("f", modifiers: .command)
-                .disabled(action == nil)
-        }
-    }
-}

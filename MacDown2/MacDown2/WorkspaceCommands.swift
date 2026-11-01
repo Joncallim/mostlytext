@@ -13,6 +13,7 @@ struct WorkspaceCommands: Commands {
     @Environment(\.windowCoordinator) var coordinator
     @Environment(\.appSettings) private var appSettings
     @FocusedValue(\.previewLayout) private var previewLayout
+    @FocusedValue(\.licenseFindAction) private var licenseFindAction
     private let themeController: ThemeController
 
     init(themeController: ThemeController) {
@@ -284,11 +285,21 @@ struct WorkspaceCommands: Commands {
             // ⌘F previously did nothing in the editor); this replaces the
             // original Slice 5a ⌃F binding (a second, hidden ⌃F item does not
             // register its shortcut in a SwiftUI command).
-            Button("Find in Document…") {
-                coordinator?.toggleFind()
-            }
+            Button(action: {
+                if let licenseFindAction {
+                    licenseFindAction.perform()
+                } else {
+                    coordinator?.toggleFind()
+                }
+            }, label: {
+                if licenseFindAction != nil {
+                    Text("Find in Licenses…")
+                } else {
+                    Text("Find in Document…")
+                }
+            })
             .keyboardShortcut("f", modifiers: [.command])
-            .disabled(coordinator?.keyModel?.hasActiveDocument != true)
+            .disabled(licenseFindAction == nil && coordinator?.keyModel?.hasActiveDocument != true)
         }
 
         textFormattingCommands
