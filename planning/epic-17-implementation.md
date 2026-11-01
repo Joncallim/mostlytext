@@ -212,7 +212,7 @@ CLI/app claim follows from same-user socket-pair controls.
 
 CommandSocketConnection takes exclusive ownership of an already connected Unix
 stream descriptor, verifies its kernel peer, sets nonblocking/close-on-exec and
-per-socket SIGPIPE protection, then supplies framed reads/writes. It has one
+per-send SIGPIPE protection, then supplies framed reads/writes. It has one
 serialized off-main owner and is not Sendable. It creates/connects/listens on no
 endpoint. Read one frame at a time through the shared decoder and retain at most
 one 4 KiB unread chunk; writes retain one bounded encoded frame. Partial I/O,
@@ -292,3 +292,15 @@ compilation errors (Duration negation and a nested throwing #require expression)
 and the test-file type-length correction remain in the retained logs under
 `CORTANA-Builds/command-transport-20261101`. Full hosted execution is required
 before integration; no public CLI/application or cross-user GUI journey ran.
+
+A combined optimized test run subsequently exposed a fast-peer-disconnect race:
+Darwin can reject setting SO_NOSIGPIPE with EINVAL after the peer has already
+closed. Writes now use MSG_NOSIGNAL on every send, as supported by the macOS SDK,
+so initialization can retain buffered final bytes without relying on a late
+socket-option mutation. A closed-before-adoption regression reads those bytes
+and verifies that the subsequent write throws without SIGPIPE. All 88 transport
+tests pass in Debug and Release; the failing combined run and instrumented
+reproduction are retained rather than retried away.
+An optimized diagnostic harness also completes 2,000 repeated timeout/cancel/
+reconnect exchanges with the corrected source. This is a stress control for the
+observed disconnect race, not a replacement for full hosted or native acceptance.

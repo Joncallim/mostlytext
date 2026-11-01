@@ -26,11 +26,6 @@ public final class CommandSocketConnection {
                   fcntl(descriptor, F_SETFD, flags | FD_CLOEXEC) == 0 else {
                 throw CommandSocketError.unavailable(errno)
             }
-            var enabled: Int32 = 1
-            guard setsockopt(descriptor, SOL_SOCKET, SO_NOSIGPIPE, &enabled,
-                             socklen_t(MemoryLayout.size(ofValue: enabled))) == 0 else {
-                throw CommandSocketError.unavailable(errno)
-            }
         } catch {
             close()
             throw error
@@ -91,7 +86,9 @@ public final class CommandSocketConnection {
                 var offset = 0
                 while offset < bytes.count {
                     try ready(for: Int16(POLLOUT), deadline: deadline, isCancelled: isCancelled)
-                    let count = send(descriptor, base.advanced(by: offset), bytes.count - offset, 0)
+                    // Per-send protection also works if the peer closed before
+                    // adoption; SO_NOSIGPIPE can fail with EINVAL in that race.
+                    let count = send(descriptor, base.advanced(by: offset), bytes.count - offset, MSG_NOSIGNAL)
                     if count > 0 {
                         offset += count
                     } else if count == 0 {
