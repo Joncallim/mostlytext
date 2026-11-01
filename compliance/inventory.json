@@ -3,7 +3,7 @@
   "product": {
     "name": "MostlyText",
     "version": "1.0.0",
-    "note": "Release identity decided 2026-09-28 (planning/RELEASE_PATH.md §4). The current development build is still MacDown 2 0.1.0 until #158/E17."
+    "note": "Release identity decided 2026-09-28 (planning/RELEASE_PATH.md \u00a74). The current development build is still MacDown 2 0.1.0 until #158/E17."
   },
   "first_party": {
     "licence": "MIT",
@@ -301,7 +301,7 @@
       "resolution": "exact",
       "licence": "MIT",
       "copyright": [
-        "Copyright (c) 2017-2020 Ingy döt Net",
+        "Copyright (c) 2017-2020 Ingy d\u00f6t Net",
         "Copyright (c) 2006-2016 Kirill Simonov"
       ],
       "licence_texts": [
@@ -625,8 +625,13 @@
         }
       ],
       "provenance": "verified",
-      "lc": ["LC-01", "LC-07"],
-      "manifest_requirement": {"exact": "2.13.9"},
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "manifest_requirement": {
+        "exact": "2.13.9"
+      },
       "evidence": "Pinned SwiftSoup 2.13.9 at immutable revision 18b80329749eca5ea29fc50211dca5c7eff5bfec for bounded emitted-HTML anchor analysis (#117). The copied MIT licence matches the clean locked package checkout byte for byte. The preliminary parser/WebKit concordance corpus is retained at GitHub/_cleanup-archive/issue117-anchor-parser-probe-2026-10-21; production target validation still requires its own regression and Release evidence."
     },
     {
@@ -998,7 +1003,7 @@
     },
     {
       "id": "theme-tomorrow-dark",
-      "name": "Editor theme “Tomorrow Dark” (colour values)",
+      "name": "Editor theme \u201cTomorrow Dark\u201d (colour values)",
       "kind": "data",
       "version": "n/a",
       "upstream": "https://github.com/chriskempson/tomorrow-theme",
@@ -1051,7 +1056,7 @@
     },
     {
       "id": "theme-tomorrow-light",
-      "name": "Editor theme “Tomorrow Light” (colour values)",
+      "name": "Editor theme \u201cGitHub Light\u201d (legacy tomorrow-light identifier)",
       "kind": "data",
       "version": "n/a",
       "upstream": "https://github.com/primer/github-syntax-light",
@@ -1076,23 +1081,21 @@
       "files": [
         {
           "path": "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/Tomorrow Light.json",
-          "sha256": "87fee559710cc21c85a8fb424a2e62b191f5bc7c80c4abad208f55d5a3165be9"
+          "sha256": "b236c3d9c00c333f85db05322c7081e9f010e807e08b72a6ef5b1baf62f1444a"
         }
       ],
-      "modifications": "Token colours taken from GitHub Light syntax v0.4.1; chrome colours (#2d2d2d text, #6c4f6c caret, #b4d7ff selection) are local choices with no identified upstream.",
+      "modifications": "Token colours taken from GitHub Light syntax v0.4.1; chrome colours (#2d2d2d text, #6c4f6c caret, #b4d7ff selection) are local choices with no identified upstream. Display name corrected to GitHub Light; stable ID and resource filename retained for settings compatibility.",
       "provenance": "verified",
       "lc": [
         "LC-01",
         "LC-06"
       ],
       "evidence": "All seven token colours (#a71d5d, #183691, #969896, #0086b3, #795da3, #ed6a43, #333333) appear in primer/github-syntax-light v0.4.1 lib/github-light.css. None of the canonical Tomorrow (light) palette colours are used.",
-      "open_items": [
-        "Naming, not licensing: the theme is called \"Tomorrow Light\" but is not derived from Tomorrow. E23 (#113), which owns theme integration, decides whether to rename it or re-source it from canonical Tomorrow. Either way this record must follow the shipped values."
-      ],
+      "open_items": [],
       "runtime_resources": [
         {
           "name": "Tomorrow Light.json",
-          "sha256": "87fee559710cc21c85a8fb424a2e62b191f5bc7c80c4abad208f55d5a3165be9",
+          "sha256": "b236c3d9c00c333f85db05322c7081e9f010e807e08b72a6ef5b1baf62f1444a",
           "path": "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/Tomorrow Light.json"
         }
       ]
@@ -2153,6 +2156,252 @@
       "manifest_requirement": {
         "exact": "6.2.2"
       }
+    },
+    {
+      "id": "theme-paper",
+      "name": "Editor theme \u201cPaper\u201d",
+      "kind": "data",
+      "version": "1.0.0",
+      "upstream": "https://github.com/Joncallim/macdown_2",
+      "resolution": "exact",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright (c) 2026 Joncallim"
+      ],
+      "licence_texts": [
+        {
+          "path": "LICENSE",
+          "sha256": "d6469c902a56daa3dd8f075486621f2e061d511d398d4a87f7e6dc84cb9f0d78"
+        }
+      ],
+      "owns": [
+        "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/Paper.json"
+      ],
+      "files": [
+        {
+          "path": "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/Paper.json",
+          "sha256": "3a4bb39dc88a771ffd1a2d684cd94a32261409e78f845f1a529e2acd864094e2"
+        }
+      ],
+      "modifications": null,
+      "provenance": "verified",
+      "lc": [
+        "LC-01",
+        "LC-06"
+      ],
+      "evidence": "Original first-party semantic/token palette authored for MostlyText E23 on 1 November 2026. No external artwork, font, stylesheet or theme data was copied. See planning/epic-23-implementation.md.",
+      "runtime_resources": [
+        {
+          "name": "Paper.json",
+          "path": "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/Paper.json",
+          "sha256": "3a4bb39dc88a771ffd1a2d684cd94a32261409e78f845f1a529e2acd864094e2"
+        }
+      ]
+    },
+    {
+      "id": "theme-daybreak",
+      "name": "Editor theme \u201cDaybreak\u201d",
+      "kind": "data",
+      "version": "1.0.0",
+      "upstream": "https://github.com/Joncallim/macdown_2",
+      "resolution": "exact",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright (c) 2026 Joncallim"
+      ],
+      "licence_texts": [
+        {
+          "path": "LICENSE",
+          "sha256": "d6469c902a56daa3dd8f075486621f2e061d511d398d4a87f7e6dc84cb9f0d78"
+        }
+      ],
+      "owns": [
+        "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/Daybreak.json"
+      ],
+      "files": [
+        {
+          "path": "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/Daybreak.json",
+          "sha256": "23cfe5c0c47aa1d738035913bae1bc8b5d9ce9f4ab50b9bec10ad22fb3fbb6be"
+        }
+      ],
+      "modifications": null,
+      "provenance": "verified",
+      "lc": [
+        "LC-01",
+        "LC-06"
+      ],
+      "evidence": "Original first-party semantic/token palette authored for MostlyText E23 on 1 November 2026. No external artwork, font, stylesheet or theme data was copied. See planning/epic-23-implementation.md.",
+      "runtime_resources": [
+        {
+          "name": "Daybreak.json",
+          "path": "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/Daybreak.json",
+          "sha256": "23cfe5c0c47aa1d738035913bae1bc8b5d9ce9f4ab50b9bec10ad22fb3fbb6be"
+        }
+      ]
+    },
+    {
+      "id": "theme-high-contrast-light",
+      "name": "Editor theme \u201cHigh Contrast Light\u201d",
+      "kind": "data",
+      "version": "1.0.0",
+      "upstream": "https://github.com/Joncallim/macdown_2",
+      "resolution": "exact",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright (c) 2026 Joncallim"
+      ],
+      "licence_texts": [
+        {
+          "path": "LICENSE",
+          "sha256": "d6469c902a56daa3dd8f075486621f2e061d511d398d4a87f7e6dc84cb9f0d78"
+        }
+      ],
+      "owns": [
+        "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/High Contrast Light.json"
+      ],
+      "files": [
+        {
+          "path": "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/High Contrast Light.json",
+          "sha256": "c1b1402d8da49d8628e0b248dbb51ec860c84c7e5771049b5073dd1d3d110740"
+        }
+      ],
+      "modifications": null,
+      "provenance": "verified",
+      "lc": [
+        "LC-01",
+        "LC-06"
+      ],
+      "evidence": "Original first-party semantic/token palette authored for MostlyText E23 on 1 November 2026. No external artwork, font, stylesheet or theme data was copied. See planning/epic-23-implementation.md.",
+      "runtime_resources": [
+        {
+          "name": "High Contrast Light.json",
+          "path": "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/High Contrast Light.json",
+          "sha256": "c1b1402d8da49d8628e0b248dbb51ec860c84c7e5771049b5073dd1d3d110740"
+        }
+      ]
+    },
+    {
+      "id": "theme-slate",
+      "name": "Editor theme \u201cSlate\u201d",
+      "kind": "data",
+      "version": "1.0.0",
+      "upstream": "https://github.com/Joncallim/macdown_2",
+      "resolution": "exact",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright (c) 2026 Joncallim"
+      ],
+      "licence_texts": [
+        {
+          "path": "LICENSE",
+          "sha256": "d6469c902a56daa3dd8f075486621f2e061d511d398d4a87f7e6dc84cb9f0d78"
+        }
+      ],
+      "owns": [
+        "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/Slate.json"
+      ],
+      "files": [
+        {
+          "path": "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/Slate.json",
+          "sha256": "087f940e421eca8fbc1a62316a6f6bc13fee953fa254af1441d2a3e451d21a6f"
+        }
+      ],
+      "modifications": null,
+      "provenance": "verified",
+      "lc": [
+        "LC-01",
+        "LC-06"
+      ],
+      "evidence": "Original first-party semantic/token palette authored for MostlyText E23 on 1 November 2026. No external artwork, font, stylesheet or theme data was copied. See planning/epic-23-implementation.md.",
+      "runtime_resources": [
+        {
+          "name": "Slate.json",
+          "path": "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/Slate.json",
+          "sha256": "087f940e421eca8fbc1a62316a6f6bc13fee953fa254af1441d2a3e451d21a6f"
+        }
+      ]
+    },
+    {
+      "id": "theme-midnight",
+      "name": "Editor theme \u201cMidnight\u201d",
+      "kind": "data",
+      "version": "1.0.0",
+      "upstream": "https://github.com/Joncallim/macdown_2",
+      "resolution": "exact",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright (c) 2026 Joncallim"
+      ],
+      "licence_texts": [
+        {
+          "path": "LICENSE",
+          "sha256": "d6469c902a56daa3dd8f075486621f2e061d511d398d4a87f7e6dc84cb9f0d78"
+        }
+      ],
+      "owns": [
+        "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/Midnight.json"
+      ],
+      "files": [
+        {
+          "path": "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/Midnight.json",
+          "sha256": "a1de262c4701abf4b560264f0da879637e5188de8e8dfdce416070674d97fd9c"
+        }
+      ],
+      "modifications": null,
+      "provenance": "verified",
+      "lc": [
+        "LC-01",
+        "LC-06"
+      ],
+      "evidence": "Original first-party semantic/token palette authored for MostlyText E23 on 1 November 2026. No external artwork, font, stylesheet or theme data was copied. See planning/epic-23-implementation.md.",
+      "runtime_resources": [
+        {
+          "name": "Midnight.json",
+          "path": "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/Midnight.json",
+          "sha256": "a1de262c4701abf4b560264f0da879637e5188de8e8dfdce416070674d97fd9c"
+        }
+      ]
+    },
+    {
+      "id": "theme-high-contrast-dark",
+      "name": "Editor theme \u201cHigh Contrast Dark\u201d",
+      "kind": "data",
+      "version": "1.0.0",
+      "upstream": "https://github.com/Joncallim/macdown_2",
+      "resolution": "exact",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright (c) 2026 Joncallim"
+      ],
+      "licence_texts": [
+        {
+          "path": "LICENSE",
+          "sha256": "d6469c902a56daa3dd8f075486621f2e061d511d398d4a87f7e6dc84cb9f0d78"
+        }
+      ],
+      "owns": [
+        "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/High Contrast Dark.json"
+      ],
+      "files": [
+        {
+          "path": "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/High Contrast Dark.json",
+          "sha256": "a8ee435826eaedabdbcdd441defca0286f337b02526e3011652ad0ab294dbd95"
+        }
+      ],
+      "modifications": null,
+      "provenance": "verified",
+      "lc": [
+        "LC-01",
+        "LC-06"
+      ],
+      "evidence": "Original first-party semantic/token palette authored for MostlyText E23 on 1 November 2026. No external artwork, font, stylesheet or theme data was copied. See planning/epic-23-implementation.md.",
+      "runtime_resources": [
+        {
+          "name": "High Contrast Dark.json",
+          "path": "MacDown2/Packages/MacDownKit/Sources/Themes/Themes/High Contrast Dark.json",
+          "sha256": "a8ee435826eaedabdbcdd441defca0286f337b02526e3011652ad0ab294dbd95"
+        }
+      ]
     }
   ]
 }

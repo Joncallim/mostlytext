@@ -237,6 +237,18 @@ struct PreviewThemeTests {
         #expect(preview.foreground == theme.chrome.foreground)
     }
 
+    @Test func customLinkAndCodeRolesComeFromTheSharedPalette() {
+        var theme = BundledThemes.light
+        let link = ThemeColor(red: 0.1, green: 0.2, blue: 0.3)
+        theme.tokenStyles["markup.link"] = TokenStyle(color: link)
+        let palette = ResolvedPresentationPalette(theme: theme)
+        let preview = PreviewTheme(theme: theme)
+        #expect(preview.linkColor == link)
+        #expect(preview.codeBackground == palette.codeBackground)
+        #expect(preview.codeForeground == palette.codeForeground)
+        #expect(preview.separatorColor == palette.rule)
+    }
+
     @Test func defaultThemeIsDifferentForLightAndDark() {
         let light = PreviewTheme.default(for: .light)
         let dark = PreviewTheme.default(for: .dark)
