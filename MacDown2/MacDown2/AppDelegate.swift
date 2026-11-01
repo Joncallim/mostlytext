@@ -27,6 +27,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private static let hasCompletedFirstRunKey = "com.joncallim.macdown2.hasCompletedFirstRun"
 
     override init() {
+        Self.validateUITestLaunch()
         let args = Self.launchArguments
         let isUITesting = args.contains("-UITesting")
 
@@ -42,14 +43,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let defaults: UserDefaults
         if isUITesting {
             let sessionDir = Self.sessionDirectory(from: args)
-            try? FileManager.default.createDirectory(at: sessionDir, withIntermediateDirectories: true)
+            defaults = Self.prepareUITestState(sessionDirectory: sessionDir)
             sessionStore = WorkspaceSessionStore(fileURL: sessionDir.appendingPathComponent("session.json"))
             recoveryBuffer = RecoveryBuffer(
                 recoveryDirectory: sessionDir.appendingPathComponent("recovery", isDirectory: true)
             )
-            let suite = "com.joncallim.macdown2.uitest.\(UUID().uuidString)"
-            defaults = UserDefaults(suiteName: suite) ?? .standard
-            defaults.removePersistentDomain(forName: suite)
             workspaceStateStore = WorkspaceStateStore(defaults: defaults)
         } else {
             sessionStore = WorkspaceSessionStore()
@@ -246,8 +244,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     /// The arguments the test hooks (`-UITesting`, `-sessionDir`, `-openFiles`, `-openFolder`) are read from.
     /// Debug builds only, except the separately flagged and explicitly launched
-    /// #117 native acceptance build. An ordinary Release build ignores them,
-    /// so they cannot redirect session/recovery directories or force-open paths.
+    /// #117 native acceptance build. An ordinary Release build rejects a
+    /// UI-test request before selecting stores instead of ignoring its isolation.
     static var launchArguments: [String] {
         #if ISSUE117_NATIVE_ACCEPTANCE
             let args = ProcessInfo.processInfo.arguments

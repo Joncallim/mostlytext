@@ -1,3 +1,4 @@
+import Darwin
 import XCTest
 
 /// E10 smoke coverage through the real app: Return-key list continuation in
@@ -7,24 +8,60 @@ final class EditingAssistsUITests: XCTestCase {
     private var app: XCUIApplication!
     private var sessionDir: URL!
     private var fixturesDir: URL!
+    private var isolatedRunDir: URL?
+    private var didAttemptLaunch = false
+    private var didLaunchApp = false
 
     override func setUp() async throws {
         continueAfterFailure = false
-        app = XCUIApplication()
+        #if UITEST_ISOLATED
+            let owner = try XCTUnwrap(ProcessInfo.processInfo.environment["MOSTLYTEXT_UI_TEST_OWNER_UID"])
+            guard let ownerUID = uid_t(owner), ownerUID > 0,
+                  getuid() == geteuid(), geteuid() != 0, geteuid() != ownerUID else {
+                throw NSError(domain: "UITestIsolation", code: 4)
+            }
+            let bundleID = try XCTUnwrap(ProcessInfo.processInfo.environment["MOSTLYTEXT_UI_TEST_BUNDLE_ID"])
+            let prefix = "com.joncallim.MacDown2.UITestIsolated."
+            guard bundleID.hasPrefix(prefix), UUID(uuidString: String(bundleID.dropFirst(prefix.count))) != nil else {
+                throw NSError(domain: "UITestIsolation", code: 1)
+            }
+            app = XCUIApplication(bundleIdentifier: bundleID)
+            let length = confstr(_CS_DARWIN_USER_TEMP_DIR, nil, 0)
+            guard length > 1 else { throw NSError(domain: "UITestIsolation", code: 2) }
+            var buffer = [CChar](repeating: 0, count: length)
+            guard confstr(_CS_DARWIN_USER_TEMP_DIR, &buffer, length) == length else {
+                throw NSError(domain: "UITestIsolation", code: 3)
+            }
+            let root = URL(fileURLWithPath: String(cString: buffer), isDirectory: true).resolvingSymlinksInPath()
+            let runID = String(bundleID.dropFirst(prefix.count))
+            let runDir = root.appendingPathComponent("MostlyTextUITest-" + runID, isDirectory: true)
+            guard mkdir(runDir.path, 0o700) == 0 else { throw NSError(domain: NSPOSIXErrorDomain, code: Int(errno)) }
+            isolatedRunDir = runDir
+        #else
+            app = XCUIApplication()
+        #endif
 
-        fixturesDir = FileManager.default.temporaryDirectory
-            .appendingPathComponent(UUID().uuidString, isDirectory: true)
-        try? FileManager.default.createDirectory(at: fixturesDir, withIntermediateDirectories: true)
+        #if UITEST_ISOLATED
+            fixturesDir = try XCTUnwrap(isolatedRunDir).appendingPathComponent("fixtures", isDirectory: true)
+        #else
+            fixturesDir = FileManager.default.temporaryDirectory
+                .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        #endif
+        try FileManager.default.createDirectory(at: fixturesDir, withIntermediateDirectories: true)
         let markdownFile = fixturesDir.appendingPathComponent("a.md")
         // No trailing newline: the initial caret lands at the end of the
         // single list line, exactly where Return must continue the list.
-        try? "- item".write(to: markdownFile, atomically: true, encoding: .utf8)
+        try "- item".write(to: markdownFile, atomically: true, encoding: .utf8)
         let plainFile = fixturesDir.appendingPathComponent("a.txt")
-        try? "".write(to: plainFile, atomically: true, encoding: .utf8)
+        try "".write(to: plainFile, atomically: true, encoding: .utf8)
 
-        sessionDir = FileManager.default.temporaryDirectory
-            .appendingPathComponent(UUID().uuidString, isDirectory: true)
-        try? FileManager.default.createDirectory(at: sessionDir, withIntermediateDirectories: true)
+        #if UITEST_ISOLATED
+            sessionDir = try XCTUnwrap(isolatedRunDir).appendingPathComponent("session", isDirectory: true)
+        #else
+            sessionDir = FileManager.default.temporaryDirectory
+                .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        #endif
+        try FileManager.default.createDirectory(at: sessionDir, withIntermediateDirectories: true)
 
         app.launchArguments = [
             "-UITesting",
@@ -34,17 +71,41 @@ final class EditingAssistsUITests: XCTestCase {
     }
 
     override func tearDown() async throws {
-        app.terminate()
-        try? FileManager.default.removeItem(at: sessionDir)
-        try? FileManager.default.removeItem(at: fixturesDir)
+        // A failed launch can still leave a process alive. Preserve its files
+        // when ownership or termination cannot be established.
+        if didAttemptLaunch, !didLaunchApp {
+            return
+        }
+        if didLaunchApp {
+            app.terminate()
+            guard app.wait(for: .notRunning, timeout: 5) else { return }
+        }
+        if let sessionDir {
+            try? FileManager.default.removeItem(at: sessionDir)
+        }
+        if let fixturesDir {
+            try? FileManager.default.removeItem(at: fixturesDir)
+        }
+        if let isolatedRunDir {
+            try? FileManager.default.removeItem(at: isolatedRunDir)
+        }
     }
 
-    /// Selects the given native tab through the app's own Window menu (the
-    /// established pattern for deterministic tab activation; with several
-    /// files opened at launch the initially selected tab is not guaranteed).
-    private func selectTab(_ index: Int) {
-        app.menuBars.menuBarItems["Window"].click()
-        app.menuBars.menuBarItems["Window"].menuItems["Select Tab \(index)"].firstMatch.click()
+    private func launchTestApp() {
+        didAttemptLaunch = true
+        app.launch()
+        didLaunchApp = true
+    }
+
+    /// Select by fixture identity: native tab order and initial selection can
+    /// vary when multiple documents are opened at launch. Confirm the active
+    /// tab before sending keystrokes so a misdirected edit cannot pass.
+    private func selectTab(named name: String) {
+        let tab = app.tabs.matching(NSPredicate(format: "title == %@", name)).firstMatch
+        XCTAssertTrue(tab.waitForExistence(timeout: 5), "Missing tab \(name)")
+        tab.click()
+        let selected = app.tabs.matching(NSPredicate(format: "title == %@ AND value == %d", name, 1)).firstMatch
+        XCTAssertTrue(selected.waitForExistence(timeout: 5), "Tab did not become active: \(name)")
     }
 
     /// Waits (2 s, the bound the Focus Outline step always used) for a menu
@@ -52,23 +113,24 @@ final class EditingAssistsUITests: XCTestCase {
     /// `.disabled` state to its `NSMenuItem` on its next update pass, not
     /// synchronously with the focus change: logging showed
     /// `canPerformMarkdownEditingCommand` already `true` while XCUITest still
-    /// read the item as disabled, then enabled on the next sample.
+    /// read the item as disabled, then enabled on the next sample. A missing
+    /// command is not evidence that it is disabled.
     private func waitFor(_ item: XCUIElement, enabled: Bool) -> Bool {
         let expectation = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "enabled == %@", NSNumber(value: enabled)),
+            predicate: NSPredicate(format: "exists == YES AND enabled == %@", NSNumber(value: enabled)),
             object: item
         )
         return XCTWaiter().wait(for: [expectation], timeout: 2) == .completed
     }
 
     func testListContinuationOnReturn() {
-        app.launch()
+        launchTestApp()
         app.activate()
 
         XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 5))
         let markdownTab = app.tabs.matching(NSPredicate(format: "title CONTAINS[c] %@", "a.md")).firstMatch
         XCTAssertTrue(markdownTab.waitForExistence(timeout: 5))
-        selectTab(1)
+        selectTab(named: "a.md")
 
         let textView = app.textViews.firstMatch
         XCTAssertTrue(textView.waitForExistence(timeout: 5))
@@ -95,13 +157,13 @@ final class EditingAssistsUITests: XCTestCase {
     /// text too. What must still never fire outside Markdown is E10's own
     /// Markdown delimiter pairing (`*`, `_`, backtick).
     func testNoMarkdownDelimiterPairingInPlainText() {
-        app.launch()
+        launchTestApp()
         app.activate()
 
         XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 5))
         let plainTab = app.tabs.matching(NSPredicate(format: "title CONTAINS[c] %@", "a.txt")).firstMatch
         XCTAssertTrue(plainTab.waitForExistence(timeout: 5))
-        selectTab(2)
+        selectTab(named: "a.txt")
 
         let textView = app.textViews.firstMatch
         XCTAssertTrue(textView.waitForExistence(timeout: 5))
@@ -120,13 +182,13 @@ final class EditingAssistsUITests: XCTestCase {
     /// is focused: the menu item enables (first-responder identity) and the
     /// click applies through the same one-edit command bridge as ⌘B.
     func testBoldMenuCommandAppliesToFocusedEditor() {
-        app.launch()
+        launchTestApp()
         app.activate()
 
         XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 5))
         let markdownTab = app.tabs.matching(NSPredicate(format: "title CONTAINS[c] %@", "a.md")).firstMatch
         XCTAssertTrue(markdownTab.waitForExistence(timeout: 5))
-        selectTab(1)
+        selectTab(named: "a.md")
 
         let textView = app.textViews.firstMatch
         XCTAssertTrue(textView.waitForExistence(timeout: 5))
@@ -149,13 +211,13 @@ final class EditingAssistsUITests: XCTestCase {
     /// editor re-enables it. The action is also guarded independently so a
     /// stale menu update cannot edit the wrong responder.
     func testFormattingMenuTracksEditorSidebarFindAndEditorFocus() {
-        app.launch()
+        launchTestApp()
         app.activate()
 
         XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 5))
         let markdownTab = app.tabs.matching(NSPredicate(format: "title CONTAINS[c] %@", "a.md")).firstMatch
         XCTAssertTrue(markdownTab.waitForExistence(timeout: 5))
-        selectTab(1)
+        selectTab(named: "a.md")
 
         let textView = app.textViews.firstMatch
         XCTAssertTrue(textView.waitForExistence(timeout: 5))
@@ -199,10 +261,10 @@ final class EditingAssistsUITests: XCTestCase {
     /// The standard ⌘F opens the docked Find in Document bar and focuses its query field (owner decision: it used to
     /// do nothing in the editor).
     func testCommandFOpensTheFindBar() {
-        app.launch()
+        launchTestApp()
         app.activate()
         XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 5))
-        selectTab(1)
+        selectTab(named: "a.md")
         let textView = app.textViews.firstMatch
         XCTAssertTrue(textView.waitForExistence(timeout: 5))
         textView.click()
@@ -226,13 +288,13 @@ final class EditingAssistsUITests: XCTestCase {
     }
 
     func testFormattingMenuRefreshesAfterKeyboardTabAndFocusOutline() {
-        app.launch()
+        launchTestApp()
         app.activate()
 
         XCTAssertTrue(app.windows.firstMatch.waitForExistence(timeout: 5))
         let markdownTab = app.tabs.matching(NSPredicate(format: "title CONTAINS[c] %@", "a.md")).firstMatch
         XCTAssertTrue(markdownTab.waitForExistence(timeout: 5))
-        selectTab(1)
+        selectTab(named: "a.md")
 
         let textView = app.textViews.firstMatch
         XCTAssertTrue(textView.waitForExistence(timeout: 5))

@@ -38,3 +38,6 @@ MacDown2/MacDown2/Info.plist
 # synchronise into the repo and serve as the porting source for EPIC-05 (themes +
 # highlighting). See planning/epic-05-implementation.md §3.D4 and §4.11.
 # If the backup is large, prefer committing only the theme/color subset it needs.
+
+# Generated Python bytecode for repository tooling.
+__pycache__/
