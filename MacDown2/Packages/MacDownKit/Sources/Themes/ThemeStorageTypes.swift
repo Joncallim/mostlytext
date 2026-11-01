@@ -1,6 +1,7 @@
 import Foundation
 
 public enum ThemeStorageError: Error, Sendable, Equatable {
+    case alreadyObserving
     case invalidDirectory
     case unsupportedAtomicPublication
     case directoryChanged

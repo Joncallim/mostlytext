@@ -270,3 +270,26 @@ Report the persistence problem through the existing settings warning so an
 ephemeral UI choice is not mistaken for a successful save. This does not create
 a legacy importer or claim UserDefaults is a multi-key transaction; E17's
 journal/before-desired checks remain required for migration.
+
+## One advisory catalog observer
+
+Use one FSEvents stream owned by ThemeCatalogStore, with per-file events and
+root-change reporting; a directory vnode alone misses in-place child writes.
+The event stream only requests a full bounded reload. It never supplies read
+paths or a new grant. Start observation before the initial catalog scan.
+
+Deliver changes through AsyncStream bufferingNewest(1). A private serial queue
+owns stream shutdown; stop, invalidate and release exactly once, then finish
+the stream and acknowledge drainage. Reject a second observer while the first
+is active or stopping. Consumer cancellation and store deinitialization both
+stop it, and a restart is admitted only after the old stream drains. Context
+retain/release callbacks own an immutable continuation receiver, not the
+catalog actor, app model or window. The shipping SDK documents that Stop ends
+callbacks and Invalidate unschedules the queue; do not use a deprecated runloop
+API or free the callback context before those operations.
+
+The app-level consumer will debounce wakes and serialize refreshes, with one
+750 ms recheck for pending invalid files. Real filesystem tests cover creation,
+in-place writes, root replacement, cancellation, repeated start/stop and
+second-observer refusal. These events remain advisory; descriptor/identity and
+byte validation are authoritative, including after dropped/coalesced events.

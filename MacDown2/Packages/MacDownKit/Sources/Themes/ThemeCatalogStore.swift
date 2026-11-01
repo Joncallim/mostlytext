@@ -13,6 +13,7 @@ public actor ThemeCatalogStore {
     var pending: [UUID: PendingFailure] = [:]
     var observations: [UUID: String] = [:]
     var needsRecheck = false
+    var eventObserver: ThemeCatalogEvents?
 
     struct Record: Sendable, Equatable {
         let file: ThemeFile
@@ -36,6 +37,8 @@ public actor ThemeCatalogStore {
         catalog = try ThemeCatalogSnapshot(revision: 0, customThemes: [])
         self.now = now
     }
+
+    deinit { eventObserver?.cancel() }
 
     public func currentState() -> ThemeCatalogState {
         ThemeCatalogState(catalog: catalog, diagnostics: diagnostics, needsRecheck: needsRecheck)
