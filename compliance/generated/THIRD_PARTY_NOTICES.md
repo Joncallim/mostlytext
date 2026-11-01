@@ -2935,7 +2935,7 @@ SOFTWARE.
 - Revision: `f969cd3ae3f9fbd4e43205431d0ae286014c05b5`
 - Licence: MIT
 - Copyright (c) 2021 Matthias Deiml
-- Local modifications: Capture names in the two highlights.scm query files rewritten to this app's theme key space; see the package README.
+- Local modifications: Block scanner is the exact upstream PR 279 safety backport at 38dc6f5297551f070d15a33fda3da89f01863a04 (blob e8d87eec1f8f6dbddd987df43097195e8d790c78); capture names in the two highlights.scm query files are rewritten to this app's theme key space. See the package README.
 
 ### LICENSE
 

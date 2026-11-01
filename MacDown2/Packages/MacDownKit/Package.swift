@@ -6,6 +6,7 @@ let package = Package(
     platforms: [.macOS(.v26)],
     products: [
         .library(name: "FileCore", targets: ["FileCore"]),
+        .library(name: "CommandBridge", targets: ["CommandBridge"]),
         .library(name: "LocalResourceAccess", targets: ["LocalResourceAccess"]),
         .library(name: "AppSettings", targets: ["AppSettings"]),
         .library(name: "Themes", targets: ["Themes"]),
@@ -81,6 +82,7 @@ let package = Package(
     ],
     targets: [
         .target(name: "FileCore"),
+        .target(name: "CommandBridge", dependencies: ["JSONSupport"]),
         .target(name: "LocalResourceAccess"),
         .target(name: "TextSearch", dependencies: ["FileCore"]),
         .target(name: "AppSettings", dependencies: ["JSONSupport"]),
@@ -188,6 +190,7 @@ let package = Package(
         ),
 
         .testTarget(name: "FileCoreTests", dependencies: ["FileCore"]),
+        .testTarget(name: "CommandBridgeTests", dependencies: ["CommandBridge"]),
         .testTarget(name: "LocalResourceAccessTests", dependencies: ["LocalResourceAccess"]),
         .testTarget(name: "TextSearchTests", dependencies: ["TextSearch"]),
         .testTarget(name: "AppSettingsTests", dependencies: ["AppSettings"]),
