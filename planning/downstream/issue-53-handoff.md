@@ -1,5 +1,29 @@
 # Issue #53 — Compatible settings and deliberate legacy import
 
+## 1 November 2026: conditional persistent-domain publication
+
+The [conditional writer architecture](conditional-settings-publication.md)
+adds an explicitly named persistent-domain store alongside the existing generic
+injectable store. Ordinary edits and the optional migration primitive share the
+same synchronous MainActor owner and saved-value admission. Registered/global
+fallback values do not count as persisted presence or preserved backups in this
+bound store. Domain validation rejects the original MacDown/system domains
+before opening a suite; no production caller is switched to it yet.
+
+The publisher compares exact before/desired revisions, requires a matching fresh
+source before a first write, preserves conflicting later values and verifies
+exact persistent-domain readback. Repeating an already-desired write is a no-op;
+failed readback never claims completion or rolls back a third value. All 115
+AppSettings tests pass in Debug and Release, including 13 new synthetic-suite
+controls. The initial combined run exposed a process-wide registration fixture
+leak; fixtures now restore their prior volatile registration domain. Full hosted
+CI and merge evidence belong in the PR record.
+
+This supplies the single-domain write boundary, not the durable E17 journal,
+bootstrap/consent UI, font/theme conversion or real isolated-account rehearsal.
+Readback is not proof of defaults-daemon disk durability or multi-key atomicity.
+#53 remains open for those requirements.
+
 ## 1 November 2026: exhaustive report and consent-bound write preparation
 
 Baseline: integration `1b79485699199509ec15e0baa34906e5ffd4b63e`; master
