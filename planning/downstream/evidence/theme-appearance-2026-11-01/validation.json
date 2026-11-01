@@ -1,0 +1,184 @@
+{
+  "sourceSHA": "0b78b3a26659e85d054fa7966ec64a5baae33db1",
+  "host": "CORTANA",
+  "macOS": "26.5.1",
+  "Xcode": "26.6",
+  "build": {
+    "sourceSHA": "0b78b3a26659e85d054fa7966ec64a5baae33db1",
+    "steps": [
+      {
+        "name": "generate",
+        "command": [
+          "xcodegen",
+          "generate"
+        ],
+        "exit": 0,
+        "elapsed": 0.08
+      },
+      {
+        "name": "pin",
+        "command": [
+          "bash",
+          "MacDown2/scripts/pin-xcode-package-versions.sh"
+        ],
+        "exit": 0,
+        "elapsed": 0.01
+      },
+      {
+        "name": "release-app",
+        "command": [
+          "xcodebuild",
+          "-project",
+          "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-ui/source/MacDown2/MacDown2.xcodeproj",
+          "-destination",
+          "platform=macOS,arch=arm64",
+          "-derivedDataPath",
+          "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-ui/derived",
+          "-clonedSourcePackagesDirPath",
+          "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-ui/SourcePackages",
+          "-onlyUsePackageVersionsFromResolvedFile",
+          "-disableAutomaticPackageResolution",
+          "-skipPackageUpdates",
+          "-jobs",
+          "2",
+          "ONLY_ACTIVE_ARCH=YES",
+          "ARCHS=arm64",
+          "CODE_SIGN_IDENTITY=-",
+          "-scheme",
+          "MacDown2",
+          "-configuration",
+          "Release",
+          "build"
+        ],
+        "exit": 0,
+        "elapsed": 204.72
+      },
+      {
+        "name": "release-cli",
+        "command": [
+          "xcodebuild",
+          "-project",
+          "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-ui/source/MacDown2/MacDown2.xcodeproj",
+          "-destination",
+          "platform=macOS,arch=arm64",
+          "-derivedDataPath",
+          "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-ui/derived",
+          "-clonedSourcePackagesDirPath",
+          "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-ui/SourcePackages",
+          "-onlyUsePackageVersionsFromResolvedFile",
+          "-disableAutomaticPackageResolution",
+          "-skipPackageUpdates",
+          "-jobs",
+          "2",
+          "ONLY_ACTIVE_ARCH=YES",
+          "ARCHS=arm64",
+          "CODE_SIGN_IDENTITY=-",
+          "-scheme",
+          "MacDown2CLI",
+          "-configuration",
+          "Release",
+          "build"
+        ],
+        "exit": 0,
+        "elapsed": 4.58
+      },
+      {
+        "name": "debug-test-compile",
+        "command": [
+          "xcodebuild",
+          "-project",
+          "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-ui/source/MacDown2/MacDown2.xcodeproj",
+          "-destination",
+          "platform=macOS,arch=arm64",
+          "-derivedDataPath",
+          "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-ui/derived",
+          "-clonedSourcePackagesDirPath",
+          "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-ui/SourcePackages",
+          "-onlyUsePackageVersionsFromResolvedFile",
+          "-disableAutomaticPackageResolution",
+          "-skipPackageUpdates",
+          "-jobs",
+          "2",
+          "ONLY_ACTIVE_ARCH=YES",
+          "ARCHS=arm64",
+          "CODE_SIGN_IDENTITY=-",
+          "-scheme",
+          "MacDown2",
+          "-configuration",
+          "Debug",
+          "-parallel-testing-enabled",
+          "NO",
+          "ENABLE_CODE_COVERAGE=NO",
+          "CLANG_ENABLE_CODE_COVERAGE=NO",
+          "CLANG_COVERAGE_MAPPING=NO",
+          "build-for-testing"
+        ],
+        "exit": 0,
+        "elapsed": 171.16
+      },
+      {
+        "name": "pin-check",
+        "command": [
+          "bash",
+          "MacDown2/scripts/pin-xcode-package-versions.sh",
+          "--check"
+        ],
+        "exit": 0,
+        "elapsed": 0.01
+      }
+    ],
+    "applicationTestsRun": 0,
+    "sourceUnchanged": true,
+    "state": "PASS"
+  },
+  "sourceChecks": {
+    "sourceSHA": "0b78b3a26659e85d054fa7966ec64a5baae33db1",
+    "checks": [
+      {
+        "name": "format",
+        "exit": 0,
+        "elapsed": 3.06
+      },
+      {
+        "name": "lint",
+        "exit": 0,
+        "elapsed": 0.31
+      },
+      {
+        "name": "compliance-tests",
+        "exit": 0,
+        "elapsed": 29.3
+      },
+      {
+        "name": "source-compliance",
+        "exit": 0,
+        "elapsed": 3.41
+      },
+      {
+        "name": "release-compliance",
+        "exit": 1,
+        "elapsed": 0.27
+      }
+    ]
+  },
+  "packageTestCommand": [
+    "swift",
+    "test",
+    "--scratch-path",
+    "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-palette",
+    "--force-resolved-versions",
+    "--no-parallel",
+    "--jobs",
+    "2",
+    "--filter",
+    "FileByteDecoderTests|FileEncodingTests|ExplicitEncodingTests|ThemeImportPlanTests|ThemeFileTests|ResolvedPresentationPaletteTests|ThemeTests|ThemeControllerTests|PreviewThemeTests|ExportStylesheetTests"
+  ],
+  "selectedPackageTests": 114,
+  "packageSuites": 13,
+  "packageInputManifestSHA256": "eb3cbc4625b5415a056f8addc34a2483ce99f79550321a20512d2fc9bd84d100",
+  "packageInputsMatchSourceSHA": true,
+  "applicationTestsRun": 0,
+  "nativeAcceptance": "NOT_RUN",
+  "releaseCompliance": "FAIL: six unresolved source/attribution obligations",
+  "independentReview": "PENDING"
+}

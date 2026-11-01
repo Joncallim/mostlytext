@@ -11,6 +11,7 @@ import Workspace
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private(set) var coordinator: WindowCoordinator!
     private(set) var themeController: ThemeController!
+    private(set) var themeCatalog: ThemeCatalogModel!
     private(set) var grammarRegistry: GrammarRegistry!
     private(set) var fileTreePreferences: FileTreePreferences!
     private(set) var recentFolderRoots: RecentFolderRoots!
@@ -27,6 +28,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private static let hasCompletedFirstRunKey = "com.joncallim.macdown2.hasCompletedFirstRun"
 
     override init() {
+        Self.validateUITestLaunch()
         let args = Self.launchArguments
         let isUITesting = args.contains("-UITesting")
 
@@ -42,14 +44,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let defaults: UserDefaults
         if isUITesting {
             let sessionDir = Self.sessionDirectory(from: args)
-            try? FileManager.default.createDirectory(at: sessionDir, withIntermediateDirectories: true)
+            defaults = Self.prepareUITestState(sessionDirectory: sessionDir)
             sessionStore = WorkspaceSessionStore(fileURL: sessionDir.appendingPathComponent("session.json"))
             recoveryBuffer = RecoveryBuffer(
                 recoveryDirectory: sessionDir.appendingPathComponent("recovery", isDirectory: true)
             )
-            let suite = "com.joncallim.macdown2.uitest.\(UUID().uuidString)"
-            defaults = UserDefaults(suiteName: suite) ?? .standard
-            defaults.removePersistentDomain(forName: suite)
             workspaceStateStore = WorkspaceStateStore(defaults: defaults)
         } else {
             sessionStore = WorkspaceSessionStore()
@@ -72,6 +71,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         launchURLs = Self.openFilesPaths(from: args).map { URL(fileURLWithPath: $0) }
         launchFolderURL = Self.openFolderPath(from: args).map { URL(fileURLWithPath: $0, isDirectory: true) }
         themeController = ThemeController(preferenceStore: UserDefaultsThemePreferenceStore(defaults: defaults))
+        themeCatalog = Self.makeThemeCatalog(controller: themeController, args: args)
         grammarRegistry = GrammarRegistry()
         fileTreePreferences = FileTreePreferences(store: UserDefaultsFileTreePreferenceStore(defaults: defaults))
         recentFolderRoots = RecentFolderRoots(preferences: fileTreePreferences)
@@ -94,7 +94,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         )
     }
 
+    private static func makeThemeCatalog(controller: ThemeController, args: [String]) -> ThemeCatalogModel {
+        let location: ThemeCatalogModel.Location = args.contains("-UITesting")
+            ? .isolatedSession(sessionDirectory(from: args)) : .applicationSupport
+        return ThemeCatalogModel(controller: controller, location: location)
+    }
+
     func applicationDidFinishLaunching(_: Notification) {
+        themeCatalog.start()
         NSWindow.allowsAutomaticWindowTabbing = true
         applyThemeAppearanceOverride()
 
@@ -203,10 +210,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         themeController.setAppearance(NSApp.effectiveAppearance.themeAppearance)
     }
 
+    func applicationWillTerminate(_: Notification) {
+        themeCatalog.cancel()
+    }
+
     func applicationShouldTerminate(_: NSApplication) -> NSApplication.TerminateReply {
         Task { @MainActor in
             let result = await coordinator.saveSessionForTermination()
-            NSApp.reply(toApplicationShouldTerminate: coordinator.handleTerminationSessionResult(result))
+            let terminate = coordinator.handleTerminationSessionResult(result)
+            if terminate {
+                await themeCatalog.shutdown()
+            }
+            NSApp.reply(toApplicationShouldTerminate: terminate)
         }
         return .terminateLater
     }
@@ -246,8 +261,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     /// The arguments the test hooks (`-UITesting`, `-sessionDir`, `-openFiles`, `-openFolder`) are read from.
     /// Debug builds only, except the separately flagged and explicitly launched
-    /// #117 native acceptance build. An ordinary Release build ignores them,
-    /// so they cannot redirect session/recovery directories or force-open paths.
+    /// #117 native acceptance build. An ordinary Release build rejects a
+    /// UI-test request before selecting stores instead of ignoring its isolation.
     static var launchArguments: [String] {
         #if ISSUE117_NATIVE_ACCEPTANCE
             let args = ProcessInfo.processInfo.arguments

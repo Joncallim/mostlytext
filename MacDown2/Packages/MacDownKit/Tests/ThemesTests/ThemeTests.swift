@@ -45,7 +45,7 @@ struct ThemeTests {
     @Test func bundledThemesDecode() {
         #expect(BundledThemes.light.id == "tomorrow-light")
         #expect(BundledThemes.dark.id == "tomorrow-dark")
-        #expect(BundledThemes.all.count == 2)
+        #expect(BundledThemes.all.count >= 8)
     }
 
     @Test func bundledThemesCoverCanonicalRoots() {

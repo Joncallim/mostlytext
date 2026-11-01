@@ -62,7 +62,7 @@ Expose a narrow stateless FileCore decoder taking bounded bytes and returning te
 
 ## Data-based Quick Look provider
 
-Use QLPreviewProvider and the actual shipping SDK's providePreview callback/async declaration. A data-based provider is not a view-controller clone, and no speculative QLPreviewingController conformance or invented cancellation callback is required. QLPreviewReply's data factory is synchronous: the selected design completes rendering/attachments FIRST, then lets the factory return frozen Data only. It must not start asynchronous render work, mutate caches or read files each time the system asks for bytes. Fill matching attachments/stringEncoding/title before handing off the reply. A repeated factory call returns identical bytes without restarting work.
+Use QLPreviewProvider with explicit QLPreviewingController conformance and the actual shipping SDK's providePreview callback/async declaration. The 1 November 2026 macOS 26.5 SDK check below corrects the earlier instruction against that conformance: it is required by the actual SDK and Apple's provider documentation. A data-based provider is not a view-controller clone; do not invent a cancellation callback. QLPreviewReply's data factory is synchronous: the selected design completes rendering/attachments FIRST, then lets the factory return frozen Data only. It must not start asynchronous render work, mutate caches or read files each time the system asks for bytes. Fill matching attachments/stringEncoding/title before handing off the reply. A repeated factory call returns identical bytes without restarting work.
 
 This precomputed-payload design is a project choice, NOT an Apple API requirement. Apple's Objective-C initializer documentation recommends doing heavy work inside dataCreationBlock so Quick Look can present loading UI early. QL-REPLY must therefore measure the proposed provider-callback/preparation timing against that documented lifecycle, including cold launch and slow rendering. Do not treat a synchronous factory signature as proof that precomputing before the reply is the best execution placement. Retain the selected design only if its actual callback timing, fallback delivery and responsiveness pass; otherwise record a narrow execution-placement revision before broad integration. Do not bridge async work by blocking MainActor or the executor required by that work.
 
@@ -118,3 +118,15 @@ Run serial format/strict lint, full package/app/extension builds and affected re
 Second review corrected stale E22 assumptions, catalog ID churn, settings-reset risk, cyclic orchestration, invented provider conformance/cancellation, synchronous data-factory misuse, per-request identity, precomputed fallback and false deadline claims. Continuation review distinguishes our precomputation choice from Apple's recommendation and bounds retained replies without equating callback completion with deallocation. Architecture choices are fixed subject to their named feasibility gates; QL-REPLY, calibration, final artwork/identity and real evidence remain explicit prerequisites. E23 closes only with its actual full acceptance and E23-owned #79/#115 evidence, not package tests alone.
 
 Primary API references inspected in the continuation review: https://developer.apple.com/documentation/quicklookui/qlpreviewreply/init(dataofcontenttype:contentsize:createdatausing:) and https://developer.apple.com/documentation/quicklookui/qlpreviewreply/initwithdataofcontenttype:contentsize:datacreationblock: .
+
+## 2026-11-01 shipping-SDK reconciliation
+
+The [compile-only API control](evidence/quicklook-api-2026-11-01/README.md)
+proves that QLPreviewProvider does not supply an overridable providePreview
+method itself. Its subclass explicitly conforms to QLPreviewingController.
+The async protocol implementation and reply/attachment APIs compile in Swift 6
+with complete strict concurrency and warnings as errors. stringEncoding takes
+String.Encoding (`.utf8`), not its UInt rawValue. This is a narrow correction to
+the provider declaration, not authorization to bypass QL-REPLY. No extension
+was packaged, registered or invoked by this control. The precomputation versus
+data-factory lifecycle and all real Finder evidence remain unproven.

@@ -44,6 +44,21 @@ struct ExportStylesheetTests {
         }
     }
 
+    @Test func semanticColorsMatchTheSharedPaletteForEveryBundledTheme() throws {
+        for theme in BundledThemes.all {
+            let palette = ResolvedPresentationPalette(theme: theme)
+            let variables = ExportThemeStylesheet.variables(for: theme)
+            for (name, color) in [
+                ("--md-heading", palette.heading), ("--md-link", palette.link),
+                ("--md-muted", palette.muted), ("--md-rule", palette.rule),
+                ("--md-code-bg", palette.codeBackground),
+            ] {
+                let expected = [color.red, color.green, color.blue].map { Int(($0 * 255).rounded()) }
+                #expect(try channels(of: name, in: variables) == expected, "\(theme.name): \(name)")
+            }
+        }
+    }
+
     /// The RGB channels of a `#rrggbb` custom-property value.
     private func channels(of name: String, in css: String) throws -> [Int] {
         let line = try #require(css.split(separator: "\n").first { $0.contains(name) })

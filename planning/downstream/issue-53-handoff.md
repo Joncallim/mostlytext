@@ -1,5 +1,45 @@
 # Issue #53 — Compatible settings and deliberate legacy import
 
+## 2026-10-25 local admission slice
+
+The next pure `LegacyImportPlan` step classifies only the three verified editor
+Boolean suggestions. A missing destination domain or a field whose absence was
+proved by a future protected decoder may be proposed as a default fill. Every
+valid persisted value wins, including a value equal to the current default;
+unreadable, future-version and unknown-presence destinations block automatic
+fills. The plan carries source and destination revision identities for a later
+write-boundary recheck. Its classifier consumes explicitly supplied states;
+it does **not** parse or write a persisted destination blob and cannot itself
+prove that a field is absent. Thirteen focused plan/conversion/snapshot tests
+pass with locked dependencies; strict lint and format checks pass. This is
+not consent, a serialized writer, journaling, recovery or a migration run.
+
+The next isolated, read-only fixture slice classifies three direct editor Boolean
+keys: `editorAutoIncrementNumberedLists`, `editorConvertTabs`, and
+`editorSmartHome`. `LegacyEditorBooleanConversion` preserves explicit true and
+false, distinguishes absent keys from false, and reports present non-Boolean
+values instead of coercing numeric or string lookalikes. It produces proposals
+only; it does not persist them or infer that a default-valued destination is
+absent. The three conversion fixtures and 44 adjacent snapshot/editor-behavior
+tests pass on the locked package build; strict lint and format checks pass. The
+font, prefix-continuation, and matching-character candidates remain
+unmapped pending their respective value or behavioral fixtures. Destination
+precedence, consent, E17 journaling, E23 theme IDs, and real-domain rehearsal
+remain outside this slice.
+
+An isolated local #53 branch based on release-debt candidate `e2434fab` now has a pure
+`LegacyPreferenceSnapshot(domain:)` value. It copies an explicitly supplied domain,
+preserves property-list value kinds (including Boolean versus number), rejects unsupported
+objects and non-finite numbers, and bounds depth, entries, strings, aggregate admitted bytes and the
+canonical encoded form. Its sorted typed digest can identify a frozen source snapshot for
+a later plan. It does not access the original MacDown preferences, apply a setting, grant
+file access, or implement consent, journaling or import. This is preparation for the
+existing immutable-plan contract below, not evidence that #53 can close.
+
+Four synthetic-domain snapshot tests pass with locked Swift packages. Real-domain
+disposition, precedence, settings migration, the E23 theme destination and the
+E17 isolated-account rehearsal remain separate acceptance gates.
+
 ## Owner summary
 
 Import useful original-MacDown preferences without changing that app, reviving inert parser toggles or overwriting the new editor's deliberate choices. First preserve development/beta settings across schema changes; then perform the separate opt-in original-MacDown import. Every legacy key receives an explicit disposition.
@@ -80,6 +120,29 @@ finding; it must not be reimplemented as if still absent. The broader
 protected-write contract remains required as described above.
 
 ## Settings compatibility — first executable unit
+
+The first import-planning slice now has a pure editor-domain admission candidate.
+`LegacyEditorDestinationEvidence.decode(_:)` accepts caller-supplied raw bytes,
+classifies absence, historical/current valid data, malformed data and unknown
+future data, retains the decoded `EditorSettings` only for admitted bytes, and
+binds its decision to the exact byte digest. It does not read
+preferences or write settings. `LegacyImportPlan` accepts only this decoder's
+evidence, so a caller cannot invent field absence from a default-valued model.
+For an existing non-Data value, the eventual storage adapter must report an
+unreadable domain rather than call `decode(nil)`; nil means proven absence.
+
+This candidate adds the local, Foundation-only `AppSettings` → `JSONSupport`
+dependency. Its purpose is duplicate-key admission before Foundation decoding;
+Foundation's JSON deserializer can silently collapse duplicate keys. The
+dependency is acyclic and carries no renderer, document or network capability.
+The ordinary `UserDefaultsAppSettingsStore` editor load and write-protection
+check now use this same admission result. A read-only `editorStoredDomain`
+snapshot exposes the decoded evidence to a future importer; it distinguishes
+an absent key from a present non-Data value before any Data cast. Unsupported
+bytes remain at the primary key and startup exposes only a session-safe
+default. This does not migrate or rewrite stored data. The serialized writer,
+consent flow and execution journal remain separate review gates. Passing
+these compatibility tests is not migration completion.
 
 AppSettings owns a typed versioned decode/migration adapter, used by normal startup AND the importer. Do not implement a one-off importer decoder while ordinary startup still falls back destructively. Inspect raw persisted data before constructing mutable models or writing defaults. Distinguish absent, known-compatible older schema, valid current, malformed and unknown future data.
 

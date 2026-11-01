@@ -1,0 +1,28 @@
+{
+  "sourceSHA": "ed1bfb898d31d1a064e497de07d7e73ff8af7070",
+  "command": [
+    "swift",
+    "test",
+    "--scratch-path",
+    "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-palette",
+    "--force-resolved-versions",
+    "--no-parallel",
+    "--jobs",
+    "2",
+    "--filter",
+    "ResolvedPresentationPaletteTests|ThemeTests|ThemeControllerTests|PreviewThemeTests|ExportStylesheetTests"
+  ],
+  "exit": 0,
+  "elapsed": 44.14,
+  "trackedSourceUnchanged": true,
+  "applicationLaunched": false,
+  "testCount": 34,
+  "suiteCount": 5,
+  "applicationTestsRun": 0,
+  "nativeAcceptance": "NOT_RUN",
+  "sourceCompliance": "PASS",
+  "complianceFixtures": 92,
+  "testLogSHA256": "6b6bd122daaf01def33b4e965c83ffd4f899f12f38bf806c4ac60c6b83fe344c",
+  "os": "26.5.1",
+  "xcode": "Xcode 26.6\nBuild version 17F113"
+}
