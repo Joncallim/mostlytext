@@ -12,11 +12,7 @@ extension SessionViewStateRoundTripTests {
         let coordinator = try coordinatorWithOneTab(sessions: sessions, directory: directory)
         let controller = try #require(coordinator.controllers.first)
         try await settleInitialMonitoring(of: coordinator)
-        let baseline = try #require(controller.model.activeDocument)
-        let baselineSnapshot = try FileSnapshot(
-            text: baseline.text, encoding: baseline.encoding,
-            revision: #require(baseline.lastKnownRevision)
-        )
+        let baselineSnapshot = try baselineSnapshot(of: controller)
         await coordinator.awaitScheduledSessionSaveForTesting()
         controller.model.tabStore.updateActiveDocument { $0.edited(text: "first edit") }
         controller.updateTitleAndEditedState()
@@ -140,6 +136,14 @@ extension SessionViewStateRoundTripTests {
         #expect(sessions.publicationCount == 1)
         let currentDocument = try #require(coordinator.controllers.first?.model.activeDocument)
         #expect(sessions.session?.tabs.first?.documentRecoveryEpoch == currentDocument.recoveryEpoch)
+    }
+
+    private func baselineSnapshot(of controller: WindowController) throws -> FileSnapshot {
+        let baseline = try #require(controller.model.activeDocument)
+        return try FileSnapshot(
+            text: baseline.text, encoding: baseline.encoding,
+            revision: #require(baseline.lastKnownRevision)
+        )
     }
 
     private func applyBaselineObservation(
