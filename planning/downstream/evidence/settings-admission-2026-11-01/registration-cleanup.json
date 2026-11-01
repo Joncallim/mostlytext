@@ -1,0 +1,74 @@
+{
+  "timeUTC": "2026-11-01T03:08:07.644338+00:00",
+  "reason": "Remove Launch Services registrations created by these exact compile-only products; preserve files and all other registrations. No application launched.",
+  "apps": [
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-final/derived/Build/Products/Debug/MacDown2.app",
+      "bundleID": "com.joncallim.MacDown2",
+      "executableSHA256": "9794890591f0b8b10797b0ee2cbdace6237ea770a76865ef3ab1dbcb4b205cbf"
+    },
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-final/derived/Build/Products/Debug/MacDown2UITests-Runner.app",
+      "bundleID": "com.joncallim.MacDown2UITests.xctrunner",
+      "executableSHA256": "f066696f4cd3b2bd1261e5846b0d87818de1abcc4e6e7e903f2170f7edbb5396"
+    },
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-final/derived/Build/Products/Release/MacDown2.app",
+      "bundleID": "com.joncallim.MacDown2",
+      "executableSHA256": "b98f7e9ae3c8a40e2238e50c893df084068577bd3c74de8a3a0856154acef28f"
+    },
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-settings-app/derived/Build/Products/Debug/MacDown2.app",
+      "bundleID": "com.joncallim.MacDown2",
+      "executableSHA256": "453cd9f69da88d573bfb5f13cd899aba7fefd5681cf0c89e094626142bc379f0"
+    },
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-settings-app/derived/Build/Products/Debug/MacDown2UITests-Runner.app",
+      "bundleID": "com.joncallim.MacDown2UITests.xctrunner",
+      "executableSHA256": "6f3b0b9d3f45d3b70fedfbfade812aadbf251dc4d9b2b920e06bc837490d2ada"
+    },
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-settings-app/derived/Build/Products/Release/MacDown2.app",
+      "bundleID": "com.joncallim.MacDown2",
+      "executableSHA256": "c095962b2d744a9cad81a9f61e0bdfbee50cd1da25c3630e166fc073065a2139"
+    }
+  ],
+  "skippedIncomplete": [],
+  "before": [
+    "path:                       /Volumes/Fast SSD/CORTANA-Builds/completion-20261101-settings-app/derived/Build/Products/Release/MacDown2.app (0xe900)",
+    "path:                       /Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-final/derived/Build/Products/Release/MacDown2.app (0xe904)",
+    "path:                       /Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-final/derived/Build/Products/Debug/MacDown2.app (0xe908)",
+    "path:                       /Volumes/Fast SSD/CORTANA-Builds/completion-20261101-settings-app/derived/Build/Products/Debug/MacDown2.app (0xe90c)"
+  ],
+  "operations": [
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-final/derived/Build/Products/Debug/MacDown2.app",
+      "exit": 0,
+      "output": ""
+    },
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-final/derived/Build/Products/Debug/MacDown2UITests-Runner.app",
+      "state": "Already absent; no mutation"
+    },
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-final/derived/Build/Products/Release/MacDown2.app",
+      "exit": 0,
+      "output": ""
+    },
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-settings-app/derived/Build/Products/Debug/MacDown2.app",
+      "exit": 0,
+      "output": ""
+    },
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-settings-app/derived/Build/Products/Debug/MacDown2UITests-Runner.app",
+      "state": "Already absent; no mutation"
+    },
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-settings-app/derived/Build/Products/Release/MacDown2.app",
+      "exit": 0,
+      "output": ""
+    }
+  ],
+  "after": []
+}

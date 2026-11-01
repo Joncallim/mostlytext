@@ -85,7 +85,7 @@ let package = Package(
         .target(name: "CommandBridge", dependencies: ["JSONSupport"]),
         .target(name: "LocalResourceAccess"),
         .target(name: "TextSearch", dependencies: ["FileCore"]),
-        .target(name: "AppSettings"),
+        .target(name: "AppSettings", dependencies: ["JSONSupport"]),
         .target(name: "Themes", resources: [.process("Themes")]),
         .target(name: "Workspace", dependencies: ["FileCore"], resources: [.process("Resources")]),
         .target(name: "FileTree", dependencies: ["FileCore"], resources: [.process("Resources")]),
