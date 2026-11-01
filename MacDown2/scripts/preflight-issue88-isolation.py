@@ -105,14 +105,27 @@ def sha(path):
             h.update(block)
     return h.hexdigest()
 
+def validate_source_manifest(root, receipt):
+    manifest_path = root / 'source-manifest.json'
+    require(sha(manifest_path) == receipt.get('sourceManifestSHA256'), 'Source manifest differs from build receipt')
+    source_files = json.loads(manifest_path.read_text())
+    require(isinstance(source_files, dict) and source_files, 'Missing complete source manifest')
+    for rel, expected in source_files.items():
+        relative = Path(rel)
+        require(not relative.is_absolute() and '..' not in relative.parts, 'Invalid source manifest path')
+        source = checked_path(root / 'source' / relative, root / 'source')
+        require(sha(source) == expected, 'Build source changed: ' + rel)
+
 def inspect_build(args):
     root = args.build_root.resolve(strict=True)
     receipt = json.loads((root / 'receipt.json').read_text())
-    require(receipt.get('state') == 'built', 'Build did not complete successfully')
+    require(receipt.get('state') in {'built', 'builds-and-static-preflight-passed'}, 'Build did not complete successfully')
     require(sha(args.expected_patch) == receipt.get('patchSHA256'), 'Patch differs from build receipt')
+    validate_source_manifest(root, receipt)
     candidate = args.candidate_root.resolve(strict=True)
     for rel in ('MacDown2/project.yml', 'MacDown2/MacDown2/AppDelegate.swift',
                 'MacDown2/MacDown2/UITestLaunchGuard.swift',
+                'MacDown2/MacDown2/AppDelegate+UITestLaunch.swift',
                 'MacDown2/MacDown2/WindowController+FrameRestore.swift',
                 'MacDown2/MacDown2UITests/EditingAssistsUITests.swift'):
         require(sha(root / 'source' / rel) == sha(candidate / rel), 'Build source differs from reviewed candidate: ' + rel)
@@ -196,7 +209,8 @@ def inspect_build(args):
     require(target.get('UITargetAppEnvironmentVariables', {}).get('MOSTLYTEXT_UI_TEST_BUNDLE_ID', bundle) == bundle,
             'Conflicting app environment identity')
     return {'status':'static-preflight-passed-runtime-isolation-still-unverified',
-            'selectedTest':EXPECTED_TEST, 'bundleID':bundle, 'ownerUID':owner_uid, 'xctestrunSHA256':sha(plan),
+            'selectedTest':EXPECTED_TEST, 'bundleID':bundle, 'ownerUID':owner_uid,
+            'sourceSHA':receipt.get('sourceSHA'), 'sourceManifestSHA256':receipt.get('sourceManifestSHA256'), 'xctestrunSHA256':sha(plan),
             'binarySHA256':{k:sha(v) for k,v in binaries.items()},
             'sourcePatchSHA256':receipt.get('patchSHA256')}
 

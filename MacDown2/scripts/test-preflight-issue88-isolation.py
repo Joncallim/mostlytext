@@ -2,6 +2,8 @@
 """Pure negative controls; no app or UI test is launched."""
 import importlib.util
 import copy
+import hashlib
+import json
 from pathlib import Path
 import tempfile
 import unittest
@@ -64,6 +66,22 @@ class GuardTests(unittest.TestCase):
         p.validate_environments(target, self.bundle, 501)
         target['UITargetAppEnvironmentVariables']['DYLD_INSERT_LIBRARIES'] = '/tmp/untrusted'
         with self.assertRaises(p.Refusal): p.validate_environments(target, self.bundle, 501)
+
+    def test_source_manifest_rejects_changed_content_and_escape(self):
+        with tempfile.TemporaryDirectory(prefix='issue88-source-') as tmp:
+            root = Path(tmp); source = root / 'source'; source.mkdir()
+            content = source / 'input.swift'; content.write_text('original')
+            manifest = root / 'source-manifest.json'
+            manifest.write_text(json.dumps({'input.swift': p.sha(content)}))
+            receipt = {'sourceManifestSHA256': p.sha(manifest)}
+            p.validate_source_manifest(root, receipt)
+            content.write_text('changed')
+            with self.assertRaises(p.Refusal): p.validate_source_manifest(root, receipt)
+            content.write_text('original')
+            manifest.write_text(json.dumps({'../outside': 'a' * 64}))
+            with self.assertRaises(p.Refusal): p.validate_source_manifest(root, receipt)
+            receipt['sourceManifestSHA256'] = p.sha(manifest)
+            with self.assertRaises(p.Refusal): p.validate_source_manifest(root, receipt)
 
     def test_product_path_cannot_escape_via_symlink(self):
         with tempfile.TemporaryDirectory(prefix='issue88-preflight-') as tmp:
