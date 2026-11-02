@@ -207,13 +207,19 @@ struct CommandApplicationServerTests {
         while true {
             do {
                 return try CommandEndpointClient.connect(to: location, until: deadline)
-            } catch CommandEndpointError.unavailable(ENOENT) {
-                // Listener startup has not published the endpoint yet.
-            } catch CommandSocketError.unavailable(ECONNREFUSED) {
-                // Retry only before a connection/request exists.
+            } catch {
+                guard startupUnavailable(error) else { throw error }
             }
             guard ContinuousClock.now < deadline else { throw CommandSocketError.timedOut }
             Thread.sleep(forTimeInterval: 0.005)
+        }
+    }
+
+    private nonisolated static func startupUnavailable(_ error: any Error) -> Bool {
+        switch error {
+        case let CommandEndpointError.unavailable(code), let CommandSocketError.unavailable(code):
+            code == ENOENT || code == ECONNREFUSED
+        default: false
         }
     }
 

@@ -80,3 +80,12 @@ for peer-close/refusal-related handshake failures and backs off descriptor/buffe
 exhaustion, while namespace/ownership/invalid-listener failures still stop it.
 Retain the failing control; require the complete corrected Debug/Release and
 hosted runs before integration.
+
+The first complete hosted package run executed 3,150 tests/434 suites and
+retains five new server-fixture startup failures plus the two existing known
+Neon issues. The asynchronous listener had created its namespace but not yet
+bound the socket; the fixture retried endpoint ENOENT and socket ECONNREFUSED,
+but omitted socket ENOENT. Match the production CLI's already-existing typed
+absence/refusal policy for fixture readiness, retaining the same finite
+deadline and refusing all permission/protocol/identity failures. No production
+assertion or test is excluded. Full corrected hosted CI is required.
