@@ -7,17 +7,20 @@ struct MacDown2App: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     var body: some Scene {
+        let ready = appDelegate.normalLaunchReady
         WindowGroup {
             EmptyView()
         }
         .commands {
-            WorkspaceCommands(themeController: appDelegate.themeController)
-            TextFilterCommands()
-            AboutCommands()
+            if ready, let themeController = appDelegate.themeController {
+                WorkspaceCommands(themeController: themeController)
+                TextFilterCommands()
+                AboutCommands()
+            }
         }
-        .environment(\.windowCoordinator, appDelegate.coordinator)
-        .environment(\.themeController, appDelegate.themeController)
-        .environment(\.appSettings, appDelegate.appSettings)
+        .environment(\.windowCoordinator, ready ? appDelegate.coordinator : nil)
+        .environment(\.themeController, ready ? appDelegate.themeController : nil)
+        .environment(\.appSettings, ready ? appDelegate.appSettings : nil)
 
         Window("About MostlyText", id: "about") {
             AboutMostlyTextView()
@@ -32,11 +35,17 @@ struct MacDown2App: App {
         .restorationBehavior(.disabled)
 
         Settings {
-            SettingsView()
-                .environment(\.appSettings, appDelegate.appSettings)
-                .environment(\.windowCoordinator, appDelegate.coordinator)
-                .environment(\.themeController, appDelegate.themeController)
-                .environment(\.themeCatalog, appDelegate.themeCatalog)
+            Group {
+                if ready {
+                    SettingsView()
+                } else {
+                    LegacyImportStartupView(startup: appDelegate.startup)
+                }
+            }
+            .environment(\.appSettings, ready ? appDelegate.appSettings : nil)
+            .environment(\.windowCoordinator, ready ? appDelegate.coordinator : nil)
+            .environment(\.themeController, ready ? appDelegate.themeController : nil)
+            .environment(\.themeCatalog, appDelegate.themeCatalog)
         }
     }
 }

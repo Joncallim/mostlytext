@@ -23,6 +23,8 @@ public final class LegacyEditorMigrationBootstrap {
         self.store = store; self.journal = journal
     }
 
+    public var resolveFont: (@MainActor (LegacyPreferenceReport.FontRequest) -> LegacyResolvedFont?)?
+
     public func start(_ proposal: LegacyEditorWriteProposal,
                       currentSource: @MainActor () throws -> LegacyPreferenceSnapshot) async throws -> Outcome {
         try await run(proposal: proposal, currentSource: currentSource)
@@ -101,11 +103,25 @@ public final class LegacyEditorMigrationBootstrap {
         case .alreadyApplied: return .alreadyApplied
         case .readyToWrite:
             let source = try currentSource()
-            guard proposal.matchesJournalSource(source) else {
+            guard proposal.matchesJournalSource(source), fontStillMatches(proposal, source: source) else {
                 throw UserDefaultsAppSettingsStore.LegacyPublicationFailure.sourceChanged
             }
             return try store.publishLegacyEditorChanges(proposal, currentSource: source)
         }
+    }
+
+    private func fontStillMatches(_ proposal: LegacyEditorWriteProposal, source: LegacyPreferenceSnapshot) -> Bool {
+        guard let name = proposal.fontPostScriptName else { return true }
+        guard let desired = LegacyEditorDestinationEvidence.decode(proposal.desiredData).settings else { return false }
+        for entry in LegacyPreferenceReport(snapshot: source).entries {
+            if case let .requiresExactInstalledFont(request) = entry.disposition,
+               request.postScriptName.utf8.elementsEqual(name.utf8) {
+                guard let actual = resolveFont?(request)?.descriptor else { return false }
+                return actual.familyName.utf8.elementsEqual(desired.font.familyName.utf8)
+                    && actual.size == desired.font.size
+            }
+        }
+        return false
     }
 
     private func finish(_ plan: LegacyEditorJournalPlan,

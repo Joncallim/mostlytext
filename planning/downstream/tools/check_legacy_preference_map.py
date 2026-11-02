@@ -73,7 +73,10 @@ def validate(record: dict, header: bytes, implementation: bytes, repo: Path) -> 
                 raise ValueError(f"source classification/type mismatch: {key}")
         if entry["disposition"] not in allowed[entry["kind"]]:
             raise ValueError(f"unclassified disposition: {key}")
-        if not entry.get("rationale") or not entry.get("owner") or entry.get("implementation_status") != "not_implemented":
+        implemented = {"editorBaseFontInfo": "implemented_exact_resolution", "editorStyleName": "implemented_report"}
+        if not entry.get("rationale") or not entry.get("owner") or entry.get("implementation_status") not in {
+            "not_implemented", implemented.get(key)
+        } or entry.get("implementation_status") is None:
             raise ValueError(f"missing rationale/owner or unsupported implementation claim: {key}")
         candidate = entry.get("destination_candidate")
         if entry["disposition"] == "candidate_equivalent":
@@ -92,7 +95,7 @@ def validate(record: dict, header: bytes, implementation: bytes, repo: Path) -> 
         elif candidate is not None or entry.get("destination_source") is not None:
             raise ValueError("non-equivalent disposition cannot install a destination")
     validate_report(record, repo)
-    return {"status": "declaration and runtime report coverage passed; execution remains unimplemented",
+    return {"status": "declaration and runtime report coverage passed; runtime acceptance requires separate evidence",
             "properties": len(entries), "kinds": dict(Counter(entry["kind"] for entry in entries)),
             "dispositions": dict(Counter(entry["disposition"] for entry in entries))}
 

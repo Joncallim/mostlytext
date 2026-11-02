@@ -12,6 +12,7 @@ public struct LegacyPreferenceReport: Sendable, Equatable {
     public enum Disposition: Sendable, Equatable {
         case editorBoolean(LegacyImportPlan.Destination, Bool)
         case requiresExactInstalledFont(FontRequest)
+        case unsupportedLegacyTheme
         case unconditionalCapability
         case unsupported
         case legacyProvenance
@@ -70,6 +71,7 @@ public struct LegacyPreferenceReport: Sendable, Equatable {
         case .font:
             guard let request = fontRequest(value) else { return .invalid }
             return .requiresExactInstalledFont(request)
+        case .legacyTheme: return .unsupportedLegacyTheme
         case .unconditional:
             return value == .boolean(true) ? .unconditionalCapability : .unsupported
         case .provenance: return .legacyProvenance

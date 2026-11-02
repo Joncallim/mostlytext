@@ -495,6 +495,17 @@
         }
       }
     },
+    "Automatically increment numbered lists": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatically increment numbered lists"
+          }
+        }
+      }
+    },
     "Bundled with MostlyText": {
       "comment": "Theme provenance. Translation draft; native-speaker review remains required.",
       "localizations": {
@@ -541,6 +552,28 @@
         }
       }
     },
+    "Checking MacDown preferences…": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking MacDown preferences…"
+          }
+        }
+      }
+    },
+    "Choose which original MacDown preferences to import. Your original preferences remain unchanged.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose which original MacDown preferences to import. Your original preferences remain unchanged."
+          }
+        }
+      }
+    },
     "Command": {
       "localizations": {
         "fr": {
@@ -559,6 +592,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "Polecenie"
+          }
+        }
+      }
+    },
+    "Continue Without Importing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue Without Importing"
+          }
+        }
+      }
+    },
+    "Convert tabs to spaces": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Convert tabs to spaces"
           }
         }
       }
@@ -836,6 +891,17 @@
         }
       }
     },
+    "Editor font": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Editor font"
+          }
+        }
+      }
+    },
     "Embedded CSS": {
       "localizations": {
         "fr": {
@@ -1038,6 +1104,50 @@
         }
       }
     },
+    "Import Selected Preferences": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import Selected Preferences"
+          }
+        }
+      }
+    },
+    "Import this value.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import this value."
+          }
+        }
+      }
+    },
+    "Import value: Off": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import value: Off"
+          }
+        }
+      }
+    },
+    "Import value: On": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import value: On"
+          }
+        }
+      }
+    },
     "Import…": {
       "comment": "Theme management. Translation draft; native-speaker review remains required.",
       "localizations": {
@@ -1221,6 +1331,17 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "テーマを読み込み中…"
+          }
+        }
+      }
+    },
+    "MacDown Preferences": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MacDown Preferences"
           }
         }
       }
@@ -1872,6 +1993,17 @@
         }
       }
     },
+    "Replace the saved MostlyText value.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Replace the saved MostlyText value."
+          }
+        }
+      }
+    },
     "Reset Theme Choices": {
       "comment": "Appearance settings. Translation draft; native-speaker review remains required.",
       "localizations": {
@@ -1987,6 +2119,17 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "設定を使用できません"
+          }
+        }
+      }
+    },
+    "Smart Home key": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smart Home key"
           }
         }
       }
@@ -2122,6 +2265,28 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "テーマフォルダが移動または変更されました。現在のフォルダを開くには、アプリを再起動してください。"
+          }
+        }
+      }
+    },
+    "The import could not continue safely. Close the original MacDown if it is running. Existing preferences and recovery records have been preserved. You can continue without importing and review the import on a later launch.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The import could not continue safely. Close the original MacDown if it is running. Existing preferences and recovery records have been preserved. You can continue without importing and review the import on a later launch."
+          }
+        }
+      }
+    },
+    "The original editor font cannot be reproduced exactly and will not be imported.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The original editor font cannot be reproduced exactly and will not be imported."
           }
         }
       }
@@ -2439,6 +2604,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "UTF-8"
+          }
+        }
+      }
+    },
+    "Unavailable fonts, unsupported preferences and legacy themes are kept unchanged. MostlyText theme choices are preserved.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unavailable fonts, unsupported preferences and legacy themes are kept unchanged. MostlyText theme choices are preserved."
           }
         }
       }
