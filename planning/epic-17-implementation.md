@@ -304,3 +304,16 @@ reproduction are retained rather than retried away.
 An optimized diagnostic harness also completes 2,000 repeated timeout/cancel/
 reconnect exchanges with the corrected source. This is a stress control for the
 observed disconnect race, not a replacement for full hosted or native acceptance.
+
+## Embedded CLI metadata read boundary — 3 November 2026
+
+The enclosing-app locator now reads Info.plist through the Foundation/POSIX
+`CommandApplicationMetadata` helper: nonblocking/no-follow regular-file open,
+64-KiB pre-allocation limit, bounded chunks/growth probe, and descriptor/named
+identity plus size/time checks before returning immutable bytes. A FIFO cannot
+block the ordinary path-following FileHandle open, and a leaf symlink cannot
+supply external metadata. App/signature/launch policy is unchanged; no installed
+application or signed launch is exercised by local controls. The binding source
+unit, real-file tests and limits are in `downstream/bounded-cli-metadata.md`.
+This is source hardening for #18/#183, not installed CLI or signed native
+acceptance. Local app/UI targets compile only; full hosted checks remain required.

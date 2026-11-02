@@ -4,12 +4,6 @@ import Foundation
 import MachO
 import Security
 
-public enum EmbeddedCommandFailure: Error, Sendable, Equatable {
-    case invalidContainer
-    case invalidIdentity
-    case unverifiedSignature
-}
-
 /// Locate only the app containing this executable. No PATH/LaunchServices
 /// search, configurable bundle ID or unsigned-launch override is accepted.
 public struct EmbeddedCommandApplication: Sendable, Equatable {
@@ -48,11 +42,8 @@ public struct EmbeddedCommandApplication: Sendable, Equatable {
               FileManager.default.isExecutableFile(atPath: cli.path)
         else { throw EmbeddedCommandFailure.invalidContainer }
         let infoURL = contents.appendingPathComponent("Info.plist")
-        let handle = try FileHandle(forReadingFrom: infoURL)
-        defer { try? handle.close() }
-        let bytes = try handle.read(upToCount: 65537) ?? Data()
-        guard bytes.count <= 65536,
-              let info = try PropertyListSerialization.propertyList(from: bytes, format: nil) as? [String: Any],
+        let bytes = try CommandApplicationMetadata.read(at: infoURL)
+        guard let info = try PropertyListSerialization.propertyList(from: bytes, format: nil) as? [String: Any],
               info["CFBundlePackageType"] as? String == "APPL",
               let identity = info["CFBundleIdentifier"] as? String, validIdentity(identity),
               let name = info["CFBundleExecutable"] as? String, validComponent(name), name.lowercased() != Self.toolName
