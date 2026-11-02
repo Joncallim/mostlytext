@@ -27,22 +27,26 @@ enum ExportFileWriter {
 
     /// Writes an HTML export. `target` must be an `.html` target; PDF is written
     /// by the app's WebKit adapter.
-    static func writeHTML(_ prepared: PreparedExportDocument, to target: ExportTarget) throws -> ExportResult {
+    static func writeHTML(_ prepared: PreparedExportDocument, to target: ExportTarget,
+                          limit: Int = ExportResourceBudget.maxFinalHTMLUTF8Bytes) throws -> ExportResult {
         guard case let .html(url, mode) = target else {
             throw ExportError.invalidDestination("PDF targets are written by the PDF adapter, not the HTML writer")
         }
 
         let directory = url.deletingLastPathComponent()
-        try ensureDirectory(directory)
 
         var companionFiles: [URL] = []
-        let html: String
-
-        switch mode {
+        let html: String = switch mode {
         case .selfContained:
-            html = ExportHTMLWriter.selfContainedHTML(from: prepared)
+            try ExportHTMLWriter.selfContainedHTML(from: prepared, limit: limit)
         case let .standalone(style):
-            html = ExportHTMLWriter.companionHTML(from: prepared, style: style)
+            try ExportHTMLWriter.companionHTML(from: prepared, style: style, limit: limit)
+        }
+
+        // Complete admission before creating a destination or touching sidecars.
+        try Task.checkCancellation()
+        try ensureDirectory(directory)
+        if case let .standalone(style) = mode {
             companionFiles = try writeCompanions(prepared, style: style, nextTo: url)
         }
 

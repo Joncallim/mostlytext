@@ -87,7 +87,7 @@ struct FidelityCorpusTests {
             ExportRequest(text: entry.markdown, sourceGeneration: 1, theme: ExportTestSupport.lightTheme()),
             target: .html(url: URL(fileURLWithPath: "/tmp/corpus.html"), mode: .standalone(style: .embedded))
         )
-        let html = ExportHTMLWriter.companionHTML(from: prepared, style: .embedded)
+        let html = try ExportHTMLWriter.companionHTML(from: prepared, style: .embedded)
 
         for expected in entry.expected {
             #expect(html.contains(expected), "\(name): missing \(expected)")
@@ -122,7 +122,7 @@ struct FidelityCorpusTests {
             ),
             target: .html(url: URL(fileURLWithPath: "/tmp/out.html"), mode: .selfContained)
         )
-        let html = ExportHTMLWriter.selfContainedHTML(from: prepared)
+        let html = try ExportHTMLWriter.selfContainedHTML(from: prepared)
         // No `<name>.assets/…` companion reference of any kind should survive
         // self-contained embedding, whatever the per-document directory name.
         #expect(!html.contains(".assets/"))

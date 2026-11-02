@@ -286,6 +286,17 @@
           }
         }
       }
+    },
+    "final HTML exceeds the export safety limit": {
+      "comment": "Export size failure detail. The final HTML includes embedded resources and document markup.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "final HTML exceeds the export safety limit"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

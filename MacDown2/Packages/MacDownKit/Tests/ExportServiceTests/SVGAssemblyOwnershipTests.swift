@@ -141,7 +141,7 @@ struct SVGAssemblyOwnershipTests {
             manifest: ExportManifest(resources: [], referenceMap: [:]),
             diagnostics: [], sourceGeneration: 1, preservesRawHTML: false
         )
-        let candidates = [
+        let candidates = try [
             ExportHTMLWriter.selfContainedHTML(from: prepared),
             ExportHTMLWriter.selfContainedHTML(from: prepared, additionalHead:
                 #"<meta http-equiv="Content-Security-Policy" content="default-src 'none'">"#),
@@ -176,7 +176,7 @@ struct SVGAssemblyOwnershipTests {
         #expect(SVGAssemblyOwnership.inspect(
             markedDocument: authoredStyle, fragment: marked, auditedHeadCSS: audited
         ) == nil)
-        let linked = ExportHTMLWriter.companionHTML(from: prepared, style: .linked)
+        let linked = try ExportHTMLWriter.companionHTML(from: prepared, style: .linked)
         #expect(SVGAssemblyOwnership.inspect(
             markedDocument: linked, fragment: marked, auditedHeadCSS: audited
         ) == nil)
