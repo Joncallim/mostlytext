@@ -43,11 +43,11 @@ struct FileTreeTrashConfirmationTests {
         let fixture = try Fixture()
         defer { fixture.cleanup() }
         await fixture.model.setRoot(fixture.firstRoot)
-        var open = true
+        let origin = ConfirmationOrigin()
         let confirmation = FileTreeTrashConfirmation(
             model: fixture.model, source: fixture.firstRoot.appendingPathComponent("original.md")
-        ) { open }
-        open = false
+        ) { origin.isOpen }
+        origin.isOpen = false
         #expect(try await confirmation.run() == nil)
         #expect(await fixture.mutator.trashed.isEmpty)
     }
@@ -95,6 +95,11 @@ struct FileTreeTrashConfirmationTests {
             try? FileManager.default.removeItem(at: root)
         }
     }
+}
+
+@MainActor
+private final class ConfirmationOrigin {
+    var isOpen = true
 }
 
 private actor RecordingTrashMutator: FileSystemMutating {

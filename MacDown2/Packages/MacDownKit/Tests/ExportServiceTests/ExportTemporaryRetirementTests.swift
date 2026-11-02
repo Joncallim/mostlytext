@@ -45,9 +45,9 @@ struct ExportTemporaryRetirementTests {
         let url = item.directory.appendingPathComponent(name)
         try Data("ours".utf8).write(to: url)
         let stamp = try ExportPublicationFilesystem.childStamp(name, in: descriptor)
-        try Data("foreign".utf8).write(to: url, options: .atomic)
-        let occupy: (String) -> Void = { _ in
+        let occupy: (String) -> Void = { quarantine in
             do {
+                try Data("foreign".utf8).write(to: item.directory.appendingPathComponent(quarantine), options: .atomic)
                 try Data("new occupant".utf8).write(to: url)
             } catch {
                 Issue.record("Could not occupy the restore name: \(error)")

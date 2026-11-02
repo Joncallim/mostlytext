@@ -6,6 +6,23 @@
 > **Architecture date:** 2026-08-17
 > **Review status:** Final adversarial pass complete; implementation begins with Slice 0 only
 
+## 2026-11-03 owned scratch verification amendment
+
+Normal/cancelled staging retirement now binds known bytes to an in-memory
+receipt with birth time, ownership, permissions, link count, flags and existing
+device/inode/type/size/time metadata. Check the complete captured stamp before
+quarantine, then capture the post-rename stamp before any inspection hook. Stream
+SHA-256 in bounded 64-KiB chunks and recheck opened/named metadata before unlink.
+Changed objects restore without replacement or retain an explicit recovery URL.
+The owned staging descriptor supplies the final receipt after legitimate link
+operations; this does not establish arbitrary same-UID writer exclusion.
+
+See [export-owned-file-receipts.md](downstream/export-owned-file-receipts.md).
+The receipt has no external decoder or producer identity claim. Durable private
+journals, automatic crash repair, native printer scratch ownership and final
+Release/native/independent acceptance remain open. No filename or adjacent
+JSON/xattr is granted cleanup authority by this change.
+
 ## 2026-11-02 ordinary publication amendment
 
 Ordinary HTML now uses the descriptor-relative writer shared with the optional
