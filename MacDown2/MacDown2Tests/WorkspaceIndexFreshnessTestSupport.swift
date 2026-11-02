@@ -111,21 +111,3 @@ final class IndexWalkProbe: @unchecked Sendable {
         })
     }
 }
-
-final class IndexWalkGate: @unchecked Sendable {
-    private let started = DispatchSemaphore(value: 0)
-    private let releaseSignal = DispatchSemaphore(value: 0)
-
-    func blockUntilReleased() {
-        started.signal()
-        releaseSignal.wait()
-    }
-
-    func waitUntilBlocked(timeout: DispatchTime = .now() + 5) -> Bool {
-        started.wait(timeout: timeout) == .success
-    }
-
-    func release() {
-        releaseSignal.signal()
-    }
-}

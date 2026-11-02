@@ -58,7 +58,7 @@ struct WorkspaceIndexFreshnessTests {
     }
 
     private func waitForWalk(_ gate: IndexWalkGate) async -> Bool {
-        await Task.detached { gate.waitUntilBlocked() }.value
+        await gate.waitUntilBlocked()
     }
 
     private func tempRoot(_ files: [String]) throws -> URL {
