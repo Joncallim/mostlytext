@@ -34,7 +34,7 @@ enum PDFExportAdapter {
     static func export(_ prepared: PreparedExportDocument, to url: URL) async throws {
         // Base64-encoding every embedded image is the most expensive step in a
         // PDF export; it is done off the main actor so the app stays responsive.
-        let html = await hardenedHTML(from: prepared)
+        let html = try await hardenedHTML(from: prepared)
         let sourceHasContent = !prepared.bodyHTML.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         try await exportHTML(html, to: url, sourceHasContent: sourceHasContent, lease: nil)
     }
@@ -178,12 +178,12 @@ enum PDFExportAdapter {
     /// substituted into the rendered string afterwards: a string rewrite would
     /// silently stop applying if the template's whitespace ever changed, and a
     /// security control that can vanish without failing is not a control.
-    nonisolated static func hardenedHTML(from prepared: PreparedExportDocument) async -> String {
+    nonisolated static func hardenedHTML(from prepared: PreparedExportDocument) async throws -> String {
         let csp = "<meta http-equiv=\"Content-Security-Policy\" content=\""
             + "default-src 'none'; script-src 'none'; style-src 'unsafe-inline'; "
             + "img-src data:; media-src data:; font-src data:; connect-src 'none'; "
             + "object-src 'none'; form-action 'none'; base-uri 'none';\">"
-        return ExportHTMLWriter.selfContainedHTML(from: prepared, additionalHead: csp)
+        return try ExportHTMLWriter.selfContainedHTML(from: prepared, additionalHead: csp)
     }
 
     /// Configure the system key before WebKit copies the print info into its operation.

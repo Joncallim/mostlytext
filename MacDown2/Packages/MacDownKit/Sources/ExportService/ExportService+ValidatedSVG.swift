@@ -38,7 +38,7 @@ extension ExportService {
             request: request, target: target, engine: engine, namespaceSVGIDs: true
         )
         try Task.checkCancellation()
-        if let publication = publication(for: initial, target: target, audited: audited, csp: csp) {
+        if let publication = try publication(for: initial, target: target, audited: audited, csp: csp) {
             return ValidatedExportHTML(publication: publication, prepared: initial.prepared,
                                        target: target, sourceText: request.text)
         }
@@ -57,7 +57,7 @@ extension ExportService {
         )
         try Task.checkCancellation()
         guard fallback.markedRoots.isEmpty,
-              let publication = publication(for: fallback, target: target, audited: audited, csp: csp)
+              let publication = try publication(for: fallback, target: target, audited: audited, csp: csp)
         else { throw ExportError.validatedPublicationRejected }
         let diagnostic = ExportDiagnostic(
             severity: .warning,
@@ -73,7 +73,7 @@ extension ExportService {
     private static func publication(
         for output: ExportComposer.MarkedPreparation, target: ExportTarget,
         audited: SVGAssemblyOwnership.AuditedHeadCSS, csp: String
-    ) -> SVGAssemblyOwnership.Publication? {
+    ) throws -> SVGAssemblyOwnership.Publication? {
         let prepared = output.prepared
         guard prepared.stylesheet == audited.stylesheet else { return nil }
         let body: String
@@ -83,17 +83,17 @@ extension ExportService {
         case let .html(_, mode):
             switch mode {
             case .selfContained:
-                body = ExportHTMLWriter.selfContainedBody(from: prepared)
-                html = ExportHTMLWriter.selfContainedHTML(from: prepared, additionalHead: head)
+                html = try ExportHTMLWriter.selfContainedHTML(from: prepared, additionalHead: head)
+                body = try ExportHTMLWriter.selfContainedBody(from: prepared)
             case .standalone(style: .embedded):
                 body = prepared.bodyHTML
-                html = ExportHTMLWriter.companionHTML(from: prepared, style: .embedded, additionalHead: head)
+                html = try ExportHTMLWriter.companionHTML(from: prepared, style: .embedded, additionalHead: head)
             case .standalone(style: .linked):
                 return nil
             }
         case .pdf:
-            body = ExportHTMLWriter.selfContainedBody(from: prepared)
-            html = ExportHTMLWriter.selfContainedHTML(from: prepared, additionalHead: head)
+            html = try ExportHTMLWriter.selfContainedHTML(from: prepared, additionalHead: head)
+            body = try ExportHTMLWriter.selfContainedBody(from: prepared)
         }
         if output.markedRoots.isEmpty {
             return SVGAssemblyOwnership.publishFallback(html, auditedHeadCSS: audited, requiredCSP: csp)

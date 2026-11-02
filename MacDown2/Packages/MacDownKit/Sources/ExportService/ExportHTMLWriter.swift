@@ -48,77 +48,144 @@ public enum ExportHTMLWriter {
     public static func selfContainedHTML(
         from prepared: PreparedExportDocument,
         additionalHead: String = ""
-    ) -> String {
-        let body = selfContainedBody(from: prepared)
-        let style = embeddedStyleElement(prepared.stylesheet)
-        return BuiltInExportTemplate.document(
-            title: prepared.title,
-            visibleTitle: prepared.visibleTitle,
-            headExtras: additionalHead,
-            styleElement: style,
-            body: body
-        )
+    ) throws -> String {
+        try selfContainedHTML(from: prepared, additionalHead: additionalHead,
+                              limit: ExportResourceBudget.maxFinalHTMLUTF8Bytes)
     }
 
-    static func selfContainedBody(from prepared: PreparedExportDocument) -> String {
-        embedResources(in: prepared.bodyHTML, manifest: prepared.manifest,
-                       assetsDirectoryName: prepared.assetsDirectoryName)
+    static func selfContainedHTML(
+        from prepared: PreparedExportDocument, additionalHead: String = "", limit: Int
+    ) throws -> String {
+        try document(from: prepared, style: .embedded, additionalHead: additionalHead, limit: limit) { sink in
+            try embedResources(in: prepared.bodyHTML, manifest: prepared.manifest,
+                               assetsDirectoryName: prepared.assetsDirectoryName, into: &sink)
+        }
     }
 
-    /// A companion HTML document. `style` selects embedded (`<style>`) or linked
-    /// (`<link rel="stylesheet" href="<name>.assets/<hash>.css">`) CSS.
+    static func selfContainedBody(from prepared: PreparedExportDocument) throws -> String {
+        var sink = BoundedExportHTML(limit: ExportResourceBudget.maxFinalHTMLUTF8Bytes)
+        try embedResources(in: prepared.bodyHTML, manifest: prepared.manifest,
+                           assetsDirectoryName: prepared.assetsDirectoryName, into: &sink)
+        return sink.html
+    }
+
+    /// A complete companion document. Oversized output throws before publishing.
     public static func companionHTML(
         from prepared: PreparedExportDocument, style: ExportStyleEmbedding,
         additionalHead: String = ""
-    ) -> String {
-        let styleElement: String = switch style {
-        case .embedded:
-            embeddedStyleElement(prepared.stylesheet)
-        case .linked:
-            linkedStyleElement(prepared)
+    ) throws -> String {
+        try companionHTML(from: prepared, style: style, additionalHead: additionalHead,
+                          limit: ExportResourceBudget.maxFinalHTMLUTF8Bytes)
+    }
+
+    static func companionHTML(
+        from prepared: PreparedExportDocument, style: ExportStyleEmbedding,
+        additionalHead: String = "", limit: Int
+    ) throws -> String {
+        try document(from: prepared, style: style, additionalHead: additionalHead, limit: limit) { sink in
+            try sink.append(prepared.bodyHTML)
         }
-        return BuiltInExportTemplate.document(
-            title: prepared.title,
-            visibleTitle: prepared.visibleTitle,
-            headExtras: additionalHead,
-            styleElement: styleElement,
-            body: prepared.bodyHTML
+    }
+
+    private static func document(
+        from prepared: PreparedExportDocument, style: ExportStyleEmbedding,
+        additionalHead: String, limit: Int, body: (inout BoundedExportHTML) throws -> Void
+    ) throws -> String {
+        try BuiltInExportTemplate.boundedDocument(
+            metadata: .init(title: prepared.title, visibleTitle: prepared.visibleTitle, headExtras: additionalHead),
+            limit: limit, style: { sink in
+                switch style {
+                case .embedded:
+                    try sink.append("<style>\n")
+                    try sink.append(prepared.stylesheet)
+                    try sink.append("\n</style>")
+                case .linked:
+                    // Check inputs before allocating the CSS Data or URL encodings.
+                    guard prepared.stylesheet.utf8.count <= ExportResourceBudget.maxFinalHTMLUTF8Bytes
+                    else { throw BoundedExportHTML.tooLarge }
+                    try sink.requireScratchCapacity(Self.encodedComponentUpperBound(prepared.assetsDirectoryName))
+                    let resource = linkedStylesheetResource(for: prepared.stylesheet)
+                    try sink.append("<link rel=\"stylesheet\" href=\"")
+                    try sink.append(percentEncodedCompanionComponent(prepared.assetsDirectoryName))
+                    try sink.append("/" + resource.identity.fileName + "\">")
+                }
+            }, body: body
         )
     }
 
     /// 64 hex digits, a dot, and room for any canonical extension.
     private static let maxCompanionNameLength = 96
 
-    private static func embeddedStyleElement(_ stylesheet: String) -> String {
-        "<style>\n\(stylesheet)\n</style>"
-    }
-
-    private static func linkedStyleElement(_ prepared: PreparedExportDocument) -> String {
-        let resource = linkedStylesheetResource(for: prepared.stylesheet)
-        let href = "\(percentEncodedCompanionComponent(prepared.assetsDirectoryName))/\(resource.identity.fileName)"
-        return "<link rel=\"stylesheet\" href=\"\(href)\">"
-    }
-
-    /// Replaces every `<name>.assets/<file>` companion reference with its data
-    /// URI (`data:<mime>;base64,<bytes>`). Content-addressed filenames are
-    /// `<64hex>.<ext>`, so an exact match is deterministic and cannot collide
-    /// with authored text.
-    ///
-    /// The body is scanned once and rebuilt once. Replacing resource by resource
-    /// would rescan and recopy the whole document per image — and because each
-    /// substitution grows the document by a base64-inflated payload, that copy
-    /// gets more expensive with every image an export carries.
-    static func embedResources(in body: String, manifest: ExportManifest, assetsDirectoryName: String) -> String {
-        guard !manifest.resources.isEmpty else { return body }
-        // The renderer percent-encodes and HTML-escapes a rewritten `src` the way
-        // it does any destination, so for an output name with a space, non-ASCII,
-        // `&` or `'` the reference in the body is not the raw directory name —
-        // matching only the raw form silently left every local image un-embedded.
-        var result = body
-        for directory in referenceForms(of: assetsDirectoryName) {
-            result = embedResourcesForPrefix(in: result, manifest: manifest, prefix: "\(directory)/")
+    /// One scan of the original body, charging every replacement occurrence.
+    /// Textual matching is retained here; registered URL slots remain separate
+    /// work and authored text that resembles a companion path can still match.
+    private static func embedResources(
+        in body: String, manifest: ExportManifest, assetsDirectoryName: String,
+        into sink: inout BoundedExportHTML
+    ) throws {
+        try Task.checkCancellation()
+        guard !manifest.resources.isEmpty else { try sink.append(body); return }
+        try sink.requireScratchCapacity(encodedComponentUpperBound(assetsDirectoryName))
+        let prefixes = referenceForms(of: assetsDirectoryName).map { $0 + "/" }
+        var resources: [String: ExportResource] = [:]
+        for resource in manifest.resources {
+            try Task.checkCancellation()
+            try sink.requireScratchCapacity(resource.identity.sha256.utf8.count)
+            try sink.requireScratchCapacity(resource.identity.mimeType.utf8.count)
+            resources[resource.identity.fileName] = resource
         }
-        return result
+        var dataURIs: [String: String] = [:]
+        var pending = body.startIndex
+        var hits = prefixes.map { body.range(of: $0) }
+        while true {
+            try Task.checkCancellation()
+            guard let hit = hits.compactMap(\.self).min(by: { $0.lowerBound < $1.lowerBound }) else { break }
+            var searchStart = hit.upperBound
+            // Cache each prefix's next match, including misses. Re-searching
+            // absent forms after every hit would make repeated paths quadratic.
+            defer {
+                for index in hits.indices {
+                    if let previous = hits[index], previous.lowerBound < searchStart {
+                        hits[index] = body.range(of: prefixes[index], range: searchStart ..< body.endIndex)
+                    }
+                }
+            }
+            let candidate = body[hit.upperBound...].prefix(maxCompanionNameLength)
+                .prefix { $0.isLetter || $0.isNumber || $0 == "." }
+            let name = String(candidate)
+            guard let resource = resources[name] else { searchStart = hit.upperBound; continue }
+            try sink.append(body[pending ..< hit.lowerBound])
+            try appendResource(resource, named: name, cache: &dataURIs, into: &sink)
+            pending = candidate.endIndex
+            searchStart = candidate.endIndex
+        }
+        try sink.append(body[pending...])
+    }
+
+    private static func appendResource(
+        _ resource: ExportResource, named name: String,
+        cache: inout [String: String], into sink: inout BoundedExportHTML
+    ) throws {
+        if let uri = cache[name] {
+            try sink.append(uri); return
+        }
+        // Reject before base64 expansion, including synthetic Int.max sizes.
+        let size = try BoundedExportHTML.dataURISize(
+            payloadBytes: resource.bytes.count, mimeBytes: resource.identity.mimeType.utf8.count
+        )
+        try sink.requireCapacity(size)
+        if sink.measuring {
+            try sink.appendCount(size); return
+        }
+        let uri = "data:\(resource.identity.mimeType);base64,\(resource.bytes.base64EncodedString())"
+        try sink.append(uri)
+        cache[name] = uri
+    }
+
+    private static func encodedComponentUpperBound(_ name: String) throws -> Int {
+        let (size, overflow) = name.utf8.count.multipliedReportingOverflow(by: 6)
+        guard !overflow else { throw BoundedExportHTML.tooLarge }
+        return size
     }
 
     /// The raw directory name plus the form cmark writes into an `href`/`src`.
@@ -161,45 +228,5 @@ public enum ExportHTMLWriter {
             }
         }
         return output
-    }
-
-    private static func embedResourcesForPrefix(in body: String, manifest: ExportManifest, prefix: String) -> String {
-        guard !manifest.resources.isEmpty else { return body }
-        var dataURIs: [String: String] = [:]
-        dataURIs.reserveCapacity(manifest.resources.count)
-        var embeddedBytes = 0
-        for resource in manifest.resources {
-            let uri = "data:\(resource.identity.mimeType);base64,\(resource.bytes.base64EncodedString())"
-            embeddedBytes += uri.utf8.count
-            dataURIs[resource.identity.fileName] = uri
-        }
-
-        var result = ""
-        result.reserveCapacity(body.utf8.count + embeddedBytes)
-
-        var pending = body.startIndex
-        var searchStart = body.startIndex
-        while searchStart < body.endIndex,
-              let hit = body.range(of: prefix, range: searchStart ..< body.endIndex) {
-            // A content-addressed filename is `<64hex>.<ext>`; it ends at the
-            // first character that cannot occur in one, which in rendered HTML
-            // is the closing attribute quote. The scan is length-bounded so a
-            // long alphanumeric run after a false prefix stays cheap.
-            let candidate = body[hit.upperBound...]
-                .prefix(maxCompanionNameLength)
-                .prefix { $0.isLetter || $0.isNumber || $0 == "." }
-            guard let uri = dataURIs[String(candidate)] else {
-                searchStart = hit.upperBound
-                continue
-            }
-            result += body[pending ..< hit.lowerBound]
-            result += uri
-            pending = candidate.endIndex
-            searchStart = candidate.endIndex
-        }
-
-        guard pending != body.startIndex else { return body }
-        result += body[pending...]
-        return result
     }
 }

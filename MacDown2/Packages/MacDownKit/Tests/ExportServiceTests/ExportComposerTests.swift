@@ -60,7 +60,7 @@ struct ExportComposerTests {
         let resource = try #require(prepared.manifest.resources.first)
         #expect(resource.identity.mimeType == "image/png")
 
-        let html = ExportHTMLWriter.selfContainedHTML(from: prepared)
+        let html = try ExportHTMLWriter.selfContainedHTML(from: prepared)
         #expect(html.contains("data:image/png;base64,"))
         #expect(!html.contains("images/foo.png"))
     }

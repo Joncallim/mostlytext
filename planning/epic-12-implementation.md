@@ -6,6 +6,27 @@
 > **Architecture date:** 2026-08-17
 > **Review status:** Final adversarial pass complete; implementation begins with Slice 0 only
 
+## 2026-11-02 final HTML assembly amendment
+
+`ExportHTMLWriter.selfContainedHTML` and `companionHTML` now throw on final
+assembly failure. `ExportResourceBudget.maxFinalHTMLUTF8Bytes` owns a 256 MiB
+provisional ceiling for the complete document. `BoundedExportHTML` first counts
+the exact UTF-8 shell, scalar-escaped metadata, CSS/head, body and every embedded
+resource occurrence without materializing final HTML or base64. Only an admitted
+document is rendered, with checked appends and cancellation. Directory reference
+forms are scanned with cached next matches; used resource encodings are shared
+within that render. Ordinary HTML completes this gate before destination/sidecar
+mutation; the PDF adapter propagates failure before creating/loading WebKit.
+
+This supersedes earlier prepared-body-only sizing descriptions. It does not
+freeze measured Release memory limits or establish PDF responsiveness. Textual
+resource replacement remains collision-prone until registered URL slots land;
+explicit input resource leases, output authority/recovery and stale managed
+assets remain #118 work. The optional validated-SVG path remains disabled.
+Implementation and source-control evidence are recorded in
+`planning/downstream/mostlytext-packaging-and-export-bounds.md`; native and
+exact-artifact gates remain separate.
+
 ## 2026-09-21 as-built reconciliation
 
 > **Authority amendment:** E12 shipped successfully, but several symbol/type sketches below describe the pre-implementation design rather than the final code. For implementation truth, the as-built mapping in this section supersedes conflicting symbol names/shapes below. The product/security/file-safety invariants remain binding.
