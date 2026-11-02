@@ -9,7 +9,7 @@ struct EmbeddedCommandApplicationTests {
         let app = root.appendingPathComponent("Mostly Text.app")
         let folder = app.appendingPathComponent("Contents/MacOS")
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
-        let cli = folder.appendingPathComponent("macdown2")
+        let cli = folder.appendingPathComponent("macdown2-command")
         for file in [cli, folder.appendingPathComponent("MostlyText")] {
             try Data().write(to: file)
             try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: file.path)
