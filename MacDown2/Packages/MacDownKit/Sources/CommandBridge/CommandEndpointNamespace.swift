@@ -15,7 +15,7 @@ struct CommandSocketIdentity: Equatable {
     }
 }
 
-/// A read-only namespace handle for clients and the lease-owning listener.
+/// An anchored namespace handle for clients and the lease-owning listener.
 /// It never creates, locks or removes a directory or lock file.
 final class CommandEndpointNamespace {
     let location: CommandEndpointLocation
@@ -66,44 +66,48 @@ final class CommandEndpointNamespace {
         }
     }
 
-    func socketIdentity(requirePrivateMode: Bool = true) throws -> CommandSocketIdentity? {
+    func socketIdentity(requirePrivateMode: Bool = true, leaf: String = "s") throws -> CommandSocketIdentity? {
         try verify()
-        guard let attributes = try attributes("s") else { return nil }
+        guard let attributes = try attributes(leaf) else { return nil }
         guard attributes.st_mode & S_IFMT == S_IFSOCK, attributes.st_uid == geteuid(),
               attributes.st_nlink == 1 else { throw CommandEndpointError.insecureSocket }
         if requirePrivateMode {
-            guard attributes.st_mode & 0o7777 == 0o600, try socketHasOnlyDenyACL() else {
+            guard attributes.st_mode & 0o7777 == 0o600, try socketHasOnlyDenyACL(leaf) else {
                 throw CommandEndpointError.insecureSocket
             }
         }
         try verify()
-        guard let after = try self.attributes("s"),
+        guard let after = try self.attributes(leaf),
               CommandSocketIdentity(after) == CommandSocketIdentity(attributes) else {
             throw CommandEndpointError.identityChanged
         }
         return CommandSocketIdentity(attributes)
     }
 
-    func secureSocket(expected: CommandSocketIdentity) throws {
-        guard try socketIdentity(requirePrivateMode: false) == expected else {
+    func secureSocket(expected: CommandSocketIdentity, leaf: String = "s") throws {
+        guard try socketIdentity(requirePrivateMode: false, leaf: leaf) == expected else {
             throw CommandEndpointError.identityChanged
         }
-        guard fchmodat(directory, "s", 0o600, AT_SYMLINK_NOFOLLOW) == 0 else {
+        guard fchmodat(directory, leaf, 0o600, AT_SYMLINK_NOFOLLOW) == 0 else {
             throw CommandEndpointError.unavailable(errno)
         }
-        guard try socketIdentity() == expected else { throw CommandEndpointError.identityChanged }
+        guard try socketIdentity(leaf: leaf) == expected else { throw CommandEndpointError.identityChanged }
     }
 
     /// Caller must own and revalidate the exclusive instance lease. Quarantine
     /// first so a replaced path cannot make cleanup delete an unknown object.
-    func retireSocket(expected: CommandSocketIdentity, beforeMove: (() throws -> Void)? = nil) throws {
-        guard try socketIdentity(requirePrivateMode: false) == expected else {
+    func retireSocket(
+        expected: CommandSocketIdentity,
+        leaf: String = "s",
+        beforeMove: (() throws -> Void)? = nil
+    ) throws {
+        guard try socketIdentity(requirePrivateMode: false, leaf: leaf) == expected else {
             throw CommandEndpointError.identityChanged
         }
         let quarantine = "retired-" + UUID().uuidString
         // Internal deterministic race control; production supplies no hook.
         try beforeMove?()
-        guard renameatx_np(directory, "s", directory, quarantine, UInt32(RENAME_EXCL)) == 0 else {
+        guard renameatx_np(directory, leaf, directory, quarantine, UInt32(RENAME_EXCL)) == 0 else {
             throw CommandEndpointError.unavailable(errno)
         }
         do {
@@ -115,9 +119,52 @@ final class CommandEndpointNamespace {
         } catch {
             // RENAME_EXCL preserves a newer path. If restoration cannot happen,
             // leave the displaced object under its private quarantine name.
-            _ = renameatx_np(directory, quarantine, directory, "s", UInt32(RENAME_EXCL))
+            _ = renameatx_np(directory, quarantine, directory, leaf, UInt32(RENAME_EXCL))
             throw error
         }
+    }
+
+    /// Bound sockets stay under a private unpublished leaf until both mode
+    /// and listen state are ready. No process-global umask change is needed.
+    func bindStagedSocket(_ descriptor: Int32, until deadline: ContinuousClock.Instant,
+                          isCancelled: @Sendable () -> Bool) throws -> (String, CommandSocketIdentity) {
+        let room = MemoryLayout.size(ofValue: sockaddr_un().sun_path) - 2 - location.directory.path.utf8.count
+        guard room >= 1 else { throw CommandEndpointError.invalidLocation }
+        let alphabet = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+        let offset = Int.random(in: 0 ..< alphabet.count)
+        for attempt in 0 ..< alphabet.count {
+            let prefix = String(alphabet[(offset + attempt) % alphabet.count])
+            let suffix = UUID().uuidString.replacingOccurrences(of: "-", with: "").prefix(min(room, 16) - 1)
+            let leaf = prefix + suffix
+            if leaf.lowercased() == "s" || leaf.lowercased() == "lock" {
+                continue
+            }
+            try verify()
+            try CommandSocketPolling.check(descriptor, deadline: deadline, cancelled: isCancelled)
+            let result = try CommandSocketPolling.withAddress(location.directory.appendingPathComponent(leaf).path) {
+                Darwin.bind(descriptor, $0, $1)
+            }
+            if result != 0 {
+                let code = errno
+                if code == EADDRINUSE || code == EEXIST {
+                    continue
+                }
+                throw CommandSocketError.unavailable(code)
+            }
+            guard let identity = try socketIdentity(requirePrivateMode: false, leaf: leaf) else {
+                throw CommandEndpointError.identityChanged
+            }
+            return (leaf, identity)
+        }
+        throw CommandSocketError.unavailable(EADDRINUSE)
+    }
+
+    func publishSocket(from leaf: String, expected: CommandSocketIdentity) throws {
+        guard try socketIdentity(leaf: leaf) == expected else { throw CommandEndpointError.identityChanged }
+        guard renameatx_np(directory, leaf, directory, "s", UInt32(RENAME_EXCL)) == 0 else {
+            throw CommandEndpointError.unavailable(errno)
+        }
+        guard try socketIdentity() == expected else { throw CommandEndpointError.identityChanged }
     }
 
     private func attributes(_ leaf: String) throws -> stat? {
@@ -131,8 +178,8 @@ final class CommandEndpointNamespace {
         return attributes
     }
 
-    private func socketHasOnlyDenyACL() throws -> Bool {
-        guard let acl = acl_get_link_np(location.socketPath, ACL_TYPE_EXTENDED) else {
+    private func socketHasOnlyDenyACL(_ leaf: String) throws -> Bool {
+        guard let acl = acl_get_link_np(location.directory.appendingPathComponent(leaf).path, ACL_TYPE_EXTENDED) else {
             if errno == ENOATTR || errno == ENOENT {
                 return true
             }

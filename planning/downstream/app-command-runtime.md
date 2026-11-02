@@ -89,3 +89,21 @@ but omitted socket ENOENT. Match the production CLI's already-existing typed
 absence/refusal policy for fixture readiness, retaining the same finite
 deadline and refusing all permission/protocol/identity failures. No production
 assertion or test is excluded. Full corrected hosted CI is required.
+
+## Atomic endpoint publication correction
+
+A later full hosted run retained two insecureSocket startup failures: clients
+observed the final socket after bind but before chmod. Strict client checks must
+not retry or accept an insecure endpoint. Bind under a transaction-owned private
+staging leaf in the already secured namespace, secure/verify that exact socket,
+start listening, then publish to `s` with anchored RENAME_EXCL. Never change the
+process-wide umask. The client sees absence until a private listening socket is
+published. A Darwin real-socket control proves renamed bound sockets accept at
+the published path. Stage names respect the existing sockaddr_un path budget,
+including the one-character boundary; collisions preserve existing entries.
+
+Keep exact identity/lease checks around publication and cleanup. Cleanup may
+retire only the captured staged/final socket, never a replacement; preserve any
+unfamiliar final entry. Fault controls must probe final absence between bind and
+securing, plus final-path replacement and interrupted preparation. Re-run all
+strict transport/admission controls and complete hosted suites before merge.
