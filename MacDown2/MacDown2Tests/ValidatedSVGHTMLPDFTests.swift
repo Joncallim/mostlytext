@@ -17,9 +17,10 @@ struct ValidatedSVGHTMLPDFTests {
             + "AAAADUlEQVR4nGP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg=="
         let image = try #require(Data(base64Encoded: pngBase64))
         try image.write(to: folder.appendingPathComponent("pixel.png"))
-        let request = ExportRequest(
+        let request = try ExportRequest(
             text: "![pixel](pixel.png)\n", sourceGeneration: 1,
-            theme: BundledThemes.light, documentURL: folder.appendingPathComponent("source.md")
+            theme: BundledThemes.light, documentURL: folder.appendingPathComponent("source.md"),
+            resourceAccess: ExportResourceAccess(openingDirectory: folder)
         )
 
         for name in ["report#one?.html", "report%23one.html", "雪.html"] {
