@@ -18,6 +18,12 @@ public final class LegacyImportStartup {
 
     public private(set) var phase: Phase
     public private(set) var review: Review?
+    /// No ordinary model exists in these states and no import write is in
+    /// flight, so Quit can leave the prior session/recovery untouched.
+    public var canQuitWithoutSession: Bool {
+        phase == .review || phase == .blocked
+    }
+
     public var didBecomeReady: (@MainActor () -> Void)?
     private let store: UserDefaultsAppSettingsStore
     private let makeJournal: @Sendable () async throws -> LegacyEditorMigrationJournal

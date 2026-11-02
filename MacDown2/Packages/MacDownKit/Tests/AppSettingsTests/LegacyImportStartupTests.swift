@@ -28,9 +28,11 @@ struct LegacyImportStartupTests {
         startup.didBecomeReady = { readyCount += 1 }
         await startup.begin()
         #expect(startup.phase == .review && readyCount == 0)
+        #expect(startup.canQuitWithoutSession)
         #expect(fixture.defaults.data(forKey: "appSettings.editor") == nil)
         await startup.apply(selected: [.smartHome], includeFont: false)
         #expect(startup.phase == .ready && readyCount == 1)
+        #expect(!startup.canQuitWithoutSession)
         #expect(!fixture.store.editor.smartHome)
         #expect(fixture.store.editor.convertsTabsToSpaces)
         let journal = try LegacyEditorMigrationJournal(directoryURL: fixture.directory)
@@ -135,6 +137,7 @@ struct LegacyImportStartupTests {
         await startup.continueWithoutImporting()
         await startup.apply(selected: [.smartHome], includeFont: false)
         #expect(startup.phase == .inspecting)
+        #expect(!startup.canQuitWithoutSession)
         gate.continuation?.resume()
         await operation.value
         #expect(startup.phase == .review)
@@ -163,6 +166,7 @@ struct LegacyImportStartupTests {
         let startup = startup(fixture, source: { sourceReads += 1; return try fixture.source() })
         await startup.begin()
         #expect(startup.phase == .blocked && sourceReads == 0)
+        #expect(startup.canQuitWithoutSession)
         await startup.continueWithoutImporting()
         #expect(startup.phase == .ready)
         let retained = try Data(contentsOf: fixture.directory.appendingPathComponent("plan.json"))

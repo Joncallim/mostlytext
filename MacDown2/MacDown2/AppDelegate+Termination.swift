@@ -7,7 +7,9 @@ extension AppDelegate {
     }
 
     func applicationShouldTerminate(_: NSApplication) -> NSApplication.TerminateReply {
-        guard normalLaunchReady else { return .terminateCancel }
+        guard normalLaunchReady else {
+            return startup.canQuitWithoutSession ? .terminateNow : .terminateCancel
+        }
         coordinator.commandReceiver?.suspendAdmission()
         Task { @MainActor in
             let result = await coordinator.saveSessionForTermination()

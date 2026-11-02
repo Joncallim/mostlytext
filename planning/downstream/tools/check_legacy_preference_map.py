@@ -95,7 +95,7 @@ def validate(record: dict, header: bytes, implementation: bytes, repo: Path) -> 
         elif candidate is not None or entry.get("destination_source") is not None:
             raise ValueError("non-equivalent disposition cannot install a destination")
     validate_report(record, repo)
-    return {"status": "declaration and runtime report coverage passed; execution remains unimplemented",
+    return {"status": "declaration and runtime report coverage passed; runtime acceptance requires separate evidence",
             "properties": len(entries), "kinds": dict(Counter(entry["kind"] for entry in entries)),
             "dispositions": dict(Counter(entry["disposition"] for entry in entries))}
 
