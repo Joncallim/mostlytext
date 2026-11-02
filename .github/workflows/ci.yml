@@ -244,26 +244,31 @@ jobs:
             exec python3 "$RUNNER_TEMP/pr535-package-diagnostics/diagnostic.py" run
           fi
           swift build --force-resolved-versions
-          # Intel's linker can leave the test host unsigned. Foundation then
-          # cannot mint an app-scope bookmark key, even for private fixtures.
-          # Give the ephemeral test host an ordinary ad-hoc identity; no new
-          # entitlement or production bookmark fallback is required.
+          # Build all tests once. Darwin loads Swift Testing bundles inside
+          # swiftpm-testing-helper: signing a bundle cannot give that process
+          # an identity. Keep installed Xcode untouched and sign an owned copy.
           swift build --build-tests --force-resolved-versions
           test_bundle="$(swift build --show-bin-path --force-resolved-versions)/MacDownKitPackageTests.xctest"
-          test -f "$test_bundle/Contents/MacOS/MacDownKitPackageTests"
-          codesign --force --sign - "$test_bundle"
-          codesign --verify --strict "$test_bundle"
           test_host="$test_bundle/Contents/MacOS/MacDownKitPackageTests"
-          shasum -a 256 "$test_host" > "$RUNNER_TEMP/package-test-host.sha256"
-          # Monitor/save-queue/performance tests share temporary filesystem
-          # resources; concurrent XCTest scheduling makes these load-sensitive
-          # tests exceed their bounded coordination timeouts on CI. Keep the
-          # full suite and its assertions intact, but serialize execution.
-          # SwiftPM can relink an already-built host when entering test mode,
-          # discarding its identity. Build every test above, then execute that
-          # exact signed binary: no filter, disabled test or changed assertion.
-          swift test --skip-build --no-parallel --force-resolved-versions
-          codesign --verify --strict "$test_bundle"
+          test -f "$test_host"
+          developer="$(xcode-select -p)"
+          helper="$developer/Toolchains/XcodeDefault.xctoolchain/usr/libexec/swift/pm/swiftpm-testing-helper"
+          owned_helper="$RUNNER_TEMP/owned-swiftpm-testing-helper"
+          cp "$helper" "$owned_helper"
+          cmp "$helper" "$owned_helper"
+          shasum -a 256 "$helper"
+          codesign --force --sign - "$owned_helper"
+          codesign --verify --strict "$owned_helper"
+          shasum -a 256 "$helper" "$test_host" "$owned_helper" > "$RUNNER_TEMP/package-test-host.sha256"
+          frameworks="$developer/Platforms/MacOSX.platform/Developer/Library/Frameworks"
+          test -d "$frameworks/Testing.framework"
+          # Keep both frameworks and all assertions. SwiftPM runs XCTest;
+          # the copied, identified helper runs every Swift Testing case.
+          # Existing timing ceilings and serial execution remain unchanged.
+          swift test --skip-build --disable-swift-testing --no-parallel --force-resolved-versions
+          env DYLD_FRAMEWORK_PATH="$frameworks" "$owned_helper" \
+            --test-bundle-path "$test_host" --testing-library swift-testing --no-parallel
+          codesign --verify --strict "$owned_helper"
           shasum -a 256 -c "$RUNNER_TEMP/package-test-host.sha256"
       - name: Collect fresh package test crash reports
         if: ${{ always() && env.PR535_DIAGNOSTICS == 'true' }}

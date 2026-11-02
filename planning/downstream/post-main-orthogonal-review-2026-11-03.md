@@ -110,3 +110,55 @@ selection or execution. Hash the executable before/after and verify its signatur
 again after a pass. No test filter, disabled assertion, budget change or new
 entitlement is introduced. The obsolete first combined run is explicitly
 superseded for this diagnosed sequencing error, not counted as a pass.
+
+## Actual Swift Testing host identity
+
+Full run 41521890558 executed 3,311 package tests / 460 suites and retained 23
+unexpected issues plus the two existing known issues. Its 17 bookmark assertion
+failures persisted despite signing the bundle and preventing relinking. A
+minimal package probe at the same Xcode 26.0.1/Swift 6.2 toolchain identifies the
+actual process as the installed swiftpm-testing-helper. Signing the loaded
+bundle cannot establish that executable's identity; disabling XCTest still uses
+the same helper and does not create a standalone executable on Darwin.
+
+The official Swift Testing command-line debugging reference documents invoking
+this helper with --test-bundle-path and --testing-library swift-testing. Use a
+byte-verified private copy of the exact selected Xcode helper, ad-hoc sign and
+verify that copy, and provide the same Xcode platform's Testing.framework search
+path. Never modify the installed helper or Xcode. Do not distribute the copied
+vendor executable as a product or workflow artifact. The matched private-helper
+probe 41528703799 passes the actual scoped-bookmark assertion; the original and
+bundle-signed paths both fail. An explicit failing-assertion exit control is
+also required before using this path for full CI.
+
+Normal full CI retains all framework tests: the ordinary pinned SwiftPM command
+executes XCTest with Swift Testing disabled, then the owned helper executes the
+entire Swift Testing bundle serially with no filter. Current package sources
+contain no XCTest import or XCTestCase subclass, matching the original zero
+XCTest count; retaining that pathway also avoids dropping future framework
+coverage. Hash the test bundle and helper around execution, preserve every
+assertion/budget and require complete actual summaries. This is infrastructure
+identity, not a production bookmark permission change or native acceptance.
+
+Reference: [Swift Testing command-line debugging](https://github.com/swiftlang/swift-testing/blob/main/Documentation/CommandlineDebugging.md).
+
+The final minimal package control 41529393284 confirms both sides: the matched,
+owned helper executes the actual scoped-bookmark test and exits zero; a separate
+intentional assertion failure executes one test and exits one. Default,
+bundle-signed and XCTest-disabled original-helper paths all retain their scope
+failure. The normal CI path now uses that proven helper strategy, preserves the
+original helper/bundle bytes with before/after hashes, and retains XCTest plus
+the full serial Swift Testing execution. No toolchain binary is modified.
+
+## Editing scan and fixture fidelity review
+
+The candidate also incorporates #582: prefix admission avoids redundant full-line
+scans while preserving all existing UTF-16 helpers and fence grammar. All 165
+Foundation-only controls / 16 suites pass Debug/Release with an explicit pure
+transaction-DTO extraction; 17,376 generated caret classifications match the
+previous source. Complete pure Smart Home on exactly 2,000,000 units falls from
+about 47.70 to 23.33 ms in Debug; the existing named 1 MB fixture is actually
+475,008 ASCII units and its pure newline decision falls from about 3.55 to
+1.59 ms. Those numbers do not establish a full-size/native budget. Fixture
+fidelity remains in #112/#203/#115. The native backing-store getter probe shows
+no material getter cost, so no speculative getter change is included.
