@@ -13,6 +13,9 @@ extension ThemeCatalogModel {
         case .applicationSupport:
             parent = FileManager.default.homeDirectoryForCurrentUser
             components = ["Library", "Application Support", "MacDown 2", "Themes"]
+        case let .managedInstallation(url):
+            parent = url
+            components = ["Themes"]
         case let .isolatedSession(url):
             parent = url
             components = ["themes"]

@@ -32,6 +32,19 @@ public struct UserDefaultsThemePreferenceStore: ThemePreferenceStoring {
         self.defaults = UserDefaultsBox(defaults)
     }
 
+    /// Pure pre-model admission for an installation preference snapshot.
+    public static func admitsInstallationPreferences(_ domain: [String: Any]) -> Bool {
+        for key in [Keys.light, Keys.dark] {
+            if let raw = domain[key] {
+                guard let value = raw as? String, validID(value) else { return false }
+            }
+        }
+        if let raw = domain[Keys.appearanceMode] {
+            guard let value = raw as? String, ThemeAppearanceMode(rawValue: value) != nil else { return false }
+        }
+        return true
+    }
+
     public var hasUnreadablePreferences: Bool {
         !readID(Keys.light).isReadable || !readID(Keys.dark).isReadable || !appearanceModeIsReadable
     }

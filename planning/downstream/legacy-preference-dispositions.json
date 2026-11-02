@@ -43,11 +43,11 @@
       "key": "updateIncludesPreReleases",
       "declaration_type": "BOOL",
       "kind": "stored",
-      "disposition": "owned_policy_pending",
+      "disposition": "unsupported_current_surface",
       "rationale": "Explicit update-channel suggestion only; no hidden channel/feed/key import.",
       "owner": "#18",
-      "implementation_status": "not_implemented",
-      "report_policy": "unsupported"
+      "implementation_status": "implemented_report",
+      "report_policy": "updateConsent"
     },
     {
       "key": "supressesUntitledDocumentOnLaunch",
@@ -459,21 +459,21 @@
       "key": "htmlMathJax",
       "declaration_type": "BOOL",
       "kind": "stored",
-      "disposition": "owned_policy_pending",
+      "disposition": "unsupported_current_surface",
       "rationale": "Explain the engine/capability change; no MathJax runtime/URL/hidden switch.",
       "owner": "#116",
-      "implementation_status": "not_implemented",
-      "report_policy": "unsupported"
+      "implementation_status": "implemented_report",
+      "report_policy": "capabilityPolicy"
     },
     {
       "key": "htmlMathJaxInlineDollar",
       "declaration_type": "BOOL",
       "kind": "stored",
-      "disposition": "owned_policy_pending",
-      "rationale": "Explain #116's shared grammar and unsupported disabling behavior; no second grammar.",
+      "disposition": "unsupported_current_surface",
+      "rationale": "Retain current math parsing rules without importing the old disabling switch. Shared Preview/Export grammar acceptance remains owned by #116; this report does not claim that work complete.",
       "owner": "#116",
-      "implementation_status": "not_implemented",
-      "report_policy": "unsupported"
+      "implementation_status": "implemented_report",
+      "report_policy": "capabilityPolicy"
     },
     {
       "key": "htmlSyntaxHighlighting",
@@ -509,21 +509,21 @@
       "key": "htmlGraphviz",
       "declaration_type": "BOOL",
       "kind": "stored",
-      "disposition": "owned_policy_pending",
+      "disposition": "unsupported_current_surface",
       "rationale": "Report local Graphviz capability; no old scripts or no-op setting.",
       "owner": "#79/#117",
-      "implementation_status": "not_implemented",
-      "report_policy": "unsupported"
+      "implementation_status": "implemented_report",
+      "report_policy": "capabilityPolicy"
     },
     {
       "key": "htmlMermaid",
       "declaration_type": "BOOL",
       "kind": "stored",
-      "disposition": "owned_policy_pending",
+      "disposition": "unsupported_current_surface",
       "rationale": "Same for local Mermaid.",
       "owner": "#79/#117",
-      "implementation_status": "not_implemented",
-      "report_policy": "unsupported"
+      "implementation_status": "implemented_report",
+      "report_policy": "capabilityPolicy"
     },
     {
       "key": "htmlCodeBlockAccessory",
@@ -549,11 +549,11 @@
       "key": "htmlRendersTOC",
       "declaration_type": "BOOL",
       "kind": "stored",
-      "disposition": "owned_policy_pending",
+      "disposition": "unsupported_current_surface",
       "rationale": "Explain explicit [TOC] contribution policy; never insert markers or rewrite documents.",
       "owner": "#117",
-      "implementation_status": "not_implemented",
-      "report_policy": "unsupported"
+      "implementation_status": "implemented_report",
+      "report_policy": "capabilityPolicy"
     },
     {
       "key": "editorBaseFontName",

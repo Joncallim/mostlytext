@@ -17,6 +17,9 @@ struct CommandDescriptor: Equatable {
         case paletteItself
         /// App information and license readers remain in the application menu.
         case informational
+        /// Reauthorization is scoped to unavailable recent items; the palette
+        /// already offers the ordinary Open File and Open Folder commands.
+        case recentReauthorization
         /// Palette-eligible in principle, but not yet wired: doing so needs
         /// explicit origin-window capture (the palette is the key window
         /// while a command runs). Carried forward in the EPIC-22 tracker.
@@ -50,6 +53,8 @@ extension CommandDescriptor {
         CommandDescriptor("Open Recent Folder", .excluded(.menuContainer)),
         CommandDescriptor("Open Recent File", .excluded(.menuContainer)),
         CommandDescriptor("Clear Menu", .excluded(.dynamicItems)),
+        CommandDescriptor("Choose a File Again…", .excluded(.recentReauthorization)),
+        CommandDescriptor("Choose a Folder Again…", .excluded(.recentReauthorization)),
         CommandDescriptor("Quick Open…", .excluded(.notYetWired)),
         CommandDescriptor("Save", .palette(id: "save")),
         CommandDescriptor("Save As…", .palette(id: "saveAs")),

@@ -20,6 +20,33 @@ struct LegacyImportStartupTests {
                                    source: source, resolveFont: { _ in nil })
     }
 
+    @Test func historicalOfferSuppressionStillResumesAnUnfinishedNewJournal() async throws {
+        let fixture = try EditorMigrationFixture(); defer { fixture.cleanup() }
+        let journal = try LegacyEditorMigrationJournal(directoryURL: fixture.directory)
+        _ = try await journal.prepare(fixture.plan())
+        await journal.close()
+        let directory = fixture.directory
+        let startup = LegacyImportStartup(store: fixture.store, skipNewOffer: true,
+                                          makeJournal: { try LegacyEditorMigrationJournal(directoryURL: directory) },
+                                          source: { try fixture.source() }, resolveFont: { _ in nil })
+        await startup.begin()
+        #expect(startup.phase == .ready && !fixture.store.editor.smartHome)
+        let completed = try LegacyEditorMigrationJournal(directoryURL: directory)
+        #expect(try await completed.inspect() == .complete)
+        await completed.close()
+    }
+
+    @Test func historicalOfferSuppressionDoesNotReadAnAbsentNewOfferSource() async throws {
+        let fixture = try EditorMigrationFixture(); defer { fixture.cleanup() }
+        let directory = fixture.directory
+        let startup = LegacyImportStartup(store: fixture.store, skipNewOffer: true,
+                                          makeJournal: { try LegacyEditorMigrationJournal(directoryURL: directory) },
+                                          source: { throw LegacyMigrationFailure.busy }, resolveFont: { _ in nil })
+        await startup.begin()
+        #expect(startup.phase == .ready)
+        #expect(fixture.defaults.data(forKey: "appSettings.editor") == nil)
+    }
+
     @Test func writersWaitForExplicitSelectionAndJournalCompletesBeforeReadiness() async throws {
         let fixture = try EditorMigrationFixture()
         defer { fixture.cleanup() }

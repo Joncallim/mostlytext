@@ -404,6 +404,10 @@
         }
       }
     },
+    "A table of contents requires an explicit [TOC] marker. Migration does not insert or rewrite document text.": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
+    },
     "About MostlyText": {
       "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
       "localizations": {
@@ -563,6 +567,14 @@
         }
       }
     },
+    "Choose a File Again…": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
+    },
+    "Choose a Folder Again…": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
+    },
     "Choose which original MacDown preferences to import. Your original preferences remain unchanged.": {
       "extractionState": "manual",
       "localizations": {
@@ -573,6 +585,10 @@
           }
         }
       }
+    },
+    "Close older installations before retrying. Existing files, preferences and recovery copies are preserved.": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
     },
     "Command": {
       "localizations": {
@@ -595,6 +611,10 @@
           }
         }
       }
+    },
+    "Continue With Existing Installation": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
     },
     "Continue Without Importing": {
       "extractionState": "manual",
@@ -1036,6 +1056,10 @@
         }
       }
     },
+    "Graphviz is a local capability; old scripts and renderer switches are not imported.": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
+    },
     "HTML": {
       "localizations": {
         "fr": {
@@ -1170,6 +1194,10 @@
           }
         }
       }
+    },
+    "Installation Needs Review": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
     },
     "License document": {
       "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
@@ -1369,6 +1397,14 @@
         }
       }
     },
+    "Math uses the local engine. Old MathJax settings do not disable it or load a remote runtime.": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
+    },
+    "Mermaid is a local capability; old scripts and renderer switches are not imported.": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
+    },
     "MostlyText": {
       "comment": "Canonical product name. Preserve MostlyText capitalization in every language.",
       "localizations": {
@@ -1391,6 +1427,10 @@
           }
         }
       }
+    },
+    "MostlyText Migration": {
+      "extractionState": "manual",
+      "comment": "Installation migration source copy. Translation and native layout acceptance remain tracked in #17."
     },
     "MostlyText license": {
       "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
@@ -1770,6 +1810,10 @@
         }
       }
     },
+    "Other Migration Policies": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
+    },
     "PDF": {
       "localizations": {
         "fr": {
@@ -1791,6 +1835,14 @@
           }
         }
       }
+    },
+    "Pre-release updates were previously disabled.": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
+    },
+    "Pre-release updates were previously enabled.": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
     },
     "Preferences from the original MacDown were found. Importing them isn't supported yet.": {
       "localizations": {
@@ -1814,6 +1866,10 @@
         }
       }
     },
+    "Preserving your previous installation…": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
+    },
     "Preview Only": {
       "localizations": {
         "fr": {
@@ -1835,6 +1891,14 @@
           }
         }
       }
+    },
+    "Previously disabled": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
+    },
+    "Previously enabled": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
     },
     "Prose and": {
       "comment": "Appearance settings. Translation draft; native-speaker review remains required.",
@@ -2027,6 +2091,10 @@
         }
       }
     },
+    "Retry Migration": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
+    },
     "Save Changes": {
       "extractionState": "manual"
     },
@@ -2123,6 +2191,10 @@
         }
       }
     },
+    "Show Preserved Installation": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
+    },
     "Smart Home key": {
       "extractionState": "manual",
       "localizations": {
@@ -2156,6 +2228,10 @@
           }
         }
       }
+    },
+    "Some previous bookmarks need access again.": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
     },
     "Split Editor & Preview": {
       "localizations": {
@@ -2280,6 +2356,10 @@
         }
       }
     },
+    "The old inline-dollar switch is not imported. This version uses its current math parsing rules.": {
+      "extractionState": "manual",
+      "comment": "Installation migration source copy. Translation and native layout acceptance remain tracked in #17."
+    },
     "The original editor font cannot be reproduced exactly and will not be imported.": {
       "extractionState": "manual",
       "localizations": {
@@ -2290,6 +2370,10 @@
           }
         }
       }
+    },
+    "The previous development installation was preserved separately, including its unsaved recovery files.": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
     },
     "The theme changed during this operation. Import it again to review the current version.": {
       "comment": "Theme management. Translation draft; native-speaker review remains required.",
@@ -2619,6 +2703,14 @@
         }
       }
     },
+    "Unsupported or changed state must be reviewed before this version can open it safely.": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
+    },
+    "Update channels require fresh consent. No old feed, key or pre-release choice is imported.": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
+    },
     "Version": {
       "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
       "localizations": {
@@ -2663,6 +2755,10 @@
           }
         }
       }
+    },
+    "Your Existing MostlyText Installation Was Kept": {
+      "extractionState": "manual",
+      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
     },
     "^[%lld valid placement](inflect: true) exceeded the preview budget and remain as authored source": {
       "localizations": {

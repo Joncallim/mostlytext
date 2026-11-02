@@ -9,10 +9,16 @@ public struct LegacyPreferenceReport: Sendable, Equatable {
         public let size: Double
     }
 
+    public enum CapabilityPolicy: String, Sendable, CaseIterable {
+        case localMath, currentInlineDollarRules, localGraphviz, localMermaid, explicitTableOfContents
+    }
+
     public enum Disposition: Sendable, Equatable {
         case editorBoolean(LegacyImportPlan.Destination, Bool)
         case requiresExactInstalledFont(FontRequest)
         case unsupportedLegacyTheme
+        case currentCapabilityPolicy(CapabilityPolicy, legacyEnabled: Bool)
+        case requiresFreshUpdateConsent(legacyIncludedPrereleases: Bool)
         case unconditionalCapability
         case unsupported
         case legacyProvenance
@@ -63,21 +69,53 @@ public struct LegacyPreferenceReport: Sendable, Equatable {
         value: LegacyPreferenceValue,
         conversion: LegacyEditorBooleanConversion
     ) -> Disposition {
+        if let policy = classifyOwnedPolicy(definition, value: value) {
+            return policy
+        }
         switch definition.policy {
         case .mapped:
-            guard let destination = LegacyEditorBooleanConversion.destination(for: definition.key),
-                  let proposed = conversion.proposedValues[destination] else { return .invalid }
-            return .editorBoolean(destination, proposed)
+            return mappedDisposition(key: definition.key, conversion: conversion)
         case .font:
-            guard let request = fontRequest(value) else { return .invalid }
-            return .requiresExactInstalledFont(request)
+            return fontRequest(value).map(Disposition.requiresExactInstalledFont) ?? .invalid
         case .legacyTheme: return .unsupportedLegacyTheme
+        case .updateConsent, .capabilityPolicy: return .invalid
         case .unconditional:
             return value == .boolean(true) ? .unconditionalCapability : .unsupported
         case .provenance: return .legacyProvenance
         case .unsupported: return .unsupported
         case .calculated: return .calculatedValue
         case .transient: return .ignoredTransient
+        }
+    }
+
+    private static func mappedDisposition(key: String, conversion: LegacyEditorBooleanConversion) -> Disposition {
+        guard let destination = LegacyEditorBooleanConversion.destination(for: key),
+              let proposed = conversion.proposedValues[destination] else { return .invalid }
+        return .editorBoolean(destination, proposed)
+    }
+
+    private static func classifyOwnedPolicy(_ definition: LegacyPreferenceCatalog.Definition,
+                                            value: LegacyPreferenceValue) -> Disposition? {
+        switch definition.policy {
+        case .updateConsent:
+            guard case let .boolean(flag) = value else { return .invalid }
+            return .requiresFreshUpdateConsent(legacyIncludedPrereleases: flag)
+        case .capabilityPolicy:
+            guard case let .boolean(flag) = value,
+                  let policy = capabilityPolicy(for: definition.key) else { return .invalid }
+            return .currentCapabilityPolicy(policy, legacyEnabled: flag)
+        default: return nil
+        }
+    }
+
+    private static func capabilityPolicy(for key: String) -> CapabilityPolicy? {
+        switch key {
+        case "htmlMathJax": .localMath
+        case "htmlMathJaxInlineDollar": .currentInlineDollarRules
+        case "htmlGraphviz": .localGraphviz
+        case "htmlMermaid": .localMermaid
+        case "htmlRendersTOC": .explicitTableOfContents
+        default: nil
         }
     }
 

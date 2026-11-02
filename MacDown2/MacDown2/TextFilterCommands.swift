@@ -21,7 +21,8 @@ struct TextFilterCommands: Commands {
 
             Divider()
 
-            let commands = TextFilterCommandDiscovery.discoverCommands()
+            let commands = coordinator
+                .map { TextFilterCommandDiscovery.discoverCommands(in: $0.commandsDirectory) } ?? []
             if commands.isEmpty {
                 Text("No Commands Installed")
             } else {
@@ -37,7 +38,7 @@ struct TextFilterCommands: Commands {
             Divider()
 
             Button("Show Commands Folder") {
-                let directory = TextFilterCommandDiscovery.commandsDirectory
+                guard let directory = coordinator?.commandsDirectory else { return }
                 // Discovery creates the directory as a side effect (§9); the
                 // folder must exist before Finder can open it.
                 _ = TextFilterCommandDiscovery.discoverCommands(in: directory)
@@ -45,7 +46,8 @@ struct TextFilterCommands: Commands {
             }
 
             Button("Add Example Scripts") {
-                let result = BundledExampleScripts.install(into: TextFilterCommandDiscovery.commandsDirectory)
+                guard let directory = coordinator?.commandsDirectory else { return }
+                let result = BundledExampleScripts.install(into: directory)
                 Self.presentAddExampleScriptsResult(result)
             }
         }

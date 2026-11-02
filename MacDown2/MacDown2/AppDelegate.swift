@@ -2,10 +2,12 @@ import AppKit
 import AppSettings
 import Combine
 import CommandBridge
+import EditorCore
 import FileCore
 import FileTree
 import Foundation
 import Highlighting
+import TextFilters
 import Themes
 import Workspace
 
@@ -27,8 +29,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     private var hasPendingDocumentOpen = false
     var commandServer: CommandApplicationServer?
     private let defaults: UserDefaults
-    private let shouldShowFirstRun: Bool
-    let startup: LegacyImportStartup
+    private var shouldShowFirstRun: Bool {
+        Self.launchArguments.contains("-UITesting") ? Self.launchArguments.contains("-ForceFirstRun")
+            : !defaults.bool(forKey: Self.hasCompletedFirstRunKey)
+    }
+
+    let startup: ApplicationMigrationStartup
     private let settingsStore: UserDefaultsAppSettingsStore
     @Published private(set) var normalLaunchReady = false
     private var startupOpenFiles: [String] = []
@@ -61,19 +67,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             settingsStore = (try? UserDefaultsAppSettingsStore(persistentDomainName: identity))
                 ?? UserDefaultsAppSettingsStore(defaults: defaults)
         }
-        startup = LegacyImportEnvironment.makeStartup(store: settingsStore, identity: identity, disabled: bypassImport)
+        startup = InstallationMigrationEnvironment.makeStartup(
+            store: settingsStore,
+            identity: identity,
+            disabled: bypassImport
+        )
 
         self.defaults = defaults
-        // Under `-UITesting`, `defaults` is always a fresh, empty, isolated
-        // suite (above), so it would never report first-run as complete and
-        // every one of this target's ~30 existing UI tests would otherwise
-        // have to contend with an unexpected welcome window. Onboarding is
-        // opted into explicitly with `-ForceFirstRun` instead, so its own UI
-        // test can exercise it without disturbing every other one.
-        shouldShowFirstRun = isUITesting
-            ? args.contains("-ForceFirstRun")
-            : !defaults.bool(forKey: Self.hasCompletedFirstRunKey)
-
         launchURLs = Self.openFilesPaths(from: args).map { URL(fileURLWithPath: $0) }
         launchFolderURL = Self.openFolderPath(from: args).map { URL(fileURLWithPath: $0, isDirectory: true) }
         super.init()
@@ -92,17 +92,30 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 isDirectory: true
             ))
             workspaceStateStore = WorkspaceStateStore(defaults: defaults)
+        } else if let locations = startup.locations {
+            sessionStore = WorkspaceSessionStore(fileURL: locations.session)
+            recoveryBuffer = RecoveryBuffer(recoveryDirectory: locations.recovery)
+            guard let workspaceDefaults = UserDefaults(suiteName: ApplicationStorageLocations.workspaceDomain) else {
+                preconditionFailure("The compiled workspace domain must be available")
+            }
+            workspaceStateStore = WorkspaceStateStore(defaults: workspaceDefaults)
         } else {
             sessionStore = WorkspaceSessionStore()
             recoveryBuffer = .shared
             workspaceStateStore = WorkspaceStateStore()
         }
         themeController = ThemeController(preferenceStore: UserDefaultsThemePreferenceStore(defaults: defaults))
-        themeCatalog = Self.makeThemeCatalog(controller: themeController, args: args)
+        themeCatalog = makeThemeCatalog(controller: themeController, args: args)
         grammarRegistry = GrammarRegistry()
         fileTreePreferences = FileTreePreferences(store: UserDefaultsFileTreePreferenceStore(defaults: defaults))
-        recentFolderRoots = RecentFolderRoots(preferences: fileTreePreferences)
-        recentFileDocuments = RecentFileDocuments(preferences: fileTreePreferences)
+        recentFolderRoots = RecentFolderRoots(
+            preferences: fileTreePreferences,
+            preservesUnavailableBookmarks: startup.locations != nil
+        )
+        recentFileDocuments = RecentFileDocuments(
+            preferences: fileTreePreferences,
+            preservesUnavailableBookmarks: startup.locations != nil
+        )
         appSettings = AppSettingsModel(store: settingsStore)
         connectThemeAppearanceOverride()
 
@@ -116,13 +129,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             recentFolderRoots: recentFolderRoots,
             recentFileDocuments: recentFileDocuments,
             appSettings: appSettings,
-            workspaceStateStore: workspaceStateStore
+            workspaceStateStore: workspaceStateStore,
+            snippetStore: startup.locations.map { SnippetStore(fileURL: $0.snippets) } ?? SnippetStore(),
+            commandsDirectory: startup.locations?.commands ?? TextFilterCommandDiscovery.commandsDirectory
         )
     }
 
-    private static func makeThemeCatalog(controller: ThemeController, args: [String]) -> ThemeCatalogModel {
-        let location: ThemeCatalogModel.Location = args.contains("-UITesting")
-            ? .isolatedSession(sessionDirectory(from: args)) : .applicationSupport
+    private func makeThemeCatalog(controller: ThemeController, args: [String]) -> ThemeCatalogModel {
+        let location: ThemeCatalogModel.Location = if args
+            .contains("-UITesting") {
+            .isolatedSession(Self.sessionDirectory(from: args))
+        } else if let locations = startup.locations {
+            .managedInstallation(locations.dataDirectory)
+        } else {
+            .applicationSupport
+        }
         return ThemeCatalogModel(controller: controller, location: location)
     }
 
@@ -239,33 +260,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 self?.hasPendingDocumentOpen ?? false
             }
         }
-    }
-
-    @objc private func systemAppearanceChanged() {
-        guard themeController.appearanceMode == .system else { return }
-        syncThemeAppearance()
-    }
-
-    private func connectThemeAppearanceOverride() {
-        themeController.appearanceModeDidChange = { [weak self] _ in
-            self?.applyThemeAppearanceOverride()
-        }
-    }
-
-    private func applyThemeAppearanceOverride() {
-        switch themeController.appearanceMode {
-        case .system:
-            NSApp.appearance = nil
-            syncThemeAppearance()
-        case .light:
-            NSApp.appearance = NSAppearance(named: .aqua)
-        case .dark:
-            NSApp.appearance = NSAppearance(named: .darkAqua)
-        }
-    }
-
-    private func syncThemeAppearance() {
-        themeController.setAppearance(NSApp.effectiveAppearance.themeAppearance)
     }
 
     func applicationShouldHandleReopen(_: NSApplication, hasVisibleWindows flag: Bool) -> Bool {

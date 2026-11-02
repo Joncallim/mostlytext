@@ -51,10 +51,17 @@ public final class RecentFileDocuments {
     }
 
     public private(set) var documents: [URL] = []
+    public var unresolvedBookmarkCount: Int {
+        unresolved.count
+    }
+
     private let preferences: FileTreePreferences
     private var bookmarks: [Data] = []
+    private var unresolved: [Data] = []
+    public let preservesUnavailableBookmarks: Bool
 
-    public init(preferences: FileTreePreferences) {
+    public init(preferences: FileTreePreferences, preservesUnavailableBookmarks: Bool = false) {
+        self.preservesUnavailableBookmarks = preservesUnavailableBookmarks
         self.preferences = preferences
         reload()
     }
@@ -63,7 +70,10 @@ public final class RecentFileDocuments {
         let standardized = url.standardizedFileURL
         let physical = standardized.resolvingSymlinksInPath().standardizedFileURL
         guard let bookmark = try? physical.bookmarkData(options: .withSecurityScope) else { return }
-        var updated = zip(documents, bookmarks).filter { !PhysicalFileIdentity.matches($0.0, standardized) }
+        var updated = zip(documents, bookmarks).filter { $0.0 != standardized && !PhysicalFileIdentity.matches(
+            $0.0,
+            standardized
+        ) }
         updated.insert(
             (standardized, stored(
                 bookmark: bookmark,
@@ -111,6 +121,9 @@ public final class RecentFileDocuments {
             relativeTo: nil,
             bookmarkDataIsStale: &stale
         ) else {
+            if preservesUnavailableBookmarks {
+                return nil
+            }
             documents.remove(at: index)
             bookmarks.remove(at: index)
             save()
@@ -122,6 +135,9 @@ public final class RecentFileDocuments {
         // old path they resolve to *it*. Refuse it rather than open the wrong
         // file; the entry no longer refers to anything we can find.
         if let expected = record.fingerprint, Fingerprint(of: standardized) != expected {
+            if preservesUnavailableBookmarks {
+                return nil
+            }
             documents.remove(at: index)
             bookmarks.remove(at: index)
             save()
@@ -151,7 +167,7 @@ public final class RecentFileDocuments {
     }
 
     public func clear() {
-        documents = []; bookmarks = []
+        documents = []; bookmarks = []; unresolved = []
         storeBookmarks([])
     }
 
@@ -202,6 +218,11 @@ public final class RecentFileDocuments {
                     stored(bookmark: record.bookmark, lexicalURL: moved, fingerprint: record.fingerprint)
                 ))
                 changed = true
+            } else if preservesUnavailableBookmarks {
+                // ENOENT can mean an unmounted volume or unavailable grant,
+                // not just deliberate deletion. Retain uncertain identity;
+                // explicit reauthorization or Clear owns its removal.
+                survivors.append((url, bookmark))
             }
         }
         guard changed || survivors.count != documents.count else { return }
@@ -213,6 +234,7 @@ public final class RecentFileDocuments {
     private func reload() {
         documents = []
         bookmarks = []
+        unresolved = []
         var changed = false
         var seen: [URL] = []
         for data in storedBookmarks() {
@@ -224,7 +246,15 @@ public final class RecentFileDocuments {
                 relativeTo: nil,
                 bookmarkDataIsStale: &stale
             ) else {
-                changed = true
+                if preservesUnavailableBookmarks {
+                    if let lexical = record.lexicalURL {
+                        documents.append(lexical); bookmarks.append(data)
+                    } else {
+                        unresolved.append(data)
+                    }
+                } else {
+                    changed = true
+                }
                 continue
             }
             let resolved = url.standardizedFileURL
@@ -250,8 +280,21 @@ public final class RecentFileDocuments {
         pruneMissingFiles()
     }
 
+    public static func relocatedInstallationBookmarks(_ values: [Data],
+                                                      map: (URL) throws -> URL?) throws -> [Data] {
+        try values.map { data in
+            let stored = try? JSONDecoder().decode(StoredDocument.self, from: data)
+            var stale = false
+            let old = stored?.lexicalURL ?? (try? URL(resolvingBookmarkData: data, options: [.withSecurityScope],
+                                                      relativeTo: nil, bookmarkDataIsStale: &stale))
+            guard let old, let new = try map(old) else { return data }
+            return try JSONEncoder().encode(StoredDocument(bookmark: new.bookmarkData(options: .withSecurityScope),
+                                                           lexicalURL: new, fingerprint: Fingerprint(of: new)))
+        }
+    }
+
     private func save() {
-        storeBookmarks(bookmarks)
+        storeBookmarks(bookmarks + unresolved)
     }
 
     /// Where a bookmark currently finds its file, if that file exists.

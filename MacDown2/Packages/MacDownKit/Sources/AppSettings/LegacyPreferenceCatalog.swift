@@ -5,7 +5,8 @@ import Foundation
 /// remain visible in a local report; they never become no-op destination keys.
 public enum LegacyPreferenceCatalog {
     public enum ValueKind: Sendable { case boolean, string, number, enumeration, font, opaque }
-    public enum Policy: Sendable { case mapped, font, legacyTheme, unconditional, provenance, unsupported, calculated,
+    public enum Policy: Sendable { case mapped, font, legacyTheme, capabilityPolicy, updateConsent, unconditional,
+                                        provenance, unsupported, calculated,
                                         transient
     }
 
@@ -24,7 +25,7 @@ public enum LegacyPreferenceCatalog {
     public static let definitions: [Definition] = [
         .init("firstVersionInstalled", .string, .provenance),
         .init("latestVersionInstalled", .string, .provenance),
-        .init("updateIncludesPreReleases", .boolean, .unsupported),
+        .init("updateIncludesPreReleases", .boolean, .updateConsent),
         .init("supressesUntitledDocumentOnLaunch", .boolean, .unsupported),
         .init("createFileForLinkTarget", .boolean, .unsupported),
         .init("extensionIntraEmphasis", .boolean, .unsupported),
@@ -64,16 +65,16 @@ public enum LegacyPreferenceCatalog {
         .init("htmlDetectFrontMatter", .boolean, .unsupported),
         .init("htmlTaskList", .boolean, .unconditional),
         .init("htmlHardWrap", .boolean, .unsupported),
-        .init("htmlMathJax", .boolean, .unsupported),
-        .init("htmlMathJaxInlineDollar", .boolean, .unsupported),
+        .init("htmlMathJax", .boolean, .capabilityPolicy),
+        .init("htmlMathJaxInlineDollar", .boolean, .capabilityPolicy),
         .init("htmlSyntaxHighlighting", .boolean, .unsupported),
         .init("htmlHighlightingThemeName", .string, .unsupported),
         .init("htmlLineNumbers", .boolean, .unsupported),
-        .init("htmlGraphviz", .boolean, .unsupported),
-        .init("htmlMermaid", .boolean, .unsupported),
+        .init("htmlGraphviz", .boolean, .capabilityPolicy),
+        .init("htmlMermaid", .boolean, .capabilityPolicy),
         .init("htmlCodeBlockAccessory", .enumeration, .unsupported),
         .init("htmlDefaultDirectoryUrl", .opaque, .unsupported),
-        .init("htmlRendersTOC", .boolean, .unsupported),
+        .init("htmlRendersTOC", .boolean, .capabilityPolicy),
         .init("editorBaseFontName", .string, .calculated),
         .init("editorBaseFontSize", .number, .calculated),
         .init("editorBaseFont", .opaque, .calculated),

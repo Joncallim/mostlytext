@@ -28,7 +28,12 @@ extension WindowCoordinator {
     /// publication. Menu callers may discard it; lifecycle tests await it.
     @discardableResult
     func openRecentFile(_ url: URL) -> Task<Void, Never>? {
-        guard let resolution = recentFileDocuments.resolve(url) else { return nil }
+        guard let resolution = recentFileDocuments.resolve(url) else {
+            if recentFileDocuments.preservesUnavailableBookmarks {
+                openFile()
+            }
+            return nil
+        }
         // `lexicalURL`, not `accessURL` -- matching `openRecentFolder`'s own
         // choice of `resolution.lexicalURL` for `openFolder`'s primary
         // argument. An independent review of this slice caught this: for a
