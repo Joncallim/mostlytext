@@ -10,7 +10,8 @@ extension FileStore {
         temporaryURL: URL,
         destinationURL: URL,
         expectedRevision: FileRevision,
-        hooks: ConditionalPublicationTestHooks?
+        hooks: ConditionalPublicationTestHooks?,
+        stage: FileStoreStage
     ) throws(FileStoreError) {
         var ownership: ConditionalPublicationOwnership = .oursAtTemporary
         let publishedRevision = try readRevision(from: temporaryURL)
@@ -36,12 +37,14 @@ extension FileStore {
         } catch {
             try rollbackOrPreserve(temporaryURL, destinationURL, publishedRevision: publishedRevision, hooks: hooks)
             ownership = .rollbackConfirmed
+            do { try stage.refreshAfterRollback() } catch { throw mapWriteError(error) }
             throw mapWriteError(error)
         }
 
         guard matchesExpectedBaseline(displaced, expectedRevision) else {
             try rollbackOrPreserve(temporaryURL, destinationURL, publishedRevision: publishedRevision, hooks: hooks)
             ownership = .rollbackConfirmed
+            do { try stage.refreshAfterRollback() } catch { throw mapWriteError(error) }
             throw .fileChangedDuringRead
         }
 
