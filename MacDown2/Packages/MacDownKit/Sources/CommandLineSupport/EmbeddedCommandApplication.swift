@@ -13,7 +13,7 @@ public enum EmbeddedCommandFailure: Error, Sendable, Equatable {
 /// Locate only the app containing this executable. No PATH/LaunchServices
 /// search, configurable bundle ID or unsigned-launch override is accepted.
 public struct EmbeddedCommandApplication: Sendable, Equatable {
-    private static let toolName = "macdown2-command"
+    private static let toolName = "mostlytext-cli"
     public let bundleURL: URL
     public let executableURL: URL
     public let bundleIdentifier: String
