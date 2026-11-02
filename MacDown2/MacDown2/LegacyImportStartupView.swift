@@ -13,7 +13,8 @@ struct LegacyImportStartupView: View {
                 switch startup.phase {
                 case .review:
                     Text(
-                        "Choose which original MacDown preferences to import. Your original preferences remain unchanged."
+                        LocalizedStringKey("Choose which original MacDown preferences to import. "
+                            + "Your original preferences remain unchanged.")
                     )
                     if let review = startup.review {
                         ForEach(review.plan.entries, id: \.destination) { entry in
