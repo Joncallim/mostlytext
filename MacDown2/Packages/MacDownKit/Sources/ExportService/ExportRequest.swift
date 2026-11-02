@@ -3,8 +3,8 @@ import MarkdownEngine
 import Themes
 
 /// A self-contained export request: the live editor snapshot plus the inputs
-/// the composer needs. No layout, resource-root, budget, metadata-policy, or
-/// template identity may be supplied — those are fixed by the composer.
+/// the composer needs. Resource authority is an explicit retained capability;
+/// layout, budget, metadata policy and template remain composer-owned.
 public struct ExportRequest: Sendable, Equatable {
     /// The full document text as it exists in the editor at export time.
     public let text: String
@@ -22,11 +22,13 @@ public struct ExportRequest: Sendable, Equatable {
 
     /// The saved document's own file URL, or `nil` for an untitled document.
     ///
-    /// One URL is the single source of truth for two derived facts: the
-    /// resource root (its parent directory) and the browser-title fallback (its
-    /// filename stem). Neither may be supplied separately, so they cannot
-    /// disagree.
+    /// This is metadata, including the browser-title fallback. It grants no
+    /// authority to read siblings: relative images require `resourceAccess`.
     public let documentURL: URL?
+
+    /// An explicitly admitted directory retained for this operation. Nil means
+    /// no local-resource access, even when a saved document URL is present.
+    public let resourceAccess: ExportResourceAccess?
 
     /// Renderer-neutral derived-content contributions (E19 inline math,
     /// E20 block diagrams) that this export must place. Empty for ordinary
@@ -38,6 +40,7 @@ public struct ExportRequest: Sendable, Equatable {
         sourceGeneration: UInt,
         theme: Theme,
         documentURL: URL? = nil,
+        resourceAccess: ExportResourceAccess? = nil,
         parseOptions: MarkdownParseOptions = .default,
         contributions: [ExportDerivedContribution] = []
     ) {
@@ -46,13 +49,8 @@ public struct ExportRequest: Sendable, Equatable {
         self.theme = theme
         self.parseOptions = parseOptions
         self.documentURL = documentURL
+        self.resourceAccess = resourceAccess
         self.contributions = contributions
-    }
-
-    /// The directory relative resource references resolve against. An untitled
-    /// document has no root: E12 never guesses the process working directory.
-    var documentDirectory: URL? {
-        documentURL?.deletingLastPathComponent()
     }
 
     /// The saved filename without its extension, used only as the browser-title

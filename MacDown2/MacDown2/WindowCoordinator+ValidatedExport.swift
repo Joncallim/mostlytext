@@ -101,6 +101,7 @@ extension WindowCoordinator {
         let request = ExportRequest(
             text: frozen.text, sourceGeneration: frozen.sourceGeneration,
             theme: frozen.theme, documentURL: frozen.documentURL,
+            resourceAccess: frozen.resourceAccess,
             contributions: adaptation.contributions
         )
         await beforePublication?(request)

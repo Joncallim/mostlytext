@@ -172,6 +172,8 @@ struct ValidatedSVGExportTests {
         return ExportRequest(
             text: text, sourceGeneration: 1, theme: BundledThemes.light,
             documentURL: documentURL,
+            resourceAccess: documentURL
+                .flatMap { try? ExportResourceAccess(openingDirectory: $0.deletingLastPathComponent()) },
             contributions: [
                 ExportDerivedContribution(
                     sourceRange: 0 ..< source.utf16.count, placement: .block,

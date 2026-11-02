@@ -11,6 +11,7 @@ struct OrdinaryExportSnapshot: Sendable, Equatable {
     let sourceGeneration: UInt
     let theme: Theme
     let documentURL: URL?
+    let resourceAccess: ExportResourceAccess?
     let parseOptions: MarkdownParseOptions
 
     init(document: FileCore.FileDocument, theme: Theme, parseOptions: MarkdownParseOptions) {
@@ -18,6 +19,9 @@ struct OrdinaryExportSnapshot: Sendable, Equatable {
         sourceGeneration = document.mutationGeneration
         self.theme = theme
         documentURL = document.fileURL
+        resourceAccess = document.fileURL.flatMap {
+            try? ExportResourceAccess(openingDirectory: $0.deletingLastPathComponent())
+        }
         self.parseOptions = parseOptions
     }
 
@@ -27,6 +31,7 @@ struct OrdinaryExportSnapshot: Sendable, Equatable {
             sourceGeneration: sourceGeneration,
             theme: theme,
             documentURL: documentURL,
+            resourceAccess: resourceAccess,
             parseOptions: parseOptions,
             contributions: contributions
         )

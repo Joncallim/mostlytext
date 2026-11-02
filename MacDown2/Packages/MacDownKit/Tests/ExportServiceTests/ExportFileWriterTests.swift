@@ -232,7 +232,8 @@ struct ExportFileWriterTests {
                 text: "# Alpha\n\n![a](alpha.png)\n",
                 sourceGeneration: 1,
                 theme: ExportTestSupport.lightTheme(),
-                documentURL: directory.appendingPathComponent("Alpha.md")
+                documentURL: directory.appendingPathComponent("Alpha.md"),
+                resourceAccess: ExportResourceAccess(openingDirectory: directory)
             ),
             to: .html(url: alphaURL, mode: .standalone(style: .linked))
         )
@@ -244,7 +245,8 @@ struct ExportFileWriterTests {
                 text: "# Beta\n\n![b](beta.png)\n",
                 sourceGeneration: 1,
                 theme: BundledThemes.dark,
-                documentURL: directory.appendingPathComponent("Beta.md")
+                documentURL: directory.appendingPathComponent("Beta.md"),
+                resourceAccess: ExportResourceAccess(openingDirectory: directory)
             ),
             to: .html(url: betaURL, mode: .standalone(style: .linked))
         )

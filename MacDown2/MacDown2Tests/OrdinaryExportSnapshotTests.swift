@@ -66,6 +66,8 @@ struct OrdinaryExportSnapshotTests {
         #expect(request.text == document.text)
         #expect(request.sourceGeneration == document.mutationGeneration)
         #expect(request.documentURL == document.fileURL)
+        #expect(request.resourceAccess === snapshot.resourceAccess)
+        #expect(request.resourceAccess != nil)
         #expect(request.theme == BundledThemes.light)
         #expect(request.parseOptions == MarkdownParseOptions(blockDirectives: true))
     }

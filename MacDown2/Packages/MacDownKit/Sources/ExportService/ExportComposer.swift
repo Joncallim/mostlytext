@@ -1,4 +1,5 @@
 import Foundation
+import LocalResourceAccess
 import MarkdownEngine
 import Themes
 
@@ -70,6 +71,25 @@ enum ExportComposer {
         budget: ExportResourceBudget = .standard,
         namespaceSVGIDs: Bool = false
     ) async throws -> MarkedPreparation {
+        let cancellation = ResourceCancellation()
+        return try await withTaskCancellationHandler {
+            try await prepareWithRoots(
+                request: request, target: target, engine: engine, budget: budget,
+                rendering: (namespaceSVGIDs, cancellation)
+            )
+        } onCancel: {
+            cancellation.cancel()
+        }
+    }
+
+    private static func prepareWithRoots(
+        request: ExportRequest,
+        target: ExportTarget,
+        engine: any ParseExecuting,
+        budget: ExportResourceBudget,
+        rendering: (namespaceSVGIDs: Bool, cancellation: ResourceCancellation)
+    ) async throws -> MarkedPreparation {
+        let (namespaceSVGIDs, cancellation) = rendering
         let policy = policy(for: target)
         try checkSourceBudget(bytes: request.text.utf8.count, budget: budget)
 
@@ -85,7 +105,7 @@ enum ExportComposer {
         let output = try renderDerived(
             request: request, parsed: parsed, policy: policy,
             assetsDirName: assetsDirName, budget: budget,
-            namespaceSVGIDs: namespaceSVGIDs
+            namespaceSVGIDs: namespaceSVGIDs, cancellation: cancellation
         )
         let (derived, rendered, resolver, leakWarnings) = (
             output.derived,
@@ -277,7 +297,7 @@ enum ExportComposer {
                 options: options,
                 customNodes: derived.customNodes,
                 urlTransformer: { url, isImage in
-                    let disposition = resolver.disposition(for: url, isImage: isImage)
+                    let disposition = try resolver.disposition(for: url, isImage: isImage)
                     if isImage, case .rewrite = disposition, let registry,
                        let identity = resolver.packagedIdentity(for: url) {
                         return try .rewrite(registry.register(identity))

@@ -41,7 +41,7 @@ public enum ContainedResourceReader {
         let relative = try constrainedRelativePath(for: reference, in: directory)
         return try readStrict(
             relativePath: relative,
-            name: reference.components.last ?? "",
+            name: (relative as NSString).lastPathComponent,
             in: directory,
             limits: (maxBytes, cancellation),
             hooks: hooks

@@ -9,8 +9,9 @@ struct ExportResourceResolverTests {
         root: URL?,
         fatal: Bool = false,
         budget: ExportResourceBudget = .standard
-    ) -> ExportResourceResolver {
-        ExportResourceResolver(documentDirectory: root, unresolvedIsFatal: fatal, budget: budget)
+    ) throws -> ExportResourceResolver {
+        let access = try root.map { try ExportResourceAccess(openingDirectory: $0) }
+        return ExportResourceResolver(resourceAccess: access, unresolvedIsFatal: fatal, budget: budget)
     }
 
     @Test func resolvesAnImageInsideTheDocumentFolder() throws {
@@ -18,8 +19,8 @@ struct ExportResourceResolverTests {
         defer { try? FileManager.default.removeItem(at: directory) }
         try ExportTestSupport.writeFixture(named: "images/a.png", in: directory, bytes: Data([0x89, 0x50]))
 
-        let subject = resolver(root: directory)
-        #expect(subject.disposition(for: "images/a.png", isImage: true) != .keep)
+        let subject = try resolver(root: directory)
+        #expect(try subject.disposition(for: "images/a.png", isImage: true) != .keep)
         #expect(subject.diagnostics.isEmpty)
     }
 
@@ -31,8 +32,8 @@ struct ExportResourceResolverTests {
         let documentDirectory = base.appendingPathComponent("docs", isDirectory: true)
         try FileManager.default.createDirectory(at: documentDirectory, withIntermediateDirectories: true)
 
-        let subject = resolver(root: documentDirectory)
-        #expect(subject.disposition(for: "../secret.png", isImage: true) == .keep)
+        let subject = try resolver(root: documentDirectory)
+        #expect(try subject.disposition(for: "../secret.png", isImage: true) == .keep)
         #expect(subject.diagnostics.contains { $0.message.contains("outside the document's folder") })
     }
 
@@ -42,8 +43,8 @@ struct ExportResourceResolverTests {
         try ExportTestSupport.writeFixture(named: "my image.png", in: directory, bytes: Data([0x89, 0x50]))
 
         // Editors write spaces as %20; the file on disk still has a space.
-        let subject = resolver(root: directory)
-        #expect(subject.disposition(for: "my%20image.png", isImage: true) != .keep)
+        let subject = try resolver(root: directory)
+        #expect(try subject.disposition(for: "my%20image.png", isImage: true) != .keep)
         #expect(subject.diagnostics.isEmpty)
     }
 
@@ -52,14 +53,14 @@ struct ExportResourceResolverTests {
         defer { try? FileManager.default.removeItem(at: directory) }
         try ExportTestSupport.writeFixture(named: "a.png", in: directory, bytes: Data([0x89, 0x50]))
 
-        let subject = resolver(root: directory)
-        let first = subject.disposition(for: "a.png", isImage: true)
-        let second = subject.disposition(for: "a.png", isImage: true)
+        let subject = try resolver(root: directory)
+        let first = try subject.disposition(for: "a.png", isImage: true)
+        let second = try subject.disposition(for: "a.png", isImage: true)
         #expect(first == second)
         #expect(subject.frozenManifest().resources.count == 1)
 
-        _ = subject.disposition(for: "missing.png", isImage: true)
-        _ = subject.disposition(for: "missing.png", isImage: true)
+        _ = try subject.disposition(for: "missing.png", isImage: true)
+        _ = try subject.disposition(for: "missing.png", isImage: true)
         #expect(subject.diagnostics.count == 1)
     }
 
@@ -77,8 +78,8 @@ struct ExportResourceResolverTests {
             maxAggregateDerivedHTMLBytes: 1024,
             maxPreparedHTMLUTF8Bytes: 1024
         )
-        let subject = resolver(root: directory, budget: tiny)
-        #expect(subject.disposition(for: "big.png", isImage: true) == .keep)
+        let subject = try resolver(root: directory, budget: tiny)
+        #expect(try subject.disposition(for: "big.png", isImage: true) == .keep)
         #expect(subject.diagnostics.contains { $0.message.contains("per-file export limit") })
         #expect(subject.frozenManifest().resources.isEmpty)
     }
@@ -103,9 +104,9 @@ struct ExportResourceResolverTests {
             maxAggregateDerivedHTMLBytes: 1024,
             maxPreparedHTMLUTF8Bytes: 1024
         )
-        let subject = resolver(root: directory, budget: capped)
+        let subject = try resolver(root: directory, budget: capped)
         for index in 0 ..< 3 {
-            _ = subject.disposition(for: "img\(index).png", isImage: true)
+            _ = try subject.disposition(for: "img\(index).png", isImage: true)
         }
         #expect(subject.frozenManifest().resources.count == 2)
         #expect(subject.diagnostics.contains { $0.message.contains("2-resource limit") })
@@ -117,10 +118,10 @@ struct ExportResourceResolverTests {
         try ExportTestSupport.writeFixture(named: ".env", in: directory, bytes: Data("SECRET=hunter2".utf8))
         try ExportTestSupport.writeFixture(named: "notes.txt", in: directory, bytes: Data("private".utf8))
         try ExportTestSupport.writeFixture(named: "noextension", in: directory, bytes: Data("private".utf8))
-        let subject = resolver(root: directory, fatal: false)
+        let subject = try resolver(root: directory, fatal: false)
 
         for reference in [".env", "notes.txt", "noextension"] {
-            #expect(subject.disposition(for: reference, isImage: true) == .keep)
+            #expect(try subject.disposition(for: reference, isImage: true) == .keep)
         }
 
         #expect(subject.frozenManifest().resources.isEmpty)
@@ -132,12 +133,12 @@ struct ExportResourceResolverTests {
         let directory = try ExportTestSupport.makeTempDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
 
-        let lenient = resolver(root: directory, fatal: false)
-        _ = lenient.disposition(for: "missing.png", isImage: true)
+        let lenient = try resolver(root: directory, fatal: false)
+        _ = try lenient.disposition(for: "missing.png", isImage: true)
         #expect(lenient.diagnostics.allSatisfy { $0.severity == .warning })
 
-        let strict = resolver(root: directory, fatal: true)
-        _ = strict.disposition(for: "missing.png", isImage: true)
+        let strict = try resolver(root: directory, fatal: true)
+        _ = try strict.disposition(for: "missing.png", isImage: true)
         #expect(strict.diagnostics.allSatisfy { $0.severity == .error })
     }
 
@@ -145,28 +146,28 @@ struct ExportResourceResolverTests {
         let directory = try ExportTestSupport.makeTempDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
 
-        let subject = resolver(root: directory, fatal: true)
-        #expect(subject.disposition(for: "https://example.com", isImage: false) == .keep)
-        #expect(subject.disposition(for: "#anchor", isImage: true) == .keep)
+        let subject = try resolver(root: directory, fatal: true)
+        #expect(try subject.disposition(for: "https://example.com", isImage: false) == .keep)
+        #expect(try subject.disposition(for: "#anchor", isImage: true) == .keep)
         #expect(subject.frozenManifest().resources.isEmpty)
     }
 
-    @Test func blankedSchemesAreReported() {
+    @Test func blankedSchemesAreReported() throws {
         // A neutralised link must not just silently lose its target.
-        let subject = resolver(root: nil, fatal: true)
-        #expect(subject.disposition(for: "javascript:alert(1)", isImage: false) == .blank)
-        #expect(subject.disposition(for: "data:text/html;base64,PHNjcmlwdD4=", isImage: true) == .blank)
+        let subject = try resolver(root: nil, fatal: true)
+        #expect(try subject.disposition(for: "javascript:alert(1)", isImage: false) == .blank)
+        #expect(try subject.disposition(for: "data:text/html;base64,PHNjcmlwdD4=", isImage: true) == .blank)
         #expect(subject.diagnostics.count == 2)
         #expect(subject.diagnostics.allSatisfy { $0.severity == .warning })
     }
 
-    @Test func inlineRasterImagesAreKeptAndOtherDataImagesStayBlanked() {
-        let subject = resolver(root: nil, fatal: true)
-        #expect(subject.disposition(for: "data:image/png;base64,iVBORw0KGgo=", isImage: true) == .keep)
-        #expect(subject.disposition(for: "data:image/jpeg;base64,/9j/4AAQ", isImage: true) == .keep)
-        #expect(subject.disposition(for: "data:image/svg+xml;base64,PHN2Zz4=", isImage: true) == .blank)
-        #expect(subject.disposition(for: "data:image/png;base64,AA\"onerror=x", isImage: true) == .blank)
-        #expect(subject.disposition(for: "data:image/png;base64,AAAA", isImage: false) == .blank)
+    @Test func inlineRasterImagesAreKeptAndOtherDataImagesStayBlanked() throws {
+        let subject = try resolver(root: nil, fatal: true)
+        #expect(try subject.disposition(for: "data:image/png;base64,iVBORw0KGgo=", isImage: true) == .keep)
+        #expect(try subject.disposition(for: "data:image/jpeg;base64,/9j/4AAQ", isImage: true) == .keep)
+        #expect(try subject.disposition(for: "data:image/svg+xml;base64,PHN2Zz4=", isImage: true) == .blank)
+        #expect(try subject.disposition(for: "data:image/png;base64,AA\"onerror=x", isImage: true) == .blank)
+        #expect(try subject.disposition(for: "data:image/png;base64,AAAA", isImage: false) == .blank)
     }
 
     @Test func rejectsAReferenceThatIsActuallyADirectory() throws {
@@ -177,8 +178,8 @@ struct ExportResourceResolverTests {
             withIntermediateDirectories: true
         )
 
-        let subject = resolver(root: directory, fatal: true)
-        #expect(subject.disposition(for: "images", isImage: true) == .keep)
+        let subject = try resolver(root: directory, fatal: true)
+        #expect(try subject.disposition(for: "images", isImage: true) == .keep)
         #expect(subject.diagnostics.contains { $0.severity == .error })
         #expect(subject.frozenManifest().resources.isEmpty)
     }
@@ -192,8 +193,8 @@ struct ExportResourceResolverTests {
         let link = directory.appendingPathComponent("linked.png")
         try FileManager.default.createSymbolicLink(at: link, withDestinationURL: target)
 
-        let subject = resolver(root: directory)
-        #expect(subject.disposition(for: "linked.png", isImage: true) != .keep)
+        let subject = try resolver(root: directory)
+        #expect(try subject.disposition(for: "linked.png", isImage: true) != .keep)
         #expect(subject.diagnostics.isEmpty)
         #expect(subject.frozenManifest().resources.count == 1)
     }
