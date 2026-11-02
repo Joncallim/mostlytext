@@ -65,4 +65,79 @@ struct HeadingAnchorIndexTests {
             #expect(error as? HeadingAnchorIndex.Error == .sourceDoesNotMatchParse)
         }
     }
+
+    @Test(arguments: [false, true])
+    func canonicallyEquivalentDifferentBytesCannotBorrowAParse(frontMatter: Bool) async throws {
+        let original = frontMatter ? "---\ntitle: \u{212B}\n---\n# Same\n" : "# \u{212B}\n"
+        let other = frontMatter ? "---\ntitle: \u{00C5}\n---\n# Same\n" : "# \u{00C5}\n"
+        #expect(original == other)
+        #expect(!original.utf8.elementsEqual(other.utf8))
+        #expect(SourceMap(text: original) == SourceMap(text: other))
+        let parsed = try await ParseEngine().parse(original, revision: 1)
+        #expect(throws: HeadingAnchorIndex.Error.sourceDoesNotMatchParse) {
+            try HeadingAnchorIndex(
+                document: parsed, sourceText: other, documentID: "doc-1",
+                recoveryEpoch: UUID(), sourceGeneration: 2, reservedIDs: []
+            )
+        }
+    }
+
+    @Test(arguments: [false, true])
+    func independentlyParsedCanonicalSpellingsKeepTheirOwnSourceIdentity(frontMatter: Bool) async throws {
+        let first = frontMatter ? "---\ntitle: \u{212B}\n---\n# Same\n" : "# \u{212B}\n"
+        let second = frontMatter ? "---\ntitle: \u{00C5}\n---\n# Same\n" : "# \u{00C5}\n"
+        let epoch = UUID()
+        let parser = ParseEngine()
+        let parsedFirst = try await parser.parse(first, revision: 1)
+        let parsedSecond = try await parser.parse(second, revision: 1)
+        let firstIndex = try HeadingAnchorIndex(
+            document: parsedFirst, sourceText: first, documentID: "doc-1",
+            recoveryEpoch: epoch, sourceGeneration: 1, reservedIDs: []
+        )
+        let secondIndex = try HeadingAnchorIndex(
+            document: parsedSecond, sourceText: second, documentID: "doc-1",
+            recoveryEpoch: epoch, sourceGeneration: 1, reservedIDs: []
+        )
+        #expect(firstIndex.identity.sourceSHA256 != secondIndex.identity.sourceSHA256)
+        #expect(parsedFirst.body.utf8.elementsEqual((frontMatter ? "# Same\n" : first).utf8))
+        #expect(parsedSecond.body.utf8.elementsEqual((frontMatter ? "# Same\n" : second).utf8))
+        #expect(firstIndex.headings.map(\.fragment) == secondIndex.headings.map(\.fragment))
+    }
+
+    @Test(arguments: [false, true])
+    func changedFrontMatterDelimitersCannotBorrowTheSameExtractedFields(trailingWhitespace: Bool) async throws {
+        let original = "---\ntitle: Same\n--- \n# Same\n"
+        let other = trailingWhitespace
+            ? "---\ntitle: Same\n---\t\n# Same\n"
+            : "---\ntitle: Same\n... \n# Same\n"
+        let parsed = try await ParseEngine().parse(original, revision: 1)
+        let otherParsed = try await ParseEngine().parse(other, revision: 1)
+        #expect(SourceMap(text: original) == SourceMap(text: other))
+        #expect(parsed.body.utf8.elementsEqual(otherParsed.body.utf8))
+        #expect(parsed.frontMatter?.raw == otherParsed.frontMatter?.raw)
+        #expect(parsed.bodyLineOffset == otherParsed.bodyLineOffset)
+        #expect(throws: HeadingAnchorIndex.Error.sourceDoesNotMatchParse) {
+            try HeadingAnchorIndex(
+                document: parsed, sourceText: other, documentID: "doc-1",
+                recoveryEpoch: UUID(), sourceGeneration: 2, reservedIDs: []
+            )
+        }
+    }
+
+    @Test func anUnboundManualModelCannotMintASourceIdentity() async throws {
+        let source = "# Same\n"
+        let parsed = try await ParseEngine().parse(source, revision: 1)
+        let unbound = MarkdownDocument(
+            body: parsed.body, bodyLineOffset: parsed.bodyLineOffset,
+            blocks: parsed.blocks, headings: parsed.headings, frontMatter: parsed.frontMatter,
+            sourceMap: parsed.sourceMap, revision: parsed.revision, options: parsed.options
+        )
+        #expect(unbound.sourceSHA256 == nil)
+        #expect(throws: HeadingAnchorIndex.Error.sourceDoesNotMatchParse) {
+            try HeadingAnchorIndex(
+                document: unbound, sourceText: source, documentID: "doc-1",
+                recoveryEpoch: UUID(), sourceGeneration: 1, reservedIDs: []
+            )
+        }
+    }
 }

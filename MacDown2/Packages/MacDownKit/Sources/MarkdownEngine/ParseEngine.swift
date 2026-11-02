@@ -84,7 +84,8 @@ public actor ParseEngine: ParseExecuting {
             frontMatter: frontMatter,
             sourceMap: sourceMap,
             revision: revision,
-            options: options
+            options: options,
+            sourceSHA256: MarkdownSourceFingerprint.sha256(text)
         )
     }
 
