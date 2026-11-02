@@ -78,3 +78,31 @@ or final native acceptance is inferred from a scoped self-review. Update existin
 canonical issues, check only completed criteria, close only complete contracts,
 and retain precise residual native/artifact/language/external gates. Public
 publication, signing keys and repository cutover remain separate actions.
+
+## Hosted bookmark identity diagnosis
+
+The first Intel full run executed all 3,302 tests but failed 22 unexpected
+issues (plus two existing known issues); none of its later app checks ran.
+Default ARM retries again ran zero steps: GitHub explicitly reports runner
+acquisition failure and macOS arm64 capacity constraints. The stable integration
+tree was separately transferred unchanged to master through #578, using its
+complete successful ARM run 41462906779 and exact resulting-tree equality;
+newer #570–#577 source remains held pending its own complete validation.
+
+Private Foundation fixture probes on Intel (runs 41516548914 and 41516989441)
+show six of six scoped bookmark operations fail in an unsigned executable with
+NSCocoaErrorDomain 256, Failed to retrieve app-scope key. The same six operations
+pass after ordinary ad-hoc signing. Adding an app-scope entitlement also passes,
+but is unnecessary; do not add it or change production bookmark policy. All
+unscoped controls pass. This isolates executable identity, not a production
+permission or bookmark fallback defect. The diagnostic-only branch replaces its
+CI workflow with a clearly named Foundation probe and is never integration CI.
+
+For ordinary full CI, explicitly build the existing package test bundle and
+ad-hoc sign/verify that ephemeral hosted executable before the unchanged full
+swift test command. Verify the signature again afterwards. Keep package pins,
+Debug configuration, complete test selection, all assertions/timeouts and all
+subsequent app/CLI checks. No developer certificate, keychain change, entitlement
+or product/release signing change is involved. The historical PR535 diagnostic
+path stays unchanged. A fresh complete run is still required; signing probes do
+not waive or establish the remaining renderer/performance/highlighting results.

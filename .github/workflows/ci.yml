@@ -244,11 +244,21 @@ jobs:
             exec python3 "$RUNNER_TEMP/pr535-package-diagnostics/diagnostic.py" run
           fi
           swift build --force-resolved-versions
+          # Intel's linker can leave the test host unsigned. Foundation then
+          # cannot mint an app-scope bookmark key, even for private fixtures.
+          # Give the ephemeral test host an ordinary ad-hoc identity; no new
+          # entitlement or production bookmark fallback is required.
+          swift build --build-tests --force-resolved-versions
+          test_bundle="$(swift build --show-bin-path --force-resolved-versions)/MacDownKitPackageTests.xctest"
+          test -f "$test_bundle/Contents/MacOS/MacDownKitPackageTests"
+          codesign --force --sign - "$test_bundle"
+          codesign --verify --strict "$test_bundle"
           # Monitor/save-queue/performance tests share temporary filesystem
           # resources; concurrent XCTest scheduling makes these load-sensitive
           # tests exceed their bounded coordination timeouts on CI. Keep the
           # full suite and its assertions intact, but serialize execution.
           swift test --no-parallel --force-resolved-versions
+          codesign --verify --strict "$test_bundle"
       - name: Collect fresh package test crash reports
         if: ${{ always() && env.PR535_DIAGNOSTICS == 'true' }}
         run: |
