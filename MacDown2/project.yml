@@ -28,7 +28,7 @@ targets:
       type: file
       buildPhase: resources
     dependencies:
-    - target: macdown2
+    - target: MacDown2Command
       link: false
     - package: MacDownKit
       product: FileCore
@@ -209,8 +209,12 @@ targets:
       outputFiles:
       - $(TARGET_BUILD_DIR)/$(EXECUTABLE_FOLDER_PATH)/macdown2
       - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/MacDownKit_CommandLineSupport.bundle
-  macdown2:
+  MacDown2Command:
     type: tool
+    settings:
+      base:
+        PRODUCT_NAME: macdown2
+        PRODUCT_MODULE_NAME: MacDown2Command
     platform: macOS
     sources:
     - MacDown2CLI
@@ -323,4 +327,4 @@ schemes:
   MacDown2CLI:
     build:
       targets:
-        macdown2: all
+        MacDown2Command: all
