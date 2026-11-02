@@ -10,6 +10,7 @@ extension CMarkGFM {
         let headingAnalysis: HeadingAnalysis
         let markerNonce: String
         var sawRawHTML = false
+        var insideImageDescription = false
         var headingLocations: [HeadingLocation] = []
         var headingMarkers: [HeadingMarker] = []
         var markerInsertionFailed = false
@@ -26,21 +27,27 @@ extension CMarkGFM {
     static func transform(
         _ root: UnsafeMutablePointer<cmark_node>,
         customNodes: [CustomNodeSpec],
-        urlTransformer: ((String, Bool) -> URLDisposition)?,
+        urlTransformer: ((String, Bool) throws -> URLDisposition)?,
         result: inout WalkResult
-    ) {
+    ) throws {
         let blockSpecs = Dictionary(uniqueKeysWithValues: customNodes.filter(\.isBlock).map { ($0.sentinel, $0) })
         let inlineSpecs = InlineSentinelIndex(customNodes.filter { !$0.isBlock })
-        walk(root, blockSpecs: blockSpecs, inlineSpecs: inlineSpecs, urlTransformer: urlTransformer, result: &result)
+        try walk(
+            root,
+            blockSpecs: blockSpecs,
+            inlineSpecs: inlineSpecs,
+            urlTransformer: urlTransformer,
+            result: &result
+        )
     }
 
     private static func walk(
         _ node: UnsafeMutablePointer<cmark_node>,
         blockSpecs: [String: CustomNodeSpec],
         inlineSpecs: InlineSentinelIndex,
-        urlTransformer: ((String, Bool) -> URLDisposition)?,
+        urlTransformer: ((String, Bool) throws -> URLDisposition)?,
         result: inout WalkResult
-    ) {
+    ) throws {
         if result.headingAnalysis != .none, cmark_node_get_type(node) == CMARK_NODE_HEADING {
             let location = HeadingLocation(
                 level: Int(cmark_node_get_heading_level(node)),
@@ -63,7 +70,12 @@ extension CMarkGFM {
                 result.headingMarkers.append(HeadingMarker(location: location, comment: comment))
             }
         }
-        applyNodePolicy(node, urlTransformer: urlTransformer, result: &result)
+        let wasInsideDescription = result.insideImageDescription
+        try applyNodePolicy(node, urlTransformer: urlTransformer, result: &result)
+        if cmark_node_get_type(node) == CMARK_NODE_IMAGE {
+            result.insideImageDescription = true
+        }
+        defer { result.insideImageDescription = wasInsideDescription }
 
         var child = cmark_node_first_child(node)
         while let current = child {
@@ -77,7 +89,7 @@ extension CMarkGFM {
                       let spec = blockSpec(for: current, bySentinel: blockSpecs) {
                 replace(current, withCustom: spec)
             } else {
-                walk(
+                try walk(
                     current,
                     blockSpecs: blockSpecs,
                     inlineSpecs: inlineSpecs,
@@ -98,20 +110,21 @@ extension CMarkGFM {
     /// which is the hot path of a large export.
     private static func applyNodePolicy(
         _ node: UnsafeMutablePointer<cmark_node>,
-        urlTransformer: ((String, Bool) -> URLDisposition)?,
+        urlTransformer: ((String, Bool) throws -> URLDisposition)?,
         result: inout WalkResult
-    ) {
+    ) throws {
         let kind = cmark_node_get_type(node)
         if kind == CMARK_NODE_HTML_BLOCK || kind == CMARK_NODE_HTML_INLINE {
             result.sawRawHTML = true
             return
         }
         guard kind == CMARK_NODE_IMAGE || kind == CMARK_NODE_LINK,
+              !result.insideImageDescription,
               let urlTransformer, let url = cmark_node_get_url(node) else {
             return
         }
 
-        switch urlTransformer(String(cString: url), kind == CMARK_NODE_IMAGE) {
+        switch try urlTransformer(String(cString: url), kind == CMARK_NODE_IMAGE) {
         case .keep:
             break
         case let .rewrite(replacement):

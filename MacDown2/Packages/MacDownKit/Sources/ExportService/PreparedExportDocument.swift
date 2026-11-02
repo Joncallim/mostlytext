@@ -44,6 +44,14 @@ public struct PreparedExportDocument: Sendable, Equatable {
     /// `true` when authored raw HTML was preserved (`CMARK_OPT_UNSAFE`).
     public let preservesRawHTML: Bool
 
+    private(set) var resourceSlots: ExportResourceSlots?
+
+    func registeringResourceSlots(_ slots: ExportResourceSlots?) -> Self {
+        var result = self
+        result.resourceSlots = slots
+        return result
+    }
+
     public init(
         title: String,
         visibleTitle: String? = nil,

@@ -28,6 +28,7 @@ extension CMarkGFM {
     /// tree walk that does the substitutions, so no extra pass is needed.
     struct Rendered {
         let html: String
+        var resourceSlots: ExportResourceSlots?
         /// `true` when the source contained an authored raw-HTML block or inline
         /// span. Self-contained export treats this as fatal; PDF warns.
         let containsRawHTML: Bool

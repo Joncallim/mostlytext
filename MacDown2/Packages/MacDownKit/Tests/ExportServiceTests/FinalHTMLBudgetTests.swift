@@ -7,12 +7,12 @@ struct FinalHTMLBudgetTests {
         body: String = "<p>é😀</p>", title: String = "A & <B>",
         visibleTitle: String? = "\u{0600}<\u{0301}", css: String = "body { color: black; }",
         directory: String = "report.assets", resources: [ExportResource] = []
-    ) -> PreparedExportDocument {
-        PreparedExportDocument(
+    ) throws -> PreparedExportDocument {
+        try ExportSlotTestSupport.registeringGeneratedImages(PreparedExportDocument(
             title: title, visibleTitle: visibleTitle, bodyHTML: body, assetsDirectoryName: directory,
             stylesheet: css, manifest: ExportManifest(resources: resources, referenceMap: [:]),
             diagnostics: [], sourceGeneration: 1, preservesRawHTML: false
-        )
+        ))
     }
 
     private func resource() -> ExportResource {
@@ -32,7 +32,7 @@ struct FinalHTMLBudgetTests {
     }
 
     @Test func normalOutputRetainsExactTemplateBytes() throws {
-        let input = prepared()
+        let input = try prepared()
         let head = "<meta name=\"example\" content=\"yes\">"
         let expected = BuiltInExportTemplate.document(
             title: input.title, visibleTitle: input.visibleTitle, headExtras: head,
@@ -44,7 +44,7 @@ struct FinalHTMLBudgetTests {
 
     @Test(arguments: [ExportStyleEmbedding.embedded, .linked])
     func companionBoundaryUsesCompleteUTF8Bytes(style: ExportStyleEmbedding) throws {
-        let input = prepared()
+        let input = try prepared()
         let head = "<!-- policy -->"
         let html = try ExportHTMLWriter.companionHTML(from: input, style: style, additionalHead: head)
         let size = html.utf8.count
@@ -61,7 +61,7 @@ struct FinalHTMLBudgetTests {
     @Test func repeatedResourceOccurrencesAreChargedIndividually() throws {
         let image = resource()
         let reference = "<img src=\"report.assets/\(image.identity.fileName)\">"
-        let input = prepared(body: String(repeating: reference, count: 12), resources: [image])
+        let input = try prepared(body: String(repeating: reference, count: 12), resources: [image])
         let html = try ExportHTMLWriter.selfContainedHTML(from: input)
         let uri = "data:image/png;base64," + image.bytes.base64EncodedString()
         #expect(html.components(separatedBy: uri).count == 13)
@@ -79,15 +79,15 @@ struct FinalHTMLBudgetTests {
         let references = ExportHTMLWriter.referenceForms(of: directory).map {
             "<img src=\"\($0)/\(image.identity.fileName)\">"
         }.joined()
-        let input = prepared(body: references, directory: directory, resources: [image])
+        let input = try prepared(body: references, directory: directory, resources: [image])
         let html = try ExportHTMLWriter.selfContainedHTML(from: input)
         #expect(html.components(separatedBy: "data:image/png;base64,").count == 4)
         #expect(!html.contains(image.identity.fileName))
     }
 
     @Test func unusedResourceDoesNotAllocateOrChargeBase64() throws {
-        let input = prepared(resources: [resource()])
-        let without = prepared()
+        let input = try prepared(resources: [resource()])
+        let without = try prepared()
         let html = try ExportHTMLWriter.selfContainedHTML(from: without)
         #expect(try ExportHTMLWriter.selfContainedHTML(from: input, limit: html.utf8.count) == html)
     }
@@ -95,7 +95,7 @@ struct FinalHTMLBudgetTests {
     @Test func escapedMetadataStylesAndHeadAreIncluded() throws {
         let baseline = try ExportHTMLWriter.selfContainedHTML(from: prepared())
         let cap = baseline.utf8.count
-        let inputs = [
+        let inputs = try [
             prepared(title: String(repeating: "&", count: cap)),
             prepared(visibleTitle: String(repeating: "<", count: cap)),
             prepared(css: String(repeating: "x", count: cap)),
@@ -145,16 +145,16 @@ struct FinalHTMLBudgetTests {
 
     @Test func repeatedFalsePrefixesPreserveBytesWithoutEmbedding() throws {
         let body = String(repeating: "<p>report.assets/missing.png</p>", count: 10000)
-        let input = prepared(body: body, resources: [resource()])
+        let input = try prepared(body: body, resources: [resource()])
         let html = try ExportHTMLWriter.selfContainedHTML(from: input)
         #expect(html.contains(body))
         #expect(!html.contains("data:image/png"))
     }
 
-    @Test func cancellationRejectsBothOutputShapes() async {
+    @Test func cancellationRejectsBothOutputShapes() async throws {
+        let input = try prepared(resources: [resource()])
         let task = Task {
             withUnsafeCurrentTask { $0?.cancel() }
-            let input = prepared(resources: [resource()])
             for operation in [
                 { try ExportHTMLWriter.selfContainedHTML(from: input) },
                 { try ExportHTMLWriter.companionHTML(from: input, style: .linked) },

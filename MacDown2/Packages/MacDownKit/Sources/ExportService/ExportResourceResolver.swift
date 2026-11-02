@@ -100,6 +100,10 @@ final class ExportResourceResolver {
         return packageLocalResource(referencedBy: url)
     }
 
+    func packagedIdentity(for reference: String) -> ExportResourceIdentity? {
+        resourcesByReference[reference]?.identity
+    }
+
     // MARK: - Local resources
 
     private func packageLocalResource(referencedBy url: String) -> URLDisposition {

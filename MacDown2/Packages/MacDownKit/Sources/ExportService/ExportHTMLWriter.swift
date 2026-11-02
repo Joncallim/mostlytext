@@ -56,16 +56,16 @@ public enum ExportHTMLWriter {
     static func selfContainedHTML(
         from prepared: PreparedExportDocument, additionalHead: String = "", limit: Int
     ) throws -> String {
-        try document(from: prepared, style: .embedded, additionalHead: additionalHead, limit: limit) { sink in
-            try embedResources(in: prepared.bodyHTML, manifest: prepared.manifest,
-                               assetsDirectoryName: prepared.assetsDirectoryName, into: &sink)
+        try validateSlots(in: prepared)
+        return try document(from: prepared, style: .embedded, additionalHead: additionalHead, limit: limit) { sink in
+            try embedResources(from: prepared, into: &sink)
         }
     }
 
     static func selfContainedBody(from prepared: PreparedExportDocument) throws -> String {
+        try validateSlots(in: prepared)
         var sink = BoundedExportHTML(limit: ExportResourceBudget.maxFinalHTMLUTF8Bytes)
-        try embedResources(in: prepared.bodyHTML, manifest: prepared.manifest,
-                           assetsDirectoryName: prepared.assetsDirectoryName, into: &sink)
+        try embedResources(from: prepared, into: &sink)
         return sink.html
     }
 
@@ -82,7 +82,8 @@ public enum ExportHTMLWriter {
         from prepared: PreparedExportDocument, style: ExportStyleEmbedding,
         additionalHead: String = "", limit: Int
     ) throws -> String {
-        try document(from: prepared, style: style, additionalHead: additionalHead, limit: limit) { sink in
+        try validateSlots(in: prepared, requiringAuthority: false)
+        return try document(from: prepared, style: style, additionalHead: additionalHead, limit: limit) { sink in
             try sink.append(prepared.bodyHTML)
         }
     }
@@ -113,60 +114,43 @@ public enum ExportHTMLWriter {
         )
     }
 
-    /// 64 hex digits, a dot, and room for any canonical extension.
-    private static let maxCompanionNameLength = 96
+    private static func validateSlots(in prepared: PreparedExportDocument, requiringAuthority: Bool = true) throws {
+        if let slots = prepared.resourceSlots {
+            try slots.validate(body: prepared.bodyHTML, manifest: prepared.manifest)
+        } else if requiringAuthority, !prepared.manifest.resources.isEmpty {
+            throw ExportError.invalidResourceSlots
+        }
+    }
 
-    /// One scan of the original body, charging every replacement occurrence.
-    /// Textual matching is retained here; registered URL slots remain separate
-    /// work and authored text that resembles a companion path can still match.
     private static func embedResources(
-        in body: String, manifest: ExportManifest, assetsDirectoryName: String,
+        from prepared: PreparedExportDocument,
         into sink: inout BoundedExportHTML
     ) throws {
-        try Task.checkCancellation()
-        guard !manifest.resources.isEmpty else { try sink.append(body); return }
-        try sink.requireScratchCapacity(encodedComponentUpperBound(assetsDirectoryName))
-        let prefixes = referenceForms(of: assetsDirectoryName).map { $0 + "/" }
-        var resources: [String: ExportResource] = [:]
-        for resource in manifest.resources {
-            try Task.checkCancellation()
-            try sink.requireScratchCapacity(resource.identity.sha256.utf8.count)
-            try sink.requireScratchCapacity(resource.identity.mimeType.utf8.count)
-            resources[resource.identity.fileName] = resource
+        let body = prepared.bodyHTML
+        let bytes = body.utf8
+        var resources: [ExportResourceIdentity: ExportResource] = [:]
+        for resource in prepared.manifest.resources {
+            resources[resource.identity] = resource
         }
-        var dataURIs: [String: String] = [:]
+        var dataURIs: [ExportResourceIdentity: String] = [:]
         var pending = body.startIndex
-        var hits = prefixes.map { body.range(of: $0) }
-        while true {
-            try Task.checkCancellation()
-            guard let hit = hits.compactMap(\.self).min(by: { $0.lowerBound < $1.lowerBound }) else { break }
-            var searchStart = hit.upperBound
-            // Cache each prefix's next match, including misses. Re-searching
-            // absent forms after every hit would make repeated paths quadratic.
-            defer {
-                for index in hits.indices {
-                    if let previous = hits[index], previous.lowerBound < searchStart {
-                        hits[index] = body.range(of: prefixes[index], range: searchStart ..< body.endIndex)
-                    }
-                }
-            }
-            let candidate = body[hit.upperBound...].prefix(maxCompanionNameLength)
-                .prefix { $0.isLetter || $0.isNumber || $0 == "." }
-            let name = String(candidate)
-            guard let resource = resources[name] else { searchStart = hit.upperBound; continue }
-            try sink.append(body[pending ..< hit.lowerBound])
-            try appendResource(resource, named: name, cache: &dataURIs, into: &sink)
-            pending = candidate.endIndex
-            searchStart = candidate.endIndex
+        for slot in prepared.resourceSlots?.occurrences ?? [] {
+            let start = bytes.index(bytes.startIndex, offsetBy: slot.range.lowerBound)
+            let end = bytes.index(bytes.startIndex, offsetBy: slot.range.upperBound)
+            guard let lower = String.Index(start, within: body), let upper = String.Index(end, within: body),
+                  let resource = resources[slot.identity] else { throw ExportError.invalidResourceSlots }
+            try sink.append(body[pending ..< lower])
+            try appendResource(resource, cache: &dataURIs, into: &sink)
+            pending = upper
         }
         try sink.append(body[pending...])
     }
 
     private static func appendResource(
-        _ resource: ExportResource, named name: String,
-        cache: inout [String: String], into sink: inout BoundedExportHTML
+        _ resource: ExportResource,
+        cache: inout [ExportResourceIdentity: String], into sink: inout BoundedExportHTML
     ) throws {
-        if let uri = cache[name] {
+        if let uri = cache[resource.identity] {
             try sink.append(uri); return
         }
         // Reject before base64 expansion, including synthetic Int.max sizes.
@@ -179,7 +163,7 @@ public enum ExportHTMLWriter {
         }
         let uri = "data:\(resource.identity.mimeType);base64,\(resource.bytes.base64EncodedString())"
         try sink.append(uri)
-        cache[name] = uri
+        cache[resource.identity] = uri
     }
 
     private static func encodedComponentUpperBound(_ name: String) throws -> Int {

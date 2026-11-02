@@ -86,6 +86,16 @@ extension ExportComposer {
             budget: budget,
             assetsDirectoryName: assetsDirName
         )
-        return try (renderBody(derived: derived, policy: policy, resolver: resolver), resolver)
+        let registry = ExportResourceURLRegistry(
+            avoiding: [request.text, assetsDirName, stylesheet(for: request.theme)] + derived.customNodes.map(\.html),
+            assetsDirectoryName: assetsDirName, limit: budget.maxPreparedHTMLUTF8Bytes
+        )
+        let rendered = try renderBody(derived: derived, policy: policy, resolver: resolver, registry: registry)
+        let resolved = try registry.resolve(rendered.html)
+        return (CMarkGFM.Rendered(
+            html: resolved.html, resourceSlots: resolved.slots, containsRawHTML: rendered.containsRawHTML,
+            headingLocations: rendered.headingLocations, headingMarkers: rendered.headingMarkers,
+            headingSourceSHA256: rendered.headingSourceSHA256
+        ), resolver)
     }
 }
