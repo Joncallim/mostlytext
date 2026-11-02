@@ -46,10 +46,19 @@ public actor DiagramWebKitPool {
         bundle: Bundle,
         poolSize: Int = 2,
         timeout: Duration = .seconds(5),
-        admissionTimeout: Duration? = nil
+        admissionTimeout: Duration? = nil,
+        preparePage: @escaping @Sendable (DiagramHarnessPage) async throws -> Void = { _ in }
     ) {
         self.init(poolSize: poolSize, timeout: timeout, admissionTimeout: admissionTimeout) {
-            try await DiagramHarnessPage.make(harnessResourceName: harnessResourceName, bundle: bundle)
+            let page = try await DiagramHarnessPage.make(harnessResourceName: harnessResourceName, bundle: bundle)
+            do {
+                try await preparePage(page)
+                try Task.checkCancellation()
+                return page
+            } catch {
+                await page.teardown()
+                throw error
+            }
         }
     }
 
@@ -60,7 +69,7 @@ public actor DiagramWebKitPool {
         timeout: Duration,
         admissionTimeout: Duration? = nil,
         makePage: @escaping @Sendable () async throws -> DiagramHarnessPage,
-        retirePage: @escaping @Sendable (DiagramHarnessPage) async -> Void = { await $0.teardown() }
+        retirePage: @escaping @Sendable (DiagramHarnessPage) async -> Void = { @MainActor in $0.teardown() }
     ) {
         self.poolSize = max(1, poolSize)
         self.timeout = timeout

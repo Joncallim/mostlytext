@@ -26,7 +26,8 @@ public actor D2WebRenderer: D2DiagramRendering {
             harnessResourceName: "harness",
             bundle: Bundle.module,
             poolSize: poolSize,
-            timeout: timeout
+            timeout: timeout,
+            preparePage: Self.prepare
         )
         self.maxOutputBytes = maxOutputBytes
     }
@@ -64,7 +65,8 @@ public actor D2WebRenderer: D2DiagramRendering {
         }
         let fresh = DiagramWebKitPool(
             harnessResourceName: "harness", bundle: Bundle.module,
-            poolSize: poolSize, timeout: timeout
+            poolSize: poolSize, timeout: timeout,
+            preparePage: Self.prepare
         )
         pool = fresh
         return fresh
@@ -76,6 +78,12 @@ public actor D2WebRenderer: D2DiagramRendering {
         if retirement?.id == current.id {
             retirement = nil
         }
+    }
+
+    @MainActor
+    private static func prepare(_ page: DiagramHarnessPage) async throws {
+        let result = try await page.evaluate("return await window.__macdownPrepareD2();", arguments: [:])
+        guard result.succeeded else { throw D2RenderError.rendererUnavailable }
     }
 
     @MainActor

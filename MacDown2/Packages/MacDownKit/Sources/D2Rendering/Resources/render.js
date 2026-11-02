@@ -69,12 +69,24 @@ function opaqueD2Canvas(svg, fill) {
     return { svg: new XMLSerializer().serializeToString(root), width: values[2], height: values[3] };
 }
 
+// One engine/worker belongs to each pooled page. The pool awaits readiness
+// during bounded preparation and serializes every later compile/render pair.
+const macdownD2Engine = new window.D2();
+window.__macdownPrepareD2 = async function () {
+    try {
+        await macdownD2Engine.ready;
+        return { ok: true };
+    } catch (error) {
+        return { ok: false, message: error && error.message ? error.message : String(error) };
+    }
+};
+
 window.__macdownRenderD2 = async function (source, theme) {
     try {
         if (!theme || !["neutral-light-v1", "preview-context-v1"].includes(theme.policyID)) {
             throw new Error("unsupported diagram palette");
         }
-        const d2 = new window.D2();
+        const d2 = macdownD2Engine;
         const compiled = await d2.compile(source);
         // This bundled D2.js version documents themeID/darkThemeID. Pin
         // defaults across WebKit appearances, while retaining a theme
