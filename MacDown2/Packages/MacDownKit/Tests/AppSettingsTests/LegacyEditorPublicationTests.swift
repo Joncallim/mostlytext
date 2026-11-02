@@ -216,11 +216,11 @@ struct LegacyEditorPublicationTests {
     private enum TestFailure: Error { case invalidFixture }
 }
 
-private final class RefusingDefaults: UserDefaults, @unchecked Sendable {
+private final class RefusingDefaults: UserDefaults {
     override func set(_: Any?, forKey _: String) {}
 }
 
-private final class ReplacingDefaults: UserDefaults, @unchecked Sendable {
+private final class ReplacingDefaults: UserDefaults {
     override func set(_: Any?, forKey key: String) {
         super.set("later value", forKey: key)
     }
