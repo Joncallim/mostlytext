@@ -39,7 +39,7 @@ work runs off MainActor. SIGINT/SIGTERM cancel only this client/connection.
 ## Installed app and transport
 
 Resolve the actual executing image physically, including an explicitly created
-user-bin symlink, and require `App.app/Contents/MacOS/macdown2`. Validate its Info
+user-bin symlink, and require `App.app/Contents/MacOS/macdown2-command`. Validate its Info
 plist, main executable and non-placeholder bundle identity. Embed the CLI as an
 app build dependency/copy with exact bytes and its localisation resource bundle, so CLI and app update together. Warm
 connection uses the OS-selected per-user endpoint, not TMPDIR or a client path.
@@ -86,3 +86,12 @@ Additional nonlaunching checks relocate both Debug and Release executables into
 a synthetic app with the resource bundle and exercise direct/user-bin-symlink
 help, version and formats: all 12 pass. All 15 first-party catalogue keys exist.
 These checks do not launch AppDelegate or prove compiled-catalog translations.
+
+The next full run passed package tests and all builds, but app-target execution
+found a second case-insensitive collision: copying macdown2 alongside main
+executable MacDown2 overwrote the app. Embed the tool as macdown2-command;
+public syntax, build product macdown2 and optional user-bin symlink name remain
+macdown2. The locator follows that symlink to the distinct embedded filename.
+The embed script refuses a destination aliasing the main executable and refuses
+an already overwritten app executable (clean/rebuild required). Retain the
+failed app bootstrap and require the complete corrected hosted run.

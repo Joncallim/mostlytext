@@ -207,7 +207,7 @@ targets:
       - $(BUILT_PRODUCTS_DIR)/macdown2
       - $(BUILT_PRODUCTS_DIR)/MacDownKit_CommandLineSupport.bundle
       outputFiles:
-      - $(TARGET_BUILD_DIR)/$(EXECUTABLE_FOLDER_PATH)/macdown2
+      - $(TARGET_BUILD_DIR)/$(EXECUTABLE_FOLDER_PATH)/macdown2-command
       - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/MacDownKit_CommandLineSupport.bundle
   MacDown2Command:
     type: tool

@@ -13,6 +13,7 @@ public enum EmbeddedCommandFailure: Error, Sendable, Equatable {
 /// Locate only the app containing this executable. No PATH/LaunchServices
 /// search, configurable bundle ID or unsigned-launch override is accepted.
 public struct EmbeddedCommandApplication: Sendable, Equatable {
+    private static let toolName = "macdown2-command"
     public let bundleURL: URL
     public let executableURL: URL
     public let bundleIdentifier: String
@@ -42,7 +43,7 @@ public struct EmbeddedCommandApplication: Sendable, Equatable {
         let macOS = cli.deletingLastPathComponent()
         let contents = macOS.deletingLastPathComponent()
         let app = contents.deletingLastPathComponent()
-        guard cli.lastPathComponent == "macdown2", macOS.lastPathComponent == "MacOS",
+        guard cli.lastPathComponent == Self.toolName, macOS.lastPathComponent == "MacOS",
               contents.lastPathComponent == "Contents", app.pathExtension == "app",
               FileManager.default.isExecutableFile(atPath: cli.path)
         else { throw EmbeddedCommandFailure.invalidContainer }
@@ -54,7 +55,7 @@ public struct EmbeddedCommandApplication: Sendable, Equatable {
               let info = try PropertyListSerialization.propertyList(from: bytes, format: nil) as? [String: Any],
               info["CFBundlePackageType"] as? String == "APPL",
               let identity = info["CFBundleIdentifier"] as? String, validIdentity(identity),
-              let name = info["CFBundleExecutable"] as? String, validComponent(name), name != "macdown2"
+              let name = info["CFBundleExecutable"] as? String, validComponent(name), name.lowercased() != Self.toolName
         else { throw EmbeddedCommandFailure.invalidIdentity }
         guard let resolvedMain = realpath(macOS.appendingPathComponent(name).path, nil) else {
             throw EmbeddedCommandFailure.invalidContainer
