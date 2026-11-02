@@ -33,6 +33,17 @@ def protected(path):
             'Test account can modify a protected input or ancestor')
 
 
+def candidate_root(manifest):
+    value = manifest.get('candidateRoot')
+    require(isinstance(value, str), 'Missing candidate root in binding manifest')
+    candidate = Path(value)
+    require(candidate.is_absolute() and str(candidate) == value and '..' not in candidate.parts,
+            'Binding candidate root must be canonical and absolute')
+    require(candidate.resolve(strict=True) == candidate and candidate.is_dir(),
+            'Binding candidate root must be an existing unlinked directory')
+    return candidate
+
+
 def verified_pass(exit_code, counts, timed_out):
     expected = {'totalTestCount': 1, 'passedTests': 1, 'failedTests': 0,
                 'skippedTests': 0, 'expectedFailures': 0}
@@ -77,7 +88,7 @@ def main():
     args = ['fixed-runner', '--manifest', str(manifest_path), '--owner-home', '/Users/jonathanlim',
             '--scratch', str(scratch), '--build-root', str(root / 'build'),
             '--plan', str(root / 'build/derived/Build/Products/Issue88-isolated-prepared.xctestrun'),
-            '--candidate-root', '/Volumes/Fast SSD/CORTANA-Builds/native-completion-20261103/candidate-a75',
+            '--candidate-root', str(candidate_root(manifest)),
             '--expected-patch', str(root / 'build/source.patch')]
     sys.argv = args
     # First run must reach the original hold only after every actual protection,
