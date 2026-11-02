@@ -7,7 +7,7 @@ struct MacDown2App: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     var body: some Scene {
-        let ready = appDelegate.startup.phase == .ready
+        let ready = appDelegate.normalLaunchReady
         WindowGroup {
             EmptyView()
         }

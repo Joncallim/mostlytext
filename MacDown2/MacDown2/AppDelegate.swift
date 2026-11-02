@@ -1,5 +1,6 @@
 import AppKit
 import AppSettings
+import Combine
 import CommandBridge
 import FileCore
 import FileTree
@@ -9,7 +10,7 @@ import Themes
 import Workspace
 
 @MainActor
-final class AppDelegate: NSObject, NSApplicationDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     private(set) var coordinator: WindowCoordinator!
     private(set) var themeController: ThemeController!
     private(set) var themeCatalog: ThemeCatalogModel!
@@ -29,7 +30,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let shouldShowFirstRun: Bool
     let startup: LegacyImportStartup
     private let settingsStore: UserDefaultsAppSettingsStore
-    var normalLaunchReady = false
+    @Published private(set) var normalLaunchReady = false
     private var startupOpenFiles: [String] = []
     private var startupWindow: LegacyImportWindowController?
     private static let hasCompletedFirstRunKey = "com.joncallim.macdown2.hasCompletedFirstRun"
