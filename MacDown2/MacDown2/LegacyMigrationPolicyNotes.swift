@@ -44,8 +44,8 @@ struct LegacyMigrationPolicyNotes: View {
         switch policy {
         case .localMath:
             "Math uses the local engine. Old MathJax settings do not disable it or load a remote runtime."
-        case .sharedInlineDollarGrammar:
-            "Inline dollar math follows the shared grammar; the old switch does not change that grammar."
+        case .currentInlineDollarRules:
+            "The old inline-dollar switch is not imported. This version uses its current math parsing rules."
         case .localGraphviz:
             "Graphviz is a local capability; old scripts and renderer switches are not imported."
         case .localMermaid:

@@ -10,7 +10,7 @@ public struct LegacyPreferenceReport: Sendable, Equatable {
     }
 
     public enum CapabilityPolicy: String, Sendable, CaseIterable {
-        case localMath, sharedInlineDollarGrammar, localGraphviz, localMermaid, explicitTableOfContents
+        case localMath, currentInlineDollarRules, localGraphviz, localMermaid, explicitTableOfContents
     }
 
     public enum Disposition: Sendable, Equatable {
@@ -111,7 +111,7 @@ public struct LegacyPreferenceReport: Sendable, Equatable {
     private static func capabilityPolicy(for key: String) -> CapabilityPolicy? {
         switch key {
         case "htmlMathJax": .localMath
-        case "htmlMathJaxInlineDollar": .sharedInlineDollarGrammar
+        case "htmlMathJaxInlineDollar": .currentInlineDollarRules
         case "htmlGraphviz": .localGraphviz
         case "htmlMermaid": .localMermaid
         case "htmlRendersTOC": .explicitTableOfContents

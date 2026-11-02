@@ -1195,10 +1195,6 @@
         }
       }
     },
-    "Inline dollar math follows the shared grammar; the old switch does not change that grammar.": {
-      "extractionState": "manual",
-      "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
-    },
     "Installation Needs Review": {
       "extractionState": "manual",
       "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
@@ -1431,6 +1427,10 @@
           }
         }
       }
+    },
+    "MostlyText Migration": {
+      "extractionState": "manual",
+      "comment": "Installation migration source copy. Translation and native layout acceptance remain tracked in #17."
     },
     "MostlyText license": {
       "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
@@ -2355,6 +2355,10 @@
           }
         }
       }
+    },
+    "The old inline-dollar switch is not imported. This version uses its current math parsing rules.": {
+      "extractionState": "manual",
+      "comment": "Installation migration source copy. Translation and native layout acceptance remain tracked in #17."
     },
     "The original editor font cannot be reproduced exactly and will not be imported.": {
       "extractionState": "manual",

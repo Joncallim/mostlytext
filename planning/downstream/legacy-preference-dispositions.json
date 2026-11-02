@@ -470,7 +470,7 @@
       "declaration_type": "BOOL",
       "kind": "stored",
       "disposition": "unsupported_current_surface",
-      "rationale": "Explain #116's shared grammar and unsupported disabling behavior; no second grammar.",
+      "rationale": "Retain current math parsing rules without importing the old disabling switch. Shared Preview/Export grammar acceptance remains owned by #116; this report does not claim that work complete.",
       "owner": "#116",
       "implementation_status": "implemented_report",
       "report_policy": "capabilityPolicy"

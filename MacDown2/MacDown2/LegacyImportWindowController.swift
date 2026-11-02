@@ -9,7 +9,7 @@ final class LegacyImportWindowController: NSWindowController, NSWindowDelegate {
     init(startup: ApplicationMigrationStartup) {
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 590, height: 540),
                               styleMask: [.titled, .miniaturizable], backing: .buffered, defer: false)
-        window.title = String(localized: "MacDown Preferences")
+        window.title = String(localized: "MostlyText Migration")
         window.contentView = NSHostingView(rootView: ApplicationMigrationView(startup: startup))
         window.isReleasedWhenClosed = false
         super.init(window: window)
