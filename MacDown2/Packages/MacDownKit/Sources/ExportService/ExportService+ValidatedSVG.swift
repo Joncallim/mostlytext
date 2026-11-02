@@ -51,7 +51,8 @@ extension ExportService {
         let fallbackRequest = ExportRequest(
             text: request.text, sourceGeneration: request.sourceGeneration,
             theme: request.theme, documentURL: request.documentURL,
-            resourceAccess: request.resourceAccess, parseOptions: request.parseOptions, contributions: kept
+            resourceAccess: request.resourceAccess, protectedSourceIdentity: request.protectedSourceIdentity,
+            parseOptions: request.parseOptions, contributions: kept
         )
         let fallback = try await ExportComposer.prepareWithRoots(
             request: fallbackRequest, target: target, engine: engine, namespaceSVGIDs: true

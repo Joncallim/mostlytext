@@ -76,14 +76,17 @@ enum ExportFilePublication {
 
     static func write(
         _ input: HTMLFilePublicationInput, lease: ExportLifetimeLease,
-        hooks: ExportPublicationHooks = .init()
+        hooks: ExportPublicationHooks = .init(),
+        admission: ExportDestinationAdmission? = nil
     ) throws -> ExportResult {
         try validate(input)
         try Task.checkCancellation()
         try lease.checkActive()
+        let authorization = try admission ?? ExportDestinationAdmission(capturing: input.url)
+        try authorization.checkTarget(input.url)
         let parentURL = input.url.deletingLastPathComponent()
-        let parent = try openParent(parentURL)
-        let parentStamp = try Filesystem.directoryStamp(parent.descriptor)
+        let parent = authorization.parent
+        let parentStamp = authorization.parentStamp
         return try ExportPublicationGate.withDirectory(device: parentStamp.device, inode: parentStamp.inode) {
             try Task.checkCancellation()
             try lease.checkActive()
@@ -91,7 +94,8 @@ enum ExportFilePublication {
             else { throw ExportError.unsafePublication }
             let prefix = ExportPublicationRetention.scratchPrefix(for: input.url.lastPathComponent)
             try ExportPublicationRetention.checkParent(parent.descriptor, scratchPrefix: prefix)
-            let baseline = try primaryBaseline(input.url.lastPathComponent, in: parent.descriptor)
+            try authorization.checkTarget(input.url)
+            let baseline = authorization.primaryStamp
             let staged = try stageCompanions(
                 input, in: parent, nextTo: parentURL,
                 lease: lease, hooks: hooks
@@ -107,8 +111,10 @@ enum ExportFilePublication {
                         parentStamp: parentStamp,
                         staged: staged
                     )
-                    guard try primaryBaseline(input.url.lastPathComponent, in: parent.descriptor) == baseline,
-                          try Filesystem.childStamp(primary.name, in: parent.descriptor) == primary.stamp
+                    try authorization.checkTarget(input.url)
+                    guard try Filesystem
+                        .primaryBaseline(input.url.lastPathComponent, in: parent.descriptor) == baseline,
+                        try Filesystem.childStamp(primary.name, in: parent.descriptor) == primary.stamp
                     else { throw ExportError.unsafePublication }
                     try primary.promote(as: input.url.lastPathComponent, absent: baseline == nil)
                 }
@@ -145,25 +151,6 @@ enum ExportFilePublication {
             ),
                 safeName(resource.identity.fileName) else { throw ExportError.unsafePublication }
         }
-    }
-
-    private static func primaryBaseline(_ name: String, in directory: Int32) throws -> Stamp? {
-        var info = stat()
-        if fstatat(directory, name, &info, AT_SYMLINK_NOFOLLOW) != 0 {
-            if errno == ENOENT {
-                return nil
-            }
-            throw Filesystem.posixFailure()
-        }
-        let stamp = Stamp(info)
-        guard stamp.kind == mode_t(S_IFREG) else { throw ExportError.unsafePublication }
-        return stamp
-    }
-
-    private static func openParent(_ url: URL) throws -> DirectoryHandle {
-        let descriptor = Darwin.open(url.path, O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)
-        guard descriptor >= 0 else { throw ExportError.invalidDestination(url.path) }
-        return DirectoryHandle(descriptor)
     }
 
     private static func stageCompanions(

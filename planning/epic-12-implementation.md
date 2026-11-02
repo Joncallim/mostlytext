@@ -1190,3 +1190,29 @@ are required before integration. Local app/tests compile only. Native/sandbox
 acceptance, authorization-time output/source-alias admission, inventory-backed
 crash recovery and empirical limits remain separate gates. The optional SVG
 route and held preview/current-line changes are not activated.
+
+
+## Authorization-time destination and immutable PDF bytes — 2 November 2026
+
+The unit in `downstream/export-destination-admission.md` captures the opened
+parent and absent-or-regular primary revision before ordinary contribution
+parsing/rendering. Publication checks that same admission before staging and
+inside the final lifetime cutoff. Current source/open-document URLs and
+previously observed FileCore device/inode identities reject aliases, including
+hard links whose original source name is gone. Name comparison is deliberately
+conservative on case/Unicode variants; it does not normalize source bytes.
+
+Ordinary HTML passes this admission through ExportService. PDF reads a bounded
+no-follow candidate relative to the admitted parent, validates/normalizes the
+immutable bytes, then publishes those same bytes on an explicitly cancelled
+background I/O worker through the shared descriptor-relative primary writer.
+Normalization no longer rewrites a printer pathname. Existing PDF integrity
+assertions now inspect the accepted value and preserve the input fixture. The
+WebKit/NSPrintOperation/fallback API and print-progress policy are unchanged.
+
+This detects observed revision changes and protects the document set captured
+at authorization; it is not filesystem compare-and-swap or a global fence
+against files opened later. Unknown printer-scratch ownership and automatic
+crash repair remain follow-on source/native-probe gates. Full PDF/menu/native
+acceptance, Release calibration, final language review and independent release
+review remain unperformed. Local app/test targets compile only.

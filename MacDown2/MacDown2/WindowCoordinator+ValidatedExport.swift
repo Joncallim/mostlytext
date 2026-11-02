@@ -102,6 +102,7 @@ extension WindowCoordinator {
             text: frozen.text, sourceGeneration: frozen.sourceGeneration,
             theme: frozen.theme, documentURL: frozen.documentURL,
             resourceAccess: frozen.resourceAccess,
+            protectedSourceIdentity: frozen.protectedSourceIdentity,
             contributions: adaptation.contributions
         )
         await beforePublication?(request)

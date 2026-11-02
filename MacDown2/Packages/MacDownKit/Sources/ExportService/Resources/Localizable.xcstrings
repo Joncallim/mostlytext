@@ -399,6 +399,28 @@
           }
         }
       }
+    },
+    "The export destination changed after it was selected. Choose it again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The export destination changed after it was selected. Choose it again."
+          }
+        }
+      }
+    },
+    "Choose an export destination that is not a source or open document.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose an export destination that is not a source or open document."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

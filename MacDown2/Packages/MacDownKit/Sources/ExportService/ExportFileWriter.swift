@@ -13,6 +13,21 @@ enum ExportFileWriter {
                           limit: Int = ExportResourceBudget.maxFinalHTMLUTF8Bytes,
                           lease: ExportLifetimeLease = ExportLifetimeLease(),
                           hooks: ExportPublicationHooks = .init()) throws -> ExportResult {
+        let input = try assemble(prepared, to: target, limit: limit)
+        return try ExportFilePublication.write(input, lease: lease, hooks: hooks)
+    }
+
+    static func writeHTML(
+        _ prepared: PreparedExportDocument, to target: ExportTarget,
+        admission: ExportDestinationAdmission, lease: ExportLifetimeLease
+    ) throws -> ExportResult {
+        let input = try assemble(prepared, to: target, limit: ExportResourceBudget.maxFinalHTMLUTF8Bytes)
+        return try ExportFilePublication.write(input, lease: lease, admission: admission)
+    }
+
+    private static func assemble(
+        _ prepared: PreparedExportDocument, to target: ExportTarget, limit: Int
+    ) throws -> HTMLFilePublicationInput {
         guard case let .html(url, mode) = target else {
             throw ExportError.invalidDestination("PDF targets are written by the PDF adapter, not the HTML writer")
         }
@@ -32,11 +47,10 @@ enum ExportFileWriter {
                 resources.append(ExportHTMLWriter.linkedStylesheetResource(for: prepared.stylesheet))
             }
         }
-        let input = HTMLFilePublicationInput(
+        return HTMLFilePublicationInput(
             url: url, mode: mode, bytes: Data(html.utf8), resources: resources,
             assetsDirectoryName: prepared.assetsDirectoryName, diagnostics: prepared.diagnostics
         )
-        return try ExportFilePublication.write(input, lease: lease, hooks: hooks)
     }
 
     /// The opt-in path consumes the inspected UTF-8 bytes directly. Existing

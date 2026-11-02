@@ -81,7 +81,7 @@ final class ValidatedExportOrigin {
             theme: controller.themeController.current, documentURL: document.fileURL,
             resourceAccess: document.fileURL.flatMap {
                 try? ExportResourceAccess(openingDirectory: $0.deletingLastPathComponent())
-            }
+            }, protectedSourceIdentity: ExportProtectedFileIdentity(document: document)
         )
     }
 
