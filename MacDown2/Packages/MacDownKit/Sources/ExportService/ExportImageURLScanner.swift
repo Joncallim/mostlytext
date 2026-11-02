@@ -34,10 +34,9 @@ enum ExportImageURLScanner {
                 cursor = closing.end
                 continue
             }
-            if matches("<!--", at: cursor, in: bytes) {
-                guard let end = try commentEnd(at: cursor, in: bytes) else { break }
-                cursor = end
-                continue
+            guard let opaqueEnd = try afterOpaqueMarkup(at: cursor, in: bytes) else { break }
+            if opaqueEnd != cursor {
+                cursor = opaqueEnd; continue
             }
             guard let tag = try tag(at: cursor, in: bytes) else {
                 // An unfinished tag can contain arbitrary apparent markup.
@@ -51,6 +50,16 @@ enum ExportImageURLScanner {
             cursor = tag.end
         }
         return sources
+    }
+
+    private static func afterOpaqueMarkup(at cursor: Int, in bytes: [UInt8]) throws -> Int? {
+        if matches("<![CDATA[", at: cursor, in: bytes) {
+            return try cdataEnd(from: cursor + 9, in: bytes)
+        }
+        if matches("<!--", at: cursor, in: bytes) {
+            return try commentEnd(at: cursor, in: bytes)
+        }
+        return cursor
     }
 
     private static let rawElements: Set<String> = [
@@ -197,6 +206,20 @@ enum ExportImageURLScanner {
     private static func matches(_ text: String, at start: Int, in bytes: [UInt8]) -> Bool {
         let needle = Array(text.utf8)
         return bytes.count - start >= needle.count && bytes[start ..< start + needle.count].elementsEqual(needle)
+    }
+
+    private static func cdataEnd(from start: Int, in bytes: [UInt8]) throws -> Int? {
+        var cursor = start
+        while bytes.count - cursor >= 3 {
+            if cursor.isMultiple(of: 4096) {
+                try Task.checkCancellation()
+            }
+            if bytes[cursor] == 93, bytes[cursor + 1] == 93, bytes[cursor + 2] == 62 {
+                return cursor + 3
+            }
+            cursor += 1
+        }
+        return nil
     }
 
     private static func commentEnd(at start: Int, in bytes: [UInt8]) throws -> Int? {

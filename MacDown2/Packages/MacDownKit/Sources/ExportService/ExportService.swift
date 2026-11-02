@@ -28,13 +28,15 @@ public enum ExportService {
     public static func exportHTML(
         _ request: ExportRequest,
         to target: ExportTarget,
-        engine: any ParseExecuting = ParseEngine()
+        engine: any ParseExecuting = ParseEngine(),
+        lease: ExportLifetimeLease = ExportLifetimeLease()
     ) async throws -> ExportResult {
         guard case .html = target else {
             throw ExportError.invalidDestination("exportHTML writes HTML targets only; use the PDF adapter for PDF")
         }
+        try lease.checkActive()
         let prepared = try await prepare(request, target: target, engine: engine)
-        return try ExportFileWriter.writeHTML(prepared, to: target)
+        return try ExportFileWriter.writeHTML(prepared, to: target, lease: lease)
     }
 
     /// Renders a standalone Markdown fragment to a self-contained HTML

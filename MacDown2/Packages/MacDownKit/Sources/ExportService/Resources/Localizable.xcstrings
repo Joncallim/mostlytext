@@ -327,6 +327,56 @@
           }
         }
       }
+    },
+    "The export destination or assets could not be safely reused.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The export destination or assets could not be safely reused."
+          }
+        }
+      }
+    },
+    "Choose another export name or destination. Existing files have been preserved.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose another export name or destination. Existing files have been preserved."
+          }
+        }
+      }
+    },
+    "An export staging file needs recovery at: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An export staging file needs recovery at: %@"
+          }
+        }
+      }
+    },
+    "Preserve that file and choose another export destination.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preserve that file and choose another export destination."
+          }
+        }
+      }
+    },
+    "retained export assets exceed the safety limit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "retained export assets exceed the safety limit"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

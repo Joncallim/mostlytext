@@ -6,6 +6,37 @@
 > **Architecture date:** 2026-08-17
 > **Review status:** Final adversarial pass complete; implementation begins with Slice 0 only
 
+## 2026-11-02 ordinary publication amendment
+
+Ordinary HTML now uses the descriptor-relative writer shared with the optional
+validated path. A parent-device/inode gate serializes publication after assembly.
+The selected parent must already exist; no intermediate paths are created by the
+writer. Sidecars require a v2 marker bound to the exact primary leaf; unknown and
+legacy directories, symlinked directories/primaries/resources, changed identities
+and same-stem owner collisions are refused without adopting or deleting files.
+Existing resources are reused only after bounded no-follow byte comparison.
+
+All retained flat entries count toward a provisional 513-file/128-MiB ceiling,
+including the marker and unknown user entries. Old assets are kept; growth stops
+at the ceiling. Ambiguous scratch residue blocks another allocation. Primary
+scratch names bind to the leaf digest. Normal/cancelled staging cleanup moves a
+name to exclusive quarantine before verifying the original inode and bytes;
+mismatches restore without replacing an occupied path or report a recovery URL.
+No filename-pattern deletion or automatic legacy adoption is performed.
+
+Ordinary origins now use the existing lifetime revocation hooks. Their lease
+flows through preparation to the HTML/PDF publication cutoff; text edits keep
+the captured snapshot, while window/document identity changes revoke it. Native
+close/print timing is still unverified. Observed primary baselines are rechecked,
+and absent primaries promote without replacement. Existing-file precheck plus
+rename is not a filesystem compare-and-swap. Authorization-time parent/target
+admission, inventory-backed transaction journals/automatic crash repair, fully
+proved external-writer/root-membership exclusion and native/exact-artifact
+acceptance remain #118/#183 gates. The optional SVG path remains disabled.
+
+Publication review also completed fallback-title namespace exclusion and CDATA
+context rejection for resource slots. Neither change enables another renderer.
+
 ## 2026-11-02 generated resource substitution amendment
 
 The composer now registers unique image-URL occurrence tokens only for resolved,

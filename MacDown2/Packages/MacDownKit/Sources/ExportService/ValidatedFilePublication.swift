@@ -1,51 +1,16 @@
 import Darwin
 import Foundation
 
-/// Filesystem boundary for the disabled, validated HTML path. Open directory
+/// Shared filesystem boundary for ordinary and optional validated HTML. Open directory
 /// descriptors keep every staging operation in the directory actually checked;
 /// changing a pathname to a symlink cannot redirect a later read or write.
 /// A process with write access to the destination can still race the final
 /// pathname checks or change exported files after publication. This is not an
 /// atomic transaction across the primary and its companions.
-enum ValidatedFilePublication {
-    private final class DirectoryHandle {
-        let descriptor: Int32
-
-        init(_ descriptor: Int32) {
-            self.descriptor = descriptor
-        }
-
-        deinit {
-            _ = Darwin.close(descriptor)
-        }
-    }
-
-    private struct Stamp: Equatable {
-        let device: UInt64
-        let inode: UInt64
-        let kind: mode_t
-        let size: Int64
-        let modifiedSeconds: Int64
-        let modifiedNanoseconds: Int64
-        let changedSeconds: Int64
-        let changedNanoseconds: Int64
-
-        init(_ info: stat) {
-            device = UInt64(info.st_dev)
-            inode = UInt64(info.st_ino)
-            kind = info.st_mode & mode_t(S_IFMT)
-            size = info.st_size
-            modifiedSeconds = Int64(info.st_mtimespec.tv_sec)
-            modifiedNanoseconds = Int64(info.st_mtimespec.tv_nsec)
-            changedSeconds = Int64(info.st_ctimespec.tv_sec)
-            changedNanoseconds = Int64(info.st_ctimespec.tv_nsec)
-        }
-
-        func sameDirectory(as other: Stamp) -> Bool {
-            kind == mode_t(S_IFDIR) && other.kind == kind
-                && device == other.device && inode == other.inode
-        }
-    }
+enum ExportFilePublication {
+    private typealias Filesystem = ExportPublicationFilesystem
+    private typealias DirectoryHandle = Filesystem.DirectoryHandle
+    private typealias Stamp = Filesystem.Stamp
 
     private struct StagedCompanions {
         let directory: DirectoryHandle
@@ -58,61 +23,141 @@ enum ValidatedFilePublication {
         let directory: DirectoryHandle
         let name: String
         let stamp: Stamp
+        let bytes: Data
         private var promoted = false
+        private var retirementAttempted = false
 
-        init(directory: DirectoryHandle, name: String, stamp: Stamp) {
+        init(directory: DirectoryHandle, name: String, stamp: Stamp, bytes: Data) {
             self.directory = directory
             self.name = name
             self.stamp = stamp
+            self.bytes = bytes
         }
 
-        func promote(as destination: String) throws {
-            guard renameat(directory.descriptor, name, directory.descriptor, destination) == 0
-            else { throw ValidatedFilePublication.posixFailure() }
+        func promote(as destination: String, absent: Bool) throws {
+            let result = absent
+                ? renameatx_np(directory.descriptor, name, directory.descriptor, destination, UInt32(RENAME_EXCL))
+                : renameat(directory.descriptor, name, directory.descriptor, destination)
+            guard result == 0
+            else { throw Filesystem.posixFailure() }
             promoted = true
         }
 
-        deinit {
-            // A replaced temporary name is not ours to remove. As with the
-            // final rename, a hostile concurrent writer can race this check.
-            if !promoted, (try? ValidatedFilePublication.childStamp(name, in: directory.descriptor)) == stamp {
-                _ = unlinkat(directory.descriptor, name, 0)
+        func publishing(_ operation: () throws -> Void) throws {
+            do { try operation() } catch {
+                try discard()
+                throw error
             }
         }
+
+        private func discard() throws {
+            guard !promoted, !retirementAttempted else { return }
+            retirementAttempted = true
+            try Filesystem.retireTemporary(bytes, name: name, expected: stamp, in: directory.descriptor)
+        }
+
+        deinit { try? discard() }
     }
 
     static func write(
         _ validated: ValidatedExportHTML, lease: ExportLifetimeLease,
         afterCompanionDirectoryOpened: (() -> Void)?, beforePromotion: (() -> Void)?
     ) throws -> ExportResult {
-        guard case let .html(url, _) = validated.target, validated.bytesAreIntact(),
-              safeName(url.lastPathComponent),
-              validated.assetsDirectoryName == ExportHTMLWriter.assetsDirectoryName(for: url)
+        guard case let .html(url, mode) = validated.target, validated.bytesAreIntact()
         else { throw ExportError.validatedPublicationRejected }
+        let input = HTMLFilePublicationInput(
+            url: url, mode: mode, bytes: validated.utf8, resources: validated.resources,
+            assetsDirectoryName: validated.assetsDirectoryName, diagnostics: validated.diagnostics
+        )
+        return try write(input, lease: lease, hooks: .init(
+            afterCompanionDirectoryOpened: afterCompanionDirectoryOpened, beforePromotion: beforePromotion
+        ))
+    }
+
+    static func write(
+        _ input: HTMLFilePublicationInput, lease: ExportLifetimeLease,
+        hooks: ExportPublicationHooks = .init()
+    ) throws -> ExportResult {
+        try validate(input)
         try Task.checkCancellation()
         try lease.checkActive()
-
-        let parentURL = url.deletingLastPathComponent()
+        let parentURL = input.url.deletingLastPathComponent()
         let parent = try openParent(parentURL)
-        let parentStamp = try directoryStamp(parent.descriptor)
-        let staged = try stageCompanions(
-            validated, in: parent, nextTo: parentURL,
-            lease: lease, afterOpening: afterCompanionDirectoryOpened
-        )
-        let primary = try stagePrimary(validated.utf8, in: parent)
-
-        beforePromotion?()
-        // The bounded primary write and fsync finish before the final checks.
-        // Revocation, verification and rename share one synchronous cutoff.
-        try lease.withPublicationCutoff {
-            try verify(validated, parent: parent, parentPath: parentURL.path,
-                       parentStamp: parentStamp, staged: staged)
-            guard try childStamp(primary.name, in: parent.descriptor) == primary.stamp
-            else { throw ExportError.validatedPublicationRejected }
-            try primary.promote(as: url.lastPathComponent)
+        let parentStamp = try Filesystem.directoryStamp(parent.descriptor)
+        return try ExportPublicationGate.withDirectory(device: parentStamp.device, inode: parentStamp.inode) {
+            try Task.checkCancellation()
+            try lease.checkActive()
+            guard try Filesystem.directoryAtPath(parentURL.path, matches: parentStamp)
+            else { throw ExportError.unsafePublication }
+            let prefix = ExportPublicationRetention.scratchPrefix(for: input.url.lastPathComponent)
+            try ExportPublicationRetention.checkParent(parent.descriptor, scratchPrefix: prefix)
+            let baseline = try primaryBaseline(input.url.lastPathComponent, in: parent.descriptor)
+            let staged = try stageCompanions(
+                input, in: parent, nextTo: parentURL,
+                lease: lease, hooks: hooks
+            )
+            let primary = try stagePrimary(input.bytes, in: parent, prefix: prefix)
+            try primary.publishing {
+                hooks.beforePromotion?()
+                try lease.withPublicationCutoff {
+                    try verify(
+                        input,
+                        parent: parent,
+                        parentPath: parentURL.path,
+                        parentStamp: parentStamp,
+                        staged: staged
+                    )
+                    guard try primaryBaseline(input.url.lastPathComponent, in: parent.descriptor) == baseline,
+                          try Filesystem.childStamp(primary.name, in: parent.descriptor) == primary.stamp
+                    else { throw ExportError.unsafePublication }
+                    try primary.promote(as: input.url.lastPathComponent, absent: baseline == nil)
+                }
+            }
+            return ExportResult(
+                primaryFile: input.url,
+                companionFiles: staged?.urls ?? [],
+                diagnostics: input.diagnostics
+            )
         }
-        return ExportResult(primaryFile: url, companionFiles: staged?.urls ?? [],
-                            diagnostics: validated.diagnostics)
+    }
+
+    private static func validate(_ input: HTMLFilePublicationInput) throws {
+        guard input.url.isFileURL, safeName(input.url.lastPathComponent), safeName(input.assetsDirectoryName),
+              input.assetsDirectoryName.utf8.elementsEqual(ExportHTMLWriter.assetsDirectoryName(for: input.url).utf8)
+        else { throw ExportError.unsafePublication }
+        if case .standalone = input.mode, !input.resources.isEmpty,
+           input.url.pathExtension.lowercased() == "assets" {
+            throw ExportError.unsafePublication
+        }
+        guard input.bytes.count <= ExportResourceBudget.maxFinalHTMLUTF8Bytes,
+              input.resources.count <= ExportResourceBudget.standard.maxResourceCount
+        else { throw BoundedExportHTML.tooLarge }
+        var bytes = 0
+        for resource in input.resources {
+            try Task.checkCancellation()
+            guard resource.bytes.count <= ExportResourceBudget.standard.maxSingleResourceBytes,
+                  bytes <= ExportResourceBudget.standard.maxAggregateResourceBytes - resource.bytes.count
+            else { throw BoundedExportHTML.tooLarge }
+            bytes += resource.bytes.count
+            guard resource.identity == ExportResourceIdentity(
+                bytes: resource.bytes,
+                mimeType: resource.identity.mimeType
+            ),
+                safeName(resource.identity.fileName) else { throw ExportError.unsafePublication }
+        }
+    }
+
+    private static func primaryBaseline(_ name: String, in directory: Int32) throws -> Stamp? {
+        var info = stat()
+        if fstatat(directory, name, &info, AT_SYMLINK_NOFOLLOW) != 0 {
+            if errno == ENOENT {
+                return nil
+            }
+            throw Filesystem.posixFailure()
+        }
+        let stamp = Stamp(info)
+        guard stamp.kind == mode_t(S_IFREG) else { throw ExportError.unsafePublication }
+        return stamp
     }
 
     private static func openParent(_ url: URL) throws -> DirectoryHandle {
@@ -122,43 +167,48 @@ enum ValidatedFilePublication {
     }
 
     private static func stageCompanions(
-        _ validated: ValidatedExportHTML,
+        _ input: HTMLFilePublicationInput,
         in parent: DirectoryHandle, nextTo parentURL: URL,
-        lease: ExportLifetimeLease, afterOpening: (() -> Void)?
+        lease: ExportLifetimeLease, hooks: ExportPublicationHooks
     ) throws -> StagedCompanions? {
-        guard case let .html(_, mode) = validated.target else { throw ExportError.validatedPublicationRejected }
-        switch mode {
-        case .selfContained:
+        if case .selfContained = input.mode {
             return nil
-        case .standalone(style: .linked):
-            throw ExportError.validatedPublicationRejected
-        case .standalone(style: .embedded):
-            guard !validated.resources.isEmpty else { return nil }
         }
-        let assetsName = validated.assetsDirectoryName
-        guard safeName(assetsName) else { throw ExportError.validatedPublicationRejected }
-        if mkdirat(parent.descriptor, assetsName, mode_t(S_IRUSR | S_IWUSR | S_IXUSR)) != 0,
-           errno != EEXIST {
-            throw posixFailure()
+        guard !input.resources.isEmpty else { return nil }
+        let assetsName = input.assetsDirectoryName
+        let created = mkdirat(parent.descriptor, assetsName, mode_t(S_IRUSR | S_IWUSR | S_IXUSR)) == 0
+        if !created, errno != EEXIST {
+            throw Filesystem.posixFailure()
         }
         let descriptor = openat(parent.descriptor, assetsName, O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)
-        guard descriptor >= 0 else { throw ExportError.validatedPublicationRejected }
+        guard descriptor >= 0 else { throw ExportError.unsafePublication }
         let directory = DirectoryHandle(descriptor)
-        let stamp = try directoryStamp(descriptor)
-        afterOpening?()
+        let stamp = try Filesystem.directoryStamp(descriptor)
+        hooks.afterCompanionDirectoryOpened?()
+        guard try Filesystem.directoryAtPath(parentURL.path, matches: Filesystem.directoryStamp(parent.descriptor)),
+              try Filesystem.childDirectory(assetsName, in: parent.descriptor, matches: stamp)
+        else { throw ExportError.unsafePublication }
         let assetsURL = parentURL.appendingPathComponent(assetsName, isDirectory: true)
         let marker = ExportFileWriter.markerFileName
-        var entries = [(name: String, stamp: Stamp)]()
-        try entries.append((marker, stage(Data(ExportFileWriter.markerContent.utf8),
-                                          named: marker, in: descriptor)))
+        let owner = try ExportAssetOwnerMarker.bytes(primary: input.url.lastPathComponent, assets: assetsName)
+        let markerStamp: Stamp
+        if created {
+            markerStamp = try stage(owner, named: marker, in: descriptor)
+        } else {
+            guard let existing = try Filesystem.existingBytes(owner, named: marker, in: descriptor)
+            else { throw ExportError.unsafePublication }
+            markerStamp = existing
+        }
+        var entries = [(name: marker, stamp: markerStamp)]
         var urls = [assetsURL.appendingPathComponent(marker)]
-        for resource in validated.resources {
+        var retained = try ExportPublicationRetention.scanAssets(descriptor, limits: hooks.retentionLimit)
+        for resource in input.resources {
             try Task.checkCancellation()
             try lease.checkActive()
-            guard resource.identity == ExportResourceIdentity(
-                bytes: resource.bytes, mimeType: resource.identity.mimeType
-            ), safeName(resource.identity.fileName) else { throw ExportError.validatedPublicationRejected }
+            guard try Filesystem.childDirectory(assetsName, in: parent.descriptor, matches: stamp)
+            else { throw ExportError.unsafePublication }
             let name = resource.identity.fileName
+            try retained.reserve(name: name, bytes: resource.bytes.count, limits: hooks.retentionLimit)
             try entries.append((name, stage(resource.bytes, named: name, in: descriptor)))
             urls.append(assetsURL.appendingPathComponent(name))
         }
@@ -166,156 +216,54 @@ enum ValidatedFilePublication {
     }
 
     private static func verify(
-        _ validated: ValidatedExportHTML, parent: DirectoryHandle,
+        _ input: HTMLFilePublicationInput, parent: DirectoryHandle,
         parentPath: String, parentStamp: Stamp, staged: StagedCompanions?
     ) throws {
-        guard validated.bytesAreIntact(), try directoryAtPath(parentPath, matches: parentStamp)
-        else { throw ExportError.validatedPublicationRejected }
+        guard try Filesystem.directoryAtPath(parentPath, matches: parentStamp)
+        else { throw ExportError.unsafePublication }
         guard let staged else { return }
-        guard try childDirectory(validated.assetsDirectoryName, in: parent.descriptor, matches: staged.stamp)
-        else { throw ExportError.validatedPublicationRejected }
+        guard try Filesystem.childDirectory(input.assetsDirectoryName, in: parent.descriptor, matches: staged.stamp)
+        else { throw ExportError.unsafePublication }
         for entry in staged.entries {
-            guard try childStamp(entry.name, in: staged.directory.descriptor) == entry.stamp
-            else { throw ExportError.validatedPublicationRejected }
+            guard try Filesystem.childStamp(entry.name, in: staged.directory.descriptor) == entry.stamp
+            else { throw ExportError.unsafePublication }
         }
     }
 
     private static func safeName(_ name: String) -> Bool {
         !name.isEmpty && name != "." && name != ".."
-            && !name.contains("/") && !name.contains("\0")
+            && !name.utf8.contains(UInt8(ascii: "/")) && !name.utf8.contains(0)
     }
 }
 
-private extension ValidatedFilePublication {
-    private static func directoryStamp(_ descriptor: Int32) throws -> Stamp {
-        var info = stat()
-        guard fstat(descriptor, &info) == 0 else { throw posixFailure() }
-        let stamp = Stamp(info)
-        guard stamp.kind == mode_t(S_IFDIR) else { throw ExportError.validatedPublicationRejected }
-        return stamp
-    }
-
-    private static func childStamp(_ name: String, in directory: Int32) throws -> Stamp {
-        var info = stat()
-        guard fstatat(directory, name, &info, AT_SYMLINK_NOFOLLOW) == 0 else { throw posixFailure() }
-        return Stamp(info)
-    }
-
-    private static func childDirectory(_ name: String, in parent: Int32, matches expected: Stamp) throws -> Bool {
-        try childStamp(name, in: parent).sameDirectory(as: expected)
-    }
-
-    private static func directoryAtPath(_ path: String, matches expected: Stamp) throws -> Bool {
-        var info = stat()
-        guard lstat(path, &info) == 0 else { throw posixFailure() }
-        return Stamp(info).sameDirectory(as: expected)
-    }
-
+private extension ExportFilePublication {
     /// Existing names are opened without following links and compared by bytes.
     /// New names are linked from an exclusive temporary inode, never renamed
     /// over a resource used by the previous primary.
     private static func stage(_ bytes: Data, named name: String, in directory: Int32) throws -> Stamp {
-        if let existing = try existingBytes(bytes, named: name, in: directory) {
+        if let existing = try Filesystem.existingBytes(bytes, named: name, in: directory) {
             return existing
         }
         let temporary = ".mt-\(UUID().uuidString).stage"
-        let descriptor = openat(directory, temporary, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC,
-                                mode_t(S_IRUSR | S_IWUSR))
-        guard descriptor >= 0 else { throw posixFailure() }
-        defer {
-            _ = Darwin.close(descriptor)
-            _ = unlinkat(directory, temporary, 0)
+        try Filesystem.withScratch(bytes, name: temporary, in: directory, retainOnSuccess: false) { _, _ in
+            if linkat(directory, temporary, directory, name, 0) != 0, errno != EEXIST {
+                throw Filesystem.posixFailure()
+            }
         }
-        try writeAll(bytes, to: descriptor)
-        guard fsync(descriptor) == 0 else { throw posixFailure() }
-        if linkat(directory, temporary, directory, name, 0) != 0,
-           errno != EEXIST {
-            throw posixFailure()
-        }
-        // Removing the temporary hard link changes the installed inode's
-        // change time. Capture its final stamp only after that mutation.
-        guard unlinkat(directory, temporary, 0) == 0 else { throw posixFailure() }
-        guard let installed = try existingBytes(bytes, named: name, in: directory)
-        else { throw ExportError.validatedPublicationRejected }
+        guard let installed = try Filesystem.existingBytes(bytes, named: name, in: directory)
+        else { throw ExportError.unsafePublication }
         return installed
     }
 
-    private static func existingBytes(_ expected: Data, named name: String, in directory: Int32) throws -> Stamp? {
-        // Non-blocking open prevents a substituted FIFO from waiting forever
-        // before fstat can reject its non-regular inode.
-        let descriptor = openat(directory, name, O_RDONLY | O_NONBLOCK | O_NOFOLLOW | O_CLOEXEC)
-        if descriptor < 0 {
-            if errno == ENOENT {
-                return nil
+    private static func stagePrimary(_ bytes: Data, in directory: DirectoryHandle,
+                                     prefix: String) throws -> StagedPrimary {
+        let temporary = prefix + UUID().uuidString + ".html.tmp"
+        return try Filesystem
+            .withScratch(bytes, name: temporary, in: directory.descriptor, retainOnSuccess: true) { _, stamp in
+                StagedPrimary(directory: directory, name: temporary, stamp: stamp, bytes: bytes)
             }
-            throw ExportError.validatedPublicationRejected
-        }
-        defer { _ = Darwin.close(descriptor) }
-        var initial = stat()
-        guard fstat(descriptor, &initial) == 0 else { throw posixFailure() }
-        let stamp = Stamp(initial)
-        guard stamp.kind == mode_t(S_IFREG), stamp.size == expected.count
-        else { throw ExportError.validatedPublicationRejected }
-        var actual = Data()
-        actual.reserveCapacity(expected.count)
-        var buffer = [UInt8](repeating: 0, count: 16 * 1024)
-        while actual.count < expected.count {
-            let count = min(buffer.count, expected.count - actual.count)
-            let readCount = buffer.withUnsafeMutableBytes { Darwin.read(descriptor, $0.baseAddress, count) }
-            if readCount < 0, errno == EINTR {
-                continue
-            }
-            guard readCount > 0 else { throw ExportError.validatedPublicationRejected }
-            actual.append(contentsOf: buffer.prefix(readCount))
-        }
-        var extra: UInt8 = 0
-        guard Darwin.read(descriptor, &extra, 1) == 0, actual == expected else {
-            throw ExportError.validatedPublicationRejected
-        }
-        var final = stat()
-        guard fstat(descriptor, &final) == 0, Stamp(final) == stamp else {
-            throw ExportError.validatedPublicationRejected
-        }
-        return stamp
-    }
-
-    private static func stagePrimary(_ bytes: Data, in directory: DirectoryHandle) throws -> StagedPrimary {
-        let temporary = ".mt-\(UUID().uuidString).html.tmp"
-        let descriptor = openat(directory.descriptor, temporary, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC,
-                                mode_t(S_IRUSR | S_IWUSR))
-        guard descriptor >= 0 else { throw posixFailure() }
-        defer { _ = Darwin.close(descriptor) }
-        var retained = false
-        defer {
-            if !retained {
-                _ = unlinkat(directory.descriptor, temporary, 0)
-            }
-        }
-        try writeAll(bytes, to: descriptor)
-        guard fsync(descriptor) == 0 else { throw posixFailure() }
-        var info = stat()
-        guard fstat(descriptor, &info) == 0, (info.st_mode & mode_t(S_IFMT)) == mode_t(S_IFREG)
-        else { throw ExportError.validatedPublicationRejected }
-        retained = true
-        return StagedPrimary(directory: directory, name: temporary, stamp: Stamp(info))
-    }
-
-    private static func writeAll(_ bytes: Data, to descriptor: Int32) throws {
-        try bytes.withUnsafeBytes { buffer in
-            guard let baseAddress = buffer.baseAddress else { return }
-            var offset = 0
-            while offset < buffer.count {
-                let written = Darwin.write(descriptor, baseAddress.advanced(by: offset), buffer.count - offset)
-                if written < 0, errno == EINTR {
-                    continue
-                }
-                guard written > 0 else { throw posixFailure() }
-                offset += written
-            }
-        }
-    }
-
-    private static func posixFailure() -> ExportError {
-        .writeFailed(underlying: NSError(domain: NSPOSIXErrorDomain, code: Int(errno)))
     }
 }
+
+/// Compatibility name for the optional validated entry point.
+typealias ValidatedFilePublication = ExportFilePublication

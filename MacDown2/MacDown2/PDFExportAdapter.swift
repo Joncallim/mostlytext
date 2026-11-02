@@ -31,12 +31,14 @@ enum PDFExportAdapter {
     private static let maxValidationPages = 1024
     private static let validationSide = 256
 
-    static func export(_ prepared: PreparedExportDocument, to url: URL) async throws {
+    static func export(_ prepared: PreparedExportDocument, to url: URL,
+                       lease: ExportLifetimeLease = ExportLifetimeLease()) async throws {
+        try lease.checkActive()
         // Base64-encoding every embedded image is the most expensive step in a
         // PDF export; it is done off the main actor so the app stays responsive.
         let html = try await hardenedHTML(from: prepared)
         let sourceHasContent = !prepared.bodyHTML.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        try await exportHTML(html, to: url, sourceHasContent: sourceHasContent, lease: nil)
+        try await exportHTML(html, to: url, sourceHasContent: sourceHasContent, lease: lease)
     }
 
     /// Disabled opt-in consumer: WebKit receives exactly the accepted UTF-8

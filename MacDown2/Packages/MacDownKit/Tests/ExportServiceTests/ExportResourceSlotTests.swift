@@ -98,6 +98,7 @@ struct ExportResourceSlotTests {
     private static let rejectedContexts = [
         "<p>TOKEN</p>", "<!-- <img src=\"TOKEN\"> -->", "<div title='<img src=\"TOKEN\">'>x</div>",
         "<style> a < b; <img src=\"TOKEN\"></style>", "<textarea><img src=\"TOKEN\"></textarea>",
+        "<![CDATA[><img src=\"TOKEN\">]]>",
         "<img src=\"TOKEN\"><img src=\"TOKEN\">", "<img src=TOKEN>", "<img title=\"TOKEN\">", "",
     ]
 

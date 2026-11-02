@@ -87,7 +87,8 @@ extension ExportComposer {
             assetsDirectoryName: assetsDirName
         )
         let registry = ExportResourceURLRegistry(
-            avoiding: [request.text, assetsDirName, stylesheet(for: request.theme)] + derived.customNodes.map(\.html),
+            avoiding: [request.text, request.fileNameStem ?? "", assetsDirName, stylesheet(for: request.theme)] +
+                derived.customNodes.map(\.html),
             assetsDirectoryName: assetsDirName, limit: budget.maxPreparedHTMLUTF8Bytes
         )
         let rendered = try renderBody(derived: derived, policy: policy, resolver: resolver, registry: registry)
