@@ -109,13 +109,20 @@ final class OrdinaryExportPanelSession {
 }
 
 @MainActor
+protocol OrdinaryExportAlertWindow: AnyObject {
+    var window: NSWindow { get }
+}
+
+extension NSAlert: OrdinaryExportAlertWindow {}
+
+@MainActor
 final class OrdinaryExportAlertSession {
-    private let alert: NSAlert
+    private let alert: any OrdinaryExportAlertWindow
     private weak var window: NSWindow?
     private var continuation: CheckedContinuation<Void, Never>?
     private var finished = false
 
-    init(alert: NSAlert, window: NSWindow) {
+    init(alert: any OrdinaryExportAlertWindow, window: NSWindow) {
         self.alert = alert
         self.window = window
     }

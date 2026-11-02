@@ -13,6 +13,10 @@ import Workspace
 @MainActor
 @Suite("Ordinary export origin")
 struct OrdinaryExportOriginTests {
+    private final class AlertWindow: OrdinaryExportAlertWindow {
+        let window = NSWindow()
+    }
+
     @Test func panelReadsLatestValueFromOriginalDocumentOnly() throws {
         let preferences = FileTreePreferences()
         let coordinator = WindowCoordinator(
@@ -110,7 +114,9 @@ struct OrdinaryExportOriginTests {
 
         // The AppKit sheet need not be shown to prove that a close completes
         // its one-shot continuation and disallows the following Finder action.
-        let session = OrdinaryExportAlertSession(alert: NSAlert(), window: window)
+        let alert = AlertWindow()
+        defer { alert.window.close() }
+        let session = OrdinaryExportAlertSession(alert: alert, window: window)
         let closeObserver = session.observeOriginClose()
         defer { NotificationCenter.default.removeObserver(closeObserver) }
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
@@ -120,5 +126,10 @@ struct OrdinaryExportOriginTests {
         }
         #expect(!origin.canRevealOutput(isCancelled: false))
         #expect(throws: CancellationError.self) { try origin.publicationLease.withPublicationCutoff {} }
+        session.cancel()
+        session.finish()
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            #expect(!session.install(continuation), "a completed alert session cannot be reinstalled")
+        }
     }
 }

@@ -44,3 +44,23 @@ existing ceilings; no skip, test filter or known-issue wrapper is added to full
 CI. Focused diagnostic selection is labeled separately and never stands in for
 the complete suite. Actual native sheet/save/cancel/focus acceptance and the
 long-session WebKit issue remain open in #88/#118/#155.
+
+## Bounded diagnostic result and complete alert-adapter scope
+
+Baseline diagnostic41545356070 reaches before-renew and after-renew-before-performClose,
+then hits its150-second bound without the after-performClose marker. Owned-process
+samples2/3 show WindowController.windowShouldClose -> presentDirtyCloseSheet ->
+makeDirtyCloseAlert -> NSAlert.init -> system-image/IconServices initialization ->
+a synchronous XPC reply wait. Recovery renewal is not the observed stall. The
+first sample separately records full SwiftUI window construction/layout cost.
+This is a real bounded reproduction of the native initialization dependency,
+not a complete app-suite pass or proof of every long-session WebKit failure.
+
+Apply the same component boundary to the two other explicit NSAlert constructors:
+close-prompt copy/configuration and export-alert cancellation. Internal MainActor
+field/window protocols conform the real NSAlert; independent fixtures exercise
+the same production configuration/session methods without allocating a native
+alert. Preserve every existing assertion and add full button/style/message and
+one-shot cancellation checks. Production continues allocating and presenting its
+real alert, and actual UI acceptance remains open. No timeout or test selection
+is relaxed. Full hosted validation is repeated for the new combined source.

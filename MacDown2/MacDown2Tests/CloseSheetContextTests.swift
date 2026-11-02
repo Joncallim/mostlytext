@@ -10,6 +10,16 @@ import Workspace
 /// backing state and the generation). "Discard" would then discard the last copy without the Save-a-Copy offer.
 @MainActor
 struct CloseSheetContextTests {
+    private final class AlertFields: DirtyCloseAlertFields {
+        var messageText = "initial"
+        var informativeText = "initial"
+        var alertStyle: NSAlert.Style = .informational
+        var buttonTitles: [String] = []
+        func addCloseButton(withTitle title: String) {
+            buttonTitles.append(title)
+        }
+    }
+
     @Test func aVanishedBackingFileIsNoLongerTheDocumentTheSheetAskedAbout() throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
@@ -100,9 +110,12 @@ struct CloseSheetContextTests {
     }
 
     @Test func closePromptRemainsTruthfulIfBackingDisappearsWhileSheetIsOpen() {
-        let alert = WindowController.makeDirtyCloseAlert(fileName: "draft.md")
+        let alert = AlertFields()
+        WindowController.configureDirtyCloseAlert(alert, fileName: "draft.md")
 
-        #expect(alert.buttons[0].title == "Save Changes")
+        #expect(alert.buttonTitles == ["Save Changes", "Cancel", "Discard Changes"])
+        #expect(alert.messageText == "Unsaved Changes")
+        #expect(alert.alertStyle == .warning)
         #expect(alert.informativeText.contains("location"))
         #expect(alert.informativeText.contains("draft.md"))
     }
