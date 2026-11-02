@@ -31,10 +31,9 @@ enum CMarkGFM {
 
     private static let coreExtensionNames = ["table", "strikethrough", "autolink", "tagfilter", "tasklist"]
 
-    /// cmark-gfm's `ensure_registered` mutates a process-global registry behind a
-    /// plain `int` guard, so concurrent exports must not race it. A `static let`
-    /// initialiser is run exactly once under the Swift runtime's own lock, which
-    /// is the guarantee cmark itself does not provide.
+    /// Initialize extension setup once for this wrapper. The pinned Swift
+    /// package also protects its shared macOS registry with `pthread_once`,
+    /// including calls made through swift-markdown.
     private static let extensionsRegistered: Void = {
         cmark_gfm_core_extensions_ensure_registered()
     }()

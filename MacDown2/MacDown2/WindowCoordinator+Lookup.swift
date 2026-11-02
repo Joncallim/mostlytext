@@ -14,7 +14,7 @@ extension WindowCoordinator {
     /// Where "Open Folder" lands when the caller named no window: the key document window, else the
     /// frontmost document window (the key window can be Settings, a palette or the welcome window), else
     /// a new untitled window — choosing a folder must never silently do nothing.
-    func folderTargetController() -> WindowController? {
+    func folderTargetController(createIfNeeded: Bool = true) -> WindowController? {
         if let key = controllers.first(where: { $0.window == NSApp.keyWindow }) {
             return key
         }
@@ -22,6 +22,7 @@ extension WindowCoordinator {
         if let frontmost = ordered.first ?? controllers.last {
             return frontmost
         }
+        guard createIfNeeded else { return nil }
         newDocument()
         return controllers.last
     }
