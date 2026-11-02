@@ -2296,3 +2296,28 @@ Both fixes are covered by the same automated evidence run recorded in
 authoritative record of what manual/Release-app verification remains
 unexecuted for these two fixes specifically, layered on top of this epic's
 own still-unverified manual UI matrix (§24).
+
+
+## 27. Ordinary export reuses one immutable parse — 2 November 2026
+
+The ordinary export contribution and composition phases now share the exact
+MarkdownDocument instead of parsing the source twice. FrozenExportParse is
+actor-confined and checks byte-exact UTF-8, revision, parse options and cached
+document metadata; ordinary composition consumes it once to release its stored
+full-tree reference before the separate cmark pass. The disabled validated SVG
+fallback keeps repeatable access and remains disabled. All original snapshot
+source/theme/options/revision/output assertions remain; the upstream parse count
+is now one. A new English snapshot-refusal catalog entry belongs to final E16.
+
+The binding design is `downstream/single-export-parse.md`; reproducible Release
+component measurements and their limits are in
+`downstream/evidence/export-parse-reuse-2026-11-02/README.md`. At about 1 MiB,
+three paired samples give medians of 446.11 to 220.71 ms for ordinary input and
+598.55 to 300.19 ms for technical input. These are parser-only timings, not
+whole-export, editor, memory or native PDF evidence. The private source-identical
+non-application harness passes 134 controls/13 suites Debug and Release. Replacing
+byte equality with canonical String equality fails the actual Unicode guard
+assertion. Hosted app orchestration and complete exact-head CI must pass before
+integration. Local app/UI targets compile only. Generated anchor navigation,
+PDF/progress, final Release calibration, native acceptance and independent final
+review remain open.

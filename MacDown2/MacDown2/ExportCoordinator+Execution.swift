@@ -27,7 +27,7 @@ extension ExportCoordinator {
         try authorization.checkNoFileAliases(
             protectedExportFileIdentities + (snapshot.protectedSourceIdentity.map { [$0] } ?? [])
         )
-        let adaptation = try await exportContributionAdaptation(
+        let (adaptation, parser) = try await exportContributionAdaptation(
             for: snapshot,
             isPrintTarget: selection.format == .pdf,
             engine: engine
@@ -43,7 +43,7 @@ extension ExportCoordinator {
             let result = try await ExportService.exportHTML(
                 request,
                 to: .html(url: selection.url, mode: mode),
-                engine: engine, lease: publicationLease, admission: authorization
+                engine: parser, lease: publicationLease, admission: authorization
             )
             return ExportOutcome(
                 primaryFile: result.primaryFile,
@@ -53,7 +53,7 @@ extension ExportCoordinator {
             let prepared = try await ExportService.prepare(
                 request,
                 target: .pdf(url: selection.url),
-                engine: engine
+                engine: parser
             )
             try await PDFExportAdapter.export(
                 prepared, to: selection.url, lease: publicationLease, admission: authorization
@@ -81,7 +81,7 @@ extension ExportCoordinator {
         for snapshot: OrdinaryExportSnapshot,
         isPrintTarget: Bool,
         engine: any ParseExecuting
-    ) async throws -> ExportContributionAdapter.Adaptation {
+    ) async throws -> (adaptation: ExportContributionAdapter.Adaptation, parser: FrozenExportParse) {
         let revision = Int(exactly: snapshot.sourceGeneration) ?? Int.max
         let parsed = try await engine.parse(
             snapshot.text,
@@ -97,6 +97,10 @@ extension ExportCoordinator {
             sourceText: snapshot.text,
             sourceGeneration: snapshot.sourceGeneration
         )
-        return ExportContributionAdapter.adapt(results, destination: isPrintTarget ? .pdfExport : .htmlExport)
+        return (
+            ExportContributionAdapter.adapt(results, destination: isPrintTarget ? .pdfExport : .htmlExport),
+            FrozenExportParse(text: snapshot.text, revision: revision, document: parsed,
+                              options: snapshot.parseOptions, releaseAfterUse: true)
+        )
     }
 }

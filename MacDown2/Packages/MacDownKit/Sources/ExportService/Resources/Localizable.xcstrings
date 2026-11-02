@@ -421,6 +421,17 @@
           }
         }
       }
+    },
+    "The export inputs no longer match their prepared source. Try exporting again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The export inputs no longer match their prepared source. Try exporting again."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

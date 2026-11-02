@@ -42,7 +42,7 @@ struct OrdinaryExportSnapshotTests {
         let calls = await parser.callsSnapshot()
         #expect(fixture.themeController.current == BundledThemes.dark)
         #expect(fixture.settings.markdown.parsesBlockDirectives)
-        #expect(calls.count == 2)
+        #expect(calls.count == 1)
         #expect(calls.allSatisfy { $0.text == source })
         #expect(calls.allSatisfy { $0.options == .default })
         #expect(calls.allSatisfy { $0.revision == Int(document.mutationGeneration) })
