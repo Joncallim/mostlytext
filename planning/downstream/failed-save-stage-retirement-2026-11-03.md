@@ -67,3 +67,34 @@ violations. XcodeGen regeneration, committed package pins and unsigned Debug
 build-for-testing passed; no product or UI tests were executed locally. Existing
 Diagrams/DiagramsD2 dependency-scan warnings are retained separately for review.
 No full hosted pass for this remediation is claimed yet.
+
+## Review extension: successful displaced-baseline retirement
+
+A second post-main control now reproduces the analogous race after a conditional
+save verifies the displaced old baseline: replacing or editing that temporary
+object before removal destroys the new bytes and incorrectly reports success.
+Two cases each fail both their error and retained-byte assertions. The test seam
+runs exactly between successful verification and the existing remove operation.
+
+Extend the same narrow FileCore retirement mechanism to the approved displaced
+baseline. Capture no-follow metadata, require the caller-approved baseline's
+identity/size/modification time and complete known SHA-256, then bracket its
+streamed verification with metadata/name checks. Return an in-memory retirement
+receipt. Run the existing after-verification control before receipt retirement;
+changed objects must survive and report recovery, while the published document
+is never falsely accepted. Reuse the exact quarantine/restore implementation
+for owned stages and approved displaced baselines. A pathname or same-byte
+replacement cannot mint authority. No new persistence, module or public error
+is introduced. Retain both original negative controls and existing rollback,
+FAT32, metadata and encoding assertions.
+
+The shared retirement implementation initially reconstructed Foundation dates
+from stat nanoseconds; double rounding caused eleven real test issues. It now
+uses the exact Foundation metadata conversion used by FileRevision, bracketed
+by the existing full no-follow metadata/name checks. No tolerance or assertion
+was weakened. All 135 source tests in 18 suites now pass in Debug and Release,
+including both after-verification mutation/replacement cases. The rebased
+compile initially retained a generated project from the larger pending stack;
+regenerating/pinning the project removed missing-input errors and the exact
+master-based app/test targets then compiled successfully. Keep those initial
+setup and implementation failures in the evidence ledger.

@@ -90,6 +90,30 @@ struct FileStoreStageRetirementTests {
         }
     }
 
+    @Test(arguments: [false, true])
+    func changedDisplacedBaselineIsPreservedAfterVerification(replacement: Bool) throws {
+        let root = try fixture()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let url = root.appendingPathComponent("document.md")
+        let backup = root.appendingPathComponent("approved-baseline-backup")
+        let foreign = Data("external writer after baseline verification".utf8)
+        _ = try FileStore().write("original", to: url)
+        let baseline = try FileStore().readRevision(from: url)
+        let store = FileStore(conditionalPublicationHooks: .init(afterDisplacedVerification: { displaced in
+            if replacement {
+                try FileManager.default.moveItem(at: displaced, to: backup)
+            }
+            try foreign.write(to: displaced)
+        }))
+        #expect(throws: FileStoreError.self) { try store.write("ours", to: url, expectedRevision: baseline) }
+        let files = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil)
+        #expect(files.filter { (try? Data(contentsOf: $0)) == foreign }.count == 1)
+        #expect(try Data(contentsOf: url) == Data("ours".utf8))
+        if replacement {
+            #expect(try Data(contentsOf: backup) == Data("original".utf8))
+        }
+    }
+
     @Test func unchangedQuarantineIsRemovedAndAnAbsentStageIsHarmless() throws {
         let root = try fixture()
         defer { try? FileManager.default.removeItem(at: root) }
