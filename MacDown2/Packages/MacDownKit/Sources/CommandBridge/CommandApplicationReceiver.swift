@@ -105,6 +105,10 @@ public final class CommandApplicationReceiver {
         publish()
     }
 
+    fileprivate var permitsAdmission: Bool {
+        accepting
+    }
+
     fileprivate func bind(_ token: CommandReceiptToken, target: CommandOpenTarget, lifetime: UUID) throws {
         guard accepting else { throw CommandSocketError.closed }
         try ledger.bind(token, target: target, lifetime: lifetime)
@@ -149,6 +153,10 @@ public final class CommandOpeningAdmission {
             targets.insert(.activation)
         }
         self.targets = targets
+    }
+
+    public var canContinue: Bool {
+        !finished && owner.permitsAdmission
     }
 
     /// False refuses exposure if the receipt no longer owns this admission.

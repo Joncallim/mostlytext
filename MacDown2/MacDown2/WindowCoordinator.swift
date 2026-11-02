@@ -55,6 +55,8 @@ final class WindowCoordinator {
     private var hasRestoredSession = false
     let documentOpens = KeyedSerialRunner<String>()
     @ObservationIgnored var commandReceiver: CommandApplicationReceiver?
+    @ObservationIgnored var commandStdinStages: [WindowController] = []
+    let commandStdinAdmissions = KeyedSerialRunner<String>()
     var launchSession: WorkspaceSession? // as at launch; handed out once by `consumeLaunchSession()`
     var saveTask: Task<Void, Never>?
     @ObservationIgnored var terminationSaveInProgress = false

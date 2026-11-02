@@ -53,10 +53,12 @@ extension SessionViewStateRoundTripTests {
         #expect(coordinator.controllers.count == 2)
     }
 
-    @Test func appRefusesStdinBeforeOpeningAnyAssociatedFile() async throws {
+    @Test func stdinPersistenceFailureDoesNotOpenAssociatedFiles() async throws {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
-        let coordinator = try coordinatorWithOneTab(sessions: MemorySessionStore(), directory: directory)
+        let sessions = MemorySessionStore()
+        sessions.refusesSaves = true
+        let coordinator = try coordinatorWithOneTab(sessions: sessions, directory: directory)
         defer { coordinator.controllers.forEach { $0.window?.close() } }
         let url = directory.appendingPathComponent("second.md")
         try Data("# Second".utf8).write(to: url)

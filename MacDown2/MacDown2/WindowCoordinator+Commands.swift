@@ -15,12 +15,13 @@ extension WindowCoordinator {
     func makeCommandReceiver() -> CommandApplicationReceiver {
         let receiver = CommandApplicationReceiver { [weak self] input, admission in
             guard let self else { admission.reject(.unavailable); return }
-            // Until recovery plus a restoration reference is durable, stdin
-            // is never shown or acknowledged as an untitled document.
-            guard input.bytes == nil else { admission.reject(.recoveryUnavailable); return }
             guard !terminationSaveInProgress else { admission.reject(.unavailable); return }
             await settleLaunchRestoration()
-            if input.request.paths.isEmpty {
+            if let bytes = input.bytes, await !admitCommandStdin(bytes, admission: admission) {
+                admission.reject(.recoveryUnavailable)
+                return
+            }
+            if input.request.paths.isEmpty, input.bytes == nil {
                 await ensureWindowExistsForReopen()
                 guard let controller = controllers.first(where: { !$0.isClosed }),
                       admission.bind(.activation, lifetime: controller.commandDocumentLifetime) else { return }
