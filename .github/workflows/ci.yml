@@ -10,7 +10,16 @@ on:
   pull_request:
     branches: [master, integration-final]
     paths: ['MacDown2/**', '.github/workflows/ci.yml']
-  workflow_dispatch: {}  # allow manual re-runs from the Actions tab / gh CLI
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: macOS 26 architecture for this complete validation run
+        type: choice
+        required: true
+        default: macos-26
+        options:
+          - macos-26
+          - macos-26-intel
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -18,11 +27,10 @@ concurrency:
 
 jobs:
   lint:
-    # macos-26 arm64 is GA since 2026-02 (github.blog changelog). The old
-    # macos-15 fallback ran macOS-26-deployment binaries on a macOS 15 host,
-    # which crashed (SIGBUS) once E06's dependencies exercised newer Swift
-    # runtime paths. Host now matches the deployment target.
-    runs-on: macos-26
+    # Keep ARM as the default. An explicit dispatch can exercise the same
+    # complete checks on supported Intel macOS 26 during ARM capacity outages.
+    # Never use an older OS to execute macOS-26-deployment binaries.
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.runner == 'macos-26-intel' && 'macos-26-intel' || 'macos-26' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -46,11 +54,8 @@ jobs:
         run: swiftlint lint --strict MacDown2
 
   build-and-test:
-    # macos-26 arm64 is GA since 2026-02 (github.blog changelog). The old
-    # macos-15 fallback ran macOS-26-deployment binaries on a macOS 15 host,
-    # which crashed (SIGBUS) once E06's dependencies exercised newer Swift
-    # runtime paths. Host now matches the deployment target.
-    runs-on: macos-26
+    # Both dispatch choices match the deployment OS and run every check.
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.runner == 'macos-26-intel' && 'macos-26-intel' || 'macos-26' }}
     timeout-minutes: 60
     env:
       PR535_DIAGNOSTICS: ${{ github.event_name == 'pull_request' && github.event.number == 535 && github.event.pull_request.head.repo.full_name == github.repository }}
@@ -63,9 +68,12 @@ jobs:
       - name: Select Xcode 26
         run: |
           XCODE=$(ls -d /Applications/Xcode*.app | grep "26" | head -1 || true)
-          if [ -z "$XCODE" ]; then XCODE=$(ls -d /Applications/Xcode*.app | head -1); fi
+          test -n "$XCODE"
+          test "$(sw_vers -productVersion | cut -d. -f1)" = 26
           sudo xcode-select -s "$XCODE/Contents/Developer"
           xcodebuild -version
+          sw_vers
+          uname -m
           if [ "$PR535_DIAGNOSTICS" = true ]; then
             test "$(xcodebuild -version | head -1)" = 'Xcode 26.0.1'
           fi

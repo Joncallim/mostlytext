@@ -33,6 +33,13 @@ def protected(path):
             'Test account can modify a protected input or ancestor')
 
 
+def verified_pass(exit_code, counts, timed_out):
+    expected = {'totalTestCount': 1, 'passedTests': 1, 'failedTests': 0,
+                'skippedTests': 0, 'expectedFailures': 0}
+    return type(exit_code) is int and exit_code == 0 and timed_out is False and isinstance(counts, dict) \
+        and all(type(counts.get(key)) is int and counts[key] == value for key, value in expected.items())
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--execute', action='store_true')
@@ -50,8 +57,8 @@ def main():
         require(sha(path) == expected, 'Driver hash differs: ' + name)
     console = os.stat('/dev/console')
     require(console.st_uid == 502, 'Test desktop is not the active console')
-    subprocess.run(['launchctl', 'print', 'gui/502'], check=True, stdout=subprocess.DEVNULL)
-    registry = plistlib.loads(subprocess.check_output(['ioreg', '-a', '-n', 'Root', '-d', '1']))
+    subprocess.run(['/bin/launchctl', 'print', 'gui/502'], check=True, stdout=subprocess.DEVNULL)
+    registry = plistlib.loads(subprocess.check_output(['/usr/sbin/ioreg', '-a', '-n', 'Root', '-d', '1']))
     registries = registry if isinstance(registry, list) else [registry]
     require(any(item.get('IOConsoleLocked') is False and any(
         session.get('kCGSSessionUserIDKey') == 502 and session.get('kCGSSessionOnConsoleKey') is True
@@ -100,7 +107,7 @@ def main():
     account = pwd.getpwuid(502)
     env = {'PATH': '/usr/bin:/bin:/usr/sbin:/sbin', 'HOME': account.pw_dir,
            'USER': account.pw_name, 'LOGNAME': account.pw_name,
-           'TMPDIR': subprocess.check_output(['getconf', 'DARWIN_USER_TEMP_DIR'], text=True).strip(),
+           'TMPDIR': subprocess.check_output(['/usr/bin/getconf', 'DARWIN_USER_TEMP_DIR'], text=True).strip(),
            'LANG': 'en_US.UTF-8'}
     record = {'status': 'FAIL', 'command': command, 'binding': manifest, 'resultBundle': str(result)}
     start = time.monotonic()
@@ -117,15 +124,14 @@ def main():
                 os.killpg(process.pid, signal.SIGKILL)
                 process.wait()
     record.update(exit=process.returncode, elapsed=round(time.monotonic() - start, 2))
-    summary = subprocess.run(['xcrun', 'xcresulttool', 'get', 'test-results', 'summary',
+    summary = subprocess.run(['/usr/bin/xcrun', 'xcresulttool', 'get', 'test-results', 'summary',
                               '--path', str(result)], capture_output=True, text=True)
     (scratch / 'summary.stdout').write_text(summary.stdout)
     (scratch / 'summary.stderr').write_text(summary.stderr)
     if summary.returncode == 0:
         counts = json.loads(summary.stdout)
         record['summary'] = counts
-        if process.returncode == 0 and counts.get('totalTestCount') == 1 and counts.get('passedTests') == 1 \
-                and counts.get('failedTests') == 0 and counts.get('skippedTests') == 0 and counts.get('expectedFailures') == 0:
+        if verified_pass(process.returncode, counts, record.get('timeout', False)):
             record['status'] = 'PASS'
     (scratch / 'result.json').write_text(json.dumps(record, indent=2) + '\n')
     print(json.dumps({'status': record['status'], 'evidence': str(scratch)}))

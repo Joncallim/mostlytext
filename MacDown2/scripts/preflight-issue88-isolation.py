@@ -169,7 +169,7 @@ def validate_candidate_identity(source_files, candidate, receipt):
     require(isinstance(expected, str) and re.fullmatch(r'[0-9a-f]{40}', expected),
             'Invalid source commit in build receipt')
     def git(*args):
-        result = subprocess.run(['git', '-C', str(candidate), *args], capture_output=True, check=True)
+        result = subprocess.run(['/usr/bin/git', '-C', str(candidate), *args], capture_output=True, check=True)
         return result.stdout
     require(Path(os.fsdecode(git('rev-parse', '--show-toplevel')).strip()).resolve() == candidate,
             'Candidate must be the complete worktree root')
@@ -245,7 +245,7 @@ def inspect_build(args):
     require(runner_info.get('CFBundleIdentifier') == bundle + '.UITests.xctrunner', 'Runner identity is not isolated')
     require(test_info.get('CFBundleIdentifier') == bundle + '.UITests', 'Test bundle identity is not isolated')
     for product in (app, runner, test_bundle):
-        p = subprocess.run(['codesign', '--verify', '--deep', '--strict', str(product)], capture_output=True)
+        p = subprocess.run(['/usr/bin/codesign', '--verify', '--deep', '--strict', str(product)], capture_output=True)
         require(p.returncode == 0, 'Code signature verification failed: ' + product.name)
     def executable(bundle_dir, data):
         name = data.get('CFBundleExecutable', '')
@@ -253,7 +253,7 @@ def inspect_build(args):
         return checked_path(bundle_dir / 'Contents/MacOS' / name, bundle_dir)
     binaries = {'app': executable(app, info), 'runner': executable(runner, runner_info),
                 'test': executable(test_bundle, test_info), 'cli': validate_embedded_cli(products / 'UITestIsolated', app)}
-    processes = subprocess.run(['ps', '-axo', 'comm='], text=True, capture_output=True)
+    processes = subprocess.run(['/bin/ps', '-axo', 'comm='], text=True, capture_output=True)
     require(processes.returncode == 0, 'Unable to inspect active processes')
     require(not any('MacDown2' in line or 'xctest' in line.lower() for line in processes.stdout.splitlines()),
             'Potential app or test process is active')
