@@ -70,3 +70,19 @@ weaken production signature checks with a public test switch. Execute only
 non-launching command routes locally. Full hosted package/app tests and locked
 Debug/Release builds precede merge. Actual cold/warm app/document/wait acceptance,
 bootstrap UI and signing remain open; no app or real user state is launched here.
+
+## Hosted build correction
+
+The first full run passed all 3,139 package tests (431 suites, two existing
+Neon known issues) but app+CLI dependency builds exposed a case-insensitive
+intermediate-directory collision: app target MacDown2 and tool target macdown2
+wrote overlapping Swift file lists, so the tool attempted to compile the app's
+GeneratedAssetSymbols.swift before it existed. Rename only the internal tool
+target to MacDown2Command and set PRODUCT_NAME to macdown2. The public scheme,
+executable, embedding path and app identity stay the same. Retain the failed
+run and require a full corrected locked run.
+
+Additional nonlaunching checks relocate both Debug and Release executables into
+a synthetic app with the resource bundle and exercise direct/user-bin-symlink
+help, version and formats: all 12 pass. All 15 first-party catalogue keys exist.
+These checks do not launch AppDelegate or prove compiled-catalog translations.
