@@ -62,8 +62,8 @@ OUT="${OUT:-$REPO/build/release-$STAMP}"
 EVIDENCE="$OUT/evidence"
 DERIVED="$OUT/DerivedData"
 APP_NAME="MacDown2"   # becomes MostlyText at the #158/E17 cutover
-CLI_NAME="macdown2"   # becomes mostlytext at the #158/E17 cutover
-CLI_SCHEME="MacDown2CLI" # distinct from the app scheme on case-insensitive volumes
+CLI_NAME="mostlytext"
+CLI_SCHEME="MostlyTextCLI" # distinct from the app scheme on case-insensitive volumes
 mkdir -p "$EVIDENCE"
 exec > >(tee -a "$EVIDENCE/run.log") 2>&1
 
@@ -178,8 +178,13 @@ build "$CLI_SCHEME"
 PRODUCTS="$DERIVED/Build/Products/Release"
 APP="$PRODUCTS/$APP_NAME.app"
 CLI="$PRODUCTS/$CLI_NAME"
+EMBEDDED_CLI="$APP/Contents/MacOS/mostlytext-cli"
 [[ -d "$APP" ]] || fail "app not produced at $APP"
-[[ -f "$CLI" ]] || fail "CLI not produced at $CLI"
+[[ -f "$CLI" && ! -L "$CLI" && -x "$CLI" ]] || fail "executable CLI not produced at $CLI"
+[[ -f "$EMBEDDED_CLI" && ! -L "$EMBEDDED_CLI" && -x "$EMBEDDED_CLI" ]] \
+  || fail "embedded executable CLI not produced at $EMBEDDED_CLI"
+record "public CLI: $CLI_NAME (scheme $CLI_SCHEME)"
+record "embedded CLI: Contents/MacOS/mostlytext-cli"
 record "version: $(defaults read "$APP/Contents/Info" CFBundleShortVersionString) ($(defaults read "$APP/Contents/Info" CFBundleVersion))"
 record "bundle id: $(defaults read "$APP/Contents/Info" CFBundleIdentifier)"
 
@@ -242,8 +247,9 @@ ditto -c -k --keepParent "$APP" "$OUT/$APP_NAME.zip"
 notarise "$OUT/$APP_NAME.zip" app
 xcrun stapler staple "$APP"
 # A bare command-line binary can't be stapled, so its notarisation ticket is
-# checked online. The notarised ZIP is the CLI's distributable form until E17
-# decides how the CLI ships (inside the app or separately).
+# checked online. The app includes mostlytext-cli; the public mostlytext ZIP
+# also permits explicit standalone installation. This script installs neither
+# a shell command nor a compatibility alias on the build machine.
 step "Notarise the CLI ZIP"
 ditto -c -k "$CLI" "$OUT/$CLI_NAME.zip"
 notarise "$OUT/$CLI_NAME.zip" cli
