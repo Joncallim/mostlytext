@@ -39,6 +39,8 @@ targets:
     - package: MacDownKit
       product: Workspace
     - package: MacDownKit
+      product: JSONSupport
+    - package: MacDownKit
       product: FileTree
     - package: MacDownKit
       product: EditorCore
@@ -232,6 +234,8 @@ targets:
       product: LocalResourceAccess
     - package: MacDownKit
       product: Workspace
+    - package: MacDownKit
+      product: JSONSupport
     - package: MacDownKit
       product: EditorCore
     - package: MacDownKit
