@@ -4,7 +4,7 @@ import Foundation
 /// Persistent representation of an open tab session.
 ///
 /// The schema is versioned so future epics can add fields without migration.
-/// Unknown versions are treated as empty sessions during restore.
+/// Unknown versions remain protected in storage and are reported by admission.
 public struct WorkspaceSession: Codable, Sendable, Equatable {
     public static let currentVersion = 1
 
@@ -18,7 +18,7 @@ public struct WorkspaceSession: Codable, Sendable, Equatable {
         self.activeTabID = activeTabID
     }
 
-    private enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey, CaseIterable {
         case version, tabs, activeTabID
     }
 
@@ -48,6 +48,12 @@ public struct WorkspaceSession: Codable, Sendable, Equatable {
 
 /// One persisted tab.
 public struct TabRecord: Codable, Sendable, Equatable {
+    enum CodingKeys: String, CodingKey, CaseIterable {
+        case id, fileURL, untitledDocumentID, documentRecoveryEpoch, isPinned
+        case cursorPosition, selectionLength, scrollOffset, previewLayout, previewMode, syntaxOverride
+        case encoding, baseSHA256, folderRootBookmark, folderRootAlias
+    }
+
     public var id: UUID
     public var fileURL: URL?
     public var untitledDocumentID: String?
@@ -127,6 +133,7 @@ public struct TabRecord: Codable, Sendable, Equatable {
 public protocol WorkspaceSessionStoring: Sendable {
     func loadSession() -> WorkspaceSession?
     func saveSession(_ session: WorkspaceSession)
+    @discardableResult func saveSessionVerified(_ session: WorkspaceSession) -> Bool
 }
 
 public extension WorkspaceSessionStoring {
@@ -142,13 +149,14 @@ public extension WorkspaceSessionStoring {
 
 /// JSON file-backed session store.
 ///
-/// Writes atomically and never throws: failures are swallowed because session
-/// restore is best-effort.
+/// Preserves unsupported/partial primary state. Ordinary autosave is best-effort;
+/// verified lifecycle publication reports refusal/failure to its owner.
 @MainActor
 public struct WorkspaceSessionStore: WorkspaceSessionStoring {
     public static let defaultFileName = "session.json"
 
-    private let fileURL: URL
+    let fileURL: URL
+    var beforePublication: (@Sendable (URL) throws -> Void)?
 
     public init(fileURL: URL? = nil) {
         if let fileURL {
@@ -163,44 +171,14 @@ public struct WorkspaceSessionStore: WorkspaceSessionStoring {
     }
 
     public func loadSession() -> WorkspaceSession? {
-        guard FileManager.default.fileExists(atPath: fileURL.path) else { return nil }
-        guard let data = try? Data(contentsOf: fileURL) else { return nil }
-        guard let session = try? JSONDecoder().decode(WorkspaceSession.self, from: data),
-              session.version == WorkspaceSession.currentVersion
-        else {
-            preserveUnreadableSession()
-            return nil
+        let snapshot = readForAdmission()
+        if !snapshot.admission.permitsPublication, let bytes = snapshot.bytes {
+            preserveUnreadableSession(bytes)
         }
-        // A tab that decoded leniently away is gone from the next autosave, with its recovery pointer: keep the
-        // file it came from.
-        if let raw = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
-           let rawTabs = raw["tabs"] as? [Any], rawTabs.count > session.tabs.count {
-            preserveUnreadableSession()
-        }
-        return session
-    }
-
-    /// The next autosave replaces `session.json`; keep a copy of one that could not be read (a newer build's
-    /// format, corruption) so it is not the only evidence lost when that happens.
-    private func preserveUnreadableSession() {
-        let backup = fileURL.appendingPathExtension("unreadable")
-        try? FileManager.default.removeItem(at: backup)
-        try? FileManager.default.copyItem(at: fileURL, to: backup)
+        return snapshot.admission.session
     }
 
     public func saveSession(_ session: WorkspaceSession) {
-        let directory = fileURL.deletingLastPathComponent()
-        try? FileManager.default.createDirectory(
-            at: directory,
-            withIntermediateDirectories: true
-        )
-
-        guard let data = try? JSONEncoder().encode(session) else { return }
-
-        // `.atomic` writes to a temp file and renames it over `fileURL`,
-        // atomically replacing any existing session. A manual temp+`moveItem`
-        // would fail once the destination exists, silently freezing the file
-        // at its first-written value.
-        try? data.write(to: fileURL, options: .atomic)
+        _ = saveSessionVerified(session)
     }
 }
