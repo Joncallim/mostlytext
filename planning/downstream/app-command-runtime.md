@@ -70,3 +70,13 @@ reproduced: macOS Foundation's existing final-symlink resolution already opens
 the physical parent target. Retain that passing filesystem regression without
 changing the production path helper. Dedicated-thread fixture close tasks are
 cancelled on failure to avoid orphaned asynchronous test work.
+
+The initial burst fixture also encountered pre-request accept-backlog refusal;
+the controlled regression distinguishes that from listener failure. Against the
+exact previous server head it records EPIPE (32) escaping the accept loop and
+the endpoint disappearing with ENOENT (2) after clients close without reading
+the hello. An accepted peer's handshake error had escaped the listener loop. The corrected loop continues
+for peer-close/refusal-related handshake failures and backs off descriptor/buffer
+exhaustion, while namespace/ownership/invalid-listener failures still stop it.
+Retain the failing control; require the complete corrected Debug/Release and
+hosted runs before integration.

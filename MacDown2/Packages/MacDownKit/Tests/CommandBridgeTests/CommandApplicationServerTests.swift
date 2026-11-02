@@ -161,6 +161,46 @@ struct CommandApplicationServerTests {
         #expect(opens == 1)
     }
 
+    @Test func earlyHandshakeDisconnectsDoNotStopTheListener() async throws {
+        let root = try Self.root()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let location = try CommandEndpointLocation(runtimeDirectory: root, productIdentity: "test.server")
+        var opens = 0
+        let receiver = CommandApplicationReceiver { _, admission in
+            opens += 1
+            #expect(admission.bind(.activation, lifetime: UUID()))
+        }
+        let server = CommandApplicationServer(location: location, receiver: receiver)
+        defer {
+            #expect(server.startupFailure == nil)
+            server.stop()
+        }
+        let request = try CommandOpenRequest(paths: [])
+        let result = try await Self.thread {
+            let ready = try Self.connect(location)
+            ready.connection.close()
+            for _ in 0 ..< 32 {
+                let descriptor = try CommandSocketPolling.makeSocket()
+                defer { Darwin.close(descriptor) }
+                do {
+                    try CommandSocketPolling.connect(descriptor, path: location.socketPath,
+                                                     deadline: .now.advanced(by: .seconds(2)), cancelled: { false })
+                } catch CommandSocketError.unavailable(ECONNREFUSED) {
+                    // A full accept backlog may refuse a pre-request probe.
+                    Thread.sleep(forTimeInterval: 0.005)
+                }
+                // Close without reading the instance hello.
+            }
+            Thread.sleep(forTimeInterval: 0.05)
+            return try CommandClientExchange.execute(request, stdin: nil, endpoint: Self.connect(location),
+                                                     inputDeadline: .now.advanced(by: .seconds(3)),
+                                                     acceptanceDeadline: .now.advanced(by: .seconds(3)))
+        }
+        #expect(result == .finished(openedCount: 1, failures: []))
+        #expect(opens == 1)
+        #expect(server.startupFailure == nil)
+    }
+
     private nonisolated static func connect(_ location: CommandEndpointLocation) throws
         -> sending CommandConnectedEndpoint {
         let deadline = ContinuousClock.now.advanced(by: .seconds(3))

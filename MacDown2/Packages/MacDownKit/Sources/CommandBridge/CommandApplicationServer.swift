@@ -48,12 +48,33 @@ public final class CommandApplicationServer: Sendable {
                         defer { withExtendedLifetime(permit) {} }
                         serve(owned)
                     }
-                } catch CommandSocketError.timedOut { continue }
+                } catch {
+                    if stopped {
+                        return
+                    }
+                    guard recoverableAcceptFailure(error) else { throw error }
+                }
             }
         } catch {
             if !stopped {
                 failure.withLock { $0 = error }
             }
+        }
+    }
+
+    private func recoverableAcceptFailure(_ error: any Error) -> Bool {
+        if case CommandEndpointError.invalidPeer = error {
+            return true
+        }
+        guard let error = error as? CommandSocketError else { return false }
+        switch error {
+        case .timedOut, .closed: return true
+        case let .unavailable(code) where [EPIPE, ECONNRESET, ECONNABORTED, ENOTCONN, EINTR, EAGAIN].contains(code):
+            return true
+        case let .unavailable(code) where [EMFILE, ENFILE, ENOBUFS].contains(code):
+            Thread.sleep(forTimeInterval: 0.05)
+            return true
+        default: return false
         }
     }
 
