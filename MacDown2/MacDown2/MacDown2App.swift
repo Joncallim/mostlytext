@@ -39,7 +39,7 @@ struct MacDown2App: App {
                 if ready {
                     SettingsView()
                 } else {
-                    LegacyImportStartupView(startup: appDelegate.startup)
+                    ApplicationMigrationView(startup: appDelegate.startup)
                 }
             }
             .environment(\.appSettings, ready ? appDelegate.appSettings : nil)

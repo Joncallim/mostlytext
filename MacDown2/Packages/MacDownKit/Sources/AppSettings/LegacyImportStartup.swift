@@ -32,12 +32,14 @@ public final class LegacyImportStartup {
     private var journal: LegacyEditorMigrationJournal?
     private var bootstrap: LegacyEditorMigrationBootstrap?
     private var began = false
+    private let skipNewOffer: Bool
 
-    public init(store: UserDefaultsAppSettingsStore, disabled: Bool = false,
+    public init(store: UserDefaultsAppSettingsStore, disabled: Bool = false, skipNewOffer: Bool = false,
                 makeJournal: @escaping @Sendable () async throws -> LegacyEditorMigrationJournal,
                 source: @escaping @MainActor () throws -> LegacyPreferenceSnapshot,
                 resolveFont: @escaping @MainActor (LegacyPreferenceReport.FontRequest) -> LegacyResolvedFont?) {
         self.store = store; self.makeJournal = makeJournal; self.source = source; self.resolveFont = resolveFont
+        self.skipNewOffer = skipNewOffer
         phase = disabled ? .ready : .inspecting
     }
 
@@ -52,7 +54,7 @@ public final class LegacyImportStartup {
             self.bootstrap = bootstrap
             let result = try await bootstrap.resume(currentSource: source)
             guard result != .conflict else { phase = .blocked; return }
-            guard result == .noPendingTransaction else { await finish(); return }
+            guard result == .noPendingTransaction, !skipNewOffer else { await finish(); return }
             let snapshot = try source()
             guard !snapshot.values.isEmpty, !store.hasDismissedLegacyImport(snapshot.canonicalDigest) else {
                 await finish(); return

@@ -1,4 +1,5 @@
 import AppKit
+import TextFilters
 
 /// The ⌘⇧P command palette (epic-14-implementation.md §17 Slice 7). Split
 /// out of `WindowCoordinator.swift`'s main class body to stay under the
@@ -22,7 +23,11 @@ extension WindowCoordinator {
 
         let originWindow = NSApp.keyWindow
         let originController = controllers.first(where: { $0.window == originWindow })
-        let created = CommandPalettePanel(coordinator: self, originController: originController)
+        let directory = commandsDirectory
+        let created = CommandPalettePanel(coordinator: self, originController: originController,
+                                          discoverTextFilters: {
+                                              TextFilterCommandDiscovery.discoverCommands(in: directory)
+                                          })
         // Strong ownership lives here for exactly as long as the panel is
         // open; `commandPaletteDidClose` releases it. See
         // `CommandPalettePanel`'s doc comment for why this reference must

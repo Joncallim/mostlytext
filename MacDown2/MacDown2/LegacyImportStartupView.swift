@@ -17,6 +17,7 @@ struct LegacyImportStartupView: View {
                             + "Your original preferences remain unchanged.")
                     )
                     if let review = startup.review {
+                        LegacyMigrationPolicyNotes(source: review.source)
                         ForEach(review.plan.entries, id: \.destination) { entry in
                             Toggle(isOn: selection(entry.destination)) {
                                 VStack(alignment: .leading) {

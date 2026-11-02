@@ -8,6 +8,7 @@ import Themes
 final class ThemeCatalogModel {
     enum Location: Sendable {
         case applicationSupport
+        case managedInstallation(URL)
         case isolatedSession(URL)
         case existingDirectory(URL)
     }

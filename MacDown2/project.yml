@@ -85,6 +85,7 @@ targets:
     settings:
       base:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.MostlyText
       configs:
         Release:
           ENABLE_TESTABILITY: 'YES'
@@ -94,8 +95,8 @@ targets:
     info:
       path: MacDown2/Info.plist
       properties:
-        CFBundleName: MacDown 2
-        CFBundleDisplayName: MacDown 2
+        CFBundleName: MostlyText
+        CFBundleDisplayName: MostlyText
         MostlyTextUITestOwnerUID: '$(MOSTLYTEXT_UI_TEST_OWNER_UID)'
         CFBundleIconName: AppIcon
         CFBundleShortVersionString: 0.1.0

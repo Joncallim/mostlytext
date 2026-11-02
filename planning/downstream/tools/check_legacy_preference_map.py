@@ -73,7 +73,10 @@ def validate(record: dict, header: bytes, implementation: bytes, repo: Path) -> 
                 raise ValueError(f"source classification/type mismatch: {key}")
         if entry["disposition"] not in allowed[entry["kind"]]:
             raise ValueError(f"unclassified disposition: {key}")
-        implemented = {"editorBaseFontInfo": "implemented_exact_resolution", "editorStyleName": "implemented_report"}
+        implemented = {"editorBaseFontInfo": "implemented_exact_resolution", "editorStyleName": "implemented_report",
+                       "htmlMathJax": "implemented_report", "htmlMathJaxInlineDollar": "implemented_report",
+                       "htmlGraphviz": "implemented_report", "htmlMermaid": "implemented_report",
+                       "htmlRendersTOC": "implemented_report", "updateIncludesPreReleases": "implemented_report"}
         if not entry.get("rationale") or not entry.get("owner") or entry.get("implementation_status") not in {
             "not_implemented", implemented.get(key)
         } or entry.get("implementation_status") is None:

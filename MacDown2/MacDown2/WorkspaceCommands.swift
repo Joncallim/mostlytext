@@ -53,6 +53,10 @@ struct WorkspaceCommands: Commands {
             .keyboardShortcut("o", modifiers: [.command, .shift])
 
             Menu("Open Recent Folder") {
+                if (coordinator?.recentFolderRoots.unresolvedBookmarkCount ?? 0) > 0 {
+                    Text("Some previous bookmarks need access again.")
+                    Button("Choose a Folder Again…") { coordinator?.chooseFolder() }
+                }
                 ForEach(coordinator?.recentFolderRoots.roots ?? [], id: \.self) { url in
                     Button(url.lastPathComponent) { coordinator?.openRecentFolder(url) }
                 }
@@ -73,6 +77,10 @@ struct WorkspaceCommands: Commands {
             // user opens anything, not just when they happen to look at
             // this specific menu.
             Menu("Open Recent File") {
+                if (coordinator?.recentFileDocuments.unresolvedBookmarkCount ?? 0) > 0 {
+                    Text("Some previous bookmarks need access again.")
+                    Button("Choose a File Again…") { coordinator?.openFile() }
+                }
                 ForEach(coordinator?.recentFileDocuments.documents ?? [], id: \.self) { url in
                     Button(url.lastPathComponent) { coordinator?.openRecentFile(url) }
                 }

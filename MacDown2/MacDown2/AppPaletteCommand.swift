@@ -146,8 +146,8 @@ extension AppPaletteCommand {
             isAvailable: { coordinator, controller in coordinator.isLiveController(controller) },
             action: { coordinator, controller in coordinator.editSnippets(relativeTo: controller?.window) }
         ),
-        AppPaletteCommand(id: "showCommandsFolder", title: "Show Commands Folder") { _, _ in
-            let directory = TextFilterCommandDiscovery.commandsDirectory
+        AppPaletteCommand(id: "showCommandsFolder", title: "Show Commands Folder") { coordinator, _ in
+            let directory = coordinator.commandsDirectory
             _ = TextFilterCommandDiscovery.discoverCommands(in: directory)
             NSWorkspace.shared.open(directory)
         },

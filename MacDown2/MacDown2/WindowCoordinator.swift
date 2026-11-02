@@ -8,6 +8,7 @@ import Foundation
 import Highlighting
 import Observation
 import SwiftUI
+import TextFilters
 import Themes
 import Workspace
 
@@ -41,6 +42,8 @@ final class WindowCoordinator {
     let sessionStore: WorkspaceSessionStoring
     let panelProvider: NSFilePanelProvider
     let recoveryBuffer: RecoveryBuffer
+    let snippetStore: SnippetStore
+    let commandsDirectory: URL
     let themeController: ThemeController
     let grammarRegistry: GrammarRegistry
     let fileTreePreferences: FileTreePreferences
@@ -125,7 +128,9 @@ final class WindowCoordinator {
         recentFolderRoots: RecentFolderRoots,
         recentFileDocuments: RecentFileDocuments,
         appSettings: AppSettingsModel,
-        workspaceStateStore: any WorkspaceStateStoring = WorkspaceStateStore()
+        workspaceStateStore: any WorkspaceStateStoring = WorkspaceStateStore(),
+        snippetStore: SnippetStore = SnippetStore(),
+        commandsDirectory: URL = TextFilterCommandDiscovery.commandsDirectory
     ) {
         self.sessionStore = sessionStore
         self.panelProvider = panelProvider
@@ -137,6 +142,8 @@ final class WindowCoordinator {
         self.recentFileDocuments = recentFileDocuments
         self.appSettings = appSettings
         self.workspaceStateStore = workspaceStateStore
+        self.snippetStore = snippetStore
+        self.commandsDirectory = commandsDirectory
         launchSession = sessionStore.loadSession()
     }
 

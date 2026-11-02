@@ -24,8 +24,8 @@ enum LegacyImportEnvironment {
     }
 
     static func makeStartup(store: UserDefaultsAppSettingsStore, identity: String,
-                            disabled: Bool) -> LegacyImportStartup {
-        LegacyImportStartup(store: store, disabled: disabled, makeJournal: {
+                            disabled: Bool, skipNewOffer: Bool = false) -> LegacyImportStartup {
+        LegacyImportStartup(store: store, disabled: disabled, skipNewOffer: skipNewOffer, makeJournal: {
             try await Task.detached {
                 let support = try FileManager.default.url(for: .applicationSupportDirectory,
                                                           in: .userDomainMask, appropriateFor: nil, create: true)
