@@ -123,6 +123,42 @@ struct CommandApplicationServerTests {
         #expect(recovered == .finished(openedCount: 1, failures: []))
     }
 
+    @Test func aDisconnectedWaiterCanReplayWithoutOpeningAgain() async throws {
+        let root = try Self.root()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let location = try CommandEndpointLocation(runtimeDirectory: root, productIdentity: "test.server")
+        var opens = 0
+        let lifetime = UUID()
+        let receiver = CommandApplicationReceiver { _, admission in
+            opens += 1
+            #expect(admission.bind(.path(0), lifetime: lifetime))
+        }
+        let server = CommandApplicationServer(location: location, receiver: receiver)
+        defer { server.stop() }
+        let request = try CommandOpenRequest(paths: ["/one"], wait: true)
+        try await Self.thread {
+            let endpoint = try Self.connect(location)
+            defer { endpoint.connection.close() }
+            try endpoint.connection.writeFrame(CommandRequestCodec.encode(request),
+                                               until: .now.advanced(by: .seconds(2)))
+            let frame = try #require(try endpoint.connection.readFrame(until: .now.advanced(by: .seconds(2))))
+            #expect(try CommandReplyCodec.decode(frame) == .accepted(requestID: request.id,
+                                                                     openedCount: 1, failures: []))
+        }
+        let close = Task { @MainActor in
+            try await Task.sleep(for: .milliseconds(100))
+            receiver.documentClosed(lifetime)
+        }
+        let result = try await Self.thread {
+            try CommandClientExchange.execute(request, stdin: nil, endpoint: Self.connect(location),
+                                              inputDeadline: .now.advanced(by: .seconds(3)),
+                                              acceptanceDeadline: .now.advanced(by: .seconds(3)))
+        }
+        try await close.value
+        #expect(result == .finished(openedCount: 1, failures: []))
+        #expect(opens == 1)
+    }
+
     private nonisolated static func connect(_ location: CommandEndpointLocation) throws
         -> sending CommandConnectedEndpoint {
         let deadline = ContinuousClock.now.advanced(by: .seconds(3))

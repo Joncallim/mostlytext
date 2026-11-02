@@ -89,6 +89,26 @@ struct CommandApplicationReceiverTests {
         #expect(mailbox.snapshot?.events == [.rejected(requestID: request.id, reason: .recoveryUnavailable)])
     }
 
+    @Test func cancelledQuitReopensAdmissionButConfirmedQuitCannotBeResumed() async throws {
+        let receiver = CommandApplicationReceiver { _, admission in
+            #expect(admission.bind(.activation, lifetime: UUID()))
+        }
+        let input = try CommandValidatedInput(request: CommandOpenRequest(paths: []), bytes: nil)
+        receiver.suspendAdmission()
+        #expect(throws: CommandSocketError.closed) {
+            try receiver.submit(input, subscriber: UUID(), mailbox: CommandReplyMailbox())
+        }
+        receiver.resumeAdmission()
+        let mailbox = CommandReplyMailbox()
+        try receiver.submit(input, subscriber: UUID(), mailbox: mailbox)
+        try await Self.wait { mailbox.snapshot?.isTerminal == true }
+        receiver.finishForTermination()
+        receiver.resumeAdmission()
+        #expect(throws: CommandSocketError.closed) {
+            try receiver.submit(input, subscriber: UUID(), mailbox: CommandReplyMailbox())
+        }
+    }
+
     private static func wait(_ predicate: @MainActor () -> Bool) async throws {
         let deadline = ContinuousClock.now.advanced(by: .seconds(2))
         while !predicate() {
