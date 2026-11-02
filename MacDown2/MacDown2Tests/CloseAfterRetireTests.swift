@@ -1,3 +1,4 @@
+import AppKit
 import AppSettings
 import FileCore
 import FileTree
@@ -12,6 +13,14 @@ import Workspace
 /// discarded without a prompt on the discard/save/conflict/deleted-file paths; only the clean path rechecked.
 @MainActor
 struct CloseAfterRetireTests {
+    private final class CloseRequestProbe: NSObject, NSWindowDelegate {
+        var attempts = 0
+        func windowShouldClose(_: NSWindow) -> Bool {
+            attempts += 1
+            return false
+        }
+    }
+
     private func makeController() throws -> (coordinator: WindowCoordinator, controller: WindowController) {
         let defaults = try #require(UserDefaults(suiteName: "close-after-retire-\(UUID().uuidString)"))
         let preferences = FileTreePreferences(store: UserDefaultsFileTreePreferenceStore(defaults: defaults))
@@ -50,7 +59,11 @@ struct CloseAfterRetireTests {
         let (coordinator, controller) = try makeController()
         let retired = try #require(controller.model.activeDocument)
         controller.model.tabStore.updateActiveDocument { $0.updatingText("one, then typed") }
+        let closeRequest = CloseRequestProbe()
+        let window = try #require(controller.window)
+        window.delegate = closeRequest
         defer {
+            window.delegate = controller
             coordinator.removeController(controller)
             controller.close()
         }
@@ -59,6 +72,8 @@ struct CloseAfterRetireTests {
 
         #expect(coordinator.controllers.contains { $0 === controller })
         #expect(controller.model.activeDocument?.text == "one, then typed")
+        #expect(closeRequest.attempts == 1, "changed content must request the close flow again")
+        #expect(controller.model.activeDocument?.recoveryEpoch != retired.recoveryEpoch)
     }
 
     /// The generation moves on (an edit made and then reverted to identical text, standing in for a background
