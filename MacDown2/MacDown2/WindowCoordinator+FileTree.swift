@@ -188,7 +188,12 @@ extension WindowCoordinator {
     }
 
     func openRecentFolder(_ url: URL) {
-        guard let resolution = recentFolderRoots.resolve(url) else { return }
+        guard let resolution = recentFolderRoots.resolve(url) else {
+            if recentFolderRoots.preservesUnavailableBookmarks {
+                chooseFolder()
+            }
+            return
+        }
         openFolder(resolution.lexicalURL, accessURL: resolution.accessURL)
     }
 

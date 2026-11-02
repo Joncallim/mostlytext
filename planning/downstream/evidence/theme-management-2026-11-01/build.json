@@ -1,0 +1,128 @@
+{
+  "sourceSHA": "ce7750aa2e3d8a80eb3a9d17d6decc8e588dcc5c",
+  "steps": [
+    {
+      "name": "generate",
+      "command": [
+        "xcodegen",
+        "generate"
+      ],
+      "exit": 0,
+      "elapsed": 0.08
+    },
+    {
+      "name": "pin",
+      "command": [
+        "bash",
+        "MacDown2/scripts/pin-xcode-package-versions.sh"
+      ],
+      "exit": 0,
+      "elapsed": 0.03
+    },
+    {
+      "name": "release-app",
+      "command": [
+        "xcodebuild",
+        "-project",
+        "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-final/source/MacDown2/MacDown2.xcodeproj",
+        "-destination",
+        "platform=macOS,arch=arm64",
+        "-derivedDataPath",
+        "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-final/derived",
+        "-clonedSourcePackagesDirPath",
+        "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-final/SourcePackages",
+        "-onlyUsePackageVersionsFromResolvedFile",
+        "-disableAutomaticPackageResolution",
+        "-skipPackageUpdates",
+        "-jobs",
+        "2",
+        "ONLY_ACTIVE_ARCH=YES",
+        "ARCHS=arm64",
+        "CODE_SIGN_IDENTITY=-",
+        "-scheme",
+        "MacDown2",
+        "-configuration",
+        "Release",
+        "build"
+      ],
+      "exit": 0,
+      "elapsed": 280.84
+    },
+    {
+      "name": "release-cli",
+      "command": [
+        "xcodebuild",
+        "-project",
+        "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-final/source/MacDown2/MacDown2.xcodeproj",
+        "-destination",
+        "platform=macOS,arch=arm64",
+        "-derivedDataPath",
+        "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-final/derived",
+        "-clonedSourcePackagesDirPath",
+        "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-final/SourcePackages",
+        "-onlyUsePackageVersionsFromResolvedFile",
+        "-disableAutomaticPackageResolution",
+        "-skipPackageUpdates",
+        "-jobs",
+        "2",
+        "ONLY_ACTIVE_ARCH=YES",
+        "ARCHS=arm64",
+        "CODE_SIGN_IDENTITY=-",
+        "-scheme",
+        "MacDown2CLI",
+        "-configuration",
+        "Release",
+        "build"
+      ],
+      "exit": 0,
+      "elapsed": 4.45
+    },
+    {
+      "name": "debug-test-compile",
+      "command": [
+        "xcodebuild",
+        "-project",
+        "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-final/source/MacDown2/MacDown2.xcodeproj",
+        "-destination",
+        "platform=macOS,arch=arm64",
+        "-derivedDataPath",
+        "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-final/derived",
+        "-clonedSourcePackagesDirPath",
+        "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-theme-final/SourcePackages",
+        "-onlyUsePackageVersionsFromResolvedFile",
+        "-disableAutomaticPackageResolution",
+        "-skipPackageUpdates",
+        "-jobs",
+        "2",
+        "ONLY_ACTIVE_ARCH=YES",
+        "ARCHS=arm64",
+        "CODE_SIGN_IDENTITY=-",
+        "-scheme",
+        "MacDown2",
+        "-configuration",
+        "Debug",
+        "-parallel-testing-enabled",
+        "NO",
+        "ENABLE_CODE_COVERAGE=NO",
+        "CLANG_ENABLE_CODE_COVERAGE=NO",
+        "CLANG_COVERAGE_MAPPING=NO",
+        "build-for-testing"
+      ],
+      "exit": 0,
+      "elapsed": 258.33
+    },
+    {
+      "name": "pin-check",
+      "command": [
+        "bash",
+        "MacDown2/scripts/pin-xcode-package-versions.sh",
+        "--check"
+      ],
+      "exit": 0,
+      "elapsed": 0.04
+    }
+  ],
+  "applicationTestsRun": 0,
+  "sourceUnchanged": true,
+  "state": "PASS"
+}

@@ -1,32 +1,48 @@
 import AppKit
 import AppSettings
+import Combine
+import CommandBridge
+import EditorCore
 import FileCore
 import FileTree
 import Foundation
 import Highlighting
+import TextFilters
 import Themes
 import Workspace
 
 @MainActor
-final class AppDelegate: NSObject, NSApplicationDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     private(set) var coordinator: WindowCoordinator!
     private(set) var themeController: ThemeController!
+    private(set) var themeCatalog: ThemeCatalogModel!
     private(set) var grammarRegistry: GrammarRegistry!
     private(set) var fileTreePreferences: FileTreePreferences!
     private(set) var recentFolderRoots: RecentFolderRoots!
     private(set) var recentFileDocuments: RecentFileDocuments!
     private(set) var appSettings: AppSettingsModel!
-    private let sessionStore: WorkspaceSessionStoring
-    private let recoveryBuffer: RecoveryBuffer
-    private let workspaceStateStore: any WorkspaceStateStoring
+    private var sessionStore: WorkspaceSessionStoring!
+    private var recoveryBuffer: RecoveryBuffer!
+    private var workspaceStateStore: (any WorkspaceStateStoring)!
     private let launchURLs: [URL]
     private let launchFolderURL: URL?
     private var hasPendingDocumentOpen = false
+    var commandServer: CommandApplicationServer?
     private let defaults: UserDefaults
-    private let shouldShowFirstRun: Bool
+    private var shouldShowFirstRun: Bool {
+        Self.launchArguments.contains("-UITesting") ? Self.launchArguments.contains("-ForceFirstRun")
+            : !defaults.bool(forKey: Self.hasCompletedFirstRunKey)
+    }
+
+    let startup: ApplicationMigrationStartup
+    private let settingsStore: UserDefaultsAppSettingsStore
+    @Published private(set) var normalLaunchReady = false
+    private var startupOpenFiles: [String] = []
+    private var startupWindow: LegacyImportWindowController?
     private static let hasCompletedFirstRunKey = "com.joncallim.macdown2.hasCompletedFirstRun"
 
     override init() {
+        Self.validateUITestLaunch()
         let args = Self.launchArguments
         let isUITesting = args.contains("-UITesting")
 
@@ -39,45 +55,68 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             SingleTestInstanceGuard.enforceSingleInstance()
         }
 
-        let defaults: UserDefaults
-        if isUITesting {
+        let defaults = isUITesting
+            ? Self.prepareUITestState(sessionDirectory: Self.sessionDirectory(from: args)) : UserDefaults.standard
+        let bypassImport = isUITesting || SingleTestInstanceGuard.isRunningUnderXCTest
+        let identity = Bundle.main.bundleIdentifier ?? "com.joncallim.MacDown2"
+        if bypassImport {
+            settingsStore = UserDefaultsAppSettingsStore(defaults: defaults)
+        } else {
+            // Bind both import and ordinary settings to the exact same saved
+            // domain, excluding registered/global fallback values.
+            settingsStore = (try? UserDefaultsAppSettingsStore(persistentDomainName: identity))
+                ?? UserDefaultsAppSettingsStore(defaults: defaults)
+        }
+        startup = InstallationMigrationEnvironment.makeStartup(
+            store: settingsStore,
+            identity: identity,
+            disabled: bypassImport
+        )
+
+        self.defaults = defaults
+        launchURLs = Self.openFilesPaths(from: args).map { URL(fileURLWithPath: $0) }
+        launchFolderURL = Self.openFolderPath(from: args).map { URL(fileURLWithPath: $0, isDirectory: true) }
+        super.init()
+        if bypassImport {
+            constructApplicationModels()
+        }
+    }
+
+    private func constructApplicationModels() {
+        let args = Self.launchArguments
+        if args.contains("-UITesting") {
             let sessionDir = Self.sessionDirectory(from: args)
-            try? FileManager.default.createDirectory(at: sessionDir, withIntermediateDirectories: true)
             sessionStore = WorkspaceSessionStore(fileURL: sessionDir.appendingPathComponent("session.json"))
-            recoveryBuffer = RecoveryBuffer(
-                recoveryDirectory: sessionDir.appendingPathComponent("recovery", isDirectory: true)
-            )
-            let suite = "com.joncallim.macdown2.uitest.\(UUID().uuidString)"
-            defaults = UserDefaults(suiteName: suite) ?? .standard
-            defaults.removePersistentDomain(forName: suite)
+            recoveryBuffer = RecoveryBuffer(recoveryDirectory: sessionDir.appendingPathComponent(
+                "recovery",
+                isDirectory: true
+            ))
             workspaceStateStore = WorkspaceStateStore(defaults: defaults)
+        } else if let locations = startup.locations {
+            sessionStore = WorkspaceSessionStore(fileURL: locations.session)
+            recoveryBuffer = RecoveryBuffer(recoveryDirectory: locations.recovery)
+            guard let workspaceDefaults = UserDefaults(suiteName: ApplicationStorageLocations.workspaceDomain) else {
+                preconditionFailure("The compiled workspace domain must be available")
+            }
+            workspaceStateStore = WorkspaceStateStore(defaults: workspaceDefaults)
         } else {
             sessionStore = WorkspaceSessionStore()
             recoveryBuffer = .shared
-            defaults = .standard
             workspaceStateStore = WorkspaceStateStore()
         }
-
-        self.defaults = defaults
-        // Under `-UITesting`, `defaults` is always a fresh, empty, isolated
-        // suite (above), so it would never report first-run as complete and
-        // every one of this target's ~30 existing UI tests would otherwise
-        // have to contend with an unexpected welcome window. Onboarding is
-        // opted into explicitly with `-ForceFirstRun` instead, so its own UI
-        // test can exercise it without disturbing every other one.
-        shouldShowFirstRun = isUITesting
-            ? args.contains("-ForceFirstRun")
-            : !defaults.bool(forKey: Self.hasCompletedFirstRunKey)
-
-        launchURLs = Self.openFilesPaths(from: args).map { URL(fileURLWithPath: $0) }
-        launchFolderURL = Self.openFolderPath(from: args).map { URL(fileURLWithPath: $0, isDirectory: true) }
         themeController = ThemeController(preferenceStore: UserDefaultsThemePreferenceStore(defaults: defaults))
+        themeCatalog = makeThemeCatalog(controller: themeController, args: args)
         grammarRegistry = GrammarRegistry()
         fileTreePreferences = FileTreePreferences(store: UserDefaultsFileTreePreferenceStore(defaults: defaults))
-        recentFolderRoots = RecentFolderRoots(preferences: fileTreePreferences)
-        recentFileDocuments = RecentFileDocuments(preferences: fileTreePreferences)
-        appSettings = AppSettingsModel(store: UserDefaultsAppSettingsStore(defaults: defaults))
-        super.init()
+        recentFolderRoots = RecentFolderRoots(
+            preferences: fileTreePreferences,
+            preservesUnavailableBookmarks: startup.locations != nil
+        )
+        recentFileDocuments = RecentFileDocuments(
+            preferences: fileTreePreferences,
+            preservesUnavailableBookmarks: startup.locations != nil
+        )
+        appSettings = AppSettingsModel(store: settingsStore)
         connectThemeAppearanceOverride()
 
         coordinator = WindowCoordinator(
@@ -90,11 +129,50 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             recentFolderRoots: recentFolderRoots,
             recentFileDocuments: recentFileDocuments,
             appSettings: appSettings,
-            workspaceStateStore: workspaceStateStore
+            workspaceStateStore: workspaceStateStore,
+            snippetStore: startup.locations.map { SnippetStore(fileURL: $0.snippets) } ?? SnippetStore(),
+            commandsDirectory: startup.locations?.commands ?? TextFilterCommandDiscovery.commandsDirectory
         )
     }
 
+    private func makeThemeCatalog(controller: ThemeController, args: [String]) -> ThemeCatalogModel {
+        let location: ThemeCatalogModel.Location = if args
+            .contains("-UITesting") {
+            .isolatedSession(Self.sessionDirectory(from: args))
+        } else if let locations = startup.locations {
+            .managedInstallation(locations.dataDirectory)
+        } else {
+            .applicationSupport
+        }
+        return ThemeCatalogModel(controller: controller, location: location)
+    }
+
     func applicationDidFinishLaunching(_: Notification) {
+        if startup.phase == .ready {
+            finishApplicationStartup()
+        } else {
+            startup.didBecomeReady = { [weak self] in
+                guard let self else { return }
+                startupWindow?.close()
+                startupWindow = nil
+                constructApplicationModels()
+                finishApplicationStartup()
+            }
+            for window in NSApp.windows where Self.isSwiftUIPlaceholder(window) {
+                window.close()
+            }
+            startupWindow = LegacyImportWindowController(startup: startup)
+            startupWindow?.showWindow(nil)
+            startupWindow?.window?.center()
+            startupWindow?.window?.makeKeyAndOrderFront(nil)
+            Task { @MainActor in await startup.begin() }
+        }
+    }
+
+    private func finishApplicationStartup() {
+        guard !normalLaunchReady else { return }
+        normalLaunchReady = true
+        themeCatalog.start()
         NSWindow.allowsAutomaticWindowTabbing = true
         applyThemeAppearanceOverride()
 
@@ -115,14 +193,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
 
-        if shouldShowFirstRun, launchURLs.isEmpty, launchFolderURL == nil {
+        if shouldShowFirstRun, launchURLs.isEmpty, launchFolderURL == nil, startupOpenFiles.isEmpty {
             coordinator.showFirstRunWindow { [weak self] openedDocument in
                 guard let self else { return }
                 defaults.set(true, forKey: Self.hasCompletedFirstRunKey)
                 proceedWithNormalLaunch(documentAlreadyOpened: openedDocument)
             }
         } else {
+            hasPendingDocumentOpen = !startupOpenFiles.isEmpty
             proceedWithNormalLaunch()
+        }
+        let queued = startupOpenFiles
+        startupOpenFiles = []
+        if !queued.isEmpty {
+            application(NSApp, openFiles: queued)
         }
     }
 
@@ -132,6 +216,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// user ever saw it.
     static func isSwiftUIPlaceholder(_ window: NSWindow) -> Bool {
         !(window.delegate is WindowController) && !(window.delegate is FirstRunWindowController)
+            && !(window.delegate is LegacyImportWindowController)
     }
 
     /// The app's ordinary launch behavior: open files/folders passed on the
@@ -143,6 +228,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// already opened a document: launch then does not open an untitled
     /// document of its own (the saved session, if any, is still restored).
     private func proceedWithNormalLaunch(documentAlreadyOpened: Bool = false) {
+        defer { scheduleCommandServerStart() }
         if !launchURLs.isEmpty {
             Task { @MainActor in
                 await coordinator.restoreUnsavedSessionTabs()
@@ -176,42 +262,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    @objc private func systemAppearanceChanged() {
-        guard themeController.appearanceMode == .system else { return }
-        syncThemeAppearance()
-    }
-
-    private func connectThemeAppearanceOverride() {
-        themeController.appearanceModeDidChange = { [weak self] _ in
-            self?.applyThemeAppearanceOverride()
-        }
-    }
-
-    private func applyThemeAppearanceOverride() {
-        switch themeController.appearanceMode {
-        case .system:
-            NSApp.appearance = nil
-            syncThemeAppearance()
-        case .light:
-            NSApp.appearance = NSAppearance(named: .aqua)
-        case .dark:
-            NSApp.appearance = NSAppearance(named: .darkAqua)
-        }
-    }
-
-    private func syncThemeAppearance() {
-        themeController.setAppearance(NSApp.effectiveAppearance.themeAppearance)
-    }
-
-    func applicationShouldTerminate(_: NSApplication) -> NSApplication.TerminateReply {
-        Task { @MainActor in
-            let result = await coordinator.saveSessionForTermination()
-            NSApp.reply(toApplicationShouldTerminate: coordinator.handleTerminationSessionResult(result))
-        }
-        return .terminateLater
-    }
-
     func applicationShouldHandleReopen(_: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        guard normalLaunchReady else {
+            startupWindow?.showWindow(nil)
+            startupWindow?.window?.makeKeyAndOrderFront(nil)
+            return false
+        }
         if !flag {
             Task { @MainActor in
                 await coordinator.ensureWindowExistsForReopen()
@@ -225,6 +281,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func application(_: NSApplication, openFiles filenames: [String]) {
+        guard normalLaunchReady else {
+            startupOpenFiles.append(contentsOf: filenames)
+            return
+        }
         // AppKit also routes bare launch-argument paths (such as the
         // `-sessionDir` value under UI testing) and folder drops through this
         // handler. Only regular files count as document opens; anything else
@@ -240,70 +300,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 await coordinator.openDocument(at: url)
             }
         }
-    }
-
-    // MARK: - Launch argument parsing
-
-    /// The arguments the test hooks (`-UITesting`, `-sessionDir`, `-openFiles`, `-openFolder`) are read from.
-    /// Debug builds only, except the separately flagged and explicitly launched
-    /// #117 native acceptance build. An ordinary Release build ignores them,
-    /// so they cannot redirect session/recovery directories or force-open paths.
-    static var launchArguments: [String] {
-        #if ISSUE117_NATIVE_ACCEPTANCE
-            let args = ProcessInfo.processInfo.arguments
-            precondition(
-                args.contains("-Issue117Acceptance") && args.contains("-UITesting")
-                    && args.contains("-sessionDir") && args.contains("-openFiles"),
-                "Launch the isolated #117 acceptance build with its retained launcher"
-            )
-            return args
-        #elseif DEBUG
-            ProcessInfo.processInfo.arguments
-        #else
-            []
-        #endif
-    }
-
-    private static func sessionDirectory(from args: [String]) -> URL {
-        if let index = args.firstIndex(of: "-sessionDir"), index + 1 < args.count {
-            return URL(fileURLWithPath: args[index + 1])
-        }
-        return FileManager.default.temporaryDirectory
-            .appendingPathComponent(UUID().uuidString, isDirectory: true)
-    }
-
-    private static func openFilesPaths(from args: [String]) -> [String] {
-        if let index = args.firstIndex(of: "-openFiles"), index + 1 < args.count {
-            let remainder = args[index + 1]
-            return remainder.split(separator: ",", omittingEmptySubsequences: true)
-                .map { String($0).trimmingCharacters(in: .whitespaces) }
-        }
-        if let arg = args.first(where: { $0.hasPrefix("-openFiles") }) {
-            let prefix = "-openFiles"
-            let remainder = String(arg.dropFirst(prefix.count))
-            return remainder.split(separator: ",", omittingEmptySubsequences: true)
-                .map { String($0).trimmingCharacters(in: .whitespaces) }
-        }
-        return []
-    }
-
-    /// UI-test hook: `-fileMonitorDebounceMs <n>` (with `-UITesting`, Debug only via `launchArguments`) lengthens
-    /// the external-file monitor's debounce, so a UI test can act on a conflict banner after deleting the backing
-    /// file but before the monitor itself notices the deletion — otherwise the default 150 ms debounce always
-    /// beats XCUITest's ~300 ms click and that action's own "file vanished" path can never be reached.
-    /// `nil` (the monitor's own default) for every other launch.
-    static var uiTestingFileMonitorDebounce: Duration? {
-        let args = launchArguments
-        guard args.contains("-UITesting"),
-              let index = args.firstIndex(of: "-fileMonitorDebounceMs"), index + 1 < args.count,
-              let milliseconds = Int(args[index + 1]), milliseconds >= 0
-        else { return nil }
-        return .milliseconds(milliseconds)
-    }
-
-    private static func openFolderPath(from args: [String]) -> String? {
-        guard let index = args.firstIndex(of: "-openFolder"), index + 1 < args.count else { return nil }
-        return args[index + 1]
     }
 }
 

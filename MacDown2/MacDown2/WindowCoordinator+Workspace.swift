@@ -36,6 +36,18 @@ private struct ControllerTabSnapshot {
     let tab: TabSnapshot
 }
 
+/// Captures one tab's document state while a window session is being saved.
+/// Kept with the session-publication code so the coordinator's core type stays
+/// focused on live window ownership.
+struct TabSnapshot {
+    let record: TabRecord
+    let documentID: String
+    let documentText: String
+    let documentState: FileDocumentState
+    let documentGeneration: UInt
+    let documentRecoveryEpoch: UUID
+}
+
 /// Orders session publications by snapshot and invalidates snapshots when
 /// session state changes, before the next debounced save begins (#183 F20).
 struct SessionPublicationOrder {
@@ -120,7 +132,11 @@ extension WindowCoordinator {
             // document lifetime and generation too, after recovery and before the synchronous canonical write.
             // Scheduling a changed session invalidates A while B is debounced.
             // Beginning B also invalidates A if B fails.
-            if sessionPublicationOrder.isSuperseded(sequence) || !capturedDocumentsRemainCurrent(snapshot) {
+            let superseded = sessionPublicationOrder.isSuperseded(sequence)
+            let documentChanged = (!superseded || afterSessionPublicationRejected != nil)
+                && !capturedDocumentsRemainCurrent(snapshot)
+            if superseded || documentChanged {
+                afterSessionPublicationRejected?(superseded, documentChanged)
                 if isAutosave {
                     return .saved
                 }
@@ -143,7 +159,7 @@ extension WindowCoordinator {
     }
 
     private func capturedDocumentsRemainCurrent(_ snapshot: [ControllerTabSnapshot]) -> Bool {
-        let current = Self.inTabOrder(controllers, window: \.window).compactMap { controller in
+        let current = Self.inTabOrder(sessionControllers, window: \.window).compactMap { controller in
             controller.model.tabStore.tabs.first.map { (controller, $0) }
         }
         guard current.count == snapshot.count else { return false }
@@ -162,7 +178,7 @@ extension WindowCoordinator {
     }
 
     private func sessionSnapshot() -> ([ControllerTabSnapshot], UUID?) {
-        let snapshot = Self.inTabOrder(controllers, window: \.window)
+        let snapshot = Self.inTabOrder(sessionControllers, window: \.window)
             .compactMap { controller -> ControllerTabSnapshot? in
                 guard let tab = controller.model.tabStore.tabs.first else { return nil }
                 let system = controller.editorStore.existingSystem(for: tab.id.uuidString)

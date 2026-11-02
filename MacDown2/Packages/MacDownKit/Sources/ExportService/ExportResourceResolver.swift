@@ -1,4 +1,5 @@
 import Foundation
+import LocalResourceAccess
 
 /// Resolves authored image references to local resources, applying the export
 /// URL policy, the resource root containment rule and the export budget, and
@@ -17,11 +18,8 @@ final class ExportResourceResolver {
     private var reportedReferences: Set<String> = []
     private(set) var diagnostics: [ExportDiagnostic] = []
 
-    private let documentDirectory: URL?
-    /// The canonical resource root: the resolved parent directory of the saved
-    /// document, with a trailing separator so prefix comparison cannot match a
-    /// sibling directory whose name merely starts with the root's.
-    private let resourceRootPrefix: String?
+    private let resourceAccess: ExportResourceAccess?
+    private let cancellation: ResourceCancellation
     /// When true, an unresolved or remote *rendering* resource (image) is a
     /// fatal condition; when false it is reported as a warning and left as
     /// authored. Applies to self-contained HTML and PDF.
@@ -36,26 +34,23 @@ final class ExportResourceResolver {
     private var packagedIdentities: Set<ExportResourceIdentity> = []
 
     init(
-        documentDirectory: URL?,
+        resourceAccess: ExportResourceAccess?,
+        cancellation: ResourceCancellation = ResourceCancellation(),
         unresolvedIsFatal: Bool,
         budget: ExportResourceBudget = .standard,
         assetsDirectoryName: String = ExportHTMLWriter.defaultAssetsDirectoryName
     ) {
-        self.documentDirectory = documentDirectory
+        self.resourceAccess = resourceAccess
+        self.cancellation = cancellation
         self.unresolvedIsFatal = unresolvedIsFatal
         self.budget = budget
         self.assetsDirectoryName = assetsDirectoryName
-        if let documentDirectory {
-            let root = documentDirectory.standardizedFileURL.resolvingSymlinksInPath().path
-            resourceRootPrefix = root.hasSuffix("/") ? root : root + "/"
-        } else {
-            resourceRootPrefix = nil
-        }
     }
 
     /// Decides how an authored URL should be rendered. `isImage` distinguishes a
     /// rendering resource (embed/pack) from a navigation link (policy only).
-    func disposition(for url: String, isImage: Bool) -> URLDisposition {
+    func disposition(for url: String, isImage: Bool) throws -> URLDisposition {
+        guard !cancellation.isCancelled else { throw CancellationError() }
         // Inline raster data is already self-contained: nothing to fetch, pack or blank.
         if isImage, ExportURLPolicy.isEmbeddedRasterImage(url) {
             return .keep
@@ -97,87 +92,59 @@ final class ExportResourceResolver {
             return .keep
         }
 
-        return packageLocalResource(referencedBy: url)
+        return try packageLocalResource(referencedBy: url)
+    }
+
+    func packagedIdentity(for reference: String) -> ExportResourceIdentity? {
+        resourcesByReference[reference]?.identity
     }
 
     // MARK: - Local resources
 
-    private func packageLocalResource(referencedBy url: String) -> URLDisposition {
-        guard let fileURL = containedFileURL(for: url) else {
-            // `containedFileURL` has already recorded why.
-            return .keep
+    private func packageLocalResource(referencedBy url: String) throws -> URLDisposition {
+        guard let resourceAccess else {
+            return handleUnresolved(
+                url: url,
+                reason: String(localized: "no resource directory was admitted for this export", bundle: .module)
+            )
         }
-
-        // `fileURL` is already the fully symlink-resolved target (see
-        // `containedFileURL`), so `.isRegularFileKey` reports on the real file
-        // a symlink points to, not on the symlink itself — a symlink to a
-        // regular file inside the root is accepted, a directory, device,
-        // socket or FIFO is not, and only ordinary file bytes are ever handed
-        // to `Data(contentsOf:)`.
-        guard let isRegularFile = try? fileURL.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile,
-              isRegularFile else {
-            return handleUnresolved(url: url, reason: "resource is not a readable file at \(fileURL.lastPathComponent)")
-        }
-
-        // This path serves image references only. Anything else in the document's folder
-        // (`![x](.env)`, `![x](notes.txt)`) must not be copied into, or embedded in, an export
-        // that is then shared.
-        guard ExportMIMEType.mimeType(forFileExtension: fileURL.pathExtension).hasPrefix("image/") else {
-            return handleUnresolved(url: url, reason: "\(fileURL.lastPathComponent) is not an image file")
-        }
-
-        // Size is read from the file's metadata first, so an oversized file is
-        // rejected without ever entering memory.
-        if let declared = try? fileURL.resourceValues(forKeys: [.fileSizeKey]).fileSize,
-           declared > budget.maxSingleResourceBytes {
+        let snapshot: ResourceSnapshot
+        do {
+            let reference = try ResourceReference.parse(url)
+            // One bounded candidate is read at a time. Only admitted distinct
+            // identities enter the aggregate; a duplicate consumes no quota.
+            snapshot = try ContainedResourceReader.read(
+                reference, in: resourceAccess.directory,
+                maxBytes: budget.maxSingleResourceBytes, cancellation: cancellation
+            )
+        } catch ResourceReadError.cancelled {
+            throw CancellationError()
+        } catch ResourceReadError.oversized {
             return handleUnresolved(url: url, reason: singleLimitReason)
+        } catch ResourceReadError.denied {
+            return handleUnresolved(url: url, reason: "resource is outside the document's folder")
+        } catch ResourceReadError.invalidReference {
+            return handleUnresolved(url: url, reason: "reference is not a usable file path")
+        } catch {
+            return handleUnresolved(
+                url: url,
+                reason: String(localized: "resource could not be read through its admitted directory", bundle: .module)
+            )
         }
-        guard let bytes = try? Data(contentsOf: fileURL) else {
-            return handleUnresolved(url: url, reason: "resource could not be read at \(fileURL.lastPathComponent)")
+        guard !cancellation.isCancelled else { throw CancellationError() }
+        // Use the resolved leaf, not an alias such as image.png -> private.txt.
+        let mimeType = ExportMIMEType.mimeType(forFileExtension: (snapshot.name as NSString).pathExtension)
+        guard mimeType.hasPrefix("image/") else {
+            return handleUnresolved(url: url, reason: "\(snapshot.name) is not an image file")
         }
-        guard bytes.count <= budget.maxSingleResourceBytes else {
-            return handleUnresolved(url: url, reason: singleLimitReason)
-        }
-
-        let mimeType = ExportMIMEType.mimeType(forFileExtension: fileURL.pathExtension)
-        let resource = ExportResource(identity: ExportResourceIdentity(bytes: bytes, mimeType: mimeType), bytes: bytes)
+        let resource = ExportResource(
+            identity: ExportResourceIdentity(bytes: snapshot.bytes, mimeType: mimeType), bytes: snapshot.bytes
+        )
         if let rejection = admit(resource) {
             return handleUnresolved(url: url, reason: rejection)
         }
-
         resourcesByReference[url] = resource
         return .rewrite(companionReference(for: resource))
-    }
-
-    /// The file an authored reference points at, fully symlink-resolved, or
-    /// `nil` (with a diagnostic recorded) when it cannot be resolved inside
-    /// the document's own folder.
-    ///
-    /// The resolved URL — not the as-authored one — is what containment is
-    /// checked against and what every later step (`isRegularFile`, size, the
-    /// actual read) operates on, so there is exactly one notion of "the file"
-    /// a reference names, not two that could disagree across a symlink hop.
-    private func containedFileURL(for url: String) -> URL? {
-        guard let documentDirectory, let resourceRootPrefix else {
-            _ = handleUnresolved(url: url, reason: "untitled document has no directory to resolve resources from")
-            return nil
-        }
-        guard let relativePath = filesystemPath(from: url) else {
-            _ = handleUnresolved(url: url, reason: "reference is not a usable file path")
-            return nil
-        }
-
-        let candidate = documentDirectory.appendingPathComponent(relativePath).standardizedFileURL
-        let resolved = candidate.resolvingSymlinksInPath()
-        // Root containment: the resource root is the document's own directory.
-        // A reference that climbs out of it (`../../.ssh/id_rsa`), directly or
-        // through a symlink hop, is never read, so an export can only ever
-        // carry files from the document's folder.
-        guard resolved.path.hasPrefix(resourceRootPrefix) else {
-            _ = handleUnresolved(url: url, reason: "resource is outside the document's folder")
-            return nil
-        }
-        return resolved
     }
 
     /// Admits a resource against the count and aggregate budgets, returning a
@@ -213,23 +180,6 @@ final class ExportResourceResolver {
 
     private func companionReference(for resource: ExportResource) -> String {
         "\(ExportHTMLWriter.percentEncodedCompanionComponent(assetsDirectoryName))/\(resource.identity.fileName)"
-    }
-
-    /// The filesystem-relative path an authored reference points at: query and
-    /// fragment removed, percent-encoding decoded.
-    ///
-    /// Decoding matters in practice — macOS filenames routinely contain spaces,
-    /// and anything that writes a Markdown link for you emits `my%20image.png`.
-    private func filesystemPath(from url: String) -> String? {
-        let withoutFragment = url.split(separator: "#", maxSplits: 1, omittingEmptySubsequences: false).first
-        let withoutQuery = (withoutFragment ?? "").split(
-            separator: "?",
-            maxSplits: 1,
-            omittingEmptySubsequences: false
-        ).first
-        let path = String(withoutQuery ?? "")
-        let decoded = path.removingPercentEncoding ?? path
-        return decoded.isEmpty ? nil : decoded
     }
 
     /// Records that a dangerous authored scheme was emptied, once per URL.

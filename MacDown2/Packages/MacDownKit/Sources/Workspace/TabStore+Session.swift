@@ -50,7 +50,9 @@ extension TabStore {
                 documentID: untitledID,
                 recoveryEpoch: record.documentRecoveryEpoch
             )
-            document = document.updatingText(recovered)
+            // A recovery-backed untitled document is unsaved even when its
+            // exact text is empty (for example an empty accepted stdin stream).
+            document = document.edited(text: recovered)
             return WorkspaceTab(
                 id: record.id,
                 document: document,

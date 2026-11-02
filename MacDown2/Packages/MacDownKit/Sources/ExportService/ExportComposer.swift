@@ -1,4 +1,5 @@
 import Foundation
+import LocalResourceAccess
 import MarkdownEngine
 import Themes
 
@@ -70,6 +71,25 @@ enum ExportComposer {
         budget: ExportResourceBudget = .standard,
         namespaceSVGIDs: Bool = false
     ) async throws -> MarkedPreparation {
+        let cancellation = ResourceCancellation()
+        return try await withTaskCancellationHandler {
+            try await prepareWithRoots(
+                request: request, target: target, engine: engine, budget: budget,
+                rendering: (namespaceSVGIDs, cancellation)
+            )
+        } onCancel: {
+            cancellation.cancel()
+        }
+    }
+
+    private static func prepareWithRoots(
+        request: ExportRequest,
+        target: ExportTarget,
+        engine: any ParseExecuting,
+        budget: ExportResourceBudget,
+        rendering: (namespaceSVGIDs: Bool, cancellation: ResourceCancellation)
+    ) async throws -> MarkedPreparation {
+        let (namespaceSVGIDs, cancellation) = rendering
         let policy = policy(for: target)
         try checkSourceBudget(bytes: request.text.utf8.count, budget: budget)
 
@@ -85,7 +105,7 @@ enum ExportComposer {
         let output = try renderDerived(
             request: request, parsed: parsed, policy: policy,
             assetsDirName: assetsDirName, budget: budget,
-            namespaceSVGIDs: namespaceSVGIDs
+            namespaceSVGIDs: namespaceSVGIDs, cancellation: cancellation
         )
         let (derived, rendered, resolver, leakWarnings) = (
             output.derived,
@@ -113,7 +133,7 @@ enum ExportComposer {
             diagnostics: diagnostics,
             sourceGeneration: request.sourceGeneration,
             preservesRawHTML: policy.preservesRawHTML
-        )
+        ).registeringResourceSlots(rendered.resourceSlots)
         return MarkedPreparation(prepared: prepared, markedRoots: derived.markedRoots,
                                  markedSourceRanges: derived.markedSourceRanges)
     }
@@ -136,7 +156,7 @@ enum ExportComposer {
     /// white paper — only wins if the structural sheet comes second. For screen
     /// rules the order is irrelevant: the structural sheet declares no `--md-*`
     /// value outside `@media print`, so the theme still owns every colour.
-    private static func stylesheet(for theme: Theme) -> String {
+    static func stylesheet(for theme: Theme) -> String {
         ExportThemeStylesheet.variables(for: theme) + "\n" + ExportThemeStylesheet.structural
     }
 
@@ -207,7 +227,7 @@ enum ExportComposer {
         let revision = Int(exactly: request.sourceGeneration) ?? Int.max
         let document: MarkdownDocument
         do {
-            document = try await engine.parse(request.text, options: .default, revision: revision)
+            document = try await engine.parse(request.text, options: request.parseOptions, revision: revision)
         } catch {
             if error is CancellationError {
                 throw error
@@ -260,7 +280,8 @@ enum ExportComposer {
     static func renderBody(
         derived: DerivedContentComposer.Result,
         policy: Policy,
-        resolver: ExportResourceResolver
+        resolver: ExportResourceResolver,
+        registry: ExportResourceURLRegistry? = nil
     ) throws -> CMarkGFM.Rendered {
         var options = CMarkGFM.optDefault
         if policy.preservesRawHTML {
@@ -275,9 +296,19 @@ enum ExportComposer {
                 derived.splicedBody,
                 options: options,
                 customNodes: derived.customNodes,
-                urlTransformer: { url, isImage in resolver.disposition(for: url, isImage: isImage) }
+                urlTransformer: { url, isImage in
+                    let disposition = try resolver.disposition(for: url, isImage: isImage)
+                    if isImage, case .rewrite = disposition, let registry,
+                       let identity = resolver.packagedIdentity(for: url) {
+                        return try .rewrite(registry.register(identity))
+                    }
+                    return disposition
+                }
             )
         } catch {
+            if error is ExportError || error is CancellationError {
+                throw error
+            }
             throw ExportError.renderFailed(underlying: error)
         }
     }

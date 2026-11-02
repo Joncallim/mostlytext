@@ -34,6 +34,14 @@ extension ExternalFileController {
     func synchronize(with document: FileDocument?) {
         guard !disposed else { return }
 
+        // Save As can replace an unavailable source with a healthy destination
+        // before rebinding its watcher. The old source's warning must not
+        // follow the newly published document; a cancelled or failed Save As
+        // leaves backingState unavailable and keeps the warning visible.
+        if case .unavailable = notice, document?.backingState == .available {
+            notice = .none
+        }
+
         if updateExistingBinding(with: document) {
             return
         }

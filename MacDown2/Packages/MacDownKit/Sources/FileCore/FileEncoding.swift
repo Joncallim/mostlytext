@@ -119,8 +119,12 @@ public struct FileDecodingDiagnostic: Sendable, Equatable {
 
 /// The result of decoding a byte snapshot: the text, the BOM it carried, and
 /// the encoding that decoded it. A failed decode yields no text.
-struct FileDecodedPayload: Sendable, Equatable {
-    let text: String
-    let encoding: String.Encoding
-    let bom: FileBOM
+public struct FileDecodedPayload: Sendable, Equatable {
+    public let text: String
+    public let encoding: String.Encoding
+    public let bom: FileBOM
+
+    public var metadata: FileEncodingMetadata {
+        FileEncodingMetadata(encoding: encoding, bom: bom)
+    }
 }

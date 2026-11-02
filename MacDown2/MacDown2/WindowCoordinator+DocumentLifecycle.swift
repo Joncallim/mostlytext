@@ -93,6 +93,10 @@ extension WindowCoordinator {
     /// the command palette (where, by the time this resolves, it may no
     /// longer be — post-review finding #4).
     func saveDocumentAs(in controller: WindowController) {
-        Task { await controller.saveDocumentAsFromExplicitOrigin() }
+        guard let document = controller.model.activeDocument,
+              let admission = controller.model.reserveSaveAs(for: document) else { return }
+        Task {
+            await controller.saveDocumentAsFromExplicitOrigin(expecting: document, admission: admission)
+        }
     }
 }

@@ -1,0 +1,247 @@
+{
+  "scope": "Bounded legacy report/write preparation and offline license implementation; no local ordinary app/native execution",
+  "legacy_head": "1e42affc2db39a4c61e4bd928842bbbcf99f0e34",
+  "legacy_merge": "74fd1cfb4a83149feb978473485ebc3e77816556",
+  "legacy_ci": 41308380669,
+  "legacy_compliance": 41308380732,
+  "combined_head": "6a7329c940437b5bd5491b3454fd0e4b9df26ea4",
+  "combined_merge": "9a7a08ba5c678e954f00f366f6b8df712d467b57",
+  "combined_ci": 41311494804,
+  "combined_compliance": 41311494676,
+  "combined_result": {
+    "package_tests": 3056,
+    "package_suites": 419,
+    "existing_neon_known_issues": 2,
+    "app_tests": 542,
+    "app_suites": 111,
+    "all_seven_license_tests_executed": true,
+    "shipped_menu_palette_test_executed": true,
+    "debug_release_app_cli": "passed",
+    "app_ui_test_compilation": "passed",
+    "strict_lint_format": "passed",
+    "dependency_locks": "passed"
+  },
+  "local_pure_tests": {
+    "legacy": 38,
+    "legacy_catalog_controls": 5,
+    "foundation_license_loader": 5
+  },
+  "self_review": true,
+  "independent_review": false,
+  "local_application_ui_tests_run": 0,
+  "native_acceptance": "NOT_RUN",
+  "isolation_execution_hold": true,
+  "source_supersessions": [
+    {
+      "conclusion": "success",
+      "databaseId": 41311494676,
+      "headSha": "6a7329c940437b5bd5491b3454fd0e4b9df26ea4",
+      "status": "completed",
+      "workflowName": "Compliance"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 41311494804,
+      "headSha": "6a7329c940437b5bd5491b3454fd0e4b9df26ea4",
+      "status": "completed",
+      "workflowName": "CI"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 41310417701,
+      "headSha": "ec0c7860da1f79e3f5d1a44217a908a52a6a3413",
+      "status": "completed",
+      "workflowName": "Compliance"
+    },
+    {
+      "conclusion": "cancelled",
+      "databaseId": 41310417694,
+      "headSha": "ec0c7860da1f79e3f5d1a44217a908a52a6a3413",
+      "status": "completed",
+      "workflowName": "CI"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 41310049413,
+      "headSha": "be46b14527643874134de011b56960fe7533f57e",
+      "status": "completed",
+      "workflowName": "Compliance"
+    },
+    {
+      "conclusion": "cancelled",
+      "databaseId": 41310049420,
+      "headSha": "be46b14527643874134de011b56960fe7533f57e",
+      "status": "completed",
+      "workflowName": "CI"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 41309912877,
+      "headSha": "dd5b1415cfd805a10fde3c3779007dc9e3210269",
+      "status": "completed",
+      "workflowName": "Compliance"
+    },
+    {
+      "conclusion": "cancelled",
+      "databaseId": 41309912949,
+      "headSha": "dd5b1415cfd805a10fde3c3779007dc9e3210269",
+      "status": "completed",
+      "workflowName": "CI"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 41309121625,
+      "headSha": "32b18fc5967d3002a4113f74875afe9e3ab694bb",
+      "status": "completed",
+      "workflowName": "Compliance"
+    },
+    {
+      "conclusion": "cancelled",
+      "databaseId": 41309121643,
+      "headSha": "32b18fc5967d3002a4113f74875afe9e3ab694bb",
+      "status": "completed",
+      "workflowName": "CI"
+    }
+  ],
+  "issue_updates": [
+    17,
+    53,
+    88,
+    115,
+    117,
+    119,
+    148,
+    183
+  ],
+  "new_bounded_progress_items_checked": 6,
+  "issues_closed": [],
+  "remaining_open_issues": [
+    17,
+    18,
+    53,
+    88,
+    112,
+    113,
+    115,
+    116,
+    117,
+    118,
+    119,
+    121,
+    148,
+    155,
+    158,
+    183,
+    203,
+    459
+  ],
+  "master_unchanged": "15c0fae22f7618e94c82681227057c66011be2a9",
+  "issue_readback": {
+    "17": "6401bfdc087cd489fc3f4f101f2e119fc94b6cd5c1d6d9add245706922938a9e",
+    "53": "e29c050f15aeaf46c8253501417e149ddfef5ef70019238c7f695fae0440b186",
+    "88": "5af56bfa46e9fc61afb1414d22450f2c546bcd227a2ee32235f56b52f9ddc563",
+    "115": "1202d5be88d7e80b0a9b23f130d232d9ed94993334079bf239ce50b1f7c76f51",
+    "117": "34dcb7486e87310bd5144b18bf73af6ae0406e96f9ce7758c98812e0b081ca32",
+    "119": "20f272bd96d04c2ef98521ebdf136eee330b60909bfc5d5574bf44511e868a20",
+    "148": "d9ebb851e27dfacb46b23ed4f0dd5a05e7d76f67b2446c409250b9b9257c9119",
+    "183": "d3a24c632253d2d549afd7dd579fb8a8c31e1584ce759fa0dfc0a1961b5d07b5"
+  },
+  "retained_logs": {
+    "legacy/compliance-check.log": {
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+    },
+    "legacy/compliance-tests.log": {
+      "bytes": 20115,
+      "sha256": "64d14170a990eed02b4cccf22a344ed33bd6187a89cb50533e04e9c77d6421f9"
+    },
+    "legacy/hosted-checks-watch.log": {
+      "bytes": 10602,
+      "sha256": "a7fa1a4d8e78485efd447f8337f9e54b4d3e69ade797d8e57cef2ea3118393f4"
+    },
+    "legacy/hosted-full-job.log": {
+      "bytes": 17335266,
+      "sha256": "5ccbadd79db7d7208032eb306c3c446d5d050fb84e9a25c1b269f084ab4b80a7"
+    },
+    "legacy/pure-final.log": {
+      "bytes": 8702,
+      "sha256": "0f5ca2a88e1782179d2aa896b7ffe30c287681bf6aa2212cada7e0fdb7c9f703"
+    },
+    "legacy/pure-first.log": {
+      "bytes": 2497,
+      "sha256": "37612a5b0c9c9471f29ced7df7d049027398869da67ed506841bbc85ed509b0d"
+    },
+    "legacy/pure-second.log": {
+      "bytes": 3188,
+      "sha256": "46e99c2cf50004c9b58d1edda04d4ca23bab889eace2a61853a0699f10e262b7"
+    },
+    "legacy/pure-third.log": {
+      "bytes": 9503,
+      "sha256": "d1c1187a1d0124f843753cb7025e1bb7524688692f07ddfef6ce44f284237d9f"
+    },
+    "licenses/catalog-compile.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "licenses/catalog-final-compile.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "licenses/compliance.log": {
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+    },
+    "licenses/foundation-loader-tests.log": {
+      "bytes": 1793,
+      "sha256": "0a2b469adc99672d30ba3645f734cfe68796bce5b83dabfd92bdb044c673e1d2"
+    },
+    "licenses/hosted-checks-watch.log": {
+      "bytes": 2096,
+      "sha256": "5c7998cd80c59d536dd049660a7540c6bd7d6223500b300957df6396e55dfe78"
+    },
+    "licenses/hosted-final-full-job.log": {
+      "bytes": 17338689,
+      "sha256": "b83c51e3e9d7212d2eb540896d1ced4fb8470ece94f6a2be460e8515f56c2c10"
+    },
+    "licenses/menu-consistency-after.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "licenses/menu-consistency-before.log": {
+      "bytes": 81,
+      "sha256": "80a7a051ba159694e25855ccfb7ab165f38c43683eb92cd8e8b1de2b29a5d115"
+    },
+    "licenses/test-typecheck-complete.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "licenses/test-typecheck-final-source.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "licenses/test-typecheck-final.log": {
+      "bytes": 258,
+      "sha256": "5086e49dffbcb7c6a739489551b753f398f5bd2d64ec1a25fbfaa00234fb026d"
+    },
+    "licenses/test-typecheck-framework.log": {
+      "bytes": 76643,
+      "sha256": "0c866c7b04ee1e5e81853fd9320acbaf8f26f88dbb64248ed4a95ab9373cf332"
+    },
+    "licenses/typecheck-final-source.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "licenses/typecheck-final.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "licenses/typecheck-find-corrected.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "licenses/typecheck-first.log": {
+      "bytes": 1113,
+      "sha256": "14910ff585683eb0e0dcf9be21265020c9a5c00166364fd88bf787d0c05391fd"
+    }
+  }
+}

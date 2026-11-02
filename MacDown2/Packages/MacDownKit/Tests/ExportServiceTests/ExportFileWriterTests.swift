@@ -5,8 +5,8 @@ import Themes
 
 /// Slice 2: companion-directory ownership and primary-last durability.
 struct ExportFileWriterTests {
-    private func makePrepared(bodyHTML: String, resources: [ExportResource] = []) -> PreparedExportDocument {
-        PreparedExportDocument(
+    private func makePrepared(bodyHTML: String, resources: [ExportResource] = []) throws -> PreparedExportDocument {
+        try ExportSlotTestSupport.registeringGeneratedImages(PreparedExportDocument(
             title: "Title",
             bodyHTML: bodyHTML,
             stylesheet: "body { color: var(--md-foreground); }",
@@ -14,7 +14,7 @@ struct ExportFileWriterTests {
             diagnostics: [],
             sourceGeneration: 1,
             preservesRawHTML: true
-        )
+        ))
     }
 
     private func pngResource() -> ExportResource {
@@ -27,12 +27,12 @@ struct ExportFileWriterTests {
         defer { try? FileManager.default.removeItem(at: directory) }
         let resource = pngResource()
         let assetsDir = ExportHTMLWriter.defaultAssetsDirectoryName
-        let prepared = makePrepared(
+        let prepared = try makePrepared(
             bodyHTML: "<p><img src=\"\(assetsDir)/\(resource.identity.fileName)\"></p>",
             resources: [resource]
         )
         let target = ExportTarget.html(
-            url: directory.appendingPathComponent("doc.html"),
+            url: directory.appendingPathComponent("report.html"),
             mode: .selfContained
         )
 
@@ -50,12 +50,12 @@ struct ExportFileWriterTests {
         defer { try? FileManager.default.removeItem(at: directory) }
         let resource = pngResource()
         let assetsDir = ExportHTMLWriter.defaultAssetsDirectoryName
-        let prepared = makePrepared(
+        let prepared = try makePrepared(
             bodyHTML: "<p><img src=\"\(assetsDir)/\(resource.identity.fileName)\"></p>",
             resources: [resource]
         )
         let target = ExportTarget.html(
-            url: directory.appendingPathComponent("doc.html"),
+            url: directory.appendingPathComponent("report.html"),
             mode: .standalone(style: .embedded)
         )
 
@@ -69,7 +69,7 @@ struct ExportFileWriterTests {
 
         let marker = assetsURL.appendingPathComponent(ExportFileWriter.markerFileName)
         #expect(FileManager.default.fileExists(atPath: marker.path))
-        #expect(try String(contentsOf: marker, encoding: .utf8) == ExportFileWriter.markerContent)
+        #expect(try Data(contentsOf: marker) == ExportAssetOwnerMarker.bytes(primary: "report.html", assets: assetsDir))
     }
 
     @Test func linkedStandaloneWritesStylesheetIntoTheAssetsDirectory() throws {
@@ -78,9 +78,9 @@ struct ExportFileWriterTests {
         // same ownership and dedup guarantees as every image resource.
         let directory = try ExportTestSupport.makeTempDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
-        let prepared = makePrepared(bodyHTML: "<p>hi</p>")
+        let prepared = try makePrepared(bodyHTML: "<p>hi</p>")
         let target = ExportTarget.html(
-            url: directory.appendingPathComponent("doc.html"),
+            url: directory.appendingPathComponent("report.html"),
             mode: .standalone(style: .linked)
         )
 
@@ -106,9 +106,9 @@ struct ExportFileWriterTests {
         // CSS still needs somewhere to live.
         let directory = try ExportTestSupport.makeTempDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
-        let prepared = makePrepared(bodyHTML: "<p>no images</p>")
+        let prepared = try makePrepared(bodyHTML: "<p>no images</p>")
         let target = ExportTarget.html(
-            url: directory.appendingPathComponent("doc.html"),
+            url: directory.appendingPathComponent("report.html"),
             mode: .standalone(style: .linked)
         )
 
@@ -123,21 +123,21 @@ struct ExportFileWriterTests {
         let directory = try ExportTestSupport.makeTempDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
         let assetsDir = directory.appendingPathComponent(ExportHTMLWriter.defaultAssetsDirectoryName)
-        try FileManager.default.createDirectory(at: assetsDir, withIntermediateDirectories: true)
         let userFile = assetsDir.appendingPathComponent("user-notes.txt")
-        try Data("keep me".utf8).write(to: userFile)
 
         let resource = pngResource()
         let assetsDirName = ExportHTMLWriter.defaultAssetsDirectoryName
-        let prepared = makePrepared(
+        let prepared = try makePrepared(
             bodyHTML: "<p><img src=\"\(assetsDirName)/\(resource.identity.fileName)\"></p>",
             resources: [resource]
         )
         let target = ExportTarget.html(
-            url: directory.appendingPathComponent("doc.html"),
+            url: directory.appendingPathComponent("report.html"),
             mode: .standalone(style: .embedded)
         )
 
+        _ = try ExportFileWriter.writeHTML(prepared, to: target)
+        try Data("keep me".utf8).write(to: userFile)
         _ = try ExportFileWriter.writeHTML(prepared, to: target)
 
         #expect(FileManager.default.fileExists(atPath: userFile.path))
@@ -147,14 +147,14 @@ struct ExportFileWriterTests {
     @Test func writeHTMLRejectsPDFTarget() throws {
         let directory = try ExportTestSupport.makeTempDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
-        let prepared = makePrepared(bodyHTML: "<p>hi</p>")
+        let prepared = try makePrepared(bodyHTML: "<p>hi</p>")
 
         #expect(throws: ExportError.self) {
             try ExportFileWriter.writeHTML(prepared, to: .pdf(url: directory.appendingPathComponent("out.pdf")))
         }
     }
 
-    @Test func everyResourceIsEmbeddedInOnePass() {
+    @Test func everyResourceIsEmbeddedInOnePass() throws {
         // One scan must place every data URI: an image-heavy document is where a
         // per-resource rescan would quietly turn into quadratic work.
         let resources = (0 ..< 5).map { index -> ExportResource in
@@ -168,9 +168,9 @@ struct ExportFileWriterTests {
         let body = resources
             .map { "<img src=\"\(assetsDir)/\($0.identity.fileName)\" alt=\"x\">" }
             .joined(separator: "\n")
-        let prepared = makePrepared(bodyHTML: body, resources: resources)
+        let prepared = try makePrepared(bodyHTML: body, resources: resources)
 
-        let html = ExportHTMLWriter.selfContainedHTML(from: prepared)
+        let html = try ExportHTMLWriter.selfContainedHTML(from: prepared)
 
         #expect(!html.contains("\(assetsDir)/"))
         for resource in resources {
@@ -181,13 +181,13 @@ struct ExportFileWriterTests {
         #expect(html.contains("alt=\"x\""))
     }
 
-    @Test func unknownCompanionReferencesAreLeftAlone() {
+    @Test func unknownCompanionReferencesAreLeftAlone() throws {
         let resource = pngResource()
         let assetsDir = ExportHTMLWriter.defaultAssetsDirectoryName
         let body = "<img src=\"\(assetsDir)/not-a-resource.png\">"
-        let prepared = makePrepared(bodyHTML: body, resources: [resource])
+        let prepared = try makePrepared(bodyHTML: body, resources: [resource])
 
-        let html = ExportHTMLWriter.selfContainedHTML(from: prepared)
+        let html = try ExportHTMLWriter.selfContainedHTML(from: prepared)
 
         #expect(html.contains("\(assetsDir)/not-a-resource.png"))
     }
@@ -196,9 +196,9 @@ struct ExportFileWriterTests {
         // An empty assets folder beside every export is litter.
         let directory = try ExportTestSupport.makeTempDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
-        let prepared = makePrepared(bodyHTML: "<p>no images here</p>")
+        let prepared = try makePrepared(bodyHTML: "<p>no images here</p>")
         let target = ExportTarget.html(
-            url: directory.appendingPathComponent("doc.html"),
+            url: directory.appendingPathComponent("report.html"),
             mode: .standalone(style: .embedded)
         )
 
@@ -232,7 +232,8 @@ struct ExportFileWriterTests {
                 text: "# Alpha\n\n![a](alpha.png)\n",
                 sourceGeneration: 1,
                 theme: ExportTestSupport.lightTheme(),
-                documentURL: directory.appendingPathComponent("Alpha.md")
+                documentURL: directory.appendingPathComponent("Alpha.md"),
+                resourceAccess: ExportResourceAccess(openingDirectory: directory)
             ),
             to: .html(url: alphaURL, mode: .standalone(style: .linked))
         )
@@ -244,7 +245,8 @@ struct ExportFileWriterTests {
                 text: "# Beta\n\n![b](beta.png)\n",
                 sourceGeneration: 1,
                 theme: BundledThemes.dark,
-                documentURL: directory.appendingPathComponent("Beta.md")
+                documentURL: directory.appendingPathComponent("Beta.md"),
+                resourceAccess: ExportResourceAccess(openingDirectory: directory)
             ),
             to: .html(url: betaURL, mode: .standalone(style: .linked))
         )

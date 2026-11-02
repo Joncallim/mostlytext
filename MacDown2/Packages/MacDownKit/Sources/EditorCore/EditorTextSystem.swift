@@ -44,7 +44,7 @@ public final class EditorTextSystem {
     var lastFrameSyncSignature: FrameSyncSignature?
     /// Not `private`: see `lastFrameSyncSignature`'s note above.
     var measuredContentHeight: CGFloat = 0
-    private var frameSyncTask: Task<Void, Never>?
+    var frameSyncTask: Task<Void, Never>?
     /// Not `private`: `EditorTextSystem+Content.swift`'s `setText`/
     /// `replaceTextFromExternal` bump this on every whole-document
     /// replacement, mirroring the incremental-edit path's own bump in
@@ -96,6 +96,8 @@ public final class EditorTextSystem {
     /// Set by `scrollOffset`'s setter before the scroll view exists yet
     /// (session restore); applied by `applyPendingScrollOffset()` once it does.
     var pendingScrollOffset: CGFloat?
+    var pendingExternalViewport: EditorViewportSnapshot?
+    var pendingExternalViewportRevision: UInt64?
     /// Kept current with every edit this text system observes, incrementally
     /// (never a full rescan except on whole-document replacement). Powers
     /// the gutter, status bar, and Go to Line/Column. Setter is `internal`
@@ -341,40 +343,6 @@ public final class EditorTextSystem {
         let neededHeight = max(measuredContentHeight, scrollView.bounds.height)
         if textView.frame.height != neededHeight {
             textView.frame.size.height = neededHeight
-        }
-    }
-
-    /// Brings the frame height up to date off the back of an editing or
-    /// caret-movement event, one run-loop turn later.
-    ///
-    /// Keyboard-driven caret movement and typing are entirely internal to
-    /// `NSTextView` — they never flow through SwiftUI's `updateNSView`, so
-    /// `syncFrameHeightToContent()` would otherwise never run for those paths
-    /// and the frame would fall behind the content again. Cheap on the common
-    /// path: the signature check inside no-ops once the frame has caught up.
-    ///
-    /// Deferred one run-loop turn because the delegate callbacks that drive
-    /// this fire *during* `NSTextView`'s own handling, before it has finished
-    /// updating its layout; measuring then reads a half-updated state.
-    ///
-    /// This deliberately does **not** scroll. An earlier version called
-    /// `scrollRangeToVisible(selection)` here, which meant every selection
-    /// change — including ones the user never initiated — yanked the viewport
-    /// back to the caret, so scrolling away from the caret and releasing
-    /// snapped straight back to it. `NSTextView` already scrolls to follow the
-    /// caret on its own; all it ever needed from us was a frame tall enough
-    /// to have somewhere to scroll to.
-    func scheduleFrameHeightSync() {
-        frameSyncTask?.cancel()
-        frameSyncTask = Task { @MainActor [weak self] in
-            do {
-                try await Task.sleep(for: .milliseconds(50))
-            } catch {
-                return
-            }
-            guard !Task.isCancelled, let self else { return }
-            syncFrameHeightToContent()
-            applyPendingScrollOffset()
         }
     }
 

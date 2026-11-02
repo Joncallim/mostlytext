@@ -17,9 +17,16 @@ public final class RecentFolderRoots {
     }
 
     public private(set) var roots: [URL] = []
+    public var unresolvedBookmarkCount: Int {
+        unresolved.count
+    }
+
     private let preferences: FileTreePreferences
     private var bookmarks: [Data] = []
-    public init(preferences: FileTreePreferences) {
+    private var unresolved: [Data] = []
+    public let preservesUnavailableBookmarks: Bool
+    public init(preferences: FileTreePreferences, preservesUnavailableBookmarks: Bool = false) {
+        self.preservesUnavailableBookmarks = preservesUnavailableBookmarks
         self.preferences = preferences; reload()
     }
 
@@ -29,7 +36,10 @@ public final class RecentFolderRoots {
         // URL as the user-facing label and tree root.
         let physical = standardized.resolvingSymlinksInPath().standardizedFileURL
         guard let bookmark = try? physical.bookmarkData(options: .withSecurityScope) else { return }
-        var updated = zip(roots, bookmarks).filter { !PhysicalFileIdentity.matches($0.0, standardized) }
+        var updated = zip(roots, bookmarks).filter { $0.0 != standardized && !PhysicalFileIdentity.matches(
+            $0.0,
+            standardized
+        ) }
         updated.insert((standardized, stored(bookmark: bookmark, lexicalURL: standardized)), at: 0)
         updated = Array(updated.prefix(10))
         roots = updated.map(\.0)
@@ -48,6 +58,9 @@ public final class RecentFolderRoots {
             relativeTo: nil,
             bookmarkDataIsStale: &stale
         ) else {
+            if preservesUnavailableBookmarks {
+                return nil
+            }
             roots.remove(at: index)
             bookmarks.remove(at: index)
             save()
@@ -76,7 +89,7 @@ public final class RecentFolderRoots {
     }
 
     public func clear() {
-        roots = []; bookmarks = []
+        roots = []; bookmarks = []; unresolved = []
         storeBookmarks([])
     }
 
@@ -109,6 +122,7 @@ public final class RecentFolderRoots {
     private func reload() {
         roots = []
         bookmarks = []
+        unresolved = []
         var changed = false
         var seen: [URL] = []
         for data in storedBookmarks() {
@@ -120,7 +134,15 @@ public final class RecentFolderRoots {
                 relativeTo: nil,
                 bookmarkDataIsStale: &stale
             ) else {
-                changed = true
+                if preservesUnavailableBookmarks {
+                    if let lexical = record.lexicalURL {
+                        roots.append(lexical); bookmarks.append(data)
+                    } else {
+                        unresolved.append(data)
+                    }
+                } else {
+                    changed = true
+                }
                 continue
             }
             let resolved = url.standardizedFileURL
@@ -145,8 +167,23 @@ public final class RecentFolderRoots {
         }
     }
 
+    /// Refresh grants only for already-created descendants of the new owned
+    /// installation. Outside or unresolved bookmarks remain byte-identical.
+    public static func relocatedInstallationBookmarks(_ values: [Data],
+                                                      map: (URL) throws -> URL?) throws -> [Data] {
+        try values.map { data in
+            let stored = try? JSONDecoder().decode(StoredRoot.self, from: data)
+            var stale = false
+            let old = stored?.lexicalURL ?? (try? URL(resolvingBookmarkData: data, options: [.withSecurityScope],
+                                                      relativeTo: nil, bookmarkDataIsStale: &stale))
+            guard let old, let new = try map(old) else { return data }
+            return try JSONEncoder().encode(StoredRoot(bookmark: new.bookmarkData(options: .withSecurityScope),
+                                                       lexicalURL: new))
+        }
+    }
+
     private func save() {
-        storeBookmarks(bookmarks)
+        storeBookmarks(bookmarks + unresolved)
     }
 
     private func stored(bookmark: Data, lexicalURL: URL) -> Data {

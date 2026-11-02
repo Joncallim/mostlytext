@@ -69,6 +69,22 @@ public extension WorkspaceModel {
         encodingOverride: FileEncodingMetadata? = nil,
         target: FileDocument? = nil
     ) async -> NonPromptingSaveResult {
+        await saveAttempt(
+            isRetry: isRetry,
+            destinationPolicy: destinationPolicy,
+            encodingOverride: encodingOverride,
+            target: target,
+            continuingOperation: nil
+        )
+    }
+
+    internal func saveAttempt(
+        isRetry: Bool,
+        destinationPolicy: SaveDestinationPolicy,
+        encodingOverride: FileEncodingMetadata?,
+        target: FileDocument?,
+        continuingOperation: LogicalSaveOperationID?
+    ) async -> NonPromptingSaveResult {
         guard let document = target ?? tabStore.activeDocument else {
             lastError = .noActiveDocument
             return .handled
@@ -78,17 +94,20 @@ public extension WorkspaceModel {
             return .handled
         }
         if document.fileURL == nil || isBackingUnavailable(document) {
-            if destinationPolicy == .promptIfNeeded {
-                await saveAs()
-                return .handled
-            }
-            return .requiresDestination
+            return await handleMissingSaveDestination(destinationPolicy, continuingOperation: continuingOperation)
         }
         guard inFlightSaveAsByDocumentID[document.id] == nil else { return .handled }
 
         let context = beginSave(for: document)
-        beginSavingIndicator(for: document.id)
-        defer { endSavingIndicator(for: document.id) }
+        let operation = continuingOperation ?? beginSavingIndicator(for: document)
+        if continuingOperation != nil {
+            includeSavingLifetime(document, in: operation)
+        }
+        defer {
+            if continuingOperation == nil {
+                endSavingIndicator(operation)
+            }
+        }
         do {
             let result = try await documentWriter.save(document, encodingOverride: encodingOverride)
             result.document.fileURL.map { onDocumentWritten?($0) }
@@ -105,15 +124,34 @@ public extension WorkspaceModel {
                 return await reconcileSaveConflict(
                     for: document,
                     context: context,
-                    isRetry: isRetry,
-                    destinationPolicy: destinationPolicy,
-                    encodingOverride: encodingOverride
+                    retry: SaveConflictRetry(
+                        isRetry: isRetry,
+                        destinationPolicy: destinationPolicy,
+                        encodingOverride: encodingOverride,
+                        operation: operation
+                    )
                 )
             }
             guard shouldSurfaceSaveFailure(for: document, context: context, error: error) else { return .handled }
             lastError = workspaceError(for: error)
         }
         return .handled
+    }
+
+    private func handleMissingSaveDestination(
+        _ policy: SaveDestinationPolicy,
+        continuingOperation: LogicalSaveOperationID?
+    ) async -> NonPromptingSaveResult {
+        // A retry that lost its destination is no longer writing. Save As
+        // starts a separate operation only after the user accepts a location.
+        if let continuingOperation {
+            endSavingIndicator(continuingOperation)
+        }
+        if policy == .promptIfNeeded {
+            await saveAs()
+            return .handled
+        }
+        return .requiresDestination
     }
 
     /// Saves the active document to a user-chosen location, prompted via
@@ -130,31 +168,38 @@ public extension WorkspaceModel {
             lastError = .noActiveDocument
             return
         }
+        guard let admission = reserveSaveAs(for: document) else { return }
+        defer { finishSaveAs(admission) }
         guard let url = await panel.chooseSaveLocation(
             defaultName: Self.defaultSaveAsName(for: document),
             format: document.format
         )
         else { return }
-        await saveAs(to: url, expecting: document)
+        await saveAs(to: url, expecting: document, admission: admission)
     }
 
     /// Saves `expected` — the document the caller began Save As *for*,
     /// captured before it presented its panel — to an already-chosen
-    /// `url`. The caller having already presented (and dismissed) whatever
-    /// panel it used to obtain it, explicitly against whichever window it
-    /// considers the operation's origin. `Workspace` has no AppKit window type; the caller keeps that context.
-    ///
+    /// `url`. The caller owns the panel and its originating window; Workspace
+    /// receives only the chosen URL and the expected document.
     /// `expected` is what makes that hand-off safe. A panel stays open for
     /// as long as the user takes to answer it, and the active document can
     /// be replaced (an external-change reload) or switched (another tab
     /// activated) meanwhile — a sheet blocks neither. Saving "whatever is
     /// active now" would write a *different* document's contents to the
     /// filename the user chose for `expected`, and rebind that document to
-    /// it. Re-reading `tabStore.activeDocument` here and checking
-    /// `isCurrent` against it cannot express that guard: it compares the
-    /// active document with itself and is always true.
-    func saveAs(to url: URL, expecting expected: FileDocument) async {
+    /// it. Checking `isCurrent` against a re-read active document would
+    /// compare that document with itself and always succeed.
+    func saveAs(to url: URL, expecting expected: FileDocument, admission existing: SaveAsAdmission? = nil) async {
         guard isCurrent(expected) else { return }
+        let ownsAdmission = existing == nil
+        guard let admission = existing ?? reserveSaveAs(for: expected) else { return }
+        defer {
+            if ownsAdmission {
+                finishSaveAs(admission)
+            }
+        }
+        guard ownsSaveAs(admission, for: expected) else { return }
         guard let url = freeDestination(url) else { return }
         // Captured at authorization: publication is conditional on it (#183 F22).
         let baseline: DestinationBaseline?
@@ -165,7 +210,7 @@ public extension WorkspaceModel {
             return
         }
         guard documentLifetimeIsOpen(with: expected) else { return }
-        await publishSaveAs(expected, to: url, destinationBaseline: baseline)
+        await publishSaveAs(expected, to: url, destinationBaseline: baseline, admission: admission)
     }
 
     /// The filename `saveAs()`'s own panel prompt defaults to — exposed so
@@ -183,13 +228,14 @@ public extension WorkspaceModel {
     private func publishSaveAs(
         _ document: FileDocument,
         to url: URL,
-        destinationBaseline: DestinationBaseline?
+        destinationBaseline: DestinationBaseline?,
+        admission: SaveAsAdmission
     ) async {
         let context = beginSave(for: document)
         inFlightSaveAsByDocumentID[document.id] = context.generation
-        beginSavingIndicator(for: document.id)
+        let operation = beginSavingIndicator(for: document)
         defer {
-            endSavingIndicator(for: document.id)
+            endSavingIndicator(operation)
             if inFlightSaveAsByDocumentID[document.id] == context.generation {
                 inFlightSaveAsByDocumentID[document.id] = nil
             }
@@ -197,14 +243,19 @@ public extension WorkspaceModel {
         do {
             let saved = try await documentWriter.saveAs(document, to: url, destinationBaseline: destinationBaseline)
             onDocumentWritten?(url)
-            await applySaveAs(saved, from: document, context: context)
+            await applySaveAs(saved, from: document, context: context, progress: (operation, admission))
         } catch {
             guard shouldSurfaceSaveFailure(for: document, context: context, error: error) else { return }
             lastError = workspaceError(for: error)
         }
     }
 
-    private func applySaveAs(_ saved: FileDocument, from document: FileDocument, context: SaveContext) async {
+    private func applySaveAs(
+        _ saved: FileDocument,
+        from document: FileDocument,
+        context: SaveContext,
+        progress: (operation: LogicalSaveOperationID, admission: SaveAsAdmission)
+    ) async {
         guard let replacement = saveAsReplacement(saved: saved, source: document, context: context) else { return }
         let oldID = document.id
         let recoveryOutcome = await finalizeSaveAsRecovery(replacement, source: document, context: context)
@@ -215,7 +266,8 @@ public extension WorkspaceModel {
             saved,
             source: document,
             initialReplacement: replacement,
-            context: context
+            context: context,
+            progress: progress
         ) else { return }
         if case .migrationPending = recoveryOutcome {
             await onSaveAsDestinationSessionPublished?(document, finalReplacement)
@@ -249,7 +301,8 @@ public extension WorkspaceModel {
         _ saved: FileDocument,
         source document: FileDocument,
         initialReplacement replacement: FileDocument,
-        context: SaveContext
+        context: SaveContext,
+        progress: (operation: LogicalSaveOperationID, admission: SaveAsAdmission)
     ) async -> FileDocument? {
         await onSaveAsRecoveryFinalized?()
         guard let reconciled = saveAsReplacement(saved: saved, source: document, context: context) else { return nil }
@@ -266,6 +319,8 @@ public extension WorkspaceModel {
         guard let finalReplacement = saveAsReplacement(saved: saved, source: document, context: context),
               sameSaveAsSnapshot(finalReplacement, reconciled),
               let tabID = owningTabID(of: document) else { return nil }
+        guard includeSaveAsLifetime(finalReplacement, in: progress.admission) else { return nil }
+        includeSavingLifetime(finalReplacement, in: progress.operation)
         tabStore.updateDocument(inTab: tabID) { _ in finalReplacement }
         guard await publishSaveAsSession() else {
             enqueueSaveAsRetry(

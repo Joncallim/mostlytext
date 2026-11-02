@@ -22,3 +22,7 @@
 3. If no dialog appears and it times out again, open System Settings, Privacy & Security, Accessibility, and check whether `MacDown2UITests-Runner` is listed and enabled; tell me what you see. Do not change other security settings.
 
 Nothing here authorises changing a security setting without the owner.
+
+## Later observation (2026-10-29)
+
+All six real ExternalFileChangesUITests completed in optimized Release on CORTANA without changing security settings or answering an authorization prompt. DevToolsSecurity still reported disabled. This does not establish the cause of the October 16 failures or prove every UI suite is now runnable. See [the exact six-case evidence](../issue-119-2026-10-29/README.md); no historical failure has been erased or relabelled as a pass.

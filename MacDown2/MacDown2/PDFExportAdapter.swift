@@ -25,29 +25,36 @@ enum PDFExportAdapter {
     private static let loadTimeout: Duration = .seconds(30)
     /// Provisional output admission before allocating Data/PDFKit objects. The
     /// release memory calibration must confirm or revise this separate PDF cap.
-    private static let maxPDFBytes = 256 * 1024 * 1024
+    private nonisolated static let maxPDFBytes = 256 * 1024 * 1024
     /// Preview rasterization is only an admission check; the original vector
     /// PDF is published unchanged. Bound the page work and scratch memory.
     private static let maxValidationPages = 1024
     private static let validationSide = 256
 
-    static func export(_ prepared: PreparedExportDocument, to url: URL) async throws {
+    static func export(_ prepared: PreparedExportDocument, to url: URL,
+                       lease: ExportLifetimeLease = ExportLifetimeLease(),
+                       admission: ExportDestinationAdmission? = nil) async throws {
+        try lease.checkActive()
+        let authorization = try admission ?? ExportDestinationAdmission(capturing: url)
+        try authorization.checkTarget(url)
         // Base64-encoding every embedded image is the most expensive step in a
         // PDF export; it is done off the main actor so the app stays responsive.
-        let html = await hardenedHTML(from: prepared)
+        let html = try await hardenedHTML(from: prepared)
         let sourceHasContent = !prepared.bodyHTML.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        try await exportHTML(html, to: url, sourceHasContent: sourceHasContent, lease: nil)
+        try await exportHTML(html, to: url, sourceHasContent: sourceHasContent,
+                             lease: lease, admission: authorization)
     }
 
     /// Disabled opt-in consumer: WebKit receives exactly the accepted UTF-8
     /// bytes, and the caller's lifetime lease still guards final publication.
     static func export(_ validated: ValidatedExportHTML, to url: URL,
                        lease: ExportLifetimeLease) async throws {
+        let admission = try ExportDestinationAdmission(capturing: url)
         let html = try validatedHTMLForWebKit(validated, to: url)
         // ValidatedExportHTML does not expose the source body. Fail closed on
         // an unmarked PDF until that path's activation contract defines how an
         // intentionally empty document should be represented.
-        try await exportHTML(html, to: url, sourceHasContent: true, lease: lease)
+        try await exportHTML(html, to: url, sourceHasContent: true, lease: lease, admission: admission)
     }
 
     static func validatedHTMLForWebKit(_ validated: ValidatedExportHTML, to url: URL) throws -> String {
@@ -60,7 +67,7 @@ enum PDFExportAdapter {
     }
 
     private static func exportHTML(_ html: String, to url: URL, sourceHasContent: Bool,
-                                   lease: ExportLifetimeLease?) async throws {
+                                   lease: ExportLifetimeLease?, admission: ExportDestinationAdmission) async throws {
         try lease?.checkActive()
 
         let webView = WKWebView(frame: .zero, configuration: lockedConfiguration())
@@ -79,6 +86,7 @@ enum PDFExportAdapter {
         try Task.checkCancellation()
         try lease?.checkActive()
 
+        try admission.checkCurrent()
         let printURL = temporaryURL(nextTo: url)
         let snapshotURL = temporaryURL(nextTo: url)
         // Neither scratch file is left behind on any exit path.
@@ -92,49 +100,55 @@ enum PDFExportAdapter {
             throw PDFExportError.printOperationFailed
         }
 
-        var outputURL = printURL
-        if try !hasUsablePDF(at: printURL, sourceHasContent: sourceHasContent) {
+        var output = try await validatedPDFBytes(at: printURL, admission: admission, sourceHasContent: sourceHasContent)
+        if output == nil {
             // A successful print operation can still write no marks at all.
             // Keep its broken output isolated and ask WebKit for a local vector
             // snapshot, which is divided into ordinary paper-sized pages.
             try Task.checkCancellation()
             try lease?.checkActive()
+            try admission.checkCurrent()
             try await PDFSnapshotFallback.render(
                 webView: webView,
                 printInfo: operation.printInfo,
                 to: snapshotURL,
                 maxBytes: maxPDFBytes
             )
-            guard try hasUsablePDF(at: snapshotURL, sourceHasContent: sourceHasContent) else {
-                throw PDFExportError.invalidPDFOutput
-            }
-            outputURL = snapshotURL
+            output = try await validatedPDFBytes(
+                at: snapshotURL, admission: admission, sourceHasContent: sourceHasContent
+            )
         }
         try Task.checkCancellation()
         try lease?.checkActive()
 
-        try publish(outputURL, to: url, lease: lease)
+        guard let output else { throw PDFExportError.invalidPDFOutput }
+        let publicationLease = lease ?? ExportLifetimeLease()
+        try await io { try admission.publish(output, lease: publicationLease) }
     }
 
-    private static func publish(_ outputURL: URL, to url: URL, lease: ExportLifetimeLease?) throws {
-        // Atomic promotion: the validated PDF replaces any previous file.
+    private static func validatedPDFBytes(
+        at url: URL, admission: ExportDestinationAdmission, sourceHasContent: Bool
+    ) async throws -> Data? {
+        let data: Data?
         do {
-            let promote: () throws -> Void = {
-                if FileManager.default.fileExists(atPath: url.path) {
-                    _ = try FileManager.default.replaceItemAt(url, withItemAt: outputURL)
-                } else {
-                    try FileManager.default.moveItem(at: outputURL, to: url)
-                }
-            }
-            if let lease {
-                try lease.withPublicationCutoff(promote)
-            } else {
-                try promote()
-            }
-        } catch is CancellationError {
-            throw CancellationError()
-        } catch {
-            throw ExportError.writeFailed(underlying: error)
+            data = try await io { try admission.readGeneratedFile(at: url, maxBytes: maxPDFBytes) }
+        } catch ExportError.budgetExceeded {
+            throw PDFExportError.pdfTooLarge
+        }
+        guard let data else { return nil }
+        return normalizedPrintableData(data, sourceHasContent: sourceHasContent)
+    }
+
+    /// Detached file I/O has an explicit cancellation bridge back to its owner.
+    /// PDFKit and the print operation remain on their existing main-actor path.
+    private nonisolated static func io<T: Sendable>(
+        _ operation: @escaping @Sendable () throws -> T
+    ) async throws -> T {
+        let worker = Task.detached(priority: .userInitiated, operation: operation)
+        return try await withTaskCancellationHandler {
+            try await worker.value
+        } onCancel: {
+            worker.cancel()
         }
     }
 
@@ -178,12 +192,12 @@ enum PDFExportAdapter {
     /// substituted into the rendered string afterwards: a string rewrite would
     /// silently stop applying if the template's whitespace ever changed, and a
     /// security control that can vanish without failing is not a control.
-    nonisolated static func hardenedHTML(from prepared: PreparedExportDocument) async -> String {
+    nonisolated static func hardenedHTML(from prepared: PreparedExportDocument) async throws -> String {
         let csp = "<meta http-equiv=\"Content-Security-Policy\" content=\""
             + "default-src 'none'; script-src 'none'; style-src 'unsafe-inline'; "
             + "img-src data:; media-src data:; font-src data:; connect-src 'none'; "
             + "object-src 'none'; form-action 'none'; base-uri 'none';\">"
-        return ExportHTMLWriter.selfContainedHTML(from: prepared, additionalHead: csp)
+        return try ExportHTMLWriter.selfContainedHTML(from: prepared, additionalHead: csp)
     }
 
     /// Configure the system key before WebKit copies the print info into its operation.
@@ -202,19 +216,13 @@ enum PDFExportAdapter {
         operation.printInfo = printInfo(savingTo: url)
     }
 
-    static func hasUsablePDF(at url: URL, sourceHasContent: Bool) throws -> Bool {
-        guard let size = (try? FileManager.default.attributesOfItem(atPath: url.path)[.size]) as? NSNumber,
-              size.int64Value > 0
-        else { return false }
-        guard size.int64Value <= Int64(maxPDFBytes) else { throw PDFExportError.pdfTooLarge }
-        guard let data = try? Data(contentsOf: url),
+    /// Validate immutable bytes once; the same accepted value is published.
+    /// Normalization never rewrites an unverified printer scratch pathname.
+    static func normalizedPrintableData(_ data: Data, sourceHasContent: Bool) -> Data? {
+        guard !data.isEmpty, data.count <= maxPDFBytes,
               let checked = PDFCrossReferenceIntegrity.normalized(data),
-              isPrintablePDF(checked, sourceHasContent: sourceHasContent) else { return false }
-        if checked != data {
-            try Task.checkCancellation()
-            try checked.write(to: url, options: .atomic)
-        }
-        return true
+              isPrintablePDF(checked, sourceHasContent: sourceHasContent) else { return nil }
+        return checked
     }
 
     /// A syntactically valid PDF can still contain only empty graphics-state

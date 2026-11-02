@@ -51,7 +51,7 @@ TextKit 2, a modular Swift package core, and a modern SwiftUI shell.
 ```
 MacDown2/
 ├── MacDown2/                 # App target (SwiftUI shell)
-├── MacDown2CLI/              # `macdown2` command-line tool
+├── MacDown2CLI/              # `mostlytext` command-line tool
 ├── MacDown2UITests/          # XCUITest target
 ├── Packages/MacDownKit/      # Swift package — all logic lives here
 │   └── Sources/
@@ -95,7 +95,7 @@ xcodegen generate
 
 # 3. Build the app and the CLI
 xcodebuild -project MacDown2.xcodeproj -scheme MacDown2  -destination 'platform=macOS' build
-xcodebuild -project MacDown2.xcodeproj -scheme macdown2  -destination 'platform=macOS' build
+xcodebuild -project MacDown2.xcodeproj -scheme MostlyTextCLI  -destination 'platform=macOS' build
 ```
 
 ## Linting

@@ -37,6 +37,7 @@ import Testing
         canonical.saveSessionVerified(store.currentSession())
     }
     model.onSaveAsDestinationSessionPublished = { source, _ in
+        #expect(model.isSavingActiveDocument, "migration acknowledgement still belongs to Save As")
         probe.publishedSession = canonical.loadSession()
         let relaunched = RecoveryBuffer(recoveryDirectory: recoveryDirectory)
         probe.sourceRedirectText = try? await relaunched.load(for: source.id, epoch: source.recoveryEpoch)

@@ -1,5 +1,16 @@
 # Issue #18 / E17 — Stateful installation, CLI, updates and release
 
+## 2 November 2026: required whole-installation migration and complete legacy policies
+
+The [whole-installation architecture](whole-install-migration.md) supersedes pending namespace/policy statements below. The app now uses the owner-frozen `app.mostlytext.MostlyText` identity and injects one post-migration storage location into settings/workspace/session/recovery/themes/snippets/Commands owners. Independent snapshots retain the development tree and its import journal. Existing final profiles win without combining conflicting sessions; their separate development backup requires an explicit review acknowledgement. Managed open files and recovery IDs relocate with stable epochs before readiness. Unavailable bookmarks remain data and route to a chooser.
+
+All 58 original preference declarations have explicit runtime dispositions, including the six renderer/updater policies. No old renderer switch, updater feed/key or automatic channel is replayed. The optional original import remains separately skippable. Source tests and compile-only local checks do not satisfy the installed-state, native account, VoiceOver, signed update or exact-artifact gates. Internal target/product names and `0.1.0` development version remain deliberate packaging debt; no signing or release was performed.
+
+## 2 November 2026: production optional editor import
+
+The [production import architecture](production-editor-import.md) supersedes the older pending activation/font/theme statements below. The application now runs the optional consent/journal recovery step before constructing mutable settings/theme/session/document owners. Exact representable installed fonts and the three reviewed Boolean mappings are eligible for explicit per-field selection; legacy style names have no exact aliases and never alter current theme storage. App/UI-test hosts bypass real-domain import. Whole-install identity migration, native/private-candidate evidence, final localization, signing and public release remain separate gates.
+
+
 ## Owner summary
 
 Make the finished editor installable and updatable without losing the state accumulated in development or original MacDown. Deliver the promised open/stdin/--wait CLI, prove signed updates with real state and promote only the same artifact that passed final verification. Distribution is not another feature or onboarding redesign.

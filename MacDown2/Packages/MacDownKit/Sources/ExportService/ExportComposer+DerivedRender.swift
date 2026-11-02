@@ -1,4 +1,5 @@
 import Foundation
+import LocalResourceAccess
 
 extension ExportComposer {
     struct DerivedRender {
@@ -18,13 +19,15 @@ extension ExportComposer {
         policy: Policy,
         assetsDirName: String,
         budget: ExportResourceBudget,
-        namespaceSVGIDs: Bool = false
+        namespaceSVGIDs: Bool = false,
+        cancellation: ResourceCancellation = ResourceCancellation()
     ) throws -> DerivedRender {
         let sourceLength = request.text.utf16.count
         var derived = composeDerived(request: request, parsed: parsed, budget: budget,
                                      sourceUTF16Length: sourceLength, namespaceSVGIDs: namespaceSVGIDs)
         var (rendered, resolver) = try render(
-            derived: derived, policy: policy, assetsDirName: assetsDirName, request: request, budget: budget
+            derived: derived, policy: policy, assetsDirName: assetsDirName, request: request, budget: budget,
+            cancellation: cancellation
         )
         let leaked = DerivedContentComposer.leakedSentinelIndices(in: rendered.html, suffix: derived.sentinelSuffix)
         guard !leaked.isEmpty else { return DerivedRender(
@@ -41,7 +44,8 @@ extension ExportComposer {
             contributions: kept, namespaceSVGIDs: namespaceSVGIDs
         )
         (rendered, resolver) = try render(
-            derived: derived, policy: policy, assetsDirName: assetsDirName, request: request, budget: budget
+            derived: derived, policy: policy, assetsDirName: assetsDirName, request: request, budget: budget,
+            cancellation: cancellation
         )
         let warning = ExportDiagnostic(
             severity: .warning,
@@ -78,14 +82,27 @@ extension ExportComposer {
         policy: Policy,
         assetsDirName: String,
         request: ExportRequest,
-        budget: ExportResourceBudget
+        budget: ExportResourceBudget,
+        cancellation: ResourceCancellation = ResourceCancellation()
     ) throws -> (CMarkGFM.Rendered, ExportResourceResolver) {
         let resolver = ExportResourceResolver(
-            documentDirectory: request.documentDirectory,
+            resourceAccess: request.resourceAccess,
+            cancellation: cancellation,
             unresolvedIsFatal: policy.unresolvedResourcesAreFatal,
             budget: budget,
             assetsDirectoryName: assetsDirName
         )
-        return try (renderBody(derived: derived, policy: policy, resolver: resolver), resolver)
+        let registry = ExportResourceURLRegistry(
+            avoiding: [request.text, request.fileNameStem ?? "", assetsDirName, stylesheet(for: request.theme)] +
+                derived.customNodes.map(\.html),
+            assetsDirectoryName: assetsDirName, limit: budget.maxPreparedHTMLUTF8Bytes
+        )
+        let rendered = try renderBody(derived: derived, policy: policy, resolver: resolver, registry: registry)
+        let resolved = try registry.resolve(rendered.html)
+        return (CMarkGFM.Rendered(
+            html: resolved.html, resourceSlots: resolved.slots, containsRawHTML: rendered.containsRawHTML,
+            headingLocations: rendered.headingLocations, headingMarkers: rendered.headingMarkers,
+            headingSourceSHA256: rendered.headingSourceSHA256
+        ), resolver)
     }
 }

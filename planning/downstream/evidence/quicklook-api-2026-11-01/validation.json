@@ -1,0 +1,67 @@
+{
+  "timeUTC": "2026-11-01T01:12:54.591523+00:00",
+  "sourceSHA256": "7fa09ca842b80d9da2d4c2e15607e61749755a24bab2158c7374fea85a36042d",
+  "sdk": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+  "headerSHA256": {
+    "QLPreviewProvider.h": "f4996c1be11a969201d07b55459b698087c95f3e1bbddbbb53b7f81339b133b8",
+    "QLPreviewingController.h": "55e83a657c6ea42ec90f2e2a2a0c56338e552821e92e041d6c4d29cec96007a8",
+    "QLPreviewReply.h": "ea69cf0fa6ba54bda2c45296b91042306865a875ecd81da7df052ce8a585ced0"
+  },
+  "steps": [
+    {
+      "name": "inherited-method-negative",
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "6",
+        "-strict-concurrency=complete",
+        "-warnings-as-errors",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-typecheck",
+        "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-quicklook-api/InheritedMethod.swift"
+      ],
+      "exit": 1
+    },
+    {
+      "name": "explicit-protocol-positive",
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "6",
+        "-strict-concurrency=complete",
+        "-warnings-as-errors",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-typecheck",
+        "/Volumes/Fast SSD/CORTANA-GitHub/worktrees/github/macdown_2-palette-completion/planning/downstream/evidence/quicklook-api-2026-11-01/APICompileOnlyProvider.swift"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "library-compile",
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "6",
+        "-strict-concurrency=complete",
+        "-warnings-as-errors",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-emit-library",
+        "-parse-as-library",
+        "/Volumes/Fast SSD/CORTANA-GitHub/worktrees/github/macdown_2-palette-completion/planning/downstream/evidence/quicklook-api-2026-11-01/APICompileOnlyProvider.swift",
+        "-o",
+        "/Volumes/Fast SSD/CORTANA-Builds/completion-20261101-quicklook-api/libQuickLookAPIWitness.dylib"
+      ],
+      "exit": 0
+    }
+  ],
+  "librarySHA256": "19a0ee452dfa991c565d284187caa2995acb6fccf9b784bd79a6fa566a319388",
+  "applicationLaunched": false,
+  "extensionPackagedOrRegistered": false,
+  "runtimeAcceptance": "NOT_RUN"
+}

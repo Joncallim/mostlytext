@@ -1,4 +1,8 @@
 name: MacDown2
+configs:
+  Debug: debug
+  Release: release
+  UITestIsolated: debug
 options:
   bundleIdPrefix: com.joncallim
   deploymentTarget:
@@ -24,8 +28,12 @@ targets:
       type: file
       buildPhase: resources
     dependencies:
+    - target: MostlyTextCommand
+      link: false
     - package: MacDownKit
       product: FileCore
+    - package: MacDownKit
+      product: CommandBridge
     - package: MacDownKit
       product: LocalResourceAccess
     - package: MacDownKit
@@ -34,6 +42,8 @@ targets:
       product: Themes
     - package: MacDownKit
       product: Workspace
+    - package: MacDownKit
+      product: JSONSupport
     - package: MacDownKit
       product: FileTree
     - package: MacDownKit
@@ -75,14 +85,19 @@ targets:
     settings:
       base:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.MostlyText
       configs:
         Release:
           ENABLE_TESTABILITY: 'YES'
+        UITestIsolated:
+          PRODUCT_BUNDLE_IDENTIFIER: '$(MOSTLYTEXT_UI_TEST_BUNDLE_ID)'
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: '$(inherited) UITEST_ISOLATED'
     info:
       path: MacDown2/Info.plist
       properties:
-        CFBundleName: MacDown 2
-        CFBundleDisplayName: MacDown 2
+        CFBundleName: MostlyText
+        CFBundleDisplayName: MostlyText
+        MostlyTextUITestOwnerUID: '$(MOSTLYTEXT_UI_TEST_OWNER_UID)'
         CFBundleIconName: AppIcon
         CFBundleShortVersionString: 0.1.0
         CFBundleVersion: '1'
@@ -167,6 +182,13 @@ targets:
           - tex
           - latex
         UTExportedTypeDeclarations:
+        - UTTypeIdentifier: app.mostlytext.theme
+          UTTypeDescription: MostlyText Theme
+          UTTypeConformsTo:
+          - public.json
+          UTTypeTagSpecification:
+            public.filename-extension:
+            - mostlytext-theme
         - UTTypeIdentifier: com.joncallim.macdown2.file-tree-item
           UTTypeDescription: MostlyText File Tree Item
           UTTypeConformsTo:
@@ -179,14 +201,31 @@ targets:
           UTTypeTagSpecification:
             public.filename-extension:
             - toml
-  macdown2:
+    postBuildScripts:
+    - name: Embed command-line executable
+      path: scripts/embed-cli.sh
+      inputFiles:
+      - $(BUILT_PRODUCTS_DIR)/mostlytext
+      - $(BUILT_PRODUCTS_DIR)/MacDownKit_CommandLineSupport.bundle
+      outputFiles:
+      - $(TARGET_BUILD_DIR)/$(EXECUTABLE_FOLDER_PATH)/mostlytext-cli
+      - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/MacDownKit_CommandLineSupport.bundle
+  MostlyTextCommand:
     type: tool
+    settings:
+      base:
+        PRODUCT_NAME: mostlytext
+        PRODUCT_MODULE_NAME: MostlyTextCommand
     platform: macOS
     sources:
     - MacDown2CLI
     dependencies:
     - package: MacDownKit
       product: FileCore
+    - package: MacDownKit
+      product: CommandBridge
+    - package: MacDownKit
+      product: CommandLineSupport
   MacDown2UITests:
     type: bundle.ui-testing
     platform: macOS
@@ -197,6 +236,10 @@ targets:
     - package: MacDownKit
       product: Workspace
     settings:
+      configs:
+        UITestIsolated:
+          PRODUCT_BUNDLE_IDENTIFIER: '$(MOSTLYTEXT_UI_TEST_BUNDLE_ID).UITests'
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: '$(inherited) UITEST_ISOLATED'
       base:
         GENERATE_INFOPLIST_FILE: 'YES'
         TEST_TARGET_NAME: MacDown2
@@ -210,9 +253,13 @@ targets:
     - package: MacDownKit
       product: FileCore
     - package: MacDownKit
+      product: CommandBridge
+    - package: MacDownKit
       product: LocalResourceAccess
     - package: MacDownKit
       product: Workspace
+    - package: MacDownKit
+      product: JSONSupport
     - package: MacDownKit
       product: EditorCore
     - package: MacDownKit
@@ -256,6 +303,17 @@ targets:
         GENERATE_INFOPLIST_FILE: 'YES'
         TEST_TARGET_NAME: MacDown2
 schemes:
+  Issue88Isolated:
+    build:
+      targets:
+        MacDown2: all
+    run:
+      config: UITestIsolated
+      executable: MacDown2
+    test:
+      config: UITestIsolated
+      targets:
+      - MacDown2UITests
   MacDown2:
     build:
       targets:
@@ -267,7 +325,7 @@ schemes:
       targets:
       - MacDown2UITests
       - MacDown2Tests
-  macdown2:
+  MostlyTextCLI:
     build:
       targets:
-        macdown2: all
+        MostlyTextCommand: all

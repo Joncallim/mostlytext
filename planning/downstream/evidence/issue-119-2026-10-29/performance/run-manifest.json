@@ -1,0 +1,3158 @@
+[
+  {
+    "stem": "1048576-snapshot-fresh-00",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3815,
+    "exit": 0,
+    "seconds": 1.306105500087142,
+    "peakObservedRSSKiB": 9088,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-fresh-01",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3836,
+    "exit": 0,
+    "seconds": 0.06026237504556775,
+    "peakObservedRSSKiB": 3872,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-fresh-02",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3838,
+    "exit": 0,
+    "seconds": 0.06549966707825661,
+    "peakObservedRSSKiB": 2496,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-fresh-03",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3840,
+    "exit": 0,
+    "seconds": 0.06742495810613036,
+    "peakObservedRSSKiB": 3696,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-fresh-04",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3842,
+    "exit": 0,
+    "seconds": 0.0607676669023931,
+    "peakObservedRSSKiB": 2848,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-fresh-05",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3844,
+    "exit": 0,
+    "seconds": 0.067071083933115,
+    "peakObservedRSSKiB": 3952,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-fresh-06",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3846,
+    "exit": 0,
+    "seconds": 0.0671584578230977,
+    "peakObservedRSSKiB": 3728,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-fresh-07",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3848,
+    "exit": 0,
+    "seconds": 0.06119012460112572,
+    "peakObservedRSSKiB": 2768,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-fresh-08",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3850,
+    "exit": 0,
+    "seconds": 0.0667093750089407,
+    "peakObservedRSSKiB": 3712,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-fresh-09",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3852,
+    "exit": 0,
+    "seconds": 0.06730424985289574,
+    "peakObservedRSSKiB": 3392,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-fresh-10",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3854,
+    "exit": 0,
+    "seconds": 0.06739812484011054,
+    "peakObservedRSSKiB": 3456,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-fresh-11",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3856,
+    "exit": 0,
+    "seconds": 0.06348450016230345,
+    "peakObservedRSSKiB": 3936,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-fresh-12",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3858,
+    "exit": 0,
+    "seconds": 0.06349083269014955,
+    "peakObservedRSSKiB": 3520,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-fresh-13",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3860,
+    "exit": 0,
+    "seconds": 0.06302308291196823,
+    "peakObservedRSSKiB": 3696,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-fresh-14",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3862,
+    "exit": 0,
+    "seconds": 0.06662462512031198,
+    "peakObservedRSSKiB": 3648,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-fresh-15",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3864,
+    "exit": 0,
+    "seconds": 0.06710841692984104,
+    "peakObservedRSSKiB": 4096,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-fresh-16",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3866,
+    "exit": 0,
+    "seconds": 0.06364887533709407,
+    "peakObservedRSSKiB": 3552,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-fresh-17",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3868,
+    "exit": 0,
+    "seconds": 0.06445916695520282,
+    "peakObservedRSSKiB": 2880,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-fresh-18",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3870,
+    "exit": 0,
+    "seconds": 0.0662390417419374,
+    "peakObservedRSSKiB": 2768,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-fresh-19",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3872,
+    "exit": 0,
+    "seconds": 0.05787720810621977,
+    "peakObservedRSSKiB": 2704,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-snapshot-warm-00",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--warm-count",
+      "50"
+    ],
+    "pid": 3874,
+    "exit": 0,
+    "seconds": 0.23305012518540025,
+    "peakObservedRSSKiB": 12192,
+    "stopReason": null,
+    "sampleCount": 51,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-00",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3879,
+    "exit": 0,
+    "seconds": 0.057822249829769135,
+    "peakObservedRSSKiB": 2256,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-01",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3881,
+    "exit": 0,
+    "seconds": 0.0578904589638114,
+    "peakObservedRSSKiB": 2384,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-02",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3883,
+    "exit": 0,
+    "seconds": 0.056352667044848204,
+    "peakObservedRSSKiB": 3264,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-03",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3885,
+    "exit": 0,
+    "seconds": 0.06422104220837355,
+    "peakObservedRSSKiB": 3056,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-04",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3887,
+    "exit": 0,
+    "seconds": 0.06640433287248015,
+    "peakObservedRSSKiB": 3952,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-05",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3889,
+    "exit": 0,
+    "seconds": 0.06656033312901855,
+    "peakObservedRSSKiB": 3728,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-06",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3891,
+    "exit": 0,
+    "seconds": 0.06747087510302663,
+    "peakObservedRSSKiB": 3920,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-07",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3893,
+    "exit": 0,
+    "seconds": 0.06773216696456075,
+    "peakObservedRSSKiB": 3808,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-08",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3895,
+    "exit": 0,
+    "seconds": 0.06425570789724588,
+    "peakObservedRSSKiB": 4000,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-09",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3897,
+    "exit": 0,
+    "seconds": 0.06229187501594424,
+    "peakObservedRSSKiB": 3008,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-10",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3899,
+    "exit": 0,
+    "seconds": 0.06271558394655585,
+    "peakObservedRSSKiB": 3584,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-11",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3901,
+    "exit": 0,
+    "seconds": 0.06653562467545271,
+    "peakObservedRSSKiB": 3728,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-12",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3903,
+    "exit": 0,
+    "seconds": 0.06752795819193125,
+    "peakObservedRSSKiB": 3360,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-13",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3905,
+    "exit": 0,
+    "seconds": 0.06773841707035899,
+    "peakObservedRSSKiB": 4096,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-14",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3907,
+    "exit": 0,
+    "seconds": 0.06046479195356369,
+    "peakObservedRSSKiB": 3248,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-15",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3909,
+    "exit": 0,
+    "seconds": 0.06715550040826201,
+    "peakObservedRSSKiB": 3936,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-16",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3911,
+    "exit": 0,
+    "seconds": 0.06285770796239376,
+    "peakObservedRSSKiB": 3136,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-17",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3913,
+    "exit": 0,
+    "seconds": 0.06710587488487363,
+    "peakObservedRSSKiB": 3472,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-18",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3915,
+    "exit": 0,
+    "seconds": 0.05998537503182888,
+    "peakObservedRSSKiB": 3392,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-fresh-19",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3917,
+    "exit": 0,
+    "seconds": 0.06516945827752352,
+    "peakObservedRSSKiB": 3984,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-revision-warm-00",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--warm-count",
+      "50"
+    ],
+    "pid": 3919,
+    "exit": 0,
+    "seconds": 0.06257687509059906,
+    "peakObservedRSSKiB": 4272,
+    "stopReason": null,
+    "sampleCount": 51,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-00",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3921,
+    "exit": 0,
+    "seconds": 0.0641357908025384,
+    "peakObservedRSSKiB": 3744,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-01",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3923,
+    "exit": 0,
+    "seconds": 0.05457558296620846,
+    "peakObservedRSSKiB": 3456,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-02",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3925,
+    "exit": 0,
+    "seconds": 0.06422866694629192,
+    "peakObservedRSSKiB": 3920,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-03",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3927,
+    "exit": 0,
+    "seconds": 0.05617358302697539,
+    "peakObservedRSSKiB": 3952,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-04",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3929,
+    "exit": 0,
+    "seconds": 0.06483995774760842,
+    "peakObservedRSSKiB": 3744,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-05",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3931,
+    "exit": 0,
+    "seconds": 0.05867929197847843,
+    "peakObservedRSSKiB": 3232,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-06",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3933,
+    "exit": 0,
+    "seconds": 0.0655184998176992,
+    "peakObservedRSSKiB": 4080,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-07",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3935,
+    "exit": 0,
+    "seconds": 0.0670020841062069,
+    "peakObservedRSSKiB": 4016,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-08",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3937,
+    "exit": 0,
+    "seconds": 0.06130987498909235,
+    "peakObservedRSSKiB": 4016,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-09",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3939,
+    "exit": 0,
+    "seconds": 0.057543833274394274,
+    "peakObservedRSSKiB": 3664,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-10",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3941,
+    "exit": 0,
+    "seconds": 0.06580137507990003,
+    "peakObservedRSSKiB": 4224,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-11",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3943,
+    "exit": 0,
+    "seconds": 0.06724141677841544,
+    "peakObservedRSSKiB": 3504,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-12",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3945,
+    "exit": 0,
+    "seconds": 0.06706191692501307,
+    "peakObservedRSSKiB": 3920,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-13",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3947,
+    "exit": 0,
+    "seconds": 0.06700783316046,
+    "peakObservedRSSKiB": 4048,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-14",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3949,
+    "exit": 0,
+    "seconds": 0.06257766718044877,
+    "peakObservedRSSKiB": 3312,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-15",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3951,
+    "exit": 0,
+    "seconds": 0.06440270924940705,
+    "peakObservedRSSKiB": 4064,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-16",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3953,
+    "exit": 0,
+    "seconds": 0.06615045806393027,
+    "peakObservedRSSKiB": 3952,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-17",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3955,
+    "exit": 0,
+    "seconds": 0.06542620807886124,
+    "peakObservedRSSKiB": 3712,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-18",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3957,
+    "exit": 0,
+    "seconds": 0.06698183435946703,
+    "peakObservedRSSKiB": 4192,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.47314453125,
+      2.49462890625,
+      2.72998046875
+    ]
+  },
+  {
+    "stem": "1048576-probe-fresh-19",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--once"
+    ],
+    "pid": 3959,
+    "exit": 0,
+    "seconds": 0.058471125084906816,
+    "peakObservedRSSKiB": 3264,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "1048576-probe-warm-00",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+      "--expected-size",
+      "1048576",
+      "--expected-sha256",
+      "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758",
+      "--warm-count",
+      "50"
+    ],
+    "pid": 3961,
+    "exit": 0,
+    "seconds": 0.18815612513571978,
+    "peakObservedRSSKiB": 12224,
+    "stopReason": null,
+    "sampleCount": 51,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-00",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 3965,
+    "exit": 0,
+    "seconds": 0.060295999981462955,
+    "peakObservedRSSKiB": 3360,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-01",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 3967,
+    "exit": 0,
+    "seconds": 0.0582269593141973,
+    "peakObservedRSSKiB": 2944,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-02",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 3969,
+    "exit": 0,
+    "seconds": 0.05802495777606964,
+    "peakObservedRSSKiB": 3680,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-03",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 3971,
+    "exit": 0,
+    "seconds": 0.05637987470254302,
+    "peakObservedRSSKiB": 3792,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-04",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 3973,
+    "exit": 0,
+    "seconds": 0.06409649970009923,
+    "peakObservedRSSKiB": 3168,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-05",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 3975,
+    "exit": 0,
+    "seconds": 0.06399654131382704,
+    "peakObservedRSSKiB": 3152,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-06",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 3977,
+    "exit": 0,
+    "seconds": 0.05584349995478988,
+    "peakObservedRSSKiB": 3520,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-07",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 3979,
+    "exit": 0,
+    "seconds": 0.05790487490594387,
+    "peakObservedRSSKiB": 4304,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-08",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 3982,
+    "exit": 0,
+    "seconds": 0.06420250004157424,
+    "peakObservedRSSKiB": 3712,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-09",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 3984,
+    "exit": 0,
+    "seconds": 0.06407362502068281,
+    "peakObservedRSSKiB": 3312,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-10",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 3986,
+    "exit": 0,
+    "seconds": 0.06424337485805154,
+    "peakObservedRSSKiB": 3024,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-11",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 3988,
+    "exit": 0,
+    "seconds": 0.056255375035107136,
+    "peakObservedRSSKiB": 3744,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-12",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 3990,
+    "exit": 0,
+    "seconds": 0.05799825023859739,
+    "peakObservedRSSKiB": 2768,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-13",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 3992,
+    "exit": 0,
+    "seconds": 0.060231958981603384,
+    "peakObservedRSSKiB": 3408,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-14",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 3994,
+    "exit": 0,
+    "seconds": 0.06410570768639445,
+    "peakObservedRSSKiB": 3424,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-15",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 3996,
+    "exit": 0,
+    "seconds": 0.05961974989622831,
+    "peakObservedRSSKiB": 3296,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-16",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 3998,
+    "exit": 0,
+    "seconds": 0.05454129073768854,
+    "peakObservedRSSKiB": 3008,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-17",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4000,
+    "exit": 0,
+    "seconds": 0.0590574168600142,
+    "peakObservedRSSKiB": 3328,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-18",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4002,
+    "exit": 0,
+    "seconds": 0.05857958318665624,
+    "peakObservedRSSKiB": 2768,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-fresh-19",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4004,
+    "exit": 0,
+    "seconds": 0.06387720815837383,
+    "peakObservedRSSKiB": 2944,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-snapshot-warm-00",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "snapshot",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--warm-count",
+      "50"
+    ],
+    "pid": 4006,
+    "exit": 0,
+    "seconds": 1.6898325830698013,
+    "peakObservedRSSKiB": 30752,
+    "stopReason": null,
+    "sampleCount": 51,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-00",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4036,
+    "exit": 0,
+    "seconds": 0.061799957882612944,
+    "peakObservedRSSKiB": 1424,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-01",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4038,
+    "exit": 0,
+    "seconds": 0.05786683317273855,
+    "peakObservedRSSKiB": 1856,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-02",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4040,
+    "exit": 0,
+    "seconds": 0.05572662455961108,
+    "peakObservedRSSKiB": 3808,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-03",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4042,
+    "exit": 0,
+    "seconds": 0.06402770895510912,
+    "peakObservedRSSKiB": 3488,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-04",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4044,
+    "exit": 0,
+    "seconds": 0.06417295802384615,
+    "peakObservedRSSKiB": 3808,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-05",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4046,
+    "exit": 0,
+    "seconds": 0.06280429242178798,
+    "peakObservedRSSKiB": 2448,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-06",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4048,
+    "exit": 0,
+    "seconds": 0.062204624991863966,
+    "peakObservedRSSKiB": 3632,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-07",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4050,
+    "exit": 0,
+    "seconds": 0.06347141694277525,
+    "peakObservedRSSKiB": 3920,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-08",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4052,
+    "exit": 0,
+    "seconds": 0.062158791813999414,
+    "peakObservedRSSKiB": 3904,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-09",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4054,
+    "exit": 0,
+    "seconds": 0.06644375016912818,
+    "peakObservedRSSKiB": 3632,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-10",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4056,
+    "exit": 0,
+    "seconds": 0.06095024989917874,
+    "peakObservedRSSKiB": 3984,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-11",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4058,
+    "exit": 0,
+    "seconds": 0.06427245773375034,
+    "peakObservedRSSKiB": 3264,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-12",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4060,
+    "exit": 0,
+    "seconds": 0.057655499782413244,
+    "peakObservedRSSKiB": 3840,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-13",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4062,
+    "exit": 0,
+    "seconds": 0.06637016590684652,
+    "peakObservedRSSKiB": 3776,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-14",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4064,
+    "exit": 0,
+    "seconds": 0.05907924985513091,
+    "peakObservedRSSKiB": 3632,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-15",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4066,
+    "exit": 0,
+    "seconds": 0.0614993330091238,
+    "peakObservedRSSKiB": 2928,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-16",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4068,
+    "exit": 0,
+    "seconds": 0.06702083302661777,
+    "peakObservedRSSKiB": 2496,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-17",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4070,
+    "exit": 0,
+    "seconds": 0.06067445920780301,
+    "peakObservedRSSKiB": 3392,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-18",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4072,
+    "exit": 0,
+    "seconds": 0.06670895917341113,
+    "peakObservedRSSKiB": 2560,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-fresh-19",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4074,
+    "exit": 0,
+    "seconds": 0.06704845791682601,
+    "peakObservedRSSKiB": 3344,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-revision-warm-00",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "revision",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--warm-count",
+      "50"
+    ],
+    "pid": 4076,
+    "exit": 0,
+    "seconds": 0.3140124580822885,
+    "peakObservedRSSKiB": 20496,
+    "stopReason": null,
+    "sampleCount": 51,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-00",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4082,
+    "exit": 0,
+    "seconds": 0.06451833387836814,
+    "peakObservedRSSKiB": 3536,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-01",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4084,
+    "exit": 0,
+    "seconds": 0.058923667296767235,
+    "peakObservedRSSKiB": 3936,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-02",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4086,
+    "exit": 0,
+    "seconds": 0.06437204219400883,
+    "peakObservedRSSKiB": 3968,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-03",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4088,
+    "exit": 0,
+    "seconds": 0.06414820812642574,
+    "peakObservedRSSKiB": 3376,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.51513671875,
+      2.5029296875,
+      2.7314453125
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-04",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4090,
+    "exit": 0,
+    "seconds": 0.06197304092347622,
+    "peakObservedRSSKiB": 3312,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.5537109375,
+      2.5107421875,
+      2.73291015625
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-05",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4092,
+    "exit": 0,
+    "seconds": 0.06405762489885092,
+    "peakObservedRSSKiB": 3744,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.5537109375,
+      2.5107421875,
+      2.73291015625
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-06",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4094,
+    "exit": 0,
+    "seconds": 0.057069667149335146,
+    "peakObservedRSSKiB": 2880,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.5537109375,
+      2.5107421875,
+      2.73291015625
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-07",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4096,
+    "exit": 0,
+    "seconds": 0.060822667088359594,
+    "peakObservedRSSKiB": 3392,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.5537109375,
+      2.5107421875,
+      2.73291015625
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-08",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4098,
+    "exit": 0,
+    "seconds": 0.057945957873016596,
+    "peakObservedRSSKiB": 4176,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.5537109375,
+      2.5107421875,
+      2.73291015625
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-09",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4100,
+    "exit": 0,
+    "seconds": 0.05789845809340477,
+    "peakObservedRSSKiB": 2720,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.5537109375,
+      2.5107421875,
+      2.73291015625
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-10",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4102,
+    "exit": 0,
+    "seconds": 0.05775566678494215,
+    "peakObservedRSSKiB": 3344,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.5537109375,
+      2.5107421875,
+      2.73291015625
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-11",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4104,
+    "exit": 0,
+    "seconds": 0.05811387533321977,
+    "peakObservedRSSKiB": 3312,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.5537109375,
+      2.5107421875,
+      2.73291015625
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-12",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4106,
+    "exit": 0,
+    "seconds": 0.06399312475696206,
+    "peakObservedRSSKiB": 2864,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.5537109375,
+      2.5107421875,
+      2.73291015625
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-13",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4108,
+    "exit": 0,
+    "seconds": 0.060073541942983866,
+    "peakObservedRSSKiB": 3584,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.5537109375,
+      2.5107421875,
+      2.73291015625
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-14",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4110,
+    "exit": 0,
+    "seconds": 0.06412079185247421,
+    "peakObservedRSSKiB": 2608,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.5537109375,
+      2.5107421875,
+      2.73291015625
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-15",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4112,
+    "exit": 0,
+    "seconds": 0.06426870869472623,
+    "peakObservedRSSKiB": 3984,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.5537109375,
+      2.5107421875,
+      2.73291015625
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-16",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4114,
+    "exit": 0,
+    "seconds": 0.06187883298844099,
+    "peakObservedRSSKiB": 2144,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.5537109375,
+      2.5107421875,
+      2.73291015625
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-17",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4116,
+    "exit": 0,
+    "seconds": 0.06405587494373322,
+    "peakObservedRSSKiB": 3408,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.5537109375,
+      2.5107421875,
+      2.73291015625
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-18",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4118,
+    "exit": 0,
+    "seconds": 0.06008579162880778,
+    "peakObservedRSSKiB": 3904,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.5537109375,
+      2.5107421875,
+      2.73291015625
+    ]
+  },
+  {
+    "stem": "10485760-probe-fresh-19",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--once"
+    ],
+    "pid": 4120,
+    "exit": 0,
+    "seconds": 0.06390487495809793,
+    "peakObservedRSSKiB": 2928,
+    "stopReason": null,
+    "sampleCount": 1,
+    "error": null,
+    "hostLoadAverage": [
+      2.5537109375,
+      2.5107421875,
+      2.73291015625
+    ]
+  },
+  {
+    "stem": "10485760-probe-warm-00",
+    "arguments": [
+      "/tmp/mostlytext-119-acceptance-20261029/performance/harness",
+      "probe",
+      "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+      "--expected-size",
+      "10485760",
+      "--expected-sha256",
+      "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70",
+      "--warm-count",
+      "50"
+    ],
+    "pid": 4122,
+    "exit": 0,
+    "seconds": 1.723201374989003,
+    "peakObservedRSSKiB": 30752,
+    "stopReason": null,
+    "sampleCount": 51,
+    "error": null,
+    "hostLoadAverage": [
+      2.5537109375,
+      2.5107421875,
+      2.73291015625
+    ]
+  }
+]

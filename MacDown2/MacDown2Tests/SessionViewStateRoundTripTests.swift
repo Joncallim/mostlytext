@@ -17,12 +17,14 @@ struct SessionViewStateRoundTripTests {
     final class MemorySessionStore: WorkspaceSessionStoring {
         var session: WorkspaceSession?
         var failNextSave = false
+        var refusesSaves = false
         var publicationCount = 0
         func loadSession() -> WorkspaceSession? {
             session
         }
 
         func saveSession(_ session: WorkspaceSession) {
+            guard !refusesSaves else { return }
             if failNextSave {
                 failNextSave = false
                 return
@@ -145,8 +147,11 @@ extension SessionViewStateRoundTripTests {
         sessions: MemorySessionStore,
         directory: URL
     ) throws -> WindowCoordinator {
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        let fileURL = directory.appendingPathComponent("notes.txt")
+        // Recovery creation must not generate signals in the watched document
+        // directory while a test is controlling the publication interleaving.
+        let documents = directory.appendingPathComponent("Documents", isDirectory: true)
+        try FileManager.default.createDirectory(at: documents, withIntermediateDirectories: true)
+        let fileURL = documents.appendingPathComponent("notes.txt")
         try "hello".write(to: fileURL, atomically: true, encoding: .utf8)
         let recovery = RecoveryBuffer(recoveryDirectory: directory.appendingPathComponent("Recovery"))
         let coordinator = makeCoordinator(sessions: sessions, recovery: recovery)
@@ -161,6 +166,35 @@ extension SessionViewStateRoundTripTests {
         )
         coordinator.controllers = [controller]
         return coordinator
+    }
+
+    func settleInitialMonitoring(of coordinator: WindowCoordinator) async throws {
+        let controller = try #require(coordinator.controllers.first)
+        let document = try #require(controller.model.activeDocument)
+        let fileURL = try #require(document.fileURL)
+        let revision = try #require(document.lastKnownRevision)
+        let external = controller.externalFileController
+        // bindTask only queues the nested observation task. The handling seam
+        // also acknowledges stale drops, so require the current baseline context.
+        var handled: DocumentFileObservationContext?
+        external.afterObservationContextHandled = { handled = $0 }
+        defer { external.afterObservationContextHandled = nil }
+        var settled = false
+        for _ in 0 ..< 1000 {
+            if let context = handled,
+               context.bindingGeneration == external.lifecycleGeneration,
+               context.expectedURL.standardizedFileURL == fileURL.standardizedFileURL,
+               await context.requestGeneration == (external.monitor.currentRequestGeneration()),
+               case let .available(snapshot) = context.observation,
+               snapshot.revision == revision,
+               snapshot.text.isExactlyEqual(to: document.text) {
+                settled = true
+                break
+            }
+            try await Task.sleep(for: .milliseconds(10))
+        }
+        try #require(settled)
+        await coordinator.awaitScheduledSessionSaveForTesting()
     }
 
     @Test func aCancelledAutosaveNeverPublishesItsObsoleteSnapshot() async throws {
@@ -310,6 +344,12 @@ extension SessionViewStateRoundTripTests {
         defer { try? FileManager.default.removeItem(at: directory) }
         let sessions = MemorySessionStore()
         let coordinator = try coordinatorWithOneTab(sessions: sessions, directory: directory)
+        var rejectionCount = 0
+        coordinator.afterSessionPublicationRejected = { superseded, documentChanged in
+            #expect(superseded)
+            #expect(!documentChanged)
+            rejectionCount += 1
+        }
         coordinator.afterSessionRecoveryPersisted = { [weak coordinator] in
             guard let coordinator else { return }
             coordinator.sessionPublicationOrder.invalidateCapturedSnapshots()
@@ -318,6 +358,7 @@ extension SessionViewStateRoundTripTests {
         let result = await coordinator.saveSessionResult()
 
         #expect(!result.persisted)
+        #expect(rejectionCount == 2)
         #expect(sessions.session == nil)
     }
 

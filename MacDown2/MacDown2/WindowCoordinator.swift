@@ -1,5 +1,6 @@
 import AppKit
 import AppSettings
+import CommandBridge
 import EditorCore
 import FileCore
 import FileTree
@@ -7,12 +8,14 @@ import Foundation
 import Highlighting
 import Observation
 import SwiftUI
+import TextFilters
 import Themes
 import Workspace
 
 extension EnvironmentValues {
     @Entry var windowCoordinator: WindowCoordinator?
     @Entry var themeController: ThemeController?
+    @Entry var themeCatalog: ThemeCatalogModel?
     @Entry var appSettings: AppSettingsModel?
 }
 
@@ -39,6 +42,8 @@ final class WindowCoordinator {
     let sessionStore: WorkspaceSessionStoring
     let panelProvider: NSFilePanelProvider
     let recoveryBuffer: RecoveryBuffer
+    let snippetStore: SnippetStore
+    let commandsDirectory: URL
     let themeController: ThemeController
     let grammarRegistry: GrammarRegistry
     let fileTreePreferences: FileTreePreferences
@@ -52,11 +57,15 @@ final class WindowCoordinator {
     let sidebarLayoutBroadcaster = SidebarLayoutBroadcaster()
     private var hasRestoredSession = false
     let documentOpens = KeyedSerialRunner<String>()
+    @ObservationIgnored var commandReceiver: CommandApplicationReceiver?
+    @ObservationIgnored var commandStdinStages: [WindowController] = []
+    let commandStdinAdmissions = KeyedSerialRunner<String>()
     var launchSession: WorkspaceSession? // as at launch; handed out once by `consumeLaunchSession()`
     var saveTask: Task<Void, Never>?
     @ObservationIgnored var terminationSaveInProgress = false
     var sessionPublicationOrder = SessionPublicationOrder()
     var afterSessionRecoveryPersisted: (@MainActor () async -> Void)? // test seam: before publishing
+    var afterSessionPublicationRejected: (@MainActor (_ superseded: Bool, _ documentChanged: Bool) -> Void)?
     /// Test seam: runs after a new controller's root/index rebuild and before publication.
     var afterFolderSearchRootRebuild: (@MainActor () async -> Void)?
     /// Test seam: runs after file loading and before the post-load continuation check.
@@ -119,7 +128,9 @@ final class WindowCoordinator {
         recentFolderRoots: RecentFolderRoots,
         recentFileDocuments: RecentFileDocuments,
         appSettings: AppSettingsModel,
-        workspaceStateStore: any WorkspaceStateStoring = WorkspaceStateStore()
+        workspaceStateStore: any WorkspaceStateStoring = WorkspaceStateStore(),
+        snippetStore: SnippetStore = SnippetStore(),
+        commandsDirectory: URL = TextFilterCommandDiscovery.commandsDirectory
     ) {
         self.sessionStore = sessionStore
         self.panelProvider = panelProvider
@@ -131,92 +142,31 @@ final class WindowCoordinator {
         self.recentFileDocuments = recentFileDocuments
         self.appSettings = appSettings
         self.workspaceStateStore = workspaceStateStore
+        self.snippetStore = snippetStore
+        self.commandsDirectory = commandsDirectory
         launchSession = sessionStore.loadSession()
     }
 
     // MARK: - Window lifecycle
 
-    /// Opens a file in a new window, or activates the existing window if the
-    /// same file is already open. The single choke point every real file
-    /// open routes through — see `WindowCoordinator+RecentFiles.swift` for
-    /// why `recentFileDocuments.record(_:)` is called from here.
-    /// - Parameter relativeTo: when non-`nil`, used as the tab host instead
-    ///   of `NSApp.keyWindow` — the command palette (via `createInFolder`,
-    ///   whose "New File" this backs) passes its captured origin window
-    ///   here so the newly created document opens relative to it rather
-    ///   than whatever window is key once this `await` resolves
-    ///   (post-review finding #4).
-    func performOpenDocument(
-        at url: URL,
-        folderRoot: URL? = nil,
-        folderAccessURL: URL? = nil,
-        folderSelectionURL: URL? = nil,
-        folderRenameURL: URL? = nil,
-        relativeTo overrideKeyWindow: NSWindow? = nil,
-        encoding: FileEncodingMetadata? = nil,
-        shouldContinue: (@MainActor () -> Bool)? = nil
-    ) async {
-        guard shouldContinue?() ?? true else { return }
-        // A link to a file opens (and saves to) that file; resolved first so the
-        // same file is not opened twice, once through the link and once directly.
-        let url = url.resolvingFinalSymlink()
-        if let existing = controllerForDocument(url: url), existing.window != nil {
-            await focus(
-                existing,
-                for: url,
-                folder: FolderOpenContext(
-                    root: folderRoot,
-                    accessURL: folderAccessURL,
-                    selectionURL: folderSelectionURL,
-                    renameURL: folderRenameURL
-                ),
-                encoding: encoding,
-                shouldContinue: shouldContinue
-            )
-            return
-        }
-        let keyWindow = overrideKeyWindow ?? NSApp.keyWindow
-        let model = makeWindowModel()
-        let outcome = await model.tabStore.openFileInTab(url, encoding: encoding)
-        if shouldContinue != nil {
-            await afterFolderSearchFileLoad?()
-        }
-        guard shouldContinue?() ?? true else { return }
-        model.setFolderRoot(folderRoot)
-
-        guard !model.tabStore.tabs.isEmpty else {
-            if case let .failure(error) = outcome {
-                presentOpenFailure(error, url: url)
-            }
-            return
-        }
-        let controller = makeWindowController(model: model)
-        if let folderRoot {
-            await controller.setFileTreeRoot(folderRoot, accessURL: folderAccessURL)
-        }
-        if shouldContinue != nil {
-            await afterFolderSearchRootRebuild?()
-        }
-        guard shouldContinue?() ?? true else {
-            controller.window?.close()
-            return
-        }
-        controller.fileTreeModel.selectedURL = folderSelectionURL
-        controller.fileTreeModel.renamingURL = folderRenameURL
-        addController(controller, addingAsTab: true, keyWindow: keyWindow)
-        recentFileDocuments.record(url)
-    }
-
     /// Shows the open panel and opens the chosen file.
     /// - Parameter relativeTo: when non-`nil`, the panel presents against
     ///   this window explicitly and the opened document opens relative to
-    ///   it — used by the command palette (post-review finding #4). `nil`
-    ///   (the real menu path) keeps the previous ambient behavior.
+    ///   it — used by the command palette (post-review finding #4). The real
+    ///   menu path captures the current application window at dispatch.
     func openFile(relativeTo controller: WindowController? = nil) {
+        let trace = OpenPanelTrace()
+        let provider = controller.map { NSFilePanelProvider(window: $0.window) }
+            ?? NSFilePanelProvider(applicationWindow: NSApp.keyWindow)
         Task { @MainActor in
-            let provider = controller.map { NSFilePanelProvider(window: $0.window) } ?? panelProvider
-            guard let url = await provider.chooseFile() else { return }
-            await openDocument(at: url, relativeTo: controller?.window)
+            guard let url = await provider.chooseFile(trace: trace) else { return }
+            guard provider.canCompleteScopedOpen else { return }
+            await openDocument(
+                at: url,
+                relativeTo: provider.scopedOpenWindow,
+                shouldContinue: { provider.canCompleteScopedOpen },
+                useAmbientWindow: false
+            )
         }
     }
 
@@ -315,6 +265,7 @@ final class WindowCoordinator {
     // MARK: - Internal helpers
 
     func removeController(_ controller: WindowController) {
+        commandReceiver?.documentClosed(controller.commandDocumentLifetime)
         pendingNewDocumentTasks.removeValue(forKey: ObjectIdentifier(controller))?.cancel()
         controllers.removeAll { $0 === controller }
         // The palette must never keep offering (or being able to invoke)
@@ -346,11 +297,13 @@ final class WindowCoordinator {
     func addController(
         _ controller: WindowController,
         addingAsTab: Bool,
-        keyWindow: NSWindow? = nil
+        keyWindow: NSWindow? = nil,
+        useAmbientWindow: Bool = true
     ) {
         controllers.append(controller)
 
-        if addingAsTab, let key = Self.tabHost(keyWindow ?? NSApp.keyWindow), key != controller.window,
+        let hostWindow = keyWindow ?? (useAmbientWindow ? NSApp.keyWindow : nil)
+        if addingAsTab, let key = Self.tabHost(hostWindow), key != controller.window,
            let tab = controller.window {
             key.addTabbedWindow(tab, ordered: .above)
         }
@@ -382,15 +335,4 @@ final class WindowCoordinator {
     func commandStateDidChange() {
         commandStateRevision &+= 1
     }
-}
-
-// MARK: - Session snapshot
-
-struct TabSnapshot {
-    let record: TabRecord
-    let documentID: String
-    let documentText: String
-    let documentState: FileDocumentState
-    let documentGeneration: UInt
-    let documentRecoveryEpoch: UUID
 }

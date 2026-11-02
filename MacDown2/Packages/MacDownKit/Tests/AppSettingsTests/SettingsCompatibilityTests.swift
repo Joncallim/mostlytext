@@ -157,31 +157,6 @@ struct SettingsCompatibilityTests {
         }
     }
 
-    @Test(arguments: ["1.0000000000000001", "0.99999999999999999"])
-    func schemaVersionUsesTheFoundationParsedNumericValue(version: String) {
-        isolated { defaults, store in
-            defaults.set(editorJSON(extra: "\"schemaVersion\":\(version)"), forKey: Self.editorKey)
-
-            // Foundation has already rounded both literals to the exact NSNumber value 1.
-            #expect(store.editor.indentationWidth == 2)
-            #expect(store.unreadableDomains.isEmpty)
-        }
-    }
-
-    @Test func aNewerSchemaVersionIsBackedUpBeforeAnOrdinarySaveReplacesIt() {
-        isolated { defaults, store in
-            var store = store
-            let future = editorJSON(extra: "\"schemaVersion\":2,\"futureOnlyField\":\"keep me\"")
-            defaults.set(future, forKey: Self.editorKey)
-
-            #expect(store.editor == .default)
-            #expect(store.unreadableDomains == [Self.editorKey])
-
-            store.editor = EditorSettings(indentationWidth: 5)
-            #expect(store.preservedUnreadableData(forDomain: Self.editorKey) == future)
-        }
-    }
-
     @Test func aCurrentOrAbsentSchemaVersionIsReadable() {
         isolated { defaults, store in
             defaults.set(editorJSON(extra: "\"schemaVersion\":1"), forKey: Self.editorKey)
@@ -310,6 +285,38 @@ struct SettingsCompatibilityTests {
             #expect(store.editor.indentationWidth == 7 && !store.editor.showsStatusBar)
             #expect(store.preservedUnreadableData(forDomain: Self.editorKey) == nil)
             #expect(defaults.data(forKey: Self.editorKey + ".preservedUnreadable") == nil)
+        }
+    }
+}
+
+extension SettingsCompatibilityTests {
+    @Test(arguments: ["1.0000000000000001", "0.99999999999999999"])
+    func fractionalSchemaVersionIsPreservedBeforeFoundationCanRoundIt(version: String) {
+        isolated { defaults, store in
+            var store = store
+            let raw = editorJSON(extra: "\"schemaVersion\":\(version)")
+            defaults.set(raw, forKey: Self.editorKey)
+
+            // The raw parser can now distinguish these fractions from 1.
+            #expect(store.editor == .default)
+            #expect(store.unreadableDomains == [Self.editorKey])
+            store.editor = EditorSettings(indentationWidth: 5)
+            #expect(defaults.data(forKey: Self.editorKey) == raw)
+        }
+    }
+
+    @Test func aNewerSchemaVersionStaysAtItsPrimaryKeyAfterAnOrdinarySave() {
+        isolated { defaults, store in
+            var store = store
+            let future = editorJSON(extra: "\"schemaVersion\":2,\"futureOnlyField\":\"keep me\"")
+            defaults.set(future, forKey: Self.editorKey)
+
+            #expect(store.editor == .default)
+            #expect(store.unreadableDomains == [Self.editorKey])
+
+            store.editor = EditorSettings(indentationWidth: 5)
+            #expect(store.preservedUnreadableData(forDomain: Self.editorKey) == future)
+            #expect(defaults.data(forKey: Self.editorKey) == future)
         }
     }
 }

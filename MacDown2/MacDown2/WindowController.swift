@@ -46,6 +46,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
     let folderSearchModel: FolderSearchModel
     let externalFileController: ExternalFileController
     weak var coordinator: WindowCoordinator?
+    let commandDocumentLifetime = UUID()
     private(set) var isClosed = false
     private var observationTask: Task<Void, Never>?
     /// Running text-filter commands, keyed by tab — see
@@ -265,6 +266,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
 
     func windowWillClose(_: Notification) {
         isClosed = true
+        coordinator?.commandReceiver?.documentClosed(commandDocumentLifetime)
         revokeValidatedExports()
         previewResourceState.close()
         previewResourceState.setCurrentPreviewDocument(nil)
@@ -290,22 +292,6 @@ final class WindowController: NSWindowController, NSWindowDelegate {
         cancelAllTextFilterTasks()
     }
 
-    func windowDidBecomeKey(_: Notification) {
-        // Called by AppKit when this window (or tab) becomes key. This is the
-        // deterministic hook for native tab switches, and it only fires for
-        // document windows because the coordinator is their delegate.
-        coordinator?.updateKeyModel()
-        coordinator?.scheduleSaveSession()
-        // The inactive polling cadence is intentionally low; refresh once
-        // synchronously when a native tab becomes visible again.
-        updateTitleAndEditedState()
-        externalFileController.retryMonitoring()
-        Task {
-            await fileTreeModel.rescanExpandedDirectories()
-            await refreshWorkspaceIndex(minInterval: 5)
-        }
-    }
-
     /// Explicit-target Save never calls a model method that is permitted to
     /// present an ambient destination panel. `saveWithoutDestinationPrompt()`
     /// performs the backing check inside the same Save attempt (including its
@@ -323,37 +309,22 @@ final class WindowController: NSWindowController, NSWindowDelegate {
         }
     }
 
-    func saveDocumentAs() async {
-        await externalFileController.drainRecovery()
-        await model.saveAs()
-        externalFileController.synchronize(with: model.activeDocument)
-        updateTitleAndEditedState()
-    }
-
-    /// Explicit-target variant of `saveDocumentAs()`: presents the
-    /// destination panel itself, bound explicitly to `self.window`, rather
-    /// than going through `WorkspaceModel.saveAs()`'s own ambient,
-    /// `NSApp.keyWindow`-relative panel provider. The real menu/shortcut
-    /// path (`saveDocumentAs()` above) is invoked *from* the key window, so
-    /// that ambient resolution is already correct there; a caller — like
-    /// the command palette — that captured this window as an origin
-    /// earlier cannot assume it is still key by the time this `await`
-    /// resolves (post-review finding #4).
-    func saveDocumentAsFromExplicitOrigin() async {
-        // `saveDocumentAs()` above re-syncs the external-file binding and
-        // title/dirty state unconditionally, including on a no-op. `defer`
-        // gives this one the same guarantee on every exit — no active
-        // document, or the user cancelling the panel — rather than only
-        // after a completed write (#57: the close-dialog's Save routing
-        // started calling this function for a backing-unavailable document
-        // and would otherwise silently skip that resync whenever the user
-        // cancelled its panel).
+    /// The coordinator may reserve at synchronous command dispatch; other
+    /// callers reserve here before recovery draining or panel presentation.
+    /// Both paths bind the destination picker to this window.
+    func saveDocumentAsFromExplicitOrigin(
+        expecting reservedDocument: FileCore.FileDocument? = nil,
+        admission reservedAdmission: WorkspaceModel.SaveAsAdmission? = nil
+    ) async {
         defer {
             externalFileController.synchronize(with: model.activeDocument)
             updateTitleAndEditedState()
         }
+        guard let document = reservedDocument ?? model.activeDocument else { return }
+        guard let admission = reservedAdmission ?? model.reserveSaveAs(for: document) else { return }
+        defer { model.finishSaveAs(admission) }
         await externalFileController.drainRecovery()
-        guard let document = model.activeDocument else { return }
+        guard model.isAdmittedSaveAsCurrent(admission, for: document) else { return }
         let provider = NSFilePanelProvider(window: window)
         guard let url = await provider.chooseSaveLocation(
             defaultName: WorkspaceModel.defaultSaveAsName(for: document),
@@ -366,7 +337,13 @@ final class WindowController: NSWindowController, NSWindowDelegate {
         // it is up (a sheet blocks neither); without this the save would
         // write whichever document is active *now* to the name the user
         // chose for that one.
-        await model.saveAs(to: url, expecting: document)
+        await model.saveAs(to: url, expecting: document, admission: admission)
+    }
+}
+
+extension WindowController {
+    func saveDocumentAs() async {
+        await saveDocumentAsFromExplicitOrigin()
     }
 }
 
@@ -387,6 +364,24 @@ private extension WindowController {
             // search rows synchronously, before a watcher or root rebuild
             // can leave them actionable against a different folder.
             self?.folderSearchModel.rootAccessWasRevoked()
+        }
+    }
+}
+
+extension WindowController {
+    func windowDidBecomeKey(_: Notification) {
+        // Called by AppKit when this window (or tab) becomes key. This is the
+        // deterministic hook for native tab switches, and it only fires for
+        // document windows because the coordinator is their delegate.
+        coordinator?.updateKeyModel()
+        coordinator?.scheduleSaveSession()
+        // The inactive polling cadence is intentionally low; refresh once
+        // synchronously when a native tab becomes visible again.
+        updateTitleAndEditedState()
+        externalFileController.retryMonitoring()
+        Task {
+            await fileTreeModel.rescanExpandedDirectories()
+            await refreshWorkspaceIndex(minInterval: 5)
         }
     }
 }

@@ -33,7 +33,10 @@ jobs:
         with:
           python-version: '3.12'
       - name: Tool tests (including negative fixtures)
-        run: python3 -m unittest discover -s compliance/tests -v
+        run: |
+          python3 -m unittest discover -s compliance/tests -v
+          python3 MacDown2/scripts/test-preflight-issue88-isolation.py
+          python3 MacDown2/scripts/test-fixed-issue88-runner-preflight.py
       - name: Inventory check against the source tree
         run: python3 compliance/tools/compliance.py check
       - name: Release-gate ledger (informational until the release candidate)

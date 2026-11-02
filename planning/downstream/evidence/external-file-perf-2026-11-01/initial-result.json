@@ -1,0 +1,380 @@
+{
+  "configuration" : "Release",
+  "fixture_cache" : "freshly written local files; no cold-cache claim",
+  "results" : [
+    {
+      "bytes" : 1000000,
+      "one_second_idle_new_debounce_sleeps" : 0,
+      "one_second_idle_observations" : 1,
+      "read_revision" : {
+        "max_ms" : 2.8859590000000002,
+        "median_ms" : 0.55137499999999995,
+        "p95_ms" : 0.72024999999999995,
+        "samples_ms" : [
+          2.8859590000000002,
+          0.72024999999999995,
+          0.5625,
+          0.544875,
+          0.60941699999999999,
+          0.55720800000000004,
+          0.55391699999999999,
+          0.54683300000000001,
+          0.55800000000000005,
+          0.558917,
+          0.55137499999999995,
+          0.54554100000000005,
+          0.541709,
+          0.54312499999999997,
+          0.55279199999999995,
+          0.53887499999999999,
+          0.53837500000000005,
+          0.56379199999999996,
+          0.54225000000000001,
+          0.59954099999999999,
+          0.55049999999999999,
+          0.547292,
+          0.54508299999999998,
+          0.56970799999999999,
+          0.54474999999999996,
+          0.56337499999999996,
+          0.55083300000000002,
+          0.56683300000000003,
+          0.548292,
+          0.53658300000000003
+        ]
+      },
+      "read_snapshot" : {
+        "max_ms" : 5.3912079999999998,
+        "median_ms" : 3.3610000000000002,
+        "p95_ms" : 3.4307080000000001,
+        "samples_ms" : [
+          5.3912079999999998,
+          3.4307080000000001,
+          3.3583750000000001,
+          3.3752499999999999,
+          3.361917,
+          3.3691249999999999,
+          3.3581660000000002,
+          3.3484579999999999,
+          3.3940419999999998,
+          3.3542920000000001,
+          3.3534579999999998,
+          3.3498749999999999,
+          3.3696670000000002,
+          3.3508749999999998,
+          3.3667919999999998,
+          3.3464999999999998,
+          3.3749579999999999,
+          3.3526250000000002,
+          3.3800840000000001,
+          3.3523749999999999,
+          3.3610000000000002,
+          3.3545829999999999,
+          3.365958,
+          3.3617919999999999,
+          3.348916,
+          3.4005000000000001,
+          3.3490000000000002,
+          3.37825,
+          3.3543750000000001,
+          3.357958
+        ]
+      },
+      "watcher_atomic_replacement_samples" : [
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 1.5035000000000001,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.0089580000000000007,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 152.55491699999999,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 1.641208,
+          "write_start_to_matching_observation_ms" : 157.799083
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.68037499999999995,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.0055409999999999999,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 151.40045799999999,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 0.79016600000000004,
+          "write_start_to_matching_observation_ms" : 158.14895799999999
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 1.8554170000000001,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.003375,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 150.20474999999999,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 2.1047910000000001,
+          "write_start_to_matching_observation_ms" : 158.121208
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 1.055833,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.012959,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 151.06975,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 1.3314170000000001,
+          "write_start_to_matching_observation_ms" : 158.150125
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 1.512958,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.0089160000000000003,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 150.373875,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 1.783166,
+          "write_start_to_matching_observation_ms" : 157.87641600000001
+        }
+      ]
+    },
+    {
+      "bytes" : 10000000,
+      "one_second_idle_new_debounce_sleeps" : 0,
+      "one_second_idle_observations" : 1,
+      "read_revision" : {
+        "max_ms" : 5.2514580000000004,
+        "median_ms" : 5.1372080000000002,
+        "p95_ms" : 5.2492080000000003,
+        "samples_ms" : [
+          5.1085000000000003,
+          5.1600000000000001,
+          5.1463749999999999,
+          5.0807079999999996,
+          5.1461249999999996,
+          5.1435000000000004,
+          5.0227909999999998,
+          5.0780830000000003,
+          5.1559169999999996,
+          5.1191250000000004,
+          5.0591249999999999,
+          5.1815420000000003,
+          5.1264159999999999,
+          5.1372080000000002,
+          5.1395840000000002,
+          5.1586249999999998,
+          5.1950000000000003,
+          5.0935420000000002,
+          5.2492080000000003,
+          5.2514580000000004,
+          5.08725,
+          5.1272500000000001,
+          5.1372910000000003,
+          5.0801660000000002,
+          5.196917,
+          5.1355829999999996,
+          5.1081250000000002,
+          5.1064999999999996,
+          5.1656250000000004,
+          5.0825420000000001
+        ]
+      },
+      "read_snapshot" : {
+        "max_ms" : 33.763666999999998,
+        "median_ms" : 33.203583000000002,
+        "p95_ms" : 33.665792000000003,
+        "samples_ms" : [
+          33.763666999999998,
+          33.382916999999999,
+          33.350000000000001,
+          33.095041000000002,
+          33.328082999999999,
+          33.249208000000003,
+          33.133667000000003,
+          32.964458,
+          33.090167000000001,
+          33.064458999999999,
+          32.919499999999999,
+          33.380749999999999,
+          33.240000000000002,
+          33.266333000000003,
+          33.418750000000003,
+          32.998417000000003,
+          33.665792000000003,
+          33.425041,
+          33.383208000000003,
+          33.144374999999997,
+          33.049124999999997,
+          33.292082999999998,
+          33.093457999999998,
+          33.058334000000002,
+          33.388125000000002,
+          33.203583000000002,
+          33.201833999999998,
+          33.120165999999998,
+          33.184832999999998,
+          33.106417
+        ]
+      },
+      "watcher_atomic_replacement_samples" : [
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 3.5542500000000001,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.0073749999999999996,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 152.45470800000001,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 3.6896659999999999,
+          "write_start_to_matching_observation_ms" : 189.48266599999999
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 2.3230420000000001,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.00175,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 153.97987499999999,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 2.4336250000000001,
+          "write_start_to_matching_observation_ms" : 189.79845800000001
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 3.6934589999999998,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.002166,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 154.39962499999999,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 3.8483749999999999,
+          "write_start_to_matching_observation_ms" : 191.05404200000001
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 2.689708,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.0073749999999999996,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 153.33937499999999,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 2.837208,
+          "write_start_to_matching_observation_ms" : 189.57287500000001
+        },
+        {
+          "debounce_sleeps" : [
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 4.951416,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : true,
+              "elapsed_ms" : 0.0067920000000000003,
+              "requested_ms" : 150
+            },
+            {
+              "cancelled" : false,
+              "elapsed_ms" : 153.19341700000001,
+              "requested_ms" : 150
+            }
+          ],
+          "write_ms" : 5.0707500000000003,
+          "write_start_to_matching_observation_ms" : 192.00079199999999
+        }
+      ]
+    }
+  ],
+  "scope" : "FileCore component only; no app\/controller reconciliation, native UI or OS wakeup-profile claim",
+  "snapshot_digest_reads_on_main_thread" : false
+}

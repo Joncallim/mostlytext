@@ -1,14 +1,19 @@
 import FileCore
 import Foundation
 
+struct SaveConflictRetry {
+    let isRetry: Bool
+    let destinationPolicy: WorkspaceModel.SaveDestinationPolicy
+    let encodingOverride: FileEncodingMetadata?
+    let operation: LogicalSaveOperationID
+}
+
 @MainActor
 extension WorkspaceModel {
     func reconcileSaveConflict(
         for document: FileDocument,
         context: SaveContext,
-        isRetry: Bool,
-        destinationPolicy: SaveDestinationPolicy,
-        encodingOverride: FileEncodingMetadata?
+        retry: SaveConflictRetry
     ) async -> NonPromptingSaveResult {
         // A failed older write cannot start new recovery after a newer save or a different document lifetime.
         guard isLatestSave(context), let tabID = owningTabID(of: document),
@@ -51,13 +56,13 @@ extension WorkspaceModel {
         // An encoding change is a request to rewrite the file even when the
         // text is unedited, so a clean document must still retry it rather
         // than end silently with the old bytes.
-        let hasEncodingChange = encodingOverride.map { $0 != reconciliation.document.encoding } ?? false
+        let hasEncodingChange = retry.encodingOverride.map { $0 != reconciliation.document.encoding } ?? false
         guard reconciliation.document.state == .dirty || reconciliation.document.state == .promptingClose
             || hasEncodingChange
         else {
             return .handled
         }
-        guard !isRetry else {
+        guard !retry.isRetry else {
             // Something is touching this file's metadata faster than one
             // retry can keep up with. Stop instead of recursing indefinitely,
             // and say so rather than leaving the document dirty with no
@@ -74,11 +79,12 @@ extension WorkspaceModel {
         // something external is outpacing us, and that deserves a real error
         // rather than another silent attempt. Preserve the caller's
         // destination policy across that retry.
-        return await save(
+        return await saveAttempt(
             isRetry: true,
-            destinationPolicy: destinationPolicy,
-            encodingOverride: encodingOverride,
-            target: reconciliation.document
+            destinationPolicy: retry.destinationPolicy,
+            encodingOverride: retry.encodingOverride,
+            target: reconciliation.document,
+            continuingOperation: retry.operation
         )
     }
 

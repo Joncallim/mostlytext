@@ -15,14 +15,18 @@ one bounded session on the owner's Mac. It:
 The aim is to prove the whole pipeline and fix any signing or entitlement
 problem now, rather than during E17. It publishes nothing.
 
-**Status: ready to run.** Apple Developer Program enrolment is confirmed. Run
-this now, on current `master`.
+**Status: execution held.** Source integration is on `integration-final`; the
+owner's Daybreak/signing and fresh-account acceptance gates remain open. Do not
+run the signing pipeline on frozen `master` or treat fixture results as signed
+release evidence.
 
-**What it builds.** The app still has its development identity
-(`MacDown2.app`, `com.joncallim.MacDown2`, CLI `macdown2`) because the #158
-identity cutover waits for E22. This run produces a *pre-cutover candidate*
-that proves the pipeline. E17 repeats the same script on the real
-MostlyText release candidate. Nothing this run produces is ever published.
+**What it builds.** The development app remains `MacDown2.app` with bundle ID
+`com.joncallim.MacDown2`, pending the #158 identity cutover. The public CLI is
+`mostlytext`, built with scheme `MostlyTextCLI` (target/module
+`MostlyTextCommand`); the app embeds `Contents/MacOS/mostlytext-cli`. The script
+requires both executable products and packages the standalone command as
+`mostlytext.zip`. E17 repeats this pipeline on the eventual approved MostlyText
+release candidate. Nothing this preparatory work produces is published.
 
 Everything else about the release (licensing, website, planning, CI) stays in
 cloud sessions.
@@ -142,7 +146,7 @@ Confirm this with the smoke test in step 3.
 
 - **If everything works:** make the setting permanent in a small PR. In
   `MacDown2/project.yml`, set `ENABLE_HARDENED_RUNTIME: YES` in the **Release**
-  configuration of the `MacDown2` and `macdown2` targets only. Debug builds
+  configuration of the `MacDown2` and `MostlyTextCommand` targets only. Debug builds
   and CI's unsigned test runs stay unchanged, so tests are unaffected.
   Regenerate the project with `xcodegen generate` and confirm the Release
   build.
@@ -180,21 +184,20 @@ trust decisions.
    Record any feature that fails and the console errors (Console.app, filtered
    on the app).
 5. CLI, starting from the file a user would download:
-   - get `macdown2.zip` (the notarised ZIP from `build/`) into the fresh
+   - get `mostlytext.zip` (the notarised ZIP from `build/`) into the fresh
      account **with the quarantine flag set**, as for the DMG in item 1, and
-     confirm it with `xattr -p com.apple.quarantine macdown2.zip`;
+     confirm it with `xattr -p com.apple.quarantine mostlytext.zip`;
    - extract it with Finder (double-click), which carries the quarantine flag
-     over to the extracted `macdown2`; confirm that with `xattr -l macdown2`;
-   - run `./macdown2 formats` from Terminal, first online and then offline,
+     over to the extracted `mostlytext`; confirm that with `xattr -l mostlytext`;
+   - run `./mostlytext formats` from Terminal, first online and then offline,
      and record any Gatekeeper prompt or refusal.
 
-   **How the CLI finally ships is not decided.** E17 (#18) still has to choose
-   between shipping it inside the app bundle (and how it gets onto the user's
-   `PATH`) and shipping it as a separate download. Today's CLI is also a
-   placeholder. This test therefore proves only what exists now: the
-   notarised CLI ZIP, downloaded and run under quarantine. It says nothing
-   about an in-app install path. Record it in the evidence as
-   "CLI: notarised ZIP path only; final topology pending E17".
+   The app embeds `mostlytext-cli`; the public `mostlytext` command supports
+   explicit installation using that helper, and the release script also
+   produces a standalone ZIP. This acceptance step proves the downloaded ZIP
+   under quarantine. The app install/remove command flow and embedded helper
+   still need their own native acceptance; source tests do not complete either
+   gate. Record exactly which distribution path was exercised.
 6. Remove the test account or VM afterwards.
 
 ## Evidence to return

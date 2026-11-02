@@ -1,6 +1,145 @@
 # MostlyText open-issue acceptance register
 
-## Owner summary
+## Code continuation and native access — 1 November 2026
+
+The owner authorized computer use for native acceptance, then chose to stay in
+the current account and continue code work. At the access check, the separate
+non-admin `mostlytexttest` UID 502 existed but had no GUI session; the current
+console belonged to the owner's UID 501. No local app or UI suite was launched.
+The isolation runner's unconditional execution hold remains, and any later
+candidate requires its own matching source/build receipt before native use.
+
+[PR #550](https://github.com/Joncallim/macdown_2/pull/550) is merged at
+`74fd1cfb4a83149feb978473485ebc3e77816556`. All 58 legacy declarations have an
+executable data-only report, and the three verified Boolean suggestions produce
+consent-bound deterministic editor bytes with safe replay decisions. Exact-head
+CI 41308380669 passed 3,056 package tests in 419 suites (two existing Neon known
+issues), 535 app tests in 110 suites, Debug/Release builds, test compilation,
+lint and dependency-lock verification; Compliance also passed. Thirty-eight
+pure focused tests and five catalog controls pass. Font/theme/policy binding and
+actual consent/writer/journal/E17 migration remain open in #53/#18.
+
+[PR #552](https://github.com/Joncallim/macdown_2/pull/552) is merged at
+`92ddddf396b144fd0c323c6c18946cc629255e87`. The
+[FileCore component evidence](downstream/evidence/external-file-perf-2026-11-01/README.md)
+retains all three
+Release runs, full samples, exact source/driver hashes and the initial
+compilation/exploratory results. Digest/snapshot costs and actual monitor waits
+are measured without an application host. They do not replace #119's native
+controller latency, window/resource accounting or OS idle-wakeup profiling.
+
+[PR #551](https://github.com/Joncallim/macdown_2/pull/551) is merged at
+`9a7a08ba5c678e954f00f366f6b8df712d467b57`. It implements About -> Open Source
+Licenses using canonical bundled files, read-only native text, one focused Find
+command and draft localized surrounding strings. Exact-head CI 41311494804
+passed 3,056 package tests in 419 suites (two existing Neon known issues), 542 app
+tests in 111 suites, Debug/Release builds, test compilation, lint and locks.
+Compliance 41311494676 passed. All seven new license tests and the shipped
+menu/palette consistency test explicitly executed and passed. The merge adds only
+#552's planning/evidence files to the tested implementation tree.
+
+Source review corrected competing Find shortcuts, remount replay and catalog
+drift; the standalone catalog control failed before correction and passes after
+it. Five Foundation-only loader tests pass locally. No keyboard/VoiceOver/
+readability or final signed-artifact result is inferred. LC-08 and #148 remain open.
+
+Eight issue bodies (#17/#53/#88/#115/#117/#119/#148/#183) distinguish these
+bounded completed units from whole acceptance. Six newly recorded implementation/
+measurement progress items were checked in #53/#119/#148; earlier original
+acceptance checkboxes remain intact. No additional whole issue is closed; all
+18 remain open. The two older native-held drafts #519/#520 retain their recorded
+holds. Master remains `15c0fae2`; public source offers,
+release signing/promotion, final localization, migration and Quick Look still
+follow their existing prerequisites. Self-reviews are explicitly recorded as
+self-reviews.
+
+## Earlier issue reconciliation — 1 November 2026
+
+All 18 remaining issues were inspected against live GitHub state, merged source
+and their recorded acceptance criteria. Seventeen issue bodies now distinguish
+completed implementation/controls from remaining acceptance; 35 existing
+criteria were checked, and #53's completed parser-model cleanup was recorded.
+No whole issue met its closure criteria, so none was closed.
+
+PRs #544, #545, #532, #543, #541 and #533 are merged into integration-final.
+Implementation merge `54e78ab5` has exactly the source tree tested at `31344a7c`
+by CI 41289671790: 3,038 package tests in 417 suites (two existing Neon known
+issues), 535 app tests in 110 suites, Debug/Release app and CLI builds, test
+compilation, lint, Compliance and locked-resolution verification passed. Master
+remains `15c0fae2`. This documentation reconciliation changes no runtime input.
+
+Earlier #532/#543 runs failed the same intermittent session-publication
+assertions. Their logs remain preserved under #183; the passing stack is not
+claimed to identify those historical callbacks. PR #533 acknowledges current
+startup monitoring before its controlled recovery gates and proves the late
+baseline observation's safe rejection separately. It also awaits the owned
+viewport restoration task instead of assuming completion within 150 ms. Both
+publication cases, repeated invalidation and the offscreen viewport control
+passed. Production guards, two-attempt limit and timer delays are unchanged.
+
+PR #519 retains its explicit native folder-panel/WebKit/signed-app hold. PR #520
+retains the architecture's source/native presentation hold; its diagnostic runs
+are not a native pass. Quick Look, the complete legacy/state migration, native
+UI/runtime isolation, Release performance, final localization and exact signed
+artifact/source-offer qualification remain open in their owning issues. No local
+app/UI test or public release was performed by this reconciliation.
+
+## Earlier resumption checkpoint — 1 November 2026
+
+The owner requested resumption of all work independent of Daybreak hardware-key
+authentication. Live application master remains
+`15c0fae22f7618e94c82681227057c66011be2a9`; integration is
+`9de81f5ff5222138a210472f2def33de01df6c8c`. GitHub has 18 open application
+issues. Older counts, pause statements and branch baselines below are historical.
+The existing release sequence, performance budgets and acceptance rules remain
+binding; no issue or native journey is waived by this checkpoint.
+
+| Work | Current evidence | Remaining boundary |
+| --- | --- | --- |
+| [CLI foundations #546](https://github.com/Joncallim/macdown_2/pull/546) | 71 locked CommandBridge tests and the Release CommandBridge target pass with unchanged source hashes. Framing, requests, replies, retained receipts, endpoint leases, peer checks and bounded connected-socket I/O are implemented. | Actual listener/connect orchestration, request admission workers, public arguments, document/window admission, bootstrap migration, updater and native CLI evidence remain. |
+| [Scanner backport #547](https://github.com/Joncallim/macdown_2/pull/547) | Exact upstream scanner bytes, corrected attribution/notices/SBOM and 36 focused package tests in seven suites. Combined immutable snapshot builds the Release app/CLI and Debug test targets with locked dependencies and unchanged inputs. | Independent integration review, native editor acceptance and the separate #203 performance target remain. |
+| [Recent-file completion #548](https://github.com/Joncallim/macdown_2/pull/548) | Tests await the existing open task and retire all fixture controllers. Combined snapshot compilation passes. | Hosted execution must establish the actual corrected outcome. Settings #545's previous 515-test app run failed two recent-file assertions; that failure is retained. |
+| Existing theme/settings/isolation drafts | #544 and #543 had passing hosted checks at resumption. #545 passed package/build stages but failed the app-target run described above. | Each draft retains its own native, review and owning-issue criteria. A source/build check is not acceptance. |
+
+Local command evidence is retained under `CORTANA-Builds/resume-20261101-*` on
+the Fast SSD. The application compilation receipt is
+`resume-20261101-scanner-recent-app/receipt.json`; it records both source
+overlays and zero application tests run. CLI evidence is
+`resume-20261101-command-replies/receipt-socket-io-final.json`. Initial failed
+controls remain beside corrected results. Hosted results are read from each
+PR's actual tested head rather than inferred from these local passes.
+
+The separate non-admin `mostlytexttest` account exists as UID 502. A live
+`launchctl print gui/502` check found no GUI bootstrap. Local app/native runs
+therefore remain NOT_RUN until the safe GUI lane and positive control are
+verified. Daybreak session authentication and macOS GUI authentication are
+separate dependencies. Neither blocks ordinary source implementation, package
+tests or build verification. The owner will handle the hardware key separately.
+
+Continue #18 transport/admission and #53's serialized migration writer, then
+the remaining #113 application integration and #148 attribution work under their
+existing contracts. Source review, actual native outcomes, linguistic review,
+exact signed-artifact qualification and action-specific publication approval
+remain required before final issue closure or public delivery.
+
+## Historical execution baseline — 1 November 2026
+
+The owner approved the complete macOS 1.0 convergence plan and implementation.
+Live `master` is `15c0fae22f7618e94c82681227057c66011be2a9`; live
+`integration-final` is `7b8b4055796d7452fc6dd1b27ced71470c92623c` (21 commits
+ahead, none behind master). There are 18 open application issues and five draft
+application PRs. Earlier counts, pause statements and branch checkpoints below
+are historical. Existing safety/review/evidence gates remain required.
+
+The [execution contract](downstream/COMPLETION_EXECUTION_2026-11-01.md) records
+the approved scope, dependency order, current native-test isolation incident,
+and release boundaries. Source changes begin with #88's startup guard and
+non-launch verification. No candidate has passed the complete final native
+matrix. The earlier private #88 source and patches were preserved on the Fast
+SSD before importing them; the original checkout remains untouched.
+
+## Historical owner summary
+
 
 MostlyText has 22 open issues. The integration candidate is locally preserved on
 `fix/ci-timing-contracts`; it is not approved for merging or release. The immediate

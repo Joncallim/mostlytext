@@ -22,6 +22,12 @@ final class ExternalFileChangesUITests: XCTestCase {
             "-sessionDir", sessionDirectory.path,
             "-openFiles", fixtureURL.path,
         ]
+        #if ISSUE117_NATIVE_ACCEPTANCE
+            app.launchArguments.insert("-Issue117Acceptance", at: 0)
+        #endif
+        let fixtureHome = sessionDirectory.appendingPathComponent("home", isDirectory: true)
+        try FileManager.default.createDirectory(at: fixtureHome, withIntermediateDirectories: true)
+        app.launchEnvironment["CFFIXED_USER_HOME"] = fixtureHome.path
     }
 
     override func tearDown() async throws {

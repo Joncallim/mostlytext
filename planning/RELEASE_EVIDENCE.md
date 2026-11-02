@@ -4,6 +4,12 @@
 >
 > This is not another epic and it is not a substitute for individual epic test records. It is the owner-readable cross-product ledger required by `planning/RELEASE_HARDENING.md` so a closed issue is never mistaken for proof that the exact release application has been validated end-to-end.
 
+## External-file evidence update (2026-10-29; partial, #119/#115 open)
+
+The six existing `ExternalFileChangesUITests` now **genuinely pass 6/6 in optimized Release arm64** on the #541 candidate (baseline `6a915a08`, plus cancellation callback teardown and isolated acceptance startup). Full package: **2812 tests / 384 suites passed**, two recorded known Neon issues. A cancellation-insensitive held-probe test reproduced and fixed retention of `contextCallback`. Serial 1/10 MiB snapshot/revision/probe component timings have raw samples and exact build hashes. See [the dated evidence and limits](downstream/evidence/issue-119-2026-10-29/README.md).
+
+This supersedes the historical lack of a completed six-case run for this candidate only; historical E18 rows below describe their own dates. It does **not** close E18/#119/#115: one-active/one-latest-pending and shared four-worker admission, the remaining native behavior/fidelity matrix, MainActor I/O and complete performance/lifecycle evidence remain open. The optimized testable ad-hoc acceptance binary is not a shipping-signed release proof.
+
 ## Rules
 
 - `implemented` means the intended code/product work exists; it does **not** mean release-proven.

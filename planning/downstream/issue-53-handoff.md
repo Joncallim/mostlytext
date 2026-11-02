@@ -1,5 +1,122 @@
 # Issue #53 — Compatible settings and deliberate legacy import
 
+## 2 November 2026: production optional editor import
+
+The [production import architecture](production-editor-import.md) supersedes the older pending activation/font/theme statements below. The application now runs the optional consent/journal recovery step before constructing mutable settings/theme/session/document owners. Exact representable installed fonts and the three reviewed Boolean mappings are eligible for explicit per-field selection; legacy style names have no exact aliases and never alter current theme storage. App/UI-test hosts bypass real-domain import. Whole-install identity migration, native/private-candidate evidence, final localization, signing and public release remain separate gates.
+
+
+## 1 November 2026: conditional persistent-domain publication
+
+The [conditional writer architecture](conditional-settings-publication.md)
+adds an explicitly named persistent-domain store alongside the existing generic
+injectable store. Ordinary edits and the optional migration primitive share the
+same synchronous MainActor owner and saved-value admission. Registered/global
+fallback values do not count as persisted presence or preserved backups in this
+bound store. Domain validation rejects the original MacDown/system domains
+before opening a suite; no production caller is switched to it yet.
+
+The publisher compares exact before/desired revisions, requires a matching fresh
+source before a first write, preserves conflicting later values and verifies
+exact persistent-domain readback. Repeating an already-desired write is a no-op;
+failed readback never claims completion or rolls back a third value. All 115
+AppSettings tests pass in Debug and Release, including 13 new synthetic-suite
+controls. The initial combined run exposed a process-wide registration fixture
+leak; fixtures now restore their prior volatile registration domain. Full hosted
+CI and merge evidence belong in the PR record.
+
+This supplies the single-domain write boundary, not the durable E17 journal,
+bootstrap/consent UI, font/theme conversion or real isolated-account rehearsal.
+Readback is not proof of defaults-daemon disk durability or multi-key atomicity.
+#53 remains open for those requirements.
+
+## 1 November 2026: exhaustive report and consent-bound write preparation
+
+Baseline: integration `1b79485699199509ec15e0baa34906e5ffd4b63e`; master
+`15c0fae22f7618e94c82681227057c66011be2a9`. The executable data-only report
+now covers all 52 stored, four calculated and two transient declarations. The
+source-backed JSON record and a Compliance test bind every key, value kind and
+report policy to the Swift catalog. Unknown keys, exact legacy misspellings,
+Boolean/numeric distinctions, invalid enums and malformed fonts have explicit
+outcomes. No report entry reads a URL, unarchives data or applies a preference.
+
+The three reviewed editor Boolean conversions now produce deterministic desired
+editor bytes after exact source/destination revalidation. Selection is explicit;
+replacing any persisted field requires separate consent for that field, including
+when the existing value equals the default. Every unselected editor value is
+retained. Unsupported/future/non-Data destinations are blocked. A proposal binds
+mapping version, source digest, before/desired raw revisions and selected fields.
+Replay distinguishes captured-before, already-desired and a conflicting third
+value; the last is preserved. These are pure writer inputs and replay decisions,
+not an executed or atomic preference transaction.
+
+Source reconciliation found two earlier candidate equivalents were not exact:
+
+- In upstream `MPDocument.m:774–781` at pinned `3e2a2bf`, disabling
+  `editorInsertPrefixInBlock` stops list/quote continuation but still calls
+  `completeNextIndentedLine`. Current `continuesMarkdownPrefixes` also gates
+  indentation. The legacy value is reported unsupported rather than silently
+  changing its meaning.
+- The old matching-character switch also controls the original character map and
+  strikethrough selection wrapping (`NSTextView+Autocomplete.m:99–122,208–233`).
+  Current structural/Markdown pairing does not reproduce that whole policy.
+  It is reported unsupported; no partial conversion is advertised as exact.
+
+The font row validates the exact legacy `name`/`size` shape and produces an
+unresolved PostScript-name request. E17 must resolve the installed font and prove
+that the current family-based destination reproduces it before offering an
+applicable change; missing or nonrepresentable faces remain unsupported. Theme
+aliases, renderer/update-policy rows, actual consent UI, shared serialized writer,
+transaction journal and isolated native/live-apply migration remain outstanding.
+The frozen plan never grants file authority or replays IPC. #53 remains open.
+
+A local Foundation-only harness uses copied unmodified AppSettings/JSONSupport
+sources and six pure test files, without an application host or a real preferences
+domain. Its first setup lacked JSONSupport's resource declaration; after fixing
+that harness, compilation found a missing static qualifier in the shared mapping.
+Both failed logs are retained. Final focused and full hosted results belong in
+the PR verification record; this section does not infer native acceptance.
+
+
+## 2026-10-25 local admission slice
+
+The next pure `LegacyImportPlan` step classifies only the three verified editor
+Boolean suggestions. A missing destination domain or a field whose absence was
+proved by a future protected decoder may be proposed as a default fill. Every
+valid persisted value wins, including a value equal to the current default;
+unreadable, future-version and unknown-presence destinations block automatic
+fills. The plan carries source and destination revision identities for a later
+write-boundary recheck. Its classifier consumes explicitly supplied states;
+it does **not** parse or write a persisted destination blob and cannot itself
+prove that a field is absent. Thirteen focused plan/conversion/snapshot tests
+pass with locked dependencies; strict lint and format checks pass. This is
+not consent, a serialized writer, journaling, recovery or a migration run.
+
+The next isolated, read-only fixture slice classifies three direct editor Boolean
+keys: `editorAutoIncrementNumberedLists`, `editorConvertTabs`, and
+`editorSmartHome`. `LegacyEditorBooleanConversion` preserves explicit true and
+false, distinguishes absent keys from false, and reports present non-Boolean
+values instead of coercing numeric or string lookalikes. It produces proposals
+only; it does not persist them or infer that a default-valued destination is
+absent. The three conversion fixtures and 44 adjacent snapshot/editor-behavior
+tests pass on the locked package build; strict lint and format checks pass. The
+font, prefix-continuation, and matching-character candidates remain
+unmapped pending their respective value or behavioral fixtures. Destination
+precedence, consent, E17 journaling, E23 theme IDs, and real-domain rehearsal
+remain outside this slice.
+
+An isolated local #53 branch based on release-debt candidate `e2434fab` now has a pure
+`LegacyPreferenceSnapshot(domain:)` value. It copies an explicitly supplied domain,
+preserves property-list value kinds (including Boolean versus number), rejects unsupported
+objects and non-finite numbers, and bounds depth, entries, strings, aggregate admitted bytes and the
+canonical encoded form. Its sorted typed digest can identify a frozen source snapshot for
+a later plan. It does not access the original MacDown preferences, apply a setting, grant
+file access, or implement consent, journaling or import. This is preparation for the
+existing immutable-plan contract below, not evidence that #53 can close.
+
+Four synthetic-domain snapshot tests pass with locked Swift packages. Real-domain
+disposition, precedence, settings migration, the E23 theme destination and the
+E17 isolated-account rehearsal remain separate acceptance gates.
+
 ## Owner summary
 
 Import useful original-MacDown preferences without changing that app, reviving inert parser toggles or overwriting the new editor's deliberate choices. First preserve development/beta settings across schema changes; then perform the separate opt-in original-MacDown import. Every legacy key receives an explicit disposition.
@@ -81,6 +198,29 @@ protected-write contract remains required as described above.
 
 ## Settings compatibility — first executable unit
 
+The first import-planning slice now has a pure editor-domain admission candidate.
+`LegacyEditorDestinationEvidence.decode(_:)` accepts caller-supplied raw bytes,
+classifies absence, historical/current valid data, malformed data and unknown
+future data, retains the decoded `EditorSettings` only for admitted bytes, and
+binds its decision to the exact byte digest. It does not read
+preferences or write settings. `LegacyImportPlan` accepts only this decoder's
+evidence, so a caller cannot invent field absence from a default-valued model.
+For an existing non-Data value, the eventual storage adapter must report an
+unreadable domain rather than call `decode(nil)`; nil means proven absence.
+
+This candidate adds the local, Foundation-only `AppSettings` → `JSONSupport`
+dependency. Its purpose is duplicate-key admission before Foundation decoding;
+Foundation's JSON deserializer can silently collapse duplicate keys. The
+dependency is acyclic and carries no renderer, document or network capability.
+The ordinary `UserDefaultsAppSettingsStore` editor load and write-protection
+check now use this same admission result. A read-only `editorStoredDomain`
+snapshot exposes the decoded evidence to a future importer; it distinguishes
+an absent key from a present non-Data value before any Data cast. Unsupported
+bytes remain at the primary key and startup exposes only a session-safe
+default. This does not migrate or rewrite stored data. The serialized writer,
+consent flow and execution journal remain separate review gates. Passing
+these compatibility tests is not migration completion.
+
 AppSettings owns a typed versioned decode/migration adapter, used by normal startup AND the importer. Do not implement a one-off importer decoder while ordinary startup still falls back destructively. Inspect raw persisted data before constructing mutable models or writing defaults. Distinguish absent, known-compatible older schema, valid current, malformed and unknown future data.
 
 For a known older editor blob missing showsStatusBar, preserve every present valid field and supply true ONLY for the missing new field. A present false remains false. Apply the same additive-field discipline to every final E22/E23 setting. Validate ranges explicitly during decode; constructor clamping is not automatically invoked by synthesized Decodable. Known removed parser keys receive the final E22 disposition, not a fake stored control.
@@ -121,8 +261,8 @@ Preserve exact legacy spellings. This table is exhaustive for the stored keys de
 | editorBaseFontInfo | Validate name/size; resolve installed PostScript name through NSFont to the final FontDescriptor on MainActor. Preserve current font and warn if unavailable; never download. |
 | editorAutoIncrementNumberedLists | Boolean -> editor.autoIncrementOrderedLists. |
 | editorConvertTabs | Boolean -> editor.convertsTabsToSpaces; does not encode indentation width. |
-| editorInsertPrefixInBlock | Boolean -> editor.continuesMarkdownPrefixes after semantic list/quote fixture. |
-| editorCompleteMatchingCharacters | Boolean -> editor.completesMatchingCharacters. |
+| editorInsertPrefixInBlock | Unsupported: legacy false retains indentation continuation, while the current prefix setting also disables it. |
+| editorCompleteMatchingCharacters | Unsupported: the legacy character map/strikethrough wrapping is not the complete current pairing policy. |
 | editorSyncScrolling | Only an exact final scroll-sync preference; not preview layout or an invented switch. |
 | editorSmartHome | Boolean -> editor.smartHome. |
 | editorStyleName | Only curated exact compatible theme aliases; no nearest-name guess or executable old-style import. Unknown/custom style remains unsupported with safe explicit conversion outside this import. |

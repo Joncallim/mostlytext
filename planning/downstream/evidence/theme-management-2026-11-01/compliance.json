@@ -1,0 +1,36 @@
+[
+  {
+    "name": "compliance",
+    "command": [
+      "python3",
+      "compliance/tools/compliance.py",
+      "check"
+    ],
+    "exit": 0,
+    "elapsed": 1.8
+  },
+  {
+    "name": "fixtures",
+    "command": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "compliance/tests"
+    ],
+    "exit": 0,
+    "elapsed": 23.14
+  },
+  {
+    "name": "release-compliance",
+    "command": [
+      "python3",
+      "compliance/tools/compliance.py",
+      "check",
+      "--release"
+    ],
+    "exit": 1,
+    "elapsed": 0.26
+  }
+]

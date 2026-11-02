@@ -48,77 +48,128 @@ public enum ExportHTMLWriter {
     public static func selfContainedHTML(
         from prepared: PreparedExportDocument,
         additionalHead: String = ""
-    ) -> String {
-        let body = selfContainedBody(from: prepared)
-        let style = embeddedStyleElement(prepared.stylesheet)
-        return BuiltInExportTemplate.document(
-            title: prepared.title,
-            visibleTitle: prepared.visibleTitle,
-            headExtras: additionalHead,
-            styleElement: style,
-            body: body
-        )
+    ) throws -> String {
+        try selfContainedHTML(from: prepared, additionalHead: additionalHead,
+                              limit: ExportResourceBudget.maxFinalHTMLUTF8Bytes)
     }
 
-    static func selfContainedBody(from prepared: PreparedExportDocument) -> String {
-        embedResources(in: prepared.bodyHTML, manifest: prepared.manifest,
-                       assetsDirectoryName: prepared.assetsDirectoryName)
+    static func selfContainedHTML(
+        from prepared: PreparedExportDocument, additionalHead: String = "", limit: Int
+    ) throws -> String {
+        try validateSlots(in: prepared)
+        return try document(from: prepared, style: .embedded, additionalHead: additionalHead, limit: limit) { sink in
+            try embedResources(from: prepared, into: &sink)
+        }
     }
 
-    /// A companion HTML document. `style` selects embedded (`<style>`) or linked
-    /// (`<link rel="stylesheet" href="<name>.assets/<hash>.css">`) CSS.
+    static func selfContainedBody(from prepared: PreparedExportDocument) throws -> String {
+        try validateSlots(in: prepared)
+        var sink = BoundedExportHTML(limit: ExportResourceBudget.maxFinalHTMLUTF8Bytes)
+        try embedResources(from: prepared, into: &sink)
+        return sink.html
+    }
+
+    /// A complete companion document. Oversized output throws before publishing.
     public static func companionHTML(
         from prepared: PreparedExportDocument, style: ExportStyleEmbedding,
         additionalHead: String = ""
-    ) -> String {
-        let styleElement: String = switch style {
-        case .embedded:
-            embeddedStyleElement(prepared.stylesheet)
-        case .linked:
-            linkedStyleElement(prepared)
+    ) throws -> String {
+        try companionHTML(from: prepared, style: style, additionalHead: additionalHead,
+                          limit: ExportResourceBudget.maxFinalHTMLUTF8Bytes)
+    }
+
+    static func companionHTML(
+        from prepared: PreparedExportDocument, style: ExportStyleEmbedding,
+        additionalHead: String = "", limit: Int
+    ) throws -> String {
+        try validateSlots(in: prepared, requiringAuthority: false)
+        return try document(from: prepared, style: style, additionalHead: additionalHead, limit: limit) { sink in
+            try sink.append(prepared.bodyHTML)
         }
-        return BuiltInExportTemplate.document(
-            title: prepared.title,
-            visibleTitle: prepared.visibleTitle,
-            headExtras: additionalHead,
-            styleElement: styleElement,
-            body: prepared.bodyHTML
+    }
+
+    private static func document(
+        from prepared: PreparedExportDocument, style: ExportStyleEmbedding,
+        additionalHead: String, limit: Int, body: (inout BoundedExportHTML) throws -> Void
+    ) throws -> String {
+        try BuiltInExportTemplate.boundedDocument(
+            metadata: .init(title: prepared.title, visibleTitle: prepared.visibleTitle, headExtras: additionalHead),
+            limit: limit, style: { sink in
+                switch style {
+                case .embedded:
+                    try sink.append("<style>\n")
+                    try sink.append(prepared.stylesheet)
+                    try sink.append("\n</style>")
+                case .linked:
+                    // Check inputs before allocating the CSS Data or URL encodings.
+                    guard prepared.stylesheet.utf8.count <= ExportResourceBudget.maxFinalHTMLUTF8Bytes
+                    else { throw BoundedExportHTML.tooLarge }
+                    try sink.requireScratchCapacity(Self.encodedComponentUpperBound(prepared.assetsDirectoryName))
+                    let resource = linkedStylesheetResource(for: prepared.stylesheet)
+                    try sink.append("<link rel=\"stylesheet\" href=\"")
+                    try sink.append(percentEncodedCompanionComponent(prepared.assetsDirectoryName))
+                    try sink.append("/" + resource.identity.fileName + "\">")
+                }
+            }, body: body
         )
     }
 
-    /// 64 hex digits, a dot, and room for any canonical extension.
-    private static let maxCompanionNameLength = 96
-
-    private static func embeddedStyleElement(_ stylesheet: String) -> String {
-        "<style>\n\(stylesheet)\n</style>"
-    }
-
-    private static func linkedStyleElement(_ prepared: PreparedExportDocument) -> String {
-        let resource = linkedStylesheetResource(for: prepared.stylesheet)
-        let href = "\(percentEncodedCompanionComponent(prepared.assetsDirectoryName))/\(resource.identity.fileName)"
-        return "<link rel=\"stylesheet\" href=\"\(href)\">"
-    }
-
-    /// Replaces every `<name>.assets/<file>` companion reference with its data
-    /// URI (`data:<mime>;base64,<bytes>`). Content-addressed filenames are
-    /// `<64hex>.<ext>`, so an exact match is deterministic and cannot collide
-    /// with authored text.
-    ///
-    /// The body is scanned once and rebuilt once. Replacing resource by resource
-    /// would rescan and recopy the whole document per image — and because each
-    /// substitution grows the document by a base64-inflated payload, that copy
-    /// gets more expensive with every image an export carries.
-    static func embedResources(in body: String, manifest: ExportManifest, assetsDirectoryName: String) -> String {
-        guard !manifest.resources.isEmpty else { return body }
-        // The renderer percent-encodes and HTML-escapes a rewritten `src` the way
-        // it does any destination, so for an output name with a space, non-ASCII,
-        // `&` or `'` the reference in the body is not the raw directory name —
-        // matching only the raw form silently left every local image un-embedded.
-        var result = body
-        for directory in referenceForms(of: assetsDirectoryName) {
-            result = embedResourcesForPrefix(in: result, manifest: manifest, prefix: "\(directory)/")
+    private static func validateSlots(in prepared: PreparedExportDocument, requiringAuthority: Bool = true) throws {
+        if let slots = prepared.resourceSlots {
+            try slots.validate(body: prepared.bodyHTML, manifest: prepared.manifest)
+        } else if requiringAuthority, !prepared.manifest.resources.isEmpty {
+            throw ExportError.invalidResourceSlots
         }
-        return result
+    }
+
+    private static func embedResources(
+        from prepared: PreparedExportDocument,
+        into sink: inout BoundedExportHTML
+    ) throws {
+        let body = prepared.bodyHTML
+        let bytes = body.utf8
+        var resources: [ExportResourceIdentity: ExportResource] = [:]
+        for resource in prepared.manifest.resources {
+            resources[resource.identity] = resource
+        }
+        var dataURIs: [ExportResourceIdentity: String] = [:]
+        var pending = body.startIndex
+        for slot in prepared.resourceSlots?.occurrences ?? [] {
+            let start = bytes.index(bytes.startIndex, offsetBy: slot.range.lowerBound)
+            let end = bytes.index(bytes.startIndex, offsetBy: slot.range.upperBound)
+            guard let lower = String.Index(start, within: body), let upper = String.Index(end, within: body),
+                  let resource = resources[slot.identity] else { throw ExportError.invalidResourceSlots }
+            try sink.append(body[pending ..< lower])
+            try appendResource(resource, cache: &dataURIs, into: &sink)
+            pending = upper
+        }
+        try sink.append(body[pending...])
+    }
+
+    private static func appendResource(
+        _ resource: ExportResource,
+        cache: inout [ExportResourceIdentity: String], into sink: inout BoundedExportHTML
+    ) throws {
+        if let uri = cache[resource.identity] {
+            try sink.append(uri); return
+        }
+        // Reject before base64 expansion, including synthetic Int.max sizes.
+        let size = try BoundedExportHTML.dataURISize(
+            payloadBytes: resource.bytes.count, mimeBytes: resource.identity.mimeType.utf8.count
+        )
+        try sink.requireCapacity(size)
+        if sink.measuring {
+            try sink.appendCount(size); return
+        }
+        let uri = "data:\(resource.identity.mimeType);base64,\(resource.bytes.base64EncodedString())"
+        try sink.append(uri)
+        cache[resource.identity] = uri
+    }
+
+    private static func encodedComponentUpperBound(_ name: String) throws -> Int {
+        let (size, overflow) = name.utf8.count.multipliedReportingOverflow(by: 6)
+        guard !overflow else { throw BoundedExportHTML.tooLarge }
+        return size
     }
 
     /// The raw directory name plus the form cmark writes into an `href`/`src`.
@@ -161,45 +212,5 @@ public enum ExportHTMLWriter {
             }
         }
         return output
-    }
-
-    private static func embedResourcesForPrefix(in body: String, manifest: ExportManifest, prefix: String) -> String {
-        guard !manifest.resources.isEmpty else { return body }
-        var dataURIs: [String: String] = [:]
-        dataURIs.reserveCapacity(manifest.resources.count)
-        var embeddedBytes = 0
-        for resource in manifest.resources {
-            let uri = "data:\(resource.identity.mimeType);base64,\(resource.bytes.base64EncodedString())"
-            embeddedBytes += uri.utf8.count
-            dataURIs[resource.identity.fileName] = uri
-        }
-
-        var result = ""
-        result.reserveCapacity(body.utf8.count + embeddedBytes)
-
-        var pending = body.startIndex
-        var searchStart = body.startIndex
-        while searchStart < body.endIndex,
-              let hit = body.range(of: prefix, range: searchStart ..< body.endIndex) {
-            // A content-addressed filename is `<64hex>.<ext>`; it ends at the
-            // first character that cannot occur in one, which in rendered HTML
-            // is the closing attribute quote. The scan is length-bounded so a
-            // long alphanumeric run after a false prefix stays cheap.
-            let candidate = body[hit.upperBound...]
-                .prefix(maxCompanionNameLength)
-                .prefix { $0.isLetter || $0.isNumber || $0 == "." }
-            guard let uri = dataURIs[String(candidate)] else {
-                searchStart = hit.upperBound
-                continue
-            }
-            result += body[pending ..< hit.lowerBound]
-            result += uri
-            pending = candidate.endIndex
-            searchStart = candidate.endIndex
-        }
-
-        guard pending != body.startIndex else { return body }
-        result += body[pending...]
-        return result
     }
 }

@@ -38,16 +38,6 @@ private struct GeneralSettingsForm: View {
                 Toggle("Show hidden files", isOn: $fileTreePreferences.filter.showsHiddenFiles)
                 Toggle("Open items with a single click", isOn: $fileTreePreferences.opensOnSingleClick)
             }
-
-            // O3: detection-only — reports presence, imports nothing
-            // (epic-13-implementation.md §18).
-            if LegacyPreferencesDetector.detect() {
-                Section {
-                    Text("Preferences from the original MacDown were found. Importing them isn't supported yet.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
         }
         .formStyle(.grouped)
         .padding()

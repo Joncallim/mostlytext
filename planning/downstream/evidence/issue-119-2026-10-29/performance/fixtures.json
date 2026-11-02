@@ -1,0 +1,12 @@
+[
+  {
+    "size": 1048576,
+    "path": "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/1048576.txt",
+    "sha256": "80eb545bb87e098e4ab54f2940a376cacdb41e6a3ba99c74dcdc4bedb5faa758"
+  },
+  {
+    "size": 10485760,
+    "path": "/tmp/mostlytext-119-acceptance-20261029/performance/fixtures/10485760.txt",
+    "sha256": "5caa64597802658f8d3f0646d4f5e47fd246b0c6de785b6f438437516f28ec70"
+  }
+]

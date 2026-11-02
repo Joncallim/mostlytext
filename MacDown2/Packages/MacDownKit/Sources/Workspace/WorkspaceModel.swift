@@ -90,19 +90,14 @@ public final class WorkspaceModel {
     /// that interval are deliberately coalesced instead of writing the old
     /// pathname after Save As has selected a destination.
     var inFlightSaveAsByDocumentID: [String: UInt] = [:]
-    /// Reference count of save writes actually in flight right now, per
-    /// document ID (#57): covers the real `documentWriter.save`/`saveAs`
-    /// call and the publication bookkeeping around it, not time spent
-    /// waiting on a Save As destination panel. A count, not a `Set`,
-    /// because two overlapping saves of the *same* document are possible
-    /// (e.g. the user presses ⌘S again before a slow save finishes, or the
-    /// metadata-conflict retry in `reconcileSaveConflict` recurses into a
-    /// nested save while the outer one is still unwinding) — a `Set` would
-    /// let the first save's completion clear the flag while the second is
-    /// still writing, resurfacing the "looks hung" problem this exists to
-    /// solve. Keyed by document ID, like `inFlightSaveAsByDocumentID`
-    /// above, so switching tabs shows the right tab's state.
-    var savingCountByDocumentID: [String: Int] = [:]
+    /// Reserve the destination picker before an async command can be fired
+    /// again. This is distinct from the Saving indicator, which begins only
+    /// after a destination has been accepted.
+    var saveAsAdmissions: [SavingDocumentLifetime: UUID] = [:]
+    /// Active logical saves retain exact document lifetimes. Save As adds its
+    /// destination lifetime before the tab changes identity; overlapping
+    /// saves remain independent and the destination picker is not a write.
+    var activeSaveOperations: [LogicalSaveOperationID: Set<SavingDocumentLifetime>] = [:]
     /// Test seam for the crash window after destination session publication
     /// and before a dirty Save As acknowledges its source redirect.
     var onSaveAsDestinationSessionPublished: (@MainActor (FileDocument, FileDocument) async -> Void)?
@@ -233,8 +228,9 @@ public final class WorkspaceModel {
     /// looking hung — previously there was no observable signal at all, so a
     /// save that took a moment looked identical to the app not responding.
     public var isSavingActiveDocument: Bool {
-        guard let id = tabStore.activeDocument?.id else { return false }
-        return (savingCountByDocumentID[id] ?? 0) > 0
+        guard let document = tabStore.activeDocument else { return false }
+        let lifetime = SavingDocumentLifetime(document)
+        return activeSaveOperations.values.contains { $0.contains(lifetime) }
     }
 
     /// `true` if the active tab exists and is not pinned.

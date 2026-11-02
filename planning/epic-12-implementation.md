@@ -6,6 +6,78 @@
 > **Architecture date:** 2026-08-17
 > **Review status:** Final adversarial pass complete; implementation begins with Slice 0 only
 
+## 2026-11-02 ordinary publication amendment
+
+Ordinary HTML now uses the descriptor-relative writer shared with the optional
+validated path. A parent-device/inode gate serializes publication after assembly.
+The selected parent must already exist; no intermediate paths are created by the
+writer. Sidecars require a v2 marker bound to the exact primary leaf; unknown and
+legacy directories, symlinked directories/primaries/resources, changed identities
+and same-stem owner collisions are refused without adopting or deleting files.
+Existing resources are reused only after bounded no-follow byte comparison.
+
+All retained flat entries count toward a provisional 513-file/128-MiB ceiling,
+including the marker and unknown user entries. Old assets are kept; growth stops
+at the ceiling. Ambiguous scratch residue blocks another allocation. Primary
+scratch names bind to the leaf digest. Normal/cancelled staging cleanup moves a
+name to exclusive quarantine before verifying the original inode and bytes;
+mismatches restore without replacing an occupied path or report a recovery URL.
+No filename-pattern deletion or automatic legacy adoption is performed.
+
+Ordinary origins now use the existing lifetime revocation hooks. Their lease
+flows through preparation to the HTML/PDF publication cutoff; text edits keep
+the captured snapshot, while window/document identity changes revoke it. Native
+close/print timing is still unverified. Observed primary baselines are rechecked,
+and absent primaries promote without replacement. Existing-file precheck plus
+rename is not a filesystem compare-and-swap. Authorization-time parent/target
+admission, inventory-backed transaction journals/automatic crash repair, fully
+proved external-writer/root-membership exclusion and native/exact-artifact
+acceptance remain #118/#183 gates. The optional SVG path remains disabled.
+
+Publication review also completed fallback-title namespace exclusion and CDATA
+context rejection for resource slots. Neither change enables another renderer.
+
+## 2026-11-02 generated resource substitution amendment
+
+The composer now registers unique image-URL occurrence tokens only for resolved,
+emitted cmark image nodes. A quote-aware UTF-8 scanner consumes each private token
+exactly once in an img/src attribute, restores its encoded companion URL, and
+records the precise byte range and admitted identity. The private slot table is
+bound to the completed body digest; final assembly validates that binding and
+embeds only those ranges. Code/prose, navigation links and authored raw HTML are
+never inferred to be generated references from their filenames. The opaque
+namespace is excluded from source, destination, stylesheet and derived inputs,
+and unresolved/misplaced/duplicate tokens reject the render. Images and links
+inside image descriptions do not emit URL attributes and register no occurrence.
+
+The public prepared-document initializer grants no substitution authority;
+self-contained assembly of a manifest-bearing manual value fails without the
+private registry receipt. Companion assembly preserves manually supplied body
+bytes. Both paths reject a stale attached receipt. Source resolver grants/TOCTOU
+remain unchanged and open. See export-resource-slots-and-publication.md for the
+bounded publication unit and remaining #118/#183 gates.
+
+## 2026-11-02 final HTML assembly amendment
+
+`ExportHTMLWriter.selfContainedHTML` and `companionHTML` now throw on final
+assembly failure. `ExportResourceBudget.maxFinalHTMLUTF8Bytes` owns a 256 MiB
+provisional ceiling for the complete document. `BoundedExportHTML` first counts
+the exact UTF-8 shell, scalar-escaped metadata, CSS/head, body and every embedded
+resource occurrence without materializing final HTML or base64. Only an admitted
+document is rendered, with checked appends and cancellation. Directory reference
+forms are scanned with cached next matches; used resource encodings are shared
+within that render. Ordinary HTML completes this gate before destination/sidecar
+mutation; the PDF adapter propagates failure before creating/loading WebKit.
+
+This supersedes earlier prepared-body-only sizing descriptions. It does not
+freeze measured Release memory limits or establish PDF responsiveness. Textual
+resource replacement remains collision-prone until registered URL slots land;
+explicit input resource leases, output authority/recovery and stale managed
+assets remain #118 work. The optional validated-SVG path remains disabled.
+Implementation and source-control evidence are recorded in
+`planning/downstream/mostlytext-packaging-and-export-bounds.md`; native and
+exact-artifact gates remain separate.
+
 ## 2026-09-21 as-built reconciliation
 
 > **Authority amendment:** E12 shipped successfully, but several symbol/type sketches below describe the pre-implementation design rather than the final code. For implementation truth, the as-built mapping in this section supersedes conflicting symbol names/shapes below. The product/security/file-safety invariants remain binding.
@@ -1099,3 +1171,48 @@ Done only when:
 9. **Initial resource limits:** central `.standard` values are provisional safety gates until Slice 6 measured evidence; tuning stays in one definition.
 
 No residual risk permits weakening local/offline operation, source preservation, one-pipeline composition or unknown-user-file protection.
+
+## Explicit Export resource authority — 2 November 2026
+
+The input-authority unit in `downstream/export-input-authority.md` replaces
+path approval followed by Data(contentsOf:) with the existing contained reader.
+ExportRequest.documentURL is metadata only. ExportResourceAccess retains the
+explicit DirectoryLease; the ordinary post-panel snapshot opens it using only
+existing process access, without a chooser or broader security scope. The
+resolved target leaf supplies image MIME rather than a misleading alias.
+Cancellation is bridged to the real cmark thread and 64-KiB read checkpoints.
+Serial candidate reads retain per-file, distinct-count and aggregate-payload
+limits, deduplication and ordinary-warning versus self-contained/PDF failure.
+The disabled SVG fallback preserves this capability and parse policy.
+
+Source-identical Foundation/POSIX controls and hosted package/app validation
+are required before integration. Local app/tests compile only. Native/sandbox
+acceptance, authorization-time output/source-alias admission, inventory-backed
+crash recovery and empirical limits remain separate gates. The optional SVG
+route and held preview/current-line changes are not activated.
+
+
+## Authorization-time destination and immutable PDF bytes — 2 November 2026
+
+The unit in `downstream/export-destination-admission.md` captures the opened
+parent and absent-or-regular primary revision before ordinary contribution
+parsing/rendering. Publication checks that same admission before staging and
+inside the final lifetime cutoff. Current source/open-document URLs and
+previously observed FileCore device/inode identities reject aliases, including
+hard links whose original source name is gone. Name comparison is deliberately
+conservative on case/Unicode variants; it does not normalize source bytes.
+
+Ordinary HTML passes this admission through ExportService. PDF reads a bounded
+no-follow candidate relative to the admitted parent, validates/normalizes the
+immutable bytes, then publishes those same bytes on an explicitly cancelled
+background I/O worker through the shared descriptor-relative primary writer.
+Normalization no longer rewrites a printer pathname. Existing PDF integrity
+assertions now inspect the accepted value and preserve the input fixture. The
+WebKit/NSPrintOperation/fallback API and print-progress policy are unchanged.
+
+This detects observed revision changes and protects the document set captured
+at authorization; it is not filesystem compare-and-swap or a global fence
+against files opened later. Unknown printer-scratch ownership and automatic
+crash repair remain follow-on source/native-probe gates. Full PDF/menu/native
+acceptance, Release calibration, final language review and independent release
+review remain unperformed. Local app/test targets compile only.

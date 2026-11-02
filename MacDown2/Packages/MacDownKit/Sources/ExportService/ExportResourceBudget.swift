@@ -23,6 +23,12 @@ struct ExportResourceBudget: Sendable, Equatable {
     /// Largest composed HTML body, in UTF-8 bytes.
     let maxPreparedHTMLUTF8Bytes: Int
 
+    /// Largest complete HTML document, including repeated data URIs and shell.
+    /// Provisional safety ceiling; Release memory calibration remains required.
+    static let maxFinalHTMLUTF8Bytes = 256 << 20
+    /// Bound private occurrence records before cmark allocates its HTML buffer.
+    static let maxResourceURLSlots = 65536
+
     static let standard = ExportResourceBudget(
         maxSourceUTF8Bytes: 32 << 20,
         maxResourceCount: 512,

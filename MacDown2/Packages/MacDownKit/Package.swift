@@ -6,6 +6,8 @@ let package = Package(
     platforms: [.macOS(.v26)],
     products: [
         .library(name: "FileCore", targets: ["FileCore"]),
+        .library(name: "CommandBridge", targets: ["CommandBridge"]),
+        .library(name: "CommandLineSupport", targets: ["CommandLineSupport"]),
         .library(name: "LocalResourceAccess", targets: ["LocalResourceAccess"]),
         .library(name: "AppSettings", targets: ["AppSettings"]),
         .library(name: "Themes", targets: ["Themes"]),
@@ -32,6 +34,7 @@ let package = Package(
         .library(name: "TextSearch", targets: ["TextSearch"]),
     ],
     dependencies: [
+        .package(url: "https://github.com/apple/swift-argument-parser", exact: "1.8.2"),
         .package(url: "https://github.com/ChimeHQ/SwiftTreeSitter", branch: "main"),
         .package(url: "https://github.com/Joncallim/Neon", revision: "dabf50c947148c49acd0d321dfe8f3805d10b3da"),
         .package(url: "https://github.com/tree-sitter/tree-sitter-json", from: "0.24.8"),
@@ -80,13 +83,17 @@ let package = Package(
         .package(url: "https://github.com/gonzalezreal/swiftui-math", exact: "0.1.0"),
     ],
     targets: [
-        .target(name: "FileCore"),
+        .target(name: "FileCore", dependencies: ["JSONSupport"]),
+        .target(name: "CommandBridge", dependencies: ["JSONSupport"]),
+        .target(name: "CommandLineSupport", dependencies: [
+            "CommandBridge", .product(name: "ArgumentParser", package: "swift-argument-parser"),
+        ], resources: [.process("Resources")]),
         .target(name: "LocalResourceAccess"),
         .target(name: "TextSearch", dependencies: ["FileCore"]),
-        .target(name: "AppSettings"),
+        .target(name: "AppSettings", dependencies: ["JSONSupport"]),
         .target(name: "Themes", resources: [.process("Themes")]),
-        .target(name: "Workspace", dependencies: ["FileCore"], resources: [.process("Resources")]),
-        .target(name: "FileTree", dependencies: ["FileCore"], resources: [.process("Resources")]),
+        .target(name: "Workspace", dependencies: ["FileCore", "JSONSupport"], resources: [.process("Resources")]),
+        .target(name: "FileTree", dependencies: ["FileCore", "JSONSupport"], resources: [.process("Resources")]),
         .target(name: "EditorCore", dependencies: ["FileCore", "TextSearch"], resources: [.process("Resources")]),
         .target(
             name: "Highlighting",
@@ -139,6 +146,7 @@ let package = Package(
             dependencies: [
                 "MarkdownEngine",
                 "Themes",
+                "LocalResourceAccess",
                 .product(name: "cmark-gfm", package: "swift-cmark"),
                 .product(name: "cmark-gfm-extensions", package: "swift-cmark"),
                 .product(name: "SwiftSoup", package: "SwiftSoup"),
@@ -188,6 +196,8 @@ let package = Package(
         ),
 
         .testTarget(name: "FileCoreTests", dependencies: ["FileCore"]),
+        .testTarget(name: "CommandBridgeTests", dependencies: ["CommandBridge"]),
+        .testTarget(name: "CommandLineSupportTests", dependencies: ["CommandLineSupport", "CommandBridge"]),
         .testTarget(name: "LocalResourceAccessTests", dependencies: ["LocalResourceAccess"]),
         .testTarget(name: "TextSearchTests", dependencies: ["TextSearch"]),
         .testTarget(name: "AppSettingsTests", dependencies: ["AppSettings"]),
@@ -205,7 +215,10 @@ let package = Package(
         .testTarget(name: "JSONSupportTests", dependencies: ["JSONSupport"]),
         .testTarget(
             name: "ExportServiceTests",
-            dependencies: ["ExportService", "MarkdownEngine", .product(name: "SwiftSoup", package: "SwiftSoup")]
+            dependencies: [
+                "ExportService", "MarkdownEngine", "LocalResourceAccess",
+                .product(name: "SwiftSoup", package: "SwiftSoup"),
+            ]
         ),
         .testTarget(name: "ContributionsTests", dependencies: ["Contributions", "MarkdownEngine"]),
         .testTarget(name: "TextFiltersTests", dependencies: ["TextFilters"]),

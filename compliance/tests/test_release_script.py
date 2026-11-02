@@ -44,7 +44,7 @@ STUBS = {
     "defaults": 'case "$3" in CFBundleShortVersionString) echo 0.1.0;; CFBundleVersion) echo 7;; *) echo com.example.App;; esac',
     "codesign": 'case "$*" in *-d*) printf "Authority=Developer ID Application: Test Owner (TEAMID1234)\\nTimestamp=now\\nflags=0x10000(runtime)\\n" >&2;; esac; true',
     "hdiutil": 'for last in "$@"; do :; done; touch "$last"',
-    "ditto": 'if [ "$1" = -c ]; then for last in "$@"; do :; done; touch "$last"; else cp -R "$1" "$2"; fi',
+    "ditto": 'echo "ditto $*" >> "$CALLS"; if [ "$1" = -c ]; then for last in "$@"; do :; done; touch "$last"; else cp -R "$1" "$2"; fi',
     "xcodebuild": textwrap.dedent("""\
         if [ "$1" = -version ]; then echo "Xcode 26.0"; exit 0; fi
         echo "xcodebuild $*" >> "$CALLS"
@@ -69,8 +69,14 @@ STUBS = {
           cp "$source" "$workspace/Package.resolved"
         fi
         out="$dd/Build/Products/Release"; mkdir -p "$out"
-        if [ "$scheme" = MacDown2 ]; then mkdir -p "$out/MacDown2.app/Contents"; touch "$out/MacDown2.app/Contents/Info"
-        else touch "$out/macdown2"; fi"""),
+        if [ "$scheme" = MacDown2 ]; then
+          mkdir -p "$out/MacDown2.app/Contents/MacOS"; touch "$out/MacDown2.app/Contents/Info"
+          if [ "${MISSING_EMBEDDED_CLI:-0}" != 1 ]; then
+            touch "$out/MacDown2.app/Contents/MacOS/mostlytext-cli"
+            if [ "${NONEXECUTABLE_EMBEDDED_CLI:-0}" != 1 ]; then chmod +x "$out/MacDown2.app/Contents/MacOS/mostlytext-cli"; fi
+          fi
+        elif [ "$scheme" = MostlyTextCLI ]; then touch "$out/mostlytext"; chmod +x "$out/mostlytext"
+        else echo "Unknown build scheme: $scheme" >&2; exit 65; fi"""),
     "xcrun": textwrap.dedent("""\
         echo "xcrun $*" >> "$CALLS"
         case "$1 $2" in
@@ -155,6 +161,9 @@ class ReleaseScriptModeTests(unittest.TestCase):
         self.assertEqual(workspace.read_text(), source.read_text())
         builds = [line for line in self.calls.read_text().splitlines() if line.startswith("xcodebuild ")]
         self.assertEqual(len(builds), 2)
+        schemes = [build.split("-scheme ", 1)[1].split()[0] for build in builds]
+        self.assertEqual(set(schemes), {"MacDown2", "MostlyTextCLI"})
+        self.assertEqual(len({scheme.casefold() for scheme in schemes}), 2)
         self.assertTrue(all("-onlyUsePackageVersionsFromResolvedFile" in build for build in builds))
 
     def test_release_build_stops_before_notarisation_when_xcode_rewrites_the_lock(self) -> None:
@@ -235,8 +244,27 @@ class ReleaseScriptModeTests(unittest.TestCase):
         self.assertNotIn("UNVERIFIED", self.summary())
         self.assertTrue((self.out / "MacDown2-0.1.0-7.dmg").exists())
         sums = (self.out / "evidence/SHA256SUMS").read_text()
-        self.assertIn("macdown2.zip", sums.split("# not distributed")[0])
+        self.assertIn("mostlytext.zip", sums.split("# not distributed")[0])
         self.assertIn("syspolicy_check distribution ", self.calls.read_text())
+
+    def test_missing_or_nonexecutable_embedded_cli_stops_before_notarisation(self) -> None:
+        for failure in ("MISSING_EMBEDDED_CLI", "NONEXECUTABLE_EMBEDDED_CLI"):
+            with self.subTest(failure=failure):
+                shutil.rmtree(self.out, ignore_errors=True)
+                result = self.run_script("--release-candidate", **{failure: "1"})
+                self.assertNotEqual(result.returncode, 0, result.stdout)
+                self.assertIn("embedded executable CLI not produced", result.stdout)
+                self.assertNotIn("notarytool submit", self.calls.read_text())
+
+    def test_public_and_embedded_cli_names_are_recorded_and_packaged(self) -> None:
+        result = self.run_script("--release-candidate")
+        self.assertEqual(result.returncode, 0, result.stdout)
+        self.assertTrue((self.out / "mostlytext.zip").is_file())
+        self.assertIn("/Release/mostlytext ", self.calls.read_text())
+        self.assertNotIn("/Release/macdown2 ", self.calls.read_text())
+        self.assertIn("public CLI: mostlytext (scheme MostlyTextCLI)", self.summary())
+        self.assertIn("embedded CLI: Contents/MacOS/mostlytext-cli", self.summary())
+        self.assertIn("mostlytext.zip", (self.out / "evidence/SHA256SUMS").read_text())
 
     def test_distribution_check_failure_stops_before_final_hashes(self) -> None:
         for mode in ("--dry-run", "--release-candidate"):

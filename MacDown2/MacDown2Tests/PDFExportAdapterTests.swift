@@ -231,7 +231,7 @@ struct PDFExportAdapterTests {
             ExportRequest(text: "# Printable\n\nA short document.\n", sourceGeneration: 1, theme: BundledThemes.light),
             target: .pdf(url: FileManager.default.temporaryDirectory.appendingPathComponent("print.pdf"))
         )
-        let html = await PDFExportAdapter.hardenedHTML(from: prepared)
+        let html = try await PDFExportAdapter.hardenedHTML(from: prepared)
         #expect(html.contains("Content-Security-Policy"))
         #expect(html.contains("default-src 'none'"))
         #expect(html.contains("A short document."))

@@ -1,14 +1,54 @@
 # MostlyText 1.0 release path
 
-## Current integration checkpoint — 2026-10-26
+## Current coordination checkpoint — 2026-10-29
+
+This dated update supersedes the live-status statements in the October 26
+snapshot below; that snapshot is retained as historical evidence, not as a
+current work queue. GitHub branch, PR, issue and exact-head check metadata were
+read on 2026-10-29. Merge status is not release or native acceptance.
+
+- The current `integration-final` head is
+  [`1c773427`](https://github.com/Joncallim/macdown_2/commit/1c773427ae0e4bb934b9d6a0914707ef98a1bfe9).
+  [#509](https://github.com/Joncallim/macdown_2/pull/509) merged on October 28,
+  followed by [#505](https://github.com/Joncallim/macdown_2/pull/505).
+  [#120](https://github.com/Joncallim/macdown_2/issues/120) is closed. The
+  historical draft and Trash-hold statements below no longer describe these
+  items. Their issue/PR evidence remains authoritative; this document does not
+  broaden owner-accepted evidence limitations or claim a published release.
+- [#520](https://github.com/Joncallim/macdown_2/pull/520) remains draft at
+  `758152ed6638e381704e23af34cc7c067bc92208`.
+  [CI 40721494606](https://github.com/Joncallim/macdown_2/actions/runs/40721494606)
+  passed build-and-test, but lint was cancelled with no executed steps, so the
+  overall run is not green. Compliance passed. Reconcile the current native
+  evidence and outstanding check before merge; the October 26 candidate is
+  not evidence for this head.
+- [#532](https://github.com/Joncallim/macdown_2/pull/532) remains draft at
+  `f5605d9aead306e15ccb1bd8fb4f48b8931c1f76`.
+  [CI 40322381213](https://github.com/Joncallim/macdown_2/actions/runs/40322381213)
+  failed at package build/tests; subsequent app checks did not run. Lint and
+  Compliance passed. Its native Release export acceptance remains unverified
+  by this checkpoint; the older pending-run description below is historical.
+- [#519](https://github.com/Joncallim/macdown_2/pull/519) and
+  [#533](https://github.com/Joncallim/macdown_2/pull/533) remain draft at their
+  October 26 heads. Their exact-head CI and Compliance passed, but those
+  results alone do not establish native permission acceptance or explain the
+  historical session-publication failure.
+- Release, migration, dependency/pin, signing, website and publication gates
+  remain separate. This documentation change waives none of them. Historical
+  workflow and credential descriptions below must be reconciled with their
+  owning issue and current owner decisions before execution.
+
+## Historical integration checkpoint — 2026-10-26
 
 The order and release gates below remain the coordination contract, but their
-2026-09-28 status and credential inventory are historical. The current
-`integration-final` checkpoint is `a129ae2be3de6f0065a2584e974de6d3d2a56c43`
-(tree `16418c77437bdc186a47836febc67ce9a5467832`). This checkpoint is
-an engineering integration branch, not a signed release candidate. Its
-post-merge CI run `40277767533` and compliance run `40277767426` passed;
-the combined source tree also matches the independently reviewed merge tree.
+2026-09-28 status and credential inventory are historical. This snapshot
+records the latest app-code `integration-final` checkpoint as
+`d04bca8e93ac34120b7e2e48422d52588a3f50c4` (tree
+`d50f19b6d8ce8537a6eccdc0522c0ec984e245b0`). This is an engineering
+integration baseline, not a signed release candidate. Its exact-head CI run
+`40286608868` and Compliance run `40286608854` passed, including locked
+package tests, Debug and Release builds, app-target tests, dependency
+verification and lint.
 
 Recent narrow [#183](https://github.com/Joncallim/macdown_2/issues/183)
 corrections are integrated:
@@ -35,28 +75,72 @@ corrections are integrated:
   merged at `dc952693`, keeps later row clicks, match reveal and Replace
   inclusion bound to the result the user saw. Their source reviews and
   exact-head CI runs `40272393710` and `40274842156` passed.
-- [#529](https://github.com/Joncallim/macdown_2/pull/529), merged at the
-  current checkpoint, blocks stale session publication after a newer edit,
+- [#529](https://github.com/Joncallim/macdown_2/pull/529), merged by the
+  earlier `a129ae2b` checkpoint and retained in current integration, blocks
+  stale session publication after a newer edit,
   including a dirty-to-dirty edit that does not schedule a coordinator save.
   Its source review and exact-head CI run `40275023542` passed. Independent
   combined-tree review found no interaction with #528, and the post-merge
-  CI above passed on their combined tree.
-
+  CI at that earlier checkpoint passed on their combined tree.
 These results land only the named implementation slices. #183 remains open
 pending reconciliation of its other findings and the required real-app
 recovery, filesystem, relaunch and Release evidence. Green CI does not replace
 the release-evidence ledger or
 [#115](https://github.com/Joncallim/macdown_2/issues/115) acceptance.
 
-Two reviewed branches remain draft for native acceptance:
-[#519](https://github.com/Joncallim/macdown_2/pull/519) (#121, explicit
-window-local preview-resource grants) requires signed real-app permission,
-revocation and document-lifecycle checks; [#520](https://github.com/Joncallim/macdown_2/pull/520)
-(#112, current-line presentation) requires Release visual, scrolling and
-responsiveness checks. Their source reviews and exact-head CI passed, but
-neither is merged or accepted for 1.0. Reconcile their base with the current
-integration head before any later merge. #509's native sidebar/encoding
-acceptance and #505's held missing-file recovery test are separate open gates.
+Separate from #183, [#531](https://github.com/Joncallim/macdown_2/pull/531)
+implements the #116 guard for invalid rendered math image dimensions before
+HTML width/height conversion. Its independent source review and exact-head CI
+run `40282586058` passed; current integration-head CI run `40286608868` also
+passed.
+This change does not establish a pre-allocation raster memory budget.
+
+## Historical draft and acceptance status — 2026-10-26
+
+- [#532](https://github.com/Joncallim/macdown_2/pull/532) is a draft #117
+  slice at `7a9a06c15b04e7ce7e5bf2788da7b8c177c97fbd`. It freezes the accepted
+  document text, theme and effective Markdown parse options for both
+  contribution parsing and final HTML/PDF composition. Independent source
+  review and local format, lint and syntax checks passed. Compliance run
+  `40290713699` and lint job in CI run `40290713620` passed; package and app
+  checks were still running when this checkpoint was written. Native Release
+  panel, PDF and close/cancel acceptance remains outstanding. The PR remains a
+  draft.
+- [#533](https://github.com/Joncallim/macdown_2/pull/533) records diagnostics
+  for the historical #183 dirty-edit session-publication failure. CI run
+  `40281269838` failed three final assertions in
+  `SessionPublicationDirtyEditTests.swift` at lines 60–62 after the recovery
+  buffer contained the second edit. Diagnostic PR head
+  `201be73782b3ca75dce936be4e20c01afc7a7ed7` passed its exact-head CI and
+  Compliance runs `40286438757` and `40286438651` without reproducing the
+  rejection. The later current integration head also passed app-target tests
+  in run `40286608868`. The original failure remains unexplained; no production
+  retry change or #183 closure is justified by this evidence.
+- [#519](https://github.com/Joncallim/macdown_2/pull/519) remains a draft for
+  #121 at head `4fbaba397b32980f29ddf9a79ca012c623eeb603`. A temporary combined
+  native candidate based on the earlier `a129ae2b` integration passed the
+  tested chooser cancel, wrong-folder, valid ancestor-grant, sibling-denial,
+  revocation, tab-switch and reselection flows. This does not establish signed
+  sandbox permission behavior, and the tested candidate does not include the
+  current `d04bca8e` base. Reconcile and rerun on the exact current candidate
+  before merge or issue closure.
+- [#520](https://github.com/Joncallim/macdown_2/pull/520) remains a draft for
+  #112 at head `6238eaa0c9cec87512acf085c5bceae475aeb312`. The same earlier
+  combined native candidate passed the observed current-line, gutter,
+  multiselection and save/reopen checks, but a 1.15 MB single-paragraph preview
+  became unresponsive. A retained sample showed repeated main-thread SwiftUI
+  text-layout/Core Text measurement in the one-Text oversize fallback. The
+  native task owns that performance investigation; this is not #203 closure or
+  proof of release responsiveness. Retest on the exact current integration
+  candidate after a reviewed fix.
+- [#509](https://github.com/Joncallim/macdown_2/pull/509) remains a draft for
+  #112 at head `680812ad07ab727885e8ef3e9bb33ef7983fcf8a`. Its sidebar and
+  checked-encoding source changes do not yet have completed native acceptance.
+- #505's missing-file recovery test remains held pending its separate Trash
+  approval. #53 migration activation remains gated by its compatibility,
+  consent and recovery contracts. #203 dependency or pin changes remain held
+  for their explicit decision. None of these gates is waived by the results
+  above.
 
 **Historical owner summary (2026-09-28).** This is the coordination map from
 the recorded `master` baseline to a

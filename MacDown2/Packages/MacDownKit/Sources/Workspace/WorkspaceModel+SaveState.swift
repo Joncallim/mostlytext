@@ -1,6 +1,22 @@
 import FileCore
 import Foundation
 
+/// Presentation ownership for one accepted save, independent of a document ID
+/// that Save As may replace before its session and recovery work completes.
+struct LogicalSaveOperationID: Hashable {
+    private let value = UUID()
+}
+
+struct SavingDocumentLifetime: Hashable, Sendable {
+    let documentID: String
+    let recoveryEpoch: UUID
+
+    init(_ document: FileDocument) {
+        documentID = document.id
+        recoveryEpoch = document.recoveryEpoch
+    }
+}
+
 @MainActor
 extension WorkspaceModel {
     func isBackingUnavailable(_ document: FileDocument) -> Bool {
@@ -13,6 +29,7 @@ extension WorkspaceModel {
     func isCurrent(_ document: FileDocument) -> Bool {
         guard let current = tabStore.activeDocument else { return false }
         return current.id == document.id
+            && current.recoveryEpoch == document.recoveryEpoch
             && current.fileURL?.standardizedFileURL == document.fileURL?.standardizedFileURL
             && current.text.isExactlyEqual(to: document.text)
             && current.state == document.state
@@ -23,6 +40,7 @@ extension WorkspaceModel {
     func isCurrent(_ document: FileDocument, inTab tabID: UUID) -> Bool {
         guard let current = tabStore.tabs.first(where: { $0.id == tabID })?.document else { return false }
         return current.id == document.id
+            && current.recoveryEpoch == document.recoveryEpoch
             && current.fileURL?.standardizedFileURL == document.fileURL?.standardizedFileURL
             && current.text.isExactlyEqual(to: document.text)
             && current.state == document.state
@@ -60,28 +78,22 @@ extension WorkspaceModel {
         latestSaveGenerationByDocumentID[document.id] != nil
     }
 
-    /// Marks `documentID` as having a save write in flight (#57). Paired with
-    /// `endSavingIndicator`, always via `defer`, so it clears on every exit
-    /// path — success, failure, or a metadata-conflict retry recursing back
-    /// through the same call. Reference-counted (adversarial review finding):
-    /// `save(isRetry:destinationPolicy:)` has no reentrancy guard against a
-    /// second concurrent `save()` for the same document (only
-    /// `inFlightSaveAsByDocumentID` blocks a *Save As* from overlapping), and
-    /// the metadata-conflict retry in `reconcileSaveConflict` recurses into a
-    /// nested `save(isRetry: true, ...)` call for the same document ID while
-    /// the outer call is still unwinding. A plain `Set` would let whichever
-    /// overlapping call finishes first clear the flag while the other is
-    /// still genuinely writing.
-    func beginSavingIndicator(for documentID: String) {
-        savingCountByDocumentID[documentID, default: 0] += 1
+    /// Each overlapping save owns its own token, including a nested metadata
+    /// retry. Only that token may remove its aliases when its work ends.
+    func beginSavingIndicator(for document: FileDocument) -> LogicalSaveOperationID {
+        let operation = LogicalSaveOperationID()
+        activeSaveOperations[operation] = [SavingDocumentLifetime(document)]
+        return operation
     }
 
-    func endSavingIndicator(for documentID: String) {
-        guard let count = savingCountByDocumentID[documentID] else { return }
-        if count > 1 {
-            savingCountByDocumentID[documentID] = count - 1
-        } else {
-            savingCountByDocumentID[documentID] = nil
-        }
+    /// Attach the destination before publishing it as the active document.
+    /// Retain the source alias until this operation's terminal path runs.
+    func includeSavingLifetime(_ document: FileDocument, in operation: LogicalSaveOperationID) {
+        guard activeSaveOperations[operation] != nil else { return }
+        activeSaveOperations[operation]?.insert(SavingDocumentLifetime(document))
+    }
+
+    func endSavingIndicator(_ operation: LogicalSaveOperationID) {
+        activeSaveOperations[operation] = nil
     }
 }

@@ -73,7 +73,13 @@ def validate(record: dict, header: bytes, implementation: bytes, repo: Path) -> 
                 raise ValueError(f"source classification/type mismatch: {key}")
         if entry["disposition"] not in allowed[entry["kind"]]:
             raise ValueError(f"unclassified disposition: {key}")
-        if not entry.get("rationale") or not entry.get("owner") or entry.get("implementation_status") != "not_implemented":
+        implemented = {"editorBaseFontInfo": "implemented_exact_resolution", "editorStyleName": "implemented_report",
+                       "htmlMathJax": "implemented_report", "htmlMathJaxInlineDollar": "implemented_report",
+                       "htmlGraphviz": "implemented_report", "htmlMermaid": "implemented_report",
+                       "htmlRendersTOC": "implemented_report", "updateIncludesPreReleases": "implemented_report"}
+        if not entry.get("rationale") or not entry.get("owner") or entry.get("implementation_status") not in {
+            "not_implemented", implemented.get(key)
+        } or entry.get("implementation_status") is None:
             raise ValueError(f"missing rationale/owner or unsupported implementation claim: {key}")
         candidate = entry.get("destination_candidate")
         if entry["disposition"] == "candidate_equivalent":
@@ -91,9 +97,34 @@ def validate(record: dict, header: bytes, implementation: bytes, repo: Path) -> 
                 raise ValueError("candidate requires outstanding semantic evidence")
         elif candidate is not None or entry.get("destination_source") is not None:
             raise ValueError("non-equivalent disposition cannot install a destination")
-    return {"status": "declaration coverage passed; import remains unimplemented",
+    validate_report(record, repo)
+    return {"status": "declaration and runtime report coverage passed; runtime acceptance requires separate evidence",
             "properties": len(entries), "kinds": dict(Counter(entry["kind"] for entry in entries)),
             "dispositions": dict(Counter(entry["disposition"] for entry in entries))}
+
+
+def validate_report(record: dict, repo: Path) -> None:
+    """Bind the data-only report to the exhaustive source-backed declaration map."""
+    path = repo / "MacDown2/Packages/MacDownKit/Sources/AppSettings/LegacyPreferenceCatalog.swift"
+    members = re.findall(r'\.init\("(\w+)",\s*\.(\w+),\s*\.(\w+)\)', path.read_text())
+    names = [member[0] for member in members]
+    entries = {entry["key"]: entry for entry in record["entries"]}
+    if len(entries) != len(record["entries"]) or len(set(names)) != len(names) or set(names) != set(entries):
+        raise ValueError("runtime report declaration coverage mismatch")
+    kinds = {"BOOL": "boolean", "NSString *": "string", "CGFloat": "number",
+             "NSInteger": "enumeration", "NSDictionary *": "font", "NSURL *": "opaque",
+             "NSArray *": "opaque", "NSFont *": "opaque"}
+    for key, kind, policy in members:
+        entry = entries[key]
+        if kind != kinds[entry["declaration_type"]] or policy != entry.get("report_policy"):
+            raise ValueError(f"runtime report type/policy mismatch: {key}")
+        if entry["kind"] == "transient" and policy != "transient":
+            raise ValueError("runtime report must never replay IPC")
+        if entry["kind"] == "calculated" and policy != "calculated":
+            raise ValueError("runtime report must not import calculated values")
+    mapped = {key for key, _, policy in members if policy == "mapped"}
+    if mapped != {"editorAutoIncrementNumberedLists", "editorConvertTabs", "editorSmartHome"}:
+        raise ValueError("runtime report changed the reviewed direct mappings")
 
 
 def main():

@@ -98,22 +98,39 @@ final class ExternalFileController {
     private func apply(_ observation: DocumentFileObservation, generation: UInt) async {
         guard generation == lifecycleGeneration else { return }
         guard !disposed, let model, let document = model.activeDocument else { return }
+        // A Save As publishes its destination before the window controller
+        // rebinds this watcher. An already queued observation still describes
+        // the former URL; never apply it to the new destination during that
+        // handoff.
+        guard activeDocumentMatchesBoundURL(document) else { return }
 
-        switch observation {
-        case let .available(snapshot):
-            guard snapshot.revision.url.standardizedFileURL == boundURL else { return }
-            applyAvailable(snapshot, to: document, model: model)
-        case let .moved(snapshot):
-            await applyMove(snapshot, to: document, model: model)
-        case let .missing(url):
-            guard url.standardizedFileURL == boundURL else { return }
-            applyUnavailable(.missingOrMoved, to: document, model: model)
-        case let .unavailable(url, issue):
-            guard url.standardizedFileURL == boundURL else { return }
-            applyUnavailable(issue, to: document, model: model)
-        }
+        guard await applyObservedFileState(observation, to: document, model: model) else { return }
         if case .monitorFailed = notice {
             notice = .none
+        }
+    }
+
+    private func applyObservedFileState(
+        _ observation: DocumentFileObservation,
+        to document: FileDocument,
+        model: WorkspaceModel
+    ) async -> Bool {
+        switch observation {
+        case let .available(snapshot):
+            guard snapshot.revision.url.standardizedFileURL == boundURL else { return false }
+            applyAvailable(snapshot, to: document, model: model)
+            return true
+        case let .moved(snapshot):
+            await applyMove(snapshot, to: document, model: model)
+            return true
+        case let .missing(url):
+            guard url.standardizedFileURL == boundURL else { return false }
+            applyUnavailable(.missingOrMoved, to: document, model: model)
+            return true
+        case let .unavailable(url, issue):
+            guard url.standardizedFileURL == boundURL else { return false }
+            applyUnavailable(issue, to: document, model: model)
+            return true
         }
     }
 
@@ -265,6 +282,10 @@ extension ExternalFileController {
 
     func isBindingCurrent(generation: UInt, url: URL) -> Bool {
         !disposed && lifecycleGeneration == generation && boundURL == url
+    }
+
+    private func activeDocumentMatchesBoundURL(_ document: FileDocument) -> Bool {
+        document.fileURL?.standardizedFileURL == boundURL
     }
 
     func isCurrent(_ context: OperationContext, in model: WorkspaceModel) -> Bool {

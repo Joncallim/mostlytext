@@ -15,6 +15,18 @@ public struct DocumentFileObservationContext: Sendable, Equatable {
     public let bindingGeneration: UInt
     public let requestGeneration: UInt
     public let expectedURL: URL
+
+    public init(
+        observation: DocumentFileObservation,
+        bindingGeneration: UInt,
+        requestGeneration: UInt,
+        expectedURL: URL
+    ) {
+        self.observation = observation
+        self.bindingGeneration = bindingGeneration
+        self.requestGeneration = requestGeneration
+        self.expectedURL = expectedURL
+    }
 }
 
 protocol DocumentFileProbing: Sendable {

@@ -37,6 +37,7 @@ as a read-only porting source in `legacy-reference/`.
 |---|---|
 | Generate Xcode project | `cd MacDown2 && xcodegen generate` |
 | Build app | `xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 -destination 'platform=macOS' build` |
+| Build CLI | `xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MostlyTextCLI -destination 'platform=macOS' build` (the executable is `mostlytext`) |
 | Build app for dogfooding | `MacDown2/scripts/pin-xcode-package-versions.sh`, then the command above + `-configuration Release -onlyUsePackageVersionsFromResolvedFile` — Debug Swift has no optimizations and materially changes how the app feels to type in; judge responsiveness on a Release build, not Debug |
 | Pin Xcode to locked dependency versions | `MacDown2/scripts/pin-xcode-package-versions.sh` after `xcodegen generate`, then add `-onlyUsePackageVersionsFromResolvedFile` to `xcodebuild`. CI does this for every Xcode build; the plain "Build app" command above does not, so Xcode resolves on its own |
 | Build + test package | `cd MacDown2/Packages/MacDownKit && swift build && swift test` (CI adds `--force-resolved-versions`) |

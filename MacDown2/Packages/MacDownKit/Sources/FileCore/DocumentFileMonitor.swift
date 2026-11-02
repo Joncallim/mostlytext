@@ -156,6 +156,7 @@ public actor DocumentFileMonitor {
         watcherHealthy = false
         parentRecoveryPending = false
         callback = nil
+        contextCallback = nil
         healthCallback = nil
         boundURL = nil
         priorFileObjectID = nil

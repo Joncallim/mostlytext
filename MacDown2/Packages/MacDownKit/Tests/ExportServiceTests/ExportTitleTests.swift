@@ -22,7 +22,7 @@ struct ExportTitleTests {
         )
         #expect(prepared.title == "My Title")
 
-        let html = ExportHTMLWriter.selfContainedHTML(from: prepared)
+        let html = try ExportHTMLWriter.selfContainedHTML(from: prepared)
         #expect(html.contains("<title>My Title</title>"))
         #expect(html.contains("<h1>Hello</h1>"))
         // The document already opens with its own heading; the front-matter
@@ -42,7 +42,7 @@ struct ExportTitleTests {
         #expect(prepared.title == "Report Q3")
         #expect(prepared.visibleTitle == nil)
 
-        let html = ExportHTMLWriter.selfContainedHTML(from: prepared)
+        let html = try ExportHTMLWriter.selfContainedHTML(from: prepared)
         #expect(html.contains("<title>Report Q3</title>"))
         #expect(html.contains("<h1>Report Q3</h1>"))
         // Exactly one <h1>: the authored one, not a synthesised duplicate.
@@ -59,7 +59,7 @@ struct ExportTitleTests {
         )
         #expect(prepared.visibleTitle == "Report Q3")
 
-        let html = ExportHTMLWriter.selfContainedHTML(from: prepared)
+        let html = try ExportHTMLWriter.selfContainedHTML(from: prepared)
         #expect(html.contains("<h1>Report Q3</h1>"))
         #expect(html.contains("<h2>Subsection</h2>"))
     }
@@ -73,7 +73,7 @@ struct ExportTitleTests {
         #expect(prepared.title == "Quarterly Report")
         #expect(prepared.visibleTitle == "Quarterly Report")
 
-        let html = ExportHTMLWriter.selfContainedHTML(from: prepared)
+        let html = try ExportHTMLWriter.selfContainedHTML(from: prepared)
         #expect(html.contains("<title>Quarterly Report</title>"))
         #expect(html.contains("<h1>Quarterly Report</h1>"))
     }
@@ -94,7 +94,7 @@ struct ExportTitleTests {
         // A filename is not a heading the author wrote, so it never becomes one.
         #expect(prepared.visibleTitle == nil)
 
-        let html = ExportHTMLWriter.selfContainedHTML(from: prepared)
+        let html = try ExportHTMLWriter.selfContainedHTML(from: prepared)
         #expect(html.contains("<title>Meeting Notes</title>"))
         #expect(!html.contains("<h1>Meeting Notes</h1>"))
     }
@@ -105,7 +105,8 @@ struct ExportTitleTests {
             target: .html(url: URL(fileURLWithPath: "/tmp/out.html"), mode: .selfContained)
         )
         #expect(prepared.title.isEmpty)
-        #expect(!ExportHTMLWriter.selfContainedHTML(from: prepared).contains("<title>"))
+        let html = try ExportHTMLWriter.selfContainedHTML(from: prepared)
+        #expect(!html.contains("<title>"))
     }
 
     @Test func aNonScalarFrontMatterTitleWarnsAndIsNotUsed() async throws {
@@ -130,7 +131,7 @@ struct ExportTitleTests {
             ExportRequest(text: markdown, sourceGeneration: 16, theme: ExportTestSupport.lightTheme()),
             target: .html(url: URL(fileURLWithPath: "/tmp/out.html"), mode: .selfContained)
         )
-        let html = ExportHTMLWriter.selfContainedHTML(from: prepared)
+        let html = try ExportHTMLWriter.selfContainedHTML(from: prepared)
         #expect(!html.contains("<b>bold</b>"))
         #expect(html.contains("&lt;b&gt;bold&lt;/b&gt;"))
         #expect(html.contains("&amp;"))

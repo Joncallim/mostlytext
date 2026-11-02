@@ -1,0 +1,12 @@
+diff --git a/MacDown2/Packages/MacDownKit/Sources/FileCore/DocumentFileMonitor.swift b/MacDown2/Packages/MacDownKit/Sources/FileCore/DocumentFileMonitor.swift
+index be9719e2..3af8eac2 100644
+--- a/MacDown2/Packages/MacDownKit/Sources/FileCore/DocumentFileMonitor.swift
++++ b/MacDown2/Packages/MacDownKit/Sources/FileCore/DocumentFileMonitor.swift
+@@ -156,6 +156,7 @@ public actor DocumentFileMonitor {
+         watcherHealthy = false
+         parentRecoveryPending = false
+         callback = nil
++        contextCallback = nil
+         healthCallback = nil
+         boundURL = nil
+         priorFileObjectID = nil

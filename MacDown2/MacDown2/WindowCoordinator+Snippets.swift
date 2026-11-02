@@ -9,8 +9,8 @@ extension WindowCoordinator {
     /// `snippets.json`, scoped and sorted by `SnippetCatalog`. A missing,
     /// unreadable or newer-version file contributes no user snippets and is
     /// never rewritten by this path.
-    func availableSnippets(formatID: String, store: SnippetStore = SnippetStore()) -> [Snippet] {
-        SnippetCatalog.snippets(user: store.load().snippets, formatID: formatID)
+    func availableSnippets(formatID: String, store: SnippetStore? = nil) -> [Snippet] {
+        SnippetCatalog.snippets(user: (store ?? snippetStore).load().snippets, formatID: formatID)
     }
 
     /// A one-line explanation when the user's snippet file could not be used
@@ -50,7 +50,7 @@ extension WindowCoordinator {
               origin.editorStore.existingSystem(for: activeTab.id.uuidString) != nil
         else { return }
 
-        let loaded = SnippetStore().load()
+        let loaded = snippetStore.load()
         let snippets = SnippetCatalog.snippets(user: loaded.snippets, formatID: activeTab.syntaxFormat.id)
         let created = SnippetPickerPanel(
             coordinator: self,
@@ -110,7 +110,7 @@ extension WindowCoordinator {
     /// if it does not exist. An existing — even unreadable — file is opened
     /// as is, never replaced.
     func editSnippets(relativeTo window: NSWindow?) {
-        let store = SnippetStore()
+        let store = snippetStore
         guard store.createIfMissing() else {
             NSSound.beep()
             return
