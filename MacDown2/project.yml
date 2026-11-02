@@ -28,7 +28,7 @@ targets:
       type: file
       buildPhase: resources
     dependencies:
-    - target: MacDown2Command
+    - target: MostlyTextCommand
       link: false
     - package: MacDownKit
       product: FileCore
@@ -204,17 +204,17 @@ targets:
     - name: Embed command-line executable
       path: scripts/embed-cli.sh
       inputFiles:
-      - $(BUILT_PRODUCTS_DIR)/macdown2
+      - $(BUILT_PRODUCTS_DIR)/mostlytext
       - $(BUILT_PRODUCTS_DIR)/MacDownKit_CommandLineSupport.bundle
       outputFiles:
-      - $(TARGET_BUILD_DIR)/$(EXECUTABLE_FOLDER_PATH)/macdown2-command
+      - $(TARGET_BUILD_DIR)/$(EXECUTABLE_FOLDER_PATH)/mostlytext-cli
       - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/MacDownKit_CommandLineSupport.bundle
-  MacDown2Command:
+  MostlyTextCommand:
     type: tool
     settings:
       base:
-        PRODUCT_NAME: macdown2
-        PRODUCT_MODULE_NAME: MacDown2Command
+        PRODUCT_NAME: mostlytext
+        PRODUCT_MODULE_NAME: MostlyTextCommand
     platform: macOS
     sources:
     - MacDown2CLI
@@ -324,7 +324,7 @@ schemes:
       targets:
       - MacDown2UITests
       - MacDown2Tests
-  MacDown2CLI:
+  MostlyTextCLI:
     build:
       targets:
-        MacDown2Command: all
+        MostlyTextCommand: all

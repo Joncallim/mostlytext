@@ -19,8 +19,11 @@ that endpoint; passing command tests does not claim native open/stdin/wait.
 Pin Apple swift-argument-parser 1.8.2 at its verified release revision, wrapping
 it in CommandLineSupport. Preserve all existing locked dependencies, copy its
 exact licence/notice and update inventory/notices/SBOM. The official package
-has no external dependencies. Keep `macdown2` as the existing development command
-name; final release identity remains a separate manifest input.
+has no external dependencies. The owner-confirmed public command and build product are `mostlytext`. The
+internal target/module is MostlyTextCommand and the build scheme is MostlyTextCLI.
+The embedded filename is mostlytext-cli, keeping it distinct from the app
+executable on case-insensitive filesystems. Final app/storage identity remains
+a separate manifest input.
 
 The default and `open` commands accept structured file arguments and `--wait`.
 `--` escapes option-like or reserved-command filenames. `-` is one explicit
@@ -39,7 +42,7 @@ work runs off MainActor. SIGINT/SIGTERM cancel only this client/connection.
 ## Installed app and transport
 
 Resolve the actual executing image physically, including an explicitly created
-user-bin symlink, and require `App.app/Contents/MacOS/macdown2-command`. Validate its Info
+user-bin symlink, and require `App.app/Contents/MacOS/mostlytext-cli`. Validate its Info
 plist, main executable and non-placeholder bundle identity. Embed the CLI as an
 app build dependency/copy with exact bytes and its localisation resource bundle, so CLI and app update together. Warm
 connection uses the OS-selected per-user endpoint, not TMPDIR or a client path.
@@ -78,7 +81,7 @@ Neon known issues) but app+CLI dependency builds exposed a case-insensitive
 intermediate-directory collision: app target MacDown2 and tool target macdown2
 wrote overlapping Swift file lists, so the tool attempted to compile the app's
 GeneratedAssetSymbols.swift before it existed. Rename only the internal tool
-target and Swift module to MacDown2Command and set PRODUCT_NAME to macdown2. The public scheme,
+target and Swift module to MostlyTextCommand and set PRODUCT_NAME to mostlytext. The public scheme,
 executable, embedding path and app identity stay the same. Retain the failed
 run and require a full corrected locked run.
 
@@ -89,9 +92,16 @@ These checks do not launch AppDelegate or prove compiled-catalog translations.
 
 The next full run passed package tests and all builds, but app-target execution
 found a second case-insensitive collision: copying macdown2 alongside main
-executable MacDown2 overwrote the app. Embed the tool as macdown2-command;
-public syntax, build product macdown2 and optional user-bin symlink name remain
-macdown2. The locator follows that symlink to the distinct embedded filename.
+executable MacDown2 overwrote the app. Embed the tool as mostlytext-cli;
+public syntax, build product and optional user-bin symlink name are mostlytext. The locator follows that symlink to the distinct embedded filename.
 The embed script refuses a destination aliasing the main executable and refuses
 an already overwritten app executable (clean/rebuild required). Retain the
 failed app bootstrap and require the complete corrected hosted run.
+
+## Public CLI identity confirmation
+
+On 2 November the owner confirmed mostlytext as the public CLI. The executable
+build product, help/usage, unbundled version marker, scheme/build instructions
+and optional user-bin command all use mostlytext. Contents/MacOS/mostlytext-cli
+is the embedded implementation path, avoiding a future collision with an app
+executable named MostlyText. No compatibility alias is installed automatically.

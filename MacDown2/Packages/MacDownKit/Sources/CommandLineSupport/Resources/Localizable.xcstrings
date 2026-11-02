@@ -141,12 +141,12 @@
         }
       }
     },
-    "macdown2 (unbundled development build)": {
+    "mostlytext (unbundled development build)": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "macdown2 (unbundled development build)"
+            "value": "mostlytext (unbundled development build)"
           }
         }
       }
