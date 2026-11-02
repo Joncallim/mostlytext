@@ -1,5 +1,6 @@
 import AppKit
 import AppSettings
+import CommandBridge
 import EditorCore
 import FileCore
 import FileTree
@@ -53,6 +54,7 @@ final class WindowCoordinator {
     let sidebarLayoutBroadcaster = SidebarLayoutBroadcaster()
     private var hasRestoredSession = false
     let documentOpens = KeyedSerialRunner<String>()
+    @ObservationIgnored var commandReceiver: CommandApplicationReceiver?
     var launchSession: WorkspaceSession? // as at launch; handed out once by `consumeLaunchSession()`
     var saveTask: Task<Void, Never>?
     @ObservationIgnored var terminationSaveInProgress = false
@@ -137,78 +139,6 @@ final class WindowCoordinator {
     }
 
     // MARK: - Window lifecycle
-
-    /// Opens a file in a new window, or activates the existing window if the
-    /// same file is already open. The single choke point every real file
-    /// open routes through — see `WindowCoordinator+RecentFiles.swift` for
-    /// why `recentFileDocuments.record(_:)` is called from here.
-    /// - Parameter relativeTo: when non-`nil`, used as the tab host instead
-    ///   of `NSApp.keyWindow` — the command palette (via `createInFolder`,
-    ///   whose "New File" this backs) passes its captured origin window
-    ///   here so the newly created document opens relative to it rather
-    ///   than whatever window is key once this `await` resolves
-    ///   (post-review finding #4).
-    func performOpenDocument(
-        at url: URL,
-        folderRoot: URL? = nil,
-        folderAccessURL: URL? = nil,
-        folderSelectionURL: URL? = nil,
-        folderRenameURL: URL? = nil,
-        relativeTo overrideKeyWindow: NSWindow? = nil,
-        encoding: FileEncodingMetadata? = nil,
-        shouldContinue: (@MainActor () -> Bool)? = nil,
-        useAmbientWindow: Bool = true
-    ) async {
-        guard shouldContinue?() ?? true else { return }
-        // A link to a file opens (and saves to) that file; resolved first so the
-        // same file is not opened twice, once through the link and once directly.
-        let url = url.resolvingFinalSymlink()
-        if let existing = controllerForDocument(url: url), existing.window != nil {
-            await focus(
-                existing,
-                for: url,
-                folder: FolderOpenContext(
-                    root: folderRoot,
-                    accessURL: folderAccessURL,
-                    selectionURL: folderSelectionURL,
-                    renameURL: folderRenameURL
-                ),
-                encoding: encoding,
-                shouldContinue: shouldContinue
-            )
-            return
-        }
-        let keyWindow = overrideKeyWindow ?? (useAmbientWindow ? NSApp.keyWindow : nil)
-        let model = makeWindowModel()
-        let outcome = await model.tabStore.openFileInTab(url, encoding: encoding)
-        if shouldContinue != nil {
-            await afterFolderSearchFileLoad?()
-        }
-        guard shouldContinue?() ?? true else { return }
-        model.setFolderRoot(folderRoot)
-
-        guard !model.tabStore.tabs.isEmpty else {
-            if case let .failure(error) = outcome {
-                presentOpenFailure(error, url: url)
-            }
-            return
-        }
-        let controller = makeWindowController(model: model)
-        if let folderRoot {
-            await controller.setFileTreeRoot(folderRoot, accessURL: folderAccessURL)
-        }
-        if shouldContinue != nil {
-            await afterFolderSearchRootRebuild?()
-        }
-        guard shouldContinue?() ?? true else {
-            controller.window?.close()
-            return
-        }
-        controller.fileTreeModel.selectedURL = folderSelectionURL
-        controller.fileTreeModel.renamingURL = folderRenameURL
-        addController(controller, addingAsTab: true, keyWindow: keyWindow, useAmbientWindow: useAmbientWindow)
-        recentFileDocuments.record(url)
-    }
 
     /// Shows the open panel and opens the chosen file.
     /// - Parameter relativeTo: when non-`nil`, the panel presents against
@@ -326,6 +256,7 @@ final class WindowCoordinator {
     // MARK: - Internal helpers
 
     func removeController(_ controller: WindowController) {
+        commandReceiver?.documentClosed(controller.commandDocumentLifetime)
         pendingNewDocumentTasks.removeValue(forKey: ObjectIdentifier(controller))?.cancel()
         controllers.removeAll { $0 === controller }
         // The palette must never keep offering (or being able to invoke)

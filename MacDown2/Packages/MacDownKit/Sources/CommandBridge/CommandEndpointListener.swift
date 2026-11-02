@@ -12,7 +12,7 @@ public final class CommandEndpointListener {
     private var ownedIdentity: CommandSocketIdentity?
 
     public init(location: CommandEndpointLocation, until deadline: ContinuousClock.Instant,
-                isCancelled: () -> Bool = { false }) throws {
+                isCancelled: @Sendable () -> Bool = { false }) throws {
         self.location = location
         lease = try CommandEndpointLease(location: location)
         namespace = try CommandEndpointNamespace(location)
@@ -59,7 +59,7 @@ public final class CommandEndpointListener {
     }
 
     public func accept(until deadline: ContinuousClock.Instant,
-                       isCancelled: () -> Bool = { false }) throws -> CommandSocketConnection {
+                       isCancelled: @Sendable () -> Bool = { false }) throws -> sending CommandSocketConnection {
         while true {
             try CommandSocketPolling.check(descriptor, deadline: deadline, cancelled: isCancelled)
             try lease.verifyOwnership()
@@ -91,7 +91,7 @@ public final class CommandEndpointListener {
     }
 
     private func requireRefusedEndpoint(until deadline: ContinuousClock.Instant,
-                                        isCancelled: () -> Bool) throws {
+                                        isCancelled: @Sendable () -> Bool) throws {
         let probe = try CommandSocketPolling.makeSocket()
         defer { Darwin.close(probe) }
         do {
