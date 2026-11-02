@@ -219,10 +219,10 @@ public final class RecentFileDocuments {
                 ))
                 changed = true
             } else if preservesUnavailableBookmarks {
-                var info = stat()
-                if stat(url.path, &info) != 0, errno != ENOENT, errno != ENOTDIR {
-                    survivors.append((url, bookmark))
-                }
+                // ENOENT can mean an unmounted volume or unavailable grant,
+                // not just deliberate deletion. Retain uncertain identity;
+                // explicit reauthorization or Clear owns its removal.
+                survivors.append((url, bookmark))
             }
         }
         guard changed || survivors.count != documents.count else { return }

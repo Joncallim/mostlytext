@@ -24,7 +24,7 @@ The published generation contains independent `Source` and `State` trees plus ra
 
 Strictly inspect copied settings, canonical sessions, recovery ledgers, snippets and themes before activation. Unknown/future/malformed authoritative formats stop required migration, with originals and staged copies retained; they are never turned into empty stores. Existing final state is retained without importing development settings into it. Preserve a separate development backup and expose a deliberate Finder review action. All authored text and IDs/epochs remain byte-identical; no documents outside Application Support are copied or normalized.
 
-Bookmark bytes and lexical labels survive. Resolution under the new identity grants no authority by itself. Keep unavailable structured entries visible, retain opaque unresolved records, and route an unresolved recent-item action to a user chooser rather than opening a stored path. Native TCC/security-scope behavior remains an exact-account/candidate acceptance gate.
+Bookmark bytes and lexical labels survive. Resolution under the new identity grants no authority by itself. Keep unavailable structured entries visible, retain opaque unresolved records, and route an unresolved recent-item action to a user chooser rather than opening a stored path. An unresolved recent-file path is retained even on ENOENT, which may mean an unmounted volume; explicit Clear or reauthorization controls its later removal. Native TCC/security-scope behavior remains an exact-account/candidate acceptance gate.
 
 ## Resource, failure and cancellation rules
 

@@ -28,13 +28,17 @@ struct InstallationBookmarkTests {
         let folders = RecentFolderRoots(preferences: model, preservesUnavailableBookmarks: true)
         let files = RecentFileDocuments(preferences: model, preservesUnavailableBookmarks: true)
         #expect(folders.roots == [lexical])
-        // A genuinely missing recent file may still prune under ordinary policy;
-        // opaque records remain retained rather than rewritten as empty state.
+        // A missing path cannot distinguish deletion from an unmounted
+        // volume. Migration retains the structured record for a chooser.
         #expect(files.unresolvedBookmarkCount == 1)
         #expect(folders.unresolvedBookmarkCount == 1)
         #expect(folders.resolve(lexical) == nil)
         #expect(stored.recentRootBookmarks == [record, opaque])
-        #expect(stored.recentFileBookmarks.contains(opaque))
+        #expect(stored.recentFileBookmarks == [record, opaque])
+        #expect(files.documents == [lexical])
+        #expect(files.resolve(lexical) == nil)
+        files.pruneMissingFiles()
+        #expect(stored.recentFileBookmarks == [record, opaque])
         folders.clear(); files.clear()
         #expect(stored.recentRootBookmarks.isEmpty && stored.recentFileBookmarks.isEmpty)
     }
