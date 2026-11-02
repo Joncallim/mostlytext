@@ -162,3 +162,19 @@ about 47.70 to 23.33 ms in Debug; the existing named 1 MB fixture is actually
 1.59 ms. Those numbers do not establish a full-size/native budget. Fixture
 fidelity remains in #112/#203/#115. The native backing-store getter probe shows
 no material getter cost, so no speculative getter change is included.
+
+## Fresh native candidate binding
+
+Preparing fresh isolated binaries exposed a stale executor path: its candidate
+argument still named the earlier a75 checkout. Bind that argument to the
+owner-protected manifest's required candidateRoot instead. Refuse missing,
+relative, noncanonical, linked, missing or non-directory roots. The existing
+fixed-runner source/commit/patch/plan/signature checks still bind the selected
+checkout to the actual products; choosing a path does not bypass those gates.
+Older manifests must be deliberately regenerated with current source and driver
+hashes. Their historical receipts are not retargeted.
+
+Factoring the exact old constant reproduces eleven failed assertions in the two
+new candidate controls. All ten executor controls then pass normally and with
+Python optimization. The initial missing-helper test attempt is retained as a
+setup failure, not the behavioral negative. No application or test is launched.

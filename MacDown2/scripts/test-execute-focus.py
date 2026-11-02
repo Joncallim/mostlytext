@@ -3,6 +3,7 @@
 import importlib.util
 from pathlib import Path
 from types import SimpleNamespace
+import tempfile
 import unittest
 from unittest import mock
 
@@ -15,6 +16,26 @@ class ExecutorVerdictTests(unittest.TestCase):
     def setUp(self):
         self.counts = {'totalTestCount': 1, 'passedTests': 1, 'failedTests': 0,
                        'skippedTests': 0, 'expectedFailures': 0}
+
+    def test_current_candidate_comes_from_the_reviewed_binding(self):
+        with tempfile.TemporaryDirectory() as directory:
+            candidate = Path(directory).resolve()
+            self.assertEqual(executor.candidate_root({'candidateRoot': str(candidate)}), candidate)
+
+    def test_missing_relative_noncanonical_or_non_directory_candidates_are_refused(self):
+        with tempfile.TemporaryDirectory() as directory:
+            parent = Path(directory).resolve()
+            file = parent / 'file'
+            file.write_text('not a checkout')
+            alias = parent / 'alias'
+            alias.symlink_to(parent, target_is_directory=True)
+            for value in [None, 1, '', 'relative', str(parent) + '/../other',
+                          str(parent) + '/', str(file), str(alias), str(parent / 'missing')]:
+                with self.subTest(candidate=value):
+                    with self.assertRaises((RuntimeError, FileNotFoundError)):
+                        executor.candidate_root({'candidateRoot': value})
+            with self.assertRaisesRegex(RuntimeError, 'candidate'):
+                executor.candidate_root({})
 
     def test_one_complete_pass_is_accepted(self):
         self.assertTrue(executor.verified_pass(0, self.counts, False))
