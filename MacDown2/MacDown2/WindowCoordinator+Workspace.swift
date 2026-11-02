@@ -159,7 +159,7 @@ extension WindowCoordinator {
     }
 
     private func capturedDocumentsRemainCurrent(_ snapshot: [ControllerTabSnapshot]) -> Bool {
-        let current = Self.inTabOrder(controllers, window: \.window).compactMap { controller in
+        let current = Self.inTabOrder(sessionControllers, window: \.window).compactMap { controller in
             controller.model.tabStore.tabs.first.map { (controller, $0) }
         }
         guard current.count == snapshot.count else { return false }
@@ -178,7 +178,7 @@ extension WindowCoordinator {
     }
 
     private func sessionSnapshot() -> ([ControllerTabSnapshot], UUID?) {
-        let snapshot = Self.inTabOrder(controllers, window: \.window)
+        let snapshot = Self.inTabOrder(sessionControllers, window: \.window)
             .compactMap { controller -> ControllerTabSnapshot? in
                 guard let tab = controller.model.tabStore.tabs.first else { return nil }
                 let system = controller.editorStore.existingSystem(for: tab.id.uuidString)

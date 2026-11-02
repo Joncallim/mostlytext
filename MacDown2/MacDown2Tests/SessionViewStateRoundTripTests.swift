@@ -17,12 +17,14 @@ struct SessionViewStateRoundTripTests {
     final class MemorySessionStore: WorkspaceSessionStoring {
         var session: WorkspaceSession?
         var failNextSave = false
+        var refusesSaves = false
         var publicationCount = 0
         func loadSession() -> WorkspaceSession? {
             session
         }
 
         func saveSession(_ session: WorkspaceSession) {
+            guard !refusesSaves else { return }
             if failNextSave {
                 failNextSave = false
                 return
