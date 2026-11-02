@@ -13,13 +13,16 @@ extension ExportCoordinator {
     func performExport(
         snapshot: OrdinaryExportSnapshot,
         selection: ExportSelection,
-        engine: any ParseExecuting = ParseEngine()
+        engine: any ParseExecuting = ParseEngine(),
+        publicationLease: ExportLifetimeLease = ExportLifetimeLease()
     ) async throws -> ExportOutcome {
+        try publicationLease.checkActive()
         let adaptation = try await exportContributionAdaptation(
             for: snapshot,
             isPrintTarget: selection.format == .pdf,
             engine: engine
         )
+        try publicationLease.checkActive()
         let request = snapshot.request(contributions: adaptation.contributions)
 
         switch selection.format {
@@ -30,7 +33,7 @@ extension ExportCoordinator {
             let result = try await ExportService.exportHTML(
                 request,
                 to: .html(url: selection.url, mode: mode),
-                engine: engine
+                engine: engine, lease: publicationLease
             )
             return ExportOutcome(
                 primaryFile: result.primaryFile,
@@ -42,7 +45,7 @@ extension ExportCoordinator {
                 target: .pdf(url: selection.url),
                 engine: engine
             )
-            try await PDFExportAdapter.export(prepared, to: selection.url)
+            try await PDFExportAdapter.export(prepared, to: selection.url, lease: publicationLease)
             return ExportOutcome(
                 primaryFile: selection.url,
                 diagnostics: Self.combinedDiagnostics(adaptation, prepared.diagnostics)

@@ -42,6 +42,11 @@ struct ValidatedSVGFileSafetyTests {
         let item = try await fixture()
         defer { try? FileManager.default.removeItem(at: item.directory) }
         try FileManager.default.createDirectory(at: item.assets, withIntermediateDirectories: true)
+        try ExportAssetOwnerMarker.bytes(
+            primary: item.targetURL.lastPathComponent,
+            assets: item.validated.assetsDirectoryName
+        )
+        .write(to: item.assets.appendingPathComponent(ExportFileWriter.markerFileName))
         let fifo = item.assets.appendingPathComponent(item.resource.identity.fileName)
         #expect(mkfifo(fifo.path, mode_t(S_IRUSR | S_IWUSR)) == 0)
         #expect(throws: ExportError.self) {
@@ -97,8 +102,8 @@ struct ValidatedSVGFileSafetyTests {
         #expect(swapped)
         #expect(try Data(contentsOf: item.targetURL) == Data("old primary".utf8))
         #expect(try FileManager.default.contentsOfDirectory(atPath: outside.path).isEmpty)
-        #expect(try Data(contentsOf: detached.appendingPathComponent(item.resource.identity.fileName))
-            == item.resource.bytes)
+        #expect(!FileManager.default
+            .fileExists(atPath: detached.appendingPathComponent(item.resource.identity.fileName).path))
     }
 
     @Test func replacementOfStagedPrimaryCannotPublishDifferentBytes() async throws {

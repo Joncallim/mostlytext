@@ -32,7 +32,7 @@ struct ExportFileWriterTests {
             resources: [resource]
         )
         let target = ExportTarget.html(
-            url: directory.appendingPathComponent("doc.html"),
+            url: directory.appendingPathComponent("report.html"),
             mode: .selfContained
         )
 
@@ -55,7 +55,7 @@ struct ExportFileWriterTests {
             resources: [resource]
         )
         let target = ExportTarget.html(
-            url: directory.appendingPathComponent("doc.html"),
+            url: directory.appendingPathComponent("report.html"),
             mode: .standalone(style: .embedded)
         )
 
@@ -69,7 +69,7 @@ struct ExportFileWriterTests {
 
         let marker = assetsURL.appendingPathComponent(ExportFileWriter.markerFileName)
         #expect(FileManager.default.fileExists(atPath: marker.path))
-        #expect(try String(contentsOf: marker, encoding: .utf8) == ExportFileWriter.markerContent)
+        #expect(try Data(contentsOf: marker) == ExportAssetOwnerMarker.bytes(primary: "report.html", assets: assetsDir))
     }
 
     @Test func linkedStandaloneWritesStylesheetIntoTheAssetsDirectory() throws {
@@ -80,7 +80,7 @@ struct ExportFileWriterTests {
         defer { try? FileManager.default.removeItem(at: directory) }
         let prepared = try makePrepared(bodyHTML: "<p>hi</p>")
         let target = ExportTarget.html(
-            url: directory.appendingPathComponent("doc.html"),
+            url: directory.appendingPathComponent("report.html"),
             mode: .standalone(style: .linked)
         )
 
@@ -108,7 +108,7 @@ struct ExportFileWriterTests {
         defer { try? FileManager.default.removeItem(at: directory) }
         let prepared = try makePrepared(bodyHTML: "<p>no images</p>")
         let target = ExportTarget.html(
-            url: directory.appendingPathComponent("doc.html"),
+            url: directory.appendingPathComponent("report.html"),
             mode: .standalone(style: .linked)
         )
 
@@ -123,9 +123,7 @@ struct ExportFileWriterTests {
         let directory = try ExportTestSupport.makeTempDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
         let assetsDir = directory.appendingPathComponent(ExportHTMLWriter.defaultAssetsDirectoryName)
-        try FileManager.default.createDirectory(at: assetsDir, withIntermediateDirectories: true)
         let userFile = assetsDir.appendingPathComponent("user-notes.txt")
-        try Data("keep me".utf8).write(to: userFile)
 
         let resource = pngResource()
         let assetsDirName = ExportHTMLWriter.defaultAssetsDirectoryName
@@ -134,10 +132,12 @@ struct ExportFileWriterTests {
             resources: [resource]
         )
         let target = ExportTarget.html(
-            url: directory.appendingPathComponent("doc.html"),
+            url: directory.appendingPathComponent("report.html"),
             mode: .standalone(style: .embedded)
         )
 
+        _ = try ExportFileWriter.writeHTML(prepared, to: target)
+        try Data("keep me".utf8).write(to: userFile)
         _ = try ExportFileWriter.writeHTML(prepared, to: target)
 
         #expect(FileManager.default.fileExists(atPath: userFile.path))
@@ -198,7 +198,7 @@ struct ExportFileWriterTests {
         defer { try? FileManager.default.removeItem(at: directory) }
         let prepared = try makePrepared(bodyHTML: "<p>no images here</p>")
         let target = ExportTarget.html(
-            url: directory.appendingPathComponent("doc.html"),
+            url: directory.appendingPathComponent("report.html"),
             mode: .standalone(style: .embedded)
         )
 

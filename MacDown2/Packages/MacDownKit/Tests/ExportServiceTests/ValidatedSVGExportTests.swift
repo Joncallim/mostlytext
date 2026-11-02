@@ -74,6 +74,8 @@ struct ValidatedSVGExportTests {
         let resource = try #require(validated.resources.first)
         let assets = directory.appendingPathComponent(validated.assetsDirectoryName)
         try FileManager.default.createDirectory(at: assets, withIntermediateDirectories: true)
+        try ExportAssetOwnerMarker.bytes(primary: targetURL.lastPathComponent, assets: validated.assetsDirectoryName)
+            .write(to: assets.appendingPathComponent(ExportFileWriter.markerFileName))
         let path = assets.appendingPathComponent(resource.identity.fileName)
         try Data("old asset".utf8).write(to: path)
         try Data("old primary".utf8).write(to: targetURL)
@@ -149,6 +151,8 @@ struct ValidatedSVGExportTests {
         let resource = try #require(validated.resources.first)
         let assets = directory.appendingPathComponent(validated.assetsDirectoryName)
         try FileManager.default.createDirectory(at: assets, withIntermediateDirectories: true)
+        try ExportAssetOwnerMarker.bytes(primary: targetURL.lastPathComponent, assets: validated.assetsDirectoryName)
+            .write(to: assets.appendingPathComponent(ExportFileWriter.markerFileName))
         let outside = directory.appendingPathComponent("outside.png")
         try resource.bytes.write(to: outside)
         try FileManager.default.createSymbolicLink(

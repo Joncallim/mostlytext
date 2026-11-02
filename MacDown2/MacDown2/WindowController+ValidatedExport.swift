@@ -16,14 +16,21 @@ extension WindowController {
         guard !isClosed, let tabID = model.tabStore.activeTabID,
               let document = model.activeDocument, document.format.id == "markdown"
         else { return nil }
-        let lease = ExportLifetimeLease()
-        validatedExportLeases.removeAll { $0.lease == nil }
-        validatedExportLeases.append(WeakValidatedExportLease(lease))
+        let lease = makeExportLifetimeLease()
         return ValidatedExportOrigin(
             controller: self, tabID: tabID, documentID: document.id,
             recoveryEpoch: document.recoveryEpoch, fileURL: document.fileURL,
             lease: lease
         )
+    }
+
+    /// Ordinary and optional validated exports share the same document-lifetime
+    /// revocation points; this creates no alternate rendering activation path.
+    func makeExportLifetimeLease() -> ExportLifetimeLease {
+        let lease = ExportLifetimeLease()
+        validatedExportLeases.removeAll { $0.lease == nil }
+        validatedExportLeases.append(WeakValidatedExportLease(lease))
+        return lease
     }
 
     func revokeValidatedExports() {

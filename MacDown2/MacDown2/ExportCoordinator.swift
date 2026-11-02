@@ -92,7 +92,11 @@ struct ExportCoordinator {
                 theme: themeController.current,
                 parseOptions: DocumentEditorSplitView.markdownParseOptions(from: appSettings.markdown)
             )
-            let result = try await performExport(snapshot: snapshot, selection: selection)
+            let result = try await performExport(
+                snapshot: snapshot,
+                selection: selection,
+                publicationLease: origin.publicationLease
+            )
             // Diagnostics are read before Finder takes focus, so the report is
             // not left sitting behind another app's window.
             await presentDiagnosticsIfNeeded(result.diagnostics, from: origin)

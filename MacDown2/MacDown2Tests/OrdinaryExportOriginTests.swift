@@ -1,5 +1,6 @@
 import AppKit
 import AppSettings
+import ExportService
 import FileCore
 import FileTree
 import Foundation
@@ -38,12 +39,14 @@ struct OrdinaryExportOriginTests {
         let origin = try #require(OrdinaryExportOrigin.capture(controller: controller))
         model.tabStore.updateActiveDocument { $0.updatingText("edited during panel") }
         let accepted = try origin.documentAfterPanel()
+        try origin.publicationLease.checkActive()
         #expect(accepted.text == "edited during panel")
         model.tabStore.updateActiveDocument { $0.updatingText("later edit") }
         #expect(accepted.text == "edited during panel")
 
         model.tabStore.updateActiveDocument { _ in FileDocument(text: "replacement") }
         #expect(throws: CancellationError.self) { try origin.documentAfterPanel() }
+        #expect(throws: CancellationError.self) { try origin.publicationLease.withPublicationCutoff {} }
     }
 
     @Test func changingToAnotherTabCannotBorrowTheOldExportPanel() throws {
@@ -72,6 +75,7 @@ struct OrdinaryExportOriginTests {
         let origin = try #require(OrdinaryExportOrigin.capture(controller: controller))
         model.tabStore.newTab(document: FileDocument(text: "B"))
         #expect(throws: CancellationError.self) { try origin.documentAfterPanel() }
+        #expect(throws: CancellationError.self) { try origin.publicationLease.withPublicationCutoff {} }
     }
 
     @Test func closingOriginCompletesDiagnosticSessionWithoutFinderReveal() async throws {
@@ -115,5 +119,6 @@ struct OrdinaryExportOriginTests {
             NotificationCenter.default.post(name: NSWindow.willCloseNotification, object: window)
         }
         #expect(!origin.canRevealOutput(isCancelled: false))
+        #expect(throws: CancellationError.self) { try origin.publicationLease.withPublicationCutoff {} }
     }
 }

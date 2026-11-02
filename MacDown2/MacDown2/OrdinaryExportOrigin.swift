@@ -1,4 +1,5 @@
 import AppKit
+import ExportService
 import FileCore
 import Foundation
 
@@ -12,6 +13,7 @@ final class OrdinaryExportOrigin {
     private let tabID: UUID
     private let documentID: String
     private let recoveryEpoch: UUID
+    let publicationLease: ExportLifetimeLease
     let operationID = UUID()
     let initialDocument: FileDocument
 
@@ -22,6 +24,7 @@ final class OrdinaryExportOrigin {
         documentID = document.id
         recoveryEpoch = document.recoveryEpoch
         initialDocument = document
+        publicationLease = controller.makeExportLifetimeLease()
     }
 
     static func capture(controller: WindowController) -> OrdinaryExportOrigin? {
@@ -45,6 +48,7 @@ final class OrdinaryExportOrigin {
     }
 
     func documentAfterPanel() throws -> FileDocument {
+        try publicationLease.checkActive()
         guard let controller, presentableWindow != nil,
               controller.model.tabStore.activeTabID == tabID,
               let document = controller.model.activeDocument,
