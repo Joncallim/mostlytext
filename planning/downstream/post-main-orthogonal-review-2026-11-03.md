@@ -94,3 +94,19 @@ unmerged branch, worktree directory, index, stash and recovery bundle. A branch
 whose HEAD happens to equal merged master while active uncommitted work exists
 is not eligible for deletion. Reaudit after final integration; never remove a
 worktree directory or reset its files as branch housekeeping.
+
+## Hosted test-host sequencing correction
+
+The full signed-host rerun 41518126997 still failed: raw logs prove that SwiftPM
+linked MacDownKitPackageTests again between ad-hoc signing and test execution.
+It therefore discarded the identity just established by the fixture probes.
+All 3,302 tests executed; 20 unexpected issues and two existing known issues
+remain retained. Do not claim the bundle signing alone fixed the full suite.
+
+Explicitly build every test target, sign/verify the host, then use swift test
+--skip-build --no-parallel --force-resolved-versions to execute that exact built
+suite. The installed tool help confirms --skip-build skips compilation, not
+selection or execution. Hash the executable before/after and verify its signature
+again after a pass. No test filter, disabled assertion, budget change or new
+entitlement is introduced. The obsolete first combined run is explicitly
+superseded for this diagnosed sequencing error, not counted as a pass.

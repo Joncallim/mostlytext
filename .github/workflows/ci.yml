@@ -253,12 +253,18 @@ jobs:
           test -f "$test_bundle/Contents/MacOS/MacDownKitPackageTests"
           codesign --force --sign - "$test_bundle"
           codesign --verify --strict "$test_bundle"
+          test_host="$test_bundle/Contents/MacOS/MacDownKitPackageTests"
+          shasum -a 256 "$test_host" > "$RUNNER_TEMP/package-test-host.sha256"
           # Monitor/save-queue/performance tests share temporary filesystem
           # resources; concurrent XCTest scheduling makes these load-sensitive
           # tests exceed their bounded coordination timeouts on CI. Keep the
           # full suite and its assertions intact, but serialize execution.
-          swift test --no-parallel --force-resolved-versions
+          # SwiftPM can relink an already-built host when entering test mode,
+          # discarding its identity. Build every test above, then execute that
+          # exact signed binary: no filter, disabled test or changed assertion.
+          swift test --skip-build --no-parallel --force-resolved-versions
           codesign --verify --strict "$test_bundle"
+          shasum -a 256 -c "$RUNNER_TEMP/package-test-host.sha256"
       - name: Collect fresh package test crash reports
         if: ${{ always() && env.PR535_DIAGNOSTICS == 'true' }}
         run: |
