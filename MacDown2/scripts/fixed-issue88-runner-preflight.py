@@ -59,7 +59,7 @@ def validate_manifest(manifest):
                   *manifest.get('binarySHA256', {}).values()]:
         require(isinstance(value, str) and re.fullmatch(r'[0-9a-f]{64}', value) is not None,
                           'Invalid digest in binding manifest')
-    require(set(manifest.get('binarySHA256', {})) == {'app', 'runner', 'test'},
+    require(set(manifest.get('binarySHA256', {})) == {'app', 'runner', 'test', 'cli'},
                       'Incomplete executable bindings')
 
 
@@ -187,7 +187,7 @@ def main():
                              test=[EXPECTED_TEST])
     products = args.build_root / 'derived/Build/Products/UITestIsolated'
     check_products_immutable([
-        args.plan, products / 'MacDown2.app', products / 'MacDown2UITests-Runner.app',
+        args.plan, products / 'MacDown2.app', products / 'MacDown2UITests-Runner.app', products / 'mostlytext',
     ], args.build_root)
     try:
         checked = preflight.inspect_build(values)

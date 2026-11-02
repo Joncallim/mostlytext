@@ -18,7 +18,7 @@ class FixedRunnerChecks(unittest.TestCase):
                          'selectedTest':r.EXPECTED_TEST,'xctestrunSHA256':'a'*64,
                          'sourcePatchSHA256':'b'*64,
                          'sourceSHA':'f'*40, 'sourceManifestSHA256':'0'*64,
-                         'binarySHA256':{'app':'c'*64,'runner':'d'*64,'test':'e'*64}}
+                         'binarySHA256':{'app':'c'*64,'runner':'d'*64,'test':'e'*64,'cli':'f'*64}}
 
     def test_exact_command_is_bounded_and_single_case(self):
         argv = r.command_for(Path('/private/tmp/isolated.xctestrun'), Path('/private/tmp/result.xcresult'), self.manifest['hostID'])

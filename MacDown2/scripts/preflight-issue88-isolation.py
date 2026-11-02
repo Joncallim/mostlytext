@@ -99,12 +99,34 @@ def validate_environments(target, bundle, owner_uid):
     require(target.get('UITargetAppEnvironmentVariables') == APP_ENV, 'Unexpected app environment')
     require(target.get('TestingEnvironmentVariables') == TESTING_ENV, 'Unexpected testing environment')
 
+def validate_dependent_products(target):
+    # The app embeds the public CLI, so Xcode includes that target in this
+    # plan even though the selected test launches only the isolated app.
+    expected = [
+        '__TESTROOT__/UITestIsolated/MacDown2.app',
+        '__TESTROOT__/UITestIsolated/MacDown2UITests-Runner.app',
+        '__TESTROOT__/UITestIsolated/MacDown2UITests-Runner.app/Contents/PlugIns/MacDown2UITests.xctest',
+        '__TESTROOT__/UITestIsolated/mostlytext',
+    ]
+    require(target.get('DependentProductPaths') == expected, 'Unreviewed dependent products')
+
+
 def sha(path):
     h = hashlib.sha256()
     with open(path, 'rb') as f:
         for block in iter(lambda: f.read(1024 * 1024), b''):
             h.update(block)
     return h.hexdigest()
+
+def validate_embedded_cli(products, app):
+    external = products / 'mostlytext'
+    embedded = app / 'Contents/MacOS/mostlytext-cli'
+    for path in (external, embedded):
+        require(stat.S_ISREG(path.lstat().st_mode), 'CLI must be a regular file, not a symlink')
+        checked_path(path, products)
+    require(sha(external) == sha(embedded), 'CLI differs from signed app copy')
+    return external
+
 
 def source_path(root, rel):
     require(isinstance(rel, str) and rel and '\\' not in rel
@@ -201,14 +223,10 @@ def inspect_build(args):
         'IsXCTRunnerHostedTestBundle': True, 'RunOrder': 0,
         'TestTimeoutsEnabled': True, 'DefaultTestExecutionTimeAllowance': 60,
         'MaximumTestExecutionTimeAllowance': 120,
-        'DependentProductPaths': [
-            '__TESTROOT__/UITestIsolated/MacDown2.app',
-            '__TESTROOT__/UITestIsolated/MacDown2UITests-Runner.app',
-            '__TESTROOT__/UITestIsolated/MacDown2UITests-Runner.app/Contents/PlugIns/MacDown2UITests.xctest',
-        ],
     }
     require(all(target.get(key) == value for key, value in expected_values.items()),
             'Unreviewed test-plan values')
+    validate_dependent_products(target)
     validate_environments(target, bundle, owner_uid)
     require(target.get('UITargetAppCommandLineArguments', []) == [], 'Unexpected app launch arguments in test plan')
     def expand(value):
@@ -233,7 +251,8 @@ def inspect_build(args):
         name = data.get('CFBundleExecutable', '')
         require(name and '/' not in name and name not in ('.', '..'), 'Invalid executable name')
         return checked_path(bundle_dir / 'Contents/MacOS' / name, bundle_dir)
-    binaries = {'app': executable(app, info), 'runner': executable(runner, runner_info), 'test': executable(test_bundle, test_info)}
+    binaries = {'app': executable(app, info), 'runner': executable(runner, runner_info),
+                'test': executable(test_bundle, test_info), 'cli': validate_embedded_cli(products, app)}
     processes = subprocess.run(['ps', '-axo', 'comm='], text=True, capture_output=True)
     require(processes.returncode == 0, 'Unable to inspect active processes')
     require(not any('MacDown2' in line or 'xctest' in line.lower() for line in processes.stdout.splitlines()),

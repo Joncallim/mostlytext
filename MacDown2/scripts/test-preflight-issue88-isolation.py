@@ -61,6 +61,39 @@ class GuardTests(unittest.TestCase):
             altered = copy.deepcopy(prepared); altered['MacDown2UITests'][key] = bad
             with self.assertRaises(p.Refusal): p.validate_plan(original, altered, self.bundle, 501)
 
+    def test_current_plan_requires_cli_and_rejects_extra_or_escaped_products(self):
+        products = [
+            '__TESTROOT__/UITestIsolated/MacDown2.app',
+            '__TESTROOT__/UITestIsolated/MacDown2UITests-Runner.app',
+            '__TESTROOT__/UITestIsolated/MacDown2UITests-Runner.app/Contents/PlugIns/MacDown2UITests.xctest',
+            '__TESTROOT__/UITestIsolated/mostlytext',
+        ]
+        p.validate_dependent_products({'DependentProductPaths': products})
+        for changed in (products[:-1], products + ['/tmp/injected'],
+                        products[:-1] + ['__TESTROOT__/../mostlytext'],
+                        products + [products[-1]], list(reversed(products))):
+            with self.subTest(products=changed), self.assertRaises(p.Refusal):
+                p.validate_dependent_products({'DependentProductPaths': changed})
+        with self.assertRaises(p.Refusal): p.validate_dependent_products({})
+
+    def test_cli_binding_requires_identical_regular_embedded_copy(self):
+        with tempfile.TemporaryDirectory(prefix='issue88-cli-') as tmp:
+            products = Path(tmp).resolve()
+            app = products / 'MacDown2.app'
+            embedded = app / 'Contents/MacOS/mostlytext-cli'
+            embedded.parent.mkdir(parents=True)
+            external = products / 'mostlytext'
+            external.write_bytes(b'reviewed CLI')
+            embedded.write_bytes(external.read_bytes())
+            self.assertEqual(p.validate_embedded_cli(products, app), external)
+            embedded.write_bytes(b'different executable')
+            with self.assertRaises(p.Refusal): p.validate_embedded_cli(products, app)
+            embedded.unlink(); embedded.symlink_to(external)
+            with self.assertRaises(p.Refusal): p.validate_embedded_cli(products, app)
+            embedded.unlink(); embedded.write_bytes(external.read_bytes())
+            external.unlink(); external.symlink_to(embedded)
+            with self.assertRaises(p.Refusal): p.validate_embedded_cli(products, app)
+
     def test_environment_rejects_unexpected_injection(self):
         target = {'EnvironmentVariables': dict(p.RUNNER_ENV, MOSTLYTEXT_UI_TEST_BUNDLE_ID=self.bundle, MOSTLYTEXT_UI_TEST_OWNER_UID='501'),
                   'UITargetAppEnvironmentVariables': dict(p.APP_ENV),
