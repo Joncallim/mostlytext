@@ -78,7 +78,7 @@ Neon known issues) but app+CLI dependency builds exposed a case-insensitive
 intermediate-directory collision: app target MacDown2 and tool target macdown2
 wrote overlapping Swift file lists, so the tool attempted to compile the app's
 GeneratedAssetSymbols.swift before it existed. Rename only the internal tool
-target to MacDown2Command and set PRODUCT_NAME to macdown2. The public scheme,
+target and Swift module to MacDown2Command and set PRODUCT_NAME to macdown2. The public scheme,
 executable, embedding path and app identity stay the same. Retain the failed
 run and require a full corrected locked run.
 

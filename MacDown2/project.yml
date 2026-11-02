@@ -212,6 +212,7 @@ targets:
     settings:
       base:
         PRODUCT_NAME: macdown2
+        PRODUCT_MODULE_NAME: MacDown2Command
     platform: macOS
     sources:
     - MacDown2CLI
