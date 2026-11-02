@@ -24,6 +24,6 @@ public enum CommandLineDiagnostics {
     }
 
     public static var unbundledVersion: String {
-        String(localized: "macdown2 (unbundled development build)", bundle: CommandLineLocalization.bundle)
+        String(localized: "mostlytext (unbundled development build)", bundle: CommandLineLocalization.bundle)
     }
 }

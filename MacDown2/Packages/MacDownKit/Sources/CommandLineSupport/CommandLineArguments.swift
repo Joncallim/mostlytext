@@ -62,8 +62,8 @@ public enum CommandLineArguments {
 
     private struct Root: ParsableCommand {
         static var configuration: CommandConfiguration {
-            CommandConfiguration(commandName: "macdown2", abstract: String(localized: "Open documents in MostlyText.",
-                                                                           bundle: CommandLineLocalization.bundle),
+            CommandConfiguration(commandName: "mostlytext", abstract: String(localized: "Open documents in MostlyText.",
+                                                                             bundle: CommandLineLocalization.bundle),
                                  discussion: String(localized: "Use --version to show the enclosing app version.",
                                                     bundle: CommandLineLocalization.bundle),
                                  subcommands: [Open.self, Formats.self], defaultSubcommand: Open.self)
