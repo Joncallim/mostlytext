@@ -1,5 +1,6 @@
 import AppKit
 import AppSettings
+import CommandBridge
 import FileCore
 import FileTree
 import Foundation
@@ -23,6 +24,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let launchURLs: [URL]
     private let launchFolderURL: URL?
     private var hasPendingDocumentOpen = false
+    var commandServer: CommandApplicationServer?
     private let defaults: UserDefaults
     private let shouldShowFirstRun: Bool
     private static let hasCompletedFirstRunKey = "com.joncallim.macdown2.hasCompletedFirstRun"
@@ -150,6 +152,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// already opened a document: launch then does not open an untitled
     /// document of its own (the saved session, if any, is still restored).
     private func proceedWithNormalLaunch(documentAlreadyOpened: Bool = false) {
+        defer { scheduleCommandServerStart() }
         if !launchURLs.isEmpty {
             Task { @MainActor in
                 await coordinator.restoreUnsavedSessionTabs()
@@ -211,15 +214,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationWillTerminate(_: Notification) {
+        commandServer?.stop()
         themeCatalog.cancel()
     }
 
     func applicationShouldTerminate(_: NSApplication) -> NSApplication.TerminateReply {
+        coordinator.commandReceiver?.suspendAdmission()
         Task { @MainActor in
             let result = await coordinator.saveSessionForTermination()
             let terminate = coordinator.handleTerminationSessionResult(result)
             if terminate {
+                await finishCommandRequestsForTermination()
                 await themeCatalog.shutdown()
+            } else {
+                coordinator.commandReceiver?.resumeAdmission()
             }
             NSApp.reply(toApplicationShouldTerminate: terminate)
         }

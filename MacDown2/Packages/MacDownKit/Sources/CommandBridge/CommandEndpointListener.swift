@@ -10,9 +10,15 @@ public final class CommandEndpointListener {
     private let namespace: CommandEndpointNamespace
     private var descriptor: Int32 = -1
     private var ownedIdentity: CommandSocketIdentity?
+    private var stagedLeaf: String?
 
-    public init(location: CommandEndpointLocation, until deadline: ContinuousClock.Instant,
-                isCancelled: () -> Bool = { false }) throws {
+    public convenience init(location: CommandEndpointLocation, until deadline: ContinuousClock.Instant,
+                            isCancelled: @Sendable () -> Bool = { false }) throws {
+        try self.init(location: location, until: deadline, isCancelled: isCancelled, afterBind: nil)
+    }
+
+    init(location: CommandEndpointLocation, until deadline: ContinuousClock.Instant,
+         isCancelled: @Sendable () -> Bool = { false }, afterBind: (@Sendable () throws -> Void)?) throws {
         self.location = location
         lease = try CommandEndpointLease(location: location)
         namespace = try CommandEndpointNamespace(location)
@@ -27,15 +33,16 @@ public final class CommandEndpointListener {
             try lease.verifyOwnership()
             try namespace.verify()
             try CommandSocketPolling.check(descriptor, deadline: deadline, cancelled: isCancelled)
-            guard try CommandSocketPolling.withAddress(location.socketPath, {
-                Darwin.bind(descriptor, $0, $1)
-            }) == 0 else { throw CommandSocketError.unavailable(errno) }
-            guard let identity = try namespace.socketIdentity(requirePrivateMode: false) else {
-                throw CommandEndpointError.identityChanged
-            }
+            let (leaf, identity) = try namespace.bindStagedSocket(descriptor, until: deadline, isCancelled: isCancelled)
+            stagedLeaf = leaf
             ownedIdentity = identity
-            try namespace.secureSocket(expected: identity)
+            try afterBind?()
+            try namespace.secureSocket(expected: identity, leaf: leaf)
             guard Darwin.listen(descriptor, 8) == 0 else { throw CommandSocketError.unavailable(errno) }
+            try lease.verifyOwnership()
+            try CommandSocketPolling.check(descriptor, deadline: deadline, cancelled: isCancelled)
+            try namespace.publishSocket(from: leaf, expected: identity)
+            stagedLeaf = nil
             try CommandSocketPolling.check(descriptor, deadline: deadline, cancelled: isCancelled)
         } catch {
             close()
@@ -51,15 +58,21 @@ public final class CommandEndpointListener {
         }
         if let ownedIdentity {
             if (try? lease.verifyOwnership()) != nil {
+                if let stagedLeaf {
+                    try? namespace.retireSocket(expected: ownedIdentity, leaf: stagedLeaf)
+                }
+                // Publication may have succeeded before its final verification
+                // threw. Exact identity checks protect any replacement.
                 try? namespace.retireSocket(expected: ownedIdentity)
             }
             self.ownedIdentity = nil
+            stagedLeaf = nil
         }
         lease.release()
     }
 
     public func accept(until deadline: ContinuousClock.Instant,
-                       isCancelled: () -> Bool = { false }) throws -> CommandSocketConnection {
+                       isCancelled: @Sendable () -> Bool = { false }) throws -> sending CommandSocketConnection {
         while true {
             try CommandSocketPolling.check(descriptor, deadline: deadline, cancelled: isCancelled)
             try lease.verifyOwnership()
@@ -91,7 +104,7 @@ public final class CommandEndpointListener {
     }
 
     private func requireRefusedEndpoint(until deadline: ContinuousClock.Instant,
-                                        isCancelled: () -> Bool) throws {
+                                        isCancelled: @Sendable () -> Bool) throws {
         let probe = try CommandSocketPolling.makeSocket()
         defer { Darwin.close(probe) }
         do {

@@ -104,6 +104,24 @@ public final class CommandSocketConnection {
         }
     }
 
+    /// Editing waits have no short deadline, but still detect disconnects and
+    /// refuse a second/pipelined request on this one-request connection.
+    public func verifyIdlePeer() throws {
+        guard descriptor >= 0 else { throw CommandSocketError.closed }
+        guard unread.isEmpty else { throw CommandProtocolError.invalidState }
+        var byte: UInt8 = 0
+        let count = recv(descriptor, &byte, 1, MSG_PEEK | MSG_DONTWAIT)
+        if count == 0 {
+            throw CommandSocketError.closed
+        }
+        if count > 0 {
+            throw CommandProtocolError.invalidState
+        }
+        guard errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR else {
+            throw CommandSocketError.unavailable(errno)
+        }
+    }
+
     private func check(deadline: ContinuousClock.Instant?, isCancelled: () -> Bool) throws {
         guard descriptor >= 0 else { throw CommandSocketError.closed }
         if isCancelled() {

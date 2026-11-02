@@ -1,6 +1,7 @@
 @testable import CommandBridge
 import Darwin
 import Foundation
+import Synchronization
 import Testing
 
 extension CommandEndpointTransportTests {
@@ -12,11 +13,11 @@ extension CommandEndpointTransportTests {
             defer { Darwin.close(client) }
             try CommandSocketPolling.connect(client, path: location.socketPath,
                                              deadline: .now.advanced(by: .seconds(1)), cancelled: { false })
-            var checks = 0
+            let checks = Mutex(0)
             #expect(throws: CommandEndpointError.insecureSocket) {
                 try listener.accept(until: .now.advanced(by: .seconds(2)), isCancelled: {
-                    checks += 1
-                    if checks == 2 {
+                    let current = checks.withLock { $0 += 1; return $0 }
+                    if current == 2 {
                         do {
                             try FileManager.default.moveItem(atPath: location.socketPath,
                                                              toPath: location.directory.appendingPathComponent("saved")

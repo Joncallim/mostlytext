@@ -46,6 +46,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
     let folderSearchModel: FolderSearchModel
     let externalFileController: ExternalFileController
     weak var coordinator: WindowCoordinator?
+    let commandDocumentLifetime = UUID()
     private(set) var isClosed = false
     private var observationTask: Task<Void, Never>?
     /// Running text-filter commands, keyed by tab — see
@@ -265,6 +266,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
 
     func windowWillClose(_: Notification) {
         isClosed = true
+        coordinator?.commandReceiver?.documentClosed(commandDocumentLifetime)
         revokeValidatedExports()
         previewResourceState.close()
         previewResourceState.setCurrentPreviewDocument(nil)
@@ -288,22 +290,6 @@ final class WindowController: NSWindowController, NSWindowDelegate {
         jsonAnalysisStore.evictAll()
         fileTreeModel.dispose()
         cancelAllTextFilterTasks()
-    }
-
-    func windowDidBecomeKey(_: Notification) {
-        // Called by AppKit when this window (or tab) becomes key. This is the
-        // deterministic hook for native tab switches, and it only fires for
-        // document windows because the coordinator is their delegate.
-        coordinator?.updateKeyModel()
-        coordinator?.scheduleSaveSession()
-        // The inactive polling cadence is intentionally low; refresh once
-        // synchronously when a native tab becomes visible again.
-        updateTitleAndEditedState()
-        externalFileController.retryMonitoring()
-        Task {
-            await fileTreeModel.rescanExpandedDirectories()
-            await refreshWorkspaceIndex(minInterval: 5)
-        }
     }
 
     /// Explicit-target Save never calls a model method that is permitted to
@@ -378,6 +364,24 @@ private extension WindowController {
             // search rows synchronously, before a watcher or root rebuild
             // can leave them actionable against a different folder.
             self?.folderSearchModel.rootAccessWasRevoked()
+        }
+    }
+}
+
+extension WindowController {
+    func windowDidBecomeKey(_: Notification) {
+        // Called by AppKit when this window (or tab) becomes key. This is the
+        // deterministic hook for native tab switches, and it only fires for
+        // document windows because the coordinator is their delegate.
+        coordinator?.updateKeyModel()
+        coordinator?.scheduleSaveSession()
+        // The inactive polling cadence is intentionally low; refresh once
+        // synchronously when a native tab becomes visible again.
+        updateTitleAndEditedState()
+        externalFileController.retryMonitoring()
+        Task {
+            await fileTreeModel.rescanExpandedDirectories()
+            await refreshWorkspaceIndex(minInterval: 5)
         }
     }
 }
