@@ -1,6 +1,16 @@
 {
   "sourceLanguage": "en",
   "strings": {
+  "the export resource read-work limit was reached": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "the export resource read-work limit was reached"
+        }
+      }
+    }
+  },
     "Check that the destination folder exists and is writable.": {
       "localizations": {
         "fr": {
