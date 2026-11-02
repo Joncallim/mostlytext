@@ -78,7 +78,10 @@ final class ValidatedExportOrigin {
         }
         return ExportRequest(
             text: document.text, sourceGeneration: document.mutationGeneration,
-            theme: controller.themeController.current, documentURL: document.fileURL
+            theme: controller.themeController.current, documentURL: document.fileURL,
+            resourceAccess: document.fileURL.flatMap {
+                try? ExportResourceAccess(openingDirectory: $0.deletingLastPathComponent())
+            }
         )
     }
 

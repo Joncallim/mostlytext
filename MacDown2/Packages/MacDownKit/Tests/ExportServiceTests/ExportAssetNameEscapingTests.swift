@@ -15,9 +15,10 @@ struct ExportAssetNameEscapingTests {
         defer { try? FileManager.default.removeItem(at: dir) }
         try ExportTestSupport.writeFixture(named: "pic.png", in: dir, bytes: png)
         let out = dir.appendingPathComponent(outputName)
-        let request = ExportRequest(
+        let request = try ExportRequest(
             text: "![a](pic.png)\n", sourceGeneration: 1, theme: BundledThemes.light,
-            documentURL: dir.appendingPathComponent("doc.md")
+            documentURL: dir.appendingPathComponent("doc.md"),
+            resourceAccess: ExportResourceAccess(openingDirectory: dir)
         )
         _ = try await ExportService.exportHTML(request, to: .html(url: out, mode: .selfContained))
         return try String(contentsOf: out, encoding: .utf8)
@@ -39,9 +40,10 @@ struct ExportAssetNameEscapingTests {
         defer { try? FileManager.default.removeItem(at: dir) }
         try ExportTestSupport.writeFixture(named: "pic.png", in: dir, bytes: png)
         let out = dir.appendingPathComponent(name)
-        let request = ExportRequest(
+        let request = try ExportRequest(
             text: "![a](pic.png)\n", sourceGeneration: 1, theme: BundledThemes.light,
-            documentURL: dir.appendingPathComponent("doc.md")
+            documentURL: dir.appendingPathComponent("doc.md"),
+            resourceAccess: ExportResourceAccess(openingDirectory: dir)
         )
         let result = try await ExportService.exportHTML(
             request, to: .html(url: out, mode: .standalone(style: .embedded))

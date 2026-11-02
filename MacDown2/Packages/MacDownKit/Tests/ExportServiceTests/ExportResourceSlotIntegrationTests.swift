@@ -10,10 +10,11 @@ struct ExportResourceSlotIntegrationTests {
         try ExportTestSupport.writeFixture(named: "a.png", in: directory, bytes: bytes)
         let identity = ExportResourceIdentity(bytes: bytes, mimeType: "image/png")
         let path = "report.assets/" + identity.fileName
-        let request = ExportRequest(
+        let request = try ExportRequest(
             text: "![a](a.png) ![b](a.png)\n\n`\(path)`\n\n[link](\(path))\n\n<img src=\"\(path)\">",
             sourceGeneration: 1, theme: ExportTestSupport.lightTheme(),
-            documentURL: directory.appendingPathComponent("source.md")
+            documentURL: directory.appendingPathComponent("source.md"),
+            resourceAccess: ExportResourceAccess(openingDirectory: directory)
         )
         let prepared = try await ExportService.prepare(
             request, target: .pdf(url: directory.appendingPathComponent("report.pdf"))

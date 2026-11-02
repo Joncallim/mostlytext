@@ -377,6 +377,28 @@
           }
         }
       }
+    },
+    "no resource directory was admitted for this export": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "no resource directory was admitted for this export"
+          }
+        }
+      }
+    },
+    "resource could not be read through its admitted directory": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "resource could not be read through its admitted directory"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

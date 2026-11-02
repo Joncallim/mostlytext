@@ -146,6 +146,7 @@ let package = Package(
             dependencies: [
                 "MarkdownEngine",
                 "Themes",
+                "LocalResourceAccess",
                 .product(name: "cmark-gfm", package: "swift-cmark"),
                 .product(name: "cmark-gfm-extensions", package: "swift-cmark"),
                 .product(name: "SwiftSoup", package: "SwiftSoup"),
@@ -214,7 +215,10 @@ let package = Package(
         .testTarget(name: "JSONSupportTests", dependencies: ["JSONSupport"]),
         .testTarget(
             name: "ExportServiceTests",
-            dependencies: ["ExportService", "MarkdownEngine", .product(name: "SwiftSoup", package: "SwiftSoup")]
+            dependencies: [
+                "ExportService", "MarkdownEngine", "LocalResourceAccess",
+                .product(name: "SwiftSoup", package: "SwiftSoup"),
+            ]
         ),
         .testTarget(name: "ContributionsTests", dependencies: ["Contributions", "MarkdownEngine"]),
         .testTarget(name: "TextFiltersTests", dependencies: ["TextFilters"]),

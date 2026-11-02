@@ -51,7 +51,8 @@ struct ExportComposerTests {
                 text: markdown,
                 sourceGeneration: 4,
                 theme: ExportTestSupport.lightTheme(),
-                documentURL: directory.appendingPathComponent("doc.md")
+                documentURL: directory.appendingPathComponent("doc.md"),
+                resourceAccess: ExportResourceAccess(openingDirectory: directory)
             ),
             target: .html(url: URL(fileURLWithPath: "/tmp/out.html"), mode: .selfContained)
         )
@@ -76,7 +77,8 @@ struct ExportComposerTests {
                     text: markdown,
                     sourceGeneration: 5,
                     theme: ExportTestSupport.lightTheme(),
-                    documentURL: directory.appendingPathComponent("doc.md")
+                    documentURL: directory.appendingPathComponent("doc.md"),
+                    resourceAccess: ExportResourceAccess(openingDirectory: directory)
                 ),
                 target: .html(url: URL(fileURLWithPath: "/tmp/out.html"), mode: .selfContained)
             )
@@ -93,7 +95,8 @@ struct ExportComposerTests {
                 text: markdown,
                 sourceGeneration: 6,
                 theme: ExportTestSupport.lightTheme(),
-                documentURL: directory.appendingPathComponent("doc.md")
+                documentURL: directory.appendingPathComponent("doc.md"),
+                resourceAccess: ExportResourceAccess(openingDirectory: directory)
             ),
             target: .html(url: URL(fileURLWithPath: "/tmp/out.html"), mode: .standalone(style: .embedded))
         )
@@ -177,7 +180,8 @@ struct ExportComposerTests {
                 text: markdown,
                 sourceGeneration: 11,
                 theme: ExportTestSupport.lightTheme(),
-                documentURL: directory.appendingPathComponent("doc.md")
+                documentURL: directory.appendingPathComponent("doc.md"),
+                resourceAccess: ExportResourceAccess(openingDirectory: directory)
             ),
             target: .html(url: URL(fileURLWithPath: "/tmp/out.html"), mode: .standalone(style: .embedded))
         )

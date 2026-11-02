@@ -1171,3 +1171,22 @@ Done only when:
 9. **Initial resource limits:** central `.standard` values are provisional safety gates until Slice 6 measured evidence; tuning stays in one definition.
 
 No residual risk permits weakening local/offline operation, source preservation, one-pipeline composition or unknown-user-file protection.
+
+## Explicit Export resource authority — 2 November 2026
+
+The input-authority unit in `downstream/export-input-authority.md` replaces
+path approval followed by Data(contentsOf:) with the existing contained reader.
+ExportRequest.documentURL is metadata only. ExportResourceAccess retains the
+explicit DirectoryLease; the ordinary post-panel snapshot opens it using only
+existing process access, without a chooser or broader security scope. The
+resolved target leaf supplies image MIME rather than a misleading alias.
+Cancellation is bridged to the real cmark thread and 64-KiB read checkpoints.
+Serial candidate reads retain per-file, distinct-count and aggregate-payload
+limits, deduplication and ordinary-warning versus self-contained/PDF failure.
+The disabled SVG fallback preserves this capability and parse policy.
+
+Source-identical Foundation/POSIX controls and hosted package/app validation
+are required before integration. Local app/tests compile only. Native/sandbox
+acceptance, authorization-time output/source-alias admission, inventory-backed
+crash recovery and empirical limits remain separate gates. The optional SVG
+route and held preview/current-line changes are not activated.

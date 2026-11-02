@@ -43,6 +43,7 @@ struct ContainedResourceReaderTests {
         )
 
         #expect(snapshot.bytes == Data("real".utf8))
+        #expect(snapshot.name == "real.txt")
     }
 
     // MARK: - Outside objects

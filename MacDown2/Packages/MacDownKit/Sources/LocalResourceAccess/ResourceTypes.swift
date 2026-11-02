@@ -40,6 +40,8 @@ public struct ResourceIdentity: Equatable, Hashable, Sendable {
 public struct ResourceSnapshot: Sendable, Equatable {
     public let bytes: Data
     public let identity: ResourceIdentity
+    /// Resolved target leaf used by the constrained open, rather than an
+    /// authored symlink alias. MIME decisions must describe those same bytes.
     public let name: String
     public let mimeHint: String
 }

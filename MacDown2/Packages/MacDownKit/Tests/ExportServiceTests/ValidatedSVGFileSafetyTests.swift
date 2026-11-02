@@ -26,9 +26,10 @@ struct ValidatedSVGFileSafetyTests {
         let png = try #require(Data(base64Encoded:
             "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg=="))
         try png.write(to: directory.appendingPathComponent("pixel.png"))
-        let request = ExportRequest(
+        let request = try ExportRequest(
             text: "![pixel](pixel.png)\n", sourceGeneration: 1, theme: BundledThemes.light,
-            documentURL: directory.appendingPathComponent("source.md")
+            documentURL: directory.appendingPathComponent("source.md"),
+            resourceAccess: ExportResourceAccess(openingDirectory: directory)
         )
         let validated = try await ExportService.prepareValidatedSVG(
             request, to: .html(url: targetURL, mode: .standalone(style: .embedded)), engine: ParseEngine()

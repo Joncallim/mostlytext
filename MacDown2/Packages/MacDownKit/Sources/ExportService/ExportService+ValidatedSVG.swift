@@ -50,7 +50,8 @@ extension ExportService {
         let kept = request.contributions.filter { !rejected.contains($0.sourceRange) }
         let fallbackRequest = ExportRequest(
             text: request.text, sourceGeneration: request.sourceGeneration,
-            theme: request.theme, documentURL: request.documentURL, contributions: kept
+            theme: request.theme, documentURL: request.documentURL,
+            resourceAccess: request.resourceAccess, parseOptions: request.parseOptions, contributions: kept
         )
         let fallback = try await ExportComposer.prepareWithRoots(
             request: fallbackRequest, target: target, engine: engine, namespaceSVGIDs: true
