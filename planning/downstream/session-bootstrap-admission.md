@@ -65,3 +65,12 @@ existential. Strict lint/format and ordinary Compliance pass. The first harness
 omitted the existing Fakes helper; that setup failure is retained with corrected
 runs in `CORTANA-Builds/session-bootstrap-20261102`. No application or real
 session directory was opened; full hosted regression/build checks follow.
+
+## Hosted verification correction
+
+The first hosted run passed all 3,122 package tests (426 suites, two existing
+Neon known issues) and app/CLI Debug/Release builds, but build-for-testing
+failed to link JSONAnalysisStore symbols. The app and app test sources directly
+import JSONSupport while the project spec relied on transitive linkage. Declare
+the existing JSONSupport product for both targets; no dependency version changes
+or test exclusions. Retain the first run and require a full corrected run.
