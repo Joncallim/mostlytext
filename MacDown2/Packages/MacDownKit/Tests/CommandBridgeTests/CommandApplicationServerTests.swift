@@ -25,6 +25,7 @@ struct CommandApplicationServerTests {
             }
             receiver.documentClosed(lifetime)
         }
+        defer { close.cancel() }
         let result = try await Self.thread {
             let endpoint = try Self.connect(location)
             return try CommandClientExchange.execute(request, stdin: bytes, endpoint: endpoint,
@@ -149,6 +150,7 @@ struct CommandApplicationServerTests {
             try await Task.sleep(for: .milliseconds(100))
             receiver.documentClosed(lifetime)
         }
+        defer { close.cancel() }
         let result = try await Self.thread {
             try CommandClientExchange.execute(request, stdin: nil, endpoint: Self.connect(location),
                                               inputDeadline: .now.advanced(by: .seconds(3)),

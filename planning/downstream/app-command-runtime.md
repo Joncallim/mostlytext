@@ -61,3 +61,12 @@ App adapter controls run in hosted serial app tests; local tests never launch
 AppDelegate or access real preferences/recovery/session paths. Full locked hosted
 Debug/Release builds and suites are required before merge. Native open/focus/close,
 Save As and clean Quit acceptance remain unverified until a suitable GUI account.
+
+## Verification update
+
+The combined isolated transport controls pass 108 tests in 13 suites in both
+Debug and Release without warnings. A suspected link/../ path bug was not
+reproduced: macOS Foundation's existing final-symlink resolution already opens
+the physical parent target. Retain that passing filesystem regression without
+changing the production path helper. Dedicated-thread fixture close tasks are
+cancelled on failure to avoid orphaned asynchronous test work.
