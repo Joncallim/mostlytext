@@ -113,7 +113,7 @@ enum ExportComposer {
             diagnostics: diagnostics,
             sourceGeneration: request.sourceGeneration,
             preservesRawHTML: policy.preservesRawHTML
-        )
+        ).registeringResourceSlots(rendered.resourceSlots)
         return MarkedPreparation(prepared: prepared, markedRoots: derived.markedRoots,
                                  markedSourceRanges: derived.markedSourceRanges)
     }
@@ -136,7 +136,7 @@ enum ExportComposer {
     /// white paper — only wins if the structural sheet comes second. For screen
     /// rules the order is irrelevant: the structural sheet declares no `--md-*`
     /// value outside `@media print`, so the theme still owns every colour.
-    private static func stylesheet(for theme: Theme) -> String {
+    static func stylesheet(for theme: Theme) -> String {
         ExportThemeStylesheet.variables(for: theme) + "\n" + ExportThemeStylesheet.structural
     }
 
@@ -260,7 +260,8 @@ enum ExportComposer {
     static func renderBody(
         derived: DerivedContentComposer.Result,
         policy: Policy,
-        resolver: ExportResourceResolver
+        resolver: ExportResourceResolver,
+        registry: ExportResourceURLRegistry? = nil
     ) throws -> CMarkGFM.Rendered {
         var options = CMarkGFM.optDefault
         if policy.preservesRawHTML {
@@ -275,9 +276,19 @@ enum ExportComposer {
                 derived.splicedBody,
                 options: options,
                 customNodes: derived.customNodes,
-                urlTransformer: { url, isImage in resolver.disposition(for: url, isImage: isImage) }
+                urlTransformer: { url, isImage in
+                    let disposition = resolver.disposition(for: url, isImage: isImage)
+                    if isImage, case .rewrite = disposition, let registry,
+                       let identity = resolver.packagedIdentity(for: url) {
+                        return try .rewrite(registry.register(identity))
+                    }
+                    return disposition
+                }
             )
         } catch {
+            if error is ExportError || error is CancellationError {
+                throw error
+            }
             throw ExportError.renderFailed(underlying: error)
         }
     }

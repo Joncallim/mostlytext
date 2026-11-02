@@ -297,6 +297,36 @@
           }
         }
       }
+    },
+    "The export image references could not be safely assembled.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The export image references could not be safely assembled."
+          }
+        }
+      }
+    },
+    "Try exporting again from the original document.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try exporting again from the original document."
+          }
+        }
+      }
+    },
+    "too many image occurrences": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "too many image occurrences"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

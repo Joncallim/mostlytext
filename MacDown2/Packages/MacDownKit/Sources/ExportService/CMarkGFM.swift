@@ -53,7 +53,7 @@ enum CMarkGFM {
         options: Int32,
         customNodes: [CustomNodeSpec] = [],
         headingAnalysis: HeadingAnalysis = .none,
-        urlTransformer: ((String, Bool) -> URLDisposition)? = nil
+        urlTransformer: ((String, Bool) throws -> URLDisposition)? = nil
     ) throws -> Rendered {
         // `walk` recurses once per nesting level, so a few thousand `>` would
         // overflow a cooperative thread's stack and kill the app. Like the parse
@@ -72,7 +72,7 @@ enum CMarkGFM {
         options: Int32,
         customNodes: [CustomNodeSpec],
         headingAnalysis: HeadingAnalysis,
-        urlTransformer: ((String, Bool) -> URLDisposition)?
+        urlTransformer: ((String, Bool) throws -> URLDisposition)?
     ) throws -> Rendered {
         // Reading the `static let` runs its initialiser exactly once under the
         // Swift runtime's own lock. `precondition` is not used here because it
@@ -109,7 +109,7 @@ enum CMarkGFM {
             headingAnalysis: headingAnalysis,
             markerNonce: headingAnalysis == .marked ? UUID().uuidString : ""
         )
-        transform(root, customNodes: customNodes, urlTransformer: urlTransformer, result: &walkResult)
+        try transform(root, customNodes: customNodes, urlTransformer: urlTransformer, result: &walkResult)
         guard !walkResult.markerInsertionFailed else { throw CMarkError.renderFailed }
 
         // tagfilter/table/tasklist rendering reads the parser's extension list,
@@ -137,7 +137,7 @@ enum CMarkGFM {
         _ text: String,
         options: Int32,
         customNodes: [CustomNodeSpec] = [],
-        urlTransformer: ((String, Bool) -> URLDisposition)? = nil
+        urlTransformer: ((String, Bool) throws -> URLDisposition)? = nil
     ) throws -> String {
         try render(text, options: options, customNodes: customNodes, urlTransformer: urlTransformer).html
     }

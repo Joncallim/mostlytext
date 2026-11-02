@@ -5,8 +5,8 @@ import Themes
 
 /// Slice 2: companion-directory ownership and primary-last durability.
 struct ExportFileWriterTests {
-    private func makePrepared(bodyHTML: String, resources: [ExportResource] = []) -> PreparedExportDocument {
-        PreparedExportDocument(
+    private func makePrepared(bodyHTML: String, resources: [ExportResource] = []) throws -> PreparedExportDocument {
+        try ExportSlotTestSupport.registeringGeneratedImages(PreparedExportDocument(
             title: "Title",
             bodyHTML: bodyHTML,
             stylesheet: "body { color: var(--md-foreground); }",
@@ -14,7 +14,7 @@ struct ExportFileWriterTests {
             diagnostics: [],
             sourceGeneration: 1,
             preservesRawHTML: true
-        )
+        ))
     }
 
     private func pngResource() -> ExportResource {
@@ -27,7 +27,7 @@ struct ExportFileWriterTests {
         defer { try? FileManager.default.removeItem(at: directory) }
         let resource = pngResource()
         let assetsDir = ExportHTMLWriter.defaultAssetsDirectoryName
-        let prepared = makePrepared(
+        let prepared = try makePrepared(
             bodyHTML: "<p><img src=\"\(assetsDir)/\(resource.identity.fileName)\"></p>",
             resources: [resource]
         )
@@ -50,7 +50,7 @@ struct ExportFileWriterTests {
         defer { try? FileManager.default.removeItem(at: directory) }
         let resource = pngResource()
         let assetsDir = ExportHTMLWriter.defaultAssetsDirectoryName
-        let prepared = makePrepared(
+        let prepared = try makePrepared(
             bodyHTML: "<p><img src=\"\(assetsDir)/\(resource.identity.fileName)\"></p>",
             resources: [resource]
         )
@@ -78,7 +78,7 @@ struct ExportFileWriterTests {
         // same ownership and dedup guarantees as every image resource.
         let directory = try ExportTestSupport.makeTempDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
-        let prepared = makePrepared(bodyHTML: "<p>hi</p>")
+        let prepared = try makePrepared(bodyHTML: "<p>hi</p>")
         let target = ExportTarget.html(
             url: directory.appendingPathComponent("doc.html"),
             mode: .standalone(style: .linked)
@@ -106,7 +106,7 @@ struct ExportFileWriterTests {
         // CSS still needs somewhere to live.
         let directory = try ExportTestSupport.makeTempDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
-        let prepared = makePrepared(bodyHTML: "<p>no images</p>")
+        let prepared = try makePrepared(bodyHTML: "<p>no images</p>")
         let target = ExportTarget.html(
             url: directory.appendingPathComponent("doc.html"),
             mode: .standalone(style: .linked)
@@ -129,7 +129,7 @@ struct ExportFileWriterTests {
 
         let resource = pngResource()
         let assetsDirName = ExportHTMLWriter.defaultAssetsDirectoryName
-        let prepared = makePrepared(
+        let prepared = try makePrepared(
             bodyHTML: "<p><img src=\"\(assetsDirName)/\(resource.identity.fileName)\"></p>",
             resources: [resource]
         )
@@ -147,7 +147,7 @@ struct ExportFileWriterTests {
     @Test func writeHTMLRejectsPDFTarget() throws {
         let directory = try ExportTestSupport.makeTempDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
-        let prepared = makePrepared(bodyHTML: "<p>hi</p>")
+        let prepared = try makePrepared(bodyHTML: "<p>hi</p>")
 
         #expect(throws: ExportError.self) {
             try ExportFileWriter.writeHTML(prepared, to: .pdf(url: directory.appendingPathComponent("out.pdf")))
@@ -168,7 +168,7 @@ struct ExportFileWriterTests {
         let body = resources
             .map { "<img src=\"\(assetsDir)/\($0.identity.fileName)\" alt=\"x\">" }
             .joined(separator: "\n")
-        let prepared = makePrepared(bodyHTML: body, resources: resources)
+        let prepared = try makePrepared(bodyHTML: body, resources: resources)
 
         let html = try ExportHTMLWriter.selfContainedHTML(from: prepared)
 
@@ -185,7 +185,7 @@ struct ExportFileWriterTests {
         let resource = pngResource()
         let assetsDir = ExportHTMLWriter.defaultAssetsDirectoryName
         let body = "<img src=\"\(assetsDir)/not-a-resource.png\">"
-        let prepared = makePrepared(bodyHTML: body, resources: [resource])
+        let prepared = try makePrepared(bodyHTML: body, resources: [resource])
 
         let html = try ExportHTMLWriter.selfContainedHTML(from: prepared)
 
@@ -196,7 +196,7 @@ struct ExportFileWriterTests {
         // An empty assets folder beside every export is litter.
         let directory = try ExportTestSupport.makeTempDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
-        let prepared = makePrepared(bodyHTML: "<p>no images here</p>")
+        let prepared = try makePrepared(bodyHTML: "<p>no images here</p>")
         let target = ExportTarget.html(
             url: directory.appendingPathComponent("doc.html"),
             mode: .standalone(style: .embedded)

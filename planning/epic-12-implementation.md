@@ -6,6 +6,26 @@
 > **Architecture date:** 2026-08-17
 > **Review status:** Final adversarial pass complete; implementation begins with Slice 0 only
 
+## 2026-11-02 generated resource substitution amendment
+
+The composer now registers unique image-URL occurrence tokens only for resolved,
+emitted cmark image nodes. A quote-aware UTF-8 scanner consumes each private token
+exactly once in an img/src attribute, restores its encoded companion URL, and
+records the precise byte range and admitted identity. The private slot table is
+bound to the completed body digest; final assembly validates that binding and
+embeds only those ranges. Code/prose, navigation links and authored raw HTML are
+never inferred to be generated references from their filenames. The opaque
+namespace is excluded from source, destination, stylesheet and derived inputs,
+and unresolved/misplaced/duplicate tokens reject the render. Images and links
+inside image descriptions do not emit URL attributes and register no occurrence.
+
+The public prepared-document initializer grants no substitution authority;
+self-contained assembly of a manifest-bearing manual value fails without the
+private registry receipt. Companion assembly preserves manually supplied body
+bytes. Both paths reject a stale attached receipt. Source resolver grants/TOCTOU
+remain unchanged and open. See export-resource-slots-and-publication.md for the
+bounded publication unit and remaining #118/#183 gates.
+
 ## 2026-11-02 final HTML assembly amendment
 
 `ExportHTMLWriter.selfContainedHTML` and `companionHTML` now throw on final
