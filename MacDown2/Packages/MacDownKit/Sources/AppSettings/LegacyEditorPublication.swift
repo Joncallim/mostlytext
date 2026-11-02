@@ -56,7 +56,7 @@ public extension UserDefaultsAppSettingsStore {
         return .applied
     }
 
-    private static func admitsPersistenceDomain(_ name: String) -> Bool {
+    internal nonisolated static func admitsPersistenceDomain(_ name: String) -> Bool {
         let normalized = name.lowercased()
         guard name.utf8.count <= 255,
               !normalized.hasPrefix("com.uranusjr.macdown"),
