@@ -252,7 +252,7 @@ def inspect_build(args):
         require(name and '/' not in name and name not in ('.', '..'), 'Invalid executable name')
         return checked_path(bundle_dir / 'Contents/MacOS' / name, bundle_dir)
     binaries = {'app': executable(app, info), 'runner': executable(runner, runner_info),
-                'test': executable(test_bundle, test_info), 'cli': validate_embedded_cli(products, app)}
+                'test': executable(test_bundle, test_info), 'cli': validate_embedded_cli(products / 'UITestIsolated', app)}
     processes = subprocess.run(['ps', '-axo', 'comm='], text=True, capture_output=True)
     require(processes.returncode == 0, 'Unable to inspect active processes')
     require(not any('MacDown2' in line or 'xctest' in line.lower() for line in processes.stdout.splitlines()),
