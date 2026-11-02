@@ -2402,6 +2402,37 @@
           "sha256": "a8ee435826eaedabdbcdd441defca0286f337b02526e3011652ad0ab294dbd95"
         }
       ]
+    },
+    {
+      "id": "swift-argument-parser",
+      "name": "Swift Argument Parser",
+      "kind": "swiftpm",
+      "version": "1.8.2",
+      "upstream": "https://github.com/apple/swift-argument-parser",
+      "revision": "6a52f3251125d74daf04fcbd5e6f08a75d074382",
+      "resolution": "exact",
+      "licence": "Apache-2.0 WITH Swift-exception",
+      "copyright": [
+        "Copyright (c) 2020 Apple Inc. and the Swift project authors"
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/swift-argument-parser--LICENSE.txt",
+          "sha256": "770af8291f708538d8ff885a0bbc4e045cd700531741c4f99528d435c14d7f55",
+          "upstream": "https://github.com/apple/swift-argument-parser",
+          "upstream_revision": "6a52f3251125d74daf04fcbd5e6f08a75d074382",
+          "upstream_path": "LICENSE.txt"
+        }
+      ],
+      "provenance": "verified",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "manifest_requirement": {
+        "exact": "1.8.2"
+      },
+      "evidence": "Pinned 1.8.2 release at immutable revision 6a52f3251125d74daf04fcbd5e6f08a75d074382 for the public CLI argument boundary (#18). Package.swift has no external dependencies; the exact upstream licence includes its Runtime Library Exception. Existing resolution pins are unchanged."
     }
   ]
 }

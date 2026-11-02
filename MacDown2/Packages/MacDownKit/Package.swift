@@ -7,6 +7,7 @@ let package = Package(
     products: [
         .library(name: "FileCore", targets: ["FileCore"]),
         .library(name: "CommandBridge", targets: ["CommandBridge"]),
+        .library(name: "CommandLineSupport", targets: ["CommandLineSupport"]),
         .library(name: "LocalResourceAccess", targets: ["LocalResourceAccess"]),
         .library(name: "AppSettings", targets: ["AppSettings"]),
         .library(name: "Themes", targets: ["Themes"]),
@@ -33,6 +34,7 @@ let package = Package(
         .library(name: "TextSearch", targets: ["TextSearch"]),
     ],
     dependencies: [
+        .package(url: "https://github.com/apple/swift-argument-parser", exact: "1.8.2"),
         .package(url: "https://github.com/ChimeHQ/SwiftTreeSitter", branch: "main"),
         .package(url: "https://github.com/Joncallim/Neon", revision: "dabf50c947148c49acd0d321dfe8f3805d10b3da"),
         .package(url: "https://github.com/tree-sitter/tree-sitter-json", from: "0.24.8"),
@@ -83,6 +85,9 @@ let package = Package(
     targets: [
         .target(name: "FileCore"),
         .target(name: "CommandBridge", dependencies: ["JSONSupport"]),
+        .target(name: "CommandLineSupport", dependencies: [
+            "CommandBridge", .product(name: "ArgumentParser", package: "swift-argument-parser"),
+        ], resources: [.process("Resources")]),
         .target(name: "LocalResourceAccess"),
         .target(name: "TextSearch", dependencies: ["FileCore"]),
         .target(name: "AppSettings", dependencies: ["JSONSupport"]),
@@ -191,6 +196,7 @@ let package = Package(
 
         .testTarget(name: "FileCoreTests", dependencies: ["FileCore"]),
         .testTarget(name: "CommandBridgeTests", dependencies: ["CommandBridge"]),
+        .testTarget(name: "CommandLineSupportTests", dependencies: ["CommandLineSupport", "CommandBridge"]),
         .testTarget(name: "LocalResourceAccessTests", dependencies: ["LocalResourceAccess"]),
         .testTarget(name: "TextSearchTests", dependencies: ["TextSearch"]),
         .testTarget(name: "AppSettingsTests", dependencies: ["AppSettings"]),

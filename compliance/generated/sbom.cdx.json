@@ -438,6 +438,38 @@
       "version": "2.1.1"
     },
     {
+      "bom-ref": "swift-argument-parser",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/apple/swift-argument-parser"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "Apache-2.0 WITH Swift-exception"
+        }
+      ],
+      "name": "Swift Argument Parser",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "swiftpm"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact"
+        }
+      ],
+      "purl": "pkg:github/apple/swift-argument-parser@6a52f3251125d74daf04fcbd5e6f08a75d074382",
+      "type": "library",
+      "version": "1.8.2"
+    },
+    {
       "bom-ref": "swift-cmark",
       "externalReferences": [
         {
@@ -1665,6 +1697,7 @@
         "nvim-treesitter-markdown-queries",
         "prismjs-textual",
         "rearrange",
+        "swift-argument-parser",
         "swift-cmark",
         "swift-concurrency-extras",
         "swift-markdown",
@@ -1718,7 +1751,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:dcf23b50-dd22-55ad-8978-dcb3a8aea786",
+  "serialNumber": "urn:uuid:c460ed02-521d-56dc-8248-ea89706cf404",
   "specVersion": "1.5",
   "version": 1
 }

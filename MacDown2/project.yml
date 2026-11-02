@@ -28,6 +28,8 @@ targets:
       type: file
       buildPhase: resources
     dependencies:
+    - target: macdown2
+      link: false
     - package: MacDownKit
       product: FileCore
     - package: MacDownKit
@@ -194,6 +196,15 @@ targets:
           UTTypeTagSpecification:
             public.filename-extension:
             - toml
+    postBuildScripts:
+    - name: Embed command-line executable
+      path: scripts/embed-cli.sh
+      inputFiles:
+      - $(BUILT_PRODUCTS_DIR)/macdown2
+      - $(BUILT_PRODUCTS_DIR)/MacDownKit_CommandLineSupport.bundle
+      outputFiles:
+      - $(TARGET_BUILD_DIR)/$(EXECUTABLE_FOLDER_PATH)/macdown2
+      - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/MacDownKit_CommandLineSupport.bundle
   macdown2:
     type: tool
     platform: macOS
@@ -202,6 +213,10 @@ targets:
     dependencies:
     - package: MacDownKit
       product: FileCore
+    - package: MacDownKit
+      product: CommandBridge
+    - package: MacDownKit
+      product: CommandLineSupport
   MacDown2UITests:
     type: bundle.ui-testing
     platform: macOS

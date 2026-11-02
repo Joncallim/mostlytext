@@ -1,0 +1,156 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "At most 32 file paths may be opened in one request.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At most 32 file paths may be opened in one request."
+          }
+        }
+      }
+    },
+    "File paths; - reads stdin. Use -- before option-like paths.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File paths; - reads stdin. Use -- before option-like paths."
+          }
+        }
+      }
+    },
+    "Invalid command-line arguments. Use --help for usage.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid command-line arguments. Use --help for usage."
+          }
+        }
+      }
+    },
+    "List supported file formats.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "List supported file formats."
+          }
+        }
+      }
+    },
+    "MostlyText is unavailable. Use the command embedded in the installed app.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MostlyText is unavailable. Use the command embedded in the installed app."
+          }
+        }
+      }
+    },
+    "One or more request targets could not be opened.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One or more request targets could not be opened."
+          }
+        }
+      }
+    },
+    "Only one stdin stream may be requested.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only one stdin stream may be requested."
+          }
+        }
+      }
+    },
+    "Open documents in MostlyText.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open documents in MostlyText."
+          }
+        }
+      }
+    },
+    "Open files or UTF-8 stdin.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open files or UTF-8 stdin."
+          }
+        }
+      }
+    },
+    "Show the enclosing app version.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show the enclosing app version."
+          }
+        }
+      }
+    },
+    "Unable to read bounded UTF-8 stdin.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unable to read bounded UTF-8 stdin."
+          }
+        }
+      }
+    },
+    "Use --version on its own.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use --version on its own."
+          }
+        }
+      }
+    },
+    "Use --version to show the enclosing app version.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use --version to show the enclosing app version."
+          }
+        }
+      }
+    },
+    "Wait until the opened documents close.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wait until the opened documents close."
+          }
+        }
+      }
+    },
+    "macdown2 (unbundled development build)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macdown2 (unbundled development build)"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
