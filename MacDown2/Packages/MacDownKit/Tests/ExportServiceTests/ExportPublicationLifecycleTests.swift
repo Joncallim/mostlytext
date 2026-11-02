@@ -91,6 +91,12 @@ struct ExportPublicationLifecycleTests {
         defer { try? FileManager.default.removeItem(at: item.directory) }
         let prepared = try ExportPublicationTestSupport.prepared()
         let record = ConcurrentPublicationRecord()
+        let admission = try ExportDestinationAdmission(capturing: item.primary)
+        let input = try HTMLFilePublicationInput(
+            url: item.primary, mode: .standalone(style: .embedded),
+            bytes: Data(ExportHTMLWriter.companionHTML(from: prepared, style: .embedded).utf8),
+            resources: prepared.manifest.resources, assetsDirectoryName: prepared.assetsDirectoryName, diagnostics: []
+        )
         let group = DispatchGroup()
         for _ in 0 ..< 20 {
             group.enter()
@@ -98,13 +104,16 @@ struct ExportPublicationLifecycleTests {
                 defer { group.leave() }
                 do {
                     let hooks = ExportPublicationHooks(beforePromotion: { record.observeOverlap() })
-                    _ = try ExportFileWriter.writeHTML(prepared, to: item.target, hooks: hooks)
+                    _ = try ExportFilePublication.write(
+                        input, lease: ExportLifetimeLease(), hooks: hooks, admission: admission
+                    )
                 } catch { record.failed(error) }
             }
         }
         #expect(group.wait(timeout: .now() + .seconds(30)) == .success)
         #expect(record.maximum == 1)
         #expect(record.failures.isEmpty)
+        #expect(record.refused == 19)
         #expect(try Data(contentsOf: item.primary) == Data(ExportHTMLWriter.companionHTML(from: prepared,
                                                                                           style: .embedded).utf8))
     }
@@ -115,6 +124,11 @@ private final class ConcurrentPublicationRecord: @unchecked Sendable {
     private var active = 0
     private var peak = 0
     private var errors: [String] = []
+    private var conflicts = 0
+    var refused: Int {
+        lock.withLock { conflicts }
+    }
+
     var maximum: Int {
         lock.withLock { peak }
     }
@@ -130,6 +144,12 @@ private final class ConcurrentPublicationRecord: @unchecked Sendable {
     }
 
     func failed(_ error: Error) {
-        lock.withLock { errors.append(String(describing: error)) }
+        lock.withLock {
+            if case ExportError.destinationChanged = error {
+                conflicts += 1
+            } else {
+                errors.append(String(describing: error))
+            }
+        }
     }
 }

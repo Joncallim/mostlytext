@@ -50,6 +50,49 @@ struct OrdinaryExportSnapshotTests {
         #expect(!html.contains(ExportThemeStylesheet.variables(for: BundledThemes.dark)))
     }
 
+    @Test func aDestinationCreatedWhileTheContributionParseIsHeldIsPreserved() async throws {
+        let fixture = try makeFixture()
+        defer { try? FileManager.default.removeItem(at: fixture.directory) }
+        let snapshot = OrdinaryExportSnapshot(
+            document: FileDocument(fileURL: fixture.directory.appendingPathComponent("source.md"), text: "# Source"),
+            theme: BundledThemes.light, parseOptions: .default
+        )
+        let parser = GatedExportParseExecutor()
+        let operation = Task { @MainActor in
+            try await fixture.exporter.performExport(
+                snapshot: snapshot,
+                selection: .init(url: fixture.outputURL, format: .standaloneHTML, style: .embedded),
+                engine: parser
+            )
+        }
+        await parser.waitForFirstCall()
+        let external = Data("new destination fixture".utf8)
+        try external.write(to: fixture.outputURL)
+        await parser.releaseFirstCall()
+        await #expect(throws: ExportError.self) { try await operation.value }
+        #expect(try Data(contentsOf: fixture.outputURL) == external)
+    }
+
+    @Test func anUnlinkedSourceObjectCannotBeOverwrittenThroughAHardLink() async throws {
+        let fixture = try makeFixture()
+        defer { try? FileManager.default.removeItem(at: fixture.directory) }
+        let source = fixture.directory.appendingPathComponent("source.md")
+        let original = Data("# Source fixture".utf8)
+        try original.write(to: source)
+        let document = try FileDocument(fileURL: source, text: "").load()
+        try FileManager.default.linkItem(at: source, to: fixture.outputURL)
+        try FileManager.default.removeItem(at: source)
+        let snapshot = OrdinaryExportSnapshot(document: document, theme: BundledThemes.light, parseOptions: .default)
+        #expect(snapshot.protectedSourceIdentity != nil)
+        await #expect(throws: ExportError.self) {
+            try await fixture.exporter.performExport(
+                snapshot: snapshot,
+                selection: .init(url: fixture.outputURL, format: .standaloneHTML, style: .embedded)
+            )
+        }
+        #expect(try Data(contentsOf: fixture.outputURL) == original)
+    }
+
     @Test func snapshotRequestPreservesItsCapturedInputs() {
         let document = FileDocument(
             fileURL: URL(fileURLWithPath: "/tmp/export-snapshot.md"),

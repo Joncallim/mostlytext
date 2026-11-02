@@ -2,7 +2,7 @@ import Foundation
 
 /// Already assembled immutable bytes; no document parsing or UI work under the
 /// destination publication lock.
-struct HTMLFilePublicationInput {
+struct HTMLFilePublicationInput: Sendable {
     let url: URL
     let mode: HTMLExportMode
     let bytes: Data

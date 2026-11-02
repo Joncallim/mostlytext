@@ -56,6 +56,65 @@ enum ExportPublicationFilesystem {
         return Stamp(info)
     }
 
+    static func primaryBaseline(_ name: String, in directory: Int32) throws -> Stamp? {
+        var info = stat()
+        if fstatat(directory, name, &info, AT_SYMLINK_NOFOLLOW) != 0 {
+            if errno == ENOENT {
+                return nil
+            }
+            throw posixFailure()
+        }
+        let stamp = Stamp(info)
+        guard stamp.kind == mode_t(S_IFREG) else { throw ExportError.unsafePublication }
+        return stamp
+    }
+
+    static func readBoundedFile(_ name: String, in directory: Int32, maxBytes: Int) throws -> Data? {
+        guard maxBytes >= 0, maxBytes <= ExportResourceBudget.maxFinalHTMLUTF8Bytes
+        else { throw BoundedExportHTML.tooLarge }
+        let descriptor = openat(directory, name, O_RDONLY | O_NONBLOCK | O_NOFOLLOW | O_CLOEXEC)
+        if descriptor < 0 {
+            if errno == ENOENT {
+                return nil
+            }
+            throw ExportError.unsafePublication
+        }
+        defer { _ = Darwin.close(descriptor) }
+        var initial = stat()
+        guard fstat(descriptor, &initial) == 0 else { throw posixFailure() }
+        let stamp = Stamp(initial)
+        guard stamp.kind == mode_t(S_IFREG), stamp.size >= 0 else { throw ExportError.unsafePublication }
+        guard stamp.size <= maxBytes else { throw BoundedExportHTML.tooLarge }
+        let bytes = try readBoundedBytes(from: descriptor, maxBytes: maxBytes, expectedSize: Int(stamp.size))
+        var final = stat()
+        guard fstat(descriptor, &final) == 0, Stamp(final) == stamp,
+              bytes.count == stamp.size, try childStamp(name, in: directory) == stamp
+        else { throw ExportError.unsafePublication }
+        return bytes
+    }
+
+    private static func readBoundedBytes(from descriptor: Int32, maxBytes: Int, expectedSize: Int) throws -> Data {
+        var bytes = Data()
+        bytes.reserveCapacity(expectedSize)
+        var buffer = [UInt8](repeating: 0, count: 64 * 1024)
+        while true {
+            try Task.checkCancellation()
+            let remaining = maxBytes - bytes.count
+            let wanted = remaining >= buffer.count ? buffer.count : remaining + 1
+            let count = buffer.withUnsafeMutableBytes { Darwin.read(descriptor, $0.baseAddress, wanted) }
+            if count < 0, errno == EINTR {
+                continue
+            }
+            guard count >= 0 else { throw posixFailure() }
+            if count == 0 {
+                break
+            }
+            guard count <= remaining else { throw BoundedExportHTML.tooLarge }
+            bytes.append(contentsOf: buffer.prefix(count))
+        }
+        return bytes
+    }
+
     static func childDirectory(_ name: String, in parent: Int32, matches expected: Stamp) throws -> Bool {
         try childStamp(name, in: parent).sameDirectory(as: expected)
     }

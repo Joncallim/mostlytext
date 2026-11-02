@@ -14,9 +14,19 @@ extension ExportCoordinator {
         snapshot: OrdinaryExportSnapshot,
         selection: ExportSelection,
         engine: any ParseExecuting = ParseEngine(),
-        publicationLease: ExportLifetimeLease = ExportLifetimeLease()
+        publicationLease: ExportLifetimeLease = ExportLifetimeLease(),
+        admission: ExportDestinationAdmission? = nil
     ) async throws -> ExportOutcome {
         try publicationLease.checkActive()
+        let openURLs = protectedExportDocumentURLs
+        let authorization = try admission ?? ExportDestinationAdmission(
+            capturing: selection.url, protecting: openURLs + (snapshot.documentURL.map { [$0] } ?? [])
+        )
+        try authorization.checkTarget(selection.url)
+        try authorization.checkNoDocumentAliases(openURLs + (snapshot.documentURL.map { [$0] } ?? []))
+        try authorization.checkNoFileAliases(
+            protectedExportFileIdentities + (snapshot.protectedSourceIdentity.map { [$0] } ?? [])
+        )
         let adaptation = try await exportContributionAdaptation(
             for: snapshot,
             isPrintTarget: selection.format == .pdf,
@@ -33,7 +43,7 @@ extension ExportCoordinator {
             let result = try await ExportService.exportHTML(
                 request,
                 to: .html(url: selection.url, mode: mode),
-                engine: engine, lease: publicationLease
+                engine: engine, lease: publicationLease, admission: authorization
             )
             return ExportOutcome(
                 primaryFile: result.primaryFile,
@@ -45,7 +55,9 @@ extension ExportCoordinator {
                 target: .pdf(url: selection.url),
                 engine: engine
             )
-            try await PDFExportAdapter.export(prepared, to: selection.url, lease: publicationLease)
+            try await PDFExportAdapter.export(
+                prepared, to: selection.url, lease: publicationLease, admission: authorization
+            )
             return ExportOutcome(
                 primaryFile: selection.url,
                 diagnostics: Self.combinedDiagnostics(adaptation, prepared.diagnostics)

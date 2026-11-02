@@ -31,6 +31,8 @@ public enum ExportError: Error, LocalizedError, CustomStringConvertible {
     case invalidResourceSlots
     /// Destination/sidecar identity or ownership could not be retained.
     case unsafePublication
+    case destinationChanged
+    case destinationIsOpenDocument
     case publicationRecoveryRequired(URL)
 
     public var description: String {
@@ -61,6 +63,16 @@ public enum ExportError: Error, LocalizedError, CustomStringConvertible {
             return String(localized: "An export staging file needs recovery at: \(url.path)", bundle: .module)
         case .unsafePublication:
             return String(localized: "The export destination or assets could not be safely reused.", bundle: .module)
+        case .destinationChanged:
+            return String(
+                localized: "The export destination changed after it was selected. Choose it again.",
+                bundle: .module
+            )
+        case .destinationIsOpenDocument:
+            return String(
+                localized: "Choose an export destination that is not a source or open document.",
+                bundle: .module
+            )
         case .invalidResourceSlots:
             return String(localized: "The export image references could not be safely assembled.", bundle: .module)
         case .validatedPublicationRejected:
@@ -105,7 +117,7 @@ public enum ExportError: Error, LocalizedError, CustomStringConvertible {
             String(localized: "Split the document, or reduce the size of the images it references.", bundle: .module)
         case .publicationRecoveryRequired:
             String(localized: "Preserve that file and choose another export destination.", bundle: .module)
-        case .unsafePublication:
+        case .unsafePublication, .destinationChanged, .destinationIsOpenDocument:
             String(
                 localized: "Choose another export name or destination. Existing files have been preserved.",
                 bundle: .module

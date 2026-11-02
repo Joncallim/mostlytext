@@ -29,6 +29,8 @@ public struct ExportRequest: Sendable, Equatable {
     /// An explicitly admitted directory retained for this operation. Nil means
     /// no local-resource access, even when a saved document URL is present.
     public let resourceAccess: ExportResourceAccess?
+    /// Previously observed source identity used only for overwrite refusal.
+    public let protectedSourceIdentity: ExportProtectedFileIdentity?
 
     /// Renderer-neutral derived-content contributions (E19 inline math,
     /// E20 block diagrams) that this export must place. Empty for ordinary
@@ -41,6 +43,7 @@ public struct ExportRequest: Sendable, Equatable {
         theme: Theme,
         documentURL: URL? = nil,
         resourceAccess: ExportResourceAccess? = nil,
+        protectedSourceIdentity: ExportProtectedFileIdentity? = nil,
         parseOptions: MarkdownParseOptions = .default,
         contributions: [ExportDerivedContribution] = []
     ) {
@@ -50,6 +53,7 @@ public struct ExportRequest: Sendable, Equatable {
         self.parseOptions = parseOptions
         self.documentURL = documentURL
         self.resourceAccess = resourceAccess
+        self.protectedSourceIdentity = protectedSourceIdentity
         self.contributions = contributions
     }
 

@@ -12,6 +12,7 @@ struct OrdinaryExportSnapshot: Sendable, Equatable {
     let theme: Theme
     let documentURL: URL?
     let resourceAccess: ExportResourceAccess?
+    let protectedSourceIdentity: ExportProtectedFileIdentity?
     let parseOptions: MarkdownParseOptions
 
     init(document: FileCore.FileDocument, theme: Theme, parseOptions: MarkdownParseOptions) {
@@ -19,6 +20,7 @@ struct OrdinaryExportSnapshot: Sendable, Equatable {
         sourceGeneration = document.mutationGeneration
         self.theme = theme
         documentURL = document.fileURL
+        protectedSourceIdentity = ExportProtectedFileIdentity(document: document)
         resourceAccess = document.fileURL.flatMap {
             try? ExportResourceAccess(openingDirectory: $0.deletingLastPathComponent())
         }
@@ -32,8 +34,19 @@ struct OrdinaryExportSnapshot: Sendable, Equatable {
             theme: theme,
             documentURL: documentURL,
             resourceAccess: resourceAccess,
+            protectedSourceIdentity: protectedSourceIdentity,
             parseOptions: parseOptions,
             contributions: contributions
         )
+    }
+}
+
+extension ExportProtectedFileIdentity {
+    init?(document: FileCore.FileDocument) {
+        guard let identity = document.lastKnownRevision?.fileObjectID,
+              let inode = UInt64(identity.file),
+              let device = UInt64(identity.volume) ?? Int64(identity.volume).map({ UInt64(truncatingIfNeeded: $0) })
+        else { return nil }
+        self.init(device: device, inode: inode)
     }
 }

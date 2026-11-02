@@ -11,18 +11,19 @@ struct PDFCrossReferenceIntegrityTests {
         defer { try? FileManager.default.removeItem(at: scratch) }
         let original = makePDF(orphan: true)
         try original.write(to: scratch)
-        #expect(try PDFExportAdapter.hasUsablePDF(at: scratch, sourceHasContent: true))
-        let repaired = try Data(contentsOf: scratch)
+        let repaired = PDFExportAdapter.normalizedPrintableData(original, sourceHasContent: true)
         #expect(repaired == PDFCrossReferenceIntegrity.normalized(original))
+        #expect(repaired != nil)
+        #expect(try Data(contentsOf: scratch) == original)
 
         let referenced = makePDF(orphan: true, reference: "5 0 R")
         try referenced.write(to: scratch)
-        #expect(try !PDFExportAdapter.hasUsablePDF(at: scratch, sourceHasContent: true))
+        #expect(try PDFExportAdapter.normalizedPrintableData(Data(contentsOf: scratch), sourceHasContent: true) == nil)
         #expect(try Data(contentsOf: scratch) == referenced)
 
         let trailerReferenced = makePDF(orphan: true, trailerExtra: "/Info 5 0 R")
         try trailerReferenced.write(to: scratch)
-        #expect(try !PDFExportAdapter.hasUsablePDF(at: scratch, sourceHasContent: true))
+        #expect(try PDFExportAdapter.normalizedPrintableData(Data(contentsOf: scratch), sourceHasContent: true) == nil)
         #expect(try Data(contentsOf: scratch) == trailerReferenced)
     }
 

@@ -22,6 +22,18 @@ struct ExportCoordinator {
     private let themeController: ThemeController
     private let appSettings: AppSettingsModel
 
+    var protectedExportDocumentURLs: [URL] {
+        coordinator.sessionControllers.flatMap { controller in
+            controller.model.tabStore.tabs.compactMap(\.document.fileURL)
+        }
+    }
+
+    var protectedExportFileIdentities: [ExportProtectedFileIdentity] {
+        coordinator.sessionControllers.flatMap { controller in
+            controller.model.tabStore.tabs.compactMap { ExportProtectedFileIdentity(document: $0.document) }
+        }
+    }
+
     init(coordinator: WindowCoordinator, themeController: ThemeController, appSettings: AppSettingsModel) {
         self.coordinator = coordinator
         self.themeController = themeController
