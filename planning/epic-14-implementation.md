@@ -2321,3 +2321,15 @@ assertion. Hosted app orchestration and complete exact-head CI must pass before
 integration. Local app/UI targets compile only. Generated anchor navigation,
 PDF/progress, final Release calibration, native acceptance and independent final
 review remain open.
+
+## 28. Frozen ordinary origin survives Save As — 3 November 2026
+
+The #117 source snapshot contract now separates pre-panel identity checking from
+the post-capture lifetime. After text/root/presentation are frozen, ordinary
+export may finish from those old inputs after Save As in the same tab. It still
+revokes on logical-tab switch/removal or source-window close; the disabled
+validated route stays strict. #118's live document registry additionally revokes
+if that Save As or another open would make the selected output an open document.
+The source design, hosted held-parse old-root/new-root image test and residual
+limits are recorded in `downstream/live-export-document-protection.md` and the
+E12 amendment. No native acceptance or optional feature activation is inferred.

@@ -121,7 +121,9 @@ public final class TabStore {
     /// unpinned tabs.
     public internal(set) var tabs: [WorkspaceTab] {
         willSet {
-            precondition(!isNotifyingActiveIdentityChange, "Active identity callback cannot mutate TabStore")
+            precondition(!isNotifyingActiveIdentityChange && !isNotifyingDocumentFilePublication,
+                         "Identity publication callback cannot mutate TabStore")
+            notifyBeforeDocumentFilesPublication(newValue)
             notifyBeforeActiveIdentityChange(from: activeIdentity(in: tabs, selectedBy: activeTabID),
                                              to: activeIdentity(in: newValue, selectedBy: activeTabID))
         }
@@ -130,7 +132,8 @@ public final class TabStore {
     /// The tab currently shown in the content area.
     public internal(set) var activeTabID: UUID? {
         willSet {
-            precondition(!isNotifyingActiveIdentityChange, "Active identity callback cannot mutate TabStore")
+            precondition(!isNotifyingActiveIdentityChange && !isNotifyingDocumentFilePublication,
+                         "Identity publication callback cannot mutate TabStore")
             notifyBeforeActiveIdentityChange(from: activeIdentity(in: tabs, selectedBy: activeTabID),
                                              to: activeIdentity(in: tabs, selectedBy: newValue))
         }
@@ -140,6 +143,8 @@ public final class TabStore {
         ActiveDocumentIdentity?, ActiveDocumentIdentity?
     ) -> Void)?
     @ObservationIgnored private var isNotifyingActiveIdentityChange = false
+    @ObservationIgnored var documentFilesWillPublish: (@MainActor ([WorkspaceTab]) -> Void)?
+    @ObservationIgnored var isNotifyingDocumentFilePublication = false
 
     /// Non-nil while the dirty-close alert should be shown for this tab.
     public internal(set) var pendingCloseTabID: UUID?

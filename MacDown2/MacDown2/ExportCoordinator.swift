@@ -22,6 +22,10 @@ struct ExportCoordinator {
     private let themeController: ThemeController
     private let appSettings: AppSettingsModel
 
+    var documentProtections: ExportDocumentProtectionRegistry {
+        coordinator.exportDocumentProtections
+    }
+
     var protectedExportDocumentURLs: [URL] {
         coordinator.sessionControllers.flatMap { controller in
             controller.model.tabStore.tabs.compactMap(\.document.fileURL)
@@ -104,6 +108,7 @@ struct ExportCoordinator {
                 theme: themeController.current,
                 parseOptions: DocumentEditorSplitView.markdownParseOptions(from: appSettings.markdown)
             )
+            try origin.didFreezeInputs()
             let result = try await performExport(
                 snapshot: snapshot,
                 selection: selection,

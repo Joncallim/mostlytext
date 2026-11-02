@@ -27,6 +27,8 @@ extension ExportCoordinator {
         try authorization.checkNoFileAliases(
             protectedExportFileIdentities + (snapshot.protectedSourceIdentity.map { [$0] } ?? [])
         )
+        let protection = documentProtections.register(authorization, lease: publicationLease)
+        defer { documentProtections.remove(protection) }
         let (adaptation, parser) = try await exportContributionAdaptation(
             for: snapshot,
             isPrintTarget: selection.format == .pdf,

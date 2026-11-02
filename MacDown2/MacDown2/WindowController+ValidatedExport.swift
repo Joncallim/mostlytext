@@ -1,14 +1,6 @@
 import ExportService
 import Foundation
 
-final class WeakValidatedExportLease {
-    weak var lease: ExportLifetimeLease?
-
-    init(_ lease: ExportLifetimeLease) {
-        self.lease = lease
-    }
-}
-
 extension WindowController {
     /// Called at command dispatch, before a panel can suspend or focus can move.
     /// This path is deliberately disconnected from the ordinary export command.
@@ -26,11 +18,29 @@ extension WindowController {
 
     /// Ordinary and optional validated exports share the same document-lifetime
     /// revocation points; this creates no alternate rendering activation path.
-    func makeExportLifetimeLease() -> ExportLifetimeLease {
+    func makeExportLifetimeLease(ordinary: Bool = false) -> ExportLifetimeLease {
         let lease = ExportLifetimeLease()
         validatedExportLeases.removeAll { $0.lease == nil }
-        validatedExportLeases.append(WeakValidatedExportLease(lease))
+        validatedExportLeases.append(WeakValidatedExportLease(lease, ordinary: ordinary))
         return lease
+    }
+
+    func freezeOrdinaryExportLease(_ lease: ExportLifetimeLease, tabID: UUID) {
+        for entry in validatedExportLeases where entry.lease === lease {
+            entry.didFreezeOrdinaryInputs(tabID: tabID)
+        }
+    }
+
+    func revokeExportsForIdentityChange(from oldTab: UUID?, to newTab: UUID?) {
+        for entry in validatedExportLeases {
+            entry.sourceIdentityWillChange(from: oldTab, to: newTab)
+        }
+    }
+
+    func revokeExportsForScopeChange() {
+        for entry in validatedExportLeases {
+            entry.sourceScopeWillChange()
+        }
     }
 
     func revokeValidatedExports() {

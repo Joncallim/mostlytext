@@ -1241,3 +1241,23 @@ distinct-payload accounting; it does not establish empirical final budgets,
 crash repair, global late-open document exclusion, printer scratch ownership,
 native acceptance or independent release review. Local app targets compile
 only and held functionality remains disabled.
+
+## Live document protection and frozen ordinary origins — 3 November 2026
+
+Every ordinary export registers its retained destination admission and weak
+lifetime lease before rendering. Incoming controller/CLI-stage pools and changed
+tab file identities synchronously check current paths and retained physical file
+identities before publishing them. A newly opened alias revokes the export's
+publication lease; unrelated opens and keystroke-only edits do not. Inactive
+tab insertion is included. The existing lease cutoff linearizes document
+publication/revocation against final primary promotion inside this process.
+
+Ordinary origins now have an explicit post-panel frozen-input phase: source,
+resource capability, presentation and target are fixed before the first render
+await. A Save As or folder change in the same logical tab then leaves those
+inputs valid; tab switch/removal and window close still cancel. Pre-panel and
+disabled validated origins keep strict identity revocation. No source or UI
+retargeting is introduced. The binding source unit and proof limits are in
+`downstream/live-export-document-protection.md`. This is not arbitrary external
+writer exclusion, filesystem compare-and-swap, crash recovery, printer ownership
+or final native acceptance. Local app/UI targets compile only.

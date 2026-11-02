@@ -1,3 +1,4 @@
+import AppKit
 import AppSettings
 import ExportService
 import FileCore
@@ -8,7 +9,7 @@ import Highlighting
 import MarkdownEngine
 import Testing
 import Themes
-import Workspace
+@testable import Workspace
 
 @MainActor
 @Suite("Ordinary export snapshot")
@@ -125,6 +126,7 @@ struct OrdinaryExportSnapshotTests {
         themeController.setAppearance(.light)
         let preferences = FileTreePreferences()
         let coordinator = WindowCoordinator(
+            recoveryBuffer: RecoveryBuffer(recoveryDirectory: directory.appendingPathComponent("recovery")),
             themeController: themeController,
             grammarRegistry: GrammarRegistry(),
             fileTreePreferences: preferences,
@@ -140,6 +142,7 @@ struct OrdinaryExportSnapshotTests {
         return Fixture(
             settings: settings,
             themeController: themeController,
+            coordinator: coordinator,
             exporter: exporter,
             directory: directory,
             outputURL: directory.appendingPathComponent("result.html")
@@ -149,9 +152,156 @@ struct OrdinaryExportSnapshotTests {
     private struct Fixture {
         let settings: AppSettingsModel
         let themeController: ThemeController
+        let coordinator: WindowCoordinator
         let exporter: ExportCoordinator
         let directory: URL
         let outputURL: URL
+    }
+}
+
+extension OrdinaryExportSnapshotTests {
+    enum LatePublication: Sendable,
+        CaseIterable { case controller, activeTab, inactiveTab, stagedController, unlinkedController }
+
+    @Test(arguments: LatePublication.allCases)
+    func laterDocumentPublicationPreservesAnUnchangedExportDestination(mode: LatePublication) async throws {
+        let fixture = try makeFixture()
+        defer { try? FileManager.default.removeItem(at: fixture.directory) }
+        let original = Data("# Already saved output".utf8)
+        try original.write(to: fixture.outputURL)
+        let model = fixture.coordinator.makeWindowModel()
+        model.tabStore.newTab(document: FileDocument(text: ""))
+        let controller = fixture.coordinator.makeWindowController(model: model)
+        fixture.coordinator.controllers = [controller]
+        defer {
+            for item in fixture.coordinator.sessionControllers {
+                item.close()
+            }
+            fixture.coordinator.controllers = []
+            fixture.coordinator.commandStdinStages = []
+        }
+        let parser = GatedExportParseExecutor()
+        let snapshot = OrdinaryExportSnapshot(document: FileDocument(text: "# Export source"),
+                                              theme: BundledThemes.light, parseOptions: .default)
+        let operation = Task { @MainActor in
+            try await fixture.exporter.performExport(
+                snapshot: snapshot, selection: .init(url: fixture.outputURL, format: .standaloneHTML, style: .embedded),
+                engine: parser
+            )
+        }
+        await parser.waitForFirstCall()
+        let opened = try FileDocument(fileURL: fixture.outputURL, recoveryBuffer: fixture.coordinator.recoveryBuffer)
+            .load()
+        switch mode {
+        case .controller, .stagedController, .unlinkedController:
+            let incoming = fixture.coordinator.makeWindowModel()
+            incoming.tabStore.newTab(document: opened)
+            let incomingController = fixture.coordinator.makeWindowController(model: incoming)
+            if mode != .stagedController {
+                fixture.coordinator.controllers.append(incomingController)
+            } else {
+                fixture.coordinator.commandStdinStages.append(incomingController)
+            }
+        case .activeTab:
+            model.tabStore.newTab(document: opened)
+        case .inactiveTab:
+            let active = model.tabStore.activeTabID
+            model.tabStore.tabs.append(WorkspaceTab(document: opened))
+            #expect(model.tabStore.activeTabID == active)
+        }
+        await parser.releaseFirstCall()
+        await #expect(throws: CancellationError.self) { try await operation.value }
+        #expect(try Data(contentsOf: fixture.outputURL) == original)
+    }
+
+    private func laterOpenedDocument(fixture: Fixture, mode: LatePublication) throws -> FileDocument {
+        guard mode == .unlinkedController else {
+            return try FileDocument(fileURL: fixture.outputURL, recoveryBuffer: fixture.coordinator.recoveryBuffer)
+                .load()
+        }
+        let alias = fixture.directory.appendingPathComponent("vanished-source.md")
+        try FileManager.default.linkItem(at: fixture.outputURL, to: alias)
+        let loaded = try FileDocument(fileURL: alias, recoveryBuffer: fixture.coordinator.recoveryBuffer).load()
+        try FileManager.default.removeItem(at: alias)
+        return loaded
+    }
+
+    @Test func postFreezeSaveAsUsesTheOriginalSourceAndResourceDirectory() async throws {
+        let fixture = try makeFixture()
+        defer { try? FileManager.default.removeItem(at: fixture.directory) }
+        let oldRoot = fixture.directory.appendingPathComponent("old")
+        let newRoot = fixture.directory.appendingPathComponent("new")
+        try FileManager.default.createDirectory(at: oldRoot, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: newRoot, withIntermediateDirectories: true)
+        let sourceURL = oldRoot.appendingPathComponent("source.md")
+        let newURL = newRoot.appendingPathComponent("source.md")
+        let source = "# Original source\n![image](a.png)\n"
+        try Data(source.utf8).write(to: sourceURL)
+        try Data([1]).write(to: oldRoot.appendingPathComponent("a.png"))
+        try Data([2]).write(to: newRoot.appendingPathComponent("a.png"))
+        let loaded = try await FileDocument.create(
+            fileURL: sourceURL,
+            recoveryBuffer: fixture.coordinator.recoveryBuffer
+        ).load()
+        let model = fixture.coordinator.makeWindowModel()
+        model.tabStore.newTab(document: loaded)
+        let controller = fixture.coordinator.makeWindowController(model: model)
+        fixture.coordinator.controllers = [controller]
+        defer { fixture.coordinator.removeController(controller); controller.close() }
+        let tab = model.tabStore.activeTabID
+        let origin = try #require(OrdinaryExportOrigin.capture(controller: controller))
+        let accepted = try origin.documentAfterPanel()
+        let snapshot = OrdinaryExportSnapshot(document: accepted, theme: BundledThemes.light, parseOptions: .default)
+        try origin.didFreezeInputs()
+        let parser = GatedExportParseExecutor()
+        let operation = Task { @MainActor in
+            try await fixture.exporter.performExport(
+                snapshot: snapshot, selection: .init(url: fixture.outputURL, format: .standaloneHTML, style: .embedded),
+                engine: parser, publicationLease: origin.publicationLease
+            )
+        }
+        await parser.waitForFirstCall()
+        await model.saveAs(to: newURL, expecting: accepted)
+        model.setFolderRoot(newRoot)
+        #expect(model.activeDocument?.fileURL == newURL)
+        #expect(model.tabStore.activeTabID == tab)
+        await parser.releaseFirstCall()
+        let result = try await operation.value
+        let html = try String(contentsOf: result.primaryFile, encoding: .utf8)
+        #expect(html.contains("Original source"))
+        let image = try #require(FileManager.default.contentsOfDirectory(
+            at: fixture.outputURL.deletingPathExtension().appendingPathExtension("assets"),
+            includingPropertiesForKeys: nil
+        ).first { $0.pathExtension == "png" })
+        #expect(try Data(contentsOf: image) == Data([1]))
+        #expect(try Data(contentsOf: sourceURL) == Data(source.utf8))
+        #expect(try Data(contentsOf: newRoot.appendingPathComponent("a.png")) == Data([2]))
+    }
+
+    @Test func closingTheFrozenOriginWhileParsingStillPreventsPublication() async throws {
+        let fixture = try makeFixture()
+        defer { try? FileManager.default.removeItem(at: fixture.directory) }
+        let model = fixture.coordinator.makeWindowModel()
+        model.tabStore.newTab(document: FileDocument(text: "# Frozen source"))
+        let controller = fixture.coordinator.makeWindowController(model: model)
+        fixture.coordinator.controllers = [controller]
+        defer { fixture.coordinator.removeController(controller); controller.close() }
+        let origin = try #require(OrdinaryExportOrigin.capture(controller: controller))
+        let snapshot = try OrdinaryExportSnapshot(document: origin.documentAfterPanel(),
+                                                  theme: BundledThemes.light, parseOptions: .default)
+        try origin.didFreezeInputs()
+        let parser = GatedExportParseExecutor()
+        let operation = Task { @MainActor in
+            try await fixture.exporter.performExport(
+                snapshot: snapshot, selection: .init(url: fixture.outputURL, format: .standaloneHTML, style: .embedded),
+                engine: parser, publicationLease: origin.publicationLease
+            )
+        }
+        await parser.waitForFirstCall()
+        controller.windowWillClose(Notification(name: NSWindow.willCloseNotification, object: controller.window))
+        await parser.releaseFirstCall()
+        await #expect(throws: CancellationError.self) { try await operation.value }
+        #expect(!FileManager.default.fileExists(atPath: fixture.outputURL.path))
     }
 }
 
