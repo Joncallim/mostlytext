@@ -22,12 +22,14 @@ struct LegacyEditorJournalPlan: Codable, Sendable, Equatable {
     let before: Data?
     let desired: Data
     let selected: [String]
+    let fontPostScriptName: String?
 
     init(proposal: LegacyEditorWriteProposal, domain: String, before: Data?) throws {
         version = 1; mappingVersion = proposal.mappingVersion; id = UUID()
         self.domain = domain; sourceDigest = proposal.sourceDigest
         self.before = before; desired = proposal.desiredData
         selected = proposal.selected.map(\.rawValue).sorted()
+        fontPostScriptName = proposal.fontPostScriptName
         guard LegacyEditorDestinationEvidence.decode(before).rawRevision == proposal.beforeRevision else {
             throw LegacyMigrationFailure.invalidRecord
         }
@@ -51,11 +53,14 @@ struct LegacyEditorJournalPlan: Codable, Sendable, Equatable {
     }
 
     func restoredProposal() throws -> LegacyEditorWriteProposal {
-        guard version == 1, mappingVersion == 1, UserDefaultsAppSettingsStore.admitsPersistenceDomain(domain),
+        guard version == 1, mappingVersion == 1 || mappingVersion == 2,
+              (mappingVersion == 2) == (fontPostScriptName != nil),
+              UserDefaultsAppSettingsStore.admitsPersistenceDomain(domain),
               desired.count <= 65536, (before?.count ?? 0) <= 65536,
               sourceDigest.utf8.count == 64,
               sourceDigest.utf8.allSatisfy({ (48 ... 57).contains($0) || (97 ... 102).contains($0) }),
-              !selected.isEmpty, selected.count <= 3, selected == Array(Set(selected)).sorted()
+              !selected.isEmpty || fontPostScriptName != nil, selected.count <= 3,
+              selected == Array(Set(selected)).sorted()
         else { throw LegacyMigrationFailure.invalidRecord }
         let fields = selected.compactMap(LegacyImportPlan.Destination.init(rawValue:))
         guard fields.count == selected.count else { throw LegacyMigrationFailure.invalidRecord }
@@ -80,6 +85,12 @@ extension LegacyEditorWriteProposal {
         guard before.status == .absent || before.settings != nil,
               let desired = after.settings else { throw LegacyMigrationFailure.invalidRecord }
         var allowed = before.settings ?? .default
+        if let name = record.fontPostScriptName {
+            guard !name.isEmpty, name.utf8.count <= 4096,
+                  !name.unicodeScalars.contains(where: { CharacterSet.controlCharacters.contains($0) })
+            else { throw LegacyMigrationFailure.invalidRecord }
+            allowed.font = desired.font
+        }
         for field in selected {
             switch field {
             case .smartHome: allowed.smartHome = desired.smartHome
@@ -89,9 +100,11 @@ extension LegacyEditorWriteProposal {
         }
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]
-        guard allowed == desired, try encoder.encode(desired) == record.desired else {
+        guard try encoder.encode(allowed) == record.desired, try encoder.encode(desired) == record.desired else {
             throw LegacyMigrationFailure.invalidRecord
         }
+        mappingVersion = record.mappingVersion
+        fontPostScriptName = record.fontPostScriptName
         sourceDigest = record.sourceDigest
         beforeRevision = before.rawRevision
         desiredRevision = after.rawRevision
@@ -102,6 +115,12 @@ extension LegacyEditorWriteProposal {
     func matchesJournalSource(_ source: LegacyPreferenceSnapshot) -> Bool {
         guard source.canonicalDigest == sourceDigest,
               let desired = LegacyEditorDestinationEvidence.decode(desiredData).settings else { return false }
+        if let name = fontPostScriptName {
+            guard LegacyPreferenceReport(snapshot: source).entries.contains(where: {
+                guard case let .requiresExactInstalledFont(request) = $0.disposition else { return false }
+                return request.postScriptName.utf8.elementsEqual(name.utf8) && request.size == desired.font.size
+            }) else { return false }
+        }
         let converted = LegacyEditorBooleanConversion(snapshot: source).proposedValues
         return selected.allSatisfy { field in
             switch field {

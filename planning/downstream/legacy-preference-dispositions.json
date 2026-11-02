@@ -199,10 +199,10 @@
       "disposition": "candidate_equivalent",
       "rationale": "Validate name/size; resolve installed PostScript name through NSFont to the final FontDescriptor on MainActor. Preserve current font and warn if unavailable; never download.",
       "owner": "#53",
-      "implementation_status": "not_implemented",
+      "implementation_status": "implemented_exact_resolution",
       "destination_candidate": "EditorSettings.font",
       "destination_source": "MacDown2/Packages/MacDownKit/Sources/AppSettings/EditorSettings.swift",
-      "semantic_verification": "pending isolated legacy-value conversion, exact behavior and destination precedence evidence",
+      "semantic_verification": "Exact PostScript face and point-size equality between installed legacy font and ordinary family resolver; explicit replacement consent and fresh revalidation before publication.",
       "report_policy": "font"
     },
     {
@@ -278,11 +278,11 @@
       "key": "editorStyleName",
       "declaration_type": "NSString *",
       "kind": "stored",
-      "disposition": "owned_policy_pending",
-      "rationale": "Only curated exact compatible theme aliases; no nearest-name guess or executable old-style import. Unknown/custom style remains unsupported with safe explicit conversion outside this import.",
+      "disposition": "unsupported_current_surface",
+      "rationale": "No reviewed exact aliases. Legacy PEG style attributes cannot reproduce semantic capture, chrome and preview roles; even matching Tomorrow names do not establish compatibility. Preserve all current MostlyText theme slots, appearance and custom files. No style files are read or converted.",
       "owner": "#113",
-      "implementation_status": "not_implemented",
-      "report_policy": "unsupported"
+      "implementation_status": "implemented_report",
+      "report_policy": "legacyTheme"
     },
     {
       "key": "editorHorizontalInset",

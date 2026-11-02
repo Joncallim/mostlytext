@@ -1,5 +1,10 @@
 # Issue #53 — Compatible settings and deliberate legacy import
 
+## 2 November 2026: production optional editor import
+
+The [production import architecture](production-editor-import.md) supersedes the older pending activation/font/theme statements below. The application now runs the optional consent/journal recovery step before constructing mutable settings/theme/session/document owners. Exact representable installed fonts and the three reviewed Boolean mappings are eligible for explicit per-field selection; legacy style names have no exact aliases and never alter current theme storage. App/UI-test hosts bypass real-domain import. Whole-install identity migration, native/private-candidate evidence, final localization, signing and public release remain separate gates.
+
+
 ## 1 November 2026: conditional persistent-domain publication
 
 The [conditional writer architecture](conditional-settings-publication.md)

@@ -17,7 +17,8 @@ public struct LegacyEditorWriteProposal: Sendable, Equatable {
     }
 
     public let sourceDigest: String
-    public let mappingVersion = 1
+    public let mappingVersion: Int
+    public let fontPostScriptName: String?
     public let beforeRevision: String
     public let desiredRevision: String
     public let desiredData: Data
@@ -30,22 +31,33 @@ public struct LegacyEditorWriteProposal: Sendable, Equatable {
         source: LegacyPreferenceSnapshot,
         storedDestination: StoredDomain,
         selected: Set<Destination>,
-        replacing: Set<Destination> = []
+        replacing: Set<Destination> = [],
+        font: LegacyResolvedFont? = nil,
+        replacingFont: Bool = false
     ) throws {
         guard case let .decoded(destination) = storedDestination else { throw Failure.unavailableDestination }
         guard plan.matches(source: source, destination: destination) else { throw Failure.stalePlan }
         guard destination.status == .absent || destination.settings != nil else {
             throw Failure.unavailableDestination
         }
-        guard !selected.isEmpty else { throw Failure.noSelectedChanges }
+        guard !selected.isEmpty || font != nil else { throw Failure.noSelectedChanges }
         guard replacing.isSubset(of: selected) else { throw Failure.unproposedSelection }
         let proposed = Set(plan.entries.map(\.destination))
         guard selected.isSubset(of: proposed) else { throw Failure.unproposedSelection }
+        if let font {
+            guard font.matches(source) else { throw Failure.stalePlan }
+            guard destination.status == .absent || replacingFont else { throw Failure.replacementConsentRequired }
+        }
         var settings = destination.settings ?? .default
+        if let font {
+            settings.font = font.descriptor
+        }
         try Self.apply(plan: plan, selected: selected, replacing: replacing, to: &settings)
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]
         let data = try encoder.encode(settings)
+        mappingVersion = font == nil ? 1 : 2
+        fontPostScriptName = font?.postScriptName
         sourceDigest = source.canonicalDigest
         beforeRevision = destination.rawRevision
         desiredRevision = Self.revision(data)

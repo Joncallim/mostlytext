@@ -5,7 +5,9 @@ import Foundation
 /// remain visible in a local report; they never become no-op destination keys.
 public enum LegacyPreferenceCatalog {
     public enum ValueKind: Sendable { case boolean, string, number, enumeration, font, opaque }
-    public enum Policy: Sendable { case mapped, font, unconditional, provenance, unsupported, calculated, transient }
+    public enum Policy: Sendable { case mapped, font, legacyTheme, unconditional, provenance, unsupported, calculated,
+                                        transient
+    }
 
     public struct Definition: Sendable {
         public let key: String
@@ -44,7 +46,7 @@ public enum LegacyPreferenceCatalog {
         .init("editorCompleteMatchingCharacters", .boolean, .unsupported),
         .init("editorSyncScrolling", .boolean, .unsupported),
         .init("editorSmartHome", .boolean, .mapped),
-        .init("editorStyleName", .string, .unsupported),
+        .init("editorStyleName", .string, .legacyTheme),
         .init("editorHorizontalInset", .number, .unsupported),
         .init("editorVerticalInset", .number, .unsupported),
         .init("editorLineSpacing", .number, .unsupported),
