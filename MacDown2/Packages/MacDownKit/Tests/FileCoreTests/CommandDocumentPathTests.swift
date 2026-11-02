@@ -16,7 +16,7 @@ struct CommandDocumentPathTests {
         try FileManager.default.createSymbolicLink(at: lexical.appendingPathComponent("link"),
                                                    withDestinationURL: physical.appendingPathComponent("child"))
         let path = lexical.path + "/link/../document.md"
-        let resolved = try URL(fileURLWithPath: path).resolvingFinalSymlink()
+        let resolved = URL(fileURLWithPath: path).resolvingFinalSymlink()
         #expect(try Data(contentsOf: resolved) == Data("right".utf8))
     }
 }
