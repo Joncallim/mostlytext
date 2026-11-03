@@ -75,7 +75,10 @@ struct FolderPanelOriginTests {
         let coordinator: WindowCoordinator
 
         init() throws {
-            root = FileManager.default.temporaryDirectory.appendingPathComponent("folder-origin-\(UUID().uuidString)")
+            root = FileManager.default.temporaryDirectory.appendingPathComponent(
+                "folder-origin-\(UUID().uuidString)", isDirectory: true
+            )
+            #expect(root.hasDirectoryPath)
             try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
             let preferences = FileTreePreferences(store: FolderPanelPreferences())
             coordinator = WindowCoordinator(
