@@ -27,3 +27,9 @@ Integration reconciliation: main 68b72f76 brings the Help-menu correction, whose
 complete hosted app/package CI passed at 0c1625a0. Its existing localized action
 and current documentation are retained. Against this integrated baseline this
 notice unit changes no Swift source, renderer, lock, guard or release policy.
+
+The same unit also prepares a coordinate/hash-only index for all original
+unassociated parser positions, including each of the 3,528 still requiring
+review. It neither republishes unknown code text nor guesses an ownership or
+license disposition. Exact archive/chunk/map identity and aggregate counts are
+validated using the existing source-map implementation.

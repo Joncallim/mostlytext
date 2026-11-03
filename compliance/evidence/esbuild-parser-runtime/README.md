@@ -60,3 +60,19 @@ No npm package, Go source, upstream build script or runtime helper is executed.
 Other generated/embedded code, original compiler/candidate resolution and Framer
 origin ambiguity remain open. All six strict failures stay in place. No native,
 legal-clearance, signed-artifact or public source-offer approval is inferred.
+
+## Complete remaining-position review handoff
+
+[The coordinate/hash index](review-positions.json) accounts for every original
+unassociated outer reference, including all 3,528 still requiring review. Each
+row identifies the exact parser member/digest, one-based UTF-16 coordinates and
+all linked outer generated coordinates. It publishes no copied code text and
+assigns no guessed ownership or license to unclassified positions. A reviewer can
+retrieve the pinned original archives, inspect the exact regions and add a
+documented disposition without re-discovering the source-map composition.
+
+Reproduce with `compliance/tools/index_parser_review_positions.py --evidence-dir
+/path/to/mermaid-capture --output /tmp/review-positions.json`, then compare to the
+committed index. It pins every reviewed parent chunk/map and rejects a changed
+bundle/archive/chunk pairing or inconsistent total/runtime count. Index presence
+is evidence preparation, not a completed independent review.
