@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "attributions": [
+    {
+      "id": "cytoscape-bezier-easing",
+      "credit": "/*! Bezier curve function generator. Copyright Gaetan Renaudeau. MIT License: http://en.wikipedia.org/wiki/MIT_License */",
+      "start": "function generateCubicBezier(",
+      "end": "/*! Runge-Kutta spring physics function generator.",
+      "probes": [
+        "  function calcBezier(aT, aA1, aA2) {",
+        "  function getSlope(aT, aA1, aA2) {"
+      ],
+      "distributed_licence": "cytoscape-bezier--MIT.txt",
+      "reference": {
+        "repository": "https://github.com/gre/bezier-easing",
+        "revision": "18f06f5d058184690f5975a243e5bcfcba2e89c4",
+        "version": "v2.0.3",
+        "source_path": "src/index.js",
+        "source_file": "bezier-index.js",
+        "source_sha256": "f2518b9c277c50312280715e36eb79057f927ac1d9b98182854ca5af865ccab7",
+        "source_markers": [
+          "NEWTON_ITERATIONS",
+          "function calcBezier",
+          "function getSlope"
+        ],
+        "licence_path": "LICENSE",
+        "licence_file": "bezier-LICENSE",
+        "licence_sha256": "32bfd1097d45b41ca6792bf07b389b26ee4045e7f7db28349f4199eef889c516"
+      }
+    },
+    {
+      "id": "cytoscape-jquery-events",
+      "credit": "Event object based on jQuery events, MIT license",
+      "start": "var Event = function",
+      "end": "var eventRegex = ",
+      "probes": [
+        "    this.isDefaultPrevented = returnTrue;",
+        "    this.isPropagationStopped = returnTrue;",
+        "    this.isImmediatePropagationStopped = returnTrue;"
+      ],
+      "distributed_licence": "cytoscape-jquery-events--MIT.txt",
+      "reference": {
+        "repository": "https://github.com/jquery/jquery",
+        "revision": "91cd1587ed4a1d4f3834227e8eb3cc30cb385409",
+        "version": "1.11.0",
+        "source_path": "src/event.js",
+        "source_file": "jquery-event.js",
+        "source_sha256": "782abe207bcf86f976332603136a9423e20394413742714c46ea92b44c515429",
+        "source_markers": [
+          "jQuery.Event",
+          "this.isDefaultPrevented = returnTrue",
+          "this.isPropagationStopped = returnTrue"
+        ],
+        "licence_path": "MIT-LICENSE.txt",
+        "licence_file": "jquery-MIT-LICENSE.txt",
+        "licence_sha256": "44254c9a91a4647b9192584f17b2d27bf43696ba1ea16b0e88ac7bd6bf0780f1"
+      }
+    }
+  ]
+}

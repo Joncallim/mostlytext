@@ -16,6 +16,8 @@ This file is generated from `compliance/inventory.json` by
 
 | Component | Version | Licence |
 |---|---|---|
+| Bezier easing helper credited to Gaetan Renaudeau (via Cytoscape/Mermaid) | Cytoscape 3.34.0; licensed reference v2.0.3 | MIT |
+| Cytoscape own-code notice (via Mermaid) | 3.34.0 | MIT |
 | D2 (@terrastruct/d2) | 0.1.33 | MPL-2.0 |
 | Editor theme “Daybreak” | 1.0.0 | MIT |
 | Editor theme “GitHub Light” (legacy tomorrow-light identifier) | n/a | MIT |
@@ -27,6 +29,7 @@ This file is generated from `compliance/inventory.json` by
 | Editor theme “Tomorrow Dark” (colour values) | n/a | MIT |
 | Expat (embedded in Viz.js WebAssembly) | 2.8.4 | MIT |
 | Graphviz red-black tree library (via Viz.js) | Graphviz 16.0.0 source snapshot | LicenseRef-Graphviz-RBTree |
+| jQuery-derived event object (via Cytoscape/Mermaid) | Cytoscape 3.34.0; licensed reference jQuery 1.11.0 | MIT |
 | Liberation Mono WOFF (embedded in D2 WebAssembly via Chroma) | bundled in Chroma v2.14.0 | OFL-1.1 |
 | libyaml (vendored inside Yams as CYaml) | 0.2.5 (Yams import 2021-03, plus Yams' 2024 nesting-depth fix) | MIT |
 | Luc Maisonobe-derived ellipse routine (via Graphviz/Viz.js) | Graphviz 16.0.0 source snapshot | BSD-3-Clause AND EPL-2.0 |
@@ -64,6 +67,75 @@ This file is generated from `compliance/inventory.json` by
 | tree-sitter-yaml | 0.7.0 | MIT |
 | Viz.js (@viz-js/viz) | 3.30.0 | MIT AND EPL-2.0 |
 | Yams | 6.2.2 | MIT |
+
+---
+
+## Bezier easing helper credited to Gaetan Renaudeau (via Cytoscape/Mermaid)
+
+- Version: Cytoscape 3.34.0; licensed reference v2.0.3
+- Upstream: https://github.com/gre/bezier-easing
+- Licence: MIT
+- Copyright (c) 2014 Gaëtan Renaudeau
+
+### cytoscape-bezier--MIT.txt
+
+```text
+Copyright (c) 2014 Gaëtan Renaudeau
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+```
+
+---
+
+## Cytoscape own-code notice (via Mermaid)
+
+- Version: 3.34.0
+- Upstream: https://github.com/cytoscape/cytoscape.js
+- Licence: MIT
+- Copyright (c) 2016-2026, The Cytoscape Consortium.
+
+### cytoscape--MIT.txt
+
+```text
+Copyright (c) 2016-2026, The Cytoscape Consortium.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the “Software”), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
 
 ---
 
@@ -900,6 +972,41 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
 THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+```
+
+---
+
+## jQuery-derived event object (via Cytoscape/Mermaid)
+
+- Version: Cytoscape 3.34.0; licensed reference jQuery 1.11.0
+- Upstream: https://github.com/jquery/jquery
+- Licence: MIT
+- Copyright 2014 jQuery Foundation and other contributors
+
+### cytoscape-jquery-events--MIT.txt
+
+```text
+Copyright 2014 jQuery Foundation and other contributors
+http://jquery.com/
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```
 
 ---

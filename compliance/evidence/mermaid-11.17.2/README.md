@@ -1,5 +1,15 @@
 # Mermaid shipped-module and licence evidence
 
+> Current scoped attribution update — 3 November 2026: Cytoscape's own MIT text,
+> the Gaëtan Renaudeau Bézier helper and jQuery-derived events now have separate
+> distributed notices and mapped-code evidence in
+> [the new checkpoint](../cytoscape-borrowed-attribution/README.md). The
+> React-derived KaTeX notice was already addressed separately. Ralf Thenable,
+> Framer spring, other embedded/generated helpers and the remaining full nested
+> inventory stay open. Counts/status below describe the original dated evidence,
+> not a current claim that those scoped notices are still absent.
+
+
 ## Owner summary
 
 The shipped Mermaid bundle is now connected to the official generated source

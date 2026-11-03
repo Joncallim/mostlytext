@@ -32,6 +32,15 @@ reported these six failures. It did not create or submit a signed release:
    remains incomplete.
 6. Remaining embedded Graphviz/Emscripten attribution audit remains incomplete.
 
+## Scoped Mermaid attribution progress — 3 November 2026
+
+Cytoscape's own complete MIT text and the credited Bézier/jQuery-event helper
+notices are now separately registered and generated with source-map evidence.
+See [the checkpoint](../compliance/evidence/cytoscape-borrowed-attribution/README.md).
+This closes those bounded notice gaps. It does not remove the Mermaid strict
+failure: remaining package/embedded-helper review, Rough.js, candidate provenance
+and final artifact evidence remain. The strict release failure count stays six.
+
 ## Remaining engineering ownership
 
 | Issue | Remaining contract |
