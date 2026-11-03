@@ -30,7 +30,8 @@ public enum ExportService {
         to target: ExportTarget,
         engine: any ParseExecuting = ParseEngine(),
         lease: ExportLifetimeLease = ExportLifetimeLease(),
-        admission: ExportDestinationAdmission? = nil
+        admission: ExportDestinationAdmission? = nil,
+        recovery: ExportRecoveryLocation? = nil
     ) async throws -> ExportResult {
         guard case let .html(url, _) = target else {
             throw ExportError.invalidDestination("exportHTML writes HTML targets only; use the PDF adapter for PDF")
@@ -43,7 +44,8 @@ public enum ExportService {
         try authorization.checkNoDocumentAliases(request.documentURL.map { [$0] } ?? [])
         try authorization.checkNoFileAliases(request.protectedSourceIdentity.map { [$0] } ?? [])
         let prepared = try await prepare(request, target: target, engine: engine)
-        return try ExportFileWriter.writeHTML(prepared, to: target, admission: authorization, lease: lease)
+        return try ExportFileWriter.writeHTML(prepared, to: target, admission: authorization, lease: lease,
+                                              recovery: recovery)
     }
 
     /// Renders a standalone Markdown fragment to a self-contained HTML

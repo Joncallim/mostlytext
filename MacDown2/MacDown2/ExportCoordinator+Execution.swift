@@ -45,7 +45,7 @@ extension ExportCoordinator {
             let result = try await ExportService.exportHTML(
                 request,
                 to: .html(url: selection.url, mode: mode),
-                engine: parser, lease: publicationLease, admission: authorization
+                engine: parser, lease: publicationLease, admission: authorization, recovery: recoveryLocation
             )
             return ExportOutcome(
                 primaryFile: result.primaryFile,

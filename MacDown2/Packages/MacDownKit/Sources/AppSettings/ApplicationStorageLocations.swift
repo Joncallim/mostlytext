@@ -18,6 +18,10 @@ public struct ApplicationStorageLocations: Sendable, Equatable {
         dataDirectory.appendingPathComponent("Recovery", isDirectory: true)
     }
 
+    public var exportRecovery: URL {
+        dataDirectory.appendingPathComponent("ExportRecovery", isDirectory: true)
+    }
+
     public var themes: URL {
         dataDirectory.appendingPathComponent("Themes", isDirectory: true)
     }

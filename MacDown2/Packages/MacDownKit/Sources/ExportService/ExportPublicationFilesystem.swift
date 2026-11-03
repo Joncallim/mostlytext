@@ -15,7 +15,7 @@ enum ExportPublicationFilesystem {
         }
     }
 
-    struct Stamp: Equatable {
+    struct Stamp: Codable, Equatable {
         let device: UInt64
         let inode: UInt64
         let kind: mode_t

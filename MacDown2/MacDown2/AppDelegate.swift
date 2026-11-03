@@ -3,6 +3,7 @@ import AppSettings
 import Combine
 import CommandBridge
 import EditorCore
+import ExportService
 import FileCore
 import FileTree
 import Foundation
@@ -134,7 +135,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             appSettings: appSettings,
             workspaceStateStore: workspaceStateStore,
             snippetStore: startup.locations.map { SnippetStore(fileURL: $0.snippets) } ?? SnippetStore(),
-            commandsDirectory: startup.locations?.commands ?? TextFilterCommandDiscovery.commandsDirectory
+            commandsDirectory: startup.locations?.commands ?? TextFilterCommandDiscovery.commandsDirectory,
+            exportRecoveryLocation: startup.locations.map { ExportRecoveryLocation(directory: $0.exportRecovery) }
         )
     }
 

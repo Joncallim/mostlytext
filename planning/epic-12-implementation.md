@@ -1278,3 +1278,10 @@ retargeting is introduced. The binding source unit and proof limits are in
 `downstream/live-export-document-protection.md`. This is not arbitrary external
 writer exclusion, filesystem compare-and-swap, crash recovery, printer ownership
 or final native acceptance. Local app/UI targets compile only.
+
+
+## Durable primary recovery supplement — 3 November 2026
+
+[The current-source primary recovery contract](downstream/export-primary-recovery.md)
+defines the dependency-first durable receipt slice. It preserves the broader
+managed-directory manifest, pending-resource inventory and native PDF gates.

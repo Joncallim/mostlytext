@@ -122,3 +122,23 @@ and the application menu, with the existing catalog title and startup admission.
 No separate text corpus or fallback is introduced. Genuine protected-account
 menu/window/keyboard/VoiceOver/localization and final signed-resource acceptance
 remain open; source implementation does not close the native journey or #14.
+
+
+## Primary export recovery source slice — 3 November 2026
+
+[The current-source contract](downstream/export-primary-recovery.md) adds a lazy,
+explicitly injected private producer store, authenticated primary staging receipts,
+bounded primary-state reconciliation and durable quarantine transitions. A
+completed export remains successful with a localized warning if record finalization
+fails. Unknown residue, changed primary/staging objects and changed private
+authority are preserved. The app supplies storage only after installation migration;
+existing isolated test constructors have no ambient recovery directory.
+
+The source controls use temporary non-application fixtures only. They cover
+ordinary/self-contained exports, cancellation, both sides of quarantine rename,
+changed files/keys/permissions/locks, authenticated corruption/binding checks and
+100 alternating exports. Hosted full checks and compile-only Release evidence
+belong to the associated PR; this does not establish native application acceptance.
+The complete companion manifest/pending-asset inventory, printer scratch policy,
+PDF feasibility/progress/parity and native export journeys remain in #11.
+No native receipt, signing prerequisite or strict compliance predicate changes.

@@ -1,3 +1,4 @@
+import CryptoKit
 import Darwin
 import Foundation
 
@@ -43,9 +44,16 @@ enum ExportFilePublication {
             promoted = true
         }
 
-        func publishing(_ operation: () throws -> Void) throws {
+        func publishing(retireOnFailure: (() throws -> Void)? = nil, _ operation: () throws -> Void) throws {
             do { try operation() } catch {
-                try discard()
+                if let retireOnFailure {
+                    // A durable receipt must also own the quarantine transition.
+                    // Do not fall back to an unrecorded deinit cleanup on failure.
+                    retirementAttempted = true
+                    try retireOnFailure()
+                } else {
+                    try discard()
+                }
                 throw error
             }
         }
@@ -61,7 +69,8 @@ enum ExportFilePublication {
 
     static func write(
         _ validated: ValidatedExportHTML, lease: ExportLifetimeLease,
-        afterCompanionDirectoryOpened: (() -> Void)?, beforePromotion: (() -> Void)?
+        afterCompanionDirectoryOpened: (() -> Void)?, beforePromotion: (() -> Void)?,
+        recovery: ExportRecoveryLocation? = nil
     ) throws -> ExportResult {
         guard case let .html(url, mode) = validated.target, validated.bytesAreIntact()
         else { throw ExportError.validatedPublicationRejected }
@@ -71,13 +80,14 @@ enum ExportFilePublication {
         )
         return try write(input, lease: lease, hooks: .init(
             afterCompanionDirectoryOpened: afterCompanionDirectoryOpened, beforePromotion: beforePromotion
-        ))
+        ), recovery: recovery)
     }
 
     static func write(
         _ input: HTMLFilePublicationInput, lease: ExportLifetimeLease,
         hooks: ExportPublicationHooks = .init(),
-        admission: ExportDestinationAdmission? = nil
+        admission: ExportDestinationAdmission? = nil,
+        recovery: ExportRecoveryLocation? = nil
     ) throws -> ExportResult {
         try validate(input)
         try Task.checkCancellation()
@@ -92,38 +102,99 @@ enum ExportFilePublication {
             try lease.checkActive()
             guard try Filesystem.directoryAtPath(parentURL.path, matches: parentStamp)
             else { throw ExportError.unsafePublication }
+            let journal = try recovery.map {
+                try openJournal($0, parent: parentStamp, leaf: input.url.lastPathComponent)
+            }
+            // The process lock must outlive the complete publication cutoff.
+            defer { withExtendedLifetime(journal) {} }
+            if let journal {
+                try ExportPrimaryRecovery.recover(journal, primary: input.url.lastPathComponent, in: parent.descriptor)
+            }
             let prefix = ExportPublicationRetention.scratchPrefix(for: input.url.lastPathComponent)
             try ExportPublicationRetention.checkParent(parent.descriptor, scratchPrefix: prefix)
             try authorization.checkTarget(input.url)
-            let baseline = authorization.primaryStamp
+            let priorDigest = try journal == nil ? nil : ExportPrimaryRecovery.digest(
+                of: input.url.lastPathComponent, in: parent.descriptor
+            )
             let staged = try stageCompanions(
                 input, in: parent, nextTo: parentURL,
                 lease: lease, hooks: hooks
             )
             let primary = try stagePrimary(input.bytes, in: parent, prefix: prefix)
-            try primary.publishing {
+            try primary.publishing(retireOnFailure: retirement(
+                using: journal, parent: parent, primary: input.url.lastPathComponent, scratch: primary.name
+            )) {
+                hooks.afterPrimaryStaged?()
+                try journal?.begin(
+                    priorDigest: priorDigest, desired: Data(SHA256.hash(data: input.bytes)), name: primary.name,
+                    receipt: ExportOwnedFileReceipt(bytes: input.bytes, stamp: primary.stamp)
+                )
                 hooks.beforePromotion?()
-                try lease.withPublicationCutoff {
-                    try verify(
-                        input,
-                        parent: parent,
-                        parentPath: parentURL.path,
-                        parentStamp: parentStamp,
-                        staged: staged
-                    )
-                    try authorization.checkTarget(input.url)
-                    guard try Filesystem
-                        .primaryBaseline(input.url.lastPathComponent, in: parent.descriptor) == baseline,
-                        try Filesystem.childStamp(primary.name, in: parent.descriptor) == primary.stamp
-                    else { throw ExportError.unsafePublication }
-                    try primary.promote(as: input.url.lastPathComponent, absent: baseline == nil)
-                }
+                try promote(primary, input: input, authorization: authorization, companions: staged, lease: lease)
             }
+            let diagnostics = finish(journal, parent: parent, hooks: hooks, diagnostics: input.diagnostics)
             return ExportResult(
                 primaryFile: input.url,
                 companionFiles: staged?.urls ?? [],
-                diagnostics: input.diagnostics
+                diagnostics: diagnostics
             )
+        }
+    }
+}
+
+private extension ExportFilePublication {
+    private static func retirement(using journal: ExportJournalStore?, parent: DirectoryHandle,
+                                   primary: String, scratch: String) -> (() throws -> Void)? {
+        journal.map { journal in
+            {
+                guard journal.record.pending != nil
+                else { throw Filesystem.recoveryRequired(directory: parent.descriptor, name: scratch) }
+                try ExportPrimaryRecovery.recover(journal, primary: primary, in: parent.descriptor)
+            }
+        }
+    }
+
+    private static func openJournal(_ location: ExportRecoveryLocation, parent: Stamp,
+                                    leaf: String) throws -> ExportJournalStore {
+        do { return try ExportJournalStore(location: location, parent: parent, leaf: leaf) } catch {
+            throw ExportError.recoveryStorageUnavailable(location.directory)
+        }
+    }
+
+    private static func promote(_ primary: StagedPrimary, input: HTMLFilePublicationInput,
+                                authorization: ExportDestinationAdmission, companions: StagedCompanions?,
+                                lease: ExportLifetimeLease) throws {
+        try lease.withPublicationCutoff {
+            try verify(input, parent: authorization.parent, parentPath: input.url.deletingLastPathComponent().path,
+                       parentStamp: authorization.parentStamp, staged: companions)
+            try authorization.checkTarget(input.url)
+            guard try Filesystem.primaryBaseline(input.url.lastPathComponent, in: authorization.parent.descriptor)
+                == authorization.primaryStamp,
+                try Filesystem.childStamp(primary.name, in: authorization.parent.descriptor) == primary.stamp
+            else { throw ExportError.unsafePublication }
+            try primary.promote(as: input.url.lastPathComponent, absent: authorization.primaryStamp == nil)
+        }
+    }
+
+    private static func finish(_ journal: ExportJournalStore?, parent: DirectoryHandle, hooks: ExportPublicationHooks,
+                               diagnostics: [ExportDiagnostic]) -> [ExportDiagnostic] {
+        guard let journal else { return diagnostics }
+        do {
+            // Once rename succeeds, sync/finalization failure cannot undo the
+            // saved output or turn it into a misleading publication failure.
+            guard fsync(parent.descriptor) == 0 else { throw Filesystem.posixFailure() }
+            try hooks.beforeJournalFinalization?()
+            try journal.finish()
+            return diagnostics
+        } catch {
+            let warning = ExportDiagnostic(severity: .warning, message: String(
+                localized: """
+                The export was saved, but its recovery record could not be finalized. \
+                Keep the output and try this destination again.
+                """,
+                bundle: .module
+            ))
+            return diagnostics + [warning]
         }
     }
 
