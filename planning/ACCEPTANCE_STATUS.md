@@ -1,6 +1,7 @@
 # MostlyText acceptance status — 3 November 2026
 
-Current source baseline: main `f660e30f61c0b48551fb450ee9afd24ba35d50ae`.
+Initial acceptance baseline: main `f660e30f61c0b48551fb450ee9afd24ba35d50ae`.
+The later scoped attribution integration and its exact resource checks are recorded below.
 This dated status distinguishes source integration, local prerequisites and
 acceptance. The live backlog is [MostlyText issues](https://github.com/Joncallim/mostlytext/issues);
 [the number map](ISSUE_TRANSFER_MAP.md) explains imported historical references.
@@ -13,7 +14,7 @@ acceptance. The live backlog is [MostlyText issues](https://github.com/Joncallim
 | Native execution here | UID501 console; UID502 test account has no GUI domain; protected staging absent; nonprompting sudo refuses | #5 UI triage; never execute the owner-data paths to bypass this prerequisite |
 | Signing discovery here | Valid Developer ID Application identity for team 968BRM85G5 found | #4: actual signing/key authorization/hardened-runtime acceptance not executed |
 | Notarization preflight | Real script stops because documented mostlytext-notary keychain profile is absent | #4: credential profile, submissions, stapling and online/offline Gatekeeper acceptance remain open |
-| Source/nonrelease artifact inventory | Passes; 99 local Compliance controls pass | #14 final compliance is a separate strict gate |
+| Source/nonrelease artifact inventory | Passes; current scoped attribution checks include 109 local Compliance controls | #14 final compliance is a separate strict gate |
 | Strict release compliance | Six failures remain, detailed below | #14: acceptance is blocked before an RC can be submitted |
 | Repository preview | Source SVG/JPEG ready and visually checked; settings upload did not persist and native chooser fallback is blocked by the locked desktop | #16: install/read back the social preview remains open |
 | Website | Separate mostlytext-site source/license; current FAQ and source/backlog links merged | No deployment was initiated; historical roadmap is explicitly dated |
@@ -37,7 +38,11 @@ reported these six failures. It did not create or submit a signed release:
 Cytoscape's own complete MIT text and the credited Bézier/jQuery-event helper
 notices are now separately registered and generated with source-map evidence.
 See [the checkpoint](../compliance/evidence/cytoscape-borrowed-attribution/README.md).
-This closes those bounded notice gaps. It does not remove the Mermaid strict
+[PR23](https://github.com/Joncallim/mostlytext/pull/23) is integrated at c938a4ad;
+109 local controls and hosted Compliance pass. The compile-only Release artifact
+contains byte-identical new notices and its unchanged Foundation-only reader loads
+all three credits. This is resource validation, not native license-screen acceptance.
+It closes those bounded notice gaps. It does not remove the Mermaid strict
 failure: remaining package/embedded-helper review, Rough.js, candidate provenance
 and final artifact evidence remain. The strict release failure count stays six.
 

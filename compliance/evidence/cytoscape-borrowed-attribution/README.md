@@ -103,3 +103,25 @@ All six strict release failures remain. Source-offer approval/publication and
 anonymous retrieval, native license surfaces, real installation/signing and the
 exact final artifact remain separate gates. No legal clearance, release or
 website deployment is claimed by these scoped notice additions.
+
+## Integrated validation — 3 November 2026
+
+[PR23](https://github.com/Joncallim/mostlytext/pull/23) merged at
+c938a4adf71b331a55d9eb3c3b027080a98cda49. The merge tree exactly matches checked
+source d0dcd50312846b07d1dbf3a970cc2cf491268b16.
+[Hosted Compliance41614475192](https://github.com/Joncallim/mostlytext/actions/runs/41614475192)
+passes; all 109 local controls pass on the committed source. Ten full-input
+corruption cases reject as required, and real-input replay matches mapping.json.
+Source/generated-file/link/pin checks pass. The unchanged root Cytoscape license
+also matches its recorded immutable upstream source commit, not only the npm archive.
+
+The locked compile-only Release build succeeds. Its 192,169-byte bundled notice
+is byte-identical to source, below the unchanged 2 MiB reader limit, and passes
+artifact inventory. An exact-source Foundation-only control loads all three new
+credits with the unchanged production LicenseNoticesContent reader from that
+built app. It does not execute the app, use AppKit or prove native screen behavior.
+Swift sources, renderer bytes, locks, guards and signing/release inputs remain
+unchanged; the generated notice is the only changed bundled resource. Full
+product-suite qualification is historical, not represented as a fresh native or
+resource acceptance run. All six strict release failures remain. No Developer ID
+signing, notarization submission, release or website deployment occurred.
