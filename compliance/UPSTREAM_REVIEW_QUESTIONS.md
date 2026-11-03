@@ -16,7 +16,7 @@ response, permission or completed review.
 | Complete D2/Graphviz corresponding source and runtime | Local manifested source-review packages retain verified upstream/package/module inputs, patches/build records and current notice snapshots. Bison's existing exception, Emscripten/musl root notices and module texts are preserved. | Independent review of remaining nested/per-file compiler/runtime obligations and required complete source/build inputs. Root notices/direct linker lists are not an exhaustive retained-code audit or approval of the offer. |
 
 Evidence: [D2 source graph](evidence/d2-0.1.33/README.md),
-[font comparison](evidence/d2-font-reference/README.md),
+[font comparison](https://github.com/Joncallim/mostlytext/blob/0f4348d6ac39e2300c0e6d8783c8c18c93303631/compliance/evidence/d2-font-reference/README.md),
 [mapped Mermaid evidence](evidence/mermaid-11.17.2/README.md),
 [build references](evidence/nested-build-attribution/README.md) and
 [Graphviz review package](evidence/graphviz-source-review/README.md).
@@ -30,3 +30,8 @@ source-only publication remains the separately authorized action in
 precede final signed-artifact promotion. Native UI, final localization, signing
 and release acceptance remain in their owning issues. No historical receipt is
 retargeted and no release guard is changed by this packet.
+
+The retained Framer license references are
+[0.5.0](https://github.com/koenbok/Framer/blob/27de5feef92c477c5465188f3587dfe0fd961bdc/LICENSE)
+and [2.0](https://github.com/koenbok/Framer/blob/6fd264c787a410e47ea4d3e8e6e32d5f99d5ac8c/LICENSE).
+They are comparison references only, not proof of the adaptation's actual origin.
