@@ -1,0 +1,14 @@
+[
+  {
+    "name": "liberation-fonts-ttf-2.00.5.tar.gz",
+    "url": "https://github.com/liberationfonts/liberation-fonts/files/2926169/liberation-fonts-ttf-2.00.5.tar.gz",
+    "bytes": 2355722,
+    "sha256": "f14ff0a0be87b5aeb672e669363b5a699db76feb1144b06798261c0fdcd2b24d"
+  },
+  {
+    "name": "liberation-fonts-2.00.5.tar.gz",
+    "url": "https://github.com/liberationfonts/liberation-fonts/files/2926167/liberation-fonts-2.00.5.tar.gz",
+    "bytes": 4935865,
+    "sha256": "af351ce9f4d6630ffa047bce0dca7dc58f93b5545325f18d1b92332e46be94a8"
+  }
+]

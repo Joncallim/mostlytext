@@ -1,5 +1,13 @@
 # D2 browser source and Go-module audit (#148 LC-03)
 
+> Further font evidence — 3 November 2026: [the exact table comparison](../d2-font-reference/README.md)
+> relates the embedded Version 2.00.5 WOFF to the font project's published TTF.
+> Fifteen of 18 tables are identical; post-table underline/fixed-pitch metadata
+> differs. This narrows the review and prevents an unsupported unchanged-font
+> claim. It does not resolve RFN/functional-equivalence or original conversion
+> provenance, change the selected font/binary, or clear the D2 release item.
+
+
 > Current module notice update — 3 November 2026: complete root texts for all 16
 > recorded module inputs are now distributed as conservative publisher source-build
 > attributions, including FreeType's complete selected FTL option and binary credit.
