@@ -3,7 +3,7 @@ import Foundation
 
 /// A previously observed source object, even if its original name is now gone.
 /// It grants no read/write authority and is used only to refuse aliases.
-public struct ExportProtectedFileIdentity: Sendable, Equatable {
+public struct ExportProtectedFileIdentity: Sendable, Hashable {
     public let device: UInt64
     public let inode: UInt64
 
@@ -14,9 +14,18 @@ public struct ExportProtectedFileIdentity: Sendable, Equatable {
 }
 
 /// Authorization-time output identity, retained across rendering. The private
-/// descriptor is immutable and publication is serialized by parent identity.
+/// descriptor is immutable; protected identities are locked. Publication is
+/// serialized by parent identity.
 /// This detects observed changes; existing-target rename is not filesystem CAS.
 public final class ExportDestinationAdmission: @unchecked Sendable {
+    private final class Protection {
+        let lock = NSLock()
+        var files: Set<ExportProtectedFileIdentity> = []
+        var recoveryTargets: Set<ExportProtectedFileIdentity> = []
+        var uncertain = false
+    }
+
+    private let protection = Protection()
     private typealias Filesystem = ExportPublicationFilesystem
     public let url: URL
     let parent: ExportPublicationFilesystem.DirectoryHandle
@@ -51,15 +60,52 @@ public final class ExportDestinationAdmission: @unchecked Sendable {
     }
 
     public func checkNoDocumentAliases(_ documents: [URL]) throws {
+        var failure: (any Error)?
         for document in documents {
-            try rejectAlias(of: document)
+            do { try rejectAlias(of: document) } catch {
+                recordUncertainty(error)
+                if failure == nil {
+                    failure = error
+                }
+            }
+        }
+        if let failure {
+            throw failure
         }
     }
 
     public func checkNoFileAliases(_ identities: [ExportProtectedFileIdentity]) throws {
-        guard let primaryStamp else { return }
-        guard !identities.contains(where: { $0.device == primaryStamp.device && $0.inode == primaryStamp.inode })
-        else { throw ExportError.destinationIsOpenDocument }
+        try protection.lock.withLock {
+            protection.files.formUnion(identities)
+            guard protection.recoveryTargets.isDisjoint(with: identities)
+            else { throw ExportError.destinationIsOpenDocument }
+            if let primaryStamp {
+                guard !identities.contains(Self.identity(primaryStamp))
+                else { throw ExportError.destinationIsOpenDocument }
+            }
+        }
+    }
+
+    /// Registers an owned working object with the same live-document checks
+    /// as the primary. Earlier sources and later publications both protect it.
+    func checkRecoveryObject(_ stamp: ExportPublicationFilesystem.Stamp) throws {
+        let identity = Self.identity(stamp)
+        try protection.lock.withLock {
+            protection.recoveryTargets.insert(identity)
+            guard !protection.uncertain, !protection.files.contains(identity)
+            else { throw ExportError.destinationIsOpenDocument }
+        }
+    }
+
+    private func recordUncertainty(_ error: any Error) {
+        if let error = error as? ExportError, case .destinationIsOpenDocument = error {
+            return
+        }
+        protection.lock.withLock { protection.uncertain = true }
+    }
+
+    private static func identity(_ stamp: ExportPublicationFilesystem.Stamp) -> ExportProtectedFileIdentity {
+        ExportProtectedFileIdentity(device: stamp.device, inode: stamp.inode)
     }
 
     /// Publishes already validated immutable bytes through the same bounded,
@@ -88,10 +134,10 @@ public final class ExportDestinationAdmission: @unchecked Sendable {
         guard document.isFileURL else { throw ExportError.unsafePublication }
         var file = stat()
         if stat(document.path, &file) == 0 {
-            if let primaryStamp,
-               primaryStamp.device == UInt64(truncatingIfNeeded: file.st_dev), primaryStamp.inode == file.st_ino {
-                throw ExportError.destinationIsOpenDocument
-            }
+            let identity = ExportProtectedFileIdentity(
+                device: UInt64(truncatingIfNeeded: file.st_dev), inode: UInt64(file.st_ino)
+            )
+            try checkNoFileAliases([identity])
         } else if errno != ENOENT, errno != ENOTDIR {
             throw ExportError.unsafePublication
         }

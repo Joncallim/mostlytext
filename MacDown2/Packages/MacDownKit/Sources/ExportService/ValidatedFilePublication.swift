@@ -25,14 +25,17 @@ enum ExportFilePublication {
         let name: String
         let stamp: Stamp
         let bytes: Data
+        let protection: ExportRecoveryProtection
         private var promoted = false
         private var retirementAttempted = false
 
-        init(directory: DirectoryHandle, name: String, stamp: Stamp, bytes: Data) {
+        init(directory: DirectoryHandle, name: String, stamp: Stamp, bytes: Data,
+             protection: ExportRecoveryProtection) {
             self.directory = directory
             self.name = name
             self.stamp = stamp
             self.bytes = bytes
+            self.protection = protection
         }
 
         func promote(as destination: String, absent: Bool) throws {
@@ -61,7 +64,8 @@ enum ExportFilePublication {
         private func discard() throws {
             guard !promoted, !retirementAttempted else { return }
             retirementAttempted = true
-            try Filesystem.retireTemporary(bytes, name: name, expected: stamp, in: directory.descriptor)
+            try ExportFileRetirement.retire(ExportOwnedFileReceipt(bytes: bytes, stamp: stamp),
+                                            name: name, in: directory.descriptor, protection: protection)
         }
 
         deinit { try? discard() }
@@ -105,30 +109,28 @@ enum ExportFilePublication {
             let journal = try recovery.map {
                 try openJournal($0, parent: parentStamp, leaf: input.url.lastPathComponent)
             }
+            let protection = ExportRecoveryProtection(admission: authorization, lease: lease)
             // The process lock must outlive the complete publication cutoff.
             defer { withExtendedLifetime(journal) {} }
-            if let journal {
-                try ExportPrimaryRecovery.recover(journal, primary: input.url.lastPathComponent, in: parent.descriptor)
-            }
             let prefix = ExportPublicationRetention.scratchPrefix(for: input.url.lastPathComponent)
+            let priorDigest = try reconcile(journal, for: input.url, in: parent, protection: protection)
             try ExportPublicationRetention.checkParent(parent.descriptor, scratchPrefix: prefix)
             try authorization.checkTarget(input.url)
-            let priorDigest = try journal == nil ? nil : ExportPrimaryRecovery.digest(
-                of: input.url.lastPathComponent, in: parent.descriptor
-            )
             let staged = try stageCompanions(
                 input, in: parent, nextTo: parentURL,
                 lease: lease, hooks: hooks
             )
-            let primary = try stagePrimary(input.bytes, in: parent, prefix: prefix)
+            let primary = try stagePrimary(input.bytes, in: parent, prefix: prefix, protection: protection)
             try primary.publishing(retireOnFailure: retirement(
-                using: journal, parent: parent, primary: input.url.lastPathComponent, scratch: primary.name
+                using: journal, parent: parent, primary: input.url.lastPathComponent, scratch: primary.name,
+                protection: protection
             )) {
                 hooks.afterPrimaryStaged?()
                 try journal?.begin(
                     priorDigest: priorDigest, desired: Data(SHA256.hash(data: input.bytes)), name: primary.name,
                     receipt: ExportOwnedFileReceipt(bytes: input.bytes, stamp: primary.stamp)
                 )
+                try authorization.checkRecoveryObject(primary.stamp)
                 hooks.beforePromotion?()
                 try promote(primary, input: input, authorization: authorization, companions: staged, lease: lease)
             }
@@ -143,13 +145,27 @@ enum ExportFilePublication {
 }
 
 private extension ExportFilePublication {
+    private static func reconcile(_ journal: ExportJournalStore?, for url: URL, in parent: DirectoryHandle,
+                                  protection: ExportRecoveryProtection) throws -> Data? {
+        guard let journal else { return nil }
+        try ExportPrimaryRecovery.recover(journal, primary: url.lastPathComponent, in: parent.descriptor,
+                                          protection: protection)
+        return try ExportPrimaryRecovery.digest(of: url.lastPathComponent, in: parent.descriptor)
+    }
+
     private static func retirement(using journal: ExportJournalStore?, parent: DirectoryHandle,
-                                   primary: String, scratch: String) -> (() throws -> Void)? {
+                                   primary: String, scratch: String,
+                                   protection: ExportRecoveryProtection) -> (() throws -> Void)? {
         journal.map { journal in
             {
                 guard journal.record.pending != nil
                 else { throw Filesystem.recoveryRequired(directory: parent.descriptor, name: scratch) }
-                try ExportPrimaryRecovery.recover(journal, primary: primary, in: parent.descriptor)
+                try ExportPrimaryRecovery.recover(
+                    journal,
+                    primary: primary,
+                    in: parent.descriptor,
+                    protection: protection
+                )
             }
         }
     }
@@ -168,6 +184,7 @@ private extension ExportFilePublication {
             try verify(input, parent: authorization.parent, parentPath: input.url.deletingLastPathComponent().path,
                        parentStamp: authorization.parentStamp, staged: companions)
             try authorization.checkTarget(input.url)
+            try authorization.checkRecoveryObject(primary.stamp)
             guard try Filesystem.primaryBaseline(input.url.lastPathComponent, in: authorization.parent.descriptor)
                 == authorization.primaryStamp,
                 try Filesystem.childStamp(primary.name, in: authorization.parent.descriptor) == primary.stamp
@@ -314,11 +331,11 @@ private extension ExportFilePublication {
     }
 
     private static func stagePrimary(_ bytes: Data, in directory: DirectoryHandle,
-                                     prefix: String) throws -> StagedPrimary {
+                                     prefix: String, protection: ExportRecoveryProtection) throws -> StagedPrimary {
         let temporary = prefix + UUID().uuidString + ".html.tmp"
         return try Filesystem
             .withScratch(bytes, name: temporary, in: directory.descriptor, retainOnSuccess: true) { _, stamp in
-                StagedPrimary(directory: directory, name: temporary, stamp: stamp, bytes: bytes)
+                StagedPrimary(directory: directory, name: temporary, stamp: stamp, bytes: bytes, protection: protection)
             }
     }
 }

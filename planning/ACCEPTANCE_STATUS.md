@@ -142,3 +142,23 @@ belong to the associated PR; this does not establish native application acceptan
 The complete companion manifest/pending-asset inventory, printer scratch policy,
 PDF feasibility/progress/parity and native export journeys remain in #11.
 No native receipt, signing prerequisite or strict compliance predicate changes.
+
+## Open-document recovery protection source follow-up — 3 November 2026
+
+The [focused follow-up contract](downstream/export-recovery-document-protection.md)
+protects a known staging/quarantine object that has subsequently become a document.
+Initial URL/retained identities and later document publication are retained in the
+existing admission; recovery, memory retirement and fresh primary promotion
+recheck those identities. An object adopted while quarantined is preserved at
+that path with a recovery diagnostic. Batch conflicts collect all available
+protection facts; an unusable reference refuses cleanup conservatively.
+
+The regression on the previous source actually removed the opened fixture. The
+new temporary-fixture controls cover that writer path and the actual Foundation
+publication registry. All 320 source-bound non-application controls passed in
+Debug and Release; two deliberately removed protections produced actual
+regression failures before source restoration. Strict lint and pinned format
+checks passed, as did locked Release and compile-only app/UI test-target builds.
+Hosted checks and reviewed integration are recorded on the associated PR.
+Native account, lifecycle/GUI, companion inventory, PDF,
+calibration, independent review and strict release gates remain unchanged.

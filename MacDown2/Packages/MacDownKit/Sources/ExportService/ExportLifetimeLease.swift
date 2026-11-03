@@ -26,4 +26,11 @@ public final class ExportLifetimeLease: @unchecked Sendable {
             return try body()
         }
     }
+
+    /// Orders owned cleanup against document publication/revocation. Closing
+    /// the origin or cancelling its task does not itself forbid safe cleanup;
+    /// the recovery protection must still check the current protected object.
+    func withRecoveryCutoff<T>(_ body: () throws -> T) rethrows -> T {
+        try lock.withLock(body)
+    }
 }
