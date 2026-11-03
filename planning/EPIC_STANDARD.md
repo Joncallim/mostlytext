@@ -1,6 +1,6 @@
 # Epic implementation and readability standard
 
-This document defines the required planning and communication standard for every new or materially revised MacDown 2 epic.
+This document defines the required planning and communication standard for every new or materially revised MostlyText epic.
 
 The purpose is simple: an epic should be precise enough that an implementation agent can execute it without inventing architecture, while remaining understandable to a human owner who did not participate in the implementation conversation.
 
@@ -26,7 +26,7 @@ The issue should avoid implementation detail unless the detail is itself a produ
 
 ### Layer 2 — Implementation architecture: engineering contract
 
-Before coding starts, inspect the current `master` branch and write `planning/epic-NN-implementation.md` from the live repository state.
+Before coding starts, inspect the current `main` branch and write `planning/epic-NN-implementation.md` from the live repository state.
 
 This document is the binding engineering contract for the epic branch. It resolves stale assumptions in the issue and makes important technical decisions before implementation begins.
 
@@ -45,7 +45,7 @@ If a slice encounters a false architectural assumption, it stops and escalates r
 An epic is not ready for implementation until all of the following are true:
 
 - [ ] Upstream dependencies required by the epic are merged or their exact stable interfaces are known.
-- [ ] The current `master` SHA is recorded as the implementation baseline.
+- [ ] The current `main` SHA is recorded as the implementation baseline.
 - [ ] The relevant live code, tests, planning documents and open follow-up issues have been inspected.
 - [ ] Stale assumptions in the original issue are listed and explicitly reconciled.
 - [ ] The owner summary and user journeys are understandable without reading code.
@@ -81,7 +81,7 @@ Do not make the owner reconstruct the purpose from type names, issue IDs or inte
 
 Record:
 
-- baseline `master` SHA;
+- baseline `main` SHA;
 - relevant shipped modules and behaviours;
 - assumptions from older plans that no longer match the repository;
 - open bugs or follow-up issues that intersect the epic;

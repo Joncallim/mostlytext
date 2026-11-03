@@ -70,3 +70,37 @@ parser/export/security invariants and all existing test deadlines remain unchang
 - Record actual results and remaining native acceptance in the identity issue.
   A changed storage requirement, different logo geometry, build-product rename or
   absent validated icon source requires a revised contract before implementation.
+
+## Observed source and compiled-resource verification
+
+The source tranche is `98d8ba01b492d52bc345f447be38f9110b18d018` (PR20). All 17
+transfers were verified against complete saved bodies/discussions after normalizing
+GitHub automatic cross-reference qualification/retargeting. Authors, original dates,
+comment counts, labels (including colors/descriptions), assignees and milestone
+titles match. Every old browser URL returns a redirect to the mapped issue; no
+open engineering issue remains in the historical repository. A map note was then
+added to each issue, with its prior body/discussion read back unchanged.
+
+The locked local Release build compiles without executing the application. Its
+Info.plist retains `app.mostlytext.MostlyText` and executable `MacDown2`, and uses
+MostlyText for both bundle/display names. AppIcon.icns and Assets.car exist; the
+compiled appearance table includes Aqua, DarkAqua, System and Tintable, with two
+explicit tint renditions on Xcode 26.6. The extracted 256 px compiled icon shows
+the approved Slant mark; both source files exactly match D-028's frozen document.
+This observes compiled resources, not the live Dock/Finder appearance.
+
+All 99 local Compliance controls pass; source and compiled-artifact inventory checks,
+strict lint/format, dependency-pin checks and whitespace checks pass. The app's
+project specification, dependency lock, migration environment, native launch guard,
+LICENSE, release scripts and workflows match the baseline byte for byte. No local
+product or UI test ran. Hosted CI results follow.
+
+[Complete normal ARM CI41593264872](https://github.com/Joncallim/mostlytext/actions/runs/41593264872)
+passes 3,325 package tests / 462 suites (340.511 seconds, two existing known Neon
+issues), 600 app tests / 122 suites (128.855 seconds), locked Debug/Release app
+and mostlytext builds, app/UI-test compilation, strict lint/format and final pins.
+[Compliance41593264910](https://github.com/Joncallim/mostlytext/actions/runs/41593264910)
+passes. PR20 merged at `d85cc9db03b50726c3967236704fcda45732f375`; its tree exactly
+matches the tested head. This evidence follow-up changes documentation and JSON
+indentation only; the application/design/release/lock inputs remain byte-identical.
+The earlier pre-diagnostic-copy CI attempt was superseded/cancelled, not a pass.
