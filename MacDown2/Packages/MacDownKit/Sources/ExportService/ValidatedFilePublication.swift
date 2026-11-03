@@ -124,6 +124,7 @@ enum ExportFilePublication {
             try primary.publishing(retireOnFailure: retirement(
                 using: journal, parent: parent, primary: input.url.lastPathComponent, scratch: primary.name
             )) {
+                hooks.afterPrimaryStaged?()
                 try journal?.begin(
                     priorDigest: priorDigest, desired: Data(SHA256.hash(data: input.bytes)), name: primary.name,
                     receipt: ExportOwnedFileReceipt(bytes: input.bytes, stamp: primary.stamp)

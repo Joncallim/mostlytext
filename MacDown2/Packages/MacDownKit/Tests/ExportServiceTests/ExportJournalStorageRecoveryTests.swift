@@ -160,14 +160,14 @@ struct ExportJournalStorageRecoveryTests {
             let descriptor = open(output.path, O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)
             guard descriptor >= 0 else { Issue.record("Could not open fixture"); return }
             defer { Darwin.close(descriptor) }
-            // Provisioning completes its tiny key write before a later bounded
-            // read notices cancellation. No product or owner storage is used.
+            // The bounded control-data critical section completes despite
+            // cancellation. No product or owner storage is used.
             do {
                 _ = try ExportJournalStore(location: location,
                                            parent: ExportPublicationFilesystem.directoryStamp(descriptor),
                                            leaf: "report.html")
             } catch is CancellationError {
-                // The private key must nevertheless be complete and reusable.
+                Issue.record("Private provisioning unexpectedly abandoned its checkpoint")
             } catch { Issue.record("Provisioning failed: \(error)") }
         }
         await task.value

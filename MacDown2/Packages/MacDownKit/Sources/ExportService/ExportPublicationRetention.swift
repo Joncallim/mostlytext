@@ -11,6 +11,7 @@ struct ExportRetentionLimit {
 
 struct ExportPublicationHooks {
     var afterCompanionDirectoryOpened: (() -> Void)?
+    var afterPrimaryStaged: (() -> Void)?
     var beforePromotion: (() -> Void)?
     var beforeJournalFinalization: (() throws -> Void)?
     var retentionLimit = ExportRetentionLimit.standard

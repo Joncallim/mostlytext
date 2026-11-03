@@ -95,8 +95,10 @@ prove that this process performed its rename. A crash before a complete receipt
 is durable remains unknown residue and is
 refused by existing retention checks. No inferred ownership fills this gap.
 
-Initial key provisioning completes its tiny write/sync critical section even if
-cancellation arrives, so ordinary cancellation cannot leave an empty key.
+Private key/record reads and writes finish their at-most-64-KiB checkpoint
+critical section even if cancellation arrives. Ordinary cancellation cannot leave
+an empty key or abandon the only receipt for an already completed public stage.
+Source/resource work and the publication cutoff remain cancellable.
 The synchronous writer performs no MainActor/UI work. Cancellation remains
 checked before publication; recovery checkpoints/removal complete as a small
 bounded critical section. No cancellation exception after successful primary

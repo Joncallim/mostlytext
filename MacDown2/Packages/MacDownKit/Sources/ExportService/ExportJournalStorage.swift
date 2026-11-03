@@ -71,8 +71,13 @@ enum ExportJournalStorage {
         defer { Darwin.close(descriptor) }
         try validate(descriptor, kind: mode_t(S_IFREG), mode: 0o600)
         let stamp = try fileStamp(descriptor)
-        let bytes = try Filesystem.readBoundedFile(name, in: directory, maxBytes: maximum)
-        guard try fileStamp(descriptor) == stamp, try Filesystem.childStamp(name, in: directory) == stamp
+        guard maximum >= 0, maximum <= ExportJournalStore.maximumBytes,
+              stamp.size >= 0, stamp.size <= maximum else { throw ExportError.unsafePublication }
+        let bytes = try readBytes(descriptor, maximum: maximum)
+        guard bytes.count == stamp.size, try fileStamp(descriptor) == stamp, try Filesystem.childStamp(
+            name,
+            in: directory
+        ) == stamp
         else { throw ExportError.unsafePublication }
         return bytes
     }
@@ -80,19 +85,29 @@ enum ExportJournalStorage {
     static func replace(_ bytes: Data, named name: String, previous: Data?,
                         in directory: Int32) throws -> Filesystem.Stamp {
         let temporary = ".mt-" + UUID().uuidString + ".journal"
-        return try Filesystem
-            .withScratch(bytes, name: temporary, in: directory, retainOnSuccess: true) { descriptor, _ in
-                if let previous {
-                    guard try read(name, in: directory, maximum: ExportJournalStore.maximumBytes) == previous
-                    else { throw ExportError.unsafePublication }
-                    guard renameat(directory, temporary, directory, name) == 0 else { throw Filesystem.posixFailure() }
-                } else {
-                    guard renameatx_np(directory, temporary, directory, name, UInt32(RENAME_EXCL)) == 0
-                    else { throw Filesystem.posixFailure() }
-                }
-                guard fsync(directory) == 0 else { throw Filesystem.posixFailure() }
-                return try fileStamp(descriptor)
+        let descriptor = openat(directory, temporary, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC, 0o600)
+        guard descriptor >= 0 else { throw Filesystem.posixFailure() }
+        defer { Darwin.close(descriptor) }
+        var progress = 0
+        do {
+            try validate(descriptor, kind: mode_t(S_IFREG), mode: 0o600)
+            try writeBytes(bytes, to: descriptor, progress: &progress)
+            guard fsync(descriptor) == 0 else { throw Filesystem.posixFailure() }
+            if let previous {
+                guard try read(name, in: directory, maximum: ExportJournalStore.maximumBytes) == previous
+                else { throw ExportError.unsafePublication }
+                guard renameat(directory, temporary, directory, name) == 0 else { throw Filesystem.posixFailure() }
+            } else {
+                guard renameatx_np(directory, temporary, directory, name, UInt32(RENAME_EXCL)) == 0
+                else { throw Filesystem.posixFailure() }
             }
+            guard fsync(directory) == 0 else { throw Filesystem.posixFailure() }
+            return try fileStamp(descriptor)
+        } catch {
+            try Filesystem.cleanupTemporary(Data(bytes.prefix(progress)), name: temporary,
+                                            descriptor: descriptor, in: directory)
+            throw error
+        }
     }
 
     static func checkCount(_ descriptor: Int32) throws {
@@ -125,20 +140,45 @@ enum ExportJournalStorage {
         guard descriptor >= 0 else { throw Filesystem.posixFailure() }
         defer { Darwin.close(descriptor) }
         try validate(descriptor, kind: mode_t(S_IFREG), mode: 0o600)
-        // Finish this tiny provisioning critical section even when the export
-        // is cancelled. Cancellation must not leave an empty permanent key.
+        var progress = 0
+        try writeBytes(bytes, to: descriptor, progress: &progress)
+        guard fsync(descriptor) == 0 else { throw Filesystem.posixFailure() }
+    }
+
+    /// Producer records and the key are bounded control data. Finish their
+    /// checkpoint critical section even if cancellation arrives; otherwise a
+    /// completed public stage could lose its only durable recovery receipt.
+    /// Public source/resource reads and the promotion cutoff remain cancellable.
+    private static func writeBytes(_ bytes: Data, to descriptor: Int32, progress: inout Int) throws {
+        guard bytes.count <= ExportJournalStore.maximumBytes else { throw ExportError.unsafePublication }
         try bytes.withUnsafeBytes { raw in
-            var offset = 0
-            while offset < raw.count {
-                let count = Darwin.write(descriptor, raw.baseAddress?.advanced(by: offset), raw.count - offset)
+            while progress < raw.count {
+                let count = Darwin.write(descriptor, raw.baseAddress?.advanced(by: progress), raw.count - progress)
                 if count < 0, errno == EINTR {
                     continue
                 }
                 guard count > 0 else { throw Filesystem.posixFailure() }
-                offset += count
+                progress += count
             }
         }
-        guard fsync(descriptor) == 0 else { throw Filesystem.posixFailure() }
+    }
+
+    private static func readBytes(_ descriptor: Int32, maximum: Int) throws -> Data {
+        var bytes = Data()
+        var buffer = [UInt8](repeating: 0, count: min(maximum + 1, 64 * 1024))
+        while true {
+            let remaining = maximum - bytes.count
+            let count = Darwin.read(descriptor, &buffer, min(buffer.count, remaining + 1))
+            if count < 0, errno == EINTR {
+                continue
+            }
+            guard count >= 0 else { throw Filesystem.posixFailure() }
+            if count == 0 {
+                return bytes
+            }
+            guard count <= remaining else { throw ExportError.unsafePublication }
+            bytes.append(contentsOf: buffer.prefix(count))
+        }
     }
 
     private static func fileStamp(_ descriptor: Int32) throws -> Filesystem.Stamp {

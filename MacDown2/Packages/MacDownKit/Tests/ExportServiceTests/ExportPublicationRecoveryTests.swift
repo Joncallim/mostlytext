@@ -60,7 +60,7 @@ struct ExportPublicationRecoveryTests {
         #expect(try fixture.store().record.pending == nil)
     }
 
-    @Test func taskCancellationPreservesItsDurableReceiptForTheNextExport() async throws {
+    @Test func taskCancellationCompletesDurableCleanupWithoutManualRecovery() async throws {
         let fixture = try Fixture()
         defer { fixture.cleanup() }
         try fixture.old.write(to: fixture.primary)
@@ -75,9 +75,30 @@ struct ExportPublicationRecoveryTests {
         }
         await task.value
         #expect(try Data(contentsOf: fixture.primary) == fixture.old)
-        #expect(try fixture.store().record.pending != nil)
+        #expect(try fixture.store().record.pending == nil)
         _ = try ExportFileWriter.writeHTML(prepared, to: target, recovery: fixture.location)
         #expect(try fixture.store().record.pending == nil)
+    }
+
+    @Test func taskCancellationBeforeReceiptCheckpointRequiresNoManualRecovery() async throws {
+        let fixture = try Fixture()
+        defer { fixture.cleanup() }
+        try fixture.old.write(to: fixture.primary)
+        let prepared = try ExportPublicationTestSupport.prepared()
+        let target = ExportTarget.html(url: fixture.primary, mode: .selfContained)
+        let recovery = fixture.location
+        let task = Task {
+            let hooks = ExportPublicationHooks(afterPrimaryStaged: { withUnsafeCurrentTask { $0?.cancel() } })
+            #expect(throws: CancellationError.self) {
+                _ = try ExportFileWriter.writeHTML(prepared, to: target, hooks: hooks, recovery: recovery)
+            }
+        }
+        await task.value
+        #expect(try Data(contentsOf: fixture.primary) == fixture.old)
+        #expect(try fixture.store().record.pending == nil)
+        let names = try FileManager.default.contentsOfDirectory(atPath: fixture.output.path)
+        #expect(!names.contains { $0.hasPrefix(".mt-") })
+        _ = try ExportFileWriter.writeHTML(prepared, to: target, recovery: recovery)
     }
 
     @Test func unknownScratchStillBlocksGrowthEvenWhenPrivateStorageIsAvailable() throws {
