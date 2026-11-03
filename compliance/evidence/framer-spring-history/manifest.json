@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "scope": "historical source-body comparison; actual adaptation origin and grant unresolved",
+  "cytoscape_introduction": {
+    "revision": "b272f918d3bbd6a06e6935e9b184fe6f3b7a0965",
+    "date": "2015-08-26",
+    "path": "src/core-animation.js",
+    "source_sha256": "beb25eabe2cc6b62482f40d45e91db6f994e039e4adb7faca3893b47bbc22553",
+    "function_lines": [
+      331,
+      413
+    ],
+    "parent_revision": "ff06300c6258cfe2655df03116807be03d41ce27",
+    "parent_source_sha256": "1a0499b939ef6de271b797d377f7eca2dca7e5e5977e5c574f211b9696f5b200",
+    "parent_file_lacks_function_symbol": true
+  },
+  "velocity_reference": {
+    "revision": "d9cd60bc0c026adff6303869934bb58fc832e82f",
+    "date": "2015-08-20",
+    "path": "velocity.js",
+    "file_header_version": "1.2.2",
+    "source_sha256": "3f72ce728149e3cac6b1d81a962a3a40527f0a324d04f92796833a7266563719",
+    "function_lines": [
+      818,
+      900
+    ],
+    "licence_path": "LICENSE.md",
+    "licence_sha256": "725d6011a8aa52d87469af24ac6815f06add959ddb7dbae96bcb17c29d26a79a"
+  },
+  "comparison": {
+    "function": "generateSpringRK4",
+    "rule": "Compare the full outer function body, including braces; remove block comments then whitespace only. The body contains no quoted string literals. No identifier, operator or parenthesis normalization.",
+    "normalised_body_bytes": 1530,
+    "normalised_body_sha256": "e4a26a63ee511ea31275b48b157c61aa9c516b811eeefd6ebd275b2f1163a6c8",
+    "match": true
+  },
+  "limits": [
+    "Historical body match does not uniquely identify actual copy origin or original Framer revision.",
+    "Current distributed body is not byte-identical under this comparison.",
+    "No licence, inventory, runtime, source-offer or release predicate changed."
+  ]
+}
