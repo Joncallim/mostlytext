@@ -109,6 +109,9 @@ final class WindowCoordinator {
     @ObservationIgnored var onNewDocumentLifetimePrepared: (@MainActor () async -> Void)?
     @ObservationIgnored var terminationRecoveryState: TerminationRecoveryState = .none
     @ObservationIgnored var terminationRecoveryController: WindowController?
+    /// Tests can record a recovery-sheet request without creating native UI.
+    /// Nil retains the production alert and its unchanged response handling.
+    @ObservationIgnored var terminationRecoveryAlertPresenter: (@MainActor (NSWindow, WindowController?) -> Void)?
     /// The one currently open command-palette panel, if any — see
     /// `WindowCoordinator+CommandPalette.swift` and `CommandPalettePanel`'s
     /// doc comment for why this coordinator must hold it strongly.

@@ -64,3 +64,23 @@ alert. Preserve every existing assertion and add full button/style/message and
 one-shot cancellation checks. Production continues allocating and presenting its
 real alert, and actual UI acceptance remains open. No timeout or test selection
 is relaxed. Full hosted validation is repeated for the new combined source.
+
+## Termination-policy presentation recorder
+
+Bounded full-app diagnostic 41557212648 reaches 143 passing tests without an
+assertion failure before its 600.17-second bound. All four component-host
+presentation controls, deleted-document discard and real D2 rendering pass.
+Fourteen samples then show the termination recovery policy case calling
+handleTerminationSessionResult -> presentTerminationRecoveryRequired ->
+NSAlert.init -> IconServices. Its assertions inspect refusal/state/recovery,
+not a user's interaction with that native sheet.
+
+Add an optional MainActor termination-alert presenter next to the coordinator's
+existing test callbacks. Keep it nil in production/native UI. Set recovery state
+and choose the exact target window first; only then invoke the supplied recorder
+or continue the unchanged real NSAlert path. The fixture records exactly one
+presentation request and asserts both window and document-controller identity,
+plus no attached sheet. Preserve every refusal, recovery-state and restored-text
+assertion. The no-window policy case continues returning before presentation.
+No global alert suppression, automatic response, test skip or timing change is
+introduced. All 600 app cases remain required in full combined qualification.

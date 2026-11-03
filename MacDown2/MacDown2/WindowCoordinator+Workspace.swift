@@ -268,6 +268,10 @@ extension WindowCoordinator {
             ?? controllers.first(where: { $0.window?.isKeyWindow == true })?.window
             ?? controllers.first?.window
         else { return }
+        if let terminationRecoveryAlertPresenter {
+            terminationRecoveryAlertPresenter(window, target)
+            return
+        }
         let alert = NSAlert()
         alert.messageText = TerminationRecoveryPresentation.title
         alert.informativeText = TerminationRecoveryPresentation.message
