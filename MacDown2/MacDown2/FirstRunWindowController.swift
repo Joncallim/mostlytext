@@ -25,7 +25,7 @@ final class FirstRunWindowController: NSWindowController, NSWindowDelegate {
             backing: .buffered,
             defer: false
         )
-        window.title = String(localized: "Welcome to MacDown 2")
+        window.title = String(localized: "Welcome to MostlyText")
         window.isReleasedWhenClosed = false
         super.init(window: window)
 

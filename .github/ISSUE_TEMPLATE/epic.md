@@ -8,7 +8,7 @@ assignees: ""
 
 ## Owner summary
 
-In plain English, describe what becomes possible for the user and why it belongs in MacDown 2.
+In plain English, describe what becomes possible for the user and why it belongs in MostlyText.
 
 ## Problem
 

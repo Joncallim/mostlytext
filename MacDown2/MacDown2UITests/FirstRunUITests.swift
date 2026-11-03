@@ -66,12 +66,12 @@ final class FirstRunUITests: XCTestCase {
         XCTAssertTrue(textView.waitForExistence(timeout: 5))
         XCTAssertFalse(welcome.exists)
         let sampleText = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "value CONTAINS %@", "Welcome to MacDown 2"),
+            predicate: NSPredicate(format: "value CONTAINS %@", "Welcome to MostlyText"),
             object: textView
         )
         XCTAssertEqual(XCTWaiter.wait(for: [sampleText], timeout: 5), .completed)
         assertNoSecondDocumentAppears()
-        XCTAssertTrue((textView.value as? String)?.contains("Welcome to MacDown 2") == true)
+        XCTAssertTrue((textView.value as? String)?.contains("Welcome to MostlyText") == true)
     }
 
     /// The welcome choice opens the only document: the normal launch that

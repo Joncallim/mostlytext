@@ -89,24 +89,24 @@
         }
       }
     },
-    "The command produced more output than MacDown 2 will accept.": {
+    "The command produced more output than MostlyText will accept.": {
       "localizations": {
         "fr": {
           "stringUnit": {
-            "state": "translated",
-            "value": "La commande a produit plus de données que MacDown 2 n'en accepte."
+            "state": "needs_review",
+            "value": "La commande a produit plus de données que MostlyText n'en accepte."
           }
         },
         "ja": {
           "stringUnit": {
-            "state": "translated",
-            "value": "コマンドの出力がMacDown 2の許容量を超えました。"
+            "state": "needs_review",
+            "value": "コマンドの出力がMostlyTextの許容量を超えました。"
           }
         },
         "pl": {
           "stringUnit": {
-            "state": "translated",
-            "value": "Polecenie wygenerowało więcej danych wyjściowych, niż akceptuje MacDown 2."
+            "state": "needs_review",
+            "value": "Polecenie wygenerowało więcej danych wyjściowych, niż akceptuje MostlyText."
           }
         }
       }

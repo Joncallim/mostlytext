@@ -1,5 +1,5 @@
 name: Alpha feedback
-description: Something broken, confusing or missing in the MostlyText alpha (MacDown 2 source build)
+description: Something broken, confusing or missing in the MostlyText alpha source build
 title: "[alpha] "
 body:
   - type: markdown

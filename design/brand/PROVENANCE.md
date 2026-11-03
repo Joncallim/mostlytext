@@ -83,3 +83,15 @@ cd design/brand/slant && node build.mjs && node lockup.mjs
 cd design/brand/slant/validation && node build.mjs     # canonical SVGs + validation board
 cd design/validation/read-test && node build.mjs       # read-test stimuli (needs Playwright + Chromium)
 ```
+
+## Application icon integration
+
+The shipped source `MacDown2/MacDown2/AppIcon.icon` is a byte-identical copy of
+`design/evidence/2026-09-26/icon-art/MostlyText-lean10.icon`, the D-028 accepted
+Icon Composer document: original Slant geometry on the existing automatic blue
+gradient. It contains only `icon.json` and `Assets/lean-10-1024.png`; no font or
+third-party artwork is bundled. Keep the document adjacent to Assets.xcassets,
+not nested within it, and keep a single AppIcon source. Xcode builds the
+appearance/tint renditions. See the evidence README for the validated integration
+path. The old placeholder generator is historical tooling and must not regenerate
+a competing AppIcon.appiconset in current production source.

@@ -75,7 +75,7 @@ struct TextFilterCommands: Commands {
                 ? String(localized: "Some Example Scripts Couldn't Be Added")
                 : String(localized: "Couldn't Add Example Scripts")
             alert.informativeText = String(
-                localized: "Check that MacDown 2 can write to the Commands folder, then try again."
+                localized: "Check that MostlyText can write to the Commands folder, then try again."
             )
         } else if result.installedCount > 0 {
             alert.alertStyle = .informational

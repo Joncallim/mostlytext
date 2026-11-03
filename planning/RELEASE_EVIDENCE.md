@@ -1,5 +1,12 @@
 # macOS 1.0 release-evidence ledger
 
+> Backlog cutover, 3 November 2026: the 17 open engineering issues now live in
+> `Joncallim/mostlytext`; [the transfer map](ISSUE_TRANSFER_MAP.md) resolves old
+> numbers used by the historical evidence below. Source integration of the frozen
+> app icon is tracked in MostlyText #16/#7. Existing native/artifact receipts
+> remain bound to their original candidate and do not qualify the new icon build.
+
+
 > Status: **controlled pre-release reopening (2026-09-21)** — E22 (#112) and E23 (#113) are approved before 1.0, public identity is being re-frozen, and the complete closed-epic audit (#115) is now a hard release gate. Historical rows below retain the evidence state recorded when each epic closed, but no `accepted with residual debt`, `unverified`, `environment blocked`, or equivalent release-required item is allowed to survive #115 into the production RC. E15's placeholder icon and live VoiceOver/visual pass are therefore mandatory closure items, not waivers.
 >
 > This is not another epic and it is not a substitute for individual epic test records. It is the owner-readable cross-product ledger required by `planning/RELEASE_HARDENING.md` so a closed issue is never mistaken for proof that the exact release application has been validated end-to-end.

@@ -1,6 +1,10 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "Check that MostlyText can write to the Commands folder, then try again.": {
+      "extractionState": "manual",
+      "comment": "Command-folder error. Requires translation and native layout review before the final string freeze."
+    },
     "    Editor Only": {
       "localizations": {
         "fr": {
@@ -2734,24 +2738,24 @@
         }
       }
     },
-    "Welcome to MacDown 2": {
+    "Welcome to MostlyText": {
       "localizations": {
         "fr": {
           "stringUnit": {
-            "state": "translated",
-            "value": "Bienvenue dans MacDown 2"
+            "state": "needs_review",
+            "value": "Bienvenue dans MostlyText"
           }
         },
         "ja": {
           "stringUnit": {
-            "state": "translated",
-            "value": "MacDown 2へようこそ"
+            "state": "needs_review",
+            "value": "MostlyTextへようこそ"
           }
         },
         "pl": {
           "stringUnit": {
-            "state": "translated",
-            "value": "Witamy w MacDown 2"
+            "state": "needs_review",
+            "value": "Witamy w MostlyText"
           }
         }
       }
