@@ -1,6 +1,16 @@
 {
   "sourceLanguage": "en",
   "strings": {
+  "the export resource read-work limit was reached": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "the export resource read-work limit was reached"
+        }
+      }
+    }
+  },
     "Check that the destination folder exists and is writable.": {
       "localizations": {
         "fr": {
@@ -418,6 +428,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Choose an export destination that is not a source or open document."
+          }
+        }
+      }
+    },
+    "The export inputs no longer match their prepared source. Try exporting again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The export inputs no longer match their prepared source. Try exporting again."
           }
         }
       }

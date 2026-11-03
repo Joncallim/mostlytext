@@ -40,6 +40,7 @@ public final class CommandApplicationServer: Sendable {
             while !stopped {
                 do {
                     let connection = try listener.accept(until: .now.advanced(by: .milliseconds(250)),
+                                                         helloTimeout: .milliseconds(250),
                                                          isCancelled: { self.stopped })
                     guard let permit = reserveConnection() else { connection.close(); continue }
                     let transferred = ConnectionTransfer(connection)

@@ -1,3 +1,4 @@
+import AppKit
 import AppSettings
 import FileCore
 import FileTree
@@ -13,6 +14,14 @@ import Workspace
 /// the same text and state, leaving the discarded text loadable from E2.
 @MainActor
 struct WindowControllerEpochCloseTests {
+    private final class CloseRequestProbe: NSObject, NSWindowDelegate {
+        var attempts = 0
+        func windowShouldClose(_: NSWindow) -> Bool {
+            attempts += 1
+            return false
+        }
+    }
+
     @Test func closeAfterRetireOfAnOlderLifetimeLeavesTheLiveLifetimeRecovery() async throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
@@ -39,6 +48,14 @@ struct WindowControllerEpochCloseTests {
             grammarRegistry: coordinator.grammarRegistry, fileTreePreferences: preferences
         )
         coordinator.controllers = [controller]
+        let closeRequest = CloseRequestProbe()
+        let window = try #require(controller.window)
+        window.delegate = closeRequest
+        defer {
+            window.delegate = controller
+            coordinator.removeController(controller)
+            controller.close()
+        }
         // The user chose Discard: the old lifetime is retired...
         #expect(await controller.externalFileController.retireRecovery(for: dirty).isAbsent)
         // ...while another path (renew / preserve / move-follow) moved the live document to a new persisted lifetime.
@@ -48,7 +65,11 @@ struct WindowControllerEpochCloseTests {
 
         await controller.closeAfterRetire(of: dirty)
 
+        #expect(closeRequest.attempts == 1, "a different live lifetime must re-request closure")
+        #expect(model.activeDocument?.recoveryEpoch == renewed.recoveryEpoch)
+        #expect(window.attachedSheet == nil)
         let closed = coordinator.controllers.isEmpty
+        #expect(!closed)
         let leftover = try await buffer.load(for: renewed.id, epoch: renewed.recoveryEpoch)
         #expect(!(closed && leftover != nil), "window closed but the live lifetime still holds the discarded text")
     }

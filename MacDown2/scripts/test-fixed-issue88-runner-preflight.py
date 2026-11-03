@@ -18,7 +18,7 @@ class FixedRunnerChecks(unittest.TestCase):
                          'selectedTest':r.EXPECTED_TEST,'xctestrunSHA256':'a'*64,
                          'sourcePatchSHA256':'b'*64,
                          'sourceSHA':'f'*40, 'sourceManifestSHA256':'0'*64,
-                         'binarySHA256':{'app':'c'*64,'runner':'d'*64,'test':'e'*64}}
+                         'binarySHA256':{'app':'c'*64,'runner':'d'*64,'test':'e'*64,'cli':'f'*64}}
 
     def test_exact_command_is_bounded_and_single_case(self):
         argv = r.command_for(Path('/private/tmp/isolated.xctestrun'), Path('/private/tmp/result.xcresult'), self.manifest['hostID'])
@@ -78,6 +78,30 @@ class FixedRunnerChecks(unittest.TestCase):
                 with self.assertRaises(r.Refusal): r.check_products_immutable([app], root)
             with mock.patch.object(r.os, 'access', side_effect=lambda p, _: Path(p) == root.parent):
                 with self.assertRaises(r.Refusal): r.check_products_immutable([app], root)
+
+    def test_canonical_framework_aliases_preserve_product_boundary(self):
+        with tempfile.TemporaryDirectory(prefix='issue88-frameworks-') as tmp:
+            root = Path(tmp).resolve()
+            framework = root / 'Runner.app/Contents/Frameworks/XCTest.framework'
+            version = framework / 'Versions/A'
+            (version / 'Resources').mkdir(parents=True)
+            (version / 'XCTest').write_text('signed framework fixture')
+            aliases = [framework / 'Versions/Current', framework / 'Resources', framework / 'XCTest']
+            for path, target in zip(aliases, ['A', 'Versions/Current/Resources', 'Versions/Current/XCTest']):
+                path.symlink_to(target)
+            with mock.patch.object(r.os, 'access', return_value=False):
+                r.check_products_immutable([root / 'Runner.app'], root)
+                aliases[0].unlink(); aliases[0].symlink_to(root)
+                with self.assertRaises(r.Refusal): r.check_products_immutable([root / 'Runner.app'], root)
+                aliases[0].unlink(); aliases[0].symlink_to('A')
+                aliases[1].unlink(); aliases[1].symlink_to('Versions/A/Resources')
+                with self.assertRaises(r.Refusal): r.check_products_immutable([root / 'Runner.app'], root)
+                aliases[1].unlink(); aliases[1].symlink_to('Versions/Current/Resources')
+            with mock.patch.object(r.os, 'access', side_effect=lambda p, _: Path(p) == version / 'XCTest'):
+                with self.assertRaises(r.Refusal): r.check_products_immutable([root / 'Runner.app'], root)
+            missing = dict(self.manifest); missing['binarySHA256'] = dict(self.manifest['binarySHA256'])
+            del missing['binarySHA256']['cli']
+            with self.assertRaises(r.Refusal): r.validate_manifest(missing)
 
     def test_private_scratch_and_symlink(self):
         with tempfile.TemporaryDirectory(prefix='issue88-scratch-') as tmp:

@@ -1,3 +1,4 @@
+import Darwin
 import Foundation
 
 public enum DocumentFileObservation: Sendable, Equatable {
@@ -40,6 +41,7 @@ protocol DocumentFileProbing: Sendable {
 struct SnapshotReader: Sendable {
     let store: FileStore
     let policy: FileDecodingPolicy
+    let beforeMovedCandidateRead: (@Sendable (URL) -> Void)?
 
     func snapshot(_ url: URL) throws(FileStoreError) -> FileSnapshot {
         try store.readSnapshot(from: url, decoding: policy)
@@ -48,9 +50,11 @@ struct SnapshotReader: Sendable {
 
 struct DocumentFileProbe: DocumentFileProbing, Sendable {
     let fileStore: FileStore
+    private let beforeMovedCandidateRead: (@Sendable (URL) -> Void)?
 
-    init(fileStore: FileStore = FileStore()) {
+    init(fileStore: FileStore = FileStore(), beforeMovedCandidateRead: (@Sendable (URL) -> Void)? = nil) {
         self.fileStore = fileStore
+        self.beforeMovedCandidateRead = beforeMovedCandidateRead
     }
 
     func observe(
@@ -59,11 +63,16 @@ struct DocumentFileProbe: DocumentFileProbing, Sendable {
         decoding: FileDecodingPolicy
     ) async -> DocumentFileObservation {
         let store = fileStore
+        let beforeMovedCandidateRead = beforeMovedCandidateRead
         return await Task.detached(priority: .utility) {
             Self.observeSynchronously(
                 expectedURL: expectedURL.standardizedFileURL,
                 priorFileObjectID: priorFileObjectID,
-                reader: SnapshotReader(store: store, policy: decoding)
+                reader: SnapshotReader(
+                    store: store,
+                    policy: decoding,
+                    beforeMovedCandidateRead: beforeMovedCandidateRead
+                )
             )
         }.value
     }
@@ -149,38 +158,30 @@ struct DocumentFileProbe: DocumentFileProbing, Sendable {
         excluding expectedURL: URL,
         reader: SnapshotReader
     ) -> MoveSearchResult {
-        let urls: [URL]
-        do {
-            urls = try FileManager.default.contentsOfDirectory(
-                at: directory,
-                includingPropertiesForKeys: [
-                    .fileResourceIdentifierKey,
-                    .volumeIdentifierKey,
-                    .isRegularFileKey,
-                ],
-                options: []
-            )
-        } catch {
-            return .unavailable(classifyParentReadFailure(error))
+        let descriptor = open(directory.path, O_RDONLY | O_DIRECTORY | O_CLOEXEC)
+        guard descriptor >= 0 else { return .unavailable(classifyParentReadFailure(errno)) }
+        guard let stream = fdopendir(descriptor) else {
+            let failure = errno
+            Darwin.close(descriptor)
+            return .unavailable(classifyParentReadFailure(failure))
         }
+        defer { closedir(stream) }
 
         var matches: [FileSnapshot] = []
-        for url in urls where url.standardizedFileURL != expectedURL.standardizedFileURL {
-            // Directory enumeration prefetched the cheap identity metadata.
-            // Only a candidate with the exact volume/file identity warrants a
-            // full read and SHA-256 calculation; large sibling directories
-            // must never hash every Markdown file just to detect a move.
-            guard !Task.isCancelled,
-                  let attributes = try? FileManager.default.attributesOfItem(atPath: url.path),
-                  attributes[.type] as? FileAttributeType == .typeRegular,
-                  let volume = attributes[.systemNumber] as? NSNumber,
-                  let file = attributes[.systemFileNumber] as? NSNumber,
-                  PhysicalFileIdentity.FileObjectID(
-                      volume: volume.stringValue,
-                      file: file.stringValue
-                  ) == objectID,
-                  let snapshot = try? reader.snapshot(url)
-            else { continue }
+        while !Task.isCancelled {
+            // Metadata/read failures can set errno too. Only this readdir's
+            // error may turn the end of enumeration into a parent failure.
+            errno = 0
+            guard let entry = readdir(stream) else {
+                if errno != 0 {
+                    return .unavailable(classifyParentReadFailure(errno))
+                }
+                break
+            }
+            guard let snapshot = movedCandidate(
+                entry, descriptor: descriptor, matching: objectID,
+                excluding: expectedURL, reader: reader
+            ) else { continue }
             matches.append(snapshot)
             if matches.count > 1 {
                 return .ambiguous
@@ -188,6 +189,39 @@ struct DocumentFileProbe: DocumentFileProbing, Sendable {
         }
         guard let snapshot = matches.first else { return .none }
         return .one(snapshot)
+    }
+
+    private static func movedCandidate(
+        _ entry: UnsafeMutablePointer<dirent>, descriptor: Int32,
+        matching objectID: PhysicalFileIdentity.FileObjectID, excluding expectedURL: URL,
+        reader: SnapshotReader
+    ) -> FileSnapshot? {
+        let capacity = MemoryLayout.size(ofValue: entry.pointee.d_name)
+        return withUnsafePointer(to: &entry.pointee.d_name) { raw in
+            raw.withMemoryRebound(to: CChar.self, capacity: capacity) { name in
+                var info = stat()
+                guard fstatat(descriptor, name, &info, AT_SYMLINK_NOFOLLOW) == 0,
+                      matches(info, objectID: objectID) else { return nil }
+                // Unrelated siblings never allocate/canonicalize a URL or read
+                // document bytes. The opened snapshot must still be that file.
+                let url = URL(
+                    fileURLWithFileSystemRepresentation: name,
+                    isDirectory: false,
+                    relativeTo: expectedURL.deletingLastPathComponent()
+                )
+                guard url.standardizedFileURL != expectedURL else { return nil }
+                reader.beforeMovedCandidateRead?(url)
+                guard let snapshot = try? reader.snapshot(url), snapshot.revision.fileObjectID == objectID,
+                      fstatat(descriptor, name, &info, AT_SYMLINK_NOFOLLOW) == 0,
+                      matches(info, objectID: objectID) else { return nil }
+                return snapshot
+            }
+        }
+    }
+
+    private static func matches(_ info: stat, objectID: PhysicalFileIdentity.FileObjectID) -> Bool {
+        info.st_mode & mode_t(S_IFMT) == mode_t(S_IFREG)
+            && String(info.st_dev) == objectID.volume && String(info.st_ino) == objectID.file
     }
 
     private static func classifyReadFailure(_ error: Error) -> FileBackingIssue {
@@ -198,15 +232,12 @@ struct DocumentFileProbe: DocumentFileProbing, Sendable {
         return .readFailed(error.localizedDescription)
     }
 
-    private static func classifyParentReadFailure(_ error: Error) -> FileBackingIssue {
-        let nsError = error as NSError
-        switch nsError.code {
-        case NSFileNoSuchFileError, NSFileReadNoSuchFileError:
-            return .parentUnavailable
-        case NSFileReadNoPermissionError:
-            return .permissionDenied
+    private static func classifyParentReadFailure(_ code: Int32) -> FileBackingIssue {
+        switch code {
+        case EACCES, EPERM:
+            .permissionDenied
         default:
-            return .parentUnavailable
+            .parentUnavailable
         }
     }
 }

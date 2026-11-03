@@ -28,6 +28,10 @@ struct ExportResourceBudget: Sendable, Equatable {
     static let maxFinalHTMLUTF8Bytes = 256 << 20
     /// Bound private occurrence records before cmark allocates its HTML buffer.
     static let maxResourceURLSlots = 65536
+    /// Bound actual input work independently of distinct packaged payload.
+    /// Provisional; failed/non-image/duplicate reads consume this allowance too.
+    static let maxResourceReadAttempts = 4096
+    static let maxResourceReadBytes = 256 << 20
 
     static let standard = ExportResourceBudget(
         maxSourceUTF8Bytes: 32 << 20,

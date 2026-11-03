@@ -73,6 +73,13 @@ public final class CommandEndpointListener {
 
     public func accept(until deadline: ContinuousClock.Instant,
                        isCancelled: @Sendable () -> Bool = { false }) throws -> sending CommandSocketConnection {
+        try accept(until: deadline, helloTimeout: nil, isCancelled: isCancelled)
+    }
+
+    /// The application polls idle admission separately from an accepted peer's
+    /// greeting. Public callers retain their original single-deadline contract.
+    func accept(until deadline: ContinuousClock.Instant, helloTimeout: Duration?,
+                isCancelled: @Sendable () -> Bool = { false }) throws -> sending CommandSocketConnection {
         while true {
             try CommandSocketPolling.check(descriptor, deadline: deadline, cancelled: isCancelled)
             try lease.verifyOwnership()
@@ -85,6 +92,7 @@ public final class CommandEndpointListener {
                 }
                 throw CommandSocketError.unavailable(errno)
             }
+            let helloDeadline = helloTimeout.map { ContinuousClock.now.advanced(by: $0) } ?? deadline
             // The constructor takes ownership even when its peer/flag checks fail.
             let connection = try CommandSocketConnection(adopting: accepted)
             do {
@@ -93,7 +101,7 @@ public final class CommandEndpointListener {
                 guard try namespace.socketIdentity() == ownedIdentity else {
                     throw CommandEndpointError.identityChanged
                 }
-                try connection.writeFrame(CommandInstanceHello.encode(instanceID: instanceID), until: deadline,
+                try connection.writeFrame(CommandInstanceHello.encode(instanceID: instanceID), until: helloDeadline,
                                           isCancelled: isCancelled)
                 return connection
             } catch {

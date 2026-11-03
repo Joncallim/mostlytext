@@ -2,6 +2,20 @@ import AppKit
 import FileCore
 import Foundation
 
+@MainActor
+protocol DirtyCloseAlertFields: AnyObject {
+    var messageText: String { get set }
+    var informativeText: String { get set }
+    var alertStyle: NSAlert.Style { get set }
+    func addCloseButton(withTitle title: String)
+}
+
+extension NSAlert: DirtyCloseAlertFields {
+    func addCloseButton(withTitle title: String) {
+        addButton(withTitle: title)
+    }
+}
+
 extension WindowController {
     func windowShouldClose(_ sender: NSWindow) -> Bool {
         guard let coordinator, coordinator.controllers.contains(where: { $0 === self }) else { return true }
@@ -40,6 +54,11 @@ extension WindowController {
     /// user's intent, not a destination decision made before they click.
     static func makeDirtyCloseAlert(fileName: String) -> NSAlert {
         let alert = NSAlert()
+        configureDirtyCloseAlert(alert, fileName: fileName)
+        return alert
+    }
+
+    static func configureDirtyCloseAlert(_ alert: any DirtyCloseAlertFields, fileName: String) {
         alert.messageText = String(localized: "Unsaved Changes")
         alert.informativeText = String(
             localized: """
@@ -47,11 +66,10 @@ extension WindowController {
             you may be asked to choose a location.
             """
         )
-        alert.addButton(withTitle: String(localized: "Save Changes"))
-        alert.addButton(withTitle: String(localized: "Cancel"))
-        alert.addButton(withTitle: String(localized: "Discard Changes"))
+        alert.addCloseButton(withTitle: String(localized: "Save Changes"))
+        alert.addCloseButton(withTitle: String(localized: "Cancel"))
+        alert.addCloseButton(withTitle: String(localized: "Discard Changes"))
         alert.alertStyle = .warning
-        return alert
     }
 
     private func presentDirtyCloseSheet(for sender: NSWindow, context: CloseSheetContext) {

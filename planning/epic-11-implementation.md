@@ -336,3 +336,15 @@ This plan was checked independently from two angles:
 - **Architecture implementation audit:** mapped each slice to current `FileCore`, `EditorCore`, `Preview`, `OutlineUI`, `Workspace`, `Highlighting`, `project.yml`, and package ownership, and identified issue-text conflicts with the as-built WebKit host, Markdown-specific outline/parser, and existing format registry.
 
 The Epic is ready for implementation planning review, not yet for production implementation or merge of feature code.
+
+## JSON busy-state overlap — 3 November 2026
+
+JSONAnalysisSession now accounts for actual immediate analysis calls separately
+from a scheduled debounced task. Busy remains true while either exists, including
+a superseded worker draining after a newer result or cancellation. Three
+controlled overlaps fail their busy-state assertions on the unchanged source;
+publication generations, returned cancelled results and the already-cancelled
+no-state path stay intact. The source fix follows MarkdownParseSession's existing
+counter/defer pattern. `downstream/async-ui-publication-review.md` records the
+scope and proof; it does not establish preemption, worker bounds, performance or
+native acceptance. Local app/UI targets compile only.

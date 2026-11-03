@@ -75,8 +75,7 @@ enum FencedRegionClassifier {
         // line) would silently drop that closer from the count, since the
         // backward scan below only ever looks at lines STRICTLY BEFORE the
         // caret's line.
-        let currentLineContentEnd = MarkdownEditingAssistEngine.lineContentEnd(of: currentLineStart, in: text)
-        if let fence = fenceDelimiter(lineStart: currentLineStart, lineContentEnd: currentLineContentEnd, in: text),
+        if let fence = fenceDelimiter(lineStart: currentLineStart, in: text),
            caret >= fence.markerEnd {
             fenceCount += 1
             nearestLanguageID = fence.languageID
@@ -84,12 +83,7 @@ enum FencedRegionClassifier {
 
         while currentLineStart > 0, linesScanned < maximumFenceLinesScanned {
             let previousLineStart = MarkdownEditingAssistEngine.lineStart(of: currentLineStart - 1, in: text)
-            let previousLineContentEnd = MarkdownEditingAssistEngine.lineContentEnd(of: previousLineStart, in: text)
-            if let fence = fenceDelimiter(
-                lineStart: previousLineStart,
-                lineContentEnd: previousLineContentEnd,
-                in: text
-            ) {
+            if let fence = fenceDelimiter(lineStart: previousLineStart, in: text) {
                 fenceCount += 1
                 if fenceCount == 1 {
                     nearestLanguageID = fence.languageID
@@ -119,26 +113,28 @@ enum FencedRegionClassifier {
     /// tilde character), the `FenceDelimiter` it describes.
     private static func fenceDelimiter(
         lineStart: Int,
-        lineContentEnd: Int,
         in text: NSString
     ) -> FenceDelimiter? {
         var index = lineStart
         var leadingSpaces = 0
-        while index < lineContentEnd, leadingSpaces < 3,
+        while index < text.length, leadingSpaces < 3,
               MarkdownEditingAssistEngine.character(at: index, in: text) == 0x20 {
             leadingSpaces += 1
             index += 1
         }
-        guard index < lineContentEnd else { return nil }
+        guard index < text.length else { return nil }
         let marker = MarkdownEditingAssistEngine.character(at: index, in: text)
         guard marker == 0x60 || marker == 0x7E else { return nil } // ` or ~
         var fenceLength = 0
-        while index < lineContentEnd, MarkdownEditingAssistEngine.character(at: index, in: text) == marker {
+        while index < text.length, MarkdownEditingAssistEngine.character(at: index, in: text) == marker {
             fenceLength += 1
             index += 1
         }
         guard fenceLength >= 3 else { return nil }
         let markerEnd = index
+        // Plain lines need no forward traversal. Only a real marker run
+        // admits the rest of this line for the existing info-string rules.
+        let lineContentEnd = MarkdownEditingAssistEngine.lineContentEnd(of: index, in: text)
 
         let infoString = text.substring(with: NSRange(location: index, length: lineContentEnd - index))
             .trimmingCharacters(in: .whitespaces)
@@ -157,7 +153,8 @@ enum FencedRegionClassifier {
     /// The UTF-16 offset at which ordinary content resumes after a
     /// front-matter block, or `nil` if `text` doesn't open with one at all.
     private static func frontMatterEnd(in text: NSString) -> Int? {
-        guard text.length > 0 else { return nil }
+        guard text.length >= 3, text.character(at: 0) == 0x2D,
+              text.character(at: 1) == 0x2D, text.character(at: 2) == 0x2D else { return nil }
         let firstLineContentEnd = MarkdownEditingAssistEngine.lineContentEnd(of: 0, in: text)
         guard isExactly(text, range: NSRange(location: 0, length: firstLineContentEnd), matching: "---") else {
             return nil

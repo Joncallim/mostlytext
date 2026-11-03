@@ -20,8 +20,8 @@ public enum FileStoreError: Error {
     /// diagnostic describes the first invalid byte sequence; no replacement
     /// characters or text snapshot are produced.
     case decodingFailed([FileDecodingDiagnostic])
-    /// Conditional publication could not restore a displaced external writer.
-    /// The external bytes were preserved at the returned sibling URL.
+    /// A save preserved a competing stage or could not restore a displaced
+    /// external writer. The preserved bytes remain at the returned sibling URL.
     case conditionalPublicationRecoveryRequired(URL)
 }
 
@@ -218,14 +218,17 @@ public struct FileStore: Sendable {
         let temporaryURL = directory
             .appendingPathComponent(Self.companionName(for: url, infix: "tmp"))
 
+        var stage: FileStoreStage?
         do {
-            try data.write(to: temporaryURL, options: .atomic)
+            let created = try FileStoreStage(bytes: data, at: temporaryURL)
+            stage = created
             if expectedRevision != nil {
                 // The conditional path publishes the temporary file itself, so
                 // it must already carry the destination's metadata (#174);
                 // the unconditional path's `replaceItemAt` preserves it.
                 try carryMetadata(from: url, to: temporaryURL)
             }
+            try created.refreshAfterMetadata()
             try beforePublication?(url)
             // Re-check immediately before publishing the replacement. A
             // conditional publication then uses `RENAME_SWAP`: the previous
@@ -242,20 +245,12 @@ public struct FileStore: Sendable {
             // replacement window. The conditional swap below must preserve a
             // direct, non-cooperating write issued here.
             try afterBaselineVerification?(url)
-            try publishStaged(temporaryURL, to: url, expectedRevision: expectedRevision, requireAbsent: requireAbsent)
+            try created.verifyBeforePublication()
+            try publishStaged(temporaryURL, to: url, expectedRevision: expectedRevision,
+                              requireAbsent: requireAbsent, stage: created)
             try afterReplacement?(url)
         } catch {
-            let mapped = mapWriteError(error)
-            // A failed rollback has moved the displaced external version to a
-            // sibling recovery URL (or left it at `temporaryURL`). Never
-            // delete that evidence while surfacing the recovery location.
-            if case .conditionalPublicationRecoveryRequired = mapped {
-                throw mapped
-            }
-            // Best-effort cleanup of our own temporary file; do not let
-            // cleanup failures mask the real error.
-            try? FileManager.default.removeItem(at: temporaryURL)
-            throw mapped
+            try failAfterStageCleanup(stage, temporaryURL: temporaryURL, error: error)
         }
 
         let published = try readRevision(from: url)

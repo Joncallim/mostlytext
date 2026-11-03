@@ -120,18 +120,3 @@ extension WindowCoordinator {
         )
     }
 }
-
-/// Reuses the one immutable Markdown parse for contribution generation and
-/// composition. A different source, revision or parse policy cannot borrow it.
-struct FrozenExportParse: ParseExecuting {
-    let text: String
-    let revision: Int
-    let document: MarkdownDocument
-
-    func parse(_ text: String, options: MarkdownParseOptions, revision: Int) async throws -> MarkdownDocument {
-        try Task.checkCancellation()
-        guard text.utf8.elementsEqual(self.text.utf8), revision == self.revision, options == .default
-        else { throw ExportError.validatedPublicationRejected }
-        return document
-    }
-}

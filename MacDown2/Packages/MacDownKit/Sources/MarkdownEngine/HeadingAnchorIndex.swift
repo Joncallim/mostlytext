@@ -1,4 +1,3 @@
-import CryptoKit
 import Foundation
 
 /// The exact document lifetime and source/parse policy that produced a set of
@@ -48,18 +47,24 @@ public struct HeadingAnchorIndex: Sendable, Equatable {
         reservedIDs: Set<String>
     ) throws {
         let extraction = FrontMatterExtractor.extract(from: sourceText)
-        guard SourceMap(text: sourceText) == document.sourceMap,
-              (extraction?.body ?? sourceText) == document.body,
+        let digest = MarkdownSourceFingerprint.sha256(sourceText)
+        let frontMatterMatches = switch (extraction?.raw, document.frontMatter?.raw) {
+        case (nil, nil): true
+        case let (supplied?, parsed?): supplied.utf8.elementsEqual(parsed.utf8)
+        default: false
+        }
+        guard document.sourceSHA256 == digest,
+              SourceMap(text: sourceText) == document.sourceMap,
+              (extraction?.body ?? sourceText).utf8.elementsEqual(document.body.utf8),
               (extraction?.closingLineNumber ?? 0) == document.bodyLineOffset,
-              extraction?.raw == document.frontMatter?.raw
+              frontMatterMatches
         else { throw Error.sourceDoesNotMatchParse }
 
-        let digest = SHA256.hash(data: Data(sourceText.utf8))
         identity = HeadingAnchorIdentity(
             documentID: documentID,
             recoveryEpoch: recoveryEpoch,
             sourceGeneration: sourceGeneration,
-            sourceSHA256: digest.map { String(format: "%02x", $0) }.joined(),
+            sourceSHA256: digest,
             parseRevision: document.revision,
             parseOptions: document.options,
             allocatorPolicyVersion: HeadingAnchorAllocator.policyVersion

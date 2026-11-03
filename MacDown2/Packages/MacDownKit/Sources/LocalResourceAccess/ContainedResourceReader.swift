@@ -24,9 +24,11 @@ public enum ContainedResourceReader {
         _ reference: ResourceReference,
         in directory: DirectoryLease,
         maxBytes: Int,
-        cancellation: ResourceCancellation = ResourceCancellation()
+        cancellation: ResourceCancellation = ResourceCancellation(),
+        accounting: ResourceReadAccounting? = nil
     ) throws(ResourceReadError) -> ResourceSnapshot {
-        try read(reference, in: directory, maxBytes: maxBytes, cancellation: cancellation, hooks: .none)
+        try read(reference, in: directory, maxBytes: maxBytes, cancellation: cancellation, hooks: .none,
+                 accounting: accounting)
     }
 
     static func read(
@@ -34,9 +36,11 @@ public enum ContainedResourceReader {
         in directory: DirectoryLease,
         maxBytes: Int,
         cancellation: ResourceCancellation,
-        hooks: ResourceReadHooks
+        hooks: ResourceReadHooks,
+        accounting: ResourceReadAccounting? = nil
     ) throws(ResourceReadError) -> ResourceSnapshot {
         guard !cancellation.isCancelled else { throw .cancelled }
+        try accounting?.beginAttempt()
         guard directory.nameStillRefersToGrantedDirectory() else { throw .changedRoot }
         let relative = try constrainedRelativePath(for: reference, in: directory)
         return try readStrict(
@@ -44,7 +48,7 @@ public enum ContainedResourceReader {
             name: (relative as NSString).lastPathComponent,
             in: directory,
             limits: (maxBytes, cancellation),
-            hooks: hooks
+            hooks: hooks, accounting: accounting
         )
     }
 
@@ -56,7 +60,8 @@ public enum ContainedResourceReader {
         name: String,
         in directory: DirectoryLease,
         limits: (maxBytes: Int, cancellation: ResourceCancellation),
-        hooks: ResourceReadHooks
+        hooks: ResourceReadHooks,
+        accounting: ResourceReadAccounting? = nil
     ) throws(ResourceReadError) -> ResourceSnapshot {
         let (maxBytes, cancellation) = limits
         hooks.beforeOpen?()
@@ -70,7 +75,7 @@ public enum ContainedResourceReader {
                 name: name,
                 maxBytes: maxBytes,
                 cancellation: cancellation,
-                hooks: hooks
+                hooks: hooks, accounting: accounting
             )
         }
         guard let result else { throw .leaseClosed }
@@ -174,7 +179,8 @@ public enum ContainedResourceReader {
         name: String,
         maxBytes: Int,
         cancellation: ResourceCancellation,
-        hooks: ResourceReadHooks
+        hooks: ResourceReadHooks,
+        accounting: ResourceReadAccounting? = nil
     ) throws(ResourceReadError) -> ResourceSnapshot {
         var before = stat()
         guard fstat(descriptor, &before) == 0 else { throw .unavailable(errno) }
@@ -186,7 +192,7 @@ public enum ContainedResourceReader {
             expectedSize: Int(before.st_size),
             maxBytes: maxBytes,
             cancellation: cancellation,
-            hooks: hooks
+            hooks: hooks, accounting: accounting
         )
 
         var after = stat()
@@ -205,10 +211,11 @@ public enum ContainedResourceReader {
         expectedSize: Int,
         maxBytes: Int,
         cancellation: ResourceCancellation,
-        hooks: ResourceReadHooks
+        hooks: ResourceReadHooks,
+        accounting: ResourceReadAccounting? = nil
     ) throws(ResourceReadError) -> Data {
         var bytes = Data()
-        bytes.reserveCapacity(expectedSize)
+        bytes.reserveCapacity(accounting?.readAllowance(upTo: expectedSize) ?? expectedSize)
         var buffer = [UInt8](repeating: 0, count: chunkSize)
         while true {
             guard !cancellation.isCancelled else { throw .cancelled }
@@ -217,13 +224,23 @@ public enum ContainedResourceReader {
             // `remaining + 1` only runs when `remaining < chunkSize`, so it cannot overflow even for `maxBytes ==
             // Int.max`.
             let remaining = maxBytes - bytes.count
-            let want = remaining >= chunkSize ? chunkSize : remaining + 1
-            let count = Darwin.read(descriptor, &buffer, want)
+            let fileAllowance = remaining >= chunkSize ? chunkSize : remaining + 1
+            let result: (bytesRead: Int, failure: Int32)
+            if let accounting {
+                result = try accounting.readChunk(upTo: fileAllowance) { want in
+                    let count = Darwin.read(descriptor, &buffer, want)
+                    return (count, errno)
+                }
+            } else {
+                let count = Darwin.read(descriptor, &buffer, fileAllowance)
+                result = (count, errno)
+            }
+            let (count, failure) = result
             if count < 0 {
-                if errno == EINTR {
+                if failure == EINTR {
                     continue
                 }
-                throw .unavailable(errno)
+                throw .unavailable(failure)
             }
             if count == 0 {
                 return bytes

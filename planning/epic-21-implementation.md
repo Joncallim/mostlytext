@@ -260,8 +260,17 @@ public actor DiagramWebKitPool {
 
 The current implementation keeps the five-second default for JavaScript
 execution after page acquisition. The separately bounded default admission
-window is 15 seconds for pool queueing and cold harness navigation; an
+window is 15 seconds for pool queueing, cold harness navigation and optional
+renderer preparation; an
 explicitly longer execution budget is not shortened during admission.
+
+The resource-backed pool initializer also accepts an optional async
+`preparePage` callback, executed before acquisition under the same admission
+window. A failed/canceled preparation tears down its unpublished page. D2 uses
+this callback to await its single page-owned engine's `ready` promise; every
+later compile/render pair reuses that worker under the pool's existing exclusive
+page ownership. This does not change either timeout ceiling or the vendor
+bundle. See [D2 engine lifetime](downstream/d2-engine-page-lifetime-2026-11-03.md).
 
 Each language's own renderer (`D2WebRenderer`, `GraphvizWebRenderer`)
 owns one `DiagramWebKitPool` instance, its own bundled harness resource,

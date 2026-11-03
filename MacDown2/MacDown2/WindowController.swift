@@ -238,7 +238,11 @@ final class WindowController: NSWindowController, NSWindowDelegate {
         lastObservedURL = url
         if changed {
             window?.title = title
-            window?.representedURL = url
+            if let documentWindow = window as? DocumentWindow {
+                documentWindow.documentRepresentedURL = url
+            } else {
+                window?.representedURL = url
+            }
             window?.isDocumentEdited = isDirty
             coordinator?.scheduleSaveSession()
         }
@@ -353,10 +357,18 @@ private extension WindowController {
             (model?.tabStore.activeTabID, model?.activeDocument)
         }
         let invalidate: @MainActor () -> Void = { [weak self, weak state = previewResourceState] in
-            self?.revokeValidatedExports()
+            self?.revokeExportsForScopeChange()
             state?.invalidateForIdentityChange()
         }
-        model.tabStore.setActiveIdentityWillChange { _, _ in invalidate() }
+        model.tabStore.setActiveIdentityWillChange { [weak self] old, new in
+            self?.revokeExportsForIdentityChange(from: old?.tabID, to: new?.tabID)
+            invalidate()
+        }
+        model.tabStore.setDocumentFilesWillPublish { [weak self, weak model] incoming in
+            guard let self, let model, let coordinator,
+                  coordinator.sessionControllers.contains(where: { $0.model === model }) else { return }
+            coordinator.protectExportsBeforePublishing(incoming)
+        }
         model.setFolderAssociationWillChange(invalidate)
         fileTreeModel.setRootAccessWillChange { [weak self] in
             invalidate()

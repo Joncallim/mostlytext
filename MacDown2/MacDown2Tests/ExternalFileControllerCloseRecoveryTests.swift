@@ -1,3 +1,4 @@
+import AppKit
 import EditorCore
 import FileCore
 import FileTree
@@ -10,6 +11,19 @@ import Workspace
 
 @MainActor
 struct ExternalFileControllerCloseRecoveryTests {
+    @MainActor
+    private final class TerminationPresentationProbe {
+        var requests = 0
+        var window: NSWindow?
+        var target: WindowController?
+
+        func record(window: NSWindow, target: WindowController?) {
+            requests += 1
+            self.window = window
+            self.target = target
+        }
+    }
+
     @Test func retryAfterAnEditKeepsTheWindowOpenWithAFreshPersistedLifetime() async throws {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)
@@ -210,9 +224,18 @@ struct ExternalFileControllerCloseRecoveryTests {
             return
         }
         #expect(blockingController === controller)
+        let presentation = TerminationPresentationProbe()
+        coordinator.terminationRecoveryAlertPresenter = { window, target in
+            presentation.record(window: window, target: target)
+        }
+        defer { coordinator.terminationRecoveryAlertPresenter = nil }
         #expect(!coordinator.handleTerminationSessionResult(result))
         #expect(coordinator.terminationRecoveryState == .recoveryRequired)
         #expect(coordinator.terminationRecoveryController === controller)
+        #expect(presentation.requests == 1)
+        #expect(presentation.window === controller.window)
+        #expect(presentation.target === controller)
+        #expect(controller.window?.attachedSheet == nil)
 
         let relaunched = TabStore(
             sessionStore: fixture.session,

@@ -24,7 +24,7 @@ final class OrdinaryExportOrigin {
         documentID = document.id
         recoveryEpoch = document.recoveryEpoch
         initialDocument = document
-        publicationLease = controller.makeExportLifetimeLease()
+        publicationLease = controller.makeExportLifetimeLease(ordinary: true)
     }
 
     static func capture(controller: WindowController) -> OrdinaryExportOrigin? {
@@ -45,6 +45,15 @@ final class OrdinaryExportOrigin {
 
     func canRevealOutput(isCancelled: Bool) -> Bool {
         !isCancelled && presentableWindow != nil
+    }
+
+    /// Called synchronously after source/root/presentation capture and before
+    /// any render await. Later Save As cannot retarget these frozen inputs.
+    func didFreezeInputs() throws {
+        try publicationLease.checkActive()
+        guard let controller, presentableWindow != nil,
+              controller.model.tabStore.activeTabID == tabID else { throw CancellationError() }
+        controller.freezeOrdinaryExportLease(publicationLease, tabID: tabID)
     }
 
     func documentAfterPanel() throws -> FileDocument {
@@ -100,13 +109,20 @@ final class OrdinaryExportPanelSession {
 }
 
 @MainActor
+protocol OrdinaryExportAlertWindow: AnyObject {
+    var window: NSWindow { get }
+}
+
+extension NSAlert: OrdinaryExportAlertWindow {}
+
+@MainActor
 final class OrdinaryExportAlertSession {
-    private let alert: NSAlert
+    private let alert: any OrdinaryExportAlertWindow
     private weak var window: NSWindow?
     private var continuation: CheckedContinuation<Void, Never>?
     private var finished = false
 
-    init(alert: NSAlert, window: NSWindow) {
+    init(alert: any OrdinaryExportAlertWindow, window: NSWindow) {
         self.alert = alert
         self.window = window
     }

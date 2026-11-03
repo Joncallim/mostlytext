@@ -2,6 +2,7 @@ import AppKit
 import AppSettings
 import CommandBridge
 import EditorCore
+import ExportService
 import FileCore
 import FileTree
 import Foundation
@@ -34,11 +35,15 @@ final class WindowCoordinator {
     /// The model for the document currently shown in the key window.
     private(set) var keyModel: WorkspaceModel?
 
-    // `controllers`, `sessionStore`, `themeController`, and `grammarRegistry`
-    // are internal rather than private: `WindowCoordinator+SessionRestore.swift`
-    // is a same-module extension in a separate file (split out to stay under
-    // the type-body-length lint budget) and needs them.
-    var controllers: [WindowController] = []
+    /// `controllers`, `sessionStore`, `themeController`, and `grammarRegistry`
+    /// are internal rather than private: `WindowCoordinator+SessionRestore.swift`
+    /// is a same-module extension in a separate file (split out to stay under
+    /// the type-body-length lint budget) and needs them.
+    var controllers: [WindowController] = [] {
+        willSet { protectExportsBeforePublishing(newValue) }
+    }
+
+    @ObservationIgnored let exportDocumentProtections = ExportDocumentProtectionRegistry()
     let sessionStore: WorkspaceSessionStoring
     let panelProvider: NSFilePanelProvider
     let recoveryBuffer: RecoveryBuffer
@@ -58,7 +63,10 @@ final class WindowCoordinator {
     private var hasRestoredSession = false
     let documentOpens = KeyedSerialRunner<String>()
     @ObservationIgnored var commandReceiver: CommandApplicationReceiver?
-    @ObservationIgnored var commandStdinStages: [WindowController] = []
+    @ObservationIgnored var commandStdinStages: [WindowController] = [] {
+        willSet { protectExportsBeforePublishing(newValue) }
+    }
+
     let commandStdinAdmissions = KeyedSerialRunner<String>()
     var launchSession: WorkspaceSession? // as at launch; handed out once by `consumeLaunchSession()`
     var saveTask: Task<Void, Never>?
@@ -101,6 +109,9 @@ final class WindowCoordinator {
     @ObservationIgnored var onNewDocumentLifetimePrepared: (@MainActor () async -> Void)?
     @ObservationIgnored var terminationRecoveryState: TerminationRecoveryState = .none
     @ObservationIgnored var terminationRecoveryController: WindowController?
+    /// Tests can record a recovery-sheet request without creating native UI.
+    /// Nil retains the production alert and its unchanged response handling.
+    @ObservationIgnored var terminationRecoveryAlertPresenter: (@MainActor (NSWindow, WindowController?) -> Void)?
     /// The one currently open command-palette panel, if any — see
     /// `WindowCoordinator+CommandPalette.swift` and `CommandPalettePanel`'s
     /// doc comment for why this coordinator must hold it strongly.
