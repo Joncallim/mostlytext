@@ -112,6 +112,16 @@ E15 then creates the final icon, first-run experience and polished copy against 
 
 **Controlled reopening (2026-09-21):** the historical gate was passed, but the owner subsequently made two explicit product decisions: add bounded pre-release epics E22/E23 and ship as a new editor descended from MacDown rather than as `MacDown 2`. The earlier identity freeze is therefore an evidence record, not the final release identity. The public identity must be re-frozen before E23 commits final app/Quick Look/theme-file identifiers, and E17 still may not decide the brand at the end.
 
+**Current identity handoff (3 November 2026):** D-031 freezes the 1.0 brand.
+The app ID/display name, public mostlytext CLI, theme-file type/extension and
+repository/backlog cutover are implemented. [IDENTITY.md](IDENTITY.md) records
+actual runtime identifiers, reserved Quick Look/document-resource conventions,
+and every migration-sensitive legacy namespace for E23/E17. Do not re-open
+settled owner inputs because an older paragraph predates the cutover. Native
+presentation, final packaging, installed migration and update/signing acceptance
+remain open in MostlyText #16/#7/#4. [ACCEPTANCE_STATUS.md](ACCEPTANCE_STATUS.md)
+records current prerequisites and strict release failures.
+
 ### 5.2 Maintain a release-evidence ledger
 
 Create one owner-readable table for the complete product. At minimum:

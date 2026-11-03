@@ -13,12 +13,13 @@ localization, performance and exact release-artifact verification.
 - Website source: [Joncallim/mostlytext-site](https://github.com/Joncallim/mostlytext-site)
 - Engineering backlog: [MostlyText issues](https://github.com/Joncallim/mostlytext/issues) ([old-to-new number map](planning/ISSUE_TRANSFER_MAP.md))
 - [Repository migration contract](planning/downstream/mostlytext-repository-migration-2026-11-03.md)
-- [Release evidence](planning/RELEASE_EVIDENCE.md)
+- [Current acceptance status](planning/ACCEPTANCE_STATUS.md) and [identity handoff](planning/IDENTITY.md)
+- [Historical release evidence](planning/RELEASE_EVIDENCE.md)
 
 ## Build the application and CLI
 
-Requires macOS 26+, Xcode 26 with Swift 6.2+, and XcodeGen. Internal target,
-package, bundle and storage names are retained for compatibility; the public CLI
+Requires macOS 26+, Xcode 26 with Swift 6.2+, and XcodeGen. Internal target/package paths and selected legacy compatibility identifiers
+are retained as documented in the identity handoff; the public CLI
 scheme is `MostlyTextCLI` and produces `mostlytext`.
 
 ```sh

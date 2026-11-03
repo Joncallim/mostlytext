@@ -1,5 +1,13 @@
 # MostlyText identity: Figma handoff
 
+> Current handoff — 3 November 2026: production geometry is frozen at 10° under
+> D-027/D-029/D-031, the app icon source is integrated, and the canonical file
+> title now reads “MostlyText — Brand Identity (Slant 10°)”. Use the
+> [brand registry](brand/README.md) and [identity handoff](../planning/IDENTITY.md).
+> Earlier comparisons/timing notes below remain historical; do not recascade
+> old 12° geometry or reopen waived/deferred gates as if they were undecided.
+
+
 **Owner summary.** The MostlyText mark (Slant) and its lockup rules are
 settled at release-candidate stage. The Figma session's job is production:
 outline the wordmark and build the lockup artwork from the canonical files

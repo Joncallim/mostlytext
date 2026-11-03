@@ -4,16 +4,17 @@
 outlines. It contains the flattened mark (the four validation SVGs with strokes
 expanded, clips applied and the skew baked in) and the outlined MostlyText
 wordmark and lockup. **Production lean is 10° (D-027), superseding the
-original 12° build (D-024/D-025).** The same geometry needs re-placing in the
-canonical Figma file, [MostlyText — Brand Identity](https://www.figma.com/design/x5wTgOFnR9GgNFfUqWwKmX)
-(title/status pending update — see `design/DECISIONS.md` D-029). Mark
+original 12° build (D-024/D-025).** The same geometry is cascaded into the
+canonical Figma file under D-029, [MostlyText — Brand Identity](https://www.figma.com/design/x5wTgOFnR9GgNFfUqWwKmX)
+(the title-only follow-up was completed through the Figma UI on 3 November
+2026; see `design/DECISIONS.md` D-029 and the brand registry). Mark
 geometry itself is unchanged except the lean angle; `s32`/`s16`/`i16` are now
 derived mechanically from the master rather than hand-lightened (D-026/D-027,
 matching `design/brand/slant/validation/small.mjs`). The wordmark's three
 optical corrections were re-measured at 10°, not reused from the 12°/2.6°
 build — see below. Nothing here needs a Mac, except the macOS icon pipeline
 itself (D-028, closed) and the human read test / register search
-(D-026, waived / in progress).
+(D-026 waived; registration/legal review owner-deferred under D-031).
 
 ## Files
 

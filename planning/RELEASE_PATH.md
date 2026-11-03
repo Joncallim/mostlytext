@@ -1,5 +1,15 @@
 # MostlyText 1.0 release path
 
+> **Current route — 3 November 2026:** use [acceptance status](ACCEPTANCE_STATUS.md),
+> [identity handoff](IDENTITY.md) and the live MostlyText issues for current work.
+> Source/brand/backlog migration is integrated on main. Developer ID discovery
+> passes; notarization preflight stops on the missing keychain profile. Native
+> staging/test-desktop prerequisites and six strict release-compliance failures
+> remain. Do not interpret an older “ready to run” row below as current acceptance.
+> Earlier dated status snapshots remain history. Section 4's owner decisions stay
+> binding except the repository mechanism/timing superseded on 3 November.
+
+
 > Current cutover: application source and the 17 engineering issues now live in
 > `Joncallim/mostlytext` on `main`. The owner authorized this earlier repository,
 > backlog and source-brand cutover on 3 November 2026. This supersedes older
@@ -14,8 +24,9 @@
 > `Joncallim/mostlytext` now carries the full application history; this supersedes
 > older instructions below to wait for #115 before preparing the repository or
 > rename the occupied website repository as though it were the application.
-> Engineering issues/evidence remain in `Joncallim/macdown_2`; historical bare
-> issue numbers and references to `master` below retain that original context.
+> This preparation-only snapshot is superseded by the mapped transfer of all
+> 17 engineering issues into MostlyText. Historical PR/release evidence stays in
+> macdown_2; older bare issue numbers resolve through the transfer map.
 > Source import is not #115 closure, native acceptance, or release permission.
 > See [the migration contract](downstream/mostlytext-repository-migration-2026-11-03.md).
 
