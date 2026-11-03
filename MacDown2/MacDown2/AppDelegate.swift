@@ -77,7 +77,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         launchURLs = Self.openFilesPaths(from: args).map { URL(fileURLWithPath: $0) }
         launchFolderURL = Self.openFolderPath(from: args).map { URL(fileURLWithPath: $0, isDirectory: true) }
         super.init()
-        ComponentTestHostIcon.installIfRequired(
+        ComponentTestHostPresentation.installIconIfRequired(
             isTestHost: SingleTestInstanceGuard.isRunningUnderXCTest, isUITesting: isUITesting
         ) { NSApplication.shared.applicationIconImage = $0 }
         if bypassImport {

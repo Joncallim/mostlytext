@@ -7,6 +7,26 @@ import Workspace
 @MainActor
 final class DocumentWindow: NSWindow {
     weak var coordinator: WindowCoordinator?
+    let usesComponentDocumentProxyFixture = ComponentTestHostPresentation.isCurrentComponentHost
+    private var componentRepresentedURL: URL?
+    private(set) var componentProxyAssignmentCount = 0
+
+    /// Component tests retain the presentation field without asking the
+    /// machine's IconServices to create a proxy widget. Native UI/ordinary
+    /// launches use the real NSWindow property, including its Finder behavior.
+    var documentRepresentedURL: URL? {
+        get {
+            usesComponentDocumentProxyFixture ? componentRepresentedURL : representedURL
+        }
+        set {
+            if usesComponentDocumentProxyFixture {
+                componentRepresentedURL = newValue
+                componentProxyAssignmentCount += 1
+            } else {
+                representedURL = newValue
+            }
+        }
+    }
 
     override func sendEvent(_ event: NSEvent) {
         super.sendEvent(event)
