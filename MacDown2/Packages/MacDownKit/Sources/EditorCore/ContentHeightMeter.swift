@@ -59,23 +59,7 @@ final class ContentHeightMeter {
     /// the empty paragraph after a trailing terminator. A paragraph ends at `\n`, `\r`, `\r\n` or
     /// U+2029.
     static func forEachParagraph(in string: NSString, _ body: (NSRange) -> Void) {
-        let length = string.length
-        var start = 0
-        var index = 0
-        while index < length {
-            let unit = string.character(at: index)
-            if unit == 0x0A || unit == 0x0D || unit == 0x2029 {
-                body(NSRange(location: start, length: index - start))
-                if unit == 0x0D, index + 1 < length, string.character(at: index + 1) == 0x0A {
-                    index += 1
-                }
-                index += 1
-                start = index
-            } else {
-                index += 1
-            }
-        }
-        body(NSRange(location: start, length: length - start))
+        HeightParagraphScanner.forEach(in: string, body)
     }
 
     private static func cacheKey(width: CGFloat, attributes: [NSAttributedString.Key: Any]) -> String {
