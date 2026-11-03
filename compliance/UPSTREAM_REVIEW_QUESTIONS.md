@@ -29,7 +29,8 @@ concrete review handoff, not an ownership guess or completed independent review.
 [The later syntax audit](evidence/parser-position-classification/README.md) binds
 all 2,597 remaining original positions and classifies 3,428 references as imports,
 strict export bindings, static name-retention calls or punctuation syntax using
-actual JavaScript parsing. Another 100 references remain technically unclassified.
+actual JavaScript parsing. [The residual audit](evidence/parser-residual-positions/README.md) now gives exact
+token/node dispositions for the final 100 references, with no technical remainder.
 All original positions retain independent attribution/rights-review requirements;
 no syntax category determines ownership or clears the earlier unresolved grants.
 The original index and all notice/runtime/pin bytes are preserved.

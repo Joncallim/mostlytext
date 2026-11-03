@@ -258,3 +258,15 @@ rights-review requirements. Template/comment lookalikes and executable getter/
 name-call mutations do not qualify. The original reports, all notice/SBOM/runtime/
 pin/build inputs and six strict release failures remain unchanged; no native,
 independent-review, signing or publication acceptance is inferred.
+
+## Final 100 parser positions technically resolved — 4 November 2026
+
+[The residual audit](../compliance/evidence/parser-residual-positions/README.md)
+accounts for all 100 references left by the first syntax packet, using exact
+original row and actual token/node identities in the reproduced chunk. Twenty-seven
+actual parser controls exclude executable bodies, changed constructors/bindings
+and string/comment/template lookalikes. Four actual input mutations refuse output;
+restoration reproduces identical receipt bytes. The original reports/first packet
+are preserved. No technically unclassified position remains in that scoped set;
+all independent attribution/rights-review requirements remain. Product/runtime/
+pin/notice/SBOM/build inputs and the six strict release failures are unchanged.

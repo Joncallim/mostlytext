@@ -1,0 +1,27 @@
+[
+  {
+    "control": "member actual bytes changed",
+    "returnCode": 1,
+    "outputWritten": false
+  },
+  {
+    "control": "index actual bytes changed",
+    "returnCode": 1,
+    "outputWritten": false
+  },
+  {
+    "control": "parent actual bytes changed",
+    "returnCode": 1,
+    "outputWritten": false
+  },
+  {
+    "control": "parser actual bytes changed",
+    "returnCode": 1,
+    "outputWritten": false
+  },
+  {
+    "control": "restored member and exact parents",
+    "returnCode": 0,
+    "byteIdenticalReceipt": true
+  }
+]

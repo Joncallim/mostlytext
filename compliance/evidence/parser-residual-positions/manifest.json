@@ -1,0 +1,13 @@
+{
+  "files": {
+    "actual-controls.json": "210337a37082a50c2415488fd377aec0468e2c9dc06e3b9a6077f742d5b0c762",
+    "classification.json": "04061650df025d84510ef4892ef9fa9defce0dbf9305408b3f39259755781152",
+    "classify.mjs": "d5db33569fcd8ca287822a56673ed2698bf5c7937928d6ff216cb6db33a302e6"
+  },
+  "independentReviewRequired": true,
+  "parentManifestSHA256": "29d3fee42fb7148db29920bde189a455fc07bc53727191ffbe9ae80ecbf084ab",
+  "schema": 1,
+  "sourceMember": "dist/chunks/mermaid-parser.core/chunk-FOHPRMQF.mjs",
+  "sourceMemberSHA256": "5c83305b04a62463567bdf6d82d9ba9dfc3795e516d8cc848e6981504af48068",
+  "technicalClassificationOnly": true
+}
