@@ -9,6 +9,9 @@ struct AboutCommands: Commands {
             Button("About MostlyText") { openWindow(id: "about") }
             Button("Open Source Licenses…") { openWindow(id: "licenses") }
         }
+        CommandGroup(after: .help) {
+            Button("Open Source Licenses…") { openWindow(id: "licenses") }
+        }
     }
 }
 
