@@ -1,0 +1,66 @@
+{
+  "attributions": [
+    {
+      "adaptation_limit": "Matching licensed reference; Cytoscape does not identify the original adaptation revision",
+      "credit_sha256": "1a0a6cc440fbe77461a056de1cb4725213dcf64aa4f2c0e5f6300f959e88fd44",
+      "distributed_licence": "cytoscape-bezier--MIT.txt",
+      "end_source_line_exclusive": 15109,
+      "first_source_line": 14979,
+      "fragment_sha256": "5363f82aafa7cf8c6d397bd81fc57b11248e71d2a84b79c56fb31c862ef7c370",
+      "generated_probe_references": [
+        {
+          "references": 9,
+          "source_line": 15015
+        },
+        {
+          "references": 9,
+          "source_line": 15018
+        }
+      ],
+      "generated_references": 453,
+      "id": "cytoscape-bezier-easing",
+      "licence_sha256": "32bfd1097d45b41ca6792bf07b389b26ee4045e7f7db28349f4199eef889c516",
+      "mapped_source_lines": 108,
+      "reference_repository": "https://github.com/gre/bezier-easing",
+      "reference_revision": "18f06f5d058184690f5975a243e5bcfcba2e89c4",
+      "reference_source_sha256": "f2518b9c277c50312280715e36eb79057f927ac1d9b98182854ca5af865ccab7"
+    },
+    {
+      "adaptation_limit": "Matching licensed reference; Cytoscape does not identify the original adaptation revision",
+      "credit_sha256": "fe735e6fc046dfe2c427486b560581ab68a96f508240da169c3545a3cebe3b1c",
+      "distributed_licence": "cytoscape-jquery-events--MIT.txt",
+      "end_source_line_exclusive": 12325,
+      "first_source_line": 12234,
+      "fragment_sha256": "e2534b0c1cf7ad191bb3776d77089fb649db0a240042007c8a4ae0562a2d8b3c",
+      "generated_probe_references": [
+        {
+          "references": 3,
+          "source_line": 12293
+        },
+        {
+          "references": 3,
+          "source_line": 12305
+        },
+        {
+          "references": 3,
+          "source_line": 12317
+        }
+      ],
+      "generated_references": 227,
+      "id": "cytoscape-jquery-events",
+      "licence_sha256": "44254c9a91a4647b9192584f17b2d27bf43696ba1ea16b0e88ac7bd6bf0780f1",
+      "mapped_source_lines": 63,
+      "reference_repository": "https://github.com/jquery/jquery",
+      "reference_revision": "91cd1587ed4a1d4f3834227e8eb3cc30cb385409",
+      "reference_source_sha256": "782abe207bcf86f976332603136a9423e20394413742714c46ea92b44c515429"
+    }
+  ],
+  "cytoscape_archive_sha256": "4155f863f4408d18bb637afb5808dff7840ca7361437067faf45bbe8c970e768",
+  "cytoscape_licence_sha256": "eb319c6e6f233607f71e8e2f450391751883cfc0eeb3ca7ef574c13d1d9c2203",
+  "cytoscape_mapped_source_sha256": "9ffbc8172ca3bd6723fba3513f96194f0e4c98225e00f380948f285869517803",
+  "mermaid_archive_sha256": "6ad2f42c3fc26bbf9e45cbb6d11898972573ea52b33a5f4ff51952899f950ffd",
+  "mermaid_map_sha256": "43cd977e8e0f351d6c47d31302c564f1c21fdc1e0be0d9e46370ee5e23cea004",
+  "schema": 1,
+  "scope": "Two conservative helper attributions, not complete Mermaid/Cytoscape notice closure or legal clearance",
+  "shipped_mermaid_sha256": "581ed7d74bd9048d0e3a91363927d72ef22942d7722546b27f7cc29e35390eb8"
+}

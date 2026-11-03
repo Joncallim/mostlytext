@@ -2,6 +2,100 @@
   "bomFormat": "CycloneDX",
   "components": [
     {
+      "bom-ref": "cytoscape-bezier-easing",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/gre/bezier-easing"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "Bezier easing helper credited to Gaetan Renaudeau (via Cytoscape/Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact"
+        }
+      ],
+      "type": "library",
+      "version": "Cytoscape 3.34.0; licensed reference v2.0.3"
+    },
+    {
+      "bom-ref": "cytoscape-jquery-events",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/jquery/jquery"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "jQuery-derived event object (via Cytoscape/Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact"
+        }
+      ],
+      "type": "library",
+      "version": "Cytoscape 3.34.0; licensed reference jQuery 1.11.0"
+    },
+    {
+      "bom-ref": "cytoscape-via-mermaid",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/cytoscape/cytoscape.js"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "Cytoscape own-code notice (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact"
+        }
+      ],
+      "purl": "pkg:npm/cytoscape@3.34.0",
+      "type": "library",
+      "version": "3.34.0"
+    },
+    {
       "bom-ref": "d2",
       "externalReferences": [
         {
@@ -1684,6 +1778,9 @@
   "dependencies": [
     {
       "dependsOn": [
+        "cytoscape-bezier-easing",
+        "cytoscape-jquery-events",
+        "cytoscape-via-mermaid",
         "d2",
         "d2-liberation-mono",
         "expat",
@@ -1751,7 +1848,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:c460ed02-521d-56dc-8248-ea89706cf404",
+  "serialNumber": "urn:uuid:ee480e17-519d-5c31-8209-0716cfd8455c",
   "specVersion": "1.5",
   "version": 1
 }

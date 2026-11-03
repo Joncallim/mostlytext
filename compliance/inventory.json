@@ -3,7 +3,7 @@
   "product": {
     "name": "MostlyText",
     "version": "1.0.0",
-    "note": "Release identity decided 2026-09-28 (planning/RELEASE_PATH.md \u00a74). The current development build is still MacDown 2 0.1.0 until #158/E17."
+    "note": "Release identity decided 2026-09-28 (planning/RELEASE_PATH.md \u00a74). This inventory targets the planned 1.0.0 release. The current development build is MostlyText 0.1.0 (1), with internal MacDown2.app packaging and exact release acceptance still tracked in #4/#14."
   },
   "first_party": {
     "licence": "MIT",
@@ -446,7 +446,7 @@
         }
       ],
       "open_items": [
-        "mermaid.min.js is a single-file bundle of the runtime dependencies listed in `nested` (from mermaid@11.17.2 package.json). Resolve their exact bundled versions from the mermaid v11.17.2 release lockfile, record each licence (dompurify is MPL-2.0 OR Apache-2.0; d3 is ISC; most others MIT) and add the required texts."
+        "Complete the remaining Mermaid nested-notice inventory from the shipped-source evidence: package texts/versions (including original resolution for the two content-matched candidates), Ralf Thenable and Framer/Koen spring review, Rough.js nested inputs, and unmapped/generated helpers. Cytoscape own-code, Bezier and jQuery-derived event MIT texts are now recorded separately; those scoped attributions do not complete the bundle audit or exact-artifact gate."
       ],
       "runtime_resources": [
         {
@@ -455,6 +455,91 @@
           "path": "MacDown2/Packages/MacDownKit/Sources/DiagramRendering/Resources/mermaid.min.js"
         }
       ]
+    },
+    {
+      "id": "cytoscape-via-mermaid",
+      "name": "Cytoscape own-code notice (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.34.0",
+      "upstream": "https://github.com/cytoscape/cytoscape.js",
+      "npm": "cytoscape@3.34.0",
+      "resolution": "exact",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright (c) 2016-2026, The Cytoscape Consortium."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/cytoscape--MIT.txt",
+          "sha256": "eb319c6e6f233607f71e8e2f450391751883cfc0eeb3ca7ef574c13d1d9c2203",
+          "upstream": "https://github.com/cytoscape/cytoscape.js",
+          "upstream_revision": "22716bfb75834b56fa6679648b0abb06f4ae691c",
+          "upstream_path": "LICENSE"
+        }
+      ],
+      "provenance": "verified",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/cytoscape-borrowed-attribution/mapping.json",
+      "notes": "The shipped Mermaid source map reaches the byte-identical Cytoscape 3.34.0 dist/cytoscape.esm.mjs package member. This carries its own-code MIT text; embedded borrowed-code attribution remains a separate audit and the Mermaid release item stays open."
+    },
+    {
+      "id": "cytoscape-bezier-easing",
+      "name": "Bezier easing helper credited to Gaetan Renaudeau (via Cytoscape/Mermaid)",
+      "kind": "attribution",
+      "version": "Cytoscape 3.34.0; licensed reference v2.0.3",
+      "upstream": "https://github.com/gre/bezier-easing",
+      "resolution": "exact",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright (c) 2014 Ga\u00ebtan Renaudeau"
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/cytoscape-bezier--MIT.txt",
+          "sha256": "32bfd1097d45b41ca6792bf07b389b26ee4045e7f7db28349f4199eef889c516",
+          "upstream": "https://github.com/gre/bezier-easing",
+          "upstream_revision": "18f06f5d058184690f5975a243e5bcfcba2e89c4",
+          "upstream_path": "LICENSE"
+        }
+      ],
+      "provenance": "verified",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/cytoscape-borrowed-attribution/mapping.json",
+      "notes": "Conservative attribution for Cytoscape's explicitly credited MIT Bezier generator. Actual generated Mermaid positions reach its calcBezier and getSlope code. The captured upstream reference supplies matching licensed source and the verbatim MIT text, not proof of the original adaptation revision or inclusion of the complete bezier-easing package. Other Mermaid nested notices remain open."
+    },
+    {
+      "id": "cytoscape-jquery-events",
+      "name": "jQuery-derived event object (via Cytoscape/Mermaid)",
+      "kind": "attribution",
+      "version": "Cytoscape 3.34.0; licensed reference jQuery 1.11.0",
+      "upstream": "https://github.com/jquery/jquery",
+      "resolution": "exact",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright 2014 jQuery Foundation and other contributors"
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/cytoscape-jquery-events--MIT.txt",
+          "sha256": "44254c9a91a4647b9192584f17b2d27bf43696ba1ea16b0e88ac7bd6bf0780f1",
+          "upstream": "https://github.com/jquery/jquery",
+          "upstream_revision": "91cd1587ed4a1d4f3834227e8eb3cc30cb385409",
+          "upstream_path": "MIT-LICENSE.txt"
+        }
+      ],
+      "provenance": "verified",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/cytoscape-borrowed-attribution/mapping.json",
+      "notes": "Conservative attribution for the event object Cytoscape explicitly credits to jQuery under MIT. Actual generated Mermaid positions reach the default/propagation/immediate-propagation setters. jQuery 1.11.0 is a matching licensed reference for the full text, not a proven original adaptation revision or a claim that the complete jQuery package ships. Other Mermaid nested notices remain open."
     },
     {
       "id": "katex-react-helpers",
