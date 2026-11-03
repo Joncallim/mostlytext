@@ -84,3 +84,16 @@ plus no attached sheet. Preserve every refusal, recovery-state and restored-text
 assertion. The no-window policy case continues returning before presentation.
 No global alert suppression, automatic response, test skip or timing change is
 introduced. All 600 app cases remain required in full combined qualification.
+
+The independent export-alert window is also Swift-owned rather than owned by
+an NSWindowController. Disable its AppKit release-on-close flag, preserving its
+explicit close and ARC lifetime; do not apply this fixture setting globally.
+
+## Retired-lifetime component fixture
+
+Diagnostic 41561585900 reproduces the same unanswered NSAlert initialization in
+WindowCloseRetiredLifetimeTests after recovery renewal. Apply the existing
+NSWindowDelegate request recorder to this component case too. Retain the real
+performClose, assert exactly one request/new lifetime/no attached sheet, restore
+the production delegate before cleanup, and preserve all persistence, session
+and relaunched-text assertions. Actual dirty sheet acceptance stays native.
