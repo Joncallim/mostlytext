@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "client": "gh version 2.97.0 (2026-07-31)",
+  "certificate_policy": {
+    "issuer": "https://token.actions.githubusercontent.com",
+    "subjectAlternativeName": "https://github.com/mermaid-js/mermaid/.github/workflows/release.yml@refs/heads/master",
+    "sourceRepositoryURI": "https://github.com/mermaid-js/mermaid",
+    "sourceRepositoryDigest": "293b1c153a6f94c3a4a1d9cd5eae4dde609f1ec4",
+    "sourceRepositoryIdentifier": "26066727",
+    "sourceRepositoryOwnerIdentifier": "57169982",
+    "runnerEnvironment": "github-hosted"
+  },
+  "verified_timestamps": [
+    {
+      "type": "Tlog",
+      "uri": "https://rekor.sigstore.dev",
+      "timestamp": "2026-08-19T17:04:45+08:00"
+    }
+  ],
+  "negative_controls": [
+    {
+      "case": "wrong-source",
+      "accepted": false,
+      "ghExit": 1,
+      "stage": "cryptographic/CLI policy verification"
+    },
+    {
+      "case": "wrong-workflow",
+      "accepted": false,
+      "ghExit": 1,
+      "stage": "cryptographic/CLI policy verification"
+    },
+    {
+      "case": "wrong-issuer",
+      "accepted": false,
+      "ghExit": 1,
+      "stage": "cryptographic/CLI policy verification"
+    },
+    {
+      "case": "altered-archive",
+      "accepted": false,
+      "ghExit": 1,
+      "stage": "cryptographic/CLI policy verification"
+    },
+    {
+      "case": "altered-signed-payload",
+      "accepted": false,
+      "ghExit": 1,
+      "stage": "cryptographic/CLI policy verification"
+    }
+  ],
+  "issuer_policy": "Explicitly compare issuer on the cryptographically verified certificate; do not infer it from the CLI returned wildcard issuer policy.",
+  "current_repository_id_check": {
+    "repository": "mermaid-js/mermaid",
+    "id": 26066727,
+    "owner_id": 57169982
+  }
+}

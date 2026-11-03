@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "scope": "verified publisher package provenance and declared build inputs; no independent rebuild or licence clearance",
+  "registry_attestation_url": "https://registry.npmjs.org/-/npm/v1/attestations/@mermaid-js%2fparser@1.2.1",
+  "bundle_sha256": "a46663f76e8c54546e68c8a734edca4bec200f0e39bd025e118a6fb562e9837e",
+  "verification_receipt_sha256": "72ef5fbabf4333b338ccc0cceb3702a7d0423fd0f4c47461a54a33cddff043a2",
+  "archive": {
+    "url": "https://registry.npmjs.org/@mermaid-js/parser/-/parser-1.2.1.tgz",
+    "sha256": "97eef1a4c37110e4836b6eb8dd6a348d989efb370a7672831df01042a7c323f4",
+    "sha512": "9f5d8da215779ab53250bda8f772201bf89f796f454f27899f7cc3c648706bc309f45c60dc740c940dd1886983ff752726f85eced9238d00230364f82e651ca7",
+    "mapped_chunks_verified": 32
+  },
+  "source_commit": "293b1c153a6f94c3a4a1d9cd5eae4dde609f1ec4",
+  "source_inputs": [
+    {
+      "path": ".github/workflows/release.yml",
+      "url": "https://raw.githubusercontent.com/mermaid-js/mermaid/293b1c153a6f94c3a4a1d9cd5eae4dde609f1ec4/.github/workflows/release.yml",
+      "sha256": "681edca80a6ac8e9fac937f03adf2dc334e07de64ad0573fad226b2ccde525ce"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "url": "https://raw.githubusercontent.com/mermaid-js/mermaid/293b1c153a6f94c3a4a1d9cd5eae4dde609f1ec4/pnpm-lock.yaml",
+      "sha256": "54024afe43a1dc1db26e01687e18f7b10f2e1b86dda6930279fccdab45d8307e"
+    },
+    {
+      "path": "package.json",
+      "url": "https://raw.githubusercontent.com/mermaid-js/mermaid/293b1c153a6f94c3a4a1d9cd5eae4dde609f1ec4/package.json",
+      "sha256": "85b0a3711c8cba13114194937840ade476db69ab1c9804bdee097ef0a7ea6d62"
+    },
+    {
+      "path": "packages/parser/package.json",
+      "url": "https://raw.githubusercontent.com/mermaid-js/mermaid/293b1c153a6f94c3a4a1d9cd5eae4dde609f1ec4/packages/parser/package.json",
+      "sha256": "131781c3d500d3c43453193dc3deeea281f8645d00831d85905180a6796e14ce"
+    },
+    {
+      "path": ".esbuild/build.ts",
+      "url": "https://raw.githubusercontent.com/mermaid-js/mermaid/293b1c153a6f94c3a4a1d9cd5eae4dde609f1ec4/.esbuild/build.ts",
+      "sha256": "a53c133aa5b41a17ad4f1784292e64559349ffe87c78ac66fedda3d288cc5217"
+    },
+    {
+      "path": "packages/parser/scripts/prepack.ts",
+      "url": "https://raw.githubusercontent.com/mermaid-js/mermaid/293b1c153a6f94c3a4a1d9cd5eae4dde609f1ec4/packages/parser/scripts/prepack.ts",
+      "sha256": "9755fa9d0972042c400c99350bec82b714fc0a709c99915926f9110750e32434"
+    }
+  ],
+  "declared_build_inputs": {
+    "langium": "4.2.1",
+    "vscode-uri": "3.1.0",
+    "root_esbuild": "0.25.12"
+  },
+  "compiler_licence": {
+    "archive_url": "https://registry.npmjs.org/esbuild/-/esbuild-0.25.12.tgz",
+    "archive_sha256": "227584145829e5c4782734b3fb7b91b49c6aa12876d6cf070e6a3d9d4de543f9",
+    "publisher_lock_integrity": "sha512-bbPBYYrtZbkt6Os6FiTLCTFxvq4tt3JKall1vRwshA3fdVztsLAatFaZobhkBC8/BrPetoa0oksYoKXoG4ryJg==",
+    "member": "package/LICENSE.md",
+    "sha256": "b40ec5baec7bb34fa5b1c09521fa3cd52d5fad7adafed74932a2010d3612a681",
+    "equals_distributed_runtime_mit_text": true
+  },
+  "unchanged_scope": [
+    "raw content-only mapping and candidate labels",
+    "runtime and selected notices",
+    "remaining 3528 parser positions",
+    "six strict release predicates"
+  ]
+}
