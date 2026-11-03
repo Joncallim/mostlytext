@@ -110,7 +110,8 @@ enum ExportJournalStorage {
         }
     }
 
-    static func checkCount(_ descriptor: Int32) throws {
+    static func checkCount(_ descriptor: Int32, reserving: Int = 1) throws {
+        guard (1 ... 2).contains(reserving) else { throw ExportError.unsafePublication }
         // A fresh open file description avoids readdir offsets shared by dup.
         let copied = openat(descriptor, ".", O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)
         guard copied >= 0 else { throw Filesystem.posixFailure() }
@@ -131,7 +132,7 @@ enum ExportJournalStorage {
                 continue
             }
             count += 1
-            guard count < 1024 else { throw ExportError.unsafePublication }
+            guard count <= 1024 - reserving else { throw ExportError.unsafePublication }
         }
     }
 

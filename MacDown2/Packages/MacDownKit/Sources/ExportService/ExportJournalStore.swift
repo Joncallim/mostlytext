@@ -59,6 +59,7 @@ final class ExportJournalStore {
             record = ExportJournalRecord(binding: binding)
         }
         try validate(record)
+        try ExportJournalStorage.checkCount(directory.descriptor, reserving: previous == nil ? 2 : 1)
     }
 
     func begin(priorDigest: Data?, desired: Data, name: String, receipt: ExportOwnedFileReceipt) throws {
@@ -109,7 +110,7 @@ final class ExportJournalStore {
     private func save(_ next: ExportJournalRecord) throws {
         try validate(next)
         try checkCurrent()
-        try ExportJournalStorage.checkCount(directory.descriptor)
+        try ExportJournalStorage.checkCount(directory.descriptor, reserving: previous == nil ? 2 : 1)
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]
         let payload = try encoder.encode(next)

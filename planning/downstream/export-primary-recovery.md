@@ -115,7 +115,9 @@ against arbitrary hostile same-UID writers.
 ## Budgets, interoperability, accessibility and localization
 
 Each envelope is at most 64 KiB; each private directory has at most 1024 entries,
-including unknown/interrupted private checkpoints. The ceiling does not limit
+including unknown/interrupted private checkpoints. Admission reserves room for
+the pending record and replacement checkpoint before public staging; recovery
+of an existing record needs only its replacement slot. The ceiling does not limit
 successfully completed user outputs: idle records are retired.
 Primary hashing streams in 64 KiB chunks up to the unchanged final-HTML ceiling,
 with one growth-probe byte. Only one pending primary exists per bound output.

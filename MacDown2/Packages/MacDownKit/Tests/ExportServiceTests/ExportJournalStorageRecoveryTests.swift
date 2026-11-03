@@ -187,6 +187,33 @@ struct ExportJournalStorageRecoveryTests {
         #expect(Set(names) == Set(["producer.key", "producer.lock"]))
     }
 
+    @Test(arguments: [1020, 1021])
+    func checkpointCapacityIsAdmittedBeforePublicStaging(unknownFiles: Int) throws {
+        let fixture = try Fixture()
+        defer { fixture.cleanup() }
+        do { _ = try fixture.store() }
+        try fixture.old.write(to: fixture.primary)
+        for index in 0 ..< unknownFiles {
+            try Data().write(to: fixture.location.directory.appendingPathComponent("unknown-\(index)"))
+        }
+        let target = ExportTarget.html(url: fixture.primary, mode: .selfContained)
+        if unknownFiles == 1020 {
+            _ = try ExportFileWriter.writeHTML(ExportPublicationTestSupport.prepared(), to: target,
+                                               recovery: fixture.location)
+            #expect(try Data(contentsOf: fixture.primary) != fixture.old)
+        } else {
+            #expect(throws: ExportError.self) {
+                _ = try ExportFileWriter.writeHTML(ExportPublicationTestSupport.prepared(), to: target,
+                                                   recovery: fixture.location)
+            }
+            #expect(try Data(contentsOf: fixture.primary) == fixture.old)
+        }
+        #expect(try FileManager.default.contentsOfDirectory(atPath: fixture.location.directory.path).count
+            == unknownFiles + 2)
+        #expect(try !FileManager.default.contentsOfDirectory(atPath: fixture.output.path)
+            .contains { $0.hasPrefix(".mt-") })
+    }
+
     @Test func replacingTheProducerKeyMidOperationCannotCommitAReceipt() throws {
         let fixture = try Fixture()
         defer { fixture.cleanup() }
