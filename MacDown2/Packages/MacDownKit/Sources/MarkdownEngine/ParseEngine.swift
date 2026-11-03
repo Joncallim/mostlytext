@@ -115,8 +115,7 @@ public actor ParseEngine: ParseExecuting {
             )
         }
 
-        // Only `blockDirectives` maps to a swift-markdown `ParseOption` in 0.8.0;
-        // the remaining GFM features are always enabled together.
+        // swift-markdown 0.8.0 always enables GFM; only directives are optional.
         var parseOptions: ParseOptions = []
         if options.blockDirectives {
             parseOptions.insert(.parseBlockDirectives)
@@ -125,7 +124,16 @@ public actor ParseEngine: ParseExecuting {
 
         let fallbackRange = 1 ... max(1, sourceMap.lineCount)
         let converter = BlockConverter(bodyLineOffset: bodyLineOffset)
-        let result = converter.convert(document, parentRange: fallbackRange)
+        var result = converter.convert(document, parentRange: fallbackRange)
+        if options.blockDirectives {
+            result = DirectiveSourceCoverage.preservingVisibleContent(
+                result,
+                body: bodyText,
+                offset: bodyLineOffset
+            ) {
+                converter.convert(Document(parsing: bodyText), parentRange: fallbackRange)
+            }
+        }
 
         return MarkdownDocument(
             body: bodyText,
@@ -217,11 +225,6 @@ public actor ParseEngine: ParseExecuting {
 
 // MARK: - Block conversion
 
-private struct ConversionResult {
-    let blocks: [MarkdownBlock]
-    let headings: [HeadingItem]
-}
-
 private struct BlockConverter {
     /// Nesting deeper than this is never authored by hand. The converted tree is
     /// a nested value type that every consumer walks — and whose release —
@@ -231,7 +234,7 @@ private struct BlockConverter {
 
     let bodyLineOffset: Int
 
-    func convert(_ document: Document, parentRange: ClosedRange<Int>) -> ConversionResult {
+    func convert(_ document: Document, parentRange: ClosedRange<Int>) -> MarkdownConversionResult {
         var blocks: [MarkdownBlock] = []
         var headings: [HeadingItem] = []
         let children = document.children.compactMap { $0 as? BlockMarkup }
@@ -244,7 +247,7 @@ private struct BlockConverter {
             blocks.append(result.block)
             headings.append(contentsOf: result.headings)
         }
-        return ConversionResult(blocks: blocks, headings: headings)
+        return MarkdownConversionResult(blocks: blocks, headings: headings)
     }
 
     func convert(
