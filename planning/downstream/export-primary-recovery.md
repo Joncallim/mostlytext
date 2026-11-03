@@ -72,7 +72,10 @@ The record name is SHA-256 of an unambiguous encoding of parent device, inode,
 birth time and exact UTF-8 primary leaf. Records also include that binding.
 A pending record contains operation ID, prior primary digest (or absence),
 desired digest, primary scratch name/receipt, and a chosen quarantine name.
-An idle record retains only the binding. Records are authenticated with
+An idle checkpoint retains only the binding and is durably written before its
+owned record is quarantined/verified/retired. Successful exports therefore do not
+accumulate private per-output records. A crash may preserve an inert private
+checkpoint/quarantine; it grants no new output cleanup authority. Records are authenticated with
 HMAC-SHA256 (a keyed message-authentication code) over a versioned bounded payload
 before the payload is decoded. Receipt reconstruction requires the authenticated
 loader's capability. The storage root's physical pathname is not signed, so
@@ -83,12 +86,17 @@ moving the whole trusted installation does not invalidate its key and records.
 `idle -> staged receipt durable -> primary promoted -> idle`.
 Recovery: `pending -> primary-state check -> quarantine durable -> rename without
 replacement -> verify quarantined object -> unlink -> idle`.
+Failure cleanup uses the same journal, without a memory-only quarantine fallback.
 The quarantine name is written before rename. A crash at either side of rename
-can therefore be reconciled. A mismatch restores without replacement where
+can therefore be reconciled. A mismatch during live retirement restores without replacement where
 possible; an occupied original path preserves both objects and reports recovery.
-A crash before a complete receipt is durable remains unknown residue and is
+On restart an unknown quarantine is preserved: the planned name alone cannot
+prove that this process performed its rename. A crash before a complete receipt
+is durable remains unknown residue and is
 refused by existing retention checks. No inferred ownership fills this gap.
 
+Initial key provisioning completes its tiny write/sync critical section even if
+cancellation arrives, so ordinary cancellation cannot leave an empty key.
 The synchronous writer performs no MainActor/UI work. Cancellation remains
 checked before publication; recovery checkpoints/removal complete as a small
 bounded critical section. No cancellation exception after successful primary
@@ -104,7 +112,9 @@ against arbitrary hostile same-UID writers.
 
 ## Budgets, interoperability, accessibility and localization
 
-Each envelope is at most 64 KiB; each private directory has at most 1024 entries.
+Each envelope is at most 64 KiB; each private directory has at most 1024 entries,
+including unknown/interrupted private checkpoints. The ceiling does not limit
+successfully completed user outputs: idle records are retired.
 Primary hashing streams in 64 KiB chunks up to the unchanged final-HTML ceiling,
 with one growth-probe byte. Only one pending primary exists per bound output.
 The journal stores hashes and filesystem identities, never source/HTML text.

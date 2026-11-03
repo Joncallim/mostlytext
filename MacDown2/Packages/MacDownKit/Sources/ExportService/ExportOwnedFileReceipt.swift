@@ -2,18 +2,30 @@ import CryptoKit
 import Darwin
 import Foundation
 
-/// Minted only from known staging bytes and their observed object. Reading a
-/// pathname or decoding external metadata does not establish this authority.
+/// Minted from known staging bytes and their observed object, or restored by
+/// the authenticated private producer store. A pathname/public marker alone
+/// never establishes removal authority.
 struct ExportOwnedFileReceipt {
     typealias Stamp = ExportPublicationFilesystem.Stamp
     let stamp: Stamp
-    let digest: SHA256.Digest
+    let digest: Data
 
     init(bytes: Data, stamp: Stamp) throws {
         guard stamp.kind == mode_t(S_IFREG), stamp.size == bytes.count,
               bytes.count <= ExportResourceBudget.maxFinalHTMLUTF8Bytes else { throw ExportError.unsafePublication }
         self.stamp = stamp
-        digest = SHA256.hash(data: bytes)
+        digest = Data(SHA256.hash(data: bytes))
+    }
+
+    /// An archived model alone cannot authorize removal. This capability is
+    /// created only by the private store after envelope authentication.
+    init(authenticated: ExportJournalStore.AuthenticatedReceipt) throws {
+        let archived = authenticated.value
+        guard archived.stamp.kind == mode_t(S_IFREG), archived.stamp.size >= 0,
+              archived.stamp.size <= ExportResourceBudget.maxFinalHTMLUTF8Bytes,
+              archived.digest.count == SHA256.byteCount else { throw ExportError.unsafePublication }
+        stamp = archived.stamp
+        digest = archived.digest
     }
 
     func matchesMetadata(_ actual: Stamp) -> Bool {
@@ -47,10 +59,10 @@ enum ExportReceiptInspection {
         var final = stat()
         guard fstat(descriptor, &final) == 0 else { throw Filesystem.posixFailure() }
         let named = try Filesystem.childStamp(name, in: directory)
-        return Filesystem.Stamp(final) == observed && receipt.digest == digest && named == observed
+        return Filesystem.Stamp(final) == observed && receipt.digest == Data(digest) && named == observed
     }
 
-    private static func hash(_ descriptor: Int32, expectedBytes: Int) throws -> SHA256.Digest {
+    static func hash(_ descriptor: Int32, expectedBytes: Int) throws -> SHA256.Digest {
         var hasher = SHA256()
         var buffer = [UInt8](repeating: 0, count: 64 * 1024)
         var total = 0

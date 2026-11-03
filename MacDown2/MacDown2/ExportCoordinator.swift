@@ -31,6 +31,10 @@ struct ExportCoordinator {
     private let themeController: ThemeController
     private let appSettings: AppSettingsModel
 
+    var recoveryLocation: ExportRecoveryLocation? {
+        coordinator.exportRecoveryLocation
+    }
+
     var documentProtections: ExportDocumentProtectionRegistry {
         coordinator.exportDocumentProtections
     }

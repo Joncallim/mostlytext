@@ -35,6 +35,7 @@ public enum ExportError: Error, LocalizedError, CustomStringConvertible {
     case destinationChanged
     case destinationIsOpenDocument
     case publicationRecoveryRequired(URL)
+    case recoveryStorageUnavailable(URL)
 
     public var description: String {
         switch self {
@@ -60,6 +61,8 @@ public enum ExportError: Error, LocalizedError, CustomStringConvertible {
             return String(localized: "Export destination is invalid: \(path)", bundle: .module)
         case let .budgetExceeded(detail):
             return String(localized: "This document is too large to export: \(detail).", bundle: .module)
+        case let .recoveryStorageUnavailable(url):
+            return String(localized: "Export recovery storage is unavailable or in use: \(url.path)", bundle: .module)
         case let .publicationRecoveryRequired(url):
             return String(localized: "An export staging file needs recovery at: \(url.path)", bundle: .module)
         case .unsafePublication:
@@ -121,6 +124,14 @@ public enum ExportError: Error, LocalizedError, CustomStringConvertible {
             String(localized: "Choose a different destination folder.", bundle: .module)
         case .budgetExceeded:
             String(localized: "Split the document, or reduce the size of the images it references.", bundle: .module)
+        case .recoveryStorageUnavailable:
+            String(
+                localized: """
+                Finish other exports and try again. If this continues, \
+                preserve the recovery folder and contact support.
+                """,
+                bundle: .module
+            )
         case .publicationRecoveryRequired:
             String(localized: "Preserve that file and choose another export destination.", bundle: .module)
         case .unsafePublication, .destinationChanged, .destinationIsOpenDocument:

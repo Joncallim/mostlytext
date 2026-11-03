@@ -12,17 +12,19 @@ enum ExportFileWriter {
     static func writeHTML(_ prepared: PreparedExportDocument, to target: ExportTarget,
                           limit: Int = ExportResourceBudget.maxFinalHTMLUTF8Bytes,
                           lease: ExportLifetimeLease = ExportLifetimeLease(),
-                          hooks: ExportPublicationHooks = .init()) throws -> ExportResult {
+                          hooks: ExportPublicationHooks = .init(),
+                          recovery: ExportRecoveryLocation? = nil) throws -> ExportResult {
         let input = try assemble(prepared, to: target, limit: limit)
-        return try ExportFilePublication.write(input, lease: lease, hooks: hooks)
+        return try ExportFilePublication.write(input, lease: lease, hooks: hooks, recovery: recovery)
     }
 
     static func writeHTML(
         _ prepared: PreparedExportDocument, to target: ExportTarget,
-        admission: ExportDestinationAdmission, lease: ExportLifetimeLease
+        admission: ExportDestinationAdmission, lease: ExportLifetimeLease,
+        recovery: ExportRecoveryLocation? = nil
     ) throws -> ExportResult {
         let input = try assemble(prepared, to: target, limit: ExportResourceBudget.maxFinalHTMLUTF8Bytes)
-        return try ExportFilePublication.write(input, lease: lease, admission: admission)
+        return try ExportFilePublication.write(input, lease: lease, admission: admission, recovery: recovery)
     }
 
     private static func assemble(
@@ -59,12 +61,13 @@ enum ExportFileWriter {
     static func writeValidatedHTML(
         _ validated: ValidatedExportHTML, lease: ExportLifetimeLease,
         afterCompanionDirectoryOpened: (() -> Void)? = nil,
-        beforePromotion: (() -> Void)? = nil
+        beforePromotion: (() -> Void)? = nil,
+        recovery: ExportRecoveryLocation? = nil
     ) throws -> ExportResult {
         try ValidatedFilePublication.write(
             validated, lease: lease,
             afterCompanionDirectoryOpened: afterCompanionDirectoryOpened,
-            beforePromotion: beforePromotion
+            beforePromotion: beforePromotion, recovery: recovery
         )
     }
 }

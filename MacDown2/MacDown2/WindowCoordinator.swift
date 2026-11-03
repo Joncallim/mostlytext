@@ -49,6 +49,7 @@ final class WindowCoordinator {
     let recoveryBuffer: RecoveryBuffer
     let snippetStore: SnippetStore
     let commandsDirectory: URL
+    let exportRecoveryLocation: ExportRecoveryLocation?
     let themeController: ThemeController
     let grammarRegistry: GrammarRegistry
     let fileTreePreferences: FileTreePreferences
@@ -141,7 +142,8 @@ final class WindowCoordinator {
         appSettings: AppSettingsModel,
         workspaceStateStore: any WorkspaceStateStoring = WorkspaceStateStore(),
         snippetStore: SnippetStore = SnippetStore(),
-        commandsDirectory: URL = TextFilterCommandDiscovery.commandsDirectory
+        commandsDirectory: URL = TextFilterCommandDiscovery.commandsDirectory,
+        exportRecoveryLocation: ExportRecoveryLocation? = nil
     ) {
         self.sessionStore = sessionStore
         self.panelProvider = panelProvider
@@ -155,6 +157,7 @@ final class WindowCoordinator {
         self.workspaceStateStore = workspaceStateStore
         self.snippetStore = snippetStore
         self.commandsDirectory = commandsDirectory
+        self.exportRecoveryLocation = exportRecoveryLocation
         launchSession = sessionStore.loadSession()
     }
 
