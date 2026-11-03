@@ -88,7 +88,7 @@ It is not approved as complete corresponding source or published.
 
 [The current license-window contract](../compliance/LICENCES_UI.md) replaces stale
 unstarted/Textual instructions with the actual native plain-text implementation
-and explicitly retains the absent original Help-menu integration requirement.
+and retains the original Help-menu requirement, implemented in the later scoped fix below.
 [Remaining engineering ownership](ENGINEERING_REMAINDER.md) names unfinished
 implementation, diagnosis, native acceptance and release/publication work for all
 17 open issues. Completing these documentation and notice units does not close
@@ -105,3 +105,11 @@ documented assembly, not a fabricated upstream LICENSE file. The scoped full-tex
 linkage gap is resolved; other Mermaid embedded/generated origins and all six
 strict failures remain. Native, legal-clearance and signed-artifact claims are
 not inferred from this notice correction.
+
+## License Help entry implementation
+
+The original LC-08 Help-menu entry now opens the same licenses scene as About
+and the application menu, with the existing catalog title and startup admission.
+No separate text corpus or fallback is introduced. Genuine protected-account
+menu/window/keyboard/VoiceOver/localization and final signed-resource acceptance
+remain open; source implementation does not close the native journey or #14.
