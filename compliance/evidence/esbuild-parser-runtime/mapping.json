@@ -1,0 +1,37 @@
+{
+  "classified_runtime_preamble_references": 452,
+  "complete_embedded_attribution": false,
+  "emitting_version_proved": false,
+  "helpers": [
+    {
+      "body_sha256": "68d41845f337bce156b0d5b8d84d72e2677831c39ea1a8db172fe597be28b7bc",
+      "generated_body_probe_references": 20,
+      "generated_references": 32,
+      "helper": "commonjs",
+      "normalized_token_sha256": "5560b8846f75a96f69848e07cb732b8c8363e263112de0e7f434df3329998e4a",
+      "reference_body_sha256": "eb01121b79048c6f1206a86395182c155bb6d20c053184be788cd05dff803b7b",
+      "source_end_line_exclusive": 14,
+      "source_first_line": 11
+    },
+    {
+      "body_sha256": "11686e9ebd8014d00fd61648d9b92e95d30eeced0a5d74e5f27cef1221bab537",
+      "generated_body_probe_references": 3,
+      "generated_references": 24,
+      "helper": "exports",
+      "normalized_token_sha256": "44986f0ddfa795113853f96b8de98f05801585e19f2368e125f01205a5dad971",
+      "reference_body_sha256": "f61704dab6983034edae502a9b785a256b8eca692a16436843a9394d4085ee92",
+      "source_end_line_exclusive": 18,
+      "source_first_line": 14
+    }
+  ],
+  "id": "esbuild-parser-runtime",
+  "license_sha256": "b40ec5baec7bb34fa5b1c09521fa3cd52d5fad7adafed74932a2010d3612a681",
+  "original_unassociated_parser_positions": 3980,
+  "parser_archive_sha256": "97eef1a4c37110e4836b6eb8dd6a348d989efb370a7672831df01042a7c323f4",
+  "parser_chunk_sha256": "5c83305b04a62463567bdf6d82d9ba9dfc3795e516d8cc848e6981504af48068",
+  "reference_revision": "2025c9ff6ab15ba6b0f9d074fd732250cc46e4a3",
+  "reference_source_sha256": "a23de38cb7e78582039ad707b4625dd1f298f15fa000d6f52f6eb6cb08e1e79b",
+  "remaining_unassociated_positions_not_classified_here": 3528,
+  "schema": 1,
+  "shipped_bundle_sha256": "581ed7d74bd9048d0e3a91363927d72ef22942d7722546b27f7cc29e35390eb8"
+}
