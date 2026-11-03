@@ -10,6 +10,15 @@
 > not a current claim that those scoped notices are still absent.
 
 
+> Later package-text integration — 3 November 2026: all 74 mapped package records
+> now have complete selected distributed texts (including the existing Cytoscape
+> notice). Two remain qualified content-matched references. Four Rough.js build
+> input notices are also registered. See [the current package checkpoint](../mermaid-package-notices/README.md)
+> and [source-build checkpoint](../nested-build-attribution/README.md). The original
+> capture-only claims/counts below remain historical; embedded/generated code and
+> origin ambiguities are not declared complete.
+
+
 ## Owner summary
 
 The shipped Mermaid bundle is now connected to the official generated source

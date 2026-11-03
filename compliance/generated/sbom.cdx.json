@@ -141,6 +141,502 @@
       "version": "0.1.33"
     },
     {
+      "bom-ref": "d2-build-github.com-alecthomas-chroma-v2",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/alecthomas/chroma/v2"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "github.com/alecthomas/chroma/v2 (D2 publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input v2.14.0"
+    },
+    {
+      "bom-ref": "d2-build-github.com-andybalholm-brotli",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/andybalholm/brotli"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "github.com/andybalholm/brotli (D2 publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input v1.2.0"
+    },
+    {
+      "bom-ref": "d2-build-github.com-andybalholm-cascadia",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/andybalholm/cascadia"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "BSD-3-Clause"
+        }
+      ],
+      "name": "github.com/andybalholm/cascadia (D2 publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input v1.3.2"
+    },
+    {
+      "bom-ref": "d2-build-github.com-dlclark-regexp2",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/dlclark/regexp2"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "github.com/dlclark/regexp2 (D2 publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input v1.11.4"
+    },
+    {
+      "bom-ref": "d2-build-github.com-golang-freetype",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/golang/freetype"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "FTL"
+        }
+      ],
+      "name": "github.com/golang/freetype (D2 publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input v0.0.0-20170609003504-e2365dfdc4a0"
+    },
+    {
+      "bom-ref": "d2-build-github.com-lucasb-eyer-go-colorful",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/lucasb-eyer/go-colorful"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "github.com/lucasb-eyer/go-colorful (D2 publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input v1.2.0"
+    },
+    {
+      "bom-ref": "d2-build-github.com-mazznoer-csscolorparser",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/mazznoer/csscolorparser"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "github.com/mazznoer/csscolorparser (D2 publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input v0.1.5"
+    },
+    {
+      "bom-ref": "d2-build-github.com-puerkitobio-goquery",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/PuerkitoBio/goquery"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "BSD-3-Clause"
+        }
+      ],
+      "name": "github.com/PuerkitoBio/goquery (D2 publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input v1.10.0"
+    },
+    {
+      "bom-ref": "d2-build-github.com-rivo-uniseg",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/rivo/uniseg"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "github.com/rivo/uniseg (D2 publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input v0.4.7"
+    },
+    {
+      "bom-ref": "d2-build-github.com-yuin-goldmark",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/yuin/goldmark"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "github.com/yuin/goldmark (D2 publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input v1.7.4"
+    },
+    {
+      "bom-ref": "d2-build-golang.org-x-exp",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://golang.org/x/exp"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "BSD-3-Clause"
+        }
+      ],
+      "name": "golang.org/x/exp (D2 publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input v0.0.0-20240909161429-701f63a606c0"
+    },
+    {
+      "bom-ref": "d2-build-golang.org-x-image",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://golang.org/x/image"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "BSD-3-Clause"
+        }
+      ],
+      "name": "golang.org/x/image (D2 publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input v0.20.0"
+    },
+    {
+      "bom-ref": "d2-build-golang.org-x-net",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://golang.org/x/net"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "BSD-3-Clause"
+        }
+      ],
+      "name": "golang.org/x/net (D2 publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input v0.35.0"
+    },
+    {
+      "bom-ref": "d2-build-golang.org-x-text",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://golang.org/x/text"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "BSD-3-Clause"
+        }
+      ],
+      "name": "golang.org/x/text (D2 publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input v0.22.0"
+    },
+    {
+      "bom-ref": "d2-build-golang.org-x-xerrors",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://golang.org/x/xerrors"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "BSD-3-Clause"
+        }
+      ],
+      "name": "golang.org/x/xerrors (D2 publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input v0.0.0-20240903120638-7835f813f4da"
+    },
+    {
+      "bom-ref": "d2-build-oss.terrastruct.com-util-go",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://oss.terrastruct.com/util-go"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "oss.terrastruct.com/util-go (D2 publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input v0.0.0-20250213174338-243d8661088a"
+    },
+    {
       "bom-ref": "d2-liberation-mono",
       "externalReferences": [
         {
@@ -402,6 +898,2340 @@
       "version": "11.17.2"
     },
     {
+      "bom-ref": "mermaid-package-braintree-sanitize-url-7.1.2",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/@braintree%2Fsanitize-url/7.1.2"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "@braintree/sanitize-url (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/%40braintree/sanitize-url@7.1.2",
+      "type": "library",
+      "version": "7.1.2"
+    },
+    {
+      "bom-ref": "mermaid-package-chevrotain-11.1.2",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/chevrotain/11.1.2"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "Apache-2.0"
+        }
+      ],
+      "name": "chevrotain (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/chevrotain@11.1.2",
+      "type": "library",
+      "version": "11.1.2"
+    },
+    {
+      "bom-ref": "mermaid-package-chevrotain-allstar-0.3.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/chevrotain-allstar/0.3.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "chevrotain-allstar (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/chevrotain-allstar@0.3.1",
+      "type": "library",
+      "version": "0.3.1"
+    },
+    {
+      "bom-ref": "mermaid-package-chevrotain-gast-11.1.2",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/@chevrotain%2Fgast/11.1.2"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "Apache-2.0"
+        }
+      ],
+      "name": "@chevrotain/gast (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/%40chevrotain/gast@11.1.2",
+      "type": "library",
+      "version": "11.1.2"
+    },
+    {
+      "bom-ref": "mermaid-package-chevrotain-regexp-to-ast-11.1.2",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/@chevrotain%2Fregexp-to-ast/11.1.2"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "Apache-2.0"
+        }
+      ],
+      "name": "@chevrotain/regexp-to-ast (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/%40chevrotain/regexp-to-ast@11.1.2",
+      "type": "library",
+      "version": "11.1.2"
+    },
+    {
+      "bom-ref": "mermaid-package-chevrotain-utils-11.1.2",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/@chevrotain%2Futils/11.1.2"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "Apache-2.0"
+        }
+      ],
+      "name": "@chevrotain/utils (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/%40chevrotain/utils@11.1.2",
+      "type": "library",
+      "version": "11.1.2"
+    },
+    {
+      "bom-ref": "mermaid-package-cose-base-1.0.3",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/cose-base/1.0.3"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "cose-base (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/cose-base@1.0.3",
+      "type": "library",
+      "version": "1.0.3"
+    },
+    {
+      "bom-ref": "mermaid-package-cose-base-2.2.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/cose-base/2.2.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "cose-base (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/cose-base@2.2.0",
+      "type": "library",
+      "version": "2.2.0"
+    },
+    {
+      "bom-ref": "mermaid-package-cytoscape-cose-bilkent-4.1.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/cytoscape-cose-bilkent/4.1.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "cytoscape-cose-bilkent (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/cytoscape-cose-bilkent@4.1.0",
+      "type": "library",
+      "version": "4.1.0"
+    },
+    {
+      "bom-ref": "mermaid-package-cytoscape-fcose-2.2.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/cytoscape-fcose/2.2.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "cytoscape-fcose (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/cytoscape-fcose@2.2.0",
+      "type": "library",
+      "version": "2.2.0"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-7.9.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3/7.9.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3 (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3@7.9.0",
+      "type": "library",
+      "version": "7.9.0"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-array-2.12.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-array/2.12.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "BSD-3-Clause"
+        }
+      ],
+      "name": "d3-array (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-array@2.12.1",
+      "type": "library",
+      "version": "2.12.1"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-array-3.2.4",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-array/3.2.4"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-array (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-array@3.2.4",
+      "type": "library",
+      "version": "3.2.4"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-axis-3.0.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-axis/3.0.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-axis (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-axis@3.0.0",
+      "type": "library",
+      "version": "3.0.0"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-brush-3.0.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-brush/3.0.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-brush (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-brush@3.0.0",
+      "type": "library",
+      "version": "3.0.0"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-chord-3.0.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-chord/3.0.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-chord (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-chord@3.0.1",
+      "type": "library",
+      "version": "3.0.1"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-color-3.1.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-color/3.1.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-color (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-color@3.1.0",
+      "type": "library",
+      "version": "3.1.0"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-contour-4.0.2",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-contour/4.0.2"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-contour (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-contour@4.0.2",
+      "type": "library",
+      "version": "4.0.2"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-delaunay-6.0.4",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-delaunay/6.0.4"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-delaunay (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-delaunay@6.0.4",
+      "type": "library",
+      "version": "6.0.4"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-dispatch-3.0.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-dispatch/3.0.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-dispatch (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-dispatch@3.0.1",
+      "type": "library",
+      "version": "3.0.1"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-drag-3.0.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-drag/3.0.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-drag (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-drag@3.0.0",
+      "type": "library",
+      "version": "3.0.0"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-dsv-3.0.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-dsv/3.0.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-dsv (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-dsv@3.0.1",
+      "type": "library",
+      "version": "3.0.1"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-ease-3.0.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-ease/3.0.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "BSD-3-Clause"
+        }
+      ],
+      "name": "d3-ease (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-ease@3.0.1",
+      "type": "library",
+      "version": "3.0.1"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-fetch-3.0.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-fetch/3.0.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-fetch (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-fetch@3.0.1",
+      "type": "library",
+      "version": "3.0.1"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-force-3.0.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-force/3.0.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-force (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-force@3.0.0",
+      "type": "library",
+      "version": "3.0.0"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-format-3.1.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-format/3.1.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-format (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-format@3.1.0",
+      "type": "library",
+      "version": "3.1.0"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-geo-3.1.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-geo/3.1.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-geo (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-geo@3.1.1",
+      "type": "library",
+      "version": "3.1.1"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-hierarchy-3.1.2",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-hierarchy/3.1.2"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-hierarchy (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-hierarchy@3.1.2",
+      "type": "library",
+      "version": "3.1.2"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-interpolate-3.0.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-interpolate/3.0.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-interpolate (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-interpolate@3.0.1",
+      "type": "library",
+      "version": "3.0.1"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-path-1.0.9",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-path/1.0.9"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "BSD-3-Clause"
+        }
+      ],
+      "name": "d3-path (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-path@1.0.9",
+      "type": "library",
+      "version": "1.0.9"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-path-3.1.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-path/3.1.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-path (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-path@3.1.0",
+      "type": "library",
+      "version": "3.1.0"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-polygon-3.0.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-polygon/3.0.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-polygon (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-polygon@3.0.1",
+      "type": "library",
+      "version": "3.0.1"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-quadtree-3.0.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-quadtree/3.0.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-quadtree (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-quadtree@3.0.1",
+      "type": "library",
+      "version": "3.0.1"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-random-3.0.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-random/3.0.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-random (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-random@3.0.1",
+      "type": "library",
+      "version": "3.0.1"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-sankey-0.12.3",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-sankey/0.12.3"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "BSD-3-Clause"
+        }
+      ],
+      "name": "d3-sankey (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-sankey@0.12.3",
+      "type": "library",
+      "version": "0.12.3"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-scale-4.0.2",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-scale/4.0.2"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-scale (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-scale@4.0.2",
+      "type": "library",
+      "version": "4.0.2"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-scale-chromatic-3.1.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-scale-chromatic/3.1.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-scale-chromatic (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-scale-chromatic@3.1.0",
+      "type": "library",
+      "version": "3.1.0"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-selection-3.0.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-selection/3.0.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-selection (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-selection@3.0.0",
+      "type": "library",
+      "version": "3.0.0"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-shape-1.3.7",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-shape/1.3.7"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "BSD-3-Clause"
+        }
+      ],
+      "name": "d3-shape (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-shape@1.3.7",
+      "type": "library",
+      "version": "1.3.7"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-shape-3.2.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-shape/3.2.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-shape (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-shape@3.2.0",
+      "type": "library",
+      "version": "3.2.0"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-time-3.1.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-time/3.1.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-time (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-time@3.1.0",
+      "type": "library",
+      "version": "3.1.0"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-time-format-4.1.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-time-format/4.1.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-time-format (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-time-format@4.1.0",
+      "type": "library",
+      "version": "4.1.0"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-timer-3.0.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-timer/3.0.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-timer (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-timer@3.0.1",
+      "type": "library",
+      "version": "3.0.1"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-transition-3.0.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-transition/3.0.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-transition (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-transition@3.0.1",
+      "type": "library",
+      "version": "3.0.1"
+    },
+    {
+      "bom-ref": "mermaid-package-d3-zoom-3.0.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/d3-zoom/3.0.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "d3-zoom (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/d3-zoom@3.0.0",
+      "type": "library",
+      "version": "3.0.0"
+    },
+    {
+      "bom-ref": "mermaid-package-dagre-d3-es-7.0.14",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/dagre-d3-es/7.0.14"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "dagre-d3-es (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/dagre-d3-es@7.0.14",
+      "type": "library",
+      "version": "7.0.14"
+    },
+    {
+      "bom-ref": "mermaid-package-dayjs-1.11.21",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/dayjs/1.11.21"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "dayjs (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/dayjs@1.11.21",
+      "type": "library",
+      "version": "1.11.21"
+    },
+    {
+      "bom-ref": "mermaid-package-dompurify-3.4.12",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/dompurify/3.4.12"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "Apache-2.0"
+        }
+      ],
+      "name": "dompurify (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/dompurify@3.4.12",
+      "type": "library",
+      "version": "3.4.12"
+    },
+    {
+      "bom-ref": "mermaid-package-es-toolkit-1.45.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/es-toolkit/1.45.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "es-toolkit (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/es-toolkit@1.45.1",
+      "type": "library",
+      "version": "1.45.1"
+    },
+    {
+      "bom-ref": "mermaid-package-fastdom-1.0.12",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/fastdom/1.0.12"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "fastdom (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/fastdom@1.0.12",
+      "type": "library",
+      "version": "1.0.12"
+    },
+    {
+      "bom-ref": "mermaid-package-iconify-utils-3.0.2",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/@iconify%2Futils/3.0.2"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "@iconify/utils (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/%40iconify/utils@3.0.2",
+      "type": "library",
+      "version": "3.0.2"
+    },
+    {
+      "bom-ref": "mermaid-package-internmap-2.0.3",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/internmap/2.0.3"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "ISC"
+        }
+      ],
+      "name": "internmap (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/internmap@2.0.3",
+      "type": "library",
+      "version": "2.0.3"
+    },
+    {
+      "bom-ref": "mermaid-package-js-yaml-4.3.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/js-yaml/4.3.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "js-yaml (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/js-yaml@4.3.0",
+      "type": "library",
+      "version": "4.3.0"
+    },
+    {
+      "bom-ref": "mermaid-package-katex-0.16.47",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/katex/0.16.47"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "katex (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/katex@0.16.47",
+      "type": "library",
+      "version": "0.16.47"
+    },
+    {
+      "bom-ref": "mermaid-package-khroma-2.1.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/khroma/2.1.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "khroma (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/khroma@2.1.0",
+      "type": "library",
+      "version": "2.1.0"
+    },
+    {
+      "bom-ref": "mermaid-package-langium-4.2.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/langium/4.2.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "langium (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/langium@4.2.1",
+      "type": "library",
+      "version": "4.2.1"
+    },
+    {
+      "bom-ref": "mermaid-package-layout-base-1.0.2",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/layout-base/1.0.2"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "layout-base (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/layout-base@1.0.2",
+      "type": "library",
+      "version": "1.0.2"
+    },
+    {
+      "bom-ref": "mermaid-package-layout-base-2.0.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/layout-base/2.0.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "layout-base (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/layout-base@2.0.1",
+      "type": "library",
+      "version": "2.0.1"
+    },
+    {
+      "bom-ref": "mermaid-package-lodash-es-4.17.23",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/lodash-es/4.17.23"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "lodash-es (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/lodash-es@4.17.23",
+      "type": "library",
+      "version": "4.17.23"
+    },
+    {
+      "bom-ref": "mermaid-package-lodash-es-4.18.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/lodash-es/4.18.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "lodash-es (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/lodash-es@4.18.1",
+      "type": "library",
+      "version": "4.18.1"
+    },
+    {
+      "bom-ref": "mermaid-package-marked-16.3.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/marked/16.3.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "marked (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/marked@16.3.0",
+      "type": "library",
+      "version": "16.3.0"
+    },
+    {
+      "bom-ref": "mermaid-package-mermaid-js-parser-1.2.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/@mermaid-js%2Fparser/1.2.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "@mermaid-js/parser (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/%40mermaid-js/parser@1.2.1",
+      "type": "library",
+      "version": "1.2.1"
+    },
+    {
+      "bom-ref": "mermaid-package-path-browserify-1.0.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/path-browserify/1.0.1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "path-browserify (content-matched reference via Mermaid; original version unresolved)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "content-match-only; original resolution unresolved"
+        }
+      ],
+      "type": "library",
+      "version": "original unresolved; content matches 1.0.1"
+    },
+    {
+      "bom-ref": "mermaid-package-roughjs-4.6.6",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/roughjs/4.6.6"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "roughjs (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/roughjs@4.6.6",
+      "type": "library",
+      "version": "4.6.6"
+    },
+    {
+      "bom-ref": "mermaid-package-stylis-4.3.6",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/stylis/4.3.6"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "stylis (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/stylis@4.3.6",
+      "type": "library",
+      "version": "4.3.6"
+    },
+    {
+      "bom-ref": "mermaid-package-ts-dedent-2.2.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/ts-dedent/2.2.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "ts-dedent (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/ts-dedent@2.2.0",
+      "type": "library",
+      "version": "2.2.0"
+    },
+    {
+      "bom-ref": "mermaid-package-upsetjs-venn.js-2.0.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/@upsetjs%2Fvenn.js/2.0.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "@upsetjs/venn.js (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/%40upsetjs/venn.js@2.0.0",
+      "type": "library",
+      "version": "2.0.0"
+    },
+    {
+      "bom-ref": "mermaid-package-uuid-14.0.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/uuid/14.0.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "uuid (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/uuid@14.0.0",
+      "type": "library",
+      "version": "14.0.0"
+    },
+    {
+      "bom-ref": "mermaid-package-vscode-jsonrpc-8.2.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/vscode-jsonrpc/8.2.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "vscode-jsonrpc (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/vscode-jsonrpc@8.2.0",
+      "type": "library",
+      "version": "8.2.0"
+    },
+    {
+      "bom-ref": "mermaid-package-vscode-languageserver-protocol-3.17.5",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/vscode-languageserver-protocol/3.17.5"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "vscode-languageserver-protocol (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/vscode-languageserver-protocol@3.17.5",
+      "type": "library",
+      "version": "3.17.5"
+    },
+    {
+      "bom-ref": "mermaid-package-vscode-languageserver-textdocument-1.0.12",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/vscode-languageserver-textdocument/1.0.12"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "vscode-languageserver-textdocument (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/vscode-languageserver-textdocument@1.0.12",
+      "type": "library",
+      "version": "1.0.12"
+    },
+    {
+      "bom-ref": "mermaid-package-vscode-languageserver-types-3.17.5",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/vscode-languageserver-types/3.17.5"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "vscode-languageserver-types (via Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact-mapped-input"
+        }
+      ],
+      "purl": "pkg:npm/vscode-languageserver-types@3.17.5",
+      "type": "library",
+      "version": "3.17.5"
+    },
+    {
+      "bom-ref": "mermaid-package-vscode-uri-3.1.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://registry.npmjs.org/vscode-uri/3.1.0"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "vscode-uri (content-matched reference via Mermaid; original version unresolved)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "content-match-only; original resolution unresolved"
+        }
+      ],
+      "type": "library",
+      "version": "original unresolved; content matches 3.1.0"
+    },
+    {
       "bom-ref": "neon",
       "externalReferences": [
         {
@@ -530,6 +3360,192 @@
       "purl": "pkg:github/chimehq/rearrange@4de8be41dba304192e87dc0a11e0aa39e72aa2e8",
       "type": "library",
       "version": "2.1.1"
+    },
+    {
+      "bom-ref": "renderer-build-bison-skeleton",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://www.gnu.org/software/bison/"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "GPL-3.0-or-later WITH Bison-exception-2.2"
+        }
+      ],
+      "name": "Bison skeleton text in Graphviz source (build-reference attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-reference; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "3.8.2 in Graphviz 16.0.0 source"
+    },
+    {
+      "bom-ref": "renderer-build-emscripten",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/emscripten-core/emscripten"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT AND (MIT OR NCSA)"
+        }
+      ],
+      "name": "Emscripten and musl root notices (Viz.js publisher-build reference)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-reference; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "5.0.7 source reference"
+    },
+    {
+      "bom-ref": "rough-build-hachure-fill",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/pshihn/hachure-fill"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "hachure-fill (Rough.js publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input 0.5.2"
+    },
+    {
+      "bom-ref": "rough-build-path-data-parser",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/pshihn/path-data-parser"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "path-data-parser (Rough.js publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input 0.1.0"
+    },
+    {
+      "bom-ref": "rough-build-points-on-curve",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/pshihn/bezier-points"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "points-on-curve (Rough.js publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input 0.2.0"
+    },
+    {
+      "bom-ref": "rough-build-points-on-path",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/pshihn/points-on-path"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "points-on-path (Rough.js publisher-build attribution)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "publisher source-build input 0.2.1"
     },
     {
       "bom-ref": "swift-argument-parser",
@@ -1782,6 +4798,22 @@
         "cytoscape-jquery-events",
         "cytoscape-via-mermaid",
         "d2",
+        "d2-build-github.com-alecthomas-chroma-v2",
+        "d2-build-github.com-andybalholm-brotli",
+        "d2-build-github.com-andybalholm-cascadia",
+        "d2-build-github.com-dlclark-regexp2",
+        "d2-build-github.com-golang-freetype",
+        "d2-build-github.com-lucasb-eyer-go-colorful",
+        "d2-build-github.com-mazznoer-csscolorparser",
+        "d2-build-github.com-puerkitobio-goquery",
+        "d2-build-github.com-rivo-uniseg",
+        "d2-build-github.com-yuin-goldmark",
+        "d2-build-golang.org-x-exp",
+        "d2-build-golang.org-x-image",
+        "d2-build-golang.org-x-net",
+        "d2-build-golang.org-x-text",
+        "d2-build-golang.org-x-xerrors",
+        "d2-build-oss.terrastruct.com-util-go",
         "d2-liberation-mono",
         "expat",
         "graphviz-ellipse-maisonobe",
@@ -1790,10 +4822,89 @@
         "katex-react-helpers",
         "libyaml",
         "mermaid",
+        "mermaid-package-braintree-sanitize-url-7.1.2",
+        "mermaid-package-chevrotain-11.1.2",
+        "mermaid-package-chevrotain-allstar-0.3.1",
+        "mermaid-package-chevrotain-gast-11.1.2",
+        "mermaid-package-chevrotain-regexp-to-ast-11.1.2",
+        "mermaid-package-chevrotain-utils-11.1.2",
+        "mermaid-package-cose-base-1.0.3",
+        "mermaid-package-cose-base-2.2.0",
+        "mermaid-package-cytoscape-cose-bilkent-4.1.0",
+        "mermaid-package-cytoscape-fcose-2.2.0",
+        "mermaid-package-d3-7.9.0",
+        "mermaid-package-d3-array-2.12.1",
+        "mermaid-package-d3-array-3.2.4",
+        "mermaid-package-d3-axis-3.0.0",
+        "mermaid-package-d3-brush-3.0.0",
+        "mermaid-package-d3-chord-3.0.1",
+        "mermaid-package-d3-color-3.1.0",
+        "mermaid-package-d3-contour-4.0.2",
+        "mermaid-package-d3-delaunay-6.0.4",
+        "mermaid-package-d3-dispatch-3.0.1",
+        "mermaid-package-d3-drag-3.0.0",
+        "mermaid-package-d3-dsv-3.0.1",
+        "mermaid-package-d3-ease-3.0.1",
+        "mermaid-package-d3-fetch-3.0.1",
+        "mermaid-package-d3-force-3.0.0",
+        "mermaid-package-d3-format-3.1.0",
+        "mermaid-package-d3-geo-3.1.1",
+        "mermaid-package-d3-hierarchy-3.1.2",
+        "mermaid-package-d3-interpolate-3.0.1",
+        "mermaid-package-d3-path-1.0.9",
+        "mermaid-package-d3-path-3.1.0",
+        "mermaid-package-d3-polygon-3.0.1",
+        "mermaid-package-d3-quadtree-3.0.1",
+        "mermaid-package-d3-random-3.0.1",
+        "mermaid-package-d3-sankey-0.12.3",
+        "mermaid-package-d3-scale-4.0.2",
+        "mermaid-package-d3-scale-chromatic-3.1.0",
+        "mermaid-package-d3-selection-3.0.0",
+        "mermaid-package-d3-shape-1.3.7",
+        "mermaid-package-d3-shape-3.2.0",
+        "mermaid-package-d3-time-3.1.0",
+        "mermaid-package-d3-time-format-4.1.0",
+        "mermaid-package-d3-timer-3.0.1",
+        "mermaid-package-d3-transition-3.0.1",
+        "mermaid-package-d3-zoom-3.0.0",
+        "mermaid-package-dagre-d3-es-7.0.14",
+        "mermaid-package-dayjs-1.11.21",
+        "mermaid-package-dompurify-3.4.12",
+        "mermaid-package-es-toolkit-1.45.1",
+        "mermaid-package-fastdom-1.0.12",
+        "mermaid-package-iconify-utils-3.0.2",
+        "mermaid-package-internmap-2.0.3",
+        "mermaid-package-js-yaml-4.3.0",
+        "mermaid-package-katex-0.16.47",
+        "mermaid-package-khroma-2.1.0",
+        "mermaid-package-langium-4.2.1",
+        "mermaid-package-layout-base-1.0.2",
+        "mermaid-package-layout-base-2.0.1",
+        "mermaid-package-lodash-es-4.17.23",
+        "mermaid-package-lodash-es-4.18.1",
+        "mermaid-package-marked-16.3.0",
+        "mermaid-package-mermaid-js-parser-1.2.1",
+        "mermaid-package-path-browserify-1.0.1",
+        "mermaid-package-roughjs-4.6.6",
+        "mermaid-package-stylis-4.3.6",
+        "mermaid-package-ts-dedent-2.2.0",
+        "mermaid-package-upsetjs-venn.js-2.0.0",
+        "mermaid-package-uuid-14.0.0",
+        "mermaid-package-vscode-jsonrpc-8.2.0",
+        "mermaid-package-vscode-languageserver-protocol-3.17.5",
+        "mermaid-package-vscode-languageserver-textdocument-1.0.12",
+        "mermaid-package-vscode-languageserver-types-3.17.5",
+        "mermaid-package-vscode-uri-3.1.0",
         "neon",
         "nvim-treesitter-markdown-queries",
         "prismjs-textual",
         "rearrange",
+        "renderer-build-bison-skeleton",
+        "renderer-build-emscripten",
+        "rough-build-hachure-fill",
+        "rough-build-path-data-parser",
+        "rough-build-points-on-curve",
+        "rough-build-points-on-path",
         "swift-argument-parser",
         "swift-cmark",
         "swift-concurrency-extras",
@@ -1848,7 +4959,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:ee480e17-519d-5c31-8209-0716cfd8455c",
+  "serialNumber": "urn:uuid:db2dd75e-126c-530b-8dac-9081ca816d78",
   "specVersion": "1.5",
   "version": 1
 }

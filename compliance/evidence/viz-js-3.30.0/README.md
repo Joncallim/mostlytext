@@ -1,5 +1,13 @@
 # Graphviz source inputs and Expat attribution (#148, LC-02)
 
+> Current preparation update — 3 November 2026: the
+> [local source-review assembler](../graphviz-source-review/README.md) now packages
+> the retained inputs. [Bison exception and Emscripten/musl root notices](../nested-build-attribution/README.md)
+> are distributed conservatively. Earlier seven-failure counts are historical; the
+> current count remains six. This does not complete compiler/runtime attribution,
+> independent corresponding-source review, public source availability or signing.
+
+
 The unchanged diagram renderer includes Expat 2.8.4, whose MIT notice was
 missing from the generated notice bundle. This change records that embedded
 component, adds its exact upstream `COPYING` text, and replaces the wrapper

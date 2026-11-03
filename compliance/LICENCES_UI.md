@@ -1,58 +1,43 @@
-# Open Source Licences screen (LC-08): implementation contract
+# Open Source Licenses window (LC-08)
 
-**Owner summary.** MostlyText needs an in-app screen that shows the licences
-of every third-party component it ships, readable offline. This page fixes
-the design so the screen can be built quickly once E22 is finished, without
-a second copy of the notices to maintain. The screen shows the generated
-`compliance/generated/THIRD_PARTY_NOTICES.md`, bundled into the app, in the
-app's existing native Markdown preview.
+The read-only license window is implemented. About and the application menu
+open the shared licenses scene; its two documents are the bundled MostlyText MIT
+license and generated third-party notices. The implementation uses a native plain
+text view, preserving wording and enabling standard Find and Copy without active
+markup, automatic links or a network content source. It does not use the Markdown
+preview renderer. This supersedes the old unstarted/Textual design.
 
-**The screen remains not started. Its existing dependency is E22 closure**,
-because the contract reserves the shared app menus and window code for that work.
-The resource-packaging prerequisite was completed and verified on unsigned
-Release candidate `ceecea9c4a8297db6aa24e3afa9163406e4a10e5`; see the
-[exact artifact evidence](evidence/prism-textual-1.29.0/README.md).
-This does not implement the screen or establish that E22 has closed.
-The screen must land before the final
-E16 string freeze (#17). It adds a few UI strings and no new dependency.
+## Source contract
 
-Risks: the screen could show a stale or hand-edited copy (prevented by
-bundling the generated file and checking its digest in the signed app), and
-licence text could be altered by rendering (prevented by showing licence
-bodies as preformatted text, which the generator already emits).
+- `MacDown2/MacDown2/AboutCommands.swift` supplies About and license entry points;
+  `MacDown2App.swift` registers the shared scenes.
+- `LicenseNoticesContent.swift` loads only `LICENSE` and `THIRD_PARTY_NOTICES.md`
+  from the selected bundle. Each resource is bounded at 2 MiB; empty, invalid UTF-8,
+  missing and oversized resources fail. No source-tree or network fallback exists.
+- `LicenseNoticesView.swift` switches the two documents, exposes read-only selectable
+  native text, and routes Find through `FocusedLicenseFind.swift`. Automatic link
+  detection and editing are disabled. Labels and surrounding strings use catalogs;
+  original third-party texts are not translated.
+- `project.yml` copies the canonical root license and generated notice file into
+  the app. `compliance.py check --artifact` requires both exact byte sequences.
+- Failure presents the localized bundled-text loading error. It does not assert,
+  open a web page or substitute an unrelated resource.
 
-## Behaviour
+## Evidence and remaining acceptance
 
-- **Entry points:** a button in the About window, and a Help menu item, both
-  titled "Open Source Licences". Both open one read-only window; opening it
-  again brings the existing window forward.
-- **Content:** the bundled `THIRD_PARTY_NOTICES.md`, rendered with the same
-  native preview used for Markdown documents (Textual, D4). Licence bodies are
-  fenced as plain text by the generator, so they display verbatim.
-- **Offline:** reads only the bundled resource. No network access, and no
-  links opened automatically.
-- **First-party licence:** the window leads with MostlyText's MIT licence
-  and MacDown lineage (LC-10). Take the text from the bundled `LICENSE`,
-  never from a copy typed into code.
+`MacDown2Tests/LicenseNoticesTests.swift` covers decoding/limits, expected bundle
+contents and native text-view configuration. The final whole-app CI and exact
+resource evidence are linked in [acceptance status](../planning/ACCEPTANCE_STATUS.md).
+A separate exact-source Foundation-only control has loaded the generated notice
+corpus from a compile-only Release app; that proves neither visible UI nor VoiceOver.
 
-## Implementation notes
+The original LC-08 contract also requires a Help-menu entry. Current source
+registers only About and the application-menu entry, so Help integration remains
+an implementation item under #14; this documentation does not waive it.
 
-- **Resource (implemented):** `compliance/generated/THIRD_PARTY_NOTICES.md` and
-  `LICENSE` are explicit app-target resource references in
-  `MacDown2/project.yml`. Regenerate the project after editing the specification;
-  keep using these original files rather than separate maintained copies.
-- **Strings:** the window title, button and menu titles, and any
-  empty-or-error state go in the String Catalog for localisation. Licence text
-  itself is never localised.
-- **Errors:** if the resource is missing, show a short localised message and
-  the source-repository URL, and fail loudly in Debug. A missing resource
-  also fails `compliance.py check --artifact`.
-
-## Tests and evidence
-
-| Check | Where |
-|---|---|
-| The bundled notices load from the built app bundle, not from the source tree | App test against `Bundle.main` |
-| The bundled file's digest equals the generated file | `compliance.py check --release --artifact MostlyText.app` (Mac, on the release candidate) |
-| Keyboard: reachable from the menu, scrollable and closable with the keyboard; VoiceOver reads the headings | Manual pass on a Release build, recorded under `planning/evidence/` |
-| Localisation: surrounding strings present in every shipped language, pseudo-localised layout OK | E16's final pass |
+Before LC-08 closes, obtain the protected-account Release journey: open from both
+implemented entry points, reopen/raise the shared window, switch documents, Find/Copy/scroll and
+close with the keyboard, and verify VoiceOver labels and readable localized layout.
+After final localization, repeat affected paths and exact resource checks on the
+signed/notarized candidate under MostlyText #4/#14. No passing component test or
+compile-only build substitutes for this native or exact-artifact evidence.

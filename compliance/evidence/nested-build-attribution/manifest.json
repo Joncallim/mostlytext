@@ -1,0 +1,886 @@
+{
+  "evidence": [
+    {
+      "archive_sha256": "d816b83fea8b39161ef35c46f5080a0a7e406dce39ebf26f1ec8a1daea06a837",
+      "archive_url": "https://registry.npmjs.org/hachure-fill/-/hachure-fill-0.5.2.tgz",
+      "id": "rough-build-hachure-fill",
+      "integrity": "sha512-3GKBOn+m2LX9iq+JC1064cSFprJY4jL1jCXTcpnfER5HYE2l/4EfWSGzkPa/ZDBmYI0ZOEj5VHV/eKnPGkHuOg==",
+      "publisher_lock_sha256": "da065ed0bdfb3bf196c7cb05bf20dcb10100b6aa0f1f1d6037ea8aeb108b3ad5",
+      "publisher_lock_url": "https://raw.githubusercontent.com/rough-stuff/rough/56a2762171b1294d643501e8d14f120db6b27bd7/package-lock.json",
+      "registry_sha256": "61a8968211a9dedf73b03608a65ba2fe37742cf69f117df89209fde80dc23f03",
+      "source_import_path": "bin/fillers/scan-line-hachure.js",
+      "source_import_sha256": "fb81b8eeccea1f677148887cfa7ddf47c720d783b8433d2eb4a1fe7d5cac37bc"
+    },
+    {
+      "archive_sha256": "09be555fc313a8e831b55d4cc727699655f5c224fde2d8062f3f52bc9386d3b0",
+      "archive_url": "https://registry.npmjs.org/path-data-parser/-/path-data-parser-0.1.0.tgz",
+      "id": "rough-build-path-data-parser",
+      "integrity": "sha512-NOnmBpt5Y2RWbuv0LMzsayp3lVylAHLPUTut412ZA3l+C4uw4ZVkQbjShYCQ8TCpUMdPapr4YjUqLYD6v68j+w==",
+      "publisher_lock_sha256": "da065ed0bdfb3bf196c7cb05bf20dcb10100b6aa0f1f1d6037ea8aeb108b3ad5",
+      "publisher_lock_url": "https://raw.githubusercontent.com/rough-stuff/rough/56a2762171b1294d643501e8d14f120db6b27bd7/package-lock.json",
+      "registry_sha256": "0eb1dba98c9a742b7c8c1a186f98e5bdf669196c300d1fc8b8cf01049535591f",
+      "source_import_path": "bin/renderer.js",
+      "source_import_sha256": "51966b08ec58bea880cc6895ae17f4d7d72006b4d65a87aefb31867ce31ca8fe"
+    },
+    {
+      "archive_sha256": "adc00f4d5ae800c315aea316822fb6f8dd4529f76107facbdccf356372e5ddbf",
+      "archive_url": "https://registry.npmjs.org/points-on-curve/-/points-on-curve-0.2.0.tgz",
+      "id": "rough-build-points-on-curve",
+      "integrity": "sha512-0mYKnYYe9ZcqMCWhUjItv/oHjvgEsfKvnUTg8sAtnHr3GVy7rGkXCb6d5cSyqrWqL4k81b9CPg3urd+T7aop3A==",
+      "publisher_lock_sha256": "da065ed0bdfb3bf196c7cb05bf20dcb10100b6aa0f1f1d6037ea8aeb108b3ad5",
+      "publisher_lock_url": "https://raw.githubusercontent.com/rough-stuff/rough/56a2762171b1294d643501e8d14f120db6b27bd7/package-lock.json",
+      "registry_sha256": "41ffaf6920cd6c6c2d993fe24b359858263842d058b37d3fcfba3d7bcb3f1e48",
+      "source_import_path": "bin/generator.js",
+      "source_import_sha256": "1de29118bfee391c75c3bbf1601fde1d734d506202495b0309782ce1c65720f5"
+    },
+    {
+      "archive_sha256": "eb57ddbb156d4e73cbc8d9416e1b666ace0d8abf9dc783f8c934ab63dbae6e44",
+      "archive_url": "https://registry.npmjs.org/points-on-path/-/points-on-path-0.2.1.tgz",
+      "id": "rough-build-points-on-path",
+      "integrity": "sha512-25ClnWWuw7JbWZcgqY/gJ4FQWadKxGWk+3kR/7kD0tCaDtPPMj7oHu2ToLaVhfpnHrZzYby2w6tUA0eOIuUg8g==",
+      "publisher_lock_sha256": "da065ed0bdfb3bf196c7cb05bf20dcb10100b6aa0f1f1d6037ea8aeb108b3ad5",
+      "publisher_lock_url": "https://raw.githubusercontent.com/rough-stuff/rough/56a2762171b1294d643501e8d14f120db6b27bd7/package-lock.json",
+      "registry_sha256": "274001e341a4a9e6532e06ba8c0826c9ba3d8925f31ef4f5f4e0e6f3e4fe9e1d",
+      "source_import_path": "bin/generator.js",
+      "source_import_sha256": "1de29118bfee391c75c3bbf1601fde1d734d506202495b0309782ce1c65720f5"
+    },
+    {
+      "compiled_package_count": 1,
+      "go_sum": "h1:6fiXdLuUvYs2OJSvNRqlNPoBm6YABE226xrbavY5Wv4=",
+      "id": "d2-build-github.com-puerkitobio-goquery",
+      "module_path": "github.com/PuerkitoBio/goquery",
+      "module_version": "v1.10.0",
+      "review_bundle_member": "modules/01/source.zip",
+      "source_zip_sha256": "0bd7e0e8b5d3c82484b2e144502399f8387a9eaf00acb0c92f6d195c7f4cb4cc"
+    },
+    {
+      "compiled_package_count": 6,
+      "go_sum": "h1:R3+wzpnUArGcQz7fCETQBzO5n9IMNi13iIs46aU4V9E=",
+      "id": "d2-build-github.com-alecthomas-chroma-v2",
+      "module_path": "github.com/alecthomas/chroma/v2",
+      "module_version": "v2.14.0",
+      "review_bundle_member": "modules/02/source.zip",
+      "source_zip_sha256": "1fc346b3317079b8c8ab6927cd3f3da494561116f0e9613a08a714bd9cfbd76a"
+    },
+    {
+      "compiled_package_count": 2,
+      "go_sum": "h1:ukwgCxwYrmACq68yiUqwIWnGY0cTPox/M94sVwToPjQ=",
+      "id": "d2-build-github.com-andybalholm-brotli",
+      "module_path": "github.com/andybalholm/brotli",
+      "module_version": "v1.2.0",
+      "review_bundle_member": "modules/03/source.zip",
+      "source_zip_sha256": "e4c47dd6da396292eed4107838ccfd1fee632884caa8da8a027623435b6daa36"
+    },
+    {
+      "compiled_package_count": 1,
+      "go_sum": "h1:3Xi6Dw5lHF15JtdcmAHD3i1+T8plmv7BQ/nsViSLyss=",
+      "id": "d2-build-github.com-andybalholm-cascadia",
+      "module_path": "github.com/andybalholm/cascadia",
+      "module_version": "v1.3.2",
+      "review_bundle_member": "modules/04/source.zip",
+      "source_zip_sha256": "dec535cccf58418de6a38909010cfcea9e46475f79aab9f53cd80d133abcdd3a"
+    },
+    {
+      "compiled_package_count": 2,
+      "go_sum": "h1:rPYF9/LECdNymJufQKmri9gV604RvvABwgOA8un7yAo=",
+      "id": "d2-build-github.com-dlclark-regexp2",
+      "module_path": "github.com/dlclark/regexp2",
+      "module_version": "v1.11.4",
+      "review_bundle_member": "modules/05/source.zip",
+      "source_zip_sha256": "29613e60dfc18d0f94c6382522b2496716e01dce8bd660fe68c83d3e9acd7386"
+    },
+    {
+      "compiled_package_count": 2,
+      "go_sum": "h1:DACJavvAHhabrF08vX0COfcOBJRhZ8lUbR+ZWIs0Y5g=",
+      "id": "d2-build-github.com-golang-freetype",
+      "module_path": "github.com/golang/freetype",
+      "module_version": "v0.0.0-20170609003504-e2365dfdc4a0",
+      "review_bundle_member": "modules/06/source.zip",
+      "source_zip_sha256": "cdcb9e6a14933dcbf167b44dcd5083fc6a2e52c4fae8fb79747c691efeb7d84e"
+    },
+    {
+      "compiled_package_count": 1,
+      "go_sum": "h1:1nnpGOrhyZZuNyfu1QjKiUICQ74+3FNCN69Aj6K7nkY=",
+      "id": "d2-build-github.com-lucasb-eyer-go-colorful",
+      "module_path": "github.com/lucasb-eyer/go-colorful",
+      "module_version": "v1.2.0",
+      "review_bundle_member": "modules/07/source.zip",
+      "source_zip_sha256": "78d5d0e0737f0f54bbed77b6dfa847d8c871bed2668a9dc44328c7c3411ada10"
+    },
+    {
+      "compiled_package_count": 1,
+      "go_sum": "h1:Wr4uNIE+pHWN3TqZn2SGpA2nLRG064gB7WdSfSS5cz4=",
+      "id": "d2-build-github.com-mazznoer-csscolorparser",
+      "module_path": "github.com/mazznoer/csscolorparser",
+      "module_version": "v0.1.5",
+      "review_bundle_member": "modules/08/source.zip",
+      "source_zip_sha256": "c6ae8b1878b632a894e47df22a070d0cf270f3547800647eb1d48667c579baea"
+    },
+    {
+      "compiled_package_count": 1,
+      "go_sum": "h1:WUdvkW8uEhrYfLC4ZzdpI2ztxP1I582+49Oc5Mq64VQ=",
+      "id": "d2-build-github.com-rivo-uniseg",
+      "module_path": "github.com/rivo/uniseg",
+      "module_version": "v0.4.7",
+      "review_bundle_member": "modules/09/source.zip",
+      "source_zip_sha256": "b995e4aa0cc1e5779cc61138ac925cb8c1e963e40c80e4b93ee8553812ebb792"
+    },
+    {
+      "compiled_package_count": 9,
+      "go_sum": "h1:BDXOHExt+A7gwPCJgPIIq7ENvceR7we7rOS9TNoLZeg=",
+      "id": "d2-build-github.com-yuin-goldmark",
+      "module_path": "github.com/yuin/goldmark",
+      "module_version": "v1.7.4",
+      "review_bundle_member": "modules/10/source.zip",
+      "source_zip_sha256": "7e0a308bb016a245a6e20ed44f088b0a17b46ccac70e454735ae1575703a4816"
+    },
+    {
+      "compiled_package_count": 1,
+      "go_sum": "h1:e66Fs6Z+fZTbFBAxKfP3PALWBtpfqks2bwGcexMxgtk=",
+      "id": "d2-build-golang.org-x-exp",
+      "module_path": "golang.org/x/exp",
+      "module_version": "v0.0.0-20240909161429-701f63a606c0",
+      "review_bundle_member": "modules/11/source.zip",
+      "source_zip_sha256": "447a436882177a2a9fc281116f1858d6e0533c790a90f55cf3a64f1cafb752c6"
+    },
+    {
+      "compiled_package_count": 2,
+      "go_sum": "h1:7cVCUjQwfL18gyBJOmYvptfSHS8Fb3YUDtfLIZ7Nbpw=",
+      "id": "d2-build-golang.org-x-image",
+      "module_path": "golang.org/x/image",
+      "module_version": "v0.20.0",
+      "review_bundle_member": "modules/12/source.zip",
+      "source_zip_sha256": "1f0f48daa679986db28876cef4074ff192fb705fcdc537627903270375bf6971"
+    },
+    {
+      "compiled_package_count": 2,
+      "go_sum": "h1:T5GQRQb2y08kTAByq9L4/bz8cipCdA8FbRTXewonqY8=",
+      "id": "d2-build-golang.org-x-net",
+      "module_path": "golang.org/x/net",
+      "module_version": "v0.35.0",
+      "review_bundle_member": "modules/13/source.zip",
+      "source_zip_sha256": "9c746c215d695e80d6f4d1b1f1d55deaae5e451b4c031223af25f2b2f0757215"
+    },
+    {
+      "compiled_package_count": 14,
+      "go_sum": "h1:bofq7m3/HAFvbF51jz3Q9wLg3jkvSPuiZu/pD1XwgtM=",
+      "id": "d2-build-golang.org-x-text",
+      "module_path": "golang.org/x/text",
+      "module_version": "v0.22.0",
+      "review_bundle_member": "modules/14/source.zip",
+      "source_zip_sha256": "939cb4c202aa8fa302f2ba6f9d29165ce82fce9c665d9a1a0bb0d9e51b79e6f5"
+    },
+    {
+      "compiled_package_count": 2,
+      "go_sum": "h1:noIWHXmPHxILtqtCOPIhSt0ABwskkZKjD3bXGnZGpNY=",
+      "id": "d2-build-golang.org-x-xerrors",
+      "module_path": "golang.org/x/xerrors",
+      "module_version": "v0.0.0-20240903120638-7835f813f4da",
+      "review_bundle_member": "modules/15/source.zip",
+      "source_zip_sha256": "07ee9f680118861ee732ce0df4553b834383b87e0519fb9a0990c51d7abd6885"
+    },
+    {
+      "compiled_package_count": 3,
+      "go_sum": "h1:UXF/Z9i9tOx/wqGUOn/T12wZeez1Gg0sAVKKl7YUDwM=",
+      "id": "d2-build-oss.terrastruct.com-util-go",
+      "module_path": "oss.terrastruct.com/util-go",
+      "module_version": "v0.0.0-20250213174338-243d8661088a",
+      "review_bundle_member": "modules/16/source.zip",
+      "source_zip_sha256": "850c470a3055d03061536e1341fc8d87237613612743637bdaeebff3cdfab239"
+    },
+    {
+      "graphviz_archive_sha256": "36a1de1aaf5a2023b14f95170a5f8f0b12522d1c305b517fc261966597050749",
+      "id": "renderer-build-bison-skeleton",
+      "notice_bytes": 1534,
+      "source_files": {
+        "lib/cgraph/Makefile.am": "77794f118cee84c4bc4717ad1e63c68add8500b789d2378351e442b25ecd0686",
+        "lib/cgraph/grammar.c": "cff31863b4dc52caddd4c43c09c3bdd75e18691cb6cc4e0158b2e7399e080a8f",
+        "lib/common/Makefile.am": "88c0cf3d14f85a2c17f2f69af3ae1b7ce8ea288d792efbfef8b778606a51859a",
+        "lib/common/htmlparse.c": "3004295044c446ce4c47ea74a457ce1f82c7908b6c9c1d89c8a0b80fe364f183"
+      }
+    },
+    {
+      "compiler_image_sha256": "4e332f7343b6f66320bf72f7ecc01a3d9f3866721a13b0e5c7b96505d6ab148a",
+      "emscripten_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+      "id": "renderer-build-emscripten",
+      "publisher_build_record": "compliance/evidence/viz-js-3.30.0/source-audit.json"
+    }
+  ],
+  "inputs": {
+    "d2_graph_sha256": "87dbd885c3668585ef91150fe9a776b36f2933f9094d7177e1a86c27d77c0d6e",
+    "d2_review_archive_sha256": "07de46d856b3e7bbc1d455651fe7045be73083e1d072530e8a1cca99a7b65c02",
+    "graphviz_source_audit_sha256": "35005d6ec62448a586f56fc28a1cf80ef2a46df79235fe674cc9dac511ef2ece",
+    "mermaid_mapping_sha256": "6183e8177380457abbe5522f173ac844da1a4ae6609408c7d5de727a306609cb",
+    "rough_lock_sha256": "da065ed0bdfb3bf196c7cb05bf20dcb10100b6aa0f1f1d6037ea8aeb108b3ad5"
+  },
+  "records": [
+    {
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "rough-build-hachure-fill",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "MIT",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/rough-build-hachure-fill--LICENSE.txt",
+          "sha256": "5e807b516a9be9229ed459880bf353a336e2d947867247290680d437017be391",
+          "upstream": "https://registry.npmjs.org/hachure-fill/-/hachure-fill-0.5.2.tgz",
+          "upstream_archive_sha256": "d816b83fea8b39161ef35c46f5080a0a7e406dce39ebf26f1ec8a1daea06a837",
+          "upstream_path": "LICENSE",
+          "upstream_revision": "2083be6f7e6c814dc6a8c2c88a7823827566504e"
+        }
+      ],
+      "name": "hachure-fill (Rough.js publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://github.com/pshihn/hachure-fill",
+      "version": "publisher source-build input 0.5.2"
+    },
+    {
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "rough-build-path-data-parser",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "MIT",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/rough-build-path-data-parser--LICENSE.txt",
+          "sha256": "e9754a00aebde654e80f40bcf41dab667d6a41dfbbd2912bcf14fb07d468bf71",
+          "upstream": "https://registry.npmjs.org/path-data-parser/-/path-data-parser-0.1.0.tgz",
+          "upstream_archive_sha256": "09be555fc313a8e831b55d4cc727699655f5c224fde2d8062f3f52bc9386d3b0",
+          "upstream_path": "LICENSE",
+          "upstream_revision": "93d3fa8448c50d1b6443b06b8c71202ee0967e25"
+        }
+      ],
+      "name": "path-data-parser (Rough.js publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://github.com/pshihn/path-data-parser",
+      "version": "publisher source-build input 0.1.0"
+    },
+    {
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "rough-build-points-on-curve",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "MIT",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/rough-build-points-on-curve--LICENSE.txt",
+          "sha256": "e9754a00aebde654e80f40bcf41dab667d6a41dfbbd2912bcf14fb07d468bf71",
+          "upstream": "https://registry.npmjs.org/points-on-curve/-/points-on-curve-0.2.0.tgz",
+          "upstream_archive_sha256": "adc00f4d5ae800c315aea316822fb6f8dd4529f76107facbdccf356372e5ddbf",
+          "upstream_path": "LICENSE",
+          "upstream_revision": "48241476eb86307294f54913ccfb60a3e7338c56"
+        }
+      ],
+      "name": "points-on-curve (Rough.js publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://github.com/pshihn/bezier-points",
+      "version": "publisher source-build input 0.2.0"
+    },
+    {
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "rough-build-points-on-path",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "MIT",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/rough-build-points-on-path--LICENSE.txt",
+          "sha256": "b6fc1f7f1d96a48bc97176f3dcef959e364c5c17ba44167511de421500a86c6c",
+          "upstream": "https://registry.npmjs.org/points-on-path/-/points-on-path-0.2.1.tgz",
+          "upstream_archive_sha256": "eb57ddbb156d4e73cbc8d9416e1b666ace0d8abf9dc783f8c934ab63dbae6e44",
+          "upstream_path": "LICENSE",
+          "upstream_revision": "7693ef0c930466b7408ee7082497e0d735f9c646"
+        }
+      ],
+      "name": "points-on-path (Rough.js publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://github.com/pshihn/points-on-path",
+      "version": "publisher source-build input 0.2.1"
+    },
+    {
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "d2-build-github.com-puerkitobio-goquery",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "BSD-3-Clause",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-puerkitobio-goquery--LICENSE.txt",
+          "sha256": "ab79785bfa235ac1c5e16f75e0f85eb7ce0402fb72f4667fffa0729e694579b8",
+          "upstream": "https://proxy.golang.org/github.com/!puerkito!bio/goquery/@v/v1.10.0.zip",
+          "upstream_archive_sha256": "0bd7e0e8b5d3c82484b2e144502399f8387a9eaf00acb0c92f6d195c7f4cb4cc",
+          "upstream_path": "LICENSE"
+        }
+      ],
+      "name": "github.com/PuerkitoBio/goquery (D2 publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://github.com/PuerkitoBio/goquery",
+      "version": "publisher source-build input v1.10.0"
+    },
+    {
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "d2-build-github.com-alecthomas-chroma-v2",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "MIT",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-alecthomas-chroma-v2--LICENSE.txt",
+          "sha256": "e7bf754e7153012a3a8ff697d21acd6c12e590d6a55f2aef8ee83616aa9a795f",
+          "upstream": "https://proxy.golang.org/github.com/alecthomas/chroma/v2/@v/v2.14.0.zip",
+          "upstream_archive_sha256": "1fc346b3317079b8c8ab6927cd3f3da494561116f0e9613a08a714bd9cfbd76a",
+          "upstream_path": "COPYING"
+        }
+      ],
+      "name": "github.com/alecthomas/chroma/v2 (D2 publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://github.com/alecthomas/chroma/v2",
+      "version": "publisher source-build input v2.14.0"
+    },
+    {
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "d2-build-github.com-andybalholm-brotli",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "MIT",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-andybalholm-brotli--LICENSE.txt",
+          "sha256": "3d180008e36922a4e8daec11c34c7af264fed5962d07924aea928c38e8663c94",
+          "upstream": "https://proxy.golang.org/github.com/andybalholm/brotli/@v/v1.2.0.zip",
+          "upstream_archive_sha256": "e4c47dd6da396292eed4107838ccfd1fee632884caa8da8a027623435b6daa36",
+          "upstream_path": "LICENSE"
+        }
+      ],
+      "name": "github.com/andybalholm/brotli (D2 publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://github.com/andybalholm/brotli",
+      "version": "publisher source-build input v1.2.0"
+    },
+    {
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "d2-build-github.com-andybalholm-cascadia",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "BSD-3-Clause",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-andybalholm-cascadia--LICENSE.txt",
+          "sha256": "04a8e475337d6b9959a8c47956bf713dd3362d3aadf839e74b376afb07487167",
+          "upstream": "https://proxy.golang.org/github.com/andybalholm/cascadia/@v/v1.3.2.zip",
+          "upstream_archive_sha256": "dec535cccf58418de6a38909010cfcea9e46475f79aab9f53cd80d133abcdd3a",
+          "upstream_path": "LICENSE"
+        }
+      ],
+      "name": "github.com/andybalholm/cascadia (D2 publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://github.com/andybalholm/cascadia",
+      "version": "publisher source-build input v1.3.2"
+    },
+    {
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "d2-build-github.com-dlclark-regexp2",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "MIT",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-dlclark-regexp2--LICENSE.txt",
+          "sha256": "9be5d04bb4d706914d5bf943710da4afeb42048f7c529902fb57c82762a991a9",
+          "upstream": "https://proxy.golang.org/github.com/dlclark/regexp2/@v/v1.11.4.zip",
+          "upstream_archive_sha256": "29613e60dfc18d0f94c6382522b2496716e01dce8bd660fe68c83d3e9acd7386",
+          "upstream_path": "LICENSE"
+        }
+      ],
+      "name": "github.com/dlclark/regexp2 (D2 publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://github.com/dlclark/regexp2",
+      "version": "publisher source-build input v1.11.4"
+    },
+    {
+      "copyright": [
+        "Copyright 1996-2002, 2006 David Turner, Robert Wilhelm, and Werner Lemberg.",
+        "This software is based in part on the work of the FreeType Team.",
+        "FreeType-Go is distributed using the FreeType License option; the complete original choice notice and FreeType terms follow."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "d2-build-github.com-golang-freetype",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "FTL",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-golang-freetype--LICENSE.txt",
+          "sha256": "d3ba056adc2b7909e95681deaae397fb37c97ed491a920f491214f07b62c41d0",
+          "upstream": "https://proxy.golang.org/github.com/golang/freetype/@v/v0.0.0-20170609003504-e2365dfdc4a0.zip",
+          "upstream_archive_sha256": "cdcb9e6a14933dcbf167b44dcd5083fc6a2e52c4fae8fb79747c691efeb7d84e",
+          "upstream_path": "LICENSE"
+        },
+        {
+          "distribution_encoding": "UTF-8",
+          "path": "compliance/licenses/d2-build-github.com-golang-freetype--FTL.txt",
+          "sha256": "4a9a548027a2c1d37788519dea833294c9c81f1ebc280e817f41f50d0c642d78",
+          "source_encoding": "ISO-8859-1",
+          "upstream": "https://proxy.golang.org/github.com/golang/freetype/@v/v0.0.0-20170609003504-e2365dfdc4a0.zip",
+          "upstream_archive_sha256": "cdcb9e6a14933dcbf167b44dcd5083fc6a2e52c4fae8fb79747c691efeb7d84e",
+          "upstream_path": "licenses/ftl.txt",
+          "upstream_sha256": "f4b133e25df1f86ad3ffea453aa0e613f0474f34778dbbb3e437e7b2724937d8"
+        }
+      ],
+      "name": "github.com/golang/freetype (D2 publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://github.com/golang/freetype",
+      "version": "publisher source-build input v0.0.0-20170609003504-e2365dfdc4a0"
+    },
+    {
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "d2-build-github.com-lucasb-eyer-go-colorful",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "MIT",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-lucasb-eyer-go-colorful--LICENSE.txt",
+          "sha256": "1e4cf2a117516ec1b54041d68ed4f5d331878b04de3386f4790e7b5b9c04e1ec",
+          "upstream": "https://proxy.golang.org/github.com/lucasb-eyer/go-colorful/@v/v1.2.0.zip",
+          "upstream_archive_sha256": "78d5d0e0737f0f54bbed77b6dfa847d8c871bed2668a9dc44328c7c3411ada10",
+          "upstream_path": "LICENSE"
+        }
+      ],
+      "name": "github.com/lucasb-eyer/go-colorful (D2 publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://github.com/lucasb-eyer/go-colorful",
+      "version": "publisher source-build input v1.2.0"
+    },
+    {
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "d2-build-github.com-mazznoer-csscolorparser",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "MIT",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-mazznoer-csscolorparser--LICENSE.txt",
+          "sha256": "54d5c177c5a7b24ec8b5b3182a5884d958c6a70c6be1ebb2fdd4627841415204",
+          "upstream": "https://proxy.golang.org/github.com/mazznoer/csscolorparser/@v/v0.1.5.zip",
+          "upstream_archive_sha256": "c6ae8b1878b632a894e47df22a070d0cf270f3547800647eb1d48667c579baea",
+          "upstream_path": "LICENSE"
+        }
+      ],
+      "name": "github.com/mazznoer/csscolorparser (D2 publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://github.com/mazznoer/csscolorparser",
+      "version": "publisher source-build input v0.1.5"
+    },
+    {
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "d2-build-github.com-rivo-uniseg",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "MIT",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-rivo-uniseg--LICENSE.txt",
+          "sha256": "a59885f5f0f3b3c07cf9444db5fe399b6f0791eac82055f7b85cc65500551039",
+          "upstream": "https://proxy.golang.org/github.com/rivo/uniseg/@v/v0.4.7.zip",
+          "upstream_archive_sha256": "b995e4aa0cc1e5779cc61138ac925cb8c1e963e40c80e4b93ee8553812ebb792",
+          "upstream_path": "LICENSE.txt"
+        }
+      ],
+      "name": "github.com/rivo/uniseg (D2 publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://github.com/rivo/uniseg",
+      "version": "publisher source-build input v0.4.7"
+    },
+    {
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "d2-build-github.com-yuin-goldmark",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "MIT",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-yuin-goldmark--LICENSE.txt",
+          "sha256": "c1d6f653c38c80294dc7994647ba0dcc508ce64a86996303c804efa2f7982bff",
+          "upstream": "https://proxy.golang.org/github.com/yuin/goldmark/@v/v1.7.4.zip",
+          "upstream_archive_sha256": "7e0a308bb016a245a6e20ed44f088b0a17b46ccac70e454735ae1575703a4816",
+          "upstream_path": "LICENSE"
+        }
+      ],
+      "name": "github.com/yuin/goldmark (D2 publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://github.com/yuin/goldmark",
+      "version": "publisher source-build input v1.7.4"
+    },
+    {
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "d2-build-golang.org-x-exp",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "BSD-3-Clause",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-golang.org-x-exp--LICENSE.txt",
+          "sha256": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+          "upstream": "https://proxy.golang.org/golang.org/x/exp/@v/v0.0.0-20240909161429-701f63a606c0.zip",
+          "upstream_archive_sha256": "447a436882177a2a9fc281116f1858d6e0533c790a90f55cf3a64f1cafb752c6",
+          "upstream_path": "LICENSE"
+        }
+      ],
+      "name": "golang.org/x/exp (D2 publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://golang.org/x/exp",
+      "version": "publisher source-build input v0.0.0-20240909161429-701f63a606c0"
+    },
+    {
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "d2-build-golang.org-x-image",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "BSD-3-Clause",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-golang.org-x-image--LICENSE.txt",
+          "sha256": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+          "upstream": "https://proxy.golang.org/golang.org/x/image/@v/v0.20.0.zip",
+          "upstream_archive_sha256": "1f0f48daa679986db28876cef4074ff192fb705fcdc537627903270375bf6971",
+          "upstream_path": "LICENSE"
+        }
+      ],
+      "name": "golang.org/x/image (D2 publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://golang.org/x/image",
+      "version": "publisher source-build input v0.20.0"
+    },
+    {
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "d2-build-golang.org-x-net",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "BSD-3-Clause",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-golang.org-x-net--LICENSE.txt",
+          "sha256": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+          "upstream": "https://proxy.golang.org/golang.org/x/net/@v/v0.35.0.zip",
+          "upstream_archive_sha256": "9c746c215d695e80d6f4d1b1f1d55deaae5e451b4c031223af25f2b2f0757215",
+          "upstream_path": "LICENSE"
+        }
+      ],
+      "name": "golang.org/x/net (D2 publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://golang.org/x/net",
+      "version": "publisher source-build input v0.35.0"
+    },
+    {
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "d2-build-golang.org-x-text",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "BSD-3-Clause",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-golang.org-x-text--LICENSE.txt",
+          "sha256": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+          "upstream": "https://proxy.golang.org/golang.org/x/text/@v/v0.22.0.zip",
+          "upstream_archive_sha256": "939cb4c202aa8fa302f2ba6f9d29165ce82fce9c665d9a1a0bb0d9e51b79e6f5",
+          "upstream_path": "LICENSE"
+        }
+      ],
+      "name": "golang.org/x/text (D2 publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://golang.org/x/text",
+      "version": "publisher source-build input v0.22.0"
+    },
+    {
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "d2-build-golang.org-x-xerrors",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "BSD-3-Clause",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-golang.org-x-xerrors--LICENSE.txt",
+          "sha256": "f9a2df4fb1d45cef691b8bc2e35776f8bee5af5b3696d48d4547635d7858bf91",
+          "upstream": "https://proxy.golang.org/golang.org/x/xerrors/@v/v0.0.0-20240903120638-7835f813f4da.zip",
+          "upstream_archive_sha256": "07ee9f680118861ee732ce0df4553b834383b87e0519fb9a0990c51d7abd6885",
+          "upstream_path": "LICENSE"
+        }
+      ],
+      "name": "golang.org/x/xerrors (D2 publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://golang.org/x/xerrors",
+      "version": "publisher source-build input v0.0.0-20240903120638-7835f813f4da"
+    },
+    {
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "d2-build-oss.terrastruct.com-util-go",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "licence": "ISC",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-oss.terrastruct.com-util-go--LICENSE.txt",
+          "sha256": "798801f8406a10b9ab31136f8fd05ddbdc61d8dea37e6e6f5687bd8541884005",
+          "upstream": "https://proxy.golang.org/oss.terrastruct.com/util-go/@v/v0.0.0-20250213174338-243d8661088a.zip",
+          "upstream_archive_sha256": "850c470a3055d03061536e1341fc8d87237613612743637bdaeebff3cdfab239",
+          "upstream_path": "LICENSE"
+        }
+      ],
+      "name": "oss.terrastruct.com/util-go (D2 publisher-build attribution)",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "upstream": "https://oss.terrastruct.com/util-go",
+      "version": "publisher source-build input v0.0.0-20250213174338-243d8661088a"
+    },
+    {
+      "copyright": [
+        "Original copyright holders and notices are reproduced in the complete texts below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "renderer-build-bison-skeleton",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-02",
+        "LC-07"
+      ],
+      "licence": "GPL-3.0-or-later WITH Bison-exception-2.2",
+      "licence_texts": [
+        {
+          "byte_end_exclusive": 1534,
+          "byte_start": 0,
+          "path": "compliance/licenses/renderer-build-bison-skeleton--NOTICE.txt",
+          "sha256": "e4b163e4052ac5d612d633187449c78d14484df49c258d3507f169c7224614b1",
+          "upstream": "https://gitlab.com/graphviz/graphviz",
+          "upstream_path": "lib/common/htmlparse.c; lib/cgraph/grammar.c",
+          "upstream_revision": "06fff22d8e1a2aead6de0042e5e5ec2f7749be29"
+        },
+        {
+          "path": "compliance/licenses/renderer-build-bison-skeleton--GPL-3.0.txt",
+          "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+          "upstream": "https://github.com/akimd/bison",
+          "upstream_path": "COPYING",
+          "upstream_revision": "9beba1919cad5dd08b0cac277c27896808719e4b"
+        }
+      ],
+      "name": "Bison skeleton text in Graphviz source (build-reference attribution)",
+      "notes": "The complete existing skeleton exception is preserved with the GPL text. Graphviz is a parser consumer, not a parser-generator product; this records the source notice without declaring the entire application GPL or claiming its exact generated parser/compiler output has been independently reproduced.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-reference; exact binary retention not independently proved",
+      "upstream": "https://www.gnu.org/software/bison/",
+      "version": "3.8.2 in Graphviz 16.0.0 source"
+    },
+    {
+      "copyright": [
+        "Original copyright holders and notices are reproduced in the complete texts below."
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "id": "renderer-build-emscripten",
+      "kind": "attribution",
+      "lc": [
+        "LC-01",
+        "LC-02",
+        "LC-07"
+      ],
+      "licence": "MIT AND (MIT OR NCSA)",
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/renderer-build-emscripten--LICENSE.txt",
+          "reference_file": "emscripten-LICENSE",
+          "sha256": "620a78084fc7ca97c0b5dea9abf891f3ffcadfdbf305276f099c9c4e12fc1d86",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_path": "LICENSE",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849"
+        },
+        {
+          "path": "compliance/licenses/renderer-build-emscripten--AUTHORS.txt",
+          "reference_file": "emscripten-AUTHORS",
+          "sha256": "9d24c3cb52c1f712fbc6660337074f76eb2a12a0dde1dd0076c4310807c4e83c",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_path": "AUTHORS",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849"
+        },
+        {
+          "path": "compliance/licenses/renderer-build-emscripten--MUSL-COPYRIGHT.txt",
+          "reference_file": "musl-COPYRIGHT",
+          "sha256": "f9bc4423732350eb0b3f7ed7e91d530298476f8fec0c6c427a1c04ade22655af",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_path": "system/lib/libc/musl/COPYRIGHT",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849"
+        }
+      ],
+      "name": "Emscripten and musl root notices (Viz.js publisher-build reference)",
+      "notes": "Publisher build record names emscripten/emsdk 5.0.7 and its image digest. Exact tag reference and full root notices/authors are retained. This is conservative build-reference attribution, not proof of all retained runtime or libc/compiler-rt/libc++ subcomponents; their per-file notices and exact build images remain an open audit.",
+      "provenance": "verified",
+      "resolution": "publisher-source-build-reference; exact binary retention not independently proved",
+      "upstream": "https://github.com/emscripten-core/emscripten",
+      "version": "5.0.7 source reference"
+    }
+  ],
+  "remaining": [
+    "Rough.js points-on-curve names an adapted offset-Bezier algorithm reference; this is an unresolved embedded-source provenance lead, not silently cleared by its MIT package label.",
+    "D2 build graph is publisher-source correspondence, not an independent WASM rebuild or exhaustive embedded copyright audit. Liberation Mono Reserved Font Name and independent provenance review remain open.",
+    "Framer spring original adaptation revision/license ambiguity, Ralf Thenable full-text linkage, generated/unmapped Mermaid helpers and Graphviz/Emscripten review remain separate.",
+    "Bison skeleton exception and Emscripten/musl root notices are included conservatively. Exact generated parser output and runtime/libc/compiler-rt/libc++ per-file retention still need independent review; root notices are not exhaustive closure."
+  ],
+  "schema": 1,
+  "scope": "22 conservative publisher source-build/reference attributions; not independent binary retention or complete embedded-code audit"
+}

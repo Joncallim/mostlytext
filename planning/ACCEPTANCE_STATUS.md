@@ -14,7 +14,7 @@ acceptance. The live backlog is [MostlyText issues](https://github.com/Joncallim
 | Native execution here | UID501 console; UID502 test account has no GUI domain; protected staging absent; nonprompting sudo refuses | #5 UI triage; never execute the owner-data paths to bypass this prerequisite |
 | Signing discovery here | Valid Developer ID Application identity for team 968BRM85G5 found | #4: actual signing/key authorization/hardened-runtime acceptance not executed |
 | Notarization preflight | Real script stops because documented mostlytext-notary keychain profile is absent | #4: credential profile, submissions, stapling and online/offline Gatekeeper acceptance remain open |
-| Source/nonrelease artifact inventory | Passes; current scoped attribution checks include 109 local Compliance controls | #14 final compliance is a separate strict gate |
+| Source/nonrelease artifact inventory | Passes; current scoped attribution checks include 131 local Compliance controls | #14 final compliance is a separate strict gate |
 | Strict release compliance | Six failures remain, detailed below | #14: acceptance is blocked before an RC can be submitted |
 | Repository preview | Source SVG/JPEG ready and visually checked; settings upload did not persist and native chooser fallback is blocked by the locked desktop | #16: install/read back the social preview remains open |
 | Website | Separate mostlytext-site source/license; current FAQ and source/backlog links merged | No deployment was initiated; historical roadmap is explicitly dated |
@@ -72,3 +72,26 @@ These whole issues remain open; completed source sub-items are checked with
 specific evidence. There is no release or native acceptance claim in this table.
 [Identity handoff](IDENTITY.md), [current signing brief](MAC_SIGNING_BRIEF.md) and
 [historical release evidence](RELEASE_EVIDENCE.md) provide the detailed contracts.
+
+## Nested notices and engineering documentation — 3 November 2026
+
+The current [package checkpoint](../compliance/evidence/mermaid-package-notices/README.md)
+adds 73 complete selected package texts alongside the existing Cytoscape record,
+covering all 74 mapped package records. The two candidate versions remain visibly
+unresolved. [Build-reference notices](../compliance/evidence/nested-build-attribution/README.md)
+add 22 conservative records for Rough.js/D2/Bison/Emscripten sources. No renderer,
+Swift source, dependency lock or native guard changes. All 131 local Compliance
+controls pass; exact source-map and build-input replays pass. The
+[Graphviz local source-review package](../compliance/evidence/graphviz-source-review/README.md)
+now has a deterministic assembler, manifested digest and corruption controls.
+It is not approved as complete corresponding source or published.
+
+[The current license-window contract](../compliance/LICENCES_UI.md) replaces stale
+unstarted/Textual instructions with the actual native plain-text implementation
+and explicitly retains the absent original Help-menu integration requirement.
+[Remaining engineering ownership](ENGINEERING_REMAINDER.md) names unfinished
+implementation, diagnosis, native acceptance and release/publication work for all
+17 open issues. Completing these documentation and notice units does not close
+the broader issues. All six strict release failures remain; origin ambiguities,
+independent source/font/runtime review and exact signed-artifact gates are not
+waived. No local app/UI execution or publication is claimed.

@@ -3,7 +3,7 @@
   "product": {
     "name": "MostlyText",
     "version": "1.0.0",
-    "note": "Release identity decided 2026-09-28 (planning/RELEASE_PATH.md \u00a74). This inventory targets the planned 1.0.0 release. The current development build is MostlyText 0.1.0 (1), with internal MacDown2.app packaging and exact release acceptance still tracked in #4/#14."
+    "note": "Release identity decided 2026-09-28 (planning/RELEASE_PATH.md §4). This inventory targets the planned 1.0.0 release. The current development build is MostlyText 0.1.0 (1), with internal MacDown2.app packaging and exact release acceptance still tracked in #4/#14."
   },
   "first_party": {
     "licence": "MIT",
@@ -117,7 +117,7 @@
         "status": "planned"
       },
       "open_items": [
-        "LC-03: complete independent review of the recorded D2 Go/WASM source graph, including the embedded Liberation Mono WOFF's Reserved Font Name treatment, and publish the upstream package plus the one-line patch through LC-09."
+        "LC-03: complete independent review of the D2 Go/WASM source graph and embedded/nested code, including Liberation Mono Reserved Font Name treatment, and approve/publish the upstream package plus one-line patch through LC-09. Complete root texts for all 16 recorded module inputs, including the FreeType License option and binary acknowledgement, are now distributed as conservative source-build attributions; this is not an independent WASM rebuild or complete source-offer approval."
       ],
       "runtime_resources": [
         {
@@ -303,7 +303,7 @@
       "resolution": "exact",
       "licence": "MIT",
       "copyright": [
-        "Copyright (c) 2017-2020 Ingy d\u00f6t Net",
+        "Copyright (c) 2017-2020 Ingy döt Net",
         "Copyright (c) 2006-2016 Kirill Simonov"
       ],
       "licence_texts": [
@@ -446,7 +446,7 @@
         }
       ],
       "open_items": [
-        "Complete the remaining Mermaid nested-notice inventory from the shipped-source evidence: package texts/versions (including original resolution for the two content-matched candidates), Ralf Thenable and Framer/Koen spring review, Rough.js nested inputs, and unmapped/generated helpers. Cytoscape own-code, Bezier and jQuery-derived event MIT texts are now recorded separately; those scoped attributions do not complete the bundle audit or exact-artifact gate."
+        "Complete remaining embedded/generated Mermaid attribution and original resolution for two content-matched candidate versions. All 74 mapped package records now have complete selected texts distributed (Cytoscape retained separately); four Rough.js publisher-build input notices are also registered. Ralf Thenable full-text linkage, Framer/Koen spring origin ambiguity, points-on-curve borrowed-algorithm provenance, other nested helpers, unmapped parser/generated positions and exact final artifact proof remain open. Source-build references and root package labels do not complete nested-code review."
       ],
       "runtime_resources": [
         {
@@ -494,7 +494,7 @@
       "resolution": "exact",
       "licence": "MIT",
       "copyright": [
-        "Copyright (c) 2014 Ga\u00ebtan Renaudeau"
+        "Copyright (c) 2014 Gaëtan Renaudeau"
       ],
       "licence_texts": [
         {
@@ -1090,7 +1090,7 @@
     },
     {
       "id": "theme-tomorrow-dark",
-      "name": "Editor theme \u201cTomorrow Dark\u201d (colour values)",
+      "name": "Editor theme “Tomorrow Dark” (colour values)",
       "kind": "data",
       "version": "n/a",
       "upstream": "https://github.com/chriskempson/tomorrow-theme",
@@ -1143,7 +1143,7 @@
     },
     {
       "id": "theme-tomorrow-light",
-      "name": "Editor theme \u201cGitHub Light\u201d (legacy tomorrow-light identifier)",
+      "name": "Editor theme “GitHub Light” (legacy tomorrow-light identifier)",
       "kind": "data",
       "version": "n/a",
       "upstream": "https://github.com/primer/github-syntax-light",
@@ -2197,8 +2197,8 @@
         "status": "planned"
       },
       "open_items": [
-        "LC-02: exact Graphviz 16.0.0, Viz.js 3.30.0 and Expat 2.8.4 source/build inputs are hashed in compliance/evidence/viz-js-3.30.0; assemble and review the complete corresponding-source offer, then publish it through LC-09.",
-        "Expat 2.8.4, Graphviz's red-black tree, Luc Maisonobe-derived ellipse routine and Random kit source linkage and notices are recorded. Complete the remaining embedded Graphviz and Emscripten runtime attribution audit, including generated Bison parser skeleton exceptions; the source linker chains alone are not a complete linked-code inventory."
+        "LC-02: exact Graphviz 16.0.0, Viz.js 3.30.0 and Expat 2.8.4 source/build inputs have a reproducible local source-review package. Complete independent corresponding-source/compiler-input review, approval and LC-09 publication/anonymous retrieval remain open; a prepared review package is not a complete approved offer.",
+        "Expat, red-black tree, ellipse and Random kit notices remain registered. The distributed Bison skeleton copyright/exception/full GPL text and Emscripten/musl root notices now have conservative source-build references. Complete exact generated-parser and runtime/libc/compiler-rt/libc++ per-file retention and attribution review; neither root notices nor direct linker lists prove exhaustive linked-code coverage."
       ],
       "runtime_resources": [
         {
@@ -2246,7 +2246,7 @@
     },
     {
       "id": "theme-paper",
-      "name": "Editor theme \u201cPaper\u201d",
+      "name": "Editor theme “Paper”",
       "kind": "data",
       "version": "1.0.0",
       "upstream": "https://github.com/Joncallim/macdown_2",
@@ -2287,7 +2287,7 @@
     },
     {
       "id": "theme-daybreak",
-      "name": "Editor theme \u201cDaybreak\u201d",
+      "name": "Editor theme “Daybreak”",
       "kind": "data",
       "version": "1.0.0",
       "upstream": "https://github.com/Joncallim/macdown_2",
@@ -2328,7 +2328,7 @@
     },
     {
       "id": "theme-high-contrast-light",
-      "name": "Editor theme \u201cHigh Contrast Light\u201d",
+      "name": "Editor theme “High Contrast Light”",
       "kind": "data",
       "version": "1.0.0",
       "upstream": "https://github.com/Joncallim/macdown_2",
@@ -2369,7 +2369,7 @@
     },
     {
       "id": "theme-slate",
-      "name": "Editor theme \u201cSlate\u201d",
+      "name": "Editor theme “Slate”",
       "kind": "data",
       "version": "1.0.0",
       "upstream": "https://github.com/Joncallim/macdown_2",
@@ -2410,7 +2410,7 @@
     },
     {
       "id": "theme-midnight",
-      "name": "Editor theme \u201cMidnight\u201d",
+      "name": "Editor theme “Midnight”",
       "kind": "data",
       "version": "1.0.0",
       "upstream": "https://github.com/Joncallim/macdown_2",
@@ -2451,7 +2451,7 @@
     },
     {
       "id": "theme-high-contrast-dark",
-      "name": "Editor theme \u201cHigh Contrast Dark\u201d",
+      "name": "Editor theme “High Contrast Dark”",
       "kind": "data",
       "version": "1.0.0",
       "upstream": "https://github.com/Joncallim/macdown_2",
@@ -2520,6 +2520,2784 @@
         "exact": "1.8.2"
       },
       "evidence": "Pinned 1.8.2 release at immutable revision 6a52f3251125d74daf04fcbd5e6f08a75d074382 for the public CLI argument boundary (#18). Package.swift has no external dependencies; the exact upstream licence includes its Runtime Library Exception. Existing resolution pins are unchanged."
+    },
+    {
+      "id": "mermaid-package-braintree-sanitize-url-7.1.2",
+      "name": "@braintree/sanitize-url (via Mermaid)",
+      "kind": "attribution",
+      "version": "7.1.2",
+      "upstream": "https://registry.npmjs.org/@braintree%2Fsanitize-url/7.1.2",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-braintree-sanitize-url-7.1.2--1.txt",
+          "sha256": "0984740e0c3d725c8044dec7edcefe1dbce180ef5a7bc710c251e19607000158",
+          "upstream": "https://registry.npmjs.org/@braintree/sanitize-url/-/sanitize-url-7.1.2.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "fd9a220c24c5cdd406433cce1c3db7f09222d8f7977f0fe087aec914e1a63dc0"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "@braintree/sanitize-url@7.1.2"
+    },
+    {
+      "id": "mermaid-package-chevrotain-gast-11.1.2",
+      "name": "@chevrotain/gast (via Mermaid)",
+      "kind": "attribution",
+      "version": "11.1.2",
+      "upstream": "https://registry.npmjs.org/@chevrotain%2Fgast/11.1.2",
+      "licence": "Apache-2.0",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-chevrotain-gast-11.1.2--1.txt",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+          "upstream": "https://registry.npmjs.org/@chevrotain/gast/-/gast-11.1.2.tgz",
+          "upstream_path": "LICENSE.txt",
+          "upstream_archive_sha256": "10d6ea7e6884108dd7167c0aed54c300b525683574e9336ff1507a472414df1e"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "@chevrotain/gast@11.1.2"
+    },
+    {
+      "id": "mermaid-package-chevrotain-regexp-to-ast-11.1.2",
+      "name": "@chevrotain/regexp-to-ast (via Mermaid)",
+      "kind": "attribution",
+      "version": "11.1.2",
+      "upstream": "https://registry.npmjs.org/@chevrotain%2Fregexp-to-ast/11.1.2",
+      "licence": "Apache-2.0",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-chevrotain-regexp-to-ast-11.1.2--1.txt",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+          "upstream": "https://registry.npmjs.org/@chevrotain/regexp-to-ast/-/regexp-to-ast-11.1.2.tgz",
+          "upstream_path": "LICENSE.txt",
+          "upstream_archive_sha256": "bda3be7ab6ad851d5bc723af365c547e630ddb3f065c2b0513c1a9ac69757294"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "@chevrotain/regexp-to-ast@11.1.2"
+    },
+    {
+      "id": "mermaid-package-chevrotain-utils-11.1.2",
+      "name": "@chevrotain/utils (via Mermaid)",
+      "kind": "attribution",
+      "version": "11.1.2",
+      "upstream": "https://registry.npmjs.org/@chevrotain%2Futils/11.1.2",
+      "licence": "Apache-2.0",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-chevrotain-utils-11.1.2--1.txt",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+          "upstream": "https://registry.npmjs.org/@chevrotain/utils/-/utils-11.1.2.tgz",
+          "upstream_path": "LICENSE.txt",
+          "upstream_archive_sha256": "be2de827ae6eaa5cbd1fa1e912302139992da39e483970cf20556de5cba0194a"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "@chevrotain/utils@11.1.2"
+    },
+    {
+      "id": "mermaid-package-iconify-utils-3.0.2",
+      "name": "@iconify/utils (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.0.2",
+      "upstream": "https://registry.npmjs.org/@iconify%2Futils/3.0.2",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-iconify-utils-3.0.2--1.txt",
+          "sha256": "a86793ac023162ce98b91899601c15f6712f44943163c4f92a0a4bf89152b3bf",
+          "upstream": "https://registry.npmjs.org/@iconify/utils/-/utils-3.0.2.tgz",
+          "upstream_path": "license.txt",
+          "upstream_archive_sha256": "7f1b0f8bd152444d962bbcb258f57583bea55bb05e437eedf4cc950b9b56f969"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "@iconify/utils@3.0.2"
+    },
+    {
+      "id": "mermaid-package-mermaid-js-parser-1.2.1",
+      "name": "@mermaid-js/parser (via Mermaid)",
+      "kind": "attribution",
+      "version": "1.2.1",
+      "upstream": "https://registry.npmjs.org/@mermaid-js%2Fparser/1.2.1",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-mermaid-js-parser-1.2.1--1.txt",
+          "sha256": "d374061c40bfb6f99c5033290caefda97a9b3e7e477e5ee02f487143ef2177e8",
+          "upstream": "https://registry.npmjs.org/@mermaid-js/parser/-/parser-1.2.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "97eef1a4c37110e4836b6eb8dd6a348d989efb370a7672831df01042a7c323f4"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "@mermaid-js/parser@1.2.1"
+    },
+    {
+      "id": "mermaid-package-upsetjs-venn.js-2.0.0",
+      "name": "@upsetjs/venn.js (via Mermaid)",
+      "kind": "attribution",
+      "version": "2.0.0",
+      "upstream": "https://registry.npmjs.org/@upsetjs%2Fvenn.js/2.0.0",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-upsetjs-venn.js-2.0.0--1.txt",
+          "sha256": "6a3508febf2cfccfee96597394543a6154a4bb0b1f91f28404be42c09e9fcb54",
+          "upstream": "https://registry.npmjs.org/@upsetjs/venn.js/-/venn.js-2.0.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "23c5da5de5c23351c6c6ed891d6416284c05c618e2774bd55484a4c4bef321e4"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "@upsetjs/venn.js@2.0.0"
+    },
+    {
+      "id": "mermaid-package-chevrotain-11.1.2",
+      "name": "chevrotain (via Mermaid)",
+      "kind": "attribution",
+      "version": "11.1.2",
+      "upstream": "https://registry.npmjs.org/chevrotain/11.1.2",
+      "licence": "Apache-2.0",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-chevrotain-11.1.2--1.txt",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+          "upstream": "https://registry.npmjs.org/chevrotain/-/chevrotain-11.1.2.tgz",
+          "upstream_path": "LICENSE.txt",
+          "upstream_archive_sha256": "bf2d28019e3a6b2d5f0980440c8467721e6e0a12cdce8b778a32034f3c516297"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "chevrotain@11.1.2"
+    },
+    {
+      "id": "mermaid-package-chevrotain-allstar-0.3.1",
+      "name": "chevrotain-allstar (via Mermaid)",
+      "kind": "attribution",
+      "version": "0.3.1",
+      "upstream": "https://registry.npmjs.org/chevrotain-allstar/0.3.1",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-chevrotain-allstar-0.3.1--1.txt",
+          "sha256": "1db2cfbc7ce5fa3b82699b4ac4badce8984084d25b5308ece00f5c9b1381a0a5",
+          "upstream": "https://registry.npmjs.org/chevrotain-allstar/-/chevrotain-allstar-0.3.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "51027c5355c69e6404bb6415e2cd27594569616f97daf613535b662cc5cf0763"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "chevrotain-allstar@0.3.1"
+    },
+    {
+      "id": "mermaid-package-cose-base-1.0.3",
+      "name": "cose-base (via Mermaid)",
+      "kind": "attribution",
+      "version": "1.0.3",
+      "upstream": "https://registry.npmjs.org/cose-base/1.0.3",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-cose-base-1.0.3--1.txt",
+          "sha256": "5fb3cf4a14c3c5af6e473a192df8bca10c77754e3a0c6492c79fb92a76a5478a",
+          "upstream": "https://registry.npmjs.org/cose-base/-/cose-base-1.0.3.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "a20640fb8c1a2cf226eb9195785e9f714ba1cce1e80cb8f48d131d1bc0909d18"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "cose-base@1.0.3"
+    },
+    {
+      "id": "mermaid-package-cose-base-2.2.0",
+      "name": "cose-base (via Mermaid)",
+      "kind": "attribution",
+      "version": "2.2.0",
+      "upstream": "https://registry.npmjs.org/cose-base/2.2.0",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-cose-base-2.2.0--1.txt",
+          "sha256": "5fb3cf4a14c3c5af6e473a192df8bca10c77754e3a0c6492c79fb92a76a5478a",
+          "upstream": "https://registry.npmjs.org/cose-base/-/cose-base-2.2.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "612ec91a30b7f2dc158cca4846eeea1b7f89a97fc672951da3c1932107de6da8"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "cose-base@2.2.0"
+    },
+    {
+      "id": "mermaid-package-cytoscape-cose-bilkent-4.1.0",
+      "name": "cytoscape-cose-bilkent (via Mermaid)",
+      "kind": "attribution",
+      "version": "4.1.0",
+      "upstream": "https://registry.npmjs.org/cytoscape-cose-bilkent/4.1.0",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-cytoscape-cose-bilkent-4.1.0--1.txt",
+          "sha256": "440fc58a56a12814e417d2b341da89b050da052dc75bdb235607d37ec5fe74ef",
+          "upstream": "https://registry.npmjs.org/cytoscape-cose-bilkent/-/cytoscape-cose-bilkent-4.1.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "9df46b10952452b1d2a5d4cd942f70709a037bc6b7ef25cf1d9fb70be73bb950"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "cytoscape-cose-bilkent@4.1.0"
+    },
+    {
+      "id": "mermaid-package-cytoscape-fcose-2.2.0",
+      "name": "cytoscape-fcose (via Mermaid)",
+      "kind": "attribution",
+      "version": "2.2.0",
+      "upstream": "https://registry.npmjs.org/cytoscape-fcose/2.2.0",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-cytoscape-fcose-2.2.0--1.txt",
+          "sha256": "2837634f403949215760fcdd2fa1ed0c64875d02099ecc8318c704b852f1421d",
+          "upstream": "https://registry.npmjs.org/cytoscape-fcose/-/cytoscape-fcose-2.2.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "4e1f30e1821fdd4b66f21043c8ea40a8e2ad0ba75e4ccdd2c24d289cf5595432"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "cytoscape-fcose@2.2.0"
+    },
+    {
+      "id": "mermaid-package-d3-7.9.0",
+      "name": "d3 (via Mermaid)",
+      "kind": "attribution",
+      "version": "7.9.0",
+      "upstream": "https://registry.npmjs.org/d3/7.9.0",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-7.9.0--1.txt",
+          "sha256": "3e6849627f74ff73c257a3ae1efb574015d94fc1035c05ec3c15805165efcbc4",
+          "upstream": "https://registry.npmjs.org/d3/-/d3-7.9.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "7e36605710a2ba54846797c8c6d888911341b215ae53257dc32a49a0b824355e"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3@7.9.0"
+    },
+    {
+      "id": "mermaid-package-d3-array-2.12.1",
+      "name": "d3-array (via Mermaid)",
+      "kind": "attribution",
+      "version": "2.12.1",
+      "upstream": "https://registry.npmjs.org/d3-array/2.12.1",
+      "licence": "BSD-3-Clause",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-array-2.12.1--1.txt",
+          "sha256": "0747bebeb06b10954913149be9b9a8bdf6fad3e6fdcbd9f9524e7a94c13d2cea",
+          "upstream": "https://registry.npmjs.org/d3-array/-/d3-array-2.12.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "3795da9bd345fc440b82be032400c538298e021b559ca48342fe9647e44bb86b"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-array@2.12.1"
+    },
+    {
+      "id": "mermaid-package-d3-array-3.2.4",
+      "name": "d3-array (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.2.4",
+      "upstream": "https://registry.npmjs.org/d3-array/3.2.4",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-array-3.2.4--1.txt",
+          "sha256": "3e6849627f74ff73c257a3ae1efb574015d94fc1035c05ec3c15805165efcbc4",
+          "upstream": "https://registry.npmjs.org/d3-array/-/d3-array-3.2.4.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "6dbf3f2be39e48f86775be6e166a5d3e5a585ca7144453cd6ad1912f5ae4417f"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-array@3.2.4"
+    },
+    {
+      "id": "mermaid-package-d3-axis-3.0.0",
+      "name": "d3-axis (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.0.0",
+      "upstream": "https://registry.npmjs.org/d3-axis/3.0.0",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-axis-3.0.0--1.txt",
+          "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee",
+          "upstream": "https://registry.npmjs.org/d3-axis/-/d3-axis-3.0.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "b5ca6e00b9a2503d6b473485684670564a370733cdc8565a45b63f9fb4d944f6"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-axis@3.0.0"
+    },
+    {
+      "id": "mermaid-package-d3-brush-3.0.0",
+      "name": "d3-brush (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.0.0",
+      "upstream": "https://registry.npmjs.org/d3-brush/3.0.0",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-brush-3.0.0--1.txt",
+          "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee",
+          "upstream": "https://registry.npmjs.org/d3-brush/-/d3-brush-3.0.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "fde88a49b16f92d067401df00abf88bf07eec3e091343eb902caf9cab02bdf2a"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-brush@3.0.0"
+    },
+    {
+      "id": "mermaid-package-d3-chord-3.0.1",
+      "name": "d3-chord (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.0.1",
+      "upstream": "https://registry.npmjs.org/d3-chord/3.0.1",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-chord-3.0.1--1.txt",
+          "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee",
+          "upstream": "https://registry.npmjs.org/d3-chord/-/d3-chord-3.0.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "84c47d193e5e8c5fd3a28783a55b34f08dfaa1c8d764e96d9b49c78a3b6b40b5"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-chord@3.0.1"
+    },
+    {
+      "id": "mermaid-package-d3-color-3.1.0",
+      "name": "d3-color (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.1.0",
+      "upstream": "https://registry.npmjs.org/d3-color/3.1.0",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-color-3.1.0--1.txt",
+          "sha256": "faa682e3e430941f958d26180458f5934a62f58dac4d70ccdd15608c15d0f884",
+          "upstream": "https://registry.npmjs.org/d3-color/-/d3-color-3.1.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "d41bbcd99dd4f00e696546bffc73fed9b8fb6c3354905b6ea1721bff25f33b42"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-color@3.1.0"
+    },
+    {
+      "id": "mermaid-package-d3-contour-4.0.2",
+      "name": "d3-contour (via Mermaid)",
+      "kind": "attribution",
+      "version": "4.0.2",
+      "upstream": "https://registry.npmjs.org/d3-contour/4.0.2",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-contour-4.0.2--1.txt",
+          "sha256": "e51cba0e4fa1d8c078e15319868f2b90188f413f9ce9dac1043b62db32901e93",
+          "upstream": "https://registry.npmjs.org/d3-contour/-/d3-contour-4.0.2.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "fa347e237c259a987fc3cfd890e2fcb0f2ec42ed125a2c9363854509e86db8f4"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-contour@4.0.2"
+    },
+    {
+      "id": "mermaid-package-d3-delaunay-6.0.4",
+      "name": "d3-delaunay (via Mermaid)",
+      "kind": "attribution",
+      "version": "6.0.4",
+      "upstream": "https://registry.npmjs.org/d3-delaunay/6.0.4",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-delaunay-6.0.4--1.txt",
+          "sha256": "582c3022bd01942336095f92b58a90b1be624dc547d987555c6c956512dd24c1",
+          "upstream": "https://registry.npmjs.org/d3-delaunay/-/d3-delaunay-6.0.4.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "935113ffa78d545505c8f1accf95be0e48594737eab34db8f50c9d6319907971"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-delaunay@6.0.4"
+    },
+    {
+      "id": "mermaid-package-d3-dispatch-3.0.1",
+      "name": "d3-dispatch (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.0.1",
+      "upstream": "https://registry.npmjs.org/d3-dispatch/3.0.1",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-dispatch-3.0.1--1.txt",
+          "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee",
+          "upstream": "https://registry.npmjs.org/d3-dispatch/-/d3-dispatch-3.0.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "3d1a0b5c003e0e9608ad57f6ca21a0c8368031fcbe5f5317fe4e50b3f797ea23"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-dispatch@3.0.1"
+    },
+    {
+      "id": "mermaid-package-d3-drag-3.0.0",
+      "name": "d3-drag (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.0.0",
+      "upstream": "https://registry.npmjs.org/d3-drag/3.0.0",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-drag-3.0.0--1.txt",
+          "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee",
+          "upstream": "https://registry.npmjs.org/d3-drag/-/d3-drag-3.0.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "a3ccc9d31d85135f35a4eda3ec0fae6ac22435d4e3fe2d2e0c73b5246460d4db"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-drag@3.0.0"
+    },
+    {
+      "id": "mermaid-package-d3-dsv-3.0.1",
+      "name": "d3-dsv (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.0.1",
+      "upstream": "https://registry.npmjs.org/d3-dsv/3.0.1",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-dsv-3.0.1--1.txt",
+          "sha256": "7842a82012622e5a37bfe4f6c1b67cd3bae6350716b5bf87f36cea0bdc1319dc",
+          "upstream": "https://registry.npmjs.org/d3-dsv/-/d3-dsv-3.0.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "fdafcae0362205e2fc63fe3e87fed54822227d9370ce5150914f863ec36153cb"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-dsv@3.0.1"
+    },
+    {
+      "id": "mermaid-package-d3-ease-3.0.1",
+      "name": "d3-ease (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.0.1",
+      "upstream": "https://registry.npmjs.org/d3-ease/3.0.1",
+      "licence": "BSD-3-Clause",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-ease-3.0.1--1.txt",
+          "sha256": "b989d9085148d21ff64a75e14462aefa06b2589a55553b07b1460c70081c7d08",
+          "upstream": "https://registry.npmjs.org/d3-ease/-/d3-ease-3.0.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "b249afe4aa8b741beeaf2d14f625ccf49270adb645e3f1c755d11476c1fdbe2a"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-ease@3.0.1"
+    },
+    {
+      "id": "mermaid-package-d3-fetch-3.0.1",
+      "name": "d3-fetch (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.0.1",
+      "upstream": "https://registry.npmjs.org/d3-fetch/3.0.1",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-fetch-3.0.1--1.txt",
+          "sha256": "ffdc17dc9040006bddeb891c95bfbb492e86d6bc64a4a4233666febab1be35e0",
+          "upstream": "https://registry.npmjs.org/d3-fetch/-/d3-fetch-3.0.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "8a3d61af2bed2b4899df1a90dfed41c0e10ad79d1bea93a18155f5d4e11a526f"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-fetch@3.0.1"
+    },
+    {
+      "id": "mermaid-package-d3-force-3.0.0",
+      "name": "d3-force (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.0.0",
+      "upstream": "https://registry.npmjs.org/d3-force/3.0.0",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-force-3.0.0--1.txt",
+          "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee",
+          "upstream": "https://registry.npmjs.org/d3-force/-/d3-force-3.0.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "deacfa7ecb466f88717fe1863347dd65e5a5422d9f8c893d771cb2a7f987fa15"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-force@3.0.0"
+    },
+    {
+      "id": "mermaid-package-d3-format-3.1.0",
+      "name": "d3-format (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.1.0",
+      "upstream": "https://registry.npmjs.org/d3-format/3.1.0",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-format-3.1.0--1.txt",
+          "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee",
+          "upstream": "https://registry.npmjs.org/d3-format/-/d3-format-3.1.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "5439103fc9b6f033e02bf68fbeb13ecd2c33442f77ea772a4b2b1bc4f4cee5ba"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-format@3.1.0"
+    },
+    {
+      "id": "mermaid-package-d3-geo-3.1.1",
+      "name": "d3-geo (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.1.1",
+      "upstream": "https://registry.npmjs.org/d3-geo/3.1.1",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-geo-3.1.1--1.txt",
+          "sha256": "3e3edc1224eec9c39cd26491a21304a62883c1e5b6a65c5283ccc7a6cc94baee",
+          "upstream": "https://registry.npmjs.org/d3-geo/-/d3-geo-3.1.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "fe1f2dd81a87d942790c5a7786f4aab03df2b357d46d8af56b613fb8a1bb9be5"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-geo@3.1.1"
+    },
+    {
+      "id": "mermaid-package-d3-hierarchy-3.1.2",
+      "name": "d3-hierarchy (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.1.2",
+      "upstream": "https://registry.npmjs.org/d3-hierarchy/3.1.2",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-hierarchy-3.1.2--1.txt",
+          "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee",
+          "upstream": "https://registry.npmjs.org/d3-hierarchy/-/d3-hierarchy-3.1.2.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "7681875f06440c088afda1fd834d853dd560166c945e731382ee0c636332360b"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-hierarchy@3.1.2"
+    },
+    {
+      "id": "mermaid-package-d3-interpolate-3.0.1",
+      "name": "d3-interpolate (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.0.1",
+      "upstream": "https://registry.npmjs.org/d3-interpolate/3.0.1",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-interpolate-3.0.1--1.txt",
+          "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee",
+          "upstream": "https://registry.npmjs.org/d3-interpolate/-/d3-interpolate-3.0.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "7e8df78d233cd102a0bb518658dc0b7d5c38442b6f2dbc8b95ffc14ba87c7c33"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-interpolate@3.0.1"
+    },
+    {
+      "id": "mermaid-package-d3-path-1.0.9",
+      "name": "d3-path (via Mermaid)",
+      "kind": "attribution",
+      "version": "1.0.9",
+      "upstream": "https://registry.npmjs.org/d3-path/1.0.9",
+      "licence": "BSD-3-Clause",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-path-1.0.9--1.txt",
+          "sha256": "b8265327ab678f554800e71188b1cc6b1ff57522e292d2b1c0be66f27cf328b6",
+          "upstream": "https://registry.npmjs.org/d3-path/-/d3-path-1.0.9.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "2c10702bad9be578f0827d00e45010ae59cb67165f65462e5c781913a5505db1"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-path@1.0.9"
+    },
+    {
+      "id": "mermaid-package-d3-path-3.1.0",
+      "name": "d3-path (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.1.0",
+      "upstream": "https://registry.npmjs.org/d3-path/3.1.0",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-path-3.1.0--1.txt",
+          "sha256": "a09b0d6d76e768fca2085fad05743ee81ddd11946bcda160a3cf5e1081a479aa",
+          "upstream": "https://registry.npmjs.org/d3-path/-/d3-path-3.1.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "94e9b69f82f113ed4ada36703c05f6b7406723c55affe2a443d69729d6d5da14"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-path@3.1.0"
+    },
+    {
+      "id": "mermaid-package-d3-polygon-3.0.1",
+      "name": "d3-polygon (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.0.1",
+      "upstream": "https://registry.npmjs.org/d3-polygon/3.0.1",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-polygon-3.0.1--1.txt",
+          "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee",
+          "upstream": "https://registry.npmjs.org/d3-polygon/-/d3-polygon-3.0.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "6a33e6b083bd596a08e6f9e973fdb0d098f9ac8348cdc86346bb3e9c15614aca"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-polygon@3.0.1"
+    },
+    {
+      "id": "mermaid-package-d3-quadtree-3.0.1",
+      "name": "d3-quadtree (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.0.1",
+      "upstream": "https://registry.npmjs.org/d3-quadtree/3.0.1",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-quadtree-3.0.1--1.txt",
+          "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee",
+          "upstream": "https://registry.npmjs.org/d3-quadtree/-/d3-quadtree-3.0.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "d4145e9cecca8a6077e1099de96375ec9923b0de0df4004bd98aafa17c2d557f"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-quadtree@3.0.1"
+    },
+    {
+      "id": "mermaid-package-d3-random-3.0.1",
+      "name": "d3-random (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.0.1",
+      "upstream": "https://registry.npmjs.org/d3-random/3.0.1",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-random-3.0.1--1.txt",
+          "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee",
+          "upstream": "https://registry.npmjs.org/d3-random/-/d3-random-3.0.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "c35794d70beff4e2e2da799cd7fb0e3e763574f24c0fad38c1841770c12b99e8"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-random@3.0.1"
+    },
+    {
+      "id": "mermaid-package-d3-sankey-0.12.3",
+      "name": "d3-sankey (via Mermaid)",
+      "kind": "attribution",
+      "version": "0.12.3",
+      "upstream": "https://registry.npmjs.org/d3-sankey/0.12.3",
+      "licence": "BSD-3-Clause",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-sankey-0.12.3--1.txt",
+          "sha256": "2bf785e778d67a4f5266cffcd4f2cc5bb98cde73791666e7efeb8002ba32dfa5",
+          "upstream": "https://registry.npmjs.org/d3-sankey/-/d3-sankey-0.12.3.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "6bd8cdb143d4088ff38179def70954419868d4b95f136c168ffef2dad004ff22"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-sankey@0.12.3"
+    },
+    {
+      "id": "mermaid-package-d3-scale-4.0.2",
+      "name": "d3-scale (via Mermaid)",
+      "kind": "attribution",
+      "version": "4.0.2",
+      "upstream": "https://registry.npmjs.org/d3-scale/4.0.2",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-scale-4.0.2--1.txt",
+          "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee",
+          "upstream": "https://registry.npmjs.org/d3-scale/-/d3-scale-4.0.2.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "bf50a1f34ba0e6fa25cb7ae902abe0b9e2f85ced39fdca7b18fbe863fbaa39a7"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-scale@4.0.2"
+    },
+    {
+      "id": "mermaid-package-d3-scale-chromatic-3.1.0",
+      "name": "d3-scale-chromatic (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.1.0",
+      "upstream": "https://registry.npmjs.org/d3-scale-chromatic/3.1.0",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-scale-chromatic-3.1.0--1.txt",
+          "sha256": "0986d93944902cca9af86824b6a641b4b7c2d10602fc510c433a8bcd443919fe",
+          "upstream": "https://registry.npmjs.org/d3-scale-chromatic/-/d3-scale-chromatic-3.1.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "2573f980e0acbbecc919f5c5fdf7cd3a8110eda2497da7b94ae303fab9c32aa4"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-scale-chromatic@3.1.0"
+    },
+    {
+      "id": "mermaid-package-d3-selection-3.0.0",
+      "name": "d3-selection (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.0.0",
+      "upstream": "https://registry.npmjs.org/d3-selection/3.0.0",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-selection-3.0.0--1.txt",
+          "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee",
+          "upstream": "https://registry.npmjs.org/d3-selection/-/d3-selection-3.0.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "a1f872f30dca23b76de89cae9e882f56c325433e7f3aee87b95fa830d12789f3"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-selection@3.0.0"
+    },
+    {
+      "id": "mermaid-package-d3-shape-1.3.7",
+      "name": "d3-shape (via Mermaid)",
+      "kind": "attribution",
+      "version": "1.3.7",
+      "upstream": "https://registry.npmjs.org/d3-shape/1.3.7",
+      "licence": "BSD-3-Clause",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-shape-1.3.7--1.txt",
+          "sha256": "7eea8533ea92bd8c32a901e89ecb0305890905bb12711449565ddff96891146d",
+          "upstream": "https://registry.npmjs.org/d3-shape/-/d3-shape-1.3.7.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "d19261dad8ff192357db2720d57c1786dbfb8c9f42eafe577cb7c4d5b473fd0e"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-shape@1.3.7"
+    },
+    {
+      "id": "mermaid-package-d3-shape-3.2.0",
+      "name": "d3-shape (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.2.0",
+      "upstream": "https://registry.npmjs.org/d3-shape/3.2.0",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-shape-3.2.0--1.txt",
+          "sha256": "faa682e3e430941f958d26180458f5934a62f58dac4d70ccdd15608c15d0f884",
+          "upstream": "https://registry.npmjs.org/d3-shape/-/d3-shape-3.2.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "8b4b2bc9daa99a957abe17656c5944fd3f28efb88f788e6b4fdba346cb80e602"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-shape@3.2.0"
+    },
+    {
+      "id": "mermaid-package-d3-time-3.1.0",
+      "name": "d3-time (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.1.0",
+      "upstream": "https://registry.npmjs.org/d3-time/3.1.0",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-time-3.1.0--1.txt",
+          "sha256": "faa682e3e430941f958d26180458f5934a62f58dac4d70ccdd15608c15d0f884",
+          "upstream": "https://registry.npmjs.org/d3-time/-/d3-time-3.1.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "a9f2c8e177b76e7068e7c9c77722c4924c71c9e54f9b1e245d27ef11b28dbc08"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-time@3.1.0"
+    },
+    {
+      "id": "mermaid-package-d3-time-format-4.1.0",
+      "name": "d3-time-format (via Mermaid)",
+      "kind": "attribution",
+      "version": "4.1.0",
+      "upstream": "https://registry.npmjs.org/d3-time-format/4.1.0",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-time-format-4.1.0--1.txt",
+          "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee",
+          "upstream": "https://registry.npmjs.org/d3-time-format/-/d3-time-format-4.1.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "46f1492ef6be8afe04a844876a644a4a964da7f87937e90e93f9585acff9d30e"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-time-format@4.1.0"
+    },
+    {
+      "id": "mermaid-package-d3-timer-3.0.1",
+      "name": "d3-timer (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.0.1",
+      "upstream": "https://registry.npmjs.org/d3-timer/3.0.1",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-timer-3.0.1--1.txt",
+          "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee",
+          "upstream": "https://registry.npmjs.org/d3-timer/-/d3-timer-3.0.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "05cdf901e1876a7f24f4c365a879252752e22e3cc52b131ca616639f07e8ed05"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-timer@3.0.1"
+    },
+    {
+      "id": "mermaid-package-d3-transition-3.0.1",
+      "name": "d3-transition (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.0.1",
+      "upstream": "https://registry.npmjs.org/d3-transition/3.0.1",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-transition-3.0.1--1.txt",
+          "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee",
+          "upstream": "https://registry.npmjs.org/d3-transition/-/d3-transition-3.0.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "260eb8eaed565581afc00634ec83c83fd3b7e830e2a6b73b49f3f744dce0254c"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-transition@3.0.1"
+    },
+    {
+      "id": "mermaid-package-d3-zoom-3.0.0",
+      "name": "d3-zoom (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.0.0",
+      "upstream": "https://registry.npmjs.org/d3-zoom/3.0.0",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-d3-zoom-3.0.0--1.txt",
+          "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee",
+          "upstream": "https://registry.npmjs.org/d3-zoom/-/d3-zoom-3.0.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "846d28725c4889d6a2069c6cf084ca7e7730ee917a9b87960ecc53247f840f85"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "d3-zoom@3.0.0"
+    },
+    {
+      "id": "mermaid-package-dagre-d3-es-7.0.14",
+      "name": "dagre-d3-es (via Mermaid)",
+      "kind": "attribution",
+      "version": "7.0.14",
+      "upstream": "https://registry.npmjs.org/dagre-d3-es/7.0.14",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-dagre-d3-es-7.0.14--1.txt",
+          "sha256": "d01eb84ccce437dbf5fd40853bceea0f287930920acea066597a4a25ead63858",
+          "upstream": "https://registry.npmjs.org/dagre-d3-es/-/dagre-d3-es-7.0.14.tgz",
+          "upstream_path": "LICENSE.md",
+          "upstream_archive_sha256": "488d146fc076978029da937a54628f840dbbcb48e6f95ea79e6c58cc384fe157"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "dagre-d3-es@7.0.14"
+    },
+    {
+      "id": "mermaid-package-dayjs-1.11.21",
+      "name": "dayjs (via Mermaid)",
+      "kind": "attribution",
+      "version": "1.11.21",
+      "upstream": "https://registry.npmjs.org/dayjs/1.11.21",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-dayjs-1.11.21--1.txt",
+          "sha256": "5faab7526d055651be3aab769d58897be6bd91f3d39d137f25f12dba1b31d5dc",
+          "upstream": "https://registry.npmjs.org/dayjs/-/dayjs-1.11.21.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "290ec8bf81878ae4927581d9be74125f07722ea8bbea2ff77a2226dce12df876"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "dayjs@1.11.21"
+    },
+    {
+      "id": "mermaid-package-dompurify-3.4.12",
+      "name": "dompurify (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.4.12",
+      "upstream": "https://registry.npmjs.org/dompurify/3.4.12",
+      "licence": "Apache-2.0",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-dompurify-3.4.12--1.txt",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+          "upstream": "https://registry.npmjs.org/dompurify/-/dompurify-3.4.12.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "4fd255d4cd435ffc74d59b7ffa8b4a92f8e4a7fc84faf1d0f9d298cd7d741616"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "dompurify@3.4.12"
+    },
+    {
+      "id": "mermaid-package-es-toolkit-1.45.1",
+      "name": "es-toolkit (via Mermaid)",
+      "kind": "attribution",
+      "version": "1.45.1",
+      "upstream": "https://registry.npmjs.org/es-toolkit/1.45.1",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-es-toolkit-1.45.1--1.txt",
+          "sha256": "ed68888a2a28f32a05e88f24d4d4ee75075a1bda2b6372a1f2e00fa0576a5524",
+          "upstream": "https://registry.npmjs.org/es-toolkit/-/es-toolkit-1.45.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "0ab10ae18c0853f0c989ee187cecd9d5b2dd561bdf2b3c9f314bbc981aab427f"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "es-toolkit@1.45.1"
+    },
+    {
+      "id": "mermaid-package-fastdom-1.0.12",
+      "name": "fastdom (via Mermaid)",
+      "kind": "attribution",
+      "version": "1.0.12",
+      "upstream": "https://registry.npmjs.org/fastdom/1.0.12",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-fastdom-1.0.12--1.txt",
+          "sha256": "50c0de64f5cd5e39859b43f7eca7f5843fb3c3d5ac7e34a453e27419ad51e08c",
+          "upstream": "https://registry.npmjs.org/fastdom/-/fastdom-1.0.12.tgz",
+          "upstream_path": "README.md",
+          "upstream_archive_sha256": "15e452be64ae3661c3cc9d736524ebb689c23f162765d60741dcc518ec182265",
+          "byte_start": 6431,
+          "byte_end_exclusive": 7525,
+          "archive_file_sha256": "cc5669ab6f7741bb061c8a7244addc8e3af1f84ec7d2445744b59d0169a87d11"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "fastdom@1.0.12"
+    },
+    {
+      "id": "mermaid-package-internmap-2.0.3",
+      "name": "internmap (via Mermaid)",
+      "kind": "attribution",
+      "version": "2.0.3",
+      "upstream": "https://registry.npmjs.org/internmap/2.0.3",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-internmap-2.0.3--1.txt",
+          "sha256": "9ea8903938dab5f12c4572d60725069bec2d1b0dc3bcc210b09bae946a5ebb1f",
+          "upstream": "https://registry.npmjs.org/internmap/-/internmap-2.0.3.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "39d1936831a4d3f2bd6e088db28a10de4458d823f652c36b2c808bf5b978c48d"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "internmap@2.0.3"
+    },
+    {
+      "id": "mermaid-package-js-yaml-4.3.0",
+      "name": "js-yaml (via Mermaid)",
+      "kind": "attribution",
+      "version": "4.3.0",
+      "upstream": "https://registry.npmjs.org/js-yaml/4.3.0",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-js-yaml-4.3.0--1.txt",
+          "sha256": "a07bc24468b9654ce76a547d47a2db282d07733b715db4c73a98bd63961f9550",
+          "upstream": "https://registry.npmjs.org/js-yaml/-/js-yaml-4.3.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "8594ee34496dd2e41ec934fd202843dc993be9ab2d7d5d47579146962fbdfae6"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "js-yaml@4.3.0"
+    },
+    {
+      "id": "mermaid-package-katex-0.16.47",
+      "name": "katex (via Mermaid)",
+      "kind": "attribution",
+      "version": "0.16.47",
+      "upstream": "https://registry.npmjs.org/katex/0.16.47",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-katex-0.16.47--1.txt",
+          "sha256": "766ccc1f306c885aa45542a9846bbd0a505b27a0374f146778171c2254ce18e3",
+          "upstream": "https://registry.npmjs.org/katex/-/katex-0.16.47.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "ad2d1ab2f7fcc227019784320e8a2c5218ff6bb333b36df4136d10365ae29375"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "katex@0.16.47"
+    },
+    {
+      "id": "mermaid-package-khroma-2.1.0",
+      "name": "khroma (via Mermaid)",
+      "kind": "attribution",
+      "version": "2.1.0",
+      "upstream": "https://registry.npmjs.org/khroma/2.1.0",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-khroma-2.1.0--1.txt",
+          "sha256": "66b333b0f66759a0b710459e03f7029abe17f4358114a128d2c972e642961b49",
+          "upstream": "https://registry.npmjs.org/khroma/-/khroma-2.1.0.tgz",
+          "upstream_path": "license",
+          "upstream_archive_sha256": "8963d209f3a682374d7f7e45e5fa361a58fc060c8528df6656fae0fc7c508110"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "khroma@2.1.0"
+    },
+    {
+      "id": "mermaid-package-langium-4.2.1",
+      "name": "langium (via Mermaid)",
+      "kind": "attribution",
+      "version": "4.2.1",
+      "upstream": "https://registry.npmjs.org/langium/4.2.1",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-langium-4.2.1--1.txt",
+          "sha256": "599bf70b4e55f06250571d103dbd8441e0c47cb7f858c0147ca312ce38e9ef2a",
+          "upstream": "https://registry.npmjs.org/langium/-/langium-4.2.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "640d97d6f78fc6c98411863f9390e516cb9d714d80b12a56e5b1b1e7e18e4f20"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "langium@4.2.1"
+    },
+    {
+      "id": "mermaid-package-layout-base-1.0.2",
+      "name": "layout-base (via Mermaid)",
+      "kind": "attribution",
+      "version": "1.0.2",
+      "upstream": "https://registry.npmjs.org/layout-base/1.0.2",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-layout-base-1.0.2--1.txt",
+          "sha256": "eabb762d8a95109a39c9be3247325529a5239a7aca327d909c3ccdc41f3a06bf",
+          "upstream": "https://registry.npmjs.org/layout-base/-/layout-base-1.0.2.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "efea1306903d9d043c42c1e7931b2d97b4f519cff04b1347fa308032a52eebab"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "layout-base@1.0.2"
+    },
+    {
+      "id": "mermaid-package-layout-base-2.0.1",
+      "name": "layout-base (via Mermaid)",
+      "kind": "attribution",
+      "version": "2.0.1",
+      "upstream": "https://registry.npmjs.org/layout-base/2.0.1",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-layout-base-2.0.1--1.txt",
+          "sha256": "eabb762d8a95109a39c9be3247325529a5239a7aca327d909c3ccdc41f3a06bf",
+          "upstream": "https://registry.npmjs.org/layout-base/-/layout-base-2.0.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "34165e46d8c4b9d719a592e39a60fa5f7324c21a3edd02733e1116b17013defd"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "layout-base@2.0.1"
+    },
+    {
+      "id": "mermaid-package-lodash-es-4.17.23",
+      "name": "lodash-es (via Mermaid)",
+      "kind": "attribution",
+      "version": "4.17.23",
+      "upstream": "https://registry.npmjs.org/lodash-es/4.17.23",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-lodash-es-4.17.23--1.txt",
+          "sha256": "f71e8ed126b46346494aad5486874cd8f0aafe95092ed67d2e3cb6110f939abc",
+          "upstream": "https://registry.npmjs.org/lodash-es/-/lodash-es-4.17.23.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "2dbc40d4f256e6c2eccc6c355e5e068acf78b3117a8b0c458be004319a3108ff"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "lodash-es@4.17.23"
+    },
+    {
+      "id": "mermaid-package-lodash-es-4.18.1",
+      "name": "lodash-es (via Mermaid)",
+      "kind": "attribution",
+      "version": "4.18.1",
+      "upstream": "https://registry.npmjs.org/lodash-es/4.18.1",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-lodash-es-4.18.1--1.txt",
+          "sha256": "f71e8ed126b46346494aad5486874cd8f0aafe95092ed67d2e3cb6110f939abc",
+          "upstream": "https://registry.npmjs.org/lodash-es/-/lodash-es-4.18.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "b0c810e5cd4cd580ed7b18fc71384b9a80c151dc5c85b1729bd656a49e3f16f8"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "lodash-es@4.18.1"
+    },
+    {
+      "id": "mermaid-package-marked-16.3.0",
+      "name": "marked (via Mermaid)",
+      "kind": "attribution",
+      "version": "16.3.0",
+      "upstream": "https://registry.npmjs.org/marked/16.3.0",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-marked-16.3.0--1.txt",
+          "sha256": "8e3a3f82f59a60958f56ca08f445647c32a4733dc7ca6c2c46f6eb898471ab9c",
+          "upstream": "https://registry.npmjs.org/marked/-/marked-16.3.0.tgz",
+          "upstream_path": "LICENSE.md",
+          "upstream_archive_sha256": "c333c47cd3802a1d631dfdd8c6cfc411a88599a872c04ce8cd2291381a7767a0"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "marked@16.3.0"
+    },
+    {
+      "id": "mermaid-package-path-browserify-1.0.1",
+      "name": "path-browserify (content-matched reference via Mermaid; original version unresolved)",
+      "kind": "attribution",
+      "version": "original unresolved; content matches 1.0.1",
+      "upstream": "https://registry.npmjs.org/path-browserify/1.0.1",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-path-browserify-1.0.1--1.txt",
+          "sha256": "a22b9d5763f574e5db347c30acc0b33eaf4846767c03d2e27d012e864e79a824",
+          "upstream": "https://registry.npmjs.org/path-browserify/-/path-browserify-1.0.1.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "74ad6965c6f8cb61d17b1798d48095c3238eca5707b517640a12150f17b8f93d"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "content-match-only; original resolution unresolved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. content-matched candidate; original prebundle resolution not proved by this verifier"
+    },
+    {
+      "id": "mermaid-package-roughjs-4.6.6",
+      "name": "roughjs (via Mermaid)",
+      "kind": "attribution",
+      "version": "4.6.6",
+      "upstream": "https://registry.npmjs.org/roughjs/4.6.6",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-roughjs-4.6.6--1.txt",
+          "sha256": "dca9a392272606ac748ac0976a2a1133f14eef841c27beaa51a844d53c56a09d",
+          "upstream": "https://registry.npmjs.org/roughjs/-/roughjs-4.6.6.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "373873b2c3f1b7ddba878525c774816057c5818029780c7fba081f06018ba78c"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "roughjs@4.6.6"
+    },
+    {
+      "id": "mermaid-package-stylis-4.3.6",
+      "name": "stylis (via Mermaid)",
+      "kind": "attribution",
+      "version": "4.3.6",
+      "upstream": "https://registry.npmjs.org/stylis/4.3.6",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-stylis-4.3.6--1.txt",
+          "sha256": "88c579c6ee44b41137a21321190d177982e5b17d4fa1b83a4a2e3ea325a8fc9a",
+          "upstream": "https://registry.npmjs.org/stylis/-/stylis-4.3.6.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "57bd37727276e7e30d2f15472a43c5d5b8ae6cd9cebd36dbb84880c500de568e"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "stylis@4.3.6"
+    },
+    {
+      "id": "mermaid-package-ts-dedent-2.2.0",
+      "name": "ts-dedent (via Mermaid)",
+      "kind": "attribution",
+      "version": "2.2.0",
+      "upstream": "https://registry.npmjs.org/ts-dedent/2.2.0",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-ts-dedent-2.2.0--1.txt",
+          "sha256": "eff13095d9d762c3bd9dda74370c81e2130c28f2691bc455603abf973bac25b9",
+          "upstream": "https://registry.npmjs.org/ts-dedent/-/ts-dedent-2.2.0.tgz",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "f04cddc15ce3aad91287aebdcb0d6b6997b85222769c35c910038f59bfd2234d"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "ts-dedent@2.2.0"
+    },
+    {
+      "id": "mermaid-package-uuid-14.0.0",
+      "name": "uuid (via Mermaid)",
+      "kind": "attribution",
+      "version": "14.0.0",
+      "upstream": "https://registry.npmjs.org/uuid/14.0.0",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-uuid-14.0.0--1.txt",
+          "sha256": "beaa6b04fb82e41dd2ad679e19e27953afb5999b1abbb455b6564e78ebfeb332",
+          "upstream": "https://registry.npmjs.org/uuid/-/uuid-14.0.0.tgz",
+          "upstream_path": "LICENSE.md",
+          "upstream_archive_sha256": "ca468c168ec7f2021f6a98041e943443b29e67e0e0ff5b4c1caca17c6efa9870"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "uuid@14.0.0"
+    },
+    {
+      "id": "mermaid-package-vscode-jsonrpc-8.2.0",
+      "name": "vscode-jsonrpc (via Mermaid)",
+      "kind": "attribution",
+      "version": "8.2.0",
+      "upstream": "https://registry.npmjs.org/vscode-jsonrpc/8.2.0",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-vscode-jsonrpc-8.2.0--1.txt",
+          "sha256": "ec9ee83580841e8eb687aca9867f221503809ba6426c7f876ede17d91b9fcfd0",
+          "upstream": "https://registry.npmjs.org/vscode-jsonrpc/-/vscode-jsonrpc-8.2.0.tgz",
+          "upstream_path": "License.txt",
+          "upstream_archive_sha256": "3da44531c398f1545074cb728e359a822f35b9f8ac7171c847f42f0728b9c7cb"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "vscode-jsonrpc@8.2.0"
+    },
+    {
+      "id": "mermaid-package-vscode-languageserver-protocol-3.17.5",
+      "name": "vscode-languageserver-protocol (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.17.5",
+      "upstream": "https://registry.npmjs.org/vscode-languageserver-protocol/3.17.5",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-vscode-languageserver-protocol-3.17.5--1.txt",
+          "sha256": "ec9ee83580841e8eb687aca9867f221503809ba6426c7f876ede17d91b9fcfd0",
+          "upstream": "https://registry.npmjs.org/vscode-languageserver-protocol/-/vscode-languageserver-protocol-3.17.5.tgz",
+          "upstream_path": "License.txt",
+          "upstream_archive_sha256": "7473eb2d2163f3f8bea09644f9d803789a195e596b65d3946c4157e583e3ccc8"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "vscode-languageserver-protocol@3.17.5"
+    },
+    {
+      "id": "mermaid-package-vscode-languageserver-textdocument-1.0.12",
+      "name": "vscode-languageserver-textdocument (via Mermaid)",
+      "kind": "attribution",
+      "version": "1.0.12",
+      "upstream": "https://registry.npmjs.org/vscode-languageserver-textdocument/1.0.12",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-vscode-languageserver-textdocument-1.0.12--1.txt",
+          "sha256": "ec9ee83580841e8eb687aca9867f221503809ba6426c7f876ede17d91b9fcfd0",
+          "upstream": "https://registry.npmjs.org/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.12.tgz",
+          "upstream_path": "License.txt",
+          "upstream_archive_sha256": "9f1d28814d6ee81267f52f5bc8c920bb6a0a23eb6de48960345a0a25fbf3b0db"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "vscode-languageserver-textdocument@1.0.12"
+    },
+    {
+      "id": "mermaid-package-vscode-languageserver-types-3.17.5",
+      "name": "vscode-languageserver-types (via Mermaid)",
+      "kind": "attribution",
+      "version": "3.17.5",
+      "upstream": "https://registry.npmjs.org/vscode-languageserver-types/3.17.5",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-vscode-languageserver-types-3.17.5--1.txt",
+          "sha256": "ec9ee83580841e8eb687aca9867f221503809ba6426c7f876ede17d91b9fcfd0",
+          "upstream": "https://registry.npmjs.org/vscode-languageserver-types/-/vscode-languageserver-types-3.17.5.tgz",
+          "upstream_path": "License.txt",
+          "upstream_archive_sha256": "d673f9e7f8bbe51351be51c58f32d4dcfa97a670ebb86bc633368394c609cac0"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "exact-mapped-input",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. versioned map input path or byte-identical published parser chunks",
+      "npm": "vscode-languageserver-types@3.17.5"
+    },
+    {
+      "id": "mermaid-package-vscode-uri-3.1.0",
+      "name": "vscode-uri (content-matched reference via Mermaid; original version unresolved)",
+      "kind": "attribution",
+      "version": "original unresolved; content matches 3.1.0",
+      "upstream": "https://registry.npmjs.org/vscode-uri/3.1.0",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-package-vscode-uri-3.1.0--1.txt",
+          "sha256": "c669138cb1eb01fbb745e8e460b291e4f2869c14a40061390b6095d845ed4c82",
+          "upstream": "https://registry.npmjs.org/vscode-uri/-/vscode-uri-3.1.0.tgz",
+          "upstream_path": "LICENSE.md",
+          "upstream_archive_sha256": "c6ec752d7a4858237389b23fb4d5ac05c2f1f606071cd212a9b54730e43cfc54"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "content-match-only; original resolution unresolved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
+      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. content-matched candidate; original prebundle resolution not proved by this verifier"
+    },
+    {
+      "id": "rough-build-hachure-fill",
+      "name": "hachure-fill (Rough.js publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input 0.5.2",
+      "upstream": "https://github.com/pshihn/hachure-fill",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/rough-build-hachure-fill--LICENSE.txt",
+          "sha256": "5e807b516a9be9229ed459880bf353a336e2d947867247290680d437017be391",
+          "upstream": "https://registry.npmjs.org/hachure-fill/-/hachure-fill-0.5.2.tgz",
+          "upstream_revision": "2083be6f7e6c814dc6a8c2c88a7823827566504e",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "d816b83fea8b39161ef35c46f5080a0a7e406dce39ebf26f1ec8a1daea06a837"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "rough-build-path-data-parser",
+      "name": "path-data-parser (Rough.js publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input 0.1.0",
+      "upstream": "https://github.com/pshihn/path-data-parser",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/rough-build-path-data-parser--LICENSE.txt",
+          "sha256": "e9754a00aebde654e80f40bcf41dab667d6a41dfbbd2912bcf14fb07d468bf71",
+          "upstream": "https://registry.npmjs.org/path-data-parser/-/path-data-parser-0.1.0.tgz",
+          "upstream_revision": "93d3fa8448c50d1b6443b06b8c71202ee0967e25",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "09be555fc313a8e831b55d4cc727699655f5c224fde2d8062f3f52bc9386d3b0"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "rough-build-points-on-curve",
+      "name": "points-on-curve (Rough.js publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input 0.2.0",
+      "upstream": "https://github.com/pshihn/bezier-points",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/rough-build-points-on-curve--LICENSE.txt",
+          "sha256": "e9754a00aebde654e80f40bcf41dab667d6a41dfbbd2912bcf14fb07d468bf71",
+          "upstream": "https://registry.npmjs.org/points-on-curve/-/points-on-curve-0.2.0.tgz",
+          "upstream_revision": "48241476eb86307294f54913ccfb60a3e7338c56",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "adc00f4d5ae800c315aea316822fb6f8dd4529f76107facbdccf356372e5ddbf"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "rough-build-points-on-path",
+      "name": "points-on-path (Rough.js publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input 0.2.1",
+      "upstream": "https://github.com/pshihn/points-on-path",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/rough-build-points-on-path--LICENSE.txt",
+          "sha256": "b6fc1f7f1d96a48bc97176f3dcef959e364c5c17ba44167511de421500a86c6c",
+          "upstream": "https://registry.npmjs.org/points-on-path/-/points-on-path-0.2.1.tgz",
+          "upstream_revision": "7693ef0c930466b7408ee7082497e0d735f9c646",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "eb57ddbb156d4e73cbc8d9416e1b666ace0d8abf9dc783f8c934ab63dbae6e44"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "d2-build-github.com-puerkitobio-goquery",
+      "name": "github.com/PuerkitoBio/goquery (D2 publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input v1.10.0",
+      "upstream": "https://github.com/PuerkitoBio/goquery",
+      "licence": "BSD-3-Clause",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-puerkitobio-goquery--LICENSE.txt",
+          "sha256": "ab79785bfa235ac1c5e16f75e0f85eb7ce0402fb72f4667fffa0729e694579b8",
+          "upstream": "https://proxy.golang.org/github.com/!puerkito!bio/goquery/@v/v1.10.0.zip",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "0bd7e0e8b5d3c82484b2e144502399f8387a9eaf00acb0c92f6d195c7f4cb4cc"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "d2-build-github.com-alecthomas-chroma-v2",
+      "name": "github.com/alecthomas/chroma/v2 (D2 publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input v2.14.0",
+      "upstream": "https://github.com/alecthomas/chroma/v2",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-alecthomas-chroma-v2--LICENSE.txt",
+          "sha256": "e7bf754e7153012a3a8ff697d21acd6c12e590d6a55f2aef8ee83616aa9a795f",
+          "upstream": "https://proxy.golang.org/github.com/alecthomas/chroma/v2/@v/v2.14.0.zip",
+          "upstream_path": "COPYING",
+          "upstream_archive_sha256": "1fc346b3317079b8c8ab6927cd3f3da494561116f0e9613a08a714bd9cfbd76a"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "d2-build-github.com-andybalholm-brotli",
+      "name": "github.com/andybalholm/brotli (D2 publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input v1.2.0",
+      "upstream": "https://github.com/andybalholm/brotli",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-andybalholm-brotli--LICENSE.txt",
+          "sha256": "3d180008e36922a4e8daec11c34c7af264fed5962d07924aea928c38e8663c94",
+          "upstream": "https://proxy.golang.org/github.com/andybalholm/brotli/@v/v1.2.0.zip",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "e4c47dd6da396292eed4107838ccfd1fee632884caa8da8a027623435b6daa36"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "d2-build-github.com-andybalholm-cascadia",
+      "name": "github.com/andybalholm/cascadia (D2 publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input v1.3.2",
+      "upstream": "https://github.com/andybalholm/cascadia",
+      "licence": "BSD-3-Clause",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-andybalholm-cascadia--LICENSE.txt",
+          "sha256": "04a8e475337d6b9959a8c47956bf713dd3362d3aadf839e74b376afb07487167",
+          "upstream": "https://proxy.golang.org/github.com/andybalholm/cascadia/@v/v1.3.2.zip",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "dec535cccf58418de6a38909010cfcea9e46475f79aab9f53cd80d133abcdd3a"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "d2-build-github.com-dlclark-regexp2",
+      "name": "github.com/dlclark/regexp2 (D2 publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input v1.11.4",
+      "upstream": "https://github.com/dlclark/regexp2",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-dlclark-regexp2--LICENSE.txt",
+          "sha256": "9be5d04bb4d706914d5bf943710da4afeb42048f7c529902fb57c82762a991a9",
+          "upstream": "https://proxy.golang.org/github.com/dlclark/regexp2/@v/v1.11.4.zip",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "29613e60dfc18d0f94c6382522b2496716e01dce8bd660fe68c83d3e9acd7386"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "d2-build-github.com-golang-freetype",
+      "name": "github.com/golang/freetype (D2 publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input v0.0.0-20170609003504-e2365dfdc4a0",
+      "upstream": "https://github.com/golang/freetype",
+      "licence": "FTL",
+      "copyright": [
+        "Copyright 1996-2002, 2006 David Turner, Robert Wilhelm, and Werner Lemberg.",
+        "This software is based in part on the work of the FreeType Team.",
+        "FreeType-Go is distributed using the FreeType License option; the complete original choice notice and FreeType terms follow."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-golang-freetype--LICENSE.txt",
+          "sha256": "d3ba056adc2b7909e95681deaae397fb37c97ed491a920f491214f07b62c41d0",
+          "upstream": "https://proxy.golang.org/github.com/golang/freetype/@v/v0.0.0-20170609003504-e2365dfdc4a0.zip",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "cdcb9e6a14933dcbf167b44dcd5083fc6a2e52c4fae8fb79747c691efeb7d84e"
+        },
+        {
+          "path": "compliance/licenses/d2-build-github.com-golang-freetype--FTL.txt",
+          "sha256": "4a9a548027a2c1d37788519dea833294c9c81f1ebc280e817f41f50d0c642d78",
+          "upstream": "https://proxy.golang.org/github.com/golang/freetype/@v/v0.0.0-20170609003504-e2365dfdc4a0.zip",
+          "upstream_path": "licenses/ftl.txt",
+          "upstream_sha256": "f4b133e25df1f86ad3ffea453aa0e613f0474f34778dbbb3e437e7b2724937d8",
+          "source_encoding": "ISO-8859-1",
+          "distribution_encoding": "UTF-8",
+          "upstream_archive_sha256": "cdcb9e6a14933dcbf167b44dcd5083fc6a2e52c4fae8fb79747c691efeb7d84e"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "d2-build-github.com-lucasb-eyer-go-colorful",
+      "name": "github.com/lucasb-eyer/go-colorful (D2 publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input v1.2.0",
+      "upstream": "https://github.com/lucasb-eyer/go-colorful",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-lucasb-eyer-go-colorful--LICENSE.txt",
+          "sha256": "1e4cf2a117516ec1b54041d68ed4f5d331878b04de3386f4790e7b5b9c04e1ec",
+          "upstream": "https://proxy.golang.org/github.com/lucasb-eyer/go-colorful/@v/v1.2.0.zip",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "78d5d0e0737f0f54bbed77b6dfa847d8c871bed2668a9dc44328c7c3411ada10"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "d2-build-github.com-mazznoer-csscolorparser",
+      "name": "github.com/mazznoer/csscolorparser (D2 publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input v0.1.5",
+      "upstream": "https://github.com/mazznoer/csscolorparser",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-mazznoer-csscolorparser--LICENSE.txt",
+          "sha256": "54d5c177c5a7b24ec8b5b3182a5884d958c6a70c6be1ebb2fdd4627841415204",
+          "upstream": "https://proxy.golang.org/github.com/mazznoer/csscolorparser/@v/v0.1.5.zip",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "c6ae8b1878b632a894e47df22a070d0cf270f3547800647eb1d48667c579baea"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "d2-build-github.com-rivo-uniseg",
+      "name": "github.com/rivo/uniseg (D2 publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input v0.4.7",
+      "upstream": "https://github.com/rivo/uniseg",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-rivo-uniseg--LICENSE.txt",
+          "sha256": "a59885f5f0f3b3c07cf9444db5fe399b6f0791eac82055f7b85cc65500551039",
+          "upstream": "https://proxy.golang.org/github.com/rivo/uniseg/@v/v0.4.7.zip",
+          "upstream_path": "LICENSE.txt",
+          "upstream_archive_sha256": "b995e4aa0cc1e5779cc61138ac925cb8c1e963e40c80e4b93ee8553812ebb792"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "d2-build-github.com-yuin-goldmark",
+      "name": "github.com/yuin/goldmark (D2 publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input v1.7.4",
+      "upstream": "https://github.com/yuin/goldmark",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-github.com-yuin-goldmark--LICENSE.txt",
+          "sha256": "c1d6f653c38c80294dc7994647ba0dcc508ce64a86996303c804efa2f7982bff",
+          "upstream": "https://proxy.golang.org/github.com/yuin/goldmark/@v/v1.7.4.zip",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "7e0a308bb016a245a6e20ed44f088b0a17b46ccac70e454735ae1575703a4816"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "d2-build-golang.org-x-exp",
+      "name": "golang.org/x/exp (D2 publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input v0.0.0-20240909161429-701f63a606c0",
+      "upstream": "https://golang.org/x/exp",
+      "licence": "BSD-3-Clause",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-golang.org-x-exp--LICENSE.txt",
+          "sha256": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+          "upstream": "https://proxy.golang.org/golang.org/x/exp/@v/v0.0.0-20240909161429-701f63a606c0.zip",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "447a436882177a2a9fc281116f1858d6e0533c790a90f55cf3a64f1cafb752c6"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "d2-build-golang.org-x-image",
+      "name": "golang.org/x/image (D2 publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input v0.20.0",
+      "upstream": "https://golang.org/x/image",
+      "licence": "BSD-3-Clause",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-golang.org-x-image--LICENSE.txt",
+          "sha256": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+          "upstream": "https://proxy.golang.org/golang.org/x/image/@v/v0.20.0.zip",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "1f0f48daa679986db28876cef4074ff192fb705fcdc537627903270375bf6971"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "d2-build-golang.org-x-net",
+      "name": "golang.org/x/net (D2 publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input v0.35.0",
+      "upstream": "https://golang.org/x/net",
+      "licence": "BSD-3-Clause",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-golang.org-x-net--LICENSE.txt",
+          "sha256": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+          "upstream": "https://proxy.golang.org/golang.org/x/net/@v/v0.35.0.zip",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "9c746c215d695e80d6f4d1b1f1d55deaae5e451b4c031223af25f2b2f0757215"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "d2-build-golang.org-x-text",
+      "name": "golang.org/x/text (D2 publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input v0.22.0",
+      "upstream": "https://golang.org/x/text",
+      "licence": "BSD-3-Clause",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-golang.org-x-text--LICENSE.txt",
+          "sha256": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+          "upstream": "https://proxy.golang.org/golang.org/x/text/@v/v0.22.0.zip",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "939cb4c202aa8fa302f2ba6f9d29165ce82fce9c665d9a1a0bb0d9e51b79e6f5"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "d2-build-golang.org-x-xerrors",
+      "name": "golang.org/x/xerrors (D2 publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input v0.0.0-20240903120638-7835f813f4da",
+      "upstream": "https://golang.org/x/xerrors",
+      "licence": "BSD-3-Clause",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-golang.org-x-xerrors--LICENSE.txt",
+          "sha256": "f9a2df4fb1d45cef691b8bc2e35776f8bee5af5b3696d48d4547635d7858bf91",
+          "upstream": "https://proxy.golang.org/golang.org/x/xerrors/@v/v0.0.0-20240903120638-7835f813f4da.zip",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "07ee9f680118861ee732ce0df4553b834383b87e0519fb9a0990c51d7abd6885"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "d2-build-oss.terrastruct.com-util-go",
+      "name": "oss.terrastruct.com/util-go (D2 publisher-build attribution)",
+      "kind": "attribution",
+      "version": "publisher source-build input v0.0.0-20250213174338-243d8661088a",
+      "upstream": "https://oss.terrastruct.com/util-go",
+      "licence": "ISC",
+      "copyright": [
+        "Copyright holders and original notices are reproduced verbatim in the complete licence text below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-build-oss.terrastruct.com-util-go--LICENSE.txt",
+          "sha256": "798801f8406a10b9ab31136f8fd05ddbdc61d8dea37e6e6f5687bd8541884005",
+          "upstream": "https://proxy.golang.org/oss.terrastruct.com/util-go/@v/v0.0.0-20250213174338-243d8661088a.zip",
+          "upstream_path": "LICENSE",
+          "upstream_archive_sha256": "850c470a3055d03061536e1341fc8d87237613612743637bdaeebff3cdfab239"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-graph; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Conservative source-build attribution. Not an independent rebuild, proof that every package file was emitted, or exhaustive nested-code review."
+    },
+    {
+      "id": "renderer-build-bison-skeleton",
+      "name": "Bison skeleton text in Graphviz source (build-reference attribution)",
+      "kind": "attribution",
+      "version": "3.8.2 in Graphviz 16.0.0 source",
+      "upstream": "https://www.gnu.org/software/bison/",
+      "licence": "GPL-3.0-or-later WITH Bison-exception-2.2",
+      "copyright": [
+        "Original copyright holders and notices are reproduced in the complete texts below."
+      ],
+      "licence_texts": [
+        {
+          "byte_end_exclusive": 1534,
+          "byte_start": 0,
+          "path": "compliance/licenses/renderer-build-bison-skeleton--NOTICE.txt",
+          "sha256": "e4b163e4052ac5d612d633187449c78d14484df49c258d3507f169c7224614b1",
+          "upstream": "https://gitlab.com/graphviz/graphviz",
+          "upstream_path": "lib/common/htmlparse.c; lib/cgraph/grammar.c",
+          "upstream_revision": "06fff22d8e1a2aead6de0042e5e5ec2f7749be29"
+        },
+        {
+          "path": "compliance/licenses/renderer-build-bison-skeleton--GPL-3.0.txt",
+          "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+          "upstream": "https://github.com/akimd/bison",
+          "upstream_path": "COPYING",
+          "upstream_revision": "9beba1919cad5dd08b0cac277c27896808719e4b"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-reference; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-02",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "The complete existing skeleton exception is preserved with the GPL text. Graphviz is a parser consumer, not a parser-generator product; this records the source notice without declaring the entire application GPL or claiming its exact generated parser/compiler output has been independently reproduced."
+    },
+    {
+      "id": "renderer-build-emscripten",
+      "name": "Emscripten and musl root notices (Viz.js publisher-build reference)",
+      "kind": "attribution",
+      "version": "5.0.7 source reference",
+      "upstream": "https://github.com/emscripten-core/emscripten",
+      "licence": "MIT AND (MIT OR NCSA)",
+      "copyright": [
+        "Original copyright holders and notices are reproduced in the complete texts below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/renderer-build-emscripten--LICENSE.txt",
+          "sha256": "620a78084fc7ca97c0b5dea9abf891f3ffcadfdbf305276f099c9c4e12fc1d86",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "LICENSE",
+          "reference_file": "emscripten-LICENSE"
+        },
+        {
+          "path": "compliance/licenses/renderer-build-emscripten--AUTHORS.txt",
+          "sha256": "9d24c3cb52c1f712fbc6660337074f76eb2a12a0dde1dd0076c4310807c4e83c",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "AUTHORS",
+          "reference_file": "emscripten-AUTHORS"
+        },
+        {
+          "path": "compliance/licenses/renderer-build-emscripten--MUSL-COPYRIGHT.txt",
+          "sha256": "f9bc4423732350eb0b3f7ed7e91d530298476f8fec0c6c427a1c04ade22655af",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/libc/musl/COPYRIGHT",
+          "reference_file": "musl-COPYRIGHT"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-reference; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-02",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
+      "notes": "Publisher build record names emscripten/emsdk 5.0.7 and its image digest. Exact tag reference and full root notices/authors are retained. This is conservative build-reference attribution, not proof of all retained runtime or libc/compiler-rt/libc++ subcomponents; their per-file notices and exact build images remain an open audit."
     }
   ]
 }
