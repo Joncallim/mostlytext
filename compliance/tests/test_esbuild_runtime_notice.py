@@ -31,11 +31,11 @@ class EsbuildRuntimeNoticeTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 runtime.select(source, 'start', 'end')
 
-    def test_actual_distribution_keeps_qualified_identity(self):
+    def test_actual_distribution_records_the_reproduced_outer_compiler_without_whole_package_claim(self):
         runtime.verify_installed(TOOLS.parents[1])
         c = runtime.component()
         self.assertNotIn('npm', c)
-        self.assertIn('unresolved', c['version'])
+        self.assertEqual(c['version'], '0.25.12 (emitted runtime only)')
 
     def test_exact_version_promotion_and_changed_notice_reject(self):
         with tempfile.TemporaryDirectory() as temp:

@@ -446,7 +446,7 @@
         }
       ],
       "open_items": [
-        "Complete remaining embedded/generated Mermaid attribution and original resolution for two content-matched candidate versions. All 74 mapped package records now have complete selected texts distributed (Cytoscape retained separately); four Rough.js publisher-build input notices are also registered. Framer/Koen spring origin ambiguity, grant review for the traced points-on-curve borrowed-algorithm source chain, other nested helpers, unmapped parser/generated positions and exact final artifact proof remain open. Source-build references and root package labels do not complete nested-code review. The credited esbuild runtime helper preamble now has its full MIT notice and 452 classified outer references; 3,528 previously unassociated parser positions remain unclassified by that scoped tool, and independent review of the declared compiler build and earlier nested prebundles remains open. Verified signed publisher evidence now binds the exact parser archive/chunks to source commit 293b1c153a6f94c3a4a1d9cd5eae4dde609f1ec4, whose root lock declares esbuild 0.25.12 and vscode-uri 3.1.0; the original content-only comparison results remain qualified as captured."
+        "Complete remaining embedded/generated Mermaid attribution, earlier path-browserify prebundle resolution and independent IP/runtime review. All 74 mapped package records have complete selected texts distributed; the signed publisher source and complete 192-file parser JS/map reproduction identify the outer esbuild 0.25.12 and vscode-uri 3.1.0 input. Four retained Webpack runtime bodies have a qualified 5.88.2 reference/full MIT notice with 125 mapped references and 42 body-operation probes; the earlier emitting Webpack version remains unresolved. Framer/Koen spring grant/origin, grant review for the traced points-on-curve source chain, other nested helpers, 3,528 parser positions outside the original scoped classification and exact final artifact proof remain open. The original content-only reports are preserved. Root notices, a matching reference and technical reproduction do not complete independent nested-code review or publication/native acceptance."
       ],
       "runtime_resources": [
         {
@@ -4613,9 +4613,9 @@
     },
     {
       "id": "mermaid-package-vscode-uri-3.1.0",
-      "name": "vscode-uri (content-matched reference via Mermaid; original version unresolved)",
+      "name": "vscode-uri (reproduced publisher input via Mermaid)",
       "kind": "attribution",
-      "version": "original unresolved; content matches 3.1.0",
+      "version": "3.1.0",
       "upstream": "https://registry.npmjs.org/vscode-uri/3.1.0",
       "licence": "MIT",
       "copyright": [
@@ -4631,13 +4631,14 @@
         }
       ],
       "provenance": "verified",
-      "resolution": "content-match-only; original resolution unresolved",
+      "resolution": "signed-publisher-input-and-reproduced-parser-build",
       "lc": [
         "LC-01",
         "LC-07"
       ],
-      "evidence": "compliance/evidence/mermaid-11.17.2/module-notice-map.json",
-      "notes": "Mapped generated source, not full package inclusion or complete embedded-code attribution. content-matched candidate; original prebundle resolution not proved by this verifier"
+      "evidence": "compliance/evidence/parser-runtime-reproduction/manifest.json",
+      "notes": "The signed publisher source, frozen lock and complete byte-identical parser JS/map reproduction establish this outer build input. The original content-only report is retained. This is not full package inclusion or proof of every earlier nested build or licence obligation.",
+      "npm": "vscode-uri@3.1.0"
     },
     {
       "id": "rough-build-hachure-fill",
@@ -5332,9 +5333,9 @@
     },
     {
       "id": "esbuild-parser-runtime",
-      "name": "esbuild parser runtime helpers (matching licensed reference; emitting version unresolved)",
+      "name": "esbuild parser runtime helpers (reproduced parser compiler)",
       "kind": "attribution",
-      "version": "emitting version unresolved; reference v0.27.7",
+      "version": "0.25.12 (emitted runtime only)",
       "upstream": "https://github.com/evanw/esbuild",
       "licence": "MIT",
       "copyright": [
@@ -5344,9 +5345,38 @@
         {
           "path": "compliance/licenses/esbuild-parser-runtime--MIT.txt",
           "sha256": "b40ec5baec7bb34fa5b1c09521fa3cd52d5fad7adafed74932a2010d3612a681",
-          "upstream": "https://github.com/evanw/esbuild",
-          "upstream_revision": "2025c9ff6ab15ba6b0f9d074fd732250cc46e4a3",
-          "upstream_path": "LICENSE.md"
+          "upstream": "https://registry.npmjs.org/esbuild/-/esbuild-0.25.12.tgz",
+          "upstream_archive_sha256": "227584145829e5c4782734b3fb7b91b49c6aa12876d6cf070e6a3d9d4de543f9",
+          "upstream_path": "package/LICENSE.md"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "signed-publisher-input-and-reproduced-parser-build",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/parser-runtime-reproduction/manifest.json",
+      "notes": "The complete parser JavaScript/source-map output is reproduced from verified publisher source with pinned esbuild 0.25.12. The earlier v0.27.7 body comparison remains a licensed reference. No whole compiler package, full runtime reachability or complete nested audit is claimed."
+    },
+    {
+      "id": "webpack-parser-runtime",
+      "name": "Webpack parser runtime helpers (matching licensed reference; emitting version unresolved)",
+      "kind": "attribution",
+      "version": "emitting version unresolved; reference 5.88.2",
+      "upstream": "https://github.com/webpack/webpack",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright JS Foundation and other contributors"
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/webpack-parser-runtime--MIT.txt",
+          "sha256": "9068a8782d2fb4c6e432cfa25334efa56f722822180570802bf86e71b6003b1e",
+          "upstream": "https://registry.npmjs.org/webpack/-/webpack-5.88.2.tgz",
+          "upstream_archive_sha256": "4d92a947dbc855289a1a33a9a77dd9a2cf04606d721a74b18104de29aa1f8279",
+          "upstream_revision": "1f99ad6367f2b8a6ef17cce0e058f7a67fb7db18",
+          "upstream_path": "package/LICENSE"
         }
       ],
       "provenance": "verified",
@@ -5355,8 +5385,8 @@
         "LC-01",
         "LC-07"
       ],
-      "evidence": "compliance/evidence/esbuild-parser-runtime/mapping.json",
-      "notes": "Two complete emitted helper bodies match the licensed reference after narrowly reviewed formatting normalization. No exact npm identity, original compiler-version proof, full runtime reachability or complete nested audit is claimed."
+      "evidence": "compliance/evidence/webpack-parser-runtime/mapping.json",
+      "notes": "Four complete retained runtime source bodies match a generated Webpack 5.88.2 reference byte-for-byte without normalization, with actual composed body-operation probes. This does not identify the earlier emitting Webpack version, imply whole compiler package inclusion or complete nested attribution."
     }
   ]
 }

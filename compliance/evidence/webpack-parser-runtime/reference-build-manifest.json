@@ -1,0 +1,19 @@
+{
+  "archiveSHA256": "4d92a947dbc855289a1a33a9a77dd9a2cf04606d721a74b18104de29aa1f8279",
+  "files": {
+    "mapping.json": "64e37346adfe1cd5f98626851ea1b4bfc580937529205b9ff7111dbf32e57193",
+    "reference-build.mjs": "6b77d7eb9a18ff86ce256bfa2dcd28326cefbf14b5be9b98ccc5ae9ec571774a",
+    "reference-entry.js": "f414e94732ccd9b46286964d6dd77167c6683d55561d190515b140e2a9fa0304",
+    "reference-lock.yaml": "cca4c3c06f0a227c007c43c369feead03e8577c4e3836ec4405fa21acd7acc61",
+    "reference-map.json": "7432a589823b59cd6eb501ba96315a99476628ca21f30992d59b099449c728a6",
+    "reference-module.cjs": "d36e07cae0dcd90908e17da10ea86f78e5c1f3590497e6e6ec0f26acf9839363"
+  },
+  "gitHead": "1f99ad6367f2b8a6ef17cce0e058f7a67fb7db18",
+  "integrity": "sha512-JmcgNZ1iKj+aiR0OvTYtWQqJwq37Pf683dY9bVORwVbUrDhLhdn/PlO2sHsFHPkj7sHNQF3JwaAkp49V+Sq1tQ==",
+  "localPlatform": "darwin-arm64",
+  "node": "24.16.0",
+  "pnpm": "10.30.3",
+  "role": "licensed generated reference; original emitting version unresolved",
+  "tarball": "https://registry.npmjs.org/webpack/-/webpack-5.88.2.tgz",
+  "version": "5.88.2"
+}

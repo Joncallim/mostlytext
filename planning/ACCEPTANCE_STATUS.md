@@ -202,3 +202,35 @@ all ceilings and unknown files; it does not add companion cleanup authority.
 Final source checks, hosted qualification and integration are recorded on the
 associated PRs/issues. Whole native, companion inventory, PDF, calibration,
 independent review, source publication and signed-artifact gates remain open.
+
+## Complete parser reproduction and Webpack notice — 4 November 2026
+
+[The new source contract](downstream/parser-reproduction-and-webpack-notice.md)
+separates complete outer-parser build correspondence from earlier nested builds.
+[All 96 JavaScript files and 96 maps](../compliance/evidence/parser-runtime-reproduction/README.md)
+are byte-identical to the published parser under its pinned toolchain. The signed
+source and original frozen lock identify esbuild 0.25.12 and vscode-uri 3.1.0;
+their inventory projections now require that pinned receipt. Generic content-only
+candidates, including the earlier path-browserify input, remain qualified. The
+original source-map reports and prior licensed reference comparisons are preserved.
+
+[Four retained Webpack runtime bodies](../compliance/evidence/webpack-parser-runtime/README.md)
+match a licensed generated reference without normalization: 125 composed code
+references and 42 body-operation references. JS Foundation and contributors' full
+MIT notice is separately distributed. Its earlier emitting compiler version stays
+unresolved; no whole compiler package is claimed. This adds one qualified credit
+(98 added credits, 149 total inventoried components) while preserving all earlier
+copyright and license text. Runtime bytes, dependency locks, budgets, native guards
+and all six strict release failures remain unchanged. Exact corpus/build/CI
+qualification belongs to the associated PR and #14; there is no native, independent
+IP review, source-offer publication or signed-artifact acceptance claim.
+
+## Licensing coordination links — 4 November 2026
+
+All ten existing Notion LC-01–LC-10 records now point to canonical MostlyText #14
+and current repository sources. Readback confirms every Gate ID and link, while
+all release statuses remain Open and artifact/RC verification fields remain blank.
+LC-05 now explains the adopted immutable, CI-enforced lock solution above its
+preserved original manifest-replacement wording; the actual required main-branch
+manifest compatibility and pin are unchanged. This completes coordination-link
+reconciliation, not any native or final release gate.

@@ -81,7 +81,7 @@ This file is generated from `compliance/inventory.json` by
 | Editor theme “Tomorrow Dark” (colour values) | n/a | MIT |
 | Emscripten and musl root notices (Viz.js publisher-build reference) | 5.0.7 source reference | MIT AND (MIT OR NCSA) |
 | es-toolkit (via Mermaid) | 1.45.1 | MIT |
-| esbuild parser runtime helpers (matching licensed reference; emitting version unresolved) | emitting version unresolved; reference v0.27.7 | MIT |
+| esbuild parser runtime helpers (reproduced parser compiler) | 0.25.12 (emitted runtime only) | MIT |
 | Expat (embedded in Viz.js WebAssembly) | 2.8.4 | MIT |
 | fastdom (via Mermaid) | 1.0.12 | MIT |
 | github.com/alecthomas/chroma/v2 (D2 publisher-build attribution) | publisher source-build input v2.14.0 | MIT |
@@ -162,7 +162,8 @@ This file is generated from `compliance/inventory.json` by
 | vscode-languageserver-protocol (via Mermaid) | 3.17.5 | MIT |
 | vscode-languageserver-textdocument (via Mermaid) | 1.0.12 | MIT |
 | vscode-languageserver-types (via Mermaid) | 3.17.5 | MIT |
-| vscode-uri (content-matched reference via Mermaid; original version unresolved) | original unresolved; content matches 3.1.0 | MIT |
+| vscode-uri (reproduced publisher input via Mermaid) | 3.1.0 | MIT |
+| Webpack parser runtime helpers (matching licensed reference; emitting version unresolved) | emitting version unresolved; reference 5.88.2 | MIT |
 | Yams | 6.2.2 | MIT |
 
 ---
@@ -5204,9 +5205,9 @@ SOFTWARE.
 
 ---
 
-## esbuild parser runtime helpers (matching licensed reference; emitting version unresolved)
+## esbuild parser runtime helpers (reproduced parser compiler)
 
-- Version: emitting version unresolved; reference v0.27.7
+- Version: 0.25.12 (emitted runtime only)
 - Upstream: https://github.com/evanw/esbuild
 - Licence: MIT
 - Copyright (c) 2020 Evan Wallace
@@ -10089,9 +10090,9 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ---
 
-## vscode-uri (content-matched reference via Mermaid; original version unresolved)
+## vscode-uri (reproduced publisher input via Mermaid)
 
-- Version: original unresolved; content matches 3.1.0
+- Version: 3.1.0
 - Upstream: https://registry.npmjs.org/vscode-uri/3.1.0
 - Licence: MIT
 - Copyright holders and original notices are reproduced verbatim in the complete licence text below.
@@ -10108,6 +10109,40 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+```
+
+---
+
+## Webpack parser runtime helpers (matching licensed reference; emitting version unresolved)
+
+- Version: emitting version unresolved; reference 5.88.2
+- Upstream: https://github.com/webpack/webpack
+- Licence: MIT
+- Copyright JS Foundation and other contributors
+
+### webpack-parser-runtime--MIT.txt
+
+```text
+Copyright JS Foundation and other contributors
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```
 
 ---

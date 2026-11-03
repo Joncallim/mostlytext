@@ -1,0 +1,46 @@
+{
+  "helpers": [
+    {
+      "body_sha256": "4158dea042576a3385c74915858d23ff819d6e19839c43832e741eeee77638d6",
+      "generated_body_probe_references": 3,
+      "generated_references": 46,
+      "helper": "bootstrap",
+      "probe_line": 22,
+      "source": "webpack://LIB/webpack/bootstrap"
+    },
+    {
+      "body_sha256": "8887a7a4ae920342bb9109b1d8e4a7deddf67d2bb59309fe935121acf0d65d6d",
+      "generated_body_probe_references": 13,
+      "generated_references": 34,
+      "helper": "define%20property%20getters",
+      "probe_line": 5,
+      "source": "webpack://LIB/webpack/runtime/define%20property%20getters"
+    },
+    {
+      "body_sha256": "2fc045876ffafa261598b1d1476ffb16010e9fed737aa98bd4545e5fb2867777",
+      "generated_body_probe_references": 12,
+      "generated_references": 12,
+      "helper": "hasOwnProperty%20shorthand",
+      "probe_line": 1,
+      "source": "webpack://LIB/webpack/runtime/hasOwnProperty%20shorthand"
+    },
+    {
+      "body_sha256": "dcb6fa6d79b08ff7453817108c79154a90678e58f0ba43820f694a7311f22fd8",
+      "generated_body_probe_references": 14,
+      "generated_references": 33,
+      "helper": "make%20namespace%20object",
+      "probe_line": 6,
+      "source": "webpack://LIB/webpack/runtime/make%20namespace%20object"
+    }
+  ],
+  "id": "webpack-parser-runtime",
+  "license_sha256": "9068a8782d2fb4c6e432cfa25334efa56f722822180570802bf86e71b6003b1e",
+  "mapped_runtime_references": 125,
+  "original_emitter_version": "unresolved",
+  "parser_archive_sha256": "97eef1a4c37110e4836b6eb8dd6a348d989efb370a7672831df01042a7c323f4",
+  "parser_chunk_sha256": "5c83305b04a62463567bdf6d82d9ba9dfc3795e516d8cc848e6981504af48068",
+  "reference_map_sha256": "7432a589823b59cd6eb501ba96315a99476628ca21f30992d59b099449c728a6",
+  "reference_version": "5.88.2",
+  "schema": 1,
+  "shipped_bundle_sha256": "581ed7d74bd9048d0e3a91363927d72ef22942d7722546b27f7cc29e35390eb8"
+}

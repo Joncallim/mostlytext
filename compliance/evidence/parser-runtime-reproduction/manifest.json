@@ -1,0 +1,45 @@
+{
+  "esbuild": "0.25.12",
+  "files": {
+    "node-proof.json": "fe7328f9d9934c914e31a85a6ec52bce0b92c7baefdb470d428b97d4d5e8332b",
+    "pnpm-proof.json": "d1378119b230aa47090b48034f3ba735df5246666ef0b3de52a7a552c72e5acb",
+    "publisher-source-hashes.json": "d976c2130a8efaf0e8ce14478e1f2bdd7603717bb95b603cd4f01ecf129ba6e3",
+    "reproduce-parser.mts": "f4c0a288f7dfc65553fe5bd962c0ad82a0d29fb7c735ee8723e2a55537a9e8d4",
+    "reproduction.json": "c53c8801d014cbd03797491f9598864f2d7177d8ddf99ba91c6e0c472274a9af",
+    "restored-source-proof.json": "015667a95ac769fd507372b4d0622f55570e7adff71f1181a781979a5c0c9ca7",
+    "source-mutation-control.json": "20e25cdf1b3722a7a8bb2a8970dd2ebbe5938e2fef0b0987911aa13ae941c650"
+  },
+  "langium": "4.2.1",
+  "node": "24.16.0",
+  "parserJavaScriptMembers": 96,
+  "parserMapMembers": 96,
+  "pnpm": "10.30.3",
+  "publisherArchiveSHA256": "97eef1a4c37110e4836b6eb8dd6a348d989efb370a7672831df01042a7c323f4",
+  "publisherSourceFiles": 1753,
+  "schema": 1,
+  "scope": "locally reproduced complete parser JavaScript and maps; not types/prepack, independent IP review or other nested builds",
+  "sourceCommit": "293b1c153a6f94c3a4a1d9cd5eae4dde609f1ec4",
+  "sourceInputs": {
+    ".build/common.ts": "622933466593fd2421a83134ac9c08c757fe52875f167a4bd7dd57f36527ce72",
+    ".build/generateLangium.ts": "34c01fe656b73922d92d3b8178a98048f0361985518578f4d385fd3d8dda95d1",
+    ".esbuild/build.ts": "a53c133aa5b41a17ad4f1784292e64559349ffe87c78ac66fedda3d288cc5217",
+    ".esbuild/util.ts": "e7d3fe160447830de3b7f304d87d6ce943136cb6054cc8dfc0a78cfc4f186d23",
+    ".github/workflows/release.yml": "681edca80a6ac8e9fac937f03adf2dc334e07de64ad0573fad226b2ccde525ce",
+    ".node-version": "2722b61f414f07f08be7f1f1316012813818f26f1c40d6a24a748686cec7d2ff",
+    "package.json": "85b0a3711c8cba13114194937840ade476db69ab1c9804bdee097ef0a7ea6d62",
+    "packages/parser/package.json": "131781c3d500d3c43453193dc3deeea281f8645d00831d85905180a6796e14ce",
+    "packages/parser/scripts/prepack.ts": "9755fa9d0972042c400c99350bec82b714fc0a709c99915926f9110750e32434",
+    "pnpm-lock.yaml": "54024afe43a1dc1db26e01687e18f7b10f2e1b86dda6930279fccdab45d8307e"
+  },
+  "unchangedScope": [
+    "shipped renderer/runtime bytes",
+    "dependency pins",
+    "original content-only mapping reports",
+    "strict release predicates",
+    "native and final artifact acceptance"
+  ],
+  "vscodeUri": {
+    "archiveSHA256": "c6ec752d7a4858237389b23fb4d5ac05c2f1f606071cd212a9b54730e43cfc54",
+    "version": "3.1.0"
+  }
+}
