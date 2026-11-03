@@ -1,0 +1,14 @@
+{
+  "files": {
+    "actual-controls.json": "03c55cb70958f548cac6adc0eb98dde109a3a6e960aa900a6ec160427b49bb7e",
+    "classification.json": "de87447fd7390841f770969dcc9ed44a243f098546086f5cd40cfa3ca0fae63f",
+    "classify.mjs": "08102fd46d0d3332cd9228ee3520c04bc89d8dfd255088e3528b9d09eee6ca18",
+    "tool-proof.json": "63749b8599c5c6ea235818ad59ebc3bb987e2a3cd3bf8f4977f89cb7d0582bbe"
+  },
+  "independentReviewRequired": true,
+  "originalIndex": "compliance/evidence/esbuild-parser-runtime/review-positions.json",
+  "originalIndexSHA256": "4137239965a49864f71dc3ecbce8dfc04833731c0e92a55cd2dd44b6a9958ec3",
+  "reproductionManifestSHA256": "912cbbff1784e95298f882dade1bf22e5617d06f1bb17e4a5c9200d1f2f76088",
+  "schema": 1,
+  "technicalClassificationOnly": true
+}

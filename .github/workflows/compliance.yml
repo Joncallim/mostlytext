@@ -45,6 +45,7 @@ jobs:
         run: |
           python3 compliance/tools/verify_parser_reproduction.py
           python3 compliance/tools/verify_webpack_runtime_notice.py
+          python3 compliance/tools/verify_parser_classification.py
       - name: Release-gate ledger (informational until the release candidate)
         # Lists what still blocks public 1.0 (pending lock file, open items,
         # unverified source locations). It is expected to fail until then,

@@ -26,6 +26,14 @@ classifies 452 of the original 3,980 unassociated references and supplies a
 for every position, retaining all other 3,528 as review-required. This is a
 concrete review handoff, not an ownership guess or completed independent review.
 
+[The later syntax audit](evidence/parser-position-classification/README.md) binds
+all 2,597 remaining original positions and classifies 3,428 references as imports,
+strict export bindings, static name-retention calls or punctuation syntax using
+actual JavaScript parsing. Another 100 references remain technically unclassified.
+All original positions retain independent attribution/rights-review requirements;
+no syntax category determines ownership or clears the earlier unresolved grants.
+The original index and all notice/runtime/pin bytes are preserved.
+
 When these inputs are resolved, update their canonical evidence, inventory,
 notices and SBOM together and rerun the exact resource/source checks. Public
 source-only publication remains the separately authorized action in
