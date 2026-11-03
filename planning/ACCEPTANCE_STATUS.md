@@ -234,3 +234,16 @@ LC-05 now explains the adopted immutable, CI-enforced lock solution above its
 preserved original manifest-replacement wording; the actual required main-branch
 manifest compatibility and pin are unchanged. This completes coordination-link
 reconciliation, not any native or final release gate.
+
+## Artifact links cannot hide runtime resources — 4 November 2026
+
+[The source contract](downstream/artifact-link-verification.md) closes the
+artifact checker's silent link omission: outside file/directory links, invalid
+chains, unknown bytes exposed by script aliases, special nodes and refused reads
+or scans now fail verification. Relative internal framework/resource links and
+the exact installer Applications shortcut remain supported. The checker expects
+a stable candidate; it does not create a race-free snapshot or prove signatures.
+App/runtime/notice/SBOM/pin inputs and all six strict release failures remain
+unchanged. Actual fixture, compiled-resource, hosted and integration evidence is
+recorded with the associated PR and MostlyText #14/#4; no local app launch,
+native acceptance, signing or publication is inferred.

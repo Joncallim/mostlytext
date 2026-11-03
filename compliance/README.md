@@ -104,6 +104,20 @@ With `--artifact`, the check fails if any of these is true:
    `inventory.json` → `artifact.registered_extensions`) whose digest isn't a
    known runtime resource or a first-party source file.
 
+The artifact walker also rejects escaping, absolute, dangling or cyclic symbolic
+links, special filesystem objects, and unreadable directories/files. Relative
+links must resolve entirely within the prepared artifact, with at most 40 link
+hops; directory aliases are validated without a second traversal. Internal file
+aliases are checked under their distributed name, so a .js alias cannot hide
+unregistered bytes stored in a .txt file. Versioned framework links remain valid.
+The only external-link exception is the exact root Applications -> /Applications
+installation shortcut outside an app bundle; it is never traversed or hashed.
+
+Provide a stable prepared/signed directory. This is not a race-free filesystem
+snapshot or a code-signature check. A root supplied through a filesystem alias
+is resolved once before inspection. Required resource bytes, source/publication
+obligations and the exact signed-candidate gates remain unchanged.
+
 It does **not** prove anything about compiled code. Swift packages and the C
 grammar parsers are linked into the binary and can't be matched by digest.
 For those, the evidence is the source-tree check, the exact revisions in the
