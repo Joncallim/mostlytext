@@ -21,10 +21,12 @@ credentials or private files.
 from __future__ import annotations
 
 import argparse
+from collections import deque
 import hashlib
 import json
 import os
 import re
+import stat
 import sys
 import uuid
 from pathlib import Path
@@ -484,6 +486,83 @@ def check(root: Path, release: bool = False, artifact: Path | None = None) -> Re
     return report
 
 
+def resolve_artifact_link(path: Path, artifact: Path) -> Path:
+    """Resolve a relative link chain without inspecting any outside component.
+
+    The artifact is a canonical, stable prepared tree. This is containment
+    validation, not a snapshot or protection against concurrent replacement.
+    """
+    pending = deque(path.relative_to(artifact).parts)
+    current, links = artifact, 0
+    while pending:
+        part = pending.popleft()
+        if part == "..":
+            if current == artifact:
+                raise ValueError("link leaves the artifact")
+            current = current.parent
+            continue
+        if part in (".", ""):
+            continue
+        candidate = current / part
+        mode = candidate.lstat().st_mode
+        if stat.S_ISLNK(mode):
+            links += 1
+            if links > 40:
+                raise ValueError("cyclic or excessive link chain")
+            target = os.readlink(candidate)
+            if os.path.isabs(target):
+                raise ValueError("absolute link target")
+            # Preserve dot/empty components: file.js/.. and file.js/ are
+            # invalid paths, not aliases to be normalized into valid ones.
+            pending.extendleft(reversed(target.split("/")))
+        else:
+            if pending and not stat.S_ISDIR(mode):
+                raise ValueError("non-directory link component")
+            current = candidate
+    return current
+
+
+def artifact_digests(artifact: Path, report: Report) -> dict[str, list[str]]:
+    """Count regular files and safe file aliases; never follow directory aliases."""
+    shipped: dict[str, list[str]] = {}
+
+    def unreadable(error: OSError) -> None:
+        report.error(f"artifact directory unreadable: {error}")
+
+    for dirpath, dirnames, filenames in os.walk(artifact, onerror=unreadable, followlinks=False):
+        # Inspect directory links as well as filenames, including dangling links.
+        for name in sorted(dirnames + filenames):
+            path = Path(dirpath) / name
+            rel = path.relative_to(artifact).as_posix()
+            try:
+                mode = path.lstat().st_mode
+                if stat.S_ISLNK(mode):
+                    if name in dirnames:
+                        dirnames.remove(name)
+                    # The DMG's installation shortcut is not shipped runtime.
+                    # No app-level, nested or differently targeted escape qualifies.
+                    if (path.parent == artifact and name == "Applications"
+                            and not artifact.name.lower().endswith(".app")
+                            and not os.path.lexists(artifact / "Contents")
+                            and os.readlink(path) == "/Applications"):
+                        continue
+                    try:
+                        path = resolve_artifact_link(path, artifact)
+                        mode = path.lstat().st_mode
+                    except (OSError, ValueError) as error:
+                        report.error(f"unsafe artifact link: {rel}: {error}")
+                        continue
+                if stat.S_ISDIR(mode):
+                    continue
+                if not stat.S_ISREG(mode):
+                    report.error(f"unsupported artifact object: {rel}")
+                    continue
+                shipped.setdefault(sha256_file(path), []).append(rel)
+            except OSError as error:
+                report.error(f"artifact file unreadable: {rel}: {error}")
+    return shipped
+
+
 def check_artifact(root: Path, inventory: dict, artifact: Path, report: Report) -> None:
     """Compare a built app (or mounted DMG) with the inventory's artifact contract.
 
@@ -495,17 +574,16 @@ def check_artifact(root: Path, inventory: dict, artifact: Path, report: Report) 
     Compiled code can't be matched this way; the source-tree check and the
     SBOM cover it.
     """
-    if not artifact.exists():
-        report.error(f"artifact not found: {artifact}")
+    try:
+        artifact = artifact.resolve(strict=True)
+        if not artifact.is_dir():
+            report.error(f"artifact is not a directory: {artifact}")
+            return
+    except (OSError, RuntimeError) as error:
+        report.error(f"artifact not found or unreadable: {artifact}: {error}")
         return
     contract = inventory.get("artifact", {})
-    shipped: dict[str, list[str]] = {}
-    for dirpath, _, filenames in os.walk(artifact):
-        for name in filenames:
-            path = Path(dirpath) / name
-            if path.is_symlink() or not path.is_file():
-                continue
-            shipped.setdefault(sha256_file(path), []).append(path.relative_to(artifact).as_posix())
+    shipped = artifact_digests(artifact, report)
 
     known: set[str] = set()
     for component in inventory["components"]:
