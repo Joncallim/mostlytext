@@ -1,6 +1,42 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "The export was saved, but its recovery record could not be finalized. Keep the output and try this destination again.": {
+      "comment": "Nonfatal warning after successful export publication. The output was saved; do not describe this as a failed save.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The export was saved, but its recovery record could not be finalized. Keep the output and try this destination again."
+          }
+        }
+      }
+    },
+    "Finish other exports and try again. If this continues, preserve the recovery folder and contact support.": {
+      "comment": "Recovery suggestion after private export storage could not be admitted. Preserve recovery evidence.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finish other exports and try again. If this continues, preserve the recovery folder and contact support."
+          }
+        }
+      }
+    },
+    "Export recovery storage is unavailable or in use: %@": {
+      "comment": "Export failure. The placeholder is the private recovery folder path; do not suggest deleting it.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export recovery storage is unavailable or in use: %@"
+          }
+        }
+      }
+    },
   "the export resource read-work limit was reached": {
     "localizations": {
       "en": {

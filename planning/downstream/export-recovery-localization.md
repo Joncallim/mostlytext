@@ -29,3 +29,22 @@ lookups do not supply those package translations. Run strict lint/pinned format,
 locked compilation and full hosted CI before merge. Keep native language/layout,
 VoiceOver, native-speaker review and the final string freeze open. No local
 product or app-target tests may execute on the owner account.
+
+## Source qualification
+
+The owned Foundation-only command fixture compiles the actual two production
+error/diagnostic files unchanged, with the actual compiled catalog and an isolated
+fixture linker property list enabling mixed localizations. Command-line language
+overrides do not write preferences. All three existing message values match their
+catalog in English, French, Japanese and Polish, in Debug and Release (eight
+configuration/language combinations). Recovery error/guidance uses the expected
+English fallback; no new non-English translation is asserted. All 28 existing
+catalog entries are unchanged and three contextual English entries are added.
+
+With the previous error source, the same French fixture returns English at all
+three lookups. The corrected source and its copies were restored byte-for-byte;
+the rebuilt Debug fixture again returns the existing French values. This proves
+package resource selection in that fixture, not actual app language override,
+layout, accessibility or linguistic quality. Strict lint and pinned formatter
+pass. Locked app compilation and exact-head hosted checks must also pass before
+integration; their results belong to the associated PR and issue.
