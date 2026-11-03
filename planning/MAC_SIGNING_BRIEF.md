@@ -112,7 +112,7 @@ candidate must pass the strict check before anything is submitted to Apple.
 ## Step 1: build, sign, notarise and package
 
 The script is already integrated in the application repository. Start a clean
-working branch from the current reviewed `main`; old #164 references describe its
+working branch from the current reviewed `main`; [original PR164](https://github.com/Joncallim/macdown_2/pull/164) references describe its
 original introduction, not an unmerged prerequisite. The following is the
 preparatory pipeline mode, not a final release command:
 
@@ -245,5 +245,6 @@ Open **one pull request** from `release/signing-dry-run` containing:
 `run.log` (the log is only for your own debugging). They stay in the
 git-ignored `build/` folder.
 
-The cloud coordinator reviews the PR, reconciles `RELEASE_PATH.md` and #18,
+The reviewer reconciles the PR, `RELEASE_PATH.md` and
+[distribution issue #4](https://github.com/Joncallim/mostlytext/issues/4),
 and plans any fix.
