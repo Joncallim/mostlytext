@@ -270,7 +270,11 @@ instance identity. A caller-supplied expected instance must match on reconnect;
 otherwise close and report instanceChanged, with no replay, relaunch or retry.
 The hello is compatibility/instance data, not same-UID application authentication.
 Use the existing strict JSON admission and frame caps. Poll at most 50 ms for
-cancellation; connect, accept and hello all consume the caller's finite deadline.
+cancellation; public connect and accept/hello consume the caller's finite
+deadline. The application server's internal idle/greeting phases are separately
+bounded as amended in
+`downstream/cli-idle-and-hello-budgets-2026-11-03.md`; its idle polling deadline
+must not truncate a newly admitted peer's greeting.
 
 Allow changes in CommandBridge endpoint/polling/hello code and its tests only.
 Keep classes non-Sendable with one serialized off-main owner. Tests exercise real
