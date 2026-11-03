@@ -31,7 +31,7 @@ D-027–D-031's existing frozen geometry, without redesign or legal-clearance cl
 3. First run uses that application icon, the MostlyText welcome title and sample;
    French/Japanese/Polish welcome translations retain their wording with the brand
    noun changed and review state reset. Generated example-command comments and
-   command-folder error copy use MostlyText. Their execution semantics do not change.
+   command-folder and output-limit error copy use MostlyText. Their execution semantics do not change.
 
 No new module, type, runtime service, persistence transition, executor, cancellation
 policy or export path is introduced. SwiftUI/AppKit keep their existing ownership.

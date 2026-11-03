@@ -50,7 +50,7 @@ public enum TextFilterError: Error, LocalizedError, Sendable, Equatable {
         case .cancelled:
             String(localized: "The command was cancelled.", bundle: .module)
         case .outputTooLarge:
-            String(localized: "The command produced more output than MacDown 2 will accept.", bundle: .module)
+            String(localized: "The command produced more output than MostlyText will accept.", bundle: .module)
         case .outputNotDecodable:
             String(localized: "The command's output wasn't valid text.", bundle: .module)
         case .outputIncomplete:
