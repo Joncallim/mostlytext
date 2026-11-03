@@ -446,7 +446,7 @@
         }
       ],
       "open_items": [
-        "Complete remaining embedded/generated Mermaid attribution and original resolution for two content-matched candidate versions. All 74 mapped package records now have complete selected texts distributed (Cytoscape retained separately); four Rough.js publisher-build input notices are also registered. Ralf Thenable full-text linkage, Framer/Koen spring origin ambiguity, points-on-curve borrowed-algorithm provenance, other nested helpers, unmapped parser/generated positions and exact final artifact proof remain open. Source-build references and root package labels do not complete nested-code review."
+        "Complete remaining embedded/generated Mermaid attribution and original resolution for two content-matched candidate versions. All 74 mapped package records now have complete selected texts distributed (Cytoscape retained separately); four Rough.js publisher-build input notices are also registered. Framer/Koen spring origin ambiguity, points-on-curve borrowed-algorithm provenance, other nested helpers, unmapped parser/generated positions and exact final artifact proof remain open. Source-build references and root package labels do not complete nested-code review."
       ],
       "runtime_resources": [
         {
@@ -5298,6 +5298,37 @@
       ],
       "evidence": "compliance/evidence/nested-build-attribution/manifest.json",
       "notes": "Publisher build record names emscripten/emsdk 5.0.7 and its image digest. Exact tag reference and full root notices/authors are retained. This is conservative build-reference attribution, not proof of all retained runtime or libc/compiler-rt/libc++ subcomponents; their per-file notices and exact build images remain an open audit."
+    },
+    {
+      "id": "cytoscape-thenable",
+      "name": "Ralf S. Engelschall Thenable (via Cytoscape/Mermaid)",
+      "kind": "attribution",
+      "version": "Thenable/1.0.7 credited adaptation",
+      "upstream": "https://github.com/rse/thenable",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright (c) 2013-2014 Ralf S. Engelschall (http://engelschall.com)"
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/cytoscape-thenable--MIT.txt",
+          "sha256": "8dd7050fe645e769344d25736c97f1e6a59830f14c83e2e93e5477a541e91b66",
+          "upstream": "https://github.com/rse/thenable",
+          "upstream_revision": "b7ee46032b4be96acf74cb188ace7acc39f1613c",
+          "upstream_path": "thenable.js (copyright and explicit MIT declaration)",
+          "assembly": "Original author declaration/copyright plus the verbatim canonical MIT paragraphs linked by that declaration; not an upstream standalone LICENSE file",
+          "standard_terms_source": "https://opensource.org/license/mit",
+          "standard_terms_sha256": "748c15c2a285ef74aec280f2e72bd98482b96bd0e2da0d8f0fde934fa88e2e16"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "credited-version; original adaptation revision unspecified",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/thenable-mit-declaration/mapping.json",
+      "notes": "Specific fallback code probes map into shipped Mermaid. The tagged licensed reference confirms the explicit declaration; it is not proof of the exact original adaptation revision or complete Cytoscape attribution."
     }
   ]
 }

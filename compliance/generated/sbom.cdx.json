@@ -64,6 +64,37 @@
       "version": "Cytoscape 3.34.0; licensed reference jQuery 1.11.0"
     },
     {
+      "bom-ref": "cytoscape-thenable",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/rse/thenable"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "Ralf S. Engelschall Thenable (via Cytoscape/Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "credited-version; original adaptation revision unspecified"
+        }
+      ],
+      "type": "library",
+      "version": "Thenable/1.0.7 credited adaptation"
+    },
+    {
       "bom-ref": "cytoscape-via-mermaid",
       "externalReferences": [
         {
@@ -4796,6 +4827,7 @@
       "dependsOn": [
         "cytoscape-bezier-easing",
         "cytoscape-jquery-events",
+        "cytoscape-thenable",
         "cytoscape-via-mermaid",
         "d2",
         "d2-build-github.com-alecthomas-chroma-v2",
@@ -4959,7 +4991,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:db2dd75e-126c-530b-8dac-9081ca816d78",
+  "serialNumber": "urn:uuid:d473c6c8-d599-5bab-af9b-9b240d88d797",
   "specVersion": "1.5",
   "version": 1
 }
