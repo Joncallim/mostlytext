@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 /// The first-run welcome screen (E15 deliverable 6). Shown exactly once, the
@@ -8,13 +9,13 @@ struct FirstRunView: View {
 
     var body: some View {
         VStack(spacing: 28) {
-            Image(systemName: "doc.plaintext.fill")
-                .font(.system(size: 52))
-                .foregroundStyle(.tint)
+            Image(nsImage: NSImage(named: NSImage.applicationIconName) ?? NSImage())
+                .resizable()
+                .frame(width: 52, height: 52)
                 .accessibilityHidden(true)
 
             VStack(spacing: 8) {
-                Text("Welcome to MacDown 2")
+                Text("Welcome to MostlyText")
                     .font(.largeTitle.bold())
                 Text("A fast, native Markdown editor for Mac, with live preview, math, and diagrams built right in.")
                     .font(.body)
@@ -50,14 +51,14 @@ struct FirstRunView: View {
 /// written in the Markdown it demonstrates.
 enum FirstRunSampleDocument {
     static let text = """
-    # Welcome to MacDown 2
+    # Welcome to MostlyText
 
     This is a sample document, open for you to explore — edit it, or start a
     new one from the **File** menu whenever you're ready.
 
     ## Formatting
 
-    MacDown 2 supports **bold**, *italic*, `inline code`, and [links](https://example.com).
+    MostlyText supports **bold**, *italic*, `inline code`, and [links](https://example.com).
 
     - A bullet list
     - With a couple of items

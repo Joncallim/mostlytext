@@ -16,7 +16,7 @@ enum BundledExampleScripts {
             filename: "uppercase_selection.sh",
             contents: """
             #!/bin/sh
-            # MacDown 2 example text-filter command.
+            # MostlyText example text-filter command.
             # Uppercases stdin (the selection, or the whole document when
             # nothing is selected) and writes the result to stdout.
             cat | tr '[:lower:]' '[:upper:]'
@@ -26,7 +26,7 @@ enum BundledExampleScripts {
             filename: "sort_lines.sh",
             contents: """
             #!/bin/sh
-            # MacDown 2 example text-filter command.
+            # MostlyText example text-filter command.
             # Sorts stdin's lines alphabetically.
             cat | sort
             """

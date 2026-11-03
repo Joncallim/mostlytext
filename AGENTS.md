@@ -9,11 +9,13 @@ read-only reference tag `macdown-original-reference-3e2a2bf1`, separately from t
 rewrite branch. There is no `legacy-reference/` directory in the current tree.
 
 The website is a separate repository, `Joncallim/mostlytext-site`, with its own
-licence. The engineering backlog and historical release evidence remain at
-`https://github.com/Joncallim/macdown_2/issues` during this migration. Bare epic
-numbers in imported planning documents refer to that backlog, not this new
-repository's issue numbers. Do not transfer or duplicate them without a mapping.
-See `planning/downstream/mostlytext-repository-migration-2026-11-03.md`.
+licence. All 17 open engineering issues have moved to
+`https://github.com/Joncallim/mostlytext/issues`. Use the new numbers for new work;
+[the transfer map](planning/ISSUE_TRANSFER_MAP.md) resolves imported bare issue
+numbers to their current issues. Historical closed issues, PRs, alpha releases
+and workflow evidence remain in `Joncallim/macdown_2`. Never mass-renumber those
+records or retarget exact-source/native receipts.
+See `planning/downstream/mostlytext-brand-backlog-cutover-2026-11-03.md`.
 
 ## Layout
 
@@ -25,16 +27,16 @@ See `planning/downstream/mostlytext-repository-migration-2026-11-03.md`.
   - `MacDown2/Packages/MacDownKit/` — SPM modules (see `planning/MIGRATION_PLAN.md` §4)
   - `MacDown2/project.yml` — XcodeGen spec (regenerate; never hand-edit the xcodeproj)
 - `planning/` — migration plan + epic definitions; epics are tracked as issues on
-  `Joncallim/macdown_2` (milestones M1–M5).
+  `Joncallim/mostlytext` (historical IDs resolve through the transfer map).
 - `planning/EPIC_STANDARD.md` — mandatory Definition of Ready, architecture,
   slice, Definition of Done, and human-readability rules for new epic work.
 - `planning/RELEASE_HARDENING.md` — binding cross-epic macOS 1.0 integration,
   identity, evidence, offline/privacy, fidelity, localisation and release gates.
-- `planning/RELEASE_PATH.md` — coordination map from current `master` to public
+- `planning/RELEASE_PATH.md` — coordination map from current `main` to public
   MostlyText 1.0: order, cloud/Mac split, open owner decisions. Adds no scope.
 - `design/` — MostlyText design packet (`DESIGN_CONTEXT.md`, `DECISIONS.md`)
   and the canonical brand assets.
-- `compliance/` — third-party licence/provenance gate (#148): `inventory.json`,
+- `compliance/` — third-party licence/provenance gate (MostlyText #14, formerly #148): `inventory.json`,
   generated notices and SBOM, and `tools/compliance.py`. Update the inventory in
   the same change as any new dependency or bundled file.
 - `website/` — draft of the `mostlytext.app` download site. Not deployed before

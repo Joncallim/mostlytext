@@ -1,5 +1,15 @@
 # MostlyText repository migration
 
+## Current status — 3 November 2026
+
+Repository separation is integrated. The owner subsequently authorized transferring
+all 17 engineering issues and starting the brand cutover. The live backlog is now
+[MostlyText](https://github.com/Joncallim/mostlytext/issues); see the
+[number map](../ISSUE_TRANSFER_MAP.md) and
+[brand cutover contract](mostlytext-brand-backlog-cutover-2026-11-03.md). The
+preparation-only scope and backlog hold below describe the completed first tranche,
+not a continuing prohibition. Historical release/PR/native evidence stays in place.
+
 ## Owner outcome and authorization
 
 Give the application its own MostlyText repository while preserving the website,

@@ -1,5 +1,14 @@
 # MostlyText 1.0 release path
 
+> Current cutover: application source and the 17 engineering issues now live in
+> `Joncallim/mostlytext` on `main`. The owner authorized this earlier repository,
+> backlog and source-brand cutover on 3 November 2026. This supersedes older
+> timing instructions below; it does not waive release gates. Imported bare
+> issue numbers use [the transfer map](ISSUE_TRANSFER_MAP.md). The canonical app
+> ID/display name and public `mostlytext` CLI are already integrated; internal
+> `MacDown2.app` packaging remains deliberate E17 work.
+
+
 > **Repository migration update — 3 November 2026.** The owner requested the
 > migration to begin now and the website to move to `Joncallim/mostlytext-site`.
 > `Joncallim/mostlytext` now carries the full application history; this supersedes
