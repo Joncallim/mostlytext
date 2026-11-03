@@ -56,3 +56,16 @@ complete exact-head hosted tests remain required. These are self-review lenses,
 not independent final approval. Rooted filesystem mutation races, installed/native
 acceptance, crash journals, performance budgets and held feature probes remain
 separate; no release or master promotion is authorized by this source work.
+
+## Folder fixture directory identity — 3 November 2026
+
+Full ARM run 41557168954 retains two actual folder-origin assertion failures:
+the admitted model root is a directory URL with its trailing slash, while the
+fixture constructed its not-yet-created root with the default file hint. The
+physical directory and target controller are correct; the expected URL value
+does not match the real folder-panel contract. Construct the fixture root with
+isDirectory: true and assert hasDirectoryPath. Keep both original model URL
+equality checks and every origin/cancellation assertion; do not compare only
+paths, remove equality checks or change product canonicalization. Full combined
+qualification remains required. The owner's later main-transfer authorization
+supersedes this document's historical source-only promotion restriction.
