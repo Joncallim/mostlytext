@@ -20,8 +20,11 @@ Evidence: [D2 source graph](evidence/d2-0.1.33/README.md),
 [mapped Mermaid evidence](evidence/mermaid-11.17.2/README.md),
 [build references](evidence/nested-build-attribution/README.md) and
 [Graphviz review package](evidence/graphviz-source-review/README.md).
-The generated-runtime checkpoint, when integrated, further narrows the original
-unassociated parser positions without claiming all remaining code is classified.
+The [generated-runtime checkpoint](evidence/esbuild-parser-runtime/README.md)
+classifies 452 of the original 3,980 unassociated references and supplies a
+[complete coordinate/hash review index](evidence/esbuild-parser-runtime/review-positions.json)
+for every position, retaining all other 3,528 as review-required. This is a
+concrete review handoff, not an ownership guess or completed independent review.
 
 When these inputs are resolved, update their canonical evidence, inventory,
 notices and SBOM together and rerun the exact resource/source checks. Public

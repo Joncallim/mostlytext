@@ -2,7 +2,8 @@
 
 > Current integration — 3 November 2026: complete selected texts for all 74 mapped
 > package records, 22 conservative source-build/reference attributions and the
-> explicitly declared Thenable MIT terms are now distributed through PR25/PR26.
+> explicitly declared Thenable MIT terms are now distributed through PR25/PR26. PR30 adds the qualified esbuild MIT
+> runtime notice and the complete coordinate/hash-only remaining-position index.
 > See [package evidence](evidence/mermaid-package-notices/README.md),
 > [build references](evidence/nested-build-attribution/README.md) and
 > [Thenable construction](evidence/thenable-mit-declaration/README.md). Older
