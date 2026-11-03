@@ -106,3 +106,21 @@ release and its assets are unpublished and access-controlled, so anonymous retri
 Test obligations: anonymous fetch of a draft-release asset fails (documented counterexample, so nobody rebuilds the
 deadlock); a cookie-less fetch of every published object matches `SHA256SUMS`; the notices embed those exact locations;
 and no application binary is reachable from the source location.
+
+## Local source-review packages — 3 November 2026
+
+Both source families now have local review archives. D2's existing verified
+37-file package contains the source/npm inputs, patch and 16 Go module ZIPs; see
+[its manifest and controls](evidence/d2-0.1.33/README.md). The Graphviz assembler
+`tools/prepare_graphviz_offer.py` now packages the exact Graphviz/Viz/Expat/npm
+inputs, current notices/SBOM snapshot, build evidence and explicit review limits.
+[Its checkpoint](evidence/graphviz-source-review/README.md) records the manifest,
+digest and reproduction. The assembler never executes upstream packages or tools.
+
+These are prepared review objects, not approval as complete corresponding source.
+Compiler/sysroot inputs and embedded runtime attribution still require review;
+source-offer URLs/status stay planned. Rebuild the review snapshot if notices or
+source inputs change, using a new local output name; the tool refuses to overwrite
+a different archive. No website deployment, source-only public upload, application
+binary publication or signing is performed by this preparation. The explicit
+source-archive authorization above remains required for publication.

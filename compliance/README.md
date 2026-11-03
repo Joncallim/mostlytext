@@ -1,11 +1,10 @@
 # Third-party licence and provenance gate
 
-**Owner summary.** MostlyText ships under MIT, but it also ships about 30
-third-party components: parsers, a Markdown library, diagram engines compiled
+**Owner summary.** MostlyText ships under MIT, and bundles third-party components and separately credited embedded code: parsers, a Markdown library, diagram engines compiled
 to JavaScript and WebAssembly, math fonts, and colour themes. Each keeps its
 own licence, and some licences (Graphviz's EPL-2.0, D2's MPL-2.0) also require
 the source to be available. This directory is the release gate for those
-obligations (#148, LC-01 to LC-09):
+obligations (MostlyText #14, formerly #148; LC-01 to LC-10):
 
 - `inventory.json` lists every third-party component the app ships, where it
   came from (exact upstream revision), its licence and the files it owns.
@@ -13,8 +12,9 @@ obligations (#148, LC-01 to LC-09):
   the notices file and a software bill of materials (SBOM), and, at release
   time, refuses to pass while anything is pending or unverified.
 - `generated/` holds the generated `THIRD_PARTY_NOTICES.md` and
-  `sbom.cdx.json`. The About → Open Source Licences screen (LC-08) will show
-  the notices file, so no one maintains a second hand-written copy.
+  `sbom.cdx.json`. The implemented Open Source Licenses window (LC-08) reads
+  the bundled canonical notice file as native plain text. Its real-app keyboard,
+  accessibility and localization acceptance remains separate.
 
 Why this way: the notices have to match what actually ships, byte for byte.
 A single machine-checked inventory catches a new library, a changed file or a
@@ -46,7 +46,7 @@ Run from the repository root. They need only Python 3.11 or later.
 | Run the tool's own tests | `python3 -m unittest discover -s compliance/tests` |
 
 The `Compliance` workflow runs the tests and the tree check on every pull
-request and push to `master`. It also prints the release ledger for
+request and push to `main`. It also prints the release ledger for
 information; that step is expected to fail until the release candidate
 exists. The strict version runs in the signing script's
 `--release-candidate` mode, against the built app.
@@ -112,7 +112,7 @@ copy in with extensions outside that list (for example SwiftUIMath's font
 `.plist` metrics) are covered by the notices but aren't matched individually.
 
 The Compliance workflow runs on every pull request and every push to
-`master`, with no path filter. A test (`test_compliance_workflow_cannot_be_skipped_by_path_filters`)
+`main`, with no path filter. A test (`test_compliance_workflow_cannot_be_skipped_by_path_filters`)
 fails if anyone narrows it.
 
 The tests in `tests/test_compliance.py` break a passing fixture one way at a
@@ -168,3 +168,22 @@ Open items per component are listed in `inventory.json` and by
 `check --release`. The main ones: Mermaid's bundled npm dependencies, the Graphviz and D2 corresponding-source
 packages (LC-02, LC-03 and LC-09), and confirming the font set in the signed
 app.
+
+## Current nested notice distribution — 3 November 2026
+
+The [Mermaid package checkpoint](evidence/mermaid-package-notices/README.md)
+distributes the complete selected texts for all 74 mapped package records,
+including the separately retained Cytoscape own-code notice. Two records remain
+content-matched references with unresolved original versions; neither is encoded
+as an exact npm component. DOMPurify uses the captured Apache-2.0 option.
+[Source-build attributions](evidence/nested-build-attribution/README.md) additionally
+cover four Rough.js dependency inputs, 16 D2 module inputs and two
+Graphviz parser/compiler references. Exact source-build
+lineage is not independent proof of all binary-retained code or a complete
+embedded-code audit. The strict Mermaid, D2 and Graphviz items remain open.
+
+Ordinary offline CI checks the committed projections and every distributed text;
+raw-input replay additionally validates the captured archives and source links.
+The current blockers and source-publication boundary are recorded in
+[RELEASE_PREPARATION.md](RELEASE_PREPARATION.md). Dated evidence directories retain
+their original outcomes and limits; later scoped updates do not rewrite history.

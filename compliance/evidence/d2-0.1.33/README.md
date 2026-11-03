@@ -1,5 +1,13 @@
 # D2 browser source and Go-module audit (#148 LC-03)
 
+> Current module notice update — 3 November 2026: complete root texts for all 16
+> recorded module inputs are now distributed as conservative publisher source-build
+> attributions, including FreeType's complete selected FTL option and binary credit.
+> [The checkpoint](../nested-build-attribution/README.md) records exact sources and
+> the lossless legacy-encoding conversion. Earlier statements that those root texts
+> are absent are historical. Independent WASM/source/nested review, Liberation Mono
+> RFN treatment, approval/publication and exact-artifact acceptance remain open.
+
 ## Owner summary
 
 The shipped D2 browser bundle is now tied byte-for-byte to the official npm

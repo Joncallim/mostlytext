@@ -1,0 +1,139 @@
+{
+  "archive_sha256": "fc35780d174b0a9519000b22a952300dfd49bf7f001586cf7b9417fef9706c5e",
+  "files": 25,
+  "manifest": {
+    "expat_revision": "12cf0b1f25f026a022fe728ad8f7e3d017285b80",
+    "files": [
+      {
+        "path": "README.txt",
+        "sha256": "54141cfd0e8c862f137e2795ee1eb84ab15e0e52d5295f66ee4e79a2a793f33d",
+        "size": 848
+      },
+      {
+        "path": "distribution-snapshot/THIRD_PARTY_NOTICES.md",
+        "sha256": "781780af718c2c882c69fbebfab3903708323437fb295be52a00be4b56e328a9",
+        "size": 461924
+      },
+      {
+        "path": "distribution-snapshot/sbom.cdx.json",
+        "sha256": "302c5298ff421489a593c35675a80e87b32a6f2425fc5ee5356b1077b3b6951b",
+        "size": 122387
+      },
+      {
+        "path": "evidence/ARCHIVE_PLAN.md",
+        "sha256": "01ee319ae85c5059a58d4576bdba89009f8d6b908c5eb74ca2f277baa67c31cc",
+        "size": 8005
+      },
+      {
+        "path": "evidence/audit-source-inputs.py",
+        "sha256": "fdd689fd8d5fcbbedcec7fa504559db14246fa125a6444d15722ce6f1451c13e",
+        "size": 11065
+      },
+      {
+        "path": "evidence/downloads.json",
+        "sha256": "36b6b63d3655f6d2cd7296936e38a12924df081290566bc940b1b3343558c363",
+        "size": 3085
+      },
+      {
+        "path": "evidence/selected-inventory.json",
+        "sha256": "b8d79c54940648712d9effb886ad988895b8515a9323b44ab2e9eb128f9dd491",
+        "size": 15934
+      },
+      {
+        "path": "evidence/source-audit.json",
+        "sha256": "35005d6ec62448a586f56fc28a1cf80ef2a46df79235fe674cc9dac511ef2ece",
+        "size": 5043
+      },
+      {
+        "path": "notices/GRAPHVIZ-EPL-LICENSE.txt",
+        "sha256": "0becf16567beb77fa252b7664631dd177c8f9a1889e48995b45379c7130e5303",
+        "size": 14198
+      },
+      {
+        "path": "notices/NOTICE.txt",
+        "sha256": "d463e0d074d10cd5cb61034729d11790c7cce11120763d538678ae97e2a06466",
+        "size": 898
+      },
+      {
+        "path": "notices/VIZJS-LICENSE.txt",
+        "sha256": "f1fb91bf7cbcb42b2af56949e4fa909e1979d5b57c2826cabacdb4b631457720",
+        "size": 1066
+      },
+      {
+        "path": "notices/expat--COPYING.txt",
+        "sha256": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "size": 1144
+      },
+      {
+        "path": "notices/graphviz-ellipse--LUC-MAISONOBE.txt",
+        "sha256": "354cf0b3bc6b4bc4b0db8b446aaa3f82777f64debfd3cc12bdd3ffbb1db97c3a",
+        "size": 1705
+      },
+      {
+        "path": "notices/graphviz-randomkit--HEADER-NOTICE.txt",
+        "sha256": "1be5b0283ded0074ee5c213b0b011a05cfc472fbd4e87518977f7131b972b347",
+        "size": 1149
+      },
+      {
+        "path": "notices/graphviz-randomkit--SOURCE-NOTICE.txt",
+        "sha256": "d153c538b26c67cf85a430d30df672154daec3e17be7d92e52dba2887e8d6097",
+        "size": 3110
+      },
+      {
+        "path": "notices/graphviz-rbtree--LICENSE.txt",
+        "sha256": "fcb423209a3a3909f41e629a4973eab3995ceb93136dd72485fb12ad3de29dfc",
+        "size": 1048
+      },
+      {
+        "path": "notices/renderer-build-bison-skeleton--GPL-3.0.txt",
+        "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+        "size": 35149
+      },
+      {
+        "path": "notices/renderer-build-bison-skeleton--NOTICE.txt",
+        "sha256": "e4b163e4052ac5d612d633187449c78d14484df49c258d3507f169c7224614b1",
+        "size": 1534
+      },
+      {
+        "path": "notices/renderer-build-emscripten--AUTHORS.txt",
+        "sha256": "9d24c3cb52c1f712fbc6660337074f76eb2a12a0dde1dd0076c4310807c4e83c",
+        "size": 29039
+      },
+      {
+        "path": "notices/renderer-build-emscripten--LICENSE.txt",
+        "sha256": "620a78084fc7ca97c0b5dea9abf891f3ffcadfdbf305276f099c9c4e12fc1d86",
+        "size": 5093
+      },
+      {
+        "path": "notices/renderer-build-emscripten--MUSL-COPYRIGHT.txt",
+        "sha256": "f9bc4423732350eb0b3f7ed7e91d530298476f8fec0c6c427a1c04ade22655af",
+        "size": 6204
+      },
+      {
+        "path": "upstream/expat-2.8.4.tar.gz",
+        "sha256": "b8ece2437692dad44d851c4532723390a5a330990007706be9c8d2b90d294f36",
+        "size": 825689
+      },
+      {
+        "path": "upstream/graphviz-16.0.0.tar.gz",
+        "sha256": "36a1de1aaf5a2023b14f95170a5f8f0b12522d1c305b517fc261966597050749",
+        "size": 26847233
+      },
+      {
+        "path": "upstream/viz-3.30.0.tgz",
+        "sha256": "4f52d4bd062b38b9ca66de0a4888633c912b745f1f00b9b224c77a1c7d9f1c92",
+        "size": 1903630
+      },
+      {
+        "path": "upstream/viz-source-99da545.tar.gz",
+        "sha256": "27d1aed976e66e56dee2ad9491415c8d3e2a2132d8c7a1372220f17321bf766c",
+        "size": 108597
+      }
+    ],
+    "graphviz_revision": "06fff22d8e1a2aead6de0042e5e5ec2f7749be29",
+    "schema": 1,
+    "status": "local-review-only; incomplete approval/publication gates",
+    "viz_revision": "99da545270e6e7b127a5c7ba65974b8a604a6358"
+  },
+  "status": "local-review-only; incomplete approval/publication gates"
+}

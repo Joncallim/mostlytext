@@ -1,4 +1,30 @@
-# Release preparation ledger (#148)
+# Release preparation ledger (MostlyText #14)
+
+## Current checkpoint — 3 November 2026
+
+The earlier seven/eight-entry counts below are historical. The current strict
+check has six failures: D2 source publication/retrieval and independent nested
+source/font review; Mermaid remaining embedded/generated/candidate provenance;
+Graphviz source publication/retrieval, complete corresponding-source review, and
+remaining embedded/runtime attribution. The theme naming item is implemented.
+
+All 74 mapped Mermaid package records now have their complete selected texts
+distributed, with candidate-version limits retained. Four Rough.js and 16 D2
+publisher source-build inputs also have registered texts. See the
+[package checkpoint](evidence/mermaid-package-notices/README.md) and
+[build-attribution checkpoint](evidence/nested-build-attribution/README.md). These
+bounded additions do not prove complete embedded-code coverage or legal clearance.
+
+LC-08 source implementation is complete: the About/application-menu licenses scene uses
+bounded native plain text, not Textual. [Its current contract](LICENCES_UI.md)
+separates implementation and resource controls from missing native acceptance.
+No source-offer status, release policy, signing or protected native guard changes.
+The source-only publication step still requires the explicit authorization named
+in [ARCHIVE_PLAN.md](ARCHIVE_PLAN.md). Current engineering ownership and acceptance
+are reconciled in [the remaining-work map](../planning/ENGINEERING_REMAINDER.md).
+
+## Historical preparation and artifact evidence
+
 
 This is an evidence-preparation record, not a release approval or legal
 clearance. It is intentionally kept on the integration branch so the release
