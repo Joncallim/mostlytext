@@ -88,3 +88,7 @@ long-session WebKit diagnosis and real PDF/TOC lifecycle journeys likewise retai
 their named native/reproduction prerequisites. Continue independent safe source
 units where interfaces and evidence permit, but do not integrate those held
 behaviors or weaken their gates merely to reduce the open-issue count.
+
+[The attribution review packet](../compliance/UPSTREAM_REVIEW_QUESTIONS.md) records
+the concrete missing upstream/independent-review inputs and available evidence.
+It does not claim those questions have been externally submitted or resolved.
