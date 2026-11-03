@@ -1,0 +1,38 @@
+{
+  "binary_structure": {
+    "data_segments": 100000,
+    "defined_functions": 7752,
+    "go_function_records": 7594,
+    "imported_functions": 22,
+    "initialized_memory_bytes": 12371321,
+    "runtime_functions": {
+      "runtime.main": {
+        "code_bytes": 2887,
+        "code_sha256": "08d52b5d7acd985539814f4c4be1591dc3cc013242006654da02c5f79b7cf259",
+        "go_pc": 312868864,
+        "table_index": 4774,
+        "wasm_function_index": 691
+      },
+      "runtime.mallocgc": {
+        "code_bytes": 1217,
+        "code_sha256": "1a26f3aeb74ca53e766c1f7dd58ddd340247cd1a5a4d7e8ad3ce357334cc737c",
+        "go_pc": 347602944,
+        "table_index": 5304,
+        "wasm_function_index": 1219
+      },
+      "syscall/js.valueCall": {
+        "code_bytes": 15,
+        "code_sha256": "9531cb579eb79b1c821510504acf43fa28e924ab8085ac7ac141a6060f305bb1",
+        "go_pc": 367525888,
+        "table_index": 5608,
+        "wasm_function_index": 1502
+      }
+    }
+  },
+  "go_archive_sha256": "4e29202c49573b953be7cc3500e1f8d9e66ddd12faa8cf0939a4951411e09a2a",
+  "go_version": "go1.24.6",
+  "limits": "Conservative root runtime attribution; not a publisher rebuild, exhaustive per-file rights audit or source-offer approval.",
+  "notice_sha256": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+  "schema": 1,
+  "wasm_sha256": "7b0d5db9e148d1eba9ab7494a468a79fd92aca93fd3a89cad5876e68097170af"
+}

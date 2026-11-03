@@ -668,6 +668,37 @@
       "version": "publisher source-build input v0.0.0-20250213174338-243d8661088a"
     },
     {
+      "bom-ref": "d2-go-runtime",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://go.dev"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "BSD-3-Clause"
+        }
+      ],
+      "name": "Go runtime and standard library (embedded in D2 WebAssembly)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "embedded"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact publisher WASM; embedded Go version and runtime PC/element/code linkage"
+        }
+      ],
+      "type": "library",
+      "version": "go1.24.6"
+    },
+    {
       "bom-ref": "d2-liberation-mono",
       "externalReferences": [
         {
@@ -4909,6 +4940,7 @@
         "d2-build-golang.org-x-text",
         "d2-build-golang.org-x-xerrors",
         "d2-build-oss.terrastruct.com-util-go",
+        "d2-go-runtime",
         "d2-liberation-mono",
         "esbuild-parser-runtime",
         "expat",
@@ -5056,7 +5088,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:b7fe25c4-9bc0-5655-b3b4-9875680d4b8b",
+  "serialNumber": "urn:uuid:2636840b-271f-58fe-be59-e539496724b4",
   "specVersion": "1.5",
   "version": 1
 }
