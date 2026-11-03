@@ -1,5 +1,5 @@
 import Darwin
-import ExportService
+@testable import ExportService
 import Foundation
 @testable import MacDown2
 import Testing
@@ -94,6 +94,85 @@ struct ExportDocumentProtectionTests {
         registry.register(fixture.admission, lease: lease)
         try registry.documentsWillPublish(urls: [#require(URL(string: "https://example.invalid/a.md"))], identities: [])
         #expect(throws: CancellationError.self) { try lease.checkActive() }
+    }
+
+    @Test func aLaterOpenOfARecoveryCandidateRevokesBeforeDocumentPublication() throws {
+        let fixture = try fixture(existing: false)
+        defer { try? FileManager.default.removeItem(at: fixture.root) }
+        let source = fixture.root.appendingPathComponent("working.html.tmp")
+        try Data("source".utf8).write(to: source)
+        var info = stat()
+        try #require(stat(source.path, &info) == 0)
+        try fixture.admission.checkRecoveryObject(ExportPublicationFilesystem.Stamp(info))
+        let registry = ExportDocumentProtectionRegistry()
+        let lease = ExportLifetimeLease()
+        registry.register(fixture.admission, lease: lease)
+        registry.documentsWillPublish(urls: [source], identities: [])
+        #expect(throws: CancellationError.self) { try lease.checkActive() }
+        #expect(throws: ExportError.self) {
+            try fixture.admission.checkRecoveryObject(ExportPublicationFilesystem.Stamp(info))
+        }
+        #expect(try Data(contentsOf: source) == Data("source".utf8))
+    }
+
+    @Test func anEarlierDocumentPublicationIsRetainedBeforeCandidateRegistration() throws {
+        let fixture = try fixture(existing: false)
+        defer { try? FileManager.default.removeItem(at: fixture.root) }
+        let source = fixture.root.appendingPathComponent("working.html.tmp")
+        try Data("source".utf8).write(to: source)
+        var info = stat()
+        try #require(stat(source.path, &info) == 0)
+        let registry = ExportDocumentProtectionRegistry()
+        let lease = ExportLifetimeLease()
+        registry.register(fixture.admission, lease: lease)
+        registry.documentsWillPublish(urls: [source], identities: [])
+        try lease.checkActive() // unrelated to the primary until recovery registers it
+        #expect(throws: ExportError.self) {
+            try fixture.admission.checkRecoveryObject(ExportPublicationFilesystem.Stamp(info))
+        }
+        #expect(try Data(contentsOf: source) == Data("source".utf8))
+    }
+
+    @Test func anUnusableURLStillRetainsTheBatchsKnownPhysicalIdentity() throws {
+        let fixture = try fixture(existing: false)
+        defer { try? FileManager.default.removeItem(at: fixture.root) }
+        let source = fixture.root.appendingPathComponent("working.html.tmp")
+        try Data("source".utf8).write(to: source)
+        var info = stat()
+        try #require(stat(source.path, &info) == 0)
+        let registry = ExportDocumentProtectionRegistry()
+        let lease = ExportLifetimeLease()
+        registry.register(fixture.admission, lease: lease)
+        let invalid = try #require(URL(string: "https://example.invalid/document"))
+        registry.documentsWillPublish(urls: [invalid], identities: [
+            ExportProtectedFileIdentity(device: UInt64(truncatingIfNeeded: info.st_dev), inode: UInt64(info.st_ino)),
+        ])
+        #expect(throws: CancellationError.self) { try lease.checkActive() }
+        #expect(throws: ExportError.self) {
+            try fixture.admission.checkRecoveryObject(ExportPublicationFilesystem.Stamp(info))
+        }
+        #expect(try Data(contentsOf: source) == Data("source".utf8))
+    }
+
+    @Test func aURLConflictStillRetainsAnUnlinkedRecoveryIdentity() throws {
+        let fixture = try fixture()
+        defer { try? FileManager.default.removeItem(at: fixture.root) }
+        let source = fixture.root.appendingPathComponent("working.html.tmp")
+        try Data("source".utf8).write(to: source)
+        var info = stat()
+        try #require(stat(source.path, &info) == 0)
+        let stamp = ExportPublicationFilesystem.Stamp(info)
+        try fixture.admission.checkRecoveryObject(stamp)
+        let registry = ExportDocumentProtectionRegistry()
+        let lease = ExportLifetimeLease()
+        registry.register(fixture.admission, lease: lease)
+        let vanished = fixture.root.appendingPathComponent("unlinked-source.md")
+        registry.documentsWillPublish(urls: [fixture.output, vanished], identities: [
+            ExportProtectedFileIdentity(device: UInt64(truncatingIfNeeded: info.st_dev), inode: UInt64(info.st_ino)),
+        ])
+        #expect(throws: CancellationError.self) { try lease.checkActive() }
+        #expect(throws: ExportError.self) { try fixture.admission.checkRecoveryObject(stamp) }
+        #expect(try Data(contentsOf: source) == Data("source".utf8))
     }
 
     private struct Fixture {

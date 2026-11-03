@@ -14,8 +14,8 @@ and the existing destination/live-document architecture under MostlyText #11.
 
 ExportService retains protected physical file identities inside each
 `ExportDestinationAdmission`, guarded by one private lock. Existing source/open
-URL and retained-identity checks populate that set. Recovery registers its exact
-owned candidate as an additional protected target; subsequent document
+URL and retained-identity checks populate that set. Recovery and fresh primary staging register their exact
+owned candidates as additional protected targets; subsequent document
 publication already passes through the same admission in
 `ExportDocumentProtectionRegistry`. No global document lookup, actor dependency,
 new permission or ambient storage is introduced.
@@ -24,7 +24,9 @@ new permission or ambient storage is introduced.
 The lease gains an internal cleanup-ordering cutoff: it serializes the short
 rename/unlink operation with document publication/revocation, without authorizing
 primary publication or abandoning safe cleanup just because cancellation arrived.
-The original active/cancellation checks for primary promotion remain unchanged.
+The original active/cancellation checks for primary promotion remain unchanged;
+promotion also rechecks the working object. Memory-only primary retirement uses
+the same protection, without pretending that legacy/PDF scratch has a durable journal.
 
 ## State, concurrency and failure policy
 
@@ -40,7 +42,10 @@ The original active/cancellation checks for primary promotion remain unchanged.
   longer protects it. Preserve the prior primary throughout.
 
 The existing registry still allows the document publication and revokes the
-export. Locks are not nested across registry revocation: admission checks release
+export. It collects both URL and retained-identity checks even if one fails; a
+URL batch retains later identities before surfacing its first conflict. An
+unusable reference marks the admission uncertain and conservatively blocks
+owned cleanup until a fresh admission can establish its document set. Locks are not nested across registry revocation: admission checks release
 their lock before the lease is revoked. Candidate checks inside the cleanup
 cutoff use the same ordering as primary publication. Files adopted after a
 completed destructive cutoff retain the existing document-publication
@@ -59,8 +64,8 @@ messages; no new native control is introduced.
 
 ## Files, slices, evidence and completion
 
-Allowed: admission/protection/lease and primary-recovery helpers, writer call
-sites, focused package/helper tests and architecture/status documentation.
+Allowed: admission/protection/lease and primary-recovery helpers, the existing
+document-protection registry checks, writer call sites, focused package/helper tests and architecture/status documentation.
 Do not alter native account rules, renderer activation, test thresholds or pins.
 
 1. Demonstrate the open-scratch regression on the baseline with a real owned

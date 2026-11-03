@@ -10,6 +10,7 @@ enum ExportPrimaryRecovery {
         let primary: String
         let digest: Data?
         let directory: Int32
+        let protection: ExportRecoveryProtection?
     }
 
     static func digest(of name: String, in directory: Int32) throws -> Data? {
@@ -35,12 +36,14 @@ enum ExportPrimaryRecovery {
     }
 
     static func recover(_ store: ExportJournalStore, primary: String, in directory: Int32,
+                        protection: ExportRecoveryProtection? = nil,
                         afterQuarantine: ((String) throws -> Void)? = nil) throws {
         guard let pending = store.record.pending else { return }
         let observed = try digest(of: primary, in: directory)
         guard observed == pending.priorDigest || observed == pending.desiredDigest
         else { throw Filesystem.recoveryRequired(directory: directory, name: pending.scratch) }
         let receipt = try store.ownedReceipt()
+        try protection?.admission.checkRecoveryObject(receipt.stamp)
         // A recorded quarantine is authoritative only for this exact inode and
         // digest; its name alone never permits deletion or adoption.
         if let quarantine = pending.quarantine,
@@ -51,10 +54,15 @@ enum ExportPrimaryRecovery {
                   try digest(of: primary, in: directory) == observed
             else { throw Filesystem.recoveryRequired(directory: directory, name: quarantine) }
             try store.checkCurrent()
-            try remove(quarantine, in: directory)
+            try remove(quarantine, in: directory, receipt: receipt, protection: protection)
         } else {
             try retireScratch(store, pending: pending, receipt: receipt,
-                              target: Target(primary: primary, digest: observed, directory: directory),
+                              target: Target(
+                                  primary: primary,
+                                  digest: observed,
+                                  directory: directory,
+                                  protection: protection
+                              ),
                               afterQuarantine: afterQuarantine)
         }
         try store.finish()
@@ -71,9 +79,12 @@ enum ExportPrimaryRecovery {
               try ExportReceiptInspection.verify(receipt, name: pending.scratch, in: directory, matching: current)
         else { throw Filesystem.recoveryRequired(directory: directory, name: pending.scratch) }
         let quarantine = try store.prepareQuarantine()
-        guard try digest(of: primary, in: directory) == expected,
-              renameatx_np(directory, pending.scratch, directory, quarantine, UInt32(RENAME_EXCL)) == 0
+        guard try digest(of: primary, in: directory) == expected
         else { throw Filesystem.recoveryRequired(directory: directory, name: pending.scratch) }
+        try ExportRecoveryProtection.mutate(receipt.stamp, protection: target.protection) {
+            guard renameatx_np(directory, pending.scratch, directory, quarantine, UInt32(RENAME_EXCL)) == 0
+            else { throw Filesystem.recoveryRequired(directory: directory, name: pending.scratch) }
+        }
         do {
             let quarantined = try Filesystem.childStamp(quarantine, in: directory)
             guard receipt.matchesMetadata(quarantined) else { throw ExportError.unsafePublication }
@@ -82,15 +93,21 @@ enum ExportPrimaryRecovery {
                   try digest(of: primary, in: directory) == expected
             else { throw ExportError.unsafePublication }
             try store.checkCurrent()
-            try remove(quarantine, in: directory)
+            try remove(quarantine, in: directory, receipt: receipt, protection: target.protection)
         } catch {
-            guard renameatx_np(directory, quarantine, directory, pending.scratch, UInt32(RENAME_EXCL)) == 0
-            else { throw Filesystem.recoveryRequired(directory: directory, name: quarantine) }
+            try ExportFileRetirement.restoreQuarantine(quarantine, as: pending.scratch, in: directory,
+                                                       protection: target.protection)
             throw error
         }
     }
 
-    private static func remove(_ name: String, in directory: Int32) throws {
-        guard unlinkat(directory, name, 0) == 0, fsync(directory) == 0 else { throw Filesystem.posixFailure() }
+    private static func remove(_ name: String, in directory: Int32, receipt: ExportOwnedFileReceipt,
+                               protection: ExportRecoveryProtection?) throws {
+        try ExportRecoveryProtection.mutate(receipt.stamp, protection: protection) {
+            guard try receipt.matchesMetadata(Filesystem.childStamp(name, in: directory))
+            else { throw ExportError.unsafePublication }
+            guard unlinkat(directory, name, 0) == 0 else { throw Filesystem.posixFailure() }
+        }
+        guard fsync(directory) == 0 else { throw Filesystem.posixFailure() }
     }
 }
