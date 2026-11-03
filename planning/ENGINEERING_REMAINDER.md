@@ -61,8 +61,11 @@ historical and must not be retargeted to a new checkout.
    author credit and [mapped evidence](../compliance/evidence/thenable-mit-declaration/README.md);
    no standalone upstream license file is invented.
    The parser's [verified signed publisher provenance](../compliance/evidence/parser-publisher-provenance/README.md)
-   establishes its source revision and declared compiler/lock inputs; it is not
-   an independent reproduction of all earlier nested builds.
+   and [complete JS/map reproduction](../compliance/evidence/parser-runtime-reproduction/README.md)
+   establish the outer compiler and input version. The [qualified Webpack runtime
+   notice](../compliance/evidence/webpack-parser-runtime/README.md) supplies four
+   complete matching licensed bodies; earlier nested builds and independent IP
+   review remain separate.
 3. Independently review complete corresponding-source and nested obligations,
    including D2's Liberation Mono Reserved Font Name and Graphviz compiler/runtime
    inputs. A local review archive is not independent review or an approved offer.

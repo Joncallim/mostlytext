@@ -1,19 +1,20 @@
 # Emitted parser runtime MIT notice — 3 November 2026
 
-Current publisher follow-up: [verified signed parser provenance](../parser-publisher-provenance/README.md)
-binds the exact parser archive and mapped chunks to the publisher source commit.
-That source declares root esbuild 0.25.12, whose complete MIT text matches the
-notice already shipped here. The v0.27.7 body comparison below remains its original
-content-only reference result; it is not relabelled as the emitting version.
-Independent reproduction of the declared build and earlier nested prebundles
-remains open. This follow-up changes neither the map classification nor notices.
+Current follow-up: [the complete parser JavaScript/map reproduction](../parser-runtime-reproduction/README.md)
+now identifies the outer compiler as esbuild 0.25.12 from verified publisher source,
+its pinned toolchain and all 192 byte-identical outputs. Its complete MIT text is
+identical to the text already distributed here. The inventory now records that
+reproduced outer emitter, while retaining this original v0.27.7 licensed-body
+comparison and its immutable mapping as the earlier reference result. Earlier
+nested builds and independent IP/runtime review remain separate questions.
 
 The shipped Mermaid outer map reaches an exact published parser chunk whose
 unmapped preamble contains esbuild runtime helpers. Two complete bodies,
 __commonJS and __export, match the licensed v0.27.7 reference after only narrowly
 reviewed formatting normalization. Evan Wallace's complete MIT text is now a
-separate distributed attribution. This original scoped comparison did not identify an emitting compiler; no exact
-npm identity or whole-package inclusion is recorded by its mapping.
+separate distributed attribution. This original scoped comparison did not identify an emitting compiler. The
+follow-up supplies the outer emitter; no whole npm compiler package inclusion
+is recorded or implied.
 
 The [mapping](mapping.json) pins the Mermaid bundle/map, parser archive/chunk,
 reference source and license. The reference tag/npm gitHead agree on
@@ -65,9 +66,9 @@ Captured reference files remain under
 `/Volumes/Fast SSD/CORTANA-Builds/nested-notice-completion-20261103/upstream`.
 No npm package, Go source, upstream build script or runtime helper is executed.
 
-Other generated/embedded code, independent build/candidate review and Framer
-origin ambiguity remain open; see the publisher follow-up above for declared
-compiler/source inputs. All six strict failures stay in place. No native,
+Other generated/embedded code, earlier nested build/candidate review and Framer
+origin ambiguity remain open; see the reproduction follow-up above for the
+identified outer compiler/source inputs. All six strict failures stay in place. No native,
 legal-clearance, signed-artifact or public source-offer approval is inferred.
 
 ## Complete remaining-position review handoff

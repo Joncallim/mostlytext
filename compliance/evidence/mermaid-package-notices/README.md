@@ -1,5 +1,10 @@
 # Distributed mapped Mermaid package texts — 3 November 2026
 
+Current follow-up: [complete parser JS/map reproduction](../parser-runtime-reproduction/README.md)
+resolves the specific vscode-uri 3.1.0 outer input. Its projection now requires the
+pinned reproduction receipt. Generic content-only candidates, including the earlier
+path-browserify resolution, stay qualified. The original raw map/report is unchanged.
+
 > Subsequent scoped update: [Thenable's explicitly declared MIT terms](../thenable-mit-declaration/README.md)
 > are now assembled and distributed with the author's credit and positive mapped
 > code probes. Earlier Thenable full-text linkage limitations below are historical;

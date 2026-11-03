@@ -1,5 +1,11 @@
 # Verified parser publisher provenance
 
+Current follow-up: [all 96 parser JavaScript files and 96 maps are now independently
+reproduced locally](../parser-runtime-reproduction/README.md) with the pinned
+toolchain. This original signed-publisher packet and its scope/manifest remain
+unchanged; the separate reproduction does not claim type/prepack, earlier nested
+build or independent IP review.
+
 The exact published parser archive used by the shipped Mermaid map now has a
 verified signed publisher record. It identifies the source commit and lets a
 reviewer inspect the release workflow and dependency lock instead of guessing

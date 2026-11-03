@@ -1,0 +1,11 @@
+{
+  "unchangedPublisherSourceFiles": 1753,
+  "sourceRestoredExact": true,
+  "actualRebuiltMembers": {
+    "expectedMembers": 192,
+    "changedOrMissing": [],
+    "extra": [],
+    "matchingMembers": 192
+  },
+  "noPublisherTypesOrOtherPackagesClaimed": true
+}

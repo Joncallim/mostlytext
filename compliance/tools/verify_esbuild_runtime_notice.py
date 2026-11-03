@@ -10,6 +10,7 @@ import re
 from audit_cytoscape_attribution import MERMAID_MAP_SHA256, MERMAID_SHA256
 from install_mermaid_notices import checked_map
 from source_map_evidence import MappingIndex, mapped_positions, verified_bundle_map, verified_package_files
+from verify_parser_reproduction import verify_installed as checked_reproduction, PACKET
 
 ROOT = Path(__file__).resolve().parents[2]
 REFERENCE_SHA = 'a23de38cb7e78582039ad707b4625dd1f298f15fa000d6f52f6eb6cb08e1e79b'
@@ -60,16 +61,17 @@ def match_helper(generated, reference):
 
 
 def component():
-    return {'id': ID, 'name': 'esbuild parser runtime helpers (matching licensed reference; emitting version unresolved)',
-            'kind': 'attribution', 'version': 'emitting version unresolved; reference v0.27.7',
+    return {'id': ID, 'name': 'esbuild parser runtime helpers (reproduced parser compiler)',
+            'kind': 'attribution', 'version': '0.25.12 (emitted runtime only)',
             'upstream': 'https://github.com/evanw/esbuild', 'licence': 'MIT',
             'copyright': ['Copyright (c) 2020 Evan Wallace'],
             'licence_texts': [{'path': LICENSE_PATH, 'sha256': LICENSE_SHA,
-                'upstream': 'https://github.com/evanw/esbuild',
-                'upstream_revision': '2025c9ff6ab15ba6b0f9d074fd732250cc46e4a3', 'upstream_path': 'LICENSE.md'}],
-            'provenance': 'verified', 'resolution': 'matching-runtime-reference; original emitting version unresolved',
-            'lc': ['LC-01', 'LC-07'], 'evidence': 'compliance/evidence/esbuild-parser-runtime/mapping.json',
-            'notes': 'Two complete emitted helper bodies match the licensed reference after narrowly reviewed formatting normalization. No exact npm identity, original compiler-version proof, full runtime reachability or complete nested audit is claimed.'}
+                'upstream': 'https://registry.npmjs.org/esbuild/-/esbuild-0.25.12.tgz',
+                'upstream_archive_sha256': '227584145829e5c4782734b3fb7b91b49c6aa12876d6cf070e6a3d9d4de543f9',
+                'upstream_path': 'package/LICENSE.md'}],
+            'provenance': 'verified', 'resolution': 'signed-publisher-input-and-reproduced-parser-build',
+            'lc': ['LC-01', 'LC-07'], 'evidence': PACKET + '/manifest.json',
+            'notes': 'The complete parser JavaScript/source-map output is reproduced from verified publisher source with pinned esbuild 0.25.12. The earlier v0.27.7 body comparison remains a licensed reference. No whole compiler package, full runtime reachability or complete nested audit is claimed.'}
 
 
 def verify_installed(root):
@@ -78,6 +80,7 @@ def verify_installed(root):
         raise ValueError('Qualified runtime attribution changed')
     if sha((root / LICENSE_PATH).read_bytes()) != LICENSE_SHA:
         raise ValueError('Distributed runtime MIT text changed')
+    checked_reproduction(root)
 
 
 def replay(root, evidence, reference):

@@ -711,7 +711,7 @@
           "expression": "MIT"
         }
       ],
-      "name": "esbuild parser runtime helpers (matching licensed reference; emitting version unresolved)",
+      "name": "esbuild parser runtime helpers (reproduced parser compiler)",
       "properties": [
         {
           "name": "mostlytext:kind",
@@ -723,11 +723,11 @@
         },
         {
           "name": "mostlytext:resolution",
-          "value": "matching-runtime-reference; original emitting version unresolved"
+          "value": "signed-publisher-input-and-reproduced-parser-build"
         }
       ],
       "type": "library",
-      "version": "emitting version unresolved; reference v0.27.7"
+      "version": "0.25.12 (emitted runtime only)"
     },
     {
       "bom-ref": "expat",
@@ -3275,7 +3275,7 @@
           "expression": "MIT"
         }
       ],
-      "name": "vscode-uri (content-matched reference via Mermaid; original version unresolved)",
+      "name": "vscode-uri (reproduced publisher input via Mermaid)",
       "properties": [
         {
           "name": "mostlytext:kind",
@@ -3287,11 +3287,12 @@
         },
         {
           "name": "mostlytext:resolution",
-          "value": "content-match-only; original resolution unresolved"
+          "value": "signed-publisher-input-and-reproduced-parser-build"
         }
       ],
+      "purl": "pkg:npm/vscode-uri@3.1.0",
       "type": "library",
-      "version": "original unresolved; content matches 3.1.0"
+      "version": "3.1.0"
     },
     {
       "bom-ref": "neon",
@@ -4821,6 +4822,37 @@
       "version": "3.30.0"
     },
     {
+      "bom-ref": "webpack-parser-runtime",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/webpack/webpack"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "Webpack parser runtime helpers (matching licensed reference; emitting version unresolved)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "matching-runtime-reference; original emitting version unresolved"
+        }
+      ],
+      "type": "library",
+      "version": "emitting version unresolved; reference 5.88.2"
+    },
+    {
       "bom-ref": "yams",
       "externalReferences": [
         {
@@ -5003,6 +5035,7 @@
         "tree-sitter-xml",
         "tree-sitter-yaml",
         "viz-js",
+        "webpack-parser-runtime",
         "yams"
       ],
       "ref": "product"
@@ -5023,7 +5056,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:87e11bd0-8056-59c3-aefc-d6762fba09b9",
+  "serialNumber": "urn:uuid:b7fe25c4-9bc0-5655-b3b4-9875680d4b8b",
   "specVersion": "1.5",
   "version": 1
 }

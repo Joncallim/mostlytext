@@ -1,0 +1,8 @@
+{
+  "version": "24.16.0",
+  "matchesPublisherNodeVersionFile": true,
+  "distribution": "node-v24.16.0-darwin-arm64.tar.xz",
+  "sha256": "e28ad5531b2aafe0ea555a51b2412c42fdc0f91a6a53fbd03ac93e3847e91389",
+  "checksumSource": "https://nodejs.org/dist/v24.16.0/SHASUMS256.txt",
+  "platformDifference": "local darwin-arm64; publisher ubuntu-latest"
+}

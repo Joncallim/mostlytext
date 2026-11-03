@@ -1,0 +1,18 @@
+{
+  "control": "changed a real exported parser error literal in an owned upstream source copy",
+  "buildSucceeded": true,
+  "byteComparisonRefused": true,
+  "result": {
+    "expectedMembers": 192,
+    "changedOrMissing": [
+      "dist/mermaid-parser.core.mjs.map",
+      "dist/mermaid-parser.esm.min.mjs.map",
+      "dist/mermaid-parser.esm.mjs.map",
+      "dist/mermaid-parser.core.mjs",
+      "dist/mermaid-parser.esm.min.mjs",
+      "dist/mermaid-parser.esm.mjs"
+    ],
+    "extra": [],
+    "matchingMembers": 186
+  }
+}

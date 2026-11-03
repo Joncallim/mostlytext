@@ -1,4 +1,4 @@
-# Graphviz local source-review package — 3 November 2026
+# Graphviz local source-review package — 4 November 2026
 
 The exact Graphviz 16.0.0, Viz.js 3.30.0, Expat 2.8.4 and npm renderer inputs now
 have a deterministic local review archive. It includes current notice/SBOM
@@ -7,10 +7,10 @@ review limits. It has not been approved as the complete corresponding-source
 offer and is not published. No MostlyText application binary or private material
 is included. The already-public npm renderer input is JavaScript/WebAssembly.
 
-Archive SHA-256: `d0733acf3a662540ef755c92bd96815a9313e089d36a7a64055d4385370ca9a8`. It contains 25
+Archive SHA-256: `d4d406e3b9132e6b2156cd28604536014d6f8517c413b4aac7ccefad5f3207a8`. It contains 25
 manifested files plus manifest.json; all bytes and exact member sets are verified.
 The [manifest](manifest.json) records each size/digest. Local artifact:
-`/Volumes/Fast SSD/CORTANA-Builds/nested-notice-completion-20261103/graphviz-source-review-esbuild.tar.gz`.
+`/Volumes/Fast SSD/CORTANA-Builds/parser-reproduction-20261103/graphviz-source-review-parser-webpack.tar.gz`.
 
 ## Reproduce and verify
 
@@ -54,3 +54,9 @@ archive is overwritten.
 The prior Thenable review snapshot (SHA-256 `e045615c9d9db048eb689a1eb7b595cc78975935c9b7357526ed9c229fd449e5`)
 remains at graphviz-source-review-thenable.tar.gz. The current snapshot also
 includes the qualified parser-runtime MIT notice; source/review limits are unchanged.
+
+The prior 97-credit runtime snapshot remains at graphviz-source-review-esbuild.tar.gz
+(SHA256 d0733acf3a662540ef755c92bd96815a9313e089d36a7a64055d4385370ca9a8).
+The current snapshot includes the reproduced parser-input labels and qualified
+Webpack MIT notice. Every upstream/source input and all review/publication limits
+remain unchanged; no old archive is overwritten.
