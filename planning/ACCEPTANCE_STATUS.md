@@ -14,7 +14,7 @@ acceptance. The live backlog is [MostlyText issues](https://github.com/Joncallim
 | Native execution here | UID501 console; UID502 test account has no GUI domain; protected staging absent; nonprompting sudo refuses | #5 UI triage; never execute the owner-data paths to bypass this prerequisite |
 | Signing discovery here | Valid Developer ID Application identity for team 968BRM85G5 found | #4: actual signing/key authorization/hardened-runtime acceptance not executed |
 | Notarization preflight | Real script stops because documented mostlytext-notary keychain profile is absent | #4: credential profile, submissions, stapling and online/offline Gatekeeper acceptance remain open |
-| Source/nonrelease artifact inventory | Passes; current scoped attribution checks include 136 local Compliance controls | #14 final compliance is a separate strict gate |
+| Source/nonrelease artifact inventory | Passes; current scoped attribution checks include 142 local Compliance controls | #14 final compliance is a separate strict gate |
 | Strict release compliance | Six failures remain, detailed below | #14: acceptance is blocked before an RC can be submitted |
 | Repository preview | Source SVG/JPEG ready and visually checked; settings upload did not persist and native chooser fallback is blocked by the locked desktop | #16: install/read back the social preview remains open |
 | Website | Separate mostlytext-site source/license; current FAQ and source/backlog links merged | No deployment was initiated; historical roadmap is explicitly dated |
@@ -105,6 +105,15 @@ documented assembly, not a fabricated upstream LICENSE file. The scoped full-tex
 linkage gap is resolved; other Mermaid embedded/generated origins and all six
 strict failures remain. Native, legal-clearance and signed-artifact claims are
 not inferred from this notice correction.
+
+## Generated parser runtime attribution
+
+[The runtime checkpoint](../compliance/evidence/esbuild-parser-runtime/README.md)
+adds the complete esbuild MIT notice with two full matching helper bodies and
+positive emitted-code probes. Its qualified identity does not invent an exact
+emitting compiler version. The scoped preamble classifies 452 of the original
+3,980 unassociated parser positions; 3,528 remain outside this classification.
+The original report, all six strict failures and native/exact-artifact gates remain.
 
 ## License Help entry implementation
 
