@@ -1,4 +1,10 @@
-# mostlytext.app (draft)
+# mostlytext.app (retained historical draft)
+
+> Current website work belongs in [Joncallim/mostlytext-site](https://github.com/Joncallim/mostlytext-site).
+> This application-repository copy preserves the original draft and claims ledger.
+> Its future-tense rename and implementation rows are historical; do not deploy
+> this snapshot or treat it as the current site/release status. Current application
+> gates are in [the acceptance ledger](../planning/ACCEPTANCE_STATUS.md).
 
 **Owner summary.** This is the first draft of the public download site for
 MostlyText 1.0: a home page with the download button, an open-source page that

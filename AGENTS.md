@@ -41,8 +41,9 @@ See `planning/downstream/mostlytext-brand-backlog-cutover-2026-11-03.md`.
 - `compliance/` — third-party licence/provenance gate (MostlyText #14, formerly #148): `inventory.json`,
   generated notices and SBOM, and `tools/compliance.py`. Update the inventory in
   the same change as any new dependency or bundled file.
-- `website/` — draft of the `mostlytext.app` download site. Not deployed before
-  E17; see its claims ledger.
+- `website/` — retained download-site draft/history. Current website source is
+  `Joncallim/mostlytext-site`; follow that repository for site edits. Publication
+  remains an E17 gate; this snapshot is not a deployment.
 
 ## Commands (from repo root)
 

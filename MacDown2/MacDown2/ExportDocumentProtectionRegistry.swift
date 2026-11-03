@@ -2,7 +2,8 @@ import ExportService
 import Foundation
 
 /// MainActor serializes document publication. A lease's final filesystem
-/// cutoff also serializes revocation against primary promotion off-main.
+/// cutoffs also serialize revocation against primary promotion and owned
+/// working-file recovery off-main.
 @MainActor
 final class ExportDocumentProtectionRegistry {
     private struct Entry {
@@ -29,10 +30,12 @@ final class ExportDocumentProtectionRegistry {
         entries.removeAll { $0.lease == nil }
         for entry in entries {
             guard let lease = entry.lease else { continue }
-            do {
-                try entry.admission.checkNoDocumentAliases(urls)
-                try entry.admission.checkNoFileAliases(identities)
-            } catch {
+            // Both checks also retain protection facts. One bad URL must not
+            // prevent capturing an unlinked source's retained identity.
+            var conflict = false
+            do { try entry.admission.checkNoDocumentAliases(urls) } catch { conflict = true }
+            do { try entry.admission.checkNoFileAliases(identities) } catch { conflict = true }
+            if conflict {
                 lease.revoke()
             }
         }

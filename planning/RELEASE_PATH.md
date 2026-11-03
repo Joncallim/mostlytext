@@ -31,7 +31,23 @@
 > See [the migration contract](downstream/mostlytext-repository-migration-2026-11-03.md).
 
 
-## Current coordination checkpoint — 2026-10-29
+## Current work and evidence routing — 3 November 2026
+
+Use [the engineering remainder](ENGINEERING_REMAINDER.md) for current issue
+ownership and [the acceptance ledger](ACCEPTANCE_STATUS.md) for observed checks.
+The September workstream table below is preserved history; its future-tense
+rename/icon/license-window instructions and old component counts are superseded.
+
+| Area | Current handoff |
+|---|---|
+| Repository and brand source | Full application history, MostlyText display/bundle identity and public `mostlytext` command are integrated. Backlog is in MostlyText; website source is in `mostlytext-site`. Internal product names and development version are recorded in [IDENTITY.md](IDENTITY.md). |
+| Export recovery | Authenticated primary staging recovery is implemented. Open-document working-file protection and package error lookup/catalog corrections are qualified source units; their exact PR/CI results are in [ACCEPTANCE_STATUS.md](ACCEPTANCE_STATUS.md). Companion inventory, printer scratch and native PDF/export acceptance remain #11. |
+| Notices and provenance | The complete selected package/build/runtime texts, local source-review archives and [remaining review inputs](../compliance/UPSTREAM_REVIEW_QUESTIONS.md) are inspectable. All six strict release predicates remain unsatisfied; added notices and publisher evidence do not waive them. |
+| Signing and installation | Certificate discovery passed. Notarization profile, protected test desktop/staging, actual signing/notarization, installed migration and exact RC verification remain #4/#5. Follow [MAC_SIGNING_BRIEF.md](MAC_SIGNING_BRIEF.md); the old "ready" row is not authorization or a prerequisite pass. |
+| Native feature activation | Quick Look callback feasibility, held preview activation, editor/theme geometry and real UI/performance journeys retain the prerequisites in their owning issues. No source/compile pass substitutes for native execution. |
+| Localization and promotion | Finish software/UI changes before final #3 freeze; #14 exact artifact/public source retrieval and #4 signed RC promotion follow the adopted [release sequence](RELEASE_SEQUENCE.md). No source archive, website or binary publication follows from this document. |
+
+## Historical coordination checkpoint — 2026-10-29
 
 This dated update supersedes the live-status statements in the October 26
 snapshot below; that snapshot is retained as historical evidence, not as a
@@ -263,7 +279,7 @@ after the status line above). Each was done on its own:
   revisions are built. Checking them against a registered inventory is LC-07's job, and LC-07 is still open.
   Changing the lock is a deliberate dependency update, reviewed like code.
 
-## 2. Workstreams
+## 2. Historical workstream map — 28 September 2026
 
 | Workstream | Owning issue | Can start now? | Where | Next concrete step |
 |---|---|---|---|---|
@@ -278,7 +294,7 @@ after the status line above). Each was done on its own:
 | Website and deployment | E17 (#18); LC-09 (#148) | Draft exists | Cloud | `website/` (2026-09-28) has a static draft of `mostlytext.app`: home and download, `/opensource` archive and privacy pages. **Not deployed.** Its README has a claims ledger; every public statement needs release evidence before E17 deploys it. Hosting and the appcast are E17 decisions |
 | Clean-install and update verification | E17 (#18); #115 | No. Needs the exact RC | **Mac** | On the signed, notarised RC: clean install on macOS 26 in a fresh user account or VM, Gatekeeper, first run, CLI, Sparkle N→N+1, migration from development state, legacy MacDown preference import (#53) |
 
-## 3. Cloud and Mac split
+## 3. Original cloud and Mac split — historical execution context
 
 Cloud sessions (Linux, no Xcode) own GitHub, planning, issue coordination,
 documentation, CI configuration, website source, the licence and SBOM

@@ -42,14 +42,16 @@ public enum ExportError: Error, LocalizedError, CustomStringConvertible {
         case let .unresolvedResources(diagnostics):
             let listed = Self.summarise(diagnostics)
             return String(
-                localized: "This export must embed every image, but some could not be resolved:\n\(listed)"
+                localized: "This export must embed every image, but some could not be resolved:\n\(listed)",
+                bundle: .module
             )
         case .rawHTMLNotEmbeddable:
             return String(
                 localized: """
                 This document contains raw HTML, which cannot be embedded in a self-contained file. \
                 Export it as HTML instead.
-                """
+                """,
+                bundle: .module
             )
         case let .parseFailed(error):
             return String(localized: "Markdown parse failed: \(error.localizedDescription)", bundle: .module)
@@ -112,7 +114,8 @@ public enum ExportError: Error, LocalizedError, CustomStringConvertible {
         switch self {
         case .unresolvedResources:
             String(
-                localized: "Fix the image paths, or export as HTML, which keeps unresolved references as authored."
+                localized: "Fix the image paths, or export as HTML, which keeps unresolved references as authored.",
+                bundle: .module
             )
         case .rawHTMLNotEmbeddable:
             String(localized: "Choose the HTML format, which preserves authored raw HTML.", bundle: .module)

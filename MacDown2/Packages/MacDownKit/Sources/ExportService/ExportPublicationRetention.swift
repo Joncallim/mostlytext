@@ -63,7 +63,8 @@ enum ExportPublicationRetention {
     }
 
     private static func enumerate(_ descriptor: Int32, maximum: Int, inspect: (String) throws -> Void) throws {
-        let copied = dup(descriptor)
+        // dup shares a directory cursor; each check must see the whole directory.
+        let copied = openat(descriptor, ".", O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)
         guard copied >= 0 else { throw ExportPublicationFilesystem.posixFailure() }
         guard let directory = fdopendir(copied) else {
             _ = Darwin.close(copied)
