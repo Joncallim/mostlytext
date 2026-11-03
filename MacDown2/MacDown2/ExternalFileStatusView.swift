@@ -143,11 +143,11 @@ struct ExternalFileStatusView: View {
         case .missingOrMoved, .parentUnavailable:
             String(localized: "The backing file is unavailable. Save As to keep this copy.")
         case .permissionDenied:
-            String(localized: "MacDown cannot access the backing file. Save As to keep this copy.")
+            String(localized: "MostlyText cannot access the backing file. Save As to keep this copy.")
         case .notRegularFile:
             String(localized: "The backing path is no longer a regular file. Save As to keep this copy.")
         case .ambiguousMove, .moveCollidesWithOpenDocument:
-            String(localized: "MacDown cannot safely identify the moved file. Save As to keep this copy.")
+            String(localized: "MostlyText cannot safely identify the moved file. Save As to keep this copy.")
         case .readFailed:
             String(localized: "The backing file could not be read safely. Save As to keep this copy.")
         }

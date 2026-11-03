@@ -318,7 +318,7 @@ enum FileSaveFailurePresentation {
     static func message(for error: FileStoreError) -> String {
         switch error {
         case .writeFailed: String(localized: "The file could not be written.")
-        case .permissionDenied: String(localized: "MacDown does not have permission to write this file.")
+        case .permissionDenied: String(localized: "MostlyText does not have permission to write this file.")
         case .notRegularFile: String(localized: "This is not a regular file.")
         case .invalidURL: String(localized: "This is not a valid save location.")
         case .fileChangedDuringRead: String(localized: "The file changed on disk while saving. Try again.")

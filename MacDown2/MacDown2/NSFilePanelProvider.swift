@@ -37,7 +37,7 @@ struct PreviewResourceFolderSelection {
     #endif
 }
 
-/// AppKit implementation of `FilePanelProviding` for the MacDown 2 app target.
+/// AppKit implementation of `FilePanelProviding` for the MostlyText app target.
 ///
 /// Application commands may use the key window or a modal panel. A command
 /// captured from a document window may use only that window.

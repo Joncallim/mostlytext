@@ -32,14 +32,14 @@ extension WorkspaceError: LocalizedError {
         case let .conditionalPublicationRecoveryRequired(url):
             String(
                 localized: """
-                MacDown preserved a competing version as \(url.lastPathComponent). \
+                MostlyText preserved a competing version as \(url.lastPathComponent). \
                 Reveal it, then use Save As to keep this copy.
                 """
             )
         case let .recoveryCleanupRequired(url):
             String(
                 localized: """
-                MacDown retained recovery for \(url.lastPathComponent). Keep this window open and retry, \
+                MostlyText retained recovery for \(url.lastPathComponent). Keep this window open and retry, \
                 or use Save As after revealing the recovery copy.
                 """
             )
@@ -72,7 +72,7 @@ extension WorkspaceError: LocalizedError {
                 )
             case .permissionDenied:
                 String(
-                    localized: "MacDown cannot access the backing file. Use Save As to keep this copy.",
+                    localized: "MostlyText cannot access the backing file. Use Save As to keep this copy.",
                     bundle: .module
                 )
             case .notRegularFile:
@@ -82,7 +82,7 @@ extension WorkspaceError: LocalizedError {
                 )
             case .ambiguousMove, .moveCollidesWithOpenDocument:
                 String(
-                    localized: "MacDown could not safely follow the moved file. Use Save As to keep this copy.",
+                    localized: "MostlyText could not safely follow the moved file. Use Save As to keep this copy.",
                     bundle: .module
                 )
             case .readFailed:

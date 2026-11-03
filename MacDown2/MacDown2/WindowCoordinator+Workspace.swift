@@ -6,11 +6,13 @@ import Foundation
 import Workspace
 
 enum TerminationRecoveryPresentation {
-    static let title = "Recovery Could Not Be Secured"
-    static let message = "MacDown kept this window open because unsaved recovery data could not be verified. "
-        + "Retry, or use Save As to preserve your changes."
-    static let retryTitle = "Retry"
-    static let saveAsTitle = "Save As…"
+    static let title = String(localized: "Recovery Could Not Be Secured")
+    static let message = String(localized: """
+    MostlyText kept this window open because unsaved recovery data could not be verified. \
+    Retry, or use Save As to preserve your changes.
+    """)
+    static let retryTitle = String(localized: "Retry")
+    static let saveAsTitle = String(localized: "Save As…")
 }
 
 enum SessionSaveResult {
