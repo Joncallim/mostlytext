@@ -26,7 +26,7 @@ Recovery bundles and before/after repository metadata are retained on Fast SSD.
 
 ## Scope and invariants
 
-Keep all `MacDown2/`, `legacy-reference/`, design assets, dependency locks and
+Keep all `MacDown2/`, design assets, dependency locks and
 release scripts byte-identical. Change only current repository documentation,
 the descriptive first-party licence heading, its six first-party theme licence
 digests/generated notices, and CI branch admission. Preserve
@@ -72,3 +72,18 @@ six first-party theme entries and stale notices. Preserve that failure, verify
 the sole descriptive-word replacement with all MIT terms/copyright unchanged,
 then refresh only those six licence digests and regenerate notices/SBOM. No
 third-party text, theme data or dependency resolution changes.
+
+## Exact history and layout verification
+
+The imported development branch has 1,331 commits and begins with the rewrite
+migration plan in July2026. Original MacDown upstream is a separate history,
+not an ancestor of that branch. Retain the existing frozen upstream reference
+`3e2a2bf101c215c143bf00d9f857965f0ee82487` (1,111 commits) under annotated tag
+`macdown-original-reference-3e2a2bf1`. It is historical source, not merged runtime
+code. The original source checkout still retains that same upstream reference.
+
+Inherited layout documents mentioned `legacy-reference/`, but that directory is
+absent in both the import and migration candidate. Verify absence/equality,
+not a nonexistent subtree object. Correct current README/AGENTS wording; preserve
+historical planning text in its original context. No app or CI input changes
+are needed for this documentation correction.

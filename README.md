@@ -52,7 +52,9 @@ isolation scripts and [release hardening](planning/RELEASE_HARDENING.md).
 `MacDown2/` contains the application, CLI, tests and packages. `planning/` records
 architecture, acceptance and historical evidence; `design/` contains brand assets.
 `compliance/` contains the dependency inventory, notices and source obligations.
-`legacy-reference/` is read-only original MacDown porting material. `website/`
+Original MacDown source is retained under the read-only historical tag
+[`macdown-original-reference-3e2a2bf1`](https://github.com/Joncallim/mostlytext/tree/macdown-original-reference-3e2a2bf1);
+there is no `legacy-reference/` directory in the current tree. `website/`
 is an earlier planning draft; the maintained public website has its own repository.
 
 The full application history was imported from `Joncallim/macdown_2` at

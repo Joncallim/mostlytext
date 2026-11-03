@@ -4,8 +4,9 @@
 
 **MostlyText**, the native macOS text and Markdown editor (Swift 6 / SwiftUI,
 macOS 26+), lives in `Joncallim/mostlytext` on `main`. Its complete MacDown 2
-and original MacDown history is preserved. The legacy ObjC app survives only
-as a read-only porting source in `legacy-reference/`.
+development history is preserved. Original MacDown source/history is frozen at
+read-only reference tag `macdown-original-reference-3e2a2bf1`, separately from the
+rewrite branch. There is no `legacy-reference/` directory in the current tree.
 
 The website is a separate repository, `Joncallim/mostlytext-site`, with its own
 licence. The engineering backlog and historical release evidence remain at
@@ -16,8 +17,8 @@ See `planning/downstream/mostlytext-repository-migration-2026-11-03.md`.
 
 ## Layout
 
-- `legacy-reference/` — legacy ObjC tree (themes, `MPColor`/`MPUtilities`
-  tests, resources). Porting source only. Do not modify.
+- `macdown-original-reference-3e2a2bf1` — historical original MacDown Git tag,
+  not a current directory or runtime dependency. Treat reference source as read-only.
 - `MacDown2/` — the new product.
   - `MacDown2/MacDown2/` — app target sources
   - `MacDown2/MacDown2CLI/` — CLI target sources
