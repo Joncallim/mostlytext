@@ -270,3 +270,15 @@ restoration reproduces identical receipt bytes. The original reports/first packe
 are preserved. No technically unclassified position remains in that scoped set;
 all independent attribution/rights-review requirements remain. Product/runtime/
 pin/notice/SBOM/build inputs and the six strict release failures are unchanged.
+
+## Failed notarization response evidence retained — 4 November 2026
+
+[The release-source correction](downstream/notary-failure-evidence.md) preserves
+submission stdout/stderr/exit before parsing or stopping, and attempts the log
+when a valid safe identity exists. Nonzero commands and rejected/malformed/
+duplicate/unsafe responses remain fatal in every mode. Existing dry-run versus
+strict missing-log treatment is unchanged. Substitute-tool fixtures cover app,
+CLI and DMG stages, failed-before regressions and successful metadata/evidence
+capture. No real release script, signing/notary credentials, product/native launch
+or publication is executed. Six strict compliance failures and real signing,
+notarization, installed-state and exact-artifact acceptance remain open.
