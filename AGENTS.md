@@ -2,9 +2,17 @@
 
 ## What this repo is
 
-Fork of MacDown hosting the **MacDown 2** rewrite (Swift 6 / SwiftUI,
-macOS 26+). The rewrite lives on `master`; the legacy ObjC app survives only
+**MostlyText**, the native macOS text and Markdown editor (Swift 6 / SwiftUI,
+macOS 26+), lives in `Joncallim/mostlytext` on `main`. Its complete MacDown 2
+and original MacDown history is preserved. The legacy ObjC app survives only
 as a read-only porting source in `legacy-reference/`.
+
+The website is a separate repository, `Joncallim/mostlytext-site`, with its own
+licence. The engineering backlog and historical release evidence remain at
+`https://github.com/Joncallim/macdown_2/issues` during this migration. Bare epic
+numbers in imported planning documents refer to that backlog, not this new
+repository's issue numbers. Do not transfer or duplicate them without a mapping.
+See `planning/downstream/mostlytext-repository-migration-2026-11-03.md`.
 
 ## Layout
 
@@ -55,7 +63,7 @@ as a read-only porting source in `legacy-reference/`.
   build; locally it is enforced only with `--force-resolved-versions` or the
   pin step + flag above. Change it only in a deliberate dependency update
   (`swift package update` or `resolve`), reviewed like any other code.
-- One branch per epic (`epic/NN-name`) → PR into `master`.
+- One branch per epic (`epic/NN-name`) → PR into `main`.
 - Before starting or materially revising an epic, read and follow
   `planning/EPIC_STANDARD.md`.
 - For any remaining macOS 1.0 epic or release-gate work, also read and reconcile
@@ -63,7 +71,7 @@ as a read-only porting source in `legacy-reference/`.
   grandfathered in when the product/release contract has changed.
 - An epic must satisfy the Definition of Ready before broad implementation
   begins. The implementation architecture is written from the current live
-  `master` state, not copied blindly from an older issue.
+  `main` state, not copied blindly from an older issue.
 - The implementation architecture is binding for the epic branch. Workers may
   make ordinary local coding decisions, but must stop when a false assumption
   would require new architecture, a new cross-module dependency, changed

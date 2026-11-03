@@ -502,7 +502,7 @@ written from.
 ```text
 MIT License
 
-MacDown 2 is free and open-source software. It is a fork and successor of MacDown
+MostlyText is free and open-source software. It is a fork and successor of MacDown
 (https://github.com/MacDownApp/macdown), the original open-source Markdown editor for
 macOS, and is likewise released under the MIT License.
 
@@ -579,7 +579,7 @@ SOFTWARE.
 ```text
 MIT License
 
-MacDown 2 is free and open-source software. It is a fork and successor of MacDown
+MostlyText is free and open-source software. It is a fork and successor of MacDown
 (https://github.com/MacDownApp/macdown), the original open-source Markdown editor for
 macOS, and is likewise released under the MIT License.
 
@@ -619,7 +619,7 @@ THE SOFTWARE.
 ```text
 MIT License
 
-MacDown 2 is free and open-source software. It is a fork and successor of MacDown
+MostlyText is free and open-source software. It is a fork and successor of MacDown
 (https://github.com/MacDownApp/macdown), the original open-source Markdown editor for
 macOS, and is likewise released under the MIT License.
 
@@ -659,7 +659,7 @@ THE SOFTWARE.
 ```text
 MIT License
 
-MacDown 2 is free and open-source software. It is a fork and successor of MacDown
+MostlyText is free and open-source software. It is a fork and successor of MacDown
 (https://github.com/MacDownApp/macdown), the original open-source Markdown editor for
 macOS, and is likewise released under the MIT License.
 
@@ -699,7 +699,7 @@ THE SOFTWARE.
 ```text
 MIT License
 
-MacDown 2 is free and open-source software. It is a fork and successor of MacDown
+MostlyText is free and open-source software. It is a fork and successor of MacDown
 (https://github.com/MacDownApp/macdown), the original open-source Markdown editor for
 macOS, and is likewise released under the MIT License.
 
@@ -739,7 +739,7 @@ THE SOFTWARE.
 ```text
 MIT License
 
-MacDown 2 is free and open-source software. It is a fork and successor of MacDown
+MostlyText is free and open-source software. It is a fork and successor of MacDown
 (https://github.com/MacDownApp/macdown), the original open-source Markdown editor for
 macOS, and is likewise released under the MIT License.
 

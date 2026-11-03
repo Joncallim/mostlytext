@@ -12,9 +12,9 @@ name: Compliance
 
 on:
   push:
-    branches: [master]
+    branches: [main, master]
   pull_request:
-    branches: [master, integration-final]
+    branches: [main, master, integration-final]
   workflow_dispatch: {}
 
 permissions:

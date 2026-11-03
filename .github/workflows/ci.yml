@@ -5,10 +5,10 @@ permissions:
 
 on:
   push:
-    branches: [master]
+    branches: [main, master]
     paths: ['MacDown2/**', '.github/workflows/ci.yml']
   pull_request:
-    branches: [master, integration-final]
+    branches: [main, master, integration-final]
     paths: ['MacDown2/**', '.github/workflows/ci.yml']
   workflow_dispatch:
     inputs:
@@ -58,7 +58,7 @@ jobs:
     runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.runner == 'macos-26-intel' && 'macos-26-intel' || 'macos-26' }}
     timeout-minutes: 60
     env:
-      PR535_DIAGNOSTICS: ${{ github.event_name == 'pull_request' && github.event.number == 535 && github.event.pull_request.head.repo.full_name == github.repository }}
+      PR535_DIAGNOSTICS: ${{ github.repository == 'Joncallim/macdown_2' && github.event_name == 'pull_request' && github.event.number == 535 && github.event.pull_request.head.repo.full_name == github.repository }}
     steps:
       - uses: actions/checkout@v4
         with:
