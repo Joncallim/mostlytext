@@ -1,0 +1,26 @@
+{
+  "assembled_notice_sha256": "8dd7050fe645e769344d25736c97f1e6a59830f14c83e2e93e5477a541e91b66",
+  "canonical_terms_sha256": "748c15c2a285ef74aec280f2e72bd98482b96bd0e2da0d8f0fde934fa88e2e16",
+  "end_source_line_exclusive": 6692,
+  "first_source_line": 6506,
+  "fragment_sha256": "80da5ec5eac3de0db93baa523e6ff52154c144cfc2f1154df935ed8a09766fa0",
+  "generated_probe_references": [
+    {
+      "references": 3,
+      "source_line": 6516
+    },
+    {
+      "references": 11,
+      "source_line": 6634
+    }
+  ],
+  "generated_references": 541,
+  "id": "cytoscape-thenable",
+  "mapped_source_lines": 139,
+  "reference_revision": "b7ee46032b4be96acf74cb188ace7acc39f1613c",
+  "reference_sha256": "15d5267aeaa15d3dfeac1ca6a97378189d693d75ee26130afa342b6fcdfb97ed",
+  "schema": 1,
+  "scope": "Declared standard MIT notice assembly; not an upstream standalone license file, exact original adaptation revision or complete embedded-code audit",
+  "shipped_mermaid_sha256": "581ed7d74bd9048d0e3a91363927d72ef22942d7722546b27f7cc29e35390eb8",
+  "source_sha256": "9ffbc8172ca3bd6723fba3513f96194f0e4c98225e00f380948f285869517803"
+}

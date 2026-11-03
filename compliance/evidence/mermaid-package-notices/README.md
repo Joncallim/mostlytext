@@ -1,5 +1,11 @@
 # Distributed mapped Mermaid package texts — 3 November 2026
 
+> Subsequent scoped update: [Thenable's explicitly declared MIT terms](../thenable-mit-declaration/README.md)
+> are now assembled and distributed with the author's credit and positive mapped
+> code probes. Earlier Thenable full-text linkage limitations below are historical;
+> the other embedded-code and origin-review limits remain.
+
+
 All 74 package records in the retained Mermaid source-map audit now have complete
 selected texts in the distributed notice corpus. This adds 73 inventory records;
 Cytoscape's own-code MIT record from PR23 is retained without duplication. The

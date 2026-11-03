@@ -1,5 +1,11 @@
 # Distributed source-build reference notices — 3 November 2026
 
+> Subsequent scoped update: [Thenable's explicitly declared MIT terms](../thenable-mit-declaration/README.md)
+> are now assembled and distributed with the author's credit and positive mapped
+> code probes. Earlier Thenable full-text linkage limitations below are historical;
+> the other embedded-code and origin-review limits remain.
+
+
 Twenty-two conservative attributions now preserve complete selected terms for
 four Rough.js dependency inputs, 16 D2 Go-module inputs, the Bison skeleton text
 in Graphviz sources and Emscripten/musl root notices. The [manifest](manifest.json)

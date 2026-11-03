@@ -55,8 +55,9 @@ historical and must not be retargeted to a new checkout.
 2. Resolve the remaining named/embedded/generated provenance. Framer's ambiguous
    adaptation origin and points-on-curve's borrowed-algorithm reference are
    evidence leads, not grounds to substitute guessed license terms. Ralf Thenable
-   declares MIT but its retained source has no standalone complete text; record
-   and resolve that linkage without inventing an upstream license file.
+   now has its expressly declared standard MIT terms assembled with the actual
+   author credit and [mapped evidence](../compliance/evidence/thenable-mit-declaration/README.md);
+   no standalone upstream license file is invented.
 3. Independently review complete corresponding-source and nested obligations,
    including D2's Liberation Mono Reserved Font Name and Graphviz compiler/runtime
    inputs. A local review archive is not independent review or an approved offer.
