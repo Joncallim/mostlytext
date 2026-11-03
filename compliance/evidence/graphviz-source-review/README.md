@@ -7,10 +7,10 @@ review limits. It has not been approved as the complete corresponding-source
 offer and is not published. No MostlyText application binary or private material
 is included. The already-public npm renderer input is JavaScript/WebAssembly.
 
-Archive SHA-256: `e045615c9d9db048eb689a1eb7b595cc78975935c9b7357526ed9c229fd449e5`. It contains 25
+Archive SHA-256: `d0733acf3a662540ef755c92bd96815a9313e089d36a7a64055d4385370ca9a8`. It contains 25
 manifested files plus manifest.json; all bytes and exact member sets are verified.
 The [manifest](manifest.json) records each size/digest. Local artifact:
-`/Volumes/Fast SSD/CORTANA-Builds/nested-notice-completion-20261103/graphviz-source-review-thenable.tar.gz`.
+`/Volumes/Fast SSD/CORTANA-Builds/nested-notice-completion-20261103/graphviz-source-review-esbuild.tar.gz`.
 
 ## Reproduce and verify
 
@@ -50,3 +50,7 @@ The earlier PR25 review package is retained separately at graphviz-source-review
 (SHA-256 `fc35780d174b0a9519000b22a952300dfd49bf7f001586cf7b9417fef9706c5e`). This later snapshot includes the
 Thenable notice; upstream/source and approval limits are unchanged. No old local
 archive is overwritten.
+
+The prior Thenable review snapshot (SHA-256 `e045615c9d9db048eb689a1eb7b595cc78975935c9b7357526ed9c229fd449e5`)
+remains at graphviz-source-review-thenable.tar.gz. The current snapshot also
+includes the qualified parser-runtime MIT notice; source/review limits are unchanged.

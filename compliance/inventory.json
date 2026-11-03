@@ -446,7 +446,7 @@
         }
       ],
       "open_items": [
-        "Complete remaining embedded/generated Mermaid attribution and original resolution for two content-matched candidate versions. All 74 mapped package records now have complete selected texts distributed (Cytoscape retained separately); four Rough.js publisher-build input notices are also registered. Framer/Koen spring origin ambiguity, points-on-curve borrowed-algorithm provenance, other nested helpers, unmapped parser/generated positions and exact final artifact proof remain open. Source-build references and root package labels do not complete nested-code review."
+        "Complete remaining embedded/generated Mermaid attribution and original resolution for two content-matched candidate versions. All 74 mapped package records now have complete selected texts distributed (Cytoscape retained separately); four Rough.js publisher-build input notices are also registered. Framer/Koen spring origin ambiguity, points-on-curve borrowed-algorithm provenance, other nested helpers, unmapped parser/generated positions and exact final artifact proof remain open. Source-build references and root package labels do not complete nested-code review. The credited esbuild runtime helper preamble now has its full MIT notice and 452 classified outer references; 3,528 previously unassociated parser positions remain unclassified by that scoped tool, and the original emitting compiler version is still unresolved."
       ],
       "runtime_resources": [
         {
@@ -5329,6 +5329,34 @@
       ],
       "evidence": "compliance/evidence/thenable-mit-declaration/mapping.json",
       "notes": "Specific fallback code probes map into shipped Mermaid. The tagged licensed reference confirms the explicit declaration; it is not proof of the exact original adaptation revision or complete Cytoscape attribution."
+    },
+    {
+      "id": "esbuild-parser-runtime",
+      "name": "esbuild parser runtime helpers (matching licensed reference; emitting version unresolved)",
+      "kind": "attribution",
+      "version": "emitting version unresolved; reference v0.27.7",
+      "upstream": "https://github.com/evanw/esbuild",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright (c) 2020 Evan Wallace"
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/esbuild-parser-runtime--MIT.txt",
+          "sha256": "b40ec5baec7bb34fa5b1c09521fa3cd52d5fad7adafed74932a2010d3612a681",
+          "upstream": "https://github.com/evanw/esbuild",
+          "upstream_revision": "2025c9ff6ab15ba6b0f9d074fd732250cc46e4a3",
+          "upstream_path": "LICENSE.md"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "matching-runtime-reference; original emitting version unresolved",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/esbuild-parser-runtime/mapping.json",
+      "notes": "Two complete emitted helper bodies match the licensed reference after narrowly reviewed formatting normalization. No exact npm identity, original compiler-version proof, full runtime reachability or complete nested audit is claimed."
     }
   ]
 }
