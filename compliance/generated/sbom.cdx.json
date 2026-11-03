@@ -699,6 +699,37 @@
       "version": "go1.24.6"
     },
     {
+      "bom-ref": "d2-go-stdlib-source-notices",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://go.dev"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "LicenseRef-Go-Standard-Library-Source-Notices"
+        }
+      ],
+      "name": "Go standard-library supplemental source-build notices",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-graph; exact emission of every selected file not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "go1.24.6 selected source inputs"
+    },
+    {
       "bom-ref": "d2-liberation-mono",
       "externalReferences": [
         {
@@ -4941,6 +4972,7 @@
         "d2-build-golang.org-x-xerrors",
         "d2-build-oss.terrastruct.com-util-go",
         "d2-go-runtime",
+        "d2-go-stdlib-source-notices",
         "d2-liberation-mono",
         "esbuild-parser-runtime",
         "expat",
@@ -5088,7 +5120,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:2636840b-271f-58fe-be59-e539496724b4",
+  "serialNumber": "urn:uuid:bf903a68-706f-5e78-bc32-0a10e46e9812",
   "specVersion": "1.5",
   "version": 1
 }
