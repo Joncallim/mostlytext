@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "scope": "borrowed-helper source-build origin; runtime retention and reuse grant not independently established",
+  "observed_at_utc": "2026-11-03T13:10:33.986492+00:00",
+  "package": {
+    "name": "points-on-curve",
+    "version": "0.2.0",
+    "publisher_git_head": "48241476eb86307294f54913ccfb60a3e7338c56",
+    "archive_url": "https://registry.npmjs.org/points-on-curve/-/points-on-curve-0.2.0.tgz",
+    "archive_sha256": "adc00f4d5ae800c315aea316822fb6f8dd4529f76107facbdccf356372e5ddbf",
+    "member": "package/src/index.ts",
+    "member_sha256": "eb494439d7322be3624e1f6ef090c5a56b95714ad89f35a61a4d79b16b3a07b2",
+    "reference_lines": [
+      31,
+      52
+    ],
+    "referenced_function": "flatness"
+  },
+  "article": {
+    "author": "Sean Thayne",
+    "title": "Offset Bézier Curves",
+    "published": "2010-11-12",
+    "url": "https://seant23.wordpress.com/2010/11/12/offset-bezier-curves/",
+    "observed_html_sha256": "d6a4a55134797719cdd142515348ecd12b5e5d9438b85ccae248410e7e3dddc3",
+    "response_is_dynamic": true,
+    "author_reply_anchors": [
+      "comment-33",
+      "comment-127"
+    ]
+  },
+  "paper": {
+    "author": "Kaspar Fischer",
+    "title": "Piecewise Linear Approximation of Bézier Curves",
+    "dated": "2000-10-16",
+    "url": "https://seant23.wordpress.com/wp-content/uploads/2010/11/piecewise_linear_approzimation.pdf",
+    "observed_pdf_sha256": "9e4ee182956622503f562396473540cf3ed9983fbf4dcf3137f5de3e76875ad7",
+    "origin_credit": "Roger Willcocks",
+    "relevant_pages": [
+      3,
+      4
+    ]
+  },
+  "decision": "Unresolved: independent/upstream grant review required; no licence text, inventory, runtime, source-offer or release predicate changed."
+}
