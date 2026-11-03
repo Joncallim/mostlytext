@@ -1,0 +1,17 @@
+[
+  {
+    "control": "actual parser member changed",
+    "returnCode": 1,
+    "outputWritten": false
+  },
+  {
+    "control": "actual original index changed",
+    "returnCode": 1,
+    "outputWritten": false
+  },
+  {
+    "control": "restored source exact receipt replay",
+    "returnCode": 0,
+    "byteIdentical": true
+  }
+]

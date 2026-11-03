@@ -247,3 +247,14 @@ App/runtime/notice/SBOM/pin inputs and all six strict release failures remain
 unchanged. Actual fixture, compiled-resource, hosted and integration evidence is
 recorded with the associated PR and MostlyText #14/#4; no local app launch,
 native acceptance, signing or publication is inferred.
+
+## Parser syntax review narrowed — 4 November 2026
+
+[The syntax audit](../compliance/evidence/parser-position-classification/README.md)
+binds every original remaining parser position to actual reproduced member bytes
+and classifies 3,428 references, with 100 left technically unclassified. It uses
+actual JavaScript structure and preserves all original independent attribution/
+rights-review requirements. Template/comment lookalikes and executable getter/
+name-call mutations do not qualify. The original reports, all notice/SBOM/runtime/
+pin/build inputs and six strict release failures remain unchanged; no native,
+independent-review, signing or publication acceptance is inferred.

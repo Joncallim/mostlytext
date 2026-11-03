@@ -86,3 +86,12 @@ Reproduce with `compliance/tools/index_parser_review_positions.py --evidence-dir
 committed index. It pins every reviewed parent chunk/map and rejects a changed
 bundle/archive/chunk pairing or inconsistent total/runtime count. Index presence
 is evidence preparation, not a completed independent review.
+
+
+## Later syntax classification — 4 November 2026
+
+[The syntax packet](../parser-position-classification/README.md) now accounts for
+3,428 of the 3,528 later references using actual JavaScript structure; 100 remain
+technically unclassified. It preserves this original report/index and every
+independent review requirement. Syntax classification does not assign ownership,
+identify unresolved earlier versions or clear attribution/rights obligations.
