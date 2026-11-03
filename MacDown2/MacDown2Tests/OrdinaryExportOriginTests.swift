@@ -15,6 +15,10 @@ import Workspace
 struct OrdinaryExportOriginTests {
     private final class AlertWindow: OrdinaryExportAlertWindow {
         let window = NSWindow()
+
+        init() {
+            window.isReleasedWhenClosed = false
+        }
     }
 
     @Test func panelReadsLatestValueFromOriginalDocumentOnly() throws {
