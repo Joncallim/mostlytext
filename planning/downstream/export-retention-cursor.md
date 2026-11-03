@@ -28,3 +28,12 @@ a later matching primary scratch must still refuse growth. Capture real failures
 on the old code, then run the combined focused Debug/Release controls, strict
 lint/pinned format, compile-only locked Release and full hosted checks. Native,
 companion inventory, calibration, signing and release acceptance stay open.
+
+## Reproduction
+
+Both real old-source controls ran and failed five actual assertions across two
+tests. Repeated scans dropped names/bytes; a later owned-fixture primary scratch
+was missed after the first scan. No test is skipped, weakened or given a larger
+budget. The fix changes only the descriptor open policy and its explanatory
+comment; the focused corpus, locked compilation and hosted result qualify the
+associated integration before merge.

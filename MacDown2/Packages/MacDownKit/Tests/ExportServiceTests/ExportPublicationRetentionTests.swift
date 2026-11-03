@@ -1,8 +1,41 @@
+import Darwin
 @testable import ExportService
 import Foundation
 import Testing
 
 struct ExportPublicationRetentionTests {
+    @Test func repeatedScansOfOneDirectoryRetainAllNamesAndBytes() throws {
+        let item = try ExportPublicationTestSupport.fixture()
+        defer { try? FileManager.default.removeItem(at: item.directory) }
+        try Data("first".utf8).write(to: item.directory.appendingPathComponent("first.txt"))
+        try Data("second".utf8).write(to: item.directory.appendingPathComponent("second.txt"))
+        let directory = open(item.directory.path, O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)
+        try #require(directory >= 0)
+        defer { close(directory) }
+        let limits = ExportRetentionLimit(files: 2, bytes: 11)
+        for _ in 0 ..< 3 {
+            let retained = try ExportPublicationRetention.scanAssets(directory, limits: limits)
+            #expect(retained.names == [Data("first.txt".utf8), Data("second.txt".utf8)])
+            #expect(retained.bytes == 11)
+        }
+    }
+
+    @Test func aLaterPrimaryScratchIsSeenAfterAnEarlierScan() throws {
+        let item = try ExportPublicationTestSupport.fixture()
+        defer { try? FileManager.default.removeItem(at: item.directory) }
+        let directory = open(item.directory.path, O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)
+        try #require(directory >= 0)
+        defer { close(directory) }
+        let prefix = ExportPublicationRetention.scratchPrefix(for: "report.html")
+        try ExportPublicationRetention.checkParent(directory, scratchPrefix: prefix)
+        let scratch = item.directory.appendingPathComponent(prefix + "retained.html.tmp")
+        try Data("preserve".utf8).write(to: scratch)
+        #expect(throws: ExportError.self) {
+            try ExportPublicationRetention.checkParent(directory, scratchPrefix: prefix)
+        }
+        #expect(try Data(contentsOf: scratch) == Data("preserve".utf8))
+    }
+
     @Test func scalarDistinctUnknownNamesAreChargedSeparately() throws {
         var retained = ExportPublicationRetention.Retained()
         let limits = ExportRetentionLimit(files: 2, bytes: 10)

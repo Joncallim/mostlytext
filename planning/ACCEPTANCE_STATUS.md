@@ -1,7 +1,9 @@
 # MostlyText acceptance status — 3 November 2026
 
 Initial acceptance baseline: main `f660e30f61c0b48551fb450ee9afd24ba35d50ae`.
-The later scoped attribution integration and its exact resource checks are recorded below.
+Later scoped recovery, localization and attribution units and their exact checks
+are recorded below. The initial source-count row is historical; use those later
+qualified units and the live PR checks for current integration status.
 This dated status distinguishes source integration, local prerequisites and
 acceptance. The live backlog is [MostlyText issues](https://github.com/Joncallim/mostlytext/issues);
 [the number map](ISSUE_TRANSFER_MAP.md) explains imported historical references.
@@ -123,7 +125,6 @@ No separate text corpus or fallback is introduced. Genuine protected-account
 menu/window/keyboard/VoiceOver/localization and final signed-resource acceptance
 remain open; source implementation does not close the native journey or #14.
 
-
 ## Primary export recovery source slice — 3 November 2026
 
 [The current-source contract](downstream/export-primary-recovery.md) adds a lazy,
@@ -162,3 +163,42 @@ checks passed, as did locked Release and compile-only app/UI test-target builds.
 Hosted checks and reviewed integration are recorded on the associated PR.
 Native account, lifecycle/GUI, companion inventory, PDF,
 calibration, independent review and strict release gates remain unchanged.
+
+## Publisher and borrowed-algorithm provenance — 3 November 2026
+
+[PR32](https://github.com/Joncallim/mostlytext/pull/32) integrated three bounded
+source-evidence packets, with passing hosted Compliance41647340785 and a verified
+merge tree. The [flatness source chain](../compliance/evidence/points-on-curve-origin/README.md)
+traces the article/paper/credited author. The [spring history](../compliance/evidence/framer-spring-history/README.md)
+finds a matching contemporary intermediary body. Neither supplies an invented
+original grant or permission determination.
+
+[Signed publisher verification](../compliance/evidence/parser-publisher-provenance/README.md)
+binds the exact parser archive and all 32 mapped chunks to source commit
+293b1c153a6f94c3a4a1d9cd5eae4dde609f1ec4, including its declared root esbuild
+0.25.12 and vscode-uri 3.1.0 inputs. Five actual wrong-input controls are refused;
+the issuer is explicitly checked in the verified certificate as well as the CLI
+policy. This is not an independent rebuild or proof of an earlier nested
+path-browserify compilation. Original content-only comparison results remain
+scoped as captured. The 97 qualified credits, distributed notice/runtime bytes,
+all six strict failures and all native/source-publication/artifact gates remain.
+
+## Export language ownership and repeatable retention scans — 3 November 2026
+
+Three existing unresolved-image/raw-HTML messages now explicitly select their
+own ExportService bundle; the recovery storage error, guidance and saved-output
+warning have contextual English catalog entries. All 28 earlier entries remain
+unchanged. The actual error source with the compiled catalog returns the existing
+English/French/Japanese/Polish values in Debug and Release (eight combinations).
+The previous source returns English for all three lookups under the same French
+fixture. Native language selection/layout/VoiceOver/linguistic review and the final
+freeze remain open. See [the scoped contract](downstream/export-recovery-localization.md).
+
+A separate [retention scan correction](downstream/export-retention-cursor.md)
+opens an independent directory cursor for each check. Both real old-source
+regressions fail: repeated asset scans miss retained names/bytes, and a later
+primary scratch is not refused after an earlier scan. The correction preserves
+all ceilings and unknown files; it does not add companion cleanup authority.
+Final source checks, hosted qualification and integration are recorded on the
+associated PRs/issues. Whole native, companion inventory, PDF, calibration,
+independent review, source publication and signed-artifact gates remain open.

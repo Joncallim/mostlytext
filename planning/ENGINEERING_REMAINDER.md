@@ -5,8 +5,10 @@ Merged implementation, automated checks and documentation progress are recorded
 within them. None currently has all its whole-issue closure evidence. This map
 reconciles current source, the transferred issues and the preserved native hold;
 it is a work queue, not a declaration that engineering or release work is done.
-Baseline: main 8c78f3cd13635a7010ebeaecad932744afc90992 plus the scoped nested
-notice/docs work described in its evidence checkpoints. Historical PR numbers
+Initial mapping baseline: main 8c78f3cd13635a7010ebeaecad932744afc90992.
+Later primary recovery, live-document protection, package localization and
+attribution source evidence are recorded in [ACCEPTANCE_STATUS.md](ACCEPTANCE_STATUS.md)
+and the associated PRs; the named remaining contracts below still apply. Historical PR numbers
 resolve through [ISSUE_TRANSFER_MAP.md](ISSUE_TRANSFER_MAP.md).
 
 ## Work still requiring implementation or diagnosis
@@ -17,7 +19,7 @@ resolve through [ISSUE_TRANSFER_MAP.md](ISSUE_TRANSFER_MAP.md).
 | [#7 Mac integration](https://github.com/Joncallim/mostlytext/issues/7) | First pass the required native QL-REPLY callback/cancellation/cold-Finder feasibility probe, then implement the currently absent dedicated Quick Look target and static shared-content path, Markdown document artwork/registration, and remaining theme/renderer semantics. Verify containment, failure isolation and performance in real Finder/Quick Look. Naming conventions are frozen, not implementation. |
 | [#9 math](https://github.com/Joncallim/mostlytext/issues/9) | Complete shared delimiter/parity, useful source-anchored diagnostics and accessible equation identity; prove final Preview/Export paths and real visual/accessibility behavior. |
 | [#10 contributions/TOC](https://github.com/Joncallim/mostlytext/issues/10) | Activate/prove deterministic shared heading anchors and actual Preview/Export TOC navigation. Immutable parse ownership/source binding is integrated; that is not navigation acceptance. |
-| [#11 export](https://github.com/Joncallim/mostlytext/issues/11) | Finish durable companion-asset inventory/crash/orphan policy, parity, whole-operation PDF progress/cancellation and resource-budget calibration. The [primary staging recovery slice](downstream/export-primary-recovery.md) supplies private authenticated receipts and preserves unfamiliar objects; it grants no companion cleanup inventory. Prove real pagination and Save/Cancel behavior without broadening filesystem authority. |
+| [#11 export](https://github.com/Joncallim/mostlytext/issues/11) | Finish durable companion-asset inventory/crash/orphan policy, parity, whole-operation PDF progress/cancellation and resource-budget calibration. The [primary staging recovery slice](downstream/export-primary-recovery.md) supplies private authenticated receipts and preserves unfamiliar objects; [live-document protection](downstream/export-recovery-document-protection.md) also protects adopted working files. Repeatable scans now use independent cursors so retries still count existing files. These corrections do not supply a companion cleanup inventory. Prove real pagination and Save/Cancel behavior without broadening filesystem authority. |
 | [#13 HTML preview](https://github.com/Joncallim/mostlytext/issues/13) | The production consumer still uses the legacy handler. The bounded grant/handler must not be activated without the required native request/root/MIME/cancellation/containment proof. The preserved draft was closed without merge or acceptance. |
 | [#14 attribution](https://github.com/Joncallim/mostlytext/issues/14) | Complete remaining embedded/generated provenance and notices, independent D2/font/source review, complete Graphviz runtime/source review and final source offer. LC-08's original Help-menu entry now reuses the existing shared scene; genuine native menu/window acceptance remains separate. Captured package texts and conservative build-input notices now ship. |
 | [#15 WebKit](https://github.com/Joncallim/mostlytext/issues/15) | Controlled extended-session reproduction/root-cause diagnosis remains. Hosted fixture/alert/IconServices corrections do not explain or close the original WebKit hang. Preserve failed-run samples; do not change timeouts or label a retry as a fix. |
@@ -52,12 +54,15 @@ historical and must not be retargeted to a new checkout.
 1. Verify and distribute unambiguous captured texts; retain original copyright,
    complete terms and exact archive/source links. Keep content-matched candidate
    versions and conservative source-build attributions visibly qualified.
-2. Resolve the remaining named/embedded/generated provenance. Framer's ambiguous
-   adaptation origin and points-on-curve's borrowed-algorithm reference are
-   evidence leads, not grounds to substitute guessed license terms. Ralf Thenable
+2. Resolve the remaining named/embedded/generated provenance. Framer's [historical intermediary match](../compliance/evidence/framer-spring-history/README.md)
+   and [points-on-curve's traced source chain](../compliance/evidence/points-on-curve-origin/README.md)
+   narrow the review without resolving the actual original grant. Ralf Thenable
    now has its expressly declared standard MIT terms assembled with the actual
    author credit and [mapped evidence](../compliance/evidence/thenable-mit-declaration/README.md);
    no standalone upstream license file is invented.
+   The parser's [verified signed publisher provenance](../compliance/evidence/parser-publisher-provenance/README.md)
+   establishes its source revision and declared compiler/lock inputs; it is not
+   an independent reproduction of all earlier nested builds.
 3. Independently review complete corresponding-source and nested obligations,
    including D2's Liberation Mono Reserved Font Name and Graphviz compiler/runtime
    inputs. A local review archive is not independent review or an approved offer.
