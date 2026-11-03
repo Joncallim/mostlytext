@@ -1,5 +1,16 @@
 # MostlyText 1.0 release path
 
+> **Repository migration update — 3 November 2026.** The owner requested the
+> migration to begin now and the website to move to `Joncallim/mostlytext-site`.
+> `Joncallim/mostlytext` now carries the full application history; this supersedes
+> older instructions below to wait for #115 before preparing the repository or
+> rename the occupied website repository as though it were the application.
+> Engineering issues/evidence remain in `Joncallim/macdown_2`; historical bare
+> issue numbers and references to `master` below retain that original context.
+> Source import is not #115 closure, native acceptance, or release permission.
+> See [the migration contract](downstream/mostlytext-repository-migration-2026-11-03.md).
+
+
 ## Current coordination checkpoint — 2026-10-29
 
 This dated update supersedes the live-status statements in the October 26

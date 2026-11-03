@@ -1,124 +1,71 @@
-# MacDown 2
+# MostlyText
 
-> **Website:** [mostlytext.app](https://mostlytext.app)
+A native macOS text and Markdown editor, built with Swift, SwiftUI and TextKit 2.
+MostlyText continues the MacDown lineage, with a rewritten application and a
+modular Swift package core. The command-line executable is `mostlytext`.
 
-A native macOS Markdown editor — a ground-up Swift / SwiftUI rewrite built on
-TextKit 2, a modular Swift package core, and a modern SwiftUI shell.
+**Status: source-only testing alpha.** Source integration and automated checks
+are not native acceptance or a signed, notarized release. Remaining work includes
+native editing/export/accessibility journeys, installed-state migration,
+localization, performance and exact release-artifact verification.
 
-> **Status:** active development, feature epics in progress (updated
-> 2026-09-18). Implemented and merged: project foundations, file/format
-> core, the native-`NSWindow`-tab workspace shell, the TextKit 2 editor,
-> tree-sitter highlighting and the theme system, the native Markdown parser
-> and block-sliced Textual preview, the heading outline and lazy folder
-> browser, JSON/HTML multi-format support, Markdown editing assists,
-> HTML/PDF export with a shared derived-content destination, a native
-> SwiftUI Settings scene, first-party contribution infrastructure (table of
-> contents, local text-filter commands, command palette), live
-> external-file change detection/conflict handling, first-class
-> math/scientific-notation rendering ($…$ / $$…$$) in preview and export,
-> and a native diagram platform supporting Mermaid, D2, and Graphviz/DOT
-> (```mermaid```/```d2```/```dot``` fences rendered natively in preview and
-> exported as genuine vector SVG). WaveDrom was evaluated and deliberately
-> deferred, not rejected, over a real `eval()`-based code-execution risk in
-> its documented rendering API — see issue #46.
->
-> Known open work before macOS 1.0: a narrower external-file-change
-> notice-banner issue is tracked as
-> [#70](https://github.com/Joncallim/macdown_2/issues/70) (the core
-> defect, #59, is fixed); a narrower Preview-only math/nested-code-fence
-> edge case is tracked as
-> [#63](https://github.com/Joncallim/macdown_2/issues/63); none of the
-> three diagram languages has an interactive copy-as-SVG affordance yet
-> ([#86](https://github.com/Joncallim/macdown_2/issues/86)); a genuine,
-> pre-existing (not newly introduced) fragility across roughly half of the
-> `MacDown2UITests` target was found and is being triaged
-> ([#88](https://github.com/Joncallim/macdown_2/issues/88)). The remaining
-> planned epics — whole-app accessibility and polish, localisation, and
-> signed/distributable release engineering — have not started. See
-> [`planning/epics/README.md`](planning/epics/README.md) for the full epic
-> table and [`planning/RELEASE_EVIDENCE.md`](planning/RELEASE_EVIDENCE.md)
-> for the release-readiness ledger, which distinguishes "implemented" from
-> "release-proven" per epic.
+- Website: [mostlytext.app](https://mostlytext.app)
+- Website source: [Joncallim/mostlytext-site](https://github.com/Joncallim/mostlytext-site)
+- Engineering issues and existing evidence: [Joncallim/macdown_2](https://github.com/Joncallim/macdown_2/issues)
+- [Repository migration contract](planning/downstream/mostlytext-repository-migration-2026-11-03.md)
+- [Release evidence](planning/RELEASE_EVIDENCE.md)
 
-## Requirements
+## Build the application and CLI
 
-- macOS 26.0 or later
-- Xcode 26 (Swift 6.2 toolchain, strict concurrency)
-- [XcodeGen](https://github.com/yonaskolb/XcodeGen) — the `.xcodeproj` is generated, not committed
+Requires macOS 26+, Xcode 26 with Swift 6.2+, and XcodeGen. Internal target,
+package, bundle and storage names are retained for compatibility; the public CLI
+scheme is `MostlyTextCLI` and produces `mostlytext`.
 
-## Repository layout
-
-```
-MacDown2/
-├── MacDown2/                 # App target (SwiftUI shell)
-├── MacDown2CLI/              # `mostlytext` command-line tool
-├── MacDown2UITests/          # XCUITest target
-├── Packages/MacDownKit/      # Swift package — all logic lives here
-│   └── Sources/
-│       ├── FileCore          # FileStore, FileFormat registry, document lifecycle
-│       ├── Workspace         # Per-window model + session restore (native NSWindow tabs)
-│       ├── EditorCore        # NSTextView + TextKit 2 editor
-│       ├── Highlighting      # Tree-sitter engine (markdown/json/html), Neon-backed
-│       ├── Themes            # Theme model + Tomorrow Light/Dark, live switching
-│       ├── MarkdownEngine    # Native swift-markdown parser + parse session store
-│       ├── Preview           # Block-sliced native Textual preview + scroll sync
-│       ├── OutlineUI         # Heading outline: tree, selection, identity remap, controller
-│       ├── FileTree          # Folder browser: lazy tree, FS watching, CRUD (E09)
-│       ├── AppSettings       # Typed settings model + panes (E13)
-│       ├── ExportService     # HTML/PDF export + shared derived-content destination (E12)
-│       ├── Contributions     # First-party contribution SPI/registry: TOC, etc. (E14)
-│       ├── TextFilters       # Local text-filter command execution (E14)
-│       ├── JSONSupport       # JSON analysis/outline (E11)
-│       ├── Math / MathRendering   # Inline/display math parsing + rendering (E19)
-│       ├── Diagrams / DiagramRendering  # Mermaid diagram platform: model + WKWebView renderer (E20)
-│       ├── DiagramWebKitPool     # Shared offscreen WKWebView pool generalized for E21's renderers
-│       ├── DiagramsD2 / D2Rendering            # D2 diagram support (E21)
-│       ├── DiagramsGraphviz / GraphvizRendering  # Graphviz/DOT diagram support (E21)
-│       └── …
-├── Packages/TreeSitterMarkdown  # Vendored markdown + markdown-inline grammars
-└── project.yml               # XcodeGen project definition
-planning/                     # Epic specs and implementation plans
-legacy-reference/             # Legacy ObjC MacDown — read-only porting source
-```
-
-## Building
-
-```bash
-# 1. Logic package — build + test (all unit tests live here)
-cd MacDown2/Packages/MacDownKit
-swift build
-swift test
-
-# 2. Generate the Xcode project
-cd ../..
+```sh
+cd MacDown2
 xcodegen generate
-
-# 3. Build the app and the CLI
-xcodebuild -project MacDown2.xcodeproj -scheme MacDown2  -destination 'platform=macOS' build
-xcodebuild -project MacDown2.xcodeproj -scheme MostlyTextCLI  -destination 'platform=macOS' build
+cd ..
+bash MacDown2/scripts/pin-xcode-package-versions.sh
+xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
+  -configuration Release -destination 'platform=macOS' \
+  -onlyUsePackageVersionsFromResolvedFile build
+xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MostlyTextCLI \
+  -configuration Release -destination 'platform=macOS' \
+  -onlyUsePackageVersionsFromResolvedFile build
+bash MacDown2/scripts/pin-xcode-package-versions.sh --check
 ```
 
-## Linting
+Build and test the package with its committed dependency versions:
 
-```bash
-swiftformat --lint MacDown2
-swiftlint   lint --strict MacDown2
+```sh
+cd MacDown2/Packages/MacDownKit
+swift build --force-resolved-versions
+swift test --force-resolved-versions
 ```
 
-CI (`.github/workflows/ci.yml`) runs the lint, package tests, and app/CLI builds
-on every push and PR to `master`.
+Use Release builds when judging responsiveness. Native app/UI testing must use
+its protected verification inputs and the separate test account; see the
+isolation scripts and [release hardening](planning/RELEASE_HARDENING.md).
 
-## Roadmap
+## Source layout and history
 
-Development is organised into epics, each tracked as a GitHub issue with a spec in
-[`planning/epics/`](planning/epics/) and a detailed implementation plan in
-[`planning/`](planning/). See [`planning/MIGRATION_PLAN.md`](planning/MIGRATION_PLAN.md)
-for the overall plan.
+`MacDown2/` contains the application, CLI, tests and packages. `planning/` records
+architecture, acceptance and historical evidence; `design/` contains brand assets.
+`compliance/` contains the dependency inventory, notices and source obligations.
+`legacy-reference/` is read-only original MacDown porting material. `website/`
+is an earlier planning draft; the maintained public website has its own repository.
 
-## License
+The full application history was imported from `Joncallim/macdown_2` at
+`8be8ad4158f6fee5ad8bd40337e118054177cfa8`. The tag
+`macdown-2-lineage-2026-11-03` records that boundary. Existing tags are preserved;
+GitHub release assets, issue numbers and workflow-run records have not been
+recreated or retargeted. Historical alpha release files remain in the
+[original repository](https://github.com/Joncallim/macdown_2/releases).
 
-MacDown 2 is free and open-source software, released under the [MIT License](LICENSE).
+## License and attribution
 
-It is an open-source **fork and successor of [MacDown](https://github.com/MacDownApp/macdown)**,
-the original macOS Markdown editor by Tzu-ping Chung and contributors (also MIT-licensed).
-The original copyright notice is retained in [`LICENSE`](LICENSE).
+MostlyText's application source remains under the [MIT License](LICENSE).
+The original MacDown copyright and later contributors' attribution are retained.
+Third-party components keep their own terms in [the generated notices](compliance/generated/THIRD_PARTY_NOTICES.md).
+The separately maintained website has its own license; its terms are not changed
+by this application migration.
