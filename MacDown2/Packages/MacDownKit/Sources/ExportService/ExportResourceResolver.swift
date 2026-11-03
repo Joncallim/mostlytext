@@ -12,10 +12,19 @@ import LocalResourceAccess
 final class ExportResourceResolver {
     /// Authored reference URL → resource. Deduplication is by resource identity,
     /// so two references to the same bytes share one resource entry.
-    private var resourcesByReference: [String: ExportResource] = [:]
+    private var resourcesByReference: [Data: (reference: String, resource: ExportResource)] = [:]
+    private enum PathResult {
+        case resource(ExportResource)
+        case unresolved(String)
+    }
+
+    /// Byte keys preserve distinct canonical-equivalent filenames. Query,
+    /// fragment and percent/dot spellings share the first immutable result.
+    private var resourcesByPath: [Data: PathResult] = [:]
+    private let accounting: ResourceReadAccounting
     /// References already reported on, unresolved or blanked. A document that
     /// uses one broken image twenty times has one problem, not twenty.
-    private var reportedReferences: Set<String> = []
+    private var reportedReferences: Set<Data> = []
     private(set) var diagnostics: [ExportDiagnostic] = []
 
     private let resourceAccess: ExportResourceAccess?
@@ -31,15 +40,20 @@ final class ExportResourceResolver {
     private let assetsDirectoryName: String
 
     private var aggregateResourceBytes = 0
-    private var packagedIdentities: Set<ExportResourceIdentity> = []
+    private var packagedResources: [ExportResourceIdentity: ExportResource] = [:]
 
     init(
         resourceAccess: ExportResourceAccess?,
         cancellation: ResourceCancellation = ResourceCancellation(),
         unresolvedIsFatal: Bool,
         budget: ExportResourceBudget = .standard,
-        assetsDirectoryName: String = ExportHTMLWriter.defaultAssetsDirectoryName
+        assetsDirectoryName: String = ExportHTMLWriter.defaultAssetsDirectoryName,
+        accounting: ResourceReadAccounting = ResourceReadAccounting(
+            maxAttempts: ExportResourceBudget.maxResourceReadAttempts,
+            maxBytes: ExportResourceBudget.maxResourceReadBytes
+        )
     ) {
+        self.accounting = accounting
         self.resourceAccess = resourceAccess
         self.cancellation = cancellation
         self.unresolvedIsFatal = unresolvedIsFatal
@@ -70,10 +84,10 @@ final class ExportResourceResolver {
         // A document that uses the same image twenty times reads and hashes it
         // once. Repeating that work is the most expensive thing an image-heavy
         // export could do, and it produces nothing new.
-        if let cached = resourcesByReference[url] {
-            return .rewrite(companionReference(for: cached))
+        if let cached = resourcesByReference[Data(url.utf8)] {
+            return .rewrite(companionReference(for: cached.resource))
         }
-        if reportedReferences.contains(url) {
+        if reportedReferences.contains(Data(url.utf8)) {
             return .keep
         }
 
@@ -96,7 +110,7 @@ final class ExportResourceResolver {
     }
 
     func packagedIdentity(for reference: String) -> ExportResourceIdentity? {
-        resourcesByReference[reference]?.identity
+        resourcesByReference[Data(reference.utf8)]?.resource.identity
     }
 
     // MARK: - Local resources
@@ -108,53 +122,76 @@ final class ExportResourceResolver {
                 reason: String(localized: "no resource directory was admitted for this export", bundle: .module)
             )
         }
+        let reference: ResourceReference
+        do { reference = try ResourceReference.parse(url) } catch ResourceReadError.denied {
+            return handleUnresolved(url: url, reason: "resource is outside the document's folder")
+        } catch {
+            return handleUnresolved(url: url, reason: "reference is not a usable file path")
+        }
+        let key = Data(reference.relativePath.utf8)
+        let result: PathResult
+        if let cached = resourcesByPath[key] {
+            result = cached
+        } else {
+            result = try readResource(reference, through: resourceAccess)
+            resourcesByPath[key] = result
+        }
+        switch result {
+        case let .resource(resource):
+            resourcesByReference[Data(url.utf8)] = (url, resource)
+            return .rewrite(companionReference(for: resource))
+        case let .unresolved(reason):
+            return handleUnresolved(url: url, reason: reason)
+        }
+    }
+
+    private func readResource(_ reference: ResourceReference,
+                              through access: ExportResourceAccess) throws -> PathResult {
         let snapshot: ResourceSnapshot
         do {
-            let reference = try ResourceReference.parse(url)
-            // One bounded candidate is read at a time. Only admitted distinct
-            // identities enter the aggregate; a duplicate consumes no quota.
             snapshot = try ContainedResourceReader.read(
-                reference, in: resourceAccess.directory,
-                maxBytes: budget.maxSingleResourceBytes, cancellation: cancellation
+                reference, in: access.directory,
+                maxBytes: budget.maxSingleResourceBytes, cancellation: cancellation, accounting: accounting
             )
         } catch ResourceReadError.cancelled {
             throw CancellationError()
+        } catch ResourceReadError.workLimit {
+            return .unresolved(String(localized: "the export resource read-work limit was reached", bundle: .module))
         } catch ResourceReadError.oversized {
-            return handleUnresolved(url: url, reason: singleLimitReason)
+            return .unresolved(singleLimitReason)
         } catch ResourceReadError.denied {
-            return handleUnresolved(url: url, reason: "resource is outside the document's folder")
+            return .unresolved("resource is outside the document's folder")
         } catch ResourceReadError.invalidReference {
-            return handleUnresolved(url: url, reason: "reference is not a usable file path")
+            return .unresolved("reference is not a usable file path")
         } catch {
-            return handleUnresolved(
-                url: url,
-                reason: String(localized: "resource could not be read through its admitted directory", bundle: .module)
-            )
+            return .unresolved(String(
+                localized: "resource could not be read through its admitted directory",
+                bundle: .module
+            ))
         }
         guard !cancellation.isCancelled else { throw CancellationError() }
         // Use the resolved leaf, not an alias such as image.png -> private.txt.
         let mimeType = ExportMIMEType.mimeType(forFileExtension: (snapshot.name as NSString).pathExtension)
         guard mimeType.hasPrefix("image/") else {
-            return handleUnresolved(url: url, reason: "\(snapshot.name) is not an image file")
+            return .unresolved("\(snapshot.name) is not an image file")
         }
         let resource = ExportResource(
             identity: ExportResourceIdentity(bytes: snapshot.bytes, mimeType: mimeType), bytes: snapshot.bytes
         )
         if let rejection = admit(resource) {
-            return handleUnresolved(url: url, reason: rejection)
+            return .unresolved(rejection)
         }
-        resourcesByReference[url] = resource
-        return .rewrite(companionReference(for: resource))
+        return .resource(packagedResources[resource.identity] ?? resource)
     }
 
     /// Admits a resource against the count and aggregate budgets, returning a
     /// rejection reason when it does not fit. Budgets count *distinct* resources,
     /// so a document that repeats one image is not charged for it twice.
     private func admit(_ resource: ExportResource) -> String? {
-        guard !packagedIdentities.contains(resource.identity) else {
+        guard packagedResources[resource.identity] == nil else {
             return nil
         }
-        guard packagedIdentities.count < budget.maxResourceCount else {
+        guard packagedResources.count < budget.maxResourceCount else {
             return "the export already carries its \(budget.maxResourceCount)-resource limit"
         }
         let (total, overflowed) = aggregateResourceBytes.addingReportingOverflow(resource.bytes.count)
@@ -162,7 +199,7 @@ final class ExportResourceResolver {
             return aggregateLimitReason
         }
         aggregateResourceBytes = total
-        packagedIdentities.insert(resource.identity)
+        packagedResources[resource.identity] = resource
         return nil
     }
 
@@ -184,7 +221,7 @@ final class ExportResourceResolver {
 
     /// Records that a dangerous authored scheme was emptied, once per URL.
     private func reportBlanked(url: String) -> URLDisposition {
-        guard reportedReferences.insert(url).inserted else {
+        guard reportedReferences.insert(Data(url.utf8)).inserted else {
             return .blank
         }
         diagnostics.append(ExportDiagnostic(
@@ -195,7 +232,7 @@ final class ExportResourceResolver {
     }
 
     private func handleUnresolved(url: String, reason: String) -> URLDisposition {
-        guard reportedReferences.insert(url).inserted else {
+        guard reportedReferences.insert(Data(url.utf8)).inserted else {
             return .keep
         }
         let message = "Unresolved resource \"\(url)\": \(reason)."
@@ -208,10 +245,13 @@ final class ExportResourceResolver {
     func frozenManifest() -> ExportManifest {
         var byIdentity: [ExportResourceIdentity: ExportResource] = [:]
         byIdentity.reserveCapacity(resourcesByReference.count)
-        for resource in resourcesByReference.values where byIdentity[resource.identity] == nil {
-            byIdentity[resource.identity] = resource
+        for entry in resourcesByReference.values where byIdentity[entry.resource.identity] == nil {
+            byIdentity[entry.resource.identity] = entry.resource
         }
         let sorted = byIdentity.values.sorted { $0.identity.fileName < $1.identity.fileName }
-        return ExportManifest(resources: sorted, referenceMap: resourcesByReference.mapValues { $0.identity.fileName })
+        return ExportManifest(resources: sorted, referenceMappings: resourcesByReference.map {
+            ExportResourceReferenceMapping(authoredReference: $0.value.reference,
+                                           companionFileName: $0.value.resource.identity.fileName)
+        })
     }
 }

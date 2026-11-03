@@ -53,4 +53,17 @@ struct EmbeddedCommandApplicationTests {
             #expect(throws: (any Error).self) { try EmbeddedCommandApplication.locate(executableURL: cli) }
         }
     }
+
+    @Test func aSymlinkedInfoPlistIsRefusedByThePublicLocator() throws {
+        try withApp { app, cli in
+            let info = app.appendingPathComponent("Contents/Info.plist")
+            let outside = app.deletingLastPathComponent().appendingPathComponent("outside-info.plist")
+            try FileManager.default.moveItem(at: info, to: outside)
+            try FileManager.default.createSymbolicLink(at: info, withDestinationURL: outside)
+            #expect(throws: EmbeddedCommandFailure.invalidContainer) {
+                try EmbeddedCommandApplication.locate(executableURL: cli)
+            }
+            #expect(FileManager.default.fileExists(atPath: outside.path))
+        }
+    }
 }

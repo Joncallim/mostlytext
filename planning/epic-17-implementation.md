@@ -270,7 +270,11 @@ instance identity. A caller-supplied expected instance must match on reconnect;
 otherwise close and report instanceChanged, with no replay, relaunch or retry.
 The hello is compatibility/instance data, not same-UID application authentication.
 Use the existing strict JSON admission and frame caps. Poll at most 50 ms for
-cancellation; connect, accept and hello all consume the caller's finite deadline.
+cancellation; public connect and accept/hello consume the caller's finite
+deadline. The application server's internal idle/greeting phases are separately
+bounded as amended in
+`downstream/cli-idle-and-hello-budgets-2026-11-03.md`; its idle polling deadline
+must not truncate a newly admitted peer's greeting.
 
 Allow changes in CommandBridge endpoint/polling/hello code and its tests only.
 Keep classes non-Sendable with one serialized off-main owner. Tests exercise real
@@ -304,3 +308,16 @@ reproduction are retained rather than retried away.
 An optimized diagnostic harness also completes 2,000 repeated timeout/cancel/
 reconnect exchanges with the corrected source. This is a stress control for the
 observed disconnect race, not a replacement for full hosted or native acceptance.
+
+## Embedded CLI metadata read boundary — 3 November 2026
+
+The enclosing-app locator now reads Info.plist through the Foundation/POSIX
+`CommandApplicationMetadata` helper: nonblocking/no-follow regular-file open,
+64-KiB pre-allocation limit, bounded chunks/growth probe, and descriptor/named
+identity plus size/time checks before returning immutable bytes. A FIFO cannot
+block the ordinary path-following FileHandle open, and a leaf symlink cannot
+supply external metadata. App/signature/launch policy is unchanged; no installed
+application or signed launch is exercised by local controls. The binding source
+unit, real-file tests and limits are in `downstream/bounded-cli-metadata.md`.
+This is source hardening for #18/#183, not installed CLI or signed native
+acceptance. Local app/UI targets compile only; full hosted checks remain required.

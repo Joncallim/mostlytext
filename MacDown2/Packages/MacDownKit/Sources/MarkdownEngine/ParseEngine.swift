@@ -6,7 +6,21 @@ import Yams
 /// The parse owner. An actor so work is serialised and OFF the main thread.
 /// The ONLY file that imports Markdown and Yams (D1, D3).
 public actor ParseEngine: ParseExecuting {
-    public init() {}
+    private var parseSlotIsTaken = false
+    private var queuedParses: [(id: UUID, continuation: CheckedContinuation<Void, any Error>)] = []
+    private let beforeRequest: (@Sendable (Int) -> Void)?
+    private let beforeSynchronousParse: (@Sendable (Int) -> Void)?
+
+    public init() {
+        beforeRequest = nil
+        beforeSynchronousParse = nil
+    }
+
+    init(beforeRequest: @escaping @Sendable (Int) -> Void,
+         beforeSynchronousParse: @escaping @Sendable (Int) -> Void) {
+        self.beforeRequest = beforeRequest
+        self.beforeSynchronousParse = beforeSynchronousParse
+    }
 
     /// Pure: text in → document out.
     public func parse(
@@ -17,20 +31,56 @@ public actor ParseEngine: ParseExecuting {
         dispatchPrecondition(condition: .notOnQueue(.main))
 
         try Task.checkCancellation()
+        beforeRequest?(revision)
 
-        // swift-markdown, the block converter and Yams all recurse once per
-        // nesting level. On a cooperative-pool thread (≈512 KB of stack) a few
-        // KB of hostile or accidental input — `>` repeated ~700 times, deeply
-        // nested emphasis or lists, a YAML flow sequence ~350 deep — overflows
-        // it and kills the app, and a crash during open or session restore
-        // repeats on every relaunch. The synchronous work therefore runs on a
-        // dedicated thread with a large (lazily committed) stack.
-        let document = await Self.runOnLargeStack { [self] in
-            parseSynchronously(text, options: options, revision: revision)
+        let requestID = UUID()
+        return try await withTaskCancellationHandler {
+            try await acquireParseSlot(requestID)
+            defer { releaseParseSlot() }
+            try Task.checkCancellation()
+
+            // swift-markdown, the block converter and Yams all recurse once per
+            // nesting level. On a cooperative-pool thread (≈512 KB of stack) a few
+            // KB of hostile or accidental input — `>` repeated ~700 times, deeply
+            // nested emphasis or lists, a YAML flow sequence ~350 deep — overflows
+            // it and kills the app, and a crash during open or session restore
+            // repeats on every relaunch. The synchronous work therefore runs on a
+            // dedicated thread with a large (lazily committed) stack.
+            let document = await Self.runOnLargeStack { [self] in
+                parseSynchronously(text, options: options, revision: revision)
+            }
+
+            try Task.checkCancellation()
+            return document
+        } onCancel: {
+            Task { await self.cancelQueuedParse(requestID) }
         }
+    }
 
+    private func acquireParseSlot(_ requestID: UUID) async throws {
         try Task.checkCancellation()
-        return document
+        if !parseSlotIsTaken {
+            parseSlotIsTaken = true
+            return
+        }
+        try await withCheckedThrowingContinuation { continuation in
+            queuedParses.append((requestID, continuation))
+        }
+    }
+
+    private func releaseParseSlot() {
+        if queuedParses.isEmpty {
+            parseSlotIsTaken = false
+        } else {
+            let next = queuedParses.removeFirst()
+            next.continuation.resume()
+        }
+    }
+
+    private func cancelQueuedParse(_ requestID: UUID) {
+        guard let index = queuedParses.firstIndex(where: { $0.id == requestID }) else { return }
+        let canceled = queuedParses.remove(at: index)
+        canceled.continuation.resume(throwing: CancellationError())
     }
 
     /// Stack for the parse thread. Only touched pages are committed.
@@ -51,6 +101,7 @@ public actor ParseEngine: ParseExecuting {
         options: MarkdownParseOptions,
         revision: Int
     ) -> MarkdownDocument {
+        beforeSynchronousParse?(revision)
         let sourceMap = SourceMap(text: text)
 
         let extraction = FrontMatterExtractor.extract(from: text)
@@ -84,7 +135,8 @@ public actor ParseEngine: ParseExecuting {
             frontMatter: frontMatter,
             sourceMap: sourceMap,
             revision: revision,
-            options: options
+            options: options,
+            sourceSHA256: MarkdownSourceFingerprint.sha256(text)
         )
     }
 

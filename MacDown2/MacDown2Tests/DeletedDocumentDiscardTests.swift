@@ -43,6 +43,7 @@ struct DeletedDocumentDiscardTests {
             fileTreePreferences: preferences
         )
         coordinator.controllers = [controller]
+        #expect((controller.window as? DocumentWindow)?.documentRepresentedURL == file)
         #expect(try await buffer.load(for: dirty.id, epoch: dirty.recoveryEpoch) == "unsaved words")
 
         await coordinator.discardDeletedDocument(in: controller)

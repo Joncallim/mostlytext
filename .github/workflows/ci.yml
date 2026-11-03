@@ -10,7 +10,16 @@ on:
   pull_request:
     branches: [master, integration-final]
     paths: ['MacDown2/**', '.github/workflows/ci.yml']
-  workflow_dispatch: {}  # allow manual re-runs from the Actions tab / gh CLI
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: macOS 26 architecture for this complete validation run
+        type: choice
+        required: true
+        default: macos-26
+        options:
+          - macos-26
+          - macos-26-intel
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -18,11 +27,10 @@ concurrency:
 
 jobs:
   lint:
-    # macos-26 arm64 is GA since 2026-02 (github.blog changelog). The old
-    # macos-15 fallback ran macOS-26-deployment binaries on a macOS 15 host,
-    # which crashed (SIGBUS) once E06's dependencies exercised newer Swift
-    # runtime paths. Host now matches the deployment target.
-    runs-on: macos-26
+    # Keep ARM as the default. An explicit dispatch can exercise the same
+    # complete checks on supported Intel macOS 26 during ARM capacity outages.
+    # Never use an older OS to execute macOS-26-deployment binaries.
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.runner == 'macos-26-intel' && 'macos-26-intel' || 'macos-26' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -46,11 +54,8 @@ jobs:
         run: swiftlint lint --strict MacDown2
 
   build-and-test:
-    # macos-26 arm64 is GA since 2026-02 (github.blog changelog). The old
-    # macos-15 fallback ran macOS-26-deployment binaries on a macOS 15 host,
-    # which crashed (SIGBUS) once E06's dependencies exercised newer Swift
-    # runtime paths. Host now matches the deployment target.
-    runs-on: macos-26
+    # Both dispatch choices match the deployment OS and run every check.
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.runner == 'macos-26-intel' && 'macos-26-intel' || 'macos-26' }}
     timeout-minutes: 60
     env:
       PR535_DIAGNOSTICS: ${{ github.event_name == 'pull_request' && github.event.number == 535 && github.event.pull_request.head.repo.full_name == github.repository }}
@@ -63,9 +68,12 @@ jobs:
       - name: Select Xcode 26
         run: |
           XCODE=$(ls -d /Applications/Xcode*.app | grep "26" | head -1 || true)
-          if [ -z "$XCODE" ]; then XCODE=$(ls -d /Applications/Xcode*.app | head -1); fi
+          test -n "$XCODE"
+          test "$(sw_vers -productVersion | cut -d. -f1)" = 26
           sudo xcode-select -s "$XCODE/Contents/Developer"
           xcodebuild -version
+          sw_vers
+          uname -m
           if [ "$PR535_DIAGNOSTICS" = true ]; then
             test "$(xcodebuild -version | head -1)" = 'Xcode 26.0.1'
           fi
@@ -236,11 +244,32 @@ jobs:
             exec python3 "$RUNNER_TEMP/pr535-package-diagnostics/diagnostic.py" run
           fi
           swift build --force-resolved-versions
-          # Monitor/save-queue/performance tests share temporary filesystem
-          # resources; concurrent XCTest scheduling makes these load-sensitive
-          # tests exceed their bounded coordination timeouts on CI. Keep the
-          # full suite and its assertions intact, but serialize execution.
-          swift test --no-parallel --force-resolved-versions
+          # Build all tests once. Darwin loads Swift Testing bundles inside
+          # swiftpm-testing-helper: signing a bundle cannot give that process
+          # an identity. Keep installed Xcode untouched and sign an owned copy.
+          swift build --build-tests --force-resolved-versions
+          test_bundle="$(swift build --show-bin-path --force-resolved-versions)/MacDownKitPackageTests.xctest"
+          test_host="$test_bundle/Contents/MacOS/MacDownKitPackageTests"
+          test -f "$test_host"
+          developer="$(xcode-select -p)"
+          helper="$developer/Toolchains/XcodeDefault.xctoolchain/usr/libexec/swift/pm/swiftpm-testing-helper"
+          owned_helper="$RUNNER_TEMP/owned-swiftpm-testing-helper"
+          cp "$helper" "$owned_helper"
+          cmp "$helper" "$owned_helper"
+          shasum -a 256 "$helper"
+          codesign --force --sign - "$owned_helper"
+          codesign --verify --strict "$owned_helper"
+          shasum -a 256 "$helper" "$test_host" "$owned_helper" > "$RUNNER_TEMP/package-test-host.sha256"
+          frameworks="$developer/Platforms/MacOSX.platform/Developer/Library/Frameworks"
+          test -d "$frameworks/Testing.framework"
+          # Keep both frameworks and all assertions. SwiftPM runs XCTest;
+          # the copied, identified helper runs every Swift Testing case.
+          # Existing timing ceilings and serial execution remain unchanged.
+          swift test --skip-build --disable-swift-testing --no-parallel --force-resolved-versions
+          env DYLD_FRAMEWORK_PATH="$frameworks" "$owned_helper" \
+            --test-bundle-path "$test_host" --testing-library swift-testing --no-parallel
+          codesign --verify --strict "$owned_helper"
+          shasum -a 256 -c "$RUNNER_TEMP/package-test-host.sha256"
       - name: Collect fresh package test crash reports
         if: ${{ always() && env.PR535_DIAGNOSTICS == 'true' }}
         run: |

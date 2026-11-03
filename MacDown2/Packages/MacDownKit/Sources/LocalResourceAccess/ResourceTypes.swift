@@ -11,6 +11,8 @@ public enum ResourceReadError: Error, Equatable, Sendable {
     case nonRegular
     /// The object is, or grew, larger than the trusted cap.
     case oversized
+    /// The shared attempt or actual-byte work allowance is exhausted.
+    case workLimit
     /// The object's identity, size or modification time changed while it was being read.
     case changedDuringRead
     case cancelled

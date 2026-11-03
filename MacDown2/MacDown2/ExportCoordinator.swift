@@ -10,6 +10,15 @@ import Themes
 import UniformTypeIdentifiers
 import Workspace
 
+/// The filename policy needs fields, not a presented native save panel.
+@MainActor
+protocol ExportFilenamePanel: AnyObject {
+    var nameFieldStringValue: String { get set }
+    var allowedContentTypes: [UTType] { get set }
+}
+
+extension NSSavePanel: ExportFilenamePanel {}
+
 /// Orchestrates export for the active document: reads the live editor snapshot,
 /// presents the export panel (save location + options), composes the export
 /// off the main actor, and surfaces the result or the error.
@@ -21,6 +30,10 @@ struct ExportCoordinator {
     private let coordinator: WindowCoordinator
     private let themeController: ThemeController
     private let appSettings: AppSettingsModel
+
+    var documentProtections: ExportDocumentProtectionRegistry {
+        coordinator.exportDocumentProtections
+    }
 
     var protectedExportDocumentURLs: [URL] {
         coordinator.sessionControllers.flatMap { controller in
@@ -104,6 +117,7 @@ struct ExportCoordinator {
                 theme: themeController.current,
                 parseOptions: DocumentEditorSplitView.markdownParseOptions(from: appSettings.markdown)
             )
+            try origin.didFreezeInputs()
             let result = try await performExport(
                 snapshot: snapshot,
                 selection: selection,
@@ -188,14 +202,18 @@ struct ExportCoordinator {
 
     /// Starts with the document's name even when AppKit prepopulates the field.
     /// Later format changes preserve whatever name the user has entered.
-    static func initializeFilename(_ format: ExportFormatOption, in panel: NSSavePanel, defaultBaseName: String) {
+    static func initializeFilename(
+        _ format: ExportFormatOption,
+        in panel: any ExportFilenamePanel,
+        defaultBaseName: String
+    ) {
         panel.nameFieldStringValue = defaultBaseName
         apply(format, to: panel, defaultBaseName: defaultBaseName)
     }
 
     /// Keeps the panel's filename and enforced content type in step with the
     /// chosen format, so picking PDF cannot save a PDF named `.html`.
-    static func apply(_ format: ExportFormatOption, to panel: NSSavePanel, defaultBaseName: String) {
+    static func apply(_ format: ExportFormatOption, to panel: any ExportFilenamePanel, defaultBaseName: String) {
         panel.allowedContentTypes = [format.contentType]
 
         let typed = panel.nameFieldStringValue

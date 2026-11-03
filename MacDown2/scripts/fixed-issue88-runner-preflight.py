@@ -59,7 +59,7 @@ def validate_manifest(manifest):
                   *manifest.get('binarySHA256', {}).values()]:
         require(isinstance(value, str) and re.fullmatch(r'[0-9a-f]{64}', value) is not None,
                           'Invalid digest in binding manifest')
-    require(set(manifest.get('binarySHA256', {})) == {'app', 'runner', 'test'},
+    require(set(manifest.get('binarySHA256', {})) == {'app', 'runner', 'test', 'cli'},
                       'Incomplete executable bindings')
 
 
@@ -85,6 +85,25 @@ def check_owner_controlled(path, owner_uid):
         require(not os.access(parent, os.W_OK), 'A binding parent is writable by the test account')
 
 
+def check_framework_link(entry, product_root):
+    # Xcode's signed runner embeds standard versioned frameworks. Permit only
+    # their canonical aliases; arbitrary links and links outside a framework
+    # remain rejected. The real Versions/A tree is walked separately.
+    framework = next((parent for parent in entry.parents if parent.suffix == '.framework'), None)
+    require(framework is not None and not framework.is_symlink(), 'Unreviewed product symlink')
+    require(framework.is_relative_to(product_root), 'Framework escaped product root')
+    relative = entry.relative_to(framework).as_posix()
+    expected = {'Versions/Current': 'A', 'Resources': 'Versions/Current/Resources',
+                framework.stem: 'Versions/Current/' + framework.stem}
+    require(relative in expected and os.readlink(entry) == expected[relative], 'Unreviewed framework alias')
+    try:
+        resolved = entry.resolve(strict=True)
+    except (OSError, RuntimeError) as error:
+        raise Refusal('Broken or cyclic framework alias') from error
+    require(resolved.is_relative_to(framework / 'Versions/A'), 'Framework alias escaped its version')
+    require(not os.access(resolved, os.W_OK), 'Test account may modify a framework alias target')
+
+
 def check_products_immutable(paths, root):
     root = root.resolve(strict=True)
     def reject_write(path):
@@ -106,8 +125,8 @@ def check_products_immutable(paths, root):
             for directory, dirs, files in os.walk(path, followlinks=False, onerror=walk_error):
                 for name in dirs + files:
                     entry = Path(directory) / name
-                    # Reject links until framework link handling is reviewed.
-                    require(not entry.is_symlink(), 'Product tree has an unreviewed symlink')
+                    if entry.is_symlink():
+                        check_framework_link(entry, path)
                     reject_write(entry)
 
 
@@ -187,7 +206,7 @@ def main():
                              test=[EXPECTED_TEST])
     products = args.build_root / 'derived/Build/Products/UITestIsolated'
     check_products_immutable([
-        args.plan, products / 'MacDown2.app', products / 'MacDown2UITests-Runner.app',
+        args.plan, products / 'MacDown2.app', products / 'MacDown2UITests-Runner.app', products / 'mostlytext',
     ], args.build_root)
     try:
         checked = preflight.inspect_build(values)

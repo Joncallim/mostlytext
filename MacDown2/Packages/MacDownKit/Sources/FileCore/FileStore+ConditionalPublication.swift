@@ -10,7 +10,8 @@ extension FileStore {
         temporaryURL: URL,
         destinationURL: URL,
         expectedRevision: FileRevision,
-        hooks: ConditionalPublicationTestHooks?
+        hooks: ConditionalPublicationTestHooks?,
+        stage: FileStoreStage
     ) throws(FileStoreError) {
         var ownership: ConditionalPublicationOwnership = .oursAtTemporary
         let publishedRevision = try readRevision(from: temporaryURL)
@@ -29,24 +30,20 @@ extension FileStore {
         guard FileManager.default.fileExists(atPath: temporaryURL.path) else { return }
         ownership = .displacedExternalAtTemporary
 
-        let displaced: FileRevision
+        let retirement: FileStoreRetirement
         do {
             try hooks?.beforeDisplacedRead?(temporaryURL)
-            displaced = try readRevision(from: temporaryURL)
+            retirement = try stage.approvedDisplacedRetirement(expectedRevision)
         } catch {
             try rollbackOrPreserve(temporaryURL, destinationURL, publishedRevision: publishedRevision, hooks: hooks)
             ownership = .rollbackConfirmed
+            do { try stage.refreshAfterRollback() } catch { throw mapWriteError(error) }
             throw mapWriteError(error)
         }
 
-        guard matchesExpectedBaseline(displaced, expectedRevision) else {
-            try rollbackOrPreserve(temporaryURL, destinationURL, publishedRevision: publishedRevision, hooks: hooks)
-            ownership = .rollbackConfirmed
-            throw .fileChangedDuringRead
-        }
-
         do {
-            try FileManager.default.removeItem(at: temporaryURL)
+            try hooks?.afterDisplacedVerification?(temporaryURL)
+            try retirement.retire()
         } catch {
             throw mapWriteError(error)
         }
@@ -220,6 +217,7 @@ extension FileStore {
 
 struct ConditionalPublicationTestHooks: Sendable {
     let beforeDisplacedRead: (@Sendable (URL) throws -> Void)?
+    let afterDisplacedVerification: (@Sendable (URL) throws -> Void)?
     let beforeRollbackSwap: (@Sendable (URL, URL) throws -> Void)?
     /// Behave as on a volume whose exchange returns `ENOTSUP`.
     let simulateSwapUnsupported: Bool
@@ -228,11 +226,13 @@ struct ConditionalPublicationTestHooks: Sendable {
 
     init(
         beforeDisplacedRead: (@Sendable (URL) throws -> Void)? = nil,
+        afterDisplacedVerification: (@Sendable (URL) throws -> Void)? = nil,
         beforeRollbackSwap: (@Sendable (URL, URL) throws -> Void)? = nil,
         simulateSwapUnsupported: Bool = false,
         swapOverride: (@Sendable (URL, URL) -> Int32)? = nil
     ) {
         self.beforeDisplacedRead = beforeDisplacedRead
+        self.afterDisplacedVerification = afterDisplacedVerification
         self.beforeRollbackSwap = beforeRollbackSwap
         self.simulateSwapUnsupported = simulateSwapUnsupported
         self.swapOverride = swapOverride

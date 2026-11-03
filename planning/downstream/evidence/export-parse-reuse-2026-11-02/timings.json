@@ -1,0 +1,71 @@
+{
+  "baseline": "025b89f96f58063e522d7823e890c4cace1f057b",
+  "layer": "Release parser component; two parses versus one parse plus consumed cache; no app/renderer/IO/whole-export claim",
+  "samples": [
+    {
+      "checksum": 1048649,
+      "corpus": "ordinary",
+      "iteration": 1,
+      "oneParseAndReuseMilliseconds": 220.117708,
+      "sourceBytes": 1048648,
+      "twoParsesMilliseconds": 454.94475
+    },
+    {
+      "checksum": 1048650,
+      "corpus": "ordinary",
+      "iteration": 2,
+      "oneParseAndReuseMilliseconds": 220.712708,
+      "sourceBytes": 1048648,
+      "twoParsesMilliseconds": 441.350125
+    },
+    {
+      "checksum": 1048651,
+      "corpus": "ordinary",
+      "iteration": 3,
+      "oneParseAndReuseMilliseconds": 226.420708,
+      "sourceBytes": 1048648,
+      "twoParsesMilliseconds": 446.11275
+    },
+    {
+      "checksum": 1060117,
+      "corpus": "technical",
+      "iteration": 1,
+      "oneParseAndReuseMilliseconds": 300.18825,
+      "sourceBytes": 1048593,
+      "twoParsesMilliseconds": 598.767708
+    },
+    {
+      "checksum": 1060118,
+      "corpus": "technical",
+      "iteration": 2,
+      "oneParseAndReuseMilliseconds": 299.417375,
+      "sourceBytes": 1048593,
+      "twoParsesMilliseconds": 592.285375
+    },
+    {
+      "checksum": 1060119,
+      "corpus": "technical",
+      "iteration": 3,
+      "oneParseAndReuseMilliseconds": 301.105458,
+      "sourceBytes": 1048593,
+      "twoParsesMilliseconds": 598.550541
+    }
+  ],
+  "medians": {
+    "ordinary": {
+      "beforeMs": 446.11275,
+      "afterMs": 220.712708,
+      "savedMs": 225.400042,
+      "sourceBytes": 1048648
+    },
+    "technical": {
+      "beforeMs": 598.550541,
+      "afterMs": 300.18825,
+      "savedMs": 298.36229099999997,
+      "sourceBytes": 1048593
+    }
+  },
+  "swift": "Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)\nTarget: arm64-apple-macosx26.0",
+  "macOS": "ProductName:\t\tmacOS\nProductVersion:\t\t26.5.1\nBuildVersion:\t\t25F80",
+  "architecture": "arm64"
+}

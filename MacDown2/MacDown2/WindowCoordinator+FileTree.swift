@@ -1,5 +1,6 @@
 import AppKit
 import Foundation
+import Workspace
 
 extension WindowCoordinator {
     var keyFolderRoot: URL? {
@@ -71,6 +72,12 @@ extension WindowCoordinator {
         guard let controller = keyFolderCommandController(),
               let selected = controller.fileTreeModel.selectedURL,
               let window = controller.window else { return }
+        let confirmation = FileTreeTrashConfirmation(
+            model: controller.fileTreeModel, source: selected
+        ) { [weak controller, weak window] in
+            guard let controller, let window else { return false }
+            return !controller.isClosed && controller.window === window
+        }
         let alert = NSAlert()
         alert.messageText = String(localized: "Move \"\(selected.lastPathComponent)\" to Trash?")
         alert.informativeText = String(localized: "You can recover it from the Trash in Finder.")
@@ -79,12 +86,11 @@ extension WindowCoordinator {
         alert.addButton(withTitle: String(localized: "Cancel"))
         alert.beginSheetModal(for: window) { [weak self, weak controller] response in
             guard response == .alertFirstButtonReturn, let self, let controller else { return }
-            let context = controller.fileTreeModel.beginOperation()
             Task { @MainActor in
                 do {
-                    let result = try await controller.fileTreeModel.moveToTrash(selected, context: context)
+                    guard let result = try await confirmation.run() else { return }
                     self.documentFileWasDeleted(at: result.url)
-                } catch where controller.fileTreeModel.isCurrent(context) {
+                } catch where confirmation.isCurrent {
                     controller.fileTreeModel.recordOperationError(error)
                 } catch {}
             }
@@ -160,18 +166,30 @@ extension WindowCoordinator {
         }
     }
 
-    /// - Parameter relativeTo: when non-`nil`, the panel presents against
-    ///   this window explicitly and the chosen folder opens in it — used by
-    ///   the command palette so both the panel and the resulting root
-    ///   target the window the palette was opened from, not whatever
-    ///   window happens to be key once this `await` resolves (post-review
-    ///   finding #4). `nil` (the real menu path) keeps the previous
-    ///   ambient, `NSApp.keyWindow`-relative behavior for both.
-    func chooseFolder(relativeTo controller: WindowController? = nil) {
-        Task { @MainActor in
-            let provider = controller.map { NSFilePanelProvider(window: $0.window) } ?? panelProvider
-            guard let url = await provider.chooseFolder() else { return }
-            openFolder(url, in: controller)
+    /// Capture the originating document before scheduling or presenting a
+    /// panel. With no document, acceptance creates a separate window; a later
+    /// document cannot borrow that earlier application-level choice.
+    @discardableResult
+    func chooseFolder(relativeTo controller: WindowController? = nil,
+                      using injectedPanel: (any FilePanelProviding)? = nil) -> Task<Void, Never> {
+        let origin = controller ?? folderTargetController(createIfNeeded: false)
+        let hadOrigin = origin != nil
+        let provider = injectedPanel ?? origin.map { NSFilePanelProvider(window: $0.window) }
+            ?? NSFilePanelProvider(applicationWindow: nil)
+        return Task { @MainActor [weak self, weak origin] in
+            guard !Task.isCancelled, let self else { return }
+            if hadOrigin {
+                guard let origin, !origin.isClosed, controllers.contains(where: { $0 === origin }) else { return }
+            }
+            guard let url = await provider.chooseFolder(), !Task.isCancelled else { return }
+            if hadOrigin {
+                guard let origin, !origin.isClosed, controllers.contains(where: { $0 === origin }) else { return }
+                openFolder(url, in: origin)
+            } else {
+                newDocument()
+                guard let created = controllers.last else { return }
+                openFolder(url, in: created)
+            }
         }
     }
 

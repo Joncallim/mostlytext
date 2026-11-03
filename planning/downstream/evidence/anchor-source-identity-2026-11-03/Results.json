@@ -1,0 +1,51 @@
+{
+  "results": [
+    {
+      "inputKind": "native",
+      "medianMilliseconds": 0.41975,
+      "samplesMilliseconds": [
+        0.433291,
+        0.405958,
+        0.41975
+      ],
+      "sha256": "5c2936e25bd853233adfbd826abc1e2e07b5845969309d03bdf528e0a100855d",
+      "utf8Bytes": 1048585
+    },
+    {
+      "inputKind": "bridged",
+      "medianMilliseconds": 0.402833,
+      "samplesMilliseconds": [
+        0.402833,
+        0.422834,
+        0.402792
+      ],
+      "sha256": "5c2936e25bd853233adfbd826abc1e2e07b5845969309d03bdf528e0a100855d",
+      "utf8Bytes": 1048585
+    },
+    {
+      "inputKind": "native",
+      "medianMilliseconds": 3.836792,
+      "samplesMilliseconds": [
+        3.839542,
+        3.811709,
+        3.836792
+      ],
+      "sha256": "18e08b9fc65a539ca7f47a96fdb3663e2e9131382c4caec60e3e36e0ec85f80b",
+      "utf8Bytes": 10485769
+    },
+    {
+      "inputKind": "bridged",
+      "medianMilliseconds": 3.824375,
+      "samplesMilliseconds": [
+        3.819292,
+        3.842708,
+        3.824375
+      ],
+      "sha256": "18e08b9fc65a539ca7f47a96fdb3663e2e9131382c4caec60e3e36e0ec85f80b",
+      "utf8Bytes": 10485769
+    }
+  ],
+  "scope": "Optimized warm fingerprint component only; no full parse, app, peak-memory or native budget claim",
+  "sourceSHA256": "ac2e5986b1bbab95c5eae574a47001c316ccffd61435f54eea39d5dde6a26535",
+  "compilerMode": "swiftc -O"
+}

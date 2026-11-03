@@ -20,6 +20,13 @@ enum ExportPublicationFilesystem {
         let inode: UInt64
         let kind: mode_t
         let size: Int64
+        let birthSeconds: Int64
+        let birthNanoseconds: Int64
+        let owner: uid_t
+        let group: gid_t
+        let permissions: mode_t
+        let links: nlink_t
+        let flags: UInt32
         let modifiedSeconds: Int64
         let modifiedNanoseconds: Int64
         let changedSeconds: Int64
@@ -30,6 +37,13 @@ enum ExportPublicationFilesystem {
             inode = UInt64(info.st_ino)
             kind = info.st_mode & mode_t(S_IFMT)
             size = info.st_size
+            birthSeconds = Int64(info.st_birthtimespec.tv_sec)
+            birthNanoseconds = Int64(info.st_birthtimespec.tv_nsec)
+            owner = info.st_uid
+            group = info.st_gid
+            permissions = info.st_mode & 0o7777
+            links = info.st_nlink
+            flags = info.st_flags
             modifiedSeconds = Int64(info.st_mtimespec.tv_sec)
             modifiedNanoseconds = Int64(info.st_mtimespec.tv_nsec)
             changedSeconds = Int64(info.st_ctimespec.tv_sec)
@@ -193,27 +207,8 @@ enum ExportPublicationFilesystem {
 
     static func retireTemporary(_ bytes: Data, name: String, expected: Stamp, in directory: Int32,
                                 afterQuarantine: ((String) -> Void)? = nil) throws {
-        let parts = name.split(separator: "-")
-        let prefix = parts.count > 2 && parts[1].utf8.count == 64 ? ".mt-" + parts[1] + "-" : ".mt-"
-        let quarantine = prefix + UUID().uuidString + ".retired"
-        guard renameatx_np(directory, name, directory, quarantine, UInt32(RENAME_EXCL)) == 0 else {
-            if errno == ENOENT {
-                return
-            }
-            throw posixFailure()
-        }
-        afterQuarantine?(quarantine)
-        do {
-            guard let actual = try existingBytes(bytes, named: quarantine, in: directory, observingCancellation: false),
-                  actual.device == expected.device, actual.inode == expected.inode, actual.kind == expected.kind
-            else { throw ExportError.unsafePublication }
-            guard unlinkat(directory, quarantine, 0) == 0 else { throw posixFailure() }
-        } catch {
-            // Never overwrite a writer that occupied the original name during inspection.
-            guard renameatx_np(directory, quarantine, directory, name, UInt32(RENAME_EXCL)) == 0
-            else { throw recoveryRequired(directory: directory, name: quarantine) }
-            throw error
-        }
+        let receipt = try ExportOwnedFileReceipt(bytes: bytes, stamp: expected)
+        try ExportFileRetirement.retire(receipt, name: name, in: directory, afterQuarantine: afterQuarantine)
     }
 
     static func posixFailure() -> ExportError {
@@ -244,7 +239,11 @@ enum ExportPublicationFilesystem {
             throw error
         }
         if !retainOnSuccess {
-            try retireTemporary(bytes, name: name, expected: stamp, in: directory)
+            // The owned body can link this inode to its final companion name;
+            // capture that legitimate link/change-time update before cleanup.
+            var final = stat()
+            guard fstat(descriptor, &final) == 0 else { throw posixFailure() }
+            try retireTemporary(bytes, name: name, expected: Stamp(final), in: directory)
         }
         return result
     }
@@ -255,7 +254,7 @@ enum ExportPublicationFilesystem {
         try retireTemporary(bytes, name: name, expected: Stamp(info), in: directory)
     }
 
-    private static func recoveryRequired(directory: Int32, name: String) -> ExportError {
+    static func recoveryRequired(directory: Int32, name: String) -> ExportError {
         var buffer = [UInt8](repeating: 0, count: Int(MAXPATHLEN))
         let result = buffer.withUnsafeMutableBytes { raw -> Int32 in
             guard let pointer = raw.baseAddress else { return -1 }

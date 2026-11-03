@@ -29,6 +29,7 @@ public enum ExportError: Error, LocalizedError, CustomStringConvertible {
     case validatedPublicationRejected
     /// Generated image substitution authority is absent, stale or malformed.
     case invalidResourceSlots
+    case invalidSourceSnapshot
     /// Destination/sidecar identity or ownership could not be retained.
     case unsafePublication
     case destinationChanged
@@ -75,6 +76,11 @@ public enum ExportError: Error, LocalizedError, CustomStringConvertible {
             )
         case .invalidResourceSlots:
             return String(localized: "The export image references could not be safely assembled.", bundle: .module)
+        case .invalidSourceSnapshot:
+            return String(
+                localized: "The export inputs no longer match their prepared source. Try exporting again.",
+                bundle: .module
+            )
         case .validatedPublicationRejected:
             return String(
                 localized: "The generated diagram could not be safely included in this export.",
@@ -122,7 +128,7 @@ public enum ExportError: Error, LocalizedError, CustomStringConvertible {
                 localized: "Choose another export name or destination. Existing files have been preserved.",
                 bundle: .module
             )
-        case .invalidResourceSlots:
+        case .invalidResourceSlots, .invalidSourceSnapshot:
             String(localized: "Try exporting again from the original document.", bundle: .module)
         case .validatedPublicationRejected:
             String(localized: "Try exporting the diagram as its authored source.", bundle: .module)

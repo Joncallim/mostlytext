@@ -1,0 +1,75 @@
+import CryptoKit
+import Darwin
+import Foundation
+
+/// Minted only from known staging bytes and their observed object. Reading a
+/// pathname or decoding external metadata does not establish this authority.
+struct ExportOwnedFileReceipt {
+    typealias Stamp = ExportPublicationFilesystem.Stamp
+    let stamp: Stamp
+    let digest: SHA256.Digest
+
+    init(bytes: Data, stamp: Stamp) throws {
+        guard stamp.kind == mode_t(S_IFREG), stamp.size == bytes.count,
+              bytes.count <= ExportResourceBudget.maxFinalHTMLUTF8Bytes else { throw ExportError.unsafePublication }
+        self.stamp = stamp
+        digest = SHA256.hash(data: bytes)
+    }
+
+    func matchesMetadata(_ actual: Stamp) -> Bool {
+        stamp.device == actual.device && stamp.inode == actual.inode && stamp.kind == actual.kind
+            && stamp.size == actual.size && stamp.birthSeconds == actual.birthSeconds
+            && stamp.birthNanoseconds == actual.birthNanoseconds
+            && stamp.modifiedSeconds == actual.modifiedSeconds && stamp.modifiedNanoseconds == actual
+            .modifiedNanoseconds
+            && stamp.owner == actual.owner && stamp.group == actual.group && stamp.permissions == actual.permissions
+            && stamp.links == actual.links && stamp.flags == actual.flags
+    }
+}
+
+enum ExportReceiptInspection {
+    private typealias Filesystem = ExportPublicationFilesystem
+
+    static func verify(_ receipt: ExportOwnedFileReceipt, name: String, in directory: Int32,
+                       matching snapshot: ExportPublicationFilesystem.Stamp? = nil,
+                       afterOpen: (() throws -> Void)? = nil) throws -> Bool {
+        guard !name.isEmpty, name != ".", name != "..", !name.utf8.contains(0), !name.utf8.contains(UInt8(ascii: "/"))
+        else { throw ExportError.unsafePublication }
+        let descriptor = openat(directory, name, O_RDONLY | O_NONBLOCK | O_NOFOLLOW | O_CLOEXEC)
+        guard descriptor >= 0 else { throw ExportError.unsafePublication }
+        defer { _ = Darwin.close(descriptor) }
+        var initial = stat()
+        guard fstat(descriptor, &initial) == 0 else { throw Filesystem.posixFailure() }
+        let observed = Filesystem.Stamp(initial)
+        guard receipt.matchesMetadata(observed), observed == (snapshot ?? receipt.stamp) else { return false }
+        try afterOpen?()
+        let digest = try hash(descriptor, expectedBytes: Int(observed.size))
+        var final = stat()
+        guard fstat(descriptor, &final) == 0 else { throw Filesystem.posixFailure() }
+        let named = try Filesystem.childStamp(name, in: directory)
+        return Filesystem.Stamp(final) == observed && receipt.digest == digest && named == observed
+    }
+
+    private static func hash(_ descriptor: Int32, expectedBytes: Int) throws -> SHA256.Digest {
+        var hasher = SHA256()
+        var buffer = [UInt8](repeating: 0, count: 64 * 1024)
+        var total = 0
+        while true {
+            let remaining = expectedBytes - total
+            let wanted = remaining >= buffer.count ? buffer.count : remaining + 1
+            let count = Darwin.read(descriptor, &buffer, wanted)
+            if count < 0, errno == EINTR {
+                continue
+            }
+            guard count >= 0 else { throw ExportPublicationFilesystem.posixFailure() }
+            if count == 0 {
+                break
+            }
+            guard count <= remaining else { throw ExportError.unsafePublication }
+            total += count
+            buffer.withUnsafeBytes { hasher.update(bufferPointer: UnsafeRawBufferPointer(rebasing: $0.prefix(count))) }
+        }
+        guard total == expectedBytes else { throw ExportError.unsafePublication }
+        return hasher.finalize()
+    }
+}

@@ -1,3 +1,4 @@
+import AppKit
 import FileCore
 import Foundation
 @testable import MacDown2
@@ -9,6 +10,14 @@ import Workspace
 /// awaits makes `closeAfterRetire` keep the window open, but on the RETIRED lifetime.
 @MainActor
 struct WindowCloseRetiredLifetimeTests {
+    private final class CloseRequestProbe: NSObject, NSWindowDelegate {
+        var attempts = 0
+        func windowShouldClose(_: NSWindow) -> Bool {
+            attempts += 1
+            return false
+        }
+    }
+
     @Test func anEditDuringASuccessfulCloseRetireLeavesTheWindowRecoverable() async throws {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)
@@ -26,7 +35,11 @@ struct WindowCloseRetiredLifetimeTests {
         let coordinator = try #require(helpers.makeCoordinator(directory: directory, recoveryBuffer: buffer))
         let controller = helpers.makeWindowController(model: model, coordinator: coordinator)
         coordinator.controllers = [controller]
+        let closeRequest = CloseRequestProbe()
+        let window = try #require(controller.window)
+        window.delegate = closeRequest
         defer {
+            window.delegate = controller
             coordinator.removeController(controller)
             controller.close()
         }
@@ -39,6 +52,9 @@ struct WindowCloseRetiredLifetimeTests {
         model.tabStore.updateActiveDocument { $0.updatingText("typed during the retire") }
         await controller.closeAfterRetire(of: document)
         #expect(coordinator.controllers.contains { $0 === controller })
+        #expect(closeRequest.attempts == 1, "edited content must request the close flow again")
+        #expect(model.activeDocument?.recoveryEpoch != document.recoveryEpoch)
+        #expect(window.attachedSheet == nil)
 
         // The window is open with unsaved text. Its recovery must still be writable.
         let current = try #require(model.activeDocument)

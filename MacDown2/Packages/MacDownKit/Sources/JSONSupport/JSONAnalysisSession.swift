@@ -61,6 +61,7 @@ public final class JSONAnalysisSession {
     private var pendingTask: Task<Void, Never>?
     private var pendingGeneration = 0
     private var lastText = ""
+    private var immediateAnalysisCount = 0
 
     /// `debounce` is injectable so tests run fast; production uses the default.
     public init(debounce: Duration = .milliseconds(150)) {
@@ -119,6 +120,11 @@ public final class JSONAnalysisSession {
             let analyze = analyze
             return await Task.detached(priority: .utility) { analyze(text) }.value
         }
+        immediateAnalysisCount += 1
+        defer {
+            immediateAnalysisCount -= 1
+            refreshAnalyzingState()
+        }
         lastText = text
         pendingGeneration += 1
         let generation = pendingGeneration
@@ -133,8 +139,8 @@ public final class JSONAnalysisSession {
     public func cancelPending() {
         pendingTask?.cancel()
         pendingTask = nil
-        isAnalyzing = false
         pendingGeneration += 1
+        refreshAnalyzingState()
     }
 
     // MARK: - Analysis
@@ -143,7 +149,7 @@ public final class JSONAnalysisSession {
     @discardableResult
     private func analyzeAndPublish(text: String, generation: Int) async -> JSONAnalysisResult {
         isAnalyzing = true
-        defer { isAnalyzing = pendingTask != nil }
+        defer { refreshAnalyzingState() }
 
         let analyze = analyze
         let outcome = await Task.detached(priority: .utility) {
@@ -162,7 +168,13 @@ public final class JSONAnalysisSession {
     private func clearIfCurrent(generation: Int) {
         guard pendingGeneration == generation else { return }
         pendingTask = nil
-        isAnalyzing = false
+        refreshAnalyzingState()
+    }
+
+    /// Actual immediate workers remain busy until they return, even when their
+    /// publication was cancelled or a newer generation already completed.
+    private func refreshAnalyzingState() {
+        isAnalyzing = pendingTask != nil || immediateAnalysisCount > 0
     }
 }
 

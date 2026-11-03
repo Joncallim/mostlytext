@@ -19,6 +19,10 @@ public struct MarkdownDocument: Sendable, Equatable {
     /// Line table of the ORIGINAL source (front matter included).
     public let sourceMap: SourceMap
 
+    /// Digest of the complete immutable input consumed by ParseEngine, including
+    /// front-matter delimiters and whitespace. Nil on unbound manual models.
+    public let sourceSHA256: String?
+
     /// The revision passed to the parse that produced this document.
     public let revision: Int
 
@@ -33,7 +37,8 @@ public struct MarkdownDocument: Sendable, Equatable {
         frontMatter: FrontMatter?,
         sourceMap: SourceMap,
         revision: Int,
-        options: MarkdownParseOptions
+        options: MarkdownParseOptions,
+        sourceSHA256: String? = nil
     ) {
         self.body = body
         self.bodyLineOffset = bodyLineOffset
@@ -41,6 +46,7 @@ public struct MarkdownDocument: Sendable, Equatable {
         self.headings = headings
         self.frontMatter = frontMatter
         self.sourceMap = sourceMap
+        self.sourceSHA256 = sourceSHA256
         self.revision = revision
         self.options = options
     }

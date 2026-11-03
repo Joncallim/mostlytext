@@ -873,3 +873,23 @@ Epic 9 is implemented and merged. The Release `tenThousandEntryListingArrangemen
 - **`FileTree` imports `FileCore`, `Foundation`, `Observation`, `Dispatch` — nothing else** (D1). No `SwiftUI`, no `AppKit`, no `Workspace`.
 - **The watcher never touches an open document** (D11/§2.6). In-app CRUD does. External changes to open documents are E18's, and E18 must not have to depend on this module.
 - **No `Package.swift` / `project.yml` / `ci.yml` diff** (§6). The target, the product, the test target, and the app dependency all already exist.
+
+## Trash confirmation origin — 3 November 2026
+
+Both Folder-menu and row-context-menu Trash actions now construct one
+FileTreeTrashConfirmation before presenting their sheet. It retains the
+original URL and existing FileTreeOperationContext, and checks weak origin
+validity before invoking the model. Root replacement, including A -> B -> A,
+window close and task cancellation cannot acquire a fresh context at response
+time. Existing mutation/result propagation remains unchanged. Tests use the real
+model with in-memory preferences/reader/watcher and a recording mutator; no local
+system Trash or native sheet is exercised. `downstream/async-ui-publication-review.md`
+records the binding source unit. This fixes delayed UI authority, not the broader
+path-based mutator/external-writer race or native filesystem acceptance.
+
+Open Folder now captures its existing controller or explicit no-document intent
+before scheduling the panel. Focus changes cannot retarget it; a closed origin
+cancels completion. With no document at dispatch, cancellation creates no window
+and acceptance creates its own window even if a document opened meanwhile.
+Gated FilePanelProviding app tests cover all four paths without a native panel;
+the actual app-target execution remains hosted-only locally.

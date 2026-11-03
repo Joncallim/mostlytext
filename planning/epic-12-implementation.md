@@ -6,6 +6,23 @@
 > **Architecture date:** 2026-08-17
 > **Review status:** Final adversarial pass complete; implementation begins with Slice 0 only
 
+## 2026-11-03 owned scratch verification amendment
+
+Normal/cancelled staging retirement now binds known bytes to an in-memory
+receipt with birth time, ownership, permissions, link count, flags and existing
+device/inode/type/size/time metadata. Check the complete captured stamp before
+quarantine, then capture the post-rename stamp before any inspection hook. Stream
+SHA-256 in bounded 64-KiB chunks and recheck opened/named metadata before unlink.
+Changed objects restore without replacement or retain an explicit recovery URL.
+The owned staging descriptor supplies the final receipt after legitimate link
+operations; this does not establish arbitrary same-UID writer exclusion.
+
+See [export-owned-file-receipts.md](downstream/export-owned-file-receipts.md).
+The receipt has no external decoder or producer identity claim. Durable private
+journals, automatic crash repair, native printer scratch ownership and final
+Release/native/independent acceptance remain open. No filename or adjacent
+JSON/xattr is granted cleanup authority by this change.
+
 ## 2026-11-02 ordinary publication amendment
 
 Ordinary HTML now uses the descriptor-relative writer shared with the optional
@@ -1216,3 +1233,48 @@ against files opened later. Unknown printer-scratch ownership and automatic
 crash repair remain follow-on source/native-probe gates. Full PDF/menu/native
 acceptance, Release calibration, final language review and independent release
 review remain unperformed. Local app/test targets compile only.
+
+## Bounded resource read work — 2 November 2026
+
+The resolver now caches each parsed root-relative path by exact UTF-8 bytes,
+including first refusals. Query, fragment and percent/dot spellings reuse the
+same immutable result; authored references still receive individual manifest
+mappings. Canonical-equivalent Unicode filenames are not collapsed. Different
+filesystem aliases must still use the constrained reader and consume work.
+Accepted duplicate content reuses one retained payload value.
+
+One thread-safe reader accounting object bounds an export to provisional 4,096
+attempts and 256 MiB of actual positive syscall results. Failed/mutated/non-image
+reads consume work too. Each in-flight attempt can read at most one excess
+probe byte to detect EOF/growth; exhaustion prevents further attempts. The
+existing 512-resource, 32-MiB per-file and 128-MiB distinct-payload ceilings stay
+unchanged. Other contained-reader callers retain their existing policy without
+an accounting object. Exhaustion retains ordinary warning versus fatal
+self-contained/PDF behavior, with a catalogued English reason for final E16.
+
+`downstream/bounded-export-resource-work.md` records the binding source unit,
+private real-file controls and limits. This closes repeated input work beyond
+distinct-payload accounting; it does not establish empirical final budgets,
+crash repair, global late-open document exclusion, printer scratch ownership,
+native acceptance or independent release review. Local app targets compile
+only and held functionality remains disabled.
+
+## Live document protection and frozen ordinary origins — 3 November 2026
+
+Every ordinary export registers its retained destination admission and weak
+lifetime lease before rendering. Incoming controller/CLI-stage pools and changed
+tab file identities synchronously check current paths and retained physical file
+identities before publishing them. A newly opened alias revokes the export's
+publication lease; unrelated opens and keystroke-only edits do not. Inactive
+tab insertion is included. The existing lease cutoff linearizes document
+publication/revocation against final primary promotion inside this process.
+
+Ordinary origins now have an explicit post-panel frozen-input phase: source,
+resource capability, presentation and target are fixed before the first render
+await. A Save As or folder change in the same logical tab then leaves those
+inputs valid; tab switch/removal and window close still cancel. Pre-panel and
+disabled validated origins keep strict identity revocation. No source or UI
+retargeting is introduced. The binding source unit and proof limits are in
+`downstream/live-export-document-protection.md`. This is not arbitrary external
+writer exclusion, filesystem compare-and-swap, crash recovery, printer ownership
+or final native acceptance. Local app/UI targets compile only.

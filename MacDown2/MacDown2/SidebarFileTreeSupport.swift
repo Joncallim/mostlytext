@@ -206,22 +206,24 @@ struct FileTreeRowView: View {
     }
 
     private func requestMoveToTrash() {
+        guard let window = NSApp.keyWindow ?? NSApp.mainWindow else { return }
+        let confirmation = FileTreeTrashConfirmation(model: model, source: row.entry.url) { [weak window] in
+            window?.isVisible == true
+        }
         let alert = NSAlert()
         alert.messageText = String(localized: "Move \"\(row.entry.name)\" to Trash?")
         alert.informativeText = String(localized: "You can recover it from the Trash in Finder.")
         alert.alertStyle = .warning
         alert.addButton(withTitle: String(localized: "Move to Trash"))
         alert.addButton(withTitle: String(localized: "Cancel"))
-        guard let window = NSApp.keyWindow ?? NSApp.mainWindow else { return }
         alert.beginSheetModal(for: window) { response in
             guard response == .alertFirstButtonReturn else { return }
             Task { @MainActor in
-                let context = model.beginOperation()
                 do {
-                    let result = try await model.moveToTrash(row.entry.url, context: context)
+                    guard let result = try await confirmation.run() else { return }
                     didDelete(result.url)
                 } catch {
-                    if model.isCurrent(context) {
+                    if confirmation.isCurrent {
                         model.recordOperationError(error)
                     }
                 }

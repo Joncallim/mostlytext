@@ -121,7 +121,8 @@ extension FileStore {
         _ temporaryURL: URL,
         to url: URL,
         expectedRevision: FileRevision?,
-        requireAbsent: Bool
+        requireAbsent: Bool,
+        stage: FileStoreStage
     ) throws(FileStoreError) {
         do {
             if let expectedRevision {
@@ -129,7 +130,8 @@ extension FileStore {
                     temporaryURL: temporaryURL,
                     destinationURL: url,
                     expectedRevision: expectedRevision,
-                    hooks: conditionalPublicationHooks
+                    hooks: conditionalPublicationHooks,
+                    stage: stage
                 )
             } else if requireAbsent {
                 try publishExclusively(temporaryURL, to: url)
