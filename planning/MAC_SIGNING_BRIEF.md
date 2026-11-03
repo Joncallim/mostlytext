@@ -15,26 +15,37 @@ one bounded session on the owner's Mac. It:
 The aim is to prove the whole pipeline and fix any signing or entitlement
 problem now, rather than during E17. It publishes nothing.
 
-**Status: execution held.** Source integration is on `integration-final`; the
-owner's Daybreak/signing and fresh-account acceptance gates remain open. Do not
-run the signing pipeline on frozen `master` or treat fixture results as signed
-release evidence.
+**Current status — 3 November 2026.** Application source and the engineering
+backlog are now in `Joncallim/mostlytext` on `main`. The app uses display name
+MostlyText and bundle ID `app.mostlytext.MostlyText`; the internal build product
+remains `MacDown2.app`. The public CLI is `mostlytext`, built with scheme
+`MostlyTextCLI` (target/module `MostlyTextCommand`), with required embedded
+helper `Contents/MacOS/mostlytext-cli`.
 
-**What it builds.** The development app remains `MacDown2.app` with bundle ID
-`com.joncallim.MacDown2`, pending the #158 identity cutover. The public CLI is
-`mostlytext`, built with scheme `MostlyTextCLI` (target/module
-`MostlyTextCommand`); the app embeds `Contents/MacOS/mostlytext-cli`. The script
-requires both executable products and packages the standalone command as
-`mostlytext.zip`. E17 repeats this pipeline on the eventual approved MostlyText
-release candidate. Nothing this preparatory work produces is published.
+Actual CORTANA checks found a valid **Developer ID Application: Jonathan Lim
+(968BRM85G5)** identity. The documented script's `--preflight-only` mode then
+stopped because keychain profile `mostlytext-notary` is absent. Certificate
+presence completes discovery, not an actual signing/notarization proof. No new
+certificate or key export is needed merely to repeat this discovery.
 
-Everything else about the release (licensing, website, planning, CI) stays in
-cloud sessions.
+Native acceptance is also blocked in the current session: UID501 is the console
+user, mostlytexttest (UID502) has no GUI domain, protected staging is absent and
+nonprompting administrator access is unavailable. Existing native receipts remain
+bound to their original source; do not repoint them at a different build.
+
+The strict release check against the compiled brand candidate reports **six**
+existing D2/Mermaid/Graphviz provenance/source-publication failures under
+[MostlyText #14](https://github.com/Joncallim/mostlytext/issues/14). Source and
+nonrelease artifact checks pass. These are different gates. See
+[acceptance status](ACCEPTANCE_STATUS.md) and [identity handoff](IDENTITY.md).
+
+Nothing produced by this preparatory work is published. Application code,
+credentials, signing policy and native protection are not changed by this brief.
 
 ## Rules
 
 1. **Never publish.** No GitHub Release, tag, appcast, website deploy,
-   notarised file upload, or push to `master`. Changes and evidence go on a
+   notarised file upload, or direct push to `main`. Changes and evidence go on a
    branch through a pull request.
 2. **No credentials in the repository, logs or screenshots.** That covers
    certificates, `.p12`/`.cer`/`.p8` files, private keys, app-specific
@@ -89,19 +100,25 @@ file name or label whether a failure is acceptable.
 | `--dry-run` | **This tranche.** Proves the pipeline on a pre-cutover build that is never published | Recorded as `UNVERIFIED (dry run)` in `summary.txt`; the run continues |
 | `--release-candidate` | **E17 only**, for a build that may be published | The run stops. A failing licence gate stops it before anything is sent to Apple. It also refuses to start from a working tree with uncommitted changes |
 
-The licence gate is `compliance.py check --release --artifact <app>`. It is
-expected to fail in this dry run: the licences screen (LC-08), the LC-05 lock
-file and the source archive (LC-09) don't exist yet. A dry run records that;
-a release candidate can't be produced until it passes.
+The licence gate is `compliance.py check --release --artifact <app>`. Its
+current six failures concern D2 source hosting/review, Mermaid bundled dependency
+versions/licenses, and Graphviz source hosting/corresponding-source/embedded
+attribution review. The committed dependency lock and offline license surfaces
+already exist; do not repeat the old claim that LC-05/LC-08 have no implementation.
+Their complete native/exact-artifact acceptance remains in #14. Dry-run tolerance
+is pipeline evidence, not permission to call these release gates passed. A release
+candidate must pass the strict check before anything is submitted to Apple.
 
 ## Step 1: build, sign, notarise and package
 
-The script lands on `master` with PR #164. Until that merges, start from the
-PR's branch instead of `origin/master`:
+The script is already integrated in the application repository. Start a clean
+working branch from the current reviewed `main`; [original PR164](https://github.com/Joncallim/macdown_2/pull/164) references describe its
+original introduction, not an unmerged prerequisite. The following is the
+preparatory pipeline mode, not a final release command:
 
 ```sh
 git fetch origin
-git switch -c release/signing-dry-run origin/master   # or origin/claude/beautiful-ramanujan-bq0a0w before #164 merges
+git switch -c release/signing-dry-run origin/main
 TEAM_ID=<TEAM_ID> NOTARY_PROFILE=mostlytext-notary release/macos/sign-notarize-dmg.sh --dry-run
 ```
 
@@ -158,9 +175,11 @@ Confirm this with the smoke test in step 3.
 
 ## Step 3: clean-install and Gatekeeper test
 
-Use a fresh macOS 26 user account (System Settings → Users & Groups) or a
-fresh macOS 26 virtual machine, so there are no existing preferences or
-trust decisions.
+Use the protected test-account workflow or an approved fresh macOS 26 virtual
+machine, with isolated fixtures, no existing preferences/trust decisions and
+fresh isolation controls. Do not substitute the owner's current UID501 session.
+Build/static preflight is not executed UI evidence; current prerequisite failures
+are recorded above.
 
 1. Get the DMG into that account **with the quarantine flag set**, the way a
    real download would. AirDrop it, or download it with Safari from private
@@ -226,5 +245,6 @@ Open **one pull request** from `release/signing-dry-run` containing:
 `run.log` (the log is only for your own debugging). They stay in the
 git-ignored `build/` folder.
 
-The cloud coordinator reviews the PR, reconciles `RELEASE_PATH.md` and #18,
+The reviewer reconciles the PR, `RELEASE_PATH.md` and
+[distribution issue #4](https://github.com/Joncallim/mostlytext/issues/4),
 and plans any fix.

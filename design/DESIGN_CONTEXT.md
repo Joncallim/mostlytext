@@ -9,7 +9,7 @@ Decisions live in [`DECISIONS.md`](DECISIONS.md).
 ## Product
 
 - **MostlyText** is a native macOS (26+) text and Markdown editor descended
-  from MacDown. The development codename in the code is still `MacDown 2`.
+  from MacDown. Internal project/product filenames retain `MacDown2` for coordinated packaging.
   The name was settled 2026-09-25 (`planning/MIGRATION_PLAN.md`, open item O1).
   The mark and artwork are frozen for 1.0 (D-031). The bundle ID and CLI
   name are set by the release-hardening identity cutover
@@ -41,8 +41,8 @@ Decisions live in [`DECISIONS.md`](DECISIONS.md).
   licence doesn't allow logo use.
 - Primary identity direction: the symbol meaningfully combines **M** and **T**.
   Chosen mark: **Slant**, an M and T sharing one stem, leaning forward, with a
-  wedge cut on the crossbar. Geometry is release-candidate frozen, not frozen
-  (D-018). The 16 px files are microglyphs for ≤17 px only; never enlarge them (D-020).
+  wedge cut on the crossbar. Geometry is frozen for 1.0 under D-031; this supersedes D-018’s
+  earlier release-candidate status. The 16 px files are microglyphs for ≤17 px only; never enlarge them (D-020).
   **Production lean is 10°, superseding the original 12° construction
   (D-027, 2026-09-25/26).** The cascade is complete (D-029): `slant-16.svg`,
   `slant-32.svg`, `slant-master.svg`, `slant-icon-16-inner.svg`, the production
@@ -53,9 +53,9 @@ Decisions live in [`DECISIONS.md`](DECISIONS.md).
   resource adjacent to `Assets.xcassets` (not inside it — see
   `design/evidence/2026-09-26/icon-art/README.md` for the exact steps)
   compiles correctly and renders the mark in the real Dock and Finder at true
-  small size. The Figma file's own title still reads "(Slant 12°)" — that
-  field can't be renamed via the Plugin API (D-029) and needs a person to
-  update it through the Figma UI.
+  small size in the dated design evidence. The Figma file title was corrected
+  to “MostlyText — Brand Identity (Slant 10°)” through its visible filename
+  control on 3 November 2026; this closes D-029’s title-only follow-up.
 - **Handoff and gates:** `design/FIGMA_HANDOFF.md` (everything the Figma session
   needs), `design/brand/PROVENANCE.md` (licences, canonical files),
   `design/validation/read-test/` (blind human test: round 1 exploratory; formal gate waived by the owner, D-026) and
@@ -68,6 +68,9 @@ Decisions live in [`DECISIONS.md`](DECISIONS.md).
   It replaces the document placeholder appiconset. Compile-time appearance/tint
   inspection does not establish fresh Dock/Finder/native acceptance for this build.
 
+See [the current brand asset registry](brand/README.md) and
+[identity handoff](../planning/IDENTITY.md) for production versus historical inputs.
+
 ## Sources of truth
 
 | What | Where | Status |
@@ -75,8 +78,8 @@ Decisions live in [`DECISIONS.md`](DECISIONS.md).
 | Repository | `github.com/Joncallim/mostlytext`, branch `main` | live |
 | App sources | `MacDown2/MacDown2/`; packages in `MacDown2/Packages/MacDownKit/` | live, changing |
 | Build / run | macOS 26 + Xcode 26: see the commands table in `AGENTS.md`. Judge feel on a **Release** build | needs a Mac; cloud design sessions run on Linux and **cannot run the app** |
-| Screenshots | `design/evidence/YYYY-MM-DD/` (capture protocol below) | **none yet** |
-| Figma | [MostlyText — Brand Identity (Slant 12°)](https://www.figma.com/design/x5wTgOFnR9GgNFfUqWwKmX): 8 pages, components for the mark (master, 32 optical, 16 microglyphs), wordmark, lockup and app icon sources, plus brand colour, theme and spacing variables | **live**; the production source for brand assets and the visual source of truth (D-024). Product UI is not in it yet |
+| Screenshots | `design/evidence/YYYY-MM-DD/` (capture protocol below) | Dated icon/design evidence exists; the full current-app screenshot matrix remains open |
+| Figma | [MostlyText — Brand Identity (Slant 10°)](https://www.figma.com/design/x5wTgOFnR9GgNFfUqWwKmX): 8 pages, components for the mark (master, 32 optical, 16 microglyphs), wordmark, lockup and app icon sources, plus brand colour, theme and spacing variables | **live**; the production source for brand assets and the visual source of truth (D-024). Product UI is not in it yet |
 | Brand assets | `design/brand/gen2/`: source geometry in `marks.mjs`, exported SVGs, comparison board (`node build.mjs` rebuilds `board.html`; published at https://claude.ai/artifact/HnqRCjVR1UPxFtWC9KnAwW). Gen-1 board: owner's image "Logo concepts — five directions for the T" (not in repo) | **Slant chosen (D-010).** Refinement in `design/brand/slant/` (board: https://claude.ai/artifact/CxLEqf5TCcFrEMMo1uN4Ni); `slant/marks.mjs` holds the parameterised geometry. Lockup board: https://claude.ai/artifact/BEM1dsLaq9Wf6jfE4KeRBV (`node lockup.mjs`). **Pre-freeze validation and production masters:** `design/brand/slant/validation/` (board: https://claude.ai/artifact/KdvvQKM2q4pV93baFvntnV, `node build.mjs`). **Production outlines** (mark flattened, wordmark outlined and corrected, lockup): `design/brand/slant/production/` (D-024, D-025). Earlier rounds in `gen2/` and `gen3/` are kept as a record |
 | Design tokens / themes | Editor/preview themes: `MacDownKit` `Themes` module; the chrome follows system colours | not yet a named token set |
 | Polish/identity contract | `planning/epics/EPIC-15-liquid-glass-polish.md`; `planning/RELEASE_HARDENING.md` §5.1 | binding for release |

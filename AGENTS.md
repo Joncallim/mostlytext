@@ -9,7 +9,7 @@ read-only reference tag `macdown-original-reference-3e2a2bf1`, separately from t
 rewrite branch. There is no `legacy-reference/` directory in the current tree.
 
 The website is a separate repository, `Joncallim/mostlytext-site`, with its own
-licence. All 17 open engineering issues have moved to
+licence. The engineering backlog has moved to
 `https://github.com/Joncallim/mostlytext/issues`. Use the new numbers for new work;
 [the transfer map](planning/ISSUE_TRANSFER_MAP.md) resolves imported bare issue
 numbers to their current issues. Historical closed issues, PRs, alpha releases
@@ -32,6 +32,8 @@ See `planning/downstream/mostlytext-brand-backlog-cutover-2026-11-03.md`.
   slice, Definition of Done, and human-readability rules for new epic work.
 - `planning/RELEASE_HARDENING.md` — binding cross-epic macOS 1.0 integration,
   identity, evidence, offline/privacy, fidelity, localisation and release gates.
+- `planning/ACCEPTANCE_STATUS.md` — dated current acceptance/prerequisite results;
+  `planning/IDENTITY.md` — current names, implemented types and reserved handoff.
 - `planning/RELEASE_PATH.md` — coordination map from current `main` to public
   MostlyText 1.0: order, cloud/Mac split, open owner decisions. Adds no scope.
 - `design/` — MostlyText design packet (`DESIGN_CONTEXT.md`, `DECISIONS.md`)
