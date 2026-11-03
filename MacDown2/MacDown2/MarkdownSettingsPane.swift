@@ -24,7 +24,9 @@ private struct MarkdownSettingsForm: View {
                 Text(
                     """
                     Tables, task lists, and strikethrough always parse and cannot be turned off. Autolinks are \
-                    recognised only in <https://…> form, and footnotes are not supported yet.
+                    recognised only in <https://…> form, and footnotes are not supported yet. Block directives affect \
+                    document structure; Preview and exports render their source as ordinary Markdown, without DocC \
+                    callout styling. An unfinished directive falls back to ordinary Markdown if it would hide content.
                     """
                 )
                 .font(.caption)

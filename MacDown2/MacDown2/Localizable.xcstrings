@@ -1,10 +1,6 @@
 {
   "sourceLanguage": "en",
   "strings": {
-    "Check that MostlyText can write to the Commands folder, then try again.": {
-      "extractionState": "manual",
-      "comment": "Command-folder error. Requires translation and native layout review before the final string freeze."
-    },
     "    Editor Only": {
       "localizations": {
         "fr": {
@@ -559,6 +555,10 @@
           }
         }
       }
+    },
+    "Check that MostlyText can write to the Commands folder, then try again.": {
+      "extractionState": "manual",
+      "comment": "Command-folder error. Requires translation and native layout review before the final string freeze."
     },
     "Checking MacDown preferences…": {
       "extractionState": "manual",
@@ -2281,24 +2281,24 @@
         }
       }
     },
-    "Tables, task lists, and strikethrough always parse and cannot be turned off. Autolinks are recognised only in <https://…> form, and footnotes are not supported yet.": {
+    "Tables, task lists, and strikethrough always parse and cannot be turned off. Autolinks are recognised only in <https://…> form, and footnotes are not supported yet. Block directives affect document structure; Preview and exports render their source as ordinary Markdown, without DocC callout styling. An unfinished directive falls back to ordinary Markdown if it would hide content.": {
       "localizations": {
         "fr": {
           "stringUnit": {
-            "state": "translated",
-            "value": "Les tableaux, listes de tâches et textes barrés sont toujours interprétés et ne peuvent pas être désactivés. Les liens automatiques ne sont reconnus que sous la forme <https://…>, et les notes de bas de page ne sont pas encore prises en charge."
+            "state": "needs_review",
+            "value": "Tables, task lists, and strikethrough always parse and cannot be turned off. Autolinks are recognised only in <https://…> form, and footnotes are not supported yet. Block directives affect document structure; Preview and exports render their source as ordinary Markdown, without DocC callout styling. An unfinished directive falls back to ordinary Markdown if it would hide content."
           }
         },
         "ja": {
           "stringUnit": {
-            "state": "translated",
-            "value": "テーブル、タスクリスト、取り消し線は常に解析され、無効にすることはできません。自動リンクは <https://…> の形式のみ認識され、脚注はまだサポートされていません。"
+            "state": "needs_review",
+            "value": "Tables, task lists, and strikethrough always parse and cannot be turned off. Autolinks are recognised only in <https://…> form, and footnotes are not supported yet. Block directives affect document structure; Preview and exports render their source as ordinary Markdown, without DocC callout styling. An unfinished directive falls back to ordinary Markdown if it would hide content."
           }
         },
         "pl": {
           "stringUnit": {
-            "state": "translated",
-            "value": "Tabele, listy zadań i przekreślenia są zawsze analizowane i nie można ich wyłączyć. Automatyczne odnośniki są rozpoznawane tylko w postaci <https://…>, a przypisy nie są jeszcze obsługiwane."
+            "state": "needs_review",
+            "value": "Tables, task lists, and strikethrough always parse and cannot be turned off. Autolinks are recognised only in <https://…> form, and footnotes are not supported yet. Block directives affect document structure; Preview and exports render their source as ordinary Markdown, without DocC callout styling. An unfinished directive falls back to ordinary Markdown if it would hide content."
           }
         }
       }
