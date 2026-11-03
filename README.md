@@ -13,6 +13,7 @@ localization, performance and exact release-artifact verification.
 - Website source: [Joncallim/mostlytext-site](https://github.com/Joncallim/mostlytext-site)
 - Engineering backlog: [MostlyText issues](https://github.com/Joncallim/mostlytext/issues) ([old-to-new number map](planning/ISSUE_TRANSFER_MAP.md))
 - [Repository migration contract](planning/downstream/mostlytext-repository-migration-2026-11-03.md)
+- [Installation, CLI and migration guide](docs/INSTALLATION_AND_MIGRATION.md)
 - [Current acceptance status](planning/ACCEPTANCE_STATUS.md) and [identity handoff](planning/IDENTITY.md)
 - [Historical release evidence](planning/RELEASE_EVIDENCE.md)
 
@@ -60,7 +61,7 @@ is an earlier planning draft; the maintained public website has its own reposito
 
 The full application history was imported from `Joncallim/macdown_2` at
 `8be8ad4158f6fee5ad8bd40337e118054177cfa8`. The tag
-`macdown-2-lineage-2026-11-03` records that boundary. Existing tags are preserved;
+`macdown-2-lineage-2026-11-03` records that boundary. Existing tags are preserved.
 The 17 open engineering issues were transferred with redirects and discussions;
 [their number map](planning/ISSUE_TRANSFER_MAP.md) preserves traceability. GitHub
 release assets and workflow-run records remain at their original URLs. Historical alpha release files remain in the

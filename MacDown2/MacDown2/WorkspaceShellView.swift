@@ -10,7 +10,7 @@ import SwiftUI
 import Themes
 import Workspace
 
-/// The content of a single MacDown 2 document window.
+/// The content of a single MostlyText document window.
 ///
 /// With native window tabbing, each tab/window hosts its own `WorkspaceModel`
 /// showing one document. The tab bar itself is provided by AppKit; this view

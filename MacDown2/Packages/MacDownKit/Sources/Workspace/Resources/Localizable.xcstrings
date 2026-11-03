@@ -1,90 +1,90 @@
 {
   "sourceLanguage": "en",
   "strings": {
-    "MacDown cannot access the backing file. Use Save As to keep this copy.": {
+    "MostlyText cannot access the backing file. Use Save As to keep this copy.": {
       "localizations": {
         "fr": {
           "stringUnit": {
-            "state": "translated",
-            "value": "MacDown ne peut pas accéder au fichier source. Utilisez Enregistrer sous pour conserver cette copie."
+            "state": "needs_review",
+            "value": "MostlyText ne peut pas accéder au fichier source. Utilisez Enregistrer sous pour conserver cette copie."
           }
         },
         "ja": {
           "stringUnit": {
-            "state": "translated",
-            "value": "MacDownは元のファイルにアクセスできません。「別名で保存」を使ってこのコピーを保持してください。"
+            "state": "needs_review",
+            "value": "MostlyTextは元のファイルにアクセスできません。「別名で保存」を使ってこのコピーを保持してください。"
           }
         },
         "pl": {
           "stringUnit": {
-            "state": "translated",
-            "value": "MacDown nie ma dostępu do pliku źródłowego. Użyj polecenia Zapisz jako, aby zachować tę kopię."
+            "state": "needs_review",
+            "value": "MostlyText nie ma dostępu do pliku źródłowego. Użyj polecenia Zapisz jako, aby zachować tę kopię."
           }
         }
       }
     },
-    "MacDown could not safely follow the moved file. Use Save As to keep this copy.": {
+    "MostlyText could not safely follow the moved file. Use Save As to keep this copy.": {
       "localizations": {
         "fr": {
           "stringUnit": {
-            "state": "translated",
-            "value": "MacDown n'a pas pu suivre le fichier déplacé en toute sécurité. Utilisez Enregistrer sous pour conserver cette copie."
+            "state": "needs_review",
+            "value": "MostlyText n'a pas pu suivre le fichier déplacé en toute sécurité. Utilisez Enregistrer sous pour conserver cette copie."
           }
         },
         "ja": {
           "stringUnit": {
-            "state": "translated",
-            "value": "MacDownは移動されたファイルを安全に追跡できませんでした。「別名で保存」を使ってこのコピーを保持してください。"
+            "state": "needs_review",
+            "value": "MostlyTextは移動されたファイルを安全に追跡できませんでした。「別名で保存」を使ってこのコピーを保持してください。"
           }
         },
         "pl": {
           "stringUnit": {
-            "state": "translated",
-            "value": "MacDown nie mógł bezpiecznie podążyć za przeniesionym plikiem. Użyj polecenia Zapisz jako, aby zachować tę kopię."
+            "state": "needs_review",
+            "value": "MostlyText nie mógł bezpiecznie podążyć za przeniesionym plikiem. Użyj polecenia Zapisz jako, aby zachować tę kopię."
           }
         }
       }
     },
-    "MacDown preserved a competing version as %@. Reveal it, then use Save As to keep this copy.": {
+    "MostlyText preserved a competing version as %@. Reveal it, then use Save As to keep this copy.": {
       "localizations": {
         "fr": {
           "stringUnit": {
-            "state": "translated",
-            "value": "MacDown a conservé une version concurrente sous le nom %@. Révélez-la, puis utilisez Enregistrer sous pour conserver cette copie."
+            "state": "needs_review",
+            "value": "MostlyText a conservé une version concurrente sous le nom %@. Révélez-la, puis utilisez Enregistrer sous pour conserver cette copie."
           }
         },
         "ja": {
           "stringUnit": {
-            "state": "translated",
-            "value": "MacDownは競合するバージョンを%@として保存しました。それを表示してから、「別名で保存」を使ってこのコピーを保持してください。"
+            "state": "needs_review",
+            "value": "MostlyTextは競合するバージョンを%@として保存しました。それを表示してから、「別名で保存」を使ってこのコピーを保持してください。"
           }
         },
         "pl": {
           "stringUnit": {
-            "state": "translated",
-            "value": "MacDown zachował konkurencyjną wersję jako %@. Odsłoń ją, a następnie użyj polecenia Zapisz jako, aby zachować tę kopię."
+            "state": "needs_review",
+            "value": "MostlyText zachował konkurencyjną wersję jako %@. Odsłoń ją, a następnie użyj polecenia Zapisz jako, aby zachować tę kopię."
           }
         }
       }
     },
-    "MacDown retained recovery for %@. Keep this window open and retry, or use Save As after revealing the recovery copy.": {
+    "MostlyText retained recovery for %@. Keep this window open and retry, or use Save As after revealing the recovery copy.": {
       "localizations": {
         "fr": {
           "stringUnit": {
-            "state": "translated",
-            "value": "MacDown a conservé une récupération pour %@. Laissez cette fenêtre ouverte et réessayez, ou utilisez Enregistrer sous après avoir révélé la copie de récupération."
+            "state": "needs_review",
+            "value": "MostlyText a conservé une récupération pour %@. Laissez cette fenêtre ouverte et réessayez, ou utilisez Enregistrer sous après avoir révélé la copie de récupération."
           }
         },
         "ja": {
           "stringUnit": {
-            "state": "translated",
-            "value": "MacDownは%@の復旧データを保持しました。このウィンドウを開いたままにして再試行するか、復旧コピーを表示してから「別名で保存」を使ってください。"
+            "state": "needs_review",
+            "value": "MostlyTextは%@の復旧データを保持しました。このウィンドウを開いたままにして再試行するか、復旧コピーを表示してから「別名で保存」を使ってください。"
           }
         },
         "pl": {
           "stringUnit": {
-            "state": "translated",
-            "value": "MacDown zachował kopię odzyskiwania dla %@. Pozostaw to okno otwarte i spróbuj ponownie, albo użyj polecenia Zapisz jako po odsłonięciu kopii odzyskiwania."
+            "state": "needs_review",
+            "value": "MostlyText zachował kopię odzyskiwania dla %@. Pozostaw to okno otwarte i spróbuj ponownie, albo użyj polecenia Zapisz jako po odsłonięciu kopii odzyskiwania."
           }
         }
       }

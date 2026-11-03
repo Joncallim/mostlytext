@@ -1436,6 +1436,121 @@
       "extractionState": "manual",
       "comment": "Installation migration source copy. Translation and native layout acceptance remain tracked in #17."
     },
+    "MostlyText cannot access the backing file. Save As to keep this copy.": {
+      "comment": "MostlyText file/recovery presentation. Draft translations require native-language review.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText cannot access the backing file. Save As to keep this copy."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText cannot access the backing file. Save As to keep this copy."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText cannot access the backing file. Save As to keep this copy."
+          }
+        }
+      }
+    },
+    "MostlyText cannot safely identify the moved file. Save As to keep this copy.": {
+      "comment": "MostlyText file/recovery presentation. Draft translations require native-language review.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText cannot safely identify the moved file. Save As to keep this copy."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText cannot safely identify the moved file. Save As to keep this copy."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText cannot safely identify the moved file. Save As to keep this copy."
+          }
+        }
+      }
+    },
+    "MostlyText does not have permission to read this file.": {
+      "comment": "MostlyText file/recovery presentation. Draft translations require native-language review.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText does not have permission to read this file."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText does not have permission to read this file."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText does not have permission to read this file."
+          }
+        }
+      }
+    },
+    "MostlyText does not have permission to write this file.": {
+      "comment": "MostlyText file/recovery presentation. Draft translations require native-language review.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText does not have permission to write this file."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText does not have permission to write this file."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText does not have permission to write this file."
+          }
+        }
+      }
+    },
+    "MostlyText kept this window open because unsaved recovery data could not be verified. Retry, or use Save As to preserve your changes.": {
+      "comment": "MostlyText file/recovery presentation. Draft translations require native-language review.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText kept this window open because unsaved recovery data could not be verified. Retry, or use Save As to preserve your changes."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText kept this window open because unsaved recovery data could not be verified. Retry, or use Save As to preserve your changes."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "MostlyText kept this window open because unsaved recovery data could not be verified. Retry, or use Save As to preserve your changes."
+          }
+        }
+      }
+    },
     "MostlyText license": {
       "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
       "localizations": {
@@ -1927,6 +2042,29 @@
         }
       }
     },
+    "Recovery Could Not Be Secured": {
+      "comment": "MostlyText file/recovery presentation. Draft translations require native-language review.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Recovery Could Not Be Secured"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Recovery Could Not Be Secured"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Recovery Could Not Be Secured"
+          }
+        }
+      }
+    },
     "Recovery cleanup for %@ needs attention. Reveal it, retry, or use Save As.": {
       "localizations": {
         "fr": {
@@ -2095,9 +2233,55 @@
         }
       }
     },
+    "Retry": {
+      "comment": "MostlyText file/recovery presentation. Draft translations require native-language review.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Retry"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Retry"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Retry"
+          }
+        }
+      }
+    },
     "Retry Migration": {
       "extractionState": "manual",
       "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
+    },
+    "Save As…": {
+      "comment": "MostlyText file/recovery presentation. Draft translations require native-language review.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Save As…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Save As…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Save As…"
+          }
+        }
+      }
     },
     "Save Changes": {
       "extractionState": "manual"

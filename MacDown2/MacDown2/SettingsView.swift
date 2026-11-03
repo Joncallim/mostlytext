@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// The `Settings { }` scene's pane container (`⌘,` / "MacDown 2 → Settings…").
+/// The `Settings { }` scene's pane container (`⌘,` / "MostlyText → Settings…").
 struct SettingsView: View {
     static let contentSize = CGSize(width: 580, height: 480)
     @Environment(\.appSettings) private var appSettings
