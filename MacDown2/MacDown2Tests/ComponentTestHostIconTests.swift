@@ -44,7 +44,9 @@ struct ComponentTestHostIconTests {
 
     @Test func componentDocumentProxyRetainsAndClearsItsValue() {
         let window = DocumentWindow(contentRect: .zero, styleMask: [.titled], backing: .buffered, defer: true)
+        window.isReleasedWhenClosed = false
         defer { window.close() }
+        #expect(!window.isReleasedWhenClosed)
         #expect(window.usesComponentDocumentProxyFixture)
         let initialAssignments = window.componentProxyAssignmentCount
         let url = URL(fileURLWithPath: "/private/tmp/component-proxy-\(UUID().uuidString).md")

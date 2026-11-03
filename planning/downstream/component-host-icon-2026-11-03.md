@@ -67,3 +67,15 @@ This fixture is not native proxy-icon/drag-menu/Finder acceptance. Add real
 component field set/clear checks and an original deleted-document controller
 URL assertion; keep all prior cases and native UI launch exclusions. Full
 combined qualification must execute all 600 app cases / 122 suites.
+
+## Standalone window ownership correction
+
+ARM full run 41557168954 passes all 3,320 package tests, builds and compilation,
+then crashes at componentDocumentProxyRetainsAndClearsItsValue. The new fixture
+owns a bare DocumentWindow with Swift ARC and closes it without disabling
+release-on-close. [Apple's NSWindow contract](https://developer.apple.com/documentation/appkit/nswindow/isreleasedwhenclosed)
+requires ARC clients to disable that setting for standalone owned windows;
+controller-owned windows use the controller's existing lifetime instead.
+Set the fixture flag false, assert that precondition and keep the actual close.
+Retain the crash and incomplete/restarted test logs; the later 262-case restart
+is not a complete 600-case pass or evidence that the crash can be ignored.
