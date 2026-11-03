@@ -3,7 +3,7 @@
 ## Owner summary
 
 Keep the recovery storage error, recovery guidance and saved-output warning in
-ExportService's normal translation catalog. Two existing unresolved-image
+ExportService's normal translation catalog. Three existing unresolved-image/raw-HTML
 messages also need their package bundle explicitly, so translations are looked
 up alongside the catalog that owns them. This corrects string ownership without
 changing export policy or claiming final localization acceptance.
@@ -14,7 +14,7 @@ Owners: MostlyText #3, with #11's recovery string delta and #17 L01.
 ## Scope and interfaces
 
 Only add three exact English keys with translator context to ExportService's
-existing catalog and select `bundle: .module` at the two existing unresolved-image
+existing catalog and select `bundle: .module` at the three existing unresolved-image/raw-HTML
 lookups. No copy changes, fabricated translations, dependencies, extraction
 settings, native controls or persistence changes. Existing French/Japanese/Polish
 translations and all license texts remain byte-for-byte values.
