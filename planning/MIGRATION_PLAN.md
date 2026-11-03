@@ -1,9 +1,19 @@
 # MacDown → Swift/SwiftUI Migration Plan
 
+> Current product/source — 3 November 2026: MostlyText is the owner-frozen name;
+> application history and open engineering backlog are in MostlyText/main, with
+> website source separate. [Identity](IDENTITY.md), [acceptance status](ACCEPTANCE_STATUS.md)
+> and [remaining engineering](ENGINEERING_REMAINDER.md) describe current source and
+> unfinished requirements. Dated MacDown 2/master decisions below preserve lineage
+> and original architecture; they are not current branding or acceptance claims.
+
+
 > Status: **approved direction** · Scope: full rewrite as a **new product** · Target: **macOS 26+ for 1.0**
 
 This document is the single source of truth for the rewrite roadmap. Epics live in
-`planning/epics/` and are tracked as GitHub issues on `Joncallim/macdown_2`.
+`planning/epics/` and are tracked as GitHub issues on `Joncallim/mostlytext`. Historical closed issues, PRs and
+exact-source evidence remain in `Joncallim/macdown_2`; use
+[the transfer map](ISSUE_TRANSFER_MAP.md) for imported bare issue numbers.
 `planning/EPIC_STANDARD.md` defines the mandatory readiness, architecture,
 execution, completion and human-readability contract for epic work.
 `planning/RELEASE_HARDENING.md` defines binding cross-epic macOS 1.0 integration,

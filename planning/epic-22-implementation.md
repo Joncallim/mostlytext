@@ -1,5 +1,14 @@
 # EPIC-22 implementation architecture: Editor essentials (power-text workflows before macOS 1.0)
 
+> Current reading guide — 3 November 2026: initial baseline and “current” source
+> observations in the dated architecture below describe their original snapshots.
+> Later merged source/identity/notice changes are summarized in
+> [acceptance status](ACCEPTANCE_STATUS.md) and [remaining engineering](ENGINEERING_REMAINDER.md).
+> Source integration does not establish native acceptance. Quick Look's QL-REPLY
+> feasibility probe, held preview/current-line activation and other named native
+> prerequisites remain binding; a documentation update does not skip them.
+
+
 > Baseline: `master` at commit `95e4f6005f7f0a998b6c03377a17d92b8c1fcef7` (2026-09-21), immediately after EPIC-16's interim localisation baseline (PR #111) and the owner's "Plan final pre-release debt closure and E23" / "Complete carried-forward debt audit" planning commits. Epic issue: [#112](https://github.com/Joncallim/macdown_2/issues/112).
 
 ## 1. Owner summary

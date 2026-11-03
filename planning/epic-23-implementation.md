@@ -1,5 +1,14 @@
 # E23 Mac integration implementation
 
+> Current reading guide — 3 November 2026: initial baseline and “current” source
+> observations in the dated architecture below describe their original snapshots.
+> Later merged source/identity/notice changes are summarized in
+> [acceptance status](ACCEPTANCE_STATUS.md) and [remaining engineering](ENGINEERING_REMAINDER.md).
+> Source integration does not establish native acceptance. Quick Look's QL-REPLY
+> feasibility probe, held preview/current-line activation and other named native
+> prerequisites remain binding; a documentation update does not skip them.
+
+
 ## Owner summary
 
 Give MostlyText one coherent theme across its editor, native Markdown preview
