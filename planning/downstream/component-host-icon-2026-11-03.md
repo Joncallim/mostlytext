@@ -1,11 +1,11 @@
-# Own the component test host's application icon
+# Own component-host icon and document-proxy fields
 
 ## Owner outcome
 
 Keep app-target component tests independent of the hosted machine's icon
 service while retaining real windows, native tab ordering and all assertions.
 Ordinary launches and the separate native UI-test application retain the real
-product icon and still require genuine icon/Finder/appearance acceptance.
+product icon/proxy and still require genuine icon/Finder/appearance acceptance.
 
 ## Evidence and baseline
 
@@ -37,3 +37,33 @@ locally only, then execute all app cases on the hosted runner with retained
 samples/results. Full combined package/app/build/lock/lint qualification remains
 required before merge. Do not infer native branding, Release performance or
 signed-artifact acceptance from the fixture icon.
+
+## Second bounded result: document proxy and image readback
+
+Diagnostic 41552942731 (c3c06 source plus diagnostic markers only) reaches real
+D2 Export/Preview rendering, then times out at 600.48 seconds with fourteen
+samples. The stale-origin palette cases now finish. The main thread instead
+waits in WindowController.updateTitleAndEditedState -> representedURL -> native
+document proxy button -> default document icon -> IconServices. A ShareKit
+worker owns the service initialization. This is not a WebKit rendering stall.
+
+The actual host bitmap control also exposes an incorrect fixture assumption:
+NSApplication normalizes the image to NSCGImageSnapshotRep. Verify its rendered
+CGImage dimensions and distinctive opaque black/white pixels instead of
+requiring one storage representation subclass. Keep the original assertion
+failure and all samples.
+
+Expand the same explicit component presentation boundary to DocumentWindow's
+documentRepresentedURL field. A window captures the existing Xcode-component-host and
+not-native-UI predicate once. In that mode only, retain/read/count the proxy URL
+as an owned field without allocating the system proxy widget; normal/native UI
+launches forward the getter/setter to NSWindow.representedURL unchanged. The
+native getter is not overridden: it stays nil in component mode so native tab
+code cannot accidentally request the fixture URL's file icon. The controller
+updates this explicit presentation field; its non-DocumentWindow fallback keeps
+the original NSWindow assignment. Do not change window
+title, edited state, native tabs, coordinator/model behavior or source URL.
+This fixture is not native proxy-icon/drag-menu/Finder acceptance. Add real
+component field set/clear checks and an original deleted-document controller
+URL assertion; keep all prior cases and native UI launch exclusions. Full
+combined qualification must execute all 600 app cases / 122 suites.

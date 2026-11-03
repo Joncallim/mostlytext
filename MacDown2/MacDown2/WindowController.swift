@@ -238,7 +238,11 @@ final class WindowController: NSWindowController, NSWindowDelegate {
         lastObservedURL = url
         if changed {
             window?.title = title
-            window?.representedURL = url
+            if let documentWindow = window as? DocumentWindow {
+                documentWindow.documentRepresentedURL = url
+            } else {
+                window?.representedURL = url
+            }
             window?.isDocumentEdited = isDirty
             coordinator?.scheduleSaveSession()
         }
