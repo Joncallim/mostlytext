@@ -1,5 +1,5 @@
 {
-  "archive_sha256": "d4d406e3b9132e6b2156cd28604536014d6f8517c413b4aac7ccefad5f3207a8",
+  "archive_sha256": "165316d0ed75e8ec5beb4cf9569c900d7421a2454d19e4f5130e3637efacd240",
   "files": 25,
   "manifest": {
     "expat_revision": "12cf0b1f25f026a022fe728ad8f7e3d017285b80",
@@ -11,13 +11,13 @@
       },
       {
         "path": "distribution-snapshot/THIRD_PARTY_NOTICES.md",
-        "sha256": "acd00f64bb092fb84156c43184767ad823e75946c6837c0d6877b2f11eff8c75",
-        "size": 466390
+        "sha256": "ca01ed8ab8de9a2dce8686138297fec70ddad08c97da780176f658642d1c9f24",
+        "size": 468154
       },
       {
         "path": "distribution-snapshot/sbom.cdx.json",
-        "sha256": "68d439ed63f386a6cacd2b93dc58b292ae1c2ce4e03f0e6a226051b55f59130a",
-        "size": 124845
+        "sha256": "ae71e1e26911835e813805867dee1669415f751854ba3242c6d02e3fc1f744cb",
+        "size": 125629
       },
       {
         "path": "evidence/ARCHIVE_PLAN.md",

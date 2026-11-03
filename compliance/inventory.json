@@ -104,7 +104,7 @@
       "npm_file_sha256": "9898965444a940cdbedda3b039f717e96a86ffe9b3170bf30f8fea94ffb66e8a",
       "modifications": "Trailing `export{lw as D2}` replaced with `window.D2=lw;` (one statement; every other byte identical). Documented in NOTICE.txt.",
       "provenance": "verified",
-      "evidence": "The integrity-checked @terrastruct/d2@0.1.33 npm archive matches the shipped browser file except for the documented export replacement. npm gitHead names source commit 581c91096b62d644fb5168313142c836b7e68e74; the js/wasm source-build graph and 16 external Go module licence-text hashes are recorded in compliance/evidence/d2-0.1.33/. This is publisher provenance and source-graph evidence, not an independent rebuild or completed source offer.",
+      "evidence": "The integrity-checked @terrastruct/d2@0.1.33 npm archive matches the shipped browser file except for the documented export replacement. npm gitHead names source commit 581c91096b62d644fb5168313142c836b7e68e74; the js/wasm source-build graph and 16 external Go module licence-text hashes are recorded in compliance/evidence/d2-0.1.33/. This is publisher provenance and source-graph evidence, not an independent rebuild or completed source offer. The complete Go 1.24.6 root notice is also preserved; compliance/evidence/d2-go-runtime/ binds runtime PC records through the optimized WASM element table to defined code bodies without executing WASM.",
       "lc": [
         "LC-01",
         "LC-03",
@@ -117,7 +117,7 @@
         "status": "planned"
       },
       "open_items": [
-        "LC-03: complete independent review of the D2 Go/WASM source graph and embedded/nested code, including Liberation Mono Reserved Font Name treatment, and approve/publish the upstream package plus one-line patch through LC-09. Complete root texts for all 16 recorded module inputs, including the FreeType License option and binary acknowledgement, are now distributed as conservative source-build attributions; this is not an independent WASM rebuild or complete source-offer approval."
+        "LC-03: complete independent review of the D2 Go/WASM source graph and embedded/nested code, including Liberation Mono Reserved Font Name treatment, and approve/publish the upstream package plus one-line patch through LC-09. Complete root texts for all 16 recorded module inputs, including the FreeType License option and binary acknowledgement, are now distributed as conservative source-build attributions; this is not an independent WASM rebuild or complete source-offer approval. Go runtime root attribution and selected actual code-body linkage are recorded separately; complete per-file/nested runtime obligations remain open."
       ],
       "runtime_resources": [
         {
@@ -5387,6 +5387,37 @@
       ],
       "evidence": "compliance/evidence/webpack-parser-runtime/mapping.json",
       "notes": "Four complete retained runtime source bodies match a generated Webpack 5.88.2 reference byte-for-byte without normalization, with actual composed body-operation probes. This does not identify the earlier emitting Webpack version, imply whole compiler package inclusion or complete nested attribution."
+    },
+    {
+      "id": "d2-go-runtime",
+      "name": "Go runtime and standard library (embedded in D2 WebAssembly)",
+      "kind": "embedded",
+      "version": "go1.24.6",
+      "upstream": "https://go.dev",
+      "resolution": "exact publisher WASM; embedded Go version and runtime PC/element/code linkage",
+      "licence": "BSD-3-Clause",
+      "copyright": [
+        "Copyright 2009 The Go Authors."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2--GO-RUNTIME-LICENSE.txt",
+          "sha256": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+          "upstream": "https://go.dev/dl/go1.24.6.darwin-arm64.tar.gz",
+          "upstream_revision": "go1.24.6",
+          "upstream_path": "go/LICENSE",
+          "upstream_archive_sha256": "4e29202c49573b953be7cc3500e1f8d9e66ddd12faa8cf0939a4951411e09a2a"
+        }
+      ],
+      "embedded_in": "d2",
+      "provenance": "verified",
+      "lc": [
+        "LC-01",
+        "LC-03",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/d2-go-runtime/binary-audit.json",
+      "notes": "Complete Go 1.24.6 root text is preserved as conservative runtime/standard-library attribution. Runtime PC records resolve through the optimized WASM element table to defined nonempty code bodies. This does not independently rebuild D2 or resolve every nested/per-file compiler/runtime obligation, font/RFN question or source-offer approval."
     }
   ]
 }

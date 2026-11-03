@@ -94,6 +94,7 @@ This file is generated from `compliance/inventory.json` by
 | github.com/PuerkitoBio/goquery (D2 publisher-build attribution) | publisher source-build input v1.10.0 | BSD-3-Clause |
 | github.com/rivo/uniseg (D2 publisher-build attribution) | publisher source-build input v0.4.7 | MIT |
 | github.com/yuin/goldmark (D2 publisher-build attribution) | publisher source-build input v1.7.4 | MIT |
+| Go runtime and standard library (embedded in D2 WebAssembly) | go1.24.6 | BSD-3-Clause |
 | golang.org/x/exp (D2 publisher-build attribution) | publisher source-build input v0.0.0-20240909161429-701f63a606c0 | BSD-3-Clause |
 | golang.org/x/image (D2 publisher-build attribution) | publisher source-build input v0.20.0 | BSD-3-Clause |
 | golang.org/x/net (D2 publisher-build attribution) | publisher source-build input v0.35.0 | BSD-3-Clause |
@@ -5789,6 +5790,47 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+```
+
+---
+
+## Go runtime and standard library (embedded in D2 WebAssembly)
+
+- Version: go1.24.6
+- Upstream: https://go.dev
+- Licence: BSD-3-Clause
+- Copyright 2009 The Go Authors.
+
+### d2--GO-RUNTIME-LICENSE.txt
+
+```text
+Copyright 2009 The Go Authors.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+   * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+   * Neither the name of Google LLC nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
 ---

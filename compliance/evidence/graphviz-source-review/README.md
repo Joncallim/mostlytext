@@ -7,10 +7,10 @@ review limits. It has not been approved as the complete corresponding-source
 offer and is not published. No MostlyText application binary or private material
 is included. The already-public npm renderer input is JavaScript/WebAssembly.
 
-Archive SHA-256: `d4d406e3b9132e6b2156cd28604536014d6f8517c413b4aac7ccefad5f3207a8`. It contains 25
+Archive SHA-256: `165316d0ed75e8ec5beb4cf9569c900d7421a2454d19e4f5130e3637efacd240`. It contains 25
 manifested files plus manifest.json; all bytes and exact member sets are verified.
 The [manifest](manifest.json) records each size/digest. Local artifact:
-`/Volumes/Fast SSD/CORTANA-Builds/parser-reproduction-20261103/graphviz-source-review-parser-webpack.tar.gz`.
+`/Volumes/Fast SSD/CORTANA-Builds/d2-go-runtime-20261104/graphviz-source-review-go-runtime.tar.gz`.
 
 ## Reproduce and verify
 
@@ -60,3 +60,8 @@ The prior 97-credit runtime snapshot remains at graphviz-source-review-esbuild.t
 The current snapshot includes the reproduced parser-input labels and qualified
 Webpack MIT notice. Every upstream/source input and all review/publication limits
 remain unchanged; no old archive is overwritten.
+
+The 4 November Go-runtime notice update prepares another 25-file snapshot with
+the current 150-component notice/SBOM corpus. The previous parser/Webpack archive
+remains intact at its recorded path/hash. This package is still unapproved and
+unpublished; its notice snapshot does not complete runtime/source review.
