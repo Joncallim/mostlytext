@@ -22,3 +22,8 @@ selection controls, complete compliance suite, unchanged notice-reader bound,
 compile-only artifact checks and hosted Compliance precede merge. All six strict
 release failures remain; other unassociated positions and embedded origin questions
 are not silently cleared. No application/native execution or publication.
+
+Integration reconciliation: main 68b72f76 brings the Help-menu correction, whose
+complete hosted app/package CI passed at 0c1625a0. Its existing localized action
+and current documentation are retained. Against this integrated baseline this
+notice unit changes no Swift source, renderer, lock, guard or release policy.
