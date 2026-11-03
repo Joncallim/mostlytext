@@ -1,5 +1,14 @@
 # Downstream architecture — implementation entry point
 
+> Current reading guide — 3 November 2026: initial baseline and “current” source
+> observations in the dated architecture below describe their original snapshots.
+> Later merged source/identity/notice changes are summarized in
+> [acceptance status](../ACCEPTANCE_STATUS.md) and [remaining engineering](../ENGINEERING_REMAINDER.md).
+> Source integration does not establish native acceptance. Quick Look's QL-REPLY
+> feasibility probe, held preview/current-line activation and other named native
+> prerequisites remain binding; a documentation update does not skip them.
+
+
 Current review: **26 September 2026**, restored master `b95fe439672dbcad4e5c9d04f7f353ffc85ff26b`.
 Current PR: **#147**, branch `docs/downstream-architecture-2026-09-24`.
 Original architecture: **#125**, preserved at `b2c6d19ef453b571f4eb5eb020accfa84305fb60`.

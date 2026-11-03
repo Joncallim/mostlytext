@@ -1,6 +1,6 @@
 # macOS 1.0 execution and authorization sequence
 
-Status: proposed cross-epic contract amendment in the recovery/readiness PR #147, 26 September 2026; rebaselined 9 October 2026 to the two-candidate sequence and the source-archive resolution. It becomes repository authority when that documentation PR is adopted; no release is authorized by its existence. It clarifies RELEASE_HARDENING.md sections 7–8 without weakening issue acceptance, artifact identity, security, fidelity or language requirements.
+Status: adopted through [PR147](https://github.com/Joncallim/macdown_2/pull/147), merged 10 October 2026 at 7fa4cbcacd11ed639356ed45dd24251190c968e8; originally proposed 26 September and rebaselined 9 October to the two-candidate sequence and source-archive resolution. No release is authorized by its existence. It clarifies RELEASE_HARDENING.md sections 7–8 without weakening issue acceptance, artifact identity, security, fidelity or language requirements.
 
 ## Why the old shorthand must be expanded
 
@@ -13,7 +13,7 @@ The historical shorthand `E22 -> identity -> E23 -> #115 -> final E16 -> E17` mi
 3. **Final E16.** Only after V1: the final actual resource/string audit, plural/layout work, native-language review and the freeze of the exact source/translation/UI baseline.
 4. **Final signed candidate (candidate 2).** Built from the frozen baseline. Its notices and source offer point at durable, already-published corresponding-source locations (see below), so those exist BEFORE this candidate is generated and notarised. Then run #148's exact-artifact compliance verification and every artifact- or locale-sensitive #115 observation again on this binary (`final-artifact-reruns`); the compliance gate is not relaxed to make a checker pass.
 5. **#115 closes** once V1, final E16, the artifact-sensitive reruns and #148 are all evidenced.
-6. **Full-history repository cutover (#158)** to the new repository, mirroring the verified history. The engineering backlog stays in `macdown_2` until then.
+6. **Final release-history/cutover verification (MostlyText #16).** The owner explicitly authorized the earlier physical repository and backlog cutover on 3 November 2026: complete application history is already in `Joncallim/mostlytext` on `main`, all 17 engineering issues were transferred, and the website source is separate. That supersedes the original timing requirement to keep the backlog in macdown_2 until this step. Before promotion, verify that the final qualified release baseline/history is present in MostlyText and that historical receipts still name their original source; the earlier move is not debt-gate closure or release permission.
 7. **P — separately authorised public promotion.** Forbidden while #115 is open or the cutover has not happened. A documentation task, a green workflow, an architecture review or a private signature is not that authorisation.
 
 ## Source-archive deadlock and its resolution (#148)
@@ -35,3 +35,20 @@ Zero release-relevant P0/P1/P2; only explicitly accepted cosmetic P3. No require
 RELEASE_HARDENING.md links this sequence as its current execution interpretation. The revised #17/#18/#115 hand-offs refer here. At adoption, add short cross-links to relevant issue discussions rather than replacing their product acceptance text. Older statements that final localization waits for all of #115 to close are superseded only as sequencing, not as a waiver of any criterion.
 
 Use planning/downstream/readiness.json for unit dependencies and named unrun probes. It is a planning artifact, not the future runtime release-evidence manifest and not an executable release approval.
+
+## Current engineering route and historical planning model
+
+[ENGINEERING_REMAINDER.md](ENGINEERING_REMAINDER.md) names current implementation
+and acceptance ownership. The source-only notice/review packages are concrete
+local preparation; independent source/runtime review, explicit publication and
+anonymous retrieval still precede final signed-artifact promotion. The current
+license window is implemented; its native acceptance remains open.
+
+`downstream/readiness.json` and its validator are retained as the historical
+architecture/dependency model, not execution receipts. Their old repository and
+issue numbers describe the reviewed baseline and resolve through
+[ISSUE_TRANSFER_MAP.md](ISSUE_TRANSFER_MAP.md). The guarded repository-cutover
+node still enforces a final handoff after the debt gate; it does not undo the
+owner-authorized earlier physical transfer or claim that an unrun probe passed.
+No machine release guard, dependency, execution result or approval field is
+changed by this documentation reconciliation.

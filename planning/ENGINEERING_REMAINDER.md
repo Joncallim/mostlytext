@@ -14,7 +14,7 @@ resolve through [ISSUE_TRANSFER_MAP.md](ISSUE_TRANSFER_MAP.md).
 | Owner | Remaining work and completion evidence |
 |---|---|
 | [#6 editor](https://github.com/Joncallim/mostlytext/issues/6) | Reconcile the retained current-line/theme-role draft, actual multi-selection/editing behavior and remaining text workflows. Establish large-file/full-path Release budgets; a source scan microbenchmark is insufficient. |
-| [#7 Mac integration](https://github.com/Joncallim/mostlytext/issues/7) | Implement the currently absent dedicated Quick Look target and static shared-content path, Markdown document artwork/registration, and remaining theme/renderer semantics. Verify containment, failure isolation and performance in real Finder/Quick Look. Naming conventions are frozen, not implementation. |
+| [#7 Mac integration](https://github.com/Joncallim/mostlytext/issues/7) | First pass the required native QL-REPLY callback/cancellation/cold-Finder feasibility probe, then implement the currently absent dedicated Quick Look target and static shared-content path, Markdown document artwork/registration, and remaining theme/renderer semantics. Verify containment, failure isolation and performance in real Finder/Quick Look. Naming conventions are frozen, not implementation. |
 | [#9 math](https://github.com/Joncallim/mostlytext/issues/9) | Complete shared delimiter/parity, useful source-anchored diagnostics and accessible equation identity; prove final Preview/Export paths and real visual/accessibility behavior. |
 | [#10 contributions/TOC](https://github.com/Joncallim/mostlytext/issues/10) | Activate/prove deterministic shared heading anchors and actual Preview/Export TOC navigation. Immutable parse ownership/source binding is integrated; that is not navigation acceptance. |
 | [#11 export](https://github.com/Joncallim/mostlytext/issues/11) | Finish durable asset crash/orphan policy, parity, whole-operation PDF progress/cancellation and resource-budget calibration. Prove real pagination and Save/Cancel behavior without broadening filesystem authority. |
@@ -72,3 +72,19 @@ See [package notices](../compliance/evidence/mermaid-package-notices/README.md),
 [build attributions](../compliance/evidence/nested-build-attribution/README.md),
 [license window](../compliance/LICENCES_UI.md) and
 [release sequence](RELEASE_SEQUENCE.md) for concrete evidence and boundaries.
+
+## Named prerequisites for the next engineering units
+
+Quick Look's binding [QL-REPLY probe](downstream/issue-113-handoff.md) first
+requires a minimal installed signed/ad-hoc provider and real cold Finder
+callback/fallback/cancellation evidence. Only after it passes may broad shared
+rendering be integrated. This probe cannot be replaced by API compilation or a
+mock callback. The protected native desktop/staging prerequisites are currently
+unavailable; target absence remains unfinished implementation, not a completed
+feature waiting only for a screenshot.
+
+The held HTML-preview consumer, current-line drawing, mounted-editor geometry,
+long-session WebKit diagnosis and real PDF/TOC lifecycle journeys likewise retain
+their named native/reproduction prerequisites. Continue independent safe source
+units where interfaces and evidence permit, but do not integrate those held
+behaviors or weaken their gates merely to reduce the open-issue count.
