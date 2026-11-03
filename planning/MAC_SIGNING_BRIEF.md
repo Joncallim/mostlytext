@@ -109,6 +109,23 @@ Their complete native/exact-artifact acceptance remains in #14. Dry-run toleranc
 is pipeline evidence, not permission to call these release gates passed. A release
 candidate must pass the strict check before anything is submitted to Apple.
 
+## Failed submission evidence — 4 November 2026
+
+For each app, cli and dmg phase, the script preserves notary-<phase>-submit.json,
+-submit.stderr and -submit.exitcode before interpreting the command result.
+-response.stderr records response validation failures. A valid, safe submission ID
+permits log retrieval before the failure is enforced; -log.json, -log.stderr and
+-log.exitcode retain that outcome. Missing/malformed/duplicate fields, nonfinite
+values or an unsafe ID stop without a guessed log request. Extra benign metadata
+remains permitted and raw response bytes are preserved.
+
+A nonzero submission exit or any non-Accepted status is fatal in every mode,
+even if the other signal says Accepted. There is no automatic retry. The existing
+missing-log rule remains UNVERIFIED for dry runs and fatal for release candidates.
+Keep these raw diagnostics in the private ignored evidence folder and review them
+before sharing. Behavioral substitute-tool tests cover all three phases; they do
+not establish real signing, Apple service, installed-state or native acceptance.
+
 ## Step 1: build, sign, notarise and package
 
 The script is already integrated in the application repository. Start a clean

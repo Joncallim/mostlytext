@@ -225,21 +225,72 @@ fi
 
 # ---------------------------------------------------------------- 5. notarise
 notarise() {  # $1 file to submit, $2 evidence name
-  local json id status
-  json="$(xcrun notarytool submit "$1" --keychain-profile "$NOTARY_PROFILE" --wait --output-format json)"
-  printf '%s\n' "$json" > "$EVIDENCE/notary-$2-submit.json"
-  id="$(python3 -c 'import json,sys; print(json.load(sys.stdin)["id"])' <<<"$json")"
-  status="$(python3 -c 'import json,sys; print(json.load(sys.stdin)["status"])' <<<"$json")"
+  local id status fields submit_status=0 log_status=0
+  local response="$EVIDENCE/notary-$2-submit.json"
+  # Capture before testing the exit: a rejected/failed wait can still return
+  # a submission identity whose diagnostic log must be retained.
+  if xcrun notarytool submit "$1" --keychain-profile "$NOTARY_PROFILE" --wait --output-format json \
+      > "$response" 2> "$EVIDENCE/notary-$2-submit.stderr"; then
+    submit_status=0
+  else
+    submit_status=$?
+  fi
+  printf '%s\n' "$submit_status" > "$EVIDENCE/notary-$2-submit.exitcode"
+  record "notarisation submit $2: exit $submit_status"
+  if fields="$(python3 - "$response" 2> "$EVIDENCE/notary-$2-response.stderr" <<'PY'
+import json, math, re, sys
+
+def unique(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError("duplicate response key")
+        result[key] = value
+    return result
+
+def finite(value):
+    raise ValueError("nonfinite response value")
+
+def finite_float(value):
+    number = float(value)
+    if not math.isfinite(number):
+        raise ValueError("nonfinite response number")
+    return number
+
+try:
+    with open(sys.argv[1], encoding="utf-8") as handle:
+        value = json.load(handle, object_pairs_hook=unique, parse_constant=finite, parse_float=finite_float)
+    if not isinstance(value, dict):
+        raise ValueError("response is not an object")
+    identity, status = value.get("id"), value.get("status")
+    if not isinstance(identity, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9-]{0,127}", identity):
+        raise ValueError("missing or unsafe submission identity")
+    if not isinstance(status, str) or not re.fullmatch(r"[A-Za-z][A-Za-z ]{0,63}", status):
+        raise ValueError("missing or unsafe submission status")
+    print(identity + "\t" + status)
+except (OSError, ValueError) as error:
+    print("Invalid notarization response: " + str(error), file=sys.stderr)
+    sys.exit(1)
+PY
+)"; then
+    IFS=$'\t' read -r id status <<< "$fields"
+  else
+    fail "invalid notarisation response for $2 (submit exit $submit_status); see notary-$2-submit.json, .stderr, .exitcode and notary-$2-response.stderr"
+  fi
   record "notarisation $2: $id $status"
   # Fetch Apple's log before judging the status: it explains a rejection.
   local log_ok=1
-  if xcrun notarytool log "$id" --keychain-profile "$NOTARY_PROFILE" "$EVIDENCE/notary-$2-log.json"; then
+  if xcrun notarytool log "$id" --keychain-profile "$NOTARY_PROFILE" "$EVIDENCE/notary-$2-log.json" \
+      2> "$EVIDENCE/notary-$2-log.stderr"; then
     record "notarisation log $2: captured"
   else
+    log_status=$?
     log_ok=0
     record "notarisation log $2: NOT captured"
   fi
-  [[ "$status" == "Accepted" ]] || fail "notarisation of $2 returned '$status'; see notary-$2-log.json and notary-$2-submit.json"
+  printf '%s\n' "$log_status" > "$EVIDENCE/notary-$2-log.exitcode"
+  [[ "$status" == "Accepted" ]] || fail "notarisation of $2 returned '$status' (submit exit $submit_status); see notary-$2-log.json and notary-$2-submit.json"
+  (( submit_status == 0 )) || fail "notarisation submission command failed for $2 (exit $submit_status); see notary-$2-submit.json, .stderr and .exitcode"
   (( log_ok )) || gate "the notarisation log for $2 ($id) could not be downloaded"
 }
 step "Notarise the app"

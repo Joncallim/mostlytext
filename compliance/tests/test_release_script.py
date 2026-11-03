@@ -80,8 +80,19 @@ STUBS = {
     "xcrun": textwrap.dedent("""\
         echo "xcrun $*" >> "$CALLS"
         case "$1 $2" in
-          "notarytool submit") printf '{"id": "sub-1", "status": "%s"}\\n' "${NOTARY_STATUS:-Accepted}";;
-          "notarytool log") [ "${NOTARY_LOG_FAILS:-0}" = 1 ] && exit 1; for last in "$@"; do :; done; echo '{}' > "$last";;
+          "notarytool submit")
+            case "$3" in *.dmg) stage=dmg;; */mostlytext.zip) stage=cli;; *) stage=app;; esac
+            if [ "$stage" = "${NOTARY_FAIL_STAGE:-app}" ]; then
+              if [ "${NOTARY_RESPONSE+x}" = x ]; then printf '%s' "$NOTARY_RESPONSE"
+              else printf '{"id": "sub-1", "status": "%s"}\\n' "${NOTARY_STATUS:-Accepted}"
+              fi
+              printf '%s' "${NOTARY_DIAGNOSTIC:-}" >&2
+              exit "${NOTARY_SUBMIT_EXIT:-0}"
+            fi
+            printf '{"id": "sub-1", "status": "Accepted"}\\n';;
+          "notarytool log")
+            if [ "${NOTARY_LOG_FAILS:-0}" = 1 ]; then echo 'fixture log diagnostic' >&2; exit 1; fi
+            for last in "$@"; do :; done; echo '{}' > "$last";;
         esac
         true"""),
 }
@@ -230,6 +241,96 @@ class ReleaseScriptModeTests(unittest.TestCase):
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn("returned 'Invalid'", result.stdout)
                 self.assertTrue((self.out / "evidence/notary-app-log.json").exists())
+
+    def reset_release_evidence(self) -> None:
+        shutil.rmtree(self.out, ignore_errors=True)
+        self.calls.write_text("")
+
+    def test_nonzero_rejected_submit_preserves_response_diagnostic_and_log_at_every_phase(self) -> None:
+        for mode in ("--dry-run", "--release-candidate"):
+            for number, phase in enumerate(("app", "cli", "dmg"), 1):
+                with self.subTest(mode=mode, phase=phase):
+                    self.reset_release_evidence()
+                    result = self.run_script(mode, NOTARY_FAIL_STAGE=phase, NOTARY_STATUS="Invalid",
+                                             NOTARY_SUBMIT_EXIT="65", NOTARY_DIAGNOSTIC="fixture rejected")
+                    evidence = self.out / "evidence"
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertTrue((evidence / f"notary-{phase}-submit.json").is_file())
+                    self.assertIn('"Invalid"', (evidence / f"notary-{phase}-submit.json").read_text())
+                    self.assertEqual((evidence / f"notary-{phase}-submit.stderr").read_text(), "fixture rejected")
+                    self.assertEqual((evidence / f"notary-{phase}-submit.exitcode").read_text(), "65\n")
+                    self.assertTrue((evidence / f"notary-{phase}-log.json").is_file())
+                    self.assertEqual(self.calls.read_text().count("notarytool submit"), number)
+                    self.assertFalse((evidence / "SHA256SUMS").exists())
+                    self.assertNotIn("Done (", result.stdout)
+
+    def test_nonzero_submit_cannot_pass_even_when_the_response_claims_accepted(self) -> None:
+        for mode in ("--dry-run", "--release-candidate"):
+            for phase in ("app", "cli", "dmg"):
+                with self.subTest(mode=mode, phase=phase):
+                    self.reset_release_evidence()
+                    result = self.run_script(mode, NOTARY_FAIL_STAGE=phase, NOTARY_SUBMIT_EXIT="72")
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn("submission command failed", result.stdout)
+                    self.assertTrue((self.out / f"evidence/notary-{phase}-log.json").is_file())
+                    self.assertNotIn("Done (", result.stdout)
+
+    def test_transport_and_non_json_failures_keep_raw_evidence_without_guessing_an_id(self) -> None:
+        for mode in ("--dry-run", "--release-candidate"):
+            for response in ("", "not-json"):
+                with self.subTest(mode=mode, response=response):
+                    self.reset_release_evidence()
+                    result = self.run_script(mode, NOTARY_RESPONSE=response, NOTARY_SUBMIT_EXIT="69",
+                                             NOTARY_DIAGNOSTIC="fixture transport failure")
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn("invalid notarisation response", result.stdout)
+                    evidence = self.out / "evidence"
+                    self.assertEqual((evidence / "notary-app-submit.json").read_text(), response)
+                    self.assertEqual((evidence / "notary-app-submit.stderr").read_text(), "fixture transport failure")
+                    self.assertEqual((evidence / "notary-app-submit.exitcode").read_text(), "69\n")
+                    self.assertTrue((evidence / "notary-app-response.stderr").read_text())
+                    self.assertNotIn("notarytool log", self.calls.read_text())
+
+    def test_malformed_response_fields_duplicate_keys_and_unsafe_ids_stop_before_log_request(self) -> None:
+        responses = ['{}', '[]', '{"id": 1, "status": "Accepted"}',
+                     '{"id": "sub-1", "status": true}', '{"id": "--help", "status": "Accepted"}',
+                     '{"id": "sub-1", "id": "sub-2", "status": "Accepted"}',
+                     '{"id": "sub-1", "status": "Invalid", "status": "Accepted"}',
+                     '{"id": "sub-1", "status": "Accepted", "value": NaN}',
+                     '{"id": "sub-1", "status": "Accepted", "value": 1e999}',
+                     '{"id": "", "status": "Accepted"}',
+                     '{"id": "sub-1", "status": "Accepted\\nforged"}']
+        for response in responses:
+            with self.subTest(response=response):
+                self.reset_release_evidence()
+                result = self.run_script("--release-candidate", NOTARY_RESPONSE=response)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("invalid notarisation response", result.stdout)
+                self.assertNotIn("notarytool log", self.calls.read_text())
+                self.assertEqual((self.out / "evidence/notary-app-submit.json").read_text(), response)
+
+    def test_nonzero_submit_and_log_failure_remain_fatal_in_dry_run(self) -> None:
+        result = self.run_script("--dry-run", NOTARY_STATUS="Invalid", NOTARY_SUBMIT_EXIT="65", NOTARY_LOG_FAILS="1")
+        self.assertNotEqual(result.returncode, 0)
+        evidence = self.out / "evidence"
+        self.assertEqual((evidence / "notary-app-submit.exitcode").read_text(), "65\n")
+        self.assertEqual((evidence / "notary-app-log.exitcode").read_text(), "1\n")
+        self.assertIn("fixture log diagnostic", (evidence / "notary-app-log.stderr").read_text())
+        self.assertNotIn("Done (", result.stdout)
+
+    def test_success_records_submission_and_log_stream_status_for_all_three_phases(self) -> None:
+        result = self.run_script("--release-candidate")
+        self.assertEqual(result.returncode, 0, result.stdout)
+        for phase in ("app", "cli", "dmg"):
+            for command in ("submit", "log"):
+                self.assertEqual((self.out / f"evidence/notary-{phase}-{command}.exitcode").read_text(), "0\n")
+                self.assertEqual((self.out / f"evidence/notary-{phase}-{command}.stderr").read_text(), "")
+
+    def test_valid_response_metadata_is_preserved_without_narrowing_the_protocol(self) -> None:
+        response = '{"id":"sub-1","status":"Accepted","message":"done","info":{"n":1}}'
+        result = self.run_script("--release-candidate", NOTARY_RESPONSE=response)
+        self.assertEqual(result.returncode, 0, result.stdout)
+        self.assertEqual((self.out / "evidence/notary-app-submit.json").read_text(), response)
 
     def test_release_candidate_requires_a_clean_tree(self) -> None:
         (self.repo / "untracked.txt").write_text("dirty\n")
