@@ -97,3 +97,9 @@ NSWindowDelegate request recorder to this component case too. Retain the real
 performClose, assert exactly one request/new lifetime/no attached sheet, restore
 the production delegate before cleanup, and preserve all persistence, session
 and relaunched-text assertions. Actual dirty sheet acceptance stays native.
+
+The static audit of every app-test closeAfterRetire caller also finds the same
+implicit real dirty-sheet path in WindowControllerEpochCloseTests. Apply the
+same request recorder before full execution, keep the original recovery-leak
+assertion, and strengthen it with one request, retained exact live epoch and an
+open window/no attached sheet. All direct close callers are now accounted for.
