@@ -61,3 +61,14 @@ metadata/helper/artifact readback. Existing real transaction/command/JSON tests
 run hosted; no local label fixture is claimed as native editing acceptance.
 Record exact source, substitutions, failing controls and integration evidence;
 retain final freeze, translations, plural/layout/VoiceOver and native gates.
+
+## Find view layout reconciliation before applying it
+
+The new catalog expressions make SwiftFormat wrap several Find option calls,
+and strict lint now reports a 256-line type body against its unchanged 250-line
+limit. Move the existing private optionToggle helper to a private method in an
+extension in the same file. It uses only its existing parameters; keep the
+signature, body and privacy unchanged. Do not suppress or raise the lint limit,
+compress unrelated code, or move state/observation. The source-scope proof must
+put this unchanged helper back in its original declaration position before
+comparing reversed parser trees, and record that explicit layout normalization.
