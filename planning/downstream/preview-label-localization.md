@@ -65,3 +65,31 @@ No native or final linguistic sign-off, final string freeze, new renderer,
 network/file authority, dependency, budget, editing policy or Quick Look target
 is introduced. Native tooltip/VoiceOver/layout and final translated plurals
 remain open; English review drafts do not meet language-quality criteria.
+
+## Compiler coverage refinement before adding its guard
+
+The locked compile-only Release extraction found 691 owned source/key routes
+and 615 distinct catalog/key pairs across all 15 catalogs. There are 315 missing
+route references, representing 282 distinct keys, before reconciliation. Most
+are existing correctly extracted app labels; the package omissions also include
+escaped-quote and signed 32-bit/64-bit format-key mismatches. Retain existing
+entries/translations unchanged and add the exact compiler keys as review drafts;
+do not reinterpret a mismatched older key as accepted translation evidence.
+
+Add a read-only standard-library coverage tool that compares actual Xcode
+stringsdata with the current owned source/catalog paths. Normalize paths in its
+receipt; ignore dependency extraction, reject unknown owned tables/catalogs,
+and fail on empty, malformed, missing-source or missing-key evidence. Require
+all owned application/helper/package Swift compilation inputs (excluding resource
+scripts) to have extraction records, including files with no keys. This catches
+an accidentally partial extraction rather than treating zero results as a pass.
+Record exact source hashes and reject inconsistent architecture duplicates.
+
+Enable string extraction in the existing hosted Release app/helper builds and
+run the guard on that build's intermediates. Derive the intermediates path from
+actual Xcode build settings, not a guessed home directory. The code/pin/signing
+and UI-execution policies remain unchanged. Add deterministic positive and
+negative Python controls for ownership, completeness, format-key identity and
+duplicate/malformed records; run them in Compliance. This is compiler/resource
+coverage of currently built code, not an exhaustive discovery of every plain
+String or final native/string-freeze acceptance.
