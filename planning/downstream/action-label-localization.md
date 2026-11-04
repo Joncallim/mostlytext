@@ -98,3 +98,29 @@ Strict lint and pinned formatting pass after the documented helper move; source
 Compliance and 19 catalog/configuration controls pass. Final complete compiler
 coverage, locked Release/resource readback and full hosted combined behavior
 tests remain required before merge. Final language/native acceptance stays open.
+
+## Reproduced installation-title correction before implementation
+
+The remaining action-message review disproved the assumption that every needed
+change is a label-only lookup. TextFilterCommands uses String(localized:) for
+`^[Added count Example Script](inflect: true)`. The Foundation-only source probe
+returns the literal markup for counts 0/1/2; AttributedString(localized:) returns
+readable Added 0 Example Scripts / Added 1 Example Script / Added 2 Example
+Scripts. This is a real formatting defect, separate from the 62 lookup routes.
+
+Add a small static installedExamplesTitle(count:bundle:locale:) value formatter
+to the existing TextFilterCommands type. Resolve the existing catalog key with
+AttributedString(localized:) and return its plain characters. The existing
+success alert calls that formatter; installation, failure/no-op branches and
+modal/window policy remain untouched. No new key or catalog translation is
+required. The formatter owns count agreement and accepts explicit resources for
+qualification without constructing a command or NSAlert.
+
+Test that actual helper and compiled English count forms, all four locales'
+absence of raw markup, and a separate explicit-bundle sentinel. Locally extract
+only this unchanged Foundation function into a namespace fixture. The actual
+old String expression must fail the new readable-output assertions. Record this
+functional correction separately; the 19-file parser-reversal proof applies
+only to the earlier 62 label routes, not to this intentionally different
+formatter. Full hosted qualification must use the new combined head; the
+superseded partial CI is not a release or correctness pass.
