@@ -71,6 +71,10 @@ The tool requires a record for every owned app, helper and package Swift input,
 including sources with no keys. It excludes dependency/test/resource-script
 copy, compares architecture duplicates within the selected configuration and
 checks exact catalog/key identity. Empty or partial extraction cannot pass.
+Future extension targets must explicitly extend the coverage tool's ownership
+and extraction roots before their compiler output can be claimed covered. The
+current roots cover the app, helper and MacDownKit package.
+
 Debug records cannot substitute for missing Release inputs. The receipt records
 current source hashes and relative source/key/line routes; produce it from a
 stable current build, not stale intermediates from a different source snapshot.

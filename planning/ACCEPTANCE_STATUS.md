@@ -41,10 +41,29 @@ use the package catalog, bringing the inventory to 346 entries. Complete
 CI 41771722159 passes 3,425 package/478 suites (two existing known issues),
 613 non-UI app/125 suites, locked builds, metadata/helper checks and pins.
 Actual compiled resources and old-source marker controls pass for both units.
-PR54 and PR55 are still in combined hosted qualification for compiler-key
-coverage and owned action/accessibility labels; they are not yet the integrated
-source baseline. Foundation/compiler/catalog checks remain separate from native
-language/layout/PDF acceptance. Non-English new values remain review drafts.
+[PR54](https://github.com/Joncallim/mostlytext/pull/54) merged at `18f3599b`,
+qualifying preview/TOC labels and exact compiler-key reconciliation. Complete
+CI 41773915889 passes 3,425 package and 616 non-UI app tests.
+[PR55](https://github.com/Joncallim/mostlytext/pull/55) is now merged at
+`f548b1818205e4b705757fc6748d0f8302212a22`, with actual tree
+`39cc13dae12bc0b64cb54f5dd31c5907089420e3` equal to qualified `e7bd40d3`.
+[Complete CI 41776832659](https://github.com/Joncallim/mostlytext/actions/runs/41776832659)
+passes 3,425 package tests/478 suites (321.089 seconds, two recorded known
+issues), 619 app tests/127 suites (114.103 seconds), locked Debug/Release
+app/mostlytext builds, app/UI compilation, compiler coverage, metadata/helper
+and final pins. Compliance 41776832665 and GitGuardian pass.
+
+The current inventory has 671 entries across 15 catalogs. Actual Release
+extraction covers all 682 owned Swift inputs, 788 source/line routes and 653
+distinct keys with zero missing routes. Plain-String command/sidebar/Find/undo/
+JSON labels now enter their owning catalogs. The script-installation success
+title resolves grammar markup through AttributedString; the old expression
+fails the readable-output controls. Original-source failures and restored
+passes are retained. The original #3 math/diagram/error/recovery pipeline row
+is checked; the final hardcoded-string audit, translations, plural quality,
+native overrides/layout/VoiceOver and freeze remain open. New non-English values
+are review drafts. Local Foundation/compiler/catalog checks do not launch the
+product and establish no native acceptance.
 
 There are 152 registered notice components after the captured Go standard-library
 and compiler-rt corrections. The final 100 parser positions have technical
@@ -70,7 +89,7 @@ before any native execution; the source checkpoint does not authorize it.
 | Source/nonrelease artifact inventory | Passes; current scoped attribution checks include 142 local Compliance controls | #14 final compliance is a separate strict gate |
 | Strict release compliance | Six failures remain, detailed below | #14: acceptance is blocked before an RC can be submitted |
 | Repository preview (superseded on 4 November) | The earlier failed upload did not establish installation. The owner subsequently approved upload; settings persistence and anonymous Open Graph readback now verify the installed image, recorded in [brand assets](../design/brand/README.md) | #16 social-install row is checked; native document/Finder/release artwork remains separate |
-| Website | Separate mostlytext-site source/license; reviewed source/backlog/MostlyText-MIT fixes merged through `0d04102` and prepared | Deployment approval remains unanswered; source readiness is not a live-site readback |
+| Website | Separate mostlytext-site source/license; reviewed source/backlog/MostlyText-MIT fixes merged through `0d04102` and prepared | Owner approved deployment on 4 November; publication remains unexecuted because Keychain blocks the CLI credential, the connector rejects asset-token upload, and Chrome reports an open extension panel. No live-site change is claimed |
 
 ## Strict release failures observed here
 

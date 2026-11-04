@@ -155,9 +155,11 @@ put credentials in evidence, or mutate owner language defaults for native QA.
 The original legacy source reference is the frozen Git tag recorded in
 [AGENTS.md](../AGENTS.md), not a current legacy-reference directory.
 
-## String-freeze baseline
+## Final string-freeze baseline remains open
 
-The English source-string set at the point E16 is signed off is the 1.0 string freeze (per the
-epic's "String-freeze rule"). E17 must not introduce new user-facing application strings without
-re-running the extraction/audit/pseudo-localization steps above. The freeze baseline commit is
-recorded in `planning/RELEASE_EVIDENCE.md`.
+The final English source-string set is frozen only after the post-stabilization
+E16 review in [RELEASE_SEQUENCE.md](RELEASE_SEQUENCE.md). Record that exact
+baseline in the release evidence then; earlier catalog snapshots are historical
+and no final baseline is claimed here. Any subsequent application string or UI
+change reopens the affected extraction, translation, layout and exact-artifact
+checks in the current guide.

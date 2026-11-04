@@ -120,9 +120,12 @@ that actual assertion and exact restoration passes. An initial fixture literal
 had an invalid backslash escape; its failed compile is retained, and only that
 fixture was corrected before the successful Debug/Release qualification.
 
-Sixteen Python coverage controls and 19 catalog/configuration controls pass,
+Eighteen Python coverage controls and 19 catalog/configuration controls pass,
 as do source Compliance, strict lint and pinned formatting. Locked universal
 Release compilation with extraction passes for the corrected Swift sources;
-after resource reconciliation, final rebuilt-resource readback and full hosted
-combined checks are still required before merge. Non-English drafts, final
+all 287 added keys were read back in four compiled locales (1,148 lookups).
+PR54 merged at `18f3599b` with the same tree as qualified `91154ddc`. Full
+CI 41773915889 passes 3,425 package and 616 app tests, locked builds, actual
+compiler coverage and metadata/helper/pin checks. Compliance and GitGuardian
+pass. Non-English drafts, final
 plural/language/layout/VoiceOver review and the native hold remain unchanged.

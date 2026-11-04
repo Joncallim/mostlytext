@@ -1,7 +1,7 @@
 # Remaining engineering and acceptance ownership — 4 November 2026
 
-The live 4 November audit contains 17 open issues and 184 unchecked original
-checkbox rows after PR51. Three issues use prose rather than checkbox criteria;
+The live 4 November audit contains 17 open issues and 183 unchecked
+checkbox rows after PR55. Three issues use prose rather than checkbox criteria;
 that does not make them complete. These are broad acceptance contracts, not
 17 newly discovered bugs.
 Merged implementation, automated checks and documentation progress are recorded
@@ -9,9 +9,9 @@ within them. None currently has all its whole-issue closure evidence. This map
 reconciles current source, the transferred issues and the preserved native hold;
 it is a work queue, not a declaration that engineering or release work is done.
 Initial mapping baseline: main 8c78f3cd13635a7010ebeaecad932744afc90992.
-Current fully qualified source baseline: main `6166a1424edd42e3b138f0f9e52009ac9ec275ac`
-([PR53](https://github.com/Joncallim/mostlytext/pull/53)). Its actual tree matches
-qualified `b0fe54df`; complete CI passes 3,425 package and 613 non-UI app tests. Scoped
+Current fully qualified source baseline: main `f548b1818205e4b705757fc6748d0f8302212a22`
+([PR55](https://github.com/Joncallim/mostlytext/pull/55)). Its actual tree matches
+qualified `e7bd40d3`; complete CI passes 3,425 package and 619 non-UI app tests. Scoped
 source/resource evidence is recorded in [ACCEPTANCE_STATUS.md](ACCEPTANCE_STATUS.md)
 and the associated PRs; the named remaining contracts below still apply. Historical PR numbers
 resolve through [ISSUE_TRANSFER_MAP.md](ISSUE_TRANSFER_MAP.md).
@@ -28,7 +28,7 @@ resolve through [ISSUE_TRANSFER_MAP.md](ISSUE_TRANSFER_MAP.md).
 | [#13 HTML preview](https://github.com/Joncallim/mostlytext/issues/13) | The production consumer still uses the legacy handler. The bounded grant/handler must not be activated without the required native request/root/MIME/cancellation/containment proof. The preserved draft was closed without merge or acceptance. |
 | [#14 attribution](https://github.com/Joncallim/mostlytext/issues/14) | Technical disposition of the final 100 parser references is complete with zero technical remainder; original frozen unclassified columns are historical and their effective categories are populated. Independent embedded/generated IP/grant, D2/font/source and complete Graphviz per-file/runtime review and approved source publication remain. Captured Go 1.24.6 standard-library and compiler-rt texts are distributed conservatively; they do not waive those reviews. LC-08's original Help-menu entry now reuses the existing shared scene; genuine native menu/window acceptance remains separate. Captured package texts and conservative build-input notices now ship. |
 | [#15 WebKit](https://github.com/Joncallim/mostlytext/issues/15) | Controlled extended-session reproduction/root-cause diagnosis remains. Hosted fixture/alert/IconServices corrections do not explain or close the original WebKit hang. Preserve failed-run samples; do not change timeouts or label a retry as a fix. |
-| [#16 identity](https://github.com/Joncallim/mostlytext/issues/16) | The owner-approved social preview is installed and publicly verified; repository/backlog cutover and compiled document-rank/helper corrections are complete. Finish approved document artwork, native Finder/Open With, update-channel and installed-state evidence. Website source `0d04102` is ready but deployment approval remains pending. Retained internal/storage identifiers are intentional. |
+| [#16 identity](https://github.com/Joncallim/mostlytext/issues/16) | The owner-approved social preview is installed and publicly verified; repository/backlog cutover and compiled document-rank/helper corrections are complete. Finish approved document artwork, native Finder/Open With, update-channel and installed-state evidence. Website source `0d04102` is approved for deployment; credential/upload/browser access currently blocks publication, and the live site is unchanged. Retained internal/storage identifiers are intentional. |
 | [#17 audit](https://github.com/Joncallim/mostlytext/issues/17) | Reconcile each directly owned finding with its exact fix/proof and each delegated finding with its owner. Repeat the final whole-repository review on the post-fix baseline and retain required native lifecycle proof. |
 | [#18 parsing performance](https://github.com/Joncallim/mostlytext/issues/18) | Remaining whole-document work and genuine 1 MiB Release keystroke budget need resolution/proof. Retained measurements above budget are failures, not superseded by smaller component timings. |
 | [#19 highlighting](https://github.com/Joncallim/mostlytext/issues/19) | The original point/byte geometry criterion is checked with PR43's actual constructor/endpoint proof. Establish the original Debug abort's exact offset/limit trigger in a mounted editor; deterministic stale parse/style interleavings, mounted geometry/lifecycle/IME and Release stress proof remain. Scanner safety fixes do not close all these paths. |
@@ -44,7 +44,7 @@ held code, re-open product identity or introduce new features.
 |---|---|
 | [#5 native UI](https://github.com/Joncallim/mostlytext/issues/5) | Protected staging, fresh source/build receipts and active separate GUI session, followed first by the genuine formatting-focus control and then the critical UI matrix. Owner-account product paths remain held. |
 | [#12 external files](https://github.com/Joncallim/mostlytext/issues/12) | Exact Release reload/conflict/close, selection/scroll, filesystem storms, 1/10 MiB latency and idle-wakeup matrix, with genuine XCUITest execution. |
-| [#3 localization](https://github.com/Joncallim/mostlytext/issues/3) | Post-software-stabilization string audit/freeze, translated/pseudo-localized layout, three plural-rule languages, VoiceOver/native-language review and exact string baseline. Do not freeze before remaining in-app UI/strings. |
+| [#3 localization](https://github.com/Joncallim/mostlytext/issues/3) | The original math/diagram/error/recovery pipeline criterion is checked through PR55; 671 catalog entries and complete Release compiler coverage are qualified. Post-software-stabilization string audit/freeze, translated/pseudo-localized layout, three plural-rule languages, VoiceOver/native-language review and exact string baseline. Do not freeze before remaining in-app UI/strings. |
 | [#4 distribution](https://github.com/Joncallim/mostlytext/issues/4) | Final packaged/public identity and installed mostlytext CLI acceptance, real clean/stateful install and idempotent migration, Sparkle feed/key/channel and N→N+1 state-preserving update, Developer ID signing, notary credential profile, notarization/stapling/Gatekeeper and exact final compliance. |
 | [#8 closure gate](https://github.com/Joncallim/mostlytext/issues/8) | Consume all owning issues, zero release-relevant P0/P1/P2, final review, coherent evidence on one exact verification candidate and the localization/artifact handoff. It cannot close by aggregating source passes alone. |
 
