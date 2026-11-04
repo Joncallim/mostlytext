@@ -312,6 +312,21 @@ jobs:
             -destination 'platform=macOS' -onlyUsePackageVersionsFromResolvedFile build
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MostlyTextCLI -configuration Release \
             -destination 'platform=macOS' -onlyUsePackageVersionsFromResolvedFile build
+      - name: Verify compiled document metadata and embedded CLI
+        run: |
+          python3 MacDown2/scripts/test-document-metadata.py
+          xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 -configuration Release \
+            -destination 'platform=macOS' -onlyUsePackageVersionsFromResolvedFile -showBuildSettings -json \
+            > "$RUNNER_TEMP/document-build-settings.json"
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess
+          records = json.loads((pathlib.Path(os.environ['RUNNER_TEMP']) / 'document-build-settings.json').read_text())
+          settings = next(row['buildSettings'] for row in records if row['target'] == 'MacDown2')
+          app = pathlib.Path(settings['TARGET_BUILD_DIR']) / settings['FULL_PRODUCT_NAME']
+          command = pathlib.Path(settings['BUILT_PRODUCTS_DIR']) / 'mostlytext'
+          subprocess.run(['python3', 'MacDown2/scripts/verify-document-metadata.py', '--app', str(app),
+                          '--guide', 'docs/INSTALLATION_AND_MIGRATION.md', '--standalone-cli', str(command)], check=True)
+          PY
       - name: Build for testing (app + UI tests; UI tests run requires macOS 26+ GUI)
         # -enableCodeCoverage NO: documented in planning/epic-10-implementation.md
         # ("Local build-for-testing coverage quirk"). Xcode 26's build-for-testing
