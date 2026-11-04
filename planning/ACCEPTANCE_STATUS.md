@@ -32,9 +32,19 @@ remain open.
 [PR50](https://github.com/Joncallim/mostlytext/pull/50) qualified package-owned
 FileCore/TextSearch details and all 15 catalog mappings; Transifex account/project
 slugs remain unconfigured. [PR52](https://github.com/Joncallim/mostlytext/pull/52)
-is pending full combined qualification for 19 app-owned diagram/PDF details and
-a 343-entry inventory. Its Foundation/compiler/catalog checks are separate from
-native language/layout/PDF acceptance. Non-English new values remain review drafts.
+merged at `f3860c3d`, qualifying 19 app-owned diagram/PDF details and a
+343-entry inventory. Complete CI 41769847413 passes 3,422 package and 613 non-UI
+app tests plus locked builds and metadata/helper checks.
+[PR53](https://github.com/Joncallim/mostlytext/pull/53) then merged at `6166a142`
+with the same tree as qualified `b0fe54df`: all three editor-owned cmark details
+use the package catalog, bringing the inventory to 346 entries. Complete
+CI 41771722159 passes 3,425 package/478 suites (two existing known issues),
+613 non-UI app/125 suites, locked builds, metadata/helper checks and pins.
+Actual compiled resources and old-source marker controls pass for both units.
+PR54 and PR55 are still in combined hosted qualification for compiler-key
+coverage and owned action/accessibility labels; they are not yet the integrated
+source baseline. Foundation/compiler/catalog checks remain separate from native
+language/layout/PDF acceptance. Non-English new values remain review drafts.
 
 There are 152 registered notice components after the captured Go standard-library
 and compiler-rt corrections. The final 100 parser positions have technical

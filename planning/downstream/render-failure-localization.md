@@ -12,7 +12,7 @@ language/native acceptance or activation of held preview/Quick Look behavior.
 
 ## Baseline and ownership
 
-Main23a42955a54495590eadad9b823e96f1f2eb4a28; PR51 export recovery is independent
+Main `23a42955a54495590eadad9b823e96f1f2eb4a28`; PR51 export recovery is independent
 and will be incorporated before combined qualification. The three existing
 DiagramBlockView types own their render-state transitions; their known-error
 switches currently return identical literal details. The app owns these strings,
@@ -86,13 +86,18 @@ all known states, fallback, the full signed maximum count with each locale's
 actual digit grouping and every PDF error/recovery value. A synthetic explicit
 bundle control fails when the diagram formatter is forced to main. Separate
 synthetic PDF markers pass for all fifteen localized properties and fail against
-the actual original value-enum bodies from23a42955; production catalogs are never
+the actual original value-enum bodies from `23a42955`; production catalogs are never
 rewritten for this control. The static guard covers twelve diagram routes and
-fifteen PDF routes, with29 rejected bypass/passthrough mutations across its
+fifteen PDF routes, with 29 rejected bypass/passthrough mutations across its
 controls. New non-English values remain English needs_review drafts. This is
 resource/source qualification, not PDF execution or native translation/layout.
 
-The canonical inventory now contains343 entries across the same15 catalogs;
-Transifex mappings/account placeholders are unchanged. Full combined hosted
-app/package/build qualification follows incorporation of PR51. Required native
-and final language acceptance remain open.
+The canonical inventory now contains 343 entries across the same 15 catalogs;
+Transifex mappings/account placeholders are unchanged. PR52 merged at
+`f3860c3d594a72921d0fea1b4732dcc1500d2810`, with the exact qualified
+`51bcbfa3` tree. Complete CI 41769847413 passes 3,422 package/477 suites
+(two existing known issues), 613 non-UI app/125 suites, locked Debug/Release
+builds, app/UI compilation, metadata/helper checks and pins. All 19 keys
+compile-extract and appear in the actual universal Release locale resources.
+Compliance and GitGuardian pass. Required native and final language acceptance
+remain open.
