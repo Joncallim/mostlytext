@@ -15,7 +15,11 @@ extension CMarkGFM {
         }
 
         var errorDescription: String? {
-            description
+            switch self {
+            case .parserCreationFailed: String(localized: "cmark could not create a parser", bundle: .module)
+            case .parseProducedNoDocument: String(localized: "cmark produced no document", bundle: .module)
+            case .renderFailed: String(localized: "cmark could not render HTML", bundle: .module)
+            }
         }
     }
 
