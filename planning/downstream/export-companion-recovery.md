@@ -209,3 +209,12 @@ The 100-cycle crash proof must include both eligible cleanup and ineligible
 retention/backpressure. This correction changes no budget, authored text, raw-
 HTML policy, dependency or native gate. Complete it before activating cleanup;
 Unit A's authenticated model alone remains deliberately unmerged scaffolding.
+
+## Commit and retirement cutoff
+
+Before the first irreversible obsolete-resource retirement, persist the pending
+operation's committed phase. After this point a primary whose bytes revert to
+the prior digest is an external post-commit modification, not an aborted export.
+Refuse further cleanup; never reinterpret that state as rollback, because assets
+needed by the former primary may already have been retired. This phase must
+survive restart and is checked alongside the actual primary before mutation.
