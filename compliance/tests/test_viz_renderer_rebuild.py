@@ -1,6 +1,8 @@
 """Offline build-input and complete-output refusal controls."""
 
 import json
+import base64
+import hashlib
 from pathlib import Path
 import shutil
 import sys
@@ -91,13 +93,37 @@ class VizRendererRebuildTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Frozen npm lock differs"):
             renderer.check_lock(b'{"lockfileVersion": 3, "packages": {}}', self.root)
 
-    def test_backend_recipe_stays_identical_with_one_networked_install(self):
+    def test_backend_recipe_stays_identical_with_fully_offline_install(self):
         original = (self.root / "compliance/evidence/graphviz-backend-reproduction/upstream-Dockerfile").read_bytes()
         recipe = renderer.recipe(original, self.root)
         self.assertTrue(recipe.startswith(renderer.backend.derive_recipe(original, self.root)))
-        self.assertEqual(recipe.count(b"RUN --network=default "), 1)
-        self.assertIn(b"npm clean-install --ignore-scripts --no-audit --no-fund", recipe)
+        self.assertEqual(recipe.count(b"RUN --network=default "), 0)
+        self.assertIn(b"npm clean-install --ignore-scripts --offline --cache=/npm-cache --no-audit --no-fund", recipe)
         self.assertIn(b"touch lib/backend.js && make", recipe)
+
+    def test_dependency_integrity_changed_missing_extra_and_linked_objects_rejected(self):
+        folder = Path(self.temp.name) / "packages"
+        folder.mkdir()
+        data = b"fixture compressed package bytes; never executed"
+        integrity = "sha512-" + base64.b64encode(hashlib.sha512(data).digest()).decode()
+        plan = {"object.tgz": {"integrity": integrity, "url": "https://registry.npmjs.org/fixture.tgz"}}
+        p = folder / "object.tgz"
+        p.write_bytes(data)
+        self.assertEqual(renderer.checked_packages(plan, folder)["total_bytes"], len(data))
+        p.write_bytes(data + b"changed")
+        with self.assertRaisesRegex(ValueError, "integrity differs"):
+            renderer.checked_packages(plan, folder)
+        p.unlink()
+        with self.assertRaisesRegex(ValueError, "membership"):
+            renderer.checked_packages(plan, folder)
+        p.symlink_to(self.built / "backend.js")
+        with self.assertRaisesRegex(ValueError, "regular file"):
+            renderer.checked_packages(plan, folder)
+        p.unlink()
+        p.write_bytes(data)
+        (folder / "extra.tgz").write_bytes(b"extra")
+        with self.assertRaisesRegex(ValueError, "membership"):
+            renderer.checked_packages(plan, folder)
 
 
 if __name__ == "__main__":

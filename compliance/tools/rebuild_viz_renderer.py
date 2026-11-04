@@ -2,6 +2,9 @@
 """Prepare/compare a complete hosted Viz.js build; no upstream execution here."""
 
 import argparse
+import base64
+from concurrent.futures import ThreadPoolExecutor
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -9,6 +12,7 @@ import re
 import shutil
 import sys
 import tarfile
+from threading import Lock
 from urllib.parse import urlsplit
 import urllib.request
 
@@ -20,6 +24,8 @@ PACKET = "compliance/evidence/viz-renderer-reproduction"
 GENERATED = {"backend.js": "lib/backend.js", "metadata.js": "lib/metadata.js",
              "viz.js": "dist/viz.js", "viz.cjs": "dist/viz.cjs", "viz-global.js": "dist/viz-global.js"}
 SCOPE = "all five generated npm runtime files; not full npm archive, historical attestation or rights clearance"
+MAX_PACKAGE = 32 * 1024 * 1024
+MAX_PACKAGES_TOTAL = 512 * 1024 * 1024
 
 
 def node_reference(root=ROOT):
@@ -56,6 +62,76 @@ def check_lock(data, root=ROOT):
     return {"bytes": len(data), "sha256": backend.sha(data), "resolved_registry_inputs": resolved}
 
 
+def lock_bytes(inputs, root=ROOT):
+    path = inputs / "viz-source-99da545.tar.gz"
+    expected = backend.audit(root)["archives"][path.name]
+    backend.require(backend.record(backend.read_regular(path, expected["bytes"])) == expected, "Source archive differs")
+    with tarfile.open(path) as archive:
+        return backend.selected_member(archive, f"viz-js-{backend.REVISION}/package-lock.json")
+
+
+def dependency_plan(data, root=ROOT):
+    check_lock(data, root)
+    objects = {}
+    for entry in json.loads(data)["packages"].values():
+        if not entry.get("resolved") or entry.get("link"):
+            continue
+        integrity = entry["integrity"]
+        name = backend.sha(integrity.encode()) + ".tgz"
+        item = {"integrity": integrity, "url": entry["resolved"]}
+        if name in objects:
+            backend.require(objects[name]["integrity"] == integrity, "Dependency object collision")
+            item["url"] = min(item["url"], objects[name]["url"])
+        objects[name] = item
+    return dict(sorted(objects.items()))
+
+
+def check_integrity(data, integrity):
+    backend.require(len(data) <= MAX_PACKAGE, "Oversized dependency object")
+    algorithm, encoded = integrity.split("-", 1)
+    backend.require(algorithm in {"sha1", "sha256", "sha384", "sha512"}, "Unsupported dependency integrity")
+    expected = base64.b64decode(encoded, validate=True)
+    backend.require(hashlib.new(algorithm, data).digest() == expected, "Dependency integrity differs")
+
+
+def checked_packages(plan, folder):
+    backend.require(not folder.is_symlink() and folder.is_dir(), "Dependency cache is not an owned directory")
+    backend.require({p.name for p in folder.iterdir()} == set(plan), "Dependency object membership differs")
+    result = {}
+    total = 0
+    for name, item in plan.items():
+        data = backend.read_regular(folder / name, MAX_PACKAGE)
+        check_integrity(data, item["integrity"])
+        total += len(data)
+        backend.require(total <= MAX_PACKAGES_TOTAL, "Dependency cache exceeds total bound")
+        result[name] = {**item, **backend.record(data)}
+    return {"object_count": len(result), "total_bytes": total, "objects": result}
+
+
+def fetch_packages(inputs, folder, root=ROOT):
+    plan = dependency_plan(lock_bytes(inputs, root), root)
+    backend.new_scratch(folder, root)
+    total = 0
+    budget = Lock()
+    def fetch(row):
+        nonlocal total
+        name, item = row
+        request = urllib.request.Request(item["url"], headers={"User-Agent": "MostlyText-source-reproduction"})
+        with urllib.request.urlopen(request, timeout=120) as response:
+            data = response.read(MAX_PACKAGE + 1)
+        check_integrity(data, item["integrity"])
+        with budget:
+            total += len(data)
+            backend.require(total <= MAX_PACKAGES_TOTAL, "Dependency cache exceeds total bound")
+        with (folder / name).open("xb") as stream:
+            stream.write(data)
+        return len(data)
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        list(pool.map(fetch, plan.items()))
+    backend.require(total <= MAX_PACKAGES_TOTAL, "Dependency cache exceeds total bound")
+    return checked_packages(plan, folder)
+
+
 def recipe(original, root=ROOT):
     node = node_reference(root)
     lock = backend.audit(root)["build_source_sha256"]["package-lock.json"]
@@ -69,7 +145,9 @@ RUN mkdir /src/source && tar -zxf /src/source.tar.gz --strip-components=1 --dire
 COPY --from=viz /output/backend.js /src/source/packages/viz/lib/backend.js
 WORKDIR /src/source/packages/viz
 RUN echo "{lock}  /src/source/package-lock.json" | sha256sum -c -
-RUN --network=default npm clean-install --ignore-scripts --no-audit --no-fund
+COPY package-tarballs /package-tarballs
+RUN find /package-tarballs -name '*.tgz' -print0 | xargs -0 -n16 npm cache add --ignore-scripts --offline --cache=/npm-cache --no-audit --no-fund
+RUN npm clean-install --ignore-scripts --offline --cache=/npm-cache --no-audit --no-fund
 RUN echo "{lock}  /src/source/package-lock.json" | sha256sum -c -
 RUN test -f lib/backend.js && touch lib/backend.js && make
 RUN echo "{lock}  /src/source/package-lock.json" | sha256sum -c -
@@ -91,7 +169,7 @@ def descriptor(output, root=ROOT):
     node = node_reference(root)
     context = output / "wrapper-context"
     names = set(prior["context"]) | {node["archive"], "viz-source-99da545.tar.gz"}
-    backend.require({p.name for p in context.iterdir()} == names, "Unexpected wrapper context members")
+    backend.require({p.name for p in context.iterdir()} == names | {"package-tarballs"}, "Unexpected wrapper context members")
     original = backend.read_regular(output / "upstream-Dockerfile", backend.MAX_MEMBER)
     expected = dict(prior["context"])
     expected["Dockerfile"] = backend.record(recipe(original, root))
@@ -103,23 +181,27 @@ def descriptor(output, root=ROOT):
     npm_pin = prior["archives"]["viz-3.30.0.tgz"]
     backend.require(backend.record(backend.read_regular(npm_archive, npm_pin["bytes"])) == npm_pin, "npm input differs")
     with tarfile.open(context / "viz-source-99da545.tar.gz") as archive:
-        lock = check_lock(backend.selected_member(archive, f"viz-js-{backend.REVISION}/package-lock.json"), root)
+        data = backend.selected_member(archive, f"viz-js-{backend.REVISION}/package-lock.json")
+        lock = check_lock(data, root)
+        dependencies = checked_packages(dependency_plan(data, root), context / "package-tarballs")
     outputs = published_outputs(npm_archive)
     backend.require(outputs["backend.js"] == prior["expected_backend"], "Backend subject differs")
     resource = root / "MacDown2/Packages/MacDownKit/Sources/GraphvizRendering/Resources/viz-global.js"
     backend.require(backend.record(resource.read_bytes()) == outputs["viz-global.js"], "Current shipped renderer differs")
     return {"schema": 1, "backend_preparation": prior, "node": node, "lock": lock,
-            "context": expected, "expected_outputs": outputs,
+            "context": expected, "dependencies": dependencies, "expected_outputs": outputs,
             "tool_sha256": backend.sha(Path(__file__).read_bytes())}
 
 
-def prepare(inputs, node_archive, output, root=ROOT):
+def prepare(inputs, node_archive, packages, output, root=ROOT):
     node = node_reference(root)
     data = backend.read_regular(node_archive, node["bytes"])
     backend.require(backend.record(data) == {"bytes": node["bytes"], "sha256": node["sha256"]}, "Node archive differs")
+    checked_packages(dependency_plan(lock_bytes(inputs, root), root), packages)
     backend.prepare(inputs, output, root)
     context = output / "wrapper-context"
     shutil.copytree(output / "context", context)
+    shutil.copytree(packages, context / "package-tarballs")
     (context / node["archive"]).write_bytes(data)
     (context / "viz-source-99da545.tar.gz").write_bytes(backend.read_regular(inputs / "viz-source-99da545.tar.gz", 108597))
     (output / "npm-input.tgz").write_bytes(backend.read_regular(inputs / "viz-3.30.0.tgz", 1903630))
@@ -155,11 +237,15 @@ def main():
     prep = sub.add_parser("prepare")
     prep.add_argument("--inputs", type=Path, required=True)
     prep.add_argument("--node", type=Path, required=True)
+    prep.add_argument("--packages", type=Path, required=True)
     prep.add_argument("--output", type=Path, required=True)
     prep.add_argument("--download", action="store_true")
     check = sub.add_parser("compare")
     check.add_argument("--output", type=Path, required=True)
     check.add_argument("--built", type=Path, required=True)
+    fetch = sub.add_parser("fetch-packages")
+    fetch.add_argument("--inputs", type=Path, required=True)
+    fetch.add_argument("--packages", type=Path, required=True)
     args = parser.parse_args()
     if args.command == "prepare":
         if args.download:
@@ -170,7 +256,10 @@ def main():
             backend.require(backend.record(data) == {"bytes": node["bytes"], "sha256": node["sha256"]}, "Downloaded Node differs")
             with args.node.open("xb") as stream:
                 stream.write(data)
-        result = prepare(args.inputs, args.node, args.output)
+            fetch_packages(args.inputs, args.packages)
+        result = prepare(args.inputs, args.node, args.packages, args.output)
+    elif args.command == "fetch-packages":
+        result = fetch_packages(args.inputs, args.packages)
     else:
         result = compare(args.output, args.built)
     print(json.dumps(result, indent=2, sort_keys=True))

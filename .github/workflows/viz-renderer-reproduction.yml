@@ -28,6 +28,7 @@ jobs:
         run: |
           python3 compliance/tools/rebuild_viz_renderer.py prepare --download \
             --inputs "$RUNNER_TEMP/viz-wrapper-inputs" --node "$RUNNER_TEMP/node-reference.tar.xz" \
+            --packages "$RUNNER_TEMP/viz-package-tarballs" \
             --output "$RUNNER_TEMP/viz-wrapper"
       - name: Rebuild backend and all generated wrapper formats
         run: |
