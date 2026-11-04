@@ -37,3 +37,12 @@ available through their primary links; their code is not recopied here. Complete
 runtime/source-offer review and MostlyText #14 remain open. See the
 [existing mapped Cytoscape evidence](../cytoscape-borrowed-attribution/README.md)
 and [review packet](../../UPSTREAM_REVIEW_QUESTIONS.md).
+
+## Later actual MIT reference — 4 November 2026
+
+[The qualified Framer reference](../framer-mit-reference/README.md) now identifies
+an actual 2014 MIT source containing the same four-helper CoffeeScript block as the
+older 2.0comparison. Its full unchanged MIT text is distributed conservatively,
+with four spring-specific generated-code probes. This supersedes the absence of
+a captured matching MIT reference, not the original-input/independent-rights
+question. All older source/license evidence above remains preserved.

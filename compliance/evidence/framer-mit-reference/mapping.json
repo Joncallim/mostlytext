@@ -1,0 +1,40 @@
+{
+  "cytoscapeSHA256": "9ffbc8172ca3bd6723fba3513f96194f0e4c98225e00f380948f285869517803",
+  "endSourceLineExclusive": 15192,
+  "firstSourceLine": 15112,
+  "fragmentSHA256": "4e4c2de4ac90b2357b74c238ee3fa2a479fc968c7d4ee367bedbde283d4cce77",
+  "generated_probe_references": [
+    {
+      "references": 7,
+      "source_line": 15113
+    },
+    {
+      "references": 9,
+      "source_line": 15116
+    },
+    {
+      "references": 9,
+      "source_line": 15128
+    },
+    {
+      "references": 8,
+      "source_line": 15142
+    }
+  ],
+  "generated_references": 258,
+  "helperComparison": {
+    "bytes": 872,
+    "match": true,
+    "rule": "entire four-helper block; remove whitespace only, no identifier/operator/comment normalization",
+    "sha256": "91032f702c37375045a1df7fa857972f6f248b2a3f83fd35e662c7a9c2baed5d"
+  },
+  "id": "cytoscape-framer-spring",
+  "mapSHA256": "43cd977e8e0f351d6c47d31302c564f1c21fdc1e0be0d9e46370ee5e23cea004",
+  "mapped_source_lines": 64,
+  "noticeSHA256": "298012b8b6c965d489221b5b79be5f77ca2027ec65d47a80b16b73812cb60a46",
+  "referenceRevision": "a41d843dc1371dd0cdc87d1fbbb3f833a5d24d58",
+  "referenceSpecificationSHA256": "0b2c5699b8f138e41994b0c5d9604511921596c392edf4e24e5ccf2377a27064",
+  "schema": 1,
+  "scope": "Matching MIT-licensed source reference; actual adaptation revision and independent rights review unresolved",
+  "shippedMermaidSHA256": "581ed7d74bd9048d0e3a91363927d72ef22942d7722546b27f7cc29e35390eb8"
+}

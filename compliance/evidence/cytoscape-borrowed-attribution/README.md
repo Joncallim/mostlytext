@@ -125,3 +125,12 @@ unchanged; the generated notice is the only changed bundled resource. Full
 product-suite qualification is historical, not represented as a fresh native or
 resource acceptance run. All six strict release failures remain. No Developer ID
 signing, notarization submission, release or website deployment occurred.
+
+## Later actual MIT reference — 4 November 2026
+
+[The qualified Framer reference](../framer-mit-reference/README.md) now identifies
+an actual 2014 MIT source containing the same four-helper CoffeeScript block as the
+older 2.0comparison. Its full unchanged MIT text is distributed conservatively,
+with four spring-specific generated-code probes. This supersedes the absence of
+a captured matching MIT reference, not the original-input/independent-rights
+question. All older source/license evidence above remains preserved.
