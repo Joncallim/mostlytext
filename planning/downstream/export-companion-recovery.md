@@ -232,3 +232,14 @@ identity within ExportService; ordinary export must conservatively lose cleanup
 eligibility if bundled CSS changes before renewed reference review. Color-only
 variables remain generated from Theme values. This adds no parser, sanitizer,
 style rewrite or dependency, and does not enable optional SVG publication.
+
+## Resource-content reference correction
+
+A packaged authored SVG can itself contain relative references to older managed
+files. Its generated outer img URL is not proof that the resource's contents are
+closed. Do not add a recursive reader or rely on browser image-mode restrictions.
+Only the existing inline-raster allowlist (PNG/JPEG/GIF/WebP) may preserve a
+reference certificate when packaged; other accepted image MIME types continue
+to export normally but make cleanup ineligible. Reuse ExportURLPolicy's existing
+raster media knowledge. Add a real composed SVG/older-managed-PNG preservation
+regression. This changes cleanup authority only, not accepted content or output.
