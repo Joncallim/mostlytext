@@ -61,9 +61,14 @@ extension ExportManagedCompanions {
                 next.owned.append(.init(name: name, mimeType: mimeType,
                                         receipt: ExportJournalRecord.Receipt(installed)))
             }
-            guard let index = next.files.firstIndex(where: { $0.temporary == temporary })
-            else { throw ExportError.unsafePublication }
-            next.files[index].receipt = ExportJournalRecord.Receipt(installed)
+            if role == .resource {
+                next.createdNames.append(name)
+                next.files.removeAll { $0.temporary == temporary }
+            } else {
+                guard let index = next.files.firstIndex(where: { $0.temporary == temporary })
+                else { throw ExportError.unsafePublication }
+                next.files[index].receipt = ExportJournalRecord.Receipt(installed)
+            }
         }
         try checkpoint("stage-installation-saved")
         return installed.stamp
@@ -79,7 +84,27 @@ extension ExportManagedCompanions {
         if try record.previousInventory != nil {
             names.append(ExportCompanionInventoryRecord.fileName)
         }
-        let entries = try names.map { try (name: $0, stamp: Filesystem.childStamp($0, in: directory.descriptor)) }
+        var entries: [(name: String, stamp: Filesystem.Stamp)] = []
+        let marker = try ExportAssetOwnerMarker.bytes(primary: input.url.lastPathComponent,
+                                                      assets: input.assetsDirectoryName)
+        guard let markerStamp = try Filesystem.existingBytes(marker, named: ExportFileWriter.markerFileName,
+                                                             in: directory.descriptor)
+        else { throw ExportError.unsafePublication }
+        entries.append((ExportFileWriter.markerFileName, markerStamp))
+        if includeResources {
+            for name in try record.requiredNames {
+                guard let resource = input.resources.first(where: { $0.identity.fileName == name }),
+                      let observed = try Filesystem.existingBytes(resource.bytes, named: name, in: directory.descriptor)
+                else { throw ExportError.unsafePublication }
+                entries.append((name, observed))
+            }
+        }
+        if let previous = try record.previousInventory {
+            guard let current = try loadInventory(in: directory.descriptor),
+                  current.metadataReceipt.value.stamp == previous.stamp,
+                  current.metadataReceipt.value.digest == previous.digest else { throw ExportError.unsafePublication }
+            entries.append((ExportCompanionInventoryRecord.fileName, current.metadataReceipt.value.stamp))
+        }
         let base = input.url.deletingLastPathComponent().appendingPathComponent(input.assetsDirectoryName,
                                                                                 isDirectory: true)
         return Stage(directory: directory, stamp: stamp, entries: entries,

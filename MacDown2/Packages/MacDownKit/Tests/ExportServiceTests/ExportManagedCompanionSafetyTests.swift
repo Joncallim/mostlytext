@@ -131,8 +131,9 @@ struct ExportManagedCompanionSafetyTests {
         let prior = try Data(contentsOf: fixture.files.primary)
         let second = try await fixture.prepare(2)
         var hooks = ExportPublicationHooks()
+        let old = try fixture.resourceURL(first)
         hooks.companionCheckpoint = { point in
-            if point == "retirement-unlinked" {
+            if point == "retirement-unlinked", !FileManager.default.fileExists(atPath: old.path) {
                 throw ExportError.unsafePublication
             }
         }

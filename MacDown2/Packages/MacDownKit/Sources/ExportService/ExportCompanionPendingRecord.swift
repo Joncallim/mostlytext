@@ -44,9 +44,12 @@ struct ExportCompanionPendingRecord: Codable {
     let retireObsoleteResources: Bool
     let requiredNames: [String]
     var phase: Phase
+    var inventoryPublished: Bool
+    var publishedOwnedCount: Int
     var directory: ExportCompanionObjectIdentity?
     var previousInventory: ExportJournalRecord.Receipt?
     var owned: [ExportCompanionInventoryRecord.Entry]
+    var createdNames: [String]
     var files: [WorkFile]
     var retirements: [Retirement]
 
@@ -66,7 +69,10 @@ struct ExportCompanionPendingRecord: Codable {
         self.retireObsoleteResources = retireObsoleteResources
         self.requiredNames = requiredNames
         phase = .preparing
+        inventoryPublished = false
+        publishedOwnedCount = 0
         owned = []
+        createdNames = []
         files = []
         retirements = []
     }
@@ -90,13 +96,18 @@ struct ExportCompanionPendingRecord: Codable {
               priorReferencesKnown || priorRequiredNames.isEmpty,
               priorDigest != nil || (priorReferencesKnown && priorRequiredNames.isEmpty),
               validResourceNames(requiredNames), validResourceNames(priorRequiredNames),
+              validResourceNames(createdNames), Set(createdNames).isSubset(of: Set(requiredNames)),
               owned.count <= ExportCompanionLimits.ownedEntries,
+              (0 ... ExportCompanionLimits.ownedEntries).contains(publishedOwnedCount),
+              inventoryPublished || publishedOwnedCount == 0,
+              !inventoryPublished || previousInventory != nil,
               files.count <= ExportResourceBudget.standard.maxResourceCount + 2,
               retirements.count <= ExportCompanionLimits.ownedEntries + 2
         else { throw ExportError.unsafePublication }
         guard let directory else {
-            guard owned.isEmpty, files.isEmpty, retirements.isEmpty, previousInventory == nil,
-                  phase == .preparing else { throw ExportError.unsafePublication }
+            guard owned.isEmpty, createdNames.isEmpty, files.isEmpty, retirements.isEmpty, previousInventory == nil,
+                  phase == .preparing, !inventoryPublished,
+                  publishedOwnedCount == 0 else { throw ExportError.unsafePublication }
             return
         }
         guard directory.kind == mode_t(S_IFDIR), directory.validBirthTime else {

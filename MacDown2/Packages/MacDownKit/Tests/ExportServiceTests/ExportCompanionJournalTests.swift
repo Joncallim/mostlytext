@@ -170,4 +170,34 @@ struct ExportCompanionJournalTests {
         let envelope = try fixture.rawEnvelope(payload: payload, domain: "MostlyText.Export.CompanionPending.v1\0")
         #expect(throws: (any Error).self) { _ = try codec.openPending(envelope) }
     }
+
+    @Test func aMaximumCompletedResourceGenerationFitsTheFixedControlBudget() throws {
+        let fixture = try ExportCompanionAuthenticationFixture()
+        var entries: [ExportCompanionInventoryRecord.Entry] = []
+        for index in 0 ..< ExportResourceBudget.standard.maxResourceCount {
+            let bytes = Data("distinct resource \(index)".utf8)
+            let identity = ExportResourceIdentity(bytes: bytes, mimeType: "image/png")
+            let url = fixture.root.appendingPathComponent("report.assets").appendingPathComponent(identity.fileName)
+            try bytes.write(to: url, options: .withoutOverwriting)
+            let stamp = try ExportPublicationFilesystem.childStamp(identity.fileName, in: fixture.directory.descriptor)
+            try entries.append(.init(name: identity.fileName, mimeType: identity.mimeType,
+                                     receipt: ExportJournalRecord.Receipt(ExportOwnedFileReceipt(bytes: bytes,
+                                                                                                 stamp: stamp))))
+        }
+        let names = entries.map(\.name).sorted()
+        var record = ExportCompanionPendingRecord(
+            binding: fixture.binding, assetsName: "report.assets", priorDigest: nil,
+            desiredDigest: Data(repeating: 1, count: 32), priorReferencesKnown: true, priorRequiredNames: [],
+            desiredReferencesKnown: true, requiredNames: names
+        )
+        record.directory = ExportCompanionObjectIdentity(fixture.directoryStamp)
+        record.owned = entries
+        record.createdNames = names
+        let codec = try fixture.codec()
+        let bytes = try codec.sealPending(record)
+        #expect(bytes.count <= ExportCompanionLimits.envelopeBytes)
+        #expect(try codec.openPending(bytes).value.owned.count == ExportResourceBudget.standard.maxResourceCount)
+        let inventory = fixture.record(required: names, owned: entries)
+        #expect(try codec.seal(inventory).count <= ExportCompanionLimits.envelopeBytes)
+    }
 }

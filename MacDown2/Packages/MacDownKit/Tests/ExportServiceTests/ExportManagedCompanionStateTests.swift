@@ -92,4 +92,29 @@ struct ExportManagedCompanionStateTests {
         #expect(try fixture.assetNames() == names)
         #expect(try Data(contentsOf: fixture.resourceURL(first)) == first.manifest.resources.first?.bytes)
     }
+
+    @Test func aPublishedInitialInventoryPrecedesObsoleteResourceRetirement() async throws {
+        let fixture = try ExportManagedCompanionFixture()
+        let first = try await fixture.prepare(1)
+        try fixture.write(first)
+        let old = try fixture.resourceURL(first)
+        let second = try await fixture.prepare(2)
+        var hooks = ExportPublicationHooks()
+        hooks.companionCheckpoint = { point in
+            if point == "initial-inventory-recorded" {
+                throw ExportError.unsafePublication
+            }
+        }
+        let result = try fixture.write(second, hooks: hooks)
+        #expect(result.diagnostics.contains { $0.message.contains("could not be finalized") })
+        #expect(try Data(contentsOf: old) == first.manifest.resources.first?.bytes)
+        let inventory = try fixture.inventory()
+        #expect(inventory.owned.count == 2)
+        #expect(inventory.requiredNames == second.manifest.resources.map(\.identity.fileName))
+        let next = try fixture.write(second)
+        #expect(!next.diagnostics.contains { $0.message.contains("could not be finalized") })
+        #expect(!FileManager.default.fileExists(atPath: old.path))
+        #expect(try fixture.inventory().owned.count == 1)
+        try fixture.assertIdle()
+    }
 }

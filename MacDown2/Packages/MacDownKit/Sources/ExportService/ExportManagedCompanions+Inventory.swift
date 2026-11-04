@@ -2,6 +2,36 @@ import Darwin
 import Foundation
 
 extension ExportManagedCompanions {
+    func checkPublishedInventory(expectedDigest: Data?) throws {
+        guard try record.inventoryPublished else { return }
+        guard let directory, let inventory = try loadInventory(in: directory.descriptor),
+              inventory.value.primaryDigest == expectedDigest,
+              let previous = try record.previousInventory else { throw ExportError.unsafePublication }
+        let actual = inventory.metadataReceipt.value.stamp
+        try protection.admission.checkRecoveryObject(actual)
+        if previous.stamp == actual {
+            return
+        }
+        guard let next = try record.files.first(where: { $0.role == .inventory }), next.receipt != nil
+        else { throw ExportError.unsafePublication }
+        let receipt = try journal.receipt(named: next.temporary)
+        _ = try receipt.inspectingRenamedFile(ExportCompanionInventoryRecord.fileName, in: directory.descriptor)
+    }
+
+    func publishInitialInventory(expectedDigest: Data?) throws {
+        guard try !record.inventoryPublished else { return }
+        try installInventory(expectedDigest: expectedDigest)
+        guard let directory, let inventory = try loadInventory(in: directory.descriptor),
+              inventory.value.primaryDigest == expectedDigest else { throw ExportError.unsafePublication }
+        try update { next in
+            next.inventoryPublished = true
+            next.publishedOwnedCount = next.owned.count
+            next.previousInventory = inventory.metadataReceipt.value
+            next.files.removeAll { $0.role == .inventory }
+        }
+        try checkpoint("initial-inventory-recorded")
+    }
+
     func installInventory(expectedDigest: Data?) throws {
         guard let directory else { throw ExportError.unsafePublication }
         try checkState(expectedDigest: expectedDigest)

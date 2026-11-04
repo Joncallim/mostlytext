@@ -38,14 +38,18 @@ extension ExportManagedCompanions {
     }
 
     private func complete(expectedDigest: Data?) throws {
+        try checkPublishedInventory(expectedDigest: expectedDigest)
         try reconcileWorkFiles(expectedDigest: expectedDigest)
         let state = try record
         if state.phase == .committed {
             try verifyRequiredResources()
         }
         try drainRetirements(expectedDigest: expectedDigest, includeMetadata: false)
+        try publishInitialInventory(expectedDigest: expectedDigest)
         try retireObsoleteResources(expectedDigest: expectedDigest)
-        try installInventory(expectedDigest: expectedDigest)
+        if try record.owned.count != record.publishedOwnedCount {
+            try installInventory(expectedDigest: expectedDigest)
+        }
         try checkState(expectedDigest: expectedDigest)
         try journal.finish()
         try checkpoint("companion-finished")
@@ -99,6 +103,10 @@ extension ExportManagedCompanions {
                !next.owned.contains(where: { $0.name == file.name }) {
                 next.owned.append(.init(name: file.name, mimeType: mimeType,
                                         receipt: ExportJournalRecord.Receipt(installed)))
+                if !next.createdNames.contains(file.name) {
+                    next.createdNames.append(file.name)
+                }
+                next.files.removeAll { $0.temporary == file.temporary }
             }
         }
     }
@@ -167,8 +175,7 @@ extension ExportManagedCompanions {
             eligible = Set(state.owned.map(\.name)).subtracting(state.requiredNames)
         } else {
             guard state.phase == .aborted, state.priorReferencesKnown else { return }
-            eligible = Set(state.files.filter { $0.role == .resource }.map(\.name))
-                .subtracting(state.priorRequiredNames)
+            eligible = Set(state.createdNames).subtracting(state.priorRequiredNames)
         }
         for entry in state.owned where eligible.contains(entry.name) {
             let receipt = try journal.receipt(named: entry.name)
@@ -202,6 +209,7 @@ extension ExportManagedCompanions {
             try update { next in
                 next.retirements.removeAll { $0.quarantine == item.quarantine }
                 next.owned.removeAll { $0.name == item.name }
+                next.createdNames.removeAll { $0 == item.name }
                 next.files.removeAll {
                     $0.role != .inventory && ($0.temporary == item.name || $0.name == item.name)
                 }

@@ -15,7 +15,8 @@ struct ExportManagedCompanionRaceTests {
         var quarantine: URL?
         var hooks = ExportPublicationHooks()
         hooks.companionCheckpoint = { point in
-            if point == "retirement-renamed", quarantine == nil {
+            if point == "retirement-renamed", quarantine == nil,
+               !FileManager.default.fileExists(atPath: old.path) {
                 let name = try #require(fixture.assetNames().first { $0.hasSuffix(".retired") })
                 let url = fixture.assets.appendingPathComponent(name)
                 quarantine = url
@@ -107,5 +108,29 @@ struct ExportManagedCompanionRaceTests {
         #expect(try Data(contentsOf: adopted) == first.manifest.resources.first?.bytes)
         #expect(try !fixture.inventory().owned.contains { $0.name == adopted.lastPathComponent })
         try fixture.assertIdle()
+    }
+
+    @Test(arguments: ["resource", "marker"])
+    func changedStageContentsCannotBorrowNewlyCapturedPromotionMetadata(_ kind: String) async throws {
+        let fixture = try ExportManagedCompanionFixture()
+        let first = try await fixture.prepare(1)
+        try fixture.write(first)
+        let primary = try Data(contentsOf: fixture.files.primary)
+        let next = try await fixture.prepare(2)
+        let target = kind == "resource" ? try fixture.resourceURL(next)
+            : fixture.assets.appendingPathComponent(ExportFileWriter.markerFileName)
+        let changed = Data("owner changed the staged object".utf8)
+        var modified = false
+        var hooks = ExportPublicationHooks()
+        hooks.companionCheckpoint = { point in
+            if point == "stage-installation-saved", !modified {
+                modified = true
+                try changed.write(to: target)
+            }
+        }
+        #expect(throws: (any Error).self) { try fixture.write(next, hooks: hooks) }
+        #expect(modified)
+        #expect(try Data(contentsOf: target) == changed)
+        #expect(try Data(contentsOf: fixture.files.primary) == primary)
     }
 }
