@@ -1,0 +1,10 @@
+{
+  "version": "24.19.0",
+  "archive": "node-v24.19.0-linux-x64.tar.xz",
+  "url": "https://nodejs.org/dist/v24.19.0/node-v24.19.0-linux-x64.tar.xz",
+  "bytes": 31633904,
+  "sha256": "14b342e71204f811bde6153be8e04b62aef63c236fef92b55f9c83154b409647",
+  "checksum_url": "https://nodejs.org/dist/v24.19.0/SHASUMS256.txt",
+  "checksum_sha256": "be0629ee2bcd8e40bb856abdd3407f0762101b76bd60a36b8867f637733631c0",
+  "selection": "captured npm publisher Node reference; not unique historical builder proof"
+}
