@@ -23,6 +23,35 @@
         }
       }
     },
+    "Document exceeds the maximum nesting depth of %lld.": {
+      "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Document exceeds the maximum nesting depth of %lld."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Document exceeds the maximum nesting depth of %lld."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Document exceeds the maximum nesting depth of %lld."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Document exceeds the maximum nesting depth of %lld."
+          }
+        }
+      }
+    },
     "Duplicate object key '%@' (first defined at line %@).": {
       "localizations": {
         "fr": {
@@ -41,6 +70,35 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zduplikowany klucz obiektu „%@” (po raz pierwszy zdefiniowany w wierszu %@)."
+          }
+        }
+      }
+    },
+    "Duplicate object key '%@' (first defined at line %lld).": {
+      "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duplicate object key '%@' (first defined at line %lld)."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Duplicate object key '%@' (first defined at line %lld)."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Duplicate object key '%@' (first defined at line %lld)."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Duplicate object key '%@' (first defined at line %lld)."
           }
         }
       }

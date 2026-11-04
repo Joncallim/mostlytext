@@ -45,6 +45,35 @@
         }
       }
     },
+    "rendered output too large (%lld bytes)": {
+      "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rendered output too large (%lld bytes)"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rendered output too large (%lld bytes)"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rendered output too large (%lld bytes)"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rendered output too large (%lld bytes)"
+          }
+        }
+      }
+    },
     "renderer unavailable": {
       "localizations": {
         "fr": {

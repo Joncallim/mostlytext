@@ -23,6 +23,35 @@
         }
       }
     },
+    "\"%@\" is not a valid name.": {
+      "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\"%@\" is not a valid name."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "\"%@\" is not a valid name."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "\"%@\" is not a valid name."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "\"%@\" is not a valid name."
+          }
+        }
+      }
+    },
     "A folder cannot be moved into itself.": {
       "localizations": {
         "fr": {
@@ -85,6 +114,35 @@
           "stringUnit": {
             "state": "translated",
             "value": "Operacja na folderze nie powiodła się (błąd POSIX %@)."
+          }
+        }
+      }
+    },
+    "Folder operation failed (POSIX error %d).": {
+      "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Folder operation failed (POSIX error %d)."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Folder operation failed (POSIX error %d)."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Folder operation failed (POSIX error %d)."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Folder operation failed (POSIX error %d)."
           }
         }
       }

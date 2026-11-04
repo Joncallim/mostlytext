@@ -309,9 +309,9 @@ jobs:
         # PR without this.
         run: |
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 -configuration Release \
-            -destination 'platform=macOS' -onlyUsePackageVersionsFromResolvedFile build
+            -destination 'platform=macOS' -onlyUsePackageVersionsFromResolvedFile SWIFT_EMIT_LOC_STRINGS=YES build
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MostlyTextCLI -configuration Release \
-            -destination 'platform=macOS' -onlyUsePackageVersionsFromResolvedFile build
+            -destination 'platform=macOS' -onlyUsePackageVersionsFromResolvedFile SWIFT_EMIT_LOC_STRINGS=YES build
       - name: Verify compiled document metadata and embedded CLI
         run: |
           python3 MacDown2/scripts/test-document-metadata.py
@@ -326,6 +326,9 @@ jobs:
           command = pathlib.Path(settings['BUILT_PRODUCTS_DIR']) / 'mostlytext'
           subprocess.run(['python3', 'MacDown2/scripts/verify-document-metadata.py', '--app', str(app),
                           '--guide', 'docs/INSTALLATION_AND_MIGRATION.md', '--standalone-cli', str(command)], check=True)
+          subprocess.run(['python3', 'planning/downstream/tools/compiled_string_coverage.py',
+                          '--extraction-dir', settings['OBJROOT'], '--configuration', settings['CONFIGURATION'], '--output',
+                          str(pathlib.Path(os.environ['RUNNER_TEMP']) / 'compiled-string-coverage.json')], check=True)
           PY
       - name: Build for testing (app + UI tests; UI tests run requires macOS 26+ GUI)
         # -enableCodeCoverage NO: documented in planning/epic-10-implementation.md

@@ -44,6 +44,7 @@ jobs:
       - name: Catalog structure and translation-resource coverage
         run: |
           python3 -m unittest discover -s planning/downstream/tools -p test_localization_inventory.py
+          python3 -m unittest discover -s planning/downstream/tools -p test_compiled_string_coverage.py
           python3 planning/downstream/tools/localization_inventory.py --check --check-transifex
           python3 MacDown2/scripts/verify-render-failure-localization.py
       - name: Reproduced parser receipt and qualified Webpack runtime notice

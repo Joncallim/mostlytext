@@ -106,7 +106,10 @@ public struct TOCContribution: Contributing {
     }
 
     private static func list(_ entries: [(level: Int, content: String)]) -> String {
-        guard !entries.isEmpty else { return "*(No headings found.)*" }
+        guard !entries.isEmpty else {
+            let message = String(localized: "No headings found.", bundle: .module)
+            return "*(\(escaped(message)))*"
+        }
 
         var lines: [String] = []
         var openLevels: [Int] = []

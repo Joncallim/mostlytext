@@ -1,6 +1,35 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "%@ is open in another window. Close it there, or choose a different name.": {
+      "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ is open in another window. Close it there, or choose a different name."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ is open in another window. Close it there, or choose a different name."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ is open in another window. Close it there, or choose a different name."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ is open in another window. Close it there, or choose a different name."
+          }
+        }
+      }
+    },
     "MostlyText cannot access the backing file. Use Save As to keep this copy.": {
       "localizations": {
         "fr": {
@@ -239,6 +268,35 @@
           "stringUnit": {
             "state": "translated",
             "value": "Brak aktywnego dokumentu."
+          }
+        }
+      }
+    },
+    "This text cannot be saved as %@ without losing characters. Nothing was changed; choose another encoding, or delete an invisible byte-order-mark character (U+FEFF or U+FFFE) at the very start of the text.": {
+      "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This text cannot be saved as %@ without losing characters. Nothing was changed; choose another encoding, or delete an invisible byte-order-mark character (U+FEFF or U+FFFE) at the very start of the text."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "This text cannot be saved as %@ without losing characters. Nothing was changed; choose another encoding, or delete an invisible byte-order-mark character (U+FEFF or U+FFFE) at the very start of the text."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "This text cannot be saved as %@ without losing characters. Nothing was changed; choose another encoding, or delete an invisible byte-order-mark character (U+FEFF or U+FFFE) at the very start of the text."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "This text cannot be saved as %@ without losing characters. Nothing was changed; choose another encoding, or delete an invisible byte-order-mark character (U+FEFF or U+FFFE) at the very start of the text."
           }
         }
       }
