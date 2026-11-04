@@ -1,0 +1,12 @@
+{
+  "files": {
+    "amd64-config.json": "f8b9ec6ea64ccb381d9a9553146fa265eeb72b8a5283d582bb6f492a1f6385f0",
+    "amd64-manifest.json": "c2ac84c26ee40ae2f2c5a15bd3f9e608d1959e1b37413fa7f08138046a188dc5",
+    "capture.py": "8028b57e3ecd5bb0eb66b868498e6ba6081025e4ce42b36e40c58fcbabae9bd4",
+    "index.json": "4e332f7343b6f66320bf72f7ecc01a3d9f3866721a13b0e5c7b96505d6ab148a",
+    "layer-verification.json": "8ce0e557bdf892a6e7c24bdaf2615e851ed1a610a43e7a27a39c9166e2ade235",
+    "selected-files.json": "77f8b2f7079c1317ecbcb7a821acdc4e6c7617eda9eacff73a54122fa6c452f7"
+  },
+  "schema": 1,
+  "scope": "digest-verified-image-graph-and-selected-source; no-image-execution-rebuild-or-independent-clearance"
+}

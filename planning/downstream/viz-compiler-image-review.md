@@ -64,3 +64,14 @@ The compiler digest in the publisher record is the multi-platform index
 Node 22.16.0, LLVM/Binaryen roots and SDK release mapping 5.0.7 to
 `6cd98e86d7749ff98b82b7f2ae78eb4f01942788`. These are image file/configuration
 facts, not independently executed compiler versions or a unique Git origin.
+
+## Qualified result
+
+The complete four-layer graph is verified at compressed and uncompressed levels,
+with ordered selected-source readback. Nine final files are captured: the five
+matching source/text inputs, explicit differing release marker and three SDK
+configuration/manifests. Twelve offline graph/overlay/refusal controls pass. The
+portable capture and raw replay exercise the recorded public blobs without
+Docker, image execution or host filesystem application. No distribution, original
+manifest, notice/SBOM, source-offer or release predicate changes. See
+[the image packet](../../compliance/evidence/viz-compiler-image/README.md).
