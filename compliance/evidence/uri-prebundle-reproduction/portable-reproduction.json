@@ -1,0 +1,17 @@
+{
+  "archiveByteIdentical": true,
+  "publishedArchiveSHA256": "c6ec752d7a4858237389b23fb4d5ac05c2f1f606071cd212a9b54730e43cfc54",
+  "rebuiltArchiveSHA256": "c6ec752d7a4858237389b23fb4d5ac05c2f1f606071cd212a9b54730e43cfc54",
+  "sourceCommit": "edfdccd976efaf4bb8fdeca87e97c47257721729",
+  "sourceFilesVerified": 23,
+  "toolchain": {
+    "node": "v20.19.0",
+    "npm": "10.8.2",
+    "path-browserify": "1.0.1",
+    "ts-loader": "9.4.4",
+    "typescript": "5.2.2",
+    "webpack": "5.94.0",
+    "webpack-cli": "5.1.4",
+    "yarn": "1.22.22"
+  }
+}

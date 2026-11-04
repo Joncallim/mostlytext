@@ -1,0 +1,15 @@
+{
+  "node": {
+    "archiveSHA256": "881a91a81481799f785ff251e3374e90c7ed3e0d6b89e830ffd3806d59338739",
+    "archiveURL": "https://nodejs.org/dist/v20.19.0/node-v20.19.0-darwin-arm64.tar.xz",
+    "checksumFileSHA256": "5af768d268e09e75c7a4a5cbd6e1c1ae93d211a71a9100f8d46666ecd1a3e61d",
+    "checksumURL": "https://nodejs.org/dist/v20.19.0/SHASUMS256.txt",
+    "version": "20.19.0"
+  },
+  "yarn": {
+    "archiveSHA256": "c17d3797fb9a9115bf375e31bfd30058cac6bc9c3b8807a3d8cb2094794b51ca",
+    "archiveURL": "https://registry.npmjs.org/yarn/-/yarn-1.22.22.tgz",
+    "integrity": "sha512-prL3kGtyG7o9Z9Sv8IPfBNrWTDmXB4Qbes8A9rEzt6wkJV8mUvoirjU0Mp3GGAU06Y0XQyA3/2/RQFVuK7MTfg==",
+    "version": "1.22.22"
+  }
+}

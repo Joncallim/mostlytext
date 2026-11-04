@@ -55,3 +55,17 @@ source/toolchain or output differences are recorded, never solved by weakening
 comparisons. Reassess this contract before a new build lane, package resolution,
 runtime dependency or attribution/grant decision. A source match is not unique
 historical origin, a new license grant, final artifact or native acceptance.
+
+## Qualified result
+
+The complete compressed 3.1.0 npm archive reproduces byte-for-byte, including
+all 17 payload members. All 13 JS/map/type files match separately; 23 original
+source files remain unchanged. The tagged frozen lock selects Webpack 5.94.0,
+path-browserify 1.0.1 and the recorded TypeScript/loader inputs. Both original
+and portable recipes and repeated npm packing return the same archive SHA-256.
+A real source error-literal mutation produces five refused members; restoration
+returns all 13 matches. Fourteen offline controls and raw-capture replay qualify
+this technical packet, without any inventory, notice/SBOM, runtime, source-offer
+or release-predicate change. Publisher execution remains unattested and the
+original candidate/independent-review fields are retained. See
+[the full reproduction packet](../../compliance/evidence/uri-prebundle-reproduction/README.md).

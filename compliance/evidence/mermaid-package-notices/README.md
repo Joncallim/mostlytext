@@ -1,5 +1,7 @@
 # Distributed mapped Mermaid package texts — 3 November 2026
 
+Current nested-build follow-up: [the complete tagged URI archive reproduction](../uri-prebundle-reproduction/README.md) reconstructs all published vscode-uri 3.1.0 archive bytes with frozen path-browserify 1.0.1/Webpack 5.94.0 inputs. Historical publisher execution is unattested; existing qualified candidate fields and every distributed notice/SBOM byte are preserved.
+
 Current follow-up: [complete parser JS/map reproduction](../parser-runtime-reproduction/README.md)
 resolves the specific vscode-uri 3.1.0 outer input. Its projection now requires the
 pinned reproduction receipt. Generic content-only candidates, including the earlier

@@ -1,0 +1,109 @@
+{
+  "mutation": "Change the actual exported URI illegal-scheme error literal in src/uri.ts",
+  "comparison": {
+    "comparedMembers": 13,
+    "identicalMembers": 8,
+    "missing": [],
+    "different": [
+      "lib/esm/index.mjs",
+      "lib/esm/index.mjs.map",
+      "lib/umd/index.js",
+      "lib/umd/index.js.map",
+      "lib/umd/uri.js"
+    ],
+    "members": [
+      {
+        "member": "lib/esm/index.mjs",
+        "bytes": 10732,
+        "publishedSHA256": "3cdafb6e17143d40b44923e053e84546d6cbe596b0fee1eba2b37ac2111de08e",
+        "rebuiltSHA256": "45744b3e3b89b218027f97f98a1d6f87921f8fb3b2f0861cec00e8fc73fe50da",
+        "byteIdentical": false
+      },
+      {
+        "member": "lib/esm/index.mjs.map",
+        "bytes": 62941,
+        "publishedSHA256": "563dcd8eac674485da4f37940fc2c37a69d46707ff3e7db7882065136f91700e",
+        "rebuiltSHA256": "01731d728b9f3149e05ebc64f869fd2fce0a021f1bea45923eea520c911be0fc",
+        "byteIdentical": false
+      },
+      {
+        "member": "lib/umd/charCode.d.ts",
+        "bytes": 11020,
+        "publishedSHA256": "12589e6b27710c071911512033dcc0031cba705fe4dd911cb1b65139c7ef0fb9",
+        "rebuiltSHA256": "12589e6b27710c071911512033dcc0031cba705fe4dd911cb1b65139c7ef0fb9",
+        "byteIdentical": true
+      },
+      {
+        "member": "lib/umd/charCode.js",
+        "bytes": 429,
+        "publishedSHA256": "8aff082422674415b257672bdb20d7ac94380c214180c36b4b9c3fed1e854a37",
+        "rebuiltSHA256": "8aff082422674415b257672bdb20d7ac94380c214180c36b4b9c3fed1e854a37",
+        "byteIdentical": true
+      },
+      {
+        "member": "lib/umd/index.d.ts",
+        "bytes": 85,
+        "publishedSHA256": "a2ca9f3aee02a7fa0ec6f80afc09c5465191e5ca513be720bf858f5da275e66b",
+        "rebuiltSHA256": "a2ca9f3aee02a7fa0ec6f80afc09c5465191e5ca513be720bf858f5da275e66b",
+        "byteIdentical": true
+      },
+      {
+        "member": "lib/umd/index.js",
+        "bytes": 11851,
+        "publishedSHA256": "abded94de05f95f6696b3f318c331de010086172aa7ce04381dc7d90f1faaee2",
+        "rebuiltSHA256": "abadbb46c3514cb3f119c824f90832454166107ad4991707ac550dc4cad9be94",
+        "byteIdentical": false
+      },
+      {
+        "member": "lib/umd/index.js.map",
+        "bytes": 62976,
+        "publishedSHA256": "a20c452ad8d72c30e9176cf281cec0ac026e9ef653e0fc2631e31e4f147e98f0",
+        "rebuiltSHA256": "be5e0d78901a9dddcc1042765379a40ea15962bf0f31fe132677521e96b9f881",
+        "byteIdentical": false
+      },
+      {
+        "member": "lib/umd/platform.d.ts",
+        "bytes": 39,
+        "publishedSHA256": "ab34bee45fe908c992964ac5f881e1c96140c04c2e4e6e7ad9b9a282bf4325de",
+        "rebuiltSHA256": "ab34bee45fe908c992964ac5f881e1c96140c04c2e4e6e7ad9b9a282bf4325de",
+        "byteIdentical": true
+      },
+      {
+        "member": "lib/umd/platform.js",
+        "bytes": 692,
+        "publishedSHA256": "8db7f807d815332325bd1c24b7e0862d4979305135ab4a5a8609ebe7f8d5ef16",
+        "rebuiltSHA256": "8db7f807d815332325bd1c24b7e0862d4979305135ab4a5a8609ebe7f8d5ef16",
+        "byteIdentical": true
+      },
+      {
+        "member": "lib/umd/uri.d.ts",
+        "bytes": 5843,
+        "publishedSHA256": "657e6dc684415721980e91e97785f1b8e6da4134e194de757d2d3733c54b4f06",
+        "rebuiltSHA256": "657e6dc684415721980e91e97785f1b8e6da4134e194de757d2d3733c54b4f06",
+        "byteIdentical": true
+      },
+      {
+        "member": "lib/umd/uri.js",
+        "bytes": 21939,
+        "publishedSHA256": "9c1c3551c85a2812e7e1e56a34d5a371f1114027bfca9bebee7eb88fe616afd4",
+        "rebuiltSHA256": "3a532093c8c3bcf8a1a88c52ba0e995457f7d4a3974ceed1ca79b698f76c89f2",
+        "byteIdentical": false
+      },
+      {
+        "member": "lib/umd/utils.d.ts",
+        "bytes": 2861,
+        "publishedSHA256": "bad1bc59cf9ba7f2b8efc0f7342b141843cbf3d3d791fa13df4ff9b86db26df9",
+        "rebuiltSHA256": "bad1bc59cf9ba7f2b8efc0f7342b141843cbf3d3d791fa13df4ff9b86db26df9",
+        "byteIdentical": true
+      },
+      {
+        "member": "lib/umd/utils.js",
+        "bytes": 5552,
+        "publishedSHA256": "9f9b8f431890c158e48c2d7d2eb509898efb88d2d20d46351f015dbce4439ed9",
+        "rebuiltSHA256": "9f9b8f431890c158e48c2d7d2eb509898efb88d2d20d46351f015dbce4439ed9",
+        "byteIdentical": true
+      }
+    ]
+  },
+  "expectedRefusal": true
+}
