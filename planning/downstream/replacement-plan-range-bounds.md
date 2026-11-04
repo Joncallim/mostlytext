@@ -58,3 +58,15 @@ storage. No native rendering, accessibility, localization or export change.
 Stop and reconcile before changing any additional product behavior, source
 binding, authority or native gate. Final whole-app and exact release acceptance
 remain outside this bounded range-validation fix.
+
+## Actual failing-before result
+
+The source-identical owned fixture compiled all three Foundation/Darwin modules
+and the complete existing TextSearch test corpus. Separate filtered runs of the
+new overflowing-end and negative-length controls both terminate the old test
+host with an uncaught `NSInvalidArgumentException` from
+`NSString.stringByReplacingCharactersInRange`. The captured overflow case passes
+the old endpoint comparison and reaches replacement; no Swift arithmetic-trap
+claim is needed. Preserve both original logs. The subtraction-before-addition
+contract above rejects both cases before either endpoint arithmetic or
+Foundation replacement. No application/AppKit/WebKit target was run.
