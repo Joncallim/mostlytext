@@ -62,7 +62,7 @@ def read_selected(layers, wanted, maximum=4 * 1024 * 1024):
     """Read selected regular files with overlay whiteouts; never apply a rootfs."""
     final, events = {}, []
     for layer, archive in layers:
-        seen = set()
+        seen, additions = set(), {}
         with tarfile.open(archive, 'r:gz') as stream:
             for member in stream:
                 name = member.name
@@ -94,12 +94,15 @@ def read_selected(layers, wanted, maximum=4 * 1024 * 1024):
                     body = stream.extractfile(member).read()
                     if len(body) != member.size:
                         raise ValueError('Selected source read is incomplete')
-                    final[name] = (body, layer)
+                    additions[name] = (body, layer)
                     continue
                 for key in removed:
                     del final[key]
                 if removed:
                     events.append({'layer': layer, 'marker': name, 'removed': removed})
+        # Whiteouts affect only inherited entries. Publish this layer's files
+        # afterwards so an opaque marker cannot erase a same-layer addition.
+        final.update(additions)
     return final, events
 
 
