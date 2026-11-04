@@ -12,8 +12,8 @@ and [open engineering issues](https://github.com/Joncallim/mostlytext/issues).
 Follow the locked application and CLI build commands in the [root README](../README.md#build-the-application-and-cli).
 The application scheme is `MacDown2`; the command scheme is `MostlyTextCLI` and its
 executable is `mostlytext`. These internal build names do not change the product
-name. The command is embedded at `Contents/MacOS/mostlytext` inside its enclosing
-app. Keep that bundle intact; copying the executable alone loses its application
+name. The public command remains `mostlytext`; its embedded copy is named
+`Contents/MacOS/mostlytext-cli` inside the enclosing app. Keep that bundle intact; copying the executable alone loses its application
 identity and resource context. A command symlink must continue to resolve to that
 embedded executable. Do not replace a different installed command unintentionally.
 
@@ -22,13 +22,13 @@ Set `APP_BUNDLE` to the app you built or were explicitly given for testing:
 
 ```sh
 APP_BUNDLE="/path/to/your/built/MacDown2.app"
-"$APP_BUNDLE/Contents/MacOS/mostlytext" --help
-"$APP_BUNDLE/Contents/MacOS/mostlytext" --version
-"$APP_BUNDLE/Contents/MacOS/mostlytext" formats
-"$APP_BUNDLE/Contents/MacOS/mostlytext" open notes.md
-printf '# Draft\n' | "$APP_BUNDLE/Contents/MacOS/mostlytext" -
-"$APP_BUNDLE/Contents/MacOS/mostlytext" --wait notes.md
-"$APP_BUNDLE/Contents/MacOS/mostlytext" open -- ./-draft.md
+"$APP_BUNDLE/Contents/MacOS/mostlytext-cli" --help
+"$APP_BUNDLE/Contents/MacOS/mostlytext-cli" --version
+"$APP_BUNDLE/Contents/MacOS/mostlytext-cli" formats
+"$APP_BUNDLE/Contents/MacOS/mostlytext-cli" open notes.md
+printf '# Draft\n' | "$APP_BUNDLE/Contents/MacOS/mostlytext-cli" -
+"$APP_BUNDLE/Contents/MacOS/mostlytext-cli" --wait notes.md
+"$APP_BUNDLE/Contents/MacOS/mostlytext-cli" open -- ./-draft.md
 ```
 
 `open` is the default subcommand. `-` reads one UTF-8 stdin stream; piping input
