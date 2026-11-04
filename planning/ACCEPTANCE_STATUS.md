@@ -1,4 +1,4 @@
-# MostlyText acceptance status — 3 November 2026
+# MostlyText acceptance status — 4 November 2026
 
 Initial acceptance baseline: main `f660e30f61c0b48551fb450ee9afd24ba35d50ae`.
 Later scoped recovery, localization and attribution units and their exact checks
@@ -7,6 +7,47 @@ qualified units and the live PR checks for current integration status.
 This dated status distinguishes source integration, local prerequisites and
 acceptance. The live backlog is [MostlyText issues](https://github.com/Joncallim/mostlytext/issues);
 [the number map](ISSUE_TRANSFER_MAP.md) explains imported historical references.
+
+## Current source checkpoint — 4 November 2026
+
+[PR51](https://github.com/Joncallim/mostlytext/pull/51) is merged at
+`8158068771a2012c27885d7ac4808cf73af7ffb1`, with the same tree as qualified
+`2ddfe206`. [Complete CI 41765512315](https://github.com/Joncallim/mostlytext/actions/runs/41765512315)
+passes 3,422 package tests/477 suites (two existing known issues), 607 non-UI app
+tests/123 suites, locked Debug/Release app/mostlytext builds, app/UI compilation,
+actual metadata/helper verification and final pins. Compliance 41765512286 and
+GitGuardian pass. Local Release compiled only; artifact checks read resources
+without executing the product. No native receipt is retargeted.
+
+The original #11 managed-asset recovery criterion is checked. 396 focused export
+tests pass Debug/Release, including 100 changed exports with 20 interruptions,
+unknown/adopted/modified/copied objects, inventory/swap/quarantine boundaries,
+512-entry control records and committed/aborted primary reversal. First publish
+ownership, then retire verified obsolete assets, then publish reduced ownership.
+Uncertain references (including SVG disguised as raster) and pre-receipt gaps
+preserve files and may refuse growth; this is not a promise of automatic repair
+for every machine-instruction/power-loss window. Native PDF/UI and final limits
+remain open.
+
+[PR50](https://github.com/Joncallim/mostlytext/pull/50) qualified package-owned
+FileCore/TextSearch details and all 15 catalog mappings; Transifex account/project
+slugs remain unconfigured. [PR52](https://github.com/Joncallim/mostlytext/pull/52)
+is pending full combined qualification for 19 app-owned diagram/PDF details and
+a 343-entry inventory. Its Foundation/compiler/catalog checks are separate from
+native language/layout/PDF acceptance. Non-English new values remain review drafts.
+
+There are 152 registered notice components after the captured Go standard-library
+and compiler-rt corrections. The final 100 parser positions have technical
+syntax/token dispositions with no technical remainder. Original independent
+grant/source/font/runtime obligations and the six strict release predicates
+remain open. Prepared archives are neither approved offers nor published objects.
+
+## Historical prerequisite/source observations — 3 November 2026
+
+The table below retains its original source/signing/session snapshot; it is not
+a fresh native-preflight receipt. Later source qualification is above. Revalidate
+protected runtime identity, staging, permissions, credentials and exact products
+before any native execution; the source checkpoint does not authorize it.
 
 | Area | Observed result | Remaining owner issue |
 |---|---|---|
@@ -18,8 +59,8 @@ acceptance. The live backlog is [MostlyText issues](https://github.com/Joncallim
 | Notarization preflight | Real script stops because documented mostlytext-notary keychain profile is absent | #4: credential profile, submissions, stapling and online/offline Gatekeeper acceptance remain open |
 | Source/nonrelease artifact inventory | Passes; current scoped attribution checks include 142 local Compliance controls | #14 final compliance is a separate strict gate |
 | Strict release compliance | Six failures remain, detailed below | #14: acceptance is blocked before an RC can be submitted |
-| Repository preview | Source SVG/JPEG ready and visually checked; settings upload did not persist and native chooser fallback is blocked by the locked desktop | #16: install/read back the social preview remains open |
-| Website | Separate mostlytext-site source/license; current FAQ and source/backlog links merged | No deployment was initiated; historical roadmap is explicitly dated |
+| Repository preview (superseded on 4 November) | The earlier failed upload did not establish installation. The owner subsequently approved upload; settings persistence and anonymous Open Graph readback now verify the installed image, recorded in [brand assets](../design/brand/README.md) | #16 social-install row is checked; native document/Finder/release artwork remains separate |
+| Website | Separate mostlytext-site source/license; reviewed source/backlog/MostlyText-MIT fixes merged through `0d04102` and prepared | Deployment approval remains unanswered; source readiness is not a live-site readback |
 
 ## Strict release failures observed here
 
@@ -140,8 +181,10 @@ ordinary/self-contained exports, cancellation, both sides of quarantine rename,
 changed files/keys/permissions/locks, authenticated corruption/binding checks and
 100 alternating exports. Hosted full checks and compile-only Release evidence
 belong to the associated PR; this does not establish native application acceptance.
-The complete companion manifest/pending-asset inventory, printer scratch policy,
-PDF feasibility/progress/parity and native export journeys remain in #11.
+The companion inventory was still pending at this historical checkpoint; the
+4 November source checkpoint above records its completed source qualification.
+Printer scratch policy, PDF feasibility/progress/parity and native export
+journeys remain in #11.
 No native receipt, signing prerequisite or strict compliance predicate changes.
 
 ## Open-document recovery protection source follow-up — 3 November 2026
@@ -161,8 +204,9 @@ Debug and Release; two deliberately removed protections produced actual
 regression failures before source restoration. Strict lint and pinned format
 checks passed, as did locked Release and compile-only app/UI test-target builds.
 Hosted checks and reviewed integration are recorded on the associated PR.
-Native account, lifecycle/GUI, companion inventory, PDF,
-calibration, independent review and strict release gates remain unchanged.
+Native account, lifecycle/GUI, PDF, calibration, independent review and strict
+release gates remain unchanged. Companion inventory qualification followed in
+PR51, as recorded in the current source checkpoint above.
 
 ## Publisher and borrowed-algorithm provenance — 3 November 2026
 
@@ -200,8 +244,9 @@ regressions fail: repeated asset scans miss retained names/bytes, and a later
 primary scratch is not refused after an earlier scan. The correction preserves
 all ceilings and unknown files; it does not add companion cleanup authority.
 Final source checks, hosted qualification and integration are recorded on the
-associated PRs/issues. Whole native, companion inventory, PDF, calibration,
-independent review, source publication and signed-artifact gates remain open.
+associated PRs/issues. PR51 subsequently qualified companion inventory recovery.
+Whole native, PDF, calibration, independent review, source publication and
+signed-artifact gates remain open.
 
 ## Complete parser reproduction and Webpack notice — 4 November 2026
 
