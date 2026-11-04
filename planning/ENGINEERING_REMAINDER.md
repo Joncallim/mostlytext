@@ -22,20 +22,33 @@ all 266 local controls and source inventory pass. The built notice matches sourc
 and its unchanged Foundation reader loads the new Framer credit. This does not
 establish native window, installed-state, independent rights or release acceptance.
 
-PR68's later notice resource passes locked universal Release compilation, actual
-bundle/source equality and the unchanged Foundation-only reader. Its exact-head
-Compliance passes all 314 controls. Full Intel CI 41856165565 nevertheless fails
-on `RealSVGNamespaceTests.ownedRendererOutputsRemainAdmissibleAndD2FallsBack`
-with `timedOut` after 17.247 seconds; later app builds/tests did not execute.
-The focused attribution-head diagnostic in
-[PR69](https://github.com/Joncallim/mostlytext/pull/69) passes twice with unchanged
-deadlines/assertions. This does not explain the original failure or establish
-its failing renderer/phase. The baseline comparison and ARM full-run attempts
-failed to acquire hosted runners and executed zero steps; preserve those as
-infrastructure failures. Full Intel source validation
-[41866648980](https://github.com/Joncallim/mostlytext/actions/runs/41866648980)
-and the remaining comparison are pending. No queued, cancelled or focused run
-replaces complete qualification; the first timeout remains tracked in #17.
+[PR68](https://github.com/Joncallim/mostlytext/pull/68) integrates the complete C++
+root notices at main `d4456758a9a951d6bf54c661c3d638497a6d2d27`, whose tree equals
+qualified head `7ead272c0022108baacfd7db28dab8af86c446ad`. Its 536,721-byte notice
+resource passes locked universal Release compilation, actual bundle/source
+equality and the unchanged Foundation-only reader; exact-head Compliance passes
+all 314 controls. Complete same-head source coverage comprises
+[the ARM build/test job](https://github.com/Joncallim/mostlytext/actions/runs/41872318473/job/126722444792)
+(3,430 package tests /479 suites with two known issues, 619 non-UI app tests /127
+suites, all Debug/Release app/mostlytext builds, metadata/test-target/final pins)
+and [the Intel style job](https://github.com/Joncallim/mostlytext/actions/runs/41866648980/job/126702439319)
+(pinned format and strict lint). Every required category executes at the same
+source SHA; the independent jobs' coverage is recorded in the
+[scoped merge review](https://github.com/Joncallim/mostlytext/pull/68#issuecomment-6638697196).
+Duplicate ARM lint jobs that fail runner acquisition execute zero steps and are
+not counted as passes or represented as a wholly successful workflow.
+
+Both full Intel failures remain tracked in #17: the original namespace case
+throws `timedOut` after 17.247 seconds; the later run fails D2's first simple
+render after 15.043 seconds, with later app steps skipped. The namespace case
+passes in both new full runs and all four focused base/head executions. This
+does not explain or fix either failure or establish that it is pre-existing.
+[PR69](https://github.com/Joncallim/mostlytext/pull/69) now investigates cold D2
+startup with phase markers and an optional host-initialization control on the
+immutable base. No production assertion/deadline changes or native acceptance
+are inferred. The six strict release predicates and remaining native/per-file/
+rights/publication requirements stay open; attribution integration does not
+waive runtime or final-artifact release gates.
 
 [PR61](https://github.com/Joncallim/mostlytext/pull/61) rejects negative/overflowing
 folder-replacement ranges before arithmetic or mutation. Both actual old-source
