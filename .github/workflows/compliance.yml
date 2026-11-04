@@ -38,6 +38,7 @@ jobs:
           python3 MacDown2/scripts/test-preflight-issue88-isolation.py
           python3 MacDown2/scripts/test-fixed-issue88-runner-preflight.py
           python3 MacDown2/scripts/test-execute-focus.py
+          python3 MacDown2/scripts/test-document-metadata.py
       - name: Inventory check against the source tree
         run: python3 compliance/tools/compliance.py check
       - name: Reproduced parser receipt and qualified Webpack runtime notice
