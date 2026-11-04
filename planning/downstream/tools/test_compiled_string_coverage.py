@@ -135,6 +135,27 @@ class CompiledStringCoverageTests(unittest.TestCase):
         with self.assertRaisesRegex(coverage.CoverageError, 'no owned localized keys'):
             coverage.check(self.repo, self.extraction)
 
+    def test_other_configuration_cannot_conflict_with_the_selected_release(self):
+        release = self.extraction / 'Project.build/Release/Objects-normal/arm64'
+        release.mkdir(parents=True)
+        for path in list(self.extraction.glob('*.stringsdata')):
+            path.rename(release / path.name)
+        debug = self.extraction / 'Project.build/Debug'
+        debug.mkdir(parents=True)
+        duplicate = self.record(self.app, ['Debug-only label'], 'debug')
+        duplicate.rename(debug / duplicate.name)
+        result = coverage.check(self.repo, self.extraction, 'Release')
+        self.assertEqual(result['status'], 'passed')
+        self.assertEqual(result['configuration'], 'Release')
+
+    def test_other_configuration_cannot_supply_missing_release_inputs(self):
+        debug = self.extraction / 'Project.build/Debug'
+        debug.mkdir(parents=True)
+        for path in list(self.extraction.glob('*.stringsdata')):
+            path.rename(debug / path.name)
+        with self.assertRaisesRegex(coverage.CoverageError, 'incomplete compiler extraction'):
+            coverage.check(self.repo, self.extraction, 'Release')
+
 
 if __name__ == '__main__':
     unittest.main()

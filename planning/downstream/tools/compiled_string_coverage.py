@@ -39,7 +39,7 @@ def catalog_for(repo: Path, source: Path) -> Path | None:
     return None
 
 
-def check(repo: Path, extraction: Path) -> dict:
+def check(repo: Path, extraction: Path, configuration: str | None = None) -> dict:
     repo = repo.resolve(strict=True)
     expected = expected_sources(repo)
     if not expected:
@@ -48,6 +48,8 @@ def check(repo: Path, extraction: Path) -> dict:
     routes: set[tuple[str, str, str, int]] = set()
     catalogs: dict[Path, dict] = {}
     for path in sorted(extraction.rglob('*.stringsdata')):
+        if configuration is not None and configuration not in path.relative_to(extraction).parts[:-1]:
+            continue
         data = json.loads(path.read_text(encoding='utf-8'))
         if not isinstance(data, dict) or not isinstance(data.get('source'), str):
             raise CoverageError(f'{path.name}: missing compiler source identity')
@@ -102,6 +104,7 @@ def check(repo: Path, extraction: Path) -> dict:
     missing = [row for row in rows if row['key'] not in catalogs[repo / row['catalog']]]
     return {
         'schema': 1, 'status': 'missing-keys' if missing else 'passed',
+        'configuration': configuration,
         'compiled_sources': len(records), 'catalogs': len(catalogs),
         'distinct_keys': len({(row['catalog'], row['key']) for row in rows}),
         'routes': rows, 'missing': missing,
@@ -115,10 +118,11 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--repo', type=Path, default=Path(__file__).resolve().parents[3])
     parser.add_argument('--extraction-dir', type=Path, required=True)
+    parser.add_argument('--configuration', default='Release', help='exact Xcode configuration directory (default: Release)')
     parser.add_argument('--output', type=Path)
     args = parser.parse_args()
     try:
-        result = check(args.repo, args.extraction_dir)
+        result = check(args.repo, args.extraction_dir, args.configuration)
     except (CoverageError, OSError, ValueError, TypeError) as error:
         print(json.dumps({'status': 'invalid', 'error': str(error)}))
         return 1

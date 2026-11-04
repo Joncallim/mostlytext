@@ -327,7 +327,7 @@ jobs:
           subprocess.run(['python3', 'MacDown2/scripts/verify-document-metadata.py', '--app', str(app),
                           '--guide', 'docs/INSTALLATION_AND_MIGRATION.md', '--standalone-cli', str(command)], check=True)
           subprocess.run(['python3', 'planning/downstream/tools/compiled_string_coverage.py',
-                          '--extraction-dir', settings['OBJROOT'], '--output',
+                          '--extraction-dir', settings['OBJROOT'], '--configuration', settings['CONFIGURATION'], '--output',
                           str(pathlib.Path(os.environ['RUNNER_TEMP']) / 'compiled-string-coverage.json')], check=True)
           PY
       - name: Build for testing (app + UI tests; UI tests run requires macOS 26+ GUI)
