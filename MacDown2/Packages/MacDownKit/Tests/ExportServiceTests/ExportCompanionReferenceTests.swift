@@ -44,7 +44,11 @@ struct ExportCompanionReferenceTests {
     @Test func generatedLocalImageIsFullyRegistered() async throws {
         let directory = try ExportTestSupport.makeTempDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
-        try ExportTestSupport.writeFixture(named: "image.png", in: directory, bytes: Data([0x89, 0x50, 0x4E]))
+        try ExportTestSupport.writeFixture(
+            named: "image.png",
+            in: directory,
+            bytes: Data([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])
+        )
         let prepared = try await ExportService.prepare(
             ExportRequest(text: "![image](image.png)", sourceGeneration: 1,
                           theme: ExportTestSupport.lightTheme(),
@@ -78,5 +82,33 @@ struct ExportCompanionReferenceTests {
         )
         #expect(!prepared.companionReferencesKnown)
         #expect(!prepared.hasClosedCompanionReferences(for: "manual"))
+    }
+
+    @Test func aChangedStructuralStylesheetCannotCertifyClosedReferences() {
+        let actual = ExportThemeStylesheet.structural
+        #expect(ExportThemeStylesheet.hasClosedReferences(structuralCSS: actual))
+        #expect(!ExportThemeStylesheet.hasClosedReferences(
+            structuralCSS: actual + "\nbody { background: url(old.assets/retained.png) }"
+        ))
+        #expect(!ExportThemeStylesheet.hasClosedReferences(structuralCSS: ""))
+    }
+
+    @Test func anInlineSVGPayloadCannotBorrowARasterHeader() async throws {
+        let svg = Data("<svg><image href=\"old.assets/retained.png\"/></svg>".utf8).base64EncodedString()
+        let source = "![spoof](data:image/png;base64,\(svg))"
+        let prepared = try await ExportService.prepare(
+            ExportRequest(text: source, sourceGeneration: 1, theme: ExportTestSupport.lightTheme()), target: Self.target
+        )
+        #expect(prepared.bodyHTML.contains(svg))
+        #expect(!prepared.companionReferencesKnown)
+    }
+
+    @Test func rasterSignatureKnowledgeDoesNotClaimImageValidity() {
+        #expect(ExportURLPolicy.hasClosedRasterReferences(Data([0xFF, 0xD8, 0xFF]), mimeType: "image/jpeg"))
+        #expect(ExportURLPolicy.hasClosedRasterReferences(Data("GIF89a".utf8), mimeType: "image/gif"))
+        #expect(ExportURLPolicy.hasClosedRasterReferences(Data("RIFF0000WEBP".utf8), mimeType: "image/webp"))
+        #expect(!ExportURLPolicy.hasClosedRasterReferences(Data("<svg/>".utf8), mimeType: "image/png"))
+        #expect(!ExportURLPolicy.hasClosedRasterReferences(Data("<svg/>".utf8), mimeType: "image/svg+xml"))
+        #expect(!ExportURLPolicy.embeddedRasterReferencesAreClosed("data:image/png;base64,AAAA="))
     }
 }

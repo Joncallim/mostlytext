@@ -6,6 +6,35 @@
 > **Architecture date:** 2026-08-17
 > **Review status:** Final adversarial pass complete; implementation begins with Slice 0 only
 
+## 2026-11-04 authenticated companion recovery amendment
+
+Production callers that supply ExportRecoveryLocation now share its existing
+producer lock/key with a separately authenticated companion pending record and
+an inode/birth-bound public inventory. New exclusive resource stages are
+checkpointed before no-replace installation; metadata uses a recorded exclusive
+rename or verified swap. Every retirement records its unique quarantine before
+moving, then rechecks primary/directory authority, ownership, bytes and live
+source-document protection. The committed/aborted phase is durable before
+irreversible cleanup, so later external primary changes cannot reverse it.
+
+Only the composer can certify complete resource references, and only with the
+reviewed structural CSS, no raw HTML/custom contributions, and no kept unresolved
+images/local navigation. Unknown reference sets and self-contained mode retain
+old resources. Existing matching legacy files are reused without ownership;
+changed/copied/hardlinked/adopted objects remain untouched. Unauthenticated
+callers retain the conservative path. No filename pattern grants removal rights.
+
+[The companion contract](downstream/export-companion-recovery.md) supersedes the
+earlier inventory/automatic-recovery deferrals for this source path. A crash
+before a complete object receipt still preserves uncertainty and refuses growth;
+MostlyText never repairs that gap by adopting filenames. Primary records remain
+64 KiB; companion controls have separate 512-KiB payload/1-MiB envelope/64-MiB
+private aggregate ceilings. Public resource quotas remain unchanged; only an
+authenticated fixed inventory has a separate control-file allowance. Exhaustion
+may require another output basename. This is neither filesystem compare-and-swap
+nor native UI, PDF, final memory calibration or release acceptance. Optional SVG
+publication stays disabled.
+
 ## 2026-11-03 owned scratch verification amendment
 
 Normal/cancelled staging retirement now binds known bytes to an in-memory

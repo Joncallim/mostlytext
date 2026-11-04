@@ -71,7 +71,7 @@ final class ExportResourceResolver {
         guard !cancellation.isCancelled else { throw CancellationError() }
         // Inline raster data is already self-contained: nothing to fetch, pack or blank.
         if isImage, ExportURLPolicy.isEmbeddedRasterImage(url) {
-            return .keep
+            return keepEmbeddedRaster(url)
         }
         guard ExportURLPolicy.isSafe(url) else {
             // The reference is neutralised, so the reader must be told: an
@@ -118,6 +118,13 @@ final class ExportResourceResolver {
         }
 
         return try packageLocalResource(referencedBy: url)
+    }
+
+    private func keepEmbeddedRaster(_ url: String) -> URLDisposition {
+        if !ExportURLPolicy.embeddedRasterReferencesAreClosed(url) {
+            companionReferencesKnown = false
+        }
+        return .keep
     }
 
     func packagedIdentity(for reference: String) -> ExportResourceIdentity? {
@@ -197,6 +204,9 @@ final class ExportResourceResolver {
         )
         if let rejection = admit(resource) {
             return .unresolved(rejection)
+        }
+        if !ExportURLPolicy.hasClosedRasterReferences(snapshot.bytes, mimeType: mimeType) {
+            companionReferencesKnown = false
         }
         return .resource(packagedResources[resource.identity] ?? resource)
     }

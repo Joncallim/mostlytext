@@ -29,6 +29,23 @@ struct ExportCompanionAuthentication {
         }
     }
 
+    struct AuthenticatedPending {
+        let value: ExportCompanionPendingRecord
+
+        fileprivate init(_ value: ExportCompanionPendingRecord) {
+            self.value = value
+        }
+
+        func receipt(named name: String) throws -> AuthenticatedReceipt {
+            let archived = value.files.first(where: { $0.temporary == name })?.receipt
+                ?? value.owned.first(where: { $0.name == name })?.receipt
+                ?? value.retirements.first(where: { $0.name == name || $0.quarantine == name })?.receipt
+                ?? (name == ExportCompanionInventoryRecord.fileName ? value.previousInventory : nil)
+            guard let archived else { throw ExportError.unsafePublication }
+            return AuthenticatedReceipt(archived)
+        }
+    }
+
     private struct Envelope: Codable {
         let payload: Data
         let authentication: Data
@@ -37,6 +54,7 @@ struct ExportCompanionAuthentication {
     private let key: SymmetricKey
     private let binding: ExportJournalRecord.Binding
     private static let inventoryDomain = Data("MostlyText.Export.CompanionInventory.v1\0".utf8)
+    private static let pendingDomain = Data("MostlyText.Export.CompanionPending.v1\0".utf8)
 
     init(keyBytes: Data, binding: ExportJournalRecord.Binding) throws {
         guard keyBytes.count == 32 else { throw ExportError.unsafePublication }
@@ -75,6 +93,30 @@ struct ExportCompanionAuthentication {
         guard record.metadata.sameFile(as: metadata), record.directory.sameDirectory(as: directory)
         else { throw ExportError.unsafePublication }
         return try AuthenticatedInventory(record, metadata: ExportOwnedFileReceipt(bytes: bytes, stamp: metadata))
+    }
+
+    func sealPending(_ record: ExportCompanionPendingRecord) throws -> Data {
+        try record.validate(binding: binding)
+        let encoder = Self.encoder()
+        let payload = try encoder.encode(record)
+        guard payload.count <= ExportCompanionLimits.payloadBytes else { throw ExportError.unsafePublication }
+        let code = HMAC<SHA256>.authenticationCode(for: Self.pendingDomain + payload, using: key)
+        let bytes = try encoder.encode(Envelope(payload: payload, authentication: Data(code)))
+        guard bytes.count <= ExportCompanionLimits.envelopeBytes else { throw ExportError.unsafePublication }
+        return bytes
+    }
+
+    func openPending(_ bytes: Data) throws -> AuthenticatedPending {
+        guard bytes.count <= ExportCompanionLimits.envelopeBytes else { throw ExportError.unsafePublication }
+        let envelope = try JSONDecoder().decode(Envelope.self, from: bytes)
+        guard envelope.payload.count <= ExportCompanionLimits.payloadBytes,
+              HMAC<SHA256>.isValidAuthenticationCode(
+                  envelope.authentication, authenticating: Self.pendingDomain + envelope.payload, using: key
+              )
+        else { throw ExportError.unsafePublication }
+        let record = try JSONDecoder().decode(ExportCompanionPendingRecord.self, from: envelope.payload)
+        try record.validate(binding: binding)
+        return AuthenticatedPending(record)
     }
 
     private static func encoder() -> JSONEncoder {

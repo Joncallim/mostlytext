@@ -14,6 +14,7 @@ struct ExportPublicationHooks {
     var afterPrimaryStaged: (() -> Void)?
     var beforePromotion: (() -> Void)?
     var beforeJournalFinalization: (() throws -> Void)?
+    var companionCheckpoint: ((String) throws -> Void)?
     var retentionLimit = ExportRetentionLimit.standard
 }
 
@@ -50,9 +51,15 @@ enum ExportPublicationRetention {
         }
     }
 
-    static func scanAssets(_ descriptor: Int32, limits: ExportRetentionLimit) throws -> Retained {
+    static func scanAssets(_ descriptor: Int32, limits: ExportRetentionLimit,
+                           authenticatedInventory: ExportOwnedFileReceipt? = nil) throws -> Retained {
         var result = Retained()
-        try enumerate(descriptor, maximum: limits.files) { name in
+        try enumerate(descriptor, maximum: limits.files + (authenticatedInventory == nil ? 0 : 1)) { name in
+            if name == ExportCompanionInventoryRecord.fileName, let authenticatedInventory {
+                guard try ExportReceiptInspection.verify(authenticatedInventory, name: name, in: descriptor)
+                else { throw ExportError.unsafePublication }
+                return
+            }
             guard !name.hasPrefix(".mt-") else { throw ExportError.unsafePublication }
             let stamp = try ExportPublicationFilesystem.childStamp(name, in: descriptor)
             let bytes = stamp.kind == mode_t(S_IFREG) ? Int(exactly: stamp.size) : 0

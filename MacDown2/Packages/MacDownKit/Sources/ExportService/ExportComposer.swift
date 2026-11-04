@@ -134,7 +134,8 @@ enum ExportComposer {
             sourceGeneration: request.sourceGeneration,
             preservesRawHTML: policy.preservesRawHTML
         ).registeringResourceSlots(rendered.resourceSlots)
-        if !rendered.containsRawHTML, request.contributions.isEmpty, resolver.companionReferencesKnown {
+        if !rendered.containsRawHTML, request.contributions.isEmpty, resolver.companionReferencesKnown,
+           ExportThemeStylesheet.hasClosedReferences(structuralCSS: ExportThemeStylesheet.structural) {
             prepared = prepared.certifyingCompanionReferences(sourceText: request.text)
         }
         return MarkedPreparation(prepared: prepared, markedRoots: derived.markedRoots,

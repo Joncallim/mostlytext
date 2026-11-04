@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 import Themes
 
@@ -37,6 +38,14 @@ public enum ExportThemeStylesheet {
         }
         return data
     }()
+
+    /// Shared with the optional SVG head audit. A style change must be reviewed
+    /// before it can certify that generated HTML has no unregistered asset URLs.
+    static func hasClosedReferences(structuralCSS: String) -> Bool {
+        let reviewed = "668c19314146a74355da813dee3df584c964788e5a5b81f7233884c82ec5c5c3"
+        return SHA256.hash(data: Data(structuralCSS.utf8))
+            .map { String(format: "%02x", $0) }.joined() == reviewed
+    }
 
     private static func css(_ color: ThemeColor) -> String {
         let red = channel(color.red)

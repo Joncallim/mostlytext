@@ -39,6 +39,21 @@ struct ExportOwnedFileReceipt {
         digest = archived.digest
     }
 
+    /// Rebase only the change-time caused by an authenticated rename, after
+    /// inspecting the same inode/birth/metadata and hashing its unchanged bytes.
+    func inspectingRenamedFile(_ name: String, in directory: Int32) throws -> Self {
+        let actual = try ExportPublicationFilesystem.childStamp(name, in: directory)
+        guard matchesMetadata(actual),
+              try ExportReceiptInspection.verify(self, name: name, in: directory, matching: actual)
+        else { throw ExportError.unsafePublication }
+        return Self(stamp: actual, digest: digest)
+    }
+
+    private init(stamp: Stamp, digest: Data) {
+        self.stamp = stamp
+        self.digest = digest
+    }
+
     func matchesMetadata(_ actual: Stamp) -> Bool {
         stamp.device == actual.device && stamp.inode == actual.inode && stamp.kind == actual.kind
             && stamp.size == actual.size && stamp.birthSeconds == actual.birthSeconds

@@ -21,7 +21,7 @@ enum SVGAssemblyOwnership {
 
         static func builtIn(for theme: Theme) -> Self? {
             let structural = ExportThemeStylesheet.structural
-            guard SVGAssemblyOwnership.sha256(structural) == SVGAssemblyOwnership.auditedStructuralSHA256
+            guard ExportThemeStylesheet.hasClosedReferences(structuralCSS: structural)
             else { return nil }
             return Self(stylesheet: ExportThemeStylesheet.variables(for: theme) + "\n" + structural)
         }
@@ -56,10 +56,6 @@ enum SVGAssemblyOwnership {
     private static let maximumAnalyzedBytes = 8 * 1024 * 1024
     private static let maximumRoots = 64
     private static let maximumOwnedIDs = 4096
-    /// Changes to the bundled structural CSS need renewed SVG non-interference
-    /// review before this disabled opt-in validator can admit its bytes.
-    private static let auditedStructuralSHA256 =
-        "668c19314146a74355da813dee3df584c964788e5a5b81f7233884c82ec5c5c3"
 
     static func inspect(
         markedDocument: String, fragment: SVGIDNamespace.MarkedFragment,
