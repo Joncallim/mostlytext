@@ -80,7 +80,8 @@ enum ExportFilePublication {
         else { throw ExportError.validatedPublicationRejected }
         let input = HTMLFilePublicationInput(
             url: url, mode: mode, bytes: validated.utf8, resources: validated.resources,
-            assetsDirectoryName: validated.assetsDirectoryName, diagnostics: validated.diagnostics
+            assetsDirectoryName: validated.assetsDirectoryName, diagnostics: validated.diagnostics,
+            referencesKnown: validated.companionReferencesKnown
         )
         return try write(input, lease: lease, hooks: .init(
             afterCompanionDirectoryOpened: afterCompanionDirectoryOpened, beforePromotion: beforePromotion

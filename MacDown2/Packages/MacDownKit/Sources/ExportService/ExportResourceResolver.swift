@@ -26,6 +26,10 @@ final class ExportResourceResolver {
     /// uses one broken image twenty times has one problem, not twenty.
     private var reportedReferences: Set<Data> = []
     private(set) var diagnostics: [ExportDiagnostic] = []
+    /// A kept authored reference may address an older managed resource that
+    /// is absent from the newly generated manifest. Such output cannot retire
+    /// prior resources. This is observed in the emitter's actual URL walk.
+    private(set) var companionReferencesKnown = true
 
     private let resourceAccess: ExportResourceAccess?
     private let cancellation: ResourceCancellation
@@ -78,6 +82,10 @@ final class ExportResourceResolver {
         // Navigation links to local/remote destinations are left as authored;
         // they are not fetched, embedded, or rewritten.
         guard isImage else {
+            let scheme = ExportURLPolicy.scheme(of: url)
+            if !url.isEmpty, !url.hasPrefix("#"), scheme != "http", scheme != "https", scheme != "mailto" {
+                companionReferencesKnown = false
+            }
             return .keep
         }
 
@@ -247,6 +255,7 @@ final class ExportResourceResolver {
     }
 
     private func handleUnresolved(url: String, reason: String) -> URLDisposition {
+        companionReferencesKnown = false
         guard reportedReferences.insert(Data(url.utf8)).inserted else {
             return .keep
         }

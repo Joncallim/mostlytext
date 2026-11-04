@@ -9,6 +9,18 @@ struct HTMLFilePublicationInput: Sendable {
     let resources: [ExportResource]
     let assetsDirectoryName: String
     let diagnostics: [ExportDiagnostic]
+    let referencesKnown: Bool
+
+    init(url: URL, mode: HTMLExportMode, bytes: Data, resources: [ExportResource],
+         assetsDirectoryName: String, diagnostics: [ExportDiagnostic], referencesKnown: Bool = false) {
+        self.url = url
+        self.mode = mode
+        self.bytes = bytes
+        self.resources = resources
+        self.assetsDirectoryName = assetsDirectoryName
+        self.diagnostics = diagnostics
+        self.referencesKnown = referencesKnown
+    }
 }
 
 /// Ownership is primary-bound, not merely a filename pattern or a legacy

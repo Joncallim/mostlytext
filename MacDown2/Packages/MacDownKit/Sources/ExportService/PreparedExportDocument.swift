@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 
 /// The frozen result of export composition: everything needed to render HTML or
@@ -43,6 +44,24 @@ public struct PreparedExportDocument: Sendable, Equatable {
 
     /// `true` when authored raw HTML was preserved (`CMARK_OPT_UNSAFE`).
     public let preservesRawHTML: Bool
+
+    /// Only the composer can establish complete companion references. Public
+    /// prepared values, including arbitrary body HTML or CSS, start unknown.
+    private var closedReferenceSourceDigest: Data?
+
+    var companionReferencesKnown: Bool {
+        closedReferenceSourceDigest != nil
+    }
+
+    func certifyingCompanionReferences(sourceText: String) -> Self {
+        var result = self
+        result.closedReferenceSourceDigest = Data(SHA256.hash(data: Data(sourceText.utf8)))
+        return result
+    }
+
+    func hasClosedCompanionReferences(for sourceText: String) -> Bool {
+        closedReferenceSourceDigest == Data(SHA256.hash(data: Data(sourceText.utf8)))
+    }
 
     private(set) var resourceSlots: ExportResourceSlots?
 
