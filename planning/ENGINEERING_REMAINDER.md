@@ -107,3 +107,14 @@ behaviors or weaken their gates merely to reduce the open-issue count.
 [The attribution review packet](../compliance/UPSTREAM_REVIEW_QUESTIONS.md) records
 the concrete missing upstream/independent-review inputs and available evidence.
 It does not claim those questions have been externally submitted or resolved.
+
+## Current parser review wording
+
+The Mermaid inventory's open-item description must distinguish completed
+technical parser classification from the still-required independent IP/rights
+review. The final 100 references have dispositions; the old wording about
+positions outside the initial scoped classification describes historical scope,
+not a current technical remainder. Correct only that description. Preserve every
+review-required field, source-offer state, original evidence packet, component,
+pin and distributed notice/SBOM byte. Verify that ordinary checks still pass and
+the same six strict release predicates still fail; this is not a rights waiver.
