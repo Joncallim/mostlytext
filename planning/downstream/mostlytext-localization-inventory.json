@@ -8124,6 +8124,111 @@
       "target": "ExportService",
       "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
       "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "cmark could not create a parser",
+      "source_default_value": "cmark could not create a parser",
+      "translator_comment": "Editor-owned cmark bridge failure detail in the export alert. Non-English values are English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/CMarkGFM+Errors.swift:19"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "ExportService",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "cmark could not render HTML",
+      "source_default_value": "cmark could not render HTML",
+      "translator_comment": "Editor-owned cmark bridge failure detail in the export alert. Non-English values are English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/CMarkGFM+Errors.swift:21"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "ExportService",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "cmark produced no document",
+      "source_default_value": "cmark produced no document",
+      "translator_comment": "Editor-owned cmark bridge failure detail in the export alert. Non-English values are English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/CMarkGFM+Errors.swift:20"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "ExportService",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
       "key": "derived SVG identifiers could not be safely isolated; authored source preserved",
       "source_default_value": "derived SVG identifiers could not be safely isolated; authored source preserved",
       "translator_comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
