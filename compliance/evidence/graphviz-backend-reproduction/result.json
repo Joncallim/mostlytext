@@ -1,0 +1,69 @@
+{
+  "backend_equal": true,
+  "built_backend": {
+    "bytes": 1173021,
+    "sha256": "d2d18f488ffbf12fd3ae68d3899d6911051b9bfc3b4240eebe9883ca17d58903"
+  },
+  "hosted": {
+    "run_id": "41819062875",
+    "source_head": "24f21198b1c00bb30356da1e8ae891a04a479857",
+    "url": "https://github.com/Joncallim/mostlytext/actions/runs/41819062875"
+  },
+  "inputs": {
+    "archives": {
+      "expat-2.8.4.tar.gz": {
+        "bytes": 825689,
+        "sha256": "b8ece2437692dad44d851c4532723390a5a330990007706be9c8d2b90d294f36"
+      },
+      "graphviz-16.0.0.tar.gz": {
+        "bytes": 26847233,
+        "sha256": "36a1de1aaf5a2023b14f95170a5f8f0b12522d1c305b517fc261966597050749"
+      },
+      "viz-3.30.0.tgz": {
+        "bytes": 1903630,
+        "sha256": "4f52d4bd062b38b9ca66de0a4888633c912b745f1f00b9b224c77a1c7d9f1c92"
+      },
+      "viz-source-99da545.tar.gz": {
+        "bytes": 108597,
+        "sha256": "27d1aed976e66e56dee2ad9491415c8d3e2a2132d8c7a1372220f17321bf766c"
+      }
+    },
+    "context": {
+      "Dockerfile": {
+        "bytes": 2030,
+        "sha256": "ba44702ffad7fb3a6d0f230b74a4401c9251b99db421a71f4004a8d38d53bd9c"
+      },
+      "expat-2.8.4.tar.gz": {
+        "bytes": 825689,
+        "sha256": "b8ece2437692dad44d851c4532723390a5a330990007706be9c8d2b90d294f36"
+      },
+      "graphviz-16.0.0.tar.gz": {
+        "bytes": 26847233,
+        "sha256": "36a1de1aaf5a2023b14f95170a5f8f0b12522d1c305b517fc261966597050749"
+      },
+      "pre.js": {
+        "bytes": 112,
+        "sha256": "3f32afc091724733008e0dd5dd58f0da51fdbc74e2a129a6efb39d90f5dcc510"
+      },
+      "viz.c": {
+        "bytes": 5274,
+        "sha256": "98a136782d13a293f2ecea4f5f7e0dbf7f5ee34ccc7c5d1da6cb07cfad7d1492"
+      }
+    },
+    "expected_backend": {
+      "bytes": 1173021,
+      "sha256": "d2d18f488ffbf12fd3ae68d3899d6911051b9bfc3b4240eebe9883ca17d58903"
+    },
+    "image": "emscripten/emsdk@sha256:c2ac84c26ee40ae2f2c5a15bd3f9e608d1959e1b37413fa7f08138046a188dc5",
+    "original_recipe": {
+      "bytes": 2048,
+      "sha256": "65478ae2711a2837955d7b6d15d274a1a2769871ddecc3d9e465ff124a1bf76c"
+    },
+    "schema": 1,
+    "shipped_bundle_sha256": "c857641af952c8f82ac7243917f8563959046e5cfc44d7e84eff9a2b470f5eab",
+    "tool_sha256": "278700eb31af448feff9ef116ffc4a5dfa129e0e99ac802b68380cf2aebd700b",
+    "viz_revision": "99da545270e6e7b127a5c7ba65974b8a604a6358"
+  },
+  "schema": 1,
+  "scope": "complete npm backend only; not full wrapper rebuild, historical attestation or rights clearance"
+}

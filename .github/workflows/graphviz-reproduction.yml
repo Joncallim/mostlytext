@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/graphviz-reproduction.yml'
       - 'compliance/tools/rebuild_graphviz_backend.py'
+      - 'compliance/tools/verify_graphviz_rebuild.py'
       - 'compliance/tests/test_graphviz_rebuild.py'
       - 'compliance/evidence/graphviz-backend-reproduction/**'
 

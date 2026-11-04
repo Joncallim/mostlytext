@@ -90,3 +90,25 @@ them. The exact source/hash and failed owned context are preserved. Match the
 actual quoted instructions, leaving every build flag and stage unchanged; the
 corrected preparation uses a fresh output directory. Synthetic refusal fixtures
 alone did not establish actual-source recipe compatibility.
+
+The first hosted Compliance run (`41819062823`) found that the new offline
+comparison fixture inherited the GitHub run ID without the rebuild-only source
+head. Its error and raw logs are retained. Isolate the fixture environment and
+exercise both complete hosted identities and missing/invalid halves explicitly;
+retain the production requirement for both fields. All 273 initial local controls
+had passed without that hosted environment, so they did not prove CI portability.
+
+## Observed build result
+
+Hosted run `41819062875`, source `24f21198b1c00bb30356da1e8ae891a04a479857`,
+rebuilds the complete 1,173,021-byte backend with SHA-256
+`d2d18f488ffbf12fd3ae68d3899d6911051b9bfc3b4240eebe9883ca17d58903`,
+exactly matching the npm subject. Captured Docker inspection binds the actual
+Linux/AMD64 image to the recorded config `f8b9ec6e...`. No output was executed.
+The [packet](../../compliance/evidence/graphviz-backend-reproduction/README.md)
+pins its raw receipt and rechecks the recipe, tool, current original audit,
+complete image graph and actual shipped renderer without network or Docker.
+Fourteen methods now cover preparation/comparison and receipt refusals, including
+the hosted fixture environment correction. Preserve the successful first rebuild
+and failed first Compliance separately; require final-head hosted checks after
+these test/evidence additions. All product/distribution inputs remain unchanged.

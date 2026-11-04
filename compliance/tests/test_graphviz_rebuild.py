@@ -3,7 +3,10 @@
 import importlib.util
 import io
 import json
+import copy
 from pathlib import Path
+import shutil
+import sys
 import tarfile
 import tempfile
 import unittest
@@ -13,6 +16,8 @@ TOOL = Path(__file__).resolve().parents[1] / "tools/rebuild_graphviz_backend.py"
 SPEC = importlib.util.spec_from_file_location("graphviz_rebuild", TOOL)
 rebuild = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(rebuild)
+sys.path.insert(0, str(TOOL.parent))
+import verify_graphviz_rebuild as proof
 
 RECIPE = b'''FROM emscripten/emsdk:5.0.7 AS graphviz
 ADD "https://github.com/libexpat/libexpat/releases/download/R_2_8_4/expat-2.8.4.tar.gz" ./expat.tar.gz
@@ -44,6 +49,9 @@ class GraphvizRebuildTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
+        environment = patch.dict(rebuild.os.environ, {"SOURCE_HEAD": "", "GITHUB_RUN_ID": ""})
+        environment.start()
+        self.addCleanup(environment.stop)
         self.base = Path(self.temp.name)
         self.root = self.base / "repo"
         evidence = self.root / "compliance/evidence/viz-js-3.30.0"
@@ -83,6 +91,17 @@ class GraphvizRebuildTests(unittest.TestCase):
         (self.built / "backend.js").write_bytes(BACKEND + b"different suffix")
         self.assertFalse(rebuild.compare(self.output, self.built, self.root)["backend_equal"])
         self.assertFalse(json.loads((self.output / "result.json").read_text())["backend_equal"])
+
+    def test_hosted_identity_requires_both_source_head_and_run(self):
+        self.prepare()
+        with patch.dict(rebuild.os.environ, {"SOURCE_HEAD": "a" * 40, "GITHUB_RUN_ID": "12345"}):
+            result = rebuild.compare(self.output, self.built, self.root)
+        self.assertEqual(result["hosted"]["source_head"], "a" * 40)
+        self.assertTrue(result["hosted"]["url"].endswith("/12345"))
+        for head, run in [("", "12345"), ("a" * 40, ""), ("wrong", "12345")]:
+            with patch.dict(rebuild.os.environ, {"SOURCE_HEAD": head, "GITHUB_RUN_ID": run}):
+                with self.assertRaisesRegex(ValueError, "hosted run identity"):
+                    rebuild.compare(self.output, self.built, self.root)
 
     def test_changed_archive_fails_before_context_creation(self):
         p = self.inputs / "graphviz-16.0.0.tar.gz"
@@ -154,6 +173,93 @@ class GraphvizRebuildTests(unittest.TestCase):
         p.write_bytes(b"x" * (rebuild.MAX_MEMBER + 1))
         with self.assertRaisesRegex(ValueError, "Oversized"):
             rebuild.compare(self.output, self.built, self.root)
+
+
+class CapturedGraphvizRebuildTests(unittest.TestCase):
+    def setUp(self):
+        self.root = TOOL.parents[2]
+        self.result = json.loads((self.root / proof.PACKET / "result.json").read_text())
+
+    def test_captured_receipt_binds_exact_source_recipe_image_and_shipped_bytes(self):
+        self.assertEqual(proof.verify(self.root)["status"], "passed")
+
+    def test_false_or_changed_complete_backend_claim_rejected(self):
+        for kind in ("false", "integer", "bytes", "hash"):
+            value = copy.deepcopy(self.result)
+            if kind == "false":
+                value["backend_equal"] = False
+            elif kind == "integer":
+                value["backend_equal"] = 1
+            elif kind == "bytes":
+                value["built_backend"]["bytes"] += 1
+            else:
+                value["built_backend"]["sha256"] = "a" * 64
+            with self.subTest(kind=kind), self.assertRaisesRegex(ValueError, "Complete backend differs"):
+                proof.validate(value, self.root)
+
+    def test_coherent_input_recipe_tool_and_scope_substitutions_rejected(self):
+        for kind in ("image", "revision", "archive", "recipe", "source", "tool", "scope", "extra"):
+            value = copy.deepcopy(self.result)
+            if kind == "image":
+                value["inputs"]["image"] = "emscripten/emsdk:5.0.7"
+            elif kind == "revision":
+                value["inputs"]["viz_revision"] = "a" * 40
+            elif kind == "archive":
+                value["inputs"]["archives"]["viz-3.30.0.tgz"]["sha256"] = "a" * 64
+            elif kind == "recipe":
+                value["inputs"]["context"]["Dockerfile"]["sha256"] = "a" * 64
+            elif kind == "source":
+                value["inputs"]["context"]["viz.c"]["bytes"] += 1
+            elif kind == "tool":
+                value["inputs"]["tool_sha256"] = "a" * 64
+            elif kind == "scope":
+                value["scope"] = "independent rights clearance"
+            else:
+                value["source_offer_verified"] = True
+            with self.subTest(kind=kind), self.assertRaises(ValueError):
+                proof.validate(value, self.root)
+
+    def test_missing_invalid_or_wrong_hosted_identity_rejected(self):
+        for kind in ("missing", "head", "run", "url"):
+            value = copy.deepcopy(self.result)
+            if kind == "missing":
+                value.pop("hosted")
+            elif kind == "head":
+                value["hosted"]["source_head"] = "wrong"
+            elif kind == "run":
+                value["hosted"]["run_id"] = "../wrong"
+            else:
+                value["hosted"]["url"] = "https://example.invalid/receipt"
+            with self.subTest(kind=kind), self.assertRaises(ValueError):
+                proof.validate(value, self.root)
+
+    def test_complete_receipt_byte_pin_rejects_changes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            folder = root / proof.PACKET
+            folder.mkdir(parents=True)
+            (folder / "result.json").write_bytes((self.root / proof.PACKET / "result.json").read_bytes() + b"\n")
+            with self.assertRaisesRegex(ValueError, "receipt differs"):
+                proof.verify(root)
+
+    def test_changed_upstream_recipe_licence_and_actual_resource_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            names = [proof.PACKET + "/upstream-Dockerfile", proof.PACKET + "/UPSTREAM-LICENSE.txt",
+                     "compliance/evidence/viz-js-3.30.0/source-audit.json",
+                     "compliance/tools/rebuild_graphviz_backend.py",
+                     "MacDown2/Packages/MacDownKit/Sources/GraphvizRendering/Resources/viz-global.js"]
+            for name in names:
+                p = root / name
+                p.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(self.root / name, p)
+            for name in (names[0], names[1], names[-1]):
+                p = root / name
+                original = p.read_bytes()
+                p.write_bytes(original + b"changed")
+                with self.subTest(file=name), self.assertRaises(ValueError):
+                    proof.validate(self.result, root)
+                p.write_bytes(original)
 
 
 if __name__ == "__main__":
