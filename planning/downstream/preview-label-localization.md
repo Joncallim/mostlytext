@@ -94,6 +94,11 @@ duplicate/malformed records; run them in Compliance. This is compiler/resource
 coverage of currently built code, not an exhaustive discovery of every plain
 String or final native/string-freeze acceptance.
 
+Select the actual Xcode configuration as well as its intermediates root.
+Debug and Release may deliberately compile different conditional strings;
+another configuration's old records must neither satisfy completeness nor be
+mistaken for an inconsistent architecture of the checked Release build.
+
 ## Qualification checkpoint
 
 The complete owned compilation set has 682 Swift inputs. All have extraction
