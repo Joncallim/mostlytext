@@ -4,6 +4,7 @@ import sys
 import tarfile
 import tempfile
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
 import prepare_graphviz_offer as offer
@@ -53,6 +54,18 @@ class GraphvizOfferTests(unittest.TestCase):
                 archive.addfile(entry)
         with self.assertRaisesRegex(ValueError, 'type or contents'):
             offer.verify_archive(self.path, self.bodies)
+
+    def test_same_basename_cannot_silently_replace_a_notice(self):
+        bodies = {}
+        offer.add_body(bodies, 'notices/LICENSE.txt', b'first complete licence')
+        with self.assertRaisesRegex(ValueError, 'destination collision'):
+            offer.add_body(bodies, 'notices/LICENSE.txt', b'different complete licence')
+        self.assertEqual(bodies['notices/LICENSE.txt'], b'first complete licence')
+
+    def test_stale_link_evidence_stops_preparation_before_file_reads(self):
+        with patch.object(offer.verify_libcxx_notices, 'verify', side_effect=ValueError('stale link receipt')):
+            with self.assertRaisesRegex(ValueError, 'stale link receipt'):
+                offer.reproduction_evidence(Path(self.temp.name) / 'nonexistent')
 
 
 if __name__ == '__main__':

@@ -7,10 +7,24 @@ review limits. It has not been approved as the complete corresponding-source
 offer and is not published. No MostlyText application binary or private material
 is included. The already-public npm renderer input is JavaScript/WebAssembly.
 
-Archive SHA-256: `538e76c405ecd52026de1bfcd67428b951745a5a0c86223f47f99e4ee2489613`. It contains 29
+Archive SHA-256: `e9db382f36e79f5153c1c31a32700084327ea735fb51dd811293116d648923ca`. It contains 57
 manifested files plus manifest.json; all bytes and exact member sets are verified.
 The [manifest](manifest.json) records each size/digest. Local artifact:
-`/Volumes/Fast SSD/CORTANA-Builds/emscripten-runtime-20261104/graphviz-source-review-compiler-rt-qualified.tar.gz`.
+`/Volumes/Fast SSD/CORTANA-Builds/libcxx-image-notices-20261104/graphviz-source-review-image-link-cpp.tar.gz`.
+
+This snapshot adds 24 exact committed compiler-image, backend/wrapper
+reproduction, link-map/extraction and C++ notice evidence files, plus both C++
+inventory records and all four complete root licence/credit texts. The assembler
+first replays their installed offline verifiers and the original source audit.
+Every included evidence path retains its repository path beneath
+`evidence/reproduction/`; no raw image layer or compiled application is included.
+The receipts are review evidence, not a self-contained compiler environment.
+Their source/build and pre-optimization/link-stage limits remain unchanged.
+The current global notice/SBOM snapshot contains 155 components.
+
+The preceding 29-file compiler-rt snapshot remains untouched at
+`/Volumes/Fast SSD/CORTANA-Builds/emscripten-runtime-20261104/graphviz-source-review-compiler-rt-qualified.tar.gz`
+(SHA-256 `538e76c405ecd52026de1bfcd67428b951745a5a0c86223f47f99e4ee2489613`).
 
 ## Reproduce and verify
 
@@ -78,7 +92,8 @@ is still a local review package, not an approved or published source offer.
 The previous selected-Go-standard-library archive remains unchanged at
 `/Volumes/Fast SSD/CORTANA-Builds/go-stdlib-notices-20261104/graphviz-source-review-go-stdlib.tar.gz`
 (SHA-256 `eed89107fdaffab73c26cd2ae15aa1fcee57753ad58a3543f12c5589e2f88784`).
-The current 152-component snapshot adds the complete compiler-rt root licence,
+That 152-component checkpoint added the complete compiler-rt root licence,
 its referenced partial contributor credits, captured source-link evidence and
-offline verifier. Exact compiler image/sysroot and per-file linked-code review
-remain open. This remains an unapproved, unpublished source-review package.
+offline verifier. The current image/link/C++ supplement above narrows the recorded
+compiler evidence; complete per-file linked-code/source/rights review remains
+open. This remains an unapproved, unpublished source-review package.

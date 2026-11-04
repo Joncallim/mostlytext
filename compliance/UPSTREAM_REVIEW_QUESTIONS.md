@@ -35,6 +35,12 @@ All original positions retain independent attribution/rights-review requirements
 no syntax category determines ownership or clears the earlier unresolved grants.
 The original index and all notice/runtime/pin bytes are preserved.
 
+The [current unpublished Graphviz review package](evidence/graphviz-source-review/README.md)
+now carries 24 exact compiler-image/reproduction/link/C++ evidence files and the
+four complete C++ root texts alongside the selected source archives and current
+155-component notice snapshot. This is prepared local evidence; it does not
+complete the independent review or authorize a source offer.
+
 When these inputs are resolved, update their canonical evidence, inventory,
 notices and SBOM together and rerun the exact resource/source checks. Public
 source-only publication remains the separately authorized action in
