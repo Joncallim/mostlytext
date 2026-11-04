@@ -26,6 +26,10 @@ final class ExportResourceResolver {
     /// uses one broken image twenty times has one problem, not twenty.
     private var reportedReferences: Set<Data> = []
     private(set) var diagnostics: [ExportDiagnostic] = []
+    /// A kept authored reference may address an older managed resource that
+    /// is absent from the newly generated manifest. Such output cannot retire
+    /// prior resources. This is observed in the emitter's actual URL walk.
+    private(set) var companionReferencesKnown = true
 
     private let resourceAccess: ExportResourceAccess?
     private let cancellation: ResourceCancellation
@@ -67,7 +71,7 @@ final class ExportResourceResolver {
         guard !cancellation.isCancelled else { throw CancellationError() }
         // Inline raster data is already self-contained: nothing to fetch, pack or blank.
         if isImage, ExportURLPolicy.isEmbeddedRasterImage(url) {
-            return .keep
+            return keepEmbeddedRaster(url)
         }
         guard ExportURLPolicy.isSafe(url) else {
             // The reference is neutralised, so the reader must be told: an
@@ -78,6 +82,10 @@ final class ExportResourceResolver {
         // Navigation links to local/remote destinations are left as authored;
         // they are not fetched, embedded, or rewritten.
         guard isImage else {
+            let scheme = ExportURLPolicy.scheme(of: url)
+            if !url.isEmpty, !url.hasPrefix("#"), scheme != "http", scheme != "https", scheme != "mailto" {
+                companionReferencesKnown = false
+            }
             return .keep
         }
 
@@ -110,6 +118,13 @@ final class ExportResourceResolver {
         }
 
         return try packageLocalResource(referencedBy: url)
+    }
+
+    private func keepEmbeddedRaster(_ url: String) -> URLDisposition {
+        if !ExportURLPolicy.embeddedRasterReferencesAreClosed(url) {
+            companionReferencesKnown = false
+        }
+        return .keep
     }
 
     func packagedIdentity(for reference: String) -> ExportResourceIdentity? {
@@ -190,6 +205,9 @@ final class ExportResourceResolver {
         if let rejection = admit(resource) {
             return .unresolved(rejection)
         }
+        if !ExportURLPolicy.hasClosedRasterReferences(snapshot.bytes, mimeType: mimeType) {
+            companionReferencesKnown = false
+        }
         return .resource(packagedResources[resource.identity] ?? resource)
     }
 
@@ -247,6 +265,7 @@ final class ExportResourceResolver {
     }
 
     private func handleUnresolved(url: String, reason: String) -> URLDisposition {
+        companionReferencesKnown = false
         guard reportedReferences.insert(Data(url.utf8)).inserted else {
             return .keep
         }

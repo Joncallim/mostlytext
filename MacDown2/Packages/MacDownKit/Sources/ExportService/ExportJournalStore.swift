@@ -60,6 +60,7 @@ final class ExportJournalStore {
         }
         try validate(record)
         try ExportJournalStorage.checkCount(directory.descriptor, reserving: previous == nil ? 2 : 1)
+        try ExportJournalStorage.checkAggregate(directory.descriptor, reserving: Self.maximumBytes)
     }
 
     func begin(priorDigest: Data?, desired: Data, name: String, receipt: ExportOwnedFileReceipt) throws {
@@ -134,6 +135,49 @@ final class ExportJournalStore {
         guard try Filesystem.directoryAtPath(location.directory.path, matches: directoryStamp),
               try ExportJournalStorage.read("producer.key", in: directory.descriptor, maximum: 32) == keyBytes
         else { throw ExportError.unsafePublication }
+    }
+
+    var companionBinding: ExportJournalRecord.Binding {
+        binding
+    }
+
+    func companionAuthentication() throws -> ExportCompanionAuthentication {
+        try checkCurrent()
+        return try ExportCompanionAuthentication(keyBytes: keyBytes, binding: binding)
+    }
+
+    func checkCompanionCapacity() throws {
+        try checkCurrent()
+        try ExportJournalStorage.checkCount(directory.descriptor, reserving: 2)
+        try ExportJournalStorage.checkAggregate(directory.descriptor, reserving: ExportCompanionLimits.envelopeBytes)
+    }
+
+    func readCompanionPending() throws -> Data? {
+        try checkCurrent()
+        return try ExportJournalStorage.read(
+            companionFileName, in: directory.descriptor, maximum: ExportCompanionLimits.envelopeBytes,
+            limit: .companion
+        )
+    }
+
+    func replaceCompanionPending(_ bytes: Data, previous: Data?) throws -> ExportOwnedFileReceipt {
+        try checkCurrent()
+        try ExportJournalStorage.checkCount(directory.descriptor, reserving: previous == nil ? 2 : 1)
+        try ExportJournalStorage.checkAggregate(directory.descriptor, reserving: bytes.count)
+        let stamp = try ExportJournalStorage.replace(
+            bytes, named: companionFileName, previous: previous, in: directory.descriptor, limit: .companion
+        )
+        return try ExportOwnedFileReceipt(bytes: bytes, stamp: stamp)
+    }
+
+    func finishCompanionPending(_ receipt: ExportOwnedFileReceipt) throws {
+        try checkCurrent()
+        try ExportFileRetirement.retire(receipt, name: companionFileName, in: directory.descriptor)
+        guard fsync(directory.descriptor) == 0 else { throw Filesystem.posixFailure() }
+    }
+
+    private var companionFileName: String {
+        get throws { try binding.fileName + ".companion" }
     }
 
     private func validate(_ candidate: ExportJournalRecord) throws {

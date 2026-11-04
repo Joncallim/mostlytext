@@ -7,6 +7,18 @@ import Foundation
 enum ExportJournalStorage {
     typealias Filesystem = ExportPublicationFilesystem
 
+    enum RecordLimit {
+        case primary
+        case companion
+
+        var maximumBytes: Int {
+            switch self {
+            case .primary: ExportJournalStore.maximumBytes
+            case .companion: ExportCompanionLimits.envelopeBytes
+            }
+        }
+    }
+
     static func open(_ location: ExportRecoveryLocation) throws -> Filesystem.DirectoryHandle {
         let url = location.directory
         guard url.isFileURL, url.query == nil, url.fragment == nil, !url.path.utf8.contains(0),
@@ -60,7 +72,8 @@ enum ExportJournalStorage {
         else { throw ExportError.unsafePublication }
     }
 
-    static func read(_ name: String, in directory: Int32, maximum: Int) throws -> Data? {
+    static func read(_ name: String, in directory: Int32, maximum: Int,
+                     limit: RecordLimit = .primary) throws -> Data? {
         let descriptor = openat(directory, name, O_RDONLY | O_NONBLOCK | O_NOFOLLOW | O_CLOEXEC)
         if descriptor < 0 {
             if errno == ENOENT {
@@ -71,7 +84,7 @@ enum ExportJournalStorage {
         defer { Darwin.close(descriptor) }
         try validate(descriptor, kind: mode_t(S_IFREG), mode: 0o600)
         let stamp = try fileStamp(descriptor)
-        guard maximum >= 0, maximum <= ExportJournalStore.maximumBytes,
+        guard maximum >= 0, maximum <= limit.maximumBytes,
               stamp.size >= 0, stamp.size <= maximum else { throw ExportError.unsafePublication }
         let bytes = try readBytes(descriptor, maximum: maximum)
         guard bytes.count == stamp.size, try fileStamp(descriptor) == stamp, try Filesystem.childStamp(
@@ -83,7 +96,9 @@ enum ExportJournalStorage {
     }
 
     static func replace(_ bytes: Data, named name: String, previous: Data?,
-                        in directory: Int32) throws -> Filesystem.Stamp {
+                        in directory: Int32, limit: RecordLimit = .primary) throws -> Filesystem.Stamp {
+        guard bytes.count <= limit.maximumBytes else { throw ExportError.unsafePublication }
+        try checkAggregate(directory, reserving: bytes.count)
         let temporary = ".mt-" + UUID().uuidString + ".journal"
         let descriptor = openat(directory, temporary, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC, 0o600)
         guard descriptor >= 0 else { throw Filesystem.posixFailure() }
@@ -91,10 +106,10 @@ enum ExportJournalStorage {
         var progress = 0
         do {
             try validate(descriptor, kind: mode_t(S_IFREG), mode: 0o600)
-            try writeBytes(bytes, to: descriptor, progress: &progress)
+            try writeBytes(bytes, to: descriptor, progress: &progress, maximum: limit.maximumBytes)
             guard fsync(descriptor) == 0 else { throw Filesystem.posixFailure() }
             if let previous {
-                guard try read(name, in: directory, maximum: ExportJournalStore.maximumBytes) == previous
+                guard try read(name, in: directory, maximum: limit.maximumBytes, limit: limit) == previous
                 else { throw ExportError.unsafePublication }
                 guard renameat(directory, temporary, directory, name) == 0 else { throw Filesystem.posixFailure() }
             } else {
@@ -136,6 +151,38 @@ enum ExportJournalStorage {
         }
     }
 
+    static func checkAggregate(_ descriptor: Int32, reserving bytes: Int) throws {
+        guard bytes >= 0, bytes <= ExportCompanionLimits.envelopeBytes else { throw ExportError.unsafePublication }
+        let copied = openat(descriptor, ".", O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)
+        guard copied >= 0 else { throw Filesystem.posixFailure() }
+        guard let directory = fdopendir(copied) else {
+            Darwin.close(copied)
+            throw Filesystem.posixFailure()
+        }
+        defer { closedir(directory) }
+        var total = bytes
+        var count = 0
+        while true {
+            errno = 0
+            guard let entry = readdir(directory) else {
+                guard errno == 0 else { throw Filesystem.posixFailure() }
+                return
+            }
+            let raw = withUnsafeBytes(of: entry.pointee.d_name) { Array($0.prefix { $0 != 0 }) }
+            if raw == Array(".".utf8) || raw == Array("..".utf8) {
+                continue
+            }
+            guard let name = String(bytes: raw, encoding: .utf8) else { throw ExportError.unsafePublication }
+            count += 1
+            let stamp = try Filesystem.childStamp(name, in: descriptor)
+            guard count <= 1024, stamp.kind == mode_t(S_IFREG), stamp.size >= 0,
+                  stamp.size <= ExportCompanionLimits.envelopeBytes,
+                  let size = Int(exactly: stamp.size), total <= ExportCompanionLimits.privateBytes - size
+            else { throw ExportError.unsafePublication }
+            total += size
+        }
+    }
+
     private static func create(_ bytes: Data, name: String, in directory: Int32) throws {
         let descriptor = openat(directory, name, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC, 0o600)
         guard descriptor >= 0 else { throw Filesystem.posixFailure() }
@@ -150,8 +197,9 @@ enum ExportJournalStorage {
     /// checkpoint critical section even if cancellation arrives; otherwise a
     /// completed public stage could lose its only durable recovery receipt.
     /// Public source/resource reads and the promotion cutoff remain cancellable.
-    private static func writeBytes(_ bytes: Data, to descriptor: Int32, progress: inout Int) throws {
-        guard bytes.count <= ExportJournalStore.maximumBytes else { throw ExportError.unsafePublication }
+    private static func writeBytes(_ bytes: Data, to descriptor: Int32, progress: inout Int,
+                                   maximum: Int = ExportJournalStore.maximumBytes) throws {
+        guard bytes.count <= maximum else { throw ExportError.unsafePublication }
         try bytes.withUnsafeBytes { raw in
             while progress < raw.count {
                 let count = Darwin.write(descriptor, raw.baseAddress?.advanced(by: progress), raw.count - progress)

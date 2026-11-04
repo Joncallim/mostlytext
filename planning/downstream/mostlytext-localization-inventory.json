@@ -8544,7 +8544,7 @@
         "en": "translated"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceResolver.swift:125"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceResolver.swift:140"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -8577,8 +8577,8 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceResolver.swift:137",
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceResolver.swift:174"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceResolver.swift:152",
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceResolver.swift:189"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -8611,7 +8611,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceResolver.swift:101"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceResolver.swift:109"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -8640,7 +8640,7 @@
         "en": "translated"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceResolver.swift:176"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceResolver.swift:191"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -8709,8 +8709,8 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceResolver.swift:132",
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceResolver.swift:172"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceResolver.swift:147",
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceResolver.swift:187"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -8739,7 +8739,7 @@
         "en": "translated"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportPublicationRetention.swift:39"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportPublicationRetention.swift:40"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -8920,7 +8920,7 @@
         "en": "translated"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceResolver.swift:168"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceResolver.swift:183"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"

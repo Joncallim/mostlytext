@@ -9,9 +9,10 @@ same destination, MostlyText can retire the unchanged staging object safely.
 Changed files, unknown residue and an unfamiliar primary are preserved and
 reported. This adds no background directory scan or automatic document opening.
 
-Companion-asset inventories, interrupted asset staging and obsolete-resource
-collection remain subsequent work under MostlyText #11. This slice does not
-claim the complete managed-directory crash policy. PDF printing and all native
+The later [companion recovery supplement](export-companion-recovery.md) extends
+this producer lock/key with separate pending/inventory domains, exact resource
+receipts and recorded cleanup. This document remains the primary-scratch contract;
+it does not itself prove companion behavior. PDF printing and all native
 acceptance requirements retain their existing prerequisites.
 
 ## Baseline and reconciliation

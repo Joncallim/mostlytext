@@ -123,7 +123,7 @@ enum ExportComposer {
             policy: policy
         )
 
-        let prepared = PreparedExportDocument(
+        var prepared = PreparedExportDocument(
             title: parsed.metadata.browserTitle,
             visibleTitle: parsed.metadata.visibleTitle,
             bodyHTML: rendered.html,
@@ -134,6 +134,10 @@ enum ExportComposer {
             sourceGeneration: request.sourceGeneration,
             preservesRawHTML: policy.preservesRawHTML
         ).registeringResourceSlots(rendered.resourceSlots)
+        if !rendered.containsRawHTML, request.contributions.isEmpty, resolver.companionReferencesKnown,
+           ExportThemeStylesheet.hasClosedReferences(structuralCSS: ExportThemeStylesheet.structural) {
+            prepared = prepared.certifyingCompanionReferences(sourceText: request.text)
+        }
         return MarkedPreparation(prepared: prepared, markedRoots: derived.markedRoots,
                                  markedSourceRanges: derived.markedSourceRanges)
     }
