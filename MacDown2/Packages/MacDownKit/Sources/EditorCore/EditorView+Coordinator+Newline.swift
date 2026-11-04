@@ -58,7 +58,7 @@ extension EditorView.Coordinator {
             replacementRange: selection,
             replacementString: separator,
             resultingSelection: NSRange(location: selection.location + separator.utf16.count, length: 0),
-            undoActionName: "Typing"
+            undoActionName: String(localized: "Typing", bundle: .module)
         )))
     }
 

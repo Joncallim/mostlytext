@@ -71,7 +71,10 @@ extension EditorTextTransforms {
             replacements: accumulator.replacements,
             resultsByOriginalIndex: accumulator.resultsByOriginalIndex,
             selection: selection,
-            undoActionName: decrease ? "Decrease Indent" : "Increase Indent"
+            undoActionName: decrease ? String(localized: "Decrease Indent", bundle: .module) : String(
+                localized: "Increase Indent",
+                bundle: .module
+            )
         )
     }
 

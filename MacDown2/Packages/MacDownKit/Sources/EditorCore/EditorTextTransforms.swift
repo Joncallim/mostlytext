@@ -36,7 +36,7 @@ enum EditorTextTransforms {
         selection: EditorSelectionSet
     ) -> EditorEditTransaction? {
         multiLineGroupTransform(text: text, lineIndex: lineIndex, selection: selection,
-                                undoActionName: "Sort Lines") { block in
+                                undoActionName: String(localized: "Sort Lines", bundle: .module)) { block in
             var rebuilt = ""
             for (index, content) in block.contents.sorted().enumerated() {
                 rebuilt += content
@@ -63,7 +63,7 @@ enum EditorTextTransforms {
         selection: EditorSelectionSet
     ) -> EditorEditTransaction? {
         multiLineGroupTransform(text: text, lineIndex: lineIndex, selection: selection,
-                                undoActionName: "Dedupe Lines") { block in
+                                undoActionName: String(localized: "Dedupe Lines", bundle: .module)) { block in
             // Keyed by UTF-8 bytes: `String` equality would merge canonically
             // equivalent but scalar-distinct lines (#183 F02).
             var seen = Set<[UInt8]>()
@@ -118,7 +118,7 @@ enum EditorTextTransforms {
         let resultingRanges = selection.ranges.map { remapPosition($0, throughDeletionsIn: replacements) }
         return EditorEditTransaction(
             replacements: replacements,
-            undoActionName: "Trim Trailing Whitespace",
+            undoActionName: String(localized: "Trim Trailing Whitespace", bundle: .module),
             resultingSelection: EditorSelectionSet(ranges: resultingRanges, primaryIndex: selection.primaryIndex)
         )
     }

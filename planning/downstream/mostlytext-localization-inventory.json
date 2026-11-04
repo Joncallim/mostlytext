@@ -1780,6 +1780,41 @@
       "target": "MacDown2",
       "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
       "bundle": "Bundle.main (project target resource)",
+      "key": "Case Sensitive",
+      "source_default_value": "Case Sensitive",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/MacDown2/FindBarView.swift:106"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
       "key": "Check that MostlyText can write to the Commands folder, then try again.",
       "source_default_value": "Check that MostlyText can write to the Commands folder, then try again.",
       "translator_comment": "Command-folder error. Requires translation and native layout review before the final string freeze.",
@@ -2095,8 +2130,10 @@
         "ja": "needs_review",
         "pl": "needs_review"
       },
-      "callsites": [],
-      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "callsites": [
+        "MacDown2/MacDown2/AppPaletteCommand.swift:120"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -3385,8 +3422,10 @@
         "ja": "needs_review",
         "pl": "needs_review"
       },
-      "callsites": [],
-      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "callsites": [
+        "MacDown2/MacDown2/AppPaletteCommand.swift:145"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -4269,6 +4308,7 @@
         "pl": "needs_review"
       },
       "callsites": [
+        "MacDown2/MacDown2/OutlineRowView.swift:57",
         "MacDown2/MacDown2/SidebarView+Folder.swift:99"
       ],
       "callsite_evidence": "direct_literal_static_match",
@@ -4631,8 +4671,10 @@
         "ja": "needs_review",
         "pl": "needs_review"
       },
-      "callsites": [],
-      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "callsites": [
+        "MacDown2/MacDown2/WindowCoordinator+Editing.swift:128"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -4664,8 +4706,10 @@
         "ja": "needs_review",
         "pl": "needs_review"
       },
-      "callsites": [],
-      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "callsites": [
+        "MacDown2/MacDown2/WindowCoordinator+Editing.swift:127"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -5301,6 +5345,41 @@
       "target": "MacDown2",
       "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
       "bundle": "Bundle.main (project target resource)",
+      "key": "In Selection",
+      "source_default_value": "In Selection",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/MacDown2/FindBarView.swift:116"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
       "key": "Include %@ in Replace",
       "source_default_value": "Include %@ in Replace",
       "translator_comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
@@ -5501,8 +5580,10 @@
         "ja": "needs_review",
         "pl": "needs_review"
       },
-      "callsites": [],
-      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "callsites": [
+        "MacDown2/MacDown2/AppPaletteCommand.swift:139"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -7264,8 +7345,10 @@
         "ja": "translated",
         "pl": "translated"
       },
-      "callsites": [],
-      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "callsites": [
+        "MacDown2/MacDown2/AppPaletteCommand.swift:42"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -7328,8 +7411,10 @@
         "ja": "needs_review",
         "pl": "needs_review"
       },
-      "callsites": [],
-      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "callsites": [
+        "MacDown2/MacDown2/AppPaletteCommand.swift:66"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -8160,8 +8245,10 @@
         "ja": "needs_review",
         "pl": "needs_review"
       },
-      "callsites": [],
-      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "callsites": [
+        "MacDown2/MacDown2/AppPaletteCommand.swift:92"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -8523,8 +8610,10 @@
         "ja": "needs_review",
         "pl": "needs_review"
       },
-      "callsites": [],
-      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "callsites": [
+        "MacDown2/MacDown2/AppPaletteCommand.swift:84"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -8556,8 +8645,10 @@
         "ja": "needs_review",
         "pl": "needs_review"
       },
-      "callsites": [],
-      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "callsites": [
+        "MacDown2/MacDown2/AppPaletteCommand.swift:76"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -8646,7 +8737,8 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/HTMLPreviewPane.swift:71"
+        "MacDown2/MacDown2/HTMLPreviewPane.swift:71",
+        "MacDown2/MacDown2/OutlineRowView.swift:58"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -9330,6 +9422,41 @@
       },
       "callsites": [],
       "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
+      "key": "Regular Expression",
+      "source_default_value": "Regular Expression",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/MacDown2/FindBarView.swift:112"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -10304,8 +10431,10 @@
         "ja": "needs_review",
         "pl": "needs_review"
       },
-      "callsites": [],
-      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "callsites": [
+        "MacDown2/MacDown2/AppPaletteCommand.swift:100"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -10336,6 +10465,7 @@
         "pl": "needs_review"
       },
       "callsites": [
+        "MacDown2/MacDown2/AppPaletteCommand.swift:109",
         "MacDown2/MacDown2/WindowCoordinator+FileTree.swift:293",
         "MacDown2/MacDown2/WindowCoordinator+Workspace.swift:15"
       ],
@@ -10463,6 +10593,41 @@
       "target": "MacDown2",
       "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
       "bundle": "Bundle.main (project target resource)",
+      "key": "Search",
+      "source_default_value": "Search",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/MacDown2/OutlineRowView.swift:59"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
       "key": "Search cancelled",
       "source_default_value": "Search cancelled",
       "translator_comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
@@ -10489,7 +10654,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/FindBarView.swift:291"
+        "MacDown2/MacDown2/FindBarView.swift:299"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -10558,6 +10723,41 @@
       },
       "callsites": [],
       "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
+      "key": "Sel",
+      "source_default_value": "Sel",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/MacDown2/FindBarView.swift:114"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -10821,8 +11021,10 @@
         "ja": "needs_review",
         "pl": "needs_review"
       },
-      "callsites": [],
-      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "callsites": [
+        "MacDown2/MacDown2/AppPaletteCommand.swift:150"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -13670,8 +13872,10 @@
         "ja": "needs_review",
         "pl": "needs_review"
       },
-      "callsites": [],
-      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "callsites": [
+        "MacDown2/MacDown2/AppPaletteCommand.swift:129"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -14224,6 +14428,41 @@
       "target": "MacDown2",
       "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
       "bundle": "Bundle.main (project target resource)",
+      "key": "W",
+      "source_default_value": "W",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/MacDown2/FindBarView.swift:108"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
       "key": "WebKit did not produce a readable PDF snapshot.",
       "source_default_value": "WebKit did not produce a readable PDF snapshot.",
       "translator_comment": "App-owned PDF failure/recovery detail. Non-English values are English review drafts requiring final translation/native review.",
@@ -14354,6 +14593,41 @@
       },
       "callsites": [
         "MacDown2/MacDown2/FirstRunWindowController.swift:28"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
+      "key": "Whole Word",
+      "source_default_value": "Whole Word",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/MacDown2/FindBarView.swift:110"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -16544,6 +16818,607 @@
       "target": "EditorCore",
       "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
       "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Bold",
+      "source_default_value": "Bold",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Commands.swift:17"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Capitalize",
+      "source_default_value": "Capitalize",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorTextTransforms+Case.swift:63"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Continue List",
+      "source_default_value": "Continue List",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Newline.swift:133",
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Newline.swift:153"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Convert Line Endings",
+      "source_default_value": "Convert Line Endings",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorTextTransforms+LineEndings.swift:46"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Decrease Indent",
+      "source_default_value": "Decrease Indent",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorTextTransforms+Indent.swift:74"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Dedupe Lines",
+      "source_default_value": "Dedupe Lines",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorTextTransforms.swift:66"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Delete",
+      "source_default_value": "Delete",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Pairing.swift:288"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Delete Line",
+      "source_default_value": "Delete Line",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorLineTransforms.swift:138"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Duplicate Line",
+      "source_default_value": "Duplicate Line",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorLineTransforms.swift:90"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Heading",
+      "source_default_value": "Heading",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Commands.swift:173"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Increase Indent",
+      "source_default_value": "Increase Indent",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorTextTransforms+Indent.swift:74"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Indent",
+      "source_default_value": "Indent",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Indentation.swift:45",
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Indentation.swift:53"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Inline Code",
+      "source_default_value": "Inline Code",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Commands.swift:26"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Insert",
+      "source_default_value": "Insert",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Newline.swift:102",
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Pairing.swift:75",
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Pairing.swift:206"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Insert Snippet",
+      "source_default_value": "Insert Snippet",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/Snippets/EditorSnippetInsertion.swift:10"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Italic",
+      "source_default_value": "Italic",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Commands.swift:81",
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Commands.swift:93",
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Commands.swift:100"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Join Lines",
+      "source_default_value": "Join Lines",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorLineTransforms.swift:241"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
       "key": "Line numbers",
       "source_default_value": "Line numbers",
       "translator_comment": "unknown_no_catalog_comment",
@@ -16569,6 +17444,146 @@
       },
       "callsites": [
         "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorGutterView.swift:28"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Lowercase",
+      "source_default_value": "Lowercase",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorTextTransforms+Case.swift:62"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Move Line Down",
+      "source_default_value": "Move Line Down",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorLineTransforms+Move.swift:82"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Move Line Up",
+      "source_default_value": "Move Line Up",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorLineTransforms+Move.swift:82"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Paragraph",
+      "source_default_value": "Paragraph",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Commands.swift:173"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -16612,6 +17627,216 @@
       "target": "EditorCore",
       "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
       "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Replace",
+      "source_default_value": "Replace",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorFindModel+Replace.swift:35"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Replace All",
+      "source_default_value": "Replace All",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorFindModel+Replace.swift:57"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Sort Lines",
+      "source_default_value": "Sort Lines",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorTextTransforms.swift:39"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Toggle Comment",
+      "source_default_value": "Toggle Comment",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorCommentToggle.swift:65"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Trim Trailing Whitespace",
+      "source_default_value": "Trim Trailing Whitespace",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorTextTransforms.swift:121"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Typing",
+      "source_default_value": "Typing",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorView+Coordinator+Newline.swift:61"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
       "key": "Undo",
       "source_default_value": "Undo",
       "translator_comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
@@ -16639,6 +17864,78 @@
       },
       "callsites": [
         "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorTextView.swift:43"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Unindent",
+      "source_default_value": "Unindent",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Indentation.swift:68",
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Indentation.swift:146",
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Indentation.swift:164"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Uppercase",
+      "source_default_value": "Uppercase",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorTextTransforms+Case.swift:61"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -19289,6 +20586,41 @@
       "target": "JSONSupport",
       "catalog": "MacDown2/Packages/MacDownKit/Sources/JSONSupport/Resources/Localizable.xcstrings",
       "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Array",
+      "source_default_value": "Array",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONOutlineBuilder.swift:91"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "JSONSupport",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/JSONSupport/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
       "key": "Document exceeds the maximum nesting depth of %@.",
       "source_default_value": "Document exceeds the maximum nesting depth of %@.",
       "translator_comment": "unknown_no_catalog_comment",
@@ -19818,6 +21150,41 @@
       },
       "callsites": [],
       "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "JSONSupport",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/JSONSupport/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Object",
+      "source_default_value": "Object",
+      "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONOutlineBuilder.swift:90"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {

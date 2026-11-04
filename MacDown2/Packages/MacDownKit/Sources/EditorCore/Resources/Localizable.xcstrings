@@ -1,6 +1,499 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "Bold": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bold"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Bold"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Bold"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Bold"
+          }
+        }
+      }
+    },
+    "Capitalize": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Capitalize"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Capitalize"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Capitalize"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Capitalize"
+          }
+        }
+      }
+    },
+    "Continue List": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue List"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Continue List"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Continue List"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Continue List"
+          }
+        }
+      }
+    },
+    "Convert Line Endings": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Convert Line Endings"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Convert Line Endings"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Convert Line Endings"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Convert Line Endings"
+          }
+        }
+      }
+    },
+    "Decrease Indent": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Decrease Indent"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Decrease Indent"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Decrease Indent"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Decrease Indent"
+          }
+        }
+      }
+    },
+    "Dedupe Lines": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dedupe Lines"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Dedupe Lines"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Dedupe Lines"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Dedupe Lines"
+          }
+        }
+      }
+    },
+    "Delete": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Delete"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Delete"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Delete"
+          }
+        }
+      }
+    },
+    "Delete Line": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete Line"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Delete Line"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Delete Line"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Delete Line"
+          }
+        }
+      }
+    },
+    "Duplicate Line": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duplicate Line"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Duplicate Line"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Duplicate Line"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Duplicate Line"
+          }
+        }
+      }
+    },
+    "Heading": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heading"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Heading"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Heading"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Heading"
+          }
+        }
+      }
+    },
+    "Increase Indent": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Increase Indent"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Increase Indent"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Increase Indent"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Increase Indent"
+          }
+        }
+      }
+    },
+    "Indent": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Indent"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Indent"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Indent"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Indent"
+          }
+        }
+      }
+    },
+    "Inline Code": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inline Code"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Inline Code"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Inline Code"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Inline Code"
+          }
+        }
+      }
+    },
+    "Insert": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Insert"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Insert"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Insert"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Insert"
+          }
+        }
+      }
+    },
+    "Insert Snippet": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Insert Snippet"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Insert Snippet"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Insert Snippet"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Insert Snippet"
+          }
+        }
+      }
+    },
+    "Italic": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Italic"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Italic"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Italic"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Italic"
+          }
+        }
+      }
+    },
+    "Join Lines": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Join Lines"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Join Lines"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Join Lines"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Join Lines"
+          }
+        }
+      }
+    },
     "Line numbers": {
       "localizations": {
         "fr": {
@@ -19,6 +512,122 @@
           "stringUnit": {
             "state": "translated",
             "value": "Numery linii"
+          }
+        }
+      }
+    },
+    "Lowercase": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lowercase"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Lowercase"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Lowercase"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Lowercase"
+          }
+        }
+      }
+    },
+    "Move Line Down": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move Line Down"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Move Line Down"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Move Line Down"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Move Line Down"
+          }
+        }
+      }
+    },
+    "Move Line Up": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move Line Up"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Move Line Up"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Move Line Up"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Move Line Up"
+          }
+        }
+      }
+    },
+    "Paragraph": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paragraph"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Paragraph"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Paragraph"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Paragraph"
           }
         }
       }
@@ -52,6 +661,180 @@
         }
       }
     },
+    "Replace": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Replace"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Replace"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Replace"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Replace"
+          }
+        }
+      }
+    },
+    "Replace All": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Replace All"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Replace All"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Replace All"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Replace All"
+          }
+        }
+      }
+    },
+    "Sort Lines": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sort Lines"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Sort Lines"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Sort Lines"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Sort Lines"
+          }
+        }
+      }
+    },
+    "Toggle Comment": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toggle Comment"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Toggle Comment"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Toggle Comment"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Toggle Comment"
+          }
+        }
+      }
+    },
+    "Trim Trailing Whitespace": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trim Trailing Whitespace"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Trim Trailing Whitespace"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Trim Trailing Whitespace"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Trim Trailing Whitespace"
+          }
+        }
+      }
+    },
+    "Typing": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Typing"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Typing"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Typing"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Typing"
+          }
+        }
+      }
+    },
     "Undo": {
       "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
       "localizations": {
@@ -77,6 +860,64 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Undo"
+          }
+        }
+      }
+    },
+    "Unindent": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unindent"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Unindent"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Unindent"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Unindent"
+          }
+        }
+      }
+    },
+    "Uppercase": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uppercase"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Uppercase"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Uppercase"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Uppercase"
           }
         }
       }

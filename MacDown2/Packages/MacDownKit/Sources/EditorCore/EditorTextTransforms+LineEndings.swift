@@ -43,7 +43,7 @@ extension EditorTextTransforms {
         )
         return EditorEditTransaction(
             replacements: [replacement],
-            undoActionName: "Convert Line Endings",
+            undoActionName: String(localized: "Convert Line Endings", bundle: .module),
             resultingSelection: EditorSelectionSet(ranges: resultingRanges, primaryIndex: selection.primaryIndex)
         )
     }

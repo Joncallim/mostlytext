@@ -79,7 +79,10 @@ extension EditorLineTransforms {
             replacements: replacements,
             resultsByOriginalIndex: resultsByOriginalIndex,
             selection: selection,
-            undoActionName: moveUp ? "Move Line Up" : "Move Line Down"
+            undoActionName: moveUp ? String(localized: "Move Line Up", bundle: .module) : String(
+                localized: "Move Line Down",
+                bundle: .module
+            )
         )
     }
 
