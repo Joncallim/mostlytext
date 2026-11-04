@@ -4,10 +4,11 @@ A native macOS text and Markdown editor, built with Swift, SwiftUI and TextKit 2
 MostlyText continues the MacDown lineage, with a rewritten application and a
 modular Swift package core. The command-line executable is `mostlytext`.
 
-**Status: source-only testing alpha.** Source integration and automated checks
-are not native acceptance or a signed, notarized release. Remaining work includes
-native editing/export/accessibility journeys, installed-state migration,
-localization, performance and exact release-artifact verification.
+**Status: source-only testing alpha.** Merged source and passing automated checks
+do not establish readiness in the macOS app or a signed, notarized release.
+Editing, export and accessibility workflows still need native verification.
+Migration from an existing installation, localization, performance and the exact
+release files also remain to be verified.
 
 - Website: [mostlytext.app](https://mostlytext.app)
 - Website source: [Joncallim/mostlytext-site](https://github.com/Joncallim/mostlytext-site)
@@ -19,9 +20,13 @@ localization, performance and exact release-artifact verification.
 
 ## Build the application and CLI
 
-Requires macOS 26+, Xcode 26 with Swift 6.2+, and XcodeGen. Internal target/package paths and selected legacy compatibility identifiers
-are retained as documented in the identity handoff; the public CLI
-scheme is `MostlyTextCLI` and produces `mostlytext`.
+Requires macOS 26+, Xcode 26 with Swift 6.2+, and XcodeGen. Run the commands below
+from the repository root.
+
+The application scheme is `MacDown2`; the CLI scheme is `MostlyTextCLI` and
+produces `mostlytext`. The product is MostlyText. Internal target and package
+paths, along with selected legacy identifiers needed for compatibility, are
+retained as documented in the [identity handoff](planning/IDENTITY.md).
 
 ```sh
 cd MacDown2
@@ -45,8 +50,8 @@ swift build --force-resolved-versions
 swift test --force-resolved-versions
 ```
 
-Use Release builds when judging responsiveness. Native app/UI testing must use
-its protected verification inputs and the separate test account; see the
+Use Release builds when judging responsiveness. To test the app and its UI, use
+the protected verification inputs and separate test account required by the
 isolation scripts and [release hardening](planning/RELEASE_HARDENING.md).
 
 ## Source layout and history
