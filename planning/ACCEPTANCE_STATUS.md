@@ -89,7 +89,7 @@ before any native execution; the source checkpoint does not authorize it.
 | Source/nonrelease artifact inventory | Passes; current scoped attribution checks include 142 local Compliance controls | #14 final compliance is a separate strict gate |
 | Strict release compliance | Six failures remain, detailed below | #14: acceptance is blocked before an RC can be submitted |
 | Repository preview (superseded on 4 November) | The earlier failed upload did not establish installation. The owner subsequently approved upload; settings persistence and anonymous Open Graph readback now verify the installed image, recorded in [brand assets](../design/brand/README.md) | #16 social-install row is checked; native document/Finder/release artwork remains separate |
-| Website | Separate mostlytext-site source/license; reviewed source/backlog/MostlyText-MIT fixes merged through `0d04102` and prepared | Owner approved deployment on 4 November; publication remains unexecuted because Keychain blocks the CLI credential, the connector rejects asset-token upload, and Chrome reports an open extension panel. No live-site change is claimed |
+| Website (superseded on 4 November) | Owner-approved `0d04102` is deployed as Worker version `c6d1a000`; all 51 assets and 19 pages are accounted for, with the sole Cloudflare HTML-beacon difference explicitly verified | [Deployment/readback receipt](downstream/website-brand-deployment-2026-11-04.md); website links/MIT wording are live, while application/source-archive and final release acceptance remain separate |
 
 ## Strict release failures observed here
 
