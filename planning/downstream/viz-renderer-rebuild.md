@@ -77,3 +77,38 @@ Completion means all five exact generated runtime files reproduce with honest
 reference/runtime measurements and refusal controls. It does not imply historical
 publisher attestation, full npm archive reproduction, exhaustive retained-code
 rights review, an approved corresponding-source offer or native acceptance.
+
+## Reconciliation after the first hosted failure
+
+First hosted run `41821191927` at `60a48b1d` passes actual-input preparation and
+backend compilation, then npm fails with `EAI_AGAIN` resolving registry.npmjs.org
+inside the build. Metadata/wrapper generation and comparison are not reached.
+Raw run/artifact ZIPs, prepared identities and complete build log are retained;
+do not substitute a retry or claim the wrapper reproduced. Ordinary Compliance
+at that head and all 288 local tests pass; neither establishes build-network access.
+
+Replace the dependency-install network exception with a complete, verified
+offline package cache. This changes the network/data-flow assumption before
+implementation; it leaves the frozen lock, packages and build scripts unchanged.
+Fetch the 546 lock-resolved tarball records on the hosted runner with bounded
+parallelism and byte limits, verifying each declared Subresource Integrity hash.
+Require the fixed registry HTTPS URLs, validate archive bytes before any use,
+deduplicate identical integrity objects and record a complete dependency receipt.
+Keep this cache inside a new owned directory, with no credentials or source
+execution. Preserve failed downloads rather than overwriting differing objects.
+
+Copy only these verified package tarballs into the new context cache directory.
+Inside a build RUN with network=none, populate npm's content-addressed cache from
+the local tarballs with scripts/audit/funding disabled. Use the same upstream
+clean-install with `--offline` and the explicit cache; then run upstream make as
+before, without network. Reject missing/changed/extra package objects, frozen-lock
+changes and any request for an unavailable input. No guessed package, resolution
+change, host networking, added install script or relaxed output equality is allowed.
+
+The original backend prefix remains identical. Every RUN now uses the build's
+network=none; remove the ineffective dependency-network exception. Add negative
+controls for package integrity, exact dependency-object membership and missing
+offline inputs before another fresh hosted run. Preserve first-run evidence and
+record the cache-population method/actual Node/npm versions honestly. This
+supersedes only the original single-networked-install instructions above; all
+other scope, acceptance and publication/native boundaries remain.
