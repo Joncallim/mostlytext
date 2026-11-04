@@ -96,7 +96,10 @@ final class ExportResourceResolver {
         switch ExportURLPolicy.scheme(of: url) {
         case "http", "https":
             // Remote rendering resources are never fetched (offline guarantee).
-            return handleUnresolved(url: url, reason: "remote resource is not fetched during offline export")
+            return handleUnresolved(
+                url: url,
+                reason: String(localized: "remote resource is not fetched during offline export", bundle: .module)
+            )
         default:
             break
         }
@@ -124,9 +127,15 @@ final class ExportResourceResolver {
         }
         let reference: ResourceReference
         do { reference = try ResourceReference.parse(url) } catch ResourceReadError.denied {
-            return handleUnresolved(url: url, reason: "resource is outside the document's folder")
+            return handleUnresolved(
+                url: url,
+                reason: String(localized: "resource is outside the document's folder", bundle: .module)
+            )
         } catch {
-            return handleUnresolved(url: url, reason: "reference is not a usable file path")
+            return handleUnresolved(
+                url: url,
+                reason: String(localized: "reference is not a usable file path", bundle: .module)
+            )
         }
         let key = Data(reference.relativePath.utf8)
         let result: PathResult
@@ -160,9 +169,9 @@ final class ExportResourceResolver {
         } catch ResourceReadError.oversized {
             return .unresolved(singleLimitReason)
         } catch ResourceReadError.denied {
-            return .unresolved("resource is outside the document's folder")
+            return .unresolved(String(localized: "resource is outside the document's folder", bundle: .module))
         } catch ResourceReadError.invalidReference {
-            return .unresolved("reference is not a usable file path")
+            return .unresolved(String(localized: "reference is not a usable file path", bundle: .module))
         } catch {
             return .unresolved(String(
                 localized: "resource could not be read through its admitted directory",
@@ -173,7 +182,7 @@ final class ExportResourceResolver {
         // Use the resolved leaf, not an alias such as image.png -> private.txt.
         let mimeType = ExportMIMEType.mimeType(forFileExtension: (snapshot.name as NSString).pathExtension)
         guard mimeType.hasPrefix("image/") else {
-            return .unresolved("\(snapshot.name) is not an image file")
+            return .unresolved(String(localized: "\(snapshot.name) is not an image file", bundle: .module))
         }
         let resource = ExportResource(
             identity: ExportResourceIdentity(bytes: snapshot.bytes, mimeType: mimeType), bytes: snapshot.bytes
@@ -192,7 +201,10 @@ final class ExportResourceResolver {
             return nil
         }
         guard packagedResources.count < budget.maxResourceCount else {
-            return "the export already carries its \(budget.maxResourceCount)-resource limit"
+            return String(
+                localized: "the export already carries its \(budget.maxResourceCount)-resource limit",
+                bundle: .module
+            )
         }
         let (total, overflowed) = aggregateResourceBytes.addingReportingOverflow(resource.bytes.count)
         guard !overflowed, total <= budget.maxAggregateResourceBytes else {
@@ -207,12 +219,12 @@ final class ExportResourceResolver {
 
     private var singleLimitReason: String {
         let limit = ExportResourceBudget.describe(bytes: budget.maxSingleResourceBytes)
-        return "resource is larger than the \(limit) per-file export limit"
+        return String(localized: "resource is larger than the \(limit) per-file export limit", bundle: .module)
     }
 
     private var aggregateLimitReason: String {
         let limit = ExportResourceBudget.describe(bytes: budget.maxAggregateResourceBytes)
-        return "the export exceeds its \(limit) total resource limit"
+        return String(localized: "the export exceeds its \(limit) total resource limit", bundle: .module)
     }
 
     private func companionReference(for resource: ExportResource) -> String {
@@ -226,7 +238,10 @@ final class ExportResourceResolver {
         }
         diagnostics.append(ExportDiagnostic(
             severity: .warning,
-            message: "Removed the target of \"\(url)\": that URL scheme is not allowed in an exported document."
+            message: String(
+                localized: "Removed the target of \"\(url)\": that URL scheme is not allowed in an exported document.",
+                bundle: .module
+            )
         ))
         return .blank
     }
@@ -235,7 +250,7 @@ final class ExportResourceResolver {
         guard reportedReferences.insert(Data(url.utf8)).inserted else {
             return .keep
         }
-        let message = "Unresolved resource \"\(url)\": \(reason)."
+        let message = String(localized: "Unresolved resource \"\(url)\": \(reason).", bundle: .module)
         diagnostics.append(ExportDiagnostic(severity: unresolvedIsFatal ? .error : .warning, message: message))
         return .keep
     }

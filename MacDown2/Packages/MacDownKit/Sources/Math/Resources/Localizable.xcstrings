@@ -1,8 +1,52 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "The equation renderer produced invalid image dimensions." : {
+  "sourceLanguage": "en",
+  "strings": {
+    "The equation renderer produced invalid image dimensions.": {
+      "comment": "Export equation failure. Authored LaTeX is an opaque substitution. Translation/native review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Le moteur de rendu des équations a produit des dimensions d’image invalides."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "数式レンダラーが無効な画像サイズを生成しました。"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moduł renderowania równań wygenerował nieprawidłowe wymiary obrazu."
+          }
+        }
+      }
+    },
+    "equation could not be typeset: %@": {
+      "comment": "Export equation failure. Authored LaTeX is an opaque substitution. Translation/native review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "l’équation n’a pas pu être composée : %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "数式を組版できませんでした: %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "nie można było złożyć równania: %@"
+          }
+        }
+      }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

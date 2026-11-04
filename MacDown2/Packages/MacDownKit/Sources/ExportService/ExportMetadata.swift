@@ -35,8 +35,10 @@ enum ExportMetadataResolver {
         guard let scalar = scalarText(of: declared) else {
             let warning = ExportDiagnostic(
                 severity: .warning,
-                message: "The front-matter \"title\" is not a single value, so it was not used as the "
-                    + "document title."
+                message: String(localized: """
+                The front-matter \"title\" is not a single value, so it was not used as the document \
+                title.
+                """, bundle: .module)
             )
             return ExportMetadata(browserTitle: fileNameStem ?? "", visibleTitle: nil, diagnostics: [warning])
         }

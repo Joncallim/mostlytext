@@ -175,7 +175,7 @@ final class NSFilePanelProvider: FilePanelProviding {
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
-        panel.prompt = "Open Folder"
+        panel.prompt = String(localized: "Open Folder")
 
         return await present(panel)
     }
