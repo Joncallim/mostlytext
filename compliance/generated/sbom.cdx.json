@@ -1010,6 +1010,68 @@
       "version": "KaTeX 0.16.47"
     },
     {
+      "bom-ref": "libcxx-recorded-image-root-notices",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/emscripten-core/emscripten"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "LicenseRef-Libcxx-Complete-Root"
+        }
+      ],
+      "name": "libc++ complete root licence and credits (recorded compiler image)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "recorded-image-root-texts; wasm-ld archive references; per-file/final retention independently unproved"
+        }
+      ],
+      "type": "library",
+      "version": "Emscripten 5.0.7 recorded compiler image"
+    },
+    {
+      "bom-ref": "libcxxabi-recorded-image-root-notices",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/emscripten-core/emscripten"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "LicenseRef-Libcxxabi-Complete-Root"
+        }
+      ],
+      "name": "libc++abi complete root licence and credits (recorded compiler image)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "recorded-image-root-texts; wasm-ld archive references; per-file/final retention independently unproved"
+        }
+      ],
+      "type": "library",
+      "version": "Emscripten 5.0.7 recorded compiler image"
+    },
+    {
       "bom-ref": "libyaml",
       "externalReferences": [
         {
@@ -5044,6 +5106,8 @@
         "graphviz-randomkit",
         "graphviz-rbtree",
         "katex-react-helpers",
+        "libcxx-recorded-image-root-notices",
+        "libcxxabi-recorded-image-root-notices",
         "libyaml",
         "mermaid",
         "mermaid-package-braintree-sanitize-url-7.1.2",
@@ -5184,7 +5248,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:6a0ddfc0-a6f7-55c3-915f-a3a53b98d7d0",
+  "serialNumber": "urn:uuid:56499d84-6555-5fd8-b0b7-7fd7eb52754b",
   "specVersion": "1.5",
   "version": 1
 }

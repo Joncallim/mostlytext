@@ -1,0 +1,188 @@
+{
+  "schema": 1,
+  "image_index": "4e332f7343b6f66320bf72f7ecc01a3d9f3866721a13b0e5c7b96505d6ab148a",
+  "image_child": "c2ac84c26ee40ae2f2c5a15bd3f9e608d1959e1b37413fa7f08138046a188dc5",
+  "config": "sha256:f8b9ec6ea64ccb381d9a9553146fa265eeb72b8a5283d582bb6f492a1f6385f0",
+  "source_reference": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+  "files": [
+    {
+      "path": "emsdk/upstream/emscripten/system/lib/libcxx/CREDITS.TXT",
+      "source_path": "system/lib/libcxx/CREDITS.TXT",
+      "layer": "sha256:9fb8c7e631563d57e6d2670b1e49fa040d90b0894590d8b3da21385383f048da",
+      "bytes": 4124,
+      "sha256": "054e099bf5954c8821b880f5751d2fbf221bf43cf7c57ac1c2c5ff6263d6d9c3",
+      "git_reference_url": "https://raw.githubusercontent.com/emscripten-core/emscripten/263db4cffa6f9fc2ec514a70abac81362ea41849/system/lib/libcxx/CREDITS.TXT",
+      "git_blob_sha1": "aa3c8cf1a8c6e3aebf00f4dde627ed429c261640",
+      "source_reference_equal": true
+    },
+    {
+      "path": "emsdk/upstream/emscripten/system/lib/libcxx/LICENSE.TXT",
+      "source_path": "system/lib/libcxx/LICENSE.TXT",
+      "layer": "sha256:9fb8c7e631563d57e6d2670b1e49fa040d90b0894590d8b3da21385383f048da",
+      "bytes": 16703,
+      "sha256": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b",
+      "git_reference_url": "https://raw.githubusercontent.com/emscripten-core/emscripten/263db4cffa6f9fc2ec514a70abac81362ea41849/system/lib/libcxx/LICENSE.TXT",
+      "git_blob_sha1": "e159d283443f92ac78b964d2bccebe8f95d5d445",
+      "source_reference_equal": true
+    },
+    {
+      "path": "emsdk/upstream/emscripten/system/lib/libcxxabi/CREDITS.TXT",
+      "source_path": "system/lib/libcxxabi/CREDITS.TXT",
+      "layer": "sha256:9fb8c7e631563d57e6d2670b1e49fa040d90b0894590d8b3da21385383f048da",
+      "bytes": 1660,
+      "sha256": "a259fff28a51623f14917dd68f97f3af7804984087ddc1bfd8196d08ebb75b83",
+      "git_reference_url": "https://raw.githubusercontent.com/emscripten-core/emscripten/263db4cffa6f9fc2ec514a70abac81362ea41849/system/lib/libcxxabi/CREDITS.TXT",
+      "git_blob_sha1": "fbb6cbf38baf60a05dcca9025e50f3a25c961b73",
+      "source_reference_equal": true
+    },
+    {
+      "path": "emsdk/upstream/emscripten/system/lib/libcxxabi/LICENSE.TXT",
+      "source_path": "system/lib/libcxxabi/LICENSE.TXT",
+      "layer": "sha256:9fb8c7e631563d57e6d2670b1e49fa040d90b0894590d8b3da21385383f048da",
+      "bytes": 16706,
+      "sha256": "e2b35be49f7284a45b7baca8fc7b3ab7440e7902392b2528a457816b5bb2a15c",
+      "git_reference_url": "https://raw.githubusercontent.com/emscripten-core/emscripten/263db4cffa6f9fc2ec514a70abac81362ea41849/system/lib/libcxxabi/LICENSE.TXT",
+      "git_blob_sha1": "b75c0441bcd5be32b5a07e2a1ffc7e67b6d99f16",
+      "source_reference_equal": true
+    }
+  ],
+  "overlay_events": [],
+  "scope": "complete recorded-image root texts; link-stage evidence; per-file and independent review remain",
+  "link_receipt_sha256": "520b112060cd872b775da8b41d5ae2775b6d590128c9b3cd6110049ad1a57877",
+  "components": [
+    {
+      "id": "libcxx-recorded-image-root-notices",
+      "name": "libc++ complete root licence and credits (recorded compiler image)",
+      "kind": "attribution",
+      "version": "Emscripten 5.0.7 recorded compiler image",
+      "upstream": "https://github.com/emscripten-core/emscripten",
+      "licence": "LicenseRef-Libcxx-Complete-Root",
+      "copyright": [
+        "Complete original copyright, exceptions and referenced partial contributor credits are reproduced verbatim below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/libcxx--LICENSE.txt",
+          "sha256": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/libcxx/LICENSE.TXT"
+        },
+        {
+          "path": "compliance/licenses/libcxx--CREDITS.txt",
+          "sha256": "054e099bf5954c8821b880f5751d2fbf221bf43cf7c57ac1c2c5ff6263d6d9c3",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/libcxx/CREDITS.TXT"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "recorded-image-root-texts; wasm-ld archive references; per-file/final retention independently unproved",
+      "lc": [
+        "LC-01",
+        "LC-02",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/libcxx-image-notices/manifest.json",
+      "notes": "All complete root texts and referenced partial credits are byte-identical between the recorded AMD64 image and the immutable Emscripten source reference. The actual wasm-ld map names 10 members of libc++-noexcept.a. This preserves conservative root-text coverage; it does not establish a unique source revision for the entire compiler image, final optimized retention of every mapped member, exhaustive per-file obligations, independent rights review or source-offer approval."
+    },
+    {
+      "id": "libcxxabi-recorded-image-root-notices",
+      "name": "libc++abi complete root licence and credits (recorded compiler image)",
+      "kind": "attribution",
+      "version": "Emscripten 5.0.7 recorded compiler image",
+      "upstream": "https://github.com/emscripten-core/emscripten",
+      "licence": "LicenseRef-Libcxxabi-Complete-Root",
+      "copyright": [
+        "Complete original copyright, exceptions and referenced partial contributor credits are reproduced verbatim below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/libcxxabi--LICENSE.txt",
+          "sha256": "e2b35be49f7284a45b7baca8fc7b3ab7440e7902392b2528a457816b5bb2a15c",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/libcxxabi/LICENSE.TXT"
+        },
+        {
+          "path": "compliance/licenses/libcxxabi--CREDITS.txt",
+          "sha256": "a259fff28a51623f14917dd68f97f3af7804984087ddc1bfd8196d08ebb75b83",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/libcxxabi/CREDITS.TXT"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "recorded-image-root-texts; wasm-ld archive references; per-file/final retention independently unproved",
+      "lc": [
+        "LC-01",
+        "LC-02",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/libcxx-image-notices/manifest.json",
+      "notes": "All complete root texts and referenced partial credits are byte-identical between the recorded AMD64 image and the immutable Emscripten source reference. The actual wasm-ld map names 8 members of libc++abi-noexcept.a. This preserves conservative root-text coverage; it does not establish a unique source revision for the entire compiler image, final optimized retention of every mapped member, exhaustive per-file obligations, independent rights review or source-offer approval."
+    }
+  ],
+  "mapped_archive_members": {
+    "libcxx": [
+      "/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++-noexcept.a(call_once.o)",
+      "/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++-noexcept.a(exception.o)",
+      "/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++-noexcept.a(ios.instantiations.o)",
+      "/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++-noexcept.a(ios.o)",
+      "/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++-noexcept.a(locale.o)",
+      "/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++-noexcept.a(memory.o)",
+      "/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++-noexcept.a(new.o)",
+      "/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++-noexcept.a(new_helpers.o)",
+      "/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++-noexcept.a(stdexcept.o)",
+      "/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++-noexcept.a(string.o)"
+    ],
+    "libcxxabi": [
+      "/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++abi-noexcept.a(abort_message.o)",
+      "/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++abi-noexcept.a(cxa_default_handlers.o)",
+      "/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++abi-noexcept.a(cxa_handlers.o)",
+      "/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++abi-noexcept.a(cxa_noexception.o)",
+      "/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++abi-noexcept.a(private_typeinfo.o)",
+      "/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++abi-noexcept.a(stdlib_exception.o)",
+      "/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++abi-noexcept.a(stdlib_stdexcept.o)",
+      "/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++abi-noexcept.a(stdlib_typeinfo.o)"
+    ]
+  },
+  "license_texts": [
+    {
+      "path": "compliance/licenses/libcxx--CREDITS.txt",
+      "sha256": "054e099bf5954c8821b880f5751d2fbf221bf43cf7c57ac1c2c5ff6263d6d9c3",
+      "upstream": "https://github.com/emscripten-core/emscripten",
+      "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+      "upstream_path": "system/lib/libcxx/CREDITS.TXT",
+      "bytes": 4124,
+      "image_path": "emsdk/upstream/emscripten/system/lib/libcxx/CREDITS.TXT"
+    },
+    {
+      "path": "compliance/licenses/libcxx--LICENSE.txt",
+      "sha256": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b",
+      "upstream": "https://github.com/emscripten-core/emscripten",
+      "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+      "upstream_path": "system/lib/libcxx/LICENSE.TXT",
+      "bytes": 16703,
+      "image_path": "emsdk/upstream/emscripten/system/lib/libcxx/LICENSE.TXT"
+    },
+    {
+      "path": "compliance/licenses/libcxxabi--CREDITS.txt",
+      "sha256": "a259fff28a51623f14917dd68f97f3af7804984087ddc1bfd8196d08ebb75b83",
+      "upstream": "https://github.com/emscripten-core/emscripten",
+      "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+      "upstream_path": "system/lib/libcxxabi/CREDITS.TXT",
+      "bytes": 1660,
+      "image_path": "emsdk/upstream/emscripten/system/lib/libcxxabi/CREDITS.TXT"
+    },
+    {
+      "path": "compliance/licenses/libcxxabi--LICENSE.txt",
+      "sha256": "e2b35be49f7284a45b7baca8fc7b3ab7440e7902392b2528a457816b5bb2a15c",
+      "upstream": "https://github.com/emscripten-core/emscripten",
+      "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+      "upstream_path": "system/lib/libcxxabi/LICENSE.TXT",
+      "bytes": 16706,
+      "image_path": "emsdk/upstream/emscripten/system/lib/libcxxabi/LICENSE.TXT"
+    }
+  ]
+}

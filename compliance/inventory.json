@@ -5514,6 +5514,78 @@
       ],
       "evidence": "compliance/evidence/framer-mit-reference/mapping.json",
       "notes": "Conservative matching-source attribution for the Framer/Koen spring helper expressly credited under MIT by Cytoscape. The actual 2014 MIT reference contains the same four-helper CoffeeScript block as the older BSD-style comparison. Four specific spring probes map into shipped Mermaid. Wrapping/inlining/parameter adaptations remain explicit; this is not a unique original-input, complete compiled-body equality or independent rights determination. Older BSD/intermediary evidence and Mermaid review-required items remain open."
+    },
+    {
+      "id": "libcxx-recorded-image-root-notices",
+      "name": "libc++ complete root licence and credits (recorded compiler image)",
+      "kind": "attribution",
+      "version": "Emscripten 5.0.7 recorded compiler image",
+      "upstream": "https://github.com/emscripten-core/emscripten",
+      "licence": "LicenseRef-Libcxx-Complete-Root",
+      "copyright": [
+        "Complete original copyright, exceptions and referenced partial contributor credits are reproduced verbatim below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/libcxx--LICENSE.txt",
+          "sha256": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/libcxx/LICENSE.TXT"
+        },
+        {
+          "path": "compliance/licenses/libcxx--CREDITS.txt",
+          "sha256": "054e099bf5954c8821b880f5751d2fbf221bf43cf7c57ac1c2c5ff6263d6d9c3",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/libcxx/CREDITS.TXT"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "recorded-image-root-texts; wasm-ld archive references; per-file/final retention independently unproved",
+      "lc": [
+        "LC-01",
+        "LC-02",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/libcxx-image-notices/manifest.json",
+      "notes": "All complete root texts and referenced partial credits are byte-identical between the recorded AMD64 image and the immutable Emscripten source reference. The actual wasm-ld map names 10 members of libc++-noexcept.a. This preserves conservative root-text coverage; it does not establish a unique source revision for the entire compiler image, final optimized retention of every mapped member, exhaustive per-file obligations, independent rights review or source-offer approval."
+    },
+    {
+      "id": "libcxxabi-recorded-image-root-notices",
+      "name": "libc++abi complete root licence and credits (recorded compiler image)",
+      "kind": "attribution",
+      "version": "Emscripten 5.0.7 recorded compiler image",
+      "upstream": "https://github.com/emscripten-core/emscripten",
+      "licence": "LicenseRef-Libcxxabi-Complete-Root",
+      "copyright": [
+        "Complete original copyright, exceptions and referenced partial contributor credits are reproduced verbatim below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/libcxxabi--LICENSE.txt",
+          "sha256": "e2b35be49f7284a45b7baca8fc7b3ab7440e7902392b2528a457816b5bb2a15c",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/libcxxabi/LICENSE.TXT"
+        },
+        {
+          "path": "compliance/licenses/libcxxabi--CREDITS.txt",
+          "sha256": "a259fff28a51623f14917dd68f97f3af7804984087ddc1bfd8196d08ebb75b83",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/libcxxabi/CREDITS.TXT"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "recorded-image-root-texts; wasm-ld archive references; per-file/final retention independently unproved",
+      "lc": [
+        "LC-01",
+        "LC-02",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/libcxx-image-notices/manifest.json",
+      "notes": "All complete root texts and referenced partial credits are byte-identical between the recorded AMD64 image and the immutable Emscripten source reference. The actual wasm-ld map names 8 members of libc++abi-noexcept.a. This preserves conservative root-text coverage; it does not establish a unique source revision for the entire compiler image, final optimized retention of every mapped member, exhaustive per-file obligations, independent rights review or source-offer approval."
     }
   ]
 }
