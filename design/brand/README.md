@@ -29,9 +29,15 @@ browser at device scale 1 to produce the JPEG. Keep an opaque white canvas and
 #11141A ink, without distorting the lockup or enlarging a microglyph. GitHub
 [recommends this size and a file below 1 MB](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/customizing-your-repositorys-social-media-preview).
 Tracking an image and installing it in repository settings are distinct steps.
-The 3 November source asset is ready; browser upload did not persist and the
-native chooser fallback was blocked by the locked Mac. Installation remains
-unverified and is a separate unchecked item in #16.
+On 4 November 2026 the owner explicitly approved the upload to
+`Joncallim/mostlytext`. The image was installed through repository settings and
+remained after reloading. An anonymous public-page readback showed the same
+[repository preview image](https://repository-images.githubusercontent.com/1443787935/f144dd9d-e438-4bc1-9796-fd8bd7a84f11)
+in Open Graph metadata. MostlyText #16 now records installation and fresh public
+branding as checked, with the local persisted-settings screenshot and anonymous
+readback retained under `CORTANA-Builds/visible-brand-20261104`. This supersedes
+the 3 November failed-upload/locked-chooser status; that earlier attempt did not
+establish installation.
 
 This asset handoff completes source availability and naming. It does not accept
 fresh Dock/Finder appearances, document icons, Quick Look, screenshot coverage,
