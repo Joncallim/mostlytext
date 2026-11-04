@@ -46,3 +46,21 @@ source/evidence checks and hosted Compliance. This evidence-only scope requires
 no product or app-target execution, local native account, new infrastructure,
 source publication, signing or private credentials. Independent per-file/source/
 rights review, native acceptance and all six strict release predicates remain.
+
+## Capture reconciliation before verifier implementation
+
+All four compressed layer hashes and all four uncompressed config diff identifiers
+verify. The selected-source readback finds the root licence, credits and three
+link/driver sources byte-identical to the earlier reference. The sixth file is
+deliberately different: the image contains `"5.0.7"`, while the retained Git
+reference contains `5.0.7-git`. Preserve and report both hashes; do not normalize
+them into equality or alter the original reference manifest. This mismatch calls
+for no license choice because both actual complete licence/credit texts match.
+The new verifier must require five exact source matches and that explicit version
+marker difference, rather than claiming all six inputs are byte-identical.
+
+The compiler digest in the publisher record is the multi-platform index
+`4e332f...`; its AMD64 child is `c2ac84...`. The actual SDK configuration names
+Node 22.16.0, LLVM/Binaryen roots and SDK release mapping 5.0.7 to
+`6cd98e86d7749ff98b82b7f2ae78eb4f01942788`. These are image file/configuration
+facts, not independently executed compiler versions or a unique Git origin.
