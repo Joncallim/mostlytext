@@ -40,9 +40,13 @@ public struct ReplacementPlan: Sendable, Equatable {
             let range = match.range
             guard range.location != NSNotFound,
                   range.location >= previousEnd,
-                  NSMaxRange(range) <= source.length
+                  range.length >= 0,
+                  range.location <= source.length,
+                  range.length <= source.length - range.location
             else { return nil }
-            previousEnd = NSMaxRange(range)
+            // Check by subtraction first: NSMaxRange can wrap an oversized
+            // endpoint and admit a range that makes Foundation throw.
+            previousEnd = range.location + range.length
         }
         var result = text as NSString
         let replacement = LineEnding.adaptingLineBreaks(in: replacementText, toMatch: text)

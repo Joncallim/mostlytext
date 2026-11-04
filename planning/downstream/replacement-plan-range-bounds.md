@@ -70,3 +70,20 @@ the old endpoint comparison and reaches replacement; no Swift arithmetic-trap
 claim is needed. Preserve both original logs. The subtraction-before-addition
 contract above rejects both cases before either endpoint arithmetic or
 Foundation replacement. No application/AppKit/WebKit target was run.
+
+## Source qualification
+
+All 131 TextSearch tests /20 suites pass in both Debug and Release on exact
+copied source/resources/tests, including five new methods. The 86-file
+[source manifest](evidence/replacement-plan-range-bounds-2026-11-04/source-files.json)
+and [validation receipt](evidence/replacement-plan-range-bounds-2026-11-04/validation.json)
+record both actual old-source Foundation crashes, final file hashes, toolchain,
+commands' retained log hashes and native limitations. No imports, source or
+resources are substituted. The independent fixture manifest is retained beside
+the receipt so another Foundation-only run can use the same module graph.
+
+Strict lint is clean and pinned SwiftFormat0.63.1 passes. Initial new-test tuple
+and collection-layout lint findings were corrected without changing assertions;
+those initial logs remain retained. All257 Compliance tests and the source
+inventory pass. Complete hosted locked builds/tests and exact merge proof are
+required next; local source evidence does not establish mounted-app acceptance.
