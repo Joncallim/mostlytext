@@ -156,7 +156,7 @@ struct ExportCoordinator {
     ) async -> ExportSelection? {
         let panel = NSSavePanel()
         panel.canCreateDirectories = true
-        panel.prompt = "Export"
+        panel.prompt = String(localized: "Export")
         panel.message = "Choose where to export this document."
         if let directory {
             panel.directoryURL = directory

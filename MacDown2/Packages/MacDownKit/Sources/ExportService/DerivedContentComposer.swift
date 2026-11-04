@@ -297,7 +297,7 @@ private struct DerivedContentPlan {
                 guard !context.startsFence(bodyRange) else {
                     diagnostics.append(ExportDiagnostic(
                         severity: .warning,
-                        message: "a diagram inside a list item or block quote is exported as its source text"
+                        message: ExportDerivedDiagnosticText.nestedDiagram
                     ))
                     return
                 }
@@ -315,7 +315,7 @@ private struct DerivedContentPlan {
             guard let namespaced = SVGIDNamespace.rewriteMarked(sanitized, occurrence: index) else {
                 diagnostics.append(ExportDiagnostic(
                     severity: .error,
-                    message: "derived SVG identifiers could not be safely isolated; authored source preserved"
+                    message: ExportDerivedDiagnosticText.unsafeSVG
                 ))
                 return
             }
@@ -339,28 +339,26 @@ private struct DerivedContentPlan {
         context: DerivedContentComposer.ValidationContext
     ) -> String? {
         if contribution.diagnostics.contains(where: { $0.severity == .error }) {
-            return "derived contribution failed in its renderer; authored source preserved"
+            return ExportDerivedDiagnosticText.rendererFailure
         }
         if contribution.sourceGeneration != context.sourceGeneration {
-            return "derived contribution is stale (source generation \(contribution.sourceGeneration) "
-                + "!= \(context.sourceGeneration)); authored source preserved"
+            return ExportDerivedDiagnosticText.stale(contribution.sourceGeneration, expected: context.sourceGeneration)
         }
         if contribution.sourceRange.lowerBound < context.bodyStartOffset
             || contribution.sourceRange.upperBound > context.sourceUTF16Length {
-            return "derived contribution range \(contribution.sourceRange) is outside the document "
-                + "body; authored source preserved"
+            return ExportDerivedDiagnosticText.outsideDocument(contribution.sourceRange)
         }
         if contribution.sourceRange.lowerBound >= contribution.sourceRange.upperBound {
-            return "derived contribution range is empty; authored source preserved"
+            return ExportDerivedDiagnosticText.emptyRange
         }
         if bodyRange.upperBound > context.bodyUTF16Length {
-            return "derived contribution range exceeds the body; authored source preserved"
+            return ExportDerivedDiagnosticText.beyondBody
         }
         if bodyRange.lowerBound < previousBodyUpperBound {
-            return "derived contribution range overlaps another contribution; authored source preserved"
+            return ExportDerivedDiagnosticText.overlappingRange
         }
         if contribution.html.isEmpty {
-            return "derived contribution produced no HTML; authored source preserved"
+            return ExportDerivedDiagnosticText.emptyHTML
         }
         return budgetRejection(for: contribution, budget: context.budget)
     }
@@ -372,13 +370,12 @@ private struct DerivedContentPlan {
         budget: ExportResourceBudget
     ) -> String? {
         guard placedCount < budget.maxDerivedFragmentCount else {
-            return "derived contribution exceeds the \(budget.maxDerivedFragmentCount)-fragment "
-                + "export limit; authored source preserved"
+            return ExportDerivedDiagnosticText.fragmentLimit(budget.maxDerivedFragmentCount)
         }
         let (total, overflowed) = aggregateDerivedBytes.addingReportingOverflow(contribution.html.utf8.count)
         guard !overflowed, total <= budget.maxAggregateDerivedHTMLBytes else {
             let limit = ExportResourceBudget.describe(bytes: budget.maxAggregateDerivedHTMLBytes)
-            return "derived contribution exceeds the \(limit) total derived HTML limit; authored source preserved"
+            return ExportDerivedDiagnosticText.totalLimit(limit)
         }
         return nil
     }

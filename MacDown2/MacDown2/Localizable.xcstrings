@@ -1983,6 +1983,29 @@
         }
       }
     },
+    "Open Folder": {
+      "comment": "NSOpenPanel confirmation button. Translation/native review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Open Folder"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Open Folder"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Open Folder"
+          }
+        }
+      }
+    },
     "Open Source Licenses": {
       "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
       "localizations": {

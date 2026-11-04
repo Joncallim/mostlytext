@@ -49,8 +49,10 @@ extension ExportComposer {
         )
         let warning = ExportDiagnostic(
             severity: .warning,
-            message: "\(leaked.count) math or diagram fragment(s) sit inside a link, reference definition or HTML "
-                + "construct and cannot be placed there; they are exported as their source text"
+            message: String(localized: """
+            \(leaked.count) math or diagram fragment(s) sit inside a link, reference definition or HTML construct \
+            and cannot be placed there; they are exported as their source text
+            """, bundle: .module)
         )
         return DerivedRender(derived: derived, rendered: rendered, resolver: resolver, leakWarnings: [warning])
     }
