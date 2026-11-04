@@ -10,6 +10,6 @@ public extension FileEncodingMetadata {
         case .utf16BigEndian: "UTF-16 BE"
         default: String.localizedName(of: encoding)
         }
-        return bom == .none ? base : String(localized: "\(base) with BOM")
+        return bom == .none ? base : String(localized: "\(base) with BOM", bundle: .module)
     }
 }

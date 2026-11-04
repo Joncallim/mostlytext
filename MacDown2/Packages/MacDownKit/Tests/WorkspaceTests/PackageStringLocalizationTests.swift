@@ -7,18 +7,14 @@ import Testing
 /// the fr/pl/ja translations shipped in each package's catalog were unreachable.
 struct PackageStringLocalizationTests {
     /// Every package that ships a string catalog must look its strings up in that
-    /// catalog's bundle. (FileCore ships no catalog, so its one user-facing string
-    /// is exempt.)
+    /// catalog's bundle, including FileCore's encoding/status diagnostics.
     @Test func noPackageSourceLooksUpALocalisedStringInTheMainBundle() throws {
         let sources = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
             .appendingPathComponent("Sources")
-        let exempt: Set = ["FileCore"]
         var offenders: [String] = []
         let enumerator = try #require(FileManager.default.enumerator(at: sources, includingPropertiesForKeys: nil))
         for case let url as URL in enumerator where url.pathExtension == "swift" {
-            let target = url.pathComponents[url.pathComponents.count - 2]
-            guard !exempt.contains(target) else { continue }
             let text = try String(contentsOf: url, encoding: .utf8)
             var searchRange = text.startIndex ..< text.endIndex
             while let hit = text.range(of: "String(localized:", range: searchRange) {

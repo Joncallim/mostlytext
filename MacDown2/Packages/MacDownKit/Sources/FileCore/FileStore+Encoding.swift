@@ -71,7 +71,12 @@ extension FileStore {
     }
 
     private static func mismatch(_ name: String, at offset: Int) -> FileStoreError {
-        .decodingFailed([FileDecodingDiagnostic(message: "Invalid \(name) byte sequence.", byteOffset: offset)])
+        .decodingFailed([
+            FileDecodingDiagnostic(
+                message: String(localized: "Invalid \(name) byte sequence.", bundle: .module),
+                byteOffset: offset
+            ),
+        ])
     }
 
     private func decodeUTF8(_ data: Data) throws(FileStoreError) -> FileDecodedPayload {
@@ -82,7 +87,10 @@ extension FileStore {
         let payload = hasBOM ? data.subdata(in: 3 ..< data.count) : data
         if let offset = utf8InvalidByteOffset(in: payload) {
             throw .decodingFailed([
-                FileDecodingDiagnostic(message: "Invalid UTF-8 byte sequence.", byteOffset: offset + prefix),
+                FileDecodingDiagnostic(
+                    message: String(localized: "Invalid UTF-8 byte sequence.", bundle: .module),
+                    byteOffset: offset + prefix
+                ),
             ])
         }
         // The payload was just validated as strict UTF-8, so this decode
@@ -107,7 +115,7 @@ extension FileStore {
             let unitOffset = utf16InvalidUnitOffset(in: payload, littleEndian: encoding == .utf16LittleEndian)
             throw .decodingFailed([
                 FileDecodingDiagnostic(
-                    message: "Invalid UTF-16 byte sequence.",
+                    message: String(localized: "Invalid UTF-16 byte sequence.", bundle: .module),
                     byteOffset: unitOffset + prefix
                 ),
             ])
