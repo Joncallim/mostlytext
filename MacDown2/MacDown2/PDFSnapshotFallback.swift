@@ -175,17 +175,19 @@ enum PDFSnapshotFallback {
 
         var errorDescription: String? {
             switch self {
-            case .invalidSnapshot: "WebKit did not produce a readable PDF snapshot."
-            case .invalidGeometry: "WebKit produced a PDF with unsupported page dimensions."
-            case .tooManyPages: "The document needs more PDF pages than this export can safely create."
-            case .tooLarge: "The PDF would exceed the current export size limit."
-            case .cannotWrite: "The PDF could not be written to a temporary file."
-            case .timedOut: "WebKit took too long to prepare the PDF."
+            case .invalidSnapshot: String(localized: "WebKit did not produce a readable PDF snapshot.")
+            case .invalidGeometry: String(localized: "WebKit produced a PDF with unsupported page dimensions.")
+            case .tooManyPages: String(
+                    localized: "The document needs more PDF pages than this export can safely create."
+                )
+            case .tooLarge: String(localized: "The PDF would exceed the current export size limit.")
+            case .cannotWrite: String(localized: "The PDF could not be written to a temporary file.")
+            case .timedOut: String(localized: "WebKit took too long to prepare the PDF.")
             }
         }
 
         var recoverySuggestion: String? {
-            "The prior output was left unchanged. Try a shorter document or export as HTML."
+            String(localized: "The prior output was left unchanged. Try a shorter document or export as HTML.")
         }
     }
 }

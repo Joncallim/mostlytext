@@ -292,21 +292,23 @@ enum PDFExportAdapter {
 
         var errorDescription: String? {
             switch self {
-            case .invalidPDFOutput: "The printed document was not a readable PDF."
-            case .noPDFOutput: "The macOS print system did not write a PDF."
-            case .pdfTooLarge: "The PDF exceeds the current export size limit."
-            case .printConfigurationFailed: "The macOS print system did not accept the PDF destination."
-            case .printOperationFailed: "The macOS print system could not produce the PDF."
-            case .pageLoadTimedOut: "Laying the document out for printing took too long."
+            case .invalidPDFOutput: String(localized: "The printed document was not a readable PDF.")
+            case .noPDFOutput: String(localized: "The macOS print system did not write a PDF.")
+            case .pdfTooLarge: String(localized: "The PDF exceeds the current export size limit.")
+            case .printConfigurationFailed: String(
+                    localized: "The macOS print system did not accept the PDF destination."
+                )
+            case .printOperationFailed: String(localized: "The macOS print system could not produce the PDF.")
+            case .pageLoadTimedOut: String(localized: "Laying the document out for printing took too long.")
             }
         }
 
         var recoverySuggestion: String? {
             switch self {
             case .invalidPDFOutput, .noPDFOutput, .pdfTooLarge, .printConfigurationFailed, .printOperationFailed:
-                "Try exporting as HTML, or print the document from the preview."
+                String(localized: "Try exporting as HTML, or print the document from the preview.")
             case .pageLoadTimedOut:
-                "Try again, or split very large documents before exporting."
+                String(localized: "Try again, or split very large documents before exporting.")
             }
         }
     }

@@ -1,11 +1,12 @@
-# Localise the diagram failure details
+# Localise diagram and PDF failure details
 
 ## Owner summary
 
 Mermaid, D2 and Graphviz preview blocks show a translated failure summary but
 leave four details in English: no image, timeout, output size and unavailable
-renderer. Route those details through the existing app catalog while preserving
-source/syntax messages verbatim. Rendering, cancellation, state and native
+renderer. The PDF adapters also leave fifteen failure/recovery details outside
+the catalog. Route all nineteen details through the existing app catalog while
+preserving source/syntax messages verbatim. Rendering, cancellation, state and native
 presentation stay unchanged. This is a bounded #3/#7 source fix, not final
 language/native acceptance or activation of held preview/Quick Look behavior.
 
@@ -76,3 +77,22 @@ The three legacy-import labels already return LocalizedStringKey and are not
 hard-coded String failures. UITestLaunchGuard's English operational refusal
 messages are deliberate test-only diagnostics; do not translate guard policy
 or treat those strings as shipped application copy. No new native gate is waived.
+
+## Source qualification checkpoint
+
+The Apple compiler extracts the expected signed-size key `%lld`. Six pure-value
+compiled-catalog tests/two suites pass Debug and Release, covering four locales,
+all known states, fallback, the full signed maximum count with each locale's
+actual digit grouping and every PDF error/recovery value. A synthetic explicit
+bundle control fails when the diagram formatter is forced to main. Separate
+synthetic PDF markers pass for all fifteen localized properties and fail against
+the actual original value-enum bodies from23a42955; production catalogs are never
+rewritten for this control. The static guard covers twelve diagram routes and
+fifteen PDF routes, with29 rejected bypass/passthrough mutations across its
+controls. New non-English values remain English needs_review drafts. This is
+resource/source qualification, not PDF execution or native translation/layout.
+
+The canonical inventory now contains343 entries across the same15 catalogs;
+Transifex mappings/account placeholders are unchanged. Full combined hosted
+app/package/build qualification follows incorporation of PR51. Required native
+and final language acceptance remain open.
