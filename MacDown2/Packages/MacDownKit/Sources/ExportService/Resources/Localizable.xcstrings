@@ -555,6 +555,93 @@
         }
       }
     },
+    "cmark could not create a parser": {
+      "comment": "Editor-owned cmark bridge failure detail in the export alert. Non-English values are English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cmark could not create a parser"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "cmark could not create a parser"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "cmark could not create a parser"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "cmark could not create a parser"
+          }
+        }
+      }
+    },
+    "cmark could not render HTML": {
+      "comment": "Editor-owned cmark bridge failure detail in the export alert. Non-English values are English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cmark could not render HTML"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "cmark could not render HTML"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "cmark could not render HTML"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "cmark could not render HTML"
+          }
+        }
+      }
+    },
+    "cmark produced no document": {
+      "comment": "Editor-owned cmark bridge failure detail in the export alert. Non-English values are English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cmark produced no document"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "cmark produced no document"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "cmark produced no document"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "cmark produced no document"
+          }
+        }
+      }
+    },
     "derived SVG identifiers could not be safely isolated; authored source preserved": {
       "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
       "localizations": {
