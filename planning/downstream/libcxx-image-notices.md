@@ -67,3 +67,21 @@ deleting merged clean branches; preserve worktrees/stashes. Update #14/#17 only
 for completed text/source/resource evidence. Independent per-file/grant review,
 source approval/publication/anonymous retrieval, native and final signed-artifact
 acceptance remain explicitly unfinished.
+
+## Qualified selected-source result
+
+PR67 merged as `dbbd6f4f69d3f4712801205cbd92308d9244870d`; its actual tree equals
+the stable dependency used here. Full raw image graph/compressed/uncompressed
+layer replay and ordered final-file readback pass. All four selected root files
+come from SDK layer `9fb8c7e6...`, with no later selected replacement/whiteout,
+and equal the named Git source reference byte for byte. The baseline corpus lacks
+all four complete texts. New records preserve 39,193 bytes of complete root texts
+and partial credits while every previous component remains unchanged.
+
+The first focused verifier run exposed an overly literal coverage comparison for
+the source credits' two terminal newlines. The existing notice generator uses
+`rstrip`; correct only the verifier to that existing presentation projection and
+retain exact byte hashes for the four files. Its failure is preserved. This is
+not a text truncation or a change to generator policy. All seven focused controls
+and the complete 314-control suite now pass; raw-image replay passes. Resource,
+full hosted source CI and final-head merge gates above still apply.

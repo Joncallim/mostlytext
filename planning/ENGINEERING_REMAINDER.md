@@ -100,7 +100,9 @@ historical and must not be retargeted to a new checkout.
    preserved. This is technical correspondence, without historical execution
    attestation or an exhaustive retained-code audit. Independently review complete corresponding-source and nested obligations,
    including D2's Liberation Mono Reserved Font Name and Graphviz compiler/runtime
-   inputs. A local review archive is not independent review or an approved offer.
+   inputs. The [actual C++ runtime root texts](../compliance/evidence/libcxx-image-notices/README.md)
+   now ship with exact image/reference and link-stage evidence; that coverage does
+   not decide remaining per-file or independent rights obligations. A local review archive is not independent review or an approved offer.
 4. Prepare the concrete immutable source objects for approval. Only the explicit
    source-archive authorization in [ARCHIVE_PLAN.md](../compliance/ARCHIVE_PLAN.md)
    authorizes publication; public application promotion remains separate.
