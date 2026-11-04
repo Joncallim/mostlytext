@@ -74,8 +74,8 @@ Foundation replacement. No application/AppKit/WebKit target was run.
 ## Source qualification
 
 All 131 TextSearch tests /20 suites pass in both Debug and Release on exact
-copied source/resources/tests, including five new methods. The 86-file
-[source manifest](evidence/replacement-plan-range-bounds-2026-11-04/source-files.json)
+copied source/resources/tests, including five new methods. The [exact reproduction procedure](evidence/replacement-plan-range-bounds-2026-11-04/README.md),
+86-file [source manifest](evidence/replacement-plan-range-bounds-2026-11-04/source-files.json)
 and [validation receipt](evidence/replacement-plan-range-bounds-2026-11-04/validation.json)
 record both actual old-source Foundation crashes, final file hashes, toolchain,
 commands' retained log hashes and native limitations. No imports, source or
