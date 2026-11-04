@@ -253,3 +253,20 @@ bounded format-exclusion check, not a new decoder, recursive reader or claim of
 image validity. Export acceptance and bytes remain unchanged; inconclusive or
 mislabeled resources simply retain older assets. Add spoofed .png/data-URI SVG
 regressions and signature controls before qualification.
+
+## Inventory order verification
+
+The pre-merge review found that the first implementation used the private pending
+record as authority to retire obsolete resources before publishing its first new
+inventory. Although receipts remained authenticated, that ordering did not follow
+steps 6–8 above. Correct it before integration: first install the inventory with
+all known owned receipts; checkpoint that publication and its exact metadata
+receipt; then retire eligible resources; finally replace the inventory with its
+reduced ownership set. Pending state records whether the first inventory was
+published and its owned-entry count so restart cannot confuse either inventory
+stage. Retirements still require a durable committed/aborted phase and the actual
+primary digest. Both metadata swaps use the same pre-recorded verified protocol.
+A failure before the first inventory is finalized must leave older resources
+intact. Add a regression that stops at this boundary and inspects the inventory,
+primary and retained resources before resuming. Earlier qualification is retained
+as provisional evidence and does not qualify the corrected source by itself.
