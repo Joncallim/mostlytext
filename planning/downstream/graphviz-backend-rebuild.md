@@ -81,3 +81,12 @@ Done means a reproducible hosted result and honest receipt, refusal controls,
 scope checks and issue/document reconciliation. A backend match is technical
 source correspondence, not publisher signature verification, historical
 execution attestation, exhaustive runtime retention or independent clearance.
+
+## Actual-input preparation check
+
+The first retained-input preparation refused the Dockerfile before execution: its
+two upstream ADD URLs include quotes, while the initial literal matcher omitted
+them. The exact source/hash and failed owned context are preserved. Match the
+actual quoted instructions, leaving every build flag and stage unchanged; the
+corrected preparation uses a fresh output directory. Synthetic refusal fixtures
+alone did not establish actual-source recipe compatibility.
