@@ -1,5 +1,12 @@
 # Compiler-rt root attribution for the Viz.js build
 
+Current image follow-up: [the recorded compiler image graph and selected files](../viz-compiler-image/README.md)
+are now independently digest-checked without executing the image. The full root
+licence, credits and three link/driver sources match this reference exactly; the
+image's 5.0.7 release marker deliberately differs from this Git reference's
+5.0.7-git marker. This original packet is preserved. Linked-object, per-file,
+independent rights/source and final release review remain separate.
+
 The recorded Viz.js publisher build names `emscripten/emsdk:5.0.7` and its
 linux/amd64 image digest. The existing immutable Emscripten source reference is
 `263db4cffa6f9fc2ec514a70abac81362ea41849` (source version `5.0.7-git`).

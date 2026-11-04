@@ -1,0 +1,142 @@
+{
+  "files": [
+    {
+      "path": "emsdk/.emscripten",
+      "layer": "sha256:9fb8c7e631563d57e6d2670b1e49fa040d90b0894590d8b3da21385383f048da",
+      "bytes": 272,
+      "sha256": "37c9112b5e4491d5c6bd1895a5938fe05b38fb7e7f09138deeab1b3dc9ac452d",
+      "localFile": "emsdk--.emscripten"
+    },
+    {
+      "path": "emsdk/emscripten-releases-tags.json",
+      "layer": "sha256:9fb8c7e631563d57e6d2670b1e49fa040d90b0894590d8b3da21385383f048da",
+      "bytes": 18575,
+      "sha256": "69988e2905917e92a170b7aac9cac797df7e1131a3e859d7a2242e2663169523",
+      "localFile": "emsdk--emscripten-releases-tags.json"
+    },
+    {
+      "path": "emsdk/emsdk_manifest.json",
+      "layer": "sha256:9fb8c7e631563d57e6d2670b1e49fa040d90b0894590d8b3da21385383f048da",
+      "bytes": 28058,
+      "sha256": "7a7201711bd5311a17d95a3cf97329ebc5bebe35d36ab4657631a5c74662c188",
+      "localFile": "emsdk--emsdk_manifest.json"
+    },
+    {
+      "path": "emsdk/upstream/emscripten/emcc.py",
+      "layer": "sha256:9fb8c7e631563d57e6d2670b1e49fa040d90b0894590d8b3da21385383f048da",
+      "bytes": 22941,
+      "sha256": "9265f2af265ffffc05d836b405e2260609613280e862ebe7a7fdc6a7bdf20a65",
+      "localFile": "emsdk--upstream--emscripten--emcc.py"
+    },
+    {
+      "path": "emsdk/upstream/emscripten/emscripten-version.txt",
+      "layer": "sha256:9fb8c7e631563d57e6d2670b1e49fa040d90b0894590d8b3da21385383f048da",
+      "bytes": 8,
+      "sha256": "63f302ebe7ed904608943bc13d2abe2653f9ccc444fe47046409b680db5614dc",
+      "localFile": "emsdk--upstream--emscripten--emscripten-version.txt"
+    },
+    {
+      "path": "emsdk/upstream/emscripten/system/lib/compiler-rt/CREDITS.TXT",
+      "layer": "sha256:9fb8c7e631563d57e6d2670b1e49fa040d90b0894590d8b3da21385383f048da",
+      "bytes": 1049,
+      "sha256": "a9901f47a089da41e4690682d00ce4cedaa2baf41fedbe79beee366d43ac2461",
+      "localFile": "emsdk--upstream--emscripten--system--lib--compiler-rt--CREDITS.TXT"
+    },
+    {
+      "path": "emsdk/upstream/emscripten/system/lib/compiler-rt/LICENSE.TXT",
+      "layer": "sha256:9fb8c7e631563d57e6d2670b1e49fa040d90b0894590d8b3da21385383f048da",
+      "bytes": 16708,
+      "sha256": "1a8f1058753f1ba890de984e48f0242a3a5c29a6a8f2ed9fd813f36985387e8d",
+      "localFile": "emsdk--upstream--emscripten--system--lib--compiler-rt--LICENSE.TXT"
+    },
+    {
+      "path": "emsdk/upstream/emscripten/tools/link.py",
+      "layer": "sha256:9fb8c7e631563d57e6d2670b1e49fa040d90b0894590d8b3da21385383f048da",
+      "bytes": 131010,
+      "sha256": "30c4c4fe52c8f8a367d0878e360dea80494bb20d51710e45132bc3f58940dc17",
+      "localFile": "emsdk--upstream--emscripten--tools--link.py"
+    },
+    {
+      "path": "emsdk/upstream/emscripten/tools/system_libs.py",
+      "layer": "sha256:9fb8c7e631563d57e6d2670b1e49fa040d90b0894590d8b3da21385383f048da",
+      "bytes": 89824,
+      "sha256": "9fb182d4f5aa9d74a321e1ba9697178aeaf8d7f642717b67ed566bcb05a48f0b",
+      "localFile": "emsdk--upstream--emscripten--tools--system_libs.py"
+    }
+  ],
+  "whiteoutEvents": [],
+  "comparison": [
+    {
+      "path": "system/lib/compiler-rt/LICENSE.TXT",
+      "previousReferenceSHA256": "1a8f1058753f1ba890de984e48f0242a3a5c29a6a8f2ed9fd813f36985387e8d",
+      "image": {
+        "path": "emsdk/upstream/emscripten/system/lib/compiler-rt/LICENSE.TXT",
+        "layer": "sha256:9fb8c7e631563d57e6d2670b1e49fa040d90b0894590d8b3da21385383f048da",
+        "bytes": 16708,
+        "sha256": "1a8f1058753f1ba890de984e48f0242a3a5c29a6a8f2ed9fd813f36985387e8d",
+        "localFile": "emsdk--upstream--emscripten--system--lib--compiler-rt--LICENSE.TXT"
+      },
+      "matchesPreviousSource": true
+    },
+    {
+      "path": "system/lib/compiler-rt/CREDITS.TXT",
+      "previousReferenceSHA256": "a9901f47a089da41e4690682d00ce4cedaa2baf41fedbe79beee366d43ac2461",
+      "image": {
+        "path": "emsdk/upstream/emscripten/system/lib/compiler-rt/CREDITS.TXT",
+        "layer": "sha256:9fb8c7e631563d57e6d2670b1e49fa040d90b0894590d8b3da21385383f048da",
+        "bytes": 1049,
+        "sha256": "a9901f47a089da41e4690682d00ce4cedaa2baf41fedbe79beee366d43ac2461",
+        "localFile": "emsdk--upstream--emscripten--system--lib--compiler-rt--CREDITS.TXT"
+      },
+      "matchesPreviousSource": true
+    },
+    {
+      "path": "tools/system_libs.py",
+      "previousReferenceSHA256": "9fb182d4f5aa9d74a321e1ba9697178aeaf8d7f642717b67ed566bcb05a48f0b",
+      "image": {
+        "path": "emsdk/upstream/emscripten/tools/system_libs.py",
+        "layer": "sha256:9fb8c7e631563d57e6d2670b1e49fa040d90b0894590d8b3da21385383f048da",
+        "bytes": 89824,
+        "sha256": "9fb182d4f5aa9d74a321e1ba9697178aeaf8d7f642717b67ed566bcb05a48f0b",
+        "localFile": "emsdk--upstream--emscripten--tools--system_libs.py"
+      },
+      "matchesPreviousSource": true
+    },
+    {
+      "path": "tools/link.py",
+      "previousReferenceSHA256": "30c4c4fe52c8f8a367d0878e360dea80494bb20d51710e45132bc3f58940dc17",
+      "image": {
+        "path": "emsdk/upstream/emscripten/tools/link.py",
+        "layer": "sha256:9fb8c7e631563d57e6d2670b1e49fa040d90b0894590d8b3da21385383f048da",
+        "bytes": 131010,
+        "sha256": "30c4c4fe52c8f8a367d0878e360dea80494bb20d51710e45132bc3f58940dc17",
+        "localFile": "emsdk--upstream--emscripten--tools--link.py"
+      },
+      "matchesPreviousSource": true
+    },
+    {
+      "path": "emcc.py",
+      "previousReferenceSHA256": "9265f2af265ffffc05d836b405e2260609613280e862ebe7a7fdc6a7bdf20a65",
+      "image": {
+        "path": "emsdk/upstream/emscripten/emcc.py",
+        "layer": "sha256:9fb8c7e631563d57e6d2670b1e49fa040d90b0894590d8b3da21385383f048da",
+        "bytes": 22941,
+        "sha256": "9265f2af265ffffc05d836b405e2260609613280e862ebe7a7fdc6a7bdf20a65",
+        "localFile": "emsdk--upstream--emscripten--emcc.py"
+      },
+      "matchesPreviousSource": true
+    },
+    {
+      "path": "emscripten-version.txt",
+      "previousReferenceSHA256": "e98d3838adf1e543df88ee6c21e756dace857f6ebaa3c1b0dd7f5ae76708886e",
+      "image": {
+        "path": "emsdk/upstream/emscripten/emscripten-version.txt",
+        "layer": "sha256:9fb8c7e631563d57e6d2670b1e49fa040d90b0894590d8b3da21385383f048da",
+        "bytes": 8,
+        "sha256": "63f302ebe7ed904608943bc13d2abe2653f9ccc444fe47046409b680db5614dc",
+        "localFile": "emsdk--upstream--emscripten--emscripten-version.txt"
+      },
+      "matchesPreviousSource": false
+    }
+  ]
+}
