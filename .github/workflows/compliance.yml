@@ -41,6 +41,10 @@ jobs:
           python3 MacDown2/scripts/test-document-metadata.py
       - name: Inventory check against the source tree
         run: python3 compliance/tools/compliance.py check
+      - name: Catalog structure and translation-resource coverage
+        run: |
+          python3 -m unittest discover -s planning/downstream/tools -p test_localization_inventory.py
+          python3 planning/downstream/tools/localization_inventory.py --check --check-transifex
       - name: Reproduced parser receipt and qualified Webpack runtime notice
         # Offline evidence checks only; never installs or runs upstream Node tools.
         run: |

@@ -1,3 +1,4 @@
+# Organization/project slugs remain unconfigured placeholders; no remote project is implied.
 [main]
 host = https://www.transifex.com
 lang_map = zh_TW:zh-Hant, zh_CN:zh-Hans, ko_KR:ko-KR
@@ -59,5 +60,35 @@ type = XCSTRINGS
 [o:macdown-2--core:p:macdown-2:r:diagramsgraphviz]
 file_filter = MacDown2/Packages/MacDownKit/Sources/DiagramsGraphviz/Resources/Localizable.xcstrings
 source_file = MacDown2/Packages/MacDownKit/Sources/DiagramsGraphviz/Resources/Localizable.xcstrings
+source_lang = en
+type = XCSTRINGS
+
+[o:macdown-2--core:p:macdown-2:r:math]
+file_filter = MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings
+source_file = MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings
+source_lang = en
+type = XCSTRINGS
+
+[o:macdown-2--core:p:macdown-2:r:editorcore]
+file_filter = MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings
+source_file = MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings
+source_lang = en
+type = XCSTRINGS
+
+[o:macdown-2--core:p:macdown-2:r:commandlinesupport]
+file_filter = MacDown2/Packages/MacDownKit/Sources/CommandLineSupport/Resources/Localizable.xcstrings
+source_file = MacDown2/Packages/MacDownKit/Sources/CommandLineSupport/Resources/Localizable.xcstrings
+source_lang = en
+type = XCSTRINGS
+
+[o:macdown-2--core:p:macdown-2:r:filecore]
+file_filter = MacDown2/Packages/MacDownKit/Sources/FileCore/Resources/Localizable.xcstrings
+source_file = MacDown2/Packages/MacDownKit/Sources/FileCore/Resources/Localizable.xcstrings
+source_lang = en
+type = XCSTRINGS
+
+[o:macdown-2--core:p:macdown-2:r:textsearch]
+file_filter = MacDown2/Packages/MacDownKit/Sources/TextSearch/Resources/Localizable.xcstrings
+source_file = MacDown2/Packages/MacDownKit/Sources/TextSearch/Resources/Localizable.xcstrings
 source_lang = en
 type = XCSTRINGS

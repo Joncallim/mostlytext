@@ -10,6 +10,7 @@ choose plural forms, assess translation quality, or claim native review.
 from __future__ import annotations
 
 import argparse
+import configparser
 import json
 from pathlib import Path
 import re
@@ -40,6 +41,8 @@ def load_catalog(path: Path) -> dict[str, Any]:
         raise CatalogError(f"{path}: malformed JSON: {error}") from error
     if not isinstance(value, dict) or not isinstance(value.get("strings"), dict):
         raise CatalogError(f"{path}: expected an object with a strings object")
+    if not isinstance(value.get("sourceLanguage"), str) or not value["sourceLanguage"].strip():
+        raise CatalogError(f"{path}: expected a nonempty sourceLanguage")
     for key, entry in value["strings"].items():
         if not isinstance(entry, dict):
             raise CatalogError(f"{path}: {key!r} is not a string entry")
@@ -278,15 +281,53 @@ def validate(repo: Path) -> list[str]:
     return errors
 
 
+def validate_translation_resources(repo: Path) -> list[str]:
+    """Check source configuration coverage only, never remote project existence."""
+    path = repo / ".tx/config"
+    config = configparser.ConfigParser(interpolation=None, strict=True)
+    try:
+        with path.open(encoding="utf-8") as source:
+            config.read_file(source)
+    except (OSError, configparser.Error, UnicodeError) as error:
+        return [f"translation configuration unavailable or invalid: {error}"]
+    catalogs = {repo_relative(repo, path): load_catalog(path)["sourceLanguage"]
+                for path in sorted(repo.glob("MacDown2/**/*.xcstrings"))}
+    seen: set[str] = set()
+    errors: list[str] = []
+    for section in config.sections():
+        if section == "main":
+            continue
+        resource = config[section]
+        source = resource.get("source_file", "")
+        if source not in catalogs:
+            errors.append(f"{section}: source_file is not a known catalog: {source!r}")
+            continue
+        if source in seen:
+            errors.append(f"{section}: duplicate translation resource for {source}")
+        seen.add(source)
+        if resource.get("file_filter") != source:
+            errors.append(f"{section}: XCSTRINGS file_filter must equal source_file")
+        if resource.get("type") != "XCSTRINGS":
+            errors.append(f"{section}: translation resource type must be XCSTRINGS")
+        if resource.get("source_lang") != catalogs[source]:
+            errors.append(f"{section}: source_lang must match the catalog sourceLanguage")
+    for source in sorted(set(catalogs) - seen):
+        errors.append(f"missing translation resource for {source}")
+    return errors
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[3])
     parser.add_argument("--inventory-out", type=Path, help="write deterministic inventory JSON")
     parser.add_argument("--check", action="store_true", help="fail if validation finds structural defects")
+    parser.add_argument("--check-transifex", action="store_true", help="check local resource coverage, not remote project setup")
     args = parser.parse_args()
     try:
         record = inventory(args.repo)
         errors = validate(args.repo)
+        if args.check_transifex:
+            errors.extend(validate_translation_resources(args.repo))
     except CatalogError as error:
         print(json.dumps({"status": "invalid", "errors": [str(error)]}, indent=2, sort_keys=True))
         return 1
@@ -294,7 +335,7 @@ def main() -> int:
         args.inventory_out.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     payload = {"status": "passed" if not errors else "invalid", "catalogs": len({entry["catalog"] for entry in record["entries"]}), "entries": len(record["entries"]), "errors": errors}
     print(json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True))
-    return 1 if args.check and errors else 0
+    return 1 if (args.check or args.check_transifex) and errors else 0
 
 
 if __name__ == "__main__":
