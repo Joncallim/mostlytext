@@ -112,3 +112,9 @@ offline inputs before another fresh hosted run. Preserve first-run evidence and
 record the cache-population method/actual Node/npm versions honestly. This
 supersedes only the original single-networked-install instructions above; all
 other scope, acceptance and publication/native boundaries remain.
+
+Docker documents [`RUN --network=default`](https://docs.docker.com/reference/dockerfile/#run---networkdefault)
+as using the default network for the build, rather than an escape from the
+build-level network setting. The original `--network=none` therefore also
+constrained that install. Keep the isolation and prefetch verified lock objects;
+do not widen build networking to repair the mistaken assumption.
