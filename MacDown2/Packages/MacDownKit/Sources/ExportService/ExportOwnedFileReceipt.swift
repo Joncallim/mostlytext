@@ -28,6 +28,17 @@ struct ExportOwnedFileReceipt {
         digest = archived.digest
     }
 
+    /// Companion receipts require a verified self-bound producer inventory,
+    /// not a decoded public payload or a matching resource filename.
+    init(authenticatedCompanion: ExportCompanionAuthentication.AuthenticatedReceipt) throws {
+        let archived = authenticatedCompanion.value
+        guard archived.stamp.kind == mode_t(S_IFREG), archived.stamp.size >= 0,
+              archived.stamp.size <= ExportResourceBudget.maxFinalHTMLUTF8Bytes,
+              archived.digest.count == SHA256.byteCount else { throw ExportError.unsafePublication }
+        stamp = archived.stamp
+        digest = archived.digest
+    }
+
     func matchesMetadata(_ actual: Stamp) -> Bool {
         stamp.device == actual.device && stamp.inode == actual.inode && stamp.kind == actual.kind
             && stamp.size == actual.size && stamp.birthSeconds == actual.birthSeconds
