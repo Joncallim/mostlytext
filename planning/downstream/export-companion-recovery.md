@@ -270,3 +270,19 @@ A failure before the first inventory is finalized must leave older resources
 intact. Add a regression that stops at this boundary and inspects the inventory,
 primary and retained resources before resuming. Earlier qualification is retained
 as provisional evidence and does not qualify the corrected source by itself.
+
+Completed resource stages move into the authenticated owned list and a bounded
+newly-created-name set in one checkpoint; do not duplicate every installed file's
+full receipt in both the work list and owned list. Only unfinished resources,
+marker and current metadata stages need work records. This keeps a full admitted
+resource generation within the fixed control payload rather than making control
+bookkeeping itself consume the resource allowance. Abort cleanup uses the
+newly-created-name set plus the known prior reference set.
+
+The final staged view must compare input resource bytes and expected marker
+contents before capturing promotion stamps. Recapturing whatever stamp happens
+to exist after a checkpoint callback would accept a changed file. Keep that
+byte check followed by the existing exact-stamp promotion check; do not weaken
+it to a filename/digest-label or current-metadata check. Add controlled edits
+between resource installation and this view, and preserve both changed resources
+and markers when refusing primary promotion.
