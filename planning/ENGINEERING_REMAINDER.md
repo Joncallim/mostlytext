@@ -9,12 +9,32 @@ within them. None currently has all its whole-issue closure evidence. This map
 reconciles current source, the transferred issues and the preserved native hold;
 it is a work queue, not a declaration that engineering or release work is done.
 Initial mapping baseline: main 8c78f3cd13635a7010ebeaecad932744afc90992.
-Current fully qualified source baseline: main `f548b1818205e4b705757fc6748d0f8302212a22`
-([PR55](https://github.com/Joncallim/mostlytext/pull/55)). Its actual tree matches
-qualified `e7bd40d3`; complete CI passes 3,425 package and 619 non-UI app tests. Scoped
-source/resource evidence is recorded in [ACCEPTANCE_STATUS.md](ACCEPTANCE_STATUS.md)
-and the associated PRs; the named remaining contracts below still apply. Historical PR numbers
-resolve through [ISSUE_TRANSFER_MAP.md](ISSUE_TRANSFER_MAP.md).
+Latest full source qualification: main
+`5aa5a37b93a1ae52a9177cf47e72f2f0fa6503f0`
+([PR62](https://github.com/Joncallim/mostlytext/pull/62)). Its actual tree equals
+qualified `24b19a9b301704f56fd2f3e50ff11b96872742ad`. Complete ARM
+[CI41806404272](https://github.com/Joncallim/mostlytext/actions/runs/41806404272)
+passes 3,430 package tests /479 suites with two existing known issues, 619 non-UI
+app tests /127 suites, locked Debug/Release app and mostlytext builds,
+test-target compilation, lint/format and final pins. Exact-head Compliance passes;
+all 266 local controls and source inventory pass. The built notice matches source
+and its unchanged Foundation reader loads the new Framer credit. This does not
+establish native window, installed-state, independent rights or release acceptance.
+
+[PR61](https://github.com/Joncallim/mostlytext/pull/61) rejects negative/overflowing
+folder-replacement ranges before arithmetic or mutation. Both actual old-source
+Foundation crashes are retained; all 131 source-identical TextSearch tests /20
+suites pass Debug/Release, including unchanged-file and later-valid-file controls.
+The [reproduction procedure](downstream/evidence/replacement-plan-range-bounds-2026-11-04/README.md)
+pins every copied file and runs the old-source negatives in a separate owned
+fixture. Issues #6/#14/#17 now check these scoped source/evidence results while
+preserving every broader acceptance criterion. The live audit still has 17 open
+issues and 183 unchecked original rows.
+
+Scoped source/resource evidence is recorded in
+[ACCEPTANCE_STATUS.md](ACCEPTANCE_STATUS.md) and the associated PRs; the named
+remaining contracts below still apply. Historical PR numbers resolve through
+[ISSUE_TRANSFER_MAP.md](ISSUE_TRANSFER_MAP.md).
 
 ## Work still requiring implementation or diagnosis
 
