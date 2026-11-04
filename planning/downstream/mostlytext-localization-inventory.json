@@ -5777,8 +5777,10 @@
         "ja": "needs_review",
         "pl": "needs_review"
       },
-      "callsites": [],
-      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "callsites": [
+        "MacDown2/MacDown2/DiagramFailurePresentation.swift:14"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -5936,8 +5938,10 @@
         "ja": "needs_review",
         "pl": "needs_review"
       },
-      "callsites": [],
-      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "callsites": [
+        "MacDown2/MacDown2/DiagramFailurePresentation.swift:20"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -5969,8 +5973,10 @@
         "ja": "needs_review",
         "pl": "needs_review"
       },
-      "callsites": [],
-      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "callsites": [
+        "MacDown2/MacDown2/DiagramFailurePresentation.swift:16"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
