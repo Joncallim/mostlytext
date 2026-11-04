@@ -15,3 +15,6 @@ See the [installation, CLI and migration guide](../docs/INSTALLATION_AND_MIGRATI
 for state-preservation behavior and release prerequisites, and the
 [architecture plan](../planning/MIGRATION_PLAN.md) for module ownership. Native
 app/UI testing on the development machine retains its protected test-account gate.
+
+For catalog ownership, compiler coverage, translation exchange and final
+language verification, follow [the localization maintenance guide](../docs/LOCALIZATION.md).

@@ -1,7 +1,19 @@
 > Implementation notes for [EPIC-16] Localization: String Catalogs + Transifex migration.
 > See `planning/epics/EPIC-16-localization.md` for the epic's scope and acceptance criteria.
 
-## Architecture summary
+## Current maintenance entry point — 4 November 2026
+
+Use [the current localization guide](../docs/LOCALIZATION.md), the live
+[MostlyText #3](https://github.com/Joncallim/mostlytext/issues/3) criteria and
+[the adopted release sequence](RELEASE_SEQUENCE.md). The ten-catalog counts,
+extraction/tooling observations and old Transifex walkthrough below describe
+the original September implementation. They are not current compiler-key or
+translation acceptance. Current owned catalogs include later editor, CLI,
+encoding and search resources, with explicit unreviewed language deltas.
+Final E16 follows private candidate 1/native verification; no final freeze is
+claimed by interim source checks.
+
+## Historical architecture summary
 
 MacDown 2's user-facing strings live in ten String Catalogs (`.xcstrings`):
 
@@ -129,40 +141,19 @@ ready (same catalog infrastructure) but have no seeded translations yet — this
 as future community/Transifex contribution, not a 1.0 blocker per se, since the acceptance
 criteria only requires "at least one" shipped locale plus the three-plural-family check.
 
-## Transifex workflow
+## Current translation-exchange contract
 
-`.tx/config` at the repository root declares one Transifex resource per catalog, using the
-`XCSTRINGS` file type (Transifex CLI supports `.xcstrings` directly — confirmed via Transifex's
-own documentation, since this is a single multi-locale file rather than the older per-locale
-`.strings`/`.xliff` layout the legacy MacDown project used). The `o:macdown-2--core:p:macdown-2`
-organization/project slugs are placeholders: **creating the actual Transifex organization and
-project is an external, credential-gated step no engineering agent can perform** — a maintainer
-with a Transifex account must create the project once and update the slugs in `.tx/config`
-accordingly. Everything else (the resource layout, file type, source language, workflow below) is
-real, usable infrastructure today.
-
-Once a real project exists:
-
-1. Install the Transifex CLI: `brew install transifex/cli/tx` (or see
-   `https://developers.transifex.com/docs/cli`).
-2. Authenticate: `tx init` the first time, or set `TX_TOKEN` from the project's API token.
-3. **Push new/changed English source strings** after any app-string change:
-   `tx push --source`. Do this whenever a catalog's English strings change — see the
-   string-freeze rule below for when this requires re-verification.
-4. **Pull translations** (including in-progress ones, for testing):
-   `tx pull --all` (or `--minimum-perc=100` to pull only complete locales for a release build).
-   Transifex writes translations back into the same `.xcstrings` files pushed in step 3 — no
-   separate per-locale files to reconcile by hand.
-5. Rebuild and spot-check the affected UI in the pulled locale (Settings → General → Language,
-   or `defaults write <bundle-id> AppleLanguages '("fr")'` before launch for a quick check).
-6. Commit the updated `.xcstrings` files exactly as pulled — do not hand-edit translated
-   `stringUnit`/`substitutions` entries; treat Transifex as the source of truth for anything not
-   in `en`.
-
-No agent context is required to run this workflow — steps 3–6 are ordinary CLI commands run from
-the repository root, matching the legacy project's `Tools/travis_push_transifex.py` pattern
-(kept at `legacy-reference/macdown-legacy/.tx/config` for reference; not reused directly, since
-the legacy project used XLIFF export rather than native `.xcstrings` support).
+The resource layout in `.tx/config` is checked against all current owned catalogs.
+Its account/project slugs are placeholders, not verified remote identity. Follow
+[the current guide](../docs/LOCALIZATION.md#exchange-translations-without-losing-reviewed-content)
+and [the adopted safe exchange contract](downstream/issue-17-handoff.md#safe-transifex-workflow).
+A real authorized project and a version-qualified staged canary round trip are
+required before synchronization. Preserve source keys/comments, all non-target
+locales, placeholder/plural structure and review state. Do not commit returned
+catalogs blindly, let stale embedded translations overwrite remote reviews,
+put credentials in evidence, or mutate owner language defaults for native QA.
+The original legacy source reference is the frozen Git tag recorded in
+[AGENTS.md](../AGENTS.md), not a current legacy-reference directory.
 
 ## String-freeze baseline
 
