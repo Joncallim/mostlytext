@@ -1,7 +1,9 @@
 """Offline controls for bounded, stage-qualified linker evidence."""
 
 from pathlib import Path
+import json
 import sys
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -68,6 +70,26 @@ class GraphvizLinkTests(unittest.TestCase):
         self.assertEqual(value.replace(link.FLAG, b""), plain)
         with self.assertRaisesRegex(ValueError, "Unexpected original"):
             link.recipe(original + b"RUN echo changed\n", root)
+
+    def test_unexpected_parser_format_keeps_raw_sidecars_for_review(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output, built = root / "receipt", root / "built"
+            output.mkdir(); built.mkdir()
+            (output / "link-prepared.json").write_text(json.dumps({"fixture": True}))
+            (built / "backend.js").write_bytes(b"owned comparison fixture")
+            raw_map = MAP.replace(b"Addr", b"Unexpected")
+            (built / "backend.map").write_bytes(raw_map)
+            (built / "why-extract.tsv").write_bytes(WHY)
+            # The ordinary backend/context verifier is tested separately. This
+            # isolates preservation when the next, diagnostic-only parser fails.
+            with patch.object(link, "descriptor", return_value={"fixture": True}), \
+                 patch.object(link.backend, "compare", return_value={"backend_equal": True, "built_backend": {}}):
+                with self.assertRaisesRegex(ValueError, "map header"):
+                    link.compare(output, built)
+            self.assertEqual((output / "backend.map").read_bytes(), raw_map)
+            self.assertEqual((output / "why-extract.tsv").read_bytes(), WHY)
+            self.assertFalse((output / "link-result.json").exists())
 
 
 if __name__ == "__main__":

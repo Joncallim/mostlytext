@@ -96,15 +96,16 @@ def compare(output, built, root=ROOT):
     standard = backend.compare(output, built, root)
     raw_map = backend.read_regular(built / "backend.map", LIMIT)
     raw_why = backend.read_regular(built / "why-extract.tsv", LIMIT)
+    # Preserve bounded originals before parsing: an unexpected format is itself
+    # evidence and must remain inspectable after the hosted runner disappears.
+    for name, data in (("backend.map", raw_map), ("why-extract.tsv", raw_why)):
+        with (output / name).open("xb") as stream:
+            stream.write(data)
     value = {"schema": 1, "inputs": inputs, "backend_equal": standard["backend_equal"],
              "built_backend": standard["built_backend"], "scope": SCOPE,
              "sidecars": {"backend.map": backend.record(raw_map), "why-extract.tsv": backend.record(raw_why)},
              "index": summarize(raw_map, raw_why), "hosted": standard.get("hosted")}
     backend.write_json(output / "link-result.json", value)
-    # Copy only bounded public diagnostic text, never the rebuilt JS/WASM.
-    for name, data in (("backend.map", raw_map), ("why-extract.tsv", raw_why)):
-        with (output / name).open("xb") as stream:
-            stream.write(data)
     return value
 
 
