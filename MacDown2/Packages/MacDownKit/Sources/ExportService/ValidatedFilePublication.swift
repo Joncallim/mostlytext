@@ -80,7 +80,8 @@ enum ExportFilePublication {
         else { throw ExportError.validatedPublicationRejected }
         let input = HTMLFilePublicationInput(
             url: url, mode: mode, bytes: validated.utf8, resources: validated.resources,
-            assetsDirectoryName: validated.assetsDirectoryName, diagnostics: validated.diagnostics
+            assetsDirectoryName: validated.assetsDirectoryName, diagnostics: validated.diagnostics,
+            referencesKnown: validated.companionReferencesKnown
         )
         return try write(input, lease: lease, hooks: .init(
             afterCompanionDirectoryOpened: afterCompanionDirectoryOpened, beforePromotion: beforePromotion
@@ -114,37 +115,77 @@ enum ExportFilePublication {
             defer { withExtendedLifetime(journal) {} }
             let prefix = ExportPublicationRetention.scratchPrefix(for: input.url.lastPathComponent)
             let priorDigest = try reconcile(journal, for: input.url, in: parent, protection: protection)
-            try ExportPublicationRetention.checkParent(parent.descriptor, scratchPrefix: prefix)
-            try authorization.checkTarget(input.url)
-            let staged = try stageCompanions(
-                input, in: parent, nextTo: parentURL,
-                lease: lease, hooks: hooks
-            )
-            let primary = try stagePrimary(input.bytes, in: parent, prefix: prefix, protection: protection)
-            try primary.publishing(retireOnFailure: retirement(
-                using: journal, parent: parent, primary: input.url.lastPathComponent, scratch: primary.name,
-                protection: protection
-            )) {
-                hooks.afterPrimaryStaged?()
-                try journal?.begin(
-                    priorDigest: priorDigest, desired: Data(SHA256.hash(data: input.bytes)), name: primary.name,
-                    receipt: ExportOwnedFileReceipt(bytes: input.bytes, stamp: primary.stamp)
+            if let journal {
+                let managed = try ExportManagedCompanions(
+                    input: input, parent: parent, parentStamp: parentStamp, producer: journal,
+                    protection: protection, hooks: hooks
                 )
-                try authorization.checkRecoveryObject(primary.stamp)
-                hooks.beforePromotion?()
-                try promote(primary, input: input, authorization: authorization, companions: staged, lease: lease)
+                try managed.recover()
+                try ExportPublicationRetention.checkParent(parent.descriptor, scratchPrefix: prefix)
+                try authorization.checkTarget(input.url)
+                return try writeManaged(managed, priorDigest: priorDigest, authorization: authorization,
+                                        journal: journal)
             }
-            let diagnostics = finish(journal, parent: parent, hooks: hooks, diagnostics: input.diagnostics)
-            return ExportResult(
-                primaryFile: input.url,
-                companionFiles: staged?.urls ?? [],
-                diagnostics: diagnostics
-            )
+            return try writeConservative(input, authorization: authorization, protection: protection, hooks: hooks)
         }
     }
 }
 
 private extension ExportFilePublication {
+    private static func writeManaged(
+        _ companions: ExportManagedCompanions, priorDigest: Data?,
+        authorization: ExportDestinationAdmission, journal: ExportJournalStore
+    ) throws -> ExportResult {
+        let input = companions.input
+        let parent = companions.parent
+        let prefix = ExportPublicationRetention.scratchPrefix(for: input.url.lastPathComponent)
+        let protection = companions.protection
+        let lease = protection.lease
+        let hooks = companions.hooks
+        let primary = try stagePrimary(input.bytes, in: parent, prefix: prefix, protection: protection)
+        var staged: StagedCompanions?
+        try primary.publishing(retireOnFailure: retirement(
+            using: journal, parent: parent, primary: input.url.lastPathComponent,
+            scratch: primary.name, protection: protection
+        )) {
+            hooks.afterPrimaryStaged?()
+            try journal.begin(priorDigest: priorDigest, desired: Data(SHA256.hash(data: input.bytes)),
+                              name: primary.name, receipt: ExportOwnedFileReceipt(bytes: input.bytes,
+                                                                                  stamp: primary.stamp))
+            if let managed = try companions.begin(priorDigest: priorDigest) {
+                staged = StagedCompanions(directory: managed.directory, stamp: managed.stamp,
+                                          entries: managed.entries, urls: managed.urls)
+            }
+            try authorization.checkRecoveryObject(primary.stamp)
+            hooks.beforePromotion?()
+            try promote(primary, input: input, authorization: authorization, companions: staged, lease: lease)
+        }
+        let diagnostics = finish(journal, parent: parent, hooks: hooks, diagnostics: input.diagnostics,
+                                 managed: companions)
+        return ExportResult(primaryFile: input.url, companionFiles: staged?.urls ?? [], diagnostics: diagnostics)
+    }
+
+    private static func writeConservative(
+        _ input: HTMLFilePublicationInput, authorization: ExportDestinationAdmission,
+        protection: ExportRecoveryProtection, hooks: ExportPublicationHooks
+    ) throws -> ExportResult {
+        let parent = authorization.parent
+        let lease = protection.lease
+        let prefix = ExportPublicationRetention.scratchPrefix(for: input.url.lastPathComponent)
+        try ExportPublicationRetention.checkParent(parent.descriptor, scratchPrefix: prefix)
+        try authorization.checkTarget(input.url)
+        let staged = try stageCompanions(input, in: parent, nextTo: input.url.deletingLastPathComponent(),
+                                         lease: lease, hooks: hooks)
+        let primary = try stagePrimary(input.bytes, in: parent, prefix: prefix, protection: protection)
+        try primary.publishing {
+            hooks.afterPrimaryStaged?()
+            try authorization.checkRecoveryObject(primary.stamp)
+            hooks.beforePromotion?()
+            try promote(primary, input: input, authorization: authorization, companions: staged, lease: lease)
+        }
+        return ExportResult(primaryFile: input.url, companionFiles: staged?.urls ?? [], diagnostics: input.diagnostics)
+    }
+
     private static func reconcile(_ journal: ExportJournalStore?, for url: URL, in parent: DirectoryHandle,
                                   protection: ExportRecoveryProtection) throws -> Data? {
         guard let journal else { return nil }
@@ -194,13 +235,15 @@ private extension ExportFilePublication {
     }
 
     private static func finish(_ journal: ExportJournalStore?, parent: DirectoryHandle, hooks: ExportPublicationHooks,
-                               diagnostics: [ExportDiagnostic]) -> [ExportDiagnostic] {
+                               diagnostics: [ExportDiagnostic],
+                               managed: ExportManagedCompanions? = nil) -> [ExportDiagnostic] {
         guard let journal else { return diagnostics }
         do {
             // Once rename succeeds, sync/finalization failure cannot undo the
             // saved output or turn it into a misleading publication failure.
             guard fsync(parent.descriptor) == 0 else { throw Filesystem.posixFailure() }
             try hooks.beforeJournalFinalization?()
+            try managed?.finish()
             try journal.finish()
             return diagnostics
         } catch {
@@ -211,6 +254,9 @@ private extension ExportFilePublication {
                 """,
                 bundle: .module
             ))
+            if let failure = error as? ExportError, case .publicationRecoveryRequired = failure {
+                return diagnostics + [warning, ExportDiagnostic(severity: .warning, message: failure.description)]
+            }
             return diagnostics + [warning]
         }
     }

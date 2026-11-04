@@ -51,7 +51,8 @@ enum ExportFileWriter {
         }
         return HTMLFilePublicationInput(
             url: url, mode: mode, bytes: Data(html.utf8), resources: resources,
-            assetsDirectoryName: prepared.assetsDirectoryName, diagnostics: prepared.diagnostics
+            assetsDirectoryName: prepared.assetsDirectoryName, diagnostics: prepared.diagnostics,
+            referencesKnown: prepared.companionReferencesKnown
         )
     }
 

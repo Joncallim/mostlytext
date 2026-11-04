@@ -28,6 +28,32 @@ struct ExportOwnedFileReceipt {
         digest = archived.digest
     }
 
+    /// Companion receipts require a verified self-bound producer inventory,
+    /// not a decoded public payload or a matching resource filename.
+    init(authenticatedCompanion: ExportCompanionAuthentication.AuthenticatedReceipt) throws {
+        let archived = authenticatedCompanion.value
+        guard archived.stamp.kind == mode_t(S_IFREG), archived.stamp.size >= 0,
+              archived.stamp.size <= ExportResourceBudget.maxFinalHTMLUTF8Bytes,
+              archived.digest.count == SHA256.byteCount else { throw ExportError.unsafePublication }
+        stamp = archived.stamp
+        digest = archived.digest
+    }
+
+    /// Rebase only the change-time caused by an authenticated rename, after
+    /// inspecting the same inode/birth/metadata and hashing its unchanged bytes.
+    func inspectingRenamedFile(_ name: String, in directory: Int32) throws -> Self {
+        let actual = try ExportPublicationFilesystem.childStamp(name, in: directory)
+        guard matchesMetadata(actual),
+              try ExportReceiptInspection.verify(self, name: name, in: directory, matching: actual)
+        else { throw ExportError.unsafePublication }
+        return Self(stamp: actual, digest: digest)
+    }
+
+    private init(stamp: Stamp, digest: Data) {
+        self.stamp = stamp
+        self.digest = digest
+    }
+
     func matchesMetadata(_ actual: Stamp) -> Bool {
         stamp.device == actual.device && stamp.inode == actual.inode && stamp.kind == actual.kind
             && stamp.size == actual.size && stamp.birthSeconds == actual.birthSeconds

@@ -24,6 +24,30 @@ public enum ExportURLPolicy {
         "data:image/gif;base64", "data:image/webp;base64",
     ]
 
+    static func hasClosedRasterReferences(_ bytes: Data, mimeType: String) -> Bool {
+        switch mimeType.lowercased() {
+        case "image/png": bytes.starts(with: [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])
+        case "image/jpeg", "image/jpg": bytes.starts(with: [0xFF, 0xD8, 0xFF])
+        case "image/gif": bytes.starts(with: Data("GIF87a".utf8)) || bytes.starts(with: Data("GIF89a".utf8))
+        case "image/webp": bytes.count >= 12 && bytes.prefix(4) == Data("RIFF".utf8)
+            && bytes.dropFirst(8).prefix(4) == Data("WEBP".utf8)
+        default: false
+        }
+    }
+
+    /// Called only after the existing full URL admission. Decode a constant
+    /// prefix, not the author's complete potentially large inline image.
+    static func embeddedRasterReferencesAreClosed(_ url: String) -> Bool {
+        let trimmed = url.trimmingCharacters(in: .whitespaces)
+        guard let comma = trimmed.firstIndex(of: ",") else { return false }
+        let header = trimmed[..<comma].lowercased()
+        guard rasterHeaders.contains(header) else { return false }
+        let mime = String(header.dropFirst("data:".count).dropLast(";base64".count))
+        let prefix = String(trimmed[trimmed.index(after: comma)...].prefix(16))
+        guard let bytes = Data(base64Encoded: prefix) else { return false }
+        return hasClosedRasterReferences(bytes, mimeType: mime)
+    }
+
     public static func isEmbeddedRasterImage(_ url: String) -> Bool {
         guard url.utf8.count > 22, url.lowercased().hasPrefix("data:image/") else { return false }
         let trimmed = url.trimmingCharacters(in: .whitespaces)

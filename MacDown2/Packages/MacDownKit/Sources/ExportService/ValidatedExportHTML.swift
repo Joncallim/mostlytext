@@ -15,6 +15,7 @@ public struct ValidatedExportHTML: Sendable {
     let resources: [ExportResource]
     let assetsDirectoryName: String
     let diagnostics: [ExportDiagnostic]
+    let companionReferencesKnown: Bool
 
     init(publication: SVGAssemblyOwnership.Publication, prepared: PreparedExportDocument,
          target: ExportTarget, sourceText: String, diagnostics: [ExportDiagnostic]? = nil) {
@@ -26,6 +27,7 @@ public struct ValidatedExportHTML: Sendable {
         resources = prepared.manifest.resources
         assetsDirectoryName = prepared.assetsDirectoryName
         self.diagnostics = diagnostics ?? prepared.diagnostics
+        companionReferencesKnown = prepared.hasClosedCompanionReferences(for: sourceText)
     }
 
     func matches(target: ExportTarget, sourceText: String, generation: UInt) -> Bool {
