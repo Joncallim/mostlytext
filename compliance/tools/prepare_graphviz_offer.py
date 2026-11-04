@@ -46,11 +46,14 @@ def payload(root, inputs):
     for name in ['source-audit.json', 'downloads.json', 'audit-source-inputs.py']:
         bodies['evidence/' + name] = (root / 'compliance/evidence/viz-js-3.30.0' / name).read_bytes()
     bodies['evidence/ARCHIVE_PLAN.md'] = (root / 'compliance/ARCHIVE_PLAN.md').read_bytes()
+    for name in ['compliance/evidence/compiler-rt-source-notices/manifest.json',
+                 'compliance/tools/verify_compiler_rt_notices.py']:
+        bodies['evidence/compiler-rt/' + Path(name).name] = (root / name).read_bytes()
     for name in ['THIRD_PARTY_NOTICES.md', 'sbom.cdx.json']:
         bodies['distribution-snapshot/' + name] = (root / 'compliance/generated' / name).read_bytes()
     inv = json.loads((root / 'compliance/inventory.json').read_text())
     ids = {'viz-js', 'expat', 'graphviz-rbtree', 'graphviz-ellipse-maisonobe',
-           'graphviz-randomkit', 'renderer-build-bison-skeleton', 'renderer-build-emscripten'}
+           'graphviz-randomkit', 'renderer-build-bison-skeleton', 'renderer-build-emscripten', 'compiler-rt-publisher-root-notices'}
     selected = [r for r in inv['components'] if r['id'] in ids]
     if {r['id'] for r in selected} != ids:
         raise ValueError('Expected Graphviz and nested source notice records')
