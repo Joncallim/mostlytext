@@ -1,6 +1,7 @@
 """Offline controls for bounded, stage-qualified linker evidence."""
 
 from pathlib import Path
+import copy
 import json
 import sys
 import tempfile
@@ -10,6 +11,7 @@ from unittest.mock import patch
 TOOLS = Path(__file__).resolve().parents[1] / "tools"
 sys.path.insert(0, str(TOOLS))
 import capture_graphviz_link as link
+import verify_graphviz_link as proof
 
 MAP = b'''    Addr      Off     Size Out     In      Symbol
        -        8        e TYPE
@@ -90,6 +92,65 @@ class GraphvizLinkTests(unittest.TestCase):
             self.assertEqual((output / "backend.map").read_bytes(), raw_map)
             self.assertEqual((output / "why-extract.tsv").read_bytes(), WHY)
             self.assertFalse((output / "link-result.json").exists())
+
+
+class CapturedGraphvizLinkTests(unittest.TestCase):
+    def setUp(self):
+        self.root = TOOLS.parents[1]
+        folder = self.root / proof.PACKET
+        self.result = json.loads((folder / "result.json").read_text())
+        self.raw_map = (folder / "backend.map").read_bytes()
+        self.raw_why = (folder / "why-extract.tsv").read_bytes()
+
+    def test_current_raw_sidecars_reproduce_complete_stage_qualified_index(self):
+        value = proof.verify(self.root)
+        self.assertEqual(value["status"], "passed")
+        self.assertEqual(value["map_rows"], 9874)
+        self.assertEqual(value["extraction_rows"], 577)
+        self.assertEqual(value["mapped_archive_members"], 426)
+        self.assertEqual(value["extracted_archive_members"], 457)
+
+    def test_false_output_recipe_index_scope_identity_and_rights_claims_rejected(self):
+        for kind in ("output", "boolean", "recipe", "index", "scope", "host", "extra"):
+            value = copy.deepcopy(self.result)
+            if kind == "output":
+                value["built_backend"]["sha256"] = "a" * 64
+            elif kind == "boolean":
+                value["backend_equal"] = 1
+            elif kind == "recipe":
+                value["inputs"]["diagnostic_context"]["Dockerfile"]["sha256"] = "a" * 64
+            elif kind == "index":
+                value["index"]["extraction_rows"].pop()
+            elif kind == "scope":
+                value["scope"] = "complete final optimized retention and clearance"
+            elif kind == "host":
+                value["hosted"]["url"] = "https://example.invalid/receipt"
+            else:
+                value["source_offer_verified"] = True
+            with self.subTest(kind=kind), self.assertRaises(ValueError):
+                proof.validate(value, self.raw_map, self.raw_why, self.root)
+
+    def test_changed_raw_map_or_extraction_data_rejected(self):
+        for mapping, why in [(self.raw_map + b"\n", self.raw_why), (self.raw_map, self.raw_why + b"\n")]:
+            with self.assertRaisesRegex(ValueError, "Raw diagnostic identity"):
+                proof.validate(self.result, mapping, why, self.root)
+
+    def test_coherent_but_malformed_diagnostic_rejected_by_parser(self):
+        value = copy.deepcopy(self.result)
+        mapping = self.raw_map.replace(b"Addr", b"Other", 1)
+        value["sidecars"]["backend.map"] = link.backend.record(mapping)
+        with self.assertRaisesRegex(ValueError, "map header"):
+            proof.validate(value, mapping, self.raw_why, self.root)
+
+    def test_raw_receipt_byte_pin_rejects_changes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            folder = root / proof.PACKET
+            folder.mkdir(parents=True)
+            data = (self.root / proof.PACKET / "result.json").read_bytes()
+            (folder / "result.json").write_bytes(data + b"\n")
+            with self.assertRaisesRegex(ValueError, "Captured link receipt"):
+                proof.verify(root)
 
 
 if __name__ == "__main__":

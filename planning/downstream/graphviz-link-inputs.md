@@ -72,3 +72,20 @@ branches; preserve worktrees and stashes. Update #14's checklist only for observ
 link-stage evidence. Independent exhaustive per-file/grant review, complete source
 approval, separately authorized publication/anonymous retrieval, native and exact
 signed-artifact acceptance remain open.
+
+## Observed diagnostic result
+
+Runs `41850441841` (`6653ed2e`) and `41850608058` (`c367af8b`) both preserve
+the complete backend bytes. The latter captured receipt records 9,874 map rows,
+426 mapped archive/member pairs across 17 archives, and all 577 extraction-reason
+rows covering 457 distinct pairs. There are no unparsed extracted inputs; 32
+mapped pairs lack extraction records and 63 extracted pairs lack map records.
+These differing sets are retained, not reclassified as final retention. Both runs
+agree on stable member sets; raw diagnostic hashes differ with temporary paths.
+
+The map names libc++/libc++abi alongside libc, compiler-rt, allocator/stubs and
+Graphviz/Expat. This identifies a concrete separate source/text reconciliation
+unit without approving its per-file obligations here. Twelve offline methods
+now cover bounded parsing, raw preservation, exact recipe/index/receipt bindings
+and false scope/output/rights claims. Final-head hosted qualification remains
+required after the evidence additions. No distribution/release predicate changes.
