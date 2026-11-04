@@ -174,7 +174,7 @@ proof with deletion by pattern, weakened checks or fabricated native evidence.
 
 ## Reference-closure correction before publication integration
 
-Unit A's independent ownership review exposed a false assumption: the generated
+Unit A's separate ownership review exposed a false assumption: the generated
 resource manifest is not necessarily the complete set of assets referenced by
 ordinary exported HTML. Preserved authored raw HTML, local navigation links,
 unresolved images, custom derived HTML or caller-supplied CSS can refer to an old

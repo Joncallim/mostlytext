@@ -1326,6 +1326,35 @@
       "extractionState": "manual",
       "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
     },
+    "Laying the document out for printing took too long.": {
+      "comment": "App-owned PDF failure/recovery detail. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laying the document out for printing took too long."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Laying the document out for printing took too long."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Laying the document out for printing took too long."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Laying the document out for printing took too long."
+          }
+        }
+      }
+    },
     "License document": {
       "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
       "localizations": {
@@ -2633,6 +2662,93 @@
         }
       }
     },
+    "The PDF could not be written to a temporary file.": {
+      "comment": "App-owned PDF failure/recovery detail. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The PDF could not be written to a temporary file."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The PDF could not be written to a temporary file."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The PDF could not be written to a temporary file."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The PDF could not be written to a temporary file."
+          }
+        }
+      }
+    },
+    "The PDF exceeds the current export size limit.": {
+      "comment": "App-owned PDF failure/recovery detail. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The PDF exceeds the current export size limit."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The PDF exceeds the current export size limit."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The PDF exceeds the current export size limit."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The PDF exceeds the current export size limit."
+          }
+        }
+      }
+    },
+    "The PDF would exceed the current export size limit.": {
+      "comment": "App-owned PDF failure/recovery detail. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The PDF would exceed the current export size limit."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The PDF would exceed the current export size limit."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The PDF would exceed the current export size limit."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The PDF would exceed the current export size limit."
+          }
+        }
+      }
+    },
     "The Themes folder has reached its limit of 256 custom themes.": {
       "comment": "Theme management. Translation draft; native-speaker review remains required.",
       "localizations": {
@@ -2679,6 +2795,35 @@
         }
       }
     },
+    "The document needs more PDF pages than this export can safely create.": {
+      "comment": "App-owned PDF failure/recovery detail. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The document needs more PDF pages than this export can safely create."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The document needs more PDF pages than this export can safely create."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The document needs more PDF pages than this export can safely create."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The document needs more PDF pages than this export can safely create."
+          }
+        }
+      }
+    },
     "The import could not continue safely. Close the original MacDown if it is running. Existing preferences and recovery records have been preserved. You can continue without importing and review the import on a later launch.": {
       "extractionState": "manual",
       "localizations": {
@@ -2686,6 +2831,93 @@
           "stringUnit": {
             "state": "translated",
             "value": "The import could not continue safely. Close the original MacDown if it is running. Existing preferences and recovery records have been preserved. You can continue without importing and review the import on a later launch."
+          }
+        }
+      }
+    },
+    "The macOS print system could not produce the PDF.": {
+      "comment": "App-owned PDF failure/recovery detail. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The macOS print system could not produce the PDF."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The macOS print system could not produce the PDF."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The macOS print system could not produce the PDF."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The macOS print system could not produce the PDF."
+          }
+        }
+      }
+    },
+    "The macOS print system did not accept the PDF destination.": {
+      "comment": "App-owned PDF failure/recovery detail. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The macOS print system did not accept the PDF destination."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The macOS print system did not accept the PDF destination."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The macOS print system did not accept the PDF destination."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The macOS print system did not accept the PDF destination."
+          }
+        }
+      }
+    },
+    "The macOS print system did not write a PDF.": {
+      "comment": "App-owned PDF failure/recovery detail. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The macOS print system did not write a PDF."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The macOS print system did not write a PDF."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The macOS print system did not write a PDF."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The macOS print system did not write a PDF."
           }
         }
       }
@@ -2708,6 +2940,64 @@
     "The previous development installation was preserved separately, including its unsaved recovery files.": {
       "extractionState": "manual",
       "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
+    },
+    "The printed document was not a readable PDF.": {
+      "comment": "App-owned PDF failure/recovery detail. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The printed document was not a readable PDF."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The printed document was not a readable PDF."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The printed document was not a readable PDF."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The printed document was not a readable PDF."
+          }
+        }
+      }
+    },
+    "The prior output was left unchanged. Try a shorter document or export as HTML.": {
+      "comment": "App-owned PDF failure/recovery detail. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The prior output was left unchanged. Try a shorter document or export as HTML."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The prior output was left unchanged. Try a shorter document or export as HTML."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The prior output was left unchanged. Try a shorter document or export as HTML."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The prior output was left unchanged. Try a shorter document or export as HTML."
+          }
+        }
+      }
     },
     "The theme changed during this operation. Import it again to review the current version.": {
       "comment": "Theme management. Translation draft; native-speaker review remains required.",
@@ -2982,6 +3272,64 @@
         }
       }
     },
+    "Try again, or split very large documents before exporting.": {
+      "comment": "App-owned PDF failure/recovery detail. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try again, or split very large documents before exporting."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Try again, or split very large documents before exporting."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Try again, or split very large documents before exporting."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Try again, or split very large documents before exporting."
+          }
+        }
+      }
+    },
+    "Try exporting as HTML, or print the document from the preview.": {
+      "comment": "App-owned PDF failure/recovery detail. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try exporting as HTML, or print the document from the preview."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Try exporting as HTML, or print the document from the preview."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Try exporting as HTML, or print the document from the preview."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Try exporting as HTML, or print the document from the preview."
+          }
+        }
+      }
+    },
     "UTF-16": {
       "localizations": {
         "fr": {
@@ -3064,6 +3412,93 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Wersja"
+          }
+        }
+      }
+    },
+    "WebKit did not produce a readable PDF snapshot.": {
+      "comment": "App-owned PDF failure/recovery detail. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WebKit did not produce a readable PDF snapshot."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "WebKit did not produce a readable PDF snapshot."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "WebKit did not produce a readable PDF snapshot."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "WebKit did not produce a readable PDF snapshot."
+          }
+        }
+      }
+    },
+    "WebKit produced a PDF with unsupported page dimensions.": {
+      "comment": "App-owned PDF failure/recovery detail. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WebKit produced a PDF with unsupported page dimensions."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "WebKit produced a PDF with unsupported page dimensions."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "WebKit produced a PDF with unsupported page dimensions."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "WebKit produced a PDF with unsupported page dimensions."
+          }
+        }
+      }
+    },
+    "WebKit took too long to prepare the PDF.": {
+      "comment": "App-owned PDF failure/recovery detail. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WebKit took too long to prepare the PDF."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "WebKit took too long to prepare the PDF."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "WebKit took too long to prepare the PDF."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "WebKit took too long to prepare the PDF."
           }
         }
       }
@@ -3299,6 +3734,35 @@
         }
       }
     },
+    "no preview image was produced": {
+      "comment": "App-owned diagram failure detail shared by Mermaid, D2 and Graphviz. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "no preview image was produced"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "no preview image was produced"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "no preview image was produced"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "no preview image was produced"
+          }
+        }
+      }
+    },
     "parsed revision %lld could not be represented; contributions skipped": {
       "localizations": {
         "fr": {
@@ -3339,6 +3803,187 @@
           "stringUnit": {
             "state": "translated",
             "value": "bloki podglądu nie są uporządkowane/nienakładające się; wkłady pozostają w oryginalnej postaci źródła"
+          }
+        }
+      }
+    },
+    "rendered output too large (%lld bytes)": {
+      "comment": "App-owned diagram failure detail shared by Mermaid, D2 and Graphviz. Non-English values are English review drafts requiring final translation/native review. Byte count uses the signed Int format. English singular applies to one; non-English plural values remain drafts.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%#@arg1@"
+          },
+          "substitutions": {
+            "arg1": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "rendered output too large (%arg byte)"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "rendered output too large (%arg bytes)"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%#@arg1@"
+          },
+          "substitutions": {
+            "arg1": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "rendered output too large (%arg byte)"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "rendered output too large (%arg bytes)"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%#@arg1@"
+          },
+          "substitutions": {
+            "arg1": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "rendered output too large (%arg bytes)"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%#@arg1@"
+          },
+          "substitutions": {
+            "arg1": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "rendered output too large (%arg byte)"
+                    }
+                  },
+                  "few": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "rendered output too large (%arg bytes)"
+                    }
+                  },
+                  "many": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "rendered output too large (%arg bytes)"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "rendered output too large (%arg bytes)"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "renderer unavailable": {
+      "comment": "App-owned diagram failure detail shared by Mermaid, D2 and Graphviz. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "renderer unavailable"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "renderer unavailable"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "renderer unavailable"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "renderer unavailable"
+          }
+        }
+      }
+    },
+    "rendering timed out": {
+      "comment": "App-owned diagram failure detail shared by Mermaid, D2 and Graphviz. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rendering timed out"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rendering timed out"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rendering timed out"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rendering timed out"
           }
         }
       }

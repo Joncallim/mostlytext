@@ -67,7 +67,7 @@ struct GraphvizDiagramBlockView: View {
             let diagram = try await renderer.render(fence, context: context)
             guard !Task.isCancelled else { return }
             guard let svgData = diagram.svg.data(using: .utf8), let image = NSImage(data: svgData) else {
-                renderState = .failed("no preview image was produced")
+                renderState = .failed(DiagramFailurePresentation.noPreviewImage.message())
                 return
             }
             renderState = .rendered(image, width: diagram.naturalWidth, height: diagram.naturalHeight, svg: diagram.svg)
@@ -83,9 +83,10 @@ struct GraphvizDiagramBlockView: View {
         }
         switch renderError {
         case let .invalidSyntax(message): return message
-        case .timedOut: return "rendering timed out"
-        case let .outputTooLarge(byteCount): return "rendered output too large (\(byteCount) bytes)"
-        case .rendererUnavailable: return "renderer unavailable"
+        case .timedOut: return DiagramFailurePresentation.timedOut.message()
+        case let .outputTooLarge(byteCount):
+            return DiagramFailurePresentation.outputTooLarge(byteCount: byteCount).message()
+        case .rendererUnavailable: return DiagramFailurePresentation.rendererUnavailable.message()
         }
     }
 }
