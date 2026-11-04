@@ -127,6 +127,50 @@ class VizImageTests(unittest.TestCase):
                 self.assertEqual(files, {})
                 self.assertEqual(len(events), 1)
 
+    def test_same_layer_whiteouts_preserve_replacements_in_both_archive_orders(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            a = self.layer(root, 'a', [('emsdk/file', b'old', 'file')])
+            for marker in ('emsdk/.wh.file', 'emsdk/.wh..wh..opq', '.wh.emsdk', '.wh..wh..opq'):
+                for reverse in (False, True):
+                    entries = [(marker, b'', 'file'), ('emsdk/file', b'new', 'file')]
+                    b = self.layer(root, 'b', entries[::-1] if reverse else entries)
+                    with self.subTest(marker=marker, reverse=reverse):
+                        files, events = image.read_selected([a, b], {'emsdk/file'})
+                        self.assertEqual(files, {'emsdk/file': (b'new', 'b')})
+                        self.assertEqual(events, [{'layer': 'b', 'marker': marker, 'removed': ['emsdk/file']}])
+
+    def test_opaque_marker_preserves_new_nested_files_and_removes_lower_siblings(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            a = self.layer(root, 'a', [('emsdk/old', b'old', 'file'), ('elsewhere/keep', b'keep', 'file')])
+            for reverse in (False, True):
+                entries = [('emsdk/.wh..wh..opq', b'', 'file'), ('emsdk/nested/new', b'new', 'file')]
+                b = self.layer(root, 'b', entries[::-1] if reverse else entries)
+                with self.subTest(reverse=reverse):
+                    files, events = image.read_selected([a, b], {'emsdk/old', 'emsdk/nested/new', 'elsewhere/keep'})
+                    self.assertEqual(files, {'elsewhere/keep': (b'keep', 'a'), 'emsdk/nested/new': (b'new', 'b')})
+                    self.assertEqual(events, [{'layer': 'b', 'marker': 'emsdk/.wh..wh..opq', 'removed': ['emsdk/old']}])
+
+    def test_first_layer_whiteout_cannot_hide_same_layer_addition(self):
+        with tempfile.TemporaryDirectory() as d:
+            for marker in ('emsdk/.wh.file', 'emsdk/.wh..wh..opq'):
+                a = self.layer(Path(d), 'a', [('emsdk/file', b'new', 'file'), (marker, b'', 'file')])
+                with self.subTest(marker=marker):
+                    files, events = image.read_selected([a], {'emsdk/file'})
+                    self.assertEqual(files, {'emsdk/file': (b'new', 'a')})
+                    self.assertEqual(events, [])
+
+    def test_subsequent_layer_can_remove_a_previously_protected_addition(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            a = self.layer(root, 'a', [('emsdk/file', b'old', 'file')])
+            b = self.layer(root, 'b', [('emsdk/.wh.file', b'', 'file'), ('emsdk/file', b'new', 'file')])
+            c = self.layer(root, 'c', [('emsdk/.wh..wh..opq', b'', 'file')])
+            files, events = image.read_selected([a, b, c], {'emsdk/file'})
+            self.assertEqual(files, {})
+            self.assertEqual([event['layer'] for event in events], ['b', 'c'])
+
     def test_selected_symlinks_hardlinks_and_linked_parents_refuse(self):
         with tempfile.TemporaryDirectory() as d:
             for name, kind in [('emsdk/file', 'symlink'), ('emsdk/file', 'hardlink'), ('emsdk', 'symlink')]:

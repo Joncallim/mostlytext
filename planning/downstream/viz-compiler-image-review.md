@@ -102,3 +102,15 @@ release predicate unchanged. Hosted Compliance and exact merge-tree evidence
 complete this scoped tooling correction; native and independent rights review
 remain in their owning issues. No app Release build is needed for Python-only
 evidence tooling with no distribution input changes.
+
+### Overlay correction verification
+
+All 257 Compliance controls pass, including 16 image-reader methods. The original
+reader fails seven assertions across three new methods; a fourth confirms a
+later layer can still delete a formerly protected addition. Full raw replay of
+all four compressed/uncompressed layers and nine selected files passes with the
+corrected reader. The source inventory passes and the strict check retains the
+same six failure messages as the prior artifact check. Only this contract, the
+reader, its tests and its packet README change; original proof/manifest bytes,
+all distribution inputs and release guards remain intact. Local logs are retained
+at `/Volumes/Fast SSD/CORTANA-Builds/viz-image-whiteout-20261104`.

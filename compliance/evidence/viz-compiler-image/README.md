@@ -72,7 +72,13 @@ Controls reject altered graph bytes, coherently hashed wrong platforms/incomplet
 layer graphs, wrong layer order/diff identifiers/sizes, partial/changed selected
 files, a false version-marker equality, later whiteouts, linked/duplicate/unsafe/
 oversized source records and missing proof. Positive overlay controls establish
-correct later replacement while leaving host paths untouched.
+correct later replacement while leaving host paths untouched. The subsequent
+[overlay correction](../../../planning/downstream/viz-compiler-image-review.md#overlay-correction-contract--4-november-2026)
+keeps each layer's additions separate until its whiteouts have affected only
+inherited files. Four regression methods cover both archive orders, same-layer
+replacement/nested additions, first-layer additions and subsequent-layer removal.
+Seven assertions fail against the original reader; the selected raw image files
+contain no affected whiteouts and retain their original hashes.
 
 ## Remaining review
 
