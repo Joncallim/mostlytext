@@ -225,3 +225,10 @@ only the prior primary state is admissible. If an external writer later restores
 the desired bytes, refuse further cleanup rather than interpreting that as a
 late commit after abort has already retired resources. Metadata installation is
 bound to the selected committed/aborted phase as well as the observed digest.
+
+The reference certificate also requires the exact already-reviewed structural
+CSS identity used by the existing optional SVG head audit. Share that fixed
+identity within ExportService; ordinary export must conservatively lose cleanup
+eligibility if bundled CSS changes before renewed reference review. Color-only
+variables remain generated from Theme values. This adds no parser, sanitizer,
+style rewrite or dependency, and does not enable optional SVG publication.
