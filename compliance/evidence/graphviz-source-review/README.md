@@ -37,6 +37,10 @@ Independent source/build and embedded runtime review, required compiler/sysroot
 inputs and complete per-file notices remain open. Bison's source exception and
 Emscripten/musl root texts are preserved, not treated as exhaustive runtime
 coverage. A source-review archive is not an independent rebuild or legal clearance.
+The later [hosted backend rebuild](../graphviz-backend-reproduction/README.md)
+does reproduce the complete npm backend byte for byte from its recorded inputs.
+That technical correspondence does not approve this dated source-review archive
+as complete or resolve the remaining independent/runtime/publication obligations.
 D2's separate verified review archive is documented in
 [its checkpoint](../d2-0.1.33/README.md).
 

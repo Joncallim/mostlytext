@@ -82,10 +82,12 @@ contain no affected whiteouts and retain their original hashes.
 
 ## Remaining review
 
-The publisher build record remains cross-checked, not signature-verified. The
-complete image graph is identified, but no Graphviz/WASM output was rebuilt, no
-library/object retention was inferred, and complete compiler/sysroot/per-file
-attribution review remains open. No libc++ or libunwind record is added merely
+The publisher build record remains cross-checked, not signature-verified. This
+image-only checkpoint identified the complete graph without rebuilding output.
+The subsequent [hosted backend reproduction](../graphviz-backend-reproduction/README.md)
+matches the complete npm backend byte for byte using this exact image. Neither
+checkpoint infers exhaustive library/object retention; complete compiler/sysroot/
+per-file attribution review remains open. No libc++ or libunwind record is added merely
 because a source file exists. Existing full license texts, runtime, pins,
 inventory, generated notices/SBOM, source-offer flags and all six strict release
 predicates remain unchanged. Source publication, native acceptance, signing and
