@@ -171,3 +171,41 @@ HTML/PDF UI, renderer calibration, signed artifact and complete #11/#17 remain
 in their separate original rows. Stop for a narrow architecture correction if
 any necessary ownership/persistence invariant cannot be met; do not bypass the
 proof with deletion by pattern, weakened checks or fabricated native evidence.
+
+## Reference-closure correction before publication integration
+
+Unit A's independent ownership review exposed a false assumption: the generated
+resource manifest is not necessarily the complete set of assets referenced by
+ordinary exported HTML. Preserved authored raw HTML, local navigation links,
+unresolved images, custom derived HTML or caller-supplied CSS can refer to an old
+managed file without registering a generated resource slot. Deleting that file
+merely because it is absent from the generated list would break the new output.
+
+Add producer-certified reference knowledge to the prepared/publication snapshot.
+Public/manual prepared values default to unknown; outside callers cannot assert
+closed references through a new public flag. Only the existing ExportComposer
+may certify its own generated shell/CSS/body after observing no authored raw
+HTML, no custom derived contributions, no unresolved kept images and no
+untracked local navigation references. Reuse ExportURLPolicy/actual emitter
+callbacks rather than inventing a second URL parser or adding a sanitizer.
+Fragment-only navigation is local to the document; conservative uncertainty is
+acceptable. Bind this fact into ordinary and optional publication inputs and
+snapshots; a source/hash mismatch must not inherit certification.
+
+A pending operation always records required newly prepared resource names for
+staging/verification. Its committed inventory uses referencesKnown=false and an
+empty requiredNames list when closure is unknown; owned receipts remain retained
+and are not mistaken for a complete reference set. No obsolete-resource cleanup
+runs for unknown closure. Known producer temporary/metadata retirement remains
+permitted with exact receipts and live-document protection. Self-contained mode
+continues to retain old assets. A later certified closed primary may retire only
+its proven obsolete owned resources. This preserves current conservative behavior
+for ambiguous output; quotas still block growth instead of deleting unknown data.
+
+Add real composer/emitter regressions for a literal authored old-assets href,
+raw HTML/resource attributes, unresolved images, custom contributions and
+manually supplied prepared values/CSS, alongside positive closed Markdown cases.
+The 100-cycle crash proof must include both eligible cleanup and ineligible
+retention/backpressure. This correction changes no budget, authored text, raw-
+HTML policy, dependency or native gate. Complete it before activating cleanup;
+Unit A's authenticated model alone remains deliberately unmerged scaffolding.
