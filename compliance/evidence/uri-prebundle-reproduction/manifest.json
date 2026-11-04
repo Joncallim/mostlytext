@@ -1,0 +1,20 @@
+{
+  "files": {
+    "compare.py": "f62292ed27f360e20619d822b3ec2954e6bf109bb674f5b2a2cbc8e8809bde4c",
+    "portable-reproduction.json": "9ae4dbd5a70cad3fd6f1c2e04d49e42c728dc3b0b6019d7a732874e790dbb6f2",
+    "reproduce.py": "24fe7a372ee8adc458e6f8d165af252654dffdbb4e1b5bb72e72c3c1b8088d81",
+    "reproduction.json": "f219f2a3ef90ae7ba5f1ddd0e0e26132cf3b9c713b996e53f82f5a3f21d0c825",
+    "restored-source-proof.json": "6774348b0bea2e1b06aff52de34a7032ee729600849748b2aa454cfbd321ac1a",
+    "source-map-links.json": "662b70a9567d9730cba4f99bafd075a9bde161b9c1b56ecf17c3cd9c3777a8a0",
+    "source-mutation-control.json": "99f83693a24c7d745867ebd1c699cd4871bb863ececb78ea0324b9f649824236",
+    "tagged-source-hashes.json": "92210d994f32daf24b575d8cd3ee7c7210c8ead2cab94a092d238096052ff22e",
+    "toolchain-proof.json": "9784bab3266dda28e6be298a2a31a38ccb240975824f9b72eef7325e2abb8ead"
+  },
+  "publishedArchiveSHA256": "c6ec752d7a4858237389b23fb4d5ac05c2f1f606071cd212a9b54730e43cfc54",
+  "registryMetadataSHA256": "4a113f58bd08b0b10ba0371cc1b5c4c6ab6959e143b460901accccf1fc662595",
+  "schema": 1,
+  "scope": "complete-tagged-archive-reproduction; publisher-execution-unattested; independent-review-required",
+  "sourceArchiveSHA256": "9aeb4cd58d590f5a14cc23306c82eae2b90fe08a8fa59f0349ee7134e7c91bb0",
+  "sourceCommit": "edfdccd976efaf4bb8fdeca87e97c47257721729",
+  "sourceURL": "https://github.com/microsoft/vscode-uri/tree/edfdccd976efaf4bb8fdeca87e97c47257721729"
+}

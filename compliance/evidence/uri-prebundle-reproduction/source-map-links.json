@@ -1,0 +1,51 @@
+[
+  {
+    "map": "lib/esm/index.mjs.map",
+    "source": "webpack://LIB/./src/platform.ts",
+    "taggedFile": "src/platform.ts",
+    "exactBytes": true,
+    "sha256": "dac86bdbe85f542a48951e384d64cb92b60467d4f1fb128b0dd751e0efd66059"
+  },
+  {
+    "map": "lib/esm/index.mjs.map",
+    "source": "webpack://LIB/./src/uri.ts",
+    "taggedFile": "src/uri.ts",
+    "exactBytes": true,
+    "sha256": "3489642f68ab94f315c680d382d73c472a82b447ce494527c711458d64387afc"
+  },
+  {
+    "map": "lib/esm/index.mjs.map",
+    "source": "webpack://LIB/./src/utils.ts",
+    "taggedFile": "src/utils.ts",
+    "exactBytes": true,
+    "sha256": "79414fa5be3a2b55fe6c6faa5e36ab33642a421b0be89b82fc9336f92f91a96d"
+  },
+  {
+    "map": "lib/umd/index.js.map",
+    "source": "webpack://vscode-uri/./src/platform.ts",
+    "taggedFile": "src/platform.ts",
+    "exactBytes": true,
+    "sha256": "dac86bdbe85f542a48951e384d64cb92b60467d4f1fb128b0dd751e0efd66059"
+  },
+  {
+    "map": "lib/umd/index.js.map",
+    "source": "webpack://vscode-uri/./src/uri.ts",
+    "taggedFile": "src/uri.ts",
+    "exactBytes": true,
+    "sha256": "3489642f68ab94f315c680d382d73c472a82b447ce494527c711458d64387afc"
+  },
+  {
+    "map": "lib/umd/index.js.map",
+    "source": "webpack://vscode-uri/./src/utils.ts",
+    "taggedFile": "src/utils.ts",
+    "exactBytes": true,
+    "sha256": "79414fa5be3a2b55fe6c6faa5e36ab33642a421b0be89b82fc9336f92f91a96d"
+  },
+  {
+    "map": "lib/umd/index.js.map",
+    "source": "webpack://vscode-uri/./src/index.ts",
+    "taggedFile": "src/index.ts",
+    "exactBytes": true,
+    "sha256": "240233aeb84ac1d12779bad2e8a33d0da7ca0b0179104523228860bfa7653ce8"
+  }
+]

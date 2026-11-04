@@ -1,5 +1,7 @@
 # Complete parser JavaScript reproduction — 4 November 2026
 
+Current nested-build follow-up: [the entire vscode-uri 3.1.0 npm archive now reproduces byte-for-byte](../uri-prebundle-reproduction/README.md) from tagged source and its frozen Webpack 5.94.0/path-browserify 1.0.1 inputs. This is a separate technical reconstruction, without signed historical publisher-execution or independent rights clearance. The original outer receipt and scope below remain unchanged.
+
 The parser's **96 JavaScript files and 96 source maps reproduce byte-for-byte**
 from the source bound by [verified publisher provenance](../parser-publisher-provenance/README.md).
 This supplies technical build correspondence for the outer parser compiler and

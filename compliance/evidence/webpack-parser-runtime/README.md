@@ -1,5 +1,7 @@
 # Retained Webpack runtime MIT notice — 4 November 2026
 
+Current follow-up: [the complete tagged URI archive reproduction](../uri-prebundle-reproduction/README.md) resolves Webpack 5.94.0 in that frozen reconstruction and reproduces every published archive byte. Its complete MIT text equals this existing 5.88.2 reference text. The earlier reference packet remains intact; no unique historical emitter or independent rights clearance is inferred.
+
 Four complete Webpack runtime source bodies embedded through vscode-uri match a
 generated **5.88.2 reference byte-for-byte**, without whitespace/comment/token
 normalization. The composed shipped Mermaid/parser map reaches 125 references,
