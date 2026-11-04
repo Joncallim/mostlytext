@@ -2,6 +2,37 @@
   "bomFormat": "CycloneDX",
   "components": [
     {
+      "bom-ref": "compiler-rt-publisher-root-notices",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/emscripten-core/emscripten"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "LicenseRef-CompilerRT-Complete-Root"
+        }
+      ],
+      "name": "compiler-rt root licence and credits (Emscripten publisher-build reference)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "publisher-source-build-reference; exact binary retention not independently proved"
+        }
+      ],
+      "type": "library",
+      "version": "Emscripten 5.0.7 source reference"
+    },
+    {
       "bom-ref": "cytoscape-bezier-easing",
       "externalReferences": [
         {
@@ -4950,6 +4981,7 @@
   "dependencies": [
     {
       "dependsOn": [
+        "compiler-rt-publisher-root-notices",
         "cytoscape-bezier-easing",
         "cytoscape-jquery-events",
         "cytoscape-thenable",
@@ -5120,7 +5152,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:bf903a68-706f-5e78-bc32-0a10e46e9812",
+  "serialNumber": "urn:uuid:31a15e3a-5b7f-5f52-a613-3f0afe624974",
   "specVersion": "1.5",
   "version": 1
 }

@@ -7,10 +7,10 @@ review limits. It has not been approved as the complete corresponding-source
 offer and is not published. No MostlyText application binary or private material
 is included. The already-public npm renderer input is JavaScript/WebAssembly.
 
-Archive SHA-256: `eed89107fdaffab73c26cd2ae15aa1fcee57753ad58a3543f12c5589e2f88784`. It contains 25
+Archive SHA-256: `538e76c405ecd52026de1bfcd67428b951745a5a0c86223f47f99e4ee2489613`. It contains 29
 manifested files plus manifest.json; all bytes and exact member sets are verified.
 The [manifest](manifest.json) records each size/digest. Local artifact:
-`/Volumes/Fast SSD/CORTANA-Builds/go-stdlib-notices-20261104/graphviz-source-review-go-stdlib.tar.gz`.
+`/Volumes/Fast SSD/CORTANA-Builds/emscripten-runtime-20261104/graphviz-source-review-compiler-rt-qualified.tar.gz`.
 
 ## Reproduce and verify
 
@@ -70,3 +70,11 @@ The later selected-Go-standard-library notice supplement refreshes the global
 snapshot to 151 components. The preceding Go-root archive and parser/Webpack
 archives remain untouched at their earlier paths and hashes. The current snapshot
 is still a local review package, not an approved or published source offer.
+
+The previous selected-Go-standard-library archive remains unchanged at
+`/Volumes/Fast SSD/CORTANA-Builds/go-stdlib-notices-20261104/graphviz-source-review-go-stdlib.tar.gz`
+(SHA-256 `eed89107fdaffab73c26cd2ae15aa1fcee57753ad58a3543f12c5589e2f88784`).
+The current 152-component snapshot adds the complete compiler-rt root licence,
+its referenced partial contributor credits, captured source-link evidence and
+offline verifier. Exact compiler image/sysroot and per-file linked-code review
+remain open. This remains an unapproved, unpublished source-review package.

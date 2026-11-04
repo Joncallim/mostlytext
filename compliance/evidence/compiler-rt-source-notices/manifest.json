@@ -1,0 +1,104 @@
+{
+  "schema": 1,
+  "status": "conservative-publisher-source-build-reference; not exact linked-object proof",
+  "emscripten_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+  "source_version": "5.0.7-git",
+  "publisher_compiler_image": {
+    "digest": {
+      "sha256": "4e332f7343b6f66320bf72f7ecc01a3d9f3866721a13b0e5c7b96505d6ab148a"
+    },
+    "uri": "pkg:docker/emscripten/emsdk@5.0.7?platform=linux%2Famd64"
+  },
+  "publisher_build_source_sha256": "65478ae2711a2837955d7b6d15d274a1a2769871ddecc3d9e465ff124a1bf76c",
+  "shipped_renderer_sha256": "c857641af952c8f82ac7243917f8563959046e5cfc44d7e84eff9a2b470f5eab",
+  "source_tree_response_sha256": "01641986d70f5717e5e0ce1bd4cd5998213254468429ee7e3d644f4ab7669816",
+  "inputs": [
+    {
+      "path": "system/lib/compiler-rt/LICENSE.TXT",
+      "bytes": 16708,
+      "sha256": "1a8f1058753f1ba890de984e48f0242a3a5c29a6a8f2ed9fd813f36985387e8d",
+      "git_blob_sha1": "5a79a1b9d5cb0af9a779751f07033e44ca3b14d8",
+      "url": "https://raw.githubusercontent.com/emscripten-core/emscripten/263db4cffa6f9fc2ec514a70abac81362ea41849/system/lib/compiler-rt/LICENSE.TXT"
+    },
+    {
+      "path": "system/lib/compiler-rt/CREDITS.TXT",
+      "bytes": 1049,
+      "sha256": "a9901f47a089da41e4690682d00ce4cedaa2baf41fedbe79beee366d43ac2461",
+      "git_blob_sha1": "6964eba020b8aa7a08629b249e3b9aea3ce3e448",
+      "url": "https://raw.githubusercontent.com/emscripten-core/emscripten/263db4cffa6f9fc2ec514a70abac81362ea41849/system/lib/compiler-rt/CREDITS.TXT"
+    },
+    {
+      "path": "tools/system_libs.py",
+      "bytes": 89824,
+      "sha256": "9fb182d4f5aa9d74a321e1ba9697178aeaf8d7f642717b67ed566bcb05a48f0b",
+      "git_blob_sha1": "5a08d3871ac3399fa07447a11a79e6dd8e11c41d",
+      "url": "https://raw.githubusercontent.com/emscripten-core/emscripten/263db4cffa6f9fc2ec514a70abac81362ea41849/tools/system_libs.py"
+    },
+    {
+      "path": "tools/link.py",
+      "bytes": 131010,
+      "sha256": "30c4c4fe52c8f8a367d0878e360dea80494bb20d51710e45132bc3f58940dc17",
+      "git_blob_sha1": "52ff1129f62576191ac97930adc75b7278398d92",
+      "url": "https://raw.githubusercontent.com/emscripten-core/emscripten/263db4cffa6f9fc2ec514a70abac81362ea41849/tools/link.py"
+    },
+    {
+      "path": "emcc.py",
+      "bytes": 22941,
+      "sha256": "9265f2af265ffffc05d836b405e2260609613280e862ebe7a7fdc6a7bdf20a65",
+      "git_blob_sha1": "c36423fcdb35967146abb5218462337ed8738892",
+      "url": "https://raw.githubusercontent.com/emscripten-core/emscripten/263db4cffa6f9fc2ec514a70abac81362ea41849/emcc.py"
+    },
+    {
+      "path": "emscripten-version.txt",
+      "bytes": 10,
+      "sha256": "e98d3838adf1e543df88ee6c21e756dace857f6ebaa3c1b0dd7f5ae76708886e",
+      "git_blob_sha1": "c1494c821ddcfc449d314c6a900242f75c002c16",
+      "url": "https://raw.githubusercontent.com/emscripten-core/emscripten/263db4cffa6f9fc2ec514a70abac81362ea41849/emscripten-version.txt"
+    }
+  ],
+  "source_anchors": [
+    {
+      "source": "tools/system_libs.py",
+      "byte_offset": 33492,
+      "bytes": 1866,
+      "sha256": "b2748676af5ef7d82c8cff5eb88229ff4b7796b2b25bb540e27a58c580dee994",
+      "text": "class libcompiler_rt(MTLibrary, SjLjLibrary):\n  name = 'libcompiler_rt'\n  # compiler_rt files can't currently be part of LTO although we are hoping to remove this\n  # restriction soon: https://reviews.llvm.org/D71738\n  force_object_files = True\n\n  cflags = [\n      '-fno-builtin',\n      '-DNDEBUG',\n      '-DCOMPILER_RT_HAS_ATOMICS=1',\n      # TODO: Remove this if the emutls_key_created variable in emutls.c is\n      # fixed or if the scope of the warning is modified again (see\n      # https://github.com/llvm/llvm-project/pull/178342)\n      '-Wno-unused-but-set-variable',\n  ]\n  src_dir = 'system/lib/compiler-rt/lib/builtins'\n  profile_src_dir = 'system/lib/compiler-rt/lib/profile'\n  includes = ['system/lib/libc', 'system/lib/compiler-rt/include']\n  excludes = [\n    # gcc_personality_v0.c depends on libunwind, which don't include by default.\n    'gcc_personality_v0.c',\n    # bfloat16\n    'extendbfsf2.c',\n    'truncdfbf2.c',\n    'truncxfbf2.c',\n    'truncsfbf2.c',\n    'trunctfbf2.c',\n    # We provide our own crt\n    'crtbegin.c',\n    'crtend.c',\n    # 80-bit long double (xf_float)\n    'divxc3.c',\n    'extendhfxf2.c',\n    'extendxftf2.c',\n    'fixxfdi.c',\n    'fixxfti.c',\n    'fixunsxfdi.c',\n    'fixunsxfsi.c',\n    'fixunsxfti.c',\n    'floatdixf.c',\n    'floattixf.c',\n    'floatundixf.c',\n    'floatuntixf.c',\n    'mulxc3.c',\n    'powixf2.c',\n    'trunctfxf2.c',\n    'truncxfhf2.c',\n  ]\n  src_files = glob_in_path(src_dir, '*.c', excludes=excludes)\n  src_files += glob_in_path(profile_src_dir, '*.c')\n  src_files += glob_in_path(profile_src_dir, '*.cpp')\n  src_files += files_in_path(\n      path='system/lib/compiler-rt',\n      filenames=[\n        'stack_ops.S',\n        'stack_limits.S',\n        'emscripten_setjmp.c',\n        'emscripten_exception_builtins.c',\n        'emscripten_tempret.s',\n        '__c_longjmp.S',\n        '__trap.c',\n      ])\n\n\n"
+    },
+    {
+      "source": "tools/system_libs.py",
+      "byte_offset": 79778,
+      "bytes": 5749,
+      "sha256": "5bd34db4a6fa31d489cc61c8d0c45bcaa50fba50a7280fea5cde95830c8e6366",
+      "text": "def get_libs_to_link(options):\n  libs_to_link = []\n\n  if options.nostdlib:\n    return libs_to_link\n\n  already_included = set()\n  system_libs_map = Library.get_usable_variations()\n\n  # Setting this in the environment will avoid checking dependencies and make\n  # building big projects a little faster 1 means include everything; otherwise\n  # it can be the name of a lib (libc++, etc.).\n  # You can provide 1 to include everything, or a comma-separated list with the\n  # ones you want\n  force_include = []\n  force = os.environ.get('EMCC_FORCE_STDLIBS')\n  # Setting this will only use the forced libs in EMCC_FORCE_STDLIBS. This\n  # avoids spending time checking for unresolved symbols in your project files,\n  # which can speed up linking, but if you do not have the proper list of\n  # actually needed libraries, errors can occur.\n  only_forced = os.environ.get('EMCC_ONLY_FORCED_STDLIBS')\n  if only_forced:\n    # One of the purposes EMCC_ONLY_FORCED_STDLIBS was to skip the scanning\n    # of the input files for reverse dependencies.\n    diagnostics.warning('deprecated', 'EMCC_ONLY_FORCED_STDLIBS is deprecated.  Use `-nostdlib` to avoid linking standard libraries')\n  if force == '1':\n    force_include = [name for name, lib in system_libs_map.items() if not lib.never_force]\n  elif force is not None:\n    force_include = force.split(',')\n  if force_include:\n    logger.debug(f'forcing stdlibs: {force_include}')\n\n  def add_library(libname, whole_archive=False):\n    lib = system_libs_map[libname]\n    if lib.name in already_included:\n      return\n    already_included.add(lib.name)\n\n    logger.debug('including %s (%s)' % (lib.name, lib.get_filename()))\n\n    need_whole_archive = lib.name in force_include and lib.get_ext() == '.a'\n    libs_to_link.append((lib.get_link_flag(), whole_archive or need_whole_archive))\n\n  if not options.nostartfiles:\n    if settings.PTHREADS:\n      add_library('crtbegin-mt')\n\n    if not settings.SIDE_MODULE:\n      if settings.STANDALONE_WASM:\n        if settings.EXPECT_MAIN:\n          add_library('crt1')\n        else:\n          add_library('crt1_reactor')\n      elif settings.PROXY_TO_PTHREAD:\n        add_library('crt1_proxy_main')\n\n  if settings.SIDE_MODULE:\n    return libs_to_link\n\n  # We add the forced libs last so that any libraries that are added in the normal\n  # sequence below are added in the correct order even when they are also part of\n  # EMCC_FORCE_STDLIBS.\n  def add_forced_libs():\n    for forced in force_include:\n      if forced not in system_libs_map:\n        utils.exit_with_error('invalid forced library: %s', forced)\n      add_library(forced)\n\n  if options.nodefaultlibs:\n    add_forced_libs()\n    return libs_to_link\n\n  sanitize = settings.USE_LSAN or settings.USE_ASAN or settings.UBSAN_RUNTIME\n\n  def add_sanitizer_libs():\n    if settings.USE_ASAN:\n      force_include.append('libasan_rt')\n      add_library('libasan_rt')\n    elif settings.USE_LSAN:\n      force_include.append('liblsan_rt')\n      add_library('liblsan_rt')\n\n    if settings.UBSAN_RUNTIME == 1:\n      add_library('libubsan_minimal_rt')\n    elif settings.UBSAN_RUNTIME == 2:\n      add_library('libubsan_rt')\n\n    if settings.USE_LSAN or settings.USE_ASAN:\n      add_library('liblsan_common_rt')\n\n    if sanitize:\n      add_library('libsanitizer_common_rt')\n\n  if only_forced:\n    add_library('libcompiler_rt')\n    add_sanitizer_libs()\n    add_forced_libs()\n    return libs_to_link\n\n  if settings.AUTO_NATIVE_LIBRARIES:\n    add_library('libGL')\n    add_library('libal')\n    add_library('libhtml5')\n\n  # JS math must come before anything else, so that it overrides the normal\n  # libc math.\n  if settings.JS_MATH:\n    add_library('libjsmath')\n\n  # C libraries that override libc must come before it\n  if settings.PRINTF_LONG_DOUBLE:\n    add_library('libprintf_long_double')\n  # See comment in libc_optz itself\n  if settings.SHRINK_LEVEL >= 2 and not settings.LINKABLE and \\\n     not os.environ.get('EMCC_FORCE_STDLIBS'):\n    add_library('libc_optz')\n  if settings.STANDALONE_WASM:\n    add_library('libstandalonewasm')\n  if settings.ALLOW_UNIMPLEMENTED_SYSCALLS:\n    add_library('libstubs')\n  if not options.nolibc:\n    if not settings.EXIT_RUNTIME:\n      add_library('libnoexit')\n    add_library('libc')\n    if settings.MALLOC == 'mimalloc':\n      add_library('libmimalloc')\n      if settings.USE_ASAN:\n        # See https://github.com/emscripten-core/emscripten/issues/23288#issuecomment-2571648258\n        utils.exit_with_error('mimalloc is not compatible with -fsanitize=address')\n    elif settings.MALLOC != 'none':\n      add_library('libmalloc')\n  add_library('libcompiler_rt')\n  if settings.LINK_AS_CXX:\n    add_library('libc++')\n  if settings.LINK_AS_CXX or sanitize:\n    add_library('libc++abi')\n    if settings.WASM_EXCEPTIONS:\n      add_library('libunwind')\n\n  if settings.PROXY_POSIX_SOCKETS:\n    add_library('libsockets_proxy')\n  else:\n    add_library('libsockets')\n\n  if settings.WASM_WORKERS and (not settings.SINGLE_FILE and not settings.MAIN_MODULE):\n    # When we include libwasm_workers we use `--whole-archive` to ensure\n    # that the static constructor (`emscripten_wasm_worker_main_thread_initialize`)\n    # is run.\n    add_library('libwasm_workers', whole_archive=True)\n\n  if settings.WASMFS:\n    # Link in the no-fs version first, so that if it provides all the needed\n    # system libraries then WasmFS is not linked in at all. (We only do this if\n    # the filesystem is not forced; if it is then we know we definitely need the\n    # whole thing, and it would be unnecessary work to try to link in the no-fs\n    # version).\n    if not settings.FORCE_FILESYSTEM:\n      add_library('libwasmfs_no_fs')\n    add_library('libwasmfs')\n\n  add_sanitizer_libs()\n  add_forced_libs()\n  return libs_to_link\n\n\n"
+    },
+    {
+      "source": "tools/link.py",
+      "byte_offset": 78270,
+      "bytes": 413,
+      "sha256": "9cca3d4f6aa67914c04900785863423da75993470c03ed2447f316ef2b5e5556",
+      "text": "\ndef phase_calculate_system_libraries(options):\n  extra_files_to_link = []\n  # Link in ports and system libraries, if necessary\n  if not settings.SIDE_MODULE:\n    # Ports are always linked into the main module, never the side module.\n    extra_files_to_link += ports.get_libs(settings)\n  extra_files_to_link += system_libs.calculate(options)\n  return extra_files_to_link\n\n\n@ToolchainProfiler.profile_block('link')"
+    }
+  ],
+  "license_texts": [
+    {
+      "path": "compliance/licenses/compiler-rt--LICENSE.txt",
+      "sha256": "1a8f1058753f1ba890de984e48f0242a3a5c29a6a8f2ed9fd813f36985387e8d",
+      "upstream": "https://github.com/emscripten-core/emscripten",
+      "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+      "upstream_path": "system/lib/compiler-rt/LICENSE.TXT"
+    },
+    {
+      "path": "compliance/licenses/compiler-rt--CREDITS.txt",
+      "sha256": "a9901f47a089da41e4690682d00ce4cedaa2baf41fedbe79beee366d43ac2461",
+      "upstream": "https://github.com/emscripten-core/emscripten",
+      "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+      "upstream_path": "system/lib/compiler-rt/CREDITS.TXT"
+    }
+  ],
+  "limits": [
+    "Full root licence and referenced partial credits preserved, not a per-file audit.",
+    "The normal standard-library selection adds libcompiler_rt; linker removal and exact object retention were not reproduced.",
+    "The immutable Emscripten tag reference does not independently establish the full publisher image/sysroot.",
+    "No independent rebuild, rights clearance, source-offer approval/publication, native or signed-artifact acceptance."
+  ]
+}
