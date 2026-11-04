@@ -93,10 +93,12 @@ historical and must not be retargeted to a new checkout.
    complete matching licensed bodies. The [final 100-reference syntax packet](../compliance/evidence/parser-residual-positions/README.md)
    leaves no technically unclassified reference; earlier nested builds and all
    original independent attribution/rights-review obligations remain separate.
-3. The [complete Graphviz npm backend now reproduces byte for byte](../compliance/evidence/graphviz-backend-reproduction/README.md)
-   in a disposable hosted Linux build using the recorded source recipe and exact
-   AMD64 image. This does not rebuild the outer npm/Rollup wrapper or infer an
-   exhaustive retained-code audit. Independently review complete corresponding-source and nested obligations,
+3. [All five generated Viz.js runtime files now reproduce byte for byte](../compliance/evidence/viz-renderer-reproduction/README.md),
+   including the exact shipped Graphviz browser resource, in a disposable hosted
+   Linux build using the recorded source/image, frozen npm lock and explicit
+   Node reference. Actual measured npm differs from the publisher metadata and is
+   preserved. This is technical correspondence, without historical execution
+   attestation or an exhaustive retained-code audit. Independently review complete corresponding-source and nested obligations,
    including D2's Liberation Mono Reserved Font Name and Graphviz compiler/runtime
    inputs. A local review archive is not independent review or an approved offer.
 4. Prepare the concrete immutable source objects for approval. Only the explicit

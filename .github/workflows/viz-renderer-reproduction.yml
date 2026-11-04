@@ -1,0 +1,55 @@
+name: Complete Viz.js renderer reproduction
+
+on:
+  workflow_dispatch: {}
+  pull_request:
+    paths:
+      - '.github/workflows/viz-renderer-reproduction.yml'
+      - 'compliance/tools/rebuild_viz_renderer.py'
+      - 'compliance/tools/verify_viz_renderer.py'
+      - 'compliance/tests/test_viz_renderer_rebuild.py'
+      - 'compliance/evidence/viz-renderer-reproduction/**'
+
+permissions:
+  contents: read
+
+jobs:
+  renderer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Prepare pinned source, compiler recipe and Node reference
+        run: |
+          python3 compliance/tools/rebuild_viz_renderer.py prepare --download \
+            --inputs "$RUNNER_TEMP/viz-wrapper-inputs" --node "$RUNNER_TEMP/node-reference.tar.xz" \
+            --packages "$RUNNER_TEMP/viz-package-tarballs" \
+            --output "$RUNNER_TEMP/viz-wrapper"
+      - name: Rebuild backend and all generated wrapper formats
+        run: |
+          set -o pipefail
+          docker pull --platform linux/amd64 emscripten/emsdk@sha256:c2ac84c26ee40ae2f2c5a15bd3f9e608d1959e1b37413fa7f08138046a188dc5
+          docker image inspect emscripten/emsdk@sha256:c2ac84c26ee40ae2f2c5a15bd3f9e608d1959e1b37413fa7f08138046a188dc5 > "$RUNNER_TEMP/viz-wrapper/image-inspect.json"
+          docker build --platform linux/amd64 --no-cache --network=none --progress=plain \
+            --output "type=local,dest=$RUNNER_TEMP/viz-wrapper-built" "$RUNNER_TEMP/viz-wrapper/wrapper-context" \
+            2>&1 | tee "$RUNNER_TEMP/viz-wrapper/build.log"
+      - name: Compare all five generated runtime files and shipped resource
+        run: |
+          python3 compliance/tools/rebuild_viz_renderer.py compare \
+            --output "$RUNNER_TEMP/viz-wrapper" --built "$RUNNER_TEMP/viz-wrapper-built"
+      - name: Retain receipts and logs only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: viz-renderer-reproduction-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/viz-wrapper/wrapper-prepared.json
+            ${{ runner.temp }}/viz-wrapper/wrapper-result.json
+            ${{ runner.temp }}/viz-wrapper/image-inspect.json
+            ${{ runner.temp }}/viz-wrapper/build.log

@@ -85,3 +85,8 @@ that original checkpoint. Complete corresponding-source approval, runtime/grant
 review, separately authorized source publication/anonymous retrieval, native
 acceptance and final signed-artifact verification remain open. No inventory,
 notice/SBOM, runtime, pin, source-offer state or strict release predicate changes.
+
+The subsequent [complete renderer reproduction](../viz-renderer-reproduction/README.md)
+also matches metadata and all three npm/Rollup wrapper formats, including the
+shipped browser resource. This backend checkpoint and its original receipt remain
+unchanged; independent rights/source-publication/native obligations still apply.
