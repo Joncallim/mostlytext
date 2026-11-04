@@ -75,3 +75,30 @@ portable capture and raw replay exercise the recorded public blobs without
 Docker, image execution or host filesystem application. No distribution, original
 manifest, notice/SBOM, source-offer or release predicate changes. See
 [the image packet](../../compliance/evidence/viz-compiler-image/README.md).
+
+## Overlay correction contract — 4 November 2026
+
+Baseline main `cf4355c751576054a68ea5d814c095a2051019e4`, MostlyText #14/#17.
+A source review found that the reader applied deletion markers to files already
+read from the same layer. That makes a late opaque marker incorrectly hide an
+upper-layer replacement. The [OCI image-layer specification v1.1.1](https://github.com/opencontainers/image-spec/blob/v1.1.1/layer.md#whiteouts)
+requires whiteouts to affect only lower layers, independently of tar order.
+The pinned image has no selected-path whiteouts; its existing proof is unaffected.
+
+Keep the inherited selected-file map separate from each layer's additions.
+Apply ordinary and opaque whiteouts only to inherited records, then overlay the
+current layer's bounded, unique regular files after that layer has been read.
+Continue refusing selected links, unsafe paths, non-directory ancestors,
+duplicate selected records and oversized reads. No host filesystem application,
+container execution or additional source selection is permitted.
+
+Before changing the reader, add deterministic ordinary/opaque marker controls
+covering both archive orders, replacements and new nested files, first-layer
+additions, removal of lower siblings, and removal by a subsequent layer. Retain
+actual failing-before assertions. Then run all Compliance controls and replay
+the original four compressed/uncompressed layers and nine selected source files.
+Keep every pinned evidence/manifest, notice/SBOM, inventory, runtime byte and
+release predicate unchanged. Hosted Compliance and exact merge-tree evidence
+complete this scoped tooling correction; native and independent rights review
+remain in their owning issues. No app Release build is needed for Python-only
+evidence tooling with no distribution input changes.
