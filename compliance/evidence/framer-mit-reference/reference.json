@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "scope": "Matching MIT-licensed source reference; actual adaptation revision and independent rights review unresolved",
+  "reference": {
+    "repository": "https://github.com/koenbok/Framer",
+    "revision": "a41d843dc1371dd0cdc87d1fbbb3f833a5d24d58",
+    "date": "2014-06-24",
+    "sourcePath": "framer/Animators/SpringRK4Animator.coffee",
+    "sourceLines": [
+      57,
+      95
+    ],
+    "packageVersion": "3.0.0",
+    "licensePath": "LICENSE"
+  },
+  "olderReference": {
+    "revision": "6fd264c787a410e47ea4d3e8e6e32d5f99d5ac8c",
+    "sourcePath": "src/curves/spring.coffee",
+    "sourceLines": [
+      9,
+      47
+    ],
+    "license": "original BSD-style comparison preserved"
+  },
+  "helperComparison": {
+    "rule": "entire four-helper block; remove whitespace only, no identifier/operator/comment normalization",
+    "bytes": 872,
+    "sha256": "91032f702c37375045a1df7fa857972f6f248b2a3f83fd35e662c7a9c2baed5d",
+    "match": true
+  },
+  "files": {
+    "mit-reference.coffee": {
+      "sha256": "936d8036969c76094e9d653fc1c4bf3212553d778aad7ccee549a5b073cc8e9d",
+      "bytes": 2180
+    },
+    "mit-reference-LICENSE": {
+      "sha256": "298012b8b6c965d489221b5b79be5f77ca2027ec65d47a80b16b73812cb60a46",
+      "bytes": 1075
+    },
+    "mit-reference-package-json": {
+      "sha256": "826c656b393aa2ca91a845b0abd47c31e6870d131a91dde8b58cc5e229772637",
+      "bytes": 1056
+    },
+    "bsd-reference.coffee": {
+      "sha256": "d2e36d48f87692d0c2ddd2c9a446666ce94b06a8ee6d9ebe86d55338acd74206",
+      "bytes": 2791
+    },
+    "bsd-reference-LICENSE": {
+      "sha256": "e7db6b6131fef9133e7a689822c2e40e446a0d1f3e942f4fce14fa67cd5ed8c3",
+      "bytes": 1487
+    }
+  }
+}

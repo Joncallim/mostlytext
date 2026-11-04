@@ -64,6 +64,37 @@
       "version": "Cytoscape 3.34.0; licensed reference v2.0.3"
     },
     {
+      "bom-ref": "cytoscape-framer-spring",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/koenbok/Framer"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "Koen Bok Framer spring helper (via Cytoscape/Mermaid)",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "matching licensed reference; original adaptation revision unspecified"
+        }
+      ],
+      "type": "library",
+      "version": "Matching Framer 3.0.0 MIT reference; original adaptation unspecified"
+    },
+    {
       "bom-ref": "cytoscape-jquery-events",
       "externalReferences": [
         {
@@ -4983,6 +5014,7 @@
       "dependsOn": [
         "compiler-rt-publisher-root-notices",
         "cytoscape-bezier-easing",
+        "cytoscape-framer-spring",
         "cytoscape-jquery-events",
         "cytoscape-thenable",
         "cytoscape-via-mermaid",
@@ -5152,7 +5184,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:31a15e3a-5b7f-5f52-a613-3f0afe624974",
+  "serialNumber": "urn:uuid:6a0ddfc0-a6f7-55c3-915f-a3a53b98d7d0",
   "specVersion": "1.5",
   "version": 1
 }

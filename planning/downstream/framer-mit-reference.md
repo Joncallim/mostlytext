@@ -10,16 +10,16 @@ No renderer code, source-offer/publication state or release guard changes.
 ## Baseline and discovered source
 
 Start from qualified range-fix source `d23ce9847515529ed785b0155a39dfd77e84dc5d`
-(PR61; main was17b1e7a0). Existing historical evidence identifies older Framer
+(PR61; main was 17b1e7a0). Existing historical evidence identifies older Framer
 0.5.0/2.0 BSD-style references and the matching Velocity intermediary, while
 Cytoscape expressly declares Koen Bok/Framer MIT. Do not overwrite those records.
 
 Read-only upstream history now identifies commit
-`a41d843dc1371dd0cdc87d1fbbb3f833a5d24d58` (24June2014): its root LICENSE is
-MIT, Copyright2014KoenBok; package.json names framerjs3.0.0 and MIT; its
+`a41d843dc1371dd0cdc87d1fbbb3f833a5d24d58` (24 June 2014): its root LICENSE is
+MIT, Copyright 2014 Koen Bok; package.json names framerjs 3.0.0 and MIT; its
 framer/Animators/SpringRK4Animator.coffee contains the actual four helper bodies.
 After whitespace-only removal, the entire four-helper block equals the older
-2.0 reference's block (872bytes, SHA25691032f702c37375045a1df7fa857972f6f248b2a3f83fd35e662c7a9c2baed5d).
+2.0 reference's block (872 bytes, SHA25691032f702c37375045a1df7fa857972f6f248b2a3f83fd35e662c7a9c2baed5d).
 This is a matching licensed source, not an invented exact original adaptation.
 Cytoscape/Velocity adapt the wrapper, inline one helper and change parameter
 names; no complete compiled-JS or unique-original-input equality is claimed.
@@ -44,7 +44,7 @@ names; no complete compiled-JS or unique-original-input equality is claimed.
    missing/changed mapping and missing generated probes. Replay actual inputs.
 5. Run complete Compliance, source/generated correspondence, local-link checks
    and complete hosted locked builds/tests. Verify generated notice is within
-   the existing2MiB reader bound. Obtain compile-only or hosted built-resource
+   the existing 2 MiB reader bound. Obtain compile-only or hosted built-resource
    correspondence; no local native product execution. Merge only qualified
    source with exact tree/ancestry verification and update #14's checklist.
 

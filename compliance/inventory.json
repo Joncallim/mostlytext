@@ -5486,6 +5486,34 @@
       ],
       "evidence": "compliance/evidence/compiler-rt-source-notices/manifest.json",
       "notes": "The complete upstream root text retains Apache-2.0 with LLVM exceptions and all included legacy University of Illinois/NCSA and MIT portions; no convenient subsection is substituted. CREDITS.TXT is upstream's explicitly partial contributor list. Source selection establishes conservative attribution, not per-file coverage, exact linked objects, a verified compiler image, independent rights review or source-offer approval."
+    },
+    {
+      "id": "cytoscape-framer-spring",
+      "name": "Koen Bok Framer spring helper (via Cytoscape/Mermaid)",
+      "kind": "attribution",
+      "version": "Matching Framer 3.0.0 MIT reference; original adaptation unspecified",
+      "upstream": "https://github.com/koenbok/Framer",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright (c) 2014 Koen Bok"
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/cytoscape-framer-spring--MIT.txt",
+          "sha256": "298012b8b6c965d489221b5b79be5f77ca2027ec65d47a80b16b73812cb60a46",
+          "upstream": "https://github.com/koenbok/Framer",
+          "upstream_revision": "a41d843dc1371dd0cdc87d1fbbb3f833a5d24d58",
+          "upstream_path": "LICENSE"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "matching licensed reference; original adaptation revision unspecified",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/framer-mit-reference/mapping.json",
+      "notes": "Conservative matching-source attribution for the Framer/Koen spring helper expressly credited under MIT by Cytoscape. The actual 2014 MIT reference contains the same four-helper CoffeeScript block as the older BSD-style comparison. Four specific spring probes map into shipped Mermaid. Wrapping/inlining/parameter adaptations remain explicit; this is not a unique original-input, complete compiled-body equality or independent rights determination. Older BSD/intermediary evidence and Mermaid review-required items remain open."
     }
   ]
 }

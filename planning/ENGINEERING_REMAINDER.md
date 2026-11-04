@@ -61,7 +61,7 @@ historical and must not be retargeted to a new checkout.
    complete terms and exact archive/source links. Keep content-matched candidate
    versions and conservative source-build attributions visibly qualified.
 2. Resolve the remaining named/embedded/generated provenance. Framer's [historical intermediary match](../compliance/evidence/framer-spring-history/README.md)
-   and [points-on-curve's traced source chain](../compliance/evidence/points-on-curve-origin/README.md)
+   now has an [actual matching 2014 MIT source/full text](../compliance/evidence/framer-mit-reference/README.md), with original input and independent review still open; [points-on-curve's traced source chain](../compliance/evidence/points-on-curve-origin/README.md)
    narrow the review without resolving the actual original grant. Ralf Thenable
    now has its expressly declared standard MIT terms assembled with the actual
    author credit and [mapped evidence](../compliance/evidence/thenable-mit-declaration/README.md);
