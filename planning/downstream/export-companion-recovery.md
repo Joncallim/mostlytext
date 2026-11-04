@@ -218,3 +218,10 @@ the prior digest is an external post-commit modification, not an aborted export.
 Refuse further cleanup; never reinterpret that state as rollback, because assets
 needed by the former primary may already have been retired. This phase must
 survive restart and is checked alongside the actual primary before mutation.
+
+The same rule applies to abort cleanup: persist an explicit aborted phase before
+retiring newly installed files against the known prior reference set. Thereafter
+only the prior primary state is admissible. If an external writer later restores
+the desired bytes, refuse further cleanup rather than interpreting that as a
+late commit after abort has already retired resources. Metadata installation is
+bound to the selected committed/aborted phase as well as the observed digest.
