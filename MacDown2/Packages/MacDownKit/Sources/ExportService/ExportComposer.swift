@@ -185,8 +185,10 @@ enum ExportComposer {
         }
         let bestEffort = ExportDiagnostic(
             severity: .warning,
-            message: "Authored raw HTML is rendered best-effort by the print system; "
-                + "it cannot load scripts or remote resources."
+            message: String(localized: """
+            Authored raw HTML is rendered best-effort by the print system; it cannot load scripts or \
+            remote resources.
+            """, bundle: .module)
         )
         return derived + resources + [bestEffort]
     }
@@ -197,7 +199,10 @@ enum ExportComposer {
         guard bytes > budget.maxSourceUTF8Bytes else { return }
         let limit = ExportResourceBudget.describe(bytes: budget.maxSourceUTF8Bytes)
         throw ExportError.budgetExceeded(
-            "the document is \(ExportResourceBudget.describe(bytes: bytes)), over the \(limit) export limit"
+            String(localized: """
+            the document is \(ExportResourceBudget.describe(bytes: bytes)), over the \(limit) export \
+            limit
+            """, bundle: .module)
         )
     }
 
@@ -205,7 +210,10 @@ enum ExportComposer {
         guard bytes > budget.maxPreparedHTMLUTF8Bytes else { return }
         let limit = ExportResourceBudget.describe(bytes: budget.maxPreparedHTMLUTF8Bytes)
         throw ExportError.budgetExceeded(
-            "the composed document is \(ExportResourceBudget.describe(bytes: bytes)), over the \(limit) export limit"
+            String(localized: """
+            the composed document is \(ExportResourceBudget.describe(bytes: bytes)), over the \
+            \(limit) export limit
+            """, bundle: .module)
         )
     }
 

@@ -1,52 +1,85 @@
 {
   "sourceLanguage": "en",
   "strings": {
-    "The export was saved, but its recovery record could not be finalized. Keep the output and try this destination again.": {
-      "comment": "Nonfatal warning after successful export publication. The output was saved; do not describe this as a failed save.",
-      "extractionState": "manual",
+    "%@ is not an image file": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
       "localizations": {
-        "en": {
+        "fr": {
           "stringUnit": {
-            "state": "translated",
-            "value": "The export was saved, but its recovery record could not be finalized. Keep the output and try this destination again."
+            "state": "needs_review",
+            "value": "%@ is not an image file"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ is not an image file"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ is not an image file"
           }
         }
       }
     },
-    "Finish other exports and try again. If this continues, preserve the recovery folder and contact support.": {
-      "comment": "Recovery suggestion after private export storage could not be admitted. Preserve recovery evidence.",
-      "extractionState": "manual",
+    "%lld math or diagram fragment(s) sit inside a link, reference definition or HTML construct and cannot be placed there; they are exported as their source text": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
       "localizations": {
-        "en": {
+        "fr": {
           "stringUnit": {
-            "state": "translated",
-            "value": "Finish other exports and try again. If this continues, preserve the recovery folder and contact support."
+            "state": "needs_review",
+            "value": "%lld math or diagram fragment(s) sit inside a link, reference definition or HTML construct and cannot be placed there; they are exported as their source text"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%lld math or diagram fragment(s) sit inside a link, reference definition or HTML construct and cannot be placed there; they are exported as their source text"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%lld math or diagram fragment(s) sit inside a link, reference definition or HTML construct and cannot be placed there; they are exported as their source text"
           }
         }
       }
     },
-    "Export recovery storage is unavailable or in use: %@": {
-      "comment": "Export failure. The placeholder is the private recovery folder path; do not suggest deleting it.",
-      "extractionState": "manual",
+    "An export staging file needs recovery at: %@": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Export recovery storage is unavailable or in use: %@"
+            "value": "An export staging file needs recovery at: %@"
           }
         }
       }
     },
-  "the export resource read-work limit was reached": {
-    "localizations": {
-      "en": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "the export resource read-work limit was reached"
+    "Authored raw HTML is rendered best-effort by the print system; it cannot load scripts or remote resources.": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Authored raw HTML is rendered best-effort by the print system; it cannot load scripts or remote resources."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Authored raw HTML is rendered best-effort by the print system; it cannot load scripts or remote resources."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Authored raw HTML is rendered best-effort by the print system; it cannot load scripts or remote resources."
+          }
         }
       }
-    }
-  },
+    },
     "Check that the destination folder exists and is writable.": {
       "localizations": {
         "fr": {
@@ -91,6 +124,27 @@
         }
       }
     },
+    "Choose an export destination that is not a source or open document.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose an export destination that is not a source or open document."
+          }
+        }
+      }
+    },
+    "Choose another export name or destination. Existing files have been preserved.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose another export name or destination. Existing files have been preserved."
+          }
+        }
+      }
+    },
     "Choose the HTML format, which preserves authored raw HTML.": {
       "localizations": {
         "fr": {
@@ -131,6 +185,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "Miejsce docelowe eksportu jest nieprawidłowe: %@"
+          }
+        }
+      }
+    },
+    "Export recovery storage is unavailable or in use: %@": {
+      "comment": "Export failure. The placeholder is the private recovery folder path; do not suggest deleting it.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export recovery storage is unavailable or in use: %@"
+          }
+        }
+      }
+    },
+    "Finish other exports and try again. If this continues, preserve the recovery folder and contact support.": {
+      "comment": "Recovery suggestion after private export storage could not be admitted. Preserve recovery evidence.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finish other exports and try again. If this continues, preserve the recovery folder and contact support."
           }
         }
       }
@@ -201,6 +279,39 @@
         }
       }
     },
+    "Preserve that file and choose another export destination.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preserve that file and choose another export destination."
+          }
+        }
+      }
+    },
+    "Removed the target of \"%@\": that URL scheme is not allowed in an exported document.": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Removed the target of \"%@\": that URL scheme is not allowed in an exported document."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Removed the target of \"%@\": that URL scheme is not allowed in an exported document."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Removed the target of \"%@\": that URL scheme is not allowed in an exported document."
+          }
+        }
+      }
+    },
     "Split the document, or reduce the size of the images it references.": {
       "localizations": {
         "fr": {
@@ -219,6 +330,83 @@
           "stringUnit": {
             "state": "translated",
             "value": "Podziel dokument albo zmniejsz rozmiar obrazów, do których się on odwołuje."
+          }
+        }
+      }
+    },
+    "The export destination changed after it was selected. Choose it again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The export destination changed after it was selected. Choose it again."
+          }
+        }
+      }
+    },
+    "The export destination or assets could not be safely reused.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The export destination or assets could not be safely reused."
+          }
+        }
+      }
+    },
+    "The export image references could not be safely assembled.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The export image references could not be safely assembled."
+          }
+        }
+      }
+    },
+    "The export inputs no longer match their prepared source. Try exporting again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The export inputs no longer match their prepared source. Try exporting again."
+          }
+        }
+      }
+    },
+    "The export was saved, but its recovery record could not be finalized. Keep the output and try this destination again.": {
+      "comment": "Nonfatal warning after successful export publication. The output was saved; do not describe this as a failed save.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The export was saved, but its recovery record could not be finalized. Keep the output and try this destination again."
+          }
+        }
+      }
+    },
+    "The front-matter \"title\" is not a single value, so it was not used as the document title.": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The front-matter \"title\" is not a single value, so it was not used as the document title."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The front-matter \"title\" is not a single value, so it was not used as the document title."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The front-matter \"title\" is not a single value, so it was not used as the document title."
           }
         }
       }
@@ -289,6 +477,39 @@
         }
       }
     },
+    "Try exporting again from the original document.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try exporting again from the original document."
+          }
+        }
+      }
+    },
+    "Unresolved resource \"%@\": %@.": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Unresolved resource \"%@\": %@."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Unresolved resource \"%@\": %@."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Unresolved resource \"%@\": %@."
+          }
+        }
+      }
+    },
     "Writing export output failed: %@": {
       "localizations": {
         "fr": {
@@ -311,6 +532,529 @@
         }
       }
     },
+    "a diagram inside a list item or block quote is exported as its source text": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "a diagram inside a list item or block quote is exported as its source text"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "a diagram inside a list item or block quote is exported as its source text"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "a diagram inside a list item or block quote is exported as its source text"
+          }
+        }
+      }
+    },
+    "derived SVG identifiers could not be safely isolated; authored source preserved": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived SVG identifiers could not be safely isolated; authored source preserved"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived SVG identifiers could not be safely isolated; authored source preserved"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived SVG identifiers could not be safely isolated; authored source preserved"
+          }
+        }
+      }
+    },
+    "derived contribution exceeds the %@ total derived HTML limit; authored source preserved": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution exceeds the %@ total derived HTML limit; authored source preserved"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution exceeds the %@ total derived HTML limit; authored source preserved"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution exceeds the %@ total derived HTML limit; authored source preserved"
+          }
+        }
+      }
+    },
+    "derived contribution exceeds the %lld-fragment export limit; authored source preserved": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution exceeds the %lld-fragment export limit; authored source preserved"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution exceeds the %lld-fragment export limit; authored source preserved"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution exceeds the %lld-fragment export limit; authored source preserved"
+          }
+        }
+      }
+    },
+    "derived contribution failed in its renderer; authored source preserved": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution failed in its renderer; authored source preserved"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution failed in its renderer; authored source preserved"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution failed in its renderer; authored source preserved"
+          }
+        }
+      }
+    },
+    "derived contribution is stale (source generation %llu != %llu); authored source preserved": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution is stale (source generation %llu != %llu); authored source preserved"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution is stale (source generation %llu != %llu); authored source preserved"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution is stale (source generation %llu != %llu); authored source preserved"
+          }
+        }
+      }
+    },
+    "derived contribution produced no HTML; authored source preserved": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution produced no HTML; authored source preserved"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution produced no HTML; authored source preserved"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution produced no HTML; authored source preserved"
+          }
+        }
+      }
+    },
+    "derived contribution range %@ is outside the document body; authored source preserved": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution range %@ is outside the document body; authored source preserved"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution range %@ is outside the document body; authored source preserved"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution range %@ is outside the document body; authored source preserved"
+          }
+        }
+      }
+    },
+    "derived contribution range exceeds the body; authored source preserved": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution range exceeds the body; authored source preserved"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution range exceeds the body; authored source preserved"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution range exceeds the body; authored source preserved"
+          }
+        }
+      }
+    },
+    "derived contribution range is empty; authored source preserved": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution range is empty; authored source preserved"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution range is empty; authored source preserved"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution range is empty; authored source preserved"
+          }
+        }
+      }
+    },
+    "derived contribution range overlaps another contribution; authored source preserved": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution range overlaps another contribution; authored source preserved"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution range overlaps another contribution; authored source preserved"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "derived contribution range overlaps another contribution; authored source preserved"
+          }
+        }
+      }
+    },
+    "final HTML exceeds the export safety limit": {
+      "comment": "Export size failure detail. The final HTML includes embedded resources and document markup.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "final HTML exceeds the export safety limit"
+          }
+        }
+      }
+    },
+    "generated diagram could not be safely isolated; authored source preserved": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "generated diagram could not be safely isolated; authored source preserved"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "generated diagram could not be safely isolated; authored source preserved"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "generated diagram could not be safely isolated; authored source preserved"
+          }
+        }
+      }
+    },
+    "no resource directory was admitted for this export": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "no resource directory was admitted for this export"
+          }
+        }
+      }
+    },
+    "reference is not a usable file path": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "reference is not a usable file path"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "reference is not a usable file path"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "reference is not a usable file path"
+          }
+        }
+      }
+    },
+    "remote resource is not fetched during offline export": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "remote resource is not fetched during offline export"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "remote resource is not fetched during offline export"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "remote resource is not fetched during offline export"
+          }
+        }
+      }
+    },
+    "resource could not be read through its admitted directory": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "resource could not be read through its admitted directory"
+          }
+        }
+      }
+    },
+    "resource is larger than the %@ per-file export limit": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "resource is larger than the %@ per-file export limit"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "resource is larger than the %@ per-file export limit"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "resource is larger than the %@ per-file export limit"
+          }
+        }
+      }
+    },
+    "resource is outside the document's folder": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "resource is outside the document's folder"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "resource is outside the document's folder"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "resource is outside the document's folder"
+          }
+        }
+      }
+    },
+    "retained export assets exceed the safety limit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "retained export assets exceed the safety limit"
+          }
+        }
+      }
+    },
+    "the composed document is %@, over the %@ export limit": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "the composed document is %@, over the %@ export limit"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "the composed document is %@, over the %@ export limit"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "the composed document is %@, over the %@ export limit"
+          }
+        }
+      }
+    },
+    "the document is %@, over the %@ export limit": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "the document is %@, over the %@ export limit"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "the document is %@, over the %@ export limit"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "the document is %@, over the %@ export limit"
+          }
+        }
+      }
+    },
+    "the export already carries its %lld-resource limit": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "the export already carries its %lld-resource limit"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "the export already carries its %lld-resource limit"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "the export already carries its %lld-resource limit"
+          }
+        }
+      }
+    },
+    "the export exceeds its %@ total resource limit": {
+      "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "the export exceeds its %@ total resource limit"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "the export exceeds its %@ total resource limit"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "the export exceeds its %@ total resource limit"
+          }
+        }
+      }
+    },
+    "the export resource read-work limit was reached": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the export resource read-work limit was reached"
+          }
+        }
+      }
+    },
+    "too many image occurrences": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "too many image occurrences"
+          }
+        }
+      }
+    },
     "…and %@ more.": {
       "localizations": {
         "fr": {
@@ -329,152 +1073,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "…i %@ więcej."
-          }
-        }
-      }
-    },
-    "final HTML exceeds the export safety limit": {
-      "comment": "Export size failure detail. The final HTML includes embedded resources and document markup.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "final HTML exceeds the export safety limit"
-          }
-        }
-      }
-    },
-    "The export image references could not be safely assembled.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The export image references could not be safely assembled."
-          }
-        }
-      }
-    },
-    "Try exporting again from the original document.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Try exporting again from the original document."
-          }
-        }
-      }
-    },
-    "too many image occurrences": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "too many image occurrences"
-          }
-        }
-      }
-    },
-    "The export destination or assets could not be safely reused.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The export destination or assets could not be safely reused."
-          }
-        }
-      }
-    },
-    "Choose another export name or destination. Existing files have been preserved.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Choose another export name or destination. Existing files have been preserved."
-          }
-        }
-      }
-    },
-    "An export staging file needs recovery at: %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "An export staging file needs recovery at: %@"
-          }
-        }
-      }
-    },
-    "Preserve that file and choose another export destination.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Preserve that file and choose another export destination."
-          }
-        }
-      }
-    },
-    "retained export assets exceed the safety limit": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "retained export assets exceed the safety limit"
-          }
-        }
-      }
-    },
-    "no resource directory was admitted for this export": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "no resource directory was admitted for this export"
-          }
-        }
-      }
-    },
-    "resource could not be read through its admitted directory": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "resource could not be read through its admitted directory"
-          }
-        }
-      }
-    },
-    "The export destination changed after it was selected. Choose it again.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The export destination changed after it was selected. Choose it again."
-          }
-        }
-      }
-    },
-    "Choose an export destination that is not a source or open document.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Choose an export destination that is not a source or open document."
-          }
-        }
-      }
-    },
-    "The export inputs no longer match their prepared source. Try exporting again.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The export inputs no longer match their prepared source. Try exporting again."
           }
         }
       }

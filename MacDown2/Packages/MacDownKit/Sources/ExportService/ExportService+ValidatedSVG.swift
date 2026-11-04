@@ -63,7 +63,10 @@ extension ExportService {
         else { throw ExportError.validatedPublicationRejected }
         let diagnostic = ExportDiagnostic(
             severity: .warning,
-            message: "generated diagram could not be safely isolated; authored source preserved"
+            message: String(
+                localized: "generated diagram could not be safely isolated; authored source preserved",
+                bundle: .module
+            )
         )
         return ValidatedExportHTML(
             publication: publication, prepared: fallback.prepared,

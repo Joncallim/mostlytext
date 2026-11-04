@@ -57,9 +57,6 @@ struct ExportCoordinator {
         self.appSettings = appSettings
     }
 
-    /// How many diagnostics one alert lists before it summarises the rest.
-    private let diagnosticsShownAtMost = 6
-
     /// Whether the selected document is exportable Markdown and
     /// does not already have an export in flight.
     var canExportActiveDocument: Bool {
@@ -159,7 +156,7 @@ struct ExportCoordinator {
     ) async -> ExportSelection? {
         let panel = NSSavePanel()
         panel.canCreateDirectories = true
-        panel.prompt = "Export"
+        panel.prompt = String(localized: "Export")
         panel.message = "Choose where to export this document."
         if let directory {
             panel.directoryURL = directory
@@ -279,18 +276,12 @@ struct ExportCoordinator {
     ) async {
         guard !diagnostics.isEmpty else { return }
 
-        let shown = diagnostics.prefix(diagnosticsShownAtMost).map(\.message)
-        var text = shown.joined(separator: "\n")
-        if diagnostics.count > shown.count {
-            text += "\n…and \(diagnostics.count - shown.count) more."
-        }
+        let presentation = ExportDiagnosticPresentation(messages: diagnostics.map(\.message))
 
         let alert = NSAlert()
         alert.alertStyle = .informational
-        alert.messageText = diagnostics.count == 1
-            ? "Exported with 1 issue"
-            : "Exported with \(diagnostics.count) issues"
-        alert.informativeText = text
+        alert.messageText = presentation.title
+        alert.informativeText = presentation.body
         await present(alert, from: origin)
     }
 

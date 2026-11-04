@@ -992,6 +992,129 @@
         }
       }
     },
+    "Exported with %lld issues": {
+      "comment": "Export issue count. Non-English translations are drafts requiring final E16 review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%#@arg1@"
+          },
+          "substitutions": {
+            "arg1": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "Exported with %arg issue"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "Exported with %arg issues"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%#@arg1@"
+          },
+          "substitutions": {
+            "arg1": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "Exporté avec %arg problème"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "Exporté avec %arg problèmes"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%#@arg1@"
+          },
+          "substitutions": {
+            "arg1": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg件の問題を伴って書き出しました"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%#@arg1@"
+          },
+          "substitutions": {
+            "arg1": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "Wyeksportowano z %arg problemem"
+                    }
+                  },
+                  "few": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "Wyeksportowano z %arg problemami"
+                    }
+                  },
+                  "many": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "Wyeksportowano z %arg problemami"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "Wyeksportowano z %arg problemu"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Export…": {
       "comment": "Theme management. Translation draft; native-speaker review remains required.",
       "localizations": {
@@ -1856,6 +1979,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "Otwórz plik"
+          }
+        }
+      }
+    },
+    "Open Folder": {
+      "comment": "NSOpenPanel confirmation button. Translation/native review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Open Folder"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Open Folder"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Open Folder"
           }
         }
       }
@@ -3215,6 +3361,129 @@
           "stringUnit": {
             "state": "translated",
             "value": "— Zapisz jako… ⌘⇧S, aby nazwać ten dokument"
+          }
+        }
+      }
+    },
+    "…and %lld more issues.": {
+      "comment": "Export issue count. Non-English translations are drafts requiring final E16 review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%#@arg1@"
+          },
+          "substitutions": {
+            "arg1": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "…and %arg more issue."
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "…and %arg more issues."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%#@arg1@"
+          },
+          "substitutions": {
+            "arg1": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "…et %arg autre problème."
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "…et %arg autres problèmes."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%#@arg1@"
+          },
+          "substitutions": {
+            "arg1": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "…ほか%arg件の問題。"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%#@arg1@"
+          },
+          "substitutions": {
+            "arg1": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "…i jeszcze %arg problem."
+                    }
+                  },
+                  "few": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "…i jeszcze %arg problemy."
+                    }
+                  },
+                  "many": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "…i jeszcze %arg problemów."
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "…i jeszcze %arg problemu."
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
