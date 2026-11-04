@@ -75,7 +75,7 @@ public struct MathContribution: Contributing {
                 let message = if let renderError = error as? MathRenderError, renderError == .invalidImageDimensions {
                     String(localized: "The equation renderer produced invalid image dimensions.", bundle: .module)
                 } else {
-                    "equation could not be typeset: \(span.latex)"
+                    String(localized: "equation could not be typeset: \(span.latex)", bundle: .module)
                 }
                 results.append(ContributionResult(
                     contributionID: id,
