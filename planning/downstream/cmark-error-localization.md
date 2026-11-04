@@ -66,3 +66,13 @@ The canonical inventory has 346 entries across the same 15 catalogs. Full
 combined hosted checks, Release build and final artifact readback remain
 necessary. PR52 must merge first and its actual main tree must combine without
 changing the checked candidate tree before this unit is integrated.
+
+## Integrated qualification
+
+PR53 merged at `6166a1424edd42e3b138f0f9e52009ac9ec275ac`, preserving the
+qualified `b0fe54df` tree and previous main. Complete CI 41771722159 passes
+3,425 package/478 suites (two existing known issues), 613 non-UI app/125 suites,
+locked builds, app/UI compilation, metadata/helper checks and pins. Universal
+compile-only Release and actual four-locale resource/artifact checks pass;
+Compliance and GitGuardian pass. No native language, final freeze or PDF
+acceptance is inferred.

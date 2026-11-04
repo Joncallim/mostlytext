@@ -67,6 +67,9 @@ The 17 open engineering issues were transferred with redirects and discussions;
 release assets and workflow-run records remain at their original URLs. Historical alpha release files remain in the
 [original repository](https://github.com/Joncallim/macdown_2/releases).
 
+For catalog ownership, compiler coverage and translation exchange, use the
+[localization maintenance guide](docs/LOCALIZATION.md).
+
 ## License and attribution
 
 MostlyText's application source remains under the [MIT License](LICENSE).

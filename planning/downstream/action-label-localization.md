@@ -135,3 +135,23 @@ fixture supplies only a namespace and catalog accessor and never creates
 Commands, an installer or NSAlert. The earlier 62-route scope proof and resource
 results remain unchanged. Full combined hosted qualification must use the final
 head containing this correction, not the superseded partial run.
+
+## Integrated qualification
+
+PR55 merged at `f548b1818205e4b705757fc6748d0f8302212a22`. Its actual tree
+`39cc13dae12bc0b64cb54f5dd31c5907089420e3` equals qualified `e7bd40d3` and
+preserves previous main. Full CI 41776832659 passes 3,425 package tests/478
+suites (two recorded known issues), 619 app tests/127 suites, locked
+Debug/Release app/mostlytext builds, app/UI compilation, actual compiler
+coverage and metadata/helper/pin checks. Compliance 41776832665 and GitGuardian
+pass. The earlier partial run 41775708503 was cancelled and is not qualification.
+
+Final universal compile-only Release and four-locale resource readback pass.
+The 15 catalogs contain 671 entries; complete extraction covers 682 owned Swift
+inputs, 788 source/line routes and 653 keys with none missing. Six expression
+tests and three installation-title tests pass Debug/Release. Actual old
+literals fail 62 marker assertions; the old installation expression fails
+13 readable-output assertions; exact restoration passes. The initial explicit
+English-resource fixture assumption was corrected only in the fixture for two
+legitimate source-fallback keys, retaining its failure. No product/AppKit/WebKit
+execution, final translation/native acceptance or receipt retargeting occurred.
