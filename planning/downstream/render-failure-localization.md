@@ -51,3 +51,28 @@ hosted CI, locked compile-only universal Release and read-only artifact checks.
 Refresh the canonical string inventory after integration. Record source hashes,
 failed-before controls and real results. Keep native hover/help, layout,
 VoiceOver, pseudo-localisation and translation review open.
+
+## PDF error/recovery copy reconciliation before implementation
+
+The broader app error-description audit found six PDFSnapshotFallback.FallbackError
+descriptions plus its recovery suggestion, and six PDFExportAdapter.PDFExportError
+descriptions plus two recovery suggestions, returning English String literals.
+These are normal user-facing LocalizedError details, not test-only guard text.
+Include these fifteen keys in this same app-owned rendering-failure unit.
+Wrap the existing literals with String(localized:) in their existing enums;
+retain enum identities, cases, control flow, printing and cancellation exactly.
+Do not add a formatter abstraction merely for testing these single call sites.
+
+App component tests exercise only the nested error values and compiled catalog,
+without creating a print adapter or WebKit object. The local non-app fixture
+extracts the two unchanged value-enum bodies, removes only their parent namespace
+in test references and substitutes the fixture resource bundle for the app's
+implicit main bundle. This is not PDF execution or a native language override.
+Use separate synthetic catalog markers and the actual old enum bodies to prove
+that catalog lookup is effective; retain production catalogs unchanged. Extend
+the static source guard and compiler-extracted key check to all fifteen routes.
+
+The three legacy-import labels already return LocalizedStringKey and are not
+hard-coded String failures. UITestLaunchGuard's English operational refusal
+messages are deliberate test-only diagnostics; do not translate guard policy
+or treat those strings as shipped application copy. No new native gate is waived.
