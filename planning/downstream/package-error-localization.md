@@ -27,3 +27,16 @@ Compliance and locked compile-only Release. Verify actual app resource bundles
 and the embedded/public CLI resource path contract. Do not add tests that merely
 repeat wrappers. Final language/layout/VoiceOver and the whole-project string
 freeze remain separate; no broad #3/#6 or native acceptance is claimed here.
+
+## Translation-resource reconciliation
+
+The same source audit found ten .tx/config entries for thirteen pre-existing
+catalogs: Math, EditorCore and CommandLineSupport were absent even before this
+unit. Add those plus FileCore/TextSearch so all fifteen catalogs have exactly one
+XCSTRINGS resource with matching source/filter paths and source language. Keep
+existing organization/project slugs as the explicitly unconfigured placeholders;
+no Transifex account/project, submission or external translation is created here.
+Add a read-only static coverage validator and meaningful missing/duplicate/path/
+type/language controls, enforce them in Compliance, and refresh the committed
+localisation inventory. This is pipeline completeness, not translation quality or
+final native string-freeze acceptance.
