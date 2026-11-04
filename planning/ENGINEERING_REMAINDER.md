@@ -103,7 +103,11 @@ historical and must not be retargeted to a new checkout.
    inputs. The [actual C++ runtime root texts](../compliance/evidence/libcxx-image-notices/README.md)
    now ship with exact image/reference and link-stage evidence; that coverage does
    not decide remaining per-file or independent rights obligations. A local review archive is not independent review or an approved offer.
-4. Prepare the concrete immutable source objects for approval. Only the explicit
+4. The [current Graphviz local review archive](../compliance/evidence/graphviz-source-review/README.md)
+   now carries the exact compiler-image, full renderer reproduction, linker and
+   C++ notice evidence, including all four complete C++ texts. Its 57 manifested
+   files are verified and deterministically encoded; it remains unpublished and
+   unapproved as a complete corresponding-source offer. Prepare the concrete immutable source objects for approval. Only the explicit
    source-archive authorization in [ARCHIVE_PLAN.md](../compliance/ARCHIVE_PLAN.md)
    authorizes publication; public application promotion remains separate.
 5. Verify anonymous retrieval and exact final signed artifact; preserve all six

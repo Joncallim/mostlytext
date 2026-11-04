@@ -14,6 +14,9 @@ import json
 from pathlib import Path
 import tarfile
 
+import verify_libcxx_notices
+import verify_viz_renderer
+
 ROOT = Path(__file__).resolve().parents[2]
 LIMITS = ('Local source-review package only. Not approved as the complete corresponding-source offer.\n'
           'Includes exact publisher Graphviz/Viz/Expat source archives and npm output, source-build\n'
@@ -24,11 +27,39 @@ LIMITS = ('Local source-review package only. Not approved as the complete corres
           'compiler/sysroot/build-tool inputs where required, explicit source-only publication\n'
           'authorization, stable hosting and anonymous retrieval. Do not mark source_offer verified.\n'
           'Emscripten root notices do not complete musl/libc++/compiler-rt per-file notice coverage.\n'
+          'Included image/reproduction/link receipts are review evidence, not a self-contained\n'
+          'compiler environment or approval of final retained-code/source/rights completeness.\n'
           'The source-only publication authorization in compliance/ARCHIVE_PLAN.md still applies.\n')
+
+REPRODUCTION_FILES = {
+    'viz-compiler-image': ('README.md', 'manifest.json', 'index.json', 'amd64-manifest.json',
+                           'amd64-config.json', 'layer-verification.json', 'selected-files.json'),
+    'graphviz-backend-reproduction': ('README.md', 'result.json', 'upstream-Dockerfile', 'UPSTREAM-LICENSE.txt'),
+    'viz-renderer-reproduction': ('README.md', 'result.json', 'node-reference.json', 'npm-publisher.json',
+                                 'package-lock.json', 'dependencies.json', 'SHASUMS256.txt'),
+    'graphviz-link-inputs': ('README.md', 'result.json', 'backend.map', 'why-extract.tsv'),
+    'libcxx-image-notices': ('README.md', 'manifest.json'),
+}
 
 
 def sha(body):
     return hashlib.sha256(body).hexdigest()
+
+
+def add_body(bodies, name, body):
+    if name in bodies:
+        raise ValueError('Source-review destination collision: ' + name)
+    bodies[name] = body
+
+
+def reproduction_evidence(root):
+    # These existing validators bind the complete dependency chains and shipped
+    # renderer. Copy only the explicit review allowlist after they succeed.
+    verify_libcxx_notices.verify(root)
+    verify_viz_renderer.verify(root)
+    return {'evidence/reproduction/compliance/evidence/' + folder + '/' + name:
+            (root / 'compliance/evidence' / folder / name).read_bytes()
+            for folder, names in REPRODUCTION_FILES.items() for name in names}
 
 
 def payload(root, inputs):
@@ -41,6 +72,7 @@ def payload(root, inputs):
     if report != expected:
         raise ValueError('Graphviz source audit differs from committed report')
     bodies = {'README.txt': LIMITS.encode()}
+    bodies.update(reproduction_evidence(root))
     for name in audit.ARCHIVES:
         bodies['upstream/' + name] = (inputs / name).read_bytes()
     for name in ['source-audit.json', 'downloads.json', 'audit-source-inputs.py']:
@@ -53,7 +85,8 @@ def payload(root, inputs):
         bodies['distribution-snapshot/' + name] = (root / 'compliance/generated' / name).read_bytes()
     inv = json.loads((root / 'compliance/inventory.json').read_text())
     ids = {'viz-js', 'expat', 'graphviz-rbtree', 'graphviz-ellipse-maisonobe',
-           'graphviz-randomkit', 'renderer-build-bison-skeleton', 'renderer-build-emscripten', 'compiler-rt-publisher-root-notices'}
+           'graphviz-randomkit', 'renderer-build-bison-skeleton', 'renderer-build-emscripten',
+           'compiler-rt-publisher-root-notices', 'libcxx-recorded-image-root-notices', 'libcxxabi-recorded-image-root-notices'}
     selected = [r for r in inv['components'] if r['id'] in ids]
     if {r['id'] for r in selected} != ids:
         raise ValueError('Expected Graphviz and nested source notice records')
@@ -63,7 +96,7 @@ def payload(root, inputs):
             body = (root / text['path']).read_bytes()
             if sha(body) != text['sha256']:
                 raise ValueError('Source-review notice digest changed')
-            bodies['notices/' + Path(text['path']).name] = body
+            add_body(bodies, 'notices/' + Path(text['path']).name, body)
     manifest = {'schema': 1, 'status': 'local-review-only; incomplete approval/publication gates',
                 'graphviz_revision': audit.GRAPHVIZ_REVISION, 'viz_revision': audit.VIZ_REVISION,
                 'expat_revision': audit.EXPAT_REVISION,

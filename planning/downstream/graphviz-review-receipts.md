@@ -47,3 +47,15 @@ Reconcile the current review manifest/docs and #14 only for prepared local
 evidence. Expected-head merge, actual tree/parents, clean main fast-forward and
 verified recovery bundle precede merged-branch cleanup. Publication, anonymous
 retrieval, independent review, final signed-artifact and native acceptance remain.
+
+## Qualified local result
+
+All 316 Compliance controls pass, including destination-collision rejection and
+stale-link failure propagation before file reads. The real source audit and
+installed image/C++/link/backend/renderer validators pass. The new 57-file archive
+has SHA-256 `e9db382f36e79f5153c1c31a32700084327ea735fb51dd811293116d648923ca`;
+independent tar/member/digest/repository-byte readback and a second full
+audit/encode agree exactly. The prior archive's recorded digest is unchanged.
+Source inventory passes; the six strict failure messages are byte-identical.
+Product, inventory and generated notices/SBOM are unchanged from PR68.
+Hosted Compliance, the PR68 dependency gate and final merge checks remain.
