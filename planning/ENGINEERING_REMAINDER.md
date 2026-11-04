@@ -1,7 +1,8 @@
-# Remaining engineering and acceptance ownership — 4 November 2026
+# Remaining engineering and acceptance ownership — 5 November 2026
 
-The live 4 November audit contains 17 open issues and 183 unchecked
-checkbox rows after PR55. Three issues use prose rather than checkbox criteria;
+The live 5 November audit contains 17 open issues and 182 unchecked
+checkbox rows after the scoped math source/offline reconciliation in #9.
+Three issues use prose rather than checkbox criteria;
 that does not make them complete. These are broad acceptance contracts, not
 17 newly discovered bugs.
 Merged implementation, automated checks and documentation progress are recorded
@@ -9,7 +10,7 @@ within them. None currently has all its whole-issue closure evidence. This map
 reconciles current source, the transferred issues and the preserved native hold;
 it is a work queue, not a declaration that engineering or release work is done.
 Initial mapping baseline: main 8c78f3cd13635a7010ebeaecad932744afc90992.
-Latest full source qualification: main
+Completed Framer source/resource qualification: main
 `5aa5a37b93a1ae52a9177cf47e72f2f0fa6503f0`
 ([PR62](https://github.com/Joncallim/mostlytext/pull/62)). Its actual tree equals
 qualified `24b19a9b301704f56fd2f3e50ff11b96872742ad`. Complete ARM
@@ -21,6 +22,21 @@ all 266 local controls and source inventory pass. The built notice matches sourc
 and its unchanged Foundation reader loads the new Framer credit. This does not
 establish native window, installed-state, independent rights or release acceptance.
 
+PR68's later notice resource passes locked universal Release compilation, actual
+bundle/source equality and the unchanged Foundation-only reader. Its exact-head
+Compliance passes all 314 controls. Full Intel CI 41856165565 nevertheless fails
+on `RealSVGNamespaceTests.ownedRendererOutputsRemainAdmissibleAndD2FallsBack`
+with `timedOut` after 17.247 seconds; later app builds/tests did not execute.
+The focused attribution-head diagnostic in
+[PR69](https://github.com/Joncallim/mostlytext/pull/69) passes twice with unchanged
+deadlines/assertions. This does not explain the original failure or establish
+its failing renderer/phase. The baseline comparison and ARM full-run attempts
+failed to acquire hosted runners and executed zero steps; preserve those as
+infrastructure failures. Full Intel source validation
+[41866648980](https://github.com/Joncallim/mostlytext/actions/runs/41866648980)
+and the remaining comparison are pending. No queued, cancelled or focused run
+replaces complete qualification; the first timeout remains tracked in #17.
+
 [PR61](https://github.com/Joncallim/mostlytext/pull/61) rejects negative/overflowing
 folder-replacement ranges before arithmetic or mutation. Both actual old-source
 Foundation crashes are retained; all 131 source-identical TextSearch tests /20
@@ -29,7 +45,7 @@ The [reproduction procedure](downstream/evidence/replacement-plan-range-bounds-2
 pins every copied file and runs the old-source negatives in a separate owned
 fixture. Issues #6/#14/#17 now check these scoped source/evidence results while
 preserving every broader acceptance criterion. The live audit still has 17 open
-issues and 183 unchecked original rows.
+issues and 182 unchecked original rows.
 
 Scoped source/resource evidence is recorded in
 [ACCEPTANCE_STATUS.md](ACCEPTANCE_STATUS.md) and the associated PRs; the named
@@ -42,7 +58,7 @@ remaining contracts below still apply. Historical PR numbers resolve through
 |---|---|
 | [#6 editor](https://github.com/Joncallim/mostlytext/issues/6) | Reconcile the retained current-line/theme-role draft, actual multi-selection/editing behavior and remaining text workflows. Establish large-file/full-path Release budgets; a source scan microbenchmark is insufficient. |
 | [#7 Mac integration](https://github.com/Joncallim/mostlytext/issues/7) | First pass the required native QL-REPLY callback/cancellation/cold-Finder feasibility probe, then implement the currently absent dedicated Quick Look target and static shared-content path, Markdown document artwork/registration, and remaining theme/renderer semantics. Verify containment, failure isolation and performance in real Finder/Quick Look. Naming conventions are frozen, not implementation. |
-| [#9 math](https://github.com/Joncallim/mostlytext/issues/9) | Complete shared delimiter/parity, useful source-anchored diagnostics and accessible equation identity; prove final Preview/Export paths and real visual/accessibility behavior. |
+| [#9 math](https://github.com/Joncallim/mostlytext/issues/9) | The original source-preservation/local-rendering criterion is checked: source values feed derived content, local rendering uses bundled fonts, and all 12 math suites pass in the retained Intel package run. That overall run failed on the separate diagram timeout and is not a whole-run pass. Complete shared delimiter/parity, useful source-anchored diagnostics and accessible equation identity; prove final Preview/Export paths and real visual/accessibility behavior. |
 | [#10 contributions/TOC](https://github.com/Joncallim/mostlytext/issues/10) | Activate/prove deterministic shared heading anchors and actual Preview/Export TOC navigation. Immutable parse ownership/source binding is integrated; that is not navigation acceptance. |
 | [#11 export](https://github.com/Joncallim/mostlytext/issues/11) | The original managed-asset crash/orphan criterion is checked after [PR51](https://github.com/Joncallim/mostlytext/pull/51): [authenticated companion inventory/pending recovery](downstream/export-companion-recovery.md), first-inventory-before-cleanup ordering, changed-stage byte checks, source protection and bounded unknown-reference retention are qualified. Pre-receipt uncertainty is preserved and blocks growth. Remaining work is Preview/cmark parity, whole-operation PDF progress/cancellation, final resource-budget calibration, real pagination and exact-app Save/Cancel evidence. None is replaced by the 396 focused source tests or 100 changed exports. |
 | [#13 HTML preview](https://github.com/Joncallim/mostlytext/issues/13) | The production consumer still uses the legacy handler. The bounded grant/handler must not be activated without the required native request/root/MIME/cancellation/containment proof. The preserved draft was closed without merge or acceptance. |
