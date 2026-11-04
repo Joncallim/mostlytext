@@ -87,7 +87,7 @@ enum EditorLineTransforms {
             replacements: replacements,
             resultsByOriginalIndex: resultsByOriginalIndex,
             selection: selection,
-            undoActionName: "Duplicate Line"
+            undoActionName: String(localized: "Duplicate Line", bundle: .module)
         )
     }
 
@@ -135,7 +135,7 @@ enum EditorLineTransforms {
             replacements: replacements,
             resultsByOriginalIndex: resultsByOriginalIndex,
             selection: selection,
-            undoActionName: "Delete Line"
+            undoActionName: String(localized: "Delete Line", bundle: .module)
         )
     }
 
@@ -238,7 +238,7 @@ enum EditorLineTransforms {
             replacements: replacements,
             resultsByOriginalIndex: resultsByOriginalIndex,
             selection: selection,
-            undoActionName: "Join Lines"
+            undoActionName: String(localized: "Join Lines", bundle: .module)
         )
     }
 

@@ -72,3 +72,29 @@ signature, body and privacy unchanged. Do not suppress or raise the lint limit,
 compress unrelated code, or move state/observation. The source-scope proof must
 put this unchanged helper back in its original declaration position before
 comparing reversed parser trees, and record that explicit layout normalization.
+
+## Source qualification checkpoint
+
+There are 62 literal routes across 19 files and 54 owned keys; 38 keys were
+absent and are now registered, bringing the same 15 catalogs to 671 entries.
+Before formatting, reversing the new expressions reproduces the exact original
+source bytes. After formatting and restoring the unchanged Find helper's
+declaration position, Swift's parse-only compiler produces identical parser
+trees after source-location/context-pointer normalization. Parsing does not
+resolve or execute the AppKit/editor imports. No command or editing logic is
+silently excluded from this scope comparison.
+
+Six Foundation tests in three suites pass Debug/Release against the exact
+localization expressions and actual compiled catalogs. Only app-owned default
+main-bundle lookup is substituted with the fixture bundle. Distinctive separate
+markers pass all 62 routes; the original literals fail 62 assertions; exact
+restoration passes. Two pre-existing app keys, New File and Save As…, intentionally
+use source-language English fallback rather than explicit English resources.
+The fixture initially expected explicit resources for both, then was corrected
+to test that actual fallback while retaining the failed observation. Production
+catalog entries/translations were not rewritten to accommodate the fixture.
+
+Strict lint and pinned formatting pass after the documented helper move; source
+Compliance and 19 catalog/configuration controls pass. Final complete compiler
+coverage, locked Release/resource readback and full hosted combined behavior
+tests remain required before merge. Final language/native acceptance stays open.

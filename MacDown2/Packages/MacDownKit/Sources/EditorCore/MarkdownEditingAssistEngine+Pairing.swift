@@ -72,7 +72,7 @@ extension MarkdownEditingAssistEngine {
             replacementRange: selection,
             replacementString: prefix + content + suffix,
             resultingSelection: NSRange(location: selection.location + prefix.utf16.count, length: selection.length),
-            undoActionName: "Insert"
+            undoActionName: String(localized: "Insert", bundle: .module)
         ))
     }
 
@@ -203,7 +203,7 @@ extension MarkdownEditingAssistEngine {
             replacementRange: NSRange(location: caret, length: 0),
             replacementString: pair,
             resultingSelection: NSRange(location: caret + 1, length: 0),
-            undoActionName: "Insert"
+            undoActionName: String(localized: "Insert", bundle: .module)
         ))
     }
 
@@ -285,7 +285,7 @@ extension MarkdownEditingAssistEngine {
             replacementRange: range,
             replacementString: "",
             resultingSelection: NSRange(location: range.location, length: 0),
-            undoActionName: "Delete"
+            undoActionName: String(localized: "Delete", bundle: .module)
         ))
     }
 }

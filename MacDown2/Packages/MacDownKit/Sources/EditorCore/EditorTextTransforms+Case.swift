@@ -58,9 +58,9 @@ extension EditorTextTransforms {
 
     private static func undoActionName(for conversion: TextCaseConversion) -> String {
         switch conversion {
-        case .uppercase: "Uppercase"
-        case .lowercase: "Lowercase"
-        case .capitalized: "Capitalize"
+        case .uppercase: String(localized: "Uppercase", bundle: .module)
+        case .lowercase: String(localized: "Lowercase", bundle: .module)
+        case .capitalized: String(localized: "Capitalize", bundle: .module)
         }
     }
 }

@@ -54,9 +54,9 @@ struct OutlineRowView: View {
 extension SidebarSection {
     var title: String {
         switch self {
-        case .folder: "Folder"
-        case .outline: "Outline"
-        case .search: "Search"
+        case .folder: String(localized: "Folder")
+        case .outline: String(localized: "Outline")
+        case .search: String(localized: "Search")
         }
     }
 

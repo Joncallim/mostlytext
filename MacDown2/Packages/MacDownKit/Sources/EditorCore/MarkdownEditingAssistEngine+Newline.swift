@@ -99,7 +99,7 @@ extension MarkdownEditingAssistEngine {
             replacementRange: NSRange(location: caret, length: 0),
             replacementString: replacement,
             resultingSelection: NSRange(location: caret + replacement.utf16.count, length: 0),
-            undoActionName: "Insert"
+            undoActionName: String(localized: "Insert", bundle: .module)
         ))
     }
 
@@ -130,7 +130,7 @@ extension MarkdownEditingAssistEngine {
             replacementRange: range,
             replacementString: replacementText,
             resultingSelection: NSRange(location: lineStart + replacementText.utf16.count, length: 0),
-            undoActionName: "Continue List"
+            undoActionName: String(localized: "Continue List", bundle: .module)
         ))
     }
 
@@ -150,7 +150,7 @@ extension MarkdownEditingAssistEngine {
             replacementRange: NSRange(location: caret, length: 0),
             replacementString: replacement,
             resultingSelection: NSRange(location: caret + replacement.utf16.count, length: 0),
-            undoActionName: "Continue List"
+            undoActionName: String(localized: "Continue List", bundle: .module)
         ))
     }
 

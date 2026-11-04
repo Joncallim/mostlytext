@@ -1,6 +1,35 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "Array": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Array"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Array"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Array"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Array"
+          }
+        }
+      }
+    },
     "Document exceeds the maximum nesting depth of %@.": {
       "localizations": {
         "fr": {
@@ -363,6 +392,35 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nieprawidłowa liczba: oczekiwano cyfry."
+          }
+        }
+      }
+    },
+    "Object": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Object"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Object"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Object"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Object"
           }
         }
       }

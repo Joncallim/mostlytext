@@ -42,12 +42,16 @@ extension MarkdownEditingAssistEngine {
             replacementRange: NSRange(location: caret, length: 0),
             replacementString: padding,
             resultingSelection: NSRange(location: caret + spaces, length: 0),
-            undoActionName: "Indent"
+            undoActionName: String(localized: "Indent", bundle: .module)
         ))
     }
 
     private static func indentSelectedLines(text: NSString, selection: NSRange, unit: String) -> EditingAssistOutcome {
-        transformSelectedLines(text: text, selection: selection, undoActionName: "Indent") { lines in
+        transformSelectedLines(
+            text: text,
+            selection: selection,
+            undoActionName: String(localized: "Indent", bundle: .module)
+        ) { lines in
             var deltas: [Int] = []
             let processed = lines.map { line in
                 deltas.append(unit.utf16.count)
@@ -58,7 +62,11 @@ extension MarkdownEditingAssistEngine {
     }
 
     private static func unindentSelectedLines(text: NSString, selection: NSRange, width: Int) -> EditingAssistOutcome {
-        transformSelectedLines(text: text, selection: selection, undoActionName: "Unindent") { lines in
+        transformSelectedLines(
+            text: text,
+            selection: selection,
+            undoActionName: String(localized: "Unindent", bundle: .module)
+        ) { lines in
             var deltas: [Int] = []
             let processed = lines.map { line in
                 if line.hasPrefix("\t") {
@@ -135,7 +143,7 @@ extension MarkdownEditingAssistEngine {
                 replacementRange: NSRange(location: caret - 1, length: 1),
                 replacementString: "",
                 resultingSelection: NSRange(location: caret - 1, length: 0),
-                undoActionName: "Unindent"
+                undoActionName: String(localized: "Unindent", bundle: .module)
             ))
         }
 
@@ -153,7 +161,7 @@ extension MarkdownEditingAssistEngine {
             replacementRange: NSRange(location: caret - remove, length: remove),
             replacementString: "",
             resultingSelection: NSRange(location: caret - remove, length: 0),
-            undoActionName: "Unindent"
+            undoActionName: String(localized: "Unindent", bundle: .module)
         ))
     }
 
