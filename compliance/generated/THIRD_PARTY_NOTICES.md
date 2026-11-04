@@ -95,6 +95,7 @@ This file is generated from `compliance/inventory.json` by
 | github.com/rivo/uniseg (D2 publisher-build attribution) | publisher source-build input v0.4.7 | MIT |
 | github.com/yuin/goldmark (D2 publisher-build attribution) | publisher source-build input v1.7.4 | MIT |
 | Go runtime and standard library (embedded in D2 WebAssembly) | go1.24.6 | BSD-3-Clause |
+| Go standard-library supplemental source-build notices | go1.24.6 selected source inputs | LicenseRef-Go-Standard-Library-Source-Notices |
 | golang.org/x/exp (D2 publisher-build attribution) | publisher source-build input v0.0.0-20240909161429-701f63a606c0 | BSD-3-Clause |
 | golang.org/x/image (D2 publisher-build attribution) | publisher source-build input v0.20.0 | BSD-3-Clause |
 | golang.org/x/net (D2 publisher-build attribution) | publisher source-build input v0.35.0 | BSD-3-Clause |
@@ -5831,6 +5832,219 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
 THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+```
+
+---
+
+## Go standard-library supplemental source-build notices
+
+- Version: go1.24.6 selected source inputs
+- Upstream: https://go.dev
+- Licence: LicenseRef-Go-Standard-Library-Source-Notices
+- Original Go, Sun Microsystems, Stephen L. Moshier and fiat-crypto copyright statements are reproduced verbatim below.
+
+### d2--GO-STDLIB-SUPPLEMENTAL.txt
+
+```text
+Go 1.24.6 selected standard-library source-build notices
+Conservative attribution to the frozen D2 publisher-source build graph.
+Selection does not prove every source file was emitted. These comments
+and original terms are preserved, not replaced by a new grant.
+
+Complete Go root license (also byte-identical in the four vendor roots):
+
+Copyright 2009 The Go Authors.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+   * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+   * Neither the name of Google LLC nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Complete Go additional IP rights grant:
+
+Additional IP Rights Grant (Patents)
+
+"This implementation" means the copyrightable works distributed by
+Google as part of the Go project.
+
+Google hereby grants to You a perpetual, worldwide, non-exclusive,
+no-charge, royalty-free, irrevocable (except as stated in this section)
+patent license to make, have made, use, offer to sell, sell, import,
+transfer and otherwise run, modify and propagate the contents of this
+implementation of Go, where such license applies only to those patent
+claims, both currently owned or controlled by Google and acquired in
+the future, licensable by Google that are necessarily infringed by this
+implementation of Go.  This grant does not include claims that would be
+infringed only as a consequence of further modification of this
+implementation.  If you or your agent or exclusive licensee institute or
+order or agree to the institution of patent litigation against any
+entity (including a cross-claim or counterclaim in a lawsuit) alleging
+that this implementation of Go or any code incorporated within this
+implementation of Go constitutes direct or contributory patent
+infringement, or inducement of patent infringement, then any patent
+rights granted to you under this License for this implementation of Go
+shall terminate as of the date such litigation is filed.
+
+
+Cephes source notice
+// Cephes Math Library Release 2.8:  June, 2000
+// Copyright 1984, 1987, 1989, 1992, 2000 by Stephen L. Moshier
+//
+// The readme file at http://netlib.sandia.gov/cephes/ says:
+//    Some software in this archive may be from the book _Methods and
+// Programs for Mathematical Functions_ (Prentice-Hall or Simon & Schuster
+// International, 1989) or from the Cephes Mathematical Library, a
+// commercial product. In either event, it is copyrighted by the author.
+// What you see here may be used freely but it comes with no support or
+// guarantee.
+//
+//   The two known misprints in the book are repaired here in the
+// source listings for the gamma function and the incomplete beta
+// integral.
+//
+//   Stephen L. Moshier
+//   moshier@na-net.ornl.gov
+
+Go copyright
+// Copyright 2011 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright 2010 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright 2021 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright (c) 2016 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright 2012 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright (c) 2017 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright 2013 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright 2009 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright 2016 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright 2025 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright 2014 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright (c) 2021 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright 2015 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright 2024 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright (c) 2019 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright 2017 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright 2020 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright 2023 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright 2019 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright 2022 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright 2009-2010 The Go Authors. All rights reserved.
+
+Go copyright
+// Copyright 2018 The Go Authors. All rights reserved.
+
+Sun source notice
+// ====================================================
+// Copyright (C) 2004 by Sun Microsystems, Inc. All rights reserved.
+//
+// Permission to use, copy, modify, and distribute this
+// software is freely granted, provided that this notice
+// is preserved.
+// ====================================================
+
+Sun source notice
+// ====================================================
+// Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
+//
+// Developed at SunSoft, a Sun Microsystems, Inc. business.
+// Permission to use, copy, modify, and distribute this
+// software is freely granted, provided that this notice
+// is preserved.
+// ====================================================
+
+Sun source notice
+// ====================================================
+// Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
+//
+// Developed at SunPro, a Sun Microsystems, Inc. business.
+// Permission to use, copy, modify, and distribute this
+// software is freely granted, provided that this notice
+// is preserved.
+// ====================================================
+
+fiat-crypto source notice
+// fiat-crypto code comes under the following license.
+//
+//     Copyright (c) 2015-2020 The fiat-crypto Authors. All rights reserved.
+//
+//     Redistribution and use in source and binary forms, with or without
+//     modification, are permitted provided that the following conditions are
+//     met:
+//
+//         1. Redistributions of source code must retain the above copyright
+//         notice, this list of conditions and the following disclaimer.
+//
+//     THIS SOFTWARE IS PROVIDED BY the fiat-crypto authors "AS IS"
+//     AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+//     THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+//     PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Berkeley Software Design,
+//     Inc. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+//     EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+//     PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+//     PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//     LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//     NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 ```
 
 ---

@@ -5418,6 +5418,38 @@
       ],
       "evidence": "compliance/evidence/d2-go-runtime/binary-audit.json",
       "notes": "Complete Go 1.24.6 root text is preserved as conservative runtime/standard-library attribution. Runtime PC records resolve through the optimized WASM element table to defined nonempty code bodies. This does not independently rebuild D2 or resolve every nested/per-file compiler/runtime obligation, font/RFN question or source-offer approval."
+    },
+    {
+      "id": "d2-go-stdlib-source-notices",
+      "name": "Go standard-library supplemental source-build notices",
+      "kind": "attribution",
+      "version": "go1.24.6 selected source inputs",
+      "upstream": "https://go.dev",
+      "resolution": "publisher-source-build-graph; exact emission of every selected file not independently proved",
+      "licence": "LicenseRef-Go-Standard-Library-Source-Notices",
+      "copyright": [
+        "Original Go, Sun Microsystems, Stephen L. Moshier and fiat-crypto copyright statements are reproduced verbatim below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2--GO-STDLIB-SUPPLEMENTAL.txt",
+          "sha256": "1631d50a03dbd23f8ad778ea20f87f6944eb9bc34e6a662e63e95b38d2aa51ac",
+          "upstream": "https://go.dev/dl/go1.24.6.darwin-arm64.tar.gz",
+          "upstream_revision": "go1.24.6",
+          "upstream_path": "go/LICENSE; go/PATENTS; selected source comment fragments (exact paths/byte ranges in the evidence manifest)",
+          "upstream_archive_sha256": "4e29202c49573b953be7cc3500e1f8d9e66ddd12faa8cf0939a4951411e09a2a",
+          "assembly": "Verbatim complete root texts, distinct selected Go copyright lines and complete supplemental notice/readme comment fragments; no new or substituted grant."
+        }
+      ],
+      "provenance": "verified",
+      "embedded_in": "d2",
+      "lc": [
+        "LC-01",
+        "LC-03",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/go-stdlib-source-notices/manifest.json",
+      "notes": "Conservative attribution for 192 standard-library source-build packages / 1,013 selected files from the frozen D2 Go graph and verified compiler archive. Twenty-one files contain supplemental Sun/Cephes/fiat-crypto comments. This preserves original texts; it does not independently identify every emitted file, clear original Cephes reuse, complete nested runtime/source review or approve publication."
     }
   ]
 }
