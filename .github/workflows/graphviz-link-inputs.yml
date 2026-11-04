@@ -1,0 +1,55 @@
+name: Graphviz linker input capture
+
+on:
+  workflow_dispatch: {}
+  pull_request:
+    paths:
+      - '.github/workflows/graphviz-link-inputs.yml'
+      - 'compliance/tools/capture_graphviz_link.py'
+      - 'compliance/tools/verify_graphviz_link.py'
+      - 'compliance/tests/test_graphviz_link.py'
+      - 'compliance/evidence/graphviz-link-inputs/**'
+
+permissions:
+  contents: read
+
+jobs:
+  link:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Prepare verified sources and diagnostic-only recipe
+        run: |
+          python3 compliance/tools/capture_graphviz_link.py prepare --download \
+            --inputs "$RUNNER_TEMP/link-inputs" --output "$RUNNER_TEMP/link-capture"
+      - name: Build with fresh caches and no RUN network
+        run: |
+          set -o pipefail
+          docker pull --platform linux/amd64 emscripten/emsdk@sha256:c2ac84c26ee40ae2f2c5a15bd3f9e608d1959e1b37413fa7f08138046a188dc5
+          docker image inspect emscripten/emsdk@sha256:c2ac84c26ee40ae2f2c5a15bd3f9e608d1959e1b37413fa7f08138046a188dc5 > "$RUNNER_TEMP/link-capture/image-inspect.json"
+          docker build --platform linux/amd64 --no-cache --network=none --progress=plain \
+            --output "type=local,dest=$RUNNER_TEMP/link-built" "$RUNNER_TEMP/link-capture/link-context" \
+            2>&1 | tee "$RUNNER_TEMP/link-capture/build.log"
+      - name: Require byte-identical backend and read bounded diagnostics
+        run: |
+          python3 compliance/tools/capture_graphviz_link.py compare \
+            --output "$RUNNER_TEMP/link-capture" --built "$RUNNER_TEMP/link-built"
+      - name: Retain public text diagnostics and receipts only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: graphviz-link-inputs-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/link-capture/link-prepared.json
+            ${{ runner.temp }}/link-capture/link-result.json
+            ${{ runner.temp }}/link-capture/backend.map
+            ${{ runner.temp }}/link-capture/why-extract.tsv
+            ${{ runner.temp }}/link-capture/image-inspect.json
+            ${{ runner.temp }}/link-capture/build.log
