@@ -5450,6 +5450,42 @@
       ],
       "evidence": "compliance/evidence/go-stdlib-source-notices/manifest.json",
       "notes": "Conservative attribution for 192 standard-library source-build packages / 1,013 selected files from the frozen D2 Go graph and verified compiler archive. Twenty-one files contain supplemental Sun/Cephes/fiat-crypto comments. This preserves original texts; it does not independently identify every emitted file, clear original Cephes reuse, complete nested runtime/source review or approve publication."
+    },
+    {
+      "id": "compiler-rt-publisher-root-notices",
+      "name": "compiler-rt root licence and credits (Emscripten publisher-build reference)",
+      "kind": "attribution",
+      "version": "Emscripten 5.0.7 source reference",
+      "upstream": "https://github.com/emscripten-core/emscripten",
+      "licence": "LicenseRef-CompilerRT-Complete-Root",
+      "copyright": [
+        "Original copyright holders and the referenced contributor credits are reproduced verbatim in the complete texts below."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/compiler-rt--LICENSE.txt",
+          "sha256": "1a8f1058753f1ba890de984e48f0242a3a5c29a6a8f2ed9fd813f36985387e8d",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/compiler-rt/LICENSE.TXT"
+        },
+        {
+          "path": "compliance/licenses/compiler-rt--CREDITS.txt",
+          "sha256": "a9901f47a089da41e4690682d00ce4cedaa2baf41fedbe79beee366d43ac2461",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/compiler-rt/CREDITS.TXT"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "publisher-source-build-reference; exact binary retention not independently proved",
+      "lc": [
+        "LC-01",
+        "LC-02",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/compiler-rt-source-notices/manifest.json",
+      "notes": "The complete upstream root text retains Apache-2.0 with LLVM exceptions and all included legacy University of Illinois/NCSA and MIT portions; no convenient subsection is substituted. CREDITS.TXT is upstream's explicitly partial contributor list. Source selection establishes conservative attribution, not per-file coverage, exact linked objects, a verified compiler image, independent rights review or source-offer approval."
     }
   ]
 }
