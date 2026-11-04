@@ -95,6 +95,14 @@ class FramerReferenceTests(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             framer.verify_installed(self.root)
 
+    def test_unreviewed_code_outside_the_helper_excerpt_refuses(self):
+        path = self.root / framer.PACKET / 'helper-block.coffee'
+        original = path.read_bytes()
+        for body in [b'unreviewed = 1\n' + original, original + b'\nunreviewed = 1\n']:
+            path.write_bytes(body)
+            with self.subTest(body=body[:20]), self.assertRaises(ValueError):
+                framer.verify_installed(self.root)
+
 
 if __name__ == '__main__':
     unittest.main()

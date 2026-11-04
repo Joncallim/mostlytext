@@ -60,10 +60,10 @@ cmp compliance/evidence/framer-mit-reference/mapping.json /tmp/framer-mapping.js
 python3 -m unittest compliance.tests.test_framer_reference -v
 ```
 
-Eight offline test methods reject incomplete/changed terms, missing author,
+Nine offline test methods reject incomplete/changed terms, missing author,
 coherently rewritten notice/inventory, false exact-original claims, missing or
 duplicate components, changed reference/mapping, arithmetic/identifier/comment
-changes, missing generated probes and missing proof. Six actual captured-input
+changes, missing generated probes, unreviewed code around the retained excerpt and missing proof. Six actual captured-input
 mutations reject all five changed source/terms/package inputs plus substitution
 of the older BSD text for this actual MIT reference. Full raw replay equals the
 committed mapping exactly. An initial indentation-only positive control exposed
@@ -74,3 +74,18 @@ No runtime, pin, old component/text, original evidence or release predicate is
 removed. Inventory, generated notices and SBOM change together. All six existing
 strict release failures remain. Source publication/anonymous retrieval, native
 license-window and exact signed-artifact acceptance are unperformed.
+
+## Built resource and final evidence review
+
+The locked compile-only universal Release build succeeds. Its actual internal
+bundle is MacDown2.app; the built notice is byte-identical to generated source,
+496,371 bytes, SHA256 859b18af33f6b22973719404faee5e9c4a2f97bc8d463005eb86f4bc847e30bf,
+below the unchanged 2 MiB reader limit. Artifact inventory passes and the exact
+same six strict failure messages remain. Final package-pin check passes. No
+product/native executable ran; this is not native licence-window acceptance.
+
+Review also reproduced acceptance of extra code outside the reviewed helper
+excerpt. Two actual assertions fail before the complete-file digest guard; the
+corrected verifier pins the whole excerpt as well as checking its helper block.
+The original failing log is retained. This changes only evidence validation, not
+the notice, source map, runtime or any release predicate.

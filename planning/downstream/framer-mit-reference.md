@@ -55,3 +55,18 @@ and independent rights review, source publication/anonymous retrieval, native
 licence UI and signed final artifact gates stay open. Stop and reconcile if the
 real code probes or source/terms correspondence disagree; do not choose a
 convenient license or weaken a guard to fit the new reference.
+
+## Source/resource qualification
+
+All 266 local Compliance controls pass after final review. Full raw replay
+matches the committed 258-reference mapping; six actual captured-input mutations
+refuse. Every prior inventory and SBOM component is unchanged. Complete-file
+pinning of the helper excerpt rejects two actual formerly accepted prefix/suffix
+mutations. The initial indentation-positive failure and both excerpt-boundary
+failures remain retained with corrected results.
+
+The locked compile-only universal Release build and actual built-notice check
+pass. Generated and packaged notice bytes are identical and below the existing
+2 MiB bound. Artifact inventory passes and all six strict failure messages stay
+byte-identical. Final dependency pins match. No local product/AppKit/WebKit test
+or native screen acceptance is inferred. Full hosted checks remain required.

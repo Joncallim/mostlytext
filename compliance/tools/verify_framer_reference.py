@@ -17,6 +17,7 @@ NOTICE = 'compliance/licenses/cytoscape-framer-spring--MIT.txt'
 NOTICE_SHA = '298012b8b6c965d489221b5b79be5f77ca2027ec65d47a80b16b73812cb60a46'
 REVISION = 'a41d843dc1371dd0cdc87d1fbbb3f833a5d24d58'
 ID = 'cytoscape-framer-spring'
+EXCERPT_SHA = '40787843e292b274e4360120c8ac2ad7ff01778edb16d4c88fd01dcd0c59d192'
 MAPPING_SHA = '683119f8d539f4640c41126db315a0a0a6cbff095b5e12b35765b1c8edc61159'
 START = 'var generateSpringRK4 = function () {'
 END = 'var cubicBezier = function cubicBezier('
@@ -89,7 +90,10 @@ def checked_reference(root, inputs):
 
 def verify_installed(root=ROOT):
     specification(root)
-    helper_block((root / PACKET / 'helper-block.coffee').read_text())
+    excerpt = (root / PACKET / 'helper-block.coffee').read_bytes()
+    if sha(excerpt) != EXCERPT_SHA:
+        raise ValueError('Pinned Framer helper excerpt changed')
+    helper_block(excerpt.decode())
     if sha((root / NOTICE).read_bytes()) != NOTICE_SHA:
         raise ValueError('Complete Framer MIT text changed')
     inventory = json.loads((root / 'compliance/inventory.json').read_text())
