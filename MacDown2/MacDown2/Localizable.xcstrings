@@ -1360,6 +1360,35 @@
         }
       }
     },
+    "Case Sensitive": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Case Sensitive"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Case Sensitive"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Case Sensitive"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Case Sensitive"
+          }
+        }
+      }
+    },
     "Check that MostlyText can write to the Commands folder, then try again.": {
       "extractionState": "manual",
       "comment": "Command-folder error. Requires translation and native layout review before the final string freeze."
@@ -4152,6 +4181,35 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "読み込む…"
+          }
+        }
+      }
+    },
+    "In Selection": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In Selection"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "In Selection"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "In Selection"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "In Selection"
           }
         }
       }
@@ -7206,6 +7264,35 @@
         }
       }
     },
+    "Regular Expression": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Regular Expression"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Regular Expression"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Regular Expression"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Regular Expression"
+          }
+        }
+      }
+    },
     "Reloaded from disk": {
       "localizations": {
         "fr": {
@@ -8046,6 +8133,35 @@
         }
       }
     },
+    "Search": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Search"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Search"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Search"
+          }
+        }
+      }
+    },
     "Search cancelled": {
       "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
       "localizations": {
@@ -8129,6 +8245,35 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Searching…"
+          }
+        }
+      }
+    },
+    "Sel": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sel"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Sel"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Sel"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Sel"
           }
         }
       }
@@ -10977,6 +11122,35 @@
         }
       }
     },
+    "W": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "W"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "W"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "W"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "W"
+          }
+        }
+      }
+    },
     "WebKit did not produce a readable PDF snapshot.": {
       "comment": "App-owned PDF failure/recovery detail. Non-English values are English review drafts requiring final translation/native review.",
       "localizations": {
@@ -11082,6 +11256,35 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Witamy w MostlyText"
+          }
+        }
+      }
+    },
+    "Whole Word": {
+      "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whole Word"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Whole Word"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Whole Word"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Whole Word"
           }
         }
       }

@@ -103,10 +103,18 @@ struct FindBarView: View {
                 .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
                 .frame(minWidth: 200, maxWidth: 320)
 
-                optionToggle("Aa", isOn: $model.options.isCaseSensitive, help: "Case Sensitive")
-                optionToggle("W", isOn: $model.options.isWholeWord, help: "Whole Word")
-                optionToggle(".*", isOn: $model.options.isRegex, help: "Regular Expression")
-                optionToggle("Sel", isOn: $model.options.searchesSelectionOnly, help: "In Selection")
+                optionToggle("Aa", isOn: $model.options.isCaseSensitive, help: String(localized: "Case Sensitive"))
+                optionToggle(
+                    String(localized: "W"),
+                    isOn: $model.options.isWholeWord,
+                    help: String(localized: "Whole Word")
+                )
+                optionToggle(".*", isOn: $model.options.isRegex, help: String(localized: "Regular Expression"))
+                optionToggle(
+                    String(localized: "Sel"),
+                    isOn: $model.options.searchesSelectionOnly,
+                    help: String(localized: "In Selection")
+                )
 
                 if model.isSearching {
                     ProgressView()
@@ -292,19 +300,6 @@ struct FindBarView: View {
         }
     }
 
-    private func optionToggle(_ title: String, isOn: Binding<Bool>, help: String) -> some View {
-        Button {
-            isOn.wrappedValue.toggle()
-        } label: {
-            Text(title)
-                .font(.system(size: 11, weight: .medium, design: .monospaced))
-                .frame(minWidth: 20)
-        }
-        .buttonStyle(.bordered)
-        .tint(isOn.wrappedValue ? Color.accentColor : Color.clear)
-        .help(help)
-    }
-
     /// Runs `navigation` (`model.findNext`/`findPrevious`), then reports the
     /// resulting state up — used by both the keyboard (Return/Shift-Return)
     /// and the toolbar chevron buttons so both paths behave identically.
@@ -382,5 +377,20 @@ struct FindBarView: View {
         guard !model.isSearching, let selection = model.selectionSetForAllMatches else { return }
         onSelectAll(selection)
         onClose()
+    }
+}
+
+extension FindBarView {
+    private func optionToggle(_ title: String, isOn: Binding<Bool>, help: String) -> some View {
+        Button {
+            isOn.wrappedValue.toggle()
+        } label: {
+            Text(title)
+                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                .frame(minWidth: 20)
+        }
+        .buttonStyle(.bordered)
+        .tint(isOn.wrappedValue ? Color.accentColor : Color.clear)
+        .help(help)
     }
 }

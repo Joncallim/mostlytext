@@ -32,7 +32,7 @@ public extension EditorFindModel {
         }
         return EditorEditTransaction(
             replacements: [textReplacement],
-            undoActionName: "Replace",
+            undoActionName: String(localized: "Replace", bundle: .module),
             resultingSelection: EditorSelectionSet(single: caretRange)
         )
     }
@@ -54,7 +54,7 @@ public extension EditorFindModel {
         }
         return EditorEditTransaction(
             replacements: textReplacements,
-            undoActionName: "Replace All",
+            undoActionName: String(localized: "Replace All", bundle: .module),
             resultingSelection: EditorSelectionSet(single: caretRange)
         )
     }

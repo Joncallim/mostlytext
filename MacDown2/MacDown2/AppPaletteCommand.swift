@@ -39,7 +39,7 @@ extension AppPaletteCommand {
     static let standard: [AppPaletteCommand] = [
         AppPaletteCommand(
             id: "newFile",
-            title: "New File",
+            title: String(localized: "New File"),
             // Mirrors `WorkspaceCommands`' real "New File" menu item: only
             // meaningful with an open folder (post-review finding #8 — the
             // palette previously aliased this to "New Tab", which drifted
@@ -63,7 +63,7 @@ extension AppPaletteCommand {
         // window or tab host.
         AppPaletteCommand(
             id: "newTab",
-            title: "New Tab",
+            title: String(localized: "New Tab"),
             isAvailable: { _, controller in controller != nil },
             action: { coordinator, controller in
                 coordinator.newDocument(addAsTab: true, relativeTo: controller?.window)
@@ -73,7 +73,7 @@ extension AppPaletteCommand {
         // is the palette itself while these run) — post-review finding #4.
         AppPaletteCommand(
             id: "open",
-            title: "Open…",
+            title: String(localized: "Open…"),
             isAvailable: { _, controller in controller != nil },
             action: { coordinator, controller in
                 coordinator.openFile(relativeTo: controller)
@@ -81,7 +81,7 @@ extension AppPaletteCommand {
         ),
         AppPaletteCommand(
             id: "openWithEncoding",
-            title: "Open with Encoding…",
+            title: String(localized: "Open with Encoding…"),
             isAvailable: { _, controller in controller != nil },
             action: { coordinator, controller in
                 coordinator.openFileWithEncoding(relativeTo: controller)
@@ -89,7 +89,7 @@ extension AppPaletteCommand {
         ),
         AppPaletteCommand(
             id: "openFolder",
-            title: "Open Folder…",
+            title: String(localized: "Open Folder…"),
             isAvailable: { _, controller in controller != nil },
             action: { coordinator, controller in
                 coordinator.chooseFolder(relativeTo: controller)
@@ -97,7 +97,7 @@ extension AppPaletteCommand {
         ),
         AppPaletteCommand(
             id: "save",
-            title: "Save",
+            title: String(localized: "Save"),
             isAvailable: { _, controller in controller?.model.canSave == true },
             action: { coordinator, controller in
                 guard let controller else { return }
@@ -106,7 +106,7 @@ extension AppPaletteCommand {
         ),
         AppPaletteCommand(
             id: "saveAs",
-            title: "Save As…",
+            title: String(localized: "Save As…"),
             isAvailable: { coordinator, controller in
                 coordinator.isLiveController(controller) && controller?.model.hasActiveDocument == true
             },
@@ -117,7 +117,7 @@ extension AppPaletteCommand {
         ),
         AppPaletteCommand(
             id: "closeTab",
-            title: "Close Tab",
+            title: String(localized: "Close Tab"),
             isAvailable: { _, controller in controller?.model.canClose == true },
             action: { coordinator, controller in
                 guard let controller else { return }
@@ -126,7 +126,7 @@ extension AppPaletteCommand {
         ),
         AppPaletteCommand(
             id: "toggleSidebar",
-            title: "Toggle Sidebar",
+            title: String(localized: "Toggle Sidebar"),
             // Unlike the other commands above, toggling the sidebar has no
             // other precondition of its own to fall back on — without this,
             // it would stay "available" (and invocable) against an origin
@@ -136,17 +136,18 @@ extension AppPaletteCommand {
         ),
         AppPaletteCommand(
             id: "insertSnippet",
-            title: "Insert Snippet…",
+            title: String(localized: "Insert Snippet…"),
             isAvailable: { _, controller in controller?.model.hasActiveDocument == true },
             action: { coordinator, controller in coordinator.presentSnippetPicker(origin: controller) }
         ),
         AppPaletteCommand(
             id: "editSnippets",
-            title: "Edit Snippets…",
+            title: String(localized: "Edit Snippets…"),
             isAvailable: { coordinator, controller in coordinator.isLiveController(controller) },
             action: { coordinator, controller in coordinator.editSnippets(relativeTo: controller?.window) }
         ),
-        AppPaletteCommand(id: "showCommandsFolder", title: "Show Commands Folder") { coordinator, _ in
+        AppPaletteCommand(id: "showCommandsFolder",
+                          title: String(localized: "Show Commands Folder")) { coordinator, _ in
             let directory = coordinator.commandsDirectory
             _ = TextFilterCommandDiscovery.discoverCommands(in: directory)
             NSWorkspace.shared.open(directory)

@@ -10,11 +10,21 @@ extension MarkdownEditingAssistEngine {
     ) -> EditingAssistOutcome {
         switch command {
         case .bold:
-            return toggleInline(delimiter: "**", text: text, selection: selection, undoActionName: "Bold")
+            return toggleInline(
+                delimiter: "**",
+                text: text,
+                selection: selection,
+                undoActionName: String(localized: "Bold", bundle: .module)
+            )
         case .italic:
             return toggleItalic(text: text, selection: selection)
         case .inlineCode:
-            return toggleInline(delimiter: "`", text: text, selection: selection, undoActionName: "Inline Code")
+            return toggleInline(
+                delimiter: "`",
+                text: text,
+                selection: selection,
+                undoActionName: String(localized: "Inline Code", bundle: .module)
+            )
         case let .heading(level):
             guard (1 ... 6).contains(level) else { return .passthrough }
             return headingOutcome(level: level, text: text, selection: selection)
@@ -68,7 +78,7 @@ extension MarkdownEditingAssistEngine {
                 replacementRange: selection,
                 replacementString: "**",
                 resultingSelection: NSRange(location: selection.location + 1, length: 0),
-                undoActionName: "Italic"
+                undoActionName: String(localized: "Italic", bundle: .module)
             ))
         }
         let isTripleSurrounded = isSurrounded(selection: selection, by: "***", in: text)
@@ -80,14 +90,14 @@ extension MarkdownEditingAssistEngine {
                 replacementRange: stripRange,
                 replacementString: content,
                 resultingSelection: NSRange(location: stripRange.location, length: selection.length),
-                undoActionName: "Italic"
+                undoActionName: String(localized: "Italic", bundle: .module)
             ))
         }
         return .edit(EditingAssistEdit(
             replacementRange: selection,
             replacementString: "*" + content + "*",
             resultingSelection: NSRange(location: selection.location + 1, length: selection.length),
-            undoActionName: "Italic"
+            undoActionName: String(localized: "Italic", bundle: .module)
         ))
     }
 
@@ -160,7 +170,10 @@ extension MarkdownEditingAssistEngine {
             replacementRange: range,
             replacementString: newContent,
             resultingSelection: selectionRange,
-            undoActionName: level > 0 ? "Heading" : "Paragraph"
+            undoActionName: level > 0 ? String(localized: "Heading", bundle: .module) : String(
+                localized: "Paragraph",
+                bundle: .module
+            )
         ))
     }
 

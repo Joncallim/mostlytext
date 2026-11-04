@@ -62,7 +62,7 @@ enum EditorCommentToggle {
             replacements: replacements,
             resultsByOriginalIndex: resultsByOriginalIndex,
             selection: selection,
-            undoActionName: "Toggle Comment"
+            undoActionName: String(localized: "Toggle Comment", bundle: .module)
         )
     }
 

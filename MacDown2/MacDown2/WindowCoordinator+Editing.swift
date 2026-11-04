@@ -124,7 +124,8 @@ extension WindowCoordinator {
             guard formattedText != snapshotText else { return true }
             currentSystem.applyDocumentReplacement(
                 formattedText,
-                undoActionName: sortKeys ? "Format JSON with Sorted Keys" : "Format JSON"
+                undoActionName: sortKeys ? String(localized: "Format JSON with Sorted Keys") :
+                    String(localized: "Format JSON")
             )
             return true
         }

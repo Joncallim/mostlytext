@@ -79,7 +79,7 @@ struct TextFilterCommands: Commands {
             )
         } else if result.installedCount > 0 {
             alert.alertStyle = .informational
-            alert.messageText = String(localized: "^[Added \(result.installedCount) Example Script](inflect: true)")
+            alert.messageText = installedExamplesTitle(count: result.installedCount)
             alert.informativeText = String(localized: "They're now listed in the Commands menu.")
         } else {
             alert.alertStyle = .informational
@@ -89,5 +89,11 @@ struct TextFilterCommands: Commands {
             )
         }
         alert.runModal()
+    }
+
+    static func installedExamplesTitle(count: Int, bundle: Bundle = .main, locale: Locale = .current) -> String {
+        String(AttributedString(
+            localized: "^[Added \(count) Example Script](inflect: true)", bundle: bundle, locale: locale
+        ).characters)
     }
 }

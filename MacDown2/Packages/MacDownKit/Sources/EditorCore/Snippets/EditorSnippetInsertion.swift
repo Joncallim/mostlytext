@@ -7,7 +7,7 @@ import FileCore
 /// its own indentation, its own line's terminator) and leaves one caret at
 /// its own final-caret position (EPIC-22 journey J7).
 enum EditorSnippetInsertion {
-    static let undoActionName = "Insert Snippet"
+    static let undoActionName = String(localized: "Insert Snippet", bundle: .module)
 
     static func transaction(
         template: SnippetTemplate,

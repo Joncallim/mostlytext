@@ -87,8 +87,8 @@ public enum JSONOutlineBuilder {
 
     private static func rootTitle(_ node: JSONNode) -> String {
         switch node.value {
-        case .object: "Object"
-        case .array: "Array"
+        case .object: String(localized: "Object", bundle: .module)
+        case .array: String(localized: "Array", bundle: .module)
         default: scalarTitle(node)
         }
     }
