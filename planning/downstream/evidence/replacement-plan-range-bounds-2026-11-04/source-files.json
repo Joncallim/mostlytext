@@ -1,0 +1,346 @@
+[
+  {
+    "path": "Sources/JSONSupport/JSONAnalysisSession.swift",
+    "sha256": "9553c312eee9bdf85a844b72f87b7b99b7b2bf62891d67bfe83aa5bbfd8b9fb6"
+  },
+  {
+    "path": "Sources/JSONSupport/JSONFormatter.swift",
+    "sha256": "29da8d31de8d794d2782c63e31ddd06a6861de2e026a66546daa0f4c6a772263"
+  },
+  {
+    "path": "Sources/JSONSupport/JSONFormattingBaseline.swift",
+    "sha256": "c08cfaf05da5c80de0a7c736df31c3fc73085211809692f3f3e00acacfae5cbf"
+  },
+  {
+    "path": "Sources/JSONSupport/JSONOutlineBuilder.swift",
+    "sha256": "743d44593a695ab4bf1b187536610fa6ad6616b853f583ae29a890bbca36f3c7"
+  },
+  {
+    "path": "Sources/JSONSupport/JSONParser.swift",
+    "sha256": "4621bf74e40d287e177b868579a9cf688b5e6b9bbfc87d2481093a7b62f4f26e"
+  },
+  {
+    "path": "Sources/JSONSupport/JSONScanner+Strings.swift",
+    "sha256": "0f724bee6788ababb26e2065b279fdba6f198bb1507fe459e1ce03cd3521419a"
+  },
+  {
+    "path": "Sources/JSONSupport/JSONScanner+Values.swift",
+    "sha256": "8f4021899831dd1470670720a76c4f93d1ec08e2abbbc79f92aaab46ce323a88"
+  },
+  {
+    "path": "Sources/JSONSupport/JSONScanner.swift",
+    "sha256": "c3e36e12ec90332490e2b1592d347e3dace33e0624f9f3df185687a836073386"
+  },
+  {
+    "path": "Sources/JSONSupport/JSONValues.swift",
+    "sha256": "16e586872917f5a06b9a2cb0c65508b70b56c5db32e8bd9cbde4cb2254ede764"
+  },
+  {
+    "path": "Sources/JSONSupport/Resources/Localizable.xcstrings",
+    "sha256": "e5dd5abe07c0db64a4a6394c8e3513f5c878a9ee3cadcd5d6eff48400c12dcb1"
+  },
+  {
+    "path": "Sources/FileCore/DestinationBaseline.swift",
+    "sha256": "92efdd4af9d449f4f41c8f84ffd518d29c7fd52527a7239481164354487adb67"
+  },
+  {
+    "path": "Sources/FileCore/DocumentDirectoryWatcher.swift",
+    "sha256": "2306070f4b77ef0b48a8cda92de19e23428049a204c12879dd5b3a55f6ce81c9"
+  },
+  {
+    "path": "Sources/FileCore/DocumentFileMonitor+Baseline.swift",
+    "sha256": "543edeec61adb91d631ae0fc321056083a32eacd5a2ec9af7b259363ebfcc478"
+  },
+  {
+    "path": "Sources/FileCore/DocumentFileMonitor+FileWatch.swift",
+    "sha256": "3ac7ebe04526b1339b9f18b638efe2bd23df4cef830e39af2f0944ece69c2d67"
+  },
+  {
+    "path": "Sources/FileCore/DocumentFileMonitor.swift",
+    "sha256": "8fab3ae29f48f9c0aca8e11f1852c0ed56a059435ef864fa96f3051ec14a4714"
+  },
+  {
+    "path": "Sources/FileCore/DocumentFileProbe.swift",
+    "sha256": "d5484c5edf1b116b453631374db28c41ae900f8ee38320d75d587a1545bbfe64"
+  },
+  {
+    "path": "Sources/FileCore/DurableFileWriter.swift",
+    "sha256": "9632e36ce1c5c0b405a9854b5533fd445410c27deabba4f64f5c9acc47efd0ef"
+  },
+  {
+    "path": "Sources/FileCore/FileByteDecoder.swift",
+    "sha256": "929d5728eb9f1a133d5b0a09faa32fdb255bacd920c504be5ef657130f06230d"
+  },
+  {
+    "path": "Sources/FileCore/FileCore.swift",
+    "sha256": "c76f290dd5ee235ae7c81c8468d696e6348b45bfa340805b637db271f97b9c47"
+  },
+  {
+    "path": "Sources/FileCore/FileDocument+Edit.swift",
+    "sha256": "00690e71d54bdb749ae5a7b65d82cfa4c04b70dd5c4b96d506629cf9cbc59719"
+  },
+  {
+    "path": "Sources/FileCore/FileDocument+ExternalChanges.swift",
+    "sha256": "f36dce7a7de3c0ad1c7fa7bb8e6e46a32aa3dbcdfa0ad66c077186e62e432508"
+  },
+  {
+    "path": "Sources/FileCore/FileDocument+Format.swift",
+    "sha256": "05c4224916dc2409754c2ec84febcfcaa08cfcc987b578e66cc513fc394d2288"
+  },
+  {
+    "path": "Sources/FileCore/FileDocument+Lifetime.swift",
+    "sha256": "53929c186daee17b7c127638b3e95b41f608198297ca58d1150aa8b1e92ca53c"
+  },
+  {
+    "path": "Sources/FileCore/FileDocument+Recovery.swift",
+    "sha256": "ee8cdf45a78d94c1e7d3abbd6969cc5bc0f17ef1d681918875d038831bb01a03"
+  },
+  {
+    "path": "Sources/FileCore/FileDocument+RestoredBaseline.swift",
+    "sha256": "3f2f04a79cdf4f9d523841d8bd85727fbf926bc5d35306480da0cee68770d099"
+  },
+  {
+    "path": "Sources/FileCore/FileDocument.swift",
+    "sha256": "dad277e9051719ff3ef98d4f1fdbf91348bfe3059ffa075968761a54d4a60df0"
+  },
+  {
+    "path": "Sources/FileCore/FileDocumentState.swift",
+    "sha256": "b2f5581433073a23e35f4a9561d18d431325fd90302ba448d6e67b16e39f53a2"
+  },
+  {
+    "path": "Sources/FileCore/FileEncoding.swift",
+    "sha256": "9ebfd043659db44ec015258e49f6462856258beb6e6f31fdee38774f3f30c50b"
+  },
+  {
+    "path": "Sources/FileCore/FileEncodingCatalog.swift",
+    "sha256": "7ca94e6af1547ec904e1101bc0bc33243541a8c0065c8781988111e7dd430717"
+  },
+  {
+    "path": "Sources/FileCore/FileEncodingMetadata+DisplayName.swift",
+    "sha256": "a7a7f180dbdc5c787e2ec528b43020c5b2ece9dc359275b4089ffa7fd6c404d9"
+  },
+  {
+    "path": "Sources/FileCore/FileFormat.swift",
+    "sha256": "6227fd24519356a13545a591cc70dd2c5122cbb2c15b13168ac1454a5fd9dfcc"
+  },
+  {
+    "path": "Sources/FileCore/FileSnapshot.swift",
+    "sha256": "f6b88e5dbd8e76f493acf6f3b262400899597920f9a957af4772f8b5efd23b70"
+  },
+  {
+    "path": "Sources/FileCore/FileStore+CompanionNames.swift",
+    "sha256": "3d5600e67eb2d66d2fe6236d271eda578ef9a09b3fcb2f3d9817cb25d5f5ba0a"
+  },
+  {
+    "path": "Sources/FileCore/FileStore+ConditionalPublication.swift",
+    "sha256": "a7cec3e717aa9d2b2ba97d4428f7d79d8629f9cf2fb2483b4abb6c80c84d72d6"
+  },
+  {
+    "path": "Sources/FileCore/FileStore+EncodedData.swift",
+    "sha256": "158ddec50cea8db7cc32cf05fdbe081e30dd8da71780c125c532a221fe375a99"
+  },
+  {
+    "path": "Sources/FileCore/FileStore+Encoding.swift",
+    "sha256": "05a290e2cf37e9d2ec753cb56e36f92fc1aa1631aceca05a8145c0080f30651e"
+  },
+  {
+    "path": "Sources/FileCore/FileStore+EncodingDetection.swift",
+    "sha256": "7015e11ba79fb41bb0448ef69c13b3d5e0ae2296299829047a4fa399f816bf75"
+  },
+  {
+    "path": "Sources/FileCore/FileStore+ErrorMapping.swift",
+    "sha256": "c05cdd5a76eaf9ec468fc6f6e00879a77431a031dbaa69415b1765afc172acfc"
+  },
+  {
+    "path": "Sources/FileCore/FileStore.swift",
+    "sha256": "d07881ef32d28061bd34e7bdf19dde5b1bf844c01dd7f63adde30aa1cee48799"
+  },
+  {
+    "path": "Sources/FileCore/FileStoreRetirement.swift",
+    "sha256": "8d56e061d652cfb7596307ae9a976de2cd6f080a1a844cafb0bb84f50b0926d1"
+  },
+  {
+    "path": "Sources/FileCore/FileStoreStage.swift",
+    "sha256": "7bd779045334cdc02a4f352df5cf1b484438d7a260ac53e3001f41f5862507de"
+  },
+  {
+    "path": "Sources/FileCore/FormatManifest.swift",
+    "sha256": "baaebfafcb7b4dad9d258fc6bd1f351a66ec00614cf1130921e70ad5526b709e"
+  },
+  {
+    "path": "Sources/FileCore/LineEnding.swift",
+    "sha256": "3d4932a939a30236a5821de7d2690dc507ce92063f0aecb860aabb5968223968"
+  },
+  {
+    "path": "Sources/FileCore/PhysicalFileIdentity.swift",
+    "sha256": "f5bcea1835dcedc8a57d7181bb394b5c67be0e1a30d355977dd9526df09d7048"
+  },
+  {
+    "path": "Sources/FileCore/RecoveryBuffer+ExactRead.swift",
+    "sha256": "7fa8d8abbaee16c1d5193371b245df302edb0decc8acbb149bf9c5ae7650b9c5"
+  },
+  {
+    "path": "Sources/FileCore/RecoveryBuffer+Installation.swift",
+    "sha256": "97dd2716d9f2b8190fc81dd16fb8c2eab214b254e5dd24365c543d5a0ecca08c"
+  },
+  {
+    "path": "Sources/FileCore/RecoveryBuffer+Legacy.swift",
+    "sha256": "47cd20c63faa4892a0b71c2f9ee289d440bf86b6ff4db1f7fc50b314a8e49974"
+  },
+  {
+    "path": "Sources/FileCore/RecoveryBuffer+Migration.swift",
+    "sha256": "4c98449384305f2a1cfba00dd7e27ad6de70877d40a65e62c926bcdfc9d0fec1"
+  },
+  {
+    "path": "Sources/FileCore/RecoveryBuffer+Migrations.swift",
+    "sha256": "7c30c0b269696930830ccb44519a9520cb04f90530a632b363dd176155505770"
+  },
+  {
+    "path": "Sources/FileCore/RecoveryBuffer+Storage.swift",
+    "sha256": "ac99ed6d80d12559ba0bacb67e71bcd770f606116b4e4f880b2eb6d477d08243"
+  },
+  {
+    "path": "Sources/FileCore/RecoveryBuffer+StorageSupport.swift",
+    "sha256": "b1308c91bf90f8eae19efee236278947a8edc7aeeb6e18a00f61725c634deffd"
+  },
+  {
+    "path": "Sources/FileCore/RecoveryBuffer+Types.swift",
+    "sha256": "645adda79f137387cf8d7e1f77f0780971a0e9176accbca986a24672d6d4f6d9"
+  },
+  {
+    "path": "Sources/FileCore/RecoveryBuffer.swift",
+    "sha256": "9ccbc560bec7fd3ff608c1d55d9753655a97c32f15a6f1022888970a051f00da"
+  },
+  {
+    "path": "Sources/FileCore/Resources/Localizable.xcstrings",
+    "sha256": "1b3fa2624bc00799a44e20cf2123b0950fe4ad0559844f3bdf78899c77ff162c"
+  },
+  {
+    "path": "Sources/FileCore/String+ExactEquality.swift",
+    "sha256": "8f7275f85968b87eea88060afcabc8866d81d910d626f513a1fd49d5de062337"
+  },
+  {
+    "path": "Sources/FileCore/SyntaxModeOverride.swift",
+    "sha256": "305ffdb47b2377bd365c92beeef7d02232e0e608db06b1d9405a0f4a0ea90797"
+  },
+  {
+    "path": "Sources/FileCore/URL+ResolvingFinalSymlink.swift",
+    "sha256": "fe60e0fbac375235472d20c2eec57788bd4315f5856fe1a5c457cca6df810c79"
+  },
+  {
+    "path": "Sources/TextSearch/DirectoryWalker.swift",
+    "sha256": "273dd35b5d87a931446becbd5d533ea265957036c66dee8ca05071c59a0da78b"
+  },
+  {
+    "path": "Sources/TextSearch/FolderSearchFilter.swift",
+    "sha256": "8c05a6dd65af082c165299bce104a6ffd97060ff6a4d47c494ba4f364056242c"
+  },
+  {
+    "path": "Sources/TextSearch/FuzzyPathScore.swift",
+    "sha256": "7b0cd6023084cd61b9287066c3892b012504f9c379daa23fddce44f5fcc7e10f"
+  },
+  {
+    "path": "Sources/TextSearch/GlobPattern.swift",
+    "sha256": "3a79b5e8dc82398ca578b67f94ee7197fd297344c2324dd1d1f94b9f4e20ca7c"
+  },
+  {
+    "path": "Sources/TextSearch/ReplacementPlan.swift",
+    "sha256": "d207eb85ab6ca9a2dc385f5c25006b8d0cfe91302472ebead3018f1f7a54f038"
+  },
+  {
+    "path": "Sources/TextSearch/Resources/Localizable.xcstrings",
+    "sha256": "a04ad16cf4141d4f6682fc097c00d83fc7cc9c09c31f9c7fb657d9f92340e58a"
+  },
+  {
+    "path": "Sources/TextSearch/SearchTypes.swift",
+    "sha256": "78493089213bae95b5e80f091399da1431c4a3d28cecfa14b298f887b3c28479"
+  },
+  {
+    "path": "Sources/TextSearch/TextSearch.swift",
+    "sha256": "48cc298451762e415dc086ad68be3b7340309ed358986d261b6eea97d56d84eb"
+  },
+  {
+    "path": "Sources/TextSearch/TextSearchEngine.swift",
+    "sha256": "4dca58ef0af583d8b2c1422c9593b7de01cb9dd119a1277a441bacc33d75a2c3"
+  },
+  {
+    "path": "Sources/TextSearch/WorkspaceFileIndex.swift",
+    "sha256": "5d69c6a15d4328290eda79666b16bdb868c1b1ab160c584b10572aa3ee2dbbc4"
+  },
+  {
+    "path": "Sources/TextSearch/WorkspaceReplaceEngine.swift",
+    "sha256": "db87e8fd0ee472ac3d88ca8781b19019c180e38bab4d0b29dcd059d9a2de5933"
+  },
+  {
+    "path": "Sources/TextSearch/WorkspaceSearchEngine.swift",
+    "sha256": "bbf759bc60a276f384cb0792c6d24c1ac5d57be7ca3bfd36ef6c66b826d827e5"
+  },
+  {
+    "path": "Tests/TextSearchTests/DirectoryWalkerAliasTests.swift",
+    "sha256": "4c359c1fa09a907b37c959710d851f57a5c1d3c8e34dec76f85a14dba24cae5f"
+  },
+  {
+    "path": "Tests/TextSearchTests/FuzzyPathScoreTests.swift",
+    "sha256": "91ed1558d90e4e0973160010fdf475607d30dda5e2dc35f8cc1e9006f0b387ea"
+  },
+  {
+    "path": "Tests/TextSearchTests/GlobPatternScalarTests.swift",
+    "sha256": "c2d0701b96e0b96a695b29e077af011f4a4fa4d7ce55a915db13644e565a3e45"
+  },
+  {
+    "path": "Tests/TextSearchTests/RegexCRLFPairTests.swift",
+    "sha256": "75b10cbc7fa059edeaf429cf790f5d379b06ba4e146bfd60de8122e5c4a8be81"
+  },
+  {
+    "path": "Tests/TextSearchTests/RegexCancellationTests.swift",
+    "sha256": "44366c0da76d2cb2a5e693cccca0d26eb28ab61d89025bba69a4f7bdc53a1122"
+  },
+  {
+    "path": "Tests/TextSearchTests/RegexLineAnchorTests.swift",
+    "sha256": "0695efcf9a88c6155ed2a97c919038248a9e36ef93ceacc52b1ed89a035f3247"
+  },
+  {
+    "path": "Tests/TextSearchTests/ReplacementPlanRangeBoundsTests.swift",
+    "sha256": "3bd89f1b55cda4e39fee0d834ff6a84fd86a8444c2c03af8ddd9beef46a43bf1"
+  },
+  {
+    "path": "Tests/TextSearchTests/TextSearchEngineTests.swift",
+    "sha256": "dcfec65673b07792b81942e2d30d6ed9f88d1334818e141dcf62f5ef374d0427"
+  },
+  {
+    "path": "Tests/TextSearchTests/WorkspaceFileIndexPerformanceTests.swift",
+    "sha256": "5540517b2e86792604e8f9c2a8ce97a466a4474a01c124e01f07f5e1ca9198e7"
+  },
+  {
+    "path": "Tests/TextSearchTests/WorkspaceFileIndexTests.swift",
+    "sha256": "57e385329b8366e27ade972b80c26a863ef0df1ad06d9e2b92c6d270d2502b85"
+  },
+  {
+    "path": "Tests/TextSearchTests/WorkspaceReplaceEngineTests.swift",
+    "sha256": "cde681d701d73ba09ec2e033d060154c51eba6e86dafa3a2201c537813465d0b"
+  },
+  {
+    "path": "Tests/TextSearchTests/WorkspaceReplaceExtendingScalarPathTests.swift",
+    "sha256": "3c84b788965d17d51aac0bde1fb09585905b3e1d3d220b50d566ef7f8d89b8fc"
+  },
+  {
+    "path": "Tests/TextSearchTests/WorkspaceReplaceSafetyTests.swift",
+    "sha256": "6d05067af15e20ccc52a15a74a6c1d0a5d4b9ea7a9f39b70580dc2d87c0629df"
+  },
+  {
+    "path": "Tests/TextSearchTests/WorkspaceSearchEngineCancellationTests.swift",
+    "sha256": "5f8add0454c83951af4c6ebd38ff36204173e86a581893fe5c18f9ad69bf6103"
+  },
+  {
+    "path": "Tests/TextSearchTests/WorkspaceSearchEngineIndexFailureTests.swift",
+    "sha256": "fbc5d560640f56adaa7d6c09a9a549f7ad407f20f0f67f96dabc5e9897e21707"
+  },
+  {
+    "path": "Tests/TextSearchTests/WorkspaceSearchEngineSizeCapTests.swift",
+    "sha256": "5400ccfce402fb39ecdc0589a562359516c7e850e2d6b0ffcaf70d2619bdfce3"
+  },
+  {
+    "path": "Tests/TextSearchTests/WorkspaceSearchEngineTests.swift",
+    "sha256": "12be1ef63c747569e4c6294891ec7656b323163f491370e05d1b03dda5b6bc86"
+  }
+]
