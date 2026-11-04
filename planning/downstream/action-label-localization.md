@@ -124,3 +124,14 @@ functional correction separately; the 19-file parser-reversal proof applies
 only to the earlier 62 label routes, not to this intentionally different
 formatter. Full hosted qualification must use the new combined head; the
 superseded partial CI is not a release or correctness pass.
+
+## Installation-title source qualification
+
+The actual extracted Foundation helper and unchanged component tests pass three
+tests in Debug and Release: readable English count forms, no raw markup in all
+four compiled locales and effective explicit bundle selection. The actual old
+String expression fails the new assertions; exact restoration passes. This
+fixture supplies only a namespace and catalog accessor and never creates
+Commands, an installer or NSAlert. The earlier 62-route scope proof and resource
+results remain unchanged. Full combined hosted qualification must use the final
+head containing this correction, not the superseded partial run.
