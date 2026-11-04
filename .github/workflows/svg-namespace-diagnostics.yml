@@ -1,0 +1,218 @@
+name: Diagram startup diagnostics
+
+on:
+  workflow_dispatch:
+    inputs:
+      experiment:
+        description: Original namespace comparison or cold D2 host control
+        type: choice
+        required: true
+        default: namespace
+        options: [namespace, cold-d2]
+  pull_request:
+    paths: ['.github/workflows/svg-namespace-diagnostics.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    runs-on: macos-26-intel
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: baseline
+            source: dbbd6f4f69d3f4712801205cbd92308d9244870d
+            bootstrap: 'no'
+          - label: comparison
+            source: ${{ inputs.experiment == 'namespace' && '7ead272c0022108baacfd7db28dab8af86c446ad' || 'dbbd6f4f69d3f4712801205cbd92308d9244870d' }}
+            bootstrap: ${{ inputs.experiment == 'namespace' && 'no' || 'yes' }}
+    env:
+      SOURCE_HEAD: ${{ matrix.source }}
+      DIAG_FIXTURE: ${{ inputs.experiment == 'namespace' && 'namespace' || 'd2' }}
+      BOOTSTRAP_APPKIT: ${{ matrix.bootstrap }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.source }}
+          persist-credentials: false
+      - name: Select the supported toolchain and record identity
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/svg-diagnostics"
+          test "$(git rev-parse HEAD)" = "$SOURCE_HEAD"
+          XCODE=$(ls -d /Applications/Xcode*.app | grep '26' | head -1)
+          test -n "$XCODE"
+          test "$(sw_vers -productVersion | cut -d. -f1)" = 26
+          test "$(uname -m)" = x86_64
+          sudo xcode-select -s "$XCODE/Contents/Developer"
+          {
+            git show -s --format='source=%H%nparents=%P' HEAD
+            git rev-parse HEAD:MacDown2
+            xcodebuild -version
+            swift --version
+            sw_vers
+            uname -m
+            shasum -a 256 MacDown2/Packages/MacDownKit/Package.resolved
+          } > "$RUNNER_TEMP/svg-diagnostics/identity.txt"
+          cat "$RUNNER_TEMP/svg-diagnostics/identity.txt"
+      - name: Instrument the owned fixture with a byte-perfect restoration check
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          if os.environ['DIAG_FIXTURE'] == 'd2':
+              marker = '// MT_D2_DIAG'
+              originals = {}
+              patched = {}
+
+              def insert(name, anchor, additions, after=False):
+                  if name not in originals:
+                      original = Path(name).read_bytes()
+                      if marker.encode() in original:
+                          raise SystemExit('diagnostic marker already present')
+                      originals[name] = original
+                      patched[name] = original.decode('utf-8')
+                  needle = anchor + '\n'
+                  if patched[name].count(needle) != 1:
+                      raise SystemExit('non-unique source anchor: ' + name + ': ' + anchor)
+                  extra = ''.join(line + ' ' + marker + '\n' for line in additions)
+                  replacement = needle + extra if after else extra + needle
+                  patched[name] = patched[name].replace(needle, replacement)
+
+              def phase(indent, label, suffix=''):
+                  return indent + r'print("D2-PHASE \(Date().timeIntervalSince1970) ' + label + suffix + '")'
+
+              prefix = 'MacDown2/Packages/MacDownKit/'
+              test = prefix + 'Tests/D2RenderingTests/D2WebRendererTests.swift'
+              page = prefix + 'Sources/DiagramWebKitPool/DiagramHarnessPage.swift'
+              renderer = prefix + 'Sources/D2Rendering/D2WebRenderer.swift'
+              insert(test, 'import Foundation', ['import AppKit'])
+              insert(page, 'import Foundation', ['import AppKit'])
+              setup = [phase('        ', 'test-start appkit=' + os.environ['BOOTSTRAP_APPKIT'])]
+              if os.environ['BOOTSTRAP_APPKIT'] == 'yes':
+                  setup += [phase('        ', 'appkit-bootstrap-start'),
+                            '        await MainActor.run { _ = NSApplication.shared }',
+                            phase('        ', 'appkit-bootstrap-end')]
+              insert(test, '    @Test func renderProducesRealSVGForValidSource() async throws {', setup, after=True)
+              creation = '        let page = DiagramHarnessPage(allowedDirectory: harnessURL.deletingLastPathComponent())'
+              insert(page, creation, [phase('        ', 'page-create-start', r' NSAppNil=\(NSApp == nil)')])
+              insert(page, creation, [phase('        ', 'page-created', r' NSAppNil=\(NSApp == nil)')], after=True)
+              load = '            try await page.load(harnessURL: harnessURL)'
+              insert(page, load, [phase('            ', 'page-load-start')])
+              insert(page, load, [phase('            ', 'page-loaded')], after=True)
+              ready = '        let result = try await page.evaluate("return await window.__macdownPrepareD2();", arguments: [:])'
+              insert(renderer, ready, [phase('        ', 'engine-ready-start')])
+              insert(renderer, ready, [phase('        ', 'engine-ready-result')], after=True)
+              insert(renderer, '        let result = try await page.evaluate(', [phase('        ', 'render-start')])
+              insert(renderer, '        guard result.succeeded else {', [phase('        ', 'render-result')])
+              insert(renderer, '        } catch DiagramPoolError.timedOut {', [phase('            ', 'pool-timeout')], after=True)
+              records = []
+              for name, original in originals.items():
+                  body = patched[name].encode('utf-8')
+                  restored = b''.join(line for line in body.splitlines(keepends=True) if marker.encode() not in line)
+                  if restored != original:
+                      raise SystemExit('instrumentation changed original bytes: ' + name)
+                  records.append(dict(path=name, original_sha256=hashlib.sha256(original).hexdigest(),
+                                      instrumented_sha256=hashlib.sha256(body).hexdigest(), original_bytes_recovered=True))
+              # Validate every file before writing any disposable source change.
+              for name in originals:
+                  Path(name).write_bytes(patched[name].encode('utf-8'))
+              receipt = dict(source=os.environ['SOURCE_HEAD'], fixture='cold-d2',
+                             bootstrap_appkit=os.environ['BOOTSTRAP_APPKIT'], files=records,
+                             scope='phase prints and one explicit host-initialization control; no deadline/assertion changes')
+              (Path(os.environ['RUNNER_TEMP']) / 'svg-diagnostics/instrumentation.json').write_text(json.dumps(receipt, indent=2) + '\n')
+              print(json.dumps(receipt))
+              raise SystemExit(0)
+          path = Path('MacDown2/Packages/MacDownKit/Tests/ExportDiagramIntegrationTests/RealSVGNamespaceTests.swift')
+          original = path.read_bytes()
+          text = original.decode()
+          anchors = [
+              ('let graphviz = GraphvizWebRenderer()', 'Graphviz render'),
+              ('let d2Renderer = D2WebRenderer()', 'D2 prepare and render'),
+              ('let mermaidRenderer = MermaidWebRenderer()', 'Mermaid render'),
+              ('let canvas = try await MermaidHarnessPage.make()', 'canvas harness load'),
+              ('let d2Sanitized = DerivedHTMLSanitizer.sanitized(d2Diagram.svg)', 'ownership assertions'),
+              ('try await check(name: name, svg: svg, on: canvas)', 'canvas pixel comparison'),
+              (r'try await checkInlineComposition(outputs.map(\.1) + [dot.svg])', 'inline composition'),
+          ]
+          for anchor, label in anchors:
+              if text.count(anchor) != 1:
+                  raise SystemExit('non-unique phase anchor: ' + label)
+              indent = ' ' * (12 if label == 'canvas pixel comparison' else 8)
+              marker = 'print("SVG-PHASE \\(Date().timeIntervalSince1970) ' + label + '")'
+              text = text.replace(indent + anchor, indent + marker + '\n' + indent + anchor)
+          patched = text.encode()
+          # Removing just the inserted print lines must recover every original byte.
+          restored = b''.join(line for line in patched.splitlines(keepends=True) if b'print("SVG-PHASE ' not in line)
+          if restored != original:
+              raise SystemExit('phase instrumentation changed original statements')
+          path.write_bytes(patched)
+          receipt = dict(source=os.environ['SOURCE_HEAD'], original_sha256=hashlib.sha256(original).hexdigest(),
+                         instrumented_sha256=hashlib.sha256(patched).hexdigest(), phase_count=len(anchors),
+                         original_bytes_recovered=True)
+          (Path(os.environ['RUNNER_TEMP']) / 'svg-diagnostics/instrumentation.json').write_text(json.dumps(receipt, indent=2) + '\n')
+          print(json.dumps(receipt))
+          PY
+      - name: Compile locked tests and prepare the identified owned host
+        working-directory: MacDown2/Packages/MacDownKit
+        run: |
+          set -euo pipefail
+          swift build --build-tests --force-resolved-versions > "$RUNNER_TEMP/svg-diagnostics/build.log" 2>&1
+          test_bundle="$(swift build --show-bin-path --force-resolved-versions)/MacDownKitPackageTests.xctest"
+          test_host="$test_bundle/Contents/MacOS/MacDownKitPackageTests"
+          test -f "$test_host"
+          developer="$(xcode-select -p)"
+          helper="$developer/Toolchains/XcodeDefault.xctoolchain/usr/libexec/swift/pm/swiftpm-testing-helper"
+          owned_helper="$RUNNER_TEMP/svg-testing-helper"
+          cp "$helper" "$owned_helper"
+          cmp "$helper" "$owned_helper"
+          codesign --force --sign - "$owned_helper"
+          codesign --verify --strict "$owned_helper"
+          shasum -a 256 "$helper" "$test_host" "$owned_helper" > "$RUNNER_TEMP/svg-diagnostics/host.sha256"
+          printf '%s\n' "$test_host" > "$RUNNER_TEMP/svg-diagnostics/test-host-path.txt"
+      - name: Run both focused attempts and retain each result
+        working-directory: MacDown2/Packages/MacDownKit
+        run: |
+          set -euo pipefail
+          developer="$(xcode-select -p)"
+          frameworks="$developer/Platforms/MacOSX.platform/Developer/Library/Frameworks"
+          test -d "$frameworks/Testing.framework"
+          test_host="$(cat "$RUNNER_TEMP/svg-diagnostics/test-host-path.txt")"
+          filter='RealSVGNamespaceTests/ownedRendererOutputsRemainAdmissibleAndD2FallsBack'
+          expected='ownedRendererOutputsRemainAdmissibleAndD2FallsBack'
+          if [ "$DIAG_FIXTURE" = d2 ]; then
+            filter='D2WebRendererTests/renderProducesRealSVGForValidSource'
+            expected='renderProducesRealSVGForValidSource'
+          fi
+          failed=0
+          for attempt in 1 2; do
+            set +e
+            env DYLD_FRAMEWORK_PATH="$frameworks" "$RUNNER_TEMP/svg-testing-helper" \
+              --test-bundle-path "$test_host" --testing-library swift-testing --no-parallel \
+              --filter "$filter" \
+              > "$RUNNER_TEMP/svg-diagnostics/attempt-$attempt.log" 2>&1
+            result=$?
+            set -e
+            printf 'attempt=%s exit=%s\n' "$attempt" "$result" | tee -a "$RUNNER_TEMP/svg-diagnostics/status.txt"
+            cat "$RUNNER_TEMP/svg-diagnostics/attempt-$attempt.log"
+            if [ "$result" -ne 0 ]; then failed=1; fi
+            if ! grep -q "$expected.*started" "$RUNNER_TEMP/svg-diagnostics/attempt-$attempt.log"; then
+              echo 'Focused filter did not execute the required case' >&2
+              failed=1
+            fi
+          done
+          codesign --verify --strict "$RUNNER_TEMP/svg-testing-helper"
+          shasum -a 256 -c "$RUNNER_TEMP/svg-diagnostics/host.sha256"
+          git diff --exit-code -- Package.resolved
+          exit "$failed"
+      - name: Preserve logs and identity receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagram-startup-${{ matrix.label }}-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 7
+          if-no-files-found: error
+          path: ${{ runner.temp }}/svg-diagnostics
