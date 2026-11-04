@@ -42,9 +42,10 @@ struct PreviewContributionDiagnosticsBadge: View {
     }
 
     private func accessibilityLabel(for severity: ContributionDiagnostic.Severity) -> String {
-        let noun = severity == .error ? "error" : "warning"
-        let plural = diagnostics.count == 1 ? noun : "\(noun)s"
-        return "\(diagnostics.count) preview \(plural)"
+        switch severity {
+        case .error: PreviewDiagnosticLabel.error(count: diagnostics.count).message()
+        case .warning: PreviewDiagnosticLabel.warning(count: diagnostics.count).message()
+        }
     }
 }
 

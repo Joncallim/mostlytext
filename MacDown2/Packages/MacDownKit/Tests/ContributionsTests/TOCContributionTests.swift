@@ -121,7 +121,7 @@ struct TOCContributionTests {
 
     @Test func markdownListWithNoHeadingsIsANonEmptyPlaceholder() {
         let list = TOCContribution.markdownList(for: [])
-        #expect(!list.isEmpty)
+        #expect(list == "*(No headings found\\.)*")
     }
 
     @Test func markdownListIsFlatForHeadingsOfTheSameLevel() {

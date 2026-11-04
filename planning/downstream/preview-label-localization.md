@@ -68,9 +68,9 @@ remain open; English review drafts do not meet language-quality criteria.
 
 ## Compiler coverage refinement before adding its guard
 
-The locked compile-only Release extraction found 691 owned source/key routes
-and 615 distinct catalog/key pairs across all 15 catalogs. There are 315 missing
-route references, representing 282 distinct keys, before reconciliation. Most
+The locked compile-only Release extraction found 726 owned source/line/key
+routes and 615 distinct catalog/key pairs across all 15 catalogs. There are
+327 missing route references, representing 282 distinct keys, before reconciliation. Most
 are existing correctly extracted app labels; the package omissions also include
 escaped-quote and signed 32-bit/64-bit format-key mismatches. Retain existing
 entries/translations unchanged and add the exact compiler keys as review drafts;
@@ -93,3 +93,31 @@ negative Python controls for ownership, completeness, format-key identity and
 duplicate/malformed records; run them in Compliance. This is compiler/resource
 coverage of currently built code, not an exhaustive discovery of every plain
 String or final native/string-freeze acceptance.
+
+## Qualification checkpoint
+
+The complete owned compilation set has 682 Swift inputs. All have extraction
+records; architecture duplicates agree. The guard reproduces 327 missing
+source/line routes before reconciliation and zero afterward, for the same 615
+distinct compiler keys. Add 282 exact keys plus the five corrected label keys,
+bringing the inventory to 633 entries across the existing 15 catalogs. Existing
+catalog entry data/translations remain unchanged; obsolete mismatched keys are
+retained as history rather than silently relabelled as accepted translations.
+
+Six Foundation tests in two suites pass Debug/Release for the exact count
+formatter and TOC value/list/escape methods, with actual compiled locale
+resources. A supplied minimal heading model exposes only the two fields used
+by those methods; this is not contribution parsing or native navigation.
+The original English-fragment label body fails four marker assertions, while
+the new formatter and exact restoration pass. A separate TOC marker containing
+Markdown/HTML punctuation remains escaped plain text; the old list body fails
+that actual assertion and exact restoration passes. An initial fixture literal
+had an invalid backslash escape; its failed compile is retained, and only that
+fixture was corrected before the successful Debug/Release qualification.
+
+Sixteen Python coverage controls and 19 catalog/configuration controls pass,
+as do source Compliance, strict lint and pinned formatting. Locked universal
+Release compilation with extraction passes for the corrected Swift sources;
+after resource reconciliation, final rebuilt-resource readback and full hosted
+combined checks are still required before merge. Non-English drafts, final
+plural/language/layout/VoiceOver review and the native hold remain unchanged.

@@ -22,6 +22,35 @@
           }
         }
       }
+    },
+    "No headings found.": {
+      "comment": "Plain-text empty TOC message. CommonMark punctuation is escaped by the caller before embedding. Non-English entries are English review drafts.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No headings found."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "No headings found."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "No headings found."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "No headings found."
+          }
+        }
+      }
     }
   },
   "version": "1.0"
