@@ -118,3 +118,23 @@ as using the default network for the build, rather than an escape from the
 build-level network setting. The original `--network=none` therefore also
 constrained that install. Keep the isolation and prefetch verified lock objects;
 do not widen build networking to repair the mistaken assumption.
+
+## Observed complete result
+
+Hosted run `41822550855` at `d8134ba0` passes all five complete output comparisons,
+including the 1,324,675-byte shipped renderer (SHA-256 `c857641a...`). Every cached
+object identity equals the independently captured local cache receipt: 523 objects,
+290,577,307 bytes, covering 546 resolved lock records. Lock checks before and after
+installation/build pass. The actual image config equals the recorded AMD64 image.
+Measured versions are Node v24.19.0 and npm 11.17.0; captured publisher metadata
+says npm 12.0.2. Preserve that difference without claiming unique historical
+execution or changing tools to force equality. The original publication workflow
+upgrades npm separately. No local upstream execution or output publication occurs.
+
+The [complete packet](../../compliance/evidence/viz-renderer-reproduction/README.md)
+captures the raw result with a byte pin, exact frozen lock, all package-object
+records, tool/recipe/Node bindings and optional raw-cache replay. Fifteen methods
+cover preparation, output refusal and coherent receipt substitutions. Require
+final-head hosted reproduction/Compliance after these evidence additions; keep
+both failed-first and successful observations. All broader independent rights,
+source approval/publication, native and exact-artifact gates remain open.
