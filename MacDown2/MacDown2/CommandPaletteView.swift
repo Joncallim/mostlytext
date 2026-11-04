@@ -121,7 +121,7 @@ private struct CommandPaletteRowView: View {
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("commandPaletteRow.\(row.id)")
         .accessibilityAddTraits(.isButton)
-        .accessibilityLabel(row.kind == .textFilter ? "\(row.title), user command" : row.title)
+        .accessibilityLabel(row.kind == .textFilter ? String(localized: "\(row.title), user command") : row.title)
     }
 }
 

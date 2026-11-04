@@ -411,6 +411,35 @@
         }
       }
     },
+    "The generated diagram could not be safely included in this export.": {
+      "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The generated diagram could not be safely included in this export."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The generated diagram could not be safely included in this export."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The generated diagram could not be safely included in this export."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The generated diagram could not be safely included in this export."
+          }
+        }
+      }
+    },
     "This document contains raw HTML, which cannot be embedded in a self-contained file. Export it as HTML instead.": {
       "localizations": {
         "fr": {
@@ -483,6 +512,35 @@
           "stringUnit": {
             "state": "translated",
             "value": "Try exporting again from the original document."
+          }
+        }
+      }
+    },
+    "Try exporting the diagram as its authored source.": {
+      "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try exporting the diagram as its authored source."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Try exporting the diagram as its authored source."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Try exporting the diagram as its authored source."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Try exporting the diagram as its authored source."
           }
         }
       }
@@ -1160,6 +1218,35 @@
           "stringUnit": {
             "state": "translated",
             "value": "…i %@ więcej."
+          }
+        }
+      }
+    },
+    "…and %lld more.": {
+      "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "…and %lld more."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "…and %lld more."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "…and %lld more."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "…and %lld more."
           }
         }
       }
