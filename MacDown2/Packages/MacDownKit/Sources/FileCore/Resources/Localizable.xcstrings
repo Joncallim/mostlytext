@@ -1,0 +1,98 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "%@ with BOM": {
+      "comment": "Package-owned user-facing error/status copy. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ with BOM"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ with BOM"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ with BOM"
+          }
+        }
+      }
+    },
+    "Invalid %@ byte sequence.": {
+      "comment": "Package-owned user-facing error/status copy. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Invalid %@ byte sequence."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Invalid %@ byte sequence."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Invalid %@ byte sequence."
+          }
+        }
+      }
+    },
+    "Invalid UTF-8 byte sequence.": {
+      "comment": "Package-owned user-facing error/status copy. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Invalid UTF-8 byte sequence."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Invalid UTF-8 byte sequence."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Invalid UTF-8 byte sequence."
+          }
+        }
+      }
+    },
+    "Invalid UTF-16 byte sequence.": {
+      "comment": "Package-owned user-facing error/status copy. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Invalid UTF-16 byte sequence."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Invalid UTF-16 byte sequence."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Invalid UTF-16 byte sequence."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

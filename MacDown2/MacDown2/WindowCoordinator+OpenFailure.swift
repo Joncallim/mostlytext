@@ -3,11 +3,10 @@ import FileCore
 import Foundation
 
 /// A human-readable description of a failed file open. `FileStoreError`
-/// itself carries no `LocalizedError` conformance — it is a typed-throw
-/// value from `FileCore`, not user-facing prose — so this maps it here, at
-/// the one App-target boundary that needs to show it to someone. Shared by
-/// `WindowCoordinator`'s failed-open alert and `ContentAreaView`'s empty
-/// state, so the two surfaces can't drift apart.
+/// itself has no `LocalizedError` conformance, so this app boundary maps its
+/// typed failure cases to presentation text. Associated decoding diagnostics
+/// already carry FileCore's package-localised messages. Shared by the failed-open
+/// alert and `ContentAreaView`'s empty state so their explanations stay consistent.
 enum FileOpenFailurePresentation {
     static func message(for error: FileStoreError) -> String {
         switch error {

@@ -94,5 +94,63 @@ class LocalizationInventoryTests(unittest.TestCase):
                     subject.validate(self.make_repo(self.fixture(fixture)))
 
 
+class TranslationResourceTests(unittest.TestCase):
+    catalog = "MacDown2/MacDown2/Localizable.xcstrings"
+
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name)
+        path = self.root / self.catalog
+        path.parent.mkdir(parents=True)
+        path.write_text(json.dumps({"sourceLanguage": "en", "strings": {}, "version": "1.0"}))
+        (self.root / ".tx").mkdir()
+        self.config = ("[main]\nhost = https://www.transifex.com\n"
+                       "[o:placeholder:p:placeholder:r:app]\n"
+                       f"source_file = {self.catalog}\nfile_filter = {self.catalog}\n"
+                       "source_lang = en\ntype = XCSTRINGS\n")
+
+    def check(self, text):
+        (self.root / ".tx/config").write_text(text)
+        return subject.validate_translation_resources(self.root)
+
+    def test_complete_source_mapping_passes_without_claiming_remote_setup(self):
+        self.assertEqual(self.check(self.config), [])
+
+    def test_missing_configuration_and_catalog_mapping_fail(self):
+        self.assertTrue(subject.validate_translation_resources(self.root))
+        self.assertTrue(any("missing translation resource" in e for e in self.check("[main]\n")))
+
+    def test_duplicate_alias_to_one_catalog_fails(self):
+        duplicate = self.config.split("[o:placeholder:p:placeholder:r:app]")[1]
+        self.assertTrue(any("duplicate" in e for e in self.check(self.config + "[o:placeholder:p:placeholder:r:alias]" + duplicate)))
+
+    def test_unknown_external_and_traversal_paths_fail(self):
+        for source in ["/outside.xcstrings", "../outside.xcstrings", "MacDown2/Missing.xcstrings"]:
+            with self.subTest(source=source):
+                errors = self.check(self.config.replace(self.catalog, source))
+                self.assertTrue(any("not a known catalog" in e for e in errors))
+
+    def test_filter_type_and_language_mismatches_fail(self):
+        for old, new, expected in [(f"file_filter = {self.catalog}", "file_filter = elsewhere", "file_filter"),
+                                    ("type = XCSTRINGS", "type = STRINGS", "type"),
+                                    ("source_lang = en", "source_lang = fr", "source_lang")]:
+            with self.subTest(expected=expected):
+                self.assertTrue(any(expected in e for e in self.check(self.config.replace(old, new))))
+
+    def test_duplicate_section_is_controlled_configuration_error(self):
+        self.assertTrue(any("invalid" in e for e in self.check(self.config + self.config)))
+        (self.root / ".tx/config").write_bytes(b"\xff")
+        self.assertTrue(any("invalid" in e for e in subject.validate_translation_resources(self.root)))
+
+    def test_catalog_source_language_must_be_a_nonempty_string(self):
+        for value in [None, "", True]:
+            with self.subTest(value=value):
+                (self.root / self.catalog).write_text(json.dumps({"sourceLanguage": value, "strings": {}}))
+                (self.root / ".tx/config").write_text(self.config)
+                with self.assertRaisesRegex(subject.CatalogError, "sourceLanguage"):
+                    subject.validate_translation_resources(self.root)
+
+
 if __name__ == "__main__":
     unittest.main()

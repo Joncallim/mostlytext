@@ -136,9 +136,12 @@ public actor WorkspaceFileIndex {
     private static func unavailabilityReason(of root: URL) -> String? {
         var isDirectory: ObjCBool = false
         guard FileManager.default.fileExists(atPath: root.path, isDirectory: &isDirectory), isDirectory.boolValue else {
-            return "The folder is no longer available."
+            return String(localized: "The folder is no longer available.", bundle: .module)
         }
-        return FileManager.default.isReadableFile(atPath: root.path) ? nil : "The folder cannot be read."
+        return FileManager.default.isReadableFile(atPath: root.path) ? nil : String(
+            localized: "The folder cannot be read.",
+            bundle: .module
+        )
     }
 
     /// Discards the current snapshot and returns to `.empty` -- for when the

@@ -1,0 +1,52 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "The folder is no longer available.": {
+      "comment": "Package-owned user-facing error/status copy. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The folder is no longer available."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The folder is no longer available."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The folder is no longer available."
+          }
+        }
+      }
+    },
+    "The folder cannot be read.": {
+      "comment": "Package-owned user-facing error/status copy. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The folder cannot be read."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The folder cannot be read."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The folder cannot be read."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

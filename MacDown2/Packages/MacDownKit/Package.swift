@@ -83,13 +83,13 @@ let package = Package(
         .package(url: "https://github.com/gonzalezreal/swiftui-math", exact: "0.1.0"),
     ],
     targets: [
-        .target(name: "FileCore", dependencies: ["JSONSupport"]),
+        .target(name: "FileCore", dependencies: ["JSONSupport"], resources: [.process("Resources")]),
         .target(name: "CommandBridge", dependencies: ["JSONSupport"]),
         .target(name: "CommandLineSupport", dependencies: [
             "CommandBridge", .product(name: "ArgumentParser", package: "swift-argument-parser"),
         ], resources: [.process("Resources")]),
         .target(name: "LocalResourceAccess"),
-        .target(name: "TextSearch", dependencies: ["FileCore"]),
+        .target(name: "TextSearch", dependencies: ["FileCore"], resources: [.process("Resources")]),
         .target(name: "AppSettings", dependencies: ["JSONSupport"]),
         .target(name: "Themes", resources: [.process("Themes")]),
         .target(name: "Workspace", dependencies: ["FileCore", "JSONSupport"], resources: [.process("Resources")]),
