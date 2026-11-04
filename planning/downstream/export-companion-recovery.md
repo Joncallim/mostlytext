@@ -243,3 +243,13 @@ reference certificate when packaged; other accepted image MIME types continue
 to export normally but make cleanup ineligible. Reuse ExportURLPolicy's existing
 raster media knowledge. Add a real composed SVG/older-managed-PNG preservation
 regression. This changes cleanup authority only, not accepted content or output.
+
+Do not trust filename/MIME labels alone for that raster certificate: SVG bytes
+can be mislabeled .png, and an authored data URI can mislabel its base64 payload.
+Require the corresponding constant PNG/JPEG/GIF/WebP signature from bytes already
+read. For an inline raster URI inspect only a maximum 16-character base64 prefix
+(12 decoded bytes), after the existing URL policy admits the URI. This is a
+bounded format-exclusion check, not a new decoder, recursive reader or claim of
+image validity. Export acceptance and bytes remain unchanged; inconclusive or
+mislabeled resources simply retain older assets. Add spoofed .png/data-URI SVG
+regressions and signature controls before qualification.
