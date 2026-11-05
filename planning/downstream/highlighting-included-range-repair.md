@@ -75,3 +75,22 @@ limits, all original performance ceilings, known original failed runs and six
 strict attribution/source failures remain. Do not close the full issues from
 this component pass. Whole-app/native editor, IME, scroll and current-line
 geometry acceptance are separate evidence.
+
+## Reproduced refinement before adoption
+
+The new combined-edit regression proves a second omission in the historical
+B1 sketch: after typing and deleting across injections, the ROOT tree equals a
+fresh parse, but a formerly valid inline range can survive without overlapping
+any new injection. Merely filtering collapsed/overlapping captures is therefore
+insufficient. Keep the actual failing output; do not remove this test.
+
+Resolve must treat the requested source set plus returned complete injection
+capture extents as authoritative coverage. Retire old captures intersecting
+that coverage even if no replacement exists. Reconcile existing languages as
+well as newly returned languages, so disappearance of a language is handled.
+Keep unqueried neighbors unchanged. Once a restricted layer has no remaining
+ranges, retire that sublayer rather than setting an empty C range list (which
+would select the whole document). This changes only existing private layer
+reconciliation; no new public API or document behavior is introduced. Test
+partial coverage/neighbor retention, vanished injections, point/range identity
+and a fresh-root control in addition to original regression shapes.
