@@ -60,7 +60,7 @@ remain intact.
 
 A sync highlight query may return nil while inline validation is pending; it
 must not return old inline captures as current. Async queries await the existing
-validator completion queue and reject a changed content epoch with normal
+validator completion boundary and reject a changed content epoch with normal
 CancellationError. Add a package-only validity accessor on the existing
 SinglePhaseRangeValidator; public API signatures remain unchanged. Publish
 mutation/version state before synchronous parse completion and invalidate the
@@ -73,3 +73,36 @@ test watchdog; they never use timed sleeps. The initial no-warm fixture produced
 root-only captures and was rejected after adding a real inline positive control.
 Its apparent pass and the subsequent control/compile failures remain setup
 history, not product qualification.
+
+## Completion and query-boundary review
+
+The existing queue removes a provider when it starts, so its queue-empty test
+can return while that provider is still suspended. A controlled provider gate
+reproduces this independently: validationCompleted returns before the gate is
+released. Preserve the public signature but track completion waiters against
+outstanding validations and scheduled follow-up regions. An empty work queue is
+not proof that a result has completed. The package-only validity accessor lets
+the client retry required holes after completion without publishing partial data.
+
+The generic provider wrapper also starts root processing before invoking its
+async closure. Therefore highlightsProvider must own its existing processing
+calls directly, capturing the content epoch first. A reentrant source edit at
+initial parse publication must cancel the original query, then a new query must
+match a fresh client. Sync queries return nil when processing, inline validation
+or a reentrant edit leaves their captured epoch unavailable. Async queries check
+cancellation and epoch after root processing, after inline validation and after
+the background query snapshot. No generic provider or root-processor contract
+changes are required. Provider errors retain existing downstream handling;
+CancellationError is an ordinary obsolete-query result, not a fatal failure.
+
+Verification retains the rejected setup controls, the flag-only candidate's two
+remaining failures and the initially misplaced epoch check's failed test. A
+fresh client with no inline injections must still complete its asynchronous
+validation before it serves as an expected-result control.
+
+Readiness validates only the requested indices that exist in the current source.
+A query may extend beyond end of file; unowned indices must not keep the async
+readiness loop waiting forever. A strict past-end query matches an otherwise
+identical bounded query. Empty source and ordinary query failure contracts remain
+unchanged. Full component checks include all existing RangeState tests and both
+TreeSitterClient suites, with the exact pinned Swift C grammar for stress tests.

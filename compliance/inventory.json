@@ -573,9 +573,9 @@
       "id": "neon",
       "name": "Neon",
       "kind": "swiftpm",
-      "version": "e1e0c6d",
+      "version": "0699ea55",
       "upstream": "https://github.com/Joncallim/Neon",
-      "revision": "e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9",
+      "revision": "0699ea559682b4f62c8cd10ae520c7262c4acaa9",
       "resolution": "exact",
       "licence": "BSD-3-Clause",
       "copyright": [
@@ -596,9 +596,9 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9"
+        "revision": "0699ea559682b4f62c8cd10ae520c7262c4acaa9"
       },
-      "evidence": "Manifest-only child of dabf50c947148c49acd0d321dfe8f3805d10b3da: pin the same canonical SwiftTreeSitter owner fork/revision as the application. All Neon runtime/test files and original BSD-3-Clause licence bytes are unchanged; no sublayer/styling defect is inferred fixed by this manifest change."
+      "evidence": "Owner patch over the e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9 manifest child of dabf50c947148c49acd0d321dfe8f3805d10b3da. Refresh embedded-language validity after root edits, publish epoch/invalid state before callbacks, await running validation and follow-up regions, and reject obsolete highlight queries. MOSTLYTEXT_PATCHES.md records the patch and component proofs; the original BSD-3-Clause licence bytes and pinned SwiftTreeSitter revision are unchanged. Separate buffered style-coordinate drift and native acceptance remain open."
     },
     {
       "id": "nvim-treesitter-markdown-queries",

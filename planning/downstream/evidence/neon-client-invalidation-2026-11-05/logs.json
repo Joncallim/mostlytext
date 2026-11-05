@@ -1,0 +1,212 @@
+[
+  {
+    "path": "app-format-lint.log.gz",
+    "sha256": "1f8a3fe0281322adc5e0e44745859f218ad807979781cf270f4040d9362bef8d",
+    "bytes": 267,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "app-swiftlint.log.gz",
+    "sha256": "f5a74036d7f0fedb759b66894f1c71ad3af2f22099d21654b67e8c7ef22c1598",
+    "bytes": 70649,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "app-test-format.log.gz",
+    "sha256": "a9e10d11887d0ee671b9ca7e6a4e623ae1ef55503fb03fddac3c95304641ab91",
+    "bytes": 198,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "application-compliance-tests.log.gz",
+    "sha256": "17ba374ff6c5a2d1cf8b47c544a7f57950469349a46a65447632508ac6688f4a",
+    "bytes": 7515,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "application-forced-resolve.log.gz",
+    "sha256": "b64daf6fa8f6d03933d09470d2030d98512254c90797084c6fe197c93a097e84",
+    "bytes": 7267,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "application-highlight-tests-compile.log.gz",
+    "sha256": "6f5314b60fade447a75b40e38412daca73f142f9a946b4607150f0124c56a40a",
+    "bytes": 17326,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "application-source-check.log.gz",
+    "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+    "bytes": 54,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "baseline-client-runtime-tests.log.gz",
+    "sha256": "0de4a7bf15868ccb590024fb4322e6fbea14c12079311688fd20ac4d634262e8",
+    "bytes": 8441,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "baseline-client-tests.log.gz",
+    "sha256": "e28d1b62e9c92c6b4a6e9be956e903cac69491d0f4ee51bdfbc7dbfb159431c2",
+    "bytes": 5058,
+    "classification": "setup or rejected warm control; inspect retained output"
+  },
+  {
+    "path": "baseline-complete-client-tests.log.gz",
+    "sha256": "b568506a89e08c46721bec0bacc2645d7bff7f2c9d248bfafde83a173a816620",
+    "bytes": 1547,
+    "classification": "setup or rejected warm control; inspect retained output"
+  },
+  {
+    "path": "baseline-final-callback-tests.log.gz",
+    "sha256": "227e4806ec217e6d30bc7a1067ba151fee816d8618f2d3724422c485cb1973e9",
+    "bytes": 102367,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "baseline-final-client-tests.log.gz",
+    "sha256": "eb615ece0c8779257b9c497bce1bae036554580535609b7ebf039312a3803c50",
+    "bytes": 924,
+    "classification": "setup or rejected warm control; inspect retained output"
+  },
+  {
+    "path": "baseline-final-completion-regions.log.gz",
+    "sha256": "8d3c29b8b2e70705fa876ff8dd328347e450b4e17bad99cfd592387d3e6c31fc",
+    "bytes": 1550,
+    "classification": "incoherent baseline setup: accessor missing; no qualification"
+  },
+  {
+    "path": "baseline-final-dependency-client-tests.log.gz",
+    "sha256": "4bf791d5fef792bb6b2244172bd0425ab7be7ba95bc8a0a77345510405e079d5",
+    "bytes": 102369,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "baseline-final-entire-coherent-source.log.gz",
+    "sha256": "6141e609607d95bb8d20213783ea01d9091cfcc58ad5b452116ea6020c0d689f",
+    "bytes": 112483,
+    "classification": "qualified original-source regression: twelve actual assertions"
+  },
+  {
+    "path": "baseline-final-source-tests.log.gz",
+    "sha256": "0348c4d334221e3d3dbc86204f20c8467b8ff848a11b0910fe8bd777a038ecf3",
+    "bytes": 111725,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "baseline-signalled-client-runtime-tests.log.gz",
+    "sha256": "0a88e97202fb357abdd2705c07810561da95d3d5eaa0fe05b047d4db71734631",
+    "bytes": 146199,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "baseline-signalled-client-tests.log.gz",
+    "sha256": "bd68008b99a21329a507722e7813ab56392a636a4c923858f547ed94223c9cd8",
+    "bytes": 1986,
+    "classification": "setup or rejected warm control; inspect retained output"
+  },
+  {
+    "path": "baseline-validation-completion.log.gz",
+    "sha256": "bee2a6c591fc0b85e62ba069c2911101b471179de9b74e928cad8941b4c46637",
+    "bytes": 1496,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "baseline-warmed-client-tests.log.gz",
+    "sha256": "1601573ffd5fdd6b9210541ab11ba2d37f62bd25d4b4a335741f3b0b99b19c06",
+    "bytes": 6584,
+    "classification": "setup or rejected warm control; inspect retained output"
+  },
+  {
+    "path": "candidate-all-debug.log.gz",
+    "sha256": "5974db57a7b5ad670d7000aab2ba7d234e52db6385a4e8e59646c5cd3bf854ec",
+    "bytes": 10253,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "candidate-client-and-completion.log.gz",
+    "sha256": "4b52a0426c0a2c7a84dbeae5bdff19f01a055f4074e9a4fcb3a706adb5d54838",
+    "bytes": 4613,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "candidate-complete-fresh-control.log.gz",
+    "sha256": "418a6370f6b9726c6af536db6385bc95bbffd59cefbf1fbed6774412a489f65b",
+    "bytes": 3757,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "candidate-query-boundary.log.gz",
+    "sha256": "31033808a328d9ed8e7d380b24f5a757ec852c7326218d4bfe94e3609595dfb1",
+    "bytes": 2470,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "candidate-stale-query-test.log.gz",
+    "sha256": "b52e6dde6833cc95830b653506f501c8cb217e769186916a99eb40006c0a40f6",
+    "bytes": 10405,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "final-all-debug.log.gz",
+    "sha256": "52df4cb0f42c58042f9c6b461afc822585fc0f635171530f6de58f38c8ee7d69",
+    "bytes": 10052,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "final-all-release.log.gz",
+    "sha256": "369b295bc5fc30d6a5d88c0ccbdbcd3c43e3b5c70f11003da4f77a0c03267a05",
+    "bytes": 11395,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "flag-only-client-tests.log.gz",
+    "sha256": "6e7dedd1e451830b47833e4e5b9f6013d75608c69ff9588826b4bf73f4bb24f1",
+    "bytes": 35225,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "notices-generation.log.gz",
+    "sha256": "916a4698d9177a9597cb4fc51950f9842bb6a71ce740a0f2540b4a8bb51d77a1",
+    "bytes": 50,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "review-final-all-debug.log.gz",
+    "sha256": "45028c4ce11200eeca954e6586eee127de7c16c70509404763bbb4c304d75042",
+    "bytes": 9962,
+    "classification": "qualified final component result"
+  },
+  {
+    "path": "review-final-all-release.log.gz",
+    "sha256": "8ec90a8e9b2a7f6098fae15a90d506ae9ee0445af0a254235b369dbfb0c95f6f",
+    "bytes": 9842,
+    "classification": "qualified final component result"
+  },
+  {
+    "path": "sbom-after-resolution.log.gz",
+    "sha256": "a2d24371d17e6c6f1296277ca983dce9065ade847908059bfd7be20d4458cf2a",
+    "bytes": 41,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "sbom-generation.log.gz",
+    "sha256": "a2d24371d17e6c6f1296277ca983dce9065ade847908059bfd7be20d4458cf2a",
+    "bytes": 41,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "warm-query-diagnostic.log.gz",
+    "sha256": "58766497bd4652b91112c7e546b5748c930ac1ad570d284bb79ae97dbff59df3",
+    "bytes": 8582,
+    "classification": "retained intermediate or application verification; inspect output"
+  },
+  {
+    "path": "application-strict-release.log.gz",
+    "sha256": "65708a3274f0e685434f91f95f329e56e75e6284439eff266471e54be5a55d34",
+    "bytes": 2906,
+    "classification": "six retained release-only blockers; ordinary inventory passes"
+  }
+]

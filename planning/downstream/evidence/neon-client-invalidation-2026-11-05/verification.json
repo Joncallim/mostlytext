@@ -1,0 +1,19 @@
+{
+  "beforeHead": "022ae717d400134e59edf7c84c67e35d926dfe2d",
+  "beforeNeon": "e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9",
+  "afterNeon": "0699ea559682b4f62c8cd10ae520c7262c4acaa9",
+  "pins": 24,
+  "changed": [
+    "neon"
+  ],
+  "unchanged": 23,
+  "swiftTreeSitter": "1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43",
+  "swiftGrammar": "50b8c5e61c29fa30e760c7a1cbf24b59970e6233",
+  "componentSwiftTestingFunctions": 32,
+  "componentXCTestCases": 8,
+  "markdownParameterizedScenarios": 18,
+  "additionalMarkdownFunctions": 2,
+  "originalSourceAssertions": 12,
+  "nativeExecution": "held; none performed",
+  "hostedCI": "required before merge"
+}

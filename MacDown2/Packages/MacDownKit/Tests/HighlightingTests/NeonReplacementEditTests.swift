@@ -6,16 +6,11 @@ import Testing
 /// Register row H5: highlights after an edit must equal what a fresh
 /// highlighter produces for the same text.
 ///
-/// Typing and deleting do (control). Replacing a selection whose old text
-/// contains whole inline-injection ranges does not: `ts_tree_edit` collapses
-/// those included ranges to zero length at the edit start, and
-/// `SwiftTreeSitterLayer`'s `encorporateRanges` keeps them, so the merged range
-/// list overlaps the newly found ranges, `ts_parser_set_included_ranges`
-/// rejects it (silently; SwiftTreeSitter ignores its `false`), and the inline
-/// sublayer keeps parsing the stale ranges. That makes the H5 background-reparse
-/// experiment unshippable, because it reports every keystroke as such a
-/// replacement. Defects are recorded as known issues so the tests flip when
-/// the dependencies are fixed.
+/// Selection replacement now has strict parser-range and client-invalidation
+/// regressions. The text-view check below must also match a fresh highlighter.
+/// Rapid typing followed by a block deletion retains its separate known issue
+/// for buffered style coordinates. The widened background experiment remains
+/// guarded by its recorded Debug abort until separately qualified.
 @MainActor
 @Suite(.serialized)
 struct NeonReplacementEditTests {
@@ -82,9 +77,8 @@ struct NeonReplacementEditTests {
         editor.textView.insertText(replacement, replacementRange: range)
 
         let (edited, fresh) = try await runs(afterEditing: editor)
-        withKnownIssue("SwiftTreeSitterLayer keeps collapsed included ranges after a replacement edit") {
-            #expect(edited == fresh)
-        }
+        #expect(!fresh.isEmpty)
+        #expect(edited == fresh)
     }
 
     /// Release only: in Debug the widened experiment aborts the test host with

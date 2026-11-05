@@ -45,9 +45,10 @@ struct MarkdownClientInvalidationTests {
                             in: NSRange(location: 0, length: state.text.utf16.count),
                             provider: state.text.predicateTextProvider, mode: .required
                         )
-                        if let snapshot { state.observations.append(snapshot) }
-                    }
-                    catch { state.errors.append(String(describing: error)) }
+                        if let snapshot {
+                            state.observations.append(snapshot)
+                        }
+                    } catch { state.errors.append(String(describing: error)) }
                 }
             }
             edit(shape, client: client, state: state)
@@ -62,6 +63,40 @@ struct MarkdownClientInvalidationTests {
                 #expect(state.observations.allSatisfy { $0 == expected })
             }
         }
+    }
+
+    @MainActor
+    @Test(.timeLimit(.minutes(1)))
+    func asyncQueryRejectsReentrantContentChange() async throws {
+        let state = Source(fixture("\n"))
+        let client = try makeClient(state, probe: ClientResolutionProbe())
+        var edited = false
+        state.callback = { [weak client, weak state] in
+            guard let client, let state, !edited else { return }
+            edited = true
+            state.callback = nil
+            edit(.replacement, client: client, state: state)
+        }
+        await #expect(throws: CancellationError.self) {
+            try await completeCaptures(client, state)
+        }
+        #expect(edited)
+        let fresh = Source(state.text)
+        let expected = try await warmedClient(fresh, expectsInline: true)
+        #expect(try await completeCaptures(client, state) == completeCaptures(expected, fresh))
+    }
+
+    @MainActor
+    @Test(.timeLimit(.minutes(1)))
+    func queryPastDocumentEndOnlyValidatesExistingContent() async throws {
+        let state = Source(fixture("\n"))
+        let client = try await warmedClient(state, expectsInline: true)
+        let expected = try await completeCaptures(client, state)
+        let actual = try await client.highlights(
+            in: NSRange(location: 0, length: state.text.utf16.count + 64),
+            provider: state.text.predicateTextProvider, mode: .required
+        )
+        #expect(actual == expected)
     }
 
     private func fixture(_ ending: String) -> String {
@@ -136,7 +171,9 @@ struct MarkdownClientInvalidationTests {
             // The first synchronous query may enqueue inline resolution. Wait
             // for its completion publication, not a timing-based quiet period.
             _ = try #require(await probe.events.first { @Sendable _ in true })
-            let warmed = try await completeCaptures(client, state)
+        }
+        let warmed = try await completeCaptures(client, state)
+        if expectsInline {
             #expect(warmed.contains { $0.name == "markup.bold" })
         }
         return client
