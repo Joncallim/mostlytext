@@ -1,0 +1,196 @@
+{
+  "schema": 1,
+  "baseline": "4b190bebe8b3b120305ad6b6a4e2521dec5ca33d",
+  "baseline_source_sha256": {
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/SourceMap.swift": "4e00c4d7a25a339e440e6b8f31a7e59f5c8b7dbb8eb7237dd3c94dc2117c89f2",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownBlock.swift": "1b4c7d7528cd9a0f0eb2bbecf9bf2abae7c879a0fdfdd7c8381fac0fe8ab12b3",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseSession.swift": "9a6d3bfdccae312997e7df0f941d597041b0c98ef03d72fa573268fe8854a8c9",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseOptions.swift": "ec90b8c8717b73f30dc133f19d8505f8ad7911e5aafd0ee269b4b0350855eaa9",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseEngine.swift": "bc8cacc85273aa1bc350e90adbee507c61cf3b03bfc38e8e6b732ce1128124db",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseEngine+YAMLGuards.swift": "9cc7518f1acca3f61481a4df12dde3d5e5988a457ddb598aca51f347b4e84b20",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/FrontMatter.swift": "93e57c7f93e6f0f01680ad9f57936a3b334d076b4296ca6ecc397ccf7c0a2ed5",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownEngineModule.swift": "c8caff8457cc0390960b365f27a33e05980ba03ab85b35d2fa3e5eecd8938310",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/DirectiveSourceCoverage.swift": "fbcd259f511a03a8c45c38b4ec4288cdd3967870974ef60e4663280ea9d16b76",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/String+MarkdownLines.swift": "db2d92846df6beba3e7e3f534fc2cb8b199e572d83c7c9a2e67d7452b4b90fb6",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/HeadingAnchorAllocator.swift": "7f2bdae529a88d29177741a11aba7319ab58780d53dcb9a3885485229459ffa8",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/HeadingAnchorIndex.swift": "f8f95cb3b5037f99761c9dbc90bdff0abd4cde1e718a073cbbaf8c5a452e8153",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownDocument.swift": "be3e7a24af21b99127227b9f7b91b3666d9944b7bfbb536d63c4614106b086cb",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseStore.swift": "5343a853d2cc0161ae6a2a56a465e7659b05744e226d0a66ae3181cb6891afee",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseExecuting.swift": "b43026f9a6867f2fc2b355b8465ac2053ff66a662bfd811c904816d9ef7c5b4c",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownSourceFingerprint.swift": "ac2e5986b1bbab95c5eae574a47001c316ccffd61435f54eea39d5dde6a26535",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONScanner+Strings.swift": "0f724bee6788ababb26e2065b279fdba6f198bb1507fe459e1ce03cd3521419a",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONFormattingBaseline.swift": "62bf1f475a2c2581aaf114c6106be8972e5bba04e669f751a53acb8a77635b97",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONAnalysisSession.swift": "9553c312eee9bdf85a844b72f87b7b99b7b2bf62891d67bfe83aa5bbfd8b9fb6",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONScanner+Values.swift": "8f4021899831dd1470670720a76c4f93d1ec08e2abbbc79f92aaab46ce323a88",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONOutlineBuilder.swift": "743d44593a695ab4bf1b187536610fa6ad6616b853f583ae29a890bbca36f3c7",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONValues.swift": "16e586872917f5a06b9a2cb0c65508b70b56c5db32e8bd9cbde4cb2254ede764",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONScanner.swift": "c3e36e12ec90332490e2b1592d347e3dace33e0624f9f3df185687a836073386",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONFormatter.swift": "29da8d31de8d794d2782c63e31ddd06a6861de2e026a66546daa0f4c6a772263",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONParser.swift": "4621bf74e40d287e177b868579a9cf688b5e6b9bbfc87d2481093a7b62f4f26e",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/Resources/Localizable.xcstrings": "e5dd5abe07c0db64a4a6394c8e3513f5c878a9ee3cadcd5d6eff48400c12dcb1",
+    "MacDown2/Packages/MacDownKit/Sources/OutlineUI/OutlineAvailability.swift": "fb1c010c9e753718a2d17d209b20c38a34d9d9071b802cdc3def35c5f6f471c6",
+    "MacDown2/Packages/MacDownKit/Sources/OutlineUI/OutlineTree.swift": "bf2c4a088f2021351abf249f26abd4036eef79baa7b532255c1d817ab58a1c7f",
+    "MacDown2/Packages/MacDownKit/Sources/OutlineUI/OutlineController.swift": "f0d6048307e068f74432e450e5bf970232838fa155f97ca21cbb1a892948b25c",
+    "MacDown2/Packages/MacDownKit/Sources/OutlineUI/OutlineUI.swift": "237b3f434f846b0580f1ee6bfd38381635ba08f9b670a942b1964ebbddffe5c2",
+    "MacDown2/Packages/MacDownKit/Sources/OutlineUI/OutlineIdentityMap.swift": "a76b2764eb112d5d7c67c502b31321ed42fc238fd56f3d502d9f2d4ee7d327fc",
+    "MacDown2/Packages/MacDownKit/Sources/OutlineUI/OutlineSelection.swift": "7b19d64a08b02eade9883e952651efd7d462a00a5cea85a4f17962040bbaded5",
+    "MacDown2/Packages/MacDownKit/Sources/OutlineUI/OutlineController+JSON.swift": "a634f1bbe0a3e6ae848c9a63094d177e923fb4db372c483a357a15e3ba97ab95",
+    "MacDown2/Packages/MacDownKit/Sources/OutlineUI/OutlineItem.swift": "5dceb796ee6a123fd8418ee14fd84309debb913d704f44a6c6b346fa20224a0a",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONAnalysisSessionSupersessionTests.swift": "dfa3707cbf23a88bfb8ed5953207c18eef98695492ab6467cee9dcf14f119c0a",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONFormattingExactSourceTests.swift": "d190d05ea61537a8da5b6573b82c6bd2bfc8aba92293bd5f2fe0d11f89681082",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONParserDifferentialTests.swift": "0f75550df4fee40365d46853466b133101369ca716235e3d292e4e2e8bff2d68",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONDiagnosticsTests.swift": "aa03edcc75eaf81d562ce7c822efe4826339c6f7fa0eb6603a185f6f8d422c05",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONAnalysisBusyStateTests.swift": "781b068b6f2dc15321710cc11f93eee94825b8f11dfa39f936729a6d134c97b7",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONAnalysisSessionTests.swift": "65377cf81cfe68b907521020af2ed2a534c55c8398e2b0e87e968dd5e13db78e",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONOutlineTests.swift": "c334c2a89725ad6b416f3304af87ce8f9a0d8b4a1a5b3569e1a252f448b00622",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONFormattingTests.swift": "a1b7ea9e50cbb78353e6fdc1b8da1e1705abcc1a356b89322edbb9f45ab96870",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONOutlinePathCollisionTests.swift": "fd16060bbc2d73ffb5a5331f5bc76d6bf8f9d0c88a59efbd347519a8d99bbe6a",
+    "MacDown2/Packages/MacDownKit/Tests/OutlineUITests/OutlineIdentityMapTests.swift": "2fa80f6dab0c745be11183489ea2022b773420dabb1d0e5f12a0d83dac33e525",
+    "MacDown2/Packages/MacDownKit/Tests/OutlineUITests/JSONOutlineExactSourceTests.swift": "3bfd187bba899565d3f63244619fa612a2ca80ff1fe406f4ed1b5213492903d9",
+    "MacDown2/Packages/MacDownKit/Tests/OutlineUITests/OutlineControllerTests.swift": "f9edd26aa7d4ef9a49f1d55186418d24904e38fd23f58a85904da4fed06a391b",
+    "MacDown2/Packages/MacDownKit/Tests/OutlineUITests/OutlineTreeTests.swift": "03c399bfe10a2e47ee500567fb51b2a38b5f8cc1ec3bb4e964ba99d373b1f1b7",
+    "MacDown2/Packages/MacDownKit/Tests/OutlineUITests/JSONOutlineChannelTests.swift": "2cbd923179c6e171caf0b3601753541f3964354a4e041653dd712ba8ca5039c9",
+    "MacDown2/Packages/MacDownKit/Tests/OutlineUITests/OutlineUITests.swift": "6eef8b96646190b9c4e7bbf6c4c1b86a93d24ad5ad6064668473f82aac794481",
+    "MacDown2/Packages/MacDownKit/Tests/OutlineUITests/OutlineIdentityMapPerformanceTests.swift": "e5c3acd3c880c9389098734c09a874903a26d93caf11f015d4db9e6476257a1e",
+    "MacDown2/Packages/MacDownKit/Tests/OutlineUITests/OutlineSelectionTests.swift": "445b55bd9f7832c3202e446a17f1c40f7f064803d2f347007ed2b140222dfd6c",
+    "MacDown2/Packages/MacDownKit/Tests/OutlineUITests/Fixtures.swift": "b727978dbe316a3d817ad5cdafb4629ef529c4c0367e1225523183b46611c628"
+  },
+  "candidate_source_sha256": {
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/SourceMap.swift": "4e00c4d7a25a339e440e6b8f31a7e59f5c8b7dbb8eb7237dd3c94dc2117c89f2",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownBlock.swift": "1b4c7d7528cd9a0f0eb2bbecf9bf2abae7c879a0fdfdd7c8381fac0fe8ab12b3",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseSession.swift": "9a6d3bfdccae312997e7df0f941d597041b0c98ef03d72fa573268fe8854a8c9",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseOptions.swift": "ec90b8c8717b73f30dc133f19d8505f8ad7911e5aafd0ee269b4b0350855eaa9",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseEngine.swift": "bc8cacc85273aa1bc350e90adbee507c61cf3b03bfc38e8e6b732ce1128124db",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseEngine+YAMLGuards.swift": "9cc7518f1acca3f61481a4df12dde3d5e5988a457ddb598aca51f347b4e84b20",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/FrontMatter.swift": "93e57c7f93e6f0f01680ad9f57936a3b334d076b4296ca6ecc397ccf7c0a2ed5",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownEngineModule.swift": "c8caff8457cc0390960b365f27a33e05980ba03ab85b35d2fa3e5eecd8938310",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/DirectiveSourceCoverage.swift": "fbcd259f511a03a8c45c38b4ec4288cdd3967870974ef60e4663280ea9d16b76",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/String+MarkdownLines.swift": "db2d92846df6beba3e7e3f534fc2cb8b199e572d83c7c9a2e67d7452b4b90fb6",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/HeadingAnchorAllocator.swift": "7f2bdae529a88d29177741a11aba7319ab58780d53dcb9a3885485229459ffa8",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/HeadingAnchorIndex.swift": "f8f95cb3b5037f99761c9dbc90bdff0abd4cde1e718a073cbbaf8c5a452e8153",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownDocument.swift": "be3e7a24af21b99127227b9f7b91b3666d9944b7bfbb536d63c4614106b086cb",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseStore.swift": "5343a853d2cc0161ae6a2a56a465e7659b05744e226d0a66ae3181cb6891afee",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseExecuting.swift": "b43026f9a6867f2fc2b355b8465ac2053ff66a662bfd811c904816d9ef7c5b4c",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownSourceFingerprint.swift": "ac2e5986b1bbab95c5eae574a47001c316ccffd61435f54eea39d5dde6a26535",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONScanner+Strings.swift": "0f724bee6788ababb26e2065b279fdba6f198bb1507fe459e1ce03cd3521419a",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONFormattingBaseline.swift": "62bf1f475a2c2581aaf114c6106be8972e5bba04e669f751a53acb8a77635b97",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONAnalysisSession.swift": "9553c312eee9bdf85a844b72f87b7b99b7b2bf62891d67bfe83aa5bbfd8b9fb6",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONScanner+Values.swift": "8f4021899831dd1470670720a76c4f93d1ec08e2abbbc79f92aaab46ce323a88",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONOutlineBuilder.swift": "202a3423a67c1f4968dae8f3d835348183862c27dc7242dfd5801474abc746bc",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONValues.swift": "16e586872917f5a06b9a2cb0c65508b70b56c5db32e8bd9cbde4cb2254ede764",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONScanner.swift": "c3e36e12ec90332490e2b1592d347e3dace33e0624f9f3df185687a836073386",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONFormatter.swift": "29da8d31de8d794d2782c63e31ddd06a6861de2e026a66546daa0f4c6a772263",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONParser.swift": "4621bf74e40d287e177b868579a9cf688b5e6b9bbfc87d2481093a7b62f4f26e",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/Resources/Localizable.xcstrings": "e5dd5abe07c0db64a4a6394c8e3513f5c878a9ee3cadcd5d6eff48400c12dcb1",
+    "MacDown2/Packages/MacDownKit/Sources/OutlineUI/OutlineAvailability.swift": "fb1c010c9e753718a2d17d209b20c38a34d9d9071b802cdc3def35c5f6f471c6",
+    "MacDown2/Packages/MacDownKit/Sources/OutlineUI/OutlineTree.swift": "bf2c4a088f2021351abf249f26abd4036eef79baa7b532255c1d817ab58a1c7f",
+    "MacDown2/Packages/MacDownKit/Sources/OutlineUI/OutlineController.swift": "f0d6048307e068f74432e450e5bf970232838fa155f97ca21cbb1a892948b25c",
+    "MacDown2/Packages/MacDownKit/Sources/OutlineUI/OutlineUI.swift": "237b3f434f846b0580f1ee6bfd38381635ba08f9b670a942b1964ebbddffe5c2",
+    "MacDown2/Packages/MacDownKit/Sources/OutlineUI/OutlineIdentityMap.swift": "a76b2764eb112d5d7c67c502b31321ed42fc238fd56f3d502d9f2d4ee7d327fc",
+    "MacDown2/Packages/MacDownKit/Sources/OutlineUI/OutlineSelection.swift": "7b19d64a08b02eade9883e952651efd7d462a00a5cea85a4f17962040bbaded5",
+    "MacDown2/Packages/MacDownKit/Sources/OutlineUI/OutlineController+JSON.swift": "fd38b83ce4060ceb3b8f9ff3ffb6b103303f0da7b90484a8bc9d22b842dbf5ba",
+    "MacDown2/Packages/MacDownKit/Sources/OutlineUI/OutlineItem.swift": "5dceb796ee6a123fd8418ee14fd84309debb913d704f44a6c6b346fa20224a0a",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONAnalysisSessionSupersessionTests.swift": "dfa3707cbf23a88bfb8ed5953207c18eef98695492ab6467cee9dcf14f119c0a",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONFormattingExactSourceTests.swift": "d190d05ea61537a8da5b6573b82c6bd2bfc8aba92293bd5f2fe0d11f89681082",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONParserDifferentialTests.swift": "0f75550df4fee40365d46853466b133101369ca716235e3d292e4e2e8bff2d68",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONDiagnosticsTests.swift": "aa03edcc75eaf81d562ce7c822efe4826339c6f7fa0eb6603a185f6f8d422c05",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONAnalysisBusyStateTests.swift": "781b068b6f2dc15321710cc11f93eee94825b8f11dfa39f936729a6d134c97b7",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONAnalysisSessionTests.swift": "65377cf81cfe68b907521020af2ed2a534c55c8398e2b0e87e968dd5e13db78e",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONOutlineTests.swift": "c334c2a89725ad6b416f3304af87ce8f9a0d8b4a1a5b3569e1a252f448b00622",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONFormattingTests.swift": "a1b7ea9e50cbb78353e6fdc1b8da1e1705abcc1a356b89322edbb9f45ab96870",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONOutlinePathCollisionTests.swift": "fd16060bbc2d73ffb5a5331f5bc76d6bf8f9d0c88a59efbd347519a8d99bbe6a",
+    "MacDown2/Packages/MacDownKit/Tests/OutlineUITests/OutlineIdentityMapTests.swift": "2fa80f6dab0c745be11183489ea2022b773420dabb1d0e5f12a0d83dac33e525",
+    "MacDown2/Packages/MacDownKit/Tests/OutlineUITests/JSONOutlineExactSourceTests.swift": "3bfd187bba899565d3f63244619fa612a2ca80ff1fe406f4ed1b5213492903d9",
+    "MacDown2/Packages/MacDownKit/Tests/OutlineUITests/OutlineControllerTests.swift": "f9edd26aa7d4ef9a49f1d55186418d24904e38fd23f58a85904da4fed06a391b",
+    "MacDown2/Packages/MacDownKit/Tests/OutlineUITests/OutlineTreeTests.swift": "03c399bfe10a2e47ee500567fb51b2a38b5f8cc1ec3bb4e964ba99d373b1f1b7",
+    "MacDown2/Packages/MacDownKit/Tests/OutlineUITests/JSONOutlineChannelTests.swift": "2cbd923179c6e171caf0b3601753541f3964354a4e041653dd712ba8ca5039c9",
+    "MacDown2/Packages/MacDownKit/Tests/OutlineUITests/OutlineUITests.swift": "6eef8b96646190b9c4e7bbf6c4c1b86a93d24ad5ad6064668473f82aac794481",
+    "MacDown2/Packages/MacDownKit/Tests/OutlineUITests/OutlineIdentityMapPerformanceTests.swift": "e5c3acd3c880c9389098734c09a874903a26d93caf11f015d4db9e6476257a1e",
+    "MacDown2/Packages/MacDownKit/Tests/OutlineUITests/OutlineSelectionTests.swift": "445b55bd9f7832c3202e446a17f1c40f7f064803d2f347007ed2b140222dfd6c",
+    "MacDown2/Packages/MacDownKit/Tests/OutlineUITests/Fixtures.swift": "b727978dbe316a3d817ad5cdafb4629ef529c4c0367e1225523183b46611c628"
+  },
+  "dependencies": {
+    "swift-markdown": {
+      "revision": "3c6f9523da3a1ec2fd829673e472d95b8097a3b8",
+      "archive_sha256": "415c12f2b38ba662254ccc7cbec04bca0c06a54ab89191f1680cf01cbb8ce869"
+    },
+    "swift-cmark": {
+      "revision": "924936d0427cb25a61169739a7660230bffa6ea6",
+      "archive_sha256": "4a0b5b8e0c25eaaea52843613c4665b409d3c94941e461e483aaa8a6d6d3c4e1"
+    },
+    "yams": {
+      "revision": "a27b21e0c81c5bf42049b897a62aaf387e80f279",
+      "archive_sha256": "dff911cd6ea0eb6266d636c32853a6b63e7e43084bdd0833a8a00128685930dc"
+    }
+  },
+  "baseline_command": "SWIFTCI_USE_LOCAL_DEPS=1 swift test --package-path <owned-fixture> --no-parallel --filter 'JSONOutlinePathCollisionTests|JSONOutlineExactSourceTests'",
+  "baseline_exit": 1,
+  "baseline_test_functions": 4,
+  "baseline_recorded_issues": 16,
+  "candidate_commands": [
+    "SWIFTCI_USE_LOCAL_DEPS=1 swift test --package-path <owned-fixture> --no-parallel",
+    "SWIFTCI_USE_LOCAL_DEPS=1 swift test --package-path <owned-fixture> -c release --no-parallel"
+  ],
+  "candidate_debug": {
+    "exit": 0,
+    "tests": 166,
+    "suites": 21
+  },
+  "candidate_release": {
+    "exit": 0,
+    "tests": 166,
+    "suites": 21
+  },
+  "compliance": {
+    "exit": 0,
+    "controls": 316
+  },
+  "source_inventory": "PASS",
+  "format": "SwiftFormat0.63.1 entire tree PASS",
+  "strict_lint": "entire tree PASS",
+  "application_AppKit_WebKit_execution": false,
+  "stored_outline_state_format_changed": false,
+  "logs": {
+    "baseline-tests.log": {
+      "raw_bytes": 31758,
+      "sha256": "821553b187bb5abeed1380c0bc417d20b739e8166d67f29326d3f1affe4a7db2",
+      "gzip_sha256": "e2a34f708e6b48ac41de6abc74b8efadbaa1c2e93db54faba699ef5a1caf0b86"
+    },
+    "candidate-debug.log": {
+      "raw_bytes": 25924,
+      "sha256": "fcef1c1eac3bd40847814bda709fc4146cccea8275c1569cc45d40a5586ba8d7",
+      "gzip_sha256": "48dc2d37eeb4854c5b9a049f2e7da422867d12a1a1d0fe1cbc4e84aef2f666a0"
+    },
+    "candidate-release.log": {
+      "raw_bytes": 29690,
+      "sha256": "0c4c04f047601df9031668e26f97713a839e7994ac026164e5fc00f718e258c1",
+      "gzip_sha256": "7dcd3e058f81dc1f9b8eac7008ed39c80db5f5b8dc369bd190528cb747df3f72"
+    },
+    "format.log": {
+      "raw_bytes": 264,
+      "sha256": "b39c2494469001047d41132453fe139aef43517a8caf7a331f27daef92d51834",
+      "gzip_sha256": "ea851d5418a3bdb93d8954284e38ec8e612a196dae90dd2175e6548d6485f745"
+    },
+    "lint.log": {
+      "raw_bytes": 70520,
+      "sha256": "3287accbf077bff1a268af79ba7f5d02427313a073f0d485defc687a90f89cd7",
+      "gzip_sha256": "dbf7343c2d2f0529fe9966156288e14275146b562faa7663712b482a1211f2ca"
+    },
+    "compliance.log": {
+      "raw_bytes": 7515,
+      "sha256": "d4aff3a198d219c20ec722531d769c30524f0b21e3c8a31c0b909f35ba8872d6",
+      "gzip_sha256": "87a30d185dafbde61bd105dae490d6769a3c89f973e063bb6c77b1d5e9ab4a6c"
+    },
+    "inventory.log": {
+      "raw_bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+      "gzip_sha256": "af7d3b346ebda56bff76e24ceccd101e959c9d054f09c69ec05a1bf31fd193c4"
+    }
+  },
+  "limits": [
+    "No native sidebar/keyboard/VoiceOver acceptance",
+    "IDs for non-simple keys change; inspected state is in-memory only",
+    "Encoded keys retain proportional base64 data; complete app memory/latency acceptance remains open",
+    "No whole-issue or release closure from component proof"
+  ]
+}

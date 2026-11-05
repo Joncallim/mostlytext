@@ -38,7 +38,12 @@ public extension OutlineController {
         } else {
             .notParsed
         }
-        guard result?.text != lastAppliedJSONText || newAvailability != jsonAvailability else {
+        let textMatches = switch (result?.text, lastAppliedJSONText) {
+        case (nil, nil): true
+        case let (.some(current), .some(previous)): current.utf8.elementsEqual(previous.utf8)
+        default: false
+        }
+        guard !textMatches || newAvailability != jsonAvailability else {
             return
         }
 
