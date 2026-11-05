@@ -1,0 +1,109 @@
+{
+  "schema": 1,
+  "baseline": "9b9b5cf2c5e8a94418e0489ca19a9f94880ba659",
+  "baseline_source_sha256": {
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONScanner+Strings.swift": "0f724bee6788ababb26e2065b279fdba6f198bb1507fe459e1ce03cd3521419a",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONFormattingBaseline.swift": "c08cfaf05da5c80de0a7c736df31c3fc73085211809692f3f3e00acacfae5cbf",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONAnalysisSession.swift": "9553c312eee9bdf85a844b72f87b7b99b7b2bf62891d67bfe83aa5bbfd8b9fb6",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONScanner+Values.swift": "8f4021899831dd1470670720a76c4f93d1ec08e2abbbc79f92aaab46ce323a88",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONOutlineBuilder.swift": "743d44593a695ab4bf1b187536610fa6ad6616b853f583ae29a890bbca36f3c7",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONValues.swift": "16e586872917f5a06b9a2cb0c65508b70b56c5db32e8bd9cbde4cb2254ede764",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONScanner.swift": "c3e36e12ec90332490e2b1592d347e3dace33e0624f9f3df185687a836073386",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONFormatter.swift": "29da8d31de8d794d2782c63e31ddd06a6861de2e026a66546daa0f4c6a772263",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONParser.swift": "4621bf74e40d287e177b868579a9cf688b5e6b9bbfc87d2481093a7b62f4f26e",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/Resources/Localizable.xcstrings": "e5dd5abe07c0db64a4a6394c8e3513f5c878a9ee3cadcd5d6eff48400c12dcb1",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONAnalysisSessionSupersessionTests.swift": "dfa3707cbf23a88bfb8ed5953207c18eef98695492ab6467cee9dcf14f119c0a",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONFormattingExactSourceTests.swift": "d190d05ea61537a8da5b6573b82c6bd2bfc8aba92293bd5f2fe0d11f89681082",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONParserDifferentialTests.swift": "0f75550df4fee40365d46853466b133101369ca716235e3d292e4e2e8bff2d68",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONDiagnosticsTests.swift": "aa03edcc75eaf81d562ce7c822efe4826339c6f7fa0eb6603a185f6f8d422c05",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONAnalysisBusyStateTests.swift": "781b068b6f2dc15321710cc11f93eee94825b8f11dfa39f936729a6d134c97b7",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONAnalysisSessionTests.swift": "65377cf81cfe68b907521020af2ed2a534c55c8398e2b0e87e968dd5e13db78e",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONOutlineTests.swift": "c334c2a89725ad6b416f3304af87ce8f9a0d8b4a1a5b3569e1a252f448b00622",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONFormattingTests.swift": "a1b7ea9e50cbb78353e6fdc1b8da1e1705abcc1a356b89322edbb9f45ab96870"
+  },
+  "candidate_source_sha256": {
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONScanner+Strings.swift": "0f724bee6788ababb26e2065b279fdba6f198bb1507fe459e1ce03cd3521419a",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONFormattingBaseline.swift": "62bf1f475a2c2581aaf114c6106be8972e5bba04e669f751a53acb8a77635b97",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONAnalysisSession.swift": "9553c312eee9bdf85a844b72f87b7b99b7b2bf62891d67bfe83aa5bbfd8b9fb6",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONScanner+Values.swift": "8f4021899831dd1470670720a76c4f93d1ec08e2abbbc79f92aaab46ce323a88",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONOutlineBuilder.swift": "743d44593a695ab4bf1b187536610fa6ad6616b853f583ae29a890bbca36f3c7",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONValues.swift": "16e586872917f5a06b9a2cb0c65508b70b56c5db32e8bd9cbde4cb2254ede764",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONScanner.swift": "c3e36e12ec90332490e2b1592d347e3dace33e0624f9f3df185687a836073386",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONFormatter.swift": "29da8d31de8d794d2782c63e31ddd06a6861de2e026a66546daa0f4c6a772263",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONParser.swift": "4621bf74e40d287e177b868579a9cf688b5e6b9bbfc87d2481093a7b62f4f26e",
+    "MacDown2/Packages/MacDownKit/Sources/JSONSupport/Resources/Localizable.xcstrings": "e5dd5abe07c0db64a4a6394c8e3513f5c878a9ee3cadcd5d6eff48400c12dcb1",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONAnalysisSessionSupersessionTests.swift": "dfa3707cbf23a88bfb8ed5953207c18eef98695492ab6467cee9dcf14f119c0a",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONFormattingExactSourceTests.swift": "d190d05ea61537a8da5b6573b82c6bd2bfc8aba92293bd5f2fe0d11f89681082",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONParserDifferentialTests.swift": "0f75550df4fee40365d46853466b133101369ca716235e3d292e4e2e8bff2d68",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONDiagnosticsTests.swift": "aa03edcc75eaf81d562ce7c822efe4826339c6f7fa0eb6603a185f6f8d422c05",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONAnalysisBusyStateTests.swift": "781b068b6f2dc15321710cc11f93eee94825b8f11dfa39f936729a6d134c97b7",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONAnalysisSessionTests.swift": "65377cf81cfe68b907521020af2ed2a534c55c8398e2b0e87e968dd5e13db78e",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONOutlineTests.swift": "c334c2a89725ad6b416f3304af87ce8f9a0d8b4a1a5b3569e1a252f448b00622",
+    "MacDown2/Packages/MacDownKit/Tests/JSONSupportTests/JSONFormattingTests.swift": "a1b7ea9e50cbb78353e6fdc1b8da1e1705abcc1a356b89322edbb9f45ab96870"
+  },
+  "baseline_command": "swift test --package-path <owned-fixture> --no-parallel --filter JSONFormattingExactSourceTests",
+  "baseline_exit": 1,
+  "baseline_tests": 1,
+  "baseline_recorded_issues": 2,
+  "candidate_commands": [
+    "swift test --package-path <owned-fixture> --no-parallel",
+    "swift test --package-path <owned-fixture> -c release --no-parallel"
+  ],
+  "candidate_debug": {
+    "exit": 0,
+    "tests": 98,
+    "suites": 12
+  },
+  "candidate_release": {
+    "exit": 0,
+    "tests": 98,
+    "suites": 12
+  },
+  "compliance": {
+    "exit": 0,
+    "controls": 316
+  },
+  "source_inventory": "PASS",
+  "format": "SwiftFormat0.63.1 entire tree PASS",
+  "strict_lint": "entire tree PASS",
+  "new_module_dependencies": [],
+  "application_AppKit_WebKit_execution": false,
+  "native_editor_event_sequence_reproduced": false,
+  "logs": {
+    "baseline-tests.log": {
+      "raw_bytes": 3442,
+      "sha256": "8aaef5ae378100facd97f2e248aa4099f7dee1e09501a0fa863e2279cebcee54",
+      "gzip_sha256": "5483afdba0a7fe412ffed5823ce82c6f26df305d67b877b3ea599c0bf07df051"
+    },
+    "candidate-debug.log": {
+      "raw_bytes": 14735,
+      "sha256": "b7678f11894b3809e29be496e193716fc397b17de88cf6d99f61cb8b86078f95",
+      "gzip_sha256": "4f809f7b7b5e265edc7319e87e480c1870810a5f629cc90c0ef81e63fa262540"
+    },
+    "candidate-release.log": {
+      "raw_bytes": 14883,
+      "sha256": "8a02726d728769c35eedb873c1a21a8ffa51257194a896e667d4cbbd2b82ffb2",
+      "gzip_sha256": "ddab72fbddc94f20ec35c9b60394a257247e0ace9f582dd1869b13b06bf3f720"
+    },
+    "format.log": {
+      "raw_bytes": 270,
+      "sha256": "51a30d7c77b4e7fbe890c7f1d04d499b38e60b91bddfaf612844619fe42b94d4",
+      "gzip_sha256": "803c1731520f02b1092b4b6d56bd18d6b28d6a1bad0046aac9069657c6e1145a"
+    },
+    "lint.log": {
+      "raw_bytes": 70406,
+      "sha256": "08a3ffc5c015d64c49b87298d422c0c9fbf06b02676a28aa11ac398e4733557c",
+      "gzip_sha256": "adf1a7796d3f74ec21dea8ab62eddbe9c0b65042c6c828daeb6d282bdcd9b8d5"
+    },
+    "compliance.log": {
+      "raw_bytes": 7515,
+      "sha256": "8ab26dca71d1017cc9090b0bde87af1c7b8880a8ae2ffe637323956dec2177d2",
+      "gzip_sha256": "4517c003aeef8a83905fff58653d74c70509dc475831a1766022a7cfcce69a9b"
+    },
+    "inventory.log": {
+      "raw_bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+      "gzip_sha256": "af7d3b346ebda56bff76e24ceccd101e959c9d054f09c69ec05a1bf31fd193c4"
+    }
+  }
+}
