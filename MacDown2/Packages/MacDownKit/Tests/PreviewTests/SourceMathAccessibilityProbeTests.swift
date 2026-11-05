@@ -1,4 +1,5 @@
 import AppKit
+import ApplicationServices
 import Foundation
 import SwiftUI
 import Testing
@@ -14,7 +15,14 @@ struct SourceMathAccessibilityProbeTests {
     private static let after = "MT_AX_AFTER"
 
     @Test func recordsActualInlineEquationAccessibilityWithPositiveControls() async throws {
-        _ = NSApplication.shared
+        let application = NSApplication.shared
+        let previousPolicy = application.activationPolicy()
+        try #require(application.setActivationPolicy(.regular))
+        defer { _ = application.setActivationPolicy(previousPolicy) }
+        if !NSRunningApplication.current.isFinishedLaunching {
+            application.finishLaunching()
+        }
+        application.activate()
         let base = AnyAttachment.math(latex: "x+y", style: .inline, sourceID: UUID())
         let standalone = LabeledMath(base: base, label: Self.standalone)
         let inline = LabeledMath(base: base, label: Self.inline)
@@ -29,34 +37,71 @@ struct SourceMathAccessibilityProbeTests {
             styleMask: [.titled], backing: .buffered, defer: false
         )
         window.isReleasedWhenClosed = false
+        window.animationBehavior = .none
         window.contentView = host
         defer {
             window.orderOut(nil)
             window.contentView = nil
             window.close()
         }
-        window.orderFront(nil)
+        window.makeKeyAndOrderFront(nil)
+        // Ask only this test process for its public AX role. SwiftUI can defer
+        // constructing virtual children until an accessibility client requests them.
+        let request = await requestOwnAccessibilityRole()
         var labels: [String] = []
         for _ in 0 ..< 50 {
             host.layoutSubtreeIfNeeded()
             window.displayIfNeeded()
-            labels = accessibilityStrings(window)
+            let children = host.accessibilityChildren() ?? []
+            let ordered = host.accessibilityChildrenInNavigationOrder()?.map { $0 as Any } ?? []
+            labels = accessibilityStrings([host] + children + ordered + NSAccessibility.unignoredChildren(from: [host]))
             if controlsAppear(in: labels) {
                 break
             }
             try await Task.sleep(for: .milliseconds(10))
         }
+        try recordObservation(labels, host: host, window: window, request: request)
+        try #require(request.error == AXError.success.rawValue && request.role == (kAXApplicationRole as String))
+        try #require(controlsAppear(in: labels), "Accessibility probe setup lacks its actual native positive controls")
+        // This records a measured architecture question, not final equation/VoiceOver acceptance.
+    }
+
+    private func requestOwnAccessibilityRole() async -> (error: Int32, role: String?) {
+        await Task.detached {
+            let ownProcess = AXUIElementCreateApplication(ProcessInfo.processInfo.processIdentifier)
+            let timeoutError = AXUIElementSetMessagingTimeout(ownProcess, 0.5)
+            guard timeoutError == .success else { return (timeoutError.rawValue, nil) }
+            var role: CFTypeRef?
+            let error = AXUIElementCopyAttributeValue(ownProcess, kAXRoleAttribute as CFString, &role)
+            return (error.rawValue, role as? String)
+        }.value
+    }
+
+    private func recordObservation(
+        _ labels: [String], host: NSHostingView<some View>, window: NSWindow, request: (error: Int32, role: String?)
+    ) throws {
         let observation: [String: Any] = [
+            "ownAccessibilityRequestError": request.error,
+            "ownAccessibilityRole": request.role ?? "",
+            "onMainThread": Thread.isMainThread,
             "positiveControlsPresent": controlsAppear(in: labels),
             "inlineEquationLabelPresent": labels.contains { $0.contains(Self.inline) },
             "inlineEquationOwnElement": labels.contains(Self.inline),
             "labels": labels,
+            "windowLabels": accessibilityStrings([window]),
+            "windowVisible": window.isVisible,
+            "windowIsKey": window.isKeyWindow,
+            "activationPolicy": NSApplication.shared.activationPolicy().rawValue,
+            "applicationActive": NSApplication.shared.isActive,
+            "applicationFinishedLaunching": NSRunningApplication.current.isFinishedLaunching,
+            "hostingChildrenCount": host.accessibilityChildren()?.count ?? 0,
+            "hostingNavigationChildrenCount": host.accessibilityChildrenInNavigationOrder()?.count ?? 0,
+            "hostingChildTypes": (host.accessibilityChildren() ?? []).prefix(32)
+                .map { String(describing: type(of: $0)) },
         ]
         let data = try JSONSerialization.data(withJSONObject: observation, options: [.sortedKeys])
         let record = try #require(String(data: data, encoding: .utf8))
         print("MOSTLYTEXT_MATH_AX_PROBE " + record)
-        try #require(controlsAppear(in: labels), "Accessibility probe setup lacks its actual native positive controls")
-        // This records a measured architecture question, not final equation/VoiceOver acceptance.
     }
 
     private func controlsAppear(in labels: [String]) -> Bool {
@@ -65,7 +110,7 @@ struct SourceMathAccessibilityProbeTests {
             text.contains(Self.before) && text.contains(Self.after)
     }
 
-    private func accessibilityStrings(_ root: NSObject) -> [String] {
+    private func accessibilityStrings(_ roots: [Any]) -> [String] {
         var seen = Set<ObjectIdentifier>()
         var result: [String] = []
         func visit(_ object: NSObject, depth: Int) {
@@ -80,12 +125,18 @@ struct SourceMathAccessibilityProbeTests {
             }
             let selector = NSSelectorFromString("accessibilityChildren")
             guard object.responds(to: selector),
-                  let children = object.perform(selector)?.takeUnretainedValue() as? [NSObject] else { return }
+                  let children = object.perform(selector)?.takeUnretainedValue() as? [Any] else { return }
             for child in children {
-                visit(child, depth: depth + 1)
+                if let object = child as? NSObject {
+                    visit(object, depth: depth + 1)
+                }
             }
         }
-        visit(root, depth: 0)
+        for root in roots.prefix(512) {
+            if let object = root as? NSObject {
+                visit(object, depth: 0)
+            }
+        }
         return result
     }
 

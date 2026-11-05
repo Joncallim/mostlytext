@@ -81,3 +81,43 @@ a checked UTF-8 conversion, retaining that failed lint log. The readiness loop
 yields MainActor with the same 50 checks/10 ms bound; no nested RunLoop blocks
 SwiftUI state updates. Empty/failed positive controls remain a real setup failure,
 never evidence that inline equations are absent.
+
+## First actual hosted failure and focused setup remediation
+
+Complete CI 42034991725 at initial head 2e61c096 **fails** one package probe:
+3,518 tests / 497 suites, one issue. All five validated-body native functions and
+the original renderer performance suite pass. The accessibility probe prints an
+empty label array, including every positive control. This establishes a failed
+setup, not missing inline semantics. Later app tests/builds do not run. The full
+raw job log/run JSON and exact original probe source remain retained.
+
+The next candidate queries NSHostingView's public accessibility/navigation-order
+children and unignored host children directly, preserving window-root observations
+as a diagnostic. It matches the existing native mount fixture's key-window and
+no-animation setup. The same controls, depth/count bounds and 50 x 10 ms readiness
+limit remain unchanged. Actual positive controls must qualify the fix remotely.
+
+An additional hosted-only workflow runs this exact test independently with the
+same three immutable dependency revisions; the normal full workflow is unchanged
+and remains the merge gate. The preparer/verification controls reject changed
+test bytes or a changed owner revision. Both the actual PreviewTests target and
+isolated focused target compile locally. YAML syntax, exact source and pin
+verification pass. No native execution occurs locally; no permission/configuration
+change, private accessibility API, assertion weakening or test exclusion is used.
+
+## Second setup observation: prohibited process and masked workflow status
+
+Focused run 42040496028 reports a green workflow but its actual one-test log
+**fails**: positive labels remain empty, activationPolicy=2 (prohibited), window
+visible but not key, and hosting/navigation child counts zero. This is preserved
+as failed native evidence. The new tee pipeline omitted explicit pipefail and
+masked the nonzero swift-test exit. No green job status qualifies this run.
+
+The next candidate temporarily gives only its owned test process a regular
+activation policy, completes launch when needed, activates it, and restores the
+previous policy afterward. Controls, bounds and native APIs remain unchanged.
+The workflow now enables pipefail and independently validates the actual passing
+one-test summary and positive-control JSON; negative controls reject the real
+prior failing log, false controls and a failed summary, and prove pipeline exit
+7 remains exit 7. Local actual target compilation passes; this setup hypothesis
+still requires fresh hosted observation before any native conclusion or merge.

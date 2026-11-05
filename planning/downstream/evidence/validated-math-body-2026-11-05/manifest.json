@@ -164,6 +164,41 @@
       "sha256": "9a25f1610a8a3e78fe8d34ccd745cecf06b140a053465b9e6df6d9fc060ca145"
     },
     {
+      "name": "activation-fixture-preparation.log",
+      "bytes": 68,
+      "sha256": "77044de5b53e0fd320cc0000471bf7176749ab5b976beb3f752a96bb10f55fa5"
+    },
+    {
+      "name": "activation-full-format.log",
+      "bytes": 262,
+      "sha256": "5c54133d77b97e52f1eb8335697ece60db76ef88f183ff6130f8cca60a13cf7c"
+    },
+    {
+      "name": "activation-inventory.log",
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+    },
+    {
+      "name": "activation-native-target-compile.log",
+      "bytes": 270,
+      "sha256": "74eed08a24f73c095690ec1a5cf278e8523d4fd3e22a08d7cc6d2bcc8896a47a"
+    },
+    {
+      "name": "activation-probe-format.log",
+      "bytes": 193,
+      "sha256": "82091e31e2aaaf94a4fc2d7befd8d3d6c0d2e2dad6cfc3db1e4b2b7b7f73291c"
+    },
+    {
+      "name": "activation-probe-lint.log",
+      "bytes": 72324,
+      "sha256": "92b29ece344dcb71e2d1e4c95cbf05fc20d5728eae17cb2bc2921eaae235bb8f"
+    },
+    {
+      "name": "activation-workflow-yaml.log",
+      "bytes": 29,
+      "sha256": "17a6404f877c239f7d7d1751dacf53e0eeceb1cbe88c904773b84de27b6b3a6d"
+    },
+    {
       "name": "actual-accessibility-probe-accepted-compile.log",
       "bytes": 270,
       "sha256": "ca1f889783af06941678bdf7e5a36b0acc30a999ef401044fe7f736bb112e8fe"
@@ -284,6 +319,51 @@
       "sha256": "76ce86549cf14bd2f2d08c45246bac5366879704017be2301fc1279b9dfdfc88"
     },
     {
+      "name": "focused-final-after-compile-verification.log",
+      "bytes": 71,
+      "sha256": "9faad8ac2592e4a557d9417e2e6c1747345843753bce8abb9d57a219111858db"
+    },
+    {
+      "name": "focused-final-initial-verification.log",
+      "bytes": 71,
+      "sha256": "9faad8ac2592e4a557d9417e2e6c1747345843753bce8abb9d57a219111858db"
+    },
+    {
+      "name": "focused-final-preparation.log",
+      "bytes": 68,
+      "sha256": "77044de5b53e0fd320cc0000471bf7176749ab5b976beb3f752a96bb10f55fa5"
+    },
+    {
+      "name": "focused-native-probe-compile.log",
+      "bytes": 14736,
+      "sha256": "ab910b8db8c0448abaa807346fe0d4d26b62176fe9ed97e18edb30739887b8fd"
+    },
+    {
+      "name": "focused-native-probe-final-compile.log",
+      "bytes": 317,
+      "sha256": "fb0c82df5d42fa4a9765f86f658f31da88bb21230919d2ebd0a13891d94dd61e"
+    },
+    {
+      "name": "focused-native-probe-restored-compile.log",
+      "bytes": 317,
+      "sha256": "386b209fcdb3ded4bd8a3c9bee4e409a492a96e5a07c2139bdb9104e84adbb22"
+    },
+    {
+      "name": "focused-probe-initial-verification.log",
+      "bytes": 71,
+      "sha256": "9faad8ac2592e4a557d9417e2e6c1747345843753bce8abb9d57a219111858db"
+    },
+    {
+      "name": "focused-probe-preparation.log",
+      "bytes": 68,
+      "sha256": "77044de5b53e0fd320cc0000471bf7176749ab5b976beb3f752a96bb10f55fa5"
+    },
+    {
+      "name": "focused-workflow-yaml-validation.log",
+      "bytes": 60,
+      "sha256": "58c73f6d25ec502041ee542dc5cc4df8fbb8e248542fc66166b9cbc4a9073abd"
+    },
+    {
       "name": "full-format.log",
       "bytes": 262,
       "sha256": "df4eb1dfb739ce09a3cb89fcd32c9197528f1d6de39cb0441e11f862ae2f120b"
@@ -302,6 +382,61 @@
       "name": "generate-sbom.log",
       "bytes": 41,
       "sha256": "a2d24371d17e6c6f1296277ca983dce9065ade847908059bfd7be20d4458cf2a"
+    },
+    {
+      "name": "host-root-full-format.log",
+      "bytes": 262,
+      "sha256": "17c5682da412ae148a7dcb690abf29c60025ac02cf92b38ec6b9429b21120f53"
+    },
+    {
+      "name": "host-root-full-lint.log",
+      "bytes": 72664,
+      "sha256": "a3a9d82cc1e72180c6d7b2298490ead7734bcdbba21443b9568ae2d3c1af988a"
+    },
+    {
+      "name": "host-root-helper-format.log",
+      "bytes": 193,
+      "sha256": "0eb20f5d88bb6cf5d86316c7ec45afba6f30ac1a60296b638762361e9e5656c2"
+    },
+    {
+      "name": "host-root-inventory.log",
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+    },
+    {
+      "name": "host-root-native-target-compile.log",
+      "bytes": 1940,
+      "sha256": "37df17234bf1f503ccfe10829022b4eabda953287d5b4a7de4242898ff0b0bee"
+    },
+    {
+      "name": "host-root-probe-format.log",
+      "bytes": 193,
+      "sha256": "0eb20f5d88bb6cf5d86316c7ec45afba6f30ac1a60296b638762361e9e5656c2"
+    },
+    {
+      "name": "host-root-qualified-lint.log",
+      "bytes": 72324,
+      "sha256": "eb1831e5c152803d17c8a5082930fa4b4304add301730c80c71aea9e843dccae"
+    },
+    {
+      "name": "host-root-qualified-native-compile.log",
+      "bytes": 269,
+      "sha256": "7f9e68d367420060cf5dca229eac50464cc2c04459971a96f2bfcf6c961e5e7c"
+    },
+    {
+      "name": "hosted-activation-probe.log",
+      "bytes": 40636,
+      "sha256": "15b90d2279611d07b1fed47e039798da49e4c04d701dbf6efd7b00ae23a16b7d"
+    },
+    {
+      "name": "hosted-first-build-and-test.log",
+      "bytes": 1531071,
+      "sha256": "e86784e9ada894cc467d50adead7b095a76b172104b591ce810e31e97cb22e6e"
+    },
+    {
+      "name": "hosted-focused-host-root-probe.log",
+      "bytes": 40456,
+      "sha256": "19975d7d7e66539136a610ea6514d0c80f5bb0df55bf7d971346877deee3dcf7"
     },
     {
       "name": "inventory-first.log",
@@ -412,6 +547,16 @@
       "name": "qualified-lint.log",
       "bytes": 72324,
       "sha256": "a42c300686bf8f7393ddfe548c1c6c5af293b367ebff1220b10821795ebe15b3"
+    },
+    {
+      "name": "self-ax-lint.log",
+      "bytes": 228,
+      "sha256": "13a1e9d31075d178a51d4fd631cc53b285e43def27e5486cf9a4853ab37dac37"
+    },
+    {
+      "name": "self-ax-native-compile.log",
+      "bytes": 32586,
+      "sha256": "db01a5bcab63112ec1d710994dddd58deda4f91b04f6fbd9245c744cfa87d515"
     }
   ],
   "native_only_files": [
@@ -430,6 +575,6 @@
   },
   "accessibility_probe_source": {
     "path": "MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceMathAccessibilityProbeTests.swift",
-    "sha256": "ef420864f68a9f60a5c112f9241db7b15ed8116ace7c17dcd8e8b5e7b21f3f17"
+    "sha256": "f5af5b1dc13a7a92dbe9de32a2ad28491f1470ef965715f5a4a2f1068ade8369"
   }
 }

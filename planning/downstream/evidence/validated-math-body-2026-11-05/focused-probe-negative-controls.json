@@ -1,0 +1,17 @@
+[
+  {
+    "case": "changed probe bytes rejected",
+    "exit": 1,
+    "output": "Probe source or resolved dependencies differ from the application\n"
+  },
+  {
+    "case": "changed owner revision rejected",
+    "exit": 1,
+    "output": "Probe source or resolved dependencies differ from the application\n"
+  },
+  {
+    "case": "restored exact source and owner pins accepted",
+    "exit": 0,
+    "output": "Exact native probe source and all three application revisions verified\n"
+  }
+]

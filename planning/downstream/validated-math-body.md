@@ -169,3 +169,61 @@ admission and check correctness for any returned hit; cache persistence is not a
 contract when automatic eviction is allowed. All upstream/parser/token assertions
 remain unchanged. The hard entry ceiling is separate from advisory countLimit;
 no memory-pressure callback or key registry can grow without bound.
+
+## First hosted accessibility result and focused diagnosis
+
+The first full CI run 42034991725 at 2e61c096 fails one probe setup requirement:
+all labels collected from NSWindow are empty, including every positive control.
+All five validated-body native functions and the unchanged renderer performance
+suite pass, but later app builds/tests do not run. Preserve this failure and infer
+no inline accessibility result from it.
+
+Apple exposes NSHostingView.accessibilityChildren and navigation-order children as
+the SwiftUI accessibility entry points. Diagnose that actual hosting view directly,
+including unignored children; record both hosting and window roots plus visibility,
+key status, activation policy and child types. Match the existing owned native
+mount fixture's makeKeyAndOrderFront and animationBehavior.none setup. Keep the
+same controls, traversal limits and 50 x 10 ms readiness limit. This is a setup
+hypothesis pending native observation, not a claimed fix or permission change.
+
+Add an isolated hosted diagnostic workflow that copies the exact probe test into
+an owned SwiftPM test-only package with the same three immutable dependency pins.
+It uses macOS/Xcode 26 and no credentials beyond read-only checkout. Full existing
+CI stays unchanged and remains the merge gate; the focused job cannot substitute
+for package/app/four-build qualification. Preparation and post-resolution checks
+must prove exact test bytes and matching lock revisions. Local preparation/compile
+may run; local native execution stays held. Allowed additional files are the
+focused workflow, its fixture preparer and evidence. This avoids repeated full
+application builds while investigating a narrowly unknown native setup.
+
+### Hosting-root diagnosis result and executable result gate
+
+Focused run 42040496028 at c70cdbe1 prints activationPolicy=2 (prohibited), visible
+window but windowIsKey=false, and no hosting/navigation children or positive
+labels. Its test actually fails. The new workflow incorrectly reported success
+because the tee pipeline lacked explicit pipefail; preserve that job status and
+raw failing output together, never use the green status as qualification.
+
+Make this owned test process a normal application while the probe runs, finish
+its launch if needed and activate it; restore its previous activation policy at
+teardown. This changes no system permission, account or protected application.
+Keep all original controls/readiness/traversal bounds. Record activation/launch
+state. This is the next measured setup hypothesis, not a proved accessibility fix.
+The workflow now explicitly enables pipefail, and its always-run verifier also
+requires the actual one-test passing summary and a true positive-control record.
+A false/missing record or failed summary must fail independently of shell status.
+
+## Self-process accessibility initialization candidate
+
+The activation-policy correction f5ea16e1 still fails the focused native test
+([42042051846](https://github.com/Joncallim/mostlytext/actions/runs/42042051846)).
+The workflow now reports that failure correctly. Native virtual children are
+empty despite direct public host queries. Before choosing another event-host
+architecture, the next candidate makes a public AX role request to this test
+process only, on a detached task while the main actor yields, with a 0.5-second
+messaging timeout. It neither requests trust nor prompts nor changes permission
+settings. Record the result and require the application role in addition to all
+existing native positive controls, without changing polling/traversal bounds.
+An AX failure or absent controls remains a failed setup, never absence evidence.
+The earlier source/raw failure is preserved. This is an unqualified candidate
+until fresh hosted execution; final VoiceOver acceptance remains separate.
