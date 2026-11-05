@@ -1,0 +1,19 @@
+{
+  "baseline_main": "7e8e5a26f72cc21de34e6cabc3522cf44a493f5b",
+  "source_branch_base": "2e61c096008495be249318a742ef3d8559600083",
+  "debug_tests": 4,
+  "release_tests": 4,
+  "logs": [
+    {
+      "name": "debug.log",
+      "bytes": 1654,
+      "sha256": "63ee5cd425d7f511b97c8f561342eed53df2a98faad21df3bd3c7ecc483f1190"
+    },
+    {
+      "name": "release.log",
+      "bytes": 1522,
+      "sha256": "2b57161bb80bcc03371e77911f875ab67b637682db36a0b7b0a7e3c8a2df3c54"
+    }
+  ],
+  "native_execution": false
+}

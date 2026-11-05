@@ -1,0 +1,12 @@
+[
+  {
+    "path": "MacDown2/MacDown2/SourceAnalysisText.swift",
+    "fixture_path": "Sources/MacDown2/SourceAnalysisText.swift",
+    "sha256": "b6bae93139ccb0d37420ecb22223c0ce64ebb3c9d7bf1a5deb53eb537e03b101"
+  },
+  {
+    "path": "MacDown2/MacDown2Tests/SourceAnalysisTextTests.swift",
+    "fixture_path": "Tests/MacDown2Tests/SourceAnalysisTextTests.swift",
+    "sha256": "1feebdba69d2c1bf9006bf55acc86ae93aed76d96cbeb0f11ef83b9d6b8cc4e7"
+  }
+]

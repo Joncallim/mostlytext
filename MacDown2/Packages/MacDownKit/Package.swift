@@ -80,7 +80,7 @@ let package = Package(
         .package(url: "https://github.com/Joncallim/swift-cmark", revision: "2a5339b89b219584c8fa6c6fd378d3898eed5d57"),
         .package(url: "https://github.com/scinfu/SwiftSoup", exact: "2.13.9"),
         .package(url: "https://github.com/jpsim/Yams", exact: "6.2.2"),
-        .package(url: "https://github.com/Joncallim/textual", revision: "b940433c7a55b82a8bbbe6fb0837df7162307dbb"),
+        .package(url: "https://github.com/Joncallim/textual", revision: "ebf6590ab480181cc05d37f520ad6e0f474c2c72"),
         // Match Textual's immutable engine owner/revision, so Preview and Export
         // share one parser, comment correction and structured body-inspection API.
         .package(
@@ -169,7 +169,7 @@ let package = Package(
         .target(
             name: "MathRendering",
             dependencies: [
-                "Math",
+                "Math", "MarkdownEngine", .product(name: "MathSyntax", package: "MathSyntax"),
                 .product(name: "SwiftUIMath", package: "swiftui-math"),
             ]
         ),
@@ -236,7 +236,8 @@ let package = Package(
         .testTarget(
             name: "MathRenderingTests",
             dependencies: [
-                "MathRendering", .product(name: "SwiftUIMath", package: "swiftui-math"),
+                "MathRendering", "Math", "MarkdownEngine", .product(name: "MathSyntax", package: "MathSyntax"),
+                .product(name: "SwiftUIMath", package: "swiftui-math"),
                 .product(name: "Textual", package: "textual"),
             ]
         ),

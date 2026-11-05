@@ -1070,9 +1070,9 @@
       "id": "textual",
       "name": "Textual",
       "kind": "swiftpm",
-      "version": "b940433c",
+      "version": "ebf6590a",
       "upstream": "https://github.com/Joncallim/textual",
-      "revision": "b940433c7a55b82a8bbbe6fb0837df7162307dbb",
+      "revision": "ebf6590ab480181cc05d37f520ad6e0f474c2c72",
       "resolution": "exact",
       "licence": "MIT",
       "copyright": [
@@ -1093,9 +1093,9 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "b940433c7a55b82a8bbbe6fb0837df7162307dbb"
+        "revision": "ebf6590ab480181cc05d37f520ad6e0f474c2c72"
       },
-      "evidence": "Narrow descendant of gonzalezreal/textual 0.5.0 at 01b51875a5406eefc95f52a058cb059e7bc94dc4. Inherits the bounded HTML-copy correction and typed source-occurrence factory; original MIT, credits and bundled Prism bytes are unchanged. Validated-body child b940433c7a55b82a8bbbe6fb0837df7162307dbb changes only Package.swift and the two math factory/attachment files relative to inspection metadata child 2337a7751605ed819ed6ce71a450fe29608deb40. Both metrics and drawing consume the admitted raw body; legacy String factories remain source compatible. All other parser/runtime/test/resource files are unchanged. This adds no accessibility claim for Canvas symbols and does not activate production transport; actual hosted native/full CI remains required. See planning/downstream/validated-math-body.md."
+      "evidence": "Narrow descendant of gonzalezreal/textual 0.5.0 at 01b51875a5406eefc95f52a058cb059e7bc94dc4. Inherits the bounded HTML-copy correction and typed source-occurrence factory; original MIT, credits and bundled Prism bytes are unchanged. Validated-body child b940433c7a55b82a8bbbe6fb0837df7162307dbb changes only Package.swift and the two math factory/attachment files relative to inspection metadata child 2337a7751605ed819ed6ce71a450fe29608deb40. Both metrics and drawing consume the admitted raw body; legacy String factories remain source compatible. All other parser/runtime/test/resource files are unchanged. This adds no accessibility claim for Canvas symbols and does not activate production transport; actual hosted native/full CI remains required. See planning/downstream/validated-math-body.md. Child ebf6590ab480181cc05d37f520ad6e0f474c2c72 changes only Attachment.swift, AttachmentView.swift and the new AttachmentAccessibility.swift relative to b940433c7a55b82a8bbbe6fb0837df7162307dbb: opt-in caller-owned labels/opaque actions at actual layout-run geometry, with default-nil compatibility and forwarded drawing/metrics/PNG. All other sources, tests, resources and license bytes are unchanged. Native qualification is pending; see planning/downstream/shared-math-production.md."
     },
     {
       "id": "theme-tomorrow-dark",

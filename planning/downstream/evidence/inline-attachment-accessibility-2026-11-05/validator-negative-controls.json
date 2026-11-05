@@ -1,0 +1,55 @@
+{
+  "synthetic_only": true,
+  "native_execution": false,
+  "cases": [
+    {
+      "case": "synthetic complete format control",
+      "exit_code": 0,
+      "expected_acceptance": true,
+      "stdout": "Actual native test and positive-control result verified\nExact native probe source and all three application revisions verified\n",
+      "stderr": ""
+    },
+    {
+      "case": "no positive controls",
+      "exit_code": 1,
+      "expected_acceptance": false,
+      "stdout": "",
+      "stderr": "Native probe did not establish its positive controls\n"
+    },
+    {
+      "case": "missing second occurrence",
+      "exit_code": 1,
+      "expected_acceptance": false,
+      "stdout": "",
+      "stderr": "The actual inline descriptors were not exposed\n"
+    },
+    {
+      "case": "no actual native action record",
+      "exit_code": 1,
+      "expected_acceptance": false,
+      "stdout": "",
+      "stderr": "Both native occurrence actions were not verified\n"
+    },
+    {
+      "case": "failed native summary",
+      "exit_code": 1,
+      "expected_acceptance": false,
+      "stdout": "",
+      "stderr": "The actual native test did not pass\n"
+    },
+    {
+      "case": "source byte mismatch",
+      "exit_code": 1,
+      "expected_acceptance": false,
+      "stdout": "",
+      "stderr": "Probe source or resolved dependencies differ from the application\n"
+    },
+    {
+      "case": "pin mismatch",
+      "exit_code": 1,
+      "expected_acceptance": false,
+      "stdout": "",
+      "stderr": "Probe source or resolved dependencies differ from the application\n"
+    }
+  ]
+}
