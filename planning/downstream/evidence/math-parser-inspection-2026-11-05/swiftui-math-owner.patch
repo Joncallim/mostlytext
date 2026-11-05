@@ -1,0 +1,686 @@
+diff --git a/Sources/SwiftUIMath/Internal/Syntax/CommentSource.swift b/Sources/SwiftUIMath/Internal/Syntax/CommentSource.swift
+new file mode 100644
+index 0000000..5d4df60
+--- /dev/null
++++ b/Sources/SwiftUIMath/Internal/Syntax/CommentSource.swift
+@@ -0,0 +1,96 @@
++import Foundation
++
++extension Math {
++  /// Lexical comments are discarded in a private buffer; authored source is never changed.
++  struct CommentSource {
++    struct Removal {
++      let parserOffset: Int
++      let originalEnd: Int
++    }
++
++    let text: String
++    let originalLength: Int
++    let removals: [Removal]
++    let boundaries: Set<String.Index>
++
++    init(_ source: String) throws {
++      var output = String.UnicodeScalarView()
++      var removals: [Removal] = []
++      var originalOffset = 0
++      var parserOffset = 0
++      var backslashes = 0
++      var inComment = false
++      var afterCR = false
++      var visited = 0
++      for scalar in source.unicodeScalars {
++        if visited.isMultiple(of: 1024) { try Task.checkCancellation() }
++        visited += 1
++        let length = scalar.utf16.count
++        originalOffset += length
++        if afterCR {
++          afterCR = false
++          if scalar == "\n" {
++            removals[removals.count - 1] = Removal(
++              parserOffset: parserOffset, originalEnd: originalOffset
++            )
++            continue
++          }
++        }
++        if inComment {
++          if scalar == "\r" || scalar == "\n" {
++            inComment = false
++            afterCR = scalar == "\r"
++            removals.append(Removal(parserOffset: parserOffset, originalEnd: originalOffset))
++          }
++          continue
++        }
++        if scalar == "%" && backslashes.isMultiple(of: 2) {
++          inComment = true
++          backslashes = 0
++          continue
++        }
++        output.append(scalar)
++        parserOffset += length
++        backslashes = scalar == "\\" ? backslashes + 1 : 0
++      }
++      if inComment {
++        removals.append(Removal(parserOffset: parserOffset, originalEnd: originalOffset))
++      }
++      try Task.checkCancellation()
++      text = String(output)
++      originalLength = originalOffset
++      self.removals = removals
++      let offsets = Set(removals.map(\.parserOffset))
++      var indices: Set<String.Index> = []
++      var offset = 0
++      var scanned = 0
++      var index = text.unicodeScalars.startIndex
++      while index < text.unicodeScalars.endIndex {
++        if scanned.isMultiple(of: 1024) { try Task.checkCancellation() }
++        scanned += 1
++        if offsets.contains(offset) { indices.insert(index) }
++        offset += text.unicodeScalars[index].utf16.count
++        text.unicodeScalars.formIndex(after: &index)
++      }
++      if offsets.contains(offset) { indices.insert(index) }
++      try Task.checkCancellation()
++      boundaries = indices
++    }
++
++    func originalOffset(for parserOffset: Int) -> Int {
++      var lower = 0
++      var upper = removals.count
++      while lower < upper {
++        let middle = lower + (upper - lower) / 2
++        if removals[middle].parserOffset <= parserOffset {
++          lower = middle + 1
++        } else {
++          upper = middle
++        }
++      }
++      guard lower > 0 else { return parserOffset }
++      let removal = removals[lower - 1]
++      return removal.originalEnd + parserOffset - removal.parserOffset
++    }
++  }
++}
+diff --git a/Sources/SwiftUIMath/Internal/Syntax/Parser.swift b/Sources/SwiftUIMath/Internal/Syntax/Parser.swift
+index 13f2c42..35f91d3 100644
+--- a/Sources/SwiftUIMath/Internal/Syntax/Parser.swift
++++ b/Sources/SwiftUIMath/Internal/Syntax/Parser.swift
+@@ -1,8 +1,8 @@
+ import Foundation
+ 
+ extension Math {
+-  struct ParserError: Error {
+-    enum Code: Int {
++  public struct ParserError: Error, Sendable {
++    public enum Code: Int, Sendable {
+       case mismatchedBraces = 1
+       case invalidCommand
+       case characterNotFound
+@@ -19,8 +19,8 @@ extension Math {
+       case invalidLimits
+     }
+ 
+-    let code: Code
+-    let message: String
++    public let code: Code
++    public let message: String
+   }
+ }
+ 
+@@ -54,17 +54,40 @@ extension Math {
+     var mode: Mode = .display
+ 
+     var error: ParserError?
++    var errorUTF16Offset: Int?
++    var bodyLimits: BodyLimits?
++    var resourceLimit: BodyResourceLimit?
++    var wasCancelled = false
++    var parserSteps = 0
++    var parserDepth = 0
++    var lexicalSource: CommentSource?
+ 
+     // MARK: - Character-handling routines
+ 
+-    var hasCharacters: Bool { currentCharIndex < string.endIndex }
++    var hasCharacters: Bool {
++      mutating get {
++        guard currentCharIndex < string.endIndex else { return false }
++        if bodyLimits != nil {
++          if Task.isCancelled {
++            wasCancelled = true
++            return false
++          }
++          if parserSteps >= bodyLimits!.maximumParserSteps {
++            resourceLimit = .parserSteps
++            return false
++          }
++        }
++        return true
++      }
++    }
+ 
+     // gets the next character and increments the index
+     mutating func nextCharacter() -> Character {
+       assert(
+-        self.hasCharacters,
++        self.currentCharIndex < self.string.endIndex,
+         "Retrieving character at index \(self.currentCharIndex) beyond length \(self.string.count)"
+       )
++      if bodyLimits != nil { parserSteps += 1 }
+       let ch = string[currentCharIndex]
+       currentCharIndex = string.index(after: currentCharIndex)
+       return ch
+@@ -219,11 +242,18 @@ extension Math {
+ 
+     // MARK: - AtomList builder functions
+ 
+-    mutating func build() -> AtomList? {
+-      // Detect and strip delimiters, updating the string and mode
+-      let (cleanedString, mode) = detectAndStripDelimiters(from: self.string)
+-      self.string = cleanedString
+-      self.currentCharIndex = cleanedString.startIndex
++    mutating func build(detectsDelimiters: Bool = true) -> AtomList? {
++      // Preserve the legacy String API's delimiter detection. Body inspection disables it.
++      let (cleanedString, mode) = detectsDelimiters
++        ? detectAndStripDelimiters(from: self.string) : (self.string, Mode.display)
++      do {
++        lexicalSource = try CommentSource(cleanedString)
++      } catch {
++        wasCancelled = true
++        return nil
++      }
++      self.string = lexicalSource!.text
++      self.currentCharIndex = self.string.startIndex
+       self.mode = mode
+ 
+       // If inline mode, we could optionally prepend a \textstyle command
+@@ -272,11 +302,23 @@ extension Math {
+     }
+ 
+     mutating func buildInternal(_ oneCharOnly: Bool, stopChar stop: Character?) -> AtomList? {
++      if let bodyLimits {
++        if Task.isCancelled {
++          wasCancelled = true
++          return nil
++        }
++        guard parserDepth < bodyLimits.maximumDepth else {
++          resourceLimit = .depth
++          return nil
++        }
++      }
++      parserDepth += 1
++      defer { parserDepth -= 1 }
+       let list = AtomList()
+       assert(!(oneCharOnly && stop != nil), "Cannot set both oneCharOnly and stopChar.")
+       var prevAtom: Atom? = nil
+       while self.hasCharacters {
+-        if error != nil { return nil }  // If there is an error thus far then bail out.
++        if error != nil || resourceLimit != nil || wasCancelled { return nil }  // If there is an error thus far then bail out.
+ 
+         var atom: Atom? = nil
+         let char = self.nextCharacter()
+@@ -331,6 +373,10 @@ extension Math {
+         } else if char == "}" {
+           // \ means a command
+           assert(!oneCharOnly, "This should have been handled before")
++          if stop != nil {
++            self.setError(.mismatchedBraces, message: "Unexpected closing brace.")
++            return nil
++          }
+           assert(stop == nil, "This should have been handled before")
+           // Special case: } terminates implicit table (name == nil) created by \\
+           // This happens when \\ is used inside braces: \substack{a \\ b}
+@@ -663,14 +709,19 @@ extension Math {
+         skipSpaces()
+         if hasCharacters && string[currentCharIndex] == "[" {
+           _ = nextCharacter()  // consume '['
++          guard hasCharacters else {
++            setError(.characterNotFound, message: "Missing alignment after [")
++            return nil
++          }
+           let alignmentChar = nextCharacter()
+           if alignmentChar == "l" || alignmentChar == "r" || alignmentChar == "c" {
+             frac.alignment = String(alignmentChar)
+           }
+-          // Consume closing ']'
+-          if hasCharacters && string[currentCharIndex] == "]" {
+-            _ = nextCharacter()
++          guard hasCharacters && string[currentCharIndex] == "]" else {
++            setError(.characterNotFound, message: "Missing ] after alignment")
++            return nil
+           }
++          _ = nextCharacter()
+         }
+ 
+         frac.numerator = self.buildInternal(true)
+@@ -1018,6 +1069,7 @@ extension Math {
+       // Only record the first error.
+       if error == nil {
+         error = ParserError(code: code, message: message)
++        errorUTF16Offset = originalBodyOffset
+       }
+     }
+ 
+@@ -1041,14 +1093,19 @@ extension Math {
+         skipSpaces()
+         if hasCharacters && string[currentCharIndex] == "[" {
+           _ = nextCharacter()  // consume '['
++          guard hasCharacters else {
++            setError(.characterNotFound, message: "Missing alignment after [")
++            return nil
++          }
+           let alignmentChar = nextCharacter()
+           if alignmentChar == "l" || alignmentChar == "r" || alignmentChar == "c" {
+             frac.alignment = String(alignmentChar)
+           }
+-          // Consume closing ']'
+-          if hasCharacters && string[currentCharIndex] == "]" {
+-            _ = nextCharacter()
++          guard hasCharacters && string[currentCharIndex] == "]" else {
++            setError(.characterNotFound, message: "Missing ] after alignment")
++            return nil
+           }
++          _ = nextCharacter()
+         }
+ 
+         frac.numerator = self.buildInternal(true)
+@@ -1091,6 +1148,10 @@ extension Math {
+         return frac
+       } else if command == "sqrt" {
+         let rad = Radical()
++        guard self.hasCharacters else {
++          rad.radicand = self.buildInternal(true)
++          return rad
++        }
+         let char = self.nextCharacter()
+         if char == "[" {
+           rad.degree = self.buildInternal(false, stopChar: "]")
+@@ -1333,13 +1394,16 @@ extension Math {
+           self.unlookCharacter()
+         }
+       }
+-      return self.readString()
++      return self.readString(stopsAtComment: true)
+     }
+ 
+-    mutating func readString() -> String {
++    mutating func readString(stopsAtComment: Bool = false) -> String {
+       // a string of all upper and lower case characters (and asterisks for starred environments)
+       var output = ""
+       while self.hasCharacters {
++        // Comments terminate a control word even though no visible space is emitted.
++        if stopsAtComment && !output.isEmpty
++          && lexicalSource?.boundaries.contains(currentCharIndex) == true { break }
+         let char = self.nextCharacter()
+         if char.isLowercase || char.isUppercase || char == "*" {
+           output.append(char)
+diff --git a/Sources/SwiftUIMath/Math+BodyInspection.swift b/Sources/SwiftUIMath/Math+BodyInspection.swift
+new file mode 100644
+index 0000000..bbf4ac5
+--- /dev/null
++++ b/Sources/SwiftUIMath/Math+BodyInspection.swift
+@@ -0,0 +1,76 @@
++import Foundation
++
++extension Math {
++  /// Explicit ceilings for an inspection of an authored equation body.
++  public struct BodyLimits: Hashable, Sendable {
++    public let maximumUTF16Length: Int
++    public let maximumDepth: Int
++    public let maximumParserSteps: Int
++
++    public init(maximumUTF16Length: Int, maximumDepth: Int, maximumParserSteps: Int) {
++      self.maximumUTF16Length = maximumUTF16Length
++      self.maximumDepth = maximumDepth
++      self.maximumParserSteps = maximumParserSteps
++    }
++  }
++
++  public enum BodyConfigurationError: Error, Sendable { case invalidLimits }
++
++  public enum BodyResourceLimit: Sendable, Equatable { case inputLength, depth, parserSteps }
++
++  /// The cursor is an original-body UTF-16 scalar boundary, including removed comments.
++  public struct BodyDiagnostic: Sendable {
++    public let error: ParserError
++    public let utf16Offset: Int
++  }
++
++  public enum BodyInspection: Sendable {
++    case valid
++    case invalid(BodyDiagnostic)
++    case internalFailure(BodyDiagnostic)
++    case resourceLimit(BodyResourceLimit)
++  }
++
++  /// Inspects an equation body using the renderer's parser, without fonts or delimiter detection.
++  ///
++  /// Cancellation throws. Invalid configurations throw before input is inspected. Resource
++  /// exhaustion is distinct from malformed input. No mutable syntax tree escapes this call.
++  public static nonisolated func inspectBody(
++    _ body: String, limits: BodyLimits
++  ) throws -> BodyInspection {
++    try Task.checkCancellation()
++    guard (1...1_048_576).contains(limits.maximumUTF16Length),
++      (1...128).contains(limits.maximumDepth),
++      (1...1_000_000).contains(limits.maximumParserSteps)
++    else { throw BodyConfigurationError.invalidLimits }
++    guard body.utf16.prefix(limits.maximumUTF16Length + 1).count <= limits.maximumUTF16Length
++    else { return .resourceLimit(.inputLength) }
++    var parser = Parser(string: body)
++    parser.bodyLimits = limits
++    let result = parser.build(detectsDelimiters: false)
++    try Task.checkCancellation()
++    if parser.wasCancelled { throw CancellationError() }
++    if let limit = parser.resourceLimit { return .resourceLimit(limit) }
++    if let error = parser.error {
++      let diagnostic = BodyDiagnostic(
++        error: error, utf16Offset: parser.errorUTF16Offset ?? parser.originalBodyOffset
++      )
++      return error.code == .internalError ? .internalFailure(diagnostic) : .invalid(diagnostic)
++    }
++    guard result != nil else {
++      return .internalFailure(
++        BodyDiagnostic(
++          error: ParserError(code: .internalError, message: "Parser returned no result."),
++          utf16Offset: parser.originalBodyOffset
++        ))
++    }
++    return .valid
++  }
++}
++
++extension Math.Parser {
++  var originalBodyOffset: Int {
++    let offset = currentCharIndex.utf16Offset(in: string)
++    return lexicalSource?.originalOffset(for: offset) ?? offset
++  }
++}
+diff --git a/Tests/SwiftUIMathTests/BodyInspectionTests.swift b/Tests/SwiftUIMathTests/BodyInspectionTests.swift
+new file mode 100644
+index 0000000..2b9b409
+--- /dev/null
++++ b/Tests/SwiftUIMathTests/BodyInspectionTests.swift
+@@ -0,0 +1,234 @@
++import Foundation
++import Testing
++
++@testable import SwiftUIMath
++
++struct BodyInspectionTests {
++  private let limits = Math.BodyLimits(
++    maximumUTF16Length: 16_384, maximumDepth: 64, maximumParserSteps: 65_536
++  )
++
++  @Test(arguments: ["\n", "\r\n", "\r"])
++  func commentsAreNotAtoms(ending: String) throws {
++    for input in ["x % ignored" + ending + "+y", "x%}\\bad{$" + ending + "+y"] {
++      var parser = Math.Parser(string: input)
++      let built = parser.build()
++      let list = try #require(built)
++      #expect(parser.error == nil)
++      #expect(Math.Parser.atomListToString(list) == "x+y")
++    }
++    var parser = Math.Parser(string: "\\text{a% removed" + ending + "b}")
++    let built = parser.build()
++    let list = try #require(built)
++    #expect(Math.Parser.atomListToString(list) == #"\mathrm{ab}"#)
++  }
++
++  @Test func lexicalCommentRulesAndScalarNeighbors() throws {
++    let cases: [(String, String)] = [
++      ("a% EOF", "a"), ("a%", "a"), ("%all", ""),
++      (#"a\%b"#, #"a\%b"#), (#"a\\%b"#, #"a\\"#),
++      (#"a\\\%b"#, #"a\\\%b"#),
++      ("a% first\r\n% second\n+b", "a+b"),
++      ("a\u{0600}%\u{301}hidden\n+b", "a\u{0600}+b"),
++      ("a%hidden\r\n\u{301}+b", "a\u{301}+b"),
++      ("a\r\nb\rc\nd", "a\r\nb\rc\nd"),
++    ]
++    for (source, expected) in cases {
++      let value = try Math.CommentSource(source)
++      #expect(Array(value.text.utf8) == Array(expected.utf8))
++      #expect(value.originalLength == source.utf16.count)
++      #expect(value.originalOffset(for: value.text.utf16.count) == source.utf16.count)
++    }
++  }
++
++  @Test(arguments: ["\n", "\r\n", "\r"])
++  func commentsDoNotJoinControlWordNames(ending: String) throws {
++    let body = #"\al%comment"# + ending + "pha"
++    guard case .invalid(let diagnostic) = try Math.inspectBody(body, limits: limits) else {
++      Issue.record("A comment must not manufacture a valid alpha command")
++      return
++    }
++    #expect(diagnostic.error.code == .invalidCommand)
++    var parser = Math.Parser(string: #"\alpha%comment"# + ending + "x")
++    let built = parser.build()
++    let list = try #require(built)
++    #expect(list.atoms.count == 2)
++    #expect(list.atoms.first?.nucleus == "α")
++    #expect(list.atoms.last?.nucleus == "x")
++  }
++
++  @Test func inspectionAcceptsValidBodies() throws {
++    for body in [
++      "", "x+y", #"\frac{x}{y}"#, #"\text{中文🙂}"#,
++      #"\begin{matrix}a&b\\c&d\end{matrix}"#,
++    ] {
++      guard case .valid = try Math.inspectBody(body, limits: limits) else {
++        Issue.record("Expected valid body: \(body)")
++        continue
++      }
++    }
++  }
++
++  @Test func inspectionReturnsExistingErrorCodes() throws {
++    let cases: [(String, Math.ParserError.Code)] = [
++      ("{x", .mismatchedBraces), ("x}", .mismatchedBraces),
++      (#"\notARealCommand{x}"#, .invalidCommand),
++      (#"\left"#, .missingDelimiter), (#"\left z x"#, .invalidDelimiter),
++      (#"\left(x"#, .missingRight), (#"\right)"#, .missingLeft),
++      (#"\begin{notAnEnvironment}x\end{notAnEnvironment}"#, .invalidEnvironment),
++      (#"\end{matrix}"#, .missingBegin), (#"\begin{matrix}x"#, .missingEnd),
++      (#"x\limits"#, .invalidLimits),
++    ]
++    for (body, code) in cases {
++      guard case .invalid(let diagnostic) = try Math.inspectBody(body, limits: limits) else {
++        Issue.record("Expected structured invalid body: \(body)")
++        continue
++      }
++      #expect(diagnostic.error.code == code)
++      #expect(!diagnostic.error.message.isEmpty)
++      #expect(diagnostic.utf16Offset >= 0 && diagnostic.utf16Offset <= body.utf16.count)
++    }
++  }
++
++  @Test(arguments: ["\n", "\r\n", "\r"])
++  func errorCursorUsesOriginalUTF16AfterComments(ending: String) throws {
++    let body = "\\text{🙂é}% hidden🙂" + ending + #"\notARealCommand{x}"#
++    guard case .invalid(let diagnostic) = try Math.inspectBody(body, limits: limits) else {
++      Issue.record("Expected unknown-command diagnostic")
++      return
++    }
++    #expect(diagnostic.error.code == .invalidCommand)
++    let expected = (body as NSString).range(of: "{x}", options: .literal).location
++    #expect(diagnostic.utf16Offset == expected)
++    let unclosed = "{x%comment🙂" + ending
++    guard case .invalid(let end) = try Math.inspectBody(unclosed, limits: limits) else {
++      Issue.record("Expected missing-brace diagnostic")
++      return
++    }
++    #expect(end.utf16Offset == unclosed.utf16.count)
++  }
++
++  @Test func commentOffsetMapHandlesRepeatedAndAdjacentRemovals() throws {
++    let value = try Math.CommentSource("a%🙂\r\n%b\nc%tail")
++    #expect(value.text == "ac")
++    #expect(value.originalOffset(for: 0) == 0)
++    #expect(value.originalOffset(for: 1) == ("a%🙂\r\n%b\n" as NSString).length)
++    #expect(value.originalOffset(for: 2) == ("a%🙂\r\n%b\nc%tail" as NSString).length)
++  }
++
++  @Test func bodyModeDoesNotDetectDollarDelimiters() throws {
++    var automatic = Math.Parser(string: "$x$")
++    let autoList = automatic.build()
++    var raw = Math.Parser(string: "$x$")
++    let rawList = raw.build(detectsDelimiters: false)
++    #expect(automatic.mode == .inline)
++    #expect(raw.mode == .display)
++    #expect(autoList?.atoms.first?.type == .style)
++    #expect(rawList?.atoms.first?.type != .style)
++    #expect(raw.string == "$x$")
++  }
++
++  @Test func mismatchedRadicalDegreeIsAnErrorWithoutCrashing() throws {
++    guard case .invalid(let diagnostic) = try Math.inspectBody(#"\sqrt[}"#, limits: limits) else {
++      Issue.record("Expected a mismatched-brace diagnostic")
++      return
++    }
++    #expect(diagnostic.error.code == .mismatchedBraces)
++    #expect(diagnostic.utf16Offset == 7)
++  }
++
++  @Test func inputLengthLimitIsUTF16AndInclusive() throws {
++    let limits = Math.BodyLimits(maximumUTF16Length: 2, maximumDepth: 8, maximumParserSteps: 32)
++    guard case .valid = try Math.inspectBody("xy", limits: limits) else {
++      Issue.record("Inclusive input boundary rejected")
++      return
++    }
++    guard case .valid = try Math.inspectBody("🙂", limits: limits) else {
++      Issue.record("UTF16 boundary rejected")
++      return
++    }
++    guard case .resourceLimit(.inputLength) = try Math.inspectBody("🙂x", limits: limits) else {
++      Issue.record("Expected input resource limit")
++      return
++    }
++  }
++
++  @Test func recursiveAndStepBudgetsAreDistinctFromMalformedInput() throws {
++    let shallow = Math.BodyLimits(
++      maximumUTF16Length: 16_384, maximumDepth: 4, maximumParserSteps: 65_536)
++    guard case .valid = try Math.inspectBody("{{{x}}}", limits: shallow) else {
++      Issue.record("Inclusive depth rejected")
++      return
++    }
++    for body in ["{{{{x}}}}", String(repeating: "{", count: 5_000) + "x"] {
++      guard case .resourceLimit(.depth) = try Math.inspectBody(body, limits: shallow) else {
++        Issue.record("Expected recursive depth limit")
++        continue
++      }
++    }
++    let steps = Math.BodyLimits(maximumUTF16Length: 128, maximumDepth: 8, maximumParserSteps: 2)
++    guard case .valid = try Math.inspectBody("xy", limits: steps) else {
++      Issue.record("Inclusive step boundary rejected")
++      return
++    }
++    for body in ["xyz", #"\unknown"#] {
++      guard case .resourceLimit(.parserSteps) = try Math.inspectBody(body, limits: steps) else {
++        Issue.record("Expected parser work limit")
++        continue
++      }
++    }
++  }
++
++  @Test func truncatedOptionalArgumentsProduceDiagnostics() throws {
++    for body in [#"\cfrac["#, #"\cfrac[l"#] {
++      guard case .invalid(let diagnostic) = try Math.inspectBody(body, limits: limits) else {
++        Issue.record("Expected incomplete optional-argument error")
++        continue
++      }
++      #expect(diagnostic.error.code == .characterNotFound)
++      #expect(diagnostic.utf16Offset == body.utf16.count)
++    }
++  }
++
++  @Test func allPrefixesAndSmallBudgetsRemainSafe() throws {
++    let expressions = [
++      #"\cfrac[l]{a}{b}"#, #"\sqrt[3]{x}"#,
++      #"\begin{pmatrix}a&b\\c&d\end{pmatrix}"#, #"\left(\frac{x}{y}\right)"#,
++      #"\textcolor{#ff0000}{\text{🙂}}"#, #"\not\equiv"#,
++      #"\substack{a\\b}"#, #"\colorbox{#ffffff}{x}"#,
++    ]
++    for expression in expressions {
++      for end in expression.indices {
++        let body = String(expression[..<end])
++        for budget in [1, 2, 3, 5, 8, 13, 64, 1_024] {
++          let bounded = Math.BodyLimits(
++            maximumUTF16Length: 1_024, maximumDepth: 8, maximumParserSteps: budget)
++          _ = try Math.inspectBody(body, limits: bounded)
++        }
++      }
++    }
++  }
++
++  @Test func configurationsAreValidatedBeforeParsing() throws {
++    for values in [
++      (0, 1, 1), (1_048_577, 1, 1), (1, 0, 1), (1, 129, 1), (1, 1, 0), (1, 1, 1_000_001),
++    ] {
++      let limits = Math.BodyLimits(
++        maximumUTF16Length: values.0, maximumDepth: values.1, maximumParserSteps: values.2)
++      #expect(throws: Math.BodyConfigurationError.invalidLimits) {
++        try Math.inspectBody("x", limits: limits)
++      }
++    }
++  }
++
++  @Test func cancellationIsNotMalformedMathOrResourceExhaustion() async {
++    let task = Task {
++      withUnsafeCurrentTask { $0?.cancel() }
++      do {
++        _ = try Math.inspectBody("{x", limits: limits)
++        Issue.record("Cancelled inspection succeeded")
++      } catch is CancellationError {} catch { Issue.record("Wrong cancellation error: \(error)") }
++    }
++    await task.value
++  }
++}
+diff --git a/Tests/SwiftUIMathTests/GeneratedPartialInputTests.swift b/Tests/SwiftUIMathTests/GeneratedPartialInputTests.swift
+new file mode 100644
+index 0000000..146522a
+--- /dev/null
++++ b/Tests/SwiftUIMathTests/GeneratedPartialInputTests.swift
+@@ -0,0 +1,43 @@
++import Testing
++
++@testable import SwiftUIMath
++
++struct GeneratedPartialInputTests {
++  @Test func deterministicPartialEquationCorpus() throws {
++    let fragments = [
++      "{", "}", "[", "]", "(", ")", "&", "^", "_", "\\", "$", "%", "\n", "\r\n", "\r",
++      "x", "a", "1", " ", "🙂", "\u{301}", "\u{0600}", "\\frac", "\\cfrac", "\\sqrt", "\\text",
++      "\\left", "\\right", "\\begin", "\\end", "\\color", "\\colorbox", "\\textcolor", "\\not",
++      "\\substack", "\\pmod", "\\limits", "\\matrix", "\\unknown", "matrix", "cases", "#ffffff",
++      #"\begin{matrix}"#, #"\end{matrix}"#, #"\begin{aligned}"#, #"\end{aligned}"#,
++      #"\begin{cases}"#, #"\end{cases}"#, #"\cfrac["#, #"\sqrt["#, #"\left("#, #"\right)"#,
++      #"\atop"#, #"\over"#, #"\choose"#, #"\overset"#, #"\underset"#, #"\raisebox"#,
++      #"\text{"#, #"\color{#ff0000}"#, #"\colorbox{#ff0000}"#,
++    ]
++    var state: UInt64 = 0x4D_54_45_51
++    func random(_ upper: Int) -> Int {
++      state = state &* 6_364_136_223_846_793_005 &+ 1
++      return Int((state >> 32) % UInt64(upper))
++    }
++    for caseIndex in 0..<100_000 {
++      var source = ""
++      for _ in 0..<random(24) { source += fragments[random(fragments.count)] }
++      let limits = Math.BodyLimits(
++        maximumUTF16Length: 1_024, maximumDepth: 8,
++        maximumParserSteps: [1, 2, 3, 8, 32, 256, 4_096][caseIndex % 7])
++      let outcome = try Math.inspectBody(source, limits: limits)
++      switch outcome {
++      case .valid, .resourceLimit: break
++      case .invalid(let diagnostic), .internalFailure(let diagnostic):
++        let units = Array(source.utf16)
++        let offset = diagnostic.utf16Offset
++        #expect((0...units.count).contains(offset))
++        guard offset > 0 && offset < units.count else { continue }
++        #expect(!(units[offset - 1] == 13 && units[offset] == 10))
++        #expect(
++          !((0xD800...0xDBFF).contains(units[offset - 1])
++            && (0xDC00...0xDFFF).contains(units[offset])))
++      }
++    }
++  }
++}

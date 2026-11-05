@@ -1,0 +1,5 @@
+{
+  "pid": 38316,
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-package --package-path MacDown2/Packages/MacDownKit --scratch-path /Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build resolve",
+  "reason": "Fresh tree-sitter-cpp remote mirror fetch made no pack-file progress for over two minutes despite an existing complete exact-pin mirror; stop this owned resolve, preserve evidence and reuse the verified local mirror with skip-update."
+}

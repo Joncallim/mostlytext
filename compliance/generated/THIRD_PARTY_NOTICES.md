@@ -143,8 +143,8 @@ This file is generated from `compliance/inventory.json` by
 | swift-markdown | abfafecc | Apache-2.0 |
 | SwiftSoup | 2.13.9 | MIT |
 | SwiftTreeSitter | 0beea992 | BSD-3-Clause |
-| SwiftUIMath | 0.1.0 | MIT |
-| Textual | 9077b0f6 | MIT |
+| SwiftUIMath | e394d7cf | MIT |
+| Textual | 2337a775 | MIT |
 | tree-sitter (runtime) | 0.25.10+mostlytext.5ce80b6f | MIT |
 | tree-sitter-bash | 0.25.1 | MIT |
 | tree-sitter-cpp | 0.23.4 | MIT |
@@ -10529,13 +10529,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## SwiftUIMath
 
-- Version: 0.1.0
-- Upstream: https://github.com/gonzalezreal/swiftui-math
-- Revision: `0b5c2cfaaec8d6193db206f675048eeb5ce95f71`
+- Version: e394d7cf
+- Upstream: https://github.com/Joncallim/swiftui-math
+- Revision: `e394d7cf111a90b4393df7a18e989dfec0a28931`
 - Licence: MIT
 - Copyright (c) 2026 Guille Gonzalez
 - Copyright (c) 2023 Computer Inspirations (SwiftMath)
 - Copyright (c) 2013 MathChat (iosMath)
+- Local modifications: Narrow child of upstream 0.1.0: preserve authored TeX comments and control-word boundaries, expose existing parser diagnostics with original-body UTF-16 cursors and required inspection limits, and reject truncated optional alignment and mismatched radical degrees safely. All fonts, licences, original tests and unrelated files are unchanged.
 
 ### swiftui-math--LICENSE.txt
 
@@ -10569,9 +10570,9 @@ SOFTWARE.
 
 ## Textual
 
-- Version: 9077b0f6
+- Version: 2337a775
 - Upstream: https://github.com/Joncallim/textual
-- Revision: `9077b0f608bd464ee4de880c0ff4c0c8441e698d`
+- Revision: `2337a7751605ed819ed6ce71a450fe29608deb40`
 - Licence: MIT
 - Copyright (c) 2024 Guille Gonzalez
 

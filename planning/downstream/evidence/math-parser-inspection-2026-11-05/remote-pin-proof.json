@@ -1,0 +1,67 @@
+{
+  "base": "f362b61b759068bdcbebf79749dbfdf92a47e82a",
+  "remote_pins": 24,
+  "changed": {
+    "swiftui-math": {
+      "before": {
+        "identity": "swiftui-math",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/gonzalezreal/swiftui-math",
+        "state": {
+          "revision": "0b5c2cfaaec8d6193db206f675048eeb5ce95f71",
+          "version": "0.1.0"
+        }
+      },
+      "after": {
+        "identity": "swiftui-math",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/Joncallim/swiftui-math",
+        "state": {
+          "revision": "e394d7cf111a90b4393df7a18e989dfec0a28931"
+        }
+      }
+    },
+    "textual": {
+      "before": {
+        "identity": "textual",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/Joncallim/textual",
+        "state": {
+          "revision": "9077b0f608bd464ee4de880c0ff4c0c8441e698d"
+        }
+      },
+      "after": {
+        "identity": "textual",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/Joncallim/textual",
+        "state": {
+          "revision": "2337a7751605ed819ed6ce71a450fe29608deb40"
+        }
+      }
+    }
+  },
+  "unchanged": [
+    "neon",
+    "rearrange",
+    "swift-argument-parser",
+    "swift-cmark",
+    "swift-concurrency-extras",
+    "swift-markdown",
+    "swiftsoup",
+    "swifttreesitter",
+    "tree-sitter",
+    "tree-sitter-bash",
+    "tree-sitter-cpp",
+    "tree-sitter-css",
+    "tree-sitter-html",
+    "tree-sitter-json",
+    "tree-sitter-python",
+    "tree-sitter-ruby",
+    "tree-sitter-swift",
+    "tree-sitter-toml",
+    "tree-sitter-typescript",
+    "tree-sitter-xml",
+    "tree-sitter-yaml",
+    "yams"
+  ]
+}
