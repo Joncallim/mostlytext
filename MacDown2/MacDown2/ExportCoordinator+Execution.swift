@@ -99,8 +99,10 @@ extension ExportCoordinator {
             sourceText: snapshot.text,
             sourceGeneration: snapshot.sourceGeneration
         )
+        let adaptation = ExportContributionAdapter.adapt(results, destination: isPrintTarget ? .pdfExport : .htmlExport)
+        try adaptation.requirePublication()
         return (
-            ExportContributionAdapter.adapt(results, destination: isPrintTarget ? .pdfExport : .htmlExport),
+            adaptation,
             FrozenExportParse(text: snapshot.text, revision: revision, document: parsed,
                               options: snapshot.parseOptions, releaseAfterUse: true)
         )

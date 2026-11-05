@@ -1,0 +1,9 @@
+{
+  "branch": "epic/19-math-production",
+  "head": "0db3b39c7fc1cf97e28726b4cfc254f79646b876",
+  "bundle_bytes": 41500405,
+  "bundle_sha256": "01a2eb7c84b3603f167f387087f319353fc3c6be37049abc528d2e682c6dcd3d",
+  "complete_bundle_verified": true,
+  "separate_bare_clone_head_and_history_verified": true,
+  "merged_into_main": "e8201ad8925aaf0cac2f15fafbda285c773a1d05"
+}

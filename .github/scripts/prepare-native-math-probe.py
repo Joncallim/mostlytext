@@ -82,7 +82,7 @@ if args.verify:
             geometry[-1].get(field) for field in ["positiveControlsPresent", "allFramesInsideHost", "distinctFrames"]
         ):
             raise SystemExit("Six scalar-adjacent native occurrences were not verified")
-        if not re.search(r"Test run with 45 tests in 12 suites passed", log):
+        if not re.search(r"Test run with 46 tests in 12 suites passed", log):
             raise SystemExit("The actual native test did not pass")
         print("Actual native test and positive-control result verified")
     print("Exact native probe source and all six application revisions verified")

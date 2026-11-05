@@ -1,6 +1,305 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "Display equation: %@": {
+      "comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Équation en bloc : %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "独立した数式: %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Równanie blokowe: %@"
+          }
+        }
+      }
+    },
+    "Equation at line %lld, column %lld: %@": {
+      "comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Équation à la ligne %lld, colonne %lld : %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%lld行、%lld列の数式: %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Równanie w wierszu %lld, kolumnie %lld: %@"
+          }
+        }
+      }
+    },
+    "Equation notices": {
+      "comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Informations sur les équations"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "数式に関する通知"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Powiadomienia dotyczące równań"
+          }
+        }
+      }
+    },
+    "Inline equation: %@": {
+      "comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Équation dans le texte : %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "文中の数式: %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Równanie w tekście: %@"
+          }
+        }
+      }
+    },
+    "Math analysis could not be safely completed. Export was stopped.": {
+      "comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "L’analyse des équations n’a pas pu être effectuée en toute sécurité. L’exportation a été arrêtée."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "数式の解析を安全に完了できませんでした。書き出しを停止しました。"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nie udało się bezpiecznie ukończyć analizy równań. Eksport został zatrzymany."
+          }
+        }
+      }
+    },
+    "Show equation source": {
+      "comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Afficher le code source de l’équation"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "数式のソースを表示"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Pokaż źródło równania"
+          }
+        }
+      }
+    },
+    "The equation contains a character this renderer does not support. Its source is shown.": {
+      "comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "L’équation contient un caractère non pris en charge par ce moteur de rendu. Son code source est affiché."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "数式にこのレンダラーが対応していない文字が含まれています。ソースを表示しています。"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Równanie zawiera znak nieobsługiwany przez ten moduł renderowania. Wyświetlono jego źródło."
+          }
+        }
+      }
+    },
+    "The equation contains an unrecognized command. Its source is shown.": {
+      "comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "L’équation contient une commande inconnue. Son code source est affiché."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "数式に認識できないコマンドが含まれています。ソースを表示しています。"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Równanie zawiera nierozpoznane polecenie. Wyświetlono jego źródło."
+          }
+        }
+      }
+    },
+    "The equation could not be drawn. Its source is shown.": {
+      "comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "L’équation n’a pas pu être dessinée. Son code source est affiché."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "数式を描画できませんでした。ソースを表示しています。"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nie udało się narysować równania. Wyświetlono jego źródło."
+          }
+        }
+      }
+    },
+    "The equation environment is incomplete or unsupported. Its source is shown.": {
+      "comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "L’environnement de l’équation est incomplet ou non pris en charge. Son code source est affiché."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "数式の環境が不完全か未対応です。ソースを表示しています。"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Środowisko równania jest niepełne lub nieobsługiwane. Wyświetlono jego źródło."
+          }
+        }
+      }
+    },
+    "The equation exceeds a rendering safety limit. Its source is shown.": {
+      "comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "L’équation dépasse une limite de sécurité du rendu. Son code source est affiché."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "数式がレンダリングの安全上の制限を超えています。ソースを表示しています。"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Równanie przekracza limit bezpieczeństwa renderowania. Wyświetlono jego źródło."
+          }
+        }
+      }
+    },
+    "The equation output exceeds an export safety limit. Export was stopped.": {
+      "comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Le résultat des équations dépasse une limite de sécurité de l’exportation. L’exportation a été arrêtée."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "数式の出力が書き出しの安全上の制限を超えています。書き出しを停止しました。"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Wynik renderowania równań przekracza limit bezpieczeństwa eksportu. Eksport został zatrzymany."
+          }
+        }
+      }
+    },
+    "The equation parser could not complete its work. Its source is shown.": {
+      "comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "L’analyse de l’équation n’a pas pu être menée à terme. Son code source est affiché."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "数式の解析を完了できませんでした。ソースを表示しています。"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nie udało się ukończyć analizy równania. Wyświetlono jego źródło."
+          }
+        }
+      }
+    },
     "The equation renderer produced invalid image dimensions.": {
       "comment": "Export equation failure. Authored LaTeX is an opaque substitution. Translation/native review remains required.",
       "localizations": {
@@ -20,6 +319,75 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Moduł renderowania równań wygenerował nieprawidłowe wymiary obrazu."
+          }
+        }
+      }
+    },
+    "The equation syntax is incomplete or invalid. Its source is shown.": {
+      "comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "La syntaxe de l’équation est incomplète ou invalide. Son code source est affiché."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "数式の構文が不完全か無効です。ソースを表示しています。"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Składnia równania jest niepełna lub nieprawidłowa. Wyświetlono jego źródło."
+          }
+        }
+      }
+    },
+    "The remaining content is shown as source after a rendering safety limit.": {
+      "comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Le contenu restant est affiché sous forme de code source après une limite de sécurité du rendu."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "レンダリングの安全上の制限により、残りの内容をソースとして表示しています。"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Po osiągnięciu limitu bezpieczeństwa renderowania pozostała zawartość jest wyświetlana jako źródło."
+          }
+        }
+      }
+    },
+    "This valid equation has no visible symbols. Its source is shown.": {
+      "comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cette équation valide ne contient aucun symbole visible. Son code source est affiché."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "この有効な数式には表示される記号がありません。ソースを表示しています。"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "To poprawne równanie nie zawiera widocznych symboli. Wyświetlono jego źródło."
           }
         }
       }

@@ -1,0 +1,96 @@
+{
+  "baseline_run": 42069018986,
+  "baseline_log_sha256": "3a083246a5a125b3d91db00df87a4d32938a78fbc72b15f09de731f2a2fed289",
+  "warnings": [
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/EditorCoreTests/EditorGutterBaselineAlignmentTests.swift",
+      "warning": "'#require(_:_:)' is redundant because 'offsets.first' never equals 'nil' (from macro 'require')",
+      "identical_in_prior_qualified_CI": true,
+      "file_unchanged_from_main": true
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/EditorCoreTests/EditorGutterBaselineAlignmentTests.swift",
+      "warning": "'#require(_:_:)' is redundant because 'tightBaseline' never equals 'nil' (from macro 'require')",
+      "identical_in_prior_qualified_CI": true,
+      "file_unchanged_from_main": true
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/EditorCoreTests/EditorGutterBaselineAlignmentTests.swift",
+      "warning": "'#require(_:_:)' is redundant because 'looseBaseline' never equals 'nil' (from macro 'require')",
+      "identical_in_prior_qualified_CI": true,
+      "file_unchanged_from_main": true
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/EditorCoreTests/EditorGutterBaselineAlignmentTests.swift",
+      "warning": "'#require(_:_:)' is redundant because 'smallBaseline' never equals 'nil' (from macro 'require')",
+      "identical_in_prior_qualified_CI": true,
+      "file_unchanged_from_main": true
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/EditorCoreTests/EditorGutterBaselineAlignmentTests.swift",
+      "warning": "'#require(_:_:)' is redundant because 'largeBaseline' never equals 'nil' (from macro 'require')",
+      "identical_in_prior_qualified_CI": true,
+      "file_unchanged_from_main": true
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/EditorCoreTests/EditorUndoPublicationTests.swift",
+      "warning": "use '#selector' instead of explicitly constructing a 'Selector'",
+      "identical_in_prior_qualified_CI": true,
+      "file_unchanged_from_main": true
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/EditorCoreTests/EditorUndoPublicationTests.swift",
+      "warning": "use '#selector' instead of explicitly constructing a 'Selector'",
+      "identical_in_prior_qualified_CI": true,
+      "file_unchanged_from_main": true
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/EditorCoreTests/EditorUndoPublicationTests.swift",
+      "warning": "use '#selector' instead of explicitly constructing a 'Selector'",
+      "identical_in_prior_qualified_CI": true,
+      "file_unchanged_from_main": true
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/FileCoreTests/FileEncodingTests.swift",
+      "warning": "variable 'document' was never mutated; consider changing to 'let' constant",
+      "identical_in_prior_qualified_CI": true,
+      "file_unchanged_from_main": true
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/LocalResourceAccessTests/ResourceTestSupport.swift",
+      "warning": "'init(cString:)' is deprecated: Use String(decoding: array, as: UTF8.self) instead, after truncating the null termination. [#DeprecatedDeclaration]",
+      "identical_in_prior_qualified_CI": true,
+      "file_unchanged_from_main": true
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterTests.swift",
+      "warning": "no 'async' operations occur within 'await' expression",
+      "identical_in_prior_qualified_CI": true,
+      "file_unchanged_from_main": true
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterTests.swift",
+      "warning": "no 'async' operations occur within 'await' expression",
+      "identical_in_prior_qualified_CI": true,
+      "file_unchanged_from_main": true
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterTests.swift",
+      "warning": "no 'async' operations occur within 'await' expression",
+      "identical_in_prior_qualified_CI": true,
+      "file_unchanged_from_main": true
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterTests.swift",
+      "warning": "no 'async' operations occur within 'await' expression",
+      "identical_in_prior_qualified_CI": true,
+      "file_unchanged_from_main": true
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterTests.swift",
+      "warning": "no 'async' operations occur within 'await' expression",
+      "identical_in_prior_qualified_CI": true,
+      "file_unchanged_from_main": true
+    }
+  ]
+}

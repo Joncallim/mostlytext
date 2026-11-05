@@ -158,4 +158,23 @@ struct PreviewReferenceReplayTests {
             .attributedString(for: source)
         #expect(actual.runs.compactMap(\.link).map(\.absoluteString) == ["https://example.com/actual"])
     }
+
+    @Test func aMissingOriginalReferenceCannotRestoreAnEquationWithLostLinkAttributes() async throws {
+        let block = "[$x$][key]"
+        let source = "[key]: /right\n\n" + block
+        let prepared = try await input(source: source, block: block)
+        let positive = try render(prepared.input, id: prepared.id)
+        #expect(positive.runs
+            .contains { $0[PreviewMathSourceAttribute.self] == prepared.id && $0.link?.relativeString == "/right" })
+        let original = try #require(prepared.facts.links.first)
+        let destination = try #require(original.destination)
+        // Deliberate lost-prefix fault: original authority still requires the
+        // real link, but this native input cannot resolve its definition.
+        let broken = try PreviewMathInput(source: block, replacements: [
+            .init(id: prepared.id, range: 1 ..< 4, expectedSource: "$x$"),
+        ], references: [.init(range: 0 ..< block.utf16.count, destination: destination, kind: .link)])
+        let actual = try render(broken, id: prepared.id)
+        #expect(String(String.UnicodeScalarView(actual.unicodeScalars)).utf8.elementsEqual(block.utf8))
+        #expect(actual.runs.allSatisfy { $0.textual.attachment == nil && $0.link == nil })
+    }
 }

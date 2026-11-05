@@ -92,8 +92,12 @@ struct PreviewMathReferenceIndex {
     }
 
     func authorizes(_ url: URL, range: NSRange, baseURL: URL?) -> Bool {
+        matchingReference(url, range: range, baseURL: baseURL) != nil
+    }
+
+    func matchingReference(_ url: URL, range: NSRange, baseURL: URL?) -> Int? {
         guard isValid, range.location >= 0, range.length > 0,
-              range.location <= Int.max - range.length else { return false }
+              range.location <= Int.max - range.length else { return nil }
         var low = 0, high = references.count
         while low < high {
             let middle = low + (high - low) / 2
@@ -103,10 +107,11 @@ struct PreviewMathReferenceIndex {
                 high = middle
             }
         }
-        guard low > 0 else { return false }
+        guard low > 0 else { return nil }
         let reference = references[low - 1]
         guard NSMaxRange(range) <= reference.range.upperBound,
-              let expected = URL(string: reference.destination, relativeTo: baseURL) else { return false }
-        return url.absoluteString.utf8.elementsEqual(expected.absoluteString.utf8)
+              let expected = URL(string: reference.destination, relativeTo: baseURL),
+              url.absoluteString.utf8.elementsEqual(expected.absoluteString.utf8) else { return nil }
+        return low - 1
     }
 }

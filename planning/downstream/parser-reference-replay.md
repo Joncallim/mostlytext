@@ -115,3 +115,5 @@ keys, correct images and wrong/foreign URL negative controls. The exact hosted
 fixture adds the same immutable Markdown SDK, cmark and Yams pins as the app and
 copies the actual MarkdownEngine module. Locally only the pure Foundation parser
 fixtures execute; native modules compile without execution.
+
+Restoration also requires every supplied original link/image to be represented by its native URL attribute. Checking only URLs that happen to survive would miss a lost definition/target. A lost-prefix fault with real original facts must therefore show the original block instead of restoring an unlinked equation; native positive-target controls remain unchanged. For structurally invisible empty links, conservative whole-block source fallback is permitted until a separately proved visible-use policy is introduced.

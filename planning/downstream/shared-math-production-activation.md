@@ -160,3 +160,5 @@ text, guessed formula search or captured old editor string grants authority.
 Final owner-account UI/VoiceOver, native visual/PDF parity, whole-app Release
 performance calibration and exact signed candidate evidence remain explicit gates;
 package timing, fixture accessibility and integration merges do not establish them.
+
+While recompiling ExportService, replace the pre-existing unused directory binding in drainRetirements with the same explicit nonnil precondition. The original qualified PR91 log and unchanged main source prove the warning predates this work. The existing retirement/ownership algorithm, FD checks and recovery tests remain unchanged. This removes a compiler warning without changing publication policy.

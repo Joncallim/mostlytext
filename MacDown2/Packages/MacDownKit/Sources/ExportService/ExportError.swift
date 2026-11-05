@@ -11,6 +11,8 @@ public enum ExportError: Error, LocalizedError, CustomStringConvertible {
     /// be embedded (missing local file, or a remote reference that is never
     /// fetched during offline export).
     case unresolvedResources([ExportDiagnostic])
+    /// Even readable source fallback could not be safely bounded or authorized.
+    case derivedContentUnavailable([ExportDiagnostic])
     /// A self-contained export encountered authored raw HTML. Arbitrary
     /// resource-bearing attributes cannot be proven closed, so the document
     /// must not claim to be self-contained.
@@ -43,6 +45,12 @@ public enum ExportError: Error, LocalizedError, CustomStringConvertible {
             let listed = Self.summarise(diagnostics)
             return String(
                 localized: "This export must embed every image, but some could not be resolved:\n\(listed)",
+                bundle: .module
+            )
+        case let .derivedContentUnavailable(diagnostics):
+            let listed = Self.summarise(diagnostics)
+            return String(
+                localized: "Export was stopped because derived content could not be safely prepared:\n\(listed)",
                 bundle: .module
             )
         case .rawHTMLNotEmbeddable:
@@ -144,6 +152,11 @@ public enum ExportError: Error, LocalizedError, CustomStringConvertible {
             )
         case .invalidResourceSlots, .invalidSourceSnapshot:
             String(localized: "Try exporting again from the original document.", bundle: .module)
+        case .derivedContentUnavailable:
+            String(
+                localized: "Reduce the equation output or correct its source, then try exporting again.",
+                bundle: .module
+            )
         case .validatedPublicationRejected:
             String(localized: "Try exporting the diagram as its authored source.", bundle: .module)
         }

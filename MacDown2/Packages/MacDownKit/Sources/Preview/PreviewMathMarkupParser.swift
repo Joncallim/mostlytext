@@ -61,16 +61,27 @@ public struct PreviewMathMarkupParser: MarkupParser {
 
     private func checkReferenceAuthority(in parsed: AttributedString) throws {
         guard links.isValid, images.isValid else { throw PreviewMathInput.Failure.referenceProvenance }
+        var seenLinks = Set<Int>()
+        var seenImages = Set<Int>()
         for run in parsed.runs where run.link != nil || run.imageURL != nil {
             guard let position = run.markdownSourcePosition, let range = sourceMap.range(for: position) else {
                 throw PreviewMathInput.Failure.referenceProvenance
             }
-            if let url = run.link, !links.authorizes(url, range: range, baseURL: baseURL) {
-                throw PreviewMathInput.Failure.referenceProvenance
+            if let url = run.link {
+                guard let original = links.matchingReference(url, range: range, baseURL: baseURL) else {
+                    throw PreviewMathInput.Failure.referenceProvenance
+                }
+                seenLinks.insert(original)
             }
-            if let url = run.imageURL, !images.authorizes(url, range: range, baseURL: baseURL) {
-                throw PreviewMathInput.Failure.referenceProvenance
+            if let url = run.imageURL {
+                guard let original = images.matchingReference(url, range: range, baseURL: baseURL) else {
+                    throw PreviewMathInput.Failure.referenceProvenance
+                }
+                seenImages.insert(original)
             }
+        }
+        guard seenLinks.count == links.references.count, seenImages.count == images.references.count else {
+            throw PreviewMathInput.Failure.referenceProvenance
         }
     }
 

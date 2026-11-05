@@ -6,6 +6,23 @@ import SwiftUI
 @_spi(Textual) import SwiftUIMath
 
 public extension MathImageRenderer {
+    /// Preview uses the same admitted raw-body geometry as Export before it
+    /// chooses a native attachment. Zero output remains valid source fallback.
+    static func admittedSize(
+        body: SwiftUIMath.Math.ValidatedBody, style: MathDelimiterStyle,
+        pixelScale: Double = 1, budget: MathImageBudget = .standard
+    ) throws -> CGSize {
+        try Task.checkCancellation()
+        let bounds = SwiftUIMath.Math.typographicBounds(
+            for: body, fitting: .unspecified, font: .init(name: .latinModern, size: 18),
+            style: style == .inline ? .text : .display
+        )
+        _ = try budget.admit(logicalWidth: Double(bounds.size.width), logicalHeight: Double(bounds.size.height),
+                             pixelScale: pixelScale)
+        try Task.checkCancellation()
+        return bounds.size
+    }
+
     /// Renders the exact parser-admitted body with bounds checked before raster allocation.
     static func render(
         body: SwiftUIMath.Math.ValidatedBody, style: MathDelimiterStyle,
@@ -17,11 +34,9 @@ public extension MathImageRenderer {
         }), context.pixelScale.isFinite, context.pixelScale > 0 else { throw MathRenderError.invalidImageDimensions }
         let font = SwiftUIMath.Math.Font(name: .latinModern, size: 18)
         let typesettingStyle: SwiftUIMath.Math.TypesettingStyle = style == .inline ? .text : .display
-        let bounds = SwiftUIMath.Math.typographicBounds(
-            for: body, fitting: .unspecified, font: font, style: typesettingStyle
+        let size = try admittedSize(
+            body: body, style: style, pixelScale: Double(context.pixelScale), budget: budget
         )
-        _ = try budget.admit(logicalWidth: Double(bounds.size.width), logicalHeight: Double(bounds.size.height),
-                             pixelScale: Double(context.pixelScale))
         try Task.checkCancellation()
         let view = SwiftUIMath.Math(body)
             .mathFont(font)
@@ -31,7 +46,7 @@ public extension MathImageRenderer {
                 green: context.foregroundGreen,
                 blue: context.foregroundBlue
             ))
-            .frame(width: bounds.size.width, height: bounds.size.height)
+            .frame(width: size.width, height: size.height)
         let renderer = ImageRenderer(content: view)
         renderer.scale = context.pixelScale
         guard let image = renderer.cgImage else { throw MathRenderError.couldNotTypeset }
@@ -44,8 +59,8 @@ public extension MathImageRenderer {
         try Task.checkCancellation()
         return RenderedMathImage(
             pngData: png,
-            logicalWidth: Double(bounds.size.width),
-            logicalHeight: Double(bounds.size.height)
+            logicalWidth: Double(size.width),
+            logicalHeight: Double(size.height)
         )
     }
 }
