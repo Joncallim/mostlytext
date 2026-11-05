@@ -61,3 +61,29 @@ understood. This unit must prove its own actual-root capture failure fixed.
 If capture parity requires parser-policy changes, unconditional full queries,
 new public APIs or test/deadline weakening, stop this slice for a focused design
 revision. All native execution and release/rights/publication gates remain.
+
+## Focused revision: explicit fresh parsing for Markdown inline
+
+The old-capture coverage correction advances the same actual-root corpus from
+failure44 to failure1745. At1745 the root AST and child included ranges both
+match fresh; only the inline child AST differs. Explicit whole resolution does
+not repair it. This independently matches the retained original-runtime UTF-16
+incremental/fresh discrepancy. Do not weaken the 2,000-edit oracle or confuse
+these two causes.
+
+Add one source-compatible public configuration value,
+LanguageConfiguration.reusesPreviousTree, default true. Existing initializer
+signatures and other languages keep their behavior. LanguageLayer consults it:
+when false, reset the parser and parse without an old tree, retaining the old
+state only for changed-range comparison. Included ranges, queries, cancellation,
+thread confinement and ownership reconciliation remain intact. The app selects
+false only for MarkdownInline in its existing grammar factory. This is a focused
+revision to the prior public-API stop rule, justified by the reproduced parser
+state discrepancy; it adds no user setting or new dependency direction.
+
+Keep a minimal moved-capture test on the default policy to verify the coverage
+fix independently. The long actual-root corpus uses the same explicit inline
+policy as production and must pass unchanged fresh-capture equality. Retain both
+negative results and source/input hashes. Measure Release component edit costs
+at eligible sizes before adoption; keep the8192-unit fallback and whole-editor
+performance gate. The lexer optimization remains separate and unadopted.
