@@ -102,3 +102,27 @@ production math acceptance box; actual native adapter/Export parity, structured
 engine diagnostics, accessibility/navigation/cache/worker budgets and final visual/
 VoiceOver evidence remain. Stop and revise if exact parser facts cannot represent
 a required case or integration requires changing those ownership boundaries.
+
+## Focused revision: explicit first-party local package ownership
+
+The first integration check fails because the existing Compliance rule assumes
+every local SwiftPM dependency is a third-party inventory component. MathSyntax
+is authored first-party code under the existing root MIT license and already
+registered as a checked manifest; adding a fake third-party notice is incorrect.
+Extend first_party with an explicit packages list, containing only the canonical
+MacDown2/Packages/MathSyntax path. This is an ownership declaration, not a wildcard
+exception: the directory and registered manifest must exist inside MacDown2,
+canonical repository-relative paths are required, duplicates/invalid entries fail,
+and a third-party-owned package cannot be relabeled first-party. All distributed
+file classification and every manifest/transitive dependency check still run.
+An undeclared or nested local package still requires its own declared owner.
+
+The Compliance checker, inventory, README and focused negative fixtures are now
+allowed ownership files for this unit. Prove the explicit first-party positive
+case and failure for outside/symlink escapes, missing/unregistered manifests,
+invalid/duplicate declarations, third-party ownership conflict, undeclared nested
+packages, unknown remote dependencies and unregistered bundled C files. Keep every
+existing negative test unchanged. Do not broaden first_party.paths, suppress a
+finding, skip manifest traversal or misclassify third-party code. Regenerate and
+verify notices/SBOM normally; first-party code stays covered by the product's MIT
+notice, rather than being listed as an external component.
