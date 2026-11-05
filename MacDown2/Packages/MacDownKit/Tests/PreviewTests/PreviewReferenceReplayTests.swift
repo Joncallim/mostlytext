@@ -40,7 +40,7 @@ struct PreviewReferenceReplayTests {
             for: blockRange, sourceSHA256: facts.sourceSHA256, maximumUTF8Bytes: PreviewParserBudget.maximumUTF8Bytes
         )
         let id = UUID()
-        return try (PreviewMathInput(source: block, prefix: prefix, replacements: [
+        return try Prepared(input: PreviewMathInput(source: block, prefix: prefix, replacements: [
             .init(id: id, range: localMath, expectedSource: "$x$"),
         ], sourceEdits: edits), id: id, facts: facts)
     }
