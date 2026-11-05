@@ -2,8 +2,10 @@ import Foundation
 
 /// A source-neutral outline node (EPIC-11 §3.4).
 ///
-/// IDs encode the node's JSON path: object keys (`parent.key`) and array
-/// indices (`parent[0]`), rooted at `$`. Duplicate-key documents are rejected
+/// IDs encode the node's JSON path, rooted at `$`. Simple ASCII object keys
+/// use `parent.key`; other keys use quoted brackets around base64 UTF-8 bytes,
+/// keeping punctuation and canonically equivalent Unicode keys distinct.
+/// Array indices use `parent[0]`. Duplicate-key documents are rejected
 /// before outline construction, so a key path is unambiguous; repeated array
 /// elements remain distinct by index. Paths remain remappable across edits
 /// and formatting because they are derived from structure, not ordinals.
@@ -109,7 +111,7 @@ public enum JSONOutlineBuilder {
             members.map { member in
                 build(
                     member.value,
-                    path: "\(path).\(member.key)",
+                    path: objectMemberPath(member.key, parent: path),
                     title: memberTitle(member),
                     depth: depth + 1
                 )
@@ -133,6 +135,18 @@ public enum JSONOutlineBuilder {
             sourceRange: node.sourceRange,
             children: children
         )
+    }
+
+    private static func objectMemberPath(_ key: String, parent: String) -> String {
+        let simple = !key.isEmpty && key.utf8.allSatisfy { byte in
+            switch byte {
+            case 0x2D, 0x30 ... 0x39, 0x41 ... 0x5A, 0x5F, 0x61 ... 0x7A: true
+            default: false
+            }
+        }
+        // Keep established simple-key IDs. Encoded segments are ASCII and
+        // cannot be mistaken for an array index or an additional key path.
+        return simple ? "\(parent).\(key)" : "\(parent)[\"\(Data(key.utf8).base64EncodedString())\"]"
     }
 
     /// The outline label for an object member: the key alone for a non-empty
