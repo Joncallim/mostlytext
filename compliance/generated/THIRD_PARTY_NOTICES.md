@@ -143,8 +143,8 @@ This file is generated from `compliance/inventory.json` by
 | swift-markdown | abfafecc | Apache-2.0 |
 | SwiftSoup | 2.13.9 | MIT |
 | SwiftTreeSitter | 0beea992 | BSD-3-Clause |
-| SwiftUIMath | d80a744b | MIT |
-| Textual | 0667f45c | MIT |
+| SwiftUIMath | e394d7cf | MIT |
+| Textual | 2337a775 | MIT |
 | tree-sitter (runtime) | 0.25.10+mostlytext.5ce80b6f | MIT |
 | tree-sitter-bash | 0.25.1 | MIT |
 | tree-sitter-cpp | 0.23.4 | MIT |
@@ -10529,14 +10529,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## SwiftUIMath
 
-- Version: d80a744b
+- Version: e394d7cf
 - Upstream: https://github.com/Joncallim/swiftui-math
-- Revision: `d80a744b21d0045265e66e91876586ddcfac495d`
+- Revision: `e394d7cf111a90b4393df7a18e989dfec0a28931`
 - Licence: MIT
 - Copyright (c) 2026 Guille Gonzalez
 - Copyright (c) 2023 Computer Inspirations (SwiftMath)
 - Copyright (c) 2013 MathChat (iosMath)
-- Local modifications: Narrow child of upstream 0.1.0: preserve authored TeX comments and control-word boundaries, expose existing parser diagnostics with original-body UTF-16 cursors and required inspection limits, and reject truncated optional alignment safely. All fonts, licences, original tests and unrelated files are unchanged.
+- Local modifications: Narrow child of upstream 0.1.0: preserve authored TeX comments and control-word boundaries, expose existing parser diagnostics with original-body UTF-16 cursors and required inspection limits, and reject truncated optional alignment and mismatched radical degrees safely. All fonts, licences, original tests and unrelated files are unchanged.
 
 ### swiftui-math--LICENSE.txt
 
@@ -10570,9 +10570,9 @@ SOFTWARE.
 
 ## Textual
 
-- Version: 0667f45c
+- Version: 2337a775
 - Upstream: https://github.com/Joncallim/textual
-- Revision: `0667f45c5c0d66e301b8e98f93a9137f2d986308`
+- Revision: `2337a7751605ed819ed6ce71a450fe29608deb40`
 - Licence: MIT
 - Copyright (c) 2024 Guille Gonzalez
 

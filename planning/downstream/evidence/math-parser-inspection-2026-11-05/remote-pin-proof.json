@@ -17,7 +17,7 @@
         "kind": "remoteSourceControl",
         "location": "https://github.com/Joncallim/swiftui-math",
         "state": {
-          "revision": "d80a744b21d0045265e66e91876586ddcfac495d"
+          "revision": "e394d7cf111a90b4393df7a18e989dfec0a28931"
         }
       }
     },
@@ -35,7 +35,7 @@
         "kind": "remoteSourceControl",
         "location": "https://github.com/Joncallim/textual",
         "state": {
-          "revision": "0667f45c5c0d66e301b8e98f93a9137f2d986308"
+          "revision": "2337a7751605ed819ed6ce71a450fe29608deb40"
         }
       }
     }

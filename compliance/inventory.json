@@ -876,9 +876,9 @@
       "id": "swiftui-math",
       "name": "SwiftUIMath",
       "kind": "swiftpm",
-      "version": "d80a744b",
+      "version": "e394d7cf",
       "upstream": "https://github.com/Joncallim/swiftui-math",
-      "revision": "d80a744b21d0045265e66e91876586ddcfac495d",
+      "revision": "e394d7cf111a90b4393df7a18e989dfec0a28931",
       "resolution": "revision",
       "licence": "MIT",
       "copyright": [
@@ -901,10 +901,10 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "d80a744b21d0045265e66e91876586ddcfac495d"
+        "revision": "e394d7cf111a90b4393df7a18e989dfec0a28931"
       },
-      "modifications": "Narrow child of upstream 0.1.0: preserve authored TeX comments and control-word boundaries, expose existing parser diagnostics with original-body UTF-16 cursors and required inspection limits, and reject truncated optional alignment safely. All fonts, licences, original tests and unrelated files are unchanged.",
-      "evidence": "See planning/downstream/math-parser-inspection.md and its exact-source evidence packet. Only Parser.swift changes among original files; 96 original files retain exact bytes. Debug and Release Foundation fixtures pass 130 tests; native hosted qualification is separate. Raw-body inspection is not production shared Preview/Export activation."
+      "modifications": "Narrow child of upstream 0.1.0: preserve authored TeX comments and control-word boundaries, expose existing parser diagnostics with original-body UTF-16 cursors and required inspection limits, and reject truncated optional alignment and mismatched radical degrees safely. All fonts, licences, original tests and unrelated files are unchanged.",
+      "evidence": "See planning/downstream/math-parser-inspection.md and its exact-source evidence packet. Only Parser.swift changes among original files; 96 original files retain exact bytes. Debug and Release Foundation fixtures pass 132 tests including a deterministic 100,000-case partial-input corpus; native hosted qualification is separate. Raw-body inspection is not production shared Preview/Export activation."
     },
     {
       "id": "swiftui-math-fonts",
@@ -1070,9 +1070,9 @@
       "id": "textual",
       "name": "Textual",
       "kind": "swiftpm",
-      "version": "0667f45c",
+      "version": "2337a775",
       "upstream": "https://github.com/Joncallim/textual",
-      "revision": "0667f45c5c0d66e301b8e98f93a9137f2d986308",
+      "revision": "2337a7751605ed819ed6ce71a450fe29608deb40",
       "resolution": "exact",
       "licence": "MIT",
       "copyright": [
@@ -1093,9 +1093,9 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "0667f45c5c0d66e301b8e98f93a9137f2d986308"
+        "revision": "2337a7751605ed819ed6ce71a450fe29608deb40"
       },
-      "evidence": "Forked from gonzalezreal/textual 0.5.0 at 01b51875a5406eefc95f52a058cb059e7bc94dc4 for bounded preview-image HTML copy. The MIT licence and bundled Prism bytes match the original digests; the local dependency candidate passed focused tests and independent source review before its immutable revision was pushed. Source-math feasibility child 9077b0f608bd464ee4de880c0ff4c0c8441e698d adds only a typed factory for the existing MathAttachment and optional caller-owned occurrence UUID. Existing parser, sizing/body/block detection and SwiftUIMath pin remain unchanged. Test-only original-source transport is not production activation; actual native hosted probe and full CI are required. Original MIT licence/credits remain unchanged. See planning/downstream/source-math-adapter-probe.md. Parser-inspection metadata child 0667f45c5c0d66e301b8e98f93a9137f2d986308 changes only Package.swift to resolve the same immutable Joncallim/swiftui-math d80a744b21d0045265e66e91876586ddcfac495d as the application; all Textual runtime/test/resource/licence bytes match 9077b0f608bd464ee4de880c0ff4c0c8441e698d."
+      "evidence": "Forked from gonzalezreal/textual 0.5.0 at 01b51875a5406eefc95f52a058cb059e7bc94dc4 for bounded preview-image HTML copy. The MIT licence and bundled Prism bytes match the original digests; the local dependency candidate passed focused tests and independent source review before its immutable revision was pushed. Source-math feasibility child 9077b0f608bd464ee4de880c0ff4c0c8441e698d adds only a typed factory for the existing MathAttachment and optional caller-owned occurrence UUID. Existing parser, sizing/body/block detection and SwiftUIMath pin remain unchanged. Test-only original-source transport is not production activation; actual native hosted probe and full CI are required. Original MIT licence/credits remain unchanged. See planning/downstream/source-math-adapter-probe.md. Parser-inspection metadata child 2337a7751605ed819ed6ce71a450fe29608deb40 changes only Package.swift to resolve the same immutable Joncallim/swiftui-math e394d7cf111a90b4393df7a18e989dfec0a28931 as the application; all Textual runtime/test/resource/licence bytes match 9077b0f608bd464ee4de880c0ff4c0c8441e698d."
     },
     {
       "id": "theme-tomorrow-dark",

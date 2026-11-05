@@ -1,7 +1,7 @@
 {
-  "engine_revision": "d80a744b21d0045265e66e91876586ddcfac495d",
+  "engine_revision": "e394d7cf111a90b4393df7a18e989dfec0a28931",
   "engine_base": "0b5c2cfaaec8d6193db206f675048eeb5ce95f71",
-  "textual_revision": "0667f45c5c0d66e301b8e98f93a9137f2d986308",
+  "textual_revision": "2337a7751605ed819ed6ce71a450fe29608deb40",
   "namespace_only_wrapper": "public enum Math instead of the unused SwiftUI View namespace; no parser runtime method substituted",
   "exact_source_files": [
     {
@@ -12,7 +12,7 @@
     {
       "owner_path": "Sources/SwiftUIMath/Internal/Syntax/Parser.swift",
       "fixture_path": "Sources/SwiftUIMath/Syntax/Parser.swift",
-      "sha256": "c60cba07e893f74595a04bf0b735bd8ef95e6e0b42084dccd2b0f14a5cfed956"
+      "sha256": "d979c76687288921e1422630169466720efdec80c7b47985d21878ce95e0322d"
     },
     {
       "owner_path": "Sources/SwiftUIMath/Internal/Syntax/CommentSource.swift",
@@ -117,7 +117,12 @@
     {
       "owner_path": "Tests/SwiftUIMathTests/BodyInspectionTests.swift",
       "fixture_path": "Tests/SwiftUIMathTests/BodyInspectionTests.swift",
-      "sha256": "7c630b92595ca516e4ca77aad6da2846871fc3df99bf505b9d2b20a5b0bf8948"
+      "sha256": "0b5c6646de5d2f8222e16a87c8bdba0774b83e41a7d4a1c8c1290a0180098a5e"
+    },
+    {
+      "owner_path": "Tests/SwiftUIMathTests/GeneratedPartialInputTests.swift",
+      "fixture_path": "Tests/SwiftUIMathTests/GeneratedPartialInputTests.swift",
+      "sha256": "c6fa03014770f4fcd483e63cbc5c418fb42ba6b25f5eba9c993236487a3576f7"
     }
   ],
   "logs": [
@@ -177,6 +182,26 @@
       "sha256": "89f7aa1e8817fb705dd4f39c1d515a455686bad148abf48ed4e107b02124e468"
     },
     {
+      "name": "expanded-corpus-debug.log",
+      "bytes": 15571,
+      "sha256": "0362a3d982ddb7e550c16012d13da36235f78b7c3069f24337ef41bffbe32f3b"
+    },
+    {
+      "name": "expanded-corpus-release.log",
+      "bytes": 15638,
+      "sha256": "339f88b727f5795b8c331c167a3e0ba1cd3352934b3d3cb7da6253a960cb7d97"
+    },
+    {
+      "name": "fetch-final-engine.log",
+      "bytes": 123,
+      "sha256": "cfcbdc80c40f85e5b98d1e687579911e9bac1f150319b71475db9e5fde69243e"
+    },
+    {
+      "name": "fetch-final-textual.log",
+      "bytes": 118,
+      "sha256": "e7b8f7b0835b55c315d0a0e865a7611372cbc23f07fdb6dacd4765430c6d6c52"
+    },
+    {
       "name": "final-debug.log",
       "bytes": 15197,
       "sha256": "35b3cebd2af7497edbe6604873e4e1dcb89a93f21cdfa42a15055fd27e313020"
@@ -205,6 +230,46 @@
       "name": "final-release.log",
       "bytes": 15243,
       "sha256": "8df9f5dc4f35a4445870f81ce6d807625e747ab5e37a82c2a73338d14d7a3819"
+    },
+    {
+      "name": "final-stress-compliance-tests.log",
+      "bytes": 10805,
+      "sha256": "e99dcfe2d12cd6bed049897d033f2d9214e2512d9c2f3b0a133e68c824227af4"
+    },
+    {
+      "name": "final-stress-debug.log",
+      "bytes": 15571,
+      "sha256": "3d8d3b859807537baff669f316ebf960804a75f4032f0907606e33e10581d994"
+    },
+    {
+      "name": "final-stress-inventory.log",
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+    },
+    {
+      "name": "final-stress-native-target-compile.log",
+      "bytes": 2520,
+      "sha256": "a9bc0180e037efd77c6e09bc62b9611e282bcc0a1bc917526486d746e6f7fa54"
+    },
+    {
+      "name": "final-stress-packet-inventory.log",
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+    },
+    {
+      "name": "final-stress-release.log",
+      "bytes": 15521,
+      "sha256": "c6548548843b87e21d89b22d6194bf71e5a7b4d8e371826fa4eaa180a5bfd613"
+    },
+    {
+      "name": "final-stress-reproduction.log",
+      "bytes": 161,
+      "sha256": "689433a33cee3a75c07321ee41add229cb0eb24e5731568f4ad1b1089ac9d144"
+    },
+    {
+      "name": "final-stress-resolve.log",
+      "bytes": 2779,
+      "sha256": "8c126d4c881fc02653a4b831446288811b1e758a91f404c0faa7b3b697cc1557"
     },
     {
       "name": "fix-manifest-format.log",
@@ -237,6 +302,26 @@
       "sha256": "a2d24371d17e6c6f1296277ca983dce9065ade847908059bfd7be20d4458cf2a"
     },
     {
+      "name": "generated-guarded-debug.log",
+      "bytes": 15755,
+      "sha256": "9d2625978636e5f6087a9b4f08d5223c58eaac4f30c902a07ae3ba7717d8e0bd"
+    },
+    {
+      "name": "generated-partial-corpus.log",
+      "bytes": 3239,
+      "sha256": "e35a72c532df3a9318bac382b565ea357643de472f90b35754421eb0d82b8313"
+    },
+    {
+      "name": "generated-partial-trace.log",
+      "bytes": 1362114,
+      "sha256": "61027912cf551a0db00075a670e993854d2f44912bd18f51f6dbc7c1b26d0848"
+    },
+    {
+      "name": "original-mismatched-degree.log",
+      "bytes": 1867,
+      "sha256": "9e074426fcc0622402ad42bb4722abbcf0462f997635484c990e05d34f227aee"
+    },
+    {
       "name": "original-parser-and-comments-actual.log",
       "bytes": 12979,
       "sha256": "296f1d5b15ea0500848dd6d121bafdc17014056ded2a101a011b88b6c3014393"
@@ -255,6 +340,31 @@
       "name": "original-truncated-argument.log",
       "bytes": 3084,
       "sha256": "7ca854fcaa8dc35363955440fc89ea6928c5f318946b6fd1364b7b09756cdaf4"
+    },
+    {
+      "name": "stress-correction-resolve.log",
+      "bytes": 200,
+      "sha256": "c6c4575c2e5eb41e946603ad882d0e0c2cdfb715c7c9d37ca829dde75979e203"
+    },
+    {
+      "name": "stress-format.log",
+      "bytes": 265,
+      "sha256": "b8f309d71be37993fecd921c1326de61acb2c4c9c6fd6731127ccd2784d66acc"
+    },
+    {
+      "name": "stress-generate-notices.log",
+      "bytes": 50,
+      "sha256": "916a4698d9177a9597cb4fc51950f9842bb6a71ce740a0f2540b4a8bb51d77a1"
+    },
+    {
+      "name": "stress-generate-sbom.log",
+      "bytes": 41,
+      "sha256": "a2d24371d17e6c6f1296277ca983dce9065ade847908059bfd7be20d4458cf2a"
+    },
+    {
+      "name": "stress-lint.log",
+      "bytes": 72206,
+      "sha256": "2f58cc6f4e0c290f251b4253d866218696e3fb2ef71835d1052eb0616fcfc102"
     }
   ]
 }

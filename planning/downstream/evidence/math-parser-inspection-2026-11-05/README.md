@@ -3,12 +3,15 @@
 The local fixture executes the actual pinned Foundation-only SwiftUIMath syntax
 and helpers, with only the unused outer SwiftUI View namespace replaced by an
 empty public enum. It runs no fonts, drawing, native product, AppKit, SwiftUI,
-WebKit, product CLI, owner document or signing-key code. All 23 copied source/test
+WebKit, product CLI, owner document or signing-key code. All 24 copied source/test
 files are exact; manifest.json records the owner revision and SHA-256 of each.
 The two original upstream parser/atom suites are unchanged. The two original
 fixture-only comment controls remain alongside the owner's new inspection suite.
 
-Both final-debug.log and final-release.log pass **130 tests in four suites**.
+The first final-debug.log/final-release.log pass 130 tests in four suites.
+The final-stress-debug.log/final-stress-release.log supersede that result with
+**132 tests in five suites**, including 100,000 deterministic partial equations
+and original-source cursor scalar/CRLF bounds.
 The corpus covers percent comments under LF/CRLF/CR/EOF, odd/even slash parity,
 comments inside text commands, combining/Prepend neighbors, command-name
 boundaries, existing structured error families, exact original UTF-16 cursors,
@@ -28,6 +31,13 @@ Original failures are preserved:
 - before-comment-token-boundary.log: a candidate comment-removal implementation
   accidentally joins command fragments into a valid alpha command; all three
   line-ending controls fail before the indexed token-boundary correction.
+- generated-partial-corpus.log and generated-partial-trace.log: the first
+  deterministic stress corpus finds an original mismatched radical-degree
+  assertion at case 16,182. The minimal original sqrt[} crash is reproduced in
+  original-mismatched-degree.log. A guard reports the existing mismatchedBraces
+  error before the retained invariant assertion. before-GeneratedPartialInputTests.swift
+  retains the exact first trace-producing test. The expanded 100,000-case corpus
+  then passes in Debug/Release, including original-source cursor bounds.
 - candidate-complete-first.log: two initial test cursor constants are incorrect;
   initial-BodyInspectionTests.swift preserves them. The corrected expectations
   derive independently from original literal NSString prefix lengths. No runtime
@@ -50,8 +60,9 @@ owner/revision. remote-pin-proof.json proves that these are the only two changed
 pins among 24. Owner patches are included; original notices and all font/source
 licence hashes are unchanged. Notices and SBOM record the actual new owner.
 
-The actual locked MathRenderingTests target **compiles** locally in 26.94 seconds.
-The new six-function first-party public-API/native-metric corpus must execute in
+The actual locked MathRenderingTests target **compiles** locally in 26.94 seconds before the additional stress finding;
+the final-stress native target compile log qualifies the seventh regression too.
+The new seven-function first-party public-API/native-metric corpus must execute in
 full hosted CI, together with all existing package/app tests and four builds.
 Local compile evidence is not native execution or acceptance. Full inventory,
 330 Compliance controls, pinned format and strict lint of 1,373 files pass.

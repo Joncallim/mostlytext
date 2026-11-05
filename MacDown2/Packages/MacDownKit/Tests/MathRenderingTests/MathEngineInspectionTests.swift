@@ -31,6 +31,15 @@ struct MathEngineInspectionTests {
         #expect(diagnostic.error.code == .characterNotFound)
     }
 
+    @Test func mismatchedRadicalDegreeIsAnErrorWithoutCrashing() throws {
+        guard case let .invalid(diagnostic) = try SwiftUIMath.Math.inspectBody(#"\sqrt[}"#, limits: limits) else {
+            Issue.record("Expected a mismatched-brace diagnostic")
+            return
+        }
+        #expect(diagnostic.error.code == .mismatchedBraces)
+        #expect(diagnostic.utf16Offset == 7)
+    }
+
     @Test func resourceExhaustionIsSeparateFromInvalidMath() throws {
         let bounded = SwiftUIMath.Math.BodyLimits(
             maximumUTF16Length: 128, maximumDepth: 4, maximumParserSteps: 64

@@ -67,6 +67,12 @@ three failing LF/CRLF/CR assertions are retained before the boundary correction.
 The same adversarial scope also proves and fixes an original truncated cfrac
 optional-alignment out-of-bounds assertion. Missing alignment/closing bracket
 becomes the existing characterNotFound error, retaining all valid controls.
+A deterministic partial-input stress corpus also found an original assertion for
+\sqrt[}: an unexpected closing brace inside a radical degree must be the existing
+mismatchedBraces error. A guard reports it before the invariant assertion; no
+assertion or existing test is removed. The original exact-source crash and first
+50,000-case candidate failure trace are retained. The expanded 100,000-case
+corpus covers structured command fragments and seven parser-step ceilings.
 
 ## State, failures and concurrency
 

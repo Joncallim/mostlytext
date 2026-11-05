@@ -390,6 +390,8 @@
   "new_files": [
     "Sources/SwiftUIMath/Internal/Syntax/CommentSource.swift",
     "Sources/SwiftUIMath/Math+BodyInspection.swift",
-    "Tests/SwiftUIMathTests/BodyInspectionTests.swift"
-  ]
+    "Tests/SwiftUIMathTests/BodyInspectionTests.swift",
+    "Tests/SwiftUIMathTests/GeneratedPartialInputTests.swift"
+  ],
+  "candidate_revision": "e394d7cf111a90b4393df7a18e989dfec0a28931"
 }

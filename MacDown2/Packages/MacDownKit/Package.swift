@@ -80,12 +80,12 @@ let package = Package(
         .package(url: "https://github.com/Joncallim/swift-cmark", revision: "2a5339b89b219584c8fa6c6fd378d3898eed5d57"),
         .package(url: "https://github.com/scinfu/SwiftSoup", exact: "2.13.9"),
         .package(url: "https://github.com/jpsim/Yams", exact: "6.2.2"),
-        .package(url: "https://github.com/Joncallim/textual", revision: "0667f45c5c0d66e301b8e98f93a9137f2d986308"),
+        .package(url: "https://github.com/Joncallim/textual", revision: "2337a7751605ed819ed6ce71a450fe29608deb40"),
         // Match Textual's immutable engine owner/revision, so Preview and Export
         // share one parser, comment correction and structured body-inspection API.
         .package(
             url: "https://github.com/Joncallim/swiftui-math",
-            revision: "d80a744b21d0045265e66e91876586ddcfac495d"
+            revision: "e394d7cf111a90b4393df7a18e989dfec0a28931"
         ),
     ],
     targets: [

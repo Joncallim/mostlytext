@@ -101,7 +101,7 @@ index 0000000..5d4df60
 +  }
 +}
 diff --git a/Sources/SwiftUIMath/Internal/Syntax/Parser.swift b/Sources/SwiftUIMath/Internal/Syntax/Parser.swift
-index 13f2c42..cb6bbef 100644
+index 13f2c42..35f91d3 100644
 --- a/Sources/SwiftUIMath/Internal/Syntax/Parser.swift
 +++ b/Sources/SwiftUIMath/Internal/Syntax/Parser.swift
 @@ -1,8 +1,8 @@
@@ -218,7 +218,18 @@ index 13f2c42..cb6bbef 100644
  
          var atom: Atom? = nil
          let char = self.nextCharacter()
-@@ -663,14 +705,19 @@ extension Math {
+@@ -331,6 +373,10 @@ extension Math {
+         } else if char == "}" {
+           // \ means a command
+           assert(!oneCharOnly, "This should have been handled before")
++          if stop != nil {
++            self.setError(.mismatchedBraces, message: "Unexpected closing brace.")
++            return nil
++          }
+           assert(stop == nil, "This should have been handled before")
+           // Special case: } terminates implicit table (name == nil) created by \\
+           // This happens when \\ is used inside braces: \substack{a \\ b}
+@@ -663,14 +709,19 @@ extension Math {
          skipSpaces()
          if hasCharacters && string[currentCharIndex] == "[" {
            _ = nextCharacter()  // consume '['
@@ -241,7 +252,7 @@ index 13f2c42..cb6bbef 100644
          }
  
          frac.numerator = self.buildInternal(true)
-@@ -1018,6 +1065,7 @@ extension Math {
+@@ -1018,6 +1069,7 @@ extension Math {
        // Only record the first error.
        if error == nil {
          error = ParserError(code: code, message: message)
@@ -249,7 +260,7 @@ index 13f2c42..cb6bbef 100644
        }
      }
  
-@@ -1041,14 +1089,19 @@ extension Math {
+@@ -1041,14 +1093,19 @@ extension Math {
          skipSpaces()
          if hasCharacters && string[currentCharIndex] == "[" {
            _ = nextCharacter()  // consume '['
@@ -272,7 +283,7 @@ index 13f2c42..cb6bbef 100644
          }
  
          frac.numerator = self.buildInternal(true)
-@@ -1091,6 +1144,10 @@ extension Math {
+@@ -1091,6 +1148,10 @@ extension Math {
          return frac
        } else if command == "sqrt" {
          let rad = Radical()
@@ -283,7 +294,7 @@ index 13f2c42..cb6bbef 100644
          let char = self.nextCharacter()
          if char == "[" {
            rad.degree = self.buildInternal(false, stopChar: "]")
-@@ -1333,13 +1390,16 @@ extension Math {
+@@ -1333,13 +1394,16 @@ extension Math {
            self.unlookCharacter()
          }
        }
@@ -386,10 +397,10 @@ index 0000000..bbf4ac5
 +}
 diff --git a/Tests/SwiftUIMathTests/BodyInspectionTests.swift b/Tests/SwiftUIMathTests/BodyInspectionTests.swift
 new file mode 100644
-index 0000000..893d6c9
+index 0000000..2b9b409
 --- /dev/null
 +++ b/Tests/SwiftUIMathTests/BodyInspectionTests.swift
-@@ -0,0 +1,225 @@
+@@ -0,0 +1,234 @@
 +import Foundation
 +import Testing
 +
@@ -520,6 +531,15 @@ index 0000000..893d6c9
 +    #expect(raw.string == "$x$")
 +  }
 +
++  @Test func mismatchedRadicalDegreeIsAnErrorWithoutCrashing() throws {
++    guard case .invalid(let diagnostic) = try Math.inspectBody(#"\sqrt[}"#, limits: limits) else {
++      Issue.record("Expected a mismatched-brace diagnostic")
++      return
++    }
++    #expect(diagnostic.error.code == .mismatchedBraces)
++    #expect(diagnostic.utf16Offset == 7)
++  }
++
 +  @Test func inputLengthLimitIsUTF16AndInclusive() throws {
 +    let limits = Math.BodyLimits(maximumUTF16Length: 2, maximumDepth: 8, maximumParserSteps: 32)
 +    guard case .valid = try Math.inspectBody("xy", limits: limits) else {
@@ -613,5 +633,54 @@ index 0000000..893d6c9
 +      } catch is CancellationError {} catch { Issue.record("Wrong cancellation error: \(error)") }
 +    }
 +    await task.value
++  }
++}
+diff --git a/Tests/SwiftUIMathTests/GeneratedPartialInputTests.swift b/Tests/SwiftUIMathTests/GeneratedPartialInputTests.swift
+new file mode 100644
+index 0000000..146522a
+--- /dev/null
++++ b/Tests/SwiftUIMathTests/GeneratedPartialInputTests.swift
+@@ -0,0 +1,43 @@
++import Testing
++
++@testable import SwiftUIMath
++
++struct GeneratedPartialInputTests {
++  @Test func deterministicPartialEquationCorpus() throws {
++    let fragments = [
++      "{", "}", "[", "]", "(", ")", "&", "^", "_", "\\", "$", "%", "\n", "\r\n", "\r",
++      "x", "a", "1", " ", "🙂", "\u{301}", "\u{0600}", "\\frac", "\\cfrac", "\\sqrt", "\\text",
++      "\\left", "\\right", "\\begin", "\\end", "\\color", "\\colorbox", "\\textcolor", "\\not",
++      "\\substack", "\\pmod", "\\limits", "\\matrix", "\\unknown", "matrix", "cases", "#ffffff",
++      #"\begin{matrix}"#, #"\end{matrix}"#, #"\begin{aligned}"#, #"\end{aligned}"#,
++      #"\begin{cases}"#, #"\end{cases}"#, #"\cfrac["#, #"\sqrt["#, #"\left("#, #"\right)"#,
++      #"\atop"#, #"\over"#, #"\choose"#, #"\overset"#, #"\underset"#, #"\raisebox"#,
++      #"\text{"#, #"\color{#ff0000}"#, #"\colorbox{#ff0000}"#,
++    ]
++    var state: UInt64 = 0x4D_54_45_51
++    func random(_ upper: Int) -> Int {
++      state = state &* 6_364_136_223_846_793_005 &+ 1
++      return Int((state >> 32) % UInt64(upper))
++    }
++    for caseIndex in 0..<100_000 {
++      var source = ""
++      for _ in 0..<random(24) { source += fragments[random(fragments.count)] }
++      let limits = Math.BodyLimits(
++        maximumUTF16Length: 1_024, maximumDepth: 8,
++        maximumParserSteps: [1, 2, 3, 8, 32, 256, 4_096][caseIndex % 7])
++      let outcome = try Math.inspectBody(source, limits: limits)
++      switch outcome {
++      case .valid, .resourceLimit: break
++      case .invalid(let diagnostic), .internalFailure(let diagnostic):
++        let units = Array(source.utf16)
++        let offset = diagnostic.utf16Offset
++        #expect((0...units.count).contains(offset))
++        guard offset > 0 && offset < units.count else { continue }
++        #expect(!(units[offset - 1] == 13 && units[offset] == 10))
++        #expect(
++          !((0xD800...0xDBFF).contains(units[offset - 1])
++            && (0xDC00...0xDFFF).contains(units[offset])))
++      }
++    }
 +  }
 +}
