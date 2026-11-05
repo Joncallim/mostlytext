@@ -6,10 +6,16 @@ import Foundation
 public struct HeadingAnchorAllocator: Sendable {
     public static let policyVersion = 1
 
-    private var usedIDs: Set<String>
+    private var usedIDs: Set<Data>
 
-    public init(reservedIDs: Set<String> = []) {
-        usedIDs = reservedIDs
+    public init() {
+        usedIDs = []
+    }
+
+    /// A sequence preserves canonically equivalent but DOM-distinct authored
+    /// IDs. Callers must not collapse their inventory with Set<String> first.
+    public init(reservedIDs: some Sequence<String>) {
+        usedIDs = Set(reservedIDs.map { Data($0.utf8) })
     }
 
     public mutating func allocate(title: String) -> String {
@@ -17,7 +23,7 @@ public struct HeadingAnchorAllocator: Sendable {
         var duplicate = 0
         while true {
             let candidate = Self.boundedID(base: base, duplicate: duplicate)
-            if usedIDs.insert(candidate).inserted {
+            if usedIDs.insert(Data(candidate.utf8)).inserted {
                 return candidate
             }
             duplicate += 1

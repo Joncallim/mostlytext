@@ -23,6 +23,17 @@ struct HeadingAnchorAllocatorTests {
         #expect(allocator.allocate(title: "  _ a - B _ ") == "_-a---b-_")
     }
 
+    @Test func authoredIdentifiersUseExactUnicodeSpelling() {
+        let decomposed = "cafe\u{301}"
+        let composed = "café"
+        #expect(decomposed == composed)
+        #expect(!decomposed.utf8.elementsEqual(composed.utf8))
+        var distinct = HeadingAnchorAllocator(reservedIDs: [decomposed])
+        #expect(distinct.allocate(title: composed).utf8.elementsEqual(composed.utf8))
+        var collision = HeadingAnchorAllocator(reservedIDs: [composed])
+        #expect(collision.allocate(title: composed) == "café-1")
+    }
+
     @Test func longFragmentsRemainBoundedAndRepeatable() {
         let title = String(repeating: "漢字", count: 100)
         var first = HeadingAnchorAllocator()

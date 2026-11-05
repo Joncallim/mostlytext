@@ -239,7 +239,7 @@ struct EmittedHeadingDOMTests {
         return Fixture(source: source, document: document, derived: derived, rendered: rendered)
     }
 
-    private func index(for fixture: Fixture, reservedIDs: Set<String>) throws -> HeadingAnchorIndex {
+    private func index(for fixture: Fixture, reservedIDs: [String]) throws -> HeadingAnchorIndex {
         try HeadingAnchorIndex(
             document: fixture.document, sourceText: fixture.source, documentID: "fixture",
             recoveryEpoch: UUID(), sourceGeneration: 1, reservedIDs: reservedIDs
@@ -292,5 +292,38 @@ extension EmittedHeadingDOMTests {
             #expect(identifiers.count == 2)
             #expect(try dom.select("body > h1").size() == 2)
         }
+    }
+}
+
+extension EmittedHeadingDOMTests {
+    @Test(arguments: ["<div id='cafe&#x301;'>Raw</div>", "<a name='cafe&#x301;'>Raw</a>"])
+    func canonicallyEquivalentAuthoredIDDoesNotStealTheGeneratedTarget(_ authored: String) async throws {
+        let fixture = try await makeFixture(authored + "\n\n# Café\n")
+        let inspection = try #require(EmittedHeadingDOM.inspect(fixture.rendered))
+        try #require(inspection.reservedIDs.count == 1)
+        #expect(inspection.reservedIDs[0].utf8.elementsEqual("cafe\u{301}".utf8))
+        let index = try index(for: fixture, reservedIDs: inspection.reservedIDs)
+        #expect(index.headings.map(\.fragment) == ["café"])
+        let matches = try #require(match(fixture, index: index))
+        let html = try #require(EmittedHeadingDOM.publish(
+            inspected: inspection, rendered: fixture.rendered, matches: matches
+        ))
+        #expect(html.range(of: authored, options: .literal) != nil)
+        #expect(html.contains("<h1 id=\"café\">Café</h1>"))
+    }
+
+    @Test func inventoryPreservesBothAuthoredUnicodeSpellingsAndExactCollisionRefusal() async throws {
+        let fixture = try await makeFixture("<div id='cafe&#x301;'>A</div>\n<div id='caf&#233;'>B</div>\n\n# Café\n")
+        let inspection = try #require(EmittedHeadingDOM.inspect(fixture.rendered))
+        #expect(inspection.reservedIDs.count == 2)
+        #expect(Set(inspection.reservedIDs.map { Data($0.utf8) }).count == 2)
+        let index = try index(for: fixture, reservedIDs: inspection.reservedIDs)
+        #expect(index.headings.map(\.fragment) == ["café-1"])
+        let matches = try #require(match(fixture, index: index))
+        #expect(EmittedHeadingDOM.publish(inspected: inspection, rendered: fixture.rendered, matches: matches) != nil)
+        let wrong = try self.index(for: fixture, reservedIDs: [])
+        let wrongMatches = try #require(match(fixture, index: wrong))
+        #expect(EmittedHeadingDOM
+            .publish(inspected: inspection, rendered: fixture.rendered, matches: wrongMatches) == nil)
     }
 }
