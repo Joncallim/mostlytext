@@ -10,8 +10,8 @@ Do not copy URLs/titles into invented Markdown definitions or scan code for appa
 definitions. Capture the actual definitions the existing parser consumed instead.
 
 The exact source owners are cmark 2a5339b8 and Swift Markdown abfafecc; their original
-coordinate fixes remain. Main is abc3a5c8. PR90's reference repairs and PR91's actual
-25-test native adapter are qualified components pending complete CI. The additive
+coordinate fixes remain. Main is e8201ad8. PR90 and PR91 are merged; their exact common tree
+qualifies all 3,576 package and 623 app tests and all four locked builds. The additive
 raw-body renderer now passes all 37 hosted component tests in run 42071107835;
 production grammar and current-document action wiring are still not activated.
 
@@ -55,10 +55,10 @@ physical parse slot, only for this opt-in mode; default performance is unchanged
 ## First-party selection and bounds
 
 Wrap records as renderer-neutral MarkdownEngine facts, bound to the same exact
-source SHA. Link facts carry their actual definition identity; use ranges are
-converted through the same original UTF-8-to-UTF-16 coordinate projection, including
+source SHA. Opaque IDs bind uses to raw records inside the parser SPI. First-party facts
+retain the raw syntax and actual use ranges, including reference images; uses are converted through the same original UTF-8-to-UTF-16 coordinate projection, including
 front matter. A block's trusted original range selects only the definitions used
-by its actual original links. Replay those raw logical strings in original record
+by its actual original links/images. Replay those raw logical strings in original record
 order, with blank-line separation, before the existing marker transport. Unknown,
 foreign, generated or inline-composed blocks cannot mint source authority. Apply
 the complete 64 KiB expanded-input cap before native parsing. No full-source SHA or
@@ -82,3 +82,36 @@ new owner pins/inventory/notices/SBOM and complete app/CLI CI are required for a
 If source authority or replay target/title cannot be proved, retain readable source
 and correct the owner rather than weakening transport provenance or parser limits.
 This prerequisite alone closes no whole math/Export/native release criterion.
+
+## Preserve original link and image authority after replay
+
+A concrete actual-parser control establishes that the whole-document 100,000-byte
+reference expansion allowance can be exhausted before an equation label. Replaying
+the last block with a selected definition resets that budget and makes a previously
+unlinked equation clickable. Keep the original parser limits unchanged. Definition
+selection alone cannot authorize the resulting native attributes.
+
+Retain source-bound resolved image ranges/destinations beside existing link facts,
+while keeping images wholly excluded from equation admission. Preview input accepts
+only caller-proven block-local link/image ranges with original resolved destinations.
+Forward-map those endpoints through the exact existing substitutions and prefix;
+reject endpoints inside edits, invalid scalar/CRLF boundaries or over-budget lists.
+Store ranges and destinations without synthesizing Markdown or changing source.
+
+Before marker restoration, inspect every actual native link/image URL attribute.
+Its native parser position must resolve through the owned numeric source map and
+fit wholly inside a matching original reference of the same role. Compare actual
+URL bytes with Foundation URL construction from the original parser destination
+and the same base URL. A foreign, changed, newly created or unpositioned attribute
+fails the entire affected block to original visible plain source, including cases
+with no equation markers. An omitted authority list authorizes no links/images.
+No native URL may acquire capability just by equal text or a replayed definition.
+This guard proves source meaning; existing URL-open/resource policy remains.
+
+Native tests first preserve the demonstrated before-fix failure, then prove all
+original link/strong/scalar/accessibility controls, real parser-selected definitions
+across six forms and three EOLs, actual implicit-key repairs, byte-distinct Unicode
+keys, correct images and wrong/foreign URL negative controls. The exact hosted
+fixture adds the same immutable Markdown SDK, cmark and Yams pins as the app and
+copies the actual MarkdownEngine module. Locally only the pure Foundation parser
+fixtures execute; native modules compile without execution.
