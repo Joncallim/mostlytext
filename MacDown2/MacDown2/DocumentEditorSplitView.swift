@@ -118,7 +118,8 @@ struct DocumentEditorSplitView: View {
             .task(id: identity) {
                 await loadInitialContent()
             }
-            .onChange(of: text) { _, newText in
+            .onChange(of: SourceAnalysisText(text)) { _, source in
+                let newText = source.text
                 // #35: only the format that can actually consume the result
                 // pays for it. Before this gate, every keystroke in ANY
                 // format (a Python file, a JSON file, plain text) built a
@@ -236,7 +237,7 @@ struct DocumentEditorSplitView: View {
     /// debounce) and refresh both outline channels. Split out of `.task(id:)`
     /// so the compiler can type-check the view body.
     private func loadInitialContent() async {
-        // #35: mirrors the `.onChange(of: text)` gate above — a non-Markdown,
+        // #35: mirrors the exact-source change gate above — a non-Markdown,
         // non-JSON document (or a JSON document, for the Markdown side, and
         // vice versa) never reaches either parser, on open or on any later
         // edit.
