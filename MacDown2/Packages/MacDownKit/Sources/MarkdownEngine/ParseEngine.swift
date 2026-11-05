@@ -144,7 +144,8 @@ public actor ParseEngine: ParseExecuting {
     private nonisolated func sourceFacts(
         _ document: Document, original: String, bodyLineOffset: Int, fingerprint: String
     ) -> MarkdownSourceFacts? {
-        MarkdownSourceFactProjection.project(
+        guard !original.utf8.contains(0) else { return nil }
+        return MarkdownSourceFactProjection.project(
             source: original, sourceSHA256: fingerprint, root: document as any Markup,
             children: { Array($0.children) }, describe: { node in
                 let kind: MarkdownSourceNode.Kind = switch node {

@@ -1,3 +1,5 @@
+> Earlier prepared source/pins only. The qualified owner correction and final tests are in ../math-source-coordinate-correction-2026-11-05. Original logs remain unchanged.
+
 # Exact parser-owned source facts — 5 November 2026
 
 The actual MarkdownEngine production source and all its tests run in an isolated

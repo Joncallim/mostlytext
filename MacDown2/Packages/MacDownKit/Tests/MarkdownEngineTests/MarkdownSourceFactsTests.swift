@@ -108,11 +108,47 @@ struct MarkdownSourceFactsTests {
         }
     }
 
-    @Test func brokenUpstreamParagraphTableCoordinatesFailClosed() async throws {
+    @Test func repairedParagraphTableCoordinatesPreserveAllRegions() async throws {
         let source = "before\n| A | B |\n|---|---|\n| $x$ | $y$ |"
         let document = try await ParseEngine().parse(source, revision: 1)
+        let facts = try #require(document.sourceFacts)
+        #expect(facts.inlineRegions.map { slice(source, $0) } == ["before", "A", "B", "$x$", "$y$"])
+    }
+
+    @Test(arguments: ["\n", "\r\n", "\r"])
+    func variableAndLazyContinuationPrefixesUseActualOriginalOffsets(ending: String) async throws {
+        let continuations = [
+            ("> before", "lazy $x$"), ("> before", ">     $x$"),
+            ("- before", "    $x$"), ("> - before", ">      $x$"),
+        ]
+        for (first, second) in continuations {
+            let source = first + ending + second
+            let facts = try #require(try await ParseEngine().parse(source, revision: 1).sourceFacts)
+            #expect(facts.inlineRegions.map { slice(source, $0) } == ["before" + ending + second])
+            let prefix = second == "lazy $x$" ? "" : String(second.prefix { $0 != "$" })
+            #expect(facts.continuationPrefixes.map { slice(source, $0) } == (prefix.isEmpty ? [] : [prefix]))
+        }
+    }
+
+    @Test(arguments: ["\n", "\r\n", "\r"])
+    func multilineLinkTitlesKeepExactRangesAndAreNotContainerPrefixes(ending: String) async throws {
+        let raw = "[$x$](/target" + ending + ">     \"title\")"
+        let source = "> before " + raw + " after $y$"
+        let facts = try #require(try await ParseEngine().parse(source, revision: 1).sourceFacts)
+        let link = try #require(facts.links.first)
+        #expect(slice(source, link.fullRange) == raw)
+        #expect(try slice(source, #require(link.labelRange)) == "$x$")
+        #expect(link.destination == "/target")
+        #expect(link.title == "title")
+        #expect(facts.continuationPrefixes.isEmpty)
+        #expect(facts.inlineRegions.map { slice(source, $0) } == ["before " + raw + " after $y$"])
+    }
+
+    @Test func sanitizedNULCoordinatesAreNotPresentedAsExactOriginalFacts() async throws {
+        let source = "before\u{0} $x$"
+        let document = try await ParseEngine().parse(source, revision: 1)
         #expect(document.sourceFacts == nil)
-        #expect(!document.blocks.isEmpty)
+        #expect(document.body.utf8.elementsEqual(source.utf8))
     }
 
     @Test func veryDeepStructuresFailClosed() async throws {

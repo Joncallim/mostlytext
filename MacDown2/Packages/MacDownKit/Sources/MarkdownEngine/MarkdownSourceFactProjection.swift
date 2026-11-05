@@ -37,10 +37,16 @@ enum MarkdownSourceFactProjection {
             else { return nil }
             return lower ..< upper
         }
-        guard let containers = resolveContainers(raw.containers, source: source, offsets: offsets, convert: convert)
+        let units = Array(source.utf16)
+        guard let containers = resolveContainers(
+            raw.containers,
+            source: source,
+            units: units,
+            offsets: offsets,
+            convert: convert
+        )
         else { return nil }
         let literals = raw.literals.compactMap(convert).sorted { $0.lowerBound < $1.lowerBound }
-        let units = Array(source.utf16)
         var links: [MarkdownSourceLink] = []
         for link in raw.links {
             guard let range = convert(link.range),
@@ -99,7 +105,8 @@ enum MarkdownSourceFactProjection {
     }
 
     private static func resolveContainers(
-        _ containers: [[Range<MarkdownSourcePoint>]], source: String, offsets: [MarkdownSourcePoint: Int],
+        _ containers: [[Range<MarkdownSourcePoint>]], source: String, units: [UInt16],
+        offsets: [MarkdownSourcePoint: Int],
         convert: (Range<MarkdownSourcePoint>) -> Range<Int>?
     ) -> (regions: [Range<Int>], prefixes: [Range<Int>])? {
         let sourceMap = SourceMap(text: source)
@@ -109,7 +116,7 @@ enum MarkdownSourceFactProjection {
             guard let lower = container.map(\.lowerBound).min(), let upper = container.map(\.upperBound).max(),
                   let region = convert(lower ..< upper),
                   let continuation = continuationPrefixes(container, firstLine: lower.line,
-                                                          sourceMap: sourceMap, offsets: offsets)
+                                                          sourceMap: sourceMap, units: units, offsets: offsets)
             else { return nil }
             regions.append(region)
             prefixes.append(contentsOf: continuation)
@@ -123,7 +130,7 @@ enum MarkdownSourceFactProjection {
 
     private static func continuationPrefixes(
         _ container: [Range<MarkdownSourcePoint>], firstLine: Int,
-        sourceMap: SourceMap, offsets: [MarkdownSourcePoint: Int]
+        sourceMap: SourceMap, units: [UInt16], offsets: [MarkdownSourcePoint: Int]
     ) -> [Range<Int>]? {
         var starts: [Int: MarkdownSourcePoint] = [:]
         for range in container where range.lowerBound.line > firstLine {
@@ -134,7 +141,9 @@ enum MarkdownSourceFactProjection {
         for (line, point) in starts {
             guard line > 0, line <= sourceMap.lineCount, let end = offsets[point] else { return nil }
             let start = sourceMap.lineStartOffsets[line - 1]
-            if start < end {
+            // A later node can follow a multiline link destination/title. That
+            // authored syntax is not a removable container prefix.
+            if start < end, units[start ..< end].allSatisfy({ $0 == 32 || $0 == 9 || $0 == 62 }) {
                 prefixes.append(start ..< end)
             }
         }

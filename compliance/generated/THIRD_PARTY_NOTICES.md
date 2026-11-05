@@ -138,9 +138,9 @@ This file is generated from `compliance/inventory.json` by
 | roughjs (via Mermaid) | 4.6.6 | MIT |
 | stylis (via Mermaid) | 4.3.6 | MIT |
 | Swift Argument Parser | 1.8.2 | Apache-2.0 WITH Swift-exception |
-| swift-cmark (cmark-gfm) | 0.8.0 | BSD-2-Clause AND MIT |
+| swift-cmark (cmark-gfm) | 2a5339b8 | BSD-2-Clause AND MIT |
 | swift-concurrency-extras | 1.4.1 | MIT |
-| swift-markdown | 0.8.0 | Apache-2.0 |
+| swift-markdown | abfafecc | Apache-2.0 |
 | SwiftSoup | 2.13.9 | MIT |
 | SwiftTreeSitter | 0beea992 | BSD-3-Clause |
 | SwiftUIMath | 0.1.0 | MIT |
@@ -9954,9 +9954,9 @@ SOFTWARE.
 
 ## swift-cmark (cmark-gfm)
 
-- Version: 0.8.0
-- Upstream: https://github.com/swiftlang/swift-cmark
-- Revision: `924936d0427cb25a61169739a7660230bffa6ea6`
+- Version: 2a5339b8
+- Upstream: https://github.com/Joncallim/swift-cmark
+- Revision: `2a5339b89b219584c8fa6c6fd378d3898eed5d57`
 - Licence: BSD-2-Clause AND MIT
 - Copyright (c) 2014, John MacFarlane
 - See COPYING for the complete set of notices
@@ -10176,9 +10176,9 @@ SOFTWARE.
 
 ## swift-markdown
 
-- Version: 0.8.0
-- Upstream: https://github.com/swiftlang/swift-markdown
-- Revision: `3c6f9523da3a1ec2fd829673e472d95b8097a3b8`
+- Version: abfafecc
+- Upstream: https://github.com/Joncallim/swift-markdown
+- Revision: `abfafeccd6f0434daf1a667b92d227adb83b50c8`
 - Licence: Apache-2.0
 - Copyright (c) 2021 Apple Inc. and the Swift project authors
 

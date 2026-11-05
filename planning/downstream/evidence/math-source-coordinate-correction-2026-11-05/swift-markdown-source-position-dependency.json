@@ -1,0 +1,364 @@
+{
+  "upstream": "https://github.com/swiftlang/swift-markdown",
+  "base": "3c6f9523da3a1ec2fd829673e472d95b8097a3b8",
+  "cmark_owner": "https://github.com/Joncallim/swift-cmark",
+  "cmark_revision": "2a5339b89b219584c8fa6c6fd378d3898eed5d57",
+  "runtime_source_files_unchanged": [
+    {
+      "path": "Sources/CAtomic/CAtomic.c",
+      "sha256": "e0d100a0d24b920ec0c640a7349f3fbe47003b152f4eb81a112882aa259d9950"
+    },
+    {
+      "path": "Sources/CAtomic/CMakeLists.txt",
+      "sha256": "d01a893361002832646cb0642aa2539ca2e568fbc8751747954deac9a288fda4"
+    },
+    {
+      "path": "Sources/CAtomic/include/CAtomic.h",
+      "sha256": "a50969310bb42f61b2a76bb9ca338401b52dd674488fc7152e013a0790f06e85"
+    },
+    {
+      "path": "Sources/CAtomic/include/module.modulemap",
+      "sha256": "b7f9ce12a49ba51641eb1ec972d7943f1f73043633884b46ca3a5144d32aacdf"
+    },
+    {
+      "path": "Sources/CMakeLists.txt",
+      "sha256": "8069f6b5b5af7364c86ede091b3c030d71dfc22f3176b4d0fe356ba49a62a3fc"
+    },
+    {
+      "path": "Sources/Markdown/Base/ChildIndexPath.swift",
+      "sha256": "0a341f963f9a49132c7277526807e128e19cc5c1791eff73b17ce61617ed3ba9"
+    },
+    {
+      "path": "Sources/Markdown/Base/DirectiveArgument.swift",
+      "sha256": "159a692e96ae62626bccbc1df397cd18477574650fb5dae89797cc605f379c3d"
+    },
+    {
+      "path": "Sources/Markdown/Base/Document.swift",
+      "sha256": "7c997b0d934915d46a0f303d511f1c12ad0e5ad02dd1ffd1617743a74431b5ca"
+    },
+    {
+      "path": "Sources/Markdown/Base/LiteralMarkup.swift",
+      "sha256": "98898b1a803fac82ed58ba8363de3fe1a6b3920c264a61724a8b4aa0a8ca065e"
+    },
+    {
+      "path": "Sources/Markdown/Base/Markup.swift",
+      "sha256": "91b6307f6eb07782d5e86c6053a5df7665bc5197be946db9f27e3fb425136505"
+    },
+    {
+      "path": "Sources/Markdown/Base/MarkupChildren.swift",
+      "sha256": "2ff7905d96b21f4b7b09c908311a8cf0b5ff067a5dbd2504c18f81eae2281331"
+    },
+    {
+      "path": "Sources/Markdown/Base/MarkupData.swift",
+      "sha256": "d6f6cc35b0bd97493ba47fe0995c41f9c42896976c2c7d9f549f0a277f194725"
+    },
+    {
+      "path": "Sources/Markdown/Base/PlainTextConvertibleMarkup.swift",
+      "sha256": "635f86ae76e14f323bb9460296715d6f463e9702203b1ea42a99d4a661374808"
+    },
+    {
+      "path": "Sources/Markdown/Base/RawMarkup.swift",
+      "sha256": "b737cd0be908821de7eaccb011fabfbf8c8119b082179c145002286916c13b6a"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Block Container Blocks/BlockDirective.swift",
+      "sha256": "d51a469aea758329185fd9665be38f230f687152fb25406695fda3081963ae67"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Block Container Blocks/BlockQuote.swift",
+      "sha256": "6cbaf5dd03708d4169be276ea0ecccc686976191d1b5230de693ea344910b791"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Block Container Blocks/CustomBlock.swift",
+      "sha256": "d82c9044a77ee4dbd809822202c4838b290a34ad9091a677c101fba759ed0c6b"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Block Container Blocks/Doxygen Commands/DoxygenAbstract.swift",
+      "sha256": "594fe23503f59719c84fe7994128ec38a0aaee1ad3ed89dd3e238edf79fc9067"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Block Container Blocks/Doxygen Commands/DoxygenDiscussion.swift",
+      "sha256": "db341b38a77220855391da69bf4b196aef49ec5474fc50609d3e7e7dd792e53a"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Block Container Blocks/Doxygen Commands/DoxygenNote.swift",
+      "sha256": "29d5ac6660fd4de7f3b1096b0df2e1c0e50a1fe90904f77fec5296449fd3ebb7"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Block Container Blocks/Doxygen Commands/DoxygenParameter.swift",
+      "sha256": "d9680da15aa2f0dd4385467426a79f823ee8f495e5e658d55fc04744a7b58ad6"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Block Container Blocks/Doxygen Commands/DoxygenReturns.swift",
+      "sha256": "8d54abc5ba4f71abdaf26e27beb119f81c75f17f14237f34a233027d723b92df"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Block Container Blocks/ListItem.swift",
+      "sha256": "2dcd54b5213d71b4e7459a726408b30448312bb39cb6c44824cc7f46410efd4b"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Block Container Blocks/OrderedList.swift",
+      "sha256": "2f60e53fd7f942dcdea8a4dd81a19fa67e8eee81cc7fba18d37d5e7d7dd00802"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Block Container Blocks/UnorderedList.swift",
+      "sha256": "5b7e73f412dee4b4c8b94f0b94b97aa45d000bfbb63d3e0c821be458ee12b4d5"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Inline Container Blocks/Paragraph.swift",
+      "sha256": "46f1860a48f248bfbbd016f6e2d9dba53e25c2c239df80b9e5c80a46f5a3f336"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Leaf Blocks/CodeBlock.swift",
+      "sha256": "73ed3206c793f09dc39d779d52a69c9966b2030cdf6ba5af6a5b7b6168be2d24"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Leaf Blocks/HTMLBlock.swift",
+      "sha256": "392e10e3d8e84909e847e32cb93ad281a4e8d3693bc1c15b8e04a51afdc91d21"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Leaf Blocks/Heading.swift",
+      "sha256": "5fee3a2b55e6bbf868754368c9cd8d73b7186d7244a30f9de732633840bce5b1"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Leaf Blocks/ThematicBreak.swift",
+      "sha256": "bfe43a5d358b667e0fad5449b8a8c1fbd3d09b282edee4c9caa0e41154319c82"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Tables/Table.swift",
+      "sha256": "f32e1e60b09bffca6fee0419caecfd182b613fcba24f01c7f90e450d273d5c66"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Tables/TableBody.swift",
+      "sha256": "0663ca7f17755cddb74b01e9cbd09ea4b75e1c053c94b748a88902deaf38cf2e"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Tables/TableCell.swift",
+      "sha256": "a38ed3e3208b4a5c582e3bbbbd89b0c4470d3463b51b91f55e6d6ed9fb3730b6"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Tables/TableCellContainer.swift",
+      "sha256": "509271b0e1a94175d9d987104845dbd72f7eea09e97a6a0606a7d938697bb5a9"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Tables/TableHead.swift",
+      "sha256": "a284c15c3a7d156c6574caeca973d00dbf80ffbb35520431219769764612650a"
+    },
+    {
+      "path": "Sources/Markdown/Block Nodes/Tables/TableRow.swift",
+      "sha256": "fce9c3bbe0d1e6d3d50a3095a32dbd0c2fb3a6cbbfd36412f4e83d50142a7938"
+    },
+    {
+      "path": "Sources/Markdown/CMakeLists.txt",
+      "sha256": "68ce0a3389aab97e6a141794dda0c48b23fe38654e09904f24fde74ffb3b6f82"
+    },
+    {
+      "path": "Sources/Markdown/Infrastructure/Replacement.swift",
+      "sha256": "1196a9635d02dee5d8b73c4b96b69c0c196f15ef4306ef6173d01dc9cc6808e1"
+    },
+    {
+      "path": "Sources/Markdown/Infrastructure/SourceLocation.swift",
+      "sha256": "499795955d4b0e4e3d3ffc668f2ea607105444cbf186d3cfc5512967643e8e34"
+    },
+    {
+      "path": "Sources/Markdown/Inline Nodes/Inline Containers/Emphasis.swift",
+      "sha256": "05e04b51c27482ac7c755a02393c89e08c1c8df758ff57d8452fd08224bece57"
+    },
+    {
+      "path": "Sources/Markdown/Inline Nodes/Inline Containers/Image.swift",
+      "sha256": "b74230fc5c08959a6dbc2d94e7faf4c9199be9622eb79a8e65890128c0584735"
+    },
+    {
+      "path": "Sources/Markdown/Inline Nodes/Inline Containers/InlineAttributes.swift",
+      "sha256": "4cc4177a9bfc8ee6e038890c6408aebc91b6e8fd68fdc092a9a3971516988491"
+    },
+    {
+      "path": "Sources/Markdown/Inline Nodes/Inline Containers/Link.swift",
+      "sha256": "c40c830b0b1011ecbabf86edfc9cd189036c12ce7341b1aa3970f02407adea4d"
+    },
+    {
+      "path": "Sources/Markdown/Inline Nodes/Inline Containers/Strikethrough.swift",
+      "sha256": "649262dd5c0e211494b986da3b415fe58c023a37359b75974e8656920b4b9b63"
+    },
+    {
+      "path": "Sources/Markdown/Inline Nodes/Inline Containers/Strong.swift",
+      "sha256": "22ce212bf67fa424359a2c3eb7cb08db7b67367ef62251104e45dfe9532f4e8e"
+    },
+    {
+      "path": "Sources/Markdown/Inline Nodes/Inline Leaves/CustomInline.swift",
+      "sha256": "d396f2db96cbbcee6f6b6789ac47b4be77d1e408ae4197539624b4bac52b048e"
+    },
+    {
+      "path": "Sources/Markdown/Inline Nodes/Inline Leaves/InlineCode.swift",
+      "sha256": "324b8929de175b4b6742b8c0f7321c73ef83f27636a64de44c5bb52c2d6c3219"
+    },
+    {
+      "path": "Sources/Markdown/Inline Nodes/Inline Leaves/InlineHTML.swift",
+      "sha256": "ab402d914aa6a2468dfa4e2d7f4467fb2c3fa6e2037e2eb7c3eea3a1b9d8fd3d"
+    },
+    {
+      "path": "Sources/Markdown/Inline Nodes/Inline Leaves/LineBreak.swift",
+      "sha256": "4cce09b24ae9ebf4a2202af112dce75e449c4438d19e7bce6d02258904982319"
+    },
+    {
+      "path": "Sources/Markdown/Inline Nodes/Inline Leaves/SoftBreak.swift",
+      "sha256": "af7505557361b14e271944440ae2679ef9ed9a76aa612c1b2b9feaf65c37949b"
+    },
+    {
+      "path": "Sources/Markdown/Inline Nodes/Inline Leaves/SymbolLink.swift",
+      "sha256": "c3f1a939c448975ef4027795ec5fc1aaac4c164efa0cf7bab54ed307f1b7fec6"
+    },
+    {
+      "path": "Sources/Markdown/Inline Nodes/Inline Leaves/Text.swift",
+      "sha256": "c6cb6cbc807777e914677031a8dfaa4fa0d7b70a5d882afbac52884791104564"
+    },
+    {
+      "path": "Sources/Markdown/Interpretive Nodes/Aside.swift",
+      "sha256": "87c958f68175b4f22d6cdf872b5bda564095b26186e65f55296fa9a35d265e7a"
+    },
+    {
+      "path": "Sources/Markdown/Markdown.docc/Markdown/BlockDirectives.md",
+      "sha256": "f4e381deb888c77fedb116e2a13fc1f497a2304bb5597526ee173e5e25b485fa"
+    },
+    {
+      "path": "Sources/Markdown/Markdown.docc/Markdown/BlockMarkup.md",
+      "sha256": "99275bb35cb6c5488d11ddcc3600d254dd22e0c6bcc0a802af1549815ef02c2e"
+    },
+    {
+      "path": "Sources/Markdown/Markdown.docc/Markdown/DoxygenCommands.md",
+      "sha256": "61253e2c2e31b4dfca2428f53648e7e4a880551e9a78702c52549b7bbb61e245"
+    },
+    {
+      "path": "Sources/Markdown/Markdown.docc/Markdown/FormatterAndOptions.md",
+      "sha256": "4c7b2be479431ca55330f860ba56eddf2d3b5e1c352683be41d5eaad928e8e11"
+    },
+    {
+      "path": "Sources/Markdown/Markdown.docc/Markdown/Infrastructure.md",
+      "sha256": "bae2fd9954bff67dcf6b491f6cf12f98020fa14cc0145cfa93ab04b55267d5f0"
+    },
+    {
+      "path": "Sources/Markdown/Markdown.docc/Markdown/InlineMarkup.md",
+      "sha256": "9ed396b20ff8f4e5b543b76b6ec60d90932480d18024b6653532cc111b1a14a9"
+    },
+    {
+      "path": "Sources/Markdown/Markdown.docc/Markdown/VisitMarkup.md",
+      "sha256": "ff0c7e2d5de9e45a030adaf63517880e5309581199106133d50b22a2aca8cc2b"
+    },
+    {
+      "path": "Sources/Markdown/Markdown.docc/Markdown.md",
+      "sha256": "c94dc3c0529ccf3b97f0d70a9056705be56095d339ca2d71aab34d00f09a4a56"
+    },
+    {
+      "path": "Sources/Markdown/Markdown.docc/Parsing-Building-and-Modifying Markup-Trees.md",
+      "sha256": "444d0ee28d36e0cbd7b46b757a0362718e8f27c2304378af7c0429170ca3ac0a"
+    },
+    {
+      "path": "Sources/Markdown/Markdown.docc/Snippets.md",
+      "sha256": "ae0fa311cb0dda33448178fb91898fbba6281b323ac3077ba0e751d53eb28e9d"
+    },
+    {
+      "path": "Sources/Markdown/Markdown.docc/Visitors-Walkers-and-Rewriters.md",
+      "sha256": "0b7537a43b05282c436650f96418074574d5b30aa153b7705610b920dfc8cbac"
+    },
+    {
+      "path": "Sources/Markdown/Parser/BlockDirectiveParser.swift",
+      "sha256": "64c74a17c5304d00c60bc784d06c2db0ceb33a4bb79bbb186c63736d157bc723"
+    },
+    {
+      "path": "Sources/Markdown/Parser/CommonMarkConverter.swift",
+      "sha256": "1213bc0a7850ad57ffe9e8aaf4c5a2ac2a23930a078b113bb65808def8a057db"
+    },
+    {
+      "path": "Sources/Markdown/Parser/LazySplitLines.swift",
+      "sha256": "257461fcf5b6685cda8a27679e804392a5e11fce815ee921cfd4dbbdab424cc5"
+    },
+    {
+      "path": "Sources/Markdown/Parser/ParseOptions.swift",
+      "sha256": "4d8f099ff4a154989d838a7a1ef20d7e4b92f1c9bfb7ecfd841f0778690ae5e3"
+    },
+    {
+      "path": "Sources/Markdown/Parser/RangeAdjuster.swift",
+      "sha256": "cb3dc60800e99383d0827f7f8e7f5da8c50c8666ae58b1e46c51456426478237"
+    },
+    {
+      "path": "Sources/Markdown/Parser/RangerTracker.swift",
+      "sha256": "095106402608f44bcd3d0e8e8170113d09bdbcaa00b0da78cd16eee4bd000a7f"
+    },
+    {
+      "path": "Sources/Markdown/Rewriter/MarkupRewriter.swift",
+      "sha256": "a439aab5a36f422b6fb880fcd2a148b41635ca55418f700c50e77070e28fc72e"
+    },
+    {
+      "path": "Sources/Markdown/Structural Restrictions/BasicBlockContainer.swift",
+      "sha256": "b26834ebc409efc5ae56f9ec862ec386101bf93dfd9d644445ea76846bfff223"
+    },
+    {
+      "path": "Sources/Markdown/Structural Restrictions/BasicInlineContainer.swift",
+      "sha256": "452d0996494317a674cc0901b915abe5c26b273b80916779ea8cea27d35a47d5"
+    },
+    {
+      "path": "Sources/Markdown/Structural Restrictions/BlockContainer.swift",
+      "sha256": "f3cd6bd9e899ec1284f414ddc6350f1d70346487d3d285b567b5cd2d6fbc65c5"
+    },
+    {
+      "path": "Sources/Markdown/Structural Restrictions/BlockMarkup.swift",
+      "sha256": "e20a10fb3e61eb7fd51177b3168b8a19def45264a13d465285deb3391545a156"
+    },
+    {
+      "path": "Sources/Markdown/Structural Restrictions/InlineContainer.swift",
+      "sha256": "eee5c470fb0a3b6bc912a97d9227600bd683e1b0d3f39ac80a8f7b8cb18aeee5"
+    },
+    {
+      "path": "Sources/Markdown/Structural Restrictions/InlineMarkup.swift",
+      "sha256": "58ede2fb45ed07cf5476d0b5d0b7ebe96852dc0f6b11922aa57bee189c2c6a07"
+    },
+    {
+      "path": "Sources/Markdown/Structural Restrictions/ListItemContainer.swift",
+      "sha256": "2247cc6bf8adc57b020f4a50ebdaad7026a6c2da20ffc843d6351fd9df4dabe9"
+    },
+    {
+      "path": "Sources/Markdown/Utility/AtomicCounter.swift",
+      "sha256": "e9b4447b7a88e5ce7328c9e3de1f53c10174aed741197364297a53c207546868"
+    },
+    {
+      "path": "Sources/Markdown/Utility/CharacterExtensions.swift",
+      "sha256": "ed6dcd7bfbe7a42fcd310693cb4e302a68ae74a0eed0642173cb0bc71e8f5f56"
+    },
+    {
+      "path": "Sources/Markdown/Utility/CollectionExtensions.swift",
+      "sha256": "de483f2f06932b59b812cc215b2f6fa0751c59de140612995470c0e14ae4f514"
+    },
+    {
+      "path": "Sources/Markdown/Utility/StringExtensions.swift",
+      "sha256": "1bdcdaa253c538ba8971a353e4b4eacf7f2ea57ba83112f63431f868e2165156"
+    },
+    {
+      "path": "Sources/Markdown/Visitor/MarkupVisitor.swift",
+      "sha256": "5db395d9958427ccc149e46369d1688c6972e2d924bd6812be9c3cb23d21c0ac"
+    },
+    {
+      "path": "Sources/Markdown/Walker/MarkupWalker.swift",
+      "sha256": "a1e33a2b028c494bc8d0440b3f27f8f9694aea0b85c2a879ef593405042f5c08"
+    },
+    {
+      "path": "Sources/Markdown/Walker/Walkers/HTMLFormatter.swift",
+      "sha256": "f635964780938b9484fba7d408369326b8d4837c91755ef49816c20da4c0eec9"
+    },
+    {
+      "path": "Sources/Markdown/Walker/Walkers/MarkupFormatter.swift",
+      "sha256": "d4fe298d3d8900f4a94103c65e01d01da54cbcfc6f9b8de375353224a30ec628"
+    },
+    {
+      "path": "Sources/Markdown/Walker/Walkers/MarkupTreeDumper.swift",
+      "sha256": "c4735e60c627ac305c53b66a4e531008ba7eaa1ae32d58ff9b14896065daca52"
+    }
+  ],
+  "licenses_unchanged": {
+    "LICENSE.txt": "167beb36f181bd163c93c6feb45c68e5f9462fe1af55b278f7bfd1df20e673a3",
+    "NOTICE.txt": "ee7da43afcac4a52196a2141024573ec2ceb84b14e74dfed38522d94586fbc52"
+  },
+  "original_test_snapshot_change": "testMissingOpenCurly: actual authored closing brace at line3 column1, not3; source dump root end corrected accordingly",
+  "new_tests": "6 Swift Testing functions; exact byte-coordinate assertions",
+  "qualification": "299 upstream XCTest and6 new Swift Testing functions Debug/Release pass with the owner; actual original runtime fails53 initial coordinate assertions. Application source158 tests Debug/Release and9054 AST/format/HTML equivalence plus sanitizer cases pass.",
+  "limits": "No production math activation or local native product execution; full exact-head application CI remains required"
+}

@@ -1,0 +1,31 @@
+{
+  "originHash" : "aaa285fccfcddabe6c9014b8299aaf545635960bf4228826387053fa4150d0ab",
+  "pins" : [
+    {
+      "identity" : "swift-cmark",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Joncallim/swift-cmark",
+      "state" : {
+        "revision" : "2a5339b89b219584c8fa6c6fd378d3898eed5d57"
+      }
+    },
+    {
+      "identity" : "swift-markdown",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Joncallim/swift-markdown",
+      "state" : {
+        "revision" : "abfafeccd6f0434daf1a667b92d227adb83b50c8"
+      }
+    },
+    {
+      "identity" : "yams",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jpsim/Yams",
+      "state" : {
+        "revision" : "a27b21e0c81c5bf42049b897a62aaf387e80f279",
+        "version" : "6.2.2"
+      }
+    }
+  ],
+  "version" : 3
+}
