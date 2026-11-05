@@ -46,3 +46,16 @@ CLI checks and exact-head review. Verify resulting merge tree and canonical
 main. Update issue19's exact one-phase criterion only when that contract is
 proved; original abort, mounted editor/lifecycle, native Release stress and
 full-editor performance remain separate. Reassess all issues after each update.
+
+## Reproduced result and compiler setup
+
+Unmodified TokenSystemValidator reaches the style interface after every controlled
+await/reentrant change:24 assertions fail over shrunk/grown/same-length content
+and both actions. Unchanged and initially obsolete controls pass. The narrow
+post-provider guards repair the exact failure;46 functions plus8 XCTest cases
+pass Debug/Release, retaining all previous component regressions. No native UI
+executes. A first compiler crash occurs lowering the generic default sync closure;
+an explicit nil sync closure preserves the same provider contract and avoids the
+compiler defect. Both that setup crash and actual failing baseline are retained;
+compiler/language settings are not weakened. Current main is now verified
+f87a414aff15577dd881cb80cad2928862b93839 (PR81 merged), reconciled into this branch.
