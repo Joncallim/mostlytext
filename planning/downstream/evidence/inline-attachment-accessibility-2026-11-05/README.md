@@ -56,3 +56,15 @@ The first failure's exact source, full raw log and run JSON are retained. The
 added initialization exceeded the function-length lint limit; extracting the
 unchanged occurrence-verification helper fixes lint, with failure log retained.
 This host correction remains a candidate until a fresh actual native pass.
+
+## Positive-controlled component qualification at c8e36908
+
+Focused [42048402904](https://github.com/Joncallim/mostlytext/actions/runs/42048402904)
+passes two actual native tests / two suites in 1.347 s. Both descriptor occurrences
+expose their distinct labels and distinct nonempty frames inside the owned window.
+Both actual native custom-action handlers return successfully and deliver exactly
+the respective caller UUIDs. All original host/standalone/both-neighbor controls
+appear, and the retained non-opt-in baseline still has no own inline label. The
+independent exact-source/pin/result verifier also passes. Full failed/corrected
+logs and run JSON remain committed; no prior failure is erased by the pass.
+Complete app/full CI and live production authorization remain separate gates.

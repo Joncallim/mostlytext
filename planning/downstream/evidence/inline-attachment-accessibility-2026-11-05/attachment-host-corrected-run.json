@@ -1,0 +1,91 @@
+{
+  "conclusion": "success",
+  "databaseId": 42048402904,
+  "headSha": "c8e369089f8b26b7516183d3982c2c65acc6d7ba",
+  "jobs": [
+    {
+      "completedAt": "2026-11-05T14:48:52Z",
+      "conclusion": "success",
+      "databaseId": 127317558706,
+      "name": "probe",
+      "startedAt": "2026-11-05T14:47:25Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-11-05T14:47:27Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-11-05T14:47:26Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T14:47:32Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "startedAt": "2026-11-05T14:47:27Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T14:47:34Z",
+          "conclusion": "success",
+          "name": "Select Xcode and macOS 26",
+          "number": 3,
+          "startedAt": "2026-11-05T14:47:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T14:47:35Z",
+          "conclusion": "success",
+          "name": "Prepare exact test and locked dependencies",
+          "number": 4,
+          "startedAt": "2026-11-05T14:47:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T14:48:46Z",
+          "conclusion": "success",
+          "name": "Execute actual native probe",
+          "number": 5,
+          "startedAt": "2026-11-05T14:47:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T14:48:47Z",
+          "conclusion": "success",
+          "name": "Verify exact source and dependency revisions",
+          "number": 6,
+          "startedAt": "2026-11-05T14:48:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T14:48:49Z",
+          "conclusion": "success",
+          "name": "Preserve probe evidence",
+          "number": 7,
+          "startedAt": "2026-11-05T14:48:47Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T14:48:50Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 14,
+          "startedAt": "2026-11-05T14:48:49Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T14:48:50Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 15,
+          "startedAt": "2026-11-05T14:48:50Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/Joncallim/mostlytext/actions/runs/42048402904/job/127317558706"
+    }
+  ],
+  "status": "completed"
+}

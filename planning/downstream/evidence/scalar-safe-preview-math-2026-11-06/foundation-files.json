@@ -1,0 +1,27 @@
+[
+  {
+    "source": "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMathInput.swift",
+    "fixture": "Sources/Preview/PreviewMathInput.swift",
+    "sha256": "64db301d1d3d372e35095d214fb44d44dd9dbd6f0abe96261ceb4f2e2cfa620c"
+  },
+  {
+    "source": "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMarkdownSourceMap.swift",
+    "fixture": "Sources/Preview/PreviewMarkdownSourceMap.swift",
+    "sha256": "19bea4091c6c04e34a45d8a8fa417681a5fdf28783342dbaca86464b6bb40c3e"
+  },
+  {
+    "source": "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewParserBudget.swift",
+    "fixture": "Sources/Preview/PreviewParserBudget.swift",
+    "sha256": "9c94b58c5ea81732b14d487f5cd2e4adde4de364d2d8fa5ec3a6feb7016a4742"
+  },
+  {
+    "source": "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMarkdownSourceMapTests.swift",
+    "fixture": "Tests/PreviewTests/PreviewMarkdownSourceMapTests.swift",
+    "sha256": "0f76789bd78bd911f7c07af3485bdeedf08d2fa04b58bb23bd66ebb2fe91d267"
+  },
+  {
+    "source": "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMathInputTests.swift",
+    "fixture": "Tests/PreviewTests/PreviewMathInputTests.swift",
+    "sha256": "c2dbe56df89f70c6dad0131a2cb50833b1693a2b3bb9c934b0fc4984d181cb49"
+  }
+]

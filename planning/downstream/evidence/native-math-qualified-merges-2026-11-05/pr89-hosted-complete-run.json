@@ -1,0 +1,238 @@
+{
+  "conclusion": "success",
+  "databaseId": 42048403099,
+  "headSha": "c8e369089f8b26b7516183d3982c2c65acc6d7ba",
+  "jobs": [
+    {
+      "completedAt": "2026-11-05T15:26:49Z",
+      "conclusion": "success",
+      "databaseId": 127318447244,
+      "name": "build-and-test",
+      "startedAt": "2026-11-05T14:48:56Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-11-05T14:48:57Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-11-05T14:48:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T14:49:08Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "startedAt": "2026-11-05T14:48:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T14:49:11Z",
+          "conclusion": "success",
+          "name": "Select Xcode 26",
+          "number": 3,
+          "startedAt": "2026-11-05T14:49:08Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T14:49:19Z",
+          "conclusion": "success",
+          "name": "Install XcodeGen",
+          "number": 4,
+          "startedAt": "2026-11-05T14:49:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T14:49:19Z",
+          "conclusion": "skipped",
+          "name": "Prepare bounded package crash diagnostics",
+          "number": 5,
+          "startedAt": "2026-11-05T14:49:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T14:49:55Z",
+          "conclusion": "success",
+          "name": "Shared math syntax (Foundation only)",
+          "number": 6,
+          "startedAt": "2026-11-05T14:49:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T15:06:16Z",
+          "conclusion": "success",
+          "name": "Package build + tests",
+          "number": 7,
+          "startedAt": "2026-11-05T14:49:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T15:06:16Z",
+          "conclusion": "skipped",
+          "name": "Collect fresh package test crash reports",
+          "number": 8,
+          "startedAt": "2026-11-05T15:06:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T15:06:16Z",
+          "conclusion": "skipped",
+          "name": "Upload bounded package crash diagnostics",
+          "number": 9,
+          "startedAt": "2026-11-05T15:06:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T15:06:17Z",
+          "conclusion": "success",
+          "name": "Generate Xcode project",
+          "number": 10,
+          "startedAt": "2026-11-05T15:06:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T15:06:17Z",
+          "conclusion": "success",
+          "name": "Pin Xcode to the committed package versions",
+          "number": 11,
+          "startedAt": "2026-11-05T15:06:17Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T15:10:46Z",
+          "conclusion": "success",
+          "name": "Build app + CLI",
+          "number": 12,
+          "startedAt": "2026-11-05T15:06:17Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T15:21:02Z",
+          "conclusion": "success",
+          "name": "Build app + CLI (Release)",
+          "number": 13,
+          "startedAt": "2026-11-05T15:10:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T15:21:20Z",
+          "conclusion": "success",
+          "name": "Verify compiled document metadata and embedded CLI",
+          "number": 14,
+          "startedAt": "2026-11-05T15:21:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T15:23:25Z",
+          "conclusion": "success",
+          "name": "Build for testing (app + UI tests; UI tests run requires macOS 26+ GUI)",
+          "number": 15,
+          "startedAt": "2026-11-05T15:21:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T15:26:42Z",
+          "conclusion": "success",
+          "name": "Run MacDown2Tests (non-UI app-target tests)",
+          "number": 16,
+          "startedAt": "2026-11-05T15:23:25Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T15:26:43Z",
+          "conclusion": "success",
+          "name": "Verify every build used the committed package versions",
+          "number": 17,
+          "startedAt": "2026-11-05T15:26:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T15:26:45Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 34,
+          "startedAt": "2026-11-05T15:26:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T15:26:48Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 35,
+          "startedAt": "2026-11-05T15:26:45Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/Joncallim/mostlytext/actions/runs/42048403099/job/127318447244"
+    },
+    {
+      "completedAt": "2026-11-05T14:49:38Z",
+      "conclusion": "success",
+      "databaseId": 127318447886,
+      "name": "lint",
+      "startedAt": "2026-11-05T14:48:56Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-11-05T14:48:58Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-11-05T14:48:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T14:49:02Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "startedAt": "2026-11-05T14:48:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T14:49:10Z",
+          "conclusion": "success",
+          "name": "Install tools",
+          "number": 3,
+          "startedAt": "2026-11-05T14:49:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T14:49:24Z",
+          "conclusion": "success",
+          "name": "SwiftFormat (lint)",
+          "number": 4,
+          "startedAt": "2026-11-05T14:49:10Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T14:49:33Z",
+          "conclusion": "success",
+          "name": "SwiftLint (strict)",
+          "number": 5,
+          "startedAt": "2026-11-05T14:49:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T14:49:34Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 10,
+          "startedAt": "2026-11-05T14:49:33Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-05T14:49:35Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 11,
+          "startedAt": "2026-11-05T14:49:34Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/Joncallim/mostlytext/actions/runs/42048403099/job/127318447886"
+    }
+  ],
+  "status": "completed"
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "path": "MacDown2/Packages/MathSyntax/Package.swift",
+    "sha256": "fcb15bdc549a8845e30eec5c162cc21292dcbaf63b39d22f180469c429688294"
+  },
+  {
+    "path": "MacDown2/Packages/MathSyntax/Sources/MathSyntax/MathDisplayDelimiterIndex.swift",
+    "sha256": "439dd466c86ffb906fe1dbb6e474cf57d55515c67b9ecc5804a7fd3e58be0032"
+  },
+  {
+    "path": "MacDown2/Packages/MathSyntax/Sources/MathSyntax/MathSourceIntervals.swift",
+    "sha256": "b2550e65241fc36aef6994a485359b40d1dde32c4a538e1564373dfccb190496"
+  },
+  {
+    "path": "MacDown2/Packages/MathSyntax/Sources/MathSyntax/MathSourceValues.swift",
+    "sha256": "47ae4b314ab2ad271c62544bffa77a7c2e45780698ba6c9b9a8770bdd8ff0ea3"
+  },
+  {
+    "path": "MacDown2/Packages/MathSyntax/Sources/MathSyntax/MathSyntaxUnits.swift",
+    "sha256": "33e0a3bbe42e29c34a8c8b5befc3b8db1cc8341ec4ba734b693a119e4d15b83a"
+  },
+  {
+    "path": "MacDown2/Packages/MathSyntax/Sources/MathSyntax/MathTokenizer.swift",
+    "sha256": "b404b2f713c6aa25449a23706a8519bd0956c76225bf3d91993201400b0aed70"
+  }
+]

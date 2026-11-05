@@ -1,0 +1,10 @@
+{
+  "merge": "1aca9333c15ad75c83c4797adb893c9298fc9451",
+  "parents": [
+    "7e8e5a26f72cc21de34e6cabc3522cf44a493f5b",
+    "9e23f928ee66190b5b85145500b8bd4a11a624c1"
+  ],
+  "tree": "329938e435fdcd4bdcbbc82a9ce76126c4745a56",
+  "canonical_main": "clean fast-forwarded",
+  "native_acceptance": false
+}

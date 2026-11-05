@@ -1,0 +1,9 @@
+{
+  "owner_parent": "ebf6590ab480181cc05d37f520ad6e0f474c2c72",
+  "owner_child": "c52cb5834c4695109aad2cb66294eafbc8f264c8",
+  "only_changed_owner_files": [
+    "Sources/Textual/Attachment/AttachmentAccessibility.swift",
+    "Sources/Textual/Internal/Helpers/AttributedString.swift"
+  ],
+  "unchanged_other_application_pins": 23
+}

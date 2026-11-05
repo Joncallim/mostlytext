@@ -1,0 +1,22 @@
+{
+  "source_sha256": {
+    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceMathAccessibilityProbeTests.swift": "f5af5b1dc13a7a92dbe9de32a2ad28491f1470ef965715f5a4a2f1068ade8369",
+    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceAttachmentAccessibilityTests.swift": "78033809538e555eb5672517acbc728e723c3859db45f9d63a7bf3805d096435",
+    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/NativeMathProbeHost.swift": "3f92ae0ed1e387afc0e966c0a5f1ec4f11bf76117aa865d0181c30f7f5fd15b6",
+    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceMathPolicyProbeTests.swift": "c63ecf189fefa93a165497c6b3053b7f486bbce5b773fa37ad1d67f0330f5869",
+    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMathInputTests.swift": "c2dbe56df89f70c6dad0131a2cb50833b1693a2b3bb9c934b0fc4984d181cb49",
+    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMathTransportTests.swift": "826aabe8923003d83b270ba33c36555063ac5632662b78e96a18f5264e1818ef",
+    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMathScalarGeometryTests.swift": "c16c7b60d52adf602f5e02a76d0d970a763e9a9232bce3f2f9b52b48f04c92a9",
+    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMarkdownSourceMapTests.swift": "0f76789bd78bd911f7c07af3485bdeedf08d2fa04b58bb23bd66ebb2fe91d267",
+    "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewParserBudget.swift": "9c94b58c5ea81732b14d487f5cd2e4adde4de364d2d8fa5ec3a6feb7016a4742",
+    "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMathInput.swift": "64db301d1d3d372e35095d214fb44d44dd9dbd6f0abe96261ceb4f2e2cfa620c",
+    "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMathMarkupParser.swift": "4616e79064580049d17c1faa30bc5200e7297d8969ffa111ccae7f18817f3d0a",
+    "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMarkdownSourceMap.swift": "19bea4091c6c04e34a45d8a8fa417681a5fdf28783342dbaca86464b6bb40c3e"
+  },
+  "revisions": {
+    "swift-concurrency-extras": "5fa253428866f2360c3754e88537f700ed2656b5",
+    "swiftui-math": "2a89c2b41482988711909572d116374e47a52164",
+    "textual": "c52cb5834c4695109aad2cb66294eafbc8f264c8"
+  },
+  "native_execution": "hosted only; preparation does not execute any native code"
+}

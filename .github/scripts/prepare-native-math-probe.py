@@ -14,7 +14,13 @@ parser.add_argument("--require-result", action="store_true")
 args = parser.parse_args()
 repo = Path(__file__).resolve().parents[2]
 sources = [repo / "MacDown2/Packages/MacDownKit/Tests/PreviewTests" / name for name in [
-    "SourceMathAccessibilityProbeTests.swift", "SourceAttachmentAccessibilityTests.swift"
+    "SourceMathAccessibilityProbeTests.swift", "SourceAttachmentAccessibilityTests.swift",
+    "NativeMathProbeHost.swift", "SourceMathPolicyProbeTests.swift",
+    "PreviewMathInputTests.swift", "PreviewMathTransportTests.swift", "PreviewMathScalarGeometryTests.swift",
+    "PreviewMarkdownSourceMapTests.swift"
+]]
+preview_sources = [repo / "MacDown2/Packages/MacDownKit/Sources/Preview" / name for name in [
+    "PreviewParserBudget.swift", "PreviewMathInput.swift", "PreviewMathMarkupParser.swift", "PreviewMarkdownSourceMap.swift"
 ]]
 lock = json.loads((repo / "MacDown2/Packages/MacDownKit/Package.resolved").read_text())
 identities = {"textual", "swiftui-math", "swift-concurrency-extras"}
@@ -26,11 +32,14 @@ for pin in pins:
         raise SystemExit("Invalid probe dependency owner or immutable revision")
 expected = {pin["identity"]: pin["state"]["revision"] for pin in pins}
 targets = [args.output / "Tests/NativeMathAccessibilityProbe" / source.name for source in sources]
-digests = {str(source.relative_to(repo)): hashlib.sha256(source.read_bytes()).hexdigest() for source in sources}
+preview_targets = [args.output / "Sources/Preview" / source.name for source in preview_sources]
+all_sources = sources + preview_sources
+all_targets = targets + preview_targets
+digests = {str(source.relative_to(repo)): hashlib.sha256(source.read_bytes()).hexdigest() for source in all_sources}
 if args.verify:
     actual = json.loads((args.output / "Package.resolved").read_text())
     resolved = {pin["identity"]: pin["state"]["revision"] for pin in actual["pins"]}
-    if resolved != expected or any(target.read_bytes() != source.read_bytes() for source, target in zip(sources, targets)):
+    if resolved != expected or any(target.read_bytes() != source.read_bytes() for source, target in zip(all_sources, all_targets)):
         raise SystemExit("Probe source or resolved dependencies differ from the application")
     if args.require_result:
         log = (args.output / "probe.log").read_text()
@@ -45,14 +54,28 @@ if args.verify:
             raise SystemExit("The actual inline descriptors were not exposed")
         if "MOSTLYTEXT_ATTACHMENT_AX_ACTIONS 2" not in log:
             raise SystemExit("Both native occurrence actions were not verified")
-        if not re.search(r"Test run with 2 tests in 2 suites passed", log):
+        for prefix, fields in [
+            ("MOSTLYTEXT_MATH_PLACEMENT_PROBE ", ["displayBaseClassified", "displayWrappedClassified"]),
+            ("MOSTLYTEXT_MATH_FONT_PROBE ", ["positiveControlsPresent", "fontControlUpdated", "attachmentGeometryUpdated"]),
+        ]:
+            values = [json.loads(line.split(prefix, 1)[1]) for line in log.splitlines() if prefix in line]
+            if not values or not all(values[-1].get(field) for field in fields):
+                raise SystemExit("Native math placement/font controls did not pass")
+        geometry_prefix = "MOSTLYTEXT_MATH_SCALAR_GEOMETRY "
+        geometry = [json.loads(line.split(geometry_prefix, 1)[1]) for line in log.splitlines() if geometry_prefix in line]
+        if not geometry or geometry[-1].get("actualOccurrenceCount") != 6 or not all(
+            geometry[-1].get(field) for field in ["positiveControlsPresent", "allFramesInsideHost", "distinctFrames"]
+        ):
+            raise SystemExit("Six scalar-adjacent native occurrences were not verified")
+        if not re.search(r"Test run with 25 tests in 7 suites passed", log):
             raise SystemExit("The actual native test did not pass")
         print("Actual native test and positive-control result verified")
     print("Exact native probe source and all three application revisions verified")
 else:
     args.output.mkdir(parents=True, exist_ok=False)
     targets[0].parent.mkdir(parents=True)
-    for source, target in zip(sources, targets):
+    preview_targets[0].parent.mkdir(parents=True)
+    for source, target in zip(all_sources, all_targets):
         shutil.copyfile(source, target)
     requirements = ",\n".join(
         "    .package(url: " + json.dumps(pin["location"]) + ", revision: " + json.dumps(pin["state"]["revision"]) + ")"
@@ -66,8 +89,10 @@ let package = Package(
   dependencies: [
 """ + requirements + """
   ],
-  targets: [.testTarget(name: "NativeMathAccessibilityProbe", dependencies: [
-    .product(name: "Textual", package: "textual"),
+  targets: [
+  .target(name: "Preview", dependencies: [.product(name: "Textual", package: "textual")]),
+  .testTarget(name: "NativeMathAccessibilityProbe", dependencies: [
+    "Preview", .product(name: "Textual", package: "textual"),
     .product(name: "SwiftUIMath", package: "swiftui-math"),
     .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras")
   ])]
