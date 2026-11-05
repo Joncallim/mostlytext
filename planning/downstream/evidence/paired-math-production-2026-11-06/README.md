@@ -91,3 +91,18 @@ Fresh FOUR-suite app/native46/complete CI remains required for this final source
 The scoped review is by the implementation agent, not independent final release
 or compliance acceptance. Owner visual/VoiceOver/PDF/calibration/signing and
 source-offer gates remain unchanged.
+
+
+## Hosted source 9c3d6358: navigation fixtures and app-shell failure
+
+Focused run42115144432 executes12tests/4suites and fails5issues. Both
+LiveSource and SharedMathActivation pass. Navigation records3issues: assigning
+NSTextView.string itself moves selection; the generation control used identical
+updatingText, which deliberately does not mutate. Establish selection after the
+mutation and use edited(text:) with a positive generation-change assertion.
+No product authority guard changes. The production app-shell recovery also
+fails its unchanged five-second presentation deadline. This remains unresolved;
+named-stage/source/parser/editor/accessibility diagnostics now distinguish a
+missing publication from an inaccessible native attribute. Actual app/UI test
+bundles compile successfully locally; native execution remains hosted only.
+The failed raw log is retained. Fresh hosted qualification is still required.
