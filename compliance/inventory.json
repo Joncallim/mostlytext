@@ -573,9 +573,9 @@
       "id": "neon",
       "name": "Neon",
       "kind": "swiftpm",
-      "version": "0699ea55",
+      "version": "e528a193",
       "upstream": "https://github.com/Joncallim/Neon",
-      "revision": "0699ea559682b4f62c8cd10ae520c7262c4acaa9",
+      "revision": "e528a19381bfe3bc0ea996f41dcea11efbc2e9f0",
       "resolution": "exact",
       "licence": "BSD-3-Clause",
       "copyright": [
@@ -596,9 +596,9 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "0699ea559682b4f62c8cd10ae520c7262c4acaa9"
+        "revision": "e528a19381bfe3bc0ea996f41dcea11efbc2e9f0"
       },
-      "evidence": "Owner patch over the e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9 manifest child of dabf50c947148c49acd0d321dfe8f3805d10b3da. Refresh embedded-language validity after root edits, publish epoch/invalid state before callbacks, await running validation and follow-up regions, and reject obsolete highlight queries. MOSTLYTEXT_PATCHES.md records the patch and component proofs; the original BSD-3-Clause licence bytes and pinned SwiftTreeSitter revision are unchanged. Separate buffered style-coordinate drift and native acceptance remain open."
+      "evidence": "Owner patch over the e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9 manifest child of dabf50c947148c49acd0d321dfe8f3805d10b3da. Refresh embedded-language validity after root edits, publish epoch/invalid state before callbacks, await running validation and follow-up regions, and reject obsolete highlight queries. MOSTLYTEXT_PATCHES.md records the patch and component proofs; the original BSD-3-Clause licence bytes and pinned SwiftTreeSitter revision are unchanged. Separate buffered style-coordinate drift and native acceptance remain open. Hosted deletion review additionally reproduces wide captures overwriting nested styles outside a partial query. Named-range token applications are clipped to their requested styling range, preserving capture order/name mapping; exact failure and remediation controls are retained."
     },
     {
       "id": "nvim-treesitter-markdown-queries",
