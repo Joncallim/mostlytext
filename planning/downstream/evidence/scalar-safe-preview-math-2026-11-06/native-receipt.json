@@ -5,11 +5,13 @@
     "MacDown2/Packages/MacDownKit/Tests/PreviewTests/NativeMathProbeHost.swift": "3f92ae0ed1e387afc0e966c0a5f1ec4f11bf76117aa865d0181c30f7f5fd15b6",
     "MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceMathPolicyProbeTests.swift": "c63ecf189fefa93a165497c6b3053b7f486bbce5b773fa37ad1d67f0330f5869",
     "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMathInputTests.swift": "c2dbe56df89f70c6dad0131a2cb50833b1693a2b3bb9c934b0fc4984d181cb49",
-    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMathTransportTests.swift": "95576cbe84d245f8e52b1d237385d1a1ddc2c4e736dcbb12f186324799225c8e",
+    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMathTransportTests.swift": "2050fd97b5f0944ea51b17cf1976cd2dbee3f471b0ac8a660dec264d84799866",
     "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMathScalarGeometryTests.swift": "c16c7b60d52adf602f5e02a76d0d970a763e9a9232bce3f2f9b52b48f04c92a9",
+    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMarkdownSourceMapTests.swift": "c2daaf55522ce743a57b7049b2770fb2df2fd4d556166409e9321ca940dfe57a",
     "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewParserBudget.swift": "9c94b58c5ea81732b14d487f5cd2e4adde4de364d2d8fa5ec3a6feb7016a4742",
     "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMathInput.swift": "64db301d1d3d372e35095d214fb44d44dd9dbd6f0abe96261ceb4f2e2cfa620c",
-    "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMathMarkupParser.swift": "bf2808ea6bb38ea9d43a6a3fee9f649a83d3e5eeff904f09dc36b6df7dbd6239"
+    "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMathMarkupParser.swift": "4616e79064580049d17c1faa30bc5200e7297d8969ffa111ccae7f18817f3d0a",
+    "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMarkdownSourceMap.swift": "04ecc6f3ef122c322eb3342f72118d0be70a5b3d43d26a458ce684ed5220ef37"
   },
   "revisions": {
     "swift-concurrency-extras": "5fa253428866f2360c3754e88537f700ed2656b5",

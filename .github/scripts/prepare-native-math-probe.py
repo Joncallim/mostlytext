@@ -16,10 +16,11 @@ repo = Path(__file__).resolve().parents[2]
 sources = [repo / "MacDown2/Packages/MacDownKit/Tests/PreviewTests" / name for name in [
     "SourceMathAccessibilityProbeTests.swift", "SourceAttachmentAccessibilityTests.swift",
     "NativeMathProbeHost.swift", "SourceMathPolicyProbeTests.swift",
-    "PreviewMathInputTests.swift", "PreviewMathTransportTests.swift", "PreviewMathScalarGeometryTests.swift"
+    "PreviewMathInputTests.swift", "PreviewMathTransportTests.swift", "PreviewMathScalarGeometryTests.swift",
+    "PreviewMarkdownSourceMapTests.swift"
 ]]
 preview_sources = [repo / "MacDown2/Packages/MacDownKit/Sources/Preview" / name for name in [
-    "PreviewParserBudget.swift", "PreviewMathInput.swift", "PreviewMathMarkupParser.swift"
+    "PreviewParserBudget.swift", "PreviewMathInput.swift", "PreviewMathMarkupParser.swift", "PreviewMarkdownSourceMap.swift"
 ]]
 lock = json.loads((repo / "MacDown2/Packages/MacDownKit/Package.resolved").read_text())
 identities = {"textual", "swiftui-math", "swift-concurrency-extras"}
@@ -66,7 +67,7 @@ if args.verify:
             geometry[-1].get(field) for field in ["positiveControlsPresent", "allFramesInsideHost", "distinctFrames"]
         ):
             raise SystemExit("Six scalar-adjacent native occurrences were not verified")
-        if not re.search(r"Test run with 21 tests in 6 suites passed", log):
+        if not re.search(r"Test run with 25 tests in 7 suites passed", log):
             raise SystemExit("The actual native test did not pass")
         print("Actual native test and positive-control result verified")
     print("Exact native probe source and all three application revisions verified")

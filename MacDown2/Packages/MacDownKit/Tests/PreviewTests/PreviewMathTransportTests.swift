@@ -103,14 +103,25 @@ struct PreviewMathTransportTests {
         #expect(targets.map { Data($0.utf8) } == [Data("/caf%C3%A9".utf8), Data("/cafe%CC%81".utf8)])
     }
 
-    @Test(arguments: ["`$x$`", "```\n$x$\n```", "<span>$x$</span>", "[$x$]: /unused"])
-    func codeHTMLAndInvisibleDefinitionsNeverMintAnAttachment(_ source: String) throws {
+    @Test(arguments: ["`$x$`", "```\n$x$\n```", "[$x$]: /unused"])
+    func codeAndInvisibleDefinitionsNeverMintAnAttachment(_ source: String) throws {
         let occurrence = try replacement(in: source)
         let input = try PreviewMathInput(source: source, replacements: [occurrence])
         let actual = try PreviewMathMarkupParser(input: input, attachments: [occurrence.id: attachment(occurrence.id)])
             .attributedString(for: source)
         #expect(scalarText(actual).utf8.elementsEqual(source.utf8))
         #expect(actual.runs.allSatisfy { $0.textual.attachment == nil && $0[PreviewMathSourceAttribute.self] == nil })
+    }
+
+    @Test func inlineHTMLTokensStayLiteralWhileTheirOrdinaryContentMayContainMath() throws {
+        let source = "<span>$x$</span>"
+        let occurrence = try replacement(in: source)
+        let input = try PreviewMathInput(source: source, replacements: [occurrence])
+        let actual = try PreviewMathMarkupParser(input: input, attachments: [occurrence.id: attachment(occurrence.id)])
+            .attributedString(for: source)
+        #expect(scalarText(actual).utf8.elementsEqual("<span>\u{FFFC}</span>".utf8))
+        #expect(actual.runs
+            .contains { $0[PreviewMathSourceAttribute.self] == occurrence.id && $0.textual.attachment != nil })
     }
 
     @Test(arguments: ["0Q", "999Q", "0X"])

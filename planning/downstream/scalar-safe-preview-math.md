@@ -86,3 +86,29 @@ the separate placement/font regression tests remain unchanged. If parser source
 positions cannot prove a valid occurrence, retain readable fallback and investigate
 before production activation; do not remove the provenance gate or replace real
 native execution with a stub.
+
+## Source-position correction from actual hosted failure
+
+The first extended native run 42067095010 proves all six restored scalar-neighbor
+attributes and actual own native frames, missing-renderer styling, reference keys
+and entity-forgery rejection. It then traps when Range(MarkdownSourcePosition, in:)
+uses cached offsets originating in a different string. Never invoke that convenience
+initializer on provenance data. Build a bounded map of this rewritten input's own
+UTF-8 scalar boundaries and line starts (LF/CRLF/CR); validate the public 1-based
+line/UTF-8-column values with overflow-safe checks and convert only through this
+map to original UTF-16. End columns identify the first byte of the final scalar.
+Reject invalid/out-of-bounds/interior-byte/reversed positions before any slicing.
+Apple documents those numeric conventions at
+https://developer.apple.com/documentation/foundation/attributescopes/foundationattributes/markdownsourceposition.
+Foundation-only regressions must cover malformed numeric and Unicode/line bounds;
+the exact native foreign-position regression stays unchanged through the fix.
+
+The same run found a wrong test assumption: <span>$x$</span> has math in ordinary
+content BETWEEN two inline HTML tokens. The authoritative real parser marks only
+the tags literal (0..<6 and 9..<16), leaving the equation eligible. The retained
+source-only parser probe establishes this policy. Test that case for preserved
+literal markup plus the actual attachment, rather than invent a second HTML-content
+grammar inside the adapter. Whole HTML blocks/tag attributes remain excluded by the
+app's shared structural admission; parser code/HTML intent checks remain additional
+defense. Native inline-code/fence/hidden-definition and all forgery assertions stay.
+Before sources and the full native failure log are retained; no failure is relabeled.

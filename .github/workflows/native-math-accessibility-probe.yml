@@ -17,6 +17,8 @@ on:
       - 'MacDown2/Packages/MacDownKit/Sources/Preview/PreviewParserBudget.swift'
       - 'MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMathInput.swift'
       - 'MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMathMarkupParser.swift'
+      - 'MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMarkdownSourceMap.swift'
+      - 'MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMarkdownSourceMapTests.swift'
       - 'MacDown2/Packages/MacDownKit/Package.resolved'
       - '.github/scripts/prepare-native-math-probe.py'
       - '.github/workflows/native-math-accessibility-probe.yml'

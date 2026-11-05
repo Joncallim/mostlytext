@@ -6,11 +6,13 @@ public struct PreviewMathMarkupParser: MarkupParser {
     private let input: PreviewMathInput
     private let attachments: [UUID: AnyAttachment]
     private let baseURL: URL?
+    private let sourceMap: PreviewMarkdownSourceMap
 
     public init(input: PreviewMathInput, attachments: [UUID: AnyAttachment], baseURL: URL? = nil) {
         self.input = input
         self.attachments = attachments
         self.baseURL = baseURL
+        sourceMap = PreviewMarkdownSourceMap(input.rewritten)
     }
 
     public func attributedString(for source: String) throws -> AttributedString {
@@ -99,7 +101,7 @@ public struct PreviewMathMarkupParser: MarkupParser {
             let intent = run.inlinePresentationIntent ?? []
             guard !intent.contains(.code), !intent.contains(.inlineHTML), !intent.contains(.blockHTML),
                   let position = run.markdownSourcePosition,
-                  let range = Range(position, in: input.rewritten)
+                  let sourceRange = sourceMap.range(for: position)
             else { throw PreviewMathInput.Failure.markerProvenance }
             if run.presentationIntent?.components.contains(where: {
                 if case .codeBlock = $0.kind {
@@ -109,7 +111,6 @@ public struct PreviewMathMarkupParser: MarkupParser {
             }) == true {
                 throw PreviewMathInput.Failure.markerProvenance
             }
-            let sourceRange = NSRange(range, in: input.rewritten)
             guard sourceRange.intersection(marker.generatedRange) == marker.generatedRange
             else { throw PreviewMathInput.Failure.markerProvenance }
         }
