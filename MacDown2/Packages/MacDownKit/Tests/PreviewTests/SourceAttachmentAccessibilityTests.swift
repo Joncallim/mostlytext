@@ -17,7 +17,14 @@ struct SourceAttachmentAccessibilityTests {
     private static let action = "MT_AX_DESCRIPTOR_SOURCE_ACTION"
 
     @Test func inlineOccurrencesExposeTheirOwnLabelGeometryAndNativeAction() async throws {
-        _ = NSApplication.shared
+        let application = NSApplication.shared
+        let previousPolicy = application.activationPolicy()
+        try #require(application.setActivationPolicy(.regular))
+        defer { _ = application.setActivationPolicy(previousPolicy) }
+        if !NSRunningApplication.current.isFinishedLaunching {
+            application.finishLaunching()
+        }
+        application.activate()
         let calls = Calls()
         let firstID = UUID(), secondID = UUID()
         let first = attachment(label: Self.first, id: firstID)
@@ -51,6 +58,12 @@ struct SourceAttachmentAccessibilityTests {
         try record(nodes, role: role)
         try #require(role.error == AXError.success.rawValue && role.name == (kAXApplicationRole as String))
         try #require(controlsPresent(nodes), "Actual host/standalone/both paragraph-neighbor controls must appear")
+        try verifyOccurrences(nodes, window: window, calls: calls, firstID: firstID, secondID: secondID)
+    }
+
+    private func verifyOccurrences(
+        _ nodes: [NSObject], window: NSWindow, calls: Calls, firstID: UUID, secondID: UUID
+    ) throws {
         let firstNode = try #require(node(Self.first, in: nodes))
         let secondNode = try #require(node(Self.second, in: nodes))
         #expect(firstNode !== secondNode)

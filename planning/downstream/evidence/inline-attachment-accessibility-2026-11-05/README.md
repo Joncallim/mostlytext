@@ -40,3 +40,19 @@ This is a renderer component prerequisite. Production Preview/Export admission,
 localized descriptions, safe document-bound actions, whole-app accessibility and
 final VoiceOver/native Release acceptance remain open. Do not check a whole issue
 criterion or merge this candidate before complete hosted qualification and review.
+
+## First hosted setup failure and candidate correction
+
+Focused run [42047545065](https://github.com/Joncallim/mostlytext/actions/runs/42047545065)
+at d2025779 correctly fails: the new descriptor probe's self-process role request
+returns AXError.notImplemented (-25208), and all of its positive controls are
+absent. The original baseline probe passes in the same run and still observes
+no inline label without opt-in metadata. Thus this run supplies no verdict on the
+new semantic overlay. Unlike the old qualified probe, the new test omitted
+regular activation/finishLaunching initialization. The next candidate matches
+that qualified setup and restores the prior activation policy at teardown. All
+controls, time/traversal limits and native action/frame assertions remain.
+The first failure's exact source, full raw log and run JSON are retained. The
+added initialization exceeded the function-length lint limit; extracting the
+unchanged occurrence-verification helper fixes lint, with failure log retained.
+This host correction remains a candidate until a fresh actual native pass.

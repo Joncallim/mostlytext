@@ -5,7 +5,7 @@
   },
   {
     "path": "MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceAttachmentAccessibilityTests.swift",
-    "sha256": "6e2a81363fd86b9d0c6e7c4367e73944e55cd223e3f4f60f92af0f60758b2910"
+    "sha256": "78033809538e555eb5672517acbc728e723c3859db45f9d63a7bf3805d096435"
   },
   {
     "path": ".github/scripts/prepare-native-math-probe.py",
