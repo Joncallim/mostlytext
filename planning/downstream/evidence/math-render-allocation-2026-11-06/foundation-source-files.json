@@ -7,7 +7,7 @@
   {
     "source": "MacDown2/Packages/MacDownKit/Sources/Math/MathRenderError.swift",
     "fixture": "Sources/Math/MathRenderError.swift",
-    "sha256": "ef3776e0844e0f6f48dcd8e275a4e91ff40388a8facd53b6d425c0e43220f8d4"
+    "sha256": "1b06950f4f977cb3cb8bc06aebfd9ed33fea83e0cd38f0e76773a140ced4c902"
   },
   {
     "source": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathImageBudgetTests.swift",

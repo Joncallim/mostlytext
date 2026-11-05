@@ -16,7 +16,7 @@
     "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMathMarkupParser.swift": "4616e79064580049d17c1faa30bc5200e7297d8969ffa111ccae7f18817f3d0a",
     "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMarkdownSourceMap.swift": "19bea4091c6c04e34a45d8a8fa417681a5fdf28783342dbaca86464b6bb40c3e",
     "MacDown2/Packages/MacDownKit/Sources/Math/MathImageBudget.swift": "269b70963176f45d475f2148a9e79b197a0879291ded4d3fe3ea36bd36329dc3",
-    "MacDown2/Packages/MacDownKit/Sources/Math/MathRenderError.swift": "ef3776e0844e0f6f48dcd8e275a4e91ff40388a8facd53b6d425c0e43220f8d4",
+    "MacDown2/Packages/MacDownKit/Sources/Math/MathRenderError.swift": "1b06950f4f977cb3cb8bc06aebfd9ed33fea83e0cd38f0e76773a140ced4c902",
     "MacDown2/Packages/MacDownKit/Sources/Math/RenderedMathImage.swift": "9125a3d042cd23258eb627c636690c1fb1df6034cd74f90bd948f3ab88cb2080",
     "MacDown2/Packages/MacDownKit/Sources/Math/MathSpan.swift": "d3c47b234d79840e7c18a033c3852c54344d7290663612f3e89c2f17c78cb3ad",
     "MacDown2/Packages/MacDownKit/Sources/Math/ExportMathRenderContext.swift": "312a08ad0dfdc8fb00f192550ffecf45b51ddedafae47e1d358520838b4a167b",
