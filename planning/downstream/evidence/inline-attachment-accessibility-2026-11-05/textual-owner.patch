@@ -1,0 +1,155 @@
+diff --git a/Sources/Textual/Attachment/Attachment.swift b/Sources/Textual/Attachment/Attachment.swift
+index 5462c95..9fe5d3c 100644
+--- a/Sources/Textual/Attachment/Attachment.swift
++++ b/Sources/Textual/Attachment/Attachment.swift
+@@ -22,6 +22,10 @@ public enum AttachmentSelectionStyle: Sendable {
+ public protocol Attachment: Sendable, Hashable, CustomStringConvertible {
+   associatedtype Body: View
+ 
++  /// Optional caller-owned semantics for the actual inline layout occurrence.
++  /// Canvas symbol bodies alone do not expose their accessibility elements.
++  var accessibility: AttachmentAccessibility? { get }
++
+   /// Controls how text selection affects the attachment.
+   ///
+   /// The default implementation returns `.object`.
+@@ -53,6 +57,8 @@ public protocol Attachment: Sendable, Hashable, CustomStringConvertible {
+ }
+ 
+ extension Attachment {
++  public var accessibility: AttachmentAccessibility? { nil }
++
+   public var selectionStyle: AttachmentSelectionStyle {
+     .object
+   }
+@@ -99,6 +105,8 @@ public struct AnyAttachment: Attachment {
+     base.selectionStyle
+   }
+ 
++  public var accessibility: AttachmentAccessibility? { base.accessibility }
++
+   public var body: AnyView {
+     AnyView(base.body)
+   }
+diff --git a/Sources/Textual/Attachment/AttachmentAccessibility.swift b/Sources/Textual/Attachment/AttachmentAccessibility.swift
+new file mode 100644
+index 0000000..b85191f
+--- /dev/null
++++ b/Sources/Textual/Attachment/AttachmentAccessibility.swift
+@@ -0,0 +1,70 @@
++import Foundation
++import SwiftUI
++
++/// Caller-localized semantics for an attachment's actual inline occurrence.
++/// An action identifier is opaque: the host decides whether a source action is current.
++public struct AttachmentAccessibility: Sendable, Hashable {
++  public let label: String
++  public let actionID: UUID?
++  public let actionName: String?
++
++  public init(label: String, actionID: UUID? = nil, actionName: String? = nil) {
++    self.label = label
++    self.actionID = actionID
++    self.actionName = actionName
++  }
++}
++
++extension AnyAttachment {
++  /// Supplies semantics without replacing the attachment's drawing or measurement.
++  public func withAccessibility(_ descriptor: AttachmentAccessibility) -> Self {
++    .init(AccessibleAttachment(base: self, descriptor: descriptor))
++  }
++}
++
++extension TextualNamespace where Base: View {
++  /// Handles an explicitly described attachment action. The host must validate
++  /// the opaque occurrence identifier against its current document before acting.
++  @MainActor public func attachmentAccessibilityAction(
++    _ action: @escaping @MainActor @Sendable (UUID) -> Void
++  ) -> some View {
++    base.environment(\.attachmentAccessibilityAction, action)
++  }
++}
++
++extension EnvironmentValues {
++  @Entry var attachmentAccessibilityAction: (@MainActor @Sendable (UUID) -> Void)?
++}
++
++private struct AccessibleAttachment: Attachment {
++  let base: AnyAttachment
++  let descriptor: AttachmentAccessibility
++  var accessibility: AttachmentAccessibility? { descriptor }
++  var description: String { base.description }
++  var selectionStyle: AttachmentSelectionStyle { base.selectionStyle }
++  var body: some View { base.body.modifier(AttachmentAccessibilityModifier(descriptor: descriptor)) }
++  func baselineOffset(in environment: TextEnvironmentValues) -> CGFloat {
++    base.baselineOffset(in: environment)
++  }
++  func sizeThatFits(_ proposal: ProposedViewSize, in environment: TextEnvironmentValues) -> CGSize {
++    base.sizeThatFits(proposal, in: environment)
++  }
++  func pngData() -> Data? { base.pngData() }
++  func boundedPNGData(maxBytes: Int) -> Data? { base.boundedPNGData(maxBytes: maxBytes) }
++}
++
++struct AttachmentAccessibilityModifier: ViewModifier {
++  @Environment(\.attachmentAccessibilityAction) private var action
++  let descriptor: AttachmentAccessibility
++
++  func body(content: Content) -> some View {
++    let element = content.accessibilityElement(children: .ignore)
++      .accessibilityLabel(Text(verbatim: descriptor.label))
++      .accessibilityAddTraits(.isImage)
++    if let action, let id = descriptor.actionID, let name = descriptor.actionName, !name.isEmpty {
++      element.accessibilityAction(named: Text(verbatim: name)) { action(id) }
++    } else {
++      element
++    }
++  }
++}
+diff --git a/Sources/Textual/Internal/Attachment/AttachmentView.swift b/Sources/Textual/Internal/Attachment/AttachmentView.swift
+index 5cb50ee..75884d1 100644
+--- a/Sources/Textual/Internal/Attachment/AttachmentView.swift
++++ b/Sources/Textual/Internal/Attachment/AttachmentView.swift
+@@ -57,6 +57,41 @@ struct AttachmentView: View {
+           .tag(attachment)
+       }
+     }
++    .overlay(alignment: .topLeading) { accessibilityElements }
++  }
++
++  /// Canvas draws symbols but does not publish the symbol views' semantics.
++  /// Keep a separate, non-intercepting semantic element at each actual run rect.
++  private var accessibilityElements: some View {
++    ZStack(alignment: .topLeading) {
++      ForEach(accessibleRuns) { run in
++        Color.clear
++          .frame(width: run.rect.width, height: run.rect.height)
++          .modifier(AttachmentAccessibilityModifier(descriptor: run.descriptor))
++          .position(x: run.rect.midX, y: run.rect.midY)
++      }
++    }
++    .allowsHitTesting(false)
++  }
++
++  private struct AccessibleRun: Identifiable {
++    let id: String
++    let descriptor: AttachmentAccessibility
++    let rect: CGRect
++  }
++
++  private var accessibleRuns: [AccessibleRun] {
++    var result: [AccessibleRun] = []
++    for (lineIndex, line) in zip(layout.indices, layout) {
++      for (runIndex, run) in zip(line.indices, line) {
++        guard let descriptor = run.attachment?.accessibility else { continue }
++        let rect = run.typographicBounds.rect.offsetBy(dx: origin.x, dy: origin.y)
++        guard rect.minX.isFinite, rect.minY.isFinite, rect.width.isFinite, rect.height.isFinite,
++          rect.width > 0, rect.height > 0 else { continue }
++        result.append(AccessibleRun(id: "\(lineIndex):\(runIndex)", descriptor: descriptor, rect: rect))
++      }
++    }
++    return result
+   }
+ 
+   private func opacity(

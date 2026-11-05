@@ -13,7 +13,9 @@ parser.add_argument("--verify", action="store_true")
 parser.add_argument("--require-result", action="store_true")
 args = parser.parse_args()
 repo = Path(__file__).resolve().parents[2]
-source = repo / "MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceMathAccessibilityProbeTests.swift"
+sources = [repo / "MacDown2/Packages/MacDownKit/Tests/PreviewTests" / name for name in [
+    "SourceMathAccessibilityProbeTests.swift", "SourceAttachmentAccessibilityTests.swift"
+]]
 lock = json.loads((repo / "MacDown2/Packages/MacDownKit/Package.resolved").read_text())
 identities = {"textual", "swiftui-math", "swift-concurrency-extras"}
 pins = [pin for pin in lock["pins"] if pin["identity"] in identities]
@@ -23,12 +25,12 @@ for pin in pins:
     if not pin["location"].startswith("https://github.com/") or not re.fullmatch(r"[0-9a-f]{40}", pin["state"]["revision"]):
         raise SystemExit("Invalid probe dependency owner or immutable revision")
 expected = {pin["identity"]: pin["state"]["revision"] for pin in pins}
-target = args.output / "Tests/NativeMathAccessibilityProbe/SourceMathAccessibilityProbeTests.swift"
-digest = hashlib.sha256(source.read_bytes()).hexdigest()
+targets = [args.output / "Tests/NativeMathAccessibilityProbe" / source.name for source in sources]
+digests = {str(source.relative_to(repo)): hashlib.sha256(source.read_bytes()).hexdigest() for source in sources}
 if args.verify:
     actual = json.loads((args.output / "Package.resolved").read_text())
     resolved = {pin["identity"]: pin["state"]["revision"] for pin in actual["pins"]}
-    if resolved != expected or target.read_bytes() != source.read_bytes():
+    if resolved != expected or any(target.read_bytes() != source.read_bytes() for source, target in zip(sources, targets)):
         raise SystemExit("Probe source or resolved dependencies differ from the application")
     if args.require_result:
         log = (args.output / "probe.log").read_text()
@@ -36,14 +38,22 @@ if args.verify:
         records = [json.loads(line.split(prefix, 1)[1]) for line in log.splitlines() if prefix in line]
         if not records or not records[-1].get("positiveControlsPresent"):
             raise SystemExit("Native probe did not establish its positive controls")
-        if not re.search(r"Test run with 1 test in 1 suite passed", log):
+        descriptor_prefix = "MOSTLYTEXT_ATTACHMENT_AX_RESULT "
+        descriptors = [json.loads(line.split(descriptor_prefix, 1)[1]) for line in log.splitlines() if descriptor_prefix in line]
+        if not descriptors or not all(descriptors[-1].get(key) for key in
+                                      ["positiveControlsPresent", "firstOwnElement", "secondOwnElement"]):
+            raise SystemExit("The actual inline descriptors were not exposed")
+        if "MOSTLYTEXT_ATTACHMENT_AX_ACTIONS 2" not in log:
+            raise SystemExit("Both native occurrence actions were not verified")
+        if not re.search(r"Test run with 2 tests in 2 suites passed", log):
             raise SystemExit("The actual native test did not pass")
         print("Actual native test and positive-control result verified")
     print("Exact native probe source and all three application revisions verified")
 else:
     args.output.mkdir(parents=True, exist_ok=False)
-    target.parent.mkdir(parents=True)
-    shutil.copyfile(source, target)
+    targets[0].parent.mkdir(parents=True)
+    for source, target in zip(sources, targets):
+        shutil.copyfile(source, target)
     requirements = ",\n".join(
         "    .package(url: " + json.dumps(pin["location"]) + ", revision: " + json.dumps(pin["state"]["revision"]) + ")"
         for pin in pins
@@ -66,7 +76,7 @@ let package = Package(
     (args.output / "Package.swift").write_text(manifest)
     frozen = [{**pin, "state": {"revision": pin["state"]["revision"]}} for pin in pins]
     (args.output / "Package.resolved").write_text(json.dumps({"pins": frozen, "version": 2}, indent=2) + "\n")
-    receipt = {"source": str(source.relative_to(repo)), "source_sha256": digest, "revisions": expected,
+    receipt = {"source_sha256": digests, "revisions": expected,
                "native_execution": "hosted only; preparation does not execute any native code"}
     (args.output / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
     print("Copied the exact native probe with three immutable application pins")

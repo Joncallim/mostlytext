@@ -1,0 +1,18 @@
+[
+  {
+    "path": "MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceMathAccessibilityProbeTests.swift",
+    "sha256": "f5af5b1dc13a7a92dbe9de32a2ad28491f1470ef965715f5a4a2f1068ade8369"
+  },
+  {
+    "path": "MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceAttachmentAccessibilityTests.swift",
+    "sha256": "6e2a81363fd86b9d0c6e7c4367e73944e55cd223e3f4f60f92af0f60758b2910"
+  },
+  {
+    "path": ".github/scripts/prepare-native-math-probe.py",
+    "sha256": "96e5e01a4e6acc9e35a011b1fe3d516b170488d80bdf5e7b20392a7391ab6249"
+  },
+  {
+    "path": ".github/workflows/native-math-accessibility-probe.yml",
+    "sha256": "97232f485f34607bcb1d974b303c9b15398186dac2efc87d2f1675c6ed604b62"
+  }
+]
