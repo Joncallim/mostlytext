@@ -1,0 +1,228 @@
+{
+  "applicationBaseline": "5c867c5cecb1121ea157d4b6df25340f4ab14f86",
+  "libraryBase": "cbe31cb3601aa29c1f64b6e4328733511126d6d5",
+  "libraryHead": "7b914f4f1f91f3ecc60478136786babc6d6555fd",
+  "neonBase": "dabf50c947148c49acd0d321dfe8f3805d10b3da",
+  "neonHead": "526a29c48ff1b6e949aa47453f0861f9d7b14858",
+  "sourceOnly": true,
+  "localAppOrGUIExecution": false,
+  "markdownScenarios": 42,
+  "markdownTestFunctions": 1,
+  "markdownOldSourceIssues": 62,
+  "upstreamXCTests": 36,
+  "upstreamSwiftTests": 9,
+  "fullApplicationCI": "required before merge",
+  "files": {
+    "upstream-old-source-tests.log": {
+      "bytes": 59248,
+      "sha256": "d6837c5a6de2e1277db3deb829227a182760f6b8a94da771003703b3b0430c43",
+      "gzipSha256": "18ebaf5324e09079706f777c85b4c189d0abea718e64a024aad11f7705d2589b"
+    },
+    "upstream-fixed-source-tests.log": {
+      "bytes": 34797,
+      "sha256": "c32f066e390a456a10d8f7092d3a8978b32362d5bb6c119c2e0ee35bd4353fd9",
+      "gzipSha256": "1272c28ff4a2b7020b27d748a23f34e8775a3fef481f4ea747ba3656898fee61"
+    },
+    "combined-edit-root-diagnostic.log": {
+      "bytes": 34337,
+      "sha256": "3c47b7066780d93f943c690e417e385b2cb8770073b4a8bfb763f1ac9f0eeee0",
+      "gzipSha256": "ca186dae3fcdfbcc80003becc2c2d402cd7e5c0c1362f67d203628cec583b390"
+    },
+    "upstream-qualified-debug-all-tests.log": {
+      "bytes": 10752,
+      "sha256": "a7c316453c42566a848e4d137e4718500f8cdb04462608af4c57c5fc2593f32b",
+      "gzipSha256": "8671abd5eafd049046199e239dc9ef3c58e4ee0e3d1123d65141bd3c5d6c9fd5"
+    },
+    "upstream-qualified-release-all-tests.log": {
+      "bytes": 10720,
+      "sha256": "cfed277191f77317f04675579ddde6988d312e53cb9d634aa3429b319273ac54",
+      "gzipSha256": "f62184bbb0549e0050c21d725140b8dc7fa79b81bbd0f82364168220d4db0e25"
+    },
+    "markdown-baseline-final.log": {
+      "bytes": 937784,
+      "sha256": "bfa3aeae632110109e825c9992c026f19ccac2b0756bb58f84382cfd263a372e",
+      "gzipSha256": "c0f1ddb4a91e7a8ffe80fac073814758fbacdf69bd9b8b74c908fb09f7ecdba8"
+    },
+    "markdown-candidate-final-debug.log": {
+      "bytes": 4508,
+      "sha256": "844e00f8c51338ef4efbcf11c19ad802d3e78db49400bbf7baea76cfdf61951c",
+      "gzipSha256": "d7e97e7e89f98df6e764d26314dc02208fe06b7149e79ea143ca9b2f44da1642"
+    },
+    "markdown-candidate-final-release.log": {
+      "bytes": 3019,
+      "sha256": "3ad8c36a534dcb9f13313f816ba08269f7e560f56acdf24bbefd4e1ae67096d1",
+      "gzipSha256": "f458c4123b0bd3241f5244e8f4a5b3cee69f29e740cf902f4d62ac91eabd9231"
+    },
+    "baseline-reproduction.log": {
+      "bytes": 294,
+      "sha256": "2fb27aa8f7e8a71f6a90adae257d7ae62ce60ad5a909b98a214135d53f79e5ec",
+      "gzipSha256": "bd098c308243d988f48aff604e8337074ff39c34941293bae57971a115750222"
+    },
+    "application-compliance-tests.log": {
+      "bytes": 57518,
+      "sha256": "dee26d24783d0b586f78ac43f7dc0aa90b96c112a71f23b992b6a635762329dd",
+      "gzipSha256": "0ac6a320f7fd750d6a4a4d775e2e7b880099d1b419ac4aae6c8dc7def32b1507"
+    },
+    "application-final-inventory.log": {
+      "bytes": 137,
+      "sha256": "70889af76da5a640ddcb9ba1c56a123444a50edbdb06a239d2f3f2fca1d2e663",
+      "gzipSha256": "7db3b2de3ceb3dd83ae87b556507e1f29a385997cc68ba351663ef9c9716fc95"
+    },
+    "application-format.log": {
+      "bytes": 1110,
+      "sha256": "e45f0f9a078c81d536de31f532668311795eed338108269e7b8d5c1d2a6cc804",
+      "gzipSha256": "e4214a7fdf24f8e53b36f9dc7cfe37fa78de745ff792d979c03d08c3609e8bc1"
+    },
+    "application-lint.log": {
+      "bytes": 71091,
+      "sha256": "e551be0abdb281ba5016fe63a003ab5c6f8268306754e606380f31880469ba14",
+      "gzipSha256": "8c1a5312c6d09e0d07cdd392700a37ef7e2166a1e33d2a078812bda5e2ea8915"
+    },
+    "swifttreesitter.patch": {
+      "bytes": 12661,
+      "sha256": "90064ba974dd799137f8410f79a0092cae50e1651fa22466e505ae127fc12ee4"
+    },
+    "neon-manifest.patch": {
+      "bytes": 514,
+      "sha256": "506295fc5d10cf6af5d499e15dc2d7df7120ebf9742b3f32f37b3fad7171c368"
+    },
+    "application-qualified-inventory.log": {
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+      "gzipSha256": "af7d3b346ebda56bff76e24ceccd101e959c9d054f09c69ec05a1bf31fd193c4"
+    },
+    "application-final-qualified-inventory.log": {
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+      "gzipSha256": "af7d3b346ebda56bff76e24ceccd101e959c9d054f09c69ec05a1bf31fd193c4"
+    },
+    "application-fixed-format.log": {
+      "bytes": 264,
+      "sha256": "c7cca464b5149cd7b621c9044da962496de263ed10a052ca3068e86777c674e6",
+      "gzipSha256": "d820a47f295a6f9cea04f8ac2955b6614c8ba498070cc241a18919710e5ab501"
+    },
+    "application-fixed-lint.log": {
+      "bytes": 70589,
+      "sha256": "c974e0c53d7c6528f2f34e9b52240713dd0686c921d2fb7e4393f3342b207b65",
+      "gzipSha256": "6d4d8819dc951f9982efef9f019c27f0b486c5bcb243a2902d02d034c9881abf"
+    },
+    "qualified-strict-release.log": {
+      "bytes": 2906,
+      "sha256": "65708a3274f0e685434f91f95f329e56e75e6284439eff266471e54be5a55d34",
+      "gzipSha256": "39e791b3c3a7af9d078f8b602207b0ed4c8b055be30024e6dce07605b575562c"
+    },
+    "application-highlight-tests-compile.log": {
+      "bytes": 17654,
+      "sha256": "e92b7b83d01b60846ccc1b6414db7fb0f9159f5f002eb0bca9d31f62bbe8a256",
+      "gzipSha256": "d8cd3049f61514602ce163408ed307a3d739f96bf78eaaa5cc9dcf3235eb7051"
+    },
+    "strict-release.log": {
+      "bytes": 3005,
+      "sha256": "e070c3c3f5ffa9120725090683fa72435f6697ba4f8875a61a7a8bed2eacb672",
+      "gzipSha256": "ace96c2ae11fa852493db84cd343b96b927c31fdb6709c44cd11f50ac0c1cb25"
+    },
+    "application-forced-resolution.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzipSha256": "ac73670af3abed54ac6fb4695131f4099be9fbe39d6076c5d0264a6bbdae9d83"
+    }
+  },
+  "fixtureInputs": {
+    "Sources/TreeSitterMarkdownResources/TreeSitterMarkdownResources.swift": {
+      "sha256": "033c9c96cabad83f2ac4a307bf0411751d39bda65bedf2e6cdf911cbc9c5c17d",
+      "bytes": 377
+    },
+    "Sources/TreeSitterMarkdownInlineResources/TreeSitterMarkdownInlineResources.swift": {
+      "sha256": "f91917b47fadcec64ff2833ca4686e3817395483dc31f2242868b1282913d445",
+      "bytes": 391
+    },
+    "Sources/TreeSitterMarkdownInlineResources/queries/highlights.scm": {
+      "sha256": "b1b2604561026c3701aedbf0f594f69aa0571656eed9d62d139980721e9cdfa9",
+      "bytes": 695
+    },
+    "Sources/TreeSitterMarkdownInlineResources/queries/injections.scm": {
+      "sha256": "97bf17b9a973db8ee6868f543dd1eabdd81f19b8751a4fcf92db45f74462f4c5",
+      "bytes": 141
+    },
+    "Sources/TreeSitterMarkdown/src/scanner.c": {
+      "sha256": "25b9020542e35492bde8f1b9ae3fe498a29f3c5130c40c8ffdbfb67e7882acf1",
+      "bytes": 60866
+    },
+    "Sources/TreeSitterMarkdown/src/parser.c": {
+      "sha256": "0f51c93b5d79d08bc74088d91a9aafb7e40ad7e2f169164865c01d392277bb07",
+      "bytes": 2069408
+    },
+    "Sources/TreeSitterMarkdown/src/tree_sitter/parser.h": {
+      "sha256": "180b893c8734778fd32f372dfbc27bd6ad1cd2221f26150b31256ff6716320d2",
+      "bytes": 7624
+    },
+    "Sources/TreeSitterMarkdown/src/tree_sitter/array.h": {
+      "sha256": "31e60a1bff6f715afacce03b5b70efe42b58371b4f9595dd4af52a577ff9608c",
+      "bytes": 13269
+    },
+    "Sources/TreeSitterMarkdown/src/tree_sitter/alloc.h": {
+      "sha256": "b29c1c9fb7cc82f58c84b376df1297d6e2737a1d655fd356db0859e3c29c2fea",
+      "bytes": 985
+    },
+    "Sources/TreeSitterMarkdown/bindings/swift/TreeSitterMarkdown/markdown.h": {
+      "sha256": "8f90f461c5ffcf712ed4bb23a08664e1cc2e7d8f21fbf9920156f4d05477a985",
+      "bytes": 254
+    },
+    "Sources/TreeSitterMarkdownResources/queries/highlights.scm": {
+      "sha256": "ea193ee33a84d76d1cf5d84f73f438b2a1f13fc59be79ef457cfbd6b264490e6",
+      "bytes": 652
+    },
+    "Sources/TreeSitterMarkdownResources/queries/injections.scm": {
+      "sha256": "64b1a6006b40176d8db986cc41350e4f9b292fd06bfedb0abfcdb1fb989aca3e",
+      "bytes": 550
+    },
+    "Sources/TreeSitterMarkdownInline/src/scanner.c": {
+      "sha256": "6a9647420b7260955e8bf1b8338979726347211177bb5cf3d2a9c18109655ac3",
+      "bytes": 15883
+    },
+    "Sources/TreeSitterMarkdownInline/src/parser.c": {
+      "sha256": "0c6aaec9097b10118b34601047c3b4d3d565defe48e95d133f714b592795fd2c",
+      "bytes": 2259655
+    },
+    "Sources/TreeSitterMarkdownInline/src/tree_sitter/parser.h": {
+      "sha256": "180b893c8734778fd32f372dfbc27bd6ad1cd2221f26150b31256ff6716320d2",
+      "bytes": 7624
+    },
+    "Sources/TreeSitterMarkdownInline/src/tree_sitter/array.h": {
+      "sha256": "31e60a1bff6f715afacce03b5b70efe42b58371b4f9595dd4af52a577ff9608c",
+      "bytes": 13269
+    },
+    "Sources/TreeSitterMarkdownInline/src/tree_sitter/alloc.h": {
+      "sha256": "b29c1c9fb7cc82f58c84b376df1297d6e2737a1d655fd356db0859e3c29c2fea",
+      "bytes": 985
+    },
+    "Sources/TreeSitterMarkdownInline/bindings/swift/TreeSitterMarkdownInline/markdown_inline.h": {
+      "sha256": "8acda8c6ce253d403fa214000f21c29d7e03240e35b4f71633cd63f0ef7ae52e",
+      "bytes": 282
+    },
+    "Tests/ModelTests/MarkdownIncludedRangeReconciliationTests.swift": {
+      "sha256": "9d27f86c2c762fa2f1fe4f6154f4403a96251d643b75ead312835ed1810a3286",
+      "bytes": 6284
+    }
+  },
+  "compiler": "Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)\nTarget: arm64-apple-macosx26.0",
+  "treeSitterRuntime": {
+    "pins": [
+      {
+        "identity": "tree-sitter",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/tree-sitter/tree-sitter",
+        "state": {
+          "revision": "da6fe9beb4f7f67beb75914ca8e0d48ae48d6406",
+          "version": "0.25.10"
+        }
+      }
+    ],
+    "version": 2
+  },
+  "highlightingTargetCompileOnly": true,
+  "complianceControls": 316,
+  "strictReleaseFailures": 6,
+  "applicationTestSHA256": "9d27f86c2c762fa2f1fe4f6154f4403a96251d643b75ead312835ed1810a3286",
+  "applicationLockSHA256": "a6446496b31f61123ec076c221ce6f550dee8053738da29bbabd84998472e074"
+}

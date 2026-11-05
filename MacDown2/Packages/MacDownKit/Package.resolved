@@ -6,7 +6,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Joncallim/Neon",
       "state" : {
-        "revision" : "dabf50c947148c49acd0d321dfe8f3805d10b3da"
+        "revision" : "526a29c48ff1b6e949aa47453f0861f9d7b14858"
       }
     },
     {
@@ -66,10 +66,9 @@
     {
       "identity" : "swifttreesitter",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ChimeHQ/SwiftTreeSitter",
+      "location" : "https://github.com/Joncallim/SwiftTreeSitter",
       "state" : {
-        "branch" : "main",
-        "revision" : "cbe31cb3601aa29c1f64b6e4328733511126d6d5"
+        "revision" : "7b914f4f1f91f3ecc60478136786babc6d6555fd"
       }
     },
     {

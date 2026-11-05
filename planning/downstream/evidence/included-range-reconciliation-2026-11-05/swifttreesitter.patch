@@ -1,0 +1,280 @@
+diff --git a/MOSTLYTEXT_PATCHES.md b/MOSTLYTEXT_PATCHES.md
+new file mode 100644
+index 0000000..cb402fa
+--- /dev/null
++++ b/MOSTLYTEXT_PATCHES.md
+@@ -0,0 +1,21 @@
++# MostlyText maintained patch
++
++Base: ChimeHQ/SwiftTreeSitter cbe31cb3601aa29c1f64b6e4328733511126d6d5.
++The original BSD-3-Clause licence and all original credits remain unchanged.
++
++Inline injection reconciliation now discards collapsed ranges, replaces old
++ranges overlapping fresh captures and retires captures within the queried
++coverage even when there is no replacement. It retains unqueried neighbors,
++invalidates removed extents and retires an empty restricted language layer
++instead of resetting its C parser to whole-document input. A sorted sweep
++replaces the previous old-ranges-by-new-ranges filter. Public APIs are unchanged.
++
++Upstream tests plus strict regressions cover replacement/deletion, combined
++edits, partial queries, empty layer retirement and neighboring/duplicate ranges.
++A separate application corpus exercises seven edit shapes, both full and changed-
++range resolution and LF/CRLF/CR with Unicode. Baseline failures are preserved
++in MostlyText's dependency evidence packet. Full editor responsiveness, Neon
++sublayer/styling invalidation and the Markdown grammar's incremental-reuse
++limits remain separate issues; the large-document fallback is not raised here.
++
++This is an owner-maintained fork. No upstream submission or acceptance is claimed.
+diff --git a/Sources/SwiftTreeSitterLayer/LanguageLayer.swift b/Sources/SwiftTreeSitterLayer/LanguageLayer.swift
+index 2e81a23..b4482d8 100644
+--- a/Sources/SwiftTreeSitterLayer/LanguageLayer.swift
++++ b/Sources/SwiftTreeSitterLayer/LanguageLayer.swift
+@@ -330,30 +330,63 @@ extension LanguageLayer {
+ 		return layer.parse(with: content, affecting: affectedSet, resolveSublayers: true)
+ 	}
+ 
+-	private func encorporateRanges(_ tsRanges: [TSRange], content: Content) throws -> IndexSet {
++	private func encorporateRanges(
++		_ tsRanges: [TSRange], replacing coverage: IndexSet, content: Content
++	) -> (invalidation: IndexSet, hasRanges: Bool) {
+ 		guard let includedRanges = state.tree?.includedRanges else {
+ 			preconditionFailure("Cannot encorporateRanges into a layer that doesn't have any already defined")
+ 		}
+ 
+-		var allRanges = includedRanges
+-		var invalidation = IndexSet()
+-
+-		for newTSRange in tsRanges {
+-			allRanges.removeAll(where: { newTSRange.bytes.lowerBound == $0.bytes.lowerBound })
+-
+-			allRanges.append(newTSRange)
+-
+-			invalidation.insert(integersIn: Range(newTSRange.bytes.range)!)
++		let replacement = Self.replacingIncludedRanges(includedRanges, with: tsRanges, in: coverage)
++		var invalidation = replacement.invalidation
++		guard !replacement.ranges.isEmpty else {
++			return (invalidation, false)
+ 		}
+-
+-		// included ranges must be sorted and the above algorithm does not guarantee that
+-		self.parser.includedRanges = allRanges.sorted()
++		if replacement.ranges == includedRanges && invalidation.isEmpty {
++			return (invalidation, true)
++		}
++		self.parser.includedRanges = replacement.ranges
+ 
+ 		let set = parse(with: content)
+ 
+ 		invalidation.formUnion(set)
+ 
+-		return invalidation
++		return (invalidation, true)
++	}
++
++	/// Replace captures within the queried coverage, including vanished captures.
++	/// Fresh captures also replace overlapping old captures outside that coverage.
++	/// Keep unqueried neighbors and their original points exact.
++	static func replacingIncludedRanges(
++		_ existing: [TSRange], with replacements: [TSRange], in coverage: IndexSet
++	) -> (ranges: [TSRange], invalidation: IndexSet) {
++		let fresh = Set(replacements).filter { !$0.bytes.isEmpty }.sorted {
++			$0.bytes.lowerBound < $1.bytes.lowerBound
++		}
++		let old = existing.filter { !$0.bytes.isEmpty }.sorted {
++			$0.bytes.lowerBound < $1.bytes.lowerBound
++		}
++		var ranges = fresh
++		var invalidation = IndexSet()
++		for range in fresh {
++			invalidation.insert(integersIn: Range(range.bytes.range)!)
++		}
++		var nextFresh = 0
++		for range in old {
++			while nextFresh < fresh.count && fresh[nextFresh].bytes.upperBound <= range.bytes.lowerBound {
++				nextFresh += 1
++			}
++			if coverage.intersects(integersIn: Range(range.bytes.range)!)
++				|| (nextFresh < fresh.count && fresh[nextFresh].bytes.lowerBound < range.bytes.upperBound) {
++				// The old capture can extend beyond the new one; invalidate its
++				// whole span so the client can clear obsolete styling there too.
++				invalidation.insert(integersIn: Range(range.bytes.range)!)
++			} else {
++				ranges.append(range)
++			}
++		}
++		ranges.sort { $0.bytes.lowerBound < $1.bytes.lowerBound }
++		return (ranges, invalidation)
+ 	}
+ 
+ 	/// Recursively resolve any language injections within the set.
+@@ -370,11 +403,15 @@ extension LanguageLayer {
+ 		let injections = try executeShallowQuery(.injections, in: set).injections(with: content.textProvider)
+ 		let groupedInjections = Dictionary(grouping: injections, by: { $0.name })
+ 		var invalidations = IndexSet()
++		var coverage = set
++		for injection in injections {
++			coverage.insert(integersIn: Range(injection.tsRange.bytes.range)!)
++		}
+ 
+-		// they could be new, or could be updates to existing
+-		for pair in groupedInjections {
+-			let name = pair.0
+-			let ranges = pair.value.map { $0.tsRange }
++		// A query can remove every capture of an existing language. Reconcile
++		// that language too, while retaining ranges outside the queried coverage.
++		for name in Set(groupedInjections.keys).union(sublayers.keys) {
++			let ranges = groupedInjections[name, default: []].map { $0.tsRange }
+ 
+ 			guard let sublayer = sublayers[name] else {
+ 				let set = try addNewSublayer(named: name, tsRanges: ranges, content: content)
+@@ -384,9 +421,13 @@ extension LanguageLayer {
+ 				continue
+ 			}
+ 
+-			let set = try sublayer.encorporateRanges(ranges, content: content)
+-
+-			invalidations.formUnion(set)
++			let replacement = sublayer.encorporateRanges(ranges, replacing: coverage, content: content)
++			invalidations.formUnion(replacement.invalidation)
++			if !replacement.hasRanges {
++				// Passing [] to the C parser would select the entire document.
++				// Retire an empty restricted layer instead of broadening its input.
++				sublayers.removeValue(forKey: name)
++			}
+ 		}
+ 
+ 		return invalidations
+diff --git a/Tests/SwiftTreeSitterLayerTests/IncludedRangeReplacementTests.swift b/Tests/SwiftTreeSitterLayerTests/IncludedRangeReplacementTests.swift
+new file mode 100644
+index 0000000..4d37a2e
+--- /dev/null
++++ b/Tests/SwiftTreeSitterLayerTests/IncludedRangeReplacementTests.swift
+@@ -0,0 +1,128 @@
++import Foundation
++import Testing
++import SwiftTreeSitter
++@testable import SwiftTreeSitterLayer
++
++@Suite(.serialized)
++struct IncludedRangeReplacementTests {
++	private struct Edit {
++		let range: NSRange
++		let replacement: String
++	}
++
++	private func point(_ location: Int, in text: String) -> Point {
++		let prefix = Array(text.utf16.prefix(location))
++		let row = prefix.filter { $0 == 10 }.count
++		let start = prefix.lastIndex(of: 10).map { $0 + 1 } ?? 0
++		return Point(row: row, column: (location - start) * 2)
++	}
++
++	private func layer(_ text: String) throws -> LanguageLayer {
++		let configuration = LanguageLayer.Configuration(languageProvider: { _ in
++			LanguageLayerTests.swiftConfig
++		})
++		let layer = try LanguageLayer(
++			languageConfig: LanguageLayerTests.selfInjectingSwiftConfig,
++			configuration: configuration
++		)
++		_ = layer.replaceContent(with: text)
++		return layer
++	}
++
++	private func assertFreshEquivalent(_ initial: String, edits: [Edit], wholeDocument: Bool = true) throws {
++		var text = initial
++		let edited = try layer(text)
++		var invalidated = IndexSet()
++		for edit in edits {
++			let oldStart = point(edit.range.location, in: text)
++			let oldEnd = point(edit.range.upperBound, in: text)
++			text = (text as NSString).replacingCharacters(in: edit.range, with: edit.replacement)
++			let newEnd = edit.range.location + edit.replacement.utf16.count
++			invalidated.shift(startingAt: edit.range.upperBound, by: edit.replacement.utf16.count - edit.range.length)
++			let changed = edited.didChangeContent(.init(string: text), using: InputEdit(
++				startByte: edit.range.location * 2,
++				oldEndByte: edit.range.upperBound * 2,
++				newEndByte: newEnd * 2,
++				startPoint: oldStart,
++				oldEndPoint: oldEnd,
++				newEndPoint: point(newEnd, in: text)
++			), resolveSublayers: false)
++			invalidated.formUnion(changed)
++		}
++		let entireDocument = IndexSet(integersIn: 0..<text.utf16.count)
++		_ = try edited.resolveSublayers(with: .init(string: text), in: wholeDocument ? entireDocument : invalidated)
++		let fresh = try layer(text)
++		#expect(edited.snapshot()?.rootSnapshot.tree.rootNode?.sExpressionString == fresh.snapshot()?.rootSnapshot.tree.rootNode?.sExpressionString, "Root tree must match before testing injection ownership")
++		let editedTree = try #require(edited.snapshot()?.sublayerSnapshots.first?.rootSnapshot.tree)
++		let freshTree = try #require(fresh.snapshot()?.sublayerSnapshots.first?.rootSnapshot.tree)
++		#expect(editedTree.includedRanges == freshTree.includedRanges)
++		#expect(editedTree.rootNode?.sExpressionString == freshTree.rootNode?.sExpressionString)
++		let range = NSRange(location: 0, length: text.utf16.count)
++		let actual = try edited.highlights(in: range, provider: text.predicateTextProvider)
++		let expected = try fresh.highlights(in: range, provider: text.predicateTextProvider)
++		#expect(actual == expected)
++	}
++
++	@Test func partialQueriesRetainUnqueriedNeighbors() throws {
++		let text = (0..<100).map { "let value\($0) = \"var n = 1\"\n" }.joined()
++		try assertFreshEquivalent(text, edits: [Edit(range: NSRange(location: 900, length: 600), replacement: "")], wholeDocument: false)
++	}
++
++	@Test func vanishedInjectionRetiresRestrictedLayer() throws {
++		let before = "let value = \"var n = 1\"\n"
++		let after = "let value = 1\n"
++		let edited = try layer(before)
++		_ = edited.replaceContent(with: after, transformer: { point($0, in: after) })
++		let fresh = try layer(after)
++		#expect(edited.snapshot()?.sublayerSnapshots.isEmpty == true)
++		#expect(edited.snapshot()?.rootSnapshot.tree.rootNode?.sExpressionString == fresh.snapshot()?.rootSnapshot.tree.rootNode?.sExpressionString)
++	}
++
++	@Test func emptyDocumentRetiresAllRestrictedLayers() throws {
++		let before = "let value = \"var n = 1\"\n"
++		let edited = try layer(before)
++		_ = edited.didChangeContent(.init(string: ""), using: InputEdit(
++			startByte: 0, oldEndByte: before.utf16.count * 2, newEndByte: 0,
++			startPoint: .zero, oldEndPoint: point(before.utf16.count, in: before), newEndPoint: .zero
++		), resolveSublayers: false)
++		_ = try edited.resolveSublayers(with: .init(string: ""), in: IndexSet())
++		#expect(edited.snapshot()?.sublayerSnapshots.isEmpty == true)
++	}
++
++	@Test func rangeReplacementPreservesNeighborsAndInvalidatesRemovedExtent() {
++		func range(_ lower: UInt32, _ upper: UInt32) -> TSRange {
++			TSRange(points: Point(row: 0, column: Int(lower))..<Point(row: 0, column: Int(upper)), bytes: lower..<upper)
++		}
++		let result = LanguageLayer.replacingIncludedRanges(
++			[range(20, 30), range(10, 10), range(10, 20), range(0, 10)],
++			with: [range(14, 18), range(12, 14), range(14, 18)],
++			in: IndexSet(integersIn: 6..<9)
++		)
++		#expect(result.ranges == [range(0, 10), range(12, 14), range(14, 18), range(20, 30)])
++		#expect(result.invalidation == IndexSet(integersIn: 5..<10))
++		let retired = LanguageLayer.replacingIncludedRanges([range(10, 20)], with: [], in: IndexSet(integersIn: 5..<10))
++		#expect(retired.ranges.isEmpty)
++		#expect(retired.invalidation == IndexSet(integersIn: 5..<10))
++	}
++
++	@Test func replacementAcrossInjectionsMatchesFreshParse() throws {
++		let text = (0..<100).map { "let value\($0) = \"var n = 1\"\n" }.joined()
++		let range = NSRange(location: text.utf16.count / 2, length: 600)
++		try assertFreshEquivalent(text, edits: [Edit(
++			range: range, replacement: (text as NSString).substring(with: range) + "y"
++		)])
++	}
++
++	@Test func deletionAcrossInjectionsMatchesFreshParse() throws {
++		let text = (0..<100).map { "let value\($0) = \"var n = 1\"\n" }.joined()
++		try assertFreshEquivalent(text, edits: [Edit(range: NSRange(location: 900, length: 600), replacement: "")])
++	}
++
++	@Test func typingThenDeletionMatchesFreshParse() throws {
++		let text = (0..<100).map { "let value\($0) = \"var n = 1\"\n" }.joined()
++		try assertFreshEquivalent(text, edits: [
++			Edit(range: NSRange(location: text.utf16.count / 2, length: 0), replacement: "x"),
++			Edit(range: NSRange(location: 300, length: 600), replacement: ""),
++		])
++	}
++}

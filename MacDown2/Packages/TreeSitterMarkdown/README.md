@@ -55,7 +55,9 @@ notices include the nvim-treesitter Apache-2.0 notice as well, as a
 conservative attribution.
 
 The Swift wrapper files (`*Resources.swift`) and `Package.swift` are
-first-party.
+first-party. The manifest pins the same maintained SwiftTreeSitter fork as
+MacDownKit and Neon for a single canonical dependency graph; this does not
+change the vendored C grammars, scanner or queries.
 
 ## Updating
 
