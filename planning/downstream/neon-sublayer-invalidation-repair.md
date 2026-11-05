@@ -52,6 +52,24 @@ network/filesystem authority and native activation remain unchanged.
 
 Source geometry, mixed synchronous/background edits and performance remain
 measured separately. Existing Debug widened-edit abort is not declared fixed
-from this client-only unit. All native EXCECUTION_HOLD prerequisites, strict
+from this client-only unit. All native EXECUTION_HOLD prerequisites, strict
 release failures, original failures and source/archive/app publication boundaries
 remain intact.
+
+## Query readiness and publication refinement
+
+A sync highlight query may return nil while inline validation is pending; it
+must not return old inline captures as current. Async queries await the existing
+validator completion queue and reject a changed content epoch with normal
+CancellationError. Add a package-only validity accessor on the existing
+SinglePhaseRangeValidator; public API signatures remain unchanged. Publish
+mutation/version state before synchronous parse completion and invalidate the
+sublayer validator before external callbacks. Reentrant test observations accept
+nil (async work pending) or current captures, never stale nonnil output; retain
+all callback snapshots so a later corrected callback cannot hide an early one.
+
+Warm tests wait on a lock-protected provider/completion signal, with a one-minute
+test watchdog; they never use timed sleeps. The initial no-warm fixture produced
+root-only captures and was rejected after adding a real inline positive control.
+Its apparent pass and the subsequent control/compile failures remain setup
+history, not product qualification.
