@@ -105,7 +105,7 @@ struct DerivedReferenceRepairTests {
         let html = try render(result)
         #expect(html.contains("href=\"/target\" title=\"title\""))
         #expect(html.contains("rendered equation"))
-        #expect(html.contains("\u{200C}"))
+        #expect(html.unicodeScalars.contains("\u{200C}"))
     }
 
     @Test func frontMatterOffsetsAndLaterHeadingCoordinatesIncludeReferenceEdits() async throws {
