@@ -1,0 +1,137 @@
+[
+  {
+    "file": "actual-complete-package-tests-first-compile.log",
+    "bytes": 126245,
+    "sha256": "7944fe8df818e85c82cf447cc2e72fc5ef175acbaf65b43d0eeeff0ab1a3e77b"
+  },
+  {
+    "file": "actual-complete-package-tests-reference-compile.log",
+    "bytes": 733,
+    "sha256": "4b320dd811a0ffbeb09dc03c3d60dfbc124dccf7a93378a68ee2d54308f1ffd0"
+  },
+  {
+    "file": "actual-fatal-export-first-compile.log",
+    "bytes": 12683,
+    "sha256": "c4bd841d499b642ca86f4d570df0a9276cea23aa5239ca79254665841bb9cdd3"
+  },
+  {
+    "file": "actual-shared-producer-first-compile.log",
+    "bytes": 8865,
+    "sha256": "1a63f327a14ab43dc70051199bfaaeace88ff10a409ceeb6b338cdbba5586c97"
+  },
+  {
+    "file": "additive-component-compliance.log",
+    "bytes": 54,
+    "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+  },
+  {
+    "file": "fatal-source-anchors-lint.log",
+    "bytes": 282,
+    "sha256": "ea98417b5493900bcdda8fb2682f956a285aafd3a3de9f37382c5a0057e0ee07"
+  },
+  {
+    "file": "native-admission-compile.log",
+    "bytes": 22039,
+    "sha256": "ed52b490861125dc947d55c7ca625111f50c8d85d6381e8608d845001f5f591e"
+  },
+  {
+    "file": "native-reference-complete-compile.log",
+    "bytes": 22160,
+    "sha256": "494d2a73fce984da081aaab291850dfa4ee1bd90a4f4071d59e5b64059c1632a"
+  },
+  {
+    "file": "output-and-anchors-final-format.log",
+    "bytes": 257,
+    "sha256": "d6465351aef47e82012a502a178fd76bd004369f06d78a1fd857eeb0f75ed24c"
+  },
+  {
+    "file": "output-and-anchors-final-lint.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "file": "output-first-debug.log",
+    "bytes": 2313,
+    "sha256": "065ad9da0612bd78f89d32a681262ca706a77a06b887f85bbd49029ccfaf234d"
+  },
+  {
+    "file": "output-first-release.log",
+    "bytes": 2052,
+    "sha256": "bbd7ecc889d9fc17b8d586d5182a7293cc550d42878edf349fe25a143724bd0c"
+  },
+  {
+    "file": "reference-completeness-format.log",
+    "bytes": 258,
+    "sha256": "d60f23e81d63644769f7ae4b05cfbbdc7ba4152e6542be9874faba5ec0fc64db"
+  },
+  {
+    "file": "reference-completeness-input-debug.log",
+    "bytes": 4211,
+    "sha256": "a1c94542170f4aec8f9dc7720ace84112bef6853ed21245271ade87a2db0b392"
+  },
+  {
+    "file": "reference-completeness-input-release.log",
+    "bytes": 4034,
+    "sha256": "a6bc37521d78cd63663f22e7685ed42f4686ed9e773bca6c417f8d5bc579d34e"
+  },
+  {
+    "file": "reference-completeness-lint.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "file": "shared-producer-complete-debug.log",
+    "bytes": 1454,
+    "sha256": "8e0e50ab9746710c32d2851cb83852cb59848a2f62c6247fae581db3a4fa2e12"
+  },
+  {
+    "file": "shared-producer-complete-preview-dependency-debug.log",
+    "bytes": 82982,
+    "sha256": "edcd28aceb2f0b2185c0efe2b9b0acb438157ccbdacb4d12104b313a1cf2d2d0"
+  },
+  {
+    "file": "shared-producer-complete-preview-dependency-release.log",
+    "bytes": 87221,
+    "sha256": "65e3958252bb2acfb2b26d0ddfeb06b985d7eb47713449668d8050689a3abb3a"
+  },
+  {
+    "file": "shared-producer-corrected-empty-tests.log",
+    "bytes": 3684,
+    "sha256": "42b7e961e834fd026380f8e9d6497aafbbac4586ad72398fc0cd10864c4d4c9b"
+  },
+  {
+    "file": "shared-producer-final-debug.log",
+    "bytes": 85162,
+    "sha256": "581d50d27f0a999b91a9ebe240e74daf593a591046f17f8e31b571d0a133c670"
+  },
+  {
+    "file": "shared-producer-final-format.log",
+    "bytes": 258,
+    "sha256": "f518d588d999fc022b049862584f7ec8b191cbe91a5b18bb0e56d474349a0b34"
+  },
+  {
+    "file": "shared-producer-final-lint.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "file": "shared-producer-final-release.log",
+    "bytes": 82288,
+    "sha256": "e3df864cd73bd5db07ba27da29b3ba79132ba5a0dc85fcc2c785ee556abd9db9"
+  },
+  {
+    "file": "shared-producer-first-lint.log",
+    "bytes": 1717,
+    "sha256": "be176a89b29e5a09ed4553099806011e57a8feda77ca42d8d5c36b3a713c555c"
+  },
+  {
+    "file": "shared-producer-first-tests.log",
+    "bytes": 24468,
+    "sha256": "b9ceab6786a2676ca59b152d85c3761e2e2d270616e18abdfa67b5e996be25fe"
+  },
+  {
+    "file": "shared-producer-refactored-lint.log",
+    "bytes": 858,
+    "sha256": "f2498454a803e08b2b8f524a03b14c85b45f1059f29f472987df01e1350202e4"
+  }
+]

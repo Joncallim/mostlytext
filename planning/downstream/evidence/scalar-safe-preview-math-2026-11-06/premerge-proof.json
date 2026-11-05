@@ -1,0 +1,72 @@
+{
+  "base": "abc3a5c851351d28b790edac7d7b1269c8870f87",
+  "head": "ef26e5c9f37b437a625edebdefef1b28271ac2f0",
+  "head_tree": "dfdfa44cc3c2769cf629006f196ca95596b7dce8",
+  "predicted_merge_tree": "dfdfa44cc3c2769cf629006f196ca95596b7dce8",
+  "qualified_ci": 42069018986,
+  "qualified_native": 42069019008,
+  "reference_pr90_net_patch_already_present": true,
+  "raw_log_bytes": 19065108,
+  "raw_log_sha256": "3a083246a5a125b3d91db00df87a4d32938a78fbc72b15f09de731f2a2fed289",
+  "working_tree_clean": true,
+  "final_pr_snapshot": {
+    "baseRefOid": "abc3a5c851351d28b790edac7d7b1269c8870f87",
+    "headRefOid": "ef26e5c9f37b437a625edebdefef1b28271ac2f0",
+    "isDraft": false,
+    "mergeStateStatus": "CLEAN",
+    "mergeable": "MERGEABLE",
+    "reviews": [],
+    "statusCheckRollup": [
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-11-05T16:59:11Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/Joncallim/mostlytext/actions/runs/42069018986/job/127391444434",
+        "name": "lint",
+        "startedAt": "2026-11-05T16:58:13Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-11-05T16:53:30Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/Joncallim/mostlytext/actions/runs/42069018989/job/127391347731",
+        "name": "inventory",
+        "startedAt": "2026-11-05T16:53:03Z",
+        "status": "COMPLETED",
+        "workflowName": "Compliance"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-11-05T16:54:23Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/Joncallim/mostlytext/actions/runs/42069019008/job/127391365376",
+        "name": "probe",
+        "startedAt": "2026-11-05T16:53:05Z",
+        "status": "COMPLETED",
+        "workflowName": "Native math accessibility probe"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-11-05T17:25:04Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/Joncallim/mostlytext/actions/runs/42069018986/job/127391445970",
+        "name": "build-and-test",
+        "startedAt": "2026-11-05T16:58:12Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-11-05T17:05:04Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://dashboard.gitguardian.com",
+        "name": "GitGuardian Security Checks",
+        "startedAt": "2026-11-05T16:59:12Z",
+        "status": "COMPLETED",
+        "workflowName": ""
+      }
+    ]
+  }
+}

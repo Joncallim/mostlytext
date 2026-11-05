@@ -29,7 +29,7 @@ public struct PreviewMathInput: Sendable {
     public enum Failure: Error, Sendable {
         case invalidRange, sourceMismatch, duplicateIdentity, overlappingEdits
         case invalidNamespace, markerCollision, oversizedInput, invalidPrefix
-        case markerIdentity, markerProvenance
+        case markerIdentity, markerProvenance, referenceProvenance
     }
 
     struct Marker: Sendable {
@@ -44,6 +44,7 @@ public struct PreviewMathInput: Sendable {
     public let rewritten: String
     let family: String
     let markers: [String: Marker]
+    let references: [Reference]
 
     private struct Edit {
         let range: Range<Int>
@@ -54,6 +55,7 @@ public struct PreviewMathInput: Sendable {
 
     public init(
         source: String, prefix: String = "", replacements: [Replacement], sourceEdits: [SourceEdit] = [],
+        references: [Reference] = [],
         namespace: String = UUID().uuidString.replacingOccurrences(of: "-", with: "")
     ) throws {
         try Task.checkCancellation()
@@ -72,6 +74,10 @@ public struct PreviewMathInput: Sendable {
         let projectedBytes = try Self.projectedBytes(source: source, prefix: prefix, edits: edits)
         let (rewritten, generated) = try Self.rewrite(source: source, prefix: prefix, edits: edits,
                                                       projectedBytes: projectedBytes)
+        self.references = try PreviewMathReferenceProjection.project(
+            references, source: source, prefixLength: prefix.utf16.count,
+            changes: edits.map { .init(range: $0.range, replacementLength: $0.replacement.utf16.count) }
+        )
         self.source = source
         self.rewritten = rewritten
         self.family = family

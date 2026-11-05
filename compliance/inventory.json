@@ -3,7 +3,7 @@
   "product": {
     "name": "MostlyText",
     "version": "1.0.0",
-    "note": "Release identity decided 2026-09-28 (planning/RELEASE_PATH.md \u00a74). This inventory targets the planned 1.0.0 release. The current development build is MostlyText 0.1.0 (1), with internal MacDown2.app packaging and exact release acceptance still tracked in #4/#14."
+    "note": "Release identity decided 2026-09-28 (planning/RELEASE_PATH.md §4). This inventory targets the planned 1.0.0 release. The current development build is MostlyText 0.1.0 (1), with internal MacDown2.app packaging and exact release acceptance still tracked in #4/#14."
   },
   "first_party": {
     "licence": "MIT",
@@ -307,7 +307,7 @@
       "resolution": "exact",
       "licence": "MIT",
       "copyright": [
-        "Copyright (c) 2017-2020 Ingy d\u00f6t Net",
+        "Copyright (c) 2017-2020 Ingy döt Net",
         "Copyright (c) 2006-2016 Kirill Simonov"
       ],
       "licence_texts": [
@@ -498,7 +498,7 @@
       "resolution": "exact",
       "licence": "MIT",
       "copyright": [
-        "Copyright (c) 2014 Ga\u00ebtan Renaudeau"
+        "Copyright (c) 2014 Gaëtan Renaudeau"
       ],
       "licence_texts": [
         {
@@ -666,9 +666,9 @@
       "id": "swift-cmark",
       "name": "swift-cmark (cmark-gfm)",
       "kind": "swiftpm",
-      "version": "2a5339b8",
+      "version": "ff6d22e5",
       "upstream": "https://github.com/Joncallim/swift-cmark",
-      "revision": "2a5339b89b219584c8fa6c6fd378d3898eed5d57",
+      "revision": "ff6d22e5eeacccf38a8276b27ddb9dc31ab16f5a",
       "resolution": "revision",
       "licence": "BSD-2-Clause AND MIT",
       "copyright": [
@@ -690,10 +690,10 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "2a5339b89b219584c8fa6c6fd378d3898eed5d57"
+        "revision": "ff6d22e5eeacccf38a8276b27ddb9dc31ab16f5a"
       },
       "notes": "COPYING bundles several notices (cmark BSD-2-Clause plus MIT-licensed components and test data). It is reproduced in full.",
-      "evidence": "Owner original-source coordinate correction based exactly on Swift cmark0.8.0 924936d0427cb25a61169739a7660230bffa6ea6 and Swift Markdown0.8.0 3c6f9523da3a1ec2fd829673e472d95b8097a3b8. Sparse authored-byte provenance fixes paragraph/table splitting, continuation indentation, reference removal and table escapes; public opaque-node APIs and all87 Swift Markdown runtime source files remain unchanged. Original complete COPYING/LICENSE/NOTICE bytes are unchanged and retained. Original runtime fails53 coordinate assertions; candidate passes original C668 controls normally/ASAN/UBSAN, all strict spec outputs, Swift Markdown299 XCTest+6 functions Debug/Release, actual MarkdownEngine158 functions Debug/Release and9054 actual AST/format/HTML equivalence cases including ASAN. No upstream acceptance or native/final math activation is claimed. See planning/downstream/math-source-facts.md and its source-coordinate evidence."
+      "evidence": "Qualified children of the original authored-source coordinate owners (cmark2a5339b8 and Swift Markdown abfafecc), based on upstream Swift cmark0.8.0 924936d0427cb25a61169739a7660230bffa6ea6 and Swift Markdown0.8.0 3c6f9523da3a1ec2fd829673e472d95b8097a3b8. The child adds document-owned consumed definition syntax, resolved link/image use IDs and copied final use ranges through the MostlyText SPI. Child runtime scope is five C files and three SDK files; the SDK manifest pins the qualified C child. Original complete COPYING/LICENSE/NOTICE bytes and unrelated original source are byte-identical. The C node remains216 bytes; 742 C API checks pass normally/ASAN/UBSAN, all original strict fixtures pass, SDK299 XCTest+10 functions pass Debug/Release, and9054 complete AST/source-position/format and HTML outputs are byte-identical to the qualified parent, including actual sanitized semantic replay. First-party source/image facts177 functions pass Debug/Release; native reference-authority transport45 functions pass on ba7d43d2. Native new rendering admission and full current-head app/CLI qualification remain separate. This does not claim upstream acceptance, independent rights review, final native acceptance or release readiness. See planning/downstream/evidence/parser-reference-replay-2026-11-06 and shared-math-production-activation.md."
     },
     {
       "id": "swiftsoup",
@@ -761,9 +761,9 @@
       "id": "swift-markdown",
       "name": "swift-markdown",
       "kind": "swiftpm",
-      "version": "abfafecc",
+      "version": "72e0f162",
       "upstream": "https://github.com/Joncallim/swift-markdown",
-      "revision": "abfafeccd6f0434daf1a667b92d227adb83b50c8",
+      "revision": "72e0f16233a46b247c115ef5e678a0671f7e64eb",
       "resolution": "revision",
       "licence": "Apache-2.0",
       "copyright": [
@@ -791,9 +791,9 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "abfafeccd6f0434daf1a667b92d227adb83b50c8"
+        "revision": "72e0f16233a46b247c115ef5e678a0671f7e64eb"
       },
-      "evidence": "Owner original-source coordinate correction based exactly on Swift cmark0.8.0 924936d0427cb25a61169739a7660230bffa6ea6 and Swift Markdown0.8.0 3c6f9523da3a1ec2fd829673e472d95b8097a3b8. Sparse authored-byte provenance fixes paragraph/table splitting, continuation indentation, reference removal and table escapes; public opaque-node APIs and all87 Swift Markdown runtime source files remain unchanged. Original complete COPYING/LICENSE/NOTICE bytes are unchanged and retained. Original runtime fails53 coordinate assertions; candidate passes original C668 controls normally/ASAN/UBSAN, all strict spec outputs, Swift Markdown299 XCTest+6 functions Debug/Release, actual MarkdownEngine158 functions Debug/Release and9054 actual AST/format/HTML equivalence cases including ASAN. No upstream acceptance or native/final math activation is claimed. See planning/downstream/math-source-facts.md and its source-coordinate evidence."
+      "evidence": "Qualified children of the original authored-source coordinate owners (cmark2a5339b8 and Swift Markdown abfafecc), based on upstream Swift cmark0.8.0 924936d0427cb25a61169739a7660230bffa6ea6 and Swift Markdown0.8.0 3c6f9523da3a1ec2fd829673e472d95b8097a3b8. The child adds document-owned consumed definition syntax, resolved link/image use IDs and copied final use ranges through the MostlyText SPI. Child runtime scope is five C files and three SDK files; the SDK manifest pins the qualified C child. Original complete COPYING/LICENSE/NOTICE bytes and unrelated original source are byte-identical. The C node remains216 bytes; 742 C API checks pass normally/ASAN/UBSAN, all original strict fixtures pass, SDK299 XCTest+10 functions pass Debug/Release, and9054 complete AST/source-position/format and HTML outputs are byte-identical to the qualified parent, including actual sanitized semantic replay. First-party source/image facts177 functions pass Debug/Release; native reference-authority transport45 functions pass on ba7d43d2. Native new rendering admission and full current-head app/CLI qualification remain separate. This does not claim upstream acceptance, independent rights review, final native acceptance or release readiness. See planning/downstream/evidence/parser-reference-replay-2026-11-06 and shared-math-production-activation.md."
     },
     {
       "id": "swifttreesitter",
@@ -1099,7 +1099,7 @@
     },
     {
       "id": "theme-tomorrow-dark",
-      "name": "Editor theme \u201cTomorrow Dark\u201d (colour values)",
+      "name": "Editor theme “Tomorrow Dark” (colour values)",
       "kind": "data",
       "version": "n/a",
       "upstream": "https://github.com/chriskempson/tomorrow-theme",
@@ -1152,7 +1152,7 @@
     },
     {
       "id": "theme-tomorrow-light",
-      "name": "Editor theme \u201cGitHub Light\u201d (legacy tomorrow-light identifier)",
+      "name": "Editor theme “GitHub Light” (legacy tomorrow-light identifier)",
       "kind": "data",
       "version": "n/a",
       "upstream": "https://github.com/primer/github-syntax-light",
@@ -2254,7 +2254,7 @@
     },
     {
       "id": "theme-paper",
-      "name": "Editor theme \u201cPaper\u201d",
+      "name": "Editor theme “Paper”",
       "kind": "data",
       "version": "1.0.0",
       "upstream": "https://github.com/Joncallim/macdown_2",
@@ -2295,7 +2295,7 @@
     },
     {
       "id": "theme-daybreak",
-      "name": "Editor theme \u201cDaybreak\u201d",
+      "name": "Editor theme “Daybreak”",
       "kind": "data",
       "version": "1.0.0",
       "upstream": "https://github.com/Joncallim/macdown_2",
@@ -2336,7 +2336,7 @@
     },
     {
       "id": "theme-high-contrast-light",
-      "name": "Editor theme \u201cHigh Contrast Light\u201d",
+      "name": "Editor theme “High Contrast Light”",
       "kind": "data",
       "version": "1.0.0",
       "upstream": "https://github.com/Joncallim/macdown_2",
@@ -2377,7 +2377,7 @@
     },
     {
       "id": "theme-slate",
-      "name": "Editor theme \u201cSlate\u201d",
+      "name": "Editor theme “Slate”",
       "kind": "data",
       "version": "1.0.0",
       "upstream": "https://github.com/Joncallim/macdown_2",
@@ -2418,7 +2418,7 @@
     },
     {
       "id": "theme-midnight",
-      "name": "Editor theme \u201cMidnight\u201d",
+      "name": "Editor theme “Midnight”",
       "kind": "data",
       "version": "1.0.0",
       "upstream": "https://github.com/Joncallim/macdown_2",
@@ -2459,7 +2459,7 @@
     },
     {
       "id": "theme-high-contrast-dark",
-      "name": "Editor theme \u201cHigh Contrast Dark\u201d",
+      "name": "Editor theme “High Contrast Dark”",
       "kind": "data",
       "version": "1.0.0",
       "upstream": "https://github.com/Joncallim/macdown_2",

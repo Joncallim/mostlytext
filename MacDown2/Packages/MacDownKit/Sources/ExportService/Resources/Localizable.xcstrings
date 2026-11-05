@@ -224,6 +224,29 @@
         }
       }
     },
+    "Export was stopped because derived content could not be safely prepared:\n%@": {
+      "comment": "Safe derived-content publication failure. Diagnostic details are an opaque substitution. Translation/native review required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "L’exportation a été arrêtée, car le contenu généré n’a pas pu être préparé en toute sécurité :\n%@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "生成されたコンテンツを安全に準備できなかったため、書き出しを停止しました:\n%@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Eksport został zatrzymany, ponieważ nie można było bezpiecznie przygotować wygenerowanej zawartości:\n%@"
+          }
+        }
+      }
+    },
     "Finish other exports and try again. If this continues, preserve the recovery folder and contact support.": {
       "comment": "Recovery suggestion after private export storage could not be admitted. Preserve recovery evidence.",
       "extractionState": "manual",
@@ -308,6 +331,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "Preserve that file and choose another export destination."
+          }
+        }
+      }
+    },
+    "Reduce the equation output or correct its source, then try exporting again.": {
+      "comment": "Safe derived-content publication failure. Diagnostic details are an opaque substitution. Translation/native review required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Réduisez le résultat des équations ou corrigez leur code source, puis réessayez l’exportation."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "数式の出力を減らすかソースを修正してから、もう一度書き出してください。"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Zmniejsz wynik renderowania równań lub popraw ich źródło, a następnie spróbuj ponownie wyeksportować."
           }
         }
       }

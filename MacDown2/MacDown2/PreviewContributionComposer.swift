@@ -62,7 +62,9 @@ extension PreviewContributionAdapter {
         let upperLine = sourceMap.line(atUTF16Offset: fragment.range.upperBound - 1)
         let kind = fragment.contributionID.map(BlockKind.custom) ?? containingBlock.kind
         let id = deterministicID(baseBlockID: containingBlock.id, fragment: fragment, usedKeys: &usedIDKeys)
-        return PreviewBlock(id: id, kind: kind, source: fragment.text, lineRange: lowerLine ... upperLine)
+        let anchor = fragment.role == .authored ? containingBlock.sourceAnchor?.slice(fragment.range) : nil
+        return PreviewBlock(id: id, kind: kind, source: fragment.text,
+                            lineRange: lowerLine ... upperLine, sourceAnchor: anchor)
     }
 
     /// Requires strictly increasing, non-touching integer line ranges —

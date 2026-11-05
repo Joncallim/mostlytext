@@ -1,0 +1,6 @@
+{
+  "cases": 9054,
+  "sanitized_AST_equals_unsanitized_AST": true,
+  "sha256": "ca99fd8d8892ff1108056da9561a826b526ad92df7b5644fc6ef7073b5a6f641",
+  "earlier_invocations": "sanitizer-invocation-notes.txt"
+}

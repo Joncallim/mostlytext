@@ -1,0 +1,15 @@
+{
+  "base": "2a5339b89b219584c8fa6c6fd378d3898eed5d57",
+  "runtime_and_tests": {
+    "api_test/main.c": "2429f06df3131b9cade091ca95a797aa789fc5c0bbd9ec3774c9b852aa294102",
+    "src/blocks.c": "0f55a3dafb890576a5637ad0c72e80ac04ed702dd1c3eaf25c2d30975a45dff5",
+    "src/include/cmark-gfm.h": "e8808b6062930a6a572ba974bcc78dd509809d94161d4a6ea53e5b8864acd78e",
+    "src/include/node.h": "32c087275cbd09849ca92c572dff49d3c0b43b7137ebb6605d6663c33901d1bd",
+    "src/inlines.c": "17424107089fe71e3b07d614549a3f8efad21a79d402a407b838f8e64988fe82",
+    "src/node.c": "62324f2cf87a14937b9165f59a8f76c9c6de36de97b3fe489d4d6edc7c8166f7"
+  },
+  "every_other_original_tracked_file_byte_identical": true,
+  "original_license_and_notices_unchanged": true,
+  "unchanged_tracked_file_count": 164,
+  "qualification": "# Parser-consumed reference replay qualification\n\nThe old line-based Preview extractor loses 16 of 18 real-parser target/title\ncontrols. The parser now retains the actual consumed logical definition syntax\nand actual resolved link/image uses; no URL/title serialization or label\nnormalization is introduced. Original source-coordinate owners remain parents.\n\nC API: 742 checks pass normally, with AddressSanitizer and with UndefinedBehaviorSanitizer, including 74 new allocator/lifetime/type/opaque-extension checks.\nOriginal exact strict fixtures: 670 CommonMark, 26 regression, 16 smart punctuation and all 30 CMake-configured GFM cases pass. Node remains 216 bytes; the 40-byte link fits the existing 40-byte union.\nSwift Markdown: all 299 XCTest and 10 Swift Testing functions pass Debug and Release. Document mutation drops parser-only metadata promptly.\nComplete AST/source-position/format output and complete HTML including data-sourcepos are byte-identical to qualified abfafecc/2a5339b8 on 9,054 deterministic cases. The actual AddressSanitizer execution of the exact AST corpus is identical with no finding.\nThe exact first-party Foundation MarkdownEngine fixture passes all 176 tests/24 suites Debug and Release; default 10MB Release is 3.220 seconds, a package baseline rather than whole-editor latency.\n\nRetained setup failures: original Python program splitting a path with spaces; incorrect extension flags (27/3); unsupported footnote CLI flag; ASAN detect_leaks unsupported on macOS; accidental expanded 27,216-case ASAN invocation failed exact-count comparison despite no sanitizer finding. Correct invocations preserve original source/assertions. See raw logs and sanitizer-invocation-notes.txt. The first lifetime review draft is retained as before-lifetime-review-node.c.\n\nNative marker reference replay, immutable application pin adoption, complete app/CLI CI and production activation remain separate next gates. This packet establishes component behavior, not native owner acceptance, independent rights review or a release.\n"
+}

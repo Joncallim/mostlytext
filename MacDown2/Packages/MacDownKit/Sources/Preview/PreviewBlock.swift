@@ -26,6 +26,21 @@ public struct PreviewBlock: Sendable, Equatable, Identifiable {
     public let kind: BlockKind
     public let source: String
     public let lineRange: ClosedRange<Int>
+    public let sourceAnchor: SourceAnchor?
+
+    /// Only the exact-source slicer creates an origin. Generated content can
+    /// carry no such origin merely because it looks like the author's text.
+    public struct SourceAnchor: Sendable, Equatable {
+        public let sourceSHA256: String
+        public let range: Range<Int>
+
+        /// The contribution composer may retain authority for unchanged source.
+        public func slice(_ range: Range<Int>) -> Self? {
+            guard !range.isEmpty, range.lowerBound >= self.range.lowerBound,
+                  range.upperBound <= self.range.upperBound else { return nil }
+            return Self(sourceSHA256: sourceSHA256, range: range)
+        }
+    }
 
     /// `true` when `source` exceeds ``oversizeByteThreshold``. Callers should
     /// render an oversize block as plain text rather than handing it to
@@ -36,12 +51,14 @@ public struct PreviewBlock: Sendable, Equatable, Identifiable {
         id: UUID = UUID(),
         kind: BlockKind,
         source: String,
-        lineRange: ClosedRange<Int>
+        lineRange: ClosedRange<Int>,
+        sourceAnchor: SourceAnchor? = nil
     ) {
         self.id = id
         self.kind = kind
         self.source = source
         self.lineRange = lineRange
+        self.sourceAnchor = sourceAnchor?.range.count == source.utf16.count ? sourceAnchor : nil
         isOversize = source.utf8.count > Self.oversizeByteThreshold
     }
 }
@@ -54,14 +71,29 @@ public extension PreviewBlock {
     /// block is extracted via the document's ``SourceMap``.
     static func blocks(from document: MarkdownDocument, text: String) -> [PreviewBlock] {
         let sourceMap = document.sourceMap
+        let original = text as NSString
+        // Validate once for the whole snapshot, never once per block.
+        let fingerprint = document.isBound(to: text) ? document.sourceSHA256 : nil
+        guard original.length == sourceMap.utf16Length else {
+            let fallback = PreviewBlock(
+                kind: .paragraph,
+                source: text,
+                lineRange: 1 ... max(1, SourceMap(text: text).lineCount)
+            )
+            return [fallback]
+        }
         return document.blocks.map { block in
             let range = sourceMap.utf16Range(ofLines: block.lineRange)
-            let substring = (text as NSString).substring(with: range)
+            let substring = original.substring(with: range)
             return PreviewBlock(
                 id: stableID(source: substring, lineRange: block.lineRange),
                 kind: block.kind,
                 source: substring,
-                lineRange: block.lineRange
+                lineRange: block.lineRange,
+                sourceAnchor: fingerprint.map { SourceAnchor(
+                    sourceSHA256: $0,
+                    range: range.location ..< NSMaxRange(range)
+                ) }
             )
         }
     }

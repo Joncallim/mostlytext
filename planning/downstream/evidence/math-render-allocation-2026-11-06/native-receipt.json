@@ -1,0 +1,33 @@
+{
+  "source_sha256": {
+    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceMathAccessibilityProbeTests.swift": "f5af5b1dc13a7a92dbe9de32a2ad28491f1470ef965715f5a4a2f1068ade8369",
+    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceAttachmentAccessibilityTests.swift": "78033809538e555eb5672517acbc728e723c3859db45f9d63a7bf3805d096435",
+    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/NativeMathProbeHost.swift": "3f92ae0ed1e387afc0e966c0a5f1ec4f11bf76117aa865d0181c30f7f5fd15b6",
+    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceMathPolicyProbeTests.swift": "c63ecf189fefa93a165497c6b3053b7f486bbce5b773fa37ad1d67f0330f5869",
+    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMathInputTests.swift": "c2dbe56df89f70c6dad0131a2cb50833b1693a2b3bb9c934b0fc4984d181cb49",
+    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMathTransportTests.swift": "826aabe8923003d83b270ba33c36555063ac5632662b78e96a18f5264e1818ef",
+    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMathScalarGeometryTests.swift": "c16c7b60d52adf602f5e02a76d0d970a763e9a9232bce3f2f9b52b48f04c92a9",
+    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMarkdownSourceMapTests.swift": "0f76789bd78bd911f7c07af3485bdeedf08d2fa04b58bb23bd66ebb2fe91d267",
+    "MacDown2/Packages/MacDownKit/Tests/MathTests/MathImageBudgetTests.swift": "eef1593d4847880c73a2be86466171b409c316b990a44506630bc4d0ab0e67b9",
+    "MacDown2/Packages/MacDownKit/Tests/MathRenderingTests/ValidatedMathImageRendererTests.swift": "f64de930a1d9aa32c1bc741a39a51919fb30eebdf0ee99ec5c0c96aafac3f873",
+    "MacDown2/Packages/MacDownKit/Tests/MathRenderingTests/MathRenderingPerformanceTests.swift": "290598200beff9fd154b8c630fcd0fd4a9d722e36651f2b9a5b50a7c23b8579f",
+    "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewParserBudget.swift": "9c94b58c5ea81732b14d487f5cd2e4adde4de364d2d8fa5ec3a6feb7016a4742",
+    "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMathInput.swift": "64db301d1d3d372e35095d214fb44d44dd9dbd6f0abe96261ceb4f2e2cfa620c",
+    "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMathMarkupParser.swift": "4616e79064580049d17c1faa30bc5200e7297d8969ffa111ccae7f18817f3d0a",
+    "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMarkdownSourceMap.swift": "19bea4091c6c04e34a45d8a8fa417681a5fdf28783342dbaca86464b6bb40c3e",
+    "MacDown2/Packages/MacDownKit/Sources/Math/MathImageBudget.swift": "269b70963176f45d475f2148a9e79b197a0879291ded4d3fe3ea36bd36329dc3",
+    "MacDown2/Packages/MacDownKit/Sources/Math/MathRenderError.swift": "1b06950f4f977cb3cb8bc06aebfd9ed33fea83e0cd38f0e76773a140ced4c902",
+    "MacDown2/Packages/MacDownKit/Sources/Math/RenderedMathImage.swift": "9125a3d042cd23258eb627c636690c1fb1df6034cd74f90bd948f3ab88cb2080",
+    "MacDown2/Packages/MacDownKit/Sources/Math/MathSpan.swift": "d3c47b234d79840e7c18a033c3852c54344d7290663612f3e89c2f17c78cb3ad",
+    "MacDown2/Packages/MacDownKit/Sources/Math/ExportMathRenderContext.swift": "312a08ad0dfdc8fb00f192550ffecf45b51ddedafae47e1d358520838b4a167b",
+    "MacDown2/Packages/MacDownKit/Sources/MathRendering/MathImageRenderer.swift": "90b09ecb14e46d2ddb7ffd818faae293619d478af3ae8a4285b18c135eb76994",
+    "MacDown2/Packages/MacDownKit/Sources/MathRendering/MathImageRenderer+ValidatedBody.swift": "26bec12d5942a36b11e012d785bbf45202f90e8906a4aa1c86ee54b30f406754",
+    "MacDown2/Packages/MathSyntax/Sources/MathSyntax/MathSourceValues.swift": "47ae4b314ab2ad271c62544bffa77a7c2e45780698ba6c9b9a8770bdd8ff0ea3"
+  },
+  "revisions": {
+    "swift-concurrency-extras": "5fa253428866f2360c3754e88537f700ed2656b5",
+    "swiftui-math": "2a89c2b41482988711909572d116374e47a52164",
+    "textual": "c52cb5834c4695109aad2cb66294eafbc8f264c8"
+  },
+  "native_execution": "hosted only; preparation does not execute any native code"
+}

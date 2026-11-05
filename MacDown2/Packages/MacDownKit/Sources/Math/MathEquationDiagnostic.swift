@@ -11,6 +11,8 @@ public struct MathEquationDiagnostic: Sendable, Equatable {
         case resourceLimit
         case internalFailure
         case renderingFailed
+        /// Valid parsed math with no visible ink; this is never a syntax failure.
+        case noVisibleOutput
     }
 
     public let equationID: UUID

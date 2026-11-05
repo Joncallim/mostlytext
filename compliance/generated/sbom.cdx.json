@@ -3856,9 +3856,9 @@
           "value": "revision"
         }
       ],
-      "purl": "pkg:github/joncallim/swift-cmark@2a5339b89b219584c8fa6c6fd378d3898eed5d57",
+      "purl": "pkg:github/joncallim/swift-cmark@ff6d22e5eeacccf38a8276b27ddb9dc31ab16f5a",
       "type": "library",
-      "version": "2a5339b8"
+      "version": "ff6d22e5"
     },
     {
       "bom-ref": "swift-concurrency-extras",
@@ -3920,9 +3920,9 @@
           "value": "revision"
         }
       ],
-      "purl": "pkg:github/joncallim/swift-markdown@abfafeccd6f0434daf1a667b92d227adb83b50c8",
+      "purl": "pkg:github/joncallim/swift-markdown@72e0f16233a46b247c115ef5e678a0671f7e64eb",
       "type": "library",
-      "version": "abfafecc"
+      "version": "72e0f162"
     },
     {
       "bom-ref": "swiftsoup",
@@ -5251,7 +5251,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:6ccee058-6d60-5b28-adbb-376a586764f8",
+  "serialNumber": "urn:uuid:b030e487-460b-51e9-968d-8dc560ef2e1b",
   "specVersion": "1.5",
   "version": 1
 }

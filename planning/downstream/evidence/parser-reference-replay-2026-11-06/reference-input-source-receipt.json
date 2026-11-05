@@ -1,0 +1,22 @@
+[
+  {
+    "source": "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMathReferences.swift",
+    "sha256": "4ba36b9534dbcb6bcfa6dc6e7287adbfc9da6cebdfd3332284294edc0d851b3d"
+  },
+  {
+    "source": "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMathInput.swift",
+    "sha256": "ba485f40760ba8ee31293d952267cb9ff703ac4708dc711970ecd65d586dbed6"
+  },
+  {
+    "source": "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewParserBudget.swift",
+    "sha256": "9c94b58c5ea81732b14d487f5cd2e4adde4de364d2d8fa5ec3a6feb7016a4742"
+  },
+  {
+    "source": "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMathReferenceInputTests.swift",
+    "sha256": "f7d4c2d98c02d91b7f0e15a6d4227bab76309f1f31263f0c420f058006763a4f"
+  },
+  {
+    "source": "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMathInputTests.swift",
+    "sha256": "c2dbe56df89f70c6dad0131a2cb50833b1693a2b3bb9c934b0fc4984d181cb49"
+  }
+]

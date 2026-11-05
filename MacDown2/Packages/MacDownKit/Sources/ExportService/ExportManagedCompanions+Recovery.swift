@@ -202,7 +202,7 @@ extension ExportManagedCompanions {
     }
 
     func drainRetirements(expectedDigest: Data?, includeMetadata: Bool) throws {
-        guard let directory else { throw ExportError.unsafePublication }
+        guard directory != nil else { throw ExportError.unsafePublication }
         let metadataName = try record.files.first(where: { $0.role == .inventory })?.temporary
         for item in try record.retirements where includeMetadata || item.name != metadataName {
             try ExportCompanionMutation(owner: self, expectedDigest: expectedDigest).retire(item)

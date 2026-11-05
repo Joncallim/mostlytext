@@ -1,0 +1,17 @@
+[
+  {
+    "source": "MacDown2/Packages/MacDownKit/Sources/Math/MathImageBudget.swift",
+    "fixture": "Sources/Math/MathImageBudget.swift",
+    "sha256": "269b70963176f45d475f2148a9e79b197a0879291ded4d3fe3ea36bd36329dc3"
+  },
+  {
+    "source": "MacDown2/Packages/MacDownKit/Sources/Math/MathRenderError.swift",
+    "fixture": "Sources/Math/MathRenderError.swift",
+    "sha256": "1b06950f4f977cb3cb8bc06aebfd9ed33fea83e0cd38f0e76773a140ced4c902"
+  },
+  {
+    "source": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathImageBudgetTests.swift",
+    "fixture": "Tests/MathTests/MathImageBudgetTests.swift",
+    "sha256": "eef1593d4847880c73a2be86466171b409c316b990a44506630bc4d0ab0e67b9"
+  }
+]

@@ -16,6 +16,13 @@ enum ExportContributionAdapter {
     struct Adaptation {
         let contributions: [ExportDerivedContribution]
         let standaloneDiagnostics: [ExportDiagnostic]
+
+        /// Refuse before resource preparation or output publication, including
+        /// fatal observations attached to content that will not be admitted.
+        func requirePublication() throws {
+            let fatal = (standaloneDiagnostics + contributions.flatMap(\.diagnostics)).filter(\.preventsPublication)
+            guard fatal.isEmpty else { throw ExportError.derivedContentUnavailable(fatal) }
+        }
     }
 
     /// Renders each placeable result's `.markdown` representation via
@@ -48,6 +55,7 @@ enum ExportContributionAdapter {
             }
 
             guard case .accepted = content.representation.admission(to: destination) else {
+                standaloneDiagnostics.append(contentsOf: result.diagnostics.map(exportDiagnostic))
                 standaloneDiagnostics.append(ExportDiagnostic(
                     severity: .error,
                     message: String(
@@ -89,6 +97,9 @@ enum ExportContributionAdapter {
         case .warning: .warning
         case .error: .error
         }
-        return ExportDiagnostic(severity: severity, message: diagnostic.message)
+        return ExportDiagnostic(severity: severity, message: diagnostic.message,
+                                sourceRange: diagnostic.sourceRange, sourceID: diagnostic.sourceID,
+                                sourceOffset: diagnostic.sourceOffset, code: diagnostic.code,
+                                preventsPublication: diagnostic.preventsPublication)
     }
 }

@@ -60,3 +60,32 @@ start and rejecting nonterminal interior bytes, invalid ordering and out-of-boun
 values. Existing invalid-position controls stay unchanged; inclusive end/invalid
 start controls are added. Native tests record actual numeric parser positions
 and rewritten byte counts. This corrected head still needs actual hosted results.
+
+## Qualified actual extended result
+
+Hosted run 42069019008 on exact PR91 head ef26e5c9f37b437a625edebdefef1b28271ac2f0
+PASSES all 25 tests/seven suites in 1.332 s, with exact source/pin/result verification.
+The unchanged foreign cached-index crash regression, malformed-position controls,
+all six Unicode/source/attachment cases and all six distinct own native frames pass.
+Actual numeric source-position records confirm inclusive final UTF-8 columns for
+the non-ASCII neighbors. This raw result is retained in the dependent activation
+branch so the already qualifying parent head need not move for evidence packaging.
+Complete parent CI and final product/native acceptance remain separate gates.
+
+## Verified PR91 merge
+
+PR91 merged at 1bdaed0cac662f9b3e0ef6188d661c6eb44a8534, with exact parents
+abc3a5c851351d28b790edac7d7b1269c8870f87 and ef26e5c9f37b437a625edebdefef1b28271ac2f0.
+Actual tree dfdfa44cc3c2769cf629006f196ca95596b7dce8 equals the predicted and fully
+qualified head. Complete CI42069018986 passes 3,576 package tests/508 suites, 623
+app tests/128 suites, all four locked Debug/Release app/mostlytext builds and final
+pin checks. All five current-head checks passed; final review/thread reads were
+empty. Canonical main was clean before and after verified fast-forward.
+The full 19,065,108-byte raw build/test log has SHA-256
+3a083246a5a125b3d91db00df87a4d32938a78fbc72b15f09de731f2a2fed289.
+
+The complete PR90 net patch, including its corrected scalar assertion, is present:
+merging its 0db3b39c head into the qualified PR91 head yields the same tree. PR90's
+separate Intel qualification failed only the existing 10 MB Debug parse timing
+ceiling (63.111225041 s against 60 s); it is not relabeled or weakened. Fresh ARM
+qualification of that branch continues. PR90 itself is not yet reported merged.

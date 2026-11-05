@@ -1,0 +1,12 @@
+{
+  "merge": "1bdaed0cac662f9b3e0ef6188d661c6eb44a8534",
+  "parents": [
+    "abc3a5c851351d28b790edac7d7b1269c8870f87",
+    "ef26e5c9f37b437a625edebdefef1b28271ac2f0"
+  ],
+  "tree": "dfdfa44cc3c2769cf629006f196ca95596b7dce8",
+  "qualified_head": "ef26e5c9f37b437a625edebdefef1b28271ac2f0",
+  "qualified_ci": 42069018986,
+  "qualified_native": 42069019008,
+  "canonical_main_clean": true
+}
