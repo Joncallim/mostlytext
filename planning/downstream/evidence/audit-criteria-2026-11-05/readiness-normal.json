@@ -1,0 +1,12 @@
+{
+  "static_validation": "PASS",
+  "file_presence_source": "filesystem",
+  "issues": 14,
+  "units": 54,
+  "probes_not_run": 6,
+  "self_tests": 49,
+  "manifest_sha256": "c5e21775149ef66ec2f9559fc6e2b1eeb20b0984134c7699e98edbaa74b02eb1",
+  "manifest_git_blob": "7f80777b94824fa26a53eeea1e57126e7a4375ea",
+  "application_tests_run": 0,
+  "public_release_authorized": false
+}
