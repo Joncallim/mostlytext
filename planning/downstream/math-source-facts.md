@@ -34,8 +34,7 @@ Unicode scalars once. Resolve only actual scalar boundaries; do not allocate a
 per-byte dictionary. Treat CRLF as one line terminator and reject columns inside
 UTF-8 scalars or either terminator. Front matter is never an eligible region;
 body-relative parser lines are translated to original lines before resolution.
-Use descendants' inline envelopes to avoid known missing/oversized paragraph
-and setext/table block ranges. Image alt content stays literal. Code/HTML blocks
+Use descendants' inline envelopes instead of trusting oversized block ranges. Image alt content stays literal. Code/HTML blocks
 have no eligible inline region. Inline code and HTML tags are scan barriers.
 
 Each parsed link label is its own math region. Its surrounding brackets,
@@ -78,3 +77,16 @@ final-app criteria. Next unit consumes the facts in Math with the shared grammar
 and immutable analysis; the qualified actual Textual factory/transport remains
 the Preview edge. Stop for a focused architecture revision if exact parser
 coordinates cannot represent a required authored case without guessing.
+
+## Pinned table-coordinate counterexample
+
+The executable test found that an immediately preceding paragraph loses BOTH
+its block and Text ranges. Header cells are assigned impossible previous-line
+columns (for example column10 on the six-byte `before` line). Descendant
+envelopes cannot repair missing or contradictory inline positions. Retain the
+failed first test and raw AST evidence; this unit explicitly returns nil facts
+for that source, preserving existing production behavior because no consumer
+has activated. Before production shared analysis can activate, qualify a narrow
+source-preserving fix at the actual cmark table owner, or revise the integration
+with exact independently verified coordinates. No text-search guess, duplicate
+parse, weakened source assertion or silent old-tokenizer fallback is permitted.
