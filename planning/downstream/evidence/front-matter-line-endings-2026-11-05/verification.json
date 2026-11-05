@@ -1,0 +1,160 @@
+{
+  "schema": 1,
+  "baseline": "48d5be77f6015d37af369719549682b32eee406e",
+  "baseline_source_sha256": {
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/SourceMap.swift": "4e00c4d7a25a339e440e6b8f31a7e59f5c8b7dbb8eb7237dd3c94dc2117c89f2",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownBlock.swift": "1b4c7d7528cd9a0f0eb2bbecf9bf2abae7c879a0fdfdd7c8381fac0fe8ab12b3",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseSession.swift": "9a6d3bfdccae312997e7df0f941d597041b0c98ef03d72fa573268fe8854a8c9",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseOptions.swift": "ec90b8c8717b73f30dc133f19d8505f8ad7911e5aafd0ee269b4b0350855eaa9",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseEngine.swift": "bc8cacc85273aa1bc350e90adbee507c61cf3b03bfc38e8e6b732ce1128124db",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseEngine+YAMLGuards.swift": "9cc7518f1acca3f61481a4df12dde3d5e5988a457ddb598aca51f347b4e84b20",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/FrontMatter.swift": "157f15c01aeb4d414c9d083affdbeeb4839afae2169ac7d5f61ed42ca9c4218b",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownEngineModule.swift": "c8caff8457cc0390960b365f27a33e05980ba03ab85b35d2fa3e5eecd8938310",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/DirectiveSourceCoverage.swift": "fbcd259f511a03a8c45c38b4ec4288cdd3967870974ef60e4663280ea9d16b76",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/String+MarkdownLines.swift": "db2d92846df6beba3e7e3f534fc2cb8b199e572d83c7c9a2e67d7452b4b90fb6",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/HeadingAnchorAllocator.swift": "7f2bdae529a88d29177741a11aba7319ab58780d53dcb9a3885485229459ffa8",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/HeadingAnchorIndex.swift": "f8f95cb3b5037f99761c9dbc90bdff0abd4cde1e718a073cbbaf8c5a452e8153",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownDocument.swift": "be3e7a24af21b99127227b9f7b91b3666d9944b7bfbb536d63c4614106b086cb",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseStore.swift": "5343a853d2cc0161ae6a2a56a465e7659b05744e226d0a66ae3181cb6891afee",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseExecuting.swift": "b43026f9a6867f2fc2b355b8465ac2053ff66a662bfd811c904816d9ef7c5b4c",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownSourceFingerprint.swift": "ac2e5986b1bbab95c5eae574a47001c316ccffd61435f54eea39d5dde6a26535",
+    "MacDown2/Packages/MacDownKit/Sources/Diagrams/MermaidFence.swift": "1a53bf20f7bf7e71a0aa2d70aaa7ffa08ca1f3c25749e8f4ec9f25303f1dda5d",
+    "MacDown2/Packages/MacDownKit/Sources/Diagrams/MermaidFenceContent.swift": "1b541f40a62a731de7451bd7578063eaa56f5e9218baee399481fd77e8717189",
+    "MacDown2/Packages/MacDownKit/Sources/Diagrams/MermaidFenceScanner.swift": "3be8473fe610cf89d4139c90a2ceb28aedd443ee8c9706bbc4474ac1c68314fc",
+    "MacDown2/Packages/MacDownKit/Sources/DiagramsD2/D2Fence.swift": "76344c1a285f39cbeafa9a0b03dd2445408908ce606ad6ad00d1943c1157185e",
+    "MacDown2/Packages/MacDownKit/Sources/DiagramsD2/D2FenceContent.swift": "6c454b016fb1b19932637dc24b8809024b6fcd02913bd6901fe2dfb508c4449a",
+    "MacDown2/Packages/MacDownKit/Sources/DiagramsD2/D2FenceScanner.swift": "91595d8401fb563f1eb99c0c4b2ad7ddb50699e4cc444d9bb46a521ddfaee555",
+    "MacDown2/Packages/MacDownKit/Sources/DiagramsGraphviz/GraphvizFence.swift": "8b1a81e21ace70cf198a456096550647fd35a052140a68754f44a58bfce6381b",
+    "MacDown2/Packages/MacDownKit/Sources/DiagramsGraphviz/GraphvizFenceContent.swift": "d76714042e92c09e577fc83d93ad81f3ac48854028fc6652860fc704e9abbf0d",
+    "MacDown2/Packages/MacDownKit/Sources/DiagramsGraphviz/GraphvizFenceScanner.swift": "eed7eabf271188c154e1d5965b02997e86b64605699bec65e2e3b45f08962c77",
+    "MacDown2/Packages/MacDownKit/Tests/ExportDiagramIntegrationTests/ParsedDiagramFenceSourceTests.swift": "a53e42e9f1bc1db21308baab33d072e31d9e5ac21a81a14eba81bca4dfdffee1",
+    "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/BlockConversionTests.swift": "77d20d07464c34d152d8ce09ba7daa534eac7c14aa64ab9a936f5933216a9b05",
+    "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/ContainerChildRangeTests.swift": "625ce62673b3eddbcec7b2988c18ed759a9c49f46100512e6c0971602a47a62b",
+    "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FencedBlockInnerTextTests.swift": "0a41c21b6342b8ae329f91904c12e60b0e91d102a29ccdce02717e71b7616bcf",
+    "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/DirectiveSourcePreservationTests.swift": "67720489cdf171eba5038ede517b4752d7d7f15dbc3aa2a794a207779d4eed8b",
+    "MacDown2/Packages/MacDownKit/Tests/DiagramsTests/MermaidFenceScannerTests.swift": "7e99243ee6fb9ec4a6e16900852ef446c381378bda25603b12e17a1fb0b04a5c",
+    "MacDown2/Packages/MacDownKit/Tests/DiagramsD2Tests/D2FenceScannerTests.swift": "fe9617142671235a17aac741a954738b4fbe37fe8b3d131e10311cdaf3953f74",
+    "MacDown2/Packages/MacDownKit/Tests/DiagramsGraphvizTests/GraphvizFenceScannerTests.swift": "7b6321188d77450d06051f9b31fe3656cc980aab68ad75beba1d90d3ac350581",
+    "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/Fixtures.swift": "b9aeb883e4cec051a912b93e99a22bf05a751d6e90a95e2c8dd9256e1acec78f",
+    "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterTests.swift": "16d8024779acb03c175036090845db4770fbac0205784d93b2012eb63a54ea92",
+    "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterLineEndingTests.swift": "d11dbbe6874d1aa48b412ab9b66eb499b91e8a54196edb38b43185a9e1b71ea9"
+  },
+  "candidate_source_sha256": {
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/SourceMap.swift": "4e00c4d7a25a339e440e6b8f31a7e59f5c8b7dbb8eb7237dd3c94dc2117c89f2",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownBlock.swift": "1b4c7d7528cd9a0f0eb2bbecf9bf2abae7c879a0fdfdd7c8381fac0fe8ab12b3",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseSession.swift": "9a6d3bfdccae312997e7df0f941d597041b0c98ef03d72fa573268fe8854a8c9",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseOptions.swift": "ec90b8c8717b73f30dc133f19d8505f8ad7911e5aafd0ee269b4b0350855eaa9",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseEngine.swift": "bc8cacc85273aa1bc350e90adbee507c61cf3b03bfc38e8e6b732ce1128124db",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseEngine+YAMLGuards.swift": "9cc7518f1acca3f61481a4df12dde3d5e5988a457ddb598aca51f347b4e84b20",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/FrontMatter.swift": "93e57c7f93e6f0f01680ad9f57936a3b334d076b4296ca6ecc397ccf7c0a2ed5",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownEngineModule.swift": "c8caff8457cc0390960b365f27a33e05980ba03ab85b35d2fa3e5eecd8938310",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/DirectiveSourceCoverage.swift": "fbcd259f511a03a8c45c38b4ec4288cdd3967870974ef60e4663280ea9d16b76",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/String+MarkdownLines.swift": "db2d92846df6beba3e7e3f534fc2cb8b199e572d83c7c9a2e67d7452b4b90fb6",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/HeadingAnchorAllocator.swift": "7f2bdae529a88d29177741a11aba7319ab58780d53dcb9a3885485229459ffa8",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/HeadingAnchorIndex.swift": "f8f95cb3b5037f99761c9dbc90bdff0abd4cde1e718a073cbbaf8c5a452e8153",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownDocument.swift": "be3e7a24af21b99127227b9f7b91b3666d9944b7bfbb536d63c4614106b086cb",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseStore.swift": "5343a853d2cc0161ae6a2a56a465e7659b05744e226d0a66ae3181cb6891afee",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseExecuting.swift": "b43026f9a6867f2fc2b355b8465ac2053ff66a662bfd811c904816d9ef7c5b4c",
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownSourceFingerprint.swift": "ac2e5986b1bbab95c5eae574a47001c316ccffd61435f54eea39d5dde6a26535",
+    "MacDown2/Packages/MacDownKit/Sources/Diagrams/MermaidFence.swift": "1a53bf20f7bf7e71a0aa2d70aaa7ffa08ca1f3c25749e8f4ec9f25303f1dda5d",
+    "MacDown2/Packages/MacDownKit/Sources/Diagrams/MermaidFenceContent.swift": "1b541f40a62a731de7451bd7578063eaa56f5e9218baee399481fd77e8717189",
+    "MacDown2/Packages/MacDownKit/Sources/Diagrams/MermaidFenceScanner.swift": "3be8473fe610cf89d4139c90a2ceb28aedd443ee8c9706bbc4474ac1c68314fc",
+    "MacDown2/Packages/MacDownKit/Sources/DiagramsD2/D2Fence.swift": "76344c1a285f39cbeafa9a0b03dd2445408908ce606ad6ad00d1943c1157185e",
+    "MacDown2/Packages/MacDownKit/Sources/DiagramsD2/D2FenceContent.swift": "6c454b016fb1b19932637dc24b8809024b6fcd02913bd6901fe2dfb508c4449a",
+    "MacDown2/Packages/MacDownKit/Sources/DiagramsD2/D2FenceScanner.swift": "91595d8401fb563f1eb99c0c4b2ad7ddb50699e4cc444d9bb46a521ddfaee555",
+    "MacDown2/Packages/MacDownKit/Sources/DiagramsGraphviz/GraphvizFence.swift": "8b1a81e21ace70cf198a456096550647fd35a052140a68754f44a58bfce6381b",
+    "MacDown2/Packages/MacDownKit/Sources/DiagramsGraphviz/GraphvizFenceContent.swift": "d76714042e92c09e577fc83d93ad81f3ac48854028fc6652860fc704e9abbf0d",
+    "MacDown2/Packages/MacDownKit/Sources/DiagramsGraphviz/GraphvizFenceScanner.swift": "eed7eabf271188c154e1d5965b02997e86b64605699bec65e2e3b45f08962c77",
+    "MacDown2/Packages/MacDownKit/Tests/ExportDiagramIntegrationTests/ParsedDiagramFenceSourceTests.swift": "a53e42e9f1bc1db21308baab33d072e31d9e5ac21a81a14eba81bca4dfdffee1",
+    "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/BlockConversionTests.swift": "77d20d07464c34d152d8ce09ba7daa534eac7c14aa64ab9a936f5933216a9b05",
+    "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/ContainerChildRangeTests.swift": "625ce62673b3eddbcec7b2988c18ed759a9c49f46100512e6c0971602a47a62b",
+    "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FencedBlockInnerTextTests.swift": "0a41c21b6342b8ae329f91904c12e60b0e91d102a29ccdce02717e71b7616bcf",
+    "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/DirectiveSourcePreservationTests.swift": "67720489cdf171eba5038ede517b4752d7d7f15dbc3aa2a794a207779d4eed8b",
+    "MacDown2/Packages/MacDownKit/Tests/DiagramsTests/MermaidFenceScannerTests.swift": "7e99243ee6fb9ec4a6e16900852ef446c381378bda25603b12e17a1fb0b04a5c",
+    "MacDown2/Packages/MacDownKit/Tests/DiagramsD2Tests/D2FenceScannerTests.swift": "fe9617142671235a17aac741a954738b4fbe37fe8b3d131e10311cdaf3953f74",
+    "MacDown2/Packages/MacDownKit/Tests/DiagramsGraphvizTests/GraphvizFenceScannerTests.swift": "7b6321188d77450d06051f9b31fe3656cc980aab68ad75beba1d90d3ac350581",
+    "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/Fixtures.swift": "b9aeb883e4cec051a912b93e99a22bf05a751d6e90a95e2c8dd9256e1acec78f",
+    "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterTests.swift": "16d8024779acb03c175036090845db4770fbac0205784d93b2012eb63a54ea92",
+    "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterLineEndingTests.swift": "d11dbbe6874d1aa48b412ab9b66eb499b91e8a54196edb38b43185a9e1b71ea9"
+  },
+  "dependencies": {
+    "swift-markdown": {
+      "revision": "3c6f9523da3a1ec2fd829673e472d95b8097a3b8",
+      "archive_sha256": "415c12f2b38ba662254ccc7cbec04bca0c06a54ab89191f1680cf01cbb8ce869"
+    },
+    "swift-cmark": {
+      "revision": "924936d0427cb25a61169739a7660230bffa6ea6",
+      "archive_sha256": "4a0b5b8e0c25eaaea52843613c4665b409d3c94941e461e483aaa8a6d6d3c4e1"
+    },
+    "yams": {
+      "revision": "a27b21e0c81c5bf42049b897a62aaf387e80f279",
+      "archive_sha256": "dff911cd6ea0eb6266d636c32853a6b63e7e43084bdd0833a8a00128685930dc"
+    }
+  },
+  "baseline_command": "SWIFTCI_USE_LOCAL_DEPS=1 swift test --package-path <owned-fixture> --no-parallel",
+  "baseline_exit": 1,
+  "baseline_tests": 101,
+  "baseline_suites": 10,
+  "baseline_recorded_issues": 28,
+  "candidate_commands": [
+    "SWIFTCI_USE_LOCAL_DEPS=1 swift test --package-path <owned-fixture> --no-parallel",
+    "SWIFTCI_USE_LOCAL_DEPS=1 swift test --package-path <owned-fixture> -c release --no-parallel"
+  ],
+  "candidate_debug": {
+    "exit": 0,
+    "tests": 101,
+    "suites": 10
+  },
+  "candidate_release": {
+    "exit": 0,
+    "tests": 101,
+    "suites": 10
+  },
+  "compliance": {
+    "exit": 0,
+    "controls": 316
+  },
+  "format": "SwiftFormat 0.63.1 entire tree PASS",
+  "strict_lint": "entire tree PASS",
+  "source_inventory": "PASS",
+  "application_AppKit_WebKit_execution": false,
+  "body_bytes_preserved": true,
+  "existing_raw_YAML_LF_normalization_preserved": true,
+  "logs": {
+    "baseline-tests.log": {
+      "raw_bytes": 56673,
+      "sha256": "cefb91044b6d187bed9c87633972ab543db8f7dc7afe541be8bd0a8a8abfe0f4",
+      "gzip_sha256": "61a65f77783dd270cd462e37a568fd267e537c20626d5440ebeca0ed4c66d6de"
+    },
+    "candidate-debug.log": {
+      "raw_bytes": 22672,
+      "sha256": "e35fa54688c7f913ff260ba4b2f394f8856781c5882c2ab8c1fc825653b1dc4b",
+      "gzip_sha256": "ab7b3e698491acea32cd85b1fad29d33317b4f4a448bb1909de74067462ef318"
+    },
+    "candidate-release.log": {
+      "raw_bytes": 27291,
+      "sha256": "5d6215e1dc5baa4b4b35140ef1a55cf22b439837a5caf41808718039e50e5cf4",
+      "gzip_sha256": "1ab1c02ae0345c1a79dbd02c0969483770110451b7c2cf7a87aa4a98db2cd0f0"
+    },
+    "format.log": {
+      "raw_bytes": 268,
+      "sha256": "46c3625b1c817f4fb1c5f44cfd9952bdb1ab2852448086e15e93c916705bf944",
+      "gzip_sha256": "6657e59476bbdc34b7f6ae3f7a6a455bca4dcf8ac44fcf11f812f4276098288a"
+    },
+    "lint.log": {
+      "raw_bytes": 70347,
+      "sha256": "ec3f959863e211ef17683a9508944ed7431479b70ed0caf63e6d5fefabd12fbf",
+      "gzip_sha256": "4472692c8eabcce1566098da4bcd33db668622c12dacc84d52428e37704aa65f"
+    },
+    "compliance.log": {
+      "raw_bytes": 7515,
+      "sha256": "5796b069142922b88e5c67cb7bcc564dbd2a4cbf7dd150a20ae549085713ffdf",
+      "gzip_sha256": "ccd4fd307104e9c7147126141a5a83f4af2114429b856bedac76fd6cc9801f93"
+    },
+    "inventory.log": {
+      "raw_bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+      "gzip_sha256": "af7d3b346ebda56bff76e24ceccd101e959c9d054f09c69ec05a1bf31fd193c4"
+    }
+  }
+}
