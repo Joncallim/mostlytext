@@ -60,3 +60,14 @@ start and rejecting nonterminal interior bytes, invalid ordering and out-of-boun
 values. Existing invalid-position controls stay unchanged; inclusive end/invalid
 start controls are added. Native tests record actual numeric parser positions
 and rewritten byte counts. This corrected head still needs actual hosted results.
+
+## Qualified actual extended result
+
+Hosted run 42069019008 on exact PR91 head ef26e5c9f37b437a625edebdefef1b28271ac2f0
+PASSES all 25 tests/seven suites in 1.332 s, with exact source/pin/result verification.
+The unchanged foreign cached-index crash regression, malformed-position controls,
+all six Unicode/source/attachment cases and all six distinct own native frames pass.
+Actual numeric source-position records confirm inclusive final UTF-8 columns for
+the non-ASCII neighbors. This raw result is retained in the dependent activation
+branch so the already qualifying parent head need not move for evidence packaging.
+Complete parent CI and final product/native acceptance remain separate gates.

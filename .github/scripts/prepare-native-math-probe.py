@@ -22,6 +22,19 @@ sources = [repo / "MacDown2/Packages/MacDownKit/Tests/PreviewTests" / name for n
 preview_sources = [repo / "MacDown2/Packages/MacDownKit/Sources/Preview" / name for name in [
     "PreviewParserBudget.swift", "PreviewMathInput.swift", "PreviewMathMarkupParser.swift", "PreviewMarkdownSourceMap.swift"
 ]]
+sources += [repo / "MacDown2/Packages/MacDownKit/Tests" / path for path in [
+    "MathTests/MathImageBudgetTests.swift", "MathRenderingTests/ValidatedMathImageRendererTests.swift",
+    "MathRenderingTests/MathRenderingPerformanceTests.swift"
+]]
+components = {"Preview": preview_sources,
+    "Math": [repo / "MacDown2/Packages/MacDownKit/Sources/Math" / name for name in [
+        "MathImageBudget.swift", "MathRenderError.swift", "RenderedMathImage.swift", "MathSpan.swift", "ExportMathRenderContext.swift"
+    ]],
+    "MathRendering": [repo / "MacDown2/Packages/MacDownKit/Sources/MathRendering" / name for name in [
+        "MathImageRenderer.swift", "MathImageRenderer+ValidatedBody.swift"
+    ]],
+    "MathSyntax": [repo / "MacDown2/Packages/MathSyntax/Sources/MathSyntax/MathSourceValues.swift"]
+}
 lock = json.loads((repo / "MacDown2/Packages/MacDownKit/Package.resolved").read_text())
 identities = {"textual", "swiftui-math", "swift-concurrency-extras"}
 pins = [pin for pin in lock["pins"] if pin["identity"] in identities]
@@ -32,9 +45,10 @@ for pin in pins:
         raise SystemExit("Invalid probe dependency owner or immutable revision")
 expected = {pin["identity"]: pin["state"]["revision"] for pin in pins}
 targets = [args.output / "Tests/NativeMathAccessibilityProbe" / source.name for source in sources]
-preview_targets = [args.output / "Sources/Preview" / source.name for source in preview_sources]
-all_sources = sources + preview_sources
-all_targets = targets + preview_targets
+component_sources = [source for values in components.values() for source in values]
+component_targets = [args.output / "Sources" / module / source.name for module, values in components.items() for source in values]
+all_sources = sources + component_sources
+all_targets = targets + component_targets
 digests = {str(source.relative_to(repo)): hashlib.sha256(source.read_bytes()).hexdigest() for source in all_sources}
 if args.verify:
     actual = json.loads((args.output / "Package.resolved").read_text())
@@ -67,14 +81,14 @@ if args.verify:
             geometry[-1].get(field) for field in ["positiveControlsPresent", "allFramesInsideHost", "distinctFrames"]
         ):
             raise SystemExit("Six scalar-adjacent native occurrences were not verified")
-        if not re.search(r"Test run with 25 tests in 7 suites passed", log):
+        if not re.search(r"Test run with 37 tests in 10 suites passed", log):
             raise SystemExit("The actual native test did not pass")
         print("Actual native test and positive-control result verified")
     print("Exact native probe source and all three application revisions verified")
 else:
     args.output.mkdir(parents=True, exist_ok=False)
-    targets[0].parent.mkdir(parents=True)
-    preview_targets[0].parent.mkdir(parents=True)
+    for target in all_targets:
+        target.parent.mkdir(parents=True, exist_ok=True)
     for source, target in zip(all_sources, all_targets):
         shutil.copyfile(source, target)
     requirements = ",\n".join(
@@ -91,8 +105,11 @@ let package = Package(
   ],
   targets: [
   .target(name: "Preview", dependencies: [.product(name: "Textual", package: "textual")]),
+  .target(name: "Math"),
+  .target(name: "MathSyntax"),
+  .target(name: "MathRendering", dependencies: ["Math", "MathSyntax", .product(name: "SwiftUIMath", package: "swiftui-math")]),
   .testTarget(name: "NativeMathAccessibilityProbe", dependencies: [
-    "Preview", .product(name: "Textual", package: "textual"),
+    "Preview", "Math", "MathSyntax", "MathRendering", .product(name: "Textual", package: "textual"),
     .product(name: "SwiftUIMath", package: "swiftui-math"),
     .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras")
   ])]

@@ -1,0 +1,29 @@
+{
+  "pins": [
+    {
+      "identity": "swift-concurrency-extras",
+      "kind": "remoteSourceControl",
+      "location": "https://github.com/pointfreeco/swift-concurrency-extras",
+      "state": {
+        "revision": "5fa253428866f2360c3754e88537f700ed2656b5"
+      }
+    },
+    {
+      "identity": "swiftui-math",
+      "kind": "remoteSourceControl",
+      "location": "https://github.com/Joncallim/swiftui-math",
+      "state": {
+        "revision": "2a89c2b41482988711909572d116374e47a52164"
+      }
+    },
+    {
+      "identity": "textual",
+      "kind": "remoteSourceControl",
+      "location": "https://github.com/Joncallim/textual",
+      "state": {
+        "revision": "c52cb5834c4695109aad2cb66294eafbc8f264c8"
+      }
+    }
+  ],
+  "version": 2
+}
