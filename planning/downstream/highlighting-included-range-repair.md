@@ -94,3 +94,16 @@ would select the whole document). This changes only existing private layer
 reconciliation; no new public API or document behavior is introduced. Test
 partial coverage/neighbor retention, vanished injections, point/range identity
 and a fresh-root control in addition to original regression shapes.
+
+## Final review: complete expanded query coverage
+
+A new deterministic cross-language regression proves that expanding replacement
+coverage without requerying loses unqueried narrow captures inside another
+language's wide capture. The initial full hosted pass does not cover this case.
+Before integration, repeat the shallow injection query over its monotonically
+expanded capture coverage until that coverage is unchanged, then reconcile all
+languages against that complete result. This preserves legitimate nested/overlap
+captures while still retiring a changed language whose tag lies outside its
+body. The fixed point is bounded by the finite immutable root tree's capture
+extents. No authored content is read outside the already admitted root snapshot.
+Retain the failed first-head regression and qualify the corrected fork/app head.
