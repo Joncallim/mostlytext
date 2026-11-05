@@ -14,7 +14,8 @@ parser.add_argument("--require-result", action="store_true")
 args = parser.parse_args()
 repo = Path(__file__).resolve().parents[2]
 sources = [repo / "MacDown2/Packages/MacDownKit/Tests/PreviewTests" / name for name in [
-    "SourceMathAccessibilityProbeTests.swift", "SourceAttachmentAccessibilityTests.swift"
+    "SourceMathAccessibilityProbeTests.swift", "SourceAttachmentAccessibilityTests.swift",
+    "NativeMathProbeHost.swift", "SourceMathPolicyProbeTests.swift"
 ]]
 lock = json.loads((repo / "MacDown2/Packages/MacDownKit/Package.resolved").read_text())
 identities = {"textual", "swiftui-math", "swift-concurrency-extras"}
@@ -45,7 +46,14 @@ if args.verify:
             raise SystemExit("The actual inline descriptors were not exposed")
         if "MOSTLYTEXT_ATTACHMENT_AX_ACTIONS 2" not in log:
             raise SystemExit("Both native occurrence actions were not verified")
-        if not re.search(r"Test run with 2 tests in 2 suites passed", log):
+        for prefix, fields in [
+            ("MOSTLYTEXT_MATH_PLACEMENT_PROBE ", ["displayBaseClassified", "displayWrappedClassified"]),
+            ("MOSTLYTEXT_MATH_FONT_PROBE ", ["positiveControlsPresent", "fontControlUpdated", "attachmentGeometryUpdated"]),
+        ]:
+            values = [json.loads(line.split(prefix, 1)[1]) for line in log.splitlines() if prefix in line]
+            if not values or not all(values[-1].get(field) for field in fields):
+                raise SystemExit("Native math placement/font controls did not pass")
+        if not re.search(r"Test run with 4 tests in 3 suites passed", log):
             raise SystemExit("The actual native test did not pass")
         print("Actual native test and positive-control result verified")
     print("Exact native probe source and all three application revisions verified")

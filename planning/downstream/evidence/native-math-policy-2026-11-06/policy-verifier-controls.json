@@ -1,0 +1,40 @@
+{
+  "synthetic_only": true,
+  "cases": [
+    {
+      "case": "synthetic complete format",
+      "exit_code": 0,
+      "expected": true,
+      "stdout": "Actual native test and positive-control result verified\nExact native probe source and all three application revisions verified\n",
+      "stderr": ""
+    },
+    {
+      "case": "wrapped display false",
+      "exit_code": 1,
+      "expected": false,
+      "stdout": "",
+      "stderr": "Native math placement/font controls did not pass\n"
+    },
+    {
+      "case": "ordinary font control unchanged",
+      "exit_code": 1,
+      "expected": false,
+      "stdout": "",
+      "stderr": "Native math placement/font controls did not pass\n"
+    },
+    {
+      "case": "attachment geometry unchanged",
+      "exit_code": 1,
+      "expected": false,
+      "stdout": "",
+      "stderr": "Native math placement/font controls did not pass\n"
+    },
+    {
+      "case": "failed actual summary",
+      "exit_code": 1,
+      "expected": false,
+      "stdout": "",
+      "stderr": "The actual native test did not pass\n"
+    }
+  ]
+}

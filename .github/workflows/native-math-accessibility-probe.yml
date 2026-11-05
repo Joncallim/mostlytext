@@ -9,6 +9,8 @@ on:
     paths:
       - 'MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceMathAccessibilityProbeTests.swift'
       - 'MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceAttachmentAccessibilityTests.swift'
+      - 'MacDown2/Packages/MacDownKit/Tests/PreviewTests/NativeMathProbeHost.swift'
+      - 'MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceMathPolicyProbeTests.swift'
       - 'MacDown2/Packages/MacDownKit/Package.resolved'
       - '.github/scripts/prepare-native-math-probe.py'
       - '.github/workflows/native-math-accessibility-probe.yml'
