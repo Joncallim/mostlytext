@@ -573,9 +573,9 @@
       "id": "neon",
       "name": "Neon",
       "kind": "swiftpm",
-      "version": "e528a193",
+      "version": "6797068d",
       "upstream": "https://github.com/Joncallim/Neon",
-      "revision": "e528a19381bfe3bc0ea996f41dcea11efbc2e9f0",
+      "revision": "6797068d989992952accb5a821ac7ee676e1c395",
       "resolution": "exact",
       "licence": "BSD-3-Clause",
       "copyright": [
@@ -596,9 +596,9 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "e528a19381bfe3bc0ea996f41dcea11efbc2e9f0"
+        "revision": "6797068d989992952accb5a821ac7ee676e1c395"
       },
-      "evidence": "Owner patch over the e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9 manifest child of dabf50c947148c49acd0d321dfe8f3805d10b3da. Refresh embedded-language validity after root edits, publish epoch/invalid state before callbacks, await running validation and follow-up regions, and reject obsolete highlight queries. MOSTLYTEXT_PATCHES.md records the patch and component proofs; the original BSD-3-Clause licence bytes and pinned SwiftTreeSitter revision are unchanged. Separate buffered style-coordinate drift and native acceptance remain open. Hosted deletion review additionally reproduces wide captures overwriting nested styles outside a partial query. Named-range token applications are clipped to their requested styling range, preserving capture order/name mapping; exact failure and remediation controls are retained."
+      "evidence": "Owner patch over e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9 (original runtime dabf50c947148c49acd0d321dfe8f3805d10b3da). Refresh embedded-language validity before callbacks, await running validation/follow-up regions and reject obsolete queries. Preserve complete semantic tokens for attribute providers while a package-only iterator confines actual painting in all three native style interfaces. Both rejected styling boundaries and their failed hosted runs are retained; original BSD-3-Clause licence and parser/grammar pins are unchanged. Separate buffered-coordinate work, whole-editor latency and native acceptance remain open."
     },
     {
       "id": "nvim-treesitter-markdown-queries",

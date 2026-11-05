@@ -3508,9 +3508,9 @@
           "value": "exact"
         }
       ],
-      "purl": "pkg:github/joncallim/neon@e528a19381bfe3bc0ea996f41dcea11efbc2e9f0",
+      "purl": "pkg:github/joncallim/neon@6797068d989992952accb5a821ac7ee676e1c395",
       "type": "library",
-      "version": "e528a193"
+      "version": "6797068d"
     },
     {
       "bom-ref": "nvim-treesitter-markdown-queries",
@@ -5248,7 +5248,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:191ef7df-1506-5d84-9db7-84be9882e217",
+  "serialNumber": "urn:uuid:3aabbd21-2700-513d-be12-824d28875ef7",
   "specVersion": "1.5",
   "version": 1
 }

@@ -39,7 +39,7 @@ let package = Package(
             url: "https://github.com/Joncallim/SwiftTreeSitter",
             revision: "1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43"
         ),
-        .package(url: "https://github.com/Joncallim/Neon", revision: "e528a19381bfe3bc0ea996f41dcea11efbc2e9f0"),
+        .package(url: "https://github.com/Joncallim/Neon", revision: "6797068d989992952accb5a821ac7ee676e1c395"),
         .package(url: "https://github.com/tree-sitter/tree-sitter-json", from: "0.24.8"),
         .package(url: "https://github.com/tree-sitter/tree-sitter-html", from: "0.23.2"),
         // EPIC-11 Gate 5 grammars. Every grammar is pinned exactly; see

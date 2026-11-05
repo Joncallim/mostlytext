@@ -1,5 +1,6 @@
 # Embedded-language client invalidation evidence
 
+The current semantic/paint correction is recorded in [semantic-paint-boundary](semantic-paint-boundary/README.md).
 The initial evidence below describes the first implementation. The current
 partial-style correction and failed hosted run are retained in [hosted-remediation](hosted-remediation/README.md).
 
