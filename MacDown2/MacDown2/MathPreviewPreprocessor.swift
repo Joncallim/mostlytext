@@ -4,6 +4,10 @@ import Math
 import MathRendering
 import Preview
 
+/// Legacy source-rewriting helper retained for compatibility regression tests.
+/// Production uses MathPreviewSession and typed native attachments. It never
+/// invokes this helper or Textual's dollar extension.
+///
 /// Rewrites a `PreviewBlock`'s source for two independent reasons before
 /// Textual's `.math` syntax extension ever sees it (epic-19-implementation.md
 /// §6.1):
@@ -23,15 +27,9 @@ import Preview
 ///    is one unambiguous match to this epic's own `MathSpanScanner`
 ///    (confirmed empirically: real Release-app dogfood showed a `$$\nfoo\n$$`
 ///    block rendering as inert literal text, while the identical equation
-///    written as `$$foo$$` on one line rendered correctly). LaTeX math mode
-///    does not assign meaning to whitespace/newlines inside an expression,
-///    so collapsing them changes nothing about how the equation is
-///    interpreted — only whether Textual's per-run tokenizer can see the
-///    whole span as one contiguous run. Without this, Preview and Export
-///    would disagree on well-formed, everyday multi-line display math,
-///    which both `MathSpanScanner` and `MathContribution` already handle
-///    correctly (`MathSpanScannerTests.scanMatchesDisplayMathAcrossMultipleLines`,
-///    `MathExportRegistryTests`).
+///    written as `$$foo$$` on one line rendered correctly). This flattening
+///    does not preserve TeX comment boundaries. The production typed-body
+///    path keeps original newlines and validates before Markdown interpretation.
 ///
 /// A span needing neither treatment is left byte-for-byte untouched, so
 /// Textual's own `.math` extension still does the actual glyph rendering for

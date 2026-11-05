@@ -24,11 +24,11 @@ public struct TextualMarkdownPreview: MarkdownPreviewing {
     /// (the default) blocks are sliced lazily from `document`/`text`.
     public let blocks: [PreviewBlock]?
 
-    /// Pre-computed link reference definitions, if the caller caches them.
-    /// When `nil` (the default) they are extracted lazily from `text`. See
-    /// ``PreviewLinkDefinitions`` for why every block needs these.
+    /// Retained initializer input for existing callers. Live source references
+    /// now come from the parser-bound math content, never a line extractor.
     public let linkDefinitions: [String]?
-    private let definitionIndex: PreviewLinkDefinitionIndex
+    public let mathContent: PreviewMathContent?
+    public let onMathSourceAction: (@MainActor @Sendable (UUID, UUID) -> Void)?
 
     /// Renders a ```mermaid``` fence's inner diagram source (delimiters
     /// already stripped) as a native view, in place of Textual's ordinary
@@ -62,7 +62,9 @@ public struct TextualMarkdownPreview: MarkdownPreviewing {
         linkDefinitions: [String]? = nil,
         mermaidFenceView: ((String) -> AnyView)? = nil,
         d2FenceView: ((String) -> AnyView)? = nil,
-        graphvizFenceView: ((String) -> AnyView)? = nil
+        graphvizFenceView: ((String) -> AnyView)? = nil,
+        mathContent: PreviewMathContent? = nil,
+        onMathSourceAction: (@MainActor @Sendable (UUID, UUID) -> Void)? = nil
     ) {
         self.document = document
         self.text = text
@@ -73,10 +75,8 @@ public struct TextualMarkdownPreview: MarkdownPreviewing {
         self.resourceLoadID = resourceLoadID
         self.blocks = blocks
         self.linkDefinitions = linkDefinitions
-        // Built once per view value, not once per block: each block picks out the definitions it uses from it.
-        definitionIndex = PreviewLinkDefinitionIndex(
-            linkDefinitions ?? text.map(PreviewLinkDefinitions.extract(from:)) ?? []
-        )
+        self.mathContent = mathContent
+        self.onMathSourceAction = onMathSourceAction
         self.mermaidFenceView = mermaidFenceView
         self.d2FenceView = d2FenceView
         self.graphvizFenceView = graphvizFenceView
@@ -144,7 +144,8 @@ public struct TextualMarkdownPreview: MarkdownPreviewing {
                                     linkResolver: linkResolver,
                                     resourceImageLoader: resourceImageLoader,
                                     resourceLoadID: resourceLoadID,
-                                    definitionIndex: definitionIndex,
+                                    mathContent: mathContent,
+                                    onMathSourceAction: onMathSourceAction,
                                     mermaidFenceView: mermaidFenceView,
                                     d2FenceView: d2FenceView,
                                     graphvizFenceView: graphvizFenceView

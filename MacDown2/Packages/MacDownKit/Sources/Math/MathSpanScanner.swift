@@ -1,5 +1,9 @@
 import Foundation
 
+/// Legacy scanner for the public String/span APIs and compatibility tests.
+/// Production Preview and Export recognize original source through MathAnalysis
+/// and MathSyntax instead. The following records this scanner's earlier policy.
+///
 /// Scans raw source text for math spans, using literally the same matching
 /// rule as `Textual`'s sealed `.math` `SyntaxExtension`
 /// (`PatternTokenizer.Pattern.mathBlock`/`.mathInline`, verified against the

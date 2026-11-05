@@ -38,6 +38,10 @@ public enum MathDiagnosticText {
         String(localized: "Math analysis could not be safely completed. Export was stopped.", bundle: .module)
     }
 
+    public static var previewAnalysisUnavailable: String {
+        String(localized: "Math analysis could not be safely completed. The authored source is shown.", bundle: .module)
+    }
+
     public static var outputLimit: String {
         String(localized: "The equation output exceeds an export safety limit. Export was stopped.", bundle: .module)
     }

@@ -7,23 +7,9 @@ import Math
 import MathRendering
 import Themes
 
-/// Registers `MathContribution`, `MermaidContribution`, `D2Contribution`,
-/// and `GraphvizContribution` for Export only, never for Preview
-/// (epic-19-implementation.md §4 invariant 5, §6.3; epic-20-implementation.md
-/// §2.2; epic-21-implementation.md §3.6): Preview's math rendering goes
-/// through `Textual`'s own `.math` syntax extension directly on each
-/// block's literal source text, and Preview's diagram rendering goes
-/// through dedicated native views — none of these go through
-/// `ContributionRegistry`. `PreviewContributionAdmission` already rejects
-/// `.html` representations with a visible error badge — routing any of
-/// these through the SHARED `ContributionRegistry.standard` that Preview
-/// also uses would put that rejection badge on every affected document, a
-/// real regression this separate, Export-only factory avoids. Each
-/// language's own supporting pieces (shared renderer/cache instance,
-/// context derivation) live in that language's own `*ExportRegistry.swift`
-/// file; this file keeps ownership of the one real `standardForExport`
-/// factory function so there is exactly one place export contributions are
-/// assembled, not a competing registry per language.
+/// Export registers the same source-owned, bounded math evaluation used by
+/// Preview. Native Preview consumes typed attachments rather than HTML results;
+/// diagrams retain their dedicated native views and Export-only contributions.
 extension ContributionRegistry {
     /// `ExportService`'s own `structural.css` overrides EVERY theme's
     /// foreground/background for `@media print` — "Paper is white. A dark
@@ -48,7 +34,9 @@ extension ContributionRegistry {
         let graphvizContext = graphvizRenderContext(theme: theme, isPrintTarget: isPrintTarget)
         return ContributionRegistry(contributions: [
             TOCContribution(),
-            MathContribution(context: context, renderer: MathImageRenderer.render(span:context:)),
+            SharedMathContribution(context: context) { body, style, context in
+                try await MainActor.run { try MathImageRenderer.render(body: body, style: style, context: context) }
+            },
             MermaidContribution(context: mermaidContext, renderer: sharedMermaidRenderer),
             D2Contribution(context: d2Context, renderer: sharedD2Renderer),
             GraphvizContribution(context: graphvizContext, renderer: sharedGraphvizRenderer),
@@ -57,7 +45,7 @@ extension ContributionRegistry {
 
     /// Split out from `standardForExport` so the color-selection rule
     /// itself is directly unit-testable without inspecting a constructed
-    /// `MathContribution`'s private state.
+    /// `SharedMathContribution`'s private state.
     static func mathRenderContext(theme: Theme, isPrintTarget: Bool) -> ExportMathRenderContext {
         if isPrintTarget {
             return ExportMathRenderContext(

@@ -1,0 +1,18 @@
+{
+  "diff_sha256": "a5cbb2b3e843f751ec3a9703afb4018b2618718426ed9f8528a51bd0c0a0b2b0",
+  "untracked": {
+    "MacDown2/MacDown2/MathPreviewSession.swift": "32ee269a1a8dc262dfc59687488ff09561a43f693167c7290b537fcb4a615325",
+    "MacDown2/MacDown2/MathPreviewSourceBinding.swift": "7b9f8061c7fe240d4d4fdeb3f9def83e992cd1a5fd6c8b004312778071b8eedf",
+    "MacDown2/MacDown2/MathPreviewSourcePlan.swift": "af4f85e8ab0b75974c6b408a843dbdaa084fa0ffd04ad54fa26faa01a7ce8e08",
+    "MacDown2/MacDown2Tests/MathPreviewSessionTests.swift": "9f0d5dc5c7b72aed5a9d29e764f729380f5bec99cb80e398a54f9f9b437426ae",
+    "MacDown2/MacDown2Tests/MathPreviewSourceBindingTests.swift": "8e911b17456209eaf01914019fd0b4283053c743f966dfe7bf2d9a9b6b34e5d5",
+    "MacDown2/MacDown2Tests/MathPreviewSourcePlanTests.swift": "137bc15711fbec3469975a29d92839294fbc586a8c745087d2eaae43f0586173",
+    "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMathContent.swift": "aa466ec9e3189174d991ca8d09e8dc6d8a7c53cdb74d598a3ee1797d7ae1150e",
+    "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/SourceReferenceSelectionTests.swift": "e300da35cbe6d0fbe3be4a823e8159d1f984cf2e68cd7baf241d5f0c0a764027"
+  },
+  "merge": [
+    "05238f47191e8350f4ace5817a5f6066e1394176",
+    "e8201ad8925aaf0cac2f15fafbda285c773a1d05 4ee9681360af6e9f4c63ef7a5e3bbdebe7978805",
+    "d168aa70620223e5d333d01c5fe5eaf1552a00a0"
+  ]
+}

@@ -47,16 +47,17 @@ struct DocumentEditorSplitView: View {
     /// DocumentEditorSplitView+EditorPane.swift.
     @State var statusBarSelection = NSRange(location: 0, length: 0)
     @State private var previewBlocks: [PreviewBlock]?
-    @State private var previewLinkDefinitions: [String] = []
-    @State private var previewContributionSession = PreviewContributionSession()
-    @State private var previewDisplayCache = PreviewDisplayCache()
+    @State var previewContributionSession = PreviewContributionSession()
+    @State var previewDisplayCache = PreviewDisplayCache()
+    @State var mathSession = MathPreviewSession()
+    @State var mathDisplay: MathPreviewDisplay?
 
     /// Not `private`: read by DocumentEditorSplitView+EditorPane.swift.
     var parseSession: MarkdownParseSession {
         parseStore.session(for: identity)
     }
 
-    private var jsonSession: JSONAnalysisSession {
+    var jsonSession: JSONAnalysisSession {
         jsonAnalysisStore.session(for: identity)
     }
 
@@ -119,6 +120,8 @@ struct DocumentEditorSplitView: View {
                 await loadInitialContent()
             }
             .onChange(of: SourceAnalysisText(text)) { _, source in
+                mathSession.invalidate()
+                mathDisplay = nil
                 let newText = source.text
                 // #35: only the format that can actually consume the result
                 // pays for it. Before this gate, every keystroke in ANY
@@ -137,6 +140,16 @@ struct DocumentEditorSplitView: View {
                 if isJSON {
                     jsonSession.textDidChange(newText)
                 }
+            }
+            .task(id: mathTaskID) {
+                await refreshMathAnalysis()
+            }
+            .task(id: mathPresentationTaskID) {
+                await refreshMathPresentation()
+            }
+            .onDisappear {
+                mathSession.invalidate()
+                mathDisplay = nil
             }
             .onChange(of: tab.syntaxFormat.id) { _, _ in
                 attachHighlighter()
@@ -256,12 +269,10 @@ struct DocumentEditorSplitView: View {
     private func refreshPreviewBlocks() {
         guard let document = parseSession.document, let text = parseSession.publishedText else {
             previewBlocks = nil
-            previewLinkDefinitions = []
             previewDisplayCache.reset()
             return
         }
         previewBlocks = PreviewBlock.blocks(from: document, text: text)
-        previewLinkDefinitions = PreviewLinkDefinitions.extract(from: text)
         refreshRenderedPreviewBlocks()
     }
 
@@ -311,50 +322,6 @@ struct DocumentEditorSplitView: View {
         )
     }
 
-    @ViewBuilder
-    private var previewPane: some View {
-        switch PreviewRouter.previewKind(for: document.format) {
-        case .markdown:
-            TextualMarkdownPreview(
-                document: parseSession.document,
-                text: parseSession.publishedText,
-                theme: PreviewTheme(theme: themeController.current),
-                linkResolver: PreviewLinkResolver(baseURL: document.fileURL),
-                controller: scrollController,
-                blocks: previewDisplayCache.output,
-                linkDefinitions: previewLinkDefinitions,
-                mermaidFenceView: mermaidFenceView,
-                d2FenceView: d2FenceView,
-                graphvizFenceView: graphvizFenceView
-            )
-            .environment(\.previewOpenDocument) { [weak coordinator] url in
-                Task { @MainActor in await coordinator?.openDocument(at: url) }
-            }
-            .overlay(alignment: .topTrailing) {
-                HStack(spacing: 4) {
-                    PreviewContributionDiagnosticsBadge(
-                        diagnostics: previewContributionSession.displayedDiagnostics(
-                            currentRevision: parseSession.document?.revision
-                        )
-                    )
-                    PreviewBusyIndicator(isVisible: parseSession.isParsing)
-                }
-            }
-        case .html:
-            HTMLPreviewPane(model: model, tab: tab, document: document, text: text)
-        case .jsonOutline:
-            // The JSON preview mode IS the outline: the same format-neutral
-            // tree the sidebar shows, with collapse/selection/jump state
-            // shared through `outlineController`. The leaf-level identifiers
-            // (`jsonOutlinePreviewPane`, `jsonInvalidState`) live inside
-            // `JSONOutlinePreviewView`.
-            JSONOutlinePreviewView(outlineController: outlineController)
-                .overlay(alignment: .topTrailing) { PreviewBusyIndicator(isVisible: jsonSession.isAnalyzing) }
-        case .none:
-            NoPreviewView(formatName: document.format.name)
-        }
-    }
-
     /// Save As invalidation: a persisted preview mode the new format cannot
     /// display is dropped (back to the format default) and the session is
     /// re-saved so the stale mode is not restored after relaunch.
@@ -362,24 +329,5 @@ struct DocumentEditorSplitView: View {
         guard let mode = tab.previewMode, !PreviewRouter.supports(mode, for: document.format) else { return }
         model.tabStore.setPreviewMode(nil, for: tab.id)
         coordinator?.scheduleSaveSession()
-    }
-}
-
-// MARK: - No preview
-
-private struct NoPreviewView: View {
-    let formatName: String
-
-    var body: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "eye.slash")
-                .font(.system(size: 32, weight: .light))
-                .foregroundStyle(.secondary)
-            Text("No preview for \(formatName)")
-                .foregroundStyle(.secondary)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("noPreviewPane")
     }
 }

@@ -61,6 +61,7 @@ extension DocumentEditorSplitView {
                 },
                 onLayoutChange: {
                     coordinator?.folderSearchEditorLayoutChanged(tabID: identity)
+                    coordinator?.finishMathSourceNavigation(in: model, identity: identity, session: mathSession)
                 }
             )
             .accessibilityIdentifier("editorPane")

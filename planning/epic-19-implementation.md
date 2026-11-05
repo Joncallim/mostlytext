@@ -1767,3 +1767,30 @@ Export-side nested-fence defect is now fixed and covered the same way.
 This epic is marked done in `planning/epics/README.md` with the residual
 items tracked honestly in `RELEASE_EVIDENCE.md` rather than hidden by
 closing issue #44 outright.
+
+
+## Paired production activation candidate — 6 November 2026
+
+PR93 replaces production Preview preprocessing/Textual dollar scanning and Export's
+legacy MathContribution registration together. Both now consume exact-source
+MathAnalysis/MathEvaluation and typed bodies under one policy. Original reference
+syntax/targets, scalar-safe source anchors, bounded image/HTML fallback and fatal
+no-write admission are qualified prerequisites from merged PR92. The detailed
+binding contract is `downstream/shared-math-production-activation.md`.
+
+The app owns a per-document physical worker, immutable source/frame authority,
+localized per-equation notices and native accessible actions. Fresh registered
+window/model/editor/parser state is checked after awaits and immediately before
+source selection; Preview-only navigation checks again at the actual mount.
+Legacy public String/span factories and their regression corpus remain compatible,
+with their historical behavior explicitly documented; production does not use
+flattened TeX or infer malformed syntax from empty glyph geometry.
+
+The candidate includes hosted-only real app grammar/failure/reference and current
+source-navigation controls. Local app/package test bundles compile only; the
+source-identical Foundation session/planning fixture executes Debug/Release.
+Native transport run 42104288768 passes 46 tests on the first candidate head;
+final exact-head native/app/full CI remains required before merge. This is not a
+claim of owner VoiceOver/visual/PDF parity, final whole-app responsiveness ceilings,
+translation review, or signed release-candidate acceptance. Those gates remain in
+issue #9 and RELEASE_EVIDENCE.md until actually proved.

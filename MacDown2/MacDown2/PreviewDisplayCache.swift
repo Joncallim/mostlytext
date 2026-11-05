@@ -1,10 +1,10 @@
 import Preview
 
-/// Caches the last math-preprocessed preview snapshot. The parsed revision is
+/// Caches the last unchanged preview snapshot. The parsed revision is
 /// the primary key; the displayed block array is also part of the key because
 /// contributions can publish a new composition without reparsing the source.
 /// Keeping this as a small value type makes invalidation explicit and keeps
-/// preprocessing on the main actor that owns the SwiftUI state.
+/// display composition on the main actor that owns the SwiftUI state.
 struct PreviewDisplayCache {
     private(set) var revision: Int?
     private(set) var input: [PreviewBlock]?
@@ -13,7 +13,7 @@ struct PreviewDisplayCache {
     mutating func update(
         revision: Int?,
         blocks: [PreviewBlock]?,
-        preprocess: ([PreviewBlock]?) -> [PreviewBlock]? = MathPreviewPreprocessor.preprocessed
+        preprocess: ([PreviewBlock]?) -> [PreviewBlock]? = { $0 }
     ) {
         guard let blocks else {
             reset()

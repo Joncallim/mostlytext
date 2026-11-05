@@ -98,6 +98,7 @@ extension WindowCoordinator {
         let adaptation = ExportContributionAdapter.adapt(
             results, destination: isPDF ? .pdfExport : .htmlExport
         )
+        try adaptation.requirePublication()
         let request = ExportRequest(
             text: frozen.text, sourceGeneration: frozen.sourceGeneration,
             theme: frozen.theme, documentURL: frozen.documentURL,

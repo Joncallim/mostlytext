@@ -17,18 +17,53 @@ struct BlockView: View {
     let resourceImageLoader: PreviewResourceImageLoader?
     let resourceLoadID: UUID?
     @Environment(\.previewOpenDocument) private var openDocument
-    let definitionIndex: PreviewLinkDefinitionIndex
+    let mathContent: PreviewMathContent?
+    let onMathSourceAction: (@MainActor @Sendable (UUID, UUID) -> Void)?
     let mermaidFenceView: ((String) -> AnyView)?
     let d2FenceView: ((String) -> AnyView)?
     let graphvizFenceView: ((String) -> AnyView)?
 
-    /// The block's source with every document-wide link reference definition
-    /// prepended, so a `[text][label]` reference in this block resolves even
-    /// when `label` is defined in a different block. See
-    /// ``PreviewLinkDefinitions``. Oversize blocks skip this — they already
-    /// bypass Textual entirely.
-    private var renderedSource: String {
-        definitionIndex.prefixed(block.source)
+    private var isLiteral: Bool {
+        Self.showsLiteralSource(block: block, mathContent: mathContent)
+    }
+
+    static func showsLiteralSource(block: PreviewBlock, mathContent: PreviewMathContent?) -> Bool {
+        if case .literal? = mathContent?.blocks[block.id] {
+            return true
+        }
+        if case .codeBlock = block.kind {
+            return false
+        }
+        let pending = mathContent == nil || (mathContent?.isPending == true && block.sourceAnchor != nil)
+        return pending && block.source.utf8.contains(36)
+    }
+
+    private var preparedInput: PreviewMathInput? {
+        if case let .parsed(input)? = mathContent?.blocks[block.id] {
+            return input
+        }
+        return nil
+    }
+
+    private var usesSourceGuard: Bool {
+        preparedInput != nil || (mathContent?.isPending == true && block.sourceAnchor != nil)
+    }
+
+    private var contentIdentity: PreviewBlockContentIdentity {
+        .init(source: block.source, baseURL: linkResolver.baseURL, input: preparedInput,
+              frameID: mathContent?.id, guarded: usesSourceGuard)
+    }
+
+    private var parser: any MarkupParser {
+        if let input = preparedInput {
+            return PreviewMathMarkupParser(input: input, attachments: mathContent?.attachments ?? [:],
+                                           baseURL: linkResolver.baseURL)
+        }
+        if usesSourceGuard {
+            return PreviewPendingMarkupParser(baseURL: linkResolver.baseURL)
+        }
+        // Pending, unknown and generated blocks cannot run another dollar pass.
+        return PreviewMarkupParser(baseURL: linkResolver.baseURL, syntaxExtensions: [])
     }
 
     /// `block.source` for a `.codeBlock` includes both fence delimiter
@@ -61,7 +96,7 @@ struct BlockView: View {
 
     var body: some View {
         Group {
-            if block.isOversize {
+            if block.isOversize || isLiteral {
                 // Oversize blocks skip Textual entirely: it has no size limit
                 // of its own and is documented to freeze/crash on inputs
                 // around 100 KB (see ``PreviewBlock/oversizeByteThreshold``).
@@ -107,17 +142,16 @@ struct BlockView: View {
 
     @ViewBuilder
     private var secureOrLegacyText: some View {
-        let source = renderedSource
-        let text = StructuredText(
-            source,
-            parser: PreviewMarkupParser(baseURL: linkResolver.baseURL, syntaxExtensions: [.math])
-        )
-        // Textual's attachment overlay can retain old symbol geometry when
-        // an existing block gains or changes inline math. Remount only blocks
-        // with a possible math delimiter when their parsed input changes;
-        // the outer PreviewBlock ID stays stable for scroll position and sync.
-        let mathContentID = Self.inlineMathContentID(blockSource: block.source, renderedSource: source)
-        let content = text.id(mathContentID)
+        let frameID = mathContent?.id
+        let action = onMathSourceAction
+        // Analysis arrival changes parser/attachment identity even if the
+        // authored text is unchanged. The outer scroll-sync block stays stable.
+        let content = StructuredText(block.source, parser: parser)
+            .id(contentIdentity)
+            .textual.attachmentAccessibilityAction { occurrenceID in
+                guard let frameID else { return }
+                action?(frameID, occurrenceID)
+            }
         if let resourceImageLoader {
             // Textual keys its attachment task only by attributed text and can publish after cancellation.
             // A new resource identity must therefore replace its complete state subtree.

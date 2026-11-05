@@ -9,13 +9,13 @@ readable source with an explanation; a source action selects the right occurrenc
 only while its document and source snapshot are current. Generated content and
 pending/oversized text do not receive another dollar parser.
 
-Main e8201ad8925aaf0cac2f15fafbda285c773a1d05 contains PR90/91 with the qualified
-source transport. The integration branch adds the typed, allocation-bounded raster
-API (37 hosted native controls already pass) and actual parser-consumed reference
-metadata. Current ba7d43d2 guards native link/image replay against the original
-whole-document source facts. Its hosted 45-function qualification is pending;
-production cannot adopt this path until those exact controls and complete CI pass.
-This document defines the next implementation slice before its broad edits.
+Main `05238f47191e8350f4ace5817a5f6066e1394176` contains qualified PR92,
+including original consumed-reference replay, target-completeness guards and the
+bounded typed Export producer. Exact head `4ee9681360af6e9f4c63ef7a5e3bbdebe7978805`
+passes 46 hosted native tests, 3,622 package tests, 626 app tests and all four
+locked Debug/Release app/mostlytext builds. The merge tree equals that qualified
+head. This implementation now activates Preview and Export together against that
+base; its own native/full CI qualification remains required before merge.
 The parent shared-math production/activation and parser-reference-replay contracts
 remain binding. This changes no release, signing or protected-account hold.
 
@@ -139,7 +139,7 @@ text, guessed formula search or captured old editor string grants authority.
 
 ## Implementation and evidence sequence
 
-1. Qualify original reference replay/URL guard on all 45 actual hosted controls;
+1. Qualify original reference replay/URL guard on all 46 actual hosted controls;
    retain first failures, correct source/title/image/Unicode checks without weaker
    assertions, and run full package/app/locked Debug+Release builds.
 2. Add shared policy, typed bounded Export producer and diagnostics/fatal carrier.
@@ -162,3 +162,80 @@ performance calibration and exact signed candidate evidence remain explicit gate
 package timing, fixture accessibility and integration merges do not establish them.
 
 While recompiling ExportService, replace the pre-existing unused directory binding in drainRetirements with the same explicit nonnil precondition. The original qualified PR91 log and unchanged main source prove the warning predates this work. The existing retirement/ownership algorithm, FD checks and recovery tests remain unchanged. This removes a compiler warning without changing publication policy.
+
+## App integration reconciliation
+
+The app constructs Textual typed attachments directly, as described above. Both
+app and app-test XcodeGen targets therefore explicitly declare the existing
+Textual product at the same immutable `c52cb5834c4695109aad2cb66294eafbc8f264c8`
+revision already used by Preview. Relying only on transitive import visibility
+compiled ordinary app builds but failed actual test-action linking with undefined
+Textual symbols. This adds no component/revision/resource and changes no notice
+bytes. Xcode's generated lock must still equal the canonical 24-pin package lock.
+
+Source planning verifies document and repair fingerprints once per snapshot,
+builds one reference index and uses bounded block queries. It runs away from
+the main actor. Native geometry/attachment creation stays on the main actor and
+yields between equations. Direct links and images use sorted interval queries,
+including partial-overlap rejection; source is never rescanned per block.
+
+Preview-only source navigation retains only the opaque occurrence/frame IDs and a
+competing-navigation token until the actual editor mount/layout callback. It then
+repeats fresh source/window/frame checks before replacing the complete selection
+set and revealing it. Identity loss invalidates the pending action. No guessed
+mount delay or stale captured range is trusted.
+
+The hidden validated SVG operation also applies the existing fatal standalone
+contribution admission before preparing its request; ordinary error policy remains
+unchanged. The ordinary production Export coordinator already enforced this gate.
+
+Existing unregistered Preview resource-grant routing is unchanged. Original target
+provenance does not grant filesystem/network access or complete issue #13. Native
+license/VoiceOver/visual/PDF and exact signed-artifact acceptance remain held.
+
+
+## Scoped review corrections
+
+Reference sorting/query/repair passes now check cancellation, including comparator
+and linear-loop boundaries; a cancelled request cannot finish preparing obsolete
+reference data. The regression fails four assertions against the former code and
+passes with the correction. Source planning uses explicit `@concurrent` execution
+([Swift SE-0461](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0461-async-function-isolation.md)),
+so changing caller-actor defaults cannot move whole-source work onto the main actor.
+
+Preview-only navigation retains its pending request until the real editor is
+attached to its owning NSWindow; a makeNSView/layout callback before attachment
+cannot consume that request or claim keyboard focus. All source/frame/key-owner
+checks are repeated at the eventual attachment/layout callback.
+
+Adapter tests mount the actual registered TextKit editor directly to isolate
+coordinator guards from independent SwiftUI initial parsing. Their original
+hosted fixture lost analysis authority before navigation; that failure is retained.
+A separate mounted production app-shell test keeps the complete automatic
+model/editor/parser/math/view path, invalid-to-valid-to-invalid recovery and actual
+native attachment action in split and Preview-only layouts. Neither test removes
+live-source guards or injects a replacement production parser. Native execution
+still occurs only in hosted macOS 26, with final exact-head qualification required.
+
+
+## Preserve unaffected block state without retaining lost URL authority
+
+A global frame ID on every StructuredText subtree resets unrelated ordinary
+blocks when analysis is invalidated or arrives. Keep exact per-block content
+identity instead: authored and rewritten UTF-8, base URL, parser guard mode and
+every original URL role/range/destination. Only blocks with math markers also
+include the current frame ID, so stale occurrence metadata cannot survive.
+Native reference-budget changes can remove an original target while leaving the
+rewritten Markdown identical; the authority list MUST participate in identity.
+Canonical String equality alone is insufficient. Its coarser hash is allowed only
+with exact UTF-8 equality in the identity value.
+
+The app explicitly passes PreviewMathContent.pending before a source plan exists.
+Pending authored blocks use the same native no-dollar parser with zero URL
+permissions, showing original source if it would create a link/image. This is an
+app opt-in; standalone Preview callers and generated blocks keep their admitted
+Markdown behavior. Dollar-bearing authored pending blocks stay literal; code
+fences remain code/diagram views. A pending zero-target parse may be retained when
+its complete prepared input and zero-target authority are identical. Any changed
+source, reference authority, parser mode, base URL or own math frame replaces it.
+No global reference extractor or second dollar grammar is introduced.

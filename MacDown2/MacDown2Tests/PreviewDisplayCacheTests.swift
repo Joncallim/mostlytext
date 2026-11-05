@@ -25,9 +25,9 @@ struct PreviewDisplayCacheTests {
         #expect(calls == 2)
     }
 
-    @Test func revisionChangeInvalidatesPreprocessedOutput() {
+    @Test func revisionChangePreservesAuthoredMalformedAndMultilineMath() {
         let first = PreviewBlock(kind: .paragraph, source: "before", lineRange: 1 ... 1)
-        let second = PreviewBlock(kind: .paragraph, source: "$\\frac{1}{$", lineRange: 1 ... 1)
+        let second = PreviewBlock(kind: .paragraph, source: "$\\frac{1}{$\r\n$$\r\nx + y\r\n$$", lineRange: 1 ... 1)
         var cache = PreviewDisplayCache()
 
         cache.update(revision: 1, blocks: [first])
@@ -35,7 +35,8 @@ struct PreviewDisplayCacheTests {
 
         #expect(cache.revision == 2)
         #expect(cache.input == [second])
-        #expect(cache.output?.first?.source == MathPreviewPreprocessor.invalidMathMarker)
+        #expect(cache.output?.first?.source.utf8.elementsEqual(second.source.utf8) == true)
+        #expect(cache.output?.first?.sourceAnchor == second.sourceAnchor)
     }
 
     @Test func aNewCompositionAtTheSameRevisionAlsoInvalidates() {

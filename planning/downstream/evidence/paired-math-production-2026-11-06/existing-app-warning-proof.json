@@ -1,0 +1,6 @@
+{
+  "source": "MacDown2/MacDown2/UITestLaunchGuard.swift",
+  "source_unchanged_from_base": true,
+  "qualified_base_log_has_same_warning": true,
+  "warning": "'init(cString:)' is deprecated"
+}

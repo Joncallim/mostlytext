@@ -116,6 +116,28 @@
         }
       }
     },
+    "Math analysis could not be safely completed. The authored source is shown.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Math analysis could not be safely completed. The authored source is shown."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Math analysis could not be safely completed. The authored source is shown."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Math analysis could not be safely completed. The authored source is shown."
+          }
+        }
+      }
+    },
     "Show equation source": {
       "comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
       "localizations": {
