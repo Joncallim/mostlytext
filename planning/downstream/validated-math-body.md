@@ -212,3 +212,18 @@ state. This is the next measured setup hypothesis, not a proved accessibility fi
 The workflow now explicitly enables pipefail, and its always-run verifier also
 requires the actual one-test passing summary and a true positive-control record.
 A false/missing record or failed summary must fail independently of shell status.
+
+## Self-process accessibility initialization candidate
+
+The activation-policy correction f5ea16e1 still fails the focused native test
+([42042051846](https://github.com/Joncallim/mostlytext/actions/runs/42042051846)).
+The workflow now reports that failure correctly. Native virtual children are
+empty despite direct public host queries. Before choosing another event-host
+architecture, the next candidate makes a public AX role request to this test
+process only, on a detached task while the main actor yields, with a 0.5-second
+messaging timeout. It neither requests trust nor prompts nor changes permission
+settings. Record the result and require the application role in addition to all
+existing native positive controls, without changing polling/traversal bounds.
+An AX failure or absent controls remains a failed setup, never absence evidence.
+The earlier source/raw failure is preserved. This is an unqualified candidate
+until fresh hosted execution; final VoiceOver acceptance remains separate.

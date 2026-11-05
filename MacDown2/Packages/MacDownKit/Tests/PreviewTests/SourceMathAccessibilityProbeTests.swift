@@ -1,4 +1,5 @@
 import AppKit
+import ApplicationServices
 import Foundation
 import SwiftUI
 import Testing
@@ -44,6 +45,9 @@ struct SourceMathAccessibilityProbeTests {
             window.close()
         }
         window.makeKeyAndOrderFront(nil)
+        // Ask only this test process for its public AX role. SwiftUI can defer
+        // constructing virtual children until an accessibility client requests them.
+        let request = await requestOwnAccessibilityRole()
         var labels: [String] = []
         for _ in 0 ..< 50 {
             host.layoutSubtreeIfNeeded()
@@ -56,15 +60,30 @@ struct SourceMathAccessibilityProbeTests {
             }
             try await Task.sleep(for: .milliseconds(10))
         }
-        try recordObservation(labels, host: host, window: window)
+        try recordObservation(labels, host: host, window: window, request: request)
+        try #require(request.error == AXError.success.rawValue && request.role == (kAXApplicationRole as String))
         try #require(controlsAppear(in: labels), "Accessibility probe setup lacks its actual native positive controls")
         // This records a measured architecture question, not final equation/VoiceOver acceptance.
     }
 
+    private func requestOwnAccessibilityRole() async -> (error: Int32, role: String?) {
+        await Task.detached {
+            let ownProcess = AXUIElementCreateApplication(ProcessInfo.processInfo.processIdentifier)
+            let timeoutError = AXUIElementSetMessagingTimeout(ownProcess, 0.5)
+            guard timeoutError == .success else { return (timeoutError.rawValue, nil) }
+            var role: CFTypeRef?
+            let error = AXUIElementCopyAttributeValue(ownProcess, kAXRoleAttribute as CFString, &role)
+            return (error.rawValue, role as? String)
+        }.value
+    }
+
     private func recordObservation(
-        _ labels: [String], host: NSHostingView<some View>, window: NSWindow
+        _ labels: [String], host: NSHostingView<some View>, window: NSWindow, request: (error: Int32, role: String?)
     ) throws {
         let observation: [String: Any] = [
+            "ownAccessibilityRequestError": request.error,
+            "ownAccessibilityRole": request.role ?? "",
+            "onMainThread": Thread.isMainThread,
             "positiveControlsPresent": controlsAppear(in: labels),
             "inlineEquationLabelPresent": labels.contains { $0.contains(Self.inline) },
             "inlineEquationOwnElement": labels.contains(Self.inline),

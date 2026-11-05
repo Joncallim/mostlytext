@@ -169,6 +169,16 @@
       "sha256": "77044de5b53e0fd320cc0000471bf7176749ab5b976beb3f752a96bb10f55fa5"
     },
     {
+      "name": "activation-full-format.log",
+      "bytes": 262,
+      "sha256": "5c54133d77b97e52f1eb8335697ece60db76ef88f183ff6130f8cca60a13cf7c"
+    },
+    {
+      "name": "activation-inventory.log",
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+    },
+    {
       "name": "activation-native-target-compile.log",
       "bytes": 270,
       "sha256": "74eed08a24f73c095690ec1a5cf278e8523d4fd3e22a08d7cc6d2bcc8896a47a"
@@ -414,6 +424,11 @@
       "sha256": "7f9e68d367420060cf5dca229eac50464cc2c04459971a96f2bfcf6c961e5e7c"
     },
     {
+      "name": "hosted-activation-probe.log",
+      "bytes": 40636,
+      "sha256": "15b90d2279611d07b1fed47e039798da49e4c04d701dbf6efd7b00ae23a16b7d"
+    },
+    {
       "name": "hosted-first-build-and-test.log",
       "bytes": 1531071,
       "sha256": "e86784e9ada894cc467d50adead7b095a76b172104b591ce810e31e97cb22e6e"
@@ -532,6 +547,16 @@
       "name": "qualified-lint.log",
       "bytes": 72324,
       "sha256": "a42c300686bf8f7393ddfe548c1c6c5af293b367ebff1220b10821795ebe15b3"
+    },
+    {
+      "name": "self-ax-lint.log",
+      "bytes": 228,
+      "sha256": "13a1e9d31075d178a51d4fd631cc53b285e43def27e5486cf9a4853ab37dac37"
+    },
+    {
+      "name": "self-ax-native-compile.log",
+      "bytes": 32586,
+      "sha256": "db01a5bcab63112ec1d710994dddd58deda4f91b04f6fbd9245c744cfa87d515"
     }
   ],
   "native_only_files": [
@@ -550,6 +575,6 @@
   },
   "accessibility_probe_source": {
     "path": "MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceMathAccessibilityProbeTests.swift",
-    "sha256": "d76f1d568a0afbd6fabaaeabe5a1967a094304a3660b6b8461e8eb0f4c31cc27"
+    "sha256": "f5af5b1dc13a7a92dbe9de32a2ad28491f1470ef965715f5a4a2f1068ade8369"
   }
 }
