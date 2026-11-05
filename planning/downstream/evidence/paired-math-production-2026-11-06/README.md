@@ -106,3 +106,12 @@ named-stage/source/parser/editor/accessibility diagnostics now distinguish a
 missing publication from an inaccessible native attribute. Actual app/UI test
 bundles compile successfully locally; native execution remains hosted only.
 The failed raw log is retained. Fresh hosted qualification is still required.
+
+The qualified SourceMathAccessibilityProbeTests and SourceAttachmentAccessibilityTests
+both initialize the native SwiftUI accessibility client by requesting their own
+process role with a0.5second messaging bound. The app-shell recovery test omitted
+that request. It now uses the same request and requires successful AXApplication
+role before inspecting the native tree; all five-second presentation bounds and
+equation/notice/action/selection/remount requirements remain. This source-based
+fixture correction compiles successfully locally, with no native execution.
+A fresh hosted result is required to determine whether it resolves the timeout.

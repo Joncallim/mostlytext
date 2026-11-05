@@ -1,4 +1,5 @@
 import AppKit
+import ApplicationServices
 import EditorCore
 import Foundation
 @testable import MacDown2
@@ -19,7 +20,11 @@ struct MathPreviewRecoveryTests {
         fixture.controller.model.tabStore.setPreviewLayout(.split(fraction: 0.5), for: fixture.tabID)
         let window = try #require(fixture.controller.window)
         window.setContentSize(.init(width: 900, height: 600))
-        window.orderFront(nil)
+        window.makeKeyAndOrderFront(nil)
+        // SwiftUI lazily constructs its virtual accessibility children. Use
+        // the same bounded own-process request as the qualified native probe;
+        // do not treat an uninitialized accessibility tree as Preview state.
+        try await requireOwnAccessibilityRole()
         let content = try #require(window.contentView)
         let equation = MathDiagnosticText.equationLabel("x", isDisplay: false)
         try await waitForPresentation(in: fixture, stage: "initial malformed source") {
@@ -60,6 +65,19 @@ struct MathPreviewRecoveryTests {
                 !has(equation, attribute: "accessibilityLabel", in: content)
         }
         #expect(fixture.controller.model.activeDocument?.text == malformed)
+    }
+
+    private func requireOwnAccessibilityRole() async throws {
+        let result = await Task.detached {
+            let process = AXUIElementCreateApplication(ProcessInfo.processInfo.processIdentifier)
+            let timeout = AXUIElementSetMessagingTimeout(process, 0.5)
+            guard timeout == .success else { return (timeout.rawValue, String?.none) }
+            var role: CFTypeRef?
+            let error = AXUIElementCopyAttributeValue(process, kAXRoleAttribute as CFString, &role)
+            return (error.rawValue, role as? String)
+        }.value
+        try #require(result.0 == AXError.success.rawValue && result.1 == (kAXApplicationRole as String),
+                     "The actual native accessibility client must be initialized")
     }
 
     private func selectRenderedEquation(
