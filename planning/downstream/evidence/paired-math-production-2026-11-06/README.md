@@ -27,3 +27,30 @@ nonisolated and all real app/UI tests compile. These cases require exact-head ho
 and actual native tests before merge. Local compilation and Foundation execution
 do not establish owner UI/VoiceOver/visual/PDF, final whole-app calibration or
 signed-candidate acceptance. Source-only/compliance publication is unchanged.
+
+## Hosted base rerun and stronger final controls
+
+The main push run 42101684271 is retained: one original diagram preparation
+cancellation test failed before requesting cancellation because a five-second
+poll obtained no page. It is not an infrastructure-only failure or a green run.
+The binding test correction is `diagram-preparation-test-event.md`: signal actual
+preparation, propagate admission failure, retain a five-second cancellation
+watchdog and all original assertions, add a never-borrowed assertion, and drain on
+setup failure. Production admission/evaluation/retirement behavior is unchanged.
+The broader cause of WebKit startup delay/issue #15 remains unresolved.
+
+Native app navigation tests now use the real registered coordinator/editor and
+fresh key-window positive controls, then synchronously verify own full/diagnostic
+selection, complete secondary-selection reset, stale frame/foreign ID, changed
+editor/generation/parser, removed window and wrong-window rejection. They compile
+locally only. A focused hosted workflow runs these and actual production grammar/
+live-source tests and requires all three named suites to execute successfully;
+full CI is still required separately. The new pending Preview tests require the
+native MainActor; the first missing annotation compile failure and the macro
+unused-result warnings are retained. Explicit Bool observations retain every
+assertion and compile without those warnings.
+
+PR93 first head 11d6e289961b70467818ece0b07104386d1c4c94 passes native run
+42104288768: 46 tests/12 suites in 3.674s. This qualifies its exact fixture input,
+not the following app navigation/preparation changes or a complete production run.
+All 24 dependency pins, shipped notices and SBOM remain byte-identical.

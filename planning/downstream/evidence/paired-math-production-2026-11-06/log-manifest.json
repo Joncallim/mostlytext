@@ -1,5 +1,20 @@
 [
   {
+    "file": "navigation-first-compile.log.gz",
+    "uncompressed_sha256": "818b4da39a48da8ba2ce9bf45768b3d08d939262a18813ae24abe663c2bcedf8",
+    "bytes": 494051
+  },
+  {
+    "file": "navigation-preparation-final-format.log.gz",
+    "uncompressed_sha256": "248ab545a94023d7caafec2ec79f4551c93f5ce52cc8fad0e824350e86b1dd69",
+    "bytes": 209
+  },
+  {
+    "file": "navigation-preparation-final-lint.log.gz",
+    "uncompressed_sha256": "b48814ba6413fd01e91741d026287e7c483827e87f90d03f66dfcc1da0aad540",
+    "bytes": 75728
+  },
+  {
     "file": "paired-app-corrected-compile.log.gz",
     "uncompressed_sha256": "60cfab5655abda875ce2879ece23edc711834c1f31a699aa04e76aa95317f648",
     "bytes": 552547
@@ -80,8 +95,38 @@
     "bytes": 410979
   },
   {
+    "file": "pending-explicit-results-package-tests-compile.log.gz",
+    "uncompressed_sha256": "6879aeacf59a1d76db9cbb9dd9167dc2d2c61194a79bc08f31c3e9389003aaa6",
+    "bytes": 392
+  },
+  {
+    "file": "pending-mainactor-package-tests-compile.log.gz",
+    "uncompressed_sha256": "a5b17c9e9743f27198ea8c53a94c36da82a3f5f4cdc952cacab9e369257f9cf9",
+    "bytes": 5170
+  },
+  {
     "file": "pr92-complete-build-and-test.log.gz",
     "uncompressed_sha256": "1f18577ddf727f8c4ca417ce186e078450fc39308b5251b86bc42977492caf9b",
     "bytes": 19095015
+  },
+  {
+    "file": "pr92-postmerge-failed.log.gz",
+    "uncompressed_sha256": "817edb4d5b37b25264578afa3c7665eccff6e5c63766faff997426e6d74e7a48",
+    "bytes": 2030602
+  },
+  {
+    "file": "pr93-first-native46.log.gz",
+    "uncompressed_sha256": "e6da7df0bf49d0e0b3f3099a20bf01c64670fa92832878b661829c2f5149f3b0",
+    "bytes": 98248
+  },
+  {
+    "file": "preparation-gate-format.log.gz",
+    "uncompressed_sha256": "8eef70013aa239072fb0679bc86b787ce6cfc72a561bffeddd6a8f4ec247dd7a",
+    "bytes": 141
+  },
+  {
+    "file": "preparation-gate-package-tests-compile.log.gz",
+    "uncompressed_sha256": "a45a4a7a20a5a2b270c99addaf9879e42cd7c37545314a042d29d546fbf6cb90",
+    "bytes": 104446
   }
 ]

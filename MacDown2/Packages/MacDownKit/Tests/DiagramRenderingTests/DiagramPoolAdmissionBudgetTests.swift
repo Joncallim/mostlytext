@@ -11,12 +11,40 @@ struct DiagramPoolAdmissionBudgetTests {
     private final class PreparationProbe {
         var page: DiagramHarnessPage?
         var ready = false
+        var borrowed = false
+        private var preparation: CheckedContinuation<DiagramHarnessPage, any Error>?
+        private var failure: (any Error)?
+
         func record(_ page: DiagramHarnessPage) {
             self.page = page
+            preparation?.resume(returning: page)
+            preparation = nil
         }
 
         func markReady() {
             ready = true
+        }
+
+        func markBorrowed() {
+            borrowed = true
+        }
+
+        func waitForPreparation() async throws -> DiagramHarnessPage {
+            if let page {
+                return page
+            }
+            if let failure {
+                throw failure
+            }
+            return try await withCheckedThrowingContinuation { preparation = $0 }
+        }
+
+        /// Admission already has its production deadline. If it fails before
+        /// preparation starts, wake the test with that actual failure.
+        func borrowerFinished(_ error: any Error) {
+            failure = error
+            preparation?.resume(throwing: error)
+            preparation = nil
         }
     }
 
@@ -78,16 +106,37 @@ struct DiagramPoolAdmissionBudgetTests {
             await probe.record(page)
             try await Task.sleep(for: .seconds(10))
         }
-        let borrower = Task { try await pool.withPage { _ in 42 } }
-        let deadline = ContinuousClock.now.advanced(by: .seconds(5))
-        while probe.page == nil, ContinuousClock.now < deadline {
-            try await Task.sleep(for: .milliseconds(5))
+        let borrower = Task {
+            do {
+                return try await pool.withPage { _ in
+                    await probe.markBorrowed()
+                    return 42
+                }
+            } catch {
+                probe.borrowerFinished(error)
+                throw error
+            }
         }
-        let page = try #require(probe.page)
-        borrower.cancel()
-        await #expect(throws: CancellationError.self) { try await borrower.value }
-        #expect(page.isTerminated)
-        await pool.shutdown()
+        do {
+            // Cancel at the actual preparation suspension point. A separate
+            // five-second cold-navigation poll incorrectly undercut the pool's
+            // fifteen-second admission contract and never tested cancellation.
+            let page = try await probe.waitForPreparation()
+            borrower.cancel()
+            await #expect(throws: CancellationError.self) {
+                try await DiagramTimeoutRace.run(timeout: .seconds(5), timeoutError: EvaluationWatchdogExceeded()) {
+                    try await borrower.value
+                }
+            }
+            #expect(page.isTerminated)
+            #expect(!probe.borrowed)
+            await pool.shutdown()
+        } catch {
+            borrower.cancel()
+            _ = await borrower.result
+            await pool.shutdown()
+            throw error
+        }
     }
 
     @Test func coldPageAdmissionHasItsOwnBoundWithoutExtendingEvaluation() async throws {
