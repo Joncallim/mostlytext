@@ -123,7 +123,7 @@ This file is generated from `compliance/inventory.json` by
 | marked (via Mermaid) | 16.3.0 | MIT |
 | Math fonts bundled by SwiftUIMath | 0.1.0 | OFL-1.1 AND LicenseRef-GUST-Font-License AND MIT |
 | Mermaid | 11.17.2 | MIT |
-| Neon | ab93bca8 | BSD-3-Clause |
+| Neon | cd14f22a | BSD-3-Clause |
 | nvim-treesitter Markdown highlight queries (via tree-sitter-markdown) | 2022-06 import | Apache-2.0 |
 | oss.terrastruct.com/util-go (D2 publisher-build attribution) | publisher source-build input v0.0.0-20250213174338-243d8661088a | ISC |
 | path-browserify (content-matched reference via Mermaid; original version unresolved) | original unresolved; content matches 1.0.1 | MIT |
@@ -8783,9 +8783,9 @@ SOFTWARE.
 
 ## Neon
 
-- Version: ab93bca8
+- Version: cd14f22a
 - Upstream: https://github.com/Joncallim/Neon
-- Revision: `ab93bca8cc74af6f5e17eefc7fefa1999726a131`
+- Revision: `cd14f22ae8f8402b175a0bafd87560b78c7549e9`
 - Licence: BSD-3-Clause
 - Copyright (c) 2022, Chime
 
