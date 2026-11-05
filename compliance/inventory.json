@@ -18,6 +18,9 @@
       "MacDown2/Packages/MacDownKit/Sources/*/Resources/harness.html",
       "MacDown2/Packages/MacDownKit/Sources/*/Resources/render.js",
       "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/structural.css"
+    ],
+    "packages": [
+      "MacDown2/Packages/MathSyntax"
     ]
   },
   "not_distributed": [

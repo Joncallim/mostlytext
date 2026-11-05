@@ -72,6 +72,7 @@ let package = Package(
         .package(path: "../TreeSitterSQL"),
         .package(url: "https://github.com/tree-sitter-grammars/tree-sitter-xml", exact: "0.7.0"),
         .package(path: "../TreeSitterMarkdown"),
+        .package(path: "../MathSyntax"),
         .package(
             url: "https://github.com/Joncallim/swift-markdown",
             revision: "abfafeccd6f0434daf1a667b92d227adb83b50c8"
@@ -161,7 +162,11 @@ let package = Package(
         ),
         .target(name: "Contributions", dependencies: ["MarkdownEngine"], resources: [.process("Resources")]),
         .target(name: "TextFilters", resources: [.process("Resources")]),
-        .target(name: "Math", dependencies: ["MarkdownEngine", "Contributions"], resources: [.process("Resources")]),
+        .target(
+            name: "Math",
+            dependencies: ["MarkdownEngine", "Contributions", .product(name: "MathSyntax", package: "MathSyntax")],
+            resources: [.process("Resources")]
+        ),
         .target(
             name: "MathRendering",
             dependencies: [

@@ -407,6 +407,116 @@ class ComplianceCheckTests(unittest.TestCase):
                       f'.package(url: "{REMOTE_URL}", exact: "1.0.0"),\n.package(id: "example.registry", from: "1.0.0"),\n')
         self.assertFailsWith("unrecognised package declaration")
 
+    def _authored_local_package(self) -> str:
+        package = "MacDown2/Packages/Authored"
+        self.fx.write(package + "/Package.swift", "// swift-tools-version: 6.2\n")
+        self.fx.write(package + "/Sources/Authored/Value.swift", "struct Value {}\n")
+        self.fx.inventory["first_party"]["packages"] = [package]
+        self.fx.inventory["manifests"].append(package + "/Package.swift")
+        self.fx.write("MacDown2/Packages/MacDownKit/Package.swift",
+                      f'.package(url: "{REMOTE_URL}", exact: "1.0.0"),\n.package(path: "../Authored"),\n')
+        self.fx.save()
+        return package
+
+    def test_explicit_first_party_local_package_passes_without_external_notice(self) -> None:
+        self._authored_local_package()
+        self.assertEqual(self.fx.check().errors, [])
+        self.assertEqual(self.fx.check(release=True).errors, [])
+        self.assertNotIn("Authored", compliance.render_notices(self.fx.root, self.fx.inventory))
+
+    def test_first_party_package_declaration_rejects_invalid_types(self) -> None:
+        self._authored_local_package()
+        for value in ["MacDown2/Packages/Authored", [None], [123]]:
+            with self.subTest(value=value):
+                self.fx.inventory["first_party"]["packages"] = value
+                self.fx.save()
+                self.assertFailsWith("first_party.packages must be a list of strings")
+
+    def test_first_party_package_duplicate_declaration_fails(self) -> None:
+        package = self._authored_local_package()
+        self.fx.inventory["first_party"]["packages"] = [package, package]
+        self.fx.save()
+        self.assertFailsWith("duplicate first-party package declaration")
+
+    def test_first_party_package_path_escape_and_alias_fail(self) -> None:
+        self._authored_local_package()
+        for path in ["../outside", "/tmp", "MacDown2/Packages/../Packages/Authored"]:
+            with self.subTest(path=path):
+                self.fx.inventory["first_party"]["packages"] = [path]
+                self.fx.save()
+                self.assertFailsWith("first-party package path must be canonical inside MacDown2/")
+
+    def test_first_party_package_symlink_cannot_escape_the_checked_tree(self) -> None:
+        package = self._authored_local_package()
+        with tempfile.TemporaryDirectory() as outside:
+            external = Path(outside)
+            (external / "Package.swift").write_text('.package(id: "external.registry", from: "1.0.0")\n')
+            target = self.fx.root / package
+            shutil.rmtree(target)
+            target.symlink_to(external, target_is_directory=True)
+            self.assertFailsWith("first-party package path must be canonical inside MacDown2/")
+            self.assertFalse(any("unrecognised package declaration" in error for error in self.fx.check().errors))
+
+    def test_first_party_package_source_symlink_cannot_borrow_first_party_globs(self) -> None:
+        package = self._authored_local_package()
+        with tempfile.TemporaryDirectory() as outside:
+            external = Path(outside) / "Foreign.swift"
+            external.write_text("struct Foreign {}\n")
+            (self.fx.root / package / "Sources/Authored/Foreign.swift").symlink_to(external)
+            self.assertFailsWith("first-party package contains symlinked content")
+
+    def test_first_party_package_nested_directory_symlink_is_not_an_owner(self) -> None:
+        package = self._authored_local_package()
+        with tempfile.TemporaryDirectory() as outside:
+            (Path(outside) / "Foreign.swift").write_text("struct Foreign {}\n")
+            (self.fx.root / package / "Sources/Foreign").symlink_to(outside, target_is_directory=True)
+            self.assertFailsWith("first-party package contains symlinked content")
+
+    def test_first_party_package_manifest_symlink_is_rejected_without_parsing_it(self) -> None:
+        package = self._authored_local_package()
+        with tempfile.TemporaryDirectory() as outside:
+            external = Path(outside) / "Package.swift"
+            external.write_text('.package(id: "external.registry", from: "1.0.0")\n')
+            manifest = self.fx.root / package / "Package.swift"
+            manifest.unlink()
+            manifest.symlink_to(external)
+            errors = self.fx.check().errors
+            self.assertTrue(any("manifest must not be a symlink" in error for error in errors), errors)
+            self.assertFalse(any("unrecognised package declaration" in error for error in errors), errors)
+
+    def test_first_party_package_requires_existing_manifest(self) -> None:
+        package = self._authored_local_package()
+        (self.fx.root / package / "Package.swift").unlink()
+        self.assertFailsWith("first-party package manifest is missing")
+
+    def test_first_party_package_requires_explicit_manifest_registration(self) -> None:
+        package = self._authored_local_package()
+        self.fx.inventory["manifests"].remove(package + "/Package.swift")
+        self.fx.save()
+        self.assertFailsWith("first-party package manifest must be explicitly registered")
+
+    def test_third_party_package_cannot_be_reclassified_as_first_party(self) -> None:
+        self.fx.inventory["first_party"]["packages"] = [VENDORED]
+        self.fx.inventory["manifests"].append(VENDORED + "/Package.swift")
+        self.fx.save()
+        self.assertFailsWith("first-party package conflicts with a third-party package owner")
+
+    def test_first_party_package_still_checks_unknown_remote_dependencies(self) -> None:
+        package = self._authored_local_package()
+        self.fx.write(package + "/Package.swift", '.package(url: "https://github.com/example/not-approved", exact: "1.0.0")\n')
+        self.assertFailsWith("dependency https://github.com/example/not-approved is not registered")
+
+    def test_first_party_package_does_not_own_a_nested_local_package(self) -> None:
+        package = self._authored_local_package()
+        self.fx.write(package + "/Package.swift", '.package(path: "Nested")\n')
+        self.fx.write(package + "/Nested/Package.swift", "// nested\n")
+        self.assertFailsWith("local package MacDown2/Packages/Authored/Nested is not owned")
+
+    def test_first_party_package_does_not_exempt_unregistered_c_source(self) -> None:
+        package = self._authored_local_package()
+        self.fx.write(package + "/Sources/Authored/vendor.c", "int foreign;\n")
+        self.assertFailsWith("unregistered distributed file")
+
     def test_unowned_multiline_local_package_fails(self) -> None:
         self.fx.write("MacDown2/Packages/MacDownKit/Package.swift",
                       f'.package(url: "{REMOTE_URL}", exact: "1.0.0"),\n.package(\n    path: "../Sneaky"\n),\n')

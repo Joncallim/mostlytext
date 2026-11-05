@@ -290,6 +290,56 @@ class Report:
         self.warnings.append(message)
 
 
+def symlinked_package_content(target: Path) -> list[Path]:
+    """Use the same build/hidden exclusions as the distributed-file walk."""
+    found = []
+    for directory, directories, files in os.walk(target):
+        directories[:] = sorted(name for name in directories if name not in SKIP_DIRS and not name.startswith("."))
+        for name in directories + files:
+            path = Path(directory) / name
+            if not name.startswith(".") and path.is_symlink():
+                found.append(path)
+    return found
+
+
+def first_party_package_owners(root: Path, inventory: dict, owned: list[tuple[str, str]], report: Report) -> set[str]:
+    """An explicit package owner never exempts its files or dependencies."""
+    declared = inventory["first_party"].get("packages", [])
+    if not isinstance(declared, list) or any(not isinstance(path, str) for path in declared):
+        report.error("first_party.packages must be a list of strings")
+        return set()
+    if len(set(declared)) != len(declared):
+        report.error("duplicate first-party package declaration")
+    result: set[str] = set()
+    registered = set(inventory.get("manifests", []))
+    for rel in declared:
+        target = (root / rel).resolve()
+        try:
+            canonical = target.relative_to(root.resolve()).as_posix()
+            target.relative_to((root / "MacDown2").resolve())
+        except ValueError:
+            canonical = None
+        if canonical != rel or canonical is None:
+            report.error(f"first-party package path must be canonical inside MacDown2/: {rel}")
+            continue
+        manifest = rel + "/Package.swift"
+        links = symlinked_package_content(target)
+        if links:
+            report.error(f"first-party package contains symlinked content: {rel}")
+            continue
+        if not (target / "Package.swift").is_file():
+            report.error(f"first-party package manifest is missing: {manifest}")
+            continue
+        if manifest not in registered:
+            report.error(f"first-party package manifest must be explicitly registered: {manifest}")
+            continue
+        if any(glob_to_regex(pattern).match(manifest) for _, pattern in owned):
+            report.error(f"first-party package conflicts with a third-party package owner: {rel}")
+            continue
+        result.add(rel)
+    return result
+
+
 def check(root: Path, release: bool = False, artifact: Path | None = None) -> Report:
     report = Report()
     inventory = load_inventory(root)
@@ -392,9 +442,20 @@ def check(root: Path, release: bool = False, artifact: Path | None = None) -> Re
     # MacDown2/, so a newly added local package can't bring in an unchecked
     # dependency.
     build_only = {normalise_url(u) for u in inventory.get("build_only_packages", [])}
+    first_party_packages = first_party_package_owners(root, inventory, owned, report)
     manifests = sorted(set(inventory.get("manifests", [])) | {p for p in walk_distributable(root) if p.endswith("/Package.swift")})
     for manifest in manifests:
         manifest_path = root / manifest
+        if manifest_path.is_symlink():
+            report.error(f"manifest must not be a symlink: {manifest}")
+            continue
+        try:
+            canonical_manifest = manifest_path.resolve().relative_to(root.resolve()).as_posix()
+        except ValueError:
+            canonical_manifest = None
+        if canonical_manifest != manifest:
+            report.error(f"manifest path must be canonical inside the checked repository: {manifest}")
+            continue
         if not manifest_path.is_file():
             report.error(f"manifest listed in inventory is missing: {manifest}")
             continue
@@ -413,8 +474,12 @@ def check(root: Path, release: bool = False, artifact: Path | None = None) -> Re
             if recorded is not None and recorded != requirement:
                 report.error(f"{component['id']}: stale mapping: {manifest} requires {requirement}, inventory records {recorded}")
         for rel in paths:
-            target = (manifest_path.parent / rel).resolve().relative_to(root.resolve()).as_posix()
-            if not any(glob_to_regex(p).match(target + "/Package.swift") for _, p in owned):
+            try:
+                target = (manifest_path.parent / rel).resolve().relative_to(root.resolve()).as_posix()
+            except ValueError:
+                report.error(f"{manifest}: local package {rel} is outside the checked repository")
+                continue
+            if target not in first_party_packages and not any(glob_to_regex(p).match(target + "/Package.swift") for _, p in owned):
                 report.error(f"{manifest}: local package {target} is not owned by any inventory component")
 
     # XcodeGen can add packages to the app directly, bypassing Package.swift.

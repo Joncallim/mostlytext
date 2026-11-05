@@ -65,7 +65,7 @@ inventory ownership; Git ignore rules do not exempt them from the check.
 | A file inside a component's wildcard-owned boundary (such as a vendored package's `**`) that isn't in that component's audited `files`, licence texts or runtime resources. `owns` says which component a file belongs to; it doesn't make the file compliant, and such a file can't pass as first-party | fail | fail |
 | A `project.yml` package requirement (`exactVersion`, `from`, `minorVersion`, `branch`, `revision`…) that differs from the inventory, or a `packages:` entry the checker can't read (it fails closed) | fail | fail |
 | A SwiftPM dependency not in the inventory, in any `Package.swift` under `MacDown2/` (found automatically) or in `project.yml`'s `packages:` | fail | fail |
-| A local package that no component owns, or an XcodeGen local package outside `MacDown2/` | fail | fail |
+| A local package without an explicit first-party or component owner, or an XcodeGen local package outside `MacDown2/` | fail | fail |
 | A `.package(...)` declaration the checker can't read, such as a registry `id:` or an interpolated URL (it fails closed) | fail | fail |
 | A manifest requirement that differs from the inventory (stale mapping) | fail | fail |
 | A missing or edited licence/notice text, or a vendored file whose digest changed | fail | fail |
@@ -201,3 +201,15 @@ raw-input replay additionally validates the captured archives and source links.
 The current blockers and source-publication boundary are recorded in
 [RELEASE_PREPARATION.md](RELEASE_PREPARATION.md). Dated evidence directories retain
 their original outcomes and limits; later scoped updates do not rewrite history.
+
+### First-party local Swift packages
+
+`first_party.packages` declares canonical repository-relative package directories
+owned by MostlyText and covered by its existing MIT license. A declaration must
+point to an existing, explicitly registered manifest inside `MacDown2/`, and
+cannot conflict with third-party package ownership or contain symlinked source/manifest
+content. Registered symlink manifests are rejected before parsing. It grants no wildcard or
+transitive exemption: all distributed files retain normal classification and
+every manifest/dependency is checked. Nested local packages require their own
+owner. This keeps authored `MathSyntax` code first-party without creating a fake
+third-party notice or weakening the gate for bundled foreign files/dependencies.
