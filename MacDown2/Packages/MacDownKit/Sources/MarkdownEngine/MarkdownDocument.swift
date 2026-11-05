@@ -56,6 +56,13 @@ public struct MarkdownDocument: Sendable, Equatable {
         self.options = options
     }
 
+    /// Whether these parse results belong to the exact original UTF-8 bytes.
+    /// Canonical String equality is insufficient for source coordinates.
+    public func isBound(to source: String) -> Bool {
+        guard let sourceSHA256 else { return false }
+        return MarkdownSourceFingerprint.sha256(source) == sourceSHA256
+    }
+
     /// Block whose lineRange contains `line`; nil when the line is blank
     /// between blocks or inside front matter. For list items, the item itself
     /// is returned rather than its nested paragraph child so callers receive

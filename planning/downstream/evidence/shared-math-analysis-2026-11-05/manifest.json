@@ -1,0 +1,481 @@
+{
+  "predecessor_head": "d4b9a30af7c1191054b4ef4f3db348559bd1fae2",
+  "functions": 251,
+  "suites": 34,
+  "new_analysis_functions": 20,
+  "existing_parser_and_math_functions": 231,
+  "debug_and_release": "pass",
+  "compliance_tests": 330,
+  "all_remote_pins_unchanged": 24,
+  "grammar_subtree_unchanged": true,
+  "exact_production_fixture_files": [
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/DirectiveSourceCoverage.swift",
+      "sha256": "fbcd259f511a03a8c45c38b4ec4288cdd3967870974ef60e4663280ea9d16b76"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/FrontMatter.swift",
+      "sha256": "93e57c7f93e6f0f01680ad9f57936a3b334d076b4296ca6ecc397ccf7c0a2ed5"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/HeadingAnchorAllocator.swift",
+      "sha256": "7f2bdae529a88d29177741a11aba7319ab58780d53dcb9a3885485229459ffa8"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/HeadingAnchorIndex.swift",
+      "sha256": "f8f95cb3b5037f99761c9dbc90bdff0abd4cde1e718a073cbbaf8c5a452e8153"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownBlock.swift",
+      "sha256": "1b4c7d7528cd9a0f0eb2bbecf9bf2abae7c879a0fdfdd7c8381fac0fe8ab12b3"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownDocument.swift",
+      "sha256": "423218e362b259cb8b11f19d3b2e8db217a642149f585e8283fc2550411d98f7"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownEngineModule.swift",
+      "sha256": "c8caff8457cc0390960b365f27a33e05980ba03ab85b35d2fa3e5eecd8938310"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseOptions.swift",
+      "sha256": "ec90b8c8717b73f30dc133f19d8505f8ad7911e5aafd0ee269b4b0350855eaa9"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseSession.swift",
+      "sha256": "9a6d3bfdccae312997e7df0f941d597041b0c98ef03d72fa573268fe8854a8c9"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseStore.swift",
+      "sha256": "5343a853d2cc0161ae6a2a56a465e7659b05744e226d0a66ae3181cb6891afee"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownSourceFactProjection.swift",
+      "sha256": "99d3fd920b911416c13c4c88944703567af42fa90920c2c77738a846bd5d598f"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownSourceFacts.swift",
+      "sha256": "b26f45adf83a50e8cd507b917fd742cf329ac1105753434f4c8bd09f4fa79903"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownSourceFingerprint.swift",
+      "sha256": "ac2e5986b1bbab95c5eae574a47001c316ccffd61435f54eea39d5dde6a26535"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownSourceLinkProjection.swift",
+      "sha256": "e20c69b4cfb535465f91b41cfcccecd4c7e3c2ca02483611cb0469efce394f9f"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseEngine+Foundation.swift",
+      "sha256": "5886293a172d7cb478dfa245742740292c408964fb287cc1547bf19b089bd1a5"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseEngine+YAMLGuards.swift",
+      "sha256": "9cc7518f1acca3f61481a4df12dde3d5e5988a457ddb598aca51f347b4e84b20"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseEngine.swift",
+      "sha256": "e10d4007c30c65f800d59c5f8103329424eac18a0a878c557ff8a5bafb8479de"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseExecuting.swift",
+      "sha256": "b43026f9a6867f2fc2b355b8465ac2053ff66a662bfd811c904816d9ef7c5b4c"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/SourceMap.swift",
+      "sha256": "4e00c4d7a25a339e440e6b8f31a7e59f5c8b7dbb8eb7237dd3c94dc2117c89f2"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/String+MarkdownLines.swift",
+      "sha256": "db2d92846df6beba3e7e3f534fc2cb8b199e572d83c7c9a2e67d7452b4b90fb6"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/Contributing.swift",
+      "sha256": "ee76bf4fb4c5c31700a5dbbd10e74c7fd7c73f143024277999547487ca22ba35"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/ContributionContent.swift",
+      "sha256": "c16b7658fe0b022c06f50173b0e92ee418fee0f69d12d301a7162f33fbaf2e48"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/ContributionDestination.swift",
+      "sha256": "adb845cd2aafd6e7673d97ed2d037379f8e65532fa86139e313c69d67cac520b"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/ContributionDiagnostic.swift",
+      "sha256": "e845153e6ad18f7d00f81db529b14fa8646f3541ccf92361eced8c30932cce0f"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/ContributionPlacement.swift",
+      "sha256": "3155fdc743a43548bda37d6959aaf0b049775eedf876ff0af5575a05519063c8"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/ContributionRegistry.swift",
+      "sha256": "cbdc7381ee2daedaf16034d601483d07ec61955e42d80bb79b07b56efb234ebb"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/ContributionRepresentation.swift",
+      "sha256": "0001ee5f78e83e55441e295abf1bffe1caa0a9dfecdb66824d93340dd149e932"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/ContributionResult.swift",
+      "sha256": "c389a7732b88cf9c686990eb3e44b515b504c761ea83fdc37dfea2714f9c6721"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/DeterministicTestContribution.swift",
+      "sha256": "567344f84671f399f5fb2e551da2754f79e3938aba9d2682a1fdaac3b2056768"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/Resources/Localizable.xcstrings",
+      "sha256": "ddc44170e81a86a9edd275f51174558ab361afd71cc6e7a079fb31a54129e1f5"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/TOCContribution.swift",
+      "sha256": "c4ab3878ef67fc39e03caee8471b9085cafc8216f6e70a9eea5f16efc2163651"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Math/ExportMathRenderContext.swift",
+      "sha256": "312a08ad0dfdc8fb00f192550ffecf45b51ddedafae47e1d358520838b4a167b"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Math/FencedCodeBlockScanner.swift",
+      "sha256": "342396ee9b16b865b881bc7cb6d7de7af87b5f97abefc6f73999148c0d939959"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Math/InlineCodeSpanScanner.swift",
+      "sha256": "1dd32838947417b8c9e951906406f5c40c5581af4409f55de728857d32899552"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathAnalysis.swift",
+      "sha256": "5e1865ffc24ac4107f3e7849d4d31af1697e554687df03a740946e0101824428"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathContainerPrefix.swift",
+      "sha256": "dfdfb6e9df8a4dae2bbaeeff96b3ee17f088357c995202d559d35a65e569ec2c"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathContribution.swift",
+      "sha256": "644e8116f3195b62825afb7bafc6f62e989578e1d9f26daf5282983807a55e00"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathEquation.swift",
+      "sha256": "570f4177ad701573b3b2aa6ed6c1ec37e48b50142b20658d70669d73205db75f"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathExpressionProjection.swift",
+      "sha256": "dcd1f6d1ba19aa8c3c6290421570102d88eb199a739c9de1a069118c8501fa66"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathLiteralContextScanner.swift",
+      "sha256": "e1871cfb2656514c11c9359eacfec397e743949c9dcac24f440ab370f10e49b0"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathOccurrenceIdentity.swift",
+      "sha256": "b2f20dd6e01c0d40b7625f367449dacf3f05db4fd3b5b4ab502e30cb906be696"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathParityCorpus.swift",
+      "sha256": "5de7dc0afe4db6b640544b3e5c00839f9016538f5ec1c5747c45b0709ed79e7d"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathRenderError.swift",
+      "sha256": "c7839b5562879dcba702075f66a6274fbbcd6b3c885eb82280c3f2e29ef958ae"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathSpan.swift",
+      "sha256": "d3c47b234d79840e7c18a033c3852c54344d7290663612f3e89c2f17c78cb3ad"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathSpanScanner.swift",
+      "sha256": "5b44f908f53042b1edae8748ec2b9d583525e01b7c920decbf7e20dc0792d831"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Math/RenderedMathImage.swift",
+      "sha256": "9125a3d042cd23258eb627c636690c1fb1df6034cd74f90bd948f3ab88cb2080"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings",
+      "sha256": "7b3a59d537daae55748668781d2771d41636f1cf9ec51182865c7b1f6d2014c4"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/BlockConversionTests.swift",
+      "sha256": "77d20d07464c34d152d8ce09ba7daa534eac7c14aa64ab9a936f5933216a9b05"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/BlockRangeRepairTests.swift",
+      "sha256": "547283e4d8a51e3bf67aaf38d104e26dee62acab2924ea0e2d50f060394f57f8"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/ContainerChildRangeTests.swift",
+      "sha256": "625ce62673b3eddbcec7b2988c18ed759a9c49f46100512e6c0971602a47a62b"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/DirectiveSourcePreservationTests.swift",
+      "sha256": "67720489cdf171eba5038ede517b4752d7d7f15dbc3aa2a794a207779d4eed8b"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/Fakes.swift",
+      "sha256": "fd31bcccdfb71405e89095ebf653bff2ed2f9f58d89312f8bde9be321b40f428"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FencedBlockInnerTextTests.swift",
+      "sha256": "0a41c21b6342b8ae329f91904c12e60b0e91d102a29ccdce02717e71b7616bcf"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/Fixtures.swift",
+      "sha256": "b9aeb883e4cec051a912b93e99a22bf05a751d6e90a95e2c8dd9256e1acec78f"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterLineEndingTests.swift",
+      "sha256": "d11dbbe6874d1aa48b412ab9b66eb499b91e8a54196edb38b43185a9e1b71ea9"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterTests.swift",
+      "sha256": "16d8024779acb03c175036090845db4770fbac0205784d93b2012eb63a54ea92"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/HeadingAnchorAllocatorTests.swift",
+      "sha256": "6dafc006e07dca6b06af6a407a13d518a7712e1fed1bc94e88699f13306b0c50"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/HeadingAnchorIndexTests.swift",
+      "sha256": "4d0db5f86880b5045e212976b51179c8712d6b39904e1275f6ed31bca04a06dd"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/HeadingTests.swift",
+      "sha256": "c556bc61713f16c78196610332fbf67d0470d744849e716b711515685f81bd8e"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/MarkdownSourceFactsTests.swift",
+      "sha256": "e0acfeff9a9ba47828fb40c76776d2d3dfb00a3c5f5bb7aee0943eee82a62ba0"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/MarkdownSourceFingerprintTests.swift",
+      "sha256": "4464728ba002370f224f93c6274efecf00ee8a74e22a032d420990eda6a7e02b"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/OptionsTests.swift",
+      "sha256": "3c3c2911ad3e80f0ce9c8f17e3f1bc48984611f6a577af3c8413324cb64a6dfb"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/ParseDeepNestingTests.swift",
+      "sha256": "763a9f5550b3ff1592b2d56383c6931de96d777bb6c9458fd643822a508b08b4"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/ParseEnginePerformanceTests.swift",
+      "sha256": "bbf377021e1ba78527d8fed99387beae23c4f9b315aff1c462af2b51e0731e21"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/ParseEngineWorkerOwnershipTests.swift",
+      "sha256": "c482c304c6c62fa01b4aeabfd9c2b89e0c8a20d3d8811ed5328f88c7683ea31f"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/ParseSessionBusyStateTests.swift",
+      "sha256": "91d986d29a39e2d74b74ef42bcffb5a8bad08e51bea99a6a4f2c16a2db0b47b1"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/SessionDebounceTests.swift",
+      "sha256": "62f95759f15285cb94872962b9e92ae9e93a50f13a361334a440ea5b67da67d9"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/SourceMapTests.swift",
+      "sha256": "5300be25ecef211d01937acc19f1824029566be11e33bd69eb93318cecad4ddb"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/YAMLAliasBombTests.swift",
+      "sha256": "65907b2a11e93b9084ca14b5653e0df127923131faf506f12408bad1a0eb677b"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/YAMLNonScalarKeyTests.swift",
+      "sha256": "5104f4e791ab8d34e9827067418f7679a6c3a0ff890ff8fec171d4cc3e2b1880"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/FencedCodeBlockScannerTests.swift",
+      "sha256": "0bfb8897af410c5cdae5bb60aac6b976aa78f92cfdbf737a2ad2fcaf5203a399"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathAnalysisTests.swift",
+      "sha256": "ab7c960715672c740ed21ecd6005813387a788ef846d6b1bdce99c4a042c1e94"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathCodePairingTests.swift",
+      "sha256": "ed97b1822ad8721e105bae3ca1d4b555a6d5f4966f789822acf53922eb379a08"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathContributionTests.swift",
+      "sha256": "7c6c71a0b4920818ebd7264a6b6f44a0dcbc4eadd7575158846b0d558b0a1b61"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathExpressionMappingTests.swift",
+      "sha256": "185812da2ff56b1296bf2883b8628a899c381440a8aad38f568a1fa0bb4cc0a2"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathFailureDiagnosticTests.swift",
+      "sha256": "6f33100f2f58e9061a7cc26ec8517f88a85fea36e308b10b862c41720a1bec2e"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathLineEndingTests.swift",
+      "sha256": "0923c04e4e0362eab57caa0b577a8e7800a29da16b9a3fad653c50a7c1ed6050"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathLiteralContextTests.swift",
+      "sha256": "2d322c8d957ff305f6ec97de913316647ac3e5f5768e3f136a9f2d1a69117c5d"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathSpanScannerEquivalenceTests.swift",
+      "sha256": "082395f1e7c1c312fd4fba1b78f7b3f9bb00e8c3ca9e5593b74758a26003f2c6"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathSpanScannerTests.swift",
+      "sha256": "7484230d9bd560e7bb2e2fd035a836d7e044281065287eee55ff27f4f0268a41"
+    }
+  ],
+  "local_execution": "Foundation/C/CryptoKit and scalar CGFloat values only; no AppKit/SwiftUI/WebKit/product/renderer execution",
+  "production_activation": false,
+  "logs": [
+    {
+      "raw": "actual-math-tests-target-compile.log",
+      "bytes": 3829,
+      "sha256": "6f46854942ce14d75022267a6b9656da13c21dfcf8bf670ceeea103ccd818253",
+      "archive": "actual-math-tests-target-compile.log.gz"
+    },
+    {
+      "raw": "application-local-dependency-resolve.log",
+      "bytes": 5418,
+      "sha256": "42d8aec643c51c4c56d35c8d85473e81f958e9fa2cf396da8d9517337b5a6491",
+      "archive": "application-local-dependency-resolve.log.gz"
+    },
+    {
+      "raw": "before-prefix-content-guard.log",
+      "bytes": 3481,
+      "sha256": "551ca8fcad1a6e2545087447033a32a8054d8ec7a5e4baa18431ae26cf39957c",
+      "archive": "before-prefix-content-guard.log.gz"
+    },
+    {
+      "raw": "final-compliance-ownership-tests.log",
+      "bytes": 10805,
+      "sha256": "000e1b07ad3c326d7d012c02d45d65a251c605740d04b9c973491ffe669ad07a",
+      "archive": "final-compliance-ownership-tests.log.gz"
+    },
+    {
+      "raw": "final-debug.log",
+      "bytes": 50595,
+      "sha256": "d919dbda18b6d748969f8017033f4aabb5981e725a1b58d1b594e9723ddc05bc",
+      "archive": "final-debug.log.gz"
+    },
+    {
+      "raw": "final-ownership-inventory.log",
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+      "archive": "final-ownership-inventory.log.gz"
+    },
+    {
+      "raw": "final-release.log",
+      "bytes": 55172,
+      "sha256": "1ca0ac7b136c125a64251b23020358e3781ecb58e010ed94eb7781f28e7ecd58",
+      "archive": "final-release.log.gz"
+    },
+    {
+      "raw": "first-party-compliance-tests.log",
+      "bytes": 10256,
+      "sha256": "1ad9328e11f1a9db347c150d37525f2b8961861583cf70d054c8cc00e8ffe92c",
+      "archive": "first-party-compliance-tests.log.gz"
+    },
+    {
+      "raw": "first-party-final-inventory.log",
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+      "archive": "first-party-final-inventory.log.gz"
+    },
+    {
+      "raw": "first-party-full-format.log",
+      "bytes": 263,
+      "sha256": "1f8db38ded605a7c441a622c89b85b17c842e1c6fc2c3b38bf17faacbcd6d370",
+      "archive": "first-party-full-format.log.gz"
+    },
+    {
+      "raw": "first-party-full-lint.log",
+      "bytes": 72152,
+      "sha256": "89be94d821d171b7d26fd623ed3bcd193bd072a73074d0d4f9a424f211ef7253",
+      "archive": "first-party-full-lint.log.gz"
+    },
+    {
+      "raw": "first-party-generate-notices.log",
+      "bytes": 50,
+      "sha256": "916a4698d9177a9597cb4fc51950f9842bb6a71ce740a0f2540b4a8bb51d77a1",
+      "archive": "first-party-generate-notices.log.gz"
+    },
+    {
+      "raw": "first-party-generate-sbom.log",
+      "bytes": 41,
+      "sha256": "a2d24371d17e6c6f1296277ca983dce9065ade847908059bfd7be20d4458cf2a",
+      "archive": "first-party-generate-sbom.log.gz"
+    },
+    {
+      "raw": "first-party-symlink-compliance-tests.log",
+      "bytes": 10805,
+      "sha256": "2f83f83054055ffcef1965312760b167e748c1214a75430e5ae97d729642f92f",
+      "archive": "first-party-symlink-compliance-tests.log.gz"
+    },
+    {
+      "raw": "first-test-format.log",
+      "bytes": 194,
+      "sha256": "c0ddaece2b8c1a2e0489e7442138173f7eeb8cb7925b4a67d1faa81ad7c27759",
+      "archive": "first-test-format.log.gz"
+    },
+    {
+      "raw": "generate-notices.log",
+      "bytes": 50,
+      "sha256": "916a4698d9177a9597cb4fc51950f9842bb6a71ce740a0f2540b4a8bb51d77a1",
+      "archive": "generate-notices.log.gz"
+    },
+    {
+      "raw": "generate-sbom.log",
+      "bytes": 41,
+      "sha256": "a2d24371d17e6c6f1296277ca983dce9065ade847908059bfd7be20d4458cf2a",
+      "archive": "generate-sbom.log.gz"
+    },
+    {
+      "raw": "initial-debug.log",
+      "bytes": 66122,
+      "sha256": "c7d6db5273e9e2cf6ea008aaa6b73f7f5b6a540ce4d795e5cb05dd505404cc1a",
+      "archive": "initial-debug.log.gz"
+    },
+    {
+      "raw": "initial-lint.log",
+      "bytes": 1541,
+      "sha256": "de50cd76ff8ca1eccf8a9436b8f7099059cb2d37278f9ffc632a9b7049d51a97",
+      "archive": "initial-lint.log.gz"
+    },
+    {
+      "raw": "inventory.log",
+      "bytes": 171,
+      "sha256": "b3680207dd68b265e28541fc84d3c6550a5e12086a72ece42a7ec1beb9263945",
+      "archive": "inventory.log.gz"
+    },
+    {
+      "raw": "prefix-guard-debug.log",
+      "bytes": 50618,
+      "sha256": "16303f5eb2c5c1bbd89e7f8856dcacf763085f610766cfbf0674cf68cd8fbf6c",
+      "archive": "prefix-guard-debug.log.gz"
+    },
+    {
+      "raw": "prefix-guard-format.log",
+      "bytes": 194,
+      "sha256": "3ddac36a67a658d6a325e627e10f24e3d712afd70c3de097e6fa293d3fdd4424",
+      "archive": "prefix-guard-format.log.gz"
+    },
+    {
+      "raw": "refined-lint.log",
+      "bytes": 1003,
+      "sha256": "c3fc3b6caba37ea778c1f6ac8838be8f91645aa8a8d3471f24de0c6b48aea552",
+      "archive": "refined-lint.log.gz"
+    },
+    {
+      "raw": "source-tests-format.log",
+      "bytes": 195,
+      "sha256": "abad20b199426df655e02577c678fbfa5cb96421380065e579075dff58f131c7",
+      "archive": "source-tests-format.log.gz"
+    }
+  ]
+}
