@@ -123,7 +123,7 @@ This file is generated from `compliance/inventory.json` by
 | marked (via Mermaid) | 16.3.0 | MIT |
 | Math fonts bundled by SwiftUIMath | 0.1.0 | OFL-1.1 AND LicenseRef-GUST-Font-License AND MIT |
 | Mermaid | 11.17.2 | MIT |
-| Neon | 526a29c | BSD-3-Clause |
+| Neon | e1e0c6d | BSD-3-Clause |
 | nvim-treesitter Markdown highlight queries (via tree-sitter-markdown) | 2022-06 import | Apache-2.0 |
 | oss.terrastruct.com/util-go (D2 publisher-build attribution) | publisher source-build input v0.0.0-20250213174338-243d8661088a | ISC |
 | path-browserify (content-matched reference via Mermaid; original version unresolved) | original unresolved; content matches 1.0.1 | MIT |
@@ -142,7 +142,7 @@ This file is generated from `compliance/inventory.json` by
 | swift-concurrency-extras | 1.4.1 | MIT |
 | swift-markdown | 0.8.0 | Apache-2.0 |
 | SwiftSoup | 2.13.9 | MIT |
-| SwiftTreeSitter | 7b914f4 | BSD-3-Clause |
+| SwiftTreeSitter | 1b1c85e | BSD-3-Clause |
 | SwiftUIMath | 0.1.0 | MIT |
 | Textual | d3ddabb | MIT |
 | tree-sitter (runtime) | 0.25.10 | MIT |
@@ -8783,9 +8783,9 @@ SOFTWARE.
 
 ## Neon
 
-- Version: 526a29c
+- Version: e1e0c6d
 - Upstream: https://github.com/Joncallim/Neon
-- Revision: `526a29c48ff1b6e949aa47453f0861f9d7b14858`
+- Revision: `e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9`
 - Licence: BSD-3-Clause
 - Copyright (c) 2022, Chime
 
@@ -10485,9 +10485,9 @@ SOFTWARE.
 
 ## SwiftTreeSitter
 
-- Version: 7b914f4
+- Version: 1b1c85e
 - Upstream: https://github.com/Joncallim/SwiftTreeSitter
-- Revision: `7b914f4f1f91f3ecc60478136786babc6d6555fd`
+- Revision: `1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43`
 - Licence: BSD-3-Clause
 - Copyright (c) 2021, Chime
 

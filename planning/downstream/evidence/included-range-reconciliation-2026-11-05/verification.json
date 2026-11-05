@@ -1,16 +1,16 @@
 {
   "applicationBaseline": "5c867c5cecb1121ea157d4b6df25340f4ab14f86",
   "libraryBase": "cbe31cb3601aa29c1f64b6e4328733511126d6d5",
-  "libraryHead": "7b914f4f1f91f3ecc60478136786babc6d6555fd",
+  "libraryHead": "1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43",
   "neonBase": "dabf50c947148c49acd0d321dfe8f3805d10b3da",
-  "neonHead": "526a29c48ff1b6e949aa47453f0861f9d7b14858",
+  "neonHead": "e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9",
   "sourceOnly": true,
   "localAppOrGUIExecution": false,
   "markdownScenarios": 42,
   "markdownTestFunctions": 1,
   "markdownOldSourceIssues": 62,
   "upstreamXCTests": 36,
-  "upstreamSwiftTests": 9,
+  "upstreamSwiftTests": 11,
   "fullApplicationCI": "required before merge",
   "files": {
     "upstream-old-source-tests.log": {
@@ -125,6 +125,39 @@
       "bytes": 0,
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "gzipSha256": "ac73670af3abed54ac6fb4695131f4099be9fbe39d6076c5d0264a6bbdae9d83"
+    },
+    "review-final-upstream-debug.log": {
+      "bytes": 11009,
+      "sha256": "d7ed9f5edae5ef91d17463490523348f4b6aea70b6f6d37d05531cd1ff0a15ce",
+      "gzipSha256": "af7123f4a05b914fb9daa8bb5d20486a3f08d664db2a8c1972cc71f6fdfe5c18"
+    },
+    "review-final-upstream-release.log": {
+      "bytes": 11077,
+      "sha256": "ff73c7d44fd5130f9ca82eba8ac4ce837234ee304b4bc785681698aa2b17104a",
+      "gzipSha256": "c1a2eca104492ca1b8b239c98ec1ca6920ad6617c511898cdb63bab3eab79f2c"
+    },
+    "review-final-markdown-debug.log": {
+      "bytes": 2919,
+      "sha256": "2167efc2d57ae8ff94f1719ad80824713e9d9ca0300d81ea6d2690dbadeda0e0",
+      "gzipSha256": "dbf56c4a507d98c6932a2e8d95f43884e93e31907da9545f2b6b3360e2f65143"
+    },
+    "review-final-markdown-release.log": {
+      "bytes": 2878,
+      "sha256": "df7b6f943123dc1ecf2bf23333a202dd2a1d4d09c79766aaa273dd47c84343dd",
+      "gzipSha256": "de3670ce012bea427f38505cf9fb7be58658863b2a2574bd19ffc1ae68678e28"
+    },
+    "cross-language-review-regression.log": {
+      "bytes": 1729,
+      "sha256": "124cc8b1077a03acc1edf37e181d1e133708224b1deb652b4953309f0fa0cc52",
+      "gzipSha256": "09feb43475595cb560a36c3020cacc4c3d5c71ee25cb8d478a8b1eb42130fa4c"
+    },
+    "review-corrected-swifttreesitter.patch": {
+      "bytes": 16478,
+      "sha256": "47f504e79fd60605ab71c9c860cf5940c5f2035f1cbb96ecb7d36ee699da2521"
+    },
+    "review-corrected-neon-manifest.patch": {
+      "bytes": 514,
+      "sha256": "29ba60377538c5b54ca23a930e984f833a078853cdd8212cb710e23209bef99b"
     }
   },
   "fixtureInputs": {
@@ -224,5 +257,18 @@
   "complianceControls": 316,
   "strictReleaseFailures": 6,
   "applicationTestSHA256": "9d27f86c2c762fa2f1fe4f6154f4403a96251d643b75ead312835ed1810a3286",
-  "applicationLockSHA256": "a6446496b31f61123ec076c221ce6f550dee8053738da29bbabd84998472e074"
+  "applicationLockSHA256": "860f17296affe577c095f8c1d22a5ca7e85f7748b0beca6d3593331bbafc64e2",
+  "initialLibraryHead": "7b914f4f1f91f3ecc60478136786babc6d6555fd",
+  "initialNeonHead": "526a29c48ff1b6e949aa47453f0861f9d7b14858",
+  "initialHeadHostedCI": {
+    "head": "d826cc6ae3640f65cf075de9d863aafeebd4cc88",
+    "run": 41961681501,
+    "result": "success",
+    "packageTests": 3451,
+    "packageSuites": 485,
+    "knownIssues": 2,
+    "nonUIAppTests": 619,
+    "nonUIAppSuites": 127,
+    "supersededForQualification": "Cross-language final review required a corrected source head; new full CI required"
+  }
 }

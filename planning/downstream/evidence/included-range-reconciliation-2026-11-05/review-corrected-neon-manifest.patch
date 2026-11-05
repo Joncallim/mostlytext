@@ -1,0 +1,13 @@
+diff --git a/Package.swift b/Package.swift
+index 3d4a391..04f724c 100644
+--- a/Package.swift
++++ b/Package.swift
+@@ -15,7 +15,7 @@ let package = Package(
+ 		.library(name: "Neon", targets: ["Neon"]),
+ 	],
+ 	dependencies: [
+-		.package(url: "https://github.com/ChimeHQ/SwiftTreeSitter", branch: "main"),
++		.package(url: "https://github.com/Joncallim/SwiftTreeSitter", revision: "1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43"),
+ 		.package(url: "https://github.com/ChimeHQ/Rearrange", from: "2.0.0"),
+ 	],
+ 	targets: [
