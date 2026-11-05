@@ -169,3 +169,29 @@ admission and check correctness for any returned hit; cache persistence is not a
 contract when automatic eviction is allowed. All upstream/parser/token assertions
 remain unchanged. The hard entry ceiling is separate from advisory countLimit;
 no memory-pressure callback or key registry can grow without bound.
+
+## First hosted accessibility result and focused diagnosis
+
+The first full CI run 42034991725 at 2e61c096 fails one probe setup requirement:
+all labels collected from NSWindow are empty, including every positive control.
+All five validated-body native functions and the unchanged renderer performance
+suite pass, but later app builds/tests do not run. Preserve this failure and infer
+no inline accessibility result from it.
+
+Apple exposes NSHostingView.accessibilityChildren and navigation-order children as
+the SwiftUI accessibility entry points. Diagnose that actual hosting view directly,
+including unignored children; record both hosting and window roots plus visibility,
+key status, activation policy and child types. Match the existing owned native
+mount fixture's makeKeyAndOrderFront and animationBehavior.none setup. Keep the
+same controls, traversal limits and 50 x 10 ms readiness limit. This is a setup
+hypothesis pending native observation, not a claimed fix or permission change.
+
+Add an isolated hosted diagnostic workflow that copies the exact probe test into
+an owned SwiftPM test-only package with the same three immutable dependency pins.
+It uses macOS/Xcode 26 and no credentials beyond read-only checkout. Full existing
+CI stays unchanged and remains the merge gate; the focused job cannot substitute
+for package/app/four-build qualification. Preparation and post-resolution checks
+must prove exact test bytes and matching lock revisions. Local preparation/compile
+may run; local native execution stays held. Allowed additional files are the
+focused workflow, its fixture preparer and evidence. This avoids repeated full
+application builds while investigating a narrowly unknown native setup.

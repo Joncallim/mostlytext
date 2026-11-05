@@ -29,34 +29,51 @@ struct SourceMathAccessibilityProbeTests {
             styleMask: [.titled], backing: .buffered, defer: false
         )
         window.isReleasedWhenClosed = false
+        window.animationBehavior = .none
         window.contentView = host
         defer {
             window.orderOut(nil)
             window.contentView = nil
             window.close()
         }
-        window.orderFront(nil)
+        window.makeKeyAndOrderFront(nil)
         var labels: [String] = []
         for _ in 0 ..< 50 {
             host.layoutSubtreeIfNeeded()
             window.displayIfNeeded()
-            labels = accessibilityStrings(window)
+            let children = host.accessibilityChildren() ?? []
+            let ordered = host.accessibilityChildrenInNavigationOrder()?.map { $0 as Any } ?? []
+            labels = accessibilityStrings([host] + children + ordered + NSAccessibility.unignoredChildren(from: [host]))
             if controlsAppear(in: labels) {
                 break
             }
             try await Task.sleep(for: .milliseconds(10))
         }
+        try recordObservation(labels, host: host, window: window)
+        try #require(controlsAppear(in: labels), "Accessibility probe setup lacks its actual native positive controls")
+        // This records a measured architecture question, not final equation/VoiceOver acceptance.
+    }
+
+    private func recordObservation(
+        _ labels: [String], host: NSHostingView<some View>, window: NSWindow
+    ) throws {
         let observation: [String: Any] = [
             "positiveControlsPresent": controlsAppear(in: labels),
             "inlineEquationLabelPresent": labels.contains { $0.contains(Self.inline) },
             "inlineEquationOwnElement": labels.contains(Self.inline),
             "labels": labels,
+            "windowLabels": accessibilityStrings([window]),
+            "windowVisible": window.isVisible,
+            "windowIsKey": window.isKeyWindow,
+            "activationPolicy": NSApplication.shared.activationPolicy().rawValue,
+            "hostingChildrenCount": host.accessibilityChildren()?.count ?? 0,
+            "hostingNavigationChildrenCount": host.accessibilityChildrenInNavigationOrder()?.count ?? 0,
+            "hostingChildTypes": (host.accessibilityChildren() ?? []).prefix(32)
+                .map { String(describing: type(of: $0)) },
         ]
         let data = try JSONSerialization.data(withJSONObject: observation, options: [.sortedKeys])
         let record = try #require(String(data: data, encoding: .utf8))
         print("MOSTLYTEXT_MATH_AX_PROBE " + record)
-        try #require(controlsAppear(in: labels), "Accessibility probe setup lacks its actual native positive controls")
-        // This records a measured architecture question, not final equation/VoiceOver acceptance.
     }
 
     private func controlsAppear(in labels: [String]) -> Bool {
@@ -65,7 +82,7 @@ struct SourceMathAccessibilityProbeTests {
             text.contains(Self.before) && text.contains(Self.after)
     }
 
-    private func accessibilityStrings(_ root: NSObject) -> [String] {
+    private func accessibilityStrings(_ roots: [Any]) -> [String] {
         var seen = Set<ObjectIdentifier>()
         var result: [String] = []
         func visit(_ object: NSObject, depth: Int) {
@@ -80,12 +97,18 @@ struct SourceMathAccessibilityProbeTests {
             }
             let selector = NSSelectorFromString("accessibilityChildren")
             guard object.responds(to: selector),
-                  let children = object.perform(selector)?.takeUnretainedValue() as? [NSObject] else { return }
+                  let children = object.perform(selector)?.takeUnretainedValue() as? [Any] else { return }
             for child in children {
-                visit(child, depth: depth + 1)
+                if let object = child as? NSObject {
+                    visit(object, depth: depth + 1)
+                }
             }
         }
-        visit(root, depth: 0)
+        for root in roots.prefix(512) {
+            if let object = root as? NSObject {
+                visit(object, depth: 0)
+            }
+        }
         return result
     }
 

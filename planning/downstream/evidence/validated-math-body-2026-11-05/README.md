@@ -81,3 +81,26 @@ a checked UTF-8 conversion, retaining that failed lint log. The readiness loop
 yields MainActor with the same 50 checks/10 ms bound; no nested RunLoop blocks
 SwiftUI state updates. Empty/failed positive controls remain a real setup failure,
 never evidence that inline equations are absent.
+
+## First actual hosted failure and focused setup remediation
+
+Complete CI 42034991725 at initial head 2e61c096 **fails** one package probe:
+3,518 tests / 497 suites, one issue. All five validated-body native functions and
+the original renderer performance suite pass. The accessibility probe prints an
+empty label array, including every positive control. This establishes a failed
+setup, not missing inline semantics. Later app tests/builds do not run. The full
+raw job log/run JSON and exact original probe source remain retained.
+
+The next candidate queries NSHostingView's public accessibility/navigation-order
+children and unignored host children directly, preserving window-root observations
+as a diagnostic. It matches the existing native mount fixture's key-window and
+no-animation setup. The same controls, depth/count bounds and 50 x 10 ms readiness
+limit remain unchanged. Actual positive controls must qualify the fix remotely.
+
+An additional hosted-only workflow runs this exact test independently with the
+same three immutable dependency revisions; the normal full workflow is unchanged
+and remains the merge gate. The preparer/verification controls reject changed
+test bytes or a changed owner revision. Both the actual PreviewTests target and
+isolated focused target compile locally. YAML syntax, exact source and pin
+verification pass. No native execution occurs locally; no permission/configuration
+change, private accessibility API, assertion weakening or test exclusion is used.
