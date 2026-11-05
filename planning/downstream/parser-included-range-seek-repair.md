@@ -7,14 +7,15 @@ lexer seek. This unit adopts only the already-reproduced binary-search repair
 for tree-sitter 0.25.10. It does not solve Markdown's remaining full inline-tree
 reparse or justify changing the editor's large-document fallback.
 
-Application baseline 2dc95c3e20e12b4bd095825918593b0164cb0d20 (PR #79), pending
-integration of PRs #77–79; live main remains 5c867c5c at intake. The runtime is
-exact da6fe9beb4f7f67beb75914ca8e0d48ae48d6406 through SwiftTreeSitter
-1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43 and Neon
-d58b074a067861161a1df6d5b42d700526d0e7dc. The old A harness and separate later
-profile prove the linear seek cost while also proving that eliminating it leaves
-substantial parser work. Retain those dated results without treating them as
-current complete-editor measurements.
+Initial architecture intake used app2dc95c3e20e12b4bd095825918593b0164cb0d20.
+Current merged main is68801d650dbd174f1cbc810617b43e7c22afdffd after PRs77–79.
+PR80, exact app85d138d58797a9cbb4f2a4b1c79d536a4ae5daab, is the required next
+predecessor and is in complete hosted qualification. It pins SwiftTreeSitter
+7d2dc87e8b9326062d75bc1ef985f17d28e94da9 and Neon
+be25e35787585430f0f1ac845ed44c11e7f8150a. Do not merge this unit until PR80
+passes and integrates; merge that actual main without losing any prior repair.
+Runtime baseline remains exact0.25.10 da6fe9beb4f7f67beb75914ca8e0d48ae48d6406.
+The current owner fork changes only lexer range lookup, its test and manifest.
 
 ## Ownership and fixed behavior
 
@@ -67,3 +68,31 @@ baseline comparison or remediation. Dynamic grammar redesign, pointer-equality
 subtree shortcuts, per-injection trees, styling allocation changes, widened
 edits and fallback changes are separate designs. Native EXECUTION_HOLD, complete-
 editor timing, release signatures and rights/source-publication gates remain.
+
+## Baseline failures and two distinct verification contracts
+
+The first raw-unit edit corpus can split encodings and fails unmodified runtime
+fresh equality; retain it as a diagnosed fixture-domain limitation, not evidence
+that all edits are valid. A separate valid-scalar corpus keeps UTF-8/codepoint
+and UTF-16/surrogate boundaries and also reproduces an original UTF-16 inline
+reuse discrepancy at edit1018. PR80 independently reproduces the same class
+through actual Markdown root/inline layers and selects explicit fresh parsing
+only for MarkdownInline. It keeps a strict2,000-edit application fresh oracle.
+
+The original fail-fast C fresh oracle is retained unchanged. A distinct all-step
+behavior collector now runs all6,000 edits across UTF-8, UTF-16LE and UTF-16BE.
+It counts every fresh divergence and RETURNS NONZERO if any occur. Both original
+and candidate return2 with exactly282 discrepancies; all6,000 actual/fresh AST,
+point, missing-node and query-capture traces are byte-identical, including each
+diagnostic. This is runtime behavior preservation, not6,000 fresh-equivalent
+edits. Sanitized traces must match too without sanitizer diagnostics.
+
+The documented upstream cargo xtask test passes262 tests before/after. Broader
+workspace validation passes317 unit tests but fails5 Rustdoc examples due to
+missing example variables/devgrammar; the exact same5 failures reproduce on
+unmodified runtime. Preserve logs, do not disable examples or call workspace
+validation fully green. These concrete baseline comparisons satisfy the stated
+full-suite failure investigation requirement; the lexer patch is not claimed
+to repair unrelated parser-reuse or documentation problems. Adoption still
+requires current application-policy component suites, full hosted CI, pin and
+licence checks and final exact-head review. No test assertion is weakened.
