@@ -59,3 +59,9 @@ an explicit nil sync closure preserves the same provider contract and avoids the
 compiler defect. Both that setup crash and actual failing baseline are retained;
 compiler/language settings are not weakened. Current main is now verified
 f87a414aff15577dd881cb80cad2928862b93839 (PR81 merged), reconciled into this branch.
+
+PR82 subsequently passes complete native-probe/package/app/CLI qualification and
+merges30d7692f3a535c0e8930a3b80ec2f2af92727e28. Reconcile it before this unit
+is published, preserving its Textual pin. Repeat combined lock/compile/compliance/
+format/lint checks and require current-head full CI; do not cite a mixed source
+combination that has never been tested.

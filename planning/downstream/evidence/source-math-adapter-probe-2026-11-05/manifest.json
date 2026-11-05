@@ -1,0 +1,165 @@
+{
+  "textual": "9077b0f608bd464ee4de880c0ff4c0c8441e698d",
+  "native_probe": "NOT_RUN: local compile only; actual hosted execution pending",
+  "source_position_spike": "executed Foundation-only; no AppKit/SwiftUI/WebKit or product launch",
+  "source_files": [
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/PreviewTests/MathAdapterProbeModel.swift",
+      "sha256": "0def17ca4ff003e1c0c82cb099d2f984a6d87961adb73471de04db67f16a570b"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/PreviewTests/MathAdapterProbeRestore.swift",
+      "sha256": "93625c985c808969c86850fb3a47d5c32d906659e924874b589f0b294cae4f4e"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/PreviewTests/MathAdapterProbeRewrite.swift",
+      "sha256": "382c558c257feb37dbc0fc3934157015fc1adc59f5e703ac3a3fd676d9fcdb55"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/PreviewTests/MathAdapterProbeSample.swift",
+      "sha256": "d756ace60a49a036c4ca6e57ab847035ff5df1a17ebee70f28d0356b4819205f"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceMathAdapterProbeFailureTests.swift",
+      "sha256": "3076f2d7de6667e02c5bb70044c757e985c48cecf1264fcfbef4a7dc552e16d8"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceMathAdapterProbeTests.swift",
+      "sha256": "4d1c15ace3a78a81fde5265b5220d92a24b2b855c5fe334c31d180305d74ec28"
+    }
+  ],
+  "logs": [
+    {
+      "raw_name": "app-compliance-tests.log",
+      "raw_sha256": "db43c691008dc6808bbe32b1045a50cbec09f3936d974b070180feab52638fab",
+      "raw_bytes": 7515,
+      "archive": "app-compliance-tests.log.gz"
+    },
+    {
+      "raw_name": "app-final-format.log",
+      "raw_sha256": "f09a2567440861ec3b0023b1a9d71ee9a2cf7e36507bbce4bf9b68465978dc87",
+      "raw_bytes": 268,
+      "archive": "app-final-format.log.gz"
+    },
+    {
+      "raw_name": "app-final-inventory.log",
+      "raw_sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+      "raw_bytes": 54,
+      "archive": "app-final-inventory.log.gz"
+    },
+    {
+      "raw_name": "app-final-lint.log",
+      "raw_sha256": "d8123a654e4db11d87bc649af3f44198147df0354f50957a7975bd91599dd868",
+      "raw_bytes": 71091,
+      "archive": "app-final-lint.log.gz"
+    },
+    {
+      "raw_name": "app-full-format.log",
+      "raw_sha256": "c253bf8d178c3bd27b390995c067474f269634f34bdd031096f7db0333603996",
+      "raw_bytes": 268,
+      "archive": "app-full-format.log.gz"
+    },
+    {
+      "raw_name": "app-full-lint.log",
+      "raw_sha256": "e1952fbd473cb11598f4b65dc9fa8aae8d6b6014acba64e76727a5ecb63a7322",
+      "raw_bytes": 71091,
+      "archive": "app-full-lint.log.gz"
+    },
+    {
+      "raw_name": "app-generation.log",
+      "raw_sha256": "33c66bdb9775a00b493a8355dd44358cb655bcf075815ece63927cdf5f8f33d9",
+      "raw_bytes": 91,
+      "archive": "app-generation.log.gz"
+    },
+    {
+      "raw_name": "app-inventory.log",
+      "raw_sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+      "raw_bytes": 54,
+      "archive": "app-inventory.log.gz"
+    },
+    {
+      "raw_name": "app-preview-tests-actor-and-concurrent-edit-failure.log",
+      "raw_sha256": "9c848d8ec0a843ef9590cce6c1c459ae2a253774da04a337024c9587d959cbcf",
+      "raw_bytes": 37379,
+      "archive": "app-preview-tests-actor-and-concurrent-edit-failure.log.gz"
+    },
+    {
+      "raw_name": "app-preview-tests-compile.log",
+      "raw_sha256": "676584cd0801e2e1a424e5222662eed196d10b101ce8386d43844cb7797a4ee1",
+      "raw_bytes": 636,
+      "archive": "app-preview-tests-compile.log.gz"
+    },
+    {
+      "raw_name": "app-resolve.log",
+      "raw_sha256": "1560f893bec9cd48d2d459be2db4d1e35e8cb876685923f352121f3a92c3140a",
+      "raw_bytes": 7149,
+      "archive": "app-resolve.log.gz"
+    },
+    {
+      "raw_name": "foundation-source-position-stderr.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_bytes": 0,
+      "archive": "foundation-source-position-stderr.log.gz"
+    },
+    {
+      "raw_name": "probe-actor-format.log",
+      "raw_sha256": "848b80301dc024aef2008e5e31347e5181c420603c6b696f9a8983b8aef54b2a",
+      "raw_bytes": 199,
+      "archive": "probe-actor-format.log.gz"
+    },
+    {
+      "raw_name": "probe-final-format.log",
+      "raw_sha256": "6bc6f7fdb373c27ef8ee5acce46b92e264570efe3415e65c7588585fa71f91a8",
+      "raw_bytes": 199,
+      "archive": "probe-final-format.log.gz"
+    },
+    {
+      "raw_name": "probe-final-lint.log",
+      "raw_sha256": "282958ffecb62771a76493608199b4287c16a11d213e24053c5de5bed86bb3a8",
+      "raw_bytes": 858,
+      "archive": "probe-final-lint.log.gz"
+    },
+    {
+      "raw_name": "probe-format.log",
+      "raw_sha256": "449f6881d1d60374ed76dc722196ab337c25681973156f8c67a65b1b2b381c4e",
+      "raw_bytes": 199,
+      "archive": "probe-format.log.gz"
+    },
+    {
+      "raw_name": "probe-lint.log",
+      "raw_sha256": "4f493068cb2774b3606d5afb051c10e4f0881674f2783a730d94834b79d5820b",
+      "raw_bytes": 1106,
+      "archive": "probe-lint.log.gz"
+    },
+    {
+      "raw_name": "probe-native-geometry-format.log",
+      "raw_sha256": "4f29e1d92be6a960e2e4cbf902d4dce6e68f49ef1bb7ec932c36099385e8ec77",
+      "raw_bytes": 199,
+      "archive": "probe-native-geometry-format.log.gz"
+    },
+    {
+      "raw_name": "rewrite-bounds-format.log",
+      "raw_sha256": "21e9a01c14d1fdf1bd17b3189203a7822353dce99916954bf9b0561226d360fb",
+      "raw_bytes": 199,
+      "archive": "rewrite-bounds-format.log.gz"
+    },
+    {
+      "raw_name": "rewrite-bounds-lint.log",
+      "raw_sha256": "5600724458b053f21796e70ed641854b381219239e2be148ff1f56833171b2f9",
+      "raw_bytes": 858,
+      "archive": "rewrite-bounds-lint.log.gz"
+    },
+    {
+      "raw_name": "textual-factory-compile.log",
+      "raw_sha256": "6d40108015873713fcc01107ab87349c863c4c957b290fa3a60f7c0e60601b9f",
+      "raw_bytes": 20111,
+      "archive": "textual-factory-compile.log.gz"
+    },
+    {
+      "raw_name": "textual-historical-lock-compile-failure.log",
+      "raw_sha256": "faff396e5bf14446dfe4320d02e1a851b9edc8e88e285a69100e6f646f56e2ff",
+      "raw_bytes": 1960,
+      "archive": "textual-historical-lock-compile-failure.log.gz"
+    }
+  ]
+}

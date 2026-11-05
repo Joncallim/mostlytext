@@ -33,3 +33,15 @@ actual24-assertion runtime baseline are retained separately; only the latter is
 a demonstrated validator defect. Tests coordinate actual suspension with a
 continuation/stream, without sleeps. Native abort/lifecycle/IME/Release stress,
 full-editor performance and final acceptance remain separate issue criteria.
+
+## Combined source after the actual attachment probe
+
+PR82 has passed the real native probe and complete hosted CI and merged as
+30d7692f3a535c0e8930a3b80ec2f2af92727e28. This branch reconciles that actual
+main before publication, preserving Textual9077b0f6 and every new math probe.
+Only the Neon pin differs from that baseline;23 others remain unchanged.
+The generated SBOM merge conflict is resolved by sequential regeneration from
+the combined inventory, not by choosing one branch's stale output. Locked
+resolution, actual HighlightingTests compilation, all316 Compliance controls
+and full format/strict lint pass again on the combined source. No native code
+executes locally. Full current-head hosted integration remains pending.

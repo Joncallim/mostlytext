@@ -1,0 +1,20 @@
+{
+  "baseline_app": "03cba92ccc55107569bf8583b9e244770d9f5f23",
+  "textual": "9077b0f608bd464ee4de880c0ff4c0c8441e698d",
+  "changed_pin_identities": [
+    "textual"
+  ],
+  "unchanged_pins": 23,
+  "swiftui_math": {
+    "identity": "swiftui-math",
+    "kind": "remoteSourceControl",
+    "location": "https://github.com/gonzalezreal/swiftui-math",
+    "state": {
+      "revision": "0b5c2cfaaec8d6193db206f675048eeb5ce95f71",
+      "version": "0.1.0"
+    }
+  },
+  "original_mit_sha256": "9c9191ada6888f3da1a888b6c74dae46e98787b1150c734e3b1e5ec5bbf73b09",
+  "standalone_lock_restored": true,
+  "native_execution": "NOT_RUN locally; actual hosted probe pending"
+}

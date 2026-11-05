@@ -1,0 +1,156 @@
+[
+  {
+    "rendered" : "Before MTMATH0123456789ABCDEFZ0Q after.",
+    "runs" : [
+      {
+        "source" : "Before MTMATH0123456789ABCDEFZ0Q after.",
+        "source_utf16" : [
+          0,
+          39
+        ],
+        "text" : "Before MTMATH0123456789ABCDEFZ0Q after."
+      }
+    ],
+    "source" : "Before MTMATH0123456789ABCDEFZ0Q after."
+  },
+  {
+    "rendered" : "漢😀 before MTMATH0123456789ABCDEFZ0Q after.",
+    "runs" : [
+      {
+        "source" : "漢😀 before ",
+        "source_utf16" : [
+          0,
+          11
+        ],
+        "text" : "漢😀 before "
+      },
+      {
+        "source" : "MTMATH0123456789ABCDEFZ0Q",
+        "source_utf16" : [
+          12,
+          37
+        ],
+        "text" : "MTMATH0123456789ABCDEFZ0Q"
+      },
+      {
+        "source" : " after.",
+        "source_utf16" : [
+          38,
+          45
+        ],
+        "text" : " after."
+      }
+    ],
+    "source" : "漢😀 before *MTMATH0123456789ABCDEFZ0Q* after."
+  },
+  {
+    "rendered" : "MTMATH0123456789ABCDEFZ0Q",
+    "runs" : [
+      {
+        "link" : "/target",
+        "source" : "MTMATH0123456789ABCDEFZ0Q",
+        "source_utf16" : [
+          1,
+          26
+        ],
+        "text" : "MTMATH0123456789ABCDEFZ0Q"
+      }
+    ],
+    "source" : "[MTMATH0123456789ABCDEFZ0Q](/target \"title\")"
+  },
+  {
+    "rendered" : "[MTMATH0123456789ABCDEFZ0Q][]",
+    "runs" : [
+      {
+        "source" : "[MTMATH0123456789ABCDEFZ0Q][]",
+        "source_utf16" : [
+          0,
+          29
+        ],
+        "text" : "[MTMATH0123456789ABCDEFZ0Q][]"
+      }
+    ],
+    "source" : "[MTMATH0123456789ABCDEFZ0Q][]\n\n[$x$]: /target \"title\""
+  },
+  {
+    "rendered" : "MTMATH0123456789ABCDEFZ0Q",
+    "runs" : [
+      {
+        "link" : "/target",
+        "source" : "MTMATH0123456789ABCDEFZ0Q",
+        "source_utf16" : [
+          1,
+          26
+        ],
+        "text" : "MTMATH0123456789ABCDEFZ0Q"
+      }
+    ],
+    "source" : "[MTMATH0123456789ABCDEFZ0Q][$x$]\n\n[$x$]: /target \"title\""
+  },
+  {
+    "rendered" : "MTMATH0123456789ABCDEFZ0Q",
+    "runs" : [
+      {
+        "source" : "MT",
+        "source_utf16" : [
+          0,
+          2
+        ],
+        "text" : "MT"
+      },
+      {
+        "source" : "MATH0123456789ABCDEF",
+        "source_utf16" : [
+          4,
+          24
+        ],
+        "text" : "MATH0123456789ABCDEF"
+      },
+      {
+        "source" : "Z0Q",
+        "source_utf16" : [
+          26,
+          29
+        ],
+        "text" : "Z0Q"
+      }
+    ],
+    "source" : "MT**MATH0123456789ABCDEF**Z0Q"
+  },
+  {
+    "rendered" : "MTMATH0123456789ABCDEFZ0Q and MTMATH0123456789ABCDEFZ0Q",
+    "runs" : [
+      {
+        "source" : "MTMATH0123456789ABCDEFZ0Q and ",
+        "source_utf16" : [
+          0,
+          30
+        ],
+        "text" : "MTMATH0123456789ABCDEFZ0Q and "
+      },
+      {
+        "source" : "MTMATH0123456789ABCDEFZ0Q",
+        "source_utf16" : [
+          31,
+          56
+        ],
+        "text" : "MTMATH0123456789ABCDEFZ0Q"
+      }
+    ],
+    "source" : "MTMATH0123456789ABCDEFZ0Q and `MTMATH0123456789ABCDEFZ0Q`"
+  },
+  {
+    "rendered" : "Before MTMATH0123456789ABCDEFZ0Q after.",
+    "runs" : [
+      {
+        "source" : "Before &#77;TMATH0123456789ABCDEFZ0Q after.",
+        "source_utf16" : [
+          0,
+          43
+        ],
+        "text" : "Before MTMATH0123456789ABCDEFZ0Q after."
+      }
+    ],
+    "source" : "Before &#77;TMATH0123456789ABCDEFZ0Q after."
+  }
+]

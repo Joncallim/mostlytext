@@ -1,6 +1,6 @@
 {
   "neon": "cd14f22ae8f8402b175a0bafd87560b78c7549e9",
-  "app_baseline": "f87a414aff15577dd881cb80cad2928862b93839",
+  "app_baseline": "30d7692f3a535c0e8930a3b80ec2f2af92727e28",
   "changed_lock_identities": [
     "neon"
   ],
@@ -81,6 +81,48 @@
       "raw_bytes": 17161,
       "raw_sha256": "3b39b43af50df5c5ec5d7727938a1849a5a22e506980d857f4387dd95d11d6b8",
       "archive": "candidate-all-release.log.gz"
+    },
+    {
+      "raw_name": "combined-compliance-tests.log",
+      "raw_bytes": 7515,
+      "raw_sha256": "77eb1dbde3517a87d00710d14842d94cb5264c071639cd57bd7abf9133f3fec2",
+      "archive": "combined-compliance-tests.log.gz"
+    },
+    {
+      "raw_name": "combined-format.log",
+      "raw_bytes": 262,
+      "raw_sha256": "288f3006e61552afaa8bba008fa3fab97623df70c69e89026932175d53a7b14b",
+      "archive": "combined-format.log.gz"
+    },
+    {
+      "raw_name": "combined-generation.log",
+      "raw_bytes": 91,
+      "raw_sha256": "33c66bdb9775a00b493a8355dd44358cb655bcf075815ece63927cdf5f8f33d9",
+      "archive": "combined-generation.log.gz"
+    },
+    {
+      "raw_name": "combined-highlight-tests-compile.log",
+      "raw_bytes": 150,
+      "raw_sha256": "ab4adede216462b9822eff0d5539d0ee05099c0738e13ee904df3472a4034290",
+      "archive": "combined-highlight-tests-compile.log.gz"
+    },
+    {
+      "raw_name": "combined-inventory.log",
+      "raw_bytes": 54,
+      "raw_sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+      "archive": "combined-inventory.log.gz"
+    },
+    {
+      "raw_name": "combined-lint.log",
+      "raw_bytes": 71145,
+      "raw_sha256": "707d6271d888e201735800613511c24ec50480c89121a6d225c7aaab75052753",
+      "archive": "combined-lint.log.gz"
+    },
+    {
+      "raw_name": "combined-resolve.log",
+      "raw_bytes": 106,
+      "raw_sha256": "675241d19f47928ed0cc94ce7ae4738b1fefee51c38a1add20e12bd70a8bc11b",
+      "archive": "combined-resolve.log.gz"
     },
     {
       "raw_name": "explicit-provider-format.log",

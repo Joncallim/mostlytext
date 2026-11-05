@@ -1,0 +1,85 @@
+diff --git a/MOSTLYTEXT_PATCHES.md b/MOSTLYTEXT_PATCHES.md
+new file mode 100644
+index 0000000..f5bddef
+--- /dev/null
++++ b/MOSTLYTEXT_PATCHES.md
+@@ -0,0 +1,27 @@
++# Source-aware equation attachment probe
++
++Exact application base: d3ddabb1da37681083cdc3da706f96cf2fb6a3c6.
++All previously reviewed owner changes remain intact; original MIT licence and
++credits are unchanged. No upstream acceptance or new renderer is claimed.
++
++AnyAttachment.math(latex:style:sourceID:) constructs the existing concrete
++MathAttachment from an unchanged TeX body. Its optional caller-owned UUID keeps
++separate source occurrences distinct in attachment equality/caches. It is not
++an authored URL, source-range guess or transient marker. Default nil retains the
++existing math extension's behavior. Existing sizing, baseline, native view,
++block detection and SwiftUIMath identity remain unchanged.
++
++This additive factory exists to qualify an original-source transport before any
++production parser replacement. The application probe must preserve reference
++identity and original spans, reject missing/duplicate/misplaced or forged
++markers, and verify actual attachments/metrics/paragraph construction. Final
++accessibility/navigation, structured diagnostics, shared delimiter grammar and
++native visual acceptance remain separate work. No production activation follows
++merely from compiling this factory.
++
++Compile-only qualification uses the exact application shared pins plus unchanged
++standalone test-only pins. The historical standalone lock omits SwiftUIMath and
++fails forced resolution; that failure and exact seeded lock are retained in the
++application evidence packet. The historical lock is restored afterward, with no
++unrelated dependency update committed. Actual pinned application compilation and
++hosted native probe/full CI remain required for adoption.
+diff --git a/Sources/Textual/Attachment/AnyAttachment+Math.swift b/Sources/Textual/Attachment/AnyAttachment+Math.swift
+new file mode 100644
+index 0000000..e2757ff
+--- /dev/null
++++ b/Sources/Textual/Attachment/AnyAttachment+Math.swift
+@@ -0,0 +1,28 @@
++import Foundation
++
++extension AnyAttachment {
++  /// The placement of an equation in its surrounding text.
++  public enum MathStyle: Hashable, Sendable {
++    case inline
++    case display
++  }
++
++  /// Creates the existing native math attachment from an unchanged TeX body.
++  ///
++  /// Use this after admitting math from original source, before Markdown can
++  /// reinterpret its punctuation or escapes. No dollar tokenization occurs.
++  /// An optional caller-owned identity distinguishes separate source occurrences;
++  /// it is not parsed from authored text or a transient transport marker.
++  public static func math(
++    latex: String,
++    style: MathStyle,
++    sourceID: UUID? = nil
++  ) -> Self {
++    let displayStyle: MathAttachment.DisplayStyle
++    switch style {
++    case .inline: displayStyle = .inline
++    case .display: displayStyle = .block
++    }
++    return .init(MathAttachment(latex: latex, style: displayStyle, sourceID: sourceID))
++  }
++}
+diff --git a/Sources/Textual/Internal/Attachment/MathAttachment.swift b/Sources/Textual/Internal/Attachment/MathAttachment.swift
+index 0fc796c..d0bff1f 100644
+--- a/Sources/Textual/Internal/Attachment/MathAttachment.swift
++++ b/Sources/Textual/Internal/Attachment/MathAttachment.swift
+@@ -22,10 +22,12 @@ struct MathAttachment: Attachment {
+ 
+   let latex: String
+   let displayStyle: DisplayStyle
++  let sourceID: UUID?
+ 
+-  init(latex: String, style: DisplayStyle) {
++  init(latex: String, style: DisplayStyle, sourceID: UUID? = nil) {
+     self.latex = latex
+     self.displayStyle = style
++    self.sourceID = sourceID
+   }
+ 
+   var body: some View {
