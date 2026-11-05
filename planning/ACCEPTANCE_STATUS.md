@@ -1,4 +1,4 @@
-# MostlyText acceptance status — 4 November 2026
+# MostlyText acceptance status — 5 November 2026
 
 Initial acceptance baseline: main `f660e30f61c0b48551fb450ee9afd24ba35d50ae`.
 Later scoped recovery, localization and attribution units and their exact checks
@@ -7,6 +7,27 @@ qualified units and the live PR checks for current integration status.
 This dated status distinguishes source integration, local prerequisites and
 acceptance. The live backlog is [MostlyText issues](https://github.com/Joncallim/mostlytext/issues);
 [the number map](ISSUE_TRANSFER_MAP.md) explains imported historical references.
+
+## Current scoped source and public-copy checkpoint — 5 November 2026
+
+The current [engineering remainder](ENGINEERING_REMAINDER.md) records the four
+separately qualified source corrections at current main
+`28a4c141229ea656f3340569d7911239a6832986` (exact qualified tree
+`2fda814b03df28d00fd9ba6f7dbf521a73f41836`): parsed diagram literals, front-matter
+line endings, exact JSON formatting snapshots and distinct/current JSON outline
+identities. Each retains old-source failures and complete Debug/Release focused
+checks; full hosted evidence is linked there. These source corrections do not
+requalify the historical native receipts below or explain the retained renderer
+failures. The six strict release predicates remain open.
+
+The [approved website correction](downstream/website-public-claims-2026-11-05.md)
+is live at `b354a6b7`; all 51 served files match approved raw bytes, including all
+19 HTML pages. The current public-copy audit in #4 is checked, with a required
+recheck for new release copy and exact-RC claims. The live audit contains 17 open
+issues and 178 unchecked original criteria. None of the 17 whole issues is ready
+to close, including the three prose-based issues. No local product/UI execution,
+app promotion, signing, source-offer publication or independent rights approval
+is inferred.
 
 ## Current source checkpoint — 4 November 2026
 
