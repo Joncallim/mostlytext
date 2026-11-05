@@ -37,3 +37,7 @@ lint/pinned format, ordinary compliance, unchanged24pins/notices/SBOM and hosted
 native package/app checks precede merge. Keep this change separate from PR93 and
 do not integrate it before the production math candidate is qualified. Compiler
 SDK/module-map messages outside these owned call sites are not claimed fixed.
+
+## Lint reconciliation
+
+Use fully qualified Unicode.UTF8 for the bounded byte-array decoding. SwiftLint0.65.1misclassifies the unqualified initializer syntactically as a Data conversion; both original errors are retained. A failable decoder/empty fallback would change invalid-UTF8 behavior and is not used. Existing guard tests and50000buffer comparisons pass again, and complete strict lint/format now pass1442files.

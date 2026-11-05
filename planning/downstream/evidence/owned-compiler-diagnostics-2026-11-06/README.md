@@ -24,3 +24,19 @@ All24pins, notices and SBOM bytes remain unchanged; ordinary compliance passes.
 Hosted package/app execution remains required before merge, after PR93's own
 production activation qualification. This does not close native UI/account,
 release/signing, localisation or independent compliance acceptance gates.
+
+
+## Corrected lint qualification
+
+The original first-lint log contains two optional_data_string_conversion errors;
+those errors were missed before opening the draft. Hosted lint on994a6f25 also
+fails. This is not a complete lint pass. SwiftLint0.65.1's rule syntactically
+flags String(decoding:as:UTF8.self) regardless of the actual byte-array input.
+Using fully qualified Unicode.UTF8 makes the intended byte decoder explicit
+without changing replacement decoding, adopting failable/empty behavior, disabling
+a rule or changing confstr/fcntl and ownership checks. Exact guard source again
+passes5tests Debug/Release;50000old/new buffer comparisons again match exactly.
+Complete package/app/UI compilations pass with no owned warnings. Full strict
+lint and pinned format now pass1442files. The new receipts/logs describe this
+source; original failed logs and earlier source receipts remain preserved.
+Fresh exact-head hosted checks are still required before merge.
