@@ -31,6 +31,7 @@ struct PreviewMarkdownSourceMapTests {
             .init(startLine: 1, startColumn: 0, endLine: 1, endColumn: 1),
             .init(startLine: -1, startColumn: 1, endLine: 1, endColumn: 1),
             .init(startLine: 1, startColumn: 2, endLine: 1, endColumn: 4),
+            .init(startLine: 1, startColumn: 3, endLine: 1, endColumn: 4),
             .init(startLine: 1, startColumn: 1, endLine: 1, endColumn: 5),
             .init(startLine: 1, startColumn: 4, endLine: 1, endColumn: 1),
             .init(startLine: 2, startColumn: 1, endLine: 1, endColumn: 1),

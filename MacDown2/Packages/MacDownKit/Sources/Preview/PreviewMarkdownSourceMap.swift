@@ -11,17 +11,25 @@ struct PreviewMarkdownSourceMap: Sendable {
 
     private let lines: [Range<Int>]
     private let boundaries: [Int: Boundary]
+    private let endBoundaries: [Int: Boundary]
 
     init(_ source: String) {
         var boundaries: [Int: Boundary] = [:]
+        var ends: [Int: Boundary] = [:]
         var utf8Offset = 0
         var utf16Offset = 0
         for scalar in source.unicodeScalars {
-            boundaries[utf8Offset] = Boundary(lowerUTF16: utf16Offset, upperUTF16: utf16Offset + scalar.utf16.count)
+            let boundary = Boundary(lowerUTF16: utf16Offset, upperUTF16: utf16Offset + scalar.utf16.count)
+            boundaries[utf8Offset] = boundary
+            // Public positions describe a scalar endpoint. Native parser versions
+            // may report the first or inclusive final UTF-8 byte for the end column.
+            ends[utf8Offset] = boundary
+            ends[utf8Offset + scalar.utf8.count - 1] = boundary
             utf8Offset += scalar.utf8.count
             utf16Offset += scalar.utf16.count
         }
         self.boundaries = boundaries
+        endBoundaries = ends
         let bytes = Array(source.utf8)
         var lines: [Range<Int>] = []
         var start = 0
@@ -43,7 +51,7 @@ struct PreviewMarkdownSourceMap: Sendable {
     func range(for position: AttributedString.MarkdownSourcePosition) -> NSRange? {
         guard let start = byteOffset(line: position.startLine, column: position.startColumn),
               let end = byteOffset(line: position.endLine, column: position.endColumn),
-              start <= end, let lower = boundaries[start], let upper = boundaries[end]
+              start <= end, let lower = boundaries[start], let upper = endBoundaries[end]
         else { return nil }
         return NSRange(location: lower.lowerUTF16, length: upper.upperUTF16 - lower.lowerUTF16)
     }

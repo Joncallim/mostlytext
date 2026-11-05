@@ -29,6 +29,20 @@ struct PreviewMathTransportTests {
         let occurrence = try replacement(in: source)
         let input = try PreviewMathInput(source: source, replacements: [occurrence], namespace: namespace)
         let parser = PreviewMathMarkupParser(input: input, attachments: [occurrence.id: attachment(occurrence.id)])
+        let native = AttributedStringMarkdownParser(
+            baseURL: nil,
+            options: .init(appliesSourcePositionAttributes: true),
+            syntaxExtensions: []
+        )
+        let raw = try native.attributedString(for: input.rewritten)
+        let positions = raw.runs.compactMap { run -> [Int]? in
+            guard let value = run.markdownSourcePosition else { return nil }
+            return [value.startLine, value.startColumn, value.endLine, value.endColumn]
+        }
+        let data = try JSONSerialization.data(withJSONObject: [
+            "neighbor": neighbor, "rewrittenUTF8Bytes": input.rewritten.utf8.count, "positions": positions,
+        ], options: [.sortedKeys])
+        try print("MOSTLYTEXT_SCALAR_SOURCE_POSITIONS " + #require(String(data: data, encoding: .utf8)))
         let actual = try parser.attributedString(for: source)
         #expect(scalarText(actual).utf8.elementsEqual((neighbor + "\u{FFFC}" + neighbor).utf8))
         let ownRuns = actual.runs.filter { $0[PreviewMathSourceAttribute.self] == occurrence.id }

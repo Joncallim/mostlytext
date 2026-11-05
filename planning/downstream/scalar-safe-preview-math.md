@@ -112,3 +112,14 @@ grammar inside the adapter. Whole HTML blocks/tag attributes remain excluded by 
 app's shared structural admission; parser code/HTML intent checks remain additional
 defense. Native inline-code/fence/hidden-definition and all forgery assertions stay.
 Before sources and the full native failure log are retained; no failure is relabeled.
+
+The first numeric-map run 42068181327 no longer crashes and passes foreign/missing/
+duplicate/code/forgery/reference/inline-HTML controls, but rejects all six Unicode
+neighbors (13 retained assertions including absent derived geometry). Native end
+columns can identify the inclusive FINAL UTF-8 byte of the final scalar. The map
+now accepts first-byte and inclusive-final-byte scalar endpoints while still
+requiring a first-byte start and rejecting nonterminal interior bytes, reversed
+and out-of-bounds positions. Existing invalid-position assertions stay intact;
+new first/final endpoint and invalid-start controls are added. Native scalar tests
+print actual numeric positions beside exact rewritten byte counts for durable
+verification. No foreign cached index is read or converted.

@@ -5,7 +5,7 @@ surrogates or CRLF, proves UTF-8 expected bytes, rejects duplicate identities an
 all overlapping source edits, checks literal marker-family collisions and budgets
 the COMPLETE expanded input before materializing. Definitions and ordinary shared
 reference repairs participate in generated coordinates. The exact five-file
-Foundation fixture passes 12 tests /two suites in Debug (0.004 s) and Release (0.006 s).
+Foundation fixture passes 12 tests /two suites in Debug and Release (0.004 s each).
 No native/product/font/drawing code executes in that fixture. `foundation-files.json`
 and the manifest reproduce it from this checkout using a fresh output directory.
 
@@ -50,3 +50,13 @@ four-test native placement/font correction already passes on Textual c52cb583;
 its baseline failure and qualified run are in the sibling native-math-policy packet.
 No production Preview/Export grammar switch, final app/VoiceOver/RC acceptance or
 whole issue closure is claimed by this unit.
+
+The first numeric-map hosted run 42068181327 safely rejects the unchanged foreign
+position regression (no crash), but reports 13 assertions because end columns at
+the inclusive final UTF-8 byte of a non-ASCII scalar are rejected. The complete
+raw run and exact before-map source are retained. The corrected map accepts the
+first or inclusive final byte as a scalar end while still requiring a first-byte
+start and rejecting nonterminal interior bytes, invalid ordering and out-of-bounds
+values. Existing invalid-position controls stay unchanged; inclusive end/invalid
+start controls are added. Native tests record actual numeric parser positions
+and rewritten byte counts. This corrected head still needs actual hosted results.
