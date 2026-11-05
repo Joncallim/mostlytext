@@ -1,0 +1,44 @@
+[0/1] Planning build
+Building for debugging...
+[0/3] Write sources
+[1/3] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Compiling ModelTests MarkdownInjectionCoverageTests.swift
+[4/5] Emitting module ModelTests
+[4/6] Write Objects.LinkFileList
+[5/6] Linking OwnedNeonClientFixturePackageTests
+Build complete! (2.11s)
+Test Suite 'Selected tests' started at 2026-11-05 14:33:12.253.
+Test Suite 'OwnedNeonClientFixturePackageTests.xctest' started at 2026-11-05 14:33:12.260.
+Test Suite 'OwnedNeonClientFixturePackageTests.xctest' passed at 2026-11-05 14:33:12.260.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-11-05 14:33:12.261.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.007) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Moved Markdown injection capture coverage" started.
+◇ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) started.
+◇ Test case passing 1 argument ending → "
+" to newlineReplacementKeepsTheRemainingInlineParagraph(ending:) started.
+✘ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) recorded an issue with 1 argument ending → "
+" at MarkdownInjectionCoverageTests.swift:40:9: Expectation failed: (actualTree.includedRanges → [<TSRange 48..<82, {3, 0}..<{3, 34}>]) == (expectedTree.includedRanges → [<TSRange 4..<44, {1, 0}..<{1, 40}>, <TSRange 48..<82, {3, 0}..<{3, 34}>])
+± removed [<TSRange 4..<44, {1, 0}..<{1, 40}>]
+✘ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) recorded an issue with 1 argument ending → "
+" at MarkdownInjectionCoverageTests.swift:44:9: Expectation failed: (actual → [<"punctuation": <TSRange 0..<2, {0, 0}..<{0, 2}>>, <"markup.bold": <TSRange 60..<80, {3, 12}..<{3, 32}>>]) == (expected → [<"punctuation": <TSRange 0..<2, {0, 0}..<{0, 2}>>, <"markup.bold": <TSRange 12..<28, {1, 8}..<{1, 24}>>, <"markup.raw": <TSRange 30..<42, {1, 26}..<{1, 38}>>, <"markup.bold": <TSRange 60..<80, {3, 12}..<{3, 32}>>])
+± removed [<"markup.bold": <TSRange 12..<28, {1, 8}..<{1, 24}>>, <"markup.raw": <TSRange 30..<42, {1, 26}..<{1, 38}>>]
+◇ Test case passing 1 argument ending → "
+" to newlineReplacementKeepsTheRemainingInlineParagraph(ending:) started.
+✘ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) recorded an issue with 1 argument ending → "
+" at MarkdownInjectionCoverageTests.swift:40:9: Expectation failed: (actualTree.includedRanges → [<TSRange 54..<88, {3, 0}..<{3, 34}>]) == (expectedTree.includedRanges → [<TSRange 6..<46, {1, 0}..<{1, 40}>, <TSRange 54..<88, {3, 0}..<{3, 34}>])
+± removed [<TSRange 6..<46, {1, 0}..<{1, 40}>]
+✘ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) recorded an issue with 1 argument ending → "
+" at MarkdownInjectionCoverageTests.swift:44:9: Expectation failed: (actual → [<"punctuation": <TSRange 0..<2, {0, 0}..<{0, 2}>>, <"markup.bold": <TSRange 66..<86, {3, 12}..<{3, 32}>>]) == (expected → [<"punctuation": <TSRange 0..<2, {0, 0}..<{0, 2}>>, <"markup.bold": <TSRange 14..<30, {1, 8}..<{1, 24}>>, <"markup.raw": <TSRange 32..<44, {1, 26}..<{1, 38}>>, <"markup.bold": <TSRange 66..<86, {3, 12}..<{3, 32}>>])
+± removed [<"markup.bold": <TSRange 14..<30, {1, 8}..<{1, 24}>>, <"markup.raw": <TSRange 32..<44, {1, 26}..<{1, 38}>>]
+◇ Test case passing 1 argument ending → "" to newlineReplacementKeepsTheRemainingInlineParagraph(ending:) started.
+✘ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) recorded an issue with 1 argument ending → "" at MarkdownInjectionCoverageTests.swift:40:9: Expectation failed: (actualTree.includedRanges → [<TSRange 48..<82, {0, 48}..<{0, 82}>]) == (expectedTree.includedRanges → [<TSRange 4..<44, {0, 4}..<{0, 44}>, <TSRange 48..<82, {0, 48}..<{0, 82}>])
+± removed [<TSRange 4..<44, {0, 4}..<{0, 44}>]
+✘ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) recorded an issue with 1 argument ending → "" at MarkdownInjectionCoverageTests.swift:44:9: Expectation failed: (actual → [<"punctuation": <TSRange 0..<2, {0, 0}..<{0, 2}>>, <"markup.bold": <TSRange 60..<80, {0, 60}..<{0, 80}>>]) == (expected → [<"punctuation": <TSRange 0..<2, {0, 0}..<{0, 2}>>, <"markup.bold": <TSRange 12..<28, {0, 12}..<{0, 28}>>, <"markup.raw": <TSRange 30..<42, {0, 30}..<{0, 42}>>, <"markup.bold": <TSRange 60..<80, {0, 60}..<{0, 80}>>])
+± removed [<"markup.bold": <TSRange 12..<28, {0, 12}..<{0, 28}>>, <"markup.raw": <TSRange 30..<42, {0, 30}..<{0, 42}>>]
+✘ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) with 3 test cases failed after 0.056 seconds with 6 issues.
+✘ Suite "Moved Markdown injection capture coverage" failed after 0.057 seconds with 6 issues.
+✘ Test run with 1 test in 1 suite failed after 0.057 seconds with 6 issues.

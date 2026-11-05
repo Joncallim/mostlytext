@@ -1,0 +1,7 @@
+[0/1] Planning build
+Building for debugging...
+[0/2] Write sources
+[1/2] Write swift-version--58304C5D6DBC2206.txt
+[3/4] Emitting module HighlightingTests
+[4/4] Compiling HighlightingTests MarkdownLayerScalarStressTests.swift
+Build of target: 'HighlightingTests' complete! (15.43s)
