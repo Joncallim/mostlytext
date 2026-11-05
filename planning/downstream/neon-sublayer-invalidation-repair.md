@@ -106,3 +106,30 @@ readiness loop waiting forever. A strict past-end query matches an otherwise
 identical bounded query. Empty source and ordinary query failure contracts remain
 unchanged. Full component checks include all existing RangeState tests and both
 TreeSitterClient suites, with the exact pinned Swift C grammar for stress tests.
+
+## Hosted deletion failure and partial-query ownership
+
+The first hosted PR #78 run (41968571963, job 127051219564) passes the now-strict
+selection replacement control but fails the existing below-cutoff combined
+edit/deletion check. Its differing region is one wide italic capture overwriting
+several narrower styles outside the queried dirty subrange. Preserve that exact
+failure before changing code; no retry or timeout adjustment qualifies it.
+
+The narrow TreeSitterClient-to-Neon TokenApplication adapter maps complete query
+captures directly to style tokens even when they extend beyond the requested
+replacement range. Clearing a query range does not authorize applying a wide
+capture outside it. Reproduce this using the actual warmed client and actual
+Foundation-only adapter declarations: paint a complete reference, apply one
+partial query and require that styles outside its authority stay unchanged.
+Clip emitted token ranges to the requested application range, preserving order,
+name mapping and empty-range semantics. Do not change the generic Token API or
+any TextKit implementation. The two existing named-range initializers keep
+their signatures and share this containment behavior.
+
+The local fixture may compile the exact Foundation-only declaration prefix of
+TreeSitterClient+Neon.swift as a separately named component target. Its native
+conditional tail is excluded, not executed. Record the prefix byte range/hash
+and all other copied inputs; do not label the extracted prefix a whole unchanged
+file. Full hosted execution must still demonstrate the original failing native
+adapter check. This is a scoped architecture correction to the client adoption,
+not evidence that the separately prepared buffer repair has merged.

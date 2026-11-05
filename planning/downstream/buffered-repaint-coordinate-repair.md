@@ -68,3 +68,15 @@ root grammar, styling APIs, widened Debug abort and native execution hold remain
 Component results do not establish whole-editor latency or native accessibility,
 Quick Look, exports, signing or release acceptance. Existing release-only rights
 and source-publication blockers remain recorded. No upstream outreach is needed.
+
+## Hosted review reconciliation
+
+Initial CI41969776856 at2dc95c3e passes both strict selection replacement and
+combined typing/deletion controls but fails the existing below-cutoff style
+comparison. The same failure appears in PR #78 before buffer changes. The
+actual warmed-client/partial-adapter test isolates complete captures repainting
+outside their query authority. Carry the exact e528a19 correction through owner
+Neon merge9db7e1d, preserving this buffer implementation and its independent
+oracle. The merged component suites pass39 functions in10 suites plus8 existing
+XCTest cases Debug/Release. Retain both first hosted failures, selected prefix
+provenance and new receipts; require fresh full CI for the corrected app head.

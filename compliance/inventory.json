@@ -573,9 +573,9 @@
       "id": "neon",
       "name": "Neon",
       "kind": "swiftpm",
-      "version": "d58b074a",
+      "version": "9db7e1d3",
       "upstream": "https://github.com/Joncallim/Neon",
-      "revision": "d58b074a067861161a1df6d5b42d700526d0e7dc",
+      "revision": "9db7e1d361d6f724ee28da49eae532db3018b408",
       "resolution": "exact",
       "licence": "BSD-3-Clause",
       "copyright": [
@@ -596,9 +596,9 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "d58b074a067861161a1df6d5b42d700526d0e7dc"
+        "revision": "9db7e1d361d6f724ee28da49eae532db3018b408"
       },
-      "evidence": "Owner patch child of 0699ea559682b4f62c8cd10ae520c7262c4acaa9. Shift retained dirty intervals through each later edit before new client invalidations, preserving surviving deletion tails, nested depth, all-document and reentrant scope ownership. MOSTLYTEXT_PATCHES.md records the client and buffer corrections. Original BSD-3-Clause licence, SwiftTreeSitter pin and grammar bytes are unchanged. Complete-editor performance, widened Debug abort and native acceptance remain open."
+      "evidence": "Owner patch child of 0699ea559682b4f62c8cd10ae520c7262c4acaa9. Shift retained dirty intervals through each later edit before new client invalidations, preserving surviving deletion tails, nested depth, all-document and reentrant scope ownership. MOSTLYTEXT_PATCHES.md records the client and buffer corrections. Original BSD-3-Clause licence, SwiftTreeSitter pin and grammar bytes are unchanged. Complete-editor performance, widened Debug abort and native acceptance remain open. This exact merge also carries e528a19381bfe3bc0ea996f41dcea11efbc2e9f0: clip named capture tokens to partial query authority, preserving nested styles outside the application range. The first hosted failure and direct adapter reproduction are retained."
     },
     {
       "id": "nvim-treesitter-markdown-queries",

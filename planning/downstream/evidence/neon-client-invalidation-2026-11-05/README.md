@@ -1,5 +1,8 @@
 # Embedded-language client invalidation evidence
 
+The initial evidence below describes the first implementation. The current
+partial-style correction and failed hosted run are retained in [hosted-remediation](hosted-remediation/README.md).
+
 Root range repair alone does not refresh the client validity used for highlights.
 This packet proves the separate client correction and preserves failed controls.
 The owner Neon fork is0699ea559682b4f62c8cd10ae520c7262c4acaa9, with the same
