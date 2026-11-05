@@ -14,8 +14,14 @@ import TreeSitterMarkdownResources
 @Suite("Actual Markdown layer scalar-edit parity", .serialized)
 struct MarkdownLayerScalarStressTests {
     @Test(.timeLimit(.minutes(1)))
-    func editedRootAndInlineLayersMatchFresh() throws {
+    func editedRootAndInlineLayersMatchFresh() async throws {
         let (root, inline) = try configurations()
+        // Only registry access needs the main actor. Keep the bounded parser
+        // corpus from blocking concurrent hosted native test callbacks.
+        try await Task.detached { try Self.checkCorpus(root: root, inline: inline) }.value
+    }
+
+    private nonisolated static func checkCorpus(root: LanguageConfiguration, inline: LanguageConfiguration) throws {
         let configuration = LanguageLayer.Configuration(languageProvider: { $0 == "markdown_inline" ? inline : nil })
         var corpus = ScalarEditCorpus()
         let edited = try LanguageLayer(languageConfig: root, configuration: configuration)

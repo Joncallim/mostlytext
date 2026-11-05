@@ -42,8 +42,11 @@ unchanged. App/vendor manifests, inventory, notices and SBOM agree. All316
 Compliance controls, inventory, full pinned format and strict lint pass. The
 actual HighlightingTests target compiles with forced resolution. Its first
 compile caught the new stress test constructing the main-actor registry from a
-nonisolated helper; the failed log is retained, and the suite now uses the main
-actor. No production behavior, native assertion or deadline was weakened.
+nonisolated helper; the failed log is retained, and only registry access now uses the main
+actor. The unchanged long corpus runs in an explicitly detached worker with
+Sendable configurations, avoiding main-actor starvation of concurrent hosted
+native callbacks. Final Debug/Release component runs and target compilation
+pass after that executor correction. No production behavior, native assertion or deadline was weakened.
 
 The fixture's #canImport(Highlighting)/#canImport(Neon) paths are excluded locally.
 It runs only inspected Foundation/C source, using exact copied production test

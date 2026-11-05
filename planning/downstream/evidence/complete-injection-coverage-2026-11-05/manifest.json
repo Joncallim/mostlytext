@@ -6,7 +6,7 @@
     {
       "app": "MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownLayerScalarStressTests.swift",
       "fixture": "/Volumes/Fast SSD/CORTANA-Builds/injection-complete-coverage-20261105/fixture/Tests/ModelTests/MarkdownLayerScalarStressTests.swift",
-      "sha256": "096d6ecd3a7799e8efe9b4c1c15f03db8ae26344cf81248a021128b9946bf42d"
+      "sha256": "d69eb8273829e649a7516b7b8f979b1fb76f8c8c8b2f159673e278da9f8b4c5a"
     },
     {
       "app": "MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownInjectionCoverageTests.swift",
@@ -24,6 +24,21 @@
       "name": "app-compliance-tests.log",
       "sha256": "ceacd59c5037f1de8824b77afe43a1011fcb00cbc7f7d211db4b0d49683fc25d",
       "bytes": 7515
+    },
+    {
+      "name": "app-detached-corpus-compile.log",
+      "sha256": "9157d2d3eb85fad43c74838fab7f4d42c9f3533d48350d0df9738220487d20dc",
+      "bytes": 282
+    },
+    {
+      "name": "app-final-format.log",
+      "sha256": "bde73f60bc806a4618805b37d00f72551651c5444cd7a75c6e55565253424d88",
+      "bytes": 270
+    },
+    {
+      "name": "app-final-test-lint.log",
+      "sha256": "ba0ca7a0667e3c602170409d2ad30010b606ab79b7f2e4aa261b94fbeabaad39",
+      "bytes": 227
     },
     {
       "name": "app-forced-resolve.log",
@@ -86,6 +101,16 @@
       "bytes": 15289
     },
     {
+      "name": "component-detached-debug.log",
+      "sha256": "3e6739347c1f6097061122e1e7613081f751f89790439aaf8c1290267bbccb2e",
+      "bytes": 11618
+    },
+    {
+      "name": "component-detached-release.log",
+      "sha256": "fce6d8bfbbd17c1096b4e1acd6aee8efc987cb25f8ee2f8e5390a2fc014a32e9",
+      "bytes": 11631
+    },
+    {
       "name": "component-final-actor-debug.log",
       "sha256": "fe1fcdfb04a74cbc2d9142af1a27baf5470c46f556c67a33a0b53f1164acc6bc",
       "bytes": 11680
@@ -104,6 +129,11 @@
       "name": "component-final-release-with-costs.log",
       "sha256": "f8ccdfa4c027da3d356533f1403d7a138eb200a40219d8b81568cd8d3155b8b6",
       "bytes": 13450
+    },
+    {
+      "name": "detached-corpus-format.log",
+      "sha256": "1d6fac17f75d322e1adc88d132d427923aed70f27cefe99af58cb076e62f64d9",
+      "bytes": 201
     },
     {
       "name": "fresh-policy-actual-layer-scalar-stress.log",
