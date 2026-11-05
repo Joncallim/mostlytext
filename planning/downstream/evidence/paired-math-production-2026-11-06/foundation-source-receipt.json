@@ -1,0 +1,50 @@
+[
+  {
+    "source": "MacDown2/MacDown2/MathPreviewSession.swift",
+    "fixture": "Sources/MacDown2/MathPreviewSession.swift",
+    "same": true,
+    "sha256": "5bff4d2cdc4deb57da5bdd43e7a77d39ff542f1e368a1b5926aea1f242b9f6c5"
+  },
+  {
+    "source": "MacDown2/MacDown2/MathPreviewSourceBinding.swift",
+    "fixture": "Sources/MacDown2/MathPreviewSourceBinding.swift",
+    "same": true,
+    "sha256": "6ee3365f7f079021414f086ee2413e8745e1ae5b5d5a8ee0f11fddaa788dd89d"
+  },
+  {
+    "source": "MacDown2/MacDown2/MathPreviewSourcePlan.swift",
+    "fixture": "Sources/MacDown2/MathPreviewSourcePlan.swift",
+    "same": true,
+    "sha256": "a644910416895ea12ae54d13d7fd774fe4796ff318dbcb13055791d3af5983b7"
+  },
+  {
+    "source": "MacDown2/MacDown2/PreviewDisplayCache.swift",
+    "fixture": "Sources/MacDown2/PreviewDisplayCache.swift",
+    "same": true,
+    "sha256": "cf03cd36416aee33bdc0a6d8647f220592dbf11a4962b07fc65d0959bb1fbbd5"
+  },
+  {
+    "source": "MacDown2/MacDown2Tests/MathPreviewSessionTests.swift",
+    "fixture": "Tests/MacDown2Tests/MathPreviewSessionTests.swift",
+    "same": true,
+    "sha256": "e251d0aa6a30a06e5bfb5b4836e27db81cbc3a260f93dfd0604e0beb3aa06c0c"
+  },
+  {
+    "source": "MacDown2/MacDown2Tests/MathPreviewSourceBindingTests.swift",
+    "fixture": "Tests/MacDown2Tests/MathPreviewSourceBindingTests.swift",
+    "same": true,
+    "sha256": "8e911b17456209eaf01914019fd0b4283053c743f966dfe7bf2d9a9b6b34e5d5"
+  },
+  {
+    "source": "MacDown2/MacDown2Tests/MathPreviewSourcePlanTests.swift",
+    "fixture": "Tests/MacDown2Tests/MathPreviewSourcePlanTests.swift",
+    "same": true,
+    "sha256": "137bc15711fbec3469975a29d92839294fbc586a8c745087d2eaae43f0586173"
+  },
+  {
+    "source": "MacDown2/MacDown2Tests/PreviewDisplayCacheTests.swift",
+    "fixture": "Tests/MacDown2Tests/PreviewDisplayCacheTests.swift",
+    "same": true,
+    "sha256": "3cd6fa3478d7ab2ee1e6861e1a2a099c0c48b26b9dfac3c89eda9eb67c73414a"
+  }
+]

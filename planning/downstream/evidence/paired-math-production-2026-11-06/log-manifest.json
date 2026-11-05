@@ -1,0 +1,87 @@
+[
+  {
+    "file": "paired-app-corrected-compile.log.gz",
+    "uncompressed_sha256": "60cfab5655abda875ce2879ece23edc711834c1f31a699aa04e76aa95317f648",
+    "bytes": 552547
+  },
+  {
+    "file": "paired-app-first-compile.log.gz",
+    "uncompressed_sha256": "39fede8d86717348af20b1fa82464485fabc9374f6e92da81568d765488d13fa",
+    "bytes": 3984113
+  },
+  {
+    "file": "paired-compliance.log.gz",
+    "uncompressed_sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+    "bytes": 54
+  },
+  {
+    "file": "paired-declared-link-format.log.gz",
+    "uncompressed_sha256": "48037ecf55421ff5705cb4d7252ca239b74a7d56b0b45037aea68f8b5c2301bc",
+    "bytes": 258
+  },
+  {
+    "file": "paired-declared-link-lint.log.gz",
+    "uncompressed_sha256": "e34a113692c676aaec9fab11b71da8c14955e9303af07234fc3da2d0ec08345e",
+    "bytes": 75673
+  },
+  {
+    "file": "paired-final-format.log.gz",
+    "uncompressed_sha256": "8d8f6d5f35d974290d50eeb7e6cdc60216a3ce1dc22f3bf28f1a1e1ba4bec7b5",
+    "bytes": 258
+  },
+  {
+    "file": "paired-final-lint.log.gz",
+    "uncompressed_sha256": "20aeb97e247212f4a4671e9f56042f79ef40f0a4184950424ae9e3d5251f31c7",
+    "bytes": 75673
+  },
+  {
+    "file": "paired-final-parity-tests-compile.log.gz",
+    "uncompressed_sha256": "fc7ec25b4aed51a731de651c56a0c4d9387ebb484740bebc5416d1bcf72fdd1f",
+    "bytes": 492121
+  },
+  {
+    "file": "paired-final-tests-compile.log.gz",
+    "uncompressed_sha256": "cdf2cec3d30fead2b8d3767ce1d29587eba331a501161363e5e15249769aa859",
+    "bytes": 345613
+  },
+  {
+    "file": "paired-first-format.log.gz",
+    "uncompressed_sha256": "ada381ac4e1d96d2bb87f9a2ff6eca28d188881d5c6eeaf649776f7180ea72d5",
+    "bytes": 3036
+  },
+  {
+    "file": "paired-first-lint.log.gz",
+    "uncompressed_sha256": "24307f7d40ace69c7e87958b1876c8a4574ab1378d702e35c6f761aa33a7ee8a",
+    "bytes": 76893
+  },
+  {
+    "file": "paired-sourceplan-off-main-debug.log.gz",
+    "uncompressed_sha256": "41f8d8124116fa25f2808afcd7bc9f7b72a48b7479ed79edde5ef04d52977881",
+    "bytes": 87882
+  },
+  {
+    "file": "paired-sourceplan-off-main-release.log.gz",
+    "uncompressed_sha256": "813c4c26101ba33147915d9851295d264ea516aa30aa17079572c8779143f34c",
+    "bytes": 87501
+  },
+  {
+    "file": "paired-tests-declared-link-compile.log.gz",
+    "uncompressed_sha256": "a9d0a6384afb5b294fd8e84c367d56768232bba2c2c8deabd4a7bb5898330be5",
+    "bytes": 918978
+  },
+  {
+    "file": "paired-tests-first-compile.log.gz",
+    "uncompressed_sha256": "48d3758a2b929d64b4ac98052e70a818b9654755726e3102a25cd5bfc1196af7",
+    "bytes": 1977176
+  },
+  {
+    "file": "paired-tests-linked-compile.log.gz",
+    "uncompressed_sha256": "44b0bde96516e2c6de58996204d643cebb6301b66dcb0072fe5eeff18d335702",
+    "bytes": 410979
+  },
+  {
+    "file": "pr92-complete-build-and-test.log.gz",
+    "uncompressed_sha256": "1f18577ddf727f8c4ca417ce186e078450fc39308b5251b86bc42977492caf9b",
+    "bytes": 19095015
+  }
+]

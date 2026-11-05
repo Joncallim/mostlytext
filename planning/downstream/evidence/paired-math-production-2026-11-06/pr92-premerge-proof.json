@@ -1,0 +1,24 @@
+{
+  "head": "4ee9681360af6e9f4c63ef7a5e3bbdebe7978805",
+  "base": "e8201ad8925aaf0cac2f15fafbda285c773a1d05",
+  "merge_tree": "d168aa70620223e5d333d01c5fe5eaf1552a00a0",
+  "qualified_head_tree": "d168aa70620223e5d333d01c5fe5eaf1552a00a0",
+  "all_five_current_checks_success": true,
+  "reviews": [],
+  "review_threads": [],
+  "review_axes": [
+    "source/parser ownership and immutable pins",
+    "scalar/source/reference provenance and native target completeness",
+    "pre-raster/pre-base64/aggregate limits and atomic fallback failure",
+    "ordinary derived-error compatibility and fatal publication/no-write tests",
+    "allocator/document lifetime and source origin semantics",
+    "notices/localization/source receipts and remaining native/calibration gates"
+  ],
+  "remaining_gates": [
+    "paired production registration and current document source actions",
+    "final whole-app budgets",
+    "protected-account visual/VoiceOver/PDF",
+    "exact signed candidate and independent compliance review"
+  ],
+  "local_uncommitted_following_unit_preserved": true
+}

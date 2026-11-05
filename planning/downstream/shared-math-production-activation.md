@@ -9,13 +9,13 @@ readable source with an explanation; a source action selects the right occurrenc
 only while its document and source snapshot are current. Generated content and
 pending/oversized text do not receive another dollar parser.
 
-Main e8201ad8925aaf0cac2f15fafbda285c773a1d05 contains PR90/91 with the qualified
-source transport. The integration branch adds the typed, allocation-bounded raster
-API (37 hosted native controls already pass) and actual parser-consumed reference
-metadata. Current ba7d43d2 guards native link/image replay against the original
-whole-document source facts. Its hosted 45-function qualification is pending;
-production cannot adopt this path until those exact controls and complete CI pass.
-This document defines the next implementation slice before its broad edits.
+Main `05238f47191e8350f4ace5817a5f6066e1394176` contains qualified PR92,
+including original consumed-reference replay, target-completeness guards and the
+bounded typed Export producer. Exact head `4ee9681360af6e9f4c63ef7a5e3bbdebe7978805`
+passes 46 hosted native tests, 3,622 package tests, 626 app tests and all four
+locked Debug/Release app/mostlytext builds. The merge tree equals that qualified
+head. This implementation now activates Preview and Export together against that
+base; its own native/full CI qualification remains required before merge.
 The parent shared-math production/activation and parser-reference-replay contracts
 remain binding. This changes no release, signing or protected-account hold.
 
@@ -139,7 +139,7 @@ text, guessed formula search or captured old editor string grants authority.
 
 ## Implementation and evidence sequence
 
-1. Qualify original reference replay/URL guard on all 45 actual hosted controls;
+1. Qualify original reference replay/URL guard on all 46 actual hosted controls;
    retain first failures, correct source/title/image/Unicode checks without weaker
    assertions, and run full package/app/locked Debug+Release builds.
 2. Add shared policy, typed bounded Export producer and diagnostics/fatal carrier.
@@ -162,3 +162,32 @@ performance calibration and exact signed candidate evidence remain explicit gate
 package timing, fixture accessibility and integration merges do not establish them.
 
 While recompiling ExportService, replace the pre-existing unused directory binding in drainRetirements with the same explicit nonnil precondition. The original qualified PR91 log and unchanged main source prove the warning predates this work. The existing retirement/ownership algorithm, FD checks and recovery tests remain unchanged. This removes a compiler warning without changing publication policy.
+
+## App integration reconciliation
+
+The app constructs Textual typed attachments directly, as described above. Both
+app and app-test XcodeGen targets therefore explicitly declare the existing
+Textual product at the same immutable `c52cb5834c4695109aad2cb66294eafbc8f264c8`
+revision already used by Preview. Relying only on transitive import visibility
+compiled ordinary app builds but failed actual test-action linking with undefined
+Textual symbols. This adds no component/revision/resource and changes no notice
+bytes. Xcode's generated lock must still equal the canonical 24-pin package lock.
+
+Source planning (one source digest/index and bounded block queries) runs away from
+the main actor. Native geometry/attachment creation stays on the main actor and
+yields between equations. Direct links and images use sorted interval queries,
+including partial-overlap rejection; source is never rescanned per block.
+
+Preview-only source navigation retains only the opaque occurrence/frame IDs and a
+competing-navigation token until the actual editor mount/layout callback. It then
+repeats fresh source/window/frame checks before replacing the complete selection
+set and revealing it. Identity loss invalidates the pending action. No guessed
+mount delay or stale captured range is trusted.
+
+The hidden validated SVG operation also applies the existing fatal standalone
+contribution admission before preparing its request; ordinary error policy remains
+unchanged. The ordinary production Export coordinator already enforced this gate.
+
+Existing unregistered Preview resource-grant routing is unchanged. Original target
+provenance does not grant filesystem/network access or complete issue #13. Native
+license/VoiceOver/visual/PDF and exact signed-artifact acceptance remain held.

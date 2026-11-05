@@ -13,6 +13,9 @@ settings:
     SWIFT_STRICT_CONCURRENCY: complete
     MACOSX_DEPLOYMENT_TARGET: '26.0'
 packages:
+  Textual:
+    url: https://github.com/Joncallim/textual
+    revision: c52cb5834c4695109aad2cb66294eafbc8f264c8
   MacDownKit:
     path: Packages/MacDownKit
 targets:
@@ -68,6 +71,8 @@ targets:
       product: Math
     - package: MacDownKit
       product: MathRendering
+    - package: Textual
+      product: Textual
     - package: MacDownKit
       product: Diagrams
     - package: MacDownKit
@@ -284,6 +289,8 @@ targets:
       product: Math
     - package: MacDownKit
       product: MathRendering
+    - package: Textual
+      product: Textual
     - package: MacDownKit
       product: Diagrams
     - package: MacDownKit
