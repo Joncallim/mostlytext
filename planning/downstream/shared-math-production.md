@@ -128,3 +128,27 @@ Foundation/C/CryptoKit files in an owned fixture; the engine's unused outer
 SwiftUI View is replaced by the already documented empty Math namespace. Compile
 actual targets locally, execute native component tests only on hosted CI. This
 is a dependency unit; Preview/Export activation and whole criteria remain open.
+
+## Inline accessibility representation decision
+
+The measured Canvas symbol label loss requires a narrow Textual owner child of
+b940433c7a55b82a8bbbe6fb0837df7162307dbb. Add an opt-in immutable attachment
+accessibility descriptor (caller-localized label, optional caller occurrence UUID
+and localized action name), default nil on Attachment and forwarded by
+AnyAttachment. A type-erased wrapper supplies the descriptor without changing
+actual attachment body/metrics/PNG or legacy math factory behavior. Add a Textual
+view modifier accepting a main-actor callback for descriptor IDs. No source offsets
+are inferred or executed inside Textual; the app owns exact-source authorization.
+
+Drawings remain the existing Canvas. A separate hit-testing-disabled accessibility
+layer derives one semantic element per opted-in actual Text.Layout run, positioned
+at the same origin and typographic bounds. Only positive finite geometry is used;
+no second glyph renderer or pointer interception is introduced. Default nil
+descriptors preserve other attachments and legacy accessibility behavior. Native
+tests must expose the exact opt-in inline label/own element and custom source
+action, retain host/standalone/both-neighbor controls, and invoke the actual native
+action to prove the correct UUID reaches the callback. Distinct duplicate formulas
+need distinct occurrence descriptors, wrapped-line geometry must remain inside
+the owned window, and non-opt-in baseline still records its measured behavior.
+The original bounds/timeouts are not weakened. Only hosted native execution is
+allowed; owner font/license files and unrelated parsing/selection code stay intact.
