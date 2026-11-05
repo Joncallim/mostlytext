@@ -1,6 +1,8 @@
+@testable import Contributions
 @testable import ExportService
 import Foundation
 import MarkdownEngine
+import SwiftSoup
 import Testing
 
 struct HeadingAnchorPreparationTests {
@@ -122,6 +124,37 @@ struct HeadingAnchorPreparationTests {
             )
         }
         await #expect(throws: CancellationError.self) { try await task.value }
+    }
+
+    @Test func reservedNamespaceDuplicateCannotHideBehindAGraphemeBoundary() async throws {
+        let identifier = "mt117-svg-\u{301}x"
+        #expect(identifier.utf8.starts(with: "mt117-svg-".utf8))
+        let source = "<div id='\(identifier)'>A</div>\n<div id='\(identifier)'>B</div>\n\n# Target\n"
+        await #expect(throws: HeadingAnchorPreparation.Failure.unverifiableMarkup) {
+            try await prepare(source)
+        }
+    }
+
+    @Test(arguments: ["# &amp;lt; &amp;#35;\n", "# \u{600}\\*literal\u{600}\\* and \\<tag\\> &amp;lt;\n"])
+    func plainAndLinkedTOCsPreserveLiteralLabelsWithoutInventingMarkup(_ source: String) async throws {
+        let document = try await ParseEngine().parse(source, revision: 1)
+        let title = try #require(document.headings.first?.title)
+        let preparation = try await prepare(source)
+        for linked in [false, true] {
+            let markdown = linked ? TOCContribution.linkedMarkdownList(for: preparation.index)
+                : TOCContribution.markdownList(for: document.headings)
+            let dom = try SwiftSoup.parseBodyFragment(ExportService.renderMarkdownFragment(markdown))
+            let items = try dom.select("li").array()
+            try #require(items.count == 1)
+            #expect(try items[0].text().utf8.elementsEqual(title.utf8))
+            #expect(try dom.select("em, strong, code, img, script").isEmpty())
+            let links = try dom.select("a").array()
+            #expect(links.count == (linked ? 1 : 0))
+            if linked {
+                let target = try #require(preparation.index.headings.first?.fragment)
+                #expect(try links[0].attr("href") == "#" + target)
+            }
+        }
     }
 
     private func prepare(_ source: String) async throws -> HeadingAnchorPreparation {

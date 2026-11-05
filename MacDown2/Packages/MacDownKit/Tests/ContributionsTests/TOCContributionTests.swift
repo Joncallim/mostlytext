@@ -179,7 +179,7 @@ struct TOCContributionTests {
         )
         #expect(index.headings.map(\.fragment) == ["café", "100-ready", "café-1"])
         #expect(TOCContribution.linkedMarkdownList(for: index) ==
-            "- [Café](#caf%C3%A9)\n  - [100% ready](#100-ready)\n- [Café](#caf%C3%A9-1)")
+            "- [Café](#caf%C3%A9)\n  - [100\\% ready](#100-ready)\n- [Café](#caf%C3%A9-1)")
     }
 
     // MARK: - run (end-to-end, real parse)
@@ -230,5 +230,25 @@ struct TOCContributionTests {
 
         #expect(ranges.count == 20000)
         #expect(ContinuousClock.now - start < .seconds(10))
+    }
+}
+
+extension TOCContributionTests {
+    @Test(arguments: ["# &amp;lt; &amp;#35;\n", "# \u{600}\\*literal\u{600}\\* and \\<tag\\> &amp;lt;\n"])
+    func generatedLabelsPreservePlainTextAcrossUnicodeAndEntitySyntax(_ source: String) async throws {
+        let document = try await ParseEngine().parse(source, revision: 1)
+        let title = try #require(document.headings.first?.title)
+        let index = try HeadingAnchorIndex(
+            document: document, sourceText: source, documentID: "label-control",
+            recoveryEpoch: UUID(), sourceGeneration: 1, reservedIDs: []
+        )
+        for linked in [false, true] {
+            let list = linked ? TOCContribution.linkedMarkdownList(for: index)
+                : TOCContribution.markdownList(for: document.headings)
+            let parsed = try await ParseEngine().parse("# " + list, revision: 2)
+            let renderedTitle = try #require(parsed.headings.first?.title)
+            #expect(renderedTitle.utf8.elementsEqual(("- " + title).utf8))
+            #expect(parsed.sourceFacts?.links.count == (linked ? 1 : 0))
+        }
     }
 }

@@ -158,3 +158,19 @@ other heading families and authored reservations are still checked on every
 candidate. Keep every generated ID and policy version unchanged. Compare exact
 outputs with the frozen pre-change allocator, and record optimized repeated-heading
 component timings before/after. Component timings are not whole-app acceptance.
+
+### Exact serialization and namespace-family guards
+
+A Foundation probe confirms that an ID ending the ASCII namespace prefix with a
+following combining mark fails String.hasPrefix while its bytes have that prefix.
+Namespace-family classification must use UTF-8 prefix comparison, preserving its
+existing exact duplicate rejection. Add a real preparation/DOM control.
+
+TOC label escaping currently iterates extended grapheme clusters and omits some
+CommonMark ASCII punctuation. Prepend/combining scalars can hide punctuation from
+that set, and a literal '&lt;' title can be decoded a second time in the generated
+list. Escape every CommonMark ASCII punctuation scalar in labels. Keep fragment
+encoding separate and once-only. Prove both plain and linked lists with the real
+ExportService fragment renderer and parsed text/links, not only expected serializer
+spelling. This adds Contributions only to the ExportServiceTests dependency and
+focused test wrapper; no production target gains a dependency.

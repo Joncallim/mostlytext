@@ -23,6 +23,7 @@ source_digests = {
     str(p.relative_to(repo)): hashlib.sha256(p.read_bytes()).hexdigest()
     for p in sorted((package / "Sources").rglob("*.swift"))
 }
+source_digests[str((package / "Package.swift").relative_to(repo))] = hashlib.sha256((package / "Package.swift").read_bytes()).hexdigest()
 source_digests[str(test.relative_to(repo))] = hashlib.sha256(test.read_bytes()).hexdigest()
 if args.verify:
     receipt = json.loads((args.output / "receipt.json").read_text())
@@ -35,8 +36,8 @@ if args.verify:
         raise SystemExit("Heading probe inputs or immutable dependency owners/revisions changed")
     if args.require_result:
         log = re.sub(r"\x1b\[[0-9;]*m", "", (args.output / "probe.log").read_text())
-        if not re.search(r"Test run with 12 tests in 1 suite passed", log):
-            raise SystemExit("The twelve actual heading preparation controls did not pass")
+        if not re.search(r"Test run with 14 tests in 1 suite passed", log):
+            raise SystemExit("The fourteen actual heading preparation controls did not pass")
     print("Exact actual-package heading tests, source inventory and all immutable pins verified")
 else:
     args.output.mkdir(parents=True, exist_ok=False)
@@ -45,14 +46,17 @@ else:
     manifest = '''// swift-tools-version: 6.2
 import PackageDescription
 let package = Package(name: "HeadingAnchorProbe", platforms: [.macOS(.v26)], dependencies: [
-    .package(path: PACKAGE_PATH)
+    .package(path: PACKAGE_PATH),
+    .package(url: SOUP_URL, exact: SOUP_VERSION)
 ], targets: [
     .testTarget(name: "HeadingAnchorProbe", dependencies: [
         .product(name: "ExportService", package: "MacDownKit"),
+        .product(name: "Contributions", package: "MacDownKit"),
+        .product(name: "SwiftSoup", package: "SwiftSoup"),
         .product(name: "MarkdownEngine", package: "MacDownKit")
     ])
 ])
-'''.replace("PACKAGE_PATH", json.dumps(str(package)))
+'''.replace("PACKAGE_PATH", json.dumps(str(package))).replace("SOUP_URL", json.dumps(pins["swiftsoup"][0])).replace("SOUP_VERSION", json.dumps(next(p["state"]["version"] for p in canonical["pins"] if p["identity"] == "swiftsoup")))
     (args.output / "Package.swift").write_text(manifest)
     (args.output / "Package.resolved").write_text(json.dumps({"version": 2, "pins": canonical["pins"]}, indent=2) + "\n")
     receipt = {

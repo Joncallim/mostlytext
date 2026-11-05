@@ -92,7 +92,7 @@ enum EmittedHeadingDOM {
             let tag = element.tagNameNormal()
             tags.append(tag)
             if element.hasAttr("id"), let value = try? element.attr("id") {
-                if value.hasPrefix("mt117-svg-"), !namespaceIDs.insert(Data(value.utf8)).inserted {
+                if value.utf8.starts(with: "mt117-svg-".utf8), !namespaceIDs.insert(Data(value.utf8)).inserted {
                     return nil
                 }
                 reservedIDs.append(value)
