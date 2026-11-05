@@ -174,3 +174,25 @@ encoding separate and once-only. Prove both plain and linked lists with the real
 ExportService fragment renderer and parsed text/links, not only expected serializer
 spelling. This adds Contributions only to the ExportServiceTests dependency and
 focused test wrapper; no production target gains a dependency.
+
+### Current hosted result and crash investigation
+
+Actual-product hosted run42131554145 passes all14 preparation/label cases on the
+24e3fa9d source tree (8.711s). Downloaded receipt526 source/test/manifest digests
+and all24 owner/revision pins match the candidate. The PR merge checkout is
+cb2257c0, recorded separately from the source head.
+
+Complete run42131938625 stops with exit139/segmentation fault after starting
+MermaidWebRendererTests.renderProducesRealSVGForValidSource, after earlier real
+canvas cases pass. No failed assertion or crash stack is present. That last case
+is an observation, not an established root cause; no pre-existing/environment
+classification or safe-release claim is made. Preserve the first log and manifest.
+
+The CI workflow now supervises its already-owned signed Swift Testing helper
+without altering installed Xcode, assertions, serial execution, package pins or
+deadlines. It records the exact child PID, source checkout, helper digest and
+original exit status. On failure it retains only fresh bounded crash reports
+matching that exact PID and executable. Two fixture tests reject stale, other-PID,
+other-executable, symlink, oversized, malformed and nonobject reports. Every fresh
+actual hosted run remains necessary; diagnostic instrumentation is not a fix for
+the unclassified process crash and cannot establish acceptance by itself.

@@ -6,10 +6,10 @@ permissions:
 on:
   push:
     branches: [main, master]
-    paths: ['MacDown2/**', '.github/workflows/ci.yml']
+    paths: ['MacDown2/**', '.github/workflows/ci.yml', '.github/scripts/*owned*package*.py']
   pull_request:
     branches: [main, master, integration-final]
-    paths: ['MacDown2/**', '.github/workflows/ci.yml']
+    paths: ['MacDown2/**', '.github/workflows/ci.yml', '.github/scripts/*owned*package*.py']
   workflow_dispatch:
     inputs:
       runner:
@@ -269,11 +269,21 @@ jobs:
           # Keep both frameworks and all assertions. SwiftPM runs XCTest;
           # the copied, identified helper runs every Swift Testing case.
           # Existing timing ceilings and serial execution remain unchanged.
+          python3 "$GITHUB_WORKSPACE/.github/scripts/test_owned_package_reports.py"
           swift test --skip-build --disable-swift-testing --no-parallel --force-resolved-versions
-          env DYLD_FRAMEWORK_PATH="$frameworks" "$owned_helper" \
+          env DYLD_FRAMEWORK_PATH="$frameworks" python3 "$GITHUB_WORKSPACE/.github/scripts/run-owned-package-tests.py" \
+            "$RUNNER_TEMP/owned-package-test-result" "$owned_helper" \
             --test-bundle-path "$test_host" --testing-library swift-testing --no-parallel
           codesign --verify --strict "$owned_helper"
           shasum -a 256 -c "$RUNNER_TEMP/package-test-host.sha256"
+      - name: Upload owned package host identity and fresh crash diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: owned-package-test-result-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/owned-package-test-result
+          retention-days: 7
+          if-no-files-found: ignore
       - name: Collect fresh package test crash reports
         if: ${{ always() && env.PR535_DIAGNOSTICS == 'true' }}
         run: |

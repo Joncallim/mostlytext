@@ -1,0 +1,8 @@
+{
+  "run": 42131938625,
+  "source": "24e3fa9d6f95b52a9fdbe9f5807ea1a75cbc921f",
+  "log_sha256": "c21a5a544ad00b0f15b97b27d35b81d0dcabe4d72dd520d235f01501f91b259d",
+  "exit": 139,
+  "last_started_case": "MermaidWebRendererTests.renderProducesRealSVGForValidSource",
+  "scope": "Unclassified segmentation fault. Last-started case is not a proved cause. No crash report was retained by the old workflow."
+}
