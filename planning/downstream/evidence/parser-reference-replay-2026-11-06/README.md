@@ -14,3 +14,28 @@ The exact first-party Foundation MarkdownEngine fixture passes all 176 tests/24 
 Retained setup failures: original Python program splitting a path with spaces; incorrect extension flags (27/3); unsupported footnote CLI flag; ASAN detect_leaks unsupported on macOS; accidental expanded 27,216-case ASAN invocation failed exact-count comparison despite no sanitizer finding. Correct invocations preserve original source/assertions. See raw logs and sanitizer-invocation-notes.txt. The first lifetime review draft is retained as before-lifetime-review-node.c.
 
 Native marker reference replay, immutable application pin adoption, complete app/CLI CI and production activation remain separate next gates. This packet establishes component behavior, not native owner acceptance, independent rights review or a release.
+
+## Native reference-scope regression and guard
+
+The actual Foundation/C parser proves a 12-link whole document leaves the last
+equation unlinked; fresh block replay resolves it. Hosted before run 42084519940
+on 2b91b0dd confirms the equation acquired the 8,001-byte URL: the original no-link
+assertion fails. All original 37 functions pass. Three additional setup failures
+come from the initial fixture choosing a math-looking definition key before its
+actual block; select the block-local occurrence then offset it to original source.
+The prior 42084147757 never ran tests: the lint-refactored named helper still
+returned its former tuple; 2b91b0dd corrects that wrapper. Both complete logs stay.
+
+The guard now checks every actual native link/image URL against forward-projected
+original ranges and resolved destinations, with separate roles. It denies wrong,
+foreign, overlapping and unpositioned authority even without equation markers.
+Failure returns the whole original block visibly. Image facts preserve original
+resource targets while keeping image contents literal to math. Exact Foundation
+fixtures pass 177 MarkdownEngine functions Debug/Release and 13 input/authority
+functions Debug/Release. An initial pure fixture omitted its macOS platform and
+failed compilation before tests; the fixture now declares the product's macOS26
+minimum, without availability guards or source/test changes.
+
+All 45 actual native functions compile only locally; source plus all six application
+pins are verified. Full strict lint and pinned formatter pass 1,410 files. Hosted
+execution of the guarded 45 functions is the next gate; production is not switched.

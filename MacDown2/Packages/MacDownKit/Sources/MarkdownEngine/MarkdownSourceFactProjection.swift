@@ -19,6 +19,7 @@ enum MarkdownSourceFactProjection {
         var containers: [[Range<MarkdownSourcePoint>]] = []
         var literals: [Range<MarkdownSourcePoint>] = []
         var links: [RawLink] = []
+        var images: [RawLink] = []
 
         var ranges: [Range<MarkdownSourcePoint>] {
             containers.flatMap(\.self) + literals + links.map(\.range)
@@ -57,12 +58,18 @@ enum MarkdownSourceFactProjection {
                   ) else { return nil }
             links.append(resolved)
         }
+        var images: [MarkdownSourceImage] = []
+        for image in raw.images {
+            guard let range = convert(image.range), !range.isEmpty else { return nil }
+            images.append(MarkdownSourceImage(fullRange: range, source: image.destination, title: image.title))
+        }
         guard let definitions = resolveReferences(referenceDefinitions, convert: convert) else { return nil }
         return MarkdownSourceFacts(
             sourceSHA256: sourceSHA256, inlineRegions: containers.regions, literalRanges: literals,
             continuationPrefixes: containers.prefixes,
             links: links.sorted { $0.fullRange.lowerBound < $1.fullRange.lowerBound },
-            referenceDefinitions: definitions
+            referenceDefinitions: definitions,
+            images: images.sorted { $0.fullRange.lowerBound < $1.fullRange.lowerBound }
         )
     }
 
@@ -92,7 +99,7 @@ enum MarkdownSourceFactProjection {
             var container = item.container
             guard append(node, container: &container, raw: &raw) else { return nil }
             switch node.kind {
-            case .opaque, .literal: continue
+            case .opaque, .literal, .image: continue
             default: break
             }
             for child in children(item.node).reversed() {
@@ -107,13 +114,17 @@ enum MarkdownSourceFactProjection {
         case .container:
             container = raw.containers.count
             raw.containers.append([])
-        case .inline, .literal, .link:
+        case .inline, .literal, .link, .image:
             guard let range = node.range else { return false }
             if let container {
                 raw.containers[container].append(range)
             }
-            if case .literal = node.kind {
+            switch node.kind {
+            case .literal: raw.literals.append(range)
+            case let .image(source, title):
                 raw.literals.append(range)
+                raw.images.append(RawLink(range: range, destination: source, title: title))
+            default: break
             }
             if case let .link(destination, title) = node.kind {
                 raw.links.append(RawLink(range: range, destination: destination, title: title))

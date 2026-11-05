@@ -72,6 +72,12 @@ struct PreviewMathTransportTests {
         let input = try PreviewMathInput(source: source, prefix: "[$x$]: /target \"title\"" + ending + ending,
                                          replacements: [occurrence], sourceEdits: [
                                              .init(range: 4 ..< 7, expectedSource: "][]", replacement: "][$x$]"),
+                                         ], references: [
+                                             .init(
+                                                 range: 0 ..< source.utf16.count,
+                                                 destination: "/target",
+                                                 kind: .link
+                                             ),
                                          ])
         let actual = try PreviewMathMarkupParser(input: input, attachments: [occurrence.id: attachment(occurrence.id)])
             .attributedString(for: source)
@@ -105,7 +111,17 @@ struct PreviewMathTransportTests {
                                         expectedSource: "][]", replacement: "][" + key + "]")
         }
         let prefix = "[" + first + "]: /caf%C3%A9\n[" + second + "]: /cafe%CC%81\n\n"
-        let input = try PreviewMathInput(source: source, prefix: prefix, replacements: replacements, sourceEdits: edits)
+        let references = [first, second].map { key in
+            let range = literal.range(of: "[" + key + "][]", options: .literal)
+            let destination = key.utf8.elementsEqual(first.utf8) ? "/caf%C3%A9" : "/cafe%CC%81"
+            return PreviewMathInput.Reference(
+                range: range.location ..< NSMaxRange(range),
+                destination: destination,
+                kind: .link
+            )
+        }
+        let input = try PreviewMathInput(source: source, prefix: prefix, replacements: replacements,
+                                         sourceEdits: edits, references: references)
         let actual = try PreviewMathMarkupParser(
             input: input,
             attachments: Dictionary(uniqueKeysWithValues: ids.map { ($0, attachment($0)) })

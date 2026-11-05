@@ -7,12 +7,16 @@ public struct PreviewMathMarkupParser: MarkupParser {
     private let attachments: [UUID: AnyAttachment]
     private let baseURL: URL?
     private let sourceMap: PreviewMarkdownSourceMap
+    private let links: PreviewMathReferenceIndex
+    private let images: PreviewMathReferenceIndex
 
     public init(input: PreviewMathInput, attachments: [UUID: AnyAttachment], baseURL: URL? = nil) {
         self.input = input
         self.attachments = attachments
         self.baseURL = baseURL
         sourceMap = PreviewMarkdownSourceMap(input.rewritten)
+        links = PreviewMathReferenceIndex(input.references, kind: .link)
+        images = PreviewMathReferenceIndex(input.references, kind: .image)
     }
 
     public func attributedString(for source: String) throws -> AttributedString {
@@ -33,6 +37,7 @@ public struct PreviewMathMarkupParser: MarkupParser {
     }
 
     func restore(_ parsed: AttributedString) throws -> AttributedString {
+        try checkReferenceAuthority(in: parsed)
         let matches = try matches(in: parsed)
         var result = AttributedString()
         var cursor = parsed.startIndex
@@ -52,6 +57,21 @@ public struct PreviewMathMarkupParser: MarkupParser {
         }
         result.append(AttributedString(parsed[cursor ..< parsed.endIndex]))
         return result
+    }
+
+    private func checkReferenceAuthority(in parsed: AttributedString) throws {
+        guard links.isValid, images.isValid else { throw PreviewMathInput.Failure.referenceProvenance }
+        for run in parsed.runs where run.link != nil || run.imageURL != nil {
+            guard let position = run.markdownSourcePosition, let range = sourceMap.range(for: position) else {
+                throw PreviewMathInput.Failure.referenceProvenance
+            }
+            if let url = run.link, !links.authorizes(url, range: range, baseURL: baseURL) {
+                throw PreviewMathInput.Failure.referenceProvenance
+            }
+            if let url = run.imageURL, !images.authorizes(url, range: range, baseURL: baseURL) {
+                throw PreviewMathInput.Failure.referenceProvenance
+            }
+        }
     }
 
     private func matches(in parsed: AttributedString) throws -> [Match] {

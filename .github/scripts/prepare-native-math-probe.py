@@ -17,10 +17,10 @@ sources = [repo / "MacDown2/Packages/MacDownKit/Tests/PreviewTests" / name for n
     "SourceMathAccessibilityProbeTests.swift", "SourceAttachmentAccessibilityTests.swift",
     "NativeMathProbeHost.swift", "SourceMathPolicyProbeTests.swift",
     "PreviewMathInputTests.swift", "PreviewMathTransportTests.swift", "PreviewMathScalarGeometryTests.swift",
-    "PreviewMarkdownSourceMapTests.swift", "PreviewReferenceReplayTests.swift"
+    "PreviewMarkdownSourceMapTests.swift", "PreviewReferenceReplayTests.swift", "PreviewMathReferenceInputTests.swift"
 ]]
 preview_sources = [repo / "MacDown2/Packages/MacDownKit/Sources/Preview" / name for name in [
-    "PreviewParserBudget.swift", "PreviewMathInput.swift", "PreviewMathMarkupParser.swift", "PreviewMarkdownSourceMap.swift"
+    "PreviewParserBudget.swift", "PreviewMathInput.swift", "PreviewMathMarkupParser.swift", "PreviewMarkdownSourceMap.swift", "PreviewMathReferences.swift"
 ]]
 sources += [repo / "MacDown2/Packages/MacDownKit/Tests" / path for path in [
     "MathTests/MathImageBudgetTests.swift", "MathRenderingTests/ValidatedMathImageRendererTests.swift",
@@ -82,7 +82,7 @@ if args.verify:
             geometry[-1].get(field) for field in ["positiveControlsPresent", "allFramesInsideHost", "distinctFrames"]
         ):
             raise SystemExit("Six scalar-adjacent native occurrences were not verified")
-        if not re.search(r"Test run with 39 tests in 11 suites passed", log):
+        if not re.search(r"Test run with 45 tests in 12 suites passed", log):
             raise SystemExit("The actual native test did not pass")
         print("Actual native test and positive-control result verified")
     print("Exact native probe source and all six application revisions verified")

@@ -8,16 +8,18 @@ public struct MarkdownSourceFacts: Sendable, Equatable {
     public let continuationPrefixes: [Range<Int>]
     public let links: [MarkdownSourceLink]
     public let referenceDefinitions: [MarkdownReferenceDefinition]
+    public let images: [MarkdownSourceImage]
 
     init(sourceSHA256: String, inlineRegions: [Range<Int>], literalRanges: [Range<Int>],
          continuationPrefixes: [Range<Int>], links: [MarkdownSourceLink],
-         referenceDefinitions: [MarkdownReferenceDefinition] = []) {
+         referenceDefinitions: [MarkdownReferenceDefinition] = [], images: [MarkdownSourceImage] = []) {
         self.sourceSHA256 = sourceSHA256
         self.inlineRegions = inlineRegions
         self.literalRanges = literalRanges
         self.continuationPrefixes = continuationPrefixes
         self.links = links
         self.referenceDefinitions = referenceDefinitions
+        self.images = images
     }
 }
 
@@ -29,6 +31,13 @@ public struct MarkdownReferenceDefinition: Sendable, Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.useRanges == rhs.useRanges && lhs.source.utf8.elementsEqual(rhs.source.utf8)
     }
+}
+
+/// Original image syntax remains opaque to math, while its resolved resource target is source-owned.
+public struct MarkdownSourceImage: Sendable, Equatable {
+    public let fullRange: Range<Int>
+    public let source: String?
+    public let title: String?
 }
 
 struct MarkdownSourceReferenceDefinition {
@@ -60,6 +69,7 @@ struct MarkdownSourceNode {
     enum Kind {
         case container, inline, lineBreak, literal, opaque, other
         case link(destination: String?, title: String?)
+        case image(source: String?, title: String?)
     }
 
     let kind: Kind

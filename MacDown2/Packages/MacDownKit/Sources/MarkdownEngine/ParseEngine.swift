@@ -165,7 +165,8 @@ public actor ParseEngine: ParseExecuting {
                 let kind: MarkdownSourceNode.Kind = switch node {
                 case is Paragraph, is Heading, is Table.Cell: .container
                 case is CodeBlock, is HTMLBlock: .opaque
-                case is InlineCode, is InlineHTML, is Image: .literal
+                case is InlineCode, is InlineHTML: .literal
+                case let image as Image: .image(source: image.source, title: image.title)
                 case let link as Link: .link(destination: link.destination, title: link.title)
                 case is SoftBreak, is LineBreak: .lineBreak
                 case is InlineMarkup: .inline

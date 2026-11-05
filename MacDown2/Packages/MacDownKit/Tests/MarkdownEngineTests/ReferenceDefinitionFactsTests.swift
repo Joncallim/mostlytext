@@ -98,4 +98,19 @@ struct ReferenceDefinitionFactsTests {
             #expect(facts == nil)
         }
     }
+
+    @Test(arguments: ["\n", "\r\n", "\r"])
+    func imageTargetsHaveOriginalRangesWhileImageContentsStayLiteral(_ ending: String) async throws {
+        let source = "[key]: /original \"image title\"\n\n![label $literal$][key] [linked ![nested](/pic)](/link)"
+            .replacingOccurrences(of: "\n", with: ending)
+        let document = try await ParseEngine().parse(source, revision: 1)
+        let facts = try #require(document.sourceFacts)
+        #expect(facts.images.map(\.source) == ["/original", "/pic"])
+        #expect(facts.images.map(\.title) == ["image title", nil])
+        #expect(try facts.images.map(\.fullRange) == [
+            span("![label $literal$][key]", in: source), span("![nested](/pic)", in: source),
+        ])
+        #expect(facts.images.allSatisfy { facts.literalRanges.contains($0.fullRange) })
+        #expect(facts.links.map(\.destination) == ["/link"])
+    }
 }

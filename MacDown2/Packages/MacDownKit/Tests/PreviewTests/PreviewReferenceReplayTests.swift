@@ -23,9 +23,9 @@ struct PreviewReferenceReplayTests {
         let document = try await ParseEngine().parse(source, revision: 1)
         let facts = try #require(document.sourceFacts)
         let blockRange = try range(block, in: source)
-        let globalMath = try range("$x$", in: source)
-        let localMath = (globalMath.lowerBound - blockRange.lowerBound) ..<
-            (globalMath.upperBound - blockRange.lowerBound)
+        let localMath = try range("$x$", in: block)
+        let globalMath = (localMath.lowerBound + blockRange.lowerBound) ..<
+            (localMath.upperBound + blockRange.lowerBound)
         let repairs = try MarkdownReferenceRepair.edits(source: source, facts: facts, replacing: [globalMath])
         let edits = repairs.map { edit in
             PreviewMathInput.SourceEdit(
@@ -40,9 +40,20 @@ struct PreviewReferenceReplayTests {
             for: blockRange, sourceSHA256: facts.sourceSHA256, maximumUTF8Bytes: PreviewParserBudget.maximumUTF8Bytes
         )
         let id = UUID()
+        let references = facts.links.filter { $0.fullRange.lowerBound >= blockRange.lowerBound }
+            .compactMap { link -> PreviewMathInput.Reference? in
+                guard link.fullRange.upperBound <= blockRange.upperBound,
+                      let destination = link.destination else { return nil }
+                return .init(
+                    range: (link.fullRange.lowerBound - blockRange.lowerBound) ..<
+                        (link.fullRange.upperBound - blockRange.lowerBound),
+                    destination: destination,
+                    kind: .link
+                )
+            }
         return try Prepared(input: PreviewMathInput(source: block, prefix: prefix, replacements: [
             .init(id: id, range: localMath, expectedSource: "$x$"),
-        ], sourceEdits: edits), id: id, facts: facts)
+        ], sourceEdits: edits, references: references), id: id, facts: facts)
     }
 
     private func render(_ input: PreviewMathInput, id: UUID) throws -> AttributedString {
@@ -103,5 +114,48 @@ struct PreviewReferenceReplayTests {
             "mathGainedLink": own?.link != nil,
         ])
         try print("MOSTLYTEXT_REFERENCE_SCOPE " + #require(String(data: data, encoding: .utf8)))
+    }
+
+    @Test func nativeImagesKeepOnlyTheirOriginalResourceTargets() async throws {
+        let source = "[image]: /picture.png \"title\"\n\n![alt][image]"
+        let document = try await ParseEngine().parse(source, revision: 1)
+        let facts = try #require(document.sourceFacts)
+        let block = "![alt][image]"
+        let blockRange = try range(block, in: source)
+        let prefix = try MarkdownReferenceReplayIndex(facts: facts).prefix(
+            for: blockRange, sourceSHA256: facts.sourceSHA256, maximumUTF8Bytes: PreviewParserBudget.maximumUTF8Bytes
+        )
+        let original = try #require(facts.images.first)
+        let reference = try PreviewMathInput.Reference(range: 0 ..< block.utf16.count,
+                                                       destination: #require(original.source), kind: .image)
+        let input = try PreviewMathInput(source: block, prefix: prefix, replacements: [], references: [reference])
+        let actual = try PreviewMathMarkupParser(input: input, attachments: [:]).attributedString(for: block)
+        #expect(actual.runs.compactMap(\.imageURL).map(\.relativeString) == ["/picture.png"])
+        let denied = try PreviewMathInput(source: block, prefix: prefix, replacements: [])
+        let fallback = try PreviewMathMarkupParser(input: denied, attachments: [:]).attributedString(for: block)
+        #expect(String(String.UnicodeScalarView(fallback.unicodeScalars)).utf8.elementsEqual(block.utf8))
+        #expect(fallback.runs.allSatisfy { $0.imageURL == nil })
+    }
+
+    @Test func unrelatedAndWrongNativeLinkAttributesFailClosedWithoutAnyEquations() throws {
+        let source = "[label](/actual)"
+        let wrong = PreviewMathInput.Reference(range: 0 ..< source.utf16.count, destination: "/wrong", kind: .link)
+        let foreignRole = PreviewMathInput.Reference(
+            range: 0 ..< source.utf16.count,
+            destination: "/actual",
+            kind: .image
+        )
+        for references in [[], [wrong], [foreignRole]] {
+            let input = try PreviewMathInput(source: source, replacements: [], references: references)
+            let actual = try PreviewMathMarkupParser(input: input, attachments: [:]).attributedString(for: source)
+            #expect(String(String.UnicodeScalarView(actual.unicodeScalars)).utf8.elementsEqual(source.utf8))
+            #expect(actual.runs.allSatisfy { $0.link == nil && $0.imageURL == nil })
+        }
+        let reference = PreviewMathInput.Reference(range: 0 ..< source.utf16.count, destination: "/actual", kind: .link)
+        let input = try PreviewMathInput(source: source, replacements: [], references: [reference])
+        let base = try #require(URL(string: "https://example.com/document/"))
+        let actual = try PreviewMathMarkupParser(input: input, attachments: [:], baseURL: base)
+            .attributedString(for: source)
+        #expect(actual.runs.compactMap(\.link).map(\.absoluteString) == ["https://example.com/actual"])
     }
 }
