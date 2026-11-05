@@ -90,3 +90,42 @@ has activated. Before production shared analysis can activate, qualify a narrow
 source-preserving fix at the actual cmark table owner, or revise the integration
 with exact independently verified coordinates. No text-search guess, duplicate
 parse, weakened source assertion or silent old-tokenizer fallback is permitted.
+
+## Focused revision: qualify actual parser provenance before adoption
+
+The broader review also reproduced wrong-but-in-bounds positions after varying
+indentation and lazy quote/list continuation. Bounds checks alone cannot prove
+source identity. Keep the prepared PR85 draft while correcting the actual owner.
+The qualified correction is now Swift cmark fork
+2a5339b89b219584c8fa6c6fd378d3898eed5d57, consumed by the metadata/test-only
+Swift Markdown child abfafeccd6f0434daf1a667b92d227adb83b50c8. These are the only
+two remote dependency changes permitted by this revision. Original complete
+COPYING, LICENSE and NOTICE are unchanged; all87 Swift Markdown runtime source
+files and162 unaffected original cmark files are byte-identical to their bases.
+
+The cmark owner records sparse original byte-position segments while consuming
+block text, including tab expansion, reference removal and table extraction/
+escaped pipes. It corrects inline metadata only after parsing finishes, preserving
+delimiter/reference calculations. Public opaque-node APIs remain unchanged;
+internal node layout changes and all consumers build from source. The original
+runtime fails53 coordinate assertions. The candidate passes them, all668 original
+C API controls normally/AddressSanitizer/UndefinedBehaviorSanitizer, exact strict
+670 CommonMark/26 regression/30 GFM/16 smart punctuation outputs, and299 XCTest
+plus6 source-coordinate Swift Testing functions Debug/Release. One snapshot's
+closing-brace column is corrected against an independent authored-byte oracle;
+no bounds, assertion or timeout is relaxed. All9054 generated actual AST/format
+and HTML cases preserve every non-position byte, including under AddressSanitizer.
+
+Original PR85 hosted CI42002905284 passes, but applies to the earlier source and
+pins: it cannot qualify this correction. Keep those logs, then require a new
+complete hosted run on the final corrected head. The actual first-party source
+fixture now passes158 tests Debug/Release with positive paragraph/table and
+variable/lazy continuation assertions. NUL input remains readable original source
+but returns nil source facts because parser sanitization is not original-byte
+provenance. Unsupported deep/invalid mappings also remain fail-closed.
+
+Baseline actual main is now3336e59be56727693ab35f55a975aaf5562a48a5 after verified
+PR84 integration. Reconcile by actual git merge-tree without resetting newer
+source. Retain all old failed/green receipts and a proof that the other22 remote
+pins, Textual9077b0f6, Neoncd14f22a and both parser geometry policies stay exact.
+Production math consumers and final native acceptance still do not activate here.
