@@ -29,3 +29,25 @@ source/render markers, duplicate/collision refusal, memory/work bounds and sourc
 compatibility. It is not independent final compliance/release or native acceptance.
 No dependency pin, notices or SBOM changes; no local app/CLI/helper/native test
 execution. This remains the staged anchor machinery: TOC links are not activated.
+
+
+## Stacked qualification after the warning correction
+
+PR95now follows PR94source994a6f25; math source03fc4607 is also included.
+This avoids merging a combined tree that was never tested. The heading diff
+remains separate from the eight warning-cleanup files. The combined complete
+package-test compilation passes47.13s, actual app/UI build-for-testing passes,
+and the11affected heading tests pass Debug/Release again. The new49file source
+receipt includes PR94's synchronous FrontMatter tests; original receipts/logs
+continue to describe their own earlier source. All17owned baseline diagnostics
+are absent in the combined package/app compilations. No local native execution.
+Fresh combined-head hosted tests remain the merge prerequisite.
+
+The first combined full lint exposes PR94's two byte-decoder lint violations;
+that failed stacked-lint log is retained. Final PR94source606ab701corrects the
+qualified Unicode.UTF8 spelling without changing decoding behavior. This branch
+now includes that source too. Full format/strict lint pass1442files; complete
+package test bundles compile88.14s and real app/UI bundles compile successfully.
+No owned diagnostic reappears. The current49file Markdown source/test receipt
+still matches, because the two final decoder changes are outside that module.
+Hosted combined-head execution remains required; no local native execution.
