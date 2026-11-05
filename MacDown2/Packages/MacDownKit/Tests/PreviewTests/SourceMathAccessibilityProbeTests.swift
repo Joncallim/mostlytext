@@ -14,7 +14,14 @@ struct SourceMathAccessibilityProbeTests {
     private static let after = "MT_AX_AFTER"
 
     @Test func recordsActualInlineEquationAccessibilityWithPositiveControls() async throws {
-        _ = NSApplication.shared
+        let application = NSApplication.shared
+        let previousPolicy = application.activationPolicy()
+        try #require(application.setActivationPolicy(.regular))
+        defer { _ = application.setActivationPolicy(previousPolicy) }
+        if !NSRunningApplication.current.isFinishedLaunching {
+            application.finishLaunching()
+        }
+        application.activate()
         let base = AnyAttachment.math(latex: "x+y", style: .inline, sourceID: UUID())
         let standalone = LabeledMath(base: base, label: Self.standalone)
         let inline = LabeledMath(base: base, label: Self.inline)
@@ -66,6 +73,8 @@ struct SourceMathAccessibilityProbeTests {
             "windowVisible": window.isVisible,
             "windowIsKey": window.isKeyWindow,
             "activationPolicy": NSApplication.shared.activationPolicy().rawValue,
+            "applicationActive": NSApplication.shared.isActive,
+            "applicationFinishedLaunching": NSRunningApplication.current.isFinishedLaunching,
             "hostingChildrenCount": host.accessibilityChildren()?.count ?? 0,
             "hostingNavigationChildrenCount": host.accessibilityChildrenInNavigationOrder()?.count ?? 0,
             "hostingChildTypes": (host.accessibilityChildren() ?? []).prefix(32)

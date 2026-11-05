@@ -104,3 +104,20 @@ test bytes or a changed owner revision. Both the actual PreviewTests target and
 isolated focused target compile locally. YAML syntax, exact source and pin
 verification pass. No native execution occurs locally; no permission/configuration
 change, private accessibility API, assertion weakening or test exclusion is used.
+
+## Second setup observation: prohibited process and masked workflow status
+
+Focused run 42040496028 reports a green workflow but its actual one-test log
+**fails**: positive labels remain empty, activationPolicy=2 (prohibited), window
+visible but not key, and hosting/navigation child counts zero. This is preserved
+as failed native evidence. The new tee pipeline omitted explicit pipefail and
+masked the nonzero swift-test exit. No green job status qualifies this run.
+
+The next candidate temporarily gives only its owned test process a regular
+activation policy, completes launch when needed, activates it, and restores the
+previous policy afterward. Controls, bounds and native APIs remain unchanged.
+The workflow now enables pipefail and independently validates the actual passing
+one-test summary and positive-control JSON; negative controls reject the real
+prior failing log, false controls and a failed summary, and prove pipeline exit
+7 remains exit 7. Local actual target compilation passes; this setup hypothesis
+still requires fresh hosted observation before any native conclusion or merge.

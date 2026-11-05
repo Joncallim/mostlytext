@@ -37,10 +37,11 @@ jobs:
         run: python3 .github/scripts/prepare-native-math-probe.py "$RUNNER_TEMP/mostlytext-native-math-probe"
       - name: Execute actual native probe
         run: |
+          set -euo pipefail
           swift test --package-path "$RUNNER_TEMP/mostlytext-native-math-probe" --force-resolved-versions --no-parallel 2>&1 | tee "$RUNNER_TEMP/mostlytext-native-math-probe/probe.log"
       - name: Verify exact source and dependency revisions
         if: always()
-        run: python3 .github/scripts/prepare-native-math-probe.py "$RUNNER_TEMP/mostlytext-native-math-probe" --verify
+        run: python3 .github/scripts/prepare-native-math-probe.py "$RUNNER_TEMP/mostlytext-native-math-probe" --verify --require-result
       - name: Preserve probe evidence
         if: always()
         uses: actions/upload-artifact@v4

@@ -10,6 +10,7 @@ import shutil
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("output", type=Path)
 parser.add_argument("--verify", action="store_true")
+parser.add_argument("--require-result", action="store_true")
 args = parser.parse_args()
 repo = Path(__file__).resolve().parents[2]
 source = repo / "MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceMathAccessibilityProbeTests.swift"
@@ -29,6 +30,15 @@ if args.verify:
     resolved = {pin["identity"]: pin["state"]["revision"] for pin in actual["pins"]}
     if resolved != expected or target.read_bytes() != source.read_bytes():
         raise SystemExit("Probe source or resolved dependencies differ from the application")
+    if args.require_result:
+        log = (args.output / "probe.log").read_text()
+        prefix = "MOSTLYTEXT_MATH_AX_PROBE "
+        records = [json.loads(line.split(prefix, 1)[1]) for line in log.splitlines() if prefix in line]
+        if not records or not records[-1].get("positiveControlsPresent"):
+            raise SystemExit("Native probe did not establish its positive controls")
+        if not re.search(r"Test run with 1 test in 1 suite passed", log):
+            raise SystemExit("The actual native test did not pass")
+        print("Actual native test and positive-control result verified")
     print("Exact native probe source and all three application revisions verified")
 else:
     args.output.mkdir(parents=True, exist_ok=False)

@@ -195,3 +195,20 @@ must prove exact test bytes and matching lock revisions. Local preparation/compi
 may run; local native execution stays held. Allowed additional files are the
 focused workflow, its fixture preparer and evidence. This avoids repeated full
 application builds while investigating a narrowly unknown native setup.
+
+### Hosting-root diagnosis result and executable result gate
+
+Focused run 42040496028 at c70cdbe1 prints activationPolicy=2 (prohibited), visible
+window but windowIsKey=false, and no hosting/navigation children or positive
+labels. Its test actually fails. The new workflow incorrectly reported success
+because the tee pipeline lacked explicit pipefail; preserve that job status and
+raw failing output together, never use the green status as qualification.
+
+Make this owned test process a normal application while the probe runs, finish
+its launch if needed and activate it; restore its previous activation policy at
+teardown. This changes no system permission, account or protected application.
+Keep all original controls/readiness/traversal bounds. Record activation/launch
+state. This is the next measured setup hypothesis, not a proved accessibility fix.
+The workflow now explicitly enables pipefail, and its always-run verifier also
+requires the actual one-test passing summary and a true positive-control record.
+A false/missing record or failed summary must fail independently of shell status.
