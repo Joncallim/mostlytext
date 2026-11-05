@@ -13,7 +13,8 @@ public enum FrontMatterValue: Sendable, Equatable {
 
 /// A leading `--- … ---` block. Present iff the delimiters were found (D3).
 public struct FrontMatter: Sendable, Equatable {
-    /// Text between the delimiter lines (exclusive), exactly as written.
+    /// YAML text between the delimiter lines, with line endings normalized to LF
+    /// for parsing. This derived value never replaces the authored source text.
     public let raw: String
 
     /// 1-based lines of the ORIGINAL source, INCLUDING both delimiter lines.
@@ -108,22 +109,25 @@ extension String {
         let utf16 = utf16
         var currentLineStart = utf16.startIndex
 
-        while currentLineStart < utf16.endIndex {
+        while true {
             var lineEnd = currentLineStart
             while lineEnd < utf16.endIndex {
-                if utf16[lineEnd] == 0x000A { // \n
+                if utf16[lineEnd] == 0x000A || utf16[lineEnd] == 0x000D {
                     break
                 }
                 lineEnd = utf16.index(after: lineEnd)
             }
 
-            let lineText = String(decoding: Array(utf16[currentLineStart ..< lineEnd]), as: UTF16.self)
-                .trimmingCharacters(in: .init(charactersIn: "\r"))
-            let endOffset: Int = if lineEnd < utf16.endIndex {
-                lineStartOffset + utf16.distance(from: currentLineStart, to: lineEnd) + 1
-            } else {
-                utf16.count
+            let lineText = String(decoding: utf16[currentLineStart ..< lineEnd], as: UTF16.self)
+            var resume = lineEnd
+            if resume < utf16.endIndex {
+                let wasCarriageReturn = utf16[resume] == 0x000D
+                resume = utf16.index(after: resume)
+                if wasCarriageReturn, resume < utf16.endIndex, utf16[resume] == 0x000A {
+                    resume = utf16.index(after: resume)
+                }
             }
+            let endOffset = lineStartOffset + utf16.distance(from: currentLineStart, to: resume)
 
             result.append(LineInfo(
                 text: lineText,
@@ -132,19 +136,12 @@ extension String {
                 endOffset: endOffset
             ))
 
-            lineNumber += 1
-
-            if lineEnd < utf16.endIndex {
-                currentLineStart = utf16.index(after: lineEnd)
-                lineStartOffset = endOffset
-            } else {
-                currentLineStart = lineEnd
+            if lineEnd == utf16.endIndex {
+                break
             }
-        }
-
-        // Empty text is a single empty line.
-        if result.isEmpty {
-            result.append(LineInfo(text: "", lineNumber: 1, startOffset: 0, endOffset: 0))
+            currentLineStart = resume
+            lineStartOffset = endOffset
+            lineNumber += 1
         }
 
         return result
