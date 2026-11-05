@@ -1,0 +1,31 @@
+[
+  {
+    "synthetic_control": "synthetic_complete",
+    "expected_success": true,
+    "exit_code": 0,
+    "output": "Actual native test and positive-control result verified\nExact native probe source and all three application revisions verified\n"
+  },
+  {
+    "synthetic_control": "missing_geometry",
+    "expected_success": false,
+    "exit_code": 1,
+    "output": "Six scalar-adjacent native occurrences were not verified\n"
+  },
+  {
+    "synthetic_control": "wrong_count",
+    "expected_success": false,
+    "exit_code": 1,
+    "output": "Six scalar-adjacent native occurrences were not verified\n"
+  },
+  {
+    "synthetic_control": "failed_summary",
+    "expected_success": false,
+    "exit_code": 1,
+    "output": "The actual native test did not pass\n"
+  },
+  {
+    "synthetic_control": "source_tamper",
+    "expected_success": false,
+    "exit_code": 1
+  }
+]

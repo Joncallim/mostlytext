@@ -20,7 +20,7 @@ public struct PreviewBlock: Sendable, Equatable, Identifiable {
     /// (gonzalezreal/textual#23, #47); slicing by top-level block only bounds
     /// the common case; a single large fenced code block, unbroken paragraph,
     /// or big table/HTML block can still reach that size on its own.
-    public static let oversizeByteThreshold = 64 * 1024
+    public static let oversizeByteThreshold = PreviewParserBudget.maximumUTF8Bytes
 
     public let id: UUID
     public let kind: BlockKind
