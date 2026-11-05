@@ -1,0 +1,212 @@
+{
+  "baseline_app": "30d7692f3a535c0e8930a3b80ec2f2af92727e28",
+  "local_execution": "Foundation-only MathSyntax and unchanged two-file legacy scanner fixture; no AppKit/SwiftUI/WebKit/product execution",
+  "source_files": [
+    {
+      "path": "MacDown2/Packages/MathSyntax/Package.swift",
+      "sha256": "fcb15bdc549a8845e30eec5c162cc21292dcbaf63b39d22f180469c429688294"
+    },
+    {
+      "path": "MacDown2/Packages/MathSyntax/README.md",
+      "sha256": "3e8f34d2a7cd7da87d85658977acc2050d6b8775c84ed5ccfe0f8a3fe8d3dbbb"
+    },
+    {
+      "path": "MacDown2/Packages/MathSyntax/Sources/MathSyntax/MathDisplayDelimiterIndex.swift",
+      "sha256": "439dd466c86ffb906fe1dbb6e474cf57d55515c67b9ecc5804a7fd3e58be0032"
+    },
+    {
+      "path": "MacDown2/Packages/MathSyntax/Sources/MathSyntax/MathSourceIntervals.swift",
+      "sha256": "b2550e65241fc36aef6994a485359b40d1dde32c4a538e1564373dfccb190496"
+    },
+    {
+      "path": "MacDown2/Packages/MathSyntax/Sources/MathSyntax/MathSourceValues.swift",
+      "sha256": "47ae4b314ab2ad271c62544bffa77a7c2e45780698ba6c9b9a8770bdd8ff0ea3"
+    },
+    {
+      "path": "MacDown2/Packages/MathSyntax/Sources/MathSyntax/MathSyntaxUnits.swift",
+      "sha256": "33e0a3bbe42e29c34a8c8b5befc3b8db1cc8341ec4ba734b693a119e4d15b83a"
+    },
+    {
+      "path": "MacDown2/Packages/MathSyntax/Sources/MathSyntax/MathTokenizer.swift",
+      "sha256": "b404b2f713c6aa25449a23706a8519bd0956c76225bf3d91993201400b0aed70"
+    },
+    {
+      "path": "MacDown2/Packages/MathSyntax/Tests/MathSyntaxTests/MathDelimiterGrammarTests.swift",
+      "sha256": "e47caf94aa8c5e8b61150b46bbc2d6a99c7381ca5a46b4bf17f54ab4e0b5135f"
+    },
+    {
+      "path": "MacDown2/Packages/MathSyntax/Tests/MathSyntaxTests/MathSourceBoundaryTests.swift",
+      "sha256": "c269a01770d96c8f078595ecaeceaeaa97cfef8b031d9ec07c228bb5a93f5e8f"
+    },
+    {
+      "path": "MacDown2/Packages/MathSyntax/Tests/MathSyntaxTests/MathSyntaxTestSupport.swift",
+      "sha256": "2262e0ab13547104506feaac993bd9598529972aae9d33e22c7c29e80e91c9b0"
+    }
+  ],
+  "tests": "19 Swift Testing functions/two suites Debug and Release pass; unchanged production scanner fails four explicit policy criteria",
+  "production_activation": false,
+  "logs": [
+    {
+      "raw_name": "app-compliance-first-dependency-free-manifest-failure.log",
+      "raw_bytes": 8939,
+      "raw_sha256": "add4b114eec87da246ad0463917263dfe31bfe1063a18b67f00b70dec756d448",
+      "archive": "app-compliance-first-dependency-free-manifest-failure.log.gz"
+    },
+    {
+      "raw_name": "app-compliance-tests.log",
+      "raw_bytes": 7515,
+      "raw_sha256": "67f9661885d649111b52172e0c4ef9f53919cff54b69eb5d14708c802a010701",
+      "archive": "app-compliance-tests.log.gz"
+    },
+    {
+      "raw_name": "app-final-inventory.log",
+      "raw_bytes": 54,
+      "raw_sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+      "archive": "app-final-inventory.log.gz"
+    },
+    {
+      "raw_name": "app-format.log",
+      "raw_bytes": 261,
+      "raw_sha256": "b426b2227fede63c4e6a08d413374caae556fa432a15b6b66d2e36682888d3c2",
+      "archive": "app-format.log.gz"
+    },
+    {
+      "raw_name": "app-generation.log",
+      "raw_bytes": 91,
+      "raw_sha256": "33c66bdb9775a00b493a8355dd44358cb655bcf075815ece63927cdf5f8f33d9",
+      "archive": "app-generation.log.gz"
+    },
+    {
+      "raw_name": "app-inventory.log",
+      "raw_bytes": 54,
+      "raw_sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+      "archive": "app-inventory.log.gz"
+    },
+    {
+      "raw_name": "app-lint.log",
+      "raw_bytes": 71545,
+      "raw_sha256": "71c03e7ad4a9a3f0f54e2bf8b30dd3e793c1af09ba941646fd69c2d34352fee4",
+      "archive": "app-lint.log.gz"
+    },
+    {
+      "raw_name": "combined-compliance-tests.log",
+      "raw_bytes": 7515,
+      "raw_sha256": "6b6291d8ffb16f9fb9ca0cfecddb5f49d120db2f20a69eee135110b0adecd953",
+      "archive": "combined-compliance-tests.log.gz"
+    },
+    {
+      "raw_name": "combined-format.log",
+      "raw_bytes": 260,
+      "raw_sha256": "5d2c5baab9b4869a3317dfa1e320b3a50cc4873caea289a0af1d62fe9f3c9eec",
+      "archive": "combined-format.log.gz"
+    },
+    {
+      "raw_name": "combined-generation.log",
+      "raw_bytes": 91,
+      "raw_sha256": "33c66bdb9775a00b493a8355dd44358cb655bcf075815ece63927cdf5f8f33d9",
+      "archive": "combined-generation.log.gz"
+    },
+    {
+      "raw_name": "combined-inventory.log",
+      "raw_bytes": 54,
+      "raw_sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+      "archive": "combined-inventory.log.gz"
+    },
+    {
+      "raw_name": "combined-lint.log",
+      "raw_bytes": 71599,
+      "raw_sha256": "45d9c9a82d290909d9e16c3b88a61092262912d543f47ea41e51b49ec169fe9b",
+      "archive": "combined-lint.log.gz"
+    },
+    {
+      "raw_name": "display-parity-debug.log",
+      "raw_bytes": 9050,
+      "raw_sha256": "8ea89c52197965728c4944baf1f616440466a7fec1665ad1b0513f3da99698dc",
+      "archive": "display-parity-debug.log.gz"
+    },
+    {
+      "raw_name": "display-parity-format.log",
+      "raw_bytes": 208,
+      "raw_sha256": "fb909ba080dd1f231e67898b039aaa3635b8fccfba23bd99db549e2b7e9b832c",
+      "archive": "display-parity-format.log.gz"
+    },
+    {
+      "raw_name": "display-parity-lint.log",
+      "raw_bytes": 485,
+      "raw_sha256": "62beb545ad480efa48561120b025d7b2774f61e282b5ae995045885faac50c6c",
+      "archive": "display-parity-lint.log.gz"
+    },
+    {
+      "raw_name": "display-parity-release.log",
+      "raw_bytes": 9065,
+      "raw_sha256": "cf9985f9d7e5148665cdcef0ba3c959e55bfc90c2b20b5e383cc8a2a351cfa16",
+      "archive": "display-parity-release.log.gz"
+    },
+    {
+      "raw_name": "final-debug.log",
+      "raw_bytes": 7168,
+      "raw_sha256": "994a655c0288ee6fed85c28b2bba6d247eee2681ab091e34c181d9ffbf9d6ef4",
+      "archive": "final-debug.log.gz"
+    },
+    {
+      "raw_name": "final-release.log",
+      "raw_bytes": 7449,
+      "raw_sha256": "59c42f16f7020b4e54a103dd5fe4035085ba22723eed4163a7639904cc9619b0",
+      "archive": "final-release.log.gz"
+    },
+    {
+      "raw_name": "initial-debug.log",
+      "raw_bytes": 8164,
+      "raw_sha256": "246fe042138b519f54d5e8d888671e7996ed7e7eac09d058083e8e4b6bd7ad14",
+      "archive": "initial-debug.log.gz"
+    },
+    {
+      "raw_name": "initial-format.log",
+      "raw_bytes": 192,
+      "raw_sha256": "1340206d57a5f47df99e1d2a213280b1921a3e19e3021fd929c610b5cdb2ccfe",
+      "archive": "initial-format.log.gz"
+    },
+    {
+      "raw_name": "initial-lint.log",
+      "raw_bytes": 347,
+      "raw_sha256": "5c78b998dcc395d1cf973a3f6a5bdf773d152220c77c847cdfcde10e24e8435d",
+      "archive": "initial-lint.log.gz"
+    },
+    {
+      "raw_name": "literal-oracle-debug.log",
+      "raw_bytes": 7569,
+      "raw_sha256": "621d547bd80cf8fe6bf4f87ad499a90028123a425f9e668d400a1b2cd2c7d5ec",
+      "archive": "literal-oracle-debug.log.gz"
+    },
+    {
+      "raw_name": "literal-oracle-format.log",
+      "raw_bytes": 192,
+      "raw_sha256": "23f68e198177fb71101696478efecfc52f1d072e489533c26baa16b2b138b651",
+      "archive": "literal-oracle-format.log.gz"
+    },
+    {
+      "raw_name": "literal-oracle-lint.log",
+      "raw_bytes": 485,
+      "raw_sha256": "a29c80b752b309c7e367e4fc12d28c67ad6e35cb355df532c18fc07350a2cda5",
+      "archive": "literal-oracle-lint.log.gz"
+    },
+    {
+      "raw_name": "source-and-tests-format.log",
+      "raw_bytes": 192,
+      "raw_sha256": "2e737e34ca970dd34b41d4d4cba6482651aab9ca4ce86804ec0b9ce5cb29e496",
+      "archive": "source-and-tests-format.log.gz"
+    },
+    {
+      "raw_name": "source-and-tests-lint.log",
+      "raw_bytes": 1234,
+      "raw_sha256": "c9aae0e7c69b6e20361dccea4608ebaa11d14beef9b26121922b4b51b67255c5",
+      "archive": "source-and-tests-lint.log.gz"
+    },
+    {
+      "raw_name": "unchanged-production-grammar-baseline.log",
+      "raw_bytes": 2753,
+      "raw_sha256": "eb0fb030e3667542c2587d56493875f0dcf8f6e00e249337f23861a93190c552",
+      "archive": "unchanged-production-grammar-baseline.log.gz"
+    }
+  ]
+}

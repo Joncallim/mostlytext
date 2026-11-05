@@ -497,6 +497,9 @@ class RepositoryTests(unittest.TestCase):
                 self.assertEqual(len(urls) + len(paths), len(re.findall(r"\.package\s*\(", code)))
                 reflowed = re.sub(r",\s*(url|path|exact|from|branch|revision|name):", r",\n        \1:", text)
                 reflowed = reflowed.replace(".package(", ".package(\n        ")
+                # A Foundation-only package can have zero dependencies. Reflow
+                # its container too, preserving the real-mutation oracle.
+                reflowed = reflowed.replace("Package(", "Package(\n        ")
                 self.assertNotEqual(reflowed, text)
                 self.assertEqual(compliance.parse_manifest(reflowed), (urls, paths, unknown))
 

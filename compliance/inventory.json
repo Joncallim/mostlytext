@@ -36,7 +36,8 @@
     "MacDown2/Packages/MacDownKit/Package.swift",
     "MacDown2/Packages/TreeSitterMarkdown/Package.swift",
     "MacDown2/Packages/TreeSitterJavaScript/Package.swift",
-    "MacDown2/Packages/TreeSitterSQL/Package.swift"
+    "MacDown2/Packages/TreeSitterSQL/Package.swift",
+    "MacDown2/Packages/MathSyntax/Package.swift"
   ],
   "lockfiles": [
     "MacDown2/Packages/MacDownKit/Package.resolved",

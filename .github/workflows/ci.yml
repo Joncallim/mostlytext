@@ -233,6 +233,10 @@ jobs:
           else:
               raise SystemExit('unknown diagnostic mode')
           PY
+      - name: Shared math syntax (Foundation only)
+        run: |
+          swift test --package-path MacDown2/Packages/MathSyntax --force-resolved-versions
+          swift test --package-path MacDown2/Packages/MathSyntax -c release --force-resolved-versions
       - name: Package build + tests
         working-directory: MacDown2/Packages/MacDownKit
         # --force-resolved-versions builds exactly the revisions in the
