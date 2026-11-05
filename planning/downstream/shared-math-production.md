@@ -86,3 +86,45 @@ No local native/product/CLI/signing execution, hosted source renderer, document
 source rewrite, second Export renderer, unrelated theme changes or release/source
 publication is authorized by this slice. Issue updates always retain their actual
 scope and are followed immediately by a fresh repository issue audit.
+
+## Prepared evaluation and physical worker contract
+
+The positive-controlled native PR88 probe at 9e23f928 observes the standalone
+equation label but no inline label: Canvas drawing does not expose its symbol
+view's semantics. Production must add an accessible per-occurrence representation
+at actual attachment geometry with a source action; a label on MathView alone is
+rejected. Native final VoiceOver remains held.
+
+Before adapters activate, Math owns renderer-neutral diagnostic categories,
+equation ID and original scalar-safe source offset. MathRendering owns an immutable
+MathEvaluation with the exact MathAnalysis and one outcome per admitted equation:
+accepted opaque engine body, invalid syntax, internal parser failure or resource
+limit. Use the actual engine parser codes; never classify zero glyph geometry as
+malformed and never display the engine's unlocalized free-text messages. Error
+positions map through MathEquation's existing original-source segments; an invalid
+engine boundary falls back to that equation's own body start, never another span.
+Successful empty/comment-only bodies remain accepted. Cancellation aborts the
+complete result instead of publishing a partial snapshot.
+
+MathRendering also owns a per-document MathEvaluationWorker actor, with explicit
+immutable request source/document/identity/generation and caller-selected positive
+span/body limits. Its only production computation is structural MathAnalysis then
+actual body evaluation on a detached task. Add direct MarkdownEngine/MathSyntax
+dependencies for these used types; no new remote or Preview-to-renderer dependency.
+A worker keeps exactly one physical task and at most one newest pending request.
+Superseded callers return promptly, but cancellation never releases a physical
+slot before the underlying task actually returns. Caller cancellation removes
+only its own request. Shutdown rejects new requests and resolves waiters while
+retaining physical ownership until completion. Results publish only to their own
+request continuation. App consumers still must recheck live lifetime/generation/
+exact source after awaiting; worker completion alone cannot authorize navigation.
+
+Tests use actual parser/source models, comments/empty valid bodies, invalid
+commands/braces, parser bounds and source-coordinate projection. Worker tests
+use an explicitly released noncooperative fake computation, proving a newer
+request waits physically, pending replacement/caller cancellation/shutdown,
+independent document instances and error recovery. Execute only exact inspected
+Foundation/C/CryptoKit files in an owned fixture; the engine's unused outer
+SwiftUI View is replaced by the already documented empty Math namespace. Compile
+actual targets locally, execute native component tests only on hosted CI. This
+is a dependency unit; Preview/Export activation and whole criteria remain open.

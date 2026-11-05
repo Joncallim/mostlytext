@@ -169,7 +169,7 @@ let package = Package(
         .target(
             name: "MathRendering",
             dependencies: [
-                "Math",
+                "Math", "MarkdownEngine", .product(name: "MathSyntax", package: "MathSyntax"),
                 .product(name: "SwiftUIMath", package: "swiftui-math"),
             ]
         ),
@@ -236,7 +236,8 @@ let package = Package(
         .testTarget(
             name: "MathRenderingTests",
             dependencies: [
-                "MathRendering", .product(name: "SwiftUIMath", package: "swiftui-math"),
+                "MathRendering", "Math", "MarkdownEngine", .product(name: "MathSyntax", package: "MathSyntax"),
+                .product(name: "SwiftUIMath", package: "swiftui-math"),
                 .product(name: "Textual", package: "textual"),
             ]
         ),

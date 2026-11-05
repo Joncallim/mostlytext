@@ -1,0 +1,726 @@
+[
+  {
+    "fixture": "Sources/Contributions/Contributing.swift",
+    "sha256": "ee76bf4fb4c5c31700a5dbbd10e74c7fd7c73f143024277999547487ca22ba35",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/Contributing.swift"
+  },
+  {
+    "fixture": "Sources/Contributions/ContributionContent.swift",
+    "sha256": "c16b7658fe0b022c06f50173b0e92ee418fee0f69d12d301a7162f33fbaf2e48",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/ContributionContent.swift"
+  },
+  {
+    "fixture": "Sources/Contributions/ContributionDestination.swift",
+    "sha256": "adb845cd2aafd6e7673d97ed2d037379f8e65532fa86139e313c69d67cac520b",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/ContributionDestination.swift"
+  },
+  {
+    "fixture": "Sources/Contributions/ContributionDiagnostic.swift",
+    "sha256": "e845153e6ad18f7d00f81db529b14fa8646f3541ccf92361eced8c30932cce0f",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/ContributionDiagnostic.swift"
+  },
+  {
+    "fixture": "Sources/Contributions/ContributionPlacement.swift",
+    "sha256": "3155fdc743a43548bda37d6959aaf0b049775eedf876ff0af5575a05519063c8",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/ContributionPlacement.swift"
+  },
+  {
+    "fixture": "Sources/Contributions/ContributionRegistry.swift",
+    "sha256": "cbdc7381ee2daedaf16034d601483d07ec61955e42d80bb79b07b56efb234ebb",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/ContributionRegistry.swift"
+  },
+  {
+    "fixture": "Sources/Contributions/ContributionRepresentation.swift",
+    "sha256": "0001ee5f78e83e55441e295abf1bffe1caa0a9dfecdb66824d93340dd149e932",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/ContributionRepresentation.swift"
+  },
+  {
+    "fixture": "Sources/Contributions/ContributionResult.swift",
+    "sha256": "c389a7732b88cf9c686990eb3e44b515b504c761ea83fdc37dfea2714f9c6721",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/ContributionResult.swift"
+  },
+  {
+    "fixture": "Sources/Contributions/DeterministicTestContribution.swift",
+    "sha256": "567344f84671f399f5fb2e551da2754f79e3938aba9d2682a1fdaac3b2056768",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/DeterministicTestContribution.swift"
+  },
+  {
+    "fixture": "Sources/Contributions/Resources/Localizable.xcstrings",
+    "sha256": "ddc44170e81a86a9edd275f51174558ab361afd71cc6e7a079fb31a54129e1f5",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/Resources/Localizable.xcstrings"
+  },
+  {
+    "fixture": "Sources/Contributions/TOCContribution.swift",
+    "sha256": "c4ab3878ef67fc39e03caee8471b9085cafc8216f6e70a9eea5f16efc2163651",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Contributions/TOCContribution.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/DirectiveSourceCoverage.swift",
+    "sha256": "fbcd259f511a03a8c45c38b4ec4288cdd3967870974ef60e4663280ea9d16b76",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/DirectiveSourceCoverage.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/FrontMatter.swift",
+    "sha256": "93e57c7f93e6f0f01680ad9f57936a3b334d076b4296ca6ecc397ccf7c0a2ed5",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/FrontMatter.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/HeadingAnchorAllocator.swift",
+    "sha256": "7f2bdae529a88d29177741a11aba7319ab58780d53dcb9a3885485229459ffa8",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/HeadingAnchorAllocator.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/HeadingAnchorIndex.swift",
+    "sha256": "f8f95cb3b5037f99761c9dbc90bdff0abd4cde1e718a073cbbaf8c5a452e8153",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/HeadingAnchorIndex.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/MarkdownBlock.swift",
+    "sha256": "1b4c7d7528cd9a0f0eb2bbecf9bf2abae7c879a0fdfdd7c8381fac0fe8ab12b3",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownBlock.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/MarkdownDocument.swift",
+    "sha256": "423218e362b259cb8b11f19d3b2e8db217a642149f585e8283fc2550411d98f7",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownDocument.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/MarkdownEngineModule.swift",
+    "sha256": "c8caff8457cc0390960b365f27a33e05980ba03ab85b35d2fa3e5eecd8938310",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownEngineModule.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/MarkdownParseOptions.swift",
+    "sha256": "ec90b8c8717b73f30dc133f19d8505f8ad7911e5aafd0ee269b4b0350855eaa9",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseOptions.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/MarkdownParseSession.swift",
+    "sha256": "9a6d3bfdccae312997e7df0f941d597041b0c98ef03d72fa573268fe8854a8c9",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseSession.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/MarkdownParseStore.swift",
+    "sha256": "5343a853d2cc0161ae6a2a56a465e7659b05744e226d0a66ae3181cb6891afee",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseStore.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/MarkdownSourceFactProjection.swift",
+    "sha256": "99d3fd920b911416c13c4c88944703567af42fa90920c2c77738a846bd5d598f",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownSourceFactProjection.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/MarkdownSourceFacts.swift",
+    "sha256": "b26f45adf83a50e8cd507b917fd742cf329ac1105753434f4c8bd09f4fa79903",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownSourceFacts.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/MarkdownSourceFingerprint.swift",
+    "sha256": "ac2e5986b1bbab95c5eae574a47001c316ccffd61435f54eea39d5dde6a26535",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownSourceFingerprint.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/MarkdownSourceLinkProjection.swift",
+    "sha256": "e20c69b4cfb535465f91b41cfcccecd4c7e3c2ca02483611cb0469efce394f9f",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownSourceLinkProjection.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/ParseEngine+Foundation.swift",
+    "sha256": "5886293a172d7cb478dfa245742740292c408964fb287cc1547bf19b089bd1a5",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseEngine+Foundation.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/ParseEngine+YAMLGuards.swift",
+    "sha256": "9cc7518f1acca3f61481a4df12dde3d5e5988a457ddb598aca51f347b4e84b20",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseEngine+YAMLGuards.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/ParseEngine.swift",
+    "sha256": "e10d4007c30c65f800d59c5f8103329424eac18a0a878c557ff8a5bafb8479de",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseEngine.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/ParseExecuting.swift",
+    "sha256": "b43026f9a6867f2fc2b355b8465ac2053ff66a662bfd811c904816d9ef7c5b4c",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseExecuting.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/SourceMap.swift",
+    "sha256": "4e00c4d7a25a339e440e6b8f31a7e59f5c8b7dbb8eb7237dd3c94dc2117c89f2",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/SourceMap.swift"
+  },
+  {
+    "fixture": "Sources/MarkdownEngine/String+MarkdownLines.swift",
+    "sha256": "db2d92846df6beba3e7e3f534fc2cb8b199e572d83c7c9a2e67d7452b4b90fb6",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/String+MarkdownLines.swift"
+  },
+  {
+    "fixture": "Sources/Math/ExportMathRenderContext.swift",
+    "sha256": "312a08ad0dfdc8fb00f192550ffecf45b51ddedafae47e1d358520838b4a167b",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Math/ExportMathRenderContext.swift"
+  },
+  {
+    "fixture": "Sources/Math/FencedCodeBlockScanner.swift",
+    "sha256": "342396ee9b16b865b881bc7cb6d7de7af87b5f97abefc6f73999148c0d939959",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Math/FencedCodeBlockScanner.swift"
+  },
+  {
+    "fixture": "Sources/Math/InlineCodeSpanScanner.swift",
+    "sha256": "1dd32838947417b8c9e951906406f5c40c5581af4409f55de728857d32899552",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Math/InlineCodeSpanScanner.swift"
+  },
+  {
+    "fixture": "Sources/Math/MathAnalysis.swift",
+    "sha256": "5e1865ffc24ac4107f3e7849d4d31af1697e554687df03a740946e0101824428",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathAnalysis.swift"
+  },
+  {
+    "fixture": "Sources/Math/MathContainerPrefix.swift",
+    "sha256": "dfdfb6e9df8a4dae2bbaeeff96b3ee17f088357c995202d559d35a65e569ec2c",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathContainerPrefix.swift"
+  },
+  {
+    "fixture": "Sources/Math/MathContribution.swift",
+    "sha256": "644e8116f3195b62825afb7bafc6f62e989578e1d9f26daf5282983807a55e00",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathContribution.swift"
+  },
+  {
+    "fixture": "Sources/Math/MathEquation.swift",
+    "sha256": "570f4177ad701573b3b2aa6ed6c1ec37e48b50142b20658d70669d73205db75f",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathEquation.swift"
+  },
+  {
+    "fixture": "Sources/Math/MathEquationDiagnostic.swift",
+    "sha256": "768f3c99a827696325777d113e64ad3ea3b69286453f14764064531cf440ddec",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathEquationDiagnostic.swift"
+  },
+  {
+    "fixture": "Sources/Math/MathExpressionProjection.swift",
+    "sha256": "dcd1f6d1ba19aa8c3c6290421570102d88eb199a739c9de1a069118c8501fa66",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathExpressionProjection.swift"
+  },
+  {
+    "fixture": "Sources/Math/MathLiteralContextScanner.swift",
+    "sha256": "e1871cfb2656514c11c9359eacfec397e743949c9dcac24f440ab370f10e49b0",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathLiteralContextScanner.swift"
+  },
+  {
+    "fixture": "Sources/Math/MathOccurrenceIdentity.swift",
+    "sha256": "b2f20dd6e01c0d40b7625f367449dacf3f05db4fd3b5b4ab502e30cb906be696",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathOccurrenceIdentity.swift"
+  },
+  {
+    "fixture": "Sources/Math/MathParityCorpus.swift",
+    "sha256": "5de7dc0afe4db6b640544b3e5c00839f9016538f5ec1c5747c45b0709ed79e7d",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathParityCorpus.swift"
+  },
+  {
+    "fixture": "Sources/Math/MathRenderError.swift",
+    "sha256": "c7839b5562879dcba702075f66a6274fbbcd6b3c885eb82280c3f2e29ef958ae",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathRenderError.swift"
+  },
+  {
+    "fixture": "Sources/Math/MathSpan.swift",
+    "sha256": "d3c47b234d79840e7c18a033c3852c54344d7290663612f3e89c2f17c78cb3ad",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathSpan.swift"
+  },
+  {
+    "fixture": "Sources/Math/MathSpanScanner.swift",
+    "sha256": "5b44f908f53042b1edae8748ec2b9d583525e01b7c920decbf7e20dc0792d831",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathSpanScanner.swift"
+  },
+  {
+    "fixture": "Sources/Math/RenderedMathImage.swift",
+    "sha256": "9125a3d042cd23258eb627c636690c1fb1df6034cd74f90bd948f3ab88cb2080",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Math/RenderedMathImage.swift"
+  },
+  {
+    "fixture": "Sources/Math/Resources/Localizable.xcstrings",
+    "sha256": "7b3a59d537daae55748668781d2771d41636f1cf9ec51182865c7b1f6d2014c4",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings"
+  },
+  {
+    "fixture": "Sources/MathRendering/MathEvaluation.swift",
+    "sha256": "ef2bf7348cf227acc87b35e5059829f29696419cc305c8e817f48dc7adfe1478",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MathRendering/MathEvaluation.swift"
+  },
+  {
+    "fixture": "Sources/MathRendering/MathEvaluationRequest.swift",
+    "sha256": "4fca8b3f4123cd13e9263601069ca9134f209cdc07cf995554f57ac6f07e2b6a",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MathRendering/MathEvaluationRequest.swift"
+  },
+  {
+    "fixture": "Sources/MathRendering/MathEvaluationWorker.swift",
+    "sha256": "323053274986dc58c4ef64f27b3bb17d5519c2e53da4950f93dfcb7ceb7ad163",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Sources/MathRendering/MathEvaluationWorker.swift"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/BoundedRenderCache.swift",
+    "sha256": "7b9a6b55951af7e133401bf84d5a8ddcc212e7f1f22c0391a1678c5290afcdf2",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Helpers/BoundedRenderCache.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/KeyBox.swift",
+    "sha256": "79ba73aa03e66535bfc3654e1d89cb89e3c5ba8a3f92da94766aae8169cbe6f0",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Helpers/KeyBox.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Math+BodyInspection.swift",
+    "sha256": "e516c10a83a982919199bcbaf9e92a373664788d7539f38e8c762d50eacf880c",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Math+BodyInspection.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Math+ValidatedBody.swift",
+    "sha256": "9f3f47690753b286ef9d85cbc6715cb39c54d150e072a531b508d0e5deb5b8be",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Math+ValidatedBody.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Namespace.swift",
+    "sha256": "2de40d688106a3fa92d8669a007c324605f5d287c84d131e5391115f843b69f1",
+    "owner": "namespace",
+    "contents": "public enum Math {}\n"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/ReadWriteLockIsolated.swift",
+    "sha256": "bc2279e5c9c5718ec4eafa50573bc8a0e8d378ee47cb6e9eaa6b56f9af4702b0",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Helpers/ReadWriteLockIsolated.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Syntax/AtomFactory.swift",
+    "sha256": "5248827ba96db91e6d18b2fff4967dbbb7ff77ae80a8600fb1ee231e646bc070",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Syntax/AtomFactory.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Syntax/AtomList.swift",
+    "sha256": "cacebb4fcbb1001ab36a857f526f0b5286f0eb8a75b12d46f1106b392ce53610",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Syntax/AtomList.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Syntax/Atoms/Accent.swift",
+    "sha256": "7a9da302a6c0dd7734ac0520c80ef4f4ea06a12052cfbfc55de9548877248e3e",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Accent.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Syntax/Atoms/Color.swift",
+    "sha256": "072c1620069865edd8e213cd754c777ae7785cb56451ca5963c4b04079a958aa",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Color.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Syntax/Atoms/ColorBox.swift",
+    "sha256": "84f5a0f10fac65540c619f41d9526ad76a79354d9f2d769e44bfe7f0526a4d16",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/ColorBox.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Syntax/Atoms/Fraction.swift",
+    "sha256": "c14827a1eae8282a9660fd0a8caa9fe94b8b5e091dd3bce2c58e4e8bac14489a",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Fraction.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Syntax/Atoms/Inner.swift",
+    "sha256": "5f8e8808a55b0453e86f8df00e223e76437c26cf2b5bb0bcd28820316b18a516",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Inner.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Syntax/Atoms/LargeOperator.swift",
+    "sha256": "ac2baf07070622fb5e25c3e6b1af2ca286ffa12498037e75bcf7184b070f2563",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/LargeOperator.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Syntax/Atoms/Overline.swift",
+    "sha256": "7226166c72ebb2c8361c566c6368ad634c8817a9cd3a48890aebeff6c4d9b607",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Overline.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Syntax/Atoms/Radical.swift",
+    "sha256": "f1f18767326f7f3f76906fa8c1bf7b21c7d1a8b6b4efdbfa62c45fa472da9cdf",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Radical.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Syntax/Atoms/Space.swift",
+    "sha256": "3c7fc3d4aaa50de6fe799d115b04ba51fc77c82bee074d0e3863d79540b960be",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Space.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Syntax/Atoms/Style.swift",
+    "sha256": "fe20c9828a7b3a88f63b6259ef4c0e7077e4b713a293e290a65f83ac6985e3ad",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Style.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Syntax/Atoms/Table.swift",
+    "sha256": "c6a3d4ba3769699a70fb41bab58982595865f37f721d0bd6465b4fd82cfe5aed",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Table.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Syntax/Atoms/TextColor.swift",
+    "sha256": "8efbf0982cbd7b573c866312abf8b8071c8831f7c93e3f465c4ba86aa272c42f",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/TextColor.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Syntax/Atoms/Underline.swift",
+    "sha256": "bb867bd43f3afd8fed05f267434b17e1dd05cb8aff690e7bb8756c3be2a08a4b",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Underline.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Syntax/CommentSource.swift",
+    "sha256": "3ab4981f1cf624b45e982eb816c65f359ace107576801572ef763f20f5b53c77",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Syntax/CommentSource.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Syntax/Parser.swift",
+    "sha256": "d979c76687288921e1422630169466720efdec80c7b47985d21878ce95e0322d",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Syntax/Parser.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Sources/SwiftUIMath/Unicode.swift",
+    "sha256": "432fce6aef8458b55233040721fb2666223462697c4ac6f47652b26716f9a46d",
+    "owner": "engine",
+    "path": "Sources/SwiftUIMath/Internal/Helpers/Unicode.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/BlockConversionTests.swift",
+    "sha256": "77d20d07464c34d152d8ce09ba7daa534eac7c14aa64ab9a936f5933216a9b05",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/BlockConversionTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/BlockRangeRepairTests.swift",
+    "sha256": "547283e4d8a51e3bf67aaf38d104e26dee62acab2924ea0e2d50f060394f57f8",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/BlockRangeRepairTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/ContainerChildRangeTests.swift",
+    "sha256": "625ce62673b3eddbcec7b2988c18ed759a9c49f46100512e6c0971602a47a62b",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/ContainerChildRangeTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/DirectiveSourcePreservationTests.swift",
+    "sha256": "67720489cdf171eba5038ede517b4752d7d7f15dbc3aa2a794a207779d4eed8b",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/DirectiveSourcePreservationTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/Fakes.swift",
+    "sha256": "fd31bcccdfb71405e89095ebf653bff2ed2f9f58d89312f8bde9be321b40f428",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/Fakes.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/FencedBlockInnerTextTests.swift",
+    "sha256": "0a41c21b6342b8ae329f91904c12e60b0e91d102a29ccdce02717e71b7616bcf",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FencedBlockInnerTextTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/Fixtures.swift",
+    "sha256": "b9aeb883e4cec051a912b93e99a22bf05a751d6e90a95e2c8dd9256e1acec78f",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/Fixtures.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/FrontMatterLineEndingTests.swift",
+    "sha256": "d11dbbe6874d1aa48b412ab9b66eb499b91e8a54196edb38b43185a9e1b71ea9",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterLineEndingTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/FrontMatterTests.swift",
+    "sha256": "16d8024779acb03c175036090845db4770fbac0205784d93b2012eb63a54ea92",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/HeadingAnchorAllocatorTests.swift",
+    "sha256": "6dafc006e07dca6b06af6a407a13d518a7712e1fed1bc94e88699f13306b0c50",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/HeadingAnchorAllocatorTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/HeadingAnchorIndexTests.swift",
+    "sha256": "4d0db5f86880b5045e212976b51179c8712d6b39904e1275f6ed31bca04a06dd",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/HeadingAnchorIndexTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/HeadingTests.swift",
+    "sha256": "c556bc61713f16c78196610332fbf67d0470d744849e716b711515685f81bd8e",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/HeadingTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/MarkdownSourceFactsTests.swift",
+    "sha256": "e0acfeff9a9ba47828fb40c76776d2d3dfb00a3c5f5bb7aee0943eee82a62ba0",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/MarkdownSourceFactsTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/MarkdownSourceFingerprintTests.swift",
+    "sha256": "4464728ba002370f224f93c6274efecf00ee8a74e22a032d420990eda6a7e02b",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/MarkdownSourceFingerprintTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/OptionsTests.swift",
+    "sha256": "3c3c2911ad3e80f0ce9c8f17e3f1bc48984611f6a577af3c8413324cb64a6dfb",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/OptionsTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/ParseDeepNestingTests.swift",
+    "sha256": "763a9f5550b3ff1592b2d56383c6931de96d777bb6c9458fd643822a508b08b4",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/ParseDeepNestingTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/ParseEnginePerformanceTests.swift",
+    "sha256": "bbf377021e1ba78527d8fed99387beae23c4f9b315aff1c462af2b51e0731e21",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/ParseEnginePerformanceTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/ParseEngineWorkerOwnershipTests.swift",
+    "sha256": "c482c304c6c62fa01b4aeabfd9c2b89e0c8a20d3d8811ed5328f88c7683ea31f",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/ParseEngineWorkerOwnershipTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/ParseSessionBusyStateTests.swift",
+    "sha256": "91d986d29a39e2d74b74ef42bcffb5a8bad08e51bea99a6a4f2c16a2db0b47b1",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/ParseSessionBusyStateTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/SessionDebounceTests.swift",
+    "sha256": "62f95759f15285cb94872962b9e92ae9e93a50f13a361334a440ea5b67da67d9",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/SessionDebounceTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/SourceMapTests.swift",
+    "sha256": "5300be25ecef211d01937acc19f1824029566be11e33bd69eb93318cecad4ddb",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/SourceMapTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/YAMLAliasBombTests.swift",
+    "sha256": "65907b2a11e93b9084ca14b5653e0df127923131faf506f12408bad1a0eb677b",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/YAMLAliasBombTests.swift"
+  },
+  {
+    "fixture": "Tests/MarkdownEngineTests/YAMLNonScalarKeyTests.swift",
+    "sha256": "5104f4e791ab8d34e9827067418f7679a6c3a0ff890ff8fec171d4cc3e2b1880",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/YAMLNonScalarKeyTests.swift"
+  },
+  {
+    "fixture": "Tests/MathRenderingTests/MathEvaluationTests.swift",
+    "sha256": "0347d6048263794045ed78de154207770e52d42a166a24cf1f7e8c1886632fff",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MathRenderingTests/MathEvaluationTests.swift"
+  },
+  {
+    "fixture": "Tests/MathRenderingTests/MathEvaluationWorkerTests.swift",
+    "sha256": "d8db4a7b4f35b9af785b4b0c1e1b217d8684823ac0db4908c7e3ec7419e849c0",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MathRenderingTests/MathEvaluationWorkerTests.swift"
+  },
+  {
+    "fixture": "Tests/MathTests/FencedCodeBlockScannerTests.swift",
+    "sha256": "0bfb8897af410c5cdae5bb60aac6b976aa78f92cfdbf737a2ad2fcaf5203a399",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/FencedCodeBlockScannerTests.swift"
+  },
+  {
+    "fixture": "Tests/MathTests/MathAnalysisTests.swift",
+    "sha256": "ab7c960715672c740ed21ecd6005813387a788ef846d6b1bdce99c4a042c1e94",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathAnalysisTests.swift"
+  },
+  {
+    "fixture": "Tests/MathTests/MathCodePairingTests.swift",
+    "sha256": "ed97b1822ad8721e105bae3ca1d4b555a6d5f4966f789822acf53922eb379a08",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathCodePairingTests.swift"
+  },
+  {
+    "fixture": "Tests/MathTests/MathContributionTests.swift",
+    "sha256": "7c6c71a0b4920818ebd7264a6b6f44a0dcbc4eadd7575158846b0d558b0a1b61",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathContributionTests.swift"
+  },
+  {
+    "fixture": "Tests/MathTests/MathExpressionMappingTests.swift",
+    "sha256": "185812da2ff56b1296bf2883b8628a899c381440a8aad38f568a1fa0bb4cc0a2",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathExpressionMappingTests.swift"
+  },
+  {
+    "fixture": "Tests/MathTests/MathFailureDiagnosticTests.swift",
+    "sha256": "6f33100f2f58e9061a7cc26ec8517f88a85fea36e308b10b862c41720a1bec2e",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathFailureDiagnosticTests.swift"
+  },
+  {
+    "fixture": "Tests/MathTests/MathLineEndingTests.swift",
+    "sha256": "0923c04e4e0362eab57caa0b577a8e7800a29da16b9a3fad653c50a7c1ed6050",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathLineEndingTests.swift"
+  },
+  {
+    "fixture": "Tests/MathTests/MathLiteralContextTests.swift",
+    "sha256": "2d322c8d957ff305f6ec97de913316647ac3e5f5768e3f136a9f2d1a69117c5d",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathLiteralContextTests.swift"
+  },
+  {
+    "fixture": "Tests/MathTests/MathSpanScannerEquivalenceTests.swift",
+    "sha256": "082395f1e7c1c312fd4fba1b78f7b3f9bb00e8c3ca9e5593b74758a26003f2c6",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathSpanScannerEquivalenceTests.swift"
+  },
+  {
+    "fixture": "Tests/MathTests/MathSpanScannerTests.swift",
+    "sha256": "7484230d9bd560e7bb2e2fd035a836d7e044281065287eee55ff27f4f0268a41",
+    "owner": "app",
+    "path": "MacDown2/Packages/MacDownKit/Tests/MathTests/MathSpanScannerTests.swift"
+  },
+  {
+    "fixture": "Tests/SwiftUIMathTests/AtomListTests.swift",
+    "sha256": "9c4499d5a8e3089f23357fc37770e4056469f4e8c2f10a4cc98ee742d210bf86",
+    "owner": "engine",
+    "path": "Tests/SwiftUIMathTests/Internal/Syntax/AtomListTests.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Tests/SwiftUIMathTests/BodyInspectionTests.swift",
+    "sha256": "0b5c6646de5d2f8222e16a87c8bdba0774b83e41a7d4a1c8c1290a0180098a5e",
+    "owner": "engine",
+    "path": "Tests/SwiftUIMathTests/BodyInspectionTests.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Tests/SwiftUIMathTests/CommentContractTests.swift",
+    "sha256": "56c22f9c16cb430002a741094abc46a4e88f5252319bc82a51a994523ff6fcd8",
+    "owner": "app",
+    "path": "planning/downstream/evidence/validated-math-body-2026-11-05/fixture-CommentContractTests.swift"
+  },
+  {
+    "fixture": "Tests/SwiftUIMathTests/GeneratedPartialInputTests.swift",
+    "sha256": "c6fa03014770f4fcd483e63cbc5c418fb42ba6b25f5eba9c993236487a3576f7",
+    "owner": "engine",
+    "path": "Tests/SwiftUIMathTests/GeneratedPartialInputTests.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Tests/SwiftUIMathTests/ParserTests.swift",
+    "sha256": "b87870658906f20bdb3add958c473fa3228248a634e9120eb3e1b11d359f614d",
+    "owner": "engine",
+    "path": "Tests/SwiftUIMathTests/Internal/Syntax/ParserTests.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  },
+  {
+    "fixture": "Tests/SwiftUIMathTests/ValidatedBodyTests.swift",
+    "sha256": "80c349a509608bd2a8c318b76f83ece8ef8e4384582ec24be9a94b9d4ef549ac",
+    "owner": "engine",
+    "path": "Tests/SwiftUIMathTests/ValidatedBodyTests.swift",
+    "revision": "2a89c2b41482988711909572d116374e47a52164"
+  }
+]
