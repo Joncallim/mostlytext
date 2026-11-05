@@ -573,9 +573,9 @@
       "id": "neon",
       "name": "Neon",
       "kind": "swiftpm",
-      "version": "be25e357",
+      "version": "ab93bca8",
       "upstream": "https://github.com/Joncallim/Neon",
-      "revision": "be25e35787585430f0f1ac845ed44c11e7f8150a",
+      "revision": "ab93bca8cc74af6f5e17eefc7fefa1999726a131",
       "resolution": "exact",
       "licence": "BSD-3-Clause",
       "copyright": [
@@ -596,9 +596,9 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "be25e35787585430f0f1ac845ed44c11e7f8150a"
+        "revision": "ab93bca8cc74af6f5e17eefc7fefa1999726a131"
       },
-      "evidence": "Owner patch over e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9 (original runtime dabf50c947148c49acd0d321dfe8f3805d10b3da). Refresh embedded-language validity before callbacks, await running validation/follow-up regions and reject obsolete queries. Preserve complete semantic tokens for attribute providers while a package-only iterator confines actual painting in all three native style interfaces. Both rejected styling boundaries and their failed hosted runs are retained; original BSD-3-Clause licence and parser/grammar pins are unchanged. Separate buffered-coordinate work, whole-editor latency and native acceptance remain open. This exact merge also shifts retained dirty intervals through later edits before new client invalidations, preserving surviving deletion tails, nested depth, all-document and reentrant scope ownership. Both client/style and buffer proofs and all first hosted failures are retained. Manifest-only child be25e35787585430f0f1ac845ed44c11e7f8150a pins the complete injection coverage repair; all Neon runtime and test bytes are unchanged from baf93c72924e31e16b84adced6ee29cb02934c3b."
+      "evidence": "Owner patch over e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9 (original runtime dabf50c947148c49acd0d321dfe8f3805d10b3da). Refresh embedded-language validity before callbacks, await running validation/follow-up regions and reject obsolete queries. Preserve complete semantic tokens for attribute providers while a package-only iterator confines actual painting in all three native style interfaces. Both rejected styling boundaries and their failed hosted runs are retained; original BSD-3-Clause licence and parser/grammar pins are unchanged. Separate buffered-coordinate work, whole-editor latency and native acceptance remain open. This exact merge also shifts retained dirty intervals through later edits before new client invalidations, preserving surviving deletion tails, nested depth, all-document and reentrant scope ownership. Both client/style and buffer proofs and all first hosted failures are retained. Manifest-only child be25e35787585430f0f1ac845ed44c11e7f8150a pins the complete injection coverage repair; all Neon runtime and test bytes are unchanged from baf93c72924e31e16b84adced6ee29cb02934c3b. Dependency-metadata child ab93bca8cc74af6f5e17eefc7fefa1999726a131 pins the behavior-preserving tree-sitter lexer lookup fork; its runtime/test bytes are unchanged from the complete-injection-coverage predecessor. Original BSD licence remains unchanged. The runtime evidence packet preserves all original fresh-tree/Rustdoc failures as well as cross-runtime equivalence proof."
     },
     {
       "id": "nvim-treesitter-markdown-queries",
@@ -793,9 +793,9 @@
       "id": "swifttreesitter",
       "name": "SwiftTreeSitter",
       "kind": "swiftpm",
-      "version": "7d2dc87e",
+      "version": "0beea992",
       "upstream": "https://github.com/Joncallim/SwiftTreeSitter",
-      "revision": "7d2dc87e8b9326062d75bc1ef985f17d28e94da9",
+      "revision": "0beea992c4246f93a122de846c8611c9be19aeb7",
       "resolution": "exact",
       "licence": "BSD-3-Clause",
       "copyright": [
@@ -817,9 +817,9 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "7d2dc87e8b9326062d75bc1ef985f17d28e94da9"
+        "revision": "0beea992c4246f93a122de846c8611c9be19aeb7"
       },
-      "evidence": "Owner-maintained fork at 1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43, based exactly on upstream cbe31cb3601aa29c1f64b6e4328733511126d6d5. Only inline injection reconciliation, strict tests and patch documentation change. Original BSD-3-Clause licence is byte-identical to the captured text; verified at the fork revision. Debug/Release upstream and source-identical Markdown regressions pass; whole-editor/native acceptance remains separate. See planning/downstream/highlighting-included-range-repair.md and its evidence packet. No upstream submission is claimed. Final review adds complete expanded-query coverage: a reproduced cross-language partial query no longer drops unqueried narrow captures; language-tag change retirement is also tested. Child 7d2dc87e8b9326062d75bc1ef985f17d28e94da9 also expands old-capture coverage and adds default-true LanguageConfiguration.reusesPreviousTree, disabled explicitly only for MarkdownInline by the app. Strict 2,000 valid-scalar edits match fresh highlights; isolated default-policy moved-capture controls pass LF/CRLF/CR. Both prior coverage and incremental-parser failures are retained. Original runtime and BSD licence remain unchanged. See planning/downstream/complete-injection-query-coverage.md and its evidence packet."
+      "evidence": "Owner-maintained fork at 1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43, based exactly on upstream cbe31cb3601aa29c1f64b6e4328733511126d6d5. Only inline injection reconciliation, strict tests and patch documentation change. Original BSD-3-Clause licence is byte-identical to the captured text; verified at the fork revision. Debug/Release upstream and source-identical Markdown regressions pass; whole-editor/native acceptance remains separate. See planning/downstream/highlighting-included-range-repair.md and its evidence packet. No upstream submission is claimed. Final review adds complete expanded-query coverage: a reproduced cross-language partial query no longer drops unqueried narrow captures; language-tag change retirement is also tested. Child 7d2dc87e8b9326062d75bc1ef985f17d28e94da9 also expands old-capture coverage and adds default-true LanguageConfiguration.reusesPreviousTree, disabled explicitly only for MarkdownInline by the app. Strict 2,000 valid-scalar edits match fresh highlights; isolated default-policy moved-capture controls pass LF/CRLF/CR. Both prior coverage and incremental-parser failures are retained. Original runtime and BSD licence remain unchanged. See planning/downstream/complete-injection-query-coverage.md and its evidence packet. Dependency-metadata child 0beea992c4246f93a122de846c8611c9be19aeb7 pins the behavior-preserving tree-sitter lexer lookup fork; its runtime/test bytes are unchanged from the complete-injection-coverage predecessor. Original BSD licence remains unchanged. The runtime evidence packet preserves all original fresh-tree/Rustdoc failures as well as cross-runtime equivalence proof."
     },
     {
       "id": "prismjs-textual",
@@ -1192,10 +1192,10 @@
       "id": "tree-sitter",
       "name": "tree-sitter (runtime)",
       "kind": "swiftpm",
-      "version": "0.25.10",
-      "upstream": "https://github.com/tree-sitter/tree-sitter",
-      "revision": "da6fe9beb4f7f67beb75914ca8e0d48ae48d6406",
-      "resolution": "lockfile",
+      "version": "0.25.10+mostlytext.5ce80b6f",
+      "upstream": "https://github.com/Joncallim/tree-sitter",
+      "revision": "5ce80b6f0e29096a5f06826a3ba610c4e89bc255",
+      "resolution": "exact",
       "licence": "MIT",
       "copyright": [
         "Copyright (c) 2018-2024 Max Brunsfeld"
@@ -1215,8 +1215,7 @@
         "LC-07"
       ],
       "transitive_via": "swifttreesitter",
-      "declared_range": ">=0.25.0 <0.26.0",
-      "evidence": "Locked at da6fe9beb4f7f67beb75914ca8e0d48ae48d6406 in MacDown2/Packages/MacDownKit/Package.resolved (#165), which CI enforces; upstream tag v0.25.10 points at this commit; the licence text at this commit is byte-identical to the captured copy (verified 2026-09-28)."
+      "evidence": "Owner-maintained exact child 5ce80b6f0e29096a5f06826a3ba610c4e89bc255 of upstream0.25.10 da6fe9beb4f7f67beb75914ca8e0d48ae48d6406. Only internal lexer included-range lookup changes: lower-bound binary search followed by the existing forward skip. Original MIT licence, public headers and ABI are unchanged. 1,624,448 direct-reference checks and sanitized runs pass; documented upstream262-test suite passes before/after. All6,000 Unicode-scalar tree/query traces match stock exactly; both retain exit2 for282 original incremental/fresh discrepancies, mitigated separately by the application fresh-inline policy. Broader workspace317 unit tests pass;5 Rustdoc example failures reproduce on unmodifiedbase and are retained. No upstream submission/endorsement or full-editor latency/native acceptance is claimed. See planning/downstream/parser-included-range-seek-repair.md and its evidence packet."
     },
     {
       "id": "tree-sitter-bash",
@@ -1575,7 +1574,7 @@
         },
         {
           "path": "MacDown2/Packages/TreeSitterMarkdown/Package.swift",
-          "sha256": "03aeedf8d351a6795d32697a06c8124e803dad6fe629152f0027bd58657b27e4"
+          "sha256": "f9b65117730209a598eea8d6d38542fb3e66169c681bf2e04828533a14fe5926"
         },
         {
           "path": "MacDown2/Packages/TreeSitterMarkdown/README.md",

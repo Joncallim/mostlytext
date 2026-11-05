@@ -1,0 +1,197 @@
+diff --git a/MOSTLYTEXT_PATCHES.md b/MOSTLYTEXT_PATCHES.md
+new file mode 100644
+index 000000000..101ae33e5
+--- /dev/null
++++ b/MOSTLYTEXT_PATCHES.md
+@@ -0,0 +1,40 @@
++# MostlyText range-lookup patch
++
++Exact base: tree-sitter0.25.10 da6fe9beb4f7f67beb75914ca8e0d48ae48d6406.
++Original MIT licence, public headers and ABI remain unchanged. This owner-
++maintained fork is not an upstream submission or an upstream-endorsed fix.
++
++The lexer previously scanned included ranges from index0 on each seek. Valid
++ranges have nondecreasing end bytes. Lower-bound binary search finds the first
++end after the original seek byte; the existing forward skip then preserves
++empty-range, position, chunk, point and EOF behavior. No allocation or new public
++interface is introduced. Only lib/src/lexer.c changes in the runtime product.
++
++lib/tests/lexer_seek_equivalence.c includes the actual runtime plus the original
++linear implementation as an independent reference. It verifies1,624,448 cases
++across10,000 sorted range sets, including empty/adjacent ranges, gaps, chunk and
++column state and past-EOF positions. Original and patched versions pass; patched
++AddressSanitizer/UndefinedBehaviorSanitizer passes. Compile standalone with:
++
++    clang -O2 -std=c11 -D_DEFAULT_SOURCE -Ilib/include -Ilib/src \
++      lib/tests/lexer_seek_equivalence.c -o /tmp/lexer-seek-equivalence
++    /tmp/lexer-seek-equivalence
++
++SwiftPM's existing sources:["src"] excludes this standalone test main from the
++product. The documented cargo xtask test passes262 tests before/after. Broader
++workspace tests pass317 unit cases but5 Rustdoc examples fail for missing
++example variables/devgrammar; identical failures reproduce at the unmodified
++base. No assertion or documentation example is disabled to turn this green.
++
++A separate application-owned all-step corpus compares6,000 tree/query traces
++across UTF-8/UTF-16LE/UTF-16BE. All old/new-runtime traces and diagnostics are
++byte-identical, including282 original-runtime incremental/fresh discrepancies.
++Both runs keep exit2; this is behavior-preservation proof, not6,000 fresh-equality
++passes. Sanitized traces match without sanitizer diagnostics. Application
++SwiftTreeSitter/MarkdownInline's explicit fresh-tree policy mitigates that
++separate reused-tree discrepancy; it is not a claim about this lexer patch.
++
++Synthetic many-range performance improves, but full editor latency, native
++acceptance, exact release artifacts and the existing large-document fallback
++remain separate application gates. Application adoption requires immutable
++transitive pins, original licence/inventory checks and complete exact-head CI.
+diff --git a/lib/src/lexer.c b/lib/src/lexer.c
+index 94124fd1d..f0db3487f 100644
+--- a/lib/src/lexer.c
++++ b/lib/src/lexer.c
+@@ -143,8 +143,21 @@ static void ts_lexer_goto(Lexer *self, Length position) {
+   self->current_position = position;
+ 
+   // Move to the first valid position at or after the given position.
++  // The included ranges are sorted and disjoint, so their end bytes are
++  // non-decreasing. Binary search for the first range that ends after the
++  // position, then skip forward past any empty ranges.
+   bool found_included_range = false;
+-  for (unsigned i = 0; i < self->included_range_count; i++) {
++  unsigned start_index = 0;
++  unsigned end_index = self->included_range_count;
++  while (start_index < end_index) {
++    unsigned mid_index = start_index + (end_index - start_index) / 2;
++    if (self->included_ranges[mid_index].end_byte > self->current_position.bytes) {
++      end_index = mid_index;
++    } else {
++      start_index = mid_index + 1;
++    }
++  }
++  for (unsigned i = start_index; i < self->included_range_count; i++) {
+     TSRange *included_range = &self->included_ranges[i];
+     if (
+       included_range->end_byte > self->current_position.bytes &&
+diff --git a/lib/tests/lexer_seek_equivalence.c b/lib/tests/lexer_seek_equivalence.c
+new file mode 100644
+index 000000000..950e41ceb
+--- /dev/null
++++ b/lib/tests/lexer_seek_equivalence.c
+@@ -0,0 +1,118 @@
++// Exact linear range-selection reference from tree-sitter 0.25.10.
++// This standalone component test includes the actual runtime implementation;
++// it does not require an app, grammar, user document or native UI.
++#include <assert.h>
++#include <stdio.h>
++#include <string.h>
++#include "../src/lib.c"
++
++static void linear_reference_goto(Lexer *self, Length position) {
++  if (position.bytes != self->current_position.bytes) {
++    ts_lexer__invalidate_column_data(self);
++  }
++
++  self->current_position = position;
++
++  // Move to the first valid position at or after the given position.
++  bool found_included_range = false;
++  for (unsigned i = 0; i < self->included_range_count; i++) {
++    TSRange *included_range = &self->included_ranges[i];
++    if (
++      included_range->end_byte > self->current_position.bytes &&
++      included_range->end_byte > included_range->start_byte
++    ) {
++      if (included_range->start_byte >= self->current_position.bytes) {
++        self->current_position = (Length) {
++          .bytes = included_range->start_byte,
++          .extent = included_range->start_point,
++        };
++      }
++
++      self->current_included_range_index = i;
++      found_included_range = true;
++      break;
++    }
++  }
++
++  if (found_included_range) {
++    // If the current position is outside of the current chunk of text,
++    // then clear out the current chunk of text.
++    if (self->chunk && (
++      self->current_position.bytes < self->chunk_start ||
++      self->current_position.bytes >= self->chunk_start + self->chunk_size
++    )) {
++      ts_lexer__clear_chunk(self);
++    }
++
++    self->lookahead_size = 0;
++    self->data.lookahead = '\0';
++  }
++
++  // If the given position is beyond any of included ranges, move to the EOF
++  // state - past the end of the included ranges.
++  else {
++    self->current_included_range_index = self->included_range_count;
++    TSRange *last_included_range = &self->included_ranges[self->included_range_count - 1];
++    self->current_position = (Length) {
++      .bytes = last_included_range->end_byte,
++      .extent = last_included_range->end_point,
++    };
++    ts_lexer__clear_chunk(self);
++    self->lookahead_size = 1;
++    self->data.lookahead = '\0';
++  }
++}
++
++static uint32_t random_state = 0x13579bdf;
++static uint32_t next_random(void) {
++  random_state = random_state * 1664525u + 1013904223u;
++  return random_state;
++}
++static TSPoint point_for(uint32_t byte) {
++  return (TSPoint){.row = byte / 16, .column = byte % 16};
++}
++int main(void) {
++  uint64_t checks = 0;
++  static const char chunk[] = "0123456789abcdefghijklmnopqrstuv";
++  for (uint32_t trial = 0; trial < 10000; trial++) {
++    Lexer lexer;
++    ts_lexer_init(&lexer);
++    TSRange ranges[32];
++    uint32_t count = trial % 33;
++    uint32_t end = 0;
++    for (uint32_t i = 0; i < count; i++) {
++      uint32_t start = end + next_random() % 4;
++      end = start + next_random() % 16;
++      ranges[i] = (TSRange){.start_byte = start, .end_byte = end,
++        .start_point = point_for(start), .end_point = point_for(end)};
++    }
++    assert(ts_lexer_set_included_ranges(&lexer, ranges, count));
++    uint32_t limit = count ? end + 16 : 64;
++    for (uint32_t byte = 0; byte <= limit; byte++) {
++      lexer.current_position = (Length){.bytes = trial % 17, .extent = point_for(trial % 17)};
++      lexer.chunk = chunk;
++      lexer.chunk_start = trial % 7;
++      lexer.chunk_size = sizeof(chunk) - 1;
++      lexer.lookahead_size = 4;
++      lexer.data.lookahead = 'x';
++      lexer.column_data = (ColumnData){.value = 9, .valid = true};
++      Lexer expected = lexer;
++      Length position = {.bytes = byte, .extent = point_for(byte)};
++      linear_reference_goto(&expected, position);
++      ts_lexer_goto(&lexer, position);
++      assert(lexer.current_position.bytes == expected.current_position.bytes);
++      assert(lexer.current_position.extent.row == expected.current_position.extent.row);
++      assert(lexer.current_position.extent.column == expected.current_position.extent.column);
++      assert(lexer.current_included_range_index == expected.current_included_range_index);
++      assert(lexer.chunk == expected.chunk && lexer.chunk_size == expected.chunk_size);
++      assert(lexer.lookahead_size == expected.lookahead_size);
++      assert(lexer.data.lookahead == expected.data.lookahead);
++      assert(lexer.column_data.valid == expected.column_data.valid);
++      assert(lexer.column_data.value == expected.column_data.value);
++      checks++;
++    }
++    ts_lexer_delete(&lexer);
++  }
++  printf("lexer seek equivalence: %llu checks across 10000 sorted range sets\n", (unsigned long long)checks);
++  return 0;
++}

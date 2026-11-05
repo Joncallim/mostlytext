@@ -1,0 +1,156 @@
+{
+  "local_execution": "Foundation/C only; native conditional tails excluded",
+  "sources": [
+    {
+      "fixture": "Sources/RangeState/AwaitableQueue.swift",
+      "owner_path": "Sources/RangeState/AwaitableQueue.swift",
+      "sha256": "08b5aab2af7f5a04db83b0fd60158ccb6bc49c6805a822dfebcba983dcb3cb27"
+    },
+    {
+      "fixture": "Sources/RangeState/HybridSyncAsyncValueProvider.swift",
+      "owner_path": "Sources/RangeState/HybridSyncAsyncValueProvider.swift",
+      "sha256": "713ec76e95805dc9f3e711c0be4621dd49d8d9da3cee70a4cdeebfbb3b5693d0"
+    },
+    {
+      "fixture": "Sources/RangeState/HybridValueProvider+RangeProcessor.swift",
+      "owner_path": "Sources/RangeState/HybridValueProvider+RangeProcessor.swift",
+      "sha256": "24c21e0b87c7a5dc8d9adee27e39f1d97e8c3ac62585c41bc3605bd71fa2ece0"
+    },
+    {
+      "fixture": "Sources/RangeState/RangeInvalidationBuffer.swift",
+      "owner_path": "Sources/RangeState/RangeInvalidationBuffer.swift",
+      "sha256": "dfb70c7b6403c79b8c1fb12d72720b0e777aaf08cbfff6e6393e963c422881c3"
+    },
+    {
+      "fixture": "Sources/RangeState/RangeProcessor.swift",
+      "owner_path": "Sources/RangeState/RangeProcessor.swift",
+      "sha256": "a9b98ef8b4659ee17889b51e21954a4da86e2ffa274630f87f00fdd9ffc51c78"
+    },
+    {
+      "fixture": "Sources/RangeState/RangeTarget.swift",
+      "owner_path": "Sources/RangeState/RangeTarget.swift",
+      "sha256": "01ee59af8a8040ecbdb84ad21767e9e4794c23d1240cf47948864b0dea39e1e4"
+    },
+    {
+      "fixture": "Sources/RangeState/RangeValidator.swift",
+      "owner_path": "Sources/RangeState/RangeValidator.swift",
+      "sha256": "1a8c6f2e9b4cf1761171b9a8b3c886dc9198f92865a70889938b1fdc693688b9"
+    },
+    {
+      "fixture": "Sources/RangeState/SinglePhaseRangeValidator.swift",
+      "owner_path": "Sources/RangeState/SinglePhaseRangeValidator.swift",
+      "sha256": "71e0f03b60d894fd57771c0d0cf046624fc15f2e9c74b8d21bd45a52bebd47d5"
+    },
+    {
+      "fixture": "Sources/RangeState/ThreePhaseRangeValidator.swift",
+      "owner_path": "Sources/RangeState/ThreePhaseRangeValidator.swift",
+      "sha256": "4dcbff84e8d5ae08e1a073b912cd6d58cd04ef2cea3b82eab7ed2f702ca36604"
+    },
+    {
+      "fixture": "Sources/RangeState/Versioned.swift",
+      "owner_path": "Sources/RangeState/Versioned.swift",
+      "sha256": "1e333e166cd89e8ff31c3b402e12fcb923e84a9a19e36fade5160c2a9676cca4"
+    },
+    {
+      "fixture": "Sources/TreeSitterClient/BackgroundProcessor.swift",
+      "owner_path": "Sources/TreeSitterClient/BackgroundProcessor.swift",
+      "sha256": "4dd10570e8237530ee8e9275cfa24700ddc0f404bcb5826499c4c134b6508b5c"
+    },
+    {
+      "fixture": "Sources/TreeSitterClient/BackgroundingLanguageLayerTree.swift",
+      "owner_path": "Sources/TreeSitterClient/BackgroundingLanguageLayerTree.swift",
+      "sha256": "0e4e37aa8fd36350dd75d035604c39eade19ccc4de6245be52775a4fd3afa70e"
+    },
+    {
+      "fixture": "Sources/TreeSitterClient/HybridSyncAsyncVersionedResource.swift",
+      "owner_path": "Sources/TreeSitterClient/HybridSyncAsyncVersionedResource.swift",
+      "sha256": "abcf72e3343f6fe7f60e1fb6c6bbd732632cd618a65505396cf1bc88710fad13"
+    },
+    {
+      "fixture": "Sources/TreeSitterClient/TreeSitter+Extensions.swift",
+      "owner_path": "Sources/TreeSitterClient/TreeSitter+Extensions.swift",
+      "sha256": "37c72237ad9612886bba149f41d781a0d3c4e782e4020bb5259af91483d17696"
+    },
+    {
+      "fixture": "Sources/TreeSitterClient/TreeSitterClient.swift",
+      "owner_path": "Sources/TreeSitterClient/TreeSitterClient.swift",
+      "sha256": "8e603a19d82b26d3744596b81a7e8f69fcff99f08dfaa3024fea8e3d0d93938b"
+    },
+    {
+      "fixture": "Sources/OwnedStylingCore/Token.swift",
+      "owner_path": "Sources/Neon/Token.swift",
+      "kind": "whole-file",
+      "copied_bytes": 2837,
+      "owner_bytes": 2837,
+      "sha256": "497b4b46036f876b49cff5178640c9d2b814cf206f30968bc422d794821be790"
+    },
+    {
+      "fixture": "Sources/OwnedStylingCore/TreeSitterClient+Neon.swift",
+      "owner_path": "Sources/Neon/TreeSitterClient+Neon.swift",
+      "kind": "Foundation-only exact prefix",
+      "copied_bytes": 2154,
+      "owner_bytes": 3911,
+      "sha256": "836d295b355540d8f4f62af461b83e77c9db29ecfdc528a3c10d79c777bbc5ad"
+    },
+    {
+      "fixture": "Tests/ModelTests/BufferedCoordinateTests.swift",
+      "sha256": "d07d174530365ece71a8a9cf7d3a566199bc976694a75f5d57d2b13d778e550a"
+    },
+    {
+      "fixture": "Tests/ModelTests/InitialFillMutationTests.swift",
+      "sha256": "dd8abb09b5b535e659b730db4005936c69b17664c637d846c072b63df94802d9"
+    },
+    {
+      "fixture": "Tests/ModelTests/MarkdownClientInvalidationTests.swift",
+      "sha256": "6bc38438eb0d376530a63636883f8611d03445b922e10b044245828ff19c6971"
+    },
+    {
+      "fixture": "Tests/ModelTests/MarkdownInjectionCoverageTests.swift",
+      "sha256": "d5838a05d58f3eb9c16d658caf31e6e808785186bcf3d05801e0a9558ffa3207"
+    },
+    {
+      "fixture": "Tests/ModelTests/MarkdownLayerScalarStressTests.swift",
+      "sha256": "d69eb8273829e649a7516b7b8f979b1fb76f8c8c8b2f159673e278da9f8b4c5a"
+    },
+    {
+      "fixture": "Tests/ModelTests/NamedRangeApplicationTests.swift",
+      "sha256": "931d4a284d8c7a09afd6d855b21c74dee9c895ed6e94c48febc47d9d559eca9e"
+    },
+    {
+      "fixture": "Tests/ModelTests/RangeInvalidationBufferTests.swift",
+      "sha256": "12ad53c7c6ef90573e33628fc3682b7c5456900d059eacbc6cdb44484335a8c3"
+    },
+    {
+      "fixture": "Tests/ModelTests/RangeProcessorTests.swift",
+      "sha256": "f2e2fb1563eae86ff8b60f57ba614a4d2dc7d042d4d4db5db45abd7efb70ee24"
+    },
+    {
+      "fixture": "Tests/ModelTests/RangeTargetTests.swift",
+      "sha256": "fad1f733a604d84079757b8795b7d2b4c49a349e12fa001911a3289ef3eb944f"
+    },
+    {
+      "fixture": "Tests/ModelTests/RangeValidatorTests.swift",
+      "sha256": "6c2944c3df2b23cad7a9c1a0851a9e6af3148d9104de2f35ece56dd202c4d985"
+    },
+    {
+      "fixture": "Tests/ModelTests/SinglePhaseRangeValidatorTests.swift",
+      "sha256": "59a4d4a45f2db570b815d38a2f1ac702bff0bc3e4faa26bae20fa87c9c654a65"
+    },
+    {
+      "fixture": "Tests/ModelTests/StringContent.swift",
+      "sha256": "6fb7b84b0ee24d9477d01544b4653e00f3cffdb596dfef67d991d0452f5310f3"
+    },
+    {
+      "fixture": "Tests/ModelTests/TreeSitterClientStressTests.swift",
+      "sha256": "6c9b9f46c3fd3ed6087fcbcfcfa0fbc553735b0be0d020cdebdfc12c144d40b4"
+    },
+    {
+      "fixture": "Tests/ModelTests/TreeSitterClientTests.swift",
+      "sha256": "d535b1ef812722617fcc8483b1754222fdd336fe18002b03cb377a54677e5f50"
+    },
+    {
+      "fixture": "Tests/ModelTests/ValidationCompletionTests.swift",
+      "sha256": "8c609b4a8df00b02d8262f1bee5375cf1b1de25823cca635586bae96566890b5"
+    }
+  ]
+}
