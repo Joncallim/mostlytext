@@ -1,0 +1,580 @@
+{
+  "engine_revision": "2a89c2b41482988711909572d116374e47a52164",
+  "engine_base": "e394d7cf111a90b4393df7a18e989dfec0a28931",
+  "textual_revision": "b940433c7a55b82a8bbbe6fb0837df7162307dbb",
+  "textual_base": "2337a7751605ed819ed6ce71a450fe29608deb40",
+  "first_party_base": "9c4b221c3f7522d81b58c4e9b73e0cf74b75d747",
+  "namespace_only_wrapper": "public enum Math instead of the unused SwiftUI View namespace; no parser/token/cache runtime method substituted",
+  "exact_source_files": [
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Syntax/AtomList.swift",
+      "fixture_path": "Sources/SwiftUIMath/Syntax/AtomList.swift",
+      "sha256": "cacebb4fcbb1001ab36a857f526f0b5286f0eb8a75b12d46f1106b392ce53610"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Syntax/Parser.swift",
+      "fixture_path": "Sources/SwiftUIMath/Syntax/Parser.swift",
+      "sha256": "d979c76687288921e1422630169466720efdec80c7b47985d21878ce95e0322d"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Syntax/CommentSource.swift",
+      "fixture_path": "Sources/SwiftUIMath/Syntax/CommentSource.swift",
+      "sha256": "3ab4981f1cf624b45e982eb816c65f359ace107576801572ef763f20f5b53c77"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Syntax/AtomFactory.swift",
+      "fixture_path": "Sources/SwiftUIMath/Syntax/AtomFactory.swift",
+      "sha256": "5248827ba96db91e6d18b2fff4967dbbb7ff77ae80a8600fb1ee231e646bc070"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Radical.swift",
+      "fixture_path": "Sources/SwiftUIMath/Syntax/Atoms/Radical.swift",
+      "sha256": "f1f18767326f7f3f76906fa8c1bf7b21c7d1a8b6b4efdbfa62c45fa472da9cdf"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/TextColor.swift",
+      "fixture_path": "Sources/SwiftUIMath/Syntax/Atoms/TextColor.swift",
+      "sha256": "8efbf0982cbd7b573c866312abf8b8071c8831f7c93e3f465c4ba86aa272c42f"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Underline.swift",
+      "fixture_path": "Sources/SwiftUIMath/Syntax/Atoms/Underline.swift",
+      "sha256": "bb867bd43f3afd8fed05f267434b17e1dd05cb8aff690e7bb8756c3be2a08a4b"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Space.swift",
+      "fixture_path": "Sources/SwiftUIMath/Syntax/Atoms/Space.swift",
+      "sha256": "3c7fc3d4aaa50de6fe799d115b04ba51fc77c82bee074d0e3863d79540b960be"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Overline.swift",
+      "fixture_path": "Sources/SwiftUIMath/Syntax/Atoms/Overline.swift",
+      "sha256": "7226166c72ebb2c8361c566c6368ad634c8817a9cd3a48890aebeff6c4d9b607"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Accent.swift",
+      "fixture_path": "Sources/SwiftUIMath/Syntax/Atoms/Accent.swift",
+      "sha256": "7a9da302a6c0dd7734ac0520c80ef4f4ea06a12052cfbfc55de9548877248e3e"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Table.swift",
+      "fixture_path": "Sources/SwiftUIMath/Syntax/Atoms/Table.swift",
+      "sha256": "c6a3d4ba3769699a70fb41bab58982595865f37f721d0bd6465b4fd82cfe5aed"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Fraction.swift",
+      "fixture_path": "Sources/SwiftUIMath/Syntax/Atoms/Fraction.swift",
+      "sha256": "c14827a1eae8282a9660fd0a8caa9fe94b8b5e091dd3bce2c58e4e8bac14489a"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/ColorBox.swift",
+      "fixture_path": "Sources/SwiftUIMath/Syntax/Atoms/ColorBox.swift",
+      "sha256": "84f5a0f10fac65540c619f41d9526ad76a79354d9f2d769e44bfe7f0526a4d16"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Inner.swift",
+      "fixture_path": "Sources/SwiftUIMath/Syntax/Atoms/Inner.swift",
+      "sha256": "5f8e8808a55b0453e86f8df00e223e76437c26cf2b5bb0bcd28820316b18a516"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Style.swift",
+      "fixture_path": "Sources/SwiftUIMath/Syntax/Atoms/Style.swift",
+      "sha256": "fe20c9828a7b3a88f63b6259ef4c0e7077e4b713a293e290a65f83ac6985e3ad"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/LargeOperator.swift",
+      "fixture_path": "Sources/SwiftUIMath/Syntax/Atoms/LargeOperator.swift",
+      "sha256": "ac2baf07070622fb5e25c3e6b1af2ca286ffa12498037e75bcf7184b070f2563"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Color.swift",
+      "fixture_path": "Sources/SwiftUIMath/Syntax/Atoms/Color.swift",
+      "sha256": "072c1620069865edd8e213cd754c777ae7785cb56451ca5963c4b04079a958aa"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Math+BodyInspection.swift",
+      "fixture_path": "Sources/SwiftUIMath/Math+BodyInspection.swift",
+      "sha256": "e516c10a83a982919199bcbaf9e92a373664788d7539f38e8c762d50eacf880c"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Helpers/Unicode.swift",
+      "fixture_path": "Sources/SwiftUIMath/Unicode.swift",
+      "sha256": "432fce6aef8458b55233040721fb2666223462697c4ac6f47652b26716f9a46d"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Helpers/ReadWriteLockIsolated.swift",
+      "fixture_path": "Sources/SwiftUIMath/ReadWriteLockIsolated.swift",
+      "sha256": "bc2279e5c9c5718ec4eafa50573bc8a0e8d378ee47cb6e9eaa6b56f9af4702b0"
+    },
+    {
+      "owner_path": "Tests/SwiftUIMathTests/Internal/Syntax/ParserTests.swift",
+      "fixture_path": "Tests/SwiftUIMathTests/ParserTests.swift",
+      "sha256": "b87870658906f20bdb3add958c473fa3228248a634e9120eb3e1b11d359f614d"
+    },
+    {
+      "owner_path": "Tests/SwiftUIMathTests/Internal/Syntax/AtomListTests.swift",
+      "fixture_path": "Tests/SwiftUIMathTests/AtomListTests.swift",
+      "sha256": "9c4499d5a8e3089f23357fc37770e4056469f4e8c2f10a4cc98ee742d210bf86"
+    },
+    {
+      "owner_path": "Tests/SwiftUIMathTests/BodyInspectionTests.swift",
+      "fixture_path": "Tests/SwiftUIMathTests/BodyInspectionTests.swift",
+      "sha256": "0b5c6646de5d2f8222e16a87c8bdba0774b83e41a7d4a1c8c1290a0180098a5e"
+    },
+    {
+      "owner_path": "Tests/SwiftUIMathTests/GeneratedPartialInputTests.swift",
+      "fixture_path": "Tests/SwiftUIMathTests/GeneratedPartialInputTests.swift",
+      "sha256": "c6fa03014770f4fcd483e63cbc5c418fb42ba6b25f5eba9c993236487a3576f7"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Math+ValidatedBody.swift",
+      "fixture_path": "Sources/SwiftUIMath/Math+ValidatedBody.swift",
+      "sha256": "9f3f47690753b286ef9d85cbc6715cb39c54d150e072a531b508d0e5deb5b8be"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Helpers/BoundedRenderCache.swift",
+      "fixture_path": "Sources/SwiftUIMath/BoundedRenderCache.swift",
+      "sha256": "7b9a6b55951af7e133401bf84d5a8ddcc212e7f1f22c0391a1678c5290afcdf2"
+    },
+    {
+      "owner_path": "Tests/SwiftUIMathTests/ValidatedBodyTests.swift",
+      "fixture_path": "Tests/SwiftUIMathTests/ValidatedBodyTests.swift",
+      "sha256": "80c349a509608bd2a8c318b76f83ece8ef8e4384582ec24be9a94b9d4ef549ac"
+    },
+    {
+      "owner_path": "Sources/SwiftUIMath/Internal/Helpers/KeyBox.swift",
+      "fixture_path": "Sources/SwiftUIMath/KeyBox.swift",
+      "sha256": "79ba73aa03e66535bfc3654e1d89cb89e3c5ba8a3f92da94766aae8169cbe6f0"
+    }
+  ],
+  "logs": [
+    {
+      "name": "accessibility-probe-async-format.log",
+      "bytes": 193,
+      "sha256": "9a25f1610a8a3e78fe8d34ccd745cecf06b140a053465b9e6df6d9fc060ca145"
+    },
+    {
+      "name": "accessibility-probe-format.log",
+      "bytes": 193,
+      "sha256": "ce3661bee4692289c1e5bfe0e6f9e1441d071ed6f466aa03cf481c8342b4fccf"
+    },
+    {
+      "name": "accessibility-probe-qualified-format.log",
+      "bytes": 193,
+      "sha256": "9a25f1610a8a3e78fe8d34ccd745cecf06b140a053465b9e6df6d9fc060ca145"
+    },
+    {
+      "name": "activation-fixture-preparation.log",
+      "bytes": 68,
+      "sha256": "77044de5b53e0fd320cc0000471bf7176749ab5b976beb3f752a96bb10f55fa5"
+    },
+    {
+      "name": "activation-full-format.log",
+      "bytes": 262,
+      "sha256": "5c54133d77b97e52f1eb8335697ece60db76ef88f183ff6130f8cca60a13cf7c"
+    },
+    {
+      "name": "activation-inventory.log",
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+    },
+    {
+      "name": "activation-native-target-compile.log",
+      "bytes": 270,
+      "sha256": "74eed08a24f73c095690ec1a5cf278e8523d4fd3e22a08d7cc6d2bcc8896a47a"
+    },
+    {
+      "name": "activation-probe-format.log",
+      "bytes": 193,
+      "sha256": "82091e31e2aaaf94a4fc2d7befd8d3d6c0d2e2dad6cfc3db1e4b2b7b7f73291c"
+    },
+    {
+      "name": "activation-probe-lint.log",
+      "bytes": 72324,
+      "sha256": "92b29ece344dcb71e2d1e4c95cbf05fc20d5728eae17cb2bc2921eaae235bb8f"
+    },
+    {
+      "name": "activation-workflow-yaml.log",
+      "bytes": 29,
+      "sha256": "17a6404f877c239f7d7d1751dacf53e0eeceb1cbe88c904773b84de27b6b3a6d"
+    },
+    {
+      "name": "actual-accessibility-probe-accepted-compile.log",
+      "bytes": 270,
+      "sha256": "ca1f889783af06941678bdf7e5a36b0acc30a999ef401044fe7f736bb112e8fe"
+    },
+    {
+      "name": "actual-accessibility-probe-compile.log",
+      "bytes": 17387,
+      "sha256": "61af6659f6506bc40763d1973023661a21f6aa9537043c87c3b906dccf2d412a"
+    },
+    {
+      "name": "actual-accessibility-probe-context-compile.log",
+      "bytes": 269,
+      "sha256": "68a7d00fe43eb0100ea46e0c5bfb0793bd3eb55ef75fbb2547641af341d648cf"
+    },
+    {
+      "name": "actual-accessibility-probe-final-compile.log",
+      "bytes": 269,
+      "sha256": "8e1c8e68106e15e37e39d7f9dab795e7983cb9512c7bd0c4440771238f3017a8"
+    },
+    {
+      "name": "actual-accessibility-probe-qualified-compile.log",
+      "bytes": 339,
+      "sha256": "2d3f20076b8d668cafe067404ed3f2ff9e447f1c8e3b3ed2bd2280bbe2d13f9f"
+    },
+    {
+      "name": "actual-accessibility-probe-ready-compile.log",
+      "bytes": 269,
+      "sha256": "4f441089744098a0c3b7e7e9b7b008587d082f0d85485e58f1bf6c9ec820fd8c"
+    },
+    {
+      "name": "actual-native-target-compile.log",
+      "bytes": 281,
+      "sha256": "1ddf6d0dd8de5e209841d9c18ad7f5f83456e3d22b13f653551ead6f65905bb7"
+    },
+    {
+      "name": "actual-native-target-first-compile.log",
+      "bytes": 22590,
+      "sha256": "c8704217f2267e4b9ee37bdbcd189cf923088e4bfc3b6383409491e8749336fc"
+    },
+    {
+      "name": "application-resolve.log",
+      "bytes": 6475,
+      "sha256": "4baa48f24133f69c8cc782368f5f14531b365aee845a5a521b3712b2f60e818f"
+    },
+    {
+      "name": "compliance-tests.log",
+      "bytes": 10805,
+      "sha256": "8571ee98e4461831b3779d65025a8df56319cd461f7f8d4ac77e53828dfe457d"
+    },
+    {
+      "name": "fetch-engine.log",
+      "bytes": 123,
+      "sha256": "e73cb8318eff17ae00ba720d3980987e8e76bbefd543b421757fb3d58490b3b4"
+    },
+    {
+      "name": "fetch-pressure-engine.log",
+      "bytes": 123,
+      "sha256": "acdc8d5a0819a79ca0bc03607699204bda17f7886a56ea55eb2495eee03148f4"
+    },
+    {
+      "name": "fetch-pressure-textual.log",
+      "bytes": 118,
+      "sha256": "2f5c624f72c418edcbead891583e5b2ef5175c269eafd11b223120940fbbebb9"
+    },
+    {
+      "name": "fetch-textual.log",
+      "bytes": 118,
+      "sha256": "a6a9d4e0b5c72377ecd8eb9cbc8384f9eb1c0738962ba85b255c8695c6a762a9"
+    },
+    {
+      "name": "final-format.log",
+      "bytes": 262,
+      "sha256": "bfd8d6bd88fb01279ae2ecdd2ee464063da4b6d19e6f62188b8e1af0a9d03d2d"
+    },
+    {
+      "name": "final-lint.log",
+      "bytes": 72262,
+      "sha256": "34bed70c13d52570605cce19d5299c075db77f1b2c50cde5d262fa3b7a7543b0"
+    },
+    {
+      "name": "final-packet-inventory.log",
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+    },
+    {
+      "name": "final-probe-format.log",
+      "bytes": 262,
+      "sha256": "e62251a97928f4de706a2ec9f27f88f1708cab2dc6f1a9a4f89273a82ef99e40"
+    },
+    {
+      "name": "final-probe-lint.log",
+      "bytes": 72675,
+      "sha256": "9da9e1fa7ebe61346de5778c8d0691edb640152e531d1d500dee9e07b3e49e63"
+    },
+    {
+      "name": "final-ready-format.log",
+      "bytes": 262,
+      "sha256": "4544ddc36f6e672e545d121880a5b007c49b7285ada7512f3e6a5929aaf73657"
+    },
+    {
+      "name": "final-ready-lint.log",
+      "bytes": 72324,
+      "sha256": "04451df370ca18b692dd951b31ee6862192d40b3afcdb8b374b998709a064d94"
+    },
+    {
+      "name": "first-debug.log",
+      "bytes": 18553,
+      "sha256": "936c88f517f339fa7cec6c20f64daed23b5e22a2585ac45eae0589e0ecf1656e"
+    },
+    {
+      "name": "first-release.log",
+      "bytes": 17093,
+      "sha256": "ca33f44d335ffbd48a9c9cc81d206c1377e7cbf85e7ae6299fc4e0d1dac14f02"
+    },
+    {
+      "name": "fixture-reproduction.log",
+      "bytes": 149,
+      "sha256": "76ce86549cf14bd2f2d08c45246bac5366879704017be2301fc1279b9dfdfc88"
+    },
+    {
+      "name": "focused-final-after-compile-verification.log",
+      "bytes": 71,
+      "sha256": "9faad8ac2592e4a557d9417e2e6c1747345843753bce8abb9d57a219111858db"
+    },
+    {
+      "name": "focused-final-initial-verification.log",
+      "bytes": 71,
+      "sha256": "9faad8ac2592e4a557d9417e2e6c1747345843753bce8abb9d57a219111858db"
+    },
+    {
+      "name": "focused-final-preparation.log",
+      "bytes": 68,
+      "sha256": "77044de5b53e0fd320cc0000471bf7176749ab5b976beb3f752a96bb10f55fa5"
+    },
+    {
+      "name": "focused-native-probe-compile.log",
+      "bytes": 14736,
+      "sha256": "ab910b8db8c0448abaa807346fe0d4d26b62176fe9ed97e18edb30739887b8fd"
+    },
+    {
+      "name": "focused-native-probe-final-compile.log",
+      "bytes": 317,
+      "sha256": "fb0c82df5d42fa4a9765f86f658f31da88bb21230919d2ebd0a13891d94dd61e"
+    },
+    {
+      "name": "focused-native-probe-restored-compile.log",
+      "bytes": 317,
+      "sha256": "386b209fcdb3ded4bd8a3c9bee4e409a492a96e5a07c2139bdb9104e84adbb22"
+    },
+    {
+      "name": "focused-probe-initial-verification.log",
+      "bytes": 71,
+      "sha256": "9faad8ac2592e4a557d9417e2e6c1747345843753bce8abb9d57a219111858db"
+    },
+    {
+      "name": "focused-probe-preparation.log",
+      "bytes": 68,
+      "sha256": "77044de5b53e0fd320cc0000471bf7176749ab5b976beb3f752a96bb10f55fa5"
+    },
+    {
+      "name": "focused-workflow-yaml-validation.log",
+      "bytes": 60,
+      "sha256": "58c73f6d25ec502041ee542dc5cc4df8fbb8e248542fc66166b9cbc4a9073abd"
+    },
+    {
+      "name": "full-format.log",
+      "bytes": 262,
+      "sha256": "df4eb1dfb739ce09a3cb89fcd32c9197528f1d6de39cb0441e11f862ae2f120b"
+    },
+    {
+      "name": "full-lint.log",
+      "bytes": 72262,
+      "sha256": "f7e4277b5ca470f1ae37a6054a58844bbe930e6c8d7edf86650cd5669d6cff2d"
+    },
+    {
+      "name": "generate-notices.log",
+      "bytes": 50,
+      "sha256": "916a4698d9177a9597cb4fc51950f9842bb6a71ce740a0f2540b4a8bb51d77a1"
+    },
+    {
+      "name": "generate-sbom.log",
+      "bytes": 41,
+      "sha256": "a2d24371d17e6c6f1296277ca983dce9065ade847908059bfd7be20d4458cf2a"
+    },
+    {
+      "name": "host-root-full-format.log",
+      "bytes": 262,
+      "sha256": "17c5682da412ae148a7dcb690abf29c60025ac02cf92b38ec6b9429b21120f53"
+    },
+    {
+      "name": "host-root-full-lint.log",
+      "bytes": 72664,
+      "sha256": "a3a9d82cc1e72180c6d7b2298490ead7734bcdbba21443b9568ae2d3c1af988a"
+    },
+    {
+      "name": "host-root-helper-format.log",
+      "bytes": 193,
+      "sha256": "0eb20f5d88bb6cf5d86316c7ec45afba6f30ac1a60296b638762361e9e5656c2"
+    },
+    {
+      "name": "host-root-inventory.log",
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+    },
+    {
+      "name": "host-root-native-target-compile.log",
+      "bytes": 1940,
+      "sha256": "37df17234bf1f503ccfe10829022b4eabda953287d5b4a7de4242898ff0b0bee"
+    },
+    {
+      "name": "host-root-probe-format.log",
+      "bytes": 193,
+      "sha256": "0eb20f5d88bb6cf5d86316c7ec45afba6f30ac1a60296b638762361e9e5656c2"
+    },
+    {
+      "name": "host-root-qualified-lint.log",
+      "bytes": 72324,
+      "sha256": "eb1831e5c152803d17c8a5082930fa4b4304add301730c80c71aea9e843dccae"
+    },
+    {
+      "name": "host-root-qualified-native-compile.log",
+      "bytes": 269,
+      "sha256": "7f9e68d367420060cf5dca229eac50464cc2c04459971a96f2bfcf6c961e5e7c"
+    },
+    {
+      "name": "hosted-activation-probe.log",
+      "bytes": 40636,
+      "sha256": "15b90d2279611d07b1fed47e039798da49e4c04d701dbf6efd7b00ae23a16b7d"
+    },
+    {
+      "name": "hosted-first-build-and-test.log",
+      "bytes": 1531071,
+      "sha256": "e86784e9ada894cc467d50adead7b095a76b172104b591ce810e31e97cb22e6e"
+    },
+    {
+      "name": "hosted-focused-host-root-probe.log",
+      "bytes": 40456,
+      "sha256": "19975d7d7e66539136a610ea6514d0c80f5bb0df55bf7d971346877deee3dcf7"
+    },
+    {
+      "name": "inventory-first.log",
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+    },
+    {
+      "name": "last-format.log",
+      "bytes": 262,
+      "sha256": "ec15328bc68c440ffcac523c326f8ae135dc3224af389f0db7765dd2ccfe3e7d"
+    },
+    {
+      "name": "last-inventory.log",
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+    },
+    {
+      "name": "last-lint.log",
+      "bytes": 72675,
+      "sha256": "8067c21b3cdafff4d34b378baabcc67766a694bb44645122a7f08930c4fb3fb6"
+    },
+    {
+      "name": "native-test-import-format.log",
+      "bytes": 193,
+      "sha256": "1d5a6bc2057f32c4a7172dcf671c812a4487e16af5d4baa2b1ce1962a7de68c3"
+    },
+    {
+      "name": "packet-inventory.log",
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+    },
+    {
+      "name": "pressure-compliance-tests.log",
+      "bytes": 10805,
+      "sha256": "5ba046a10473dd032891d99331ddcef45257727849bab4e584eef86a99276640"
+    },
+    {
+      "name": "pressure-final-format.log",
+      "bytes": 262,
+      "sha256": "4a55cc520601825cd3f326a8dc7bc8ee2000190979bb47e8236cb728462abb99"
+    },
+    {
+      "name": "pressure-final-lint.log",
+      "bytes": 72324,
+      "sha256": "3da5593f27858f6ec5c2378f6512e3f6e97de3a448d8749ecc1d4df7e1abe7e8"
+    },
+    {
+      "name": "pressure-final-packet-inventory.log",
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+    },
+    {
+      "name": "pressure-fixture-reproduction.log",
+      "bytes": 158,
+      "sha256": "b2225a393c8793fc4a9a04d345d960222ee3be4cd0d7eeb50e341b13238cf461"
+    },
+    {
+      "name": "pressure-generate-notices.log",
+      "bytes": 50,
+      "sha256": "916a4698d9177a9597cb4fc51950f9842bb6a71ce740a0f2540b4a8bb51d77a1"
+    },
+    {
+      "name": "pressure-generate-sbom.log",
+      "bytes": 41,
+      "sha256": "a2d24371d17e6c6f1296277ca983dce9065ade847908059bfd7be20d4458cf2a"
+    },
+    {
+      "name": "pressure-inventory.log",
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+    },
+    {
+      "name": "pressure-native-preview-compile.log",
+      "bytes": 145,
+      "sha256": "0781cff899ae952014ec2ee7c13b82bc731e1123f7e9c336d52e7cad8397c95e"
+    },
+    {
+      "name": "pressure-native-rendering-compile.log",
+      "bytes": 13176,
+      "sha256": "8b1bc3dbcfdaf8fff1091fc2b87dd7e4c7f75c83a80cf3932478ea203b7c5619"
+    },
+    {
+      "name": "pressure-preserving-debug.log",
+      "bytes": 17426,
+      "sha256": "2a007c8e19147065a729337322bfb08425dae9e64b6c14c1e4729d184e22adec"
+    },
+    {
+      "name": "pressure-preserving-release.log",
+      "bytes": 17068,
+      "sha256": "e3969aa51348272e84590c73bcfaae9d7b6b192483b7b27f76ae2fffdd36e051"
+    },
+    {
+      "name": "pressure-preserving-resolve.log",
+      "bytes": 2779,
+      "sha256": "0b3bdde528ff4100f0d26ffb01c1d383a5f046648d112987981ca1a166913fa0"
+    },
+    {
+      "name": "probe-app-context-format.log",
+      "bytes": 193,
+      "sha256": "9a25f1610a8a3e78fe8d34ccd745cecf06b140a053465b9e6df6d9fc060ca145"
+    },
+    {
+      "name": "probe-json-format.log",
+      "bytes": 193,
+      "sha256": "9a25f1610a8a3e78fe8d34ccd745cecf06b140a053465b9e6df6d9fc060ca145"
+    },
+    {
+      "name": "qualified-lint.log",
+      "bytes": 72324,
+      "sha256": "a42c300686bf8f7393ddfe548c1c6c5af293b367ebff1220b10821795ebe15b3"
+    },
+    {
+      "name": "self-ax-lint.log",
+      "bytes": 228,
+      "sha256": "13a1e9d31075d178a51d4fd631cc53b285e43def27e5486cf9a4853ab37dac37"
+    },
+    {
+      "name": "self-ax-native-compile.log",
+      "bytes": 32586,
+      "sha256": "db01a5bcab63112ec1d710994dddd58deda4f91b04f6fbd9245c744cfa87d515"
+    }
+  ],
+  "native_only_files": [
+    {
+      "path": "Sources/SwiftUIMath/Math.swift",
+      "sha256": "9394860c92ab0dd7a0b7cbc1f5e387c66c09bd2bf70578469fafa174cfb90b41"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Display/DisplayProvider.swift",
+      "sha256": "efefbd32f4b738ffd50f993947a2a494f9f4a11a01b78e654fbaed7b78985d5d"
+    }
+  ],
+  "native_test_source": {
+    "path": "MacDown2/Packages/MacDownKit/Tests/MathRenderingTests/ValidatedBodyRenderingTests.swift",
+    "sha256": "e1e7518c2f43061d8035be43e5fbbd46393b8d3c4412bc2e41d58075ada28ec2"
+  },
+  "accessibility_probe_source": {
+    "path": "MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceMathAccessibilityProbeTests.swift",
+    "sha256": "f5af5b1dc13a7a92dbe9de32a2ad28491f1470ef965715f5a4a2f1068ade8369"
+  }
+}

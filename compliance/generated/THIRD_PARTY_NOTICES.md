@@ -143,8 +143,8 @@ This file is generated from `compliance/inventory.json` by
 | swift-markdown | abfafecc | Apache-2.0 |
 | SwiftSoup | 2.13.9 | MIT |
 | SwiftTreeSitter | 0beea992 | BSD-3-Clause |
-| SwiftUIMath | e394d7cf | MIT |
-| Textual | 2337a775 | MIT |
+| SwiftUIMath | 2a89c2b4 | MIT |
+| Textual | b940433c | MIT |
 | tree-sitter (runtime) | 0.25.10+mostlytext.5ce80b6f | MIT |
 | tree-sitter-bash | 0.25.1 | MIT |
 | tree-sitter-cpp | 0.23.4 | MIT |
@@ -10529,14 +10529,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## SwiftUIMath
 
-- Version: e394d7cf
+- Version: 2a89c2b4
 - Upstream: https://github.com/Joncallim/swiftui-math
-- Revision: `e394d7cf111a90b4393df7a18e989dfec0a28931`
+- Revision: `2a89c2b41482988711909572d116374e47a52164`
 - Licence: MIT
 - Copyright (c) 2026 Guille Gonzalez
 - Copyright (c) 2023 Computer Inspirations (SwiftMath)
 - Copyright (c) 2013 MathChat (iosMath)
-- Local modifications: Narrow child of upstream 0.1.0: preserve authored TeX comments and control-word boundaries, expose existing parser diagnostics with original-body UTF-16 cursors and required inspection limits, and reject truncated optional alignment and mismatched radical degrees safely. All fonts, licences, original tests and unrelated files are unchanged.
+- Local modifications: Narrow child of upstream 0.1.0: preserve authored TeX comments and control-word boundaries, expose existing parser diagnostics with original-body UTF-16 cursors and required inspection limits, and reject truncated optional alignment and mismatched radical degrees safely. All fonts, licences, original tests and unrelated files are unchanged. Validated-body child adds an opaque exact-byte token, raw-body view/metrics overloads and mode/limit-aware lock-owned bounded atom/display caches that preserve automatic memory-pressure eviction. No font, licence or other renderer source changes.
 
 ### swiftui-math--LICENSE.txt
 
@@ -10570,9 +10570,9 @@ SOFTWARE.
 
 ## Textual
 
-- Version: 2337a775
+- Version: b940433c
 - Upstream: https://github.com/Joncallim/textual
-- Revision: `2337a7751605ed819ed6ce71a450fe29608deb40`
+- Revision: `b940433c7a55b82a8bbbe6fb0837df7162307dbb`
 - Licence: MIT
 - Copyright (c) 2024 Guille Gonzalez
 

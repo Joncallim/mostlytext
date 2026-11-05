@@ -1,0 +1,122 @@
+[
+  {
+    "mirror": "Neon-8e62bc63",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/Neon-8e62bc63",
+    "origin": "https://github.com/Joncallim/Neon"
+  },
+  {
+    "mirror": "Rearrange-2d80c79a",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/Rearrange-2d80c79a",
+    "origin": "https://github.com/ChimeHQ/Rearrange"
+  },
+  {
+    "mirror": "SwiftSoup-04d4e63a",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/SwiftSoup-04d4e63a",
+    "origin": "https://github.com/scinfu/SwiftSoup"
+  },
+  {
+    "mirror": "SwiftTreeSitter-6a600504",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/SwiftTreeSitter-6a600504",
+    "origin": "https://github.com/Joncallim/SwiftTreeSitter"
+  },
+  {
+    "mirror": "Yams-fd9f2519",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/Yams-fd9f2519",
+    "origin": "https://github.com/jpsim/Yams"
+  },
+  {
+    "mirror": "swift-argument-parser-54a11a8d",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/swift-argument-parser-54a11a8d",
+    "origin": "https://github.com/apple/swift-argument-parser"
+  },
+  {
+    "mirror": "swift-cmark-167e5c92",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/swift-cmark-167e5c92",
+    "origin": "https://github.com/Joncallim/swift-cmark"
+  },
+  {
+    "mirror": "swift-concurrency-extras-f87c839b",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/swift-concurrency-extras-f87c839b",
+    "origin": "https://github.com/pointfreeco/swift-concurrency-extras"
+  },
+  {
+    "mirror": "swift-markdown-0e7ac44b",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/swift-markdown-0e7ac44b",
+    "origin": "https://github.com/Joncallim/swift-markdown"
+  },
+  {
+    "mirror": "swiftui-math-9131e901",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/swiftui-math-9131e901",
+    "origin": "https://github.com/Joncallim/swiftui-math"
+  },
+  {
+    "mirror": "textual-a340cec6",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/textual-a340cec6",
+    "origin": "https://github.com/Joncallim/textual"
+  },
+  {
+    "mirror": "tree-sitter-06d028f0",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/tree-sitter-06d028f0",
+    "origin": "https://github.com/Joncallim/tree-sitter"
+  },
+  {
+    "mirror": "tree-sitter-bash-d1551ad7",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/tree-sitter-bash-d1551ad7",
+    "origin": "https://github.com/tree-sitter/tree-sitter-bash"
+  },
+  {
+    "mirror": "tree-sitter-cpp-2ec33597",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/tree-sitter-cpp-2ec33597",
+    "origin": "https://github.com/tree-sitter/tree-sitter-cpp"
+  },
+  {
+    "mirror": "tree-sitter-css-f9bfd8a2",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/tree-sitter-css-f9bfd8a2",
+    "origin": "https://github.com/tree-sitter/tree-sitter-css"
+  },
+  {
+    "mirror": "tree-sitter-html-9badd295",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/tree-sitter-html-9badd295",
+    "origin": "https://github.com/tree-sitter/tree-sitter-html"
+  },
+  {
+    "mirror": "tree-sitter-json-10275232",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/tree-sitter-json-10275232",
+    "origin": "https://github.com/tree-sitter/tree-sitter-json"
+  },
+  {
+    "mirror": "tree-sitter-python-d8990606",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/tree-sitter-python-d8990606",
+    "origin": "https://github.com/tree-sitter/tree-sitter-python"
+  },
+  {
+    "mirror": "tree-sitter-ruby-f5c12ddc",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/tree-sitter-ruby-f5c12ddc",
+    "origin": "https://github.com/tree-sitter/tree-sitter-ruby"
+  },
+  {
+    "mirror": "tree-sitter-swift-b221aa19",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/tree-sitter-swift-b221aa19",
+    "origin": "https://github.com/alex-pinkus/tree-sitter-swift"
+  },
+  {
+    "mirror": "tree-sitter-toml-2fdb0502",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/tree-sitter-toml-2fdb0502",
+    "origin": "https://github.com/tree-sitter-grammars/tree-sitter-toml"
+  },
+  {
+    "mirror": "tree-sitter-typescript-d231b526",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/tree-sitter-typescript-d231b526",
+    "origin": "https://github.com/tree-sitter/tree-sitter-typescript"
+  },
+  {
+    "mirror": "tree-sitter-xml-90472268",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/tree-sitter-xml-90472268",
+    "origin": "https://github.com/tree-sitter-grammars/tree-sitter-xml"
+  },
+  {
+    "mirror": "tree-sitter-yaml-46a0146c",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/math-parser-source-probe-20261105/application-build/repositories/tree-sitter-yaml-46a0146c",
+    "origin": "https://github.com/tree-sitter-grammars/tree-sitter-yaml"
+  }
+]

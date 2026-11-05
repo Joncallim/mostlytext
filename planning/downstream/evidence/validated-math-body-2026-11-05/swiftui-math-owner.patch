@@ -1,0 +1,487 @@
+diff --git a/Sources/SwiftUIMath/Internal/Display/DisplayProvider.swift b/Sources/SwiftUIMath/Internal/Display/DisplayProvider.swift
+index 1c3efea..5da6d16 100644
+--- a/Sources/SwiftUIMath/Internal/Display/DisplayProvider.swift
++++ b/Sources/SwiftUIMath/Internal/Display/DisplayProvider.swift
+@@ -4,14 +4,14 @@ extension Math {
+   final class DisplayProvider: Sendable {
+     private struct Cache {
+       struct Key: Hashable {
+-        let latex: String
++        let input: RenderInput
+         let font: Font
+         let style: TypesettingStyle
+         let proposedWidth: CGFloat
+       }
+ 
+-      let atomList = NSCache<NSString, AtomList>()
+-      let displayNode = NSCache<KeyBox<Key>, DisplayNode>()
++      var atomList = BoundedRenderCache<RenderInput, AtomList>(capacity: 512)
++      var displayNode = BoundedRenderCache<Key, DisplayNode>(capacity: 1_024)
+     }
+ 
+     static let shared = DisplayProvider()
+@@ -20,12 +20,12 @@ extension Math {
+ 
+     func sizeThatFits(
+       proposedWidth width: CGFloat,
+-      latex: String,
++      input: RenderInput,
+       font: Font,
+       style: TypesettingStyle
+     ) -> CGSize {
+       display(
+-        for: latex,
++        for: input,
+         font: font,
+         style: style,
+         proposedWidth: width
+@@ -33,28 +33,28 @@ extension Math {
+     }
+ 
+     func display(
+-      for latex: String,
++      for input: RenderInput,
+       font: Font,
+       style: TypesettingStyle,
+       proposedWidth: CGFloat
+     ) -> DisplayNode? {
+-      cache.withValue { cache in
++      guard !input.isCancelled else { return nil }
++      return cache.withValue { cache in
++        guard !input.isCancelled else { return nil }
+         let roundedWidth = proposedWidth.halfPointRounded()
+-        let key = KeyBox(
+-          Cache.Key(
+-            latex: latex,
+-            font: font,
+-            style: style,
+-            proposedWidth: roundedWidth
+-          )
++        let key = Cache.Key(
++          input: input,
++          font: font,
++          style: style,
++          proposedWidth: roundedWidth
+         )
+ 
+-        if let displayNode = cache.displayNode.object(forKey: key) {
++        if let displayNode = cache.displayNode.value(for: key) {
+           return displayNode
+         }
+ 
+         guard
+-          let atomList = atomList(for: latex, cache: &cache),
++          let atomList = atomList(for: input, cache: &cache),
+           let displayNode = Typesetter.createLineForMathList(
+             atomList,
+             font: .init(font: font),
+@@ -65,35 +65,35 @@ extension Math {
+           return nil
+         }
+ 
+-        cache.displayNode.setObject(displayNode, forKey: key)
++        guard !input.isCancelled else { return nil }
++        cache.displayNode.insert(displayNode, for: key)
+ 
+         if displayNode.width != roundedWidth {
+           // Cache the measured width to avoid a miss between layout and draw passes
+-          let secondaryKey = KeyBox(
+-            Cache.Key(
+-              latex: latex,
+-              font: font,
+-              style: style,
+-              proposedWidth: displayNode.width.halfPointRounded()
+-            )
++          let secondaryKey = Cache.Key(
++            input: input,
++            font: font,
++            style: style,
++            proposedWidth: displayNode.width.halfPointRounded()
+           )
+-          cache.displayNode.setObject(displayNode, forKey: secondaryKey)
++          cache.displayNode.insert(displayNode, for: secondaryKey)
+         }
+ 
+         return displayNode
+       }
+     }
+ 
+-    private func atomList(for latex: String, cache: inout Cache) -> AtomList? {
+-      if let atomList = cache.atomList.object(forKey: latex as NSString) {
++    private func atomList(for input: RenderInput, cache: inout Cache) -> AtomList? {
++      guard !input.isCancelled else { return nil }
++      if let atomList = cache.atomList.value(for: input) {
+         return atomList
+       }
+ 
+-      guard let atomList = Parser.build(fromString: latex) else {
++      guard let atomList = input.parsedAtomList(), !input.isCancelled else {
+         return nil
+       }
+ 
+-      cache.atomList.setObject(atomList, forKey: latex as NSString)
++      cache.atomList.insert(atomList, for: input)
+       return atomList
+     }
+   }
+diff --git a/Sources/SwiftUIMath/Internal/Helpers/BoundedRenderCache.swift b/Sources/SwiftUIMath/Internal/Helpers/BoundedRenderCache.swift
+new file mode 100644
+index 0000000..d366c8b
+--- /dev/null
++++ b/Sources/SwiftUIMath/Internal/Helpers/BoundedRenderCache.swift
+@@ -0,0 +1,33 @@
++import Foundation
++
++/// Owned by DisplayProvider's existing serial lock. NSCache may evict values early;
++/// an admission upper bound also enforces a hard ceiling without retaining a key registry.
++final class BoundedRenderCache<Key: Hashable, Value> {
++  private final class ValueBox {
++    let value: Value
++    init(_ value: Value) { self.value = value }
++  }
++
++  private let capacity: Int
++  private let storage = NSCache<KeyBox<Key>, ValueBox>()
++  private(set) var retainedEntryUpperBound = 0
++
++  init(capacity: Int) {
++    precondition(capacity > 0)
++    self.capacity = capacity
++  }
++
++  func value(for key: Key) -> Value? { storage.object(forKey: KeyBox(key))?.value }
++
++  func insert(_ value: Value, for key: Key) {
++    let boxedKey = KeyBox(key)
++    if storage.object(forKey: boxedKey) == nil {
++      if retainedEntryUpperBound >= capacity {
++        storage.removeAllObjects()
++        retainedEntryUpperBound = 0
++      }
++      retainedEntryUpperBound += 1
++    }
++    storage.setObject(ValueBox(value), forKey: boxedKey)
++  }
++}
+diff --git a/Sources/SwiftUIMath/Math+ValidatedBody.swift b/Sources/SwiftUIMath/Math+ValidatedBody.swift
+new file mode 100644
+index 0000000..490ae0a
+--- /dev/null
++++ b/Sources/SwiftUIMath/Math+ValidatedBody.swift
+@@ -0,0 +1,90 @@
++import Foundation
++
++extension Math {
++  /// An authored body admitted by this engine's parser under explicit limits.
++  /// Source occurrence identity belongs to the caller, separately from this render value.
++  public struct ValidatedBody: Hashable, Sendable {
++    public let source: String
++    public let limits: BodyLimits
++
++    fileprivate init(source: String, limits: BodyLimits) {
++      self.source = source
++      self.limits = limits
++    }
++
++    public static func == (lhs: Self, rhs: Self) -> Bool {
++      lhs.limits == rhs.limits && lhs.source.utf8.elementsEqual(rhs.source.utf8)
++    }
++
++    public func hash(into hasher: inout Hasher) {
++      hasher.combine(limits)
++      for byte in source.utf8 { hasher.combine(byte) }
++    }
++  }
++
++  public enum BodyValidation: Sendable {
++    case valid(ValidatedBody)
++    case invalid(BodyDiagnostic)
++    case internalFailure(BodyDiagnostic)
++    case resourceLimit(BodyResourceLimit)
++  }
++
++  /// Creates a raw-body rendering value only after the actual bounded parser accepts it.
++  public static nonisolated func validateBody(
++    _ source: String, limits: BodyLimits
++  ) throws -> BodyValidation {
++    switch try inspectBody(source, limits: limits) {
++    case .valid: return .valid(ValidatedBody(source: source, limits: limits))
++    case .invalid(let diagnostic): return .invalid(diagnostic)
++    case .internalFailure(let diagnostic): return .internalFailure(diagnostic)
++    case .resourceLimit(let limit): return .resourceLimit(limit)
++    }
++  }
++
++  /// Mode and exact bytes are part of cache identity; automatic delimiter stripping
++  /// must never be reused for a body already admitted by an external source grammar.
++  enum RenderInput: Hashable, Sendable {
++    case automatic(String)
++    case body(ValidatedBody)
++
++    static func == (lhs: Self, rhs: Self) -> Bool {
++      switch (lhs, rhs) {
++      case (.automatic(let left), .automatic(let right)):
++        return left.utf8.elementsEqual(right.utf8)
++      case (.body(let left), .body(let right)): return left == right
++      default: return false
++      }
++    }
++
++    func hash(into hasher: inout Hasher) {
++      switch self {
++      case .automatic(let source):
++        hasher.combine(0)
++        for byte in source.utf8 { hasher.combine(byte) }
++      case .body(let body):
++        hasher.combine(1)
++        hasher.combine(body)
++      }
++    }
++
++    var isCancelled: Bool {
++      if case .body = self { return Task.isCancelled }
++      return false
++    }
++
++    func parsedAtomList() -> AtomList? {
++      switch self {
++      case .automatic(let source): return Parser.build(fromString: source)
++      case .body(let body):
++        guard !Task.isCancelled else { return nil }
++        var parser = Parser(string: body.source)
++        parser.bodyLimits = body.limits
++        let result = parser.build(detectsDelimiters: false)
++        guard !Task.isCancelled, !parser.wasCancelled,
++          parser.resourceLimit == nil, parser.error == nil
++        else { return nil }
++        return result
++      }
++    }
++  }
++}
+diff --git a/Sources/SwiftUIMath/Math.swift b/Sources/SwiftUIMath/Math.swift
+index 21dc722..6171d69 100644
+--- a/Sources/SwiftUIMath/Math.swift
++++ b/Sources/SwiftUIMath/Math.swift
+@@ -36,20 +36,25 @@ public struct Math: View {
+   @Environment(\.mathTypesettingStyle) private var typesettingStyle
+   @Environment(\.mathRenderingMode) private var renderingMode
+ 
+-  private let latex: String
++  private let input: RenderInput
+ 
+   /// Creates a math view that renders the given LaTeX string.
+   /// - Parameter latex: A LaTeX math expression.
+   public init(_ latex: String) {
+-    self.latex = latex
++    self.input = .automatic(latex)
++  }
++
++  /// Renders an already admitted equation body without detecting dollar delimiters again.
++  public init(_ body: ValidatedBody) {
++    self.input = .body(body)
+   }
+ 
+   public var body: some View {
+-    Layout(latex: latex, font: font, style: typesettingStyle) {
++    Layout(input: input, font: font, style: typesettingStyle) {
+       Canvas { context, size in
+         guard
+           let displayNode = DisplayProvider.shared.display(
+-            for: latex,
++            for: input,
+             font: font,
+             style: typesettingStyle,
+             proposedWidth: size.width
+@@ -100,6 +105,25 @@ extension Math {
+     fitting proposal: ProposedViewSize,
+     font: Font,
+     style: TypesettingStyle
++  ) -> TypographicBounds {
++    bounds(for: .automatic(latex), fitting: proposal, font: font, style: style)
++  }
++
++  @_spi(Textual)
++  public static nonisolated func typographicBounds(
++    for body: ValidatedBody,
++    fitting proposal: ProposedViewSize,
++    font: Font,
++    style: TypesettingStyle
++  ) -> TypographicBounds {
++    bounds(for: .body(body), fitting: proposal, font: font, style: style)
++  }
++
++  private static nonisolated func bounds(
++    for input: RenderInput,
++    fitting proposal: ProposedViewSize,
++    font: Font,
++    style: TypesettingStyle
+   ) -> TypographicBounds {
+     if let width = proposal.width, width <= 0 {
+       return .zero
+@@ -107,7 +131,7 @@ extension Math {
+ 
+     return DisplayProvider.shared
+       .display(
+-        for: latex,
++        for: input,
+         font: font,
+         style: style,
+         proposedWidth: proposal.width ?? 0
+@@ -125,7 +149,7 @@ extension Math {
+ 
+ extension Math {
+   private struct Layout: SwiftUI.Layout {
+-    let latex: String
++    let input: RenderInput
+     let font: Font
+     let style: TypesettingStyle
+ 
+@@ -136,7 +160,7 @@ extension Math {
+ 
+       return DisplayProvider.shared.sizeThatFits(
+         proposedWidth: proposal.width ?? 0,
+-        latex: latex,
++        input: input,
+         font: font,
+         style: style
+       )
+diff --git a/Tests/SwiftUIMathTests/ValidatedBodyTests.swift b/Tests/SwiftUIMathTests/ValidatedBodyTests.swift
+new file mode 100644
+index 0000000..a7e6474
+--- /dev/null
++++ b/Tests/SwiftUIMathTests/ValidatedBodyTests.swift
+@@ -0,0 +1,133 @@
++import Foundation
++import Testing
++
++@testable import SwiftUIMath
++
++struct ValidatedBodyTests {
++  private let limits = Math.BodyLimits(
++    maximumUTF16Length: 16_384, maximumDepth: 64, maximumParserSteps: 65_536
++  )
++
++  private func body(_ source: String, limits custom: Math.BodyLimits? = nil) throws
++    -> Math.ValidatedBody
++  {
++    let result = try Math.validateBody(source, limits: custom ?? limits)
++    guard case .valid(let value) = result else {
++      Issue.record("Expected a validated body: \(source)")
++      throw Math.BodyConfigurationError.invalidLimits
++    }
++    return value
++  }
++
++  @Test func successfulValidationPreservesExactAuthoredBytesAndLimits() throws {
++    let source = "x% comment🙂\r\n+y"
++    let value = try body(source)
++    #expect(Array(value.source.utf8) == Array(source.utf8))
++    #expect(value.limits == limits)
++  }
++
++  @Test func failuresRetainTheirExistingCategoryAndSourceCursor() throws {
++    guard case .invalid(let diagnostic) = try Math.validateBody(#"\sqrt[}"#, limits: limits) else {
++      Issue.record("Expected malformed body")
++      return
++    }
++    #expect(diagnostic.error.code == .mismatchedBraces)
++    #expect(diagnostic.utf16Offset == 7)
++    let small = Math.BodyLimits(maximumUTF16Length: 1, maximumDepth: 1, maximumParserSteps: 1)
++    guard case .resourceLimit(.inputLength) = try Math.validateBody("xy", limits: small) else {
++      Issue.record("Expected input resource limit")
++      return
++    }
++    #expect(throws: Math.BodyConfigurationError.invalidLimits) {
++      try Math.validateBody(
++        "x", limits: .init(maximumUTF16Length: 0, maximumDepth: 1, maximumParserSteps: 1))
++    }
++  }
++
++  @Test func tokenAndInputIdentityUseExactUTF8InsteadOfCanonicalStringEquality() throws {
++    let composed = "\\text{é}"
++    let decomposed = "\\text{e\u{301}}"
++    #expect(composed == decomposed)
++    let first = try body(composed)
++    let second = try body(decomposed)
++    #expect(first != second)
++    #expect(Set([first, second]).count == 2)
++    #expect(Set([Math.RenderInput.automatic(composed), .automatic(decomposed)]).count == 2)
++    let repeated = try body(composed)
++    #expect(first == repeated)
++    #expect(Set([first, repeated]).count == 1)
++  }
++
++  @Test func limitsAndParsingModeArePartOfRenderIdentity() throws {
++    let value = try body("$x$")
++    let narrower = try body(
++      "$x$", limits: .init(maximumUTF16Length: 1_024, maximumDepth: 8, maximumParserSteps: 256))
++    #expect(value != narrower)
++    let automatic = Math.RenderInput.automatic(value.source)
++    let raw = Math.RenderInput.body(value)
++    #expect(automatic != raw)
++    #expect(Set([automatic, raw, .body(narrower)]).count == 3)
++    let automaticList = try #require(automatic.parsedAtomList())
++    let rawList = try #require(raw.parsedAtomList())
++    #expect(automaticList.atoms.first?.type == .style)
++    #expect(rawList.atoms.first?.type != .style)
++  }
++
++  @Test func bodyModeRetainsCommentAndDelimiterSemanticsOnEveryReparse() throws {
++    let input = try Math.RenderInput.body(body("x% ignored\r\n+y"))
++    for _ in 0..<3 {
++      #expect(Math.Parser.atomListToString(input.parsedAtomList()) == "x+y")
++    }
++  }
++
++  @Test func cancellationPreventsValidationAndColdBodyReparse() async throws {
++    let value = try body("x+y")
++    let task = Task {
++      withUnsafeCurrentTask { $0?.cancel() }
++      #expect(Math.RenderInput.body(value).isCancelled)
++      #expect(Math.RenderInput.body(value).parsedAtomList() == nil)
++      do {
++        _ = try Math.validateBody("{x", limits: limits)
++        Issue.record("Cancelled validation succeeded")
++      } catch is CancellationError {} catch {
++        Issue.record("Unexpected cancellation error: \(error)")
++      }
++    }
++    await task.value
++  }
++
++  @Test func cacheRetentionIsBoundedWithoutAKeyRegistry() {
++    final class Payload {}
++    final class WeakPayload {
++      weak var value: Payload?
++      init(_ value: Payload) { self.value = value }
++    }
++    let cache = BoundedRenderCache<Int, Payload>(capacity: 2)
++    var observed: [WeakPayload] = []
++    for number in 0..<1_000 {
++      let value = Payload()
++      observed.append(WeakPayload(value))
++      cache.insert(value, for: number)
++      #expect(cache.retainedEntryUpperBound <= 2)
++    }
++    // Automatic eviction may release values earlier; it may never retain more.
++    #expect(observed.compactMap(\.value).count <= 2)
++    #expect(observed.first?.value == nil)
++  }
++
++  @Test func returnedCacheValuesStayCorrectAcrossReplacementAndRecomputation() {
++    let cache = BoundedRenderCache<Int, Int>(capacity: 2)
++    for number in 0..<10_000 {
++      let key = number % 3
++      cache.insert(number, for: key)
++      if let hit = cache.value(for: key) { #expect(hit == number) }
++      #expect(cache.retainedEntryUpperBound <= 2)
++    }
++    cache.insert(1, for: 1)
++    cache.insert(2, for: 2)
++    cache.insert(3, for: 1)
++    if let hit = cache.value(for: 1) { #expect(hit == 3) }
++    if let other = cache.value(for: 2) { #expect(other == 2) }
++    #expect(cache.retainedEntryUpperBound <= 2)
++  }
++}

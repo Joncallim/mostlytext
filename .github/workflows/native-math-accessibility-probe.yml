@@ -1,0 +1,53 @@
+name: Native math accessibility probe
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches: [main, master, integration-final]
+    paths:
+      - 'MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceMathAccessibilityProbeTests.swift'
+      - 'MacDown2/Packages/MacDownKit/Package.resolved'
+      - '.github/scripts/prepare-native-math-probe.py'
+      - '.github/workflows/native-math-accessibility-probe.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: native-math-accessibility-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    runs-on: macos-26
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Select Xcode and macOS 26
+        run: |
+          XCODE=$(ls -d /Applications/Xcode*.app | grep "26" | head -1 || true)
+          test -n "$XCODE"
+          test "$(sw_vers -productVersion | cut -d. -f1)" = 26
+          sudo xcode-select -s "$XCODE/Contents/Developer"
+          xcodebuild -version
+          sw_vers
+      - name: Prepare exact test and locked dependencies
+        run: python3 .github/scripts/prepare-native-math-probe.py "$RUNNER_TEMP/mostlytext-native-math-probe"
+      - name: Execute actual native probe
+        run: |
+          set -euo pipefail
+          swift test --package-path "$RUNNER_TEMP/mostlytext-native-math-probe" --force-resolved-versions --no-parallel 2>&1 | tee "$RUNNER_TEMP/mostlytext-native-math-probe/probe.log"
+      - name: Verify exact source and dependency revisions
+        if: always()
+        run: python3 .github/scripts/prepare-native-math-probe.py "$RUNNER_TEMP/mostlytext-native-math-probe" --verify --require-result
+      - name: Preserve probe evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-math-accessibility-probe
+          path: |
+            ${{ runner.temp }}/mostlytext-native-math-probe/receipt.json
+            ${{ runner.temp }}/mostlytext-native-math-probe/Package.resolved
+            ${{ runner.temp }}/mostlytext-native-math-probe/probe.log

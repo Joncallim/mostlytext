@@ -80,12 +80,12 @@ let package = Package(
         .package(url: "https://github.com/Joncallim/swift-cmark", revision: "2a5339b89b219584c8fa6c6fd378d3898eed5d57"),
         .package(url: "https://github.com/scinfu/SwiftSoup", exact: "2.13.9"),
         .package(url: "https://github.com/jpsim/Yams", exact: "6.2.2"),
-        .package(url: "https://github.com/Joncallim/textual", revision: "2337a7751605ed819ed6ce71a450fe29608deb40"),
+        .package(url: "https://github.com/Joncallim/textual", revision: "b940433c7a55b82a8bbbe6fb0837df7162307dbb"),
         // Match Textual's immutable engine owner/revision, so Preview and Export
         // share one parser, comment correction and structured body-inspection API.
         .package(
             url: "https://github.com/Joncallim/swiftui-math",
-            revision: "e394d7cf111a90b4393df7a18e989dfec0a28931"
+            revision: "2a89c2b41482988711909572d116374e47a52164"
         ),
     ],
     targets: [
@@ -235,7 +235,10 @@ let package = Package(
         .testTarget(name: "MathTests", dependencies: ["Math", "MarkdownEngine"]),
         .testTarget(
             name: "MathRenderingTests",
-            dependencies: ["MathRendering", .product(name: "SwiftUIMath", package: "swiftui-math")]
+            dependencies: [
+                "MathRendering", .product(name: "SwiftUIMath", package: "swiftui-math"),
+                .product(name: "Textual", package: "textual"),
+            ]
         ),
         .testTarget(name: "DiagramsTests", dependencies: ["Diagrams", "MarkdownEngine"]),
         .testTarget(name: "DiagramRenderingTests", dependencies: ["DiagramRendering", "DiagramWebKitPool"]),

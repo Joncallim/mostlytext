@@ -1,0 +1,21 @@
+[
+  {
+    "case": "real prior failing native log",
+    "exit": 1,
+    "output": "Native probe did not establish its positive controls\n"
+  },
+  {
+    "case": "false positive controls",
+    "exit": 1,
+    "output": "Native probe did not establish its positive controls\n"
+  },
+  {
+    "case": "failed test summary",
+    "exit": 1,
+    "output": "The actual native test did not pass\n"
+  },
+  {
+    "case": "pipefail preserves first process failure",
+    "exit": 7
+  }
+]

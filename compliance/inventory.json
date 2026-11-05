@@ -876,9 +876,9 @@
       "id": "swiftui-math",
       "name": "SwiftUIMath",
       "kind": "swiftpm",
-      "version": "e394d7cf",
+      "version": "2a89c2b4",
       "upstream": "https://github.com/Joncallim/swiftui-math",
-      "revision": "e394d7cf111a90b4393df7a18e989dfec0a28931",
+      "revision": "2a89c2b41482988711909572d116374e47a52164",
       "resolution": "revision",
       "licence": "MIT",
       "copyright": [
@@ -901,10 +901,10 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "e394d7cf111a90b4393df7a18e989dfec0a28931"
+        "revision": "2a89c2b41482988711909572d116374e47a52164"
       },
-      "modifications": "Narrow child of upstream 0.1.0: preserve authored TeX comments and control-word boundaries, expose existing parser diagnostics with original-body UTF-16 cursors and required inspection limits, and reject truncated optional alignment and mismatched radical degrees safely. All fonts, licences, original tests and unrelated files are unchanged.",
-      "evidence": "See planning/downstream/math-parser-inspection.md and its exact-source evidence packet. Only Parser.swift changes among original files; 96 original files retain exact bytes. Debug and Release Foundation fixtures pass 132 tests including a deterministic 100,000-case partial-input corpus; native hosted qualification is separate. Raw-body inspection is not production shared Preview/Export activation."
+      "modifications": "Narrow child of upstream 0.1.0: preserve authored TeX comments and control-word boundaries, expose existing parser diagnostics with original-body UTF-16 cursors and required inspection limits, and reject truncated optional alignment and mismatched radical degrees safely. All fonts, licences, original tests and unrelated files are unchanged. Validated-body child adds an opaque exact-byte token, raw-body view/metrics overloads and mode/limit-aware lock-owned bounded atom/display caches that preserve automatic memory-pressure eviction. No font, licence or other renderer source changes.",
+      "evidence": "Initial bounded-inspection child e394d7cf111a90b4393df7a18e989dfec0a28931 corrects comments and two original parser assertion crashes. Validated-body child 2a89c2b41482988711909572d116374e47a52164 additionally changes Math.swift/DisplayProvider.swift and adds token/cache helpers and controls. The 94 remaining original files, including all fonts, licences, snapshots and original tests, retain exact upstream 0.1.0 bytes. Exact Foundation token/cache/parser fixture passes 140 tests in Debug and Release, including 100000 generated partial inputs. Native compilation/hosted metrics and full CI are separate prerequisites; this is not joint production adapter activation. See planning/downstream/validated-math-body.md."
     },
     {
       "id": "swiftui-math-fonts",
@@ -1070,9 +1070,9 @@
       "id": "textual",
       "name": "Textual",
       "kind": "swiftpm",
-      "version": "2337a775",
+      "version": "b940433c",
       "upstream": "https://github.com/Joncallim/textual",
-      "revision": "2337a7751605ed819ed6ce71a450fe29608deb40",
+      "revision": "b940433c7a55b82a8bbbe6fb0837df7162307dbb",
       "resolution": "exact",
       "licence": "MIT",
       "copyright": [
@@ -1093,9 +1093,9 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "2337a7751605ed819ed6ce71a450fe29608deb40"
+        "revision": "b940433c7a55b82a8bbbe6fb0837df7162307dbb"
       },
-      "evidence": "Forked from gonzalezreal/textual 0.5.0 at 01b51875a5406eefc95f52a058cb059e7bc94dc4 for bounded preview-image HTML copy. The MIT licence and bundled Prism bytes match the original digests; the local dependency candidate passed focused tests and independent source review before its immutable revision was pushed. Source-math feasibility child 9077b0f608bd464ee4de880c0ff4c0c8441e698d adds only a typed factory for the existing MathAttachment and optional caller-owned occurrence UUID. Existing parser, sizing/body/block detection and SwiftUIMath pin remain unchanged. Test-only original-source transport is not production activation; actual native hosted probe and full CI are required. Original MIT licence/credits remain unchanged. See planning/downstream/source-math-adapter-probe.md. Parser-inspection metadata child 2337a7751605ed819ed6ce71a450fe29608deb40 changes only Package.swift to resolve the same immutable Joncallim/swiftui-math e394d7cf111a90b4393df7a18e989dfec0a28931 as the application; all Textual runtime/test/resource/licence bytes match 9077b0f608bd464ee4de880c0ff4c0c8441e698d."
+      "evidence": "Narrow descendant of gonzalezreal/textual 0.5.0 at 01b51875a5406eefc95f52a058cb059e7bc94dc4. Inherits the bounded HTML-copy correction and typed source-occurrence factory; original MIT, credits and bundled Prism bytes are unchanged. Validated-body child b940433c7a55b82a8bbbe6fb0837df7162307dbb changes only Package.swift and the two math factory/attachment files relative to inspection metadata child 2337a7751605ed819ed6ce71a450fe29608deb40. Both metrics and drawing consume the admitted raw body; legacy String factories remain source compatible. All other parser/runtime/test/resource files are unchanged. This adds no accessibility claim for Canvas symbols and does not activate production transport; actual hosted native/full CI remains required. See planning/downstream/validated-math-body.md."
     },
     {
       "id": "theme-tomorrow-dark",
