@@ -1,0 +1,60 @@
+name: Heading anchor preparation
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches: [main, epic/14-heading-byte-identity]
+    paths:
+      - 'MacDown2/Packages/MacDownKit/Sources/ExportService/**'
+      - 'MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/**'
+      - 'MacDown2/Packages/MacDownKit/Tests/ExportServiceTests/HeadingAnchorPreparationTests.swift'
+      - 'MacDown2/Packages/MacDownKit/Package.resolved'
+      - '.github/scripts/prepare-heading-anchor-probe.py'
+      - '.github/workflows/heading-anchor-probe.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: heading-anchor-probe-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  heading-index:
+    runs-on: macos-26
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Select deployment-matching Xcode and OS
+        run: |
+          set -euo pipefail
+          XCODE=$(ls -d /Applications/Xcode*.app | grep "26" | head -1 || true)
+          test -n "$XCODE"
+          test "$(sw_vers -productVersion | cut -d. -f1)" = 26
+          sudo xcode-select -s "$XCODE/Contents/Developer"
+          xcodebuild -version
+          sw_vers
+      - name: Prepare the exact actual-package probe
+        run: python3 .github/scripts/prepare-heading-anchor-probe.py "$RUNNER_TEMP/heading-anchor-probe"
+      - name: Execute all heading preparation controls
+        run: |
+          set -euo pipefail
+          swift test --package-path "$RUNNER_TEMP/heading-anchor-probe" \
+            --force-resolved-versions -Xswiftc -enable-testing --no-parallel 2>&1 \
+            | tee "$RUNNER_TEMP/heading-anchor-probe/probe.log"
+      - name: Verify exact source, pins and actual execution
+        if: always()
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/prepare-heading-anchor-probe.py "$RUNNER_TEMP/heading-anchor-probe" --verify --require-result
+          git diff --exit-code -- MacDown2/Packages/MacDownKit/Package.resolved
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: heading-anchor-probe
+          path: |
+            ${{ runner.temp }}/heading-anchor-probe/receipt.json
+            ${{ runner.temp }}/heading-anchor-probe/Package.resolved
+            ${{ runner.temp }}/heading-anchor-probe/probe.log

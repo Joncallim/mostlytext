@@ -1,0 +1,10 @@
+[
+  {
+    "source": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/HeadingAnchorAllocator.swift",
+    "sha256": "e49016d1689392486a264ffb1dbef7b14aa543fe9a9cb6ebebde09466bc5bf7b"
+  },
+  {
+    "source": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/HeadingAnchorAllocatorTests.swift",
+    "sha256": "5f8dc08b7054a2c6505c14db8c63d657b6ba3c10da9b7fd1b3966b7be4c3611f"
+  }
+]

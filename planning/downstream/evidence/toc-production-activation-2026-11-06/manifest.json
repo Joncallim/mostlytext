@@ -1,0 +1,87 @@
+[
+  {
+    "file": "README.md",
+    "bytes": 1943,
+    "sha256": "12b87597dbe60361384dd6d644d6d32851ad7336c02aa2a8b5c86100ed854b57"
+  },
+  {
+    "file": "actual-product-probe-final-compile.log.gz",
+    "bytes": 364,
+    "sha256": "8a9593d71dfc03900eef3e2958744920bdcd5610fcea08b33fd5cffb52855382"
+  },
+  {
+    "file": "actual-product-probe-first-compile.log.gz",
+    "bytes": 4041,
+    "sha256": "740b36022fd4127cf5cede80dc7236729cda1fa1d3e18ed0c4332097b4f674a5"
+  },
+  {
+    "file": "actual-product-probe-precommit-receipt.json",
+    "bytes": 82831,
+    "sha256": "72a5fe70ea4244d99a16137d9b05d5bbe920623ade04e68b9fabd3fb48c356eb"
+  },
+  {
+    "file": "allocator-after-source.swift",
+    "bytes": 3594,
+    "sha256": "e49016d1689392486a264ffb1dbef7b14aa543fe9a9cb6ebebde09466bc5bf7b"
+  },
+  {
+    "file": "allocator-before-performance.json",
+    "bytes": 579,
+    "sha256": "673cfc990b8989afa6ecc6dd3f83dedae80d62a917c367c2e6f317fda810361c"
+  },
+  {
+    "file": "allocator-before-source.swift",
+    "bytes": 3241,
+    "sha256": "530b4061109125010e3e210f28537c263951903123a329cf324b967dc6d3e82a"
+  },
+  {
+    "file": "allocator-comparison.json",
+    "bytes": 5553,
+    "sha256": "642da141bd27bede08d3c72279ce87801cc5b725a6185da0e3634c89acdd4050"
+  },
+  {
+    "file": "allocator-debug.log.gz",
+    "bytes": 704,
+    "sha256": "5f0d75c9289e782a643909f1976f2bf2dff55baebc96aa228b6d478ad4fd36a8"
+  },
+  {
+    "file": "allocator-release.log.gz",
+    "bytes": 673,
+    "sha256": "1dcdb21e63b9bd81be450bb169bd2a9f520979def745faf3ea4e71913f0f5d1e"
+  },
+  {
+    "file": "allocator-source-receipt.json",
+    "bytes": 387,
+    "sha256": "a12d36117fb8c5c417d7497f0d180063726520345f7a93f0ab6a3995d177be2b"
+  },
+  {
+    "file": "index-preparation-first-compile.log.gz",
+    "bytes": 9892,
+    "sha256": "4cbba813242cd0ed8cd4caa5388936b70ff6e7f44642fe01ee99b183eba46ada"
+  },
+  {
+    "file": "index-preparation-lifetime-compile.log.gz",
+    "bytes": 316,
+    "sha256": "be0b4c26c28dedd31938a97606c7458d720ca193658544ba1f2fac50e22cf846"
+  },
+  {
+    "file": "index-unit-compliance.log.gz",
+    "bytes": 74,
+    "sha256": "af7d3b346ebda56bff76e24ceccd101e959c9d054f09c69ec05a1bf31fd193c4"
+  },
+  {
+    "file": "index-unit-format.log.gz",
+    "bytes": 212,
+    "sha256": "4a45dae8f9fc773d03b49d06c6776a5c12e9c8c0fd723ea5ecb6178b55f66204"
+  },
+  {
+    "file": "index-unit-lint.log.gz",
+    "bytes": 14514,
+    "sha256": "5851a32181d58a57e878aa0f425fa635597ab1586970249f059363a0e32f0f1b"
+  },
+  {
+    "file": "main.swift",
+    "bytes": 1433,
+    "sha256": "e60ef3a25a38d579fd26df4ac289c5c5a762a01b72e8771033ada64c3e3d701d"
+  }
+]
