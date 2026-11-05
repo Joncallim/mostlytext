@@ -1,0 +1,13 @@
+{
+  "neon": "baf93c72924e31e16b84adced6ee29cb02934c3b",
+  "clientCorrection": "6797068d989992952accb5a821ac7ee676e1c395",
+  "rejectedApplicationHead": "7c3f40baf6a21f98f351416096c51cf54331aa33",
+  "rejectedCI": 41972235335,
+  "rejectedJob": 127062914593,
+  "rejectedLogSha256": "22595c219166e4ce7407d9d5710264289e9e7caa6205201dfb680710088e2abb",
+  "finalSwiftTestingFunctions": 39,
+  "finalSuites": 10,
+  "existingXCTestCases": 8,
+  "smallEditScenarios": 75772,
+  "hostedQualification": "required before merge"
+}

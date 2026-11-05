@@ -1,0 +1,42 @@
+[
+  {
+    "path": "hosted-job-127055051027-failed.log.gz",
+    "bytes": 1483477,
+    "sha256": "3edfa3b00d1e03bc2245c1a6ab8796df5cc3cd1108bb63d05037eb8275758c83"
+  },
+  {
+    "path": "partial-style-remediation-debug.log.gz",
+    "bytes": 11490,
+    "sha256": "f00d7f19d0a023d882ef8cc65408db0132a95afc39c1c5cef9e9925099ab57ce"
+  },
+  {
+    "path": "partial-style-remediation-release.log.gz",
+    "bytes": 11100,
+    "sha256": "84dcfb53ad0db48b760fa799ea5f79e44f7b3117c2e60761ac43d1cceedaa8bb"
+  },
+  {
+    "path": "remediation-compliance-tests.log.gz",
+    "bytes": 7515,
+    "sha256": "67b48ce8945d3579afa01f76b1de3bba01756571edfeb723fd97480f4be66201"
+  },
+  {
+    "path": "remediation-forced-resolve.log.gz",
+    "bytes": 196,
+    "sha256": "fb9bcbc62780452114f61923a9b2e88b9acaa38554486e243ce1c6e1ba8f5209"
+  },
+  {
+    "path": "remediation-generation.log.gz",
+    "bytes": 91,
+    "sha256": "33c66bdb9775a00b493a8355dd44358cb655bcf075815ece63927cdf5f8f33d9"
+  },
+  {
+    "path": "remediation-highlight-tests-compile.log.gz",
+    "bytes": 1843,
+    "sha256": "9647117a46636ddf4a650f3f219b0ccb5810955318c2b12bd863483c65423487"
+  },
+  {
+    "path": "remediation-source-check.log.gz",
+    "bytes": 54,
+    "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+  }
+]

@@ -1,0 +1,199 @@
+diff --git a/MOSTLYTEXT_PATCHES.md b/MOSTLYTEXT_PATCHES.md
+index 7d75060..fd0004e 100644
+--- a/MOSTLYTEXT_PATCHES.md
++++ b/MOSTLYTEXT_PATCHES.md
+@@ -29,7 +29,26 @@ existing thousand-insert/query stress test. Original-source regressions and
+ failed intermediate/setup controls are retained in the application's evidence
+ packet. Full application hosted CI is required for adoption.
+ 
+-This does not fix buffered style-coordinate drift, widen parser thresholds,
+-raise the application fallback, prove complete-editor latency, or establish
+-native acceptance. No grammar bytes, styling APIs or upstream contributions are
+-changed by this patch.
++The client correction alone does not fix buffered style-coordinate drift;
++the next section records that separate repair. Neither correction widens parser
++thresholds, raises the application fallback, proves complete-editor latency or
++establishes native acceptance. Grammar bytes and public styling APIs remain
++unchanged; no upstream contribution is made.
++
++## Buffered repaint coordinates
++
++A package-only edit notification transforms retained dirty intervals before
++TextViewHighlighter asks the client to publish the new edit's invalidations.
++Preserve surviving source before and after deletions, shift the latter, and
++conservatively include replacement text touching a dirty interval. Keep idle,
++all-document, nested-depth and reentrant-flush behavior. Interval sweeps avoid
++per-character work; generic NSRange.apply is not used because a deletion across
++an interval's beginning can otherwise drop its surviving tail.
++
++BufferedCoordinateTests includes an independent per-character oracle over
++75,772 small edit cases, successive-edit/nesting checks, deleted-tail survival,
++all-document and idle states, sparse coordinates and reentrant scope ownership.
++The baseline-only no-op notification shim explicitly models the absent old API;
++it is not native execution. Full application hosted qualification of the actual
++TextViewHighlighter callback order remains required. This does not activate the
++widened background experiment or establish complete-editor performance.
+diff --git a/Sources/Neon/TextViewHighlighter.swift b/Sources/Neon/TextViewHighlighter.swift
+index dbce7d1..292ad93 100644
+--- a/Sources/Neon/TextViewHighlighter.swift
++++ b/Sources/Neon/TextViewHighlighter.swift
+@@ -121,6 +121,9 @@ public final class TextViewHighlighter {
+ 		storageDelegate.didChangeContent = { [buffer, client, styler] range, delta in
+ 			let adjustedRange = NSRange(location: range.location, length: range.length - delta)
+ 
++			// Retained invalidations still refer to the previous source. Shift them
++			// before the client can synchronously publish this edit's new ranges.
++			buffer.contentChanged(in: adjustedRange, delta: delta)
+ 			client.didChangeContent(in: adjustedRange, delta: delta)
+ 			styler.didChangeContent(in: adjustedRange, delta: delta)
+ 
+diff --git a/Sources/RangeState/RangeInvalidationBuffer.swift b/Sources/RangeState/RangeInvalidationBuffer.swift
+index b14dd2c..86d95c6 100644
+--- a/Sources/RangeState/RangeInvalidationBuffer.swift
++++ b/Sources/RangeState/RangeInvalidationBuffer.swift
+@@ -40,6 +40,41 @@ extension RangeInvalidationBuffer {
+ 		}
+ 	}
+ 
++	/// Shift retained dirty source through an edit before buffering its new invalidations.
++	/// The range describes the original text replaced by the edit.
++	package func contentChanged(in range: NSRange, delta: Int) {
++		guard case let .buffering(target, count) = state else { return }
++		let existing: IndexSet
++		switch target {
++		case .all:
++			return
++		case let .set(set):
++			existing = set
++		case let .range(dirty):
++			existing = IndexSet(integersIn: dirty.location..<(dirty.location + dirty.length))
++		}
++
++		let oldEnd = range.location + range.length
++		let newEnd = oldEnd + delta
++		precondition(newEnd >= range.location)
++		let edited = range.location..<oldEnd
++		var shifted = IndexSet()
++		for dirty in existing.rangeView {
++			if dirty.lowerBound < range.location {
++				shifted.insert(integersIn: dirty.lowerBound..<min(dirty.upperBound, range.location))
++			}
++			if dirty.upperBound > oldEnd {
++				shifted.insert(integersIn: (max(dirty.lowerBound, oldEnd) + delta)..<(dirty.upperBound + delta))
++			}
++			// Repaint replacement text that touches previously dirty source.
++			// Split around deletions so a surviving tail cannot disappear.
++			if newEnd > range.location && (dirty.overlaps(edited) || (range.length == 0 && dirty.contains(range.location))) {
++				shifted.insert(integersIn: range.location..<newEnd)
++			}
++		}
++		state = .buffering(.set(shifted), count)
++	}
++
+ 	public func invalidate(_ target: RangeTarget) {
+ 		switch state {
+ 		case .idle:
+diff --git a/Tests/RangeStateTests/BufferedCoordinateTests.swift b/Tests/RangeStateTests/BufferedCoordinateTests.swift
+new file mode 100644
+index 0000000..8182c55
+--- /dev/null
++++ b/Tests/RangeStateTests/BufferedCoordinateTests.swift
+@@ -0,0 +1,98 @@
++import Foundation
++import RangeState
++import Testing
++
++@Suite("Buffered repaint coordinates", .serialized)
++struct BufferedCoordinateTests {
++    @Test func survivingDirtyTailMovesThroughDeletion() {
++        let buffer = RangeInvalidationBuffer()
++        var delivered: [RangeTarget] = []
++        buffer.invalidationHandler = { delivered.append($0) }
++        buffer.beginBuffering()
++        buffer.invalidate(.range(NSRange(location: 10, length: 10)))
++        buffer.contentChanged(in: NSRange(location: 0, length: 15), delta: -15)
++        buffer.endBuffering()
++        #expect(delivered == [.set(IndexSet(integersIn: 0..<5))])
++    }
++
++    @Test func eachEditTransformsOnlyPreviouslyBufferedInvalidations() {
++        let buffer = RangeInvalidationBuffer()
++        var delivered: [RangeTarget] = []
++        buffer.invalidationHandler = { delivered.append($0) }
++        buffer.beginBuffering()
++        buffer.invalidate(.range(NSRange(location: 20, length: 5)))
++        buffer.beginBuffering()
++        buffer.contentChanged(in: NSRange(location: 0, length: 10), delta: -10)
++        buffer.invalidate(.range(NSRange(location: 2, length: 2)))
++        buffer.endBuffering()
++        #expect(delivered.isEmpty)
++        buffer.contentChanged(in: NSRange(location: 3, length: 0), delta: 2)
++        buffer.invalidate(.range(NSRange(location: 0, length: 1)))
++        buffer.endBuffering()
++        #expect(delivered == [.set(IndexSet([0, 2, 3, 4, 5, 12, 13, 14, 15, 16]))])
++    }
++
++    @Test func allDocumentAndIdleScopesKeepTheirMeaning() {
++        let buffer = RangeInvalidationBuffer()
++        var delivered: [RangeTarget] = []
++        buffer.invalidationHandler = { delivered.append($0) }
++        buffer.contentChanged(in: NSRange(location: 0, length: 2), delta: 3)
++        #expect(delivered.isEmpty)
++        buffer.beginBuffering()
++        buffer.invalidate(.all)
++        buffer.contentChanged(in: NSRange(location: 0, length: 2), delta: -2)
++        buffer.endBuffering()
++        #expect(delivered == [.all])
++    }
++
++    @Test(.timeLimit(.minutes(1)))
++    func allSmallEditsMatchIndependentCharacterIdentityOracle() {
++        var scenarios = 0
++        for length in 0...8 {
++            for mask in 0..<(1 << length) {
++                let flags = (0..<length).map { mask & (1 << $0) != 0 }
++                let dirty = IndexSet(flags.indices.filter { flags[$0] })
++                for start in 0...length {
++                    for end in start...length {
++                        for replacementLength in 0...3 {
++                            let touchesDirty = flags[start..<end].contains(true) ||
++                                (start == end && start < length && flags[start])
++                            let expectedFlags = Array(flags[..<start]) +
++                                Array(repeating: touchesDirty, count: replacementLength) + Array(flags[end...])
++                            let expected = IndexSet(expectedFlags.indices.filter { expectedFlags[$0] })
++                            let buffer = RangeInvalidationBuffer()
++                            var actual: RangeTarget?
++                            buffer.invalidationHandler = { actual = $0 }
++                            buffer.beginBuffering()
++                            buffer.invalidate(.set(dirty))
++                            buffer.contentChanged(in: NSRange(start..<end), delta: replacementLength - (end - start))
++                            buffer.endBuffering()
++                            #expect(actual == .set(expected))
++                            scenarios += 1
++                        }
++                    }
++                }
++            }
++        }
++        #expect(scenarios == 75772)
++    }
++
++    @Test func sparseLargeCoordinatesAndReentrantScopeSurvive() {
++        let buffer = RangeInvalidationBuffer()
++        var delivered: [RangeTarget] = []
++        buffer.invalidationHandler = { target in
++            delivered.append(target)
++            if delivered.count == 1 {
++                buffer.beginBuffering()
++                buffer.invalidate(.range(NSRange(location: 4, length: 2)))
++                buffer.contentChanged(in: NSRange(location: 0, length: 0), delta: 3)
++            }
++        }
++        buffer.beginBuffering()
++        buffer.invalidate(.range(NSRange(location: 10_000_000, length: 4)))
++        buffer.contentChanged(in: NSRange(location: 0, length: 1_000_000), delta: -1_000_000)
++        buffer.endBuffering()
++        buffer.endBuffering()
++        #expect(delivered == [.set(IndexSet(integersIn: 9_000_000..<9_000_004)), .set(IndexSet(integersIn: 7..<9))])
++    }
++}

@@ -1,0 +1,18 @@
+{
+  "applicationBase": "377af67b675e52cbefe280a2531f5a1d9264de99",
+  "neonBase": "0699ea559682b4f62c8cd10ae520c7262c4acaa9",
+  "neonCandidate": "d58b074a067861161a1df6d5b42d700526d0e7dc",
+  "pins": 24,
+  "changed": [
+    "neon"
+  ],
+  "unchangedPins": 23,
+  "smallEditOracleScenarios": 75772,
+  "swiftTestingFunctions": 37,
+  "swiftTestingSuites": 9,
+  "existingXCTestCases": 8,
+  "missingHookModelFailures": 2,
+  "baselineLimit": "original class plus labeled no-op test shim; not native adapter execution",
+  "nativeExecution": "held; none",
+  "hostedCI": "required before merge"
+}
