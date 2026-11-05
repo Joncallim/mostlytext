@@ -8,8 +8,8 @@ import Testing
 ///
 /// Selection replacement now has strict parser-range and client-invalidation
 /// regressions. The text-view check below must also match a fresh highlighter.
-/// Rapid typing followed by a block deletion retains its separate known issue
-/// for buffered style coordinates. The widened background experiment remains
+/// Rapid typing followed by a block deletion also has a strict buffer-coordinate
+/// regression. The widened background experiment remains
 /// guarded by its recorded Debug abort until separately qualified.
 @MainActor
 @Suite(.serialized)
@@ -56,16 +56,15 @@ struct NeonReplacementEditTests {
     }
 
     /// The same two edit kinds in one main-actor turn (no await between them)
-    /// diverge near the typing location: a further pre-existing Neon defect.
+    /// must retain repaint ownership near the original typing location.
     @Test func typingThenDeletingABlockInOneTurnMatchesAFreshHighlighter() async throws {
         let editor = try await editor()
         typeRapidly(in: editor)
         editor.textView.insertText("", replacementRange: NSRange(location: 1000, length: 1500))
 
         let (edited, fresh) = try await runs(afterEditing: editor)
-        withKnownIssue("Neon leaves the typed region stale when a block deletion follows in the same turn") {
-            #expect(edited == fresh)
-        }
+        #expect(!fresh.isEmpty)
+        #expect(edited == fresh)
     }
 
     @Test func replacingASelectionContainingInlineRangesMatchesAFreshHighlighter() async throws {
