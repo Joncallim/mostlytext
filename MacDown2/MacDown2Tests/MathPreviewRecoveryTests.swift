@@ -1,4 +1,5 @@
 import AppKit
+import ApplicationServices
 import EditorCore
 import Foundation
 @testable import MacDown2
@@ -19,10 +20,14 @@ struct MathPreviewRecoveryTests {
         fixture.controller.model.tabStore.setPreviewLayout(.split(fraction: 0.5), for: fixture.tabID)
         let window = try #require(fixture.controller.window)
         window.setContentSize(.init(width: 900, height: 600))
-        window.orderFront(nil)
+        window.makeKeyAndOrderFront(nil)
+        // SwiftUI lazily constructs its virtual accessibility children. Use
+        // the same bounded own-process request as the qualified native probe;
+        // do not treat an uninitialized accessibility tree as Preview state.
+        try await requireOwnAccessibilityRole()
         let content = try #require(window.contentView)
         let equation = MathDiagnosticText.equationLabel("x", isDisplay: false)
-        try await waitForPresentation(in: window) {
+        try await waitForPresentation(in: fixture, stage: "initial malformed source") {
             has("mathPreviewNotices", attribute: "accessibilityIdentifier", in: content)
         }
         #expect(!has(equation, attribute: "accessibilityLabel", in: content))
@@ -30,7 +35,7 @@ struct MathPreviewRecoveryTests {
         // Exercise the real model -> editor -> parse -> math -> native view
         // publication path, including its exact-source observer and task keys.
         fixture.controller.model.tabStore.updateActiveDocument { $0.updatingText(valid) }
-        try await waitForPresentation(in: window) {
+        try await waitForPresentation(in: fixture, stage: "valid equation recovery") {
             !has("mathPreviewNotices", attribute: "accessibilityIdentifier", in: content) &&
                 has(equation, attribute: "accessibilityLabel", in: content)
         }
@@ -39,7 +44,7 @@ struct MathPreviewRecoveryTests {
         let (system, own) = try selectRenderedEquation(in: fixture, window: window, label: equation)
 
         fixture.controller.model.tabStore.setPreviewLayout(.previewOnly, for: fixture.tabID)
-        try await waitForPresentation(in: window) {
+        try await waitForPresentation(in: fixture, stage: "preview-only detachment") {
             system.isDetachedFromEditorView && has(equation, attribute: "accessibilityLabel", in: content)
         }
         window.makeKeyAndOrderFront(nil)
@@ -49,17 +54,30 @@ struct MathPreviewRecoveryTests {
         try invokeSourceAction(for: equation, in: content)
         // The production mount/layout callback must finish this action; the
         // test never calls the coordinator's completion method directly.
-        try await waitForPresentation(in: window) {
+        try await waitForPresentation(in: fixture, stage: "source action remount") {
             !system.isDetachedFromEditorView && system.textView.window === window &&
                 system.selectionSet == EditorSelectionSet(single: own) && window.firstResponder === system.textView
         }
 
         fixture.controller.model.tabStore.updateActiveDocument { $0.updatingText(malformed) }
-        try await waitForPresentation(in: window) {
+        try await waitForPresentation(in: fixture, stage: "malformed source after recovery") {
             has("mathPreviewNotices", attribute: "accessibilityIdentifier", in: content) &&
                 !has(equation, attribute: "accessibilityLabel", in: content)
         }
         #expect(fixture.controller.model.activeDocument?.text == malformed)
+    }
+
+    private func requireOwnAccessibilityRole() async throws {
+        let result = await Task.detached {
+            let process = AXUIElementCreateApplication(ProcessInfo.processInfo.processIdentifier)
+            let timeout = AXUIElementSetMessagingTimeout(process, 0.5)
+            guard timeout == .success else { return (timeout.rawValue, String?.none) }
+            var role: CFTypeRef?
+            let error = AXUIElementCopyAttributeValue(process, kAXRoleAttribute as CFString, &role)
+            return (error.rawValue, role as? String)
+        }.value
+        try #require(result.0 == AXError.success.rawValue && result.1 == (kAXApplicationRole as String),
+                     "The actual native accessibility client must be initialized")
     }
 
     private func selectRenderedEquation(
@@ -83,7 +101,10 @@ struct MathPreviewRecoveryTests {
         return (system, own)
     }
 
-    private func waitForPresentation(in window: NSWindow, condition: () -> Bool) async throws {
+    private func waitForPresentation(
+        in fixture: TextFilterCoordinatorTests.Fixture, stage: String, condition: () -> Bool
+    ) async throws {
+        let window = try #require(fixture.controller.window)
         let deadline = ContinuousClock.now.advanced(by: .seconds(5))
         while ContinuousClock.now < deadline {
             window.contentView?.layoutSubtreeIfNeeded()
@@ -93,7 +114,26 @@ struct MathPreviewRecoveryTests {
             }
             try await Task.sleep(for: .milliseconds(10))
         }
-        Issue.record("The actual Preview did not publish the expected equation/notice state")
+        let identity = fixture.tabID.uuidString
+        let parse = fixture.controller.parseStore.existingSession(for: identity)
+        let editor = fixture.controller.editorStore.existingSystem(for: identity)
+        let attributes = window.contentView.map { view in
+            nodes(in: view).prefix(100).map { object in
+                ["accessibilityIdentifier", "accessibilityLabel", "accessibilityValue"].compactMap { name -> String? in
+                    let selector = NSSelectorFromString(name)
+                    guard object.responds(to: selector),
+                          let value = object.perform(selector)?.takeUnretainedValue() as? String else { return nil }
+                    return "\(name)=\(value.prefix(100))"
+                }.joined(separator: ", ")
+            }.filter { !$0.isEmpty }.joined(separator: "\n")
+        } ?? "No content view"
+        Issue.record("""
+        Preview stage: \(stage). Model: \(fixture.controller.model.activeDocument?.text ?? "nil").
+        Published: \(parse?.publishedText ?? "nil"); parsing: \(parse?.isParsing ?? false).
+        Editor: \(editor?.textView.string ?? "nil"); mounted: \(editor?.textView.window === window).
+        Registered: \(fixture.coordinator.controllers.contains { $0 === fixture.controller }).
+        Native accessibility attributes:\n\(attributes)
+        """)
         throw PresentationNotPublished()
     }
 

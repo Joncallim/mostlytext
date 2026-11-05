@@ -50,6 +50,11 @@
     "bytes": 75728
   },
   {
+    "file": "final-9c-focused-failed.log.gz",
+    "uncompressed_sha256": "e1af059665bf0fbcad1678ae3c750e5d2a878b77a7b3eabc732667c4d6520c2d",
+    "bytes": 6359048
+  },
+  {
     "file": "final-source-action-compile.log.gz",
     "uncompressed_sha256": "9115fcc58e0e8e86d31456dfd1f624236a0349697571d378bbc377e2b7405475",
     "bytes": 487652
@@ -228,6 +233,16 @@
     "file": "preparation-gate-package-tests-compile.log.gz",
     "uncompressed_sha256": "a45a4a7a20a5a2b270c99addaf9879e42cd7c37545314a042d29d546fbf6cb90",
     "bytes": 104446
+  },
+  {
+    "file": "recovery-diagnostics-compile.log.gz",
+    "uncompressed_sha256": "6614b70a648aa4ed3f4ac14cb03bf41cf95a7a6e8fc4ddf8248a3c20d4f63d09",
+    "bytes": 491671
+  },
+  {
+    "file": "recovery-own-ax-compile.log.gz",
+    "uncompressed_sha256": "e05e4ca1db6c4e8a9c3c91f60b152ea63a6446cf0004e6faa99d2ac0d4263871",
+    "bytes": 474081
   },
   {
     "file": "reference-cancellation-after-debug.log.gz",

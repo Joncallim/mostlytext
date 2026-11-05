@@ -103,7 +103,7 @@ struct MathPreviewNavigationTests {
         system.selectionSet = original
         switch change {
         case "editor": system.textView.string = "Other $y$ source"
-        case "generation": fixture.controller.model.tabStore.updateActiveDocument { $0.updatingText($0.text) }
+        case "generation": fixture.controller.model.tabStore.updateActiveDocument { $0.edited(text: $0.text) }
         case "parser": fixture.controller.parseStore.evict(identity)
         case "removed": fixture.coordinator.controllers = []
         case "frame":
@@ -119,6 +119,14 @@ struct MathPreviewNavigationTests {
             )
             #expect(system.selectionSet == original)
             return
+        }
+        // Replacing NSTextView.string can itself move the selection. Establish
+        // the negative control after the authority mutation so this assertion
+        // measures only the attempted navigation.
+        system.selectionSet = original
+        if change == "generation" {
+            #expect(fixture.controller.model.activeDocument?.mutationGeneration != prepared.session.binding?.stamp
+                .mutationGeneration)
         }
         navigate(prepared)
         #expect(system.selectionSet == original)
