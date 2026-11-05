@@ -83,3 +83,14 @@ expose structured engine outcomes, bound actual renderer work and bind accessibl
 navigation to live document identity. Pure grammar tests do not close issue9,
 final visual/VoiceOver, release or exact-artifact acceptance. Reassess all open
 issues after each actual checklist/comment update.
+
+## Predecessor reconciliation
+
+Include ready PR83 exacthead22a7b539ae2c74d8c23880d4c07eeed4deb34347 before
+publication, preserving Neoncd14f22a alongside the qualified Textual factory.
+The app manifest and all24 existing pins are byte-identical to that predecessor;
+this package adds no remote dependency and does not switch production consumers.
+Combined inventory/316Compliance/fullformat/strictlint pass. PR83 must complete
+its full CI and merge before this unit; reconcile actual main's resulting tree
+without resetting any newer source or pin. The current foundation tests pass19
+functions/two suites Debug/Release.

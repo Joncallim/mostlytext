@@ -89,6 +89,36 @@
       "archive": "app-lint.log.gz"
     },
     {
+      "raw_name": "combined-compliance-tests.log",
+      "raw_bytes": 7515,
+      "raw_sha256": "6b6291d8ffb16f9fb9ca0cfecddb5f49d120db2f20a69eee135110b0adecd953",
+      "archive": "combined-compliance-tests.log.gz"
+    },
+    {
+      "raw_name": "combined-format.log",
+      "raw_bytes": 260,
+      "raw_sha256": "5d2c5baab9b4869a3317dfa1e320b3a50cc4873caea289a0af1d62fe9f3c9eec",
+      "archive": "combined-format.log.gz"
+    },
+    {
+      "raw_name": "combined-generation.log",
+      "raw_bytes": 91,
+      "raw_sha256": "33c66bdb9775a00b493a8355dd44358cb655bcf075815ece63927cdf5f8f33d9",
+      "archive": "combined-generation.log.gz"
+    },
+    {
+      "raw_name": "combined-inventory.log",
+      "raw_bytes": 54,
+      "raw_sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+      "archive": "combined-inventory.log.gz"
+    },
+    {
+      "raw_name": "combined-lint.log",
+      "raw_bytes": 71599,
+      "raw_sha256": "45d9c9a82d290909d9e16c3b88a61092262912d543f47ea41e51b49ec169fe9b",
+      "archive": "combined-lint.log.gz"
+    },
+    {
       "raw_name": "display-parity-debug.log",
       "raw_bytes": 9050,
       "raw_sha256": "8ea89c52197965728c4944baf1f616440466a7fec1665ad1b0513f3da99698dc",

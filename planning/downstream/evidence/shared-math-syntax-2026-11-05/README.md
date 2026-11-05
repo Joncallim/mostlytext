@@ -40,3 +40,9 @@ Export behavior, engine diagnostics/limits, accessibility/navigation and final
 visual/release evidence remain required. The unpaired-display recovery and
 ambiguous dollar-run choices are deliberate fixture policy before activation.
 No issue9 acceptance criterion is closed by this standalone foundation.
+
+The prepared branch also includes PR83's exact style-version correction before
+publication. Combined inventory,316 Compliance, full pinned format and strict
+lint pass again; app manifest/all24 pins are byte-identical to PR83. Its full
+hosted validation/integration must finish first. The standalone package has no
+remote dependency, and production consumers remain unchanged.
