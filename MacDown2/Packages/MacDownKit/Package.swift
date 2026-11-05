@@ -80,7 +80,7 @@ let package = Package(
         .package(url: "https://github.com/Joncallim/swift-cmark", revision: "2a5339b89b219584c8fa6c6fd378d3898eed5d57"),
         .package(url: "https://github.com/scinfu/SwiftSoup", exact: "2.13.9"),
         .package(url: "https://github.com/jpsim/Yams", exact: "6.2.2"),
-        .package(url: "https://github.com/Joncallim/textual", revision: "ebf6590ab480181cc05d37f520ad6e0f474c2c72"),
+        .package(url: "https://github.com/Joncallim/textual", revision: "c52cb5834c4695109aad2cb66294eafbc8f264c8"),
         // Match Textual's immutable engine owner/revision, so Preview and Export
         // share one parser, comment correction and structured body-inspection API.
         .package(

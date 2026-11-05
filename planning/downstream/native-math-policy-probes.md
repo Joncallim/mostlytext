@@ -45,3 +45,18 @@ unchanged-resource/pin proof and updated inventory/notices/SBOM. Native tests ke
 all controls/assertions/bounds. Broader scalar-safe Preview transport and joint math
 activation wait for these decisions and the parent contracts; no whole-issue
 criterion closes from this component evidence alone.
+
+## Actual baseline decision — 6 November 2026
+
+Hosted run 42063896137 executed all four native tests in three suites. Existing AX
+labels/actions pass. Original display classification is true; accessible and repeated
+wrappers both fail, producing two retained assertions. The ordinary font control
+and the attachment both update at 14→28 with positive native geometry, so the font
+staleness hypothesis is rejected for this fixture and no font refresh change is
+authorized by it. Raw baseline logs and the exact two-file owner patch are retained.
+
+Textual child c52cb5834c4695109aad2cb66294eafbc8f264c8 narrowly sees through its own
+private wrapper for the existing display-only predicate and replaces repeated
+wrappers with one updated descriptor. Inline/mixed-content behavior, underlying
+drawing, measurement, PNG, fonts and resources remain unchanged. The same native
+assertions must pass on this new pin before broader activation.
