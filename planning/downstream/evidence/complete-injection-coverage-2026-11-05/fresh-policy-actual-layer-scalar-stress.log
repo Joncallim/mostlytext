@@ -1,0 +1,34 @@
+[0/1] Planning build
+Building for debugging...
+[0/5] Write sources
+[3/5] Write swift-version--58304C5D6DBC2206.txt
+[5/7] Compiling SwiftTreeSitter LanguageConfiguration.swift
+[6/7] Emitting module SwiftTreeSitter
+[7/10] Compiling SwiftTreeSitterLayer LanguageLayer.swift
+[8/10] Emitting module SwiftTreeSitterLayer
+[9/10] Compiling SwiftTreeSitterLayer Snapshots.swift
+[10/13] Compiling TreeSitterClient TreeSitterClient.swift
+[11/13] Emitting module TreeSitterClient
+[12/13] Compiling TreeSitterClient BackgroundingLanguageLayerTree.swift
+[13/18] Compiling ModelTests MarkdownLayerScalarStressTests.swift
+[14/18] Compiling ModelTests MarkdownClientInvalidationTests.swift
+[15/18] Compiling ModelTests TreeSitterClientTests.swift
+[16/18] Compiling ModelTests TreeSitterClientStressTests.swift
+[17/18] Emitting module ModelTests
+[17/19] Write Objects.LinkFileList
+[18/19] Linking OwnedNeonClientFixturePackageTests
+Build complete! (7.75s)
+Test Suite 'Selected tests' started at 2026-11-05 14:23:41.274.
+Test Suite 'OwnedNeonClientFixturePackageTests.xctest' started at 2026-11-05 14:23:41.281.
+Test Suite 'OwnedNeonClientFixturePackageTests.xctest' passed at 2026-11-05 14:23:41.281.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-11-05 14:23:41.281.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.007) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Actual Markdown layer scalar-edit parity" started.
+◇ Test editedRootAndInlineLayersMatchFresh() started.
+✔ Test editedRootAndInlineLayersMatchFresh() passed after 12.488 seconds.
+✔ Suite "Actual Markdown layer scalar-edit parity" passed after 12.488 seconds.
+✔ Test run with 1 test in 1 suite passed after 12.488 seconds.

@@ -8,10 +8,11 @@ that loss at edit44: the root tree equals a fresh parse, but the inline range
 524..<582 is missing. A full query restores it. This is an injection-ownership
 coverage defect, separate from native painting and the lexer performance patch.
 
-Application baseline4b162baefac56256cb335afcf684544be4dbc0dc (pending PR #79),
-with PR #78/#79 source stable and main9b2cd216 at intake. Dependency baseline
-SwiftTreeSitter1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43, Neonbaf93c72924e31e16b84adced6ee29cb02934c3b,
-runtime0.25.10. Both predecessor PRs require exact-head CI and integration first.
+Application implementation baseline is main68801d650dbd174f1cbc810617b43e7c22afdffd,
+after PR #78 and PR #79 passed complete exact-head CI and merged. Initial
+architecture intake used app4b162baefac56256cb335afcf684544be4dbc0dc before those
+merges. Dependency baseline is SwiftTreeSitter1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43,
+Neonbaf93c72924e31e16b84adced6ee29cb02934c3b, runtime0.25.10.
 Existing range reconciliation already expands queries over returned fresh
 capture extents. It does not expand a partially queried old capture before
 retiring it, so a replacement starting just outside the initial window is lost.

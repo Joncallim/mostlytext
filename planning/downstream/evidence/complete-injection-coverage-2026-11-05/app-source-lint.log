@@ -1,0 +1,7 @@
+Linting Swift files at paths MacDown2/Packages/MacDownKit/Sources/Highlighting/GrammarRegistry+Factories.swift, MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownLayerScalarStressTests.swift, MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownInjectionCoverageTests.swift
+Linting 'MarkdownInjectionCoverageTests.swift' (1/3)
+Linting 'GrammarRegistry+Factories.swift' (2/3)
+Linting 'MarkdownLayerScalarStressTests.swift' (3/3)
+/Volumes/Fast SSD/CORTANA-GitHub/worktrees/github/mostlytext-complete-injection-coverage/MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownLayerScalarStressTests.swift:16:5: error: Function Body Length Violation: Function body should span 50 lines or less excluding comments and whitespace: currently spans 71 lines (function_body_length)
+/Volumes/Fast SSD/CORTANA-GitHub/worktrees/github/mostlytext-complete-injection-coverage/MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownLayerScalarStressTests.swift:56:17: error: Identifier Name Violation: Variable name 'at' should be between 3 and 40 characters long (identifier_name)
+Done linting! Found 2 violations, 2 serious in 3 files.

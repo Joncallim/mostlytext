@@ -1,0 +1,22 @@
+{
+  "changed_lock_identities": [
+    "neon",
+    "swifttreesitter"
+  ],
+  "unchanged_pin_count": 22,
+  "licences": [
+    {
+      "repo": "/Volumes/Fast SSD/CORTANA-GitHub/SwiftTreeSitter-complete-coverage",
+      "head": "7d2dc87e8b9326062d75bc1ef985f17d28e94da9",
+      "sha256": "792197b8debcdecb17f429bab3a43a5911364e2a6e8e7c0f7faf02032212fb5f",
+      "base": "cbe31cb3601aa29c1f64b6e4328733511126d6d5"
+    },
+    {
+      "repo": "/Volumes/Fast SSD/CORTANA-GitHub/Neon-complete-coverage",
+      "head": "be25e35787585430f0f1ac845ed44c11e7f8150a",
+      "sha256": "d11b5eea8e9ae2f6dd06545633e8daf0dfcbc7dbb911a20d1504c905e5808775",
+      "base": "dabf50c947148c49acd0d321dfe8f3805d10b3da"
+    }
+  ],
+  "neon_runtime_and_tests_identical_to": "baf93c72924e31e16b84adced6ee29cb02934c3b"
+}
