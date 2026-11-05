@@ -1,0 +1,62 @@
+{
+  "baseRefOid": "7e8e5a26f72cc21de34e6cabc3522cf44a493f5b",
+  "headRefOid": "c8e369089f8b26b7516183d3982c2c65acc6d7ba",
+  "isDraft": false,
+  "mergeable": "MERGEABLE",
+  "state": "OPEN",
+  "statusCheckRollup": [
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-05T14:49:38Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/Joncallim/mostlytext/actions/runs/42048403099/job/127318447886",
+      "name": "lint",
+      "startedAt": "2026-11-05T14:48:56Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-05T14:47:48Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/Joncallim/mostlytext/actions/runs/42048403015/job/127317558640",
+      "name": "inventory",
+      "startedAt": "2026-11-05T14:47:24Z",
+      "status": "COMPLETED",
+      "workflowName": "Compliance"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-05T14:48:52Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/Joncallim/mostlytext/actions/runs/42048402904/job/127317558706",
+      "name": "probe",
+      "startedAt": "2026-11-05T14:47:25Z",
+      "status": "COMPLETED",
+      "workflowName": "Native math accessibility probe"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-05T15:26:49Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/Joncallim/mostlytext/actions/runs/42048403099/job/127318447244",
+      "name": "build-and-test",
+      "startedAt": "2026-11-05T14:48:56Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-05T14:53:07Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://dashboard.gitguardian.com",
+      "name": "GitGuardian Security Checks",
+      "startedAt": "2026-11-05T14:50:03Z",
+      "status": "COMPLETED",
+      "workflowName": ""
+    }
+  ],
+  "expected_main": "1aca9333c15ad75c83c4797adb893c9298fc9451",
+  "expected_tree": "13ef748a8c752ad3f4a20afd4f8251f893b9232d",
+  "review_summary": "Fresh connector reviews/threads empty before merge"
+}

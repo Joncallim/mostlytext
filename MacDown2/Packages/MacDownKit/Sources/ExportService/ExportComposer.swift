@@ -229,6 +229,7 @@ enum ExportComposer {
         let bodyText: String
         let bodyStartOffset: Int
         let containerRanges: [Range<Int>]
+        let referenceContext: DerivedContentComposer.ReferenceContext?
     }
 
     private static func parse(
@@ -259,7 +260,10 @@ enum ExportComposer {
             ),
             bodyText: bodyText,
             bodyStartOffset: bodyStartOffset,
-            containerRanges: containerRanges(in: document)
+            containerRanges: containerRanges(in: document),
+            referenceContext: document.isBound(to: request.text) ? document.sourceFacts.map {
+                DerivedContentComposer.ReferenceContext(source: request.text, facts: $0)
+            } : nil
         )
     }
 

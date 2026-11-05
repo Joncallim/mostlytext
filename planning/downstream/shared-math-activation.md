@@ -5,12 +5,15 @@
 Preview and HTML/PDF Export must recognize the same original equations, preserve
 comments and source bytes, explain malformed input at its own position, and offer
 an accessible source action that cannot navigate to a stale document. Current
-main is 7e8e5a26f72cc21de34e6cabc3522cf44a493f5b. Pending PR88 contains the stable
-engine body APIs; pending PR89 c8e369089f8b26b7516183d3982c2c65acc6d7ba prepares
-MathEvaluation, the physical worker and Textual's opt-in semantics. Native focused
+main is abc3a5c851351d28b790edac7d7b1269c8870f87, containing merged PR88's stable
+engine body APIs and merged PR89's MathEvaluation, physical worker, exact source
+observation and opt-in native attachment semantics. PR89 qualified head c8e36908
+has this exact main tree (13ef748a8c752ad3f4a20afd4f8251f893b9232d): complete CI
+passes 3,530 package tests, 623 app tests and all four locked builds. Native focused
 42048402904 proves two actual occurrence labels/geometry/actions with positive
-controls; complete qualification/merge still gates integration. Local native and
-signing execution remains held. This branch starts at the exact stable PR89 head.
+controls. This branch starts from that qualified source, with merge parents and
+clean canonical main independently verified. Local native and signing execution
+remains held; component qualification does not establish final app acceptance.
 
 The old production MathSpanScanner/newline preprocessor/secondary Textual math pass
 still runs. Those paths must change together, never as an alleged parity result
@@ -70,3 +73,41 @@ categories, no-visible-output policy, renderer allocation ceilings, app publicat
 and safe source navigation before broad code lands. The parent shared-math
 production contract remains binding; final app/native/VoiceOver evidence stays
 explicitly separate from component tests and compiled targets.
+
+## Export repair application and failure scope
+
+The source helper's actual-parser corpus now passes all LF/CRLF/CR, nested quote/
+list/lazy continuation, escaped brackets, Unicode adjacency, multiline definition/
+title and multiple-equation cases. It demonstrates that raw marker substitution
+loses the original reference, while explicit original-key repair preserves actual
+parsed destination/title. No new URL serialization is needed.
+
+Add a source/facts context to ExportComposer's private parsed snapshot, only when
+bound to the exact request. DerivedContentComposer computes source repairs AFTER
+its existing per-fragment admission, then applies them as ordinary source edits
+beside accepted sentinels. Record every edit in the existing coordinate map.
+Reference suffix edits are nonempty and must not overlap other edits. Check the
+exact source/body suffix binding and resulting Markdown byte budget before
+allocation. If that shared snapshot cannot prove reference identity (bad binding,
+invalid/overlapping repair or expanded input over budget), reject that derived
+snapshot atomically, keep original body, and append a localized failure diagnostic.
+Ordinary individual contribution rejection remains unchanged and cannot request
+an unnecessary repair. Legacy direct composer callers without a source/facts
+context retain their existing behavior; production supplies its proven context.
+Tests cover actual existing export composition, stale/failed fragment fallback,
+reference targets/titles, front matter offsets and heading coordinates. No HTML
+URL bypass or second export renderer is introduced.
+
+## Literal delimiter repair discovered by the adversarial corpus
+
+The real parser loses [$x$`tail][] if copying its raw implicit key introduces
+a closing backtick across the original label boundary. The 94-character ASCII
+corpus found this concrete failure; failed raw logs and exact before-helper/tests
+are retained. The helper therefore also protects original unescaped literal
+backticks in the visible label, outside actual code/HTML and accepted replacement
+ranges, respecting odd/even backslashes. The original reference key remains
+unchanged, and source edits are sorted. Seven regressions compare visible decoded
+heading text as well as actual targets/titles, including matched code and HTML.
+Destination/title and text comparisons use exact UTF-8, so canonical lookalikes
+cannot hide a changed target. Only the derived representation changes; the author
+source and its equation/navigation coordinates remain immutable.

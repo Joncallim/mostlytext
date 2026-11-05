@@ -74,7 +74,8 @@ extension ExportComposer {
             budget: budget,
             containerRanges: parsed.containerRanges,
             recordCoordinates: namespaceSVGIDs,
-            namespaceSVGIDs: namespaceSVGIDs
+            namespaceSVGIDs: namespaceSVGIDs,
+            referenceContext: parsed.referenceContext
         )
     }
 

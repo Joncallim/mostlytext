@@ -1,0 +1,11 @@
+{
+  "merge": "abc3a5c851351d28b790edac7d7b1269c8870f87",
+  "parents": [
+    "1aca9333c15ad75c83c4797adb893c9298fc9451",
+    "c8e369089f8b26b7516183d3982c2c65acc6d7ba"
+  ],
+  "tree": "13ef748a8c752ad3f4a20afd4f8251f893b9232d",
+  "canonical_main": "clean fast-forwarded",
+  "production_math_consumers": "not activated",
+  "native_final_acceptance": false
+}

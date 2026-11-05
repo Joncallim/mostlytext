@@ -1,0 +1,61 @@
+{
+  "headRefOid": "9e23f928ee66190b5b85145500b8bd4a11a624c1",
+  "mergeable": "MERGEABLE",
+  "state": "OPEN",
+  "statusCheckRollup": [
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-05T14:18:16Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/Joncallim/mostlytext/actions/runs/42043329444/job/127300338434",
+      "name": "lint",
+      "startedAt": "2026-11-05T14:17:24Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-05T14:16:26Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/Joncallim/mostlytext/actions/runs/42043329349/job/127299571334",
+      "name": "inventory",
+      "startedAt": "2026-11-05T14:16:02Z",
+      "status": "COMPLETED",
+      "workflowName": "Compliance"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-05T14:17:23Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/Joncallim/mostlytext/actions/runs/42043329195/job/127299569123",
+      "name": "probe",
+      "startedAt": "2026-11-05T14:16:02Z",
+      "status": "COMPLETED",
+      "workflowName": "Native math accessibility probe"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-05T14:59:41Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/Joncallim/mostlytext/actions/runs/42043329444/job/127300337435",
+      "name": "build-and-test",
+      "startedAt": "2026-11-05T14:17:24Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-05T14:21:32Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://dashboard.gitguardian.com",
+      "name": "GitGuardian Security Checks",
+      "startedAt": "2026-11-05T14:18:55Z",
+      "status": "COMPLETED",
+      "workflowName": ""
+    }
+  ],
+  "main": "7e8e5a26f72cc21de34e6cabc3522cf44a493f5b",
+  "expected_tree": "329938e435fdcd4bdcbbc82a9ce76126c4745a56",
+  "review_summary": "Fresh connector reviews and review threads checked empty before expected-head merge",
+  "native_final_acceptance": false
+}

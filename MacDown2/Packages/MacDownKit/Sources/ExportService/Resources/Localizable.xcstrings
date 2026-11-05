@@ -167,6 +167,29 @@
         }
       }
     },
+    "Derived content could not preserve reference links; authored source was kept.": {
+      "comment": "Derived export snapshot failed exact reference-identity or size proof. Native translation review remains required.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Le contenu dérivé n’a pas pu préserver les liens de référence ; le texte source a été conservé."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "派生コンテンツで参照リンクを保持できなかったため、元のソースを維持しました。"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nie udało się zachować łączy referencyjnych w treści pochodnej; zachowano tekst źródłowy."
+          }
+        }
+      }
+    },
     "Export destination is invalid: %@": {
       "localizations": {
         "fr": {
