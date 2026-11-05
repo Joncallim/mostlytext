@@ -275,9 +275,9 @@ private struct BlockConverter {
                 headings.append(contentsOf: result.headings)
             }
         }
-
+        let code = (node as? CodeBlock)?.code
         return (
-            block: MarkdownBlock(kind: kind(for: node), lineRange: range, children: childBlocks),
+            block: MarkdownBlock(kind: kind(for: node), lineRange: range, children: childBlocks, codeContent: code),
             headings: headings
         )
     }

@@ -1,7 +1,11 @@
 # Remaining engineering and acceptance ownership — 5 November 2026
 
-The live 5 November audit contains 17 open issues and 182 unchecked
-checkbox rows after the scoped math source/offline reconciliation in #9.
+The live 5 November audit contains 17 open issues and 179 unchecked
+checkbox rows after #9 source/offline reconciliation and the three evidence-
+handling rows verified by [PR71](https://github.com/Joncallim/mostlytext/pull/71),
+merged as `a95ff1fc4498e925eb1582fa6eb9e7fab5baf5ad`. These cover compliance-gate
+consumption, delegated finding ownership and full audit-gate consumption; native,
+rights and exact-artifact acceptance remain open.
 Three issues use prose rather than checkbox criteria;
 that does not make them complete. These are broad acceptance contracts, not
 17 newly discovered bugs.
@@ -43,9 +47,10 @@ throws `timedOut` after 17.247 seconds; the later run fails D2's first simple
 render after 15.043 seconds, with later app steps skipped. The namespace case
 passes in both new full runs and all four focused base/head executions. This
 does not explain or fix either failure or establish that it is pre-existing.
-[PR69](https://github.com/Joncallim/mostlytext/pull/69) now investigates cold D2
-startup with phase markers and an optional host-initialization control on the
-immutable base. No production assertion/deadline changes or native acceptance
+[PR69](https://github.com/Joncallim/mostlytext/pull/69) is merged as `a33662d9`. Both cold-D2 controls pass: original setup
+14.099s/3.925s and initialized host 7.510s/4.273s. The slow first sample spends
+2.200s in page construction, 7.943s in navigation, 3.311s in engine readiness
+and 0.629s rendering. Neither variant reproduces a failure or proves a cause. No production assertion/deadline changes or native acceptance
 are inferred. The six strict release predicates and remaining native/per-file/
 rights/publication requirements stay open; attribution integration does not
 waive runtime or final-artifact release gates.
@@ -57,8 +62,8 @@ suites pass Debug/Release, including unchanged-file and later-valid-file control
 The [reproduction procedure](downstream/evidence/replacement-plan-range-bounds-2026-11-04/README.md)
 pins every copied file and runs the old-source negatives in a separate owned
 fixture. Issues #6/#14/#17 now check these scoped source/evidence results while
-preserving every broader acceptance criterion. The live audit still has 17 open
-issues and 182 unchecked original rows.
+preserving every broader acceptance criterion. That earlier checkpoint retained 17 open
+issues and 182 unchecked original rows; PR71 later resolves three evidence rows.
 
 Scoped source/resource evidence is recorded in
 [ACCEPTANCE_STATUS.md](ACCEPTANCE_STATUS.md) and the associated PRs; the named

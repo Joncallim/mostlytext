@@ -33,10 +33,22 @@ public struct MarkdownBlock: Sendable, Equatable {
 
     public let children: [MarkdownBlock]
 
-    public init(kind: BlockKind, lineRange: ClosedRange<Int>, children: [MarkdownBlock] = []) {
+    /// Parser-decoded code text with Markdown container prefixes/delimiters removed.
+    /// One parser-added terminal LF is omitted; genuine blank lines are retained.
+    /// Nil for other nodes and older manually constructed models. Original source
+    /// coordinates remain in `lineRange`; this value is only derived render input.
+    public let codeBlockContent: String?
+
+    public init(
+        kind: BlockKind,
+        lineRange: ClosedRange<Int>,
+        children: [MarkdownBlock] = [],
+        codeContent: String? = nil
+    ) {
         self.kind = kind
         self.lineRange = lineRange
         self.children = children
+        codeBlockContent = codeContent.map { $0.hasSuffix("\n") ? String($0.dropLast()) : $0 }
     }
 }
 
