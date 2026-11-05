@@ -38,7 +38,7 @@ public enum GraphvizFenceScanner {
     ) -> GraphvizFence? {
         let nsRange = sourceMap.utf16Range(ofLines: block.lineRange)
         guard let range = Range(nsRange, in: sourceText) else { return nil }
-        let inner = GraphvizFenceContent.stripDelimiters(from: String(sourceText[range]))
+        let inner = block.codeBlockContent ?? GraphvizFenceContent.stripDelimiters(from: String(sourceText[range]))
         return GraphvizFence(source: inner, sourceRange: nsRange.location ..< (nsRange.location + nsRange.length))
     }
 }

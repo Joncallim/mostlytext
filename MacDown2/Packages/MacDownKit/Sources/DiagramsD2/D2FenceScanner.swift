@@ -28,9 +28,8 @@ public enum D2FenceScanner {
         }
     }
 
-    /// Slices the block's full line range (fence delimiters included) out
-    /// of `sourceText`, then recovers the inner diagram source via
-    /// `D2FenceContent.stripDelimiters(from:)`.
+    /// Uses parser-decoded content while preserving original source coordinates.
+    /// Older manually constructed nodes retain the legacy delimiter fallback.
     private static func fence(
         for block: MarkdownBlock,
         sourceMap: SourceMap,
@@ -38,7 +37,7 @@ public enum D2FenceScanner {
     ) -> D2Fence? {
         let nsRange = sourceMap.utf16Range(ofLines: block.lineRange)
         guard let range = Range(nsRange, in: sourceText) else { return nil }
-        let inner = D2FenceContent.stripDelimiters(from: String(sourceText[range]))
+        let inner = block.codeBlockContent ?? D2FenceContent.stripDelimiters(from: String(sourceText[range]))
         return D2Fence(source: inner, sourceRange: nsRange.location ..< (nsRange.location + nsRange.length))
     }
 }

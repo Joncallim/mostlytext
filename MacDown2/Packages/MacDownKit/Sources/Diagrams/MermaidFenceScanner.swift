@@ -38,9 +38,8 @@ public enum MermaidFenceScanner {
         }
     }
 
-    /// Slices the block's full line range (fence delimiters included) out of
-    /// `sourceText`, then recovers the inner diagram source via
-    /// `MermaidFenceContent.stripDelimiters(from:)`.
+    /// Uses parser-decoded content while preserving original source coordinates.
+    /// Older manually constructed nodes retain the legacy delimiter fallback.
     private static func fence(
         for block: MarkdownBlock,
         sourceMap: SourceMap,
@@ -48,7 +47,7 @@ public enum MermaidFenceScanner {
     ) -> MermaidFence? {
         let nsRange = sourceMap.utf16Range(ofLines: block.lineRange)
         guard let range = Range(nsRange, in: sourceText) else { return nil }
-        let inner = MermaidFenceContent.stripDelimiters(from: String(sourceText[range]))
+        let inner = block.codeBlockContent ?? MermaidFenceContent.stripDelimiters(from: String(sourceText[range]))
         return MermaidFence(source: inner, sourceRange: nsRange.location ..< (nsRange.location + nsRange.length))
     }
 }
