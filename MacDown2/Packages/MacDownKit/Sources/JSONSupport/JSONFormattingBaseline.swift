@@ -37,7 +37,9 @@ public struct JSONFormattingBaseline: Sendable, Equatable {
     /// generation, and the editor content revision must all match the values
     /// captured when the command was issued.
     public func accepts(text: String, documentGeneration: UInt, editorContentRevision: UInt64) -> Bool {
-        text == self.text
+        // String equality accepts canonically equivalent Unicode spellings;
+        // formatting may only replace the exact authored snapshot.
+        text.utf8.elementsEqual(self.text.utf8)
             && documentGeneration == self.documentGeneration
             && editorContentRevision == self.editorContentRevision
     }
