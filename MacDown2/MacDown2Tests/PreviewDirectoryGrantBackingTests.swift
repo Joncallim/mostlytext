@@ -20,7 +20,8 @@ struct PreviewDirectoryGrantBackingTests {
         let grant = try await PreviewDirectoryGrantBacking.acquire(
             selection: selection, currentDocumentURL: document, epoch: UUID()
         )
-        var use: PreviewDirectoryGrantBacking.Use? = try #require(grant.acquireUse())
+        var use = grant.acquireUse()
+        try #require(use != nil)
         let pinnedDirectory = try #require(use?.documentDirectory)
         grant.revoke()
         #expect(grant.acquireUse() == nil)

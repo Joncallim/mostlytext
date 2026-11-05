@@ -215,7 +215,7 @@ struct FileDocumentEncodingRoundTripTests {
         let url = directory.appendingPathComponent("doc.json")
         _ = try store.write("{\"a\":1}", to: url)
 
-        var document = try FileDocument(fileURL: url, fileStore: store).load()
+        let document = try FileDocument(fileURL: url, fileStore: store).load()
         // External writer replaces the file in UTF-16 LE with BOM.
         _ = try store.write("{\"a\":2}", to: url, encoding: .utf16LittleEndian, bom: .utf16LittleEndian)
         let snapshot = try store.readSnapshot(from: url)
