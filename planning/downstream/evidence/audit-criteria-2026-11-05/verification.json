@@ -1,0 +1,128 @@
+{
+  "schema": 1,
+  "verified_source": "a33662d92dd401c163513d17e8809093c6e30e5d",
+  "scope": "existing policy, delegated evidence ownership and mocked control-flow verification only",
+  "files": {
+    "release/macos/sign-notarize-dmg.sh": "cdbc81c366859f15b8bed77bf123b8e848aa921a04804eb0af829060e7e9c2f9",
+    "compliance/tests/test_release_script.py": "86acb7142de4d3e65bac76c2447c0c5e90acbacb7283a4e3126fd82e64258d4b",
+    "planning/downstream/readiness.json": "c5e21775149ef66ec2f9559fc6e2b1eeb20b0984134c7699e98edbaa74b02eb1",
+    "planning/downstream/validate_readiness.py": "b4b9858b8f2aea2fa9145147e6a5a9d3d91bec14f99ad0ad535614a4c1fe02f0",
+    "planning/RELEASE_SEQUENCE.md": "ad355a8610ee7aec97d6e2a1980ba0455155132c3e7b5539649c20b90f237a0f",
+    "planning/RELEASE_HARDENING.md": "f8af75542c61179d80ea0740961e53a235a1d866caca5814722f78160d0ba342",
+    "planning/ISSUE_TRANSFER_MAP.md": "0c30f41ec5302db20f33b4053d6e43f4bae28ba3a8a665c6c0c353a79998b6af"
+  },
+  "commands": [
+    {
+      "command": "python3 -m unittest discover -s compliance/tests -p test_release_script.py -v",
+      "exit": 0,
+      "tests": 23,
+      "apple_commands": "stubbed in temporary owned repository"
+    },
+    {
+      "command": "python3 planning/downstream/validate_readiness.py planning/downstream/readiness.json --self-test",
+      "exit": 0,
+      "controls": 49
+    },
+    {
+      "command": "python3 -O planning/downstream/validate_readiness.py planning/downstream/readiness.json --self-test",
+      "exit": 0,
+      "controls": 49
+    },
+    {
+      "command": "python3 compliance/tools/compliance.py check --release",
+      "exit": 1,
+      "failures": 6,
+      "status": "expected unresolved release predicates; never a release pass"
+    }
+  ],
+  "issues": [
+    {
+      "number": 11,
+      "title": "Pre-1.0: close EPIC-12 export residual security, parity and evidence debt",
+      "url": "https://github.com/Joncallim/mostlytext/issues/11",
+      "state": "OPEN",
+      "closedAt": null,
+      "body_sha256": "4e2927c6e15670bcfe09d2ce3dd55be8c3c6c957d16e6ddb99cbda4c19a75b8c"
+    },
+    {
+      "number": 13,
+      "title": "Pre-1.0: close E11 HTML preview request/root and resource-read races",
+      "url": "https://github.com/Joncallim/mostlytext/issues/13",
+      "state": "OPEN",
+      "closedAt": null,
+      "body_sha256": "00b3cb12a78565b9c97438d7b5608b9a6416957f0469a2cdf40399c843ec9f92"
+    },
+    {
+      "number": 3,
+      "title": "[EPIC-16] Localization: String Catalogs + Transifex migration",
+      "url": "https://github.com/Joncallim/mostlytext/issues/3",
+      "state": "OPEN",
+      "closedAt": null,
+      "body_sha256": "ab853190e7b78de27ef9058fc5b05ab46792532ecfa1fb83da2bc6bcdce714e8"
+    },
+    {
+      "number": 8,
+      "title": "Pre-1.0 gate: eliminate all carried-forward debt from closed epics",
+      "url": "https://github.com/Joncallim/mostlytext/issues/8",
+      "state": "OPEN",
+      "closedAt": null,
+      "body_sha256": "54abc2ef9077bd661dec329b5eb53ffd5040bc3213e10abf78e4471c4c098803"
+    },
+    {
+      "number": 4,
+      "title": "[EPIC-17] Distribution & release: migration, Sparkle 2, signing, CLI, macOS 1.0 checklist",
+      "url": "https://github.com/Joncallim/mostlytext/issues/4",
+      "state": "OPEN",
+      "closedAt": null,
+      "body_sha256": "ead21afe1054c3a9e6b8a8969f6a48120e0286486e9b7fbc86401b72dc0a2786"
+    },
+    {
+      "number": 15,
+      "title": "Local WebKit-dependent test hangs after extended sessions; root cause unresolved",
+      "url": "https://github.com/Joncallim/mostlytext/issues/15",
+      "state": "OPEN",
+      "closedAt": null,
+      "body_sha256": "406ed11dfd43d3fc14cb83594b4ddcdd8e2bd2fa5c297567d153351015aeb477"
+    },
+    {
+      "number": 159,
+      "title": "TextFilter lifecycle tests can crash on readiness timeout; fixture ownership/readiness needs hardening",
+      "url": "https://github.com/Joncallim/macdown_2/issues/159",
+      "state": "CLOSED",
+      "closedAt": "2026-10-22T10:37:44Z",
+      "body_sha256": "c021b102349537b69f7da0608991c80e3ebffd466162b5d2d102e3c6b6b625e7"
+    },
+    {
+      "number": 163,
+      "title": "Markdown parse-session timing tests and busy-state ownership need deterministic interleaving",
+      "url": "https://github.com/Joncallim/macdown_2/issues/163",
+      "state": "CLOSED",
+      "closedAt": "2026-10-09T03:59:29Z",
+      "body_sha256": "7a8e7159dfd7a228c44687713c7e7f3896c62c7ccc6adfb9378a2252d75ec871"
+    },
+    {
+      "number": 173,
+      "title": "Already-open document navigation: reproduce native activation/reveal and make reveal lifecycle-safe",
+      "url": "https://github.com/Joncallim/macdown_2/issues/173",
+      "state": "CLOSED",
+      "closedAt": "2026-10-28T06:58:58Z",
+      "body_sha256": "9c1694be17b4f3752b62831f9d4747731d66a71173f062a02917226b584d21db"
+    },
+    {
+      "number": 174,
+      "title": "FileStore replacement saves can lose POSIX mode, xattrs and ACLs",
+      "url": "https://github.com/Joncallim/macdown_2/issues/174",
+      "state": "CLOSED",
+      "closedAt": "2026-10-01T14:11:22Z",
+      "body_sha256": "44c0633632fcff4e6ae5b47ce69f56f20ac4768f03b398c5b9b1d90b021d458e"
+    }
+  ],
+  "evidence": {
+    "release-script-tests.log": "114cc5494be69f5aa365fe160867ee30f41016e1175b502ee3b3d3a3b452159b",
+    "readiness-normal.json": "f8fc4170d1bfdf1e29bf4330b55ccf5a992ccd7dd8c8385b5dd64afc14ee6931",
+    "readiness-optimized.json": "f8fc4170d1bfdf1e29bf4330b55ccf5a992ccd7dd8c8385b5dd64afc14ee6931",
+    "strict-release-check.log": "65708a3274f0e685434f91f95f329e56e75e6284439eff266471e54be5a55d34"
+  },
+  "native_or_release_acceptance": false,
+  "public_authorization": false
+}
