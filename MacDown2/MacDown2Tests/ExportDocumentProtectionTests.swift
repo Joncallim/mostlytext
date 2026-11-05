@@ -78,10 +78,10 @@ struct ExportDocumentProtectionTests {
         let id = registry.register(fixture.admission, lease: lease)
         registry.remove(id)
         var expired: ExportLifetimeLease? = ExportLifetimeLease()
-        weak var observed = expired
+        let observed = try WeakValidatedExportLease(#require(expired), ordinary: false)
         try registry.register(fixture.admission, lease: #require(expired))
         expired = nil
-        #expect(observed == nil)
+        #expect(observed.lease == nil)
         registry.documentsWillPublish(urls: [fixture.output], identities: [])
         try lease.checkActive()
     }

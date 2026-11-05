@@ -46,7 +46,8 @@ enum ResourceTestSupport {
         return (0 ..< 1024).count { descriptor in
             var buffer = [CChar](repeating: 0, count: Int(MAXPATHLEN))
             guard fcntl(Int32(descriptor), F_GETPATH, &buffer) == 0 else { return false }
-            return String(cString: buffer).hasPrefix(canonical)
+            return String(decoding: buffer.prefix { $0 != 0 }.map { UInt8(bitPattern: $0) }, as: UTF8.self)
+                .hasPrefix(canonical)
         }
     }
 
