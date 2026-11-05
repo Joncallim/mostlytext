@@ -1,11 +1,12 @@
 # Remaining engineering and acceptance ownership — 5 November 2026
 
-The live 5 November audit contains 17 open issues and 179 unchecked
+The live 5 November audit contains 17 open issues and 178 unchecked
 checkbox rows after #9 source/offline reconciliation and the three evidence-
 handling rows verified by [PR71](https://github.com/Joncallim/mostlytext/pull/71),
 merged as `a95ff1fc4498e925eb1582fa6eb9e7fab5baf5ad`. These cover compliance-gate
 consumption, delegated finding ownership and full audit-gate consumption; native,
-rights and exact-artifact acceptance remain open.
+rights and exact-artifact acceptance remain open. The current public-copy audit
+is also checked after the separately approved [website claims correction](downstream/website-public-claims-2026-11-05.md); new release copy and exact-RC claims require rechecking.
 Three issues use prose rather than checkbox criteria;
 that does not make them complete. These are broad acceptance contracts, not
 17 newly discovered bugs.
@@ -70,6 +71,39 @@ Scoped source/resource evidence is recorded in
 remaining contracts below still apply. Historical PR numbers resolve through
 [ISSUE_TRANSFER_MAP.md](ISSUE_TRANSFER_MAP.md).
 
+## Source correctness corrections — 5 November 2026
+
+Four bounded defects found during the remaining-work review have separate
+architecture, old-source counterexamples, source-identical non-GUI fixtures and
+full hosted qualification. They do not close the broader Preview/Export,
+editor, outline, native or performance contracts.
+
+| Unit | Corrected behavior | Focused evidence | Hosted package evidence |
+|---|---|---|---|
+| [PR72](https://github.com/Joncallim/mostlytext/pull/72), merged `eacaa519` | Diagram export consumes the parser's code literal, preserving operators/indentation while removing Markdown quote/list container syntax. Original source ranges remain unchanged. | Old source: 40 actual input failures. Fixed: 69 tests/8 suites, Debug and Release. | [CI41941336364](https://github.com/Joncallim/mostlytext/actions/runs/41941336364): 3,440 tests/480 suites. |
+| [PR73](https://github.com/Joncallim/mostlytext/pull/73), merged `f9290aa0` | Front-matter boundaries accept LF, CRLF and CR with exact original UTF-16 offsets and body slices. The existing normalized YAML-value policy remains. | Old source: 28 failures. Fixed: 101 tests/10 suites, Debug and Release. | [CI41942156434](https://github.com/Joncallim/mostlytext/actions/runs/41942156434): 3,445 tests/481 suites. |
+| [PR74](https://github.com/Joncallim/mostlytext/pull/74), merged `d85a5052` | Format JSON's stale-result guard rejects byte-different NFC/NFD text, retaining both revision counters. | Old source: two pure-guard failures. Fixed: all 98 JSON tests/12 suites, Debug and Release. | [CI41943124862](https://github.com/Joncallim/mostlytext/actions/runs/41943124862): 3,446 tests/482 suites. |
+| [PR75](https://github.com/Joncallim/mostlytext/pull/75), merged `28a4c141` | Distinct punctuation/Unicode JSON keys have distinct outline IDs; byte-changed text rebuilds current ranges. | Old source: 16 failures. Fixed: 166 tests/21 suites, Debug and Release. | [CI41944626804](https://github.com/Joncallim/mostlytext/actions/runs/41944626804): 3,450 tests/484 suites. |
+
+Each complete hosted run retains the two existing known Neon issues and also
+passes all 619 non-UI app tests/127 suites, locked Debug/Release app and public
+mostlytext builds, metadata/catalog checks, test-target compilation, pinned
+format/strict lint and final dependency pins. All 316 local Compliance controls
+and source inventory pass at each fixed head. The reconciled documentation
+checkpoint repeats all 316 controls/source inventory; strict release checking
+still fails with the same six recorded predicates. Exact qualified-head/merge trees
+are checked before recording integration. The committed source packets are
+[parser literal](downstream/evidence/parsed-diagram-source-2026-11-05/README.md),
+[line endings](downstream/evidence/front-matter-line-endings-2026-11-05/README.md),
+[format guard](downstream/evidence/json-format-source-identity-2026-11-05/README.md)
+and [outline identity](downstream/evidence/json-outline-identity-2026-11-05/README.md).
+
+No local product, AppKit, SwiftUI or WebKit execution occurred. Hosted
+model/component evidence does not establish mounted editor, sidebar/keyboard/
+VoiceOver, native export or installed-state behavior. Parser payload/outline-ID
+memory costs still need whole-app calibration. The prior renderer failures,
+six strict compliance predicates and protected native execution hold remain.
+
 ## Work still requiring implementation or diagnosis
 
 | Owner | Remaining work and completion evidence |
@@ -82,7 +116,7 @@ remaining contracts below still apply. Historical PR numbers resolve through
 | [#13 HTML preview](https://github.com/Joncallim/mostlytext/issues/13) | The production consumer still uses the legacy handler. The bounded grant/handler must not be activated without the required native request/root/MIME/cancellation/containment proof. The preserved draft was closed without merge or acceptance. |
 | [#14 attribution](https://github.com/Joncallim/mostlytext/issues/14) | Technical disposition of the final 100 parser references is complete with zero technical remainder; the [entire tagged URI prebundle archive now reproduces](../compliance/evidence/uri-prebundle-reproduction/README.md), with historical publisher execution still unattested; original frozen unclassified columns are historical and their effective categories are populated. Independent embedded/generated IP/grant, D2/font/source and complete Graphviz per-file/runtime review and approved source publication remain. Captured Go 1.24.6 standard-library and compiler-rt texts are distributed conservatively; they do not waive those reviews. LC-08's original Help-menu entry now reuses the existing shared scene; genuine native menu/window acceptance remains separate. Captured package texts and conservative build-input notices now ship. |
 | [#15 WebKit](https://github.com/Joncallim/mostlytext/issues/15) | Controlled extended-session reproduction/root-cause diagnosis remains. Hosted fixture/alert/IconServices corrections do not explain or close the original WebKit hang. Preserve failed-run samples; do not change timeouts or label a retry as a fix. |
-| [#16 identity](https://github.com/Joncallim/mostlytext/issues/16) | The owner-approved social preview is installed and publicly verified; repository/backlog cutover and compiled document-rank/helper corrections are complete. Finish approved document artwork, native Finder/Open With, update-channel and installed-state evidence. Website `0d04102` is [deployed and publicly verified](downstream/website-brand-deployment-2026-11-04.md), preserving the router/settings, historical links and dated roadmap; this does not satisfy native/update/installed-state acceptance. Retained internal/storage identifiers are intentional. |
+| [#16 identity](https://github.com/Joncallim/mostlytext/issues/16) | The owner-approved social preview is installed and publicly verified; repository/backlog cutover and compiled document-rank/helper corrections are complete. Finish approved document artwork, native Finder/Open With, update-channel and installed-state evidence. Website identity `0d04102` and the current `b354a6b7` [public-claims correction](downstream/website-public-claims-2026-11-05.md) are deployed and publicly verified, preserving the router/settings, historical links and dated roadmap; this does not satisfy native/update/installed-state acceptance. Retained internal/storage identifiers are intentional. |
 | [#17 audit](https://github.com/Joncallim/mostlytext/issues/17) | Reconcile each directly owned finding with its exact fix/proof and each delegated finding with its owner. Repeat the final whole-repository review on the post-fix baseline and retain required native lifecycle proof. |
 | [#18 parsing performance](https://github.com/Joncallim/mostlytext/issues/18) | Remaining whole-document work and genuine 1 MiB Release keystroke budget need resolution/proof. Retained measurements above budget are failures, not superseded by smaller component timings. |
 | [#19 highlighting](https://github.com/Joncallim/mostlytext/issues/19) | The original point/byte geometry criterion is checked with PR43's actual constructor/endpoint proof. Establish the original Debug abort's exact offset/limit trigger in a mounted editor; deterministic stale parse/style interleavings, mounted geometry/lifecycle/IME and Release stress proof remain. Scanner safety fixes do not close all these paths. |
