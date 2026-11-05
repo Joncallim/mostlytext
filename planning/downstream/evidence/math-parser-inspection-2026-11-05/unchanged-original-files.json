@@ -1,0 +1,395 @@
+{
+  "base": "0b5c2cfaaec8d6193db206f675048eeb5ce95f71",
+  "unchanged_original_files": [
+    {
+      "path": ".editorconfig",
+      "sha256": "f1d46723c20a6b2ca80ab8be76722f448a29f9ebc015f17cc8ee805b289e6ff5"
+    },
+    {
+      "path": ".github/CODE_OF_CONDUCT.md",
+      "sha256": "8f686afe9b0c4dd378a68d610ecc1ca2f5867b765f6d68171c387ea32c48eb2c"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/bug_report.yml",
+      "sha256": "08606542b49159a876ba82fe4d22aa29ce7718075e5d37b02cb2d07df273bd9a"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/config.yml",
+      "sha256": "a5a1b662e3498cac7a6467014459a8ad8f14973985f475cfea3fafa63d1eef36"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "558ba3b382a86b4e49773b445c4064795baaddcf44198491f4304eebbd948109"
+    },
+    {
+      "path": ".github/workflows/format.yml",
+      "sha256": "8fe12899f77a5163631f25bda43178a3e86f333083ef686023b85d2e305cae91"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "89344a5a349d5f44d6abe503de6759300b8eff1f9fc3b8d4984df514bfb84493"
+    },
+    {
+      "path": ".spi.yml",
+      "sha256": "17db15ae45a03d09a414c519b0ba7c83d08d856a834f1c6e5cc942112e8bf8ed"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "sha256": "3d983ab25c41593e8d0057e57ac88aef85bf69f3a6e97939487f42265cfc082b"
+    },
+    {
+      "path": "DemoDark.png",
+      "sha256": "d87dc62658c827a43175b77be1253ee3d8be1165c9a22a67d018776e712f0ad0"
+    },
+    {
+      "path": "DemoLight.png",
+      "sha256": "000486953d83efb27c0666fb66847b73acf0b95481281bae395f40c1844e1b36"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "10023a3a8bab8cd2206023303aa8d104a9d1cfb184e18a2f7a48b5b34fc0bb8f"
+    },
+    {
+      "path": "Makefile",
+      "sha256": "aa055de3738510d8f08a6c22421b03bb7887b451ba50dce85ac3aa52fb1a81c0"
+    },
+    {
+      "path": "Package.resolved",
+      "sha256": "5581d08ac4569043682187d0889e2818858051a55cbe9370aeaf9211da5de62c"
+    },
+    {
+      "path": "Package.swift",
+      "sha256": "8afcfa9c5abf8aae9a32d812ca852caa7172fa3be830e88ab6a3229bffeffe6f"
+    },
+    {
+      "path": "README.md",
+      "sha256": "a87fe72b22ccd6bbf583cd8316f2c202ea5292712304c37d4f7aee9cc5c1dc1f"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Font.swift",
+      "sha256": "6dd9c3a8e0ae455a309624b25c5e5453332161ef0f1543ec5a39d79dc15a7eef"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Display/CGContext+DisplayNode.swift",
+      "sha256": "2a87e6dfdbbb26c7a632552d24ac5dfa75212da93d06521310e339ce8523ca83"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Display/DisplayAccent.swift",
+      "sha256": "c1da2065a495b9ad2c023d948cd8e26dc45ad65e182f14d0bb9a671189b4ae8e"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Display/DisplayFraction.swift",
+      "sha256": "97b62f59b86e2df17ea519e1f3289f13bd6e9e10300f1f8c4e5249639a131d71"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Display/DisplayGlyph.swift",
+      "sha256": "d8870cc03809420f00b67ae8eef5d4b1492c47b9774bed87ef26aa57b2d152b8"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Display/DisplayGlyphRun.swift",
+      "sha256": "8ca90c80055eccb9da53c4d93a14878f751b7aaeb53ccbb7fc9e26ec981e1a71"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Display/DisplayLargeOperator.swift",
+      "sha256": "23c60965753a5892dde8578ec10a6da908ee885a91141545d8d56de76a4181a5"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Display/DisplayLine.swift",
+      "sha256": "2f93ebac52c65c70fb8fe69594805c75d43d814e4a1fcd37394414681103cdfe"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Display/DisplayList.swift",
+      "sha256": "af15edca1def90ee8a1a62a2ea8d4361b9a7252299f742d5738cbb4a62f02e14"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Display/DisplayNode.swift",
+      "sha256": "f93ab1623fe91259497e21a62d8c7bd31f9950bcf05720818d4697057a61fde8"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Display/DisplayProvider.swift",
+      "sha256": "42d451f5febfbcd25b0d53b4e408b97d43a9c392944700212749dcd8c4e19a41"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Display/DisplayRadical.swift",
+      "sha256": "6fd6bd1b45a97801032312378130bf93f681fa3402b2bd863e22d2402cd4b8b3"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Display/DisplayShiftedNode.swift",
+      "sha256": "09ec7b9a9f44151509aa254df5fc9114520726fe72be4925386d49d6ebd22149"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Display/DisplayTextRun.swift",
+      "sha256": "d96db43dff4f029a1b410a817ea211b79b4faad40363533217a91a85f004929e"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Display/GraphicsContext+DisplayNode.swift",
+      "sha256": "43aa0b7cef424e3c3a8e4ae700334562bad8921bb685dab79fb30ab5bead82b7"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Display/Typesetter.swift",
+      "sha256": "8e523cf1fc290f6d43da8b319e33664bbfcbe926138be28d0f37d58c5c4b5f3d"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Font/FontMetrics.swift",
+      "sha256": "04232ec8884c93f34d5e2be609624581deebf7f0203d01228ccbccfc6d743eed"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Font/FontRegistry.swift",
+      "sha256": "076ece145bb3e40c21177c46112617f4f2a36c95b1d5d06bba99a6ec3fc7e9e0"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Font/FontTable.swift",
+      "sha256": "7421745ebbe8ff90ef6e91009c557c3f1d5422090c106a83b246432b869af522"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Font/PlatformFont.swift",
+      "sha256": "dbde4b8209d978ec3d66feee10babeba4746fc3f3f58b39f9a5520f4a7f668ca"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Helpers/CGColor+HexString.swift",
+      "sha256": "8bcd95e47a07c99c27400328caa83ce0e1273655549e45e3b831506b3b76179c"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Helpers/KeyBox.swift",
+      "sha256": "79ba73aa03e66535bfc3654e1d89cb89e3c5ba8a3f92da94766aae8169cbe6f0"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Helpers/ReadWriteLockIsolated.swift",
+      "sha256": "bc2279e5c9c5718ec4eafa50573bc8a0e8d378ee47cb6e9eaa6b56f9af4702b0"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Helpers/Unicode.swift",
+      "sha256": "432fce6aef8458b55233040721fb2666223462697c4ac6f47652b26716f9a46d"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/AtomFactory.swift",
+      "sha256": "5248827ba96db91e6d18b2fff4967dbbb7ff77ae80a8600fb1ee231e646bc070"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/AtomList.swift",
+      "sha256": "cacebb4fcbb1001ab36a857f526f0b5286f0eb8a75b12d46f1106b392ce53610"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Accent.swift",
+      "sha256": "7a9da302a6c0dd7734ac0520c80ef4f4ea06a12052cfbfc55de9548877248e3e"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Color.swift",
+      "sha256": "072c1620069865edd8e213cd754c777ae7785cb56451ca5963c4b04079a958aa"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/ColorBox.swift",
+      "sha256": "84f5a0f10fac65540c619f41d9526ad76a79354d9f2d769e44bfe7f0526a4d16"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Fraction.swift",
+      "sha256": "c14827a1eae8282a9660fd0a8caa9fe94b8b5e091dd3bce2c58e4e8bac14489a"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Inner.swift",
+      "sha256": "5f8e8808a55b0453e86f8df00e223e76437c26cf2b5bb0bcd28820316b18a516"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/LargeOperator.swift",
+      "sha256": "ac2baf07070622fb5e25c3e6b1af2ca286ffa12498037e75bcf7184b070f2563"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Overline.swift",
+      "sha256": "7226166c72ebb2c8361c566c6368ad634c8817a9cd3a48890aebeff6c4d9b607"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Radical.swift",
+      "sha256": "f1f18767326f7f3f76906fa8c1bf7b21c7d1a8b6b4efdbfa62c45fa472da9cdf"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Space.swift",
+      "sha256": "3c7fc3d4aaa50de6fe799d115b04ba51fc77c82bee074d0e3863d79540b960be"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Style.swift",
+      "sha256": "fe20c9828a7b3a88f63b6259ef4c0e7077e4b713a293e290a65f83ac6985e3ad"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Table.swift",
+      "sha256": "c6a3d4ba3769699a70fb41bab58982595865f37f721d0bd6465b4fd82cfe5aed"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/TextColor.swift",
+      "sha256": "8efbf0982cbd7b573c866312abf8b8071c8831f7c93e3f465c4ba86aa272c42f"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Underline.swift",
+      "sha256": "bb867bd43f3afd8fed05f267434b17e1dd05cb8aff690e7bb8756c3be2a08a4b"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Math.swift",
+      "sha256": "af74be18ad5bbd149b4c0aa7720d8e664294e8bc4d7f1916cce76378444c3a49"
+    },
+    {
+      "path": "Sources/SwiftUIMath/RenderingMode.swift",
+      "sha256": "7e574e9f2557528a472a7d883d9fa87acd84cb2cc7f875afa044c2c389d989b2"
+    },
+    {
+      "path": "Sources/SwiftUIMath/TypesettingStyle.swift",
+      "sha256": "caa61abee181c26cf166c6da1968582250c5703ac2c96e8f04892582d5648721"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/Asana-Math.otf",
+      "sha256": "b0d9e681c08ff1f4dc6ebf085cc962585ec12cdbd25dc6225890b9f8fd12d568"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/Asana-Math.plist",
+      "sha256": "97ebe044f4c5bdc91ff522bdfb0425f1f88013e8b40bdecdbc9ba6c574e141fb"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/Euler-Math.otf",
+      "sha256": "bd07fef1faecea7fa4a89256e4e06ef94b19e23b1785db6e420229fda37c2efb"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/Euler-Math.plist",
+      "sha256": "7b8f745068f1583ea83a18da079bdecb94e2b7c73ba72a0e89f4edbb2c3a9f9e"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/FiraMath-Regular.otf",
+      "sha256": "2028cbd3dd4d8c0cf1608520eb4759956a83a67931d7b6d8e7c313520186e35b"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/FiraMath-Regular.plist",
+      "sha256": "b32d6388ee5769b6e68ffcc6f660dc73818ef6686ee846f041c2afd4ba6a0305"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/GUST-FONT-LICENSE.txt",
+      "sha256": "2bd69affc3da00715116f713f57eab9707e96daf3562ad0215987b15b9c16f73"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/Garamond-Math.otf",
+      "sha256": "c6161377e97084152b948f62abe874cbe27405938956346b54a4c6488a5009f1"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/Garamond-Math.plist",
+      "sha256": "2fe6c519cbf876e42ec601a14ca615e9bf38f51be6b92ef0bba26cf9ee45f780"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/KpMath-Light.otf",
+      "sha256": "aa6713ae76838a7db9eefe4f503b963dad50df77555ff67a50b72eb832221660"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/KpMath-Light.plist",
+      "sha256": "aaca68ecef79f005f41568df36ac467ec24a2b6732336ec8c357a156e3f4e114"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/KpMath-Sans.otf",
+      "sha256": "a9e82575a514f10ceed193d393bf2ea6ac82980ce7eb8c81be085df159a8c253"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/KpMath-Sans.plist",
+      "sha256": "3db5772fa9fbf71c96ca37eccaf38d8c2d32406c9bda8343d23a3cc0c9de348e"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/LICENSE",
+      "sha256": "431b2cb82b8a55977323598231f1baa44f32accac1231b4781a9a393d0bc29ed"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/LeteSansMath.otf",
+      "sha256": "b9242115e4d41b9ccbe179340d4ddaf5598863389a23677eefb87e8950781313"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/LeteSansMath.plist",
+      "sha256": "b00eeb445c4f525ec53391841d8b6e75c9ede23bbfa77a34c8a720ac8b7bc408"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/LibertinusMath-Regular.otf",
+      "sha256": "e81bd44acbb7119c8f00128b36fecc5d980e10d2450a226ba52402ccf4da9d32"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/LibertinusMath-Regular.plist",
+      "sha256": "35701c3b94bea93016a9161d017bacebd0954025644456aa8b47d0145fede503"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/NotoSansMath-Regular.otf",
+      "sha256": "9dda7e17fa67b7e34083798f56faf5e53ac524456e730ead35c2957e4397ca28"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/NotoSansMath-Regular.plist",
+      "sha256": "232aced02fe2d81553a1545c551d8d5fe824aae0c8c860f18bb10af3f4145c03"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/OFL.txt",
+      "sha256": "a96bed88f867f6a5bbe78ced4ca52a3ce6e002475363d86edd9097b2f8206d8d"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/latinmodern-math.otf",
+      "sha256": "6075562b771f8b82f0c179e363389684f2dd09de30038269e2628e504bd7be0f"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/latinmodern-math.plist",
+      "sha256": "201e6a483783415f335328f2d02b356fe55cd478eb0cd052898236589c8cb946"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/math_table_to_plist.py",
+      "sha256": "62a8e69ae5230b0420a34e28d9b6a44bd1127127e2d1c6ac0f06566583dafb3e"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/texgyretermes-math.otf",
+      "sha256": "e5ce42b4fe826b7ea4c0874359decf0b294439355c511a4794107a9924e2cd5a"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/texgyretermes-math.plist",
+      "sha256": "57ddeac7c51e1342aeb30fb72f6beb4d2f3ee7d51bfb1e07ab9150c06f7ec3c8"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/xits-math.otf",
+      "sha256": "d76666cb2dc222b4a811db96c41cc1853988b91008ec44a194126b4e010a5c6c"
+    },
+    {
+      "path": "Sources/SwiftUIMath/mathFonts.bundle/xits-math.plist",
+      "sha256": "e64b5302d65885a302b34eb2eb1e14c6a66f4c652fcbcd4893411361baae0363"
+    },
+    {
+      "path": "Tests/SwiftUIMathTests/Internal/Display/TypesetterTests.swift",
+      "sha256": "777790b8b0b651c62eb90bf91661f15b630d849c2ef63db0ad22398e96cd838e"
+    },
+    {
+      "path": "Tests/SwiftUIMathTests/Internal/Font/FontMetricsTests.swift",
+      "sha256": "60845cf0d87fcd0c89b9cb1dfc28831ddfca59da4cc2721ef26903a7892d0148"
+    },
+    {
+      "path": "Tests/SwiftUIMathTests/Internal/Syntax/AtomListTests.swift",
+      "sha256": "9c4499d5a8e3089f23357fc37770e4056469f4e8c2f10a4cc98ee742d210bf86"
+    },
+    {
+      "path": "Tests/SwiftUIMathTests/Internal/Syntax/ParserTests.swift",
+      "sha256": "b87870658906f20bdb3add958c473fa3228248a634e9120eb3e1b11d359f614d"
+    },
+    {
+      "path": "Tests/SwiftUIMathTests/MathTests.swift",
+      "sha256": "7d80fdf7f99fdd9df4fe44bf84a9cf5c284b30f0008f59ae147ae13b7f8e3bf7"
+    },
+    {
+      "path": "Tests/SwiftUIMathTests/__Snapshots__/MathTests/displayAndInlineStyles.1.png",
+      "sha256": "7e8fa8ccf1e96fed9f7fc7be93bc8f2277f86fa24bcec72e20ec70dc173a8e72"
+    },
+    {
+      "path": "Tests/SwiftUIMathTests/__Snapshots__/MathTests/inlineTextWrapping.1.png",
+      "sha256": "0f9d197e23a36433ba6ebc3c4e26d6962f828ff324feb40ccb4679d68fe955b7"
+    },
+    {
+      "path": "Tests/SwiftUIMathTests/__Snapshots__/MathTests/largeOperatorsAndLimits.1.png",
+      "sha256": "8e20098875ce40cfb5d66e8738a3aad4e0d6ad127abb9b209e7bd5deb96204dc"
+    },
+    {
+      "path": "Tests/SwiftUIMathTests/__Snapshots__/MathTests/matricesAndCases.1.png",
+      "sha256": "37ba94cc01a258fc684d89b502db8ff2f5dfd05fbebcfef54683a49e4184c4d0"
+    },
+    {
+      "path": "Tests/SwiftUIMathTests/__Snapshots__/MathTests/multicolorExpressions.1.png",
+      "sha256": "2bda94b9c7c79b25be4bc681fe5855c90043245bfa1e725e89d9474d344314c8"
+    }
+  ],
+  "only_changed_original_file": "Sources/SwiftUIMath/Internal/Syntax/Parser.swift",
+  "new_files": [
+    "Sources/SwiftUIMath/Internal/Syntax/CommentSource.swift",
+    "Sources/SwiftUIMath/Math+BodyInspection.swift",
+    "Tests/SwiftUIMathTests/BodyInspectionTests.swift"
+  ]
+}

@@ -46,12 +46,27 @@ These are parser safety ceilings, not whole-app performance claims or the final
 product equation admission policy. Existing String API behavior remains compatible
 except the intended comment correction; it is not newly advertised as bounded.
 
-Bare percent through the next LF/CRLF/CR is lexically masked using equal UTF-16
-length ASCII spaces. Odd backslash parity escapes percent; even parity starts a
-comment. Preserve line endings and original body bytes outside the parser's
-private lexical buffer. Scalar scanning handles combining/Prepend neighbors.
-The old public String parser applies the same correction after delimiter handling.
+Bare percent through the next LF/CRLF/CR, including that comment-ending newline,
+is removed only from the private parser input, with a sparse original-offset map. Odd backslash parity escapes percent; even parity starts a
+comment. Preserve all original body bytes and all non-comment line endings. Scalar scanning handles combining/Prepend neighbors.
+The old String parser preserves its existing delimiter detection, then applies
+the same comment correction. Raw-body inspection applies it directly to the
+complete authored body.
+A masked-space approach is rejected because spaces would become visible inside
+text commands. The offset map records each removed source range at its resulting
+parser UTF-16 boundary; right-biased lookup maps following tokens to their exact
+original positions, with end-of-input mapping to original body end.
 Raw-body inspection never strips inner dollar delimiters or trims source.
+
+Comment boundaries terminate command names without adding visible spaces; the
+boundary indices are indexed once in a scalar walk, avoiding repeated prefix
+UTF-16 scans while parsing command characters. See Knuth's TeX82 control sequence
+scanner, sections 354-356: https://tug.ctan.org/info/knuth-pdf/tex/tex.pdf.
+The preimplementation comment-removal candidate incorrectly joined command names;
+three failing LF/CRLF/CR assertions are retained before the boundary correction.
+The same adversarial scope also proves and fixes an original truncated cfrac
+optional-alignment out-of-bounds assertion. Missing alignment/closing bracket
+becomes the existing characterNotFound error, retaining all valid controls.
 
 ## State, failures and concurrency
 
@@ -66,7 +81,7 @@ Character counts. No document-generation publishing or UI state is added here.
 
 Before/after actual parser tests cover all three line endings, EOF, escaped and
 even-parity percent, comments containing delimiters/invalid commands, comments in
-text commands, Unicode around percent and exact source-length preservation.
+text commands, Unicode around percent and exact original-offset preservation.
 Inspection covers every structured error family available in the corpus, original
 UTF-16 offsets including emoji and CRLF, raw-body versus old auto mode, empty and
 valid input, depth/step/input boundaries and cancellation. Original upstream

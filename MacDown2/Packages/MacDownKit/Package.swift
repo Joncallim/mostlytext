@@ -80,14 +80,13 @@ let package = Package(
         .package(url: "https://github.com/Joncallim/swift-cmark", revision: "2a5339b89b219584c8fa6c6fd378d3898eed5d57"),
         .package(url: "https://github.com/scinfu/SwiftSoup", exact: "2.13.9"),
         .package(url: "https://github.com/jpsim/Yams", exact: "6.2.2"),
-        .package(url: "https://github.com/Joncallim/textual", revision: "9077b0f608bd464ee4de880c0ff4c0c8441e698d"),
-        // Only a transitive dependency of `textual` (via its own Package.swift)
-        // until this pin: `textual` does not re-export `SwiftUIMath` as one of
-        // its own products, so `MathRendering` (below) needs this explicit,
-        // same-version pin to import it directly (epic-19-implementation.md
-        // §16). Pinned to the exact version the Textual fork itself requests
-        // (`from: "0.1.0"`), so SwiftPM resolves one shared copy, not two.
-        .package(url: "https://github.com/gonzalezreal/swiftui-math", exact: "0.1.0"),
+        .package(url: "https://github.com/Joncallim/textual", revision: "0667f45c5c0d66e301b8e98f93a9137f2d986308"),
+        // Match Textual's immutable engine owner/revision, so Preview and Export
+        // share one parser, comment correction and structured body-inspection API.
+        .package(
+            url: "https://github.com/Joncallim/swiftui-math",
+            revision: "d80a744b21d0045265e66e91876586ddcfac495d"
+        ),
     ],
     targets: [
         .target(name: "FileCore", dependencies: ["JSONSupport"], resources: [.process("Resources")]),
@@ -234,7 +233,10 @@ let package = Package(
         .testTarget(name: "ContributionsTests", dependencies: ["Contributions", "MarkdownEngine"]),
         .testTarget(name: "TextFiltersTests", dependencies: ["TextFilters"]),
         .testTarget(name: "MathTests", dependencies: ["Math", "MarkdownEngine"]),
-        .testTarget(name: "MathRenderingTests", dependencies: ["MathRendering"]),
+        .testTarget(
+            name: "MathRenderingTests",
+            dependencies: ["MathRendering", .product(name: "SwiftUIMath", package: "swiftui-math")]
+        ),
         .testTarget(name: "DiagramsTests", dependencies: ["Diagrams", "MarkdownEngine"]),
         .testTarget(name: "DiagramRenderingTests", dependencies: ["DiagramRendering", "DiagramWebKitPool"]),
         .testTarget(name: "DiagramsD2Tests", dependencies: ["DiagramsD2", "MarkdownEngine", "Themes"]),

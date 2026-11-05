@@ -3993,7 +3993,7 @@
       "externalReferences": [
         {
           "type": "vcs",
-          "url": "https://github.com/gonzalezreal/swiftui-math"
+          "url": "https://github.com/Joncallim/swiftui-math"
         }
       ],
       "licenses": [
@@ -4002,6 +4002,9 @@
         }
       ],
       "name": "SwiftUIMath",
+      "pedigree": {
+        "notes": "Narrow child of upstream 0.1.0: preserve authored TeX comments and control-word boundaries, expose existing parser diagnostics with original-body UTF-16 cursors and required inspection limits, and reject truncated optional alignment safely. All fonts, licences, original tests and unrelated files are unchanged."
+      },
       "properties": [
         {
           "name": "mostlytext:kind",
@@ -4013,12 +4016,12 @@
         },
         {
           "name": "mostlytext:resolution",
-          "value": "exact"
+          "value": "revision"
         }
       ],
-      "purl": "pkg:github/gonzalezreal/swiftui-math@0b5c2cfaaec8d6193db206f675048eeb5ce95f71",
+      "purl": "pkg:github/joncallim/swiftui-math@d80a744b21d0045265e66e91876586ddcfac495d",
       "type": "library",
-      "version": "0.1.0"
+      "version": "d80a744b"
     },
     {
       "bom-ref": "swiftui-math-fonts",
@@ -4080,9 +4083,9 @@
           "value": "exact"
         }
       ],
-      "purl": "pkg:github/joncallim/textual@9077b0f608bd464ee4de880c0ff4c0c8441e698d",
+      "purl": "pkg:github/joncallim/textual@0667f45c5c0d66e301b8e98f93a9137f2d986308",
       "type": "library",
-      "version": "9077b0f6"
+      "version": "0667f45c"
     },
     {
       "bom-ref": "theme-daybreak",
@@ -5248,7 +5251,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:a502cb94-1a7d-56ba-a8a5-3b0916429dc1",
+  "serialNumber": "urn:uuid:917cf67d-eb18-5f45-942a-28010a431f18",
   "specVersion": "1.5",
   "version": 1
 }

@@ -1,5 +1,5 @@
 {
-  "originHash" : "4c5b2f2d1de93df0751b289509a45ee755de21529c9b0e7fbf95190ce7e2c9cc",
+  "originHash" : "a919b94ea4f2fad03d34fef14e1e49d6b5f324f8f967e984efef976bafe27899",
   "pins" : [
     {
       "identity" : "neon",
@@ -72,10 +72,9 @@
     {
       "identity" : "swiftui-math",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/gonzalezreal/swiftui-math",
+      "location" : "https://github.com/Joncallim/swiftui-math",
       "state" : {
-        "revision" : "0b5c2cfaaec8d6193db206f675048eeb5ce95f71",
-        "version" : "0.1.0"
+        "revision" : "d80a744b21d0045265e66e91876586ddcfac495d"
       }
     },
     {
@@ -83,7 +82,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Joncallim/textual",
       "state" : {
-        "revision" : "9077b0f608bd464ee4de880c0ff4c0c8441e698d"
+        "revision" : "0667f45c5c0d66e301b8e98f93a9137f2d986308"
       }
     },
     {

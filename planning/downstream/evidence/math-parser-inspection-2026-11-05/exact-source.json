@@ -1,0 +1,78 @@
+{
+  "upstream_revision": "0b5c2cfaaec8d6193db206f675048eeb5ce95f71",
+  "exact_foundation_files": [
+    {
+      "path": "Sources/SwiftUIMath/Internal/Helpers/Unicode.swift",
+      "sha256": "432fce6aef8458b55233040721fb2666223462697c4ac6f47652b26716f9a46d"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Helpers/ReadWriteLockIsolated.swift",
+      "sha256": "bc2279e5c9c5718ec4eafa50573bc8a0e8d378ee47cb6e9eaa6b56f9af4702b0"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/AtomList.swift",
+      "sha256": "cacebb4fcbb1001ab36a857f526f0b5286f0eb8a75b12d46f1106b392ce53610"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Parser.swift",
+      "sha256": "5a69f1b6893c40f69675bddb57fb3a5cf4878282c1d807fedccbac6af31ef7d6"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/AtomFactory.swift",
+      "sha256": "5248827ba96db91e6d18b2fff4967dbbb7ff77ae80a8600fb1ee231e646bc070"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Radical.swift",
+      "sha256": "f1f18767326f7f3f76906fa8c1bf7b21c7d1a8b6b4efdbfa62c45fa472da9cdf"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/TextColor.swift",
+      "sha256": "8efbf0982cbd7b573c866312abf8b8071c8831f7c93e3f465c4ba86aa272c42f"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Underline.swift",
+      "sha256": "bb867bd43f3afd8fed05f267434b17e1dd05cb8aff690e7bb8756c3be2a08a4b"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Space.swift",
+      "sha256": "3c7fc3d4aaa50de6fe799d115b04ba51fc77c82bee074d0e3863d79540b960be"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Overline.swift",
+      "sha256": "7226166c72ebb2c8361c566c6368ad634c8817a9cd3a48890aebeff6c4d9b607"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Accent.swift",
+      "sha256": "7a9da302a6c0dd7734ac0520c80ef4f4ea06a12052cfbfc55de9548877248e3e"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Table.swift",
+      "sha256": "c6a3d4ba3769699a70fb41bab58982595865f37f721d0bd6465b4fd82cfe5aed"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Fraction.swift",
+      "sha256": "c14827a1eae8282a9660fd0a8caa9fe94b8b5e091dd3bce2c58e4e8bac14489a"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/ColorBox.swift",
+      "sha256": "84f5a0f10fac65540c619f41d9526ad76a79354d9f2d769e44bfe7f0526a4d16"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Inner.swift",
+      "sha256": "5f8e8808a55b0453e86f8df00e223e76437c26cf2b5bb0bcd28820316b18a516"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Style.swift",
+      "sha256": "fe20c9828a7b3a88f63b6259ef4c0e7077e4b713a293e290a65f83ac6985e3ad"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/LargeOperator.swift",
+      "sha256": "ac2baf07070622fb5e25c3e6b1af2ca286ffa12498037e75bcf7184b070f2563"
+    },
+    {
+      "path": "Sources/SwiftUIMath/Internal/Syntax/Atoms/Color.swift",
+      "sha256": "072c1620069865edd8e213cd754c777ae7785cb56451ca5963c4b04079a958aa"
+    }
+  ],
+  "namespace_only_wrapper": "empty enum Math instead of SwiftUI View; no runtime method changed"
+}
