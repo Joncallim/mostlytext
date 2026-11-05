@@ -1,0 +1,160 @@
+{
+  "neon": "cd14f22ae8f8402b175a0bafd87560b78c7549e9",
+  "app_baseline": "30d7692f3a535c0e8930a3b80ec2f2af92727e28",
+  "changed_lock_identities": [
+    "neon"
+  ],
+  "unchanged_pins": 23,
+  "licence_sha256": "d11b5eea8e9ae2f6dd06545633e8daf0dfcbc7dbb911a20d1504c905e5808775",
+  "source_files": [
+    {
+      "fixture": "Sources/OwnedStylingCore/Token.swift",
+      "owner": "Sources/Neon/Token.swift",
+      "sha256": "497b4b46036f876b49cff5178640c9d2b814cf206f30968bc422d794821be790"
+    },
+    {
+      "fixture": "Sources/OwnedStylingCore/TextSystemInterface.swift",
+      "owner": "Sources/Neon/TextSystemInterface.swift",
+      "sha256": "20c6b1a610d9142930bf9d20a009fccb05a0af2b43b54e36b49fc8258cd50c14"
+    },
+    {
+      "fixture": "Sources/OwnedStylingCore/TokenSystemValidator.swift",
+      "owner": "Sources/Neon/TokenSystemValidator.swift",
+      "sha256": "f63d2b157dcb32e1126cabb05cfda847a87e5f17fdb7c313db1b94bb98a49cc0"
+    },
+    {
+      "test": "MacDown2/Packages/MacDownKit/Tests/HighlightingTests/OnePhaseStyleVersionTests.swift",
+      "sha256": "98c380687dd8a9510d48a90083769b1346353cf6c4be7d031edcc4f523f56ccc"
+    }
+  ],
+  "logs": [
+    {
+      "raw_name": "app-compliance-tests.log",
+      "raw_bytes": 7515,
+      "raw_sha256": "27a9d85cbe99c580baec0bfeabb1c6a25760c417c95b9894197a0a21aa75a7c0",
+      "archive": "app-compliance-tests.log.gz"
+    },
+    {
+      "raw_name": "app-format.log",
+      "raw_bytes": 262,
+      "raw_sha256": "7b1e47345504ef8111ae7d0f6b118189004136d2028929e6e4ca1114296a8c0c",
+      "archive": "app-format.log.gz"
+    },
+    {
+      "raw_name": "app-generation.log",
+      "raw_bytes": 91,
+      "raw_sha256": "33c66bdb9775a00b493a8355dd44358cb655bcf075815ece63927cdf5f8f33d9",
+      "archive": "app-generation.log.gz"
+    },
+    {
+      "raw_name": "app-highlight-tests-compile.log",
+      "raw_bytes": 17706,
+      "raw_sha256": "6042998cdf45f32cb4ef196cae9c132b52a4224a7add99b8538a085358860f19",
+      "archive": "app-highlight-tests-compile.log.gz"
+    },
+    {
+      "raw_name": "app-inventory.log",
+      "raw_bytes": 54,
+      "raw_sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+      "archive": "app-inventory.log.gz"
+    },
+    {
+      "raw_name": "app-lint.log",
+      "raw_bytes": 70821,
+      "raw_sha256": "af8abf807eb3859a616e65e3f151f4ffa0df563ddb2691f993dfa47708950a34",
+      "archive": "app-lint.log.gz"
+    },
+    {
+      "raw_name": "app-resolve.log",
+      "raw_bytes": 7150,
+      "raw_sha256": "244922c7d0713717af5e4330d315e31a5f5d3ddf56ef7c4218a0b47a0e2225cf",
+      "archive": "app-resolve.log.gz"
+    },
+    {
+      "raw_name": "candidate-all-debug.log",
+      "raw_bytes": 15288,
+      "raw_sha256": "f475fcf4630265026e61da9a16854ca914931d26da9d493307ffcdc3b74f6eb1",
+      "archive": "candidate-all-debug.log.gz"
+    },
+    {
+      "raw_name": "candidate-all-release.log",
+      "raw_bytes": 17161,
+      "raw_sha256": "3b39b43af50df5c5ec5d7727938a1849a5a22e506980d857f4387dd95d11d6b8",
+      "archive": "candidate-all-release.log.gz"
+    },
+    {
+      "raw_name": "combined-compliance-tests.log",
+      "raw_bytes": 7515,
+      "raw_sha256": "77eb1dbde3517a87d00710d14842d94cb5264c071639cd57bd7abf9133f3fec2",
+      "archive": "combined-compliance-tests.log.gz"
+    },
+    {
+      "raw_name": "combined-format.log",
+      "raw_bytes": 262,
+      "raw_sha256": "288f3006e61552afaa8bba008fa3fab97623df70c69e89026932175d53a7b14b",
+      "archive": "combined-format.log.gz"
+    },
+    {
+      "raw_name": "combined-generation.log",
+      "raw_bytes": 91,
+      "raw_sha256": "33c66bdb9775a00b493a8355dd44358cb655bcf075815ece63927cdf5f8f33d9",
+      "archive": "combined-generation.log.gz"
+    },
+    {
+      "raw_name": "combined-highlight-tests-compile.log",
+      "raw_bytes": 150,
+      "raw_sha256": "ab4adede216462b9822eff0d5539d0ee05099c0738e13ee904df3472a4034290",
+      "archive": "combined-highlight-tests-compile.log.gz"
+    },
+    {
+      "raw_name": "combined-inventory.log",
+      "raw_bytes": 54,
+      "raw_sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+      "archive": "combined-inventory.log.gz"
+    },
+    {
+      "raw_name": "combined-lint.log",
+      "raw_bytes": 71145,
+      "raw_sha256": "707d6271d888e201735800613511c24ec50480c89121a6d225c7aaab75052753",
+      "archive": "combined-lint.log.gz"
+    },
+    {
+      "raw_name": "combined-resolve.log",
+      "raw_bytes": 106,
+      "raw_sha256": "675241d19f47928ed0cc94ce7ae4738b1fefee51c38a1add20e12bd70a8bc11b",
+      "archive": "combined-resolve.log.gz"
+    },
+    {
+      "raw_name": "explicit-provider-format.log",
+      "raw_bytes": 193,
+      "raw_sha256": "6a7952de85e76dad6790d669aeaad8b989efcf407540664a271841918d98f8f9",
+      "archive": "explicit-provider-format.log.gz"
+    },
+    {
+      "raw_name": "one-phase-test-format.log",
+      "raw_bytes": 193,
+      "raw_sha256": "6a7952de85e76dad6790d669aeaad8b989efcf407540664a271841918d98f8f9",
+      "archive": "one-phase-test-format.log.gz"
+    },
+    {
+      "raw_name": "one-phase-test-lint.log",
+      "raw_bytes": 217,
+      "raw_sha256": "d0781e44922b5b5125bcd1c2e5a5aa060b4cfc637450fc5be8f1070653ad26c9",
+      "archive": "one-phase-test-lint.log.gz"
+    },
+    {
+      "raw_name": "original-explicit-provider-version-tests.log",
+      "raw_bytes": 13403,
+      "raw_sha256": "03d1769d286222e1bbcd08348b921b4a51bcdae7b4456a3b98719f1ded56c82e",
+      "archive": "original-explicit-provider-version-tests.log.gz"
+    },
+    {
+      "raw_name": "original-one-phase-version-tests.log",
+      "raw_bytes": 23335,
+      "raw_sha256": "c39f8d1d60ccc9b79cc2dc437db02bcb6209159c0d287cb2de9ecba71c215aea",
+      "archive": "original-one-phase-version-tests.log.gz"
+    }
+  ],
+  "local_execution": "Foundation-only exact TokenSystemValidator/protocol/Token, recorded style callbacks; no AppKit/SwiftUI/WebKit/product execution",
+  "native_and_hosted_integration": "pending"
+}

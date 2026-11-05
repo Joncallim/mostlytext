@@ -574,9 +574,9 @@
       "id": "neon",
       "name": "Neon",
       "kind": "swiftpm",
-      "version": "ab93bca8",
+      "version": "cd14f22a",
       "upstream": "https://github.com/Joncallim/Neon",
-      "revision": "ab93bca8cc74af6f5e17eefc7fefa1999726a131",
+      "revision": "cd14f22ae8f8402b175a0bafd87560b78c7549e9",
       "resolution": "exact",
       "licence": "BSD-3-Clause",
       "copyright": [
@@ -597,9 +597,9 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "ab93bca8cc74af6f5e17eefc7fefa1999726a131"
+        "revision": "cd14f22ae8f8402b175a0bafd87560b78c7549e9"
       },
-      "evidence": "Owner patch over e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9 (original runtime dabf50c947148c49acd0d321dfe8f3805d10b3da). Refresh embedded-language validity before callbacks, await running validation/follow-up regions and reject obsolete queries. Preserve complete semantic tokens for attribute providers while a package-only iterator confines actual painting in all three native style interfaces. Both rejected styling boundaries and their failed hosted runs are retained; original BSD-3-Clause licence and parser/grammar pins are unchanged. Separate buffered-coordinate work, whole-editor latency and native acceptance remain open. This exact merge also shifts retained dirty intervals through later edits before new client invalidations, preserving surviving deletion tails, nested depth, all-document and reentrant scope ownership. Both client/style and buffer proofs and all first hosted failures are retained. Manifest-only child be25e35787585430f0f1ac845ed44c11e7f8150a pins the complete injection coverage repair; all Neon runtime and test bytes are unchanged from baf93c72924e31e16b84adced6ee29cb02934c3b. Dependency-metadata child ab93bca8cc74af6f5e17eefc7fefa1999726a131 pins the behavior-preserving tree-sitter lexer lookup fork; its runtime/test bytes are unchanged from the complete-injection-coverage predecessor. Original BSD licence remains unchanged. The runtime evidence packet preserves all original fresh-tree/Rustdoc failures as well as cross-runtime equivalence proof."
+      "evidence": "Owner patch over e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9 (original runtime dabf50c947148c49acd0d321dfe8f3805d10b3da). Refresh embedded-language validity before callbacks, await running validation/follow-up regions and reject obsolete queries. Preserve complete semantic tokens for attribute providers while a package-only iterator confines actual painting in all three native style interfaces. Both rejected styling boundaries and their failed hosted runs are retained; original BSD-3-Clause licence and parser/grammar pins are unchanged. Separate buffered-coordinate work, whole-editor latency and native acceptance remain open. This exact merge also shifts retained dirty intervals through later edits before new client invalidations, preserving surviving deletion tails, nested depth, all-document and reentrant scope ownership. Both client/style and buffer proofs and all first hosted failures are retained. Manifest-only child be25e35787585430f0f1ac845ed44c11e7f8150a pins the complete injection coverage repair; all Neon runtime and test bytes are unchanged from baf93c72924e31e16b84adced6ee29cb02934c3b. Dependency-metadata child ab93bca8cc74af6f5e17eefc7fefa1999726a131 pins the behavior-preserving tree-sitter lexer lookup fork; its runtime/test bytes are unchanged from the complete-injection-coverage predecessor. Original BSD licence remains unchanged. The runtime evidence packet preserves all original fresh-tree/Rustdoc failures as well as cross-runtime equivalence proof. Child cd14f22ae8f8402b175a0bafd87560b78c7549e9 additionally rejects one-phase style results if content changed during an await or synchronous provider reentry, before any style callback. Exact-source controlled baseline fails24 assertions; post-guard46-function Debug/Release component suites pass, preserving prior range/client/style/buffer/2,000-edit proofs. API, scheduler and parser pins are unchanged; original BSD text remains exact. Native lifecycle/abort/Release acceptance remains separate. See planning/downstream/one-phase-style-version-guard.md."
     },
     {
       "id": "nvim-treesitter-markdown-queries",
