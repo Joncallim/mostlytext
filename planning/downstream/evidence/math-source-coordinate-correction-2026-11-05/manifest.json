@@ -1,0 +1,509 @@
+{
+  "baseline_main": "3336e59be56727693ab35f55a975aaf5562a48a5",
+  "cmark": "2a5339b89b219584c8fa6c6fd378d3898eed5d57",
+  "markdown": "abfafeccd6f0434daf1a667b92d227adb83b50c8",
+  "exact_immutable_fixture_files": [
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/DirectiveSourceCoverage.swift",
+      "sha256": "fbcd259f511a03a8c45c38b4ec4288cdd3967870974ef60e4663280ea9d16b76"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/FrontMatter.swift",
+      "sha256": "93e57c7f93e6f0f01680ad9f57936a3b334d076b4296ca6ecc397ccf7c0a2ed5"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/HeadingAnchorAllocator.swift",
+      "sha256": "7f2bdae529a88d29177741a11aba7319ab58780d53dcb9a3885485229459ffa8"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/HeadingAnchorIndex.swift",
+      "sha256": "f8f95cb3b5037f99761c9dbc90bdff0abd4cde1e718a073cbbaf8c5a452e8153"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownBlock.swift",
+      "sha256": "1b4c7d7528cd9a0f0eb2bbecf9bf2abae7c879a0fdfdd7c8381fac0fe8ab12b3"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownDocument.swift",
+      "sha256": "347beee2abf06b7d6d3db2da3ca05f897d26a70d9ee3912b69a9b2d2286a3a1e"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownEngineModule.swift",
+      "sha256": "c8caff8457cc0390960b365f27a33e05980ba03ab85b35d2fa3e5eecd8938310"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseOptions.swift",
+      "sha256": "ec90b8c8717b73f30dc133f19d8505f8ad7911e5aafd0ee269b4b0350855eaa9"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseSession.swift",
+      "sha256": "9a6d3bfdccae312997e7df0f941d597041b0c98ef03d72fa573268fe8854a8c9"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseStore.swift",
+      "sha256": "5343a853d2cc0161ae6a2a56a465e7659b05744e226d0a66ae3181cb6891afee"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownSourceFactProjection.swift",
+      "sha256": "99d3fd920b911416c13c4c88944703567af42fa90920c2c77738a846bd5d598f"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownSourceFacts.swift",
+      "sha256": "b26f45adf83a50e8cd507b917fd742cf329ac1105753434f4c8bd09f4fa79903"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownSourceFingerprint.swift",
+      "sha256": "ac2e5986b1bbab95c5eae574a47001c316ccffd61435f54eea39d5dde6a26535"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownSourceLinkProjection.swift",
+      "sha256": "e20c69b4cfb535465f91b41cfcccecd4c7e3c2ca02483611cb0469efce394f9f"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseEngine+Foundation.swift",
+      "sha256": "5886293a172d7cb478dfa245742740292c408964fb287cc1547bf19b089bd1a5"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseEngine+YAMLGuards.swift",
+      "sha256": "9cc7518f1acca3f61481a4df12dde3d5e5988a457ddb598aca51f347b4e84b20"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseEngine.swift",
+      "sha256": "e10d4007c30c65f800d59c5f8103329424eac18a0a878c557ff8a5bafb8479de"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/ParseExecuting.swift",
+      "sha256": "b43026f9a6867f2fc2b355b8465ac2053ff66a662bfd811c904816d9ef7c5b4c"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/SourceMap.swift",
+      "sha256": "4e00c4d7a25a339e440e6b8f31a7e59f5c8b7dbb8eb7237dd3c94dc2117c89f2"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/String+MarkdownLines.swift",
+      "sha256": "db2d92846df6beba3e7e3f534fc2cb8b199e572d83c7c9a2e67d7452b4b90fb6"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/BlockConversionTests.swift",
+      "sha256": "77d20d07464c34d152d8ce09ba7daa534eac7c14aa64ab9a936f5933216a9b05"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/BlockRangeRepairTests.swift",
+      "sha256": "547283e4d8a51e3bf67aaf38d104e26dee62acab2924ea0e2d50f060394f57f8"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/ContainerChildRangeTests.swift",
+      "sha256": "625ce62673b3eddbcec7b2988c18ed759a9c49f46100512e6c0971602a47a62b"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/DirectiveSourcePreservationTests.swift",
+      "sha256": "67720489cdf171eba5038ede517b4752d7d7f15dbc3aa2a794a207779d4eed8b"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/Fakes.swift",
+      "sha256": "fd31bcccdfb71405e89095ebf653bff2ed2f9f58d89312f8bde9be321b40f428"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FencedBlockInnerTextTests.swift",
+      "sha256": "0a41c21b6342b8ae329f91904c12e60b0e91d102a29ccdce02717e71b7616bcf"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/Fixtures.swift",
+      "sha256": "b9aeb883e4cec051a912b93e99a22bf05a751d6e90a95e2c8dd9256e1acec78f"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterLineEndingTests.swift",
+      "sha256": "d11dbbe6874d1aa48b412ab9b66eb499b91e8a54196edb38b43185a9e1b71ea9"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterTests.swift",
+      "sha256": "16d8024779acb03c175036090845db4770fbac0205784d93b2012eb63a54ea92"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/HeadingAnchorAllocatorTests.swift",
+      "sha256": "6dafc006e07dca6b06af6a407a13d518a7712e1fed1bc94e88699f13306b0c50"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/HeadingAnchorIndexTests.swift",
+      "sha256": "4d0db5f86880b5045e212976b51179c8712d6b39904e1275f6ed31bca04a06dd"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/HeadingTests.swift",
+      "sha256": "c556bc61713f16c78196610332fbf67d0470d744849e716b711515685f81bd8e"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/MarkdownSourceFactsTests.swift",
+      "sha256": "e0acfeff9a9ba47828fb40c76776d2d3dfb00a3c5f5bb7aee0943eee82a62ba0"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/MarkdownSourceFingerprintTests.swift",
+      "sha256": "4464728ba002370f224f93c6274efecf00ee8a74e22a032d420990eda6a7e02b"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/OptionsTests.swift",
+      "sha256": "3c3c2911ad3e80f0ce9c8f17e3f1bc48984611f6a577af3c8413324cb64a6dfb"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/ParseDeepNestingTests.swift",
+      "sha256": "763a9f5550b3ff1592b2d56383c6931de96d777bb6c9458fd643822a508b08b4"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/ParseEnginePerformanceTests.swift",
+      "sha256": "bbf377021e1ba78527d8fed99387beae23c4f9b315aff1c462af2b51e0731e21"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/ParseEngineWorkerOwnershipTests.swift",
+      "sha256": "c482c304c6c62fa01b4aeabfd9c2b89e0c8a20d3d8811ed5328f88c7683ea31f"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/ParseSessionBusyStateTests.swift",
+      "sha256": "91d986d29a39e2d74b74ef42bcffb5a8bad08e51bea99a6a4f2c16a2db0b47b1"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/SessionDebounceTests.swift",
+      "sha256": "62f95759f15285cb94872962b9e92ae9e93a50f13a361334a440ea5b67da67d9"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/SourceMapTests.swift",
+      "sha256": "5300be25ecef211d01937acc19f1824029566be11e33bd69eb93318cecad4ddb"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/YAMLAliasBombTests.swift",
+      "sha256": "65907b2a11e93b9084ca14b5653e0df127923131faf506f12408bad1a0eb677b"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/YAMLNonScalarKeyTests.swift",
+      "sha256": "5104f4e791ab8d34e9827067418f7679a6c3a0ff890ff8fec171d4cc3e2b1880"
+    }
+  ],
+  "foundation_only_execution": true,
+  "final_functions": 159,
+  "final_suites": 22,
+  "production_math_activation": false,
+  "logs_and_raw_case_receipts": [
+    {
+      "path": "actual-markdown-tests-target-compile.log",
+      "bytes": 13213,
+      "sha256": "721d0fe14c66e5be7a05964205ceb99ab68efefac539788170f4c528919bc2d4",
+      "archive": "actual-markdown-tests-target-compile.log.gz"
+    },
+    {
+      "path": "asan-generated-ast.json",
+      "bytes": 37313540,
+      "sha256": "ca99fd8d8892ff1108056da9561a826b526ad92df7b5644fc6ef7073b5a6f641",
+      "archive": "asan-generated-ast.json.gz"
+    },
+    {
+      "path": "asan-generated-build.log",
+      "bytes": 22648,
+      "sha256": "8c8ac6972125d9f2c5feeb7dfec7764061df5b366c780b3eb1b6e77f5a59e05f",
+      "archive": "asan-generated-build.log.gz"
+    },
+    {
+      "path": "candidate-generated-ast.json",
+      "bytes": 37313540,
+      "sha256": "ca99fd8d8892ff1108056da9561a826b526ad92df7b5644fc6ef7073b5a6f641",
+      "archive": "candidate-generated-ast.json.gz"
+    },
+    {
+      "path": "candidate-generated-build.log",
+      "bytes": 404,
+      "sha256": "0b08fd7c3fce9154a90979a6566b35a379eb9901bf272c594c48f7c6e3b81074",
+      "archive": "candidate-generated-build.log.gz"
+    },
+    {
+      "path": "cmark-spec-program-build.log",
+      "bytes": 269,
+      "sha256": "f18488cf4ccb904d73ad39e180d42a8b1da0990c9ff3789af5ae645ad6acab4f",
+      "archive": "cmark-spec-program-build.log.gz"
+    },
+    {
+      "path": "corrected-source-ranges.json",
+      "bytes": 110686,
+      "sha256": "0a76304b0a75d0f690b1a725b7a895fc76516e69e1b20244e40af5ec28a8741c",
+      "archive": "corrected-source-ranges.json.gz"
+    },
+    {
+      "path": "final-compliance-tests.log",
+      "bytes": 7515,
+      "sha256": "47459f80ab03a17b075878a690aecbf8cd4a22d8633ea240e1747b804f2cf596",
+      "archive": "final-compliance-tests.log.gz"
+    },
+    {
+      "path": "final-full-format.log",
+      "bytes": 260,
+      "sha256": "abbe1cf3f28fb7d55afb41339c9f6918a4a87b4982ee06cdafdf6672347ebf15",
+      "archive": "final-full-format.log.gz"
+    },
+    {
+      "path": "final-full-lint.log",
+      "bytes": 71865,
+      "sha256": "bfabbaac1ab21b0c11fadbba83391930b2d7e91289af773aae203eb44c7640c7",
+      "archive": "final-full-lint.log.gz"
+    },
+    {
+      "path": "final-generation-notices.log",
+      "bytes": 50,
+      "sha256": "916a4698d9177a9597cb4fc51950f9842bb6a71ce740a0f2540b4a8bb51d77a1",
+      "archive": "final-generation-notices.log.gz"
+    },
+    {
+      "path": "final-generation-sbom.log",
+      "bytes": 41,
+      "sha256": "a2d24371d17e6c6f1296277ca983dce9065ade847908059bfd7be20d4458cf2a",
+      "archive": "final-generation-sbom.log.gz"
+    },
+    {
+      "path": "final-inventory.log",
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+      "archive": "final-inventory.log.gz"
+    },
+    {
+      "path": "final-source-format.log",
+      "bytes": 191,
+      "sha256": "ec5e93dbdc2d81de3867217f208adc2318023a4209ea7b54f1bf0f6b13f86fd5",
+      "archive": "final-source-format.log.gz"
+    },
+    {
+      "path": "final-source-lint-corrected.log",
+      "bytes": 1144,
+      "sha256": "2ed263d8fa0ec8a8af84119b3d0106c159a263d42770374d025e8e8047ef6260",
+      "archive": "final-source-lint-corrected.log.gz"
+    },
+    {
+      "path": "final-source-lint.log",
+      "bytes": 1425,
+      "sha256": "b409a9c336240dc70746e3898cae104e9e6080e25e6362ec4129a9b55c06335b",
+      "archive": "final-source-lint.log.gz"
+    },
+    {
+      "path": "final-test-format.log",
+      "bytes": 191,
+      "sha256": "c4d5bddfffd3a3c6e52730486b84da475f9f2a95da16946394f99e46c2a48eed",
+      "archive": "final-test-format.log.gz"
+    },
+    {
+      "path": "generated-ast-content-identity.json",
+      "bytes": 194,
+      "sha256": "1735eceea785e254dc3e648a41d04bcff76168480536d21be085e175a4aff293",
+      "archive": "generated-ast-content-identity.json.gz"
+    },
+    {
+      "path": "generated-html-byte-identity.json",
+      "bytes": 2965410,
+      "sha256": "10cd6541d443c04b0c84b4dd6b5d94db2e44369ee2de07773b46760cc6113de7",
+      "archive": "generated-html-byte-identity.json.gz"
+    },
+    {
+      "path": "generated-html-byte-identity.log",
+      "bytes": 231,
+      "sha256": "5aad51bcc43933f721d646017dbe0fb4d86f528e6a05c3f9576b9b615e81d4aa",
+      "archive": "generated-html-byte-identity.log.gz"
+    },
+    {
+      "path": "generated-position-corpus.json",
+      "bytes": 275003,
+      "sha256": "3b8b8296e93167669e60d1d7ac528a3e9fb2cb686d5acff3f8bc1bffb14a30e9",
+      "archive": "generated-position-corpus.json.gz"
+    },
+    {
+      "path": "immutable-application-pins-proof.json",
+      "bytes": 6926,
+      "sha256": "ce4ee819e2098d736c639b3458f309a552f1d21d011b02f37074180e73a74c37",
+      "archive": "immutable-application-pins-proof.json.gz"
+    },
+    {
+      "path": "immutable-application-resolve.log",
+      "bytes": 11300,
+      "sha256": "9c14f051356f155500710d8afbe9147350c7bd8bead5242f777b93f7b52e7b9d",
+      "archive": "immutable-application-resolve.log.gz"
+    },
+    {
+      "path": "immutable-source-debug-corrected.log",
+      "bytes": 30534,
+      "sha256": "244af41be43e13cf7f0b6be7c470e85c92aacbfeee2150be75f43c93e79cd550",
+      "archive": "immutable-source-debug-corrected.log.gz"
+    },
+    {
+      "path": "immutable-source-debug-first.log",
+      "bytes": 45802,
+      "sha256": "99114ca985d8d48dd45b4394c232cfdf3134e7ec613105b075bf6025e085b2c2",
+      "archive": "immutable-source-debug-first.log.gz"
+    },
+    {
+      "path": "immutable-source-release.log",
+      "bytes": 34914,
+      "sha256": "32a9e51c91b9e2ff57b568443397f0a15f3d1159ab45db071108509ca9f9ddfc",
+      "archive": "immutable-source-release.log.gz"
+    },
+    {
+      "path": "initial-ast-content-identity.json",
+      "bytes": 89,
+      "sha256": "b0923acbe9a0689f4f103960a6651e05fef13947e3b9f75e7df3225f9c81974b",
+      "archive": "initial-ast-content-identity.json.gz"
+    },
+    {
+      "path": "initial-build.log",
+      "bytes": 22648,
+      "sha256": "bcbaba98ee87c2909e68e22a857771bd7b598aa5e84b275a58ee1bee4ae2fb25",
+      "archive": "initial-build.log.gz"
+    },
+    {
+      "path": "markdown-engine-owner-debug-first.log",
+      "bytes": 60894,
+      "sha256": "06cbe11b7f56139fd300a74eb1471ce269ac3ab9b2cd792cab2bcb2e5425be49",
+      "archive": "markdown-engine-owner-debug-first.log.gz"
+    },
+    {
+      "path": "markdown-engine-owner-release.log",
+      "bytes": 36426,
+      "sha256": "c5e489d9361add8958cf2cced7c25a3eb5be3700b1041bac49aacd7b9169d74f",
+      "archive": "markdown-engine-owner-release.log.gz"
+    },
+    {
+      "path": "original-cmark-spec-program-build.log",
+      "bytes": 1658,
+      "sha256": "6c0789468ab74f8bf36d1b06613d2f8cb0c18f0c87b2775f9dedc1598e97204b",
+      "archive": "original-cmark-spec-program-build.log.gz"
+    },
+    {
+      "path": "original-generated-ast.json",
+      "bytes": 37287224,
+      "sha256": "1a7f8dd9feeb5cd2f687a6fcc5ba679e38e8b6e375574daff4d3a08c68f14c64",
+      "archive": "original-generated-ast.json.gz"
+    },
+    {
+      "path": "original-generated-build.log",
+      "bytes": 323,
+      "sha256": "184d8c4f5b8a0a73808531bc91c15f4caf130ad803a17c98047186a376b33810",
+      "archive": "original-generated-build.log.gz"
+    },
+    {
+      "path": "original-position-regression-actual.log",
+      "bytes": 18370,
+      "sha256": "d027de50630a2b9805b1dfeec32f28754c3f95e1858876b5b38cca9c412fa6d3",
+      "archive": "original-position-regression-actual.log.gz"
+    },
+    {
+      "path": "original-position-regression.log",
+      "bytes": 38739,
+      "sha256": "ec9921c71b90e43bc4cae83dcb155121e370298b6dac547010772f5b1f7537dd",
+      "archive": "original-position-regression.log.gz"
+    },
+    {
+      "path": "owner-cmark-api-asan.log",
+      "bytes": 6270,
+      "sha256": "b16eeebe0a24ce1e13ed6bd5fcb4747669206c43bd99d0928e767add6dcbdbcd",
+      "archive": "owner-cmark-api-asan.log.gz"
+    },
+    {
+      "path": "owner-cmark-api-first.log",
+      "bytes": 1754,
+      "sha256": "74692f44fc1ff95d183a1330293c45006796851515879920dfb42584cc7eca43",
+      "archive": "owner-cmark-api-first.log.gz"
+    },
+    {
+      "path": "owner-cmark-api-ubsan.log",
+      "bytes": 1754,
+      "sha256": "c4d29f2332518a83c0f82b8942ded7011339eaed40f256af2e872cab8c380b0b",
+      "archive": "owner-cmark-api-ubsan.log.gz"
+    },
+    {
+      "path": "owner-cmark-spec-extensions.txt.log",
+      "bytes": 23391,
+      "sha256": "8f924e5bca123b68b330a0a16086825347912d7e33c2e93330d7a422c0467780",
+      "archive": "owner-cmark-spec-extensions.txt.log.gz"
+    },
+    {
+      "path": "owner-cmark-spec-regression.txt.log",
+      "bytes": 42,
+      "sha256": "0404bfa9212bb80ef80f9d627e24c99e158dd94240a4ea59671bfaf224ef636b",
+      "archive": "owner-cmark-spec-regression.txt.log.gz"
+    },
+    {
+      "path": "owner-cmark-spec-spec.txt.log",
+      "bytes": 624,
+      "sha256": "93fba69e488c863b600faadefe39c17d6666f0ee22a15457f0c13f68b1bbfc7a",
+      "archive": "owner-cmark-spec-spec.txt.log.gz"
+    },
+    {
+      "path": "owner-cmark-strict-extensions.txt.log",
+      "bytes": 42,
+      "sha256": "401d76a8f503c28eb2ab003795a5c3c1148c75a49f4e63fbfc1a95c092f70293",
+      "archive": "owner-cmark-strict-extensions.txt.log.gz"
+    },
+    {
+      "path": "owner-cmark-strict-regression.txt.log",
+      "bytes": 42,
+      "sha256": "0404bfa9212bb80ef80f9d627e24c99e158dd94240a4ea59671bfaf224ef636b",
+      "archive": "owner-cmark-strict-regression.txt.log.gz"
+    },
+    {
+      "path": "owner-cmark-strict-smart_punct.txt.log",
+      "bytes": 42,
+      "sha256": "f7b3e084befcd7cbb0ca6b8715318e9c72c397315f2f5bab6e70a25e04860b05",
+      "archive": "owner-cmark-strict-smart_punct.txt.log.gz"
+    },
+    {
+      "path": "owner-cmark-strict-spec.txt.log",
+      "bytes": 43,
+      "sha256": "edbdaa90c22983ca164c7293cc98f090fe02199aab5a8aef0b9ff1c6fa56089e",
+      "archive": "owner-cmark-strict-spec.txt.log.gz"
+    },
+    {
+      "path": "position-html-diagnostic.log",
+      "bytes": 4386,
+      "sha256": "c934444e19d0cfe416f846e51c0a3467cc0beb804753cda9d22d92bf9ca7ce89",
+      "archive": "position-html-diagnostic.log.gz"
+    },
+    {
+      "path": "position-regression-first.log",
+      "bytes": 37027,
+      "sha256": "01bc99473e689f2058769efd01c9fd8fa7b17c8e97d03de66e832b7ed4683359",
+      "archive": "position-regression-first.log.gz"
+    },
+    {
+      "path": "position-regression-second.log",
+      "bytes": 4444,
+      "sha256": "478caacd76548dbcae1e677ab3247142228ec8b971ae7a63dee39bb96b7ba119",
+      "archive": "position-regression-second.log.gz"
+    },
+    {
+      "path": "prefix-filter-format.log",
+      "bytes": 191,
+      "sha256": "c8e9053b99014d9e72ec139f09bfe11e5874582071817887b30faebf7f8a303d",
+      "archive": "prefix-filter-format.log.gz"
+    },
+    {
+      "path": "superseded-pr85-complete-build-and-test.log",
+      "bytes": 18793211,
+      "sha256": "355226dfceeb3ab8dc6d2d87a6eabe786cd13b53e7e58f21570b28e9d53034e8",
+      "archive": "superseded-pr85-complete-build-and-test.log.gz"
+    },
+    {
+      "path": "superseded-pr85-complete-run.json",
+      "bytes": 7484,
+      "sha256": "e4738604da472288d0ab1fcd5ec63835ff940020c28d819cb2f7109f5312c36e",
+      "archive": "superseded-pr85-complete-run.json.gz"
+    },
+    {
+      "path": "upstream-swift-markdown-debug-corrected-oracle.log",
+      "bytes": 74550,
+      "sha256": "fae3b92f1b6691d28571dfec81fd18fb124845cdba4b0aae088bc06b6997f6f7",
+      "archive": "upstream-swift-markdown-debug-corrected-oracle.log.gz"
+    },
+    {
+      "path": "upstream-swift-markdown-debug-first.log",
+      "bytes": 75808,
+      "sha256": "5bcb6f688f596e97bd76c50d8392b6d48ae191f6ddb14acc875371dcc1734bcd",
+      "archive": "upstream-swift-markdown-debug-first.log.gz"
+    },
+    {
+      "path": "upstream-swift-markdown-release.log",
+      "bytes": 80011,
+      "sha256": "8f92d0f13a8fb5d2b9a17eaed20a5c385297e963559f627afb25f7ff9121e603",
+      "archive": "upstream-swift-markdown-release.log.gz"
+    }
+  ]
+}

@@ -23,6 +23,9 @@ public struct MarkdownDocument: Sendable, Equatable {
     /// front-matter delimiters and whitespace. Nil on unbound manual models.
     public let sourceSHA256: String?
 
+    /// Exact parser-owned source projection. Nil for unbound/manual or unsupported coordinates.
+    public let sourceFacts: MarkdownSourceFacts?
+
     /// The revision passed to the parse that produced this document.
     public let revision: Int
 
@@ -38,7 +41,8 @@ public struct MarkdownDocument: Sendable, Equatable {
         sourceMap: SourceMap,
         revision: Int,
         options: MarkdownParseOptions,
-        sourceSHA256: String? = nil
+        sourceSHA256: String? = nil,
+        sourceFacts: MarkdownSourceFacts? = nil
     ) {
         self.body = body
         self.bodyLineOffset = bodyLineOffset
@@ -47,6 +51,7 @@ public struct MarkdownDocument: Sendable, Equatable {
         self.frontMatter = frontMatter
         self.sourceMap = sourceMap
         self.sourceSHA256 = sourceSHA256
+        self.sourceFacts = sourceFacts
         self.revision = revision
         self.options = options
     }

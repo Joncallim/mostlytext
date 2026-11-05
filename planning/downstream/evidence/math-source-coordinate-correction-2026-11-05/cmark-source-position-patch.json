@@ -1,0 +1,129 @@
+{
+  "upstream": "https://github.com/swiftlang/swift-cmark",
+  "base": "924936d0427cb25a61169739a7660230bffa6ea6",
+  "changed_runtime": [
+    {
+      "path": "src/include/node.h",
+      "sha256": "24ed8dc5a0561f08e0a2319fdd4a4d39b870a56c0a6c444401d6ed233a891d05"
+    },
+    {
+      "path": "src/node.c",
+      "sha256": "eaf861c567218c8c26b191121a849e164b4435ad7f4ddbb7b9aa2c39940013a3"
+    },
+    {
+      "path": "src/blocks.c",
+      "sha256": "36326bff859e02e4e7494054385cf49dfe2e7e9f7d2ee80e1e9b659d90c8cd4c"
+    },
+    {
+      "path": "src/inlines.c",
+      "sha256": "2aac46a79dba478839b798b10cad192f02f985eaee72324f1616244931f1db2c"
+    },
+    {
+      "path": "extensions/table.c",
+      "sha256": "0f18ed0e3aabe65bbeccb884943a5545c6c762699f19d6eb534064aace401597"
+    }
+  ],
+  "unchanged_original_files": 162,
+  "original_COPYING_sha256": "c22e885f33b821bddb24cf007145e5540655b6c0f403e49e6c76a93c28e6d9a9",
+  "qualification": {
+    "c_api_tests": 668,
+    "c_api_address_and_undefined_sanitizers": "pass",
+    "strict_spec_cases": 670,
+    "regression_cases": 26,
+    "extension_cases": 30,
+    "smart_punctuation_cases": 16,
+    "actual_markdown_non_position_AST_format_and_HTML_equivalence_cases": 9054,
+    "original_coordinate_assertion_failures": 53,
+    "final_SwiftMarkdown_tests": "299 XCTest and 6 Swift Testing functions Debug/Release pass; one original wrong coordinate snapshot corrected against authored bytes",
+    "actual_MarkdownEngine_tests": "158 functions/22 suites Debug/Release pass; all previous controls preserved",
+    "asan_actual_markdown_cases": 9054
+  },
+  "limits": "No application pin adopted, production math activation, native visual/VoiceOver or complete-editor performance acceptance yet",
+  "logs": [
+    {
+      "name": "owner-cmark-api-first.log",
+      "bytes": 1754,
+      "sha256": "74692f44fc1ff95d183a1330293c45006796851515879920dfb42584cc7eca43"
+    },
+    {
+      "name": "owner-cmark-api-asan.log",
+      "bytes": 6270,
+      "sha256": "b16eeebe0a24ce1e13ed6bd5fcb4747669206c43bd99d0928e767add6dcbdbcd"
+    },
+    {
+      "name": "owner-cmark-api-ubsan.log",
+      "bytes": 1754,
+      "sha256": "c4d29f2332518a83c0f82b8942ded7011339eaed40f256af2e872cab8c380b0b"
+    },
+    {
+      "name": "owner-cmark-strict-spec.txt.log",
+      "bytes": 43,
+      "sha256": "edbdaa90c22983ca164c7293cc98f090fe02199aab5a8aef0b9ff1c6fa56089e"
+    },
+    {
+      "name": "owner-cmark-strict-regression.txt.log",
+      "bytes": 42,
+      "sha256": "0404bfa9212bb80ef80f9d627e24c99e158dd94240a4ea59671bfaf224ef636b"
+    },
+    {
+      "name": "owner-cmark-strict-extensions.txt.log",
+      "bytes": 42,
+      "sha256": "401d76a8f503c28eb2ab003795a5c3c1148c75a49f4e63fbfc1a95c092f70293"
+    },
+    {
+      "name": "owner-cmark-strict-smart_punct.txt.log",
+      "bytes": 42,
+      "sha256": "f7b3e084befcd7cbb0ca6b8715318e9c72c397315f2f5bab6e70a25e04860b05"
+    },
+    {
+      "name": "upstream-swift-markdown-debug-first.log",
+      "bytes": 75808,
+      "sha256": "5bcb6f688f596e97bd76c50d8392b6d48ae191f6ddb14acc875371dcc1734bcd"
+    },
+    {
+      "name": "upstream-swift-markdown-debug-corrected-oracle.log",
+      "bytes": 74550,
+      "sha256": "fae3b92f1b6691d28571dfec81fd18fb124845cdba4b0aae088bc06b6997f6f7"
+    },
+    {
+      "name": "upstream-swift-markdown-release.log",
+      "bytes": 80011,
+      "sha256": "8f92d0f13a8fb5d2b9a17eaed20a5c385297e963559f627afb25f7ff9121e603"
+    },
+    {
+      "name": "original-position-regression-actual.log",
+      "bytes": 18370,
+      "sha256": "d027de50630a2b9805b1dfeec32f28754c3f95e1858876b5b38cca9c412fa6d3"
+    },
+    {
+      "name": "position-regression-second.log",
+      "bytes": 4444,
+      "sha256": "478caacd76548dbcae1e677ab3247142228ec8b971ae7a63dee39bb96b7ba119"
+    },
+    {
+      "name": "position-html-diagnostic.log",
+      "bytes": 4386,
+      "sha256": "c934444e19d0cfe416f846e51c0a3467cc0beb804753cda9d22d92bf9ca7ce89"
+    },
+    {
+      "name": "markdown-engine-owner-debug-first.log",
+      "bytes": 60894,
+      "sha256": "06cbe11b7f56139fd300a74eb1471ce269ac3ab9b2cd792cab2bcb2e5425be49"
+    },
+    {
+      "name": "markdown-engine-owner-release.log",
+      "bytes": 36426,
+      "sha256": "c5e489d9361add8958cf2cced7c25a3eb5be3700b1041bac49aacd7b9169d74f"
+    },
+    {
+      "name": "asan-generated-build.log",
+      "bytes": 22648,
+      "sha256": "8c8ac6972125d9f2c5feeb7dfec7764061df5b366c780b3eb1b6e77f5a59e05f"
+    },
+    {
+      "name": "generated-html-byte-identity.log",
+      "bytes": 231,
+      "sha256": "5aad51bcc43933f721d646017dbe0fb4d86f528e6a05c3f9576b9b615e81d4aa"
+    }
+  ]
+}

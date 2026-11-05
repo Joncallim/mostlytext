@@ -1,0 +1,561 @@
+diff --git a/downstream/ORIGINAL_SOURCE_POSITIONS.md b/downstream/ORIGINAL_SOURCE_POSITIONS.md
+new file mode 100644
+index 00000000..a70301f5
+--- /dev/null
++++ b/downstream/ORIGINAL_SOURCE_POSITIONS.md
+@@ -0,0 +1,35 @@
++# Preserve original positions through paragraph and table transformations
++
++This narrow owner investigation starts at Swift cmark0.8.0 commit
++924936d0427cb25a61169739a7660230bffa6ea6. It must correct source metadata while
++preserving parsed/rendered document semantics and the existing public C API.
++No application pin may adopt an unqualified candidate.
++
++Reproduced defects: a paragraph before a table loses its source positions and
++header cells retain concatenated-buffer offsets on the preceding line; inline
++nodes on a continuation line retain the first line's indentation even when the
++actual quote/list indentation differs or the line is a lazy continuation.
++
++Record sparse content-offset to original line/byte-column segments as block
++content is appended. Include offset changes from partially consumed tabs,
++reference-definition removal and table paragraph/header/cell extraction plus
++escaped-pipe removal. Store metadata with the existing opaque node, free it
++with its allocator, and keep absent metadata compatible with manually built
++nodes. This is internal node layout, not a change to the public opaque-node API.
++
++Keep inline parsing and delimiter/reference algorithms unchanged. After inline
++parsing finishes, map legacy relative coordinates through the recorded content
++segments; accounting for multiline inline-code/HTML endpoints must be explicit.
++Never let corrected coordinates alter calculations while the parser is still
++using them for delimiter or reference semantics. Table split nodes must receive
++both block coordinates and copied source mappings before inline processing.
++
++Qualification must use actual Swift Markdown plus cmark, explicit Unicode,
++CRLF/CR/LF, indentation/lazy continuations, tabs, multiline code/HTML, escaped
++pipes, links/reference definitions and paragraph/table header/body cases. Keep
++all failing-before evidence. Compare original/candidate parsed non-position
++structure and rendered bytes on a generated corpus, run the original C and
++Swift Markdown tests, sanitizers and the exact MarkdownEngine fixture. Fix
++incorrect coordinate expectations only against original authored-byte oracles;
++never loosen bounds or omit failing cases. Preserve original licenses, exact
++base/source manifests and all unrelated package identities.
+diff --git a/downstream/QUALIFICATION.md b/downstream/QUALIFICATION.md
+new file mode 100644
+index 00000000..5c87c516
+--- /dev/null
++++ b/downstream/QUALIFICATION.md
+@@ -0,0 +1,38 @@
++# Qualification of original source coordinates
++
++Only five runtime files change from the exact Swift cmark0.8.0 source recorded
++in source-position-patch.json. All other original tracked files, public C header,
++package manifest and complete COPYING remain byte-identical. The internal opaque
++node layout gains sparse provenance; the public opaque-node API is unchanged.
++Each changed file carries a prominent downstream modification notice.
++
++The unchanged runtime fails53 coordinate assertions on Unicode, LF/CRLF/CR,
++variable/lazy container prefixes, paragraph/table splitting, removed reference
++definitions, multiline code/HTML and escaped table pipes. The candidate passes
++those controls and an additional authored closing-brace oracle. The complete
++Swift Markdown suite passes299 XCTest and6 new Swift Testing functions in Debug
++and Release. Its one pre-existing snapshot expected a closing brace at column3
++although the authored byte is column1; the direct byte-range oracle proves the
++corrected expectation. Initial failures remain in the application evidence.
++
++Original C API668 controls pass normally, with AddressSanitizer and with
++UndefinedBehaviorSanitizer. Exact unnormalized reference outputs pass670 CommonMark,
++26 regression,30 GFM and16 smart punctuation cases using their original setup.
++A first extension invocation omitted required extension flags and failed27 cases;
++that setup failure is retained, then the exact CMake-configured invocation passes.
++
++The actual Swift Markdown original/candidate AST content and formatted Markdown
++are identical for9054 deterministic generated cases. Actual HTML parsing enables
++source positions in both runtimes; removing only generated numeric data-sourcepos
++attributes leaves every other rendered byte identical for all9054 sources. Raw
++position attributes change in54 cases. An AddressSanitizer execution produces
++identical complete AST/format outputs for the same9054 inputs, with no finding.
++The actual application MarkdownEngine source and all158 tests pass Debug/Release
++against this owner, including queue/cancellation/YAML/depth/block/source/timing
++controls and new exact continuation/table assertions. No native product executes.
++
++This is qualification of parser metadata, not upstream acceptance, production
++math activation, native UI/VoiceOver or the whole-editor1MiB/50ms budget. Application
++integration still requires exact immutable pins, retained notices/manifest and
++complete exact-head hosted CI. Original failed and corrected test logs are
++identified by digest; full receipts are retained with the application change.
+diff --git a/downstream/source-position-patch.json b/downstream/source-position-patch.json
+new file mode 100644
+index 00000000..c155269b
+--- /dev/null
++++ b/downstream/source-position-patch.json
+@@ -0,0 +1,129 @@
++{
++  "upstream": "https://github.com/swiftlang/swift-cmark",
++  "base": "924936d0427cb25a61169739a7660230bffa6ea6",
++  "changed_runtime": [
++    {
++      "path": "src/include/node.h",
++      "sha256": "24ed8dc5a0561f08e0a2319fdd4a4d39b870a56c0a6c444401d6ed233a891d05"
++    },
++    {
++      "path": "src/node.c",
++      "sha256": "eaf861c567218c8c26b191121a849e164b4435ad7f4ddbb7b9aa2c39940013a3"
++    },
++    {
++      "path": "src/blocks.c",
++      "sha256": "36326bff859e02e4e7494054385cf49dfe2e7e9f7d2ee80e1e9b659d90c8cd4c"
++    },
++    {
++      "path": "src/inlines.c",
++      "sha256": "2aac46a79dba478839b798b10cad192f02f985eaee72324f1616244931f1db2c"
++    },
++    {
++      "path": "extensions/table.c",
++      "sha256": "0f18ed0e3aabe65bbeccb884943a5545c6c762699f19d6eb534064aace401597"
++    }
++  ],
++  "unchanged_original_files": 162,
++  "original_COPYING_sha256": "c22e885f33b821bddb24cf007145e5540655b6c0f403e49e6c76a93c28e6d9a9",
++  "qualification": {
++    "c_api_tests": 668,
++    "c_api_address_and_undefined_sanitizers": "pass",
++    "strict_spec_cases": 670,
++    "regression_cases": 26,
++    "extension_cases": 30,
++    "smart_punctuation_cases": 16,
++    "actual_markdown_non_position_AST_format_and_HTML_equivalence_cases": 9054,
++    "original_coordinate_assertion_failures": 53,
++    "final_SwiftMarkdown_tests": "299 XCTest and 6 Swift Testing functions Debug/Release pass; one original wrong coordinate snapshot corrected against authored bytes",
++    "actual_MarkdownEngine_tests": "158 functions/22 suites Debug/Release pass; all previous controls preserved",
++    "asan_actual_markdown_cases": 9054
++  },
++  "limits": "No application pin adopted, production math activation, native visual/VoiceOver or complete-editor performance acceptance yet",
++  "logs": [
++    {
++      "name": "owner-cmark-api-first.log",
++      "bytes": 1754,
++      "sha256": "74692f44fc1ff95d183a1330293c45006796851515879920dfb42584cc7eca43"
++    },
++    {
++      "name": "owner-cmark-api-asan.log",
++      "bytes": 6270,
++      "sha256": "b16eeebe0a24ce1e13ed6bd5fcb4747669206c43bd99d0928e767add6dcbdbcd"
++    },
++    {
++      "name": "owner-cmark-api-ubsan.log",
++      "bytes": 1754,
++      "sha256": "c4d29f2332518a83c0f82b8942ded7011339eaed40f256af2e872cab8c380b0b"
++    },
++    {
++      "name": "owner-cmark-strict-spec.txt.log",
++      "bytes": 43,
++      "sha256": "edbdaa90c22983ca164c7293cc98f090fe02199aab5a8aef0b9ff1c6fa56089e"
++    },
++    {
++      "name": "owner-cmark-strict-regression.txt.log",
++      "bytes": 42,
++      "sha256": "0404bfa9212bb80ef80f9d627e24c99e158dd94240a4ea59671bfaf224ef636b"
++    },
++    {
++      "name": "owner-cmark-strict-extensions.txt.log",
++      "bytes": 42,
++      "sha256": "401d76a8f503c28eb2ab003795a5c3c1148c75a49f4e63fbfc1a95c092f70293"
++    },
++    {
++      "name": "owner-cmark-strict-smart_punct.txt.log",
++      "bytes": 42,
++      "sha256": "f7b3e084befcd7cbb0ca6b8715318e9c72c397315f2f5bab6e70a25e04860b05"
++    },
++    {
++      "name": "upstream-swift-markdown-debug-first.log",
++      "bytes": 75808,
++      "sha256": "5bcb6f688f596e97bd76c50d8392b6d48ae191f6ddb14acc875371dcc1734bcd"
++    },
++    {
++      "name": "upstream-swift-markdown-debug-corrected-oracle.log",
++      "bytes": 74550,
++      "sha256": "fae3b92f1b6691d28571dfec81fd18fb124845cdba4b0aae088bc06b6997f6f7"
++    },
++    {
++      "name": "upstream-swift-markdown-release.log",
++      "bytes": 80011,
++      "sha256": "8f92d0f13a8fb5d2b9a17eaed20a5c385297e963559f627afb25f7ff9121e603"
++    },
++    {
++      "name": "original-position-regression-actual.log",
++      "bytes": 18370,
++      "sha256": "d027de50630a2b9805b1dfeec32f28754c3f95e1858876b5b38cca9c412fa6d3"
++    },
++    {
++      "name": "position-regression-second.log",
++      "bytes": 4444,
++      "sha256": "478caacd76548dbcae1e677ab3247142228ec8b971ae7a63dee39bb96b7ba119"
++    },
++    {
++      "name": "position-html-diagnostic.log",
++      "bytes": 4386,
++      "sha256": "c934444e19d0cfe416f846e51c0a3467cc0beb804753cda9d22d92bf9ca7ce89"
++    },
++    {
++      "name": "markdown-engine-owner-debug-first.log",
++      "bytes": 60894,
++      "sha256": "06cbe11b7f56139fd300a74eb1471ce269ac3ab9b2cd792cab2bcb2e5425be49"
++    },
++    {
++      "name": "markdown-engine-owner-release.log",
++      "bytes": 36426,
++      "sha256": "c5e489d9361add8958cf2cced7c25a3eb5be3700b1041bac49aacd7b9169d74f"
++    },
++    {
++      "name": "asan-generated-build.log",
++      "bytes": 22648,
++      "sha256": "8c8ac6972125d9f2c5feeb7dfec7764061df5b366c780b3eb1b6e77f5a59e05f"
++    },
++    {
++      "name": "generated-html-byte-identity.log",
++      "bytes": 231,
++      "sha256": "5aad51bcc43933f721d646017dbe0fb4d86f528e6a05c3f9576b9b615e81d4aa"
++    }
++  ]
++}
+diff --git a/extensions/table.c b/extensions/table.c
+index c84f863e..b5fcacf4 100644
+--- a/extensions/table.c
++++ b/extensions/table.c
+@@ -1,3 +1,4 @@
++/* MostlyText downstream: retain original source provenance through block transformations. */
+ #include <stdbool.h>
+ 
+ #include <cmark-gfm-extension_api.h>
+@@ -410,6 +411,7 @@ static void try_inserting_table_header_paragraph(cmark_parser *parser,
+   paragraph_content = unescape_pipes(parser->mem, parent_string, paragraph_offset);
+   cmark_strbuf_trim(paragraph_content);
+   cmark_node_set_string_content(paragraph, (char *) paragraph_content->ptr);
++  cmark_node_copy_source(paragraph, parent_container, parent_string, 0, paragraph_offset);
+   cmark_strbuf_free(paragraph_content);
+   parser->mem->free(paragraph_content);
+ 
+@@ -489,6 +491,14 @@ static cmark_node *try_opening_table_header(cmark_syntax_extension *self,
+                                          header_row->paragraph_offset);
+   }
+ 
++  if (parent_container->source_segment_count) {
++    int line, column;
++    if (cmark_node_source_position(parent_container, header_row->paragraph_offset, &line, &column)) {
++      parent_container->start_line = line;
++      parent_container->start_column = column;
++    }
++  }
++
+   cmark_node_set_syntax_extension(parent_container, self);
+   parent_container->as.opaque = parser->mem->calloc(1, sizeof(node_table));
+   set_n_table_columns(parent_container, header_row->n_columns);
+@@ -516,6 +526,9 @@ static cmark_node *try_opening_table_header(cmark_syntax_extension *self,
+   cmark_node_set_syntax_extension(table_header, self);
+   table_header->end_column = parent_container->start_column + (int)strlen(parent_string) - 2;
+   table_header->start_line = table_header->end_line = parent_container->start_line;
++  if (parent_container->source_segment_count)
++    cmark_node_source_position(parent_container, (int)strlen(parent_string) - 2,
++                               &table_header->end_line, &table_header->end_column);
+ 
+   table_header->as.opaque = ntr = (node_table_row *)parser->mem->calloc(1, sizeof(node_table_row));
+   ntr->is_header = true;
+@@ -530,6 +543,21 @@ static cmark_node *try_opening_table_header(cmark_syntax_extension *self,
+     header_cell->as.opaque = cell->cell_data;
+     cell->cell_data = NULL;
+     cmark_node_set_string_content(header_cell, (char *) cell->buf->ptr);
++    if (parent_container->source_segment_count) {
++      cmark_node_source_position(parent_container, cell->start_offset,
++                                 &header_cell->start_line, &header_cell->start_column);
++      cmark_node_source_position(parent_container, cell->end_offset,
++                                 &header_cell->end_line, &header_cell->end_column);
++      int old_line = header_cell->start_line, old_column = header_cell->start_column;
++      int old_end_line = header_cell->end_line, old_end_column = header_cell->end_column;
++      bool copied = cmark_node_copy_source(header_cell, parent_container, (const unsigned char *)parent_string,
++                             cell->start_offset, cell->end_offset - cell->start_offset + 1);
++      /* Preserve full-cell block bounds; inline provenance starts after trim. */
++      if (copied) {
++        header_cell->start_line = old_line; header_cell->start_column = old_column;
++        header_cell->end_line = old_end_line; header_cell->end_column = old_end_column;
++      }
++    }
+     cmark_node_set_syntax_extension(header_cell, self);
+     set_cell_index(header_cell, i);
+   }
+@@ -564,6 +592,9 @@ static cmark_node *try_opening_table_row(cmark_syntax_extension *self,
+                              parent_container->start_column);
+   cmark_node_set_syntax_extension(table_row_block, self);
+   table_row_block->end_column = parent_container->end_column;
++  if (parser->options & CMARK_OPT_SOURCEPOS)
++    cmark_node_record_source(table_row_block, 0, parser->line_number,
++                             cmark_parser_get_first_nonspace(parser) + 1);
+   table_row_block->as.opaque = parser->mem->calloc(1, sizeof(node_table_row));
+ 
+   row = row_from_string(self, parser, input + cmark_parser_get_first_nonspace(parser),
+@@ -617,6 +648,18 @@ static cmark_node *try_opening_table_row(cmark_syntax_extension *self,
+       node->as.opaque = cell->cell_data;
+       cell->cell_data = NULL;
+       cmark_node_set_string_content(node, (char *) cell->buf->ptr);
++      if (table_row_block->source_segment_count) {
++        cmark_node_source_position(table_row_block, cell->start_offset, &node->start_line, &node->start_column);
++        cmark_node_source_position(table_row_block, cell->end_offset, &node->end_line, &node->end_column);
++        int old_line = node->start_line, old_column = node->start_column;
++        int old_end_line = node->end_line, old_end_column = node->end_column;
++        bool copied = cmark_node_copy_source(node, table_row_block, input + cmark_parser_get_first_nonspace(parser),
++                               cell->start_offset, cell->end_offset - cell->start_offset + 1);
++        if (copied) {
++          node->start_line = old_line; node->start_column = old_column;
++          node->end_line = old_end_line; node->end_column = old_end_column;
++        }
++      }
+       cmark_node_set_syntax_extension(node, self);
+       set_cell_index(node, i);
+     }
+diff --git a/src/blocks.c b/src/blocks.c
+index 1efd8fd0..cb1a5d4a 100644
+--- a/src/blocks.c
++++ b/src/blocks.c
+@@ -1,3 +1,4 @@
++/* MostlyText downstream: retain original source provenance through block transformations. */
+ /**
+  * Block parsing implementation.
+  *
+@@ -241,6 +242,11 @@ static void add_line(cmark_node *node, cmark_chunk *ch, cmark_parser *parser) {
+       cmark_strbuf_putc(&node->content, ' ');
+     }
+   }
++  if (parser->options & CMARK_OPT_SOURCEPOS)
++    cmark_node_record_source(node, node->content.size, parser->line_number,
++                             parser->offset + 1);
++  /* Synthetic tab spaces precede this segment; real token offsets start after
++   * them and map to the byte immediately following the original tab. */
+   cmark_strbuf_put(&node->content, ch->data + parser->offset,
+                    ch->len - parser->offset);
+ }
+@@ -302,6 +308,7 @@ static bool resolve_reference_link_definitions(
+     chunk.data += pos;
+     chunk.len -= pos;
+   }
++  b->source_content_offset += node_content->size - chunk.len;
+   cmark_strbuf_drop(node_content, (node_content->size - chunk.len));
+   return !is_blank(&b->content, 0);
+ }
+diff --git a/src/include/node.h b/src/include/node.h
+index 292a724f..f1b59c99 100644
+--- a/src/include/node.h
++++ b/src/include/node.h
+@@ -1,3 +1,4 @@
++/* MostlyText downstream: retain original source provenance through block transformations. */
+ #ifndef CMARK_NODE_H
+ #define CMARK_NODE_H
+ 
+@@ -65,8 +66,19 @@ enum cmark_node__internal_flags {
+ 
+ typedef uint16_t cmark_node_internal_flags;
+ 
++typedef struct {
++  bufsize_t content_offset;
++  int line;
++  int column;
++} cmark_source_segment;
++
+ struct cmark_node {
+   cmark_strbuf content;
++  /* Sparse provenance for content stripped from original block lines. */
++  cmark_source_segment *source_segments;
++  size_t source_segment_count;
++  size_t source_segment_capacity;
++  bufsize_t source_content_offset;
+ 
+   struct cmark_node *next;
+   struct cmark_node *prev;
+@@ -166,6 +178,18 @@ CMARK_GFM_EXPORT bool cmark_node_can_contain_type(cmark_node *node, cmark_node_t
+  */
+ CMARK_GFM_EXPORT void cmark_enable_safety_checks(bool enable);
+ 
++/* Internal provenance helpers shared with syntax extensions. */
++CMARK_GFM_EXPORT
++void cmark_node_record_source(cmark_node *node, bufsize_t content_offset,
++                              int line, int column);
++CMARK_GFM_EXPORT
++bool cmark_node_source_position(const cmark_node *node, bufsize_t content_offset,
++                                int *line, int *column);
++CMARK_GFM_EXPORT
++bool cmark_node_copy_source(cmark_node *target, const cmark_node *source,
++                            const unsigned char *input, bufsize_t offset,
++                            bufsize_t length);
++
+ #ifdef __cplusplus
+ }
+ #endif
+diff --git a/src/inlines.c b/src/inlines.c
+index 5fee895d..75bcae51 100644
+--- a/src/inlines.c
++++ b/src/inlines.c
+@@ -1,3 +1,4 @@
++/* MostlyText downstream: retain original source provenance through block transformations. */
+ #include <stdbool.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+@@ -1702,6 +1703,53 @@ static int parse_inline(cmark_parser *parser, subject *subj, cmark_node *parent,
+   return 1;
+ }
+ 
++/* Existing inline algorithms use relative columns internally. Correct metadata
++ * only after parsing/emphasis completes, so provenance cannot change semantics. */
++static void correct_inline_source_positions(cmark_node *parent) {
++  if (!parent->source_segment_count) return;
++  size_t count = 1, capacity = 8;
++  bufsize_t *starts = parent->content.mem->calloc(capacity, sizeof(bufsize_t));
++  for (bufsize_t offset = 0; offset < parent->content.size; offset++) {
++    unsigned char ch = parent->content.ptr[offset];
++    if (ch != '\r' && ch != '\n') continue;
++    if (ch == '\r' && offset + 1 < parent->content.size && parent->content.ptr[offset + 1] == '\n') offset++;
++    if (count == capacity) {
++      capacity *= 2;
++      starts = parent->content.mem->realloc(starts, capacity * sizeof(bufsize_t));
++    }
++    starts[count++] = offset + 1;
++  }
++  int base = parent->start_column - 1 + parent->internal_offset;
++  cmark_iter *iterator = cmark_iter_new(parent);
++  cmark_event_type event;
++  while ((event = cmark_iter_next(iterator)) != CMARK_EVENT_DONE) {
++    cmark_node *node = cmark_iter_get_node(iterator);
++    if (event != CMARK_EVENT_ENTER || node == parent || !node->start_line || !node->start_column) continue;
++    int first = node->start_line - parent->start_line;
++    int last = node->end_line - parent->start_line;
++    int end_base = base;
++    if (last > first && (node->type == CMARK_NODE_CODE || node->type == CMARK_NODE_HTML_INLINE)) end_base = 0;
++    if (first < 0 || last < 0 || (size_t)first >= count || (size_t)last >= count) {
++      node->start_line = node->start_column = node->end_line = node->end_column = 0;
++      continue;
++    }
++    bufsize_t begin = starts[first] + node->start_column - 1 - base;
++    bufsize_t end = starts[last] + node->end_column - 1 - end_base;
++    if (last > first && node->type == CMARK_NODE_HTML_INLINE) end++;
++    int sl, sc, el, ec;
++    if (begin >= 0 && end >= begin && end < parent->content.size &&
++        cmark_node_source_position(parent, begin, &sl, &sc) &&
++        cmark_node_source_position(parent, end, &el, &ec)) {
++      node->start_line = sl; node->start_column = sc;
++      node->end_line = el; node->end_column = ec;
++    } else {
++      node->start_line = node->start_column = node->end_line = node->end_column = 0;
++    }
++  }
++  cmark_iter_free(iterator);
++  parent->content.mem->free(starts);
++}
++
+ // Parse inlines from parent's string_content, adding as children of parent.
+ void cmark_parse_inlines(cmark_parser *parser,
+                          cmark_node *parent,
+@@ -1717,6 +1765,7 @@ void cmark_parse_inlines(cmark_parser *parser,
+     ;
+ 
+   process_emphasis(parser, &subj, 0);
++  correct_inline_source_positions(parent);
+   // free bracket and delim stack
+   while (subj.last_delim) {
+     remove_delimiter(&subj, subj.last_delim);
+diff --git a/src/node.c b/src/node.c
+index 967b1b90..c87f8c24 100644
+--- a/src/node.c
++++ b/src/node.c
+@@ -1,3 +1,4 @@
++/* MostlyText downstream: retain original source provenance through block transformations. */
+ #include <stdbool.h>
+ #include <stdlib.h>
+ #include <string.h>
+@@ -6,6 +7,7 @@
+ #include "mutex.h"
+ #include "node.h"
+ #include "syntax_extension.h"
++#include "cmark_ctype.h"
+ 
+ CMARK_DEFINE_LOCK(nextflag)
+ CMARK_DEFINE_LOCK(safety)
+@@ -204,6 +206,7 @@ static void free_node_as(cmark_node *node) {
+ static void S_free_nodes(cmark_node *e) {
+   cmark_node *next;
+   while (e != NULL) {
++    NODE_MEM(e)->free(e->source_segments);
+     cmark_strbuf_free(&e->content);
+ 
+     if (e->user_data && e->user_data_free_func)
+@@ -1156,3 +1159,74 @@ int cmark_node_check(cmark_node *node, FILE *out) {
+ 
+   return errors;
+ }
++
++/* Record only affine mapping changes, not an index for every authored byte. */
++void cmark_node_record_source(cmark_node *node, bufsize_t content_offset,
++                              int line, int column) {
++  size_t count = node->source_segment_count;
++  if (count && node->source_segments[count - 1].content_offset == content_offset) {
++    node->source_segments[count - 1].line = line;
++    node->source_segments[count - 1].column = column;
++    return;
++  }
++  if (count == node->source_segment_capacity) {
++    size_t capacity = count ? count * 2 : 4;
++    node->source_segments = NODE_MEM(node)->realloc(
++        node->source_segments, capacity * sizeof(cmark_source_segment));
++    node->source_segment_capacity = capacity;
++  }
++  node->source_segments[count].content_offset = content_offset;
++  node->source_segments[count].line = line;
++  node->source_segments[count].column = column;
++  node->source_segment_count++;
++}
++
++bool cmark_node_source_position(const cmark_node *node, bufsize_t content_offset,
++                                int *line, int *column) {
++  size_t low = 0, high = node->source_segment_count;
++  bufsize_t offset = content_offset + node->source_content_offset;
++  while (low < high) {
++    size_t middle = low + (high - low) / 2;
++    if (node->source_segments[middle].content_offset <= offset)
++      low = middle + 1;
++    else
++      high = middle;
++  }
++  if (!low) return false;
++  const cmark_source_segment *segment = &node->source_segments[low - 1];
++  *line = segment->line;
++  *column = segment->column + offset - segment->content_offset;
++  return true;
++}
++
++/* Table extraction has already unescaped pipes and trimmed the target text.
++ * Copy the same byte transformation's provenance, validating every byte. */
++bool cmark_node_copy_source(cmark_node *target, const cmark_node *source,
++                            const unsigned char *input, bufsize_t offset,
++                            bufsize_t length) {
++  bufsize_t cursor = offset, end = offset + length, output = 0;
++  int line = 0, column = 0, first_line = 0, first_column = 0;
++  while (cursor < end && cmark_isspace(input[cursor])) cursor++;
++  while (cursor < end && output < target->content.size) {
++    if (input[cursor] == '\\' && cursor + 1 < end && input[cursor + 1] == '|') cursor++;
++    if (input[cursor] != target->content.ptr[output] ||
++        !cmark_node_source_position(source, cursor, &line, &column)) goto unavailable;
++    if (!output) { first_line = line; first_column = column; }
++    size_t count = target->source_segment_count;
++    if (!count || target->source_segments[count - 1].line != line ||
++        target->source_segments[count - 1].column + output -
++            target->source_segments[count - 1].content_offset != column)
++      cmark_node_record_source(target, output, line, column);
++    cursor++; output++;
++  }
++  if (output != target->content.size) goto unavailable;
++  if (output) {
++    target->start_line = first_line; target->start_column = first_column;
++    target->end_line = line; target->end_column = column;
++  }
++  return true;
++unavailable:
++  target->start_line = target->start_column = target->end_line = target->end_column = 0;
++  target->source_segment_count = 0;
++  return false;
++}

@@ -72,8 +72,11 @@ let package = Package(
         .package(path: "../TreeSitterSQL"),
         .package(url: "https://github.com/tree-sitter-grammars/tree-sitter-xml", exact: "0.7.0"),
         .package(path: "../TreeSitterMarkdown"),
-        .package(url: "https://github.com/swiftlang/swift-markdown", exact: "0.8.0"),
-        .package(url: "https://github.com/swiftlang/swift-cmark", exact: "0.8.0"),
+        .package(
+            url: "https://github.com/Joncallim/swift-markdown",
+            revision: "abfafeccd6f0434daf1a667b92d227adb83b50c8"
+        ),
+        .package(url: "https://github.com/Joncallim/swift-cmark", revision: "2a5339b89b219584c8fa6c6fd378d3898eed5d57"),
         .package(url: "https://github.com/scinfu/SwiftSoup", exact: "2.13.9"),
         .package(url: "https://github.com/jpsim/Yams", exact: "6.2.2"),
         .package(url: "https://github.com/Joncallim/textual", revision: "9077b0f608bd464ee4de880c0ff4c0c8441e698d"),

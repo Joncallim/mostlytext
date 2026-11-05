@@ -3833,7 +3833,7 @@
       "externalReferences": [
         {
           "type": "vcs",
-          "url": "https://github.com/swiftlang/swift-cmark"
+          "url": "https://github.com/Joncallim/swift-cmark"
         }
       ],
       "licenses": [
@@ -3853,12 +3853,12 @@
         },
         {
           "name": "mostlytext:resolution",
-          "value": "exact"
+          "value": "revision"
         }
       ],
-      "purl": "pkg:github/swiftlang/swift-cmark@924936d0427cb25a61169739a7660230bffa6ea6",
+      "purl": "pkg:github/joncallim/swift-cmark@2a5339b89b219584c8fa6c6fd378d3898eed5d57",
       "type": "library",
-      "version": "0.8.0"
+      "version": "2a5339b8"
     },
     {
       "bom-ref": "swift-concurrency-extras",
@@ -3897,7 +3897,7 @@
       "externalReferences": [
         {
           "type": "vcs",
-          "url": "https://github.com/swiftlang/swift-markdown"
+          "url": "https://github.com/Joncallim/swift-markdown"
         }
       ],
       "licenses": [
@@ -3917,12 +3917,12 @@
         },
         {
           "name": "mostlytext:resolution",
-          "value": "exact"
+          "value": "revision"
         }
       ],
-      "purl": "pkg:github/swiftlang/swift-markdown@3c6f9523da3a1ec2fd829673e472d95b8097a3b8",
+      "purl": "pkg:github/joncallim/swift-markdown@abfafeccd6f0434daf1a667b92d227adb83b50c8",
       "type": "library",
-      "version": "0.8.0"
+      "version": "abfafecc"
     },
     {
       "bom-ref": "swiftsoup",
@@ -5248,7 +5248,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:87a70a4d-ef53-52f0-955f-635a9feded0b",
+  "serialNumber": "urn:uuid:a502cb94-1a7d-56ba-a8a5-3b0916429dc1",
   "specVersion": "1.5",
   "version": 1
 }
