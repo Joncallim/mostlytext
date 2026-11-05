@@ -44,7 +44,15 @@ Actual MarkdownEngineTests and ExportServiceTests targets compile locally. New
 Export tests cover the real cmark bridge and full HTML/PDF preparation, coordinates
 through front matter, original targets/titles, unsafe URL policy, literal backticks,
 stale/failed fragments, bad source facts, suffix collisions and expanded-input caps.
-**Those Export module tests are compiled only here; hosted CI must execute them.**
+The first hosted run (42061416370) executed all 3,553 package tests and found three
+failures in the parameterized Unicode test: its `String.contains` assertion missed
+a present ZWNJ because the search uses grapheme boundaries. The raw HTML proves the
+scalar remains after the closing link tag. The retained Foundation-only diagnostic
+reproduces the false negative, proves scalar/literal UTF-16 presence, and rejects an
+absent control. The assertion now checks `unicodeScalars`, preserving the exact
+scalar requirement. No production change or relaxed timeout was needed. The full
+first failure log and exact before-test source are retained. The corrected Export
+module tests compile locally; a fresh hosted full run must qualify the changed head.
 Full strict lint and pinned format pass; inventory passes. The new fr/ja/pl catalog
 translations remain needs_review for the final native language gate.
 
