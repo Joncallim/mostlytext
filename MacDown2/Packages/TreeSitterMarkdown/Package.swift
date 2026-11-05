@@ -16,7 +16,10 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/ChimeHQ/SwiftTreeSitter", branch: "main"),
+        .package(
+            url: "https://github.com/Joncallim/SwiftTreeSitter",
+            revision: "1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43"
+        ),
     ],
     targets: [
         .target(

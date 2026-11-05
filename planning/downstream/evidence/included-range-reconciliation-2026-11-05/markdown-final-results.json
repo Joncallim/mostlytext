@@ -1,0 +1,35 @@
+[
+  {
+    "name": "baseline-final",
+    "source": "/Volumes/Fast SSD/CORTANA-Builds/resume-20261101-scanner-recent-app/SourcePackages/checkouts/SwiftTreeSitter",
+    "configuration": "debug",
+    "exit": 1,
+    "issues": 62,
+    "summary": [
+      "\u2718 Test run with 1 test in 1 suite failed after 4.146 seconds with 62 issues."
+    ],
+    "logSHA256": "bfa3aeae632110109e825c9992c026f19ccac2b0756bb58f84382cfd263a372e"
+  },
+  {
+    "name": "candidate-final-debug",
+    "source": "/Volumes/Fast SSD/CORTANA-GitHub/SwiftTreeSitter-included-ranges",
+    "configuration": "debug",
+    "exit": 0,
+    "issues": 0,
+    "summary": [
+      "\u2714 Test run with 1 test in 1 suite passed after 4.110 seconds."
+    ],
+    "logSHA256": "844e00f8c51338ef4efbcf11c19ad802d3e78db49400bbf7baea76cfdf61951c"
+  },
+  {
+    "name": "candidate-final-release",
+    "source": "/Volumes/Fast SSD/CORTANA-GitHub/SwiftTreeSitter-included-ranges",
+    "configuration": "release",
+    "exit": 0,
+    "issues": 0,
+    "summary": [
+      "\u2714 Test run with 1 test in 1 suite passed after 1.073 seconds."
+    ],
+    "logSHA256": "3ad8c36a534dcb9f13313f816ba08269f7e560f56acdf24bbefd4e1ae67096d1"
+  }
+]

@@ -1,0 +1,66 @@
+{
+  "pinCount": 24,
+  "changed": {
+    "neon": {
+      "before": {
+        "identity": "neon",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/Joncallim/Neon",
+        "state": {
+          "revision": "dabf50c947148c49acd0d321dfe8f3805d10b3da"
+        }
+      },
+      "after": {
+        "identity": "neon",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/Joncallim/Neon",
+        "state": {
+          "revision": "e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9"
+        }
+      }
+    },
+    "swifttreesitter": {
+      "before": {
+        "identity": "swifttreesitter",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/ChimeHQ/SwiftTreeSitter",
+        "state": {
+          "branch": "main",
+          "revision": "cbe31cb3601aa29c1f64b6e4328733511126d6d5"
+        }
+      },
+      "after": {
+        "identity": "swifttreesitter",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/Joncallim/SwiftTreeSitter",
+        "state": {
+          "revision": "1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43"
+        }
+      }
+    }
+  },
+  "unchanged": [
+    "rearrange",
+    "swift-argument-parser",
+    "swift-cmark",
+    "swift-concurrency-extras",
+    "swift-markdown",
+    "swiftsoup",
+    "swiftui-math",
+    "textual",
+    "tree-sitter",
+    "tree-sitter-bash",
+    "tree-sitter-cpp",
+    "tree-sitter-css",
+    "tree-sitter-html",
+    "tree-sitter-json",
+    "tree-sitter-python",
+    "tree-sitter-ruby",
+    "tree-sitter-swift",
+    "tree-sitter-toml",
+    "tree-sitter-typescript",
+    "tree-sitter-xml",
+    "tree-sitter-yaml",
+    "yams"
+  ]
+}
