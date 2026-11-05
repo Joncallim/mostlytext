@@ -4003,7 +4003,7 @@
       ],
       "name": "SwiftUIMath",
       "pedigree": {
-        "notes": "Narrow child of upstream 0.1.0: preserve authored TeX comments and control-word boundaries, expose existing parser diagnostics with original-body UTF-16 cursors and required inspection limits, and reject truncated optional alignment and mismatched radical degrees safely. All fonts, licences, original tests and unrelated files are unchanged."
+        "notes": "Narrow child of upstream 0.1.0: preserve authored TeX comments and control-word boundaries, expose existing parser diagnostics with original-body UTF-16 cursors and required inspection limits, and reject truncated optional alignment and mismatched radical degrees safely. All fonts, licences, original tests and unrelated files are unchanged. Validated-body child adds an opaque exact-byte token, raw-body view/metrics overloads and mode/limit-aware lock-owned bounded atom/display caches that preserve automatic memory-pressure eviction. No font, licence or other renderer source changes."
       },
       "properties": [
         {
@@ -4019,9 +4019,9 @@
           "value": "revision"
         }
       ],
-      "purl": "pkg:github/joncallim/swiftui-math@e394d7cf111a90b4393df7a18e989dfec0a28931",
+      "purl": "pkg:github/joncallim/swiftui-math@2a89c2b41482988711909572d116374e47a52164",
       "type": "library",
-      "version": "e394d7cf"
+      "version": "2a89c2b4"
     },
     {
       "bom-ref": "swiftui-math-fonts",
@@ -4083,9 +4083,9 @@
           "value": "exact"
         }
       ],
-      "purl": "pkg:github/joncallim/textual@2337a7751605ed819ed6ce71a450fe29608deb40",
+      "purl": "pkg:github/joncallim/textual@b940433c7a55b82a8bbbe6fb0837df7162307dbb",
       "type": "library",
-      "version": "2337a775"
+      "version": "b940433c"
     },
     {
       "bom-ref": "theme-daybreak",
@@ -5251,7 +5251,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:953c3d87-c0bf-503d-9188-8456011fc356",
+  "serialNumber": "urn:uuid:ca92af64-7eeb-5acf-bcbf-288aa42ffb6b",
   "specVersion": "1.5",
   "version": 1
 }

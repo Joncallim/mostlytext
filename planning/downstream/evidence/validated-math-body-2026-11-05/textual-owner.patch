@@ -1,0 +1,133 @@
+diff --git a/Package.swift b/Package.swift
+index b4d217c..6e4ed60 100644
+--- a/Package.swift
++++ b/Package.swift
+@@ -17,7 +17,7 @@ let package = Package(
+   dependencies: [
+     .package(url: "https://github.com/pointfreeco/swift-concurrency-extras", from: "1.3.1"),
+     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.18.7"),
+-    .package(url: "https://github.com/Joncallim/swiftui-math", revision: "e394d7cf111a90b4393df7a18e989dfec0a28931"),
++    .package(url: "https://github.com/Joncallim/swiftui-math", revision: "2a89c2b41482988711909572d116374e47a52164"),
+   ],
+   targets: [
+     .target(
+diff --git a/Sources/Textual/Attachment/AnyAttachment+Math.swift b/Sources/Textual/Attachment/AnyAttachment+Math.swift
+index e2757ff..af8e5b8 100644
+--- a/Sources/Textual/Attachment/AnyAttachment+Math.swift
++++ b/Sources/Textual/Attachment/AnyAttachment+Math.swift
+@@ -1,4 +1,5 @@
+ import Foundation
++public import SwiftUIMath
+ 
+ extension AnyAttachment {
+   /// The placement of an equation in its surrounding text.
+@@ -25,4 +26,21 @@ extension AnyAttachment {
+     }
+     return .init(MathAttachment(latex: latex, style: displayStyle, sourceID: sourceID))
+   }
++
++  /// Creates the same native attachment with raw-body parsing and the admitted engine limits.
++  /// No delimiter detection occurs during metrics, layout or drawing. Source identity is
++  /// caller-owned and remains separate from the expression's render-cache identity.
++  public static func math(
++    body: SwiftUIMath.Math.ValidatedBody,
++    style: MathStyle,
++    sourceID: UUID? = nil
++  ) -> Self {
++    let displayStyle: MathAttachment.DisplayStyle
++    switch style {
++    case .inline: displayStyle = .inline
++    case .display: displayStyle = .block
++    }
++    return .init(MathAttachment(body: body, style: displayStyle, sourceID: sourceID))
++  }
++
+ }
+diff --git a/Sources/Textual/Internal/Attachment/MathAttachment.swift b/Sources/Textual/Internal/Attachment/MathAttachment.swift
+index d0bff1f..ef7aefd 100644
+--- a/Sources/Textual/Internal/Attachment/MathAttachment.swift
++++ b/Sources/Textual/Internal/Attachment/MathAttachment.swift
+@@ -1,5 +1,5 @@
+ import SwiftUI
+-@_spi(Textual) private import SwiftUIMath
++@_spi(Textual) import SwiftUIMath
+ 
+ struct MathAttachment: Attachment {
+   enum DisplayStyle: Sendable {
+@@ -23,15 +23,24 @@ struct MathAttachment: Attachment {
+   let latex: String
+   let displayStyle: DisplayStyle
+   let sourceID: UUID?
++  let validatedBody: Math.ValidatedBody?
+ 
+   init(latex: String, style: DisplayStyle, sourceID: UUID? = nil) {
+     self.latex = latex
+     self.displayStyle = style
+     self.sourceID = sourceID
++    self.validatedBody = nil
++  }
++
++  init(body: Math.ValidatedBody, style: DisplayStyle, sourceID: UUID? = nil) {
++    self.latex = body.source
++    self.displayStyle = style
++    self.sourceID = sourceID
++    self.validatedBody = body
+   }
+ 
+   var body: some View {
+-    MathView(latex: latex, style: displayStyle)
++    MathView(latex: latex, validatedBody: validatedBody, style: displayStyle)
+   }
+ 
+   func baselineOffset(in environment: TextEnvironmentValues) -> CGFloat {
+@@ -46,14 +55,17 @@ struct MathAttachment: Attachment {
+     fitting proposal: ProposedViewSize = .unspecified,
+     in environment: TextEnvironmentValues
+   ) -> Math.TypographicBounds {
+-    Math.typographicBounds(
+-      for: latex,
+-      fitting: proposal,
+-      font: .init(
+-        name: .init(environment.mathProperties.fontName),
+-        size: FontScaled(environment.mathProperties.fontScale).resolve(in: environment)
+-      ),
+-      style: .init(displayStyle)
++    let font = Math.Font(
++      name: .init(environment.mathProperties.fontName),
++      size: FontScaled(environment.mathProperties.fontScale).resolve(in: environment)
++    )
++    if let validatedBody {
++      return Math.typographicBounds(
++        for: validatedBody, fitting: proposal, font: font, style: .init(displayStyle)
++      )
++    }
++    return Math.typographicBounds(
++      for: latex, fitting: proposal, font: font, style: .init(displayStyle)
+     )
+   }
+ }
+@@ -62,10 +74,11 @@ private struct MathView: View {
+   @Environment(\.textEnvironment) private var environment
+ 
+   let latex: String
++  let validatedBody: Math.ValidatedBody?
+   let style: MathAttachment.DisplayStyle
+ 
+   var body: some View {
+-    Math(latex)
++    math
+       .mathFont(
+         .init(
+           name: .init(environment.mathProperties.fontName),
+@@ -75,6 +88,11 @@ private struct MathView: View {
+       .mathTypesettingStyle(.init(style))
+       .mathRenderingMode(.monochrome)
+   }
++
++  private var math: Math {
++    if let validatedBody { Math(validatedBody) } else { Math(latex) }
++  }
++
+ }
+ 
+ extension Math.Font.Name {

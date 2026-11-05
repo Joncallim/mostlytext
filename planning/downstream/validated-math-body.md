@@ -1,9 +1,13 @@
-# Validated body rendering and equation actions — architecture draft
+# Validated raw-body rendering and inline accessibility probe
 
-Baseline production main f362b61b759068bdcbebf79749dbfdf92a47e82a; prepared prerequisite PR87
-c75d59d2db1c37c8240a0bb909573f3c4c603691 provides actual engine inspection. Do not
-implement against a moving or failing prerequisite. This draft resolves the next
-boundary; it is not production activation or acceptance evidence.
+Baseline main 7e8e5a26f72cc21de34e6cabc3522cf44a493f5b (PR87), tree
+35c84202ff64349e76e97b7b26f2a7eacdfc5be2, matches qualified head
+9c4b221c3f7522d81b58c4e9b73e0cf74b75d747. The actual inspection engine is
+e394d7cf111a90b4393df7a18e989dfec0a28931 and Textual metadata is
+2337a7751605ed819ed6ce71a450fe29608deb40. Complete PR87 CI passes 3,512 package
+and 619 app tests plus all four locked builds. This next slice preserves one
+accepted equation body through native rendering, with bounded cache retention.
+It remains a prerequisite for joint production activation and native acceptance.
 
 A validated body is an opaque immutable engine value that can only be obtained
 from the actual parser's bounded body inspection. It stores original raw body
@@ -114,3 +118,54 @@ package/app tests and all four locked builds, verified merge and issue re-audit.
 This cannot alone close shared grammar/parity, source diagnostics, accessibility,
 navigation or final native acceptance. The next production unit must jointly
 switch Preview and Export, including reference-link identity under rewriting.
+
+### Cache implementation correction before qualification
+
+NSCache.countLimit is advisory, not a hard entry ceiling (Apple documentation:
+https://developer.apple.com/documentation/foundation/nscache/countlimit).
+The initial unqualified candidate using countLimit is therefore rejected. Use a
+small lock-owned dictionary cache that clears existing entries before admitting
+a new distinct key at capacity. Updates to an existing key do not flush it.
+This deterministic reset policy keeps retained entries within the stated limits
+without a second lock or an unbounded key registry. It can lose cache warmth at
+capacity; the unchanged real 100-equation benchmark must pass. A Foundation-only
+cache control must show released values after capacity eviction, unchanged values
+on replacement, exact-key separation and successful recomputation after eviction.
+
+## Named accessibility preimplementation probe
+
+A test-only PreviewTests window on the hosted runner compares a labeled standalone
+instance of the actual native math attachment with that same labeled attachment
+inside actual InlineText/Canvas paragraph rendering. A synthetic static-text
+control and both ordinary paragraph neighbors must appear in the same-process
+accessibility tree before any observation is considered valid. Record labels and
+whether the inline equation label survives; neither possible answer alone is a
+release pass or a test failure. This is a measured architecture question, not an
+assertion that the baseline is accessible or inaccessible. Bound tree traversal
+and asynchronous layout readiness, and close the owned synthetic window afterward. No local
+execution is permitted; compile only locally, execute solely on hosted CI.
+If positive controls fail, preserve the setup failure and do not infer an absence
+or choose the accessibility design from an empty tree. No broader app/VoiceOver
+acceptance follows from this component probe.
+
+The readiness probe yields the main actor between bounded checks; it does not
+spin a nested blocking RunLoop while SwiftUI state changes need that executor.
+The original 50 checks at 10 ms stay unchanged before first hosted execution.
+
+### Preserve memory-pressure eviction as well as the hard ceiling
+
+The dictionary candidate's entry ceiling is correct but replaces the original
+NSCache's automatic eviction under memory pressure. Preserve that existing
+behavior. Use NSCache storage with a lock-owned admission upper bound, without
+retaining a separate key registry. Before inserting a distinct absent key at the
+ceiling, remove all cached objects and reset the bound; replacing a present key
+does not spend another admission. Automatic eviction can only make the bound
+conservative. A reference-owned helper keeps storage/counter together under
+copies. No delegate mutates counters outside the existing renderer lock.
+
+The first unqualified dictionary helper/tests and their passing logs are retained.
+Cache-control tests now measure actual weakly retained objects after repeated
+admission and check correctness for any returned hit; cache persistence is not a
+contract when automatic eviction is allowed. All upstream/parser/token assertions
+remain unchanged. The hard entry ceiling is separate from advisory countLimit;
+no memory-pressure callback or key registry can grow without bound.
