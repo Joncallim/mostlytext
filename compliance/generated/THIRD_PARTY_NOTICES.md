@@ -123,7 +123,7 @@ This file is generated from `compliance/inventory.json` by
 | marked (via Mermaid) | 16.3.0 | MIT |
 | Math fonts bundled by SwiftUIMath | 0.1.0 | OFL-1.1 AND LicenseRef-GUST-Font-License AND MIT |
 | Mermaid | 11.17.2 | MIT |
-| Neon | be25e357 | BSD-3-Clause |
+| Neon | ab93bca8 | BSD-3-Clause |
 | nvim-treesitter Markdown highlight queries (via tree-sitter-markdown) | 2022-06 import | Apache-2.0 |
 | oss.terrastruct.com/util-go (D2 publisher-build attribution) | publisher source-build input v0.0.0-20250213174338-243d8661088a | ISC |
 | path-browserify (content-matched reference via Mermaid; original version unresolved) | original unresolved; content matches 1.0.1 | MIT |
@@ -142,10 +142,10 @@ This file is generated from `compliance/inventory.json` by
 | swift-concurrency-extras | 1.4.1 | MIT |
 | swift-markdown | 0.8.0 | Apache-2.0 |
 | SwiftSoup | 2.13.9 | MIT |
-| SwiftTreeSitter | 7d2dc87e | BSD-3-Clause |
+| SwiftTreeSitter | 0beea992 | BSD-3-Clause |
 | SwiftUIMath | 0.1.0 | MIT |
 | Textual | d3ddabb | MIT |
-| tree-sitter (runtime) | 0.25.10 | MIT |
+| tree-sitter (runtime) | 0.25.10+mostlytext.5ce80b6f | MIT |
 | tree-sitter-bash | 0.25.1 | MIT |
 | tree-sitter-cpp | 0.23.4 | MIT |
 | tree-sitter-css | 0.23.2 | MIT |
@@ -8783,9 +8783,9 @@ SOFTWARE.
 
 ## Neon
 
-- Version: be25e357
+- Version: ab93bca8
 - Upstream: https://github.com/Joncallim/Neon
-- Revision: `be25e35787585430f0f1ac845ed44c11e7f8150a`
+- Revision: `ab93bca8cc74af6f5e17eefc7fefa1999726a131`
 - Licence: BSD-3-Clause
 - Copyright (c) 2022, Chime
 
@@ -10485,9 +10485,9 @@ SOFTWARE.
 
 ## SwiftTreeSitter
 
-- Version: 7d2dc87e
+- Version: 0beea992
 - Upstream: https://github.com/Joncallim/SwiftTreeSitter
-- Revision: `7d2dc87e8b9326062d75bc1ef985f17d28e94da9`
+- Revision: `0beea992c4246f93a122de846c8611c9be19aeb7`
 - Licence: BSD-3-Clause
 - Copyright (c) 2021, Chime
 
@@ -10605,9 +10605,9 @@ SOFTWARE.
 
 ## tree-sitter (runtime)
 
-- Version: 0.25.10
-- Upstream: https://github.com/tree-sitter/tree-sitter
-- Revision: `da6fe9beb4f7f67beb75914ca8e0d48ae48d6406`
+- Version: 0.25.10+mostlytext.5ce80b6f
+- Upstream: https://github.com/Joncallim/tree-sitter
+- Revision: `5ce80b6f0e29096a5f06826a3ba610c4e89bc255`
 - Licence: MIT
 - Copyright (c) 2018-2024 Max Brunsfeld
 

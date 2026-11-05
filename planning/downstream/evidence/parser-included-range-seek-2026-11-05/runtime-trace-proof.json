@@ -1,0 +1,33 @@
+{
+  "runtime_base": "da6fe9beb4f7f67beb75914ca8e0d48ae48d6406",
+  "baseline_runtime_files_verified": 48,
+  "candidate_only_runtime_file_changed": "lib/src/lexer.c",
+  "candidate_lexer_sha256": "ad4e188e27f3dd1f83f1845ca8558dbfbd12b87d97260f7e48013e208531a8c8",
+  "trace_cases": 6000,
+  "trace_bytes_identical": true,
+  "baseline_exit": 2,
+  "candidate_exit": 2,
+  "fresh_divergences_each": 282,
+  "source_records": [
+    {
+      "path": "baseline-all-scalar-traces.out",
+      "sha256": "a6ffb09db0cc9b2fe802c3c41b005850f30e20f260ab3127888e7f68c1e61cb6",
+      "bytes": 416841
+    },
+    {
+      "path": "candidate-all-scalar-traces.out",
+      "sha256": "a6ffb09db0cc9b2fe802c3c41b005850f30e20f260ab3127888e7f68c1e61cb6",
+      "bytes": 416841
+    },
+    {
+      "path": "baseline-all-scalar-traces.err",
+      "sha256": "5c821084ffdb6ed1335f7f1d1f73679ee3379425491aaa71b09a233f216e02dc",
+      "bytes": 24299
+    },
+    {
+      "path": "candidate-all-scalar-traces.err",
+      "sha256": "5c821084ffdb6ed1335f7f1d1f73679ee3379425491aaa71b09a233f216e02dc",
+      "bytes": 24299
+    }
+  ]
+}

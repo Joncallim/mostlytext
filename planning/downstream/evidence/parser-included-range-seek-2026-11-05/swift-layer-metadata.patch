@@ -1,0 +1,50 @@
+diff --git a/MOSTLYTEXT_PATCHES.md b/MOSTLYTEXT_PATCHES.md
+index 5c188c8..0aa5402 100644
+--- a/MOSTLYTEXT_PATCHES.md
++++ b/MOSTLYTEXT_PATCHES.md
+@@ -48,3 +48,15 @@ Upstream Debug/Release suites pass 36 XCTest cases and 12 Swift Testing
+ functions; inspected application Foundation/C fixtures pass 36 functions plus
+ 8 XCTest cases. Release component timing remains distinct from whole-editor
+ responsiveness, native acceptance and the retained large-document fallback.
++
++## Runtime range-lookup dependency
++
++This dependency-metadata child pins owner tree-sitter5ce80b6f0e29096a5f06826a3ba610c4e89bc255
++in the manifest and standalone lock. SwiftTreeSitter runtime and test bytes
++remain identical to7d2dc87e8b9326062d75bc1ef985f17d28e94da9, including the
++explicit fresh MarkdownInline policy API and complete injection reconciliation.
++The C child preserves original runtime behavior while replacing a linear lexer
++range lookup with binary search. All6,000 cross-runtime traces agree;282
++original incremental/fresh discrepancies retain failing status. No ABI/header,
++grammar, licence or unrelated dependency upgrade occurs. Application fresh-policy
++regressions and full hosted integration remain required before adoption.
+diff --git a/Package.resolved b/Package.resolved
+index b5fe211..6aa70b7 100644
+--- a/Package.resolved
++++ b/Package.resolved
+@@ -3,10 +3,9 @@
+     {
+       "identity" : "tree-sitter",
+       "kind" : "remoteSourceControl",
+-      "location" : "https://github.com/tree-sitter/tree-sitter",
++      "location" : "https://github.com/Joncallim/tree-sitter",
+       "state" : {
+-        "revision" : "da6fe9beb4f7f67beb75914ca8e0d48ae48d6406",
+-        "version" : "0.25.10"
++        "revision" : "5ce80b6f0e29096a5f06826a3ba610c4e89bc255"
+       }
+     }
+   ],
+diff --git a/Package.swift b/Package.swift
+index e40fbaf..4f2ecf8 100644
+--- a/Package.swift
++++ b/Package.swift
+@@ -21,7 +21,7 @@ let package = Package(
+ 		.library(name: "SwiftTreeSitterLayer", targets: ["SwiftTreeSitterLayer"]),
+ 	],
+ 	dependencies: [
+-		.package(url: "https://github.com/tree-sitter/tree-sitter", .upToNextMinor(from: "0.25.0"))
++		.package(url: "https://github.com/Joncallim/tree-sitter", revision: "5ce80b6f0e29096a5f06826a3ba610c4e89bc255")
+ 	],
+ 	targets: [
+ 		.target(
