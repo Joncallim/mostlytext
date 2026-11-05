@@ -119,31 +119,31 @@ struct FrontMatterTests {
         #expect(frontMatter.values?["price"] == .number(3.14))
     }
 
-    @Test func unsignedNSNumberInRangeConvertsToInt() async {
+    @Test func unsignedNSNumberInRangeConvertsToInt() {
         let engine = ParseEngine()
 
-        let u64 = await engine.convertNSNumber(NSNumber(value: UInt64(42)))
+        let u64 = engine.convertNSNumber(NSNumber(value: UInt64(42)))
         #expect(u64 == .int(42))
 
-        let uint = await engine.convertNSNumber(NSNumber(value: UInt(42)))
+        let uint = engine.convertNSNumber(NSNumber(value: UInt(42)))
         #expect(uint == .int(42))
 
-        let uint8 = await engine.convertNSNumber(NSNumber(value: UInt8(255)))
+        let uint8 = engine.convertNSNumber(NSNumber(value: UInt8(255)))
         #expect(uint8 == .int(255))
     }
 
-    @Test func unsignedNSNumberOutOfRangeFallsBackToNumber() async {
+    @Test func unsignedNSNumberOutOfRangeFallsBackToNumber() {
         let engine = ParseEngine()
         let number = NSNumber(value: UInt64.max)
 
-        let value = await engine.convertNSNumber(number)
+        let value = engine.convertNSNumber(number)
 
         #expect(value == .number(number.doubleValue))
     }
 
-    @Test func signedNegativeNSNumberConvertsToInt() async {
+    @Test func signedNegativeNSNumberConvertsToInt() {
         let engine = ParseEngine()
-        let value = await engine.convertNSNumber(NSNumber(value: Int64(-42)))
+        let value = engine.convertNSNumber(NSNumber(value: Int64(-42)))
 
         #expect(value == .int(-42))
     }

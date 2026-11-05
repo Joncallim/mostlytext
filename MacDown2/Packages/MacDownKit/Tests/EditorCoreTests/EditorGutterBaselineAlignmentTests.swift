@@ -84,7 +84,7 @@ struct EditorGutterBaselineAlignmentTests {
         #expect(fragments[0].baselineY == expected)
     }
 
-    @Test func baselineOffsetFromTheFragmentTopIsPositiveAndConsistentAcrossManyLines() {
+    @Test func baselineOffsetFromTheFragmentTopIsPositiveAndConsistentAcrossManyLines() throws {
         let lineCount = 50
         let text = (0 ..< lineCount).map { "line \($0)" }.joined(separator: "\n")
         let mounted = mount(text: text, configuration: .default)
@@ -115,18 +115,18 @@ struct EditorGutterBaselineAlignmentTests {
         #expect(frameTops.count == lineCount)
 
         let offsets = zip(fragments, frameTops).map { $0.baselineY - $1 }
-        let first = try? #require(offsets.first)
+        let first = try #require(offsets.first)
         for offset in offsets {
             // A tolerance, not exact equality: `CGFloat` accumulation across
             // 50 independently-laid-out fragments introduces sub-picopoint
             // rounding noise (e.g. 16.200000000000045 vs. 16.2) that is not
             // drift in any visually or practically meaningful sense.
             #expect(
-                abs(offset - (first ?? 0)) < 0.001,
+                abs(offset - first) < 0.001,
                 "baseline offset from the fragment's own top must never drift across the document"
             )
         }
-        #expect(first.map { $0 > 1 } == true, "the offset must be a real, non-negligible ascent distance, not ~0")
+        #expect(first > 1, "the offset must be a real, non-negligible ascent distance, not ~0")
 
         // The regression this fix closes: the OLD code effectively used an
         // offset of 0 (label.minY WAS frame.minY). `lineHeightMultiple`
@@ -164,7 +164,7 @@ struct EditorGutterBaselineAlignmentTests {
         #expect(abs(offsets[1] - offsets[2]) < 0.001)
     }
 
-    @Test func baselineOffsetGrowsWithTheConfiguredLineHeightMultiple() {
+    @Test func baselineOffsetGrowsWithTheConfiguredLineHeightMultiple() throws {
         var tight = EditorConfiguration.default
         tight.lineHeightMultiple = 1.0
         var loose = EditorConfiguration.default
@@ -180,18 +180,15 @@ struct EditorGutterBaselineAlignmentTests {
         var looseBaseline: CGFloat?
         looseMounted.system.enumerateVisibleLineFragments { _, baselineY in looseBaseline = baselineY }
 
-        let tightValue = try? #require(tightBaseline)
-        let looseValue = try? #require(looseBaseline)
-        #expect(tightValue != nil && looseValue != nil)
-        if let tightValue, let looseValue {
-            #expect(
-                looseValue > tightValue,
-                "a taller configured line height must push the baseline down further, read from the real config"
-            )
-        }
+        let tightValue = try #require(tightBaseline)
+        let looseValue = try #require(looseBaseline)
+        #expect(
+            looseValue > tightValue,
+            "a taller configured line height must push the baseline down further, read from the real config"
+        )
     }
 
-    @Test func baselineOffsetChangesWithFontSizeRatherThanUsingAFixedConstant() {
+    @Test func baselineOffsetChangesWithFontSizeRatherThanUsingAFixedConstant() throws {
         var small = EditorConfiguration.default
         small.font = NSFont.monospacedSystemFont(ofSize: 10, weight: .regular)
         var large = EditorConfiguration.default
@@ -207,11 +204,8 @@ struct EditorGutterBaselineAlignmentTests {
         var largeBaseline: CGFloat?
         largeMounted.system.enumerateVisibleLineFragments { _, baselineY in largeBaseline = baselineY }
 
-        let smallValue = try? #require(smallBaseline)
-        let largeValue = try? #require(largeBaseline)
-        #expect(smallValue != nil && largeValue != nil)
-        if let smallValue, let largeValue {
-            #expect(largeValue > smallValue, "a larger font must produce a proportionally larger baseline offset")
-        }
+        let smallValue = try #require(smallBaseline)
+        let largeValue = try #require(largeBaseline)
+        #expect(largeValue > smallValue, "a larger font must produce a proportionally larger baseline offset")
     }
 }

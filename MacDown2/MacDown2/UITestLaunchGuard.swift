@@ -125,7 +125,13 @@ enum UITestLaunchGuard {
         guard length > 1 else { return nil }
         var buffer = [CChar](repeating: 0, count: length)
         guard confstr(_CS_DARWIN_USER_TEMP_DIR, &buffer, length) == length else { return nil }
-        let root = URL(fileURLWithPath: String(cString: buffer), isDirectory: true).resolvingSymlinksInPath()
+        let root = URL(
+            fileURLWithPath: String(
+                decoding: buffer.prefix { $0 != 0 }.map { UInt8(bitPattern: $0) },
+                as: Unicode.UTF8.self
+            ),
+            isDirectory: true
+        ).resolvingSymlinksInPath()
         var info = stat()
         guard lstat(root.path, &info) == 0, info.st_uid == geteuid(),
               info.st_mode & S_IFMT == S_IFDIR, info.st_mode & 0o077 == 0 else { return nil }

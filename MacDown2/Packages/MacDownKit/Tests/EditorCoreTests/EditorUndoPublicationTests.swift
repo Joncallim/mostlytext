@@ -76,10 +76,10 @@ struct EditorUndoPublicationTests {
         mounted.window.makeFirstResponder(system.textView)
         let responder = mounted.window.firstResponder
 
-        #expect(responder?.tryToPerform(Selector(("undo:")), with: nil) == true)
+        #expect(responder?.tryToPerform(#selector(EditorTextView.undo(_:)), with: nil) == true)
         #expect(system.text == "hello", "Cmd-Z must undo typing")
         #expect(mounted.box.value == "hello")
-        #expect(responder?.tryToPerform(Selector(("redo:")), with: nil) == true)
+        #expect(responder?.tryToPerform(#selector(EditorTextView.redo(_:)), with: nil) == true)
         #expect(system.text == "helloX")
         #expect(mounted.box.value == "helloX")
     }
@@ -88,7 +88,7 @@ struct EditorUndoPublicationTests {
         let mounted = mountEditor(text: "hello")
         defer { mounted.window.orderOut(nil) }
         let system = mounted.system
-        let item = NSMenuItem(title: "Undo", action: Selector(("undo:")), keyEquivalent: "z")
+        let item = NSMenuItem(title: "Undo", action: #selector(EditorTextView.undo(_:)), keyEquivalent: "z")
         #expect(system.textView.validateUserInterfaceItem(item) == false)
 
         system.selectedRange = NSRange(location: 5, length: 0)

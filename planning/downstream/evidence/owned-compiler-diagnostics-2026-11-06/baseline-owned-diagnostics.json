@@ -1,0 +1,92 @@
+{
+  "run": 42106201852,
+  "head": "d98c2fb65d06c01e299bedd70e12efc46f9f1b39",
+  "log_sha256": "950338bec36ca1aae336f0472883158dba59d4518ebab482ce78e3daa2d80795",
+  "owned": [
+    {
+      "source": "MacDown2/Packages/MacDownKit/Tests/LocalResourceAccessTests/ResourceTestSupport.swift",
+      "line": 49,
+      "message": "'init(cString:)' is deprecated: Use String(decoding: array, as: UTF8.self) instead, after truncating the null termination. [#DeprecatedDeclaration]"
+    },
+    {
+      "source": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterTests.swift",
+      "line": 125,
+      "message": "no 'async' operations occur within 'await' expression"
+    },
+    {
+      "source": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterTests.swift",
+      "line": 128,
+      "message": "no 'async' operations occur within 'await' expression"
+    },
+    {
+      "source": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterTests.swift",
+      "line": 131,
+      "message": "no 'async' operations occur within 'await' expression"
+    },
+    {
+      "source": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterTests.swift",
+      "line": 139,
+      "message": "no 'async' operations occur within 'await' expression"
+    },
+    {
+      "source": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/FrontMatterTests.swift",
+      "line": 146,
+      "message": "no 'async' operations occur within 'await' expression"
+    },
+    {
+      "source": "MacDown2/Packages/MacDownKit/Tests/FileCoreTests/FileEncodingTests.swift",
+      "line": 218,
+      "message": "variable 'document' was never mutated; consider changing to 'let' constant"
+    },
+    {
+      "source": "MacDown2/Packages/MacDownKit/Tests/EditorCoreTests/EditorGutterBaselineAlignmentTests.swift",
+      "line": 118,
+      "message": "'#require(_:_:)' is redundant because 'offsets.first' never equals 'nil' (from macro 'require')"
+    },
+    {
+      "source": "MacDown2/Packages/MacDownKit/Tests/EditorCoreTests/EditorGutterBaselineAlignmentTests.swift",
+      "line": 183,
+      "message": "'#require(_:_:)' is redundant because 'tightBaseline' never equals 'nil' (from macro 'require')"
+    },
+    {
+      "source": "MacDown2/Packages/MacDownKit/Tests/EditorCoreTests/EditorGutterBaselineAlignmentTests.swift",
+      "line": 184,
+      "message": "'#require(_:_:)' is redundant because 'looseBaseline' never equals 'nil' (from macro 'require')"
+    },
+    {
+      "source": "MacDown2/Packages/MacDownKit/Tests/EditorCoreTests/EditorGutterBaselineAlignmentTests.swift",
+      "line": 210,
+      "message": "'#require(_:_:)' is redundant because 'smallBaseline' never equals 'nil' (from macro 'require')"
+    },
+    {
+      "source": "MacDown2/Packages/MacDownKit/Tests/EditorCoreTests/EditorGutterBaselineAlignmentTests.swift",
+      "line": 211,
+      "message": "'#require(_:_:)' is redundant because 'largeBaseline' never equals 'nil' (from macro 'require')"
+    },
+    {
+      "source": "MacDown2/Packages/MacDownKit/Tests/EditorCoreTests/EditorUndoPublicationTests.swift",
+      "line": 79,
+      "message": "use '#selector' instead of explicitly constructing a 'Selector'"
+    },
+    {
+      "source": "MacDown2/Packages/MacDownKit/Tests/EditorCoreTests/EditorUndoPublicationTests.swift",
+      "line": 82,
+      "message": "use '#selector' instead of explicitly constructing a 'Selector'"
+    },
+    {
+      "source": "MacDown2/Packages/MacDownKit/Tests/EditorCoreTests/EditorUndoPublicationTests.swift",
+      "line": 91,
+      "message": "use '#selector' instead of explicitly constructing a 'Selector'"
+    },
+    {
+      "source": "MacDown2/MacDown2/UITestLaunchGuard.swift",
+      "line": 128,
+      "message": "'init(cString:)' is deprecated: Use String(decoding: array, as: UTF8.self) instead, after truncating the null termination."
+    },
+    {
+      "source": "MacDown2/MacDown2Tests/PreviewDirectoryGrantBackingTests.swift",
+      "line": 23,
+      "message": "'#require(_:_:)' is redundant because 'grant.acquireUse()' never equals 'nil' (from macro 'require')"
+    }
+  ]
+}

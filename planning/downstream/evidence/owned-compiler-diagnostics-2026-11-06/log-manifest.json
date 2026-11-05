@@ -1,0 +1,87 @@
+[
+  {
+    "file": "app-tests-first-compile.log.gz",
+    "bytes": 5325491,
+    "uncompressed_sha256": "cd91aaac22876b735ec1f816a8cf55074a9d0b39754b6974eaf97ca38f01abd8"
+  },
+  {
+    "file": "cchar-decoding-equivalence.log.gz",
+    "bytes": 108,
+    "uncompressed_sha256": "f187681a3dbcb8d2477b80b3e2f84d959df860664a67a2092fb4e4c3339fdef1"
+  },
+  {
+    "file": "compliance.log.gz",
+    "bytes": 54,
+    "uncompressed_sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+  },
+  {
+    "file": "first-format.log.gz",
+    "bytes": 218,
+    "uncompressed_sha256": "e5f2c0cab9d43ae9296a4dc35a30d9e677d806f8976bfbfb987728aef511fc7a"
+  },
+  {
+    "file": "first-lint.log.gz",
+    "bytes": 76620,
+    "uncompressed_sha256": "98b3467a09c12d2b12dac832c03db59014890f7e92612e575c5592a7b0006f2b"
+  },
+  {
+    "file": "frontmatter-debug.log.gz",
+    "bytes": 13765,
+    "uncompressed_sha256": "3637a1052aac60d1b0534251e09b2658cdd7c9112ddc3f4c90b4c64a92d5a991"
+  },
+  {
+    "file": "frontmatter-release.log.gz",
+    "bytes": 6257,
+    "uncompressed_sha256": "2ba510c481c6ae3aaf6affc98e868a2e70efaf06ddaca3a093534336c6057732"
+  },
+  {
+    "file": "guard-debug.log.gz",
+    "bytes": 2638,
+    "uncompressed_sha256": "01b95319df0882cd21be7e8d23411b5b593280d4902de0afc5732ef5161a6cdd"
+  },
+  {
+    "file": "guard-release.log.gz",
+    "bytes": 2488,
+    "uncompressed_sha256": "f79474fe65badde5c150f6a28f8536649b5668ab3e3d4c2fe0cbdbb22a56a403"
+  },
+  {
+    "file": "package-tests-first-compile.log.gz",
+    "bytes": 51970,
+    "uncompressed_sha256": "a288c90e57f407b765d2448aade67068b0ad3aefe505ce49c9d522d3d46e8da3"
+  },
+  {
+    "file": "qualified-app-tests-compile.log.gz",
+    "bytes": 732382,
+    "uncompressed_sha256": "e77c18cdb5274d543badd2829c044a0ff902863d3afcaebd3559240da389c13a"
+  },
+  {
+    "file": "qualified-cchar-equivalence.log.gz",
+    "bytes": 108,
+    "uncompressed_sha256": "f187681a3dbcb8d2477b80b3e2f84d959df860664a67a2092fb4e4c3339fdef1"
+  },
+  {
+    "file": "qualified-full-format.log.gz",
+    "bytes": 267,
+    "uncompressed_sha256": "0faa1609281641a29b837bf42813b8816b6fbdcd0358442e3ec4d35ea841e50d"
+  },
+  {
+    "file": "qualified-full-lint.log.gz",
+    "bytes": 75953,
+    "uncompressed_sha256": "808c0c741ee57f04700d0a2fab53a2e04ad82f5408fc164d4c998c1bf6b623e7"
+  },
+  {
+    "file": "qualified-guard-debug.log.gz",
+    "bytes": 2617,
+    "uncompressed_sha256": "736cf95e9ed6b840d4423e001b0540067914a5c7be00b4e29ee9a4ee7dae96e5"
+  },
+  {
+    "file": "qualified-guard-release.log.gz",
+    "bytes": 2487,
+    "uncompressed_sha256": "40379fa8fe5d3f57dd709eb9f71d8320673cbe18a6a0d9a2998fe0e97aa5d7fe"
+  },
+  {
+    "file": "qualified-package-tests-compile.log.gz",
+    "bytes": 50164,
+    "uncompressed_sha256": "4c70d1bea9f6f8cfb3de9ad6f71fb8091c9e0872105af76ac07a61db52dd8c8e"
+  }
+]
