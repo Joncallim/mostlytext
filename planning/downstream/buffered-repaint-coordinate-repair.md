@@ -80,3 +80,15 @@ Neon merge9db7e1d, preserving this buffer implementation and its independent
 oracle. The merged component suites pass39 functions in10 suites plus8 existing
 XCTest cases Debug/Release. Retain both first hosted failures, selected prefix
 provenance and new receipts; require fresh full CI for the corrected app head.
+
+## Preserve semantic capture identity in the final style path
+
+The second hosted run41972235335 at7c3f40ba passes the visual controls but fails
+two existing mounted byte-geometry checks: clipping the Token changed what an
+attribute provider observes. Carry owner client6797068 through merge baf93c7.
+It restores complete semantic tokens and intersects a separate paint range via
+a package-only iterator used by all three concrete interfaces. The buffer hook
+and its independent oracle remain unchanged. Preserve both rejected hosted
+heads and require new full checks, including unchanged geometry and visual tests.
+The outside-query property remains active using actual TextStorageSystemInterface
+on hosted builds and the exact iterator/memory styles in the local pure fixture.

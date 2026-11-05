@@ -1,0 +1,175 @@
+diff --git a/MOSTLYTEXT_PATCHES.md b/MOSTLYTEXT_PATCHES.md
+index 22d5d43..98f6b54 100644
+--- a/MOSTLYTEXT_PATCHES.md
++++ b/MOSTLYTEXT_PATCHES.md
+@@ -53,14 +53,27 @@ it is not native execution. Full application hosted qualification of the actual
+ TextViewHighlighter callback order remains required. This does not activate the
+ widened background experiment or establish complete-editor performance.
+ 
+-## Partial style-query containment
++## Partial style-query containment without changing semantic tokens
+ 
+-The first application hosted run exposed a wide italic capture overwriting
+-nested styles outside its requested dirty range. Named-range TokenApplication
+-initializers now clip each emitted token to the requested range, retaining
+-capture order and name mapping and dropping empty intersections. A narrow query
+-cannot restyle an unqueried neighbor. Both existing initializer signatures are
+-preserved; the generic TokenApplication initializer is unchanged. The actual
+-warmed-client/partial-application reproduction fails twice before this correction
+-and passes afterward. A separate control covers mapping, ordering, disjoint and
+-empty captures. Hosted rerun of the original failing app check is required.
++A partial query may return a capture extending outside its paint authority.
++Keep that complete semantic Token for attribute providers and source geometry.
++The package-only TokenApplication.forEachTokenToApply iterator yields the
++original token plus a separately intersected painting range. All three concrete
++text-system interfaces call the provider with the original token and apply its
++attributes only within the painting range. Public signatures, name mapping,
++clearing behavior and scheduling remain unchanged.
++
++The first hosted run exposed a wide italic capture overwriting unqueried nested
++styles. An initial token-clipping attempt fixed that visual comparison but broke
++the established byte-geometry provider contract in the next hosted run. Both
++failures are retained. Final controls separately require complete semantic token
++ranges and bounded paint ranges, including empty/disjoint/nil authority. The
++actual warmed-client outside-query property remains active: hosted tests use
++the real TextStorageSystemInterface, while the inspected Foundation fixture uses
++the exact iterator with memory styles. No native conditional tail runs locally.
++
++Compile-only standalone qualification temporarily seeds the exact application
++lock and restores the historical dependency-root lock afterward; the application
++lock remains the tested resolution authority. No application transitive version
++changes. Full corrected-head hosted CI, including unchanged byte-geometry and
++style checks, remains required.
+diff --git a/Sources/Neon/TextViewSystemInterface.swift b/Sources/Neon/TextViewSystemInterface.swift
+index f26dc72..d16d7a3 100644
+--- a/Sources/Neon/TextViewSystemInterface.swift
++++ b/Sources/Neon/TextViewSystemInterface.swift
+@@ -126,9 +126,9 @@ extension LayoutManagerSystemInterface: TextSystemInterface {
+ 			setAttributes([:], in: range)
+ 		}
+ 
+-		for token in application.tokens {
++		application.forEachTokenToApply { token, paintedRange in
+ 			let attrs = attributeProvider(token)
+-			setAttributes(attrs, in: token.range)
++			setAttributes(attrs, in: paintedRange)
+ 		}
+ 	}
+ 
+@@ -184,9 +184,9 @@ extension TextLayoutManagerSystemInterface: TextSystemInterface {
+ 			setAttributes([:], in: range)
+ 		}
+ 
+-		for token in application.tokens {
++		application.forEachTokenToApply { token, paintedRange in
+ 			let attrs = attributeProvider(token)
+-			setAttributes(attrs, in: token.range)
++			setAttributes(attrs, in: paintedRange)
+ 		}
+ 	}
+ 
+@@ -245,9 +245,9 @@ extension TextStorageSystemInterface: TextSystemInterface {
+ 			textStorage.beginEditing()
+ 		}
+ 
+-		for token in application.tokens {
++		application.forEachTokenToApply { token, paintedRange in
+ 			let attrs = attributeProvider(token)
+-			setAttributes(attrs, in: token.range)
++			setAttributes(attrs, in: paintedRange)
+ 		}
+ 
+ 		textStorage.endEditing()
+diff --git a/Sources/Neon/Token.swift b/Sources/Neon/Token.swift
+index a7fdbf8..d8de0e3 100644
+--- a/Sources/Neon/Token.swift
++++ b/Sources/Neon/Token.swift
+@@ -40,6 +40,19 @@ public struct TokenApplication: Hashable, Sendable {
+ 		self.action = action
+ 	}
+ 
++	/// Keep semantic token identity intact while bounding its paint authority.
++	package func forEachTokenToApply(_ apply: (Token, NSRange) -> Void) {
++		for token in tokens {
++			if let range {
++				let painted = NSIntersectionRange(token.range, range)
++				guard painted.length > 0 else { continue }
++				apply(token, painted)
++			} else {
++				apply(token, token.range)
++			}
++		}
++	}
++
+ 	public static let noChange = TokenApplication(tokens: [], action: .apply)
+ }
+ 
+diff --git a/Sources/Neon/TreeSitterClient+Neon.swift b/Sources/Neon/TreeSitterClient+Neon.swift
+index 6bc4404..61c52bd 100644
+--- a/Sources/Neon/TreeSitterClient+Neon.swift
++++ b/Sources/Neon/TreeSitterClient+Neon.swift
+@@ -7,21 +7,23 @@ import TreeSitterClient
+ 
+ extension TokenApplication {
+ 	public init(namedRanges: [NamedRange], nameMap: [String : String], range: NSRange) {
+-		// A query can return a capture wider than its requested dirty region.
+-		// Styling that complete capture would overwrite unqueried nested styles.
+-		let tokens = namedRanges.compactMap { named -> Token? in
+-			let clipped = NSIntersectionRange(named.range, range)
+-			guard clipped.length > 0 else { return nil }
+-			let name = nameMap[named.name] ?? named.name
+-
+-			return Token(name: name, range: clipped)
++		let tokens = namedRanges.map {
++			let name = nameMap[$0.name] ?? $0.name
++
++			return Token(name: name, range: $0.range)
+ 		}
+ 
+ 		self.init(tokens: tokens, range: range)
+ 	}
+ 
+ 	public init(namedRanges: [NamedRange], range: NSRange) {
+-		self.init(namedRanges: namedRanges, nameMap: [:], range: range)
++		let tokens = namedRanges.map {
++			let name = $0.name
++
++			return Token(name: name, range: $0.range)
++		}
++
++		self.init(tokens: tokens, range: range)
+ 	}
+ }
+ 
+diff --git a/Tests/NeonTests/NamedRangeApplicationTests.swift b/Tests/NeonTests/NamedRangeApplicationTests.swift
+index 73070c5..873588a 100644
+--- a/Tests/NeonTests/NamedRangeApplicationTests.swift
++++ b/Tests/NeonTests/NamedRangeApplicationTests.swift
+@@ -16,12 +16,24 @@ struct NamedRangeApplicationTests {
+         let captures = [named("wide", 0, 10), named("nested", 4, 2), named("outside", 20, 2), named("empty", 5, 0)]
+         let range = NSRange(location: 3, length: 4)
+         let mapped = TokenApplication(namedRanges: captures, nameMap: ["wide": "outer"], range: range)
+-        #expect(mapped.tokens == [Token(name: "outer", range: range), Token(name: "nested", range: NSRange(location: 4, length: 2))])
++        #expect(mapped.tokens.map(\.range) == captures.map(\.range))
++        #expect(mapped.tokens.map(\.name) == ["outer", "nested", "outside", "empty"])
++        var semantic: [Token] = []
++        var painted: [NSRange] = []
++        mapped.forEachTokenToApply { token, range in semantic.append(token); painted.append(range) }
++        #expect(semantic == Array(mapped.tokens.prefix(2)))
++        #expect(painted == [range, NSRange(location: 4, length: 2)])
+         let plain = TokenApplication(namedRanges: captures, range: range)
+-        #expect(plain.tokens.map(\.name) == ["wide", "nested"])
++        #expect(plain.tokens.map(\.name) == ["wide", "nested", "outside", "empty"])
+         #expect(plain.tokens.map(\.range) == mapped.tokens.map(\.range))
+         let empty = TokenApplication(namedRanges: captures, range: NSRange(location: 5, length: 0))
+-        #expect(empty.tokens.isEmpty)
++        var calls = 0
++        empty.forEachTokenToApply { _, _ in calls += 1 }
++        #expect(calls == 0)
+         #expect(empty.range == NSRange(location: 5, length: 0))
++        let unbounded = TokenApplication(tokens: Array(mapped.tokens.prefix(2)))
++        var unboundedRanges: [NSRange] = []
++        unbounded.forEachTokenToApply { _, range in unboundedRanges.append(range) }
++        #expect(unboundedRanges == Array(mapped.tokens.prefix(2)).map(\.range))
+     }
+ }

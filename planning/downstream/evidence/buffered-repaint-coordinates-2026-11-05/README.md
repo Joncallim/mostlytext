@@ -1,5 +1,7 @@
 # Buffered repaint coordinate evidence
 
+Current semantic-token/paint-range correction: [semantic-paint-boundary](semantic-paint-boundary/README.md).
+
 The first hosted failure and current combined correction are recorded in
 [hosted-remediation](hosted-remediation/README.md). The original evidence below
 remains the first implementation record.

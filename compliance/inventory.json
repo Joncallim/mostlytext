@@ -573,9 +573,9 @@
       "id": "neon",
       "name": "Neon",
       "kind": "swiftpm",
-      "version": "9db7e1d3",
+      "version": "baf93c72",
       "upstream": "https://github.com/Joncallim/Neon",
-      "revision": "9db7e1d361d6f724ee28da49eae532db3018b408",
+      "revision": "baf93c72924e31e16b84adced6ee29cb02934c3b",
       "resolution": "exact",
       "licence": "BSD-3-Clause",
       "copyright": [
@@ -596,9 +596,9 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "9db7e1d361d6f724ee28da49eae532db3018b408"
+        "revision": "baf93c72924e31e16b84adced6ee29cb02934c3b"
       },
-      "evidence": "Owner patch child of 0699ea559682b4f62c8cd10ae520c7262c4acaa9. Shift retained dirty intervals through each later edit before new client invalidations, preserving surviving deletion tails, nested depth, all-document and reentrant scope ownership. MOSTLYTEXT_PATCHES.md records the client and buffer corrections. Original BSD-3-Clause licence, SwiftTreeSitter pin and grammar bytes are unchanged. Complete-editor performance, widened Debug abort and native acceptance remain open. This exact merge also carries e528a19381bfe3bc0ea996f41dcea11efbc2e9f0: clip named capture tokens to partial query authority, preserving nested styles outside the application range. The first hosted failure and direct adapter reproduction are retained."
+      "evidence": "Owner patch over e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9 (original runtime dabf50c947148c49acd0d321dfe8f3805d10b3da). Refresh embedded-language validity before callbacks, await running validation/follow-up regions and reject obsolete queries. Preserve complete semantic tokens for attribute providers while a package-only iterator confines actual painting in all three native style interfaces. Both rejected styling boundaries and their failed hosted runs are retained; original BSD-3-Clause licence and parser/grammar pins are unchanged. Separate buffered-coordinate work, whole-editor latency and native acceptance remain open. This exact merge also shifts retained dirty intervals through later edits before new client invalidations, preserving surviving deletion tails, nested depth, all-document and reentrant scope ownership. Both client/style and buffer proofs and all first hosted failures are retained."
     },
     {
       "id": "nvim-treesitter-markdown-queries",

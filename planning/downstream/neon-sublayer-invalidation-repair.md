@@ -133,3 +133,32 @@ and all other copied inputs; do not label the extracted prefix a whole unchanged
 file. Full hosted execution must still demonstrate the original failing native
 adapter check. This is a scoped architecture correction to the client adoption,
 not evidence that the separately prepared buffer repair has merged.
+
+## Preserve semantic ranges at the styling boundary
+
+Corrected CI41971455564 at2a716c23 passes the original below-cutoff comparison
+but fails the existing byte-geometry provider checks for both JSON fixtures.
+Those providers observe semantic token ranges; clipping the Token itself changes
+that established contract. Retain this failed run and its exact log before the
+next correction. The parser/client ranges must remain complete semantic spans.
+
+Replace token clipping with a package-only TokenApplication iterator that emits
+the original Token plus its intersected painting range. The two named-range
+initializers retain their original semantic tokens and name mapping. The three
+concrete style interfaces call the attribute provider with that original token,
+then apply attributes only within the separately bounded range. Keep generic
+public signatures, clearing/action behavior and TextKit scheduling unchanged.
+This deliberately revises the earlier forbidden-file rule for only those three
+application loops, because the hosted semantic-range contract invalidated the
+initial adapter-only approach. No other layout or style behavior changes.
+
+Foundation-only tests exercise the exact new iterator with a memory paint model,
+including complete semantic ranges, bounded output, nested captures, name maps,
+empty/disjoint cases and a real warmed-client query. Keep the existing hosted
+byte-geometry, selection, combined-edit and below-cutoff comparisons unchanged.
+The original partial-application property remains active. Hosted builds paint
+through the real TextStorageSystemInterface; the owned Foundation fixture uses
+the exact package-only iterator and memory styles. Both backends require the
+same unchanged outside-query result. A separate owner-package control verifies
+complete semantic captures and the distinct bounded paint ranges. No geometry
+or style test is removed, disabled or weakened.
