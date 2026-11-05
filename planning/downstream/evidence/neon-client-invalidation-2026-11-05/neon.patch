@@ -1,0 +1,295 @@
+diff --git a/MOSTLYTEXT_PATCHES.md b/MOSTLYTEXT_PATCHES.md
+new file mode 100644
+index 0000000..7d75060
+--- /dev/null
++++ b/MOSTLYTEXT_PATCHES.md
+@@ -0,0 +1,35 @@
++# MostlyText dependency patches
++
++This owner fork retains the original BSD-3-Clause LICENSE unchanged. The current
++runtime baseline is dabf50c947148c49acd0d321dfe8f3805d10b3da; the manifest-only
++child e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9 pins the application-reviewed
++SwiftTreeSitter fork 1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43.
++
++## Embedded-language invalidation and query readiness
++
++Root edits now invalidate embedded-language work. Content epoch and shifted
++validity are published before synchronous parse completion, and sublayer
++invalidation precedes external callbacks. Sync queries defer with nil while
++inline validation is unfinished; async queries wait and reject obsolete content
++with CancellationError. Processing begins inside the highlight provider after
++capturing its epoch, so reentrant edits cannot escape that guard.
++
++SinglePhaseRangeValidator completion now counts a running provider and scheduled
++follow-up regions as unfinished work. Its old queue-empty check returned after
++dequeue but before provider completion. The public API signatures are retained;
++a package-only validity accessor supports TreeSitterClient readiness checks.
++
++ValidationCompletionTests uses a controlled continuation gate for single and
++disjoint regions, including an in-flight completion observer. The MostlyText
++application adds strict warmed Markdown/fresh-client controls across Unicode,
++three line endings, three edit shapes and ordinary/reentrant callbacks, plus a
++reentrant content-epoch cancellation test. Source-identical Foundation/C-only
++RangeState and TreeSitterClient fixtures pass Debug and Release, including the
++existing thousand-insert/query stress test. Original-source regressions and
++failed intermediate/setup controls are retained in the application's evidence
++packet. Full application hosted CI is required for adoption.
++
++This does not fix buffered style-coordinate drift, widen parser thresholds,
++raise the application fallback, prove complete-editor latency, or establish
++native acceptance. No grammar bytes, styling APIs or upstream contributions are
++changed by this patch.
+diff --git a/Package.swift b/Package.swift
+index 3d4a391..04f724c 100644
+--- a/Package.swift
++++ b/Package.swift
+@@ -15,7 +15,7 @@ let package = Package(
+ 		.library(name: "Neon", targets: ["Neon"]),
+ 	],
+ 	dependencies: [
+-		.package(url: "https://github.com/ChimeHQ/SwiftTreeSitter", branch: "main"),
++		.package(url: "https://github.com/Joncallim/SwiftTreeSitter", revision: "1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43"),
+ 		.package(url: "https://github.com/ChimeHQ/Rearrange", from: "2.0.0"),
+ 	],
+ 	targets: [
+diff --git a/Sources/RangeState/SinglePhaseRangeValidator.swift b/Sources/RangeState/SinglePhaseRangeValidator.swift
+index b761ca4..0f1772e 100644
+--- a/Sources/RangeState/SinglePhaseRangeValidator.swift
++++ b/Sources/RangeState/SinglePhaseRangeValidator.swift
+@@ -26,6 +26,8 @@ public final class SinglePhaseRangeValidator<Content: VersionedContent> {
+ 
+ 	private let primaryValidator: RangeValidator<Content>
+ 	private var eventQueue: AwaitableQueue<ValidationOperation>
++	private var completionWaiters: [CheckedContinuation<Void, Never>] = []
++	private var scheduledValidations = 0
+ 
+ 	public let configuration: Configuration
+ 	public var validationHandler: (NSRange, Bool) -> Void = { _, _ in }
+@@ -41,6 +43,10 @@ public final class SinglePhaseRangeValidator<Content: VersionedContent> {
+ 		configuration.versionedContent.currentVersion
+ 	}
+ 
++	package func isValid(_ target: RangeTarget) -> Bool {
++		primaryValidator.isValid(target)
++	}
++
+ 	/// Manually mark a region as invalid.
+ 	public func invalidate(_ target: RangeTarget) {
+ 		primaryValidator.invalidate(target)
+@@ -59,6 +65,7 @@ public final class SinglePhaseRangeValidator<Content: VersionedContent> {
+ 		switch action {
+ 		case .none:
+ 			eventQueue.handlePendingWaiters()
++			resumeCompletionWaitersIfIdle()
+ 			return .none
+ 		case let .needed(contentRange):
+ 			let operation = ValidationOperation(contentRange: contentRange, target: target)
+@@ -91,10 +98,16 @@ public final class SinglePhaseRangeValidator<Content: VersionedContent> {
+ 
+ 	private func completePrimaryValidation(of operation: ValidationOperation, with validation: Validation, isolation: isolated (any Actor)) {
+ 		primaryValidator.completeValidation(of: operation.contentRange, with: validation)
++		defer { resumeCompletionWaitersIfIdle() }
+ 
+ 		switch validation {
+ 		case .stale:
++			scheduledValidations += 1
+ 			Task<Void, Never> {
++				defer {
++					scheduledValidations -= 1
++					resumeCompletionWaitersIfIdle()
++				}
+ 				if operation.contentRange.version == self.version {
+ 					print("version unchanged after stale results, stopping validation")
+ 					return
+@@ -113,7 +126,12 @@ public final class SinglePhaseRangeValidator<Content: VersionedContent> {
+ 				return
+ 			}
+ 
++			scheduledValidations += 1
+ 			Task<Void, Never> {
++				defer {
++					scheduledValidations -= 1
++					resumeCompletionWaitersIfIdle()
++				}
+ 				validate(operation.target, isolation: isolation)
+ 			}
+ 		}
+@@ -154,7 +172,21 @@ public final class SinglePhaseRangeValidator<Content: VersionedContent> {
+ 		completePrimaryValidation(of: operation, with: validation, isolation: isolation)
+ 	}
+ 
++	private var hasPendingValidation: Bool {
++		primaryValidator.hasOutstandingValidations || scheduledValidations > 0
++	}
++
++	private func resumeCompletionWaitersIfIdle() {
++		guard !hasPendingValidation else { return }
++		let waiters = completionWaiters
++		completionWaiters.removeAll()
++		for waiter in waiters { waiter.resume() }
++	}
++
+ 	public func validationCompleted(isolation: isolated any Actor) async {
+-		await eventQueue.processingCompleted(isolation: isolation)
++		guard hasPendingValidation else { return }
++		// A provider is removed from eventQueue when it starts. It remains
++		// outstanding until its result and any follow-up regions are processed.
++		await withCheckedContinuation { completionWaiters.append($0) }
+ 	}
+ }
+diff --git a/Sources/TreeSitterClient/TreeSitterClient.swift b/Sources/TreeSitterClient/TreeSitterClient.swift
+index f855711..e66f436 100644
+--- a/Sources/TreeSitterClient/TreeSitterClient.swift
++++ b/Sources/TreeSitterClient/TreeSitterClient.swift
+@@ -146,9 +146,11 @@ public final class TreeSitterClient {
+ 	/// - Parameter range: the range that was affected by the edit
+ 	/// - Parameter delta: the change in length of the content
+ 	public func didChangeContent(in range: NSRange, delta: Int) {
+-		rangeProcessor.didChangeContent(in: range, delta: delta, isolation: MainActor.shared)
++		// Parsing can complete synchronously and publish reentrant callbacks.
++		// Advance validity and the epoch before publishing the edited tree.
+ 		sublayerValidator.contentChanged(in: range, delta: delta)
+ 		versionedContent.contentChanged()
++		rangeProcessor.didChangeContent(in: range, delta: delta, isolation: MainActor.shared)
+ 	}
+ 
+ 	/// Inform the client that calls to `languageConfiguration` may change.
+@@ -191,7 +193,7 @@ extension TreeSitterClient {
+ 
+ 		layerTree.didChangeContent(content, in: mutation.range, delta: mutation.delta, isolation: MainActor.shared, completion: { invalidated in
+ 			completion()
+-			self.handleInvalidation(invalidated, sublayers: false)
++			self.handleInvalidation(invalidated, sublayers: true)
+ 		})
+ 	}
+ 
+@@ -202,11 +204,11 @@ extension TreeSitterClient {
+ 			return
+ 		}
+ 
+-		configuration.invalidationHandler(transformedSet)
+-
+ 		if sublayers {
+ 			sublayerValidator.invalidate(.set(transformedSet))
+ 		}
++
++		configuration.invalidationHandler(transformedSet)
+ 	}
+ }
+ 
+@@ -333,37 +335,52 @@ extension TreeSitterClient {
+ 		return hasPendingChanges == false
+ 	}
+ 
+-	private func validateSublayers(in set: IndexSet) {
+-		sublayerValidator.validate(.set(set), isolation: MainActor.shared)
++	@discardableResult
++	private func validateSublayers(in set: IndexSet) -> Bool {
++		// Queries may extend beyond EOF, but only existing content can be valid.
++		let target = RangeTarget.set(set.intersection(IndexSet(integersIn: 0..<versionedContent.currentLength)))
++		sublayerValidator.validate(target, isolation: MainActor.shared)
++		return sublayerValidator.isValid(target)
+ 	}
+ 
+ 	private func executeQuery(_ clientQuery: ClientQuery) async throws -> some Sequence<QueryMatch> {
++		let version = versionedContent.currentVersion
+ 		rangeProcessor.processLocation(clientQuery.params.maxLocation, mode: clientQuery.params.mode, isolation: MainActor.shared)
+ 
+ 		await rangeProcessor.processingCompleted(isolation: MainActor.shared)
++		guard version == versionedContent.currentVersion else { throw CancellationError() }
+ 
+-		validateSublayers(in: clientQuery.params.indexSet)
++		while !validateSublayers(in: clientQuery.params.indexSet) {
++			await sublayerValidator.validationCompleted(isolation: MainActor.shared)
++			try Task.checkCancellation()
++			guard version == versionedContent.currentVersion else { throw CancellationError() }
++		}
+ 
++		try Task.checkCancellation()
++		guard version == versionedContent.currentVersion else { throw CancellationError() }
+ 		let matches = try await layerTree.executeQuery(clientQuery.query, in: clientQuery.params.indexSet, isolation: MainActor.shared)
++		try Task.checkCancellation()
++		guard version == versionedContent.currentVersion else { throw CancellationError() }
+ 
+ 		return matches.resolve(with: .init(textProvider: clientQuery.params.textProvider))
+ 	}
+ 
+ 	public var highlightsProvider: HighlightsProvider {
+ 		.init(
+-			isolation: MainActor.shared,
+-			rangeProcessor: rangeProcessor,
+-			inputTransformer: { ($0.maxLocation, $0.mode) },
+ 			syncValue: { input in
+ 				let set = input.indexSet
++				let version = self.versionedContent.currentVersion
++				guard self.rangeProcessor.processLocation(input.maxLocation, mode: input.mode, isolation: MainActor.shared),
++					version == self.versionedContent.currentVersion else { return nil }
+ 
+ 				guard self.canAttemptSynchronousAccess(in: .set(set)) else { return nil }
+ 
+-				self.validateSublayers(in: set)
++				guard self.validateSublayers(in: set),
++					version == self.versionedContent.currentVersion else { return nil }
+ 
+ 				return try self.layerTree.executeQuery(.highlights, in: set).highlights()
+ 			},
+-			asyncValue: { input in
++			mainActorAsyncValue: { input in
+ 				let query = ClientQuery(query: .highlights, indexSet: input.indexSet, textProvider: input.textProvider, mode: input.mode)
+ 
+ 				return try await self.executeQuery(query).highlights()
+diff --git a/Tests/RangeStateTests/ValidationCompletionTests.swift b/Tests/RangeStateTests/ValidationCompletionTests.swift
+new file mode 100644
+index 0000000..3eb8168
+--- /dev/null
++++ b/Tests/RangeStateTests/ValidationCompletionTests.swift
+@@ -0,0 +1,49 @@
++import Foundation
++import Testing
++import RangeState
++
++@Suite("Single-phase validation completion", .serialized)
++struct ValidationCompletionTests {
++    @MainActor
++    final class Gate {
++        let started = AsyncStream<Void>.makeStream()
++        let waiting = AsyncStream<Void>.makeStream()
++        var continuation: CheckedContinuation<Void, Never>?
++        var released = false
++    }
++
++    @MainActor
++    @Test(.timeLimit(.minutes(1)), arguments: [false, true])
++    func completionWaitsForInFlightProvider(disjoint: Bool) async throws {
++        let gate = Gate()
++        let content = UnversionableContent(lengthProvider: { 3 })
++        let provider = SinglePhaseRangeValidator<UnversionableContent>.Provider(
++            syncValue: { _ in nil },
++            mainActorAsyncValue: { range in
++                await withCheckedContinuation { continuation in
++                    gate.continuation = continuation
++                    gate.started.continuation.yield(())
++                }
++                return .success(range.value)
++            }
++        )
++        let validator = SinglePhaseRangeValidator(configuration: .init(versionedContent: content, provider: provider))
++        let target = disjoint ? RangeTarget.set(IndexSet([0, 2])) : .all
++        validator.validate(target)
++        var started = gate.started.stream.makeAsyncIterator()
++        _ = try #require(await started.next())
++        let waiter = Task { @MainActor in
++            gate.waiting.continuation.yield(())
++            await validator.validationCompleted(isolation: MainActor.shared)
++            #expect(gate.released, "a dequeued provider still counts as unfinished validation")
++        }
++        _ = try #require(await gate.waiting.stream.first { @Sendable _ in true })
++        if disjoint {
++            gate.continuation?.resume()
++            _ = try #require(await started.next())
++        }
++        gate.released = true
++        gate.continuation?.resume()
++        await waiter.value
++    }
++}

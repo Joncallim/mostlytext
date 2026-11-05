@@ -1,0 +1,90 @@
+diff --git a/MOSTLYTEXT_PATCHES.md b/MOSTLYTEXT_PATCHES.md
+index 7d75060..3e7fa7b 100644
+--- a/MOSTLYTEXT_PATCHES.md
++++ b/MOSTLYTEXT_PATCHES.md
+@@ -33,3 +33,15 @@ This does not fix buffered style-coordinate drift, widen parser thresholds,
+ raise the application fallback, prove complete-editor latency, or establish
+ native acceptance. No grammar bytes, styling APIs or upstream contributions are
+ changed by this patch.
++
++## Partial style-query containment
++
++The first application hosted run exposed a wide italic capture overwriting
++nested styles outside its requested dirty range. Named-range TokenApplication
++initializers now clip each emitted token to the requested range, retaining
++capture order and name mapping and dropping empty intersections. A narrow query
++cannot restyle an unqueried neighbor. Both existing initializer signatures are
++preserved; the generic TokenApplication initializer is unchanged. The actual
++warmed-client/partial-application reproduction fails twice before this correction
++and passes afterward. A separate control covers mapping, ordering, disjoint and
++empty captures. Hosted rerun of the original failing app check is required.
+diff --git a/Sources/Neon/TreeSitterClient+Neon.swift b/Sources/Neon/TreeSitterClient+Neon.swift
+index 61c52bd..6bc4404 100644
+--- a/Sources/Neon/TreeSitterClient+Neon.swift
++++ b/Sources/Neon/TreeSitterClient+Neon.swift
+@@ -7,23 +7,21 @@ import TreeSitterClient
+ 
+ extension TokenApplication {
+ 	public init(namedRanges: [NamedRange], nameMap: [String : String], range: NSRange) {
+-		let tokens = namedRanges.map {
+-			let name = nameMap[$0.name] ?? $0.name
+-
+-			return Token(name: name, range: $0.range)
++		// A query can return a capture wider than its requested dirty region.
++		// Styling that complete capture would overwrite unqueried nested styles.
++		let tokens = namedRanges.compactMap { named -> Token? in
++			let clipped = NSIntersectionRange(named.range, range)
++			guard clipped.length > 0 else { return nil }
++			let name = nameMap[named.name] ?? named.name
++
++			return Token(name: name, range: clipped)
+ 		}
+ 
+ 		self.init(tokens: tokens, range: range)
+ 	}
+ 
+ 	public init(namedRanges: [NamedRange], range: NSRange) {
+-		let tokens = namedRanges.map {
+-			let name = $0.name
+-
+-			return Token(name: name, range: $0.range)
+-		}
+-
+-		self.init(tokens: tokens, range: range)
++		self.init(namedRanges: namedRanges, nameMap: [:], range: range)
+ 	}
+ }
+ 
+diff --git a/Tests/NeonTests/NamedRangeApplicationTests.swift b/Tests/NeonTests/NamedRangeApplicationTests.swift
+new file mode 100644
+index 0000000..73070c5
+--- /dev/null
++++ b/Tests/NeonTests/NamedRangeApplicationTests.swift
+@@ -0,0 +1,27 @@
++import Foundation
++import SwiftTreeSitter
++import Testing
++#if canImport(Neon)
++import Neon
++#else
++import OwnedStylingCore
++#endif
++
++struct NamedRangeApplicationTests {
++    @Test func boundedTokensPreserveNamesOrderAndEmptyApplications() {
++        func named(_ name: String, _ start: Int, _ length: Int) -> NamedRange {
++            NamedRange(name: name, range: NSRange(location: start, length: length),
++                       pointRange: Point(row: 0, column: start * 2)..<Point(row: 0, column: (start + length) * 2))
++        }
++        let captures = [named("wide", 0, 10), named("nested", 4, 2), named("outside", 20, 2), named("empty", 5, 0)]
++        let range = NSRange(location: 3, length: 4)
++        let mapped = TokenApplication(namedRanges: captures, nameMap: ["wide": "outer"], range: range)
++        #expect(mapped.tokens == [Token(name: "outer", range: range), Token(name: "nested", range: NSRange(location: 4, length: 2))])
++        let plain = TokenApplication(namedRanges: captures, range: range)
++        #expect(plain.tokens.map(\.name) == ["wide", "nested"])
++        #expect(plain.tokens.map(\.range) == mapped.tokens.map(\.range))
++        let empty = TokenApplication(namedRanges: captures, range: NSRange(location: 5, length: 0))
++        #expect(empty.tokens.isEmpty)
++        #expect(empty.range == NSRange(location: 5, length: 0))
++    }
++}

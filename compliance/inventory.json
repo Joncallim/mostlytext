@@ -573,9 +573,9 @@
       "id": "neon",
       "name": "Neon",
       "kind": "swiftpm",
-      "version": "e1e0c6d",
+      "version": "6797068d",
       "upstream": "https://github.com/Joncallim/Neon",
-      "revision": "e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9",
+      "revision": "6797068d989992952accb5a821ac7ee676e1c395",
       "resolution": "exact",
       "licence": "BSD-3-Clause",
       "copyright": [
@@ -596,9 +596,9 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9"
+        "revision": "6797068d989992952accb5a821ac7ee676e1c395"
       },
-      "evidence": "Manifest-only child of dabf50c947148c49acd0d321dfe8f3805d10b3da: pin the same canonical SwiftTreeSitter owner fork/revision as the application. All Neon runtime/test files and original BSD-3-Clause licence bytes are unchanged; no sublayer/styling defect is inferred fixed by this manifest change."
+      "evidence": "Owner patch over e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9 (original runtime dabf50c947148c49acd0d321dfe8f3805d10b3da). Refresh embedded-language validity before callbacks, await running validation/follow-up regions and reject obsolete queries. Preserve complete semantic tokens for attribute providers while a package-only iterator confines actual painting in all three native style interfaces. Both rejected styling boundaries and their failed hosted runs are retained; original BSD-3-Clause licence and parser/grammar pins are unchanged. Separate buffered-coordinate work, whole-editor latency and native acceptance remain open."
     },
     {
       "id": "nvim-treesitter-markdown-queries",

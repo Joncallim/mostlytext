@@ -1,0 +1,20 @@
+{
+  "originalFailedApplicationHead": "377af67b675e52cbefe280a2531f5a1d9264de99",
+  "failedCI": 41968571963,
+  "failedJob": 127051219564,
+  "failedTest": "HighlightingSizeFallbackTests.belowTheCutoffHighlightingMatchesAFreshHighlighter",
+  "failedLogSha256": "c61bda29bb827c7679243c09e71fa03b6d8c9d00c2c2df37cfeb0135bd4950dc",
+  "neonCandidate": "e528a19381bfe3bc0ea996f41dcea11efbc2e9f0",
+  "originalPartialStyleAssertions": 2,
+  "finalSwiftTestingFunctions": 34,
+  "finalSuites": 9,
+  "existingXCTestCases": 8,
+  "selectedStylingSource": {
+    "source": "Sources/Neon/TreeSitterClient+Neon.swift",
+    "startByte": 0,
+    "endByteExcluded": 2357,
+    "sha256": "f35df2919a473f61cb5caab615209bddb954ee7fb1fd5e55cec744b58cb3cb17",
+    "nativeConditionalTail": "excluded; not executed"
+  },
+  "hostedCorrectedHeadCI": "required before merge"
+}
