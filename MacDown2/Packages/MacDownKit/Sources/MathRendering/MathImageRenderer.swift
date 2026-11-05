@@ -5,16 +5,12 @@ import Math
 import SwiftUI
 @_spi(Textual) import SwiftUIMath
 
-/// Renders one `MathSpan` to PNG bytes via `SwiftUIMath`'s `Math` view and
-/// SwiftUI's `ImageRenderer` — the same rendering engine Preview's own
-/// (currently dormant) `Textual`-driven math display uses, so Preview and
-/// Export produce visually consistent equations from one engine
-/// (epic-19-implementation.md §1, §17 Slice 2).
-///
-/// `Math` here — the type from `import SwiftUIMath` — is `SwiftUIMath.Math`,
-/// the LaTeX-rendering SwiftUI view; it is unrelated to this package's own
-/// `Math` module (`MathSpan`/`MathContribution`), which declares no type
-/// named bare `Math` and so cannot collide with it.
+/// Rasterizes shared validated bodies through SwiftUIMath and ImageRenderer.
+/// The typed-body extension checks geometry, pixel and PNG limits before output.
+/// Original String/span factories remain available for compatibility; production
+/// Preview and Export consume parser-admitted bodies rather than their old
+/// zero-size validity heuristic. SwiftUIMath.Math is separate from the local
+/// renderer-neutral Math module.
 @MainActor
 public enum MathImageRenderer {
     /// Chosen for legible on-screen/print quality without producing
@@ -24,10 +20,8 @@ public enum MathImageRenderer {
     /// `ExportMathRenderContext` (`MathExportRegistry.swift`, app target).
     public nonisolated static let standardScale: CGFloat = 3
 
-    /// `nonisolated`: read by `isRenderable(_:)` too, which must be callable
-    /// without a main-actor hop (Preview's malformed-equation check runs
-    /// synchronously inside SwiftUI `body` evaluation, epic-19-implementation.md
-    /// §6.1/§8).
+    /// Legacy synchronous String/span metrics retain their existing font.
+    /// The production typed API supplies the same font after body admission.
     private nonisolated static let font = SwiftUIMath.Math.Font(name: .latinModern, size: 18)
 
     private nonisolated static func style(for span: MathSpan) -> SwiftUIMath.Math.TypesettingStyle {
@@ -40,12 +34,9 @@ public enum MathImageRenderer {
         )
     }
 
-    /// The one failure signal available for a math span
-    /// (epic-19-implementation.md §2.1): `SwiftUIMath` exposes no structured
-    /// parse error, only "measured to zero size." Shared by `render(span:
-    /// context:)` below and by Preview's `MathPreviewPreprocessor` (app
-    /// target), so both consult the exact same check rather than risking
-    /// two independently-written validity rules drifting apart.
+    /// Legacy String/span renderability check. This does not classify parser
+    /// errors or distinguish valid empty geometry; production uses typed
+    /// evaluation and MathRenderError.noVisibleOutput instead.
     public nonisolated static func isRenderable(_ span: MathSpan) -> Bool {
         let size = bounds(for: span).size
         return size.width > 0 && size.height > 0

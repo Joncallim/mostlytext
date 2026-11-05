@@ -50,7 +50,8 @@ extension WindowCoordinator {
             scheduleSaveSession()
         } else {
             session.pendingNavigation = nil
-            system.revealSelection(utf16Range: range, flash: true, animated: true)
+            system.revealSelection(utf16Range: range, flash: true,
+                                   animated: !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion)
             controller.window?.makeFirstResponder(system.textView)
         }
     }
@@ -67,12 +68,14 @@ extension WindowCoordinator {
         }
         guard let controller = controllers.first(where: { $0.model === model && !$0.isClosed }),
               let system = controller.editorStore.existingSystem(for: identity),
-              !system.isDetachedFromEditorView else { return }
+              !system.isDetachedFromEditorView, let window = controller.window,
+              system.textView.window === window else { return }
         session.pendingNavigation = nil
         let range = Self.mathSelection(location, diagnostic: pending.diagnostic)
         system.selectionSet = EditorSelectionSet(single: range)
-        system.revealSelection(utf16Range: range, flash: true, animated: true)
-        controller.window?.makeFirstResponder(system.textView)
+        system.revealSelection(utf16Range: range, flash: true,
+                               animated: !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion)
+        window.makeFirstResponder(system.textView)
     }
 
     private static func mathSelection(_ location: MathPreviewSourceLocation, diagnostic: Bool) -> NSRange {

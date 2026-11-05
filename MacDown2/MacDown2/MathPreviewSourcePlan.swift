@@ -36,6 +36,7 @@ enum MathPreviewSourcePlanner {
         let references: MarkdownReferenceReplayIndex
     }
 
+    @concurrent
     static func prepare(_ request: MathPreviewSourceRequest) async throws -> MathPreviewSourcePlan {
         try Task.checkCancellation()
         guard request.document.isBound(to: request.source), let facts = request.document.sourceFacts,
@@ -62,6 +63,8 @@ enum MathPreviewSourcePlanner {
                 let input = try input(block: block, context: context, entries: own)
                 result.blocks[block.id] = .parsed(input)
                 result.drawableEntries.append(contentsOf: own)
+            } catch is CancellationError {
+                throw CancellationError()
             } catch {
                 result.blocks[block.id] = .literal
                 if let equation = own.first?.equation {

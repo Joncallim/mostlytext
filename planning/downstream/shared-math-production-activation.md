@@ -173,7 +173,8 @@ compiled ordinary app builds but failed actual test-action linking with undefine
 Textual symbols. This adds no component/revision/resource and changes no notice
 bytes. Xcode's generated lock must still equal the canonical 24-pin package lock.
 
-Source planning (one source digest/index and bounded block queries) runs away from
+Source planning verifies document and repair fingerprints once per snapshot,
+builds one reference index and uses bounded block queries. It runs away from
 the main actor. Native geometry/attachment creation stays on the main actor and
 yields between equations. Direct links and images use sorted interval queries,
 including partial-overlap rejection; source is never rescanned per block.
@@ -191,3 +192,50 @@ unchanged. The ordinary production Export coordinator already enforced this gate
 Existing unregistered Preview resource-grant routing is unchanged. Original target
 provenance does not grant filesystem/network access or complete issue #13. Native
 license/VoiceOver/visual/PDF and exact signed-artifact acceptance remain held.
+
+
+## Scoped review corrections
+
+Reference sorting/query/repair passes now check cancellation, including comparator
+and linear-loop boundaries; a cancelled request cannot finish preparing obsolete
+reference data. The regression fails four assertions against the former code and
+passes with the correction. Source planning uses explicit `@concurrent` execution
+([Swift SE-0461](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0461-async-function-isolation.md)),
+so changing caller-actor defaults cannot move whole-source work onto the main actor.
+
+Preview-only navigation retains its pending request until the real editor is
+attached to its owning NSWindow; a makeNSView/layout callback before attachment
+cannot consume that request or claim keyboard focus. All source/frame/key-owner
+checks are repeated at the eventual attachment/layout callback.
+
+Adapter tests mount the actual registered TextKit editor directly to isolate
+coordinator guards from independent SwiftUI initial parsing. Their original
+hosted fixture lost analysis authority before navigation; that failure is retained.
+A separate mounted production app-shell test keeps the complete automatic
+model/editor/parser/math/view path, invalid-to-valid-to-invalid recovery and actual
+native attachment action in split and Preview-only layouts. Neither test removes
+live-source guards or injects a replacement production parser. Native execution
+still occurs only in hosted macOS 26, with final exact-head qualification required.
+
+
+## Preserve unaffected block state without retaining lost URL authority
+
+A global frame ID on every StructuredText subtree resets unrelated ordinary
+blocks when analysis is invalidated or arrives. Keep exact per-block content
+identity instead: authored and rewritten UTF-8, base URL, parser guard mode and
+every original URL role/range/destination. Only blocks with math markers also
+include the current frame ID, so stale occurrence metadata cannot survive.
+Native reference-budget changes can remove an original target while leaving the
+rewritten Markdown identical; the authority list MUST participate in identity.
+Canonical String equality alone is insufficient. Its coarser hash is allowed only
+with exact UTF-8 equality in the identity value.
+
+The app explicitly passes PreviewMathContent.pending before a source plan exists.
+Pending authored blocks use the same native no-dollar parser with zero URL
+permissions, showing original source if it would create a link/image. This is an
+app opt-in; standalone Preview callers and generated blocks keep their admitted
+Markdown behavior. Dollar-bearing authored pending blocks stay literal; code
+fences remain code/diagram views. A pending zero-target parse may be retained when
+its complete prepared input and zero-target authority are identical. Any changed
+source, reference authority, parser mode, base URL or own math frame replaces it.
+No global reference extractor or second dollar grammar is introduced.

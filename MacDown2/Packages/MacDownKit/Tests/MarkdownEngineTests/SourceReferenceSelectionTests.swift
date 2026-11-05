@@ -3,6 +3,28 @@ import Foundation
 import Testing
 
 struct SourceReferenceSelectionTests {
+    @Test func cancelledReferenceWorkDoesNotBuildOrQueryAnObsoleteSnapshot() async throws {
+        let source = "[$x$][]\n\n[$x$]: /right"
+        let document = try await ParseEngine().parse(source, revision: 1)
+        let facts = try #require(document.sourceFacts)
+        let index = try MarkdownReferenceReplayIndex(facts: facts)
+        let range = 0 ..< source.utf16.count
+        let cancelled = Task {
+            withUnsafeCurrentTask { $0?.cancel() }
+            #expect(throws: CancellationError.self) { try MarkdownReferenceReplayIndex(facts: facts) }
+            #expect(throws: CancellationError.self) {
+                try index.references(for: range, sourceSHA256: facts.sourceSHA256)
+            }
+            #expect(throws: CancellationError.self) {
+                try index.prefix(for: range, sourceSHA256: facts.sourceSHA256, maximumUTF8Bytes: 65536)
+            }
+            #expect(throws: CancellationError.self) {
+                try MarkdownReferenceRepair.edits(source: source, facts: facts, replacing: [1 ..< 4])
+            }
+        }
+        await cancelled.value
+    }
+
     private func range(_ text: String, in source: String) throws -> Range<Int> {
         let value = (source as NSString).range(of: text, options: .literal)
         try #require(value.location != NSNotFound)

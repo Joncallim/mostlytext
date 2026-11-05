@@ -1,5 +1,80 @@
 [
   {
+    "file": "block-cache-app-tests-compile.log.gz",
+    "uncompressed_sha256": "ad7acdb7835fcde0a3d092b116bca4bb15b51d04c1130ecb31da9184f2ecd336",
+    "bytes": 843130
+  },
+  {
+    "file": "block-cache-final-compliance.log.gz",
+    "uncompressed_sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+    "bytes": 54
+  },
+  {
+    "file": "block-cache-final-format-check.log.gz",
+    "uncompressed_sha256": "01c60fc0fa31622e950965b1c4d153d94acd0a7c79944f5c0edda666f2521ca9",
+    "bytes": 258
+  },
+  {
+    "file": "block-cache-foundation-debug.log.gz",
+    "uncompressed_sha256": "1e8e97926e0853e8334c9fa2886d5087bf31f475e34d73d9151170f4e5e689e0",
+    "bytes": 89375
+  },
+  {
+    "file": "block-cache-foundation-release.log.gz",
+    "uncompressed_sha256": "55b0ac33e7dcd32982b77749e6ad93cef48e1e5d446fc176960ded34342647c2",
+    "bytes": 88707
+  },
+  {
+    "file": "block-cache-package-tests-compile.log.gz",
+    "uncompressed_sha256": "48e6556da7e1b2271f89343272e516a65019d6fa5a0226aa909a061ab9edc691",
+    "bytes": 4222
+  },
+  {
+    "file": "block-cache-tests-lint.log.gz",
+    "uncompressed_sha256": "c45cd36c9908329e1b1cb805b80c0db7e2d6a7fe07d0ec9e53029ff6fb362e99",
+    "bytes": 75953
+  },
+  {
+    "file": "cancellation-review-final-compile.log.gz",
+    "uncompressed_sha256": "1029e6858ec5245ee1497d3d1443f617119029d2e6a78c7694c1ba36dfc2436d",
+    "bytes": 629737
+  },
+  {
+    "file": "cancellation-review-format.log.gz",
+    "uncompressed_sha256": "e453a76eab91e6edc2fcb7f2c611aa6e774f6883756a5e400248cf82cf06c26a",
+    "bytes": 208
+  },
+  {
+    "file": "cancellation-review-lint.log.gz",
+    "uncompressed_sha256": "10152221e913d7d906f5c3c0bb181a08682fcc6399caaf4ab8db2dd2c02762f1",
+    "bytes": 75728
+  },
+  {
+    "file": "final-source-action-compile.log.gz",
+    "uncompressed_sha256": "9115fcc58e0e8e86d31456dfd1f624236a0349697571d378bbc377e2b7405475",
+    "bytes": 487652
+  },
+  {
+    "file": "fixture-disposal-compile.log.gz",
+    "uncompressed_sha256": "b2bf2dc4f8d594eed087a80f63b95e625381c079775c8ee5d360dc7cc2fa956e",
+    "bytes": 499541
+  },
+  {
+    "file": "mounted-action-lint.log.gz",
+    "uncompressed_sha256": "821ebe080fe7a9c11a1b6bcb9d4e6a8cf7bb821db5721ea5e2837a2d5a11175e",
+    "bytes": 76083
+  },
+  {
+    "file": "mounted-action-refactored-compile.log.gz",
+    "uncompressed_sha256": "13459f222bb866e253aadbd6725234345b2dad2e758ccd6bba64b2131c71031d",
+    "bytes": 604381
+  },
+  {
+    "file": "mounted-action-refactored-lint.log.gz",
+    "uncompressed_sha256": "e00d3dd8e2b71cc63b2cef37420a76f209d62bff57b60f320a4a68a08ae06a1b",
+    "bytes": 75781
+  },
+  {
     "file": "navigation-first-compile.log.gz",
     "uncompressed_sha256": "818b4da39a48da8ba2ce9bf45768b3d08d939262a18813ae24abe663c2bcedf8",
     "bytes": 494051
@@ -23,6 +98,11 @@
     "file": "paired-app-first-compile.log.gz",
     "uncompressed_sha256": "39fede8d86717348af20b1fa82464485fabc9374f6e92da81568d765488d13fa",
     "bytes": 3984113
+  },
+  {
+    "file": "paired-compliance-tests.log.gz",
+    "uncompressed_sha256": "4ec57476da1526861068752912d411aaa9ede069ee1f6f059f0f059b121153c6",
+    "bytes": 10805
   },
   {
     "file": "paired-compliance.log.gz",
@@ -95,6 +175,11 @@
     "bytes": 410979
   },
   {
+    "file": "paired-unsigned-artifact-compliance.log.gz",
+    "uncompressed_sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+    "bytes": 54
+  },
+  {
     "file": "pending-explicit-results-package-tests-compile.log.gz",
     "uncompressed_sha256": "6879aeacf59a1d76db9cbb9dd9167dc2d2c61194a79bc08f31c3e9389003aaa6",
     "bytes": 392
@@ -115,6 +200,21 @@
     "bytes": 2030602
   },
   {
+    "file": "pr93-first-app-integration-failed.log.gz",
+    "uncompressed_sha256": "1ff63d183ac542289712a28e26643a9bd94a1e16cf0e7ac40cdd2692a3b7f492",
+    "bytes": 33124
+  },
+  {
+    "file": "pr93-first-complete-app-failed.log.gz",
+    "uncompressed_sha256": "740b640aeb1cb02caa7f7f7f43101e3b92af12adf9d041c78772f415eabc94b7",
+    "bytes": 662851
+  },
+  {
+    "file": "pr93-first-complete-run.log.gz",
+    "uncompressed_sha256": "950338bec36ca1aae336f0472883158dba59d4518ebab482ce78e3daa2d80795",
+    "bytes": 22403960
+  },
+  {
     "file": "pr93-first-native46.log.gz",
     "uncompressed_sha256": "e6da7df0bf49d0e0b3f3099a20bf01c64670fa92832878b661829c2f5149f3b0",
     "bytes": 98248
@@ -128,5 +228,20 @@
     "file": "preparation-gate-package-tests-compile.log.gz",
     "uncompressed_sha256": "a45a4a7a20a5a2b270c99addaf9879e42cd7c37545314a042d29d546fbf6cb90",
     "bytes": 104446
+  },
+  {
+    "file": "reference-cancellation-after-debug.log.gz",
+    "uncompressed_sha256": "abb9b7ad660cae326ef1ffb9121e54a332e83b56dbcf4534a854cd32524a3e63",
+    "bytes": 87944
+  },
+  {
+    "file": "reference-cancellation-after-release.log.gz",
+    "uncompressed_sha256": "ae87b4bc3135d4e9b16369554b22460c59282217d253addd8742ae6fe202266a",
+    "bytes": 90344
+  },
+  {
+    "file": "reference-cancellation-before.log.gz",
+    "uncompressed_sha256": "1930f9db14365e8d515f5b8fb13e1437050ca96c9a2095378e01bc053b0ab96f",
+    "bytes": 3108
   }
 ]

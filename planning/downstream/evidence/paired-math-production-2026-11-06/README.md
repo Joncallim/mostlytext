@@ -54,3 +54,40 @@ PR93 first head 11d6e289961b70467818ece0b07104386d1c4c94 passes native run
 42104288768: 46 tests/12 suites in 3.674s. This qualifies its exact fixture input,
 not the following app navigation/preparation changes or a complete production run.
 All 24 dependency pins, shipped notices and SBOM remain byte-identical.
+
+
+## Final scoped review corrections, requiring fresh hosted qualification
+
+The d98c2fb6 focused native run42106201887 fails nine navigation setup cases:
+the manually captured session has lost live authority before navigation. The
+actual production grammar/failure/reference suite and three live-source controls
+pass. Complete run42106201852 passes3627package tests/519suites, then fails those same nine cases in three
+navigation functions (653 app tests/135 suites); other app tests and all four
+locked Debug/Release builds pass. Neither failed run is described as a pass.
+
+Adapter controls now mount the actual registered TextKit editor before waiting,
+separately from independent SwiftUI initial parsing; guards/assertions are retained
+and owned fixtures close/dispose on every exit. A separate production app-shell
+recovery test preserves the full automatic pipeline and invokes its actual native
+attachment action in split and Preview-only layouts. The latter waits for real
+attachment before consuming its pending source action. Reduce Motion disables the
+custom reveal animation. These native tests compile locally only.
+
+Source planning is explicitly concurrent. Global reference passes honor
+cancellation; the actual new regression fails four assertions against the former
+code and passes after correction. Per-block content identity preserves unaffected
+ordinary native state while including exact source, base URL, parser mode and all
+original URL authority. Math markers retain their own frame identity. Native
+pending authored blocks have zero URL authority; generated/standalone callers keep
+their admitted behavior. A changed target set cannot reuse identical rewritten
+Markdown. No secondary math grammar or new resource authority is introduced.
+
+The final exact first-party Foundation fixture passes466tests/53suites Debug and
+Release; its current source/test receipt is byte-matching. Actual complete package
+and app/UI test bundles compile without local execution; strict lint/format pass
+1442files, ordinary compliance and330compliance tests pass. Read-only unsigned
+bundle inspection passes; this is not a signed or exact release-candidate proof.
+Fresh FOUR-suite app/native46/complete CI remains required for this final source.
+The scoped review is by the implementation agent, not independent final release
+or compliance acceptance. Owner visual/VoiceOver/PDF/calibration/signing and
+source-offer gates remain unchanged.

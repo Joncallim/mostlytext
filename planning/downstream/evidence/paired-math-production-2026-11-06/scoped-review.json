@@ -1,0 +1,125 @@
+{
+  "base": "05238f47191e8350f4ace5817a5f6066e1394176",
+  "reviewed_parent": "d98c2fb65d06c01e299bedd70e12efc46f9f1b39",
+  "review_scope": "Scoped orthogonal self-review; not independent final release or compliance acceptance",
+  "axes": [
+    "original source/Unicode/parser provenance and exact dependency/notice preservation",
+    "shared grammar/body/failure categories and no secondary dollar pass",
+    "native/reference authority/cache identity including lost-target unchanged-Markdown case",
+    "bounded work/output, cooperative cancellation and atomic fatal publication",
+    "fresh live document/editor/parser/frame navigation and Preview-only attachment lifecycle",
+    "localization/compatibility/documentation and unchanged native/signing/publication gates"
+  ],
+  "corrections": [
+    "cooperative reference construction/sort/query/repair cancellation, with four actual failing-before controls",
+    "explicit concurrent source planning independent of caller-actor defaults",
+    "native adapter fixture separates registered TextKit from independent initial SwiftUI parsing and disposes owned windows",
+    "pending navigation waits for actual owning NSWindow attachment; Reduce Motion respected",
+    "full production app-shell recovery and native source action test, including Preview-only mount; hosted execution required",
+    "per-block exact source/base/parser/URL-authority identity retains unaffected ordinary state without caching lost targets",
+    "app-only pending authored zero-URL parser; standalone/generated behavior preserved",
+    "legacy source comments and E19 architecture reconciled"
+  ],
+  "local_evidence": {
+    "foundation": "466 tests/53 suites Debug and Release pass",
+    "native": "actual complete package/app/UI test bundles compile only, no local execution",
+    "format_lint": "1442 files pass",
+    "compliance": "330 tests pass and ordinary tree/unsigned artifact check pass",
+    "pins_notices_sbom": "unchanged bytes; all24canonical Xcode pins match"
+  },
+  "hosted_prior_failure": "42106201887 and42106201852 fail nine navigation setup cases before selection; actual production grammar and live-source suites pass; complete3627package tests and allfourlocked builds pass",
+  "required_before_merge": [
+    "fresh exact-head native46",
+    "four-suite actual app probe with positive source/recovery controls",
+    "complete exact-head package/app tests and allfourlocked builds",
+    "fresh reviews/threads/head/base/merge-tree qualification"
+  ],
+  "remaining_gates": [
+    "owner visual/VoiceOver/PDF and exact signed candidate",
+    "final whole-app performance/resource calibration",
+    "localization review",
+    "independent final compliance review and source-offer publication"
+  ],
+  "changed_source_footprint": [
+    {
+      "path": ".github/workflows/shared-math-app-integration.yml",
+      "sha256": "40d00115e8861f2dd478d55f249ae35f81b87572767a93b46736b29e78a56955"
+    },
+    {
+      "path": "MacDown2/MacDown2/DocumentEditorSplitView+PreviewPane.swift",
+      "sha256": "fa497d7fa9b63156b00da5354e4bcc804de4aacc43a0ab2598782eccee06ebe6"
+    },
+    {
+      "path": "MacDown2/MacDown2/MathPreviewPreprocessor.swift",
+      "sha256": "65e16a798a7659d6ca0052215cf79d96c5c18992b6a84255e9b72a59a409428d"
+    },
+    {
+      "path": "MacDown2/MacDown2/MathPreviewSourcePlan.swift",
+      "sha256": "14800a3b7c5c69cd15944a842f0b5961405a6b93a811cde7e7af4b1798bf2341"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+MathSource.swift",
+      "sha256": "21923edf257b13068b7c9fdbc31ddce575ad50466190b3a8a73d80ce9bb9686c"
+    },
+    {
+      "path": "MacDown2/MacDown2Tests/MathPreviewLiveSourceTests.swift",
+      "sha256": "7cb791820afdc3c95e547e6c7e6344190fa054ac7e08a0fed643e733725d0dca"
+    },
+    {
+      "path": "MacDown2/MacDown2Tests/MathPreviewNavigationTests.swift",
+      "sha256": "9ddc831ccabff98758945c25c6ed37b8c32b93ea39da8b97fcdb10a54a47f2c3"
+    },
+    {
+      "path": "MacDown2/MacDown2Tests/MathPreviewRecoveryTests.swift",
+      "sha256": "5256ad3af962d97c6db9196e3afbc60f71c50959b9221ae0ce8c64b8dd9cb073"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownReferenceRepair.swift",
+      "sha256": "d828c0bc57d15968d3cb0e67af7a038678e6871ea69adb180dac22c2405ecfe6"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownReferenceReplayIndex.swift",
+      "sha256": "f2332b9f92c8f11da08e21328bbcee80791c11b021b40d98fefbd3708cadb25b"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathParityCorpus.swift",
+      "sha256": "8197bf691ff13babb773a70ae96520b82d27d316aeba736d7d4a2d82dba9d0f4"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Math/MathSpanScanner.swift",
+      "sha256": "6467be47975b0c9769b6df8d7f01b0b6d20898a441590b516c56e20346fe41c4"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/MathRendering/MathImageRenderer.swift",
+      "sha256": "50ada4e2c9831820159628320c5f205c57b360ba89f9959c999c42aa818facb3"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewBlockContentIdentity.swift",
+      "sha256": "de0ce9ce4d629de779f544f4b9982d3645b045ed7738541b547b8f071b9562e0"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMathContent.swift",
+      "sha256": "cacbae69fc71175ee1356451be6362a3646d7d10e3d8ba26533d860e5a656ec2"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Preview/PreviewPendingMarkupParser.swift",
+      "sha256": "9257721edb5634698b1c6940a4d1ab7e60fcb7e67fba58f1cb5b0d33e311792d"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Preview/TextualMarkdownPreview+BlockView.swift",
+      "sha256": "2d90ce6b3648c4e7765bb3aea8c065fc4dc87c6a030a0fdeec0280c82d1f4443"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/SourceReferenceSelectionTests.swift",
+      "sha256": "9077187093eef3e7ed10fbae262bf79d4f2938158703524da755aaa85b080201"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PendingMathPresentationTests.swift",
+      "sha256": "797096f51ae6a06ae55f13f30a0efcdba45937f982241ce43c30e494c02dc099"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewBlockContentIdentityTests.swift",
+      "sha256": "cea9e591806e5f5356d5c851be946b62bf166fa00f635b411d3df5fbf743c998"
+    }
+  ]
+}

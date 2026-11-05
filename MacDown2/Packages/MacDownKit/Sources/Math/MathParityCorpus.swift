@@ -1,20 +1,10 @@
 import Foundation
 
-/// The one shared fixture list both Preview's malformed-equation detection
-/// (`MathPreviewPreprocessor`, app target) and Export's rendering
-/// (`MathImageRenderer`, `MathRendering` target) are tested against.
-///
-/// `MathSpanScanner` is an independent reimplementation of `Textual`'s
-/// sealed `.math` regex, and Preview/Export each independently decide
-/// whether one detected span is renderable — Preview via
-/// `MathImageRenderer.isRenderable`, Export via the identical check inside
-/// `MathImageRenderer.render`. Both already route through the same
-/// function today, so they cannot literally diverge in the shipped code —
-/// but that is an implementation detail, not a compiler-enforced contract
-/// (epic-19-implementation.md §2.1's own "maintenance coupling the
-/// compiler cannot enforce" risk). This corpus is what a future change to
-/// either consumer is checked against, from one place, rather than two
-/// independently-maintained fixture lists that could quietly drift apart.
+/// Compatibility corpus for the legacy String/span rendering APIs and the
+/// historical Preview preprocessor. Its zero-size validity convention is kept
+/// for those callers. Production uses the shared MathAnalysis/MathEvaluation
+/// policy; valid no-visible-output bodies have a distinct source fallback.
+/// The production app parity controls live in SharedMathActivationTests.
 public enum MathParityCorpus {
     public struct Case: Sendable {
         public let latex: String

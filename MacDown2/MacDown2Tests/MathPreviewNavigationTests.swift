@@ -19,7 +19,13 @@ struct MathPreviewNavigationTests {
 
     private func prepare() async throws -> Prepared {
         let source = "First $x$ then second $x$."
-        let fixture = try TextFilterCoordinatorTests.makeController(text: source)
+        let fixture = try MathPreviewLiveSourceTests.makeMountedController(text: source)
+        var transferred = false
+        defer {
+            if !transferred {
+                MathPreviewLiveSourceTests.dispose(fixture)
+            }
+        }
         let identity = fixture.tabID.uuidString
         let parse = fixture.controller.parseStore.session(for: identity)
         await parse.parseNow(source)
@@ -37,6 +43,7 @@ struct MathPreviewNavigationTests {
                                                  live: fixture.coordinator.mathLiveSource(
                                                      in: fixture.controller.model, identity: identity
                                                  )))
+        transferred = true
         return .init(fixture: fixture, session: session, frameID: frameID, sourceID: entry.id, location: location)
     }
 
@@ -64,6 +71,7 @@ struct MathPreviewNavigationTests {
     @Test(arguments: [false, true])
     func theOwnOccurrenceReplacesTheEntireSelectionSet(diagnostic: Bool) async throws {
         let prepared = try await prepare()
+        defer { MathPreviewLiveSourceTests.dispose(prepared.fixture) }
         let system = try #require(prepared.fixture.controller.editorStore.existingSystem(
             for: prepared.fixture.tabID.uuidString
         ))
@@ -85,6 +93,7 @@ struct MathPreviewNavigationTests {
     @Test(arguments: ["editor", "generation", "parser", "removed", "frame", "foreignID"])
     func changedLiveAuthorityCannotMoveSelection(_ change: String) async throws {
         let prepared = try await prepare()
+        defer { MathPreviewLiveSourceTests.dispose(prepared.fixture) }
         let fixture = prepared.fixture
         let identity = fixture.tabID.uuidString
         let system = try #require(fixture.controller.editorStore.existingSystem(for: identity))
@@ -118,11 +127,12 @@ struct MathPreviewNavigationTests {
 
     @Test func anotherKeyWindowCannotSelectTheOriginalDocumentsEquation() async throws {
         let prepared = try await prepare()
+        defer { MathPreviewLiveSourceTests.dispose(prepared.fixture) }
         let originalWindow = try activate(prepared)
         let other = NSWindow(contentRect: .init(x: 0, y: 0, width: 200, height: 100),
                              styleMask: [.titled], backing: .buffered, defer: false)
         other.isReleasedWhenClosed = false
-        defer { other.orderOut(nil); originalWindow.orderOut(nil) }
+        defer { other.orderOut(nil); other.close(); originalWindow.orderOut(nil) }
         other.makeKeyAndOrderFront(nil)
         other.makeKey()
         try #require(NSApp.keyWindow === other, "Wrong-window negative control must actually own focus")

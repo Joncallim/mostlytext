@@ -20,7 +20,7 @@ extension DocumentEditorSplitView {
                 mermaidFenceView: mermaidFenceView,
                 d2FenceView: d2FenceView,
                 graphvizFenceView: graphvizFenceView,
-                mathContent: currentMathDisplay?.content,
+                mathContent: currentMathDisplay?.content ?? .pending,
                 onMathSourceAction: { frameID, sourceID in
                     showMathSource(frameID: frameID, sourceID: sourceID, diagnostic: false)
                 }

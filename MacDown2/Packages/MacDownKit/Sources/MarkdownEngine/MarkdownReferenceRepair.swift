@@ -23,18 +23,25 @@ public enum MarkdownReferenceRepair {
     public static func edits(
         source: String, facts: MarkdownSourceFacts, replacing ranges: [Range<Int>]
     ) throws -> [Edit] {
+        try Task.checkCancellation()
         guard MarkdownSourceFingerprint.sha256(source) == facts.sourceSHA256 else { throw Failure.sourceMismatch }
+        try Task.checkCancellation()
         let units = Array(source.utf16)
         for range in ranges {
+            try Task.checkCancellation()
             try validate(range, units: units)
         }
-        let sorted = ranges.sorted { $0.lowerBound < $1.lowerBound }
+        let sorted = try ranges.sorted {
+            try Task.checkCancellation()
+            return $0.lowerBound < $1.lowerBound
+        }
         for index in sorted.indices.dropFirst() where sorted[index - 1].upperBound > sorted[index].lowerBound {
             throw Failure.invalidRange
         }
         var result: [Edit] = []
         var cursor = 0
         for link in facts.links {
+            try Task.checkCancellation()
             guard let label = link.labelRange, let key = link.referenceKey else { continue }
             while cursor < sorted.count, sorted[cursor].upperBound <= label.lowerBound {
                 cursor += 1
@@ -57,7 +64,10 @@ public enum MarkdownReferenceRepair {
             result.append(contentsOf: literalBacktickEdits(label: label, units: units,
                                                            literals: facts.literalRanges, replacements: sorted))
         }
-        return result.sorted { $0.sourceRange.lowerBound < $1.sourceRange.lowerBound }
+        return try result.sorted {
+            try Task.checkCancellation()
+            return $0.sourceRange.lowerBound < $1.sourceRange.lowerBound
+        }
     }
 
     private static func projectedKey(

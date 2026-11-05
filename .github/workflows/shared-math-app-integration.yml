@@ -63,7 +63,8 @@ jobs:
             -onlyUsePackageVersionsFromResolvedFile -parallel-testing-enabled NO \
             -only-testing:MacDown2Tests/SharedMathActivationTests \
             -only-testing:MacDown2Tests/MathPreviewLiveSourceTests \
-            -only-testing:MacDown2Tests/MathPreviewNavigationTests test-without-building \
+            -only-testing:MacDown2Tests/MathPreviewNavigationTests \
+            -only-testing:MacDown2Tests/MathPreviewRecoveryTests test-without-building \
             | tee "$RUNNER_TEMP/shared-math-app-tests.log"
           python3 - <<'PYVERIFY'
           import os
@@ -71,7 +72,8 @@ jobs:
           from pathlib import Path
           log = (Path(os.environ["RUNNER_TEMP"]) / "shared-math-app-tests.log").read_text()
           log = re.sub(r"\x1b\[[0-9;]*m", "", log)
-          for suite in ["SharedMathActivationTests", "MathPreviewLiveSourceTests", "MathPreviewNavigationTests"]:
+          suites = ["SharedMathActivationTests", "MathPreviewLiveSourceTests", "MathPreviewNavigationTests", "MathPreviewRecoveryTests"]
+          for suite in suites:
               assert re.search(r"Suite " + re.escape(suite) + r" passed", log), suite + " did not execute successfully"
           PYVERIFY
       - uses: actions/upload-artifact@v4

@@ -31,13 +31,36 @@ struct BlockView: View {
         if case .literal? = mathContent?.blocks[block.id] {
             return true
         }
-        return mathContent == nil && block.source.utf8.contains(36)
+        if case .codeBlock = block.kind {
+            return false
+        }
+        let pending = mathContent == nil || (mathContent?.isPending == true && block.sourceAnchor != nil)
+        return pending && block.source.utf8.contains(36)
+    }
+
+    private var preparedInput: PreviewMathInput? {
+        if case let .parsed(input)? = mathContent?.blocks[block.id] {
+            return input
+        }
+        return nil
+    }
+
+    private var usesSourceGuard: Bool {
+        preparedInput != nil || (mathContent?.isPending == true && block.sourceAnchor != nil)
+    }
+
+    private var contentIdentity: PreviewBlockContentIdentity {
+        .init(source: block.source, baseURL: linkResolver.baseURL, input: preparedInput,
+              frameID: mathContent?.id, guarded: usesSourceGuard)
     }
 
     private var parser: any MarkupParser {
-        if case let .parsed(input)? = mathContent?.blocks[block.id] {
+        if let input = preparedInput {
             return PreviewMathMarkupParser(input: input, attachments: mathContent?.attachments ?? [:],
                                            baseURL: linkResolver.baseURL)
+        }
+        if usesSourceGuard {
+            return PreviewPendingMarkupParser(baseURL: linkResolver.baseURL)
         }
         // Pending, unknown and generated blocks cannot run another dollar pass.
         return PreviewMarkupParser(baseURL: linkResolver.baseURL, syntaxExtensions: [])
@@ -124,7 +147,7 @@ struct BlockView: View {
         // Analysis arrival changes parser/attachment identity even if the
         // authored text is unchanged. The outer scroll-sync block stays stable.
         let content = StructuredText(block.source, parser: parser)
-            .id(frameID)
+            .id(contentIdentity)
             .textual.attachmentAccessibilityAction { occurrenceID in
                 guard let frameID else { return }
                 action?(frameID, occurrenceID)
