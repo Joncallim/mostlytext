@@ -7,6 +7,33 @@ public struct MarkdownSourceFacts: Sendable, Equatable {
     public let literalRanges: [Range<Int>]
     public let continuationPrefixes: [Range<Int>]
     public let links: [MarkdownSourceLink]
+    public let referenceDefinitions: [MarkdownReferenceDefinition]
+
+    init(sourceSHA256: String, inlineRegions: [Range<Int>], literalRanges: [Range<Int>],
+         continuationPrefixes: [Range<Int>], links: [MarkdownSourceLink],
+         referenceDefinitions: [MarkdownReferenceDefinition] = []) {
+        self.sourceSHA256 = sourceSHA256
+        self.inlineRegions = inlineRegions
+        self.literalRanges = literalRanges
+        self.continuationPrefixes = continuationPrefixes
+        self.links = links
+        self.referenceDefinitions = referenceDefinitions
+    }
+}
+
+/// Actual parser-consumed logical syntax and its proven original link/image uses.
+public struct MarkdownReferenceDefinition: Sendable, Equatable {
+    public let source: String
+    public let useRanges: [Range<Int>]
+
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.useRanges == rhs.useRanges && lhs.source.utf8.elementsEqual(rhs.source.utf8)
+    }
+}
+
+struct MarkdownSourceReferenceDefinition {
+    let source: String
+    let useRanges: [Range<MarkdownSourcePoint>]
 }
 
 public struct MarkdownSourceLink: Sendable, Equatable {

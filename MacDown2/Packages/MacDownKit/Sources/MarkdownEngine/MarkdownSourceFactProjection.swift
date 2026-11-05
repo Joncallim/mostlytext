@@ -27,10 +27,12 @@ enum MarkdownSourceFactProjection {
 
     static func project<Node>(
         source: String, sourceSHA256: String, root: Node,
+        referenceDefinitions: [MarkdownSourceReferenceDefinition] = [],
         children: (Node) -> [Node], describe: (Node) -> MarkdownSourceNode
     ) -> MarkdownSourceFacts? {
         guard let raw = collect(root: root, children: children, describe: describe) else { return nil }
-        let points = Set(raw.ranges.flatMap { [$0.lowerBound, $0.upperBound] })
+        let ranges = raw.ranges + referenceDefinitions.flatMap(\.useRanges)
+        let points = Set(ranges.flatMap { [$0.lowerBound, $0.upperBound] })
         guard let offsets = MarkdownSourceCoordinates.resolve(points, in: source) else { return nil }
         func convert(_ range: Range<MarkdownSourcePoint>) -> Range<Int>? {
             guard let lower = offsets[range.lowerBound], let upper = offsets[range.upperBound], lower <= upper
@@ -55,11 +57,28 @@ enum MarkdownSourceFactProjection {
                   ) else { return nil }
             links.append(resolved)
         }
+        guard let definitions = resolveReferences(referenceDefinitions, convert: convert) else { return nil }
         return MarkdownSourceFacts(
             sourceSHA256: sourceSHA256, inlineRegions: containers.regions, literalRanges: literals,
             continuationPrefixes: containers.prefixes,
-            links: links.sorted { $0.fullRange.lowerBound < $1.fullRange.lowerBound }
+            links: links.sorted { $0.fullRange.lowerBound < $1.fullRange.lowerBound },
+            referenceDefinitions: definitions
         )
+    }
+
+    private static func resolveReferences(
+        _ references: [MarkdownSourceReferenceDefinition], convert: (Range<MarkdownSourcePoint>) -> Range<Int>?
+    ) -> [MarkdownReferenceDefinition]? {
+        var result: [MarkdownReferenceDefinition] = []
+        for reference in references {
+            var uses: [Range<Int>] = []
+            for original in reference.useRanges {
+                guard let range = convert(original), !range.isEmpty else { return nil }
+                uses.append(range)
+            }
+            result.append(MarkdownReferenceDefinition(source: reference.source, useRanges: uses))
+        }
+        return result
     }
 
     private static func collect<Node>(

@@ -17,7 +17,7 @@ sources = [repo / "MacDown2/Packages/MacDownKit/Tests/PreviewTests" / name for n
     "SourceMathAccessibilityProbeTests.swift", "SourceAttachmentAccessibilityTests.swift",
     "NativeMathProbeHost.swift", "SourceMathPolicyProbeTests.swift",
     "PreviewMathInputTests.swift", "PreviewMathTransportTests.swift", "PreviewMathScalarGeometryTests.swift",
-    "PreviewMarkdownSourceMapTests.swift"
+    "PreviewMarkdownSourceMapTests.swift", "PreviewReferenceReplayTests.swift"
 ]]
 preview_sources = [repo / "MacDown2/Packages/MacDownKit/Sources/Preview" / name for name in [
     "PreviewParserBudget.swift", "PreviewMathInput.swift", "PreviewMathMarkupParser.swift", "PreviewMarkdownSourceMap.swift"
@@ -35,11 +35,12 @@ components = {"Preview": preview_sources,
     ]],
     "MathSyntax": [repo / "MacDown2/Packages/MathSyntax/Sources/MathSyntax/MathSourceValues.swift"]
 }
+components["MarkdownEngine"] = sorted((repo / "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine").glob("*.swift"))
 lock = json.loads((repo / "MacDown2/Packages/MacDownKit/Package.resolved").read_text())
-identities = {"textual", "swiftui-math", "swift-concurrency-extras"}
+identities = {"textual", "swiftui-math", "swift-concurrency-extras", "swift-markdown", "swift-cmark", "yams"}
 pins = [pin for pin in lock["pins"] if pin["identity"] in identities]
-if {pin["identity"] for pin in pins} != identities or len(pins) != 3:
-    raise SystemExit("Exactly three registered immutable probe dependencies are required")
+if {pin["identity"] for pin in pins} != identities or len(pins) != 6:
+    raise SystemExit("Exactly six registered immutable probe dependencies are required")
 for pin in pins:
     if not pin["location"].startswith("https://github.com/") or not re.fullmatch(r"[0-9a-f]{40}", pin["state"]["revision"]):
         raise SystemExit("Invalid probe dependency owner or immutable revision")
@@ -81,10 +82,10 @@ if args.verify:
             geometry[-1].get(field) for field in ["positiveControlsPresent", "allFramesInsideHost", "distinctFrames"]
         ):
             raise SystemExit("Six scalar-adjacent native occurrences were not verified")
-        if not re.search(r"Test run with 37 tests in 10 suites passed", log):
+        if not re.search(r"Test run with 39 tests in 11 suites passed", log):
             raise SystemExit("The actual native test did not pass")
         print("Actual native test and positive-control result verified")
-    print("Exact native probe source and all three application revisions verified")
+    print("Exact native probe source and all six application revisions verified")
 else:
     args.output.mkdir(parents=True, exist_ok=False)
     for target in all_targets:
@@ -104,12 +105,13 @@ let package = Package(
 """ + requirements + """
   ],
   targets: [
+  .target(name: "MarkdownEngine", dependencies: [.product(name: "Markdown", package: "swift-markdown"), .product(name: "Yams", package: "yams")]),
   .target(name: "Preview", dependencies: [.product(name: "Textual", package: "textual")]),
   .target(name: "Math"),
   .target(name: "MathSyntax"),
   .target(name: "MathRendering", dependencies: ["Math", "MathSyntax", .product(name: "SwiftUIMath", package: "swiftui-math")]),
   .testTarget(name: "NativeMathAccessibilityProbe", dependencies: [
-    "Preview", "Math", "MathSyntax", "MathRendering", .product(name: "Textual", package: "textual"),
+    "Preview", "Math", "MathSyntax", "MathRendering", "MarkdownEngine", .product(name: "Textual", package: "textual"),
     .product(name: "SwiftUIMath", package: "swiftui-math"),
     .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras")
   ])]
@@ -121,4 +123,4 @@ let package = Package(
     receipt = {"source_sha256": digests, "revisions": expected,
                "native_execution": "hosted only; preparation does not execute any native code"}
     (args.output / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
-    print("Copied the exact native probe with three immutable application pins")
+    print("Copied the exact native probe with six immutable application pins")

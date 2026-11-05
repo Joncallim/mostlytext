@@ -1,6 +1,6 @@
 import Dispatch
 import Foundation
-import Markdown
+@_spi(MostlyText) import Markdown
 import Yams
 
 /// The parse owner. An actor so work is serialised and OFF the main thread.
@@ -126,7 +126,15 @@ public actor ParseEngine: ParseExecuting {
         }
 
         let fingerprint = MarkdownSourceFingerprint.sha256(text)
-        let facts = sourceFacts(document, original: text, bodyLineOffset: bodyLineOffset, fingerprint: fingerprint)
+        // Native Preview/Export deliberately interpret directives as ordinary Markdown.
+        // Their source authority uses whole-body CommonMark scope, not independently parsed directive runs.
+        let factualDocument = options.blockDirectives ? Document(parsing: bodyText) : document
+        let facts = sourceFacts(
+            factualDocument,
+            original: text,
+            bodyLineOffset: bodyLineOffset,
+            fingerprint: fingerprint
+        )
         return MarkdownDocument(
             body: bodyText,
             bodyLineOffset: bodyLineOffset,
@@ -144,10 +152,16 @@ public actor ParseEngine: ParseExecuting {
     private nonisolated func sourceFacts(
         _ document: Document, original: String, bodyLineOffset: Int, fingerprint: String
     ) -> MarkdownSourceFacts? {
-        guard !original.utf8.contains(0) else { return nil }
+        guard !original.utf8.contains(0), let references = document.parserReferenceDefinitions else { return nil }
+        let definitions = references.map { reference in
+            MarkdownSourceReferenceDefinition(source: reference.source, useRanges: reference.useRanges.map { range in
+                MarkdownSourcePoint(line: range.lowerBound.line + bodyLineOffset, column: range.lowerBound.column) ..<
+                    MarkdownSourcePoint(line: range.upperBound.line + bodyLineOffset, column: range.upperBound.column)
+            })
+        }
         return MarkdownSourceFactProjection.project(
             source: original, sourceSHA256: fingerprint, root: document as any Markup,
-            children: { Array($0.children) }, describe: { node in
+            referenceDefinitions: definitions, children: { Array($0.children) }, describe: { node in
                 let kind: MarkdownSourceNode.Kind = switch node {
                 case is Paragraph, is Heading, is Table.Cell: .container
                 case is CodeBlock, is HTMLBlock: .opaque

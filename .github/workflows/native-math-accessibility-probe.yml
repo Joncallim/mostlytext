@@ -13,6 +13,8 @@ on:
       - 'MacDown2/Packages/MacDownKit/Tests/PreviewTests/SourceMathPolicyProbeTests.swift'
       - 'MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMathInputTests.swift'
       - 'MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMathTransportTests.swift'
+      - 'MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewReferenceReplayTests.swift'
+      - 'MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/**'
       - 'MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewMathScalarGeometryTests.swift'
       - 'MacDown2/Packages/MacDownKit/Sources/Preview/PreviewParserBudget.swift'
       - 'MacDown2/Packages/MacDownKit/Sources/Preview/PreviewMathInput.swift'
