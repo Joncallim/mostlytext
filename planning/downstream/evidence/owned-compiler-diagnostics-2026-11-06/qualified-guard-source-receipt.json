@@ -1,0 +1,14 @@
+[
+  {
+    "source": "MacDown2/MacDown2/UITestLaunchGuard.swift",
+    "fixture": "Sources/MacDown2/UITestLaunchGuard.swift",
+    "sha256": "bf15ba1162e6dfaf5a4297509eeb030b13281a8ba2a05eae5ac1eb2a3a584a75",
+    "same": true
+  },
+  {
+    "source": "MacDown2/MacDown2Tests/UITestLaunchGuardTests.swift",
+    "fixture": "Tests/MacDown2Tests/UITestLaunchGuardTests.swift",
+    "sha256": "ac98a796f0e496a98bbf7762816bc0cc9b1550240b67b72e6b261ca21e056daa",
+    "same": true
+  }
+]

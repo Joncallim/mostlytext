@@ -126,7 +126,10 @@ enum UITestLaunchGuard {
         var buffer = [CChar](repeating: 0, count: length)
         guard confstr(_CS_DARWIN_USER_TEMP_DIR, &buffer, length) == length else { return nil }
         let root = URL(
-            fileURLWithPath: String(decoding: buffer.prefix { $0 != 0 }.map { UInt8(bitPattern: $0) }, as: UTF8.self),
+            fileURLWithPath: String(
+                decoding: buffer.prefix { $0 != 0 }.map { UInt8(bitPattern: $0) },
+                as: Unicode.UTF8.self
+            ),
             isDirectory: true
         ).resolvingSymlinksInPath()
         var info = stat()
