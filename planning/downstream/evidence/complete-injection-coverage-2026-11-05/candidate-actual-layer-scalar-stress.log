@@ -1,0 +1,159 @@
+Fetching https://github.com/tree-sitter/tree-sitter from cache
+warning: 'tree-sitter': skipping cache due to an error: The file “maintenance.lock” doesn’t exist.
+[1/74253] Fetching tree-sitter
+Fetched https://github.com/tree-sitter/tree-sitter from cache (6.08s)
+Computing version for https://github.com/tree-sitter/tree-sitter
+Computed https://github.com/tree-sitter/tree-sitter at 0.25.10 (6.69s)
+Creating working copy for https://github.com/tree-sitter/tree-sitter
+Working copy of https://github.com/tree-sitter/tree-sitter resolved at 0.25.10
+Building for debugging...
+[0/35] /Volumes/Fast runner.swift
+[1/35] Write sources
+[4/35] Compiling stdlib.c
+[5/35] Write swift-version--58304C5D6DBC2206.txt
+[6/35] Compiling scanner.c
+[8/35] Compiling wasm_store.c
+[9/35] Compiling tree_cursor.c
+[10/35] Compiling lexer.c
+[11/35] Compiling node.c
+[12/35] Write sources
+[16/35] Compiling language.c
+[17/35] Write sources
+[18/35] Copying queries
+[19/35] Compiling tree.c
+[19/35] Copying queries
+[21/35] Write sources
+[22/35] Compiling alloc.c
+[23/35] Write sources
+[24/35] Compiling get_changed_ranges.c
+[25/35] Compiling stack.c
+[26/35] Compiling parser.c
+[27/35] Compiling scanner.c
+[28/45] Compiling subtree.c
+[29/45] Compiling query.c
+[30/45] Compiling parser.c
+[34/71] Compiling SwiftTreeSitter Point.swift
+[35/71] Compiling SwiftTreeSitter Predicate.swift
+[36/72] Compiling TreeSitterMarkdownInlineResources resource_bundle_accessor.swift
+[37/72] Compiling SwiftTreeSitter Language.swift
+[38/72] Compiling SwiftTreeSitter LanguageConfiguration.swift
+[39/72] Compiling Rearrange TextRangeCalculating.swift
+[40/72] Compiling TreeSitterMarkdownInlineResources TreeSitterMarkdownInlineResources.swift
+[41/72] Emitting module TreeSitterMarkdownInlineResources
+[42/72] Compiling SwiftTreeSitter SendableTypes.swift
+[43/72] Compiling SwiftTreeSitter String+Data.swift
+[44/72] Compiling SwiftTreeSitter Bundle+Extensions.swift
+[45/72] Compiling SwiftTreeSitter Encoding+Helpers.swift
+[46/72] Compiling TreeSitterMarkdownResources resource_bundle_accessor.swift
+[47/72] Emitting module TreeSitterMarkdownResources
+[48/72] Compiling TreeSitterMarkdownResources TreeSitterMarkdownResources.swift
+[49/72] Compiling Rearrange String+NSRange.swift
+[50/72] Compiling Rearrange NSRange+Shift.swift
+[51/72] Compiling Rearrange RangeMutation.swift
+[52/72] Compiling Rearrange IndexSet+NSRange.swift
+[53/72] Compiling Rearrange NSRange+ApplyMutation.swift
+[54/72] Emitting module Rearrange
+/Volumes/Fast SSD/CORTANA-Builds/injection-complete-coverage-20261105/fixture/Sources/Rearrange/NSRange+Convenience.swift:22:1: warning: extension declares a conformance of imported type '_NSRange' to imported protocol 'Sequence'; this will not behave correctly if the owners of 'Foundation' introduce this conformance in the future
+20 | }
+21 | 
+22 | extension NSRange: Sequence {
+   | |- warning: extension declares a conformance of imported type '_NSRange' to imported protocol 'Sequence'; this will not behave correctly if the owners of 'Foundation' introduce this conformance in the future
+   | `- note: add '@retroactive' to silence this warning
+23 |     public typealias Element = Range<Int>.Element
+24 |     public typealias Iterator = Range<Int>.Iterator
+[55/72] Compiling Rearrange NSRange+Convenience.swift
+/Volumes/Fast SSD/CORTANA-Builds/injection-complete-coverage-20261105/fixture/Sources/Rearrange/NSRange+Convenience.swift:22:1: warning: extension declares a conformance of imported type '_NSRange' to imported protocol 'Sequence'; this will not behave correctly if the owners of 'Foundation' introduce this conformance in the future
+20 | }
+21 | 
+22 | extension NSRange: Sequence {
+   | |- warning: extension declares a conformance of imported type '_NSRange' to imported protocol 'Sequence'; this will not behave correctly if the owners of 'Foundation' introduce this conformance in the future
+   | `- note: add '@retroactive' to silence this warning
+23 |     public typealias Element = Range<Int>.Element
+24 |     public typealias Iterator = Range<Int>.Iterator
+[56/72] Compiling Rearrange IndexSet+ApplyMutation.swift
+[57/72] Compiling Rearrange Bounded.swift
+[58/72] Compiling SwiftTreeSitter Input.swift
+[59/72] Compiling SwiftTreeSitter InputEdit.swift
+[60/72] Compiling SwiftTreeSitter ResolvingQueryCursor.swift
+[61/72] Compiling SwiftTreeSitter ResolvingQueryMatchSequence.swift
+[62/72] Compiling SwiftTreeSitter Tree.swift
+[63/72] Compiling SwiftTreeSitter Node.swift
+[64/72] Compiling SwiftTreeSitter Parser.swift
+[65/72] Compiling SwiftTreeSitter String+TextProvider.swift
+[66/72] Compiling SwiftTreeSitter TSRange.swift
+[67/72] Emitting module SwiftTreeSitter
+[68/72] Compiling SwiftTreeSitter Query.swift
+[69/72] Compiling SwiftTreeSitter QueryDefinitions.swift
+[70/72] Compiling SwiftTreeSitter TreeCursor.swift
+[71/91] Compiling SwiftTreeSitterLayer Queryable.swift
+[72/91] Compiling RangeState ThreePhaseRangeValidator.swift
+[73/91] Compiling RangeState RangeTarget.swift
+[74/91] Compiling RangeState HybridSyncAsyncValueProvider.swift
+[75/91] Compiling RangeState HybridValueProvider+RangeProcessor.swift
+[76/91] Emitting module RangeState
+[77/91] Compiling RangeState RangeInvalidationBuffer.swift
+[78/91] Compiling RangeState AwaitableQueue.swift
+[79/91] Compiling RangeState RangeProcessor.swift
+[80/91] Compiling RangeState RangeValidator.swift
+[81/91] Compiling RangeState SinglePhaseRangeValidator.swift
+[82/91] Compiling RangeState Versioned.swift
+[83/91] Compiling SwiftTreeSitterLayer Snapshots.swift
+[84/91] Compiling SwiftTreeSitterLayer LanguageLayerQueryCursor.swift
+[85/91] Compiling SwiftTreeSitterLayer ParseState.swift
+[86/91] Compiling SwiftTreeSitterLayer TreeSitter+Extensions.swift
+[87/91] Compiling SwiftTreeSitterLayer IndexSet+Range.swift
+[88/91] Emitting module SwiftTreeSitterLayer
+[89/91] Compiling SwiftTreeSitterLayer LanguageLayer.swift
+[90/97] Compiling TreeSitterClient BackgroundProcessor.swift
+[91/97] Emitting module TreeSitterClient
+[92/97] Compiling TreeSitterClient TreeSitter+Extensions.swift
+[93/97] Compiling TreeSitterClient HybridSyncAsyncVersionedResource.swift
+[94/97] Compiling TreeSitterClient TreeSitterClient.swift
+[95/97] Compiling TreeSitterClient BackgroundingLanguageLayerTree.swift
+[96/100] Compiling OwnedStylingCore Token.swift
+[97/100] Compiling OwnedStylingCore TreeSitterClient+Neon.swift
+[98/100] Emitting module OwnedStylingCore
+[99/113] Compiling ModelTests TreeSitterClientTests.swift
+[100/113] Compiling ModelTests TreeSitterClientStressTests.swift
+[101/114] Compiling ModelTests ValidationCompletionTests.swift
+[102/114] Compiling ModelTests StringContent.swift
+[103/114] Compiling ModelTests SinglePhaseRangeValidatorTests.swift
+[104/114] Compiling ModelTests RangeProcessorTests.swift
+[105/114] Compiling ModelTests RangeTargetTests.swift
+[106/114] Compiling ModelTests RangeValidatorTests.swift
+[107/114] Compiling ModelTests MarkdownLayerScalarStressTests.swift
+[108/114] Compiling ModelTests NamedRangeApplicationTests.swift
+[109/114] Compiling ModelTests RangeInvalidationBufferTests.swift
+[110/114] Compiling ModelTests InitialFillMutationTests.swift
+[111/114] Compiling ModelTests MarkdownClientInvalidationTests.swift
+[112/114] Emitting module ModelTests
+[113/116] Compiling OwnedNeonClientFixturePackageTests runner.swift
+[114/116] Emitting module OwnedNeonClientFixturePackageTests
+[114/116] Write Objects.LinkFileList
+[115/116] Linking OwnedNeonClientFixturePackageTests
+Build complete! (28.72s)
+Test Suite 'Selected tests' started at 2026-11-05 14:12:26.410.
+Test Suite 'OwnedNeonClientFixturePackageTests.xctest' started at 2026-11-05 14:12:26.417.
+Test Suite 'OwnedNeonClientFixturePackageTests.xctest' passed at 2026-11-05 14:12:26.417.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-11-05 14:12:26.417.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.007) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Actual Markdown layer scalar-edit parity" started.
+◇ Test editedRootAndInlineLayersMatchFresh() started.
+PARITY_DIAGNOSTIC edit=1745 segment=6 scalarAt=22 remove=1 insert=""
+ROOT_AST_EQUAL true
+CHILD_RANGES_EQUAL true
+CHILD_AST_EQUAL false
+EDITED_RANGES [<TSRange 0..<56, {0, 0}..<{5, 2}>, <TSRange 60..<68, {7, 0}..<{7, 8}>, <TSRange 72..<88, {9, 0}..<{11, 2}>, <TSRange 94..<148, {14, 0}..<{14, 54}>, <TSRange 152..<158, {14, 58}..<{14, 64}>, <TSRange 162..<172, {14, 68}..<{14, 78}>, <TSRange 176..<178, {16, 0}..<{16, 2}>, <TSRange 182..<228, {18, 0}..<{20, 10}>, <TSRange 234..<244, {22, 2}..<{22, 12}>, <TSRange 252..<300, {22, 20}..<{22, 68}>, <TSRange 304..<346, {24, 0}..<{28, 4}>, <TSRange 350..<358, {30, 0}..<{31, 2}>, <TSRange 362..<372, {33, 0}..<{34, 2}>, <TSRange 378..<428, {37, 0}..<{37, 50}>, <TSRange 434..<506, {40, 0}..<{44, 4}>, <TSRange 512..<516, {46, 2}..<{46, 6}>, <TSRange 520..<522, {46, 10}..<{46, 12}>, <TSRange 526..<562, {46, 16}..<{46, 52}>, <TSRange 566..<656, {48, 0}..<{54, 8}>, <TSRange 660..<676, {56, 0}..<{56, 16}>, <TSRange 680..<710, {58, 0}..<{58, 30}>, <TSRange 716..<720, {58, 36}..<{58, 40}>, <TSRange 730..<768, {58, 50}..<{58, 88}>, <TSRange 776..<780, {61, 0}..<{61, 4}>, <TSRange 784..<852, {63, 0}..<{65, 56}>, <TSRange 856..<918, {67, 0}..<{67, 62}>]
+FRESH_RANGES [<TSRange 0..<56, {0, 0}..<{5, 2}>, <TSRange 60..<68, {7, 0}..<{7, 8}>, <TSRange 72..<88, {9, 0}..<{11, 2}>, <TSRange 94..<148, {14, 0}..<{14, 54}>, <TSRange 152..<158, {14, 58}..<{14, 64}>, <TSRange 162..<172, {14, 68}..<{14, 78}>, <TSRange 176..<178, {16, 0}..<{16, 2}>, <TSRange 182..<228, {18, 0}..<{20, 10}>, <TSRange 234..<244, {22, 2}..<{22, 12}>, <TSRange 252..<300, {22, 20}..<{22, 68}>, <TSRange 304..<346, {24, 0}..<{28, 4}>, <TSRange 350..<358, {30, 0}..<{31, 2}>, <TSRange 362..<372, {33, 0}..<{34, 2}>, <TSRange 378..<428, {37, 0}..<{37, 50}>, <TSRange 434..<506, {40, 0}..<{44, 4}>, <TSRange 512..<516, {46, 2}..<{46, 6}>, <TSRange 520..<522, {46, 10}..<{46, 12}>, <TSRange 526..<562, {46, 16}..<{46, 52}>, <TSRange 566..<656, {48, 0}..<{54, 8}>, <TSRange 660..<676, {56, 0}..<{56, 16}>, <TSRange 680..<710, {58, 0}..<{58, 30}>, <TSRange 716..<720, {58, 36}..<{58, 40}>, <TSRange 730..<768, {58, 50}..<{58, 88}>, <TSRange 776..<780, {61, 0}..<{61, 4}>, <TSRange 784..<852, {63, 0}..<{65, 56}>, <TSRange 856..<918, {67, 0}..<{67, 62}>]
+PARITY_SOURCE "😀*é\n[\n😀*[[[\n**lé\né*[**é`\n*\n\nédé[\n\n[\n*é[*\n[\n\n\nc\r``aaa漢漢\r]漢]a\ra\ra\rd]`\ra\r漢漢\r\r漢aa\r\r]漢`\r`\n\n[\n\né😀*é*\né[*😀*é😀é\n[😀é*\n\n\r`]`\ra\r\r\r\r``]```a漢a\r]漢`l`漢漢a`漢a``a\n\n😀f*\n*[\n*ééé[😀\n[[\n*é\n\n😀\n`\n\n😀[\né\n\n\n]\r]漢漢a]\raa``a`漢`漢漢漢\r]\r漢*a\n\n\n*é\n[😀😀*é\n*😀é**😀😀😀*😀😀[d\né*\n[[\n\n\r漢]\r\r`\r\r漢a 漢]`\r漢漢`a\r漢a`\r漢]\n\n*[😀*[a*\né\n😀😀l[\n😀d😀[😀😀*😀\n😀*é\n[éé\n😀😀\n\n[😀é*`**\n\n`\raa``]`😀`漢漢aa\r\r\ra`\r\r\r\r\r]]\r`]`aa`漢]漢漢]]`\ra]\r\n\n\n[[\n\n😀*\n*\n[😀é*[😀*[ééé😀[*é*😀*[*😀*é\n\nc`漢`\r`b漢]]a漢\r`a`a\raa漢a]]漢漢``a\r`"
+WHOLE_RESOLVE_MATCHES false
+✘ Test editedRootAndInlineLayersMatchFresh() recorded an issue at MarkdownLayerScalarStressTests.swift:73:17: Expectation failed: (actual → [<"markup.italic": <TSRange 4..<20, {0, 4}..<{2, 6}>>, <"markup.italic": <TSRange 28..<312, {3, 0}..<{24, 8}>>, <"markup.italic": <TSRange 30..<42, {3, 2}..<{4, 4}>>, <"punctuation": <TSRange 42..<44, {4, 4}..<{4, 6}>>, <"markup.link": <TSRange 44..<114, {4, 6}..<{14, 20}>>, <"markup.raw": <TSRange 50..<102, {4, 12}..<{14, 8}>>, <"punctuation": <TSRange 114..<116, {14, 20}..<{14, 22}>>, <"markup.raw": <TSRange 136..<168, {14, 42}..<{14, 74}>>, <"markup.raw": <TSRange 170..<236, {14, 76}..<{22, 4}>>, <"markup.raw": <TSRange 238..<256, {22, 6}..<{22, 24}>>, <"markup.raw": <TSRange 276..<282, {22, 44}..<{22, 50}>>, <"markup.raw": <TSRange 288..<298, {22, 56}..<{22, 66}>>, <"markup.italic": <TSRange 314..<436, {25, 0}..<{40, 2}>>, <"markup.italic": <TSRange 320..<426, {26, 0}..<{37, 48}>>, <"punctuation": <TSRange 338..<340, {27, 2}..<{27, 4}>>, <"markup.link": <TSRange 340..<418, {27, 4}..<{37, 40}>>, <"markup.raw": <TSRange 356..<402, {31, 0}..<{37, 24}>>, <"markup.raw": <TSRange 404..<410, {37, 26}..<{37, 32}>>, <"punctuation": <TSRange 418..<420, {37, 40}..<{37, 42}>>, <"markup.italic": <TSRange 450..<458, {41, 10}..<{42, 2}>>, <"markup.italic": <TSRange 464..<500, {42, 8}..<{43, 4}>>, <"markup.italic": <TSRange 466..<482, {42, 10}..<{42, 26}>>, <"punctuation": <TSRange 504..<506, {44, 2}..<{44, 4}>>, <"markup.link": <TSRange 512..<514, {46, 2}..<{46, 4}>>, <"punctuation": <TSRange 514..<516, {46, 4}..<{46, 6}>>, <"markup.raw": <TSRange 520..<538, {46, 10}..<{46, 28}>>, <"markup.raw": <TSRange 544..<556, {46, 34}..<{46, 46}>>, <"markup.italic": <TSRange 634..<670, {52, 4}..<{56, 10}>>, <"markup.raw": <TSRange 670..<682, {56, 10}..<{58, 2}>>, <"markup.raw": <TSRange 688..<912, {58, 8}..<{67, 56}>>]) == (expected → [<"markup.italic": <TSRange 4..<20, {0, 4}..<{2, 6}>>, <"markup.italic": <TSRange 28..<312, {3, 0}..<{24, 8}>>, <"markup.italic": <TSRange 30..<42, {3, 2}..<{4, 4}>>, <"punctuation": <TSRange 42..<44, {4, 4}..<{4, 6}>>, <"markup.link": <TSRange 44..<114, {4, 6}..<{14, 20}>>, <"markup.raw": <TSRange 50..<102, {4, 12}..<{14, 8}>>, <"punctuation": <TSRange 114..<116, {14, 20}..<{14, 22}>>, <"markup.raw": <TSRange 136..<168, {14, 42}..<{14, 74}>>, <"markup.raw": <TSRange 170..<236, {14, 76}..<{22, 4}>>, <"markup.raw": <TSRange 238..<256, {22, 6}..<{22, 24}>>, <"markup.raw": <TSRange 276..<282, {22, 44}..<{22, 50}>>, <"markup.raw": <TSRange 288..<298, {22, 56}..<{22, 66}>>, <"markup.italic": <TSRange 314..<436, {25, 0}..<{40, 2}>>, <"markup.italic": <TSRange 320..<426, {26, 0}..<{37, 48}>>, <"punctuation": <TSRange 338..<340, {27, 2}..<{27, 4}>>, <"markup.link": <TSRange 340..<418, {27, 4}..<{37, 40}>>, <"markup.raw": <TSRange 356..<402, {31, 0}..<{37, 24}>>, <"markup.raw": <TSRange 404..<410, {37, 26}..<{37, 32}>>, <"punctuation": <TSRange 418..<420, {37, 40}..<{37, 42}>>, <"markup.italic": <TSRange 450..<458, {41, 10}..<{42, 2}>>, <"markup.italic": <TSRange 464..<500, {42, 8}..<{43, 4}>>, <"markup.italic": <TSRange 466..<482, {42, 10}..<{42, 26}>>, <"punctuation": <TSRange 504..<506, {44, 2}..<{44, 4}>>, <"markup.link": <TSRange 512..<514, {46, 2}..<{46, 4}>>, <"punctuation": <TSRange 514..<516, {46, 4}..<{46, 6}>>, <"markup.raw": <TSRange 520..<538, {46, 10}..<{46, 28}>>, <"markup.raw": <TSRange 544..<556, {46, 34}..<{46, 46}>>, <"markup.italic": <TSRange 566..<576, {48, 0}..<{48, 10}>>, <"markup.italic": <TSRange 634..<670, {52, 4}..<{56, 10}>>, <"markup.raw": <TSRange 670..<682, {56, 10}..<{58, 2}>>, <"markup.raw": <TSRange 688..<912, {58, 8}..<{67, 56}>>])
+± removed [<"markup.italic": <TSRange 566..<576, {48, 0}..<{48, 10}>>]
+↳ actual root/injection query parity at scalar edit 1745
+✘ Test editedRootAndInlineLayersMatchFresh() failed after 9.809 seconds with 1 issue.
+✘ Suite "Actual Markdown layer scalar-edit parity" failed after 9.810 seconds with 1 issue.
+✘ Test run with 1 test in 1 suite failed after 9.810 seconds with 1 issue.

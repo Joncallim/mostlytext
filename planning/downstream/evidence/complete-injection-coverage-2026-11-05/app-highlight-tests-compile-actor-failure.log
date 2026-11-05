@@ -1,0 +1,386 @@
+Building for debugging...
+[0/97] Write sources
+[3/97] Copying xml
+[4/97] Write sources
+[5/97] Copying queries
+[6/97] Copying dtd
+[7/97] Copying queries
+[8/97] Write sources
+[8/97] Copying queries
+[15/97] Write swift-version--58304C5D6DBC2206.txt
+[16/97] Compiling scanner.c
+[20/97] Compiling parser.c
+[23/97] Compiling scanner.c
+[25/97] Copying Info.plist
+[26/97] Copying queries
+[28/97] Compiling parser.c
+[29/97] Compiling scanner.c
+[32/100] Copying queries
+[33/100] Compiling scanner.c
+[34/100] Write sources
+[35/100] Compiling scanner.c
+[36/100] Copying queries
+[38/100] Compiling parser.c
+[39/100] Compiling scanner.c
+[41/100] Compiling parser.c
+[45/103] Copying queries
+[48/103] Write sources
+[49/103] Compiling parser.c
+[50/103] Compiling scanner.c
+[51/103] Compiling parser.c
+[53/106] Compiling scanner.c
+[54/106] Compiling parser.c
+[55/106] Compiling scanner.c
+[56/106] Compiling stdlib.c
+[57/106] Compiling scanner.c
+[58/106] Compiling wasm_store.c
+[59/106] Compiling tree.c
+[60/106] Compiling subtree.c
+[61/106] Compiling tree_cursor.c
+[62/106] Compiling stack.c
+[63/106] Compiling parser.c
+[64/106] Compiling query.c
+[65/106] Compiling node.c
+[66/106] Compiling lexer.c
+[67/106] Compiling language.c
+[68/106] Compiling get_changed_ranges.c
+[69/106] Write sources
+[71/106] Compiling alloc.c
+[72/106] Write sources
+[75/106] Copying Tomorrow Light.json
+[75/106] Copying Tomorrow Dark.json
+[75/106] Copying Slate.json
+[75/106] Copying Paper.json
+[75/106] Copying Midnight.json
+[75/106] Copying High Contrast Light.json
+[75/106] Copying High Contrast Dark.json
+[75/106] Copying Daybreak.json
+[75/106] Copying Localizable.xcstrings
+[87/106] Compiling parser.c
+[88/106] Write sources
+[90/138] Compiling parser.c
+[91/138] Write sources
+[92/146] Compiling parser.c
+[93/150] Write sources
+[95/175] Compiling parser.c
+[97/175] Compiling JSONSupport resource_bundle_accessor.swift
+[98/175] Compiling TreeSitterJavaScriptResources TreeSitterJavaScriptResources.swift
+[99/175] Emitting module TreeSitterJavaScriptResources
+[100/175] Compiling TreeSitterJavaScriptResources resource_bundle_accessor.swift
+[101/175] Emitting module TreeSitterMarkdownResources
+[102/175] Compiling TreeSitterMarkdownResources resource_bundle_accessor.swift
+[103/175] Compiling TreeSitterMarkdownResources TreeSitterMarkdownResources.swift
+[104/175] Emitting module TreeSitterMarkdownInlineResources
+[105/175] Compiling TreeSitterMarkdownInlineResources TreeSitterMarkdownInlineResources.swift
+[106/175] Compiling TreeSitterMarkdownInlineResources resource_bundle_accessor.swift
+[107/175] Compiling JSONSupport JSONScanner+Values.swift
+[108/175] Compiling JSONSupport JSONFormatter.swift
+[109/175] Compiling JSONSupport JSONValues.swift
+[110/175] Compiling JSONSupport JSONParser.swift
+[111/175] Compiling JSONSupport JSONScanner.swift
+[112/175] Compiling JSONSupport JSONOutlineBuilder.swift
+[113/175] Compiling JSONSupport JSONFormattingBaseline.swift
+[114/175] Emitting module JSONSupport
+[115/175] Compiling JSONSupport JSONAnalysisSession.swift
+[116/175] Compiling JSONSupport JSONScanner+Strings.swift
+[116/219] Compiling parser.c
+[118/222] Compiling TreeSitterSQLResources TreeSitterSQLResources.swift
+[119/222] Emitting module TreeSitterSQLResources
+[120/222] Compiling TreeSitterSQLResources resource_bundle_accessor.swift
+[121/222] Emitting module SwiftTreeSitter
+[122/223] Compiling FileCore FileStoreStage.swift
+[123/223] Compiling FileCore FormatManifest.swift
+[124/223] Compiling FileCore RecoveryBuffer+ExactRead.swift
+[125/223] Compiling FileCore FileStore+ConditionalPublication.swift
+[126/223] Compiling SwiftTreeSitter Tree.swift
+[127/223] Compiling FileCore LineEnding.swift
+[128/223] Compiling FileCore PhysicalFileIdentity.swift
+[129/223] Compiling SwiftTreeSitter TreeCursor.swift
+[130/223] Emitting module FileCore
+[131/227] Compiling FileCore RecoveryBuffer+Installation.swift
+[132/227] Compiling FileCore RecoveryBuffer+Legacy.swift
+[133/227] Compiling FileCore RecoveryBuffer+Migration.swift
+[134/227] Compiling FileCore RecoveryBuffer+Migrations.swift
+[135/227] Compiling FileCore FileEncodingMetadata+DisplayName.swift
+[136/227] Compiling FileCore FileFormat.swift
+[137/227] Compiling FileCore FileSnapshot.swift
+[138/227] Compiling FileCore FileStore+CompanionNames.swift
+[139/227] Compiling FileCore FileDocument.swift
+[140/227] Compiling FileCore FileDocumentState.swift
+[143/227] Compiling FileCore FileEncoding.swift
+[144/227] Compiling FileCore FileEncodingCatalog.swift
+[147/227] Compiling FileCore String+ExactEquality.swift
+[148/227] Compiling FileCore SyntaxModeOverride.swift
+[149/227] Compiling FileCore URL+ResolvingFinalSymlink.swift
+[150/227] Compiling FileCore resource_bundle_accessor.swift
+[151/227] Compiling FileCore FileByteDecoder.swift
+[152/227] Compiling FileCore FileCore.swift
+[153/227] Compiling FileCore DocumentFileProbe.swift
+[154/227] Compiling FileCore DurableFileWriter.swift
+[155/227] Compiling FileCore FileDocument+Edit.swift
+[156/227] Compiling FileCore FileStore+ErrorMapping.swift
+[158/227] Compiling FileCore FileStore+EncodedData.swift
+[159/227] Compiling FileCore FileStore+Encoding.swift
+[160/227] Compiling FileCore FileStore+EncodingDetection.swift
+[161/227] Compiling FileCore FileStore.swift
+[162/227] Compiling FileCore FileStoreRetirement.swift
+[174/237] Compiling SwiftTreeSitterLayer TreeSitter+Extensions.swift
+[175/237] Compiling Themes resource_bundle_accessor.swift
+[176/237] Compiling FileCore DocumentDirectoryWatcher.swift
+[177/237] Compiling FileCore DocumentFileMonitor+Baseline.swift
+[178/237] Compiling FileCore DocumentFileMonitor+FileWatch.swift
+[179/237] Compiling FileCore DocumentFileMonitor.swift
+[180/237] Compiling FileCore FileDocument+ExternalChanges.swift
+[181/237] Compiling FileCore FileDocument+Format.swift
+[182/237] Compiling FileCore FileDocument+Lifetime.swift
+[183/237] Compiling FileCore FileDocument+Recovery.swift
+[184/237] Compiling Themes TokenStyle.swift
+[185/237] Compiling FileCore RecoveryBuffer+Storage.swift
+[186/237] Compiling FileCore RecoveryBuffer+StorageSupport.swift
+[187/237] Compiling FileCore RecoveryBuffer+Types.swift
+[188/237] Compiling FileCore RecoveryBuffer.swift
+[193/237] Emitting module Themes
+[197/237] Compiling SwiftTreeSitterLayer Snapshots.swift
+[198/237] Compiling SwiftTreeSitterLayer Queryable.swift
+[199/237] Compiling SwiftTreeSitterLayer ParseState.swift
+[200/237] Compiling SwiftTreeSitterLayer LanguageLayerQueryCursor.swift
+[201/237] Compiling SwiftTreeSitterLayer IndexSet+Range.swift
+[202/237] Emitting module SwiftTreeSitterLayer
+[203/237] Compiling SwiftTreeSitterLayer LanguageLayer.swift
+[214/249] Compiling TextSearch TextSearch.swift
+[215/250] Compiling TextSearch resource_bundle_accessor.swift
+[216/250] Compiling TextSearch SearchTypes.swift
+[217/250] Compiling TextSearch DirectoryWalker.swift
+[218/250] Compiling TextSearch FolderSearchFilter.swift
+[219/250] Compiling TextSearch WorkspaceSearchEngine.swift
+[220/250] Compiling TextSearch WorkspaceReplaceEngine.swift
+[221/250] Compiling TextSearch GlobPattern.swift
+[222/250] Compiling TextSearch TextSearchEngine.swift
+[223/250] Compiling TextSearch FuzzyPathScore.swift
+[224/250] Emitting module TextSearch
+[225/250] Compiling TextSearch ReplacementPlan.swift
+[226/250] Compiling TextSearch WorkspaceFileIndex.swift
+[233/323] Compiling Rearrange String+NSRange.swift
+[234/323] Compiling Rearrange RangeMutation.swift
+[235/324] Compiling Rearrange TextRangeCalculating.swift
+[236/324] Compiling Rearrange NSRange+ApplyMutation.swift
+[237/324] Compiling Rearrange UITextRange+Convenience.swift
+[238/324] Compiling EditorCore EditingAssistPairs.swift
+[239/324] Compiling EditorCore EditorCommentToggle.swift
+[240/324] Compiling EditorCore EditorConfiguration.swift
+[241/324] Compiling EditorCore ContentHeightMeter.swift
+[242/324] Compiling EditorCore EditingAssistConfiguration.swift
+[243/324] Compiling EditorCore EditingAssistOutcome.swift
+[244/324] Compiling EditorCore EditorTextChange.swift
+[245/324] Compiling EditorCore EditorTextSystem+CommandGuard.swift
+[246/324] Compiling EditorCore EditorTextSystem+CommentToggle.swift
+[247/324] Compiling EditorCore EditorTextSystem+Content.swift
+[248/324] Compiling EditorCore EditorTextSystem+DocumentReplacement.swift
+[249/324] Compiling EditorCore EditorTextSystem+EditingAssists.swift
+[250/324] Compiling EditorCore EditorTextSystem+ExternalReplacement.swift
+[251/324] Compiling EditorCore EditorTextSystemStore.swift
+[252/324] Compiling EditorCore EditorTextTransforms+Case.swift
+[253/324] Compiling EditorCore EditorTextTransforms+Indent.swift
+[254/324] Compiling EditorCore EditorTextTransforms+LineEndings.swift
+[255/324] Compiling EditorCore EditorTextTransforms.swift
+[256/324] Compiling EditorCore EditorTextView+Composition.swift
+[257/324] Compiling EditorCore EditorTextView+FindHighlights.swift
+[258/331] Emitting module EditorCore
+[265/331] Compiling EditorCore EditorCore.swift
+[266/331] Compiling EditorCore EditorDocumentMetrics.swift
+[267/331] Compiling EditorCore EditorTextSystem+Find.swift
+[268/331] Compiling EditorCore EditorTextSystem+Gutter.swift
+[269/331] Compiling EditorCore EditorTextSystem+LineIndex.swift
+[270/331] Compiling EditorCore EditorTextSystem+LineTransforms.swift
+[271/331] Compiling EditorCore EditorTextSystem+MultiCursor.swift
+[272/331] Compiling EditorCore EditorTextSystem+OccurrenceSelection.swift
+[273/331] Compiling EditorCore EditorTextSystem+RectangularSelection.swift
+[274/331] Compiling EditorCore EditorInvisiblesLayout.swift
+[275/331] Compiling EditorCore EditorLineIndex.swift
+[276/331] Compiling EditorCore EditorLineTransforms+Join.swift
+[277/331] Compiling EditorCore EditorLineTransforms+LogicalLines.swift
+[278/331] Compiling EditorCore EditorLineTransforms+Move.swift
+[279/331] Compiling EditorCore EditorLineTransforms.swift
+[280/331] Compiling EditorCore EditorSelectionSet.swift
+[281/331] Compiling EditorCore EditorTextSystem+Scroll.swift
+[282/331] Compiling EditorCore EditorTextSystem+SecondaryCarets.swift
+[283/331] Compiling EditorCore EditorTextSystem+Selection.swift
+[284/331] Compiling EditorCore EditorTextSystem+SynchronizedMovement.swift
+[285/331] Compiling EditorCore EditorTextSystem+TextTransforms.swift
+[286/331] Compiling EditorCore EditorTextSystem+VerticalCursors.swift
+[287/331] Compiling EditorCore EditorTextSystem.swift
+[288/331] Compiling Rearrange NSRange+Shift.swift
+[289/331] Compiling Rearrange NSTextRange+Bounded.swift
+[290/331] Emitting module Rearrange
+[291/331] Compiling Rearrange IndexSet+NSRange.swift
+[292/331] Compiling Rearrange NSRange+Convenience.swift
+[293/331] Compiling Rearrange NSTextRange+NSRange.swift
+[296/331] Compiling EditorCore EditorEditTransaction+Splice.swift
+[297/331] Compiling EditorCore EditorEditTransaction.swift
+[298/331] Compiling EditorCore EditorFind.swift
+[299/331] Compiling EditorCore EditorFindModel+Replace.swift
+[300/331] Compiling EditorCore EditorFindModel.swift
+[301/331] Compiling EditorCore EditorFindModelStore.swift
+[302/331] Compiling EditorCore EditorGutterLayout.swift
+[303/331] Compiling EditorCore EditorGutterView.swift
+[304/342] Compiling EditorCore MarkdownEditingCommand.swift
+[305/342] Compiling EditorCore EditorSnippetInsertion.swift
+[306/342] Compiling EditorCore Snippet.swift
+[307/342] Compiling EditorCore SnippetStore.swift
+[308/342] Compiling EditorCore SnippetTemplate.swift
+[309/342] Compiling EditorCore TextKitStack.swift
+[310/342] Compiling EditorCore resource_bundle_accessor.swift
+[311/342] Compiling EditorCore LanguageEditingProfileRegistry.swift
+[312/342] Compiling EditorCore MarkdownEditingAssistEngine+Commands.swift
+[313/342] Compiling EditorCore MarkdownEditingAssistEngine+Indentation.swift
+[314/342] Compiling EditorCore MarkdownEditingAssistEngine+LineHelpers.swift
+[315/342] Compiling EditorCore MarkdownEditingAssistEngine+Newline.swift
+[316/342] Compiling EditorCore MarkdownEditingAssistEngine+Pairing.swift
+[317/342] Compiling EditorCore MarkdownEditingAssistEngine.swift
+[318/342] Compiling EditorCore EditorView+Dismantle.swift
+[319/342] Compiling EditorCore EditorView.swift
+[320/342] Compiling EditorCore EditorViewportSnapshot.swift
+[321/342] Compiling EditorCore ExactTextFingerprint.swift
+[322/342] Compiling EditorCore FencedRegionClassifier.swift
+[323/342] Compiling EditorCore HeightParagraphScanner.swift
+[324/342] Compiling EditorCore LanguageEditingProfile.swift
+[325/342] Compiling EditorCore EditorTextView+SecondaryCarets.swift
+[326/342] Compiling EditorCore EditorTextView.swift
+[327/342] Compiling EditorCore EditorView+Coordinator+ModelSync.swift
+[328/342] Compiling EditorCore EditorView+Coordinator+Movement.swift
+[329/342] Compiling EditorCore EditorView+Coordinator+Newline.swift
+[330/342] Compiling EditorCore EditorView+Coordinator+Observers.swift
+[331/342] Compiling EditorCore EditorView+Coordinator+Selection.swift
+[332/342] Compiling RangeState Versioned.swift
+[333/342] Compiling RangeState ThreePhaseRangeValidator.swift
+[334/342] Compiling RangeState RangeValidator.swift
+[335/342] Compiling RangeState RangeTarget.swift
+[336/342] Compiling RangeState HybridValueProvider+RangeProcessor.swift
+[337/342] Compiling RangeState RangeProcessor.swift
+[338/342] Compiling RangeState HybridSyncAsyncValueProvider.swift
+[339/342] Compiling RangeState RangeInvalidationBuffer.swift
+[340/342] Compiling RangeState AwaitableQueue.swift
+[341/342] Compiling RangeState SinglePhaseRangeValidator.swift
+[342/342] Emitting module RangeState
+[343/348] Compiling TreeSitterClient TreeSitterClient.swift
+[344/348] Compiling TreeSitterClient BackgroundingLanguageLayerTree.swift
+[345/348] Compiling TreeSitterClient TreeSitter+Extensions.swift
+[346/348] Emitting module TreeSitterClient
+[347/348] Compiling TreeSitterClient HybridSyncAsyncVersionedResource.swift
+[348/348] Compiling TreeSitterClient BackgroundProcessor.swift
+[349/359] Compiling Neon TokenSystemValidator.swift
+[350/360] Compiling Neon Token.swift
+[351/360] Compiling Neon ThreePhaseTextSystemStyler.swift
+[352/360] Compiling Neon TextViewSystemInterface.swift
+[353/360] Compiling Neon TextSystemStyler.swift
+[354/360] Compiling Neon TextSystemInterface+Validation.swift
+[355/360] Compiling Neon TextStorageDelegateBuffer.swift
+[356/360] Compiling Neon PlatformTextSystem.swift
+[357/360] Emitting module Neon
+[358/360] Compiling Neon TextSystemInterface.swift
+[359/360] Compiling Neon TextViewHighlighter.swift
+[360/360] Compiling Neon TreeSitterClient+Neon.swift
+[361/370] Compiling Highlighting NeonSyntaxHighlighter+SizeFallback.swift
+[362/370] Compiling Highlighting NeonSyntaxHighlighter.swift
+[363/370] Compiling Highlighting HighlightingStorageGate.swift
+[364/370] Compiling Highlighting HighlightCaptureName.swift
+[365/370] Compiling Highlighting SyntaxHighlightStore.swift
+[366/370] Compiling Highlighting SyntaxHighlighting.swift
+[367/370] Compiling Highlighting HighlightingState.swift
+[368/370] Compiling Highlighting GrammarRegistry.swift
+[369/370] Emitting module Highlighting
+[370/370] Compiling Highlighting GrammarRegistry+Factories.swift
+[371/401] Compiling HighlightingTests CaptureFallbackTests.swift
+[372/401] Compiling HighlightingTests EditWideningStorageDelegate.swift
+[373/401] Compiling HighlightingTests Fixtures.swift
+[374/404] Compiling HighlightingTests HighlightFallbackBenchmarkTests.swift
+[375/404] Compiling HighlightingTests HighlightInjectionTests.swift
+[376/404] Compiling HighlightingTests HighlightParseTests.swift
+[377/404] Compiling HighlightingTests InputEditGeometryTests.swift
+[378/404] Compiling HighlightingTests KeystrokeStallBenchmarkTests.swift
+[379/404] Compiling HighlightingTests KeystrokeStallSupport.swift
+[380/404] Compiling HighlightingTests MarkdownLayerScalarStressTests.swift
+/Volumes/Fast SSD/CORTANA-GitHub/worktrees/github/mostlytext-complete-injection-coverage/MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownLayerScalarStressTests.swift:39:28: error: call to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall]
+ 35 |     }
+ 36 | 
+ 37 |     private func configurations() throws -> (LanguageConfiguration, LanguageConfiguration) {
+    |                  `- note: add '@MainActor' to make instance method 'configurations()' part of global actor 'MainActor'
+ 38 |         #if canImport(Highlighting)
+ 39 |             let registry = GrammarRegistry()
+    |                            `- error: call to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall]
+ 40 |             return try (
+ 41 |                 #require(registry.configuration(for: "markdown")),
+
+/Volumes/Fast SSD/CORTANA-GitHub/worktrees/github/mostlytext-complete-injection-coverage/MacDown2/Packages/MacDownKit/Sources/Highlighting/GrammarRegistry.swift:24:12: note: calls to initializer 'init()' from outside of its actor context are implicitly asynchronous
+ 22 |     private nonisolated let configurations = ConfigurationCache()
+ 23 | 
+ 24 |     public init() {}
+    |            `- note: calls to initializer 'init()' from outside of its actor context are implicitly asynchronous
+ 25 | 
+ 26 |     /// `nil` ⇒ no grammar for this id ⇒ caller must degrade to plain text. Never throws.
+
+[#ActorIsolatedCall]: <https://docs.swift.org/compiler/documentation/diagnostics/actor-isolated-call>
+[381/404] Compiling HighlightingTests MarkdownScannerRegressionTests.swift
+/Volumes/Fast SSD/CORTANA-GitHub/worktrees/github/mostlytext-complete-injection-coverage/MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownLayerScalarStressTests.swift:39:28: error: call to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall]
+ 35 |     }
+ 36 | 
+ 37 |     private func configurations() throws -> (LanguageConfiguration, LanguageConfiguration) {
+    |                  `- note: add '@MainActor' to make instance method 'configurations()' part of global actor 'MainActor'
+ 38 |         #if canImport(Highlighting)
+ 39 |             let registry = GrammarRegistry()
+    |                            `- error: call to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall]
+ 40 |             return try (
+ 41 |                 #require(registry.configuration(for: "markdown")),
+
+/Volumes/Fast SSD/CORTANA-GitHub/worktrees/github/mostlytext-complete-injection-coverage/MacDown2/Packages/MacDownKit/Sources/Highlighting/GrammarRegistry.swift:24:12: note: calls to initializer 'init()' from outside of its actor context are implicitly asynchronous
+ 22 |     private nonisolated let configurations = ConfigurationCache()
+ 23 | 
+ 24 |     public init() {}
+    |            `- note: calls to initializer 'init()' from outside of its actor context are implicitly asynchronous
+ 25 | 
+ 26 |     /// `nil` ⇒ no grammar for this id ⇒ caller must degrade to plain text. Never throws.
+
+[#ActorIsolatedCall]: <https://docs.swift.org/compiler/documentation/diagnostics/actor-isolated-call>
+[382/404] Compiling HighlightingTests MarkdownTreeReuseTests.swift
+/Volumes/Fast SSD/CORTANA-GitHub/worktrees/github/mostlytext-complete-injection-coverage/MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownLayerScalarStressTests.swift:39:28: error: call to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall]
+ 35 |     }
+ 36 | 
+ 37 |     private func configurations() throws -> (LanguageConfiguration, LanguageConfiguration) {
+    |                  `- note: add '@MainActor' to make instance method 'configurations()' part of global actor 'MainActor'
+ 38 |         #if canImport(Highlighting)
+ 39 |             let registry = GrammarRegistry()
+    |                            `- error: call to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall]
+ 40 |             return try (
+ 41 |                 #require(registry.configuration(for: "markdown")),
+
+/Volumes/Fast SSD/CORTANA-GitHub/worktrees/github/mostlytext-complete-injection-coverage/MacDown2/Packages/MacDownKit/Sources/Highlighting/GrammarRegistry.swift:24:12: note: calls to initializer 'init()' from outside of its actor context are implicitly asynchronous
+ 22 |     private nonisolated let configurations = ConfigurationCache()
+ 23 | 
+ 24 |     public init() {}
+    |            `- note: calls to initializer 'init()' from outside of its actor context are implicitly asynchronous
+ 25 | 
+ 26 |     /// `nil` ⇒ no grammar for this id ⇒ caller must degrade to plain text. Never throws.
+
+[#ActorIsolatedCall]: <https://docs.swift.org/compiler/documentation/diagnostics/actor-isolated-call>
+[383/404] Compiling HighlightingTests HighlightBudgetBenchmarkTests.swift
+[384/404] Compiling HighlightingTests HighlightBudgetFixtures.swift
+[385/404] Compiling HighlightingTests HighlightBudgetProbe.swift
+[386/404] Emitting module HighlightingTests
+[387/404] Compiling HighlightingTests MarkdownClientInvalidationTests.swift
+[388/404] Compiling HighlightingTests MarkdownIncludedRangeReconciliationTests.swift
+[389/404] Compiling HighlightingTests MarkdownInjectionCoverageTests.swift
+[390/404] Compiling HighlightingTests HighlightPerformanceTests.swift
+[391/404] Compiling HighlightingTests HighlightingRestoreRepaintTests.swift
+[392/404] Compiling HighlightingTests HighlightingRestoreStartupTests.swift
+[393/404] Compiling HighlightingTests LocationTransformerByteGeometryTests.swift
+[394/404] Compiling HighlightingTests LocationTransformerTests.swift
+[395/404] Compiling HighlightingTests ManualRestoreSleeper.swift
+[396/404] Compiling HighlightingTests NeonReplacementEditTests.swift
+[397/404] Compiling HighlightingTests SizeFallbackTestSupport.swift
+[398/404] Compiling HighlightingTests StaleWorkAfterCrossingTests.swift
+[399/404] Compiling HighlightingTests HighlightingSizeFallbackLifecycleTests.swift
+[400/404] Compiling HighlightingTests HighlightingSizeFallbackTests.swift
+[401/404] Compiling HighlightingTests InlineResolutionReconciliationTests.swift
+[402/404] Compiling HighlightingTests FormatRegistryConsistencyTests.swift
+[403/404] Compiling HighlightingTests GrammarRegistryCompletenessTests.swift
+[404/404] Compiling HighlightingTests GrammarRegistryTests.swift

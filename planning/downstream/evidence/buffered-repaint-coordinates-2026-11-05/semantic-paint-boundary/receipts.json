@@ -1,0 +1,52 @@
+[
+  {
+    "path": "hosted-remediation-job-127062914593-failed.log.gz",
+    "bytes": 1474027,
+    "sha256": "22595c219166e4ce7407d9d5710264289e9e7caa6205201dfb680710088e2abb"
+  },
+  {
+    "path": "semantic-boundary-app-compile.log.gz",
+    "bytes": 1843,
+    "sha256": "391e81e1d25f4a5b78904322b5fb521a7d4f6e3e2fed588aa33cd56e2abc7135"
+  },
+  {
+    "path": "semantic-boundary-app-resolve.log.gz",
+    "bytes": 196,
+    "sha256": "55f0c0125de3c655ab63a2661b08853d414c1ba51ce1165e47921bbe95d22e96"
+  },
+  {
+    "path": "semantic-boundary-compliance-tests.log.gz",
+    "bytes": 7515,
+    "sha256": "bc14639a2e4f789a2d90ca4ab41b63c405d36dd3d08389b577756f8cd7bf80a1"
+  },
+  {
+    "path": "semantic-boundary-full-format.log.gz",
+    "bytes": 271,
+    "sha256": "eb39e9d6647dabde6fb06cf960fae2d3fdb098b3c6bd53e67dcf0dfb0cdab0a2"
+  },
+  {
+    "path": "semantic-boundary-full-lint.log.gz",
+    "bytes": 70649,
+    "sha256": "bf17daa92f57057b3aea3a99ba532277860221f21cdf10ed7bf8959c02882c5b"
+  },
+  {
+    "path": "semantic-boundary-generation.log.gz",
+    "bytes": 91,
+    "sha256": "33c66bdb9775a00b493a8355dd44358cb655bcf075815ece63927cdf5f8f33d9"
+  },
+  {
+    "path": "semantic-boundary-source-check.log.gz",
+    "bytes": 54,
+    "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+  },
+  {
+    "path": "semantic-paint-boundary-debug.log.gz",
+    "bytes": 11242,
+    "sha256": "33d1c886518c4f85f0df41ecdc1873e5cbb3698555ada4d7d9e7a4f6bfecf5b4"
+  },
+  {
+    "path": "semantic-paint-boundary-release.log.gz",
+    "bytes": 11100,
+    "sha256": "f0e5431cf693c11d9341c21ed7164f1b9aa64ed8c0bd7dc5a36992469694a9a9"
+  }
+]

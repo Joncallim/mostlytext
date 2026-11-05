@@ -43,11 +43,15 @@ extension ConfigurationCache {
         },
         "markdown_inline": {
             guard let queriesURL = TreeSitterMarkdownInlineResources.queriesURL else { return nil }
-            return try configuration(
+            guard var config = try configuration(
                 language: Language(tree_sitter_markdown_inline()),
                 name: "MarkdownInline",
                 queriesURL: queriesURL
-            )
+            ) else { return nil }
+            // Valid UTF-16 edits can otherwise retain a different inline tree
+            // from a fresh parse. Keep the complete source/capture semantics.
+            config.reusesPreviousTree = false
+            return config
         },
         "json": {
             try configuration(

@@ -1,4 +1,10 @@
 import Foundation
+#if canImport(Neon)
+    import AppKit
+    import Neon
+#else
+    import OwnedStylingCore
+#endif
 import SwiftTreeSitter
 import SwiftTreeSitterLayer
 import Testing
@@ -97,6 +103,58 @@ struct MarkdownClientInvalidationTests {
             provider: state.text.predicateTextProvider, mode: .required
         )
         #expect(actual == expected)
+    }
+
+    @MainActor
+    @Test(.timeLimit(.minutes(1)))
+    func partialTokenApplicationPreservesStylesOutsideItsQuery() async throws {
+        let source = Source("*aa **bold** cc*\n")
+        let client = try await warmedClient(source, expectsInline: true)
+        let provider = client.tokenProvider(with: source.text.predicateTextProvider)
+        let fullRange = NSRange(location: 0, length: source.text.utf16.count)
+        let full = try #require(provider.sync(fullRange))
+        var reference = [String?](repeating: nil, count: fullRange.length)
+        paint(full, into: &reference)
+        let partialRange = NSRange(location: 1, length: 2)
+        let partial = try #require(provider.sync(partialRange))
+        #expect(!partial.tokens.isEmpty)
+        #expect(partial.tokens.contains { NSIntersectionRange($0.range, partialRange) != $0.range },
+                "semantic tokens retain the complete parser capture")
+        var actual = reference
+        paint(partial, into: &actual)
+        #expect(actual == reference)
+    }
+
+    @MainActor
+    private func paint(_ application: TokenApplication, into styles: inout [String?]) {
+        #if canImport(Neon)
+            let key = NSAttributedString.Key("MostlyTextFixtureToken")
+            let storage = NSTextStorage(string: String(repeating: "x", count: styles.count))
+            for (index, style) in styles.enumerated() {
+                if let style {
+                    storage.addAttribute(key, value: style, range: NSRange(location: index, length: 1))
+                }
+            }
+            let interface = TextStorageSystemInterface(
+                textStorage: storage, attributeProvider: { [key: $0.name] }, defaultAttributesProvider: { [:] }
+            )
+            interface.applyStyles(for: application)
+            for index in styles
+                .indices {
+                styles[index] = storage.attribute(key, at: index, effectiveRange: nil) as? String
+            }
+        #else
+            if let range = application.range {
+                for index in range.location ..< min(NSMaxRange(range), styles.count) {
+                    styles[index] = nil
+                }
+            }
+            application.forEachTokenToApply { token, paintedRange in
+                for index in paintedRange.location ..< min(NSMaxRange(paintedRange), styles.count) {
+                    styles[index] = token.name
+                }
+            }
+        #endif
     }
 
     private func fixture(_ ending: String) -> String {

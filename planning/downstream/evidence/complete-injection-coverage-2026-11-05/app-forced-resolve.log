@@ -1,0 +1,98 @@
+Fetching https://github.com/scinfu/SwiftSoup from cache
+Fetching https://github.com/tree-sitter/tree-sitter-html from cache
+Fetching https://github.com/pointfreeco/swift-concurrency-extras from cache
+Fetching https://github.com/tree-sitter/tree-sitter-python from cache
+Fetching https://github.com/tree-sitter-grammars/tree-sitter-toml from cache
+Fetching https://github.com/gonzalezreal/swiftui-math from cache
+Fetching https://github.com/tree-sitter/tree-sitter-css from cache
+Fetching https://github.com/tree-sitter-grammars/tree-sitter-yaml from cache
+Fetched https://github.com/tree-sitter-grammars/tree-sitter-toml from cache (0.03s)
+Fetching https://github.com/tree-sitter/tree-sitter-typescript from cache
+Fetched https://github.com/tree-sitter/tree-sitter-html from cache (0.04s)
+Fetching https://github.com/alex-pinkus/tree-sitter-swift from cache
+Fetched https://github.com/tree-sitter-grammars/tree-sitter-yaml from cache (0.08s)
+Fetched https://github.com/pointfreeco/swift-concurrency-extras from cache (0.08s)
+Fetching https://github.com/tree-sitter-grammars/tree-sitter-xml from cache
+Fetching https://github.com/Joncallim/Neon from cache
+Fetched https://github.com/tree-sitter/tree-sitter-css from cache (0.23s)
+Fetching https://github.com/swiftlang/swift-cmark from cache
+Fetched https://github.com/scinfu/SwiftSoup from cache (0.45s)
+Fetched https://github.com/tree-sitter-grammars/tree-sitter-xml from cache (0.37s)
+Fetching https://github.com/Joncallim/textual from cache
+Fetching https://github.com/tree-sitter/tree-sitter from cache
+Fetched https://github.com/gonzalezreal/swiftui-math from cache (1.36s)
+Fetching https://github.com/ChimeHQ/Rearrange from cache
+Fetched https://github.com/ChimeHQ/Rearrange from cache (0.02s)
+Fetching https://github.com/Joncallim/SwiftTreeSitter from cache
+warning: 'neon': skipping cache due to an error: The file “maintenance.lock” doesn’t exist.
+Fetched https://github.com/swiftlang/swift-cmark from cache (2.73s)
+Fetching https://github.com/tree-sitter/tree-sitter-ruby from cache
+Fetched https://github.com/Joncallim/textual from cache (3.46s)
+Fetching https://github.com/tree-sitter/tree-sitter-bash from cache
+Fetched https://github.com/Joncallim/SwiftTreeSitter from cache (3.36s)
+Fetching https://github.com/apple/swift-argument-parser from cache
+Fetched https://github.com/alex-pinkus/tree-sitter-swift from cache (4.73s)
+Fetching https://github.com/jpsim/Yams from cache
+[1/1864] Fetching neon
+Fetched https://github.com/apple/swift-argument-parser from cache (1.15s)
+Fetching https://github.com/tree-sitter/tree-sitter-cpp from cache
+Fetched https://github.com/Joncallim/Neon from cache (6.86s)
+Fetching https://github.com/swiftlang/swift-markdown from cache
+Fetched https://github.com/tree-sitter/tree-sitter from cache (6.75s)
+Fetching https://github.com/tree-sitter/tree-sitter-json from cache
+Fetched https://github.com/tree-sitter/tree-sitter-json from cache (0.05s)
+Fetched https://github.com/tree-sitter/tree-sitter-python from cache (7.39s)
+Fetched https://github.com/swiftlang/swift-markdown from cache (1.11s)
+Fetched https://github.com/tree-sitter/tree-sitter-bash from cache (5.39s)
+Fetched https://github.com/jpsim/Yams from cache (4.98s)
+Fetched https://github.com/tree-sitter/tree-sitter-cpp from cache (11.56s)
+Fetched https://github.com/tree-sitter/tree-sitter-typescript from cache (17.86s)
+Fetched https://github.com/tree-sitter/tree-sitter-ruby from cache (23.00s)
+Creating working copy for https://github.com/pointfreeco/swift-concurrency-extras
+Creating working copy for https://github.com/tree-sitter/tree-sitter-css
+Creating working copy for https://github.com/alex-pinkus/tree-sitter-swift
+Creating working copy for https://github.com/gonzalezreal/swiftui-math
+Creating working copy for https://github.com/tree-sitter-grammars/tree-sitter-toml
+Creating working copy for https://github.com/tree-sitter/tree-sitter-html
+Creating working copy for https://github.com/tree-sitter-grammars/tree-sitter-yaml
+Creating working copy for https://github.com/scinfu/SwiftSoup
+Creating working copy for https://github.com/tree-sitter-grammars/tree-sitter-xml
+Creating working copy for https://github.com/tree-sitter/tree-sitter-bash
+Creating working copy for https://github.com/tree-sitter/tree-sitter
+Working copy of https://github.com/pointfreeco/swift-concurrency-extras resolved at 1.4.1
+Creating working copy for https://github.com/tree-sitter/tree-sitter-python
+Creating working copy for https://github.com/Joncallim/textual
+Working copy of https://github.com/tree-sitter/tree-sitter-html resolved at 0.23.2
+Creating working copy for https://github.com/swiftlang/swift-cmark
+Creating working copy for https://github.com/ChimeHQ/Rearrange
+Creating working copy for https://github.com/Joncallim/Neon
+Working copy of https://github.com/scinfu/SwiftSoup resolved at 2.13.9
+Creating working copy for https://github.com/Joncallim/SwiftTreeSitter
+Creating working copy for https://github.com/tree-sitter/tree-sitter-typescript
+Creating working copy for https://github.com/swiftlang/swift-markdown
+Working copy of https://github.com/tree-sitter/tree-sitter-python resolved at 0.23.6
+Creating working copy for https://github.com/tree-sitter/tree-sitter-cpp
+Working copy of https://github.com/tree-sitter/tree-sitter-bash resolved at 0.25.1
+Creating working copy for https://github.com/tree-sitter/tree-sitter-json
+Creating working copy for https://github.com/apple/swift-argument-parser
+Creating working copy for https://github.com/tree-sitter/tree-sitter-ruby
+Creating working copy for https://github.com/jpsim/Yams
+Working copy of https://github.com/tree-sitter-grammars/tree-sitter-xml resolved at 0.7.0
+Working copy of https://github.com/tree-sitter-grammars/tree-sitter-toml resolved at 0.7.0
+Working copy of https://github.com/tree-sitter/tree-sitter-css resolved at 0.23.2
+Working copy of https://github.com/gonzalezreal/swiftui-math resolved at 0.1.0
+Working copy of https://github.com/alex-pinkus/tree-sitter-swift resolved at 0.7.3-with-generated-files
+Working copy of https://github.com/Joncallim/textual resolved at d3ddabb1da37681083cdc3da706f96cf2fb6a3c6
+Working copy of https://github.com/ChimeHQ/Rearrange resolved at 2.1.1
+Working copy of https://github.com/tree-sitter/tree-sitter resolved at 0.25.10
+Working copy of https://github.com/swiftlang/swift-cmark resolved at 0.8.0
+Working copy of https://github.com/swiftlang/swift-markdown resolved at 0.8.0
+Working copy of https://github.com/tree-sitter/tree-sitter-json resolved at 0.24.8
+Working copy of https://github.com/apple/swift-argument-parser resolved at 1.8.2
+Working copy of https://github.com/tree-sitter/tree-sitter-typescript resolved at 0.23.2
+Working copy of https://github.com/tree-sitter-grammars/tree-sitter-yaml resolved at 0.7.0
+Working copy of https://github.com/tree-sitter/tree-sitter-ruby resolved at 0.23.1
+Working copy of https://github.com/jpsim/Yams resolved at 6.2.2
+Working copy of https://github.com/tree-sitter/tree-sitter-cpp resolved at 0.23.4
+Working copy of https://github.com/Joncallim/SwiftTreeSitter resolved at 7d2dc87e8b9326062d75bc1ef985f17d28e94da9
+Working copy of https://github.com/Joncallim/Neon resolved at be25e35787585430f0f1ac845ed44c11e7f8150a

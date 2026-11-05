@@ -1,0 +1,6 @@
+{
+  "source": "Sources/Neon/TreeSitterClient+Neon.swift",
+  "bytes": 2154,
+  "sha256": "836d295b355540d8f4f62af461b83e77c9db29ecfdc528a3c10d79c777bbc5ad",
+  "selection": "exact declaration prefix before native platform conditional; no native tail"
+}

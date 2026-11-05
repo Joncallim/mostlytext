@@ -1,0 +1,13 @@
+{
+  "firstHead": "2dc95c3e20e12b4bd095825918593b0164cb0d20",
+  "firstCI": 41969776856,
+  "firstFailedJob": 127055051027,
+  "firstFailedLogSha256": "3edfa3b00d1e03bc2245c1a6ab8796df5cc3cd1108bb63d05037eb8275758c83",
+  "firstFailure": "existing below-cutoff deletion comparison; strict selection and combined edit controls passed",
+  "neonCandidate": "9db7e1d361d6f724ee28da49eae532db3018b408",
+  "componentSwiftTestingFunctions": 39,
+  "componentSuites": 10,
+  "existingXCTestCases": 8,
+  "smallEditScenarios": 75772,
+  "hostedCorrectedCI": "required before merge"
+}

@@ -1,0 +1,21 @@
+{
+  "neon": "6797068d989992952accb5a821ac7ee676e1c395",
+  "rejectedApplicationHead": "2a716c23963d591f8b7a2f8e720037ecc5574017",
+  "rejectedCI": 41971455564,
+  "rejectedJob": 127060439626,
+  "rejectedLogSha256": "68942eec0db44ebb707a43573e66fbc9fa2f03601ac40067cb9eb1b52bcd4a9e",
+  "originalBoundaryModelAssertions": 4,
+  "clippedTokenBoundaryModelAssertions": 4,
+  "finalSwiftTestingFunctions": 34,
+  "finalSuites": 9,
+  "existingXCTestCases": 8,
+  "selectedPrefix": {
+    "source": "Sources/Neon/TreeSitterClient+Neon.swift",
+    "startByte": 0,
+    "endByteExcluded": 2154,
+    "sha256": "836d295b355540d8f4f62af461b83e77c9db29ecfdc528a3c10d79c777bbc5ad"
+  },
+  "hostedAppTestBackend": "real TextStorageSystemInterface with owned temporary NSTextStorage",
+  "localFixtureBackend": "exact package-only iterator with memory styles; native branch excluded",
+  "hostedFinalQualification": "required before merge"
+}

@@ -37,9 +37,9 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-argument-parser", exact: "1.8.2"),
         .package(
             url: "https://github.com/Joncallim/SwiftTreeSitter",
-            revision: "1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43"
+            revision: "7d2dc87e8b9326062d75bc1ef985f17d28e94da9"
         ),
-        .package(url: "https://github.com/Joncallim/Neon", revision: "d58b074a067861161a1df6d5b42d700526d0e7dc"),
+        .package(url: "https://github.com/Joncallim/Neon", revision: "be25e35787585430f0f1ac845ed44c11e7f8150a"),
         .package(url: "https://github.com/tree-sitter/tree-sitter-json", from: "0.24.8"),
         .package(url: "https://github.com/tree-sitter/tree-sitter-html", from: "0.23.2"),
         // EPIC-11 Gate 5 grammars. Every grammar is pinned exactly; see

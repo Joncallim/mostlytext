@@ -1,0 +1,158 @@
+[0/1] Planning build
+Building for production...
+[0/3] Write sources
+[1/3] Write swift-version--58304C5D6DBC2206.txt
+[3/4] Compiling ModelTests ComponentEditCostProbe.swift
+[4/6] Compiling OwnedNeonClientFixturePackageTests runner.swift
+[4/6] Write Objects.LinkFileList
+[5/6] Linking OwnedNeonClientFixturePackageTests
+Build complete! (6.87s)
+Test Suite 'All tests' started at 2026-11-05 14:49:42.694.
+Test Suite 'OwnedNeonClientFixturePackageTests.xctest' started at 2026-11-05 14:49:42.702.
+Test Suite 'RangeValidatorTests' started at 2026-11-05 14:49:42.702.
+Test Case '-[ModelTests.RangeValidatorTests testHandleCompletedValidation]' started.
+Test Case '-[ModelTests.RangeValidatorTests testHandleCompletedValidation]' passed (0.001 seconds).
+Test Case '-[ModelTests.RangeValidatorTests testHandleDuplicateValidation]' started.
+Test Case '-[ModelTests.RangeValidatorTests testHandleDuplicateValidation]' passed (0.000 seconds).
+Test Suite 'RangeValidatorTests' passed at 2026-11-05 14:49:42.703.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'SinglePhaseRangeValidatorTests' started at 2026-11-05 14:49:42.703.
+Test Case '-[ModelTests.SinglePhaseRangeValidatorTests testContentAddedAtEndAsync]' started.
+Test Case '-[ModelTests.SinglePhaseRangeValidatorTests testContentAddedAtEndAsync]' passed (0.000 seconds).
+Test Case '-[ModelTests.SinglePhaseRangeValidatorTests testContentAddedAtEnd]' started.
+Test Case '-[ModelTests.SinglePhaseRangeValidatorTests testContentAddedAtEnd]' passed (0.000 seconds).
+Test Case '-[ModelTests.SinglePhaseRangeValidatorTests testContentDeletedAtEnd]' started.
+Test Case '-[ModelTests.SinglePhaseRangeValidatorTests testContentDeletedAtEnd]' passed (0.000 seconds).
+Test Case '-[ModelTests.SinglePhaseRangeValidatorTests testContentDeleted]' started.
+Test Case '-[ModelTests.SinglePhaseRangeValidatorTests testContentDeleted]' passed (0.000 seconds).
+Test Case '-[ModelTests.SinglePhaseRangeValidatorTests testDistinctInvalidRegions]' started.
+Test Case '-[ModelTests.SinglePhaseRangeValidatorTests testDistinctInvalidRegions]' passed (0.000 seconds).
+Test Case '-[ModelTests.SinglePhaseRangeValidatorTests testDistinctPrioritySetValidation]' started.
+Test Case '-[ModelTests.SinglePhaseRangeValidatorTests testDistinctPrioritySetValidation]' passed (0.000 seconds).
+Test Suite 'SinglePhaseRangeValidatorTests' passed at 2026-11-05 14:49:42.705.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+Test Suite 'OwnedNeonClientFixturePackageTests.xctest' passed at 2026-11-05 14:49:42.705.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 0.002 (0.003) seconds
+Test Suite 'All tests' passed at 2026-11-05 14:49:42.705.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 0.002 (0.011) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite InitialFillMutationTests started.
+◇ Suite "Markdown client sublayer invalidation" started.
+◇ Suite TreeSitterClientStressTests started.
+◇ Suite "Single-phase validation completion" started.
+◇ Suite "Actual Markdown layer scalar-edit parity" started.
+◇ Suite "Moved Markdown injection capture coverage" started.
+◇ Suite "Component-only edit cost probe" started.
+◇ Suite RangeProcessorTests started.
+◇ Suite RangeTargetTests started.
+◇ Test completionWaitsForInFlightProvider(disjoint:) started.
+◇ Suite TreeSitterClientTests started.
+◇ Suite RangeInvalidationBufferTests started.
+◇ Test warmedClientMatchesFreshAfterEdit(_:reentrant:) started.
+◇ Test eligibleLengths() started.
+◇ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) started.
+◇ Test editedRootAndInlineLayersMatchFresh() started.
+◇ Test asyncQueriesWhileRapidlyInserting() started.
+◇ Test case passing 1 argument disjoint → false to completionWaitsForInFlightProvider(disjoint:) started.
+◇ Test deleteWithEverythingProcessed() started.
+◇ Test insertWithEverythingProcessed() started.
+◇ Test initialFillHeldWhenEditArrives() started.
+◇ Test synchronousQuery() started.
+◇ Test processWithEmptyContent() started.
+◇ Test changeThatOverlapsUnprocessedRegion() started.
+◇ Test case passing 2 arguments shape → .replacement, reentrant → false to warmedClientMatchesFreshAfterEdit(_:reentrant:) started.
+◇ Test insertingEmptyRange() started.
+◇ Test union() started.
+◇ Suite NamedRangeApplicationTests started.
+◇ Test rapidSuccessiveInsertsFollowedByDelete() started.
+◇ Test processSingleCharacterString() started.
+◇ Test insertWithNothingProcessed() started.
+◇ Test bufferingScopeOpenedByHandlerSurvivesOuterFlush() started.
+◇ Test case passing 1 argument ending → "
+" to newlineReplacementKeepsTheRemainingInlineParagraph(ending:) started.
+◇ Test waitForDelayedProcessing() started.
+◇ Test synchronousFill() started.
+◇ Test processingPastContentLength() started.
+◇ Test deleteEverythingAfterProcessing() started.
+◇ Test optionalFill() started.
+◇ Test nestedDepthFlushesOnlyAfterFinalEnd() started.
+◇ Test boundedTokensPreserveNamesOrderAndEmptyApplications() started.
+◇ Test invalidationRaisedWhileFlushingIsDelivered() started.
+✔ Test boundedTokensPreserveNamesOrderAndEmptyApplications() passed after 0.001 seconds.
+✔ Suite NamedRangeApplicationTests passed after 0.001 seconds.
+✔ Test union() passed after 0.001 seconds.
+✔ Test invalidationRaisedWhileFlushingIsDelivered() passed after 0.001 seconds.
+✔ Test bufferingScopeOpenedByHandlerSurvivesOuterFlush() passed after 0.001 seconds.
+✔ Test insertingEmptyRange() passed after 0.001 seconds.
+✔ Test nestedDepthFlushesOnlyAfterFinalEnd() passed after 0.001 seconds.
+✔ Suite RangeTargetTests passed after 0.001 seconds.
+✔ Suite RangeInvalidationBufferTests passed after 0.001 seconds.
+✔ Test insertWithEverythingProcessed() passed after 0.005 seconds.
+✔ Test deleteWithEverythingProcessed() passed after 0.005 seconds.
+◇ Test case passing 1 argument ending → "
+" to newlineReplacementKeepsTheRemainingInlineParagraph(ending:) started.
+✔ Test synchronousQuery() passed after 0.014 seconds.
+◇ Test case passing 1 argument ending → "" to newlineReplacementKeepsTheRemainingInlineParagraph(ending:) started.
+✔ Suite TreeSitterClientTests passed after 0.014 seconds.
+✔ Test changeThatOverlapsUnprocessedRegion() passed after 0.019 seconds.
+✔ Test insertWithNothingProcessed() passed after 0.019 seconds.
+✔ Test synchronousFill() passed after 0.019 seconds.
+✔ Test processSingleCharacterString() passed after 0.019 seconds.
+✔ Test deleteEverythingAfterProcessing() passed after 0.019 seconds.
+✔ Test processWithEmptyContent() passed after 0.019 seconds.
+✔ Test processingPastContentLength() passed after 0.019 seconds.
+✔ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) with 3 test cases passed after 0.019 seconds.
+✔ Suite "Moved Markdown injection capture coverage" passed after 0.019 seconds.
+✔ Test initialFillHeldWhenEditArrives() passed after 0.020 seconds.
+◇ Test initialFillCompletedBeforeTheSameEdit() started.
+✔ Test optionalFill() passed after 0.020 seconds.
+✔ Test waitForDelayedProcessing() passed after 0.020 seconds.
+✔ Test rapidSuccessiveInsertsFollowedByDelete() passed after 0.020 seconds.
+✔ Test initialFillCompletedBeforeTheSameEdit() passed after 0.001 seconds.
+✔ Suite RangeProcessorTests passed after 0.021 seconds.
+◇ Test anEditOutsideTheEffectivePrefixAfterAPendingDeletionIsIgnored() started.
+◇ Test case passing 1 argument disjoint → true to completionWaitsForInFlightProvider(disjoint:) started.
+✔ Test anEditOutsideTheEffectivePrefixAfterAPendingDeletionIsIgnored() passed after 0.001 seconds.
+◇ Test aPartialFillTracksCoveredEditsButIgnoresEditsBeyondIt() started.
+✔ Test completionWaitsForInFlightProvider(disjoint:) with 2 test cases passed after 0.021 seconds.
+✔ Test aPartialFillTracksCoveredEditsButIgnoresEditsBeyondIt() passed after 0.001 seconds.
+✔ Suite "Single-phase validation completion" passed after 0.021 seconds.
+◇ Test heldInitialFillTracksSeveralEditsInOrder() started.
+✔ Test heldInitialFillTracksSeveralEditsInOrder() passed after 0.001 seconds.
+◇ Test pendingDeletionClipsStraddlingEditAtEffectiveBoundary() started.
+✔ Test pendingDeletionClipsStraddlingEditAtEffectiveBoundary() passed after 0.001 seconds.
+◇ Test deletionToEmptyFollowedByInsertionRemainsVisible() started.
+✔ Test deletionToEmptyFollowedByInsertionRemainsVisible() passed after 0.001 seconds.
+◇ Test insertionAtZeroAfterPrefixDeletionProcessesFirstCharacterOfUnprocessedSuffix() started.
+✔ Test insertionAtZeroAfterPrefixDeletionProcessesFirstCharacterOfUnprocessedSuffix() passed after 0.001 seconds.
+◇ Test replacementStraddlingThePendingBoundaryClipsItsVisibleLength(delta:expectedBound:) started.
+◇ Test case passing 2 arguments delta → -4, expectedBound → 8 to replacementStraddlingThePendingBoundaryClipsItsVisibleLength(delta:expectedBound:) started.
+◇ Test case passing 2 arguments delta → -2, expectedBound → 10 to replacementStraddlingThePendingBoundaryClipsItsVisibleLength(delta:expectedBound:) started.
+◇ Test case passing 2 arguments delta → -1, expectedBound → 11 to replacementStraddlingThePendingBoundaryClipsItsVisibleLength(delta:expectedBound:) started.
+✔ Test replacementStraddlingThePendingBoundaryClipsItsVisibleLength(delta:expectedBound:) with 3 test cases passed after 0.006 seconds.
+✔ Suite InitialFillMutationTests passed after 0.029 seconds.
+◇ Test case passing 2 arguments shape → .replacement, reentrant → true to warmedClientMatchesFreshAfterEdit(_:reentrant:) started.
+◇ Test case passing 2 arguments shape → .removeMarkup, reentrant → false to warmedClientMatchesFreshAfterEdit(_:reentrant:) started.
+◇ Test case passing 2 arguments shape → .removeMarkup, reentrant → true to warmedClientMatchesFreshAfterEdit(_:reentrant:) started.
+◇ Test case passing 2 arguments shape → .removeAll, reentrant → false to warmedClientMatchesFreshAfterEdit(_:reentrant:) started.
+◇ Test case passing 2 arguments shape → .removeAll, reentrant → true to warmedClientMatchesFreshAfterEdit(_:reentrant:) started.
+COMPONENT_EDIT_COST utf16=1000 count=100 p50_ms=2.386792 p95_ms=4.233292 max_ms=7.83225
+✔ Test warmedClientMatchesFreshAfterEdit(_:reentrant:) with 6 test cases passed after 0.318 seconds.
+◇ Test asyncQueryRejectsReentrantContentChange() started.
+✔ Test asyncQueryRejectsReentrantContentChange() passed after 0.024 seconds.
+◇ Test queryPastDocumentEndOnlyValidatesExistingContent() started.
+✔ Test queryPastDocumentEndOnlyValidatesExistingContent() passed after 0.008 seconds.
+◇ Test partialTokenApplicationPreservesStylesOutsideItsQuery() started.
+✔ Test partialTokenApplicationPreservesStylesOutsideItsQuery() passed after 0.007 seconds.
+✔ Suite "Markdown client sublayer invalidation" passed after 0.358 seconds.
+✔ Test asyncQueriesWhileRapidlyInserting() passed after 1.128 seconds.
+✔ Suite TreeSitterClientStressTests passed after 1.129 seconds.
+COMPONENT_EDIT_COST utf16=4000 count=100 p50_ms=10.642334 p95_ms=18.995083 max_ms=29.852209
+COMPONENT_EDIT_COST utf16=8000 count=100 p50_ms=20.934042 p95_ms=50.130917 max_ms=58.284959
+✔ Test eligibleLengths() passed after 4.149 seconds.
+✔ Suite "Component-only edit cost probe" passed after 4.149 seconds.
+✔ Test editedRootAndInlineLayersMatchFresh() passed after 4.722 seconds.
+✔ Suite "Actual Markdown layer scalar-edit parity" passed after 4.722 seconds.
+✔ Test run with 37 tests in 12 suites passed after 4.722 seconds.

@@ -1,0 +1,59 @@
+[0/1] Planning build
+Building for debugging...
+[0/4] Write sources
+[1/4] Write swift-version--58304C5D6DBC2206.txt
+[3/7] Emitting module ModelTests
+[4/7] Compiling ModelTests MarkdownInjectionCoverageTests.swift
+[5/7] Compiling ModelTests MarkdownLayerScalarStressTests.swift
+/Volumes/Fast SSD/CORTANA-Builds/neon-sublayer-invalidation-20261105/fixture/Tests/ModelTests/MarkdownLayerScalarStressTests.swift:48:17: warning: variable 'inline' was never mutated; consider changing to 'let' constant
+ 46 |             let inlineURL = try #require(TreeSitterMarkdownInlineResources.queriesURL)
+ 47 |             let root = try LanguageConfiguration(tree_sitter_markdown(), name: "Markdown", queriesURL: rootURL)
+ 48 |             var inline = try LanguageConfiguration(
+    |                 `- warning: variable 'inline' was never mutated; consider changing to 'let' constant
+ 49 |                 tree_sitter_markdown_inline(),
+ 50 |                 name: "MarkdownInline",
+[5/7] Write Objects.LinkFileList
+[6/7] Linking OwnedNeonClientFixturePackageTests
+Build complete! (7.20s)
+Test Suite 'Selected tests' started at 2026-11-05 14:40:29.169.
+Test Suite 'OwnedNeonClientFixturePackageTests.xctest' started at 2026-11-05 14:40:29.176.
+Test Suite 'OwnedNeonClientFixturePackageTests.xctest' passed at 2026-11-05 14:40:29.176.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-11-05 14:40:29.177.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.007) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Actual Markdown layer scalar-edit parity" started.
+◇ Suite "Moved Markdown injection capture coverage" started.
+◇ Test editedRootAndInlineLayersMatchFresh() started.
+◇ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) started.
+◇ Test case passing 1 argument ending → "
+" to newlineReplacementKeepsTheRemainingInlineParagraph(ending:) started.
+✘ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) recorded an issue with 1 argument ending → "
+" at MarkdownInjectionCoverageTests.swift:44:9: Expectation failed: (actualTree.includedRanges → [<TSRange 48..<82, {3, 0}..<{3, 34}>]) == (expectedTree.includedRanges → [<TSRange 4..<44, {1, 0}..<{1, 40}>, <TSRange 48..<82, {3, 0}..<{3, 34}>])
+± removed [<TSRange 4..<44, {1, 0}..<{1, 40}>]
+✘ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) recorded an issue with 1 argument ending → "
+" at MarkdownInjectionCoverageTests.swift:50:9: Expectation failed: (actual → [<"punctuation": <TSRange 0..<2, {0, 0}..<{0, 2}>>, <"markup.bold": <TSRange 60..<80, {3, 12}..<{3, 32}>>]) == (expected → [<"punctuation": <TSRange 0..<2, {0, 0}..<{0, 2}>>, <"markup.bold": <TSRange 12..<28, {1, 8}..<{1, 24}>>, <"markup.raw": <TSRange 30..<42, {1, 26}..<{1, 38}>>, <"markup.bold": <TSRange 60..<80, {3, 12}..<{3, 32}>>])
+± removed [<"markup.bold": <TSRange 12..<28, {1, 8}..<{1, 24}>>, <"markup.raw": <TSRange 30..<42, {1, 26}..<{1, 38}>>]
+◇ Test case passing 1 argument ending → "
+" to newlineReplacementKeepsTheRemainingInlineParagraph(ending:) started.
+✘ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) recorded an issue with 1 argument ending → "
+" at MarkdownInjectionCoverageTests.swift:44:9: Expectation failed: (actualTree.includedRanges → [<TSRange 54..<88, {3, 0}..<{3, 34}>]) == (expectedTree.includedRanges → [<TSRange 6..<46, {1, 0}..<{1, 40}>, <TSRange 54..<88, {3, 0}..<{3, 34}>])
+± removed [<TSRange 6..<46, {1, 0}..<{1, 40}>]
+✘ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) recorded an issue with 1 argument ending → "
+" at MarkdownInjectionCoverageTests.swift:50:9: Expectation failed: (actual → [<"punctuation": <TSRange 0..<2, {0, 0}..<{0, 2}>>, <"markup.bold": <TSRange 66..<86, {3, 12}..<{3, 32}>>]) == (expected → [<"punctuation": <TSRange 0..<2, {0, 0}..<{0, 2}>>, <"markup.bold": <TSRange 14..<30, {1, 8}..<{1, 24}>>, <"markup.raw": <TSRange 32..<44, {1, 26}..<{1, 38}>>, <"markup.bold": <TSRange 66..<86, {3, 12}..<{3, 32}>>])
+± removed [<"markup.bold": <TSRange 14..<30, {1, 8}..<{1, 24}>>, <"markup.raw": <TSRange 32..<44, {1, 26}..<{1, 38}>>]
+◇ Test case passing 1 argument ending → "" to newlineReplacementKeepsTheRemainingInlineParagraph(ending:) started.
+✘ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) recorded an issue with 1 argument ending → "" at MarkdownInjectionCoverageTests.swift:44:9: Expectation failed: (actualTree.includedRanges → [<TSRange 48..<82, {0, 48}..<{0, 82}>]) == (expectedTree.includedRanges → [<TSRange 4..<44, {0, 4}..<{0, 44}>, <TSRange 48..<82, {0, 48}..<{0, 82}>])
+± removed [<TSRange 4..<44, {0, 4}..<{0, 44}>]
+✘ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) recorded an issue with 1 argument ending → "" at MarkdownInjectionCoverageTests.swift:50:9: Expectation failed: (actual → [<"punctuation": <TSRange 0..<2, {0, 0}..<{0, 2}>>, <"markup.bold": <TSRange 60..<80, {0, 60}..<{0, 80}>>]) == (expected → [<"punctuation": <TSRange 0..<2, {0, 0}..<{0, 2}>>, <"markup.bold": <TSRange 12..<28, {0, 12}..<{0, 28}>>, <"markup.raw": <TSRange 30..<42, {0, 30}..<{0, 42}>>, <"markup.bold": <TSRange 60..<80, {0, 60}..<{0, 80}>>])
+± removed [<"markup.bold": <TSRange 12..<28, {0, 12}..<{0, 28}>>, <"markup.raw": <TSRange 30..<42, {0, 30}..<{0, 42}>>]
+✘ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) with 3 test cases failed after 0.059 seconds with 6 issues.
+✘ Suite "Moved Markdown injection capture coverage" failed after 0.059 seconds with 6 issues.
+✘ Test editedRootAndInlineLayersMatchFresh() recorded an issue at MarkdownLayerScalarStressTests.swift:33:17: Expectation failed: (actual → [<"punctuation": <TSRange 520..<522, {19, 0}..<{19, 2}>>, <"markup.italic": <TSRange 0..<64, {0, 0}..<{0, 64}>>, <"markup.bold": <TSRange 20..<38, {0, 20}..<{0, 38}>>, <"markup.raw": <TSRange 50..<62, {0, 50}..<{0, 62}>>, <"markup.italic": <TSRange 68..<262, {2, 0}..<{9, 2}>>, <"markup.bold": <TSRange 88..<104, {2, 20}..<{2, 36}>>, <"markup.raw": <TSRange 122..<180, {2, 54}..<{5, 16}>>, <"markup.raw": <TSRange 190..<248, {5, 26}..<{7, 50}>>, <"markup.bold": <TSRange 280..<296, {9, 20}..<{9, 36}>>, <"markup.raw": <TSRange 302..<312, {9, 42}..<{9, 52}>>, <"markup.bold": <TSRange 312..<388, {9, 52}..<{13, 2}>>, <"markup.bold": <TSRange 340..<356, {11, 22}..<{11, 38}>>, <"markup.raw": <TSRange 366..<380, {11, 48}..<{11, 62}>>, <"markup.italic": <TSRange 412..<424, {14, 6}..<{14, 18}>>, <"markup.raw": <TSRange 436..<482, {14, 30}..<{17, 24}>>, <"markup.raw": <TSRange 504..<516, {17, 46}..<{17, 58}>>, <"markup.bold": <TSRange 602..<618, {22, 16}..<{22, 32}>>, <"markup.raw": <TSRange 628..<640, {22, 42}..<{22, 54}>>, <"markup.bold": <TSRange 640..<682, {22, 54}..<{24, 36}>>, <"markup.italic": <TSRange 648..<670, {24, 2}..<{24, 24}>>, <"markup.raw": <TSRange 706..<760, {25, 22}..<{27, 46}>>, <"markup.raw": <TSRange 762..<770, {27, 48}..<{27, 56}>>]) == (expected → [<"punctuation": <TSRange 520..<522, {19, 0}..<{19, 2}>>, <"markup.italic": <TSRange 0..<64, {0, 0}..<{0, 64}>>, <"markup.bold": <TSRange 20..<38, {0, 20}..<{0, 38}>>, <"markup.raw": <TSRange 50..<62, {0, 50}..<{0, 62}>>, <"markup.italic": <TSRange 68..<262, {2, 0}..<{9, 2}>>, <"markup.bold": <TSRange 88..<104, {2, 20}..<{2, 36}>>, <"markup.raw": <TSRange 122..<180, {2, 54}..<{5, 16}>>, <"markup.raw": <TSRange 190..<248, {5, 26}..<{7, 50}>>, <"markup.bold": <TSRange 280..<296, {9, 20}..<{9, 36}>>, <"markup.raw": <TSRange 302..<312, {9, 42}..<{9, 52}>>, <"markup.bold": <TSRange 312..<388, {9, 52}..<{13, 2}>>, <"markup.bold": <TSRange 340..<356, {11, 22}..<{11, 38}>>, <"markup.raw": <TSRange 366..<380, {11, 48}..<{11, 62}>>, <"markup.italic": <TSRange 412..<424, {14, 6}..<{14, 18}>>, <"markup.raw": <TSRange 436..<482, {14, 30}..<{17, 24}>>, <"markup.raw": <TSRange 504..<516, {17, 46}..<{17, 58}>>, <"markup.bold": <TSRange 540..<556, {20, 16}..<{20, 32}>>, <"markup.italic": <TSRange 556..<582, {20, 32}..<{20, 58}>>, <"markup.raw": <TSRange 568..<580, {20, 44}..<{20, 56}>>, <"markup.bold": <TSRange 602..<618, {22, 16}..<{22, 32}>>, <"markup.raw": <TSRange 628..<640, {22, 42}..<{22, 54}>>, <"markup.bold": <TSRange 640..<682, {22, 54}..<{24, 36}>>, <"markup.italic": <TSRange 648..<670, {24, 2}..<{24, 24}>>, <"markup.raw": <TSRange 706..<760, {25, 22}..<{27, 46}>>, <"markup.raw": <TSRange 762..<770, {27, 48}..<{27, 56}>>])
+± removed [<"markup.bold": <TSRange 540..<556, {20, 16}..<{20, 32}>>, <"markup.italic": <TSRange 556..<582, {20, 32}..<{20, 58}>>, <"markup.raw": <TSRange 568..<580, {20, 44}..<{20, 56}>>]
+↳ actual root/injection query parity at scalar edit 44
+✘ Test editedRootAndInlineLayersMatchFresh() failed after 0.286 seconds with 1 issue.
+✘ Suite "Actual Markdown layer scalar-edit parity" failed after 0.287 seconds with 1 issue.
+✘ Test run with 2 tests in 2 suites failed after 0.287 seconds with 7 issues.

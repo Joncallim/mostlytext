@@ -68,3 +68,27 @@ root grammar, styling APIs, widened Debug abort and native execution hold remain
 Component results do not establish whole-editor latency or native accessibility,
 Quick Look, exports, signing or release acceptance. Existing release-only rights
 and source-publication blockers remain recorded. No upstream outreach is needed.
+
+## Hosted review reconciliation
+
+Initial CI41969776856 at2dc95c3e passes both strict selection replacement and
+combined typing/deletion controls but fails the existing below-cutoff style
+comparison. The same failure appears in PR #78 before buffer changes. The
+actual warmed-client/partial-adapter test isolates complete captures repainting
+outside their query authority. Carry the exact e528a19 correction through owner
+Neon merge9db7e1d, preserving this buffer implementation and its independent
+oracle. The merged component suites pass39 functions in10 suites plus8 existing
+XCTest cases Debug/Release. Retain both first hosted failures, selected prefix
+provenance and new receipts; require fresh full CI for the corrected app head.
+
+## Preserve semantic capture identity in the final style path
+
+The second hosted run41972235335 at7c3f40ba passes the visual controls but fails
+two existing mounted byte-geometry checks: clipping the Token changed what an
+attribute provider observes. Carry owner client6797068 through merge baf93c7.
+It restores complete semantic tokens and intersects a separate paint range via
+a package-only iterator used by all three concrete interfaces. The buffer hook
+and its independent oracle remain unchanged. Preserve both rejected hosted
+heads and require new full checks, including unchanged geometry and visual tests.
+The outside-query property remains active using actual TextStorageSystemInterface
+on hosted builds and the exact iterator/memory styles in the local pure fixture.

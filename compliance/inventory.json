@@ -573,9 +573,9 @@
       "id": "neon",
       "name": "Neon",
       "kind": "swiftpm",
-      "version": "d58b074a",
+      "version": "be25e357",
       "upstream": "https://github.com/Joncallim/Neon",
-      "revision": "d58b074a067861161a1df6d5b42d700526d0e7dc",
+      "revision": "be25e35787585430f0f1ac845ed44c11e7f8150a",
       "resolution": "exact",
       "licence": "BSD-3-Clause",
       "copyright": [
@@ -596,9 +596,9 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "d58b074a067861161a1df6d5b42d700526d0e7dc"
+        "revision": "be25e35787585430f0f1ac845ed44c11e7f8150a"
       },
-      "evidence": "Owner patch child of 0699ea559682b4f62c8cd10ae520c7262c4acaa9. Shift retained dirty intervals through each later edit before new client invalidations, preserving surviving deletion tails, nested depth, all-document and reentrant scope ownership. MOSTLYTEXT_PATCHES.md records the client and buffer corrections. Original BSD-3-Clause licence, SwiftTreeSitter pin and grammar bytes are unchanged. Complete-editor performance, widened Debug abort and native acceptance remain open."
+      "evidence": "Owner patch over e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9 (original runtime dabf50c947148c49acd0d321dfe8f3805d10b3da). Refresh embedded-language validity before callbacks, await running validation/follow-up regions and reject obsolete queries. Preserve complete semantic tokens for attribute providers while a package-only iterator confines actual painting in all three native style interfaces. Both rejected styling boundaries and their failed hosted runs are retained; original BSD-3-Clause licence and parser/grammar pins are unchanged. Separate buffered-coordinate work, whole-editor latency and native acceptance remain open. This exact merge also shifts retained dirty intervals through later edits before new client invalidations, preserving surviving deletion tails, nested depth, all-document and reentrant scope ownership. Both client/style and buffer proofs and all first hosted failures are retained. Manifest-only child be25e35787585430f0f1ac845ed44c11e7f8150a pins the complete injection coverage repair; all Neon runtime and test bytes are unchanged from baf93c72924e31e16b84adced6ee29cb02934c3b."
     },
     {
       "id": "nvim-treesitter-markdown-queries",
@@ -793,9 +793,9 @@
       "id": "swifttreesitter",
       "name": "SwiftTreeSitter",
       "kind": "swiftpm",
-      "version": "1b1c85e",
+      "version": "7d2dc87e",
       "upstream": "https://github.com/Joncallim/SwiftTreeSitter",
-      "revision": "1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43",
+      "revision": "7d2dc87e8b9326062d75bc1ef985f17d28e94da9",
       "resolution": "exact",
       "licence": "BSD-3-Clause",
       "copyright": [
@@ -817,9 +817,9 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43"
+        "revision": "7d2dc87e8b9326062d75bc1ef985f17d28e94da9"
       },
-      "evidence": "Owner-maintained fork at 1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43, based exactly on upstream cbe31cb3601aa29c1f64b6e4328733511126d6d5. Only inline injection reconciliation, strict tests and patch documentation change. Original BSD-3-Clause licence is byte-identical to the captured text; verified at the fork revision. Debug/Release upstream and source-identical Markdown regressions pass; whole-editor/native acceptance remains separate. See planning/downstream/highlighting-included-range-repair.md and its evidence packet. No upstream submission is claimed. Final review adds complete expanded-query coverage: a reproduced cross-language partial query no longer drops unqueried narrow captures; language-tag change retirement is also tested."
+      "evidence": "Owner-maintained fork at 1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43, based exactly on upstream cbe31cb3601aa29c1f64b6e4328733511126d6d5. Only inline injection reconciliation, strict tests and patch documentation change. Original BSD-3-Clause licence is byte-identical to the captured text; verified at the fork revision. Debug/Release upstream and source-identical Markdown regressions pass; whole-editor/native acceptance remains separate. See planning/downstream/highlighting-included-range-repair.md and its evidence packet. No upstream submission is claimed. Final review adds complete expanded-query coverage: a reproduced cross-language partial query no longer drops unqueried narrow captures; language-tag change retirement is also tested. Child 7d2dc87e8b9326062d75bc1ef985f17d28e94da9 also expands old-capture coverage and adds default-true LanguageConfiguration.reusesPreviousTree, disabled explicitly only for MarkdownInline by the app. Strict 2,000 valid-scalar edits match fresh highlights; isolated default-policy moved-capture controls pass LF/CRLF/CR. Both prior coverage and incremental-parser failures are retained. Original runtime and BSD licence remain unchanged. See planning/downstream/complete-injection-query-coverage.md and its evidence packet."
     },
     {
       "id": "prismjs-textual",
@@ -1575,7 +1575,7 @@
         },
         {
           "path": "MacDown2/Packages/TreeSitterMarkdown/Package.swift",
-          "sha256": "3171ee29748e94d69718caea12d15eb9174b1328d69bdfcb0eefd42548c91595"
+          "sha256": "03aeedf8d351a6795d32697a06c8124e803dad6fe629152f0027bd58657b27e4"
         },
         {
           "path": "MacDown2/Packages/TreeSitterMarkdown/README.md",

@@ -1,0 +1,759 @@
+{
+  "swift_tree_sitter": "7d2dc87e8b9326062d75bc1ef985f17d28e94da9",
+  "app_baseline": "68801d650dbd174f1cbc810617b43e7c22afdffd",
+  "local_execution": "Inspected Foundation/C components only; native conditional branches excluded.",
+  "test_sources": [
+    {
+      "app": "MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownLayerScalarStressTests.swift",
+      "fixture": "/Volumes/Fast SSD/CORTANA-Builds/injection-complete-coverage-20261105/fixture/Tests/ModelTests/MarkdownLayerScalarStressTests.swift",
+      "sha256": "d69eb8273829e649a7516b7b8f979b1fb76f8c8c8b2f159673e278da9f8b4c5a"
+    },
+    {
+      "app": "MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownInjectionCoverageTests.swift",
+      "fixture": "/Volumes/Fast SSD/CORTANA-Builds/injection-complete-coverage-20261105/fixture/Tests/ModelTests/MarkdownInjectionCoverageTests.swift",
+      "sha256": "d5838a05d58f3eb9c16d658caf31e6e808785186bcf3d05801e0a9558ffa3207"
+    }
+  ],
+  "logs": [
+    {
+      "name": "actor-correction-format.log",
+      "sha256": "1cbd4c26ce5925be9b7e80ffe7712a11806b245cd15811724e93a760c04f9425",
+      "bytes": 201
+    },
+    {
+      "name": "app-compliance-tests.log",
+      "sha256": "ceacd59c5037f1de8824b77afe43a1011fcb00cbc7f7d211db4b0d49683fc25d",
+      "bytes": 7515
+    },
+    {
+      "name": "app-detached-corpus-compile.log",
+      "sha256": "9157d2d3eb85fad43c74838fab7f4d42c9f3533d48350d0df9738220487d20dc",
+      "bytes": 282
+    },
+    {
+      "name": "app-final-format.log",
+      "sha256": "bde73f60bc806a4618805b37d00f72551651c5444cd7a75c6e55565253424d88",
+      "bytes": 270
+    },
+    {
+      "name": "app-final-test-lint.log",
+      "sha256": "ba0ca7a0667e3c602170409d2ad30010b606ab79b7f2e4aa261b94fbeabaad39",
+      "bytes": 227
+    },
+    {
+      "name": "app-forced-resolve.log",
+      "sha256": "4b304b53fb737d104566b5266129e9f9b8f45459392af65bba7f9dbc0434a85f",
+      "bytes": 7245
+    },
+    {
+      "name": "app-full-format.log",
+      "sha256": "a790735c91f22aa3be56cc202b4e3e4a500f74e6cab9a555941ad438b0bdee23",
+      "bytes": 270
+    },
+    {
+      "name": "app-full-lint.log",
+      "sha256": "4fdc0c2a52e627dcf6568327e11d4cf877d9708a23e19886f5b84a8ca7fba3f9",
+      "bytes": 70767
+    },
+    {
+      "name": "app-generation.log",
+      "sha256": "33c66bdb9775a00b493a8355dd44358cb655bcf075815ece63927cdf5f8f33d9",
+      "bytes": 91
+    },
+    {
+      "name": "app-highlight-tests-compile-actor-failure.log",
+      "sha256": "7edf4f714e2e2f0af85b0ab3d67bb58ae27336b84f0250f896f0c2490ab39a3d",
+      "bytes": 22241
+    },
+    {
+      "name": "app-highlight-tests-compile.log",
+      "sha256": "e25e935fd6050b3fe1ae499ebe09d4a48bd4a1ba5e9021f6654c881954df61f9",
+      "bytes": 415
+    },
+    {
+      "name": "app-source-check.log",
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7",
+      "bytes": 54
+    },
+    {
+      "name": "app-source-format-final.log",
+      "sha256": "63342b7c76ffe398215ce8867126bca3c3429df3fe6174d6ee266fdd25679433",
+      "bytes": 201
+    },
+    {
+      "name": "app-source-format.log",
+      "sha256": "d75e0e3868f4f49848e34ba3015280aa8ee526304599cdda1001b5649640889e",
+      "bytes": 201
+    },
+    {
+      "name": "app-source-lint-final.log",
+      "sha256": "ba0ca7a0667e3c602170409d2ad30010b606ab79b7f2e4aa261b94fbeabaad39",
+      "bytes": 227
+    },
+    {
+      "name": "app-source-lint.log",
+      "sha256": "d4dac20eed4d2bf8776553e63da41b64fa602cb5371c197509c1dccaef62f2bd",
+      "bytes": 1153
+    },
+    {
+      "name": "candidate-actual-layer-scalar-stress.log",
+      "sha256": "853325453d017a49d994aa05bdd166e18b715153cec3031f8f854e5cd708c884",
+      "bytes": 15289
+    },
+    {
+      "name": "component-detached-debug.log",
+      "sha256": "3e6739347c1f6097061122e1e7613081f751f89790439aaf8c1290267bbccb2e",
+      "bytes": 11618
+    },
+    {
+      "name": "component-detached-release.log",
+      "sha256": "fce6d8bfbbd17c1096b4e1acd6aee8efc987cb25f8ee2f8e5390a2fc014a32e9",
+      "bytes": 11631
+    },
+    {
+      "name": "component-final-actor-debug.log",
+      "sha256": "fe1fcdfb04a74cbc2d9142af1a27baf5470c46f556c67a33a0b53f1164acc6bc",
+      "bytes": 11680
+    },
+    {
+      "name": "component-final-actor-release.log",
+      "sha256": "a05dcde74146030d0fae0715d301717a85df9e48ab5748ab6518d737c25a86b0",
+      "bytes": 11630
+    },
+    {
+      "name": "component-final-debug.log",
+      "sha256": "9f483997c0dc7b9e7c3c6b89e32a61e72cda3e6c8dd329b06822f58f93a19de2",
+      "bytes": 11188
+    },
+    {
+      "name": "component-final-release-with-costs.log",
+      "sha256": "f8ccdfa4c027da3d356533f1403d7a138eb200a40219d8b81568cd8d3155b8b6",
+      "bytes": 13450
+    },
+    {
+      "name": "detached-corpus-format.log",
+      "sha256": "1d6fac17f75d322e1adc88d132d427923aed70f27cefe99af58cb076e62f64d9",
+      "bytes": 201
+    },
+    {
+      "name": "fresh-policy-actual-layer-scalar-stress.log",
+      "sha256": "3b1343175755112bd9c937b706b27f19cc0aec92c4439457f62693c09e3402d5",
+      "bytes": 1839
+    },
+    {
+      "name": "original-actual-layer-diagnostic.log",
+      "sha256": "2322a8400939125a63c8bba6aa9c1f411415b9b62a05c2aae0a2d99a8a981c0f",
+      "bytes": 5986
+    },
+    {
+      "name": "original-actual-layer-scalar-stress.log",
+      "sha256": "974319424da21aac3cc42fe0fa18a16fc64133a35a842b1288ec7804c9edd9d3",
+      "bytes": 5226
+    },
+    {
+      "name": "original-explicit-prefix-moved-capture.log",
+      "sha256": "dc899b59384363097aa4a79c58e32d77c540219ec8702d4e4fabf0dd506bb1bc",
+      "bytes": 4899
+    },
+    {
+      "name": "original-final-regressions.log",
+      "sha256": "bfdd29300ac4f0dbb653c262e829f1869e7d3aee61ed12bdc00c47badbe73b01",
+      "bytes": 9070
+    },
+    {
+      "name": "original-minimal-moved-capture.log",
+      "sha256": "523c96e2fbef77d9c4b840110b280a964850fde4b524d44216d0ea4b5325e09e",
+      "bytes": 2353
+    },
+    {
+      "name": "upstream-final-debug.log",
+      "sha256": "30911d0fbbb61f6197b39420ac39f85490b9d15464927350e9c5f6b8ab6c4c1a",
+      "bytes": 14327
+    },
+    {
+      "name": "upstream-final-release.log",
+      "sha256": "c9dbaef6ce5f5c38dd5107d0bc5200b302b6c77a7dff7e82717cb29fc381560c",
+      "bytes": 11840
+    }
+  ],
+  "owner_sources": [
+    {
+      "path": "Sources/SwiftTreeSitter/Bundle+Extensions.swift",
+      "sha256": "b3361b5a523178eb960316c4e3887d34010bede5d477b2a01069fc5f4c91edef"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-1-1-package.swift",
+      "sha256": "06a781cba54e281c2c8d32908bb206399e8b183fdba39ceee1eddb8acae08f84"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-1-2-package.swift",
+      "sha256": "cc685d2681f028e6105b2e87676811bd93830152ed86363761741c1f4d9f6fad"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-1-3-package.swift",
+      "sha256": "1c8bc4f9fb702c0b4ea234d858121e6fd3e4f693d56ce4585a16fba11c9dac1a"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-2-1-example.swift",
+      "sha256": "2fec6d5834aad24deb1ff2e104d422df56bda5af161aafcdce8e6225bfae8343"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-2-2-example.swift",
+      "sha256": "0b442361b0d0b8b6e9fb1fac7876befcf80c6e1db07d94288801dd6a34d920ff"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-2-3-example.swift",
+      "sha256": "af3ce31d4fa344cfd000b4c91febe6fe620de6fdda44c650c22c0a8f8ad900ed"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-2-4-example.swift",
+      "sha256": "c51886c17bce45c4603f7db1d76f93dc3393fd204c6b8fbb081751ff4ceab8ec"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-2-5-example.swift",
+      "sha256": "1e947b65c43ba33a3866711fc30ea9d02b61d75bc0f2d9ed05dbe53dc81150a9"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-2-6-example.swift",
+      "sha256": "4d77b0d6eadfd6d5078eedbb33127e1070d7bd8dec6232db4a356b078379a0b1"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-3-1-example.swift",
+      "sha256": "4d77b0d6eadfd6d5078eedbb33127e1070d7bd8dec6232db4a356b078379a0b1"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-3-2-example.swift",
+      "sha256": "6e12a9b65e6485e0ce5ef1aa57833f11903468a83a767c0c7bf89adeb4da7381"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-3-3-example.swift",
+      "sha256": "f5352c46a667ae9d9089b92e271edfac247f6d79efbfc36139ba7e239f9fb737"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-3-4-example.swift",
+      "sha256": "085249b5bc7aa7620b236f841cc0684291559d9f980089006d12020c0b060282"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-3-5-example.swift",
+      "sha256": "7a909e11b151a2a5e00f9f2d95069da63f4a796b73823bb0789c6fe9c6e47a79"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-3-6-example.swift",
+      "sha256": "7e6ad669a7f9906c08226b5282f883edd7b00f74aec0afc9f57cd591ce8a1a2a"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-4-1-example.swift",
+      "sha256": "a18f91c3a5217b5530f62fea4eda2b614d4ed0b45ffd65c828dee5f5c10b12e4"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-4-2-example.swift",
+      "sha256": "cd7a3709c7da0e416a8b1e2193d2d80649a59af27c2b51f070a9bb52f08bc11a"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-4-3-example.swift",
+      "sha256": "ac3ed4123ed8ce6383d4a230638afd4e599cba173cc77c2b10fe2bd44d285087"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-4-4-example.swift",
+      "sha256": "3650abc688e6c21c547626b02bea91df0f0ae7ee2e35c5a06db2248f8e7ffc9c"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-essentials-4-5-example.swift",
+      "sha256": "6821e57ec3cb577faf3bc2d39d177439425ae72ac447792dbdd031b47ead16b7"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-queries-1-1-highlights.scm",
+      "sha256": "57b89d2cba4eb93e44e97335f30036b32c7866d9ae3f1ac35f2d21d14392f14d"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-queries-1-2-highlights.scm",
+      "sha256": "fbe39b2e8bdc69140d3605f018c5ce5003001cb362d028bfdc538ed978033cf1"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-queries-1-3-highlights.scm",
+      "sha256": "8495a67521de09f6653a14382978ebd7c15f7fcef9e6169f17fd8206db896538"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-queries-2-1-example.swift",
+      "sha256": "0d1124c34d53c3e8d53e9eccef0d17ab50394ed048ff028f8a629a26dc894fea"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-queries-2-2-example.swift",
+      "sha256": "7deabafb6622b8f5047d80de26b341bc66024a026d3486da696c070e4bca9914"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-queries-2-3-example.swift",
+      "sha256": "5aa22eda9a4fe293b682c54e887fc6bbe034be663d7ad08f7853de094fa631c3"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-queries-2-4-example.swift",
+      "sha256": "fc8129fdfe125593248643828118915d012d57d877fdc0d17a67b0486dfe39ac"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-queries-2-5-example.swift",
+      "sha256": "9cc0296e541b0be3e580cd5a198d494e75c48cfc42c7226d4ef6c5b356031e88"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-queries-2-6-example.swift",
+      "sha256": "f7ec43fec7f41ff1fa65b22ba286cfd24eeef06534f2531cf1f8360f753e53bf"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-queries-2-7-example.swift",
+      "sha256": "44d9518639150696b0b63bdfadb84e1191decc87fbee110aa96bcaadd987b24b"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-queries-2-8-example.swift",
+      "sha256": "adebd9cfd69b3339a517853e9ae28912709cb26a8163575b304000fd270ce6b0"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Code/using-queries-2-9-example.swift",
+      "sha256": "50d1d87e37eb51664a5f393d1db670184c72e4b9c36e6fa2003fca3993287ee9"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/New Languages.md",
+      "sha256": "83d7fd1f2f61302d5212f250d3e7118e91565802845340346991c5541bad7b45"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Resources/cursor-output.png",
+      "sha256": "f856be292a0b1c362faf5d9f11fd5fa666b20c56b906d92da9707935266300bd"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Resources/resolved-output.png",
+      "sha256": "36c8c4d7ba6d7315f1d2a300d1348763b52c3545ffed8054875fb7d309cd6eae"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/SwiftTreeSitter.md",
+      "sha256": "bafa708187365b7f8f0d417d81b0aa207956fa122918caf6874e5163c094005c"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Tutorials/Parsing.tutorial",
+      "sha256": "93e22cce7a8cddba466ca6f0befda1daf8393d27c134c163edf763e8d3b50aab"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Tutorials/Processing-Edits.tutorial",
+      "sha256": "936578a6f442bce50065634782d1e59b39d4a1a92a8ccb64863ea15145dc2732"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Tutorials/Queries.tutorial",
+      "sha256": "3ec9f09df5404cca30caef5bd9b8452096736a25e565addfd07657a04348dc0e"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Tutorials/Resolving-Queries.tutorial",
+      "sha256": "1b0ea8f6586109fe0cee837a55ddac8a8d0dd9c7849e0c3e1dd95863beb7070f"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Documentation.docc/Tutorials/Using-Tree-Sitter.tutorial",
+      "sha256": "f542b94aee8cfa276bf073eaf2fe9c4445b02123667d4db0b4218079323cc291"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Encoding+Helpers.swift",
+      "sha256": "e9d7b4fa3404b78942a8d1feef8f89109dc5d0815b2db4631b40411d6d5131a3"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Input.swift",
+      "sha256": "2a26bb39562173fa35e4f7438dd72ac4ea011128819f1b253888f3c58ab9f4a6"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/InputEdit.swift",
+      "sha256": "42940ca8cee43baf802d8c3dc74501af072e694a5b3d947a232b0c12de0d6368"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Language.swift",
+      "sha256": "1f1ef2a4de564958d24bb26299be918492b06acd9ec872c2eda41e544c04d74d"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/LanguageConfiguration.swift",
+      "sha256": "33b075792fa75640e1af93ba6954fa01c16d0eaf55a2f837398324ca373b4c98"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Node.swift",
+      "sha256": "d66131cd87ba2f89512f68415d1183ab19b2126d30fc6ea8e0d7f5d564e82e58"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Parser.swift",
+      "sha256": "c23d789ddedd4dafca8cd220be4dd2a900e3f53417eb3c3468563400a8453eac"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Point.swift",
+      "sha256": "a2f31eba1c130bf5f65b20927b7e1c2a6ee0dbd7df15a60e1989867c01960278"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Predicate.swift",
+      "sha256": "eb34185da4605aaa5388247b690f48721dc3fa477481eb24926d196f314d6b9a"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Query.swift",
+      "sha256": "d4ed7b6f380d34bf6ea4f85f6e3e599ca1a49d3e0970fd002e9d238c742a9d7e"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/QueryDefinitions.swift",
+      "sha256": "2efe6490847f0e01ceede4d7f1511af68188525b416716ce2043ca7ae9b21d75"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/ResolvingQueryCursor.swift",
+      "sha256": "978f09e75fff1eb27b782a061e493756254113cd531d750dd9a490fc14c41be0"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/ResolvingQueryMatchSequence.swift",
+      "sha256": "48819f2ee3eca5c480839b5c29dc653ac0b238528ef280737f7ef1fe4e760fa4"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/SendableTypes.swift",
+      "sha256": "8fbdcfca1fd49628fdc949fa081d8333da620fd84a3007e850d5f1b4708362f0"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/String+Data.swift",
+      "sha256": "df45cd3e36ed741b746914dd5c3d95ceec5f96d269f6b664ca456f5de73e1c21"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/String+TextProvider.swift",
+      "sha256": "da66c417f435fa0122e4cfeb9647bc8be8a8571b6669a743da7fe4110f0624de"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/TSRange.swift",
+      "sha256": "60b502b726b60485d8ab9205873e1cb50fca2f2f65c5fe1b67fe556aaf449c65"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/Tree.swift",
+      "sha256": "27169b3f4d3c266fc1c6bec0de0f888811e114cd70a7d9c6267c620489b7c1b4"
+    },
+    {
+      "path": "Sources/SwiftTreeSitter/TreeCursor.swift",
+      "sha256": "5f91b48a1c86cb8ce33862d78c2dec10889b62f0b42650c2e66677ad193def34"
+    },
+    {
+      "path": "Sources/SwiftTreeSitterLayer/IndexSet+Range.swift",
+      "sha256": "0b20532561d0f08ed0bf31d62ced09d93a6212b7669d3f9a6a07a0d38a2e383b"
+    },
+    {
+      "path": "Sources/SwiftTreeSitterLayer/LanguageLayer.swift",
+      "sha256": "995538ab6a2a8bc0402a0c4566b89f95b7b2dcf13331ea645404bcc2e7bb8049"
+    },
+    {
+      "path": "Sources/SwiftTreeSitterLayer/LanguageLayerQueryCursor.swift",
+      "sha256": "94ceef93e491c441105264d6f864ec154aeaf5979bdd29c57429fcca73be9cf1"
+    },
+    {
+      "path": "Sources/SwiftTreeSitterLayer/ParseState.swift",
+      "sha256": "904e939aa8b8256f803888ddac7241302a3aa4c502dfbd2c21371a3c0800079f"
+    },
+    {
+      "path": "Sources/SwiftTreeSitterLayer/Queryable.swift",
+      "sha256": "58dbff653c07ac538320a2c6bfa8e9331ab88f95ce79d3f6291c71f88bda9c4c"
+    },
+    {
+      "path": "Sources/SwiftTreeSitterLayer/Snapshots.swift",
+      "sha256": "272bc37d7f3204ab611a696ce6b0d2c5664f2ee233f0dcf5116a9b4a0c397b3a"
+    },
+    {
+      "path": "Sources/SwiftTreeSitterLayer/TreeSitter+Extensions.swift",
+      "sha256": "ee71614f7a3577ac6ad4475950c7947a50b9ea71b7a4a782b3a87c90023d07b1"
+    }
+  ],
+  "fixture_sources": [
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/.gitignore",
+      "sha256": "cae144e913608733c0faffbe9958be9af1355ef0d428ac59c3a332d677e61e0a"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/LICENSE",
+      "sha256": "3533cec129bb4bba015c0d61d86dd7c3b7e82110e4d2ff7837a01eff5bad5ccc"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/Makefile",
+      "sha256": "79e052dc0e1b5f61cc88f2d9cfc5c978f05c46bacc1a633685b54aa013e0a40d"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/Package.swift",
+      "sha256": "ca2d3b8ed02463912d5b60578e0dd66948e87a8b4f3c2b354bd6f8f96779a5f1"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/README.md",
+      "sha256": "bb692e6b19c9c7403bbde13795725bdbbe9bb8a7e0b4230439ab07bc6d672d43"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/bindings/c/tree-sitter.h.in",
+      "sha256": "ebb283ebe814f5cbd6c742d0ce5fc7ad1682fcfdfd7bc3232d12196236e29180"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/bindings/c/tree-sitter.pc.in",
+      "sha256": "1020d389b2fa7b1c872c174672e28daafebd1ef8094194abfb25761add411824"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/bindings/node/binding.cc",
+      "sha256": "943063ada8db6f6d515b6924d84ad8eed77f0a81218df227be0ff53b42396928"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/bindings/node/index.js",
+      "sha256": "94562d55bb74e46be8c5ef10d0377d4fff52c05a6b79fcd76a8cdc16892a7749"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/bindings/rust/build.rs",
+      "sha256": "ff598ba4e6e43a77596ea97dae7185499506b1b5ff45005d0d7b668ed1cfd975"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/bindings/rust/lib.rs",
+      "sha256": "3a27d4c9302a76ea26f95c888eb38ab6a401f4cf1f4d31f672b910bde1e7e379"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/bindings/swift/TreeSitterSwift/swift.h",
+      "sha256": "8ca3151d94eaa7517714e34700fd0e0214e4f970fe6cc9d7195b93f4d187f113"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/corpus/annotations.txt",
+      "sha256": "d6a69429d01eb0b46b97a28e8a1c94573933ebb71536b37082d8978f1a81c79f"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/corpus/classes.txt",
+      "sha256": "ae4c7478d13a7b7fa4839f3123aef0a5b8ac5c93b17e2492cbf51b270e1ac905"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/corpus/comments.txt",
+      "sha256": "7c2083b6d6973dc44e12928a46f0b9356fc16f71da197c40895a0cb6303da80b"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/corpus/emojis.txt",
+      "sha256": "6bb7dd48f54dbf1201476ac661293b8b3a85cb6b07a60d6b826e4e5915964770"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/corpus/expressions.txt",
+      "sha256": "468de9d8b10430bb69489db05528a14afe49133b4c381cce5f9b8647ae59dc8a"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/corpus/functions.txt",
+      "sha256": "29c71e90b1417eeb2c0ec2818affdc95c59d0c3abbbaa1a709015746cbf813a0"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/corpus/literals.txt",
+      "sha256": "14c3f96944b405cdaba0b7fd1ac99c4ebea8c6468d0331426b4ee9aa3ce0ed3e"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/corpus/statements.txt",
+      "sha256": "734bbdc1532a680e9eebfc488f6646e29b6c32a7c68ac74069a8ed985175b0be"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/corpus/types.txt",
+      "sha256": "f52d44ffc7a825f955ec3d1346cbd9f61ad7ea946a14b838bd276842fc0d6930"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/grammar.js",
+      "sha256": "8fb08114891a5c228315f3d980086232716e3e004b661fb7209ad9c39e0e2910"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/package.json",
+      "sha256": "26c793a723d033d9d5d4206e5c241148334b4e357c566e667af2b38007690033"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/queries/highlights.scm",
+      "sha256": "2291ced42c81c9491e99a72a24db9a1e3bb89a4d5bb7e00b6eb361b4f4c675a2"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/queries/locals.scm",
+      "sha256": "91e92aa1662847605ee25a8fdec27f6619b739ffaae23c2a0a0d28673ea1177d"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/queries/tags.scm",
+      "sha256": "9d24b288f032c18e79d5a37a86f2870bcd7789100cf93addb0171ecf910b3a50"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/src/grammar.json",
+      "sha256": "2d8da2c6998382eb182b267ed0e660dd569e9ad4d265f0a0aea186ee60a1b645"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/src/node-types.json",
+      "sha256": "d37b77e194d60d8b7e5bcdd3f51411d86263477561a43aaea4ae2b2f0e3c634b"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/src/parser.c",
+      "sha256": "11733baf23f514fd30fc111cdc2ed893b339a56d851b018b42b4888150a8a123"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/src/parser_abi14.c",
+      "sha256": "2d1a112027b30c3d8d95dc44fba65baf279d8501bad1785942de49ef5a665e46"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/src/scanner.c",
+      "sha256": "6d1465ffac18b2705497e74e4e25095d1c6f5b3cbca939fcbea05748962fa91a"
+    },
+    {
+      "path": "Sources/NeonTestsTreeSitterSwift/src/tree_sitter/parser.h",
+      "sha256": "ab104936984904469572a4e868149f7a22fb2929347f837ae6a1f9b790f1b173"
+    },
+    {
+      "path": "Sources/OwnedStylingCore/Token.swift",
+      "sha256": "497b4b46036f876b49cff5178640c9d2b814cf206f30968bc422d794821be790"
+    },
+    {
+      "path": "Sources/OwnedStylingCore/TreeSitterClient+Neon.swift",
+      "sha256": "836d295b355540d8f4f62af461b83e77c9db29ecfdc528a3c10d79c777bbc5ad"
+    },
+    {
+      "path": "Sources/RangeState/AwaitableQueue.swift",
+      "sha256": "08b5aab2af7f5a04db83b0fd60158ccb6bc49c6805a822dfebcba983dcb3cb27"
+    },
+    {
+      "path": "Sources/RangeState/HybridSyncAsyncValueProvider.swift",
+      "sha256": "713ec76e95805dc9f3e711c0be4621dd49d8d9da3cee70a4cdeebfbb3b5693d0"
+    },
+    {
+      "path": "Sources/RangeState/HybridValueProvider+RangeProcessor.swift",
+      "sha256": "24c21e0b87c7a5dc8d9adee27e39f1d97e8c3ac62585c41bc3605bd71fa2ece0"
+    },
+    {
+      "path": "Sources/RangeState/RangeInvalidationBuffer.swift",
+      "sha256": "b2ff0b899d2842708eae4d2147b537b10a5110e6cb1ed934ab4454a30199a56e"
+    },
+    {
+      "path": "Sources/RangeState/RangeProcessor.swift",
+      "sha256": "a9b98ef8b4659ee17889b51e21954a4da86e2ffa274630f87f00fdd9ffc51c78"
+    },
+    {
+      "path": "Sources/RangeState/RangeTarget.swift",
+      "sha256": "01ee59af8a8040ecbdb84ad21767e9e4794c23d1240cf47948864b0dea39e1e4"
+    },
+    {
+      "path": "Sources/RangeState/RangeValidator.swift",
+      "sha256": "1a8c6f2e9b4cf1761171b9a8b3c886dc9198f92865a70889938b1fdc693688b9"
+    },
+    {
+      "path": "Sources/RangeState/SinglePhaseRangeValidator.swift",
+      "sha256": "71e0f03b60d894fd57771c0d0cf046624fc15f2e9c74b8d21bd45a52bebd47d5"
+    },
+    {
+      "path": "Sources/RangeState/ThreePhaseRangeValidator.swift",
+      "sha256": "4dcbff84e8d5ae08e1a073b912cd6d58cd04ef2cea3b82eab7ed2f702ca36604"
+    },
+    {
+      "path": "Sources/RangeState/Versioned.swift",
+      "sha256": "1e333e166cd89e8ff31c3b402e12fcb923e84a9a19e36fade5160c2a9676cca4"
+    },
+    {
+      "path": "Sources/Rearrange/Bounded.swift",
+      "sha256": "8d40ec5322a926a75574ff247c0ef12cc3aeed7177bf85464b783288efdc3db4"
+    },
+    {
+      "path": "Sources/Rearrange/IndexSet+ApplyMutation.swift",
+      "sha256": "828cde7ee9945e40bad0ecd03e6b89b4db44215a4153945c3963d332f2bad512"
+    },
+    {
+      "path": "Sources/Rearrange/IndexSet+NSRange.swift",
+      "sha256": "85a8dd463f2d59faf105eb9e67f7a2d8b9b63713cf8c8fc63a34d8e45de33814"
+    },
+    {
+      "path": "Sources/Rearrange/NSRange+ApplyMutation.swift",
+      "sha256": "0742a0e17052f3b2f315d311c95d61693c60da5579eb62a11997af9a563123ac"
+    },
+    {
+      "path": "Sources/Rearrange/NSRange+Convenience.swift",
+      "sha256": "7dc7dcb919495882927f6acf39b73b284c4c83e95ecedc5e94c12f75aff7f2cc"
+    },
+    {
+      "path": "Sources/Rearrange/NSRange+Shift.swift",
+      "sha256": "eaa43b630c05661d8e63baa691eefcf2fd5e10d5479aa5f12f29e8e92769d6f0"
+    },
+    {
+      "path": "Sources/Rearrange/RangeMutation.swift",
+      "sha256": "0529f05714c1da6e5448b15f12e27a80cdb6b59d31f686d6490874d2f8e8bb66"
+    },
+    {
+      "path": "Sources/Rearrange/String+NSRange.swift",
+      "sha256": "c2cd532428f813b904a6e68ee92caa7291f7c25de6ba89400e0d2dda1383a75f"
+    },
+    {
+      "path": "Sources/Rearrange/TextRangeCalculating.swift",
+      "sha256": "fd5225be3031e375eeda6e7ef02738e6ce7e752bb5c7a7a54ca767018ab17f64"
+    },
+    {
+      "path": "Sources/TreeSitterClient/BackgroundProcessor.swift",
+      "sha256": "4dd10570e8237530ee8e9275cfa24700ddc0f404bcb5826499c4c134b6508b5c"
+    },
+    {
+      "path": "Sources/TreeSitterClient/BackgroundingLanguageLayerTree.swift",
+      "sha256": "0e4e37aa8fd36350dd75d035604c39eade19ccc4de6245be52775a4fd3afa70e"
+    },
+    {
+      "path": "Sources/TreeSitterClient/HybridSyncAsyncVersionedResource.swift",
+      "sha256": "abcf72e3343f6fe7f60e1fb6c6bbd732632cd618a65505396cf1bc88710fad13"
+    },
+    {
+      "path": "Sources/TreeSitterClient/TreeSitter+Extensions.swift",
+      "sha256": "37c72237ad9612886bba149f41d781a0d3c4e782e4020bb5259af91483d17696"
+    },
+    {
+      "path": "Sources/TreeSitterClient/TreeSitterClient.swift",
+      "sha256": "8e603a19d82b26d3744596b81a7e8f69fcff99f08dfaa3024fea8e3d0d93938b"
+    },
+    {
+      "path": "Sources/TreeSitterMarkdown/bindings/swift/TreeSitterMarkdown/markdown.h",
+      "sha256": "8f90f461c5ffcf712ed4bb23a08664e1cc2e7d8f21fbf9920156f4d05477a985"
+    },
+    {
+      "path": "Sources/TreeSitterMarkdown/src/parser.c",
+      "sha256": "0f51c93b5d79d08bc74088d91a9aafb7e40ad7e2f169164865c01d392277bb07"
+    },
+    {
+      "path": "Sources/TreeSitterMarkdown/src/scanner.c",
+      "sha256": "25b9020542e35492bde8f1b9ae3fe498a29f3c5130c40c8ffdbfb67e7882acf1"
+    },
+    {
+      "path": "Sources/TreeSitterMarkdown/src/tree_sitter/alloc.h",
+      "sha256": "b29c1c9fb7cc82f58c84b376df1297d6e2737a1d655fd356db0859e3c29c2fea"
+    },
+    {
+      "path": "Sources/TreeSitterMarkdown/src/tree_sitter/array.h",
+      "sha256": "31e60a1bff6f715afacce03b5b70efe42b58371b4f9595dd4af52a577ff9608c"
+    },
+    {
+      "path": "Sources/TreeSitterMarkdown/src/tree_sitter/parser.h",
+      "sha256": "180b893c8734778fd32f372dfbc27bd6ad1cd2221f26150b31256ff6716320d2"
+    },
+    {
+      "path": "Sources/TreeSitterMarkdownInline/bindings/swift/TreeSitterMarkdownInline/markdown_inline.h",
+      "sha256": "8acda8c6ce253d403fa214000f21c29d7e03240e35b4f71633cd63f0ef7ae52e"
+    },
+    {
+      "path": "Sources/TreeSitterMarkdownInline/src/parser.c",
+      "sha256": "0c6aaec9097b10118b34601047c3b4d3d565defe48e95d133f714b592795fd2c"
+    },
+    {
+      "path": "Sources/TreeSitterMarkdownInline/src/scanner.c",
+      "sha256": "6a9647420b7260955e8bf1b8338979726347211177bb5cf3d2a9c18109655ac3"
+    },
+    {
+      "path": "Sources/TreeSitterMarkdownInline/src/tree_sitter/alloc.h",
+      "sha256": "b29c1c9fb7cc82f58c84b376df1297d6e2737a1d655fd356db0859e3c29c2fea"
+    },
+    {
+      "path": "Sources/TreeSitterMarkdownInline/src/tree_sitter/array.h",
+      "sha256": "31e60a1bff6f715afacce03b5b70efe42b58371b4f9595dd4af52a577ff9608c"
+    },
+    {
+      "path": "Sources/TreeSitterMarkdownInline/src/tree_sitter/parser.h",
+      "sha256": "180b893c8734778fd32f372dfbc27bd6ad1cd2221f26150b31256ff6716320d2"
+    },
+    {
+      "path": "Sources/TreeSitterMarkdownInlineResources/TreeSitterMarkdownInlineResources.swift",
+      "sha256": "f91917b47fadcec64ff2833ca4686e3817395483dc31f2242868b1282913d445"
+    },
+    {
+      "path": "Sources/TreeSitterMarkdownInlineResources/queries/highlights.scm",
+      "sha256": "b1b2604561026c3701aedbf0f594f69aa0571656eed9d62d139980721e9cdfa9"
+    },
+    {
+      "path": "Sources/TreeSitterMarkdownInlineResources/queries/injections.scm",
+      "sha256": "97bf17b9a973db8ee6868f543dd1eabdd81f19b8751a4fcf92db45f74462f4c5"
+    },
+    {
+      "path": "Sources/TreeSitterMarkdownResources/TreeSitterMarkdownResources.swift",
+      "sha256": "033c9c96cabad83f2ac4a307bf0411751d39bda65bedf2e6cdf911cbc9c5c17d"
+    },
+    {
+      "path": "Sources/TreeSitterMarkdownResources/queries/highlights.scm",
+      "sha256": "ea193ee33a84d76d1cf5d84f73f438b2a1f13fc59be79ef457cfbd6b264490e6"
+    },
+    {
+      "path": "Sources/TreeSitterMarkdownResources/queries/injections.scm",
+      "sha256": "64b1a6006b40176d8db986cc41350e4f9b292fd06bfedb0abfcdb1fb989aca3e"
+    }
+  ]
+}

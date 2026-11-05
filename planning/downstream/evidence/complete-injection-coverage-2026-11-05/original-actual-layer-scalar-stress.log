@@ -1,0 +1,41 @@
+[0/1] Planning build
+Building for debugging...
+[0/5] Write sources
+[2/5] Write swift-version--58304C5D6DBC2206.txt
+[4/8] Compiling OwnedStylingCore TreeSitterClient+Neon.swift
+[5/8] Emitting module OwnedStylingCore
+[6/8] Compiling OwnedStylingCore Token.swift
+[7/21] Compiling ModelTests RangeInvalidationBufferTests.swift
+[8/21] Compiling ModelTests SinglePhaseRangeValidatorTests.swift
+[9/21] Compiling ModelTests StringContent.swift
+[10/21] Compiling ModelTests TreeSitterClientStressTests.swift
+[11/21] Compiling ModelTests TreeSitterClientTests.swift
+[12/21] Emitting module ModelTests
+[13/22] Compiling ModelTests ValidationCompletionTests.swift
+[14/22] Compiling ModelTests RangeValidatorTests.swift
+[15/22] Compiling ModelTests RangeProcessorTests.swift
+[16/22] Compiling ModelTests MarkdownLayerScalarStressTests.swift
+[17/22] Compiling ModelTests NamedRangeApplicationTests.swift
+[18/22] Compiling ModelTests RangeTargetTests.swift
+[19/22] Compiling ModelTests InitialFillMutationTests.swift
+[20/22] Compiling ModelTests MarkdownClientInvalidationTests.swift
+[20/22] Write Objects.LinkFileList
+[21/22] Linking OwnedNeonClientFixturePackageTests
+Build complete! (6.50s)
+Test Suite 'Selected tests' started at 2026-11-05 13:58:13.472.
+Test Suite 'OwnedNeonClientFixturePackageTests.xctest' started at 2026-11-05 13:58:13.479.
+Test Suite 'OwnedNeonClientFixturePackageTests.xctest' passed at 2026-11-05 13:58:13.479.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-11-05 13:58:13.479.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.007) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Actual Markdown layer scalar-edit parity" started.
+◇ Test editedRootAndInlineLayersMatchFresh() started.
+✘ Test editedRootAndInlineLayersMatchFresh() recorded an issue at MarkdownLayerScalarStressTests.swift:60:17: Expectation failed: (actual → [<"punctuation": <TSRange 520..<522, {19, 0}..<{19, 2}>>, <"markup.italic": <TSRange 0..<64, {0, 0}..<{0, 64}>>, <"markup.bold": <TSRange 20..<38, {0, 20}..<{0, 38}>>, <"markup.raw": <TSRange 50..<62, {0, 50}..<{0, 62}>>, <"markup.italic": <TSRange 68..<262, {2, 0}..<{9, 2}>>, <"markup.bold": <TSRange 88..<104, {2, 20}..<{2, 36}>>, <"markup.raw": <TSRange 122..<180, {2, 54}..<{5, 16}>>, <"markup.raw": <TSRange 190..<248, {5, 26}..<{7, 50}>>, <"markup.bold": <TSRange 280..<296, {9, 20}..<{9, 36}>>, <"markup.raw": <TSRange 302..<312, {9, 42}..<{9, 52}>>, <"markup.bold": <TSRange 312..<388, {9, 52}..<{13, 2}>>, <"markup.bold": <TSRange 340..<356, {11, 22}..<{11, 38}>>, <"markup.raw": <TSRange 366..<380, {11, 48}..<{11, 62}>>, <"markup.italic": <TSRange 412..<424, {14, 6}..<{14, 18}>>, <"markup.raw": <TSRange 436..<482, {14, 30}..<{17, 24}>>, <"markup.raw": <TSRange 504..<516, {17, 46}..<{17, 58}>>, <"markup.bold": <TSRange 602..<618, {22, 16}..<{22, 32}>>, <"markup.raw": <TSRange 628..<640, {22, 42}..<{22, 54}>>, <"markup.bold": <TSRange 640..<682, {22, 54}..<{24, 36}>>, <"markup.italic": <TSRange 648..<670, {24, 2}..<{24, 24}>>, <"markup.raw": <TSRange 706..<760, {25, 22}..<{27, 46}>>, <"markup.raw": <TSRange 762..<770, {27, 48}..<{27, 56}>>]) == (expected → [<"punctuation": <TSRange 520..<522, {19, 0}..<{19, 2}>>, <"markup.italic": <TSRange 0..<64, {0, 0}..<{0, 64}>>, <"markup.bold": <TSRange 20..<38, {0, 20}..<{0, 38}>>, <"markup.raw": <TSRange 50..<62, {0, 50}..<{0, 62}>>, <"markup.italic": <TSRange 68..<262, {2, 0}..<{9, 2}>>, <"markup.bold": <TSRange 88..<104, {2, 20}..<{2, 36}>>, <"markup.raw": <TSRange 122..<180, {2, 54}..<{5, 16}>>, <"markup.raw": <TSRange 190..<248, {5, 26}..<{7, 50}>>, <"markup.bold": <TSRange 280..<296, {9, 20}..<{9, 36}>>, <"markup.raw": <TSRange 302..<312, {9, 42}..<{9, 52}>>, <"markup.bold": <TSRange 312..<388, {9, 52}..<{13, 2}>>, <"markup.bold": <TSRange 340..<356, {11, 22}..<{11, 38}>>, <"markup.raw": <TSRange 366..<380, {11, 48}..<{11, 62}>>, <"markup.italic": <TSRange 412..<424, {14, 6}..<{14, 18}>>, <"markup.raw": <TSRange 436..<482, {14, 30}..<{17, 24}>>, <"markup.raw": <TSRange 504..<516, {17, 46}..<{17, 58}>>, <"markup.bold": <TSRange 540..<556, {20, 16}..<{20, 32}>>, <"markup.italic": <TSRange 556..<582, {20, 32}..<{20, 58}>>, <"markup.raw": <TSRange 568..<580, {20, 44}..<{20, 56}>>, <"markup.bold": <TSRange 602..<618, {22, 16}..<{22, 32}>>, <"markup.raw": <TSRange 628..<640, {22, 42}..<{22, 54}>>, <"markup.bold": <TSRange 640..<682, {22, 54}..<{24, 36}>>, <"markup.italic": <TSRange 648..<670, {24, 2}..<{24, 24}>>, <"markup.raw": <TSRange 706..<760, {25, 22}..<{27, 46}>>, <"markup.raw": <TSRange 762..<770, {27, 48}..<{27, 56}>>])
+± removed [<"markup.bold": <TSRange 540..<556, {20, 16}..<{20, 32}>>, <"markup.italic": <TSRange 556..<582, {20, 32}..<{20, 58}>>, <"markup.raw": <TSRange 568..<580, {20, 44}..<{20, 56}>>]
+↳ actual root/injection query parity at scalar edit 44
+✘ Test editedRootAndInlineLayersMatchFresh() failed after 0.262 seconds with 1 issue.
+✘ Suite "Actual Markdown layer scalar-edit parity" failed after 0.262 seconds with 1 issue.
+✘ Test run with 1 test in 1 suite failed after 0.262 seconds with 1 issue.

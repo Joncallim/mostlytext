@@ -3508,9 +3508,9 @@
           "value": "exact"
         }
       ],
-      "purl": "pkg:github/joncallim/neon@d58b074a067861161a1df6d5b42d700526d0e7dc",
+      "purl": "pkg:github/joncallim/neon@be25e35787585430f0f1ac845ed44c11e7f8150a",
       "type": "library",
-      "version": "d58b074a"
+      "version": "be25e357"
     },
     {
       "bom-ref": "nvim-treesitter-markdown-queries",
@@ -3984,9 +3984,9 @@
           "value": "exact"
         }
       ],
-      "purl": "pkg:github/joncallim/swifttreesitter@1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43",
+      "purl": "pkg:github/joncallim/swifttreesitter@7d2dc87e8b9326062d75bc1ef985f17d28e94da9",
       "type": "library",
-      "version": "1b1c85e"
+      "version": "7d2dc87e"
     },
     {
       "bom-ref": "swiftui-math",
@@ -4665,7 +4665,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "ce76ee8482dedc3eeeafd456b59a7938b5b65229ca78f984f58876c5c7c5b8bc"
+          "content": "5040343096767cd003b689f38b661ee988541e519b1473584244340d42908058"
         }
       ],
       "licenses": [
@@ -5248,7 +5248,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:906f5a4b-94b0-5d36-ab3a-0ee89805526a",
+  "serialNumber": "urn:uuid:a6afb31b-a74c-5180-85c1-608ce16bed78",
   "specVersion": "1.5",
   "version": 1
 }

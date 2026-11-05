@@ -1,0 +1,40 @@
+[0/1] Planning build
+Building for debugging...
+[0/4] Write sources
+[1/4] Write swift-version--58304C5D6DBC2206.txt
+[3/17] Compiling ModelTests RangeValidatorTests.swift
+[4/17] Compiling ModelTests SinglePhaseRangeValidatorTests.swift
+[5/17] Compiling ModelTests RangeProcessorTests.swift
+[6/17] Compiling ModelTests TreeSitterClientTests.swift
+[7/17] Compiling ModelTests TreeSitterClientStressTests.swift
+[8/18] Compiling ModelTests ValidationCompletionTests.swift
+[9/18] Compiling ModelTests StringContent.swift
+[10/18] Compiling ModelTests MarkdownInjectionCoverageTests.swift
+[11/18] Compiling ModelTests NamedRangeApplicationTests.swift
+[12/18] Compiling ModelTests InitialFillMutationTests.swift
+[13/18] Compiling ModelTests MarkdownClientInvalidationTests.swift
+[14/18] Compiling ModelTests RangeTargetTests.swift
+[15/18] Emitting module ModelTests
+[16/18] Compiling ModelTests RangeInvalidationBufferTests.swift
+[16/18] Write Objects.LinkFileList
+[17/18] Linking OwnedNeonClientFixturePackageTests
+Build complete! (6.08s)
+Test Suite 'Selected tests' started at 2026-11-05 14:30:57.768.
+Test Suite 'OwnedNeonClientFixturePackageTests.xctest' started at 2026-11-05 14:30:57.775.
+Test Suite 'OwnedNeonClientFixturePackageTests.xctest' passed at 2026-11-05 14:30:57.775.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-11-05 14:30:57.775.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.007) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Moved Markdown injection capture coverage" started.
+◇ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) started.
+◇ Test case passing 1 argument ending → "
+" to newlineReplacementKeepsTheRemainingInlineParagraph(ending:) started.
+◇ Test case passing 1 argument ending → "
+" to newlineReplacementKeepsTheRemainingInlineParagraph(ending:) started.
+◇ Test case passing 1 argument ending → "" to newlineReplacementKeepsTheRemainingInlineParagraph(ending:) started.
+✔ Test newlineReplacementKeepsTheRemainingInlineParagraph(ending:) with 3 test cases passed after 0.057 seconds.
+✔ Suite "Moved Markdown injection capture coverage" passed after 0.057 seconds.
+✔ Test run with 1 test in 1 suite passed after 0.057 seconds.
