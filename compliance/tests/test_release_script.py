@@ -248,7 +248,7 @@ class ReleaseScriptModeTests(unittest.TestCase):
 
     def test_nonzero_rejected_submit_preserves_response_diagnostic_and_log_at_every_phase(self) -> None:
         for mode in ("--dry-run", "--release-candidate"):
-            for number, phase in enumerate(("app", "cli", "dmg"), 1):
+            for number, phase in enumerate(("app", "dmg"), 1):
                 with self.subTest(mode=mode, phase=phase):
                     self.reset_release_evidence()
                     result = self.run_script(mode, NOTARY_FAIL_STAGE=phase, NOTARY_STATUS="Invalid",
@@ -266,7 +266,7 @@ class ReleaseScriptModeTests(unittest.TestCase):
 
     def test_nonzero_submit_cannot_pass_even_when_the_response_claims_accepted(self) -> None:
         for mode in ("--dry-run", "--release-candidate"):
-            for phase in ("app", "cli", "dmg"):
+            for phase in ("app", "dmg"):
                 with self.subTest(mode=mode, phase=phase):
                     self.reset_release_evidence()
                     result = self.run_script(mode, NOTARY_FAIL_STAGE=phase, NOTARY_SUBMIT_EXIT="72")
@@ -318,10 +318,10 @@ class ReleaseScriptModeTests(unittest.TestCase):
         self.assertIn("fixture log diagnostic", (evidence / "notary-app-log.stderr").read_text())
         self.assertNotIn("Done (", result.stdout)
 
-    def test_success_records_submission_and_log_stream_status_for_all_three_phases(self) -> None:
+    def test_success_records_submission_and_log_stream_status_for_both_distribution_phases(self) -> None:
         result = self.run_script("--release-candidate")
         self.assertEqual(result.returncode, 0, result.stdout)
-        for phase in ("app", "cli", "dmg"):
+        for phase in ("app", "dmg"):
             for command in ("submit", "log"):
                 self.assertEqual((self.out / f"evidence/notary-{phase}-{command}.exitcode").read_text(), "0\n")
                 self.assertEqual((self.out / f"evidence/notary-{phase}-{command}.stderr").read_text(), "")
@@ -345,7 +345,8 @@ class ReleaseScriptModeTests(unittest.TestCase):
         self.assertNotIn("UNVERIFIED", self.summary())
         self.assertTrue((self.out / "MacDown2-0.1.0-7.dmg").exists())
         sums = (self.out / "evidence/SHA256SUMS").read_text()
-        self.assertIn("mostlytext.zip", sums.split("# not distributed")[0])
+        self.assertNotIn("mostlytext.zip", sums.split("# not distributed")[0])
+        self.assertIn("MacDown2-0.1.0-7.dmg", sums.split("# not distributed")[0])
         self.assertIn("syspolicy_check distribution ", self.calls.read_text())
 
     def test_missing_or_nonexecutable_embedded_cli_stops_before_notarisation(self) -> None:
@@ -360,12 +361,38 @@ class ReleaseScriptModeTests(unittest.TestCase):
     def test_public_and_embedded_cli_names_are_recorded_and_packaged(self) -> None:
         result = self.run_script("--release-candidate")
         self.assertEqual(result.returncode, 0, result.stdout)
-        self.assertTrue((self.out / "mostlytext.zip").is_file())
-        self.assertIn("/Release/mostlytext ", self.calls.read_text())
-        self.assertNotIn("/Release/macdown2 ", self.calls.read_text())
+        self.assertFalse((self.out / "mostlytext.zip").exists())
+        products = self.out / "DerivedData/Build/Products/Release"
+        self.assertTrue((products / "mostlytext").is_file())
+        self.assertTrue(os.access(products / "mostlytext", os.X_OK))
+        self.assertFalse((products / "macdown2").exists())
         self.assertIn("public CLI: mostlytext (scheme MostlyTextCLI)", self.summary())
         self.assertIn("embedded CLI: Contents/MacOS/mostlytext-cli", self.summary())
-        self.assertIn("mostlytext.zip", (self.out / "evidence/SHA256SUMS").read_text())
+        self.assertIn("Contents/MacOS/mostlytext-cli", (self.out / "evidence/SHA256SUMS").read_text())
+
+    def test_cli_is_distributed_only_with_its_containing_application(self) -> None:
+        result = self.run_script("--release-candidate")
+        self.assertEqual(result.returncode, 0, result.stdout)
+        self.assertFalse((self.out / "mostlytext.zip").exists())
+        sums = (self.out / "evidence/SHA256SUMS").read_text()
+        public = sums.split("# not distributed")[0]
+        self.assertIn("MacDown2-0.1.0-7.dmg", public)
+        self.assertNotIn("mostlytext", public)
+        self.assertIn("Contents/MacOS/mostlytext-cli", sums.split("# not distributed")[1])
+        self.assertIn("CLI installation: embedded app helper or explicit user-created symlink", self.summary())
+        self.assertEqual(self.calls.read_text().count("notarytool submit"), 2)
+
+    def test_obsolete_standalone_cli_zip_is_preserved_and_refused(self) -> None:
+        self.out.mkdir(parents=True)
+        artifact = self.out / "mostlytext.zip"
+        original = b"previous distribution must be preserved"
+        artifact.write_bytes(original)
+        result = self.run_script("--release-candidate")
+        self.assertNotEqual(result.returncode, 0, result.stdout)
+        self.assertIn("standalone CLI ZIP", result.stdout)
+        self.assertEqual(artifact.read_bytes(), original)
+        self.assertNotIn("xcodebuild ", self.calls.read_text())
+        self.assertNotIn("notarytool", self.calls.read_text())
 
     def test_distribution_check_failure_stops_before_final_hashes(self) -> None:
         for mode in ("--dry-run", "--release-candidate"):

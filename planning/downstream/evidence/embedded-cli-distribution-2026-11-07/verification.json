@@ -1,0 +1,17 @@
+{
+  "base": "f9f14670dcf3aef953596a81d442a28ec9ca091b",
+  "old_release_script_sha256": "cdbc81c366859f15b8bed77bf123b8e848aa921a04804eb0af829060e7e9c2f9",
+  "candidate_files": {
+    "release/macos/sign-notarize-dmg.sh": "fe861a28877714b57ef27e61ace89a624b4914bfb2a1de102521ea6d05f0c0b4",
+    "compliance/tests/test_release_script.py": "b041718472175e8faae20e7b8648de07af2cf327e8e62361fd715562b1e2e642",
+    "docs/INSTALLATION_AND_MIGRATION.md": "1f56588c3471d317474a955f317eb5f2fdbdb981e9e546e66266827c46f46fd4",
+    "planning/MAC_SIGNING_BRIEF.md": "b514356e7b6578f8ec86216635c7c96d6d81d0fc7a80636e0b3004b2417f9758",
+    "planning/downstream/mostlytext-packaging-and-export-bounds.md": "470f8bd2a0a9328d5a124a56c8e2afdd11cf01d479eabba0eb0eae8875032c2d"
+  },
+  "original_new_regressions": "2 tests fail on actual original script; all release/build/signing/notary programs are test mocks",
+  "candidate": "25 release-script tests pass;332 complete compliance tests pass;ordinary inventory check pass;shell syntax pass",
+  "preserved_checks": "Both locked builds/public mostlytext product, embedded executable, all signatures/team/hardened-runtime/timestamps/nested code, compliance, app and DMG submission/log failures/stapling/Gatekeeper remain",
+  "public_artifact": "DMG containing app and embedded CLI; optional explicit user-created symlink; no standalone CLI ZIP",
+  "old_artifact": "Preserved and refused before full-pipeline preflight, build or Apple contact",
+  "scope": "No real signing/keychain/notary/public CLI/app/native helper execution or publication; no source-offer or release acceptance"
+}

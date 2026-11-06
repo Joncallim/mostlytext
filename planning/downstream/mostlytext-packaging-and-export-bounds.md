@@ -27,3 +27,13 @@ Land the two units separately. For packaging: actual scheme/product declarations
 Packaging landed in #564 at 3cb65cfba288029215148a2c962f099538620b3b, tree equal to tested head 0f7b907b6b60f18771c58bffdc756cd5fda4b1f2; hosted Compliance 41411013482 passes. All 99 local Compliance tests, shell syntax and inventory pass. The old script fails the strict scheme control. The initial ZIP-absence assertion was corrected because MacDown2.zip is the app archive on a case-insensitive filesystem; the fixture now checks the archived executable path.
 
 Final HTML controls use byte-identical production writer/template/budget/file-writer sources in a private non-application Swift package, with only the unused validated-publication dependencies stubbed. Eleven Swift Testing tests pass Debug and Release, including complete UTF-8 boundaries, repeat amplification, escaped metadata/head/styles, URI overflow, unused resources, cancellation, false-prefix scanning, no materialization before whole-document admission, and no destination/sidecar mutation on rejection. Bypassing the final cap must fail the repeated-resource control. Initial initializer-access, scratch-budget and lint/format failures are retained. This is self-review and source/control evidence; it is not native PDF acceptance or memory calibration. The localized new budget detail is registered for final #17 review.
+
+## 7 November2026 packaging reconciliation
+
+The separate `mostlytext` build product remains a regular executable and is
+signature-checked; the supported installed command resolves to the containing
+app's `Contents/MacOS/mostlytext-cli` through an explicit user-created symlink.
+The [app-bound distribution correction](embedded-cli-distribution-2026-11-07.md)
+removes the unsupported executable-only CLI ZIP from future public output.
+The app/DMG retain all signature/notarisation and exact-artifact gates. No
+historical download, native acceptance, signing or promotion result is changed.
