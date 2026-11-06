@@ -101,3 +101,21 @@ per-phase exact 24-pin equality, frozen original model, identical four tests,
 all original assertions, 900/600/660-second bounds and full original failure
 requirements. Add pure negative controls for unreviewed revisions/owners/pins
 and the baseline-only distinction. No model fixture or production code changes.
+
+## Preserve a failed full selection and measure its actual phases
+
+The original 72ec3171 complete Release selection executes 1085 functions/143
+suites and fails exactly fullHighlight1MB at 552.811375 ms >500 ms. Debug and
+the separate semantic/math/heading controls pass. The local names-only gain
+therefore does not qualify the hosted full-selection ceiling. Keep that failure
+and do not retry unchanged source or loosen any ceiling, selection or deadline.
+
+Add observation to that same canonical timed function: record parser setup,
+actual parse and query durations, taking the existing final total before any
+logging. Keep its original fixture, operations, result disposal, total interval
+and assertion. The two additional monotonic-clock reads are inside that original
+interval and do not subtract work. Logging happens after it. This establishes
+where the actual complete-process measurement spends time, without changing
+production parser policy or claiming a repair. The current branch separately
+incorporates actual merged PR103 and the documentation-only PR105; require fresh
+combined full checks rather than calling the old failed selection qualified.
