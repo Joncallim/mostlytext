@@ -1,0 +1,25 @@
+{
+  "head": "837ddd1fc92b80c134ed01f84aaa591ddd9e1a56",
+  "configuration": "release",
+  "records": [
+    {
+      "phase": "baseline",
+      "checkout": "4fda20fe5e7ba79b756a3b4bac97db284ebe0933",
+      "configuration": "release",
+      "source_hashes": 1585,
+      "orchestration_hashes": 1587,
+      "pins": 24,
+      "textual": "c52cb5834c4695109aad2cb66294eafbc8f264c8",
+      "result": "4 specific original failures",
+      "owned_status": {
+        "returncode": 1,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 1.0695103750000499,
+        "app_cleanup_requested": []
+      },
+      "license_sha256": "9c9191ada6888f3da1a888b6c74dae46e98787b1150c734e3b1e5ec5bbf73b09"
+    }
+  ],
+  "scope": "Actual internal model publication ownership only; no mounted-copy cause, production resource routing or whole-issue acceptance. Executable hashes are recorded hosted evidence; downloaded executable bytes are not available for local rehash."
+}
