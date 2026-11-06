@@ -87,3 +87,29 @@ fallback policy, public APIs or test budgets. No per-paragraph parser, widened
 highlight admission, parser read-assertion patch or TextKit batching is included.
 Local timing gains do not qualify an entire app, resolve PR101's recorded
 failure or satisfy #18/#19. Only fresh complete required checks permit merge.
+
+## Continuous C work and ownership regression
+
+Add a small Linux C qualification job alongside the unchanged macOS native and
+full app CI. This job verifies runtime behavior and work, not native acceptance.
+Fetch only the frozen owner runtime base and the exact candidate runtime and
+JSON grammar from the committed24-pin lock, rejecting changed owners or duplicate
+identities. Require the runtime product delta to be only lib/src/subtree.c and
+the original MIT text to remain byte-identical. Compile the same canonical
+candidate C control against both runtime versions; preserve all324 ordering and
+ownership checks and compare their complete semantic output. In disposable
+source copies add exactly one counter declaration and increment per comparison
+pair. The original must fail the explicit four-pair shared-root work control,
+and the candidate must pass it. Instrumentation cannot enter the product.
+
+Require an AddressSanitizer/UndefinedBehaviorSanitizer build of the unchanged
+candidate runtime to pass the same complete semantic selection. Record exact
+application input hashes, all pins, runtime/grammar source identities, fixture
+and executable hashes, compile/run output and exit statuses. Each compiler is
+bounded to180seconds and each normal standalone execution to60seconds; retain
+first failures. Reject a missing result, no-op candidate, extra runtime product
+changes, semantic differences or sanitizer diagnostics. A completed job must
+verify immutable inputs again. Local execution is permitted only for these
+inspected normal C executables with no GUI linkage. Native helpers/app/CLI stay
+held; no existing native selection, mutation, baseline, architecture build,
+threshold or deadline is removed by this additional job.
