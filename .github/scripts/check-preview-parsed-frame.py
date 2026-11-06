@@ -57,7 +57,7 @@ def main():
     base = ['xcodebuild', '-project', 'MacDown2/MacDown2.xcodeproj', '-scheme', 'MacDown2',
             '-configuration', args.configuration, 'ENABLE_TESTABILITY=YES',
             'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE',
-            '-destination', 'platform=macOS', '-derivedDataPath', str(derived),
+            '-destination', 'platform=macOS,arch=arm64', 'ONLY_ACTIVE_ARCH=YES', '-derivedDataPath', str(derived),
             '-onlyUsePackageVersionsFromResolvedFile', '-enableCodeCoverage', 'NO']
     args.output.mkdir(parents=True, exist_ok=True)
     records = []

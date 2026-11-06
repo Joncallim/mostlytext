@@ -1,0 +1,29 @@
+{
+  "pid": 58806,
+  "started": 1793989920.122665,
+  "command": [
+    "xcodebuild",
+    "-project",
+    "MacDown2/MacDown2.xcodeproj",
+    "-scheme",
+    "MacDown2",
+    "-configuration",
+    "Release",
+    "ENABLE_TESTABILITY=YES",
+    "SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE",
+    "-destination",
+    "platform=macOS",
+    "-derivedDataPath",
+    "/Users/runner/work/_temp/preview-grant-app",
+    "-onlyUsePackageVersionsFromResolvedFile",
+    "-enableCodeCoverage",
+    "NO",
+    "-parallel-testing-enabled",
+    "NO",
+    "-only-testing:MacDown2Tests/SecuredMarkdownViewportTests",
+    "test-without-building"
+  ],
+  "app": "/Users/runner/work/_temp/preview-grant-app/Build/Products/Release/MacDown2.app/Contents/MacOS/MacDown2",
+  "app_sha256": "74b2b1d5044778533761040c9780e2b988dcc290876acf8380ec57d9f77e11c7",
+  "checkout": "3e94937a50d0210022bba490dfed2347ee8798b5"
+}

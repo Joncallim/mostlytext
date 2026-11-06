@@ -3,9 +3,25 @@
 import argparse
 import hashlib
 import json
+import platform
 from pathlib import Path
 import re
 import subprocess
+
+def verify_native_architecture(receipt, identity, architectures):
+    if receipt.get("execution_architecture") != "arm64" or receipt.get("only_active_arch") is not True:
+        raise SystemExit("The native Preview receipt must identify Apple Silicon execution")
+    if architectures != ["arm64"]:
+        raise SystemExit("The actual Preview app must contain exactly its executed architecture")
+    command = identity.get("command", [])
+    if (not command or command[0] != "xcodebuild" or "test-without-building" not in command
+            or [c for c in command if c.startswith("ONLY_ACTIVE_ARCH=")] != ["ONLY_ACTIVE_ARCH=YES"]):
+        raise SystemExit("The owned native command must preserve the active-architecture build policy")
+    destinations = [i for i, value in enumerate(command) if value == "-destination"]
+    if (len(destinations) != 1 or destinations[0] + 1 >= len(command)
+            or command[destinations[0] + 1] != "platform=macOS,arch=arm64"):
+        raise SystemExit("The owned native command must select its actual Apple Silicon destination")
+
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("output", type=Path)
@@ -15,9 +31,11 @@ parser.add_argument("--verify", action="store_true")
 parser.add_argument("--require-result", action="store_true")
 args = parser.parse_args()
 repo = Path(__file__).resolve().parents[2]
+if platform.machine() != "arm64":
+    raise SystemExit("This native Preview qualification requires an Apple Silicon worker")
 paths = subprocess.check_output([
     "git", "ls-files", "-z", "MacDown2", ".github/scripts/verify-preview-grant-probe.py",
-    ".github/workflows/preview-grant-probe.yml", ".github/scripts/check-preview-parsed-frame.py", ".github/scripts/test-preview-grant-tripwire.py", ".github/scripts/run-preview-grant-probe.py", ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
+    ".github/workflows/preview-grant-probe.yml", ".github/scripts/check-preview-parsed-frame.py", ".github/scripts/test-preview-grant-tripwire.py", ".github/scripts/test-preview-native-architecture.py", ".github/scripts/run-preview-grant-probe.py", ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
 ], cwd=repo).decode().split("\0")
 digests = {name: hashlib.sha256((repo / name).read_bytes()).hexdigest() for name in paths if name}
 lock = repo / "MacDown2/Packages/MacDownKit/Package.resolved"
@@ -27,6 +45,8 @@ receipt = {
     "configuration": args.configuration,
     "mutation_pair": args.pair,
     "testability": True,
+    "execution_architecture": "arm64",
+    "only_active_arch": True,
     "additional_compilation_condition": "RELEASE_PREVIEW_PROBE",
     "source_sha256": digests,
     "pins": pins,
@@ -37,6 +57,16 @@ if args.verify:
     if json.loads(path.read_text()) != receipt:
         raise SystemExit("Actual native app source, configuration or immutable pins changed")
     if args.require_result:
+        identity = json.loads((args.output / "diagnostics/identity.json").read_text())
+        architectures = subprocess.check_output(["lipo", "-archs", identity["app"]], text=True).split()
+        verify_native_architecture(receipt, identity, architectures)
+        app_digest = hashlib.sha256(Path(identity["app"]).read_bytes()).hexdigest()
+        if app_digest != identity["app_sha256"]:
+            raise SystemExit("The final actual app differs from the original owned executable")
+        (args.output / "native-architecture.json").write_text(json.dumps({
+            "execution_architecture": "arm64", "binary_architectures": architectures,
+            "only_active_arch": True, "app_sha256": app_digest,
+        }, indent=2) + "\n")
         log = re.sub(r"\x1b\[[0-9;]*m", "", (args.output / "probe.log").read_text())
         suites = ["Preview directory grant lifetime", "Preview resource admission", "Preview window resource ownership",
                   "Immutable bounded HTML scheme delivery", "Secured HTML native routing", "Secured Markdown mounted attachment",
