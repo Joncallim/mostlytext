@@ -56,32 +56,6 @@ struct TextFilterCoordinatorTests {
         let tabID: UUID
     }
 
-    static func makeController(text: String = "one two") throws -> Fixture {
-        let preferences = FileTreePreferences()
-        let coordinator = WindowCoordinator(
-            themeController: ThemeController(),
-            grammarRegistry: GrammarRegistry(),
-            fileTreePreferences: preferences,
-            recentFolderRoots: RecentFolderRoots(preferences: preferences),
-            recentFileDocuments: RecentFileDocuments(preferences: preferences),
-            appSettings: AppSettingsModel()
-        )
-        let model = coordinator.makeWindowModel()
-        let document = FileDocument(text: text)
-        model.tabStore.newTab(document: document)
-        let tabID = try #require(model.tabStore.activeTab).id
-        let controller = WindowController(
-            model: model,
-            coordinator: coordinator,
-            themeController: ThemeController(),
-            grammarRegistry: GrammarRegistry(),
-            fileTreePreferences: preferences
-        )
-        coordinator.controllers = [controller]
-        controller.editorStore.existingSystem(for: tabID.uuidString)?.setAwaitingEditorView(false) // no EditorView here
-        return Fixture(coordinator: coordinator, controller: controller, tabID: tabID)
-    }
-
     static func target(
         controller: WindowController, tabID: UUID
     ) throws -> TextFilterCoordinator.TextFilterEditingTarget {
