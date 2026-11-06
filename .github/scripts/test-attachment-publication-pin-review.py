@@ -69,6 +69,19 @@ class ExactPinReviewTests(unittest.TestCase):
         with self.assertRaises(SystemExit):
             module.reviewed_model_pin_delta(self.before, previous)
 
+    def test_previous_shared_subtree_checkpoint_is_not_the_current_compilation_graph(self):
+        previous = copy.deepcopy(self.after)
+        revisions = {
+            "neon": "f97aca5b3c8060323dd98e020fa4cadf8f0fa21f",
+            "swifttreesitter": "8a7e21004d4964df8d427b9c8ed1043b63f43ae3",
+            "tree-sitter": "cd96b385c813b5e5ae38cbc6e67bd659db327138",
+        }
+        for row in previous:
+            if row["identity"] in revisions:
+                row["state"]["revision"] = revisions[row["identity"]]
+        with self.assertRaises(SystemExit):
+            module.reviewed_model_pin_delta(self.before, previous)
+
     def test_independent_updates_cannot_qualify_an_unchanged_original_model(self):
         current = copy.deepcopy(self.before)
         self.apply_reviewed_updates(current)

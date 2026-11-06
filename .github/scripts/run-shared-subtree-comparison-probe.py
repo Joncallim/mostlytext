@@ -104,7 +104,7 @@ def main():
     fetch(OWNERS["tree-sitter-json"], [grammar_revision], grammar_git)
     delta = subprocess.check_output(["git", "-C", str(runtime_git), "diff", "--name-only", BASE, candidate,
                                      "--", "lib/src", "lib/include", "Package.swift"], text=True).splitlines()
-    if delta != ["lib/src/subtree.c"]:
+    if delta != ["Package.swift", "lib/src/subtree.c"]:
         raise SystemExit("An unreviewed runtime product or interface changed")
     original, current, grammar = output / "original", output / "candidate", output / "grammar"
     extract(runtime_git, BASE, original)
@@ -113,6 +113,24 @@ def main():
     license_bytes = (repo / "compliance/licenses/tree-sitter--LICENSE.txt").read_bytes()
     if (original / "LICENSE").read_bytes() != license_bytes or (current / "LICENSE").read_bytes() != license_bytes:
         raise SystemExit("The original runtime licence changed")
+    original_manifest = (original / "Package.swift").read_bytes()
+    expected_manifest = original_manifest.replace(b'                        "src/lib.c",\n', b'')
+    expected_manifest = expected_manifest.replace(b'sources: ["src"]', b'sources: ["src/lib.c", "src/wasm/stdlib.c"]')
+    if expected_manifest == original_manifest or (current / "Package.swift").read_bytes() != expected_manifest:
+        raise SystemExit("The exact reviewed combined compilation source list is required")
+    included = re.findall(r'#include "\./([^"\n]+)"', (current / "lib/src/lib.c").read_text())
+    implementation = {str(path.relative_to(current / "lib")) for path in (current / "lib/src").rglob("*.c")
+                      if path.name != "lib.c"}
+    if len(included) != len(set(included)) or {"src/" + name for name in included} | {"src/wasm/stdlib.c"} != implementation:
+        raise SystemExit("Every original C implementation must remain represented exactly once")
+    if len(implementation) != 13:
+        raise SystemExit("A changed runtime implementation set requires separate review")
+    receipt["runtime_manifest_sha256"] = {"original": digest(original / "Package.swift"),
+                                          "candidate": digest(current / "Package.swift")}
+    receipt["effective_runtime_c_sha256"] = {
+        phase: {name: digest(directory / "lib" / name) for name in sorted(implementation)}
+        for phase, directory in [("original", original), ("candidate", current)]
+    }
     fixture = current / "lib/tests/subtree_compare_identity.c"
     receipt["fixture_sha256"] = digest(fixture)
     receipt["runtime_product_delta"] = delta

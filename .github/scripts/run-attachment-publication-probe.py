@@ -50,11 +50,11 @@ def owners(pins):
 # Exact independent updates reviewed with the query cache and shared-subtree runtime units.
 REVIEWED_INDEPENDENT_PIN_UPDATES = {
     "tree-sitter": ("https://github.com/Joncallim/tree-sitter",
-                    "5ce80b6f0e29096a5f06826a3ba610c4e89bc255", "cd96b385c813b5e5ae38cbc6e67bd659db327138"),
+                    "5ce80b6f0e29096a5f06826a3ba610c4e89bc255", "3b1fb00f8c4f8907073f9b7342a807a0231867fa"),
     "neon": ("https://github.com/Joncallim/Neon",
-             "cd14f22ae8f8402b175a0bafd87560b78c7549e9", "f97aca5b3c8060323dd98e020fa4cadf8f0fa21f"),
+             "cd14f22ae8f8402b175a0bafd87560b78c7549e9", "6074d1a50c7076b2e59d8d0619554b542e096afa"),
     "swifttreesitter": ("https://github.com/Joncallim/SwiftTreeSitter",
-                       "0beea992c4246f93a122de846c8611c9be19aeb7", "8a7e21004d4964df8d427b9c8ed1043b63f43ae3"),
+                       "0beea992c4246f93a122de846c8611c9be19aeb7", "76f93e7e325dcd05561a13ed63bcc92cb85be8da"),
 }
 
 
