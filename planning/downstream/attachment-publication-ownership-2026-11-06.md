@@ -30,8 +30,10 @@ network access, renderer, product string, signing setting or dependency family.
 Keep image and emoji resolution, all original output bounds and source bytes.
 
 Expected implementation, only after baseline proof: assign a private immutable
-request identity at non-cancelled entry, clear obsolete resolved content when
-new work starts, and reject cancelled/superseded completions before publication.
+request identity for attachment work at non-cancelled entry, clear obsolete
+resolved content when new work starts, and reject cancelled/superseded completions
+before publication. An image-free entry invalidates the previous identity with
+nil and clears the old result without allocating an unnecessary request UUID.
 A request already cancelled before entry must not clear a newer result. No
 await may separate the final identity/cancellation check from publication.
 
@@ -68,3 +70,23 @@ resource authority, viewport behavior, signed permission, final UI and exact
 release artifact gates remain separate. If the hypothesis is disproved or a
 fix requires public API/authority or broader rendering changes, stop this unit
 and record the result rather than extending its scope silently.
+
+## Original-model proof and final control precision
+
+Hosted run 42208657007 at app source 837ddd1fc92b80c134ed01f84aaa591ddd9e1a56
+completes all four controls with exactly the four intended failures in BOTH
+Debug and Release. Independent source readback verifies 1,585 original input
+hashes, 1,587 orchestration hashes, all 24 pins, the generated manifest, exact
+fixture and unchanged original model/MIT bytes per configuration. The original
+model is c52cb5834c4695109aad2cb66294eafbc8f264c8. These are model-publication
+defects, not proof of PR100's native-copy cause. Full app CI for the deliberately
+unrepaired original head was cancelled while both jobs were still queued; it
+is neither a passing candidate check nor additional baseline execution.
+
+Final controls distinguish an actual retained current resolved value from the
+caller's source fallback. Only an image-free replacement may qualify through
+the fallback. Cancellation/supersession controls require the current resolved
+value itself to remain present and byte exact. Final hosted before/after runs
+copy this same strengthened canonical file into both phases. Rehash the
+orchestration source after execution and retain the generated manifest bytes
+with the receipts.
