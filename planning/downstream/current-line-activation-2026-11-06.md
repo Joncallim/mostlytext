@@ -248,3 +248,15 @@ capture still differs, diagnose/remediate the production bridge rather than
 relax the oracle. Select this actual app control in both native configurations,
 alongside the unchanged 28 math/heading controls. Complete exact-source CI and
 combined Debug/Release qualification remain required after any correction.
+
+The b0f78750 native Debug run executes all 29 functions/9 suites. Its AppKit
+solid-color reference returns exactly the same shifted components as the
+status bar, including nominal 0.176 becoming 0.232248. The calibration itself
+fails, so the result does not establish a production status-color defect.
+Retain all 19 failed assertions. Next inspect raw pixel samples in the declared
+sRGB bitmap rather than constructing/converting NSColor through colorAt().
+Calibrate that sampler with a separate fresh Core Graphics bitmap filled from
+explicit sRGB components (no NSColor bridge), require opaque RGBA/8-bit storage,
+and preserve the original status 0.03 and reference 0.01 channel bounds. Keep
+production colors unchanged unless that independent calibrated oracle identifies
+a mismatch. This is a readback investigation, not a tolerance exception.
