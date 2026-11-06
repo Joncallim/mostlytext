@@ -118,3 +118,37 @@ requires distinct CURRENT pixels. Keep one original five-second deadline per
 replacement and all original secured tests unchanged. The first compile-only
 fixture version passes compilation; no native execution of it occurred before
 this stronger distinct-image control was added.
+
+## Preserve the first gated refusal and calibrate the colour oracle
+
+The first7b9c run42290565187 fails its separately selected controlled suite in
+both jobs after generation0. In the disappearance job, generation1 enters and
+returns its actual held bytes without cancellation, then the five-second pixel
+oracle refuses. The failure's actual native Copy PNG independently decodes as
+8x8 uniform opaque blueRGBA(0,0,255,255), exactly generation1's intended encoded
+colour. The test compares NSColor converted to deviceRGB against raw constructor
+channel numbers, which is not an established same-colour-space comparison.
+This is an unqualified test oracle, NOT evidence that the app failed to load or
+copy that generation. Retain both full first job logs, original55/17pass receipts
+and the independently decoded actual PNG. No production fork/pin change follows.
+
+The new selection log/owned diagnostics were omitted from the workflow's explicit
+artifact allowlist. Full job output retains the actual one-function failure and
+normal owned65 status, but the separate identity/status files are not recovered.
+Do not invent those missing files. Add selection-probe.log and all owned selection
+diagnostics to the always-uploaded artifact before the next run.
+
+Compare actual copied PNG pixels to the immutable ENCODED reference PNG supplied
+to that generation, converting BOTH to the same explicit sRGB colour space.
+Keep dimensions8x8, alpha/currentRGB comparisons and the0.1channel tolerance;
+never increase the threshold or accept alt text. Calibrate the exact oracle
+before the real gated journey using all8encoded positives and56wrong-generation
+negatives. Include the actual captured blue failure PNG as an additional positive
+and print its real deviceRGB/sRGB channel observations to test the conversion
+hypothesis rather than claim it from source. Also require the current-generation
+oracle to reject the early native Copy before held bytes are released; a prior
+valid image is allowed but is not current. Preserve the single original5s bound,
+all eight actual native copies and every original secured positive/counterfactual.
+Always retain complete inputs, byte/colour observations and first outcomes. This
+material oracle/diagnostic repair is not an unchanged native retry and is not a
+production correctness claim. Only actual later evidence can justify one.
