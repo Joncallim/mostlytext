@@ -107,26 +107,38 @@ struct ProductionPreviewResourceRoutingTests {
         ))
         for column in 0 ..< 2 {
             for row in 0 ..< 2 {
-                bitmap.setColor(.blue, atX: column, y: row)
+                bitmap.setColor(NSColor(deviceRed: 0, green: 0, blue: 1, alpha: 1), atX: column, y: row)
             }
         }
         let bytes = try #require(bitmap.representation(using: .png, properties: [:]))
+        let encoded = try #require(NSBitmapImageRep(data: bytes))
+        let fixtureColor = try #require(encoded.colorAt(x: 0, y: 0)?.usingColorSpace(.deviceRGB))
+        try #require(encoded.pixelsWide == 2 && encoded.pixelsHigh == 2)
+        try #require(fixtureColor.blueComponent > 0.9 && fixtureColor.redComponent < 0.1)
         try bytes.write(to: fixture.folder.appendingPathComponent("second.png"))
         fixture.first.model.tabStore.updateActiveDocument { $0.updatingText("![second](second.png)\n") }
         let deadline = ContinuousClock.now.advanced(by: .seconds(5))
+        var lastHTML = ""
+        var lastRaster = "no copied raster"
         while ContinuousClock.now < deadline {
             let html = try await fixture.copyHarness.copiedHTML(from: root)
+            lastHTML = html
             if let start = html.range(of: "data:image/png;base64,")?.upperBound {
                 let encoded = html[start...].prefix { $0.isLetter || $0.isNumber || "+/=".contains($0) }
-                if let data = Data(base64Encoded: String(encoded)), let image = NSBitmapImageRep(data: data),
-                   image.pixelsWide == 2, image.pixelsHigh == 2,
-                   let color = image.colorAt(x: 0, y: 0)?.usingColorSpace(.deviceRGB),
-                   color.blueComponent > 0.9, color.redComponent < 0.1 {
-                    return
+                if let data = Data(base64Encoded: String(encoded)), let image = NSBitmapImageRep(data: data) {
+                    let color = image.colorAt(x: 0, y: 0)?.usingColorSpace(.deviceRGB)
+                    lastRaster = "copied=\(image.pixelsWide)x\(image.pixelsHigh) color=\(String(describing: color))"
+                    if image.pixelsWide == 2, image.pixelsHigh == 2,
+                       let color, color.blueComponent > 0.9, color.redComponent < 0.1 {
+                        return
+                    }
                 }
             }
             try await Task.sleep(for: .milliseconds(20))
         }
-        Issue.record("The actual production Preview did not copy the current generation's distinct image pixels")
+        Issue.record("""
+        The actual production Preview did not copy the current generation's distinct image pixels;
+        \(lastRaster); html=\(lastHTML); \(fixture.copyHarness.copyDiagnostics(in: root))
+        """)
     }
 }
