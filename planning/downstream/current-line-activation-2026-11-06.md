@@ -215,3 +215,17 @@ There is no functional ordering dependency on PR98. The first independently
 qualified branch may integrate first; the later branch must synchronize with it
 and qualify the exact combined tree before merge. Owner acceptance and every
 wider E22/E23 gate remain explicit.
+
+
+## Combined-source qualification
+
+PR98 is merged as `ee45cc25d43c9cf6b067ad4d2674312a96f7cb1e` with all
+package/application and Debug/Release heading/native controls passing. This
+branch now incorporates that exact main without conflicts; both activation
+paths require fresh complete CI and native Debug/Release controls on the
+combined source before integration. Original baseline 6667bc9c remains the
+immutable missing-feature counterexample, not the merge base. The prior d9
+current-line native runs pass all 1,082 tests/142 suites in both configurations,
+including strict nonempty Release edit/fresh-highlight parity and the actual
+glyph-orientation mutation/restoration control. These earlier results do not
+replace final combined-source qualification.
