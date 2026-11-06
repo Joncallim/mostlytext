@@ -16,23 +16,62 @@ extension HeadingNativeHarness {
     static var lastLinkClientDiagnostic = ""
 
     static func hasLink(label: String) async -> Bool {
-        let result = await Task.detached { nativeInspect(label: label, press: false) }.value
+        let result = nativeInspect(label: label, press: false)
         lastLinkClientDiagnostic = "Native link lookup stage=\(result.stage) status=\(result.status) " +
             "matches=\(result.matches) visited=\(result.visited) candidates=\(result.candidates)"
         return result.status == AXError.success.rawValue && result.matches == 1
     }
 
-    /// An external-style AX client lets the app main actor service the press.
-    /// A synchronous in-process protocol call has no messaging timeout.
+    /// Same-process AX calls can synchronously enter AppKit providers, so the
+    /// client must use the app's main thread as well as its finite API bounds.
     static func pressLink(label: String) async throws {
-        let result = await Task.detached { nativeInspect(label: label, press: true) }.value
+        let result = nativeInspect(label: label, press: true)
         print("Heading AX client stage=\(result.stage) status=\(result.status) " +
             "matches=\(result.matches) visited=\(result.visited) actions=\(result.actions)")
         try #require(result.status == AXError.success.rawValue && result.matches == 1,
                      "The bounded native client must press exactly one real link in its focused window")
     }
 
-    private nonisolated static func nativeInspect(label: String, press: Bool) -> ClientResult {
+    private final class PressReceiver: NSObject {
+        var presses = 0
+        @objc func press(_: Any?) {
+            presses += 1
+        }
+    }
+
+    /// Discriminates AX transport from the actual TOC. The control is removed
+    /// before the production fixture is inspected and never calls its actions.
+    static func requireNativePressTransport(restoring window: NSWindow) throws {
+        let receiver = PressReceiver()
+        let button = NSButton(title: "Heading native transport control", target: receiver,
+                              action: #selector(PressReceiver.press(_:)))
+        button.setAccessibilityLabel("Heading native transport control")
+        let control = NSWindow(contentRect: .init(x: 0, y: 0, width: 240, height: 50),
+                               styleMask: [.titled], backing: .buffered, defer: false)
+        control.isReleasedWhenClosed = false
+        control.animationBehavior = .none
+        control.contentView = button
+        let focus = window.firstResponder
+        defer {
+            control.orderOut(nil)
+            control.close()
+            window.makeKeyAndOrderFront(nil)
+            window.makeKey()
+            window.makeFirstResponder(focus)
+        }
+        control.makeKeyAndOrderFront(nil)
+        control.makeKey()
+        try #require(NSApp.keyWindow === control)
+        let result = nativeInspect(label: "Heading native transport control", press: true,
+                                   role: NSAccessibility.Role.button.rawValue)
+        print("Native AX control status=\(result.status) stage=\(result.stage) actions=\(result.actions)")
+        try #require(result.status == AXError.success.rawValue && result.matches == 1 && receiver.presses == 1,
+                     "The same native AX client must press a known real button exactly once")
+    }
+
+    private static func nativeInspect(label: String, press: Bool,
+                                      role expectedRole: String = "AXLink") -> ClientResult {
+        precondition(Thread.isMainThread)
         let (window, status) = focusedWindow()
         guard let window else {
             return .init(status: status, stage: "focused-window", matches: 0, visited: 0)
@@ -54,7 +93,7 @@ extension HeadingNativeHarness {
                 candidates.append("\(role ?? "nil") title=\(String((title ?? "").prefix(160))) " +
                     "description=\(String((description ?? "").prefix(160)))")
             }
-            if role == NSAccessibility.Role.link.rawValue,
+            if role == expectedRole,
                [title, description].contains(where: { $0?.utf8.elementsEqual(label.utf8) == true }),
                !links.contains(where: { CFEqual($0, element) }) {
                 links.append(element)
@@ -80,10 +119,10 @@ extension HeadingNativeHarness {
         guard press else {
             return .init(status: AXError.success.rawValue, stage: "unique-link", matches: 1, visited: cursor)
         }
-        return performPress(link: link, visited: cursor)
+        return performPress(link: link, visited: cursor, deadline: deadline)
     }
 
-    private nonisolated static func focusedWindow() -> (AXUIElement?, Int32) {
+    private static func focusedWindow() -> (AXUIElement?, Int32) {
         let application = AXUIElementCreateApplication(ProcessInfo.processInfo.processIdentifier)
         AXUIElementSetMessagingTimeout(application, 0.5)
         var value: CFTypeRef?
@@ -95,15 +134,23 @@ extension HeadingNativeHarness {
         return (unsafeDowncast(value, to: AXUIElement.self), status.rawValue)
     }
 
-    private nonisolated static func performPress(link: AXUIElement, visited: Int) -> ClientResult {
+    private static func performPress(link: AXUIElement, visited: Int,
+                                     deadline: ContinuousClock.Instant) -> ClientResult {
         var actionNames: CFArray?
         let actionStatus = AXUIElementCopyActionNames(link, &actionNames)
         let actions = actionStatus == .success ? (actionNames as? [String] ?? []) : ["error:\(actionStatus.rawValue)"]
+        guard actionStatus == .success, actions.contains(kAXPressAction) else {
+            return .init(status: AXError.failure.rawValue, stage: "supported-action", matches: 1,
+                         visited: visited, actions: actions)
+        }
         let pressed = AXUIElementPerformAction(link, kAXPressAction as CFString)
+        guard ContinuousClock.now < deadline else {
+            return .init(status: AXError.failure.rawValue, stage: "press-deadline", matches: 1, visited: visited)
+        }
         return .init(status: pressed.rawValue, stage: "press", matches: 1, visited: visited, actions: actions)
     }
 
-    private nonisolated static func attribute(_ name: String, of element: AXUIElement) -> CFTypeRef? {
+    private static func attribute(_ name: String, of element: AXUIElement) -> CFTypeRef? {
         var value: CFTypeRef?
         return AXUIElementCopyAttributeValue(element, name as CFString, &value) == .success ? value : nil
     }

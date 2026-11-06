@@ -36,7 +36,7 @@ struct NativeHeadingTOC: View {
         LazyVStack(alignment: .leading, spacing: 6) {
             ForEach(entries) { entry in
                 HStack(alignment: .firstTextBaseline, spacing: 8) {
-                    Text("•").accessibilityHidden(true)
+                    Text(verbatim: "•").accessibilityHidden(true)
                     Link(destination: entry.destination) {
                         Text(verbatim: entry.heading.title)
                             .multilineTextAlignment(.leading)

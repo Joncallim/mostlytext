@@ -46,20 +46,19 @@ enum HeadingNativeHarness {
         window.makeKey()
         try #require(application.keyWindow === window, "The real app window must own keyboard focus")
         try await requireOwnAccessibilityRole()
+        try requireNativePressTransport(restoring: window)
         let content = try #require(window.contentView)
         transferred = true
         return Mounted(fixture: fixture, window: window, content: content, source: source)
     }
 
     static func requireOwnAccessibilityRole() async throws {
-        let result = await Task.detached {
-            let process = AXUIElementCreateApplication(ProcessInfo.processInfo.processIdentifier)
-            let timeout = AXUIElementSetMessagingTimeout(process, 0.5)
-            guard timeout == .success else { return (timeout.rawValue, String?.none) }
-            var role: CFTypeRef?
-            let error = AXUIElementCopyAttributeValue(process, kAXRoleAttribute as CFString, &role)
-            return (error.rawValue, role as? String)
-        }.value
+        let process = AXUIElementCreateApplication(ProcessInfo.processInfo.processIdentifier)
+        let timeout = AXUIElementSetMessagingTimeout(process, 0.5)
+        try #require(timeout == .success)
+        var role: CFTypeRef?
+        let error = AXUIElementCopyAttributeValue(process, kAXRoleAttribute as CFString, &role)
+        let result = (error.rawValue, role as? String)
         try #require(result.0 == AXError.success.rawValue && result.1 == (kAXApplicationRole as String),
                      "Initialize the actual own-process native accessibility client")
     }

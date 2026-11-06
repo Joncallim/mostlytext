@@ -10,6 +10,13 @@ functional CI, exact actual-product/native receipts and merge trees are verified
 EPIC_STANDARD, RELEASE_HARDENING and the preceding source-index/publication plans.
 No owner-account native execution, signing or separate-account gate is lifted.
 
+Current native harness decision: same-process accessibility lookups and actions
+run on MainActor, because the OS can call AppKit providers synchronously. A real
+NSButton verifies that transport separately; actual TOC links still prove their
+own source selection, Preview scrolling and focus behavior. Preserve messaging,
+five-second presentation and owned-process watchdog limits. The later evidence
+sections retain the failures that caused this correction.
+
 ## Resolved ownership and interfaces
 
 MarkdownEngine remains the sole heading allocator and source-index owner.
@@ -327,3 +334,36 @@ manufacture readiness: inspect all the same DOM assertions only after that exact
 navigation finishes. The old aggregate failure is not proved to be a nested-SVG
 count issue; retain its facts and require the new real navigation result before
 classifying the complete normal-template browser proof as passing.
+
+
+## Same-process accessibility thread correction
+
+The 9b628a9d Release run compiles and executes production export, but crashes
+inside AXUIElementCopyAttributeValue(kAXChildrenAttribute) on background Thread6.
+Its retained stack identifies HeadingNativeHarness.attribute/nativeInspect and
+the detached hasLink task. NSRemoteView rejects initialization on a thread
+incompatible with AppKit. Same-process AX queries can invoke the target's native
+provider on the calling thread; the assumption that this was an external client
+with automatic main-thread dispatch is false.
+
+Keep these same-process API operations on MainActor. Preserve finite messaging,
+traversal and five-second presentation limits, and reject an operation that
+returns beyond its deadline. The unchanged ten-minute owned-process watchdog
+retains stack evidence if native code never returns. Add a real native NSButton
+positive control, pressed through the exact same AX API before each whole-app
+fixture, then restore its original window/focus. This control does not invoke
+TOC callbacks or supply its acceptance result: every TOC still needs its actual
+unique link press, selection, real scroll, focus and Preview-only assertions.
+Retain all prior failures; this crash classifies the introduced harness thread
+error only, not the older #15 WebKit or signal-11 failures.
+
+
+The 9b complete run now proves all 3,703 package tests/528 suites, including both
+actual normal-template pages: four outer vector diagrams plus two nested SVGs,
+unique private IDs, one H1/TOC target, the expected authored alias and unchanged
+canvas pixels. All four actual app/CLI Debug/Release builds pass. The subsequent
+compiled-string gate catches the decorative bullet's localized Text initializer
+in a module without a string catalog. Mark that accessibility-hidden decoration
+verbatim; heading labels were already literal authored text. Do not add a
+spurious translated bullet or suppress compiled-string coverage. Actual full
+app-test execution remains downstream of this failed gate, not established.
