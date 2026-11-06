@@ -63,3 +63,37 @@ MarkdownDocument type. It does not mock session publication or physical state.
 Normal console linkage must be inspected before execution. Native stress,
 original byteOffset/limit classification, signed-release and independent rights
 review remain their own open criteria. Do not close a whole issue from this fix.
+
+## Preserve the native adapter fixture's single publication owner
+
+The first bc8da866 Release app integration completes29 functions/9 suites and
+fails21 assertions:9 heading navigation,3 math live-source and9 math navigation
+cases have no current parse. Keep its exact source/pin/normal-owned-exit receipt
+and full log. The generation guard must not be weakened to accommodate this.
+
+Those adapter tests intentionally remove the SwiftUI workspace and mount the
+registered TextKit editor directly, but their shared factory first constructs a
+WindowController with an active Markdown document. That creates a real workspace
+with initial parsing/options tasks before the content is removed. A manual
+parseNow then competes with that separate producer. The comment promising no
+initial-SwiftUI race is therefore not established by the old construction order.
+The production load calls setOptions, which deliberately schedules reparsing even
+for equal options; the original OptionsTests requirement stays unchanged.
+
+Extend only the test factory with a default-true mountWorkspace parameter. Its
+default path must retain every existing text-filter fixture behavior. The manual
+math/heading fixture opts out: construct the actual registered WindowController
+with no document, remove its placeholder content before creating the tab, then
+create the real editor/parser for that tab and manually mount the same native
+NSScrollView/NSTextView. No DocumentEditorSplitView exists for that fixture, so
+its manually controlled parse has one producer. This does not replace the real
+controller/coordinator/model/parser/editor or fake source authority. Preserve all
+29 selected functions,21 original positive/negative navigation assertions, key
+window/focus/selection/scroll/parser-replacement checks and all deadlines. Actual
+full-workspace heading/source/Preview journeys remain in their separate tests.
+No production UI, API or parse/options policy changes in this fixture correction.
+
+Local work compiles only; fresh complete hosted Debug/Release app integration and
+normal package/app CI are mandatory. Until then the21 failures remain unresolved
+evidence, not a claimed production cause or proof that the fixture was the only
+issue. Do not infer a historical Debug-assertion diagnosis or whole-issue closure.
