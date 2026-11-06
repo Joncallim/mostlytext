@@ -21,7 +21,7 @@ final class PreviewProductionFixture {
     private let suite: String
     private let preferences: FileTreePreferences
 
-    init(source: String, name: String = "source.md") throws {
+    init(source: String, name: String = "source.md", previewLayout: PreviewLayoutMode = .previewOnly) throws {
         let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
         self.folder = folder
@@ -40,7 +40,8 @@ final class PreviewProductionFixture {
             workspaceStateStore: WorkspaceStateStore(defaults: defaults)
         )
         self.coordinator = coordinator
-        first = try Self.makeController(name, source, folder, coordinator, preferences)
+        first = try Self.makeController(folder.appendingPathComponent(name), source, coordinator, preferences,
+                                        previewLayout: previewLayout)
         coordinator.controllers = [first]
         first.showWindow(nil)
         coordinator.updateKeyModel()
@@ -53,7 +54,7 @@ final class PreviewProductionFixture {
     }
 
     func addDocument(_ name: String, source: String) throws -> WindowController {
-        let controller = try Self.makeController(name, source, folder, coordinator, preferences)
+        let controller = try Self.makeController(folder.appendingPathComponent(name), source, coordinator, preferences)
         coordinator.controllers.append(controller)
         controller.showWindow(nil)
         coordinator.updateKeyModel()
@@ -105,15 +106,14 @@ final class PreviewProductionFixture {
     }
 
     private static func makeController(
-        _ name: String, _ source: String, _ folder: URL,
-        _ coordinator: WindowCoordinator, _ preferences: FileTreePreferences
+        _ url: URL, _ source: String, _ coordinator: WindowCoordinator,
+        _ preferences: FileTreePreferences, previewLayout: PreviewLayoutMode = .previewOnly
     ) throws -> WindowController {
-        let url = folder.appendingPathComponent(name)
         try Data(source.utf8).write(to: url)
         let model = coordinator.makeWindowModel()
         model.tabStore.newTab(document: FileDocument(fileURL: url, text: source))
         let tab = try #require(model.tabStore.activeTabID)
-        model.tabStore.setPreviewLayout(.previewOnly, for: tab)
+        model.tabStore.setPreviewLayout(previewLayout, for: tab)
         return WindowController(
             model: model, coordinator: coordinator, themeController: coordinator.themeController,
             grammarRegistry: coordinator.grammarRegistry, fileTreePreferences: preferences

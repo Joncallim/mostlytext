@@ -17,7 +17,7 @@ struct SecuredMarkdownSourceBindingTests {
         let current = "cafe\u{0301}\n\n![fixture](image.png)\n"
         #expect(published == current)
         #expect(!published.utf8.elementsEqual(current.utf8))
-        let fixture = try PreviewProductionFixture(source: current)
+        let fixture = try PreviewProductionFixture(source: current, previewLayout: .editorOnly)
         defer { fixture.dispose() }
         try await fixture.installGrant()
         let parsed = try await ParseEngine().parse(published, revision: 1)
@@ -39,7 +39,7 @@ struct SecuredMarkdownSourceBindingTests {
 
     @Test func pendingPublishedSourceRetiresThePriorLoadAndKeepsPreviewMounted() async throws {
         let source = "![fixture](image.png)\n"
-        let fixture = try PreviewProductionFixture(source: source)
+        let fixture = try PreviewProductionFixture(source: source, previewLayout: .editorOnly)
         defer { fixture.dispose() }
         try await fixture.installGrant()
         let document = try #require(fixture.first.model.activeDocument)
@@ -69,7 +69,7 @@ struct SecuredMarkdownSourceBindingTests {
 
     @Test func absentParseRetiresItsPriorLoadWithoutRemovingReadableContent() async throws {
         let source = "![fixture](image.png)\n"
-        let fixture = try PreviewProductionFixture(source: source)
+        let fixture = try PreviewProductionFixture(source: source, previewLayout: .editorOnly)
         defer { fixture.dispose() }
         try await fixture.installGrant()
         let document = try #require(fixture.first.model.activeDocument)
