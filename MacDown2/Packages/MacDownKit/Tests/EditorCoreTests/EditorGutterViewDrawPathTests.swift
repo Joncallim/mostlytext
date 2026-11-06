@@ -42,11 +42,10 @@ struct EditorGutterViewDrawPathTests {
     }
 
     /// The tight ink bounding box of the SECOND vertical cluster of ink (the "2" label under the "1" label).
-    private func secondLabelMask(in bitmap: NSBitmapImageRep, background: CGFloat) -> Mask? {
+    private func secondLabelMask(in bitmap: NSBitmapImageRep, background: CGFloat, columns: Range<Int>) -> Mask? {
         let inked: (Int, Int) -> Bool = { column, row in abs(luma(bitmap, column, row) - background) > 0.12 }
-        let width = bitmap.pixelsWide
         let height = bitmap.pixelsHigh
-        let rowHasInk = (0 ..< height).map { row in (0 ..< width).contains { inked($0, row) } }
+        let rowHasInk = (0 ..< height).map { row in columns.contains { inked($0, row) } }
         var clusters: [ClosedRange<Int>] = []
         var start: Int?
         for (row, hasInk) in rowHasInk.enumerated() {
@@ -63,8 +62,8 @@ struct EditorGutterViewDrawPathTests {
         }
         guard clusters.count >= 2 else { return nil }
         let band = clusters[1]
-        let columns = (0 ..< width).filter { column in band.contains { inked(column, $0) } }
-        guard let first = columns.first, let last = columns.last else { return nil }
+        let inkColumns = columns.filter { column in band.contains { inked(column, $0) } }
+        guard let first = inkColumns.first, let last = inkColumns.last else { return nil }
         return Mask(rows: band.map { row in (first ... last).map { inked($0, row) } })
     }
 
@@ -99,6 +98,10 @@ struct EditorGutterViewDrawPathTests {
         window.makeKeyAndOrderFront(nil)
         defer { window.orderOut(nil) }
         #expect(gutter.isFlipped)
+        // Keep the orientation specimen an ordinary numeral, as before active
+        // line weight/shape existed. Those cues have separate bitmap controls.
+        system.selectionSet = .init(single: .init(location: 0, length: 0))
+        try #require(system.currentLogicalLine == 1)
 
         let bounds = gutter.bounds
         let height = max(1, Int(bounds.height))
@@ -115,7 +118,17 @@ struct EditorGutterViewDrawPathTests {
         gutter.drawHashMarksAndLabels(in: bounds)
 
         let background = luma(bitmap, 0, 0)
-        let produced = try #require(secondLabelMask(in: bitmap, background: background), "two labels must be drawn")
+        let font = system.textView.font ?? .systemFont(ofSize: 14)
+        let bold = NSFontManager.shared.convert(font, toHaveTrait: .boldFontMask)
+        let width = max(("2" as NSString).size(withAttributes: [.font: font]).width,
+                        ("2" as NSString).size(withAttributes: [.font: bold]).width)
+        // The new gutter shape is a separate cue with its own bitmap test.
+        // Measure numeral orientation only in the right-aligned glyph columns.
+        let firstColumn = max(0, Int(floor((bounds.width - 6 - width) * CGFloat(scale))) - 1)
+        let columns = firstColumn ..< bitmap.pixelsWide
+        print("Gutter orientation primary=\(system.currentLogicalLine) selection=\(system.selectedRange)")
+        let produced = try #require(secondLabelMask(in: bitmap, background: background, columns: columns),
+                                    "two numeral labels must be drawn")
         // Mutation-checked: without the production `textMatrix` line the base sits at about 0.19; with it, 0.81.
         let producedScore = widestStrokePosition(produced)
         #expect(
