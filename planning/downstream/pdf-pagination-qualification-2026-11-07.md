@@ -67,7 +67,8 @@ selection, omitted positives, skipped tests, failure and missing/timeout status.
    hosted workflow and strict exact-input/result verifier plus its pure tests.
 2. Run pure verifier/ownership/compliance controls, strict format/lint, inventory
    and unsigned actual Release build-for-testing; no local native execution.
-3. Publish a draft PR referencing #11/#8; run the single hosted Release attempt
+3. Publish through the E08 combined qualification PR referencing #11/#8, under
+   release-source-convergence-2026-11-07.md; run the single hosted Release attempt
    and full normal CI. Independently review exact source/pins/execution. Preserve
    the first outcome. If failed, inspect the actual cause before any material
    repair and fresh qualification. Only merge on complete exact-head gates and
