@@ -46,3 +46,24 @@ No issue checkbox, dependency patch, upstream contact or production remediation
 is authorized by a mere debugger stop. A demonstrated fix needs a controlled
 mounted edit/reload/undo interleaving and fresh-highlighter parity in both
 Debug and Release, followed by full combined checks and independent review.
+
+## Controlled background language-resolution slice
+
+The first 113ec5ed hosted diagnostic executes the intended Debug function and
+resolves the real assertion breakpoint, but the original abort does not occur.
+The original expected-issue wrapper instead reports that no highlighting mismatch
+was recorded. There is no assertion-frame file. Retain this as non-reproduction
+under a debugger; neither a root cause nor a fix follows from it.
+
+Add a nil-by-default internal observation hook immediately before the real
+injected-language provider lookup, outside the configuration cache lock. The
+public initializer and every shipped call retain nil. A test-only initializer
+supplies the hook without replacing a grammar, parser, snapshot or renderer.
+Hold only the first actual background JavaScript request using a bounded
+semaphore, signal its arrival to the test, then replace/shrink/grow the mounted
+real TextKit 2 editor before releasing the request. Never block a main-thread
+lookup; missing background entry fails the control. Compare nonempty final
+rendered runs against an independent fresh real highlighter and preserve exact
+source bytes. Keep the control opt-in until the original read path is classified.
+This explicitly extends the diagnostic architecture to a small internal testing
+hook; it does not permit changes to dependency reads, limits or assertions.

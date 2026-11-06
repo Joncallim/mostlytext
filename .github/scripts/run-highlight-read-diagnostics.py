@@ -104,7 +104,8 @@ def main():
     hashes = {str(path): digest(path) for path in [helper, owned, binary, dependency]}
     commands = destination / 'commands.lldb'
     run_args = [str(owned), '--test-bundle-path', str(binary), '--testing-library', 'swift-testing',
-                '--no-parallel', '--filter', 'widenedBackgroundTypingMatchesAFreshHighlighter']
+                '--no-parallel', '--filter',
+                'widenedBackgroundTypingMatchesAFreshHighlighter|replacementWhileAnInjectedLanguageRequestIsHeldMatchesFreshHighlighting']
     commands.write_text('\n'.join([
         'command script import ' + json.dumps(str(repo / '.github/scripts/record_highlight_read.py')),
         'breakpoint set --file String+Data.swift --line ' + str(sites[0]),
@@ -112,6 +113,7 @@ def main():
         'run',
     ]) + '\n')
     environment = dict(os.environ, HIGHLIGHT_READ_DIAGNOSTICS=str(destination),
+                       MOSTLYTEXT_HIGHLIGHT_READ_DIAGNOSTIC='1',
                        DYLD_FRAMEWORK_PATH=str(developer / 'Platforms/MacOSX.platform/Developer/Library/Frameworks'))
     with (destination / 'probe.log').open('w') as log:
         result = subprocess.run([sys.executable, str(repo / '.github/scripts/run-owned-app-tests.py'),
@@ -136,16 +138,21 @@ def main():
         raise SystemExit('Diagnostic package manifest changed')
     if json.loads((package / 'Package.resolved').read_text())['pins'] != pins:
         raise SystemExit('Focused diagnostic dependency pins changed')
-    observed = json.loads((destination / 'assertion-frame.json').read_text())
+    frame_path = destination / 'assertion-frame.json'
+    if not frame_path.exists():
+        receipt['disposition'] = 'Original assertion not reproduced; triggering values unavailable; no fix established'
+        receipt_path.write_text(json.dumps(receipt, indent=2) + '\n')
+        raise SystemExit(receipt['disposition'])
+    observed = json.loads(frame_path.read_text())
     for name in ['byteOffset', 'limit', 'chunkSize', 'location', 'end', 'text_utf16_length']:
         if not isinstance(observed[name], int):
             raise SystemExit('The actual original frame did not yield ' + name)
     if observed['location'] != observed['byteOffset'] // 2 or observed['location'] <= observed['end']:
         raise SystemExit('The original failing read condition was not captured')
     log = (destination / 'probe.log').read_text()
-    if not re.search(r'Test widenedBackgroundTypingMatchesAFreshHighlighter\(\) started', log):
-        raise SystemExit('The original selected experiment did not execute')
-    if 'location is greater than end' not in log:
+    if not re.search(r'Test (widenedBackgroundTypingMatchesAFreshHighlighter|replacementWhileAnInjectedLanguageRequestIsHeldMatchesFreshHighlighting)\(\) started', log):
+        raise SystemExit('Neither selected real editor experiment executed')
+    if not re.search(r'String\+Data\.swift:\d+: Fatal error: location is greater than end', log):
         raise SystemExit('The unchanged original assertion did not execute')
     receipt['disposition'] = 'Original assertion values captured; cause and remediation remain unproved'
     receipt_path.write_text(json.dumps(receipt, indent=2) + '\n')
