@@ -81,3 +81,23 @@ job deadline, assertion or selection is weakened, and there is no unchanged
 retry-to-green. If output/metadata/order, public APIs or source ownership differ,
 stop the optimization rather than silently redesigning query semantics. A
 whole-suite failure remains failure even if a smaller fresh process passes.
+
+## Integration with the merged model probe
+
+Actual main c249d6db includes PR103's qualified model repair and a focused
+before/after probe. That probe's original safety rule rejects every unrelated
+pin difference from its frozen 4fda baseline. The two deliberately reviewed
+runtime revisions in this unit would therefore fail orchestration even though
+both actual model controls and phase-specific immutable locks remain valid.
+
+Extend that rule only for the exact already reviewed pairs:
+Neon cd14f22a ->72174c8d and SwiftTreeSitter 0beea992 ->f2163a8b, retaining their
+existing canonical owners. Every other additional owner/revision/pin removal
+or addition remains rejected. Record the exact independent deltas in the
+artifact and require separate source/inventory review; they do not count as
+model repair. An unchanged original Textual still produces baseline-only proof
+and cannot qualify a candidate. Keep original Textual owner enforcement,
+per-phase exact 24-pin equality, frozen original model, identical four tests,
+all original assertions, 900/600/660-second bounds and full original failure
+requirements. Add pure negative controls for unreviewed revisions/owners/pins
+and the baseline-only distinction. No model fixture or production code changes.
