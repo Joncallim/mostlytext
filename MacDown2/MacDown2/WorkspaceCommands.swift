@@ -180,6 +180,8 @@ struct WorkspaceCommands: Commands {
         }
 
         CommandGroup(before: .sidebar) {
+            previewResourcesCommand
+
             Menu("Layout") {
                 let layout = previewLayout
                     ?? DocumentEditorSplitView.defaultPreviewLayout(from: appSettings?.previewExport)
@@ -317,10 +319,6 @@ struct WorkspaceCommands: Commands {
                 .disabled(coordinator?.keyModel?.hasActiveDocument != true)
             }
         #endif
-    }
-
-    private func setPreviewLayout(_ layout: PreviewLayoutMode) {
-        coordinator?.setPreviewLayout(layout)
     }
 }
 

@@ -1,0 +1,10 @@
+{
+  "source_head": "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+  "source_hashes": 1605,
+  "pins": 24,
+  "initial_selection": "53/17 passed with owned normal exit and live network positives/denial",
+  "mutation": "Intended viewport assertion fails with normal owned exit65",
+  "restored_build": "Succeeded",
+  "restored_execution": "Interrupted; no final owned status/result",
+  "overall": "UNQUALIFIED: unchanged35-minute job limit, cancelled; not a six-pair pass"
+}

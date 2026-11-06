@@ -1,0 +1,8 @@
+{
+  "command": [
+    "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/local-combined-c-qualification/candidate-work-probe",
+    "--require-bounded-self-comparison"
+  ],
+  "returncode": 0,
+  "expected": 0
+}

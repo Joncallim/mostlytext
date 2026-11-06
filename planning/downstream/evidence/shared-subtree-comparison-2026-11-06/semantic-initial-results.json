@@ -1,0 +1,18 @@
+[
+  {
+    "phase": "baseline",
+    "returncode": 0,
+    "binary_sha256": "4eba7939a91980b283a945632e58bb3eca1a56942d4a78d863d48c432824ada2",
+    "fixture_sha256": "22b89d4e43cb8f8e9134281ef401acb1034439a3efb977bcc72350287b41712b",
+    "grammar_sha256": "4dd45ce9488ada8d0babf0b1ec45f62838f1df27757abc3566a9f4f42ce3a0c2",
+    "runtime_subtree_sha256": "ec4c8ca9e9957ab1effcf1ba36d6820b751c2ded0276e2d332c787eabb1265c8"
+  },
+  {
+    "phase": "candidate",
+    "returncode": 0,
+    "binary_sha256": "8eb414510ec1350256051691caa977de4a49066355bfee6141a6134bc4699f0a",
+    "fixture_sha256": "22b89d4e43cb8f8e9134281ef401acb1034439a3efb977bcc72350287b41712b",
+    "grammar_sha256": "4dd45ce9488ada8d0babf0b1ec45f62838f1df27757abc3566a9f4f42ce3a0c2",
+    "runtime_subtree_sha256": "f7e8cb035e5c636324ec725a6991923eb57f18d1e9176969e0f9dc493ff2739f"
+  }
+]

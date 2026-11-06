@@ -1,0 +1,362 @@
+{
+  "base": "d607098bdb5046c02d81137b497e0ffe1aa01748",
+  "combined": "eabd7611c39062b3efb5a07fd369a5b3024f9c79",
+  "all_input_heads_are_ancestors": true,
+  "changed_product_test_inventory_files": {
+    "MacDown2/MacDown2/CommandCatalog.swift": {
+      "blob": "8c41385e170a7dff6c8b9163efc4ce2ef66bbc8e",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2/DocumentEditorSplitView+PreviewPane.swift": {
+      "blob": "41a557b044a442a07609ab5080478d4c36d8ef4d",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2/DocumentEditorSplitView.swift": {
+      "blob": "907f9ef073f057ff2d54cb18b9ac861a33d3baee",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2/HTMLPreviewPane.swift": {
+      "blob": "913bb0fec7eb56cc6d58770225e87efd211e75e1",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2/Localizable.xcstrings": {
+      "blob": "97d5524e32a84ab8a896bf2e675e17c85b67f728",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2/NSFilePanelProvider.swift": {
+      "blob": "4321a5d551087e5e776ffadc656d2ed060d9aadb",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2/PreviewContributionSession.swift": {
+      "blob": "823f8d6cba715f11327843d15222636a0915c783",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2/PreviewDisplayCache.swift": {
+      "blob": "b4ac660034afcf9de4f6624e4a77f2c1098f6396",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2/PreviewResourceWindowState.swift": {
+      "blob": "5dbb008ba27ed4fab241530388619d736f7c19d7",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2/PreviewResourcesNotice.swift": {
+      "blob": "19ad2e20e8a1bd0611250c374e672a751e7eac6d",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2/SecuredHTMLPreviewView.swift": {
+      "blob": "13313497366284dc9f5a91a2caa2483f5e7159cd",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2/SecuredMarkdownResourceHost.swift": {
+      "blob": "b7ed4ff9628c62e849f586b08005b132629fe0f2",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2/WindowController.swift": {
+      "blob": "df7068d59482680b21e1610eb46d3c893bf9861a",
+      "identical_unit_heads": [
+        "75ff4ef9b6c074cddb900e355d78c55b1957ee26"
+      ]
+    },
+    "MacDown2/MacDown2/WindowCoordinator+PreviewResources.swift": {
+      "blob": "c033c92e4ee28268a1effaf0cb77c734ccc9b8fe",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2/WorkspaceCommands+PreviewResources.swift": {
+      "blob": "f10f66fa8b89bd685dcb9f7a73654a143b10a3fd",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2/WorkspaceCommands.swift": {
+      "blob": "39a1a7b0626a04f35552e70012bf27064156632b",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2Tests/HTMLPreviewEncodingNativeTests.swift": {
+      "blob": "5669ce2d2c219240e922e152cdd591508538d638",
+      "identical_unit_heads": [
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2Tests/HTMLResponseEncodingFixture.swift": {
+      "blob": "8a6f4de7864808f519d74378bf3518584237f89e",
+      "identical_unit_heads": [
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2Tests/HeadingPreviewNavigationTests.swift": {
+      "blob": "17e30071d85e2d9bd93fb372d21509a240eece51",
+      "identical_unit_heads": [
+        "75ff4ef9b6c074cddb900e355d78c55b1957ee26"
+      ]
+    },
+    "MacDown2/MacDown2Tests/MathPreviewLiveSourceTests.swift": {
+      "blob": "d38ce2193a2f5e3f134f4362e1c87c6f5d1d52ef",
+      "identical_unit_heads": [
+        "75ff4ef9b6c074cddb900e355d78c55b1957ee26"
+      ]
+    },
+    "MacDown2/MacDown2Tests/PDFExportAdapterTests.swift": {
+      "blob": "3baeef77676cac3278cab498ffb16053dae54688",
+      "identical_unit_heads": [
+        "0435b420609ebfb455a1418b8bc29951656f9412"
+      ]
+    },
+    "MacDown2/MacDown2Tests/PreviewDisplayCacheTests.swift": {
+      "blob": "bd3b5cb938dd05a938ffe2f05142eff38cdd7fd4",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2Tests/PreviewFolderSelectionCommandTests.swift": {
+      "blob": "0c96b0c3c55cb06527a6c5ece1367cfcffddd4ae",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2Tests/PreviewProductionFixture.swift": {
+      "blob": "6a9ddcc195408a486c2e6b92c68fb86672fa3e80",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2Tests/PreviewResourceCompositionOwnershipTests.swift": {
+      "blob": "188a44bdc489f142f0b0523d142a297e62281010",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2Tests/PreviewResourceWindowStateTests.swift": {
+      "blob": "1985fd083aca4a67d83eefa8b8da9cd756098038",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2Tests/ProductionPreviewResourceRoutingTests.swift": {
+      "blob": "3f57565a5d45095a800e69551fd8f7767e9cc733",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2Tests/SecuredMarkdownMountedTests+LayoutDiagnostics.swift": {
+      "blob": "c1e311071b7e605a091593b375882dc737155867",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2Tests/SecuredMarkdownMountedTests+Support.swift": {
+      "blob": "8add854b5c3e1337c473fe5e4969e6860405c6f8",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2Tests/SecuredMarkdownMountedTests.swift": {
+      "blob": "de313114ac30d26a36d97c78f5dad138dca85dbb",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2Tests/SecuredMarkdownSourceBindingTests.swift": {
+      "blob": "0713da7f8557c5ff8679e353d05328ddf0e111a7",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2Tests/SecuredMarkdownViewportTests.swift": {
+      "blob": "404aa1dbd285f96455583556d9593913ad592d70",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2Tests/SecuredPreviewImageAdmissionTests.swift": {
+      "blob": "677b51ebabc313493d41f7c37800338a86b9a611",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2Tests/SecuredPreviewNetworkTests.swift": {
+      "blob": "f8772221fac68207ab0a491899aad16bd2ebb652",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2Tests/SourceBindingFixture.swift": {
+      "blob": "aa7834def5416f105ef14b249fab4e4d3c9b7193",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/MacDown2Tests/TextFilterControllerFixture.swift": {
+      "blob": "ea95853fadf36a3eff4448bf8710e989611a777f",
+      "identical_unit_heads": [
+        "75ff4ef9b6c074cddb900e355d78c55b1957ee26"
+      ]
+    },
+    "MacDown2/MacDown2Tests/TextFilterCoordinatorTests.swift": {
+      "blob": "580b6c0839771d1a81e739eaf2b9766f911a3162",
+      "identical_unit_heads": [
+        "75ff4ef9b6c074cddb900e355d78c55b1957ee26"
+      ]
+    },
+    "MacDown2/Packages/MacDownKit/Package.resolved": {
+      "blob": "667f214ce30ac0ee50a8a5c6215b6afa26078b90",
+      "identical_unit_heads": [
+        "15b2306c4c5cd9ac8d34406ba29325e4ed8bf8ff"
+      ]
+    },
+    "MacDown2/Packages/MacDownKit/Package.swift": {
+      "blob": "aab4c4f80830efe6ebfaa083048cbb4c87d45a39",
+      "identical_unit_heads": [
+        "15b2306c4c5cd9ac8d34406ba29325e4ed8bf8ff"
+      ]
+    },
+    "MacDown2/Packages/MacDownKit/Sources/Highlighting/GrammarRegistry.swift": {
+      "blob": "dd1559eeb37605ee67bff95540201763cdd719b6",
+      "identical_unit_heads": [
+        "c3a1516b1d159f32ab7ce8a428fc5739ebd32868"
+      ]
+    },
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseSession.swift": {
+      "blob": "6b29160dcaedc98da2b95dd0c9dbd437805e558c",
+      "identical_unit_heads": [
+        "75ff4ef9b6c074cddb900e355d78c55b1957ee26"
+      ]
+    },
+    "MacDown2/Packages/MacDownKit/Tests/HighlightingTests/KeystrokeStallSupport.swift": {
+      "blob": "11526f7d1e95a31d3205fd816251f16133ab7a06",
+      "identical_unit_heads": [
+        "c3a1516b1d159f32ab7ce8a428fc5739ebd32868"
+      ]
+    },
+    "MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MountedHighlightingReadBoundaryTests.swift": {
+      "blob": "93b962cd41b8fb6a9bc8083c94aa4bbe9c314eb3",
+      "identical_unit_heads": [
+        "c3a1516b1d159f32ab7ce8a428fc5739ebd32868"
+      ]
+    },
+    "MacDown2/Packages/MacDownKit/Tests/HighlightingTests/SharedSubtreeComparisonTests.swift": {
+      "blob": "4eae79748de2fa2c383d722fca41acf6e0c4a9b4",
+      "identical_unit_heads": [
+        "15b2306c4c5cd9ac8d34406ba29325e4ed8bf8ff"
+      ]
+    },
+    "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/GatedParseEngine.swift": {
+      "blob": "48670d7817c25236c4a6a1765557298c17667992",
+      "identical_unit_heads": [
+        "75ff4ef9b6c074cddb900e355d78c55b1957ee26"
+      ]
+    },
+    "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/MarkdownPublicationScenarios.swift": {
+      "blob": "acbb71ac0b1b6ea9790b6bcb7cb5515d9acba375",
+      "identical_unit_heads": [
+        "75ff4ef9b6c074cddb900e355d78c55b1957ee26"
+      ]
+    },
+    "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/MarkdownSessionPublicationTests.swift": {
+      "blob": "67b215e24e5dd3926b1d0be98331bcef566606de",
+      "identical_unit_heads": [
+        "75ff4ef9b6c074cddb900e355d78c55b1957ee26"
+      ]
+    },
+    "MacDown2/Packages/MacDownKit/Tests/MarkdownEngineTests/ParseSessionBusyStateTests.swift": {
+      "blob": "05b65a27c20c9613033732722591b52d2e607f3e",
+      "identical_unit_heads": [
+        "75ff4ef9b6c074cddb900e355d78c55b1957ee26"
+      ]
+    },
+    "MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewImageDecodeBudgetTests.swift": {
+      "blob": "c9d36d69a43c662a33f8cce7ed0f96b6137df480",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "MacDown2/Packages/TreeSitterMarkdown/Package.swift": {
+      "blob": "0e51cf98ebb61168b7b52baecb1a7cf4e5365cbc",
+      "identical_unit_heads": [
+        "15b2306c4c5cd9ac8d34406ba29325e4ed8bf8ff"
+      ]
+    },
+    "MacDown2/project.yml": {
+      "blob": "72b16b822a10267686e1ca4381f86fea773cf329",
+      "identical_unit_heads": [
+        "c7ae0652c5ec79dcd98c43e70b1540ed2463f445",
+        "d10d0881d7797272f0f9bf648a692aa02384e4f3"
+      ]
+    },
+    "compliance/generated/THIRD_PARTY_NOTICES.md": {
+      "blob": "f6d0490a40eda359945d3cd77bc8aac334dc95d2",
+      "identical_unit_heads": [
+        "15b2306c4c5cd9ac8d34406ba29325e4ed8bf8ff"
+      ]
+    },
+    "compliance/generated/sbom.cdx.json": {
+      "blob": "fd307232cbb5303d190f068c6235229c008cdf53",
+      "identical_unit_heads": [
+        "15b2306c4c5cd9ac8d34406ba29325e4ed8bf8ff"
+      ]
+    },
+    "compliance/inventory.json": {
+      "blob": "9d6e7b45ccf9305f0ca029bc5a2d61a636185cda",
+      "identical_unit_heads": [
+        "15b2306c4c5cd9ac8d34406ba29325e4ed8bf8ff"
+      ]
+    }
+  }
+}

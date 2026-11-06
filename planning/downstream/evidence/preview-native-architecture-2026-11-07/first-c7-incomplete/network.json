@@ -1,0 +1,7 @@
+{
+  "paths": [
+    "/control",
+    "/control-webkit"
+  ],
+  "denied_requests": []
+}

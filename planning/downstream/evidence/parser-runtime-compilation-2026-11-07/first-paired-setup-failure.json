@@ -1,0 +1,4 @@
+{
+  "error": "shutil.copyfile preserved binary bytes but did not preserve the executable permission on the owned baseline copy. Execution never began; initial empty stdout/stderr remain.",
+  "correction": "Set owner-only executable mode on the owned standalone console; byte hash unchanged. Use a new output prefix to retain the first setup files."
+}

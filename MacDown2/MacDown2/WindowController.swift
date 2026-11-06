@@ -79,7 +79,8 @@ final class WindowController: NSWindowController, NSWindowDelegate {
         grammarRegistry: GrammarRegistry,
         fileTreePreferences: FileTreePreferences,
         recoveryExecutor: any RecoveryActionExecuting = DefaultRecoveryActionExecutor(),
-        workspaceFileIndex: WorkspaceFileIndex = WorkspaceFileIndex()
+        workspaceFileIndex: WorkspaceFileIndex = WorkspaceFileIndex(),
+        initialContentController: NSViewController? = nil
     ) {
         self.model = model
         self.coordinator = coordinator
@@ -123,7 +124,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
         )
         .environment(\.windowCoordinator, coordinator)
         .environment(\.previewResourceWindowState, previewResourceState)
-        let hostingController = NSHostingController(rootView: shell)
+        let hostingController: NSViewController = initialContentController ?? NSHostingController(rootView: shell)
         let window = DocumentWindow(contentViewController: hostingController)
         window.coordinator = coordinator
         Self.restoreFrame(of: window)
