@@ -368,3 +368,16 @@ consumer token during a delayed parse. That is competing fixture ownership, not
 proof of source binding. Real production-routing controls keep Preview visible;
 all retained-loader denial, current-source positives, original mutation controls
 and five-second limits remain unchanged.
+
+The first bd84a68e production Release selection executes53 functions/17 suites
+and fails four controls: the distinct-pixel copy and all three manually mounted
+source-binding cases. Keep the complete log, exact receipt and normal owned exit
+record. No actual mutation runs after that failed initial selection. The observed
+colorspace errors occur while the four-pixel fixture is constructed using the
+catalog NSColor.blue in a device-RGB bitmap. Use an explicitly constructed
+device-RGB blue and require the encoded fixture's actual size/color readback
+before publication. Preserve the existing distinct2x2/blue copied-pixel check
+and five-second deadline. Add failure-only actual HTML, decoded dimensions/color
+and native interaction/layout diagnostics; do not infer a production decode,
+publication or stale-render repair from that first timeout. The original8x8 PNG
+and all existing consumer/mutation tests remain unchanged.
