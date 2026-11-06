@@ -321,3 +321,11 @@ query performs no I/O and grants no authority. Disable duplicate real sheets;
 matching-origin finalization must still be safe across overlapping backing
 acquisitions and later requests. Add the new visible strings to the catalog
 without claiming the final post-stabilization localization/VoiceOver gate.
+
+The dedicated folder chooser currently calls beginSheetModal directly. Reuse
+the existing explicit-window PanelRequest/presentation path so closing the
+origin also finishes its owned continuation, while the provider's weak-origin
+checks still forbid an ambient-window fallback. An optional after-presentation
+observation, default nil, may let the hosted native fixture inspect/cancel the
+actual sheet without sleeps or substituting the typed user-selection boundary.
+This adds no automatic grant, source mutation or generic file-panel policy.
