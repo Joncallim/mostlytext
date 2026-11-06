@@ -50,3 +50,13 @@ execution. Locally use pure diagnostic controls, strict tools, all330 compliance
 checks/inventory and unsigned compile-only. After actual evidence discriminates
 the failure, record a new written correction before production changes. Any
 corrected integration candidate needs fresh complete required qualification.
+
+## Dispatch through the existing workflow identity on the diagnostic branch
+
+A newly added workflow is not yet registered on default main. Use the existing
+Preview workflow identity with this diagnostic branch/ref instead: its branch
+version is workflow_dispatch-only, with the declared Debug revision/disappear
+selection, trace forwarding and separate concurrency group. Keep every original
+step, assertion, deadline and upload rule. The actual modified workflow is
+already one of the full receipt inputs. No new main workflow or recurring
+automation is registered; no original0557 run is restarted or cancelled.
