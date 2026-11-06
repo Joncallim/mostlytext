@@ -1,0 +1,23 @@
+{
+  "source_delta": [
+    "runtime/tree-sitter/Package.swift"
+  ],
+  "identical_ordered_capture_count": 23256,
+  "original_c_implementation_files": 13,
+  "combined_includes_plus_retained_stdlib": 13,
+  "external_symbols_identical": 260,
+  "unchanged_compiler_defines_and_standard": true,
+  "five_run_medians": {
+    "baseline": {
+      "parse_seconds": 0.176402125,
+      "query_seconds": 0.056438667,
+      "total_seconds": 0.232540125
+    },
+    "combined": {
+      "parse_seconds": 0.161762167,
+      "query_seconds": 0.047046208,
+      "total_seconds": 0.21033625
+    }
+  },
+  "scope": "Normal Foundation component profile; no native or whole-app budget pass inferred"
+}

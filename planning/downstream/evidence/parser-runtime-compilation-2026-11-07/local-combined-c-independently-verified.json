@@ -1,0 +1,15 @@
+{
+  "source_head": "39d0de72b9cf554d9add4cb92ea1cc6583f564f3",
+  "base": "d607098bdb5046c02d81137b497e0ffe1aa01748",
+  "synthetic_checkout": "39d0de72b9cf554d9add4cb92ea1cc6583f564f3",
+  "source_tree": "d2e6d76c2eb1fd1dc4b67ad9ad74d71d692513e0",
+  "source_hashes_verified": 1590,
+  "dependency_pins_verified": 24,
+  "ordering_pairs_per_phase": 324,
+  "original_comparison_visits": 36866,
+  "candidate_comparison_visits": 2,
+  "sanitizer_stderr_empty": true,
+  "original_candidate_sanitized_complete_output_identical": true,
+  "receipt_sha256": "f492e2a70629fafdd94115b94bdef9c8c04b5d9c36200ef9c85aea85ac5c9e32",
+  "limitation": "Local standalone C binaries independently rehashed. Component C semantics/ownership/work only; full hosted actual package/native qualification remains required."
+}

@@ -1,0 +1,42 @@
+name: Shared subtree C comparison qualification
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches: [main, master, integration-final]
+    paths:
+      - 'MacDown2/Packages/MacDownKit/Package.swift'
+      - 'MacDown2/Packages/MacDownKit/Package.resolved'
+      - 'MacDown2/Packages/TreeSitterMarkdown/Package.swift'
+      - '.github/scripts/*shared-subtree*'
+      - '.github/workflows/shared-subtree-comparison.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: shared-subtree-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  comparison:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Reject unreviewed dependency owners and no-op candidates
+        run: python3 .github/scripts/test-shared-subtree-pin-review.py
+      - name: Prove actual runtime semantics, bounded work and sanitizer behavior
+        run: python3 .github/scripts/run-shared-subtree-comparison-probe.py "$RUNNER_TEMP/shared-subtree-comparison"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shared-subtree-c-comparison
+          path: |
+            ${{ runner.temp }}/shared-subtree-comparison/receipt.json
+            ${{ runner.temp }}/shared-subtree-comparison/*.log
+            ${{ runner.temp }}/shared-subtree-comparison/*.json
+            ${{ runner.temp }}/shared-subtree-comparison/*-linked-libraries.txt
+          if-no-files-found: warn

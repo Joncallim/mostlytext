@@ -1,0 +1,10 @@
+{
+  "returncode": 0,
+  "command": [
+    "/Volumes/Fast SSD/CORTANA-Builds/capture-order-materialization-20261107/fixture/.build/arm64-apple-macosx/release/ParserQueryProfile",
+    "5",
+    "/Volumes/Fast SSD/CORTANA-Builds/capture-order-materialization-20261107/baseline-ordered-highlights.json"
+  ],
+  "binary_sha256": "5e304b00290fd286164be2a28c856bd34976e65408f7696ff8b2a0a0d8420020",
+  "elapsed_seconds": 2.7530939169228077
+}
