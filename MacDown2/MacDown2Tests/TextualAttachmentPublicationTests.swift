@@ -15,7 +15,7 @@ struct TextualAttachmentPublicationTests {
         try #require(model.resolvedAttributedString != nil)
         let current = AttributedString("current e\u{301} 😀\r\nplain text")
         await resolve(model, current, using: RejectedAttachmentLoader())
-        #expect(matches(model, current), "Plain source must replace the prior resolved image source")
+        #expect(displayedMatches(model, current), "Plain source must replace the prior resolved image source")
     }
 
     @Test func cancelledOlderReadCannotPublishOverNewerSource() async throws {
@@ -98,6 +98,11 @@ struct TextualAttachmentPublicationTests {
     }
 
     private func matches(_ model: Model, _ source: AttributedString) -> Bool {
+        guard let resolved = model.resolvedAttributedString else { return false }
+        return String(resolved.characters).utf8.elementsEqual(String(source.characters).utf8)
+    }
+
+    private func displayedMatches(_ model: Model, _ source: AttributedString) -> Bool {
         let displayed = model.resolvedAttributedString ?? source
         return String(displayed.characters).utf8.elementsEqual(String(source.characters).utf8)
     }

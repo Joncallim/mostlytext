@@ -68,6 +68,7 @@ def qualify(root, controls_root, output, configuration, common, baseline):
     output.mkdir()
     sources = inventory(root)
     package, fixture, manifest, pins = prepare(root, output, common)
+    (output / "probe-Package.swift").write_text(manifest)
     lock = root / "MacDown2/Packages/MacDownKit/Package.resolved"
     original_lock = lock.read_bytes()
     receipt = {"checkout": run(["git", "rev-parse", "HEAD"], cwd=root),
@@ -118,6 +119,8 @@ def qualify(root, controls_root, output, configuration, common, baseline):
     status = json.loads((output / "diagnostics/status.json").read_text())
     if status["timed_out"] or status["cancelled"] or status["returncode"] != result.returncode:
         raise SystemExit("Incomplete or cancelled native controls cannot qualify")
+    if inventory(controls_root) != receipt["orchestration_sha256"]:
+        raise SystemExit("Native orchestration source changed during execution")
     if inventory(root) != sources or lock.read_bytes() != original_lock or fixture.read_bytes() != common:
         raise SystemExit("Native probe source, fixture or immutable lock changed")
     if (package / "Package.swift").read_text() != manifest:

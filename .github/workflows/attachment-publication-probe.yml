@@ -48,10 +48,12 @@ jobs:
             ${{ runner.temp }}/attachment-publication/baseline/*.json
             ${{ runner.temp }}/attachment-publication/baseline/*.log
             ${{ runner.temp }}/attachment-publication/baseline/actual-*
+            ${{ runner.temp }}/attachment-publication/baseline/probe-Package.swift
             ${{ runner.temp }}/attachment-publication/baseline/diagnostics/*
             ${{ runner.temp }}/attachment-publication/candidate/*.json
             ${{ runner.temp }}/attachment-publication/candidate/*.log
             ${{ runner.temp }}/attachment-publication/candidate/actual-*
+            ${{ runner.temp }}/attachment-publication/candidate/probe-Package.swift
             ${{ runner.temp }}/attachment-publication/candidate/diagnostics/*
             ${{ runner.temp }}/attachment-publication/baseline-only.json
           if-no-files-found: warn
