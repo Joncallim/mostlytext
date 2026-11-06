@@ -3,8 +3,8 @@
 The binding CLI contract and implementation require its actual helper to remain
 inside its signed app. The release pipeline nevertheless advertised/distributed
 a bare executable-only ZIP. The original source fails both new pure regressions:
-it produces/lists that unsupported artifact and overwrites a prior same-named
-fixture. The complete first refusal is retained here.
+it produces/lists that unsupported artifact and proceeds despite a prior
+same-named fixture. The complete first refusal is retained here.
 
 The corrected pipeline keeps both locked builds, the public mostlytext name,
 the embedded helper and every existing signature/compliance/app/DMG safeguard.
