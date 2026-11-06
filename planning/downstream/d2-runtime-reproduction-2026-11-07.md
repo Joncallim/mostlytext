@@ -191,3 +191,20 @@ does not replace/verify the final source offer or change inventory guards.
 Update the source-review question links with this narrower result. Submit this
 documentation-only unit after source convergence; do not invalidate frozen
 PR108 checks or claim source/rights/native/signing completion.
+
+## Integrate the independent source record while Preview diagnosis continues
+
+PR108's original0557 source now has independently verified failures in two
+Debug native mutation/restoration jobs, despite its full normal CI passing.
+Do not merge that product source or wait on it to preserve unrelated source
+evidence. The D2 renderer, publisher bundle, source graph, original toolchain
+notices and every build input used here are byte-identical on live main d607098b
+and0557. Port only this unit's architecture, supplemental evidence and question
+links to a branch from live main. Re-run all330 compliance controls and inventory
+on that actual branch, independently verify its packet and exact D2 unchanged
+objects, review every changed file and required checks, then merge by expected
+head/tree. No MacDown2/dependency/notice/guard or source-offer status changes.
+The build tests retained in the packet explicitly belong to pending0557; the
+new documentation branch's own checks are separate. This supersedes the initial
+ordering assumption that source convergence must finish first. Preserve the
+original research branch/head and all earlier observations.
