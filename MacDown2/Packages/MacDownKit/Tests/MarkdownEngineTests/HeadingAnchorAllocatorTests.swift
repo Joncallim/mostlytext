@@ -34,6 +34,17 @@ struct HeadingAnchorAllocatorTests {
         #expect(collision.allocate(title: composed) == "café-1")
     }
 
+    @Test func repeatedHeadingsKeepTheirSuffixAfterOtherFamiliesAndAuthoredReservations() {
+        var allocator = HeadingAnchorAllocator(reservedIDs: ["a-1", "a-3"])
+        #expect(allocator.allocate(title: "A") == "a")
+        #expect(allocator.allocate(title: "A-2") == "a-2")
+        let repeated = (0 ..< 3000).map { _ in allocator.allocate(title: "A") }
+        #expect(repeated.first == "a-4" && repeated.last == "a-3003")
+        #expect(Set(repeated).count == 3000)
+        #expect(allocator.allocate(title: "A-4") == "a-4-1")
+        #expect(allocator.allocate(title: "A") == "a-3004")
+    }
+
     @Test func longFragmentsRemainBoundedAndRepeatable() {
         let title = String(repeating: "漢字", count: 100)
         var first = HeadingAnchorAllocator()

@@ -7,6 +7,7 @@ public struct HeadingAnchorAllocator: Sendable {
     public static let policyVersion = 1
 
     private var usedIDs: Set<Data>
+    private var nextDuplicateByBase: [Data: Int] = [:]
 
     public init() {
         usedIDs = []
@@ -20,10 +21,14 @@ public struct HeadingAnchorAllocator: Sendable {
 
     public mutating func allocate(title: String) -> String {
         let base = Self.normalizedBase(title)
-        var duplicate = 0
+        let baseKey = Data(base.utf8)
+        var duplicate = nextDuplicateByBase[baseKey, default: 0]
         while true {
             let candidate = Self.boundedID(base: base, duplicate: duplicate)
             if usedIDs.insert(Data(candidate.utf8)).inserted {
+                // Used IDs only grow. Every lower suffix was already occupied;
+                // other heading families can still reserve the next candidate.
+                nextDuplicateByBase[baseKey] = duplicate + 1
                 return candidate
             }
             duplicate += 1

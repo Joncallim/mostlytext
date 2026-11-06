@@ -1,0 +1,454 @@
+Fetching https://github.com/tree-sitter/tree-sitter-json
+Fetching https://github.com/Joncallim/Neon
+[1/1877] Fetching neon
+[208/2979] Fetching neon, tree-sitter-json
+Fetched https://github.com/tree-sitter/tree-sitter-json from cache (0.73s)
+Fetched https://github.com/Joncallim/Neon from cache (0.73s)
+Fetching https://github.com/scinfu/SwiftSoup
+Fetching https://github.com/tree-sitter/tree-sitter-typescript
+[1/7132] Fetching swiftsoup
+[7133/13450] Fetching swiftsoup, tree-sitter-typescript
+Fetched https://github.com/tree-sitter/tree-sitter-typescript from cache (35.76s)
+Fetched https://github.com/scinfu/SwiftSoup from cache (35.76s)
+Fetching https://github.com/Joncallim/SwiftTreeSitter
+Fetching https://github.com/Joncallim/swiftui-math
+[1/1624] Fetching swifttreesitter
+[50/3433] Fetching swifttreesitter, swiftui-math
+Fetched https://github.com/Joncallim/swiftui-math from cache (0.66s)
+Fetched https://github.com/Joncallim/SwiftTreeSitter from cache (0.66s)
+Fetching https://github.com/Joncallim/swift-markdown
+Fetching https://github.com/ChimeHQ/Rearrange
+[1/609] Fetching rearrange
+[610/6499] Fetching rearrange, swift-markdown
+Fetched https://github.com/Joncallim/swift-markdown from cache (0.69s)
+Fetched https://github.com/ChimeHQ/Rearrange from cache (0.69s)
+Fetching https://github.com/apple/swift-argument-parser
+Fetching https://github.com/Joncallim/tree-sitter
+[1/57998] Fetching tree-sitter
+[2/77332] Fetching tree-sitter, swift-argument-parser
+Fetched https://github.com/apple/swift-argument-parser from cache (2.16s)
+Fetched https://github.com/Joncallim/tree-sitter from cache (2.16s)
+Fetching https://github.com/tree-sitter/tree-sitter-css
+Fetching https://github.com/tree-sitter/tree-sitter-ruby
+[1/1240] Fetching tree-sitter-css
+[1241/13418] Fetching tree-sitter-css, tree-sitter-ruby
+Fetched https://github.com/tree-sitter/tree-sitter-ruby from cache (97.27s)
+Fetched https://github.com/tree-sitter/tree-sitter-css from cache (97.27s)
+Fetching https://github.com/tree-sitter-grammars/tree-sitter-yaml
+Fetching https://github.com/alex-pinkus/tree-sitter-swift
+[1/4442] Fetching tree-sitter-swift
+[757/5309] Fetching tree-sitter-swift, tree-sitter-yaml
+Fetched https://github.com/alex-pinkus/tree-sitter-swift from cache (2.28s)
+Fetched https://github.com/tree-sitter-grammars/tree-sitter-yaml from cache (2.28s)
+Fetching https://github.com/Joncallim/swift-cmark
+Fetching https://github.com/tree-sitter-grammars/tree-sitter-toml
+[1/607] Fetching tree-sitter-toml
+Fetched https://github.com/tree-sitter-grammars/tree-sitter-toml from cache (0.51s)
+Fetching https://github.com/tree-sitter/tree-sitter-cpp
+[1/17509] Fetching swift-cmark
+Fetched https://github.com/Joncallim/swift-cmark from cache (1.08s)
+Fetching https://github.com/pointfreeco/swift-concurrency-extras
+[1/1133] Fetching swift-concurrency-extras
+Fetched https://github.com/pointfreeco/swift-concurrency-extras from cache (0.53s)
+Fetching https://github.com/tree-sitter/tree-sitter-html
+[1/1327] Fetching tree-sitter-html
+Fetched https://github.com/tree-sitter/tree-sitter-html from cache (0.70s)
+Fetching https://github.com/tree-sitter/tree-sitter-python
+[1/5651] Fetching tree-sitter-python
+Fetched https://github.com/tree-sitter/tree-sitter-python from cache (14.85s)
+Fetching https://github.com/Joncallim/textual
+[1/857] Fetching textual
+Fetched https://github.com/Joncallim/textual from cache (0.77s)
+Fetching https://github.com/tree-sitter/tree-sitter-bash
+[1/3658] Fetching tree-sitter-bash
+Fetched https://github.com/tree-sitter/tree-sitter-bash from cache (26.19s)
+Fetching https://github.com/tree-sitter-grammars/tree-sitter-xml
+[1/1180] Fetching tree-sitter-xml
+Fetched https://github.com/tree-sitter-grammars/tree-sitter-xml from cache (0.58s)
+Fetching https://github.com/jpsim/Yams
+[1/11878] Fetching yams
+Fetched https://github.com/jpsim/Yams from cache (1.50s)
+[1/3690] Fetching tree-sitter-cpp
+Fetched https://github.com/tree-sitter/tree-sitter-cpp from cache (163.17s)
+Creating working copy for https://github.com/tree-sitter/tree-sitter-typescript
+Creating working copy for https://github.com/Joncallim/Neon
+Creating working copy for https://github.com/tree-sitter/tree-sitter-json
+Working copy of https://github.com/tree-sitter/tree-sitter-json resolved at 0.24.8
+Working copy of https://github.com/tree-sitter/tree-sitter-typescript resolved at 0.23.2
+Creating working copy for https://github.com/scinfu/SwiftSoup
+Creating working copy for https://github.com/Joncallim/swiftui-math
+Working copy of https://github.com/scinfu/SwiftSoup resolved at 2.13.9
+Working copy of https://github.com/Joncallim/swiftui-math resolved at 2a89c2b41482988711909572d116374e47a52164
+Creating working copy for https://github.com/ChimeHQ/Rearrange
+Creating working copy for https://github.com/Joncallim/SwiftTreeSitter
+Working copy of https://github.com/ChimeHQ/Rearrange resolved at 2.1.1
+Creating working copy for https://github.com/Joncallim/swift-markdown
+Working copy of https://github.com/Joncallim/swift-markdown resolved at 72e0f16233a46b247c115ef5e678a0671f7e64eb
+Creating working copy for https://github.com/apple/swift-argument-parser
+Working copy of https://github.com/apple/swift-argument-parser resolved at 1.8.2
+Creating working copy for https://github.com/Joncallim/tree-sitter
+Working copy of https://github.com/Joncallim/tree-sitter resolved at 5ce80b6f0e29096a5f06826a3ba610c4e89bc255
+Creating working copy for https://github.com/tree-sitter/tree-sitter-css
+Working copy of https://github.com/tree-sitter/tree-sitter-css resolved at 0.23.2
+Creating working copy for https://github.com/tree-sitter/tree-sitter-ruby
+Working copy of https://github.com/tree-sitter/tree-sitter-ruby resolved at 0.23.1
+Creating working copy for https://github.com/alex-pinkus/tree-sitter-swift
+Working copy of https://github.com/alex-pinkus/tree-sitter-swift resolved at 0.7.3-with-generated-files
+Creating working copy for https://github.com/tree-sitter-grammars/tree-sitter-yaml
+Working copy of https://github.com/Joncallim/Neon resolved at cd14f22ae8f8402b175a0bafd87560b78c7549e9
+Creating working copy for https://github.com/Joncallim/swift-cmark
+Working copy of https://github.com/Joncallim/swift-cmark resolved at ff6d22e5eeacccf38a8276b27ddb9dc31ab16f5a
+Creating working copy for https://github.com/tree-sitter-grammars/tree-sitter-toml
+Working copy of https://github.com/Joncallim/SwiftTreeSitter resolved at 0beea992c4246f93a122de846c8611c9be19aeb7
+Working copy of https://github.com/tree-sitter-grammars/tree-sitter-toml resolved at 0.7.0
+Creating working copy for https://github.com/tree-sitter/tree-sitter-cpp
+Creating working copy for https://github.com/pointfreeco/swift-concurrency-extras
+Working copy of https://github.com/pointfreeco/swift-concurrency-extras resolved at 1.4.1
+Creating working copy for https://github.com/tree-sitter/tree-sitter-html
+Working copy of https://github.com/tree-sitter/tree-sitter-html resolved at 0.23.2
+Creating working copy for https://github.com/tree-sitter/tree-sitter-python
+Working copy of https://github.com/tree-sitter/tree-sitter-cpp resolved at 0.23.4
+Creating working copy for https://github.com/Joncallim/textual
+Working copy of https://github.com/tree-sitter/tree-sitter-python resolved at 0.23.6
+Creating working copy for https://github.com/tree-sitter/tree-sitter-bash
+Working copy of https://github.com/Joncallim/textual resolved at c52cb5834c4695109aad2cb66294eafbc8f264c8
+Creating working copy for https://github.com/tree-sitter-grammars/tree-sitter-xml
+Working copy of https://github.com/tree-sitter/tree-sitter-bash resolved at 0.25.1
+Creating working copy for https://github.com/jpsim/Yams
+Working copy of https://github.com/tree-sitter-grammars/tree-sitter-xml resolved at 0.7.0
+Working copy of https://github.com/jpsim/Yams resolved at 6.2.2
+Working copy of https://github.com/tree-sitter-grammars/tree-sitter-yaml resolved at 0.7.0
+[1/1] Compiling plugin GenerateManual
+[2/2] Compiling plugin GenerateDoccReference
+Building for debugging...
+[2/68] /Users/runner/work/_temp/heading-anchor-probe/.build/arm64-apple-macosx/debug/HeadingAnchorProbePackageTests.derived/runner.swift
+[3/68] Write swift-version--DC8059B11DF2811.txt
+[4/68] Compiling cmark-gfm-extensions tagfilter.c
+[5/68] Compiling cmark-gfm-extensions strikethrough.c
+[6/68] Compiling cmark-gfm-extensions tasklist.c
+[7/68] Compiling cmark-gfm-extensions ext_scanners.c
+[8/68] Compiling cmark-gfm-extensions table.c
+[9/68] Compiling cmark-gfm-extensions core-extensions.c
+[10/68] Compiling cmark-gfm xml.c
+[11/68] Compiling cmark-gfm utf8.c
+[12/68] Compiling cmark-gfm syntax_extension.c
+[13/68] Compiling cmark-gfm render.c
+[14/68] Compiling cmark-gfm registry.c
+[15/68] Compiling cmark-gfm references.c
+[16/68] Compiling cmark-gfm scanners.c
+[17/68] Compiling cmark-gfm plugin.c
+[18/68] Compiling cmark-gfm plaintext.c
+[19/68] Compiling cmark-gfm-extensions autolink.c
+[20/68] Compiling cmark-gfm node.c
+[21/68] Compiling cmark-gfm map.c
+[22/68] Compiling cmark-gfm man.c
+[23/68] Compiling cmark-gfm linked_list.c
+[24/68] Compiling cmark-gfm latex.c
+[25/68] Compiling cmark-gfm iterator.c
+[26/68] Compiling cmark-gfm html.c
+[27/68] Compiling cmark-gfm houdini_html_u.c
+[28/68] Compiling cmark-gfm inlines.c
+[29/68] Compiling cmark-gfm houdini_html_e.c
+[30/68] Compiling cmark-gfm houdini_href_e.c
+[31/68] Compiling cmark-gfm footnotes.c
+[32/68] Compiling cmark-gfm cmark_ctype.c
+[33/68] Compiling cmark-gfm commonmark.c
+[34/68] Compiling cmark-gfm cmark.c
+[35/68] Compiling cmark-gfm buffer.c
+[35/68] Write sources
+[41/68] Compiling cmark-gfm arena.c
+[41/68] Copying Tomorrow Light.json
+[41/68] Copying Tomorrow Dark.json
+[41/68] Copying Slate.json
+[45/68] Copying Paper.json
+[45/68] Copying Midnight.json
+[45/68] Copying High Contrast Light.json
+[45/68] Copying High Contrast Dark.json
+[45/68] Copying Daybreak.json
+[45/68] Copying structural.css
+[45/68] Copying Localizable.xcstrings
+[45/68] Write sources
+[58/68] Compiling cmark-gfm blocks.c
+[59/114] Compiling writer.c
+[61/133] Emitting module LocalResourceAccess
+[62/135] Compiling LocalResourceAccess ResourceReference.swift
+[63/135] Compiling LocalResourceAccess ResourceTypes.swift
+[64/135] Compiling Themes ResolvedPresentationPalette.swift
+[65/135] Compiling Themes StrictThemeJSON.swift
+[66/135] Compiling Themes BundledThemes.swift
+[67/135] Compiling Themes DiagramPalette.swift
+[67/135] Compiling scanner.c
+[68/135] Compiling reader.c
+[69/135] Compiling parser.c
+[70/135] Compiling emitter.c
+[71/135] Compiling api.c
+[72/135] Compiling CAtomic CAtomic.c
+[74/150] Compiling Yams Node.Alias.swift
+[75/150] Compiling Yams Node.Mapping.swift
+[76/150] Compiling Yams Node.Scalar.swift
+[77/150] Compiling Yams Node.Sequence.swift
+[78/150] Compiling Yams Node.swift
+[79/150] Compiling Yams Parser.swift
+[80/150] Compiling Yams RedundancyAliasingStrategy.swift
+[81/157] Compiling Yams YamlTagProviding.swift
+[82/157] Compiling SwiftSoup Exception.swift
+[83/157] Compiling SwiftSoup FormElement.swift
+[84/157] Compiling SwiftSoup HtmlTreeBuilder.swift
+[85/157] Compiling SwiftSoup HtmlTreeBuilderState.swift
+[86/157] Compiling SwiftSoup LRUCache.swift
+[87/157] Compiling SwiftSoup Mutex.swift
+[88/157] Compiling SwiftSoup Node.swift
+[89/157] Compiling SwiftSoup NodeTraversor.swift
+[90/157] Compiling SwiftSoup NodeVisitor.swift
+[91/157] Compiling SwiftSoup OrderedSet.swift
+[92/157] Compiling SwiftSoup ParseError.swift
+[93/157] Compiling SwiftSoup ParseErrorList.swift
+[94/157] Compiling SwiftSoup ParseSettings.swift
+[95/157] Compiling SwiftSoup Parser.swift
+[96/157] Compiling SwiftSoup ParsingStrings.swift
+[97/157] Compiling SwiftSoup Pattern.swift
+[98/157] Compiling SwiftSoup Profiler.swift
+[99/157] Compiling SwiftSoup QueryParser.swift
+[100/157] Compiling SwiftSoup QueryParserCache.swift
+[101/177] Emitting module Yams
+[102/177] Compiling Yams AliasDereferencingStrategy.swift
+[103/177] Compiling Yams Anchor.swift
+[104/177] Compiling Yams Constructor.swift
+[105/177] Compiling Yams Decoder.swift
+[106/177] Compiling Yams Emitter.swift
+[107/177] Compiling Yams Encoder.swift
+[108/177] Compiling Yams Mark.swift
+[109/177] Compiling Yams Representer.swift
+[110/177] Compiling Yams Resolver.swift
+[111/177] Compiling Yams String+Yams.swift
+[112/177] Compiling Yams Tag.swift
+[113/177] Compiling Yams YamlAnchorProviding.swift
+[114/177] Compiling Yams YamlError.swift
+[116/226] Compiling Markdown SourceLocation.swift
+[117/226] Compiling Markdown Emphasis.swift
+[118/226] Compiling Markdown Image.swift
+[119/226] Compiling Markdown InlineAttributes.swift
+[120/226] Compiling Markdown Link.swift
+[121/226] Compiling Markdown Strikethrough.swift
+[122/226] Compiling Markdown Strong.swift
+[123/226] Compiling Markdown CustomInline.swift
+[124/226] Compiling Markdown InlineCode.swift
+[125/235] Emitting module SwiftSoup
+[126/235] Compiling Markdown Heading.swift
+[127/235] Compiling Markdown ThematicBreak.swift
+[128/235] Compiling Markdown Table.swift
+[129/235] Compiling Markdown TableBody.swift
+[130/235] Compiling Markdown TableCell.swift
+[131/235] Compiling Markdown TableCellContainer.swift
+[132/235] Compiling Markdown TableHead.swift
+[133/235] Compiling Markdown TableRow.swift
+[134/235] Compiling Markdown Replacement.swift
+[144/235] Compiling Themes ThemeFile.swift
+[145/235] Compiling Themes ThemeFileValidation.swift
+[166/235] Compiling Themes ThemeImportPlan.swift
+[167/235] Compiling Themes ThemePreferenceStore.swift
+[168/235] Compiling Themes ThemeReadability.swift
+[169/235] Compiling Themes ThemeStorageTypes.swift
+[170/235] Compiling Themes Themes.swift
+[171/235] Compiling Themes TokenStyle.swift
+[172/235] Compiling Themes resource_bundle_accessor.swift
+[173/235] Compiling Markdown LiteralMarkup.swift
+[174/235] Compiling Markdown Markup.swift
+[175/235] Compiling Markdown MarkupChildren.swift
+[176/235] Compiling Markdown MarkupData.swift
+[177/235] Compiling Markdown ParserReferenceDefinition.swift
+[178/235] Compiling Markdown PlainTextConvertibleMarkup.swift
+[179/235] Compiling Markdown RawMarkup.swift
+[180/235] Compiling Markdown BlockDirective.swift
+[181/235] Compiling Markdown BlockQuote.swift
+[182/235] Compiling Markdown CustomBlock.swift
+[183/235] Compiling Markdown DoxygenAbstract.swift
+[184/235] Compiling Markdown DoxygenDiscussion.swift
+[185/235] Compiling Markdown DoxygenNote.swift
+[186/235] Compiling Markdown DoxygenParameter.swift
+[187/235] Compiling Markdown DoxygenReturns.swift
+[188/235] Compiling Markdown ListItem.swift
+[189/235] Compiling Markdown OrderedList.swift
+[190/235] Compiling Markdown UnorderedList.swift
+[191/235] Compiling Markdown Paragraph.swift
+[192/235] Compiling Markdown CodeBlock.swift
+[193/235] Compiling Markdown HTMLBlock.swift
+[194/235] Emitting module Markdown
+[204/258] Compiling Markdown BlockDirectiveParser.swift
+[205/258] Compiling Markdown CommonMarkConverter.swift
+[206/258] Compiling Markdown LazySplitLines.swift
+[207/258] Compiling Markdown ParseOptions.swift
+[208/258] Compiling Markdown RangeAdjuster.swift
+[209/258] Compiling Markdown RangerTracker.swift
+[210/258] Compiling Markdown MarkupRewriter.swift
+[211/258] Compiling Markdown BasicBlockContainer.swift
+[212/258] Compiling Markdown BasicInlineContainer.swift
+[213/258] Compiling Markdown BlockContainer.swift
+[214/258] Compiling Markdown BlockMarkup.swift
+[215/258] Compiling Markdown InlineContainer.swift
+[216/258] Compiling Markdown InlineMarkup.swift
+[217/258] Compiling Markdown ListItemContainer.swift
+[218/258] Compiling Markdown AtomicCounter.swift
+[219/258] Compiling Markdown CharacterExtensions.swift
+[220/258] Compiling Markdown CollectionExtensions.swift
+[221/258] Compiling Markdown StringExtensions.swift
+[222/258] Compiling Markdown MarkupVisitor.swift
+[223/258] Compiling Markdown MarkupWalker.swift
+[224/258] Compiling Markdown HTMLFormatter.swift
+[225/258] Compiling Markdown MarkupFormatter.swift
+[226/258] Compiling Markdown MarkupTreeDumper.swift
+[247/275] Emitting module Themes
+[248/275] Compiling MarkdownEngine DirectiveSourceCoverage.swift
+[249/275] Compiling MarkdownEngine FrontMatter.swift
+[250/275] Compiling MarkdownEngine HeadingAnchorAllocator.swift
+[251/275] Compiling MarkdownEngine HeadingAnchorIndex.swift
+[252/275] Compiling MarkdownEngine MarkdownBlock.swift
+[253/275] Compiling MarkdownEngine MarkdownDocument.swift
+[254/275] Compiling MarkdownEngine MarkdownEngineModule.swift
+[255/275] Compiling MarkdownEngine MarkdownParseOptions.swift
+[256/275] Compiling MarkdownEngine MarkdownParseSession.swift
+[257/275] Emitting module MarkdownEngine
+[259/275] Compiling MarkdownEngine MarkdownParseStore.swift
+[260/275] Compiling MarkdownEngine MarkdownReferenceRepair+LiteralDelimiters.swift
+[261/275] Compiling MarkdownEngine MarkdownReferenceRepair.swift
+[262/275] Compiling MarkdownEngine MarkdownReferenceReplayIndex.swift
+[263/275] Compiling MarkdownEngine MarkdownSourceFactProjection.swift
+[264/275] Compiling MarkdownEngine MarkdownSourceFacts.swift
+[265/275] Compiling MarkdownEngine MarkdownSourceFingerprint.swift
+[274/282] Compiling MarkdownEngine MarkdownSourceLinkProjection.swift
+[275/282] Compiling MarkdownEngine ParseEngine+Foundation.swift
+[276/282] Compiling MarkdownEngine ParseEngine+YAMLGuards.swift
+[277/282] Compiling MarkdownEngine ParseEngine.swift
+[278/282] Compiling MarkdownEngine ParseExecuting.swift
+[279/282] Compiling MarkdownEngine SourceMap.swift
+[280/282] Compiling MarkdownEngine String+MarkdownLines.swift
+[281/332] Compiling ExportService CMarkGFM+Types.swift
+[282/332] Compiling ExportService CMarkGFM.swift
+[283/332] Compiling ExportService DerivedContentComposer+References.swift
+[284/332] Compiling ExportService DerivedContentComposer+Validation.swift
+[285/332] Emitting module Contributions
+[286/332] Compiling ExportService BoundedExportHTML.swift
+[287/332] Compiling ExportService BuiltInExportTemplate.swift
+[288/332] Compiling ExportService CMarkGFM+Errors.swift
+[289/332] Compiling ExportService CMarkGFM+TreeTransform.swift
+[290/335] Compiling Contributions DeterministicTestContribution.swift
+[291/335] Compiling Contributions TOCContribution.swift
+[292/335] Compiling Contributions resource_bundle_accessor.swift
+[293/335] Emitting module ExportService
+[294/355] Compiling ExportService ExportComposer.swift
+[295/355] Compiling ExportService ExportDerivedContribution.swift
+[296/355] Compiling ExportService ExportDerivedDiagnosticText.swift
+[297/355] Compiling ExportService ExportDestinationAdmission.swift
+[298/355] Compiling ExportService ExportDiagnostic.swift
+[299/355] Compiling ExportService ExportError.swift
+[300/355] Compiling ExportService ExportFileRetirement.swift
+[301/355] Compiling ExportService ExportFileWriter.swift
+[302/355] Compiling ExportService ExportHTMLWriter.swift
+[303/355] Compiling ExportService ExportImageURLScanner.swift
+[304/355] Compiling ExportService ExportJournalRecord.swift
+[305/355] Compiling ExportService ExportJournalStorage.swift
+[306/355] Compiling ExportService ExportJournalStore.swift
+[307/355] Compiling ExportService ExportLifetimeLease.swift
+[308/355] Compiling ExportService ExportManagedCompanions+Inventory.swift
+[309/355] Compiling ExportService ExportManagedCompanions+Recovery.swift
+[310/355] Compiling ExportService ExportManagedCompanions+Staging.swift
+[311/355] Compiling ExportService ExportManagedCompanions.swift
+[312/355] Compiling ExportService ExportManifest.swift
+[313/355] Compiling ExportService ExportMetadata.swift
+[325/355] Compiling ExportService EmittedHeadingMatcher.swift
+[326/355] Compiling ExportService ExportCompanionAuthentication.swift
+[327/355] Compiling ExportService ExportCompanionFiles.swift
+[328/355] Compiling ExportService ExportCompanionInventoryRecord.swift
+[329/355] Compiling ExportService ExportCompanionJournal.swift
+[330/355] Compiling ExportService ExportCompanionMutation.swift
+[331/355] Compiling ExportService ExportCompanionPendingRecord.swift
+[332/355] Compiling ExportService ExportComposer+DerivedRender.swift
+[333/355] Compiling ExportService ExportComposer+Diagnostics.swift
+[334/375] Compiling ExportService ExportOwnedFileReceipt.swift
+[335/375] Compiling ExportService ExportPrimaryRecovery.swift
+[336/375] Compiling ExportService ExportPublicationFilesystem.swift
+[337/375] Compiling ExportService ExportPublicationGate.swift
+[338/375] Compiling ExportService ExportPublicationRetention.swift
+[339/375] Compiling ExportService ExportRecoveryLocation.swift
+[340/375] Compiling ExportService ExportRecoveryProtection.swift
+[341/375] Compiling ExportService ExportRequest.swift
+[342/375] Compiling ExportService ExportResource.swift
+[343/375] Compiling ExportService ExportResourceAccess.swift
+[344/375] Compiling ExportService ExportResourceBudget.swift
+[345/375] Compiling ExportService ExportResourceResolver.swift
+[346/375] Compiling ExportService ExportResourceSlots.swift
+[347/375] Compiling ExportService ExportResult.swift
+[348/375] Compiling ExportService ExportService+ValidatedSVG.swift
+[349/375] Compiling ExportService ExportService.swift
+[350/375] Compiling ExportService ExportTarget.swift
+[351/375] Compiling ExportService ExportThemeStylesheet.swift
+[352/375] Compiling ExportService ExportURLPolicy.swift
+[353/375] Compiling ExportService HTMLFilePublicationInput.swift
+[354/375] Compiling ExportService HTMLTagScanner.swift
+[355/375] Compiling ExportService HeadingAnchorPreparation.swift
+[356/375] Compiling ExportService InlineSentinelIndex.swift
+[357/375] Compiling ExportService OnLargeStack.swift
+[358/375] Compiling ExportService PreparedExportDocument.swift
+[359/375] Compiling ExportService SVGAssemblyOwnership+CSS.swift
+[360/375] Compiling ExportService SVGAssemblyOwnership+Outside.swift
+[361/375] Compiling ExportService SVGAssemblyOwnership+Raw.swift
+[362/375] Compiling ExportService SVGAssemblyOwnership+References.swift
+[363/375] Compiling ExportService SVGAssemblyOwnership.swift
+[364/375] Compiling ExportService SVGIDNamespace+Animation.swift
+[365/375] Compiling ExportService SVGIDNamespace+CSS.swift
+[366/375] Compiling ExportService SVGIDNamespace+Fonts.swift
+[367/375] Compiling ExportService SVGIDNamespace+Marked.swift
+[368/375] Compiling ExportService SVGIDNamespace+Selectors.swift
+[369/375] Compiling ExportService SVGIDNamespace.swift
+[370/375] Compiling ExportService SplicedBodySourceMap.swift
+[371/375] Compiling ExportService ValidatedExportHTML.swift
+[372/375] Compiling ExportService ValidatedFilePublication.swift
+[373/375] Compiling ExportService resource_bundle_accessor.swift
+[374/377] Compiling HeadingAnchorProbe HeadingAnchorPreparationTests.swift
+[375/377] Emitting module HeadingAnchorProbe
+[376/379] Compiling HeadingAnchorProbePackageTests runner.swift
+[377/379] Emitting module HeadingAnchorProbePackageTests
+[377/379] Write Objects.LinkFileList
+[378/379] Linking HeadingAnchorProbePackageTests
+Build complete! (388.75s)
+Test Suite 'All tests' started at 2026-11-05 23:51:44.921.
+Test Suite 'All tests' passed at 2026-11-05 23:51:44.928.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.007) seconds
+◇ Test run started.
+↳ Testing Library Version: 1085
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite HeadingAnchorPreparationTests started.
+◇ Test ordinaryMarkdownUsesTheSharedAllocatorAndOriginalLifetime() started.
+✔ Test ordinaryMarkdownUsesTheSharedAllocatorAndOriginalLifetime() passed after 0.009 seconds.
+◇ Test emittedRawIdentifiersReserveExactDecodedValuesIncludingBothUnicodeSpellings() started.
+✔ Test emittedRawIdentifiersReserveExactDecodedValuesIncludingBothUnicodeSpellings() passed after 0.027 seconds.
+◇ Test aDistinctDecomposedIdentifierDoesNotConsumeTheComposedHeading() started.
+✔ Test aDistinctDecomposedIdentifierDoesNotConsumeTheComposedHeading() passed after 0.002 seconds.
+◇ Test codeAndEscapedMarkupDoNotInventAuthoredReservations() started.
+✔ Test codeAndEscapedMarkupDoNotInventAuthoredReservations() passed after 0.001 seconds.
+◇ Test anEmptyHeadingInventoryDoesNotAcquireADOMGate() started.
+✔ Test anEmptyHeadingInventoryDoesNotAcquireADOMGate() passed after 0.001 seconds.
+◇ Test malformedMarkupCannotPublishAnUnverifiableHeadingIndex() started.
+✔ Test malformedMarkupCannotPublishAnUnverifiableHeadingIndex() passed after 0.001 seconds.
+◇ Test aDifferentSourceCannotBorrowThePublishedParse() started.
+✔ Test aDifferentSourceCannotBorrowThePublishedParse() passed after 0.001 seconds.
+◇ Test pureMarkdownAboveTheDOMBudgetStillBuildsItsIndex() started.
+✔ Test pureMarkdownAboveTheDOMBudgetStillBuildsItsIndex() passed after 3.701 seconds.
+◇ Test actualOversizedAuthoredMarkupRetainsTheExistingDOMAnalysisBudget() started.
+✔ Test actualOversizedAuthoredMarkupRetainsTheExistingDOMAnalysisBudget() passed after 3.298 seconds.
+◇ Test oversizedSourceIsRejectedBeforeRenderingAnUnrelatedParse() started.
+✔ Test oversizedSourceIsRejectedBeforeRenderingAnUnrelatedParse() passed after 0.450 seconds.
+◇ Test anOversizedHeadingInventoryIsRejectedBeforeAllocatingNavigationTargets() started.
+✔ Test anOversizedHeadingInventoryIsRejectedBeforeAllocatingNavigationTargets() passed after 1.196 seconds.
+◇ Test cancellationDoesNotReturnAnAuthoritativeIndex() started.
+✔ Test cancellationDoesNotReturnAnAuthoritativeIndex() passed after 0.002 seconds.
+◇ Test reservedNamespaceDuplicateCannotHideBehindAGraphemeBoundary() started.
+✔ Test reservedNamespaceDuplicateCannotHideBehindAGraphemeBoundary() passed after 0.001 seconds.
+◇ Test plainAndLinkedTOCsPreserveLiteralLabelsWithoutInventingMarkup(_:) started.
+◇ Test case passing 1 argument source → "# &amp;lt; &amp;#35;
+" to plainAndLinkedTOCsPreserveLiteralLabelsWithoutInventingMarkup(_:) started.
+◇ Test case passing 1 argument source → "# ؀\*literal؀\* and \<tag\> &amp;lt;
+" to plainAndLinkedTOCsPreserveLiteralLabelsWithoutInventingMarkup(_:) started.
+✔ Test plainAndLinkedTOCsPreserveLiteralLabelsWithoutInventingMarkup(_:) with 2 test cases passed after 0.016 seconds.
+✔ Suite HeadingAnchorPreparationTests passed after 8.710 seconds.
+✔ Test run with 14 tests in 1 suite passed after 8.711 seconds.

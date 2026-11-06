@@ -1,0 +1,173 @@
+{
+  "samples": [
+    {
+      "before": [
+        {
+          "count": 128,
+          "milliseconds": 1.545417,
+          "sha256": "1a0a9351fc27b2ab674e8f7220a40d9d3a9b0f4999c6c5d613463e1e2bdd49e1"
+        },
+        {
+          "count": 512,
+          "milliseconds": 17.874709,
+          "sha256": "c456d81970f75d152ca4f9e1f29accc9064b63ac2c6d679e45eae4111eeba520"
+        },
+        {
+          "count": 2048,
+          "milliseconds": 265.09775,
+          "sha256": "531561e2e13aa7e915e303c55d29f6555bfc71be96db2c0f2a7f04f0c09f2bf4"
+        },
+        {
+          "count": 4096,
+          "milliseconds": 1040.2185,
+          "sha256": "f50a5a2f40cb2f2b2acab1b70ac9bdf43cff90ccaad63fd581922561fa5fb063"
+        },
+        {
+          "mixedCount": 2048,
+          "sha256": "929858c20c512461cb7b256d2fba18f50b05600e17818a6d11fb6bc68db16631"
+        }
+      ],
+      "after": [
+        {
+          "count": 128,
+          "milliseconds": 1.101666,
+          "sha256": "1a0a9351fc27b2ab674e8f7220a40d9d3a9b0f4999c6c5d613463e1e2bdd49e1"
+        },
+        {
+          "count": 512,
+          "milliseconds": 1.516792,
+          "sha256": "c456d81970f75d152ca4f9e1f29accc9064b63ac2c6d679e45eae4111eeba520"
+        },
+        {
+          "count": 2048,
+          "milliseconds": 5.636,
+          "sha256": "531561e2e13aa7e915e303c55d29f6555bfc71be96db2c0f2a7f04f0c09f2bf4"
+        },
+        {
+          "count": 4096,
+          "milliseconds": 9.243542,
+          "sha256": "f50a5a2f40cb2f2b2acab1b70ac9bdf43cff90ccaad63fd581922561fa5fb063"
+        },
+        {
+          "mixedCount": 2048,
+          "sha256": "929858c20c512461cb7b256d2fba18f50b05600e17818a6d11fb6bc68db16631"
+        }
+      ]
+    },
+    {
+      "before": [
+        {
+          "count": 128,
+          "milliseconds": 1.837833,
+          "sha256": "1a0a9351fc27b2ab674e8f7220a40d9d3a9b0f4999c6c5d613463e1e2bdd49e1"
+        },
+        {
+          "count": 512,
+          "milliseconds": 21.188709,
+          "sha256": "c456d81970f75d152ca4f9e1f29accc9064b63ac2c6d679e45eae4111eeba520"
+        },
+        {
+          "count": 2048,
+          "milliseconds": 258.990666,
+          "sha256": "531561e2e13aa7e915e303c55d29f6555bfc71be96db2c0f2a7f04f0c09f2bf4"
+        },
+        {
+          "count": 4096,
+          "milliseconds": 1071.3398339999999,
+          "sha256": "f50a5a2f40cb2f2b2acab1b70ac9bdf43cff90ccaad63fd581922561fa5fb063"
+        },
+        {
+          "mixedCount": 2048,
+          "sha256": "929858c20c512461cb7b256d2fba18f50b05600e17818a6d11fb6bc68db16631"
+        }
+      ],
+      "after": [
+        {
+          "count": 128,
+          "milliseconds": 0.402292,
+          "sha256": "1a0a9351fc27b2ab674e8f7220a40d9d3a9b0f4999c6c5d613463e1e2bdd49e1"
+        },
+        {
+          "count": 512,
+          "milliseconds": 0.521917,
+          "sha256": "c456d81970f75d152ca4f9e1f29accc9064b63ac2c6d679e45eae4111eeba520"
+        },
+        {
+          "count": 2048,
+          "milliseconds": 1.942792,
+          "sha256": "531561e2e13aa7e915e303c55d29f6555bfc71be96db2c0f2a7f04f0c09f2bf4"
+        },
+        {
+          "count": 4096,
+          "milliseconds": 3.867958,
+          "sha256": "f50a5a2f40cb2f2b2acab1b70ac9bdf43cff90ccaad63fd581922561fa5fb063"
+        },
+        {
+          "mixedCount": 2048,
+          "sha256": "929858c20c512461cb7b256d2fba18f50b05600e17818a6d11fb6bc68db16631"
+        }
+      ]
+    },
+    {
+      "before": [
+        {
+          "count": 128,
+          "milliseconds": 1.400333,
+          "sha256": "1a0a9351fc27b2ab674e8f7220a40d9d3a9b0f4999c6c5d613463e1e2bdd49e1"
+        },
+        {
+          "count": 512,
+          "milliseconds": 18.255375,
+          "sha256": "c456d81970f75d152ca4f9e1f29accc9064b63ac2c6d679e45eae4111eeba520"
+        },
+        {
+          "count": 2048,
+          "milliseconds": 279.018458,
+          "sha256": "531561e2e13aa7e915e303c55d29f6555bfc71be96db2c0f2a7f04f0c09f2bf4"
+        },
+        {
+          "count": 4096,
+          "milliseconds": 1049.419833,
+          "sha256": "f50a5a2f40cb2f2b2acab1b70ac9bdf43cff90ccaad63fd581922561fa5fb063"
+        },
+        {
+          "mixedCount": 2048,
+          "sha256": "929858c20c512461cb7b256d2fba18f50b05600e17818a6d11fb6bc68db16631"
+        }
+      ],
+      "after": [
+        {
+          "count": 128,
+          "milliseconds": 0.36475,
+          "sha256": "1a0a9351fc27b2ab674e8f7220a40d9d3a9b0f4999c6c5d613463e1e2bdd49e1"
+        },
+        {
+          "count": 512,
+          "milliseconds": 0.47825,
+          "sha256": "c456d81970f75d152ca4f9e1f29accc9064b63ac2c6d679e45eae4111eeba520"
+        },
+        {
+          "count": 2048,
+          "milliseconds": 1.884084,
+          "sha256": "531561e2e13aa7e915e303c55d29f6555bfc71be96db2c0f2a7f04f0c09f2bf4"
+        },
+        {
+          "count": 4096,
+          "milliseconds": 3.943458,
+          "sha256": "f50a5a2f40cb2f2b2acab1b70ac9bdf43cff90ccaad63fd581922561fa5fb063"
+        },
+        {
+          "mixedCount": 2048,
+          "sha256": "929858c20c512461cb7b256d2fba18f50b05600e17818a6d11fb6bc68db16631"
+        }
+      ]
+    }
+  ],
+  "all_outputs_match_frozen": true,
+  "source_sha256": {
+    "allocator-before-source.swift": "530b4061109125010e3e210f28537c263951903123a329cf324b967dc6d3e82a",
+    "allocator-after-source.swift": "e49016d1689392486a264ffb1dbef7b14aa543fe9a9cb6ebebde09466bc5bf7b",
+    "main.swift": "e60ef3a25a38d579fd26df4ac289c5c5a762a01b72e8771033ada64c3e3d701d"
+  },
+  "scope": "Optimized Foundation allocator component; not full app/parse or release acceptance"
+}

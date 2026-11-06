@@ -226,7 +226,7 @@ let package = Package(
         .testTarget(
             name: "ExportServiceTests",
             dependencies: [
-                "ExportService", "MarkdownEngine", "LocalResourceAccess",
+                "ExportService", "MarkdownEngine", "LocalResourceAccess", "Contributions",
                 .product(name: "SwiftSoup", package: "SwiftSoup"),
             ]
         ),

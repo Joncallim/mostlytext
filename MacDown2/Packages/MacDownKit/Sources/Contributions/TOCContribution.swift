@@ -145,18 +145,19 @@ public struct TOCContribution: Contributing {
     /// re-interpreted as syntax once re-embedded in this newly generated
     /// list; backslash-escaping is valid anywhere in CommonMark and has no
     /// effect beyond presenting the literal character, so escaping every
-    /// occurrence is always safe.
+    /// occurrence is always safe. Work by scalar: a Prepend or combining mark
+    /// must not hide an ASCII punctuation token inside a larger Character.
     private static func escaped(_ title: String) -> String {
         var result = ""
         result.reserveCapacity(title.count)
-        for character in title {
-            if escapableCharacters.contains(character) {
+        for scalar in title.unicodeScalars {
+            let value = scalar.value
+            if (0x21 ... 0x2F).contains(value) || (0x3A ... 0x40).contains(value) ||
+                (0x5B ... 0x60).contains(value) || (0x7B ... 0x7E).contains(value) {
                 result.append("\\")
             }
-            result.append(character)
+            result.unicodeScalars.append(scalar)
         }
         return result
     }
-
-    private static let escapableCharacters = Set("\\`*_{}[]()#+-.!<>|~")
 }
