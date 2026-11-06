@@ -1,4 +1,5 @@
 import AppKit
+import CoreGraphics
 import Foundation
 
 /// Hosted-only normal application launch and identity-bound teardown. Never executes under XCTest.
@@ -22,6 +23,7 @@ struct NativeCLIAppHost {
         else { throw HostError.refused }
         let application: NSRunningApplication
         let launchDate: Date
+        var windows: [[String: Any]]?
         if arguments[1] == "launch" {
             guard NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText").isEmpty
             else { throw HostError.refused }
@@ -43,23 +45,41 @@ struct NativeCLIAppHost {
             launchDate = Date(timeIntervalSince1970: birth)
             let accepted: Bool
             switch arguments[1] {
+            case "inspect":
+                windows = (CGWindowListCopyWindowInfo(.optionAll, kCGNullWindowID) as? [[String: Any]])?
+                    .filter { ($0[kCGWindowOwnerPID as String] as? Int32) == pid }
+                    .prefix(32).map { row in
+                        var visible: [String: Any] = [:]
+                        for key in [kCGWindowNumber, kCGWindowLayer, kCGWindowBounds, kCGWindowIsOnscreen] {
+                            visible[key as String] = row[key as String]
+                        }
+                        if let name = row[kCGWindowName as String] as? String {
+                            visible["name"] = String(name.prefix(160))
+                        }
+                        return visible
+                    }
+                accepted = true
             case "terminate": accepted = application.terminate()
             case "cleanup": accepted = application.forceTerminate()
             default: throw HostError.refused
             }
             guard accepted else { throw HostError.refused }
             let deadline = ContinuousClock.now.advanced(by: .seconds(8))
-            while !application.isTerminated, ContinuousClock.now < deadline {
+            while arguments[1] != "inspect", !application.isTerminated, ContinuousClock.now < deadline {
                 try await Task.sleep(for: .milliseconds(20))
             }
-            guard application.isTerminated else { throw HostError.refused }
+            guard arguments[1] == "inspect" || application.isTerminated else { throw HostError.refused }
         }
-        let record: [String: Any] = [
+        var record: [String: Any] = [
             "operation": arguments[1], "pid": application.processIdentifier,
             "birth": launchDate.timeIntervalSince1970, "app": appURL.path,
             "executable": executable.resolvingSymlinksInPath().path,
             "terminated": application.isTerminated
         ]
+        if arguments[1] == "inspect" {
+            record["window_metadata_available"] = windows != nil
+            record["windows"] = windows ?? []
+        }
         let data = try JSONSerialization.data(withJSONObject: record, options: [.sortedKeys])
         print(String(decoding: data, as: UTF8.self))
     }

@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import platform
 import plistlib
+import stat
 import subprocess
 import sys
 import time
@@ -52,6 +53,60 @@ def main():
     current = None
     wait_process = None
     successes = {}
+    current_root_was_absent = not (Path.home() / "Library/Application Support/MostlyText").exists()
+
+    def storage_snapshot(label):
+        support = Path.home() / "Library/Application Support"
+        roots = [support / "MostlyText", support / "MacDown 2", support / (identity + "-editor-import-v1")]
+        records, retained = [], 0
+
+        def visit(path, depth=0, parent=None):
+            nonlocal retained
+            if len(records) >= 256 or depth > 8:
+                return
+            try:
+                entry = os.stat(path if parent is None else path.name, dir_fd=parent, follow_symlinks=False)
+            except FileNotFoundError:
+                records.append({"path": str(path), "absent": True})
+                return
+            row = {"path": str(path), "uid": entry.st_uid, "mode": oct(entry.st_mode), "bytes": entry.st_size}
+            records.append(row)
+            if stat.S_ISDIR(entry.st_mode):
+                directory = os.open(path if parent is None else path.name,
+                                    os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=parent)
+                try:
+                    opened = os.fstat(directory)
+                    assert (opened.st_dev, opened.st_ino) == (entry.st_dev, entry.st_ino)
+                    for name in sorted(os.listdir(directory)):
+                        visit(path / name, depth + 1, directory)
+                finally:
+                    os.close(directory)
+            elif (current_root_was_absent and label != "before-launch" and stat.S_ISREG(entry.st_mode)
+                  and path.is_relative_to(roots[0]) and path.suffix == ".json"
+                  and entry.st_size <= 1024 * 1024 and retained < 16):
+                # Only this newly launched first-party installation's bounded migration/session JSON.
+                descriptor = os.open(path.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent)
+                try:
+                    opened = os.fstat(descriptor)
+                    assert (opened.st_dev, opened.st_ino, opened.st_size) == (entry.st_dev, entry.st_ino, entry.st_size)
+                    chunks, total = [], 0
+                    while total <= 1024 * 1024:
+                        chunk = os.read(descriptor, min(65536, 1024 * 1024 + 1 - total))
+                        if not chunk:
+                            break
+                        chunks.append(chunk)
+                        total += len(chunk)
+                    assert total <= 1024 * 1024
+                finally:
+                    os.close(descriptor)
+                retained += 1
+                destination = output / (label + "-record-" + str(retained) + ".json")
+                destination.write_bytes(b"".join(chunks))
+                row["retained_as"] = destination.name
+
+        for root in roots:
+            visit(root)
+        (output / (label + "-storage.json")).write_text(json.dumps(records, indent=2) + "\n")
 
     def persist():
         (output / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
@@ -89,20 +144,40 @@ def main():
             time.sleep(0.05)
         return endpoint.exists()
 
+    def observe_refusal(label, application):
+        try:
+            inspection = app_action("inspect", application)
+            (output / (label + "-windows.json")).write_text(json.dumps(inspection, indent=2) + "\n")
+            command(label + "-sample", ["sample", str(application["pid"]), "1", "-file", output / (label + ".sample.txt")])
+            logs = command(label + "-unified-log", ["log", "show", "--style", "json", "--last", "1m",
+                                                    "--predicate", "processIdentifier == " + str(application["pid"])])
+            (output / (label + "-unified-log.json")).write_text(logs["stdout"][:1024 * 1024])
+            storage_snapshot(label)
+        except Exception as error:
+            receipt.setdefault("observation_errors", []).append({"phase": label, "error": str(error)})
+            persist()
+
     key = "com.joncallim.macdown2.hasCompletedFirstRun"
     try:
         before = command("first-run-key-before", ["defaults", "read", identity, key])
         assert before["returncode"] != 0, "Runner is not a fresh first-run domain"
+        storage_snapshot("before-launch")
         current = app_action("launch")
         receipt["first_run_endpoint_observed"] = wait_for_endpoint()
         first = command("fresh-warm-file", [public, source])
         successes["fresh_warm_file"] = first["returncode"] == 0
+        if not successes["fresh_warm_file"]:
+            observe_refusal("fresh-refusal", current)
         app_action("terminate", current)
         current = None
         configured = command("configure-existing-first-run-key", ["defaults", "write", identity, key, "-bool", "true"])
         assert configured["returncode"] == 0
+        command("first-run-key-after-configuration", ["defaults", "read", identity, key])
         current = app_action("launch")
-        assert wait_for_endpoint(), "Configured installation did not start its actual endpoint"
+        ready = wait_for_endpoint()
+        if not ready:
+            observe_refusal("configured-refusal", current)
+        assert ready, "Configured installation did not start its actual endpoint"
         successes["configured_warm_file"] = command("configured-warm-file", [public, source])["returncode"] == 0
         successes["missing_file_rejected"] = command("missing-file", [public, output / "does-not-exist.md"])["returncode"] == 4
         wait_process = subprocess.Popen([str(public), "--wait", str(source)], stdin=subprocess.DEVNULL,

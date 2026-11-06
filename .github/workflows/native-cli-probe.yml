@@ -70,6 +70,8 @@ jobs:
             ${{ runner.temp }}/native-cli-owned/**
             ${{ runner.temp }}/native-cli-proof/receipt.json
             ${{ runner.temp }}/native-cli-proof/*.md
+            ${{ runner.temp }}/native-cli-proof/*.json
+            ${{ runner.temp }}/native-cli-proof/*.sample.txt
             ${{ runner.temp }}/native-cli-probe.log
           if-no-files-found: warn
       - name: Verify final dependency locks
