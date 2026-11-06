@@ -182,3 +182,71 @@ app-shell positive controls still exercise unmodified production mounts. The
 first failed selection is retained and needs confirmation from the new runtime
 attachment diagnostic and actual native app tests; it is not silently classified
 as a product pass. All five-second deadlines remain unchanged.
+
+
+## Debug and optimized qualification
+
+Execute the exact actual-product heading tests and the eight app math/heading
+suites in separate Debug and Release jobs, retaining each configuration's logs
+and source/pin receipts. Preserve each existing job/test deadline. The production
+Export test records three complete command-body exports for a source above 1 MiB
+with 4,096 duplicate headings, alongside its actual parser phase. Assert exactly
+one parse per export and every heading target count, including the final duplicate.
+Record raw samples, configuration and source size; these measurements include
+file publication but do not claim save-panel, typing latency or peak memory proof.
+This does not settle the broader resource-budget or whole-editor criteria.
+
+
+The final source review also removes a repeated root-by-element lookup: final SVG
+ownership builds one ID-to-element table, then inspects each disjoint root subtree.
+Reject a root inventory beyond the remaining 4,096-root allowance before per-root
+DOM parsing. Every rewritten root necessarily owns at least one ID, so this is an
+early application of the existing final 4,096-ID budget, not a smaller accepted
+input policy. Test an over-budget inventory, exhausted remainder and a positive
+multi-root fragment. No default strict SVG behavior changes.
+
+## Bounded native client after the second interaction stall
+
+The c916 native interaction step did not complete after more than six minutes;
+it was explicitly cancelled and is not a pass. Preserve its final output. The
+in-process NSAccessibilityProtocol press has no messaging timeout and can block
+the test's main actor, preventing the five-second presentation deadline from
+running. The exact stalled frame requires a captured stack; do not infer it from
+the last logged test alone.
+
+Use the real macOS AXUIElement client from a detached task instead. Search only
+this test process's focused window, require a unique native link role and exact
+label, set a finite messaging timeout, and bound traversal by time, depth and
+node count. Perform kAXPressAction through that client while the app main actor
+is free to handle it. There is no direct coordinator/callback fallback. Keep every
+source-selection, real Preview scroll, focus, layout and source-preservation
+assertion. Split-view focus is deliberately the already-mounted source editor;
+Preview-only focus must remain outside its detached editor.
+
+The hosted native execution wrapper will record only the exact test app under
+its own DerivedData path, capture bounded stack samples if execution stalls,
+and impose a ten-minute command-body ceiling below the existing 35-minute job
+ceiling. Existing five-second presentation deadlines are unchanged. An owned
+stalled process or command termination is a failure with retained diagnostics,
+never a synthetic test success. No local native client or product is executed.
+
+
+The preserved c916 output now supplies the exact exception stack: SwiftUI's
+`AppKitAccessibilityLinkRotorBridge.LinkElement` does not implement
+`accessibilityPerformAction:` inherited through `NSAccessibilityElement`'s direct
+`accessibilityPerformPress`. The Preview-only test's protocol call triggers an
+NSInvalidArgumentException, after which the run stops progressing. This classifies
+that specific harness failure; it does not explain the older package WebKit hang
+or the separate signal-11 failure under #15. The new AX client invokes the OS
+accessibility action API instead of that unsupported inherited protocol method.
+
+
+The c916 complete package run executes 3,701 tests/528 suites and fails one new
+fixture: its authored named anchor deliberately needs ordinary standalone HTML,
+but the fixture requested self-contained output, which correctly rejects authored
+raw HTML. The real Graphviz/D2/Mermaid canvas comparisons complete before that
+rejection with no failed pixel assertion. Retain this first failure. Test both
+normal-template variants: raw-free self-contained output and ordinary standalone
+output retaining the authored alias. Preserve the four vector diagrams, unique
+IDs, exact TOC target and no-resource-request assertions in both cases; do not
+change the production raw-HTML admission policy to satisfy the fixture.

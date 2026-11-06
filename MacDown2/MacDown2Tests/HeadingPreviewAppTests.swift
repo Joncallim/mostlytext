@@ -33,14 +33,14 @@ struct HeadingPreviewAppTests {
             HeadingNativeHarness
                 .link(label: "Target", in: mounted.content) != nil && !hasDiagnostics(in: mounted.content)
         }
-        let link = try #require(HeadingNativeHarness.link(label: "Target", in: mounted.content))
+        try #require(HeadingNativeHarness.link(label: "Target", in: mounted.content))
         let system = try #require(mounted.fixture.controller.editorStore
             .existingSystem(for: mounted.fixture.tabID.uuidString))
         mounted.window.makeKeyAndOrderFront(nil)
         mounted.window.makeKey()
         try #require(NSApp.keyWindow === mounted.window)
         system.selectionSet = .init(single: .init(location: 0, length: 0))
-        #expect(link.accessibilityPerformPress())
+        try await HeadingNativeHarness.pressLink(label: "Target")
         let expected = (valid as NSString).range(of: "# Target", options: .literal)
         try await HeadingNativeHarness.wait(in: mounted, stage: "recovered native link action") {
             system.selectionSet == EditorSelectionSet(single: expected)
@@ -70,14 +70,14 @@ struct HeadingPreviewAppTests {
         mounted.window.makeKeyAndOrderFront(nil)
         mounted.window.makeKey()
         try #require(NSApp.keyWindow === mounted.window)
-        link.setAccessibilityFocused(true)
+        try #require(mounted.window.makeFirstResponder(system.textView))
         let focus = mounted.window.firstResponder
         system.selectionSet = .init(
             ranges: [.init(location: 0, length: 1), .init(location: 2, length: 1)],
             primaryIndex: 1
         )
         try #require(system.selectionSet.ranges.count == 2)
-        #expect(link.accessibilityPerformPress(), "Invoke the actual native TOC link press handler")
+        try await HeadingNativeHarness.pressLink(label: heading.title)
         let expected = (source as NSString).range(of: "## " + heading.title, options: .literal)
         try #require(expected.location != NSNotFound)
         try await HeadingNativeHarness.wait(in: mounted, stage: "own heading selection and Preview scroll") {
@@ -99,13 +99,12 @@ struct HeadingPreviewAppTests {
             system.isDetachedFromEditorView && HeadingNativeHarness
                 .link(label: "Last heading", in: mounted.content) != nil
         }
-        let link = try #require(HeadingNativeHarness.link(label: "Last heading", in: mounted.content))
+        try #require(HeadingNativeHarness.link(label: "Last heading", in: mounted.content))
         let preview = try HeadingNativeHarness.previewScroll(in: mounted, editor: system)
         let before = preview.contentView.bounds.origin.y
         mounted.window.makeKeyAndOrderFront(nil)
         mounted.window.makeKey()
         try #require(NSApp.keyWindow === mounted.window)
-        link.setAccessibilityFocused(true)
         let focus = mounted.window.firstResponder
         try #require(focus !== system.textView, "Preview-only focus must be outside the detached editor")
         let original = EditorSelectionSet(
@@ -113,7 +112,7 @@ struct HeadingPreviewAppTests {
             primaryIndex: 1
         )
         system.selectionSet = original
-        #expect(link.accessibilityPerformPress())
+        try await HeadingNativeHarness.pressLink(label: "Last heading")
         try await HeadingNativeHarness.wait(in: mounted, stage: "Preview-only scroll without editor mount") {
             preview.contentView.bounds.origin.y > before + 50
         }

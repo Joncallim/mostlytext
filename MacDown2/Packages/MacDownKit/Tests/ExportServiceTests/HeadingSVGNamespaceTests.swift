@@ -103,6 +103,16 @@ struct HeadingSVGNamespaceTests {
         }
     }
 
+    @Test func rootAdmissionRejectsBeforeExceedingTheExistingFinalIdentifierBudget() throws {
+        let source = String(repeating: "<svg></svg>", count: HeadingSVGNamespace.maximumRoots + 1)
+        #expect(HeadingSVGNamespace.rewrite(source, occurrence: 0, family: "MTTOC-SVG-0-") == nil)
+        #expect(HeadingSVGNamespace.rewrite("<svg></svg>", occurrence: 0, family: "MTTOC-SVG-0-", rootLimit: 0) == nil)
+        let admitted = try #require(HeadingSVGNamespace.rewrite(
+            "<svg></svg><svg></svg>", occurrence: 0, family: "MTTOC-SVG-0-", rootLimit: 2
+        ))
+        #expect(admitted.roots.count == 2)
+    }
+
     @Test func unsupportedUnicodeSVGIDsAndInvalidNamespaceSyntaxRetainExistingRejection() {
         #expect(SVGIDNamespace.rewrite("<svg id='café'></svg>", occurrence: 0, family: "MTTOC-SVG-0-") == nil)
         #expect(SVGIDNamespace.rewrite("<svg id='own'></svg>", occurrence: 0, family: "bad\"family-") == nil)

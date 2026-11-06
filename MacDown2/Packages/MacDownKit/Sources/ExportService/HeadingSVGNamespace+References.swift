@@ -2,6 +2,10 @@ import Foundation
 import SwiftSoup
 
 extension HeadingSVGNamespace {
+    /// Every rewritten root owns at least one ID, so more roots cannot pass
+    /// the existing 4,096-ID final analysis budget. Reject before per-root DOM work.
+    static let maximumRoots = 4096
+
     struct Root {
         let id: String
         let declaredIDs: Set<String>
@@ -18,10 +22,13 @@ extension HeadingSVGNamespace {
     /// Unlike the strict SVG route, ordinary rendering preserves absent local
     /// definitions. Every reference is still renamed into this occurrence, and
     /// final composition must prove an absent definition remains absent.
-    static func rewrite(_ html: String, occurrence: Int, family: String) -> Fragment? {
+    static func rewrite(
+        _ html: String, occurrence: Int, family: String, rootLimit: Int = maximumRoots
+    ) -> Fragment? {
         guard SVGIDNamespace.validID(family), family.hasSuffix("-"), family.utf8.count <= 64 else { return nil }
         let scalars = Array(html.unicodeScalars)
-        guard let ranges = SVGIDNamespace.findRoots(in: scalars), !ranges.isEmpty else { return nil }
+        guard let ranges = SVGIDNamespace.findRoots(in: scalars), !ranges.isEmpty,
+              ranges.count <= min(rootLimit, maximumRoots) else { return nil }
         return referenceParserLock.withLock {
             var output = ""
             var roots: [Root] = []
@@ -62,17 +69,19 @@ extension HeadingSVGNamespace {
         let expected = Set(roots.flatMap(\.declaredIDs))
         guard expected.count == roots.reduce(0, { $0 + $1.declaredIDs.count }) else { return false }
         var actual: Set<String> = []
+        var elementsByID: [String: Element] = [:]
         for element in elements {
             if let name = try? element.attr("name"), name.utf8.starts(with: family.utf8) {
                 return false
             }
             if let id = try? element.attr("id"), id.utf8.starts(with: family.utf8) {
                 guard expected.contains(id), actual.insert(id).inserted else { return false }
+                elementsByID[id] = element
             }
         }
         guard actual == expected else { return false }
         for root in roots {
-            guard let element = elements.first(where: { (try? $0.attr("id")) == root.id }),
+            guard let element = elementsByID[root.id],
                   element.tagNameNormal() == "svg",
                   let subtree = try? element.getAllElements().array(),
                   let references = SVGAssemblyOwnership.referenceTargets(in: subtree), references == root.references

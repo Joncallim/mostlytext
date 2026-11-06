@@ -296,7 +296,10 @@ private struct DerivedContentPlan {
             return namespaced.html
         }
         if let family = context.svgNamespaceFamily {
-            guard let fragment = HeadingSVGNamespace.rewrite(sanitized, occurrence: index, family: family)
+            guard let fragment = HeadingSVGNamespace.rewrite(
+                sanitized, occurrence: index, family: family,
+                rootLimit: HeadingSVGNamespace.maximumRoots - headingSVGRoots.count
+            )
             else { return nil }
             headingSVGRoots.append(contentsOf: fragment.roots)
             return fragment.html

@@ -45,8 +45,8 @@ if args.verify:
         raise SystemExit("Heading probe inputs or immutable dependency owners/revisions changed")
     if args.require_result:
         log = re.sub(r"\x1b\[[0-9;]*m", "", (args.output / "probe.log").read_text())
-        if not re.search(r"Test run with 66 tests in 9 suites passed", log):
-            raise SystemExit("The sixty-six actual heading preparation/publication/navigation controls did not pass")
+        if not re.search(r"Test run with 67 tests in 9 suites passed", log):
+            raise SystemExit("The sixty-seven actual heading preparation/publication/navigation controls did not pass")
     print("Exact actual-package heading tests, source inventory and all immutable pins verified")
 else:
     args.output.mkdir(parents=True, exist_ok=False)

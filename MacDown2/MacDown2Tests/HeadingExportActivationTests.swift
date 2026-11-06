@@ -11,11 +11,16 @@ import Themes
 struct HeadingExportActivationTests {
     private actor CountingParser: ParseExecuting {
         var count = 0
+        var parseMilliseconds: [Double] = []
         let parser = ParseEngine()
 
         func parse(_ text: String, options: MarkdownParseOptions, revision: Int) async throws -> MarkdownDocument {
             count += 1
-            return try await parser.parse(text, options: options, revision: revision)
+            let start = ContinuousClock.now
+            let result = try await parser.parse(text, options: options, revision: revision)
+            let elapsed = start.duration(to: .now).components
+            parseMilliseconds.append(Double(elapsed.seconds) * 1000 + Double(elapsed.attoseconds) / 1e15)
+            return result
         }
     }
 
@@ -102,5 +107,50 @@ struct HeadingExportActivationTests {
         let html = try String(contentsOf: output.primaryFile, encoding: .utf8)
         #expect(html.contains("<h1>Target</h1>") && !html.contains("<h1 id="))
         #expect(html.contains("<div title='unterminated>"))
+    }
+}
+
+extension HeadingExportActivationTests {
+    @Test func productionLinkedExportRecordsOneMiBAndDuplicateHeadingPhaseMeasurements() async throws {
+        let paragraph = String(repeating: "Ordinary source text. ", count: 50) + "\n\n"
+        let source = "[TOC]\n\n" + String(repeating: paragraph, count: 1000) +
+            String(repeating: "# Duplicate\n\n", count: 4096)
+        try #require(source.utf8.count >= 1024 * 1024)
+        let fixture = try TextFilterCoordinatorTests.makeController(text: source)
+        defer { MathPreviewLiveSourceTests.dispose(fixture) }
+        let directory = try TextFilterCoordinatorTests.makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let snapshot = try OrdinaryExportSnapshot(document: #require(fixture.controller.model.activeDocument),
+                                                  theme: BundledThemes.light, parseOptions: .default)
+        let exporter = ExportCoordinator(
+            coordinator: fixture.coordinator, themeController: fixture.coordinator.themeController,
+            appSettings: fixture.coordinator.appSettings
+        )
+        let parser = CountingParser()
+        var totals: [Double] = []
+        for sample in 0 ..< 3 {
+            let start = ContinuousClock.now
+            let output = try await exporter.performExport(snapshot: snapshot, selection: .init(
+                url: directory.appendingPathComponent("measurement-\(sample).html"),
+                format: .standaloneHTML, style: .embedded
+            ), engine: parser)
+            let elapsed = start.duration(to: .now).components
+            totals.append(Double(elapsed.seconds) * 1000 + Double(elapsed.attoseconds) / 1e15)
+            let html = try String(contentsOf: output.primaryFile, encoding: .utf8)
+            #expect(html.components(separatedBy: "<h1 id=").count - 1 == 4096)
+            #expect(html.contains("href=\"#duplicate-4095\"") && html.contains("id=\"duplicate-4095\""))
+            #expect(!output.diagnostics.contains { $0.severity == .error })
+        }
+        #expect(await parser.count == 3, "Every complete production export must use exactly one frozen parse")
+        let parse = await parser.parseMilliseconds
+        #if DEBUG
+            let configuration = "Debug"
+        #else
+            let configuration = "Release"
+        #endif
+        print("TOC-PHASE configuration=\(configuration) source_bytes=\(source.utf8.count) headings=4096")
+        print("TOC-PHASE parse_ms=\(parse) complete_production_export_ms=\(totals)")
+        // These are complete command-body timings, including file publication;
+        // they do not measure save-panel interaction, UI latency or peak RSS.
     }
 }
