@@ -9,6 +9,7 @@ extension HeadingNativeHarness {
         let stage: String
         let matches: Int
         let visited: Int
+        var actions: [String] = []
     }
 
     /// An external-style AX client lets the app main actor service the press.
@@ -16,7 +17,7 @@ extension HeadingNativeHarness {
     static func pressLink(label: String) async throws {
         let result = await Task.detached { nativePress(label: label) }.value
         print("Heading AX client stage=\(result.stage) status=\(result.status) " +
-            "matches=\(result.matches) visited=\(result.visited)")
+            "matches=\(result.matches) visited=\(result.visited) actions=\(result.actions)")
         try #require(result.status == AXError.success.rawValue && result.matches == 1,
                      "The bounded native client must press exactly one real link in its focused window")
     }
@@ -59,8 +60,11 @@ extension HeadingNativeHarness {
               let link = links.first else {
             return .init(status: AXError.failure.rawValue, stage: "unique-link", matches: links.count, visited: cursor)
         }
+        var actionNames: CFArray?
+        let actionStatus = AXUIElementCopyActionNames(link, &actionNames)
+        let actions = actionStatus == .success ? (actionNames as? [String] ?? []) : ["error:\(actionStatus.rawValue)"]
         let pressed = AXUIElementPerformAction(link, kAXPressAction as CFString)
-        return .init(status: pressed.rawValue, stage: "press", matches: links.count, visited: cursor)
+        return .init(status: pressed.rawValue, stage: "press", matches: links.count, visited: cursor, actions: actions)
     }
 
     private nonisolated static func attribute(_ name: String, of element: AXUIElement) -> CFTypeRef? {

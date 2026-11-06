@@ -37,18 +37,31 @@ extension RealSVGNamespaceTests {
         (() => {
           const ids = Array.from(document.querySelectorAll('[id]')).map(x => x.id);
           const svgs = Array.from(document.querySelectorAll('svg'));
-          const link = document.querySelector('a[href="#target"]');
-          return svgs.length === 4 && new Set(ids).size === ids.length &&
-            svgs.every(x => x.id.startsWith('\(authoredAlias ? "MTTOC-SVG-1-" : "MTTOC-SVG-0-")')) &&
-            document.querySelectorAll('#target').length === 1 &&
-            document.getElementById('target').tagName === 'H1' && link !== null &&
-            (document.querySelector('a[name="MTTOC-SVG-0-authored"]') !== null) === \(authoredAlias ? "true" : "false");
+          const roots = svgs.filter(x => !x.parentElement?.closest('svg'));
+          const family = '\(authoredAlias ? "MTTOC-SVG-1-" : "MTTOC-SVG-0-")';
+          return {
+            roots: roots.length, nested: svgs.length - roots.length,
+            uniqueIDs: new Set(ids).size === ids.length,
+            privateRoots: roots.every(x => x.id.startsWith(family)),
+            privateDeclaredIDs: roots.every(x => Array.from(x.querySelectorAll('[id]'))
+              .every(child => child.id.startsWith(family))),
+            targetCount: document.querySelectorAll('#target').length,
+            targetTag: document.getElementById('target')?.tagName ?? '',
+            linked: document.querySelector('a[href="#target"]') !== null,
+            authoredAlias: document.querySelector('a[name="MTTOC-SVG-0-authored"]') !== null
+          };
         })()
-        """) as? Bool
-        #expect(
-            observed == true,
-            "Actual normal-template HTML must retain all mixed vector diagrams and one TOC target"
-        )
+        """) as? [String: Any]
+        let facts = try #require(observed)
+        print("Ordinary heading SVG DOM authoredAlias=\(authoredAlias): \(facts)")
+        #expect(facts["roots"] as? Int == 4, "All four mixed diagrams must remain vector SVG")
+        #expect(facts["uniqueIDs"] as? Bool == true)
+        #expect(facts["privateRoots"] as? Bool == true)
+        #expect(facts["privateDeclaredIDs"] as? Bool == true)
+        #expect(facts["targetCount"] as? Int == 1)
+        #expect(facts["targetTag"] as? String == "H1")
+        #expect(facts["linked"] as? Bool == true)
+        #expect(facts["authoredAlias"] as? Bool == authoredAlias)
         #expect(handler.requests.isEmpty)
     }
 

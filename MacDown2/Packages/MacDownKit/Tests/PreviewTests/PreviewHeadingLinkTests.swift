@@ -6,9 +6,15 @@ import Testing
 struct PreviewHeadingLinkTests {
     private let current = URL(fileURLWithPath: "/Users/me/notes/report.md")
 
-    @Test func bareAndResolvedFragmentsNameTheSameVerifiedOriginalHeading() async throws {
+    @Test @MainActor func bareAndResolvedFragmentsNameTheSameVerifiedOriginalHeading() async throws {
         let index = try await index()
         let heading = try #require(index.headings.first)
+        let toc = NativeHeadingTOC(index: index)
+        #expect(toc.entries.map(\.heading.title) == index.headings.map(\.title))
+        for entry in toc.entries {
+            #expect(PreviewLinkResolver.action(for: entry.destination, headingIndex: index) ==
+                .internalHeading(entry.heading, index.identity))
+        }
         let resolver = PreviewLinkResolver(baseURL: current, headingIndex: index)
         let fragment = try #require(URL(string: "#caf%C3%A9"))
         #expect(PreviewLinkResolver.action(for: fragment, headingIndex: index) ==
@@ -79,6 +85,23 @@ struct PreviewHeadingLinkTests {
         #expect(try action("mailto:a@example.com#caf%C3%A9", index: index) == .open)
         let executable = try #require(URL(string: "file:///tmp/run.command#caf%C3%A9"))
         #expect(PreviewLinkResolver.action(for: executable, currentDocument: current, headingIndex: index) == .reveal)
+    }
+
+    @Test @MainActor func nativeTOCRetainsSkippedLevelHierarchyAndLiteralLabels() async throws {
+        let source = "# Price $5 & [name]\n\n### 東京\n\n## Café\n\n# Price $5 & [name]\n"
+        let document = try await ParseEngine().parse(source, revision: 1)
+        let index = try HeadingAnchorIndex(
+            document: document, sourceText: source, documentID: "toc", recoveryEpoch: UUID(),
+            sourceGeneration: 1, reservedIDs: []
+        )
+        let toc = NativeHeadingTOC(index: index)
+        #expect(toc.entries.map(\.depth) == [0, 1, 1, 0])
+        #expect(toc.entries.map(\.heading.title) == ["Price $5 & [name]", "東京", "Café", "Price $5 & [name]"])
+        #expect(toc.entries.map(\.id) == [0, 1, 2, 3])
+        for entry in toc.entries {
+            #expect(PreviewLinkResolver.action(for: entry.destination, headingIndex: index) ==
+                .internalHeading(entry.heading, index.identity))
+        }
     }
 
     private func index() async throws -> HeadingAnchorIndex {

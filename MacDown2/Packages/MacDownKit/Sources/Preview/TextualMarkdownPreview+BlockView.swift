@@ -97,7 +97,11 @@ struct BlockView: View {
 
     var body: some View {
         Group {
-            if block.isOversize || isLiteral {
+            if let nativeTOC {
+                nativeTOC
+                    .tint(theme.linkColor.swiftUIColor)
+                    .environment(\.openURL, linkAction)
+            } else if block.isOversize || isLiteral {
                 // Oversize blocks skip Textual entirely: it has no size limit
                 // of its own and is documented to freeze/crash on inputs
                 // around 100 KB (see ``PreviewBlock/oversizeByteThreshold``).
@@ -115,34 +119,39 @@ struct BlockView: View {
                 // links, so both paths agree on what "relative" means.
                 secureOrLegacyText
                     .tint(theme.linkColor.swiftUIColor)
-                    .environment(
-                        \.openURL,
-                        OpenURLAction { url in
-                            let resolved = linkResolver.resolve(url)
-                            switch PreviewLinkResolver.action(
-                                for: resolved, currentDocument: linkResolver.baseURL,
-                                headingIndex: linkResolver.headingIndex
-                            ) {
-                            case .open: NSWorkspace.shared.open(resolved)
-                            case let .openInApp(document):
-                                // Through MostlyText when the host provides it; otherwise the
-                                // default handler for a text document.
-                                if let openDocument {
-                                    openDocument(document)
-                                } else {
-                                    NSWorkspace.shared.open(document)
-                                }
-                            case .reveal: NSWorkspace.shared.activateFileViewerSelecting([resolved])
-                            case let .internalHeading(heading, identity): onHeadingAction?(heading, identity)
-                            case .unresolvedInternal, .ignore: break
-                            }
-                            return .handled
-                        }
-                    )
+                    .environment(\.openURL, linkAction)
             }
         }
         .foregroundStyle(theme.foreground.swiftUIColor)
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var nativeTOC: NativeHeadingTOC? {
+        guard block.kind == .custom("toc"), block.sourceAnchor == nil,
+              let index = linkResolver.headingIndex, !index.headings.isEmpty else { return nil }
+        return NativeHeadingTOC(index: index)
+    }
+
+    private var linkAction: OpenURLAction {
+        OpenURLAction { url in
+            let resolved = linkResolver.resolve(url)
+            switch PreviewLinkResolver.action(
+                for: resolved, currentDocument: linkResolver.baseURL,
+                headingIndex: linkResolver.headingIndex
+            ) {
+            case .open: NSWorkspace.shared.open(resolved)
+            case let .openInApp(document):
+                if let openDocument {
+                    openDocument(document)
+                } else {
+                    NSWorkspace.shared.open(document)
+                }
+            case .reveal: NSWorkspace.shared.activateFileViewerSelecting([resolved])
+            case let .internalHeading(heading, identity): onHeadingAction?(heading, identity)
+            case .unresolvedInternal, .ignore: break
+            }
+            return .handled
+        }
     }
 
     @ViewBuilder

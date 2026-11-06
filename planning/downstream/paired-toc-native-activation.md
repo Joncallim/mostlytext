@@ -250,3 +250,38 @@ normal-template variants: raw-free self-contained output and ordinary standalone
 output retaining the authored alias. Preserve the four vector diagrams, unique
 IDs, exact TOC target and no-resource-request assertions in both cases; do not
 change the production raw-HTML admission policy to satisfy the fixture.
+
+
+## Native TOC controls and optimized link ownership
+
+At eaaacddd the bounded AX client finds exactly the intended inline TOC link,
+but each real press returns AX error -25200. That generic error alone does not
+classify platform support. Preserve the failed controls and deadlines. Present
+already-admitted `.custom("toc")` blocks with standard SwiftUI Link rows, using
+only the current host-published heading index and the existing OpenURLAction.
+The composer already owns this generated block kind; no new caller trust flag,
+module dependency or heading allocator is needed. Plain heading labels must not
+be parsed again as Markdown/math. Match the existing nearest-shallower hierarchy,
+keep large lists lazy, and retain the no-headings placeholder and source fallback.
+Keep all binding, source-selection, Preview-scroll, focus and Preview-only tests.
+Record supported native actions on lookup failure; no direct callback fallback.
+
+The same candidate fails Release linking for both architectures: app object
+MathPreviewDisplayBuilder references SwiftUIMath validated-body metadata and math
+metrics symbols, but the generated app links only the containing package product
+frameworks. Declare the existing immutable SwiftUIMath product explicitly in the
+Xcode project graph, at exactly MacDownKit's existing owner/revision. This adds no
+new dependency bytes or parser, does not change the lock, and leaves the
+MathRendering adapter responsible for admission. Do not suppress optimization,
+testability, architectures or linker diagnostics. Require the actual Release
+app/test link and both configuration executions before claiming resolution.
+
+The two normal-template SVG assertions currently aggregate occurrence count,
+root IDs, nested SVG IDs and targets into a single Boolean, losing the failing
+fact. Preserve the output semantics while collecting individual DOM facts. A
+renderer may contain nested SVG containers without IDs: count outermost SVG
+occurrences and validate every declared descendant ID rather than requiring an
+ID on every nested container. Still require four real vector occurrences,
+unique document IDs, one exact heading/TOC target, expected authored alias,
+unchanged canvas pixels and no resource requests. Print the actual facts so a
+further failure is attributable. This is not permission to accept diagram loss.
