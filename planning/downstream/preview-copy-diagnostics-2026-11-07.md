@@ -152,3 +152,36 @@ all eight actual native copies and every original secured positive/counterfactua
 Always retain complete inputs, byte/colour observations and first outcomes. This
 material oracle/diagnostic repair is not an unchanged native retry and is not a
 production correctness claim. Only actual later evidence can justify one.
+
+## Calibrated outcome and current-renderer layout discriminator
+
+The first6dcc run42293710900 completes: both original55/17 selections and both
+new eight-image controlled sequences pass, with actual8positive/56negative and
+captured-blue calibration. Disappearance's actual mutant/restored pair passes;
+revision's mutant still fails the unaffected model-generation Copy control, so
+restoration never runs. Its actual chronological events show generation1's
+provider returning152bytes uncancelled and loader remaining live BEFORE the
+failure-only manual probe, while stored native selection has no attachment.
+All1616source hashes/24pins/actual owned commands and executable digests are
+independently verified. The old raw-number colour comparison was invalid; the
+captured and encoded-reference sRGB values match, while constructor values differ.
+No production cause or correction is proved, and no unchanged retry is allowed.
+
+The existing failure diagnostic's cached and freshly materialized values both
+come from the SAME selection-owned Text.Layout. Add a test-only transparent
+`overlayPreferenceValue(Text.LayoutKey.self)` observer immediately around the
+actual mounted TextualMarkdownPreview. Retain the latest actual published
+`Text.Layout` values in its existing nonobservable fixture recorder. Record only
+layout count and direct attachment-run counts in the bounded diagnostic ring.
+Do not materialize or prime those layouts during success polling, schedule work,
+write SwiftUI state, update selection, inject a layout, invoke another image
+provider or change view identity, size, hit testing, selection, original test
+logic or any deadline. The overlay is Color.clear with hit testing disabled.
+On the existing failure-only diagnostic, report the retained current renderer
+layout count/direct attachment runs alongside the existing selection snapshot.
+This separates renderer publication from a stale selection handoff if the real
+failure recurs; a pass remains inconclusive. The observer changes diagnostic
+source, not product policy or a shipping fork/pin. Keep all original55/17,
+separate calibrated1/1 eight-image control, three mounted positives and both
+counterfactual/restoration jobs. First native outcome only, with full artifacts;
+no owner execution, original0557 qualification or diagnostic-branch merge.
