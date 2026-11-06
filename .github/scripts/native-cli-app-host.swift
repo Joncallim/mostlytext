@@ -29,6 +29,7 @@ struct NativeCLIAppHost {
             else { throw HostError.refused }
             let configuration = NSWorkspace.OpenConfiguration()
             configuration.createsNewApplicationInstance = true
+            configuration.environment = ["MOSTLYTEXT_NATIVE_STARTUP_TRACE": "1"]
             application = try await NSWorkspace.shared.openApplication(at: appURL, configuration: configuration)
             guard let birth = application.launchDate,
                   application.executableURL?.resolvingSymlinksInPath() == executable.resolvingSymlinksInPath()

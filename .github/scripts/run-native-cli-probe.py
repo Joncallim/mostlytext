@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """First normal-app CLI observations on the disposable hosted macOS runner only."""
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -23,9 +24,16 @@ def main():
     assert Path.home() == Path("/Users/runner") and platform.machine() == "arm64"
     assert platform.mac_ver()[0].split(".")[0] == "26"
     temporary = Path(environment["RUNNER_TEMP"]).resolve(strict=True)
-    app, host, output = (Path(a).resolve() for a in sys.argv[1:])
-    assert all(p.is_relative_to(temporary) for p in [app, host, output])
+    app, host, output, overlay_file = (Path(a).resolve() for a in sys.argv[1:])
+    assert all(p.is_relative_to(temporary) for p in [app, host, output, overlay_file])
     assert host.is_file() and not output.exists()
+    overlay = json.loads(overlay_file.read_text())
+    spec = importlib.util.spec_from_file_location("startup_observation", Path(__file__).with_name("prepare-native-startup-observation.py"))
+    observer = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(observer)
+    observer.verify(Path.cwd(), overlay)
+    changed = set(subprocess.check_output(["git", "diff", "--name-only", "HEAD"], text=True).splitlines())
+    assert changed == set(overlay["files"]), "Refuse an unrecorded source overlay"
     metadata = plistlib.loads((app / "Contents/Info.plist").read_bytes())
     identity = metadata["CFBundleIdentifier"]
     assert identity == "app.mostlytext.MostlyText"
@@ -44,11 +52,18 @@ def main():
                "app_sha256": digest(executable), "helper_sha256": digest(helper),
                "public_symlink": str(public), "resolved_helper": str(public.resolve()),
                "source_file_sha256": source_digest, "commands": [], "applications": [], "errors": [],
-               "scope": "Hosted normal-app warm comparison; not signed, installed-state or owner acceptance"}
+               "scope": "Derived startup observation build; no production-source, signed, installed-state or owner acceptance",
+               "source_overlay": overlay}
     tracked = subprocess.check_output(["git", "ls-files", "--", "MacDown2", ".github/scripts/native-cli-app-host.swift",
                                       ".github/scripts/run-native-cli-probe.py", ".github/workflows/native-cli-probe.yml",
+                                      ".github/scripts/prepare-native-startup-observation.py",
+                                      ".github/scripts/test-native-startup-observation.py",
                                       ".github/scripts/run-owned-app-tests.py"], text=True).splitlines()
     receipt["source_sha256"] = {p: digest(Path(p)) for p in tracked}
+    receipt["canonical_source_sha256"] = dict(receipt["source_sha256"])
+    for name, item in overlay["files"].items():
+        assert receipt["source_sha256"][name] == item["executed_sha256"]
+        receipt["canonical_source_sha256"][name] = item["canonical_sha256"]
     receipt["pins"] = json.loads(Path("MacDown2/Packages/MacDownKit/Package.resolved").read_text())["pins"]
     current = None
     wait_process = None

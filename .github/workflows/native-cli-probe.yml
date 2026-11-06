@@ -8,6 +8,8 @@ on:
     paths:
       - '.github/scripts/native-cli-app-host.swift'
       - '.github/scripts/run-native-cli-probe.py'
+      - '.github/scripts/prepare-native-startup-observation.py'
+      - '.github/scripts/test-native-startup-observation.py'
       - '.github/workflows/native-cli-probe.yml'
       - 'MacDown2/**'
   workflow_dispatch:
@@ -45,6 +47,11 @@ jobs:
           cd ..
           MacDown2/scripts/pin-xcode-package-versions.sh
           python3 .github/scripts/test-run-owned-app-tests.py
+      - name: Record the exact observation-only startup source overlay
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/test-native-startup-observation.py
+          python3 .github/scripts/prepare-native-startup-observation.py "$RUNNER_TEMP/native-cli-source-overlay.json"
       - name: Compile normal locked Release app and hosted controller
         run: |
           set -euo pipefail
@@ -61,6 +68,7 @@ jobs:
             python3 .github/scripts/run-native-cli-probe.py \
             "$RUNNER_TEMP/cli-native-app/Build/Products/Release/MacDown2.app" \
             "$RUNNER_TEMP/native-cli-app-host" "$RUNNER_TEMP/native-cli-proof" \
+            "$RUNNER_TEMP/native-cli-source-overlay.json" \
             | tee "$RUNNER_TEMP/native-cli-probe.log"
       - uses: actions/upload-artifact@v4
         if: always()
@@ -68,6 +76,7 @@ jobs:
           name: normal-release-public-cli
           path: |
             ${{ runner.temp }}/native-cli-owned/**
+            ${{ runner.temp }}/native-cli-source-overlay.json
             ${{ runner.temp }}/native-cli-proof/receipt.json
             ${{ runner.temp }}/native-cli-proof/*.md
             ${{ runner.temp }}/native-cli-proof/*.json
