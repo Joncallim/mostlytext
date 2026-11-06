@@ -145,7 +145,6 @@ final class HighlightedEditor {
         text: String,
         widensEdits: Bool = false,
         theme: Theme = BundledThemes.light,
-        registry: GrammarRegistry = GrammarRegistry(),
         sizePolicy: @escaping (String?) -> HighlightingSizePolicy? = { _ in nil }
     ) {
         system = EditorTextSystem(identity: UUID().uuidString, initialText: text, configuration: .default)
@@ -154,7 +153,7 @@ final class HighlightedEditor {
             textSystem: system,
             languageID: "markdown",
             theme: theme,
-            registry: registry,
+            registry: GrammarRegistry(),
             sizePolicy: sizePolicy
         )
         if widensEdits, let storage = system.textView.textStorage, let neon = storage.delegate {
@@ -162,6 +161,15 @@ final class HighlightedEditor {
             storage.delegate = delegate
             wideningDelegate = delegate
         }
+    }
+
+    /// Mount through the actual EditorView/store before attaching the same production highlighter.
+    init(system: EditorTextSystem, registry: GrammarRegistry) {
+        self.system = system
+        highlighter = NeonSyntaxHighlighter(
+            textSystem: system, languageID: "markdown", theme: BundledThemes.light,
+            registry: registry, sizePolicy: { _ in nil }
+        )
     }
 
     var textView: NSTextView {

@@ -67,3 +67,10 @@ rendered runs against an independent fresh real highlighter and preserve exact
 source bytes. Keep the control opt-in until the original read path is classified.
 This explicitly extends the diagnostic architecture to a small internal testing
 hook; it does not permit changes to dependency reads, limits or assertions.
+
+The controlled fixture mounts the actual EditorView and EditorTextSystemStore
+before attaching the production highlighter. Its real coordinator owns source
+publication; require that delegate, exact bound-model bytes and advancing
+contentRevision as well as the native text/style checks. A manually attached
+NSTextView without the coordinator would omit the app's edit bookkeeping and
+would not prove this integration path.
