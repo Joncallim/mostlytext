@@ -354,3 +354,8 @@ and diagnostics; an old composition falls back to the current base blocks.
 Retain existing revision/heading-binding/cancellation guards. Add actual cache
 reuse and real contribution/source controls, then include them in the complete
 hosted resource selection. These are source ownership checks, not folder grants.
+
+Capture the selected folder's typed device/inode receipt inside the native
+successful-response callback, before resuming the chooser continuation. Reusing
+the generic URL presentation path must not add a task-resumption gap before
+that identity capture; all later backing/current-origin checks remain required.
