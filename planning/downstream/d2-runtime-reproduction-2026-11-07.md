@@ -103,3 +103,24 @@ hashes/licence, inspect any compiler flag/version transformation and write the
 next precise compile/optimizer decision before execution. This may identify an
 additional corresponding-source input; no shipped component or offer status is
 changed from a missing-script observation.
+
+## Recorded VCS-version input missing from the shallow source capture
+
+Read-only linear-memory comparison identifies a concrete build-info difference:
+the publisher records main module v0.6.10-0.20250817190149-581c91096b62+dirty,
+whereas the initial shallow checkout has no version tags and records
+v0.0.0-20250817190149-581c91096b62+dirty. Both preserve the same source commit
+and explicit Go/VCS fields. The third Go build-ID component matches, while the
+complete modules and memory images differ; no equality is inferred.
+
+Capture the actual public v0.6.9 tag and sufficient genuine ancestor history to
+verify it is an ancestor of the frozen source commit. Record exact tag/object
+IDs and verify HEAD/all tracked source hashes remain unchanged. This supplies a
+real recorded version-construction input, not an invented string or binary edit.
+Only after the ancestry is established, repeat the same reviewed offline Go
+compiler command with unchanged source/module/tool hashes and frozen locks, to
+a separate named output. Retain the original mismatch. Require the resulting
+main-module version to match the actual publisher field; if it does not, stop
+and record the unresolved input. Do not patch build-info or strip metadata to
+claim a complete reproduction. Optimizer continuation still requires its own
+explicit immutable-tool decision.
