@@ -1,45 +1,76 @@
-# Remaining engineering and acceptance ownership — 6 November 2026
+# Remaining engineering and acceptance ownership — 7 November 2026
 
-## Current checkpoint
+## Current checkpoint — 7 November 2026
 
-Verified main `c249d6dbb77feffc7f0fbe902dd00973d3416711` and the live issue
-check on 6 November contain **16 open issues and 164 unchecked checkbox rows**.
-The three prose-only issues still require their recorded evidence. No remaining
-whole issue has complete closure proof; the count measures acceptance criteria,
-not 164 distinct defects. The dated 5 November checkpoints below are historical.
+Verified main `a99e8ea616f33ce6a0d8861aa07ee5961f954194` and the live
+issue reconciliation contain **16 open issues and 163 unchecked original
+checkbox rows**. No remaining whole issue has complete closure proof. These
+are acceptance criteria, rather than 163 newly discovered defects; prose-only
+issues also retain their original completion requirements. The earlier dated
+checkpoints below remain historical.
 
-- [PR98](https://github.com/Joncallim/mostlytext/pull/98) completes the shared
-  heading/navigation contract, with actual native omission/restoration controls;
-  owning [issue10](https://github.com/Joncallim/mostlytext/issues/10) is closed.
-- [PR99](https://github.com/Joncallim/mostlytext/pull/99) activates and qualifies
-  current-line theme roles on actual native views in Debug and Release. Three
-  exact semantic rows in issues6/7/8 are complete; broader editor/theme, Finder,
-  accessibility and performance contracts remain.
-- [PR102](https://github.com/Joncallim/mostlytext/pull/102) corrects the actual
-  UTF-8 performance fixture bound without increasing a budget. It does not
-  establish the whole-document keystroke budget in issue18.
-- [PR103](https://github.com/Joncallim/mostlytext/pull/103), merged as the main
-  revision above, makes attachment publication belong to the current request.
-  All four identical actual-model controls fail before and pass after in both
-  configurations. Exact-head CI passes 3,711 package functions/532 suites and
-  675 app functions/142 suites, plus all app/mostlytext builds and test-target
-  compilation. This does not explain historical mounted-copy failures or
-  establish production resource activation.
+The latest independently merged units are:
 
-Active independent work remains [PR100](https://github.com/Joncallim/mostlytext/pull/100)
-(resource-host qualification, followed by production routing and folder choice),
-[PR101](https://github.com/Joncallim/mostlytext/pull/101) (mounted highlight-read
-diagnostics), and [PR104](https://github.com/Joncallim/mostlytext/pull/104)
-(measured immutable query-name reuse). They are pending integration. PR101's
-full Release selection fails the unchanged 500 ms highlighting ceiling; a
-smaller passing diagnostic process does not qualify it. PR104's text-only
-measurement is not a product-budget pass. Original failures remain retained.
+- [PR104](https://github.com/Joncallim/mostlytext/pull/104), merge `d607098b`,
+  reuses immutable parser query names. Component improvements do not establish
+  issue18's whole-document 50 ms Release keystroke budget.
+- [PR109](https://github.com/Joncallim/mostlytext/pull/109), merge `f9f14670`,
+  retains D2's verified source/compiler/module/helper inputs and genuine Git
+  version ancestry. The reconstructed module version and Go build identifier
+  match; complete publisher WebAssembly and initialized memory still differ.
+  The bounded optimizer comparison times out without output. No complete D2
+  reproduction, independent rights/font approval or source publication follows.
+- [PR110](https://github.com/Joncallim/mostlytext/pull/110), merge `a99e8ea6`,
+  aligns release packaging with the app-bound CLI: distribute the DMG with its
+  embedded helper and document the optional user-created public `mostlytext`
+  symlink. The separate build product is an audit input. A reused output
+  directory with legacy `mostlytext.zip` is preserved and refused before
+  preflight/build. All 25 release-script tests and 332 compliance controls pass
+  using substitute tools; no real signing, installation or public CLI ran.
 
-Ordinary source compliance passes; the strict release check still reports the
-same six D2/Mermaid/Graphviz predicates. Independent source/font/rights review,
-approved source publication/retrieval, protected owner-native execution and
-exact signed-artifact acceptance remain open. No held product behavior is
-activated by this documentation reconciliation.
+[PR98](https://github.com/Joncallim/mostlytext/pull/98) closed the owning
+heading/navigation issue10 with its actual native counterfactual/restoration
+proof. [PR99](https://github.com/Joncallim/mostlytext/pull/99) completed the
+three current-line theme rows in issues6/7/8. [PR102](https://github.com/Joncallim/mostlytext/pull/102)
+corrected the actual UTF-8 fixture bound without increasing a performance limit.
+[PR103](https://github.com/Joncallim/mostlytext/pull/103) qualified attachment
+publication against the actual model in both configurations. Each retains the
+broader native, performance and release boundaries of its owning issue.
+
+The combined production source in [PR108](https://github.com/Joncallim/mostlytext/pull/108)
+remains **unmerged and failed**, frozen at `0557e08f948d46c82141a8e16d63e035d650cb6d`.
+It includes the pending resource activation (PR100), highlight diagnostics
+(PR101), shared-subtree parser optimization (PR106), Markdown publication guard
+(PR107), response-encoding and genuine PDF pagination units. Its exact-head
+normal CI passes 3,719 package functions/536 suites, 704 app functions/152 suites
+and all four app/CLI builds. The required theme, math, heading, model, parser,
+strict-replay and real PDF checks pass; four of six Preview mutation/restoration
+pairs pass. **Two Debug Preview pairs fail valid native image-copy controls.**
+Neither successful package checks nor the other native paths waive those
+failures. Constituent PRs remain open until corrected production integration.
+The narrow real-PDF execution row in issue11 is checked with its pending
+integration scope; broader PDF operation, parity and exact-app criteria remain.
+
+The completed diagnostic-only [run42293710900](https://github.com/Joncallim/mostlytext/actions/runs/42293710900)
+at `6dccb7184f307467950afcd31441c9439eacde3f` retains both first outcomes.
+Both original 55-function/17-suite selections and both additional eight-image
+native sequences pass after calibrating the encoded-reference colour oracle.
+Disappearance's exact restored pair passes. Revision's mutant also fails a valid
+model-generation Copy control and stops before restoration. Before the later
+failure-only manual read, its trace shows actual replacement bytes returned,
+uncancelled, with a live loader, while native selection contains only alt text.
+This narrows diagnosis without proving a renderer/selection cause or repairing
+original0557. Diagnostic source is not a mergeable production fix. Subsequent
+investigation must materially distinguish hypotheses; no unchanged retry or
+larger deadline qualifies the failed source.
+
+Ordinary source compliance passes; the strict release predicates for
+D2/Mermaid/Graphviz remain open. Independent source/font/rights review, separately
+approved source publication/retrieval, protected owner-native execution and exact
+signed-artifact acceptance remain incomplete. Hosted native fixture evidence
+does not remove the owner-account execution hold or establish installed release
+acceptance. A corrected combined product candidate must include current main
+and receive fresh qualification; historical receipts retain their original SHA.
 
 ## Historical 5 November checkpoint
 
@@ -155,7 +186,7 @@ six strict compliance predicates and protected native execution hold remain.
 | [#7 Mac integration](https://github.com/Joncallim/mostlytext/issues/7) | First pass the required native QL-REPLY callback/cancellation/cold-Finder feasibility probe, then implement the currently absent dedicated Quick Look target and static shared-content path, Markdown document artwork/registration, and remaining theme/renderer semantics. Verify containment, failure isolation and performance in real Finder/Quick Look. Naming conventions are frozen, not implementation. |
 | [#9 math](https://github.com/Joncallim/mostlytext/issues/9) | The original source-preservation/local-rendering criterion is checked: source values feed derived content, local rendering uses bundled fonts, and all 12 math suites pass in the retained Intel package run. That overall run failed on the separate diagram timeout and is not a whole-run pass. Complete shared delimiter/parity, useful source-anchored diagnostics and accessible equation identity; prove final Preview/Export paths and real visual/accessibility behavior. |
 | [#11 export](https://github.com/Joncallim/mostlytext/issues/11) | The original managed-asset crash/orphan criterion is checked after [PR51](https://github.com/Joncallim/mostlytext/pull/51): [authenticated companion inventory/pending recovery](downstream/export-companion-recovery.md), first-inventory-before-cleanup ordering, changed-stage byte checks, source protection and bounded unknown-reference retention are qualified. Pre-receipt uncertainty is preserved and blocks growth. Remaining work is Preview/cmark parity, whole-operation PDF progress/cancellation, final resource-budget calibration, real pagination and exact-app Save/Cancel evidence. None is replaced by the 396 focused source tests or 100 changed exports. |
-| [#13 HTML preview](https://github.com/Joncallim/mostlytext/issues/13) | The production consumer still uses the legacy handler. The bounded grant/handler must not be activated without the required native request/root/MIME/cancellation/containment proof. PR100 now qualifies the replacement consumer and lifecycle boundaries; production routing and explicit folder selection remain pending its combined prerequisites and final caller controls. |
+| [#13 HTML preview](https://github.com/Joncallim/mostlytext/issues/13) | The production consumer still uses the legacy handler. The bounded grant/handler must not be activated without the required native request/root/MIME/cancellation/containment proof. PR100/PR108 include replacement consumer qualification, production routing and explicit folder selection, but that combined source remains unmerged because two Debug Preview pairs fail valid native image-copy controls. Keep production activation held until a corrected combined candidate passes every required path. |
 | [#14 attribution](https://github.com/Joncallim/mostlytext/issues/14) | Technical disposition of the final 100 parser references is complete with zero technical remainder; the [entire tagged URI prebundle archive now reproduces](../compliance/evidence/uri-prebundle-reproduction/README.md), with historical publisher execution still unattested; original frozen unclassified columns are historical and their effective categories are populated. Independent embedded/generated IP/grant, D2/font/source and complete Graphviz per-file/runtime review and approved source publication remain. Captured Go 1.24.6 standard-library and compiler-rt texts are distributed conservatively; they do not waive those reviews. LC-08's original Help-menu entry now reuses the existing shared scene; genuine native menu/window acceptance remains separate. Captured package texts and conservative build-input notices now ship. |
 | [#15 WebKit](https://github.com/Joncallim/mostlytext/issues/15) | Controlled extended-session reproduction/root-cause diagnosis remains. Hosted fixture/alert/IconServices corrections do not explain or close the original WebKit hang. Preserve failed-run samples; do not change timeouts or label a retry as a fix. |
 | [#16 identity](https://github.com/Joncallim/mostlytext/issues/16) | The owner-approved social preview is installed and publicly verified; repository/backlog cutover and compiled document-rank/helper corrections are complete. Finish approved document artwork, native Finder/Open With, update-channel and installed-state evidence. Website identity `0d04102` and the current `b354a6b7` [public-claims correction](downstream/website-public-claims-2026-11-05.md) are deployed and publicly verified, preserving the router/settings, historical links and dated roadmap; this does not satisfy native/update/installed-state acceptance. Retained internal/storage identifiers are intentional. |
