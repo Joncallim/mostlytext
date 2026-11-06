@@ -1,29 +1,13 @@
-name: Preview directory grant consumer qualification
+name: Mounted Preview copy failure observations
 
 permissions:
   contents: read
 
 on:
-  pull_request:
-    branches: [main, master, integration-final]
-    paths:
-      - 'MacDown2/MacDown2/*Preview*.swift'
-      - 'MacDown2/MacDown2/Preview*.swift'
-      - 'MacDown2/MacDown2/Secured*.swift'
-      - 'MacDown2/MacDown2Tests/*Preview*.swift'
-      - 'MacDown2/MacDown2Tests/Preview*.swift'
-      - 'MacDown2/MacDown2Tests/Secured*.swift'
-      - 'MacDown2/MacDown2Tests/HTMLResponseEncodingFixture.swift'
-      - 'MacDown2/Packages/MacDownKit/Sources/Preview/**'
-      - '.github/workflows/preview-grant-probe.yml'
-      - '.github/scripts/*preview-grant-probe.py'
-      - '.github/scripts/check-preview-parsed-frame.py'
-      - '.github/scripts/test-preview-grant-tripwire.py'
-      - '.github/scripts/test-preview-native-architecture.py'
   workflow_dispatch:
 
 concurrency:
-  group: preview-grant-${{ github.ref }}
+  group: preview-copy-diagnostics-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -31,10 +15,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        configuration: [Debug, Release]
-        pair: [revision, viewport, disappear]
+        configuration: [Debug]
+        pair: [revision, disappear]
     runs-on: macos-26
     timeout-minutes: 35
+    env:
+      MOSTLYTEXT_PREVIEW_RESOURCE_TRACE: "1"
+      TEST_RUNNER_MOSTLYTEXT_PREVIEW_RESOURCE_TRACE: "1"
     steps:
       - uses: actions/checkout@v4
         with:

@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import os
 import platform
 from pathlib import Path
 import re
@@ -31,6 +32,8 @@ parser.add_argument("--verify", action="store_true")
 parser.add_argument("--require-result", action="store_true")
 args = parser.parse_args()
 repo = Path(__file__).resolve().parents[2]
+if os.environ.get("MOSTLYTEXT_PREVIEW_RESOURCE_TRACE") != "1" or os.environ.get("TEST_RUNNER_MOSTLYTEXT_PREVIEW_RESOURCE_TRACE") != "1":
+    raise SystemExit("The diagnostic workflow must enable the actual application child trace explicitly")
 if platform.machine() != "arm64":
     raise SystemExit("This native Preview qualification requires an Apple Silicon worker")
 paths = subprocess.check_output([
@@ -45,6 +48,8 @@ receipt = {
     "configuration": args.configuration,
     "mutation_pair": args.pair,
     "testability": True,
+    "diagnostic_only": True,
+    "resource_trace_enabled": True,
     "execution_architecture": "arm64",
     "only_active_arch": True,
     "additional_compilation_condition": "RELEASE_PREVIEW_PROBE",

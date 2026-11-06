@@ -60,12 +60,23 @@ struct SecuredMarkdownResourceHost<Content: View>: View {
         )
     }
 
+    private func observedLoader(for current: Slot?) -> PreviewResourceImageLoader {
+        #if DEBUG || RELEASE_PREVIEW_PROBE
+            PreviewResourceDiagnostics.record(
+                "host-body", context: current?.context,
+                detail: "generation=\(sourceGeneration) parsedRevision=\(parsedFrame?.revision ?? -1) "
+                    + "stored=\(slot?.context?.id.uuidString ?? "none")"
+            )
+        #endif
+        return PreviewResourceImageProvider.loader(for: current?.context)
+    }
+
     var body: some View {
         let currentIdentity = identity
         let current = slot?.identity == currentIdentity ? slot : nil
         // A replacement task may not start before this view disappears. Retire the stored prior context too.
         let retiringContext = slot?.context
-        let loader = PreviewResourceImageProvider.loader(for: current?.context)
+        let loader = observedLoader(for: current)
         // BlockView replaces the complete StructuredText attachment cache using resourceLoadID. The outer
         // preview ScrollView and its measured-height state must survive a resource/parse-frame replacement.
         content(loader, current?.loadID)

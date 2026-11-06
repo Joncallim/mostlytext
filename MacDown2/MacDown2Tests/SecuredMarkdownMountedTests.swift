@@ -248,6 +248,7 @@ private final class LoadIDRecorder {
         return "phase=\(phase) loadID=\(String(describing: lastID)) disappeared=\(didDisappear) "
             + "retainedBeforeProbe=\(before.retained) reservedBeforeProbe=\(before.reserved) \(status) "
             + "fixturePNGBase64=\(imageBytes.base64EncodedString())"
+            + " observations=\(PreviewResourceDiagnostics.snapshot())"
     }
 
     func record(_ id: UUID?, loader: PreviewResourceImageLoader? = nil) {
