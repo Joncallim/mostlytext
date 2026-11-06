@@ -329,3 +329,9 @@ checks still forbid an ambient-window fallback. An optional after-presentation
 observation, default nil, may let the hosted native fixture inspect/cancel the
 actual sheet without sleeps or substituting the typed user-selection boundary.
 This adds no automatic grant, source mutation or generic file-panel policy.
+
+Current selection failures may use the Preview banner's localized explanation
+instead of opening a second sheet. Only the still-current pending origin can
+publish that failure; a new choice or identity invalidation clears it. A stale
+or cancelled older completion must not replace a newer explanation, pending
+choice or grant. Keep this presentation state separate from directory authority.
