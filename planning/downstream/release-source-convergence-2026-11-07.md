@@ -158,3 +158,35 @@ then require the union selection1087/145. No shipping conflict resolution or
 assertion edit was needed. The corresponding package-function union is expected
 3719/536 and ordinary app704/152; full logs must confirm actual totals. Preview
 encoding already requires55/17 Debug and56/18 Release in every native pair.
+
+## Bound native Preview compilation to its actual execution architecture
+
+The original c7 Release viewport job128020998471 reaches the unchanged35-minute
+job limit. Its initial53/17 selection passes, the viewport mutation build
+succeeds and the intended viewport assertion fails, the restored build succeeds,
+but its actual restored owned run is interrupted. Preserve the full job log,
+partial receipts and cancellation; the pair is unqualified. Source inspection
+and both compile logs show the focused native job repeatedly compiles arm64 and
+x86_64 app/test bundles although it only executes on the arm64 hosted worker.
+
+Change only the dedicated Preview workflow, its mutation builder and receipt
+validator to require arm64 and ONLY_ACTIVE_ARCH=YES for this hosted native
+selection. The worker's architecture is checked explicitly. Record the exact
+architecture and active-architecture policy in every receipt, and require those
+values plus the owned execution command flags at result validation. All selected
+55/56 functions, package consumer controls, actual network positives/denials,
+three mutation/restoration pairs in both configurations, source/app hash checks,
+900s compilation bounds,600s owned execution,660s outer guard and35-minute job
+limit remain. No Swift/C optimisation flag, assertion, deadline, private app
+behavior or production source changes. The normal full CI's universal app/CLI
+and app/UI builds remain unchanged. This native evidence is explicitly Apple
+Silicon execution; neither the old universal compile nor this focused build
+claims Intel execution, signing, owner or final-RC acceptance.
+
+Add a pure control that refuses missing/wrong architecture or omitted build
+policy before running a selection. Run strict tools, all compliance controls
+and actual unsigned Release compilation with these exact build flags locally
+without launching it. Publish a material qualification-input revision, retain
+the original failed/cancelled outcomes, then require the complete exact combined
+head matrix. This is an execution-input correction, not an unchanged retry or
+a waiver of a test selection or budget.
