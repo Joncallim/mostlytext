@@ -35,8 +35,9 @@ internal printer path produced all marks or prove native Cancel responsiveness.
 ## Ownership, execution and failure behavior
 
 A separate pull-request workflow compiles the actual Release app and all test
-bundles with testability plus PDF_PAGINATION_PROBE. Execute all9 existing tests
-in PDFExportAdapterTests, not a copied adapter, mocked printer or replacement
+bundles with testability plus PDF_PAGINATION_PROBE. Serialize this one suite because AppKit print operations are process-owned;
+async MainActor tests alone can interleave while awaiting WebKit. Execute all9
+existing tests in PDFExportAdapterTests, not a copied adapter, mocked printer or replacement
 harness. Keep the repository's owned-app executor unchanged:600s complete-run
 bound;120/240s exact-app samples; identity/path/UID/process-birth guards; normal
 exit evidence; owned cleanup only. A40-minute job bound includes clean compile
