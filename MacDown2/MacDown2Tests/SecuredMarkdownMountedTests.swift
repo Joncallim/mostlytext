@@ -189,7 +189,7 @@ struct SecuredMarkdownMountedTests {
         if let frame = PreviewResourceParsedFrame(parserIdentity: parserIdentity, document: parsed) {
             SecuredMarkdownResourceHost(
                 tabID: tabID, document: document, sourceGeneration: document.mutationGeneration,
-                parsedFrame: frame
+                parsedFrame: frame, publishedText: document.text
             ) { loader, loadID in
                 TextualMarkdownPreview(
                     document: parsed, text: document.text,

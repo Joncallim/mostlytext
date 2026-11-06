@@ -47,6 +47,7 @@ struct DocumentEditorSplitView: View {
     /// DocumentEditorSplitView+EditorPane.swift.
     @State var statusBarSelection = NSRange(location: 0, length: 0)
     @State private var previewBlocks: [PreviewBlock]?
+    @State private var previewBlocksFrame: PreviewResourceParsedFrame?
     @State var previewContributionSession = PreviewContributionSession()
     @State var previewDisplayCache = PreviewDisplayCache()
     @State var mathSession = MathPreviewSession()
@@ -275,18 +276,25 @@ struct DocumentEditorSplitView: View {
     private func refreshPreviewBlocks() {
         guard let document = parseSession.document, let text = parseSession.publishedText else {
             previewBlocks = nil
+            previewBlocksFrame = nil
             previewDisplayCache.reset()
             return
         }
+        previewBlocksFrame = PreviewResourceParsedFrame(parserIdentity: parseSession.identity, document: document)
         previewBlocks = PreviewBlock.blocks(from: document, text: text)
         refreshRenderedPreviewBlocks()
     }
 
     private func refreshRenderedPreviewBlocks() {
+        let liveFrame = parseSession.document.flatMap {
+            PreviewResourceParsedFrame(parserIdentity: parseSession.identity, document: $0)
+        }
+        guard previewBlocksFrame == liveFrame else { return }
         let displayed = previewContributionSession.displayedBlocks(
-            baseBlocks: previewBlocks, currentRevision: parseSession.document?.revision
+            baseBlocks: previewBlocks, currentRevision: parseSession.document?.revision,
+            documentIdentity: parseSession.identity
         )
-        previewDisplayCache.update(revision: parseSession.document?.revision, blocks: displayed)
+        previewDisplayCache.update(revision: parseSession.document?.revision, blocks: displayed, frame: liveFrame)
     }
 
     /// Keyed to document/tab identity + parsed revision only — never save
@@ -302,9 +310,11 @@ struct DocumentEditorSplitView: View {
 
     private func refreshPreviewContributions() async {
         guard let document = parseSession.document, let text = parseSession.publishedText else { return }
+        let frame = PreviewResourceParsedFrame(parserIdentity: parseSession.identity, document: document)
+        let base = previewBlocksFrame == frame ? previewBlocks : nil
         await previewContributionSession.refresh(
             taskID: contributionTaskID, document: document, text: text,
-            baseBlocks: previewBlocks ?? PreviewBlock.blocks(from: document, text: text),
+            baseBlocks: base ?? PreviewBlock.blocks(from: document, text: text),
             headingState: headingContributionState
         )
     }

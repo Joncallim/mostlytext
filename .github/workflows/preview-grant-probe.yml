@@ -93,6 +93,11 @@ jobs:
             -only-testing:MacDown2Tests/SecuredHTMLPreviewNativeTests \
             -only-testing:MacDown2Tests/SecuredMarkdownMountedTests \
             -only-testing:MacDown2Tests/SecuredMarkdownViewportTests \
+            -only-testing:MacDown2Tests/SecuredMarkdownSourceBindingTests \
+            -only-testing:MacDown2Tests/PreviewFolderSelectionCommandTests \
+            -only-testing:MacDown2Tests/ProductionPreviewResourceRoutingTests \
+            -only-testing:MacDown2Tests/PreviewDisplayCacheTests \
+            -only-testing:MacDown2Tests/PreviewResourceCompositionOwnershipTests \
             -only-testing:MacDown2Tests/SecuredPreviewImageAdmissionTests \
             -only-testing:MacDown2Tests/PreviewImageDecodeBudgetTests \
             -only-testing:MacDown2Tests/TextualAttachmentInterceptionTests \

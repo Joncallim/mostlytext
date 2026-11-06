@@ -1,9 +1,28 @@
+import Foundation
 @testable import MacDown2
+import MarkdownEngine
 import Preview
 import Testing
 
 @Suite("PreviewDisplayCache")
 struct PreviewDisplayCacheTests {
+    @Test func identicalVisibleBlocksFromAnotherParserCannotKeepThePreviousSourceFrame() async throws {
+        let source = "# Same visible content\n"
+        let parsed = try await ParseEngine().parse(source, revision: 1)
+        let first = try #require(PreviewResourceParsedFrame(parserIdentity: UUID(), document: parsed))
+        let second = try #require(PreviewResourceParsedFrame(parserIdentity: UUID(), document: parsed))
+        let blocks = PreviewBlock.blocks(from: parsed, text: source)
+        var cache = PreviewDisplayCache()
+        cache.update(revision: 1, blocks: blocks, frame: first)
+        let displayed = cache.output
+        cache.update(revision: 1, blocks: blocks, frame: second)
+        #expect(cache.frame == second)
+        #expect(cache.frame != first)
+        #expect(cache.output == displayed, "Source ownership changes without editing the visible content")
+        cache.reset()
+        #expect(cache.frame == nil)
+    }
+
     @Test func sameRevisionAndBlocksReuseTheCachedSnapshot() {
         let block = PreviewBlock(kind: .paragraph, source: "plain", lineRange: 1 ... 1)
         var cache = PreviewDisplayCache()

@@ -67,7 +67,7 @@ struct SecuredMarkdownViewportTests {
         if let frame = PreviewResourceParsedFrame(parserIdentity: parserIdentity, document: published.document) {
             SecuredMarkdownResourceHost(tabID: tabID, document: document,
                                         sourceGeneration: document.mutationGeneration,
-                                        parsedFrame: frame) { loader, id in
+                                        parsedFrame: frame, publishedText: published.text) { loader, id in
                 TextualMarkdownPreview(document: published.document, text: published.text,
                                        theme: PreviewTheme(theme: BundledThemes.light), controller: recorder.controller,
                                        resourceImageLoader: loader, resourceLoadID: id)

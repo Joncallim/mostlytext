@@ -18,8 +18,8 @@ struct PreviewResourceParsedFrame: Hashable {
     }
 }
 
-/// A document/revision-bound host for Textual attachment work. The existing preview does not use this host until
-/// HTML and Markdown both enforce the grant contract; tests can exercise it without changing the current renderer.
+/// A document/revision-bound host for Textual attachment work. Pending or unbound parses keep readable Preview
+/// content mounted while denying resource work until its published source matches the current document bytes.
 @MainActor
 struct SecuredMarkdownResourceHost<Content: View>: View {
     struct Identity: Hashable {
@@ -28,7 +28,8 @@ struct SecuredMarkdownResourceHost<Content: View>: View {
         let recoveryEpoch: UUID
         let fileURL: URL?
         let sourceGeneration: UInt
-        let parsedFrame: PreviewResourceParsedFrame
+        let parsedFrame: PreviewResourceParsedFrame?
+        let publishedSourceAvailable: Bool
         let grantRevision: UUID
     }
 
@@ -41,7 +42,8 @@ struct SecuredMarkdownResourceHost<Content: View>: View {
     let tabID: UUID
     let document: FileCore.FileDocument
     let sourceGeneration: UInt
-    let parsedFrame: PreviewResourceParsedFrame
+    let parsedFrame: PreviewResourceParsedFrame?
+    let publishedText: String?
     let content: (PreviewResourceImageLoader, UUID?) -> Content
 
     @Environment(\.previewResourceWindowState) private var owner
@@ -53,6 +55,7 @@ struct SecuredMarkdownResourceHost<Content: View>: View {
             recoveryEpoch: document.recoveryEpoch, fileURL: document.fileURL,
             sourceGeneration: sourceGeneration,
             parsedFrame: parsedFrame,
+            publishedSourceAvailable: publishedText != nil,
             grantRevision: owner?.revision ?? UUID(uuid: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
         )
     }
@@ -68,17 +71,29 @@ struct SecuredMarkdownResourceHost<Content: View>: View {
         content(loader, current?.loadID)
             .task(id: currentIdentity) {
                 guard !Task.isCancelled, identity == currentIdentity else { return }
-                let context = owner?.beginPreviewLoad(
-                    for: document, tabID: tabID,
-                    sourceGeneration: sourceGeneration, grantRevision: currentIdentity.grantRevision,
-                    consumer: .markdown
-                )
+                // Compare once per immutable identity, never on caret-driven body evaluation. A stale parse
+                // must not borrow the current model generation merely because its folder is still allowed.
+                let context: PreviewResourceLoad?
+                if parsedFrame != nil, let publishedText, publishedText.utf8.elementsEqual(document.text.utf8) {
+                    context = owner?.beginPreviewLoad(
+                        for: document, tabID: tabID,
+                        sourceGeneration: sourceGeneration, grantRevision: currentIdentity.grantRevision,
+                        consumer: .markdown
+                    )
+                } else {
+                    if let previous = slot?.context {
+                        owner?.retire(.markdown, matching: previous)
+                    }
+                    context = nil
+                }
                 guard !Task.isCancelled, identity == currentIdentity else {
                     if let context {
                         owner?.retire(.markdown, matching: context)
                     }
                     return
                 }
+                // A denied frame also replaces old attachment caches. This identity records application of
+                // the frame, not permission; its loader has no provider when the context is absent.
                 slot = Slot(identity: currentIdentity, loadID: UUID(), context: context)
             }
             .onDisappear {

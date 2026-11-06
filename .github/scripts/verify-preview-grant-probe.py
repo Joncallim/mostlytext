@@ -30,7 +30,7 @@ receipt = {
     "additional_compilation_condition": "RELEASE_PREVIEW_PROBE",
     "source_sha256": digests,
     "pins": pins,
-    "scope": "Inactive three-consumer qualification; separate from production activation, owner observation and signed-artifact acceptance",
+    "scope": "Production document-window routing and three-consumer qualification; owner observation and signed-artifact acceptance remain separate",
 }
 path = args.output / "receipt.json"
 if args.verify:
@@ -41,16 +41,36 @@ if args.verify:
         suites = ["Preview directory grant lifetime", "Preview resource admission", "Preview window resource ownership",
                   "Immutable bounded HTML scheme delivery", "Secured HTML native routing", "Secured Markdown mounted attachment",
                   "Secured Preview ImageIO admission", "Secured Preview observed network denial",
-                  "Secured Markdown stable viewport",
+                  "Secured Markdown stable viewport", "Secured Markdown source binding",
+                  "Preview folder selection commands", "Production Preview resource routing",
+                  "PreviewDisplayCache", "Preview resource composition ownership",
                   "Preview image decoded-output admission", "Pinned Textual image interception"]
         if args.configuration == "Release":
             suites.append("Preview Release resource probe")
         for suite in suites:
             if not re.search(r'Suite "' + re.escape(suite) + r'" passed' , log):
                 raise SystemExit(suite + " did not execute successfully")
-        count = 35 if args.configuration == "Release" else 34
+        count = 53 if args.configuration == "Release" else 52
         if not re.search(r"Test run with " + str(count) + r" tests in " + str(len(suites)) + r" suites passed", log):
             raise SystemExit("Every selected consumer test must finish; partial restarts are not accepted")
+        for function in [
+            "canonicallyEquivalentPublishedBytesCannotBorrowTheCurrentGrant",
+            "pendingPublishedSourceRetiresThePriorLoadAndKeepsPreviewMounted",
+            "absentParseRetiresItsPriorLoadWithoutRemovingReadableContent",
+            "originIsReservedBeforeTheCommandTaskCanRun",
+            "aHeldChoiceRemainsWithItsWindowWhenAnotherWindowBecomesKey",
+            "sameTextSaveAsRejectsAnOlderHeldFolderChoice",
+            "rootAwayAndBackCannotReviveAPendingChoice",
+            "anOlderCancellationCannotClearANewerPendingSelection",
+            "theRealFolderSheetFinishesWhenItsOriginWindowCloses",
+            "theRealMarkdownWindowCopiesGrantedImagesAndRevokesThemOnSaveAs",
+            "theRealHTMLPaneUsesImmutableHandlersAndPreservesSourceRenderedSwitching",
+            "cancellationAfterBackingAcquisitionCannotPublishAFolderGrant",
+            "identicalVisibleBlocksFromAnotherParserCannotKeepThePreviousSourceFrame",
+            "equalRevisionsFromAnotherParserCannotReusePublishedContributions",
+        ]:
+            if not re.search(r"Test " + re.escape(function) + r"\(\) passed", log):
+                raise SystemExit("Required production resource control did not pass: " + function)
         if "PREVIEW_NETWORK_CONTROL live=true loaded=true deniedRequests=0" not in log:
             raise SystemExit("Independent live listener and actual WebKit containment did not execute")
         if args.configuration == "Release" and "PREVIEW_RELEASE_PROBE sourceBytes=4194304" not in log:
