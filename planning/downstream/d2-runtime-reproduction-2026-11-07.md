@@ -124,3 +124,23 @@ main-module version to match the actual publisher field; if it does not, stop
 and record the unresolved input. Do not patch build-info or strip metadata to
 claim a complete reproduction. Optimizer continuation still requires its own
 explicit immutable-tool decision.
+
+## Freeze the reference tag view without altering captured refs
+
+The genuine-history fetch automatically followed newer tags, includingv0.7.0,
+and the next file records v0.7.1-0...+dirty instead of the publisher'sv0.6.10-0.
+The observer's version assertion rejects it; its full file/log and actual
+observed field are preserved. The first driver did not write its child status
+before that assertion, so no accepted normal-build result is inferred from it.
+
+Create a separate local reference checkout from the already captured real Git
+objects, fetching with --no-tags only the frozen root commit and actualv0.6.9
+tag/ancestry. Preserve the previous checkout and all fetched tag refs intact.
+Record the complete selected reference set and all source hashes, then invoke
+the same reviewed offline compiler command with the same frozen16 modules and
+real compiler. This explicitly reconstructs one ref view consistent with the
+recorded module-version base; it is not a claim about the publisher's full ref
+set or an invented/edited build-info string. Use only the declared untracked
+audit marker for the recorded dirty flag. Persist command/status/output metadata
+before testing the expected version, including on refusal. Still require full
+file equality for any reproduction statement; no metadata is stripped/patched.
