@@ -1,0 +1,57 @@
+name: Current-line and theme native qualification
+permissions:
+  contents: read
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'MacDown2/Packages/MacDownKit/Sources/EditorCore/**'
+      - 'MacDown2/Packages/MacDownKit/Sources/Highlighting/**'
+      - 'MacDown2/Packages/MacDownKit/Sources/Themes/**'
+      - 'MacDown2/Packages/MacDownKit/Tests/EditorCoreTests/**'
+      - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/**'
+      - 'MacDown2/Packages/MacDownKit/Tests/ThemesTests/**'
+      - '.github/scripts/run-current-line-theme-probe.py'
+      - '.github/workflows/current-line-theme-probe.yml'
+  workflow_dispatch:
+concurrency:
+  group: current-line-theme-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  editor-theme:
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [debug, release]
+    runs-on: macos-26
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Select deployment-matching Xcode and OS
+        run: |
+          set -euo pipefail
+          XCODE=$(ls -d /Applications/Xcode*.app | grep '26' | head -1 || true)
+          test -n "$XCODE"
+          test "$(sw_vers -productVersion | cut -d. -f1)" = 26
+          sudo xcode-select -s "$XCODE/Contents/Developer"
+          xcodebuild -version
+          sw_vers
+      - name: Execute identical baseline bitmap controls and all candidate editor/theme tests
+        run: python3 .github/scripts/run-current-line-theme-probe.py "$RUNNER_TEMP/current-line-theme" ${{ matrix.configuration }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: current-line-theme-${{ matrix.configuration }}
+          path: |
+            ${{ runner.temp }}/current-line-theme/baseline/receipt.json
+            ${{ runner.temp }}/current-line-theme/baseline/status.json
+            ${{ runner.temp }}/current-line-theme/baseline/compile.log
+            ${{ runner.temp }}/current-line-theme/baseline/probe.log
+            ${{ runner.temp }}/current-line-theme/candidate/receipt.json
+            ${{ runner.temp }}/current-line-theme/candidate/status.json
+            ${{ runner.temp }}/current-line-theme/candidate/compile.log
+            ${{ runner.temp }}/current-line-theme/candidate/probe.log
+          if-no-files-found: warn

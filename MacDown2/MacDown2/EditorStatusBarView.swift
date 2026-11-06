@@ -2,6 +2,7 @@ import EditorCore
 import FileCore
 import Foundation
 import SwiftUI
+import Themes
 
 /// The editor status bar (epic-22-implementation.md §6.7, §17 Slice 2b).
 ///
@@ -33,6 +34,8 @@ struct EditorStatusBarView: View {
     /// Set while the document's syntax highlighting is reduced for size.
     var reducedHighlighting: ReducedHighlightingNote?
 
+    let palette: ResolvedPresentationPalette?
+
     init(
         source: NSString,
         metrics: EditorDocumentMetrics,
@@ -44,7 +47,8 @@ struct EditorStatusBarView: View {
         encoding: EncodingStatusItem? = nil,
         lineEnding: LineEndingStatusItem? = nil,
         syntaxMode: SyntaxModeStatusItem? = nil,
-        reducedHighlighting: ReducedHighlightingNote? = nil
+        reducedHighlighting: ReducedHighlightingNote? = nil,
+        palette: ResolvedPresentationPalette? = nil
     ) {
         self.source = source
         self.metrics = metrics
@@ -57,6 +61,7 @@ struct EditorStatusBarView: View {
         self.lineEnding = lineEnding
         self.syntaxMode = syntaxMode
         self.reducedHighlighting = reducedHighlighting
+        self.palette = palette
     }
 
     /// Convenience for callers (and tests) that only have a `String`.
@@ -145,10 +150,16 @@ struct EditorStatusBarView: View {
                 .accessibilityIdentifier("statusBarIndentation")
         }
         .font(.caption)
-        .foregroundStyle(.secondary)
+        .foregroundStyle(palette.map { Color(nsColor: $0.statusForeground.nsColor) } ?? Color.secondary)
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
-        .background(.regularMaterial)
+        .background {
+            if let palette {
+                Color(nsColor: palette.statusBackground.nsColor)
+            } else {
+                Rectangle().fill(.regularMaterial)
+            }
+        }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("editorStatusBar")
     }

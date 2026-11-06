@@ -1,6 +1,17 @@
 import AppKit
 
 public extension EditorTextSystem {
+    /// The primary selection is the visual current line even when an earlier
+    /// secondary selection is the first range reported by AppKit.
+    var currentLogicalLine: Int {
+        lineIndex.line(atUTF16Offset: selectionSet.primaryRange.location)
+    }
+
+    internal func invalidateCurrentLinePresentation() {
+        textView.setNeedsDisplay(textView.visibleRect)
+        textView.enclosingScrollView?.verticalRulerView?.needsDisplay = true
+    }
+
     /// Enumerates `(utf16Offset, baselineY)` for every `NSTextLayoutFragment`
     /// currently materialized in the visible viewport, in top-to-bottom
     /// order, calling `body` for each. Never asks TextKit 2 to lay out

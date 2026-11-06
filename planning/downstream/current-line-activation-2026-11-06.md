@@ -1,0 +1,155 @@
+# Activate current-line and editor chrome theme semantics
+
+## Owner summary
+
+The primary caret's logical line needs a subtle theme background and a shape
+beside its gutter number, including when the chosen editor font is already bold.
+Current-line, gutter and status colors must consume the shared theme palette.
+Keep the existing TextKit 2 editor, source bytes, selection, undo and scroll state.
+The main risks are incorrect scrolled/wrapped geometry, theme updates that retain
+old colors, and accidental whole-document layout. This unit does not claim final
+VoiceOver/visual acceptance or the wider E22 performance and workflow matrix.
+
+## Baseline and prior implementation
+
+Current main is `6667bc9c1cb74534eafc417d921c3a37c55628b0`. PR98 is separately
+qualifying TOC navigation at `eaaacdddfdd940f73668e11f9acfaa80b7caa9b2`; this
+branch does not depend on its heading implementation. Rebase onto its verified
+merge before integration if it merges first. Follow EPIC_STANDARD,
+RELEASE_HARDENING and the existing E22/E23 architectures.
+
+Historical macdown_2 PR520, closed at `cdb92c92337a860afd9d30b5efcd74bb40c540ee`
+for repository migration, is not merged or accepted. Its patch retains a real
+viewport wash and gutter marker plus 30 reported focused tests, but not final
+native/Release evidence. Recover the narrow implementation after source review;
+do not cherry-pick stale theme/compliance files or unrelated window changes.
+The actual historical patch is retained with the new evidence.
+
+Main has eight themes and ResolvedPresentationPalette. Six themes explicitly
+provide currentLine; the two historical defaults use its shared fallback.
+EditorTextView never consumes that role. Gutter draws half-opacity text directly;
+status uses system colors. Both bypass their declared semantic palette roles.
+NeonSyntaxHighlighter already applies the shared background, foreground, caret,
+selection and invisibles roles. EditorView's selection delegate has moved into
+supporting files since PR520. Live source wins over old patch offsets.
+
+## User journeys and invariants
+
+Move the primary caret across Unicode and LF/CRLF/CR/Mixed source, wrapped rows,
+blank lines and EOF. Secondary carets do not decide the active logical line.
+Scroll, resize, switch theme/font and edit/shrink/grow source: the wash and marker
+must follow current geometry. Hiding the gutter remains the user's choice; native
+caret/selection semantics continue. No new persisted setting or editing action.
+Draw behind glyphs and native selection, never modify attributed source content.
+Never access NSLayoutManager or force TextKit 1 compatibility.
+
+## Ownership and interfaces
+
+Themes remains the sole role/fallback owner. EditorCore receives NSColor values
+without acquiring a Themes dependency. EditorTextView stores current-line and
+gutter presentation values; EditorGutterView reads them and draws the primary
+line's shape/weight cue. NeonSyntaxHighlighter forwards the resolved roles during
+initialization and live theme changes. The app supplies the same resolved status
+palette to EditorStatusBarView. Existing callers without a bound palette keep a
+system fallback. No new external dependency, public identity or resource authority.
+
+EditorTextSystem.currentLogicalLine reads the semantic primary selection through
+its existing incremental line index. Color changes and selection changes invalidate
+visible drawing/gutter only. Preserve existing source-change and attachment paths;
+no new observer that can outlive its text system. Do not copy document text to
+compute the active line or status metrics.
+
+## Geometry, state and concurrency
+
+All drawing/state remains MainActor, as required by AppKit. Intersect the dirty
+rect with the actual viewport, convert once through textContainerInset, start at
+the matching materialized fragment and stop below the visible region. A wrapped
+paragraph's rows belong to one logical source line. Explicitly cover empty source,
+trailing empty line and caret at an end boundary; do not paint an unrelated line.
+Gutter marker space belongs in thickness calculation, including proportional and
+already-bold fonts. Preserve the caller's CGContext state and Core Text matrix.
+
+There is no asynchronous analysis or publication state in the drawing path.
+Existing background parsing and style publication retain their current lifecycle
+guards. Theme/font changes repaint without reparsing, replacing the text system,
+changing document generation or breaking undo. No new cancellation policy.
+
+## Failure and trust boundary
+
+Missing/stale layout geometry skips decoration and relies on a later normal paint;
+it cannot index invalid source or force full layout to manufacture a match.
+Optional theme fields use only the canonical palette fallback. Marker geometry
+must be finite, clipped to the gutter and independent of syntax styles.
+Theme files remain validated declarative data. No network, subprocess, document
+write, scope, renderer or signing capability is added to product code.
+
+## Budgets and evidence
+
+Maintain viewport-lazy layout: the existing real 10 MiB editor control stays below
+500 materialized fragments. Measure the actual draw path before/after a scrolled
+paint in optimized hosted execution, and record raw timings and fragment counts.
+Do not use Debug ceilings or pure line-index timing as whole-app release proof.
+The original E05 50 ms/500 ms/8 ms and full editor path remain owned by #18/#6.
+No budget or old native failure is waived by recovering PR520.
+
+## Accessibility, localization and interoperability
+
+The gutter's shape cue remains visible with an already-bold font, so line color
+is supplementary. Native text selection/caret accessibility stays unchanged.
+Use existing localized status/gutter labels; no new product strings are planned.
+Final light/dark, Increase Contrast, Reduce Transparency, Reduce Motion and
+VoiceOver/keyboard review remains in #5/#7/#8. Exported source/HTML/PDF and file
+formats are unchanged; no decoration is serialized or copied as document content.
+
+## Verification matrix
+
+- Retain the historical source, first failures, exact locked candidate and commands.
+- Run a common-API native bitmap counterexample on actual baseline main and the
+  new source; no substitute editor or fake drawing engine.
+- Test primary/secondary selection, Unicode/EOL, wrap, inset/nonzero scroll, empty
+  source/trailing line, text edits, bold/proportional fonts and clipped drawing.
+- Verify live highlighter/theme forwarding and unchanged source/selection/undo.
+- Execute actual EditorCore/Highlighting/Themes and app integration controls hosted
+  in Debug and Release; locally compile only. Full locked CI remains mandatory.
+- Check formatting, strict lint, compliance and generated resource hashes after
+  any deliberate theme JSON modification. Keep prior resource/provenance records.
+
+## Implementation slices and stop conditions
+
+1. Recover/reconcile PR520 and write baseline-compatible counterexamples. Stop if
+   current TextKit geometry or primary-selection assumptions differ.
+2. Implement the viewport decoration/marker and direct shared role forwarding.
+   Make the two default current-line values explicit only with matching compliance
+   updates; keep theme IDs, fonts and syntax palettes unchanged.
+3. Qualify native geometry, live role changes and optimized viewport work, fixing
+   every failure before readiness. Keep execution in hosted macOS 26.
+4. Review the combined source independently of implementation order, rebase onto
+   current main, run exact checks and merge only after qualified tree/review proof.
+   Update #6/#7/#8 only to demonstrated scope; retain every wider/manual gate.
+
+Stop and revise this contract before changing editing semantics, introducing a
+new dependency, full-document layout, parser internals, native account authority,
+or weakening tests/deadlines. Native owner execution remains held. The Definition
+of Done is real native/optimized evidence for these source semantics, current docs,
+qualified merge and issue reconciliation; it is not completion of E22/E23.
+
+
+## Implementation and qualification detail
+
+Keep the two historical default theme JSON resources unchanged: their current-line
+color deliberately uses the existing canonical foreground-at-five-percent fallback.
+No duplicate fallback or new resource/provenance bytes are needed. The real
+highlighter forwards all editor/gutter/invisibles roles on initial and live theme
+application; the app forwards the same resolved status palette. Unbound callers
+retain system chrome. Current-line drawing returns its visited-fragment count for
+bounded native measurement without retaining mutable test state in the editor.
+
+The hosted comparison copies exactly the two common bitmap tests to immutable
+main 6667bc9c, requires exactly their two missing-feature failures, then executes
+all actual EditorCore/Highlighting/Themes controls on the candidate, in Debug and
+Release. Both source/pin inventories, actual helper/product digests and statuses
+are retained. Empty/EOF/wrapped geometry and a scrolled source above 10 MiB are
+additional candidate controls. The real app status-bar test mounts a hosting view,
+changes through every bundled theme and samples actual background pixels; it is
+not a substitute for owner visual/VoiceOver acceptance. All native execution stays
+hosted. Preserve any first geometry/capture failures and classify them before merge.
