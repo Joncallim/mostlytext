@@ -1,0 +1,12 @@
+{
+  "compliance": {
+    "message": "tree-sitter-markdown: distributed file digest mismatch: MacDown2/Packages/TreeSitterMarkdown/Package.swift",
+    "old_recorded_sha256": "f9b65117730209a598eea8d6d38542fb3e66169c681bf2e04828533a14fe5926",
+    "new_manifest_sha256": "6cb3008addcb673fa0e4a27ade5ab813704c9428fd21b5582230bcbe2c654928",
+    "correction": "Update the existing registered vendored manifest digest and provenance for the deliberate dependency-only edit; original grammar/query/license bytes unchanged"
+  },
+  "compile": {
+    "message": "module Highlighting was not compiled for testing",
+    "correction": "Compile the actual Release test target with -Xswiftc -enable-testing; preserve the original compile log; no test executes locally"
+  }
+}
