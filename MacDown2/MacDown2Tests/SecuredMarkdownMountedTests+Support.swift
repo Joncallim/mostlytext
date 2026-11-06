@@ -68,7 +68,7 @@ extension SecuredMarkdownMountedTests {
             let html = NSPasteboard.general.string(forType: .html) ?? "<no HTML>"
             return "view=\(ObjectIdentifier(interaction)) hidden=\(interaction.isHiddenOrHasHiddenAncestor) "
                 + "frame=\(interaction.frame) firstResponder=\(interaction.window?.firstResponder === interaction) "
-                + "html=\(html)"
+                + "html=\(html) \(attachmentLayoutDiagnostics(in: interaction))"
         }.joined(separator: " | ")
     }
 
