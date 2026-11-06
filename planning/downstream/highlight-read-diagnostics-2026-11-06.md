@@ -107,3 +107,16 @@ timeouts or incomplete frame values fail. A green replay check cannot satisfy
 issue #19's original-numeric-trigger or failing-before remediation criteria.
 This replaces the earlier assumption that a successful current regression must
 reproduce the historical abort; it does not weaken those root-cause criteria.
+
+## Validation against the merged editor theme semantics
+
+Reconcile this branch with actual main fcf2674420c2712056086df16437925f8bf5f411.
+The earlier 70ba1779 full CI passed 3704 package functions in 529 suites and
+670 app functions in 140 suites; both strict controlled replay configurations
+also passed. Those runs predate the merged theme source. Require fresh combined
+checks before integration. The added opt-in highlighting function and suite are
+included in the complete current-line test inventory, increasing its exact
+candidate count from 1082/142 to 1083/143. Keep the historical two-failure
+baseline and the actual orientation mutation and restoration controls intact.
+The original assertion trigger remains unresolved; no issue acceptance is
+inferred from a current replay passing.
