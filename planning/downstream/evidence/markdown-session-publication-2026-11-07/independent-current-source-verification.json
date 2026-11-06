@@ -1,0 +1,17 @@
+{
+  "source_commit": "cddb8069412b8bff67f39a856e8cd39cef3cb217",
+  "baseline": "d607098bdb5046c02d81137b497e0ffe1aa01748",
+  "actual_source_and_test_hashes_verified": 53,
+  "component_pins_verified": 3,
+  "full_application_pins_unchanged": 24,
+  "only_changed_production_source": [
+    "MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/MarkdownParseSession.swift"
+  ],
+  "cases_per_configuration": 3,
+  "checks_per_configuration": 32,
+  "original_failures_per_configuration": 18,
+  "candidate_failures_per_configuration": 0,
+  "canonical_release_tests_compiled": true,
+  "canonical_tests_executed_locally": false,
+  "scope": "Normal Foundation component execution only; full hosted actual package/app validation remains required"
+}

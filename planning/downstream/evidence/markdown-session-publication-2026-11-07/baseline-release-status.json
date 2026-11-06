@@ -1,0 +1,9 @@
+{
+  "returncode": 1,
+  "elapsed_seconds": 0.4891108754090965,
+  "binary_sha256": "b8f3330b727e137ce4e11057d5d0a6c0e7293074d705c378e2ea56afa2f6b0ae",
+  "command": [
+    "/Volumes/Fast SSD/CORTANA-Builds/markdown-session-publication-20261107/fixture/.build/arm64-apple-macosx/release/MarkdownSessionChecks"
+  ],
+  "source_head": "800a63e0ded461888971a99863a6b47650dea6dc"
+}

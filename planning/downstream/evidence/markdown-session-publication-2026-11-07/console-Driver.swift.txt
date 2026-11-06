@@ -1,0 +1,25 @@
+import Darwin
+import Foundation
+
+@main
+struct MarkdownSessionChecks {
+    @MainActor
+    static func main() async {
+        let groups = [
+            ("cancelled immediate", await MarkdownPublicationScenarios.cancelledImmediate()),
+            ("superseded immediate", await MarkdownPublicationScenarios.supersededImmediate()),
+            ("superseded by edit", await MarkdownPublicationScenarios.supersededByEdit()),
+        ]
+        var failures = 0
+        var total = 0
+        for (name, checks) in groups {
+            for check in checks {
+                total += 1
+                if !check.passed { failures += 1 }
+                print("\(check.passed ? "PASS" : "FAIL") [\(name)] \(check.message)")
+            }
+        }
+        print("MARKDOWN_SESSION_CHECKS cases=3 checks=\(total) failures=\(failures)")
+        exit(failures == 0 ? 0 : 1)
+    }
+}
