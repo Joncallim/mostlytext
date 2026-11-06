@@ -173,3 +173,21 @@ mismatch. No additional optimizer version search, edited metadata, source
 patch, removed custom section or repeated unchanged attempt is authorised by
 this decision. A mismatch is useful bounded provenance evidence, not completion
 of source reproduction, rights/font review, source offer or renderer acceptance.
+
+## Evidence-only packet for the bounded outcomes
+
+Record partial and failed outcomes as evidence even if complete reproduction
+remains unresolved. Prepare a versioned compliance/evidence/d2-build-inputs
+packet containing original status/complete hashed input records, compact full
+logs, exact genuine tag/submodule metadata and a manifested deterministic
+archive of all37 selected build-helper files including their original licence.
+No helper is executed. Preserve all earlier source-review archives unchanged.
+Include a read-only comparison recipe; do not introduce a new publisher/build
+launcher or require native execution in ordinary Compliance. Independently
+verify complete packet members/digests, source-helper archive members against
+the actual gitlink object and original licence bytes, and every stated outcome.
+The packet is preparation and an explicit source-availability gap record; it
+does not replace/verify the final source offer or change inventory guards.
+Update the source-review question links with this narrower result. Submit this
+documentation-only unit after source convergence; do not invalidate frozen
+PR108 checks or claim source/rights/native/signing completion.
