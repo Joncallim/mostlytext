@@ -81,3 +81,29 @@ to shell-expand the combined test-filter expression and lldb-argdumper exits
 arguments using process launch --shell-expand-args false, and require actual
 selected-function start before classifying missing assertion values. Preserve
 the original setup failure separately from the earlier genuine non-reproduction.
+
+## Separate strict replay coverage from original-trigger classification
+
+The c9224d40 owned Debug run really holds the background JavaScript request,
+replaces/shrinks/grows the actual EditorView, preserves native and model bytes
+and matches a nonempty fresh highlighter. The controlled test passes. The old
+widened experiment also reports no mismatch, causing its stale expected-issue
+wrapper to fail; neither reaches the original assertion. No triggering numbers
+exist. Preserve those results without treating them as a root-cause fix.
+
+Use the exact stricter canonical widened fixture from PR99 source 37e6fde0:
+nonempty fresh output and exact parity, with no expected-issue wrapper. Retain
+the ordinary Debug guard; only these explicitly opted-in owned runs enable it.
+Add a direct run before the Debug debugger to expose debugger timing effects;
+Release runs the same two strict real-editor controls directly. No assertion,
+read bound, deadline, dependency or style expectation changes.
+
+Record two independent outcomes. Successful assertion capture still requires
+every requested real value and continuation into the original fatal error. If
+no assertion occurs, qualify only complete strict replay selections (including
+the held-request marker) in every requested mode and explicitly record that the
+original trigger remains unresolved. Missing/failed controls, setup failures,
+timeouts or incomplete frame values fail. A green replay check cannot satisfy
+issue #19's original-numeric-trigger or failing-before remediation criteria.
+This replaces the earlier assumption that a successful current regression must
+reproduce the historical abort; it does not weaken those root-cause criteria.

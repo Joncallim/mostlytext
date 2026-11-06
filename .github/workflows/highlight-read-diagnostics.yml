@@ -1,4 +1,4 @@
-name: Original Debug highlighting read diagnostic
+name: Controlled highlighting replay and original-read diagnostics
 
 permissions:
   contents: read
@@ -8,8 +8,13 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - 'MacDown2/Packages/MacDownKit/Sources/Highlighting/**'
+      - 'MacDown2/Packages/MacDownKit/Sources/EditorCore/**'
+      - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/**'
+      - 'MacDown2/Packages/MacDownKit/Package.resolved'
       - '.github/scripts/run-highlight-read-diagnostics.py'
       - '.github/scripts/record_highlight_read.py'
+      - '.github/scripts/test-highlight-replay-result.py'
       - '.github/workflows/highlight-read-diagnostics.yml'
 
 concurrency:
@@ -17,7 +22,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  original-assertion:
+  controlled-highlighting:
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [debug, release]
     runs-on: macos-26
     timeout-minutes: 30
     steps:
@@ -34,20 +43,23 @@ jobs:
           xcodebuild -version
           sw_vers
       - name: Verify owned diagnostic lifecycle controls
-        run: python3 .github/scripts/test-run-owned-app-tests.py
-      - name: Capture the original fixture and unchanged assertion frame
-        run: python3 .github/scripts/run-highlight-read-diagnostics.py "$RUNNER_TEMP/highlight-read-diagnostic"
+        run: |
+          python3 .github/scripts/test-run-owned-app-tests.py
+          python3 .github/scripts/test-highlight-replay-result.py
+      - name: Verify strict native replay and classify the unchanged original assertion
+        run: python3 .github/scripts/run-highlight-read-diagnostics.py "$RUNNER_TEMP/highlight-read-diagnostic" --configuration ${{ matrix.configuration }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: original-debug-highlight-read
+          name: controlled-highlight-read-${{ matrix.configuration }}
           path: |
             ${{ runner.temp }}/highlight-read-diagnostic/receipt.json
             ${{ runner.temp }}/highlight-read-diagnostic/assertion-frame.json
             ${{ runner.temp }}/highlight-read-diagnostic/compile.log
             ${{ runner.temp }}/highlight-read-diagnostic/probe.log
+            ${{ runner.temp }}/highlight-read-diagnostic/direct.log
             ${{ runner.temp }}/highlight-read-diagnostic/commands.lldb
-            ${{ runner.temp }}/highlight-read-diagnostic/diagnostics/*.json
-            ${{ runner.temp }}/highlight-read-diagnostic/diagnostics/*.sample.txt
-            ${{ runner.temp }}/highlight-read-diagnostic/diagnostics/*.log
+            ${{ runner.temp }}/highlight-read-diagnostic/*-diagnostics/*.json
+            ${{ runner.temp }}/highlight-read-diagnostic/*-diagnostics/*.sample.txt
+            ${{ runner.temp }}/highlight-read-diagnostic/*-diagnostics/*.log
           if-no-files-found: warn

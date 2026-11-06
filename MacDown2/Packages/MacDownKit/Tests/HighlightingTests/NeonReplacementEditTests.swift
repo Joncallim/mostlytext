@@ -90,9 +90,10 @@ struct NeonReplacementEditTests {
         typeRapidly(in: editor)
 
         let (edited, fresh) = try await runs(afterEditing: editor)
-        withKnownIssue("every widened keystroke is a replacement containing inline ranges (see above)") {
-            #expect(edited == fresh)
-        }
+        // Optimized native qualification now demonstrates parity. Keep this
+        // strict; the separately recorded Debug abort remains gated above.
+        #expect(!fresh.isEmpty)
+        #expect(edited == fresh)
     }
 
     @Test func wideningIsATruthfulInBoundsDescription() {

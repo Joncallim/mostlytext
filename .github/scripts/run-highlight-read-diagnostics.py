@@ -19,9 +19,30 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def replay_passed(code, log, under_debugger=False):
+    marker = re.search(r'HIGHLIGHT_READ_CONTROL events=(\[[^\n]*\]) sourceBytes=(\d+)', log)
+    if not marker:
+        return False
+    try:
+        events = json.loads(marker[1])
+    except json.JSONDecodeError:
+        return False
+    if not isinstance(events, list):
+        return False
+    if any(value in log for value in ['Program crashed:', 'stop reason = signal', 'Fatal error:',
+                                      'Restarting after unexpected']):
+        return False
+    normal_exit = not under_debugger or re.search(r'Process \d+ exited with status = 0\b', log)
+    return (code == 0 and bool(normal_exit) and 'Test run with 2 tests in 2 suites passed' in log
+            and 'recorded an issue at' not in log and events.count('background-held') == 1
+            and 'released' in events and 'hold-timed-out' not in events)
+
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('output', type=Path)
+    parser.add_argument('--configuration', choices=['debug', 'release'], default='debug')
     args = parser.parse_args()
     if os.environ.get('CI') != 'true':
         parser.error('Native diagnostics execute only in an owned hosted CI environment')
@@ -30,7 +51,8 @@ def main():
     destination.mkdir(parents=True, exist_ok=False)
     actual = repo / 'MacDown2/Packages/MacDownKit'
     names = output(['git', 'ls-files', 'MacDown2', '.github/scripts/run-highlight-read-diagnostics.py',
-                    '.github/scripts/record_highlight_read.py', '.github/scripts/run-owned-app-tests.py',
+                    '.github/scripts/record_highlight_read.py', '.github/scripts/test-highlight-replay-result.py',
+                    '.github/scripts/run-owned-app-tests.py',
                     '.github/scripts/test-run-owned-app-tests.py', '.github/workflows/highlight-read-diagnostics.yml'],
                    cwd=repo).splitlines()
     sources = {name: digest(repo / name) for name in names}
@@ -42,7 +64,7 @@ def main():
     tests.mkdir(parents=True)
     copies = {}
     annotation = b'@Test(.enabled(if: !isDebugBuild))'
-    for source in sorted((actual / 'Tests/HighlightingTests').glob('*.swift')):
+    for source in sorted((actual / 'Tests/HighlightingTests').rglob('*.swift')):
         raw = source.read_bytes()
         if re.search(rb'Bundle\.module|#filePath|#fileID|#file\b', raw):
             raise SystemExit('Source-relative fixture requires a separate packaging decision: ' + str(source))
@@ -66,12 +88,12 @@ def main():
     (package / 'Package.swift').write_text(manifest)
     (package / 'Package.resolved').write_text(json.dumps({'version': 2, 'pins': pins}) + '\n')
     receipt = {'checkout': output(['git', 'rev-parse', 'HEAD'], cwd=repo), 'source_sha256': sources,
-               'pins': pins, 'copied_tests': copies, 'manifest_sha256': digest(package / 'Package.swift'),
+               'configuration': args.configuration, 'pins': pins, 'copied_tests': copies, 'manifest_sha256': digest(package / 'Package.swift'),
                'disposition': 'Diagnostic execution pending; no production fix or issue completion inferred'}
     receipt_path = destination / 'receipt.json'
     receipt_path.write_text(json.dumps(receipt, indent=2) + '\n')
     command = ['swift', 'build', '--package-path', str(package), '--scratch-path', str(destination / 'build'),
-               '-c', 'debug', '--force-resolved-versions', '-Xswiftc', '-enable-testing']
+               '-c', args.configuration, '--force-resolved-versions', '-Xswiftc', '-enable-testing']
     with (destination / 'compile.log').open('w') as log:
         subprocess.run(command + ['--build-tests'], check=True, timeout=900,
                        stdout=log, stderr=subprocess.STDOUT)
@@ -115,19 +137,26 @@ def main():
     environment = dict(os.environ, HIGHLIGHT_READ_DIAGNOSTICS=str(destination),
                        MOSTLYTEXT_HIGHLIGHT_READ_DIAGNOSTIC='1',
                        DYLD_FRAMEWORK_PATH=str(developer / 'Platforms/MacOSX.platform/Developer/Library/Frameworks'))
-    with (destination / 'probe.log').open('w') as log:
-        result = subprocess.run([sys.executable, str(repo / '.github/scripts/run-owned-app-tests.py'),
-                                 str(destination / 'diagnostics'), str(owned), '--',
-                                 'xcrun', 'lldb', '--no-lldbinit', '--batch', '--source', str(commands),
-                                 '--one-line-on-crash', 'thread backtrace all', '--'] + run_args,
-                                cwd=repo, env=environment, timeout=660, stdout=log, stderr=subprocess.STDOUT)
-    receipt['debugger_returncode'] = result.returncode
+    def execute(label, arguments):
+        with (destination / (label + '.log')).open('w') as log:
+            result = subprocess.run([sys.executable, str(repo / '.github/scripts/run-owned-app-tests.py'),
+                                     str(destination / (label + '-diagnostics')), str(owned), '--'] + arguments,
+                                    cwd=repo, env=environment, timeout=660, stdout=log, stderr=subprocess.STDOUT)
+        status = json.loads((destination / (label + '-diagnostics/status.json')).read_text())
+        if status['timed_out'] or status['cancelled']:
+            raise SystemExit('Owned native ' + label + ' timed out or was cancelled')
+        return result.returncode, (destination / (label + '.log')).read_text(), status
+
+    direct_code, direct_log, direct_status = execute('direct', run_args)
+    debugger = None
+    if args.configuration == 'debug':
+        debugger = execute('probe', ['xcrun', 'lldb', '--no-lldbinit', '--batch', '--source', str(commands),
+                                    '--one-line-on-crash', 'thread backtrace all', '--'] + run_args)
+    receipt['direct_status'] = direct_status
+    receipt['debugger_status'] = debugger[2] if debugger else None
     receipt['execution_sha256'] = hashes
-    receipt['disposition'] = 'Debugger finished; assertion-frame qualification pending'
+    receipt['disposition'] = 'Native execution finished; controlled replay and assertion classification pending'
     receipt_path.write_text(json.dumps(receipt, indent=2) + '\n')
-    status = json.loads((destination / 'diagnostics/status.json').read_text())
-    if status['timed_out'] or status['cancelled']:
-        raise SystemExit('Debugger execution timed out or was cancelled')
     if any(digest(repo / name) != value for name, value in sources.items()) or lock.read_bytes() != original_lock:
         raise SystemExit('Original source or immutable dependency lock changed')
     if any(digest(Path(name)) != value for name, value in hashes.items()):
@@ -138,27 +167,35 @@ def main():
         raise SystemExit('Diagnostic package manifest changed')
     if json.loads((package / 'Package.resolved').read_text())['pins'] != pins:
         raise SystemExit('Focused diagnostic dependency pins changed')
-    log = (destination / 'probe.log').read_text()
-    if result.returncode != 0 or not re.search(r'Test (widenedBackgroundTypingMatchesAFreshHighlighter|replacementWhileAnInjectedLanguageRequestIsHeldMatchesFreshHighlighting)\(\) started', log):
-        receipt['disposition'] = 'Debugger launch or fixture execution failed; no original-assertion result'
-        receipt_path.write_text(json.dumps(receipt, indent=2) + '\n')
-        raise SystemExit(receipt['disposition'])
     frame_path = destination / 'assertion-frame.json'
     if not frame_path.exists():
-        receipt['disposition'] = 'Original assertion not reproduced; triggering values unavailable; no fix established'
+        if not replay_passed(direct_code, direct_log):
+            raise SystemExit('Direct controlled replay failed or did not completely execute')
+        if debugger and not replay_passed(debugger[0], debugger[1], under_debugger=True):
+            raise SystemExit('Debugger controlled replay failed or did not completely execute')
+        receipt['controlled_replay_qualified'] = True
+        receipt['original_assertion_captured'] = False
+        receipt['original_trigger_resolved'] = False
+        receipt['disposition'] = ('Strict current controlled replays pass; original assertion not reproduced; '
+                                  'triggering values unavailable and original root-cause criterion remains open')
         receipt_path.write_text(json.dumps(receipt, indent=2) + '\n')
-        raise SystemExit(receipt['disposition'])
+        print(receipt['disposition'])
+        return
+    if not debugger or debugger[0] != 0:
+        raise SystemExit('Original frame capture requires a successfully launched Debug debugger')
+    log = debugger[1]
     observed = json.loads(frame_path.read_text())
     for name in ['byteOffset', 'limit', 'chunkSize', 'location', 'end', 'text_utf16_length']:
         if not isinstance(observed[name], int):
             raise SystemExit('The actual original frame did not yield ' + name)
     if observed['location'] != observed['byteOffset'] // 2 or observed['location'] <= observed['end']:
         raise SystemExit('The original failing read condition was not captured')
-    log = (destination / 'probe.log').read_text()
     if not re.search(r'Test (widenedBackgroundTypingMatchesAFreshHighlighter|replacementWhileAnInjectedLanguageRequestIsHeldMatchesFreshHighlighting)\(\) started', log):
         raise SystemExit('Neither selected real editor experiment executed')
     if not re.search(r'String\+Data\.swift:\d+: Fatal error: location is greater than end', log):
         raise SystemExit('The unchanged original assertion did not execute')
+    receipt['original_assertion_captured'] = True
+    receipt['original_trigger_resolved'] = False
     receipt['disposition'] = 'Original assertion values captured; cause and remediation remain unproved'
     receipt_path.write_text(json.dumps(receipt, indent=2) + '\n')
     print(receipt['disposition'])
