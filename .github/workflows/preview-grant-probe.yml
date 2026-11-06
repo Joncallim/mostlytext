@@ -109,6 +109,7 @@ jobs:
             -only-testing:MacDown2Tests/TextualImageSelectionPublicationTests test-without-building \
             | tee "$RUNNER_TEMP/preview-grant-probe/selection-probe.log"
           grep -q 'IMAGE_SELECTION_TRACE_ENABLED true' "$RUNNER_TEMP/preview-grant-probe/selection-probe.log"
+          grep -q 'IMAGE_SELECTION_ORACLE positives=8 negatives=56 capturedBlue=true' "$RUNNER_TEMP/preview-grant-probe/selection-probe.log"
           grep -q 'IMAGE_SELECTION_GATE completed=8' "$RUNNER_TEMP/preview-grant-probe/selection-probe.log"
           grep -q 'Test run with 1 test in 1 suite passed' "$RUNNER_TEMP/preview-grant-probe/selection-probe.log"
       - name: Prove omission fails and exact restored mounted application passes
@@ -130,6 +131,10 @@ jobs:
             ${{ runner.temp }}/preview-grant-probe/parsed-frame*-diagnostics/*.sample.txt
             ${{ runner.temp }}/preview-grant-probe/parsed-frame*-diagnostics/*.log
             ${{ runner.temp }}/preview-grant-probe/probe.log
+            ${{ runner.temp }}/preview-grant-probe/selection-probe.log
+            ${{ runner.temp }}/preview-grant-probe/selection-diagnostics/*.json
+            ${{ runner.temp }}/preview-grant-probe/selection-diagnostics/*.sample.txt
+            ${{ runner.temp }}/preview-grant-probe/selection-diagnostics/*.log
             ${{ runner.temp }}/preview-grant-probe/diagnostics/*.json
             ${{ runner.temp }}/preview-grant-probe/diagnostics/*.sample.txt
             ${{ runner.temp }}/preview-grant-probe/diagnostics/*.log

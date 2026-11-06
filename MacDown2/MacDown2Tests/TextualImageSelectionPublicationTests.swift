@@ -17,6 +17,8 @@ struct TextualImageSelectionPublicationTests {
         let harness = SecuredMarkdownMountedTests()
         var gates: [SelectionImageBytesGate] = []
         let source = "![fixture](image.png)"
+        let references = try (0 ..< 8).map { try coloredPNG(generation: $0) }
+        try calibrateOracle(references: references)
         let parsed = try await ParseEngine().parse(source, revision: 1)
         let originalPasteboard = harness.snapshotPasteboard()
         defer { harness.restorePasteboard(originalPasteboard) }
@@ -33,7 +35,7 @@ struct TextualImageSelectionPublicationTests {
         print("IMAGE_SELECTION_TRACE_ENABLED \(PreviewResourceDiagnostics.isEnabled)")
         for generation in 0 ..< 8 {
             let deadline = ContinuousClock.now.advanced(by: .seconds(5))
-            let gate = try SelectionImageBytesGate(bytes: coloredPNG(generation: generation), generation: generation)
+            let gate = SelectionImageBytesGate(bytes: references[generation], generation: generation)
             gates.append(gate)
             let previousRequests = gate.requestCount
             let loader = PreviewResourceImageLoader(provider: { _ in await gate.take() })
@@ -43,19 +45,12 @@ struct TextualImageSelectionPublicationTests {
                 resourceImageLoader: loader, resourceLoadID: UUID()
             ))
             host.layoutSubtreeIfNeeded()
-            try await releaseAfterEarlyCopy(in: host, gate: gate, after: previousRequests,
-                                            before: deadline, harness: harness)
-            var copiedImage = false
-            while ContinuousClock.now < deadline {
-                if let html = nativeCopy(in: host, harness: harness), matchesCurrentPixels(
-                    html,
-                    generation: generation
-                ) {
-                    copiedImage = true
-                    break
-                }
-                try await Task.sleep(for: .milliseconds(20))
-            }
+            let earlyHTML = try await copyWhileBytesAreHeld(in: host, gate: gate, after: previousRequests,
+                                                            before: deadline, harness: harness)
+            try #require(!matchesCurrentPixels(earlyHTML, reference: references[generation]))
+            gate.releaseAll()
+            let copiedImage = try await waitForCurrentPixels(in: host, reference: references[generation],
+                                                             before: deadline, harness: harness)
             if !copiedImage {
                 print("IMAGE_SELECTION_FAILURE generation=\(generation) requests=\(gate.requestCount) "
                     + harness.copyDiagnostics(in: host))
@@ -66,10 +61,10 @@ struct TextualImageSelectionPublicationTests {
         print("IMAGE_SELECTION_GATE completed=8")
     }
 
-    private func releaseAfterEarlyCopy(
+    private func copyWhileBytesAreHeld(
         in host: NSView, gate: SelectionImageBytesGate, after previousRequests: Int,
         before deadline: ContinuousClock.Instant, harness: SecuredMarkdownMountedTests
-    ) async throws {
+    ) async throws -> String {
         while gate.requestCount == previousRequests, ContinuousClock.now < deadline {
             try await Task.sleep(for: .milliseconds(20))
         }
@@ -81,8 +76,7 @@ struct TextualImageSelectionPublicationTests {
                 try await Task.sleep(for: .milliseconds(20))
             }
         }
-        _ = try #require(earlyHTML, "Actual native Copy must execute before image availability")
-        gate.releaseAll()
+        return try #require(earlyHTML, "Actual native Copy must execute before image availability")
     }
 
     private func channels(generation: Int) -> [CGFloat] {
@@ -105,15 +99,56 @@ struct TextualImageSelectionPublicationTests {
         return try #require(bitmap.representation(using: .png, properties: [:]))
     }
 
-    private func matchesCurrentPixels(_ html: String, generation: Int) -> Bool {
+    private func matchesCurrentPixels(_ html: String, reference: Data) -> Bool {
         guard let start = html.range(of: "data:image/png;base64,")?.upperBound else { return false }
         let encoded = html[start...].prefix { $0.isLetter || $0.isNumber || "+/=".contains($0) }
-        guard let bytes = Data(base64Encoded: String(encoded)), let image = NSBitmapImageRep(data: bytes),
-              image.pixelsWide == 8, image.pixelsHigh == 8,
-              let color = image.colorAt(x: 0, y: 0)?.usingColorSpace(.deviceRGB)
+        guard let bytes = Data(base64Encoded: String(encoded)),
+              let actual = components(bytes, space: .sRGB), let expected = components(reference, space: .sRGB)
         else { return false }
-        let actual = [color.redComponent, color.greenComponent, color.blueComponent]
-        return zip(actual, channels(generation: generation)).allSatisfy { abs($0 - $1) < 0.1 }
+        return zip(actual, expected).allSatisfy { abs($0 - $1) < 0.1 }
+    }
+
+    private func components(_ bytes: Data, space: NSColorSpace) -> [CGFloat]? {
+        guard bytes.starts(with: [137, 80, 78, 71, 13, 10, 26, 10]),
+              let image = NSBitmapImageRep(data: bytes), image.pixelsWide == 8, image.pixelsHigh == 8,
+              let color = image.colorAt(x: 0, y: 0)?.usingColorSpace(space)
+        else { return nil }
+        return [color.redComponent, color.greenComponent, color.blueComponent, color.alphaComponent]
+    }
+
+    private func calibrateOracle(references: [Data]) throws {
+        try #require(references.count == 8)
+        for expected in references.indices {
+            for actual in references.indices {
+                let html = "<img src=\"data:image/png;base64,\(references[actual].base64EncodedString())\">"
+                try #require(matchesCurrentPixels(html, reference: references[expected]) == (actual == expected))
+            }
+        }
+        // Exact synthetic PNG copied by the first failed native comparison, not a replacement success result.
+        let capturedBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdp"
+            + "AAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAACKADAAQAAAABAAAACAAAAACVhHtSAAAAF0lE"
+            + "QVQYGWNkYPj/nwEPYMIjB5YaHgoAEF0CDh+PWwkAAAAASUVORK5CYII="
+        let captured = try #require(Data(base64Encoded: capturedBase64))
+        let capturedHTML = "<img src=\"data:image/png;base64,\(capturedBase64)\">"
+        try #require(matchesCurrentPixels(capturedHTML, reference: references[1]))
+        print("IMAGE_SELECTION_COLORSPACE device=\(String(describing: components(captured, space: .deviceRGB))) "
+            + "capturedSRGB=\(String(describing: components(captured, space: .sRGB))) "
+            + "encodedReferenceSRGB=\(String(describing: components(references[1], space: .sRGB))) "
+            + "constructor=\(channels(generation: 1))")
+        print("IMAGE_SELECTION_ORACLE positives=8 negatives=56 capturedBlue=true")
+    }
+
+    private func waitForCurrentPixels(
+        in host: NSView, reference: Data, before deadline: ContinuousClock.Instant,
+        harness: SecuredMarkdownMountedTests
+    ) async throws -> Bool {
+        while ContinuousClock.now < deadline {
+            if let html = nativeCopy(in: host, harness: harness), matchesCurrentPixels(html, reference: reference) {
+                return true
+            }
+            try await Task.sleep(for: .milliseconds(20))
+        }
+        return false
     }
 
     private func nativeCopy(in view: NSView, harness: SecuredMarkdownMountedTests) -> String? {
