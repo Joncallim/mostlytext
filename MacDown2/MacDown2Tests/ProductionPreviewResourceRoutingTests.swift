@@ -11,7 +11,7 @@ import WebKit
 struct ProductionPreviewResourceRoutingTests {
     @Test func theRealMarkdownWindowCopiesGrantedImagesAndRevokesThemOnSaveAs() async throws {
         let source = "![fixture](image.png)\n"
-        let fixture = try PreviewProductionFixture(source: source)
+        let fixture = try PreviewProductionFixture(source: source, previewLayout: .split(fraction: 0.5))
         defer { fixture.dispose() }
         let pasteboard = fixture.copyHarness.snapshotPasteboard()
         defer { fixture.copyHarness.restorePasteboard(pasteboard) }
@@ -116,8 +116,18 @@ struct ProductionPreviewResourceRoutingTests {
         try #require(encoded.pixelsWide == 2 && encoded.pixelsHigh == 2)
         try #require(fixtureColor.blueComponent > 0.9 && fixtureColor.redComponent < 0.1)
         try bytes.write(to: fixture.folder.appendingPathComponent("second.png"))
-        fixture.first.model.tabStore.updateActiveDocument { $0.updatingText("![second](second.png)\n") }
+        let tabID = try #require(fixture.first.model.tabStore.activeTabID)
+        let system = try #require(fixture.first.editorStore.existingSystem(for: tabID.uuidString))
+        try #require(system.textView.window === fixture.first.window)
+        try #require(system.textView.delegate != nil)
+        let priorGeneration = try #require(fixture.first.model.activeDocument).mutationGeneration
+        let replacement = "![second](second.png)\n"
         let deadline = ContinuousClock.now.advanced(by: .seconds(5))
+        system.textView.insertText(replacement, replacementRange: NSRange(location: 0, length: system.text.utf16.count))
+        let edited = try #require(fixture.first.model.activeDocument)
+        try #require(edited.text.utf8.elementsEqual(replacement.utf8))
+        try #require(system.textView.string.utf8.elementsEqual(replacement.utf8))
+        try #require(edited.mutationGeneration > priorGeneration)
         var lastHTML = ""
         var lastRaster = "no copied raster"
         while ContinuousClock.now < deadline {

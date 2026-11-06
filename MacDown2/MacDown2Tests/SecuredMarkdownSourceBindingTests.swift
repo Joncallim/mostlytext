@@ -17,11 +17,10 @@ struct SecuredMarkdownSourceBindingTests {
         let current = "cafe\u{0301}\n\n![fixture](image.png)\n"
         #expect(published == current)
         #expect(!published.utf8.elementsEqual(current.utf8))
-        let fixture = try PreviewProductionFixture(source: current, previewLayout: .editorOnly)
+        let fixture = try await SourceBindingFixture(source: current)
         defer { fixture.dispose() }
-        try await fixture.installGrant()
         let parsed = try await ParseEngine().parse(published, revision: 1)
-        let document = try #require(fixture.first.model.activeDocument)
+        let document = fixture.document
         let recorder = SourceFrameRecorder()
         let host = NSHostingView(rootView: view(document, parsed, published, fixture, recorder))
         let window = fixture.copyHarness.makeMountedWindow(hosting: host)
@@ -34,15 +33,14 @@ struct SecuredMarkdownSourceBindingTests {
         try await fixture.wait("The exact current source did not replace the denied frame") {
             recorder.id != nil && recorder.id != deniedID
         }
-        _ = try await read(#require(recorder.loader))
+        _ = try await read(#require(recorder.loader), phase: "exact published source positive")
     }
 
     @Test func pendingPublishedSourceRetiresThePriorLoadAndKeepsPreviewMounted() async throws {
         let source = "![fixture](image.png)\n"
-        let fixture = try PreviewProductionFixture(source: source, previewLayout: .editorOnly)
+        let fixture = try await SourceBindingFixture(source: source)
         defer { fixture.dispose() }
-        try await fixture.installGrant()
-        let document = try #require(fixture.first.model.activeDocument)
+        let document = fixture.document
         let parsed = try await ParseEngine().parse(source, revision: 1)
         let recorder = SourceFrameRecorder()
         let host = NSHostingView(rootView: view(document, parsed, source, fixture, recorder))
@@ -50,7 +48,7 @@ struct SecuredMarkdownSourceBindingTests {
         defer { window.close() }
         try await fixture.wait("The original bound source frame did not apply") { recorder.id != nil }
         let prior = try #require(recorder.loader)
-        _ = try await read(prior)
+        _ = try await read(prior, phase: "initial source before pending publication")
         let originalID = recorder.id
         host.rootView = view(document, parsed, nil, fixture, recorder)
         try await fixture.wait("Missing published source did not apply a denied frame") {
@@ -64,15 +62,14 @@ struct SecuredMarkdownSourceBindingTests {
         try await fixture.wait("Published source arrival did not restore the bound frame") {
             recorder.id != nil && recorder.id != missingSourceID
         }
-        _ = try await read(#require(recorder.loader))
+        _ = try await read(#require(recorder.loader), phase: "exact published source positive")
     }
 
     @Test func absentParseRetiresItsPriorLoadWithoutRemovingReadableContent() async throws {
         let source = "![fixture](image.png)\n"
-        let fixture = try PreviewProductionFixture(source: source, previewLayout: .editorOnly)
+        let fixture = try await SourceBindingFixture(source: source)
         defer { fixture.dispose() }
-        try await fixture.installGrant()
-        let document = try #require(fixture.first.model.activeDocument)
+        let document = fixture.document
         let parsed = try await ParseEngine().parse(source, revision: 1)
         let recorder = SourceFrameRecorder()
         let host = NSHostingView(rootView: view(document, parsed, source, fixture, recorder))
@@ -81,7 +78,7 @@ struct SecuredMarkdownSourceBindingTests {
         try await fixture.wait("The original parsed frame did not apply") { recorder.id != nil }
         let originalID = recorder.id
         let retained = try #require(recorder.loader)
-        _ = try await read(retained)
+        _ = try await read(retained, phase: "initial source before absent parse")
         host.rootView = view(document, nil, source, fixture, recorder,
                              blocks: PreviewBlock.blocks(from: parsed, text: source))
         try await fixture.wait("Missing parse did not apply a denied frame") {
@@ -94,11 +91,11 @@ struct SecuredMarkdownSourceBindingTests {
 
     private func view(
         _ document: FileCore.FileDocument, _ parsed: MarkdownDocument?, _ published: String?,
-        _ fixture: PreviewProductionFixture, _ recorder: SourceFrameRecorder,
+        _ fixture: SourceBindingFixture, _ recorder: SourceFrameRecorder,
         blocks: [PreviewBlock]? = nil
     ) -> some View {
         let frame = parsed.flatMap { PreviewResourceParsedFrame(parserIdentity: recorder.parserIdentity, document: $0) }
-        let tabID = fixture.first.model.tabStore.activeTabID ?? UUID()
+        let tabID = fixture.tabID
         return SecuredMarkdownResourceHost(
             tabID: tabID, document: document, sourceGeneration: document.mutationGeneration,
             parsedFrame: frame, publishedText: published
@@ -111,14 +108,23 @@ struct SecuredMarkdownSourceBindingTests {
                     recorder.loader = loader
                 }
         }
-        .environment(\.previewResourceWindowState, fixture.first.previewResourceState)
+        .environment(\.previewResourceWindowState, fixture.owner)
     }
 
-    private func read(_ loader: PreviewResourceImageLoader) async throws -> PreviewImageAttachment {
+    private func read(
+        _ loader: PreviewResourceImageLoader, phase: String = "denied frame control"
+    ) async throws -> PreviewImageAttachment {
         let url = try #require(URL(string: "image.png"))
-        return try await loader.attachment(for: url, text: "fixture", environment: ColorEnvironmentValues(
-            colorScheme: .light, colorSchemeContrast: .standard
-        ))
+        do {
+            return try await loader.attachment(for: url, text: "fixture", environment: ColorEnvironmentValues(
+                colorScheme: .light, colorSchemeContrast: .standard
+            ))
+        } catch {
+            if phase != "denied frame control" {
+                Issue.record("Actual source-bound image read failed at \(phase): \(error)")
+            }
+            throw error
+        }
     }
 
     private func assertDenied(_ loader: PreviewResourceImageLoader) async throws {
