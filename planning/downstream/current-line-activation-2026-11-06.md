@@ -153,3 +153,44 @@ additional candidate controls. The real app status-bar test mounts a hosting vie
 changes through every bundled theme and samples actual background pixels; it is
 not a substitute for owner visual/VoiceOver acceptance. All native execution stays
 hosted. Preserve any first geometry/capture failures and classify them before merge.
+
+
+## First hosted geometry findings
+
+The exact common fixture fails precisely its two absent-feature assertions on
+baseline 6667bc9c and both pass on candidate 4a3bc7cf. The complete Debug subset
+executes 1,082 tests/142 suites and finds three issues: empty source has no layout
+fragment; a terminal newline places a zero-length final visual row inside the
+preceding paragraph fragment, so selecting its logical final line paints nothing;
+and the existing gutter glyph-orientation score is contaminated or regressed by
+the new active-line cue. Retain all first results and do not weaken thresholds.
+The scrolled 10,530,000-byte draw visits 38 fragments in 1.1925 ms (Debug diagnostic,
+not whole-editor Release proof).
+
+Use TextKit 2's explicit ensuresExtraLineFragment only in the existing bounded
+viewport enumeration; the zero-length document may start directly at its known
+start. Recognize a terminal empty row only when its native zero-length range
+matches the incremental line index's exact final empty-line offset. Share this
+small native geometry rule between background and gutter. Exclude that final row
+from the preceding logical line's background and emit its own gutter number.
+Never force layout to a distant caret or traverse all wrapped rows.
+
+Keep the gutter orientation threshold and flipped-matrix mutation check. Record
+its actual primary selection, and isolate the numeral's columns from the new
+separate shape when testing glyph orientation; the shape has its own real bitmap
+positive/negative control. This is fixture isolation of two independent visual
+contracts, not permission to accept an inverted numeral or drop the marker.
+
+
+The first Release comparison never executes: its baseline build reaches the
+900-second compile limit while building every unrelated package test target.
+Keep that deadline and the complete independent CI. The focused comparison will
+compile the actual EditorCore/Highlighting/Themes products through a small test
+package with byte-identical copies of all three original test directories and
+the same declared product dependencies; baseline copies only the common fixture.
+No test uses Bundle.module or source-relative fixture paths in these directories.
+Record/verify copied test bytes, manifest, all original source hashes and all 24
+locked owners/revisions before and after execution. Do not adapt production
+sources, replace a native type or omit any of the 1,082 selected candidate tests.
+The native glyph-orientation mutant and restored positive control also use those
+same actual products, with exact source restoration and separate execution hashes.

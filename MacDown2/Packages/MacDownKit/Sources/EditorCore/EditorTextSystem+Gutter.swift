@@ -47,12 +47,13 @@ public extension EditorTextSystem {
             NSPoint(x: visibleRect.origin.x, y: visibleRect.maxY),
             from: scrollView.contentView
         )
-        guard let startFragment = layoutManager.textLayoutFragment(for: topPoint) else { return }
+        let start = layoutManager.textLayoutFragment(for: topPoint)?.rangeInElement.location
+        guard start != nil || lineIndex.utf16Length == 0 else { return }
 
         let documentStart = contentStorage.documentRange.location
         layoutManager.enumerateTextLayoutFragments(
-            from: startFragment.rangeInElement.location,
-            options: [.ensuresLayout]
+            from: start ?? documentStart,
+            options: [.ensuresLayout, .ensuresExtraLineFragment]
         ) { fragment in
             let frame = fragment.layoutFragmentFrame
             guard frame.minY < bottomPoint.y else { return false }
@@ -65,6 +66,9 @@ public extension EditorTextSystem {
             let baselineY = frame.minY + firstLine.typographicBounds.minY + firstLine.glyphOrigin.y
             let offset = contentStorage.offset(from: documentStart, to: fragment.rangeInElement.location)
             body(offset, baselineY)
+            if let extra = trailingEmptyLine(in: fragment, startingAt: offset), offset != lineIndex.utf16Length {
+                body(lineIndex.utf16Length, frame.minY + extra.typographicBounds.minY + extra.glyphOrigin.y)
+            }
             return true
         }
     }

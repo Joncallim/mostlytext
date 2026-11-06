@@ -54,4 +54,6 @@ jobs:
             ${{ runner.temp }}/current-line-theme/candidate/status.json
             ${{ runner.temp }}/current-line-theme/candidate/compile.log
             ${{ runner.temp }}/current-line-theme/candidate/probe.log
+            ${{ runner.temp }}/current-line-theme/orientation*.log
+            ${{ runner.temp }}/current-line-theme/orientation-results.json
           if-no-files-found: warn
