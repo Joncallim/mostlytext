@@ -60,3 +60,49 @@ selection, trace forwarding and separate concurrency group. Keep every original
 step, assertion, deadline and upload rule. The actual modified workflow is
 already one of the full receipt inputs. No new main workflow or recurring
 automation is registered; no original0557 run is restarted or cancelled.
+
+## First diagnostic outcome and controlled selection-publication discriminator
+
+The first diagnostic704706cb run42286765550 passes both complete Debug pairs,
+with independently verified1615sourcehashes24pins, actual original/restored app
+hash equality, all original55/17initial selections and three-function mutation/
+restoration controls. The revision mutant prints actual enabled trace events;
+the disappearance run has no failed-copy diagnostic to dump. These passing
+observations do not repair or explain original0557's exact restored failures.
+
+The selected native interaction view in the original failure has8px width but
+its selected Text.Layout contains only alt text. That is not proof of the
+current SwiftUI renderer's preference value: selection owns an older layout
+collection. Textual's selection-layout onChange, fragment/TextBuilder publication
+and actual loader completion remain competing hypotheses; no pin is changed.
+
+Make the next diagnostic materially discriminating: always dump the bounded
+ring at the end of each original mounted function, and mark the existing
+failure-only manual loader probe before/after its call so that read cannot be
+mistaken for the original pipeline. Report/require actual child trace enablement.
+Do not change success logic, provider execution, original selection or deadlines.
+
+Add one separately selected native regression fixture for real
+TextualMarkdownPreview image/selection publication. A fixture-only MainActor
+continuation gate holds immutable synthetic PNG bytes before the unchanged
+PreviewResourceImageLoader decoder. It grants no filesystem/network authority
+and does not substitute for the original secured consumer tests. Over eight
+explicit resource-ID replacements with identical real parsed source, require a
+provider request, exercise actual native selectAll/Copy before bytes are
+released, release the held bytes, then require actual copied HTML to contain its
+bounded PNG within one five-second deadline started before that replacement.
+Keep the native early-copy polling behavior; never write attachment/model/layout
+state or force a cache result. Preserve pasteboard/window ownership and release
+all held fixture continuations on teardown. Record source-generation index,
+provider request counts and actual native copy/layout diagnostics on failure.
+The real parser, Textual attachment/selection path, decoder and native Copy run;
+no fake attachment or injected success result. Eight complete replacements are
+required, not a partial prefix. No new public API or shipping pin changes.
+
+Run this one additional suite in a separate owned600s step on each of the two
+existing diagnostic jobs after the original complete consumer selection. Its
+one-function/one-suite result, actual trace-enable positive and eight-complete
+marker are verified separately; it is not folded into or substituted for55/17.
+Retain the first observed result. A failure needs evidence and a written repair
+before any production fork/pin change. A pass is bounded comparison evidence,
+not a causal finding or qualification of original0557. No unchanged retry.
