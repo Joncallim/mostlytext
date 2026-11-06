@@ -1,4 +1,4 @@
-name: Shared math app integration
+name: Shared math and heading app integration
 
 permissions:
   contents: read
@@ -8,10 +8,17 @@ on:
     branches: [main, master, integration-final]
     paths:
       - 'MacDown2/MacDown2/*Math*.swift'
+      - 'MacDown2/MacDown2/*Heading*.swift'
+      - 'MacDown2/MacDown2/*Export*.swift'
+      - 'MacDown2/MacDown2/PreviewContribution*.swift'
       - 'MacDown2/MacDown2/DocumentEditorSplitView*.swift'
       - 'MacDown2/MacDown2Tests/*Math*.swift'
+      - 'MacDown2/MacDown2Tests/*Heading*.swift'
       - 'MacDown2/Packages/MacDownKit/Sources/Preview/**'
       - 'MacDown2/Packages/MacDownKit/Sources/Math*/**'
+      - 'MacDown2/Packages/MacDownKit/Sources/ExportService/**'
+      - 'MacDown2/Packages/MacDownKit/Sources/Contributions/**'
+      - 'MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/**'
       - 'MacDown2/Packages/MacDownKit/Package.resolved'
       - 'MacDown2/project.yml'
       - '.github/workflows/shared-math-app-integration.yml'
@@ -55,7 +62,7 @@ jobs:
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
             -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/shared-math-app" \
             -onlyUsePackageVersionsFromResolvedFile -enableCodeCoverage NO build-for-testing
-      - name: Execute production math and live source-navigation controls
+      - name: Execute production math, heading links, and live source-navigation controls
         run: |
           set -euo pipefail
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
@@ -64,7 +71,11 @@ jobs:
             -only-testing:MacDown2Tests/SharedMathActivationTests \
             -only-testing:MacDown2Tests/MathPreviewLiveSourceTests \
             -only-testing:MacDown2Tests/MathPreviewNavigationTests \
-            -only-testing:MacDown2Tests/MathPreviewRecoveryTests test-without-building \
+            -only-testing:MacDown2Tests/MathPreviewRecoveryTests \
+            -only-testing:MacDown2Tests/HeadingPreviewSessionTests \
+            -only-testing:MacDown2Tests/HeadingPreviewNavigationTests \
+            -only-testing:MacDown2Tests/HeadingPreviewAppTests \
+            -only-testing:MacDown2Tests/HeadingExportActivationTests test-without-building \
             | tee "$RUNNER_TEMP/shared-math-app-tests.log"
           python3 - <<'PYVERIFY'
           import os
@@ -72,7 +83,7 @@ jobs:
           from pathlib import Path
           log = (Path(os.environ["RUNNER_TEMP"]) / "shared-math-app-tests.log").read_text()
           log = re.sub(r"\x1b\[[0-9;]*m", "", log)
-          suites = ["SharedMathActivationTests", "MathPreviewLiveSourceTests", "MathPreviewNavigationTests", "MathPreviewRecoveryTests"]
+          suites = ["SharedMathActivationTests", "MathPreviewLiveSourceTests", "MathPreviewNavigationTests", "MathPreviewRecoveryTests", "HeadingPreviewSessionTests", "HeadingPreviewNavigationTests", "HeadingPreviewAppTests", "HeadingExportActivationTests"]
           for suite in suites:
               assert re.search(r"Suite " + re.escape(suite) + r" passed", log), suite + " did not execute successfully"
           PYVERIFY

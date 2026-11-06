@@ -38,17 +38,23 @@ public struct ExportDerivedContribution: Sendable, Equatable {
     /// contribution that must be treated as failed by the composer.
     public let diagnostics: [ExportDiagnostic]
 
+    /// Feature intent that only tightens failure behavior. It grants no target
+    /// or resource authority: the shared preparation and final checks still do.
+    public let requiresHeadingNavigation: Bool
+
     public init(
         sourceRange: Range<Int>,
         placement: ExportDerivedPlacement,
         html: String,
         sourceGeneration: UInt,
-        diagnostics: [ExportDiagnostic] = []
+        diagnostics: [ExportDiagnostic] = [],
+        requiresHeadingNavigation: Bool = false
     ) {
         self.sourceRange = sourceRange
         self.placement = placement
         self.html = html
         self.sourceGeneration = sourceGeneration
         self.diagnostics = diagnostics
+        self.requiresHeadingNavigation = requiresHeadingNavigation
     }
 }

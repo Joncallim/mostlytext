@@ -17,8 +17,13 @@ repo = Path(__file__).resolve().parents[2]
 package = repo / "MacDown2/Packages/MacDownKit"
 tests = [package / "Tests/ExportServiceTests" / name for name in [
     "HeadingAnchorPreparationTests.swift", "HeadingFragmentStructureTests.swift",
-    "HeadingPublicationIntegrationTests.swift", "ExportTestSupport.swift"
+    "HeadingPublicationIntegrationTests.swift", "HeadingPreparationWorkerTests.swift",
+    "HeadingSVGNamespaceTests.swift", "ExportTestSupport.swift"
 ]]
+tests += [package / "Tests/PreviewTests" / name for name in [
+    "PreviewHeadingLinkTests.swift", "PreviewLinkActionTests.swift", "QueuedHeadingJumpTests.swift"
+]]
+tests += [package / "Tests/ContributionsTests/TOCLinkedContributionTests.swift"]
 targets = [args.output / "Tests/HeadingAnchorProbe" / test.name for test in tests]
 canonical = json.loads((package / "Package.resolved").read_text())
 pins = {p["identity"]: (p["location"], p["state"]["revision"]) for p in canonical["pins"]}
@@ -40,8 +45,8 @@ if args.verify:
         raise SystemExit("Heading probe inputs or immutable dependency owners/revisions changed")
     if args.require_result:
         log = re.sub(r"\x1b\[[0-9;]*m", "", (args.output / "probe.log").read_text())
-        if not re.search(r"Test run with 30 tests in 3 suites passed", log):
-            raise SystemExit("The thirty actual heading preparation/publication controls did not pass")
+        if not re.search(r"Test run with 63 tests in 9 suites passed", log):
+            raise SystemExit("The sixty-three actual heading preparation/publication/navigation controls did not pass")
     print("Exact actual-package heading tests, source inventory and all immutable pins verified")
 else:
     args.output.mkdir(parents=True, exist_ok=False)
@@ -57,6 +62,7 @@ let package = Package(name: "HeadingAnchorProbe", platforms: [.macOS(.v26)], dep
     .testTarget(name: "HeadingAnchorProbe", dependencies: [
         .product(name: "ExportService", package: "MacDownKit"),
         .product(name: "Contributions", package: "MacDownKit"),
+        .product(name: "Preview", package: "MacDownKit"),
         .product(name: "Themes", package: "MacDownKit"),
         .product(name: "SwiftSoup", package: "SwiftSoup"),
         .product(name: "MarkdownEngine", package: "MacDownKit")

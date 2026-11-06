@@ -29,9 +29,7 @@ extension ExportComposer {
             derived: derived, policy: policy, assetsDirName: assetsDirName, request: request,
             budget: budget, cancellation: cancellation, headingAnalysis: .marked
         )
-        guard output.rendered.html.utf8.count <= budget.maxPreparedHTMLUTF8Bytes else {
-            throw BoundedExportHTML.tooLarge
-        }
+        try checkPreparedBudget(bytes: output.rendered.html.utf8.count, budget: budget)
         let leaked = DerivedContentComposer.leakedSentinelIndices(
             in: output.rendered.html, suffix: derived.sentinelSuffix
         )
@@ -51,19 +49,24 @@ extension ExportComposer {
             warnings.append(headingSentinelWarning(count: leaked.count))
         }
         try Task.checkCancellation()
-        guard output.rendered.html.utf8.count <= budget.maxPreparedHTMLUTF8Bytes else {
-            throw BoundedExportHTML.tooLarge
-        }
+        try checkPreparedBudget(bytes: output.rendered.html.utf8.count, budget: budget)
         guard DerivedContentComposer.leakedSentinelIndices(
             in: output.rendered.html, suffix: derived.sentinelSuffix
         ).isEmpty,
+            requiredTOCsWerePlaced(request: request, derived: derived),
             let html = HeadingTargetPublication.publish(
                 index: index, document: parsed.document, sourceText: request.text,
-                derived: derived, rendered: output.rendered
+                derived: derived, rendered: output.rendered, namespaceFamily: headingSVGFamily(for: request)
             ) else { throw ExportError.headingNavigationUnavailable }
         try Task.checkCancellation()
         let resolved = try output.resolving(html: html)
         return DerivedRender(derived: derived, rendered: resolved, resolver: output.resolver, leakWarnings: warnings)
+    }
+
+    private static func requiredTOCsWerePlaced(request: ExportRequest, derived: DerivedContentComposer.Result) -> Bool {
+        let required = request.contributions.filter(\.requiresHeadingNavigation).map(\.sourceRange)
+        return required.count == derived.acceptedHeadingTOCRanges.count &&
+            Set(required) == derived.acceptedHeadingTOCRanges
     }
 
     private static func headingSentinelWarning(count: Int) -> ExportDiagnostic {
@@ -80,7 +83,7 @@ extension ExportComposer {
 enum HeadingTargetPublication {
     static func publish(
         index: HeadingAnchorIndex, document: MarkdownDocument, sourceText: String,
-        derived: DerivedContentComposer.Result, rendered: CMarkGFM.Rendered
+        derived: DerivedContentComposer.Result, rendered: CMarkGFM.Rendered, namespaceFamily: String? = nil
     ) -> String? {
         guard document.isBound(to: sourceText), let matches = EmittedHeadingMatcher.match(
             index: index, document: document, sourceText: sourceText, derived: derived, rendered: rendered
@@ -95,7 +98,8 @@ enum HeadingTargetPublication {
             HeadingFragmentStructure.accepts($0.html, isBlock: $0.isBlock)
         }
         guard direct else {
-            guard let inspected = EmittedHeadingDOM.inspect(rendered) else { return nil }
+            guard let inspected = EmittedHeadingDOM.inspect(rendered, generatedNamespaceFamily: namespaceFamily)
+            else { return nil }
             return EmittedHeadingDOM.publish(inspected: inspected, rendered: rendered, matches: matches)
         }
         let fragments = matches.map { Data($0.indexed.fragment.utf8) }

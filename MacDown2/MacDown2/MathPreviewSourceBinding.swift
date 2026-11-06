@@ -2,7 +2,7 @@ import Foundation
 
 /// Primitives only: the live provider must obtain these values again from the
 /// registered window, active model/editor and existing parser after every await.
-struct MathPreviewSourceStamp: Sendable, Hashable {
+struct PreviewSourceStamp: Sendable, Hashable {
     var tabIdentity: String
     var documentID: String
     var recoveryEpoch: UUID
@@ -12,8 +12,8 @@ struct MathPreviewSourceStamp: Sendable, Hashable {
     var sourceSHA256: String
 }
 
-struct MathPreviewLiveSource: Sendable {
-    var stamp: MathPreviewSourceStamp
+struct PreviewLiveSource: Sendable {
+    var stamp: PreviewSourceStamp
     var modelText: String
     var editorText: String
     var publishedText: String
@@ -22,12 +22,12 @@ struct MathPreviewLiveSource: Sendable {
 
 /// One immutable request owns its source. A matching digest or equal-looking
 /// Unicode text is insufficient for either publication or source navigation.
-struct MathPreviewSourceBinding: Sendable {
+struct PreviewSourceBinding: Sendable {
     let id = UUID()
-    let stamp: MathPreviewSourceStamp
+    let stamp: PreviewSourceStamp
     let source: String
 
-    func isCurrent(_ live: MathPreviewLiveSource?) -> Bool {
+    func isCurrent(_ live: PreviewLiveSource?) -> Bool {
         guard let live, live.stamp == stamp else { return false }
         return live.modelText.utf8.elementsEqual(source.utf8) &&
             live.editorText.utf8.elementsEqual(source.utf8) &&
@@ -36,7 +36,7 @@ struct MathPreviewSourceBinding: Sendable {
 
     /// A delayed native action must belong to the current prepared layout as
     /// well as the current source, even when a later snapshot reused an ID.
-    func allowsNavigation(frameID: UUID, currentFrameID: UUID, live: MathPreviewLiveSource?) -> Bool {
+    func allowsNavigation(frameID: UUID, currentFrameID: UUID, live: PreviewLiveSource?) -> Bool {
         frameID == currentFrameID && live?.isKeyWindow == true && isCurrent(live)
     }
 }
@@ -46,3 +46,9 @@ struct MathPreviewSourceAction: Sendable {
     let sourceID: UUID
     let diagnostic: Bool
 }
+
+// Preserve existing math callers while both derived-content features share
+// exactly the same live source and lifetime checks.
+typealias MathPreviewSourceStamp = PreviewSourceStamp
+typealias MathPreviewLiveSource = PreviewLiveSource
+typealias MathPreviewSourceBinding = PreviewSourceBinding

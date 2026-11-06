@@ -5,6 +5,16 @@ import MarkdownEngine
 
 @MainActor
 extension ExportCoordinator {
+    struct ContributionPreparation {
+        let adaptation: ExportContributionAdapter.Adaptation
+        let parser: FrozenExportParse
+        let headings: HeadingAnchorPreparation?
+
+        func request(from snapshot: OrdinaryExportSnapshot) -> ExportRequest {
+            snapshot.request(contributions: adaptation.contributions, headingPreparation: headings)
+        }
+    }
+
     struct ExportOutcome {
         let primaryFile: URL
         let diagnostics: [ExportDiagnostic]
@@ -29,13 +39,14 @@ extension ExportCoordinator {
         )
         let protection = documentProtections.register(authorization, lease: publicationLease)
         defer { documentProtections.remove(protection) }
-        let (adaptation, parser) = try await exportContributionAdaptation(
+        let preparation = try await exportContributionAdaptation(
             for: snapshot,
             isPrintTarget: selection.format == .pdf,
             engine: engine
         )
         try publicationLease.checkActive()
-        let request = snapshot.request(contributions: adaptation.contributions)
+        let (adaptation, parser) = (preparation.adaptation, preparation.parser)
+        let request = preparation.request(from: snapshot)
 
         switch selection.format {
         case .standaloneHTML, .selfContainedHTML:
@@ -83,28 +94,56 @@ extension ExportCoordinator {
         for snapshot: OrdinaryExportSnapshot,
         isPrintTarget: Bool,
         engine: any ParseExecuting
-    ) async throws -> (adaptation: ExportContributionAdapter.Adaptation, parser: FrozenExportParse) {
+    ) async throws -> ContributionPreparation {
         let revision = Int(exactly: snapshot.sourceGeneration) ?? Int.max
         let parsed = try await engine.parse(
             snapshot.text,
             options: snapshot.parseOptions,
             revision: revision
         )
+        let headings = try await Self.prepareHeadingTargets(snapshot: snapshot, document: parsed)
         let registry = ContributionRegistry.standardForExport(
             theme: snapshot.theme,
-            isPrintTarget: isPrintTarget
+            isPrintTarget: isPrintTarget,
+            headingIndex: headings?.index
         )
         let results = try await registry.run(
             document: parsed,
             sourceText: snapshot.text,
             sourceGeneration: snapshot.sourceGeneration
         )
-        let adaptation = ExportContributionAdapter.adapt(results, destination: isPrintTarget ? .pdfExport : .htmlExport)
-        try adaptation.requirePublication()
-        return (
-            adaptation,
-            FrozenExportParse(text: snapshot.text, revision: revision, document: parsed,
-                              options: snapshot.parseOptions, releaseAfterUse: true)
+        let adaptation = ExportContributionAdapter.adapt(
+            results, destination: isPrintTarget ? .pdfExport : .htmlExport, requiringHeadingNavigation: headings != nil
         )
+        if headings != nil, results.contains(where: { $0.contributionID == "toc" &&
+                ($0.content == nil || $0.diagnostics.contains { $0.severity == .error })
+        }) {
+            throw ExportError.headingNavigationUnavailable
+        }
+        try adaptation.requirePublication()
+        return ContributionPreparation(
+            adaptation: adaptation,
+            parser: FrozenExportParse(text: snapshot.text, revision: revision, document: parsed,
+                                      options: snapshot.parseOptions, releaseAfterUse: true),
+            headings: headings
+        )
+    }
+
+    @concurrent
+    private nonisolated static func prepareHeadingTargets(
+        snapshot: OrdinaryExportSnapshot, document: MarkdownDocument
+    ) async throws -> HeadingAnchorPreparation? {
+        try Task.checkCancellation()
+        guard TOCContribution.containsMarker(in: snapshot.text, document: document) else { return nil }
+        do {
+            return try await HeadingAnchorPreparation.prepare(
+                document: document, sourceText: snapshot.text, documentID: snapshot.documentID,
+                recoveryEpoch: snapshot.recoveryEpoch, sourceGeneration: snapshot.sourceGeneration
+            )
+        } catch is CancellationError {
+            throw CancellationError()
+        } catch {
+            throw ExportError.headingNavigationUnavailable
+        }
     }
 }

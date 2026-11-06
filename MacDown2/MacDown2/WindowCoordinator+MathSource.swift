@@ -5,7 +5,7 @@ import Workspace
 
 extension WindowCoordinator {
     /// Never creates a parser or editor to make a stale request look current.
-    func mathLiveSource(in model: WorkspaceModel, identity: String) -> MathPreviewLiveSource? {
+    func previewLiveSource(in model: WorkspaceModel, identity: String) -> PreviewLiveSource? {
         guard let controller = controllers.first(where: { $0.model === model && !$0.isClosed }),
               controller.model.tabStore.activeTabID?.uuidString == identity,
               let document = controller.model.activeDocument,
@@ -19,10 +19,14 @@ extension WindowCoordinator {
             mutationGeneration: document.mutationGeneration, parseIdentity: parse.identity,
             parsedRevision: parsed.revision, sourceSHA256: sourceSHA256
         ), modelText: document.text, editorText: editor.textView.string, publishedText: published,
-        isKeyWindow: Self.mathWindowOwnsKey(controller.window))
+        isKeyWindow: Self.previewWindowOwnsKey(controller.window))
     }
 
-    private static func mathWindowOwnsKey(_ window: NSWindow?) -> Bool {
+    func mathLiveSource(in model: WorkspaceModel, identity: String) -> MathPreviewLiveSource? {
+        previewLiveSource(in: model, identity: identity)
+    }
+
+    private static func previewWindowOwnsKey(_ window: NSWindow?) -> Bool {
         guard let window, window.attachedSheet == nil, let key = NSApp.keyWindow else { return false }
         // An owned popover can temporarily become key. Another document or
         // a modal sheet cannot inherit this window's source authority.

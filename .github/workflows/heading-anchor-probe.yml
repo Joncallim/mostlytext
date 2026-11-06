@@ -5,12 +5,16 @@ permissions:
 
 on:
   pull_request:
-    branches: [main, epic/14-heading-byte-identity]
+    branches: [main]
     paths:
       - 'MacDown2/Packages/MacDownKit/Sources/ExportService/**'
       - 'MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/**'
       - 'MacDown2/Packages/MacDownKit/Tests/ExportServiceTests/Heading*Tests.swift'
       - 'MacDown2/Packages/MacDownKit/Sources/Contributions/**'
+      - 'MacDown2/Packages/MacDownKit/Sources/Preview/**'
+      - 'MacDown2/Packages/MacDownKit/Tests/ContributionsTests/TOCLinkedContributionTests.swift'
+      - 'MacDown2/Packages/MacDownKit/Tests/PreviewTests/*Heading*.swift'
+      - 'MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewLinkActionTests.swift'
       - 'MacDown2/Packages/MacDownKit/Package.swift'
       - 'MacDown2/Packages/MacDownKit/Package.resolved'
       - '.github/scripts/prepare-heading-anchor-probe.py'

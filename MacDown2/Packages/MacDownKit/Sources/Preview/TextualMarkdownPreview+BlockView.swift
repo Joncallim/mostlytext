@@ -19,6 +19,7 @@ struct BlockView: View {
     @Environment(\.previewOpenDocument) private var openDocument
     let mathContent: PreviewMathContent?
     let onMathSourceAction: (@MainActor @Sendable (UUID, UUID) -> Void)?
+    var onHeadingAction: TextualMarkdownPreview.HeadingAction?
     let mermaidFenceView: ((String) -> AnyView)?
     let d2FenceView: ((String) -> AnyView)?
     let graphvizFenceView: ((String) -> AnyView)?
@@ -118,7 +119,10 @@ struct BlockView: View {
                         \.openURL,
                         OpenURLAction { url in
                             let resolved = linkResolver.resolve(url)
-                            switch PreviewLinkResolver.action(for: resolved, currentDocument: linkResolver.baseURL) {
+                            switch PreviewLinkResolver.action(
+                                for: resolved, currentDocument: linkResolver.baseURL,
+                                headingIndex: linkResolver.headingIndex
+                            ) {
                             case .open: NSWorkspace.shared.open(resolved)
                             case let .openInApp(document):
                                 // Through MostlyText when the host provides it; otherwise the
@@ -129,7 +133,8 @@ struct BlockView: View {
                                     NSWorkspace.shared.open(document)
                                 }
                             case .reveal: NSWorkspace.shared.activateFileViewerSelecting([resolved])
-                            case .ignore: break
+                            case let .internalHeading(heading, identity): onHeadingAction?(heading, identity)
+                            case .unresolvedInternal, .ignore: break
                             }
                             return .handled
                         }

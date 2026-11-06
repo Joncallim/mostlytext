@@ -12,6 +12,13 @@ import Preview
 struct PreviewContributionTaskID: Hashable {
     let documentIdentity: UUID
     let parsedRevision: Int?
+    let headingBindingID: UUID?
+
+    init(documentIdentity: UUID, parsedRevision: Int?, headingBindingID: UUID? = nil) {
+        self.documentIdentity = documentIdentity
+        self.parsedRevision = parsedRevision
+        self.headingBindingID = headingBindingID
+    }
 }
 
 /// Owns Preview's one atomic `PreviewContributionComposition` and the
@@ -23,6 +30,7 @@ struct PreviewContributionTaskID: Hashable {
 @Observable
 final class PreviewContributionSession {
     private(set) var composition: PreviewContributionComposition = .empty
+    private(set) var headingBindingID: UUID?
     private var currentTaskID: PreviewContributionTaskID?
 
     /// Runs the contribution registry and composes `baseBlocks` for one
@@ -35,8 +43,10 @@ final class PreviewContributionSession {
         taskID: PreviewContributionTaskID,
         document: MarkdownDocument,
         text: String,
-        baseBlocks: [PreviewBlock]
+        baseBlocks: [PreviewBlock],
+        headingState: PreviewContributionAdapter.HeadingState? = nil
     ) async {
+        guard !Task.isCancelled else { return }
         currentTaskID = taskID
         guard let sourceGeneration = UInt(exactly: document.revision) else {
             publishIfCurrent(taskID: taskID, invalidRevisionComposition(document.revision))
@@ -45,7 +55,7 @@ final class PreviewContributionSession {
 
         do {
             let results = try await PreviewContributionAdapter.results(
-                document: document, text: text, generation: sourceGeneration
+                document: document, text: text, generation: sourceGeneration, headingState: headingState
             )
             try Task.checkCancellation()
             let composed = PreviewContributionAdapter.compose(
@@ -83,6 +93,7 @@ final class PreviewContributionSession {
     private func publishIfCurrent(taskID: PreviewContributionTaskID, _ composition: PreviewContributionComposition) {
         guard currentTaskID == taskID else { return }
         self.composition = composition
+        headingBindingID = taskID.headingBindingID
     }
 
     /// `Int -> UInt` only fails for a negative revision, which

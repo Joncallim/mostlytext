@@ -7,6 +7,8 @@ import Themes
 /// Immutable source and presentation inputs captured after the ordinary
 /// export panel is accepted, before parsing or rendering can suspend.
 struct OrdinaryExportSnapshot: Sendable, Equatable {
+    let documentID: String
+    let recoveryEpoch: UUID
     let text: String
     let sourceGeneration: UInt
     let theme: Theme
@@ -16,6 +18,8 @@ struct OrdinaryExportSnapshot: Sendable, Equatable {
     let parseOptions: MarkdownParseOptions
 
     init(document: FileCore.FileDocument, theme: Theme, parseOptions: MarkdownParseOptions) {
+        documentID = document.id
+        recoveryEpoch = document.recoveryEpoch
         text = document.text
         sourceGeneration = document.mutationGeneration
         self.theme = theme
@@ -27,7 +31,9 @@ struct OrdinaryExportSnapshot: Sendable, Equatable {
         self.parseOptions = parseOptions
     }
 
-    func request(contributions: [ExportDerivedContribution]) -> ExportRequest {
+    func request(
+        contributions: [ExportDerivedContribution], headingPreparation: HeadingAnchorPreparation? = nil
+    ) -> ExportRequest {
         ExportRequest(
             text: text,
             sourceGeneration: sourceGeneration,
@@ -36,7 +42,8 @@ struct OrdinaryExportSnapshot: Sendable, Equatable {
             resourceAccess: resourceAccess,
             protectedSourceIdentity: protectedSourceIdentity,
             parseOptions: parseOptions,
-            contributions: contributions
+            contributions: contributions,
+            headingPreparation: headingPreparation
         )
     }
 }

@@ -28,6 +28,9 @@ extension ExportComposer {
                 budget: budget, rendering: (namespaceSVGIDs, cancellation)
             )
         }
+        guard !request.contributions.contains(where: \.requiresHeadingNavigation) else {
+            throw ExportError.headingNavigationUnavailable
+        }
         let sourceLength = request.text.utf16.count
         var derived = composeDerived(request: request, parsed: parsed, budget: budget,
                                      sourceUTF16Length: sourceLength, namespaceSVGIDs: namespaceSVGIDs)
@@ -81,8 +84,14 @@ extension ExportComposer {
             containerRanges: parsed.containerRanges,
             recordCoordinates: namespaceSVGIDs || request.headingIndex != nil,
             namespaceSVGIDs: namespaceSVGIDs,
+            svgNamespaceFamily: headingSVGFamily(for: request),
             referenceContext: parsed.referenceContext
         )
+    }
+
+    static func headingSVGFamily(for request: ExportRequest) -> String? {
+        guard let preparation = request.headingPreparation, !preparation.index.headings.isEmpty else { return nil }
+        return HeadingSVGNamespace.family(avoiding: preparation.authoredIdentifiers)
     }
 
     /// Renders with a FRESH resolver: its manifest and diagnostics accumulate per render.

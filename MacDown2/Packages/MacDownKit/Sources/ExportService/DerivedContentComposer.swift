@@ -22,6 +22,7 @@ enum DerivedContentComposer {
         let sentinelSuffix: String
         let markedRoots: [SVGIDNamespace.MarkedRoot]
         let markedSourceRanges: [Range<Int>]
+        var acceptedHeadingTOCRanges: Set<Range<Int>> = []
     }
 
     /// One accepted replacement: a body-relative UTF-16 range and the sentinel
@@ -46,6 +47,7 @@ enum DerivedContentComposer {
         containerRanges: [Range<Int>] = [],
         recordCoordinates: Bool = false,
         namespaceSVGIDs: Bool = false,
+        svgNamespaceFamily: String? = nil,
         referenceContext: ReferenceContext? = nil
     ) -> Result {
         guard !contributions.isEmpty else {
@@ -69,7 +71,8 @@ enum DerivedContentComposer {
             budget: budget,
             containerRanges: containerRanges,
             bodyText: bodyText as NSString,
-            namespaceSVGIDs: namespaceSVGIDs
+            namespaceSVGIDs: namespaceSVGIDs,
+            svgNamespaceFamily: svgNamespaceFamily
         )
 
         let sorted = contributions.sorted { $0.sourceRange.lowerBound < $1.sourceRange.lowerBound }
@@ -111,7 +114,8 @@ enum DerivedContentComposer {
             diagnostics: plan.diagnostics,
             sentinelSuffix: context.sentinelSuffix,
             markedRoots: plan.markedRoots,
-            markedSourceRanges: plan.markedSourceRanges
+            markedSourceRanges: plan.markedSourceRanges,
+            acceptedHeadingTOCRanges: plan.acceptedHeadingTOCRanges
         )
     }
 
@@ -213,6 +217,7 @@ private struct DerivedContentPlan {
     var splices: [DerivedContentComposer.Splice] = []
     var markedRoots: [SVGIDNamespace.MarkedRoot] = []
     var markedSourceRanges: [Range<Int>] = []
+    var acceptedHeadingTOCRanges: Set<Range<Int>> = []
 
     private var previousBodyUpperBound = 0
     private var placedCount = 0
@@ -259,27 +264,38 @@ private struct DerivedContentPlan {
             index: index,
             suffix: context.sentinelSuffix
         )
-        let sanitized = DerivedHTMLSanitizer.sanitized(contribution.html)
-        var preparedHTML = sanitized
-        if context.namespaceSVGIDs, sanitized.lowercased().contains("<svg") {
-            guard let namespaced = SVGIDNamespace.rewriteMarked(sanitized, occurrence: index) else {
-                diagnostics.append(ExportDiagnostic(
-                    severity: .error,
-                    message: ExportDerivedDiagnosticText.unsafeSVG
-                ))
-                return
-            }
-            preparedHTML = namespaced.html
-            markedRoots.append(contentsOf: namespaced.roots)
-            markedSourceRanges.append(contribution.sourceRange)
+        guard let preparedHTML = prepareHTML(contribution, index: index, context: context) else {
+            diagnostics.append(ExportDiagnostic(severity: .error, message: ExportDerivedDiagnosticText.unsafeSVG))
+            return
         }
         customNodes.append(CMarkGFM.CustomNodeSpec(sentinel: sentinel,
                                                    isBlock: isBlock,
                                                    html: preparedHTML))
         splices.append(DerivedContentComposer.Splice(range: bodyRange, sentinel: sentinel, isBlock: isBlock))
+        if contribution.requiresHeadingNavigation {
+            acceptedHeadingTOCRanges.insert(contribution.sourceRange)
+        }
         previousBodyUpperBound = bodyRange.upperBound
         placedCount += 1
         aggregateDerivedBytes += contribution.html.utf8.count
+    }
+
+    private mutating func prepareHTML(
+        _ contribution: ExportDerivedContribution, index: Int, context: DerivedContentComposer.ValidationContext
+    ) -> String? {
+        let sanitized = DerivedHTMLSanitizer.sanitized(contribution.html)
+        guard context.namespaceSVGIDs || context.svgNamespaceFamily != nil else { return sanitized }
+        guard sanitized.range(of: "<svg", options: .caseInsensitive) != nil else { return sanitized }
+        if context.namespaceSVGIDs {
+            guard let namespaced = SVGIDNamespace.rewriteMarked(sanitized, occurrence: index) else { return nil }
+            markedRoots.append(contentsOf: namespaced.roots)
+            markedSourceRanges.append(contribution.sourceRange)
+            return namespaced.html
+        }
+        if let family = context.svgNamespaceFamily {
+            return SVGIDNamespace.rewrite(sanitized, occurrence: index, family: family)
+        }
+        return sanitized
     }
 
     /// Why this contribution cannot be placed, or `nil` when it can be.

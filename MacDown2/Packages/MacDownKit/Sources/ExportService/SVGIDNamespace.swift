@@ -6,7 +6,8 @@ import SwiftSoup
 /// Unsupported SVG/CSS syntax fails closed so a partial rewrite cannot leave
 /// references pointing at a different diagram or an authored element.
 enum SVGIDNamespace {
-    static func rewrite(_ html: String, occurrence: Int) -> String? {
+    static func rewrite(_ html: String, occurrence: Int, family: String = "mt117-svg-") -> String? {
+        guard validID(family), family.hasSuffix("-"), family.utf8.count <= 64 else { return nil }
         guard html.lowercased().contains("<svg") else { return html }
         let scalars = Array(html.unicodeScalars)
         guard let roots = findRoots(in: scalars), !roots.isEmpty else { return nil }
@@ -15,7 +16,7 @@ enum SVGIDNamespace {
         for (ordinal, root) in roots.enumerated() {
             output += String(String.UnicodeScalarView(scalars[copiedThrough ..< root.lowerBound]))
             let fragment = String(String.UnicodeScalarView(scalars[root]))
-            guard let rewritten = rewriteRoot(fragment, prefix: "mt117-svg-\(occurrence)-\(ordinal)-")
+            guard let rewritten = rewriteRoot(fragment, prefix: "\(family)\(occurrence)-\(ordinal)-")
             else { return nil }
             output += rewritten
             copiedThrough = root.upperBound
