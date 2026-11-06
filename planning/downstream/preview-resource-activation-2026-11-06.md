@@ -359,3 +359,66 @@ Capture the selected folder's typed device/inode receipt inside the native
 successful-response callback, before resuming the chooser continuation. Reusing
 the generic URL presentation path must not add a task-resumption gap before
 that identity capture; all later backing/current-origin checks remain required.
+
+The source-binding controls mount a deliberately controlled resource host beside
+an actual document controller. Initialize that controller in editor-only layout
+before its window is shown or any grant is installed. Otherwise its independent
+production Preview could legitimately replace the manual host's single Markdown
+consumer token during a delayed parse. That is competing fixture ownership, not
+proof of source binding. Real production-routing controls keep Preview visible;
+all retained-loader denial, current-source positives, original mutation controls
+and five-second limits remain unchanged.
+
+The first bd84a68e production Release selection executes53 functions/17 suites
+and fails four controls: the distinct-pixel copy and all three manually mounted
+source-binding cases. Keep the complete log, exact receipt and normal owned exit
+record. No actual mutation runs after that failed initial selection. The observed
+colorspace errors occur while the four-pixel fixture is constructed using the
+catalog NSColor.blue in a device-RGB bitmap. Use an explicitly constructed
+device-RGB blue and require the encoded fixture's actual size/color readback
+before publication. Preserve the existing distinct2x2/blue copied-pixel check
+and five-second deadline. Add failure-only actual HTML, decoded dimensions/color
+and native interaction/layout diagnostics; do not infer a production decode,
+publication or stale-render repair from that first timeout. The original8x8 PNG
+and all existing consumer/mutation tests remain unchanged.
+
+The first complete app CI also reports eight command-catalog consistency issues
+from the new menu action missing its catalog record. Add that literal title to
+CommandDescriptor.catalog. Its palette disposition remains notYetWired, like
+other document-panel commands requiring explicit palette-origin capture; this
+unit promises the document Preview button and native menu route. Preserve every
+existing catalog drift/duplicate/negative control. Complete normal CI remains a
+required gate, including all701 app functions/151 suites; its12 original issues
+and the separate Debug/Release53/52 four-fixture failures remain retained.
+
+## Exercise real editing and isolate source-binding ownership
+
+The d1b74a7b Debug revision selection still fails three functions. Its copied
+HTML contains the literal new image Markdown, and the native interaction reports
+zero attachment runs. The test directly changed the model in Preview-only layout,
+while production live-source validation also requires the retained editor bytes.
+Actual external reload synchronizes that editor through replaceEditorText; the
+test bypassed both this path and typing. No production stale-image cause is
+established by that result. Mount the production routing journey in split layout,
+require its real editor/delegate/window, type the replacement through insertText,
+and require matching model/editor bytes and an advanced mutation generation.
+Start the existing five-second copy deadline before typing; preserve the distinct
+2x2 blue decoded-source and copied-pixel positives, Save As revocation, and all
+existing controls. No direct model synchronization substitutes for the delegate.
+
+Two controlled source-binding functions still throw denied after editor-only
+initialization; the absent-parse control passes. These functions test the host's
+immutable frame binding, not controller initialization or external-file watching.
+Use the established mounted-test boundary: one real PreviewResourceWindowState,
+one stable tab/current-document resolver, the actual typed folder selection and
+backing acquisition, and one mounted SecuredMarkdownResourceHost/Textual consumer.
+The disposable document and PNG remain real; no loader/read/decoder is mocked.
+Do not register a second full document controller for these controlled source
+publications. Keep all three function names and frame transitions, exact UTF8
+negative and restored-source real attachment-read positives, readable mounted
+content assertions and five-second limits. Add phase-labelled read diagnostics
+so a future denied positive identifies which publication failed. Actual full
+controller/coordinator/editor/window behavior remains required in the separate
+production routing and six chooser functions. This narrows fixture ownership; it
+does not establish that the prior failures were solely fixture errors or waive
+any native result. Retain the first Debug/Release receipts and normal owned exits.

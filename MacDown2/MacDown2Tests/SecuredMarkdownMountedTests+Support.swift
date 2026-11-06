@@ -56,7 +56,7 @@ extension SecuredMarkdownMountedTests {
         return window
     }
 
-    private func copyDiagnostics(in view: NSView) -> String {
+    func copyDiagnostics(in view: NSView) -> String {
         let original = snapshotPasteboard()
         defer { restorePasteboard(original) }
         return textInteractions(in: view).map { interaction in
