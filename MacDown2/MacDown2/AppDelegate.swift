@@ -177,6 +177,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     private func finishApplicationStartup() {
         guard !normalLaunchReady else { return }
         normalLaunchReady = true
+        // Commands become available after migration, including while Welcome is open.
+        defer { scheduleCommandServerStart() }
         themeCatalog.start()
         NSWindow.allowsAutomaticWindowTabbing = true
         applyThemeAppearanceOverride()
@@ -233,7 +235,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     /// already opened a document: launch then does not open an untitled
     /// document of its own (the saved session, if any, is still restored).
     private func proceedWithNormalLaunch(documentAlreadyOpened: Bool = false) {
-        defer { scheduleCommandServerStart() }
         if !launchURLs.isEmpty {
             Task { @MainActor in
                 await coordinator.restoreUnsavedSessionTabs()
