@@ -106,3 +106,15 @@ marker are verified separately; it is not folded into or substituted for55/17.
 Retain the first observed result. A failure needs evidence and a written repair
 before any production fork/pin change. A pass is bounded comparison evidence,
 not a causal finding or qualification of original0557. No unchanged retry.
+
+The unexecuted controlled fixture must distinguish the current image from a
+still-visible prior valid image. Use eight opaque8x8 synthetic RGB-corner images,
+one immutable byte gate per generation, and verify the actual copied PNG's
+size/pixel channels against that generation. Clear the owned pasteboard before
+each Copy so stale clipboard bytes cannot be a positive. An early Copy may
+legitimately contain a retained prior valid image; its completion, rather than
+an invented blank-before-load rule, is the control. The post-release positive
+requires distinct CURRENT pixels. Keep one original five-second deadline per
+replacement and all original secured tests unchanged. The first compile-only
+fixture version passes compilation; no native execution of it occurred before
+this stronger distinct-image control was added.
