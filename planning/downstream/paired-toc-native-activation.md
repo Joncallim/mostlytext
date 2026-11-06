@@ -294,3 +294,36 @@ ENABLE_TESTABILITY=YES to the complete hosted compile/test command, consistently
 for both configurations. Keep normal Release optimization and both architectures;
 this grants test visibility rather than substituting a Debug product. The first
 failure and exact command remain retained. Actual Release execution is pending.
+
+
+The next optimized test compilation reaches the existing folder-selection
+fixtures, whose deliberately nonshipping capture factory is guarded by DEBUG or
+RELEASE_PREVIEW_PROBE. Use that existing narrow probe condition in both complete
+test commands, and record it and testability in the immutable receipt. Its sole
+product source use is NSFilePanelProvider's fixture factory; no runtime authority,
+link behavior or production branch changes. Do not set DEBUG or put this condition
+into distributable project settings. This Release test candidate is distinct from
+the final distributable artifact and its native/signing acceptance.
+
+
+At d34a13ae the 28-function Debug run reaches all eight suites and fails four
+TOC presentation waits before attempting a press. The old in-process protocol
+lookup reports many AXUnknown nodes and no matching links; that does not prove
+what the OS client exposes. Move presence/absence and exact-label lookup to the
+same bounded AXUIElement client as press, keeping the five-second publication
+ceiling and all state assertions. Retain a bounded actual-client role/title dump
+on failure. Give native TOC links explicit literal accessibility labels and link
+traits, without a direct callback or alternative action fallback. The run remains
+a failure; the native presentation/activation result still needs fresh evidence.
+
+
+The d34 complete run supplies the missing DOM facts: both variants observe zero
+SVGs, no target, no link and no authored alias, while 3,703 tests execute. The
+shared readyState-only wait can accept a new WKWebView's initial empty document
+before loadHTMLString commits. Replace that new fixture's wait with the exact
+returned WKNavigation's didFinish, retaining provisional/final failures and the
+original five-second ceiling. Do not wait for expected target/diagram counts to
+manufacture readiness: inspect all the same DOM assertions only after that exact
+navigation finishes. The old aggregate failure is not proved to be a nested-SVG
+count issue; retain its facts and require the new real navigation result before
+classifying the complete normal-template browser proof as passing.

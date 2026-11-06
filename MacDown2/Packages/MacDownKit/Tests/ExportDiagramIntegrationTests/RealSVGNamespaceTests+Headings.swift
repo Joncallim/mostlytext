@@ -31,8 +31,7 @@ extension RealSVGNamespaceTests {
         configuration.setURLSchemeHandler(handler, forURLScheme: "resourceprobe")
         let view = WKWebView(frame: .init(x: 0, y: 0, width: 900, height: 600), configuration: configuration)
         defer { view.stopLoading() }
-        view.loadHTMLString(html, baseURL: nil)
-        try await AssembledSVGResourceTests().waitForLoad(in: view)
+        try await HeadingHTMLNavigationProbe.load(html, in: view)
         let observed = try await view.evaluateJavaScript("""
         (() => {
           const ids = Array.from(document.querySelectorAll('[id]')).map(x => x.id);

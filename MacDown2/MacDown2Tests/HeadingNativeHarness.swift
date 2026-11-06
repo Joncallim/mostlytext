@@ -64,16 +64,6 @@ enum HeadingNativeHarness {
                      "Initialize the actual own-process native accessibility client")
     }
 
-    /// SwiftUI exposes role/label and a real press action for these links, but
-    /// not AXURL. The fixture labels are unique; the resulting exact selection
-    /// and actual Preview scroll prove which source target the press reached.
-    static func link(label: String, in content: NSView) -> (any NSAccessibilityProtocol)? {
-        let links = nodes(in: content).compactMap { $0 as? any NSAccessibilityProtocol }.filter {
-            $0.accessibilityRole() == .link && $0.accessibilityLabel()?.utf8.elementsEqual(label.utf8) == true
-        }
-        return links.count == 1 ? links[0] : nil
-    }
-
     static func previewScroll(in mounted: Mounted, editor: EditorTextSystem) throws -> NSScrollView {
         var result: [NSScrollView] = []
         func visit(_ view: NSView, depth: Int) {
@@ -93,13 +83,13 @@ enum HeadingNativeHarness {
     }
 
     static func wait(
-        in mounted: Mounted, stage: String, condition: () -> Bool
+        in mounted: Mounted, stage: String, condition: @MainActor () async -> Bool
     ) async throws {
         let deadline = ContinuousClock.now.advanced(by: .seconds(5))
         while ContinuousClock.now < deadline {
             mounted.content.layoutSubtreeIfNeeded()
             mounted.window.displayIfNeeded()
-            if condition() {
+            if await condition() {
                 return
             }
             try await Task.sleep(for: .milliseconds(10))
@@ -114,6 +104,7 @@ enum HeadingNativeHarness {
         Issue.record("""
         Heading Preview stage: \(stage); parsed revision: \(parse?.document?.revision ?? -1);
         published bytes: \(parse?.publishedText?.utf8.count ?? 0); parsing: \(parse?.isParsing ?? false).
+        \(lastLinkClientDiagnostic)
         Native accessibility attributes:\n\(attributes)
         """)
         throw PresentationUnavailable()

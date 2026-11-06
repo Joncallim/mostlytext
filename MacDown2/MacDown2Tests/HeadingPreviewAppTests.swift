@@ -19,21 +19,22 @@ struct HeadingPreviewAppTests {
         let mounted = try await HeadingNativeHarness.mount(source: valid, layout: .split(fraction: 0.5))
         defer { MathPreviewLiveSourceTests.dispose(mounted.fixture) }
         try await HeadingNativeHarness.wait(in: mounted, stage: "initial real TOC link") {
-            HeadingNativeHarness.link(label: "Target", in: mounted.content) != nil
+            await HeadingNativeHarness.hasLink(label: "Target")
         }
         let broken = "<div title='unterminated>\n\n" + valid
         mounted.fixture.controller.model.tabStore.updateActiveDocument { $0.updatingText(broken) }
         try await HeadingNativeHarness.wait(in: mounted, stage: "unverifiable TOC isolated with a diagnostic") {
-            HeadingNativeHarness
-                .link(label: "Target", in: mounted.content) == nil && hasDiagnostics(in: mounted.content)
+            let present = await HeadingNativeHarness.hasLink(label: "Target")
+            return !present && hasDiagnostics(in: mounted.content)
         }
         #expect(mounted.fixture.controller.model.activeDocument?.text.utf8.elementsEqual(broken.utf8) == true)
         mounted.fixture.controller.model.tabStore.updateActiveDocument { $0.updatingText(valid) }
         try await HeadingNativeHarness.wait(in: mounted, stage: "corrected TOC recovery") {
-            HeadingNativeHarness
-                .link(label: "Target", in: mounted.content) != nil && !hasDiagnostics(in: mounted.content)
+            let present = await HeadingNativeHarness.hasLink(label: "Target")
+            return present && !hasDiagnostics(in: mounted.content)
         }
-        try #require(HeadingNativeHarness.link(label: "Target", in: mounted.content))
+        let recovered = await HeadingNativeHarness.hasLink(label: "Target")
+        try #require(recovered)
         let system = try #require(mounted.fixture.controller.editorStore
             .existingSystem(for: mounted.fixture.tabID.uuidString))
         mounted.window.makeKeyAndOrderFront(nil)
@@ -58,10 +59,10 @@ struct HeadingPreviewAppTests {
         let mounted = try await HeadingNativeHarness.mount(source: source, layout: .split(fraction: 0.5))
         defer { MathPreviewLiveSourceTests.dispose(mounted.fixture) }
         try await HeadingNativeHarness.wait(in: mounted, stage: "linked TOC publication") {
-            HeadingNativeHarness.link(label: heading.title, in: mounted.content) != nil
+            await HeadingNativeHarness.hasLink(label: heading.title)
         }
-        let link = try #require(HeadingNativeHarness.link(label: heading.title, in: mounted.content))
-        #expect(link.accessibilityLabel()?.contains(heading.title) == true)
+        let published = await HeadingNativeHarness.hasLink(label: heading.title)
+        try #require(published, "The native client must find the unique exact heading label")
         let system = try #require(mounted.fixture.controller.editorStore
             .existingSystem(for: mounted.fixture.tabID.uuidString))
         try #require(system.textView.window === mounted.window && !system.isDetachedFromEditorView)
@@ -96,10 +97,11 @@ struct HeadingPreviewAppTests {
         let system = try #require(mounted.fixture.controller.editorStore
             .existingSystem(for: mounted.fixture.tabID.uuidString))
         try await HeadingNativeHarness.wait(in: mounted, stage: "Preview-only linked TOC and editor detachment") {
-            system.isDetachedFromEditorView && HeadingNativeHarness
-                .link(label: "Last heading", in: mounted.content) != nil
+            let present = await HeadingNativeHarness.hasLink(label: "Last heading")
+            return system.isDetachedFromEditorView && present
         }
-        try #require(HeadingNativeHarness.link(label: "Last heading", in: mounted.content))
+        let published = await HeadingNativeHarness.hasLink(label: "Last heading")
+        try #require(published)
         let preview = try HeadingNativeHarness.previewScroll(in: mounted, editor: system)
         let before = preview.contentView.bounds.origin.y
         mounted.window.makeKeyAndOrderFront(nil)

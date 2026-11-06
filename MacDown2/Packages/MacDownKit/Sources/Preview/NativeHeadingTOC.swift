@@ -41,6 +41,8 @@ struct NativeHeadingTOC: View {
                         Text(verbatim: entry.heading.title)
                             .multilineTextAlignment(.leading)
                     }
+                    .accessibilityLabel(Text(verbatim: entry.heading.title))
+                    .accessibilityAddTraits(.isLink)
                 }
                 .padding(.leading, CGFloat(entry.depth) * 20)
             }
