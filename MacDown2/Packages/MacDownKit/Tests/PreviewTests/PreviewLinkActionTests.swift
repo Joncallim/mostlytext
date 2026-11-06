@@ -48,6 +48,6 @@ struct PreviewLinkActionTests {
     @Test func aSameDocumentAnchorDoesNotReopenTheDocument() throws {
         let current = URL(fileURLWithPath: "/Users/me/notes/this.md")
         let anchor = try #require(URL(string: "file:///Users/me/notes/this.md#heading"))
-        #expect(PreviewLinkResolver.action(for: anchor, currentDocument: current) == .ignore)
+        #expect(PreviewLinkResolver.action(for: anchor, currentDocument: current) == .unresolvedInternal("heading"))
     }
 }

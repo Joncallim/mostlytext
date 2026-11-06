@@ -5,12 +5,16 @@ permissions:
 
 on:
   pull_request:
-    branches: [main, epic/14-heading-byte-identity]
+    branches: [main]
     paths:
       - 'MacDown2/Packages/MacDownKit/Sources/ExportService/**'
       - 'MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/**'
       - 'MacDown2/Packages/MacDownKit/Tests/ExportServiceTests/Heading*Tests.swift'
       - 'MacDown2/Packages/MacDownKit/Sources/Contributions/**'
+      - 'MacDown2/Packages/MacDownKit/Sources/Preview/**'
+      - 'MacDown2/Packages/MacDownKit/Tests/ContributionsTests/TOCLinkedContributionTests.swift'
+      - 'MacDown2/Packages/MacDownKit/Tests/PreviewTests/*Heading*.swift'
+      - 'MacDown2/Packages/MacDownKit/Tests/PreviewTests/PreviewLinkActionTests.swift'
       - 'MacDown2/Packages/MacDownKit/Package.swift'
       - 'MacDown2/Packages/MacDownKit/Package.resolved'
       - '.github/scripts/prepare-heading-anchor-probe.py'
@@ -23,6 +27,10 @@ concurrency:
 
 jobs:
   heading-index:
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [debug, release]
     runs-on: macos-26
     timeout-minutes: 25
     steps:
@@ -44,7 +52,7 @@ jobs:
         run: |
           set -euo pipefail
           swift test --package-path "$RUNNER_TEMP/heading-anchor-probe" \
-            --force-resolved-versions -Xswiftc -enable-testing --no-parallel 2>&1 \
+            -c ${{ matrix.configuration }} --force-resolved-versions -Xswiftc -enable-testing --no-parallel 2>&1 \
             | tee "$RUNNER_TEMP/heading-anchor-probe/probe.log"
       - name: Verify exact source, pins and actual execution
         if: always()
@@ -55,7 +63,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: heading-anchor-probe
+          name: heading-anchor-probe-${{ matrix.configuration }}
           path: |
             ${{ runner.temp }}/heading-anchor-probe/receipt.json
             ${{ runner.temp }}/heading-anchor-probe/Package.resolved

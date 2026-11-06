@@ -16,6 +16,9 @@ packages:
   Textual:
     url: https://github.com/Joncallim/textual
     revision: c52cb5834c4695109aad2cb66294eafbc8f264c8
+  SwiftUIMath:
+    url: https://github.com/Joncallim/swiftui-math
+    revision: 2a89c2b41482988711909572d116374e47a52164
   MacDownKit:
     path: Packages/MacDownKit
 targets:
@@ -73,6 +76,8 @@ targets:
       product: MathRendering
     - package: Textual
       product: Textual
+    - package: SwiftUIMath
+      product: SwiftUIMath
     - package: MacDownKit
       product: Diagrams
     - package: MacDownKit

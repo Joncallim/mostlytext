@@ -6,6 +6,85 @@ import SwiftSoup
 import Testing
 
 struct HeadingPublicationIntegrationTests {
+    @Test(arguments: ["id", "name"])
+    func opaqueContributedIdentifiersCannotAliasAnOccurrenceNamespace(_ attribute: String) async throws {
+        let source = "[TOC]\n\n# graph0\n\n```dot\none\n```\n\nOPAQUE\n"
+        let initial = try await linkedRequest(source)
+        let diagram = contribution("```dot\none\n```", in: source, html: "<svg id='graph0'></svg>")
+        let opaque = contribution("OPAQUE", in: source, html: "<a \(attribute)='MTTOC-SVG-0-1-0-graph0'>Alias</a>")
+        let request = ExportRequest(
+            text: source, sourceGeneration: 1, theme: initial.theme,
+            contributions: initial.contributions + [diagram, opaque], headingPreparation: initial.headingPreparation
+        )
+        let error = await #expect(throws: ExportError.self) {
+            _ = try await ExportService.prepare(request, target: target())
+        }
+        guard case .headingNavigationUnavailable = error else {
+            Issue.record("Opaque aliases must fail the final namespace inventory")
+            return
+        }
+    }
+
+    @Test func rejectedRequiredTOCsCannotSilentlyBecomeSourceOrAnotherContribution() async throws {
+        let source = "\n[TOC]\n\n# Target\n"
+        let initial = try await linkedRequest(source)
+        let toc = try #require(initial.contributions.first)
+        let stale = ExportDerivedContribution(
+            sourceRange: toc.sourceRange, placement: toc.placement, html: toc.html,
+            sourceGeneration: 0, requiresHeadingNavigation: true
+        )
+        let empty = ExportDerivedContribution(
+            sourceRange: toc.sourceRange, placement: toc.placement, html: "",
+            sourceGeneration: 1, requiresHeadingNavigation: true
+        )
+        let overlapping = ExportDerivedContribution(
+            sourceRange: 0 ..< toc.sourceRange.upperBound + 1, placement: .block,
+            html: "<p>Other contribution</p>", sourceGeneration: 1
+        )
+        let cases: [([ExportDerivedContribution], HeadingAnchorPreparation?)] = [
+            ([stale], initial.headingPreparation), ([empty], initial.headingPreparation),
+            ([overlapping, toc], initial.headingPreparation), ([toc, toc], initial.headingPreparation), ([toc], nil),
+        ]
+        for (contributions, preparation) in cases {
+            let request = ExportRequest(
+                text: source, sourceGeneration: 1, theme: initial.theme,
+                contributions: contributions, headingPreparation: preparation
+            )
+            let error = await #expect(throws: ExportError.self) {
+                _ = try await ExportService.prepare(request, target: target())
+            }
+            guard case .headingNavigationUnavailable = error else {
+                Issue.record("A rejected required TOC must fail before publication")
+                continue
+            }
+        }
+    }
+
+    @Test func repeatedDiagramsCannotStealTheHeadingOrAnAuthoredNamespaceFamily() async throws {
+        let source = "<div id='MTTOC-SVG-0-\u{301}root'>Raw</div>\n\n[TOC]\n\n# graph0\n\n"
+            + "```dot\none\n```\n\n```dot\ntwo\n```\n"
+        let initial = try await linkedRequest(source)
+        let canonical = "<svg id='graph0'><path id='node1' /><use href='#node1' /></svg>"
+        let diagrams = ["one", "two"].map {
+            contribution("```dot\n\($0)\n```", in: source, html: canonical)
+        }
+        let request = ExportRequest(
+            text: source, sourceGeneration: 1, theme: initial.theme,
+            contributions: initial.contributions + diagrams, headingPreparation: initial.headingPreparation
+        )
+        let prepared = try await ExportService.prepare(request, target: target())
+        let dom = try SwiftSoup.parseBodyFragment(prepared.bodyHTML)
+        #expect(try dom.select("h1").first()?.attr("id") == "graph0")
+        #expect(try dom.select("li a").first()?.attr("href") == "#graph0")
+        let roots = try dom.select("svg").array()
+        #expect(roots.count == 2)
+        #expect(try roots.map { try $0.attr("id") } == ["MTTOC-SVG-1-1-0-graph0", "MTTOC-SVG-1-2-0-graph0"])
+        let ids = try dom.select("[id]").array().map { try Data($0.attr("id").utf8) }
+        #expect(Set(ids).count == ids.count)
+        #expect(!prepared.bodyHTML.contains("<!--MT117-"))
+        #expect(canonical == "<svg id='graph0'><path id='node1' /><use href='#node1' /></svg>")
+    }
+
     @Test func noHeadingPlaceholderNeedsNoTargetAuthorityEvenBesideRawHTML() async throws {
         let source = "[TOC]\n\n<div id=authored>Raw</div>\n"
         let prepared = try await ExportService.prepare(linkedRequest(source), target: target())
@@ -37,7 +116,7 @@ struct HeadingPublicationIntegrationTests {
         let request = try ExportRequest(
             text: source, sourceGeneration: 1, theme: initial.theme,
             resourceAccess: ExportResourceAccess(openingDirectory: directory),
-            contributions: initial.contributions, headingIndex: initial.headingIndex
+            contributions: initial.contributions, headingPreparation: initial.headingPreparation
         )
         let prepared = try await ExportService.prepare(
             request, target: target(directory.appendingPathComponent("é % # ?.html"))
@@ -83,7 +162,7 @@ struct HeadingPublicationIntegrationTests {
         let opaque = contribution("REPLACE", in: source, html: "<div id=target>Opaque</div>")
         let request = ExportRequest(
             text: source, sourceGeneration: 1, theme: initial.theme,
-            contributions: initial.contributions + [opaque], headingIndex: initial.headingIndex
+            contributions: initial.contributions + [opaque], headingPreparation: initial.headingPreparation
         )
         let error = await #expect(throws: ExportError.self) {
             _ = try await ExportService.prepare(request, target: target())
@@ -99,7 +178,7 @@ struct HeadingPublicationIntegrationTests {
         for (source, generation) in [(initial.text, UInt(2)), ("[TOC]\n\n# Changed\n", UInt(1))] {
             let request = ExportRequest(
                 text: source, sourceGeneration: generation, theme: initial.theme,
-                headingIndex: initial.headingIndex
+                headingPreparation: initial.headingPreparation
             )
             let error = await #expect(throws: ExportError.self) {
                 _ = try await ExportService.prepare(request, target: target())
@@ -117,7 +196,7 @@ struct HeadingPublicationIntegrationTests {
         let impossible = contribution("REPLACE", in: source, html: "<em>replacement</em>", placement: .inline)
         let request = ExportRequest(
             text: source, sourceGeneration: 1, theme: initial.theme,
-            contributions: initial.contributions + [impossible], headingIndex: initial.headingIndex
+            contributions: initial.contributions + [impossible], headingPreparation: initial.headingPreparation
         )
         let prepared = try await ExportService.prepare(request, target: target())
         #expect(prepared.bodyHTML.contains("title=\"REPLACE\""))
@@ -143,7 +222,7 @@ struct HeadingPublicationIntegrationTests {
         let request = ExportRequest(
             text: source, sourceGeneration: 1, theme: initial.theme,
             contributions: initial.contributions + [conflict],
-            headingIndex: initial.headingIndex
+            headingPreparation: initial.headingPreparation
         )
         let error = await #expect(throws: ExportError.self) {
             _ = try await ExportService.exportHTML(request, to: target(destination))
@@ -171,6 +250,33 @@ struct HeadingPublicationIntegrationTests {
             #expect(try dom.select("[id]").count == 1 && dom.select("a[name]").isEmpty())
         }
     }
+}
+
+extension HeadingPublicationIntegrationTests {
+    @Test func aMissingSVGTargetMustRemainAbsentAcrossFinalOpaqueComposition() async throws {
+        let source = "[TOC]\n\n# Target\n\nDIAGRAM\n\nOTHER\n"
+        let initial = try await linkedRequest(source)
+        let diagram = contribution("DIAGRAM", in: source, html: "<svg id='root'><path fill='url(#missing)'/></svg>")
+        func request(_ extra: [ExportDerivedContribution]) -> ExportRequest {
+            .init(text: source, sourceGeneration: 1, theme: initial.theme,
+                  contributions: initial.contributions + [diagram] + extra,
+                  headingPreparation: initial.headingPreparation)
+        }
+        let positive = try await ExportService.prepare(request([]), target: target())
+        #expect(positive.bodyHTML.contains("url(#MTTOC-SVG-0-1-0-missing)"))
+        #expect(positive.bodyHTML.contains("<h1 id=\"target\">Target</h1>"))
+        #expect(!positive.diagnostics.contains { $0.severity == .error })
+        for attribute in ["id", "name"] {
+            let alias = contribution("OTHER", in: source, html: "<a \(attribute)='MTTOC-SVG-0-1-0-missing'>Alias</a>")
+            let failure = await #expect(throws: ExportError.self) {
+                _ = try await ExportService.prepare(request([alias]), target: target())
+            }
+            guard case .headingNavigationUnavailable = failure else {
+                Issue.record("An opaque outside alias materialized a missing SVG target")
+                return
+            }
+        }
+    }
 
     private func linkedRequest(_ source: String) async throws -> ExportRequest {
         let document = try await ParseEngine().parse(source, revision: 1)
@@ -182,7 +288,7 @@ struct HeadingPublicationIntegrationTests {
         try #require(HeadingFragmentStructure.accepts(html, isBlock: true))
         return ExportRequest(
             text: source, sourceGeneration: 1, theme: ExportTestSupport.lightTheme(),
-            contributions: [contribution("[TOC]", in: source, html: html)], headingIndex: preparation.index
+            contributions: [contribution("[TOC]", in: source, html: html)], headingPreparation: preparation
         )
     }
 
@@ -192,7 +298,7 @@ struct HeadingPublicationIntegrationTests {
         let range = (source as NSString).range(of: needle)
         return ExportDerivedContribution(
             sourceRange: range.location ..< range.location + range.length, placement: placement,
-            html: html, sourceGeneration: 1
+            html: html, sourceGeneration: 1, requiresHeadingNavigation: needle == "[TOC]"
         )
     }
 

@@ -4,18 +4,30 @@ import MarkdownEngine
 /// Replaces every line consisting only of `[TOC]` (surrounding whitespace
 /// trimmed) with a nested Markdown list built from `document.headings`.
 ///
-/// The list is plain text, not clickable links: no part of today's export
-/// pipeline generates a stable `id` for a heading, and Preview hands every
-/// link — anchor or not — to `NSWorkspace.shared.open` rather than
-/// scrolling to it, so a link would not go anywhere useful in either
-/// destination (epic-14-implementation.md §18, residual risk 2).
+/// A host with verified source-owned heading preparation supplies its index
+/// for links. The standalone registry retains its plain-list default; live
+/// Preview and Export own destination-specific preparation/failure behavior.
 ///
 /// Zero headings still replaces the marker, with a short placeholder — the
 /// literal text `[TOC]` never remains visible once a marker is found.
 public struct TOCContribution: Contributing {
     public let id = "toc"
+    private let headingIndex: HeadingAnchorIndex?
 
-    public init() {}
+    public init(headingIndex: HeadingAnchorIndex? = nil) {
+        self.headingIndex = headingIndex
+    }
+
+    public static var navigationUnavailableMessage: String {
+        String(
+            localized: "Table-of-contents navigation could not be verified; authored source preserved.",
+            bundle: .module
+        )
+    }
+
+    public static func containsMarker(in source: String, document: MarkdownDocument) -> Bool {
+        !findMarkers(in: source, document: document).isEmpty
+    }
 
     public func run(
         document: MarkdownDocument,
@@ -25,7 +37,25 @@ public struct TOCContribution: Contributing {
         let markers = Self.findMarkers(in: sourceText, document: document)
         guard !markers.isEmpty else { return [] }
 
-        let list = Self.markdownList(for: document.headings)
+        let list: String
+        if let headingIndex {
+            guard document.isBound(to: sourceText), headingIndex.identity.sourceSHA256 == document.sourceSHA256,
+                  headingIndex.identity.parseRevision == document.revision,
+                  headingIndex.identity.parseOptions == document.options else {
+                let diagnostic = ContributionDiagnostic(
+                    severity: .error, message: Self.navigationUnavailableMessage, preventsPublication: true
+                )
+                let result = ContributionResult(
+                    contributionID: id, content: nil, sourceGeneration: sourceGeneration, diagnostics: [diagnostic]
+                )
+                return [result]
+            }
+            // Preview's placement token is a parse revision; Export's token is
+            // a model generation. Neither changes this index's source identity.
+            list = Self.linkedMarkdownList(for: headingIndex)
+        } else {
+            list = Self.markdownList(for: document.headings)
+        }
         return markers.map { range in
             ContributionResult(
                 contributionID: id,
@@ -96,8 +126,7 @@ public struct TOCContribution: Contributing {
     }
 
     /// Serializes only an already-allocated index. The caller must first
-    /// verify those fragments against the emitted HTML; `run` deliberately
-    /// continues to produce the plain list until that end-to-end gate exists.
+    /// verify those fragments against its destination before publishing links.
     static func linkedMarkdownList(for index: HeadingAnchorIndex) -> String {
         list(index.headings.map { heading in
             let destination = encodedFragment(heading.fragment)

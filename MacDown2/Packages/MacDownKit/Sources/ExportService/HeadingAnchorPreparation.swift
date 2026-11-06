@@ -4,7 +4,7 @@ import MarkdownEngine
 /// A source-owned index shared by native Preview and static export. This value
 /// proves source/emitted-heading agreement, not final contributed-HTML targets:
 /// the exporter must still validate its accepted splices before publishing links.
-public struct HeadingAnchorPreparation: Sendable {
+public struct HeadingAnchorPreparation: Sendable, Equatable {
     public enum Failure: Error, Equatable {
         case sourceBudgetExceeded
         case headingBudgetExceeded

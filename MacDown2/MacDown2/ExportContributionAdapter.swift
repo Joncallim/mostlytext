@@ -44,7 +44,8 @@ enum ExportContributionAdapter {
     /// and `DerivedContentComposer` already fails it closed.
     static func adapt(
         _ results: [ContributionResult],
-        destination: ContributionDestination
+        destination: ContributionDestination,
+        requiringHeadingNavigation: Bool = false
     ) -> Adaptation {
         var contributions: [ExportDerivedContribution] = []
         var standaloneDiagnostics: [ExportDiagnostic] = []
@@ -79,7 +80,8 @@ enum ExportContributionAdapter {
                 placement: exportPlacement(for: content.placement),
                 html: html,
                 sourceGeneration: result.sourceGeneration,
-                diagnostics: diagnostics
+                diagnostics: diagnostics,
+                requiresHeadingNavigation: requiringHeadingNavigation && result.contributionID == "toc"
             ))
         }
         return Adaptation(contributions: contributions, standaloneDiagnostics: standaloneDiagnostics)

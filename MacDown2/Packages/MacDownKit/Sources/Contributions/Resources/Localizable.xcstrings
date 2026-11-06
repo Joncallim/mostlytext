@@ -51,6 +51,29 @@
           }
         }
       }
+    },
+    "Table-of-contents navigation could not be verified; authored source preserved.": {
+      "comment": "Generated heading navigation diagnostic. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Table-of-contents navigation could not be verified; authored source preserved."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Table-of-contents navigation could not be verified; authored source preserved."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Table-of-contents navigation could not be verified; authored source preserved."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

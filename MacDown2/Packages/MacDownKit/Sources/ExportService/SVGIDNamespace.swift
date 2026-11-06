@@ -6,7 +6,8 @@ import SwiftSoup
 /// Unsupported SVG/CSS syntax fails closed so a partial rewrite cannot leave
 /// references pointing at a different diagram or an authored element.
 enum SVGIDNamespace {
-    static func rewrite(_ html: String, occurrence: Int) -> String? {
+    static func rewrite(_ html: String, occurrence: Int, family: String = "mt117-svg-") -> String? {
+        guard validID(family), family.hasSuffix("-"), family.utf8.count <= 64 else { return nil }
         guard html.lowercased().contains("<svg") else { return html }
         let scalars = Array(html.unicodeScalars)
         guard let roots = findRoots(in: scalars), !roots.isEmpty else { return nil }
@@ -15,7 +16,7 @@ enum SVGIDNamespace {
         for (ordinal, root) in roots.enumerated() {
             output += String(String.UnicodeScalarView(scalars[copiedThrough ..< root.lowerBound]))
             let fragment = String(String.UnicodeScalarView(scalars[root]))
-            guard let rewritten = rewriteRoot(fragment, prefix: "mt117-svg-\(occurrence)-\(ordinal)-")
+            guard let rewritten = rewriteRoot(fragment, prefix: "\(family)\(occurrence)-\(ordinal)-")
             else { return nil }
             output += rewritten
             copiedThrough = root.upperBound
@@ -54,7 +55,7 @@ enum SVGIDNamespace {
         return depth == 0 ? roots : nil
     }
 
-    static func rewriteRoot(_ svg: String, prefix: String) -> String? {
+    static func rewriteRoot(_ svg: String, prefix: String, additionalReferenceIDs: Set<String> = []) -> String? {
         let scalars = Array(svg.unicodeScalars)
         guard let ids = collectIDs(in: scalars),
               let root = HTMLTagScanner.parseTag(at: 0, in: scalars), root.name == "svg" else { return nil }
@@ -78,8 +79,9 @@ enum SVGIDNamespace {
             guard !svg.contains(synthetic), !decoded.contains(synthetic) else { return nil }
             scopeID = prefix + synthetic
         }
-        return rewriteTags(in: scalars, ids: ids, prefix: prefix,
-                           scopeID: scopeID, rootClasses: rootClasses)
+        guard additionalReferenceIDs.allSatisfy(validID) else { return nil }
+        return rewriteTags(in: scalars, ids: ids.union(additionalReferenceIDs), prefix: prefix,
+                           scope: (scopeID, authoredRootID == nil), rootClasses: rootClasses)
     }
 
     static func collectIDs(in scalars: [Unicode.Scalar]) -> Set<String>? {
@@ -101,10 +103,10 @@ enum SVGIDNamespace {
 
     private static func rewriteTags(
         in scalars: [Unicode.Scalar], ids: Set<String>, prefix: String,
-        scopeID: String, rootClasses: Set<String>
+        scope: (id: String, addRootID: Bool), rootClasses: Set<String>
     ) -> String? {
+        let (scopeID, addRootID) = scope
         guard let hasFontFace = admittedFontFaceScope(in: scalars) else { return nil }
-        let addRootID = !ids.contains(String(scopeID.dropFirst(prefix.count)))
         var output = ""
         var cursor = 0
         var style = false

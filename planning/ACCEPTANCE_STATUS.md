@@ -1,4 +1,4 @@
-# MostlyText acceptance status — 5 November 2026
+# MostlyText acceptance status — 6 November 2026
 
 Initial acceptance baseline: main `f660e30f61c0b48551fb450ee9afd24ba35d50ae`.
 Later scoped recovery, localization and attribution units and their exact checks
@@ -7,6 +7,46 @@ qualified units and the live PR checks for current integration status.
 This dated status distinguishes source integration, local prerequisites and
 acceptance. The live backlog is [MostlyText issues](https://github.com/Joncallim/mostlytext/issues);
 [the number map](ISSUE_TRANSFER_MAP.md) explains imported historical references.
+
+## Qualified source checkpoint — 6 November 2026
+
+Main `6667bc9c1cb74534eafc417d921c3a37c55628b0` includes reviewed PR93–97.
+The final PR97 tree is `8133121b19b6acf1b7c76e893c6161828137577a`, exactly
+matching its qualified source. [Full CI42134312141](https://github.com/Joncallim/mostlytext/actions/runs/42134312141)
+passes 3,670 package tests/523 suites, 654 app tests/136 suites, all four locked
+Debug/Release app/mostlytext builds, app/UI compilation, metadata and pins.
+The exact actual-product heading probe passes 30 tests/3 suites; its downloaded
+531 source/test/manifest hashes and 24 dependency owner/revisions match the source.
+The native component probe passes 46 tests/12 suites with its source/pins verified.
+These hosted results are distinct from owner-observed or signed-artifact acceptance.
+
+[PR93](https://github.com/Joncallim/mostlytext/pull/93) activates shared math in
+production Preview and Export. Its additional actual-app-shell probe executes
+12 tests, including real native equation actions, error/recovery presentation,
+Preview-only behavior and editor remount. The first five software criteria in
+#9 are checked; final visual/VoiceOver/signed-artifact criteria remain open.
+[PR94](https://github.com/Joncallim/mostlytext/pull/94) removes 17 owned compiler
+diagnostics with full functional CI and native component checks.
+[PR95](https://github.com/Joncallim/mostlytext/pull/95) preserves byte-distinct
+Unicode authored heading reservations. [PR96](https://github.com/Joncallim/mostlytext/pull/96)
+qualifies bounded source-owned heading preparation; PR97 orders final heading
+validation before resource-slot minting. These do not themselves activate
+production TOC navigation. [Draft PR98](https://github.com/Joncallim/mostlytext/pull/98)
+implements paired app activation and is undergoing native/diagram qualification.
+
+PR96/97's five functional checks pass. GitGuardian's additional check is neutral
+for public source-file SHA-256 entries in evidence receipts. Exact tracked-blob
+rehashing confirms the flagged values describe public
+`ExportCompanionAuthentication.swift` bytes; the PRs record this reviewed false
+positive. No credential or scanner-policy change is involved.
+
+The earlier CI42131938625 package host exited with signal 11/status139 without a
+retained stack. It remains unclassified under #15; the last logged Mermaid case
+is not a proved trigger. The owned-process diagnostic collector now retains fresh,
+matching PID/helper reports on future failures. Later successful runs do not
+explain that failure. The live audit has 17 open issues and 171 unchecked original
+criteria. No whole issue is closed from component evidence alone. Owner-account
+native execution remains held, and signing, release and final rights gates remain.
 
 ## Current scoped source and public-copy checkpoint — 5 November 2026
 

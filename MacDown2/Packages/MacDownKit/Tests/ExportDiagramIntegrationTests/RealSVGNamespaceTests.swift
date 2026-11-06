@@ -46,7 +46,21 @@ struct RealSVGNamespaceTests {
         let canvas = try await MermaidHarnessPage.make()
         defer { canvas.teardown() }
 
-        let d2Sanitized = DerivedHTMLSanitizer.sanitized(d2Diagram.svg)
+        try checkStrictD2Fallback(d2Diagram.svg)
+
+        let outputs = [("Graphviz", dot.svg), ("Mermaid", mermaid.svg)]
+        for (name, svg) in outputs {
+            try await check(name: name, svg: svg, on: canvas)
+        }
+        try await checkInlineComposition(outputs.map(\.1) + [dot.svg])
+        try await checkOrdinaryHeadingNamespaces(
+            [("Graphviz", dot.svg), ("D2", d2Diagram.svg), ("Mermaid", mermaid.svg), ("D2 repeated", d2Diagram.svg)],
+            on: canvas
+        )
+    }
+
+    private func checkStrictD2Fallback(_ svg: String) throws {
+        let d2Sanitized = DerivedHTMLSanitizer.sanitized(svg)
         #expect(SVGIDNamespace.rewrite(d2Sanitized, occurrence: 0) == nil)
         // This D2 fixture emits a paint URL without a matching local ID. The
         // opt-in path retains the authored fence until renderer output can
@@ -54,7 +68,7 @@ struct RealSVGNamespaceTests {
         let source = "```d2\na -> b -> c\n```\n"
         let d2Contribution = ExportDerivedContribution(
             sourceRange: 0 ..< source.utf16.count, placement: .block,
-            html: d2Diagram.svg, sourceGeneration: 1
+            html: svg, sourceGeneration: 1
         )
         let fallback = DerivedContentComposer.compose(
             bodyText: source, bodyStartOffset: 0, sourceUTF16Length: source.utf16.count,
@@ -63,12 +77,6 @@ struct RealSVGNamespaceTests {
         #expect(fallback.splicedBody == source)
         #expect(fallback.customNodes.isEmpty)
         #expect(fallback.diagnostics.contains { $0.severity == .error })
-
-        let outputs = [("Graphviz", dot.svg), ("Mermaid", mermaid.svg)]
-        for (name, svg) in outputs {
-            try await check(name: name, svg: svg, on: canvas)
-        }
-        try await checkInlineComposition(outputs.map(\.1) + [dot.svg])
     }
 
     @MainActor private func check(name: String, svg: String, on canvas: MermaidHarnessPage) async throws {
@@ -376,7 +384,7 @@ struct AssembledSVGResourceTests {
 }
 
 @MainActor
-private final class RecordingResourceHandler: NSObject, WKURLSchemeHandler {
+final class RecordingResourceHandler: NSObject, WKURLSchemeHandler {
     private(set) var requests: [URL] = []
 
     func webView(_: WKWebView, start task: any WKURLSchemeTask) {

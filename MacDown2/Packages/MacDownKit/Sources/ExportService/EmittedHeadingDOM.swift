@@ -19,7 +19,10 @@ enum EmittedHeadingDOM {
     /// First pass: prove every private cmark marker is a direct child of the
     /// expected generated heading and inventory the exact emitted DOM IDs.
     /// Call only on a worker; parser objects never escape the serial lock.
-    static func inspect(_ rendered: CMarkGFM.Rendered) -> Inspection? {
+    static func inspect(
+        _ rendered: CMarkGFM.Rendered, generatedNamespaceFamily: String? = nil,
+        svgRoots: [HeadingSVGNamespace.Root] = []
+    ) -> Inspection? {
         guard !rendered.headingMarkers.isEmpty,
               rendered.html.utf8.count <= maximumAnalyzedBytes else { return nil }
         let markers = rendered.headingMarkers
@@ -32,10 +35,13 @@ enum EmittedHeadingDOM {
 
         return parserLock.withLock {
             guard let document = try? SwiftSoup.parseBodyFragment(rendered.html),
-                  let elements = try? document.getAllElements().array() else { return nil }
+                  let elements = try? document.getAllElements().array(),
+                  HeadingSVGNamespace.validate(elements: elements, family: generatedNamespaceFamily, roots: svgRoots)
+            else { return nil }
             return inspectElements(
                 elements, expectedByData: expectedByData,
-                expectedCount: markers.count, markedHTML: rendered.html
+                expectedCount: markers.count, markedHTML: rendered.html,
+                generatedNamespaceFamily: generatedNamespaceFamily
             )
         }
     }
@@ -80,7 +86,7 @@ enum EmittedHeadingDOM {
 
     private static func inspectElements(
         _ elements: [Element], expectedByData: [String: Int],
-        expectedCount: Int, markedHTML: String
+        expectedCount: Int, markedHTML: String, generatedNamespaceFamily: String?
     ) -> Inspection? {
         var reservedIDs: [String] = []
         var namespaceIDs: Set<Data> = []
@@ -92,13 +98,19 @@ enum EmittedHeadingDOM {
             let tag = element.tagNameNormal()
             tags.append(tag)
             if element.hasAttr("id"), let value = try? element.attr("id") {
-                if value.utf8.starts(with: "mt117-svg-".utf8), !namespaceIDs.insert(Data(value.utf8)).inserted {
+                let namespaced = value.utf8.starts(with: "mt117-svg-".utf8) ||
+                    generatedNamespaceFamily.map { value.utf8.starts(with: $0.utf8) } == true
+                if namespaced, !namespaceIDs.insert(Data(value.utf8)).inserted {
                     return nil
                 }
                 reservedIDs.append(value)
                 explicitCount += 1
             }
             if tag == "a", element.hasAttr("name"), let value = try? element.attr("name") {
+                if let family = generatedNamespaceFamily, value.utf8.starts(with: family.utf8),
+                   !namespaceIDs.insert(Data(value.utf8)).inserted {
+                    return nil
+                }
                 reservedIDs.append(value)
                 explicitCount += 1
             }

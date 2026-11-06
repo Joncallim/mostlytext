@@ -180,7 +180,7 @@ enum ExportComposer {
         )
     }
 
-    private static func checkPreparedBudget(bytes: Int, budget: ExportResourceBudget) throws {
+    static func checkPreparedBudget(bytes: Int, budget: ExportResourceBudget) throws {
         guard bytes > budget.maxPreparedHTMLUTF8Bytes else { return }
         let limit = ExportResourceBudget.describe(bytes: budget.maxPreparedHTMLUTF8Bytes)
         throw ExportError.budgetExceeded(

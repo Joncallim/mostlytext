@@ -1,4 +1,4 @@
-name: Shared math app integration
+name: Shared math and heading app integration
 
 permissions:
   contents: read
@@ -8,13 +8,23 @@ on:
     branches: [main, master, integration-final]
     paths:
       - 'MacDown2/MacDown2/*Math*.swift'
+      - 'MacDown2/MacDown2/*Heading*.swift'
+      - 'MacDown2/MacDown2/*Export*.swift'
+      - 'MacDown2/MacDown2/PreviewContribution*.swift'
       - 'MacDown2/MacDown2/DocumentEditorSplitView*.swift'
       - 'MacDown2/MacDown2Tests/*Math*.swift'
+      - 'MacDown2/MacDown2Tests/*Heading*.swift'
       - 'MacDown2/Packages/MacDownKit/Sources/Preview/**'
       - 'MacDown2/Packages/MacDownKit/Sources/Math*/**'
+      - 'MacDown2/Packages/MacDownKit/Sources/ExportService/**'
+      - 'MacDown2/Packages/MacDownKit/Sources/Contributions/**'
+      - 'MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/**'
       - 'MacDown2/Packages/MacDownKit/Package.resolved'
       - 'MacDown2/project.yml'
       - '.github/workflows/shared-math-app-integration.yml'
+      - '.github/scripts/verify-shared-app-probe.py'
+      - '.github/scripts/run-owned-app-tests.py'
+      - '.github/scripts/test-run-owned-app-tests.py'
   workflow_dispatch:
 
 concurrency:
@@ -23,6 +33,10 @@ concurrency:
 
 jobs:
   app-math:
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [Debug, Release]
     runs-on: macos-26
     timeout-minutes: 35
     steps:
@@ -49,38 +63,50 @@ jobs:
           xcodegen generate
           cd ..
           MacDown2/scripts/pin-xcode-package-versions.sh
+      - name: Verify diagnostic ownership controls
+        run: python3 .github/scripts/test-run-owned-app-tests.py
+      - name: Record exact application inputs and configuration
+        run: python3 .github/scripts/verify-shared-app-probe.py "$RUNNER_TEMP/shared-app-probe" ${{ matrix.configuration }}
       - name: Compile real app and test bundles
         run: |
           set -euo pipefail
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
+            -configuration ${{ matrix.configuration }} ENABLE_TESTABILITY=YES \
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE' \
             -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/shared-math-app" \
             -onlyUsePackageVersionsFromResolvedFile -enableCodeCoverage NO build-for-testing
-      - name: Execute production math and live source-navigation controls
+      - name: Execute production math, heading links, and live source-navigation controls
         run: |
           set -euo pipefail
-          xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
+          python3 .github/scripts/run-owned-app-tests.py "$RUNNER_TEMP/shared-app-probe/diagnostics" \
+            "$RUNNER_TEMP/shared-math-app/Build/Products/${{ matrix.configuration }}/MacDown2.app/Contents/MacOS/MacDown2" -- \
+            xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
+            -configuration ${{ matrix.configuration }} ENABLE_TESTABILITY=YES \
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE' \
             -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/shared-math-app" \
             -onlyUsePackageVersionsFromResolvedFile -parallel-testing-enabled NO \
             -only-testing:MacDown2Tests/SharedMathActivationTests \
             -only-testing:MacDown2Tests/MathPreviewLiveSourceTests \
             -only-testing:MacDown2Tests/MathPreviewNavigationTests \
-            -only-testing:MacDown2Tests/MathPreviewRecoveryTests test-without-building \
-            | tee "$RUNNER_TEMP/shared-math-app-tests.log"
-          python3 - <<'PYVERIFY'
-          import os
-          import re
-          from pathlib import Path
-          log = (Path(os.environ["RUNNER_TEMP"]) / "shared-math-app-tests.log").read_text()
-          log = re.sub(r"\x1b\[[0-9;]*m", "", log)
-          suites = ["SharedMathActivationTests", "MathPreviewLiveSourceTests", "MathPreviewNavigationTests", "MathPreviewRecoveryTests"]
-          for suite in suites:
-              assert re.search(r"Suite " + re.escape(suite) + r" passed", log), suite + " did not execute successfully"
-          PYVERIFY
+            -only-testing:MacDown2Tests/MathPreviewRecoveryTests \
+            -only-testing:MacDown2Tests/HeadingPreviewSessionTests \
+            -only-testing:MacDown2Tests/HeadingPreviewNavigationTests \
+            -only-testing:MacDown2Tests/HeadingPreviewAppTests \
+            -only-testing:MacDown2Tests/HeadingExportActivationTests test-without-building \
+            | tee "$RUNNER_TEMP/shared-app-probe/probe.log"
+      - name: Verify exact source and actual selected execution
+        if: always()
+        run: python3 .github/scripts/verify-shared-app-probe.py "$RUNNER_TEMP/shared-app-probe" ${{ matrix.configuration }} --verify --require-result
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: shared-math-app-tests
-          path: ${{ runner.temp }}/shared-math-app-tests.log
+          name: shared-math-app-tests-${{ matrix.configuration }}
+          path: |
+            ${{ runner.temp }}/shared-app-probe/receipt.json
+            ${{ runner.temp }}/shared-app-probe/probe.log
+            ${{ runner.temp }}/shared-app-probe/diagnostics/*.json
+            ${{ runner.temp }}/shared-app-probe/diagnostics/*.sample.txt
+            ${{ runner.temp }}/shared-app-probe/diagnostics/*.log
           if-no-files-found: warn
       - name: Verify immutable dependency locks
         if: ${{ !cancelled() && steps.pin.outcome == 'success' }}

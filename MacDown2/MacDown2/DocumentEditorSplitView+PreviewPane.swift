@@ -10,11 +10,15 @@ extension DocumentEditorSplitView {
     var previewPane: some View {
         switch PreviewRouter.previewKind(for: document.format) {
         case .markdown:
+            let headingDisplay = currentHeadingDisplay
             TextualMarkdownPreview(
                 document: parseSession.document,
                 text: parseSession.publishedText,
                 theme: PreviewTheme(theme: themeController.current),
-                linkResolver: PreviewLinkResolver(baseURL: document.fileURL),
+                linkResolver: PreviewLinkResolver(
+                    baseURL: document.fileURL,
+                    headingIndex: headingDisplay?.preparation.index
+                ),
                 controller: scrollController,
                 blocks: previewDisplayCache.output,
                 mermaidFenceView: mermaidFenceView,
@@ -23,6 +27,10 @@ extension DocumentEditorSplitView {
                 mathContent: currentMathDisplay?.content ?? .pending,
                 onMathSourceAction: { frameID, sourceID in
                     showMathSource(frameID: frameID, sourceID: sourceID, diagnostic: false)
+                },
+                onHeadingAction: { heading, identity in
+                    guard let bindingID = headingDisplay?.bindingID else { return }
+                    showHeading(.init(bindingID: bindingID, heading: heading, identity: identity))
                 }
             )
             .environment(\.previewOpenDocument) { [weak coordinator] url in
@@ -38,7 +46,9 @@ extension DocumentEditorSplitView {
                     MathPreviewNoticesView(display: currentMathDisplay) { frameID, sourceID in
                         showMathSource(frameID: frameID, sourceID: sourceID, diagnostic: true)
                     }
-                    PreviewBusyIndicator(isVisible: parseSession.isParsing || mathSession.isBusy)
+                    PreviewBusyIndicator(
+                        isVisible: parseSession.isParsing || mathSession.isBusy || headingSession.phase == .analyzing
+                    )
                 }
             }
         case .html:

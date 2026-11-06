@@ -10,6 +10,7 @@ import Themes
 /// can map editor source lines to preview geometry. If Textual fails on a
 /// block, that block degrades to plain text rather than crashing the preview.
 public struct TextualMarkdownPreview: MarkdownPreviewing {
+    public typealias HeadingAction = @MainActor @Sendable (HeadingAnchorIndex.Heading, HeadingAnchorIdentity) -> Void
     public let document: MarkdownDocument?
     public let text: String?
     public let theme: PreviewTheme
@@ -29,6 +30,7 @@ public struct TextualMarkdownPreview: MarkdownPreviewing {
     public let linkDefinitions: [String]?
     public let mathContent: PreviewMathContent?
     public let onMathSourceAction: (@MainActor @Sendable (UUID, UUID) -> Void)?
+    public let onHeadingAction: HeadingAction?
 
     /// Renders a ```mermaid``` fence's inner diagram source (delimiters
     /// already stripped) as a native view, in place of Textual's ordinary
@@ -64,7 +66,8 @@ public struct TextualMarkdownPreview: MarkdownPreviewing {
         d2FenceView: ((String) -> AnyView)? = nil,
         graphvizFenceView: ((String) -> AnyView)? = nil,
         mathContent: PreviewMathContent? = nil,
-        onMathSourceAction: (@MainActor @Sendable (UUID, UUID) -> Void)? = nil
+        onMathSourceAction: (@MainActor @Sendable (UUID, UUID) -> Void)? = nil,
+        onHeadingAction: HeadingAction? = nil
     ) {
         self.document = document
         self.text = text
@@ -77,6 +80,7 @@ public struct TextualMarkdownPreview: MarkdownPreviewing {
         self.linkDefinitions = linkDefinitions
         self.mathContent = mathContent
         self.onMathSourceAction = onMathSourceAction
+        self.onHeadingAction = onHeadingAction
         self.mermaidFenceView = mermaidFenceView
         self.d2FenceView = d2FenceView
         self.graphvizFenceView = graphvizFenceView
@@ -146,6 +150,7 @@ public struct TextualMarkdownPreview: MarkdownPreviewing {
                                     resourceLoadID: resourceLoadID,
                                     mathContent: mathContent,
                                     onMathSourceAction: onMathSourceAction,
+                                    onHeadingAction: onHeadingAction,
                                     mermaidFenceView: mermaidFenceView,
                                     d2FenceView: d2FenceView,
                                     graphvizFenceView: graphvizFenceView
@@ -240,6 +245,15 @@ public struct TextualMarkdownPreview: MarkdownPreviewing {
                     )
                     controller.targetPreviewFraction = nil
                     controller.targetPreviewBlock = nil
+                }
+                .onChange(of: controller.headingJumpID) { _, id in
+                    guard id != nil, let target = controller.consumeHeadingJump() else { return }
+                    // The precise source block is authoritative. Its fraction
+                    // fallback is unused, including before heights are measured.
+                    scroll(
+                        to: 0, preciseBlock: target.block, animated: target.animated,
+                        using: proxy, viewportHeight: Double(viewportGeometry.size.height)
+                    )
                 }
             }
         }

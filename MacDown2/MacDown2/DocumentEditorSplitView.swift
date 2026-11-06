@@ -50,6 +50,7 @@ struct DocumentEditorSplitView: View {
     @State var previewContributionSession = PreviewContributionSession()
     @State var previewDisplayCache = PreviewDisplayCache()
     @State var mathSession = MathPreviewSession()
+    @State var headingSession = HeadingPreviewSession()
     @State var mathDisplay: MathPreviewDisplay?
 
     /// Not `private`: read by DocumentEditorSplitView+EditorPane.swift.
@@ -121,6 +122,7 @@ struct DocumentEditorSplitView: View {
             }
             .onChange(of: SourceAnalysisText(text)) { _, source in
                 mathSession.invalidate()
+                headingSession.invalidate()
                 mathDisplay = nil
                 let newText = source.text
                 // #35: only the format that can actually consume the result
@@ -144,11 +146,15 @@ struct DocumentEditorSplitView: View {
             .task(id: mathTaskID) {
                 await refreshMathAnalysis()
             }
+            .task(id: headingTaskID) {
+                await refreshHeadingAnalysis()
+            }
             .task(id: mathPresentationTaskID) {
                 await refreshMathPresentation()
             }
             .onDisappear {
                 mathSession.invalidate()
+                headingSession.invalidate()
                 mathDisplay = nil
             }
             .onChange(of: tab.syntaxFormat.id) { _, _ in
@@ -289,7 +295,8 @@ struct DocumentEditorSplitView: View {
     /// TOC (architecture takeover, pass 1/10).
     private var contributionTaskID: PreviewContributionTaskID {
         PreviewContributionTaskID(
-            documentIdentity: parseSession.identity, parsedRevision: parseSession.document?.revision
+            documentIdentity: parseSession.identity, parsedRevision: parseSession.document?.revision,
+            headingBindingID: headingSession.publicationID
         )
     }
 
@@ -297,7 +304,8 @@ struct DocumentEditorSplitView: View {
         guard let document = parseSession.document, let text = parseSession.publishedText else { return }
         await previewContributionSession.refresh(
             taskID: contributionTaskID, document: document, text: text,
-            baseBlocks: previewBlocks ?? PreviewBlock.blocks(from: document, text: text)
+            baseBlocks: previewBlocks ?? PreviewBlock.blocks(from: document, text: text),
+            headingState: headingContributionState
         )
     }
 
