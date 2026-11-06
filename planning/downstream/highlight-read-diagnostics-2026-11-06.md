@@ -141,3 +141,11 @@ either outcome is a repair or a green original selection. No retries of the
 full suite are added and the existing job/execution limits remain unchanged.
 The diagnostic source and owned-executor source are part of immutable receipts.
 All native execution stays on hosted macOS 26; no owner GUI launch is permitted.
+
+The c99eb37a complete normal CI passes 3712 package functions/533 suites,
+671 app functions/141 suites, all four app/mostlytext builds and app/UI
+compilation. Both strict original-read replay configurations pass; current-line
+Debug passes 1083/143. These do not waive the recorded Release ceiling failure.
+Local validation of this diagnostic addition is Python/YAML and pure owned-
+process controls only; its native entry refuses the current environment before
+creating output. No production or fixture assertions change.
