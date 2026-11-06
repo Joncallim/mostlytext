@@ -2,6 +2,7 @@ import EditorCore
 import FileCore
 import Highlighting
 import SwiftUI
+import Themes
 
 /// The editor pane and its status bar (epic-22-implementation.md §6.7, §17
 /// Slice 2b). Split out of `DocumentEditorSplitView.swift` to stay under the
@@ -117,7 +118,8 @@ extension DocumentEditorSplitView {
                         }
                     ),
                     syntaxMode: syntaxModeItem,
-                    reducedHighlighting: ReducedHighlightingNote(highlightStore.state(for: identity))
+                    reducedHighlighting: ReducedHighlightingNote(highlightStore.state(for: identity)),
+                    palette: ResolvedPresentationPalette(theme: themeController.current)
                 )
             }
         }
