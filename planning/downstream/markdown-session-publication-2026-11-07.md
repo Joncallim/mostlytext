@@ -80,18 +80,25 @@ initial-SwiftUI race is therefore not established by the old construction order.
 The production load calls setOptions, which deliberately schedules reparsing even
 for equal options; the original OptionsTests requirement stays unchanged.
 
-Extend only the test factory with a default-true mountWorkspace parameter. Its
-default path must retain every existing text-filter fixture behavior. The manual
-math/heading fixture opts out: construct the actual registered WindowController
-with no document, remove its placeholder content before creating the tab, then
-create the real editor/parser for that tab and manually mount the same native
-NSScrollView/NSTextView. No DocumentEditorSplitView exists for that fixture, so
-its manually controlled parse has one producer. This does not replace the real
-controller/coordinator/model/parser/editor or fake source authority. Preserve all
-29 selected functions,21 original positive/negative navigation assertions, key
-window/focus/selection/scroll/parser-replacement checks and all deadlines. Actual
-full-workspace heading/source/Preview journeys remain in their separate tests.
-No production UI, API or parse/options policy changes in this fixture correction.
+Give the internal WindowController initializer an optional initial content
+controller, default nil. With nil it constructs exactly the existing workspace
+root; no production caller changes. The direct-adapter test factory supplies an
+empty native content controller before WindowController is initialized, so a
+SwiftUI workspace and its parse producer are never created for that fixture.
+The actual model/tab/controller, eager real editor/parser stores, source provider,
+window and manually mounted NSScrollView/NSTextView remain. Merely constructing
+an empty model and removing its placeholder before inserting a tab cannot prove
+that an asynchronously dismantling SwiftUI graph will never observe that tab.
+Use the explicit content ownership boundary instead of timing that teardown.
+
+The shared test factory's default-true mountWorkspace path retains all original
+text-filter fixture behavior. Only the direct math/heading helper opts out. Move
+the constructor to a test support extension if needed to retain original strict
+source-size limits. Preserve all29 selected functions,21 original positive/
+negative navigation assertions, key-window/focus/selection/scroll/parser-replacement
+checks and every deadline. Real full-workspace heading/source/Preview journeys
+remain in their separate tests. No shipping option, alternate parser, private
+state mutation, public package API or parse/options policy is added.
 
 Local work compiles only; fresh complete hosted Debug/Release app integration and
 normal package/app CI are mandatory. Until then the21 failures remain unresolved
