@@ -129,6 +129,8 @@ def qualify(root, output, configuration, baseline):
                 raise SystemExit("Required native control did not pass: " + name)
         if "CURRENT-LINE-PHASE" not in log:
             raise SystemExit("Real viewport draw measurement did not execute")
+        if "HIGHLIGHT_PHASE sourceUTF8=1000008 setup=" not in log:
+            raise SystemExit("Actual unchanged full-highlight phase observation did not execute")
     print(("Baseline" if baseline else "Candidate") + " exact native result/source/pins verified: " + configuration)
 
 
