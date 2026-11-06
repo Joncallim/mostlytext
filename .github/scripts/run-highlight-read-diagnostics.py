@@ -110,7 +110,7 @@ def main():
         'command script import ' + json.dumps(str(repo / '.github/scripts/record_highlight_read.py')),
         'breakpoint set --file String+Data.swift --line ' + str(sites[0]),
         'breakpoint command add -F record_highlight_read.capture 1',
-        'run',
+        'process launch --shell-expand-args false',
     ]) + '\n')
     environment = dict(os.environ, HIGHLIGHT_READ_DIAGNOSTICS=str(destination),
                        MOSTLYTEXT_HIGHLIGHT_READ_DIAGNOSTIC='1',
@@ -138,6 +138,11 @@ def main():
         raise SystemExit('Diagnostic package manifest changed')
     if json.loads((package / 'Package.resolved').read_text())['pins'] != pins:
         raise SystemExit('Focused diagnostic dependency pins changed')
+    log = (destination / 'probe.log').read_text()
+    if result.returncode != 0 or not re.search(r'Test (widenedBackgroundTypingMatchesAFreshHighlighter|replacementWhileAnInjectedLanguageRequestIsHeldMatchesFreshHighlighting)\(\) started', log):
+        receipt['disposition'] = 'Debugger launch or fixture execution failed; no original-assertion result'
+        receipt_path.write_text(json.dumps(receipt, indent=2) + '\n')
+        raise SystemExit(receipt['disposition'])
     frame_path = destination / 'assertion-frame.json'
     if not frame_path.exists():
         receipt['disposition'] = 'Original assertion not reproduced; triggering values unavailable; no fix established'

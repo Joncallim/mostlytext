@@ -74,3 +74,10 @@ publication; require that delegate, exact bound-model bytes and advancing
 contentRevision as well as the native text/style checks. A manually attached
 NSTextView without the coordinator would omit the app's edit bookkeeping and
 would not prove this integration path.
+
+The first coordinator-mounted revision compiles, but LLDB's run command tries
+to shell-expand the combined test-filter expression and lldb-argdumper exits
+127. No selected fixture executes in that attempt. Launch with explicit literal
+arguments using process launch --shell-expand-args false, and require actual
+selected-function start before classifying missing assertion values. Preserve
+the original setup failure separately from the earlier genuine non-reproduction.
