@@ -102,6 +102,29 @@
         }
       }
     },
+    "Check the table-of-contents source and nearby HTML, or remove the table-of-contents marker before exporting.": {
+      "comment": "Generated heading navigation failure. Non-English values are English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Check the table-of-contents source and nearby HTML, or remove the table-of-contents marker before exporting."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Check the table-of-contents source and nearby HTML, or remove the table-of-contents marker before exporting."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Check the table-of-contents source and nearby HTML, or remove the table-of-contents marker before exporting."
+          }
+        }
+      }
+    },
     "Choose a different destination folder.": {
       "localizations": {
         "fr": {
@@ -243,6 +266,29 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Eksport został zatrzymany, ponieważ nie można było bezpiecznie przygotować wygenerowanej zawartości:\n%@"
+          }
+        }
+      }
+    },
+    "Export was stopped because the requested table of contents could not be linked to verified headings.": {
+      "comment": "Generated heading navigation failure. Non-English values are English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Export was stopped because the requested table of contents could not be linked to verified headings."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Export was stopped because the requested table of contents could not be linked to verified headings."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Export was stopped because the requested table of contents could not be linked to verified headings."
           }
         }
       }

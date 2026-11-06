@@ -15,8 +15,11 @@ parser.add_argument("--require-result", action="store_true")
 args = parser.parse_args()
 repo = Path(__file__).resolve().parents[2]
 package = repo / "MacDown2/Packages/MacDownKit"
-test = package / "Tests/ExportServiceTests/HeadingAnchorPreparationTests.swift"
-target = args.output / "Tests/HeadingAnchorProbe/HeadingAnchorPreparationTests.swift"
+tests = [package / "Tests/ExportServiceTests" / name for name in [
+    "HeadingAnchorPreparationTests.swift", "HeadingFragmentStructureTests.swift",
+    "HeadingPublicationIntegrationTests.swift", "ExportTestSupport.swift"
+]]
+targets = [args.output / "Tests/HeadingAnchorProbe" / test.name for test in tests]
 canonical = json.loads((package / "Package.resolved").read_text())
 pins = {p["identity"]: (p["location"], p["state"]["revision"]) for p in canonical["pins"]}
 source_digests = {
@@ -24,7 +27,8 @@ source_digests = {
     for p in sorted((package / "Sources").rglob("*.swift"))
 }
 source_digests[str((package / "Package.swift").relative_to(repo))] = hashlib.sha256((package / "Package.swift").read_bytes()).hexdigest()
-source_digests[str(test.relative_to(repo))] = hashlib.sha256(test.read_bytes()).hexdigest()
+for test in tests:
+    source_digests[str(test.relative_to(repo))] = hashlib.sha256(test.read_bytes()).hexdigest()
 if args.verify:
     receipt = json.loads((args.output / "receipt.json").read_text())
     checkout = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
@@ -32,17 +36,18 @@ if args.verify:
         raise SystemExit("Heading probe checkout identity changed")
     actual = json.loads((args.output / "Package.resolved").read_text())
     resolved = {p["identity"]: (p["location"], p["state"]["revision"]) for p in actual["pins"]}
-    if resolved != pins or receipt["source_sha256"] != source_digests or target.read_bytes() != test.read_bytes():
+    if resolved != pins or receipt["source_sha256"] != source_digests or any(target.read_bytes() != test.read_bytes() for test, target in zip(tests, targets)):
         raise SystemExit("Heading probe inputs or immutable dependency owners/revisions changed")
     if args.require_result:
         log = re.sub(r"\x1b\[[0-9;]*m", "", (args.output / "probe.log").read_text())
-        if not re.search(r"Test run with 14 tests in 1 suite passed", log):
-            raise SystemExit("The fourteen actual heading preparation controls did not pass")
+        if not re.search(r"Test run with 30 tests in 3 suites passed", log):
+            raise SystemExit("The thirty actual heading preparation/publication controls did not pass")
     print("Exact actual-package heading tests, source inventory and all immutable pins verified")
 else:
     args.output.mkdir(parents=True, exist_ok=False)
-    target.parent.mkdir(parents=True)
-    shutil.copyfile(test, target)
+    targets[0].parent.mkdir(parents=True)
+    for test, target in zip(tests, targets):
+        shutil.copyfile(test, target)
     manifest = '''// swift-tools-version: 6.2
 import PackageDescription
 let package = Package(name: "HeadingAnchorProbe", platforms: [.macOS(.v26)], dependencies: [
@@ -52,6 +57,7 @@ let package = Package(name: "HeadingAnchorProbe", platforms: [.macOS(.v26)], dep
     .testTarget(name: "HeadingAnchorProbe", dependencies: [
         .product(name: "ExportService", package: "MacDownKit"),
         .product(name: "Contributions", package: "MacDownKit"),
+        .product(name: "Themes", package: "MacDownKit"),
         .product(name: "SwiftSoup", package: "SwiftSoup"),
         .product(name: "MarkdownEngine", package: "MacDownKit")
     ])

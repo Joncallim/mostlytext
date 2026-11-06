@@ -22,6 +22,12 @@ extension ExportComposer {
         namespaceSVGIDs: Bool = false,
         cancellation: ResourceCancellation = ResourceCancellation()
     ) throws -> DerivedRender {
+        if request.headingIndex != nil {
+            return try renderHeadingDerived(
+                request: request, parsed: parsed, policy: policy, assetsDirName: assetsDirName,
+                budget: budget, rendering: (namespaceSVGIDs, cancellation)
+            )
+        }
         let sourceLength = request.text.utf16.count
         var derived = composeDerived(request: request, parsed: parsed, budget: budget,
                                      sourceUTF16Length: sourceLength, namespaceSVGIDs: namespaceSVGIDs)
@@ -73,7 +79,7 @@ extension ExportComposer {
             sourceGeneration: request.sourceGeneration,
             budget: budget,
             containerRanges: parsed.containerRanges,
-            recordCoordinates: namespaceSVGIDs,
+            recordCoordinates: namespaceSVGIDs || request.headingIndex != nil,
             namespaceSVGIDs: namespaceSVGIDs,
             referenceContext: parsed.referenceContext
         )
@@ -88,6 +94,37 @@ extension ExportComposer {
         budget: ExportResourceBudget,
         cancellation: ResourceCancellation = ResourceCancellation()
     ) throws -> (CMarkGFM.Rendered, ExportResourceResolver) {
+        let output = try renderUnresolved(
+            derived: derived, policy: policy, assetsDirName: assetsDirName,
+            request: request, budget: budget, cancellation: cancellation
+        )
+        return try (output.resolving(html: output.rendered.html), output.resolver)
+    }
+
+    struct UnresolvedRender {
+        let rendered: CMarkGFM.Rendered
+        let resolver: ExportResourceResolver
+        let registry: ExportResourceURLRegistry
+
+        func resolving(html: String) throws -> CMarkGFM.Rendered {
+            let resolved = try registry.resolve(html)
+            return CMarkGFM.Rendered(
+                html: resolved.html, resourceSlots: resolved.slots, containsRawHTML: rendered.containsRawHTML,
+                headingLocations: rendered.headingLocations, headingMarkers: rendered.headingMarkers,
+                headingSourceSHA256: rendered.headingSourceSHA256
+            )
+        }
+    }
+
+    static func renderUnresolved(
+        derived: DerivedContentComposer.Result,
+        policy: Policy,
+        assetsDirName: String,
+        request: ExportRequest,
+        budget: ExportResourceBudget,
+        cancellation: ResourceCancellation = ResourceCancellation(),
+        headingAnalysis: CMarkGFM.HeadingAnalysis = .none
+    ) throws -> UnresolvedRender {
         let resolver = ExportResourceResolver(
             resourceAccess: request.resourceAccess,
             cancellation: cancellation,
@@ -100,12 +137,9 @@ extension ExportComposer {
                 derived.customNodes.map(\.html),
             assetsDirectoryName: assetsDirName, limit: budget.maxPreparedHTMLUTF8Bytes
         )
-        let rendered = try renderBody(derived: derived, policy: policy, resolver: resolver, registry: registry)
-        let resolved = try registry.resolve(rendered.html)
-        return (CMarkGFM.Rendered(
-            html: resolved.html, resourceSlots: resolved.slots, containsRawHTML: rendered.containsRawHTML,
-            headingLocations: rendered.headingLocations, headingMarkers: rendered.headingMarkers,
-            headingSourceSHA256: rendered.headingSourceSHA256
-        ), resolver)
+        let rendered = try renderBody(
+            derived: derived, policy: policy, resolver: resolver, registry: registry, headingAnalysis: headingAnalysis
+        )
+        return UnresolvedRender(rendered: rendered, resolver: resolver, registry: registry)
     }
 }

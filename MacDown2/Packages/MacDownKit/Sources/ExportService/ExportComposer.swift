@@ -195,6 +195,7 @@ enum ExportComposer {
     /// matter stripped), and the body's exact UTF-16 offset within the original
     /// text.
     struct ParsedSource {
+        let document: MarkdownDocument
         let metadata: ExportMetadata
         let bodyText: String
         let bodyStartOffset: Int
@@ -223,6 +224,7 @@ enum ExportComposer {
         // matter stripped), so the body start offset is exact.
         let bodyStartOffset = request.text.utf16.count - bodyText.utf16.count
         return ParsedSource(
+            document: document,
             metadata: ExportMetadataResolver.resolve(
                 frontMatter: document.frontMatter?.values,
                 fileNameStem: request.fileNameStem,
@@ -267,7 +269,8 @@ enum ExportComposer {
         derived: DerivedContentComposer.Result,
         policy: Policy,
         resolver: ExportResourceResolver,
-        registry: ExportResourceURLRegistry? = nil
+        registry: ExportResourceURLRegistry? = nil,
+        headingAnalysis: CMarkGFM.HeadingAnalysis = .none
     ) throws -> CMarkGFM.Rendered {
         var options = CMarkGFM.optDefault
         if policy.preservesRawHTML {
@@ -282,6 +285,7 @@ enum ExportComposer {
                 derived.splicedBody,
                 options: options,
                 customNodes: derived.customNodes,
+                headingAnalysis: headingAnalysis,
                 urlTransformer: { url, isImage in
                     let disposition = try resolver.disposition(for: url, isImage: isImage)
                     if isImage, case .rewrite = disposition, let registry,

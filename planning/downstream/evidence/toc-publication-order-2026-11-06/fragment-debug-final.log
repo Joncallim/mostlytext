@@ -1,0 +1,81 @@
+[0/1] Planning build
+Building for debugging...
+[0/4] Write sources
+[2/4] Write swift-version--58304C5D6DBC2206.txt
+[4/6] Compiling ExportService HeadingFragmentStructure.swift
+[5/6] Emitting module ExportService
+[6/9] Emitting module ExportServiceTests
+[7/9] Compiling ExportServiceTests HeadingFragmentStructureTests.swift
+[7/9] Write Objects.LinkFileList
+[8/9] Linking HeadingFragmentProofPackageTests
+Build complete! (2.37s)
+Test Suite 'All tests' started at 2026-11-06 08:02:14.683.
+Test Suite 'All tests' passed at 2026-11-06 08:02:14.690.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.007) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite HeadingFragmentStructureTests started.
+◇ Test balancedIdentifierFreeFragmentsAreAdmitted(_:) started.
+◇ Test case passing 1 argument html → "" to balancedIdentifierFreeFragmentsAreAdmitted(_:) started.
+◇ Test case passing 1 argument html → "Readable 東京 &lt;h1 id=x&gt; &amp; text" to balancedIdentifierFreeFragmentsAreAdmitted(_:) started.
+◇ Test case passing 1 argument html → "<ul>
+<li><a href="#caf%C3%A9">Café</a><ul><li>Child</li></ul></li>
+</ul>
+" to balancedIdentifierFreeFragmentsAreAdmitted(_:) started.
+◇ Test case passing 1 argument html → "<p><em>(No headings found.)</em></p>
+" to balancedIdentifierFreeFragmentsAreAdmitted(_:) started.
+◇ Test case passing 1 argument html → "<ol start="9"><li><p>One</p><p>Two</p></li></ol>" to balancedIdentifierFreeFragmentsAreAdmitted(_:) started.
+◇ Test case passing 1 argument html → "<img src="data:image/png;base64,AAAA" width="9" height="8" alt="&quot;&lt; &amp;">" to balancedIdentifierFreeFragmentsAreAdmitted(_:) started.
+◇ Test case passing 1 argument html → "<p><strong>A <em>B</em></strong><br />C <del>D</del> <code>&lt;svg&gt;</code></p>" to balancedIdentifierFreeFragmentsAreAdmitted(_:) started.
+✔ Test balancedIdentifierFreeFragmentsAreAdmitted(_:) with 7 test cases passed after 0.001 seconds.
+◇ Test unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<h1>Invented</h1>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<a id="target">A</a>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<a name="target">A</a>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<p ID="target">A</p>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<p data-id="target">A</p>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<svg></svg>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<math><mtext>A</mtext></math>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<!-- hidden -->" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<!doctype html>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<script></script>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<style></style>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<textarea></textarea>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<plaintext>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<template></template>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<table><tr><td>A</td></tr></table>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "</p><p>A</p>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<p>A" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<p><ul><li>A</li></ul></p>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<li>A</li>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<ul>not a list item<li>A</li></ul>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<ul>&#65;<li>A</li></ul>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<ul><p>A</p></ul>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<a href="#a"><em><a href="#b">B</a></em></a>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<p/>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<br></br>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<IMG>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<p>A</p>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "A◇ Test case passing 1 argument html → "<a href=#x>A</a>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<a href="#x"href="#y">A</a>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<a href="#x" href="#y">A</a>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<a href="<p>">A</a>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<img src="x" onerror="bad">" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<img src="x" style="x">" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<a href="#x
+">A</a>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<a href="unterminated>A</a>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<p>A</p trailing>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<p>A</p/><p>B</p>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<br / >" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+◇ Test case passing 1 argument html → "<?processing?>" to unknownOrRepairingMarkupNeedsDOMAnalysis(_:) started.
+✔ Test unknownOrRepairingMarkupNeedsDOMAnalysis(_:) with 40 test cases passed after 0.001 seconds.
+◇ Test inlineFragmentsCannotCloseOrIntroduceBlockContexts() started.
+✔ Test inlineFragmentsCannotCloseOrIntroduceBlockContexts() passed after 0.001 seconds.
+◇ Test depthIsBoundedAndCheckedBeforePushing() started.
+✔ Test depthIsBoundedAndCheckedBeforePushing() passed after 0.001 seconds.
+◇ Test largeImageValuesDoNotAcquireTheDOMByteCap() started.
+✔ Test largeImageValuesDoNotAcquireTheDOMByteCap() passed after 0.152 seconds.
+✔ Suite HeadingFragmentStructureTests passed after 0.154 seconds.
+✔ Test run with 5 tests in 1 suite passed after 0.154 seconds.

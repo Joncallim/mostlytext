@@ -37,6 +37,11 @@ public struct ExportRequest: Sendable, Equatable {
     /// Markdown.
     public let contributions: [ExportDerivedContribution]
 
+    /// Opt-in generated targets from the same source/parse snapshot. The final
+    /// composer verifies accepted splices and emitted headings before resolving
+    /// resource slots. Nil preserves ordinary export's existing path and limits.
+    public let headingIndex: HeadingAnchorIndex?
+
     public init(
         text: String,
         sourceGeneration: UInt,
@@ -45,7 +50,8 @@ public struct ExportRequest: Sendable, Equatable {
         resourceAccess: ExportResourceAccess? = nil,
         protectedSourceIdentity: ExportProtectedFileIdentity? = nil,
         parseOptions: MarkdownParseOptions = .default,
-        contributions: [ExportDerivedContribution] = []
+        contributions: [ExportDerivedContribution] = [],
+        headingIndex: HeadingAnchorIndex? = nil
     ) {
         self.text = text
         self.sourceGeneration = sourceGeneration
@@ -55,6 +61,7 @@ public struct ExportRequest: Sendable, Equatable {
         self.resourceAccess = resourceAccess
         self.protectedSourceIdentity = protectedSourceIdentity
         self.contributions = contributions
+        self.headingIndex = headingIndex
     }
 
     /// The saved filename without its extension, used only as the browser-title
