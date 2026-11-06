@@ -30,7 +30,13 @@ struct SecuredMarkdownViewportTests {
         window.isReleasedWhenClosed = false
         window.animationBehavior = .none
         window.contentView = host
+        let application = NSApplication.shared
+        if !NSRunningApplication.current.isFinishedLaunching {
+            application.finishLaunching()
+        }
+        application.activate()
         window.makeKeyAndOrderFront(nil)
+        try await HeadingNativeHarness.requireOwnAccessibilityRole()
         defer {
             owner.close()
             window.orderOut(nil)
@@ -83,7 +89,25 @@ struct SecuredMarkdownViewportTests {
             }
             try await Task.sleep(for: .milliseconds(20))
         }
-        Issue.record("The actual overflowing Preview did not publish its new resource frame and final row")
+        let values = accessibleValues(in: host)
+        var containers: [String] = []
+        func describe(_ view: NSView, depth: Int) {
+            guard depth < 30 else { return }
+            if let scroll = view as? NSScrollView {
+                containers
+                    .append(
+                        "clip=\(scroll.contentView.bounds) document=\(String(describing: scroll.documentView?.bounds))"
+                    )
+            }
+            view.subviews.forEach { describe($0, depth: depth + 1) }
+        }
+        describe(host, depth: 0)
+        Issue.record("""
+        The actual overflowing Preview did not publish its new resource frame and final row.
+        prior=\(String(describing: prior)) current=\(String(describing: recorder.loadID)); marker=\(lastMarker)
+        Scroll containers: \(containers.joined(separator: "; "))
+        Native text: \(values.prefix(80).joined(separator: " | "))
+        """)
         throw CocoaError(.coderInvalidValue)
     }
 
@@ -101,6 +125,12 @@ struct SecuredMarkdownViewportTests {
     }
 
     private func containsAllRows(in host: NSView, lastMarker: String) -> Bool {
+        let values = accessibleValues(in: host)
+        let markers = (0 ..< 29).map { "ROW-\($0)-END" } + [lastMarker]
+        return markers.allSatisfy { marker in values.contains { $0.contains(marker) } }
+    }
+
+    private func accessibleValues(in host: NSView) -> [String] {
         var values: [String] = []
         for node in HeadingNativeHarness.nodes(in: host) {
             for name in ["accessibilityLabel", "accessibilityValue"] {
@@ -116,8 +146,7 @@ struct SecuredMarkdownViewportTests {
                 }
             }
         }
-        let markers = (0 ..< 29).map { "ROW-\($0)-END" } + [lastMarker]
-        return markers.allSatisfy { marker in values.contains { $0.contains(marker) } }
+        return values
     }
 }
 

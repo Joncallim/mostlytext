@@ -137,3 +137,14 @@ zero-byte probe log and failed strict result check are retained, not a Debug
 pass. Use one explicit scalar selection: skip the opt-in maximum-source suite
 in Debug and select it in Release. This preserves strict shell settings and
 all intended per-configuration tests without an empty-array expansion.
+
+## First viewport execution
+
+The 0a7aecfa Debug and Release consumer runs execute all 33/34 selected
+functions. The new viewport fixture times out before establishing its initial
+overflowing, fully rendered Preview; all image, resource, parsed-revision and
+network controls pass. No scroll-preservation result is inferred. Initialize
+the owned application's accessibility client as the existing native heading
+fixture does, and retain bounded load-ID, scroll-geometry and native-text
+diagnostics on the unchanged five-second readiness failure. All thirty row
+markers, real overflow, container identity, offset and focus checks remain.
