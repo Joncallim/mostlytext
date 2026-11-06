@@ -39,8 +39,10 @@ retargeted to a new source:
   evidence must pass the unchanged400/500ms ceilings, not waive the failure.
 - Preview response encoding d10d0881d7797272f0f9bf648a692aa02384e4f3: three
   actual WebKit/BOM/MIME/Unicode controls on the qualified production connector.
-- The PDF qualification branch based on this same main. Its final code head is
-  recorded before combination after actual unsigned compile/strict checks. The
+- PDF qualification0435b420609ebfb455a1418b8bc29951656f9412, based on this same
+  main. Actual unsigned Release app/test compilation, all330 compliance controls,
+  strict format/lint, inventory, five PDF verifier and three owned-executor
+  controls pass. Both original print test bodies are byte-identical to main. The
   first hosted genuine9-function PDF attempt occurs on the combined candidate.
 
 ## Ownership and invariants
