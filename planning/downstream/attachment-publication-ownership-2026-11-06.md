@@ -90,3 +90,17 @@ value itself to remain present and byte exact. Final hosted before/after runs
 copy this same strengthened canonical file into both phases. Rehash the
 orchestration source after execution and retain the generated manifest bytes
 with the receipts.
+
+## Shared app-test ownership prerequisite
+
+Before final full-app qualification, include the independently reviewed two-line
+ValidatedExportPanelTests ownership correction from d9c3cc70. Its standalone
+Swift-owned NSWindow must disable automatic release on close before presenting
+the real cancellation sheet, as required by the
+[AppKit ARC contract](https://developer.apple.com/documentation/appkit/nswindow/isreleasedwhenclosed).
+The immediately following app host crashed in PR101's original run; the stack
+alone does not establish that fixture as its cause. Keeping the known ownership
+violation in this branch would unnecessarily leave the same app-test hazard.
+Carry only that test-file correction, not PR101's unrelated production hook.
+Keep all real sheet assertions/deadlines and full final CI. This adds no product
+window policy or historical crash-resolution claim.
