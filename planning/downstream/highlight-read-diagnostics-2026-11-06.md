@@ -120,3 +120,24 @@ candidate count from 1082/142 to 1083/143. Keep the historical two-failure
 baseline and the actual orientation mutation and restoration controls intact.
 The original assertion trigger remains unresolved; no issue acceptance is
 inferred from a current replay passing.
+
+## Investigate repeated Release ceilings without bypassing qualification
+
+Final combined source c99eb37a again executes all 1083 editor/theme functions
+and fails only the existing 400 ms direct-parser ceiling (411.439834 ms). The
+previous c1db source also failed it and the 500 ms full-highlight ceiling.
+The performance fixtures, grammar factory and immutable runtime pins are
+unchanged from the earlier PR99 occurrence; no timing cause is inferred.
+The original full selection remains failed and cannot qualify this PR.
+
+On a complete failed Release selection naming HighlightPerformanceTests,
+collect a bounded fresh-process replay of the unchanged direct-parser test and
+the complete unchanged performance suite. Use the same compiled test binary,
+owned helper, pins and thresholds; preserve both success and failure statuses.
+Record CPU model/core/memory metadata and current toolchain, plus the existing
+owned-process identity/status/stack evidence. This distinguishes a failure that
+also occurs in an isolated process from a possible full-suite interaction;
+either outcome is a repair or a green original selection. No retries of the
+full suite are added and the existing job/execution limits remain unchanged.
+The diagnostic source and owned-executor source are part of immutable receipts.
+All native execution stays on hosted macOS 26; no owner GUI launch is permitted.
