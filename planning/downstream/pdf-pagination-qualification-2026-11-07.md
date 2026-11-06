@@ -35,7 +35,11 @@ internal printer path produced all marks or prove native Cancel responsiveness.
 ## Ownership, execution and failure behavior
 
 A separate pull-request workflow compiles the actual Release app and all test
-bundles with testability plus PDF_PAGINATION_PROBE. Serialize this one suite because AppKit print operations are process-owned;
+bundles with testability, the existing RELEASE_PREVIEW_PROBE support condition and
+PDF_PAGINATION_PROBE. The first compile confirmed the ordinary native folder
+fixtures require the existing support condition in Release; retain that compile
+failure. The PDF opt-in boolean is nonisolated because it reads only a build
+condition and the Testing trait evaluates in a Sendable closure. Serialize this one suite because AppKit print operations are process-owned;
 async MainActor tests alone can interleave while awaiting WebKit. Execute all9
 existing tests in PDFExportAdapterTests, not a copied adapter, mocked printer or replacement
 harness. Keep the repository's owned-app executor unchanged:600s complete-run
