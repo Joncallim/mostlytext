@@ -206,3 +206,31 @@ The changed executable must differ, and its exact restoration must equal that
 original hash, in addition to the existing source, selected tests and pin checks.
 Do not require independently built jobs to have byte-identical executables;
 qualify each job against its own unmodified build.
+
+## Diagnose unrelated mounted-copy failures before activation
+
+The 7f2fcb3c full CI passes 3711 package functions/532 suites and 683 app
+functions/146 suites. Both math/heading/status configurations pass 29/9.
+The Release disappearance pair also passes all 35 consumer functions/12 suites,
+its intended mutation and exact executable restoration, independently verified
+against 1593 inputs and 24 pins. The Debug viewport pair passes.
+
+Two separate Debug pair jobs instead expose failed mounted-copy positive
+controls: HTML contains the image's alt text but no PNG. One revision mutation
+also encounters its intended new-frame failure; its unrelated generation-copy
+control fails, so the pair is correctly refused. The disappearance mutation
+fails only its intended assertion, but exact restoration later fails the
+new-parsed-frame copy control. Preserve both failed artifacts; neither is
+qualified by the earlier complete c63 run or the successful initial 34/11
+selection. No native copy deadline or expected PNG is weakened.
+
+Add failure-only diagnostics before deciding on a production fix: distinguish
+initial versus replacement copy, record the actual selected loader's read/decode
+result, exact generated PNG bytes, current load ID/ledger and disappearance
+state, and inspect every real native text-interaction descendant's copy output
+and visibility. This must identify whether the failure is token revocation,
+image decode, retained-byte readiness, an obsolete view selected by the fixture,
+or actual current Textual export. Diagnostics must still fail the original
+copy assertion and preserve all input and ownership checks. Do not infer an
+uninitialized/transparent-PNG cause, a pasteboard-service cause or a production
+repair from the current evidence. Native execution remains hosted only.
