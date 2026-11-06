@@ -12,7 +12,7 @@ struct MathPreviewLiveSourceTests {
     /// do not race unrelated SwiftUI initial parsing or layout tasks. App-shell
     /// mount/layout acceptance remains a separate native journey.
     static func makeMountedController(text: String) throws -> TextFilterCoordinatorTests.Fixture {
-        let fixture = try TextFilterCoordinatorTests.makeController(text: text)
+        let fixture = try TextFilterCoordinatorTests.makeController(text: text, mountWorkspace: false)
         do {
             let window = try #require(fixture.controller.window)
             let system = try #require(fixture.controller.editorStore.existingSystem(for: fixture.tabID.uuidString))

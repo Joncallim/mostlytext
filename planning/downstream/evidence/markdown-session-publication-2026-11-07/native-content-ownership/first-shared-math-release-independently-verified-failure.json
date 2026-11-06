@@ -1,0 +1,47 @@
+{
+  "source_head": "bc8da866dd58493c0622844f0e35ee6ce192876d",
+  "checkout": "649d6bcb7afca0b037c92e595518910a3fe596e5",
+  "source_hashes_verified": 1591,
+  "pins_verified": 24,
+  "configuration": "Release",
+  "tests": 29,
+  "suites": 9,
+  "failed_assertions": 21,
+  "failed_adapter_suites": [
+    "HeadingPreviewNavigationTests",
+    "MathPreviewLiveSourceTests",
+    "MathPreviewNavigationTests"
+  ],
+  "other_six_suites_passed": true,
+  "owned_status": {
+    "returncode": 65,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 127.57919741699993,
+    "app_cleanup_requested": []
+  },
+  "exact_failures": [
+    "\u2718 Test anOwnHeadingReplacesAllCaretsAndKeepsTheCurrentFirstResponder() recorded an issue at HeadingPreviewNavigationTests.swift:33:28: Expectation failed: (parse \u2192 MarkdownEngine.MarkdownParseSession).document \u2192 nil \u2192 nil",
+    "\u2718 Test changedLiveAuthorityCannotSelectOrQueueAScroll(_:) recorded an issue with 1 argument change \u2192 \"editor\" at HeadingPreviewNavigationTests.swift:33:28: Expectation failed: (parse \u2192 MarkdownEngine.MarkdownParseSession).document \u2192 nil \u2192 nil",
+    "\u2718 Test changedLiveAuthorityCannotSelectOrQueueAScroll(_:) recorded an issue with 1 argument change \u2192 \"generation\" at HeadingPreviewNavigationTests.swift:33:28: Expectation failed: (parse \u2192 MarkdownEngine.MarkdownParseSession).document \u2192 nil \u2192 nil",
+    "\u2718 Test changedLiveAuthorityCannotSelectOrQueueAScroll(_:) recorded an issue with 1 argument change \u2192 \"parser\" at HeadingPreviewNavigationTests.swift:33:28: Expectation failed: (parse \u2192 MarkdownEngine.MarkdownParseSession).document \u2192 nil \u2192 nil",
+    "\u2718 Test changedLiveAuthorityCannotSelectOrQueueAScroll(_:) recorded an issue with 1 argument change \u2192 \"removed\" at HeadingPreviewNavigationTests.swift:33:28: Expectation failed: (parse \u2192 MarkdownEngine.MarkdownParseSession).document \u2192 nil \u2192 nil",
+    "\u2718 Test changedLiveAuthorityCannotSelectOrQueueAScroll(_:) recorded an issue with 1 argument change \u2192 \"binding\" at HeadingPreviewNavigationTests.swift:33:28: Expectation failed: (parse \u2192 MarkdownEngine.MarkdownParseSession).document \u2192 nil \u2192 nil",
+    "\u2718 Test anotherKeyWindowCannotBorrowThisDocumentsHeading() recorded an issue at HeadingPreviewNavigationTests.swift:33:28: Expectation failed: (parse \u2192 MarkdownEngine.MarkdownParseSession).document \u2192 nil \u2192 nil",
+    "\u2718 Test aQueuedScrollRechecksSourceAfterTheInitialValidPress() recorded an issue at HeadingPreviewNavigationTests.swift:33:28: Expectation failed: (parse \u2192 MarkdownEngine.MarkdownParseSession).document \u2192 nil \u2192 nil",
+    "\u2718 Test anAttachedSheetCannotAuthorizeHeadingNavigation() recorded an issue at HeadingPreviewNavigationTests.swift:33:28: Expectation failed: (parse \u2192 MarkdownEngine.MarkdownParseSession).document \u2192 nil \u2192 nil",
+    "\u2718 Test anEditorOnlyEditCannotBorrowTheUnchangedModelAndPublishedParse() recorded an issue at MathPreviewLiveSourceTests.swift:47:24: Expectation failed: (fixture.coordinator \u2192 MacDown2.WindowCoordinator).mathLiveSource(in: (controller.model \u2192 Workspace.WorkspaceModel), identity: (identity \u2192 \"ABB58B3B-0D79-4A58-9ECE-A6C80DA86BF7\")) \u2192 nil",
+    "\u2718 Test aNontextGenerationChangeAndParserReplacementInvalidateOldAuthority() recorded an issue at MathPreviewLiveSourceTests.swift:65:24: Expectation failed: (fixture.coordinator \u2192 MacDown2.WindowCoordinator).mathLiveSource(in: (controller.model \u2192 Workspace.WorkspaceModel), identity: (identity \u2192 \"47B07394-C3B8-4710-A906-F103D4C8E944\")) \u2192 nil",
+    "\u2718 Test removedWindowsAndUnknownTabsCannotCreateFreshAuthority() recorded an issue at MathPreviewLiveSourceTests.swift:86:9: Expectation failed: (fixture.coordinator.mathLiveSource(in: controller.model, identity: identity) \u2192 nil) != nil",
+    "\u2718 Test theOwnOccurrenceReplacesTheEntireSelectionSet(diagnostic:) recorded an issue with 1 argument diagnostic \u2192 false at MathPreviewNavigationTests.swift:32:24: Expectation failed: (fixture.coordinator \u2192 MacDown2.WindowCoordinator).mathLiveSource(in: (fixture.controller.model \u2192 Workspace.WorkspaceModel), identity: (identity \u2192 \"BE3E2128-05C5-4603-8D49-39979540AC50\")) \u2192 nil",
+    "\u2718 Test theOwnOccurrenceReplacesTheEntireSelectionSet(diagnostic:) recorded an issue with 1 argument diagnostic \u2192 true at MathPreviewNavigationTests.swift:32:24: Expectation failed: (fixture.coordinator \u2192 MacDown2.WindowCoordinator).mathLiveSource(in: (fixture.controller.model \u2192 Workspace.WorkspaceModel), identity: (identity \u2192 \"BC06A69C-ADC4-484E-B92C-22F32C16B3E4\")) \u2192 nil",
+    "\u2718 Test changedLiveAuthorityCannotMoveSelection(_:) recorded an issue with 1 argument change \u2192 \"editor\" at MathPreviewNavigationTests.swift:32:24: Expectation failed: (fixture.coordinator \u2192 MacDown2.WindowCoordinator).mathLiveSource(in: (fixture.controller.model \u2192 Workspace.WorkspaceModel), identity: (identity \u2192 \"7037FBA1-8255-454C-BAE8-4EAE5728760B\")) \u2192 nil",
+    "\u2718 Test changedLiveAuthorityCannotMoveSelection(_:) recorded an issue with 1 argument change \u2192 \"generation\" at MathPreviewNavigationTests.swift:32:24: Expectation failed: (fixture.coordinator \u2192 MacDown2.WindowCoordinator).mathLiveSource(in: (fixture.controller.model \u2192 Workspace.WorkspaceModel), identity: (identity \u2192 \"353056CD-CBD5-4B77-A014-396D2280D55D\")) \u2192 nil",
+    "\u2718 Test changedLiveAuthorityCannotMoveSelection(_:) recorded an issue with 1 argument change \u2192 \"parser\" at MathPreviewNavigationTests.swift:32:24: Expectation failed: (fixture.coordinator \u2192 MacDown2.WindowCoordinator).mathLiveSource(in: (fixture.controller.model \u2192 Workspace.WorkspaceModel), identity: (identity \u2192 \"746E001A-15BB-4BBD-ADAD-9CFF067A3752\")) \u2192 nil",
+    "\u2718 Test changedLiveAuthorityCannotMoveSelection(_:) recorded an issue with 1 argument change \u2192 \"removed\" at MathPreviewNavigationTests.swift:32:24: Expectation failed: (fixture.coordinator \u2192 MacDown2.WindowCoordinator).mathLiveSource(in: (fixture.controller.model \u2192 Workspace.WorkspaceModel), identity: (identity \u2192 \"5B97838E-6B36-4761-B129-DB72C4A7CCDA\")) \u2192 nil",
+    "\u2718 Test changedLiveAuthorityCannotMoveSelection(_:) recorded an issue with 1 argument change \u2192 \"frame\" at MathPreviewNavigationTests.swift:32:24: Expectation failed: (fixture.coordinator \u2192 MacDown2.WindowCoordinator).mathLiveSource(in: (fixture.controller.model \u2192 Workspace.WorkspaceModel), identity: (identity \u2192 \"5AC05255-C34A-4738-A30B-BB2F796D8279\")) \u2192 nil",
+    "\u2718 Test changedLiveAuthorityCannotMoveSelection(_:) recorded an issue with 1 argument change \u2192 \"foreignID\" at MathPreviewNavigationTests.swift:32:24: Expectation failed: (fixture.coordinator \u2192 MacDown2.WindowCoordinator).mathLiveSource(in: (fixture.controller.model \u2192 Workspace.WorkspaceModel), identity: (identity \u2192 \"D2CF18D1-2F47-4FEF-928C-46904602E828\")) \u2192 nil",
+    "\u2718 Test anotherKeyWindowCannotSelectTheOriginalDocumentsEquation() recorded an issue at MathPreviewNavigationTests.swift:32:24: Expectation failed: (fixture.coordinator \u2192 MacDown2.WindowCoordinator).mathLiveSource(in: (fixture.controller.model \u2192 Workspace.WorkspaceModel), identity: (identity \u2192 \"4D9DF84C-00F2-483F-9390-90B4B293EEDE\")) \u2192 nil"
+  ],
+  "scope": "Preserved complete initial native failure; no product-cause classification or passing qualification inferred"
+}
