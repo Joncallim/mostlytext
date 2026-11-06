@@ -229,3 +229,22 @@ current-line native runs pass all 1,082 tests/142 suites in both configurations,
 including strict nonempty Release edit/fresh-highlight parity and the actual
 glyph-orientation mutation/restoration control. These earlier results do not
 replace final combined-source qualification.
+
+## First combined application pixel findings
+
+Combined source 7c5891b7 completes package tests and all app/CLI builds; its full
+app run executes 671 functions/141 suites and fails eight channel comparisons
+in the new status-bar test only. Tomorrow Dark captures 0.232248 per channel
+against nominal 0.176; Slate and Midnight also differ, while white/black and
+warm light themes remain within the original tolerance. Raw logs and the first
+failure remain retained. These are not a green status-theme acceptance result.
+
+The initial fixture asks AppKit for an implicit cached-display bitmap and
+compares deviceRGB components to an sRGB palette. Before changing production
+colors, render into an explicitly sRGB-tagged bitmap and verify readback with
+an independent Core Graphics solid-color reference in the same bitmap. Keep
+the original 0.03 status-channel tolerance and all eight themes. If calibrated
+capture still differs, diagnose/remediate the production bridge rather than
+relax the oracle. Select this actual app control in both native configurations,
+alongside the unchanged 28 math/heading controls. Complete exact-source CI and
+combined Debug/Release qualification remain required after any correction.
