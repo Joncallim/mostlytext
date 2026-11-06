@@ -37,9 +37,9 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-argument-parser", exact: "1.8.2"),
         .package(
             url: "https://github.com/Joncallim/SwiftTreeSitter",
-            revision: "0beea992c4246f93a122de846c8611c9be19aeb7"
+            revision: "f2163a8bc5d0f1ce76b4cead48ce0f3ade4aa9f3"
         ),
-        .package(url: "https://github.com/Joncallim/Neon", revision: "cd14f22ae8f8402b175a0bafd87560b78c7549e9"),
+        .package(url: "https://github.com/Joncallim/Neon", revision: "72174c8de8f28c957fd48850b90de99899b709ee"),
         .package(url: "https://github.com/tree-sitter/tree-sitter-json", from: "0.24.8"),
         .package(url: "https://github.com/tree-sitter/tree-sitter-html", from: "0.23.2"),
         // EPIC-11 Gate 5 grammars. Every grammar is pinned exactly; see
@@ -80,7 +80,7 @@ let package = Package(
         .package(url: "https://github.com/Joncallim/swift-cmark", revision: "ff6d22e5eeacccf38a8276b27ddb9dc31ab16f5a"),
         .package(url: "https://github.com/scinfu/SwiftSoup", exact: "2.13.9"),
         .package(url: "https://github.com/jpsim/Yams", exact: "6.2.2"),
-        .package(url: "https://github.com/Joncallim/textual", revision: "c52cb5834c4695109aad2cb66294eafbc8f264c8"),
+        .package(url: "https://github.com/Joncallim/textual", revision: "dd123d4f7052d84032cafb22c62cd467916518dd"),
         // Match Textual's immutable engine owner/revision, so Preview and Export
         // share one parser, comment correction and structured body-inspection API.
         .package(

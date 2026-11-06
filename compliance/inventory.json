@@ -577,9 +577,9 @@
       "id": "neon",
       "name": "Neon",
       "kind": "swiftpm",
-      "version": "cd14f22a",
+      "version": "72174c8d",
       "upstream": "https://github.com/Joncallim/Neon",
-      "revision": "cd14f22ae8f8402b175a0bafd87560b78c7549e9",
+      "revision": "72174c8de8f28c957fd48850b90de99899b709ee",
       "resolution": "exact",
       "licence": "BSD-3-Clause",
       "copyright": [
@@ -600,9 +600,9 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "cd14f22ae8f8402b175a0bafd87560b78c7549e9"
+        "revision": "72174c8de8f28c957fd48850b90de99899b709ee"
       },
-      "evidence": "Owner patch over e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9 (original runtime dabf50c947148c49acd0d321dfe8f3805d10b3da). Refresh embedded-language validity before callbacks, await running validation/follow-up regions and reject obsolete queries. Preserve complete semantic tokens for attribute providers while a package-only iterator confines actual painting in all three native style interfaces. Both rejected styling boundaries and their failed hosted runs are retained; original BSD-3-Clause licence and parser/grammar pins are unchanged. Separate buffered-coordinate work, whole-editor latency and native acceptance remain open. This exact merge also shifts retained dirty intervals through later edits before new client invalidations, preserving surviving deletion tails, nested depth, all-document and reentrant scope ownership. Both client/style and buffer proofs and all first hosted failures are retained. Manifest-only child be25e35787585430f0f1ac845ed44c11e7f8150a pins the complete injection coverage repair; all Neon runtime and test bytes are unchanged from baf93c72924e31e16b84adced6ee29cb02934c3b. Dependency-metadata child ab93bca8cc74af6f5e17eefc7fefa1999726a131 pins the behavior-preserving tree-sitter lexer lookup fork; its runtime/test bytes are unchanged from the complete-injection-coverage predecessor. Original BSD licence remains unchanged. The runtime evidence packet preserves all original fresh-tree/Rustdoc failures as well as cross-runtime equivalence proof. Child cd14f22ae8f8402b175a0bafd87560b78c7549e9 additionally rejects one-phase style results if content changed during an await or synchronous provider reentry, before any style callback. Exact-source controlled baseline fails24 assertions; post-guard46-function Debug/Release component suites pass, preserving prior range/client/style/buffer/2,000-edit proofs. API, scheduler and parser pins are unchanged; original BSD text remains exact. Native lifecycle/abort/Release acceptance remains separate. See planning/downstream/one-phase-style-version-guard.md."
+      "evidence": "Owner patch over e1e0c6de7f299fd8e9ff2b5ecb468d04ee6d50a9 (original runtime dabf50c947148c49acd0d321dfe8f3805d10b3da). Refresh embedded-language validity before callbacks, await running validation/follow-up regions and reject obsolete queries. Preserve complete semantic tokens for attribute providers while a package-only iterator confines actual painting in all three native style interfaces. Both rejected styling boundaries and their failed hosted runs are retained; original BSD-3-Clause licence and parser/grammar pins are unchanged. Separate buffered-coordinate work, whole-editor latency and native acceptance remain open. This exact merge also shifts retained dirty intervals through later edits before new client invalidations, preserving surviving deletion tails, nested depth, all-document and reentrant scope ownership. Both client/style and buffer proofs and all first hosted failures are retained. Manifest-only child be25e35787585430f0f1ac845ed44c11e7f8150a pins the complete injection coverage repair; all Neon runtime and test bytes are unchanged from baf93c72924e31e16b84adced6ee29cb02934c3b. Dependency-metadata child ab93bca8cc74af6f5e17eefc7fefa1999726a131 pins the behavior-preserving tree-sitter lexer lookup fork; its runtime/test bytes are unchanged from the complete-injection-coverage predecessor. Original BSD licence remains unchanged. The runtime evidence packet preserves all original fresh-tree/Rustdoc failures as well as cross-runtime equivalence proof. Child cd14f22ae8f8402b175a0bafd87560b78c7549e9 additionally rejects one-phase style results if content changed during an await or synchronous provider reentry, before any style callback. Exact-source controlled baseline fails24 assertions; post-guard46-function Debug/Release component suites pass, preserving prior range/client/style/buffer/2,000-edit proofs. API, scheduler and parser pins are unchanged; original BSD text remains exact. Native lifecycle/abort/Release acceptance remains separate. See planning/downstream/one-phase-style-version-guard.md. Child 72174c8de8f28c957fd48850b90de99899b709ee changes only Package.swift relative to cd14f22ae8f8402b175a0bafd87560b78c7549e9, selecting the exact SwiftTreeSitter f2163a8bc5d0f1ce76b4cead48ce0f3ade4aa9f3 private capture-name cache. Every Neon runtime/test/submodule/license object is unchanged. The app and vendored Markdown exact requirements agree. This does not repair or remove the original parser assertion or establish hosted/product performance readiness."
     },
     {
       "id": "nvim-treesitter-markdown-queries",
@@ -799,9 +799,9 @@
       "id": "swifttreesitter",
       "name": "SwiftTreeSitter",
       "kind": "swiftpm",
-      "version": "0beea992",
+      "version": "f2163a8b",
       "upstream": "https://github.com/Joncallim/SwiftTreeSitter",
-      "revision": "0beea992c4246f93a122de846c8611c9be19aeb7",
+      "revision": "f2163a8bc5d0f1ce76b4cead48ce0f3ade4aa9f3",
       "resolution": "exact",
       "licence": "BSD-3-Clause",
       "copyright": [
@@ -823,9 +823,9 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "0beea992c4246f93a122de846c8611c9be19aeb7"
+        "revision": "f2163a8bc5d0f1ce76b4cead48ce0f3ade4aa9f3"
       },
-      "evidence": "Owner-maintained fork at 1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43, based exactly on upstream cbe31cb3601aa29c1f64b6e4328733511126d6d5. Only inline injection reconciliation, strict tests and patch documentation change. Original BSD-3-Clause licence is byte-identical to the captured text; verified at the fork revision. Debug/Release upstream and source-identical Markdown regressions pass; whole-editor/native acceptance remains separate. See planning/downstream/highlighting-included-range-repair.md and its evidence packet. No upstream submission is claimed. Final review adds complete expanded-query coverage: a reproduced cross-language partial query no longer drops unqueried narrow captures; language-tag change retirement is also tested. Child 7d2dc87e8b9326062d75bc1ef985f17d28e94da9 also expands old-capture coverage and adds default-true LanguageConfiguration.reusesPreviousTree, disabled explicitly only for MarkdownInline by the app. Strict 2,000 valid-scalar edits match fresh highlights; isolated default-policy moved-capture controls pass LF/CRLF/CR. Both prior coverage and incremental-parser failures are retained. Original runtime and BSD licence remain unchanged. See planning/downstream/complete-injection-query-coverage.md and its evidence packet. Dependency-metadata child 0beea992c4246f93a122de846c8611c9be19aeb7 pins the behavior-preserving tree-sitter lexer lookup fork; its runtime/test bytes are unchanged from the complete-injection-coverage predecessor. Original BSD licence remains unchanged. The runtime evidence packet preserves all original fresh-tree/Rustdoc failures as well as cross-runtime equivalence proof."
+      "evidence": "Owner-maintained fork at 1b1c85e94df6421a0e4bdcb9f3afaddb16b75d43, based exactly on upstream cbe31cb3601aa29c1f64b6e4328733511126d6d5. Only inline injection reconciliation, strict tests and patch documentation change. Original BSD-3-Clause licence is byte-identical to the captured text; verified at the fork revision. Debug/Release upstream and source-identical Markdown regressions pass; whole-editor/native acceptance remains separate. See planning/downstream/highlighting-included-range-repair.md and its evidence packet. No upstream submission is claimed. Final review adds complete expanded-query coverage: a reproduced cross-language partial query no longer drops unqueried narrow captures; language-tag change retirement is also tested. Child 7d2dc87e8b9326062d75bc1ef985f17d28e94da9 also expands old-capture coverage and adds default-true LanguageConfiguration.reusesPreviousTree, disabled explicitly only for MarkdownInline by the app. Strict 2,000 valid-scalar edits match fresh highlights; isolated default-policy moved-capture controls pass LF/CRLF/CR. Both prior coverage and incremental-parser failures are retained. Original runtime and BSD licence remain unchanged. See planning/downstream/complete-injection-query-coverage.md and its evidence packet. Dependency-metadata child 0beea992c4246f93a122de846c8611c9be19aeb7 pins the behavior-preserving tree-sitter lexer lookup fork; its runtime/test bytes are unchanged from the complete-injection-coverage predecessor. Original BSD licence remains unchanged. The runtime evidence packet preserves all original fresh-tree/Rustdoc failures as well as cross-runtime equivalence proof. Child f2163a8bc5d0f1ce76b4cead48ce0f3ade4aa9f3 changes only Query.swift relative to 0beea992c4246f93a122de846c8611c9be19aeb7: immutable capture names/components are split once per compiled query and reused by value. Public APIs, direct-name construction, metadata evaluation, predicates, ordering, nodes/ranges, C runtime and original BSD text are unchanged. Actual owned-copy alternating process measurements preserve all 23,256 ordered highlight values and reduce query time about 17 percent on the exact local one MB fixture; this is not hosted/product-budget acceptance. Final exact-head Debug/Release component and full app/package qualification remain required. See planning/downstream/query-capture-name-cache-2026-11-06.md."
     },
     {
       "id": "prismjs-textual",
@@ -1070,9 +1070,9 @@
       "id": "textual",
       "name": "Textual",
       "kind": "swiftpm",
-      "version": "c52cb583",
+      "version": "dd123d4f",
       "upstream": "https://github.com/Joncallim/textual",
-      "revision": "c52cb5834c4695109aad2cb66294eafbc8f264c8",
+      "revision": "dd123d4f7052d84032cafb22c62cd467916518dd",
       "resolution": "exact",
       "licence": "MIT",
       "copyright": [
@@ -1093,9 +1093,9 @@
         "LC-07"
       ],
       "manifest_requirement": {
-        "revision": "c52cb5834c4695109aad2cb66294eafbc8f264c8"
+        "revision": "dd123d4f7052d84032cafb22c62cd467916518dd"
       },
-      "evidence": "Narrow descendant of gonzalezreal/textual 0.5.0 at 01b51875a5406eefc95f52a058cb059e7bc94dc4. Inherits the bounded HTML-copy correction and typed source-occurrence factory; original MIT, credits and bundled Prism bytes are unchanged. Validated-body child b940433c7a55b82a8bbbe6fb0837df7162307dbb changes only Package.swift and the two math factory/attachment files relative to inspection metadata child 2337a7751605ed819ed6ce71a450fe29608deb40. Both metrics and drawing consume the admitted raw body; legacy String factories remain source compatible. All other parser/runtime/test/resource files are unchanged. This adds no accessibility claim for Canvas symbols and does not activate production transport; actual hosted native/full CI remains required. See planning/downstream/validated-math-body.md. Child ebf6590ab480181cc05d37f520ad6e0f474c2c72 changes only Attachment.swift, AttachmentView.swift and the new AttachmentAccessibility.swift relative to b940433c7a55b82a8bbbe6fb0837df7162307dbb: opt-in caller-owned labels/opaque actions at actual layout-run geometry, with default-nil compatibility and forwarded drawing/metrics/PNG. All other sources, tests, resources and license bytes are unchanged. Native qualification is recorded in planning/downstream/evidence/native-math-qualified-merges-2026-11-05. Child c52cb5834c4695109aad2cb66294eafbc8f264c8 changes only AttachmentAccessibility.swift and Internal/Helpers/AttributedString.swift: display paragraph classification sees through the private semantic wrapper, and replacing metadata avoids accumulating wrappers. Hosted baseline 42063896137 proves the wrapped-display failure with the original display positive control; font-only metrics pass and remain unchanged. No other source/resource/font/license bytes change. Corrected native/full CI qualification remains required; see planning/downstream/native-math-policy-probes.md. Paired production math activation explicitly declares this same immutable product for the app and app-test targets in MacDown2/project.yml, in addition to Preview's existing dependency. There is no component, revision, source/resource/font/license byte change. Qualified transport evidence: mostlytext PR92, native run 42093505120 (46 tests), complete run 42093505156; production app activation requires its own exact-head CI."
+      "evidence": "Narrow descendant of gonzalezreal/textual 0.5.0 at 01b51875a5406eefc95f52a058cb059e7bc94dc4. Inherits the bounded HTML-copy correction and typed source-occurrence factory; original MIT, credits and bundled Prism bytes are unchanged. Validated-body child b940433c7a55b82a8bbbe6fb0837df7162307dbb changes only Package.swift and the two math factory/attachment files relative to inspection metadata child 2337a7751605ed819ed6ce71a450fe29608deb40. Both metrics and drawing consume the admitted raw body; legacy String factories remain source compatible. All other parser/runtime/test/resource files are unchanged. This adds no accessibility claim for Canvas symbols and does not activate production transport; actual hosted native/full CI remains required. See planning/downstream/validated-math-body.md. Child ebf6590ab480181cc05d37f520ad6e0f474c2c72 changes only Attachment.swift, AttachmentView.swift and the new AttachmentAccessibility.swift relative to b940433c7a55b82a8bbbe6fb0837df7162307dbb: opt-in caller-owned labels/opaque actions at actual layout-run geometry, with default-nil compatibility and forwarded drawing/metrics/PNG. All other sources, tests, resources and license bytes are unchanged. Native qualification is recorded in planning/downstream/evidence/native-math-qualified-merges-2026-11-05. Child c52cb5834c4695109aad2cb66294eafbc8f264c8 changes only AttachmentAccessibility.swift and Internal/Helpers/AttributedString.swift: display paragraph classification sees through the private semantic wrapper, and replacing metadata avoids accumulating wrappers. Hosted baseline 42063896137 proves the wrapped-display failure with the original display positive control; font-only metrics pass and remain unchanged. No other source/resource/font/license bytes change. Corrected native/full CI qualification remains required; see planning/downstream/native-math-policy-probes.md. Paired production math activation explicitly declares this same immutable product for the app and app-test targets in MacDown2/project.yml, in addition to Preview's existing dependency. There is no component, revision, source/resource/font/license byte change. Qualified transport evidence: mostlytext PR92, native run 42093505120 (46 tests), complete run 42093505156; production app activation requires its own exact-head CI. Child dd123d4f7052d84032cafb22c62cd467916518dd changes only Internal/Attachment/WithAttachments.swift relative to c52cb5834c4695109aad2cb66294eafbc8f264c8: private non-cancelled request ownership clears obsolete resolved content and rejects cancelled or superseded publication. No public API, loader, authority, parser, math, resource, font or original MIT byte changes. Hosted original-model run 42208657007 executes four specific failing controls in BOTH Debug and Release, with immutable source/license/pin readback. Candidate before/after native and complete app/package qualification remain required; this does not establish the cause of mounted native PNG-copy failures. See planning/downstream/attachment-publication-ownership-2026-11-06.md."
     },
     {
       "id": "theme-tomorrow-dark",
@@ -1582,7 +1582,7 @@
         },
         {
           "path": "MacDown2/Packages/TreeSitterMarkdown/Package.swift",
-          "sha256": "f9b65117730209a598eea8d6d38542fb3e66169c681bf2e04828533a14fe5926"
+          "sha256": "6cb3008addcb673fa0e4a27ade5ab813704c9428fd21b5582230bcbe2c654928"
         },
         {
           "path": "MacDown2/Packages/TreeSitterMarkdown/README.md",
@@ -1661,7 +1661,7 @@
           "sha256": "64b1a6006b40176d8db986cc41350e4f9b292fd06bfedb0abfcdb1fb989aca3e"
         }
       ],
-      "modifications": "Block scanner is the exact upstream PR 279 safety backport at 38dc6f5297551f070d15a33fda3da89f01863a04 (blob e8d87eec1f8f6dbddd987df43097195e8d790c78); capture names in the two highlights.scm query files are rewritten to this app's theme key space. See the package README.",
+      "modifications": "Block scanner is the exact upstream PR 279 safety backport at 38dc6f5297551f070d15a33fda3da89f01863a04 (blob e8d87eec1f8f6dbddd987df43097195e8d790c78); capture names in the two highlights.scm query files are rewritten to this app's theme key space. See the package README. The manifest-only query capture-name cache integration selects SwiftTreeSitter f2163a8bc5d0f1ce76b4cead48ce0f3ade4aa9f3; generated block/inline C, scanner, queries, resource helpers and original MIT bytes remain unchanged.",
       "provenance": "verified",
       "evidence": "Base parser, inline scanner, headers and injection queries match upstream v0.5.3 (2026-09-28). Block scanner matches upstream merge commit 38dc6f5297551f070d15a33fda3da89f01863a04 byte-for-byte (2026-11-01); SHA-256 25b9020542e35492bde8f1b9ae3fe498a29f3c5130c40c8ffdbfb67e7882acf1. Package README records provenance and limits.",
       "lc": [

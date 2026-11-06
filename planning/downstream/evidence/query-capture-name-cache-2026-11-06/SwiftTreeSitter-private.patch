@@ -1,0 +1,70 @@
+diff --git a/Sources/SwiftTreeSitter/Query.swift b/Sources/SwiftTreeSitter/Query.swift
+index 3a499e7..a9a0269 100644
+--- a/Sources/SwiftTreeSitter/Query.swift
++++ b/Sources/SwiftTreeSitter/Query.swift
+@@ -45,6 +45,8 @@ public enum QueryPredicateError: Error {
+ public final class Query: Sendable {
+     let internalQueryPointer: SendableOpaquePointer
+     let predicateList: [[Predicate]]
++    // Capture names are immutable for this query; split them once instead of once per match.
++    private let captureDescriptions: [(name: String?, components: [String])]
+ 
+     /// Construct a query object from scm data
+     ///
+@@ -74,6 +76,11 @@ public final class Query: Sendable {
+ 
+         self.internalQueryPointer = SendableOpaquePointer(queryPtr)
+         self.predicateList = try PredicateParser().predicates(in: queryPtr)
++        self.captureDescriptions = (0..<Int(ts_query_capture_count(queryPtr))).map { id in
++            var length: UInt32 = 0
++            let name = ts_query_capture_name_for_id(queryPtr, UInt32(id), &length).map { String(cString: $0) }
++            return (name, name?.components(separatedBy: ".") ?? [])
++        }
+     }
+ 
+ 	/// Construct a query object from scm data located at a url
+@@ -146,6 +153,11 @@ public final class Query: Sendable {
+         return String(cString: cStr)
+     }
+ 
++    func captureDescription(for id: Int) -> (name: String?, components: [String])? {
++        guard captureDescriptions.indices.contains(id) else { return nil }
++        return captureDescriptions[id]
++    }
++
+     public func stringName(for id: Int) -> String? {
+         var length: UInt32 = 0
+ 
+@@ -181,27 +193,28 @@ public struct QueryCapture {
+ 	/// The language injection depth.
+ 	public let depth: Int
+ 
+-	init?(tsCapture: TSQueryCapture, internalTree: Tree, name: String?, patternIndex: Int, metadata: [String: String], depth: Int) {
++	init?(tsCapture: TSQueryCapture, internalTree: Tree, name: String?, patternIndex: Int, metadata: [String: String], depth: Int, cachedComponents: [String]? = nil) {
+ 		guard let node = Node(internalNode: tsCapture.node, internalTree: internalTree) else {
+             return nil
+         }
+ 
+         self.node = node
+         self.index = Int(tsCapture.index)
+-        self.nameComponents = name?.components(separatedBy: ".") ?? []
++        self.nameComponents = cachedComponents ?? name?.components(separatedBy: ".") ?? []
+         self.patternIndex = patternIndex
+ 		self.metadata = metadata
+ 		self.depth = depth
+     }
+ 
+ 	init?(tsCapture: TSQueryCapture, internalTree: Tree, query: Query?, patternIndex: Int, depth: Int) {
+-		let name = query?.captureName(for: Int(tsCapture.index))
++		let description = query?.captureDescription(for: Int(tsCapture.index))
++		let name = description?.name
+ 
+ 		let predicates = query?.predicates(for: patternIndex) ?? []
+ 
+ 		let metadata = name.map { QueryCapture.evaluateDirectives(predicates, with: $0) } ?? [:]
+ 
+-		self.init(tsCapture: tsCapture, internalTree: internalTree, name: name, patternIndex: patternIndex, metadata: metadata, depth: depth)
++		self.init(tsCapture: tsCapture, internalTree: internalTree, name: name, patternIndex: patternIndex, metadata: metadata, depth: depth, cachedComponents: description?.components)
+ 	}
+ 
+ 	private static func evaluateDirectives(_ predicates: [Predicate], with name: String) -> [String: String] {

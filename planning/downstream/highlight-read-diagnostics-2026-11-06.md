@@ -176,3 +176,17 @@ blindly editing controller-owned windows. Preserve the original log, compile
 and qualify the corrected complete app suite plus existing required checks.
 Do not call the historical crash fixed from a single green run. Native
 execution remains hosted-only. No threshold, selection or retry waiver.
+
+## Requalify with actual merged publication and query changes
+
+Reconcile with actual main d607098bdb5046c02d81137b497e0ffe1aa01748,
+including the immutable query-capture-name preparation and request-owned Textual
+publication corrections. The diagnostic hook, original assertion, thresholds,
+held-request replay and failure-only isolated measurements remain unchanged.
+The complete current-line selection is now exactly 1,086 functions / 144 suites:
+main's 1,085 / 143 plus this branch's mounted replay function and suite. Require
+all three new query semantic controls and the unchanged full-highlight phase
+marker as well as all pre-existing baseline, mutation and restoration controls.
+Fresh combined full CI, both strict diagnostic replay configurations and both
+complete theme selections are required before integration. Historical failures
+and the unresolved original trigger remain explicit.

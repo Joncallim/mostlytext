@@ -1,0 +1,26 @@
+{
+  "changed": [
+    "neon",
+    "swifttreesitter"
+  ],
+  "unchanged_pins": 22,
+  "all_owners_unchanged": true,
+  "new": {
+    "neon": {
+      "identity": "neon",
+      "kind": "remoteSourceControl",
+      "location": "https://github.com/Joncallim/Neon",
+      "state": {
+        "revision": "72174c8de8f28c957fd48850b90de99899b709ee"
+      }
+    },
+    "swifttreesitter": {
+      "identity": "swifttreesitter",
+      "kind": "remoteSourceControl",
+      "location": "https://github.com/Joncallim/SwiftTreeSitter",
+      "state": {
+        "revision": "f2163a8bc5d0f1ce76b4cead48ce0f3ade4aa9f3"
+      }
+    }
+  }
+}

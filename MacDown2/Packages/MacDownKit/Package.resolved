@@ -1,12 +1,12 @@
 {
-  "originHash" : "b73c8b2c9c35bf94b53ef0248dcc95829855597b2cf771e595315c5839608f4a",
+  "originHash" : "37a346a9172e8606c768549ea4e4c8493335e2b54c7e34d10063aa7fe6b47d69",
   "pins" : [
     {
       "identity" : "neon",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Joncallim/Neon",
       "state" : {
-        "revision" : "cd14f22ae8f8402b175a0bafd87560b78c7549e9"
+        "revision" : "72174c8de8f28c957fd48850b90de99899b709ee"
       }
     },
     {
@@ -66,7 +66,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Joncallim/SwiftTreeSitter",
       "state" : {
-        "revision" : "0beea992c4246f93a122de846c8611c9be19aeb7"
+        "revision" : "f2163a8bc5d0f1ce76b4cead48ce0f3ade4aa9f3"
       }
     },
     {
@@ -82,7 +82,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Joncallim/textual",
       "state" : {
-        "revision" : "c52cb5834c4695109aad2cb66294eafbc8f264c8"
+        "revision" : "dd123d4f7052d84032cafb22c62cd467916518dd"
       }
     },
     {
