@@ -129,12 +129,12 @@ enum Fixtures {
     /// `targetByteCount` UTF-8 bytes.
     static func markdown(targetByteCount: Int) -> String {
         let paragraph = "The quick brown fox jumps over the lazy dog.\n\n"
-        let paragraphCount = max(1, targetByteCount / paragraph.utf8.count)
 
         var result = ""
         result.reserveCapacity(targetByteCount)
 
-        for index in 0 ..< paragraphCount {
+        var index = 0
+        repeat {
             switch index % 6 {
             case 0:
                 result += "# Heading \(index)\n\n"
@@ -152,10 +152,8 @@ enum Fixtures {
                 result += paragraph
             }
 
-            if result.utf8.count >= targetByteCount {
-                break
-            }
-        }
+            index += 1
+        } while result.utf8.count < targetByteCount
 
         return result
     }
