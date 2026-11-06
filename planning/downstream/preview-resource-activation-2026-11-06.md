@@ -390,3 +390,35 @@ unit promises the document Preview button and native menu route. Preserve every
 existing catalog drift/duplicate/negative control. Complete normal CI remains a
 required gate, including all701 app functions/151 suites; its12 original issues
 and the separate Debug/Release53/52 four-fixture failures remain retained.
+
+## Exercise real editing and isolate source-binding ownership
+
+The d1b74a7b Debug revision selection still fails three functions. Its copied
+HTML contains the literal new image Markdown, and the native interaction reports
+zero attachment runs. The test directly changed the model in Preview-only layout,
+while production live-source validation also requires the retained editor bytes.
+Actual external reload synchronizes that editor through replaceEditorText; the
+test bypassed both this path and typing. No production stale-image cause is
+established by that result. Mount the production routing journey in split layout,
+require its real editor/delegate/window, type the replacement through insertText,
+and require matching model/editor bytes and an advanced mutation generation.
+Start the existing five-second copy deadline before typing; preserve the distinct
+2x2 blue decoded-source and copied-pixel positives, Save As revocation, and all
+existing controls. No direct model synchronization substitutes for the delegate.
+
+Two controlled source-binding functions still throw denied after editor-only
+initialization; the absent-parse control passes. These functions test the host's
+immutable frame binding, not controller initialization or external-file watching.
+Use the established mounted-test boundary: one real PreviewResourceWindowState,
+one stable tab/current-document resolver, the actual typed folder selection and
+backing acquisition, and one mounted SecuredMarkdownResourceHost/Textual consumer.
+The disposable document and PNG remain real; no loader/read/decoder is mocked.
+Do not register a second full document controller for these controlled source
+publications. Keep all three function names and frame transitions, exact UTF8
+negative and restored-source real attachment-read positives, readable mounted
+content assertions and five-second limits. Add phase-labelled read diagnostics
+so a future denied positive identifies which publication failed. Actual full
+controller/coordinator/editor/window behavior remains required in the separate
+production routing and six chooser functions. This narrows fixture ownership; it
+does not establish that the prior failures were solely fixture errors or waive
+any native result. Retain the first Debug/Release receipts and normal owned exits.
