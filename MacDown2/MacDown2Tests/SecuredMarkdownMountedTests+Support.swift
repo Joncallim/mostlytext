@@ -21,17 +21,60 @@ extension SecuredMarkdownMountedTests {
         throw PreviewResourceAdmissionError.limitExceeded
     }
 
-    func assertGrantedImageCopies(from view: NSView) async throws {
+    func assertGrantedImageCopies(
+        from view: NSView, diagnostic: @MainActor () async -> String
+    ) async throws {
         let deadline = ContinuousClock.now.advanced(by: .seconds(5))
         var lastHTML = ""
         while ContinuousClock.now < deadline {
-            lastHTML = try await copiedHTML(from: view)
+            do {
+                lastHTML = try await copiedHTML(from: view)
+            } catch {
+                let details = await diagnostic()
+                print("MOUNTED_COPY_DIAGNOSTIC \(details) \(copyDiagnostics(in: view))")
+                throw error
+            }
             if lastHTML.contains("data:image/png;base64,") {
                 return
             }
             try await Task.sleep(for: .milliseconds(20))
         }
-        Issue.record("Mounted Textual never copied its admitted image; final HTML: \(lastHTML)")
+        let details = await diagnostic()
+        Issue.record("""
+        Mounted Textual never copied its admitted image; final HTML: \(lastHTML);
+        \(details); \(copyDiagnostics(in: view))
+        """)
+    }
+
+    func makeMountedWindow(hosting: NSView) -> NSWindow {
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 500, height: 400),
+                              styleMask: [.titled], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        window.animationBehavior = .none
+        window.contentView = hosting
+        window.makeKeyAndOrderFront(nil)
+        return window
+    }
+
+    private func copyDiagnostics(in view: NSView) -> String {
+        let original = snapshotPasteboard()
+        defer { restorePasteboard(original) }
+        return textInteractions(in: view).map { interaction in
+            guard interaction.responds(to: NSSelectorFromString("selectAll:")),
+                  interaction.responds(to: NSSelectorFromString("copy:"))
+            else { return "view=\(ObjectIdentifier(interaction)) lacks native copy selectors" }
+            _ = interaction.perform(NSSelectorFromString("selectAll:"), with: nil)
+            _ = interaction.perform(NSSelectorFromString("copy:"), with: nil)
+            let html = NSPasteboard.general.string(forType: .html) ?? "<no HTML>"
+            return "view=\(ObjectIdentifier(interaction)) hidden=\(interaction.isHiddenOrHasHiddenAncestor) "
+                + "frame=\(interaction.frame) firstResponder=\(interaction.window?.firstResponder === interaction) "
+                + "html=\(html)"
+        }.joined(separator: " | ")
+    }
+
+    private func textInteractions(in view: NSView) -> [NSView] {
+        let current = NSStringFromClass(type(of: view)).hasSuffix(".NSTextInteractionView") ? [view] : []
+        return current + view.subviews.flatMap { textInteractions(in: $0) }
     }
 
     func assertRevocationStopsCopy(

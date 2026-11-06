@@ -26,19 +26,12 @@ struct SecuredMarkdownMountedTests {
         let tabID = UUID()
         owner.setCurrentPreviewDocument { (tabID, document) }
         try await installFixtureGrant(folder, for: document, owner: owner)
-        let recorder = LoadIDRecorder()
+        let recorder = LoadIDRecorder(imageBytes: imageBytes)
         let initialInput = await PreviewResourceAdmission.shared.globalStatus().retained
         let hosting = NSHostingView(rootView: mountedView(
             document: document, parsed: parsed, tabID: tabID, owner: owner, recorder: recorder
         ))
-        let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 500, height: 400),
-            styleMask: [.titled], backing: .buffered, defer: false
-        )
-        window.isReleasedWhenClosed = false
-        window.animationBehavior = .none
-        window.contentView = hosting
-        window.makeKeyAndOrderFront(nil)
+        let window = makeMountedWindow(hosting: hosting)
         defer {
             owner.close()
             window.orderOut(nil)
@@ -52,7 +45,9 @@ struct SecuredMarkdownMountedTests {
         )
         let originalPasteboard = snapshotPasteboard()
         defer { restorePasteboard(originalPasteboard) }
-        try await assertGrantedImageCopies(from: hosting)
+        try await assertGrantedImageCopies(from: hosting) {
+            await recorder.diagnostic(phase: "initial grant")
+        }
 
         document = document.updatingText(source).markClean()
         hosting.rootView = mountedView(
@@ -63,7 +58,9 @@ struct SecuredMarkdownMountedTests {
             after: first, recorder: recorder, minimumRetained: initialInput + imageBytes.count
         )
         #expect(second != first)
-        try await assertGrantedImageCopies(from: hosting)
+        try await assertGrantedImageCopies(from: hosting) {
+            await recorder.diagnostic(phase: "new model generation")
+        }
         try await assertRevocationStopsCopy(from: hosting, owner: owner, document: document, tabID: tabID)
     }
 
@@ -79,7 +76,7 @@ struct SecuredMarkdownMountedTests {
         let tabID = UUID()
         owner.setCurrentPreviewDocument { (tabID, document) }
         try await installFixtureGrant(folder, for: document, owner: owner)
-        let recorder = LoadIDRecorder()
+        let recorder = LoadIDRecorder(imageBytes: imageBytes)
         let initialInput = await PreviewResourceAdmission.shared.globalStatus().retained
         let hosting = NSHostingView(rootView: mountedView(
             document: document, parsed: firstParse, tabID: tabID, owner: owner, recorder: recorder
@@ -107,7 +104,9 @@ struct SecuredMarkdownMountedTests {
         let second = try await waitForLoad(after: first, recorder: recorder,
                                            minimumRetained: initialInput + imageBytes.count)
         #expect(first != second)
-        try await assertGrantedImageCopies(from: hosting)
+        try await assertGrantedImageCopies(from: hosting) {
+            await recorder.diagnostic(phase: "new parsed revision")
+        }
         #expect(firstParse.sourceSHA256 == secondParse.sourceSHA256)
         #expect(firstParse.revision != secondParse.revision)
     }
@@ -124,7 +123,7 @@ struct SecuredMarkdownMountedTests {
         let tabID = UUID()
         owner.setCurrentPreviewDocument { (tabID, document) }
         try await installFixtureGrant(folder, for: document, owner: owner)
-        let recorder = LoadIDRecorder()
+        let recorder = LoadIDRecorder(imageBytes: imageBytes)
         let initialInput = await PreviewResourceAdmission.shared.globalStatus().retained
         let hosting = NSHostingView(rootView: AnyView(mountedView(
             document: document, parsed: firstParse, tabID: tabID, owner: owner, recorder: recorder
@@ -215,16 +214,41 @@ struct SecuredMarkdownMountedTests {
             }
             try await Task.sleep(for: .milliseconds(20))
         }
-        Issue.record("Mounted Textual did not admit the expected document-bound image")
+        let details = await recorder.diagnostic(phase: "load readiness minimumRetained=\(minimumRetained)")
+        Issue.record("Mounted Textual did not admit the expected document-bound image; \(details)")
         throw PreviewResourceAdmissionError.limitExceeded
     }
 }
 
 @MainActor
 private final class LoadIDRecorder {
+    private let imageBytes: Data
     private(set) var lastID: UUID?
     private(set) var lastLoader: PreviewResourceImageLoader?
     var didDisappear = false
+
+    init(imageBytes: Data) {
+        self.imageBytes = imageBytes
+    }
+
+    func diagnostic(phase: String) async -> String {
+        let before = await PreviewResourceAdmission.shared.globalStatus()
+        let status: String
+        if let lastLoader, let reference = URL(string: "image.png") {
+            do {
+                let environment = ColorEnvironmentValues(colorScheme: .light, colorSchemeContrast: .standard)
+                _ = try await lastLoader.attachment(for: reference, text: "fixture", environment: environment)
+                status = "actual loader reads and decodes"
+            } catch {
+                status = "actual loader failed: \(String(reflecting: type(of: error))) \(error)"
+            }
+        } else {
+            status = "no recorded actual loader"
+        }
+        return "phase=\(phase) loadID=\(String(describing: lastID)) disappeared=\(didDisappear) "
+            + "retainedBeforeProbe=\(before.retained) reservedBeforeProbe=\(before.reserved) \(status) "
+            + "fixturePNGBase64=\(imageBytes.base64EncodedString())"
+    }
 
     func record(_ id: UUID?, loader: PreviewResourceImageLoader? = nil) {
         if let id {
