@@ -49,3 +49,15 @@ merging. No unchanged retry or threshold/fixture change waives the original
 500ms highlight,400ms parse,50ms product or historical Debug-trigger gates.
 If effective C sources/defines/API differ or the improvement is not established,
 retain the result and stop adoption; amend before a different material approach.
+
+## Complete C input reconciliation before the experiment
+
+The current source directory has13 individual implementation C files, excluding
+lib.c itself. The combined input includes12 exactly once. The additional
+src/wasm/stdlib.c is a separate conditional implementation and must remain an
+explicit separate source even though TREE_SITTER_FEATURE_WASM is not enabled by
+the current package. The candidate source list is therefore exactly
+["src/lib.c", "src/wasm/stdlib.c"], with only lib.c removed from exclusions.
+No C file, macro, wasm configuration, header or implementation is omitted or
+rewritten. Compare the complete effective original13-file set to the twelve
+includes plus the retained stdlib file before accepting this build experiment.
