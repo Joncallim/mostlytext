@@ -1,0 +1,11 @@
+{
+  "files": {
+    "README.md": "606997e7020d948568a3c5f514ec74320a32da78f2e98340b210db4a49a848ff",
+    "corrected-release-script-tests.log.gz": "ac6507a71f2193a043bf84b90f11ad8fd382fc083c6306b143413555a401bee8",
+    "original-packaging-regression.log.gz": "26f4121d4244c851401a9dd98f0ac2b9b3b2e4f4b44e349f96e3e596a8ed7a85",
+    "reviewed-all-compliance-tests.log.gz": "261bf54a13da12da94f14d13a2c88f9349df6ef727622c705bacd39848043381",
+    "reviewed-inventory.log.gz": "af7d3b346ebda56bff76e24ceccd101e959c9d054f09c69ec05a1bf31fd193c4",
+    "reviewed-release-script-tests.log.gz": "dd137c49e518e381bddebd43bdab03a255c1f6db27c05fbf2371907574132a95",
+    "verification.json": "6fee756332647d67c2a859540c9c7c9cabeb21f4fe17071dbc2ceb248258ceb8"
+  }
+}

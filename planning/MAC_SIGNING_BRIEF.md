@@ -155,15 +155,17 @@ following:
 4. **Notarise the app** (zipped) and staple it, and download Apple's
    notarisation log. A log that can't be downloaded is recorded as
    `UNVERIFIED` in a dry run and stops a release candidate.
-5. **Notarise the CLI ZIP.** A bare command-line binary can't be stapled, so
-   Gatekeeper checks its ticket online. The notarised ZIP is the CLI's
-   distributable form for now (see the note in step 3 below).
+5. **Keep the CLI in that app.** Its signed `mostlytext-cli` helper is covered
+   by the app submission. The public `mostlytext` command may be an explicit
+   user-created symlink to it; no separate executable-only CLI ZIP is produced.
 6. **Build the DMG,** containing the app and an Applications shortcut. Then
    sign it, notarise it and staple it.
 7. **Validate** with `stapler validate`, `spctl` (app and DMG),
    `codesign --verify`, and `syspolicy_check distribution`, Apple's
    pre-distribution check.
-8. **Record** SHA-256 hashes. The distributables are the DMG and the CLI ZIP.
+8. **Record** SHA-256 hashes. The DMG is the distributable. Keep the app ZIP,
+   separate CLI build product and actual embedded helper hashes as
+   non-distributed verification inputs.
 
 Output goes to `build/release-<timestamp>/`, which is git-ignored.
 
@@ -219,21 +221,26 @@ are recorded above.
 
    Record any feature that fails and the console errors (Console.app, filtered
    on the app).
-5. CLI, starting from the file a user would download:
-   - get `mostlytext.zip` (the notarised ZIP from `build/`) into the fresh
-     account **with the quarantine flag set**, as for the DMG in item 1, and
-     confirm it with `xattr -p com.apple.quarantine mostlytext.zip`;
-   - extract it with Finder (double-click), which carries the quarantine flag
-     over to the extracted `mostlytext`; confirm that with `xattr -l mostlytext`;
-   - run `./mostlytext formats` from Terminal, first online and then offline,
-     and record any Gatekeeper prompt or refusal.
+5. CLI, using the app installed from that same quarantined DMG:
+   - inspect and record the app and embedded helper's quarantine/signature
+     state; do not strip attributes or add a security exception;
+   - run the installed app's `Contents/MacOS/mostlytext-cli formats` and
+     `--version`, first online and then offline, recording any Gatekeeper
+     prompt or refusal;
+   - explicitly create a `mostlytext` symlink to that embedded helper in a
+     fresh directory owned by this test user. Preserve any existing command
+     and keep the app in place; do not copy the helper out of its bundle;
+   - with the app closed normally, invoke that public symlink on a disposable
+     Markdown file and verify genuine cold launch/open. Then verify warm open,
+     piped Markdown, and `--wait` through real logical document closure;
+   - repeat the applicable installed CLI checks offline and record actual
+     source/recovery fidelity and prompts. Help/formats output alone is not
+     evidence that a document opens.
 
-   The app embeds `mostlytext-cli`; the public `mostlytext` command supports
-   explicit installation using that helper, and the release script also
-   produces a standalone ZIP. This acceptance step proves the downloaded ZIP
-   under quarantine. The app install/remove command flow and embedded helper
-   still need their own native acceptance; source tests do not complete either
-   gate. Record exactly which distribution path was exercised.
+   The helper's containing-app and Apple-trusted matching-team checks remain
+   mandatory. No independent CLI ZIP is an installation path. These are exact
+   signed-candidate native observations; unsigned builds, protocol mocks and
+   source tests do not satisfy them. Existing historical downloads stay intact.
 6. Remove the test account or VM afterwards.
 
 ## Evidence to return

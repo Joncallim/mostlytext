@@ -8,7 +8,7 @@
 #   3. sign-check confirm Xcode signed every Mach-O binary with this Developer
 #                 ID, the hardened runtime and a secure timestamp
 #   4. licences   compliance.py check --release --artifact against the built app
-#   5. notarise   submit the app (zip) and CLI (zip), wait, save logs, staple the app
+#   5. notarise   submit the app (including its CLI), wait, save logs, staple the app
 #   6. dmg        build a DMG (app + /Applications link), sign, notarise, staple
 #   7. verify     codesign, spctl, stapler validate, syspolicy_check
 #
@@ -98,6 +98,13 @@ if [[ "$MODE" == "release-candidate" && -n "$(git -C "$REPO" status --porcelain)
   fail "a release candidate must be built from a clean working tree; commit or stash first"
 fi
 
+if [[ "$MODE" != "preflight" ]]; then
+  # A reused output directory may contain the unsupported standalone artifact
+  # produced by older pipeline versions. Preserve it and require a fresh output.
+  [[ ! -e "$OUT/$CLI_NAME.zip" && ! -L "$OUT/$CLI_NAME.zip" ]] \
+    || fail "obsolete standalone CLI ZIP exists in the output directory; preserve it and use a fresh OUT"
+fi
+
 # ---------------------------------------------------------------- 1. preflight
 step "Preflight: Developer ID Application identity for team $TEAM_ID"
 IDENTITIES="$(security find-identity -v -p codesigning)"
@@ -185,6 +192,7 @@ EMBEDDED_CLI="$APP/Contents/MacOS/mostlytext-cli"
   || fail "embedded executable CLI not produced at $EMBEDDED_CLI"
 record "public CLI: $CLI_NAME (scheme $CLI_SCHEME)"
 record "embedded CLI: Contents/MacOS/mostlytext-cli"
+record "CLI installation: embedded app helper or explicit user-created symlink"
 record "version: $(defaults read "$APP/Contents/Info" CFBundleShortVersionString) ($(defaults read "$APP/Contents/Info" CFBundleVersion))"
 record "bundle id: $(defaults read "$APP/Contents/Info" CFBundleIdentifier)"
 
@@ -297,13 +305,9 @@ step "Notarise the app"
 ditto -c -k --keepParent "$APP" "$OUT/$APP_NAME.zip"
 notarise "$OUT/$APP_NAME.zip" app
 xcrun stapler staple "$APP"
-# A bare command-line binary can't be stapled, so its notarisation ticket is
-# checked online. The app includes mostlytext-cli; the public mostlytext ZIP
-# also permits explicit standalone installation. This script installs neither
-# a shell command nor a compatibility alias on the build machine.
-step "Notarise the CLI ZIP"
-ditto -c -k "$CLI" "$OUT/$CLI_NAME.zip"
-notarise "$OUT/$CLI_NAME.zip" cli
+# The app's notarised bytes already include mostlytext-cli. Its public mostlytext
+# command is an explicit user-created symlink to that embedded helper. A copied
+# standalone binary cannot locate its containing app and is not distributed.
 
 # ---------------------------------------------------------------- 6. dmg
 VERSION="$(defaults read "$APP/Contents/Info" CFBundleShortVersionString)"
@@ -338,16 +342,16 @@ step "Verify"
 } 2>&1 | tee "$EVIDENCE/verify.txt"
 
 step "Hashes"
-# Distributables: the DMG and the CLI ZIP. The app ZIP is only the vehicle
-# for notarising the app; the bare CLI hash ties the ZIP to its contents.
+# The DMG is the distributable. Retain the notarisation vehicle, separate
+# build product and actual embedded helper hashes as non-distributed evidence.
 {
-  shasum -a 256 "$DMG" "$OUT/$CLI_NAME.zip"
-  echo "# not distributed: notarisation vehicle and CLI binary"
-  shasum -a 256 "$OUT/$APP_NAME.zip" "$CLI"
+  shasum -a 256 "$DMG"
+  echo "# not distributed: notarisation vehicle, compiled CLI and embedded helper"
+  shasum -a 256 "$OUT/$APP_NAME.zip" "$CLI" "$EMBEDDED_CLI"
 } | tee "$EVIDENCE/SHA256SUMS"
 
 echo
-echo "Done ($MODE). DMG: $DMG  CLI: $OUT/$CLI_NAME.zip"
+echo "Done ($MODE). DMG: $DMG"
 if [[ "$MODE" == "dry-run" ]] && grep -q '^UNVERIFIED' "$EVIDENCE/summary.txt"; then
   echo "Dry run recorded UNVERIFIED items (see summary.txt). This output is not a release."
 fi

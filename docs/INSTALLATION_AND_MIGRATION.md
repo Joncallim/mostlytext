@@ -20,6 +20,12 @@ alone loses the application identity and resources it needs. If you use a comman
 symlink, it must continue to point to that embedded executable. Do not
 unintentionally replace a different installed command.
 
+The release pipeline distributes the app in its DMG, including that embedded
+helper. It does not provide a separate executable-only CLI ZIP: such a copy
+cannot satisfy the containing-app contract. The independently built `mostlytext`
+product is retained for build/signature verification, not advertised as a
+standalone installation. Existing historical downloads are unchanged.
+
 These examples describe the interface; they do not establish native acceptance.
 Set `APP_BUNDLE` to the app you built or were explicitly given for testing. The
 first three commands print help, version and format information without opening
