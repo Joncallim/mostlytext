@@ -123,7 +123,7 @@ This file is generated from `compliance/inventory.json` by
 | marked (via Mermaid) | 16.3.0 | MIT |
 | Math fonts bundled by SwiftUIMath | 0.1.0 | OFL-1.1 AND LicenseRef-GUST-Font-License AND MIT |
 | Mermaid | 11.17.2 | MIT |
-| Neon | cd14f22a | BSD-3-Clause |
+| Neon | 72174c8d | BSD-3-Clause |
 | nvim-treesitter Markdown highlight queries (via tree-sitter-markdown) | 2022-06 import | Apache-2.0 |
 | oss.terrastruct.com/util-go (D2 publisher-build attribution) | publisher source-build input v0.0.0-20250213174338-243d8661088a | ISC |
 | path-browserify (content-matched reference via Mermaid; original version unresolved) | original unresolved; content matches 1.0.1 | MIT |
@@ -142,7 +142,7 @@ This file is generated from `compliance/inventory.json` by
 | swift-concurrency-extras | 1.4.1 | MIT |
 | swift-markdown | 72e0f162 | Apache-2.0 |
 | SwiftSoup | 2.13.9 | MIT |
-| SwiftTreeSitter | 0beea992 | BSD-3-Clause |
+| SwiftTreeSitter | f2163a8b | BSD-3-Clause |
 | SwiftUIMath | 2a89c2b4 | MIT |
 | Textual | c52cb583 | MIT |
 | tree-sitter (runtime) | 0.25.10+mostlytext.5ce80b6f | MIT |
@@ -8783,9 +8783,9 @@ SOFTWARE.
 
 ## Neon
 
-- Version: cd14f22a
+- Version: 72174c8d
 - Upstream: https://github.com/Joncallim/Neon
-- Revision: `cd14f22ae8f8402b175a0bafd87560b78c7549e9`
+- Revision: `72174c8de8f28c957fd48850b90de99899b709ee`
 - Licence: BSD-3-Clause
 - Copyright (c) 2022, Chime
 
@@ -10485,9 +10485,9 @@ SOFTWARE.
 
 ## SwiftTreeSitter
 
-- Version: 0beea992
+- Version: f2163a8b
 - Upstream: https://github.com/Joncallim/SwiftTreeSitter
-- Revision: `0beea992c4246f93a122de846c8611c9be19aeb7`
+- Revision: `f2163a8bc5d0f1ce76b4cead48ce0f3ade4aa9f3`
 - Licence: BSD-3-Clause
 - Copyright (c) 2021, Chime
 
@@ -10863,7 +10863,7 @@ SOFTWARE.
 - Revision: `f969cd3ae3f9fbd4e43205431d0ae286014c05b5`
 - Licence: MIT
 - Copyright (c) 2021 Matthias Deiml
-- Local modifications: Block scanner is the exact upstream PR 279 safety backport at 38dc6f5297551f070d15a33fda3da89f01863a04 (blob e8d87eec1f8f6dbddd987df43097195e8d790c78); capture names in the two highlights.scm query files are rewritten to this app's theme key space. See the package README.
+- Local modifications: Block scanner is the exact upstream PR 279 safety backport at 38dc6f5297551f070d15a33fda3da89f01863a04 (blob e8d87eec1f8f6dbddd987df43097195e8d790c78); capture names in the two highlights.scm query files are rewritten to this app's theme key space. See the package README. The manifest-only query capture-name cache integration selects SwiftTreeSitter f2163a8bc5d0f1ce76b4cead48ce0f3ade4aa9f3; generated block/inline C, scanner, queries, resource helpers and original MIT bytes remain unchanged.
 
 ### LICENSE
 

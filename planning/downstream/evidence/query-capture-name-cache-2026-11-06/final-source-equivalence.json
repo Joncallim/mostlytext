@@ -1,0 +1,8 @@
+{
+  "fork_revision": "f2163a8bc5d0f1ce76b4cead48ce0f3ade4aa9f3",
+  "compiled_candidate_Query_sha256": "5972845adf40750a99e1fe41113de1ea89c60368a13d3840b1467f815bd7009b",
+  "exact_same_before_after_harness_sha256": "8a2068bca273e595929303ae3cf7fc8a050436695242d432c24053b7bb8e6082",
+  "exact_production_fixture_sha256": "037ebc2b553f2cda6a1752f2066560b70de2a2ad31d72f1e2d6a82623e166b06",
+  "original_pinned_assertion_unchanged": true,
+  "scope": "Final names-only source is byte identical to compiled owned copy; no native module, owner acceptance or hosted budget inference"
+}

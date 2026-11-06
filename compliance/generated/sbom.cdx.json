@@ -3508,9 +3508,9 @@
           "value": "exact"
         }
       ],
-      "purl": "pkg:github/joncallim/neon@cd14f22ae8f8402b175a0bafd87560b78c7549e9",
+      "purl": "pkg:github/joncallim/neon@72174c8de8f28c957fd48850b90de99899b709ee",
       "type": "library",
-      "version": "cd14f22a"
+      "version": "72174c8d"
     },
     {
       "bom-ref": "nvim-treesitter-markdown-queries",
@@ -3984,9 +3984,9 @@
           "value": "exact"
         }
       ],
-      "purl": "pkg:github/joncallim/swifttreesitter@0beea992c4246f93a122de846c8611c9be19aeb7",
+      "purl": "pkg:github/joncallim/swifttreesitter@f2163a8bc5d0f1ce76b4cead48ce0f3ade4aa9f3",
       "type": "library",
-      "version": "0beea992"
+      "version": "f2163a8b"
     },
     {
       "bom-ref": "swiftui-math",
@@ -4668,7 +4668,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "e3e2fb1821dae2f5496fc1f6bbae10161dab0f8c2c31906146f71d226e672fce"
+          "content": "d876cf73017b10e395e224470d33eb11dcce6228203f2f03e755e0b43424395c"
         }
       ],
       "licenses": [
@@ -4678,7 +4678,7 @@
       ],
       "name": "tree-sitter-markdown",
       "pedigree": {
-        "notes": "Block scanner is the exact upstream PR 279 safety backport at 38dc6f5297551f070d15a33fda3da89f01863a04 (blob e8d87eec1f8f6dbddd987df43097195e8d790c78); capture names in the two highlights.scm query files are rewritten to this app's theme key space. See the package README."
+        "notes": "Block scanner is the exact upstream PR 279 safety backport at 38dc6f5297551f070d15a33fda3da89f01863a04 (blob e8d87eec1f8f6dbddd987df43097195e8d790c78); capture names in the two highlights.scm query files are rewritten to this app's theme key space. See the package README. The manifest-only query capture-name cache integration selects SwiftTreeSitter f2163a8bc5d0f1ce76b4cead48ce0f3ade4aa9f3; generated block/inline C, scanner, queries, resource helpers and original MIT bytes remain unchanged."
       },
       "properties": [
         {
@@ -5251,7 +5251,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:b030e487-460b-51e9-968d-8dc560ef2e1b",
+  "serialNumber": "urn:uuid:9dbf9446-815c-589c-adbc-47e41347062d",
   "specVersion": "1.5",
   "version": 1
 }

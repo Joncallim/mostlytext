@@ -116,12 +116,15 @@ def qualify(root, output, configuration, baseline):
             if message not in log:
                 raise SystemExit("Baseline failed for a different reason: " + message)
     else:
-        if result.returncode != 0 or not re.search(r"Test run with 1082 tests in 142 suites passed", log):
+        if result.returncode != 0 or not re.search(r"Test run with 1085 tests in 143 suites passed", log):
             raise SystemExit("All selected real editor/highlighter/theme tests must execute and pass")
         for name in ["anAppliedThemePaintsAndRemovesTheCurrentLineInTheRealScrolledEditor",
                      "aShapeIdentifiesThePrimaryLineEvenWhenTheEditorFontIsAlreadyBold",
                      "currentLineDrawingKeepsTenMiBViewportWorkBounded",
-                     "liveChromeUsesTheSingleResolvedPaletteWithoutEditingSource"]:
+                     "liveChromeUsesTheSingleResolvedPaletteWithoutEditingSource",
+                     "captureNamesRetainNamedAndGlobalDirectiveSemantics",
+                     "oneQueryKeepsCurrentTreeRangesWhenSourceOffsetsChange",
+                     "independentCursorsShareAnImmutableQueryConcurrently"]:
             if not re.search(r"Test " + name + r"\(\) passed", log):
                 raise SystemExit("Required native control did not pass: " + name)
         if "CURRENT-LINE-PHASE" not in log:
