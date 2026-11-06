@@ -12,6 +12,8 @@ on:
       - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/**'
       - 'MacDown2/Packages/MacDownKit/Tests/ThemesTests/**'
       - '.github/scripts/run-current-line-theme-probe.py'
+      - '.github/scripts/run-owned-app-tests.py'
+      - '.github/scripts/test-run-owned-app-tests.py'
       - '.github/workflows/current-line-theme-probe.yml'
   workflow_dispatch:
 concurrency:
@@ -39,6 +41,8 @@ jobs:
           sudo xcode-select -s "$XCODE/Contents/Developer"
           xcodebuild -version
           sw_vers
+      - name: Verify owned diagnostic lifecycle controls
+        run: python3 .github/scripts/test-run-owned-app-tests.py
       - name: Execute identical baseline bitmap controls and all candidate editor/theme tests
         run: python3 .github/scripts/run-current-line-theme-probe.py "$RUNNER_TEMP/current-line-theme" ${{ matrix.configuration }}
       - uses: actions/upload-artifact@v4
@@ -54,6 +58,11 @@ jobs:
             ${{ runner.temp }}/current-line-theme/candidate/status.json
             ${{ runner.temp }}/current-line-theme/candidate/compile.log
             ${{ runner.temp }}/current-line-theme/candidate/probe.log
+            ${{ runner.temp }}/current-line-theme/candidate/performance-diagnostic/*.json
+            ${{ runner.temp }}/current-line-theme/candidate/performance-diagnostic/*.log
+            ${{ runner.temp }}/current-line-theme/candidate/performance-diagnostic/*-diagnostics/*.json
+            ${{ runner.temp }}/current-line-theme/candidate/performance-diagnostic/*-diagnostics/*.sample.txt
+            ${{ runner.temp }}/current-line-theme/candidate/performance-diagnostic/*-diagnostics/*.log
             ${{ runner.temp }}/current-line-theme/orientation*.log
             ${{ runner.temp }}/current-line-theme/orientation-results.json
           if-no-files-found: warn

@@ -21,7 +21,16 @@ public final class GrammarRegistry {
     /// from Neon's background queue.
     private nonisolated let configurations = ConfigurationCache()
 
-    public init() {}
+    private nonisolated let beforeInjectedLanguageResolution: (@Sendable (String) -> Void)?
+
+    public init() {
+        beforeInjectedLanguageResolution = nil
+    }
+
+    /// Allows a controlled integration fixture to hold a real background lookup without holding the cache lock.
+    init(beforeInjectedLanguageResolution: @escaping @Sendable (String) -> Void) {
+        self.beforeInjectedLanguageResolution = beforeInjectedLanguageResolution
+    }
 
     /// `nil` ⇒ no grammar for this id ⇒ caller must degrade to plain text. Never throws.
     public nonisolated func configuration(for highlightLanguageID: String?) -> LanguageConfiguration? {
@@ -40,7 +49,11 @@ public final class GrammarRegistry {
     /// explicit.
     public nonisolated var languageProvider: LanguageLayer.LanguageProvider {
         let configurations = configurations
-        return { name in configurations.configuration(for: name) }
+        let beforeResolution = beforeInjectedLanguageResolution
+        return { name in
+            beforeResolution?(name)
+            return configurations.configuration(for: name)
+        }
     }
 
     /// Ids the registry can currently satisfy.

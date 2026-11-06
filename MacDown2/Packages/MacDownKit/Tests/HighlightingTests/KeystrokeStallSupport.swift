@@ -163,6 +163,15 @@ final class HighlightedEditor {
         }
     }
 
+    /// Mount through the actual EditorView/store before attaching the same production highlighter.
+    init(system: EditorTextSystem, registry: GrammarRegistry) {
+        self.system = system
+        highlighter = NeonSyntaxHighlighter(
+            textSystem: system, languageID: "markdown", theme: BundledThemes.light,
+            registry: registry, sizePolicy: { _ in nil }
+        )
+    }
+
     var textView: NSTextView {
         system.textView
     }
