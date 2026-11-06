@@ -143,7 +143,7 @@ enum EmittedHeadingDOM {
         return true
     }
 
-    private static func patchMarkedHeadings(
+    static func patchMarkedHeadings(
         _ html: String,
         replacements: [String: (level: Int, fragment: String)]
     ) -> String? {
@@ -168,11 +168,22 @@ enum EmittedHeadingDOM {
             patches.append((range, newTag))
         }
         guard seen.count == replacements.count else { return nil }
-        let output = NSMutableString(string: html)
-        for (range, replacement) in patches.reversed() {
-            output.replaceCharacters(in: range, with: replacement)
+        // Advance through UTF-16 once. Repeated insertion into a mutable body
+        // shifts the entire remaining tail per heading on large pure documents.
+        var output = ""
+        output.reserveCapacity(html.utf8.count)
+        var cursor = html.utf16.startIndex
+        var consumed = 0
+        for (range, replacement) in patches {
+            let start = html.utf16.index(cursor, offsetBy: range.location - consumed)
+            let end = html.utf16.index(start, offsetBy: range.length)
+            output.append(contentsOf: html[cursor ..< start])
+            output.append(replacement)
+            cursor = end
+            consumed = range.location + range.length
         }
-        return output as String
+        output.append(contentsOf: html[cursor...])
+        return output
     }
 
     private static func sha256(_ text: String) -> String {

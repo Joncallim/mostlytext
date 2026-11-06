@@ -9,7 +9,9 @@ on:
     paths:
       - 'MacDown2/Packages/MacDownKit/Sources/ExportService/**'
       - 'MacDown2/Packages/MacDownKit/Sources/MarkdownEngine/**'
-      - 'MacDown2/Packages/MacDownKit/Tests/ExportServiceTests/HeadingAnchorPreparationTests.swift'
+      - 'MacDown2/Packages/MacDownKit/Tests/ExportServiceTests/Heading*Tests.swift'
+      - 'MacDown2/Packages/MacDownKit/Sources/Contributions/**'
+      - 'MacDown2/Packages/MacDownKit/Package.swift'
       - 'MacDown2/Packages/MacDownKit/Package.resolved'
       - '.github/scripts/prepare-heading-anchor-probe.py'
       - '.github/workflows/heading-anchor-probe.yml'

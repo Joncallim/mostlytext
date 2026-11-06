@@ -32,6 +32,8 @@ public enum ExportError: Error, LocalizedError, CustomStringConvertible {
     /// Generated image substitution authority is absent, stale or malformed.
     case invalidResourceSlots
     case invalidSourceSnapshot
+    /// Requested generated navigation could not be matched to actual headings.
+    case headingNavigationUnavailable
     /// Destination/sidecar identity or ownership could not be retained.
     case unsafePublication
     case destinationChanged
@@ -94,6 +96,13 @@ public enum ExportError: Error, LocalizedError, CustomStringConvertible {
                 localized: "The export inputs no longer match their prepared source. Try exporting again.",
                 bundle: .module
             )
+        case .headingNavigationUnavailable:
+            return String(
+                localized: """
+                Export was stopped because the requested table of contents could not be linked to verified headings.
+                """,
+                bundle: .module
+            )
         case .validatedPublicationRejected:
             return String(
                 localized: "The generated diagram could not be safely included in this export.",
@@ -152,6 +161,14 @@ public enum ExportError: Error, LocalizedError, CustomStringConvertible {
             )
         case .invalidResourceSlots, .invalidSourceSnapshot:
             String(localized: "Try exporting again from the original document.", bundle: .module)
+        case .headingNavigationUnavailable:
+            String(
+                localized: """
+                Check the table-of-contents source and nearby HTML, or \
+                remove the table-of-contents marker before exporting.
+                """,
+                bundle: .module
+            )
         case .derivedContentUnavailable:
             String(
                 localized: "Reduce the equation output or correct its source, then try exporting again.",

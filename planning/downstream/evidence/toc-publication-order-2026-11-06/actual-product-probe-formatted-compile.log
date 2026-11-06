@@ -1,0 +1,11 @@
+[0/1] Planning build
+[1/1] Compiling plugin GenerateManual
+[2/2] Compiling plugin GenerateDoccReference
+Building for debugging...
+[2/5] Write sources
+[3/5] Write swift-version--58304C5D6DBC2206.txt
+[5/7] Compiling HeadingAnchorProbe HeadingPublicationIntegrationTests.swift
+[6/7] Emitting module HeadingAnchorProbe
+[6/8] Write Objects.LinkFileList
+[7/8] Linking HeadingAnchorProbePackageTests
+Build complete! (8.65s)

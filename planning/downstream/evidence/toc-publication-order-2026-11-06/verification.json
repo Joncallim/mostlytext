@@ -1,0 +1,181 @@
+{
+  "scope": "Exact Foundation-only execution plus actual-product compilation. Hosted execution pending; production navigation inactive.",
+  "logs": {
+    "actual-product-probe-final-compile.log": {
+      "bytes": 797,
+      "sha256": "ec28f45aeb8860957af5086c1c3c10a97ae8cb9bbb0913e3b24db33b8079b9c6"
+    },
+    "actual-product-probe-first-compile.log": {
+      "bytes": 12365,
+      "sha256": "320880df23b6212b914f83a7169e29cad35d2836e80b0a45284dd07577952337"
+    },
+    "actual-product-probe-formatted-compile.log": {
+      "bytes": 417,
+      "sha256": "97cd94e43229785341a22919eda501afb8f78640c6e8553d74cbd99122fec5ab"
+    },
+    "complete-tests-first-compile.log": {
+      "bytes": 48885,
+      "sha256": "1b8ef600cab7d93963542e062fc9d8d9bdd03177287cf7ac207719c1625538ac"
+    },
+    "complete-tests-second-compile.log": {
+      "bytes": 10390,
+      "sha256": "1fcba3564c6a36d5fdf96c6778ee21b19dbfdd1a13fa90d2d60df5a2fd257784"
+    },
+    "compliance-final.log": {
+      "bytes": 54,
+      "sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+    },
+    "format-clean-final.log": {
+      "bytes": 258,
+      "sha256": "c971137689e54319f197c8d323807cd3b6e0370dd0fe6f1e21cbf903e2f91632"
+    },
+    "format-corrections.log": {
+      "bytes": 188,
+      "sha256": "d15bb8c3e4cf8ffec00ac933d4e53d2f71fedc9a9cca0efbd9ce7392844e1e17"
+    },
+    "format-final-changes.log": {
+      "bytes": 189,
+      "sha256": "faa341c107e1fd3b0ee3d301061181d2ffb96dc3e5fc26daea260eafe96a87a6"
+    },
+    "format-full-final.log": {
+      "bytes": 794,
+      "sha256": "4420880ca6ce0ef5115e52357428e5dacf45b27dee6bffd218a71e6851f76a79"
+    },
+    "format-helper.log": {
+      "bytes": 189,
+      "sha256": "35cec6df282dbae307b316d9e814bc575ca5a7e61fa902097d1e9c0155ec5ecd"
+    },
+    "format-last-test.log": {
+      "bytes": 189,
+      "sha256": "78818638462df9e8ed137f3a2a823a4ad2c1a3afb9d5c08e1b148b6ad1b635c2"
+    },
+    "format.log": {
+      "bytes": 189,
+      "sha256": "eb7bbacdbec1befce2159529c997733ce23468d0d6ba29837a30c963c3533887"
+    },
+    "fragment-debug-final.log": {
+      "bytes": 7519,
+      "sha256": "9526e4f7422d5f7d1b17859dfe9fca630f9231c8bd809ce584b4e0bf379061bf"
+    },
+    "fragment-debug-first.log": {
+      "bytes": 7658,
+      "sha256": "3c13c93beb3bd83239d946ae0b4b066739749af822f8ed7233ef6a680d4114fa"
+    },
+    "fragment-release-final.log": {
+      "bytes": 7520,
+      "sha256": "585e87ce246837ce95b43b5059d65155ab7e02926b887d83b1eb18eff137c8b0"
+    },
+    "lint-all-final.log": {
+      "bytes": 76295,
+      "sha256": "52892703377f454b3d8ac5da3ba69ee8e4215599790c237b302c61b8377d4db3"
+    },
+    "lint-clean-final.log": {
+      "bytes": 76295,
+      "sha256": "2f6e9f94f2b07b71b15a98587bb7b85ca70f9fad587dc6bef831b368afc3ffd1"
+    },
+    "lint-final.log": {
+      "bytes": 76295,
+      "sha256": "829a22f41f65f2ec2c0b2156865d55da8eebe60aae489da61c01f887cd3e57e1"
+    },
+    "lint-first.log": {
+      "bytes": 79991,
+      "sha256": "8389d41e33d91609d104557de6863ef8d49c27c4bd2ff12831d2a26462672f5c"
+    },
+    "lint-second.log": {
+      "bytes": 77131,
+      "sha256": "6037278a1a669b4c17bd9225e8b19cdb3555fe3d13b3111180c1700cef0c31c3"
+    },
+    "lint-third.log": {
+      "bytes": 76628,
+      "sha256": "1e8a4ae2f04d8e7c22404b198edfe470d1d26c4c255fea1b70cf851506ac76bb"
+    }
+  },
+  "export_sources": {
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/BoundedExportHTML.swift": "4af5dfa050cff6855d6dfb3ca22d2d6231f45a57c4c4a0899a500cb53cb2ea3e",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/BuiltInExportTemplate.swift": "11b4527ad334cde6418978b80428ff62312e033655a1272f76c3e81f3f9d32b7",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/CMarkGFM+Errors.swift": "a3c3c9e3498b9a07c654f5d17aad193499f369f6f2066f93efc12423ffd1ddf0",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/CMarkGFM+TreeTransform.swift": "21014c98ca6f6500b14b6216223f6b10abda607563fa52ca687a0d76a460024b",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/CMarkGFM+Types.swift": "4aa949f66ae22702d0cc1f479344a218dab4bafced45b5e70e48eb4f0472e8ad",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/CMarkGFM.swift": "f6b8e1cf3a9176ec41e2b99489a12ef3245a4dae4d0315b1f6cb1584f8371e48",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/DerivedContentComposer+References.swift": "b8f769e1710925cdbddb2a14b2429b26e81b5564b2da027f3c33a6477464d93f",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/DerivedContentComposer+Validation.swift": "2dbe4a5acd12bbc967ad5966f60e0e5459ab9c40c048d9f0688112503e34d86a",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/DerivedContentComposer.swift": "9491fcfc63ac9a32c28b39ce4bc3e9d75f5281bc8e4c8d79603a922cfc8659e0",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/DerivedHTMLSanitizer.swift": "f94fefee57f9991657d6b254e92570cde5880131215fb3b360512230e98abd2c",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/EmittedHeadingDOM.swift": "4ccb01eda8ee8d02d638bf463a04196d6521774363b13cde13a0d8f7d651e8b7",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/EmittedHeadingMatcher.swift": "4e4a816ef490124418ee149999e1be78bb648e9ad644eeee222d7b58286e2048",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportCompanionAuthentication.swift": "b91856f161293624d589a3b35857f322a314891db3f19793fba56c554af08b59",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportCompanionFiles.swift": "a59d8d3564e1e6c73bb9d52925760e436f5440fc47f2b5980e93bd9d0500153c",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportCompanionInventoryRecord.swift": "dda30e056d98b945e77a925bed2770a97c9dc300d8ddd06439a1ab7e718bd453",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportCompanionJournal.swift": "6f9acdfa73de6fbdba276e9ff4a0de77ef93fe3ba5ef1c1a65fe14febb7a871c",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportCompanionMutation.swift": "b7f2068a7ceeb3582fae2b8a95743204178c3931d0bb7d0060e36c01d57867f4",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportCompanionPendingRecord.swift": "383520bc195f10514a205b25d379a52a6682b135eaa9806972874a55621c1213",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportComposer+DerivedRender.swift": "8cb6b82c105d3f0ecd75e15648ad79694367af7eeaa01b0e92830fef143e1d00",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportComposer+Diagnostics.swift": "eb6a6d8da52494cfd4522a06062fef58ba938cfe02c02983a8d6bccd44f2c929",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportComposer+HeadingRender.swift": "8ee6a720ca2f2d52f5b800376afafedcd701159947b1f6510fecdcb8dd8ba1f8",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportComposer.swift": "7abf9d09bec60c73995ebe706be21eaad32bf828608fedf013fc6edce98dd5b2",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportDerivedContribution.swift": "daac3c60cb9415930d03a291301e66d820777b230c9bb26dbd2c6c97d3bd4dd5",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportDerivedDiagnosticText.swift": "23e49ce5ea6c8a5875d2413faf47e030bf297d79e3c9aa23a797396bb5350f53",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportDestinationAdmission.swift": "75baf816ec81dea5b5628c59290ae16f6c76a2f9c2671c4f478545e2b2b65218",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportDiagnostic.swift": "e4befa79ae567ca28553244d721f71ff6ced04eedc3c38333251459a877dc4af",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift": "73a3c37302e3e7a14631019177f3b3457d5a74e26294381ec87bccf49e3cf0c2",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportFileRetirement.swift": "9d113b2464fa744d008aa32c73729d7f0f12a8c8f12e0c94d72aaf2b5a144d7f",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportFileWriter.swift": "91034118f42fde0c7f9fc4c25782e131ee0bb413e6b9ee95996401d34c2b72fe",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportHTMLWriter.swift": "723ad99751368656c6ca7a21c56678ea506460fb02f9f6fdedb65d6f68ab65f1",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportImageURLScanner.swift": "ce07befd15a116a02d9545aeda1ce75672efc5071cf10fe8bbcfd9383c5f946d",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportJournalRecord.swift": "f7f791869ff1660af3b5da6ac914581dfff2547aee0e9417b147ea347de33d3e",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportJournalStorage.swift": "a0b156d381c5bbca795e0a99aa0276c730878f8e5eb1c3595a975f10ce236407",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportJournalStore.swift": "1a7b0e84a595bd1610d01051d5b902836749da44ad2cd5b1ebf9dd1d66716b73",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportLifetimeLease.swift": "b0c8fc690cfae97af7038c98d1d86728f639e24bd6a92b5df745de2e63ce14d5",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportManagedCompanions+Inventory.swift": "63e18d59524180764d0c76433682c78f3f1f1a7ce98d3cfaab82bd462517b02d",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportManagedCompanions+Recovery.swift": "035c2558442ccc45b00acc1cfc4e462768826ec869baeafd67e98365d0ad73ad",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportManagedCompanions+Staging.swift": "a142644bd7c9a4b77a8a3b52365126e96135d5fd7ea8382c0effc2b46d1a9c86",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportManagedCompanions.swift": "09055efbadc7480d5b4d05adfc68d4d3e4c0eb10b6ef7467b1eb356d6354926e",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportManifest.swift": "beb733cda788de754bceb655ec93efd047d239aa60f4ef3c0469c63d70ca45b1",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportMetadata.swift": "8b3a54444e6038e4883cfadb3fa0e304a9723e2446242b5ce081121426e43735",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportOwnedFileReceipt.swift": "0be7528ae14344a40444543643c2422d43ef2692b0ba843f09da297f31f7f9f2",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportPrimaryRecovery.swift": "3fc2ee95670f5a1185fa261d020c0da06868a1a8ab64b765bb4b7f2ca1113617",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportPublicationFilesystem.swift": "926b14478f82efa0e350beca5a03a57b3416eebb507135e0957074f9a401a058",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportPublicationGate.swift": "50953d51054bbe3e4d16b949914affa0609ea4d17660799844bc6e0d3cf56376",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportPublicationRetention.swift": "a1f08c7485f9b6f2809c6ca601572fe152583445922ced2554d0a6639263b322",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportRecoveryLocation.swift": "709c400659706b8b6f09ef1dbacec24b01d3b09b550d68fd901a72f2fd167350",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportRecoveryProtection.swift": "8427e81c1f07fdb54f066cdc3962a1a6bcda535002a8730c0450e02a6da7c8df",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportRequest.swift": "b70c64d5943e567871eb96d442eec50bb7e196ca6519323cba7a1ad2164b9e60",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResource.swift": "4c2e1e10502bbf882a055107402b8002778f75a78634221c20b1cb4377128083",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceAccess.swift": "479f7c32e9e31f4138c5000532e5320b3fd05c7ed5ed9bba7d3c16192a2807d5",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceBudget.swift": "763c5a772b9ea34d2b9e7e0c93487dce915148282b9bc136fd925a36ab0018fd",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceResolver.swift": "b07d369e802bb175c2e29e7647ce99a8b4b88e89a24d2e59a3d92b00a348036e",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceSlots.swift": "cead7dbef3035077870dc439677e5748bb4b3b0837a02d395c8294578ab0ce9f",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResult.swift": "7a0a1703f51d6ebb8a346837a94b476c39288795dcb13ede444eb607ce1713ff",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportService+ValidatedSVG.swift": "14dc9613eb1d4e6c192ae01e3179b5c56083f48dfad962d98509713ca4e47bae",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportService.swift": "0e709a8a70afd62ec2b29d9af8d60836344817e47826108f2a1af4e35d435d58",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportTarget.swift": "814917928cc9aacfe6cacde1d22c9b982a19b8800c31e3f7cf7cea84097f3c56",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportThemeStylesheet.swift": "ff09eec93d4d60c5efe559e61b7475ad393615f3c84fefbb76f295f715656531",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportURLPolicy.swift": "6c7ff68bee6e0f55632c0f77aca3a35ccdd312bdee44ebb913c42aebabd23623",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/HTMLFilePublicationInput.swift": "782c4c3b3c4f429d09123c7052bdf8172d6a2e5cf8a4942c61347ec517efd888",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/HTMLTagScanner.swift": "e8ea3d0352c1ddc9551dd81dde67fc4fb93e8b70072bec49dc1bb6156ceee2f0",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/HeadingAnchorPreparation.swift": "29390455267ed2a23fbda9b1631ed4c4910865b24917fd3119b29519724ee63a",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/HeadingFragmentStructure.swift": "e8945701d66aa7ff2d2e9cc56a78188fe4c3e01b820037fb327a0547ca9c9536",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/InlineSentinelIndex.swift": "97d5b941e8b9c02bb548efd6c7e4fc0ca5c255bb79a9837c057e85fa79622447",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/OnLargeStack.swift": "f1df83318c54cd0eac824fec0c2e1329349f94d196cefe7ef5a488ec92d9a409",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/PreparedExportDocument.swift": "f6f6dcc073ab11cc626dac68697e701de9664b268a145e73c72da7ae21f864ba",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/SVGAssemblyOwnership+CSS.swift": "f1ca7200e8959474009345b0169aa2c32848df89e0c5fead0a14e6711e846037",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/SVGAssemblyOwnership+Outside.swift": "733a104c86b59e668fa41e67b66e19355f4eec7233c1d6070b1c1dbbd5871668",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/SVGAssemblyOwnership+Raw.swift": "c58384364c11d7d77ea842c0e620ca041f1fac85de7f4d2fe10b72054e06b851",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/SVGAssemblyOwnership+References.swift": "fe7af81a028e847ea85b42206591e2b0b06d8f0d10741ed078bdf447b0173e13",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/SVGAssemblyOwnership.swift": "d35223a8f7392151f1f78c3220f8de6f459379fc6dcb1c413dea1dd9192d7a1a",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/SVGIDNamespace+Animation.swift": "b38bfe0024e27d1f7c44cf8d4d247f2beb857a31d90ef0dbc6d878c5184af6db",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/SVGIDNamespace+CSS.swift": "ccbfef856d41459d1dd2c477405b42af741a99f326a85bfeab9c1585bfab8021",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/SVGIDNamespace+Fonts.swift": "a1c00587e958e9b7629cd4b6ab0c8caf13a349763eb0cbe3c86e6b6e53fd975c",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/SVGIDNamespace+Marked.swift": "69d8696db9a27add8a058a467d8f68309e0c0eaa99c8e4c17c89a802340e4c80",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/SVGIDNamespace+Selectors.swift": "c037df9a27835e17201dd9ea7fe86f1e76ad4b525375305892f1eb343cca21b4",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/SVGIDNamespace.swift": "c9a1eb90e3f695a36705452568f28cff6b063847e6cfdeb853e58ffcc79dfa57",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/SplicedBodySourceMap.swift": "bfcae559c2af91f8a98c064bc9d93639b4285e9401d0cd607152b8514fedf049",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ValidatedExportHTML.swift": "21feaf2679670955f5b549aa0f8cb67967ce9fe676957d30e6402efd845980f4",
+    "MacDown2/Packages/MacDownKit/Sources/ExportService/ValidatedFilePublication.swift": "95511eb8605dc9ae9ad94dc29c3c269acc7ae881556a404aada6ec57d62bc68c"
+  },
+  "foundation_tests": 5,
+  "foundation_suites": 1,
+  "hosted_test_functions": 30,
+  "hosted_suites": 3,
+  "first_failures": "Missing LocalResourceAccess import on first actual compile; lint13/3/1 violations and last-format test failure corrected. All raw logs retained; final compile/format/lint/compliance pass."
+}
