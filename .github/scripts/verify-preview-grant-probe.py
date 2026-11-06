@@ -44,16 +44,20 @@ if args.verify:
                   "Secured Markdown stable viewport", "Secured Markdown source binding",
                   "Preview folder selection commands", "Production Preview resource routing",
                   "PreviewDisplayCache", "Preview resource composition ownership",
+                  "HTML Preview real response encodings",
                   "Preview image decoded-output admission", "Pinned Textual image interception"]
         if args.configuration == "Release":
             suites.append("Preview Release resource probe")
         for suite in suites:
             if not re.search(r'Suite "' + re.escape(suite) + r'" passed' , log):
                 raise SystemExit(suite + " did not execute successfully")
-        count = 53 if args.configuration == "Release" else 52
+        count = 56 if args.configuration == "Release" else 55
         if not re.search(r"Test run with " + str(count) + r" tests in " + str(len(suites)) + r" suites passed", log):
             raise SystemExit("Every selected consumer test must finish; partial restarts are not accepted")
         for function in [
+            "fileStoreBOMDocumentsRenderAsUTF8WithoutRewritingOriginalBytes",
+            "nonUTF8HTMLResourcesKeepBOMBytesAndAuthoritativeResponseProtection",
+            "realSubresourcesKeepTheirMIMETypesAndUnknownHTMLIsNotAnImage",
             "canonicallyEquivalentPublishedBytesCannotBorrowTheCurrentGrant",
             "pendingPublishedSourceRetiresThePriorLoadAndKeepsPreviewMounted",
             "absentParseRetiresItsPriorLoadWithoutRemovingReadableContent",

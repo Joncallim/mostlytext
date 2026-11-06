@@ -13,6 +13,7 @@ on:
       - 'MacDown2/MacDown2Tests/*Preview*.swift'
       - 'MacDown2/MacDown2Tests/Preview*.swift'
       - 'MacDown2/MacDown2Tests/Secured*.swift'
+      - 'MacDown2/MacDown2Tests/HTMLResponseEncodingFixture.swift'
       - 'MacDown2/Packages/MacDownKit/Sources/Preview/**'
       - '.github/workflows/preview-grant-probe.yml'
       - '.github/scripts/*preview-grant-probe.py'
@@ -91,6 +92,7 @@ jobs:
             -only-testing:MacDown2Tests/PreviewResourceWindowStateTests \
             -only-testing:MacDown2Tests/BoundedHTMLPreviewHandlerTests \
             -only-testing:MacDown2Tests/SecuredHTMLPreviewNativeTests \
+            -only-testing:MacDown2Tests/HTMLPreviewEncodingNativeTests \
             -only-testing:MacDown2Tests/SecuredMarkdownMountedTests \
             -only-testing:MacDown2Tests/SecuredMarkdownViewportTests \
             -only-testing:MacDown2Tests/SecuredMarkdownSourceBindingTests \
