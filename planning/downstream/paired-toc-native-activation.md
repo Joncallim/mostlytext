@@ -285,3 +285,12 @@ ID on every nested container. Still require four real vector occurrences,
 unique document IDs, one exact heading/TOC target, expected authored alias,
 unchanged canvas pixels and no resource requests. Print the actual facts so a
 further failure is attributable. This is not permission to accept diagram loss.
+
+
+The first local unsigned Release build now links the app on arm64 and x86_64,
+then exposes a separate test compilation prerequisite: the app's Release target
+setting did not enable `@testable` imports in dependent package modules. Pass
+ENABLE_TESTABILITY=YES to the complete hosted compile/test command, consistently
+for both configurations. Keep normal Release optimization and both architectures;
+this grants test visibility rather than substituting a Debug product. The first
+failure and exact command remain retained. Actual Release execution is pending.
