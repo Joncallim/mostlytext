@@ -16,15 +16,21 @@ MostlyText #8 owns integration, #18 the outstanding performance finding, #19 the
 original read assertion, #17 publication/lifecycle, #13 Preview and #11 PDF.
 Individual branches initially share this main baseline; merging them separately
 would change the base seen by each later branch and require fresh combined
-qualification anyway. Use one ancestor-preserving E08 integration branch after
-PR100's production Preview activation passes its complete prerequisite matrix
-and is actually merged with independently verified parents/tree.
+qualification anyway. Use one ancestor-preserving E08 integration branch.
+Keep main unchanged until the complete combined source passes every required
+gate. PR100 currently has full CI, both math selections and five independently
+qualified native pairs; its last Release viewport job is still compiling.
+Include its exact source directly, continue that original first attempt, retain
+its actual outcome, and require all six pairs again on the combined candidate.
+This gives the Preview/encoding dependency one final qualified source rather
+than first merging a version that the other units would immediately change.
+No constituent's pending or failed result is treated as passing.
 
 The following reviewed unit heads are the initial inputs, never old evidence
 retargeted to a new source:
 
 - PR100 production Preview c7ae0652c5ec79dcd98c43e70b1540ed2463f445, through
-  its real main merge; original bd84/d1 failures remain retained.
+  the combined final main merge; original bd84/d1 failures remain retained.
 - PR106 shared immutable child comparison plus the combined C compilation
   manifest 15b2306c4c5cd9ac8d34406ba29325e4ed8bf8ff. Preserve the original
   4d7 503.522292ms failure and rejected sorting experiment. Runtime 3b1fb00f,
