@@ -1,0 +1,188 @@
+[
+  {
+    "variant": "baseline",
+    "fixture_kib": 16,
+    "returncode": 0,
+    "results": [
+      {
+        "phase": "initial",
+        "bytes": "16422",
+        "ranges": "290",
+        "nodes": "621905",
+        "ns": "16673625",
+        "digest": "783bfda111bfb1c1"
+      },
+      {
+        "phase": "incremental",
+        "bytes": "16422",
+        "ranges": "290",
+        "nodes": "621905",
+        "ns": "16524625",
+        "digest": "783bfda111bfb1c1"
+      },
+      {
+        "phase": "fresh",
+        "bytes": "16422",
+        "ranges": "290",
+        "nodes": "621905",
+        "ns": "16492959",
+        "digest": "783bfda111bfb1c1"
+      }
+    ]
+  },
+  {
+    "variant": "baseline",
+    "fixture_kib": 64,
+    "returncode": 0,
+    "results": [
+      {
+        "phase": "initial",
+        "bytes": "65631",
+        "ranges": "1145",
+        "nodes": "9601970",
+        "ns": "115214916",
+        "digest": "1ed3381a2e148d9d"
+      },
+      {
+        "phase": "incremental",
+        "bytes": "65631",
+        "ranges": "1145",
+        "nodes": "9601970",
+        "ns": "115292875",
+        "digest": "1ed3381a2e148d9d"
+      },
+      {
+        "phase": "fresh",
+        "bytes": "65631",
+        "ranges": "1145",
+        "nodes": "9601970",
+        "ns": "115003125",
+        "digest": "1ed3381a2e148d9d"
+      }
+    ]
+  },
+  {
+    "variant": "baseline",
+    "fixture_kib": 256,
+    "returncode": 0,
+    "results": [
+      {
+        "phase": "initial",
+        "bytes": "262151",
+        "ranges": "4545",
+        "nodes": "150921270",
+        "ns": "1251109708",
+        "digest": "68a41363d4f24b8d"
+      },
+      {
+        "phase": "incremental",
+        "bytes": "262151",
+        "ranges": "4545",
+        "nodes": "150921270",
+        "ns": "1260083667",
+        "digest": "68a41363d4f24b8d"
+      },
+      {
+        "phase": "fresh",
+        "bytes": "262151",
+        "ranges": "4545",
+        "nodes": "150921270",
+        "ns": "1233390583",
+        "digest": "68a41363d4f24b8d"
+      }
+    ]
+  },
+  {
+    "variant": "candidate",
+    "fixture_kib": 16,
+    "returncode": 0,
+    "results": [
+      {
+        "phase": "initial",
+        "bytes": "16422",
+        "ranges": "290",
+        "nodes": "348",
+        "ns": "12787167",
+        "digest": "783bfda111bfb1c1"
+      },
+      {
+        "phase": "incremental",
+        "bytes": "16422",
+        "ranges": "290",
+        "nodes": "348",
+        "ns": "12552500",
+        "digest": "783bfda111bfb1c1"
+      },
+      {
+        "phase": "fresh",
+        "bytes": "16422",
+        "ranges": "290",
+        "nodes": "348",
+        "ns": "12530208",
+        "digest": "783bfda111bfb1c1"
+      }
+    ]
+  },
+  {
+    "variant": "candidate",
+    "fixture_kib": 64,
+    "returncode": 0,
+    "results": [
+      {
+        "phase": "initial",
+        "bytes": "65631",
+        "ranges": "1145",
+        "nodes": "1374",
+        "ns": "50375208",
+        "digest": "1ed3381a2e148d9d"
+      },
+      {
+        "phase": "incremental",
+        "bytes": "65631",
+        "ranges": "1145",
+        "nodes": "1374",
+        "ns": "50698333",
+        "digest": "1ed3381a2e148d9d"
+      },
+      {
+        "phase": "fresh",
+        "bytes": "65631",
+        "ranges": "1145",
+        "nodes": "1374",
+        "ns": "50694583",
+        "digest": "1ed3381a2e148d9d"
+      }
+    ]
+  },
+  {
+    "variant": "candidate",
+    "fixture_kib": 256,
+    "returncode": 0,
+    "results": [
+      {
+        "phase": "initial",
+        "bytes": "262151",
+        "ranges": "4545",
+        "nodes": "5454",
+        "ns": "204941292",
+        "digest": "68a41363d4f24b8d"
+      },
+      {
+        "phase": "incremental",
+        "bytes": "262151",
+        "ranges": "4545",
+        "nodes": "5454",
+        "ns": "221208708",
+        "digest": "68a41363d4f24b8d"
+      },
+      {
+        "phase": "fresh",
+        "bytes": "262151",
+        "ranges": "4545",
+        "nodes": "5454",
+        "ns": "207123875",
+        "digest": "68a41363d4f24b8d"
+      }
+    ]
+  }
+]

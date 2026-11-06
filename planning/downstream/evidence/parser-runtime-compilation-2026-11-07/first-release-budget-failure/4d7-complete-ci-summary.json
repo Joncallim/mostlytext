@@ -1,0 +1,40 @@
+{
+  "source_head": "4d7adc9047e7fdffe0569a0b0a231feb39a3b973",
+  "run": 42252541329,
+  "completed": true,
+  "records": [
+    {
+      "file": "build-and-test/7_Package build + tests.txt",
+      "results": [
+        "2026-11-06T17:03:31.0764750Z \u2714 Test run with 3715 tests in 534 suites passed after 437.891 seconds."
+      ]
+    },
+    {
+      "file": "build-and-test/13_Build app + CLI.txt",
+      "results": [
+        "2026-11-06T17:08:17.0936010Z ** BUILD SUCCEEDED **",
+        "2026-11-06T17:08:26.9605270Z ** BUILD SUCCEEDED **"
+      ]
+    },
+    {
+      "file": "build-and-test/14_Build app + CLI (Release).txt",
+      "results": [
+        "2026-11-06T17:19:38.7311710Z ** BUILD SUCCEEDED **",
+        "2026-11-06T17:19:48.6387880Z ** BUILD SUCCEEDED **"
+      ]
+    },
+    {
+      "file": "build-and-test/16_Build for testing (app + UI tests; UI tests run requires macOS 26+ GUI).txt",
+      "results": [
+        "2026-11-06T17:23:02.1147820Z ** TEST BUILD SUCCEEDED **"
+      ]
+    },
+    {
+      "file": "build-and-test/17_Run MacDown2Tests (non-UI app-target tests).txt",
+      "results": [
+        "2026-11-06T17:28:17.4037730Z \u2714 Test run with 675 tests in 142 suites passed after 284.095 seconds."
+      ]
+    }
+  ],
+  "scope": "Complete CI passes do not waive the separate unchanged full-highlight Release failure"
+}

@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+import sys
 
 BASELINE = "6667bc9c1cb74534eafc417d921c3a37c55628b0"
 COMMON = "MacDown2/Packages/MacDownKit/Tests/HighlightingTests/CurrentLineRoleBitmapTests.swift"
@@ -19,7 +20,9 @@ def run(arguments, **kwargs):
 
 def inventory(root):
     names = run(["git", "ls-files", "MacDown2", ".github/scripts/run-current-line-theme-probe.py",
-                 ".github/workflows/current-line-theme-probe.yml"], cwd=root).splitlines()
+                 ".github/workflows/current-line-theme-probe.yml",
+                 ".github/scripts/run-owned-app-tests.py",
+                 ".github/scripts/test-run-owned-app-tests.py"], cwd=root).splitlines()
     names = sorted(set(names + [COMMON]))
     return {name: hashlib.sha256((root / name).read_bytes()).hexdigest() for name in names}
 
@@ -57,6 +60,43 @@ def prepare_test_package(root, output, baseline):
     pins = json.loads((actual / "Package.resolved").read_text())["pins"]
     (package / "Package.resolved").write_text(json.dumps({"version": 2, "pins": pins}, indent=2) + "\n")
     return package, copied, hashlib.sha256(manifest.encode()).hexdigest()
+
+
+def diagnose_performance_failure(root, output, binary, helper, environment):
+    """Retain isolated results without changing the failed complete selection's verdict."""
+    if os.environ.get("CI") != "true":
+        raise SystemExit("Performance diagnostics require the owned hosted job")
+    destination = output / "performance-diagnostic"
+    destination.mkdir()
+    inputs = {str(path): hashlib.sha256(path.read_bytes()).hexdigest() for path in [binary, helper]}
+    metadata = []
+    for command in [["sw_vers"], ["xcodebuild", "-version"],
+                    ["sysctl", "hw.model", "hw.ncpu", "hw.memsize", "machdep.cpu.brand_string"]]:
+        result = subprocess.run(command, capture_output=True, text=True, timeout=10)
+        metadata.append({"command": command, "returncode": result.returncode,
+                         "stdout": result.stdout, "stderr": result.stderr})
+    (destination / "environment.json").write_text(json.dumps(metadata, indent=2) + "\n")
+    results = []
+    for label, selection in [("parse-only", "mainThreadParseBudgetDocumented"),
+                             ("performance-suite", "HighlightPerformanceTests")]:
+        diagnostics = destination / (label + "-diagnostics")
+        with (destination / (label + ".log")).open("w") as log:
+            result = subprocess.run([
+                sys.executable, str(root / ".github/scripts/run-owned-app-tests.py"),
+                str(diagnostics), str(helper), "--", str(helper),
+                "--test-bundle-path", str(binary), "--testing-library", "swift-testing",
+                "--no-parallel", "--filter", selection,
+            ], cwd=root, env=environment, stdout=log, stderr=subprocess.STDOUT, timeout=660)
+        status = json.loads((diagnostics / "status.json").read_text())
+        results.append({"label": label, "selection": selection,
+                        "supervisor_returncode": result.returncode, "owned_status": status})
+        (destination / "results.json").write_text(json.dumps(results, indent=2) + "\n")
+        if status["timed_out"] or status["cancelled"]:
+            break
+    if any(hashlib.sha256(Path(name).read_bytes()).hexdigest() != digest for name, digest in inputs.items()):
+        raise SystemExit("A diagnostic execution product changed")
+    (destination / "execution-sha256.json").write_text(json.dumps(inputs, indent=2) + "\n")
+    print("Isolated performance results retained; the original complete selection remains failed")
 
 
 def qualify(root, output, configuration, baseline):
@@ -116,7 +156,9 @@ def qualify(root, output, configuration, baseline):
             if message not in log:
                 raise SystemExit("Baseline failed for a different reason: " + message)
     else:
-        if result.returncode != 0 or not re.search(r"Test run with 1085 tests in 143 suites passed", log):
+        if result.returncode != 0 or not re.search(r"Test run with 1087 tests in 145 suites passed", log):
+            if configuration == "release" and "Suite HighlightPerformanceTests failed" in log:
+                diagnose_performance_failure(root, output, binary, owned, environment)
             raise SystemExit("All selected real editor/highlighter/theme tests must execute and pass")
         for name in ["anAppliedThemePaintsAndRemovesTheCurrentLineInTheRealScrolledEditor",
                      "aShapeIdentifiesThePrimaryLineEvenWhenTheEditorFontIsAlreadyBold",
@@ -124,7 +166,8 @@ def qualify(root, output, configuration, baseline):
                      "liveChromeUsesTheSingleResolvedPaletteWithoutEditingSource",
                      "captureNamesRetainNamedAndGlobalDirectiveSemantics",
                      "oneQueryKeepsCurrentTreeRangesWhenSourceOffsetsChange",
-                     "independentCursorsShareAnImmutableQueryConcurrently"]:
+                     "independentCursorsShareAnImmutableQueryConcurrently",
+                     "denseInlineEditsKeepFreshCapturesAndPreviouslyRetainedSnapshots"]:
             if not re.search(r"Test " + name + r"\(\) passed", log):
                 raise SystemExit("Required native control did not pass: " + name)
         if "CURRENT-LINE-PHASE" not in log:

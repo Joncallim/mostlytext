@@ -1,0 +1,61 @@
+{
+  "source_checkpoint": "4d7adc9047e7fdffe0569a0b0a231feb39a3b973",
+  "pins": 24,
+  "changed": {
+    "neon": {
+      "before": {
+        "identity": "neon",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/Joncallim/Neon",
+        "state": {
+          "revision": "f97aca5b3c8060323dd98e020fa4cadf8f0fa21f"
+        }
+      },
+      "after": {
+        "identity": "neon",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/Joncallim/Neon",
+        "state": {
+          "revision": "6074d1a50c7076b2e59d8d0619554b542e096afa"
+        }
+      }
+    },
+    "swifttreesitter": {
+      "before": {
+        "identity": "swifttreesitter",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/Joncallim/SwiftTreeSitter",
+        "state": {
+          "revision": "8a7e21004d4964df8d427b9c8ed1043b63f43ae3"
+        }
+      },
+      "after": {
+        "identity": "swifttreesitter",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/Joncallim/SwiftTreeSitter",
+        "state": {
+          "revision": "76f93e7e325dcd05561a13ed63bcc92cb85be8da"
+        }
+      }
+    },
+    "tree-sitter": {
+      "before": {
+        "identity": "tree-sitter",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/Joncallim/tree-sitter",
+        "state": {
+          "revision": "cd96b385c813b5e5ae38cbc6e67bd659db327138"
+        }
+      },
+      "after": {
+        "identity": "tree-sitter",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/Joncallim/tree-sitter",
+        "state": {
+          "revision": "3b1fb00f8c4f8907073f9b7342a807a0231867fa"
+        }
+      }
+    }
+  },
+  "unchanged": 21
+}

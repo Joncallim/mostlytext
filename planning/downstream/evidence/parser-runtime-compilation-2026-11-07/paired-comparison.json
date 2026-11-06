@@ -1,0 +1,16 @@
+{
+  "five_run_medians": {
+    "baseline": {
+      "parse_seconds": 0.183110417,
+      "query_seconds": 0.057100375,
+      "total_seconds": 0.24056825
+    },
+    "combined": {
+      "parse_seconds": 0.165724709,
+      "query_seconds": 0.047368417,
+      "total_seconds": 0.213219417
+    }
+  },
+  "normal_outputs_identical": true,
+  "scope": "One paired confirmation after correcting copy-mode setup; no threshold or native acceptance result"
+}

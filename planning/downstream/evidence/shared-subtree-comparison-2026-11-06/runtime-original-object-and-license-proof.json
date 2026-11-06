@@ -1,0 +1,16 @@
+{
+  "base": "5ce80b6f0e29096a5f06826a3ba610c4e89bc255",
+  "unchanged_original_blob_count": 486,
+  "changed_original_files": [
+    "MOSTLYTEXT_PATCHES.md",
+    "lib/src/subtree.c"
+  ],
+  "new_test": "lib/tests/subtree_compare_identity.c",
+  "license_sha256": "5f9cf9fb6acb1972b35ae29119ce563bb60ec097656bc4b69b9bac2d04c7a147",
+  "runtime_subtree_sha256": "f7e8cb035e5c636324ec725a6991923eb57f18d1e9176969e0f9dc493ff2739f",
+  "component_test_sha256": "22b89d4e43cb8f8e9134281ef401acb1034439a3efb977bcc72350287b41712b",
+  "documented_corpus_tests": 262,
+  "observed_original_incremental_discrepancies_preserved": 282,
+  "all_scalar_trace_sha256": "a6ffb09db0cc9b2fe802c3c41b005850f30e20f260ab3127888e7f68c1e61cb6",
+  "no_counter_in_product": true
+}

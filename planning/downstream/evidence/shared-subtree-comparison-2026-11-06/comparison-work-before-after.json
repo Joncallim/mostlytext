@@ -1,0 +1,20 @@
+[
+  {
+    "phase": "baseline",
+    "returncode": 2,
+    "visited_nodes": 36866,
+    "original_subtree_sha256": "ec4c8ca9e9957ab1effcf1ba36d6820b751c2ded0276e2d332c787eabb1265c8",
+    "instrumented_subtree_sha256": "fb3527b60dd653d629cc975e08c3a4c2ad40726c40b3a21ea58a3aba3afe09da",
+    "binary_sha256": "eecbd735a7a4d3fc60543b0369587028232329a7a400d18b0d8202489e341a3c",
+    "instrumentation": "Only a uint64_t counter declaration and one increment per actual comparison pair; not shipped"
+  },
+  {
+    "phase": "candidate",
+    "returncode": 0,
+    "visited_nodes": 2,
+    "original_subtree_sha256": "f7e8cb035e5c636324ec725a6991923eb57f18d1e9176969e0f9dc493ff2739f",
+    "instrumented_subtree_sha256": "b14c10dca2bbad8aa1e10aedd36763afba96319c59e07a321b6c6afd59f90ca6",
+    "binary_sha256": "3df9a02bc42d6fa179fd7d94229ed60323befd3f5ba2c40b277bd6b056ea348b",
+    "instrumentation": "Only a uint64_t counter declaration and one increment per actual comparison pair; not shipped"
+  }
+]
