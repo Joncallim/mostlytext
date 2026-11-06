@@ -360,6 +360,7 @@ public struct EditorView: NSViewRepresentable {
             if !system.isUpdatingSelectionSet {
                 system.invalidateStoredSelectionSetIfStale()
             }
+            system.invalidateCurrentLinePresentation()
             system.scheduleFrameHeightSync()
             // The semantic primary range, not AppKit's topmost one: with Cmd-D / Select All Matches the two differ, and
             // the status bar and both outlines follow this callback.

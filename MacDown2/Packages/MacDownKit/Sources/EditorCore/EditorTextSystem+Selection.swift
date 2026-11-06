@@ -99,6 +99,7 @@ public extension EditorTextSystem {
             if newValue.isMultiple, textView.selectedRanges.map(\.rangeValue) != newValue.ranges {
                 textView.selectedRanges = [NSValue(range: clampedToLiveText(newValue.primaryRange))]
             }
+            invalidateCurrentLinePresentation()
         }
     }
 
