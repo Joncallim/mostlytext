@@ -83,3 +83,23 @@ without broadening the dependency graph or enabling network resolution. Keep
 the original go.mod/go.sum and every tracked source byte unchanged. If the
 actual target build needs uncaptured metadata, preserve that first failure and
 document the exact missing immutable input before any preparation change.
+
+## First target result and missing build-helper inspection
+
+All16 selected ZIPs match their recorded Go h1 sums, and every expanded file
+plus complete file set matches its ZIP. The first offline target build exits0
+in9.591s, produces23,704,208 bytes with SHA25690cbb3a1..., and preserves every
+tracked source byte. It does not match the publisher's optimized module. Section
+comparison retains both complete files: raw7594 functions versus publisher7752,
+raw type count12 versus59, and the same explicit Go1.24.6/VCS build fields. No
+complete reproduction or optimizer version is inferred.
+
+The verified root make.sh prepends ci/sub/bin before invoking the Go build. The
+source archive omits that gitlink's contents. Inspect the exact declared public
+submodule https://github.com/terrastruct/ci at2594100ac939644f134e24edac7c9bcd569b99f6
+as read-only source, comparing the gitlink and .gitmodules against the frozen
+root commit. Do not execute its wrapper or publisher scripts. Record all input
+hashes/licence, inspect any compiler flag/version transformation and write the
+next precise compile/optimizer decision before execution. This may identify an
+additional corresponding-source input; no shipped component or offer status is
+changed from a missing-script observation.
