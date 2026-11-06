@@ -258,3 +258,10 @@ change or qualification retry is added. Preserve the original failed verdict.
 Unsigned universal Release compilation succeeds; native failure evidence must
 still be collected in the hosted job, after useful current qualification jobs
 finish. Production activation remains held for all required consumer controls.
+
+The final branch also carries only the reviewed standalone export-sheet fixture
+ownership correction from d9c3cc70. Swift-owned windows must disable automatic
+release on close under AppKit's documented ARC contract. Keep the real sheet
+presentation/cancellation/detachment checks and all deadlines; no production
+window policy or historical crash-cause claim follows. This avoids leaving a
+known test-host lifetime violation while qualifying the complete app suite.
