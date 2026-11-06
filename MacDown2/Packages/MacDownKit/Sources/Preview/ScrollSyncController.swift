@@ -61,6 +61,9 @@ public final class ScrollSyncController {
     /// Consumers should clear this after acting on it.
     public var targetSourceLine: Int?
 
+    public internal(set) var headingJumpID: UUID?
+    @ObservationIgnored var pendingHeadingJump: PendingHeadingJump?
+
     /// The preview block index we most recently asked the preview to scroll
     /// to because the editor moved. The next ``previewContentOffsetDidChange(_:)``
     /// report that lands on this same block is the preview confirming that

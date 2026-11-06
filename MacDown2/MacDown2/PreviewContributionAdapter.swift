@@ -1,4 +1,5 @@
 import Contributions
+import ExportService
 import Foundation
 import MarkdownEngine
 import Preview
@@ -12,6 +13,12 @@ import Preview
 /// composition seam"). See `PreviewContributionAdmission.swift` and
 /// `PreviewContributionComposer.swift` for the pipeline this delegates to.
 enum PreviewContributionAdapter {
+    enum HeadingState: Sendable {
+        case preparing
+        case unavailable
+        case prepared(HeadingAnchorPreparation)
+    }
+
     /// Runs the standard contribution registry for one document snapshot.
     /// Cancellation, and any other thrown error, propagates to the caller —
     /// this never converts a cancelled or failed run into an empty result
@@ -19,10 +26,28 @@ enum PreviewContributionAdapter {
     static func results(
         document: MarkdownDocument?,
         text: String?,
-        generation: UInt
+        generation: UInt,
+        headingState: HeadingState? = nil
     ) async throws -> [ContributionResult] {
         guard let document, let text else { return [] }
-        return try await ContributionRegistry.standard.run(
+        let registry: ContributionRegistry
+        switch headingState {
+        case nil: registry = .standard
+        case .preparing: return []
+        case .unavailable:
+            guard TOCContribution.containsMarker(in: text, document: document) else { return [] }
+            let diagnostic = ContributionDiagnostic(
+                severity: .error,
+                message: TOCContribution.navigationUnavailableMessage
+            )
+            let result = ContributionResult(
+                contributionID: "toc", content: nil, sourceGeneration: generation, diagnostics: [diagnostic]
+            )
+            return [result]
+        case let .prepared(preparation):
+            registry = ContributionRegistry(contributions: [TOCContribution(headingIndex: preparation.index)])
+        }
+        return try await registry.run(
             document: document, sourceText: text, sourceGeneration: generation
         )
     }

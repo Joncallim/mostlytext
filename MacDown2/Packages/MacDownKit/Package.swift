@@ -250,7 +250,7 @@ let package = Package(
         .testTarget(
             name: "ExportDiagramIntegrationTests",
             dependencies: [
-                "ExportService", "Diagrams", "DiagramRendering",
+                "ExportService", "Contributions", "MarkdownEngine", "Themes", "Diagrams", "DiagramRendering",
                 "DiagramsD2", "D2Rendering", "DiagramsGraphviz", "GraphvizRendering",
             ]
         ),

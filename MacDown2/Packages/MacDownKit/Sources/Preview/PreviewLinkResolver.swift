@@ -1,4 +1,5 @@
 import Foundation
+import MarkdownEngine
 
 /// Resolves links clicked in the preview.
 ///
@@ -6,9 +7,11 @@ import Foundation
 /// document's base URL when one is available.
 public struct PreviewLinkResolver: Sendable, Equatable {
     public let baseURL: URL?
+    public let headingIndex: HeadingAnchorIndex?
 
-    public init(baseURL: URL? = nil) {
+    public init(baseURL: URL? = nil, headingIndex: HeadingAnchorIndex? = nil) {
         self.baseURL = baseURL
+        self.headingIndex = headingIndex
     }
 
     /// Resolves `url` relative to the document base URL.
@@ -35,6 +38,10 @@ public struct PreviewLinkResolver: Sendable, Equatable {
         case openInApp(URL)
         /// Show a local file in Finder without opening or executing it.
         case reveal
+        /// The host must revalidate its source/parser/window binding on press.
+        case internalHeading(HeadingAnchorIndex.Heading, HeadingAnchorIdentity)
+        /// Native Preview cannot display every authored raw-HTML target.
+        case unresolvedInternal(String)
         /// Do nothing.
         case ignore
     }
@@ -43,7 +50,12 @@ public struct PreviewLinkResolver: Sendable, Equatable {
 
     /// `currentDocument` is the document being previewed: a same-document
     /// `#anchor` link resolves to that file plus a fragment, and must not reopen it.
-    public static func action(for url: URL, currentDocument: URL? = nil) -> LinkAction {
+    public static func action(
+        for url: URL, currentDocument: URL? = nil, headingIndex: HeadingAnchorIndex? = nil
+    ) -> LinkAction {
+        if let action = headingAction(for: url, currentDocument: currentDocument, index: headingIndex) {
+            return action
+        }
         switch url.scheme?.lowercased() {
         case "http", "https", "mailto":
             return .open

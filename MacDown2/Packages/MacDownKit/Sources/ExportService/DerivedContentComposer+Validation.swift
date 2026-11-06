@@ -16,6 +16,7 @@ extension DerivedContentComposer {
         let containerRanges: [Range<Int>]
         let bodyText: NSString
         let namespaceSVGIDs: Bool
+        let svgNamespaceFamily: String?
 
         /// Whether the contributed range opens with a code-fence line (after any quote/list/indent prefix).
         func startsFence(_ bodyRange: Range<Int>) -> Bool {

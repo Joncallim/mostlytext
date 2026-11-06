@@ -3,6 +3,7 @@ import Diagrams
 import DiagramsD2
 import DiagramsGraphviz
 import Foundation
+import MarkdownEngine
 import Math
 import MathRendering
 import Themes
@@ -27,13 +28,15 @@ extension ContributionRegistry {
     /// `--md-foreground` print value.
     private static let printSafeForegroundComponent = 0x1A as Double / 255.0
 
-    static func standardForExport(theme: Theme, isPrintTarget: Bool) -> ContributionRegistry {
+    static func standardForExport(
+        theme: Theme, isPrintTarget: Bool, headingIndex: HeadingAnchorIndex? = nil
+    ) -> ContributionRegistry {
         let context = mathRenderContext(theme: theme, isPrintTarget: isPrintTarget)
         let mermaidContext = mermaidRenderContext(theme: theme, isPrintTarget: isPrintTarget)
         let d2Context = d2RenderContext(theme: theme, isPrintTarget: isPrintTarget)
         let graphvizContext = graphvizRenderContext(theme: theme, isPrintTarget: isPrintTarget)
         return ContributionRegistry(contributions: [
-            TOCContribution(),
+            TOCContribution(headingIndex: headingIndex),
             SharedMathContribution(context: context) { body, style, context in
                 try await MainActor.run { try MathImageRenderer.render(body: body, style: style, context: context) }
             },
