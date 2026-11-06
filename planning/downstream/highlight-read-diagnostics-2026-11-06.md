@@ -149,3 +149,30 @@ Debug passes 1083/143. These do not waive the recorded Release ceiling failure.
 Local validation of this diagnostic addition is Python/YAML and pure owned-
 process controls only; its native entry refuses the current environment before
 creating output. No production or fixture assertions change.
+
+## App-host qualification blocker: standalone fixture window ownership
+
+Final 9161edab normal CI 42200935981 attempt 2 passes all 3,712 package
+functions/533 suites and all four app/CLI builds, then the app host crashes
+with SIG11 in XCTWaiter after the companion-image function starts. Its restart
+runs only 50/13 and cannot qualify the whole suite. The first attempt's
+independent cleanup-bound failure remains preserved; no further unchanged
+retry is requested.
+
+Orthogonal source review identifies an independently actionable lifetime error
+in the immediately preceding serial function,
+ValidatedExportPanelTests.taskCancellationDismissesTheRealSheet: its standalone
+NSWindow keeps the automatic-release-on-close default under Swift ARC. Apple's
+[documented contract](https://developer.apple.com/documentation/appkit/nswindow/isreleasedwhenclosed)
+requires Swift/ARC clients to set this false to avoid over-release. The observed
+stack/order is consistent with a lifetime defect but does not establish this
+fixture as the crash's cause.
+
+Extend this unit only to correct that test fixture's window ownership before
+presentation; keep its real panel presentation/cancellation/detachment controls
+and deadlines. Add no product/window-controller policy change. Inspect other
+standalone app-test allocations for the same documented error rather than
+blindly editing controller-owned windows. Preserve the original log, compile
+and qualify the corrected complete app suite plus existing required checks.
+Do not call the historical crash fixed from a single green run. Native
+execution remains hosted-only. No threshold, selection or retry waiver.
