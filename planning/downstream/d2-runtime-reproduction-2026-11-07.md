@@ -70,3 +70,16 @@ or notice update requires normal corresponding manifest/hash checks. Do not
 rebuild, sign, replace or publish a shipping renderer as an audit shortcut.
 There is no new UI, persistence, export, locale, cancellation or resource policy.
 The frozen integration candidate is not modified by this spike.
+
+## Preparation correction: verify the selected module inputs directly
+
+The first offline go mod verify command stops before compilation because it
+attempts to resolve a native-only websocket module outside the recorded16-module
+js/wasm selection. Preserve its original log. Verify each selected module ZIP
+using Go's canonical Hash1 construction against the existing source-graph h1
+sum, then compare every expanded module file and complete file set byte-for-byte
+to that verified ZIP. This supplies an independent complete selected-input check
+without broadening the dependency graph or enabling network resolution. Keep
+the original go.mod/go.sum and every tracked source byte unchanged. If the
+actual target build needs uncaptured metadata, preserve that first failure and
+document the exact missing immutable input before any preparation change.
