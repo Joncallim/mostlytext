@@ -1,0 +1,10 @@
+// swift-tools-version: 6.2
+import PackageDescription
+let package = Package(name: "MarkdownSessionPublicationChecks", platforms: [.macOS(.v26)], dependencies: [
+ .package(url: "https://github.com/Joncallim/swift-markdown", revision: "72e0f16233a46b247c115ef5e678a0671f7e64eb"),
+ .package(url: "https://github.com/jpsim/Yams", exact: "6.2.2")
+], targets: [
+ .target(name: "MarkdownEngine", dependencies: [.product(name: "Markdown", package: "swift-markdown"), .product(name: "Yams", package: "Yams")]),
+ .executableTarget(name: "MarkdownSessionChecks", dependencies: ["MarkdownEngine"]),
+ .testTarget(name: "MarkdownEngineTests", dependencies: ["MarkdownEngine"])
+])

@@ -71,7 +71,7 @@ public final class MarkdownParseSession {
                 clearIfCurrent(generation: generation)
                 return
             }
-            await parse(text: text, revision: revision)
+            await parse(text: text, revision: revision, generation: generation)
             clearIfCurrent(generation: generation)
         }
     }
@@ -79,8 +79,8 @@ public final class MarkdownParseSession {
     /// Immediate parse, bypassing the debounce (document open, tests).
     /// Cancels any pending debounced parse first. Publishes AND returns.
     ///
-    /// If the calling task is cancelled before the parse completes, the result
-    /// is discarded and no state is published. This prevents a stale parse for
+    /// If the caller is cancelled or a newer request/cancelPending supersedes
+    /// this generation before completion, the result is discarded without publication. This prevents a stale parse for
     /// a tab that SwiftUI has already switched away from from overwriting the
     /// session.
     @discardableResult
@@ -101,7 +101,7 @@ public final class MarkdownParseSession {
         // inserted between them or the deferred count decrement would race.
         let revision = nextRevision
         nextRevision += 1
-        let result = await parse(text: text, revision: revision)
+        let result = await parse(text: text, revision: revision, generation: generation)
         clearIfCurrent(generation: generation)
         return result
     }
@@ -121,15 +121,15 @@ public final class MarkdownParseSession {
     }
 
     @discardableResult
-    private func parse(text: String, revision: Int) async -> MarkdownDocument? {
+    private func parse(text: String, revision: Int, generation: Int) async -> MarkdownDocument? {
         isParsing = true
         defer { refreshParsingState() }
 
         do {
             let result = try await engine.parse(text, options: options, revision: revision)
-            // A cancelled task must not publish: the identity that requested this
-            // parse may have been switched away by the time the engine returns.
-            guard !Task.isCancelled else { return nil }
+            // Session cancellation and newer requests also revoke publication, even when the immediate
+            // caller itself remains alive. Physical work stays counted until its own await returns.
+            guard !Task.isCancelled, pendingGeneration == generation else { return nil }
             guard result.revision > (document?.revision ?? 0) else {
                 return nil
             }
