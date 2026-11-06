@@ -75,3 +75,34 @@ Cold Apple-trusted launch, signing/notary, dirty-close cancel/Save As, persisten
 stdin fidelity, full protocol corpus, migration/update and owner UI journeys
 retain their original owning criteria. No release/publication authorization is
 inferred from this narrowly controlled warm comparison.
+
+## Preserve the first refusal and observe actual startup readiness
+
+First source1515733e run42297310075 actually launches the normal Release app,
+then the fresh file command returns5 without a timeout. The clean app normally
+terminates. After explicitly setting the existing first-run key, a second actual
+launch still has no endpoint within the unchanged10s bound, so configured
+file/stdin/wait checks do not run. Its same PID/path/launch-date cleanup succeeds.
+All1588source hashes/24pins, actual synthetic checkout tree, app/helper digests,
+owned normal1 status and unchanged synthetic source bytes are independently
+verified. Welcome alone is NOT a sufficient diagnosis. Keep the first full job,
+receipt, commands and unexecuted comparisons; no source fix follows from it.
+
+A new diagnostic must distinguish migration/readiness from listener/endpoint
+failure. Keep production source, Release configuration, signing/cold-launch
+policy, launch arguments, original10s bound and every acceptance criterion
+unchanged. Extend only the hosted harness/controller to capture actual window
+metadata for its identity-bound PID using CoreGraphics' ordinary window list
+(no screenshot, accessibility automation or permission bypass), a bounded
+same-PID stack sample, bounded unified log output and no-follow metadata under
+the runner's fixed first-party Application Support roots. Before launch, record
+whether those roots already existed; never delete or rewrite them. Copy only
+bounded JSON migration records from the newly generated MostlyText root; do not
+read other application stores or credential domains. Record the real first-run
+key after configuration, using defaults read, to distinguish failed persistence.
+Do not write any app model, override domain/endpoint, dismiss a window or start
+a listener from the harness. Captures happen after the original refusal/deadline,
+are labelled failure observations and never decide success. Each external capture
+has a finite bound and its raw refusal is retained. Missing window titles or log
+permission are missing evidence, not an empty/ready app verdict. Keep all
+criteria, no unchanged retry and no diagnostic-branch merge as a production fix.
