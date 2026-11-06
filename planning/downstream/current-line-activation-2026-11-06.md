@@ -194,3 +194,24 @@ locked owners/revisions before and after execution. Do not adapt production
 sources, replace a native type or omit any of the 1,082 selected candidate tests.
 The native glyph-orientation mutant and restored positive control also use those
 same actual products, with exact source restoration and separate execution hashes.
+
+
+## Qualified Debug behavior and stricter optimized regression
+
+At 77ada868 all 1,082 actual editor/highlighter/theme tests pass in Debug. Both
+common baseline controls still fail exactly as expected; native empty/EOF rows
+now paint. The actual orientation mutant scores 0.1886 and fails the unchanged
+>0.6 assertion; restored production passes. Release executes the entire same
+corpus and all current-line controls pass, including the 10 MiB draw's 38 visits
+in 0.789167 ms. Its sole failure is an inherited Release-only widened-edit test:
+withKnownIssue now reports that no issue occurred because edited/fresh parity
+actually matches. Remove that stale expected-failure wrapper and require actual
+nonempty, equal rendered output as a strict Release regression. Do not mark the
+separately recorded Debug abort fixed or enable its unsafe experiment; #19 still
+owns controlled native interleaving/root-cause qualification. A future Release
+parity failure must fail normally, not be masked as intermittent.
+
+There is no functional ordering dependency on PR98. The first independently
+qualified branch may integrate first; the later branch must synchronize with it
+and qualify the exact combined tree before merge. Owner acceptance and every
+wider E22/E23 gate remain explicit.
