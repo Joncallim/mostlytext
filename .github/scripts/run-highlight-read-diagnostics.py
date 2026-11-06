@@ -86,7 +86,17 @@ def main():
         raise SystemExit('Owned helper copy changed')
     subprocess.run(['codesign', '--force', '--sign', '-', str(owned)], check=True)
     subprocess.run(['codesign', '--verify', '--strict', str(owned)], check=True)
-    dependency = destination / 'build/checkouts/SwiftTreeSitter/Sources/SwiftTreeSitter/String+Data.swift'
+    dependency_root = destination / 'build/checkouts/SwiftTreeSitter'
+    dependency_relative = 'Sources/SwiftTreeSitter/String+Data.swift'
+    dependency = dependency_root / dependency_relative
+    pinned = [pin for pin in pins if pin['identity'] == 'swifttreesitter']
+    if len(pinned) != 1 or output(['git', 'rev-parse', 'HEAD'], cwd=dependency_root) != pinned[0]['state']['revision']:
+        raise SystemExit('The assertion dependency is not the committed revision')
+    committed = subprocess.check_output(['git', 'show', 'HEAD:' + dependency_relative], cwd=dependency_root)
+    if dependency.read_bytes() != committed:
+        raise SystemExit('The original dependency assertion source was modified')
+    receipt['assertion_dependency'] = {'revision': pinned[0]['state']['revision'], 'path': dependency_relative,
+                                       'sha256': digest(dependency)}
     lines = dependency.read_text().splitlines()
     sites = [i + 1 for i, line in enumerate(lines) if 'assertionFailure("location is greater than end")' in line]
     if len(sites) != 1:
