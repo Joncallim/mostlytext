@@ -1,0 +1,13 @@
+{
+  "returncode": 0,
+  "command": [
+    "/Volumes/Fast SSD/CORTANA-Builds/capture-order-materialization-20261107/fixture/.build/arm64-apple-macosx/release/ParserQueryProfile",
+    "5",
+    "/Volumes/Fast SSD/CORTANA-Builds/capture-order-materialization-20261107/ordering-spike-ordered-highlights.json"
+  ],
+  "binary_sha256": "299bc209db2a358a8e9a98d1d84137ea5ef65726b04eef2897a5f1e9279c6663",
+  "elapsed_seconds": 2.6897973748855293,
+  "only_component_source_delta": [
+    "Sources/SwiftTreeSitter/QueryDefinitions.swift"
+  ]
+}

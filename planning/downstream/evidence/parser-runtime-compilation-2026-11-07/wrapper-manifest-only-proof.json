@@ -1,0 +1,18 @@
+[
+  {
+    "component": "swifttreesitter",
+    "parent": "8a7e21004d4964df8d427b9c8ed1043b63f43ae3",
+    "head": "76f93e7e325dcd05561a13ed63bcc92cb85be8da",
+    "only_changed_git_object": "Package.swift",
+    "other_git_objects_exact": 102,
+    "original_license_sha256": "792197b8debcdecb17f429bab3a43a5911364e2a6e8e7c0f7faf02032212fb5f"
+  },
+  {
+    "component": "neon",
+    "parent": "f97aca5b3c8060323dd98e020fa4cadf8f0fa21f",
+    "head": "6074d1a50c7076b2e59d8d0619554b542e096afa",
+    "only_changed_git_object": "Package.swift",
+    "other_git_objects_exact": 81,
+    "original_license_sha256": "d11b5eea8e9ae2f6dd06545633e8daf0dfcbc7dbb911a20d1504c905e5808775"
+  }
+]

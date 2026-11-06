@@ -1,0 +1,10 @@
+{
+  "command": [
+    "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/ParserQueryProfile",
+    "5",
+    "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/paired-v2-combined-ordered.json"
+  ],
+  "returncode": 0,
+  "binary_sha256": "e65b9225124f0aa27d7e429a0b63a099f55fe0bea306bc0cec8150d5dec1e80d",
+  "elapsed_seconds": 2.2253447910770774
+}

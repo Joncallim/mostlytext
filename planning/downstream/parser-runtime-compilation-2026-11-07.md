@@ -61,3 +61,33 @@ the current package. The candidate source list is therefore exactly
 No C file, macro, wasm configuration, header or implementation is omitted or
 rewritten. Compare the complete effective original13-file set to the twelve
 includes plus the retained stdlib file before accepting this build experiment.
+
+## Adopted component result, pending actual native qualification
+
+The exact original and combined package builds preserve all23,256 ordered
+highlights, metadata/current-range/alias/independent-cursor positives and all260
+defined external C symbol names. Actual compiler/linker records retain the same
+C11/feature/optimization flags and complete13-file implementation set. Five-run
+medians are232.540125ms versus210.33625ms; the declared paired confirmation gives
+240.56825ms versus213.219417ms. Retain the initial object-path readback and copied
+file-mode setup failures; neither is a failed product assertion or native retry.
+
+Immutable runtime3b1fb00f8c4f8907073f9b7342a807a0231867fa changes only Package.swift
+and patch notes fromcd96b385, keeping487 other Git objects exact. Manifest-only
+SwiftTreeSitter76f93e7e325dcd05561a13ed63bcc92cb85be8da and Neon
+6074d1a50c7076b2e59d8d0619554b542e096afa retain102/81 other objects respectively.
+Only these three pins change; the other21 owners/revisions and original licences
+remain exact. The C qualifier permits only the original subtree.c repair plus
+the exact two-line Package.swift source-list change, verifies all13 effective C
+source hashes and retains the separate conditional stdlib file. Its5 complete
+C semantic/work/sanitizer phases pass again, with1,590 current application input
+hashes/24pins and actual local executable digests independently verified. This
+qualifies the unchanged C semantics, not the separate package-build delta alone.
+
+The actual optimized HighlightingTests target compiles through the new resolved
+graph and lib.c input; all330 compliance tests, inventory, strict lint/pinned
+format,6 model pin controls and4 C-authority controls pass. No owner-native
+execution occurs. Complete evidence and the preceding503.522292ms failure are
+retained in planning/downstream/evidence/parser-runtime-compilation-2026-11-07.
+Fresh exact-head full app/package and every required native configuration and
+integration gate remain mandatory before merge; local improvements waive none.

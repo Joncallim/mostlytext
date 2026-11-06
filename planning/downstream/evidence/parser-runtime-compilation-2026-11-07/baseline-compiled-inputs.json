@@ -1,0 +1,489 @@
+{
+  "objects": [
+    "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/node.c.o",
+    "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/lexer.c.o",
+    "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/parser.c.o",
+    "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/stack.c.o",
+    "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/subtree.c.o",
+    "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/query.c.o",
+    "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/tree.c.o",
+    "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/wasm_store.c.o",
+    "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/wasm/stdlib.c.o",
+    "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/tree_cursor.c.o",
+    "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/language.c.o",
+    "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/get_changed_ranges.c.o",
+    "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/alloc.c.o"
+  ],
+  "public_and_external_symbols": [
+    "__ts_dup",
+    "_ts_current_calloc",
+    "_ts_current_free",
+    "_ts_current_malloc",
+    "_ts_current_realloc",
+    "_ts_external_scanner_state_copy",
+    "_ts_external_scanner_state_data",
+    "_ts_external_scanner_state_delete",
+    "_ts_external_scanner_state_eq",
+    "_ts_external_scanner_state_init",
+    "_ts_language_abi_version",
+    "_ts_language_copy",
+    "_ts_language_delete",
+    "_ts_language_field_count",
+    "_ts_language_field_id_for_name",
+    "_ts_language_field_name_for_id",
+    "_ts_language_is_reserved_word",
+    "_ts_language_is_wasm",
+    "_ts_language_lex_mode_for_state",
+    "_ts_language_metadata",
+    "_ts_language_name",
+    "_ts_language_next_state",
+    "_ts_language_public_symbol",
+    "_ts_language_state_count",
+    "_ts_language_subtypes",
+    "_ts_language_supertypes",
+    "_ts_language_symbol_count",
+    "_ts_language_symbol_for_name",
+    "_ts_language_symbol_metadata",
+    "_ts_language_symbol_name",
+    "_ts_language_symbol_type",
+    "_ts_language_table_entry",
+    "_ts_language_version",
+    "_ts_lexer_delete",
+    "_ts_lexer_finish",
+    "_ts_lexer_included_ranges",
+    "_ts_lexer_init",
+    "_ts_lexer_mark_end",
+    "_ts_lexer_reset",
+    "_ts_lexer_set_included_ranges",
+    "_ts_lexer_set_input",
+    "_ts_lexer_start",
+    "_ts_lookahead_iterator_current_symbol",
+    "_ts_lookahead_iterator_current_symbol_name",
+    "_ts_lookahead_iterator_delete",
+    "_ts_lookahead_iterator_language",
+    "_ts_lookahead_iterator_new",
+    "_ts_lookahead_iterator_next",
+    "_ts_lookahead_iterator_reset",
+    "_ts_lookahead_iterator_reset_state",
+    "_ts_node_child",
+    "_ts_node_child_by_field_id",
+    "_ts_node_child_by_field_name",
+    "_ts_node_child_count",
+    "_ts_node_child_with_descendant",
+    "_ts_node_descendant_count",
+    "_ts_node_descendant_for_byte_range",
+    "_ts_node_descendant_for_point_range",
+    "_ts_node_edit",
+    "_ts_node_end_byte",
+    "_ts_node_end_point",
+    "_ts_node_eq",
+    "_ts_node_field_name_for_child",
+    "_ts_node_field_name_for_named_child",
+    "_ts_node_first_child_for_byte",
+    "_ts_node_first_named_child_for_byte",
+    "_ts_node_grammar_symbol",
+    "_ts_node_grammar_type",
+    "_ts_node_has_changes",
+    "_ts_node_has_error",
+    "_ts_node_is_error",
+    "_ts_node_is_extra",
+    "_ts_node_is_missing",
+    "_ts_node_is_named",
+    "_ts_node_is_null",
+    "_ts_node_language",
+    "_ts_node_named_child",
+    "_ts_node_named_child_count",
+    "_ts_node_named_descendant_for_byte_range",
+    "_ts_node_named_descendant_for_point_range",
+    "_ts_node_new",
+    "_ts_node_next_named_sibling",
+    "_ts_node_next_parse_state",
+    "_ts_node_next_sibling",
+    "_ts_node_parent",
+    "_ts_node_parse_state",
+    "_ts_node_prev_named_sibling",
+    "_ts_node_prev_sibling",
+    "_ts_node_start_byte",
+    "_ts_node_start_point",
+    "_ts_node_string",
+    "_ts_node_symbol",
+    "_ts_node_type",
+    "_ts_parser_cancellation_flag",
+    "_ts_parser_delete",
+    "_ts_parser_included_ranges",
+    "_ts_parser_language",
+    "_ts_parser_logger",
+    "_ts_parser_new",
+    "_ts_parser_parse",
+    "_ts_parser_parse_string",
+    "_ts_parser_parse_string_encoding",
+    "_ts_parser_parse_with_options",
+    "_ts_parser_print_dot_graphs",
+    "_ts_parser_reset",
+    "_ts_parser_set_cancellation_flag",
+    "_ts_parser_set_included_ranges",
+    "_ts_parser_set_language",
+    "_ts_parser_set_logger",
+    "_ts_parser_set_timeout_micros",
+    "_ts_parser_set_wasm_store",
+    "_ts_parser_take_wasm_store",
+    "_ts_parser_timeout_micros",
+    "_ts_query__step_is_fallible",
+    "_ts_query_capture_count",
+    "_ts_query_capture_name_for_id",
+    "_ts_query_capture_quantifier_for_id",
+    "_ts_query_cursor__compare_captures",
+    "_ts_query_cursor__compare_nodes",
+    "_ts_query_cursor_delete",
+    "_ts_query_cursor_did_exceed_match_limit",
+    "_ts_query_cursor_exec",
+    "_ts_query_cursor_exec_with_options",
+    "_ts_query_cursor_match_limit",
+    "_ts_query_cursor_new",
+    "_ts_query_cursor_next_capture",
+    "_ts_query_cursor_next_match",
+    "_ts_query_cursor_remove_match",
+    "_ts_query_cursor_set_byte_range",
+    "_ts_query_cursor_set_match_limit",
+    "_ts_query_cursor_set_max_start_depth",
+    "_ts_query_cursor_set_point_range",
+    "_ts_query_cursor_set_timeout_micros",
+    "_ts_query_cursor_timeout_micros",
+    "_ts_query_delete",
+    "_ts_query_disable_capture",
+    "_ts_query_disable_pattern",
+    "_ts_query_end_byte_for_pattern",
+    "_ts_query_is_pattern_guaranteed_at_step",
+    "_ts_query_is_pattern_non_local",
+    "_ts_query_is_pattern_rooted",
+    "_ts_query_new",
+    "_ts_query_pattern_count",
+    "_ts_query_predicates_for_pattern",
+    "_ts_query_start_byte_for_pattern",
+    "_ts_query_string_count",
+    "_ts_query_string_value_for_id",
+    "_ts_range_array_get_changed_ranges",
+    "_ts_range_array_intersects",
+    "_ts_set_allocator",
+    "_ts_stack_can_merge",
+    "_ts_stack_clear",
+    "_ts_stack_copy_version",
+    "_ts_stack_delete",
+    "_ts_stack_dynamic_precedence",
+    "_ts_stack_error_cost",
+    "_ts_stack_get_summary",
+    "_ts_stack_halt",
+    "_ts_stack_halted_version_count",
+    "_ts_stack_has_advanced_since_error",
+    "_ts_stack_is_active",
+    "_ts_stack_is_halted",
+    "_ts_stack_is_paused",
+    "_ts_stack_last_external_token",
+    "_ts_stack_merge",
+    "_ts_stack_new",
+    "_ts_stack_node_count_since_error",
+    "_ts_stack_pause",
+    "_ts_stack_pop_all",
+    "_ts_stack_pop_count",
+    "_ts_stack_pop_error",
+    "_ts_stack_pop_pending",
+    "_ts_stack_position",
+    "_ts_stack_print_dot_graph",
+    "_ts_stack_push",
+    "_ts_stack_record_summary",
+    "_ts_stack_remove_version",
+    "_ts_stack_renumber_version",
+    "_ts_stack_resume",
+    "_ts_stack_set_last_external_token",
+    "_ts_stack_state",
+    "_ts_stack_swap_versions",
+    "_ts_stack_version_count",
+    "_ts_subtree__print_dot_graph",
+    "_ts_subtree_array_clear",
+    "_ts_subtree_array_copy",
+    "_ts_subtree_array_delete",
+    "_ts_subtree_array_remove_trailing_extras",
+    "_ts_subtree_array_reverse",
+    "_ts_subtree_clone",
+    "_ts_subtree_compare",
+    "_ts_subtree_compress",
+    "_ts_subtree_edit",
+    "_ts_subtree_external_scanner_state",
+    "_ts_subtree_external_scanner_state_eq",
+    "_ts_subtree_get_changed_ranges",
+    "_ts_subtree_last_external_token",
+    "_ts_subtree_make_mut",
+    "_ts_subtree_new_error",
+    "_ts_subtree_new_error_node",
+    "_ts_subtree_new_leaf",
+    "_ts_subtree_new_missing_leaf",
+    "_ts_subtree_new_node",
+    "_ts_subtree_pool_delete",
+    "_ts_subtree_pool_new",
+    "_ts_subtree_print_dot_graph",
+    "_ts_subtree_release",
+    "_ts_subtree_retain",
+    "_ts_subtree_set_symbol",
+    "_ts_subtree_string",
+    "_ts_subtree_summarize_children",
+    "_ts_tree_copy",
+    "_ts_tree_cursor_copy",
+    "_ts_tree_cursor_current_depth",
+    "_ts_tree_cursor_current_descendant_index",
+    "_ts_tree_cursor_current_field_id",
+    "_ts_tree_cursor_current_field_name",
+    "_ts_tree_cursor_current_node",
+    "_ts_tree_cursor_current_status",
+    "_ts_tree_cursor_delete",
+    "_ts_tree_cursor_goto_descendant",
+    "_ts_tree_cursor_goto_first_child",
+    "_ts_tree_cursor_goto_first_child_for_byte",
+    "_ts_tree_cursor_goto_first_child_for_point",
+    "_ts_tree_cursor_goto_first_child_internal",
+    "_ts_tree_cursor_goto_last_child",
+    "_ts_tree_cursor_goto_last_child_internal",
+    "_ts_tree_cursor_goto_next_sibling",
+    "_ts_tree_cursor_goto_next_sibling_internal",
+    "_ts_tree_cursor_goto_parent",
+    "_ts_tree_cursor_goto_previous_sibling",
+    "_ts_tree_cursor_goto_previous_sibling_internal",
+    "_ts_tree_cursor_goto_sibling_internal",
+    "_ts_tree_cursor_init",
+    "_ts_tree_cursor_new",
+    "_ts_tree_cursor_parent_node",
+    "_ts_tree_cursor_reset",
+    "_ts_tree_cursor_reset_to",
+    "_ts_tree_delete",
+    "_ts_tree_edit",
+    "_ts_tree_get_changed_ranges",
+    "_ts_tree_included_ranges",
+    "_ts_tree_language",
+    "_ts_tree_new",
+    "_ts_tree_print_dot_graph",
+    "_ts_tree_root_node",
+    "_ts_tree_root_node_with_offset",
+    "_ts_wasm_language_release",
+    "_ts_wasm_language_retain",
+    "_ts_wasm_store_call_lex_keyword",
+    "_ts_wasm_store_call_lex_main",
+    "_ts_wasm_store_call_scanner_create",
+    "_ts_wasm_store_call_scanner_deserialize",
+    "_ts_wasm_store_call_scanner_destroy",
+    "_ts_wasm_store_call_scanner_scan",
+    "_ts_wasm_store_call_scanner_serialize",
+    "_ts_wasm_store_delete",
+    "_ts_wasm_store_has_error",
+    "_ts_wasm_store_reset",
+    "_ts_wasm_store_start"
+  ],
+  "compiler_commands": [
+    {
+      "source": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/runtime/tree-sitter/lib/src/node.c",
+      "object": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/node.c.o",
+      "defines": [
+        "-DSWIFT_PACKAGE=1",
+        "-D_DARWIN_C_SOURCE",
+        "-D_DEFAULT_SOURCE",
+        "-D_POSIX_C_SOURCE=200112L"
+      ],
+      "standard": [
+        "-std=c11"
+      ],
+      "optimization": [
+        "-O2"
+      ]
+    },
+    {
+      "source": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/runtime/tree-sitter/lib/src/lexer.c",
+      "object": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/lexer.c.o",
+      "defines": [
+        "-DSWIFT_PACKAGE=1",
+        "-D_DARWIN_C_SOURCE",
+        "-D_DEFAULT_SOURCE",
+        "-D_POSIX_C_SOURCE=200112L"
+      ],
+      "standard": [
+        "-std=c11"
+      ],
+      "optimization": [
+        "-O2"
+      ]
+    },
+    {
+      "source": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/runtime/tree-sitter/lib/src/parser.c",
+      "object": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/parser.c.o",
+      "defines": [
+        "-DSWIFT_PACKAGE=1",
+        "-D_DARWIN_C_SOURCE",
+        "-D_DEFAULT_SOURCE",
+        "-D_POSIX_C_SOURCE=200112L"
+      ],
+      "standard": [
+        "-std=c11"
+      ],
+      "optimization": [
+        "-O2"
+      ]
+    },
+    {
+      "source": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/runtime/tree-sitter/lib/src/stack.c",
+      "object": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/stack.c.o",
+      "defines": [
+        "-DSWIFT_PACKAGE=1",
+        "-D_DARWIN_C_SOURCE",
+        "-D_DEFAULT_SOURCE",
+        "-D_POSIX_C_SOURCE=200112L"
+      ],
+      "standard": [
+        "-std=c11"
+      ],
+      "optimization": [
+        "-O2"
+      ]
+    },
+    {
+      "source": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/runtime/tree-sitter/lib/src/subtree.c",
+      "object": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/subtree.c.o",
+      "defines": [
+        "-DSWIFT_PACKAGE=1",
+        "-D_DARWIN_C_SOURCE",
+        "-D_DEFAULT_SOURCE",
+        "-D_POSIX_C_SOURCE=200112L"
+      ],
+      "standard": [
+        "-std=c11"
+      ],
+      "optimization": [
+        "-O2"
+      ]
+    },
+    {
+      "source": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/runtime/tree-sitter/lib/src/query.c",
+      "object": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/query.c.o",
+      "defines": [
+        "-DSWIFT_PACKAGE=1",
+        "-D_DARWIN_C_SOURCE",
+        "-D_DEFAULT_SOURCE",
+        "-D_POSIX_C_SOURCE=200112L"
+      ],
+      "standard": [
+        "-std=c11"
+      ],
+      "optimization": [
+        "-O2"
+      ]
+    },
+    {
+      "source": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/runtime/tree-sitter/lib/src/tree.c",
+      "object": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/tree.c.o",
+      "defines": [
+        "-DSWIFT_PACKAGE=1",
+        "-D_DARWIN_C_SOURCE",
+        "-D_DEFAULT_SOURCE",
+        "-D_POSIX_C_SOURCE=200112L"
+      ],
+      "standard": [
+        "-std=c11"
+      ],
+      "optimization": [
+        "-O2"
+      ]
+    },
+    {
+      "source": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/runtime/tree-sitter/lib/src/wasm_store.c",
+      "object": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/wasm_store.c.o",
+      "defines": [
+        "-DSWIFT_PACKAGE=1",
+        "-D_DARWIN_C_SOURCE",
+        "-D_DEFAULT_SOURCE",
+        "-D_POSIX_C_SOURCE=200112L"
+      ],
+      "standard": [
+        "-std=c11"
+      ],
+      "optimization": [
+        "-O2"
+      ]
+    },
+    {
+      "source": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/runtime/tree-sitter/lib/src/wasm/stdlib.c",
+      "object": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/wasm/stdlib.c.o",
+      "defines": [
+        "-DSWIFT_PACKAGE=1",
+        "-D_DARWIN_C_SOURCE",
+        "-D_DEFAULT_SOURCE",
+        "-D_POSIX_C_SOURCE=200112L"
+      ],
+      "standard": [
+        "-std=c11"
+      ],
+      "optimization": [
+        "-O2"
+      ]
+    },
+    {
+      "source": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/runtime/tree-sitter/lib/src/tree_cursor.c",
+      "object": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/tree_cursor.c.o",
+      "defines": [
+        "-DSWIFT_PACKAGE=1",
+        "-D_DARWIN_C_SOURCE",
+        "-D_DEFAULT_SOURCE",
+        "-D_POSIX_C_SOURCE=200112L"
+      ],
+      "standard": [
+        "-std=c11"
+      ],
+      "optimization": [
+        "-O2"
+      ]
+    },
+    {
+      "source": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/runtime/tree-sitter/lib/src/language.c",
+      "object": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/language.c.o",
+      "defines": [
+        "-DSWIFT_PACKAGE=1",
+        "-D_DARWIN_C_SOURCE",
+        "-D_DEFAULT_SOURCE",
+        "-D_POSIX_C_SOURCE=200112L"
+      ],
+      "standard": [
+        "-std=c11"
+      ],
+      "optimization": [
+        "-O2"
+      ]
+    },
+    {
+      "source": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/runtime/tree-sitter/lib/src/get_changed_ranges.c",
+      "object": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/get_changed_ranges.c.o",
+      "defines": [
+        "-DSWIFT_PACKAGE=1",
+        "-D_DARWIN_C_SOURCE",
+        "-D_DEFAULT_SOURCE",
+        "-D_POSIX_C_SOURCE=200112L"
+      ],
+      "standard": [
+        "-std=c11"
+      ],
+      "optimization": [
+        "-O2"
+      ]
+    },
+    {
+      "source": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/runtime/tree-sitter/lib/src/alloc.c",
+      "object": "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/fixture/.build/arm64-apple-macosx/release/TreeSitter.build/src/alloc.c.o",
+      "defines": [
+        "-DSWIFT_PACKAGE=1",
+        "-D_DARWIN_C_SOURCE",
+        "-D_DEFAULT_SOURCE",
+        "-D_POSIX_C_SOURCE=200112L"
+      ],
+      "standard": [
+        "-std=c11"
+      ],
+      "optimization": [
+        "-O2"
+      ]
+    }
+  ]
+}

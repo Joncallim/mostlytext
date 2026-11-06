@@ -1,0 +1,29 @@
+[
+  {
+    "artifact": "current-line-theme-release",
+    "phase": "baseline",
+    "source_head": "4d7adc9047e7fdffe0569a0b0a231feb39a3b973",
+    "checkout": "6667bc9c1cb74534eafc417d921c3a37c55628b0",
+    "verified_source_hashes": 1552,
+    "verified_copied_tests": 1,
+    "manifest_verified": true,
+    "verified_pins": 24,
+    "results": [
+      "\u2718 Test run with 2 tests in 1 suite failed after 2.394 seconds with 2 issues."
+    ]
+  },
+  {
+    "artifact": "current-line-theme-release",
+    "phase": "candidate",
+    "source_head": "4d7adc9047e7fdffe0569a0b0a231feb39a3b973",
+    "checkout": "98e3d2460bb640e996e87a71e254257af00fd762",
+    "verified_source_hashes": 1587,
+    "verified_copied_tests": 147,
+    "manifest_verified": true,
+    "verified_pins": 24,
+    "results": [
+      "CURRENT-LINE-PHASE source_bytes=10530000 visited=38 duration=0.00122675 seconds",
+      "\u2718 Test run with 1086 tests in 144 suites failed after 128.867 seconds with 1 issue."
+    ]
+  }
+]
