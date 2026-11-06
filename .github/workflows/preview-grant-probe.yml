@@ -96,6 +96,21 @@ jobs:
             -only-testing:MacDown2Tests/SecuredPreviewNetworkTests \
             "$PREVIEW_PHASE_SELECTION" test-without-building \
             | tee "$RUNNER_TEMP/preview-grant-probe/probe.log"
+      - name: Execute controlled native image and selection publication
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/run-owned-app-tests.py "$RUNNER_TEMP/preview-grant-probe/selection-diagnostics" \
+            "$RUNNER_TEMP/preview-grant-app/Build/Products/${{ matrix.configuration }}/MacDown2.app/Contents/MacOS/MacDown2" -- \
+            xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
+            -configuration ${{ matrix.configuration }} ENABLE_TESTABILITY=YES \
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE' \
+            -destination 'platform=macOS,arch=arm64' ONLY_ACTIVE_ARCH=YES -derivedDataPath "$RUNNER_TEMP/preview-grant-app" \
+            -onlyUsePackageVersionsFromResolvedFile -parallel-testing-enabled NO \
+            -only-testing:MacDown2Tests/TextualImageSelectionPublicationTests test-without-building \
+            | tee "$RUNNER_TEMP/preview-grant-probe/selection-probe.log"
+          grep -q 'IMAGE_SELECTION_TRACE_ENABLED true' "$RUNNER_TEMP/preview-grant-probe/selection-probe.log"
+          grep -q 'IMAGE_SELECTION_GATE completed=8' "$RUNNER_TEMP/preview-grant-probe/selection-probe.log"
+          grep -q 'Test run with 1 test in 1 suite passed' "$RUNNER_TEMP/preview-grant-probe/selection-probe.log"
       - name: Prove omission fails and exact restored mounted application passes
         run: python3 .github/scripts/check-preview-parsed-frame.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --pair ${{ matrix.pair }}
       - name: Verify exact source and actual selected execution

@@ -30,6 +30,14 @@
             }
         }
 
+        static var isEnabled: Bool {
+            enabled
+        }
+
+        static func dump(_ label: String) {
+            print("PREVIEW_RESOURCE_TRACE label=\(label) enabled=\(enabled) events=\(snapshot())")
+        }
+
         static func snapshot() -> String {
             guard enabled else { return "resource trace disabled" }
             return storage.lock.withLock { storage.events.joined(separator: " | ") }

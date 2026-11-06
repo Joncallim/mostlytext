@@ -17,6 +17,7 @@ struct SecuredMarkdownMountedTests {
     private let parserIdentity = UUID()
 
     @Test func aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration() async throws {
+        defer { PreviewResourceDiagnostics.dump("aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration") }
         let (folder, imageBytes) = try makeFolderWithImage()
         defer { try? FileManager.default.removeItem(at: folder) }
         let source = "![fixture](image.png)"
@@ -65,6 +66,7 @@ struct SecuredMarkdownMountedTests {
     }
 
     @Test func aNewParsedRevisionReplacesTheLoadWithoutAnotherModelEdit() async throws {
+        defer { PreviewResourceDiagnostics.dump("aNewParsedRevisionReplacesTheLoadWithoutAnotherModelEdit") }
         let (folder, imageBytes) = try makeFolderWithImage()
         defer { try? FileManager.default.removeItem(at: folder) }
         let source = "![fixture](image.png)"
@@ -112,6 +114,7 @@ struct SecuredMarkdownMountedTests {
     }
 
     @Test func hidingDuringAParsedFrameReplacementRevokesTheRetainedLoader() async throws {
+        defer { PreviewResourceDiagnostics.dump("hidingDuringAParsedFrameReplacementRevokesTheRetainedLoader") }
         let (folder, imageBytes) = try makeFolderWithImage()
         defer { try? FileManager.default.removeItem(at: folder) }
         let source = "![fixture](image.png)"
@@ -233,6 +236,7 @@ private final class LoadIDRecorder {
 
     func diagnostic(phase: String) async -> String {
         let before = await PreviewResourceAdmission.shared.globalStatus()
+        PreviewResourceDiagnostics.record("failure-only-manual-probe-begin", context: nil, detail: phase)
         let status: String
         if let lastLoader, let reference = URL(string: "image.png") {
             do {
@@ -245,6 +249,7 @@ private final class LoadIDRecorder {
         } else {
             status = "no recorded actual loader"
         }
+        PreviewResourceDiagnostics.record("failure-only-manual-probe-end", context: nil, detail: phase)
         return "phase=\(phase) loadID=\(String(describing: lastID)) disappeared=\(didDisappear) "
             + "retainedBeforeProbe=\(before.retained) reservedBeforeProbe=\(before.reserved) \(status) "
             + "fixturePNGBase64=\(imageBytes.base64EncodedString())"
