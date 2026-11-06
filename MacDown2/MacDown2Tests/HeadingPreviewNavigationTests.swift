@@ -47,8 +47,8 @@ struct HeadingPreviewNavigationTests {
         let system = try #require(fixture.controller.editorStore.existingSystem(for: identity))
         let window = try #require(fixture.controller.window)
         try #require(system.textView.window === window)
-        // The removed SwiftUI editor's dismantle may settle during the awaits
-        // above. This fixture now owns a real manually attached NSScrollView.
+        // This fixture owns the manually attached native scroll view throughout preparation.
+        // Keep its direct-owner state explicit before synchronous navigation assertions.
         print("Heading direct fixture after awaits: detached=\(system.isDetachedFromEditorView)")
         system.setAwaitingEditorView(false)
         transferred = true

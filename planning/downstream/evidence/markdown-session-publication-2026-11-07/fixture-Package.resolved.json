@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "pins": [
+    {
+      "identity": "swift-cmark",
+      "kind": "remoteSourceControl",
+      "location": "https://github.com/Joncallim/swift-cmark",
+      "state": {
+        "revision": "ff6d22e5eeacccf38a8276b27ddb9dc31ab16f5a"
+      }
+    },
+    {
+      "identity": "swift-markdown",
+      "kind": "remoteSourceControl",
+      "location": "https://github.com/Joncallim/swift-markdown",
+      "state": {
+        "revision": "72e0f16233a46b247c115ef5e678a0671f7e64eb"
+      }
+    },
+    {
+      "identity": "yams",
+      "kind": "remoteSourceControl",
+      "location": "https://github.com/jpsim/Yams",
+      "state": {
+        "revision": "a27b21e0c81c5bf42049b897a62aaf387e80f279",
+        "version": "6.2.2"
+      }
+    }
+  ]
+}
