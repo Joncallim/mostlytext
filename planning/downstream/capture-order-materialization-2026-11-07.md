@@ -61,3 +61,16 @@ Neither component timings nor source correctness waive the failed500ms guard,
 the400ms parse guard, the50ms product criterion, original assertion diagnosis or
 owner/signed-artifact acceptance. If a different algorithm or contract is needed,
 amend this architecture before changing production code.
+
+## First investigation result: do not adopt the sorting shortcut
+
+An inspected normal Foundation console executes the exact1,000,008-byte workload
+with all23,256 ordered results, real metadata, current-range/alias and64 independent
+cursor controls. The original five measurements have median query53.216541ms;
+a disposable decorate/sort implementation has53.760625ms. Its entire encoded
+ordered result matches, but no useful speed improvement is established. A bounded
+one-second sample of the original40-iteration normal console attributes152 of
+160 match-consumption samples to actual C query traversal, and only6 samples to
+Swift sorting. These are one local profile, not product benchmarks or proof of
+a final budget. Preserve both raw records and reject adoption: no owner fork,
+production query source, pin, native selection or threshold changes.
