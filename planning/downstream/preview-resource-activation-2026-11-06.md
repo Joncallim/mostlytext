@@ -381,3 +381,12 @@ and five-second deadline. Add failure-only actual HTML, decoded dimensions/color
 and native interaction/layout diagnostics; do not infer a production decode,
 publication or stale-render repair from that first timeout. The original8x8 PNG
 and all existing consumer/mutation tests remain unchanged.
+
+The first complete app CI also reports eight command-catalog consistency issues
+from the new menu action missing its catalog record. Add that literal title to
+CommandDescriptor.catalog. Its palette disposition remains notYetWired, like
+other document-panel commands requiring explicit palette-origin capture; this
+unit promises the document Preview button and native menu route. Preserve every
+existing catalog drift/duplicate/negative control. Complete normal CI remains a
+required gate, including all701 app functions/151 suites; its12 original issues
+and the separate Debug/Release53/52 four-fixture failures remain retained.
