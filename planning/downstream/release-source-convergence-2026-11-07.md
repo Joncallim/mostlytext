@@ -147,3 +147,14 @@ localisation, signed clean install/update and exact-RC gates stay explicit.
 This integration plan does not authorise bypassing those gates or publishing a
 release/site/source archive. Product strings and existing localisations are
 preserved; final post-stabilisation language acceptance remains its own work.
+
+## Assembly record
+
+All six exact unit heads are ancestors of the assembled source. Every changed
+product, canonical test and compliance-inventory blob is identical to a reviewed
+unit input. The only merge conflict was the theme-result branch: retain the
+original failure-only performance diagnostics and the shared-tree positive,
+then require the union selection1087/145. No shipping conflict resolution or
+assertion edit was needed. The corresponding package-function union is expected
+3719/536 and ordinary app704/152; full logs must confirm actual totals. Preview
+encoding already requires55/17 Debug and56/18 Release in every native pair.
