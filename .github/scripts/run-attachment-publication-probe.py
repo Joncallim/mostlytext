@@ -47,12 +47,14 @@ def owners(pins):
     return {p["identity"]: (p["location"], p["state"]["revision"]) for p in pins}
 
 
-# Exact independent updates reviewed with the query capture-name cache unit.
+# Exact independent updates reviewed with the query cache and shared-subtree runtime units.
 REVIEWED_INDEPENDENT_PIN_UPDATES = {
+    "tree-sitter": ("https://github.com/Joncallim/tree-sitter",
+                    "5ce80b6f0e29096a5f06826a3ba610c4e89bc255", "cd96b385c813b5e5ae38cbc6e67bd659db327138"),
     "neon": ("https://github.com/Joncallim/Neon",
-             "cd14f22ae8f8402b175a0bafd87560b78c7549e9", "72174c8de8f28c957fd48850b90de99899b709ee"),
+             "cd14f22ae8f8402b175a0bafd87560b78c7549e9", "f97aca5b3c8060323dd98e020fa4cadf8f0fa21f"),
     "swifttreesitter": ("https://github.com/Joncallim/SwiftTreeSitter",
-                       "0beea992c4246f93a122de846c8611c9be19aeb7", "f2163a8bc5d0f1ce76b4cead48ce0f3ade4aa9f3"),
+                       "0beea992c4246f93a122de846c8611c9be19aeb7", "8a7e21004d4964df8d427b9c8ed1043b63f43ae3"),
 }
 
 
