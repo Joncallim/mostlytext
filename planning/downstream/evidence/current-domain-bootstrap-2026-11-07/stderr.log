@@ -1,0 +1,1 @@
+2026-11-07 06:50:45.637 defaults-console[2418:90000045] Using your own bundle identifier as an NSUserDefaults suite name does not make sense and will not work. Break on _NSUserDefaults_Log_Nonsensical_Suites to find this
