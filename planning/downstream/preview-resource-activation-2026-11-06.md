@@ -234,3 +234,27 @@ or actual current Textual export. Diagnostics must still fail the original
 copy assertion and preserve all input and ownership checks. Do not infer an
 uninitialized/transparent-PNG cause, a pasteboard-service cause or a production
 repair from the current evidence. Native execution remains hosted only.
+
+## Failure-only actual selection/layout readback
+
+Source 2ad548a7 preserves label-only native copy failures in Debug disappearance
+restoration and Release revision restoration. Their initial complete selections
+pass; actual restored source/executable hashes match the original. Both failures
+have a current recorded loader that can read/decode the unchanged generated
+fixture, retained input 152/reserved input 0 before diagnostic read, and one
+visible 8×19 native text interaction view copying only its label. The actual
+attachment's selection/layout/copy state remains the unanswered boundary; this
+is not proof of a loader, model, PNG, pasteboard or scheduling cause.
+
+Add only failure-path test diagnostics. Read the actual Textual interaction's
+selection model and its actual layout collection through test-only access;
+compare cached and freshly materialized attributed content, original line
+fragments and actual attachment-run counts. For actual selected attachment
+values, record one bounded PNG result with a 1 MiB diagnostic cap (the fixture
+is 8×8); never substitute it for the native copy assertion or lift production
+limits. Introspection failure is explicit, not a fabricated empty result.
+No model/layout setter, loader/authority bypass, source/PNG mutation, deadline
+change or qualification retry is added. Preserve the original failed verdict.
+Unsigned universal Release compilation succeeds; native failure evidence must
+still be collected in the hosted job, after useful current qualification jobs
+finish. Production activation remains held for all required consumer controls.
