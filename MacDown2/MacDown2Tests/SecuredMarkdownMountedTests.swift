@@ -13,6 +13,8 @@ import Themes
 @Suite("Secured Markdown mounted attachment", .serialized)
 @MainActor
 struct SecuredMarkdownMountedTests {
+    private let parserIdentity = UUID()
+
     @Test func aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration() async throws {
         let (folder, imageBytes) = try makeFolderWithImage()
         defer { try? FileManager.default.removeItem(at: folder) }
@@ -62,25 +64,77 @@ struct SecuredMarkdownMountedTests {
             after: first, recorder: recorder, minimumRetained: initialInput + imageBytes.count
         )
         #expect(second != first)
+        try await assertGrantedImageCopies(from: hosting)
         try await assertRevocationStopsCopy(from: hosting, owner: owner, document: document, tabID: tabID)
     }
 
+    @Test func aNewParsedRevisionReplacesTheLoadWithoutAnotherModelEdit() async throws {
+        let (folder, imageBytes) = try makeFolderWithImage()
+        defer { try? FileManager.default.removeItem(at: folder) }
+        let source = "![fixture](image.png)"
+        let engine = ParseEngine()
+        let firstParse = try await engine.parse(source, revision: 1)
+        let secondParse = try await engine.parse(source, revision: 2)
+        let document = FileDocument(fileURL: folder.appendingPathComponent("story.md"), text: source)
+        let owner = PreviewResourceWindowState()
+        let tabID = UUID()
+        owner.setCurrentPreviewDocument { (tabID, document) }
+        let documentURL = try #require(document.fileURL)
+        let selection = try #require(PreviewResourceFolderSelection.fixture(
+            documentURL: documentURL, folderURL: folder
+        ))
+        let origin = try #require(owner.beginSelection(for: document))
+        try await owner.install(selection, from: origin) { document }
+        let recorder = LoadIDRecorder()
+        let initialInput = await PreviewResourceAdmission.shared.globalStatus().retained
+        let hosting = NSHostingView(rootView: mountedView(
+            document: document, parsed: firstParse, tabID: tabID, owner: owner, recorder: recorder
+        ))
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 500, height: 400),
+                              styleMask: [.titled], backing: .buffered, defer: false)
+        window.contentView = hosting
+        window.makeKeyAndOrderFront(nil)
+        defer {
+            owner.close()
+            window.orderOut(nil)
+        }
+        let originalPasteboard = snapshotPasteboard()
+        defer { restorePasteboard(originalPasteboard) }
+        hosting.layoutSubtreeIfNeeded()
+        let first = try await waitForLoad(after: nil, recorder: recorder,
+                                          minimumRetained: initialInput + imageBytes.count)
+        hosting.rootView = mountedView(
+            document: document, parsed: secondParse, tabID: tabID, owner: owner, recorder: recorder
+        )
+        hosting.layoutSubtreeIfNeeded()
+        let second = try await waitForLoad(after: first, recorder: recorder,
+                                           minimumRetained: initialInput + imageBytes.count)
+        #expect(first != second)
+        try await assertGrantedImageCopies(from: hosting)
+        #expect(firstParse.sourceSHA256 == secondParse.sourceSHA256)
+        #expect(firstParse.revision != secondParse.revision)
+    }
+
+    @ViewBuilder
     private func mountedView(
         document: FileCore.FileDocument, parsed: MarkdownDocument, tabID: UUID,
         owner: PreviewResourceWindowState,
         recorder: LoadIDRecorder
     ) -> some View {
-        SecuredMarkdownResourceHost(
-            tabID: tabID, document: document, sourceGeneration: document.mutationGeneration
-        ) { loader, loadID in
-            TextualMarkdownPreview(
-                document: parsed, text: document.text,
-                theme: PreviewTheme(theme: BundledThemes.light),
-                resourceImageLoader: loader, resourceLoadID: loadID
-            )
-            .onAppear { recorder.record(loadID) }
+        if let frame = PreviewResourceParsedFrame(parserIdentity: parserIdentity, document: parsed) {
+            SecuredMarkdownResourceHost(
+                tabID: tabID, document: document, sourceGeneration: document.mutationGeneration,
+                parsedFrame: frame
+            ) { loader, loadID in
+                TextualMarkdownPreview(
+                    document: parsed, text: document.text,
+                    theme: PreviewTheme(theme: BundledThemes.light),
+                    resourceImageLoader: loader, resourceLoadID: loadID
+                )
+                .onChange(of: loadID, initial: true) { _, id in recorder.record(id) }
+            }
+            .environment(\.previewResourceWindowState, owner)
         }
-        .environment(\.previewResourceWindowState, owner)
     }
 
     private func waitForLoad(

@@ -1,5 +1,6 @@
 import AppKit
 import ImageIO
+@testable import MacDown2
 @testable import Preview
 import Testing
 import UniformTypeIdentifiers
@@ -8,21 +9,16 @@ import UniformTypeIdentifiers
 @Suite("Secured Preview ImageIO admission", .serialized)
 @MainActor
 struct SecuredPreviewImageAdmissionTests {
-    @Test func hugePNGDimensionsAreRejectedWithoutRetainingDecodedCapacity() throws {
-        var bytes = try png()
-        #expect(bytes.count > 33)
-        // Preserve a real PNG's compressed payload, but declare an enormous raster in its valid-CRC IHDR.
-        let dimension: [UInt8] = [0, 1, 0, 0]
-        bytes.replaceSubrange(16 ..< 20, with: dimension)
-        bytes.replaceSubrange(20 ..< 24, with: dimension)
-        let checksum = crc32(bytes[12 ..< 29])
-        bytes.replaceSubrange(29 ..< 33, with: (0 ..< 4).map {
-            UInt8(truncatingIfNeeded: checksum >> ((3 - $0) * 8))
-        })
+    @Test(arguments: [(8193, 1), (4096, 4096)])
+    func hugePNGDimensionsAreRejectedWithoutRetainingDecodedCapacity(width: Int, height: Int) throws {
+        // Real compressed rasters reach ImageIO's metadata reader: one exceeds the axis cap, the other the
+        // decoded-byte cap. The small encoded input alone cannot establish safe decoded allocation.
+        let bytes = try png(width: width, height: height)
+        #expect(bytes.count < PreviewResourceAdmission.resourceLimit)
         let source = try #require(CGImageSourceCreateWithData(bytes as CFData, nil))
         let properties = try #require(CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as NSDictionary?)
-        #expect((properties[kCGImagePropertyPixelWidth] as? NSNumber)?.intValue == 65536)
-        #expect((properties[kCGImagePropertyPixelHeight] as? NSNumber)?.intValue == 65536)
+        #expect((properties[kCGImagePropertyPixelWidth] as? NSNumber)?.intValue == width)
+        #expect((properties[kCGImagePropertyPixelHeight] as? NSNumber)?.intValue == height)
         let budget = PreviewImageDecodeBudget()
         #expect(throws: PreviewImageLoadError.self) {
             _ = try PreviewImageDecoder.decode(bytes, budget: budget)
@@ -61,23 +57,14 @@ struct SecuredPreviewImageAdmissionTests {
         #expect(budget.reservedBytes == 8 * 8 * 8)
     }
 
-    private func png() throws -> Data {
+    private func png(width: Int = 8, height: Int = 8) throws -> Data {
         let bitmap = try #require(NSBitmapImageRep(
-            bitmapDataPlanes: nil, pixelsWide: 8, pixelsHigh: 8,
+            bitmapDataPlanes: nil, pixelsWide: width, pixelsHigh: height,
             bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true,
             isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0
         ))
+        let storage = try #require(bitmap.bitmapData)
+        storage.initialize(repeating: 0, count: bitmap.bytesPerRow * height)
         return try #require(bitmap.representation(using: .png, properties: [:]))
-    }
-
-    private func crc32(_ bytes: Data.SubSequence) -> UInt32 {
-        var checksum = UInt32.max
-        for byte in bytes {
-            checksum ^= UInt32(byte)
-            for _ in 0 ..< 8 {
-                checksum = (checksum >> 1) ^ (checksum & 1 == 0 ? 0 : 0xEDB8_8320)
-            }
-        }
-        return ~checksum
     }
 }

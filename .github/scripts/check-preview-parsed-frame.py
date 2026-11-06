@@ -1,0 +1,96 @@
+#!/usr/bin/env python3
+"""Prove mounted Markdown rejects an omitted revision and replacement of its outer viewport."""
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import subprocess
+import sys
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('output', type=Path)
+    parser.add_argument('configuration', choices=['Debug', 'Release'])
+    args = parser.parse_args()
+    if os.environ.get('CI') != 'true':
+        parser.error('Only the owned hosted app products may execute')
+    repo = Path(__file__).resolve().parents[2]
+    source = repo / 'MacDown2/MacDown2/SecuredMarkdownResourceHost.swift'
+    original = source.read_bytes()
+    needle = b'revision = document.revision'
+    if original.count(needle) != 1:
+        raise SystemExit('The revision-omission mutation requires exact reviewed source')
+    replacement = b'revision = 0'
+    content_needle = b'content(loader, current?.loadID)'
+    if original.count(content_needle) != 1:
+        raise SystemExit('The viewport mutation requires the exact stable host')
+    replaced_container = (b'ZStack(alignment: .topLeading) {\n'
+                          b'    content(loader, current?.loadID).id(current?.loadID)\n'
+                          b'}.id(currentIdentity)')
+    experiments = [
+        ('revision-mutant', original.replace(needle, replacement), 'SecuredMarkdownMountedTests', 2,
+         'Mounted Textual did not admit the expected document-bound image'),
+        ('revision-restored', original, 'SecuredMarkdownMountedTests', 2, None),
+        ('viewport-mutant', original.replace(content_needle, replaced_container), 'SecuredMarkdownViewportTests', 1,
+         'Resource replacement must retain the native scroll container'),
+        ('viewport-restored', original, 'SecuredMarkdownViewportTests', 1, None),
+    ]
+    derived = Path(os.environ['RUNNER_TEMP']) / 'preview-grant-app'
+    app = derived / 'Build/Products' / args.configuration / 'MacDown2.app/Contents/MacOS/MacDown2'
+    base = ['xcodebuild', '-project', 'MacDown2/MacDown2.xcodeproj', '-scheme', 'MacDown2',
+            '-configuration', args.configuration, 'ENABLE_TESTABILITY=YES',
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE',
+            '-destination', 'platform=macOS', '-derivedDataPath', str(derived),
+            '-onlyUsePackageVersionsFromResolvedFile', '-enableCodeCoverage', 'NO']
+    args.output.mkdir(parents=True, exist_ok=True)
+    records = []
+    original_app = digest(app)
+    try:
+        for phase, candidate, suite, count, diagnostic in experiments:
+            source.write_bytes(candidate)
+            with (args.output / ('parsed-frame-' + phase + '-compile.log')).open('w') as log:
+                subprocess.run(base + ['build-for-testing'], cwd=repo, check=True, timeout=900,
+                               stdout=log, stderr=subprocess.STDOUT)
+            app_digest = digest(app)
+            if phase.endswith('mutant') and app_digest == original_app:
+                raise SystemExit('The omission did not change the actual application executable')
+            path = args.output / ('parsed-frame-' + phase + '.log')
+            with path.open('w') as log:
+                result = subprocess.run([
+                    sys.executable, str(repo / '.github/scripts/run-owned-app-tests.py'),
+                    str(args.output / ('parsed-frame-' + phase + '-diagnostics')), str(app), '--',
+                ] + base + ['-parallel-testing-enabled', 'NO',
+                            '-only-testing:MacDown2Tests/' + suite, 'test-without-building'],
+                    cwd=repo, timeout=660, stdout=log, stderr=subprocess.STDOUT)
+            records.append({'phase': phase, 'returncode': result.returncode,
+                            'source_sha256': digest(source), 'app_sha256': app_digest})
+            (args.output / 'parsed-frame-results.json').write_text(json.dumps(records, indent=2) + '\n')
+            log = re.sub(r'\x1b\[[0-9;]*m', '', path.read_text())
+            summary = 'Test run with ' + str(count) + (' test' if count == 1 else ' tests') + ' in 1 suite '
+            if diagnostic is not None:
+                if result.returncode == 0 or diagnostic not in log:
+                    raise SystemExit('The actual counterfactual did not fail its intended assertion: ' + phase)
+                if not re.search(re.escape(summary) + 'failed', log):
+                    raise SystemExit('The complete counterfactual selection did not execute')
+                if phase == 'revision-mutant' and not re.search(
+                    r'Test aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration\(\) passed', log
+                ):
+                    raise SystemExit('The established generation/copy positive control also failed')
+            elif result.returncode != 0 or not re.search(re.escape(summary) + 'passed', log):
+                raise SystemExit('The exact restored native controls did not pass: ' + phase)
+    finally:
+        source.write_bytes(original)
+        if source.read_bytes() != original:
+            raise SystemExit('Failed to restore exact parsed-frame source')
+    print('Both actual revision/viewport counterfactuals fail; exact restored application passes all mounted controls')
+
+
+if __name__ == '__main__':
+    main()

@@ -16,6 +16,8 @@ on:
       - 'MacDown2/Packages/MacDownKit/Sources/Preview/**'
       - '.github/workflows/preview-grant-probe.yml'
       - '.github/scripts/*preview-grant-probe.py'
+      - '.github/scripts/check-preview-parsed-frame.py'
+      - '.github/scripts/test-preview-grant-tripwire.py'
   workflow_dispatch:
 
 concurrency:
@@ -55,7 +57,9 @@ jobs:
           cd ..
           MacDown2/scripts/pin-xcode-package-versions.sh
       - name: Verify diagnostic ownership controls
-        run: python3 .github/scripts/test-run-owned-app-tests.py
+        run: |
+          python3 .github/scripts/test-run-owned-app-tests.py
+          python3 .github/scripts/test-preview-grant-tripwire.py
       - name: Record exact application inputs and configuration
         run: python3 .github/scripts/verify-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }}
       - name: Compile real app and test bundles
@@ -69,9 +73,9 @@ jobs:
       - name: Execute the actual three consumer paths and independent network control
         run: |
           set -euo pipefail
-          EXTRA_TESTS=()
+          PREVIEW_PHASE_SELECTION="-skip-testing:MacDown2Tests/SecuredPreviewReleaseProbeTests"
           if [ "${{ matrix.configuration }}" = Release ]; then
-            EXTRA_TESTS+=("-only-testing:MacDown2Tests/SecuredPreviewReleaseProbeTests")
+            PREVIEW_PHASE_SELECTION="-only-testing:MacDown2Tests/SecuredPreviewReleaseProbeTests"
           fi
           python3 .github/scripts/run-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe/network.json" ${{ matrix.configuration }} -- \
             python3 .github/scripts/run-owned-app-tests.py "$RUNNER_TEMP/preview-grant-probe/diagnostics" \
@@ -87,12 +91,15 @@ jobs:
             -only-testing:MacDown2Tests/BoundedHTMLPreviewHandlerTests \
             -only-testing:MacDown2Tests/SecuredHTMLPreviewNativeTests \
             -only-testing:MacDown2Tests/SecuredMarkdownMountedTests \
+            -only-testing:MacDown2Tests/SecuredMarkdownViewportTests \
             -only-testing:MacDown2Tests/SecuredPreviewImageAdmissionTests \
             -only-testing:MacDown2Tests/PreviewImageDecodeBudgetTests \
             -only-testing:MacDown2Tests/TextualAttachmentInterceptionTests \
             -only-testing:MacDown2Tests/SecuredPreviewNetworkTests \
-            "${EXTRA_TESTS[@]}" test-without-building \
+            "$PREVIEW_PHASE_SELECTION" test-without-building \
             | tee "$RUNNER_TEMP/preview-grant-probe/probe.log"
+      - name: Prove omission fails and exact restored mounted application passes
+        run: python3 .github/scripts/check-preview-parsed-frame.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }}
       - name: Verify exact source and actual selected execution
         if: always()
         run: python3 .github/scripts/verify-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --verify --require-result
@@ -103,6 +110,11 @@ jobs:
           path: |
             ${{ runner.temp }}/preview-grant-probe/receipt.json
             ${{ runner.temp }}/preview-grant-probe/network.json
+            ${{ runner.temp }}/preview-grant-probe/parsed-frame*.log
+            ${{ runner.temp }}/preview-grant-probe/parsed-frame*.json
+            ${{ runner.temp }}/preview-grant-probe/parsed-frame*-diagnostics/*.json
+            ${{ runner.temp }}/preview-grant-probe/parsed-frame*-diagnostics/*.sample.txt
+            ${{ runner.temp }}/preview-grant-probe/parsed-frame*-diagnostics/*.log
             ${{ runner.temp }}/preview-grant-probe/probe.log
             ${{ runner.temp }}/preview-grant-probe/diagnostics/*.json
             ${{ runner.temp }}/preview-grant-probe/diagnostics/*.sample.txt

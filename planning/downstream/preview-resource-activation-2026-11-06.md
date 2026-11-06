@@ -69,3 +69,71 @@ interception), preserving their exact bytes and actual module imports. The
 focused hosted gate selects those same controls, including optimized Release;
 there is no adapted image loader or duplicated implementation. Full source/pin
 receipts include these original package files and the project declaration.
+
+## Parsed-frame lifetime refinement
+
+The inactive Markdown host originally keyed its subtree only by model edit
+generation, document identity and grant epoch. A completed parser revision can
+change while that model generation stays constant: the model was edited before
+the older parse displayed, or unchanged text is reparsed with new options. Add
+parser UUID, actual parsed revision and its exact source SHA to the immutable
+resource-frame key before connecting the live renderer. An unbound parse never
+starts a resource load. Keep the model-generation check as a separate live-owner
+guard; neither a parser ID nor equal-looking text replaces directory authority.
+
+A mounted control reparses identical authored image source twice without any
+model mutation, updates the real Textual subtree, and requires a fresh resource
+load ID. The existing generation-replacement/copy/revocation control stays. A
+revision-omission mutation must fail the new control and exact restored source
+must pass before this refinement is considered qualified. It remains an
+inactive-consumer change; do not expose production routing or the chooser
+until all three consumer prerequisites and the final combined checks pass.
+
+## First optimized consumer findings
+
+Source da4b97f5 executes all 32 Release functions/11 suites and reports four
+assertions in two tests. The generated 65536x65536-header PNG is invalid to
+ImageIO itself: its properties omit width/height before the Preview decoder can
+inspect them. Replace that fixture with genuine compressed 8193x1 and 4096x4096
+rasters: the first exceeds the existing axis cap, the second the decoded-byte
+cap while still fitting the encoded-input cap. Require their actual ImageIO
+metadata, unchanged rejection and zero retained decoder capacity. This repairs
+the fixture's domain; neither production limit changes.
+
+The original global decoded-budget test observes only 64MiB instead of 128MiB
+because an array's count does not keep its unused reservation elements alive
+under optimized ARC. Explicit withExtendedLifetime scopes now retain both real
+arrays through the global-cap checks and retain the second through release of
+the first. Every original full-cap, rejected-admission, returned-capacity and
+resumed-admission assertion remains. The original canonical package fixture is
+corrected; the app target still compiles that same file by source path.
+
+The independent URLSession and ordinary WebKit controls both reach the listener;
+the real secured hostile page finishes with zero denied requests. Existing
+grant/worker, late-read/reentrant-stop, native saved-view replacement, mounted
+copy/revocation, valid image, multi-frame and Textual interception controls pass.
+The 4MiB/three-retained-load Release phase records 155.258708ms and process peak
+RSS 326959104 before/after, not a WebKit heap or performance-budget pass. First
+failure artifacts and source/pin receipts remain under da4b97f5; no whole
+consumer qualification or activation is claimed from this failed run.
+
+## Stable Preview container during resource replacement
+
+The inactive host also placed identity modifiers around its entire content,
+which is the caller's whole Textual preview and ScrollView. Changing a resource
+load must not replace the outer scroll container, clear its measured-height
+state or move keyboard focus. Keep the host/content structurally stable; the
+existing BlockView already keys each actual StructuredText/WithAttachments
+subtree by resourceLoadID and installs the deny-by-default image/emoji loaders.
+That is the required cache replacement boundary. Add mounted native proof that
+a delayed parse publication (with unchanged model generation) creates a new
+load while retaining the actual NSScrollView, nonzero scroll offset and responder. Keep all byte/publication
+revocation guards. If actual native layout still loses its position, inspect
+that behavior before activating the consumer; do not weaken the scroll check.
+
+The first Debug consumer job compiles the real app/tests but never executes a
+function: macOS Bash 3.2 rejects the empty EXTRA_TESTS array under nounset. Its
+zero-byte probe log and failed strict result check are retained, not a Debug
+pass. Use one explicit scalar selection: skip the opt-in maximum-source suite
+in Debug and select it in Release. This preserves strict shell settings and
+all intended per-configuration tests without an empty-array expansion.
