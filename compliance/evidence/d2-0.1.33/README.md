@@ -16,6 +16,8 @@
 > are absent are historical. Independent WASM/source/nested review, Liberation Mono
 > RFN treatment, approval/publication and exact-artifact acceptance remain open.
 
+> Build-input investigation — 7 November 2026: [the supplemental packet](../d2-build-inputs/README.md) records genuine version-tag ancestry and the exact 37-file build-helper submodule omitted by the source archive. The offline target matches the recorded module version/full Go build ID, but complete files still differ and the declared optimizer comparison times out without output. No source/rights/publication gate is cleared.
+
 ## Owner summary
 
 The shipped D2 browser bundle is now tied byte-for-byte to the official npm

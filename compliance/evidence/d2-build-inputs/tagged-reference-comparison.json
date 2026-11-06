@@ -1,0 +1,124 @@
+{
+  "publisher": {
+    "file_sha256": "7b0d5db9e148d1eba9ab7494a468a79fd92aca93fd3a89cad5876e68097170af",
+    "file_bytes": 22072784,
+    "sections": {
+      "1": {
+        "bytes": 791,
+        "sha256": "a371ac74801633244fac8b97ba72c2b046b2f27a0154568f9fb6ae0c6775dd95"
+      },
+      "2": {
+        "bytes": 655,
+        "sha256": "a4e86815f80d7a9bd33b364881d41b95aab0160bad2436198ed56897931cbff8"
+      },
+      "3": {
+        "bytes": 7754,
+        "sha256": "50eaddff6fc54c2b173b8d47825d73a9eaaacc5071c70d0907ab616cdd0268c1"
+      },
+      "4": {
+        "bytes": 5,
+        "sha256": "81fa21d9eab4f7525fc2fdb1f4273be410d82ecf7fb981b2b943c7fa04afbe31"
+      },
+      "5": {
+        "bytes": 4,
+        "sha256": "5c24edbe3ef1b48620e4957dc4a9eef2ef3bd1abe57bbdf579cd084c64b5c288"
+      },
+      "6": {
+        "bytes": 41,
+        "sha256": "df7ecfd3e7882850095d63e0bcbe517c7634956e4af3c9d07a8e106f1247f20a"
+      },
+      "7": {
+        "bytes": 33,
+        "sha256": "9865644727228d034fc0cc32437d13021825e9ae02a0791d43677379bd1fc9de"
+      },
+      "9": {
+        "bytes": 15052,
+        "sha256": "f9e6dd12a29cba71da9bbbea2e7a846e9b3f66e93324ab6474ac263fa27ffd19"
+      },
+      "10": {
+        "bytes": 10902656,
+        "sha256": "26ce57bba43137bc1876942113b46aa848b7c8f05b0e38dd7128d2cf956f5772"
+      },
+      "11": {
+        "bytes": 11145566,
+        "sha256": "5f9453e85fd9d7240a3ac73447e6215a0923d7394d5562259cf7c768dad586e0"
+      }
+    },
+    "custom_sections": {
+      "go:buildid": {
+        "bytes": 103,
+        "sha256": "59558186880d6d0d1e26b170717749d27216cec67b9f2e3e8b9835a484e827a7"
+      },
+      "producers": {
+        "bytes": 61,
+        "sha256": "4f372a1d179881610317146ea7a27cb31a5cf5a0c5818ff59fcffc1423d457c6"
+      }
+    },
+    "initialized_memory_bytes": 12371321,
+    "initialized_memory_sha256": "d2d4feca0e8f709d85809b59257207e86da2923805d4341633799a4eeb828607",
+    "go_build_id": "\\xff Go build ID: \"JlCQXTsXHNKMf7bW-wii/HkZBh1QgTF1cdymAWoG9/FrMmksegI6FK3cFULRzb/5fW0k4fzL7uSzDdN6dCL\"\n \\xff"
+  },
+  "declared_reference_preoptimizer": {
+    "file_sha256": "150faf74fe50b9390b71c5f728ade89416db4a18b1873a1b98d2b49084aa5049",
+    "file_bytes": 23704208,
+    "sections": {
+      "1": {
+        "bytes": 64,
+        "sha256": "964885fb9fcb1e3ed0c49a8f1ac5e64c38e25e508b25c9fdaa338310c34df311"
+      },
+      "2": {
+        "bytes": 684,
+        "sha256": "756ed419ff861c0d338c317504fa2158f4bd9e3f0323c33949f1bd99c0d9810e"
+      },
+      "3": {
+        "bytes": 7596,
+        "sha256": "933abab6cf5a50ef3678a6542a2764aa99fd2618b3d27861e0f7070a8008ed47"
+      },
+      "4": {
+        "bytes": 5,
+        "sha256": "81fa21d9eab4f7525fc2fdb1f4273be410d82ecf7fb981b2b943c7fa04afbe31"
+      },
+      "5": {
+        "bytes": 4,
+        "sha256": "5c24edbe3ef1b48620e4957dc4a9eef2ef3bd1abe57bbdf579cd084c64b5c288"
+      },
+      "6": {
+        "bytes": 41,
+        "sha256": "df7ecfd3e7882850095d63e0bcbe517c7634956e4af3c9d07a8e106f1247f20a"
+      },
+      "7": {
+        "bytes": 33,
+        "sha256": "5919032fe93723fe099fdc52e246e4a0e7a337d2aaa47e52fd497b39a0fd845c"
+      },
+      "9": {
+        "bytes": 15091,
+        "sha256": "8f965ef3e4698f75e28f9a9d4b0bdfca0a72586cd860383b041beeb0c58507db"
+      },
+      "10": {
+        "bytes": 12534842,
+        "sha256": "aa725fe375466e1312ee3733eabb17a36ac323ce980062fcf945c088a7e7c4b2"
+      },
+      "11": {
+        "bytes": 11145583,
+        "sha256": "3ce0f144d5f13850fb6486feb56363d794ffbaaf2a959dcc5f4756264e8a14c7"
+      }
+    },
+    "custom_sections": {
+      "go:buildid": {
+        "bytes": 103,
+        "sha256": "59558186880d6d0d1e26b170717749d27216cec67b9f2e3e8b9835a484e827a7"
+      },
+      "producers": {
+        "bytes": 61,
+        "sha256": "4f372a1d179881610317146ea7a27cb31a5cf5a0c5818ff59fcffc1423d457c6"
+      }
+    },
+    "initialized_memory_bytes": 12371328,
+    "initialized_memory_sha256": "d4767a8f88fce23039261548ea460865a315b96c1c573b503ae63268187439f1",
+    "go_build_id": "\\xff Go build ID: \"JlCQXTsXHNKMf7bW-wii/HkZBh1QgTF1cdymAWoG9/FrMmksegI6FK3cFULRzb/5fW0k4fzL7uSzDdN6dCL\"\n \\xff"
+  },
+  "complete_file_identical": false,
+  "complete_initialized_memory_identical": false,
+  "actual_go_build_id_identical": true,
+  "scope": "Exact complete-file/section/initialized-memory comparison without executing WASM, stripping custom sections, or normalizing metadata; memory/build ID equality alone is not complete binary reproduction"
+}

@@ -1,0 +1,9 @@
+{
+  "root": "581c91096b62d644fb5168313142c836b7e68e74",
+  "tag": "v0.6.9",
+  "tag_object": "4b0b7da6fd26c052ac4104ae5ab952d8a50fff89",
+  "tag_commit": "17399682f8289ac6999fe2e6fbb3f738ddb264ce",
+  "ancestor_verified": true,
+  "bounded_fetch_depth": 500,
+  "scope": "Actual immutable Git inputs for the recorded version-construction comparison; no publisher attestation or binary patch"
+}

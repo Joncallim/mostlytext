@@ -1,0 +1,28 @@
+{
+  "command": [
+    "/Users/jonathanlim/GitHub/_cleanup-archive/d2-source-148-2026-10-20/go/bin/go",
+    "build",
+    "-x",
+    "-work",
+    "-mod=readonly",
+    "-ldflags=-s -w -X oss.terrastruct.com/d2/d2js/d2wasm.jsVersion=0.1.33",
+    "-trimpath",
+    "-o",
+    "/Volumes/Fast SSD/CORTANA-Builds/d2-runtime-reproduction-20261107/tagged-reference-d2.wasm",
+    "./d2js"
+  ],
+  "returncode": 0,
+  "timed_out": false,
+  "elapsed_seconds": 7.47186137503013,
+  "tracked_source_unchanged": true,
+  "reference_set": [
+    "refs/heads/build-input 581c91096b62d644fb5168313142c836b7e68e74",
+    "refs/tags/v0.6.9 4b0b7da6fd26c052ac4104ae5ab952d8a50fff89"
+  ],
+  "scope": "Declared actual-object reference tag view and same frozen compiler/source/modules; not publisher execution attestation",
+  "output_bytes": 23704208,
+  "output_sha256": "150faf74fe50b9390b71c5f728ade89416db4a18b1873a1b98d2b49084aa5049",
+  "observed_main_version_line": "oss.terrastruct.com/d2\tv0.6.10-0.20250817190149-581c91096b62+dirty\t",
+  "recorded_main_version_matches": true,
+  "complete_publisher_match": false
+}
