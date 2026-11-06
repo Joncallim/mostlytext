@@ -23,12 +23,17 @@ struct TextualAttachmentPublicationTests {
         let gate = AttachmentReadGate()
         defer { gate.release() }
         let previous = try imageSource("previous")
-        let older = Task { await resolve(model, previous, using: HeldRejectedAttachmentLoader(gate: gate)) }
-        try #require(await gate.waitForEntry(), "The real model must enter the held attachment callback")
-        older.cancel()
         let current = try imageSource("current e\u{301} 😀")
+        let older = Task { await resolve(model, previous, using: HeldRejectedAttachmentLoader(gate: gate)) }
+        let entered = await gate.waitForEntry()
+        if !entered {
+            gate.release()
+            await older.value
+        }
+        try #require(entered, "The real model must enter the held attachment callback")
+        older.cancel()
         await resolve(model, current, using: RejectedAttachmentLoader())
-        try #require(matches(model, current))
+        #expect(matches(model, current))
         gate.release()
         await older.value
         #expect(matches(model, current), "Cancelled attachment completion must not replace newer source")
@@ -39,11 +44,16 @@ struct TextualAttachmentPublicationTests {
         let gate = AttachmentReadGate()
         defer { gate.release() }
         let previous = try imageSource("previous")
-        let older = Task { await resolve(model, previous, using: HeldRejectedAttachmentLoader(gate: gate)) }
-        try #require(await gate.waitForEntry(), "The real model must enter the held attachment callback")
         let current = try imageSource("current e\u{301} 😀")
+        let older = Task { await resolve(model, previous, using: HeldRejectedAttachmentLoader(gate: gate)) }
+        let entered = await gate.waitForEntry()
+        if !entered {
+            gate.release()
+            await older.value
+        }
+        try #require(entered, "The real model must enter the held attachment callback")
         await resolve(model, current, using: RejectedAttachmentLoader())
-        try #require(matches(model, current))
+        #expect(matches(model, current))
         gate.release()
         await older.value
         #expect(matches(model, current), "Older attachment completion must retain the latest request's source")
@@ -62,7 +72,12 @@ struct TextualAttachmentPublicationTests {
             #expect(Task.isCancelled)
             await resolve(model, previous, using: RejectedAttachmentLoader())
         }
-        try #require(await gate.waitForEntry())
+        let entered = await gate.waitForEntry()
+        if !entered {
+            gate.release()
+            await cancelled.value
+        }
+        try #require(entered)
         cancelled.cancel()
         gate.release()
         await cancelled.value
