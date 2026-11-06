@@ -141,3 +141,26 @@ merge this diagnostic overlay as a production fix. Locally run pure preparation
 controls and unsigned compile-only of the observed sources; no owner execution.
 The next hosted first outcome must give the actual optional-import disposition
 before any product correction. Ordinary production source on main is unchanged.
+
+## Retain missing log observations; use a private bounded phase record
+
+The first derived source5359e664 run42303506526 completes with both endpoint
+refusals. Its exact three-source recipe is retained, but neither captured unified
+log contains a MOSTLYTEXT_STARTUP event. The requested phase observation is
+therefore unqualified: do not infer a ready, blocked or review state from silence,
+attribute an error, or patch startup from this result. Keep its first artifact.
+
+Replace the observation output mechanism, not application policy. The same three
+source overlays now append small JSON phase records to the precreated private
+fixture file /Users/runner/work/_temp/native-cli-proof/startup-events.jsonl. The
+derived observer checks the actual runner home, opens only that fixed existing
+file with no-follow/append/nonblocking flags, requires a regular single-link
+0600 file owned by the executing UID, and refuses growth beyond64KiB. One
+bounded record includes only component, phase/event, PID and time. The harness
+creates it exclusively before app launch and retains it as an artifact. It is
+not a preferences, endpoint, document or user-selected path. This exists only
+in explicitly recorded derived diagnostic source; shipping main is untouched.
+Keep NSLog as supplementary output, but file-event presence is the required
+positive before claiming phase visibility. No new source read, scheduling,
+callback, readiness guard, consent, first-run choice or deadline change. Native
+phase evidence, not silent logging, must select the next production correction.
