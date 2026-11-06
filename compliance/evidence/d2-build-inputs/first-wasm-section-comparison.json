@@ -1,0 +1,142 @@
+{
+  "publisher": [
+    {
+      "id": 1,
+      "bytes": 791,
+      "sha256": "a371ac74801633244fac8b97ba72c2b046b2f27a0154568f9fb6ae0c6775dd95",
+      "entries": 59
+    },
+    {
+      "id": 2,
+      "bytes": 655,
+      "sha256": "a4e86815f80d7a9bd33b364881d41b95aab0160bad2436198ed56897931cbff8"
+    },
+    {
+      "id": 3,
+      "bytes": 7754,
+      "sha256": "50eaddff6fc54c2b173b8d47825d73a9eaaacc5071c70d0907ab616cdd0268c1",
+      "entries": 7752
+    },
+    {
+      "id": 4,
+      "bytes": 5,
+      "sha256": "81fa21d9eab4f7525fc2fdb1f4273be410d82ecf7fb981b2b943c7fa04afbe31"
+    },
+    {
+      "id": 5,
+      "bytes": 4,
+      "sha256": "5c24edbe3ef1b48620e4957dc4a9eef2ef3bd1abe57bbdf579cd084c64b5c288"
+    },
+    {
+      "id": 6,
+      "bytes": 41,
+      "sha256": "df7ecfd3e7882850095d63e0bcbe517c7634956e4af3c9d07a8e106f1247f20a"
+    },
+    {
+      "id": 7,
+      "bytes": 33,
+      "sha256": "9865644727228d034fc0cc32437d13021825e9ae02a0791d43677379bd1fc9de"
+    },
+    {
+      "id": 9,
+      "bytes": 15052,
+      "sha256": "f9e6dd12a29cba71da9bbbea2e7a846e9b3f66e93324ab6474ac263fa27ffd19"
+    },
+    {
+      "id": 10,
+      "bytes": 10902656,
+      "sha256": "26ce57bba43137bc1876942113b46aa848b7c8f05b0e38dd7128d2cf956f5772",
+      "entries": 7752
+    },
+    {
+      "id": 11,
+      "bytes": 11145566,
+      "sha256": "5f9453e85fd9d7240a3ac73447e6215a0923d7394d5562259cf7c768dad586e0",
+      "entries": 100000
+    },
+    {
+      "id": 0,
+      "bytes": 114,
+      "sha256": "16fca49141968d90b836f4de384c1e8971cb4e007849a45ebd028b726943c843",
+      "name": "go:buildid",
+      "contents": "b'\\xff Go build ID: \"JlCQXTsXHNKMf7bW-wii/HkZBh1QgTF1cdymAWoG9/FrMmksegI6FK3cFULRzb/5fW0k4fzL7uSzDdN6dCL\"\\n \\xff'"
+    },
+    {
+      "id": 0,
+      "bytes": 71,
+      "sha256": "acbfa6b2149223c8f44e9c2a34967f34c5fb5689b008d8dac8713a3b85390a09",
+      "name": "producers",
+      "contents": "b'\\x02\\x08language\\x01\\x02Go\\x08go1.24.6\\x0cprocessed-by\\x01\\x0eGo cmd/compile\\x08go1.24.6'"
+    }
+  ],
+  "preoptimization": [
+    {
+      "id": 0,
+      "bytes": 114,
+      "sha256": "2f5dc70e8e26852c21e569b849da8a9c63dc5fbdb4546e398a4963988313bd10",
+      "name": "go:buildid",
+      "contents": "b'\\xff Go build ID: \"hmdlfbawfjX4WWwZDZzv/WOJhpFK5sZErokD5sIi9/FrMmksegI6FK3cFULRzb/pbozvMhxUBMANHhqqLT5\"\\n \\xff'"
+    },
+    {
+      "id": 1,
+      "bytes": 64,
+      "sha256": "964885fb9fcb1e3ed0c49a8f1ac5e64c38e25e508b25c9fdaa338310c34df311",
+      "entries": 12
+    },
+    {
+      "id": 2,
+      "bytes": 684,
+      "sha256": "756ed419ff861c0d338c317504fa2158f4bd9e3f0323c33949f1bd99c0d9810e"
+    },
+    {
+      "id": 3,
+      "bytes": 7596,
+      "sha256": "933abab6cf5a50ef3678a6542a2764aa99fd2618b3d27861e0f7070a8008ed47",
+      "entries": 7594
+    },
+    {
+      "id": 4,
+      "bytes": 5,
+      "sha256": "81fa21d9eab4f7525fc2fdb1f4273be410d82ecf7fb981b2b943c7fa04afbe31"
+    },
+    {
+      "id": 5,
+      "bytes": 4,
+      "sha256": "5c24edbe3ef1b48620e4957dc4a9eef2ef3bd1abe57bbdf579cd084c64b5c288"
+    },
+    {
+      "id": 6,
+      "bytes": 41,
+      "sha256": "df7ecfd3e7882850095d63e0bcbe517c7634956e4af3c9d07a8e106f1247f20a"
+    },
+    {
+      "id": 7,
+      "bytes": 33,
+      "sha256": "5919032fe93723fe099fdc52e246e4a0e7a337d2aaa47e52fd497b39a0fd845c"
+    },
+    {
+      "id": 9,
+      "bytes": 15091,
+      "sha256": "8f965ef3e4698f75e28f9a9d4b0bdfca0a72586cd860383b041beeb0c58507db"
+    },
+    {
+      "id": 10,
+      "bytes": 12534842,
+      "sha256": "aa725fe375466e1312ee3733eabb17a36ac323ce980062fcf945c088a7e7c4b2",
+      "entries": 7594
+    },
+    {
+      "id": 11,
+      "bytes": 11145583,
+      "sha256": "165de22e57f33d79b79b490cd91f7d3f5cd1452144c90e779a23913cad065e12",
+      "entries": 100000
+    },
+    {
+      "id": 0,
+      "bytes": 71,
+      "sha256": "acbfa6b2149223c8f44e9c2a34967f34c5fb5689b008d8dac8713a3b85390a09",
+      "name": "producers",
+      "contents": "b'\\x02\\x08language\\x01\\x02Go\\x08go1.24.6\\x0cprocessed-by\\x01\\x0eGo cmd/compile\\x08go1.24.6'"
+    }
+  ]
+}

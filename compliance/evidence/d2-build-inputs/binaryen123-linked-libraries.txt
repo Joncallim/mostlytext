@@ -1,0 +1,8 @@
+/Volumes/Fast SSD/CORTANA-Builds/d2-runtime-reproduction-20261107/binaryen123-tool/binaryen-version_123/bin/wasm-opt:
+	@rpath/libbinaryen.dylib (compatibility version 0.0.0, current version 0.0.0)
+	/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 1700.255.5)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+/Volumes/Fast SSD/CORTANA-Builds/d2-runtime-reproduction-20261107/binaryen123-tool/binaryen-version_123/lib/libbinaryen.dylib:
+	@rpath/libbinaryen.dylib (compatibility version 0.0.0, current version 0.0.0)
+	/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 1700.255.5)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)

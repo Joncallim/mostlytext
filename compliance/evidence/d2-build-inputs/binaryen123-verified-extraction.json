@@ -1,0 +1,24 @@
+{
+  "archive": "binaryen-version_123-arm64-macos.tar.gz",
+  "official_sha256": "74428be348c1a09863e7b642a1fa948cabf8ec9561052233d8288e941951725b",
+  "actual_sha256": "74428be348c1a09863e7b642a1fa948cabf8ec9561052233d8288e941951725b",
+  "complete_extracted_files": {
+    "binaryen-version_123/bin/binaryen-unittests": "4de63dbd39dbb48c1966077239b101c4294cea19558f1fce33a5421a0872dca4",
+    "binaryen-version_123/bin/wasm-as": "ea94ad76c3049ba8aa3b6ba81ebb7af157b808abd85dd40e3405b437bf355898",
+    "binaryen-version_123/bin/wasm-ctor-eval": "7581e83a474c505c7a0125511e85125caa27429694360667da44921632396e83",
+    "binaryen-version_123/bin/wasm-dis": "2cf222119575e4a436350931baf7e188bb7513405fbb2c891bd7e372eed916dc",
+    "binaryen-version_123/bin/wasm-emscripten-finalize": "3bbd543835aaede7f985124ceb3b08e1ed527efed37fd5daada50d2ac52f882d",
+    "binaryen-version_123/bin/wasm-fuzz-lattices": "1eacf3ceedb2b657fef6ec113645190ab6b3163a3d4bb391d6210bd582032ebc",
+    "binaryen-version_123/bin/wasm-fuzz-types": "c08a0526ebac3b85cc1185e88705dd260fbd713063e6a370cabca15c66118d91",
+    "binaryen-version_123/bin/wasm-merge": "f84e8a761cc879d436656d28bd63614ef619198be71ea173660f57cf5481f98d",
+    "binaryen-version_123/bin/wasm-metadce": "90165d17cba1fbb70251cd2ea130b97ee831b7b71d76aeb5924d12ef90db31bb",
+    "binaryen-version_123/bin/wasm-opt": "4c674f02a820509828b9271665b50cd6d06b1e6696002818cdcc23314ab949e8",
+    "binaryen-version_123/bin/wasm-reduce": "882bf4d1fa2ee07cdea555fa390b3238031b1d67e788fffc10c707e7fa32354e",
+    "binaryen-version_123/bin/wasm-shell": "44ed0164ce99294f1075a0948ba449e0b39594bd0231ab7410df1ba538494671",
+    "binaryen-version_123/bin/wasm-split": "e535e7ab0781467772708c4f85f24dda7a27fb236c308b08ece248ba60a2a763",
+    "binaryen-version_123/bin/wasm2js": "536464edba9b9704683dcf977f1e5a1cca6635e41a5fc4e7710264feee10d262",
+    "binaryen-version_123/include/binaryen-c.h": "cb43bb2b2503a5ca3a2ffc7ea4f60d128255d0db20fe782d00ae664b920ddae0",
+    "binaryen-version_123/include/wasm-delegations.def": "deed1e1dd2d2f19edc181fd4d5dce8acbd0434e76edf70682979e743bda73348",
+    "binaryen-version_123/lib/libbinaryen.dylib": "672e18b2ba553c7960d71ef3db7c732772be1661d31119401af0b4f48e5d5e14"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "command": [
+    "/Users/jonathanlim/GitHub/_cleanup-archive/d2-source-148-2026-10-20/go/bin/go",
+    "build",
+    "-x",
+    "-work",
+    "-mod=readonly",
+    "-ldflags=-s -w -X oss.terrastruct.com/d2/d2js/d2wasm.jsVersion=0.1.33",
+    "-trimpath",
+    "-o",
+    "/Volumes/Fast SSD/CORTANA-Builds/d2-runtime-reproduction-20261107/preoptimization-d2.wasm",
+    "./d2js"
+  ],
+  "environment": {
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "PATH": "/Users/jonathanlim/GitHub/_cleanup-archive/d2-source-148-2026-10-20/go/bin:/usr/bin:/bin",
+    "TMPDIR": "/Volumes/Fast SSD/CORTANA-Builds/d2-runtime-reproduction-20261107/tmp",
+    "GOROOT": "/Users/jonathanlim/GitHub/_cleanup-archive/d2-source-148-2026-10-20/go",
+    "GOTOOLCHAIN": "local",
+    "GOPROXY": "off",
+    "GOSUMDB": "off",
+    "GOENV": "off",
+    "GOWORK": "off",
+    "GOFLAGS": "",
+    "CGO_ENABLED": "0",
+    "GOOS": "js",
+    "GOARCH": "wasm",
+    "GOCACHE": "/Volumes/Fast SSD/CORTANA-Builds/d2-runtime-reproduction-20261107/gocache",
+    "GOMODCACHE": "/Volumes/Fast SSD/CORTANA-Builds/d2-runtime-reproduction-20261107/gomodcache",
+    "GOPATH": "/Volumes/Fast SSD/CORTANA-Builds/d2-runtime-reproduction-20261107/gopath"
+  },
+  "returncode": 0,
+  "timed_out": false,
+  "elapsed_seconds": 9.590736499987543,
+  "tracked_source_unchanged": true,
+  "verified_selected_modules": 16,
+  "dirty_build_field": "Explicit untracked audit marker only; publisher changes remain unknown",
+  "scope": "Original frozen Go wasm target compilation only; no module/product/native helper or publisher script execution",
+  "output_bytes": 23704208,
+  "output_sha256": "90cbb3a1fb01282c028d6af3ecaee6dcc53c754bbca0b428620c2ba89a04a482",
+  "complete_publisher_match": false
+}

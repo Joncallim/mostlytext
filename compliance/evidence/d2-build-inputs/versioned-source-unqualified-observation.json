@@ -1,0 +1,10 @@
+{
+  "scope": "Second version-input comparison rejected by observer assertion; complete output preserved and not accepted",
+  "output_bytes": 23704208,
+  "output_sha256": "a1b4a4313cc9907a28d737f2d5e7e2d93bb7b3738a6414bcfb98a52209345277",
+  "observed_main_version_line": "oss.terrastruct.com/d2\tv0.7.1-0.20250817190149-581c91096b62+dirty\t",
+  "expected_publisher_main_version": "v0.6.10-0.20250817190149-581c91096b62+dirty",
+  "observer_error": "Recorded main-module version still differs; first driver did not persist its compiler status before this assertion",
+  "build_log": "versioned-source-build.log",
+  "complete_publisher_match": false
+}
