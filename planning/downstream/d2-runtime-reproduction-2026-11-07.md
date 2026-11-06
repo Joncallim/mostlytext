@@ -144,3 +144,32 @@ set or an invented/edited build-info string. Use only the declared untracked
 audit marker for the recorded dirty flag. Persist command/status/output metadata
 before testing the expected version, including on refusal. Still require full
 file equality for any reproduction statement; no metadata is stripped/patched.
+
+## Bounded optimizer comparison decision
+
+The declared two-ref source view produces the actual recorded main-module
+version with a normal7.472s offline compile; all tracked source stays unchanged.
+The complete23,704,208-byte preoptimizer wasmSHA256150faf74fe50b9390b71c5f728ade89416db4a18b1873a1b98d2b49084aa5049
+still differs from the publisher. Preserve all three earlier observations.
+
+Use one explicitly labelled comparison tool, official Binaryen version_123,
+released2025-03-25, asset binaryen-version_123-arm64-macos.tar.gz from
+https://github.com/WebAssembly/binaryen/releases/tag/version_123. Capture the
+release metadata, release tag/object and official adjacent SHA256 before any
+execution; verify archive checksum, safe archive paths and actual compiler
+linkage. Extract only to owned audit storage; no system installation or product
+execution. This tool is not claimed to be the publisher's optimizer: the
+immutable upstream daily workflow installs unversioned distribution binaryen.
+Its version remains an explicit missing input unless independently evidenced.
+
+After the tool input is verified and linkage excludes GUI/font/drawing
+frameworks, record wasm-opt --version then perform one bounded300s optimizer
+invocation: wasm-opt -Oz --enable-bulk-memory-opt tagged-reference-d2.wasm
+-o binaryen123-comparison-d2.wasm. Use a minimal compiler environment and
+separate output; retain the complete raw stdout/stderr/status and both input
+and output hashes. Never execute the wasm, Bun bundle or publishing scripts.
+Compare complete files and exact sections/data/instructions, retaining every
+mismatch. No additional optimizer version search, edited metadata, source
+patch, removed custom section or repeated unchanged attempt is authorised by
+this decision. A mismatch is useful bounded provenance evidence, not completion
+of source reproduction, rights/font review, source offer or renderer acceptance.
