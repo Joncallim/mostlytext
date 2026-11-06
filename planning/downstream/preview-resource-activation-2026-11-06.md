@@ -171,3 +171,38 @@ immutable initializer; no reader, image decoder or grant is substituted.
 Reintroducing the filtered-context lookup must fail that exact control, and
 restoring the complete source must pass. Keep all original consumer, network,
 quota, revision, scroll and phase deadlines unchanged.
+
+## Keep complete native mutation proof within the original job limit
+
+Combined source c63e8230 passes all 35 Release consumer functions/12 suites,
+both live network controls and zero denied requests. Its initial universal
+app/test compilation takes 17 minutes 36 seconds. The native revision omission
+fails as intended, exact restoration passes all three mounted functions, and
+the viewport omission fails as intended. The 35-minute job then expires while
+building the viewport restoration; no disappearance pair or complete result is
+claimed. Preserve its complete logs and partial artifact.
+
+Run each of the three actual mutation/restoration pairs in its own hosted job
+in both configurations. Every job still builds the actual app, executes the
+complete unchanged 34/35 consumer selection, network and original ownership
+controls, and verifies immutable source/pins. Bind the selected pair in the
+receipt and require exactly its two ordered phases. Overall qualification
+requires all six matrix jobs. Keep the 35-minute job limit and all existing
+900-second build and 600/660-second execution limits unchanged. This partitions
+repeated whole-module rebuilds; it removes no assertions or required proof.
+
+The same c63e8230 Debug job completes all 34 functions/11 suites and all six
+actual mutation/restoration phases. Independent review verifies 1,592 source
+hashes, all 24 pins, the working network controls, zero denied requests, exact
+mutated/restored host bytes, distinct mutated executable hashes and identical
+restored executables. In particular the filtered-context disappearance mutation
+fails the retained-loader denial while both unrelated mounted controls pass;
+restored source passes all three. This establishes the lifecycle defect in
+Debug. Release's three recorded partial phases and complete positive selection
+remain partial proof; the new six-job matrix must qualify both configurations.
+
+Each pair also records the original pre-mutation application executable hash.
+The changed executable must differ, and its exact restoration must equal that
+original hash, in addition to the existing source, selected tests and pin checks.
+Do not require independently built jobs to have byte-identical executables;
+qualify each job against its own unmodified build.

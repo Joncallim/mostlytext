@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prove mounted Markdown rejects an omitted revision and replacement of its outer viewport."""
+"""Prove one actual mounted Markdown mutation fails and exact restoration passes."""
 import argparse
 import hashlib
 import json
@@ -18,6 +18,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('output', type=Path)
     parser.add_argument('configuration', choices=['Debug', 'Release'])
+    parser.add_argument('--pair', choices=['revision', 'viewport', 'disappear'], required=True)
     args = parser.parse_args()
     if os.environ.get('CI') != 'true':
         parser.error('Only the owned hosted app products may execute')
@@ -48,6 +49,9 @@ def main():
          'A hidden Preview must revoke its previous parsed-frame loader'),
         ('disappear-restored', original, 'SecuredMarkdownMountedTests', 3, None),
     ]
+    experiments = [row for row in experiments if row[0].startswith(args.pair + '-')]
+    if len(experiments) != 2:
+        raise SystemExit('Exactly one mutation and its restoration must be selected')
     derived = Path(os.environ['RUNNER_TEMP']) / 'preview-grant-app'
     app = derived / 'Build/Products' / args.configuration / 'MacDown2.app/Contents/MacOS/MacDown2'
     base = ['xcodebuild', '-project', 'MacDown2/MacDown2.xcodeproj', '-scheme', 'MacDown2',
@@ -67,6 +71,8 @@ def main():
             app_digest = digest(app)
             if phase.endswith('mutant') and app_digest == original_app:
                 raise SystemExit('The omission did not change the actual application executable')
+            if phase.endswith('restored') and app_digest != original_app:
+                raise SystemExit('The restored application differs from the unmodified executable')
             path = args.output / ('parsed-frame-' + phase + '.log')
             with path.open('w') as log:
                 result = subprocess.run([
@@ -76,7 +82,8 @@ def main():
                             '-only-testing:MacDown2Tests/' + suite, 'test-without-building'],
                     cwd=repo, timeout=660, stdout=log, stderr=subprocess.STDOUT)
             records.append({'phase': phase, 'returncode': result.returncode,
-                            'source_sha256': digest(source), 'app_sha256': app_digest})
+                            'source_sha256': digest(source), 'app_sha256': app_digest,
+                            'original_app_sha256': original_app})
             (args.output / 'parsed-frame-results.json').write_text(json.dumps(records, indent=2) + '\n')
             log = re.sub(r'\x1b\[[0-9;]*m', '', path.read_text())
             summary = 'Test run with ' + str(count) + (' test' if count == 1 else ' tests') + ' in 1 suite '
@@ -100,7 +107,7 @@ def main():
         source.write_bytes(original)
         if source.read_bytes() != original:
             raise SystemExit('Failed to restore exact parsed-frame source')
-    print('Both actual revision/viewport counterfactuals fail; exact restored application passes all mounted controls')
+    print('Actual ' + args.pair + ' counterfactual fails; exact restored application passes all selected controls')
 
 
 if __name__ == '__main__':

@@ -10,6 +10,7 @@ import subprocess
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("output", type=Path)
 parser.add_argument("configuration", choices=["Debug", "Release"])
+parser.add_argument("--pair", choices=["revision", "viewport", "disappear"], required=True)
 parser.add_argument("--verify", action="store_true")
 parser.add_argument("--require-result", action="store_true")
 args = parser.parse_args()
@@ -24,6 +25,7 @@ pins = json.loads(lock.read_text())["pins"]
 receipt = {
     "checkout": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip(),
     "configuration": args.configuration,
+    "mutation_pair": args.pair,
     "testability": True,
     "additional_compilation_condition": "RELEASE_PREVIEW_PROBE",
     "source_sha256": digests,
@@ -56,13 +58,17 @@ if args.verify:
         mutation = json.loads((args.output / "parsed-frame-results.json").read_text())
         expected = ["revision-mutant", "revision-restored", "viewport-mutant", "viewport-restored",
                     "disappear-mutant", "disappear-restored"]
-        if [row["phase"] for row in mutation] != expected:
-            raise SystemExit("Actual revision/viewport mutation/restoration proof is incomplete")
-        for mutant, restored in [(mutation[0], mutation[1]), (mutation[2], mutation[3]), (mutation[4], mutation[5])]:
+        expected = [phase for phase in expected if phase.startswith(args.pair + "-")]
+        if len(mutation) != 2 or [row["phase"] for row in mutation] != expected:
+            raise SystemExit("The selected actual mutation/restoration proof is incomplete")
+        for mutant, restored in zip(mutation[::2], mutation[1::2]):
             if mutant["returncode"] == 0 or restored["returncode"] != 0:
                 raise SystemExit("Actual native counterfactual or restored control has the wrong result")
             if mutant["app_sha256"] == restored["app_sha256"]:
                 raise SystemExit("The actual application did not change for a counterfactual")
+            if (mutant["original_app_sha256"] != restored["original_app_sha256"]
+                    or restored["app_sha256"] != restored["original_app_sha256"]):
+                raise SystemExit("The restored executable does not match its unmodified baseline")
             if restored["source_sha256"] != receipt["source_sha256"]["MacDown2/MacDown2/SecuredMarkdownResourceHost.swift"]:
                 raise SystemExit("The final tested host source was not restored exactly")
     print("Exact actual-app inputs, configuration, pins and requested execution verified")
