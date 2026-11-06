@@ -359,3 +359,12 @@ Capture the selected folder's typed device/inode receipt inside the native
 successful-response callback, before resuming the chooser continuation. Reusing
 the generic URL presentation path must not add a task-resumption gap before
 that identity capture; all later backing/current-origin checks remain required.
+
+The source-binding controls mount a deliberately controlled resource host beside
+an actual document controller. Initialize that controller in editor-only layout
+before its window is shown or any grant is installed. Otherwise its independent
+production Preview could legitimately replace the manual host's single Markdown
+consumer token during a delayed parse. That is competing fixture ownership, not
+proof of source binding. Real production-routing controls keep Preview visible;
+all retained-loader denial, current-source positives, original mutation controls
+and five-second limits remain unchanged.
