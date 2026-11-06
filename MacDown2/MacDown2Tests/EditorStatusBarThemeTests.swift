@@ -72,17 +72,21 @@ struct EditorStatusBarThemeTests {
         let space = try #require(CGColorSpace(name: CGColorSpace.sRGB))
         return try #require(CGContext(data: nil, width: width, height: height,
                                       bitsPerComponent: 8, bytesPerRow: width * 4, space: space,
-                                      bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
+                                      bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+                                          | CGBitmapInfo.byteOrder32Big.rawValue))
     }
 
     private func rawRGB(in bitmap: NSBitmapImageRep, x pixelX: Int, y pixelY: Int) throws -> RGB {
-        try #require(bitmap.bitsPerSample == 8 && bitmap.samplesPerPixel == 4 && !bitmap.isPlanar)
-        var samples = [UInt](repeating: 0, count: 4)
-        bitmap.getPixel(&samples, atX: pixelX, y: pixelY)
-        let first = bitmap.bitmapFormat.contains(.alphaFirst) ? 1 : 0
-        try #require(samples[first == 0 ? 3 : 0] == 255, "The sampled background must be opaque")
-        return RGB(red: Double(samples[first]) / 255,
-                   green: Double(samples[first + 1]) / 255, blue: Double(samples[first + 2]) / 255)
+        let image = try #require(bitmap.cgImage)
+        let context = try makeContext(width: bitmap.pixelsWide, height: bitmap.pixelsHigh)
+        context.setBlendMode(.copy)
+        context.draw(image, in: CGRect(x: 0, y: 0, width: bitmap.pixelsWide, height: bitmap.pixelsHigh))
+        context.flush()
+        let data = try #require(context.data).assumingMemoryBound(to: UInt8.self)
+        let index = pixelY * context.bytesPerRow + pixelX * 4
+        try #require(data[index + 3] == 255, "The sampled background must be opaque")
+        return RGB(red: Double(data[index]) / 255,
+                   green: Double(data[index + 1]) / 255, blue: Double(data[index + 2]) / 255)
     }
 
     private struct RGB {

@@ -260,3 +260,11 @@ explicit sRGB components (no NSColor bridge), require opaque RGBA/8-bit storage,
 and preserve the original status 0.03 and reference 0.01 channel bounds. Keep
 production colors unchanged unless that independent calibrated oracle identifies
 a mismatch. This is a readback investigation, not a tolerance exception.
+
+The first raw-sampling revision compiles against the local SDK but the hosted
+SDK imports getPixel's component pointer as Int rather than UInt; the actual
+app job stops at compilation, not execution. Preserve that diagnostic and use
+a fixed RGBA8, big-endian sRGB CGContext for image readback instead. Read its
+explicit UInt8 buffer directly, with opaque-alpha and independent-reference
+checks; keep every original colour tolerance and all eight themes. No SDK
+availability branch or production colour change is needed.
