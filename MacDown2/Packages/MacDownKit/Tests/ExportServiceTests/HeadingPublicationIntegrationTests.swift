@@ -253,6 +253,31 @@ struct HeadingPublicationIntegrationTests {
 }
 
 extension HeadingPublicationIntegrationTests {
+    @Test func aMissingSVGTargetMustRemainAbsentAcrossFinalOpaqueComposition() async throws {
+        let source = "[TOC]\n\n# Target\n\nDIAGRAM\n\nOTHER\n"
+        let initial = try await linkedRequest(source)
+        let diagram = contribution("DIAGRAM", in: source, html: "<svg id='root'><path fill='url(#missing)'/></svg>")
+        func request(_ extra: [ExportDerivedContribution]) -> ExportRequest {
+            .init(text: source, sourceGeneration: 1, theme: initial.theme,
+                  contributions: initial.contributions + [diagram] + extra,
+                  headingPreparation: initial.headingPreparation)
+        }
+        let positive = try await ExportService.prepare(request([]), target: target())
+        #expect(positive.bodyHTML.contains("url(#MTTOC-SVG-0-1-0-missing)"))
+        #expect(positive.bodyHTML.contains("<h1 id=\"target\">Target</h1>"))
+        #expect(!positive.diagnostics.contains { $0.severity == .error })
+        for attribute in ["id", "name"] {
+            let alias = contribution("OTHER", in: source, html: "<a \(attribute)='MTTOC-SVG-0-1-0-missing'>Alias</a>")
+            let failure = await #expect(throws: ExportError.self) {
+                _ = try await ExportService.prepare(request([alias]), target: target())
+            }
+            guard case .headingNavigationUnavailable = failure else {
+                Issue.record("An opaque outside alias materialized a missing SVG target")
+                return
+            }
+        }
+    }
+
     private func linkedRequest(_ source: String) async throws -> ExportRequest {
         let document = try await ParseEngine().parse(source, revision: 1)
         let preparation = try await HeadingAnchorPreparation.prepare(

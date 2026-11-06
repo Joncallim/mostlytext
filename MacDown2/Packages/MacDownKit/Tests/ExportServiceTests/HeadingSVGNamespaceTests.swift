@@ -54,6 +54,55 @@ struct HeadingSVGNamespaceTests {
         #expect(ids.count == 8 && Data(canonical.utf8) == before)
     }
 
+    @Test func ordinaryMissingLocalReferencesRemainAbsentInsideTheirPrivateOccurrence() throws {
+        let source = "<svg><style>.node{fill:url(#missing)}</style><path class='node' aria-labelledby='absent' /></svg>"
+        #expect(SVGIDNamespace.rewrite(source, occurrence: 0) == nil)
+        let fragment = try #require(HeadingSVGNamespace.rewrite(source, occurrence: 0, family: "MTTOC-SVG-0-"))
+        #expect(fragment.roots.count == 1)
+        let root = try #require(fragment.roots.first)
+        #expect(root.references == ["MTTOC-SVG-0-0-0-missing", "MTTOC-SVG-0-0-0-absent"])
+        #expect(root.references.isDisjoint(with: root.declaredIDs))
+        let document = try SwiftSoup.parseBodyFragment(fragment.html)
+        #expect(try HeadingSVGNamespace.validate(
+            elements: document.getAllElements().array(),
+            family: "MTTOC-SVG-0-",
+            roots: fragment.roots
+        ))
+        for alias in ["<span id='MTTOC-SVG-0-0-0-missing'></span>", "<a name='MTTOC-SVG-0-0-0-absent'></a>"] {
+            let assembled = try SwiftSoup.parseBodyFragment(fragment.html + alias)
+            #expect(try !HeadingSVGNamespace.validate(
+                elements: assembled.getAllElements().array(),
+                family: "MTTOC-SVG-0-",
+                roots: fragment.roots
+            ))
+        }
+    }
+
+    @Test func ordinaryPrivateReferencesDoNotAdmitExternalResourcesOrChangedRoots() throws {
+        for source in [
+            "<svg><use href='https://example.test/a.svg#x'/></svg>",
+            "<svg><path fill='url(https://example.test/a.svg#x)'/></svg>",
+        ] {
+            #expect(HeadingSVGNamespace.rewrite(source, occurrence: 0, family: "MTTOC-SVG-0-") == nil)
+        }
+        let fragment = try #require(HeadingSVGNamespace.rewrite(
+            "<svg id='root'><path id='node' fill='url(#missing)'/></svg>",
+            occurrence: 0,
+            family: "MTTOC-SVG-0-"
+        ))
+        for changed in [
+            fragment.html.replacingOccurrences(of: "url(#MTTOC-SVG-0-0-0-missing)", with: "url(#outside)"),
+            fragment.html.replacingOccurrences(of: "id=\"MTTOC-SVG-0-0-0-node\"", with: "id=\"other\""),
+        ] {
+            let document = try SwiftSoup.parseBodyFragment(changed)
+            #expect(try !HeadingSVGNamespace.validate(
+                elements: document.getAllElements().array(),
+                family: "MTTOC-SVG-0-",
+                roots: fragment.roots
+            ))
+        }
+    }
+
     @Test func unsupportedUnicodeSVGIDsAndInvalidNamespaceSyntaxRetainExistingRejection() {
         #expect(SVGIDNamespace.rewrite("<svg id='café'></svg>", occurrence: 0, family: "MTTOC-SVG-0-") == nil)
         #expect(SVGIDNamespace.rewrite("<svg id='own'></svg>", occurrence: 0, family: "bad\"family-") == nil)

@@ -64,14 +64,14 @@ enum HeadingNativeHarness {
                      "Initialize the actual own-process native accessibility client")
     }
 
-    static func link(fragment: String, in content: NSView) -> (any NSAccessibilityProtocol)? {
-        nodes(in: content).compactMap { $0 as? any NSAccessibilityProtocol }.first { object in
-            guard object.accessibilityRole() == .link, let url = object.accessibilityURL(),
-                  let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
-                  let encoded = components.percentEncodedFragment,
-                  let decoded = encoded.removingPercentEncoding else { return false }
-            return decoded.utf8.elementsEqual(fragment.utf8)
+    /// SwiftUI exposes role/label and a real press action for these links, but
+    /// not AXURL. The fixture labels are unique; the resulting exact selection
+    /// and actual Preview scroll prove which source target the press reached.
+    static func link(label: String, in content: NSView) -> (any NSAccessibilityProtocol)? {
+        let links = nodes(in: content).compactMap { $0 as? any NSAccessibilityProtocol }.filter {
+            $0.accessibilityRole() == .link && $0.accessibilityLabel()?.utf8.elementsEqual(label.utf8) == true
         }
+        return links.count == 1 ? links[0] : nil
     }
 
     static func previewScroll(in mounted: Mounted, editor: EditorTextSystem) throws -> NSScrollView {

@@ -44,6 +44,13 @@ struct HeadingPreviewNavigationTests {
             map: ScrollSyncMap(blocks: blocks),
             blockHeights: Dictionary(uniqueKeysWithValues: blocks.indices.map { ($0, 100.0) })
         )
+        let system = try #require(fixture.controller.editorStore.existingSystem(for: identity))
+        let window = try #require(fixture.controller.window)
+        try #require(system.textView.window === window)
+        // The removed SwiftUI editor's dismantle may settle during the awaits
+        // above. This fixture now owns a real manually attached NSScrollView.
+        print("Heading direct fixture after awaits: detached=\(system.isDetachedFromEditorView)")
+        system.setAwaitingEditorView(false)
         transferred = true
         return .init(fixture: fixture, session: session,
                      action: .init(bindingID: binding.id, heading: heading, identity: preparation.index.identity),
@@ -82,6 +89,7 @@ struct HeadingPreviewNavigationTests {
             ranges: [.init(location: 0, length: 1), .init(location: 2, length: 1)],
             primaryIndex: 1
         )
+        try #require(!system.isDetachedFromEditorView && system.textView.window === window)
         navigate(prepared)
         let range = prepared.action.heading.sourceUTF16Range
         let expected = NSRange(location: range.lowerBound, length: range.count)

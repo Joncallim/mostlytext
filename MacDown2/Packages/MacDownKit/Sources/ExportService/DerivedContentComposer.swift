@@ -22,6 +22,7 @@ enum DerivedContentComposer {
         let sentinelSuffix: String
         let markedRoots: [SVGIDNamespace.MarkedRoot]
         let markedSourceRanges: [Range<Int>]
+        var headingSVGRoots: [HeadingSVGNamespace.Root] = []
         var acceptedHeadingTOCRanges: Set<Range<Int>> = []
     }
 
@@ -115,6 +116,7 @@ enum DerivedContentComposer {
             sentinelSuffix: context.sentinelSuffix,
             markedRoots: plan.markedRoots,
             markedSourceRanges: plan.markedSourceRanges,
+            headingSVGRoots: plan.headingSVGRoots,
             acceptedHeadingTOCRanges: plan.acceptedHeadingTOCRanges
         )
     }
@@ -216,6 +218,7 @@ private struct DerivedContentPlan {
     var customNodes: [CMarkGFM.CustomNodeSpec] = []
     var splices: [DerivedContentComposer.Splice] = []
     var markedRoots: [SVGIDNamespace.MarkedRoot] = []
+    var headingSVGRoots: [HeadingSVGNamespace.Root] = []
     var markedSourceRanges: [Range<Int>] = []
     var acceptedHeadingTOCRanges: Set<Range<Int>> = []
 
@@ -293,7 +296,10 @@ private struct DerivedContentPlan {
             return namespaced.html
         }
         if let family = context.svgNamespaceFamily {
-            return SVGIDNamespace.rewrite(sanitized, occurrence: index, family: family)
+            guard let fragment = HeadingSVGNamespace.rewrite(sanitized, occurrence: index, family: family)
+            else { return nil }
+            headingSVGRoots.append(contentsOf: fragment.roots)
+            return fragment.html
         }
         return sanitized
     }

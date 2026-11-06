@@ -19,21 +19,21 @@ struct HeadingPreviewAppTests {
         let mounted = try await HeadingNativeHarness.mount(source: valid, layout: .split(fraction: 0.5))
         defer { MathPreviewLiveSourceTests.dispose(mounted.fixture) }
         try await HeadingNativeHarness.wait(in: mounted, stage: "initial real TOC link") {
-            HeadingNativeHarness.link(fragment: "target", in: mounted.content) != nil
+            HeadingNativeHarness.link(label: "Target", in: mounted.content) != nil
         }
         let broken = "<div title='unterminated>\n\n" + valid
         mounted.fixture.controller.model.tabStore.updateActiveDocument { $0.updatingText(broken) }
         try await HeadingNativeHarness.wait(in: mounted, stage: "unverifiable TOC isolated with a diagnostic") {
             HeadingNativeHarness
-                .link(fragment: "target", in: mounted.content) == nil && hasDiagnostics(in: mounted.content)
+                .link(label: "Target", in: mounted.content) == nil && hasDiagnostics(in: mounted.content)
         }
         #expect(mounted.fixture.controller.model.activeDocument?.text.utf8.elementsEqual(broken.utf8) == true)
         mounted.fixture.controller.model.tabStore.updateActiveDocument { $0.updatingText(valid) }
         try await HeadingNativeHarness.wait(in: mounted, stage: "corrected TOC recovery") {
             HeadingNativeHarness
-                .link(fragment: "target", in: mounted.content) != nil && !hasDiagnostics(in: mounted.content)
+                .link(label: "Target", in: mounted.content) != nil && !hasDiagnostics(in: mounted.content)
         }
-        let link = try #require(HeadingNativeHarness.link(fragment: "target", in: mounted.content))
+        let link = try #require(HeadingNativeHarness.link(label: "Target", in: mounted.content))
         let system = try #require(mounted.fixture.controller.editorStore
             .existingSystem(for: mounted.fixture.tabID.uuidString))
         mounted.window.makeKeyAndOrderFront(nil)
@@ -58,9 +58,9 @@ struct HeadingPreviewAppTests {
         let mounted = try await HeadingNativeHarness.mount(source: source, layout: .split(fraction: 0.5))
         defer { MathPreviewLiveSourceTests.dispose(mounted.fixture) }
         try await HeadingNativeHarness.wait(in: mounted, stage: "linked TOC publication") {
-            HeadingNativeHarness.link(fragment: heading.fragment, in: mounted.content) != nil
+            HeadingNativeHarness.link(label: heading.title, in: mounted.content) != nil
         }
-        let link = try #require(HeadingNativeHarness.link(fragment: heading.fragment, in: mounted.content))
+        let link = try #require(HeadingNativeHarness.link(label: heading.title, in: mounted.content))
         #expect(link.accessibilityLabel()?.contains(heading.title) == true)
         let system = try #require(mounted.fixture.controller.editorStore
             .existingSystem(for: mounted.fixture.tabID.uuidString))
@@ -97,9 +97,9 @@ struct HeadingPreviewAppTests {
             .existingSystem(for: mounted.fixture.tabID.uuidString))
         try await HeadingNativeHarness.wait(in: mounted, stage: "Preview-only linked TOC and editor detachment") {
             system.isDetachedFromEditorView && HeadingNativeHarness
-                .link(fragment: "last-heading", in: mounted.content) != nil
+                .link(label: "Last heading", in: mounted.content) != nil
         }
-        let link = try #require(HeadingNativeHarness.link(fragment: "last-heading", in: mounted.content))
+        let link = try #require(HeadingNativeHarness.link(label: "Last heading", in: mounted.content))
         let preview = try HeadingNativeHarness.previewScroll(in: mounted, editor: system)
         let before = preview.contentView.bounds.origin.y
         mounted.window.makeKeyAndOrderFront(nil)

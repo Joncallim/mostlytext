@@ -55,7 +55,7 @@ enum SVGIDNamespace {
         return depth == 0 ? roots : nil
     }
 
-    static func rewriteRoot(_ svg: String, prefix: String) -> String? {
+    static func rewriteRoot(_ svg: String, prefix: String, additionalReferenceIDs: Set<String> = []) -> String? {
         let scalars = Array(svg.unicodeScalars)
         guard let ids = collectIDs(in: scalars),
               let root = HTMLTagScanner.parseTag(at: 0, in: scalars), root.name == "svg" else { return nil }
@@ -79,8 +79,9 @@ enum SVGIDNamespace {
             guard !svg.contains(synthetic), !decoded.contains(synthetic) else { return nil }
             scopeID = prefix + synthetic
         }
-        return rewriteTags(in: scalars, ids: ids, prefix: prefix,
-                           scopeID: scopeID, rootClasses: rootClasses)
+        guard additionalReferenceIDs.allSatisfy(validID) else { return nil }
+        return rewriteTags(in: scalars, ids: ids.union(additionalReferenceIDs), prefix: prefix,
+                           scope: (scopeID, authoredRootID == nil), rootClasses: rootClasses)
     }
 
     static func collectIDs(in scalars: [Unicode.Scalar]) -> Set<String>? {
@@ -102,10 +103,10 @@ enum SVGIDNamespace {
 
     private static func rewriteTags(
         in scalars: [Unicode.Scalar], ids: Set<String>, prefix: String,
-        scopeID: String, rootClasses: Set<String>
+        scope: (id: String, addRootID: Bool), rootClasses: Set<String>
     ) -> String? {
+        let (scopeID, addRootID) = scope
         guard let hasFontFace = admittedFontFaceScope(in: scalars) else { return nil }
-        let addRootID = !ids.contains(String(scopeID.dropFirst(prefix.count)))
         var output = ""
         var cursor = 0
         var style = false

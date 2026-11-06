@@ -98,7 +98,9 @@ enum HeadingTargetPublication {
             HeadingFragmentStructure.accepts($0.html, isBlock: $0.isBlock)
         }
         guard direct else {
-            guard let inspected = EmittedHeadingDOM.inspect(rendered, generatedNamespaceFamily: namespaceFamily)
+            guard let inspected = EmittedHeadingDOM.inspect(
+                rendered, generatedNamespaceFamily: namespaceFamily, svgRoots: derived.headingSVGRoots
+            )
             else { return nil }
             return EmittedHeadingDOM.publish(inspected: inspected, rendered: rendered, matches: matches)
         }

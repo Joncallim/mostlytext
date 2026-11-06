@@ -19,7 +19,10 @@ enum EmittedHeadingDOM {
     /// First pass: prove every private cmark marker is a direct child of the
     /// expected generated heading and inventory the exact emitted DOM IDs.
     /// Call only on a worker; parser objects never escape the serial lock.
-    static func inspect(_ rendered: CMarkGFM.Rendered, generatedNamespaceFamily: String? = nil) -> Inspection? {
+    static func inspect(
+        _ rendered: CMarkGFM.Rendered, generatedNamespaceFamily: String? = nil,
+        svgRoots: [HeadingSVGNamespace.Root] = []
+    ) -> Inspection? {
         guard !rendered.headingMarkers.isEmpty,
               rendered.html.utf8.count <= maximumAnalyzedBytes else { return nil }
         let markers = rendered.headingMarkers
@@ -32,7 +35,9 @@ enum EmittedHeadingDOM {
 
         return parserLock.withLock {
             guard let document = try? SwiftSoup.parseBodyFragment(rendered.html),
-                  let elements = try? document.getAllElements().array() else { return nil }
+                  let elements = try? document.getAllElements().array(),
+                  HeadingSVGNamespace.validate(elements: elements, family: generatedNamespaceFamily, roots: svgRoots)
+            else { return nil }
             return inspectElements(
                 elements, expectedByData: expectedByData,
                 expectedCount: markers.count, markedHTML: rendered.html,
