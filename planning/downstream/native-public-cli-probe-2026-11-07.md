@@ -106,3 +106,38 @@ are labelled failure observations and never decide success. Each external captur
 has a finite bound and its raw refusal is retained. Missing window titles or log
 permission are missing evidence, not an empty/ready app verdict. Keep all
 criteria, no unchanged retry and no diagnostic-branch merge as a production fix.
+
+## Completed observation: distinguish the optional import's actual outcome
+
+Source54c89e62 run42299346842 completes with the same actual refusal in both
+launches. Both real same-PID window lists identify MostlyText Migration. Fresh
+storage roots were absent before launch; the actual installation plan, preferences,
+complete and managed-path markers now exist, all user-owned/private, with no
+preserved development source. The optional original-editor journal has only its
+lock. Both samples show an idle AppKit event loop, not a blocked parser call.
+First-run persistence reads back1. These facts narrow investigation past the
+whole-install transaction but do not identify optional review versus refusal or
+a lost ready callback. No permission or migration-policy relaxation follows.
+
+Use a named derived diagnostic build to observe existing transitions and errors.
+A new source-preparation script runs ONLY on the hosted checkout, validates the
+exact original bytes of three tracked files and prepares all edits before writing.
+Add environment-gated Foundation NSLog observations to LegacyImportStartup,
+ApplicationMigrationStartup and AppDelegate: journal/bootstrap/resume/source
+entry count, existing phase changes, finish/callback availability, and caught
+error TYPE plus system error domain/code. No preference values, paths, document
+text, extra source read, model write, scheduling, skip, guard or policy changes.
+Existing operation calls and error handling remain in the same order. The normal
+launcher explicitly supplies only the trace flag; no domain/endpoint or test-host
+argument is added. The original10s acceptance bounds and all6 criteria remain.
+
+This is transparently instrumented source, not an unchanged shipping app. Record
+canonical Git blob hashes AND every executed source hash, the precise three-file
+before/after delta and original/replacement fragments. Upload the overlay recipe
+and all native output even on failure. Independent verification reconstructs the
+three executed files from canonical Git source and refuses missing/extra changes.
+Never retarget the earlier normal Release receipts, qualify original1515/54c8 or
+merge this diagnostic overlay as a production fix. Locally run pure preparation
+controls and unsigned compile-only of the observed sources; no owner execution.
+The next hosted first outcome must give the actual optional-import disposition
+before any product correction. Ordinary production source on main is unchanged.
