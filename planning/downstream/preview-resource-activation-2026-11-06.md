@@ -308,3 +308,16 @@ original assertion/job/build/execution limits and full source/pin receipts stay.
 Require final combined app/package CI and Debug/Release native matrices before
 integration; preserve signed permission, owner-native hostile-content, WebKit
 memory and final exact-release acceptance as separate open gates.
+
+The original owner-approved file-only workflow also requires the action beside
+the resource-unavailable explanation in Preview. Provide that visible localized
+banner/button for supported saved documents without a current grant, plus the
+native menu route for keyboard access. The banner targets its own model's
+registered controller explicitly; it never borrows whichever document becomes
+key later. An untitled document explains that it must first be saved, without
+silently saving or granting a parent. Keep the existing Preview itself mounted
+while grant/banner state changes. The state owner's read-only matching-grant
+query performs no I/O and grants no authority. Disable duplicate real sheets;
+matching-origin finalization must still be safe across overlapping backing
+acquisitions and later requests. Add the new visible strings to the catalog
+without claiming the final post-stabilization localization/VoiceOver gate.
