@@ -1,12 +1,24 @@
 # Release preparation ledger (MostlyText #14)
 
-## Current checkpoint — 3 November 2026
+## Current checkpoint — 6 November 2026
 
-The earlier seven/eight-entry counts below are historical. The current strict
+At main `c249d6dbb77feffc7f0fbe902dd00973d3416711`, ordinary source
+compliance passes. The earlier seven/eight-entry counts below are historical.
+The current strict
 check has six failures: D2 source publication/retrieval and independent nested
 source/font review; Mermaid remaining embedded/generated/candidate provenance;
 Graphviz source publication/retrieval, complete corresponding-source review, and
-remaining embedded/runtime attribution. The theme naming item is implemented.
+remaining embedded/runtime attribution. The display name is now GitHub Light;
+the legacy tomorrow-light identifier and resource filename remain for settings
+compatibility. The theme naming item is complete.
+
+All original parser positions, including the final 100 references, now have
+technical dispositions. The complete tagged URI prebundle archive reproduces
+with its frozen lock (Webpack 5.94.0/path-browserify 1.0.1); the earlier
+qualified Webpack 5.88.2 body reference is not an emitting-version finding.
+Historical execution attestation and independent nested-code/IP/grant review
+remain separate. [The review packet](UPSTREAM_REVIEW_QUESTIONS.md) records the
+specific missing inputs, without claiming they were externally requested.
 
 All 74 mapped Mermaid package records now have their complete selected texts
 distributed, with candidate-version limits retained. Four Rough.js and 16 D2
@@ -32,7 +44,7 @@ owner can review the remaining work. The 2026-10-18 font reconciliation records
 an existing product decision; it does not publish source archives, sign artifacts,
 accept agreements or verify the remaining source offers.
 
-## Reconciled checks
+## Historical 2026-10-14 to 2026-10-19 checks
 
 Run from the repository root on 2026-10-14:
 
@@ -43,11 +55,11 @@ compliance check (tree): passed, 0 unverified item(s)
 
 The historical 2026-10-14 release check reported eight raw inventory entries.
 On 2026-10-18, the recorded KEEP-all-12 font decision was reconciled in inventory;
-the current release check remains blocked by seven entries. No provenance or
+the release check at that checkpoint remained blocked by seven entries. No provenance or
 source-offer `status` field changed. See the
 [font reconciliation evidence](evidence/swiftui-math-fonts-2026-10-18/README.md).
 
-| Component | Current blocker | Material prepared or still required |
+| Component | Blocker at the historical checkpoint | Material then prepared or still required |
 | --- | --- | --- |
 | `d2` — source-location verification | Planned source URL; anonymous retrieval not verified | Existing `ARCHIVE_PLAN.md` identifies the upstream package and archive evidence still required. Do not publish or mark verified here. |
 | `d2` — `LC-03` | Go revision/module provenance open | Identify the D2 Go revision/modules, licences, upstream package and one-line patch. |
@@ -57,7 +69,7 @@ source-offer `status` field changed. See the
 | `viz-js` — `LC-02` | Complete corresponding-source offer still open | [Exact Graphviz 16.0.0, Viz.js 3.30.0 and Expat 2.8.4 inputs](evidence/viz-js-3.30.0/README.md) are downloaded and hashed against the npm backend's publisher build record. Complete package assembly/review and LC-09 publication remain. |
 | `viz-js` — linked-library review | Remaining embedded-code/runtime attribution open | Expat 2.8.4 is explicitly linked and its MIT text is added. The direct linker list does not complete the Graphviz/Emscripten runtime attribution audit. |
 
-The checker reports these seven exact entries. SwiftUIMath's product-decision
+The checker reported those seven exact entries at that checkpoint. SwiftUIMath's product-decision
 entry is resolved using the recorded KEEP decision in issue #148 comments
 5868785863 and 5867001043. All 12 font resources, digests, licence texts and
 artifact requirements remain. Notices and SBOM regenerate byte-identically.
@@ -96,15 +108,21 @@ artifact remains a separate gate.
 
 `ARCHIVE_PLAN.md` is the authoritative preparation plan. The repository has
 not created public archives, changed source-offer URLs, generated a release
-archive, signed an artifact, or claimed anonymous retrieval. The remaining
-safe preparation steps are source/archive assembly and digest review only:
+archive, signed an artifact, or claimed anonymous retrieval. Current safe preparation follows the specific remaining inputs in
+[UPSTREAM_REVIEW_QUESTIONS.md](UPSTREAM_REVIEW_QUESTIONS.md):
 
-1. identify the exact D2 Go source revision and module licences;
-2. identify the Graphviz/viz-js source and any linked-library obligations;
-3. complete Mermaid's remaining prebundle attribution and notice gaps from the
-   generated-artifact evidence, rather than equating lock resolution with inclusion;
-4. obtain the E23 Tomorrow Light naming decision and retain the font requirements
-   through final-artifact verification.
+1. Review remaining D2 per-file/nested Go/WASM obligations and Liberation Mono
+   Reserved Font Name treatment. Exact source/module inputs and selected complete
+   notices are already retained; those records are not independent clearance.
+2. Complete Graphviz corresponding-source, compiler-input and retained-code
+   review. The five exact runtime outputs reproduce and the local manifested
+   review archive includes linker/compiler/C++ evidence; neither is an approved
+   complete source offer.
+3. Resolve the remaining Mermaid Framer/Koen and points-on-curve grant/origin
+   questions and independent nested/generated-code review. Technical parser
+   classification and URI reconstruction are complete within their stated scope.
+4. Preserve the completed GitHub Light naming decision and all font/notice
+   requirements through final packaged-resource and signed-artifact acceptance.
 
 Only after an owner-authorized source-only publication may the URLs and
 `source_offer.status` values be updated and the release candidate checked.
