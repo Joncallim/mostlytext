@@ -335,3 +335,22 @@ instead of opening a second sheet. Only the still-current pending origin can
 publish that failure; a new choice or identity invalidation clears it. A stale
 or cancelled older completion must not replace a newer explanation, pending
 choice or grant. Keep this presentation state separate from directory authority.
+
+## Bind authority to the blocks actually displayed
+
+The production renderer consumes PreviewDisplayCache.output, which can lag a
+new parser publication. A new parsed document alone cannot authorize that older
+block array. Record the immutable parser identity/revision/source fingerprint
+alongside base blocks and the display cache, include it in cache reuse, and pass
+a bound resource frame only when the displayed cache belongs to the live parse.
+Keep old readable blocks while denying resources until the cache catches up;
+no full-source body comparison or second parser is added.
+
+Contribution publication likewise needs its own published task identity. The
+current in-progress task ID cannot relabel the preceding composition during an
+await, and equal revision numbers from different parser lifetimes cannot match.
+The production caller supplies the actual parser identity for displayed blocks
+and diagnostics; an old composition falls back to the current base blocks.
+Retain existing revision/heading-binding/cancellation guards. Add actual cache
+reuse and real contribution/source controls, then include them in the complete
+hosted resource selection. These are source ownership checks, not folder grants.
