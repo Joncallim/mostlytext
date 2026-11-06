@@ -40,7 +40,8 @@ class ObservationTests(unittest.TestCase):
         observer.verify(self.repo, json.loads(self.output.read_text()))
         legacy = (self.repo / observer.FILES["legacy"]).read_text()
         self.assertIn('"resume=\\(result)"', legacy)
-        self.assertIn("MOSTLYTEXT_NATIVE_STARTUP_TRACE", legacy)
+        self.assertIn("O_NOFOLLOW_ANY", legacy)
+        self.assertIn("startup-events.jsonl", legacy)
 
     def test_changed_last_input_cannot_partially_modify_earlier_inputs(self):
         target = self.repo / observer.FILES["delegate"]

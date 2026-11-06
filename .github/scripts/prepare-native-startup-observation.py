@@ -26,14 +26,33 @@ def observe(component, event):
 def recipe(kind):
     component = {"legacy": "Legacy", "migration": "Migration", "delegate": "Delegate"}[kind]
     call = lambda event: observe(component, event)
-    helper = ('private func observeNative' + component + 'Startup(_ event: String) {\n'
-              '    if ProcessInfo.processInfo.environment["MOSTLYTEXT_NATIVE_STARTUP_TRACE"] == "1" {\n'
-              '        NSLog("MOSTLYTEXT_STARTUP component=%@ event=%@", "' + kind + '", event)\n'
-              '    }\n}\n\n')
+    helper = '''private func observeNativeCOMPONENTStartup(_ event: String) {
+    guard FileManager.default.homeDirectoryForCurrentUser.path == "/Users/runner" else { return }
+    let record: [String: Any] = ["component": "KIND", "event": event,
+                               "pid": ProcessInfo.processInfo.processIdentifier,
+                               "time": Date().timeIntervalSince1970]
+    guard var bytes = try? JSONSerialization.data(withJSONObject: record, options: [.sortedKeys]),
+          bytes.count <= 2048 else { return }
+    bytes.append(0x0A)
+    let descriptor = Darwin.open("/Users/runner/work/_temp/native-cli-proof/startup-events.jsonl",
+                                O_WRONLY | O_APPEND | O_NOFOLLOW_ANY | O_NONBLOCK | O_CLOEXEC)
+    guard descriptor >= 0 else { return }
+    defer { Darwin.close(descriptor) }
+    var info = stat()
+    guard fstat(descriptor, &info) == 0, info.st_mode & S_IFMT == S_IFREG,
+          info.st_mode & 0o7777 == 0o600, info.st_uid == geteuid(), info.st_nlink == 1,
+          info.st_size >= 0, info.st_size <= Int64(65536 - bytes.count) else { return }
+    let count = bytes.withUnsafeBytes { Darwin.write(descriptor, $0.baseAddress, $0.count) }
+    guard count == bytes.count else { return }
+    NSLog("MOSTLYTEXT_STARTUP component=%@ event=%@", "KIND", event)
+}
+
+'''.replace("COMPONENT", component).replace("KIND", kind)
     declaration = {"legacy": "@MainActor\n@Observable\npublic final class LegacyImportStartup",
                    "migration": "@MainActor\n@Observable\nfinal class ApplicationMigrationStartup",
                    "delegate": "@MainActor\nfinal class AppDelegate"}[kind]
-    edits = [(declaration, helper + declaration, 1, False)]
+    edits = [("import Foundation\n", "import Darwin\nimport Foundation\n", 1, False),
+             (declaration, helper + declaration, 1, False)]
     if kind == "legacy":
         edits += [
             ("        began = true\n", "        began = true\n        " + call('"begin"') + "\n", 1, False),

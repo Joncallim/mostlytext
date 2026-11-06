@@ -40,7 +40,10 @@ def main():
     executable = app / "Contents/MacOS" / metadata["CFBundleExecutable"]
     helper = app / "Contents/MacOS/mostlytext-cli"
     assert helper.is_file() and executable.is_file()
-    output.mkdir()
+    output.mkdir(mode=0o700)
+    trace_file = output / "startup-events.jsonl"
+    descriptor = os.open(trace_file, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    os.close(descriptor)
     bin_directory = output / "bin"
     bin_directory.mkdir()
     public = bin_directory / "mostlytext"
@@ -233,6 +236,16 @@ def main():
             except Exception as error:
                 receipt["errors"].append("Identity-bound fixture cleanup: " + str(error))
         receipt["criteria"] = successes
+        trace = trace_file.read_bytes()
+        assert len(trace) <= 65536
+        receipt["startup_trace_sha256"] = hashlib.sha256(trace).hexdigest()
+        try:
+            receipt["startup_events"] = [json.loads(line) for line in trace.splitlines()]
+            if not receipt["startup_events"]:
+                receipt["errors"].append("No actual startup phase event was captured")
+        except ValueError:
+            receipt["startup_events"] = []
+            receipt["errors"].append("Incomplete startup phase record retained")
         receipt["passed"] = len(successes) == 6 and all(successes.values()) and not receipt["errors"]
         persist()
     print(json.dumps({k: receipt[k] for k in ["source_head", "criteria", "errors", "passed", "scope"]}), flush=True)
