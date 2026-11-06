@@ -199,6 +199,9 @@ struct SecuredMarkdownMountedTests {
                     theme: PreviewTheme(theme: BundledThemes.light),
                     resourceImageLoader: loader, resourceLoadID: loadID
                 )
+                .overlayPreferenceValue(Text.LayoutKey.self) { layouts in
+                    recorder.observeRendererLayouts(layouts)
+                }
                 .onChange(of: loadID, initial: true) { _, id in recorder.record(id, loader: loader) }
                 .onDisappear { recorder.didDisappear = true }
             }
@@ -228,6 +231,7 @@ private final class LoadIDRecorder {
     private let imageBytes: Data
     private(set) var lastID: UUID?
     private(set) var lastLoader: PreviewResourceImageLoader?
+    private var rendererLayouts: [Text.Layout] = []
     var didDisappear = false
 
     init(imageBytes: Data) {
@@ -235,6 +239,7 @@ private final class LoadIDRecorder {
     }
 
     func diagnostic(phase: String) async -> String {
+        let rendererBeforeProbe = rendererLayoutSummary
         let before = await PreviewResourceAdmission.shared.globalStatus()
         PreviewResourceDiagnostics.record("failure-only-manual-probe-begin", context: nil, detail: phase)
         let status: String
@@ -252,6 +257,7 @@ private final class LoadIDRecorder {
         PreviewResourceDiagnostics.record("failure-only-manual-probe-end", context: nil, detail: phase)
         return "phase=\(phase) loadID=\(String(describing: lastID)) disappeared=\(didDisappear) "
             + "retainedBeforeProbe=\(before.retained) reservedBeforeProbe=\(before.reserved) \(status) "
+            + "rendererBeforeProbe=\(rendererBeforeProbe) "
             + "fixturePNGBase64=\(imageBytes.base64EncodedString())"
             + " observations=\(PreviewResourceDiagnostics.snapshot())"
     }
@@ -263,5 +269,19 @@ private final class LoadIDRecorder {
                 lastLoader = loader
             }
         }
+    }
+
+    /// Observe the renderer's actual preference independently of the selection model; never publish state.
+    func observeRendererLayouts(_ value: Text.LayoutKey.Value) -> some View {
+        rendererLayouts = value.map(\.layout)
+        PreviewResourceDiagnostics.record("renderer-layout-observed", context: nil, detail: rendererLayoutSummary)
+        return Color.clear.allowsHitTesting(false)
+    }
+
+    private var rendererLayoutSummary: String {
+        let attachmentRuns = rendererLayouts.map { layout in
+            layout.reduce(0) { count, line in count + line.filter { $0.attachment != nil }.count }
+        }
+        return "layouts=\(rendererLayouts.count) actualAttachmentRuns=\(attachmentRuns)"
     }
 }
