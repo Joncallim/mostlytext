@@ -50,6 +50,7 @@ struct HighlightPerformanceTests {
         let start = ContinuousClock().now
         let parser = Parser()
         try parser.setLanguage(config.language)
+        let parserReady = ContinuousClock().now
         guard let tree = parser.parse(text),
               let rootNode = tree.rootNode,
               let query = config.queries[.highlights]
@@ -57,10 +58,15 @@ struct HighlightPerformanceTests {
             Issue.record("Failed to parse or load query")
             return
         }
+        let parseReady = ContinuousClock().now
         let cursor = query.execute(node: rootNode, in: tree)
         cursor.setRange(NSRange(location: 0, length: (text as NSString).length))
         _ = cursor.highlights()
         let duration = ContinuousClock().now - start
+        // Observe the original total without subtracting setup, parse, query or result disposal.
+        // Emit only after the timed interval so diagnostic output cannot dominate that measurement.
+        print("HIGHLIGHT_PHASE sourceUTF8=\(text.utf8.count) setup=\(parserReady - start) " +
+            "parse=\(parseReady - parserReady) query=\(duration - (parseReady - start)) total=\(duration)")
 
         #expect(
             duration < (Self.isRelease ? ReleaseCeiling.fullHighlight : .seconds(8)),

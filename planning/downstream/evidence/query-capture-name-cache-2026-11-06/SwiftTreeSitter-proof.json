@@ -1,0 +1,10 @@
+{
+  "base": "0beea992c4246f93a122de846c8611c9be19aeb7",
+  "head": "f2163a8bc5d0f1ce76b4cead48ce0f3ade4aa9f3",
+  "changed_files": [
+    "Sources/SwiftTreeSitter/Query.swift"
+  ],
+  "unchanged_git_objects": 102,
+  "original_license_sha256": "792197b8debcdecb17f429bab3a43a5911364e2a6e8e7c0f7faf02032212fb5f",
+  "scope": "Source and original license readback; final hosted/full CI qualification pending"
+}

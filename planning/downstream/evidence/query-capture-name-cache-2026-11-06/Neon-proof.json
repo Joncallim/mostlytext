@@ -1,0 +1,10 @@
+{
+  "base": "cd14f22ae8f8402b175a0bafd87560b78c7549e9",
+  "head": "72174c8de8f28c957fd48850b90de99899b709ee",
+  "changed_files": [
+    "Package.swift"
+  ],
+  "unchanged_git_objects": 81,
+  "original_license_sha256": "d11b5eea8e9ae2f6dd06545633e8daf0dfcbc7dbb911a20d1504c905e5808775",
+  "scope": "Source and original license readback; final hosted/full CI qualification pending"
+}

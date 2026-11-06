@@ -8,6 +8,7 @@ on:
       - 'MacDown2/MacDown2Tests/TextualAttachmentPublicationTests.swift'
       - 'MacDown2/Packages/MacDownKit/Package.resolved'
       - '.github/scripts/run-attachment-publication-probe.py'
+      - '.github/scripts/test-attachment-publication-pin-review.py'
       - '.github/scripts/run-owned-app-tests.py'
       - '.github/workflows/attachment-publication-probe.yml'
   workflow_dispatch:
@@ -36,8 +37,10 @@ jobs:
           sudo xcode-select -s "$XCODE/Contents/Developer"
           xcodebuild -version
           sw_vers
-      - name: Verify owned native command controls
-        run: python3 .github/scripts/test-run-owned-app-tests.py
+      - name: Verify owned native command and exact pin review controls
+        run: |
+          python3 .github/scripts/test-run-owned-app-tests.py
+          python3 .github/scripts/test-attachment-publication-pin-review.py
       - name: Execute identical original and candidate attachment model controls
         run: python3 .github/scripts/run-attachment-publication-probe.py "$RUNNER_TEMP/attachment-publication" ${{ matrix.configuration }}
       - uses: actions/upload-artifact@v4
@@ -56,4 +59,5 @@ jobs:
             ${{ runner.temp }}/attachment-publication/candidate/probe-Package.swift
             ${{ runner.temp }}/attachment-publication/candidate/diagnostics/*
             ${{ runner.temp }}/attachment-publication/baseline-only.json
+            ${{ runner.temp }}/attachment-publication/dependency-delta.json
           if-no-files-found: warn

@@ -38,12 +38,40 @@ def digest(path):
 def inventory(root):
     names = run(["git", "ls-files", "MacDown2", ".github/scripts/run-attachment-publication-probe.py",
                  ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
+                 ".github/scripts/test-attachment-publication-pin-review.py",
                  ".github/workflows/attachment-publication-probe.yml"], cwd=root).splitlines()
     return {name: digest(root / name) for name in sorted(set(names + [COMMON]))}
 
 
 def owners(pins):
     return {p["identity"]: (p["location"], p["state"]["revision"]) for p in pins}
+
+
+# Exact independent updates reviewed with the query capture-name cache unit.
+REVIEWED_INDEPENDENT_PIN_UPDATES = {
+    "neon": ("https://github.com/Joncallim/Neon",
+             "cd14f22ae8f8402b175a0bafd87560b78c7549e9", "72174c8de8f28c957fd48850b90de99899b709ee"),
+    "swifttreesitter": ("https://github.com/Joncallim/SwiftTreeSitter",
+                       "0beea992c4246f93a122de846c8611c9be19aeb7", "f2163a8bc5d0f1ce76b4cead48ce0f3ade4aa9f3"),
+}
+
+
+def reviewed_model_pin_delta(original, current):
+    """Other exact reviewed updates do not qualify a model repair or permit unknown pins."""
+    before, after = owners(original), owners(current)
+    if len(before) != len(original) or len(after) != len(current):
+        raise SystemExit("Duplicate dependency identities cannot qualify exact pin review")
+    previous, candidate = before.get("textual"), after.get("textual")
+    if previous is None or candidate is None or previous[0] != candidate[0]:
+        raise SystemExit("The original Textual model owner must remain unchanged")
+    differences = {name for name in before.keys() | after.keys() if before.get(name) != after.get(name)}
+    independent = {}
+    for name in sorted(differences - {"textual"}):
+        expected = REVIEWED_INDEPENDENT_PIN_UPDATES.get(name)
+        if expected is None or before.get(name) != (expected[0], expected[1]) or after.get(name) != (expected[0], expected[2]):
+            raise SystemExit("An unreviewed independent dependency changed: " + name)
+        independent[name] = {"original": before[name], "candidate": after[name]}
+    return "textual" in differences, independent
 
 
 def prepare(root, output, common):
@@ -166,15 +194,16 @@ def main():
     (baseline / COMMON).write_bytes(common)
     original, license_hash = qualify(baseline, repo, args.output / "baseline", args.configuration, common, True)
     current = json.loads((repo / "MacDown2/Packages/MacDownKit/Package.resolved").read_text())["pins"]
-    old_owners, new_owners = owners(original), owners(current)
-    differences = {name for name in old_owners.keys() | new_owners.keys() if old_owners.get(name) != new_owners.get(name)}
-    if not differences:
+    model_changed, independent = reviewed_model_pin_delta(original, current)
+    (args.output / "dependency-delta.json").write_text(json.dumps({
+        "model_revision_changed": model_changed, "independently_reviewed_updates": independent,
+        "scope": "Recorded exact reviewed updates; model proof does not approve other dependency changes"
+    }, indent=2) + "\n")
+    if not model_changed:
         (args.output / "baseline-only.json").write_text(json.dumps({"repair_evaluated": False,
             "reason": "Pinned original model only; candidate repair is not implemented"}) + "\n")
         print("Original-model baseline only; no candidate repair qualified")
         return
-    if differences != {"textual"} or old_owners["textual"][0] != new_owners["textual"][0]:
-        raise SystemExit("Only one immutable revision in the existing Textual owner fork may change")
     _, candidate_license = qualify(repo, repo, args.output / "candidate", args.configuration, common, False)
     if candidate_license != license_hash:
         raise SystemExit("Original Textual MIT license changed")
