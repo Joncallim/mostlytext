@@ -157,6 +157,24 @@ def main():
             receipt.setdefault("observation_errors", []).append({"phase": label, "error": str(error)})
             persist()
 
+    def require_welcome_without_acknowledgement(label, application):
+        inspection = app_action("inspect", application)
+        (output / (label + "-windows.json")).write_text(json.dumps(inspection, indent=2) + "\n")
+        assert inspection.get("window_metadata_available") and not inspection["terminated"]
+        assert any(window.get("name") == "Welcome to MostlyText" and window.get("kCGWindowIsOnscreen")
+                   for window in inspection["windows"]), "Fresh CLI must preserve the actual Welcome window"
+        state = command(label + "-first-run-key", ["defaults", "read", identity, key])
+        absent = (state["returncode"] == 1 and
+                  ("The domain/default pair of (" + identity + ", " + key + ") does not exist") in state["stderr"])
+        assert not state["timed_out"] and (absent or
+                                          (state["returncode"] == 0 and state["stdout"].strip() == "0")), \
+            "CLI must not acknowledge Welcome on the user's behalf"
+        receipt.setdefault("welcome_observations", []).append({"label": label,
+                                                               "pid": inspection["pid"],
+                                                               "visible": True,
+                                                               "first_run_acknowledged": False})
+        persist()
+
     key = "com.joncallim.macdown2.hasCompletedFirstRun"
     try:
         before = command("first-run-key-before", ["defaults", "read", identity, key])
@@ -164,10 +182,14 @@ def main():
         storage_snapshot("before-launch")
         current = app_action("launch")
         receipt["first_run_endpoint_observed"] = wait_for_endpoint()
+        if receipt["first_run_endpoint_observed"]:
+            require_welcome_without_acknowledgement("fresh-before-file", current)
         first = command("fresh-warm-file", [public, source])
         successes["fresh_warm_file"] = first["returncode"] == 0
         if not successes["fresh_warm_file"]:
             observe_refusal("fresh-refusal", current)
+        else:
+            require_welcome_without_acknowledgement("fresh-after-file", current)
         app_action("terminate", current)
         current = None
         configured = command("configure-existing-first-run-key", ["defaults", "write", identity, key, "-bool", "true"])
