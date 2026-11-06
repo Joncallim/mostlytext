@@ -116,7 +116,7 @@ def main():
     with (destination / 'probe.log').open('w') as log:
         result = subprocess.run([sys.executable, str(repo / '.github/scripts/run-owned-app-tests.py'),
                                  str(destination / 'diagnostics'), str(owned), '--',
-                                 'xcrun', 'lldb', '--batch', '--source', str(commands),
+                                 'xcrun', 'lldb', '--no-lldbinit', '--batch', '--source', str(commands),
                                  '--one-line-on-crash', 'thread backtrace all', '--'] + run_args,
                                 cwd=repo, env=environment, timeout=660, stdout=log, stderr=subprocess.STDOUT)
     receipt['debugger_returncode'] = result.returncode
