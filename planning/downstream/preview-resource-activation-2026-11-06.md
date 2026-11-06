@@ -265,3 +265,46 @@ release on close under AppKit's documented ARC contract. Keep the real sheet
 presentation/cancellation/detachment checks and all deadlines; no production
 window policy or historical crash-cause claim follows. This avoids leaving a
 known test-host lifetime violation while qualifying the complete app suite.
+
+## Production connector details after combined prerequisites
+
+Actual merged PR103 supplies the independently qualified request-owned Textual
+publication repair; historical mounted-copy failures remain unclassified. The
+8f27490d six-pair qualification passes, but source b06ef44e incorporating that
+actual dependency repair still needs its complete combined consumer checks.
+Do not activate the production connector until those focused prerequisites pass.
+
+Keep one structurally stable SecuredMarkdownResourceHost around the existing
+TextualMarkdownPreview, including its outer ScrollView, math/heading actions,
+contributed blocks, diagnostics and local diagram views. Permit an absent parsed
+frame, initially or after an unbound parse, without switching the view type.
+Pass the captured published source separately. In the identity-keyed task,
+require a bound frame and exact UTF-8 equality of published and captured current
+document source before beginning a load. Do not hash or compare the full source
+in the caret-sensitive view body. Pending/absent/mismatched frames use the deny
+loader and retire the stored previous matching context; never infer parent-folder
+authority. The existing live-owner document/tab/generation/grant check remains
+independent and mandatory. No additional parser or text normalization is added.
+
+Route HTMLPreviewPane's rendered branch through SecuredHTMLPreviewView, retaining
+the existing Source/Rendered picker, saved-only reload/dirty behavior, immutable
+scheme handler, navigation/MIME restrictions and independent token retirement.
+
+Expose the localized Allow Preview Resources action in the native document
+window's existing commands. Resolve and freeze the originating controller,
+window, document and typed SelectionOrigin synchronously, before starting the
+async panel task. The panel belongs to that window. Both its return and backing
+acquisition must recheck the same live origin/root/controller lifetime; the
+existing pre-publication scope invalidation clears a stale selection. Finish or
+cancel only the matching SelectionOrigin so a newer concurrent selection cannot
+be cleared by an older completion. Raw workspace URLs are not selection receipts.
+Cancellation/stale completion admits nothing and does not disturb ordinary
+editing or replace a newer grant. Errors use localized existing presentation.
+
+Add hosted actual-production routing, stale/absent published-frame denial,
+matching-origin cancellation and held chooser/acquisition controls, including
+same-text Save As and A/B/A. Existing consumer/network/mutation positives, all
+original assertion/job/build/execution limits and full source/pin receipts stay.
+Require final combined app/package CI and Debug/Release native matrices before
+integration; preserve signed permission, owner-native hostile-content, WebKit
+memory and final exact-release acceptance as separate open gates.
