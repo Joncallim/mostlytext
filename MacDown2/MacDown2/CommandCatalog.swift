@@ -68,6 +68,7 @@ extension CommandDescriptor {
         CommandDescriptor("Show Previous Tab", .excluded(.notYetWired)),
         CommandDescriptor("Select Tab \\(index)", .excluded(.dynamicItems)),
         CommandDescriptor("Layout", .excluded(.menuContainer)),
+        CommandDescriptor("Allow preview resources…", .excluded(.notYetWired)),
         CommandDescriptor("Theme", .excluded(.menuContainer)),
         CommandDescriptor("Toggle Sidebar", .palette(id: "toggleSidebar")),
         CommandDescriptor("Focus Outline", .excluded(.notYetWired)),

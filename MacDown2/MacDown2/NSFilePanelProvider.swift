@@ -182,26 +182,29 @@ final class NSFilePanelProvider: FilePanelProviding {
 
     /// Obtains a folder from a dedicated document-relative panel. The result only records user selection;
     /// no preview resource is admitted until the #121 grant owner pins and verifies the chosen directory.
-    func choosePreviewResourceFolder(near documentURL: URL) async -> PreviewResourceFolderSelection? {
+    func choosePreviewResourceFolder(
+        near documentURL: URL, afterPresentation: (@MainActor (NSOpenPanel) -> Void)? = nil
+    ) async -> PreviewResourceFolderSelection? {
         // A document-specific permission prompt cannot migrate to a different key window while awaiting the panel.
         guard documentURL.isFileURL,
-              case let .sheet(window) = presentation(keyWindow: nil)
+              case .sheet = presentation(keyWindow: nil)
         else { return nil }
         let panel = NSOpenPanel()
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
+        panel.prompt = String(localized: "Allow preview resources")
+        panel.message = String(localized: "Choose the folder containing this document.")
         panel.directoryURL = documentURL.deletingLastPathComponent()
 
-        let selectedFolderURL = await withCheckedContinuation { continuation in
-            panel.beginSheetModal(for: window) { result in
-                continuation.resume(returning: result == .OK ? panel.urls.first : nil)
-            }
+        var selection: PreviewResourceFolderSelection?
+        let selectedFolderURL = await present(panel, afterPresentation: afterPresentation) { selectedURL in
+            // Capture at the actual selection edge before task resumption. A later path replacement cannot
+            // become the grant merely because its spelling matches this originally selected object.
+            selection = PreviewResourceFolderSelection.capture(documentURL: documentURL, folderURL: selectedURL)
         }
-        guard let selectedFolderURL else { return nil }
-        // Capture object identity at the selection edge. A later path replacement cannot become the grant merely
-        // because it has the same spelling; the backing compares its opened descriptor to this identity.
-        return PreviewResourceFolderSelection.capture(documentURL: documentURL, folderURL: selectedFolderURL)
+        guard selectedFolderURL != nil else { return nil }
+        return selection
     }
 
     func chooseSaveLocation(defaultName: String, format: FileFormat) async -> URL? {
@@ -213,19 +216,32 @@ final class NSFilePanelProvider: FilePanelProviding {
         return await present(panel)
     }
 
-    private func present(_ panel: NSOpenPanel, trace: OpenPanelTrace? = nil) async -> URL? {
+    private func present(
+        _ panel: NSOpenPanel, trace: OpenPanelTrace? = nil,
+        afterPresentation: (@MainActor (NSOpenPanel) -> Void)? = nil,
+        onSelection: (@MainActor (URL) -> Void)? = nil
+    ) async -> URL? {
         await withCheckedContinuation { continuation in
             switch presentation(keyWindow: NSApp.keyWindow) {
             case let .sheet(targetWindow):
                 let request = PanelRequest(continuation, window: targetWindow)
                 trace?.markPresentation()
                 panel.beginSheetModal(for: targetWindow) { result in
-                    request.finish(result == .OK ? panel.urls.first : nil)
+                    let selected = result == .OK ? panel.urls.first : nil
+                    if let selected {
+                        onSelection?(selected)
+                    }
+                    request.finish(selected)
                 }
+                afterPresentation?(panel)
             case .modal:
                 trace?.markPresentation()
                 let result = panel.runModal()
-                continuation.resume(returning: result == .OK ? panel.urls.first : nil)
+                let selected = result == .OK ? panel.urls.first : nil
+                if let selected {
+                    onSelection?(selected)
+                }
+                continuation.resume(returning: selected)
             case .cancelled:
                 continuation.resume(returning: nil)
             }

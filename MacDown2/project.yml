@@ -258,6 +258,9 @@ targets:
     platform: macOS
     sources:
     - MacDown2Tests
+    # Compile the original package controls against the same actual products in optimized app-host qualification.
+    - Packages/MacDownKit/Tests/PreviewTests/PreviewImageDecodeBudgetTests.swift
+    - Packages/MacDownKit/Tests/PreviewTests/TextualAttachmentInterceptionTests.swift
     dependencies:
     - target: MacDown2
     - package: MacDownKit

@@ -1003,6 +1003,14 @@
         }
       }
     },
+    "Allow preview resources": {
+      "comment": "Confirmation button in the document-specific folder-selection panel.",
+      "extractionState": "manual"
+    },
+    "Allow preview resources…": {
+      "comment": "Document-window action to choose a folder for local Preview images and styles.",
+      "extractionState": "manual"
+    },
     "An editor descended from MacDown. Free software under the MIT license.": {
       "comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
       "localizations": {
@@ -1469,6 +1477,10 @@
           }
         }
       }
+    },
+    "Choose the folder containing this document.": {
+      "comment": "Explanation in the document-specific Preview folder-selection panel.",
+      "extractionState": "manual"
     },
     "Choose which original MacDown preferences to import. Your original preferences remain unchanged.": {
       "extractionState": "manual",
@@ -5165,6 +5177,10 @@
         }
       }
     },
+    "Local preview resources are unavailable.": {
+      "comment": "Preview resource notice before the document window has an explicit folder grant.",
+      "extractionState": "manual"
+    },
     "Lowercase": {
       "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
       "localizations": {
@@ -8082,6 +8098,10 @@
     "Save changes to \"%@\"? If the original file is unavailable, you may be asked to choose a location.": {
       "extractionState": "manual"
     },
+    "Save this document to allow local preview resources.": {
+      "comment": "Preview resource notice for an untitled document; the action never saves automatically.",
+      "extractionState": "manual"
+    },
     "Save with Encoding": {
       "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
       "localizations": {
@@ -9294,6 +9314,10 @@
           }
         }
       }
+    },
+    "That folder could not be used. Choose the folder containing this document.": {
+      "comment": "Current document-window folder selection failed; local Preview resources remain denied.",
+      "extractionState": "manual"
     },
     "The PDF could not be written to a temporary file.": {
       "comment": "App-owned PDF failure/recovery detail. Non-English values are English review drafts requiring final translation/native review.",
