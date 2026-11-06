@@ -152,7 +152,12 @@ public final class NeonSyntaxHighlighter: SyntaxHighlighting {
         textView.textColor = palette.foreground.nsColor
         textView.insertionPointColor = palette.caret.nsColor
         textView.selectedTextAttributes = [.backgroundColor: palette.selectionBackground.nsColor]
-        (textView as? EditorTextView)?.invisiblesColor = palette.invisibles.nsColor
+        if let editor = textView as? EditorTextView {
+            editor.invisiblesColor = palette.invisibles.nsColor
+            editor.currentLineColor = palette.currentLine.nsColor
+            editor.gutterForegroundColor = palette.gutterForeground.nsColor
+            editor.gutterBackgroundColor = palette.gutterBackground.nsColor
+        }
     }
 
     /// Builds Neon's highlighter for `config` and puts the gate back in front

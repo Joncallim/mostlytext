@@ -8,6 +8,8 @@ on:
     branches: [main, master, integration-final]
     paths:
       - 'MacDown2/MacDown2/*Math*.swift'
+      - 'MacDown2/MacDown2/EditorStatusBarView.swift'
+      - 'MacDown2/MacDown2Tests/EditorStatusBarThemeTests.swift'
       - 'MacDown2/MacDown2/*Heading*.swift'
       - 'MacDown2/MacDown2/*Export*.swift'
       - 'MacDown2/MacDown2/PreviewContribution*.swift'
@@ -92,7 +94,8 @@ jobs:
             -only-testing:MacDown2Tests/HeadingPreviewSessionTests \
             -only-testing:MacDown2Tests/HeadingPreviewNavigationTests \
             -only-testing:MacDown2Tests/HeadingPreviewAppTests \
-            -only-testing:MacDown2Tests/HeadingExportActivationTests test-without-building \
+            -only-testing:MacDown2Tests/HeadingExportActivationTests \
+            -only-testing:MacDown2Tests/EditorStatusBarThemeTests test-without-building \
             | tee "$RUNNER_TEMP/shared-app-probe/probe.log"
       - name: Verify exact source and actual selected execution
         if: always()
