@@ -46,7 +46,7 @@ if args.verify:
         for suite in suites:
             if not re.search(r'Suite "' + re.escape(suite) + r'" passed' , log):
                 raise SystemExit(suite + " did not execute successfully")
-        count = 34 if args.configuration == "Release" else 33
+        count = 35 if args.configuration == "Release" else 34
         if not re.search(r"Test run with " + str(count) + r" tests in " + str(len(suites)) + r" suites passed", log):
             raise SystemExit("Every selected consumer test must finish; partial restarts are not accepted")
         if "PREVIEW_NETWORK_CONTROL live=true loaded=true deniedRequests=0" not in log:
@@ -54,10 +54,11 @@ if args.verify:
         if args.configuration == "Release" and "PREVIEW_RELEASE_PROBE sourceBytes=4194304" not in log:
             raise SystemExit("Optimized maximum-source phase observation did not execute")
         mutation = json.loads((args.output / "parsed-frame-results.json").read_text())
-        expected = ["revision-mutant", "revision-restored", "viewport-mutant", "viewport-restored"]
+        expected = ["revision-mutant", "revision-restored", "viewport-mutant", "viewport-restored",
+                    "disappear-mutant", "disappear-restored"]
         if [row["phase"] for row in mutation] != expected:
             raise SystemExit("Actual revision/viewport mutation/restoration proof is incomplete")
-        for mutant, restored in [(mutation[0], mutation[1]), (mutation[2], mutation[3])]:
+        for mutant, restored in [(mutation[0], mutation[1]), (mutation[2], mutation[3]), (mutation[4], mutation[5])]:
             if mutant["returncode"] == 0 or restored["returncode"] != 0:
                 raise SystemExit("Actual native counterfactual or restored control has the wrong result")
             if mutant["app_sha256"] == restored["app_sha256"]:

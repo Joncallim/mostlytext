@@ -60,6 +60,8 @@ struct SecuredMarkdownResourceHost<Content: View>: View {
     var body: some View {
         let currentIdentity = identity
         let current = slot?.identity == currentIdentity ? slot : nil
+        // A replacement task may not start before this view disappears. Retire the stored prior context too.
+        let retiringContext = slot?.context
         let loader = PreviewResourceImageProvider.loader(for: current?.context)
         // BlockView replaces the complete StructuredText attachment cache using resourceLoadID. The outer
         // preview ScrollView and its measured-height state must survive a resource/parse-frame replacement.
@@ -80,7 +82,7 @@ struct SecuredMarkdownResourceHost<Content: View>: View {
                 slot = Slot(identity: currentIdentity, loadID: UUID(), context: context)
             }
             .onDisappear {
-                if let context = current?.context {
+                if let context = retiringContext {
                     owner?.retire(.markdown, matching: context)
                 }
             }

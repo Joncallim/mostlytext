@@ -34,13 +34,19 @@ def main():
     replaced_container = (b'ZStack(alignment: .topLeading) {\n'
                           b'    content(loader, current?.loadID).id(current?.loadID)\n'
                           b'}.id(currentIdentity)')
+    if original.count(b'let retiringContext = slot?.context') != 1:
+        raise SystemExit('The disappearance mutation requires the exact stored-context retirement')
     experiments = [
-        ('revision-mutant', original.replace(needle, replacement), 'SecuredMarkdownMountedTests', 2,
+        ('revision-mutant', original.replace(needle, replacement), 'SecuredMarkdownMountedTests', 3,
          'Mounted Textual did not admit the expected document-bound image'),
-        ('revision-restored', original, 'SecuredMarkdownMountedTests', 2, None),
+        ('revision-restored', original, 'SecuredMarkdownMountedTests', 3, None),
         ('viewport-mutant', original.replace(content_needle, replaced_container), 'SecuredMarkdownViewportTests', 1,
          'Resource replacement must retain the native scroll container'),
         ('viewport-restored', original, 'SecuredMarkdownViewportTests', 1, None),
+        ('disappear-mutant', original.replace(b'let retiringContext = slot?.context',
+                                             b'let retiringContext = current?.context'), 'SecuredMarkdownMountedTests', 3,
+         'A hidden Preview must revoke its previous parsed-frame loader'),
+        ('disappear-restored', original, 'SecuredMarkdownMountedTests', 3, None),
     ]
     derived = Path(os.environ['RUNNER_TEMP']) / 'preview-grant-app'
     app = derived / 'Build/Products' / args.configuration / 'MacDown2.app/Contents/MacOS/MacDown2'
@@ -79,10 +85,15 @@ def main():
                     raise SystemExit('The actual counterfactual did not fail its intended assertion: ' + phase)
                 if not re.search(re.escape(summary) + 'failed', log):
                     raise SystemExit('The complete counterfactual selection did not execute')
-                if phase == 'revision-mutant' and not re.search(
-                    r'Test aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration\(\) passed', log
-                ):
-                    raise SystemExit('The established generation/copy positive control also failed')
+                unaffected = {
+                    'revision-mutant': ['aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration',
+                                        'hidingDuringAParsedFrameReplacementRevokesTheRetainedLoader'],
+                    'disappear-mutant': ['aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration',
+                                         'aNewParsedRevisionReplacesTheLoadWithoutAnotherModelEdit'],
+                }.get(phase, [])
+                for function in unaffected:
+                    if not re.search(r'Test ' + re.escape(function) + r'\(\) passed', log):
+                        raise SystemExit('An unaffected mounted positive control also failed: ' + function)
             elif result.returncode != 0 or not re.search(re.escape(summary) + 'passed', log):
                 raise SystemExit('The exact restored native controls did not pass: ' + phase)
     finally:

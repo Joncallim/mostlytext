@@ -7,6 +7,7 @@ import MarkdownEngine
 import Preview
 import SwiftUI
 import Testing
+@testable import Textual
 import Themes
 
 /// The temporary fixture is selected through the test-only receipt; no native panel or persistent grant is used.
@@ -24,12 +25,7 @@ struct SecuredMarkdownMountedTests {
         let owner = PreviewResourceWindowState()
         let tabID = UUID()
         owner.setCurrentPreviewDocument { (tabID, document) }
-        let documentURL = try #require(document.fileURL)
-        let selection = try #require(PreviewResourceFolderSelection.fixture(
-            documentURL: documentURL, folderURL: folder
-        ))
-        let origin = try #require(owner.beginSelection(for: document))
-        try await owner.install(selection, from: origin) { document }
+        try await installFixtureGrant(folder, for: document, owner: owner)
         let recorder = LoadIDRecorder()
         let initialInput = await PreviewResourceAdmission.shared.globalStatus().retained
         let hosting = NSHostingView(rootView: mountedView(
@@ -39,11 +35,14 @@ struct SecuredMarkdownMountedTests {
             contentRect: NSRect(x: 0, y: 0, width: 500, height: 400),
             styleMask: [.titled], backing: .buffered, defer: false
         )
+        window.isReleasedWhenClosed = false
+        window.animationBehavior = .none
         window.contentView = hosting
         window.makeKeyAndOrderFront(nil)
         defer {
             owner.close()
             window.orderOut(nil)
+            window.close()
         }
         hosting.layoutSubtreeIfNeeded()
         let first = try await waitForLoad(
@@ -79,12 +78,7 @@ struct SecuredMarkdownMountedTests {
         let owner = PreviewResourceWindowState()
         let tabID = UUID()
         owner.setCurrentPreviewDocument { (tabID, document) }
-        let documentURL = try #require(document.fileURL)
-        let selection = try #require(PreviewResourceFolderSelection.fixture(
-            documentURL: documentURL, folderURL: folder
-        ))
-        let origin = try #require(owner.beginSelection(for: document))
-        try await owner.install(selection, from: origin) { document }
+        try await installFixtureGrant(folder, for: document, owner: owner)
         let recorder = LoadIDRecorder()
         let initialInput = await PreviewResourceAdmission.shared.globalStatus().retained
         let hosting = NSHostingView(rootView: mountedView(
@@ -92,11 +86,14 @@ struct SecuredMarkdownMountedTests {
         ))
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 500, height: 400),
                               styleMask: [.titled], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        window.animationBehavior = .none
         window.contentView = hosting
         window.makeKeyAndOrderFront(nil)
         defer {
             owner.close()
             window.orderOut(nil)
+            window.close()
         }
         let originalPasteboard = snapshotPasteboard()
         defer { restorePasteboard(originalPasteboard) }
@@ -115,6 +112,75 @@ struct SecuredMarkdownMountedTests {
         #expect(firstParse.revision != secondParse.revision)
     }
 
+    @Test func hidingDuringAParsedFrameReplacementRevokesTheRetainedLoader() async throws {
+        let (folder, imageBytes) = try makeFolderWithImage()
+        defer { try? FileManager.default.removeItem(at: folder) }
+        let source = "![fixture](image.png)"
+        let engine = ParseEngine()
+        let firstParse = try await engine.parse(source, revision: 1)
+        let secondParse = try await engine.parse(source, revision: 2)
+        let document = FileDocument(fileURL: folder.appendingPathComponent("story.md"), text: source)
+        let owner = PreviewResourceWindowState()
+        let tabID = UUID()
+        owner.setCurrentPreviewDocument { (tabID, document) }
+        try await installFixtureGrant(folder, for: document, owner: owner)
+        let recorder = LoadIDRecorder()
+        let initialInput = await PreviewResourceAdmission.shared.globalStatus().retained
+        let hosting = NSHostingView(rootView: AnyView(mountedView(
+            document: document, parsed: firstParse, tabID: tabID, owner: owner, recorder: recorder
+        )))
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 500, height: 400),
+                              styleMask: [.titled], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        window.animationBehavior = .none
+        window.contentView = hosting
+        window.makeKeyAndOrderFront(nil)
+        defer { owner.close(); window.orderOut(nil); window.close() }
+        let originalID = try await waitForLoad(after: nil, recorder: recorder,
+                                               minimumRetained: initialInput + imageBytes.count)
+        let retained = try #require(recorder.lastLoader)
+        let reference = try #require(URL(string: "image.png"))
+        let environment = ColorEnvironmentValues(colorScheme: .light, colorSchemeContrast: .standard)
+        _ = try await retained.attachment(for: reference, text: "fixture", environment: environment)
+        try await hideBeforeReplacementStarts(hosting, next: AnyView(mountedView(
+            document: document, parsed: secondParse, tabID: tabID, owner: owner, recorder: recorder
+        )), recorder: recorder)
+        #expect(recorder.lastID == originalID, "A newer load must not make this retirement control pass")
+        do {
+            _ = try await retained.attachment(for: reference, text: "fixture", environment: environment)
+            Issue.record("A hidden Preview must revoke its previous parsed-frame loader")
+        } catch PreviewImageLoadError.denied {
+            // The actual retained loader rejects the retired token before a new read.
+        } catch PreviewResourceAdmissionError.revoked {
+            // A read already entering the admission actor also observes synchronous retirement.
+        } catch is CancellationError {
+            #expect(!Task.isCancelled, "Only loader retirement, not cancellation of this test, can qualify")
+        }
+    }
+
+    private func installFixtureGrant(_ folder: URL, for document: FileCore.FileDocument,
+                                     owner: PreviewResourceWindowState) async throws {
+        let url = try #require(document.fileURL)
+        let selection = try #require(PreviewResourceFolderSelection.fixture(documentURL: url, folderURL: folder))
+        let origin = try #require(owner.beginSelection(for: document))
+        try await owner.install(selection, from: origin) { document }
+    }
+
+    private func hideBeforeReplacementStarts(_ host: NSHostingView<AnyView>, next: AnyView,
+                                             recorder: LoadIDRecorder) async throws {
+        // Do not yield between the new parse publication and removal: its MainActor task must remain pending.
+        host.rootView = next
+        host.layoutSubtreeIfNeeded()
+        #expect(!recorder.didDisappear, "Changing a parse must retain the existing native consumer")
+        host.rootView = AnyView(EmptyView())
+        host.layoutSubtreeIfNeeded()
+        let deadline = ContinuousClock.now.advanced(by: .seconds(5))
+        while !recorder.didDisappear, ContinuousClock.now < deadline {
+            try await Task.sleep(for: .milliseconds(20))
+        }
+        try #require(recorder.didDisappear, "The actual mounted Preview must disappear")
+    }
+
     @ViewBuilder
     private func mountedView(
         document: FileCore.FileDocument, parsed: MarkdownDocument, tabID: UUID,
@@ -131,7 +197,8 @@ struct SecuredMarkdownMountedTests {
                     theme: PreviewTheme(theme: BundledThemes.light),
                     resourceImageLoader: loader, resourceLoadID: loadID
                 )
-                .onChange(of: loadID, initial: true) { _, id in recorder.record(id) }
+                .onChange(of: loadID, initial: true) { _, id in recorder.record(id, loader: loader) }
+                .onDisappear { recorder.didDisappear = true }
             }
             .environment(\.previewResourceWindowState, owner)
         }
@@ -151,110 +218,20 @@ struct SecuredMarkdownMountedTests {
         Issue.record("Mounted Textual did not admit the expected document-bound image")
         throw PreviewResourceAdmissionError.limitExceeded
     }
-
-    private func copiedHTML(from view: NSView) async throws -> String {
-        let deadline = ContinuousClock.now.advanced(by: .seconds(5))
-        while ContinuousClock.now < deadline {
-            if let interaction = findTextInteraction(in: view) {
-                _ = interaction.perform(NSSelectorFromString("selectAll:"), with: nil)
-                _ = interaction.perform(NSSelectorFromString("copy:"), with: nil)
-                if let html = NSPasteboard.general.string(forType: .html) {
-                    return html
-                }
-            }
-            try await Task.sleep(for: .milliseconds(20))
-        }
-        Issue.record("Mounted Textual did not produce HTML from its native copy action")
-        throw PreviewResourceAdmissionError.limitExceeded
-    }
-
-    private func assertGrantedImageCopies(from view: NSView) async throws {
-        let deadline = ContinuousClock.now.advanced(by: .seconds(5))
-        var lastHTML = ""
-        while ContinuousClock.now < deadline {
-            lastHTML = try await copiedHTML(from: view)
-            if lastHTML.contains("data:image/png;base64,") {
-                return
-            }
-            try await Task.sleep(for: .milliseconds(20))
-        }
-        Issue.record("Mounted Textual never copied its admitted image; final HTML: \(lastHTML)")
-    }
-
-    private func assertRevocationStopsCopy(
-        from view: NSView, owner: PreviewResourceWindowState,
-        document: FileCore.FileDocument, tabID: UUID
-    ) async throws {
-        owner.invalidateForIdentityChange()
-        #expect(owner.beginPreviewLoad(
-            for: document, tabID: tabID, sourceGeneration: document.mutationGeneration,
-            grantRevision: owner.revision, consumer: .markdown
-        ) == nil)
-        let html = try await copiedHTML(from: view)
-        #expect(!html.contains("data:image/png;base64,"))
-    }
-
-    private func findTextInteraction(in view: NSView) -> NSView? {
-        if NSStringFromClass(type(of: view)).hasSuffix(".NSTextInteractionView") {
-            return view
-        }
-        for child in view.subviews {
-            if let found = findTextInteraction(in: child) {
-                return found
-            }
-        }
-        return nil
-    }
-
-    private func snapshotPasteboard() -> [NSPasteboardItem] {
-        NSPasteboard.general.pasteboardItems?.map { original in
-            let copy = NSPasteboardItem()
-            for type in original.types {
-                if let data = original.data(forType: type) {
-                    copy.setData(data, forType: type)
-                }
-            }
-            return copy
-        } ?? []
-    }
-
-    private func restorePasteboard(_ items: [NSPasteboardItem]) {
-        NSPasteboard.general.clearContents()
-        if !items.isEmpty {
-            _ = NSPasteboard.general.writeObjects(items)
-        }
-    }
-
-    private func smallPNG() throws -> Data {
-        let bitmap = try #require(NSBitmapImageRep(
-            bitmapDataPlanes: nil, pixelsWide: 8, pixelsHigh: 8,
-            bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true,
-            isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0
-        ))
-        return try #require(bitmap.representation(using: .png, properties: [:]))
-    }
-
-    private func makeFolderWithImage() throws -> (URL, Data) {
-        let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
-        do {
-            let bytes = try smallPNG()
-            try bytes.write(to: folder.appendingPathComponent("image.png"))
-            return (folder, bytes)
-        } catch {
-            try? FileManager.default.removeItem(at: folder)
-            throw error
-        }
-    }
 }
 
 @MainActor
 private final class LoadIDRecorder {
     private(set) var lastID: UUID?
+    private(set) var lastLoader: PreviewResourceImageLoader?
+    var didDisappear = false
 
-    func record(_ id: UUID?) {
+    func record(_ id: UUID?, loader: PreviewResourceImageLoader? = nil) {
         if let id {
             lastID = id
+            if let loader {
+                lastLoader = loader
+            }
         }
     }
 }

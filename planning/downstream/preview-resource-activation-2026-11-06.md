@@ -148,3 +148,26 @@ the owned application's accessibility client as the existing native heading
 fixture does, and retain bounded load-ID, scroll-geometry and native-text
 diagnostics on the unchanged five-second readiness failure. All thirty row
 markers, real overflow, container identity, offset and focus checks remain.
+
+## Retire a hidden pending parse frame before activation
+
+The e476aa51 candidate now qualifies its three consumer paths, four native
+counterfactual/restoration phases and full unchanged CI retry. The original
+full-run signal 11 remains unclassified; the retry does not close issue #15.
+The branch now incorporates qualified PR99 source 37e6fde0 so the next combined
+qualification includes the actual theme activation rather than deferring that
+integration until after its merge. Production routing remains held.
+
+Orthogonal lifecycle review found that onDisappear captures only the slot that
+matches the latest parse identity. A new parsed identity makes that filtered
+value nil before its replacement task runs; hiding Preview at that point can
+leave the previously admitted load alive. Capture the existing stored context
+for retirement, still using matching-context retirement so an old subtree can
+never revoke a newer renderer's load. Add a mounted native same-turn replacement
+then hide control that retains the actual loader, forbids a newer load from
+starting and requires that retained loader to deny a subsequent real image read.
+The actual Textual color environment is constructed only through its testable
+immutable initializer; no reader, image decoder or grant is substituted.
+Reintroducing the filtered-context lookup must fail that exact control, and
+restoring the complete source must pass. Keep all original consumer, network,
+quota, revision, scroll and phase deadlines unchanged.
