@@ -52,6 +52,9 @@ class ExactPinReviewTests(unittest.TestCase):
         cases.append(self.after[1:])
         cases.append(self.after[:-1])
         cases.append(self.after + [pin("new-library", "https://github.com/other/new", "1" * 40)])
+        cases.append(self.after + [copy.deepcopy(self.after[-1])])
+        with self.assertRaises(SystemExit):
+            module.reviewed_model_pin_delta(self.before + [copy.deepcopy(self.before[-1])], self.after)
         for changed in cases:
             with self.subTest(changed=changed), self.assertRaises(SystemExit):
                 module.reviewed_model_pin_delta(self.before, changed)

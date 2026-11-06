@@ -59,6 +59,8 @@ REVIEWED_INDEPENDENT_PIN_UPDATES = {
 def reviewed_model_pin_delta(original, current):
     """Other exact reviewed updates do not qualify a model repair or permit unknown pins."""
     before, after = owners(original), owners(current)
+    if len(before) != len(original) or len(after) != len(current):
+        raise SystemExit("Duplicate dependency identities cannot qualify exact pin review")
     previous, candidate = before.get("textual"), after.get("textual")
     if previous is None or candidate is None or previous[0] != candidate[0]:
         raise SystemExit("The original Textual model owner must remain unchanged")
