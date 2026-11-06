@@ -1,0 +1,10 @@
+{
+  "command": [
+    "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/baseline-normal-console",
+    "5",
+    "/Volumes/Fast SSD/CORTANA-Builds/parser-runtime-compilation-20261107/paired-v2-baseline-ordered.json"
+  ],
+  "returncode": 0,
+  "binary_sha256": "610faa8ba189fe3d2c9dd4bfe022d22482237c856d358cc6e3798235c4711b13",
+  "elapsed_seconds": 2.7165034590288997
+}

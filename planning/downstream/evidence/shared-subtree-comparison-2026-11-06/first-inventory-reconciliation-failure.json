@@ -1,0 +1,11 @@
+{
+  "stage": "Intermediate three-pin inventory reconciliation",
+  "observed_failure_count": 4,
+  "failures": [
+    "TreeSitterMarkdown manifest digest was not yet refreshed",
+    "SwiftTreeSitter root manifest_requirement still recorded f2163a8b",
+    "Neon manifest_requirement still recorded 72174c8d",
+    "Vendored Markdown SwiftTreeSitter requirement still recorded f2163a8b"
+  ],
+  "source": "Original in-turn compliance output retained in tool transcript; no final compliance pass claimed"
+}

@@ -1,0 +1,6 @@
+{
+  "phase": "original-work",
+  "source": "local-continuous-probe",
+  "failure": "Merged stderr counter output split a buffered stdout comparison line. The unchanged test failed exact output comparison as intended. Keep both channels separately before comparing complete semantic records; no production/test assertion change.",
+  "original_logs_preserved": true
+}

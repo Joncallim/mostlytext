@@ -1,0 +1,9 @@
+{
+  "original_sha256": "6b7c63d6273ab7d29ffae27e78c24acdb917bd9954ccd827a78f3fa801e7ecff",
+  "copied_sha256": "6b7c63d6273ab7d29ffae27e78c24acdb917bd9954ccd827a78f3fa801e7ecff",
+  "generated": {
+    "actual-inline-dense-16.md": "8cc7a4374b0173764998dcf4e076d0539b4a9d7c1e2686f10212cd3f1d10bd41",
+    "actual-inline-dense-256.md": "3ee9200ee9f13951a69eb750220e3677123ca1924d14068dbcc69a941007506f",
+    "actual-inline-dense-64.md": "88c15cc3efc0029014d25ec28c8bdee85a55fb2bacf7efadbcdfef6b14a9645e"
+  }
+}

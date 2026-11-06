@@ -1,0 +1,398 @@
+[
+  {
+    "variant": "baseline",
+    "instrumented": false,
+    "fixture_kib": 16,
+    "returncode": 0,
+    "binary_sha256": "c5868a08848b3c6dbe49ffdb295c810cf4b35c58a951f33cb4defd9603522cae",
+    "results": [
+      {
+        "phase": "initial",
+        "bytes": "16405",
+        "ranges": "193",
+        "nodes": "0",
+        "ns": "7955083",
+        "digest": "4b921a2662451171"
+      },
+      {
+        "phase": "incremental",
+        "bytes": "16405",
+        "ranges": "193",
+        "nodes": "0",
+        "ns": "7897541",
+        "digest": "4b921a2662451171"
+      },
+      {
+        "phase": "fresh",
+        "bytes": "16405",
+        "ranges": "193",
+        "nodes": "0",
+        "ns": "7844791",
+        "digest": "4b921a2662451171"
+      }
+    ]
+  },
+  {
+    "variant": "baseline",
+    "instrumented": false,
+    "fixture_kib": 64,
+    "returncode": 0,
+    "binary_sha256": "c5868a08848b3c6dbe49ffdb295c810cf4b35c58a951f33cb4defd9603522cae",
+    "results": [
+      {
+        "phase": "initial",
+        "bytes": "65620",
+        "ranges": "772",
+        "nodes": "0",
+        "ns": "31793125",
+        "digest": "3610f67c659dc52b"
+      },
+      {
+        "phase": "incremental",
+        "bytes": "65620",
+        "ranges": "772",
+        "nodes": "0",
+        "ns": "32141000",
+        "digest": "3610f67c659dc52b"
+      },
+      {
+        "phase": "fresh",
+        "bytes": "65620",
+        "ranges": "772",
+        "nodes": "0",
+        "ns": "31817334",
+        "digest": "3610f67c659dc52b"
+      }
+    ]
+  },
+  {
+    "variant": "baseline",
+    "instrumented": false,
+    "fixture_kib": 256,
+    "returncode": 0,
+    "binary_sha256": "c5868a08848b3c6dbe49ffdb295c810cf4b35c58a951f33cb4defd9603522cae",
+    "results": [
+      {
+        "phase": "initial",
+        "bytes": "262225",
+        "ranges": "3085",
+        "nodes": "0",
+        "ns": "131816500",
+        "digest": "95f91e6204133551"
+      },
+      {
+        "phase": "incremental",
+        "bytes": "262225",
+        "ranges": "3085",
+        "nodes": "0",
+        "ns": "133209583",
+        "digest": "95f91e6204133551"
+      },
+      {
+        "phase": "fresh",
+        "bytes": "262225",
+        "ranges": "3085",
+        "nodes": "0",
+        "ns": "131519125",
+        "digest": "95f91e6204133551"
+      }
+    ]
+  },
+  {
+    "variant": "baseline",
+    "instrumented": true,
+    "fixture_kib": 16,
+    "returncode": 0,
+    "binary_sha256": "34a674b55e5500bc405ebe2fc42658b246c963d436553fd7b538683268be73de",
+    "results": [
+      {
+        "phase": "initial",
+        "bytes": "16405",
+        "ranges": "193",
+        "nodes": "0",
+        "ns": "8145542",
+        "digest": "4b921a2662451171"
+      },
+      {
+        "phase": "incremental",
+        "bytes": "16405",
+        "ranges": "193",
+        "nodes": "0",
+        "ns": "8063625",
+        "digest": "4b921a2662451171"
+      },
+      {
+        "phase": "fresh",
+        "bytes": "16405",
+        "ranges": "193",
+        "nodes": "0",
+        "ns": "7643583",
+        "digest": "4b921a2662451171"
+      }
+    ]
+  },
+  {
+    "variant": "baseline",
+    "instrumented": true,
+    "fixture_kib": 64,
+    "returncode": 0,
+    "binary_sha256": "34a674b55e5500bc405ebe2fc42658b246c963d436553fd7b538683268be73de",
+    "results": [
+      {
+        "phase": "initial",
+        "bytes": "65620",
+        "ranges": "772",
+        "nodes": "0",
+        "ns": "31788333",
+        "digest": "3610f67c659dc52b"
+      },
+      {
+        "phase": "incremental",
+        "bytes": "65620",
+        "ranges": "772",
+        "nodes": "0",
+        "ns": "31574417",
+        "digest": "3610f67c659dc52b"
+      },
+      {
+        "phase": "fresh",
+        "bytes": "65620",
+        "ranges": "772",
+        "nodes": "0",
+        "ns": "31259417",
+        "digest": "3610f67c659dc52b"
+      }
+    ]
+  },
+  {
+    "variant": "baseline",
+    "instrumented": true,
+    "fixture_kib": 256,
+    "returncode": 0,
+    "binary_sha256": "34a674b55e5500bc405ebe2fc42658b246c963d436553fd7b538683268be73de",
+    "results": [
+      {
+        "phase": "initial",
+        "bytes": "262225",
+        "ranges": "3085",
+        "nodes": "0",
+        "ns": "129291625",
+        "digest": "95f91e6204133551"
+      },
+      {
+        "phase": "incremental",
+        "bytes": "262225",
+        "ranges": "3085",
+        "nodes": "0",
+        "ns": "134608625",
+        "digest": "95f91e6204133551"
+      },
+      {
+        "phase": "fresh",
+        "bytes": "262225",
+        "ranges": "3085",
+        "nodes": "0",
+        "ns": "127326625",
+        "digest": "95f91e6204133551"
+      }
+    ]
+  },
+  {
+    "variant": "candidate",
+    "instrumented": false,
+    "fixture_kib": 16,
+    "returncode": 0,
+    "binary_sha256": "523c61e766981dff19a41152eb544f30bc2e554e4c3981ccd8e452ab1447a548",
+    "results": [
+      {
+        "phase": "initial",
+        "bytes": "16405",
+        "ranges": "193",
+        "nodes": "0",
+        "ns": "16278583",
+        "digest": "4b921a2662451171"
+      },
+      {
+        "phase": "incremental",
+        "bytes": "16405",
+        "ranges": "193",
+        "nodes": "0",
+        "ns": "7723375",
+        "digest": "4b921a2662451171"
+      },
+      {
+        "phase": "fresh",
+        "bytes": "16405",
+        "ranges": "193",
+        "nodes": "0",
+        "ns": "7695416",
+        "digest": "4b921a2662451171"
+      }
+    ]
+  },
+  {
+    "variant": "candidate",
+    "instrumented": false,
+    "fixture_kib": 64,
+    "returncode": 0,
+    "binary_sha256": "523c61e766981dff19a41152eb544f30bc2e554e4c3981ccd8e452ab1447a548",
+    "results": [
+      {
+        "phase": "initial",
+        "bytes": "65620",
+        "ranges": "772",
+        "nodes": "0",
+        "ns": "31082208",
+        "digest": "3610f67c659dc52b"
+      },
+      {
+        "phase": "incremental",
+        "bytes": "65620",
+        "ranges": "772",
+        "nodes": "0",
+        "ns": "31367500",
+        "digest": "3610f67c659dc52b"
+      },
+      {
+        "phase": "fresh",
+        "bytes": "65620",
+        "ranges": "772",
+        "nodes": "0",
+        "ns": "30849125",
+        "digest": "3610f67c659dc52b"
+      }
+    ]
+  },
+  {
+    "variant": "candidate",
+    "instrumented": false,
+    "fixture_kib": 256,
+    "returncode": 0,
+    "binary_sha256": "523c61e766981dff19a41152eb544f30bc2e554e4c3981ccd8e452ab1447a548",
+    "results": [
+      {
+        "phase": "initial",
+        "bytes": "262225",
+        "ranges": "3085",
+        "nodes": "0",
+        "ns": "127600625",
+        "digest": "95f91e6204133551"
+      },
+      {
+        "phase": "incremental",
+        "bytes": "262225",
+        "ranges": "3085",
+        "nodes": "0",
+        "ns": "130433916",
+        "digest": "95f91e6204133551"
+      },
+      {
+        "phase": "fresh",
+        "bytes": "262225",
+        "ranges": "3085",
+        "nodes": "0",
+        "ns": "128511791",
+        "digest": "95f91e6204133551"
+      }
+    ]
+  },
+  {
+    "variant": "candidate",
+    "instrumented": true,
+    "fixture_kib": 16,
+    "returncode": 0,
+    "binary_sha256": "0210291c930d583aa42d61b206563682a3da3f240e90080911827a6c2bfbfb41",
+    "results": [
+      {
+        "phase": "initial",
+        "bytes": "16405",
+        "ranges": "193",
+        "nodes": "0",
+        "ns": "9953417",
+        "digest": "4b921a2662451171"
+      },
+      {
+        "phase": "incremental",
+        "bytes": "16405",
+        "ranges": "193",
+        "nodes": "0",
+        "ns": "7810459",
+        "digest": "4b921a2662451171"
+      },
+      {
+        "phase": "fresh",
+        "bytes": "16405",
+        "ranges": "193",
+        "nodes": "0",
+        "ns": "7831833",
+        "digest": "4b921a2662451171"
+      }
+    ]
+  },
+  {
+    "variant": "candidate",
+    "instrumented": true,
+    "fixture_kib": 64,
+    "returncode": 0,
+    "binary_sha256": "0210291c930d583aa42d61b206563682a3da3f240e90080911827a6c2bfbfb41",
+    "results": [
+      {
+        "phase": "initial",
+        "bytes": "65620",
+        "ranges": "772",
+        "nodes": "0",
+        "ns": "32846042",
+        "digest": "3610f67c659dc52b"
+      },
+      {
+        "phase": "incremental",
+        "bytes": "65620",
+        "ranges": "772",
+        "nodes": "0",
+        "ns": "31673333",
+        "digest": "3610f67c659dc52b"
+      },
+      {
+        "phase": "fresh",
+        "bytes": "65620",
+        "ranges": "772",
+        "nodes": "0",
+        "ns": "31131666",
+        "digest": "3610f67c659dc52b"
+      }
+    ]
+  },
+  {
+    "variant": "candidate",
+    "instrumented": true,
+    "fixture_kib": 256,
+    "returncode": 0,
+    "binary_sha256": "0210291c930d583aa42d61b206563682a3da3f240e90080911827a6c2bfbfb41",
+    "results": [
+      {
+        "phase": "initial",
+        "bytes": "262225",
+        "ranges": "3085",
+        "nodes": "0",
+        "ns": "127809625",
+        "digest": "95f91e6204133551"
+      },
+      {
+        "phase": "incremental",
+        "bytes": "262225",
+        "ranges": "3085",
+        "nodes": "0",
+        "ns": "129831083",
+        "digest": "95f91e6204133551"
+      },
+      {
+        "phase": "fresh",
+        "bytes": "262225",
+        "ranges": "3085",
+        "nodes": "0",
+        "ns": "129994875",
+        "digest": "95f91e6204133551"
+      }
+    ]
+  }
+]

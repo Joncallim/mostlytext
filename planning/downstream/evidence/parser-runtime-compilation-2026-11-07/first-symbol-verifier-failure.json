@@ -1,0 +1,5 @@
+{
+  "error": "The SwiftPM response file quotes paths containing spaces; literal quote characters were passed to nm instead of parsing them.",
+  "scope": "Baseline normal-console execution completed successfully; only object-path readback failed. Original compile log/status/output remain. No failed product assertion is relabeled.",
+  "correction": "Parse the retained exact original compiler/linker commands using shlex, preserve their actual source/object lists and compare the existing object symbol tables."
+}

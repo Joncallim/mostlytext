@@ -34,7 +34,7 @@ class ExactPinReviewTests(unittest.TestCase):
         self.apply_reviewed_updates(self.after)
         model_changed, recorded = module.reviewed_model_pin_delta(self.before, self.after)
         self.assertTrue(model_changed)
-        self.assertEqual(set(recorded), {"neon", "swifttreesitter"})
+        self.assertEqual(set(recorded), {"neon", "swifttreesitter", "tree-sitter"})
         for name, (owner, previous, candidate) in module.REVIEWED_INDEPENDENT_PIN_UPDATES.items():
             self.assertEqual(recorded[name], {"original": (owner, previous), "candidate": (owner, candidate)})
 
@@ -59,12 +59,35 @@ class ExactPinReviewTests(unittest.TestCase):
             with self.subTest(changed=changed), self.assertRaises(SystemExit):
                 module.reviewed_model_pin_delta(self.before, changed)
 
+    def test_previous_query_checkpoint_is_not_the_current_reviewed_graph(self):
+        previous = copy.deepcopy(self.after)
+        for value in previous:
+            if value["identity"] == "neon":
+                value["state"]["revision"] = "72174c8de8f28c957fd48850b90de99899b709ee"
+            elif value["identity"] == "swifttreesitter":
+                value["state"]["revision"] = "f2163a8bc5d0f1ce76b4cead48ce0f3ade4aa9f3"
+        with self.assertRaises(SystemExit):
+            module.reviewed_model_pin_delta(self.before, previous)
+
+    def test_previous_shared_subtree_checkpoint_is_not_the_current_compilation_graph(self):
+        previous = copy.deepcopy(self.after)
+        revisions = {
+            "neon": "f97aca5b3c8060323dd98e020fa4cadf8f0fa21f",
+            "swifttreesitter": "8a7e21004d4964df8d427b9c8ed1043b63f43ae3",
+            "tree-sitter": "cd96b385c813b5e5ae38cbc6e67bd659db327138",
+        }
+        for row in previous:
+            if row["identity"] in revisions:
+                row["state"]["revision"] = revisions[row["identity"]]
+        with self.assertRaises(SystemExit):
+            module.reviewed_model_pin_delta(self.before, previous)
+
     def test_independent_updates_cannot_qualify_an_unchanged_original_model(self):
         current = copy.deepcopy(self.before)
         self.apply_reviewed_updates(current)
         model_changed, independent = module.reviewed_model_pin_delta(self.before, current)
         self.assertFalse(model_changed)
-        self.assertEqual(set(independent), {"neon", "swifttreesitter"})
+        self.assertEqual(set(independent), {"neon", "swifttreesitter", "tree-sitter"})
 
 
 if __name__ == "__main__":

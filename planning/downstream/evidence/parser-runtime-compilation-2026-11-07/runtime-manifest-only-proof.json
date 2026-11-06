@@ -1,0 +1,51 @@
+{
+  "runtime_parent": "cd96b385c813b5e5ae38cbc6e67bd659db327138",
+  "runtime_head": "3b1fb00f8c4f8907073f9b7342a807a0231867fa",
+  "only_changed_git_objects": [
+    "MOSTLYTEXT_PATCHES.md",
+    "Package.swift"
+  ],
+  "other_git_objects_exact": 487,
+  "original_license_sha256": "5f9cf9fb6acb1972b35ae29119ce563bb60ec097656bc4b69b9bac2d04c7a147",
+  "tested_package_manifest_sha256": "c951513e4f0d3ab209cca958f74dd44830eb7b4d0d61641fcb887ffe3c28ebe7",
+  "source_algorithms_headers_modes_unchanged": true,
+  "normal_component_comparison": {
+    "source_delta": [
+      "runtime/tree-sitter/Package.swift"
+    ],
+    "identical_ordered_capture_count": 23256,
+    "original_c_implementation_files": 13,
+    "combined_includes_plus_retained_stdlib": 13,
+    "external_symbols_identical": 260,
+    "unchanged_compiler_defines_and_standard": true,
+    "five_run_medians": {
+      "baseline": {
+        "parse_seconds": 0.176402125,
+        "query_seconds": 0.056438667,
+        "total_seconds": 0.232540125
+      },
+      "combined": {
+        "parse_seconds": 0.161762167,
+        "query_seconds": 0.047046208,
+        "total_seconds": 0.21033625
+      }
+    },
+    "scope": "Normal Foundation component profile; no native or whole-app budget pass inferred"
+  },
+  "paired_confirmation": {
+    "five_run_medians": {
+      "baseline": {
+        "parse_seconds": 0.183110417,
+        "query_seconds": 0.057100375,
+        "total_seconds": 0.24056825
+      },
+      "combined": {
+        "parse_seconds": 0.165724709,
+        "query_seconds": 0.047368417,
+        "total_seconds": 0.213219417
+      }
+    },
+    "normal_outputs_identical": true,
+    "scope": "One paired confirmation after correcting copy-mode setup; no threshold or native acceptance result"
+  }
+}

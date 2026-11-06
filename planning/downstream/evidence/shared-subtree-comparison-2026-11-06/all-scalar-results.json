@@ -1,0 +1,76 @@
+[
+  {
+    "phase": "baseline",
+    "returncode": 2,
+    "command": [
+      "clang",
+      "-std=c11",
+      "-D_DEFAULT_SOURCE",
+      "-O2",
+      "-g",
+      "-I/Volumes/Fast SSD/CORTANA-GitHub/tree-sitter-included-range-seek/lib/include",
+      "-I/Volumes/Fast SSD/CORTANA-GitHub/mostlytext/MacDown2/Packages/TreeSitterMarkdown/Sources/TreeSitterMarkdownInline/src",
+      "/Volumes/Fast SSD/CORTANA-GitHub/mostlytext/planning/downstream/evidence/parser-included-range-seek-2026-11-05/valid_scalar_behavior_trace.c",
+      "/Volumes/Fast SSD/CORTANA-GitHub/tree-sitter-included-range-seek/lib/src/lib.c",
+      "/Volumes/Fast SSD/CORTANA-GitHub/mostlytext/MacDown2/Packages/TreeSitterMarkdown/Sources/TreeSitterMarkdownInline/src/parser.c",
+      "/Volumes/Fast SSD/CORTANA-GitHub/mostlytext/MacDown2/Packages/TreeSitterMarkdown/Sources/TreeSitterMarkdownInline/src/scanner.c",
+      "-o",
+      "/Volumes/Fast SSD/CORTANA-Builds/shared-subtree-comparison-20261106/baseline-all-scalar-traces"
+    ],
+    "query": "/Volumes/Fast SSD/CORTANA-GitHub/mostlytext/MacDown2/Packages/TreeSitterMarkdown/Sources/TreeSitterMarkdownInlineResources/queries/highlights.scm",
+    "fixture_sha256": "15ce821ab0120fde74be527351f8f55518ef384a93a2162facf44a7a10d64bf8",
+    "binary_sha256": "02821a829989058c179fdaa12d7a5980e4a40789e008bf7d7490b507c9ef38c1",
+    "stdout_sha256": "a6ffb09db0cc9b2fe802c3c41b005850f30e20f260ab3127888e7f68c1e61cb6",
+    "stderr_sha256": "5c821084ffdb6ed1335f7f1d1f73679ee3379425491aaa71b09a233f216e02dc"
+  },
+  {
+    "phase": "candidate",
+    "returncode": 2,
+    "command": [
+      "clang",
+      "-std=c11",
+      "-D_DEFAULT_SOURCE",
+      "-O2",
+      "-g",
+      "-I/Volumes/Fast SSD/CORTANA-GitHub/tree-sitter-shared-subtree-comparison/lib/include",
+      "-I/Volumes/Fast SSD/CORTANA-GitHub/mostlytext/MacDown2/Packages/TreeSitterMarkdown/Sources/TreeSitterMarkdownInline/src",
+      "/Volumes/Fast SSD/CORTANA-GitHub/mostlytext/planning/downstream/evidence/parser-included-range-seek-2026-11-05/valid_scalar_behavior_trace.c",
+      "/Volumes/Fast SSD/CORTANA-GitHub/tree-sitter-shared-subtree-comparison/lib/src/lib.c",
+      "/Volumes/Fast SSD/CORTANA-GitHub/mostlytext/MacDown2/Packages/TreeSitterMarkdown/Sources/TreeSitterMarkdownInline/src/parser.c",
+      "/Volumes/Fast SSD/CORTANA-GitHub/mostlytext/MacDown2/Packages/TreeSitterMarkdown/Sources/TreeSitterMarkdownInline/src/scanner.c",
+      "-o",
+      "/Volumes/Fast SSD/CORTANA-Builds/shared-subtree-comparison-20261106/candidate-all-scalar-traces"
+    ],
+    "query": "/Volumes/Fast SSD/CORTANA-GitHub/mostlytext/MacDown2/Packages/TreeSitterMarkdown/Sources/TreeSitterMarkdownInlineResources/queries/highlights.scm",
+    "fixture_sha256": "15ce821ab0120fde74be527351f8f55518ef384a93a2162facf44a7a10d64bf8",
+    "binary_sha256": "fbad1872b3dcac89f027329ad015bc235b78d37356ba8ada044f7b213c181e0f",
+    "stdout_sha256": "a6ffb09db0cc9b2fe802c3c41b005850f30e20f260ab3127888e7f68c1e61cb6",
+    "stderr_sha256": "5c821084ffdb6ed1335f7f1d1f73679ee3379425491aaa71b09a233f216e02dc"
+  },
+  {
+    "phase": "candidate-sanitized",
+    "returncode": 2,
+    "command": [
+      "clang",
+      "-std=c11",
+      "-D_DEFAULT_SOURCE",
+      "-O1",
+      "-g",
+      "-fno-omit-frame-pointer",
+      "-fsanitize=address,undefined",
+      "-I/Volumes/Fast SSD/CORTANA-GitHub/tree-sitter-shared-subtree-comparison/lib/include",
+      "-I/Volumes/Fast SSD/CORTANA-GitHub/mostlytext/MacDown2/Packages/TreeSitterMarkdown/Sources/TreeSitterMarkdownInline/src",
+      "/Volumes/Fast SSD/CORTANA-GitHub/mostlytext/planning/downstream/evidence/parser-included-range-seek-2026-11-05/valid_scalar_behavior_trace.c",
+      "/Volumes/Fast SSD/CORTANA-GitHub/tree-sitter-shared-subtree-comparison/lib/src/lib.c",
+      "/Volumes/Fast SSD/CORTANA-GitHub/mostlytext/MacDown2/Packages/TreeSitterMarkdown/Sources/TreeSitterMarkdownInline/src/parser.c",
+      "/Volumes/Fast SSD/CORTANA-GitHub/mostlytext/MacDown2/Packages/TreeSitterMarkdown/Sources/TreeSitterMarkdownInline/src/scanner.c",
+      "-o",
+      "/Volumes/Fast SSD/CORTANA-Builds/shared-subtree-comparison-20261106/candidate-sanitized-all-scalar-traces"
+    ],
+    "query": "/Volumes/Fast SSD/CORTANA-GitHub/mostlytext/MacDown2/Packages/TreeSitterMarkdown/Sources/TreeSitterMarkdownInlineResources/queries/highlights.scm",
+    "fixture_sha256": "15ce821ab0120fde74be527351f8f55518ef384a93a2162facf44a7a10d64bf8",
+    "binary_sha256": "f2f2e9126df33831f5ca435af7089fc067443883f71ff90fa692dbf622b90398",
+    "stdout_sha256": "a6ffb09db0cc9b2fe802c3c41b005850f30e20f260ab3127888e7f68c1e61cb6",
+    "stderr_sha256": "5c821084ffdb6ed1335f7f1d1f73679ee3379425491aaa71b09a233f216e02dc"
+  }
+]
