@@ -78,3 +78,16 @@ This is a startup correctness correction, not owner migration, trusted cold CLI
 launch, signed/notarized update, separate-account, final artifact or release
 acceptance. Those original criteria remain open. DiagnosticPR112 stays a draft
 and its observed source is never merged as a product correction.
+
+
+## Actual isolated platform counterexample
+
+The unique current-bundle Foundation console returns nil for the original
+named-suite call and emits Foundation's explicit own-bundle refusal. The
+corrected standard selection is the actual standard object; a different unique
+suite is available. Bounded normal exit0, exact binary digest and no GUI-library
+linkage are retained in evidence/current-domain-bootstrap-2026-11-07. No
+preferences or app data are read/written by that console. The app-host test must
+now demonstrate the actual bound store's empty-import ready callback and
+unchanged saved preferences; the platform counterexample alone is not native
+startup/CLI qualification.

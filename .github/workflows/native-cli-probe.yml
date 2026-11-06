@@ -1,0 +1,81 @@
+name: Normal application public CLI probe
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - '.github/scripts/native-cli-app-host.swift'
+      - '.github/scripts/run-native-cli-probe.py'
+      - '.github/workflows/native-cli-probe.yml'
+      - 'MacDown2/**'
+  workflow_dispatch:
+
+concurrency:
+  group: native-cli-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  normal-release-app:
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Select macOS26 ARM and deployment-matching Xcode
+        run: |
+          set -euo pipefail
+          XCODE=$(ls -d /Applications/Xcode*.app | grep '26' | head -1 || true)
+          test -n "$XCODE"
+          test "$(uname -m)" = arm64
+          test "$(sw_vers -productVersion | cut -d. -f1)" = 26
+          sudo xcode-select -s "$XCODE/Contents/Developer"
+          xcodebuild -version
+          sw_vers
+          git rev-parse HEAD
+      - name: Generate project and preserve exact dependency pins
+        run: |
+          set -euo pipefail
+          brew untap aws/tap 2>/dev/null || true
+          brew install xcodegen
+          cd MacDown2
+          xcodegen generate
+          cd ..
+          MacDown2/scripts/pin-xcode-package-versions.sh
+          python3 .github/scripts/test-run-owned-app-tests.py
+      - name: Compile normal locked Release app and hosted controller
+        run: |
+          set -euo pipefail
+          swiftc -swift-version 6 -parse-as-library .github/scripts/native-cli-app-host.swift -o "$RUNNER_TEMP/native-cli-app-host"
+          xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
+            -configuration Release -destination 'platform=macOS,arch=arm64' ONLY_ACTIVE_ARCH=YES \
+            -derivedDataPath "$RUNNER_TEMP/cli-native-app" \
+            -onlyUsePackageVersionsFromResolvedFile CODE_SIGN_IDENTITY=- build
+      - name: Exercise the public command against the actual normal app
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/run-owned-app-tests.py "$RUNNER_TEMP/native-cli-owned" \
+            "$RUNNER_TEMP/cli-native-app/Build/Products/Release/MacDown2.app/Contents/MacOS/MacDown2" -- \
+            python3 .github/scripts/run-native-cli-probe.py \
+            "$RUNNER_TEMP/cli-native-app/Build/Products/Release/MacDown2.app" \
+            "$RUNNER_TEMP/native-cli-app-host" "$RUNNER_TEMP/native-cli-proof" \
+            | tee "$RUNNER_TEMP/native-cli-probe.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: normal-release-public-cli
+          path: |
+            ${{ runner.temp }}/native-cli-owned/**
+            ${{ runner.temp }}/native-cli-proof/receipt.json
+            ${{ runner.temp }}/native-cli-proof/*.md
+            ${{ runner.temp }}/native-cli-proof/*.json
+            ${{ runner.temp }}/native-cli-proof/*.sample.txt
+            ${{ runner.temp }}/native-cli-probe.log
+          if-no-files-found: warn
+      - name: Verify final dependency locks
+        if: always()
+        run: |
+          MacDown2/scripts/pin-xcode-package-versions.sh --check
+          git diff --exit-code -- MacDown2/Packages/MacDownKit/Package.resolved
