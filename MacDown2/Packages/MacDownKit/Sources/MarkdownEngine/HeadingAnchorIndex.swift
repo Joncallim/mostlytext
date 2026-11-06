@@ -44,7 +44,7 @@ public struct HeadingAnchorIndex: Sendable, Equatable {
         documentID: String,
         recoveryEpoch: UUID,
         sourceGeneration: UInt,
-        reservedIDs: Set<String>
+        reservedIDs: some Sequence<String>
     ) throws {
         let extraction = FrontMatterExtractor.extract(from: sourceText)
         let digest = MarkdownSourceFingerprint.sha256(sourceText)

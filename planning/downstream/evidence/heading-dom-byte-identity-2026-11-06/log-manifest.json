@@ -1,0 +1,112 @@
+[
+  {
+    "file": "allocator-after-debug.log.gz",
+    "bytes": 1489,
+    "uncompressed_sha256": "6ec6f4edd8b8eca64bb6fd07aaf02d8874fb6bb098f847374b3aa1ab65d7dc45"
+  },
+  {
+    "file": "allocator-after-release.log.gz",
+    "bytes": 1504,
+    "uncompressed_sha256": "708768ae01b6dd020d59385bec8838a694c0671457d41395ec5a812fdcaa5720"
+  },
+  {
+    "file": "allocator-before.log.gz",
+    "bytes": 1845,
+    "uncompressed_sha256": "142f188b945eea0944d1c323dffa38ad5cdeff275bb142afdf36cf0b708fcdff"
+  },
+  {
+    "file": "allocator-first-platform-setup.log.gz",
+    "bytes": 8581,
+    "uncompressed_sha256": "d9c0994be12b0aaf218a965994847889af43eba5687c057ada5fe10af5842915"
+  },
+  {
+    "file": "app-ui-tests-compile.log.gz",
+    "bytes": 5297071,
+    "uncompressed_sha256": "f09cdc3f010df1e6512f21b5cdbc5d475296be6412ddc418c52c78e751809b4f"
+  },
+  {
+    "file": "complete-package-tests-compile.log.gz",
+    "bytes": 157698,
+    "uncompressed_sha256": "54de172cea6745b9f757c143d4e3be12c840797e6f925b1d7eecd11f54705d18"
+  },
+  {
+    "file": "compliance.log.gz",
+    "bytes": 54,
+    "uncompressed_sha256": "1c5db2ff733b1322bc72e36c65800fef3b2f3a18c967fcbe07d0a34482f810a7"
+  },
+  {
+    "file": "final-stacked-app-ui-tests-compile.log.gz",
+    "bytes": 455492,
+    "uncompressed_sha256": "22452def96b1b25157a896bdacd6fa2a76f7068af14f16841d0f4032821a0e8d"
+  },
+  {
+    "file": "final-stacked-format.log.gz",
+    "bytes": 264,
+    "uncompressed_sha256": "8db941870a43a93882617dd7e01804ebf39450ce98aaeaf672150cdee63baf80"
+  },
+  {
+    "file": "final-stacked-lint.log.gz",
+    "bytes": 75953,
+    "uncompressed_sha256": "74c552be0187fb4a86f11e732a3f19348f6106868274756e218018aa2c33f6bd"
+  },
+  {
+    "file": "final-stacked-package-tests-compile.log.gz",
+    "bytes": 49328,
+    "uncompressed_sha256": "f9ca913fdd98d9b1cd273993372de2f0dc9126ee971fe33fdd48d1ca5d8b3144"
+  },
+  {
+    "file": "full-format.log.gz",
+    "bytes": 264,
+    "uncompressed_sha256": "c3dde857986c19600026d408738eb25b3ded9a2eebde400919ef10a952397f63"
+  },
+  {
+    "file": "full-lint.log.gz",
+    "bytes": 75953,
+    "uncompressed_sha256": "d4c7196f4141d00a9b7fa2f4aa84bc137b3adc8e08a9e6709c515a7a00c3fbf9"
+  },
+  {
+    "file": "heading-debug.log.gz",
+    "bytes": 3736,
+    "uncompressed_sha256": "cf1c64ca7e77d28e2043fb33f8b447eabb8cb92b31768b01c1681b74b98e8cb7"
+  },
+  {
+    "file": "heading-release.log.gz",
+    "bytes": 8239,
+    "uncompressed_sha256": "1bdbfea4d1537f4391e50c8d393fdc0ba2dc572cabccc9bd38502804ce19f5cf"
+  },
+  {
+    "file": "markdown-debug.log.gz",
+    "bytes": 55699,
+    "uncompressed_sha256": "48fe2af43c3417447fffcd19463ef850e42b8646a09772acc3789253ccbf0cb6"
+  },
+  {
+    "file": "project-generation.log.gz",
+    "bytes": 286,
+    "uncompressed_sha256": "fdad5756c0ee8cfc68b02b241e2946bfe2d86b9eaeef424655e2c56348bb5cb8"
+  },
+  {
+    "file": "stacked-app-ui-tests-compile.log.gz",
+    "bytes": 737507,
+    "uncompressed_sha256": "79321d0acae124f9eb8b051c3115d3898e4c2dd85eb714793cf69fdfe870a343"
+  },
+  {
+    "file": "stacked-heading-debug.log.gz",
+    "bytes": 7052,
+    "uncompressed_sha256": "cc13ab23922f98d516b71156cbe879cacd78a6fa94a66983df9c258fbd38ba56"
+  },
+  {
+    "file": "stacked-heading-release.log.gz",
+    "bytes": 4032,
+    "uncompressed_sha256": "6f4897f6eec6f862905ab9ad504d2fdde0cbbbcbdedecc16555ec90b75182e67"
+  },
+  {
+    "file": "stacked-lint.log.gz",
+    "bytes": 76614,
+    "uncompressed_sha256": "6ed466d9c0842603c7dc61bd46a96ae4a73de76fda6b3d4c0773c2897ded8770"
+  },
+  {
+    "file": "stacked-package-tests-compile.log.gz",
+    "bytes": 795,
+    "uncompressed_sha256": "7f34bb27b05e9c431cd126408673a9b4ed25451d13bb4fec9aa04ad49731602f"
+  }
+]

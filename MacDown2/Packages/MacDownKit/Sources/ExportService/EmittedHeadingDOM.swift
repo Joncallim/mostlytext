@@ -11,7 +11,7 @@ enum EmittedHeadingDOM {
 
     struct Inspection: Sendable {
         let markedHTMLSHA256: String
-        let reservedIDs: Set<String>
+        let reservedIDs: [String]
         let elementTags: [String]
         let markerParentIndex: [String: Int]
     }
@@ -51,8 +51,10 @@ enum EmittedHeadingDOM {
         guard inspected.markedHTMLSHA256 == sha256(rendered.html),
               matches.count == rendered.headingMarkers.count else { return nil }
         let fragments = matches.map(\.indexed.fragment)
-        guard Set(fragments).count == fragments.count,
-              fragments.allSatisfy({ !inspected.reservedIDs.contains($0) }) else { return nil }
+        let fragmentKeys = fragments.map { Data($0.utf8) }
+        let reservedKeys = Set(inspected.reservedIDs.map { Data($0.utf8) })
+        guard Set(fragmentKeys).count == fragments.count,
+              fragmentKeys.allSatisfy({ !reservedKeys.contains($0) }) else { return nil }
 
         var replacements: [String: (level: Int, fragment: String)] = [:]
         for (match, marker) in zip(matches, rendered.headingMarkers) {
@@ -80,8 +82,8 @@ enum EmittedHeadingDOM {
         _ elements: [Element], expectedByData: [String: Int],
         expectedCount: Int, markedHTML: String
     ) -> Inspection? {
-        var reservedIDs: Set<String> = []
-        var namespaceIDs: Set<String> = []
+        var reservedIDs: [String] = []
+        var namespaceIDs: Set<Data> = []
         var explicitCount = 0
         var markerParents: [String: Int] = [:]
         var tags: [String] = []
@@ -90,14 +92,14 @@ enum EmittedHeadingDOM {
             let tag = element.tagNameNormal()
             tags.append(tag)
             if element.hasAttr("id"), let value = try? element.attr("id") {
-                if value.hasPrefix("mt117-svg-"), !namespaceIDs.insert(value).inserted {
+                if value.hasPrefix("mt117-svg-"), !namespaceIDs.insert(Data(value.utf8)).inserted {
                     return nil
                 }
-                reservedIDs.insert(value)
+                reservedIDs.append(value)
                 explicitCount += 1
             }
             if tag == "a", element.hasAttr("name"), let value = try? element.attr("name") {
-                reservedIDs.insert(value)
+                reservedIDs.append(value)
                 explicitCount += 1
             }
             guard explicitCount <= maximumExplicitIDs else { return nil }
@@ -121,21 +123,21 @@ enum EmittedHeadingDOM {
         matches: [EmittedHeadingMatcher.Match], markers: [CMarkGFM.HeadingMarker]
     ) -> Bool {
         guard elements.map({ $0.tagNameNormal() }) == inspected.elementTags else { return false }
-        var targetPositions: [String: [Int]] = [:]
-        let targetSet = Set(matches.map(\.indexed.fragment))
+        var targetPositions: [Data: [Int]] = [:]
+        let targetSet = Set(matches.map { Data($0.indexed.fragment.utf8) })
         for (position, element) in elements.enumerated() {
-            if element.hasAttr("id"), let value = try? element.attr("id"), targetSet.contains(value) {
-                targetPositions[value, default: []].append(position)
+            if element.hasAttr("id"), let value = try? element.attr("id"), targetSet.contains(Data(value.utf8)) {
+                targetPositions[Data(value.utf8), default: []].append(position)
             }
             if element.tagNameNormal() == "a", element.hasAttr("name"),
-               let value = try? element.attr("name"), targetSet.contains(value) {
-                targetPositions[value, default: []].append(position)
+               let value = try? element.attr("name"), targetSet.contains(Data(value.utf8)) {
+                targetPositions[Data(value.utf8), default: []].append(position)
             }
         }
         for (match, marker) in zip(matches, markers) {
             let data = String(marker.comment.dropFirst(4).dropLast(3))
             guard let expected = inspected.markerParentIndex[data], expected < elements.count,
-                  targetPositions[match.indexed.fragment] == [expected],
+                  targetPositions[Data(match.indexed.fragment.utf8)] == [expected],
                   elements[expected].tagNameNormal() == "h\(marker.location.level)" else { return false }
         }
         return true
