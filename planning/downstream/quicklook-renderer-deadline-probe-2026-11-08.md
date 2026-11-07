@@ -92,3 +92,17 @@ memory/retirement, system factory repetition, hostile passive composition,
 production extension packaging, final install/localisation or whole QL-REPLY.
 Any false execution-placement assumption requires a written narrow architecture
 revision before more code. The production app/packages/project stay unchanged.
+
+### Real API observation boundary before implementation
+
+The current D2 renderer exposes no public worker-phase hook. The probe's actual
+worker-start event therefore brackets invocation of its unchanged real render
+API, not entry into WASM or proof of a physically blocked MainActor. A successful
+small diagram must still return real valid SVG. The large-case ordering can
+establish fallback while that real API is outstanding, including real renderer
+preparation/admission/execution, but cannot identify its internal pending phase.
+Do not claim that narrower result proves synchronous WASM interruption, hard
+memory bounds, physical WebContent retirement or the complete QL-REPLY gate.
+No production or copied-renderer instrumentation is added to manufacture a
+worker-phase observation. Preserve a result that lacks the required ordering as
+inconclusive/failed; do not silently relabel it as actual busy WASM evidence.
