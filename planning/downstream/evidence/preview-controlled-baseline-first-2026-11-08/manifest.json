@@ -1,0 +1,169 @@
+{
+  "head": "1e485094f7cd750c94df6b1270112298bca6235a",
+  "run": 42393278791,
+  "conclusion": "success",
+  "records": [
+    {
+      "file": "00-controlled-baseline-first-run.json.gz",
+      "original": "controlled-baseline-first-run.json",
+      "bytes": 12506,
+      "sha256": "c3164685b2c00904013e8f948c8dca9d565142247f254bbb8c1afff1553aa5fa"
+    },
+    {
+      "file": "01-controlled-baseline-first-artifacts.json.gz",
+      "original": "controlled-baseline-first-artifacts.json",
+      "bytes": 778,
+      "sha256": "6856fd1517fa4c0df0e81da827be24b3d083aaa623ab0d629cad5e0d687c3895"
+    },
+    {
+      "file": "02-controlled-baseline-first-artifact--preview-grant-app-tests-Debug-revision-independently-verified.json.gz",
+      "original": "controlled-baseline-first-artifact--preview-grant-app-tests-Debug-revision-independently-verified.json",
+      "bytes": 17904,
+      "sha256": "e5d1407629b7255fbb6fca39ddbd371254c3e1cce85d06346a854a1343df53e7"
+    },
+    {
+      "file": "03-controlled-baseline-staged-independently-verified.json.gz",
+      "original": "controlled-baseline-staged-independently-verified.json",
+      "bytes": 2302,
+      "sha256": "ddef2c0c01accf59b6bee3a4236cfc1bd9091fadb18d5d0f2353d11e4916c471"
+    },
+    {
+      "file": "04-receipt.json.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/receipt.json",
+      "bytes": 248760,
+      "sha256": "63a5b0d437cd1c316ee43b0c7052eea8968fc3bfa94910ea0b30eca42fcb6a2b"
+    },
+    {
+      "file": "05-probe.log.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/probe.log",
+      "bytes": 177608,
+      "sha256": "4a4068ddfc939f00b72ea8b4694ff1b80596bfaed403d9bd12a03db296f7dcbe"
+    },
+    {
+      "file": "06-selection-probe.log.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/selection-probe.log",
+      "bytes": 11264,
+      "sha256": "e220b4c7d8937d383817a19992929997456623592e0d96f3dd029f051fe2baac"
+    },
+    {
+      "file": "07-parsed-frame-results.json.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/parsed-frame-results.json",
+      "bytes": 668,
+      "sha256": "2f6a76bfd94bc6a76e5939e4fd96a9b0a33dd72139145da06b4cf3b5c580e279"
+    },
+    {
+      "file": "08-compiled-initial.json.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/compiled-initial.json",
+      "bytes": 2614,
+      "sha256": "f08a16c0e933496456df0e71a1efe81125d64f0b2e2b78ee0836ca666422d39e"
+    },
+    {
+      "file": "09-compiled-initial-verified.json.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/compiled-initial-verified.json",
+      "bytes": 1659,
+      "sha256": "5271889e765a570b5babe25812f59b500c9de2b74e4d3cb46cbc679568a00e62"
+    },
+    {
+      "file": "10-actual-initial-summary.json.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/actual-initial-summary.json",
+      "bytes": 1261,
+      "sha256": "8fa0165be02fd45d95036e9144b58dc69975a9424df22913c226037ba587244b"
+    },
+    {
+      "file": "11-compiled-selection.json.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/compiled-selection.json",
+      "bytes": 2616,
+      "sha256": "defc671414bc69cc61d0a7925d2603635127d3b158be4c588cb153feb0e92584"
+    },
+    {
+      "file": "12-compiled-selection-verified.json.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/compiled-selection-verified.json",
+      "bytes": 1347,
+      "sha256": "504cdedf15767d3385a0083d77b232634ce5e681d137fd66fa13e6130cd27544"
+    },
+    {
+      "file": "13-actual-selection-summary.json.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/actual-selection-summary.json",
+      "bytes": 970,
+      "sha256": "8d2b5cc41dab2da2025da79343d1d6a173085734db633d5cbd2bd5c4df6ff4ea"
+    },
+    {
+      "file": "14-compiled-revision-mutant.json.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/compiled-revision-mutant.json",
+      "bytes": 2622,
+      "sha256": "fdce7798d1ea4d5a5b1b9a1532891a616db10352296cca97e73c636d865d39b8"
+    },
+    {
+      "file": "15-compiled-revision-mutant-verified.json.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/compiled-revision-mutant-verified.json",
+      "bytes": 8548,
+      "sha256": "728304aaa9cf45aa18cfffcfd1c307c00f4b9631b5724379d0dcc08b2f375761"
+    },
+    {
+      "file": "16-actual-revision-mutant-summary.json.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/actual-revision-mutant-summary.json",
+      "bytes": 8149,
+      "sha256": "cca97b462e246840bb11fc5f181a3e2d3327fe0019120a851c5e48b4f72e0235"
+    },
+    {
+      "file": "17-compiled-revision-restored.json.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/compiled-revision-restored.json",
+      "bytes": 2624,
+      "sha256": "7c5250e67e17a0e6c6f235c27363df4686533f1e99d41659667c5baa05a8a55c"
+    },
+    {
+      "file": "18-compiled-revision-restored-verified.json.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/compiled-revision-restored-verified.json",
+      "bytes": 1355,
+      "sha256": "efe5e95b9a354b4eef01f8886e56bf4797cfb55f36b0bc7e74df594e203c0062"
+    },
+    {
+      "file": "19-actual-revision-restored-summary.json.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/actual-revision-restored-summary.json",
+      "bytes": 970,
+      "sha256": "cdc1ed69054447dfef91afe2e0d13a951a80027554a29f179a44088b6404f4cd"
+    },
+    {
+      "file": "20-compiled-initial.json.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/delayed-grant-diagnosis/compiled-initial.json",
+      "bytes": 2614,
+      "sha256": "f08a16c0e933496456df0e71a1efe81125d64f0b2e2b78ee0836ca666422d39e"
+    },
+    {
+      "file": "21-result.json.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/delayed-grant-diagnosis/result.json",
+      "bytes": 1805,
+      "sha256": "9160a22d9658913c078d297aae7b55dd5ffd6c523e4270e25b60585c9f96eb1b"
+    },
+    {
+      "file": "22-actual-staged-summary.json.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/delayed-grant-diagnosis/actual-staged-summary.json",
+      "bytes": 970,
+      "sha256": "bd68afc1de2259586414d65a64fa608f99d75e51101a4e1c8682a81ee88cf146"
+    },
+    {
+      "file": "23-probe.log.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/delayed-grant-diagnosis/probe.log",
+      "bytes": 23413,
+      "sha256": "5fe46dcb48b18363e12ea0a129e369b5d86fb74e4a9b1037fcfa318e94a08332"
+    },
+    {
+      "file": "24-identity.json.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/delayed-grant-diagnosis/diagnostics/identity.json",
+      "bytes": 1035,
+      "sha256": "9df98bfdf8d70d69043d295fd9916a6725bf13aed82d425ae8ab9edac3a567ed"
+    },
+    {
+      "file": "25-status.json.gz",
+      "original": "controlled-baseline-first-artifact/preview-grant-app-tests-Debug-revision/delayed-grant-diagnosis/diagnostics/status.json",
+      "bytes": 138,
+      "sha256": "c9cd690019f90733d84edc37b1e138ca490dd5596371cff9801f3cb2fc62848c"
+    },
+    {
+      "file": "26-controlled-baseline-staged-independent-tests.json.gz",
+      "original": "controlled-baseline-staged-independent-tests.json",
+      "bytes": 2425,
+      "sha256": "7afe8fbdc9cab55ab801706d6dd1e7bd58f275670fcd149d8b69c024737a76d6"
+    }
+  ]
+}
