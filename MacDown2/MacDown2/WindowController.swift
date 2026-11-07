@@ -106,9 +106,8 @@ final class WindowController: NSWindowController, NSWindowDelegate {
             recoveryExecutor: recoveryExecutor
         )
 
-        // Eagerly create the text system and parse session for the active tab
-        // so session-save can read cursor/scroll state and the preview can
-        // render immediately once SwiftUI mounts the view.
+        // Eagerly create the text system and parse session for the active tab so session-save can read cursor/scroll
+        // state and the preview can render immediately once SwiftUI mounts the view.
         let shell = WorkspaceShellView(
             model: model,
             editorStore: editorStore,
@@ -123,6 +122,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
             externalFileController: externalFileController
         )
         .environment(\.windowCoordinator, coordinator)
+        .environment(\.appSettings, coordinator.appSettings)
         .environment(\.previewResourceWindowState, previewResourceState)
         let hostingController: NSViewController = initialContentController ?? NSHostingController(rootView: shell)
         let window = DocumentWindow(contentViewController: hostingController)
