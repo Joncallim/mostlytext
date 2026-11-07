@@ -66,3 +66,15 @@ performance claim. No user strings or accessibility/persistence change.
    Release menu journey plus all affected qualification, normal identity-bound
    Quit and original issue proof. PR146 remains an unresolved stacked dependency;
    finalRC/fullparity/budgets/inflightcancel/locale/VoiceOver/owner gates stay open.
+
+## Independent publication placement
+
+Publish this readback on its own branch directly from actual main324155cc,
+without the unqualified activation or ordinary export journey. The original
+validator is recovered byte-for-byte from the committed first-failure packet,
+not imported as a new product/helper. Its sourceSHA is fixed before compilation.
+The new workflow also runs on same-repository PR events for its exact four
+private diagnostic paths; this registers/evaluates the new workflow before any
+merge. The existing host guard admits precisely those same-repository events.
+PR147 source734db2f2 remains frozen unchanged on GitHub. No canonical existing
+workflow is replaced and no ordinary export UI journey is retried here.

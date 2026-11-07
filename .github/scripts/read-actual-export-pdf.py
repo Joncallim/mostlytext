@@ -46,13 +46,12 @@ def main():
     raw = records['ordinary-export.pdf']
     if len(raw) != 16424 or hashlib.sha256(raw).hexdigest() != PDF_SHA:
         raise RuntimeError('Refuse any substitute PDF or later successful fixture')
-    original = Path('.github/hosted-export-acceptance/ValidatePDF.swift')
-    if (hashlib.sha256(original.read_bytes()).hexdigest() != ORIGINAL_VALIDATOR_SHA
-            or original.read_bytes() != records['ValidatePDF.swift']):
+    original = records['ValidatePDF.swift']
+    if hashlib.sha256(original).hexdigest() != ORIGINAL_VALIDATOR_SHA:
         raise RuntimeError('Original failed guard must remain unchanged')
     path = ROOT / 'pdf-readback-receipt.json'
     inputs = ['.github/scripts/read-actual-export-pdf.py', '.github/hosted-export-acceptance/ReadActualPDF.swift',
-              '.github/hosted-export-acceptance/ValidatePDF.swift', '.github/scripts/prepare-hosted-public-focus.py',
+              '.github/scripts/prepare-hosted-public-focus.py',
               '.github/workflows/ordinary-export-pdf-readback.yml', str(PACKET / 'manifest.json')]
     source = {p: hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in inputs}
     if sys.argv[1] == 'prepare':
@@ -60,13 +59,15 @@ def main():
             raise RuntimeError('The fixed diagnostic root must be fresh')
         (ROOT / 'documents').mkdir(parents=True, mode=0o700)
         (ROOT / 'documents/ordinary-export.pdf').write_bytes(raw)
+        (ROOT / 'OriginalValidatePDF.swift').write_bytes(original)
         record = {'checkout': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
                   'source_sha256': source, 'pdf_sha256': PDF_SHA, 'diagnostic_only': True, 'qualification_candidate': False,
                   'app_GUI_launches': 0, 'scope': 'Read-only immutable original failed canary; not export qualification'}
         path.write_text(json.dumps(record, indent=2) + '\n')
         return
     record = json.loads(path.read_bytes())
-    if record['source_sha256'] != source or (ROOT / 'documents/ordinary-export.pdf').read_bytes() != raw:
+    if (record['source_sha256'] != source or (ROOT / 'documents/ordinary-export.pdf').read_bytes() != raw
+            or (ROOT / 'OriginalValidatePDF.swift').read_bytes() != original):
         raise RuntimeError('Original source or PDF bytes changed before native readback')
     record['compiled_sha256'] = {n: hashlib.sha256((ROOT / n).read_bytes()).hexdigest()
                                  for n in ['validate-export-pdf', 'read-actual-export-pdf']}
