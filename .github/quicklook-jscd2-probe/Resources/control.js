@@ -1,4 +1,12 @@
 // Execute the existing D2 browser API, not a substitute parser or SVG fixture.
+if (typeof Bf !== 'function') throw Error('Missing frozen browser unpack boundary');
+const originalWasmUnpack = Bf;
+Bf = function () {
+  __hostStage('wasm-unpack-start');
+  const value = originalWasmUnpack();
+  __hostStage('wasm-unpack-end');
+  return value;
+};
 globalThis.__d2Result = null;
 globalThis.__d2Phase = 'initialise';
 (async () => {

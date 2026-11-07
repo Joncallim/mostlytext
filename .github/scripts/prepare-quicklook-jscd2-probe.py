@@ -140,6 +140,9 @@ def reference_module(root, fixture):
         expected={name:digest(fixture/'Resources'/f'{name}.js') for name in ['host','d2-browser','control']}
         if result['assets']!=expected:raise RuntimeError('Reference used different engine/adapter assets')
         return record
+    except subprocess.TimeoutExpired as error:
+        (root/'reference-module.log').write_bytes((error.stdout or b'')+(error.stderr or b''))
+        record['timed_out']=True;record['error']=repr(error);raise
     except BaseException as error:record['error']=repr(error);raise
     finally:(root/'reference-module.json').write_text(json.dumps(record,indent=2)+'\n')
 
