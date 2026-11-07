@@ -106,3 +106,13 @@ Retain the complete first job/artifact/owned response. This is a demonstrated
 fixture command defect, not a native Finder failure or evidence that automation
 is blocked. A fresh materially corrected attempt is required before any native
 result is claimed. Provider, UI-test and prepared source bytes remain unchanged.
+
+The next first outcome49802e60/run42317900444 again stops before tests in1.108s:
+this Xcode explicitly requires test-iterations to be greater than1. The help's
+number description was insufficient. Remove ALL repetition/retry options and
+use the generated scheme's ordinary single execution. Preserve that second
+parser refusal separately. Confirm the exact generated scheme contains no retry
+or repetition mode and exercise both rejected and corrected argument parsing
+through showBuildSettings ONLY locally; never execute the UI test locally.
+Provider/UI-test/positive criteria/deadlines stay unchanged. No actual Finder
+request has executed and neither parser refusal establishes a native blocker.
