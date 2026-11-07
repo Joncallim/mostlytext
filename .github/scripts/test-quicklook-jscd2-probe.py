@@ -16,6 +16,13 @@ SPEC=importlib.util.spec_from_file_location('jscd2',HERE/'prepare-quicklook-jscd
 PREP=importlib.util.module_from_spec(SPEC);SPEC.loader.exec_module(PREP)
 
 
+def async_fixture():
+    return {'kind':'same-thread-public-async-wasm','module_bytes':39,
+            'module_sha256':'ccf59f0f7a7625ee380ed228905aadfa11072ac14cea1c53d1e7f3953d4d48c6',
+            'old_blocking_poll_completed':False,'blocked_elapsed_seconds':0.25,'pumped_elapsed_seconds':0.01,
+            'answer':42,'same_thread':True,'exception_absent':True,'rejection_absent':True,'diagnostic_only':True}
+
+
 def fixture():
     svg='<svg xmlns="http://www.w3.org/2000/svg"><rect/><text>JSC_D2_ALPHA JSC_D2_BETA</text></svg>'
     return {'kind':'mostlytext-qljscd2-compatibility','request_id':2,'started_uptime':100.0,'observed_uptime':100.1,
@@ -23,16 +30,28 @@ def fixture():
             'controls':{'utf8':True,'base64':True,'randomBytes':32,'timer':True},
             'assets':dict.fromkeys(['host','d2-browser','control'],'a'*64),
             'worker_transform':dict.fromkeys(['original_sha256','transformed_sha256'],'b'*64),
-            'diagnostic_only':True,'qualification_candidate':False}
+            'diagnostic_only':True,'qualification_candidate':False,'async_control':async_fixture()}
 
 
 def messages(row):
     raw=json.dumps(row).encode();parts=[raw[i:i+768] for i in range(0,len(raw),768)]
-    return [f'QL_JSCD2_PROBE chunk id=2 index={i} count={len(parts)} base64='+base64.b64encode(v).decode() for i,v in enumerate(parts)]+[f'QL_JSCD2_PROBE result id=2 bytes={len(raw)} sha256='+hashlib.sha256(raw).hexdigest(),'QL_JSCD2_PROBE factory id=2 bytes=1000']
+    return [f'QL_JSCD2_PROBE chunk id=2 index={i} count={len(parts)} base64='+base64.b64encode(v).decode() for i,v in enumerate(parts)]+[f'QL_JSCD2_PROBE result id=2 bytes={len(raw)} sha256='+hashlib.sha256(raw).hexdigest(),'QL_JSCD2_PROBE factory id=2 bytes=1000']+['QL_JSCD2_PROBE async-control-base64='+base64.b64encode(json.dumps(row['async_control']).encode()).decode()]
 
 
 
 class D2CompatibilityTests(unittest.TestCase):
+    def test_async_control_requires_real_answer_identity_thread_and_exception_state(self):
+        for key,value in [('module_bytes',True),('module_sha256','a'*64),('answer',True),('answer',41),('old_blocking_poll_completed',1),('same_thread',False),('exception_absent',False),('rejection_absent',False),('blocked_elapsed_seconds',True),('pumped_elapsed_seconds',float('nan'))]:
+            row=async_fixture();row[key]=value
+            with self.assertRaises(RuntimeError):PREP.validate_async_control(row)
+        for completed in [False,True]:
+            row=async_fixture();row['old_blocking_poll_completed']=completed;PREP.validate_async_control(row)
+
+    def test_missing_duplicate_or_wrong_actual_async_control_refuses(self):
+        row=fixture();actual=messages(row)
+        for changed in [actual[:-1],actual+[actual[-1]],actual[:-1]+[actual[-1].replace('base64=','base64=AAAA')]]:
+            with self.assertRaises((RuntimeError,ValueError,UnicodeDecodeError)):PREP.validate_observation(row,changed)
+
     def test_valid_schema_is_only_schema(self):
         row=fixture();PREP.validate_observation(row,messages(row))
 
@@ -78,13 +97,13 @@ class D2CompatibilityTests(unittest.TestCase):
     def test_chunk_corruption_or_wrong_hash_refuses(self):
         row=fixture();actual=messages(row)
         for changed in [[actual[0].replace('index=0','index=1')]+actual[1:],
-                        [actual[0].replace('count='+str(len(actual)-2),'count=999')]+actual[1:],
-                        actual[:-2]+[actual[-2].replace('sha256=','sha256=f')]+actual[-1:]]:
+                        [actual[0].replace('count='+str(len(actual)-3),'count=999')]+actual[1:],
+                        actual[:-3]+[actual[-3].replace('sha256=','sha256=f')]+actual[-2:]]:
             with self.assertRaises(RuntimeError):PREP.validate_observation(row,changed)
 
     def test_factory_required_and_frozen(self):
         row=fixture()
-        for actual in [messages(row)[:-1],messages(row)+['QL_JSCD2_PROBE factory id=2 bytes=1001']]:
+        for actual in [messages(row)[:-2]+messages(row)[-1:],messages(row)+['QL_JSCD2_PROBE factory id=2 bytes=1001']]:
             with self.assertRaises(RuntimeError):PREP.validate_observation(row,actual)
 
     def test_nonfinite_reversed_or_bool_time_refuses(self):

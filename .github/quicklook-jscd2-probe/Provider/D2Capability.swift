@@ -11,6 +11,7 @@ enum D2Capability {
 
     static func prepare(requestID: Int) throws -> QLPreviewReply {
         let started = ProcessInfo.processInfo.systemUptime
+        let asyncControl = try AsyncWasmControl.observe()
         guard let context = JSContext() else { throw Failure.invalid("no-context") }
         installBridges(context)
         var transform: [String: String] = [:]
@@ -36,9 +37,10 @@ enum D2Capability {
         while context.objectForKeyedSubscript("__d2Result").isNull, ProcessInfo.processInfo.systemUptime < deadline {
             context.evaluateScript("__hostTick()")
             try requireNoException(context, phase: "timer")
-            Thread.sleep(forTimeInterval: 0.001)
+            _ = RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 0.001))
         }
         guard let result = context.objectForKeyedSubscript("__d2Result").toDictionary() as? [String: Any] else {
+            logger.error("QL_JSCD2_PROBE refused=host-wait-budget")
             throw Failure.invalid("host-wait-budget")
         }
         guard result["ok"] as? Bool == true, let svg = result["svg"] as? String,
@@ -54,7 +56,7 @@ enum D2Capability {
             "kind": "mostlytext-qljscd2-compatibility", "request_id": requestID,
             "started_uptime": started, "observed_uptime": ProcessInfo.processInfo.systemUptime,
             "svg": svg, "svg_bytes": svg.utf8.count, "svg_sha256": hash(Data(svg.utf8)),
-            "assets": assets, "worker_transform": transform, "controls": controls,
+            "assets": assets, "worker_transform": transform, "controls": controls, "async_control": asyncControl,
             "diagnostic_only": true, "qualification_candidate": false,
         ]
         return try reply(record: record, svg: svg, requestID: requestID)

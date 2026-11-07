@@ -161,6 +161,20 @@ def reference_module(root, fixture):
     finally:(root/'reference-module.json').write_text(json.dumps(record,indent=2)+'\n')
 
 
+def validate_async_control(row):
+    if (not isinstance(row,dict) or row.get('kind')!='same-thread-public-async-wasm'
+            or type(row.get('module_bytes')) is not int or row['module_bytes']!=39
+            or row.get('module_sha256')!='ccf59f0f7a7625ee380ed228905aadfa11072ac14cea1c53d1e7f3953d4d48c6'
+            or type(row.get('answer')) is not int or row['answer']!=42
+            or type(row.get('old_blocking_poll_completed')) is not bool
+            or any(row.get(key) is not True for key in ['same_thread','exception_absent','rejection_absent','diagnostic_only'])):
+        raise RuntimeError('Actual public asynchronous WASM control identity/result failed')
+    for key in ['blocked_elapsed_seconds','pumped_elapsed_seconds']:
+        value=row.get(key)
+        if type(value) not in [int,float] or not math.isfinite(value) or value<0:
+            raise RuntimeError('Actual finite asynchronous control observations required')
+
+
 def validate_observation(observed,messages):
     if (observed.get('kind')!='mostlytext-qljscd2-compatibility' or type(observed.get('request_id')) is not int
             or observed['request_id']<1 or observed.get('diagnostic_only') is not True
@@ -170,6 +184,16 @@ def validate_observation(observed,messages):
         if type(observed.get(key)) not in [float,int] or not math.isfinite(observed[key]) or observed[key]<0:
             raise RuntimeError('Actual finite timing required')
     if observed['observed_uptime']<observed['started_uptime']:raise RuntimeError('Reversed timing')
+    validate_async_control(observed.get('async_control'))
+    actual_controls=[]
+    for message in messages:
+        if message.startswith('QL_JSCD2_PROBE async-control-base64='):
+            encoded=message.split('=',1)[1]
+            raw=base64.b64decode(encoded,validate=True)
+            if len(raw)>1536:raise RuntimeError('Excessive actual asynchronous control record')
+            value=json.loads(raw);validate_async_control(value);actual_controls.append(value)
+    if actual_controls!=[observed['async_control']]:
+        raise RuntimeError('Actual asynchronous control live/direct/final identity differs')
     svg=observed.get('svg')
     if (not isinstance(svg,str) or len(svg.encode())>65536 or '<svg' not in svg
             or not all(label in svg for label in ['JSC_D2_ALPHA','JSC_D2_BETA'])
