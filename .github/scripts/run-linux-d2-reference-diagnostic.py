@@ -49,6 +49,11 @@ def main():
     record['node_version']=subprocess.check_output([str(node),'--version'],text=True).strip()
     record['command']=[str(node),str(fixture/'reference.cjs'),str(fixture)]
     receipt=expected/'diagnostic-receipt.json';receipt.write_text(json.dumps(record,indent=2)+'\n')
+    controls=subprocess.run([str(node),str(fixture/'clone-counterexamples.cjs'),str(fixture/'Resources/host.js')],capture_output=True,timeout=5)
+    (expected/'clone-counterexamples.log').write_bytes(controls.stdout+controls.stderr)
+    if controls.returncode:raise RuntimeError('Actual clone counterexample harness failed before full reference')
+    record['clone_counterexamples']=json.loads(controls.stdout)
+    receipt.write_text(json.dumps(record,indent=2)+'\n')
     started=time.monotonic();exit_code=1
     try:
         actual=subprocess.run(record['command'],capture_output=True,timeout=45)
