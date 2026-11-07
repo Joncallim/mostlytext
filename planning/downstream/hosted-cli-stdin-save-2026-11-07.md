@@ -1,5 +1,35 @@
 # Public CLI stdin readback and save qualification
 
+## Current verified result — 7 November 2026
+
+This journey was qualified and integrated through
+[PR133](https://github.com/Joncallim/mostlytext/pull/133), actual main
+`56725f941f3ee8f23b6255432c229226eff8e63f`. The preparation and first-refusal
+sections below are historical checkpoints, not a current execution hold.
+
+At source `4c4e98ff021f382328256901cba6e5d076798d75`, actual tested checkout
+`24067ba899c793fa1b0d1bf2048937a66685702d`, both genuine native cases pass in
+[first native run42382477109](https://github.com/Joncallim/mostlytext/actions/runs/42382477109);
+[Compliance42382477121](https://github.com/Joncallim/mostlytext/actions/runs/42382477121) passes.
+The ordinary Release app receives the 49-byte UTF-8 stdin oracle through the
+public `mostlytext` command. The native editor, real Save As action and physical
+file preserve those exact bytes, before and after normal PID/birth-bound Quit.
+Welcome stays visible without acknowledgement. The ad-hoc cold request correctly
+returns unavailable exit 5 with four actual process-absence observations; this
+is a refusal control, not successful trusted cold launching.
+
+The [retained qualified evidence](evidence/cli-stdin-native-save-qualified-2026-11-07/manifest.json)
+binds 1,613 canonical public inputs, seven private inputs, all 24 pins, 13 copied/
+generated files and ten selected downloaded compiled roles. The actual source,
+tested and merged trees agree. This is selected compiled-input evidence, not a
+complete final distribution inventory. The exact source and original receipts
+are preserved; this status correction records no new native run at later main.
+
+Successful Apple-trusted cold launching, the installed signed helper, updates,
+final locale/VoiceOver, protected-owner and exact signed-candidate acceptance
+remain open. This rehearsal does not qualify the failed Preview candidate.
+
+
 ## Owner summary
 
 Prove that piped Markdown reaches the ordinary document editor, can be saved
