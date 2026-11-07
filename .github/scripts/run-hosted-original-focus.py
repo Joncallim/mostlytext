@@ -51,6 +51,8 @@ def main():
                         ".github/hosted-public-focus", ".github/scripts/prepare-hosted-public-focus.py",
                         ".github/scripts/run-hosted-original-focus.py", ".github/scripts/run-owned-app-tests.py",
                         ".github/scripts/test-hosted-focus-guard.py", ".github/scripts/test-run-owned-app-tests.py",
+                        ".github/scripts/check-native-ui-required-cases.py", ".github/scripts/test-native-ui-required-cases.py",
+                        "planning/downstream/native-ui-required-cases.json",
                         ".github/workflows/hosted-original-focus.yml"]).splitlines()
         for source, target in mapping.items():
             p = root / "fixture" / target

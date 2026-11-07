@@ -29,6 +29,8 @@ jobs:
           brew install xcodegen
           python3 .github/scripts/test-hosted-focus-guard.py
           python3 .github/scripts/test-run-owned-app-tests.py
+          python3 .github/scripts/test-native-ui-required-cases.py
+          python3 .github/scripts/check-native-ui-required-cases.py
           python3 .github/scripts/run-hosted-original-focus.py prepare
           cd MacDown2
           xcodegen generate
