@@ -1,0 +1,166 @@
+{
+  "head": "b6445bfbe34f41009fbfa72db339f49c4d91ca4f",
+  "actual_checkout": "4f7391ffcc8256c99aefeb9516c824c1faf0e20c",
+  "actual_merge": "3b141d4d5b0035a795f331500754c5b605298b86",
+  "run": 42404172704,
+  "conclusion": "success",
+  "system_task_cancellation_observed": false,
+  "records": [
+    {
+      "file": "00-native-first-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/native-first-run.json",
+      "bytes": 13263,
+      "sha256": "edbffecf4083e7e77a4a6838862fd80d7edfbc4ca6aa2c3d515e876a63990fd6"
+    },
+    {
+      "file": "01-native-first-artifacts.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/native-first-artifacts.json",
+      "bytes": 771,
+      "sha256": "6c690c40bae61e1deade2a01c81eaeb199932ec31ffce430a1ad2fb066a6d7f5"
+    },
+    {
+      "file": "02-compliance-first-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/compliance-first-run.json",
+      "bytes": 13207,
+      "sha256": "1bc1b73cb6e347344ea0758a8e8a5e77808b05b0c835ab01f015e0e2a221712e"
+    },
+    {
+      "file": "03-native-independently-verified.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/native-independently-verified.json",
+      "bytes": 1243,
+      "sha256": "cf3469cff92398e01cf59defc6465d96d8eaaa64f691e50a9ab8f5a4d20c8272"
+    },
+    {
+      "file": "04-actual-main-integration-proof.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/actual-main-integration-proof.json",
+      "bytes": 317,
+      "sha256": "ece3d42e7dfce63ac433fd6b0957f876cce2c96af67cea7cf1c116b0fda72b40"
+    },
+    {
+      "file": "05-actual-independent-summary.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/actual-independent-summary.json",
+      "bytes": 992,
+      "sha256": "4ffc29d98297b071cefb603bf79f23993e55c373e5f84f799a635c05b3edc032"
+    },
+    {
+      "file": "06-actual-independent-tests.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/actual-independent-tests.json",
+      "bytes": 2601,
+      "sha256": "7c29b11b13aa82488ca7e50663486141567d0e2d4787abbfec29f84a8cb35ac1"
+    },
+    {
+      "file": "07-verify-first-native.py.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/verify-first-native.py",
+      "bytes": 10012,
+      "sha256": "f22d4e2dedea8c8d150238dcc126e7c6319ff513f941a60b77b3056154fd2262"
+    },
+    {
+      "file": "08-receipt.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/native-first-artifact/pending-finder-quicklook-cancellation/receipt.json",
+      "bytes": 26098,
+      "sha256": "19c519c2cf15c8eb48ad85b007b2bfedc6a2b02657e6a3fcaa886ae05f83a08b"
+    },
+    {
+      "file": "09-observer-result.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/native-first-artifact/pending-finder-quicklook-cancellation/observer-result.json",
+      "bytes": 4628,
+      "sha256": "299f0f7ada617ba5b99a125926a92e881a624d048eff5b13f43b90c6e7d51b38"
+    },
+    {
+      "file": "10-host-ui-driver.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/native-first-artifact/pending-finder-quicklook-cancellation/host-ui-driver.json",
+      "bytes": 1522,
+      "sha256": "e2989af3801a40c840096063217eafffd56f6aeaf16a1f8c0e75d51a0e882ff6"
+    },
+    {
+      "file": "11-observer-stream.log.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/native-first-artifact/pending-finder-quicklook-cancellation/observer-stream.log",
+      "bytes": 17281,
+      "sha256": "b5efe59e7a0ff740d4045a9f0ef4541f0ed26f612d6f1dce84e4e6df67f9c49c"
+    },
+    {
+      "file": "12-observer-stream-errors.txt.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/native-first-artifact/pending-finder-quicklook-cancellation/observer-stream-errors.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "13-provider-events.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/native-first-artifact/pending-finder-quicklook-cancellation/provider-events.json",
+      "bytes": 19089,
+      "sha256": "13a1e9be5634cce0f8a6b624f3526a541e46f7cb62a24e54ee9034a555a7f103"
+    },
+    {
+      "file": "14-observer-control-events.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/native-first-artifact/pending-finder-quicklook-cancellation/observer-control-events.json",
+      "bytes": 2227,
+      "sha256": "6b515e679475566601ceb5074caa86077d0b32002c9ed43654f85b80ccd4c733"
+    },
+    {
+      "file": "15-observer-control-build.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/native-first-artifact/pending-finder-quicklook-cancellation/observer-control-build.json",
+      "bytes": 576,
+      "sha256": "4f65a23d17fb7063b63ddf73a2b659764a25984afc25647edb5a2f309235227c"
+    },
+    {
+      "file": "16-finder.log.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/native-first-artifact/pending-finder-quicklook-cancellation/finder.log",
+      "bytes": 8756,
+      "sha256": "ae3f0b5226004bfda7adf644ca719f3ba3421853fdf58c3e01845d0f127f85c0"
+    },
+    {
+      "file": "17-status.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/native-first-artifact/pending-finder-quicklook-cancellation/owned/status.json",
+      "bytes": 138,
+      "sha256": "3e7bde0ddeadaa286021a659796237b2b3bf0f3e989fd41a725a2efc214cf00d"
+    },
+    {
+      "file": "18-identity.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/native-first-artifact/pending-finder-quicklook-cancellation/owned/identity.json",
+      "bytes": 1050,
+      "sha256": "2fa74cd3d5b2d01eccaaced46fbc030f3c02593a04b7c25ae2821f01e5eeeb7d"
+    },
+    {
+      "file": "19-actual-downloaded-provider-entitlements.plist.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/actual-downloaded-provider-entitlements.plist",
+      "bytes": 298,
+      "sha256": "266f07f1f0cbe818aa41489ef1273c15e9cadfcb1885f827c4e056f7af818ee9"
+    },
+    {
+      "file": "20-08E23942-14E2-4510-B3F3-3C73C24DF83C.txt.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/actual-independent-attachments/08E23942-14E2-4510-B3F3-3C73C24DF83C.txt",
+      "bytes": 53520,
+      "sha256": "f460ba908b6835e4733aa3a86ef664392aa3ce6f7d34ea78db13e9c69311095d"
+    },
+    {
+      "file": "21-0F9FE39A-DE55-4627-A853-ED97D34E65A0.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/actual-independent-attachments/0F9FE39A-DE55-4627-A853-ED97D34E65A0.json",
+      "bytes": 353,
+      "sha256": "17d26f044a8feb92b713f2b1a10db99caf89ac72aa9b4e421d8c75f177800c44"
+    },
+    {
+      "file": "22-4751B33F-8C6C-4007-AB89-0C701369EE0C.txt.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/actual-independent-attachments/4751B33F-8C6C-4007-AB89-0C701369EE0C.txt",
+      "bytes": 54669,
+      "sha256": "b661b79e3144641f232c78f2a772664d423232109ccde4fcfb5fcec37ef2a114"
+    },
+    {
+      "file": "23-DDBABB0D-5D4B-4CC7-ADEC-902ACC9ED985.png.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/actual-independent-attachments/DDBABB0D-5D4B-4CC7-ADEC-902ACC9ED985.png",
+      "bytes": 170698,
+      "sha256": "ca67a0db620a0a16f7f1d87ccda7a3fd1ace5121087613e9c4d70ef98252b81b"
+    },
+    {
+      "file": "24-F96057B9-8CC7-4618-8D38-A7643BA8DF12.png.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/actual-independent-attachments/F96057B9-8CC7-4618-8D38-A7643BA8DF12.png",
+      "bytes": 148288,
+      "sha256": "feb98a1944f710b5099f43ded1703389477a69fb987d72a0d46bc9cdd4d37a31"
+    },
+    {
+      "file": "25-manifest.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-cancellation-20261108/live-channel-b6445bfb/actual-independent-attachments/manifest.json",
+      "bytes": 2774,
+      "sha256": "121bf8b0b7ec7143944afe5efe3be5068d085b53e2af74f4587d73acde890d49"
+    }
+  ]
+}
