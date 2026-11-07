@@ -112,3 +112,20 @@ issue after each update, and keep all original criteria until their own proof.
 All new commands have finite bounds; actual result counts decide pass, not the
 presence of a screenshot or event synthesis log. First full hosted outcome
 must complete without cancellation before a source revision or retry.
+
+## Guard and GUI-fact verification before execution
+
+The Python entry points explicitly refuse optimized Python BEFORE any assert-
+based checks, preparation or native action; -O must never erase host gates.
+A standalone guard-only counterexample removes that explicit refusal and
+compiles the former assertion-only guard under -O: it wrongly admits an
+untrusted host context. Corrected normal and optimized entry guards both refuse
+that context. These controls read only public account metadata and their own
+fresh event fixture, never preferences, product data or any GUI.
+
+After the real benign input control, a separate guarded tool reads the public
+CGSession and TIS APIs: actual UID/console/login session, keyboard input-source
+identifier and screen sizes/scales. Require the same active console account,
+login completion, no true lock field and nonempty display/input metadata before
+normal product launch. A preference-cache entry is recorded only as an optional
+observation and cannot replace these actual GUI APIs or the input outcome.
