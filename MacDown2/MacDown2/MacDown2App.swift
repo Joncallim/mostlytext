@@ -19,7 +19,8 @@ private struct ApplicationScenes: Scene {
     var body: some Scene {
         let ready = appDelegate.normalLaunchReady
         WindowGroup {
-            EmptyView()
+            StartupPlaceholderView()
+                .frame(width: 0, height: 0)
         }
         .commands {
             if ready, let themeController = appDelegate.themeController {

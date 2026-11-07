@@ -5,6 +5,9 @@ on:
   pull_request:
     branches: [main, master, integration-final]
     paths:
+      - 'MacDown2/MacDown2/AppDelegate.swift'
+      - 'MacDown2/MacDown2/MacDown2App.swift'
+      - 'MacDown2/MacDown2/StartupPlaceholderView.swift'
       - '.github/hosted-public-focus/**'
       - '.github/scripts/prepare-hosted-public-focus.py'
       - '.github/scripts/run-hosted-public-focus.py'
