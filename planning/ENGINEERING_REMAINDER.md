@@ -1,13 +1,54 @@
 # Remaining engineering and acceptance ownership — 7 November 2026
 
-## Current checkpoint — 7 November 2026
+## Current checkpoint — 7 November 2026, after PR133
 
-Verified parser/Markdown baseline main `4ed1cfc6137644f84c55372bbdf3c991ba621a89` and the live
-issue reconciliation contain **16 open issues and 163 unchecked original
-checkbox rows**. No remaining whole issue has complete closure proof. These
-are acceptance criteria, rather than 163 newly discovered defects; prose-only
-issues also retain their original completion requirements. The earlier dated
-checkpoints below remain historical.
+Actual main `56725f941f3ee8f23b6255432c229226eff8e63f` and the live issue audit
+contain **16 open issues and 161 unchecked original checkbox rows**. No remaining
+whole issue has complete closure proof. These rows are acceptance criteria;
+prose-only issues retain their original completion requirements too.
+
+- [PR130](https://github.com/Joncallim/mostlytext/pull/130), merge `d2935841`,
+  integrates qualified startup/shared settings with actual original38, critical,
+  current-profile, status, normal public CLI/focus and complete CI evidence.
+- [PR131](https://github.com/Joncallim/mostlytext/pull/131), merge `427d15fa`,
+  integrates actual valid/future startup rehearsal infrastructure. Its original
+  migration anchor remains d293; the future session is preserved rather than read
+  or overwritten. These are hosted engineering profiles, not installed migration.
+- [PR133](https://github.com/Joncallim/mostlytext/pull/133), merge `56725f94`,
+  integrates ordinary Release public stdin/editor/native Save As and same-process
+  normal Quit acceptance. The first input positive and real save case pass; all49
+  physicalUTF8bytes match before/after Quit. Source, pins, generated files, all10
+  downloaded compiled roles and raw results are independently verified. See the
+  [immutable evidence packet](downstream/evidence/cli-stdin-native-save-qualified-2026-11-07/README.md).
+  No public product/package source changes in this private acceptance unit.
+
+Current-main Preview qualification [PR132](https://github.com/Joncallim/mostlytext/pull/132)
+remains frozen at `fc29ce70d308dfa0df99c4caf43699d7716d4758` and **failed/unmerged**.
+All16first workflows are retained:13pass,3fail. Complete CI passes3719package/
+710app functions and all four builds; real PDF9, math, heading, model, status,
+license, both migration profiles, public CLI/focus and critical controls pass.
+Five of six Preview pairs pass; Debug/revision fails the original initial image
+copy with54/55pass. The window is visible and has no prior close event; a later
+image edit passes. No cache/grant/publication cause is established.
+
+The complete Debug theme selection fails its unchanged50ms10MBkeystroke assertion
+at62.876833ms; Release1087/145 and its orientation control pass. The original UI
+matrix runs all38cases:37pass, one HTML mode identity assertion fails. Its actual
+accessibility tree renders Hello and selects Rendered1 but lacks htmlRenderedPane.
+The first focused accessibility remedy and separate image diagnostic are pending;
+neither is a full activation pass. [PR134](https://github.com/Joncallim/mostlytext/pull/134)
+contains only a three-line line-offset capacity reservation against main567;
+complete first hosted qualification remains pending. No sole performance cause,
+constant-time claim, larger deadline, skipped case or release waiver is accepted.
+
+Signing/notarization, installed/trusted-cold CLI, exact final artifact, independent
+rights/source publication and applicable owner/locale/VoiceOver acceptance remain
+explicit gates. Scoped hosted engineering passes do not close their broad rows.
+
+## Earlier independently merged checkpoints
+
+The following dated records retain their original source identities. Current
+integration and pending statuses are governed by the checkpoint above.
 
 The latest independently merged units are:
 
