@@ -141,3 +141,20 @@ Refuse any previously attempted root before another bootstrap or SDK operation.
 Source/AST/YAML/diff and3 actual admission controls pass locally; root product,
 original UI tests, project and pins stay byte-identical to prepareded96. No new
 native discovery,38-case execution, main intake or source publication occurred.
+
+## Activation and first-run trigger decision
+
+Actual PR124 merge aff49a5eb4b7bb111ce949daef66b0b41ddfb274 is now incorporated.
+Its tree75af2efa matches the fully qualified synthetic candidate; all required
+first native outcomes and complete CI pass. Original failures remain evidence.
+Use that exact actual main as the discovery ancestry anchor.
+
+A new dispatch-only workflow may not be discoverable before it reaches the
+repository default branch. Avoid merging unexecuted infrastructure merely to
+register it: admit the first run from a same-repository pull request changing
+only the fixed discovery script/test/workflow, alongside explicit dispatch.
+Retain contents-read permission, no persisted credentials, exact repository and
+same-head-repository job guards, fresh disposable-host admission and all owned
+limits. No untrusted fork receives native execution. This changes the trigger,
+not the raw-capture contract or any original app/test bytes. Preserve the first
+complete outcome before deciding SDK schema or implementing the batch reader.
