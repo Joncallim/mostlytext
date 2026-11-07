@@ -136,3 +136,24 @@ attachment test is added, the corrected suite must pass all four. The private
 regression body, host/source guards, wrapper and original deadlines stay intact.
 This expressly revises the single-method selection assumption while preserving
 the exact primary before/after assertion.
+
+## Genuine counterexample and current integration baseline
+
+Source1382581d/run42333220505 now genuinely executes the three-case suite:
+2passes/1failure/0skip/0expected, normal owned65/44.065595s. The one failure is
+exactly unmarkedWindowsAreNotStartupPlaceholders calling the actual classifier,
+which returns true for the ordinary unmarked window. All1,597 canonical inputs,
+one explicit executed-source addition,24pins, actual xctestrun digests, complete
+raw result/logs and unchanged e901 product tree are independently verified.
+Preserve both the original zero-case outcome and this genuine counterexample.
+
+PR121 has since qualified and merged as actual main
+0426e88ac81efc9347011ba6b53fb1b6d2b75f35; its product tree is unchanged from e901.
+Intake this exact main before the production correction and final qualification.
+The original named focus case genuinely passes at its own source; it is not
+protected-owner or whole critical acceptance. Implement the previously specified
+role marker only now. Add the unchanged regression to the canonical target;
+verify four ownership cases, complete ordinary CI, actual normal public focus
+and normal public CLI (startup behavior changes). Require all current source,
+synthetic and computed merge trees to agree before expected-head integration.
+No other production behavior, close site or100ms delay may change.
