@@ -7,7 +7,8 @@ import shutil
 import subprocess
 import sys
 
-QUALIFIED_MAIN = 'ef93ab2d4fbda72cdd126560ffb19cd7e012a5d9'
+QUALIFIED_MAIN = 'd29358412585f669264e55e0f3666f456038b228'
+FUTURE_QUALIFIED_MAIN = 'd29358412585f669264e55e0f3666f456038b228'
 ROOT = Path('/Users/runner/work/_temp/mostlytext-focus')
 
 
@@ -18,14 +19,18 @@ def preparation():
     return module
 
 
-def admit():
+def admit(future=False):
     if sys.flags.optimize:
         raise RuntimeError('Optimized Python is refused before any migration access')
     if len(QUALIFIED_MAIN) != 40 or any(c not in '0123456789abcdef' for c in QUALIFIED_MAIN):
         raise RuntimeError('Migration execution is held pending qualified public orchestration intake')
+    if future and (len(FUTURE_QUALIFIED_MAIN) != 40 or any(c not in '0123456789abcdef' for c in FUTURE_QUALIFIED_MAIN)):
+        raise RuntimeError('Future-session execution is held pending actual qualified core integration')
     base = preparation()
     base.check_host(ROOT)
     subprocess.run(['git', 'merge-base', '--is-ancestor', QUALIFIED_MAIN, 'HEAD'], check=True, timeout=15)
+    if future:
+        subprocess.run(['git', 'merge-base', '--is-ancestor', FUTURE_QUALIFIED_MAIN, 'HEAD'], check=True, timeout=15)
     return base
 
 
@@ -53,10 +58,12 @@ def verify_seed(record, base):
 
 
 def main():
-    if len(sys.argv) != 2 or sys.argv[1] not in ['prepare', 'bind-built', 'bind-driver', 'verify']:
+    future = len(sys.argv) == 3 and sys.argv[2] == '--future-session'
+    if (len(sys.argv) not in [2, 3] or (len(sys.argv) == 3 and not future)
+            or sys.argv[1] not in ['prepare', 'bind-built', 'bind-driver', 'verify']):
         raise RuntimeError('Select one fixed migration preparation phase')
     mode = sys.argv[1]
-    base = admit()
+    base = admit(future)
     path = ROOT / 'receipt.json'
     if mode == 'prepare':
         public_step(base, '')
@@ -69,11 +76,14 @@ def main():
                     'Fixture/SeedProfile.swift', 'Fixture/Package.swift.in', 'Driver/MigrationTests.swift']}
         required.update('.github/scripts/' + p for p in ['prepare-hosted-migration.py', 'run-hosted-migration.py',
                         'migration_profile_evidence.py', 'test-hosted-migration.py', 'test-migration-seed-admission.py'])
+        required.add('.github/hosted-migration/Driver/FutureSessionTests.swift')
         required.add('.github/workflows/hosted-migration.yml')
         if not required <= set(extra) or any(not Path(p).is_file() for p in extra):
             raise RuntimeError('Migration inputs are not all tracked')
         record['source_sha256'].update({p: base.sha(Path(p)) for p in extra})
         shutil.copyfile('.github/hosted-migration/Driver/MigrationTests.swift', ROOT / 'fixture/Driver/MigrationTests.swift')
+        if future:
+            shutil.copyfile('.github/hosted-migration/Driver/FutureSessionTests.swift', ROOT / 'fixture/Driver/FutureSessionTests.swift')
         seed = ROOT / 'seed'
         shutil.copytree('.github/hosted-migration/Fixture', seed)
         template = (seed / 'Package.swift.in').read_text()
@@ -84,10 +94,14 @@ def main():
         record['seed_generated_sha256'] = {str(p.relative_to(seed)): base.sha(p) for p in seed.iterdir() if p.is_file()}
         record['migration_execution_started'] = False
         record['migration_qualified_main'] = QUALIFIED_MAIN
+        record['migration_scenario'] = 'future-session' if future else 'valid-profile'
+        record['migration_future_qualified_main'] = FUTURE_QUALIFIED_MAIN if future else None
         path.write_text(json.dumps(record, indent=2) + '\n')
     else:
         record = json.loads(path.read_text())
-        if record['migration_qualified_main'] != QUALIFIED_MAIN:
+        if (record['migration_qualified_main'] != QUALIFIED_MAIN
+                or record.get('migration_scenario') != ('future-session' if future else 'valid-profile')
+                or record.get('migration_future_qualified_main') != (FUTURE_QUALIFIED_MAIN if future else None)):
             raise RuntimeError('Migration receipt cannot be retargeted')
         verify_seed(record, base)
         public_step(base, '--bind-built' if mode == 'bind-built' else '--verify')

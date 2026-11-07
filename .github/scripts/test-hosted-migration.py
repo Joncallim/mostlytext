@@ -11,7 +11,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from migration_profile_evidence import editor_width, require_preserved, require_session, snapshot
+from migration_profile_evidence import editor_width, require_blocked_preservation, require_preserved, require_session, sha, snapshot
 
 
 class ProfileEvidenceTests(unittest.TestCase):
@@ -90,6 +90,7 @@ class ProfileEvidenceTests(unittest.TestCase):
             altered['tabs'][1][field] = changed
             with self.assertRaises(RuntimeError):
                 require_session(seed, altered, state)
+
         for alteration in ['extra', 'active']:
             altered = copy.deepcopy(after)
             if alteration == 'extra':
@@ -98,6 +99,49 @@ class ProfileEvidenceTests(unittest.TestCase):
                 altered['activeTabID'] = 'external'
             with self.assertRaises(RuntimeError):
                 require_session(seed, altered, state)
+
+    def test_blocked_startup_admits_private_plan_but_refuses_any_final_publication(self):
+        old = snapshot(self.source, self.root / 'before')
+        install = self.root / 'installation'
+        install.mkdir(mode=0o700)
+        (install / 'installation-plan.json').write_bytes(b'private plan')
+        captured = {'trees': {'old': old, 'state': {},
+                              'installation': snapshot(install, self.root / 'private')},
+                    'domains': {'old': {'editor': b'original'}, 'current': None}}
+        seed = {'externalSHA256': sha(b'external')}
+        require_blocked_preservation(captured, captured, seed, b'external', False)
+        for name in ['installation-preferences.json', 'installation-paths.json', 'installation-complete.json']:
+            file = install / name
+            file.write_bytes(b'published')
+            changed = copy.deepcopy(captured)
+            changed['trees']['installation'] = snapshot(install, self.root / name)
+            with self.assertRaises(RuntimeError):
+                require_blocked_preservation(captured, changed, seed, b'external', False)
+            file.unlink()
+        (install / 'installation-v1').mkdir()
+        changed = copy.deepcopy(captured)
+        changed['trees']['installation'] = snapshot(install, self.root / 'generation')
+        with self.assertRaises(RuntimeError):
+            require_blocked_preservation(captured, changed, seed, b'external', False)
+
+    def test_blocked_readback_rejects_identity_domain_external_and_command_changes(self):
+        old = snapshot(self.source, self.root / 'before')
+        baseline = {'trees': {'old': old, 'state': {}, 'installation': {}},
+                    'domains': {'old': {'editor': b'original'}, 'current': None}}
+        seed = {'externalSHA256': sha(b'external')}
+        for kind in ['old', 'domain', 'state']:
+            changed = copy.deepcopy(baseline)
+            if kind == 'old':
+                changed['trees']['old']['Recovery/draft']['inode'] += 1
+            elif kind == 'domain':
+                changed['domains']['current'] = {'new': True}
+            else:
+                changed['trees']['state'] = {'.': {'kind': 'directory'}}
+            with self.assertRaises(RuntimeError):
+                require_blocked_preservation(baseline, changed, seed, b'external', False)
+        for data, sentinel in [(b'changed', False), (b'external', True)]:
+            with self.assertRaises(RuntimeError):
+                require_blocked_preservation(baseline, baseline, seed, data, sentinel)
 
 
 class AdmissionTests(unittest.TestCase):
@@ -118,11 +162,50 @@ class AdmissionTests(unittest.TestCase):
             command.assert_not_called()
 
     def test_optimized_execution_refuses_before_host_receipt_or_profile_access(self):
-        for script, args in [('prepare-hosted-migration.py', ['prepare']), ('run-hosted-migration.py', [])]:
+        for script, args in [('prepare-hosted-migration.py', ['prepare']), ('run-hosted-migration.py', []),
+                             ('prepare-hosted-migration.py', ['prepare', '--future-session']),
+                             ('run-hosted-migration.py', ['--future-session'])]:
             result = subprocess.run([sys.executable, '-O', str(Path(__file__).with_name(script)), *args],
                                     capture_output=True, text=True, timeout=10)
             self.assertNotEqual(result.returncode, 0)
             self.assertIn('Optimized Python is refused before any migration access', result.stderr)
+
+    def test_future_hold_precedes_host_receipt_and_ancestry(self):
+        file = Path(__file__).with_name('prepare-hosted-migration.py')
+        spec = importlib.util.spec_from_file_location('future_held_migration', file)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        module.FUTURE_QUALIFIED_MAIN = 'PENDING_CONTROL_ANCHOR'
+        with patch.object(module, 'preparation', side_effect=AssertionError('Host reached')) as host:
+            with self.assertRaisesRegex(RuntimeError, 'Future-session execution is held'):
+                module.admit(True)
+            host.assert_not_called()
+
+    def test_receipt_scenario_or_anchor_cannot_change_before_binding_inputs(self):
+        file = Path(__file__).with_name('prepare-hosted-migration.py')
+        spec = importlib.util.spec_from_file_location('migration_retargeting', file)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory(prefix='mostlytext-migration-retarget-') as directory:
+            module.ROOT = Path(directory)
+            record = {'migration_qualified_main': module.QUALIFIED_MAIN,
+                      'migration_scenario': 'future-session',
+                      'migration_future_qualified_main': module.FUTURE_QUALIFIED_MAIN}
+            for future, key, value in [(False, None, None), (True, 'migration_scenario', 'valid-profile'),
+                                        (True, 'migration_future_qualified_main', '0' * 40)]:
+                altered = dict(record)
+                if key:
+                    altered[key] = value
+                path = module.ROOT / 'receipt.json'
+                before = json.dumps(altered).encode()
+                path.write_bytes(before)
+                args = ['prepare-hosted-migration.py', 'verify'] + (['--future-session'] if future else [])
+                with patch.object(module, 'admit', return_value=object()), patch.object(sys, 'argv', args), \
+                        patch.object(module, 'verify_seed', side_effect=AssertionError('Input binding reached')) as seed:
+                    with self.assertRaisesRegex(RuntimeError, 'receipt cannot be retargeted'):
+                        module.main()
+                    seed.assert_not_called()
+                self.assertEqual(path.read_bytes(), before)
 
 
 if __name__ == '__main__':

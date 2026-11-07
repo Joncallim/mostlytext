@@ -1,0 +1,657 @@
+Attributes: Application, 0xa45537d40, pid: 22270, title: 'MostlyText', Disabled
+Element subtree:
+ →Application, 0xa45537d40, pid: 22270, title: 'MostlyText', Disabled
+    Window (Main), 0xa45535cc0, {{132.0, 70.0}, {760.0, 600.0}}, identifier: 'licenses', title: 'Open Source Licenses', Disabled
+      Group, 0xa45537c00, {{132.0, 70.0}, {760.0, 600.0}}, Disabled
+        StaticText, 0xa45537e80, {{314.0, 122.0}, {112.0, 16.0}}, value: License document
+        RadioGroup, 0xa45536bc0, {{433.0, 117.0}, {278.0, 26.0}}, identifier: 'licenses.documentPicker'
+          RadioButton, 0xa45537340, {{434.0, 118.0}, {138.0, 24.0}}, label: 'MostlyText license', value: 0
+          RadioButton, 0xa45537480, {{573.0, 118.0}, {137.0, 24.0}}, label: 'Third-party notices', value: 1
+        ScrollView, 0xa45537980, {{148.0, 154.0}, {728.0, 500.0}}, Disabled
+          TextView, 0xa45536d00, {{149.0, 155.0}, {709.0, 194964.0}}, identifier: 'licenses.content', label: 'Third-party notices', value: # MostlyText third..., Keyboard Focused, Disabled
+          ScrollBar, 0xa45537200, {{857.0, 154.0}, {19.0, 500.0}}, value: 0
+            ValueIndicator, 0xa455370c0, {{861.0, 158.0}, {11.0, 20.0}}, value: 0, Disabled
+            IncrementArrow, 0xa45536440, {{858.0, 155.0}, {0.0, 0.0}}, Disabled
+            DecrementArrow, 0xa45536e40, {{858.0, 155.0}, {0.0, 0.0}}, Disabled
+            Button, 0xa455361c0, {{861.0, 178.0}, {11.0, 472.0}}, Disabled
+            Button, 0xa45535680, {{861.0, 158.0}, {11.0, 0.0}}, Disabled
+      Button, 0xa45535a40, {{140.0, 78.0}, {16.0, 16.0}}, identifier: '_XCUI:CloseWindow'
+      Button, 0xa45536a80, {{186.0, 78.0}, {16.0, 16.0}}, identifier: '_XCUI:ZoomWindow'
+        Group, 0xa45537ac0, {{187.0, 79.0}, {14.0, 14.0}}, Disabled
+          Group, 0xa45535540, {{187.0, 79.0}, {14.0, 14.0}}, Disabled
+      Button, 0xa455375c0, {{163.0, 78.0}, {16.0, 16.0}}, identifier: '_XCUI:MinimizeWindow'
+      StaticText, 0xa45536f80, {{214.0, 78.0}, {148.0, 16.0}}, value: Open Source Licenses
+    Window, 0xa45536080, {{322.0, 202.0}, {380.0, 335.0}}, identifier: 'about', title: 'About MostlyText', Disabled
+      Group, 0xa455357c0, {{322.0, 202.0}, {380.0, 335.0}}, Disabled
+        StaticText, 0xa45536580, {{452.0, 357.0}, {121.0, 33.0}}, value: MostlyText
+        StaticText, 0xa45535e00, {{461.0, 405.0}, {46.0, 16.0}}, value: Version
+        StaticText, 0xa45537700, {{515.0, 405.0}, {48.0, 16.0}}, value: 0.1.0 (1)
+        StaticText, 0xa45536800, {{354.5, 437.0}, {315.0, 32.0}}, value: An editor descende...
+        Button, 0xa45535900, {{427.0, 485.0}, {171.0, 24.0}}, identifier: 'about.openSourceLicenses', label: 'Open Source Licenses…'
+      Button, 0xa45536300, {{330.0, 210.0}, {16.0, 16.0}}, identifier: '_XCUI:CloseWindow'
+      Button, 0xa455366c0, {{376.0, 210.0}, {16.0, 16.0}}, identifier: '_XCUI:ZoomWindow', Disabled
+        Group, 0xa45535f40, {{377.0, 211.0}, {14.0, 14.0}}, Disabled
+          Group, 0xa45536940, {{377.0, 211.0}, {14.0, 14.0}}, Disabled
+      Button, 0xa45584140, {{353.0, 210.0}, {16.0, 16.0}}, identifier: '_XCUI:MinimizeWindow'
+      StaticText, 0xa45586300, {{404.0, 210.0}, {118.0, 16.0}}, value: About MostlyText
+    Window, 0xa45585900, {{0.0, 31.0}, {1024.0, 674.0}}, title: '● focus-42365840400.md', Disabled
+      Group, 0xa45585e00, {{0.0, 83.0}, {1024.0, 622.0}}, Disabled
+        SplitGroup, 0xa45584280, {{0.0, 83.0}, {1024.0, 622.0}}, Disabled
+          Group, 0xa45585540, {{8.0, 91.0}, {220.0, 606.0}}, Disabled
+            ScrollView, 0xa45586080, {{8.0, 91.0}, {220.0, 606.0}}, Disabled
+              Outline, 0xa455861c0, {{7.0, 90.0}, {222.0, 608.0}}, label: 'Sidebar'
+                OutlineRow, 0xa45586580, {{8.0, 101.0}, {220.0, 0.0}}, Disabled
+                  Cell, 0xa45585b80, {{18.0, 101.0}, {200.0, 0.0}}, Keyboard Focused
+                    Group, 0xa45585400, {{22.0, 101.0}, {204.0, 0.0}}, Disabled
+                OutlineRow, 0xa45585680, {{8.0, 101.0}, {220.0, 32.0}}, Disabled
+                  Cell, 0xa455852c0, {{18.0, 101.0}, {200.0, 32.0}}, Keyboard Focused
+                    StaticText, 0xa45585cc0, {{39.0, 109.0}, {172.0, 16.0}}, identifier: 'folderSection-folderSection-folderSection', label: 'Folder'
+                    DisclosureTriangle, 0xa45586bc0, {{19.0, 100.0}, {15.0, 34.0}}, identifier: 'NSOutlineViewDisclosureButtonKey', value: 1
+                OutlineRow, 0xa45585f40, {{8.0, 133.0}, {220.0, 32.0}}, Disabled
+                  Cell, 0xa455848c0, {{18.0, 133.0}, {200.0, 32.0}}, Keyboard Focused
+                    Group, 0xa455870c0, {{45.0, 142.0}, {167.0, 15.0}}, identifier: 'folderRootHeader'
+                      StaticText, 0xa45584dc0, {{52.0, 142.5}, {77.0, 13.0}}, value: documents
+                      MenuButton, 0xa45586a80, {{177.0, 141.0}, {36.0, 17.0}}, identifier: 'folderActionsButton', title: 'More'
+                OutlineRow, 0xa45586f80, {{8.0, 165.0}, {220.0, 32.0}}, Disabled
+                  Cell, 0xa45585a40, {{18.0, 165.0}, {200.0, 32.0}}, Keyboard Focused
+                    MenuButton, 0xa45587200, {{44.0, 168.0}, {140.0, 26.0}}, identifier: 'folderOptionsButton', title: 'Folder Options'
+                OutlineRow, 0xa45586d00, {{8.0, 197.0}, {220.0, 32.0}}, Disabled
+                  Cell, 0xa45586e40, {{18.0, 197.0}, {200.0, 32.0}}, Keyboard Focused
+                    Group, 0xa455857c0, {{45.0, 205.0}, {167.0, 16.0}}, identifier: 'fileRow-focus-42365840400.md'
+                      Image, 0xa45587340, {{64.0, 206.0}, {11.0, 14.0}}, identifier: 'doc.text', label: 'Plain Text Document'
+                      StaticText, 0xa45586440, {{81.0, 205.0}, {124.0, 16.0}}, value: focus-42365840400.md
+                OutlineRow, 0xa45587d40, {{8.0, 242.0}, {220.0, 0.0}}, Disabled
+                  Cell, 0xa45587e80, {{18.0, 242.0}, {200.0, 0.0}}, Keyboard Focused
+                    Group, 0xa45587840, {{22.0, 242.0}, {204.0, 0.0}}, Disabled
+                OutlineRow, 0xa45587980, {{8.0, 242.0}, {220.0, 32.0}}, Disabled
+                  Cell, 0xa45587ac0, {{18.0, 242.0}, {200.0, 32.0}}, Keyboard Focused
+                    StaticText, 0xa455866c0, {{40.0, 250.0}, {171.0, 16.0}}, identifier: 'outlineSection-outlineSection-outlineSection', label: 'Outline'
+                    DisclosureTriangle, 0xa45587480, {{19.0, 241.0}, {15.0, 34.0}}, identifier: 'NSOutlineViewDisclosureButtonKey', value: 1
+                OutlineRow, 0xa455875c0, {{8.0, 274.0}, {220.0, 32.0}}, Disabled
+                  Cell, 0xa45587700, {{18.0, 274.0}, {200.0, 32.0}}, Keyboard Focused
+                    Group, 0xa45587c00, {{45.0, 282.0}, {76.0, 16.0}}, identifier: 'outlineSection'
+                      StaticText, 0xa4554f980, {{45.0, 282.0}, {76.0, 16.0}}, value: No headings
+                OutlineRow, 0xa4554d900, {{8.0, 319.0}, {220.0, 0.0}}, Disabled
+                  Cell, 0xa4554de00, {{18.0, 319.0}, {200.0, 0.0}}, Keyboard Focused
+                    Group, 0xa4554c000, {{22.0, 319.0}, {204.0, 0.0}}, Disabled
+                OutlineRow, 0xa4554ee40, {{8.0, 319.0}, {220.0, 32.0}}, Disabled
+                  Cell, 0xa4554e080, {{18.0, 319.0}, {200.0, 32.0}}, Keyboard Focused
+                    StaticText, 0xa4554d180, {{40.0, 327.0}, {171.0, 16.0}}, identifier: 'outlineSection-outlineSection-outlineSection', label: 'Search'
+                    DisclosureTriangle, 0xa4554d7c0, {{19.0, 318.0}, {15.0, 34.0}}, identifier: 'NSOutlineViewDisclosureButtonKey', value: 1
+                OutlineRow, 0xa4554e440, {{8.0, 351.0}, {220.0, 32.0}}, Disabled
+                  Cell, 0xa4554c780, {{18.0, 351.0}, {200.0, 32.0}}, Keyboard Focused
+                    Group, 0xa4554c280, {{49.0, 359.0}, {157.0, 16.0}}, identifier: 'searchSection'
+                      TextField, 0xa4554ca00, {{48.0, 358.0}, {140.0, 18.0}}, identifier: 'folderSearchField', label: 'Folder search', placeholderValue: 'Search in Folder…'
+                      Button, 0xa4554e6c0, {{193.0, 360.0}, {13.0, 15.0}}, identifier: 'folderReplaceToggle', label: 'Toggle Replace in Folder'
+                TableColumn, 0xa4554f200, {{18.0, 91.0}, {200.0, 606.0}}, identifier: 'ListColumn', Disabled
+          Splitter, 0xa4554e800, {{228.0, 83.0}, {0.0, 622.0}}, value: 228, Disabled
+          Group, 0xa4554cdc0, {{0.0, 83.0}, {1024.0, 622.0}}, Disabled
+            Image, 0xa4554d680, {{246.0, 93.0}, {11.0, 14.0}}, identifier: 'doc.richtext', label: 'Rich Text Document'
+            StaticText, 0xa4554d540, {{269.0, 91.5}, {159.0, 16.0}}, value: focus-42365840400.md
+            StaticText, 0xa4554e300, {{951.0, 93.0}, {51.0, 13.0}}, value: Markdown
+            ScrollView, 0xa4554da40, {{228.0, 117.0}, {398.0, 547.0}}, identifier: 'editorPane', Disabled
+              TextView, 0xa4554c500, {{260.0, 117.0}, {366.0, 547.0}}, value: - item, Disabled
+              Group, 0xa4554e1c0, {{228.0, 117.0}, {32.0, 547.0}}, identifier: 'editorGutter', label: 'Line numbers', Disabled
+            Group, 0xa4554c140, {{228.0, 664.0}, {398.0, 41.0}}, identifier: 'editorStatusBar'
+              Button, 0xa4554ea80, {{236.0, 668.0}, {50.0, 13.0}}, identifier: 'statusBarLineColumn', label: 'Ln 1, Col 7'
+              StaticText, 0xa4554d400, {{302.0, 668.0}, {99.0, 13.0}}, identifier: 'statusBarCount', value: 6 characters, 1 word
+              StaticText, 0xa4554df40, {{570.0, 668.0}, {48.0, 13.0}}, identifier: 'statusBarIndentation', value: Spaces: 4
+              MenuButton, 0xa4554cb40, {{235.0, 684.0}, {71.0, 18.0}}, identifier: 'statusBarSyntaxMode', title: 'Markdown'
+              MenuButton, 0xa4554e940, {{320.0, 684.0}, {48.0, 18.0}}, identifier: 'statusBarEncoding', title: 'UTF-8'
+              MenuButton, 0xa4554c8c0, {{382.0, 684.0}, {106.0, 18.0}}, identifier: 'statusBarLineEnding', title: 'No Line Endings'
+            Other, 0xa4554ebc0, {{626.0, 117.0}, {1.0, 588.0}}, label: 'Resize editor and preview'
+            ScrollView, 0xa4554dcc0, {{627.0, 117.0}, {397.0, 588.0}}, identifier: 'previewPane', Disabled
+              Image, 0xa4554db80, {{661.0, 140.0}, {5.0, 5.0}}, identifier: 'circle.fill', label: 'Circle'
+              StaticText, 0xa4554c3c0, {{674.0, 133.0}, {31.0, 19.0}}, value: item
+      Toolbar, 0xa4554c640, {{0.0, 31.0}, {1024.0, 52.0}}, Disabled
+        Button, 0xa4554d040, {{972.0, 31.0}, {48.0, 52.0}}, label: 'Toggle Sidebar'
+      Button, 0xa4554e580, {{18.0, 49.0}, {16.0, 16.0}}, identifier: '_XCUI:CloseWindow'
+      Button, 0xa4554f5c0, {{64.0, 49.0}, {16.0, 16.0}}, identifier: '_XCUI:FullScreenWindow'
+        Group, 0xa4554f340, {{65.0, 50.0}, {14.0, 14.0}}, Disabled
+          Group, 0xa4554d2c0, {{65.0, 50.0}, {14.0, 14.0}}, Disabled
+      Button, 0xa4554ed00, {{41.0, 49.0}, {16.0, 16.0}}, identifier: '_XCUI:MinimizeWindow'
+      StaticText, 0xa4554ef80, {{92.0, 31.0}, {880.0, 52.0}}, value: ● focus-4236584040...
+    Window, 0xa4554f700, {{232.0, 77.0}, {480.0, 412.0}}, title: 'Welcome to MostlyText', Disabled
+      Group, 0xa4554f840, {{232.0, 109.0}, {480.0, 380.0}}, Disabled
+        Group, 0xa4554f0c0, {{298.0, 176.0}, {348.0, 247.0}}, identifier: 'firstRunWelcomeView'
+          StaticText, 0xa4554cc80, {{331.5, 255.5}, {281.0, 31.0}}, value: Welcome to MostlyT...
+          StaticText, 0xa4554fac0, {{298.0, 294.5}, {348.0, 32.0}}, value: A fast, native Mar...
+          Button, 0xa4554fc00, {{379.0, 355.0}, {186.0, 28.0}}, identifier: 'firstRunOpenSampleButton', label: 'Open a Sample Document'
+          Button, 0xa4554fd40, {{420.0, 395.0}, {105.0, 28.0}}, identifier: 'firstRunStartWritingButton', label: 'Start Writing'
+      Button, 0xa4554f480, {{240.0, 85.0}, {16.0, 16.0}}, identifier: '_XCUI:CloseWindow'
+      Button, 0xa4554fe80, {{286.0, 85.0}, {16.0, 16.0}}, identifier: '_XCUI:ZoomWindow', Disabled
+        Group, 0xa4558c000, {{287.0, 86.0}, {14.0, 14.0}}, Disabled
+          Group, 0xa4558c140, {{287.0, 86.0}, {14.0, 14.0}}, Disabled
+      Button, 0xa4558c280, {{263.0, 85.0}, {16.0, 16.0}}, identifier: '_XCUI:MinimizeWindow', Disabled
+      StaticText, 0xa4558c3c0, {{314.0, 85.0}, {154.0, 16.0}}, value: Welcome to MostlyT...
+    MenuBar, 0xa4558c500, {{0.0, 0.0}, {1024.0, 30.0}}
+      MenuBarItem, 0xa4558c640, {{10.0, 0.0}, {34.0, 30.0}}, title: 'Apple'
+        Menu, 0xa4558c780, {{0.0, 768.0}, {0.0, 0.0}}
+          MenuItem, 0xa4558c8c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_aboutThisMacRequested:', title: 'About This Mac'
+          MenuItem, 0xa4558ca00, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_systemInformationRequested:', title: 'System Information'
+          MenuItem, 0xa4558cb40, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa4558cc80, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_systemSettingsRequested:', title: 'System Settings…, 1 update'
+          MenuItem, 0xa4558cdc0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_appStoreRequested:', title: 'App Store'
+          MenuItem, 0xa4558cf00, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa4558d040, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_recentsRequested:', title: 'Recent Items'
+            Menu, 0xa4558d180, {{0.0, 768.0}, {0.0, 0.0}}
+              MenuItem, 0xa4558d2c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Applications', Disabled
+              MenuItem, 0xa4558d400, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_recentItemRequested:', title: 'HostedFocusControl'
+              MenuItem, 0xa4558d540, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_recentItemRequested:', title: 'Show “HostedFocusControl” in Finder'
+              MenuItem, 0xa4558d680, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_recentItemRequested:', title: 'Installer'
+              MenuItem, 0xa4558d7c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_recentItemRequested:', title: 'Show “Installer” in Finder'
+              MenuItem, 0xa4558d900, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_recentItemRequested:', title: 'MacDown2'
+              MenuItem, 0xa4558da40, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_recentItemRequested:', title: 'Show “MacDown2” in Finder'
+              MenuItem, 0xa4558db80, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_recentItemRequested:', title: 'System Settings'
+              MenuItem, 0xa4558dcc0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_recentItemRequested:', title: 'Show “System Settings” in Finder'
+              MenuItem, 0xa4558de00, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+              MenuItem, 0xa4558df40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Documents', Disabled
+              MenuItem, 0xa4558e080, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_recentItemRequested:', title: 'AnkaGuestAddons.pkg'
+              MenuItem, 0xa4558e1c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_recentItemRequested:', title: 'Show “AnkaGuestAddons.pkg” in Finder'
+              MenuItem, 0xa4558e300, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+              MenuItem, 0xa4558e440, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Servers', Disabled
+              MenuItem, 0xa4558e580, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_recentItemRequested:', title: 'Macintosh HD'
+              MenuItem, 0xa4558e6c0, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+              MenuItem, 0xa4558e800, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_clearRecentItemsRequested:', title: 'Clear Menu'
+          MenuItem, 0xa4558e940, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa4558ea80, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_forceQuitPanelRequested:', title: 'Force Quit…'
+          MenuItem, 0xa4558ebc0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_forceQuitRequested:', title: 'Force Quit MostlyText'
+          MenuItem, 0xa4558ed00, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa4558ee40, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_sleepRequested:', title: 'Sleep'
+          MenuItem, 0xa4558ef80, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_restartRequested:', title: 'Restart…'
+          MenuItem, 0xa4558f0c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_restartNowRequested:', title: 'Restart'
+          MenuItem, 0xa4558f200, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_shutDownRequested:', title: 'Shut Down…'
+          MenuItem, 0xa4558f340, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_shutDownNowRequested:', title: 'Shut Down'
+          MenuItem, 0xa4558f480, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa4558f5c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_lockScreenRequested:', title: 'Lock Screen'
+          MenuItem, 0xa4558f700, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_logOutRequested:', title: 'Log Out Anka…'
+          MenuItem, 0xa4558f840, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_logOutNowRequested:', title: 'Log Out Anka'
+          MenuItem, 0xa4558f980, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+      MenuBarItem, 0xa4558fac0, {{44.0, 0.0}, {91.0, 30.0}}, title: 'MostlyText'
+        Menu, 0xa4558fc00, {{0.0, 768.0}, {0.0, 0.0}}
+          MenuItem, 0xa4558fd40, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'About MostlyText'
+          MenuItem, 0xa4558fe80, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Open Source Licenses…'
+          MenuItem, 0xa45590000, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa45590140, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Settings…'
+          MenuItem, 0xa45590280, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455903c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Services'
+            Menu, 0xa45590500, {{0.0, 768.0}, {0.0, 0.0}}
+              MenuItem, 0xa45590640, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_processRequest:', title: 'Add to Music as a Spoken Track'
+              MenuItem, 0xa45590780, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_processRequest:', title: 'Make New Sticky Note'
+              MenuItem, 0xa455908c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_processRequest:', title: 'Open'
+              MenuItem, 0xa45590a00, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_processRequest:', title: 'Show in Finder'
+              MenuItem, 0xa45590b40, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_processRequest:', title: 'Show Info in Finder'
+              MenuItem, 0xa45590c80, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_processRequest:', title: 'Open man Page in Terminal'
+              MenuItem, 0xa45590dc0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_processRequest:', title: 'Search man Page Index in Terminal'
+              MenuItem, 0xa45590f00, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_processRequest:', title: 'Look Up in Dictionary'
+              MenuItem, 0xa45591040, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_processRequest:', title: 'Search With Google'
+              MenuItem, 0xa45591180, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_processRequest:', title: 'Activity Monitor'
+              MenuItem, 0xa455912c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_processRequest:', title: 'Allocations & Leaks'
+              MenuItem, 0xa45591400, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_processRequest:', title: 'File Activity'
+              MenuItem, 0xa45591540, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_processRequest:', title: 'System Trace'
+              MenuItem, 0xa45591680, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_processRequest:', title: 'Time Profile Active Application'
+              MenuItem, 0xa455917c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_processRequest:', title: 'Time Profile App Under Mouse'
+              MenuItem, 0xa45591900, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_processRequest:', title: 'Time Profile Entire System'
+              MenuItem, 0xa45591a40, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_processRequest:', title: 'Toggle Instruments Recording'
+              MenuItem, 0xa45591b80, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_configureServicesMenu:', title: 'Services Settings…'
+          MenuItem, 0xa45591cc0, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa45591e00, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'hide:', title: 'Hide MostlyText'
+          MenuItem, 0xa45591f40, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'hideOtherApplications:', title: 'Hide Others'
+          MenuItem, 0xa45592080, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'unhideAllApplications:', title: 'Show All', Disabled
+          MenuItem, 0xa455921c0, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa45592300, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'terminate:', title: 'Quit MostlyText'
+      MenuBarItem, 0xa45592440, {{135.0, 0.0}, {42.0, 30.0}}, title: 'File'
+        Menu, 0xa45592580, {{0.0, 768.0}, {0.0, 0.0}}
+          MenuItem, 0xa455926c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'New File'
+          MenuItem, 0xa45592800, {{0.0, 768.0}, {0.0, 0.0}}, title: 'New Folder', Disabled
+          MenuItem, 0xa45592940, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'New Tab'
+          MenuItem, 0xa45592a80, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Open…'
+          MenuItem, 0xa45592bc0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Open with Encoding…'
+          MenuItem, 0xa45592d00, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Open Folder…'
+          MenuItem, 0xa45592e40, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'ID(id: 110046)', title: 'Open Recent Folder'
+            Menu, 0xa45592f80, {{0.0, 768.0}, {0.0, 0.0}}
+              MenuItem, 0xa455930c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'documents'
+              MenuItem, 0xa45593200, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+              MenuItem, 0xa45593340, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Clear Menu'
+          MenuItem, 0xa45593480, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'ID(id: 110058)', title: 'Open Recent File'
+            Menu, 0xa455935c0, {{0.0, 768.0}, {0.0, 0.0}}
+              MenuItem, 0xa45593700, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'focus-42365840400.md'
+              MenuItem, 0xa45593840, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+              MenuItem, 0xa45593980, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Clear Menu'
+          MenuItem, 0xa45593ac0, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa45593c00, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Quick Open…'
+          MenuItem, 0xa45593d40, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa45593e80, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa45598000, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Save', Disabled
+          MenuItem, 0xa45598140, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Save As…', Disabled
+          MenuItem, 0xa45598280, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'ID(id: 110089)', title: 'Reopen with Encoding'
+            Menu, 0xa455983c0, {{0.0, 768.0}, {0.0, 0.0}}
+              MenuItem, 0xa45598500, {{0.0, 768.0}, {0.0, 0.0}}, title: 'UTF-8', Disabled
+              MenuItem, 0xa45598640, {{0.0, 768.0}, {0.0, 0.0}}, title: 'UTF-16 LE', Disabled
+              MenuItem, 0xa45598780, {{0.0, 768.0}, {0.0, 0.0}}, title: 'UTF-16 BE', Disabled
+              MenuItem, 0xa455988c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (ISO Latin 1)', Disabled
+              MenuItem, 0xa45598a00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (Windows Latin 1)', Disabled
+              MenuItem, 0xa45598b40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (Mac OS Roman)', Disabled
+              MenuItem, 0xa45598c80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Central European (ISO Latin 2)', Disabled
+              MenuItem, 0xa45598dc0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Central European (Windows Latin 2)', Disabled
+              MenuItem, 0xa45598f00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Cyrillic (Windows)', Disabled
+              MenuItem, 0xa45599040, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Greek (Windows)', Disabled
+              MenuItem, 0xa45599180, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Turkish (Windows Latin 5)', Disabled
+              MenuItem, 0xa455992c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Japanese (Windows, DOS)', Disabled
+              MenuItem, 0xa45599400, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Japanese (EUC)', Disabled
+              MenuItem, 0xa45599540, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Japanese (ISO 2022-JP)', Disabled
+              MenuItem, 0xa45599680, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Traditional Chinese (Big 5)', Disabled
+              MenuItem, 0xa455997c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Chinese (GB 18030)', Disabled
+              MenuItem, 0xa45599900, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Korean (EUC)', Disabled
+              MenuItem, 0xa45599a40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Cyrillic (KOI8-R)', Disabled
+              MenuItem, 0xa45599b80, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'ID(id: 110166)', title: 'Other'
+                Menu, 0xa45599cc0, {{0.0, 768.0}, {0.0, 0.0}}
+                  MenuItem, 0xa45599e00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Arabic (DOS)', Disabled
+                  MenuItem, 0xa45599f40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Arabic (ISO 8859-6)', Disabled
+                  MenuItem, 0xa4559a080, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Arabic (Mac OS)', Disabled
+                  MenuItem, 0xa4559a1c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Arabic (Windows)', Disabled
+                  MenuItem, 0xa4559a300, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Baltic (DOS)', Disabled
+                  MenuItem, 0xa4559a440, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Baltic (ISO Latin 7)', Disabled
+                  MenuItem, 0xa4559a580, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Baltic (Windows)', Disabled
+                  MenuItem, 0xa4559a6c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Canadian French (DOS)', Disabled
+                  MenuItem, 0xa4559a800, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Celtic (ISO Latin 8)', Disabled
+                  MenuItem, 0xa4559a940, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Celtic (Mac OS)', Disabled
+                  MenuItem, 0xa4559aa80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Central European (DOS Latin 2)', Disabled
+                  MenuItem, 0xa4559abc0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Central European (ISO Latin 4)', Disabled
+                  MenuItem, 0xa4559ad00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Central European (Mac OS)', Disabled
+                  MenuItem, 0xa4559ae40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Chinese (GBK)', Disabled
+                  MenuItem, 0xa4559af80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Chinese (ISO 2022-CN)', Disabled
+                  MenuItem, 0xa4559b0c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Croatian (Mac OS)', Disabled
+                  MenuItem, 0xa4559b200, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Cyrillic (DOS)', Disabled
+                  MenuItem, 0xa4559b340, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Cyrillic (ISO 8859-5)', Disabled
+                  MenuItem, 0xa4559b480, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Cyrillic (Mac OS Ukrainian)', Disabled
+                  MenuItem, 0xa4559b5c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Cyrillic (Mac OS)', Disabled
+                  MenuItem, 0xa4559b700, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Devanagari (Mac OS)', Disabled
+                  MenuItem, 0xa4559b840, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Dingbats (Mac OS)', Disabled
+                  MenuItem, 0xa4559b980, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Farsi (Mac OS)', Disabled
+                  MenuItem, 0xa4559bac0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Gaelic (Mac OS)', Disabled
+                  MenuItem, 0xa4559bc00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Greek (DOS Greek 1)', Disabled
+                  MenuItem, 0xa4559bd40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Greek (DOS Greek 2)', Disabled
+                  MenuItem, 0xa4559be80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Greek (DOS)', Disabled
+                  MenuItem, 0xa4559c000, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Greek (ISO 8859-7)', Disabled
+                  MenuItem, 0xa4559c140, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Greek (Mac OS)', Disabled
+                  MenuItem, 0xa4559c280, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Gujarati (Mac OS)', Disabled
+                  MenuItem, 0xa4559c3c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Gurmukhi (Mac OS)', Disabled
+                  MenuItem, 0xa4559c500, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Hebrew (DOS)', Disabled
+                  MenuItem, 0xa4559c640, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Hebrew (ISO 8859-8)', Disabled
+                  MenuItem, 0xa4559c780, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Hebrew (Mac OS)', Disabled
+                  MenuItem, 0xa4559c8c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Hebrew (Windows)', Disabled
+                  MenuItem, 0xa4559ca00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Icelandic (DOS)', Disabled
+                  MenuItem, 0xa4559cb40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Icelandic (Mac OS)', Disabled
+                  MenuItem, 0xa4559cc80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Inuit (Mac OS)', Disabled
+                  MenuItem, 0xa4559cdc0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Japanese (ISO 2022-JP-1)', Disabled
+                  MenuItem, 0xa4559cf00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Japanese (ISO 2022-JP-2)', Disabled
+                  MenuItem, 0xa4559d040, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Japanese (Mac OS)', Disabled
+                  MenuItem, 0xa4559d180, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Japanese (Shift JIS X0213)', Disabled
+                  MenuItem, 0xa4559d2c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Japanese (Shift JIS)', Disabled
+                  MenuItem, 0xa4559d400, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Keyboard Symbols (Mac OS)', Disabled
+                  MenuItem, 0xa4559d540, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Korean (ISO 2022-KR)', Disabled
+                  MenuItem, 0xa4559d680, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Korean (Mac OS)', Disabled
+                  MenuItem, 0xa4559d7c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Korean (Windows, DOS)', Disabled
+                  MenuItem, 0xa4559d900, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Latin-US (DOS)', Disabled
+                  MenuItem, 0xa4559da40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Non-lossy ASCII', Disabled
+                  MenuItem, 0xa4559db80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Nordic (DOS)', Disabled
+                  MenuItem, 0xa4559dcc0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Nordic (ISO Latin 6)', Disabled
+                  MenuItem, 0xa4559de00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Portuguese (DOS)', Disabled
+                  MenuItem, 0xa4559df40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Romanian (ISO Latin 10)', Disabled
+                  MenuItem, 0xa4559e080, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Romanian (Mac OS)', Disabled
+                  MenuItem, 0xa4559e1c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Russian (DOS)', Disabled
+                  MenuItem, 0xa4559e300, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Simplified Chinese (GB 2312)', Disabled
+                  MenuItem, 0xa4559e440, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Simplified Chinese (HZ GB 2312)', Disabled
+                  MenuItem, 0xa4559e580, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Simplified Chinese (Mac OS)', Disabled
+                  MenuItem, 0xa4559e6c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Simplified Chinese (Windows, DOS)', Disabled
+                  MenuItem, 0xa4559e800, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Symbol (Mac OS)', Disabled
+                  MenuItem, 0xa4559e940, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Thai (ISO 8859-11)', Disabled
+                  MenuItem, 0xa4559ea80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Thai (Mac OS)', Disabled
+                  MenuItem, 0xa4559ebc0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Thai (Windows, DOS)', Disabled
+                  MenuItem, 0xa4559ed00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Tibetan (Mac OS)', Disabled
+                  MenuItem, 0xa4559ee40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Traditional Chinese (Big 5 HKSCS)', Disabled
+                  MenuItem, 0xa4559ef80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Traditional Chinese (Big 5-E)', Disabled
+                  MenuItem, 0xa4559f0c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Traditional Chinese (EUC)', Disabled
+                  MenuItem, 0xa4559f200, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Traditional Chinese (Mac OS)', Disabled
+                  MenuItem, 0xa4559f340, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Traditional Chinese (Windows, DOS)', Disabled
+                  MenuItem, 0xa4559f480, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Turkish (DOS)', Disabled
+                  MenuItem, 0xa4559f5c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Turkish (ISO Latin 5)', Disabled
+                  MenuItem, 0xa4559f700, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Turkish (Mac OS)', Disabled
+                  MenuItem, 0xa4559f840, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Ukrainian (KOI8-U)', Disabled
+                  MenuItem, 0xa4559f980, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Unicode (UTF-16)', Disabled
+                  MenuItem, 0xa4559fac0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Unicode (UTF-32)', Disabled
+                  MenuItem, 0xa4559fc00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Unicode (UTF-32BE)', Disabled
+                  MenuItem, 0xa4559fd40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Unicode (UTF-32LE)', Disabled
+                  MenuItem, 0xa4559fe80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Unicode (UTF-7)', Disabled
+                  MenuItem, 0xa455a4000, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Vietnamese (Windows)', Disabled
+                  MenuItem, 0xa455a4140, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (ASCII)', Disabled
+                  MenuItem, 0xa455a4280, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (DOS Latin 1)', Disabled
+                  MenuItem, 0xa455a43c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (EBCDIC Latin 1)', Disabled
+                  MenuItem, 0xa455a4500, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (EBCDIC Latin Core)', Disabled
+                  MenuItem, 0xa455a4640, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (ISO Latin 3)', Disabled
+                  MenuItem, 0xa455a4780, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (ISO Latin 9)', Disabled
+                  MenuItem, 0xa455a48c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (Mac Mail)', Disabled
+                  MenuItem, 0xa455a4a00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (NextStep)', Disabled
+          MenuItem, 0xa455a4b40, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'ID(id: 110519)', title: 'Save with Encoding'
+            Menu, 0xa455a4c80, {{0.0, 768.0}, {0.0, 0.0}}
+              MenuItem, 0xa455a4dc0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'UTF-8', Disabled
+              MenuItem, 0xa455a4f00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'UTF-8 with BOM', Disabled
+              MenuItem, 0xa455a5040, {{0.0, 768.0}, {0.0, 0.0}}, title: 'UTF-16 LE with BOM', Disabled
+              MenuItem, 0xa455a5180, {{0.0, 768.0}, {0.0, 0.0}}, title: 'UTF-16 BE with BOM', Disabled
+              MenuItem, 0xa455a52c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'UTF-16 LE', Disabled
+              MenuItem, 0xa455a5400, {{0.0, 768.0}, {0.0, 0.0}}, title: 'UTF-16 BE', Disabled
+              MenuItem, 0xa455a5540, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (ISO Latin 1)', Disabled
+              MenuItem, 0xa455a5680, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (Windows Latin 1)', Disabled
+              MenuItem, 0xa455a57c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (Mac OS Roman)', Disabled
+              MenuItem, 0xa455a5900, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Central European (ISO Latin 2)', Disabled
+              MenuItem, 0xa455a5a40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Central European (Windows Latin 2)', Disabled
+              MenuItem, 0xa455a5b80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Cyrillic (Windows)', Disabled
+              MenuItem, 0xa455a5cc0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Greek (Windows)', Disabled
+              MenuItem, 0xa455a5e00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Turkish (Windows Latin 5)', Disabled
+              MenuItem, 0xa455a5f40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Japanese (Windows, DOS)', Disabled
+              MenuItem, 0xa455a6080, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Japanese (EUC)', Disabled
+              MenuItem, 0xa455a61c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Japanese (ISO 2022-JP)', Disabled
+              MenuItem, 0xa455a6300, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Traditional Chinese (Big 5)', Disabled
+              MenuItem, 0xa455a6440, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Chinese (GB 18030)', Disabled
+              MenuItem, 0xa455a6580, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Korean (EUC)', Disabled
+              MenuItem, 0xa455a66c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Cyrillic (KOI8-R)', Disabled
+              MenuItem, 0xa455a6800, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'ID(id: 110608)', title: 'Other'
+                Menu, 0xa455a6940, {{0.0, 768.0}, {0.0, 0.0}}
+                  MenuItem, 0xa455a6a80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Arabic (DOS)', Disabled
+                  MenuItem, 0xa455a6bc0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Arabic (ISO 8859-6)', Disabled
+                  MenuItem, 0xa455a6d00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Arabic (Mac OS)', Disabled
+                  MenuItem, 0xa455a6e40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Arabic (Windows)', Disabled
+                  MenuItem, 0xa455a6f80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Baltic (DOS)', Disabled
+                  MenuItem, 0xa455a70c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Baltic (ISO Latin 7)', Disabled
+                  MenuItem, 0xa455a7200, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Baltic (Windows)', Disabled
+                  MenuItem, 0xa455a7340, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Canadian French (DOS)', Disabled
+                  MenuItem, 0xa455a7480, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Celtic (ISO Latin 8)', Disabled
+                  MenuItem, 0xa455a75c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Celtic (Mac OS)', Disabled
+                  MenuItem, 0xa455a7700, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Central European (DOS Latin 2)', Disabled
+                  MenuItem, 0xa455a7840, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Central European (ISO Latin 4)', Disabled
+                  MenuItem, 0xa455a7980, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Central European (Mac OS)', Disabled
+                  MenuItem, 0xa455a7ac0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Chinese (GBK)', Disabled
+                  MenuItem, 0xa455a7c00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Chinese (ISO 2022-CN)', Disabled
+                  MenuItem, 0xa455a7d40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Croatian (Mac OS)', Disabled
+                  MenuItem, 0xa455a7e80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Cyrillic (DOS)', Disabled
+                  MenuItem, 0xa455a8000, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Cyrillic (ISO 8859-5)', Disabled
+                  MenuItem, 0xa455a8140, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Cyrillic (Mac OS Ukrainian)', Disabled
+                  MenuItem, 0xa455a8280, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Cyrillic (Mac OS)', Disabled
+                  MenuItem, 0xa455a83c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Devanagari (Mac OS)', Disabled
+                  MenuItem, 0xa455a8500, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Dingbats (Mac OS)', Disabled
+                  MenuItem, 0xa455a8640, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Farsi (Mac OS)', Disabled
+                  MenuItem, 0xa455a8780, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Gaelic (Mac OS)', Disabled
+                  MenuItem, 0xa455a88c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Greek (DOS Greek 1)', Disabled
+                  MenuItem, 0xa455a8a00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Greek (DOS Greek 2)', Disabled
+                  MenuItem, 0xa455a8b40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Greek (DOS)', Disabled
+                  MenuItem, 0xa455a8c80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Greek (ISO 8859-7)', Disabled
+                  MenuItem, 0xa455a8dc0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Greek (Mac OS)', Disabled
+                  MenuItem, 0xa455a8f00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Gujarati (Mac OS)', Disabled
+                  MenuItem, 0xa455a9040, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Gurmukhi (Mac OS)', Disabled
+                  MenuItem, 0xa455a9180, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Hebrew (DOS)', Disabled
+                  MenuItem, 0xa455a92c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Hebrew (ISO 8859-8)', Disabled
+                  MenuItem, 0xa455a9400, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Hebrew (Mac OS)', Disabled
+                  MenuItem, 0xa455a9540, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Hebrew (Windows)', Disabled
+                  MenuItem, 0xa455a9680, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Icelandic (DOS)', Disabled
+                  MenuItem, 0xa455a97c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Icelandic (Mac OS)', Disabled
+                  MenuItem, 0xa455a9900, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Inuit (Mac OS)', Disabled
+                  MenuItem, 0xa455a9a40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Japanese (ISO 2022-JP-1)', Disabled
+                  MenuItem, 0xa455a9b80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Japanese (ISO 2022-JP-2)', Disabled
+                  MenuItem, 0xa455a9cc0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Japanese (Mac OS)', Disabled
+                  MenuItem, 0xa455a9e00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Japanese (Shift JIS X0213)', Disabled
+                  MenuItem, 0xa455a9f40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Japanese (Shift JIS)', Disabled
+                  MenuItem, 0xa455aa080, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Keyboard Symbols (Mac OS)', Disabled
+                  MenuItem, 0xa455aa1c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Korean (ISO 2022-KR)', Disabled
+                  MenuItem, 0xa455aa300, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Korean (Mac OS)', Disabled
+                  MenuItem, 0xa455aa440, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Korean (Windows, DOS)', Disabled
+                  MenuItem, 0xa455aa580, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Latin-US (DOS)', Disabled
+                  MenuItem, 0xa455aa6c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Non-lossy ASCII', Disabled
+                  MenuItem, 0xa455aa800, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Nordic (DOS)', Disabled
+                  MenuItem, 0xa455aa940, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Nordic (ISO Latin 6)', Disabled
+                  MenuItem, 0xa455aaa80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Portuguese (DOS)', Disabled
+                  MenuItem, 0xa455aabc0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Romanian (ISO Latin 10)', Disabled
+                  MenuItem, 0xa455aad00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Romanian (Mac OS)', Disabled
+                  MenuItem, 0xa455aae40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Russian (DOS)', Disabled
+                  MenuItem, 0xa455aaf80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Simplified Chinese (GB 2312)', Disabled
+                  MenuItem, 0xa455ab0c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Simplified Chinese (HZ GB 2312)', Disabled
+                  MenuItem, 0xa455ab200, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Simplified Chinese (Mac OS)', Disabled
+                  MenuItem, 0xa455ab340, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Simplified Chinese (Windows, DOS)', Disabled
+                  MenuItem, 0xa455ab480, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Symbol (Mac OS)', Disabled
+                  MenuItem, 0xa455ab5c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Thai (ISO 8859-11)', Disabled
+                  MenuItem, 0xa455ab700, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Thai (Mac OS)', Disabled
+                  MenuItem, 0xa455ab840, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Thai (Windows, DOS)', Disabled
+                  MenuItem, 0xa455ab980, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Tibetan (Mac OS)', Disabled
+                  MenuItem, 0xa455abac0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Traditional Chinese (Big 5 HKSCS)', Disabled
+                  MenuItem, 0xa455abc00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Traditional Chinese (Big 5-E)', Disabled
+                  MenuItem, 0xa455abd40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Traditional Chinese (EUC)', Disabled
+                  MenuItem, 0xa455abe80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Traditional Chinese (Mac OS)', Disabled
+                  MenuItem, 0xa455b0000, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Traditional Chinese (Windows, DOS)', Disabled
+                  MenuItem, 0xa455b0140, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Turkish (DOS)', Disabled
+                  MenuItem, 0xa455b0280, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Turkish (ISO Latin 5)', Disabled
+                  MenuItem, 0xa455b03c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Turkish (Mac OS)', Disabled
+                  MenuItem, 0xa455b0500, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Ukrainian (KOI8-U)', Disabled
+                  MenuItem, 0xa455b0640, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Unicode (UTF-16)', Disabled
+                  MenuItem, 0xa455b0780, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Unicode (UTF-32)', Disabled
+                  MenuItem, 0xa455b08c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Unicode (UTF-32BE)', Disabled
+                  MenuItem, 0xa455b0a00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Unicode (UTF-32LE)', Disabled
+                  MenuItem, 0xa455b0b40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Unicode (UTF-7)', Disabled
+                  MenuItem, 0xa455b0c80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Vietnamese (Windows)', Disabled
+                  MenuItem, 0xa455b0dc0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (ASCII)', Disabled
+                  MenuItem, 0xa455b0f00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (DOS Latin 1)', Disabled
+                  MenuItem, 0xa455b1040, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (EBCDIC Latin 1)', Disabled
+                  MenuItem, 0xa455b1180, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (EBCDIC Latin Core)', Disabled
+                  MenuItem, 0xa455b12c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (ISO Latin 3)', Disabled
+                  MenuItem, 0xa455b1400, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (ISO Latin 9)', Disabled
+                  MenuItem, 0xa455b1540, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (Mac Mail)', Disabled
+                  MenuItem, 0xa455b1680, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Western (NextStep)', Disabled
+          MenuItem, 0xa455b17c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Close Tab'
+          MenuItem, 0xa455b1900, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455b1a40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Export…', Disabled
+      MenuBarItem, 0xa455b1b80, {{177.0, 0.0}, {44.0, 30.0}}, title: 'Edit'
+        Menu, 0xa455b1cc0, {{0.0, 768.0}, {0.0, 0.0}}
+          MenuItem, 0xa455b1e00, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'undo:', title: 'Undo', Disabled
+          MenuItem, 0xa455b1f40, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'redo:', title: 'Redo', Disabled
+          MenuItem, 0xa455b2080, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455b21c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'cut:', title: 'Cut', Disabled
+          MenuItem, 0xa455b2300, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'copy:', title: 'Copy'
+          MenuItem, 0xa455b2440, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'paste:', title: 'Paste', Disabled
+          MenuItem, 0xa455b2580, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'delete:', title: 'Delete', Disabled
+          MenuItem, 0xa455b26c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'selectAll:', title: 'Select All'
+          MenuItem, 0xa455b2800, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455b2940, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_NSMenuItemAutoFillIdentifier', title: 'AutoFill'
+            Menu, 0xa455b2a80, {{0.0, 768.0}, {0.0, 0.0}}
+              MenuItem, 0xa455b2bc0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_handleInsertFromContactsCommand:', title: 'Contact…', Disabled
+              MenuItem, 0xa455b2d00, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_handleInsertFromPasswordsCommand:', title: 'Passwords…', Disabled
+              MenuItem, 0xa455b2e40, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_handleInsertFromCreditCardsCommand:', title: 'Credit Card…', Disabled
+          MenuItem, 0xa455b2f80, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'startDictation:', title: 'Start Dictation…'
+          MenuItem, 0xa455b30c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'orderFrontCharacterPalette:', title: 'Emoji & Symbols'
+      MenuBarItem, 0xa455b3200, {{221.0, 0.0}, {63.0, 30.0}}, title: 'Format'
+        Menu, 0xa455b3340, {{0.0, 768.0}, {0.0, 0.0}}
+          MenuItem, 0xa455b3480, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Bold', Disabled
+          MenuItem, 0xa455b35c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Italic', Disabled
+          MenuItem, 0xa455b3700, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Inline Code', Disabled
+          MenuItem, 0xa455b3840, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455b3980, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'ID(id: 112166)', title: 'Heading'
+            Menu, 0xa455b3ac0, {{0.0, 768.0}, {0.0, 0.0}}
+              MenuItem, 0xa455b3c00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Heading 1', Disabled
+              MenuItem, 0xa455b3d40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Heading 2', Disabled
+              MenuItem, 0xa455b3e80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Heading 3', Disabled
+              MenuItem, 0xa455b4000, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Heading 4', Disabled
+              MenuItem, 0xa455b4140, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Heading 5', Disabled
+              MenuItem, 0xa455b4280, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Heading 6', Disabled
+              MenuItem, 0xa455b43c0, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+              MenuItem, 0xa455b4500, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Paragraph', Disabled
+          MenuItem, 0xa455b4640, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455b4780, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Format JSON', Disabled
+          MenuItem, 0xa455b48c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Format JSON with Sorted Keys', Disabled
+          MenuItem, 0xa455b4a00, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455b4b40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Add Cursor Above', Disabled
+          MenuItem, 0xa455b4c80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Add Cursor Below', Disabled
+          MenuItem, 0xa455b4dc0, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455b4f00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Select Next Occurrence', Disabled
+          MenuItem, 0xa455b5040, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Select All Occurrences', Disabled
+      MenuBarItem, 0xa455b5180, {{284.0, 0.0}, {50.0, 30.0}}, title: 'View'
+        Menu, 0xa455b52c0, {{0.0, 768.0}, {0.0, 0.0}}
+          MenuItem, 0xa455b5400, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'toggleTabBar:', title: 'Show Tab Bar', Disabled
+          MenuItem, 0xa455b5540, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'toggleTabOverview:', title: 'Show All Tabs', Disabled
+          MenuItem, 0xa455b5680, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455b57c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'ID(id: 115638)', title: 'Layout'
+            Menu, 0xa455b5900, {{0.0, 768.0}, {0.0, 0.0}}
+              MenuItem, 0xa455b5a40, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: '    Editor Only'
+              MenuItem, 0xa455b5b80, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: '✓ Split Editor & Preview'
+              MenuItem, 0xa455b5cc0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: '    Preview Only'
+          MenuItem, 0xa455b5e00, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'ID(id: 115655)', title: 'Appearance'
+            Menu, 0xa455b5f40, {{0.0, 768.0}, {0.0, 0.0}}
+              MenuItem, 0xa455b6080, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Follow System'
+              MenuItem, 0xa455b61c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Light'
+              MenuItem, 0xa455b6300, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Dark'
+          MenuItem, 0xa455b6440, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'ID(id: 115687)', title: 'Theme'
+            Menu, 0xa455b6580, {{0.0, 768.0}, {0.0, 0.0}}
+              MenuItem, 0xa455b66c0, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+              MenuItem, 0xa455b6800, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Light'
+              MenuItem, 0xa455b6940, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: '✓ GitHub Light'
+              MenuItem, 0xa455b6a80, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: '    Paper'
+              MenuItem, 0xa455b6bc0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: '    Daybreak'
+              MenuItem, 0xa455b6d00, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: '    High Contrast Light'
+              MenuItem, 0xa455b6e40, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+              MenuItem, 0xa455b6f80, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+              MenuItem, 0xa455b70c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Dark'
+              MenuItem, 0xa455b7200, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: '    Tomorrow Dark'
+              MenuItem, 0xa455b7340, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: '    Slate'
+              MenuItem, 0xa455b7480, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: '    Midnight'
+              MenuItem, 0xa455b75c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: '    High Contrast Dark'
+              MenuItem, 0xa455b7700, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455b7840, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Toggle Sidebar'
+          MenuItem, 0xa455b7980, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Focus Outline'
+          MenuItem, 0xa455b7ac0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Reveal Active File'
+          MenuItem, 0xa455b7c00, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Go to Line/Column…'
+          MenuItem, 0xa455b7d40, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Find…'
+          MenuItem, 0xa455b7e80, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'toggleFullScreen:', title: 'Enter Full Screen', Disabled
+      MenuBarItem, 0xa455b8000, {{334.0, 0.0}, {59.0, 30.0}}, title: 'Folder'
+        Menu, 0xa455b8140, {{0.0, 768.0}, {0.0, 0.0}}
+          MenuItem, 0xa455b8280, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Rename', Disabled
+          MenuItem, 0xa455b83c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Duplicate', Disabled
+          MenuItem, 0xa455b8500, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Move to Trash', Disabled
+      MenuBarItem, 0xa455b8640, {{393.0, 0.0}, {53.0, 30.0}}, title: 'Lines'
+        Menu, 0xa455b8780, {{0.0, 768.0}, {0.0, 0.0}}
+          MenuItem, 0xa455b88c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Duplicate Line', Disabled
+          MenuItem, 0xa455b8a00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Delete Line', Disabled
+          MenuItem, 0xa455b8b40, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455b8c80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Move Line Up', Disabled
+          MenuItem, 0xa455b8dc0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Move Line Down', Disabled
+          MenuItem, 0xa455b8f00, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455b9040, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Join Lines', Disabled
+          MenuItem, 0xa455b9180, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455b92c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Sort Lines', Disabled
+          MenuItem, 0xa455b9400, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Remove Duplicate Lines', Disabled
+          MenuItem, 0xa455b9540, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Trim Trailing Whitespace', Disabled
+          MenuItem, 0xa455b9680, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'ID(id: 116417)', title: 'Convert Line Endings'
+            Menu, 0xa455b97c0, {{0.0, 768.0}, {0.0, 0.0}}
+              MenuItem, 0xa455b9900, {{0.0, 768.0}, {0.0, 0.0}}, title: 'LF (Unix, macOS)', Disabled
+              MenuItem, 0xa455b9a40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'CRLF (Windows)', Disabled
+              MenuItem, 0xa455b9b80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'CR (Classic Mac OS)', Disabled
+          MenuItem, 0xa455b9cc0, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455b9e00, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'ID(id: 116441)', title: 'Convert Case'
+            Menu, 0xa455b9f40, {{0.0, 768.0}, {0.0, 0.0}}
+              MenuItem, 0xa455ba080, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Uppercase', Disabled
+              MenuItem, 0xa455ba1c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Lowercase', Disabled
+              MenuItem, 0xa455ba300, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Capitalize', Disabled
+          MenuItem, 0xa455ba440, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455ba580, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Increase Indent', Disabled
+          MenuItem, 0xa455ba6c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Decrease Indent', Disabled
+          MenuItem, 0xa455ba800, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455ba940, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Toggle Comment', Disabled
+      MenuBarItem, 0xa455baa80, {{446.0, 0.0}, {74.0, 30.0}}, title: 'Snippets'
+        Menu, 0xa455babc0, {{0.0, 768.0}, {0.0, 0.0}}
+          MenuItem, 0xa455bad00, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Insert Snippet…'
+          MenuItem, 0xa455bae40, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Edit Snippets…'
+      MenuBarItem, 0xa455baf80, {{520.0, 0.0}, {89.0, 30.0}}, title: 'Commands'
+        Menu, 0xa455bb0c0, {{0.0, 768.0}, {0.0, 0.0}}
+          MenuItem, 0xa455bb200, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Command Palette…'
+          MenuItem, 0xa455bb340, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455bb480, {{0.0, 768.0}, {0.0, 0.0}}, title: 'No Commands Installed', Disabled
+          MenuItem, 0xa455bb5c0, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455bb700, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Show Commands Folder'
+          MenuItem, 0xa455bb840, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Add Example Scripts'
+      MenuBarItem, 0xa455bb980, {{609.0, 0.0}, {69.0, 30.0}}, title: 'Window'
+        Menu, 0xa455bbac0, {{0.0, 768.0}, {0.0, 0.0}}
+          MenuItem, 0xa455bbc00, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'performMiniaturize:', title: 'Minimize'
+          MenuItem, 0xa455bbd40, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'miniaturizeAll:', title: 'Minimize All'
+          MenuItem, 0xa455bbe80, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'performZoom:', title: 'Zoom'
+          MenuItem, 0xa455bc000, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'zoomAll:', title: 'Zoom All'
+          MenuItem, 0xa455bc140, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomFill:', title: 'Fill'
+          MenuItem, 0xa455bc280, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomCenter:', title: 'Center'
+          MenuItem, 0xa455bc3c0, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455bc500, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Move & Resize'
+            Menu, 0xa455bc640, {{0.0, 768.0}, {0.0, 0.0}}
+              MenuItem, 0xa455bc780, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Halves', Disabled
+              MenuItem, 0xa455bc8c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomLeft:', title: 'Left'
+              MenuItem, 0xa455bca00, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomRight:', title: 'Right'
+              MenuItem, 0xa455bcb40, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomTop:', title: 'Top'
+              MenuItem, 0xa455bcc80, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomBottom:', title: 'Bottom'
+              MenuItem, 0xa455bcdc0, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+              MenuItem, 0xa455bcf00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Quarters', Disabled
+              MenuItem, 0xa455bd040, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomTopLeft:', title: 'Top Left'
+              MenuItem, 0xa455bd180, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomTopRight:', title: 'Top Right'
+              MenuItem, 0xa455bd2c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomBottomLeft:', title: 'Bottom Left'
+              MenuItem, 0xa455bd400, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomBottomRight:', title: 'Bottom Right'
+              MenuItem, 0xa455bd540, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+              MenuItem, 0xa455bd680, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Arrange', Disabled
+              MenuItem, 0xa455bd7c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomLeftAndRight:', title: 'Left & Right'
+              MenuItem, 0xa455bd900, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomLeftThreeUp:', title: 'Left & Quarters'
+              MenuItem, 0xa455bda40, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomRightAndLeft:', title: 'Right & Left'
+              MenuItem, 0xa455bdb80, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomRightThreeUp:', title: 'Right & Quarters'
+              MenuItem, 0xa455bdcc0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomTopAndBottom:', title: 'Top & Bottom'
+              MenuItem, 0xa455bde00, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomTopThreeUp:', title: 'Top & Quarters'
+              MenuItem, 0xa455bdf40, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomBottomAndTop:', title: 'Bottom & Top'
+              MenuItem, 0xa455be080, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomBottomThreeUp:', title: 'Bottom & Quarters'
+              MenuItem, 0xa455be1c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomQuarters:', title: 'Quarters'
+              MenuItem, 0xa455be300, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+              MenuItem, 0xa455be440, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_zoomUntile:', title: 'Return to Previous Size', Disabled
+          MenuItem, 0xa455be580, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Full Screen Tile', Disabled
+          MenuItem, 0xa455be6c0, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455be800, {{0.0, 768.0}, {0.0, 0.0}}, identifier: '_removeWindowFromStageManagerSet:', title: 'Remove Window from Set', Disabled
+          MenuItem, 0xa455be940, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455bea80, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'About MostlyText'
+          MenuItem, 0xa455bebc0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Open Source Licenses'
+          MenuItem, 0xa455bed00, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455bee40, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'selectPreviousTab:', title: 'Show Previous Tab', Disabled
+          MenuItem, 0xa455bef80, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'selectNextTab:', title: 'Show Next Tab', Disabled
+          MenuItem, 0xa455bf0c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'moveTabToNewWindow:', title: 'Move Tab to New Window', Disabled
+          MenuItem, 0xa455bf200, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'mergeAllWindows:', title: 'Merge All Windows', Disabled
+          MenuItem, 0xa455bf340, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455bf480, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455bf5c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'arrangeInFront:', title: 'Bring All to Front'
+          MenuItem, 0xa455bf700, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'alternateArrangeInFront:', title: 'Arrange in Front'
+          MenuItem, 0xa455bf840, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455bf980, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Show Next Tab', Disabled
+          MenuItem, 0xa455bfac0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Show Previous Tab', Disabled
+          MenuItem, 0xa455bfc00, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Select Tab 1', Disabled
+          MenuItem, 0xa455bfd40, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Select Tab 2', Disabled
+          MenuItem, 0xa455bfe80, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Select Tab 3', Disabled
+          MenuItem, 0xa455c8000, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Select Tab 4', Disabled
+          MenuItem, 0xa455c8140, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Select Tab 5', Disabled
+          MenuItem, 0xa455c8280, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Select Tab 6', Disabled
+          MenuItem, 0xa455c83c0, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Select Tab 7', Disabled
+          MenuItem, 0xa455c8500, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Select Tab 8', Disabled
+          MenuItem, 0xa455c8640, {{0.0, 768.0}, {0.0, 0.0}}, title: 'Select Tab 9', Disabled
+          MenuItem, 0xa455c8780, {{0.0, 768.0}, {0.0, 0.0}}, Disabled
+          MenuItem, 0xa455c88c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'makeKeyAndOrderFront:', title: '● focus-42365840400.md'
+          MenuItem, 0xa455c8a00, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'makeKeyAndOrderFront:', title: 'Welcome to MostlyText'
+      MenuBarItem, 0xa455c8b40, {{678.0, 0.0}, {48.0, 30.0}}, title: 'Help'
+        Menu, 0xa455c8c80, {{0.0, 768.0}, {0.0, 0.0}}
+          MenuItem, 0xa455c8dc0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'searchFieldAction:'
+            SearchField, 0xa455c8f00, {{-1.0, 743.0}, {342.0, 26.0}}, identifier: '_SC_SEARCH_FIELD'
+            Table, 0xa455c9040, {{-1.0, 757.0}, {362.0, 12.0}}, identifier: '_SC_RESULTS_TABLE', label: 'search result'
+              TableColumn, 0xa455c9180, {{0.0, 758.0}, {350.0, 10.0}}, identifier: 'Title', Disabled
+          MenuItem, 0xa455c92c0, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'showHelp:', title: 'MostlyText Help'
+          MenuItem, 0xa455c9400, {{0.0, 768.0}, {0.0, 0.0}}, identifier: 'menuAction:', title: 'Open Source Licenses…'
+    TouchBar, 0xa455c9540, {{80.0, 0.0}, {685.0, 30.0}}, Disabled
+Path to element:
+ →Application, 0xa45537d40, pid: 22270, title: 'MostlyText', Disabled
+Query chain:
+ →Find: Application 'app.mostlytext.MostlyText'
+  Output: {
+    Application, 0xa455c9680, pid: 22270, title: 'MostlyText', Disabled
+  }

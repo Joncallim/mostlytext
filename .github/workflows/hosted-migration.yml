@@ -14,6 +14,14 @@ concurrency:
   cancel-in-progress: false
 jobs:
   valid-development-profile:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - scenario: valid-profile
+            migration-option: ''
+          - scenario: future-session
+            migration-option: '--future-session'
     runs-on: macos-26
     timeout-minutes: 40
     steps:
@@ -31,7 +39,7 @@ jobs:
           python3 .github/scripts/test-run-owned-app-tests.py
           python3 .github/scripts/test-hosted-focus-guard.py
           python3 .github/scripts/test-hosted-migration.py ProfileEvidenceTests
-          python3 .github/scripts/prepare-hosted-migration.py prepare
+          python3 .github/scripts/prepare-hosted-migration.py prepare ${{ matrix.migration-option }}
           cd MacDown2
           xcodegen generate
           scripts/pin-xcode-package-versions.sh
@@ -42,21 +50,21 @@ jobs:
           xcrun swiftc -parse-as-library -swift-version 6 -strict-concurrency=complete .github/scripts/native-cli-app-host.swift -o "$RUNNER_TEMP/mostlytext-focus/normal-app-host"
           xcrun swiftc -parse-as-library -swift-version 6 -strict-concurrency=complete .github/hosted-public-focus/HostFacts.swift -o "$RUNNER_TEMP/mostlytext-focus/host-facts"
           swift build --package-path "$RUNNER_TEMP/mostlytext-focus/seed" --configuration release --force-resolved-versions 2>&1 | tee "$RUNNER_TEMP/mostlytext-focus/seed-build.log"
-          python3 .github/scripts/prepare-hosted-migration.py bind-built
+          python3 .github/scripts/prepare-hosted-migration.py bind-built ${{ matrix.migration-option }}
       - name: Build the private actual-input control and migration driver
         run: |
           set -euo pipefail
           xcodebuild -project "$RUNNER_TEMP/mostlytext-focus/fixture/HostedPublicFocus.xcodeproj" -scheme HostedPublicFocus -configuration Release -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/mostlytext-focus/control" CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual build-for-testing 2>&1 | tee "$RUNNER_TEMP/mostlytext-focus/control-build.log"
-          python3 .github/scripts/prepare-hosted-migration.py bind-driver
+          python3 .github/scripts/prepare-hosted-migration.py bind-driver ${{ matrix.migration-option }}
       - name: Execute one positive and the normal migration then normal relaunch
         run: |
           set -euo pipefail
-          python3 .github/scripts/run-hosted-migration.py 2>&1 | tee "$RUNNER_TEMP/mostlytext-focus/execution.log"
+          python3 .github/scripts/run-hosted-migration.py ${{ matrix.migration-option }} 2>&1 | tee "$RUNNER_TEMP/mostlytext-focus/execution.log"
       - name: Preserve the complete first native compile and execution outcome
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hosted-normal-migration
+          name: hosted-normal-migration-${{ matrix.scenario }}
           path: |
             ${{ runner.temp }}/mostlytext-focus/*.json
             ${{ runner.temp }}/mostlytext-focus/*.log

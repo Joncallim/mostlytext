@@ -14,13 +14,26 @@ struct MigrationSeedProfile {
 
     @MainActor
     static func main() async throws {
-        let action = CommandLine.arguments.dropFirst()
-        guard action.isEmpty || action == ["--set-current-indentation-after-first-quit"] ||
+        var action = Array(CommandLine.arguments.dropFirst())
+        let future = action == ["--seed-future-session"] || action.last == "--future-session"
+        if action.last == "--future-session" {
+            action.removeLast()
+        }
+        guard action.isEmpty || action == ["--seed-future-session"] ||
+            action == ["--set-current-indentation-after-first-quit"] ||
             (action.count == 2 && action.first == "--capture-fixed-domains" &&
-                ["seeded", "first", "relaunch", "failure"].contains(action.last ?? ""))
+                ["seeded", "first", "relaunch", "failure", "blocked"].contains(action.last ?? ""))
         else { throw Refusal.arguments }
+        if future {
+            try MigrationSeedAdmission.requireFutureHost()
+        }
         let receipt = try MigrationSeedAdmission.requirePositive()
         try verifySource(receipt)
+        guard receipt["migration_scenario"] as? String == (future ? "future-session" : "valid-profile"),
+              !future || receipt["migration_future_qualified_main"] as? String ==
+              MigrationSeedAdmission.futureQualifiedMain,
+              !(future && action == ["--set-current-indentation-after-first-quit"])
+        else { throw Refusal.publication }
         guard NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText")
             .isEmpty else { throw Refusal.publication }
         if action.first == "--capture-fixed-domains", let label = action.last {
@@ -36,7 +49,7 @@ struct MigrationSeedProfile {
         try FileManager.default.createDirectory(at: old, withIntermediateDirectories: false,
                                                 attributes: [.posixPermissions: 0o700])
         let files = try seedFiles(in: old, root: root)
-        let session = try await seedSession(in: old, files: files)
+        let session = try await seedSession(in: old, files: files, future: future)
         try publishPreferences(files: files)
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
@@ -111,7 +124,7 @@ struct MigrationSeedProfile {
     }
 
     @MainActor
-    private static func seedSession(in old: URL, files: Files) async throws -> WorkspaceSession {
+    private static func seedSession(in old: URL, files: Files, future: Bool) async throws -> WorkspaceSession {
         let recovery = RecoveryBuffer(recoveryDirectory: old.appendingPathComponent("Recovery", isDirectory: true))
         var records: [TabRecord] = []
         for url in [files.external, files.snippet] {
@@ -125,10 +138,17 @@ struct MigrationSeedProfile {
                                      cursorPosition: 0, selectionLength: 0, scrollOffset: 0,
                                      encoding: document.encoding, baseSHA256: document.baselineSHA256))
         }
-        let session = WorkspaceSession(tabs: records, activeTabID: records.last?.id)
-        guard WorkspaceSessionStore(fileURL: old.appendingPathComponent("session.json")).saveSessionVerified(session)
-        else {
-            throw Refusal.publication
+        let session = WorkspaceSession(version: WorkspaceSession.currentVersion + (future ? 1 : 0),
+                                       tabs: records, activeTabID: records.last?.id)
+        let file = old.appendingPathComponent("session.json")
+        if future {
+            let bytes = try JSONEncoder().encode(session)
+            guard case .unsupported = WorkspaceSessionAdmission.decode(bytes) else { throw Refusal.publication }
+            try bytes.write(to: file, options: .withoutOverwriting)
+        } else {
+            guard WorkspaceSessionStore(fileURL: file).saveSessionVerified(session) else {
+                throw Refusal.publication
+            }
         }
         return session
     }
@@ -175,7 +195,8 @@ struct MigrationSeedProfile {
 
     @MainActor
     private static func updateCurrentIndentation(_ receipt: [String: Any]) throws {
-        guard receipt["migration_first_ui_passed"] as? Bool == true,
+        guard receipt["migration_scenario"] as? String != "future-session",
+              receipt["migration_first_ui_passed"] as? Bool == true,
               receipt["migration_first_normal_quit_verified"] as? Bool == true,
               let current = UserDefaults(suiteName: ApplicationStorageLocations.applicationDomain),
               let old = UserDefaults(suiteName: ApplicationStorageLocations.developmentDomain) else {
