@@ -157,3 +157,40 @@ intentional recorder stop after UI completion may interrupt its last log query;
 that status is retained separately and never called provider-task cancellation.
 All real log queries supplying published snapshots must finish0. Exact direct
 post-run provider logs remain the independent correlation source.
+
+## Historical-scan startup refusal and live-stream execution boundary
+
+First0e1b3200/run42400199251 compiles/seals all roles but the initial historical
+host log scan exceeds its3second limit before UI starts. Both first outcomes and
+all19canonical/13generated/11downloaded execution roles are retained/verified at
+actualff185303. UI/Escape/cancellation are NOT_RUN. Do not increase that timeout
+or claim a cancelled/failed UI journey. Intake actual mainc1edd7a1, containing
+qualified PR136/137, before the next materially changed first publication.
+
+Use a single persistent own-subsystem log stream in newline-delimited JSON
+(`log help stream` confirms ndjson support). Its lifetime stays300seconds and
+startup stays5seconds. This replaces the historical-scan execution model rather
+than giving the old scan more time. Stream process must remain live until the
+existing owned driver stops it after UI; unexpected exit, malformed/lost records,
+forced cleanup or uncorrelated data fail. An expected post-UI stream stop is
+observer cleanup, not provider task cancellation.
+
+Before UI, prove the real stream channel using a tiny private SDK console that
+emits one fresh UUID control nonce through OSLog in a distinct observer subsystem.
+Compile it with strict optimized Swift on the hosted Mac only; capture exact
+source/command/binary before/after alongside the other roles. It requires actual
+runner UID/name/home/macOS26/repository and its exact generated executable path.
+The recorder can emit successful benign control pulses at most25times under the
+same5second startup bound until the actual matching nonce appears in the live
+stream. This is channel admission, never a native-suite retry or fake provider
+callback. Each control invocation has the unchanged3second command bound and
+nonzero/timeout fails. UI starts only after that real echo; its data file contains
+only actual provider messages, with the same immutable128generation/128KiB caps.
+
+Persist raw stream bytes/records, actual control attempts/echo, source/binary
+identity and observed record positions for every published snapshot. Independently
+re-read direct post-run provider AND control logs, compiled blobs, owned driver/
+stream lifecycle and actual UI attachment. No permissions/TCC/AppGroup/network
+service changes. Original cold positive/provider/read path/10second wait/window/
+spinner/Escape/closure/terminal checks remain byte-identical. Strict source/pure
+parser/correlation tests precede one new first native run; retain any new refusal.
