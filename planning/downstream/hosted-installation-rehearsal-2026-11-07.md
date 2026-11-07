@@ -116,3 +116,42 @@ package, GUI, profile, preference or owner-data operation runs in these controls
 Full fixture-module type checking/native compilation, source/generated/positive
 bindings, profile/mode/inode capture and the controller/UI journey remain later
 slices. The held fixture is not a migration/native acceptance result.
+
+## Fixed private controller and idempotent preference decision
+
+Use a separate fixed migration controller and wrapper around the unchanged
+qualified public preparation, rather than revising existing qualified launch
+controllers. The wrapper binds all migration source/template/plan/generated
+fixture and compiled executable inputs and adds a private UI extension only to
+its own generated test fixture. Its unresolved actual-main anchor remains
+before any host/receipt/profile access until the current licence orchestration
+is integrated and inspected. Existing public/default journeys are unaffected.
+
+After the real positive, the controller verifies the source-bound seed binary
+and runs it once. Do not send a public CLI file-open request: that would add an
+unrelated third tab and obscure restored-profile evidence. The normal app must
+restore the two fictional tabs itself. Kernel peer readiness may be observed
+without sending application frames. The private UI checks only the normal
+restored managed document text, both tab identities, no blocked/startup offer,
+and the real status indentation value. It does not run an earlier public-focus
+prelude against the migrated documents. Normal independent public-focus/CLI
+qualification remains separate and preserved.
+
+Seed the fictional development editor using canonical EditorSettings with
+indentationWidth2, alongside the completed first-run key. After a genuine first
+migration UI pass, identity-bound normal Quit and full old/preserved/current
+profile/defaults readback, a separate fixed fixture action may change only the
+canonical current editor indentation to8. It must require the actual first-pass
+and normal-Quit receipt before touching current preferences. Relaunch must show
+Spaces8 while the original development editor remains2, the same two tabs and
+unsaved recovered text persist, and no original file/domain changes. This tests
+idempotence without mutating the original source profile or claiming Settings-UI
+acceptance. Missing/wrong receipts, a live app, changed input/profile identity,
+unknown preference bytes, unsupported state or cleanup uncertainty refuse.
+
+Capture bounded file bytes/hashes/modes/UID/GID/inodes and exact domain property
+lists before launch and after each normal Quit; verify original state unchanged,
+preserved copies complete, sentinel absent and current canonical session/recovery
+paths/UUIDs/epochs correct. Public UI and on-disk readback remain independent
+proofs. Initial fixture module compilation is still unverified; preserve its
+first hosted compile or selector failure before any material correction.
