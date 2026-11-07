@@ -209,19 +209,19 @@ outcome. Preserve the next actual frozen combined-head first outcomes in full.
 
 ## Qualified actual Finder outcome and production constraint
 
-PR138 sourceb6445bfb passes first native42404172704 and Compliance42404172739.
-Actual checkout4f7391ff and actual merge3b141d4d both have computed tree5fd0ddaa.
+PR #138 source `b6445bfb` passes first native42404172704 and Compliance42404172739.
+Actual checkout `4f7391ff` and actual merge `3b141d4d` both have computed tree5fd0ddaa.
 The [source-bound first packet](evidence/quicklook-real-pending-closure-2026-11-08/README.md)
 retains original outcomes, independent reader, actual raw UI summary/attachments,
 provider/control logs, immutable-history receipt and all execution-role hashes.
-Both real cases pass with zero failures/skips/expected failures;20canonical,
-11copied,14generated inputs and12downloaded compiled roles verify independently.
+Both real cases pass with zero failures/skips/expected failures;20 canonical,
+11 copied,14 generated inputs and12 downloaded compiled roles verify independently.
 The actual static screenshot shows the marker and local blue image control;
 the later screenshot shows Finder after Quick Look has disappeared.
 
 **Finder closure does not propagate cancellation to this provider task on the
-observed hosted macOS26.7.2 run.** Request2 starts303.867981, is observed pending
-before Escape305.585901, closes306.859329 and completes314.171539. No cancellation
+observed hosted macOS 26.7.2 run.** Request2 starts303.867981, is observed pending
+before Escape 305.585901, closes306.859329 and completes314.171539. No cancellation
 handler runs. The cooperative wait lasts10.303558seconds and finishes7.312210seconds
 after window disappearance. This scoped negative finding rules out assuming
 window closure automatically cancels provider work. Production needs its own

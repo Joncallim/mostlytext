@@ -1,17 +1,17 @@
 # Actual pending Finder closure, negative cancellation propagation
 
-PR138 source b6445bfb / actual checkout4f7391ff / merge3b141d4d have the verified
-computed tree5fd0ddaad5227a6029978284aecf2fd9bea2c77a. Native42404172704 and
+PR #138 source `b6445bfb` / actual checkout `4f7391ff` / merge `3b141d4d` have the verified
+computed tree `5fd0ddaad5227a6029978284aecf2fd9bea2c77a`. Native42404172704 and
 Compliance42404172739 pass on their complete first attempts. Independently read
 raw result: two actual cases pass, zero failed/skipped/expected failures. Verify
-20canonical/11copied/14generated inputs,12downloaded compiled roles, actual minimal
-provider entitlements,15immutable log generations, genuine nonce within0.611s,
+20 canonical/11 copied/14 generated inputs,12 downloaded compiled roles, actual minimal
+provider entitlements,15 immutable log generations, genuine nonce within 0.611 seconds,
 live/direct provider events and clean owned UI/observer/stream lifecycle.
 
-Actual provider request2: start303.867981, observed pending305.585778,
-Escape305.585901, window closed306.859329, terminal completed314.171539.
-The task does not receive cancellation: its cooperative10.303558second wait
-completes7.312210seconds after visible closure, with no cancellation handler.
+Actual provider request 2: start 303.867981, observed pending 305.585778,
+Escape 305.585901, window closed 306.859329, terminal completed 314.171539.
+The task does not receive cancellation: its cooperative 10.303558-second wait
+completes 7.312210 seconds after visible closure, with no cancellation handler.
 This is negative system-cancellation feasibility evidence, not a production
 cancellation pass. The two actual screenshots show the cold static marker/blue
 control and later closed Quick Look window; they are not a full content audit.
