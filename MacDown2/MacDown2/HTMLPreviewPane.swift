@@ -34,6 +34,7 @@ struct HTMLPreviewPane: View {
                         .accessibilityIdentifier("htmlSourcePane")
                 case .rendered, .outline:
                     SecuredHTMLPreviewView(document: document, tabID: tab.id)
+                        .accessibilityElement(children: .contain)
                         .accessibilityIdentifier("htmlRenderedPane")
                 }
                 modePicker
