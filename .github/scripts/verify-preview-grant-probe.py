@@ -63,8 +63,8 @@ receipt = {
     "configuration": args.configuration,
     "mutation_pair": args.pair,
     "testability": True,
-    "diagnostic_only": False,
-    "qualification_candidate": True,
+    "diagnostic_only": True,
+    "qualification_candidate": False,
     "current_main_baseline": "427d15fa5da94d4045a02e7f6a005648d09e38c5",
     "resource_trace_enabled": True,
     "execution_architecture": "arm64",
@@ -72,8 +72,8 @@ receipt = {
     "additional_compilation_condition": "RELEASE_PREVIEW_PROBE",
     "source_sha256": digests,
     "pins": pins,
-    "scope": "Current-main Preview qualification candidate; first outcomes and all six pairs required, without a sole historical cause or final release claim",
-    "renderer_preference_observer": False,
+    "scope": "Private actual renderer-preference diagnosis only; no qualification, remedy, sole historical cause or final acceptance",
+    "renderer_preference_observer": True,
     "fixture_window_lifetime_observer": True,
 }
 path = args.output / "receipt.json"
@@ -86,6 +86,7 @@ if args.verify:
     if args.verify_compiled:
         verify_execution(args.output, args.configuration, args.verify_compiled)
     if args.require_result:
+        raise SystemExit("This private renderer observer can never qualify the full Preview candidate")
         for phase in ['initial', 'selection', args.pair + '-mutant', args.pair + '-restored']:
             binding = json.loads((args.output / ('compiled-' + phase + '.json')).read_text())
             proof = json.loads((args.output / ('compiled-' + phase + '-verified.json')).read_text())

@@ -204,6 +204,7 @@ struct SecuredMarkdownMountedTests {
                     theme: PreviewTheme(theme: BundledThemes.light),
                     resourceImageLoader: loader, resourceLoadID: loadID
                 )
+                .modifier(PreviewRenderedAttachmentTrace(loadID: loadID))
                 .onChange(of: loadID, initial: true) { _, id in recorder.record(id, loader: loader) }
                 .onDisappear { recorder.didDisappear = true }
             }

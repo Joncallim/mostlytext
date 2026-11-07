@@ -73,6 +73,7 @@ extension SecuredMarkdownMountedTests {
             return "view=\(ObjectIdentifier(interaction)) hidden=\(interaction.isHiddenOrHasHiddenAncestor) "
                 + "frame=\(interaction.frame) firstResponder=\(interaction.window?.firstResponder === interaction) "
                 + "html=\(html) \(attachmentLayoutDiagnostics(in: interaction))"
+                + " \(PreviewRenderedAttachmentObservations.selection(interaction))"
         }.joined(separator: " | ")
     }
 
