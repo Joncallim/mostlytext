@@ -18,7 +18,10 @@ struct PreviewDelayedGrantDiagnosisTests {
         let root = try fixture.root()
         let initial = try #require(fixture.first.model.activeDocument)
         try #require(!fixture.first.previewResourceState.hasGrant(for: initial))
+        observeFileBinding(fixture)
+        defer { fixture.first.externalFileController.afterObservationContextHandled = nil }
         let deadline = ContinuousClock.now.advanced(by: .seconds(5))
+        try await waitForInitialBinding(fixture, before: deadline)
         var deniedHTML = ""
         while ContinuousClock.now < deadline {
             deniedHTML = try await fixture.copyHarness.copiedHTML(from: root)
@@ -54,5 +57,22 @@ struct PreviewDelayedGrantDiagnosisTests {
             #endif
             return "The same observed ungranted document now has its original window's explicit folder grant"
         }
+    }
+
+    private func observeFileBinding(_ fixture: PreviewProductionFixture) {
+        fixture.first.externalFileController.afterObservationContextHandled = { _ in
+            let current = fixture.first.model.activeDocument
+            print("DELAYED_GRANT_BINDING generation=\(current?.mutationGeneration ?? 0) "
+                + "baseline=\(current?.lastKnownRevision != nil)")
+        }
+    }
+
+    private func waitForInitialBinding(
+        _ fixture: PreviewProductionFixture, before deadline: ContinuousClock.Instant
+    ) async throws {
+        while fixture.first.model.activeDocument?.lastKnownRevision == nil, ContinuousClock.now < deadline {
+            try await Task.sleep(for: .milliseconds(20))
+        }
+        try #require(fixture.first.model.activeDocument?.lastKnownRevision != nil)
     }
 }
