@@ -1,0 +1,11 @@
+{
+  "actual_merge": "aff49a5eb4b7bb111ce949daef66b0b41ddfb274",
+  "parents": [
+    "6b49777d0f36c3d7a23cd0089e0823da1986660a",
+    "ed96eb6421d8094d672a546f0d1afa5f73d085d4"
+  ],
+  "qualified_synthetic": "20015952d457fd06eb29599035f918493049e792",
+  "identical_tree": "75af2efafd2e8492c6dba8df2dbe55d06c9f58f1",
+  "corrected_unit_ancestors_verified": true,
+  "scope": "Integration identity, not a retargeted native receipt or final release acceptance"
+}

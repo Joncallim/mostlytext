@@ -417,3 +417,21 @@ CLI and DMG stages, failed-before regressions and successful metadata/evidence
 capture. No real release script, signing/notary credentials, product/native launch
 or publication is executed. Six strict compliance failures and real signing,
 notarization, installed-state and exact-artifact acceptance remain open.
+
+
+## Startup/session restoration and readable status — 7 November 2026
+
+[PR124](https://github.com/Joncallim/mostlytext/pull/124) integrates the regular-file
+startup rule, complete adaptive status rows and independent English count forms
+at actual main aff49a5eb4b7bb111ce949daef66b0b41ddfb274. Its exact tree matches
+the fully qualified synthetic candidate; corrected unit heads remain ancestors.
+[The evidence packet](downstream/evidence/qualified-startup-status-2026-11-07/README.md)
+retains all nine actual workflow first outcomes and scoped independent checks:
+3719package/679app functions, four builds, three original tab/conflict journeys,
+public CLI/focus, original formatting, ownership, actual readable status geometry,
+both package theme and both shared native-app configurations. Narrow status now
+fits all six complete fields at398×41; wide remains796×24. All first failures
+remain preserved. PR123 is integrated by actual ancestry, not a passing retry of
+its old failed head. Full38-method/six-extra critical execution, final repeated
+artifact, localisation/VoiceOver, performance, protected owner, installation and
+independent rights/publication requirements remain open. No final release pass.

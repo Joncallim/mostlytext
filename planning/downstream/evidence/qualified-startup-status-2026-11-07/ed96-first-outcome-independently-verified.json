@@ -1,0 +1,183 @@
+{
+  "head": "ed96eb6421d8094d672a546f0d1afa5f73d085d4",
+  "checkout": "20015952d457fd06eb29599035f918493049e792",
+  "tree": "75af2efafd2e8492c6dba8df2dbe55d06c9f58f1",
+  "only_five_reviewed_product_source_changes": true,
+  "genuine_original_passes": 3,
+  "genuine_original_failures": 0,
+  "all_three_private_positives_pass": true,
+  "rows": [
+    {
+      "journey": "external-conflict-close",
+      "selected": "MacDown2UITests/ExternalFileChangesUITests/testConflictCloseUseDiskClosesWithoutDiscardingTheExternalVersion",
+      "source_inputs_verified": 1611,
+      "pins_verified": 24,
+      "generated_inputs_verified": 7,
+      "actual_private_positive_pass": true,
+      "actual_original_summary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "0ed55bd27b12479f2a523e6e67d1c6f59683abef",
+              "deviceName": "My Mac",
+              "modelName": "Apple Virtual Machine 1",
+              "osBuildNumber": "25G332",
+              "osVersion": "26.7.2",
+              "platform": "macOS"
+            },
+            "expectedFailures": 0,
+            "failedTests": 0,
+            "passedTests": 1,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "MacDown2 \u00b7 Built with macOS 26.7.2",
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "finishTime": 1794030756.928,
+        "passedTests": 1,
+        "result": "Passed",
+        "skippedTests": 0,
+        "startTime": 1794030739.956,
+        "statistics": [],
+        "testFailures": [],
+        "title": "Test - MacDown2",
+        "topInsights": [],
+        "totalTestCount": 1
+      },
+      "actual_original_owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 31.29523845799997,
+        "app_cleanup_requested": []
+      },
+      "actual_case_identity_verified": true,
+      "test_binary_downloaded_sha256": "6d67f7309596009b4f49221c38ee37379a74e66ebbbcc27bba16aa36a3e1cbe3",
+      "source_verified_after_field": true,
+      "app_before_sha256": "7883788a862abefaea6f1ea14cb2459396de71167613a38d60271fbd3e5494b0",
+      "app_after_sha256": "7883788a862abefaea6f1ea14cb2459396de71167613a38d60271fbd3e5494b0",
+      "framework_runner_restart_after_failure": false
+    },
+    {
+      "journey": "native-tabs-dirty-close",
+      "selected": "MacDown2UITests/TabLifecycleUITests/testOpenFilesDirtyClosePromptAndRestore",
+      "source_inputs_verified": 1611,
+      "pins_verified": 24,
+      "generated_inputs_verified": 7,
+      "actual_private_positive_pass": true,
+      "actual_original_summary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "7463128b8c067b031c79d31c771d51fa0acd7f59",
+              "deviceName": "My Mac",
+              "modelName": "Apple Virtual Machine 1",
+              "osBuildNumber": "25G332",
+              "osVersion": "26.7.2",
+              "platform": "macOS"
+            },
+            "expectedFailures": 0,
+            "failedTests": 0,
+            "passedTests": 1,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "MacDown2 \u00b7 Built with macOS 26.7.2",
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "finishTime": 1794030172.303,
+        "passedTests": 1,
+        "result": "Passed",
+        "skippedTests": 0,
+        "startTime": 1794030139.758,
+        "statistics": [],
+        "testFailures": [],
+        "title": "Test - MacDown2",
+        "topInsights": [],
+        "totalTestCount": 1
+      },
+      "actual_original_owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 65.52552950000006,
+        "app_cleanup_requested": []
+      },
+      "actual_case_identity_verified": true,
+      "test_binary_downloaded_sha256": "f3ce83e421b5cbc3cf39394b9909ca0dc48db102bb9c11f1facdbc457e956049",
+      "source_verified_after_field": true,
+      "app_before_sha256": "82c329db3898f275ad5d9b38ccd9517586b05abb6d86ee070d243772ae2793ef",
+      "app_after_sha256": "82c329db3898f275ad5d9b38ccd9517586b05abb6d86ee070d243772ae2793ef",
+      "framework_runner_restart_after_failure": false
+    },
+    {
+      "journey": "native-tabs-quick-open",
+      "selected": "MacDown2UITests/TabLifecycleUITests/testQuickOpenReactivatesAnAlreadyOpenBackgroundTab",
+      "source_inputs_verified": 1611,
+      "pins_verified": 24,
+      "generated_inputs_verified": 7,
+      "actual_private_positive_pass": true,
+      "actual_original_summary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "89902872ff679c1db6194b51d3a866cd25eb9e78",
+              "deviceName": "My Mac",
+              "modelName": "Apple Virtual Machine 1",
+              "osBuildNumber": "25G332",
+              "osVersion": "26.7.2",
+              "platform": "macOS"
+            },
+            "expectedFailures": 0,
+            "failedTests": 0,
+            "passedTests": 1,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "MacDown2 \u00b7 Built with macOS 26.7.2",
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "finishTime": 1794031329.16,
+        "passedTests": 1,
+        "result": "Passed",
+        "skippedTests": 0,
+        "startTime": 1794031295.508,
+        "statistics": [],
+        "testFailures": [],
+        "title": "Test - MacDown2",
+        "topInsights": [],
+        "totalTestCount": 1
+      },
+      "actual_original_owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 49.19222366700001,
+        "app_cleanup_requested": []
+      },
+      "actual_case_identity_verified": true,
+      "test_binary_downloaded_sha256": "48ed34e874de9c41ea65427388abe611524cacc2f190100b0820a687894eeee8",
+      "source_verified_after_field": true,
+      "app_before_sha256": "0b3e1428aae61031df0e41bfa704eae7c2c35b250a1b2e993e4f2bd44a9e685c",
+      "app_after_sha256": "0b3e1428aae61031df0e41bfa704eae7c2c35b250a1b2e993e4f2bd44a9e685c",
+      "framework_runner_restart_after_failure": false
+    }
+  ],
+  "scope": "Actual original conflict-close, dirty-close/session restore and QuickOpen reuse all pass with all3 genuine private positives. Full source/compiled input/case/xctestrun/GUI/actual xcresult verified. Reviewed public folder precondition and shared original8second batch readiness preserve original statements. No unchanged retries/skips/expected failures/timeouts/cancellation. Original uncaptured historical events/session bytes remain unknown. No independent post-teardown fixture-byte/protected owner/full38/sixextra/finalrepeated/signed acceptance."
+}

@@ -1,0 +1,59 @@
+{
+  "head": "ed96eb6421d8094d672a546f0d1afa5f73d085d4",
+  "checkout": "20015952d457fd06eb29599035f918493049e792",
+  "rows": [
+    {
+      "configuration": "Debug",
+      "source_inputs_verified": 1596,
+      "pins_verified": 24,
+      "actual_functions": 29,
+      "actual_suites": 9,
+      "actual_all_eight_status_theme_ids": [
+        "tomorrow-light",
+        "tomorrow-dark",
+        "paper",
+        "daybreak",
+        "high-contrast-light",
+        "slate",
+        "midnight",
+        "high-contrast-dark"
+      ],
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 184.50977491700007,
+        "app_cleanup_requested": []
+      },
+      "actual_recorded_executable_sha256_not_downloaded": "a02547523666f4066fa2bec5a028f6eef6aad3149d211130c9d45a7fb3f26760",
+      "actual_production_toc_phase_observed": true
+    },
+    {
+      "configuration": "Release",
+      "source_inputs_verified": 1596,
+      "pins_verified": 24,
+      "actual_functions": 29,
+      "actual_suites": 9,
+      "actual_all_eight_status_theme_ids": [
+        "tomorrow-light",
+        "tomorrow-dark",
+        "paper",
+        "daybreak",
+        "high-contrast-light",
+        "slate",
+        "midnight",
+        "high-contrast-dark"
+      ],
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 89.85848575,
+        "app_cleanup_requested": []
+      },
+      "actual_recorded_executable_sha256_not_downloaded": "4322d072315c3e52fd9e5d1681402c26a4f11ad0dc9889f75b062ca8dfdce31a",
+      "actual_production_toc_phase_observed": true
+    }
+  ],
+  "scope": "Both actual testable app configurations genuinely execute all29functions/9suites including real status paint across8themes, production math/heading/native/export controls. Full canonical source/pins/command/executable records independently verified. Not rootapp binary download, public wholecritical/VoiceOver/protected owner/final signed-artifact acceptance."
+}
