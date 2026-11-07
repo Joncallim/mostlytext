@@ -159,7 +159,7 @@ def main():
         # Existing source test alone owns app launch with its normal Debug hooks.
         phase("original", app / "Contents/MacOS/MacDown2",
               ["xcodebuild", "-project", "MacDown2/MacDown2.xcodeproj", "-scheme", "MacDown2", "-configuration", "Debug",
-               "-destination", "platform=macOS,arch=arm64", "-derivedDataPath", str(root / "app"), "-onlyUsePackageVersionsFromResolvedFile",
+               "-destination", "platform=macOS,arch=arm64", "-derivedDataPath", str(root / "app"), "-onlyUsePackageVersionsFromResolvedFile", "-enableCodeCoverage", "NO",
                "-parallel-testing-enabled", "NO", "-test-timeouts-enabled", "YES", "-default-test-execution-time-allowance", "120", "-maximum-test-execution-time-allowance", "120",
                "-resultBundlePath", str(root / "original.xcresult"), "-only-testing:" + SELECTED, "test-without-building"])
         verify_sources()
