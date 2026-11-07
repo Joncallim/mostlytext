@@ -1,0 +1,73 @@
+name: Hosted public CLI stdin save engineering
+permissions:
+  contents: read
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/hosted-cli-stdin-save/**'
+      - '.github/scripts/prepare-hosted-cli-stdin-save.py'
+      - '.github/scripts/run-hosted-cli-stdin-save.py'
+      - '.github/scripts/hosted_cli_stdin_contract.py'
+      - '.github/scripts/test-hosted-cli-stdin-save.py'
+      - '.github/workflows/hosted-cli-stdin-save.yml'
+  workflow_dispatch:
+concurrency:
+  group: hosted-cli-stdin-save-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  guarded-stdin-save:
+    runs-on: macos-26
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Admit only the integrated disposable hosted journey
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/prepare-hosted-cli-stdin-save.py "$RUNNER_TEMP/mostlytext-focus" --phase admit
+          XCODE=$(ls -d /Applications/Xcode*.app | grep "26" | head -1 || true)
+          test -n "$XCODE"
+          sudo xcode-select -s "$XCODE/Contents/Developer"
+          brew install xcodegen
+          python3 .github/scripts/test-run-owned-app-tests.py
+          python3 .github/scripts/test-hosted-focus-guard.py
+          python3 .github/scripts/test-hosted-cli-stdin-save.py
+          python3 .github/scripts/prepare-hosted-cli-stdin-save.py "$RUNNER_TEMP/mostlytext-focus" --phase prepare
+          cd MacDown2
+          xcodegen generate
+          scripts/pin-xcode-package-versions.sh
+      - name: Build the ordinary pinned Release app and independent controllers
+        run: |
+          set -euo pipefail
+          xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 -configuration Release -destination 'platform=macOS,arch=arm64' ONLY_ACTIVE_ARCH=YES -derivedDataPath "$RUNNER_TEMP/mostlytext-focus/app" -onlyUsePackageVersionsFromResolvedFile CODE_SIGN_IDENTITY=- build 2>&1 | tee "$RUNNER_TEMP/mostlytext-focus/app-build.log"
+          xcrun swiftc -parse-as-library -swift-version 6 -strict-concurrency=complete .github/scripts/native-cli-app-host.swift -o "$RUNNER_TEMP/mostlytext-focus/normal-app-host"
+          xcrun swiftc -parse-as-library -swift-version 6 -strict-concurrency=complete .github/hosted-public-focus/HostFacts.swift -o "$RUNNER_TEMP/mostlytext-focus/host-facts"
+          xcrun swiftc -parse-as-library -swift-version 6 -strict-concurrency=complete .github/hosted-cli-stdin-save/ProductAbsence.swift -o "$RUNNER_TEMP/mostlytext-focus/product-absence"
+          python3 .github/scripts/prepare-hosted-cli-stdin-save.py "$RUNNER_TEMP/mostlytext-focus" --phase bind-built
+      - name: Build and capture the genuine control and selected Save As driver
+        run: |
+          set -euo pipefail
+          xcodebuild -project "$RUNNER_TEMP/mostlytext-focus/fixture/HostedPublicFocus.xcodeproj" -scheme HostedPublicFocus -configuration Release -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/mostlytext-focus/control" CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual build-for-testing 2>&1 | tee "$RUNNER_TEMP/mostlytext-focus/control-build.log"
+          python3 .github/scripts/prepare-hosted-cli-stdin-save.py "$RUNNER_TEMP/mostlytext-focus" --phase bind-driver
+      - name: Execute one first untrusted refusal and ordinary stdin Save As journey
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/run-hosted-cli-stdin-save.py "$RUNNER_TEMP/mostlytext-focus" 2>&1 | tee "$RUNNER_TEMP/mostlytext-focus/execution.log"
+      - name: Preserve the complete first source compiled result and physical file evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hosted-public-cli-stdin-save
+          path: |
+            ${{ runner.temp }}/mostlytext-focus/*.json
+            ${{ runner.temp }}/mostlytext-focus/*.log
+            ${{ runner.temp }}/mostlytext-focus/stdin-oracle.md
+            ${{ runner.temp }}/mostlytext-focus/positive-owned/**
+            ${{ runner.temp }}/mostlytext-focus/stdin-save-owned/**
+            ${{ runner.temp }}/mostlytext-focus/*.xcresult/**
+            ${{ runner.temp }}/mostlytext-focus/documents/**
+            ${{ runner.temp }}/mostlytext-focus/fixture/**
+            ${{ runner.temp }}/mostlytext-focus/cli-compiled/**
