@@ -110,3 +110,16 @@ No file, preference, application or native operation occurs in this control.
 The first control harness expected RuntimeError while the guard actually raises
 AssertionError; preserve that setup outcome, then admit both failure types in
 the harness. No guard or product assertion changes. Preparation stays held.
+
+## Verified readiness and activation baseline
+
+PR122 has now passed all seven current checks and merged at actual main
+6b49777d0f36c3d7a23cd0089e0823da1986660a. Complete CI passes3,719/536 package and
+678/142 app, all four builds, metadata/catalog/pins and zero style violations.
+The ownership before/after, normal public CLI and normal Release focus each have
+independently verified first outcomes. Actual source/synthetic/computed/merge
+tree isbd06d1c5fee1165e0d0e85d3787190ce9a82e2bc, with parents0426+bff2 and clean
+canonical fast-forward verified. Incorporate this actual main before replacing
+the held anchor. Root product/original UI tests/project/pins stay byte-identical
+to that actual qualified main; this branch adds only infrastructure/docs.
+The protected CORTANA hold and all complete/final acceptance limits stay intact.

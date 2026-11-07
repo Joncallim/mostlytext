@@ -9,7 +9,7 @@ from pathlib import Path
 import re
 import sys
 
-QUALIFIED_MAIN = "PENDING_PR122_QUALIFICATION"
+QUALIFIED_MAIN = "6b49777d0f36c3d7a23cd0089e0823da1986660a"
 JOURNEYS = {
     "native-tabs-dirty-close": "MacDown2UITests/TabLifecycleUITests/testOpenFilesDirtyClosePromptAndRestore",
     "native-tabs-quick-open": "MacDown2UITests/TabLifecycleUITests/testQuickOpenReactivatesAnAlreadyOpenBackgroundTab",
