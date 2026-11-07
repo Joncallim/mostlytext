@@ -1,0 +1,44 @@
+{
+  "source": "4f9bd925f0d3e96bd6aeaf93ef04fef3a42b5d2f",
+  "first_run": 42390450459,
+  "records": [
+    {
+      "original": "initial-binding-first-run.json",
+      "compressed": "initial-binding-first-run.json.gz",
+      "bytes": 12498,
+      "sha256": "bd79ecb8bf5f0895cdc219af15b105d90d583832501ad789cb5b07698dec1e0f"
+    },
+    {
+      "original": "initial-binding-first-artifacts.json",
+      "compressed": "initial-binding-first-artifacts.json.gz",
+      "bytes": 778,
+      "sha256": "5f4c3589546d518c1ed06f53c9833c21155985f4cb5c3ece9999ca76938b7e84"
+    },
+    {
+      "original": "initial-binding-first-artifact--preview-grant-app-tests-Debug-revision-independently-verified.json",
+      "compressed": "initial-binding-first-artifact--preview-grant-app-tests-Debug-revision-independently-verified.json.gz",
+      "bytes": 17987,
+      "sha256": "564cd1a46b31db66050384105076232720436621ad788dc5018087c92e10274a"
+    },
+    {
+      "original": "initial-binding-staged-first-independently-verified.json",
+      "compressed": "initial-binding-staged-first-independently-verified.json.gz",
+      "bytes": 1867,
+      "sha256": "a36f43595ec43671fdc0a6f1c9599e9526c109063febf6381ebee0bc45c8fd46"
+    },
+    {
+      "original": "verify-first-original.py",
+      "compressed": "verify-first-original.py.gz",
+      "bytes": 13717,
+      "sha256": "73d047ac821486a411aab961c1b660a4a706f3369e9860419df92d80a21cc67f"
+    },
+    {
+      "original": "initial-binding-first-artifact/preview-grant-app-tests-Debug-revision/delayed-grant-diagnosis/probe.log",
+      "compressed": "actual-staged-probe.log.gz",
+      "bytes": 12060,
+      "sha256": "6e1daa41fe5a250711e49e6ee6be9953c55ff3eeec3f7767d590723c5c617237"
+    }
+  ],
+  "whole_original_log_archive_sha256": "ffc7ad9210a284d78fe4001f9cb4f9578a35cb5fd264a60457ba220ec4926696",
+  "scope": "Diagnostic-only complete original55/selection/revisionmutant/restoration and separate staged1case pass; actualbaselinegeneration0/1/1 observations retained. Both earlier generation failures and fc29 image failure remain at original identities. No historicalcause or qualification/merge inferred."
+}

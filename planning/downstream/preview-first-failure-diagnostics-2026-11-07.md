@@ -153,3 +153,39 @@ passive phase prints for baseline presence and actual afterObservationContextHan
 callbacks via its existing test observation hook; clear that hook in cleanup.
 No original55/product/fixture/controller/workflow/pin change. A pass remains
 diagnostic-only and cannot waive fc29's failed image copy or qualify activation.
+
+## Controlled baseline delivery during actual grant acquisition
+
+First4f9 source42390450459 is complete and retained before this revision: original
+55/17, image/selection and revision mutation/restoration pass; stagedB1 passes
+with actual binding callback and generation0/1/1. This proves the already-bound
+case, not historical causation. Current actual main isd7cff043750123aea66e50406884ca73917885af
+and is incorporated before the next diagnostic. The qualified one-line HTML
+accessibility remedy9c594/d6e699 is preserved as an actual ancestor. Restore the
+canonical ten-batch UI workflow immediately; its branch-localB08matrix may never
+merge. The Preview workflow remains explicitly diagnostic-only, not activation.
+
+Add a separate real-window case for an initially unbound disk baseline. Stop ONLY
+that case's fixture-owned external controller synchronously before its first
+suspension, so a natural callback cannot compete with the controlled transition.
+Read the actual authored file through FileStore on a detached task; no fabricated
+revision/data or production API. Observe its unique denied native copy under the
+original5second bound and reserve the real owner's selection origin.
+
+Use install's existing currentDocument resolver as the controlled interleaving:
+its first read returns the actual initial model, then real pinned backing
+acquisition completes; at its second read apply the ACTUAL disk snapshot through
+FileDocument.reconcilingExternalSnapshot and the real tab store, returning the
+actual resulting model. This is domain-model delivery isolated from filesystem
+event transport, not a claimed physical watcher journey. It deliberately moves
+generation while preserving id/epoch/URL/exact source and must retain the actual
+folder grant and real PNGcopy. Require the metadata transition occurred and the
+actual snapshot is adopted; passively dump the existing bounded trace at failure.
+
+The existing already-boundBcase and every original55/assertion/deadline remain
+unchanged. The separately selected diagnosis suite now has2cases; update only its
+exact result criterion from1to2, requiring both0fail/0skip/0expected with original
+owned bounds/compiled identities. No new production interface, retry, authority,
+loader, state epoch, deadline, dependency/pin, exception or skip. A diagnostic pass
+stays inconclusive for the historical failure and cannot itself authorize merge.
+Full current-main qualification remains required before activation.
