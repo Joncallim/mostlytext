@@ -1,0 +1,24 @@
+{
+  "head": "a483f80ba036023fced25593b9f8964992d29902",
+  "checkout": "bfd2deeac9844c52644dfb0db1a216a71e4cb8de",
+  "source_tree": "70525ec16beab382a31c6ea46c5f1b4207445b26",
+  "package_functions": 3719,
+  "package_suites": 536,
+  "app_functions": 678,
+  "app_suites": 142,
+  "actual_current_domain_journal_regression_passed": true,
+  "all_four_builds": true,
+  "app_ui_test_bundle_compilation": true,
+  "metadata_catalog_final_pins_steps_passed": true,
+  "formatter_lint_zero": true,
+  "package_owned_returncode": 0,
+  "package_owned_checkout_verified": true,
+  "new_owned_crash_reports": 0,
+  "zip_sha256": "8973643a3512a57ee2b676737ae24b0932d017460cb7293b55baca039e1cd99f",
+  "preexisting_optional_pr535_diagnostics_skipped": [
+    "Collect fresh package test crash reports",
+    "Prepare bounded package crash diagnostics",
+    "Upload bounded package crash diagnostics"
+  ],
+  "scope": "Complete normal CI at actual product/orchestration sourcea483; original receipts not retargeted to later documentation. No owner/signed/installed/final-artifact acceptance."
+}

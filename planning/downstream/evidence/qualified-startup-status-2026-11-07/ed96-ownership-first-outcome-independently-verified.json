@@ -1,0 +1,28 @@
+{
+  "head": "ed96eb6421d8094d672a546f0d1afa5f73d085d4",
+  "checkout": "20015952d457fd06eb29599035f918493049e792",
+  "tree": "75af2efafd2e8492c6dba8df2dbe55d06c9f58f1",
+  "all_canonical_and_executed_inputs_verified": 1599,
+  "pins_verified": 24,
+  "canonical_regression_byte_identical_to_genuine_before_failure": true,
+  "no_additional_derived_test_source": true,
+  "actual_xcresult_summary_independently_read": true,
+  "actual_counts": {
+    "totalTestCount": 4,
+    "passedTests": 4,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "expectedFailures": 0
+  },
+  "actual_owned": {
+    "returncode": 0,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 49.596041499999956,
+    "app_cleanup_requested": []
+  },
+  "all_four_actual_case_identities_verified": true,
+  "hosted_executable_sha256_recorded_not_downloaded": "439c1b174eab35d40d27cdf656e272be719e8cd05fc94b5158b37461db560eac",
+  "full_logs_sha256": "c6031c4912383d2c0c0052e64de78fdad697ad3c08791bc53d2b07da6835e3e2",
+  "scope": "Actual scoped four-case component pass after genuine before-fix failure. Not complete CI, public normal UI, protected owner, full critical matrix, Preview repair, or signed-artifact acceptance."
+}

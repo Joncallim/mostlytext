@@ -1,0 +1,26 @@
+[
+  {
+    "configuration": "debug",
+    "phase": "baseline",
+    "complete_source_keyset_verified": 1552,
+    "complete_copied_test_keyset_verified": 1
+  },
+  {
+    "configuration": "debug",
+    "phase": "candidate",
+    "complete_source_keyset_verified": 1596,
+    "complete_copied_test_keyset_verified": 148
+  },
+  {
+    "configuration": "release",
+    "phase": "baseline",
+    "complete_source_keyset_verified": 1552,
+    "complete_copied_test_keyset_verified": 1
+  },
+  {
+    "configuration": "release",
+    "phase": "candidate",
+    "complete_source_keyset_verified": 1596,
+    "complete_copied_test_keyset_verified": 148
+  }
+]
