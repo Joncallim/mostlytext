@@ -227,3 +227,41 @@ then require corrected positives. Keep engine bytes, two permissions, native
 assertions and every deadline unchanged; preserve the next actual first outcome
 before any further correction. No production host or generic packaging policy
 is added. See https://github.com/yonaskolb/XcodeGen/blob/master/Docs/ProjectSpec.md#sources.
+
+## Observe asynchronous VM work and pump only its public owner-thread run loop
+
+Source4ce49ee6 first native42420404964 fails; Compliance42420404921 passes.
+Complete firsts and30/20/23/75source/copy/generated/actual compiled roles verify.
+All six mandatory resources are now present, byte-identical and bound. Actual
+unchanged cold Finder passes, rich fails, no skips/expected/force. Actual13phase
+markers reach WASM unpack/Int8Array and message-init-return. No engine-ready,
+compile, render, result or rich reply factory is observed. Screenshots and raw
+results retain that failure; no native D2 or scheduling fix is inferred.
+
+Primary WebKit source describes asynchronous WebAssembly validation/instantiation
+as deferred work on the VM run loop. The current private synchronous callback
+only evaluates __hostTick and Thread.sleep; public owner-thread run-loop pumping
+is a concrete hypothesis, not yet the demonstrated sole cause. References:
+https://github.com/WebKit/WebKit/blob/main/Source/JavaScriptCore/wasm/js/JSWebAssembly.cpp
+https://github.com/WebKit/WebKit/blob/main/Source/JavaScriptCore/runtime/DeferredWorkTimer.cpp
+
+Before the unchanged real engine, use a separate public JSContext on this same
+callback thread and the already qualified exact39byte answer42 module. Invoke
+actual asynchronous WebAssembly.instantiate, observe bounded0.25second old-style
+blocking polling, then permit only the same thread public default RunLoop within
+a fixed2second total control deadline. Record whether old polling completed or
+remained pending; do not require an invented universal failure or infer callback
+progress. Require actual answer42 with no exception, preserve thread identity,
+and publish a bounded independent control record before the D2 attempt even if
+the later rich assertion fails. No private JSC API, native objects, alternate
+engine, network/JIT authority or cross-thread VM transfer. This control is a
+scheduler diagnostic, never worker isolation or preemptive execution protection.
+
+Only replace the actual D2 wait-loop sleep with public same-thread default-mode
+RunLoop pumping, checking its existing monotonic15second deadline between calls.
+Keep the engine/control/host JS bytes, real graph, exact two provider permissions,
+original cold/rich Finder assertions and all outer/UI limits unchanged. The
+existing15seconds still includes setup; no longer budget is granted. Emit a
+bounded explicit host-wait diagnostic before refusal. A public loop cannot
+preempt a non-returning JS/WASM call and is not a production cancellation or
+resource policy. Preserve the next complete first before any further correction.
