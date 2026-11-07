@@ -123,10 +123,6 @@ private func preparedReply(index: Int, ledger: Ledger) throws -> HeldReply {
         createDataUsing: factory
     )
     reply.stringEncoding = .utf8
-    let earlyRefund = false
-    if earlyRefund {
-        reservation.release()
-    }
     return HeldReply(reply: reply, factory: factory, observed: WeakPayload(holder), digest: digest(holder.bytes))
 }
 

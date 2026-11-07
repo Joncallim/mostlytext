@@ -72,7 +72,7 @@ def main():
                     '.github/workflows/quicklook-retained-reply-probe.yml']).splitlines()
     source = repo / '.github/quicklook-retained-reply-probe/ReplyRetention.swift'
     raw = source.read_bytes()
-    needle = b'let earlyRefund = false'
+    needle = b'    return HeldReply(reply: reply, factory: factory, observed: WeakPayload(holder), digest: digest(holder.bytes))'
     if raw.count(needle) != 1:
         raise RuntimeError('The reviewed premature-refund counterexample changed')
     inputs = {p: sha(repo / p) for p in paths}
@@ -102,7 +102,7 @@ def main():
     save()
     try:
         for label, contents, mutant in [('original', raw, False),
-                                        ('early-refund-mutant', raw.replace(needle, b'let earlyRefund = true'), True),
+                                        ('early-refund-mutant', raw.replace(needle, b'    reservation.release()\n' + needle), True),
                                         ('restored', raw, False)]:
             verify_inputs()
             folder = root / label
