@@ -3,9 +3,15 @@
 import argparse
 import hashlib
 import json
+import os
+import platform
+import pwd
 from pathlib import Path
 import re
 import subprocess
+import sys
+
+from preview_compiled_inputs import capture, require_owned_phase, verify
 
 TESTS = {
     'vectorSnapshotIsPaginatedWithoutLosingSelectableText',
@@ -23,7 +29,10 @@ INPUTS = ['MacDown2', '.github/scripts/verify-pdf-pagination-probe.py',
           '.github/scripts/test-pdf-pagination-probe.py',
           '.github/workflows/pdf-pagination-probe.yml',
           '.github/scripts/run-owned-app-tests.py',
-          '.github/scripts/test-run-owned-app-tests.py']
+          '.github/scripts/test-run-owned-app-tests.py',
+          '.github/scripts/preview_compiled_inputs.py',
+          '.github/scripts/test-preview-compiled-inputs.py',
+          'planning/downstream/evidence/actual-app-hosted-plan-2026-11-07']
 
 
 def validate_execution(log, identity, status):
@@ -61,12 +70,52 @@ def validate_execution(log, identity, status):
         raise ValueError('The actual app digest is required')
 
 
+def check_host(root):
+    if sys.flags.optimize:
+        raise RuntimeError('Optimized Python is refused before PDF qualification access')
+    if (os.environ.get('GITHUB_ACTIONS') != 'true' or os.environ.get('RUNNER_OS') != 'macOS'
+            or os.environ.get('GITHUB_REPOSITORY') != 'Joncallim/mostlytext'):
+        raise RuntimeError('PDF qualification requires the disposable hosted repository context')
+    account = pwd.getpwuid(os.getuid())
+    if (os.getuid() != os.geteuid() or os.getuid() <= 0 or account.pw_name != 'runner'
+            or account.pw_dir != '/Users/runner' or Path.home() != Path('/Users/runner')
+            or platform.machine() != 'arm64' or platform.mac_ver()[0].split('.')[0] != '26'
+            or str(root) != '/Users/runner/work/_temp/pdf-pagination-probe'
+            or root != Path(os.environ.get('RUNNER_TEMP', '')).resolve() / 'pdf-pagination-probe'
+            or any(os.path.lexists(p) for p in ['/Users/jonathanlim', '/Users/mostlytexttest', '/Volumes/Fast SSD'])):
+        raise RuntimeError('PDF qualification host, identity or fixed root is refused')
+    event = json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text())
+    if 'pull_request' in event:
+        if event['pull_request']['head']['repo']['full_name'] != 'Joncallim/mostlytext':
+            raise RuntimeError('Untrusted PDF qualification pull request')
+    elif os.environ.get('GITHUB_EVENT_NAME') != 'workflow_dispatch':
+        raise RuntimeError('Untrusted PDF qualification event')
+
+
+def validate_summary(summary):
+    expected = {'totalTestCount': 9, 'passedTests': 9, 'failedTests': 0,
+                'skippedTests': 0, 'expectedFailures': 0}
+    if any(type(summary.get(k)) is not int or summary[k] != v for k, v in expected.items()):
+        raise ValueError('Actual PDF result bundle lacks the complete original nine passing tests')
+
+
 def main():
+    if sys.flags.optimize:
+        raise RuntimeError('Optimized Python is refused before PDF qualification access')
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('output', type=Path)
     parser.add_argument('--verify', action='store_true')
     parser.add_argument('--require-result', action='store_true')
+    parser.add_argument('--capture-compiled', action='store_true')
+    parser.add_argument('--admit', action='store_true')
     args = parser.parse_args()
+    check_host(args.output.resolve())
+    if args.admit:
+        if args.verify or args.require_result or args.capture_compiled:
+            raise RuntimeError('Host admission cannot select another PDF phase')
+        return
+    if (args.require_result or args.capture_compiled) and not args.verify:
+        raise RuntimeError('Compiled/result PDF phases require original input verification')
     repo = Path(__file__).resolve().parents[2]
     paths = subprocess.check_output(['git', 'ls-files', '-z', '--', *INPUTS], cwd=repo).decode().split('\0')
     pins = json.loads((repo / 'MacDown2/Packages/MacDownKit/Package.resolved').read_text())['pins']
@@ -89,6 +138,18 @@ def main():
                 raise SystemExit('The actual app execution checkout differs')
             validate_execution((args.output / 'probe.log').read_text(), identity,
                                json.loads((args.output / 'diagnostics/status.json').read_text()))
+            binding = json.loads((args.output / 'compiled-initial.json').read_text())
+            if binding['phase'] != 'initial' or binding['configuration'] != 'Release':
+                raise RuntimeError('PDF compiled phase was retargeted')
+            verify(args.output, binding)
+            require_owned_phase(identity, binding, receipt['checkout'])
+            raw = subprocess.check_output(['xcrun', 'xcresulttool', 'get', 'test-results', 'summary',
+                                           '--path', str(args.output / 'actual-pdf.xcresult')])
+            (args.output / 'actual-pdf-summary.json').write_bytes(raw)
+            validate_summary(json.loads(raw))
+        if args.capture_compiled:
+            capture(args.output, Path(os.environ['RUNNER_TEMP']) / 'pdf-pagination-app/Build/Products',
+                    'Release', repo / 'MacDown2/MacDown2.xcodeproj', 'initial')
         print('Exact PDF inputs, configuration, pins and requested execution verified')
     else:
         args.output.mkdir(parents=True, exist_ok=True)

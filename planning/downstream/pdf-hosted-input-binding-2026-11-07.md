@@ -59,3 +59,21 @@ rather than retry unchanged or relax a limit. No local CORTANA product/native
 runtime or Xcode product build. This does not complete public export-menu/save-
 panel/progress/cancellation, performance, owner/installed/signed-artifact or full
 #11/#8 acceptance.
+
+## Prepared remediation checks
+
+The unpublished verifier now refuses an unsuitable host before inventory/receipt
+access, and the workflow invokes that admission before project generation. It
+captures the same strict app-hosted compiled topology as Preview, retains the
+original native command exit status and xcresult, and requires both the original
+unchanged nine-name/owned validator and actual9/9/0/0/0 summary. Source comparison
+proves the original validator AST and every PDF test source byte unchanged.
+Nine PDF result/admission controls, seven real filesystem/topology controls,
+four Preview host-order/optimized controls, three native-architecture controls
+and five real loopback controls pass; source compliance, AST/YAML, workflow
+ordering and diff checks pass. The guard-order counterexample removes only its
+control call and reaches an intercepted first inventory without executing it;
+the actual call refuses before that operation. Simulated disposable-host metadata
+admits only same-repository pull/manual events and rejects fork/push/wrong-root/
+owner-path variants. No product/native runtime was executed. Final combined main
+intake, full style and the first new native input/result contracts remain pending.
