@@ -58,6 +58,7 @@ def main():
             shutil.copyfile(PRIVATE_TEST, destination)
             addition = True
         record["controlled_test_input"] = {"source": PRIVATE_TEST, "executed": EXECUTED_TEST, "sha256": sha(destination), "canonical_addition": addition}
+        shutil.copyfile(destination, root / "executed-PlaceholderOwnershipProbeTests.swift")
         record["executed_source_sha256"] = dict(record["canonical_source_sha256"], **{EXECUTED_TEST: sha(destination)})
         receipt_path.write_text(json.dumps(record, indent=2) + "\n")
         return

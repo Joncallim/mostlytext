@@ -50,7 +50,7 @@ jobs:
           path: |
             ${{ runner.temp }}/mostlytext-focus/*.json
             ${{ runner.temp }}/mostlytext-focus/*.log
+            ${{ runner.temp }}/mostlytext-focus/*.swift
             ${{ runner.temp }}/mostlytext-focus/probe-owned/**
             ${{ runner.temp }}/mostlytext-focus/Probe.xcresult/**
             ${{ runner.temp }}/mostlytext-focus/app/Build/Products/*.xctestrun
-            MacDown2/MacDown2Tests/PlaceholderOwnershipProbeTests.swift
