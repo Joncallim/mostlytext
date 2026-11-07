@@ -151,3 +151,9 @@ pass. Native SDK/test-bundle path and new actual-result summary contracts are
 still unverified until the first final-source hosted result. Intake the actual
 qualified startup/migration convergence before publication, then require every
 complete gate. No CORTANA app/package/native runtime or local Xcode build.
+
+## Bind the actual app-hosted test topology before phase capture
+
+An additional source review finds that capturing the sole xctestrun and a discovered test binary does not yet require that the run metadata actually points at those captured app/test paths. Strengthen only the private compiled-input helper and its filesystem controls: require the canonical app identifier/executable in captured Info.plist and the exact app-hosted MacDown2Tests target, host/bundle paths and module name in the captured run. Require the discovered test executable to be inside the actual application's Contents/PlugIns test bundle. Actual owned identity must match that exact captured executable path as well as its digest; its checkout must match the original candidate receipt. Preserve all full native results, mutation expectations and limits.
+
+This layout is observed in the retained actual Xcode26.0.1 app-hosted plan from normal candidate4b671790, checkoutb6145109, run42359123013. The raw original plist and input digest are retained here before the correction. It establishes that concrete supported SDK layout, not that the pending Preview candidate has built or run. Refuse unexpected metadata rather than add an unverified alternative layout. Add negative controls for redirected host/bundle/module, wrong identity/executable, unhosted target and a detached test binary; retain existing archive/phase/byte controls. This changes only evidence admission, with no product or native test assertion edits.
