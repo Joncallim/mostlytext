@@ -37,7 +37,9 @@ class SeedAdmissionTests(unittest.TestCase):
     def tearDownClass(cls):
         cls.temporary.cleanup()
 
-    def observe(self, source, environment=None):
+    def observe(self, source, environment=None, future=False):
+        control = CONTROL.replace('requirePositive()', 'requireFutureHost()') if future else CONTROL
+        (self.root / 'Control.swift').write_text(control)
         (self.root / 'Admission.swift').write_text(source)
         subprocess.run(['xcrun', 'swiftc', '-parse-as-library', '-swift-version', '6',
                         '-strict-concurrency=complete', '-O', str(self.root / 'Admission.swift'),
@@ -61,10 +63,16 @@ class SeedAdmissionTests(unittest.TestCase):
         self.assertEqual(self.observe(source, environment), 'host')
 
     def test_removed_guard_reaches_missing_private_receipt_before_any_profile(self):
-        self.assertEqual(self.source.count('        try requireHost()\n'), 1)
-        removed = self.source.replace('        try requireHost()\n', '')
+        guard = '        try requireHost()\n        let receipt ='
+        self.assertEqual(self.source.count(guard), 1)
+        removed = self.source.replace(guard, '        let receipt =')
         self.assertTrue(self.observe(removed).startswith('receipt-read-counterexample:'))
         self.assertEqual(self.observe(self.source), 'host')
+
+    def test_future_held_anchor_precedes_actual_host_or_any_receipt(self):
+        self.assertEqual(self.observe(self.source, future=True), 'held')
+        source = self.source.replace('PENDING_COMPLETED_CORE_INTEGRATION', '0' * 40)
+        self.assertEqual(self.observe(source, future=True), 'host')
 
 
 if __name__ == '__main__':

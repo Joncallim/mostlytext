@@ -4,9 +4,17 @@ import Foundation
 /// No domain, profile or receipt access is allowed before the held/host checks.
 enum MigrationSeedAdmission {
     static let qualifiedMain = "ef93ab2d4fbda72cdd126560ffb19cd7e012a5d9"
+    static let futureQualifiedMain = "PENDING_COMPLETED_CORE_INTEGRATION"
     static let root = URL(fileURLWithPath: "/Users/runner/work/_temp/mostlytext-focus", isDirectory: true)
 
     enum Refusal: Error { case held, host, event, positive }
+
+    static func requireFutureHost() throws {
+        guard futureQualifiedMain.count == 40, futureQualifiedMain.allSatisfy(\.isHexDigit) else {
+            throw Refusal.held
+        }
+        try requireHost()
+    }
 
     static func requireHost() throws {
         guard qualifiedMain.count == 40, qualifiedMain.allSatisfy(\.isHexDigit) else {

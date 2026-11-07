@@ -82,3 +82,11 @@ entrypoints and qualify both separate scenarios before expected-head merge.
 Reconcile only proved #4/#5/#16/#17 subcriteria and audit after each metadata
 change. No real-user profile, installed/quarantined/signed artifact, owner account,
 VoiceOver/locale/Sparkle or public release claim is added.
+
+## Prepared-source review; execution remains held
+
+Private controller now binds exactly valid-profile or future-session in the initial receipt and refuses later scenario/anchor retargeting before input binding. Future preparer and every future seed/capture entry check the unresolved anchor before host/receipt access. Original positive/GUI/compiled/source guards and valid first/relaunch assertions remain. Future case has its own actual blocked UI test, unchanged10s no-frame endpoint observation, normal process-identity Quit, full original/all-six-domain readback, external/sentinel checks and refusal of any final generation/preferences/paths/complete publication. Private staging/plan/lock remain allowed and captured. No migration_complete/first-normal-Quit/relaunch marker is set by a blocked pass.
+
+Eleven pure/real-filesystem/admission controls and four optimized literal Foundation/Darwin helper controls pass. Genuine private-plan versus forbidden final publication, old inode drift, new current-domain value, current State, external mutation and command sentinel are rejected. Three real receipt-retarget variants refuse before input binding and preserve the receipt bytes. Python AST, Swift syntax, private strict format/lint and YAML parse pass. No product, package, dependency/pin/inventory/notices/SBOM or canonical original UI input changed; native compilation/execution remains unverified.
+
+The first core4b671790 migration now restores the two real tabs/recovery, but fails actual Spaces4 versus authoritative imported2. A missing shared-settings environment at the separate document-host root is corrected in independent local ancestry586da1ec, still awaiting complete core first outcomes and new native qualification. This future unit remains unpushed and both future execution anchors remain PENDING_COMPLETED_CORE_INTEGRATION. Intake actual fully qualified coremain before activation; do not substitute the failed4b source or an anticipated merge.
