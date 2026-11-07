@@ -1,0 +1,169 @@
+{
+  "source_head": "fef09ea3c15d4797a51e5b4b16dd1f7bfe50ce57",
+  "actual_checkout": "68b2980d4709b7de0dea175a3e8b6b5a3dc2f0bd",
+  "actual_main_integration": "50f4a46de3b4a199f9def6d56e86a9f99e280e90",
+  "records": [
+    {
+      "file": "00-native-first-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/native-first-run.json",
+      "bytes": 13003,
+      "sha256": "1475aca7b932f41a02883a4c7887c4b93f0215ac664201432971b7a56762a95c"
+    },
+    {
+      "file": "01-native-first-artifacts.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/native-first-artifacts.json",
+      "bytes": 777,
+      "sha256": "4fbec426b598e7a895ade655ea51f2f7efee37ca943baf5ca904a8d9a263f007"
+    },
+    {
+      "file": "02-native-complete-first-workflow-logs.zip.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/native-complete-first-workflow-logs.zip",
+      "bytes": 114522,
+      "sha256": "054d02c1a4224d8306e8b0eb2c8128b6714700d73224bacf80408d98e70d14ba"
+    },
+    {
+      "file": "03-compliance-first-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/compliance-first-run.json",
+      "bytes": 12953,
+      "sha256": "97d4a8d1640a0b0b7a47040c3bcfc123eb502ac5a5ef7ea47e7b12d50c79e985"
+    },
+    {
+      "file": "04-compliance-first-artifacts.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/compliance-first-artifacts.json",
+      "bytes": 32,
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    {
+      "file": "05-compliance-complete-first-workflow-logs.zip.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/compliance-complete-first-workflow-logs.zip",
+      "bytes": 41614,
+      "sha256": "fef1c38a165a57ad0eaa82455c3cd85f34be1b2421724a9f44cf7d392196222c"
+    },
+    {
+      "file": "06-native-independently-verified.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/native-independently-verified.json",
+      "bytes": 1961,
+      "sha256": "b7aeb9c9500c643eddf9d1bf9095b6eb6bc2687021cc171fb34ea04899e7de99"
+    },
+    {
+      "file": "07-verify-first-native.py.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/verify-first-native.py",
+      "bytes": 13475,
+      "sha256": "21c1b1e1338abc67b687e56353178c0cf16c1b28e8e3fc70f8dfd3139e7ada2a"
+    },
+    {
+      "file": "08-scoped-source-and-native-review.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/scoped-source-and-native-review.json",
+      "bytes": 1101,
+      "sha256": "5daddb1784d9632cdae3a78d474dd3cc5594cdc1666e29d442e28ac9c27e9473"
+    },
+    {
+      "file": "09-readiness.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/readiness.json",
+      "bytes": 886,
+      "sha256": "7aac3723b55e6d131423f962cff946aa6ad20acf6257a29620eff7280aedd2d4"
+    },
+    {
+      "file": "10-actual-independent-summary.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/actual-independent-summary.json",
+      "bytes": 992,
+      "sha256": "59da0a1ecd81a075613fb753d0f65401b49ca4c22220d51a46348f13957b0c82"
+    },
+    {
+      "file": "11-actual-independent-tests.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/actual-independent-tests.json",
+      "bytes": 2605,
+      "sha256": "b0a8a29fa825288135624479b8a32d99eb594dc9d761bc2df27940ed95d39150"
+    },
+    {
+      "file": "12-actual-independent-native.svg.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/actual-independent-native.svg",
+      "bytes": 10928,
+      "sha256": "45d283939b9d7837024413965a00235bd15b3e87a290d84005f1d12bfda4b5a8"
+    },
+    {
+      "file": "13-actual-downloaded-provider-entitlements.plist.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/actual-downloaded-provider-entitlements.plist",
+      "bytes": 298,
+      "sha256": "266f07f1f0cbe818aa41489ef1273c15e9cadfcb1885f827c4e056f7af818ee9"
+    },
+    {
+      "file": "14-actual-main-integration-proof.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/actual-main-integration-proof.json",
+      "bytes": 482,
+      "sha256": "9be29e38629fe968eaadf4400c684a62307a14ffade3210a1cfca2cf8aa5962d"
+    },
+    {
+      "file": "15-receipt.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/native-first-artifact/javascriptcore-d2-quicklook-compatibility/receipt.json",
+      "bytes": 94286,
+      "sha256": "089b88203a6de490fd9b802795cca45e4d1e2daee1eb6c326e32850a6f5e4eb1"
+    },
+    {
+      "file": "16-reference-module.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/native-first-artifact/javascriptcore-d2-quicklook-compatibility/reference-module.json",
+      "bytes": 6099,
+      "sha256": "b0a723f9a4e73cfac12b36675e3b187d29a5e34f6e48a1e5975779ae64133b4c"
+    },
+    {
+      "file": "17-reference-actual.svg.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/native-first-artifact/javascriptcore-d2-quicklook-compatibility/reference-actual.svg",
+      "bytes": 10928,
+      "sha256": "45d283939b9d7837024413965a00235bd15b3e87a290d84005f1d12bfda4b5a8"
+    },
+    {
+      "file": "18-provider-events.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/native-first-artifact/javascriptcore-d2-quicklook-compatibility/provider-events.json",
+      "bytes": 110153,
+      "sha256": "a0debc23527fe96da1b391efb8df4a075019ecaa32dec118f2984fc4dea3accc"
+    },
+    {
+      "file": "19-provider-observer.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/native-first-artifact/javascriptcore-d2-quicklook-compatibility/provider-observer.json",
+      "bytes": 20831,
+      "sha256": "9f809113bb8ba41de3cb98fdea445a9b024d44aa52b7221ad34775a0ba11a50b"
+    },
+    {
+      "file": "20-observer-result.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/native-first-artifact/javascriptcore-d2-quicklook-compatibility/observer-result.json",
+      "bytes": 15008,
+      "sha256": "65b7088d1b1ab185888533114fc886a55ce1bb117f6285551e779821c5261bce"
+    },
+    {
+      "file": "21-host-ui-driver.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/native-first-artifact/javascriptcore-d2-quicklook-compatibility/host-ui-driver.json",
+      "bytes": 1512,
+      "sha256": "8b4474064e1a59a38db89ecc898b53914078a4dea0c23d567a71767e60e10bea"
+    },
+    {
+      "file": "22-status.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/native-first-artifact/javascriptcore-d2-quicklook-compatibility/owned/status.json",
+      "bytes": 132,
+      "sha256": "86f32f39c608f528a1fb3d90ad805beb715105c4763b3d736dfa93ce831a6e18"
+    },
+    {
+      "file": "23-identity.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/native-first-artifact/javascriptcore-d2-quicklook-compatibility/owned/identity.json",
+      "bytes": 1046,
+      "sha256": "1bef3d96641f5cacf7ba41d9784ae561688e802dae305bb14a3ad3daa6a6df46"
+    },
+    {
+      "file": "24-4D8A7664-6FCE-40F0-917B-E7D7F1AC1512.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/actual-independent-attachments/4D8A7664-6FCE-40F0-917B-E7D7F1AC1512.json",
+      "bytes": 12622,
+      "sha256": "1fcff53374bcca1c3a73e35de3916327e95419a6d5c3b8567f40fc584f84778f"
+    },
+    {
+      "file": "25-005FB3D8-8A6A-4D07-8B7E-76C89CEFA624.png.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/actual-independent-attachments/005FB3D8-8A6A-4D07-8B7E-76C89CEFA624.png",
+      "bytes": 149804,
+      "sha256": "509d7ed38b9949d4caefe2e25f776da446f21d13913be4321b36924dd9b8d1da"
+    },
+    {
+      "file": "26-083D9B8D-9397-468D-BE95-5D9DA94F4AE8.png.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/framed-fef09ea3/actual-independent-attachments/083D9B8D-9397-468D-BE95-5D9DA94F4AE8.png",
+      "bytes": 149046,
+      "sha256": "58da7e4ba20b47a638c84329e0a3736fdd6f42bd1265ced5d2f94c7f3acc3009"
+    }
+  ]
+}
