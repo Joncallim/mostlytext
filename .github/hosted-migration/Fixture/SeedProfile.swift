@@ -13,9 +13,16 @@ struct MigrationSeedProfile {
 
     @MainActor
     static func main() async throws {
-        guard CommandLine.arguments.count == 1 else { throw Refusal.arguments }
+        guard CommandLine.arguments.count == 1 ||
+            (CommandLine.arguments.count == 2 && CommandLine
+                .arguments[1] == "--set-current-indentation-after-first-quit")
+        else { throw Refusal.arguments }
         let receipt = try MigrationSeedAdmission.requirePositive()
         try verifySource(receipt)
+        if CommandLine.arguments.count == 2 {
+            try updateCurrentIndentation(receipt)
+            return
+        }
         let root = MigrationSeedAdmission.root
         let old = try freshSourceDirectory()
         try FileManager.default.createDirectory(at: old, withIntermediateDirectories: false,
@@ -118,15 +125,49 @@ struct MigrationSeedProfile {
         return session
     }
 
+    @MainActor
     private static func publishPreferences(files: Files) throws {
         let oldPreferences = ["com.joncallim.macdown2.hasCompletedFirstRun": true]
         UserDefaults.standard.setPersistentDomain(
             oldPreferences,
             forName: ApplicationStorageLocations.developmentDomain
         )
-        guard UserDefaults.standard.persistentDomain(forName: ApplicationStorageLocations.developmentDomain)
-            as? [String: Bool] == oldPreferences,
-            !FileManager.default.fileExists(atPath: files.marker.path) else { throw Refusal.publication }
+        guard let defaults = UserDefaults(suiteName: ApplicationStorageLocations.developmentDomain) else {
+            throw Refusal.publication
+        }
+        var store = UserDefaultsAppSettingsStore(defaults: defaults)
+        store.editor = EditorSettings(indentationWidth: 2)
+        guard defaults.bool(forKey: "com.joncallim.macdown2.hasCompletedFirstRun"),
+              store.editor.indentationWidth == 2,
+              !FileManager.default.fileExists(atPath: files.marker.path) else { throw Refusal.publication }
+    }
+
+    @MainActor
+    private static func updateCurrentIndentation(_ receipt: [String: Any]) throws {
+        guard receipt["migration_first_ui_passed"] as? Bool == true,
+              receipt["migration_first_normal_quit_verified"] as? Bool == true,
+              let current = UserDefaults(suiteName: ApplicationStorageLocations.applicationDomain),
+              let old = UserDefaults(suiteName: ApplicationStorageLocations.developmentDomain) else {
+            throw Refusal.publication
+        }
+        var store = UserDefaultsAppSettingsStore(defaults: current)
+        guard store.editor.indentationWidth == 2,
+              UserDefaultsAppSettingsStore(defaults: old).editor.indentationWidth == 2 else {
+            throw Refusal.publication
+        }
+        var editor = store.editor
+        editor.indentationWidth = 8
+        store.editor = editor
+        guard store.editor.indentationWidth == 8 else { throw Refusal.publication }
+        guard let domain = UserDefaults.standard
+            .persistentDomain(forName: ApplicationStorageLocations.applicationDomain) else {
+            throw Refusal.publication
+        }
+        let bytes = try PropertyListSerialization.data(fromPropertyList: domain, format: .binary, options: 0)
+        try bytes.write(
+            to: MigrationSeedAdmission.root.appendingPathComponent("migration-current-preferences-after-change.plist"),
+            options: .withoutOverwriting
+        )
     }
 
     private static func verifySource(_ receipt: [String: Any]) throws {
