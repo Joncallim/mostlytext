@@ -1,0 +1,103 @@
+name: QuickLookReplyProbe
+options:
+  deploymentTarget:
+    macOS: '26.0'
+settings:
+  base:
+    SWIFT_VERSION: '6.0'
+    SWIFT_STRICT_CONCURRENCY: complete
+    CODE_SIGN_IDENTITY: '-'
+    CODE_SIGN_STYLE: Manual
+    ENABLE_HARDENED_RUNTIME: 'YES'
+    GENERATE_INFOPLIST_FILE: 'NO'
+packages:
+  MacDownKit:
+    path: '__SOURCE_PACKAGE__'
+targets:
+  QLReplyProbeContainer:
+    type: application
+    platform: macOS
+    sources: [Container]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.MostlyText
+    info:
+      path: Container-Info.plist
+      properties:
+        CFBundleDisplayName: MostlyText QL-REPLY fixture
+        CFBundleShortVersionString: '0.0.0'
+        CFBundleVersion: '1'
+        LSUIElement: true
+        UTImportedTypeDeclarations:
+          - UTTypeIdentifier: net.daringfireball.markdown
+            UTTypeConformsTo: [public.plain-text]
+            UTTypeDescription: Markdown
+            UTTypeTagSpecification:
+              public.filename-extension: [md, markdown]
+    dependencies:
+      - target: QLReplyProbeProvider
+        embed: true
+  QLReplyProbeProvider:
+    type: app-extension
+    platform: macOS
+    sources: [Provider]
+    dependencies:
+      - package: MacDownKit
+        product: D2Rendering
+      - package: MacDownKit
+        product: DiagramsD2
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.MostlyText.QuickLook
+        APPLICATION_EXTENSION_API_ONLY: 'YES'
+    info:
+      path: Provider-Info.plist
+      properties:
+        CFBundleShortVersionString: '0.0.0'
+        CFBundleVersion: '1'
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.quicklook.preview
+          NSExtensionPrincipalClass: '$(PRODUCT_MODULE_NAME).StaticPreview'
+          NSExtensionAttributes:
+            QLIsDataBasedPreview: true
+            QLSupportedContentTypes: [net.daringfireball.markdown]
+    entitlements:
+      path: Provider.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.files.user-selected.read-only: true
+  QLReplyProbeAutomationHost:
+    type: application
+    platform: macOS
+    sources: [AutomationHost]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.QLReplyProbe.AutomationHost
+    info:
+      path: AutomationHost-Info.plist
+      properties:
+        CFBundleDisplayName: MostlyText Quick Look automation fixture
+        CFBundleShortVersionString: '0.0.0'
+        CFBundleVersion: '1'
+        LSUIElement: true
+  QLReplyProbeFinderTests:
+    type: bundle.ui-testing
+    platform: macOS
+    sources: [FinderTests]
+    dependencies:
+      - target: QLReplyProbeAutomationHost
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.QLReplyProbe.FinderTests
+        GENERATE_INFOPLIST_FILE: 'YES'
+        TEST_TARGET_NAME: QLReplyProbeAutomationHost
+schemes:
+  QuickLookReplyProbe:
+    build:
+      targets:
+        QLReplyProbeContainer: all
+        QLReplyProbeAutomationHost: all
+    test:
+      config: Release
+      targets: [QLReplyProbeFinderTests]
+      parallelizable: false

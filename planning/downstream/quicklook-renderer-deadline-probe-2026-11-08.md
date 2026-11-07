@@ -106,3 +106,31 @@ memory bounds, physical WebContent retirement or the complete QL-REPLY gate.
 No production or copied-renderer instrumentation is added to manufacture a
 worker-phase observation. Preserve a result that lacks the required ordering as
 inconclusive/failed; do not silently relabel it as actual busy WASM evidence.
+
+## First source preparation and evidence coverage
+
+Local preparation passes 11 pure renderer/reply/UI correlation controls,
+13 inherited live-channel corruption/lifecycle controls and three owned-process
+controls. Strict optimized SDK type checks pass for the isolated gate/control
+and observer; the actual UI test passes strict SDK type checking. The D2-linked
+provider is parsed only locally; its real linking/type qualification occurs on
+the hosted Mac. Changed Swift files pass pinned formatting/strict lint; the
+original cold case is byte-identical to its qualified reference and retains its
+pre-existing formatting. No native assertion is waived. Python/YAML, source
+compliance and product/reference byte-preservation checks pass.
+
+Compiled evidence includes every regular file in the containing app, actual
+provider, separate automation host and UI runner, plus the exact execution plan,
+generated project, private console/control binaries and locked dependency inputs.
+Earlier PR138's 12 recorded roles were a selected inventory; its automation-host
+binary was not separately retained there. Preserve that historical limit rather
+than calling its selected inventory exhaustive or backfilling missing bytes.
+The current new probe requires all three actual bundle directories and their
+resource bytes before and after. Exact original native outcomes stay scoped.
+
+The standalone gate console is hosted-only and remains separate from Finder
+qualification. It checks 64 concurrent choices/one winner, waiter/late-result
+behavior and occupancy. A deliberately wrong caller refunds on terminal selection
+and must fail42; original and restored modes must both finish0 using the same
+binary. This direct control is not a native renderer mutation or an actual
+worker-return observation. Its complete first statuses/logs are retained.
