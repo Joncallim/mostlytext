@@ -129,3 +129,19 @@ identifier and screen sizes/scales. Require the same active console account,
 login completion, no true lock field and nonempty display/input metadata before
 normal product launch. A preference-cache entry is recorded only as an optional
 observation and cannot replace these actual GUI APIs or the input outcome.
+
+## Actual startup integration intake before publication
+
+PR117 is now merged as actual mainb83ec408b52b67ce7d0552d50136ae8d23c8b149.
+Qualified source33b86633 and actual checkouteb83c71b pass all3719 package/536
+suites,676 app/142 suites, all four builds, all six normal Release CLI comparisons,
+raw Welcome/key checks and the current-domain journal regression. The actual
+merge tree isf95849206b8ff178c1513ad914e979398dc61a06 with preserved115/116
+ancestors and clean canonical fast-forward. Intake that actual main before
+publishing this harness; its reviewed launch controller/live-peer observer are
+now available without copying or changing their bytes.
+
+The normal app build uses the already qualified native-CLI Release recipe,
+including ARM selection and Xcode's ad-hoc signing of app/embedded helper.
+The controller retains parse-as-library compilation. No separate unsigned/
+manual nested-helper signing path or product test configuration is introduced.
