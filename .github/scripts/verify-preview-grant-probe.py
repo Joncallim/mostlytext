@@ -10,28 +10,14 @@ import sys
 from pathlib import Path
 import re
 import subprocess
+from preview_compiled_inputs import PHASES, capture as capture_compiled, check_host, verify_execution
 
 if sys.flags.optimize:
     raise SystemExit("Optimized Python is refused before Preview diagnostic preparation")
 
 
 def check_diagnostic_host(root):
-    if sys.flags.optimize:
-        raise RuntimeError("Optimized Python cannot enforce Preview diagnostic admission")
-    assert os.environ.get("GITHUB_ACTIONS") == "true" and os.environ.get("RUNNER_OS") == "macOS"
-    assert os.environ.get("GITHUB_REPOSITORY") == "Joncallim/mostlytext"
-    account = pwd.getpwuid(os.getuid())
-    assert os.getuid() == os.geteuid() > 0 and account.pw_name == "runner" and account.pw_dir == "/Users/runner"
-    assert Path.home() == Path("/Users/runner") and platform.machine() == "arm64"
-    assert platform.mac_ver()[0].split(".")[0] == "26"
-    assert root == Path(os.environ["RUNNER_TEMP"]).resolve() / "preview-grant-probe"
-    assert str(root) == "/Users/runner/work/_temp/preview-grant-probe"
-    assert not any(os.path.lexists(p) for p in ["/Users/jonathanlim", "/Users/mostlytexttest", "/Volumes/Fast SSD"])
-    event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text())
-    if "pull_request" in event:
-        assert event["pull_request"]["head"]["repo"]["full_name"] == "Joncallim/mostlytext"
-    else:
-        assert os.environ["GITHUB_EVENT_NAME"] == "workflow_dispatch"
+    check_host(root)
 
 
 def verify_native_architecture(receipt, identity, architectures):
@@ -55,6 +41,8 @@ parser.add_argument("configuration", choices=["Debug", "Release"])
 parser.add_argument("--pair", choices=["revision", "viewport", "disappear"], required=True)
 parser.add_argument("--verify", action="store_true")
 parser.add_argument("--require-result", action="store_true")
+parser.add_argument("--capture-compiled", choices=sorted(PHASES))
+parser.add_argument("--verify-compiled", choices=sorted(PHASES))
 args = parser.parse_args()
 check_diagnostic_host(args.output.resolve())
 repo = Path(__file__).resolve().parents[2]
@@ -64,7 +52,7 @@ if platform.machine() != "arm64":
     raise SystemExit("This native Preview qualification requires an Apple Silicon worker")
 paths = subprocess.check_output([
     "git", "ls-files", "-z", "MacDown2", ".github/scripts/verify-preview-grant-probe.py",
-    ".github/workflows/preview-grant-probe.yml", ".github/scripts/test-preview-diagnostic-host.py", ".github/scripts/check-preview-parsed-frame.py", ".github/scripts/test-preview-grant-tripwire.py", ".github/scripts/test-preview-native-architecture.py", ".github/scripts/run-preview-grant-probe.py", ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
+    ".github/workflows/preview-grant-probe.yml", ".github/scripts/preview_compiled_inputs.py", ".github/scripts/test-preview-compiled-inputs.py", ".github/scripts/test-preview-diagnostic-host.py", ".github/scripts/check-preview-parsed-frame.py", ".github/scripts/test-preview-grant-tripwire.py", ".github/scripts/test-preview-native-architecture.py", ".github/scripts/run-preview-grant-probe.py", ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
 ], cwd=repo).decode().split("\0")
 digests = {name: hashlib.sha256((repo / name).read_bytes()).hexdigest() for name in paths if name}
 lock = repo / "MacDown2/Packages/MacDownKit/Package.resolved"
@@ -74,14 +62,16 @@ receipt = {
     "configuration": args.configuration,
     "mutation_pair": args.pair,
     "testability": True,
-    "diagnostic_only": True,
+    "diagnostic_only": False,
+    "qualification_candidate": True,
+    "current_main_baseline": "ef93ab2d4fbda72cdd126560ffb19cd7e012a5d9",
     "resource_trace_enabled": True,
     "execution_architecture": "arm64",
     "only_active_arch": True,
     "additional_compilation_condition": "RELEASE_PREVIEW_PROBE",
     "source_sha256": digests,
     "pins": pins,
-    "scope": "Diagnostic-only window/copy observations on old product source; never qualifies production0557 or establishes the historical cause from a pass",
+    "scope": "Current-main Preview qualification candidate; first outcomes and all six pairs required, without a sole historical cause or final release claim",
     "renderer_preference_observer": False,
     "fixture_window_lifetime_observer": True,
 }
@@ -89,7 +79,31 @@ path = args.output / "receipt.json"
 if args.verify:
     if json.loads(path.read_text()) != receipt:
         raise SystemExit("Actual native app source, configuration or immutable pins changed")
+    if args.capture_compiled:
+        capture_compiled(args.output, Path(os.environ['RUNNER_TEMP']) / 'preview-grant-app/Build/Products',
+                         args.configuration, repo / 'MacDown2/MacDown2.xcodeproj', args.capture_compiled)
+    if args.verify_compiled:
+        verify_execution(args.output, args.configuration, args.verify_compiled)
     if args.require_result:
+        for phase in ['initial', 'selection', args.pair + '-mutant', args.pair + '-restored']:
+            binding = json.loads((args.output / ('compiled-' + phase + '.json')).read_text())
+            proof = json.loads((args.output / ('compiled-' + phase + '-verified.json')).read_text())
+            if (binding['phase'] != phase or binding['configuration'] != args.configuration
+                    or proof['phase'] != phase or proof['configuration'] != args.configuration
+                    or proof['compiled_inputs_unchanged_after'] is not True
+                    or proof['actual_owned_app_matches_captured_executable'] is not True):
+                raise SystemExit('Compiled phase was omitted, changed or retargeted')
+            count = ((56 if args.configuration == 'Release' else 55) if phase == 'initial' else
+                     1 if phase == 'selection' or args.pair == 'viewport' else 3)
+            failed = 1 if phase.endswith('-mutant') else 0
+            wanted = {'totalTestCount': count, 'passedTests': count - failed, 'failedTests': failed,
+                      'skippedTests': 0, 'expectedFailures': 0}
+            if any(type(proof['actual_summary'].get(k)) is not int or proof['actual_summary'][k] != v for k, v in wanted.items()):
+                raise SystemExit('Actual result bundle does not contain the complete exact phase outcome: ' + phase)
+            owned = proof['actual_owned']
+            if (owned['returncode'] != (65 if failed else 0) or owned['timed_out'] or owned['cancelled']
+                    or owned['app_cleanup_requested']):
+                raise SystemExit('Actual compiled phase did not finish with its expected owned result')
         identity = json.loads((args.output / "diagnostics/identity.json").read_text())
         architectures = subprocess.check_output(["lipo", "-archs", identity["app"]], text=True).split()
         verify_native_architecture(receipt, identity, architectures)

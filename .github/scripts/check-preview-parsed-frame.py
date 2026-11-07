@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+from preview_compiled_inputs import capture as capture_compiled, check_host, verify_execution
 
 
 def digest(path):
@@ -22,6 +23,7 @@ def main():
     args = parser.parse_args()
     if os.environ.get('CI') != 'true':
         parser.error('Only the owned hosted app products may execute')
+    check_host(args.output.resolve())
     repo = Path(__file__).resolve().parents[2]
     source = repo / 'MacDown2/MacDown2/SecuredMarkdownResourceHost.swift'
     original = source.read_bytes()
@@ -73,14 +75,18 @@ def main():
                 raise SystemExit('The omission did not change the actual application executable')
             if phase.endswith('restored') and app_digest != original_app:
                 raise SystemExit('The restored application differs from the unmodified executable')
+            capture_compiled(args.output, derived / 'Build/Products', args.configuration,
+                             repo / 'MacDown2/MacDown2.xcodeproj', phase)
             path = args.output / ('parsed-frame-' + phase + '.log')
             with path.open('w') as log:
                 result = subprocess.run([
                     sys.executable, str(repo / '.github/scripts/run-owned-app-tests.py'),
                     str(args.output / ('parsed-frame-' + phase + '-diagnostics')), str(app), '--',
                 ] + base + ['-parallel-testing-enabled', 'NO',
+                            '-resultBundlePath', str(args.output / ('actual-' + phase + '.xcresult')),
                             '-only-testing:MacDown2Tests/' + suite, 'test-without-building'],
                     cwd=repo, timeout=660, stdout=log, stderr=subprocess.STDOUT)
+            verify_execution(args.output, args.configuration, phase)
             records.append({'phase': phase, 'returncode': result.returncode,
                             'source_sha256': digest(source), 'app_sha256': app_digest,
                             'original_app_sha256': original_app})

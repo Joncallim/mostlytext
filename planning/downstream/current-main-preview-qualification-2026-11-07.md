@@ -130,3 +130,24 @@ mutations, source authority, limits or real network/image positives. The existin
 complete initial/expected mutant/restoration checks remain mandatory. New
 filesystem controls must reject changed/missing/ambiguous inputs, links, retargeted
 phases and changed archive blobs while retaining exact source restoration.
+
+## Phase-evidence source review checkpoint
+
+The private six-pair workflow and phase-bound input/result capture are implemented
+locally, not published. Four actual temporary-filesystem binding controls, three
+existing architecture controls, two held-host/optimized controls and five actual
+loopback tripwire controls pass. All original mutation tuples, intended and
+unaffected positives, source-restoration statements and timeouts remain exact.
+The same literal actual-host guard is shared by the producer and counterfactual
+entry before any source mutation/build; it retains its full original conditions.
+The initial/selection pipeline retains the actual original exit status while
+capturing phase evidence even when that command fails. Historical receipts remain
+diagnostic-only and unchanged; this new candidate is explicitly pending.
+
+Source AST/YAML, all six matrix combinations/35-minute limit, every workflow
+reference, full format0/1508 and strict lint0/1508, source Compliance0unverified,
+current-main startup/grammar/pin/inventory/notices/SBOM identities and diff checks
+pass. Native SDK/test-bundle path and new actual-result summary contracts are
+still unverified until the first final-source hosted result. Intake the actual
+qualified startup/migration convergence before publication, then require every
+complete gate. No CORTANA app/package/native runtime or local Xcode build.
