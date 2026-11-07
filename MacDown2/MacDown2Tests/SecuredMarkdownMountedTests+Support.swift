@@ -8,18 +8,26 @@ extension SecuredMarkdownMountedTests {
     func copiedHTML(from view: NSView) async throws -> String {
         let deadline = ContinuousClock.now.advanced(by: .seconds(5))
         while ContinuousClock.now < deadline {
-            if let interaction = findTextInteraction(in: view) {
-                _ = interaction.perform(NSSelectorFromString("selectAll:"), with: nil)
-                _ = interaction.perform(NSSelectorFromString("copy:"), with: nil)
-                if let html = NSPasteboard.general.string(forType: .html) {
-                    return html
-                }
+            if let interaction = findTextInteraction(in: view),
+               let html = freshNativeCopiedHTML(from: interaction) {
+                return html
             }
             try await Task.sleep(for: .milliseconds(20))
         }
         windowDiagnostics.captureFailure(host: view, selected: findTextInteraction(in: view))
         Issue.record("Mounted Textual did not produce HTML from its native copy action")
         throw PreviewResourceAdmissionError.limitExceeded
+    }
+
+    /// A no-write native action must not reuse HTML from any earlier copy.
+    func freshNativeCopiedHTML(from interaction: NSView) -> String? {
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        let clearedGeneration = pasteboard.changeCount
+        _ = interaction.perform(NSSelectorFromString("selectAll:"), with: nil)
+        _ = interaction.perform(NSSelectorFromString("copy:"), with: nil)
+        guard pasteboard.changeCount > clearedGeneration else { return nil }
+        return pasteboard.string(forType: .html)
     }
 
     func assertGrantedImageCopies(
