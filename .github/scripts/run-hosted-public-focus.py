@@ -7,15 +7,27 @@ from pathlib import Path
 import subprocess
 import sys
 import time
+import re
 from native_cli_endpoint_probe import probe_endpoint
+
+STATUS_LAYOUT_QUALIFIED_MAIN = "6b49777d0f36c3d7a23cd0089e0823da1986660a"
 
 
 def main():
+    if sys.flags.optimize:
+        raise RuntimeError("Optimized Python is refused before public-UI preparation")
+    if len(sys.argv) not in [2, 3] or (len(sys.argv) == 3 and sys.argv[2] != "--status-layout-probe"):
+        raise RuntimeError("Select the private root and, optionally, the fixed status-layout probe")
+    layout_probe = len(sys.argv) == 3
+    if layout_probe and not re.fullmatch(r"[0-9a-f]{40}", STATUS_LAYOUT_QUALIFIED_MAIN):
+        raise RuntimeError("Status-layout execution is held until verified PR122 qualification and actual main intake")
     root = Path(sys.argv[1]).resolve()
     spec = importlib.util.spec_from_file_location("focus_preparation", Path(__file__).with_name("prepare-hosted-public-focus.py"))
     preparation = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(preparation)
     preparation.check_host(root)
+    if layout_probe:
+        subprocess.run(["git", "merge-base", "--is-ancestor", STATUS_LAYOUT_QUALIFIED_MAIN, "HEAD"], check=True, timeout=15)
     path = root / "receipt.json"
     receipt = json.loads(path.read_text())
     current = None
@@ -64,7 +76,9 @@ def main():
         expected = {"totalTestCount": 1, "passedTests": 1, "failedTests": 0, "skippedTests": 0, "expectedFailures": 0}
         assert result.returncode == 0 and owned["returncode"] == 0 and not owned["timed_out"] and not owned["cancelled"]
         assert all(type(summary.get(k)) is int and summary[k] == v for k, v in expected.items()), summary
-        assert method in (root / (label + ".log")).read_text()
+        pattern = r"Test Case '-\[HostedFocusDriverTests\.PublicFocusTests " + re.escape(method) + r"\]' passed"
+        if not re.search(pattern, (root / (label + ".log")).read_text()):
+            raise RuntimeError("Actual passing case differs from the selected public journey")
         return True
 
     try:
@@ -100,7 +114,10 @@ def main():
         opened = command("public-file-open", [receipt["public_cli"], receipt["source_file"]])
         receipt["criteria"]["file_open_acknowledged"] = opened["returncode"] == 0
         assert opened["returncode"] == 0
-        receipt["criteria"]["public_focus_bold_undo"] = ui_phase("focus", "testNormalPublicFocusBoldAndUndo")
+        selected = "testNormalStatusBarRemainsReadableAtNarrowAndWideWidths" if layout_probe else "testNormalPublicFocusBoldAndUndo"
+        receipt["selected_public_method"] = selected
+        persist()
+        receipt["criteria"]["public_focus_bold_undo"] = ui_phase("focus", selected)
         inspection = app_action("inspect", current)
         assert inspection["pid"] == current["pid"] and inspection["executable"] == current["executable"]
         checked = command("source-and-build-verification-after", ["python3", ".github/scripts/prepare-hosted-public-focus.py", root, "--verify"])

@@ -1,0 +1,15 @@
+{
+  "actual_cases": 8,
+  "actual_failures": 4,
+  "failed_inputs": [
+    "directory",
+    "missing",
+    "dangling",
+    "removed-before-readiness"
+  ],
+  "raw_queued_arguments_preserved": true,
+  "actual_returncode": 1,
+  "no_ui_framework_linkage": true,
+  "binary_sha256": "a69281d9660e701b9870d4fd8288ad69380fec1465a3fa914089987262dad356",
+  "scope": "Genuine before-fix exact-source admission fragment on real private filesystem. No actual AppKit callback or historical native-failure causal claim."
+}
