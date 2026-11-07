@@ -435,3 +435,19 @@ remain preserved. PR123 is integrated by actual ancestry, not a passing retry of
 its old failed head. Full38-method/six-extra critical execution, final repeated
 artifact, localisation/VoiceOver, performance, protected owner, installation and
 independent rights/publication requirements remain open. No final release pass.
+
+
+## Normal Release licence Copy/Find/About accepted — 7 November 2026
+
+[PR125](https://github.com/Joncallim/mostlytext/pull/125) integrates the private
+licence acceptance journey at actual maincc1cd1e6da16f43b268b2b9cc03b155f1b6d54d9.
+[Its original evidence packet](downstream/evidence/hosted-license-notices-2026-11-07/README.md)
+retains the first Find selector failure and changed-source pass with exact
+inputs/results/normal-Quit/resource and actual merge evidence. A normal Release
+app exposes both complete canonical texts, keyboard Copy, native Find/Next/
+matched Copy, close and About reopen after the unchanged public focus journey.
+All companion current status/public/original-focus/critical cases pass. Product
+and distributed resources remain unchanged. Native string equality includes
+Unicode canonical equivalence; at-rest byte equality is separately hash-verified.
+Independent rights/source publication, locale/VoiceOver, protected-owner,
+installed and exact signed-artifact requirements remain open.

@@ -1,0 +1,26 @@
+{
+  "head": "f69d71e25ad9833bdfb98c3bb591bd5f72ec0de7",
+  "checkout": "ddda09843d9879887dc838d7fb75b31be1a7b1b3",
+  "all_complete_source_inputs_verified": 1612,
+  "all_pins_verified": 24,
+  "actual_generated_inputs_verified": 11,
+  "canonical_mit_bytes": 1369,
+  "canonical_notices_bytes": 537624,
+  "both_downloaded_oracles_match_canonical_resources_recorded": true,
+  "positive_actual_pass": true,
+  "actual_licence_case_failures": 1,
+  "sole_failure_source_line": 62,
+  "before_failure_both_complete_actual_text_and_keyboard_copy_assertions_reached_without_failure": true,
+  "actual_find_dialog_visible_and_combo_box_captured": true,
+  "focus_owned": {
+    "returncode": 65,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 74.51697650000006,
+    "app_cleanup_requested": []
+  },
+  "identity_bound_failure_cleanup_not_normal_quit": true,
+  "after_source_verification_present": false,
+  "actual_captured_find_ax_sha256": "99ad819137cc99de349baa6e8447d5437bc37933c33ad6f09f5044ba3a2f7e65",
+  "scope": "First real licence UI failure is an incorrect Window query: actual Find is Dialog and focused query ComboBox. Canonical full text and Copy checks precede sole failure with continueAfterFailure=false. Find entry/Next/match Copy/close/About remain unexecuted; no whole licence acceptance, after-source proof, normal Quit, rights/VO/signed claim."
+}

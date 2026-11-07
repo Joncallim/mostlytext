@@ -61,8 +61,8 @@ def main():
                           ".github/scripts/prepare-hosted-public-focus.py", ".github/scripts/run-hosted-public-focus.py",
                           ".github/scripts/test-hosted-focus-guard.py", ".github/scripts/test-run-owned-app-tests.py",
                           ".github/scripts/native-cli-app-host.swift", ".github/scripts/native_cli_endpoint_probe.py",
-                          ".github/scripts/run-owned-app-tests.py", ".github/workflows/hosted-public-focus.yml",
-                          ".github/workflows/status-bar-layout.yml"]).splitlines()
+                          ".github/scripts/run-owned-app-tests.py", ".github/workflows/hosted-public-focus.yml", ".github/workflows/status-bar-layout.yml", ".github/workflows/hosted-license-notices.yml", ".github/scripts/test-hosted-license-notices.py",
+                          "LICENSE", "compliance/generated/THIRD_PARTY_NOTICES.md"]).splitlines()
         required = {".github/scripts/native-cli-app-host.swift", ".github/scripts/native_cli_endpoint_probe.py"}
         assert required <= set(tracked), "Intake actual qualified startup integration before this lane"
         shutil.copytree(".github/hosted-public-focus", root / "fixture")
@@ -84,6 +84,16 @@ def main():
         keyboard = subprocess.run(["defaults", "read", "com.apple.HIToolbox", "AppleSelectedInputSources"], capture_output=True, text=True, timeout=15)
         record["keyboard_source"] = {"returncode": keyboard.returncode, "stdout": keyboard.stdout, "stderr": keyboard.stderr}
         # The actual TIS/GUI source is required after the real input control, not inferred from this cache.
+        oracle_root = root / "license-oracles"
+        oracle_root.mkdir(mode=0o700)
+        record["license_oracles"] = {}
+        for source in ["LICENSE", "compliance/generated/THIRD_PARTY_NOTICES.md"]:
+            raw = Path(source).read_bytes()
+            assert 0 < len(raw) <= 2 * 1024 * 1024 and raw.decode("utf-8")
+            oracle = oracle_root / Path(source).name
+            oracle.write_bytes(raw)
+            record["license_oracles"][source] = {"path": str(oracle), "sha256": sha(oracle)}
+            assert record["license_oracles"][source]["sha256"] == record["source_sha256"][source]
         record_path.write_text(json.dumps(record, indent=2) + "\n")
         return
     record = json.loads(record_path.read_text())
@@ -92,6 +102,12 @@ def main():
         assert sha(Path(name)) == digest, name
     assert sha(Path(record["source_file"])) == record["source_file_sha256"]
     app = root / "app/Build/Products/Release/MacDown2.app"
+    resource_hashes = {}
+    for source, row in record["license_oracles"].items():
+        assert sha(Path(row["path"])) == row["sha256"] == record["source_sha256"][source]
+        resource = app / "Contents/Resources" / Path(source).name
+        assert sha(resource) == row["sha256"], "Compiled licence resource differs: " + source
+        resource_hashes[str(resource)] = sha(resource)
     info = plistlib.loads((app / "Contents/Info.plist").read_bytes())
     executable = app / "Contents/MacOS" / info["CFBundleExecutable"]
     helper = app / "Contents/MacOS/mostlytext-cli"
@@ -99,7 +115,8 @@ def main():
     subprocess.run(["codesign", "--verify", "--deep", "--strict", str(app)], check=True, timeout=30)
     built = {"app": str(app), "executable": str(executable), "app_sha256": sha(executable),
              "helper": str(helper), "helper_sha256": sha(helper),
-             "controller_sha256": sha(root / "normal-app-host"), "host_facts_sha256": sha(root / "host-facts"), "info": info}
+             "controller_sha256": sha(root / "normal-app-host"), "host_facts_sha256": sha(root / "host-facts"), "info": info,
+             "license_resource_sha256": resource_hashes}
     if args.bind_built:
         assert "built" not in record
         record["built"] = built
