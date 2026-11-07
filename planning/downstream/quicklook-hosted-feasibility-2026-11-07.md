@@ -135,3 +135,50 @@ The hosted preparation guard remains exact /Users/runner + GitHub/macOS26.
 Compile the changed UI fixture unsigned only locally, preserving old build/test
 outcomes. This is the demonstrated distinction between account identity and a
 sandbox's redirected home, not permission to run native code in the owner account.
+
+## Local compilation metadata side effect and cleanup
+
+The two unsigned build-for-testing checks did not execute a fixture, but Xcode
+implicitly ran its LSRegisterURL build task for each generated containing app.
+This registered only those private build paths. Both exact registrations were
+removed with lsregister-u; no global database reset or default-handler setter
+was used. Readback finds no matching reserved-provider PlugInKit entry and no
+entry for either exact local build path; no fixture process is running. The
+containing fixture has no document-handler declaration. All subsequent local
+checks use swiftc type-check only (including the XCTest Swift overlay search
+path), avoiding another application registration. No local native acceptance,
+product launch, TCC change or signing-key access occurred.
+
+## Review rejects test-injected provider permissions despite visible success
+
+Sourceb000676d/run42318788910 genuinely passes the real Finder test: visible
+static marker and PNG are inspected in the screenshot; callback/reply/factory
+run off-main; the selected file reads28bytes; one factory call occurs. However,
+independent actual entitlements show Xcode's UI-test machinery also injected
+get-task-allow, read-only access to /, and test-manager Mach exceptions INTO THE
+PROVIDER. The initial validator checked only two required booleans and absence
+of network/App Groups, so it incorrectly admitted those additional authorities.
+The observed sibling-open true cannot establish production-like file grants.
+The workflow green result is preserved, but the sandbox feasibility predicate
+is REJECTED. Do not report it as complete QL-REPLY or a valid permission proof.
+
+Correct the fixture ownership before another actual attempt: a separate tiny
+UI-automation host is the XCUITest target; it is neither the containing fixture
+nor its provider. It has a private fixture identifier and no document handler.
+The scheme builds the actual container/provider independently, but test-manager
+injection is confined to its automation host/runner. Keep the real Finder test,
+no-containing-app launch requirement and original timing/positive assertions.
+The provider and containing app are ad-hoc re-signed after build with ONLY the
+provider's two declared entitlements and no containing-app entitlements, then
+verified. No Developer ID/private key is used. Require exact dictionary equality,
+not a permissive subset, before registration AND after the actual UI execution.
+
+Add a callback-time self-entitlement check through the actual Security API for
+the required sandbox/read-only bits and known debugger/temporary/root/network/
+AppGroup exceptions. Refuse before selected-file read if an unexpected known
+authority exists. Record that real self-check, plus the full external before/
+after dictionaries. This measures the execution context instead of assuming
+that pre-test codesign metadata survives UI-test setup. These changes narrow
+fixture privilege; they never weaken a provider sandbox or suppress a failure.
+Local checks are swiftc type-check only; no more local app builds/registration.
+The earlier green workflow and its complete raw evidence remain unchanged.
