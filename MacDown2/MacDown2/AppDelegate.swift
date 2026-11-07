@@ -199,14 +199,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             }
         }
 
-        if shouldShowFirstRun, launchURLs.isEmpty, launchFolderURL == nil, startupOpenFiles.isEmpty {
+        let hasQueuedDocuments = !Self.regularDocumentURLs(startupOpenFiles).isEmpty
+        if shouldShowFirstRun, launchURLs.isEmpty, launchFolderURL == nil, !hasQueuedDocuments {
             coordinator.showFirstRunWindow { [weak self] openedDocument in
                 guard let self else { return }
                 defaults.set(true, forKey: Self.hasCompletedFirstRunKey)
                 proceedWithNormalLaunch(documentAlreadyOpened: openedDocument)
             }
         } else {
-            hasPendingDocumentOpen = !Self.regularDocumentURLs(startupOpenFiles).isEmpty
+            hasPendingDocumentOpen = hasQueuedDocuments
             proceedWithNormalLaunch()
         }
         let queued = startupOpenFiles

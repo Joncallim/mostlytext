@@ -149,7 +149,11 @@ final class TabLifecycleUITests: XCTestCase {
         // applied to the last-opened window; explicitly choose it on b.md too.
         app.menuBars.menuBarItems["File"].click()
         app.menuBars.menuBarItems["File"].menuItems["Open Folder…"].click()
-        let panel = app.sheets.firstMatch
+        let origins = app.windows.matching(NSPredicate(format: "title CONTAINS[c] %@", "b.md"))
+        XCTAssertEqual(origins.count, 1, "Folder selection belongs to the unique selected document window")
+        let origin = origins.firstMatch
+        XCTAssertTrue(origin.exists)
+        let panel = origin.sheets.matching(identifier: "open-panel").firstMatch
         XCTAssertTrue(panel.waitForExistence(timeout: 5))
         app.typeKey("g", modifierFlags: [.command, .shift])
         app.typeText(fixturesDir.path)
