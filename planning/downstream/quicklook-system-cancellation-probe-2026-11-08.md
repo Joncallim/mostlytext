@@ -90,3 +90,22 @@ presentation/extension, final signed registration/performance/VoiceOver and the
 original issue7 requirements remain separate. Record a negative cancellation
 observation plainly; do not call it safe cancellation or permission to ignore
 live worker occupancy/retained bytes.
+
+## First actual window-query failure and correction contract
+
+First81a140c6/run42397600403 genuinely passes the original cold positive and
+fails only the new filename-as-window-title precondition. All16canonical/
+13generated inputs, minimal permissions and11downloaded execution roles are
+independently verified; actual2cases/1pass/1fail/0skip/0expected, ownednormal65.
+Failure AX has one actual Keyboard Focused window titled Quick Look and a
+pending spinner. The real provider wait starts and completes10.658797s later;
+Escape is NOT_RUN, so no system cancellation outcome follows. Both first
+workflows/logs/artifacts are complete/retained before this material correction.
+XCTest abort skips the Swift defer's custom attachment; automatic AX/video stay.
+
+Bind the same5second window query to the actual observed Quick Look title,
+require exactly one matching window and its actual spinner, and explicitly
+capture this state before a failed window assertion. Keep all provider behavior,
+source/permissions, original cold test,10second wait, Escape/disappearance,
+post-Escape correlation and original deadlines unchanged. This corrects observed
+fixture window identity, not framework/product behavior or a cancellation waiver.
