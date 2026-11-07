@@ -117,3 +117,31 @@ and enum inputs. Initial invocations lacked framework/C module maps and those
 root declarations; all preparation failures are retained locally. No app build,
 registration, linked product or native runtime is performed; hosted complete
 candidate compilation and UI qualification remain required.
+
+## Exact combined qualification decision
+
+All first a483 native outcomes are now fully preserved and independently
+verified: conflict-close and dirty-close/session restore pass, QuickOpen fails
+at its original immediate c.md-exists assertion before the folder precondition.
+Its later actual session and hierarchy both contain a/b/c. The source-bound
+correction159b0d5a7ff487bc43548ae64c995e45173a6896 retains every a483 original
+statement in order and adds only a complete3-tab wait using the REMAINDER of the
+same original8second initial readiness budget. It passes strictSwift6 actualUI
+type checking, unchanged style, manifest38/12+6 and9controls. A pre-format hash
+was correctly refused and refreshed only after formatting; no validator changed.
+
+Merge that exact corrected source as a parent here before publication. Its
+underlying AppDelegate fix is unchanged from the separately tested a483 source;
+no a483 failed QuickOpen result is qualified or retargeted. This branch's first
+combined CI/native outcomes must genuinely pass all three original journeys,
+public/original focus, normalCLI, ownership, unchanged geometry, both shared
+app status-paint configurations and both package theme mutation/restoration
+configurations. Preserve the separate still-running first full a483 CI.
+
+PR123 remains draft at its original remote a483 source. After all combined gates
+pass, integrate this actual descendant and reconcile PR123 only from verified
+source ancestry and the passing corrected native case, with first failures
+retained. Do not merge its old failed head as though that check passed. This
+avoids publishing a duplicate standalone failing-input attempt; the complete
+new source is reviewed/tested in one integration PR with exact unit histories.
+Held local licence preparation remains outside this combined source.
