@@ -12,15 +12,19 @@ acceptance remain separate.
 
 ## Baseline and readiness
 
-Actual main is0426e88ac81efc9347011ba6b53fb1b6d2b75f35. PR121 original focus
-run42332150699 has1positive/1original pass, zero failures/skips/expected failures.
-PR122 sourcebff2e3a6 has a genuine before-fix ownership counterexample and a narrow
-explicit-window-role correction; its complete/current-source qualification is
-pending. This branch is prepared from that source to avoid duplicating obsolete
-product behavior. It MUST NOT be pushed or activated until PR122 genuinely
-qualifies, merges, and its actual main is incorporated. A baked held anchor
-refuses execution before preparation; replace it only with that verified merge.
-The architecture is written before this branch's implementation.
+Current actual main is6b49777d0f36c3d7a23cd0089e0823da1986660a. PR121's original
+focus run42332150699 genuinely passes one positive and one original case with
+zero failures/skips/expected failures. PR122 has since fully qualified and
+merged: complete CI3,719/536 package plus678/142 app, all four builds, actual
+ownership before/after, normal public CLI and normal Release focus all pass.
+This branch incorporates that actual main and binds execution to it. Product,
+original UI test, project and pin bytes remain identical to that qualified main.
+
+The architecture was committed before implementation, while PR122 was pending;
+preparation then refused execution with a held anchor. That hold was replaced
+only after actual qualification, merge/parent/tree verification and main intake.
+The later activation record below preserves the exact evidence. CORTANA's
+protected hold and final release gates remain unchanged.
 
 ## Named user journeys and ownership
 
