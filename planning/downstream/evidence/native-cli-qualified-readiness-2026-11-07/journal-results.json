@@ -1,0 +1,22 @@
+{
+  "original_stdout_sha256": "ead1d920f4a7dda3cf88552edfdf5360e6c7faf2447cf3ecd7ec9a4c3f4f30ea",
+  "same_owned_directory_proved": true,
+  "cases": [
+    {
+      "admitted": false,
+      "case": "original-foundation-temp",
+      "error": "main.LegacyMigrationFailure.unavailable(62)"
+    },
+    {
+      "admitted": true,
+      "case": "same-directory-posix-physical",
+      "empty_read": true
+    },
+    {
+      "admitted": true,
+      "case": "existing-private-mkdtemp",
+      "empty_read": true
+    }
+  ],
+  "scope": "Owner temporary path strings omitted. Exact local primitive alias counterexample, not captured errno in hosted app failure."
+}
