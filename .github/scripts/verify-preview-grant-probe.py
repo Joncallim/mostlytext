@@ -53,6 +53,7 @@ if platform.machine() != "arm64":
 paths = subprocess.check_output([
     "git", "ls-files", "-z", "MacDown2", ".github/scripts/verify-preview-grant-probe.py",
     ".github/workflows/preview-grant-probe.yml", ".github/scripts/preview_compiled_inputs.py", ".github/scripts/test-preview-compiled-inputs.py", ".github/scripts/test-preview-diagnostic-host.py", ".github/scripts/check-preview-parsed-frame.py", ".github/scripts/test-preview-grant-tripwire.py", ".github/scripts/test-preview-native-architecture.py", ".github/scripts/run-preview-grant-probe.py", ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
+    "planning/downstream/evidence/actual-app-hosted-plan-2026-11-07",
 ], cwd=repo).decode().split("\0")
 digests = {name: hashlib.sha256((repo / name).read_bytes()).hexdigest() for name in paths if name}
 lock = repo / "MacDown2/Packages/MacDownKit/Package.resolved"

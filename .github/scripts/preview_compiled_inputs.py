@@ -3,6 +3,7 @@ import hashlib
 import json
 import os
 import platform
+import plistlib
 import pwd
 import subprocess
 import sys
@@ -41,6 +42,9 @@ def selected_paths(products, configuration, project):
     runs = list(products.glob('*.xctestrun'))
     if len(tests) != 1 or len(runs) != 1:
         raise RuntimeError('Missing or ambiguous actual test binary/xctestrun')
+    expected_test = folder / 'MacDown2.app/Contents/PlugIns/MacDown2Tests.xctest/Contents/MacOS/MacDown2Tests'
+    if tests[0] != expected_test:
+        raise RuntimeError('Actual test binary is detached from its captured app host')
     candidates = {
         'app_executable': folder / 'MacDown2.app/Contents/MacOS/MacDown2',
         'app_info': folder / 'MacDown2.app/Contents/Info.plist',
@@ -54,6 +58,27 @@ def selected_paths(products, configuration, project):
     return candidates
 
 
+def require_topology(configuration, inputs, blobs):
+    try:
+        info = plistlib.loads(blobs['app_info'])
+        plan = plistlib.loads(blobs['xctestrun'])
+    except (ValueError, TypeError) as error:
+        raise RuntimeError('Invalid compiled app/run property list') from error
+    if not isinstance(info, dict) or info.get('CFBundleIdentifier') != 'app.mostlytext.MostlyText' or info.get('CFBundleExecutable') != 'MacDown2':
+        raise RuntimeError('Captured application identity or executable differs')
+    target = plan.get('MacDown2Tests') if isinstance(plan, dict) else None
+    expected = {'BlueprintName': 'MacDown2Tests', 'ProductModuleName': 'MacDown2Tests',
+                'TestHostPath': '__TESTROOT__/' + configuration + '/MacDown2.app',
+                'TestHostBundleIdentifier': 'app.mostlytext.MostlyText',
+                'TestBundlePath': '__TESTHOST__/Contents/PlugIns/MacDown2Tests.xctest'}
+    if (not isinstance(target, dict) or target.get('IsAppHostedTestBundle') is not True
+            or any(target.get(key) != value for key, value in expected.items())):
+        raise RuntimeError('Actual xctestrun does not select the captured app-hosted tests')
+    app = Path(inputs['app_executable']['path']).parents[2]
+    if Path(inputs['test_executable']['path']) != app / 'Contents/PlugIns/MacDown2Tests.xctest/Contents/MacOS/MacDown2Tests':
+        raise RuntimeError('Captured test executable is not in the selected app host')
+
+
 def capture(root, products, configuration, project, phase):
     if phase not in PHASES:
         raise RuntimeError('Unknown fixed compiled phase')
@@ -65,8 +90,10 @@ def capture(root, products, configuration, project, phase):
     blobs = root / 'compiled-inputs/blobs'
     blobs.mkdir(parents=True, mode=0o700, exist_ok=True)
     rows = {}
+    captured = {}
     for role, path in paths.items():
         data = read_regular(path)
+        captured[role] = data
         digest = hashlib.sha256(data).hexdigest()
         target = blobs / digest
         if target.exists():
@@ -78,6 +105,7 @@ def capture(root, products, configuration, project, phase):
         rows[role] = {'path': str(path), 'sha256': digest, 'bytes': len(data),
                       'blob': str(target.relative_to(root))}
     value = {'phase': phase, 'configuration': configuration, 'inputs': rows}
+    require_topology(configuration, rows, captured)
     with manifest.open('x') as output:
         output.write(json.dumps(value, indent=2) + '\n')
     return value
@@ -92,7 +120,8 @@ def verify(root, binding):
         raise RuntimeError('Compiled phase differs from its original manifest')
     if set(binding['inputs']) != {'app_executable', 'app_info', 'test_executable', 'xctestrun', 'generated_project'}:
         raise RuntimeError('Incomplete compiled input contract')
-    for row in binding['inputs'].values():
+    captured = {}
+    for role, row in binding['inputs'].items():
         expected = row['sha256']
         if row['blob'] != 'compiled-inputs/blobs/' + expected:
             raise RuntimeError('Compiled archive path cannot be retargeted')
@@ -100,7 +129,15 @@ def verify(root, binding):
             data = read_regular(path)
             if len(data) != row['bytes'] or hashlib.sha256(data).hexdigest() != expected:
                 raise RuntimeError('Compiled phase bytes changed: ' + str(path))
+        captured[role] = data
+    require_topology(binding['configuration'], binding['inputs'], captured)
     return True
+
+
+def require_owned_phase(identity, binding, checkout):
+    app = binding['inputs']['app_executable']
+    if identity['app'] != app['path'] or identity['app_sha256'] != app['sha256'] or identity['checkout'] != checkout:
+        raise RuntimeError('Actual owned phase used a different app path, bytes or checkout')
 
 
 def check_host(root):
@@ -135,8 +172,8 @@ def verify_execution(root, configuration, phase):
                     else 'parsed-frame-' + phase + '-diagnostics')
     identity = json.loads((root / owned_folder / 'identity.json').read_text())
     owned = json.loads((root / owned_folder / 'status.json').read_text())
-    if identity['app_sha256'] != binding['inputs']['app_executable']['sha256']:
-        raise RuntimeError('Actual owned phase used a different app executable')
+    receipt = json.loads((root / 'receipt.json').read_text())
+    require_owned_phase(identity, binding, receipt['checkout'])
     raw = subprocess.check_output(['xcrun', 'xcresulttool', 'get', 'test-results', 'summary',
                                    '--path', str(root / ('actual-' + phase + '.xcresult'))])
     summary = json.loads(raw)

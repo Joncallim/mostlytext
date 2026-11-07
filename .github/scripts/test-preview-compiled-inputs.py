@@ -3,11 +3,14 @@
 import copy
 import json
 import os
+import plistlib
 from pathlib import Path
 import tempfile
 import unittest
 
-from preview_compiled_inputs import capture, read_regular, verify
+from preview_compiled_inputs import capture, read_regular, require_owned_phase, verify
+
+ACTUAL_PLAN = Path(__file__).resolve().parents[2] / 'planning/downstream/evidence/actual-app-hosted-plan-2026-11-07/MacDown2_macosx26.0-arm64.xctestrun'
 
 
 class CompiledInputTests(unittest.TestCase):
@@ -19,9 +22,10 @@ class CompiledInputTests(unittest.TestCase):
         self.archive = self.root / 'evidence'
         for path, data in {
             self.products / 'Debug/MacDown2.app/Contents/MacOS/MacDown2': b'actual fixture app bytes',
-            self.products / 'Debug/MacDown2.app/Contents/Info.plist': b'actual fixture metadata',
-            self.products / 'Debug/MacDown2Tests.xctest/Contents/MacOS/MacDown2Tests': b'actual fixture tests',
-            self.products / 'MacDown2.xctestrun': b'actual fixture selected run',
+            self.products / 'Debug/MacDown2.app/Contents/Info.plist': plistlib.dumps({
+                'CFBundleIdentifier': 'app.mostlytext.MostlyText', 'CFBundleExecutable': 'MacDown2'}),
+            self.products / 'Debug/MacDown2.app/Contents/PlugIns/MacDown2Tests.xctest/Contents/MacOS/MacDown2Tests': b'actual fixture tests',
+            self.products / 'MacDown2.xctestrun': ACTUAL_PLAN.read_bytes(),
             self.project / 'project.pbxproj': b'actual fixture generated project',
         }.items():
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -57,7 +61,7 @@ class CompiledInputTests(unittest.TestCase):
                 self.assertTrue(verify(self.archive, binding))
 
     def test_missing_ambiguous_and_linked_compiled_inputs_refuse(self):
-        test = self.products / 'Debug/MacDown2Tests.xctest/Contents/MacOS/MacDown2Tests'
+        test = self.products / 'Debug/MacDown2.app/Contents/PlugIns/MacDown2Tests.xctest/Contents/MacOS/MacDown2Tests'
         data = test.read_bytes()
         test.unlink()
         with self.assertRaises(RuntimeError):
@@ -94,6 +98,44 @@ class CompiledInputTests(unittest.TestCase):
                 verify(self.archive, changed)
         with self.assertRaises(RuntimeError):
             self.bind('../arbitrary')
+
+    def test_real_run_metadata_redirects_and_wrong_app_identity_refuse(self):
+        path = self.products / 'MacDown2.xctestrun'
+        original = path.read_bytes()
+        for key, value in [('TestHostPath', '__TESTROOT__/Release/Other.app'),
+                           ('TestBundlePath', '__TESTHOST__/Other.xctest'),
+                           ('TestHostBundleIdentifier', 'other.application'),
+                           ('ProductModuleName', 'OtherTests'), ('IsAppHostedTestBundle', False)]:
+            plan = plistlib.loads(original)
+            plan['MacDown2Tests'][key] = value
+            path.write_bytes(plistlib.dumps(plan))
+            with self.assertRaises(RuntimeError):
+                self.bind()
+        path.write_bytes(original)
+        info = self.products / 'Debug/MacDown2.app/Contents/Info.plist'
+        for key in ['CFBundleIdentifier', 'CFBundleExecutable']:
+            value = {'CFBundleIdentifier': 'app.mostlytext.MostlyText', 'CFBundleExecutable': 'MacDown2'}
+            value[key] = 'Other'
+            info.write_bytes(plistlib.dumps(value))
+            with self.assertRaises(RuntimeError):
+                self.bind()
+
+    def test_owned_app_path_checkout_and_digest_must_all_match(self):
+        binding = self.bind()
+        app = binding['inputs']['app_executable']
+        identity = {'app': app['path'], 'app_sha256': app['sha256'], 'checkout': '0' * 40}
+        require_owned_phase(identity, binding, '0' * 40)
+        for key in ['app', 'app_sha256', 'checkout']:
+            changed = dict(identity)
+            changed[key] = 'different'
+            with self.assertRaises(RuntimeError):
+                require_owned_phase(changed, binding, '0' * 40)
+
+    def test_detached_test_binary_refuses_even_when_it_is_unique(self):
+        source = self.products / 'Debug/MacDown2.app/Contents/PlugIns/MacDown2Tests.xctest'
+        source.rename(self.products / 'Debug/MacDown2Tests.xctest')
+        with self.assertRaises(RuntimeError):
+            self.bind()
 
 
 if __name__ == '__main__':
