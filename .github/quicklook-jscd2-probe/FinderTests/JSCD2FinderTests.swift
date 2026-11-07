@@ -67,13 +67,13 @@ final class JSCD2FinderTests: XCTestCase {
     private func decodedRecord(_ messages: [String]) -> Data? {
         let rows = messages.filter { $0.hasPrefix("QL_JSCD2_PROBE chunk id=2 ") }
         let terminal = messages.filter { $0.hasPrefix("QL_JSCD2_PROBE result id=2 ") }
-        guard !rows.isEmpty, rows.count <= 86, terminal.count == 1 else { return nil }
+        guard !rows.isEmpty, rows.count <= 171, terminal.count == 1 else { return nil }
         var raw = Data()
         for (index, row) in rows.enumerated() {
             let fields = row.split(separator: " ").map(String.init)
             guard fields.count == 6, fields[3] == "index=\(index)", fields[4] == "count=\(rows.count)",
                   fields[5].hasPrefix("base64="),
-                  let part = Data(base64Encoded: String(fields[5].dropFirst(7))), !part.isEmpty, part.count <= 768
+                  let part = Data(base64Encoded: String(fields[5].dropFirst(7))), !part.isEmpty, part.count <= 384
             else { return nil }
             raw.append(part)
         }

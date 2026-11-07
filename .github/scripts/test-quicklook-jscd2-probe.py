@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Pure evidence corruption controls; never execute an engine locally."""
 import hashlib
+import gzip
 import base64
 import importlib.util
 import json
@@ -34,7 +35,7 @@ def fixture():
 
 
 def messages(row):
-    raw=json.dumps(row).encode();parts=[raw[i:i+768] for i in range(0,len(raw),768)]
+    raw=json.dumps(row).encode();parts=[raw[i:i+384] for i in range(0,len(raw),384)]
     return [f'QL_JSCD2_PROBE chunk id=2 index={i} count={len(parts)} base64='+base64.b64encode(v).decode() for i,v in enumerate(parts)]+[f'QL_JSCD2_PROBE result id=2 bytes={len(raw)} sha256='+hashlib.sha256(raw).hexdigest(),'QL_JSCD2_PROBE factory id=2 bytes=1000']+['QL_JSCD2_PROBE async-control-base64='+base64.b64encode(json.dumps(row['async_control']).encode()).decode()]
 
 
@@ -51,6 +52,23 @@ class D2CompatibilityTests(unittest.TestCase):
         row=fixture();actual=messages(row)
         for changed in [actual[:-1],actual+[actual[-1]],actual[:-1]+[actual[-1].replace('base64=','base64=AAAA')]]:
             with self.assertRaises((RuntimeError,ValueError,UnicodeDecodeError)):PREP.validate_observation(row,changed)
+
+    def test_actual_historical_truncated_native_frames_remain_refused(self):
+        actual=json.loads(gzip.decompress((HERE.parent/'quicklook-jscd2-probe/observed-truncated-messages.json.gz').read_bytes()))
+        self.assertEqual(sum(x.endswith('<…>') for x in actual),16)
+        with self.assertRaises(RuntimeError):PREP.decode_record(actual,2)
+
+    def test_small_frame_transport_preserves_exact64KiB_total_ceiling(self):
+        empty=json.dumps({'payload':''},separators=(',',':')).encode()
+        for size in [65536,65537]:
+            row={'payload':'x'*(size-len(empty))};raw=json.dumps(row,separators=(',',':')).encode();self.assertEqual(len(raw),size)
+            parts=[raw[i:i+384] for i in range(0,len(raw),384)]
+            actual=[f'QL_JSCD2_PROBE chunk id=2 index={i} count={len(parts)} base64='+base64.b64encode(v).decode() for i,v in enumerate(parts)]
+            actual += [f'QL_JSCD2_PROBE result id=2 bytes={len(raw)} sha256='+hashlib.sha256(raw).hexdigest()]
+            self.assertTrue(all(len(line)<600 for line in actual))
+            if size==65536:self.assertEqual(PREP.decode_record(actual,2),row)
+            else:
+                with self.assertRaises(RuntimeError):PREP.decode_record(actual,2)
 
     def test_valid_schema_is_only_schema(self):
         row=fixture();PREP.validate_observation(row,messages(row))

@@ -87,9 +87,9 @@ enum D2Capability {
     }
 
     private static func logRecord(_ bytes: Data, requestID: Int) {
-        let count = (bytes.count + 767) / 768
+        let count = (bytes.count + 383) / 384
         for index in 0 ..< count {
-            let part = bytes.subdata(in: index * 768 ..< min((index + 1) * 768, bytes.count)).base64EncodedString()
+            let part = bytes.subdata(in: index * 384 ..< min((index + 1) * 384, bytes.count)).base64EncodedString()
             logger.notice(
                 "QL_JSCD2_PROBE chunk id=\(requestID) index=\(index) count=\(count) base64=\(part, privacy: .public)"
             )

@@ -226,9 +226,9 @@ def decode_record(messages,request_id):
             chunks.append((int(match[2]),int(match[3]),base64.b64decode(match[4],validate=True)))
         match=re.fullmatch(r'QL_JSCD2_PROBE result id=(\d+) bytes=(\d+) sha256=([a-f0-9]{64})',message)
         if match and int(match[1])==request_id:terminals.append((int(match[2]),match[3]))
-    if not chunks or not 1<=len(chunks)<=86 or len(terminals)!=1:
+    if not chunks or not 1<=len(chunks)<=171 or len(terminals)!=1:
         raise RuntimeError('Missing/duplicate bounded actual record terminal/chunks')
-    if any(index!=i or count!=len(chunks) or not 0<len(raw)<=768 for i,(index,count,raw) in enumerate(chunks)):
+    if any(index!=i or count!=len(chunks) or not 0<len(raw)<=384 for i,(index,count,raw) in enumerate(chunks)):
         raise RuntimeError('Reordered/missing/duplicate/truncated actual record chunks')
     raw=b''.join(x[2] for x in chunks)
     if len(raw)>65536 or terminals[0]!=(len(raw),hashlib.sha256(raw).hexdigest()):
