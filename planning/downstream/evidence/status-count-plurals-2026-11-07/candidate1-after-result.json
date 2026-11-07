@@ -1,0 +1,70 @@
+{
+  "cases" : [
+    {
+      "actual" : "0 characters, 0 words",
+      "characters" : 0,
+      "expected" : "0 characters, 0 words",
+      "passed" : true,
+      "words" : 0
+    },
+    {
+      "actual" : "0 characters, 1 word",
+      "characters" : 0,
+      "expected" : "0 characters, 1 word",
+      "passed" : true,
+      "words" : 1
+    },
+    {
+      "actual" : "0 characters, 2 words",
+      "characters" : 0,
+      "expected" : "0 characters, 2 words",
+      "passed" : true,
+      "words" : 2
+    },
+    {
+      "actual" : "1 character, 0 words",
+      "characters" : 1,
+      "expected" : "1 character, 0 words",
+      "passed" : true,
+      "words" : 0
+    },
+    {
+      "actual" : "1 character, 1 word",
+      "characters" : 1,
+      "expected" : "1 character, 1 word",
+      "passed" : true,
+      "words" : 1
+    },
+    {
+      "actual" : "1 character, 2 words",
+      "characters" : 1,
+      "expected" : "1 character, 2 words",
+      "passed" : true,
+      "words" : 2
+    },
+    {
+      "actual" : "2 characters, 0 words",
+      "characters" : 2,
+      "expected" : "2 characters, 0 words",
+      "passed" : true,
+      "words" : 0
+    },
+    {
+      "actual" : "2 characters, 1 word",
+      "characters" : 2,
+      "expected" : "2 characters, 1 word",
+      "passed" : true,
+      "words" : 1
+    },
+    {
+      "actual" : "2 characters, 2 words",
+      "characters" : 2,
+      "expected" : "2 characters, 2 words",
+      "passed" : true,
+      "words" : 2
+    }
+  ],
+  "failures" : 0,
+  "scope" : "Actual compiled private English resource resolution through Foundation; no app\/native\/owner defaults",
+  "total" : 9
+}

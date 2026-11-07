@@ -1,0 +1,1 @@
+{"scope":"Preparation only; no console/app execution", "observation":"First catalog input was named before.xcstrings and compiled a before table. Preserved that bundle as MisnamedBefore.bundle; canonical Localizable basename and explicit resource-lookup admission are required before the first actual formatter run."}

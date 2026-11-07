@@ -1,0 +1,12 @@
+{
+  "baseline": "6b49777d0f36c3d7a23cd0089e0823da1986660a",
+  "total": 9,
+  "actual_failures": 5,
+  "returncode": 1,
+  "console_sha256": "aa21cc2f514d5d05cfdcac18235ab273995e61522eb2dc81550961ebf19b62f0",
+  "source_sha256": "e201ef82100ed8fd68eed65788660556cb05f4422753f09c9064615066a8e52e",
+  "old_catalog_sha256": "eaae17d942862813f13f5db92f0d315debf7f3af39f88ca4dee600df69cbc238",
+  "compiled_resource_key_admitted_before_formatting": true,
+  "no_appkit_swiftui_webkit_coretext_linkage": true,
+  "scope": "Genuine failing-before English resource result only; app/bundle/native/final language acceptance separate."
+}

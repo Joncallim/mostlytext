@@ -1,0 +1,11 @@
+{
+  "catalogs": 15,
+  "entries": 694,
+  "errors": [
+    "/Volumes/Fast SSD/CORTANA-GitHub/worktrees/github/mostlytext-status-count-plurals/MacDown2/MacDown2/Localizable.xcstrings:'%lld characters, %lld words':en: plural 'characters'/'one' omits %characters",
+    "/Volumes/Fast SSD/CORTANA-GitHub/worktrees/github/mostlytext-status-count-plurals/MacDown2/MacDown2/Localizable.xcstrings:'%lld characters, %lld words':en: plural 'characters'/'other' omits %characters",
+    "/Volumes/Fast SSD/CORTANA-GitHub/worktrees/github/mostlytext-status-count-plurals/MacDown2/MacDown2/Localizable.xcstrings:'%lld characters, %lld words':en: plural 'words'/'one' omits %words",
+    "/Volumes/Fast SSD/CORTANA-GitHub/worktrees/github/mostlytext-status-count-plurals/MacDown2/MacDown2/Localizable.xcstrings:'%lld characters, %lld words':en: plural 'words'/'other' omits %words"
+  ],
+  "status": "invalid"
+}
