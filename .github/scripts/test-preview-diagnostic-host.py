@@ -9,6 +9,7 @@ import unittest
 from unittest import mock
 
 SCRIPT = Path(__file__).with_name("verify-preview-grant-probe.py")
+COUNTERFACTUAL = Path(__file__).with_name("check-preview-parsed-frame.py")
 
 
 def inventory_order(source):
@@ -32,6 +33,25 @@ def inventory_order(source):
     raise AssertionError("Untrusted host unexpectedly admitted")
 
 
+def counterfactual_order(source):
+    operations = []
+
+    def intercept(path, *args, **kwargs):
+        operations.append(path)
+        raise RuntimeError("Intercepted source read; no source or product bytes accessed")
+
+    with mock.patch.dict(os.environ, {"CI": "true"}, clear=True), \
+         mock.patch.object(sys, "argv", [str(COUNTERFACTUAL), "/tmp/preview-control/preview-grant-probe",
+                                         "Debug", "--pair", "revision"]), \
+         mock.patch.object(Path, "read_bytes", intercept):
+        try:
+            exec(compile(source, str(COUNTERFACTUAL), "exec"),
+                 {"__file__": str(COUNTERFACTUAL), "__name__": "__main__"})
+        except (AssertionError, RuntimeError) as error:
+            return operations, error
+    raise AssertionError("Untrusted host reached a counterfactual operation")
+
+
 class DiagnosticHostTests(unittest.TestCase):
     def test_actual_host_guard_precedes_inventory_and_removed_guard_reaches_it(self):
         source = SCRIPT.read_text()
@@ -50,6 +70,26 @@ class DiagnosticHostTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn(b"Optimized Python is refused", result.stderr)
         self.assertNotIn(b"RUNNER_TEMP", result.stderr)
+
+    def test_counterfactual_actual_host_guard_precedes_source_read_and_build(self):
+        source = COUNTERFACTUAL.read_text()
+        call = "check_host(args.output.resolve())\n"
+        self.assertEqual(source.count(call), 1)
+        operations, error = counterfactual_order(source.replace(call, "pass  # removed guard control\n"))
+        self.assertEqual(len(operations), 1)
+        self.assertEqual(operations[0].name, "SecuredMarkdownResourceHost.swift")
+        self.assertIn("Intercepted source read", str(error))
+        operations, error = counterfactual_order(source)
+        self.assertEqual(operations, [])
+        self.assertNotIn("Intercepted source read", str(error))
+
+    def test_optimized_counterfactual_refuses_before_source_or_build(self):
+        result = subprocess.run([sys.executable, "-B", "-O", str(COUNTERFACTUAL),
+                                 "/tmp/preview-control/preview-grant-probe", "Debug", "--pair", "revision"],
+                                capture_output=True, env={"PATH": os.defpath, "CI": "true"}, timeout=10)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn(b"Optimized Python cannot enforce Preview diagnostic admission", result.stderr)
+        self.assertNotIn(b"SecuredMarkdownResourceHost.swift", result.stderr)
 
 
 if __name__ == "__main__":
