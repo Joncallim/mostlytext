@@ -7,15 +7,27 @@ from pathlib import Path
 import subprocess
 import sys
 import time
+import re
+
+LICENSE_NOTICES_QUALIFIED_MAIN = "PENDING_STARTUP_AND_STATUS_INTEGRATION"
 from native_cli_endpoint_probe import probe_endpoint
 
 
 def main():
+    if sys.flags.optimize:
+        raise RuntimeError("Optimized Python is refused before public-UI preparation")
+    if len(sys.argv) not in [2, 3] or (len(sys.argv) == 3 and sys.argv[2] != "--license-notices-probe"):
+        raise RuntimeError("Select the private root and, optionally, the fixed licence journey")
+    license_probe = len(sys.argv) == 3
+    if license_probe and not re.fullmatch(r"[0-9a-f]{40}", LICENSE_NOTICES_QUALIFIED_MAIN):
+        raise RuntimeError("Licence execution is held until verified startup/status integration and current main intake")
     root = Path(sys.argv[1]).resolve()
     spec = importlib.util.spec_from_file_location("focus_preparation", Path(__file__).with_name("prepare-hosted-public-focus.py"))
     preparation = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(preparation)
     preparation.check_host(root)
+    if license_probe:
+        subprocess.run(["git", "merge-base", "--is-ancestor", LICENSE_NOTICES_QUALIFIED_MAIN, "HEAD"], check=True, timeout=15)
     path = root / "receipt.json"
     receipt = json.loads(path.read_text())
     current = None
@@ -64,7 +76,9 @@ def main():
         expected = {"totalTestCount": 1, "passedTests": 1, "failedTests": 0, "skippedTests": 0, "expectedFailures": 0}
         assert result.returncode == 0 and owned["returncode"] == 0 and not owned["timed_out"] and not owned["cancelled"]
         assert all(type(summary.get(k)) is int and summary[k] == v for k, v in expected.items()), summary
-        assert method in (root / (label + ".log")).read_text()
+        pattern = r"Test Case '-\[HostedFocusDriverTests\.PublicFocusTests " + re.escape(method) + r"\]' passed"
+        if not re.search(pattern, (root / (label + ".log")).read_text()):
+            raise RuntimeError("Actual passing case differs from the selected public journey")
         return True
 
     try:
@@ -100,7 +114,9 @@ def main():
         opened = command("public-file-open", [receipt["public_cli"], receipt["source_file"]])
         receipt["criteria"]["file_open_acknowledged"] = opened["returncode"] == 0
         assert opened["returncode"] == 0
-        receipt["criteria"]["public_focus_bold_undo"] = ui_phase("focus", "testNormalPublicFocusBoldAndUndo")
+        method = "testNormalBundledLicensesAreReadableAndSearchable" if license_probe else "testNormalPublicFocusBoldAndUndo"
+        receipt["selected_public_method"] = method
+        receipt["criteria"]["public_focus_bold_undo"] = ui_phase("focus", method)
         inspection = app_action("inspect", current)
         assert inspection["pid"] == current["pid"] and inspection["executable"] == current["executable"]
         checked = command("source-and-build-verification-after", ["python3", ".github/scripts/prepare-hosted-public-focus.py", root, "--verify"])
