@@ -118,3 +118,20 @@ again. Merge infrastructure only after its own actual native outcome, ordinary
 applicable checks, source/authority/evidence review and expected-head merge-tree
 verification; preserve the source history and safe recovery before deleting
 any merged branch.
+
+## Required source inventory before the first original-case attempt
+
+The current original target declares38 test methods, rather than the historical
+thirty. Add a checked-in source inventory for all38, with exact case IDs and
+whole source-file digests. Keep all original IDs as a fixed required set; a
+rename/removal requires a traceable replacement preserving the behavior and
+its evidence reference. A new source case must enter the required inventory.
+The checker rejects missing/duplicate/renamed/changed source and an unrecorded
+replacement. It produces no native pass verdict. Source declarations are not
+compiled runtime discovery, and this first lane still executes only the one
+named formatting-focus case. The eventual complete critical lane must compare
+actual Xcode enumeration/execution with this required inventory. Other PDF,
+Finder/Quick Look, accessibility/theme and exact-artifact behaviors absent from
+these38 remain explicitly required; they cannot disappear because the old
+source target lacks corresponding methods. Add adversarial fixture-only
+checker controls before using it in the hosted preparation.
