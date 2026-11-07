@@ -123,3 +123,32 @@ attachment before/after ordinary activation instead. No assertion was waived.
 Execution remains explicitly held by `PENDING_ACTUAL_QUALIFIED_PREVIEW_MAIN`.
 There is no new native outcome, Save-panel acceptance, merge, issue closure,
 Apple-trusted cold launch or signed-artifact evidence from this preparation.
+
+## Readiness correction: stdin/save depends on qualified startup
+
+The earlier pending Preview dependency was unnecessary. This fixture's payload is
+plain Markdown text, with no local images, folder grants, HTML page, decoder or
+new Preview API. Its public CLI, stdin factory, ordinary editor and Save As APIs
+already exist unchanged on qualified current main427d15fa. The independently
+integrated core d293 and unsupported-session main427 preserve the real normal
+Release startup/CLI/focus/licence/profile evidence; PR132's failed image-copy and
+Debug timing checks do not qualify or invalidate those unchanged interfaces.
+
+Use actual qualified startup main
+`427d15fa5da94d4045a02e7f6a005648d09e38c5` as the required ancestor. Keep product,
+package, pins and existing private lanes byte-identical to that main when this
+independent first stdin/save run is published. Rename the private dependency
+constant/receipt field to startup so no metadata implies Preview integration.
+An invalid/pending anchor must still refuse before writes, subprocesses or launch.
+This is a dependency correction before execution, not a native pass or gate waiver.
+
+The new workflow has not run on main. GitHub documents that workflow_dispatch
+requires default-branch discovery; qualification must precede integration.
+[GitHub workflow event documentation](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#workflow_dispatch).
+Add a same-repository pull-request trigger limited to these new private paths,
+retain the existing trusted-event/host guards and manual entry, and obtain the
+first actual PR-source native result before merge. No untested workflow is merged
+to bootstrap a manual run. Original native requirements, source/compiled bindings,
+Save-panel/physical-byte assertions and first-failure preservation stay unchanged.
+PR132fc29 remains frozen; its diagnostic successor is still held for all16first
+outcomes. This independent CLI unit is not its successor or a Preview qualification.
