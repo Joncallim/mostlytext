@@ -79,3 +79,27 @@ checks. Update #4/#5/#16/#17 only for provedcriteria and audit allissuesaftereac
 metadatachange. Preview activation remains a separate pending candidate. This
 doesnot approve existingtransactionrepair, protectedowner/separateaccount,
 VoiceOver/native-language, installed/quarantined/signedartifacts or release.
+
+## Complete first-outcome intake and pre-publication source review
+
+All43e firstoutcomes are preserved before newpublication. The independently
+reviewed matrix is37actualpasses/1QuickOpenpreconditionassertion with framework
+restart/0NOT_RUN, all10positives; all1620input maps include the4actualguard files.
+FullCI3719/536package,679/142app, all4builds/style/catalog/metadata/pins and
+ownedpackage0/reports[] pass. ActualCLI/status/licence/ownership are independently
+reviewed; publicfocus passes. The actualtested tree is9bf242f9, computed from
+parents ef93+43e; onlylicenceevidencedocs differ fromhead17031b6d.
+
+Actual cdee observedmigrationfailure and independent proof de2cc9c6 precede
+lifecycleunit e71b1a61. Local a504f77f chooserunit is a realmergeparent of
+assembled061b4580, preserving43e ancestry aswell. Exactlythree MacDown2 files
+differ fromactualmain: AppDelegate, MacDown2App, TabLifecycleUITests. Canonical
+package/manifests/pins/runtime/grammar/compliance and allotherproduct/tests are
+unchanged. AllpriorTabLifecycleassertions and literalwaits remain, withtwo
+originassertions added and onlythe reviewed manifestsourceSHA updated.
+
+Sourcecontrols9inventory/8batch/6SDK/7migration/3optimizedFoundation seed/
+3public admission/3owned controls pass, fullformat/strictlint0/1489, source
+Compliance0unverified, syntax anddiff checks. Nativebehaviour ofthe suppressed
+scenes isstillunverified; require every finalsourcegate listedabove beforemerge.
+No CORTANA application/CLI/package/nativeexecution or localXcodeappbuild occurs.
