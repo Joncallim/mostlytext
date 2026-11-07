@@ -5,7 +5,7 @@ const fixture = process.argv[2];
 const transformed = [];
 const phases = [];
 const stage = name => {
-  if (!/^[a-z-]{1,48}$/.test(name) || phases.length >= 32) throw Error('Phase boundary');
+  if (!/^[a-z0-9-]{1,48}$/.test(name) || phases.length >= 32) throw Error('Phase boundary');
   phases.push({phase: name, uptime_ms: performance.now()});
   fs.writeFileSync(path.join(fixture, '..', 'reference-phases.json'), JSON.stringify(phases, null, 2));
 };

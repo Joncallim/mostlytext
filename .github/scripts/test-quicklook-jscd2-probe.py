@@ -4,6 +4,7 @@ import hashlib
 import base64
 import importlib.util
 import json
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -96,6 +97,16 @@ class D2CompatibilityTests(unittest.TestCase):
         PREP.validate_provider_entitlements(expected)
         for key in ['com.apple.security.network.client','com.apple.security.cs.allow-jit','com.apple.security.get-task-allow']:
             with self.assertRaises(AssertionError):PREP.validate_provider_entitlements(dict(expected,**{key:True}))
+
+    def test_actual_phase_names_fit_the_reference_boundary(self):
+        source=(HERE.parent/'quicklook-jscd2-probe/reference.cjs').read_text()
+        grammar=re.search(r'if \(!/(.+)/\.test\(name\)',source)[1]
+        names=[f'asset-{name}-{side}' for name in ['host','d2-browser','control'] for side in ['start','end']]
+        names += ['message-'+kind+'-'+side for kind in ['init','compile','render'] for side in ['start','return']]
+        for path in (HERE.parent/'quicklook-jscd2-probe/Resources').glob('*.js'):
+            names += re.findall(r"__hostStage\('([a-z0-9-]+)'\)",path.read_text())
+        self.assertTrue(all(re.fullmatch(grammar,x) for x in names))
+        self.assertTrue(all(not re.fullmatch(grammar,x) for x in ['','bad phase','x'*49,'../path']))
 
     def test_optimized_python_refuses_before_mutation(self):
         with tempfile.TemporaryDirectory() as directory:
