@@ -17,7 +17,7 @@ struct MigrationSeedProfile {
         let action = CommandLine.arguments.dropFirst()
         guard action.isEmpty || action == ["--set-current-indentation-after-first-quit"] ||
             (action.count == 2 && action.first == "--capture-fixed-domains" &&
-                ["seeded", "first", "relaunch"].contains(action.last ?? ""))
+                ["seeded", "first", "relaunch", "failure"].contains(action.last ?? ""))
         else { throw Refusal.arguments }
         let receipt = try MigrationSeedAdmission.requirePositive()
         try verifySource(receipt)

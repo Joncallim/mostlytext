@@ -37,6 +37,7 @@ def main():
         raise RuntimeError('Migration receipt is attempted or retargeted')
     record['migration_execution_started'] = True
     current = None
+    baseline = None
 
     def persist():
         path.write_text(json.dumps(record, indent=2) + '\n')
@@ -139,6 +140,15 @@ def main():
                 'managed_unsaved_recovery_bytes': True, 'seeded_data_and_external_bytes_unchanged': True, 'sentinel_absent': True}
         persist()
 
+    def parent_nodes(label):
+        nodes = {}
+        for node in [SUPPORT, SUPPORT.parent, Path('/Users/runner')]:
+            info = node.lstat()
+            nodes[str(node)] = {'mode': info.st_mode, 'uid': info.st_uid, 'gid': info.st_gid,
+                                'inode': info.st_ino, 'device': info.st_dev}
+        record.setdefault('migration_parent_node_observations', {})[label] = nodes
+        persist()
+
     def wait_peer(identity, label):
         location = Path(subprocess.check_output(['getconf', 'DARWIN_USER_TEMP_DIR'], text=True).strip()).resolve()
         endpoint = location / ('mt-' + hashlib.sha256(b'app.mostlytext.MostlyText').hexdigest()[:24]) / 's'
@@ -165,6 +175,7 @@ def main():
             raise RuntimeError('Actual GUI/US input facts do not admit migration')
         persist()
         verify('after-positive-before-seed')
+        parent_nodes('before-seed')
         command('seed-profile', [record['seed_executable']], 60)
         seed = json.loads((root / 'migration-seed.json').read_text())
         baseline = capture('seeded')
@@ -200,13 +211,33 @@ def main():
         record['migration_complete'] = True
     except Exception as error:
         record['errors'].append({'type': type(error).__name__, 'message': str(error)[:4096]})
+        persist()  # Diagnostic success must never erase or replace this original failure.
+        if current is not None:
+            try:
+                ui('failure-observation', 'testObserveFailedMigrationStartup')
+                record['failure_ui_observation_only'] = True
+            except Exception as observed:
+                record.setdefault('failure_observation_errors', []).append(str(observed)[:4096])
     finally:
         if current is not None:
             try:
                 action('inspect', current)
                 action('cleanup', current)
+                current = None
             except Exception as error:
                 record.setdefault('cleanup_errors', []).append(str(error)[:4096])
+        if record['errors'] and baseline is not None and current is None:
+            try:
+                verify('after-failure-cleanup-inputs')
+                record['migration_failure_after_source_verified'] = True
+                parent_nodes('after-failure-cleanup')
+                observed = capture('failure')
+                record['migration_failure_original_profile_unchanged'] = observed['trees']['old'] == baseline['trees']['old']
+                record['migration_failure_original_domains_unchanged'] = all(
+                    observed['domains'][domain] == baseline['domains'][domain] for domain in DOMAINS[:2] + DOMAINS[4:])
+                record['migration_failure_command_sentinel_exists'] = (root / 'MIGRATION_COMMAND_RAN').exists()
+            except Exception as error:
+                record.setdefault('failure_readback_errors', []).append(str(error)[:4096])
         record['passed'] = record.get('migration_complete') is True and not record['errors'] and not record.get('cleanup_errors')
         persist()
     if not record['passed']:

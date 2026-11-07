@@ -5,6 +5,32 @@ import XCTest
 
 @MainActor
 extension PublicFocusTests {
+    /// Observation only: the controller retains its original failure regardless of this result.
+    @objc func testObserveFailedMigrationStartup() throws {
+        let root = URL(fileURLWithPath: HostedFocusInputs.identity).deletingLastPathComponent()
+        let record = try XCTUnwrap(JSONSerialization.jsonObject(
+            with: Data(contentsOf: root.appendingPathComponent("current-application.json"))
+        ) as? [String: Any])
+        let pid = try XCTUnwrap((record["pid"] as? NSNumber)?.int32Value)
+        let running = try XCTUnwrap(NSRunningApplication(processIdentifier: pid))
+        XCTAssertEqual(running.bundleIdentifier, "app.mostlytext.MostlyText")
+        XCTAssertEqual(running.executableURL?.resolvingSymlinksInPath().path, HostedFocusInputs.executable)
+        XCTAssertEqual(running.bundleURL?.resolvingSymlinksInPath().path, HostedFocusInputs.application)
+        let bytes = try Data(contentsOf: URL(fileURLWithPath: HostedFocusInputs.executable))
+        XCTAssertEqual(SHA256.hash(data: bytes).map { String(format: "%02x", $0) }.joined(),
+                       HostedFocusInputs.appSHA256)
+        let app = XCUIApplication(bundleIdentifier: "app.mostlytext.MostlyText")
+        app.activate()
+        let tree = XCTAttachment(string: String(app.debugDescription.prefix(131_072)))
+        tree.name = "Failure observation only: actual normal migration state"
+        tree.lifetime = .keepAlways
+        add(tree)
+        let screen = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        screen.name = "Original migration remains failed: actual startup surface"
+        screen.lifetime = .keepAlways
+        add(screen)
+    }
+
     @objc func testNormalDevelopmentProfileAdoption() throws {
         try requireMigratedProfile(indentation: 2)
     }
