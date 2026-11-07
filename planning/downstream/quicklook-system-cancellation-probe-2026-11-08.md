@@ -27,7 +27,7 @@ no default document handler, network, App Group, root-read or debugger exception
 Use the same reserved identity only on its own disposable hosted Mac.
 
 A generated selected cancellation Markdown file contains only the same authored
-27-byte static source. Its separate provider branch records monotonic timestamps
+28-byte static source. Its separate provider branch records monotonic timestamps
 and request ID before an explicitly cooperative ten-second Task.sleep. A real
 withTaskCancellationHandler records actual task cancellation if the framework
 propagates it; a cancellation error is returned normally as that one async
@@ -45,11 +45,16 @@ is still pending, then send Escape. Require that exact window to disappear and
 capture real UI/monotonic close evidence BEFORE provider wait completion. Retain
 screenshots/accessibility state and assert the containing fixture never launches.
 
+A cancellation may arrive between Escape and observed window disappearance; do
+not incorrectly require cancellation to wait for window disappearance. A normal
+wait-completion must follow actual UI close, or this was not the intended pending
+closure observation.
+
 The UI test may read only this probe's own public provider log messages, through
 bounded system-log queries. It must not signal, cancel or call the provider task.
 After closure observe its actual terminal cancellation-or-wait-completion event.
 The producer validator correlates unique request ID and strict monotonic ordering
-start < observed pending < actual UI close < terminal. It records which actual
+start < observed pending < Escape; Escape precedes both actual UI close and terminal. It records which actual
 outcome occurred; both data points are legitimate answers to the feasibility
 question. Missing callbacks/UI/ordering, premature completed work, mixed requests,
 wrong source/permissions/executables, timeout or forced cleanup fail the probe.
