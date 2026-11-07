@@ -70,3 +70,16 @@ non-English/pseudo/RTL layout, final freeze, protected owner-account or signed
 artifact acceptance. All those original issue criteria remain open. A mismatch
 in source key/type/resource ownership or an unexpected first outcome requires
 a written correction before changing policy or assertions.
+
+## Catalog representation correction before final acceptance
+
+The first English candidate compiles and the unchanged real formatter passes
+all nine cases, but the existing repository validator rejects four branch
+placeholders: custom substitution names characters/words imply %characters/
+%words in its admission model, whereas these branches use Apple's generic
+%arg. Preserve that first successful formatter result and failed admission.
+Use the repository's existing canonical arg1/arg2 substitution names with the
+same argument1/2, lld types and %arg branches. No validator, assertion, language
+review state or acceptance rule changes. Recompile/re-execute the unchanged
+formatter for the corrected representation and require both actual resolution
+and existing validator to pass before accepting the unit.
