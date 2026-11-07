@@ -1,0 +1,278 @@
+{
+  "source": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+  "records": [
+    {
+      "original": "fc29-first-source-context.json",
+      "compressed": "00-fc29-first-source-context.json.gz",
+      "bytes": 561,
+      "sha256": "951a700f5249e7e136c7ed482edbc6f51141aec5c3c5e406135496e2f0618d8a"
+    },
+    {
+      "original": "fc29-first-manual-dispatches.json",
+      "compressed": "01-fc29-first-manual-dispatches.json.gz",
+      "bytes": 2116,
+      "sha256": "1d74c042a635347fc07f9aff50b5c6a42cbcbb401551d33947d52185847e7857"
+    },
+    {
+      "original": "fc29-preview-Debug-revision-first-failure-independently-verified.json",
+      "compressed": "02-fc29-preview-Debug-revision-first-failure-independently-verified.json.gz",
+      "bytes": 4188,
+      "sha256": "983118912f7f1d0cb151ad5aba4132a4c6a130363385fce9d52938a3a2cb31dd"
+    },
+    {
+      "original": "fc29-preview-Debug-revision-actual-first-failed-summary.json",
+      "compressed": "03-fc29-preview-Debug-revision-actual-first-failed-summary.json.gz",
+      "bytes": 2355,
+      "sha256": "1bda0b16ca03ff151c78000e56df97133920f42becc0f7701dd814eb54bb0caa"
+    },
+    {
+      "original": "fc29-preview-Debug-revision-actual-first-failed-tests.json",
+      "compressed": "04-fc29-preview-Debug-revision-actual-first-failed-tests.json.gz",
+      "bytes": 37068,
+      "sha256": "382742391ada9beb5239269b3a937969b8684aeb336780bb89f96457522a1475"
+    },
+    {
+      "original": "fc29-theme-first-outcomes-independently-verified.json",
+      "compressed": "05-fc29-theme-first-outcomes-independently-verified.json.gz",
+      "bytes": 6938,
+      "sha256": "d73bf79f1414dd1e022ef0831f255e6515f34e34e850e276ed256bb0b300ee3f"
+    },
+    {
+      "original": "fc29-full-ci-independently-verified.json",
+      "compressed": "06-fc29-full-ci-independently-verified.json.gz",
+      "bytes": 1283,
+      "sha256": "2fc9c6e25b65426d895368d8793ece6863c3622bfc77fe50f01885427b909ecd"
+    },
+    {
+      "original": "fc29-pdf-first-outcome-independently-verified.json",
+      "compressed": "07-fc29-pdf-first-outcome-independently-verified.json.gz",
+      "bytes": 2664,
+      "sha256": "6763142c3022f218f8f5b41b776d69a565c1271bfeec2501c5d7fbb3919ce271"
+    },
+    {
+      "original": "fc29-cli-first-outcome-independently-verified.json",
+      "compressed": "08-fc29-cli-first-outcome-independently-verified.json.gz",
+      "bytes": 1277,
+      "sha256": "588ccfac8efab08c2a1eadb9a90e6ca768ead0f7dd8816ba6559d679a210eb6c"
+    },
+    {
+      "original": "fc29-focus-first-outcome-independently-verified.json",
+      "compressed": "09-fc29-focus-first-outcome-independently-verified.json.gz",
+      "bytes": 7861,
+      "sha256": "191fb13e662493f63c55d049e9d8a81655bc94ae9b4aca9b56a3b32a06896c54"
+    },
+    {
+      "original": "fc29-heading-first-outcome-independently-verified.json",
+      "compressed": "10-fc29-heading-first-outcome-independently-verified.json.gz",
+      "bytes": 1014,
+      "sha256": "3626e8fbbeb7fbac8a3e58ea8971098603efa00fec892972654e714e749e8748"
+    },
+    {
+      "original": "fc29-native-math-first-outcome-independently-verified.json",
+      "compressed": "11-fc29-native-math-first-outcome-independently-verified.json.gz",
+      "bytes": 621,
+      "sha256": "40af23558994dbaca9b43298dcf57b129843fd372c8e3e9056284ad5668579a4"
+    },
+    {
+      "original": "fc29-shared-math-first-outcome-independently-verified.json",
+      "compressed": "12-fc29-shared-math-first-outcome-independently-verified.json.gz",
+      "bytes": 1608,
+      "sha256": "791a79abf0aa53b91e0626c0127125d44ff94271a881d363aa976e9fe8282630"
+    },
+    {
+      "original": "fc29-exact-compiled-restoration-proof.json",
+      "compressed": "13-fc29-exact-compiled-restoration-proof.json.gz",
+      "bytes": 1856,
+      "sha256": "cce26f1de68cb41dbc1b303e78060262755d8673e47971d806e3939f3256b450"
+    },
+    {
+      "original": "fc29-preview-Debug-revision-artifact/probe.log",
+      "compressed": "14-probe.log.gz",
+      "bytes": 178706,
+      "sha256": "c39711cd5f9eab2153fc19eb6e32b2fc14b7360a9a73de33866d104f3390c5b6"
+    },
+    {
+      "original": "fc29-preview-Debug-revision-artifact/compiled-initial.json",
+      "compressed": "15-compiled-initial.json.gz",
+      "bytes": 2614,
+      "sha256": "b9cdbf71e806fe1778112b9e7ed5684cc4016d4c4b3a16d022cc4ec48904c517"
+    },
+    {
+      "original": "fc29-preview-Debug-revision-artifact/compiled-initial-verified.json",
+      "compressed": "16-compiled-initial-verified.json.gz",
+      "bytes": 2771,
+      "sha256": "8be25daf7dbf1817e4476049234bfc922e929ff5979c06cc00f2b44200303940"
+    },
+    {
+      "original": "fc29-preview-Debug-revision-artifact/receipt.json",
+      "compressed": "17-receipt.json.gz",
+      "bytes": 248512,
+      "sha256": "32974716579c3456b048a333c632d094b412572daf2f3fe941d47c5cc30d2219"
+    }
+  ],
+  "first_run_snapshot": {
+    "fc29-cli-run.json": {
+      "id": 42375837617,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-compliance-run.json": {
+      "id": 42375837620,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-critical-run.json": {
+      "id": 42375837613,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-full-ci-run.json": {
+      "id": 42375837623,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-heading-run.json": {
+      "id": 42376193454,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-license-run.json": {
+      "id": 42376227992,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "attempt": 1,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "fc29-migration-both-run.json": {
+      "id": 42376234215,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "attempt": 1,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "fc29-native-math-run.json": {
+      "id": 42376186491,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-original-model-run.json": {
+      "id": 42376199181,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-original38-run.json": {
+      "id": 42376206030,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "attempt": 1,
+      "status": "queued",
+      "conclusion": null
+    },
+    "fc29-pdf-run.json": {
+      "id": 42375837616,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-preview-six-pairs-run.json": {
+      "id": 42375837635,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    "fc29-public-focus-run.json": {
+      "id": 42376215877,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-shared-math-run.json": {
+      "id": 42375837647,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-status-run.json": {
+      "id": 42376221536,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "attempt": 1,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "fc29-theme-run.json": {
+      "id": 42376176031,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure"
+    }
+  },
+  "whole_original_archive_sha256": {
+    "fc29-preview-six-pairs-complete-first-workflow-logs.zip": {
+      "bytes": 4817371,
+      "sha256": "2b9ad531ed6ff54a6b584772199e60bb371d536fde029c1b1826d235d646df42"
+    },
+    "fc29-full-ci-complete-first-workflow-logs.zip": {
+      "bytes": 2720029,
+      "sha256": "a025a01bfeb06d170e3a037ed5f58e2a95545be0d16cb3dc6719a99ac9825a6b"
+    },
+    "fc29-shared-math-complete-first-workflow-logs.zip": {
+      "bytes": 1965364,
+      "sha256": "d397ae782b40d925282b909d9e5bac415cb3a7c62a122a404c9a289e738c5b4b"
+    },
+    "fc29-compliance-complete-first-workflow-logs.zip": {
+      "bytes": 41406,
+      "sha256": "6b43ac67afd292ca797fd5a03c2db0f246cd3f7f42bb4ecb9d296e62863bd702"
+    },
+    "fc29-pdf-complete-first-workflow-logs.zip": {
+      "bytes": 1218932,
+      "sha256": "22970e1f7247954ed845f78552f830e11d47fa82d1229dea64cc01c596ac52af"
+    },
+    "fc29-heading-complete-first-workflow-logs.zip": {
+      "bytes": 79398,
+      "sha256": "7bb09449000d19901d6e635d96aa494cdebfce6b1c6753dc1f3f1051139dcab8"
+    },
+    "fc29-cli-complete-first-workflow-logs.zip": {
+      "bytes": 566011,
+      "sha256": "94b8a4b0a39d9306591cfe13f78ee31fc5fdbf99dff3ead503b5cd6840df7e58"
+    },
+    "fc29-original-model-complete-first-workflow-logs.zip": {
+      "bytes": 28358,
+      "sha256": "a4bd361dee27e2a17bcde7551374bf37f4ffadf43d5cf9a24f081ce989e7510d"
+    },
+    "fc29-critical-complete-first-workflow-logs.zip": {
+      "bytes": 2371999,
+      "sha256": "c04d532f280c9e6539c9bb8e3f13967c1447a33cd61de9b4060f0f50f7a37a4a"
+    },
+    "fc29-public-focus-complete-first-workflow-logs.zip": {
+      "bytes": 624151,
+      "sha256": "e5573ed5638bd3dcd63d55bafde89b0b0546f8c32b3cc35582c307fe38ee4cf4"
+    },
+    "fc29-native-math-complete-first-workflow-logs.zip": {
+      "bytes": 35036,
+      "sha256": "ccbbf9b9ca8032e54b8e0f22cf9e74955bda3448ff468068fc6081ca73e1d318"
+    },
+    "fc29-theme-complete-first-workflow-logs.zip": {
+      "bytes": 29474,
+      "sha256": "759e67b3b2e9c4a2e0addaf9bb5e83b474484436319284c615f0a5568657dfb6"
+    }
+  },
+  "scope": "Partial snapshot before corrective diagnostic architecture. Preview and theme first failures are final failed outcomes; remaining frozen-source workflows still run. Raw compiled blobs/xcresults/full ZIPs retained separately at original engineering archive/GitHub, not substituted by these compressed records."
+}

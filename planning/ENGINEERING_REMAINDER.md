@@ -35,8 +35,24 @@ The complete Debug theme selection fails its unchanged 50 ms / 10 MB keystroke a
 at 62.876833 ms; Release 1,087/145 and its orientation control pass. The original UI
 matrix runs all 38 cases: 37 pass, one HTML mode identity assertion fails. Its actual
 accessibility tree renders Hello and selects Rendered=1 but lacks htmlRenderedPane.
-The first focused accessibility remedy and separate image diagnostic are pending;
-neither is a full activation pass. [PR134](https://github.com/Joncallim/mostlytext/pull/134)
+The [first focused accessibility remedy](downstream/evidence/html-accessibility-qualified-2026-11-07/README.md)
+passes all four original affected B08 cases and its genuine positive at `9c594073`.
+The runtime difference from fc29 is one container modifier; original tests,
+manifest/controller/pins and deadlines are unchanged. Integration remains pending;
+its branch-local narrowed workflow will never merge. Full38 qualification is still
+required on the eventual complete candidate.
+
+The [complete first-result packet](downstream/evidence/current-preview-first-failures-2026-11-07/final-all16/README.md)
+retains all 16 original outcomes. A separate [first image diagnostic](downstream/evidence/preview-delayed-grant-first-2026-11-07/README.md)
+at `5efe437f` passes original55/17, controlled image/selection and actual revision
+mutant/restoration, but fails its new staged case's early generation comparison
+(1 versus the snapshot's0). Its image-copy assertion does not fail. All seven
+original/staged compiled roles and raw owned/result identities are verified.
+Architecture/evidence precedes a corrected observation point at `a2768a40`:
+compare generation at the actual denied-copy boundary immediately before granting,
+retaining initial id/epoch/UTF8 checks and the original post-grant invariant. That
+first corrected diagnostic is pending; no callback or original image cause is
+proved, no old failure is waived and neither diagnostic can authorize activation. [PR134](https://github.com/Joncallim/mostlytext/pull/134)
 contains only a three-line line-offset capacity reservation against main 567;
 complete first hosted qualification remains pending. No sole performance cause,
 constant-time claim, larger deadline, skipped case or release waiver is accepted.

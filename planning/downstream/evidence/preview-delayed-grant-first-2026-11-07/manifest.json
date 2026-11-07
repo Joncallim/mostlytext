@@ -1,0 +1,71 @@
+{
+  "source": "5efe437fe1b98e2bc52822345b94277a31b6d6d7",
+  "first_run": 42385745698,
+  "records": [
+    {
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/preview-html-first-remediation-20261107/image-diagnosis-first-run.json",
+      "compressed": "00-image-diagnosis-first-run.json.gz",
+      "bytes": 12500,
+      "sha256": "7065e9691b474211b1924d5ff09db1599681a0f6f4caf8b69c84c93abc192b7a"
+    },
+    {
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/preview-html-first-remediation-20261107/image-diagnosis-first-artifacts.json",
+      "compressed": "01-image-diagnosis-first-artifacts.json.gz",
+      "bytes": 778,
+      "sha256": "3953b1d12cfe7fd53cec74a17e29c5bdd5055b1f313d34eabd162ab999c733da"
+    },
+    {
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/preview-html-first-remediation-20261107/image-diagnosis-first-staged-independently-verified.json",
+      "compressed": "02-image-diagnosis-first-staged-independently-verified.json.gz",
+      "bytes": 2637,
+      "sha256": "ae11d4a26c6181da440d3c3d598311fab0664d6b6d116d111684f73b69e40848"
+    },
+    {
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/preview-html-first-remediation-20261107/image-diagnosis-first-staged-actual-independent-summary.json",
+      "compressed": "03-image-diagnosis-first-staged-actual-independent-summary.json.gz",
+      "bytes": 1567,
+      "sha256": "43a6318ff8dcff7eda9269e00a189165bff2196f08933d247799a0fb9bed3858"
+    },
+    {
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/preview-html-first-remediation-20261107/image-diagnosis-first-artifact--preview-grant-app-tests-Debug-revision-independently-verified.json",
+      "compressed": "04-image-diagnosis-first-artifact--preview-grant-app-tests-Debug-revision-independently-verified.json.gz",
+      "bytes": 17975,
+      "sha256": "b939bdee54afe097bda59016c73a3059c5ef3af6a5622d9fbc8e3c7746b2d76e"
+    },
+    {
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/preview-html-first-remediation-20261107/verify-first-staged-outcome.py",
+      "compressed": "05-verify-first-staged-outcome.py.gz",
+      "bytes": 3462,
+      "sha256": "6adbbf64e5bed68cdf36b7ec16e88da4cebaeb6ffa88d0c4724141d20b1e56f2"
+    },
+    {
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/preview-html-first-remediation-20261107/verify-first-image-diagnostic-original.py",
+      "compressed": "06-verify-first-image-diagnostic-original.py.gz",
+      "bytes": 13705,
+      "sha256": "e6b51c7f58f2aff5192baea7157e9dee481ee09f69474f414acebc6a9e6c7e83"
+    },
+    {
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/preview-html-first-remediation-20261107/image-diagnosis-first-artifact/preview-grant-app-tests-Debug-revision/delayed-grant-diagnosis/result.json",
+      "compressed": "07-result.json.gz",
+      "bytes": 2393,
+      "sha256": "3da89d6f9b796f03cf017b1dd4875a906d2b97ff05fdf93b52fd8ae7c9476a00"
+    },
+    {
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/preview-html-first-remediation-20261107/image-diagnosis-first-artifact/preview-grant-app-tests-Debug-revision/delayed-grant-diagnosis/probe.log",
+      "compressed": "08-probe.log.gz",
+      "bytes": 11282,
+      "sha256": "a9088bd50cb787cdc74957b91c7caffc91305792e10f9ed61e93e3b72f464ba7"
+    },
+    {
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/current-main-preview-acceptance-20261107/fc29-exact-compiled-restoration-proof.json",
+      "compressed": "09-fc29-exact-compiled-restoration-proof.json.gz",
+      "bytes": 2197,
+      "sha256": "59222eaf179ba092d1da2e96e401055abbe5c1516e618e9bf8bc3ff48f610eae"
+    }
+  ],
+  "original_complete_log_archive": {
+    "bytes": 784575,
+    "sha256": "4e6befcaf1262ec447d8484ba41692159dba8617914938519fe7e6e93b333732"
+  },
+  "scope": "First diagnostic original55/selection/revision-mutant/restoration pass; stagedB fails only generation0to1. Actual copied-image oracle does not fail. Originalfc29 still failed/unmerged; latest restoration readback proves5successfulfc29pairs with failedDebug/revision explicitly incomplete, appended without overwriting earlier4pair snapshot."
+}
