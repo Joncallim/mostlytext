@@ -1,0 +1,59 @@
+{
+  "head": "ab9d16e0c1904f2f12b58e7b843832d8674a4135",
+  "records": [
+    {
+      "file": "00-native-first-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/ordinary-export-acceptance-20261108/first-ab9d16e0/native-first-run.json",
+      "bytes": 13053,
+      "sha256": "bd987f1f871d717012171317ed321e64ee31615e15bebf87627d8760dc4d3602"
+    },
+    {
+      "file": "01-native-first-artifacts.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/ordinary-export-acceptance-20261108/first-ab9d16e0/native-first-artifacts.json",
+      "bytes": 32,
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    {
+      "file": "02-native-complete-first-workflow-logs.zip.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/ordinary-export-acceptance-20261108/first-ab9d16e0/native-complete-first-workflow-logs.zip",
+      "bytes": 12734,
+      "sha256": "91a4d3be3636dea858a7415ec48e7a18c00f37dda1bb4f754ec9ffc86a1d0820"
+    },
+    {
+      "file": "03-compliance-first-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/ordinary-export-acceptance-20261108/first-ab9d16e0/compliance-first-run.json",
+      "bytes": 12945,
+      "sha256": "5fe98d17be23d02ca5a9a931f7ae7a1d926e22f230f1255ea2d06f992e45983c"
+    },
+    {
+      "file": "04-compliance-first-artifacts.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/ordinary-export-acceptance-20261108/first-ab9d16e0/compliance-first-artifacts.json",
+      "bytes": 32,
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    {
+      "file": "05-compliance-complete-first-workflow-logs.zip.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/ordinary-export-acceptance-20261108/first-ab9d16e0/compliance-complete-first-workflow-logs.zip",
+      "bytes": 41053,
+      "sha256": "a0f0898faa03a17217cb6bc53f8c5f8c5baa4279f01c0ce73ec62c6b30d596bb"
+    },
+    {
+      "file": "06-actual-first-guard-failure.log.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/ordinary-export-acceptance-20261108/first-ab9d16e0/actual-first-guard-failure.log",
+      "bytes": 4504,
+      "sha256": "23c68dde15181d095b9bb2f55cac10729f8539554568968571a3a872f5797089"
+    },
+    {
+      "file": "07-first-shallow-admission-failure-independently-verified.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/ordinary-export-acceptance-20261108/first-ab9d16e0/first-shallow-admission-failure-independently-verified.json",
+      "bytes": 608,
+      "sha256": "ad496c281fb46847882bdef344e9c44ac1a16594d31629c4bf627435bd5f7857"
+    },
+    {
+      "file": "08-independent-frozen-product-tree.txt.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/ordinary-export-acceptance-20261108/first-ab9d16e0/independent-frozen-product-tree.txt",
+      "bytes": 41,
+      "sha256": "3cd2240e44bf6b247e83ccc471d3e05f714287a0228840f56c29274c28b1a9f7"
+    }
+  ]
+}

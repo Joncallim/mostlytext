@@ -120,3 +120,23 @@ controller selects the original benign positive, then only the named export
 journey; no other private method is inferred as executed. Generated source data
 is replaced with the fixed export document before any product launch or binding,
 with the new bytes explicitly hashed; no prior native receipt is retargeted.
+
+## Preserve actual shallow-history refusal and pin the immutable product subtree
+
+First ab9d16e0 native42421039711 fails before fixture creation/build/launch:
+nine pure controls pass, then git cannot resolve ed5a9409:MacDown2 in the shallow
+checkout. Full Compliance42421111845 passes. Complete original first logZIPs,
+metadata and empty actual artifact list are retained and independently read.
+This is a source-admission implementation defect, not an export product failure.
+
+Independently resolve frozen ed5a9409's MacDown2 subtree from the complete local
+Git object graph and pin that exact tree object beside the baseline commit in
+the new preparation source. Require current HEAD:MacDown2 equal that reviewed
+immutable value. Tree equality still covers every product path/byte and never
+permits a different baseline or fallback. It avoids requiring old commit history
+at execution; do not widen runner checkout/fetch/network authority. Record both
+commit and tree in the receipt. Reproduce the old missing-baseline lookup using
+a real shallow Git capsule of the actual source, then prove the pinned exact
+subtree succeeds and a different/missing product subtree refuses. No product,
+UI selector, output assertion, deadline, dependency or parent source change.
+Preserve the next complete first outcome before any further correction.
