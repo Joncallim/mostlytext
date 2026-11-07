@@ -94,3 +94,25 @@ cleanup cannot be established. Amend architecture before changing policy or
 ownership. Final installed-state, TCC/security-scoped owner access, original-
 MacDown real data, Sparkle chain, independent rights, VoiceOver and exact signed
 artifact acceptance remain explicit external/final gates.
+
+## Held canonical fixture preparation
+
+Private fixture source now uses the canonical session/recovery/snippet/theme
+encoders and records the external CRLF/Unicode text, exact tab UUIDs/epochs and
+managed unsaved text. It writes only the generated development domain/profile
+on an admitted hosted account after the exact real positive receipt; it never
+invokes migration or starts the app. The fixed anchor remains unresolved.
+The private package template binds the canonical MacDownKit path; the installed
+Swift tool successfully parses its generated manifest without resolving or
+building dependencies. Source parsing and strict formatting/lint of both Swift
+files pass. Initial formatting/body-length/tuple preparation failures were fixed
+before publication; none is reported as a passing invocation.
+
+Three actual compiled Foundation/Darwin-only admission controls pass: unresolved
+anchor refuses before receipt access; a valid-shaped anchor plus claimed CI
+variables still refuses the real non-runner account; removing the actual guard
+reaches the known-absent private receipt, while restoration refuses. No app,
+package, GUI, profile, preference or owner-data operation runs in these controls.
+Full fixture-module type checking/native compilation, source/generated/positive
+bindings, profile/mode/inode capture and the controller/UI journey remain later
+slices. The held fixture is not a migration/native acceptance result.

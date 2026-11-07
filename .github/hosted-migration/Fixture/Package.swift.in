@@ -1,0 +1,24 @@
+// swift-tools-version: 6.2
+import PackageDescription
+
+let package = Package(
+    name: "HostedMigrationSeed",
+    platforms: [.macOS(.v26)],
+    products: [.executable(name: "SeedMigrationProfile", targets: ["SeedMigrationProfile"])],
+    dependencies: [.package(name: "MacDownKit", path: __BOUND_KIT_PATH__)],
+    targets: [
+        .executableTarget(
+            name: "SeedMigrationProfile",
+            dependencies: [
+                .product(name: "AppSettings", package: "MacDownKit"),
+                .product(name: "EditorCore", package: "MacDownKit"),
+                .product(name: "FileCore", package: "MacDownKit"),
+                .product(name: "Themes", package: "MacDownKit"),
+                .product(name: "Workspace", package: "MacDownKit"),
+            ],
+            path: ".",
+            exclude: ["Package.swift.in"],
+            sources: ["SeedAdmission.swift", "SeedProfile.swift"]
+        ),
+    ]
+)
