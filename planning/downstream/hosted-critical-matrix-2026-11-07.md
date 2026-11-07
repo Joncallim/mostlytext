@@ -132,3 +132,12 @@ proof of38methods; a bootstrap pass is only its exact original case. Retain
 failure/zero-case/timeout/source-drift outcomes and do not fan a guessed schema
 out to ten hosted jobs. Source-only held/optimized/host-before-receipt controls
 must run without opening a receipt or executing an ancestry/native command.
+
+The prepared wrapper retains an explicit overall_discovery_capture_passed=false
+from preparation, independent of the reused bootstrap's legacy passed field.
+Only complete raw capture plus after-input/signature checks may set that flag;
+unknown schema/IDs remain explicitly unreviewed and all38_cases_executed=false.
+Refuse any previously attempted root before another bootstrap or SDK operation.
+Source/AST/YAML/diff and3 actual admission controls pass locally; root product,
+original UI tests, project and pins stay byte-identical to prepareded96. No new
+native discovery,38-case execution, main intake or source publication occurred.

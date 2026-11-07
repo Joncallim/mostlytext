@@ -55,6 +55,7 @@ def main():
         base.main()
         record = json.loads(receipt_path.read_text())
         record["discovery_contract"] = contract()
+        record["overall_discovery_capture_passed"] = False
         for name in EXTRA_INPUTS:
             record["source_sha256"][name] = sha(Path(name))
         receipt_path.write_text(json.dumps(record, indent=2) + "\n")
@@ -62,6 +63,8 @@ def main():
     record = json.loads(receipt_path.read_text())
     if record.get("discovery_contract") != contract() or record.get("selected_original") != base.SELECTED:
         raise RuntimeError("The prepared discovery/bootstrap binding differs")
+    if record.get("overall_discovery_capture_passed") is not False or "results" in record:
+        raise RuntimeError("Refuse a previously attempted discovery root; preserve its first outcome")
     base.main()  # Unchanged real positive, actual original focus, target/input checks.
     record = json.loads(receipt_path.read_text())
     if record.get("passed") is not True:
@@ -122,11 +125,12 @@ def main():
                                                 root_json_type=type(value).__name__, unchanged_inputs_after=True,
                                                 scope="Raw SDK enumeration captured; exact schema and38IDs need independent review before batch implementation")
         record["passed"] = True
+        record["overall_discovery_capture_passed"] = True
     except Exception as error:
         record["errors"].append({"type": type(error).__name__, "message": str(error)[:4096]})
     finally:
         save()
-    if not record["passed"]:
+    if not record["overall_discovery_capture_passed"]:
         raise RuntimeError("Discovery did not qualify; preserve the complete first outcome")
 
 

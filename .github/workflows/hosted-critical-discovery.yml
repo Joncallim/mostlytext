@@ -7,7 +7,7 @@ concurrency:
   group: hosted-critical-discovery-${{ github.ref }}
   cancel-in-progress: false
 jobs:
-  original-named-focus:
+  capture-discovery:
     if: github.repository == 'Joncallim/mostlytext' && github.event_name == 'workflow_dispatch'
     runs-on: macos-26
     timeout-minutes: 40
