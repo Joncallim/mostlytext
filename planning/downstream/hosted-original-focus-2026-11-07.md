@@ -157,3 +157,24 @@ all protected CORTANA and release/performance claims remain held. Local nine
 inventory controls pass normal/optimized Python; all332 compliance controls
 pass43.122s, strict Swift6 private-driver type-check/Python/YAML/diff checks pass.
 No local product/native build or execution occurred.
+
+## First hosted preparation outcome and exact metadata-command correction
+
+Sourceb87ceeaca79b1d8c1a45ea0272efbe623f9fa751/run42330490485 genuinely
+builds the Debug app, original UI tests and app tests: TEST BUILD SUCCEEDED.
+The next showBuildSettings command incorrectly retained -enableCodeCoverage NO,
+which Xcode explicitly permits only when testing. It refuses with that exact
+message; the JSON consumer consequently receives empty input. The harmless
+control build/execution and original selected case are skipped, so actual UI
+test count remains zero. Preserve the entire first build log, actual plans,
+empty settings file and original preparation receipt. This is a metadata
+command failure, not an original focus result or product/environment defect.
+
+Remove ONLY that test-action option from the read-only showBuildSettings
+command. Retain the documented override for build-for-testing and
+test-without-building, all source/config/identity/count gates and actual original
+assertions. Reproduce the rejected command and admitted corrected command
+using a standalone tool-only generated project and showBuildSettings locally;
+no app target/build/registration or native test execution. This material
+command correction precedes the first actual UI attempt; no unchanged failed
+native retry, selection change or deadline change is authorized.
