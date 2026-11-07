@@ -1,0 +1,146 @@
+{
+  "head": "0beace2290d79681fe2e565874cb468de2074e08",
+  "actual_checkout": "861089b90b4dd744a8e780c8423ea2e62b040af6",
+  "run": 42408534653,
+  "conclusion": "failure",
+  "records": [
+    {
+      "file": "00-native-first-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/native-first-run.json",
+      "bytes": 12984,
+      "sha256": "8c87845dbcd7ae9322848808b501bf363c6c75e914e9bab220c8ab30e46289db"
+    },
+    {
+      "file": "01-native-first-artifacts.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/native-first-artifacts.json",
+      "bytes": 768,
+      "sha256": "8ad5ecf69a6c660e2e97643e5d4d76f11c79ed342fad1b86e439fb7e42b0f0fe"
+    },
+    {
+      "file": "02-compliance-first-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/compliance-first-run.json",
+      "bytes": 12937,
+      "sha256": "278471ad34436eff6663c1bf0f6c76ab80d8740e15ce10380123b824365c3890"
+    },
+    {
+      "file": "03-first-runtime-failure-independently-verified.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/first-runtime-failure-independently-verified.json",
+      "bytes": 1357,
+      "sha256": "8d8f6f791c6b22493176cefa5e276d756fb5ef4b705b4e81699d264b8a80a568"
+    },
+    {
+      "file": "04-verify-first-runtime-failure.py.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/verify-first-runtime-failure.py",
+      "bytes": 8207,
+      "sha256": "a8a72d5aaf519f75718e82672840989a2354ce88e2c8f95ad5a6c29931c74cc6"
+    },
+    {
+      "file": "05-actual-independent-summary.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/actual-independent-summary.json",
+      "bytes": 1578,
+      "sha256": "d1b316d46470668db77a4eca8a80462b6b8be7836a3f7e6e44be63f2743d13a4"
+    },
+    {
+      "file": "06-actual-downloaded-provider-entitlements.plist.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/actual-downloaded-provider-entitlements.plist",
+      "bytes": 298,
+      "sha256": "266f07f1f0cbe818aa41489ef1273c15e9cadfcb1885f827c4e056f7af818ee9"
+    },
+    {
+      "file": "07-actual-networking-boundary-record-selection.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/actual-networking-boundary-record-selection.json",
+      "bytes": 18715,
+      "sha256": "05d32aeb467559f69894b95b65833a09f1a78a8959a9210a990dcf6c9cd72282"
+    },
+    {
+      "file": "08-receipt.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/native-first-artifact/actual-renderer-quicklook-deadline/receipt.json",
+      "bytes": 382955,
+      "sha256": "2ad44df9d8ddbbef807a4ffecd5232470ce8eb0c2f8801f2eb8eee323fdc0e6f"
+    },
+    {
+      "file": "09-gate-controls.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/native-first-artifact/actual-renderer-quicklook-deadline/gate-controls.json",
+      "bytes": 1717,
+      "sha256": "0d0a5cf9f38900e9cb57cadc7e947547b62f70901870764a091a1e8722cfa1c7"
+    },
+    {
+      "file": "10-gate-controls-original.log.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/native-first-artifact/actual-renderer-quicklook-deadline/gate-controls-original.log",
+      "bytes": 105,
+      "sha256": "1f4cb3a0039ee3adefcb6936a52c4a943ad1f83b86707fa5b23ecd677e4029a7"
+    },
+    {
+      "file": "11-gate-controls-wrong-caller.log.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/native-first-artifact/actual-renderer-quicklook-deadline/gate-controls-wrong-caller.log",
+      "bytes": 77,
+      "sha256": "4487000ffb1955d0b79026a4d309289a43ba664873ccb7506ff336eaf0345571"
+    },
+    {
+      "file": "12-gate-controls-restored.log.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/native-first-artifact/actual-renderer-quicklook-deadline/gate-controls-restored.log",
+      "bytes": 105,
+      "sha256": "1f4cb3a0039ee3adefcb6936a52c4a943ad1f83b86707fa5b23ecd677e4029a7"
+    },
+    {
+      "file": "13-observer-result.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/native-first-artifact/actual-renderer-quicklook-deadline/observer-result.json",
+      "bytes": 5404,
+      "sha256": "f31ddaa4352d72dffda5386258167d8c01bee245758ea6c2b602997c19a691c0"
+    },
+    {
+      "file": "14-host-ui-driver.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/native-first-artifact/actual-renderer-quicklook-deadline/host-ui-driver.json",
+      "bytes": 1662,
+      "sha256": "7203b77d509e120d516e95504009a7e0bc7050d787c255b1b6ba473b4560aedb"
+    },
+    {
+      "file": "15-provider-events.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/native-first-artifact/actual-renderer-quicklook-deadline/provider-events.json",
+      "bytes": 24856,
+      "sha256": "6333357329f4e4827ce4b039b904149a17c8f6c13b9ede5b5c77c93b7e341def"
+    },
+    {
+      "file": "16-observer-control-events.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/native-first-artifact/actual-renderer-quicklook-deadline/observer-control-events.json",
+      "bytes": 2243,
+      "sha256": "dd65029e1305f236a10fe851f8adce48343e27f73908a976e71f1d6203cae139"
+    },
+    {
+      "file": "17-observer-stream.log.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/native-first-artifact/actual-renderer-quicklook-deadline/observer-stream.log",
+      "bytes": 22248,
+      "sha256": "5041eec12833f109bb1a4e2fe1acb94ac2873b296598ad7294ce69702670fb3a"
+    },
+    {
+      "file": "18-identity.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/native-first-artifact/actual-renderer-quicklook-deadline/owned/identity.json",
+      "bytes": 1106,
+      "sha256": "0cc2d6289806104eed1f9d81f92f744a94ca8bd05f5422089f295b4db3bd8917"
+    },
+    {
+      "file": "19-status.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/native-first-artifact/actual-renderer-quicklook-deadline/owned/status.json",
+      "bytes": 138,
+      "sha256": "99faacd75995bfbe08768cefdd6414700989282ec4fc4a6dd3d6b950ad45083c"
+    },
+    {
+      "file": "20-finder.log.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/native-first-artifact/actual-renderer-quicklook-deadline/finder.log",
+      "bytes": 14378,
+      "sha256": "4afd8f0875fd6ff2ff6c2a0fdb579f6bb77d810d3bae479a5f2eb624e01b4754"
+    },
+    {
+      "file": "21-E9D1AE0B-9388-4B4B-9792-830B392367FC.png.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/actual-independent-attachments/E9D1AE0B-9388-4B4B-9792-830B392367FC.png",
+      "bytes": 145104,
+      "sha256": "c219d1101d9695bb4b2ca04921d38d09a47552199820ff2b89f12190145c7bcc"
+    },
+    {
+      "file": "22-D9660C61-8304-4099-87B8-0992F0787C06.txt.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-real-renderer-deadline-20261108/corrected-0beace22/actual-independent-attachments/D9660C61-8304-4099-87B8-0992F0787C06.txt",
+      "bytes": 55947,
+      "sha256": "a2ff7fb4e7d5b66a80f2015f7e655f4c8af4708fc75fa7a36f8a7e109db62fb0"
+    }
+  ]
+}

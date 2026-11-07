@@ -29,3 +29,25 @@ presentation and production Quick Look still wait for the complete platform
 gate. Owner-account execution remains held; all actual GUI cases ran on guarded
 disposable hosted macOS26 runners. The current audit retains 16 open issues and
 160 original unchecked criteria; no whole issue is closed by narrow probe work.
+
+## Subsequent real renderer outcome
+
+The corrected PR140 source `0beace22` actually reaches Finder. Its first native
+run42408534653 fails the small-D2 rich control: the actual API reports
+rendererUnavailable after0.445818seconds. The cold static control passes; large
+fallback is NOT_RUN. The direct ownership controls pass0/42/0 and all111execution
+roles/24pins verify, but neither substitutes for the failed renderer assertion.
+The [complete first runtime-failure packet](evidence/quicklook-renderer-first-runtime-failure-2026-11-08/README.md)
+retains raw results, visible error screenshot, source/compiled input proofs and
+selected records from the imported GitHub test logarchive. WebKit's networking
+child reports missing network permission and exits, followed by WebContent
+termination and the provider error. No current owner log was queried.
+
+Do not add provider network/private entitlements or retry the failed selection
+unchanged. Document an alternative execution boundary before further renderer
+integration. Existing E23 no-automatic-network/shared-engine/immutable-reply/
+physical-occupancy/fallback controls remain binding. PR140 stays a failed draft,
+not a production or platform-gate pass. Apple's [App Sandbox documentation](https://developer.apple.com/documentation/security/app_sandbox)
+identifies the outgoing-network entitlement as additional authority; this probe
+does not authorize that change. A new diagnostic must preserve this failure and
+state precisely what it can establish before any product change.
