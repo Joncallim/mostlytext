@@ -1,0 +1,32 @@
+{
+  "head": "8b02cd6140c2c888eac700d201ea65f059dff426",
+  "actual_checkout": "8b02cd6140c2c888eac700d201ea65f059dff426",
+  "run": 42401252822,
+  "conclusion": "success",
+  "records": [
+    {
+      "file": "00-full-ci-first-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/file-probe-executor-20261108/actual-main-8b02cd61/full-ci-first-run.json",
+      "bytes": 12457,
+      "sha256": "11b3cc9faf92bcefafe39a4c0377134324588bc37f6d510b37f7a8f6bec96601"
+    },
+    {
+      "file": "01-full-ci-first-artifacts.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/file-probe-executor-20261108/actual-main-8b02cd61/full-ci-first-artifacts.json",
+      "bytes": 736,
+      "sha256": "e13df47b510d9ccdf7df651ccf5cee7cf2bfd5b841075b6c648f4cca72043349"
+    },
+    {
+      "file": "02-full-ci-independently-verified.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/file-probe-executor-20261108/actual-main-8b02cd61/full-ci-independently-verified.json",
+      "bytes": 1366,
+      "sha256": "a7d8f08cc2b3f3277aa4e56b133039b99a44a795ee5860145bb014ac03fc4ea4"
+    },
+    {
+      "file": "03-verify-first-full-ci.py.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/file-probe-executor-20261108/actual-main-8b02cd61/verify-first-full-ci.py",
+      "bytes": 4221,
+      "sha256": "3009c35bf3b8181e1f4f00e52a7e43b1a48bf59d7c6559e1159467d5ee90c4cf"
+    }
+  ]
+}
