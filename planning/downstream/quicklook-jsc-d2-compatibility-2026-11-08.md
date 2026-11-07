@@ -142,3 +142,13 @@ substitution, permissions, workaround, deadline padding or accepted failure.
 Persist the original reference outcome before post-failure verification, which
 must explicitly refuse an unadmitted stage rather than implying native work ran.
 The next first outcome must again be preserved complete before any correction.
+
+Phase-only source d3ec8f40's complete first native42414457718 fails earlier in
+its own reference phase-name validator: the allowed[a-z-] grammar excludes
+fixed asset-d2-browser-start. Its journal shows host start/end and no D2 asset
+start. Compliance42414457637 passes; complete firsts and28/19source inputs are
+retained and independently verified. This is an avoidable diagnostic bug, not
+reproduction/explanation of the original15second engine timeout. Correct the
+phase grammar to include digits and check every actual fixed/dynamic phase name
+against the actual reference script's boundary before publication. Retain the
+same engine, reference/native deadlines, authority and real-SVG requirements.
