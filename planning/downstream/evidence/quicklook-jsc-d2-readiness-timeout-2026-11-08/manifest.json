@@ -1,0 +1,47 @@
+{
+  "head": "d24ad839d51643cec5d1dd4e94aca32bf93f22d7",
+  "records": [
+    {
+      "file": "00-native-first-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/corrected-phase-d24ad839/native-first-run.json",
+      "bytes": 12990,
+      "sha256": "309603b840b7fbde74edbd463a231e2fd563ea0bdc118ecd072ecde731de8ff2"
+    },
+    {
+      "file": "01-native-first-artifacts.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/corrected-phase-d24ad839/native-first-artifacts.json",
+      "bytes": 776,
+      "sha256": "94fd2bebcb188891725b853bbd9ca3b032db377d6f61bd0b58a4045cb8bb0644"
+    },
+    {
+      "file": "02-compliance-first-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/corrected-phase-d24ad839/compliance-first-run.json",
+      "bytes": 12940,
+      "sha256": "618a43818d31b81f949beb46a34415234b79ba1da9faf27ac5e941fb616f44b1"
+    },
+    {
+      "file": "03-corrected-phase-timeout-independently-verified.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/corrected-phase-d24ad839/corrected-phase-timeout-independently-verified.json",
+      "bytes": 1585,
+      "sha256": "14e9784bc0de546bf528ec7be0a82ef9fc6cea1ad7527c5749c516944b7eb015"
+    },
+    {
+      "file": "04-receipt.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/corrected-phase-d24ad839/native-first-artifact/javascriptcore-d2-quicklook-compatibility/receipt.json",
+      "bytes": 6124,
+      "sha256": "e674ef3b95aef29b63af9a42a67debad90982c568e8b4d77093aaec068e53d7c"
+    },
+    {
+      "file": "05-reference-module.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/corrected-phase-d24ad839/native-first-artifact/javascriptcore-d2-quicklook-compatibility/reference-module.json",
+      "bytes": 593,
+      "sha256": "394e916e13a4de2e14860f3e2005af3b900a7e7d160f71bf0965a4e81dc85ac6"
+    },
+    {
+      "file": "06-reference-phases.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/corrected-phase-d24ad839/native-first-artifact/javascriptcore-d2-quicklook-compatibility/reference-phases.json",
+      "bytes": 909,
+      "sha256": "6fe046240e4d8192a072b8f1733ba9c365f8d5691111821d0b8f815f84db866d"
+    }
+  ]
+}

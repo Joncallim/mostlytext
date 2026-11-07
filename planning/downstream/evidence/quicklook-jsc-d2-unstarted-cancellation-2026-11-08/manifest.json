@@ -1,0 +1,56 @@
+{
+  "head": "d7c45fb420cb5649bf1224f9c4efa02231ac3bae",
+  "run": 42415176368,
+  "conclusion": "cancelled",
+  "native_pass": false,
+  "records": [
+    {
+      "file": "00-native-first-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/unpack-d7c45fb4/native-first-run.json",
+      "bytes": 13002,
+      "sha256": "4149dee5cf38bde0f564e257df14f0184e5e32598ae74afc907e3f083a6ecc40"
+    },
+    {
+      "file": "01-native-first-artifacts.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/unpack-d7c45fb4/native-first-artifacts.json",
+      "bytes": 32,
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    {
+      "file": "02-native-complete-first-workflow-logs.zip.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/unpack-d7c45fb4/native-complete-first-workflow-logs.zip",
+      "bytes": 22,
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85"
+    },
+    {
+      "file": "03-compliance-first-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/unpack-d7c45fb4/compliance-first-run.json",
+      "bytes": 12950,
+      "sha256": "beddd5bce1a681b541b79894464c07b13821cc5d37f3c99a2226463774178b04"
+    },
+    {
+      "file": "04-queued-before-replacement-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/unpack-d7c45fb4/queued-before-replacement-run.json",
+      "bytes": 12992,
+      "sha256": "f9c48275d94d91ae65b9fc4dcf2ebc05baeeb1ae1bdea8088222e95e9ba19e84"
+    },
+    {
+      "file": "05-queued-before-replacement-jobs.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/unpack-d7c45fb4/queued-before-replacement-jobs.json",
+      "bytes": 914,
+      "sha256": "d7cf149d2941dd6537e3bde8cdc2a77914af81a1e3d717a20a4941076fa6c940"
+    },
+    {
+      "file": "06-cancelled-final-jobs.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/unpack-d7c45fb4/cancelled-final-jobs.json",
+      "bytes": 942,
+      "sha256": "f13d6fca9b2a93501d4aa1f123e89086e3b68b6fcb311e00abe7b29ea61d7fd8"
+    },
+    {
+      "file": "07-unstarted-cancellation-independently-verified.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/unpack-d7c45fb4/unstarted-cancellation-independently-verified.json",
+      "bytes": 583,
+      "sha256": "8c9f5b9f6f347194a3f3be16426a9f37261a88d2642925f625b8031f1c3fe3a4"
+    }
+  ]
+}
