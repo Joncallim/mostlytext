@@ -126,6 +126,11 @@ def main():
         receipt["criteria"]["normal_identity_bound_quit"] = ending["terminated"]
         assert ending["terminated"]
         current = None
+        if license_probe:
+            final = command("source-and-build-verification-after-normal-quit", [
+                "python3", ".github/scripts/prepare-hosted-public-focus.py", root, "--verify"])
+            receipt["license_resources_verified_after_normal_quit"] = final["returncode"] == 0
+            assert final["returncode"] == 0
     except Exception as error:
         receipt["errors"].append({"type": type(error).__name__, "message": str(error)[:4096]})
     finally:
