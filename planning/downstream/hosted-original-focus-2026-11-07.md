@@ -135,3 +135,25 @@ Finder/Quick Look, accessibility/theme and exact-artifact behaviors absent from
 these38 remain explicitly required; they cannot disappear because the old
 source target lacks corresponding methods. Add adversarial fixture-only
 checker controls before using it in the hosted preparation.
+
+## Actual qualified startup-main intake
+
+PR119 has now genuinely qualified and merged at actual main
+e90127e9f75df20b8be1179e6ba7730651775cb2, parents25a45af7+ef72aa9a,
+tree05eef5a45171caa1a8cd351550e07b952a94ee1f. Full CI42326611536
+passes3719 package functions/536 suites,676 app functions/142 suites and all
+four builds. Public CLI42326611541 passes all six original comparisons with
+Welcome/key preserved. Public normal-focus42326611533 passes its actual benign
+control and unchanged real folder/sidebar/Find/Bold/Undo journey, one pass each
+with zero skips/failures/expected failures. All source/pin/generated input sets,
+normal owned outcomes, actual merge parents/tree and clean canonical fast-forward
+are independently verified. First failed6301 and actual structural controls
+remain at their original SHAs.
+
+The declared prerequisite is now satisfied. Intake that actual main, bind the
+script's literal qualification gate to e90127e9, and publish this first original
+engineering case. It remains exactly one case and intentionally ordinary Debug;
+all protected CORTANA and release/performance claims remain held. Local nine
+inventory controls pass normal/optimized Python; all332 compliance controls
+pass43.122s, strict Swift6 private-driver type-check/Python/YAML/diff checks pass.
+No local product/native build or execution occurred.
