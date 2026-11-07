@@ -71,3 +71,17 @@ AppKit/WebKit/font/runtime execution, signing key or account switch. Hosted guar
 disposable native execution only, with actual first source/result/process identities.
 No product/publication/dependency/pin/licence changes are authorized by this
 observation slice. Old failures and incomplete later phases stay failed/incomplete.
+
+## Passive context-lifecycle observations
+
+A visible document window does not by itself establish that its SwiftUI resource
+subtree never disappeared or that its stored load is still live. Add two narrowly
+scoped event kinds to the existing opt-in bounded Debug/probe trace: actual slot
+installation and actual subtree disappearance with the original retained context
+before/after the unchanged retirement call. Keep them inside the existing compile
+condition and disabled without the existing trace environment. Do not add an
+appearance epoch, restart, retry, grant, state invalidation, expanded/reset buffer
+or policy decision. The failure-only snapshot can then distinguish observed
+revocation from a failure to request/publish without guessing from a placeholder.
+These passive records are an execution input, not a causal fix. No production
+behaviour/authority change is authorized by these observations.
