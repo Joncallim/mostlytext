@@ -14,6 +14,7 @@ on:
       - '.github/scripts/test-hosted-focus-guard.py'
       - '.github/workflows/hosted-public-focus.yml'
       - '.github/workflows/hosted-license-notices.yml'
+      - '.github/scripts/test-hosted-license-notices.py'
       - 'LICENSE'
       - 'compliance/generated/THIRD_PARTY_NOTICES.md'
       - 'MacDown2/MacDown2/LicenseNotices*.swift'
@@ -40,6 +41,7 @@ jobs:
           brew install xcodegen
           python3 .github/scripts/test-run-owned-app-tests.py
           python3 .github/scripts/test-hosted-focus-guard.py
+          python3 .github/scripts/test-hosted-license-notices.py
           python3 .github/scripts/prepare-hosted-public-focus.py "$RUNNER_TEMP/mostlytext-focus"
           cd MacDown2
           xcodegen generate
