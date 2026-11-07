@@ -77,3 +77,16 @@ owner account and no signed/installed/final-language/VoiceOver claim.
 4. Reconcile #13/#11/#5/#8/#17 with demonstrated scope and reopen review after
    every checklist update. No whole issue closes without its original complete
    criteria; final Release/manual/resource/race/signing/owner gates stay explicit.
+
+Prepared ancestry is5d6f5c18 (main5115 plus exact failedfc29). Product container
+modifier3c347006 is followed byefcdbe1f restoring the canonical full UI workflow
+byte-for-byte before any publication; the B08-only workflow is absent from the
+final delta. All38original UI methods, batch manifest/controller, initial-image
+case/workflow/verification helper, main app lifecycle/core/settings, all package
+production sources/manifests/pins and compliance inventories/notices remain
+unchanged from their declared baselines. The sole inherited package-test change
+explicitly retains image-reservation arrays with withExtendedLifetime across
+unchanged admission assertions; it is not a changed budget or production API.
+Local9compiled-input/4host/3architecture/5live-loopback/9PDF/6discovery/8batch/
+9original-inventory/3owned controls, source compliance, full format/strict lint
+and diff checks pass. Full current-candidate native/CI outcomes remain pending.
