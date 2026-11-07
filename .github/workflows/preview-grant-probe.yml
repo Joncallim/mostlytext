@@ -1,28 +1,9 @@
-name: Current application Preview resource qualification
+name: Production Preview initial-copy diagnostics
 
 permissions:
   contents: read
 
 on:
-  pull_request:
-    branches: [main, master, integration-final]
-    paths:
-      - 'MacDown2/MacDown2/*Preview*.swift'
-      - 'MacDown2/MacDown2/Preview*.swift'
-      - 'MacDown2/MacDown2/Secured*.swift'
-      - 'MacDown2/MacDown2Tests/*Preview*.swift'
-      - 'MacDown2/MacDown2Tests/Preview*.swift'
-      - 'MacDown2/MacDown2Tests/Secured*.swift'
-      - 'MacDown2/MacDown2Tests/HTMLResponseEncodingFixture.swift'
-      - 'MacDown2/Packages/MacDownKit/Sources/Preview/**'
-      - '.github/workflows/preview-grant-probe.yml'
-      - '.github/scripts/*preview-grant-probe.py'
-      - '.github/scripts/check-preview-parsed-frame.py'
-      - '.github/scripts/test-preview-grant-tripwire.py'
-      - '.github/scripts/test-preview-native-architecture.py'
-      - '.github/scripts/preview_compiled_inputs.py'
-      - '.github/scripts/test-preview-compiled-inputs.py'
-      - '.github/scripts/test-preview-diagnostic-host.py'
   workflow_dispatch:
 
 concurrency:
@@ -34,8 +15,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        configuration: [Debug, Release]
-        pair: [revision, viewport, disappear]
+        configuration: [Debug]
+        pair: [revision]
     runs-on: macos-26
     timeout-minutes: 35
     env:
@@ -76,6 +57,7 @@ jobs:
       - name: Record exact application inputs and configuration
         run: python3 .github/scripts/verify-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --pair ${{ matrix.pair }}
       - name: Compile real app and test bundles
+        id: compile
         run: |
           set -euo pipefail
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
@@ -146,6 +128,9 @@ jobs:
           grep -q 'Test run with 1 test in 1 suite passed' "$RUNNER_TEMP/preview-grant-probe/selection-probe.log"
       - name: Prove omission fails and exact restored mounted application passes
         run: python3 .github/scripts/check-preview-parsed-frame.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --pair ${{ matrix.pair }}
+      - name: Observe the separate already-denied then explicitly granted document
+        if: ${{ always() && steps.compile.outcome == 'success' }}
+        run: python3 .github/scripts/run-preview-delayed-grant-diagnosis.py
       - name: Verify exact source and actual selected execution
         if: always()
         run: python3 .github/scripts/verify-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --pair ${{ matrix.pair }} --verify --require-result
@@ -154,6 +139,7 @@ jobs:
         with:
           name: preview-grant-app-tests-${{ matrix.configuration }}-${{ matrix.pair }}
           path: |
+            ${{ runner.temp }}/preview-grant-probe/delayed-grant-diagnosis/**
             ${{ runner.temp }}/preview-grant-probe/receipt.json
             ${{ runner.temp }}/preview-grant-probe/compiled-*.json
             ${{ runner.temp }}/preview-grant-probe/compiled-inputs/**

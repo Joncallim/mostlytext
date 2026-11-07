@@ -51,7 +51,7 @@ if os.environ.get("MOSTLYTEXT_PREVIEW_RESOURCE_TRACE") != "1" or os.environ.get(
 if platform.machine() != "arm64":
     raise SystemExit("This native Preview qualification requires an Apple Silicon worker")
 paths = subprocess.check_output([
-    "git", "ls-files", "-z", "MacDown2", ".github/scripts/verify-preview-grant-probe.py",
+    "git", "ls-files", "-z", "MacDown2", ".github/scripts/run-preview-delayed-grant-diagnosis.py", ".github/scripts/verify-preview-grant-probe.py",
     ".github/workflows/preview-grant-probe.yml", ".github/scripts/preview_compiled_inputs.py", ".github/scripts/test-preview-compiled-inputs.py", ".github/scripts/test-preview-diagnostic-host.py", ".github/scripts/check-preview-parsed-frame.py", ".github/scripts/test-preview-grant-tripwire.py", ".github/scripts/test-preview-native-architecture.py", ".github/scripts/run-preview-grant-probe.py", ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
     "planning/downstream/evidence/actual-app-hosted-plan-2026-11-07",
 ], cwd=repo).decode().split("\0")
@@ -63,8 +63,8 @@ receipt = {
     "configuration": args.configuration,
     "mutation_pair": args.pair,
     "testability": True,
-    "diagnostic_only": False,
-    "qualification_candidate": True,
+    "diagnostic_only": True,
+    "qualification_candidate": False,
     "current_main_baseline": "427d15fa5da94d4045a02e7f6a005648d09e38c5",
     "resource_trace_enabled": True,
     "execution_architecture": "arm64",
@@ -72,7 +72,7 @@ receipt = {
     "additional_compilation_condition": "RELEASE_PREVIEW_PROBE",
     "source_sha256": digests,
     "pins": pins,
-    "scope": "Current-main Preview qualification candidate; first outcomes and all six pairs required, without a sole historical cause or final release claim",
+    "scope": "Production initial-copy diagnostics only; neither a pass nor the staged denial/grant case authorizes qualification or merge",
     "renderer_preference_observer": False,
     "fixture_window_lifetime_observer": True,
 }

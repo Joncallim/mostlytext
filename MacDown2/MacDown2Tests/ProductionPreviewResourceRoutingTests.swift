@@ -25,7 +25,16 @@ struct ProductionPreviewResourceRoutingTests {
         #expect(await request.value)
         let root = try fixture.root()
         try await fixture.copyHarness.assertGrantedImageCopies(from: root) {
-            "actual WindowController / WorkspaceShell / DocumentEditorSplitView Preview"
+            #if DEBUG || RELEASE_PREVIEW_PROBE
+                PreviewResourceDiagnostics.dump("production-initial-image-copy-failure")
+            #endif
+            let current = fixture.first.model.activeDocument
+            let granted = current.map { fixture.first.previewResourceState.hasGrant(for: $0) } ?? false
+            return "actual WindowController / WorkspaceShell / DocumentEditorSplitView Preview; "
+                + "ownerClosed=\(fixture.first.previewResourceState.isClosed) "
+                + "controllerClosed=\(fixture.first.isClosed) grant=\(granted) "
+                + "generation=\(current?.mutationGeneration ?? 0) "
+                + "activeTab=\(fixture.first.model.tabStore.activeTabID?.uuidString ?? "none")"
         }
         try await assertNewDocumentGenerationCopiesItsCurrentImage(fixture, root: root)
         let before = try #require(fixture.first.model.activeDocument)
