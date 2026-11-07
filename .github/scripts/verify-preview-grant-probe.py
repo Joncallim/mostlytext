@@ -65,7 +65,7 @@ receipt = {
     "testability": True,
     "diagnostic_only": False,
     "qualification_candidate": True,
-    "current_main_baseline": "d29358412585f669264e55e0f3666f456038b228",
+    "current_main_baseline": "427d15fa5da94d4045a02e7f6a005648d09e38c5",
     "resource_trace_enabled": True,
     "execution_architecture": "arm64",
     "only_active_arch": True,

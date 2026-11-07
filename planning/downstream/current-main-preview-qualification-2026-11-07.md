@@ -216,3 +216,30 @@ source compliance passes0unverified, and both private workflow YAML files parse.
 These are prepublication source controls; no pending Preview first native outcome
 is inferred. Raw logs are retained under preview-copy-diagnostics-20261107/
 current-core-prepublication in the engineering archive.
+
+## Then-current main reconciled after blocked-session qualification
+
+PR131 now merges at actual main427d15fa5da94d4045a02e7f6a005648d09e38c5,
+parents d2935841+9f76ebef/treec51b74fa matching both qualified source and actual
+c4d329d8 checkout. Both first valid and unsupported normal Release scenarios pass
+with independent complete input/compiled/result/profile/domain readback. The
+unsupported case preserves all six domains and original bytes, exposes no endpoint
+in110 recorded observations, shows the actual blocked surface and quits normally;
+private staging is retained without authoritative publication. Complete first
+records and visual readback are retained in evidence/future-session-startup-qualified-2026-11-07.
+
+The final Preview source incorporates that actual main through real merge89346609.
+This latest intake changes no MacDown2/compliance inputs from the preceding local
+core checkpoint, so the0/1509 style and private control results remain applicable.
+Advance the receipt baseline to this actual427main. The future fixture's own fixed
+core anchors remain d293 by design; they still require the actual qualified core
+ancestor. Final-source Preview/PDF/native/full-CI qualification remains mandatory.
+
+Final source also passes9 original UI inventory controls,6 actual-SDK discovery
+controls and8 fixed-batch controls after the latest main intake. Original38 case
+IDs/assertions, all original mutation tuples, both real network/image controls,
+all6 Debug/Release pairs/35-minute limits and source restoration remain unchanged.
+All new workflow source references exist. Pin/manifests/runtime/grammar/inventory/
+notice/SBOM identities remain those of actual main; the lifecycle and original
+UI inputs from qualified core are retained. Publish one frozen candidate next;
+its first full native/CI outcomes remain mandatory before merge.
