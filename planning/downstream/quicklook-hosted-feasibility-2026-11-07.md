@@ -87,3 +87,22 @@ Primary platform references: Apple QLPreviewProvider documentation and
 QLPreviewReply's data-factory initializer, read7November2026. Their declared
 interfaces are checked against the actual compiler/SDK; neither documentation
 nor compiler success substitutes for native Finder evidence.
+
+## First hosted preparation outcome and command correction
+
+Source17c865a3's first run42317616447 completes build/ad-hoc signing and exact
+PlugInKit discovery of the actual provider path. All10 recorded inputs and the
+unchanged root product tree are independently verified; actual sandbox/read-only
+entitlements and binary hashes are retained. Owned test command returns65 in
+2.205s without timeout/cancel. It fails BEFORE any test or provider callback:
+`-retry-tests-on-failure NO` is invalid. The switch itself enables retries;
+`NO` is parsed as an unknown build action. The actual Xcode help confirms the
+switch takes no value, whereas `-test-iterations` takes a number.
+
+Correct ONLY the test command: remove the retry switch and its invalid NO,
+set explicit test-iterations1. No test retry mode is enabled, all timeouts and
+actual Finder/visible marker/callback/no-container-launch requirements remain.
+Retain the complete first job/artifact/owned response. This is a demonstrated
+fixture command defect, not a native Finder failure or evidence that automation
+is blocked. A fresh materially corrected attempt is required before any native
+result is claimed. Provider, UI-test and prepared source bytes remain unchanged.
