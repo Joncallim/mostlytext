@@ -92,3 +92,25 @@ Eleven pure/real-filesystem/admission controls and four optimized literal Founda
 The first core4b671790 migration now restores the two real tabs/recovery, but fails actual Spaces4 versus authoritative imported2. A missing shared-settings environment at the separate document-host root is corrected in independent local ancestry586da1ec, still awaiting complete core first outcomes and new native qualification. This future unit remains unpushed and both future execution anchors remain PENDING_COMPLETED_CORE_INTEGRATION. Intake actual fully qualified coremain before activation; do not substitute the failed4b source or an anticipated merge.
 
 The admission controls now retain an explicit held-anchor counterexample after eventual real activation: derive the actual literal future anchor, require the real untrusted host to refuse it, substitute a held control anchor and verify refusal before host/receipt, and substitute an admitted40hex anchor and still require actual account refusal. The Python held-order control sets its control-only held anchor explicitly. This avoids falsely requiring the production anchor to remain unresolved after the specified actual-main activation. All11 Python and4 optimized literal Foundation controls pass; production anchors remain PENDING, unchanged, and no native/profile action occurs.
+
+## Actual core integration before execution-anchor activation
+
+PR130 is now merged at actual main d29358412585f669264e55e0f3666f456038b228,
+parents ef93ab2d+ab485fc0, exact tree8c57223e matching the complete qualified
+source/synthetic tree. PR128 is merged by actual ancestry. All38 original methods,
+10 genuine positives, all3 critical journeys, full3719/680 CI/four builds, normal
+CLI/focus/status/licence/ownership and normal migration/relaunch qualify that
+source. The actual new mounted shared-settings regression passes once. Complete
+first focused/final records,13 whole-log ZIP digests and actual integration proof
+are retained in evidence/native-startup-qualified-2026-11-07. Failed predecessors
+remain unchanged. The redundant identical-tree push CI is cancelled, not passed.
+
+This branch incorporates actual main through merge7124a51c; MacDown2 and compliance
+are byte-identical to that qualified main. Before native publication, advance BOTH
+normal and future qualified-main literals in Python and the Foundation helper to
+that actual main SHA. This enforces the completed core prerequisite for either
+fixed scenario, rather than leaving valid-profile anchored only to older ef93.
+This is private admission tightening, not a caller-selected revision or product
+policy change. Preserve original valid methods, future held-anchor counterexamples,
+all source/positive/compiled/result/ownership/normal-Quit checks and limits.
+Qualify both fixed scenarios on fresh guarded VMs before expected-head merge.
