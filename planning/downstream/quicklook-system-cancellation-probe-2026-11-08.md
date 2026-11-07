@@ -109,3 +109,41 @@ capture this state before a failed window assertion. Keep all provider behavior,
 source/permissions, original cold test,10second wait, Escape/disappearance,
 post-Escape correlation and original deadlines unchanged. This corrects observed
 fixture window identity, not framework/product behavior or a cancellation waiver.
+
+## First UI log-reader context refusal and host-observer correction
+
+First corrected787497b1/run42398317823 passes original cold Finder and all new
+actual window/unique/spinner preconditions, then the UI child log command exits64.
+Its stderr was discarded; do not invent a specific permission/service cause.
+Host-workflow log show succeeds and captures the actual pending/terminal events.
+All16source/13generated/11downloaded execution roles and actual2/1/1/0skip/0expected
+results are verified; Escape and system cancellation observation are NOT_RUN.
+Both complete first outcomes are retained before any correction.
+
+Read-only signature inspection confirms the existing SDK-injected UI runner can
+read /; this is distinct from the exact two provider permissions. Move only
+observation to a guarded, bounded host recorder. It queries the same own public
+provider log subsystem, requires command exit0, preserves stderr on failure and
+atomically publishes bounded JSON under this generated temporary probe root.
+The UI reads that record through its existing read-only capability; no App Group,
+network service, entitlement/TCC change, provider signal or fake readiness event.
+Keep equivalent schema/success/correlation checks, original cold method/provider/
+10second wait/window/spinner/5second waits/Escape/disappearance/terminal limits.
+
+A guarded private driver starts the owned recorder before actual UI execution,
+waits at most5seconds for its genuine initial log-query snapshot, runs the same
+owned xcodebuild command, then stops/reaps only that recorder after UI completion.
+Recorder log calls are individually bounded; total lifetime300seconds, at most128
+changed snapshots each128KiB, and exact source/checkouts/commands/statuses/journal
+hashes are retained. A failed query, missing startup, recorder timeout, forced
+cleanup or nonzero UI outcome fails. A recorder normal stop is observer cleanup,
+never described as system task cancellation. Native provider callbacks remain
+unchanged and final direct host logs independently validate actual UI timestamps
+against the provider request before either feasibility outcome is accepted.
+
+Add pure file/sequence/cap and lifecycle/classification controls plus real normal/
+optimized foreign-host refusals. Capture all new observer/driver sources in the
+execution inventory. SDK type check only locally, no framework runtime. Preserve
+new first failure rather than retry unchanged or change native waits. This is an
+execution-context correction for diagnostic observation, not production access,
+cancellation safety, slow-renderer fallback or whole platform acceptance.
