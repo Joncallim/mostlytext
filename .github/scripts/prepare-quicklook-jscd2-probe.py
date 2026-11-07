@@ -115,6 +115,11 @@ def validate_trusted_event(event, event_name):
 
 
 D2_SOURCE = 'MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/d2-browser.js'
+NOTICE_INPUTS = {
+    'D2-LICENSE.txt': 'MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/D2-LICENSE.txt',
+    'D2-NOTICE.txt': 'MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/NOTICE.txt',
+    'THIRD_PARTY_NOTICES.md': 'compliance/generated/THIRD_PARTY_NOTICES.md',
+}
 
 
 def reference_module(root, fixture):
@@ -327,11 +332,13 @@ def main():
                          ".github/scripts/test-quicklook-jscd2-observer.py",
                          "planning/downstream/evidence/quicklook-hosted-feasibility-2026-11-07/b000-receipt.json.gz",
                          ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
-                         ".github/workflows/quicklook-jscd2-probe.yml", D2_SOURCE]).splitlines()
+                         ".github/workflows/quicklook-jscd2-probe.yml", D2_SOURCE, *NOTICE_INPUTS.values()]).splitlines()
         assert paths and any(p.endswith("StaticPreview.swift") for p in paths)
         fixture = root / "fixture"
         shutil.copytree(".github/quicklook-jscd2-probe", fixture)
         shutil.copyfile(D2_SOURCE,fixture/"Resources/d2-browser.js")
+        for name,source_path in NOTICE_INPUTS.items():
+            shutil.copyfile(source_path,fixture/"Resources"/name)
         source = root / "mostlytext-ql-reply-static.md"
         source.write_bytes(b"# Hosted Quick Look fixture\n")
         (root / "mostlytext-ql-jscd2.md").write_bytes(b"# Hosted Quick Look fixture\n")

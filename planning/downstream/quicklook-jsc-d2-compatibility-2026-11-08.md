@@ -113,3 +113,10 @@ changed Swift format/strict lint, Python/YAML, source compliance and unchanged
 product/original cold/probe controls pass. Local checks do not execute any
 JavaScriptCore/Node/WASM runtime or build/launch an app or extension. The actual
 first guarded reference/native run remains pending and must be retained whole.
+
+The generated private resource bundle also preserves the current D2 licence,
+unchanged D2 modification notice and complete generated third-party notice text,
+with canonical/copied/generated/compiled byte identity. The adapter's explicit
+in-memory module-export conversion is separately recorded; it never overwrites
+the original browser asset or its notice. This is not closure of independent
+source/font/rights review or the exact released-artifact compliance gate.
