@@ -2,6 +2,15 @@ name: Hosted public CLI stdin save engineering
 permissions:
   contents: read
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/hosted-cli-stdin-save/**'
+      - '.github/scripts/prepare-hosted-cli-stdin-save.py'
+      - '.github/scripts/run-hosted-cli-stdin-save.py'
+      - '.github/scripts/hosted_cli_stdin_contract.py'
+      - '.github/scripts/test-hosted-cli-stdin-save.py'
+      - '.github/workflows/hosted-cli-stdin-save.yml'
   workflow_dispatch:
 concurrency:
   group: hosted-cli-stdin-save-${{ github.ref }}

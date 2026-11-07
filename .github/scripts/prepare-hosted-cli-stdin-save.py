@@ -11,7 +11,7 @@ import subprocess
 import sys
 from hosted_cli_stdin_contract import capture, read_regular, sha, verify
 
-QUALIFIED_PREVIEW_MAIN = 'PENDING_ACTUAL_QUALIFIED_PREVIEW_MAIN'
+QUALIFIED_STARTUP_MAIN = '427d15fa5da94d4045a02e7f6a005648d09e38c5'
 ROOT_SOURCES = ['.github/hosted-cli-stdin-save', '.github/scripts/prepare-hosted-cli-stdin-save.py',
                 '.github/scripts/run-hosted-cli-stdin-save.py', '.github/scripts/hosted_cli_stdin_contract.py',
                 '.github/scripts/test-hosted-cli-stdin-save.py', '.github/workflows/hosted-cli-stdin-save.yml']
@@ -28,9 +28,9 @@ def admit(root):
     if sys.flags.optimize:
         raise RuntimeError('Optimized Python cannot enforce the hosted stdin contract')
     preparation_module().check_host(root)
-    if not re.fullmatch('[0-9a-f]{40}', QUALIFIED_PREVIEW_MAIN):
-        raise RuntimeError('Execution held until actual qualified Preview main integration')
-    subprocess.run(['git', 'merge-base', '--is-ancestor', QUALIFIED_PREVIEW_MAIN, 'HEAD'], check=True, timeout=15)
+    if not re.fullmatch('[0-9a-f]{40}', QUALIFIED_STARTUP_MAIN):
+        raise RuntimeError('Execution held until actual qualified startup main integration')
+    subprocess.run(['git', 'merge-base', '--is-ancestor', QUALIFIED_STARTUP_MAIN, 'HEAD'], check=True, timeout=15)
 
 
 def compiled_paths(root, receipt):
@@ -86,7 +86,7 @@ def main():
         generated += ''.join('    static let ' + key + ' = ' + json.dumps(value) + '\n' for key, value in values.items()) + '}\n'
         (root / 'fixture/Driver/CLIStdinInputs.swift').write_text(generated)
         shutil.copyfile('.github/hosted-cli-stdin-save/CLIStdinTests.swift', root / 'fixture/Driver/CLIStdinTests.swift')
-        receipt['cli_stdin'] = {'qualified_preview_main': QUALIFIED_PREVIEW_MAIN,
+        receipt['cli_stdin'] = {'qualified_startup_main': QUALIFIED_STARTUP_MAIN,
                                 'source_sha256': {p: sha(p) for p in tracked},
                                 'oracle': str(oracle), 'oracle_sha256': sha(oracle),
                                 'saved': str(saved), 'saved_must_be_absent': True,
@@ -97,7 +97,7 @@ def main():
     receipt = json.loads(read_regular(path))
     extra = receipt['cli_stdin']
     tracked = subprocess.check_output(['git', 'ls-files', '--', *ROOT_SOURCES], text=True).splitlines()
-    if (extra['qualified_preview_main'] != QUALIFIED_PREVIEW_MAIN
+    if (extra['qualified_startup_main'] != QUALIFIED_STARTUP_MAIN
             or extra['source_sha256'] != {p: sha(p) for p in tracked}
             or sha(extra['oracle']) != extra['oracle_sha256']):
         raise RuntimeError('Canonical stdin inputs or original oracle changed')

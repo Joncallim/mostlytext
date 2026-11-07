@@ -118,7 +118,7 @@ class HostAdmissionTests(unittest.TestCase):
             def check_host(root):
                 pass
         module.preparation_module = lambda: AcceptedControlHost
-        module.QUALIFIED_PREVIEW_MAIN = 'PENDING_ACTUAL_QUALIFIED_PREVIEW_MAIN'
+        module.QUALIFIED_STARTUP_MAIN = 'PENDING_ACTUAL_QUALIFIED_STARTUP_MAIN'
         original = module.subprocess.run
         try:
             module.subprocess.run = lambda *args, **kwargs: self.fail('Held execution must not invoke a subprocess')
