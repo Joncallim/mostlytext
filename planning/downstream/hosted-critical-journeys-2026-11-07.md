@@ -208,3 +208,11 @@ qualify that combined source once through full current CI and every stated
 native gate. Do not republish unchanged failinga483 or retarget its receipts.
 The old PR may be integrated through that fully qualified descendant only with
 explicit ancestry/source/result proof and precise PR/issue reconciliation.
+
+The new batch wait passes actual Swift6/XCTest concurrency type checking and
+unchanged strict style limits. Every original a483 statement remains in order.
+The first source-manifest check correctly refused a digest computed before the
+formatter changed only the new helper's layout. That local commit was never
+published or executed. Refresh the digest from the final formatted source and
+require the actual source manifest plus all9 controls before assembly/publication.
+No original behavior ID, method, schema or validator is relaxed.
