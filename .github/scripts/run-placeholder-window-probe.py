@@ -14,7 +14,7 @@ import sys
 
 BASELINE = "e90127e9f75df20b8be1179e6ba7730651775cb2"
 METHOD = "unmarkedWindowsAreNotStartupPlaceholders"
-TARGET = "MacDown2Tests/PlaceholderWindowCleanupTests/" + METHOD
+TARGET = "MacDown2Tests/PlaceholderWindowCleanupTests"
 PRIVATE_TEST = ".github/placeholder-window-probe/PlaceholderOwnershipProbeTests.swift"
 EXECUTED_TEST = "MacDown2/MacDown2Tests/PlaceholderOwnershipProbeTests.swift"
 
@@ -90,7 +90,7 @@ def main():
     receipt_path.write_text(json.dumps(record, indent=2) + "\n")
     summary = json.loads(out(["xcrun", "xcresulttool", "get", "test-results", "summary", "--path", str(root / "Probe.xcresult")]))
     record["actual_summary"] = summary
-    expected = {"totalTestCount": 1, "passedTests": 0 if args.mode == "reproduce-original" else 1,
+    expected = {"totalTestCount": 3 if args.mode == "reproduce-original" else 4, "passedTests": 2 if args.mode == "reproduce-original" else 4,
                 "failedTests": 1 if args.mode == "reproduce-original" else 0, "skippedTests": 0, "expectedFailures": 0}
     owned = record["owned"]
     expected_code = 65 if args.mode == "reproduce-original" else 0

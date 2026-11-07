@@ -1,0 +1,18 @@
+{
+  "head": "d3d50990027c4d8a493baff4c527aad967336c29",
+  "checkout": "98fcd95eb452cf2a459e45b8aae87662b607aabc",
+  "all_canonical_sources_verified": 1597,
+  "one_executed_regression_addition_verified": true,
+  "pins_verified": 24,
+  "unchanged_product_tree": true,
+  "actual_owned": {
+    "returncode": 0,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 25.727083666999988,
+    "app_cleanup_requested": []
+  },
+  "actual_tests_executed": 0,
+  "actual_controller_rejected_zero_case_green": true,
+  "scope": "Compiled regression selected zero tests. No ownership assertion or product correction is established. Whole small-suite selection is a new material command correction, retaining the primary assertion and old checks."
+}
