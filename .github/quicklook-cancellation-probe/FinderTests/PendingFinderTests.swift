@@ -36,8 +36,15 @@ final class PendingFinderTests: XCTestCase {
         }
         let start = ProcessInfo.processInfo.systemUptime
         finder.typeKey(.space, modifierFlags: [])
-        let window = finder.windows[fileName].firstMatch
-        XCTAssertTrue(window.waitForExistence(timeout: 5), "The real pending Quick Look window must exist")
+        let windows = finder.windows.matching(identifier: "Quick Look")
+        let window = windows.firstMatch
+        let found = window.waitForExistence(timeout: 5)
+        if !found {
+            attach(observation)
+        }
+        XCTAssertTrue(found, "The real pending Quick Look window must exist")
+        XCTAssertEqual(windows.count, 1)
+        XCTAssertTrue(window.activityIndicators.firstMatch.exists, "Require the actual pending Quick Look spinner")
         let pending = try waitForEvent("pending", after: start, timeout: 5)
         observation["request_id"] = pending.id
         observation["provider_started"] = pending.uptime
