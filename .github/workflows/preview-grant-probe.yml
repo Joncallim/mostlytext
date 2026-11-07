@@ -1,4 +1,4 @@
-name: Mounted Preview copy failure observations
+name: Mounted Preview window-lifetime failure observations
 
 permissions:
   contents: read
@@ -8,7 +8,7 @@ on:
 
 concurrency:
   group: preview-copy-diagnostics-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   preview-consumers:
@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         configuration: [Debug]
-        pair: [revision, disappear]
+        pair: [revision]
     runs-on: macos-26
     timeout-minutes: 35
     env:
@@ -52,6 +52,7 @@ jobs:
           python3 .github/scripts/test-run-owned-app-tests.py
           python3 .github/scripts/test-preview-grant-tripwire.py
           python3 .github/scripts/test-preview-native-architecture.py
+          python3 .github/scripts/test-preview-diagnostic-host.py
       - name: Record exact application inputs and configuration
         run: python3 .github/scripts/verify-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --pair ${{ matrix.pair }}
       - name: Compile real app and test bundles

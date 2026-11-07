@@ -17,6 +17,7 @@ extension SecuredMarkdownMountedTests {
             }
             try await Task.sleep(for: .milliseconds(20))
         }
+        windowDiagnostics.captureFailure(host: view, selected: findTextInteraction(in: view))
         Issue.record("Mounted Textual did not produce HTML from its native copy action")
         throw PreviewResourceAdmissionError.limitExceeded
     }
@@ -30,6 +31,7 @@ extension SecuredMarkdownMountedTests {
             do {
                 lastHTML = try await copiedHTML(from: view)
             } catch {
+                windowDiagnostics.captureFailure(host: view, selected: findTextInteraction(in: view))
                 let details = await diagnostic()
                 print("MOUNTED_COPY_DIAGNOSTIC \(details) \(copyDiagnostics(in: view))")
                 throw error
@@ -39,6 +41,7 @@ extension SecuredMarkdownMountedTests {
             }
             try await Task.sleep(for: .milliseconds(20))
         }
+        windowDiagnostics.captureFailure(host: view, selected: findTextInteraction(in: view))
         let details = await diagnostic()
         Issue.record("""
         Mounted Textual never copied its admitted image; final HTML: \(lastHTML);
@@ -52,6 +55,7 @@ extension SecuredMarkdownMountedTests {
         window.isReleasedWhenClosed = false
         window.animationBehavior = .none
         window.contentView = hosting
+        windowDiagnostics.observe(window, host: hosting)
         window.makeKeyAndOrderFront(nil)
         return window
     }

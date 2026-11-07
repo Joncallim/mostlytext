@@ -233,3 +233,15 @@ guard intercepted-inventory counterexample and no actual command execution.
 Record the new helper/control/workflow bytes in the complete source receipt.
 Do not dispatch until current PR124's first complete qualification is preserved;
 this keeps source diagnosis separate from its active candidate tests.
+
+Source verification before this first window-lifetime attempt: strict actual
+Swift6/concurrency type checking of the AppKit/Foundation-only helper passes;
+no app module, build, runtime or registration is needed. The first cached-app-
+module type-check invocation lacked CAtomic/cmark import paths; its failure is
+retained, and unnecessary app imports were removed rather than claiming that
+invocation passed. Strict format/lint of all3 changed Swift files passes0/3.
+Actual host admission2controls, architecture3controls and tripwire5controls pass;
+AST/YAML and diff checks pass. The selected-view diagnostic, copy action,
+assertions, calibration, mutation/restoration and deadlines remain unchanged.
+PR124's full qualification is now retained and integrated as aff49a5e, so this
+separate historical-source diagnostic may run once. Its result is still pending.
