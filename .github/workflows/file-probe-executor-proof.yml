@@ -1,0 +1,53 @@
+name: External file snapshot executor proof
+permissions:
+  contents: read
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'MacDown2/Packages/MacDownKit/Sources/FileCore/**'
+      - 'MacDown2/Packages/MacDownKit/Tests/FileCoreTests/DocumentFileProbeExecutionTests.swift'
+      - '.github/scripts/run-file-probe-executor-proof.py'
+      - '.github/workflows/file-probe-executor-proof.yml'
+  workflow_dispatch:
+concurrency:
+  group: file-probe-executor-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  snapshot-executor:
+    if: github.repository == 'Joncallim/mostlytext' && (github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository)
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [debug, release]
+    runs-on: macos-26
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Select deployment-matching Xcode
+        run: |
+          set -euo pipefail
+          XCODE=$(ls -d /Applications/Xcode*.app | grep '26' | head -1 || true)
+          test -n "$XCODE"
+          sudo xcode-select -s "$XCODE/Contents/Developer"
+          test "$(sw_vers -productVersion | cut -d. -f1)" = 26
+          test "$(uname -m)" = arm64
+      - name: Verify existing owned lifecycle controls
+        run: python3 .github/scripts/test-run-owned-app-tests.py
+      - name: Execute real snapshot reads and intended MainActor counterexample
+        run: python3 .github/scripts/run-file-probe-executor-proof.py ${{ matrix.configuration }}
+      - name: Preserve every first original counterexample and restored result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: file-probe-executor-${{ matrix.configuration }}
+          path: |
+            ${{ runner.temp }}/file-probe-executor-${{ matrix.configuration }}/receipt.json
+            ${{ runner.temp }}/file-probe-executor-${{ matrix.configuration }}/package/**
+            ${{ runner.temp }}/file-probe-executor-${{ matrix.configuration }}/original/**
+            ${{ runner.temp }}/file-probe-executor-${{ matrix.configuration }}/main-actor-mutant/**
+            ${{ runner.temp }}/file-probe-executor-${{ matrix.configuration }}/restored/**
+          if-no-files-found: warn
