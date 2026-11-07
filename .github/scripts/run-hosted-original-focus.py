@@ -144,11 +144,17 @@ def main():
         if len(matched) != 1: raise RuntimeError("Expected exactly one actual original UI target")
         target_path = matched[0]["UITargetAppPath"].replace("__TESTROOT__", str(root / "app/Build/Products"))
         if Path(target_path) != app: raise RuntimeError("Actual xctestrun target is not the built ordinary Debug app")
-        test_binaries = [p for p in (root / "app/Build/Products").rglob("MacDown2UITests") if p.is_file() and p.parent.name == "MacOS"]
-        if len(test_binaries) != 1: raise RuntimeError("Expected one actual original UI test executable")
-        record["test_executable_sha256"] = sha(test_binaries[0])
+        test_host = Path(matched[0]["TestHostPath"].replace("__TESTROOT__", str(root / "app/Build/Products")))
+        if test_host != root / "app/Build/Products/Debug/MacDown2UITests-Runner.app":
+            raise RuntimeError("Unexpected actual UI test host")
+        test_bundle = Path(matched[0]["TestBundlePath"].replace("__TESTHOST__", str(test_host)).replace("__TESTROOT__", str(root / "app/Build/Products")))
+        if test_bundle != test_host / "Contents/PlugIns/MacDown2UITests.xctest":
+            raise RuntimeError("Unexpected actual original test bundle")
+        test_binary = test_bundle / "Contents/MacOS/MacDown2UITests"
+        record["test_executable_sha256"] = sha(test_binary)
+        record["actual_original_target"] = {k: matched[0].get(k) for k in ["TestHostPath", "TestBundlePath", "UITargetAppPath", "IsUITestBundle"]}
         (root / "test-inputs").mkdir()
-        shutil.copyfile(test_binaries[0], root / "test-inputs/MacDown2UITests")
+        shutil.copyfile(test_binary, root / "test-inputs/MacDown2UITests")
         common = ["-configuration", "Release", "-destination", "platform=macOS", "-derivedDataPath", str(root / "control"),
                   "-parallel-testing-enabled", "NO", "-test-timeouts-enabled", "YES", "-default-test-execution-time-allowance", "120", "-maximum-test-execution-time-allowance", "120"]
         phase("positive", root / "control/Build/Products/Release/HostedFocusControl.app/Contents/MacOS/HostedFocusControl",
