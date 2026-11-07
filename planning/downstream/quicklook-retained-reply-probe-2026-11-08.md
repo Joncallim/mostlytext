@@ -125,3 +125,14 @@ QLPreviewReply. The named assertion and expected42 outcome remain unchanged.
 All three native phases, -O/strict concurrency/warnings-as-errors, actual bytes,
 limits, terminal choices and lifetime assertions stay. No app/production policy
 or architecture changes; first corrected native execution is mandatory.
+
+## Actual qualified main intake
+
+PR136 has merged at8b02cd6140c2c888eac700d201ea65f059dff426. Its actual parents,
+treebb4b1ba3 and canonical fast-forward are verified. Intake that actual main and
+preserve its complete qualified external-file executor packet alongside the
+existing first native Quick Look packet. All six Quick Look execution input
+blobs remain equal to qualified7581079d; the new root product tree includes the
+separate FileCore test. A fresh first native/Compliance qualification on this
+combined exact head is required before review/merge. Earlier758receipts remain
+at actual6c52874c and tree6dbfbc33, never retargeted to this intake.
