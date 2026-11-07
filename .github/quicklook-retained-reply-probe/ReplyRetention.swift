@@ -172,6 +172,13 @@ private func runProbe() throws {
         )
     }
     try require(ledger.reserve(1_048_576) == nil && ledger.usage == (8, 8 * 1_048_576), "ninth-holder-admitted")
+    for outcome in [Terminal.replied, .failed, .cancelled] {
+        let terminal = TerminalGate()
+        try require(terminal.finish(outcome), "initial-terminal-choice-refused")
+        for late in [Terminal.replied, .failed, .cancelled] {
+            try require(!terminal.finish(late), "late-terminal-choice-admitted")
+        }
+    }
     let otherRequest = TerminalGate()
     try require(otherRequest.finish(.cancelled) && !otherRequest.finish(.replied), "cancelled-request-replied")
     try checkFactories(held)

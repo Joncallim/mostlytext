@@ -91,3 +91,18 @@ Finder cancellation, framework-internal memory ceiling, final signed artifact,
 owner/VoiceOver or whole issue closure is implied. If framework retention differs
 from the proposed ownership, preserve the first refusal and revise this contract
 before changing the model; never normalize the observation into a pass.
+
+## Source preparation checkpoint
+
+Strict installed-SDK type checking, pinned0.63.1 formatting, strict lint, eleven
+pure outcome/optimized-admission controls, three owned-process controls, actual
+CORTANA normal-host refusal, Python/YAML syntax and source compliance pass. Initial
+formatting/one catch-placement refusal was corrected before any native publication.
+No local framework executable was built or run. Original cold-Finder fixture,
+controller, permissions/workflow and all MacDown2 bytes remain unchanged.
+
+An unrelated FileCore regression PR136 may integrate while this independent
+private probe qualifies. Before merge, intake its actual main and requalify the
+combined head; source-only addition of unrelated tests does not erase any first
+outcome. Preserve old and new exact checkout/product-tree identities separately.
+Do not claim the first older full tree equals a later combined tree.
