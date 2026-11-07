@@ -152,3 +152,19 @@ to bootstrap a manual run. Original native requirements, source/compiled binding
 Save-panel/physical-byte assertions and first-failure preservation stay unchanged.
 PR132fc29 remains frozen; its diagnostic successor is still held for all16first
 outcomes. This independent CLI unit is not its successor or a Preview qualification.
+
+## First preparation failure and history correction
+
+Sourceb259's first workflow42382179655 stops at the real ancestry guard before
+generation/build/native access: actions/checkout fetched only synthetic
+ed1f7201 with --depth=1, so required main427 is not a valid local object and
+merge-base exits128. Compliance42382179625 passes. Both complete first outcomes,
+raw checkout/guard steps and no-artifact metadata are retained in the source
+packet before correction. No product/UI test or Save-panel acceptance follows.
+
+Use fetch-depth0 in this private workflow. Preserve the exact main427 ancestor
+check rather than inferring ancestry from a printed merge subject or bypassing
+a missing object. Add a real owned Git-history control showing shallow missing-
+anchor refusal and success after full history is fetched. No signing/native code
+executes in that regression. Only this materially corrected source may receive
+a new first native attempt; keep all original assertions and fixed bounds.
