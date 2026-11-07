@@ -230,3 +230,29 @@ publication; no failed invocation is claimed as passing. All product/original
 UI tests, existing bootstrap/preparer/private control sources, project and pins
 remain byte-identical to actual main210f. This is source/controller verification;
 all ten first batch outcomes and exact per-case independent review remain pending.
+
+## First full matrix and correction decision before assembly
+
+First ec2d run42350228707 is independently verified as35 original passes, one
+actual FirstRun line61 failure followed by a framework restart, and two NOT_RUN
+rows after that uncertainty; all ten genuine positives pass. Complete first
+receipts/logs/actual summaries and scoped bindings are retained in the adjacent
+packet. Failed-case after-source proof is absent, not repaired by final metadata.
+Four actual guard-test corpus files were missing from the receipt hash map;
+record the gap explicitly rather than claiming complete data capture.
+
+The next candidate assembles actual current maincc1cd1e6 and real local #17
+unit5ee49b2c as a merge parent. The unit's architecture and actual first failure/
+filesystem counterexamples precede its three-line product correction. It reuses
+the same regular-file admission for Welcome and pending restore, preserving raw
+queues and all original methods/assertions/deadlines/guards. Historical runtime
+queue contents remain unknown. Full current CI and all affected native gates
+are required; continuing failure needs fresh diagnosis, never an unchanged retry.
+
+Fix the guard-data binding at the same time: one explicit GUARD_CORPUS mapping
+in the private batch controller defines the two actual pass/failure receipt/log
+pairs. Both the admission tests and producer inventory consume that mapping;
+preparation requires every listed corpus file to be tracked and hashes it before
+the positive, with normal after-source verification. This prevents the same
+fixture-name drift from reappearing. No result threshold, original case, limit
+or positive is removed. Preserve the entire first source before another push.
