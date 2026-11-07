@@ -43,3 +43,22 @@ actual unpack result's built-in type at the existing end marker, without changin
 the payload or message behaviour. The complete unchanged-engine reference must
 still run under the same bounds. Counterexample controls diagnose a host contract;
 they do not qualify a renderer or replace the missing actual SVG positive.
+
+## Actual signed-array host defect and narrow repair
+
+Sourcee8c45c57 /run42416416013 fails the original15second reference limit.
+Complete firsts and22canonical/20copied inputs are retained and independently
+verified. The actual WASM unpack result is Int8Array. Verbatim actual clone
+controls pass only Uint8Array and fail11other view kinds, turning Int8Array into
+an ordinary Object instead of preserving its bytes/type. This proves a host
+copy contract defect; a corrected real engine result is still required before
+claiming that defect explains the reference stall. Mac outcome remains unobserved.
+
+Repair only clone's BufferSource branch: detect every ArrayBuffer view, copy its
+visible underlying byte interval and preserve its actual view kind (including
+DataView) over that new buffer. Keep the existing ArrayBuffer/object/message
+branches, engine bytes, fixed graph, authority, all deadlines and SVG assertions.
+Require all12actual type/byte counterexamples to pass, then the unchanged actual
+D2 reference to produce SVG. No generic structured-clone/worker isolation promise
+is made for this private fixed-input adapter. Preserve this first result before
+publishing correction; leave frozen Mac and Preview candidates unchanged.
