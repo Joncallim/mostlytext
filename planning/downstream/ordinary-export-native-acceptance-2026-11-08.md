@@ -140,3 +140,28 @@ a real shallow Git capsule of the actual source, then prove the pinned exact
 subtree succeeds and a different/missing product subtree refuses. No product,
 UI selector, output assertion, deadline, dependency or parent source change.
 Preserve the next complete first outcome before any further correction.
+
+## Use the observed native filename field and hidden-extension display
+
+First70c5ef92 native42421882343 fails; Compliance42421949561 passes. Actual
+1639canonical/24pins/13generated/411compiled roles verify. The real ordinary
+ARM Release app has no added test flags; benign positive and initial Cancel/
+reopen complete. The second HTML panel test fails because its filename query
+requires a visible source.html value. The actual initial before-Cancel custom
+screenshot/tree instead shows saveAsNameTextField with the source stem and
+hidden extension. No custom second failed-panel screenshot is claimed. HTML
+and PDF saves are NOT_RUN. Source bytes remain unchanged. Owned UI exits65
+without timeout/force, but the ordinary app needs identity-bound FORCE cleanup
+after failure; this never qualifies normal Quit or export acceptance.
+
+Before changing code, preserve complete original firsts, compiled identities,
+actual raw results/log and the accurately labelled initial screenshot/tree.
+Use that observed unique native saveAsNameTextField identifier, require exactly
+one field and require its displayed value equal the source-derived stem. Type
+the same exact full destination filename and retain format/type/output-path
+and source-preservation checks. This corrects the private display assumption;
+no alternate selector fallback, direct export call, assertion skip or longer
+deadline. Capture the actual post-format panel before the filename assertion
+so any next failure has a contemporaneous custom tree/screenshot. All product
+source/flags/baseline, format choices, output oracles and normal Quit requirement
+remain unchanged. Preserve the next complete first outcome before correction.
