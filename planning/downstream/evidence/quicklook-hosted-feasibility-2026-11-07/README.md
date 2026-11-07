@@ -42,3 +42,13 @@ include root read/debugger/test-manager exceptions injected by UI testing.
 The permissive subset validator missed them. This is real routing/display
 evidence, not production-like file-access or full QL-REPLY proof. The full
 original receipt/permissions/event log and screenshot are preserved.
+
+Source61233e84 has valid static cold-Finder evidence: actual exact sandbox/
+user-selected-read-only entitlements and binary identities stay equal before
+and after UI execution. Callback Security self-check admits; the selected
+file reads28bytes and its generated sibling open is denied EPERM. One genuine
+Finder UI test passes with zero skips; the static HTML and cid PNG are visually
+inspected. Callback/factory run off-main with one factory call. All14 inputs
+and actual synthetic tree are verified. This qualifies only the static first
+platform probe; retention/repeated factories/system cancellation/failure-once/
+slow-real-renderer fallback and production integration remain unproven.

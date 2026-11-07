@@ -199,3 +199,15 @@ the guarded preparation itself. These changes narrow execution authority;
 provider, UI-test, native assertions and original deadlines remain unchanged.
 Fresh current-head static Finder qualification remains required after intake of
 actual startup main; first6123 static receipts keep their original source.
+
+## Actual qualified-main intake and static-slice result
+
+Intake actual mainb83ec408b52b67ce7d0552d50136ae8d23c8b149 before final
+qualification. The production app/package tree must match that qualified main;
+the private probe still has no root-product module dependency or shipping target.
+The original source61233e84 static run42319634959 independently verifies all14
+recorded inputs, exact before/after permissions/binary identity, actual runtime
+self-check, selected read/sibling denial, one real cold Finder UI pass with no
+skips, inspected HTML/cid-PNG screenshot and actual off-main callback/factory.
+The complete original receipts stay bound to6123/4fe3180d, not retargeted to the
+new main intake or guard correction. Full QL-REPLY remains open.

@@ -9,6 +9,7 @@ import platform
 import plistlib
 import shutil
 import subprocess
+import sys
 
 
 def digest(path):
@@ -24,7 +25,21 @@ def command(args):
     return subprocess.check_output(args, text=True, timeout=60).strip()
 
 
+def require_standard_python():
+    if sys.flags.optimize:
+        raise RuntimeError("Optimized Python cannot enforce the Quick Look execution contract")
+
+
+def validate_trusted_event(event, event_name):
+    if "pull_request" in event:
+        if event["pull_request"]["head"]["repo"]["full_name"] != "Joncallim/mostlytext":
+            raise RuntimeError("Quick Look native execution requires a trusted same-repository head")
+    elif event_name != "workflow_dispatch":
+        raise RuntimeError("Quick Look native execution requires an explicitly supported event")
+
+
 def main():
+    require_standard_python()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
     parser.add_argument("--verify-built", action="store_true")
@@ -33,6 +48,7 @@ def main():
     args = parser.parse_args()
     assert os.environ.get("GITHUB_ACTIONS") == "true" and os.environ.get("RUNNER_OS") == "macOS"
     assert os.environ.get("GITHUB_REPOSITORY") == "Joncallim/mostlytext"
+    validate_trusted_event(json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text()), os.environ["GITHUB_EVENT_NAME"])
     assert Path.home() == Path("/Users/runner") and platform.mac_ver()[0].split(".")[0] == "26"
     root = args.output.resolve()
     assert root == Path(os.environ["RUNNER_TEMP"]).resolve() / "mostlytext-qlreply"

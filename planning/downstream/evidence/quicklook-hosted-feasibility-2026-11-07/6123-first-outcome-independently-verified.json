@@ -1,0 +1,39 @@
+{
+  "head": "61233e844ebf3ec23a1e5b94c1d4db3528d34da2",
+  "checkout": "4fe3180dbb765dd7ea3a90b554e7634e5d517996",
+  "all_recorded_sources_verified": 14,
+  "root_product_tree_verified": "450870700f707bbe09693efb39777ac5b9610a92",
+  "owned_status": {
+    "returncode": 0,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 18.00861624999999,
+    "app_cleanup_requested": []
+  },
+  "actual_ui_tests": 1,
+  "ui_failures_and_skips": 0,
+  "actual_entitlements_before_after_equal_exact_declared": {
+    "com.apple.security.app-sandbox": true,
+    "com.apple.security.files.user-selected.read-only": true
+  },
+  "actual_callback_self_policy_admitted": true,
+  "selected_fixture_bytes_read": 28,
+  "generated_sibling_open_refused_errno": 1,
+  "actual_callback_and_factory_off_main": true,
+  "actual_factory_calls": 1,
+  "no_containing_app_launch_verified": true,
+  "actual_cold_finder_marker_and_cid_png_visually_inspected": true,
+  "screenshot_sha256": "778c3528e47131e3e6c0d73b64476f49b09a4659c6b653862f038f0b759f7036",
+  "host_device": {
+    "architecture": "arm64",
+    "deviceId": "cf3dcf53c961e4647c6907849745ba073013f96e",
+    "deviceName": "My Mac",
+    "modelName": "Apple Virtual Machine 1",
+    "osBuildNumber": "25G83",
+    "osVersion": "26.6.2",
+    "platform": "macOS"
+  },
+  "recorded_app_sha256": "cd2a77de2a55f1ac12a78238fa9e45cda852702834831e8152d73cf883a42e3f",
+  "recorded_provider_sha256": "d5668fd6a44ef8570898361cb3c7fb14cc1e0478f1990df42c27764e99149ec3",
+  "scope": "Valid static cold Finder feasibility only. Actual selected-file read/sibling denial plus exact signing context and runtime self-check. No repeated retention/system cancellation/failure-once/slow-real-renderer fallback or production/full QL-REPLY/final artifact acceptance. Binary hashes are actual hosted records, not independently downloaded binaries."
+}
