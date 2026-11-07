@@ -116,3 +116,22 @@ or repetition mode and exercise both rejected and corrected argument parsing
 through showBuildSettings ONLY locally; never execute the UI test locally.
 Provider/UI-test/positive criteria/deadlines stay unchanged. No actual Finder
 request has executed and neither parser refusal establishes a native blocker.
+
+## First actual UI-test result: sandbox home is not account identity
+
+Source5edddde4/run42318142274 genuinely starts one XCUITest, then its first
+Foundation home assertion fails. The actual runner home is the exact sandbox
+container /Users/runner/Library/Containers/app.mostlytext.QLReplyProbe.FinderTests.xctrunner/Data,
+not /Users/runner. No Finder activation or provider callback occurs. The owned
+command exits65 normally in32.211s; the actual test fails one assertion in2.128s.
+Keep the first xcresult/log and do not call this an automation permission failure.
+
+Correct the UI fixture's account guard to verify the POSIX account record
+(getpwuid(getuid())) has BOTH name runner and home /Users/runner, with matching
+real/effective UID. Separately require the exact observed, expected XCUITest
+sandbox-home path. Do not accept arbitrary user homes, disable the sandbox,
+spoof HOME, change TCC or alter provider/visible-marker/cold/no-container criteria.
+The hosted preparation guard remains exact /Users/runner + GitHub/macOS26.
+Compile the changed UI fixture unsigned only locally, preserving old build/test
+outcomes. This is the demonstrated distinction between account identity and a
+sandbox's redirected home, not permission to run native code in the owner account.
