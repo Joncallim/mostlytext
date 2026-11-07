@@ -1,0 +1,237 @@
+{
+  "head": "6139bc613dd2bad61215a49336d7d4620975465f",
+  "checkout": "2c89329b065466b160faf68a7fa96148df7ad829",
+  "source_tree": "64219ae487417ea89b111ee79f15e3aa457874e4",
+  "actual_tested_tree": "1a6c9651a954819f468880702ad8758f61e4f1b0",
+  "compiled_inputs_byte_equal_across_earlier_documentation_base": true,
+  "licence_canonical_bytes": 1369,
+  "notices_canonical_bytes": 537624,
+  "resource_verification_after_normal_quit": true,
+  "all_source_inputs_verified": 1612,
+  "all_pins_verified": 24,
+  "all_generated_copied_files_downloaded_hash_verified": 11,
+  "original_failed_journey_source_byte_unchanged": true,
+  "actual_positive_and_public_focus_tests_passed": 2,
+  "failures_skips_expected_failures": 0,
+  "criteria": {
+    "benign_control": true,
+    "file_open_acknowledged": true,
+    "public_focus_bold_undo": true,
+    "unchanged_product_and_source": true,
+    "normal_identity_bound_quit": true
+  },
+  "positive_owned": {
+    "returncode": 0,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 19.16467241700002,
+    "app_cleanup_requested": []
+  },
+  "focus_owned": {
+    "returncode": 0,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 66.77677274999996,
+    "app_cleanup_requested": []
+  },
+  "actual_gui": {
+    "keyboard_input_source": "com.apple.keylayout.US",
+    "login_done": true,
+    "on_console": true,
+    "scope": "Actual hosted GUI metadata after positive input control, before ordinary product launch",
+    "screen_lock_field": null,
+    "screens": [
+      {
+        "height": 768,
+        "scale": 1,
+        "width": 1024
+      }
+    ],
+    "uid": 501
+  },
+  "actual_same_pid_birth_and_normal_quit": true,
+  "unchanged_source_file_bytes": true,
+  "recorded_build": {
+    "app": "/Users/runner/work/_temp/mostlytext-focus/app/Build/Products/Release/MacDown2.app",
+    "executable": "/Users/runner/work/_temp/mostlytext-focus/app/Build/Products/Release/MacDown2.app/Contents/MacOS/MacDown2",
+    "app_sha256": "6a9afa6ba00529499679b23a19a5946d4748b063940a27a9e3a9f3ef9a30dcbb",
+    "helper": "/Users/runner/work/_temp/mostlytext-focus/app/Build/Products/Release/MacDown2.app/Contents/MacOS/mostlytext-cli",
+    "helper_sha256": "111047d8122a5c5246d15baeb2ef7c554e0eaaaf2b8ff8f85dd7c9f00d52fa7e",
+    "controller_sha256": "6557c74690650c7281253abf3b642b0590c913fbe6a3385dc55b6868529e2b51",
+    "host_facts_sha256": "c1850f19a3e0242d9f0cfda9200e9d913dbd9de3d3504c4f1998be2344a97166",
+    "info": {
+      "BuildMachineOSBuild": "25G332",
+      "CFBundleDevelopmentRegion": "en",
+      "CFBundleDisplayName": "MostlyText",
+      "CFBundleDocumentTypes": [
+        {
+          "CFBundleTypeExtensions": [
+            "md",
+            "markdown",
+            "mdown",
+            "mkd",
+            "mkdn"
+          ],
+          "CFBundleTypeName": "Markdown Document",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Default",
+          "LSItemContentTypes": [
+            "net.daringfireball.markdown"
+          ]
+        },
+        {
+          "CFBundleTypeExtensions": [
+            "html",
+            "htm"
+          ],
+          "CFBundleTypeName": "HTML Document",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Default",
+          "LSItemContentTypes": [
+            "public.html"
+          ]
+        },
+        {
+          "CFBundleTypeExtensions": [
+            "json"
+          ],
+          "CFBundleTypeName": "JSON Document",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Default",
+          "LSItemContentTypes": [
+            "public.json"
+          ]
+        },
+        {
+          "CFBundleTypeExtensions": [
+            "yaml",
+            "yml"
+          ],
+          "CFBundleTypeName": "YAML Document",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Default",
+          "LSItemContentTypes": [
+            "public.yaml"
+          ]
+        },
+        {
+          "CFBundleTypeExtensions": [
+            "toml"
+          ],
+          "CFBundleTypeName": "TOML Document",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Alternate",
+          "LSItemContentTypes": [
+            "com.joncallim.macdown2.toml"
+          ]
+        },
+        {
+          "CFBundleTypeExtensions": [
+            "txt"
+          ],
+          "CFBundleTypeName": "Plain Text Document",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Default",
+          "LSItemContentTypes": [
+            "public.plain-text"
+          ]
+        },
+        {
+          "CFBundleTypeExtensions": [
+            "js",
+            "jsx",
+            "ts",
+            "tsx",
+            "py",
+            "rb",
+            "css",
+            "swift",
+            "c",
+            "cpp",
+            "cc",
+            "cxx",
+            "h",
+            "hpp",
+            "sh",
+            "bash",
+            "zsh",
+            "sql",
+            "xml",
+            "tex",
+            "latex"
+          ],
+          "CFBundleTypeName": "Source Code",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Alternate",
+          "LSItemContentTypes": [
+            "public.source-code"
+          ]
+        }
+      ],
+      "CFBundleExecutable": "MacDown2",
+      "CFBundleIconFile": "AppIcon",
+      "CFBundleIconName": "AppIcon",
+      "CFBundleIdentifier": "app.mostlytext.MostlyText",
+      "CFBundleInfoDictionaryVersion": "6.0",
+      "CFBundleName": "MostlyText",
+      "CFBundlePackageType": "APPL",
+      "CFBundleShortVersionString": "0.1.0",
+      "CFBundleSupportedPlatforms": [
+        "MacOSX"
+      ],
+      "CFBundleVersion": "1",
+      "DTCompiler": "com.apple.compilers.llvm.clang.1_0",
+      "DTPlatformBuild": "25A352",
+      "DTPlatformName": "macosx",
+      "DTPlatformVersion": "26.0",
+      "DTSDKBuild": "25A352",
+      "DTSDKName": "macosx26.0",
+      "DTXcode": "2601",
+      "DTXcodeBuild": "17A400",
+      "LSApplicationCategoryType": "public.app-category.productivity",
+      "LSMinimumSystemVersion": "26.0",
+      "MostlyTextUITestOwnerUID": "",
+      "NSHumanReadableCopyright": "Copyright \u00a9 2026 Joncallim",
+      "NSPrincipalClass": "NSApplication",
+      "UTExportedTypeDeclarations": [
+        {
+          "UTTypeConformsTo": [
+            "public.json"
+          ],
+          "UTTypeDescription": "MostlyText Theme",
+          "UTTypeIdentifier": "app.mostlytext.theme",
+          "UTTypeTagSpecification": {
+            "public.filename-extension": [
+              "mostlytext-theme"
+            ]
+          }
+        },
+        {
+          "UTTypeConformsTo": [
+            "public.data"
+          ],
+          "UTTypeDescription": "MostlyText File Tree Item",
+          "UTTypeIdentifier": "com.joncallim.macdown2.file-tree-item"
+        },
+        {
+          "UTTypeConformsTo": [
+            "public.text",
+            "public.plain-text"
+          ],
+          "UTTypeDescription": "TOML Document",
+          "UTTypeIdentifier": "com.joncallim.macdown2.toml",
+          "UTTypeTagSpecification": {
+            "public.filename-extension": [
+              "toml"
+            ]
+          }
+        }
+      ]
+    },
+    "license_resource_sha256": {
+      "/Users/runner/work/_temp/mostlytext-focus/app/Build/Products/Release/MacDown2.app/Contents/Resources/LICENSE": "cf3074d35adf4d5ccdca366b21e84e20e308912c8614dbcafd28884af9c1e0f8",
+      "/Users/runner/work/_temp/mostlytext-focus/app/Build/Products/Release/MacDown2.app/Contents/Resources/THIRD_PARTY_NOTICES.md": "1e19c978f81682e60cd2cdf20a18122f2106c73a26c67e9ddebcca5b39354341"
+    }
+  },
+  "scope": "Actual normal Release licence Help/full canonical texts/keyboard Copy/native Find Next/matched Copy/close/About reopen, after unchanged full public focus/Bold/Undo. Canonical source/oracles/compiled-resource recorded hashes and normal Quit/post-Quit resource verification. Not adversarial readonly typing, native-language/VoiceOver, independent rights/source publication, protected owner or exact signed artifact. App binary hashes are hosted records, not downloaded binaries."
+}
