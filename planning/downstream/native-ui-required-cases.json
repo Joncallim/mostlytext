@@ -54,7 +54,7 @@
     "MacDown2/MacDown2UITests/MultiFormatUITests.swift": "45e9880b721eb64d67837a777073ff83693e9bec97410b004ce6fad9163d3634",
     "MacDown2/MacDown2UITests/OutlineNavigationUITests.swift": "3e719142307d60c2cfcebee590aab95462443b54534e00fb97e53495e86dbdac",
     "MacDown2/MacDown2UITests/PreviewLayoutUITests.swift": "a90e1cc66f773d0fa38de13301d3d23fb409e62c00f47db02063b9ac964a5f2b",
-    "MacDown2/MacDown2UITests/TabLifecycleUITests.swift": "878124908bb3e1be3208700fddbd2560f694a5eb60db970f588e3f61a6c244e9"
+    "MacDown2/MacDown2UITests/TabLifecycleUITests.swift": "c082d492789b06d19a0d51e01349b0573ecae838b8c5979b479bcd1dcb338026"
   },
   "cases": [
     {
