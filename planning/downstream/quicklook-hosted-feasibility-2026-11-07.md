@@ -182,3 +182,20 @@ that pre-test codesign metadata survives UI-test setup. These changes narrow
 fixture privilege; they never weaken a provider sandbox or suppress a failure.
 Local checks are swiftc type-check only; no more local app builds/registration.
 The earlier green workflow and its complete raw evidence remain unchanged.
+
+## Final source review: Python optimization and trusted event guards
+
+Before integration, explicitly refuse optimized Python before any preparation/
+verification/signing mode can use assertion-based host checks. A guard-only
+before control strips that new explicit call and compiles the former main under
+-O, intercepting its FIRST mkdir: it reaches mutation despite an untrusted host.
+The corrected main refuses before that intercepted mutation. No test executes
+mkdir, codesign, preference or GUI operations. Retain this actual counterexample.
+
+Also validate the actual GitHub event's same-repository PR head (or explicit
+workflow dispatch), rather than treating GITHUB_REPOSITORY's base name as proof
+of a trusted head. Filter the job to those events and reject a foreign head in
+the guarded preparation itself. These changes narrow execution authority;
+provider, UI-test, native assertions and original deadlines remain unchanged.
+Fresh current-head static Finder qualification remains required after intake of
+actual startup main; first6123 static receipts keep their original source.
