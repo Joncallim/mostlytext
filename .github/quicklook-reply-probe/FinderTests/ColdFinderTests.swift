@@ -1,11 +1,17 @@
 import AppKit
+import Darwin
 import XCTest
 
 @MainActor
 final class ColdFinderTests: XCTestCase {
     func testActualColdFinderStaticReply() throws {
         continueAfterFailure = false
-        XCTAssertEqual(FileManager.default.homeDirectoryForCurrentUser.path, "/Users/runner")
+        XCTAssertEqual(getuid(), geteuid())
+        let account = try XCTUnwrap(getpwuid(getuid()))
+        XCTAssertEqual(String(cString: account.pointee.pw_name), "runner")
+        XCTAssertEqual(String(cString: account.pointee.pw_dir), "/Users/runner")
+        XCTAssertEqual(FileManager.default.homeDirectoryForCurrentUser.path,
+                       "/Users/runner/Library/Containers/app.mostlytext.QLReplyProbe.FinderTests.xctrunner/Data")
         XCTAssertEqual(ProcessInfo.processInfo.operatingSystemVersion.majorVersion, 26)
         XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText").isEmpty,
                       "The containing fixture must not launch before cold Finder")
