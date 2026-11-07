@@ -1,0 +1,68 @@
+{
+  "head": "8e2c3e87047f45e439d9bd2d22e90bf426f23e7a",
+  "checkout": "b3676702e0be7a9e144979ebaab22b08bb2ad857",
+  "tree": "7d347f66a1083278fb0ac56d3c1617a7000df5c3",
+  "source_inputs_verified": 1607,
+  "pins_verified": 24,
+  "generated_files_verified": 10,
+  "root_product_original_ui_tests_project_pins_byte_identical_main": true,
+  "actual_benign_positive_pass": true,
+  "actual_selected_normal_release_case_failure": {
+    "failureText": "XCTAssertLessThanOrEqual failed: (\"99.0\") is greater than (\"52.0\") - Status bar must fit at most two readable rows at a narrow editor width",
+    "targetName": "HostedFocusDriverTests",
+    "testIdentifier": 1,
+    "testIdentifierString": "PublicFocusTests/testNormalStatusBarRemainsReadableAtNarrowAndWideWidths()",
+    "testIdentifierURL": "test://com.apple.xcode/HostedPublicFocus/HostedFocusDriverTests/PublicFocusTests/testNormalStatusBarRemainsReadableAtNarrowAndWideWidths",
+    "testName": "testNormalStatusBarRemainsReadableAtNarrowAndWideWidths()"
+  },
+  "actual_frames": {
+    "Narrow": {
+      "editorStatusBar.height": 99,
+      "editorStatusBar.width": 398,
+      "statusBarCount.height": 91,
+      "statusBarCount.width": 21,
+      "statusBarEncoding.height": 18,
+      "statusBarEncoding.width": 48,
+      "statusBarIndentation.height": 39,
+      "statusBarIndentation.width": 19,
+      "statusBarLineColumn.height": 52,
+      "statusBarLineColumn.width": 19,
+      "statusBarLineEnding.height": 18,
+      "statusBarLineEnding.width": 106,
+      "statusBarSyntaxMode.height": 18,
+      "statusBarSyntaxMode.width": 71
+    },
+    "Wide": {
+      "editorStatusBar.height": 24,
+      "editorStatusBar.width": 796,
+      "statusBarCount.height": 13,
+      "statusBarCount.width": 104,
+      "statusBarEncoding.height": 18,
+      "statusBarEncoding.width": 48,
+      "statusBarIndentation.height": 13,
+      "statusBarIndentation.width": 48,
+      "statusBarLineColumn.height": 13,
+      "statusBarLineColumn.width": 50,
+      "statusBarLineEnding.height": 18,
+      "statusBarLineEnding.width": 106,
+      "statusBarSyntaxMode.height": 18,
+      "statusBarSyntaxMode.width": 71
+    }
+  },
+  "positive_owned": {
+    "returncode": 0,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 18.799949000000083,
+    "app_cleanup_requested": []
+  },
+  "focus_owned": {
+    "returncode": 65,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 64.78999691699994,
+    "app_cleanup_requested": []
+  },
+  "same_pid_birth_inspect_and_strict_identity_cleanup_verified": true,
+  "scope": "Genuine exact intended99>52 narrow-layout failure after unchanged complete public focus journey. No skips/retry/timeouts. Cleanup is force cleanup, not normal Quit; failed controller lacks post-source/build verification. Source file bytes at download match, not an independent all-source after-run claim. No final-localisation/owner/signed-artifact acceptance."
+}

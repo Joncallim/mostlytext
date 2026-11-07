@@ -111,3 +111,19 @@ a synthetic valid anchor and intercepts ancestry. No ancestry command or receipt
 file is read by either control. Product/original UI tests/project/pins remain
 byte-identical to actual6b main. This entire branch is local and unpublished;
 no native licence result or current-main activation is claimed.
+
+## Verified main intake and activation — 7 November 2026
+
+PR124 merged as aff49a5eb4b7bb111ce949daef66b0b41ddfb274. Both exact unit
+ancestors remain; actual merge tree75af2efa equals the fully qualified synthetic
+checkout20015952. All required first native outcomes and complete CI pass at
+ed96; earlier failures remain unchanged. GitHub also marks ancestor PR123
+merged through that integration. This branch incorporates actual main before
+activation. Combined controller retains both fixed status/licence selections,
+each original ancestry anchor, strict actual-case matching and host-before-
+receipt ordering. The full source list includes both workflows and original
+geometry driver; licence resources/oracles remain bound for every selection.
+
+The licence anchor now names that actual verified merge. This enables a first
+disposable-host experiment, not native acceptance. Preserve every actual first
+result and classify any unexecuted selector assumption before further changes.

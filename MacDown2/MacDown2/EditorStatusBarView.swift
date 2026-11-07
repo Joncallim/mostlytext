@@ -111,44 +111,26 @@ struct EditorStatusBarView: View {
             : String(localized: "Tabs: \(indentationWidth)", bundle: .main)
     }
 
+    private struct Labels {
+        let lineColumn: String
+        let count: String
+        let indentation: String
+    }
+
     var body: some View {
-        HStack(spacing: 16) {
-            Button(action: onGoToLine) {
-                Text(lineColumnText)
+        // Read the existing metrics/selection once even when several layouts
+        // are measured. Whole status items keep their intrinsic readable width.
+        let labels = Labels(lineColumn: lineColumnText, count: countText, indentation: indentationText)
+        ViewThatFits(in: .horizontal) {
+            singleRow(labels)
+            stackedRows(labels)
+            ScrollView(.horizontal) {
+                stackedRows(labels)
+                    .fixedSize(horizontal: true, vertical: false)
             }
-            .buttonStyle(.plain)
-            .accessibilityIdentifier("statusBarLineColumn")
-            .help("Go to Line/Column")
-
-            Text(countText)
-                .accessibilityIdentifier("statusBarCount")
-
-            Spacer()
-
-            if let reducedHighlighting {
-                ReducedHighlightingNoteView(note: reducedHighlighting)
-            }
-
-            if let syntaxMode {
-                SyntaxModeStatusItemView(item: syntaxMode)
-            }
-
-            if let encoding {
-                EncodingStatusItemView(
-                    encoding: encoding.metadata,
-                    isChangeable: encoding.isChangeable,
-                    onReopen: encoding.onReopen,
-                    onSave: encoding.onSave
-                )
-            }
-
-            if let lineEnding {
-                LineEndingStatusItemView(profile: lineEnding.profile, onConvert: lineEnding.onConvert)
-            }
-
-            Text(indentationText)
-                .accessibilityIdentifier("statusBarIndentation")
+            .fixedSize(horizontal: false, vertical: true)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .font(.caption)
         .foregroundStyle(palette.map { Color(nsColor: $0.statusForeground.nsColor) } ?? Color.secondary)
         .padding(.horizontal, 8)
@@ -162,6 +144,77 @@ struct EditorStatusBarView: View {
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("editorStatusBar")
+    }
+
+    private func singleRow(_ labels: Labels) -> some View {
+        HStack(spacing: 16) {
+            primaryItems(labels)
+            Spacer(minLength: 0)
+            propertyItems
+            indentationItem(labels)
+        }
+    }
+
+    private func stackedRows(_ labels: Labels) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 16) {
+                primaryItems(labels)
+                Spacer(minLength: 0)
+                indentationItem(labels)
+            }
+            if reducedHighlighting != nil || syntaxMode != nil || encoding != nil || lineEnding != nil {
+                HStack(spacing: 16) {
+                    propertyItems
+                    Spacer(minLength: 0)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func primaryItems(_ labels: Labels) -> some View {
+        Button(action: onGoToLine) {
+            Text(labels.lineColumn)
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("statusBarLineColumn")
+        .help("Go to Line/Column")
+        .fixedSize(horizontal: true, vertical: false)
+
+        Text(labels.count)
+            .accessibilityIdentifier("statusBarCount")
+            .fixedSize(horizontal: true, vertical: false)
+    }
+
+    private func indentationItem(_ labels: Labels) -> some View {
+        Text(labels.indentation)
+            .accessibilityIdentifier("statusBarIndentation")
+            .fixedSize(horizontal: true, vertical: false)
+    }
+
+    @ViewBuilder
+    private var propertyItems: some View {
+        if let reducedHighlighting {
+            ReducedHighlightingNoteView(note: reducedHighlighting)
+                .fixedSize(horizontal: true, vertical: false)
+        }
+        if let syntaxMode {
+            SyntaxModeStatusItemView(item: syntaxMode)
+                .fixedSize(horizontal: true, vertical: false)
+        }
+        if let encoding {
+            EncodingStatusItemView(
+                encoding: encoding.metadata,
+                isChangeable: encoding.isChangeable,
+                onReopen: encoding.onReopen,
+                onSave: encoding.onSave
+            )
+            .fixedSize(horizontal: true, vertical: false)
+        }
+        if let lineEnding {
+            LineEndingStatusItemView(profile: lineEnding.profile, onConvert: lineEnding.onConvert)
+                .fixedSize(horizontal: true, vertical: false)
+        }
     }
 
     /// Foundation's own word-boundary logic (`enumerateSubstrings`,

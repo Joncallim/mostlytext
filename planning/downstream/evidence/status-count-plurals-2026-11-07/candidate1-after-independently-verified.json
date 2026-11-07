@@ -1,0 +1,11 @@
+{
+  "baseline": "6b49777d0f36c3d7a23cd0089e0823da1986660a",
+  "total": 9,
+  "before_failures": 5,
+  "after_failures": 0,
+  "unchanged_console_binary_and_source": true,
+  "console_sha256": "aa21cc2f514d5d05cfdcac18235ab273995e61522eb2dc81550961ebf19b62f0",
+  "source_sha256": "e201ef82100ed8fd68eed65788660556cb05f4422753f09c9064615066a8e52e",
+  "after_catalog_sha256": "42636001df40eb9b8c2371d50b3743cf151586a5a66ff72a07d0aad5691311bc",
+  "scope": "Same actual Foundation-only compiled English resource formatter; no app/native/final language or signed-artifact acceptance."
+}

@@ -1,0 +1,228 @@
+{
+  "head": "016afa10e68c4c2eed7bf79780d257444cf8e85a",
+  "checkout": "68eed391060d440b23179cb47345ca750c8e95cf",
+  "source_tree": "26c3ca73d8c1a4f337f25619ede8ef7e95e8299f",
+  "all_source_inputs_verified": 1607,
+  "all_pins_verified": 24,
+  "all_generated_copied_files_downloaded_hash_verified": 10,
+  "original_failed_journey_source_byte_unchanged": true,
+  "actual_positive_and_public_focus_tests_passed": 2,
+  "failures_skips_expected_failures": 0,
+  "criteria": {
+    "benign_control": true,
+    "file_open_acknowledged": true,
+    "public_focus_bold_undo": true,
+    "unchanged_product_and_source": true,
+    "normal_identity_bound_quit": true
+  },
+  "positive_owned": {
+    "returncode": 0,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 15.958693999999923,
+    "app_cleanup_requested": []
+  },
+  "focus_owned": {
+    "returncode": 0,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 52.50184695799999,
+    "app_cleanup_requested": []
+  },
+  "actual_gui": {
+    "keyboard_input_source": "com.apple.keylayout.US",
+    "login_done": true,
+    "on_console": true,
+    "scope": "Actual hosted GUI metadata after positive input control, before ordinary product launch",
+    "screen_lock_field": null,
+    "screens": [
+      {
+        "height": 768,
+        "scale": 1,
+        "width": 1024
+      }
+    ],
+    "uid": 501
+  },
+  "actual_same_pid_birth_and_normal_quit": true,
+  "unchanged_source_file_bytes": true,
+  "recorded_build": {
+    "app": "/Users/runner/work/_temp/mostlytext-focus/app/Build/Products/Release/MacDown2.app",
+    "executable": "/Users/runner/work/_temp/mostlytext-focus/app/Build/Products/Release/MacDown2.app/Contents/MacOS/MacDown2",
+    "app_sha256": "22e59b6595e33c5bfeca6207dcc1c46d6e90af5960e4473429754ed34be7c944",
+    "helper": "/Users/runner/work/_temp/mostlytext-focus/app/Build/Products/Release/MacDown2.app/Contents/MacOS/mostlytext-cli",
+    "helper_sha256": "111047d8122a5c5246d15baeb2ef7c554e0eaaaf2b8ff8f85dd7c9f00d52fa7e",
+    "controller_sha256": "6557c74690650c7281253abf3b642b0590c913fbe6a3385dc55b6868529e2b51",
+    "host_facts_sha256": "c1850f19a3e0242d9f0cfda9200e9d913dbd9de3d3504c4f1998be2344a97166",
+    "info": {
+      "BuildMachineOSBuild": "25G83",
+      "CFBundleDevelopmentRegion": "en",
+      "CFBundleDisplayName": "MostlyText",
+      "CFBundleDocumentTypes": [
+        {
+          "CFBundleTypeExtensions": [
+            "md",
+            "markdown",
+            "mdown",
+            "mkd",
+            "mkdn"
+          ],
+          "CFBundleTypeName": "Markdown Document",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Default",
+          "LSItemContentTypes": [
+            "net.daringfireball.markdown"
+          ]
+        },
+        {
+          "CFBundleTypeExtensions": [
+            "html",
+            "htm"
+          ],
+          "CFBundleTypeName": "HTML Document",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Default",
+          "LSItemContentTypes": [
+            "public.html"
+          ]
+        },
+        {
+          "CFBundleTypeExtensions": [
+            "json"
+          ],
+          "CFBundleTypeName": "JSON Document",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Default",
+          "LSItemContentTypes": [
+            "public.json"
+          ]
+        },
+        {
+          "CFBundleTypeExtensions": [
+            "yaml",
+            "yml"
+          ],
+          "CFBundleTypeName": "YAML Document",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Default",
+          "LSItemContentTypes": [
+            "public.yaml"
+          ]
+        },
+        {
+          "CFBundleTypeExtensions": [
+            "toml"
+          ],
+          "CFBundleTypeName": "TOML Document",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Alternate",
+          "LSItemContentTypes": [
+            "com.joncallim.macdown2.toml"
+          ]
+        },
+        {
+          "CFBundleTypeExtensions": [
+            "txt"
+          ],
+          "CFBundleTypeName": "Plain Text Document",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Default",
+          "LSItemContentTypes": [
+            "public.plain-text"
+          ]
+        },
+        {
+          "CFBundleTypeExtensions": [
+            "js",
+            "jsx",
+            "ts",
+            "tsx",
+            "py",
+            "rb",
+            "css",
+            "swift",
+            "c",
+            "cpp",
+            "cc",
+            "cxx",
+            "h",
+            "hpp",
+            "sh",
+            "bash",
+            "zsh",
+            "sql",
+            "xml",
+            "tex",
+            "latex"
+          ],
+          "CFBundleTypeName": "Source Code",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Alternate",
+          "LSItemContentTypes": [
+            "public.source-code"
+          ]
+        }
+      ],
+      "CFBundleExecutable": "MacDown2",
+      "CFBundleIconFile": "AppIcon",
+      "CFBundleIconName": "AppIcon",
+      "CFBundleIdentifier": "app.mostlytext.MostlyText",
+      "CFBundleInfoDictionaryVersion": "6.0",
+      "CFBundleName": "MostlyText",
+      "CFBundlePackageType": "APPL",
+      "CFBundleShortVersionString": "0.1.0",
+      "CFBundleSupportedPlatforms": [
+        "MacOSX"
+      ],
+      "CFBundleVersion": "1",
+      "DTCompiler": "com.apple.compilers.llvm.clang.1_0",
+      "DTPlatformBuild": "25A352",
+      "DTPlatformName": "macosx",
+      "DTPlatformVersion": "26.0",
+      "DTSDKBuild": "25A352",
+      "DTSDKName": "macosx26.0",
+      "DTXcode": "2601",
+      "DTXcodeBuild": "17A400",
+      "LSApplicationCategoryType": "public.app-category.productivity",
+      "LSMinimumSystemVersion": "26.0",
+      "MostlyTextUITestOwnerUID": "",
+      "NSHumanReadableCopyright": "Copyright \u00a9 2026 Joncallim",
+      "NSPrincipalClass": "NSApplication",
+      "UTExportedTypeDeclarations": [
+        {
+          "UTTypeConformsTo": [
+            "public.json"
+          ],
+          "UTTypeDescription": "MostlyText Theme",
+          "UTTypeIdentifier": "app.mostlytext.theme",
+          "UTTypeTagSpecification": {
+            "public.filename-extension": [
+              "mostlytext-theme"
+            ]
+          }
+        },
+        {
+          "UTTypeConformsTo": [
+            "public.data"
+          ],
+          "UTTypeDescription": "MostlyText File Tree Item",
+          "UTTypeIdentifier": "com.joncallim.macdown2.file-tree-item"
+        },
+        {
+          "UTTypeConformsTo": [
+            "public.text",
+            "public.plain-text"
+          ],
+          "UTTypeDescription": "TOML Document",
+          "UTTypeIdentifier": "com.joncallim.macdown2.toml",
+          "UTTypeTagSpecification": {
+            "public.filename-extension": [
+              "toml"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "scope": "Actual normal Release public UI: real folder selection, sidebar/Find/editor focus, fresh Bold eligibility, real Bold mutation and Undo. No root test flags/injection. Different disposable hosted machine, not protected CORTANA/original named UITest/full critical suite/performance or exact signed artifact. Binary digests are actual before/after verified hosted records, not downloaded binaries."
+}

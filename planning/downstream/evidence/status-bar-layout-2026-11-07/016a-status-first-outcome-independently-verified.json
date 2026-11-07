@@ -1,0 +1,12 @@
+{
+  "head": "016afa10e68c4c2eed7bf79780d257444cf8e85a",
+  "checkout": "68eed391060d440b23179cb47345ca750c8e95cf",
+  "tree": "26c3ca73d8c1a4f337f25619ede8ef7e95e8299f",
+  "source_inputs_verified": 1607,
+  "pins_verified": 24,
+  "generated_files_verified": 10,
+  "ordinary_release_app_and_private_driver_builds_passed": true,
+  "pre_ui_ancestry_guard_refused_missing_qualified_commit": true,
+  "native_ui_executions": 0,
+  "scope": "The first geometry attempt failed closed on shallow history before any UI test. This is neither an actual geometry failure nor native acceptance. Complete first artifacts and logs retained."
+}

@@ -83,6 +83,16 @@ struct EditorStatusBarViewTests {
         #expect(view.countText.contains("0 words"))
     }
 
+    @Test(arguments: [
+        ("", "0 characters, 0 words"),
+        ("a", "1 character, 1 word"),
+        ("ab", "2 characters, 1 word"),
+        ("a b", "3 characters, 2 words"),
+    ])
+    func documentCountsChooseIndependentEnglishPluralForms(text: String, expected: String) {
+        #expect(makeView(text: text).countText == expected)
+    }
+
     // MARK: - lineColumnText
 
     @Test func lineColumnTextAtDocumentStart() {

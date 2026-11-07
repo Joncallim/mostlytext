@@ -5,6 +5,7 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - 'MacDown2/MacDown2/EditorStatusBarView.swift'
       - 'MacDown2/Packages/MacDownKit/Sources/EditorCore/**'
       - 'MacDown2/Packages/MacDownKit/Sources/Highlighting/**'
       - 'MacDown2/Packages/MacDownKit/Sources/Themes/**'

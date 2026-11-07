@@ -61,7 +61,7 @@ def main():
                           ".github/scripts/prepare-hosted-public-focus.py", ".github/scripts/run-hosted-public-focus.py",
                           ".github/scripts/test-hosted-focus-guard.py", ".github/scripts/test-run-owned-app-tests.py",
                           ".github/scripts/native-cli-app-host.swift", ".github/scripts/native_cli_endpoint_probe.py",
-                          ".github/scripts/run-owned-app-tests.py", ".github/workflows/hosted-public-focus.yml", ".github/workflows/hosted-license-notices.yml", ".github/scripts/test-hosted-license-notices.py",
+                          ".github/scripts/run-owned-app-tests.py", ".github/workflows/hosted-public-focus.yml", ".github/workflows/status-bar-layout.yml", ".github/workflows/hosted-license-notices.yml", ".github/scripts/test-hosted-license-notices.py",
                           "LICENSE", "compliance/generated/THIRD_PARTY_NOTICES.md"]).splitlines()
         required = {".github/scripts/native-cli-app-host.swift", ".github/scripts/native_cli_endpoint_probe.py"}
         assert required <= set(tracked), "Intake actual qualified startup integration before this lane"
