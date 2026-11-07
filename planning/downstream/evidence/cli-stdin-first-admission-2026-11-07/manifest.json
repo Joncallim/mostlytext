@@ -1,0 +1,43 @@
+{
+  "source": "b25916df79db6ae9b8db4ad78ebbaa50161dcf4e",
+  "actual_pr_checkout": "ed1f720124733433824b72c1d745ff8ff0fa1f8c",
+  "first_native_workflow": 42382179655,
+  "conclusion": "failure before source generation/build/native execution",
+  "compliance": 42382179625,
+  "records": [
+    {
+      "original": "b259-native-first-artifact-metadata.json",
+      "compressed": "b259-native-first-artifact-metadata.json.gz",
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    {
+      "original": "b259-compliance-first-artifact-metadata.json",
+      "compressed": "b259-compliance-first-artifact-metadata.json.gz",
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    {
+      "original": "b259-compliance-first-run.json",
+      "compressed": "b259-compliance-first-run.json.gz",
+      "sha256": "07f17f59ced3e26266f944d484a7e94c8de8747c3c9949ac77fd058ffbfb45b7"
+    },
+    {
+      "original": "b259-native-first-run.json",
+      "compressed": "b259-native-first-run.json.gz",
+      "sha256": "1b7d265ebcb6515584a278d26c1a9ce83436cd26bf38858507f6db64a2df0667"
+    },
+    {
+      "original": "b259-2_Run actions_checkout@v4.txt",
+      "compressed": "b259-2_Run actions_checkout@v4.txt.gz",
+      "sha256": "63012d92557b7bd5068604ecc730973cf959466e6df067b57f847763a4feff6f"
+    },
+    {
+      "original": "b259-3_Admit only the integrated disposable hosted journey.txt",
+      "compressed": "b259-3_Admit only the integrated disposable hosted journey.txt.gz",
+      "sha256": "a44bb0d1799b3430ffe492e9c8b7b1b700ceb696e2b3e260397b7ba8a68c4f0a"
+    }
+  ],
+  "original_whole_archives": {
+    "b259-compliance-complete-first-logs.zip": "19d2bb6235eb7edd3c343e7d05380856f923c1f959b5c1b61d3baaa7d2dcce6a",
+    "b259-native-complete-first-logs.zip": "b2bb79d9c7253c87e5f42db429f0585a6f70028b364b680801474a09a1da4e82"
+  }
+}
