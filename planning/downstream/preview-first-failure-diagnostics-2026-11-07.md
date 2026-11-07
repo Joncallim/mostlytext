@@ -104,3 +104,30 @@ The existing default-branch Preview workflow can now be manually dispatched at
 this exact branch head once first-source guard/style/compiled-contract controls
 pass. Run one initial Debug/revision diagnostic and its separate staged case;
 preserve both first outcomes before any further material source correction.
+
+## First staged result and generation-anchor correction
+
+First diagnostic source5efe437f/run42385745698 is fully retained and independently
+verified before this revision. Original55, eight-image selection and actual
+revision mutant/restoration pass. StagedB fails only its generation0-to-1
+comparison at line42; exact id/epoch/source and granted-image copy do not fail.
+All seven downloaded original/staged compiled roles are identical. This is a
+failed diagnostic with an early-snapshot assumption, not a product image failure.
+
+FileDocument's public generation contract advances for every visible document
+state transition, not only text changes. The diagnostic snapshots generation0
+BEFORE its asynchronous denied-image observation wait. The invariant that granting
+itself does not mutate the observed source must instead compare against the
+document observed at the successful denied-copy boundary, immediately before
+beginPreviewResourceSelection. No cause of the earlier0-to-1 callback is proved.
+
+Keep the initial id/epoch and exact source requirements across the observation
+interval. Capture the observed denied document after the native copy returns,
+require it has no grant, same id/epoch/UTF8 source, then compare the post-grant
+generation/id/epoch/source against that actual pre-grant snapshot. Keep the
+original generation assertion in its correct before/after-grant interval, rather
+than treating startup activity before observation as a grant mutation. Print
+initial/denied/granted generations as passive phase observations. No original55
+assertion, payload, fixture, deadline, controller/result criterion or product
+source changes. A materially corrected first staged run remains diagnostic-only;
+its success cannot waive fc29 or prove its image-copy cause. No unchanged retry.
