@@ -62,6 +62,8 @@ def main():
         if actual.returncode:raise RuntimeError('Actual Linux reference failed; retain its original output')
         value=json.loads(actual.stdout)
         if value.get('real_d2_svg') is not True:raise RuntimeError('Actual real SVG positive absent')
+        if record['clone_counterexamples']['passed']!=12 or record['clone_counterexamples']['failed']!=0:
+            raise RuntimeError('Actual view kind/byte preservation controls must all pass')
         record['result']=value;exit_code=0
     except subprocess.TimeoutExpired as error:
         (expected/'reference-output.log').write_bytes((error.stdout or b'')+(error.stderr or b''))
