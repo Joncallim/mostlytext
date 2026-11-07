@@ -212,11 +212,28 @@ def decode_record(messages,request_id):
     return json.loads(raw)
 
 
+REQUIRED_PROVIDER_RESOURCES = ['host.js','control.js','d2-browser.js','D2-LICENSE.txt','D2-NOTICE.txt','THIRD_PARTY_NOTICES.md']
+
+
+def validate_provider_resources(provider,fixture):
+    result={}
+    for name in REQUIRED_PROVIDER_RESOURCES:
+        actual=provider/'Contents/Resources'/name
+        expected=fixture/'Resources'/name
+        if actual.is_symlink() or not actual.is_file() or not expected.is_file():
+            raise RuntimeError('Missing regular actual provider resource: '+name)
+        if actual.read_bytes()!=expected.read_bytes():
+            raise RuntimeError('Actual provider resource differs from its exact generated input: '+name)
+        result[name]=digest(actual)
+    return result
+
+
 def capture_compiled(root):
     products = root / 'build/Build/Products'
     release = products / 'Release'
     app = release / 'QLReplyProbeContainer.app'
     provider = app / 'Contents/PlugIns/QLReplyProbeProvider.appex'
+    validate_provider_resources(provider,root/'fixture')
     runner = release / 'QLReplyProbeFinderTests-Runner.app'
     test = runner / 'Contents/PlugIns/QLReplyProbeFinderTests.xctest'
     plans = list(products.glob('*.xctestrun'))
@@ -344,6 +361,7 @@ def main():
         paths = command(["git", "ls-files", "--", ".github/quicklook-jscd2-probe",
                          ".github/scripts/prepare-quicklook-jscd2-probe.py",
                          ".github/scripts/test-quicklook-jscd2-probe.py",
+                         ".github/scripts/test-quicklook-jscd2-resources.py",
                          ".github/scripts/observe-quicklook-jscd2.py",
                          ".github/scripts/run-quicklook-jscd2-ui.py",
                          ".github/scripts/test-quicklook-jscd2-observer.py",
@@ -417,7 +435,8 @@ def main():
     entitlements = plistlib.loads(raw[raw.index(b"<?xml"):])
     validate_provider_entitlements(entitlements)
     (root / "provider-actual-entitlements.plist").write_bytes(plistlib.dumps(entitlements))
-    record["built"] = {"app_info": app_info, "provider_info": info, "entitlements": entitlements,
+    actual_resources=validate_provider_resources(provider,fixture)
+    record["built"] = {"resource_sha256": actual_resources, "app_info": app_info, "provider_info": info, "entitlements": entitlements,
                        "app_executable_sha256": digest(app / "Contents/MacOS" / app_info["CFBundleExecutable"]),
                        "provider_executable_sha256": digest(provider / "Contents/MacOS" / info["CFBundleExecutable"])}
     if args.seal_built:

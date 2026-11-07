@@ -37,8 +37,10 @@ targets:
   QLReplyProbeProvider:
     type: app-extension
     platform: macOS
-    sources: [Provider]
-    resources: [Resources]
+    sources:
+      - Provider
+      - path: Resources
+        buildPhase: resources
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.MostlyText.QuickLook

@@ -9,6 +9,7 @@ on:
       - '.github/quicklook-jscd2-probe/**'
       - '.github/scripts/prepare-quicklook-jscd2-probe.py'
       - '.github/scripts/test-quicklook-jscd2-probe.py'
+      - '.github/scripts/test-quicklook-jscd2-resources.py'
       - '.github/scripts/observe-quicklook-jscd2.py'
       - '.github/scripts/run-quicklook-jscd2-ui.py'
       - '.github/scripts/test-quicklook-jscd2-observer.py'
@@ -36,6 +37,7 @@ jobs:
           brew install xcodegen
           python3 .github/scripts/test-run-owned-app-tests.py
           python3 .github/scripts/test-quicklook-jscd2-probe.py
+          python3 .github/scripts/test-quicklook-jscd2-resources.py
           python3 .github/scripts/test-quicklook-jscd2-observer.py
           python3 .github/scripts/prepare-quicklook-jscd2-probe.py "$RUNNER_TEMP/mostlytext-qljscd2"
       - name: Compile and ad-hoc sign standalone container, provider and UI test
