@@ -131,8 +131,10 @@ final class TabLifecycleUITests: XCTestCase {
         app.launch()
         app.activate()
 
+        let launchDeadline = Date().addingTimeInterval(8)
         let tabA = tab(named: "a.md")
         XCTAssertTrue(tabA.waitForExistence(timeout: 8))
+        XCTAssertTrue(waitForInitialTabBatch(until: launchDeadline))
         XCTAssertTrue(tab(named: "b.md").exists)
         XCTAssertTrue(tab(named: "c.md").exists)
 
@@ -177,6 +179,16 @@ final class TabLifecycleUITests: XCTestCase {
         let editor = app.textViews.firstMatch
         XCTAssertTrue(editor.waitForExistence(timeout: 5))
         XCTAssertTrue((editor.value as? String)?.contains("# File A") == true)
+    }
+
+    private func waitForInitialTabBatch(until deadline: Date) -> Bool {
+        if app.tabs.count == 3 {
+            return true
+        }
+        let remaining = deadline.timeIntervalSinceNow
+        guard remaining > 0 else { return false }
+        let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "count == 3"), object: app.tabs)
+        return XCTWaiter().wait(for: [ready], timeout: remaining) == .completed
     }
 
     private func captureSessionCheckpoint(_ label: String) {
