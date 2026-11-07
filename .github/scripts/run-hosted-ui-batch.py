@@ -15,6 +15,16 @@ from native_ui_discovery import selected_batch
 
 BATCH_KEYS = tuple(f"B{i:02d}" for i in range(1, 11))
 QUALIFIED_MAIN = "210f46b7f94fdbbf0e8dcc14f2a3cd6c1b306ab3"
+GUARD_CORPUS = {
+    "passed": (
+        "planning/downstream/evidence/qualified-startup-status-2026-11-07/ed96-status-layout--hosted-normal-status-layout--receipt.json.gz",
+        "planning/downstream/evidence/qualified-startup-status-2026-11-07/ed96-status-layout--hosted-normal-status-layout--focus.log.gz",
+    ),
+    "failed": (
+        "planning/downstream/evidence/status-bar-layout-2026-11-07/8e2c-status-receipt.json.gz",
+        "planning/downstream/evidence/status-bar-layout-2026-11-07/8e2c-status-focus.log.gz",
+    ),
+}
 
 
 def require_exact_case_outcome(summary, owned, returncode, log, selected_case):
@@ -87,7 +97,10 @@ def main():
                         ".github/scripts/test-hosted-ui-batch.py", ".github/scripts/native_ui_discovery.py",
                         ".github/scripts/test-native-ui-discovery.py", ".github/workflows/hosted-ui-matrix.yml",
                         "planning/downstream/native-ui-hosted-batches.json",
-                        "planning/downstream/evidence/critical-sdk-discovery-2026-11-07/actual-discovered-tests.json"]).splitlines()
+                        "planning/downstream/evidence/critical-sdk-discovery-2026-11-07/actual-discovered-tests.json",
+                        *[name for pair in GUARD_CORPUS.values() for name in pair]]).splitlines()
+        if not {name for pair in GUARD_CORPUS.values() for name in pair} <= set(paths):
+            raise RuntimeError("Every actual guard corpus input must be tracked before the first positive")
         for source, target in mapping.items():
             p = root / "fixture" / target
             p.parent.mkdir(parents=True, exist_ok=True)

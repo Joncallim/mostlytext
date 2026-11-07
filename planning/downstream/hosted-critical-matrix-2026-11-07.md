@@ -256,3 +256,16 @@ preparation requires every listed corpus file to be tracked and hashes it before
 the positive, with normal after-source verification. This prevents the same
 fixture-name drift from reappearing. No result threshold, original case, limit
 or positive is removed. Preserve the entire first source before another push.
+
+## Corrected candidate source review
+
+Before publishing the corrected source, all eight batch, six SDK, nine inventory
+and three public admission controls pass. Full format check reports 0/1489 files;
+strict lint reports zero violations in all1489. Fresh source compliance reports
+zero unverified items. AST, workflow YAML, four tracked corpus inputs, exact
+AppDelegate SHA c458fa43dec076ccd807ae68313883861c25e91f82b115e3be3d302a4929591d,
+current-main cc1cd1e6 and unit5ee49b2c ancestry, sole product-file scope and diff
+checks pass. The initial local YAML reader lacked PyYAML; the installed Ruby
+Psych parser succeeds without changing the workflow. The literal filesystem
+controls are14/14 after versus6 failures before; they are not native acceptance.
+Freeze the published source through its first complete CI and native outcomes.

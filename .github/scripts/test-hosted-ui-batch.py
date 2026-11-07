@@ -87,19 +87,15 @@ class ActualNativeOutcomeControls(unittest.TestCase):
     def setUpClass(cls):
         import gzip
         root = SCRIPT.resolve().parents[2]
-        packet = root / 'planning/downstream/evidence/qualified-startup-status-2026-11-07'
-        prefix = 'ed96-status-layout--hosted-normal-status-layout--'
-        receipt = json.loads(gzip.decompress((packet / (prefix + 'receipt.json.gz')).read_bytes()))
-        row = receipt['ui_results']['focus']
-        cls.passed = [row['summary'], row['owned'], 0,
-                      gzip.decompress((packet / (prefix + 'focus.log.gz')).read_bytes()).decode(), row['selected']]
-        packet = root / 'planning/downstream/evidence/status-bar-layout-2026-11-07'
-        receipt = json.loads(gzip.decompress((packet / '8e2c-status-receipt.json.gz').read_bytes()))
-        row = receipt['ui_results']['focus']
-        cls.failed = [row['summary'], row['owned'], 65,
-                      gzip.decompress((packet / '8e2c-status-focus.log.gz').read_bytes()).decode(), row['selected']]
         scope = {'__file__': str(SCRIPT), '__name__': 'actual_outcome_control'}
         exec(compile(ast.parse(SCRIPT.read_text()), str(SCRIPT), 'exec'), scope)
+        for key in ['passed', 'failed']:
+            receipt_path, log_path = scope['GUARD_CORPUS'][key]
+            receipt = json.loads(gzip.decompress((root / receipt_path).read_bytes()))
+            row = receipt['ui_results']['focus']
+            value = [row['summary'], row['owned'], row['owned']['returncode'],
+                     gzip.decompress((root / log_path).read_bytes()).decode(), row['selected']]
+            setattr(cls, key, value)
         cls.classify = staticmethod(scope['require_exact_case_outcome'])
 
     def test_actual_original_geometry_failure_and_corrected_pass_stay_distinct(self):
