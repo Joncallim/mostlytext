@@ -73,11 +73,10 @@ final class ExportPanelTests: XCTestCase {
         let fields = panel.textFields.matching(identifier: "saveAsNameTextField")
         XCTAssertEqual(fields.count, 1, "Require the observed unique native Save As filename field")
         let name = fields.firstMatch
-        XCTAssertEqual(
-            name.value as? String,
-            expected,
-            "AppKit displays the source-derived stem with its extension hidden"
-        )
+        let suffix = format == "PDF" ? "pdf" : "html"
+        let validDisplays = [expected, expected + "." + suffix]
+        XCTAssertTrue(validDisplays.contains(name.value as? String ?? ""),
+                      "Require the source-derived name, with only the selected format extension if AppKit shows it")
         name.click()
         name.typeKey("a", modifierFlags: .command)
         name.typeText((destination as NSString).lastPathComponent)
