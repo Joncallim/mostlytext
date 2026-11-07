@@ -21,7 +21,7 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        batch: [B08]
+        batch: [B01, B02, B03, B04, B05, B06, B07, B08, B09, B10]
     if: github.repository == 'Joncallim/mostlytext' && (github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: macos-26
     timeout-minutes: 40
