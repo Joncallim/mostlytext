@@ -1,0 +1,58 @@
+{
+  "head": "8e2c3e87047f45e439d9bd2d22e90bf426f23e7a",
+  "checkout": "b3676702e0be7a9e144979ebaab22b08bb2ad857",
+  "tree": "7d347f66a1083278fb0ac56d3c1617a7000df5c3",
+  "all_source_inputs_verified": 1608,
+  "all_pins_verified": 24,
+  "all_generated_control_inputs_verified": 7,
+  "actual_selected_original": "MacDown2UITests/EditingAssistsUITests/testFormattingMenuTracksEditorSidebarFindAndEditorFocus",
+  "original_case_and_private_positive_actual_passes": 2,
+  "failures_skips_expected_failures": 0,
+  "positive_owned": {
+    "returncode": 0,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 26.587228707999998,
+    "app_cleanup_requested": []
+  },
+  "original_owned": {
+    "returncode": 0,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 63.53726637500006,
+    "app_cleanup_requested": []
+  },
+  "actual_gui": {
+    "keyboard_input_source": "com.apple.keylayout.US",
+    "login_done": true,
+    "on_console": true,
+    "scope": "Actual hosted GUI metadata after positive input control, before ordinary product launch",
+    "screen_lock_field": null,
+    "screens": [
+      {
+        "height": 768,
+        "scale": 1,
+        "width": 1024
+      }
+    ],
+    "uid": 501
+  },
+  "actual_intentional_configuration": {
+    "CONFIGURATION": "Debug",
+    "SWIFT_ACTIVE_COMPILATION_CONDITIONS": "DEBUG",
+    "TARGET_BUILD_DIR": "/Users/runner/work/_temp/mostlytext-focus/app/Build/Products/Debug",
+    "FULL_PRODUCT_NAME": "MacDown2.app",
+    "PRODUCT_BUNDLE_IDENTIFIER": "app.mostlytext.MostlyText"
+  },
+  "actual_xctestrun_targets_verified": {
+    "TestHostPath": "__TESTROOT__/Debug/MacDown2UITests-Runner.app",
+    "TestBundlePath": "__TESTHOST__/Contents/PlugIns/MacDown2UITests.xctest",
+    "UITargetAppPath": "__TESTROOT__/Debug/MacDown2.app",
+    "IsUITestBundle": true
+  },
+  "downloaded_compiled_test_input_sha256_verified": "d76d241ea8d5e0db65717581f2c823ba789d44447c94f06cdcf1ffd2fe8e3b24",
+  "recorded_app_before_sha256": "9bc5d0ce469d51aecf8491f8d60184f4aa38aed348c1899875b8e0ec6ba6f029",
+  "recorded_app_after_sha256": "9bc5d0ce469d51aecf8491f8d60184f4aa38aed348c1899875b8e0ec6ba6f029",
+  "root_product_and_original_tests_byte_identical_main": true,
+  "scope": "Genuine original named Debug engineering focus case after real private typing/counter0-to1 control. Runtime actual counts/log identity and configured target verified. Test input binary downloaded; app binary hashes/signatures are hosted before/after records, not independently downloaded app or normal Release/exact-artifact/protected owner/full critical acceptance. No post-close fixture-byte fidelity inferred."
+}
