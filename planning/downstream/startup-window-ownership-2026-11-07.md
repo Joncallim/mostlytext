@@ -113,3 +113,26 @@ every open issue after each update. Preserve the held Preview first failures;
 any later intake/fresh qualification needs its own actual evidence. Protected
 owner/native/artifact, complete critical matrix and all original issue criteria
 remain open until their own contracts pass.
+
+## First counterexample command selected zero tests
+
+Sourced3d50990/run42331532934 compiles the explicit extra regression, then the
+method-only selector without Swift Testing's full method identity selects zero
+tests. Xcode returns0, but actual summary is total0/passed0/failed0/unknown;
+owned outcome is normal0/25.7271s. The strict counterexample verdict correctly
+rejects it. No intended assertion or ownership proof occurred; do not call the
+green xcodebuild a test pass. Preserve all canonical/executed hashes, the raw
+zero-case result and full original log. No product code changes are permitted
+from this zero-case outcome.
+
+Use the bounded existing PlaceholderWindowCleanupTests suite selector instead
+of the unsupported method-only identifier. That suite has exactly the two
+existing checks plus the one added unchanged unmarked-window regression.
+Require total3, passed2, failed1, zero skips/expected failures, normal65, and
+the ONE failure must identify the added method and actual classifier assertion.
+This adds the existing protection checks, not a waiver or removal. The current
+correction remains before actual production code. After the planned marker
+attachment test is added, the corrected suite must pass all four. The private
+regression body, host/source guards, wrapper and original deadlines stay intact.
+This expressly revises the single-method selection assumption while preserving
+the exact primary before/after assertion.
