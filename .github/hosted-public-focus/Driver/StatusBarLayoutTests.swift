@@ -27,6 +27,10 @@ extension PublicFocusTests {
         XCTAssertLessThanOrEqual(wide["editorStatusBar.height"] ?? .infinity, 32)
         for identifier in statusItemIDs {
             XCTAssertGreaterThan(narrow[identifier + ".width"] ?? 0, 0)
+            XCTAssertGreaterThan(wide[identifier + ".width"] ?? 0, 0)
+            XCTAssertGreaterThanOrEqual(narrow[identifier + ".width"] ?? 0,
+                                        (wide[identifier + ".width"] ?? .infinity) - 1,
+                                        "Narrow layout must retain each item's fully readable wide-layout width")
             XCTAssertLessThanOrEqual(narrow[identifier + ".height"] ?? .infinity, 24,
                                      "Whole status items must not fragment into vertical words")
             XCTAssertLessThanOrEqual(wide[identifier + ".height"] ?? .infinity, 24)
