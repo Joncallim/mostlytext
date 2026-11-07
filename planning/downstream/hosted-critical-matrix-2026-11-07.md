@@ -105,3 +105,30 @@ immediately after each metadata mutation. The38-method result does not alone
 close #5/#8: the six additional journeys, repeated final verification, normal
 Release/full manual and artifact-sensitive requirements remain. Ordinary Debug
 hooks do not substitute for the protected account lane or exact final app.
+
+## Bootstrap reuse decision before discovery implementation
+
+Reuse the UNCHANGED existing original-focus controller rather than duplicating
+its compiled-input/host/positive/result/configuration machinery. The first
+slice therefore runs its genuine private positive AND its one previously
+qualified original formatting-focus case before enumeration. This supersedes
+the earlier instruction to execute no root method in the discovery slice:
+exactly that bootstrap method is an explicit additional guard, not a38-method
+pass. The complete batch matrix still does not execute in this slice.
+
+A small wrapper sets the qualified-main anchor, records its own workflow and
+source inputs before execution, checks host admission BEFORE its own receipt
+read, and binds a distinct discovery contract. After the bootstrap actually
+passes, persist an overall unqualified state BEFORE calling the documented SDK
+enumeration under the existing owned600s command. Preserve complete raw JSON,
+command/status and original compiled/source bytes; verify unchanged inputs and
+actual app/test executables afterward. Mark only raw enumeration capture as
+completed, with schema/IDs explicitly requiring independent review. Never set
+an all38-executed/passed field from capture or source counts.
+
+The actual discovered schema/ID comparison is a decision output of this first
+slice and precedes batch-parser implementation. A valid JSON response is not
+proof of38methods; a bootstrap pass is only its exact original case. Retain
+failure/zero-case/timeout/source-drift outcomes and do not fan a guessed schema
+out to ten hosted jobs. Source-only held/optimized/host-before-receipt controls
+must run without opening a receipt or executing an ancestry/native command.
