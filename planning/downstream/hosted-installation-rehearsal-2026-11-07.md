@@ -185,3 +185,21 @@ managed recovered text and actual indentation status. They assert absent Welcome
 and blocked/optional-import surfaces. They never launch the product or invoke
 Debug hooks. The first complete native compile/execution remains unverified.
 Original blocked-future and installed/signed release slices remain separate.
+
+## Readback boundary review before activation
+
+Keep the complete compiled driver executable, control executable, runner and actual
+xctestrun hashes separately from generated source; copy those exact inputs into
+the artifact and recheck before/after each UI phase. Add independent no-running-
+product verification in the seed tool before any fixture action. Snapshot reads
+use no-follow file opens and reject hard links/special nodes; this assumes the
+private prepared profile is stable, not an adversarial concurrent-writer snapshot.
+
+Revise domain readback before native execution: use the already guarded canonical
+seed executable to capture all six fixed persistent domains into a binary property
+list, with an explicit present flag for each absent/present domain. Restrict its
+action to the three fixed labels seeded/first/relaunch and require positive/source/
+no-running-product checks before each capture. Do not infer absence from a CLI
+error phrase or failure to export. Preserve complete raw property lists and compare
+original domain values, rather than claiming stable daemon file serialization.
+This adds no production dependency or owner-profile operation.
