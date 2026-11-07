@@ -27,3 +27,7 @@ After all prior outcomes are retained, intake this reviewed unit as real ancestr
 ## Prepared source verification
 
 Local correction586da1ec keeps the original normal migration2→8/native recovery assertions unchanged. Complete format0/1490, strict lint0, Swift syntax,9original UI inventory,7migration filesystem/admission and3optimized literal Foundation seed controls pass. Source Compliance reports0unverified; all332 compliance controls pass in42.991s. The mounted regression has not compiled or executed yet. Complete old4b first outcomes must be retained before new publication; runtime success and merge remain pending.
+
+## Focused first native intake before final expansion
+
+The separate compact-chooser architecture now specifies a focused first native spike on the reviewed combined branch after every frozen4b first outcome is retained. Preserve both source units as actual ancestry, keep PR130 frozen during that spike, and explicitly dispatch the unchanged existing3critical and normal-migration workflows. This tests the two new assumptions before expanding to a complete new matrix. Any first failure remains failed and requires evidence-led material correction. Passing that spike does not replace fresh fullCI/38original/3critical/public/ownership/migration final-source qualification and review before actual PR130 merge.
