@@ -7,6 +7,16 @@ struct MacDown2App: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     var body: some Scene {
+        ApplicationScenes(appDelegate: appDelegate)
+    }
+}
+
+/// Observe deferred migration readiness where scenes and commands consume it.
+/// The delegate adaptor owns lifetime; it does not observe this App's captured values.
+private struct ApplicationScenes: Scene {
+    @ObservedObject var appDelegate: AppDelegate
+
+    var body: some Scene {
         let ready = appDelegate.normalLaunchReady
         WindowGroup {
             EmptyView()

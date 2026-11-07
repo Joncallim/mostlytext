@@ -1,0 +1,16 @@
+{
+  "head": "f9fb2a234f022d3c58a536e4fa50d56c29689916",
+  "checkout": "a62adef0028ecbca91b55412015620f3ff6583d1",
+  "tree": "21978a1f9a33ce692992d17414ece20f75d3ce0a",
+  "actual_both_ready": true,
+  "actual_menu_marker_counts": {
+    "former": 0,
+    "observed": 88
+  },
+  "samples_per_variant": 89,
+  "observed_first_sample_before_update": true,
+  "all_three_input_hashes_verified": true,
+  "all_six_actual_compile_sign_run_commands_return0": true,
+  "actual_generated_control_files_equal_receipt": true,
+  "scope": "Causal structural control, not root-product/native focus or release acceptance; binary digests hosted records only."
+}
