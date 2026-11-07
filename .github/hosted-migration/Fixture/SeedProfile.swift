@@ -1,3 +1,4 @@
+import AppKit
 import AppSettings
 import CryptoKit
 import EditorCore
@@ -13,13 +14,20 @@ struct MigrationSeedProfile {
 
     @MainActor
     static func main() async throws {
-        guard CommandLine.arguments.count == 1 ||
-            (CommandLine.arguments.count == 2 && CommandLine
-                .arguments[1] == "--set-current-indentation-after-first-quit")
+        let action = CommandLine.arguments.dropFirst()
+        guard action.isEmpty || action == ["--set-current-indentation-after-first-quit"] ||
+            (action.count == 2 && action.first == "--capture-fixed-domains" &&
+                ["seeded", "first", "relaunch"].contains(action.last ?? ""))
         else { throw Refusal.arguments }
         let receipt = try MigrationSeedAdmission.requirePositive()
         try verifySource(receipt)
-        if CommandLine.arguments.count == 2 {
+        guard NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText")
+            .isEmpty else { throw Refusal.publication }
+        if action.first == "--capture-fixed-domains", let label = action.last {
+            try captureDomains(label: label)
+            return
+        }
+        if action.first == "--set-current-indentation-after-first-quit" {
             try updateCurrentIndentation(receipt)
             return
         }
@@ -140,6 +148,29 @@ struct MigrationSeedProfile {
         guard defaults.bool(forKey: "com.joncallim.macdown2.hasCompletedFirstRun"),
               store.editor.indentationWidth == 2,
               !FileManager.default.fileExists(atPath: files.marker.path) else { throw Refusal.publication }
+    }
+
+    @MainActor
+    private static func captureDomains(label: String) throws {
+        let names = [
+            ApplicationStorageLocations.developmentDomain,
+            ApplicationStorageLocations.developmentWorkspaceDomain,
+            ApplicationStorageLocations.applicationDomain,
+            ApplicationStorageLocations.workspaceDomain,
+            "com.uranusjr.macdown",
+            "com.uranusjr.macdown.workspace",
+        ]
+        let values: [[String: Any]] = names.map { name in
+            if let domain = UserDefaults.standard.persistentDomain(forName: name) {
+                return ["domain": name, "present": true, "value": domain]
+            }
+            return ["domain": name, "present": false]
+        }
+        let bytes = try PropertyListSerialization.data(fromPropertyList: values, format: .binary, options: 0)
+        try bytes.write(
+            to: MigrationSeedAdmission.root.appendingPathComponent("migration-domains-\(label).plist"),
+            options: .withoutOverwriting
+        )
     }
 
     @MainActor

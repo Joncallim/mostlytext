@@ -203,3 +203,16 @@ no-running-product checks before each capture. Do not infer absence from a CLI
 error phrase or failure to export. Preserve complete raw property lists and compare
 original domain values, rather than claiming stable daemon file serialization.
 This adds no production dependency or owner-profile operation.
+
+## Held controller implementation source checkpoint
+
+The fixed wrapper/controller, canonical domain capture and private two-phase UI
+journey are now implemented with the execution anchors still unresolved. Seven
+real-filesystem/typed-state/host/optimized controls pass; the literal Foundation/
+Darwin-only seed admission controls remain3/3. All three private Swift sources
+parse, format and strict lint cleanly; source Compliance reports0unverified. No
+app/package/profile/GUI operation ran on CORTANA. Initial full native compilation
+and all migration results are still unverified. Before activation, inspect the
+compiled product paths, full source inventory, first-attempt freeze and exact
+source restoration, activate both anchors together from actual qualified main,
+then preserve the first hosted compile/execution outcome without unchanged retry.
