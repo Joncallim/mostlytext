@@ -1,0 +1,53 @@
+{
+  "head": "d3ec8f405081bc6f96b643377e96cdd751c982a0",
+  "records": [
+    {
+      "file": "00-native-first-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/phase-d3ec8f40/native-first-run.json",
+      "bytes": 13000,
+      "sha256": "b802003f297e885166c16044e5ee2eb6bc9fb6b2af01d8b99b4f795fcd727451"
+    },
+    {
+      "file": "01-native-first-artifacts.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/phase-d3ec8f40/native-first-artifacts.json",
+      "bytes": 776,
+      "sha256": "ce80f4ef33a9809e8af2ef65aeb1e85a9c8814a1a32c5500a36b3cf3d7a1ab12"
+    },
+    {
+      "file": "02-compliance-first-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/phase-d3ec8f40/compliance-first-run.json",
+      "bytes": 12950,
+      "sha256": "b7fcf9eb282313dee0ffbf3f63d10db71abbca97463596ea95d7855b72b92e97"
+    },
+    {
+      "file": "03-phase-refusal-independently-verified.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/phase-d3ec8f40/phase-refusal-independently-verified.json",
+      "bytes": 606,
+      "sha256": "ded2465fdf28b2783d9306773762ff63d7a5560f529ca6fa36ffeeed5700c10f"
+    },
+    {
+      "file": "04-receipt.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/phase-d3ec8f40/native-first-artifact/javascriptcore-d2-quicklook-compatibility/receipt.json",
+      "bytes": 6124,
+      "sha256": "ebd6c79b36242bacaf42cf8406e33549c7f7e783ed3b308656f0e282cd48d8db"
+    },
+    {
+      "file": "05-reference-module.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/phase-d3ec8f40/native-first-artifact/javascriptcore-d2-quicklook-compatibility/reference-module.json",
+      "bytes": 479,
+      "sha256": "e80aac6fcad0492d3a812125b2a93e90ec8496d48aa4b0838974c0ea9b8dfd29"
+    },
+    {
+      "file": "06-reference-module.log.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/phase-d3ec8f40/native-first-artifact/javascriptcore-d2-quicklook-compatibility/reference-module.log",
+      "bytes": 897,
+      "sha256": "09f41df205b2dd3da53534147d341fee118779e4042f357acdcf4d6c34df0218"
+    },
+    {
+      "file": "07-reference-phases.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/phase-d3ec8f40/native-first-artifact/javascriptcore-d2-quicklook-compatibility/reference-phases.json",
+      "bytes": 266,
+      "sha256": "9ac8822857f78db3fc04d0c18ca85e723b4572fcfa93057ca659aa671fa61342"
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+name: Existing D2 JavaScriptCore Quick Look compatibility
+
+permissions:
+  contents: read
+on:
+  pull_request:
+    branches: [main, master, integration-final]
+    paths:
+      - '.github/quicklook-jscd2-probe/**'
+      - '.github/scripts/prepare-quicklook-jscd2-probe.py'
+      - '.github/scripts/test-quicklook-jscd2-probe.py'
+      - '.github/scripts/test-quicklook-jscd2-resources.py'
+      - '.github/scripts/observe-quicklook-jscd2.py'
+      - '.github/scripts/run-quicklook-jscd2-ui.py'
+      - '.github/scripts/test-quicklook-jscd2-observer.py'
+      - '.github/workflows/quicklook-jscd2-probe.yml'
+  workflow_dispatch:
+concurrency:
+  group: quicklook-jscd2-probe-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  cold-finder:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: macos-26
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Select current Xcode and generate only the isolated fixture
+        run: |
+          set -euo pipefail
+          XCODE=$(ls -d /Applications/Xcode*.app | grep "26" | head -1 || true)
+          test -n "$XCODE"
+          test "$(sw_vers -productVersion | cut -d. -f1)" = 26
+          sudo xcode-select -s "$XCODE/Contents/Developer"
+          brew install xcodegen
+          python3 .github/scripts/test-run-owned-app-tests.py
+          python3 .github/scripts/test-quicklook-jscd2-probe.py
+          python3 .github/scripts/test-quicklook-jscd2-resources.py
+          python3 .github/scripts/test-quicklook-jscd2-observer.py
+          python3 .github/scripts/prepare-quicklook-jscd2-probe.py "$RUNNER_TEMP/mostlytext-qljscd2"
+      - name: Compile and ad-hoc sign standalone container, provider and UI test
+        run: |
+          set -euo pipefail
+          xcodebuild -project "$RUNNER_TEMP/mostlytext-qljscd2/fixture/QuickLookReplyProbe.xcodeproj" -scheme QuickLookReplyProbe -configuration Release -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/mostlytext-qljscd2/build" CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual build-for-testing 2>&1 | tee "$RUNNER_TEMP/mostlytext-qljscd2/build.log"
+          python3 .github/scripts/prepare-quicklook-jscd2-probe.py "$RUNNER_TEMP/mostlytext-qljscd2" --seal-built
+      - name: Register exact provider and reveal the generated file without launching the container
+        run: |
+          set -euo pipefail
+          app="$RUNNER_TEMP/mostlytext-qljscd2/build/Build/Products/Release/QLReplyProbeContainer.app"
+          /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$app"
+          pluginkit -a "$app/Contents/PlugIns/QLReplyProbeProvider.appex"
+          pluginkit -e use -i app.mostlytext.MostlyText.QuickLook
+          pluginkit -m -A -D -vv -i app.mostlytext.MostlyText.QuickLook | tee "$RUNNER_TEMP/mostlytext-qljscd2/discovery.log"
+          open -R "$RUNNER_TEMP/mostlytext-qljscd2/mostlytext-ql-reply-static.md"
+      - name: Execute cold static and actual JavaScriptCore capability once
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/run-quicklook-jscd2-ui.py
+      - name: Retain actual provider logs and post-test source verification
+        if: always()
+        run: |
+          set +e
+          /usr/bin/log show --last 12m --style json --predicate 'subsystem == "app.mostlytext.qljscd2probe"' > "$RUNNER_TEMP/mostlytext-qljscd2/provider-events.json" 2> "$RUNNER_TEMP/mostlytext-qljscd2/provider-log-errors.txt"
+          /usr/bin/log show --last 12m --style json --predicate 'subsystem == "app.mostlytext.qljscd2observer"' > "$RUNNER_TEMP/mostlytext-qljscd2/observer-control-events.json" 2> "$RUNNER_TEMP/mostlytext-qljscd2/observer-control-log-errors.txt"
+          ps -axo pid=,uid=,comm= > "$RUNNER_TEMP/mostlytext-qljscd2/processes-after.txt"
+          python3 .github/scripts/prepare-quicklook-jscd2-probe.py "$RUNNER_TEMP/mostlytext-qljscd2" --verify-finder
+      - name: Preserve the first actual JavaScriptCore capability result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: javascriptcore-d2-quicklook-compatibility
+          path: |
+            ${{ runner.temp }}/mostlytext-qljscd2/receipt.json
+            ${{ runner.temp }}/mostlytext-qljscd2/*.log
+            ${{ runner.temp }}/mostlytext-qljscd2/*.json
+            ${{ runner.temp }}/mostlytext-qljscd2/*.txt
+            ${{ runner.temp }}/mostlytext-qljscd2/*.plist
+            ${{ runner.temp }}/mostlytext-qljscd2/*.md
+            ${{ runner.temp }}/mostlytext-qljscd2/*.svg
+            ${{ runner.temp }}/mostlytext-qljscd2/compiled-inputs/**
+            ${{ runner.temp }}/mostlytext-qljscd2/actual-ui-attachments/**
+            ${{ runner.temp }}/mostlytext-qljscd2/fixture/**
+            ${{ runner.temp }}/mostlytext-qljscd2/owned/**
+            ${{ runner.temp }}/mostlytext-qljscd2/observer-journal/**
+            ${{ runner.temp }}/mostlytext-qljscd2/Finder.xcresult/**
