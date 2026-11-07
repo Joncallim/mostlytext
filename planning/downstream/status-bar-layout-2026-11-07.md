@@ -92,3 +92,7 @@ The eventual corrected baseline must not claim final localisation from English
 screenshots. Complete current reviews/checks/source/synthetic/computed trees and
 expected-head integration precede actual merge proof and #6/#17 updates; audit
 all issues immediately after each update. Preserve all original acceptance rows.
+
+## First attempt and checkout correction
+
+The first geometry run42338085708 at016afa10 stopped before UI because the new workflow omitted full history; the retained ancestry check refused missing qualified main with128. The Release app and driver built, but no geometry test executed. Existing public and original focus each passed with their actual positive. The evidence packet records exact inputs and genuine results. Before a new attempt, add `fetch-depth: 0` to that workflow only. Preserve guard, anchor, all methods/assertions and deadlines; do not call this source-history failure the required geometry counterexample.
