@@ -71,3 +71,20 @@ permissions, raw native cases and all observation channels. No unchanged failed
 native retry. Any unsupported capability remains explicit; implementing a new
 host/worker or changing the E23 renderer architecture requires a separate narrow
 written decision after this result, before product code.
+
+The first implementation passes12pure capability/correlation/authority controls,
+13original live-channel controls and3owned-process controls. Strict optimized SDK
+type checking passes for the exact provider, JavaScriptCore control, observer
+console and actual UI test. Changed Swift formatting/strict lint, Python AST,
+YAML, source compliance and diff checks pass. The original cold case remains
+byte-identical, including its pre-existing formatting. No local JavaScriptCore,
+Node/reference WebAssembly or app/extension runtime is executed.
+
+The guarded hosted preparation runs its reference WebAssembly implementation on
+the exact module literal, retaining command/engine version/binary hash/module
+hash/actual answer42. Native observation remains diagnostic_only=true and
+qualification_candidate=false, with actual available/unavailable/error outcomes
+kept distinct. The reference control or a basic-JavaScript failure cannot be
+waived as an unsupported platform. All future native results require the actual
+first raw result, source/compiled resource inventory, exact two entitlements and
+independent provider/live/direct/UI correlation before a scoped integration.
