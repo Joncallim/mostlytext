@@ -85,3 +85,22 @@ or policy decision. The failure-only snapshot can then distinguish observed
 revocation from a failure to request/publish without guessing from a placeholder.
 These passive records are an execution input, not a causal fix. No production
 behaviour/authority change is authorized by these observations.
+
+## Complete-first-result publication and qualified-main intake
+
+All16originalfc29workflows have now finished and their original complete log
+archives/artifact outcomes are retained. The appended final-all16packet preserves
+all identities and the earlier partial snapshot. Actual original38 result is
+37PASS/1FAIL: Hello is rendered and Rendered radio1 is exposed, while the expected
+htmlRenderedPane identifier is absent. This is separate from the initial Markdown
+image-copy and Debug timing failures. No previous failure is waived.
+
+Actual qualified main56725f941f3ee8f23b6255432c229226eff8e63f is merged here before
+first diagnostic publication. Its public product/package bytes remain those of
+427; it adds the independently qualified private stdin/native-save journey.
+The diagnostic retains fc29 Preview activation and all original locked inputs.
+Its own execution remains diagnostic-only and cannot establish merge readiness.
+The existing default-branch Preview workflow can now be manually dispatched at
+this exact branch head once first-source guard/style/compiled-contract controls
+pass. Run one initial Debug/revision diagnostic and its separate staged case;
+preserve both first outcomes before any further material source correction.
