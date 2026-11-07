@@ -7,7 +7,7 @@
   "generated_seed_driver_and_four_actual_compiled_downloads_verified": true,
   "positive_and_readonly_observation_pass": true,
   "first_adoption_UI_failed": true,
-  "failure": "Actual status Spaces: 4, expected imported2; original two native tabs, active recovery text and absent migration/Welcome surface observed before sole assertion. Root native NSHostingController receives coordinator but no shared appSettings environment; status explicitly falls back to4. Source discrepancy and import publication independently checked; corrected native behavior remains unverified.",
+  "failure": "Actual status Spaces: 4, expected imported2; original two native tabs, active recovery text observed before sole assertion; later readonly snapshot has no migration/Welcome window. Root native NSHostingController receives coordinator but no shared appSettings environment; status explicitly falls back to4. Source discrepancy and import publication independently checked; corrected native behavior remains unverified.",
   "current_imported_editor_bytes_equal_original": true,
   "initial_current_preferences_absent": true,
   "plan_adopts_development": true,
