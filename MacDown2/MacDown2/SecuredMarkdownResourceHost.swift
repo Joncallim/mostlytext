@@ -106,11 +106,22 @@ struct SecuredMarkdownResourceHost<Content: View>: View {
                 // A denied frame also replaces old attachment caches. This identity records application of
                 // the frame, not permission; its loader has no provider when the context is absent.
                 slot = Slot(identity: currentIdentity, loadID: UUID(), context: context)
+                #if DEBUG || RELEASE_PREVIEW_PROBE
+                    PreviewResourceDiagnostics.record("host-slot-installed", context: context,
+                                                      detail: "generation=\(sourceGeneration) "
+                                                          + "parsedRevision=\(parsedFrame?.revision ?? -1)")
+                #endif
             }
             .onDisappear {
+                #if DEBUG || RELEASE_PREVIEW_PROBE
+                    PreviewResourceDiagnostics.record("host-disappear-before-retirement", context: retiringContext)
+                #endif
                 if let context = retiringContext {
                     owner?.retire(.markdown, matching: context)
                 }
+                #if DEBUG || RELEASE_PREVIEW_PROBE
+                    PreviewResourceDiagnostics.record("host-disappear-after-retirement", context: retiringContext)
+                #endif
             }
     }
 }
