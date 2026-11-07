@@ -68,11 +68,16 @@ final class ExportPanelTests: XCTestCase {
         let choice = panel.radioButtons[format].firstMatch
         XCTAssertTrue(choice.waitForExistence(timeout: 5))
         choice.click()
-        let suffix = format == "PDF" ? "pdf" : "html"
-        let expected = (HostedFocusInputs.fileName as NSString).deletingPathExtension + "." + suffix
-        let fields = panel.textFields.matching(NSPredicate(format: "value == %@", expected))
-        XCTAssertEqual(fields.count, 1, "Require the actual unique filename field with the source-derived default")
+        capture(app, label: "Actual ordinary " + format + " panel before filename selection")
+        let expected = (HostedFocusInputs.fileName as NSString).deletingPathExtension
+        let fields = panel.textFields.matching(identifier: "saveAsNameTextField")
+        XCTAssertEqual(fields.count, 1, "Require the observed unique native Save As filename field")
         let name = fields.firstMatch
+        XCTAssertEqual(
+            name.value as? String,
+            expected,
+            "AppKit displays the source-derived stem with its extension hidden"
+        )
         name.click()
         name.typeKey("a", modifierFlags: .command)
         name.typeText((destination as NSString).lastPathComponent)
