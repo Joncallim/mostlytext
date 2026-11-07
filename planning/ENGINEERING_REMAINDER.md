@@ -2,7 +2,7 @@
 
 ## Current checkpoint — 7 November 2026
 
-Verified main `a99e8ea616f33ce6a0d8861aa07ee5961f954194` and the live
+Verified parser/Markdown baseline main `4ed1cfc6137644f84c55372bbdf3c991ba621a89` and the live
 issue reconciliation contain **16 open issues and 163 unchecked original
 checkbox rows**. No remaining whole issue has complete closure proof. These
 are acceptance criteria, rather than 163 newly discovered defects; prose-only
@@ -10,6 +10,25 @@ issues also retain their original completion requirements. The earlier dated
 checkpoints below remain historical.
 
 The latest independently merged units are:
+
+- [PR113](https://github.com/Joncallim/mostlytext/pull/113), merge `c321e973`,
+  preserves PR107 as an actual ancestor and isolates the Markdown publication
+  generation guard from held Preview activation. All 3,717 package functions/
+  534 suites, 675 app functions/142 suites, all four builds and fresh native
+  math/heading controls pass. Source, synthetic, computed and actual merge
+  trees agree. The subsequent complete main CI also genuinely passes.
+- [PR114](https://github.com/Joncallim/mostlytext/pull/114), merge `4ed1cfc6`,
+  preserves PR101 and PR106 as actual ancestors. Fresh full CI passes 3,719
+  package functions/536 suites, 675 app functions/142 suites and all four builds.
+  Both real theme mutation/restoration selections pass 1,087 functions/145 suites;
+  both strict replay selections pass, including the actual Debug debugger run.
+  Shared-subtree C/sanitizer, model counterfactual, math, heading and native math
+  controls pass with complete source/pin/process readback. Release full highlight
+  is 414.30025 ms within its unchanged 500 ms fixture bound; this does not satisfy
+  issue18's genuine whole-edit 50 ms requirement or explain the old Debug abort.
+  Exact merge parents/tree and clean canonical fast-forward are verified.
+  The redundant identical-tree main CI was explicitly cancelled and is not
+  reported as a fresh main pass.
 
 - [PR104](https://github.com/Joncallim/mostlytext/pull/104), merge `d607098b`,
   reuses immutable parser query names. Component improvements do not establish
@@ -39,15 +58,18 @@ broader native, performance and release boundaries of its owning issue.
 
 The combined production source in [PR108](https://github.com/Joncallim/mostlytext/pull/108)
 remains **unmerged and failed**, frozen at `0557e08f948d46c82141a8e16d63e035d650cb6d`.
-It includes the pending resource activation (PR100), highlight diagnostics
-(PR101), shared-subtree parser optimization (PR106), Markdown publication guard
-(PR107), response-encoding and genuine PDF pagination units. Its exact-head
-normal CI passes 3,719 package functions/536 suites, 704 app functions/152 suites
+It includes resource activation (PR100), response-encoding and genuine PDF
+pagination units that remain pending. Its parser/highlight and Markdown guard
+constituents PR101/PR106/PR107 are now independently integrated through the actual
+ancestry of PR113/PR114; their integration does not activate the held Preview
+path. Its exact-head normal CI passes 3,719 package functions/536 suites, 704 app functions/152 suites
 and all four app/CLI builds. The required theme, math, heading, model, parser,
 strict-replay and real PDF checks pass; four of six Preview mutation/restoration
 pairs pass. **Two Debug Preview pairs fail valid native image-copy controls.**
 Neither successful package checks nor the other native paths waive those
-failures. Constituent PRs remain open until corrected production integration.
+failures. Only still-unintegrated constituent PRs remain open. Do not describe the
+independently merged PR101/PR106/PR107 as pending or claim that their successful
+integration resolves the two Preview failures.
 The narrow real-PDF execution row in issue11 is checked with its pending
 integration scope; broader PDF operation, parity and exact-app criteria remain.
 
@@ -63,6 +85,47 @@ This narrows diagnosis without proving a renderer/selection cause or repairing
 original0557. Diagnostic source is not a mergeable production fix. Subsequent
 investigation must materially distinguish hypotheses; no unchanged retry or
 larger deadline qualifies the failed source.
+
+[PR117](https://github.com/Joncallim/mostlytext/pull/117) is the current startup
+candidate, preserving PR115/PR116. Actual normal Release
+[run42316086002](https://github.com/Joncallim/mostlytext/actions/runs/42316086002)
+passes all six original public CLI comparisons and raw same-PID Welcome/key
+checks at product source `6ad070b4`. Every one of its 1,597 recorded inputs,
+24 pins, actual app/helper identities, three live kernel peers and six hosted
+socket controls is independently verified. Its first complete normal
+[CI42316085987](https://github.com/Joncallim/mostlytext/actions/runs/42316085987)
+passes all 3,719 package functions/536 suites, 676 app functions/142 suites,
+all four builds and the actual current-domain journal regression. Strict style,
+metadata/catalog and final pins pass. The later repository-only documentation
+head changes no app, package, workflow or script input; receipts retain their
+original qualified product source `6ad070b4` and actual checkout `c96fa4d9`.
+Earlier native selections fail and their full outcomes remain retained; no
+failure is waived. The physical journal fixture spelling correction changes no
+production admission or migration policy. This is warm hosted acknowledgement,
+not first-client, Apple-trusted cold launch, saved stdin byte fidelity, installed
+helper, protected migration or exact signed-candidate acceptance.
+
+[PR118](https://github.com/Joncallim/mostlytext/pull/118) independently qualifies
+only the first static Quick Look feasibility slice at source `61233e84`:
+[run42319634959](https://github.com/Joncallim/mostlytext/actions/runs/42319634959)
+executes one actual cold Finder UI test with zero failures/skips and visible
+static HTML/cid PNG, without launching the containing app. All 14 recorded
+inputs and the synthetic tree are verified. Actual permissions are exactly
+sandbox plus user-selected read-only, with unchanged before/after binary and
+permission identity and a callback-time self-check. Selected-file read succeeds;
+the generated sibling open is denied. Actual callback/factory are off-main,
+with one observed factory call. Earlier green routing evidence with test-injected
+root permissions is explicitly rejected as sandbox proof and remains retained.
+
+This is an independent hosted fixture, not the missing production target.
+System cancellation, repeated factories/retained payload accounting, failure-once
+and fallback while a real renderer is slow still need their named QL-REPLY
+proof. The complete platform prerequisite still precedes shared rendering and
+production extension integration. Owner desktop and exact-release gates remain.
+
+Merged parser/highlight branches are removed only after independently restoring
+all local and remote refs, strict integrity checks and retention of every worktree
+commit. All worktree files and unmerged source/diagnostic pins remain preserved.
 
 Ordinary source compliance passes; the strict release predicates for
 D2/Mermaid/Graphviz remain open. Independent source/font/rights review, separately
@@ -266,9 +329,10 @@ Quick Look's binding [QL-REPLY probe](downstream/issue-113-handoff.md) first
 requires a minimal installed signed/ad-hoc provider and real cold Finder
 callback/fallback/cancellation evidence. Only after it passes may broad shared
 rendering be integrated. This probe cannot be replaced by API compilation or a
-mock callback. The protected native desktop/staging prerequisites are currently
-unavailable; target absence remains unfinished implementation, not a completed
-feature waiting only for a screenshot.
+mock callback. The protected owner desktop/staging prerequisites remain
+unavailable. The separate disposable-host feasibility probe in PR118 now tests whether a narrow
+real Finder path can progress without them; it is not a passed platform gate.
+Target absence remains unfinished production implementation.
 
 The pending HTML-preview production activation, mounted-editor geometry,
 long-session WebKit diagnosis and real PDF/TOC lifecycle journeys likewise retain

@@ -11,7 +11,7 @@ D-027–D-031 remain authoritative; no new geometry or legal clearance is implie
 |---|---|---|
 | Product/display name | MostlyText | project.yml, welcome/About and catalogs |
 | Application source | https://github.com/Joncallim/mostlytext, main | Complete rewrite history preserved; original MacDown history separately tagged |
-| Website | https://mostlytext.app | Public product domain; source at https://github.com/Joncallim/mostlytext-site with its own license. Corrected links/identity/MIT FAQ are merged in site source; live deployment awaits separate approval |
+| Website | https://mostlytext.app | Public product domain; source at https://github.com/Joncallim/mostlytext-site with its own license. Owner-approved identity/FAQ and public-claims corrections are deployed and publicly verified; see the [recorded website evidence](downstream/website-public-claims-2026-11-05.md) |
 | GitHub sharing preview | design/brand/social/mostlytext-repository-preview.jpg | Owner-approved installation persisted and anonymous public Open Graph image verified on 4 November 2026; see the [brand registry](../design/brand/README.md) |
 | Engineering backlog | https://github.com/Joncallim/mostlytext/issues | The 17 original issues transferred; see [number map](ISSUE_TRANSFER_MAP.md) |
 | Historical source/releases | https://github.com/Joncallim/macdown_2 | Preserve old closed issues, PRs, alpha assets and exact-source/native evidence |

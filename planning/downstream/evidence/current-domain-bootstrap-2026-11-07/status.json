@@ -1,0 +1,6 @@
+{
+  "returncode": 0,
+  "binary_sha256": "b480146910ea965a80c3ff90cc735ea51d7c157feae7d03182b44b84056a6806",
+  "foundation_only_linkage_verified": true,
+  "scope": "Standalone unique-bundle console, no owner app or preferences read/write"
+}

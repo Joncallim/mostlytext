@@ -1,6 +1,8 @@
 import AppSettings
+import Darwin
 import EditorCore
 import FileCore
+import Foundation
 @testable import MacDown2
 import MarkdownEngine
 import Testing
@@ -9,6 +11,34 @@ import Workspace
 @Suite("AppSettings wiring")
 @MainActor
 struct AppSettingsWiringTests {
+    @Test func currentApplicationDomainFinishesEmptyImportWithoutChangingPreferences() async throws {
+        let identity = try #require(Bundle.main.bundleIdentifier)
+        try #require(identity == ApplicationStorageLocations.applicationDomain)
+        let before = UserDefaults.standard.persistentDomain(forName: identity)
+        let store = try UserDefaultsAppSettingsStore(persistentDomainName: identity)
+        let temporary = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mostlytext-current-domain-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: temporary, withIntermediateDirectories: false,
+                                                attributes: [.posixPermissions: 0o700])
+        defer { try? FileManager.default.removeItem(at: temporary) }
+        // Foundation can restore the /var alias; the journal deliberately refuses every symlink.
+        let physical = try #require(realpath(temporary.path, nil))
+        let root = URL(fileURLWithPath: String(cString: physical), isDirectory: true)
+        free(physical)
+        let journal = root.appendingPathComponent("journal", isDirectory: true)
+        let startup = LegacyImportStartup(store: store,
+                                          makeJournal: { try LegacyEditorMigrationJournal(directoryURL: journal) },
+                                          source: { try LegacyPreferenceSnapshot(domain: [:]) },
+                                          resolveFont: { _ in nil })
+        var readyCount = 0
+        startup.didBecomeReady = { readyCount += 1 }
+        await startup.begin()
+        #expect(startup.phase == .ready)
+        #expect(readyCount == 1)
+        let after = UserDefaults.standard.persistentDomain(forName: identity)
+        #expect(NSDictionary(dictionary: before ?? [:]).isEqual(to: after ?? [:]))
+    }
+
     // MARK: - Markdown
 
     @Test func markdownParseOptionsReflectsThePreference() {

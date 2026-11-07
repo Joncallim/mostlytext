@@ -1,0 +1,8 @@
+{
+  "qualified_product_source": "6ad070b4ef3d04214ede4263f20093ac5f6f8afc",
+  "all_application_orchestration_paths_verified": 1623,
+  "keysets_equal": true,
+  "every_blob_equal": true,
+  "qualified_checkout": "c96fa4d9221002a0537c610b94845df34516f585",
+  "scope": "Final documentation correction changes only planning files. Runtime and full-CI receipts retain their actual original checkout, without retargeting. No final artifact claim."
+}

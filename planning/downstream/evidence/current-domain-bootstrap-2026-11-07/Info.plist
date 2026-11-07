@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleExecutable</key>
+	<string>defaults-console</string>
+	<key>CFBundleIdentifier</key>
+	<string>org.mostlytext.fixture.0feddba059a14cf3bc85fe328004c451</string>
+	<key>CFBundleName</key>
+	<string>OwnedDefaultsConsole</string>
+	<key>CFBundlePackageType</key>
+	<string>TOOL</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+</dict>
+</plist>
