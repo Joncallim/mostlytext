@@ -680,7 +680,16 @@
         "contains_inflection_markup": false
       },
       "variants": {
-        "en": {},
+        "en": {
+          "arg1": [
+            "one",
+            "other"
+          ],
+          "arg2": [
+            "one",
+            "other"
+          ]
+        },
         "fr": {},
         "ja": {},
         "pl": {}
@@ -16281,7 +16290,40 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/Contributions/TOCContribution.swift:110"
+        "MacDown2/Packages/MacDownKit/Sources/Contributions/TOCContribution.swift:139"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "Contributions",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/Contributions/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Table-of-contents navigation could not be verified; authored source preserved.",
+      "source_default_value": "Table-of-contents navigation could not be verified; authored source preserved.",
+      "translator_comment": "Generated heading navigation diagnostic. Non-English values are explicit English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/Contributions/TOCContribution.swift:22"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -17443,7 +17485,7 @@
         "pl": "translated"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorGutterView.swift:28"
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorGutterView.swift:30"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -18103,9 +18145,40 @@
         "pl": "translated"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:125"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:142"
       ],
       "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "ExportService",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Check the table-of-contents source and nearby HTML, or remove the table-of-contents marker before exporting.",
+      "source_default_value": "Check the table-of-contents source and nearby HTML, or remove the table-of-contents marker before exporting.",
+      "translator_comment": "Generated heading navigation failure. Non-English values are English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [],
+      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -18136,7 +18209,7 @@
         "pl": "translated"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:127"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:144"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -18165,7 +18238,7 @@
         "en": "translated"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:78"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:88"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -18194,7 +18267,7 @@
         "en": "translated"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:141"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:158"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -18227,9 +18300,40 @@
         "pl": "translated"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:121"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:138"
       ],
       "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "ExportService",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Derived content could not preserve reference links; authored source was kept.",
+      "source_default_value": "Derived content could not preserve reference links; authored source was kept.",
+      "translator_comment": "Derived export snapshot failed exact reference-identity or size proof. Native translation review remains required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [],
+      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -18304,6 +18408,73 @@
       "target": "ExportService",
       "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
       "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Export was stopped because derived content could not be safely prepared:\n%@",
+      "source_default_value": "Export was stopped because derived content could not be safely prepared:\n%@",
+      "translator_comment": "Safe derived-content publication failure. Diagnostic details are an opaque substitution. Translation/native review required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [
+          {
+            "position": 1,
+            "type": "@"
+          }
+        ],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [],
+      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "ExportService",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Export was stopped because the requested table of contents could not be linked to verified headings.",
+      "source_default_value": "Export was stopped because the requested table of contents could not be linked to verified headings.",
+      "translator_comment": "Generated heading navigation failure. Non-English values are English review drafts, not accepted translations.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [],
+      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "ExportService",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
       "key": "Finish other exports and try again. If this continues, preserve the recovery folder and contact support.",
       "source_default_value": "Finish other exports and try again. If this continues, preserve the recovery folder and contact support.",
       "translator_comment": "Recovery suggestion after private export storage could not be admitted. Preserve recovery evidence.",
@@ -18355,7 +18526,7 @@
         "pl": "translated"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:116"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:133"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -18456,7 +18627,40 @@
         "en": "translated"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:139"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:156"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "ExportService",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Reduce the equation output or correct its source, then try exporting again.",
+      "source_default_value": "Reduce the equation output or correct its source, then try exporting again.",
+      "translator_comment": "Safe derived-content publication failure. Diagnostic details are an opaque substitution. Translation/native review required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:173"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -18525,7 +18729,7 @@
         "pl": "translated"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:129"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:146"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -18554,7 +18758,7 @@
         "en": "translated"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:73"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:83"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -18583,7 +18787,7 @@
         "en": "translated"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:71"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:81"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -18612,7 +18816,7 @@
         "en": "translated"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:83"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:93"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -18641,7 +18845,7 @@
         "en": "translated"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:85"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:95"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -18734,7 +18938,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:90"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:107"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -18866,7 +19070,7 @@
         "en": "translated"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:146"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:163"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -18901,7 +19105,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:148"
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportError.swift:178"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -20612,7 +20816,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONOutlineBuilder.swift:91"
+        "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONOutlineBuilder.swift:93"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -21182,7 +21386,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONOutlineBuilder.swift:90"
+        "MacDown2/Packages/MacDownKit/Sources/JSONSupport/JSONOutlineBuilder.swift:92"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -21441,6 +21645,485 @@
       "target": "Math",
       "catalog": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings",
       "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Display equation: %@",
+      "source_default_value": "Display equation: %@",
+      "translator_comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [
+          {
+            "position": 1,
+            "type": "@"
+          }
+        ],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [],
+      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "Math",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Equation at line %lld, column %lld: %@",
+      "source_default_value": "Equation at line %lld, column %lld: %@",
+      "translator_comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [
+          {
+            "position": 1,
+            "type": "lld"
+          },
+          {
+            "position": 2,
+            "type": "lld"
+          },
+          {
+            "position": 3,
+            "type": "@"
+          }
+        ],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [],
+      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "Math",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Equation notices",
+      "source_default_value": "Equation notices",
+      "translator_comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/Math/MathDiagnosticText.swift:58"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "Math",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Inline equation: %@",
+      "source_default_value": "Inline equation: %@",
+      "translator_comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [
+          {
+            "position": 1,
+            "type": "@"
+          }
+        ],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [],
+      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "Math",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Math analysis could not be safely completed. Export was stopped.",
+      "source_default_value": "Math analysis could not be safely completed. Export was stopped.",
+      "translator_comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/Math/MathDiagnosticText.swift:38"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "Math",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Math analysis could not be safely completed. The authored source is shown.",
+      "source_default_value": "Math analysis could not be safely completed. The authored source is shown.",
+      "translator_comment": "unknown_no_catalog_comment",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/Math/MathDiagnosticText.swift:42"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "Math",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Show equation source",
+      "source_default_value": "Show equation source",
+      "translator_comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/Math/MathDiagnosticText.swift:54"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "Math",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "The equation contains a character this renderer does not support. Its source is shown.",
+      "source_default_value": "The equation contains a character this renderer does not support. Its source is shown.",
+      "translator_comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/Math/MathDiagnosticText.swift:12"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "Math",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "The equation contains an unrecognized command. Its source is shown.",
+      "source_default_value": "The equation contains an unrecognized command. Its source is shown.",
+      "translator_comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/Math/MathDiagnosticText.swift:10"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "Math",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "The equation could not be drawn. Its source is shown.",
+      "source_default_value": "The equation could not be drawn. Its source is shown.",
+      "translator_comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/Math/MathDiagnosticText.swift:26"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "Math",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "The equation environment is incomplete or unsupported. Its source is shown.",
+      "source_default_value": "The equation environment is incomplete or unsupported. Its source is shown.",
+      "translator_comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/Math/MathDiagnosticText.swift:17"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "Math",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "The equation exceeds a rendering safety limit. Its source is shown.",
+      "source_default_value": "The equation exceeds a rendering safety limit. Its source is shown.",
+      "translator_comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/Math/MathDiagnosticText.swift:22"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "Math",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "The equation output exceeds an export safety limit. Export was stopped.",
+      "source_default_value": "The equation output exceeds an export safety limit. Export was stopped.",
+      "translator_comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/Math/MathDiagnosticText.swift:46"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "Math",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "The equation parser could not complete its work. Its source is shown.",
+      "source_default_value": "The equation parser could not complete its work. Its source is shown.",
+      "translator_comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/Math/MathDiagnosticText.swift:24"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "Math",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
       "key": "The equation renderer produced invalid image dimensions.",
       "source_default_value": "The equation renderer produced invalid image dimensions.",
       "translator_comment": "Export equation failure. Authored LaTeX is an opaque substitution. Translation/native review remains required.",
@@ -21466,6 +22149,105 @@
       },
       "callsites": [
         "MacDown2/Packages/MacDownKit/Sources/Math/MathContribution.swift:76"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "Math",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "The equation syntax is incomplete or invalid. Its source is shown.",
+      "source_default_value": "The equation syntax is incomplete or invalid. Its source is shown.",
+      "translator_comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/Math/MathDiagnosticText.swift:8"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "Math",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "The remaining content is shown as source after a rendering safety limit.",
+      "source_default_value": "The remaining content is shown as source after a rendering safety limit.",
+      "translator_comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/Math/MathDiagnosticText.swift:50"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "Math",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/Math/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "This valid equation has no visible symbols. Its source is shown.",
+      "source_default_value": "This valid equation has no visible symbols. Its source is shown.",
+      "translator_comment": "Shared Preview/Export math diagnosis or accessible source action. Source text and location are opaque substitutions. Translation and native review required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/Math/MathDiagnosticText.swift:28"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"

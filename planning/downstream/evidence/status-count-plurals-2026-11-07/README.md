@@ -18,3 +18,15 @@ Raw records, exact console, linkage, source/compiler resource digests and compil
 English resources are retained here. The same console binary and expectations
 must pass after correction. App-hosted routing/final languages/layout/artifact
 acceptance remain separate. No non-English translation is promoted.
+
+## Final canonical argument representation
+
+The first custom-named candidate actually formats9/9 correctly, but the existing
+repository admission rejects four noncanonical branch placeholders. Both first
+results remain retained. Using existing canonical arg1/arg2 names fixes admission
+without changing source key/types, formatter binary, expectations, validators or
+non-English records. The final compiled resource resolves all9/9 correctly.
+All other catalog keys and complete French/Japanese/Polish records/review states
+are exactly unchanged. Inventory admission and19localization-validator controls
+pass. The canonical app case is added but remains unexecuted locally; final
+combined hosted/native qualification and integration are pending.
