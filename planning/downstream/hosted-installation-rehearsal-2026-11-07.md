@@ -155,3 +155,33 @@ preserved copies complete, sentinel absent and current canonical session/recover
 paths/UUIDs/epochs correct. Public UI and on-disk readback remain independent
 proofs. Initial fixture module compilation is still unverified; preserve its
 first hosted compile or selector failure before any material correction.
+
+## Actual public orchestration intake before implementation
+
+Actual main ef93ab2d4fbda72cdd126560ffb19cd7e012a5d9 integrates qualified
+normal licence source6139 and its original evidence. Its product/public preparation
+and launch orchestration match the independently reviewed native run42349282977;
+the evidence-only merge changes no source inputs. Intake is now a real ancestor.
+The migration wrapper calls unchanged public preparation for initial/built/verify
+steps, adds its private UI file before generated-project hashing, and separately
+binds the canonical seed package/source/lock/executable. All migration sources
+and the workflow enter the extended input map. A fixed first-attempt receipt flag
+freezes before pre-positive commands; neither preparation nor execute may reuse it.
+
+The fixed valid-profile controller owns the two normal launches, no-application-
+frame peer observation, actual positive/case summaries, identity-bound normal
+Quits, and bounded no-link snapshots. Read domains through defaults export and
+decode typed editor JSON for the exact2/8 policy; preserve raw plists as well.
+Compare the original tree including inode/owner/mode/bytes, the complete preserved
+copy by content and safe permissions, and actual working session IDs/epochs/URLs,
+managed recovery bytes and all immutable seeded data. Capture unknown/changed
+records before refusal. No previous profile is overwritten or reset. A caught
+error records failure and only uses the existing identity-bound cleanup command;
+any cleanup uncertainty stays failure evidence.
+
+Release native controls attach to the externally launched normal process, require
+its exact app/executable/SHA/PID and the two exact native tab identities, active
+managed recovered text and actual indentation status. They assert absent Welcome
+and blocked/optional-import surfaces. They never launch the product or invoke
+Debug hooks. The first complete native compile/execution remains unverified.
+Original blocked-future and installed/signed release slices remain separate.
