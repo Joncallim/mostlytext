@@ -26,19 +26,24 @@ struct HTMLPreviewPane: View {
     }
 
     var body: some View {
-        ZStack(alignment: .top) {
-            switch previewMode {
-            case .source:
-                HTMLSourceView(source: text)
-                    .accessibilityIdentifier("htmlSourcePane")
-            case .rendered, .outline:
-                HTMLPreviewView(document: document)
-                    .accessibilityIdentifier("htmlRenderedPane")
+        VStack(spacing: 0) {
+            ZStack(alignment: .top) {
+                switch previewMode {
+                case .source:
+                    HTMLSourceView(source: text)
+                        .accessibilityIdentifier("htmlSourcePane")
+                case .rendered, .outline:
+                    SecuredHTMLPreviewView(document: document, tabID: tab.id)
+                        .accessibilityIdentifier("htmlRenderedPane")
+                }
+                modePicker
+                    .padding(8)
+                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 8))
+                    .padding(10)
             }
-            modePicker
-                .padding(8)
-                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 8))
-                .padding(10)
+            if previewMode != .source {
+                PreviewResourcesNotice(model: model, document: document)
+            }
         }
     }
 
