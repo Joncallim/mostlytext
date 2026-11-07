@@ -16,28 +16,28 @@ prose-only issues retain their original completion requirements too.
   or overwritten. These are hosted engineering profiles, not installed migration.
 - [PR133](https://github.com/Joncallim/mostlytext/pull/133), merge `56725f94`,
   integrates ordinary Release public stdin/editor/native Save As and same-process
-  normal Quit acceptance. The first input positive and real save case pass; all49
-  physicalUTF8bytes match before/after Quit. Source, pins, generated files, all10
+  normal Quit acceptance. The first input positive and real save case pass; all 49
+  physical UTF-8 bytes match before/after Quit. Source, pins, generated files, all 10
   downloaded compiled roles and raw results are independently verified. See the
   [immutable evidence packet](downstream/evidence/cli-stdin-native-save-qualified-2026-11-07/README.md).
   No public product/package source changes in this private acceptance unit.
 
 Current-main Preview qualification [PR132](https://github.com/Joncallim/mostlytext/pull/132)
 remains frozen at `fc29ce70d308dfa0df99c4caf43699d7716d4758` and **failed/unmerged**.
-All16first workflows are retained:13pass,3fail. Complete CI passes3719package/
-710app functions and all four builds; real PDF9, math, heading, model, status,
+All 16 first workflows are retained: 13 pass, 3 fail. Complete CI passes 3,719 package/
+710 app functions and all four builds; real PDF 9, math, heading, model, status,
 license, both migration profiles, public CLI/focus and critical controls pass.
 Five of six Preview pairs pass; Debug/revision fails the original initial image
-copy with54/55pass. The window is visible and has no prior close event; a later
+copy with 54/55 passing. The window is visible and has no prior close event; a later
 image edit passes. No cache/grant/publication cause is established.
 
-The complete Debug theme selection fails its unchanged50ms10MBkeystroke assertion
-at62.876833ms; Release1087/145 and its orientation control pass. The original UI
-matrix runs all38cases:37pass, one HTML mode identity assertion fails. Its actual
-accessibility tree renders Hello and selects Rendered1 but lacks htmlRenderedPane.
+The complete Debug theme selection fails its unchanged 50 ms / 10 MB keystroke assertion
+at 62.876833 ms; Release 1,087/145 and its orientation control pass. The original UI
+matrix runs all 38 cases: 37 pass, one HTML mode identity assertion fails. Its actual
+accessibility tree renders Hello and selects Rendered=1 but lacks htmlRenderedPane.
 The first focused accessibility remedy and separate image diagnostic are pending;
 neither is a full activation pass. [PR134](https://github.com/Joncallim/mostlytext/pull/134)
-contains only a three-line line-offset capacity reservation against main567;
+contains only a three-line line-offset capacity reservation against main 567;
 complete first hosted qualification remains pending. No sole performance cause,
 constant-time claim, larger deadline, skipped case or release waiver is accepted.
 
