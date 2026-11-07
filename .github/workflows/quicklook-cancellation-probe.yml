@@ -9,6 +9,9 @@ on:
       - '.github/quicklook-cancellation-probe/**'
       - '.github/scripts/prepare-quicklook-cancellation-probe.py'
       - '.github/scripts/test-quicklook-cancellation-probe.py'
+      - '.github/scripts/observe-quicklook-cancellation.py'
+      - '.github/scripts/run-quicklook-cancellation-ui.py'
+      - '.github/scripts/test-quicklook-cancellation-observer.py'
       - '.github/workflows/quicklook-cancellation-probe.yml'
   workflow_dispatch:
 concurrency:
@@ -33,6 +36,7 @@ jobs:
           brew install xcodegen
           python3 .github/scripts/test-run-owned-app-tests.py
           python3 .github/scripts/test-quicklook-cancellation-probe.py
+          python3 .github/scripts/test-quicklook-cancellation-observer.py
           python3 .github/scripts/prepare-quicklook-cancellation-probe.py "$RUNNER_TEMP/mostlytext-qlcancel"
       - name: Compile and ad-hoc sign standalone container, provider and UI test
         run: |
@@ -51,8 +55,7 @@ jobs:
       - name: Execute actual cold positive and real pending Finder closure once
         run: |
           set -euo pipefail
-          provider="$RUNNER_TEMP/mostlytext-qlcancel/build/Build/Products/Release/QLReplyProbeContainer.app/Contents/PlugIns/QLReplyProbeProvider.appex/Contents/MacOS/QLReplyProbeProvider"
-          python3 .github/scripts/run-owned-app-tests.py "$RUNNER_TEMP/mostlytext-qlcancel/owned" "$provider" -- xcodebuild -project "$RUNNER_TEMP/mostlytext-qlcancel/fixture/QuickLookReplyProbe.xcodeproj" -scheme QuickLookReplyProbe -configuration Release -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/mostlytext-qlcancel/build" -resultBundlePath "$RUNNER_TEMP/mostlytext-qlcancel/Finder.xcresult" -parallel-testing-enabled NO -test-timeouts-enabled YES -default-test-execution-time-allowance 120 -maximum-test-execution-time-allowance 120 test-without-building 2>&1 | tee "$RUNNER_TEMP/mostlytext-qlcancel/finder.log"
+          python3 .github/scripts/run-quicklook-cancellation-ui.py
       - name: Retain actual provider logs and post-test source verification
         if: always()
         run: |
@@ -76,4 +79,5 @@ jobs:
             ${{ runner.temp }}/mostlytext-qlcancel/actual-ui-attachments/**
             ${{ runner.temp }}/mostlytext-qlcancel/fixture/**
             ${{ runner.temp }}/mostlytext-qlcancel/owned/**
+            ${{ runner.temp }}/mostlytext-qlcancel/observer-journal/**
             ${{ runner.temp }}/mostlytext-qlcancel/Finder.xcresult/**

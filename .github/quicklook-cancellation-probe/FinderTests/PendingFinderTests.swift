@@ -96,27 +96,12 @@ final class PendingFinderTests: XCTestCase {
     }
 
     private func messages() throws -> [String] {
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/log")
-        process.arguments = [
-            "show",
-            "--last",
-            "1m",
-            "--style",
-            "json",
-            "--predicate",
-            "subsystem == \"app.mostlytext.qlcancelprobe\"",
-        ]
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        process.standardError = FileHandle.nullDevice
-        try process.run()
-        let bytes = pipe.fileHandleForReading.readDataToEndOfFile()
-        process.waitUntilExit()
-        XCTAssertEqual(process.terminationStatus, 0, "Only this fixture's own provider events may be observed")
+        let url = URL(fileURLWithPath: "/Users/runner/work/_temp/mostlytext-qlcancel/provider-observer.json")
+        let bytes = try Data(contentsOf: url)
         XCTAssertLessThanOrEqual(bytes.count, 128 * 1024)
-        let rows = try XCTUnwrap(JSONSerialization.jsonObject(with: bytes) as? [[String: Any]])
-        return rows.compactMap { $0["eventMessage"] as? String }
+        let record = try XCTUnwrap(JSONSerialization.jsonObject(with: bytes) as? [String: Any])
+        XCTAssertEqual(record["kind"] as? String, "mostlytext-qlcancel-host-observer")
+        return try XCTUnwrap(record["messages"] as? [String])
     }
 
     private func event(_ phase: String, id: Int? = nil, after start: Double) throws -> Event? {

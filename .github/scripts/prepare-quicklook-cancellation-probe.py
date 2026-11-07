@@ -113,14 +113,42 @@ def capture_compiled(root):
     return captured
 
 
-def main():
+def validate_host_observer(root, checkout):
+    driver = json.loads((root / 'host-ui-driver.json').read_text())
+    observer = json.loads((root / 'observer-result.json').read_text())
+    if (driver['checkout'] != checkout or observer['checkout'] != checkout or driver['errors'] or observer['errors']
+            or driver['ui_started'] is not True or driver['ui_supervisor_returncode'] != 0
+            or driver['observer_forced_cleanup'] is not False or driver['observer_returncode'] != 0
+            or observer['timed_out'] is not False or observer['stopped_after_ui'] is not True
+            or driver['observer_pid'] != observer['pid']
+            or not driver['ui_completed_monotonic'] <= driver['observer_stop_requested_monotonic']):
+        raise RuntimeError('The actual UI and owned host recorder did not complete normally')
+    rows = observer['snapshots']
+    if not 1 <= len(rows) <= 128 or observer['successful_log_queries'] < len(rows):
+        raise RuntimeError('Incomplete actual host observation history')
+    expected = set()
+    last = None
+    for sequence, row in enumerate(rows):
+        name = f'observer-journal/{sequence:03d}.json'
+        if row['file'] != name or row['command_returncode'] != 0:
+            raise RuntimeError('Unknown/failed host observation generation')
+        raw = (root / name).read_bytes()
+        if len(raw) != row['bytes'] or len(raw) > 128 * 1024 or hashlib.sha256(raw).hexdigest() != row['sha256']:
+            raise RuntimeError('Actual host observation bytes changed')
+        value = json.loads(raw)
+        if (value['kind'] != 'mostlytext-qlcancel-host-observer' or value['checkout'] != checkout
+                or value['sequence'] != sequence or not isinstance(value['messages'], list)
+                or not all(isinstance(x, str) for x in value['messages'])):
+            raise RuntimeError('Unknown actual host observation schema/source')
+        expected.add(f'{sequence:03d}.json')
+        last = raw
+    if {p.name for p in (root / 'observer-journal').iterdir()} != expected or (root / 'provider-observer.json').read_bytes() != last:
+        raise RuntimeError('Current observation does not match its exact immutable history')
+    return {'driver': driver, 'observer': observer}
+
+
+def require_host(root):
     require_standard_python()
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("output", type=Path)
-    parser.add_argument("--verify-built", action="store_true")
-    parser.add_argument("--verify-finder", action="store_true")
-    parser.add_argument("--seal-built", action="store_true")
-    args = parser.parse_args()
     assert os.environ.get("GITHUB_ACTIONS") == "true" and os.environ.get("RUNNER_OS") == "macOS"
     assert os.environ.get("GITHUB_REPOSITORY") == "Joncallim/mostlytext"
     validate_trusted_event(json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text()), os.environ["GITHUB_EVENT_NAME"])
@@ -131,8 +159,20 @@ def main():
             or Path.cwd() != Path(os.environ.get('GITHUB_WORKSPACE', '/absent')).resolve()):
         raise RuntimeError('Real hosted runner account and checkout required before preparation')
     assert Path.home() == Path("/Users/runner") and platform.mac_ver()[0].split(".")[0] == "26"
-    root = args.output.resolve()
     assert root == Path(os.environ["RUNNER_TEMP"]).resolve() / "mostlytext-qlcancel"
+    assert Path(os.environ["RUNNER_TEMP"]).resolve() == Path("/Users/runner/work/_temp")
+
+
+def main():
+    require_standard_python()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("output", type=Path)
+    parser.add_argument("--verify-built", action="store_true")
+    parser.add_argument("--verify-finder", action="store_true")
+    parser.add_argument("--seal-built", action="store_true")
+    args = parser.parse_args()
+    root = args.output.resolve()
+    require_host(root)
     receipt_path = root / "receipt.json"
     if not (args.verify_built or args.verify_finder or args.seal_built):
         assert not root.exists()
@@ -140,6 +180,9 @@ def main():
         paths = command(["git", "ls-files", "--", ".github/quicklook-cancellation-probe",
                          ".github/scripts/prepare-quicklook-cancellation-probe.py",
                          ".github/scripts/test-quicklook-cancellation-probe.py",
+                         ".github/scripts/observe-quicklook-cancellation.py",
+                         ".github/scripts/run-quicklook-cancellation-ui.py",
+                         ".github/scripts/test-quicklook-cancellation-observer.py",
                          "planning/downstream/evidence/quicklook-hosted-feasibility-2026-11-07/b000-receipt.json.gz",
                          ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
                          ".github/workflows/quicklook-cancellation-probe.yml"]).splitlines()
@@ -208,6 +251,7 @@ def main():
     assert digest(root / "mostlytext-ql-reply-static.md") == record["selected_fixture_sha256"]
     assert digest(root / "mostlytext-ql-reply-cancel.md") == record["selected_fixture_sha256"]
     if args.verify_finder:
+        record['host_observer_proof'] = validate_host_observer(root, record['checkout'])
         events = json.loads((root / "provider-events.json").read_text())
         messages = [x.get("eventMessage", "") for x in events if isinstance(x, dict)]
         assert not any("container-launched-invalidates-cold-proof" in x for x in messages), "Containing fixture actually launched"

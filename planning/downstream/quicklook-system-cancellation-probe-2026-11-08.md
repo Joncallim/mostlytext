@@ -147,3 +147,13 @@ execution inventory. SDK type check only locally, no framework runtime. Preserve
 new first failure rather than retry unchanged or change native waits. This is an
 execution-context correction for diagnostic observation, not production access,
 cancellation safety, slow-renderer fallback or whole platform acceptance.
+
+Host-observer source preparation passes15existing correlation controls,9new
+atomic-file/sequence/cap/identity/normal-stop controls and3owned lifecycle controls.
+Normal/optimized observer/driver foreign-host execution refuses before preparation.
+Strict SDK type checks, pinned formatting/strict lint, Python/YAML and source
+compliance pass. No native outcome on this changed observer is inferred. An
+intentional recorder stop after UI completion may interrupt its last log query;
+that status is retained separately and never called provider-task cancellation.
+All real log queries supplying published snapshots must finish0. Exact direct
+post-run provider logs remain the independent correlation source.
