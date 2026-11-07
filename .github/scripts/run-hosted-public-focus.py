@@ -76,7 +76,9 @@ def main():
         expected = {"totalTestCount": 1, "passedTests": 1, "failedTests": 0, "skippedTests": 0, "expectedFailures": 0}
         assert result.returncode == 0 and owned["returncode"] == 0 and not owned["timed_out"] and not owned["cancelled"]
         assert all(type(summary.get(k)) is int and summary[k] == v for k, v in expected.items()), summary
-        assert method in (root / (label + ".log")).read_text()
+        pattern = r"Test Case '-\[HostedFocusDriverTests\.PublicFocusTests " + re.escape(method) + r"\]' passed"
+        if not re.search(pattern, (root / (label + ".log")).read_text()):
+            raise RuntimeError("Actual passing case differs from the selected public journey")
         return True
 
     try:
