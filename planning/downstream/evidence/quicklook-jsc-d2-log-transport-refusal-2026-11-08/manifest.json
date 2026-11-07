@@ -1,0 +1,113 @@
+{
+  "head": "ee7898a90fde4feed1b7edcffa87c6de3469320e",
+  "records": [
+    {
+      "file": "00-native-first-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/runloop-ee7898a9/native-first-run.json",
+      "bytes": 13000,
+      "sha256": "9e9ab2a0b60f458a3f89efe2732cc9d51216788d0ebe1492e5c2536a223d8882"
+    },
+    {
+      "file": "01-native-first-artifacts.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/runloop-ee7898a9/native-first-artifacts.json",
+      "bytes": 778,
+      "sha256": "45d29d7af464e4e0131a7dfae036f46d3fe51b06fb53dae4e2c70374a505bf24"
+    },
+    {
+      "file": "02-native-complete-first-workflow-logs.zip.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/runloop-ee7898a9/native-complete-first-workflow-logs.zip",
+      "bytes": 115182,
+      "sha256": "6e9d40850279229d232fcd099e10ea0e2bce516618bbc024f468cbeb5ef8db9a"
+    },
+    {
+      "file": "03-compliance-first-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/runloop-ee7898a9/compliance-first-run.json",
+      "bytes": 12950,
+      "sha256": "36f4a049b7ee6d7c6e626c630759633d60632a9bedcbc5c211f2678d5a21b4cc"
+    },
+    {
+      "file": "04-compliance-first-artifacts.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/runloop-ee7898a9/compliance-first-artifacts.json",
+      "bytes": 32,
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    {
+      "file": "05-compliance-complete-first-workflow-logs.zip.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/runloop-ee7898a9/compliance-complete-first-workflow-logs.zip",
+      "bytes": 41655,
+      "sha256": "77f8ec33086b28dab0c88e182a6051e61cb43d60b04119cc6f90c23eb304c8b9"
+    },
+    {
+      "file": "06-first-log-transport-failure-independently-verified.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/runloop-ee7898a9/first-log-transport-failure-independently-verified.json",
+      "bytes": 2367,
+      "sha256": "1a68695edd06056240809122e8f65b1909cf00e1363bdf73a90241f3d1939531"
+    },
+    {
+      "file": "07-verify-first-log-transport-failure.py.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/runloop-ee7898a9/verify-first-log-transport-failure.py",
+      "bytes": 6853,
+      "sha256": "26bb6bb8c91aa9241d88b79f3950d7e77973562973a212473b0c4aa7636e1268"
+    },
+    {
+      "file": "08-actual-independent-summary.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/runloop-ee7898a9/actual-independent-summary.json",
+      "bytes": 1525,
+      "sha256": "369bbe08bc7af14037342e5adb58b9eec20b1e429e4eea4ad530a1d12bdd90eb"
+    },
+    {
+      "file": "09-actual-downloaded-provider-entitlements.plist.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/runloop-ee7898a9/actual-downloaded-provider-entitlements.plist",
+      "bytes": 298,
+      "sha256": "266f07f1f0cbe818aa41489ef1273c15e9cadfcb1885f827c4e056f7af818ee9"
+    },
+    {
+      "file": "10-actual-visual-readback.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/runloop-ee7898a9/actual-visual-readback.json",
+      "bytes": 361,
+      "sha256": "7a75d7f2a2060ec058edfc635079bb2811cfa65b5858003f1ebb1ef8ca812107"
+    },
+    {
+      "file": "11-receipt.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/runloop-ee7898a9/native-first-artifact/javascriptcore-d2-quicklook-compatibility/receipt.json",
+      "bytes": 60239,
+      "sha256": "75543add026c7acdc15125753bcda2064859d524c27cc1bd5da5e60053772df4"
+    },
+    {
+      "file": "12-provider-events.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/runloop-ee7898a9/native-first-artifact/javascriptcore-d2-quicklook-compatibility/provider-events.json",
+      "bytes": 87499,
+      "sha256": "00e7defc0a3cadbe4773b55acf5909d57f503d410a5c22ec29d18624fd1ac368"
+    },
+    {
+      "file": "13-provider-observer.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/runloop-ee7898a9/native-first-artifact/javascriptcore-d2-quicklook-compatibility/provider-observer.json",
+      "bytes": 19451,
+      "sha256": "55baa3675a3ab8782a7825e9e520ce5ca106cb886302ef0e678d70627b2fd93e"
+    },
+    {
+      "file": "14-observer-result.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/runloop-ee7898a9/native-first-artifact/javascriptcore-d2-quicklook-compatibility/observer-result.json",
+      "bytes": 11929,
+      "sha256": "3ba103080c81989377adb3d45ea03dd1e2726c3ec713861ec655ad3e8c238c3b"
+    },
+    {
+      "file": "15-status.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/runloop-ee7898a9/native-first-artifact/javascriptcore-d2-quicklook-compatibility/owned/status.json",
+      "bytes": 139,
+      "sha256": "7d122c59fdbcb0f2c91ecd6c7df238103537c951fee4a17d7d6aaae7a047cad0"
+    },
+    {
+      "file": "16-B1FD750B-E47D-4FB5-AF35-85EC8CB1295E.png.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/runloop-ee7898a9/actual-independent-attachments/B1FD750B-E47D-4FB5-AF35-85EC8CB1295E.png",
+      "bytes": 149859,
+      "sha256": "c707675f40db9a69413b0d38c2f66aaab87622b3e1a0bb8d4745d7cdd682aff8"
+    },
+    {
+      "file": "17-852BDB81-CB9A-4FEB-AAEA-D06B63B253E8.png.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/quicklook-jsc-d2-compatibility-20261108/runloop-ee7898a9/actual-independent-attachments/852BDB81-CB9A-4FEB-AAEA-D06B63B253E8.png",
+      "bytes": 149084,
+      "sha256": "2157b86112602d340e446b817217863f4e69cb0ac9d3efd173db1316d31f9397"
+    }
+  ]
+}

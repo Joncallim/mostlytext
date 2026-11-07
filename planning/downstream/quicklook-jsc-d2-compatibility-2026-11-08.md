@@ -265,3 +265,28 @@ existing15seconds still includes setup; no longer budget is granted. Emit a
 bounded explicit host-wait diagnostic before refusal. A public loop cannot
 preempt a non-returning JS/WASM call and is not a production cancellation or
 resource policy. Preserve the next complete first before any further correction.
+
+## Preserve the actual rendered graph and correct only truncated log framing
+
+First ee7898a9 native42421419006 FAILS; Compliance42421419136 passes. Actual
+31/21/24/75canonical/copy/generated/downloadedcompiled roles and sixresources
+verify. Actual async39byte control remains pending under0.251sblockingpoll,
+then answers42 after0.0102spublicsame-threadRunLoop. RealD2 now reachesready,
+compile/render-end and its11151bytereply. ActualFinder screenshot visiblyshows
+the graph and the original rich heading assertion passes. Metadata reconstruction
+fails:16of17actualbase64chunks end in literal<…>. Every original truncated byte
+is retained; native raw SVG is unavailable, never filled in from Node output.
+This is not a full native pass or an assertion/deadline waiver.
+
+Before correction, preserve the complete firsts, full real source/generated/
+compiled identities, raw result/owned/live/direct records and actualscreenshots.
+Reduce only each raw log chunk from768to384bytes, yielding512ASCIIbase64chars
+plus bounded headers (<600total), below the observed1038byte truncated events.
+Keep the total raw record64KiB unchanged; the decoder may accept up to171parts
+solely to represent that same bounded total, with exact indexes/count/order/
+length/SHA and final direct/live/UI identity still required. Original cold/rich
+assertions and every deadline, engine, graph, JSasset and providerpermission stay
+unchanged. Regression controls must reject the actual historical truncated frames
+and preserve the exact64KiB ceiling with small frames. The next real hosted first
+must establish complete untruncated metadata plus actual Finder; a synthetic
+encoder or visible graph alone never qualifies the source.
