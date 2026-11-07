@@ -91,3 +91,30 @@ genuine physical main-thread precondition, not a weaker actor-only substitution.
 All actual file sizes, read hook, fidelity/hash/identity checks, counterexample,
 owned lifecycle, configurations and limits remain unchanged. This is an SDK
 calling-context correction to test setup, not a production I/O repair or waiver.
+
+## First message-classification failure and correction contract
+
+At0c0676a4, native42392295832 genuinely executes both original sizes off the main
+thread and both counterexample sizes on it, in Debug and Release. Only the two
+intended thread assertions fail. The private controller then falsely rejects
+the intended explanation because Swift Testing emits that explanation on the
+immediately following arrow line. Finally restores source; restored native runs
+remain NOT_RUN. Preserve this entire first result before changing classification.
+
+Correct the controller to parse complete adjacent two-line issue entries, not
+search a header for its attached detail. Require exactly two entries, one per
+original size, the exact original method, source assertion line, expression and
+immediately attached human explanation. Missing, detached, altered or additional
+issues must fail closed. Derive the assertion line from the unchanged copied
+test, requiring a unique exact assertion. Retain all owned outcome, complete
+suite, size/thread, input/pin and execution-digest checks.
+
+Add pure controls using the actual first Debug/Release logs, plus deliberate
+corruptions of message, attachment, source, method, expression, argument size,
+count and extra-issue entries. Bind those scripts and raw corpus in the actual
+input inventory and workflow. This changes only private evidence classification;
+production source, original Swift test/assertions, sizes, limits and all three
+native phases stay byte-identical. Do not publish this correction until all four
+0c0676a4 first workflow outcomes are complete and retained. A new first workflow
+on the materially corrected controller must actually run original, counterexample
+and restored phases in both configurations; old failed results never become pass.
