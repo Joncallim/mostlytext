@@ -1,0 +1,23 @@
+{
+  "head": "cdee3db55b05cfde0dbebcd7adf8f65ae617a7e6",
+  "actual_checkout": "1843c068117ca30ffa6175a7e09f0f50c6d11d77",
+  "actual_tree": "a00543096c4b7b47e2d3d98abd952f3e610bc92e",
+  "canonical_inputs_verified": 1622,
+  "pins": 24,
+  "all_generated_seed_driver_and_four_compiled_downloads_verified": true,
+  "actual_positive_pass": true,
+  "actual_readonly_failure_observation_pass": true,
+  "original_normal_migration_failed_before_adoption_relaunch": true,
+  "complete_source_and_product_verification_after_forced_cleanup": true,
+  "original_profile_inodes_modes_owners_bytes_and_domains_unchanged": true,
+  "preserved_copy_complete_and_private": true,
+  "command_sentinel_absent_after_failure": true,
+  "actual_current_domain_before_launch_absent": true,
+  "only_current_domain_value_in_completed_transaction": {
+    "NSWindow Frame SwiftUI.ModifiedContent<MacDown2.StartupPlaceholderView, SwiftUI._FrameLayout>-1-AppWindow-1": "62 175 900 450 0 0 1024 737 "
+  },
+  "actual_plan_adopts_development": false,
+  "actual_current_state_empty": true,
+  "actual_preserved_review_ui_and_completed_paths_preferences_journal_verified": true,
+  "scope": "Concrete first normal startup defect: automatic StartupPlaceholderView saves only a frame preference before migration snapshots current state, so populated=true prevents adoption despite initially absent current domain/state. Journal/current snapshot/UI independently agree. Original6domains/oldprofile preserved; no data loss, successful migration/relaunch, normalQuit or sole broader historical cause inferred. Fix scene lifecycle, not the conservative existing-installation policy."
+}

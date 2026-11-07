@@ -22,6 +22,10 @@ private struct ApplicationScenes: Scene {
             StartupPlaceholderView()
                 .frame(width: 0, height: 0)
         }
+        // The delegate selects migration, Welcome and document windows. An
+        // automatic placeholder would persist frame state before migration.
+        .defaultLaunchBehavior(.suppressed)
+        .restorationBehavior(.disabled)
         .commands {
             if ready, let themeController = appDelegate.themeController {
                 WorkspaceCommands(themeController: themeController)
@@ -37,12 +41,14 @@ private struct ApplicationScenes: Scene {
             AboutMostlyTextView()
         }
         .windowResizability(.contentSize)
+        .defaultLaunchBehavior(.suppressed)
         .restorationBehavior(.disabled)
 
         Window("Open Source Licenses", id: "licenses") {
             LicenseNoticesView()
         }
         .defaultSize(width: 760, height: 600)
+        .defaultLaunchBehavior(.suppressed)
         .restorationBehavior(.disabled)
 
         Settings {

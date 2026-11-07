@@ -1,0 +1,10 @@
+Query chain:
+ →Find: Target Application 'app.mostlytext.MostlyText'
+  ↪︎Find: Descendants matching type Window
+    ↪︎Find: Elements matching predicate 'title CONTAINS[c] "b.md"'
+      ↪︎Find: First Match
+        ↪︎Find: Descendants matching type Sheet
+          ↪︎Find: Elements matching predicate '"open-panel" IN identifiers'
+            ↪︎Find: First Match
+              ↪︎Find: Descendants matching type Button
+                ↪︎Find: Elements matching predicate '"Open Folder" IN identifiers'

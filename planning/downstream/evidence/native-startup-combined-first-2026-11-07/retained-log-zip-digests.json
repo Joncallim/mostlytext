@@ -1,0 +1,46 @@
+{
+  "4b67-startup-full-logs.zip": {
+    "sha256": "cdfe975e0c40c5bbc1defdd1a4985edbe85dabce7bd51b034c53a553f870100e",
+    "bytes": 719946
+  },
+  "4b67-public-focus-full-logs.zip": {
+    "sha256": "ac07271287431e2be3eaa23889b9e0d485d7e165280333fbfbb504d79acb8d59",
+    "bytes": 629583
+  },
+  "4b67-license-full-logs.zip": {
+    "sha256": "bae473a33bf026f202e41625080df87669709df9960c4d3b87bd90b578a1a75e",
+    "bytes": 632425
+  },
+  "4b67-compliance-full-logs.zip": {
+    "sha256": "c424a731b236dd3242e631950fcba70ee7221a751a13956eac535c3590b968af",
+    "bytes": 41751
+  },
+  "4b67-cli-full-logs.zip": {
+    "sha256": "86dab252ec8062404d00d4ae9381bc05a9c15cc6dedf9649583b8ca9a2cc7e48",
+    "bytes": 571005
+  },
+  "4b67-migration-full-logs.zip": {
+    "sha256": "cd7be773353bd11518c31257b71a45f700a4f9d3397b1834fce8ca68b336638e",
+    "bytes": 627479
+  },
+  "4b67-status-full-logs.zip": {
+    "sha256": "f09f84dd3822f590d7cc9a60200a99c7c1ae6cb7235fa855cea08c4105d6642a",
+    "bytes": 635047
+  },
+  "4b67-critical-full-logs.zip": {
+    "sha256": "5cc834c7df35d8a5e71d66d156c1a78d8532a068fb80cefcd1ed8395e4fecb46",
+    "bytes": 2355724
+  },
+  "4b67-original-focus-full-logs.zip": {
+    "sha256": "6a5f370a7ffd702ec0f82dfd52a650ecad893efaa95dcd10393eb5f140bf0a66",
+    "bytes": 772242
+  },
+  "4b67-full-ci-full-logs.zip": {
+    "sha256": "079d8a713c9c6b6d5d4aaa6e228cefdded4eef159df2274c644ef9fbbd7eb23b",
+    "bytes": 2658257
+  },
+  "4b67-complete-workflow-logs.zip": {
+    "sha256": "5bf77cd74e5c93d77c6ce477ce7f69b5bbb8bf965a89b815f1f27d17511c3c44",
+    "bytes": 7830025
+  }
+}

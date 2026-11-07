@@ -1,0 +1,360 @@
+{
+  "actual_tested_tree": "9bf242f995b82ec24db77b5273d2db11c298615a",
+  "all_bound_source_inputs_equal_across_documentation_base": true,
+  "head": "43e1b04c7e141a7b007dd48e9d26f011ebe3a121",
+  "checkout": "c6cafe619f609f8f2f946554e255d7ae82251a60",
+  "source_tree": "17031b6d1544fabdab2b415b4640a9b604db78d3",
+  "all_source_inputs_verified": 1612,
+  "all_pins_verified": 24,
+  "all_generated_copied_files_downloaded_hash_verified": 11,
+  "original_failed_journey_source_byte_unchanged": true,
+  "actual_positive_and_public_focus_tests_passed": 2,
+  "failures_skips_expected_failures": 0,
+  "criteria": {
+    "benign_control": true,
+    "file_open_acknowledged": true,
+    "public_focus_bold_undo": true,
+    "unchanged_product_and_source": true,
+    "normal_identity_bound_quit": true
+  },
+  "positive_owned": {
+    "returncode": 0,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 18.399933292000014,
+    "app_cleanup_requested": []
+  },
+  "focus_owned": {
+    "returncode": 0,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 39.865337290999946,
+    "app_cleanup_requested": []
+  },
+  "actual_gui": {
+    "keyboard_input_source": "com.apple.keylayout.US",
+    "login_done": true,
+    "on_console": true,
+    "scope": "Actual hosted GUI metadata after positive input control, before ordinary product launch",
+    "screen_lock_field": null,
+    "screens": [
+      {
+        "height": 768,
+        "scale": 1,
+        "width": 1024
+      }
+    ],
+    "uid": 501
+  },
+  "actual_same_pid_birth_and_normal_quit": true,
+  "unchanged_source_file_bytes": true,
+  "recorded_build": {
+    "app": "/Users/runner/work/_temp/mostlytext-focus/app/Build/Products/Release/MacDown2.app",
+    "executable": "/Users/runner/work/_temp/mostlytext-focus/app/Build/Products/Release/MacDown2.app/Contents/MacOS/MacDown2",
+    "app_sha256": "530bae8c0defa9e2febe9d1920126591edf1e7fbc98ddbec5fa180b6d592dd81",
+    "helper": "/Users/runner/work/_temp/mostlytext-focus/app/Build/Products/Release/MacDown2.app/Contents/MacOS/mostlytext-cli",
+    "helper_sha256": "111047d8122a5c5246d15baeb2ef7c554e0eaaaf2b8ff8f85dd7c9f00d52fa7e",
+    "controller_sha256": "6557c74690650c7281253abf3b642b0590c913fbe6a3385dc55b6868529e2b51",
+    "host_facts_sha256": "c1850f19a3e0242d9f0cfda9200e9d913dbd9de3d3504c4f1998be2344a97166",
+    "info": {
+      "BuildMachineOSBuild": "25G332",
+      "CFBundleDevelopmentRegion": "en",
+      "CFBundleDisplayName": "MostlyText",
+      "CFBundleDocumentTypes": [
+        {
+          "CFBundleTypeExtensions": [
+            "md",
+            "markdown",
+            "mdown",
+            "mkd",
+            "mkdn"
+          ],
+          "CFBundleTypeName": "Markdown Document",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Default",
+          "LSItemContentTypes": [
+            "net.daringfireball.markdown"
+          ]
+        },
+        {
+          "CFBundleTypeExtensions": [
+            "html",
+            "htm"
+          ],
+          "CFBundleTypeName": "HTML Document",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Default",
+          "LSItemContentTypes": [
+            "public.html"
+          ]
+        },
+        {
+          "CFBundleTypeExtensions": [
+            "json"
+          ],
+          "CFBundleTypeName": "JSON Document",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Default",
+          "LSItemContentTypes": [
+            "public.json"
+          ]
+        },
+        {
+          "CFBundleTypeExtensions": [
+            "yaml",
+            "yml"
+          ],
+          "CFBundleTypeName": "YAML Document",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Default",
+          "LSItemContentTypes": [
+            "public.yaml"
+          ]
+        },
+        {
+          "CFBundleTypeExtensions": [
+            "toml"
+          ],
+          "CFBundleTypeName": "TOML Document",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Alternate",
+          "LSItemContentTypes": [
+            "com.joncallim.macdown2.toml"
+          ]
+        },
+        {
+          "CFBundleTypeExtensions": [
+            "txt"
+          ],
+          "CFBundleTypeName": "Plain Text Document",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Default",
+          "LSItemContentTypes": [
+            "public.plain-text"
+          ]
+        },
+        {
+          "CFBundleTypeExtensions": [
+            "js",
+            "jsx",
+            "ts",
+            "tsx",
+            "py",
+            "rb",
+            "css",
+            "swift",
+            "c",
+            "cpp",
+            "cc",
+            "cxx",
+            "h",
+            "hpp",
+            "sh",
+            "bash",
+            "zsh",
+            "sql",
+            "xml",
+            "tex",
+            "latex"
+          ],
+          "CFBundleTypeName": "Source Code",
+          "CFBundleTypeRole": "Editor",
+          "LSHandlerRank": "Alternate",
+          "LSItemContentTypes": [
+            "public.source-code"
+          ]
+        }
+      ],
+      "CFBundleExecutable": "MacDown2",
+      "CFBundleIconFile": "AppIcon",
+      "CFBundleIconName": "AppIcon",
+      "CFBundleIdentifier": "app.mostlytext.MostlyText",
+      "CFBundleInfoDictionaryVersion": "6.0",
+      "CFBundleName": "MostlyText",
+      "CFBundlePackageType": "APPL",
+      "CFBundleShortVersionString": "0.1.0",
+      "CFBundleSupportedPlatforms": [
+        "MacOSX"
+      ],
+      "CFBundleVersion": "1",
+      "DTCompiler": "com.apple.compilers.llvm.clang.1_0",
+      "DTPlatformBuild": "25A352",
+      "DTPlatformName": "macosx",
+      "DTPlatformVersion": "26.0",
+      "DTSDKBuild": "25A352",
+      "DTSDKName": "macosx26.0",
+      "DTXcode": "2601",
+      "DTXcodeBuild": "17A400",
+      "LSApplicationCategoryType": "public.app-category.productivity",
+      "LSMinimumSystemVersion": "26.0",
+      "MostlyTextUITestOwnerUID": "",
+      "NSHumanReadableCopyright": "Copyright \u00a9 2026 Joncallim",
+      "NSPrincipalClass": "NSApplication",
+      "UTExportedTypeDeclarations": [
+        {
+          "UTTypeConformsTo": [
+            "public.json"
+          ],
+          "UTTypeDescription": "MostlyText Theme",
+          "UTTypeIdentifier": "app.mostlytext.theme",
+          "UTTypeTagSpecification": {
+            "public.filename-extension": [
+              "mostlytext-theme"
+            ]
+          }
+        },
+        {
+          "UTTypeConformsTo": [
+            "public.data"
+          ],
+          "UTTypeDescription": "MostlyText File Tree Item",
+          "UTTypeIdentifier": "com.joncallim.macdown2.file-tree-item"
+        },
+        {
+          "UTTypeConformsTo": [
+            "public.text",
+            "public.plain-text"
+          ],
+          "UTTypeDescription": "TOML Document",
+          "UTTypeIdentifier": "com.joncallim.macdown2.toml",
+          "UTTypeTagSpecification": {
+            "public.filename-extension": [
+              "toml"
+            ]
+          }
+        }
+      ]
+    },
+    "license_resource_sha256": {
+      "/Users/runner/work/_temp/mostlytext-focus/app/Build/Products/Release/MacDown2.app/Contents/Resources/LICENSE": "cf3074d35adf4d5ccdca366b21e84e20e308912c8614dbcafd28884af9c1e0f8",
+      "/Users/runner/work/_temp/mostlytext-focus/app/Build/Products/Release/MacDown2.app/Contents/Resources/THIRD_PARTY_NOTICES.md": "1e19c978f81682e60cd2cdf20a18122f2106c73a26c67e9ddebcca5b39354341"
+    }
+  },
+  "scope": "Actual normal Release public full focus/Bold/Undo journey plus unchanged genuine-before-failure status regression. All6 complete fields fit inside the real narrow/wide bar bounds; actual English singular visible, samePID/birth/normalQuit/source verified. Not extreme-overflow/pseudo/RTL/VoiceOver/native-language/finalcritical/owner/signed-artifact acceptance.",
+  "actual_selected_status_case": true,
+  "actual_narrow_and_wide_frames": {
+    "Narrow": {
+      "editorStatusBar.height": 41,
+      "editorStatusBar.width": 398,
+      "statusBarCount.height": 13,
+      "statusBarCount.width": 99,
+      "statusBarEncoding.height": 18,
+      "statusBarEncoding.width": 48,
+      "statusBarIndentation.height": 13,
+      "statusBarIndentation.width": 48,
+      "statusBarLineColumn.height": 13,
+      "statusBarLineColumn.width": 50,
+      "statusBarLineEnding.height": 18,
+      "statusBarLineEnding.width": 106,
+      "statusBarSyntaxMode.height": 18,
+      "statusBarSyntaxMode.width": 71
+    },
+    "Wide": {
+      "editorStatusBar.height": 24,
+      "editorStatusBar.width": 796,
+      "statusBarCount.height": 13,
+      "statusBarCount.width": 99,
+      "statusBarEncoding.height": 18,
+      "statusBarEncoding.width": 48,
+      "statusBarIndentation.height": 13,
+      "statusBarIndentation.width": 48,
+      "statusBarLineColumn.height": 13,
+      "statusBarLineColumn.width": 50,
+      "statusBarLineEnding.height": 18,
+      "statusBarLineEnding.width": 106,
+      "statusBarSyntaxMode.height": 18,
+      "statusBarSyntaxMode.width": 71
+    }
+  },
+  "actual_all_six_complete_item_rectangles_inside_status_bounds": {
+    "Narrow": {
+      "editorStatusBar": [
+        228.0,
+        664.0,
+        398.0,
+        41.0
+      ],
+      "statusBarLineColumn": [
+        236.0,
+        668.0,
+        50.0,
+        13.0
+      ],
+      "statusBarCount": [
+        302.0,
+        668.0,
+        99.0,
+        13.0
+      ],
+      "statusBarSyntaxMode": [
+        235.0,
+        684.0,
+        71.0,
+        18.0
+      ],
+      "statusBarEncoding": [
+        320.0,
+        684.0,
+        48.0,
+        18.0
+      ],
+      "statusBarLineEnding": [
+        382.0,
+        684.0,
+        106.0,
+        18.0
+      ],
+      "statusBarIndentation": [
+        570.0,
+        668.0,
+        48.0,
+        13.0
+      ]
+    },
+    "Wide": {
+      "editorStatusBar": [
+        228.0,
+        681.0,
+        796.0,
+        24.0
+      ],
+      "statusBarLineColumn": [
+        236.0,
+        686.5,
+        50.0,
+        13.0
+      ],
+      "statusBarCount": [
+        302.0,
+        686.5,
+        99.0,
+        13.0
+      ],
+      "statusBarSyntaxMode": [
+        700.0,
+        684.0,
+        71.0,
+        18.0
+      ],
+      "statusBarEncoding": [
+        785.0,
+        684.0,
+        48.0,
+        18.0
+      ],
+      "statusBarLineEnding": [
+        847.0,
+        684.0,
+        106.0,
+        18.0
+      ],
+      "statusBarIndentation": [
+        968.0,
+        686.5,
+        48.0,
+        13.0
+      ]
+    }
+  },
+  "actual_english_singular_count_visible": true
+}
