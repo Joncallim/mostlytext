@@ -120,3 +120,25 @@ with canonical/copied/generated/compiled byte identity. The adapter's explicit
 in-memory module-export conversion is separately recorded; it never overwrites
 the original browser asset or its notice. This is not closure of independent
 source/font/rights review or the exact released-artifact compliance gate.
+
+## First reference failure and bounded phase diagnosis
+
+Source dff0b156101755d1105d75a69047c71699ad65e7 /actual92beb896 first
+native42414107222 FAILS during hosted Node reference execution. Compliance
+42414107131 passes. Both complete first outcomes/logZIP/artifacts are retained
+and independently verified:28canonical/19copied inputs and unchanged actual
+D2 asset/licence/notice/full notices. Reference Nodev24.22.2 exits1 with
+ERR_SCRIPT_EXECUTION_TIMEOUT after15000ms at reference.cjs22 (one of the three
+asset evaluations). The exact asset/subphase is not recorded. Xcode generation,
+build, compiled admission, real Finder and actual D2 SVG are NOT_RUN. Do not
+classify this as a native JavaScriptCore refusal or increase the time budget.
+The later always-verifier KeyError reference_module is secondary to that timeout.
+
+A bounded diagnostic correction records fixed phase markers before/after each
+asset evaluation and the actual worker/ready/compile/render transitions. Node
+writes a small separate phase journal even when VM evaluation throws. Native
+uses the same value-only fixed phase bridge and own log. It adds no engine
+substitution, permissions, workaround, deadline padding or accepted failure.
+Persist the original reference outcome before post-failure verification, which
+must explicitly refuse an unadmitted stage rather than implying native work ran.
+The next first outcome must again be preserved complete before any correction.
