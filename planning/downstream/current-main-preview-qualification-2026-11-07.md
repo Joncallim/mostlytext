@@ -163,3 +163,24 @@ The semantic-binding correction now passes seven real-filesystem controls: exact
 Counterfactual entry admission also has direct removed-guard/intercept controls: the actual host guard prevents the first source read, while a control-only removed call reaches the intercepted SecuredMarkdownResourceHost read without reading bytes or building. Optimized counterfactual invocation refuses before source/build. All4 host/optimized controls pass and the original producer guard's AST remains identical after sharing. The first removed-call control exposed an indentation error in the test's own source substitution; retaining a same-indent pass statement fixes that control. No native command or product source ran, and no original native failure is erased.
 
 Topology validation retains only the two property-list buffers, releasing app/test executable bytes between file reads instead of holding all compiled executables in memory. The same original bounded no-link read and per-phase digest checks remain; all7 filesystem/topology controls pass. No native execution or product behavior is changed.
+
+## Capture the actual Debug code image as well as its launcher
+
+A further orthogonal review finds an actual compiled-input gap before publication:
+the retained4b normal CI Xcode26.0.1 Debug log links MacDown2.debug.dylib and
+__preview.dylib beside the main executable. Capturing only that executable does
+not download those actual code-image bytes. Preserve the exact observed link
+steps and their original log/ZIP digests before changing the pure helper. Earlier
+records keep their narrower original scope; no prior binary is backfilled.
+
+Require and capture both fixed Debug image paths alongside the existing five
+inputs; recheck their bytes and exact app-relative topology after each phase.
+For Release retain the five-input topology and refuse unexpected Debug images.
+Keep the256MiB per-input bound and all original phase/host/result/mutant/restored
+assertions. The first native layout/size check remains mandatory; do not preemptively
+increase a bound or silently omit an image. Extend actual filesystem controls for
+missing/changed/link/detached Debug libraries and the Release layout, retaining
+old controls. Include the new observed link-step packet in the bound helper input
+inventory. This changes only evidence capture, not build flags, product source,
+compiler behavior, native cases or limits; the prepared PDF Release consumer
+continues to share the same strict helper.
