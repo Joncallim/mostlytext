@@ -1,0 +1,21 @@
+{
+  "head": "49802e6023ced32ce3ae5f175541c1963977316e",
+  "checkout": "9f65a37fd2cda52aa3ebe8114fdc2d0d375b41b8",
+  "all_recorded_sources_verified": 10,
+  "owned_status": {
+    "returncode": 64,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 1.1077322079999874,
+    "app_cleanup_requested": []
+  },
+  "first_failure": "Xcode requires test-iterations greater than1; zero Finder tests/provider callbacks",
+  "root_product_tree_verified": "450870700f707bbe09693efb39777ac5b9610a92",
+  "local_parser_negative_reproduced_without_test_execution": true,
+  "local_default_execution_build_settings_parse_passed_without_test_execution": true,
+  "generated_scheme_has_no_retry_or_repetition_mode": true,
+  "parser_negative_sha256": "e834bc49ca3cf7934fa8e7881290dc11c3bc689277b849688050548c8d2f33b8",
+  "parser_positive_sha256": "d0026ddad3971fadc00461e2ce7109cab793e16c79573a60729e92b6ab6e9ee1",
+  "scheme_sha256": "6e3a89b6bb6d7fc72b2a1a4b29c17fc53e3a6a1bb5d8e5911fac5bf7f53837a1",
+  "scope": "Actual fixture signing/discovery retained; parser refuses before GUI. Corrected showBuildSettings reports selected container target; no test execution or dependency-target settings claim. No retry/repetition options."
+}
