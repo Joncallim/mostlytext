@@ -1,0 +1,18 @@
+{
+  "head": "5edddde4651828c50c2cdc57af13ff25fdaa4716",
+  "checkout": "6eafd24d40e7ef0ce440a8926e464f21a895dcfc",
+  "all_recorded_sources_verified": 10,
+  "root_product_tree_verified": "450870700f707bbe09693efb39777ac5b9610a92",
+  "owned_status": {
+    "returncode": 65,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 32.21060829199999,
+    "app_cleanup_requested": []
+  },
+  "actual_ui_tests_executed": 1,
+  "actual_ui_failures": 1,
+  "first_failure": "Foundation home is exact XCUITest sandbox container, not POSIX account home. First assertion fails before Finder activation/provider callback.",
+  "provider_events": 0,
+  "scope": "Real UI test runner executes. No Finder request, automation-permission outcome or full QL-REPLY inferred. Correct account guard retains exact sandbox path and actual POSIX runner identity."
+}
