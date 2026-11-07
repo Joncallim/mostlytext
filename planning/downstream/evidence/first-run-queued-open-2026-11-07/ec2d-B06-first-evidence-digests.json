@@ -1,0 +1,5 @@
+{
+  "original_test_manager_session_sha256": "c751060af41e651f23076230866c5a5db3147d7ab1c9d4fd8653acc20a35d120",
+  "complete_original_job_log_sha256": "bcc1bcf6cf09176e4496debb6a7859cccda181a22ea0779af15b22f0e02a8f36",
+  "scope": "One actual assertion failure before Welcome; subsequent XCTest restart stops two unexecuted methods. Actual launch request confirms flags, not runtime openFiles queue. Original full diagnostics retained in engineering archive; environment omitted from excerpt."
+}
