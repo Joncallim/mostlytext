@@ -7,7 +7,7 @@ import shutil
 import subprocess
 import sys
 
-QUALIFIED_MAIN = 'PENDING_CURRENT_PUBLIC_ORCHESTRATION_INTAKE'
+QUALIFIED_MAIN = 'ef93ab2d4fbda72cdd126560ffb19cd7e012a5d9'
 ROOT = Path('/Users/runner/work/_temp/mostlytext-focus')
 
 

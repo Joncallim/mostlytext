@@ -29,6 +29,8 @@ class SeedAdmissionTests(unittest.TestCase):
         cls.temporary = tempfile.TemporaryDirectory(prefix='mostlytext-seed-admission-')
         cls.root = Path(cls.temporary.name)
         cls.source = SOURCE.read_text()
+        import re
+        cls.anchor = re.search(r'qualifiedMain = "([^"]+)"', cls.source).group(1)
         (cls.root / 'Control.swift').write_text(CONTROL)
 
     @classmethod
@@ -38,7 +40,7 @@ class SeedAdmissionTests(unittest.TestCase):
     def observe(self, source, environment=None):
         (self.root / 'Admission.swift').write_text(source)
         subprocess.run(['xcrun', 'swiftc', '-parse-as-library', '-swift-version', '6',
-                        '-strict-concurrency=complete', str(self.root / 'Admission.swift'),
+                        '-strict-concurrency=complete', '-O', str(self.root / 'Admission.swift'),
                         str(self.root / 'Control.swift'), '-o', str(self.root / 'control')], check=True,
                        capture_output=True, timeout=60)
         result = subprocess.run([str(self.root / 'control')], env=environment or {'PATH': os.defpath},
@@ -46,11 +48,13 @@ class SeedAdmissionTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         return result.stdout.strip()
 
-    def test_actual_held_anchor_refuses_before_any_receipt_access(self):
-        self.assertEqual(self.observe(self.source), 'held')
+    def test_actual_held_and_activated_anchors_refuse_before_any_receipt_access(self):
+        self.assertEqual(self.observe(self.source), 'host')
+        held = self.source.replace(self.anchor, 'PENDING_CONTROL_ANCHOR')
+        self.assertEqual(self.observe(held), 'held')
 
     def test_admitted_anchor_still_refuses_real_untrusted_account(self):
-        source = self.source.replace('PENDING_CURRENT_PUBLIC_ORCHESTRATION_INTAKE', '0' * 40)
+        source = self.source.replace(self.anchor, '0' * 40)
         # Claimed CI variables cannot replace the actual account/home identity.
         environment = {'PATH': os.defpath, 'GITHUB_ACTIONS': 'true', 'RUNNER_OS': 'macOS',
                        'GITHUB_REPOSITORY': 'Joncallim/mostlytext', 'RUNNER_TEMP': '/Users/runner/work/_temp'}
@@ -60,7 +64,7 @@ class SeedAdmissionTests(unittest.TestCase):
         self.assertEqual(self.source.count('        try requireHost()\n'), 1)
         removed = self.source.replace('        try requireHost()\n', '')
         self.assertTrue(self.observe(removed).startswith('receipt-read-counterexample:'))
-        self.assertEqual(self.observe(self.source), 'held')
+        self.assertEqual(self.observe(self.source), 'host')
 
 
 if __name__ == '__main__':

@@ -216,3 +216,17 @@ and all migration results are still unverified. Before activation, inspect the
 compiled product paths, full source inventory, first-attempt freeze and exact
 source restoration, activate both anchors together from actual qualified main,
 then preserve the first hosted compile/execution outcome without unchanged retry.
+
+## First valid-profile execution activation
+
+Activate both fixed anchors at actual qualified main ef93ab2d. The private branch
+contains no product/root-package/original-test changes from that main; its native
+journey is independent of PR128's current original Open Folder automation failure.
+The literal fixture guard additionally rejects any requested positive-control app
+cleanup and checks the product is absent before every fixture action. Both actual
+active-anchor/untrusted-host and synthetic-held controls must still refuse before
+receipt/profile access under optimized Swift compilation. Keep the first private
+package lock/SDK compilation result as actual evidence; a new root manifest's lock
+assumption remains unverified and cannot be bypassed by enabling floating versions.
+A later product-startup intake requires new affected qualification, not retargeting
+this first source. No product/GUI/defaults operation is authorized on CORTANA.

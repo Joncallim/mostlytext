@@ -3,7 +3,7 @@ import Foundation
 
 /// No domain, profile or receipt access is allowed before the held/host checks.
 enum MigrationSeedAdmission {
-    static let qualifiedMain = "PENDING_CURRENT_PUBLIC_ORCHESTRATION_INTAKE"
+    static let qualifiedMain = "ef93ab2d4fbda72cdd126560ffb19cd7e012a5d9"
     static let root = URL(fileURLWithPath: "/Users/runner/work/_temp/mostlytext-focus", isDirectory: true)
 
     enum Refusal: Error { case held, host, event, positive }
@@ -49,6 +49,7 @@ enum MigrationSeedAdmission {
               let criteria = receipt["criteria"] as? [String: Bool], criteria["benign_control"] == true,
               owned["returncode"] as? Int == 0, owned["timed_out"] as? Bool == false,
               owned["cancelled"] as? Bool == false,
+              let cleanup = owned["app_cleanup_requested"] as? [Any], cleanup.isEmpty,
               ["totalTestCount": 1, "passedTests": 1, "failedTests": 0, "skippedTests": 0, "expectedFailures": 0]
               .allSatisfy({ summary[$0.key] as? Int == $0.value }) else { throw Refusal.positive }
         return receipt
