@@ -1,0 +1,10 @@
+{
+  "source_head": "74d9d98eb55e7d565e28476c8efd46a835e77114",
+  "app_delegate_sha256": "3efd3190e6921ac72928534562c76d76a72bb91eb1e865a193e978051fd085e0",
+  "exact_actual_handler_sha256": "c01bccc46878f9c804d6fa2dce622435e2b6c44bf779e5a41cb1f19bf972b621",
+  "exact_actual_helper_sha256": "81e548c23d9512349581f4cbdeea733d8be1fae6df7840ce1b6b9fc4407e45bb",
+  "exact_actual_pending_assignment": "hasPendingDocumentOpen = !Self.regularDocumentURLs(startupOpenFiles).isEmpty",
+  "actual_url_source_sha256": "fe60e0fbac375235472d20c2eec57788bd4315f5856fe1a5c457cca6df810c79",
+  "generated_program_sha256": "33a4e6c594e03c4d842f7c0b6b3c5fe695f385b7b63f331a5ceadeba2b3328f6",
+  "scope": "Literal actual handler/helper/pending expression + complete exact Foundation/Darwin URL extension; only unreachable AppKit/coordinator types are stand-ins. No filesystem mock or real AppKit execution."
+}

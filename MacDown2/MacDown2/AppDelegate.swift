@@ -206,7 +206,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 proceedWithNormalLaunch(documentAlreadyOpened: openedDocument)
             }
         } else {
-            hasPendingDocumentOpen = !startupOpenFiles.isEmpty
+            hasPendingDocumentOpen = !Self.regularDocumentURLs(startupOpenFiles).isEmpty
             proceedWithNormalLaunch()
         }
         let queued = startupOpenFiles
@@ -296,6 +296,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         return false
     }
 
+    private static func regularDocumentURLs(_ filenames: [String]) -> [URL] {
+        filenames
+            .map { URL(fileURLWithPath: $0).resolvingFinalSymlink() }
+            .filter { (try? $0.resourceValues(forKeys: [.isRegularFileKey]))?.isRegularFile == true }
+    }
+
     func application(_: NSApplication, openFiles filenames: [String]) {
         guard normalLaunchReady else {
             startupOpenFiles.append(contentsOf: filenames)
@@ -305,9 +311,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         // `-sessionDir` value under UI testing) and folder drops through this
         // handler. Only regular files count as document opens; anything else
         // must not suppress the session restore.
-        let fileURLs = filenames
-            .map { URL(fileURLWithPath: $0).resolvingFinalSymlink() }
-            .filter { (try? $0.resourceValues(forKeys: [.isRegularFileKey]))?.isRegularFile == true }
+        let fileURLs = Self.regularDocumentURLs(filenames)
         guard !fileURLs.isEmpty else { return }
         hasPendingDocumentOpen = true
         Task { @MainActor in
