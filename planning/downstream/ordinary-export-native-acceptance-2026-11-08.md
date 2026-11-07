@@ -165,3 +165,26 @@ deadline. Capture the actual post-format panel before the filename assertion
 so any next failure has a contemporaneous custom tree/screenshot. All product
 source/flags/baseline, format choices, output oracles and normal Quit requirement
 remain unchanged. Preserve the next complete first outcome before correction.
+
+## Preserve actual HTML output and accept the two observed AppKit name displays
+
+First55eb8bf3 native42423221480 fails; Compliance42423317927 passes. All
+1639/24pins/13generated/411actualcompiled roles verify. Actual HTML is saved
+and independently passes the UTF8/canary/heading/strong/code/GFM table oracle.
+The next actual PDF panel correctly reports the source-derived .pdf name;
+the private test wrongly demands a hidden-extension stem. Contemporaneous
+post-format screenshots/tree and the raw failure retain that actual value.
+PDF save is NOT_RUN and no normal Quit is qualified. The failed journey uses
+PID/birth-bound force cleanup, whose post-termination object reportsPID-1.
+Preserve that literal field, not an invented stable returned PID; source
+inspection identifies the shared helper reading processIdentifier after exit.
+
+Keep the same single observed Save As field and source-derived stem. Accept
+only the two real AppKit representations: exact stem, or exact stem plus the
+currently selected format extension. Reject any other stem/foreign extension.
+This fixes a private UI representation assumption; it does not remove filename
+semantics, permit another selector or waive the output file/signature/content/
+format/source/normalQuit checks. Every product byte, flag, destination and
+deadline stays fixed. Preserve the next complete first outcome. The shared
+helper post-termination PID record needs a separate evidence/source correction
+before a stable final-PID claim; no product or teardown authority is changed here.
