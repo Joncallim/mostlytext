@@ -1,0 +1,84 @@
+name: Network-denied JavaScriptCore Quick Look capability
+
+permissions:
+  contents: read
+on:
+  pull_request:
+    branches: [main, master, integration-final]
+    paths:
+      - '.github/quicklook-jsc-probe/**'
+      - '.github/scripts/prepare-quicklook-jsc-probe.py'
+      - '.github/scripts/test-quicklook-jsc-probe.py'
+      - '.github/scripts/observe-quicklook-jsc.py'
+      - '.github/scripts/run-quicklook-jsc-ui.py'
+      - '.github/scripts/test-quicklook-jsc-observer.py'
+      - '.github/workflows/quicklook-jsc-probe.yml'
+  workflow_dispatch:
+concurrency:
+  group: quicklook-jsc-probe-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  cold-finder:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: macos-26
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Select current Xcode and generate only the isolated fixture
+        run: |
+          set -euo pipefail
+          XCODE=$(ls -d /Applications/Xcode*.app | grep "26" | head -1 || true)
+          test -n "$XCODE"
+          test "$(sw_vers -productVersion | cut -d. -f1)" = 26
+          sudo xcode-select -s "$XCODE/Contents/Developer"
+          brew install xcodegen
+          python3 .github/scripts/test-run-owned-app-tests.py
+          python3 .github/scripts/test-quicklook-jsc-probe.py
+          python3 .github/scripts/test-quicklook-jsc-observer.py
+          python3 .github/scripts/prepare-quicklook-jsc-probe.py "$RUNNER_TEMP/mostlytext-qljsc"
+      - name: Compile and ad-hoc sign standalone container, provider and UI test
+        run: |
+          set -euo pipefail
+          xcodebuild -project "$RUNNER_TEMP/mostlytext-qljsc/fixture/QuickLookReplyProbe.xcodeproj" -scheme QuickLookReplyProbe -configuration Release -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/mostlytext-qljsc/build" CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual build-for-testing 2>&1 | tee "$RUNNER_TEMP/mostlytext-qljsc/build.log"
+          python3 .github/scripts/prepare-quicklook-jsc-probe.py "$RUNNER_TEMP/mostlytext-qljsc" --seal-built
+      - name: Register exact provider and reveal the generated file without launching the container
+        run: |
+          set -euo pipefail
+          app="$RUNNER_TEMP/mostlytext-qljsc/build/Build/Products/Release/QLReplyProbeContainer.app"
+          /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$app"
+          pluginkit -a "$app/Contents/PlugIns/QLReplyProbeProvider.appex"
+          pluginkit -e use -i app.mostlytext.MostlyText.QuickLook
+          pluginkit -m -A -D -vv -i app.mostlytext.MostlyText.QuickLook | tee "$RUNNER_TEMP/mostlytext-qljsc/discovery.log"
+          open -R "$RUNNER_TEMP/mostlytext-qljsc/mostlytext-ql-reply-static.md"
+      - name: Execute cold static and actual JavaScriptCore capability once
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/run-quicklook-jsc-ui.py
+      - name: Retain actual provider logs and post-test source verification
+        if: always()
+        run: |
+          set +e
+          /usr/bin/log show --last 12m --style json --predicate 'subsystem == "app.mostlytext.qljscprobe"' > "$RUNNER_TEMP/mostlytext-qljsc/provider-events.json" 2> "$RUNNER_TEMP/mostlytext-qljsc/provider-log-errors.txt"
+          /usr/bin/log show --last 12m --style json --predicate 'subsystem == "app.mostlytext.qljscobserver"' > "$RUNNER_TEMP/mostlytext-qljsc/observer-control-events.json" 2> "$RUNNER_TEMP/mostlytext-qljsc/observer-control-log-errors.txt"
+          ps -axo pid=,uid=,comm= > "$RUNNER_TEMP/mostlytext-qljsc/processes-after.txt"
+          python3 .github/scripts/prepare-quicklook-jsc-probe.py "$RUNNER_TEMP/mostlytext-qljsc" --verify-finder
+      - name: Preserve the first actual JavaScriptCore capability result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: javascriptcore-quicklook-capability
+          path: |
+            ${{ runner.temp }}/mostlytext-qljsc/receipt.json
+            ${{ runner.temp }}/mostlytext-qljsc/*.log
+            ${{ runner.temp }}/mostlytext-qljsc/*.json
+            ${{ runner.temp }}/mostlytext-qljsc/*.txt
+            ${{ runner.temp }}/mostlytext-qljsc/*.plist
+            ${{ runner.temp }}/mostlytext-qljsc/*.md
+            ${{ runner.temp }}/mostlytext-qljsc/compiled-inputs/**
+            ${{ runner.temp }}/mostlytext-qljsc/actual-ui-attachments/**
+            ${{ runner.temp }}/mostlytext-qljsc/fixture/**
+            ${{ runner.temp }}/mostlytext-qljsc/owned/**
+            ${{ runner.temp }}/mostlytext-qljsc/observer-journal/**
+            ${{ runner.temp }}/mostlytext-qljsc/Finder.xcresult/**
