@@ -25,3 +25,21 @@ only event. Never merge this narrowed/replaced workflow into main or PR145.
 No pull request or duplicate native workflow is created. Architecture is committed
 before this branch-only executor. Complete first output is preserved before any
 correction; a subsequent Mac result remains required for native conclusions.
+
+## First actual Linux outcome and next bounded observation
+
+Source020c85f4 /run42416059214 fails its actual VM15second timeout. Complete
+first logs/artifact/source/copy/Node identity are retained and independently
+verified. All21canonical/19copied inputs match; the engine/adapter/control bytes
+are identical to frozen d7c45fb4. The actual15row phase journal proves WASM
+unpack starts at0.390s and ends at0.837s; no later message-init or control-end
+is observed. This does not reproduce Mac timing or establish a sole cause.
+
+The host clone function preserves ArrayBuffer/Uint8Array only and treats other
+views as ordinary objects. Test the verbatim actual clone function in a separate
+hosted VM using tiny signed/unsigned/clamped/multibyte/DataView samples. Record
+kind/bytes/value preservation before any proposed copy fix. Also record the
+actual unpack result's built-in type at the existing end marker, without changing
+the payload or message behaviour. The complete unchanged-engine reference must
+still run under the same bounds. Counterexample controls diagnose a host contract;
+they do not qualify a renderer or replace the missing actual SVG positive.
