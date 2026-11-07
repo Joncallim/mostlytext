@@ -1,0 +1,48 @@
+{
+  "source": "9c5940731d7c1cae4f2e9197aa46250786d4dde9",
+  "before": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+  "records": [
+    {
+      "original": "html-accessibility-before-after-source-proof.json",
+      "compressed": "html-accessibility-before-after-source-proof.json.gz",
+      "bytes": 4038,
+      "sha256": "068e33d9874a64c035a430c345633d64f9415d3c4af24075365e12063cb62faa"
+    },
+    {
+      "original": "html-accessibility-first-independently-verified.json",
+      "compressed": "html-accessibility-first-independently-verified.json.gz",
+      "bytes": 3090,
+      "sha256": "27363a770e764efdd9e2531387215eec47865e56b59f7953f1a5cc1b63236e49"
+    },
+    {
+      "original": "html-accessibility-first-run.json",
+      "compressed": "html-accessibility-first-run.json.gz",
+      "bytes": 12515,
+      "sha256": "24f18e9f3e9916295277a078147227d33e2d30d1b20ee29a1ad72b9062c664d5"
+    },
+    {
+      "original": "html-accessibility-first-artifacts.json",
+      "compressed": "html-accessibility-first-artifacts.json.gz",
+      "bytes": 750,
+      "sha256": "0c1de0fb24057ef34ca8cbddfffa0c8089688f93ea5a5ee1b46bcca85968fa7a"
+    },
+    {
+      "original": "verify-first-html-accessibility.py",
+      "compressed": "verify-first-html-accessibility.py.gz",
+      "bytes": 8373,
+      "sha256": "574d9d2fa8435d7040317d7b3581ca31f96f0024c46895121db5a55e4a4829dc"
+    },
+    {
+      "original": "html-accessibility-first-artifact/hosted-ui-matrix-B08/receipt.json",
+      "compressed": "original-receipt.json.gz",
+      "bytes": 313613,
+      "sha256": "e2ab814711d9348b370a78b8151d77a73512019b8d1a378e5e6f991daeeb7f4f"
+    }
+  ],
+  "complete_original_log_archive": {
+    "name": "html-accessibility-complete-first-workflow-logs.zip",
+    "bytes": 797773,
+    "sha256": "1051397be5ceeb186698fca2dbed5d582bad24cdc128cd528bed1d93534b0ff1"
+  },
+  "scope": "Real original5sec HTML identity assertion fails before and passes after one grouping modifier. Three other original B08cases and positive also pass. Missing identifier while Hello rendered is observed before. No full38, final VoiceOver or Preview activation inferred."
+}
