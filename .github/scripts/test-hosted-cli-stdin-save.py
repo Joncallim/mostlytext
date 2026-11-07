@@ -108,6 +108,36 @@ class HostAdmissionTests(unittest.TestCase):
                 self.assertFalse(root.exists())
                 self.assertIn('Optimized Python' if flags else 'AssertionError', result.stderr)
 
+    def test_real_shallow_history_requires_the_actual_ancestor_object(self):
+        with tempfile.TemporaryDirectory(prefix='mostlytext-stdin-history-') as name:
+            root = Path(name)
+            source, bare, shallow = (root / p for p in ['source', 'origin.git', 'shallow'])
+            source.mkdir()
+            def git(*args, cwd=source):
+                return subprocess.run(['git', *args], cwd=cwd, capture_output=True, text=True, check=True)
+            git('init', '-b', 'main')
+            git('config', 'user.name', 'Owned history fixture')
+            git('config', 'user.email', 'fixture@example.invalid')
+            git('config', 'commit.gpgsign', 'false')
+            git('config', 'core.hooksPath', '/dev/null')
+            (source / 'input').write_text('qualified ancestor')
+            git('add', 'input')
+            git('commit', '-m', 'fixture ancestor')
+            anchor = git('rev-parse', 'HEAD').stdout.strip()
+            git('switch', '-c', 'candidate')
+            (source / 'input').write_text('private candidate')
+            git('commit', '-am', 'fixture candidate')
+            git('switch', 'main')
+            git('merge', '--no-ff', 'candidate', '-m', 'fixture synthetic merge')
+            git('clone', '--bare', str(source), str(bare), cwd=root)
+            git('clone', '--depth=1', bare.as_uri(), str(shallow), cwd=root)
+            refused = subprocess.run(['git', 'merge-base', '--is-ancestor', anchor, 'HEAD'],
+                                     cwd=shallow, capture_output=True, text=True)
+            self.assertEqual(refused.returncode, 128)
+            self.assertIn('Not a valid commit name', refused.stderr)
+            git('fetch', '--unshallow', 'origin', cwd=shallow)
+            self.assertEqual(git('merge-base', '--is-ancestor', anchor, 'HEAD', cwd=shallow).returncode, 0)
+
     def test_unqualified_dependency_refuses_before_any_git_or_write(self):
         script = Path(__file__).with_name('prepare-hosted-cli-stdin-save.py').resolve()
         spec = importlib.util.spec_from_file_location('stdin_prepare_control', script)
