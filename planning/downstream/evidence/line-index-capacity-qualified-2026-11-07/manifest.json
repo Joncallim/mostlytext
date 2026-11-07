@@ -1,0 +1,139 @@
+{
+  "source": "6acab2ec81504ee77ad2888bff2fbf6fbc379483",
+  "actual_checkout": "34c77b5c181e768f042f28b840914e4c32e136d9",
+  "actual_main": "38ccd5d533938c4dbc31f01d9dabbc72025adc71",
+  "tree": "0518c29aa68598f2369b40d5db58d19551cc3f9b",
+  "records": [
+    {
+      "original": "first-source-context.json",
+      "compressed": "first-source-context.json.gz",
+      "bytes": 1023,
+      "sha256": "282a2663b5e3d6aaf506e8a92b2cc3d6a63494581dcb5b3c2fd45fafb6bcc0f2"
+    },
+    {
+      "original": "full-ci-independently-verified.json",
+      "compressed": "full-ci-independently-verified.json.gz",
+      "bytes": 1273,
+      "sha256": "1250aab297114f4f1846eac8dd0e52befd087e0f164f11d68495d332ba5ee56f"
+    },
+    {
+      "original": "theme-independently-verified.json",
+      "compressed": "theme-independently-verified.json.gz",
+      "bytes": 9250,
+      "sha256": "c0b31f5693cfd292bdc2e6af659a2eb620907ad370f771b346962afad7fcee93"
+    },
+    {
+      "original": "cli-independently-verified.json",
+      "compressed": "cli-independently-verified.json.gz",
+      "bytes": 1274,
+      "sha256": "f84dbff5f7b2fde40a8510bac542ea227c671b9c29b84eee2fa00bd428e32089"
+    },
+    {
+      "original": "highlighting-independently-verified.json",
+      "compressed": "highlighting-independently-verified.json.gz",
+      "bytes": 3208,
+      "sha256": "2aa1e482152c54b9a3faadeea2b8a66c81e94483aa939144f482814ab52f1ab5"
+    },
+    {
+      "original": "review-readiness-proof.json",
+      "compressed": "review-readiness-proof.json.gz",
+      "bytes": 2191,
+      "sha256": "7dec7924be210289d0c6415335e32b5bbb27b1cb64d9ecb7de2760d4a20e1238"
+    },
+    {
+      "original": "actual-main-integration-proof.json",
+      "compressed": "actual-main-integration-proof.json.gz",
+      "bytes": 753,
+      "sha256": "7c9c079ca118159d36ff87a447d2d6c92e0a5ad4e19c43aad1879a1da69273c4"
+    },
+    {
+      "original": "theme-reader-initial-refusal.json",
+      "compressed": "theme-reader-initial-refusal.json.gz",
+      "bytes": 397,
+      "sha256": "fb2dd93c3a1ec3834e458e41304b38636ed1169425b062b089502184803d89b3"
+    },
+    {
+      "original": "full-ci-reader-initial-refusal.json",
+      "compressed": "full-ci-reader-initial-refusal.json.gz",
+      "bytes": 539,
+      "sha256": "0781d1392a47088d4c6b9b88b82c08e8060997d789bdd8336e7908a37397cbfd"
+    },
+    {
+      "original": "verify-first-full-ci.py",
+      "compressed": "verify-first-full-ci.py.gz",
+      "bytes": 4406,
+      "sha256": "dc7a2dc1d15cc19aef4e4e8f0746aece7ecd362d61e7c045517310c12b186455"
+    },
+    {
+      "original": "verify-first-theme.py",
+      "compressed": "verify-first-theme.py.gz",
+      "bytes": 5891,
+      "sha256": "55b0e05ebb4455c71e90a1e52c5df51943488b433b37426dec1466dafbbe8884"
+    },
+    {
+      "original": "verify-first-cli.py",
+      "compressed": "verify-first-cli.py.gz",
+      "bytes": 6260,
+      "sha256": "3b212440ccb6f313d9c99b91e215ca377f59f3da9a1200c4015c6dcfa1f70eb4"
+    },
+    {
+      "original": "verify-first-highlighting.py",
+      "compressed": "verify-first-highlighting.py.gz",
+      "bytes": 3913,
+      "sha256": "f962826c93111f98d2a5a30c07d9a1ec5911b0dc5d67ce0c8bf5675de245d4aa"
+    },
+    {
+      "original": "full-ci-first-run.json",
+      "compressed": "full-ci-first-run.json.gz",
+      "bytes": 12907,
+      "sha256": "3017c3653164267354f451acfcd03874b653aa0498e90a7244b4acb6a382ae8a"
+    },
+    {
+      "original": "theme-first-run.json",
+      "compressed": "theme-first-run.json.gz",
+      "bytes": 12969,
+      "sha256": "d415f3b184b365859c8d9c1bf81d5a60458953d3dcd3b1b4ff421094c8c68ce6"
+    },
+    {
+      "original": "cli-first-run.json",
+      "compressed": "cli-first-run.json.gz",
+      "bytes": 12953,
+      "sha256": "40ca93a0dd0e88a57a27129bfef82826391d974a7252f17f31170c8e168f18f0"
+    },
+    {
+      "original": "highlighting-first-run.json",
+      "compressed": "highlighting-first-run.json.gz",
+      "bytes": 12988,
+      "sha256": "2a7245dfd31a2e24d46122c7119b895aa4a73bc8d27757b82edc64d8161c1218"
+    },
+    {
+      "original": "compliance-first-run.json",
+      "compressed": "compliance-first-run.json.gz",
+      "bytes": 12923,
+      "sha256": "122d641f184b8859bc3d68707f8f9200e253f00d0fdf50a2407c37ba93a957ee"
+    }
+  ],
+  "complete_original_logs": {
+    "compliance-complete-first-workflow-logs.zip": {
+      "bytes": 41767,
+      "sha256": "48202f7f777f195e164756c9a1c487b15bb15291bf337c85e04754560c48c76c"
+    },
+    "full-ci-complete-first-workflow-logs.zip": {
+      "bytes": 2708451,
+      "sha256": "7c716e36417510949603bd7bd61b5e39194d8588141c710799af080796a5e737"
+    },
+    "cli-complete-first-workflow-logs.zip": {
+      "bytes": 570642,
+      "sha256": "ec3a623a8760d36f1137d734245af833c50a27cb0a91a8314be5c9a24c69de51"
+    },
+    "theme-complete-first-workflow-logs.zip": {
+      "bytes": 29448,
+      "sha256": "218114ee7defc43002d6adef2799589d6e4beea1b4ab95cfa56c27ce8bd990f4"
+    },
+    "highlighting-complete-first-workflow-logs.zip": {
+      "bytes": 27352,
+      "sha256": "49c1cd9704f901498ffc3e054cda0a5f200bbbee30f115f949c1564a4bbf3b1a"
+    }
+  },
+  "scope": "Qualified3line allocation unit only; first failures of earlier candidates remain failures; original opt-in declarations not executed are retained explicitly, no wholeedit1MiB50ms/Preview/owner/signed/installed/finalartifact inference."
+}

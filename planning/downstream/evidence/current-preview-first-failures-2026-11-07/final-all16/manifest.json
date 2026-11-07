@@ -1,0 +1,429 @@
+{
+  "head": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+  "original_base": "427d15fa5da94d4045a02e7f6a005648d09e38c5",
+  "actual_pr_checkout": "b3182eae20cbed1cee66aaba175ef2d0ea7faadb",
+  "tree": "ea53e10e312d450b11c0bb92db5da1a49154284a",
+  "runs": {
+    "fc29-cli-run.json": {
+      "id": 42375837617,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-compliance-run.json": {
+      "id": 42375837620,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-critical-run.json": {
+      "id": 42375837613,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-full-ci-run.json": {
+      "id": 42375837623,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-heading-run.json": {
+      "id": 42376193454,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-license-run.json": {
+      "id": 42376227992,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-migration-both-run.json": {
+      "id": 42376234215,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-native-math-run.json": {
+      "id": 42376186491,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-original-model-run.json": {
+      "id": 42376199181,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-original38-run.json": {
+      "id": 42376206030,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    "fc29-pdf-run.json": {
+      "id": 42375837616,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-preview-six-pairs-run.json": {
+      "id": 42375837635,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    "fc29-public-focus-run.json": {
+      "id": 42376215877,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-shared-math-run.json": {
+      "id": 42375837647,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-status-run.json": {
+      "id": 42376221536,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "fc29-theme-run.json": {
+      "id": 42376176031,
+      "head_sha": "fc29ce70d308dfa0df99c4caf43699d7716d4758",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "failure"
+    }
+  },
+  "records": [
+    {
+      "original": "fc29-cli-first-outcome-independently-verified.json",
+      "compressed": "00-fc29-cli-first-outcome-independently-verified.json.gz",
+      "bytes": 1277,
+      "sha256": "588ccfac8efab08c2a1eadb9a90e6ca768ead0f7dd8816ba6559d679a210eb6c"
+    },
+    {
+      "original": "fc29-critical-first-outcome-independently-verified.json",
+      "compressed": "01-fc29-critical-first-outcome-independently-verified.json.gz",
+      "bytes": 7350,
+      "sha256": "b899b6bba150acf4cadae7a249f8edb437afba848d3d8351e6053c23788063dc"
+    },
+    {
+      "original": "fc29-focus-first-outcome-independently-verified.json",
+      "compressed": "02-fc29-focus-first-outcome-independently-verified.json.gz",
+      "bytes": 7861,
+      "sha256": "191fb13e662493f63c55d049e9d8a81655bc94ae9b4aca9b56a3b32a06896c54"
+    },
+    {
+      "original": "fc29-full-ci-independently-verified.json",
+      "compressed": "03-fc29-full-ci-independently-verified.json.gz",
+      "bytes": 1283,
+      "sha256": "2fc9c6e25b65426d895368d8793ece6863c3622bfc77fe50f01885427b909ecd"
+    },
+    {
+      "original": "fc29-future-first-outcome-independently-verified.json",
+      "compressed": "04-fc29-future-first-outcome-independently-verified.json.gz",
+      "bytes": 4153,
+      "sha256": "744a9a3794d96f800d86532074cb8fe2440512a5369f2f3c185989aa58e3c735"
+    },
+    {
+      "original": "fc29-heading-first-outcome-independently-verified.json",
+      "compressed": "05-fc29-heading-first-outcome-independently-verified.json.gz",
+      "bytes": 1014,
+      "sha256": "3626e8fbbeb7fbac8a3e58ea8971098603efa00fec892972654e714e749e8748"
+    },
+    {
+      "original": "fc29-license-first-outcome-independently-verified.json",
+      "compressed": "06-fc29-license-first-outcome-independently-verified.json.gz",
+      "bytes": 8072,
+      "sha256": "fb620eca339a0073b0e2a8439adcdebe89e2e3d8ddb4bf644bbc5f2d98b99be9"
+    },
+    {
+      "original": "fc29-matrix-first-outcomes-independently-verified.json",
+      "compressed": "07-fc29-matrix-first-outcomes-independently-verified.json.gz",
+      "bytes": 21995,
+      "sha256": "3397b9ab4d95ee672d8fbc2db9791ebe1b5f6f3f841730cd5db60c07d3d93be3"
+    },
+    {
+      "original": "fc29-native-math-first-outcome-independently-verified.json",
+      "compressed": "08-fc29-native-math-first-outcome-independently-verified.json.gz",
+      "bytes": 621,
+      "sha256": "40af23558994dbaca9b43298dcf57b129843fd372c8e3e9056284ad5668579a4"
+    },
+    {
+      "original": "fc29-original-model-first-outcomes-independently-verified.json",
+      "compressed": "09-fc29-original-model-first-outcomes-independently-verified.json.gz",
+      "bytes": 2879,
+      "sha256": "c374a32c9f3bf5f136831f98adebfeb05fd0a3dcf2c43a8efa14cbf7eb3201fe"
+    },
+    {
+      "original": "fc29-pdf-first-outcome-independently-verified.json",
+      "compressed": "10-fc29-pdf-first-outcome-independently-verified.json.gz",
+      "bytes": 2664,
+      "sha256": "6763142c3022f218f8f5b41b776d69a565c1271bfeec2501c5d7fbb3919ce271"
+    },
+    {
+      "original": "fc29-preview-Debug-disappear-artifact-independently-verified.json",
+      "compressed": "11-fc29-preview-Debug-disappear-artifact-independently-verified.json.gz",
+      "bytes": 11211,
+      "sha256": "e048f75e68ddea2b1e0404c7334670a6cef34f5af97f360ba4eda05f1834624e"
+    },
+    {
+      "original": "fc29-preview-Debug-revision-first-failure-independently-verified.json",
+      "compressed": "12-fc29-preview-Debug-revision-first-failure-independently-verified.json.gz",
+      "bytes": 4188,
+      "sha256": "983118912f7f1d0cb151ad5aba4132a4c6a130363385fce9d52938a3a2cb31dd"
+    },
+    {
+      "original": "fc29-preview-Debug-viewport-artifact-independently-verified.json",
+      "compressed": "13-fc29-preview-Debug-viewport-artifact-independently-verified.json.gz",
+      "bytes": 11362,
+      "sha256": "9349a475183922583f57d07f7922757f2fa8289b78321183275883c30a644ce1"
+    },
+    {
+      "original": "fc29-preview-Release-disappear-artifact-independently-verified.json",
+      "compressed": "14-fc29-preview-Release-disappear-artifact-independently-verified.json.gz",
+      "bytes": 10639,
+      "sha256": "d72c085b1094eb76ab05e550477a612ae83e21cebcf4b5ece11824a46cce8a6e"
+    },
+    {
+      "original": "fc29-preview-Release-revision-artifact-independently-verified.json",
+      "compressed": "15-fc29-preview-Release-revision-artifact-independently-verified.json.gz",
+      "bytes": 16889,
+      "sha256": "ee5162470b874f71d1a093b983af4cb125b36b6891c034227b4fa08f6d685b7d"
+    },
+    {
+      "original": "fc29-preview-Release-viewport-artifact-independently-verified.json",
+      "compressed": "16-fc29-preview-Release-viewport-artifact-independently-verified.json.gz",
+      "bytes": 10797,
+      "sha256": "b60f2fff6c7c89bb96fdf733cdd76c8292abc18b78f43e73e3a49c64cd87f412"
+    },
+    {
+      "original": "fc29-shared-math-first-outcome-independently-verified.json",
+      "compressed": "17-fc29-shared-math-first-outcome-independently-verified.json.gz",
+      "bytes": 1608,
+      "sha256": "791a79abf0aa53b91e0626c0127125d44ff94271a881d363aa976e9fe8282630"
+    },
+    {
+      "original": "fc29-status-first-outcome-independently-verified.json",
+      "compressed": "18-fc29-status-first-outcome-independently-verified.json.gz",
+      "bytes": 10523,
+      "sha256": "5ba0a02a279b42eb7654bfca265aa034237e444afb2b8682b9a4e8300dd88f9d"
+    },
+    {
+      "original": "fc29-theme-first-outcomes-independently-verified.json",
+      "compressed": "19-fc29-theme-first-outcomes-independently-verified.json.gz",
+      "bytes": 6938,
+      "sha256": "d73bf79f1414dd1e022ef0831f255e6515f34e34e850e276ed256bb0b300ee3f"
+    },
+    {
+      "original": "fc29-valid-migration-first-outcome-independently-verified.json",
+      "compressed": "20-fc29-valid-migration-first-outcome-independently-verified.json.gz",
+      "bytes": 1843,
+      "sha256": "b168fd82d8f2224ff3420d957962e72e6547e01e0b08562a82cdd3bf5fa145ef"
+    },
+    {
+      "original": "fc29-cli-run.json",
+      "compressed": "21-fc29-cli-run.json.gz",
+      "bytes": 12997,
+      "sha256": "5221f3344732d977c2907c0665aa8a9cd282376803f8d595ddc72728fba92005"
+    },
+    {
+      "original": "fc29-compliance-run.json",
+      "compressed": "22-fc29-compliance-run.json.gz",
+      "bytes": 12967,
+      "sha256": "08460a879205b93a6071a963279bf1446a0947078f5f153fe1688e2366f06841"
+    },
+    {
+      "original": "fc29-critical-run.json",
+      "compressed": "23-fc29-critical-run.json.gz",
+      "bytes": 13021,
+      "sha256": "2712885850e2d7dce14f2251ae26fb9425a9b6b857d7f9737825689276aa05c8"
+    },
+    {
+      "original": "fc29-full-ci-run.json",
+      "compressed": "24-fc29-full-ci-run.json.gz",
+      "bytes": 12951,
+      "sha256": "95898ac8f608ffe78d845f7c88404ec7e936e7af53fdac8653e61e2938cb927f"
+    },
+    {
+      "original": "fc29-heading-run.json",
+      "compressed": "25-fc29-heading-run.json.gz",
+      "bytes": 12955,
+      "sha256": "8034ffc476c98144fcdad8aeb07cdfff4d13b69743de43ba3b0e915768bc3207"
+    },
+    {
+      "original": "fc29-license-run.json",
+      "compressed": "26-fc29-license-run.json.gz",
+      "bytes": 12982,
+      "sha256": "0a21e912e63700bc0c2d1c535f652837eb44832c1edd7fda1539532a091ad759"
+    },
+    {
+      "original": "fc29-migration-both-run.json",
+      "compressed": "27-fc29-migration-both-run.json.gz",
+      "bytes": 13006,
+      "sha256": "e511d173694fe6b3ff65ee9ee719aa87cc9069bada33e33c1fab4dad42fd969d"
+    },
+    {
+      "original": "fc29-native-math-run.json",
+      "compressed": "28-fc29-native-math-run.json.gz",
+      "bytes": 12976,
+      "sha256": "ae9c7e5aeb74ef04ff8d748b96d8e225dbe12132d79ae81f383aa1250ad85df2"
+    },
+    {
+      "original": "fc29-original-model-run.json",
+      "compressed": "29-fc29-original-model-run.json.gz",
+      "bytes": 12985,
+      "sha256": "ad882fc50dc2fd49be5855c90949c7d0a1f393920bb50025feed38051cd72dcc"
+    },
+    {
+      "original": "fc29-original38-run.json",
+      "compressed": "30-fc29-original38-run.json.gz",
+      "bytes": 13012,
+      "sha256": "f55c2696aa8044733d0959425499b9721de8a5832208c090255d1b4d8ca8aac2"
+    },
+    {
+      "original": "fc29-pdf-run.json",
+      "compressed": "31-fc29-pdf-run.json.gz",
+      "bytes": 13001,
+      "sha256": "e74313da77ac98316c4488735b9e180b9efe2070a5070a106a967474275be658"
+    },
+    {
+      "original": "fc29-preview-six-pairs-run.json",
+      "compressed": "32-fc29-preview-six-pairs-run.json.gz",
+      "bytes": 13015,
+      "sha256": "17939cf11a3d63609d21fda8c3cfd7d5b3c46895d63cec208c0befa2b407a286"
+    },
+    {
+      "original": "fc29-public-focus-run.json",
+      "compressed": "33-fc29-public-focus-run.json.gz",
+      "bytes": 12978,
+      "sha256": "888ff4ca326b7a44c018656b66093dfbb8a5d651a611e484070936a40e4cd6fc"
+    },
+    {
+      "original": "fc29-shared-math-run.json",
+      "compressed": "34-fc29-shared-math-run.json.gz",
+      "bytes": 13012,
+      "sha256": "5e4f9a85ff9823d7475cbe0815dddb83e0140bdde27dcd37fabc1114cf598c78"
+    },
+    {
+      "original": "fc29-status-run.json",
+      "compressed": "35-fc29-status-run.json.gz",
+      "bytes": 12983,
+      "sha256": "508d8b232f7a5e331515b8dfeade3dfd053aa6eb7bc38cc331df135609b6d524"
+    },
+    {
+      "original": "fc29-theme-run.json",
+      "compressed": "36-fc29-theme-run.json.gz",
+      "bytes": 12993,
+      "sha256": "0de09630c797a413ad7c8a970dcbe2e56e37be9e4f863f182e10cc3baaf62b92"
+    },
+    {
+      "original": "fc29-b08-html-failure-attachments/F67F96DB-97B3-4A57-A5C1-89295AE0B937.txt",
+      "compressed": "37-F67F96DB-97B3-4A57-A5C1-89295AE0B937.txt.gz",
+      "bytes": 106420,
+      "sha256": "1db1a4507670ec6113a778f5deb3cf2cc28075c4582200d84d05c64ccf850be3"
+    },
+    {
+      "original": "fc29-b08-html-failure-attachments/manifest.json",
+      "compressed": "38-manifest.json.gz",
+      "bytes": 5358,
+      "sha256": "4e2e946d217a58ce007b3e0956698000ad22d9c947c3ff5c5ee8da8468bf172c"
+    },
+    {
+      "original": "fc29-exact-compiled-restoration-proof.json",
+      "compressed": "39-fc29-exact-compiled-restoration-proof.json.gz",
+      "bytes": 1856,
+      "sha256": "cce26f1de68cb41dbc1b303e78060262755d8673e47971d806e3939f3256b450"
+    }
+  ],
+  "whole_original_archive_sha256": {
+    "fc29-cli-complete-first-workflow-logs.zip": {
+      "bytes": 566011,
+      "sha256": "94b8a4b0a39d9306591cfe13f78ee31fc5fdbf99dff3ead503b5cd6840df7e58"
+    },
+    "fc29-compliance-complete-first-workflow-logs.zip": {
+      "bytes": 41406,
+      "sha256": "6b43ac67afd292ca797fd5a03c2db0f246cd3f7f42bb4ecb9d296e62863bd702"
+    },
+    "fc29-critical-complete-first-workflow-logs.zip": {
+      "bytes": 2371999,
+      "sha256": "c04d532f280c9e6539c9bb8e3f13967c1447a33cd61de9b4060f0f50f7a37a4a"
+    },
+    "fc29-full-ci-complete-first-workflow-logs.zip": {
+      "bytes": 2720029,
+      "sha256": "a025a01bfeb06d170e3a037ed5f58e2a95545be0d16cb3dc6719a99ac9825a6b"
+    },
+    "fc29-heading-complete-first-workflow-logs.zip": {
+      "bytes": 79398,
+      "sha256": "7bb09449000d19901d6e635d96aa494cdebfce6b1c6753dc1f3f1051139dcab8"
+    },
+    "fc29-license-complete-first-workflow-logs.zip": {
+      "bytes": 629409,
+      "sha256": "89d95731931283fee5eaa502d8445a3b1e17839b25e589702179ab0bdaccf609"
+    },
+    "fc29-migration-both-complete-first-workflow-logs.zip": {
+      "bytes": 1268599,
+      "sha256": "a879683f85cc72fdad3998df908c35f9d9d23a3953740bda0db49c85659caa6a"
+    },
+    "fc29-native-math-complete-first-workflow-logs.zip": {
+      "bytes": 35036,
+      "sha256": "ccbbf9b9ca8032e54b8e0f22cf9e74955bda3448ff468068fc6081ca73e1d318"
+    },
+    "fc29-original-model-complete-first-workflow-logs.zip": {
+      "bytes": 28358,
+      "sha256": "a4bd361dee27e2a17bcde7551374bf37f4ffadf43d5cf9a24f081ce989e7510d"
+    },
+    "fc29-original38-complete-first-workflow-logs.zip": {
+      "bytes": 7885968,
+      "sha256": "1ff61f2022f975d73524cc58f330486615a3b550c2072e22db0453f4d22008ca"
+    },
+    "fc29-pdf-complete-first-workflow-logs.zip": {
+      "bytes": 1218932,
+      "sha256": "22970e1f7247954ed845f78552f830e11d47fa82d1229dea64cc01c596ac52af"
+    },
+    "fc29-preview-six-pairs-complete-first-workflow-logs.zip": {
+      "bytes": 4817371,
+      "sha256": "2b9ad531ed6ff54a6b584772199e60bb371d536fde029c1b1826d235d646df42"
+    },
+    "fc29-public-focus-complete-first-workflow-logs.zip": {
+      "bytes": 624151,
+      "sha256": "e5573ed5638bd3dcd63d55bafde89b0b0546f8c32b3cc35582c307fe38ee4cf4"
+    },
+    "fc29-shared-math-complete-first-workflow-logs.zip": {
+      "bytes": 1965364,
+      "sha256": "d397ae782b40d925282b909d9e5bac415cb3a7c62a122a404c9a289e738c5b4b"
+    },
+    "fc29-status-complete-first-workflow-logs.zip": {
+      "bytes": 632432,
+      "sha256": "0b04ce746db6463a46cf933f01d89a053bbbcfe5a5a358b3377ba52763c4bc2a"
+    },
+    "fc29-theme-complete-first-workflow-logs.zip": {
+      "bytes": 29474,
+      "sha256": "759e67b3b2e9c4a2e0addaf9bb5e83b474484436319284c615f0a5568657dfb6"
+    }
+  },
+  "scope": "Final ALL16 first-source snapshot, appended without changing the original partial snapshot. 13 workflows pass, Preview/Debug theme/original38 fail. Original38 executes37PASS/1FAIL. Actual HTML accessibility tree shows rendered Hello and Rendered radio1 but lacks htmlRenderedPane. No image-copy/performance cause proved; no native retry or release/owner acceptance inferred."
+}

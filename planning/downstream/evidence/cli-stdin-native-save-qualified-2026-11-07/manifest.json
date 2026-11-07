@@ -1,0 +1,51 @@
+{
+  "head": "4c4e98ff021f382328256901cba6e5d076798d75",
+  "actual_checkout": "24067ba899c793fa1b0d1bf2048937a66685702d",
+  "actual_main": "56725f941f3ee8f23b6255432c229226eff8e63f",
+  "identical_tree": "cd4ffbb29a804437e90a62fb72ea2136e526e9da",
+  "native_first_run": 42382477109,
+  "compliance_first_run": 42382477121,
+  "records": [
+    {
+      "original": "4c4e-first-native-independently-verified.json",
+      "compressed": "4c4e-first-native-independently-verified.json.gz",
+      "bytes": 2429,
+      "sha256": "29b97db5a3d538ad202e81d92fb965e64d34ffefd3db5b3a869531f4ce8bbc90"
+    },
+    {
+      "original": "4c4e-review-readiness-proof.json",
+      "compressed": "4c4e-review-readiness-proof.json.gz",
+      "bytes": 2964,
+      "sha256": "d4179703ae09c22297efc2ec24278f40e3b6b42aa2b24b0eb0d78f1fb022d32d"
+    },
+    {
+      "original": "4c4e-actual-main-integration-proof.json",
+      "compressed": "4c4e-actual-main-integration-proof.json.gz",
+      "bytes": 805,
+      "sha256": "634503bdceb9ed329c3f770152216e6bdfab02a40008dbf3865e17cbf6b78825"
+    },
+    {
+      "original": "verify-4c4e-first-native.py",
+      "compressed": "verify-4c4e-first-native.py.gz",
+      "bytes": 12557,
+      "sha256": "06c575750ba30054602b1579d5c4ab84864be02b121cebfa6b232201bbf3cb39"
+    },
+    {
+      "original": "4c4e-native-artifact/hosted-public-cli-stdin-save/receipt.json",
+      "compressed": "original-receipt.json.gz",
+      "bytes": 291505,
+      "sha256": "40635c656e367ef1d0fdc634fefa905cbbd136851715775d13a47e6620c0c2fa"
+    }
+  ],
+  "whole_original_archives": {
+    "4c4e-compliance-complete-first-logs.zip": {
+      "bytes": 41685,
+      "sha256": "dc811dd5f0b5ae5fcb17a77a33c8b5908f7da28d495acfc1cf3e615b275822d9"
+    },
+    "4c4e-native-complete-first-logs.zip": {
+      "bytes": 625142,
+      "sha256": "eb589862a55fc72ee2f1b363d87acda3e4ba239017e15988d4784941aa46f61a"
+    }
+  },
+  "scope": "First materially corrected4c4e normal Release public stdin/editor/Save As exact-byte and normal Quit rehearsal; ad-hoc cold unavailable5 with no observed product before/after. No trusted signed cold success, installed helper, protected owner, update, final locale/VoiceOver/signed candidate or failed Preview qualification waiver."
+}
