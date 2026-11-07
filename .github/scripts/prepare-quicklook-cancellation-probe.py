@@ -162,9 +162,12 @@ def capture_compiled(root):
              'runner': runner / 'Contents/MacOS/QLReplyProbeFinderTests-Runner', 'runner_info': runner / 'Contents/Info.plist',
              'test': test / 'Contents/MacOS/QLReplyProbeFinderTests', 'test_info': test / 'Contents/Info.plist', 'xctestrun': plans[0],
              'generated_project': root / 'fixture/QuickLookReplyProbe.xcodeproj/project.pbxproj'}
-    for base in [app, runner]:
-        for path in base.rglob('*.dylib'):
-            roles['dylib:' + str(path.relative_to(release))] = path
+    for base in [app, runner, release / 'QLReplyProbeAutomationHost.app']:
+        if not base.is_dir() or not (base / 'Contents/Info.plist').is_file():
+            raise RuntimeError('Missing actual signed execution bundle: ' + str(base))
+        for path in base.rglob('*'):
+            if path.is_file():
+                roles['bundle:' + str(path.relative_to(release))] = path
     blobs = root / 'compiled-inputs/blobs'
     blobs.mkdir(parents=True, exist_ok=True)
     captured = {}
