@@ -10,7 +10,7 @@ import re
 import subprocess
 import sys
 
-QUALIFIED_MAIN = "PENDING_PR124_QUALIFICATION_AND_MAIN_INTAKE"
+QUALIFIED_MAIN = "aff49a5eb4b7bb111ce949daef66b0b41ddfb274"
 EXTRA_INPUTS = [".github/scripts/run-hosted-critical-discovery.py",
                 ".github/scripts/test-hosted-critical-discovery.py",
                 ".github/workflows/hosted-critical-discovery.yml"]
