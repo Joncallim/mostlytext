@@ -58,9 +58,9 @@ extension PublicFocusTests {
 
     private func requireNativeLicenseFind(_ app: XCUIApplication, content: XCUIElement, notices: String) throws {
         app.typeKey("f", modifierFlags: .command)
-        let panel = app.windows["Find"]
+        let panel = app.dialogs["Find"]
         XCTAssertTrue(panel.waitForExistence(timeout: 5))
-        let query = panel.searchFields.firstMatch
+        let query = panel.comboBoxes["_NS:167"]
         XCTAssertTrue(query.waitForExistence(timeout: 5))
         query.click()
         app.typeKey("a", modifierFlags: .command)
