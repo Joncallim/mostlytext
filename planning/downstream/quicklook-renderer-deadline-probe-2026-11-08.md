@@ -134,3 +134,29 @@ behavior and occupancy. A deliberately wrong caller refunds on terminal selectio
 and must fail42; original and restored modes must both finish0 using the same
 binary. This direct control is not a native renderer mutation or an actual
 worker-return observation. Its complete first statuses/logs are retained.
+
+## First console-emission refusal and narrow ownership correction
+
+[First source9132b730/run42407248835](evidence/quicklook-renderer-first-console-refusal-2026-11-08/README.md)
+actually builds/links the D2 fixture, then its hosted Swift6.2 optimized console
+emission refuses a TaskGroup closure capturing the main-actor local noncopyable
+Mutex selection counter. Local strict SDK type checking had passed; it did not
+establish that later compilation stage. No runtime data race is claimed. Both
+complete first outcomes and1617canonical/14copied/18generated inputs/24pins verify.
+No console mode, registered Finder request or actual renderer runtime executed.
+The final compiled-role capture was not reached; absent binaries stay absent.
+
+Intake actual mainfe5e8d30 with the qualified canonical complete-bundle correction.
+Correct only the console's shared-counter ownership: put its Mutex in an explicit
+Sendable reference holder before concurrent capture. Keep all64tasks, one-winner/
+late/occupancy assertions, strict concurrency/warnings-as-errors/-O/Swift6/host
+checks and same-binary0/42/0 controls. Do not suppress the compiler diagnostic.
+
+Before any console can refuse, preserve all already built signed product/bundle
+roles and their source-bound receipt. This preliminary product capture is
+explicitly NOT the final execution admission: both consoles and complete pins/
+roles must still qualify before any UI. Persist the preliminary record so an
+always-post step can report a clear NOT_RUN rather than lose available products
+or fail on a missing field. No provider/UI/deadline/permissions/real-renderer
+code or native assertion changes. Preserve the next materially corrected first
+outcomes before further work; no unchanged failed native retry.
