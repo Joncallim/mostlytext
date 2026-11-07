@@ -35,7 +35,12 @@ def main():
     spec.loader.exec_module(controller)
     controller.QUALIFIED_MAIN = QUALIFIED_MAIN
     controller.SELECTED = JOURNEYS[args.journey]
-    receipt = Path(os.environ["RUNNER_TEMP"]).resolve() / "mostlytext-focus/receipt.json"
+    root = Path(os.environ["RUNNER_TEMP"]).resolve() / "mostlytext-focus"
+    guard_spec = importlib.util.spec_from_file_location("critical_journey_host_guard", Path(__file__).with_name("prepare-hosted-public-focus.py"))
+    guard = importlib.util.module_from_spec(guard_spec)
+    guard_spec.loader.exec_module(guard)
+    guard.check_host(root)
+    receipt = root / "receipt.json"
     binding = {"journey": args.journey, "qualified_main": QUALIFIED_MAIN, "selected_original": controller.SELECTED}
     if args.stage == "execute":
         prior = json.loads(receipt.read_text())

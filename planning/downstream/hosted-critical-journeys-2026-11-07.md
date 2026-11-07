@@ -96,3 +96,17 @@ full38methods/six extra journeys, repeated final runs and exact signed-artifact
 acceptance explicit. A failed native interaction needs its actual result/tree
 and a written diagnosis before a material product or automation correction.
 No final independent review or whole issue closure is implied by this unit.
+
+## Source review: admit the host before reading the selected receipt
+
+The wrapper must call the actual reused host guard before its own execute-stage
+receipt read, in addition to the controller's later guard. Otherwise a valid
+anchor would allow that wrapper read to precede host admission. A bounded
+control compiles the real launcher with a synthetic valid anchor in memory and
+intercepts receipt reads without opening any file. Removing the added guard
+reaches one forbidden read; current source reaches zero, with the actual reused
+guard refusing the untrusted environment. Optimized Python still refuses first.
+No file, preference, application or native operation occurs in this control.
+The first control harness expected RuntimeError while the guard actually raises
+AssertionError; preserve that setup outcome, then admit both failure types in
+the harness. No guard or product assertion changes. Preparation stays held.
