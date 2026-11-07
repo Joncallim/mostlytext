@@ -10,7 +10,7 @@ import subprocess
 import sys
 import time
 
-from migration_profile_evidence import editor_width, require_preserved, require_session, sha, snapshot
+from migration_profile_evidence import editor_width, require_blocked_preservation, require_preserved, require_session, sha, snapshot
 from native_cli_endpoint_probe import probe_endpoint
 
 SUPPORT = Path('/Users/runner/Library/Application Support')
@@ -27,13 +27,17 @@ def main():
     spec = importlib.util.spec_from_file_location('migration_preparation', Path(__file__).with_name('prepare-hosted-migration.py'))
     preparation = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(preparation)
-    if len(sys.argv) != 1:
+    future = sys.argv[1:] == ['--future-session']
+    if sys.argv[1:] not in [[], ['--future-session']]:
         raise RuntimeError('Migration has no caller-selected roots or modes')
-    preparation.admit()  # Actual host and qualified ancestry precede receipt/profile reads.
+    preparation.admit(future)  # Actual host and qualified ancestry precede receipt/profile reads.
     root = preparation.ROOT
     path = root / 'receipt.json'
     record = json.loads(path.read_text())
-    if record.get('migration_qualified_main') != preparation.QUALIFIED_MAIN or record.get('migration_execution_started') is not False:
+    if (record.get('migration_qualified_main') != preparation.QUALIFIED_MAIN
+            or record.get('migration_scenario') != ('future-session' if future else 'valid-profile')
+            or record.get('migration_future_qualified_main') != (preparation.FUTURE_QUALIFIED_MAIN if future else None)
+            or record.get('migration_execution_started') is not False):
         raise RuntimeError('Migration receipt is attempted or retargeted')
     record['migration_execution_started'] = True
     current = None
@@ -57,7 +61,8 @@ def main():
         return result.stdout
 
     def verify(label):
-        command(label, ['python3', '.github/scripts/prepare-hosted-migration.py', 'verify'], 90)
+        command(label, ['python3', '.github/scripts/prepare-hosted-migration.py', 'verify'] +
+                (['--future-session'] if future else []), 90)
 
     def action(operation, identity=None):
         args = [root / 'normal-app-host', operation, record['built']['app']]
@@ -94,7 +99,8 @@ def main():
         return True
 
     def domains(label):
-        command('capture-domains-' + label, [record['seed_executable'], '--capture-fixed-domains', label], 60)
+        command('capture-domains-' + label, [record['seed_executable'], '--capture-fixed-domains', label] +
+                (['--future-session'] if future else []), 60)
         raw = (root / ('migration-domains-' + label + '.plist')).read_bytes()
         rows = plistlib.loads(raw)
         if not isinstance(rows, list) or [r['domain'] for r in rows] != DOMAINS:
@@ -149,7 +155,7 @@ def main():
         record.setdefault('migration_parent_node_observations', {})[label] = nodes
         persist()
 
-    def wait_peer(identity, label):
+    def wait_peer(identity, label, expected_ready=True):
         location = Path(subprocess.check_output(['getconf', 'DARWIN_USER_TEMP_DIR'], text=True).strip()).resolve()
         endpoint = location / ('mt-' + hashlib.sha256(b'app.mostlytext.MostlyText').hexdigest()[:24]) / 's'
         deadline = time.monotonic() + 10
@@ -162,6 +168,10 @@ def main():
             time.sleep(min(0.05, max(0, deadline - time.monotonic())))
         record.setdefault('live_endpoints', {})[label] = {'attempts': attempts, 'application_frames_sent': 0}
         persist()
+        if not expected_ready:
+            if not attempts or any(row['exists'] or row['ready'] for row in attempts):
+                raise RuntimeError('Blocked future-session startup exposed an endpoint')
+            return
         if not attempts or not attempts[-1]['ready']:
             raise RuntimeError('Normal migration app did not expose the actual peer in10s')
 
@@ -176,7 +186,7 @@ def main():
         persist()
         verify('after-positive-before-seed')
         parent_nodes('before-seed')
-        command('seed-profile', [record['seed_executable']], 60)
+        command('seed-profile', [record['seed_executable']] + (['--seed-future-session'] if future else []), 60)
         seed = json.loads((root / 'migration-seed.json').read_text())
         baseline = capture('seeded')
         if baseline['trees']['state'] or baseline['trees']['preserved'] or any(baseline['domains'][d] is not None for d in DOMAINS[1:]):
@@ -185,11 +195,13 @@ def main():
             raise RuntimeError('Canonical development preference was not seeded')
         record['migration_seed_sha256'] = sha((root / 'migration-seed.json').read_bytes())
         persist()
-        for label, method, width in [('first', 'testNormalDevelopmentProfileAdoption', 2), ('relaunch', 'testNormalMigratedProfileRelaunch', 8)]:
+        journeys = [('blocked', 'testNormalFutureSessionBlocksOrdinaryEditing', None)] if future else [
+            ('first', 'testNormalDevelopmentProfileAdoption', 2), ('relaunch', 'testNormalMigratedProfileRelaunch', 8)]
+        for label, method, width in journeys:
             verify(label + '-before-launch')
             current = action('launch')
             (root / 'current-application.json').write_text(json.dumps(current, indent=2) + '\n')
-            wait_peer(current, label)
+            wait_peer(current, label, expected_ready=not future)
             ui(label, method)
             observed = action('inspect', current)
             if any(observed[k] != current[k] for k in ['pid', 'birth', 'executable']):
@@ -200,7 +212,20 @@ def main():
                 raise RuntimeError('Normal identity-bound Quit did not finish')
             current = None
             verify(label + '-after-normal-quit')
-            validate_after(label, baseline, seed, width)
+            if future:
+                captured = capture('blocked')
+                require_blocked_preservation(baseline, captured, seed, Path(seed['external']).read_bytes(),
+                                             (root / 'MIGRATION_COMMAND_RAN').exists())
+                verify('blocked-after-preservation-readback')
+                record['blocked_startup_readback'] = {
+                    'original_profile_identity_bytes_and_all_six_domains_unchanged': True,
+                    'external_bytes_unchanged': True, 'command_sentinel_absent': True,
+                    'no_authoritative_generation_or_preference_path_completion_markers': True,
+                    'normal_identity_bound_quit': True, 'ordinary_endpoint_absent': True}
+                record['blocked_startup_complete'] = True
+                persist()
+            else:
+                validate_after(label, baseline, seed, width)
             if label == 'first':
                 record['migration_first_ui_passed'] = True
                 record['migration_first_normal_quit_verified'] = True
@@ -208,7 +233,8 @@ def main():
                 command('change-current-indentation-only', [record['seed_executable'], '--set-current-indentation-after-first-quit'], 60)
                 if sha((root / 'migration-seed.json').read_bytes()) != record['migration_seed_sha256']:
                     raise RuntimeError('Seed oracle changed')
-        record['migration_complete'] = True
+        if not future:
+            record['migration_complete'] = True
     except Exception as error:
         record['errors'].append({'type': type(error).__name__, 'message': str(error)[:4096]})
         persist()  # Diagnostic success must never erase or replace this original failure.
@@ -238,7 +264,8 @@ def main():
                 record['migration_failure_command_sentinel_exists'] = (root / 'MIGRATION_COMMAND_RAN').exists()
             except Exception as error:
                 record.setdefault('failure_readback_errors', []).append(str(error)[:4096])
-        record['passed'] = record.get('migration_complete') is True and not record['errors'] and not record.get('cleanup_errors')
+        complete = 'blocked_startup_complete' if future else 'migration_complete'
+        record['passed'] = record.get(complete) is True and not record['errors'] and not record.get('cleanup_errors')
         persist()
     if not record['passed']:
         raise RuntimeError(record['errors'])

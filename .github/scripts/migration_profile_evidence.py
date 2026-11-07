@@ -80,6 +80,18 @@ def editor_width(domain):
     return width
 
 
+def require_blocked_preservation(baseline, after, seed, external_bytes, sentinel_exists):
+    if after['trees']['old'] != baseline['trees']['old'] or after['domains'] != baseline['domains']:
+        raise RuntimeError('Blocked startup changed original profile or persistent domains')
+    if after['trees']['state'] or any(
+            name == 'installation-v1' or name.startswith('installation-v1/') or name in {
+                'installation-preferences.json', 'installation-paths.json', 'installation-complete.json'}
+            for name in after['trees']['installation']):
+        raise RuntimeError('Blocked startup published authoritative installation state')
+    if sentinel_exists or sha(external_bytes) != seed['externalSHA256']:
+        raise RuntimeError('Blocked startup executed a command or changed external authored bytes')
+
+
 def require_session(seed, session, state):
     expected = seed['session']
     if session['version'] != expected['version'] or len(session['tabs']) != 2:
