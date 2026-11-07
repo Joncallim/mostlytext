@@ -9,15 +9,15 @@ struct GateControls {
         let fallback = PreparedReply(kind: .fallback, html: Data("frozen fallback".utf8))
         let rich = PreparedReply(kind: .rich, html: Data("later rich".utf8))
         let gate = DeadlineGate()
-        let selected = Mutex(0)
+        let selected = SelectionCount()
         await withTaskGroup(of: Void.self) { group in
             for number in 0 ..< 64 {
                 group.addTask {
-                    gate.select(number.isMultiple(of: 2) ? fallback : rich) { selected.withLock { $0 += 1 } }
+                    gate.select(number.isMultiple(of: 2) ? fallback : rich) { selected.increment() }
                 }
             }
         }
-        precondition(selected.withLock { $0 } == 1)
+        precondition(selected.value == 1)
         let chosen = await gate.value()
         precondition(chosen.html == fallback.html || chosen.html == rich.html)
         precondition(!gate.select(rich))
@@ -66,5 +66,18 @@ struct GateControls {
     private static func require<T>(_ value: T?) throws -> T {
         guard let value else { throw NSError(domain: "HostedGateControls", code: 2) }
         return value
+    }
+}
+
+/// Shared reference ownership makes the counter's Mutex explicit across sending closures.
+private final class SelectionCount: Sendable {
+    private let storage = Mutex(0)
+
+    func increment() {
+        storage.withLock { $0 += 1 }
+    }
+
+    var value: Int {
+        storage.withLock { $0 }
     }
 }

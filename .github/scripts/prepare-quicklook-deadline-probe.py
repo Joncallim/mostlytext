@@ -202,7 +202,7 @@ def validate_observation(observed, messages):
                 raise RuntimeError('Missing one actual late-worker result rejection')
 
 
-def capture_compiled(root):
+def capture_compiled(root, include_helpers=True):
     products = root / 'build/Build/Products'
     release = products / 'Release'
     app = release / 'QLReplyProbeContainer.app'
@@ -212,12 +212,13 @@ def capture_compiled(root):
     plans = list(products.glob('*.xctestrun'))
     if len(plans) != 1:
         raise RuntimeError('Require one actual compiled UI execution plan')
-    roles = {'observer_control': root / 'observer-control', 'gate_controls': root / 'gate-controls',
-             'app': app / 'Contents/MacOS/QLReplyProbeContainer', 'app_info': app / 'Contents/Info.plist',
+    roles = {'app': app / 'Contents/MacOS/QLReplyProbeContainer', 'app_info': app / 'Contents/Info.plist',
              'provider': provider / 'Contents/MacOS/QLReplyProbeProvider', 'provider_info': provider / 'Contents/Info.plist',
              'runner': runner / 'Contents/MacOS/QLReplyProbeFinderTests-Runner', 'runner_info': runner / 'Contents/Info.plist',
              'test': test / 'Contents/MacOS/QLReplyProbeFinderTests', 'test_info': test / 'Contents/Info.plist', 'xctestrun': plans[0],
              'generated_project': root / 'fixture/QuickLookReplyProbe.xcodeproj/project.pbxproj'}
+    if include_helpers:
+        roles.update(observer_control=root / 'observer-control', gate_controls=root / 'gate-controls')
     for base in [app, runner, release / 'QLReplyProbeAutomationHost.app']:
         if not base.is_dir() or not (base / 'Contents/Info.plist').is_file():
             raise RuntimeError('Missing actual signed execution bundle: ' + str(base))
@@ -408,12 +409,20 @@ def main():
                        "provider_executable_sha256": digest(provider / "Contents/MacOS" / info["CFBundleExecutable"])}
     if args.seal_built:
         assert "built_before_test" not in record
+        record["built_before_test"] = record["built"]
+        record['compiled_products_before_helpers'] = capture_compiled(root, include_helpers=False)
+        record['native_execution_admitted'] = False
+        receipt_path.write_text(json.dumps(record, indent=2) + "\n")
         compile_observer_control(root)
         run_gate_controls(root)
         record['actual_package_pins'] = actual_package_pins(root, record['package_pins'])
-        record["built_before_test"] = record["built"]
         record['compiled_before_test'] = capture_compiled(root)
+        if any(record['compiled_before_test'].get(k) != v for k,v in record['compiled_products_before_helpers'].items()):
+            raise RuntimeError('Built product bytes changed during helper admission')
+        record['native_execution_admitted'] = True
     else:
+        if record.get('native_execution_admitted') is not True:
+            raise RuntimeError('Console/pin admission incomplete; actual Finder UI is NOT_RUN')
         assert record["built"] == record["built_before_test"], "Test setup changed actual provider/container identity or permissions"
         if capture_compiled(root) != record['compiled_before_test']:
             raise RuntimeError('An actual compiled UI/provider execution input changed')

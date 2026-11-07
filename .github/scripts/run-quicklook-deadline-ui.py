@@ -22,7 +22,10 @@ def main():
     if len(sys.argv) != 1:
         raise RuntimeError('This actual Finder driver accepts no command/path override')
     checkout = PREP.command(['git', 'rev-parse', 'HEAD'])
-    if json.loads((root / 'receipt.json').read_text())['checkout'] != checkout:
+    receipt = json.loads((root / 'receipt.json').read_text())
+    if receipt.get('native_execution_admitted') is not True:
+        raise RuntimeError('Actual consoles, pins and complete execution bytes must qualify before UI')
+    if receipt['checkout'] != checkout:
         raise RuntimeError('Actual compiled fixture checkout changed')
     observer_command = [sys.executable, '.github/scripts/observe-quicklook-deadline.py', str(root)]
     record = {'checkout': checkout, 'observer_command': observer_command, 'observer_forced_cleanup': False,

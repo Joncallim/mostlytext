@@ -6,6 +6,7 @@ import json
 import math
 from pathlib import Path
 import subprocess
+import tempfile
 import sys
 import unittest
 sys.dont_write_bytecode = True
@@ -85,6 +86,71 @@ class RendererCorrelationTests(unittest.TestCase):
         for name in ['prepare-quicklook-deadline-probe.py','observe-quicklook-deadline.py','run-quicklook-deadline-ui.py']:
             result=subprocess.run([sys.executable,'-O',str(HERE/name)],capture_output=True,text=True,timeout=10)
             self.assertNotEqual(result.returncode,0);self.assertIn('Optimized Python cannot enforce',result.stderr)
+
+
+class ExecutionInputInventoryTests(unittest.TestCase):
+    def fixture(self, root):
+        release=root/'build/Build/Products/Release'
+        app=release/'QLReplyProbeContainer.app'
+        provider=app/'Contents/PlugIns/QLReplyProbeProvider.appex'
+        runner=release/'QLReplyProbeFinderTests-Runner.app'
+        test=runner/'Contents/PlugIns/QLReplyProbeFinderTests.xctest'
+        host=release/'QLReplyProbeAutomationHost.app'
+        for base,name in [(app,'QLReplyProbeContainer'),(provider,'QLReplyProbeProvider'),
+                          (runner,'QLReplyProbeFinderTests-Runner'),(test,'QLReplyProbeFinderTests'),
+                          (host,'QLReplyProbeAutomationHost')]:
+            (base/'Contents/MacOS').mkdir(parents=True)
+            (base/'Contents/MacOS'/name).write_bytes(('pure fake bytes '+name).encode())
+            (base/'Contents/Info.plist').write_bytes(b'pure metadata bytes')
+        project=root/'fixture/QuickLookReplyProbe.xcodeproj/project.pbxproj'
+        project.parent.mkdir(parents=True);project.write_bytes(b'pure generated-project bytes')
+        (release.parent/'probe.xctestrun').write_bytes(b'pure execution-plan bytes')
+        (root/'observer-control').write_bytes(b'pure console bytes')
+        (root/'gate-controls').write_bytes(b'pure gate-console bytes')
+        resource=provider/'Contents/Resources/probe.txt';resource.parent.mkdir();resource.write_bytes(b'first resource')
+        return host,resource
+
+    def test_changed_automation_host_is_an_actual_changed_execution_input(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);host,_=self.fixture(root)
+            first=PREP.capture_compiled(root)
+            (host/'Contents/MacOS/QLReplyProbeAutomationHost').write_bytes(b'changed actual host bytes')
+            self.assertNotEqual(first,PREP.capture_compiled(root))
+
+    def test_changed_resource_is_an_actual_changed_execution_input(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);_,resource=self.fixture(root)
+            first=PREP.capture_compiled(root);resource.write_bytes(b'changed resource')
+            self.assertNotEqual(first,PREP.capture_compiled(root))
+
+    def test_missing_automation_host_refuses_instead_of_silently_omitting(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);host,_=self.fixture(root)
+            (host/'Contents/Info.plist').unlink()
+            with self.assertRaises(RuntimeError):PREP.capture_compiled(root)
+
+    def test_original_roles_and_every_actual_blob_remain_exact(self):
+        import hashlib
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);self.fixture(root);actual=PREP.capture_compiled(root)
+            self.assertTrue({'app','app_info','provider','provider_info','runner','runner_info',
+                             'test','test_info','xctestrun','generated_project','observer_control'} <= actual.keys())
+            for row in actual.values():
+                raw=Path(row['path']).read_bytes()
+                self.assertEqual(len(raw),row['bytes'])
+                self.assertEqual(hashlib.sha256(raw).hexdigest(),row['sha256'])
+                self.assertEqual((root/row['blob']).read_bytes(),raw)
+
+
+class PreliminaryExecutionInputTests(unittest.TestCase):
+    def test_product_bytes_are_retained_without_falsely_admitting_missing_helpers(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);ExecutionInputInventoryTests.fixture(self,root)
+            (root/'observer-control').unlink();(root/'gate-controls').unlink()
+            preliminary=PREP.capture_compiled(root,include_helpers=False)
+            self.assertNotIn('gate_controls',preliminary)
+            self.assertIn('bundle:QLReplyProbeAutomationHost.app/Contents/MacOS/QLReplyProbeAutomationHost',preliminary)
+            with self.assertRaises(FileNotFoundError):PREP.capture_compiled(root)
 
 
 if __name__=='__main__':unittest.main()

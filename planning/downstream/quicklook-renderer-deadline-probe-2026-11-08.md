@@ -160,3 +160,14 @@ always-post step can report a clear NOT_RUN rather than lose available products
 or fail on a missing field. No provider/UI/deadline/permissions/real-renderer
 code or native assertion changes. Preserve the next materially corrected first
 outcomes before further work; no unchanged failed native retry.
+
+The corrected source passes16pure correlation/inventory/preliminary-admission
+controls,13live-channel controls and3owned controls. Preliminary capture retains
+all actual product/bundle bytes while explicitly refusing final admission when
+either console is missing. Strict optimized SDK type checking and formatting/
+strict lint pass for the new shared-counter holder; Python AST/diff/compliance
+pass. All11preserved first-refusal records match their exact original bytes.
+Provider/real renderer/gate/UI/project/workflow/product bytes are unchanged from
+the failed first source; only console ownership and evidence/admission handling
+change. This is not a fresh emitted-console or native result: those require the
+next actual hosted first qualification on the combined current-main source.
