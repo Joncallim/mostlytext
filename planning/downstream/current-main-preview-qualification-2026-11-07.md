@@ -1,0 +1,107 @@
+# Qualify document-bound Preview against the current startup and parser
+
+## Owner summary
+
+Finish the remaining Preview permission/resource integration on the actual current
+app, retaining all previous failures and required controls. The prior image-copy
+failures occurred on an older combined application; source integration now brings
+reviewed startup-window ownership and parser/publication fixes together. This is
+a materially different candidate to test, not proof that those changes explain
+the historical failures. No release acceptance or rights gate is waived.
+
+## Actual baseline and readiness
+
+Actual main ef93ab2d4fbda72cdd126560ffb19cd7e012a5d9 incorporates qualified
+normal-app startup ownership/menu fixes, reviewed parser runtime/wrapper/Neon
+pins, mathematical publication and complete licence-window qualification. PR128
+43e1 remains a separate frozen Welcome candidate with an original Open Folder
+precondition failure; its full first matrix/CI must finish before another push.
+PR130 is a separate generated-profile migration rehearsal. Do not retarget any
+receipt, cherry-pick a passing outcome or imply either pending PR is merged.
+
+Preview source0557e08f in PR108 includes the real PR100 production resource
+connector. Its original six native pairs have two actual Debug copy failures
+(in disappearing mutant and restored revision), while four pairs pass. Their
+normal owned65 results and unchanged positives are retained. The subsequent
+a8773155 window-lifetime diagnostic is55/17 initial pass, actual intended mutant
+fail and restored3/1pass, but did not reproduce the failure or observe an early
+fixture close. That outcome is explicitly inconclusive. Read-only tree assembly
+of actual main plus diagnostic9513b546 is conflict-free, tree46d57a74c8a12d0a4b5f5a8d952b1032814cbf39;
+all current dependency locks/inventory/runtime/grammar bytes remain unchanged.
+
+## Binding source assembly and ownership
+
+Record this contract before assembling existing code. Merge the exact real
+diagnostic branch with its full PR108/PR100 ancestry into a new current-main
+candidate. Keep the original architecture documents and evidence as history.
+Actual current AppDelegate, all 24 pins, canonical manifests, runtime sources,
+generated notices/SBOM and every unrelated later fix must survive byte-for-byte.
+A later intake of qualified Welcome/Open Folder work requires new affected
+qualification at its own final source; do not publish an obsolete assembled
+candidate merely to reuse passing outcomes.
+
+The only production delta from current main is the already-reviewed document-
+bound Preview connector and bounded diagnostic observations needed for actual
+copy failure evidence. Preserve synchronous origin capture, physical selected-
+folder receipt, cancellation/current-origin checks after acquisition, immutable
+HTML consumers, exact UTF8 parser frame authority, stale/pending denial, bounded
+real image validation and readable cached publication. File roots are per native
+document window. No network renderer or document transmission is introduced.
+
+Current startup ownership explicitly protects ordinary unmarked/managed windows
+and only closes its marked empty scene. It is a proved invariant in four native
+controls, not a proved sole explanation for old missing attachments. Leave the
+passive willClose observer and bounded trace intact in the first candidate so an
+actual recurrence can be diagnosed. Its timing changes are an execution input,
+not evidence of absence of the historical race. All original assertions remain.
+
+## Native qualification and evidence contract
+
+Restore the original complete fixed Debug/Release × revision/disappear/viewport
+workflow from the combined candidate, retaining the newer strict diagnostic
+host admission and complete source/actual image calibration checks. The later
+one-pair workflow is a diagnostic, not a complete qualification plan. Use fresh
+guarded disposable macOS26 ARM VMs only; record real OS/SDK point builds.
+Do not raise the35-minute job, original owned/case/5-second image limits, alter
+selected functions, remove the genuine image/network positives, or accept an
+intended mutant failure if unrelated positive assertions also fail.
+
+Every pair needs the complete initial55/17Debug or56/18Release selection, exact
+expected independent mutant failure, exact restored source/executable and the
+complete selected restoration result. Confirm the actual selected method
+identities, not only counts; actual initial selection/calibration corpus is
+verified from current code rather than inferred from this paragraph. Require
+real live loopback controls, zero denied-network requests, real current decoded
+image/copy/source/Save As/viewport/permissions/cancellation positives, all source/
+pin/generated/compiled input identities and normal owned outcomes. Download and
+retain every first actual job/result/log before correction; unknown or incomplete
+restoration stays failed/incomplete. No unchanged retry.
+
+Also require complete normal CI (package/all app functions and four locked app/
+mostlytext builds), strict style/compliance/metadata/pin checks, both theme
+selections and actual bitmap mutant/restoration, shared mathematical publication
+and heading selections, native math, complete PDF component source/output checks,
+original model counterexamples and C runtime/parser controls where touched. The
+final source must incorporate then-current main, with exact expected-head merge
+and independently verified actual parents/tree and clean canonical fast-forward.
+A diagnostic-only pass or qualification on the old0557 tree cannot authorise it.
+
+## Local verification and stop conditions
+
+CORTANA remains non-launch: source/AST/pure Python/C/Foundation guard controls,
+strict type checks and artifact reads only. Do not build the Xcode app locally.
+Before publication, review actual merged source scope, canonical pin/inventory/
+parser/startup identities, all new/changed workflow references and expected
+selections, strict style and source compliance. Update architecture before any
+new public policy, cross-module dependency, dropped assertion or unrelated fix.
+A required native recurrence must first preserve exact source, real event/AX/
+recording/lifetime evidence; causal uncertainty cannot be silently closed.
+
+## Completion and residual requirements
+
+Issue #13 owns Preview source authority, #11 owns export and #17 owns integration
+remediation; update only their actually demonstrated criteria after qualification.
+Account-free engineering results stay distinct from protected CORTANA access,
+final installed/signed artifacts, real macOS permission/hostile-content dogfood,
+VoiceOver/locales, whole-session WebKit memory, full performance and approved
+public release. Keep all original failure/source records and exact identities.
