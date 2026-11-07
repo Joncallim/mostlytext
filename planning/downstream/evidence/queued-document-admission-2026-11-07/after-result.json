@@ -1,0 +1,107 @@
+{
+  "cases" : [
+    {
+      "expected_pending" : false,
+      "expected_queue_raw" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/queued-document-admission-20261107\/AfterData\/directory"
+      ],
+      "name" : "directory",
+      "passed" : true,
+      "pending" : false,
+      "queued_raw" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/queued-document-admission-20261107\/AfterData\/directory"
+      ]
+    },
+    {
+      "expected_pending" : false,
+      "expected_queue_raw" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/queued-document-admission-20261107\/AfterData\/missing.md"
+      ],
+      "name" : "missing",
+      "passed" : true,
+      "pending" : false,
+      "queued_raw" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/queued-document-admission-20261107\/AfterData\/missing.md"
+      ]
+    },
+    {
+      "expected_pending" : false,
+      "expected_queue_raw" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/queued-document-admission-20261107\/AfterData\/dangling.md"
+      ],
+      "name" : "dangling",
+      "passed" : true,
+      "pending" : false,
+      "queued_raw" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/queued-document-admission-20261107\/AfterData\/dangling.md"
+      ]
+    },
+    {
+      "expected_pending" : true,
+      "expected_queue_raw" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/queued-document-admission-20261107\/AfterData\/file.md"
+      ],
+      "name" : "regular",
+      "passed" : true,
+      "pending" : true,
+      "queued_raw" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/queued-document-admission-20261107\/AfterData\/file.md"
+      ]
+    },
+    {
+      "expected_pending" : true,
+      "expected_queue_raw" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/queued-document-admission-20261107\/AfterData\/directory",
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/queued-document-admission-20261107\/AfterData\/file.md",
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/queued-document-admission-20261107\/AfterData\/missing.md"
+      ],
+      "name" : "mixed",
+      "passed" : true,
+      "pending" : true,
+      "queued_raw" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/queued-document-admission-20261107\/AfterData\/directory",
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/queued-document-admission-20261107\/AfterData\/file.md",
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/queued-document-admission-20261107\/AfterData\/missing.md"
+      ]
+    },
+    {
+      "expected_pending" : false,
+      "expected_queue_raw" : [
+
+      ],
+      "name" : "empty",
+      "passed" : true,
+      "pending" : false,
+      "queued_raw" : [
+
+      ]
+    },
+    {
+      "expected_pending" : true,
+      "expected_queue_raw" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/queued-document-admission-20261107\/AfterData\/linked.md"
+      ],
+      "name" : "linked-regular",
+      "passed" : true,
+      "pending" : true,
+      "queued_raw" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/queued-document-admission-20261107\/AfterData\/linked.md"
+      ]
+    },
+    {
+      "expected_pending" : false,
+      "expected_queue_raw" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/queued-document-admission-20261107\/AfterData\/removed.md"
+      ],
+      "name" : "removed-before-readiness",
+      "passed" : true,
+      "pending" : false,
+      "queued_raw" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/queued-document-admission-20261107\/AfterData\/removed.md"
+      ]
+    }
+  ],
+  "failures" : 0,
+  "scope" : "Exact production source fragments with readiness false, real private filesystem, unreachable UI stand-ins; not AppKit callback or native acceptance",
+  "total" : 8
+}
