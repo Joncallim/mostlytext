@@ -190,9 +190,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             object: nil
         )
 
-        // Close any placeholder SwiftUI windows so we can manage document
-        // windows ourselves. The `WindowGroup { EmptyView() }` scene creates
-        // one or more windows that do not have a `WindowController` delegate.
+        // Close only windows explicitly marked by the empty startup scene.
+        // A missing document delegate does not establish ownership of a window.
         Task { @MainActor in
             try? await Task.sleep(for: .milliseconds(100))
             for window in NSApp.windows where Self.isSwiftUIPlaceholder(window) {
@@ -217,13 +216,24 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         }
     }
 
-    /// Windows the app itself manages — document windows and the first-run
-    /// welcome window — are never placeholders. Closing the welcome window here
-    /// would run its `windowWillClose`, marking first run complete before the
-    /// user ever saw it.
+    private static let startupPlaceholderIdentifier = NSUserInterfaceItemIdentifier(
+        "app.mostlytext.startup-placeholder"
+    )
+
+    /// Only the empty scene's attached view grants startup cleanup authority.
+    /// A managed window remains protected even if its identifier is stale.
+    static func markSwiftUIPlaceholder(_ window: NSWindow) {
+        guard !isManagedWindow(window) else { return }
+        window.identifier = startupPlaceholderIdentifier
+    }
+
     static func isSwiftUIPlaceholder(_ window: NSWindow) -> Bool {
-        !(window.delegate is WindowController) && !(window.delegate is FirstRunWindowController)
-            && !(window.delegate is LegacyImportWindowController)
+        window.identifier == startupPlaceholderIdentifier && !isManagedWindow(window)
+    }
+
+    private static func isManagedWindow(_ window: NSWindow) -> Bool {
+        window.delegate is WindowController || window.delegate is FirstRunWindowController
+            || window.delegate is LegacyImportWindowController
     }
 
     /// The app's ordinary launch behavior: open files/folders passed on the

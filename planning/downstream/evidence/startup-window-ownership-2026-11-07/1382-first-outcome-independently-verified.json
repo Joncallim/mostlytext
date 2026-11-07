@@ -1,0 +1,40 @@
+{
+  "head": "1382581d585c1dd0a6c6fde0435d011ddb5f5f13",
+  "checkout": "8d89ffd5bd474a8cd8a04413ca3f6cb2a60fc223",
+  "all_canonical_sources_verified": 1597,
+  "executed_addition_verified": {
+    "source": ".github/placeholder-window-probe/PlaceholderOwnershipProbeTests.swift",
+    "executed": "MacDown2/MacDown2Tests/PlaceholderOwnershipProbeTests.swift",
+    "sha256": "d7387e4791113afd07c3cd28d2f299b766d21fae54ca609779e53a5cc065d84f",
+    "canonical_addition": true
+  },
+  "pins_verified": 24,
+  "unchanged_product_tree": true,
+  "actual_counts": {
+    "totalTestCount": 3,
+    "passedTests": 2,
+    "failedTests": 1,
+    "skippedTests": 0,
+    "expectedFailures": 0
+  },
+  "actual_failure": [
+    {
+      "failureText": "Expectation failed: !(AppDelegate.isSwiftUIPlaceholder(window \u2192 <NSWindow: 0xc55d17700>) \u2192 true)",
+      "targetName": "MacDown2Tests",
+      "testIdentifier": 1,
+      "testIdentifierString": "PlaceholderWindowCleanupTests/unmarkedWindowsAreNotStartupPlaceholders()",
+      "testIdentifierURL": "test://com.apple.xcode/MacDown2/MacDown2Tests/PlaceholderWindowCleanupTests/unmarkedWindowsAreNotStartupPlaceholders()",
+      "testName": "unmarkedWindowsAreNotStartupPlaceholders()"
+    }
+  ],
+  "actual_owned": {
+    "returncode": 65,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 44.06559499999992,
+    "app_cleanup_requested": []
+  },
+  "raw_xcresult_summary_independently_read": true,
+  "full_logs_sha256": "7409397b2c70f27ffb65dc5b7dd242175ab3983121c6886a7ff6053dd2be36fb",
+  "scope": "Genuine before-fix production-classifier counterexample. Expected assertion failure is not a product pass or native acceptance."
+}
