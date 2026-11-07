@@ -1,0 +1,31 @@
+{
+  "original_source": "734db2f2cd083c040365919134163b55ed57f41f",
+  "original_native_run": 42424848502,
+  "records": [
+    {
+      "file": "00-native-first-run.json.gz",
+      "bytes": 13049,
+      "sha256": "faa762017c5fbfada4df35780eeb08877a72ed6173ca4df8652815e13b48171e"
+    },
+    {
+      "file": "01-native-first-artifacts.json.gz",
+      "bytes": 768,
+      "sha256": "68d7a7dad6894bf13dc1bfdba079c9ae87132a77a443e5bfd2dfbe7a0709ac2c"
+    },
+    {
+      "file": "02-receipt.json.gz",
+      "bytes": 533722,
+      "sha256": "fc38f283ff9d402970fd30efb7079cfffb901347a9b0e962a7d9beab7708fa43"
+    },
+    {
+      "file": "03-first-actual-pdf-validation-failure-independently-verified.json.gz",
+      "bytes": 2044,
+      "sha256": "ad492b7d48eb5115d44f9ee248babf8b8f549f82724ef81a79be8caab8c7c4b1"
+    },
+    {
+      "file": "04-native-cli-app-host.swift.gz",
+      "bytes": 4756,
+      "sha256": "a50b91f25dca04e4756ba5132de71ca6fb673b9b2d5693266033c4ef1244a216"
+    }
+  ]
+}
