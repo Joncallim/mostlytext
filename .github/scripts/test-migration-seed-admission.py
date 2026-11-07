@@ -31,6 +31,7 @@ class SeedAdmissionTests(unittest.TestCase):
         cls.source = SOURCE.read_text()
         import re
         cls.anchor = re.search(r'qualifiedMain = "([^"]+)"', cls.source).group(1)
+        cls.future_anchor = re.search(r'futureQualifiedMain = "([^"]+)"', cls.source).group(1)
         (cls.root / 'Control.swift').write_text(CONTROL)
 
     @classmethod
@@ -70,8 +71,12 @@ class SeedAdmissionTests(unittest.TestCase):
         self.assertEqual(self.observe(self.source), 'host')
 
     def test_future_held_anchor_precedes_actual_host_or_any_receipt(self):
-        self.assertEqual(self.observe(self.source, future=True), 'held')
-        source = self.source.replace('PENDING_COMPLETED_CORE_INTEGRATION', '0' * 40)
+        import re
+        expected = 'host' if re.fullmatch('[0-9a-f]{40}', self.future_anchor) else 'held'
+        self.assertEqual(self.observe(self.source, future=True), expected)
+        held = self.source.replace(self.future_anchor, 'PENDING_CONTROL_ANCHOR')
+        self.assertEqual(self.observe(held, future=True), 'held')
+        source = self.source.replace(self.future_anchor, '0' * 40)
         self.assertEqual(self.observe(source, future=True), 'host')
 
 

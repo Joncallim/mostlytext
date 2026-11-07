@@ -175,6 +175,7 @@ class AdmissionTests(unittest.TestCase):
         spec = importlib.util.spec_from_file_location('future_held_migration', file)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
+        module.FUTURE_QUALIFIED_MAIN = 'PENDING_CONTROL_ANCHOR'
         with patch.object(module, 'preparation', side_effect=AssertionError('Host reached')) as host:
             with self.assertRaisesRegex(RuntimeError, 'Future-session execution is held'):
                 module.admit(True)
