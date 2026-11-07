@@ -1,0 +1,109 @@
+{
+  "head": "7581079dc9088314b1693357c7c21fd7defc4b1b",
+  "run": 42396132642,
+  "conclusion": "success",
+  "records": [
+    {
+      "file": "00-native-first-run.json.gz",
+      "original": "native-first-run.json",
+      "bytes": 12974,
+      "sha256": "dc73a0d5af0e131eb87bee2fef0d06f92d7c342c50745242e48d98b55fc23f03"
+    },
+    {
+      "file": "01-native-first-artifacts.json.gz",
+      "original": "native-first-artifacts.json",
+      "bytes": 759,
+      "sha256": "f45566c652751579954c0bf422dddfc8de8879b69982a54d1bdedcf2377c27e6"
+    },
+    {
+      "file": "02-compliance-first-run.json.gz",
+      "original": "compliance-first-run.json",
+      "bytes": 12927,
+      "sha256": "a308e51e0d9202401a3b877158f14a1cfa4c38168c5a5207debcf9b91d98d4fc"
+    },
+    {
+      "file": "03-first-native-independently-verified.json.gz",
+      "original": "first-native-independently-verified.json",
+      "bytes": 1683,
+      "sha256": "dfc9609bd557c4d77253f7ea6ef152a48062dbb407182a49330d498742e04dee"
+    },
+    {
+      "file": "04-receipt.json.gz",
+      "original": "native-first-artifact/quicklook-retained-reply-first/receipt.json",
+      "bytes": 5891,
+      "sha256": "ab83f682b2bed59147cc7bf02daad4998120c679df7a3b6efb2a90e13171cbf2"
+    },
+    {
+      "file": "05-ReplyRetention.swift.gz",
+      "original": "native-first-artifact/quicklook-retained-reply-first/original/ReplyRetention.swift",
+      "bytes": 8838,
+      "sha256": "7153e95f5b9de90594741290aaa65c5ed7370ad1febae4888d324934b824df18"
+    },
+    {
+      "file": "06-probe.log.gz",
+      "original": "native-first-artifact/quicklook-retained-reply-first/original/probe.log",
+      "bytes": 729,
+      "sha256": "56b24bc0f48d904219c8afe53ea4958e93f0860ccd7abaab6d2f69d102116e1b"
+    },
+    {
+      "file": "07-identity.json.gz",
+      "original": "native-first-artifact/quicklook-retained-reply-first/original/diagnostics/identity.json",
+      "bytes": 392,
+      "sha256": "8036b82861bc2efc9045b470b8a7865567d1e610dc91535e7d4889feb41c7ed9"
+    },
+    {
+      "file": "08-status.json.gz",
+      "original": "native-first-artifact/quicklook-retained-reply-first/original/diagnostics/status.json",
+      "bytes": 138,
+      "sha256": "39c06f253205bdb88488248aa0b5c5fa9bfc7bafc13333742178d39401dfca26"
+    },
+    {
+      "file": "09-ReplyRetention.swift.gz",
+      "original": "native-first-artifact/quicklook-retained-reply-first/early-refund-mutant/ReplyRetention.swift",
+      "bytes": 8864,
+      "sha256": "fbae9e7b5a49a93c08bf53757e26ba3a9dedac42c33320786df3e305546f2856"
+    },
+    {
+      "file": "10-probe.log.gz",
+      "original": "native-first-artifact/quicklook-retained-reply-first/early-refund-mutant/probe.log",
+      "bytes": 254,
+      "sha256": "5a08d6923d9b41b7a821b13de3207e3013d95972f89cf6f0abfdf93cda87282c"
+    },
+    {
+      "file": "11-identity.json.gz",
+      "original": "native-first-artifact/quicklook-retained-reply-first/early-refund-mutant/diagnostics/identity.json",
+      "bytes": 414,
+      "sha256": "58da3212bec6de89d4d236a2fd60c04f6d7883aa53b10a240f36528096d4dbac"
+    },
+    {
+      "file": "12-status.json.gz",
+      "original": "native-first-artifact/quicklook-retained-reply-first/early-refund-mutant/diagnostics/status.json",
+      "bytes": 139,
+      "sha256": "57499d6e90551a60497ba6b453a1922223e79a91cb53ed495d1cd5e92b471226"
+    },
+    {
+      "file": "13-ReplyRetention.swift.gz",
+      "original": "native-first-artifact/quicklook-retained-reply-first/restored/ReplyRetention.swift",
+      "bytes": 8838,
+      "sha256": "7153e95f5b9de90594741290aaa65c5ed7370ad1febae4888d324934b824df18"
+    },
+    {
+      "file": "14-probe.log.gz",
+      "original": "native-first-artifact/quicklook-retained-reply-first/restored/probe.log",
+      "bytes": 729,
+      "sha256": "13ebe63754c24c7b88c0fb1057ec7fe600f61c6a18a1b9fe15ec966520b1b6bd"
+    },
+    {
+      "file": "15-identity.json.gz",
+      "original": "native-first-artifact/quicklook-retained-reply-first/restored/diagnostics/identity.json",
+      "bytes": 393,
+      "sha256": "b52cf381d97e2d79ef12230cbc8e66b6b630f3ca631f6ee12a50fcf66fc95468"
+    },
+    {
+      "file": "16-status.json.gz",
+      "original": "native-first-artifact/quicklook-retained-reply-first/restored/diagnostics/status.json",
+      "bytes": 138,
+      "sha256": "a9f4c31412046d05376ef6330566c9b0f251a3f0f1f5afbfe3f6e238c1ec3971"
+    }
+  ]
+}
