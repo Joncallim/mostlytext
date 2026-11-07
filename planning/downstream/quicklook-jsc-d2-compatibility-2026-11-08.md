@@ -199,3 +199,31 @@ actual reference SVG bytes and verify their own length/hash; do not assume
 byte-equality or theme fidelity across Node/JavaScriptCore. Preserve complete
 first corrected Mac outcome before further correction. No production host,
 worker isolation, untrusted-work deadline, memory or full QL-REPLY claim.
+
+## Actual first Mac packaging refusal and mandatory asset preflight
+
+Source42d7a806 first native42417108375 FAILS; Compliance42417108349 passes.
+Complete firsts and actual29canonical/20copied/23generated/69compiled roles are
+retained and independently verified at checkout1cb1923b. Real reference Node
+passes all12copy controls and retains its actual10,928byte SVG with exact hash.
+Raw Finder results: unchanged cold static case passes; rich case fails, no skips/
+expected failures, normal owned65/no timeout/cancel/force. There is no D2 phase.
+
+The actual generated project has no PBXResourcesBuildPhase or JS references,
+and its complete actual inventory correctly records all six mandatory engine/
+host/control/notice resources absent from the provider. The wrong target-level
+resources declaration was ignored. This is a private packaging/preflight defect;
+D2 script evaluation is NOT_REACHED, not JavaScriptCore/WASM or event-loop refusal.
+No historical missing resource byte is backfilled or called captured.
+
+Correct only the provider's XcodeGen sources entry to explicitly assign the
+Resources group to buildPhase:resources, as specified by the primary XcodeGen
+project specification. Before native admission, require the actual provider's
+six regular non-symlink resource files byte-equal the exact generated inputs.
+Store their digests in the actual built identity and complete compiled inventory,
+and recheck after UI. Test missing/changed/symlinked resources and changed-after-
+seal data with actual temporary files against the frozen old capture function,
+then require corrected positives. Keep engine bytes, two permissions, native
+assertions and every deadline unchanged; preserve the next actual first outcome
+before any further correction. No production host or generic packaging policy
+is added. See https://github.com/yonaskolb/XcodeGen/blob/master/Docs/ProjectSpec.md#sources.
