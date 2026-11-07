@@ -1,0 +1,17 @@
+{
+  "head": "17c865a3b9c3124ad42bd3489e64a214c34fc899",
+  "checkout": "9dc0bd064ce89a58014c61844e49f8998ea6d9e0",
+  "all_recorded_sources_verified": 10,
+  "root_product_tree_verified": "450870700f707bbe09693efb39777ac5b9610a92",
+  "owned_status": {
+    "returncode": 65,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 2.2051275000000032,
+    "app_cleanup_requested": []
+  },
+  "discovery_exact_provider_path_retained": true,
+  "actual_built_metadata_and_sandbox_entitlements_retained": true,
+  "first_failure": "Test command parser rejects NO after boolean retry switch; zero Finder tests/provider callbacks executed",
+  "scope": "Real fixture build/ad-hoc signature and discovery succeed; no native provider/Finder result or environment blockade inferred. Binary digests recorded on host, not independently downloaded."
+}

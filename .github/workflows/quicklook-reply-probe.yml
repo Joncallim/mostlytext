@@ -49,7 +49,7 @@ jobs:
         run: |
           set -euo pipefail
           provider="$RUNNER_TEMP/mostlytext-qlreply/build/Build/Products/Release/QLReplyProbeContainer.app/Contents/PlugIns/QLReplyProbeProvider.appex/Contents/MacOS/QLReplyProbeProvider"
-          python3 .github/scripts/run-owned-app-tests.py "$RUNNER_TEMP/mostlytext-qlreply/owned" "$provider" -- xcodebuild -project "$RUNNER_TEMP/mostlytext-qlreply/fixture/QuickLookReplyProbe.xcodeproj" -scheme QuickLookReplyProbe -configuration Release -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/mostlytext-qlreply/build" -resultBundlePath "$RUNNER_TEMP/mostlytext-qlreply/Finder.xcresult" -parallel-testing-enabled NO -retry-tests-on-failure NO -test-timeouts-enabled YES -default-test-execution-time-allowance 120 -maximum-test-execution-time-allowance 120 test-without-building 2>&1 | tee "$RUNNER_TEMP/mostlytext-qlreply/finder.log"
+          python3 .github/scripts/run-owned-app-tests.py "$RUNNER_TEMP/mostlytext-qlreply/owned" "$provider" -- xcodebuild -project "$RUNNER_TEMP/mostlytext-qlreply/fixture/QuickLookReplyProbe.xcodeproj" -scheme QuickLookReplyProbe -configuration Release -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/mostlytext-qlreply/build" -resultBundlePath "$RUNNER_TEMP/mostlytext-qlreply/Finder.xcresult" -parallel-testing-enabled NO -test-iterations 1 -test-timeouts-enabled YES -default-test-execution-time-allowance 120 -maximum-test-execution-time-allowance 120 test-without-building 2>&1 | tee "$RUNNER_TEMP/mostlytext-qlreply/finder.log"
       - name: Retain actual provider logs and post-test source verification
         if: always()
         run: |
