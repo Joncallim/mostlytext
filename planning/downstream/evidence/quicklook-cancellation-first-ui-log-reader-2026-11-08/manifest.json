@@ -1,0 +1,73 @@
+{
+  "head": "787497b132eb51a54dbf9597f69584d4897c60de",
+  "run": 42398317823,
+  "conclusion": "failure",
+  "records": [
+    {
+      "file": "00-native-first-run.json.gz",
+      "original": "native-first-run.json",
+      "bytes": 12992,
+      "sha256": "d85204358a9a8cfe8b6e106208996a210180b0025a357b1ed5aded00e6c52913"
+    },
+    {
+      "file": "01-native-first-artifacts.json.gz",
+      "original": "native-first-artifacts.json",
+      "bytes": 773,
+      "sha256": "2848661d29d7126e997214621a73550b384af0a0c50f7651ec93e315c58151b7"
+    },
+    {
+      "file": "02-compliance-first-run.json.gz",
+      "original": "compliance-first-run.json",
+      "bytes": 12936,
+      "sha256": "e8e7af0ad2b83d41bbdc295f819729c8be4785fd7c67688366264af5a5f48e6d"
+    },
+    {
+      "file": "03-first-log-reader-failure-independently-verified.json.gz",
+      "original": "first-log-reader-failure-independently-verified.json",
+      "bytes": 2736,
+      "sha256": "10303ff4dc6bdff80f1b2504dbd0c5aadc13f4c0d86fff57d3e39392dc7b8a36"
+    },
+    {
+      "file": "04-actual-independent-summary.json.gz",
+      "original": "actual-independent-summary.json",
+      "bytes": 1512,
+      "sha256": "54338025922fc6cb547540f9c08ad9ae74b3e666d2f7a273b52fc16fbd30d770"
+    },
+    {
+      "file": "05-actual-downloaded-ui-runner-entitlements.plist.gz",
+      "original": "actual-downloaded-ui-runner-entitlements.plist",
+      "bytes": 1308,
+      "sha256": "e5a11e2f6c028b4ee5bc89bb3e5e0f4f933757d071106ee25ebbec1516143464"
+    },
+    {
+      "file": "06-receipt.json.gz",
+      "original": "native-first-artifact/pending-finder-quicklook-cancellation/receipt.json",
+      "bytes": 15336,
+      "sha256": "f72b939a6fc72ecee66e410d2bcf2a5b4217b8851f276e1f674cd9aa81c8e52d"
+    },
+    {
+      "file": "07-finder.log.gz",
+      "original": "native-first-artifact/pending-finder-quicklook-cancellation/finder.log",
+      "bytes": 8305,
+      "sha256": "51697abdc9d8f5467657bb11db744e5664067e834ec858c87592055770af9616"
+    },
+    {
+      "file": "08-provider-events.json.gz",
+      "original": "native-first-artifact/pending-finder-quicklook-cancellation/provider-events.json",
+      "bytes": 19089,
+      "sha256": "de3a26d8e3b2f54238039a81fa409ff432156ab88925dd105843b446dfdc161e"
+    },
+    {
+      "file": "09-identity.json.gz",
+      "original": "native-first-artifact/pending-finder-quicklook-cancellation/owned/identity.json",
+      "bytes": 1050,
+      "sha256": "0236f510ce4b0fd314217247141018d6a17d81b19c2c37d59efe67fd4bb54750"
+    },
+    {
+      "file": "10-status.json.gz",
+      "original": "native-first-artifact/pending-finder-quicklook-cancellation/owned/status.json",
+      "bytes": 138,
+      "sha256": "c80ca04ea0ba9a2c16f2a013ddc4bc1fb526ac77c35515235c5b0b79f5811e75"
+    }
+  ]
+}
