@@ -52,3 +52,19 @@ installed/signing/owner/final-artifact requirements stay open.
 A native failure stops this unit's readiness. No unchanged native retry, increased
 budget, skip, expected failure, changed fixture/delegate or compiler optimization
 switch is authorized by this architecture.
+
+## Actual qualified-main intake before publication
+
+PR133 is now merged at actual main56725f941f3ee8f23b6255432c229226eff8e63f,
+parents427d15fa+4c4e98ff and exact reviewed/native-tested treecd4ffbb2. Its ordinary
+Release stdin/native Save As first result independently verifies49physicalUTF8bytes
+before/after normal same-process Quit,1613public+7private inputs,24pins,13generated
+files and10downloaded compiled roles. Its genuine input control and native case
+both pass; main's product/package/compliance bytes remain identical to427.
+
+Take actual main567 into this allocation branch before first publication. Against
+that actual main, the runtime delta stays exactly the three capacity-reservation
+lines; existing tests, payloads, compiler settings, workflow helpers and bounds
+remain unchanged. Native qualification has not run for this allocation source.
+No local Foundation/product/AppKit benchmark or runtime is used; all timing and
+behaviour claims await complete hosted first outcomes.
