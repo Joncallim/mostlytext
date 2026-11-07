@@ -24,3 +24,14 @@ retain both complete first outcomes/logs/artifacts before a material correction.
 No local native build/runtime, source-retargeted receipt, new entitlement or
 whole original issue closure. This is private evidence-integrity remediation
 under #17, not production Quick Look or final release acceptance.
+
+The actual new temporary-file regressions run against frozen old main52652b07:
+four cases execute, with the three expected failures (changed automation host,
+changed bundled resource, missing host); original selected-role/blob integrity
+still passes. Corrected capture passes all four. Original provider/correlation
+controls plus these regressions pass19cases; live-channel13 and owned-process3
+also pass. Complete before/after logs and the frozen old reader are retained in
+CORTANA-Builds/quicklook-execution-inventory-20261108. Source compliance/diff pass.
+No fixture/provider/UI/observer/permission/deadline/product source changes.
+The corrected actual native first outcome remains pending; earlier selected-role
+receipts are not retargeted or called exhaustive.
