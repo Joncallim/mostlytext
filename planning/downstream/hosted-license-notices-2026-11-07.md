@@ -100,3 +100,14 @@ and optimized CLI refuse before preparation. These are control-flow checks,
 not fake native evidence; neither the ancestry command nor receipt file opens.
 Record this test file in full source inputs and execute it before hosted
 preparation. Preserve PR124's exact-case-passed check when reconciling main.
+
+The prepared private UI file passes strict Swift6 concurrency type-check against
+the real XCTest overlay with actual generated focus inputs, without execution.
+Source/AST/YAML/diff and3 admission controls pass. The normal held-CLI refusal
+was also observed directly while the real source anchor is unresolved. The
+retained hold test sets an unresolved anchor in memory so it continues checking
+the same refusal after later legitimate activation; the read-order control sets
+a synthetic valid anchor and intercepts ancestry. No ancestry command or receipt
+file is read by either control. Product/original UI tests/project/pins remain
+byte-identical to actual6b main. This entire branch is local and unpublished;
+no native licence result or current-main activation is claimed.

@@ -11,12 +11,12 @@ from unittest import mock
 SCRIPT = Path(__file__).with_name("run-hosted-public-focus.py")
 
 
-def read_order(source):
+def read_order(source, anchor="0" * 40):
     tree = ast.parse(source)
     for node in tree.body:
         if isinstance(node, ast.Assign) and any(
                 isinstance(t, ast.Name) and t.id == "LICENSE_NOTICES_QUALIFIED_MAIN" for t in node.targets):
-            node.value = ast.Constant("0" * 40)
+            node.value = ast.Constant(anchor)
     scope = {"__file__": str(SCRIPT), "__name__": "read_order_control"}
     exec(compile(ast.fix_missing_locations(tree), str(SCRIPT), "exec"), scope)
     reads = []
@@ -57,10 +57,10 @@ class LicenseAdmissionTests(unittest.TestCase):
         self.assertNotIn("Intercepted receipt read", str(error))
 
     def test_normal_held_selection_refuses_before_host_access(self):
-        result = subprocess.run([sys.executable, "-B", str(SCRIPT), "/nonexistent-held-fixture", "--license-notices-probe"],
-                                capture_output=True, env={"PATH": os.defpath}, timeout=10)
-        self.assertEqual(result.returncode, 1)
-        self.assertIn(b"Licence execution is held", result.stderr)
+        reads, commands, error = read_order(SCRIPT.read_text(), "PENDING_CONTROL_ANCHOR")
+        self.assertEqual(reads, [])
+        self.assertEqual(commands, [])
+        self.assertIn("Licence execution is held", str(error))
 
     def test_optimized_interpreter_refuses_before_host_access(self):
         result = subprocess.run([sys.executable, "-B", "-O", str(SCRIPT), "/nonexistent-held-fixture", "--license-notices-probe"],
