@@ -1,0 +1,15 @@
+{
+  "controls": [
+    {
+      "name": "rejected-testing-only-option",
+      "returncode": 64,
+      "action": "showBuildSettings ONLY, tool target, no build or app"
+    },
+    {
+      "name": "admitted-settings-only-command",
+      "returncode": 0,
+      "action": "showBuildSettings ONLY, tool target, no build or app"
+    }
+  ],
+  "no_app_target_build_registration_or_native_execution": true
+}
