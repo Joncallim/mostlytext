@@ -1,0 +1,181 @@
+{
+  "cases" : [
+    {
+      "actual_welcome" : true,
+      "expected_raw_queue" : [
+
+      ],
+      "expected_welcome" : true,
+      "name" : "empty",
+      "passed" : true,
+      "raw_queue" : [
+
+      ]
+    },
+    {
+      "actual_welcome" : true,
+      "expected_raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/session-directory"
+      ],
+      "expected_welcome" : true,
+      "name" : "session-directory",
+      "passed" : true,
+      "raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/session-directory"
+      ]
+    },
+    {
+      "actual_welcome" : true,
+      "expected_raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/missing.md"
+      ],
+      "expected_welcome" : true,
+      "name" : "missing",
+      "passed" : true,
+      "raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/missing.md"
+      ]
+    },
+    {
+      "actual_welcome" : true,
+      "expected_raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/dangling.md"
+      ],
+      "expected_welcome" : true,
+      "name" : "dangling",
+      "passed" : true,
+      "raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/dangling.md"
+      ]
+    },
+    {
+      "actual_welcome" : true,
+      "expected_raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/session-directory",
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/missing.md"
+      ],
+      "expected_welcome" : true,
+      "name" : "mixed-invalid",
+      "passed" : true,
+      "raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/session-directory",
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/missing.md"
+      ]
+    },
+    {
+      "actual_welcome" : false,
+      "expected_raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/file.md"
+      ],
+      "expected_welcome" : false,
+      "name" : "regular",
+      "passed" : true,
+      "raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/file.md"
+      ]
+    },
+    {
+      "actual_welcome" : false,
+      "expected_raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/linked.md"
+      ],
+      "expected_welcome" : false,
+      "name" : "linked-regular",
+      "passed" : true,
+      "raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/linked.md"
+      ]
+    },
+    {
+      "actual_welcome" : true,
+      "expected_raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/removed.md"
+      ],
+      "expected_welcome" : true,
+      "name" : "removed-before-decision",
+      "passed" : true,
+      "raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/removed.md"
+      ]
+    },
+    {
+      "actual_welcome" : false,
+      "expected_raw_queue" : [
+
+      ],
+      "expected_welcome" : false,
+      "name" : "returning-user",
+      "passed" : true,
+      "raw_queue" : [
+
+      ]
+    },
+    {
+      "actual_welcome" : false,
+      "expected_raw_queue" : [
+
+      ],
+      "expected_welcome" : false,
+      "name" : "explicit-file",
+      "passed" : true,
+      "raw_queue" : [
+
+      ]
+    },
+    {
+      "actual_welcome" : false,
+      "expected_raw_queue" : [
+
+      ],
+      "expected_welcome" : false,
+      "name" : "explicit-folder",
+      "passed" : true,
+      "raw_queue" : [
+
+      ]
+    },
+    {
+      "actual_welcome" : true,
+      "expected_raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/linked-directory"
+      ],
+      "expected_welcome" : true,
+      "name" : "linked-directory",
+      "passed" : true,
+      "raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/linked-directory"
+      ]
+    },
+    {
+      "actual_welcome" : false,
+      "expected_raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/session-directory"
+      ],
+      "expected_welcome" : false,
+      "name" : "returning-user-invalid",
+      "passed" : true,
+      "raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/session-directory"
+      ]
+    },
+    {
+      "actual_welcome" : false,
+      "expected_raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/session-directory",
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/file.md",
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/missing.md"
+      ],
+      "expected_welcome" : false,
+      "name" : "mixed-regular",
+      "passed" : true,
+      "raw_queue" : [
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/session-directory",
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/file.md",
+        "\/Volumes\/Fast SSD\/CORTANA-Builds\/first-run-queued-open-20261107\/after-files\/missing.md"
+      ]
+    }
+  ],
+  "failures" : 0,
+  "scope" : "Literal actual condition\/assignment\/helper and URL extension; real private filesystem; no AppKit event delivery, actual historical queue or native acceptance",
+  "total" : 14
+}

@@ -65,3 +65,18 @@ No CORTANA app build/registration, GUI/model/runtime, private signing key or
 separate account is used. Final locale/VoiceOver, installation, protected-owner
 and exact signed-artifact gates remain distinct. Whole issue contracts stay
 open unless every original criterion is independently satisfied.
+
+## Local correction and non-launch verification
+
+The original exact condition has6/14 policy failures on the real private
+filesystem; the corrected exact condition passes14/14. Original/after code,
+conditions, complete helper/URL-extension hashes, cases, exit outcomes and raw
+queues are retained. Regular queued files/linked files still suppress Welcome;
+returning-user and explicit file/folder priorities remain. The same existing
+helper computes one local boolean, reused for Welcome and pending restore.
+No original UI source, wait/assertion, root guard, package/project/pin or
+resource changes. Strict production-file format0/1 and lint0 pass. Full actual
+application compilation and first changed-source native qualification remain
+required. No AppKit event delivery or sole historical cause is claimed from the
+literal filesystem control. Preserve the first matrix before assembling this
+real unit branch into its corrected candidate.
