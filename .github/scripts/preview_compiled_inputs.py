@@ -93,7 +93,8 @@ def capture(root, products, configuration, project, phase):
     captured = {}
     for role, path in paths.items():
         data = read_regular(path)
-        captured[role] = data
+        if role in ['app_info', 'xctestrun']:
+            captured[role] = data
         digest = hashlib.sha256(data).hexdigest()
         target = blobs / digest
         if target.exists():
@@ -129,7 +130,8 @@ def verify(root, binding):
             data = read_regular(path)
             if len(data) != row['bytes'] or hashlib.sha256(data).hexdigest() != expected:
                 raise RuntimeError('Compiled phase bytes changed: ' + str(path))
-        captured[role] = data
+        if role in ['app_info', 'xctestrun']:
+            captured[role] = data
     require_topology(binding['configuration'], binding['inputs'], captured)
     return True
 
