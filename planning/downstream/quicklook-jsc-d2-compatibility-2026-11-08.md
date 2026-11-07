@@ -98,3 +98,18 @@ No unchanged failed native retry, skipped/expected pass or widened permission.
    fixed-input host test. Real deadlines/fallback/retirement, untrusted corpus,
    semantics/fidelity/theme, resource budgets and production shared presentation
    remain subsequent gates under #7/#8/#17.
+
+The first implementation uses a narrower48KiB actual SVG/64KiB encoded record
+budget within the architecture's256KiB ceiling. Numbered768-byte record chunks
+plus an exact length/SHA-256 terminal avoid relying on one large OSLog string;
+UI and source controls require complete ordered reconstruction of the original
+bytes and bind actual engine/adapter/module-transform identities. A fixed two-
+node graph uses the existing compile/render API; no product DOM/theme/canvas
+postprocessing is inferred as verified by raw-engine compatibility.
+
+Local14pure schema/chunk/identity/authority controls,13observer and3owned controls
+pass. Strict optimized SDK typechecks of exact provider/bridge and actual UI,
+changed Swift format/strict lint, Python/YAML, source compliance and unchanged
+product/original cold/probe controls pass. Local checks do not execute any
+JavaScriptCore/Node/WASM runtime or build/launch an app or extension. The actual
+first guarded reference/native run remains pending and must be retained whole.
