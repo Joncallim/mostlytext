@@ -20,7 +20,7 @@ concurrency:
   group: status-bar-layout-${{ github.ref }}
   cancel-in-progress: false
 jobs:
-  guarded-normal-focus:
+  guarded-status-layout:
     runs-on: macos-26
     timeout-minutes: 40
     steps:
@@ -51,7 +51,7 @@ jobs:
         run: |
           set -euo pipefail
           xcodebuild -project "$RUNNER_TEMP/mostlytext-focus/fixture/HostedPublicFocus.xcodeproj" -scheme HostedPublicFocus -configuration Release -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/mostlytext-focus/control" CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual build-for-testing 2>&1 | tee "$RUNNER_TEMP/mostlytext-focus/control-build.log"
-      - name: Gate normal launch on the actual positive control then exercise public focus once
+      - name: Require actual input and normal public focus with readable status geometry
         run: |
           set -euo pipefail
           python3 .github/scripts/run-hosted-public-focus.py "$RUNNER_TEMP/mostlytext-focus" --status-layout-probe 2>&1 | tee "$RUNNER_TEMP/mostlytext-focus/execution.log"
