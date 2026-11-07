@@ -106,3 +106,22 @@ private probe qualifies. Before merge, intake its actual main and requalify the
 combined head; source-only addition of unrelated tests does not erase any first
 outcome. Preserve old and new exact checkout/product-tree identities separately.
 Do not claim the first older full tree equals a later combined tree.
+
+## First optimizing-compiler refusal and material correction
+
+First source8421eb79/run42395882950 fails before native execution: -O with
+warnings-as-errors diagnoses the permanently false earlyRefund branch as
+unreachable. Strict type checking did not execute that optimizer diagnostic.
+Native original/mutant/restored remain NOT_RUN. Both first workflow outcomes
+(nativefailure, Compliancepass) and exact copied source/command are retained and
+independently verified before this correction; no first result is relabelled.
+
+Remove the disabled counterexample branch entirely from original Swift. The
+private controller must instead insert reservation.release() at the unique
+reviewed location immediately after real reply setup in its counterexample COPY
+only. This keeps original source executable without suppressed warnings, while
+the counterexample still physically refunds a holder retained by the same real
+QLPreviewReply. The named assertion and expected42 outcome remain unchanged.
+All three native phases, -O/strict concurrency/warnings-as-errors, actual bytes,
+limits, terminal choices and lifetime assertions stay. No app/production policy
+or architecture changes; first corrected native execution is mandatory.

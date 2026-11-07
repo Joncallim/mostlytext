@@ -1,0 +1,49 @@
+{
+  "head": "8421eb79532f7c61a6750d573ff8911f82861160",
+  "run": 42395882950,
+  "native_conclusion": "failure",
+  "records": [
+    {
+      "file": "00-native-first-run.json.gz",
+      "original": "native-first-run.json",
+      "bytes": 12965,
+      "sha256": "8dcb698f8e1f891ffdb74e9e6780cd484d9d978c3c6c8cbdf078f7d30b70c6c0"
+    },
+    {
+      "file": "01-native-first-artifacts.json.gz",
+      "original": "native-first-artifacts.json",
+      "bytes": 757,
+      "sha256": "51ae3be36a2b081436a963c9093154c3e27ed66f99cea34a83743a91b882a4b1"
+    },
+    {
+      "file": "02-compliance-first-run.json.gz",
+      "original": "compliance-first-run.json",
+      "bytes": 12918,
+      "sha256": "d72d6e842f123eac856657e35fb50fbe329bccec90b4f3546af09ced84fa0bcc"
+    },
+    {
+      "file": "03-first-compile-independently-verified.json.gz",
+      "original": "first-compile-independently-verified.json",
+      "bytes": 489,
+      "sha256": "2ba8a208e9e1b318847ec1c99d0968afbc9f30e82fb10f1030062d4c9739fe8e"
+    },
+    {
+      "file": "04-receipt.json.gz",
+      "original": "native-first-artifact/quicklook-retained-reply-first/receipt.json",
+      "bytes": 2106,
+      "sha256": "0671dbcfd6cdcbd378e47a2f02c9422520415e4a4fe4dc94e85bd209c94666a3"
+    },
+    {
+      "file": "05-compile.log.gz",
+      "original": "native-first-artifact/quicklook-retained-reply-first/original/compile.log",
+      "bytes": 503,
+      "sha256": "d51ea8bf8504022194fc3fcdc2f4fb2e5e98db953c6ef5ec9a40582aa50bba43"
+    },
+    {
+      "file": "06-ReplyRetention.swift.gz",
+      "original": "native-first-artifact/quicklook-retained-reply-first/original/ReplyRetention.swift",
+      "bytes": 8923,
+      "sha256": "586d08612c70b5906d211cd6147ecb663ca90fe4d82f7277a50f7b2f1a719f68"
+    }
+  ]
+}
