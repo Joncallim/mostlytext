@@ -3,8 +3,8 @@ import Foundation
 
 /// No domain, profile or receipt access is allowed before the held/host checks.
 enum MigrationSeedAdmission {
-    static let qualifiedMain = "ef93ab2d4fbda72cdd126560ffb19cd7e012a5d9"
-    static let futureQualifiedMain = "PENDING_COMPLETED_CORE_INTEGRATION"
+    static let qualifiedMain = "d29358412585f669264e55e0f3666f456038b228"
+    static let futureQualifiedMain = "d29358412585f669264e55e0f3666f456038b228"
     static let root = URL(fileURLWithPath: "/Users/runner/work/_temp/mostlytext-focus", isDirectory: true)
 
     enum Refusal: Error { case held, host, event, positive }

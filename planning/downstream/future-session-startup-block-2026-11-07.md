@@ -114,3 +114,13 @@ This is private admission tightening, not a caller-selected revision or product
 policy change. Preserve original valid methods, future held-anchor counterexamples,
 all source/positive/compiled/result/ownership/normal-Quit checks and limits.
 Qualify both fixed scenarios on fresh guarded VMs before expected-head merge.
+
+Both Python normal/future anchors and both literal Foundation normal/future
+anchors now name actual d29358412585f669264e55e0f3666f456038b228. All11 source/
+filesystem/scenario controls and4 optimized literal Foundation/Darwin controls
+pass after activation; private Swift syntax/format/strict lint, YAML, source
+compliance and diff checks pass. Actual helper SHA33c4ef890ae247a95074b4a5c0727f15d4514e77f79e36991e96d571edb69983
+is recorded. Original valid-profile UI source, canonical app/package/project/pins/
+compliance and normal CI workflow are byte-identical to qualified main. First
+new native compilation/blocked-surface/preservation outcomes remain pending;
+publication does not mean acceptance. CORTANA remains non-launch.
