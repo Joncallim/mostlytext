@@ -17,6 +17,7 @@ JOURNEYS = {
 }
 EXTRA_INPUTS = [
     ".github/scripts/run-hosted-critical-journey.py",
+    ".github/scripts/test-hosted-critical-journey.py",
     ".github/workflows/hosted-critical-journeys.yml",
 ]
 
