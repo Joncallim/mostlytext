@@ -185,3 +185,51 @@ source, not product policy or a shipping fork/pin. Keep all original55/17,
 separate calibrated1/1 eight-image control, three mounted positives and both
 counterfactual/restoration jobs. First native outcome only, with full artifacts;
 no owner execution, original0557 qualification or diagnostic-branch merge.
+
+## Window lifetime discriminator without a renderer preference consumer
+
+Both f37d renderer-observer pairs genuinely pass and remain inconclusive for
+0557/6dcc's copy failure. A separate real defect was later proved/fixed in PR122:
+the old startup cleanup classifies every unmarked/unmanaged window as a SwiftUI
+placeholder and can close a plain component-host NSWindow. These mounted tests
+use exactly that kind of window. This is a HYPOTHESIS about the old copy failure,
+not a causal finding. Existing copyDiagnostics lists hidden/frame state only
+AFTER the failure-only loader probe; it does not record window visibility or the
+origin/timing of a close. No unchanged retry or production activation follows.
+
+Before another diagnostic input, remove ONLY the transparent renderer preference
+observer and its retained-renderer fields, returning that view composition to the
+calibrated pre-observer shape. Do not report an unobserved renderer as zero
+layouts. Retain every original55/17 selection,3mounted positives, calibrated
+8image/56negative control, unchanged deadlines, mutant and restoration rules.
+The next diagnostic question is Debug revision only; disappearance's old results
+stay intact, not waived or renamed as complete production qualification.
+
+A new test-only, explicitly trace-enabled helper registers a bounded willClose
+observer for each exact fixture window BEFORE first order-front. Record only
+window/host object identities, bounded call-stack frames and lifecycle events in
+a separate lock-protected64event buffer, so ordinary image-loader polling cannot
+evict the close event. Do not retain the window in the callback. Stop observation
+before explicit fixture teardown. On a real copy failure, BEFORE the first await
+or manual loader/materialization probe, capture actual host/window visibility,
+identifier/delegate type and bounded native-interaction hidden/frame/visibleRect
+state. This changes no copy target, test assertion, scheduling, resource admission,
+SwiftUI state/view identity, publication, layout flush, selection or pixel oracle.
+A pass is still inconclusive. A close stack from explicit teardown is not the
+startup cause; actual event ordering and window identity must establish it.
+
+Keep this diagnostic branch unmerged. It intentionally retains the old failed
+product source; a window-role relation must be proved from actual observations
+before using the newer production correction to explain the historical copy
+failure. Neither observation nor a diagnostic pass qualifies production Preview.
+No local app build/registration/native execution; source/AST/type-check only.
+
+Narrow execution admission before publishing this new diagnostic: reuse the
+qualified hosted guard's real account/home/macOS26/arm64/trusted-event/protected-
+homes-absent policy for the exact preview-grant-probe temporary root. Explicitly
+refuse optimized Python before argument/environment/source reads. Require the
+actual guard call before any source-inventory/receipt operation, with a removed-
+guard intercepted-inventory counterexample and no actual command execution.
+Record the new helper/control/workflow bytes in the complete source receipt.
+Do not dispatch until current PR124's first complete qualification is preserved;
+this keeps source diagnosis separate from its active candidate tests.
