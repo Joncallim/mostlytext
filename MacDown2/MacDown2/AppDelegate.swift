@@ -296,12 +296,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         return false
     }
 
-    private static func regularDocumentURLs(_ filenames: [String]) -> [URL] {
-        filenames
-            .map { URL(fileURLWithPath: $0).resolvingFinalSymlink() }
-            .filter { (try? $0.resourceValues(forKeys: [.isRegularFileKey]))?.isRegularFile == true }
-    }
-
     func application(_: NSApplication, openFiles filenames: [String]) {
         guard normalLaunchReady else {
             startupOpenFiles.append(contentsOf: filenames)
@@ -329,5 +323,13 @@ extension NSAppearance {
             return .dark
         }
         return .light
+    }
+}
+
+private extension AppDelegate {
+    private static func regularDocumentURLs(_ filenames: [String]) -> [URL] {
+        filenames
+            .map { URL(fileURLWithPath: $0).resolvingFinalSymlink() }
+            .filter { (try? $0.resourceValues(forKeys: [.isRegularFileKey]))?.isRegularFile == true }
     }
 }

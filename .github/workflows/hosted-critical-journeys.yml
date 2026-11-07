@@ -8,6 +8,8 @@ on:
       - '.github/scripts/run-hosted-critical-journey.py'
       - '.github/scripts/test-hosted-critical-journey.py'
       - '.github/workflows/hosted-critical-journeys.yml'
+      - 'MacDown2/MacDown2/AppDelegate.swift'
+      - 'MacDown2/MacDown2/WindowCoordinator*.swift'
       - 'MacDown2/MacDown2UITests/TabLifecycleUITests.swift'
       - 'MacDown2/MacDown2UITests/ExternalFileChangesUITests.swift'
       - '.github/hosted-original-focus/**'

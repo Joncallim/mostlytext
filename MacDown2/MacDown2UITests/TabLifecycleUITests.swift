@@ -33,6 +33,7 @@ final class TabLifecycleUITests: XCTestCase {
     }
 
     override func tearDown() async throws {
+        captureSessionCheckpoint("Journey state before teardown")
         app.terminate()
         try? FileManager.default.removeItem(at: sessionDir)
         try? FileManager.default.removeItem(at: fixturesDir)
@@ -98,6 +99,8 @@ final class TabLifecycleUITests: XCTestCase {
         }
         XCTAssertTrue(FileManager.default.fileExists(atPath: sessionFile.path), "Session file was not written")
 
+        captureSessionCheckpoint("Saved session after normal termination")
+
         // Relaunch with the same session directory but without -openFiles so
         // the app restores from the saved session.
         app.launchArguments = [
@@ -140,6 +143,24 @@ final class TabLifecycleUITests: XCTestCase {
         )).firstMatch
         XCTAssertTrue(selectedB.waitForExistence(timeout: 5))
 
+        // Folder roots belong to each document window. The launch root was
+        // applied to the last-opened window; explicitly choose it on b.md too.
+        app.menuBars.menuBarItems["File"].click()
+        app.menuBars.menuBarItems["File"].menuItems["Open Folder…"].click()
+        let panel = app.sheets.firstMatch
+        XCTAssertTrue(panel.waitForExistence(timeout: 5))
+        app.typeKey("g", modifierFlags: [.command, .shift])
+        app.typeText(fixturesDir.path)
+        app.typeKey(.return, modifierFlags: [])
+        let open = panel.buttons["Open Folder"]
+        let ready = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == YES AND hittable == YES"), object: open
+        )
+        XCTAssertEqual(XCTWaiter().wait(for: [ready], timeout: 5), .completed)
+        open.click()
+        XCTAssertTrue(app.descendants(matching: .any)
+            .matching(identifier: "fileRow-a.md").firstMatch.waitForExistence(timeout: 5))
+
         app.typeKey("p", modifierFlags: .command)
         let search = app.textFields["quickOpenSearchField"]
         XCTAssertTrue(search.waitForExistence(timeout: 5))
@@ -156,6 +177,27 @@ final class TabLifecycleUITests: XCTestCase {
         let editor = app.textViews.firstMatch
         XCTAssertTrue(editor.waitForExistence(timeout: 5))
         XCTAssertTrue((editor.value as? String)?.contains("# File A") == true)
+    }
+
+    private func captureSessionCheckpoint(_ label: String) {
+        if app.state != .notRunning {
+            let hierarchy = XCTAttachment(string: String(app.debugDescription.prefix(65536)))
+            hierarchy.name = label + " accessibility"
+            hierarchy.lifetime = .keepAlways
+            add(hierarchy)
+        }
+        let session = sessionDir.appendingPathComponent("session.json")
+        guard let handle = try? FileHandle(forReadingFrom: session) else { return }
+        defer { try? handle.close() }
+        guard let bytes = try? handle.read(upToCount: 1_048_577) else { return }
+        let attachment = if bytes.count <= 1_048_576 {
+            XCTAttachment(data: bytes, uniformTypeIdentifier: "public.json")
+        } else {
+            XCTAttachment(string: "Generated session exceeds the diagnostic capture limit")
+        }
+        attachment.name = label + " generated session"
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     private func tab(named name: String) -> XCUIElement {

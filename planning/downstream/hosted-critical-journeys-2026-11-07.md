@@ -172,3 +172,9 @@ Quit/relaunch checkpoints, without replacing any original assertion. Refresh
 only that UI source digest in the frozen38-method source inventory; no method
 rename, removal or behavior-ID waiver. Full current CI and all three original
 native jobs plus public CLI/focus remain required before a product merge.
+
+## Candidate correction and source verification
+
+The literal-source filesystem control records8 cases: original4 failures, corrected0 failures with unchanged raw queues and expected policies. The small regular-file helper is kept in a private same-file extension to satisfy the unchanged class-length style limit. The root UI method keeps every original statement/assertion/deadline in order; Quick Open adds only its missing public folder selection. Generated session capture after normal termination and bounded JSON/accessibility capture before teardown preserve future failure diagnostics. Initial style checking caught class/method length; moving the helper and placing final diagnostics in teardown fixes those without relaxing limits. Only TabLifecycle source digest changes in the38-method manifest.
+
+Strict Swift6 concurrency type-check of the actual TabLifecycle source (no execution), Swift parse/style, full source manifest9controls and guarded launcher2controls pass locally. The first standalone type-check omitted the XCTest Swift overlay and failed to import its assertion functions; adding the actual platform overlay include path fixes invocation only. AppKit startup/delivery remains hosted-native work. The before native restore cause remains unproven; require all three materially corrected native cases, original focus, normal Release CLI/focus and full current CI before merge. No old result is retargeted to this candidate.
