@@ -1,0 +1,180 @@
+#!/usr/bin/env python3
+"""One original Debug engineering case, on a different disposable hosted machine."""
+import hashlib
+import importlib.util
+import json
+import os
+from pathlib import Path
+import plistlib
+import re
+import shutil
+import subprocess
+import sys
+
+SELECTED = "MacDown2UITests/EditingAssistsUITests/testFormattingMenuTracksEditorSidebarFindAndEditorFocus"
+QUALIFIED_MAIN = "PENDING_PR119_QUALIFICATION"
+
+
+def main():
+    # Refuse before parsing or filesystem preparation; reused guard also refuses -O.
+    if sys.flags.optimize:
+        raise RuntimeError("Optimized Python is refused before original-focus preparation")
+    if not re.fullmatch(r"[0-9a-f]{40}", QUALIFIED_MAIN):
+        raise RuntimeError("Original-case execution is held until verified PR119 qualification and actual main intake")
+    spec = importlib.util.spec_from_file_location("normal_focus_guard", Path(__file__).with_name("prepare-hosted-public-focus.py"))
+    guard = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(guard)
+    root = Path(os.environ["RUNNER_TEMP"]).resolve() / "mostlytext-focus"
+    guard.check_host(root)
+    subprocess.run(["git", "merge-base", "--is-ancestor", QUALIFIED_MAIN, "HEAD"], check=True, timeout=15)
+    if len(sys.argv) != 2 or sys.argv[1] not in ["prepare", "execute"]:
+        raise RuntimeError("Select exactly prepare or execute")
+    output = lambda args: subprocess.check_output(args, text=True, timeout=60).strip()
+    sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+    mapping = {
+        ".github/hosted-public-focus/Control/main.swift": "Control/main.swift",
+        ".github/hosted-public-focus/Control-Info.plist": "Control-Info.plist",
+        ".github/hosted-public-focus/project.yml": "project.yml",
+        ".github/hosted-original-focus/PositiveTests.swift": "Driver/PublicFocusTests.swift",
+    }
+    if sys.argv[1] == "prepare":
+        if root.exists():
+            raise RuntimeError("Refuse an existing original-focus root")
+        for name in ["MostlyText", "MacDown 2"]:
+            if (Path.home() / "Library/Application Support" / name).exists():
+                raise RuntimeError("Fresh product data is required")
+        domain = subprocess.run(["defaults", "read", "app.mostlytext.MostlyText"], capture_output=True, text=True, timeout=15)
+        if domain.returncode == 0 or "does not exist" not in domain.stderr:
+            raise RuntimeError("Fresh product preferences are required")
+        root.mkdir(mode=0o700)
+        paths = output(["git", "ls-files", "--", "MacDown2", ".github/hosted-original-focus",
+                        ".github/hosted-public-focus", ".github/scripts/prepare-hosted-public-focus.py",
+                        ".github/scripts/run-hosted-original-focus.py", ".github/scripts/run-owned-app-tests.py",
+                        ".github/scripts/test-hosted-focus-guard.py", ".github/scripts/test-run-owned-app-tests.py",
+                        ".github/workflows/hosted-original-focus.yml"]).splitlines()
+        for source, target in mapping.items():
+            p = root / "fixture" / target
+            p.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source, p)
+        subprocess.run(["xcodegen", "generate", "--spec", str(root / "fixture/project.yml")], check=True, timeout=60)
+        record = {"checkout": output(["git", "rev-parse", "HEAD"]), "source_sha256": {p: sha(Path(p)) for p in paths},
+                  "pins": json.loads(Path("MacDown2/Packages/MacDownKit/Package.resolved").read_text())["pins"],
+                  "generated_sha256": {str(p.relative_to(root / "fixture")): sha(p) for p in (root / "fixture").rglob("*") if p.is_file()},
+                  "fixture_mapping": mapping, "selected_original": SELECTED, "commands": [], "errors": [],
+                  "host": {"os": output(["sw_vers"]), "xcode": output(["xcodebuild", "-version"]), "uid": os.getuid()},
+                  "initial_domain": {"returncode": domain.returncode, "stderr": domain.stderr},
+                  "scope": "Intentional ordinary Debug original-case engineering, not protected CORTANA, ordinary Release, performance or signed-artifact acceptance"}
+        (root / "receipt.json").write_text(json.dumps(record, indent=2) + "\n")
+        return
+    record_path = root / "receipt.json"
+    record = json.loads(record_path.read_text())
+
+    def save(): record_path.write_text(json.dumps(record, indent=2) + "\n")
+
+    def verify_sources():
+        if record["checkout"] != output(["git", "rev-parse", "HEAD"]):
+            raise RuntimeError("Changed checkout")
+        for p, h in record["source_sha256"].items():
+            if sha(Path(p)) != h: raise RuntimeError("Changed source: " + p)
+        for p, h in record["generated_sha256"].items():
+            if sha(root / "fixture" / p) != h: raise RuntimeError("Changed control input: " + p)
+
+    def command(label, args, timeout=30):
+        result = subprocess.run([str(a) for a in args], capture_output=True, text=True, timeout=timeout)
+        record["commands"].append({"label": label, "arguments": [str(a) for a in args], "returncode": result.returncode,
+                                   "stdout": result.stdout[:131072], "stderr": result.stderr[:131072]})
+        save()
+        if result.returncode: raise RuntimeError(label + " failed")
+        return result.stdout
+
+    def app_metadata(label, app):
+        info = plistlib.loads((app / "Contents/Info.plist").read_bytes())
+        if info["CFBundleIdentifier"] != "app.mostlytext.MostlyText":
+            raise RuntimeError("Unexpected Debug application identity")
+        command(label + "-signature", ["codesign", "--verify", "--deep", "--strict", app])
+        details = subprocess.run(["codesign", "--display", "--verbose=4", "--entitlements", "-", "--xml", str(app)], capture_output=True, timeout=30)
+        if details.returncode: raise RuntimeError("Cannot record actual Debug signing context")
+        (root / (label + "-signature.txt")).write_bytes(details.stdout + details.stderr)
+        return {"path": str(app), "executable_sha256": sha(app / "Contents/MacOS" / info["CFBundleExecutable"]), "info": info}
+
+    def phase(label, app_executable, arguments):
+        args = ["python3", ".github/scripts/run-owned-app-tests.py", str(root / (label + "-owned")), str(app_executable), "--", *arguments]
+        with (root / (label + ".log")).open("w") as log:
+            result = subprocess.run(args, stdout=log, stderr=subprocess.STDOUT)
+        record["commands"].append({"label": label, "arguments": args, "returncode": result.returncode})
+        save()
+        summary = json.loads(command(label + "-summary", ["xcrun", "xcresulttool", "get", "test-results", "summary", "--path", root / (label + ".xcresult")]))
+        (root / (label + "-summary.json")).write_text(json.dumps(summary, indent=2) + "\n")
+        owned = json.loads((root / (label + "-owned/status.json")).read_text())
+        record.setdefault("results", {})[label] = {"summary": summary, "owned": owned}
+        save()
+        expected = {"totalTestCount": 1, "passedTests": 1, "failedTests": 0, "skippedTests": 0, "expectedFailures": 0}
+        if result.returncode or owned["returncode"] or owned["timed_out"] or owned["cancelled"]:
+            raise RuntimeError(label + " has a genuine failed owned outcome")
+        if any(type(summary.get(k)) is not int or summary[k] != v for k, v in expected.items()):
+            raise RuntimeError(label + " did not execute exactly one passing selected case")
+        selected_class, selected_method = ("OriginalFocusPositiveTests", "testActualTypingAndButtonBeforeOriginalAppCase") if label == "positive" else tuple(SELECTED.split("/")[1:])
+        pattern = r"Test Case '-\[[^\]\n]*\." + re.escape(selected_class) + " " + re.escape(selected_method) + r"\]' passed"
+        if not re.search(pattern, (root / (label + ".log")).read_text()):
+            raise RuntimeError(label + " actual passing case identity differs from the requested selection")
+
+    app = root / "app/Build/Products/Debug/MacDown2.app"
+    try:
+        verify_sources()
+        record["built_before"] = app_metadata("before", app)
+        settings = json.loads((root / "root-build-settings.json").read_text())
+        build = next(s["buildSettings"] for s in settings if s["target"] == "MacDown2")
+        if build["CONFIGURATION"] != "Debug" or "DEBUG" not in build["SWIFT_ACTIVE_COMPILATION_CONDITIONS"].split() or "UITEST_ISOLATED" in build["SWIFT_ACTIVE_COMPILATION_CONDITIONS"].split():
+            raise RuntimeError("This must be intentional ordinary Debug, not Release or the protected isolated configuration")
+        if Path(build["TARGET_BUILD_DIR"]) / build["FULL_PRODUCT_NAME"] != app:
+            raise RuntimeError("Actual target application path differs from the built Debug app")
+        record["actual_build_configuration"] = {k: build.get(k) for k in ["CONFIGURATION", "SWIFT_ACTIVE_COMPILATION_CONDITIONS", "TARGET_BUILD_DIR", "FULL_PRODUCT_NAME", "PRODUCT_BUNDLE_IDENTIFIER"]}
+        record["actual_xctestruns"] = {str(p.relative_to(root)): sha(p) for p in (root / "app/Build/Products").glob("*.xctestrun")}
+        if not record["actual_xctestruns"]: raise RuntimeError("Missing actual root xctestrun")
+        targets = []
+        def collect_targets(value):
+            if isinstance(value, dict):
+                if value.get("IsUITestBundle") is True: targets.append(value)
+                for child in value.values(): collect_targets(child)
+            elif isinstance(value, list):
+                for child in value: collect_targets(child)
+        for name in record["actual_xctestruns"]:
+            collect_targets(plistlib.loads((root / name).read_bytes()))
+        matched = [t for t in targets if str(t.get("TestBundlePath", "")).endswith("MacDown2UITests.xctest")]
+        if len(matched) != 1: raise RuntimeError("Expected exactly one actual original UI target")
+        target_path = matched[0]["UITargetAppPath"].replace("__TESTROOT__", str(root / "app/Build/Products"))
+        if Path(target_path) != app: raise RuntimeError("Actual xctestrun target is not the built ordinary Debug app")
+        test_binaries = [p for p in (root / "app/Build/Products").rglob("MacDown2UITests") if p.is_file() and p.parent.name == "MacOS"]
+        if len(test_binaries) != 1: raise RuntimeError("Expected one actual original UI test executable")
+        record["test_executable_sha256"] = sha(test_binaries[0])
+        (root / "test-inputs").mkdir()
+        shutil.copyfile(test_binaries[0], root / "test-inputs/MacDown2UITests")
+        common = ["-configuration", "Release", "-destination", "platform=macOS", "-derivedDataPath", str(root / "control"),
+                  "-parallel-testing-enabled", "NO", "-test-timeouts-enabled", "YES", "-default-test-execution-time-allowance", "120", "-maximum-test-execution-time-allowance", "120"]
+        phase("positive", root / "control/Build/Products/Release/HostedFocusControl.app/Contents/MacOS/HostedFocusControl",
+              ["xcodebuild", "-project", str(root / "fixture/HostedPublicFocus.xcodeproj"), "-scheme", "HostedPublicFocus", *common,
+               "-resultBundlePath", str(root / "positive.xcresult"), "-only-testing:HostedFocusDriverTests/OriginalFocusPositiveTests/testActualTypingAndButtonBeforeOriginalAppCase", "test-without-building"])
+        record["actual_gui"] = json.loads(command("actual-gui-facts", [root / "host-facts"]))
+        save()
+        # Existing source test alone owns app launch with its normal Debug hooks.
+        phase("original", app / "Contents/MacOS/MacDown2",
+              ["xcodebuild", "-project", "MacDown2/MacDown2.xcodeproj", "-scheme", "MacDown2", "-configuration", "Debug",
+               "-destination", "platform=macOS,arch=arm64", "-derivedDataPath", str(root / "app"), "-onlyUsePackageVersionsFromResolvedFile",
+               "-parallel-testing-enabled", "NO", "-test-timeouts-enabled", "YES", "-default-test-execution-time-allowance", "120", "-maximum-test-execution-time-allowance", "120",
+               "-resultBundlePath", str(root / "original.xcresult"), "-only-testing:" + SELECTED, "test-without-building"])
+        verify_sources()
+        record["source_unchanged_after"] = True
+    except Exception as error:
+        record["errors"].append({"type": type(error).__name__, "message": str(error)[:4096]})
+    finally:
+        if app.exists():
+            try: record["built_after"] = app_metadata("after", app)
+            except Exception as error: record["errors"].append({"type": type(error).__name__, "message": str(error)[:4096]})
+        record["passed"] = not record["errors"] and set(record.get("results", {})) == {"positive", "original"} and record.get("source_unchanged_after") is True
+        save()
+    if not record["passed"]:
+        raise RuntimeError("Original engineering focus did not qualify; preserve the first complete outcome")
+
+
+if __name__ == "__main__":
+    main()

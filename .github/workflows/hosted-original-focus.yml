@@ -1,0 +1,63 @@
+name: Original named focus engineering
+permissions:
+  contents: read
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/hosted-original-focus/**'
+      - '.github/scripts/run-hosted-original-focus.py'
+      - '.github/workflows/hosted-original-focus.yml'
+concurrency:
+  group: hosted-original-focus-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  original-named-focus:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: macos-26
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Prepare guarded private source controls
+        run: |
+          set -euo pipefail
+          XCODE=$(ls -d /Applications/Xcode*.app | grep "26" | head -1 || true)
+          test -n "$XCODE"
+          sudo xcode-select -s "$XCODE/Contents/Developer"
+          brew install xcodegen
+          python3 .github/scripts/test-hosted-focus-guard.py
+          python3 .github/scripts/test-run-owned-app-tests.py
+          python3 .github/scripts/run-hosted-original-focus.py prepare
+          cd MacDown2
+          xcodegen generate
+          scripts/pin-xcode-package-versions.sh
+      - name: Build intentionally ordinary Debug app and original test source
+        run: |
+          set -euo pipefail
+          xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 -configuration Debug -destination 'platform=macOS,arch=arm64' ONLY_ACTIVE_ARCH=YES -derivedDataPath "$RUNNER_TEMP/mostlytext-focus/app" -onlyUsePackageVersionsFromResolvedFile CODE_SIGN_IDENTITY=- ENABLE_CODE_COVERAGE=NO build-for-testing 2>&1 | tee "$RUNNER_TEMP/mostlytext-focus/app-build.log"
+          xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 -configuration Debug -destination 'platform=macOS,arch=arm64' ONLY_ACTIVE_ARCH=YES -derivedDataPath "$RUNNER_TEMP/mostlytext-focus/app" -onlyUsePackageVersionsFromResolvedFile CODE_SIGN_IDENTITY=- ENABLE_CODE_COVERAGE=NO -showBuildSettings -json > "$RUNNER_TEMP/mostlytext-focus/root-build-settings.json"
+          xcrun swiftc -parse-as-library -swift-version 6 -strict-concurrency=complete .github/hosted-public-focus/HostFacts.swift -o "$RUNNER_TEMP/mostlytext-focus/host-facts"
+      - name: Build only private harmless input control
+        run: |
+          set -euo pipefail
+          xcodebuild -project "$RUNNER_TEMP/mostlytext-focus/fixture/HostedPublicFocus.xcodeproj" -scheme HostedPublicFocus -configuration Release -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/mostlytext-focus/control" CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual build-for-testing 2>&1 | tee "$RUNNER_TEMP/mostlytext-focus/control-build.log"
+      - name: Require actual positive control then exactly one original named case
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/run-hosted-original-focus.py execute 2>&1 | tee "$RUNNER_TEMP/mostlytext-focus/execution.log"
+      - name: Preserve the original complete engineering outcome
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hosted-original-focus
+          path: |
+            ${{ runner.temp }}/mostlytext-focus/*.json
+            ${{ runner.temp }}/mostlytext-focus/*.txt
+            ${{ runner.temp }}/mostlytext-focus/*.log
+            ${{ runner.temp }}/mostlytext-focus/*-owned/**
+            ${{ runner.temp }}/mostlytext-focus/*.xcresult/**
+            ${{ runner.temp }}/mostlytext-focus/fixture/**
+            ${{ runner.temp }}/mostlytext-focus/app/Build/Products/*.xctestrun
+            ${{ runner.temp }}/mostlytext-focus/test-inputs/**
