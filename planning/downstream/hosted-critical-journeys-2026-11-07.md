@@ -178,3 +178,33 @@ native jobs plus public CLI/focus remain required before a product merge.
 The literal-source filesystem control records8 cases: original4 failures, corrected0 failures with unchanged raw queues and expected policies. The small regular-file helper is kept in a private same-file extension to satisfy the unchanged class-length style limit. The root UI method keeps every original statement/assertion/deadline in order; Quick Open adds only its missing public folder selection. Generated session capture after normal termination and bounded JSON/accessibility capture before teardown preserve future failure diagnostics. Initial style checking caught class/method length; moving the helper and placing final diagnostics in teardown fixes those without relaxing limits. Only TabLifecycle source digest changes in the38-method manifest.
 
 Strict Swift6 concurrency type-check of the actual TabLifecycle source (no execution), Swift parse/style, full source manifest9controls and guarded launcher2controls pass locally. The first standalone type-check omitted the XCTest Swift overlay and failed to import its assertion functions; adding the actual platform overlay include path fixes invocation only. AppKit startup/delivery remains hosted-native work. The before native restore cause remains unproven; require all three materially corrected native cases, original focus, normal Release CLI/focus and full current CI before merge. No old result is retargeted to this candidate.
+
+## Second actual outcomes: initial tab-batch readiness
+
+At a483f80b/run42340552456 dirty-close/session restore and conflict-close pass;
+all3 private positives pass. QuickOpen fails at the ORIGINAL immediate c.md
+existence check before reaching any new folder-panel action. Actual captured
+session and hierarchy after that failure both contain all3 tabs, c selected.
+Startup opens these documents asynchronously; A existing does not establish
+that C has appeared. This is a demonstrated fixture readiness assumption,
+not evidence that QuickOpen itself ran or failed. Preserve its genuine65 and
+framework restart; the failed controller does not verify all source afterward.
+
+Before another native attempt, retain every original assertion/statement and
+add an explicit3-tab batch wait after A. Share the ORIGINAL8second readiness
+budget: freeze its deadline immediately before A's existing8second wait, and
+give the batch only the remaining time. If3tabs already exist, return immediately;
+if the deadline expired, fail. No existing timeout, overall120/600s bound,
+logical identity/content/count assertion, product behavior or selection action
+changes. Keep the missing per-window folder precondition for the later phase.
+Refresh only that reviewed source digest in the38-method manifest. No arbitrary
+sleep, callback invocation or fake readiness. Require the actual new case to
+reach and pass all original QuickOpen reuse assertions before claiming it.
+
+All first native outcomes are now retained. The current first complete CI at
+a483 remains running and must be preserved. A corrected local source head may
+be assembled as an exact merge parent with the prepared status/plural unit;
+qualify that combined source once through full current CI and every stated
+native gate. Do not republish unchanged failinga483 or retarget its receipts.
+The old PR may be integrated through that fully qualified descendant only with
+explicit ancestry/source/result proof and precise PR/issue reconciliation.
