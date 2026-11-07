@@ -9,6 +9,9 @@ from pathlib import Path
 import subprocess
 import sys
 
+PRODUCT_BASELINE = 'ed5a9409dcfbe62263dda0dd8157d8ea4f827e7f'
+PRODUCT_TREE = '1b01b78e3415d8261fa18bfb4c90c180ffa22a7f'
+
 SOURCE = '# NATIVE_EXPORT_CANARY\r\n\r\nA café document with **bold** and `code`.\r\n\r\n| Key | Value |\r\n| --- | --- |\r\n| alpha | beta |\r\n'.encode()
 EXTRA = ['.github/hosted-export-acceptance', '.github/scripts/prepare-ordinary-export-acceptance.py',
          '.github/scripts/run-ordinary-export-acceptance.py', '.github/scripts/test-ordinary-export-acceptance.py',
@@ -68,6 +71,13 @@ def validate_settings(rows):
         raise RuntimeError('Require actual hosted ARM build, not an inferred project setting')
 
 
+def verify_product_tree():
+    actual=output(['git','rev-parse','HEAD:MacDown2'])
+    if actual!=PRODUCT_TREE:
+        raise RuntimeError('Product inputs differ from the frozen Preview candidate')
+    return actual
+
+
 def main():
     if sys.flags.optimize:raise RuntimeError('Optimized Python cannot enforce export acceptance')
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('root',type=Path)
@@ -76,9 +86,7 @@ def main():
     args=parser.parse_args();root=args.root.resolve();preparation().check_host(root)
     baseline=Path(__file__).with_name('prepare-hosted-public-focus.py')
     receipt=root/'receipt.json'
-    actual_tree=output(['git','rev-parse','HEAD:MacDown2'])
-    expected_tree=output(['git','rev-parse','ed5a9409dcfbe62263dda0dd8157d8ea4f827e7f:MacDown2'])
-    if actual_tree!=expected_tree:raise RuntimeError('Product inputs differ from the frozen Preview candidate')
+    actual_tree=verify_product_tree()
     if not (args.bind_built or args.admit_execution or args.verify):
         subprocess.run([sys.executable,str(baseline),str(root)],check=True,timeout=120)
         row=json.loads(receipt.read_bytes());source=Path(row['source_file']);source.write_bytes(SOURCE)
@@ -88,8 +96,8 @@ def main():
         row['source_sha256'].update({p:sha(Path(p)) for p in paths})
         destination=root/'fixture/Driver/ExportPanelTests.swift'
         destination.write_bytes(Path('.github/hosted-export-acceptance/ExportPanelTests.swift').read_bytes())
-        row['ordinary_export']={'product_baseline':'ed5a9409dcfbe62263dda0dd8157d8ea4f827e7f',
-            'product_tree':output(['git','rev-parse','HEAD:MacDown2']),
+        row['ordinary_export']={'product_baseline':PRODUCT_BASELINE,
+            'product_tree':actual_tree,
             'html':str(source.parent/'ordinary-export.html'),'pdf':str(source.parent/'ordinary-export.pdf'),
             'source':str(source),'source_sha256':sha(source),'diagnostic_only':False,
             'scope':'Ordinary Release export UI only; no final RC, whole parity/budgets or in-flight cancellation acceptance'}

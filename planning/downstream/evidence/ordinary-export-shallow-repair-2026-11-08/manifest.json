@@ -1,0 +1,17 @@
+{
+  "failed_head": "ab9d16e0c1904f2f12b58e7b843832d8674a4135",
+  "records": [
+    {
+      "file": "00-actual-shallow-before-after.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/ordinary-export-acceptance-20261108/shallow-source-repair/actual-shallow-before-after.json",
+      "bytes": 443,
+      "sha256": "3254a41d306507795d6813d00402aee95d61b0e8576729f6e10b5369a4de2548"
+    },
+    {
+      "file": "01-actual-old-baseline-lookup.log.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/ordinary-export-acceptance-20261108/shallow-source-repair/actual-old-baseline-lookup.log",
+      "bytes": 143,
+      "sha256": "783050fd61b91b83a82063835576272c8a88fa939a5d818bbe882031b74abf81"
+    }
+  ]
+}
