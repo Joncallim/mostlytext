@@ -3,12 +3,19 @@ globalThis.__d2Result = null;
 globalThis.__d2Phase = 'initialise';
 (async () => {
   try {
+    __hostStage('engine-construct');
     const engine = new window.D2();
+    __hostStage('engine-await-ready');
     await engine.ready;
+    __hostStage('engine-ready');
     __d2Phase = 'compile';
+    __hostStage('compile-start');
     const compiled = await engine.compile('alpha: JSC_D2_ALPHA\nbeta: JSC_D2_BETA\nalpha -> beta');
+    __hostStage('compile-end');
     __d2Phase = 'render';
+    __hostStage('render-start');
     const svg = await engine.render(compiled.diagram, Object.assign({themeID: 0, darkThemeID: 0}, compiled.renderOptions || {}));
+    __hostStage('render-end');
     if (typeof svg !== 'string' || !svg.includes('<svg') || !svg.includes('JSC_D2_ALPHA') || !svg.includes('JSC_D2_BETA')) throw Error('Missing real D2 SVG');
     if (/<(?:script|foreignObject)\b|(?:href|src)\s*=\s*['"](?:https?:|\/\/)|@import|url\(\s*['"]?https?:/i.test(svg)) throw Error('Unsafe D2 SVG');
     if (!/<(?:path|rect|polygon)\b/.test(svg)) throw Error('Missing vector geometry');

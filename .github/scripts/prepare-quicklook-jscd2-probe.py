@@ -358,6 +358,8 @@ def main():
         receipt_path.write_text(json.dumps(record, indent=2) + "\n")
         return
     record = json.loads(receipt_path.read_text())
+    if 'reference_module' not in record:
+        raise RuntimeError('Reference stage failed before project/build/native admission; inspect preserved reference output')
     if record.get('diagnostic_only') is not True or record.get('qualification_candidate') is not False:
         raise RuntimeError('Capability observation cannot become a renderer qualification')
     reference=record['reference_module']

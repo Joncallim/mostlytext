@@ -3,7 +3,14 @@ const fs = require('node:fs'), vm = require('node:vm'), crypto = require('node:c
 const path = require('node:path');
 const fixture = process.argv[2];
 const transformed = [];
+const phases = [];
+const stage = name => {
+  if (!/^[a-z-]{1,48}$/.test(name) || phases.length >= 32) throw Error('Phase boundary');
+  phases.push({phase: name, uptime_ms: performance.now()});
+  fs.writeFileSync(path.join(fixture, '..', 'reference-phases.json'), JSON.stringify(phases, null, 2));
+};
 const context = vm.createContext({
+  __hostStage: stage,
   __hostNow: () => performance.now() / 1000,
   __hostEncode: text => Array.from(Buffer.from(text, 'utf8')),
   __hostDecode: bytes => Buffer.from(bytes).toString('utf8'),
@@ -19,7 +26,9 @@ const assets = {};
 for (const name of ['host', 'd2-browser', 'control']) {
   const bytes = fs.readFileSync(path.join(fixture, 'Resources', name + '.js'));
   assets[name] = crypto.createHash('sha256').update(bytes).digest('hex');
+  stage('asset-' + name + '-start');
   vm.runInContext(bytes.toString('utf8'), context, {timeout: 15000, filename: name + '.js'});
+  stage('asset-' + name + '-end');
 }
 (async () => {
   const stop = performance.now() + 15000;

@@ -110,6 +110,10 @@ enum D2Capability {
     }
 
     private static func installBridges(_ context: JSContext) {
+        let stage: @convention(block) (String) -> Void = { name in
+            let bounded = String(name.prefix(48))
+            logger.notice("QL_JSCD2_PROBE phase=\(bounded, privacy: .public)")
+        }
         let now: @convention(block) () -> Double = { ProcessInfo.processInfo.systemUptime }
         let encode: @convention(block) (String) -> [NSNumber] = { Array($0.utf8).map { NSNumber(value: $0) } }
         let decode: @convention(block) (NSArray) -> String = { values in
@@ -130,7 +134,10 @@ enum D2Capability {
             return bytes.map { NSNumber(value: $0) }
         }
         for (name, value) in [
-            ("__hostNow", now as Any), ("__hostEncode", encode as Any), ("__hostDecode", decode as Any),
+            ("__hostStage", stage as Any), ("__hostNow", now as Any), ("__hostEncode", encode as Any), (
+                "__hostDecode",
+                decode as Any
+            ),
             ("__hostAtob", atob as Any), ("__hostBtoa", btoa as Any), ("__hostRandom", random as Any),
         ] {
             context.setObject(value, forKeyedSubscript: name as NSString)

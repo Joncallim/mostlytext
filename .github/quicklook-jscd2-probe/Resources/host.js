@@ -1,6 +1,7 @@
 // Fixed-input diagnostic host, not a production Worker or cancellation boundary.
 (() => {
   'use strict';
+  __hostStage('host-start');
   globalThis.window = globalThis;
   globalThis.performance = {now: () => __hostNow() * 1000};
   globalThis.console = {log() {}, warn() {}, error() {}};
@@ -68,13 +69,21 @@
         const copied = clone(value);
         setTimeout(() => this.onmessage?.({data: copied}), 0);
       };
+      __hostStage('worker-go-start');
       new Function('self', go).call(this.endpoint, this.endpoint);
+      __hostStage('worker-go-end');
+      __hostStage('worker-module-start');
       new Function('self', transformed).call(this.endpoint, this.endpoint);
+      __hostStage('worker-module-end');
     }
     postMessage(value) {
       const copied = clone(value);
       setTimeout(() => {
-        try { this.endpoint.onmessage({data: copied}); }
+        try {
+          __hostStage('message-' + copied.type + '-start');
+          this.endpoint.onmessage({data: copied});
+          __hostStage('message-' + copied.type + '-return');
+        }
         catch (error) { this.onerror?.(error); throw error; }
       }, 0);
     }
@@ -86,4 +95,5 @@
   if (random.length !== 32) throw Error('Random control failed');
   globalThis.__hostControls = {utf8: true, base64: true, randomBytes: random.length, timer: false};
   setTimeout(() => { __hostControls.timer = true; }, 0);
+  __hostStage('host-end');
 })();
