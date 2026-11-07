@@ -1,0 +1,115 @@
+{
+  "source": "0c0676a4d88c290e7af45be808cbc667c9866072",
+  "run": 42392295832,
+  "workflow_conclusion": "failure",
+  "records": [
+    {
+      "file": "00-native-first-run.json.gz",
+      "original": "native-first-run.json",
+      "bytes": 12975,
+      "sha256": "357c9a27fdfc5d8341f2165b591a64ec4f4c637406942af9f81428d1bd475fbb"
+    },
+    {
+      "file": "01-native-first-artifacts.json.gz",
+      "original": "native-first-artifacts.json",
+      "bytes": 1481,
+      "sha256": "0502b0cfb4c799975de8390ab79777caefcc79e64fa6ccd28a643b77718afffc"
+    },
+    {
+      "file": "02-first-source-context.json.gz",
+      "original": "first-source-context.json",
+      "bytes": 263,
+      "sha256": "ac7c9bcc82f197263d875f7d24fdf15a47cdd2f3ea67a1bdc47084b0f4d8e82d"
+    },
+    {
+      "file": "03-native-partial-first-independently-verified.json.gz",
+      "original": "native-partial-first-independently-verified.json",
+      "bytes": 1303,
+      "sha256": "951519ab98e0797ba98794a47dfd54b52056873654a149f78472dc847562f8df"
+    },
+    {
+      "file": "04-receipt.json.gz",
+      "original": "native-first-artifact/file-probe-executor-debug/receipt.json",
+      "bytes": 249122,
+      "sha256": "ff5129bea3bd1172bd3cfabf76483eea9ea103e4617a4d63c50dd76056f4a3b4"
+    },
+    {
+      "file": "05-probe.log.gz",
+      "original": "native-first-artifact/file-probe-executor-debug/original/probe.log",
+      "bytes": 1020,
+      "sha256": "3d500b7f0444445e8aacb3e1e27b883475adf1c774e95ea2c5cb89bebd4f16b9"
+    },
+    {
+      "file": "06-status.json.gz",
+      "original": "native-first-artifact/file-probe-executor-debug/original/diagnostics/status.json",
+      "bytes": 137,
+      "sha256": "907bb7493bc3e88197a6e674c339f23f91c52fc37e1b476eb9aefdb0b2b57913"
+    },
+    {
+      "file": "07-identity.json.gz",
+      "original": "native-first-artifact/file-probe-executor-debug/original/diagnostics/identity.json",
+      "bytes": 727,
+      "sha256": "ddc4e349ec5e5272fda46011e2ad7152cab7ee981388247045e32333c1a56b32"
+    },
+    {
+      "file": "08-probe.log.gz",
+      "original": "native-first-artifact/file-probe-executor-debug/main-actor-mutant/probe.log",
+      "bytes": 1689,
+      "sha256": "40d331ce19bdf9079635ca5e89af02074a214443e78acca74a0faee8157013b1"
+    },
+    {
+      "file": "09-status.json.gz",
+      "original": "native-first-artifact/file-probe-executor-debug/main-actor-mutant/diagnostics/status.json",
+      "bytes": 137,
+      "sha256": "c5285dd841f2f6e065e7cee79841c0afef0f5e04cdd6a8fc1d82919384686517"
+    },
+    {
+      "file": "10-identity.json.gz",
+      "original": "native-first-artifact/file-probe-executor-debug/main-actor-mutant/diagnostics/identity.json",
+      "bytes": 746,
+      "sha256": "03d17bfeb1490e89d38496eb1005335e2fd1ec7d46e2ebc3f37322a02c8712cf"
+    },
+    {
+      "file": "11-receipt.json.gz",
+      "original": "native-first-artifact/file-probe-executor-release/receipt.json",
+      "bytes": 249169,
+      "sha256": "0c4a0437b86ddf996fe036325fa3cc796dfd9852ecc5dfb60d9fdd4b6633577a"
+    },
+    {
+      "file": "12-probe.log.gz",
+      "original": "native-first-artifact/file-probe-executor-release/original/probe.log",
+      "bytes": 1021,
+      "sha256": "4a695cc5759853ad3946e0131d5002359e830492f85f20dc7cc65f06ea81870a"
+    },
+    {
+      "file": "13-status.json.gz",
+      "original": "native-first-artifact/file-probe-executor-release/original/diagnostics/status.json",
+      "bytes": 138,
+      "sha256": "9dff17031be8ffc1c43b5013fcd112dda1c5301ad6e58982abe28d33545a6a9b"
+    },
+    {
+      "file": "14-identity.json.gz",
+      "original": "native-first-artifact/file-probe-executor-release/original/diagnostics/identity.json",
+      "bytes": 736,
+      "sha256": "173bca47e127501d7dab37757d5d8e85cfb057c74e295c119a30e9ee47c1e0cf"
+    },
+    {
+      "file": "15-probe.log.gz",
+      "original": "native-first-artifact/file-probe-executor-release/main-actor-mutant/probe.log",
+      "bytes": 1689,
+      "sha256": "59c6422e939d7809623baf51e9e38b95e60afd3f33aaec4b2b65dd3d9b6bfbb9"
+    },
+    {
+      "file": "16-status.json.gz",
+      "original": "native-first-artifact/file-probe-executor-release/main-actor-mutant/diagnostics/status.json",
+      "bytes": 137,
+      "sha256": "14685a0bbb677d12389f0d33eb96e4f1b81c0268269c76f382d2314fcf7e3430"
+    },
+    {
+      "file": "17-identity.json.gz",
+      "original": "native-first-artifact/file-probe-executor-release/main-actor-mutant/diagnostics/identity.json",
+      "bytes": 754,
+      "sha256": "2939b3a3dd634226daa09351510a3efa87d2dd00a32985483bb04ee4f5cdfbd5"
+    }
+  ]
+}

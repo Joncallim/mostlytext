@@ -1,0 +1,13 @@
+◇ Test run started.
+↳ Testing Library Version: 1085
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite DocumentFileProbeExecutionTests started.
+◇ Test movedSnapshotReadsAndHashesAwayFromTheMainThread(utf8Bytes:) started.
+◇ Test case passing 1 argument utf8Bytes → 1000000 to movedSnapshotReadsAndHashesAwayFromTheMainThread(utf8Bytes:) started.
+FILE_PROBE_EXECUTION bytes=1000000 callbacks=1 mainThread=false
+◇ Test case passing 1 argument utf8Bytes → 10000000 to movedSnapshotReadsAndHashesAwayFromTheMainThread(utf8Bytes:) started.
+FILE_PROBE_EXECUTION bytes=10000000 callbacks=1 mainThread=false
+✔ Test movedSnapshotReadsAndHashesAwayFromTheMainThread(utf8Bytes:) with 2 test cases passed after 0.787 seconds.
+✔ Suite DocumentFileProbeExecutionTests passed after 0.787 seconds.
+✔ Test run with 1 test in 1 suite passed after 0.788 seconds.
+Owned native command status: {"returncode": 0, "timed_out": false, "cancelled": false, "elapsed_seconds": 1.100907042000017, "app_cleanup_requested": []}

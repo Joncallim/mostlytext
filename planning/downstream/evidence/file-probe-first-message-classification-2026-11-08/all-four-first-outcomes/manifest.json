@@ -1,0 +1,61 @@
+{
+  "head": "0c0676a4d88c290e7af45be808cbc667c9866072",
+  "records": [
+    {
+      "file": "native-first-run.json.gz",
+      "bytes": 12975,
+      "sha256": "357c9a27fdfc5d8341f2165b591a64ec4f4c637406942af9f81428d1bd475fbb"
+    },
+    {
+      "file": "full-ci-first-run.json.gz",
+      "bytes": 12919,
+      "sha256": "230f338c2c272f599e8075d12b1f69e6548befe1f3ccad5a57ab268c2daeeb44"
+    },
+    {
+      "file": "cli-first-run.json.gz",
+      "bytes": 12965,
+      "sha256": "aaff1864f034183d6b85d769f2855ba5a2fd88cec9c7fe9e6b54ee1a5441575d"
+    },
+    {
+      "file": "compliance-first-run.json.gz",
+      "bytes": 12935,
+      "sha256": "6a5e99a3fec07e1850b16ee205122f687e694d9ddb2d34d7e664dd4b7f45038c"
+    },
+    {
+      "file": "native-first-artifacts.json.gz",
+      "bytes": 1481,
+      "sha256": "0502b0cfb4c799975de8390ab79777caefcc79e64fa6ccd28a643b77718afffc"
+    },
+    {
+      "file": "full-ci-first-artifacts.json.gz",
+      "bytes": 765,
+      "sha256": "bdb4c0373f62e7a3b4ccc445500583253eaddc629aa1fd5e65123e9fd8fe3358"
+    },
+    {
+      "file": "cli-first-artifacts.json.gz",
+      "bytes": 753,
+      "sha256": "d9042973b6f9ca800e68457fd34ccca77f5862620fec6298339e252583822487"
+    },
+    {
+      "file": "compliance-first-artifacts.json.gz",
+      "bytes": 32,
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    {
+      "file": "full-ci-independently-verified.json.gz",
+      "bytes": 1279,
+      "sha256": "0735279de76c916d0f768b3b95b6eddbb3393e82df5f59a24884274fc4fe732d"
+    },
+    {
+      "file": "native-partial-first-independently-verified.json.gz",
+      "bytes": 1303,
+      "sha256": "951519ab98e0797ba98794a47dfd54b52056873654a149f78472dc847562f8df"
+    }
+  ],
+  "complete_workflow_archive_sha256": {
+    "compliance-complete-first-workflow-logs.zip": "e08159055c6dbb4fbb0d116ac9e18e59f0804937debc830cff29bdb47244758e",
+    "full-ci-complete-first-workflow-logs.zip": "bebbe82620a179a5c8e32231c8f64bcd5586899b14507fa9791448daf7717bb7",
+    "native-complete-first-workflow-logs.zip": "69a7a7bb1bf68e55e18cc4c2428a84b1b32553dd2d6bb20c5034916fa277a7e7",
+    "cli-complete-first-workflow-logs.zip": "f26c156f8fef256b3e3bf42743d4855d7282c4bb215ead707a5e9d983f8c60c4"
+  }
+}
