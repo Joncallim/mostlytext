@@ -230,3 +230,29 @@ package lock/SDK compilation result as actual evidence; a new root manifest's lo
 assumption remains unverified and cannot be bypassed by enabling floating versions.
 A later product-startup intake requires new affected qualification, not retargeting
 this first source. No product/GUI/defaults operation is authorized on CORTANA.
+
+## First actual result and failure observations before changing the controller
+
+Actual befb4de0/172e8bf9 run42355057395 passes native locked normal app, canonical
+seed and driver compilation, all actual input bindings and genuine1/1positive.
+The private root manifest/forced-lock assumption is now actually proved at that
+source; no pin policy changed. The normal launch leaves a real migration window
+visible and all109peer observations find no endpoint within the original10s.
+First/relaunch UI cases areNOT_RUN. Identity-bound forced cleanup is not normal
+Quit. The complete first result and independent proof are retained before code.
+Exact public phase/error, post-failure profile/domains and support-parent metadata
+were not captured; do not infer blocked versus preservedReview or a sole cause.
+
+The next material candidate adds observation, leaving every normal success path,
+first/relaunch method and10/120/600/40-minute limits unchanged. On a real failure,
+retain the original error first, then run one fixed private read-only UI case
+that verifies the actual process identity and captures its real AX/screenshot;
+its pass is an observation only, never a migration pass. After the existing exact
+identity-bound cleanup, source/product/seed/compiled input verification and bounded
+original/preserved/current/journal snapshots plus all6fixed domains may be read.
+Add only the fixed failure label to the canonical domain-capture action; its
+positive/source/no-live-app guard stays intact. Record only fixed support-parent
+node metadata, without listing unrelated home content. Preserve unknown/capture
+failures alongside the original first error. A failure can never become passed
+merely because its diagnostics succeeded. No fixture bytes or product policy
+changes until these actual observations explain the failure.

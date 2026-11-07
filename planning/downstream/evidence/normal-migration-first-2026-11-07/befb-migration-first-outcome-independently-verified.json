@@ -1,0 +1,27 @@
+{
+  "head": "befb4de00ceef29fdc5a6568e45fcac25133ef5f",
+  "actual_checkout": "172e8bf93e9f22f163ffbbe805dcc199cd024c54",
+  "actual_tree": "22d7154dd3a323b82e26fde13b514ef6b6c9a3ce",
+  "complete_canonical_source_inputs_verified": 1622,
+  "pins_verified": 24,
+  "generated_driver_inputs_verified": 12,
+  "generated_seed_inputs_verified": 5,
+  "compiled_seed_sha256": "f5eb7619089336dacb4c5ab4a71dfdf8f9a5e7d75b6034372f825275cf0367ed",
+  "four_actual_control_runner_test_binary_xctestrun_downloads_verified": true,
+  "actual_normal_release_app_and_forced_lock_canonical_seed_compilation_succeeded": true,
+  "actual_positive_pass": true,
+  "positive_owned": {
+    "returncode": 0,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 15.08024166600012,
+    "app_cleanup_requested": []
+  },
+  "normal_app_launched": true,
+  "normal_command_peer_observed": false,
+  "first_and_relaunch_cases": "NOT_RUN",
+  "original_profile_generated_and_prelaunch_bytes_identities_domains_verified": true,
+  "post_failure_profile_domains_and_precise_public_failure_state": "NOT_CAPTURED",
+  "cleanup": "identity-bound forced cleanup, not normal Quit",
+  "scope": "First normal migration rehearsal fails before original first/relaunch UI cases:109 no-peer observations in existing10s and a real migration window remains. No precise blocked-versus-preserved-review state or sole cause captured. Native root-lock/seed/driver compile and actual positive are verified; no migration preservation/adoption/readiness/pass inferred. Preserve first failure before material observability or policy correction."
+}
