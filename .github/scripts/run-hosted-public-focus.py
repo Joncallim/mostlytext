@@ -10,7 +10,7 @@ import time
 import re
 from native_cli_endpoint_probe import probe_endpoint
 
-STATUS_LAYOUT_QUALIFIED_MAIN = "PENDING_PR122_QUALIFICATION"
+STATUS_LAYOUT_QUALIFIED_MAIN = "6b49777d0f36c3d7a23cd0089e0823da1986660a"
 
 
 def main():

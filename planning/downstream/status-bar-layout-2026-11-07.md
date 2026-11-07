@@ -11,12 +11,17 @@ status field, menu, action, identifier, palette and localisation lookup.
 
 ## Current baseline and first proof
 
-Actual main is0426e88ac81efc9347011ba6b53fb1b6d2b75f35. This prepared branch starts
-from PR122'sbff2e3a6, whose four ownership cases, normal CLI and public focus pass;
-complete CI and actual merge are still pending. Do not publish or activate this
-branch before verified PR122 qualification/merge/main intake. Product source
-must remain byte-identical to that actual qualified main for the first new
-layout regression. No product repair before its genuine first result.
+Actual qualified main is6b49777d0f36c3d7a23cd0089e0823da1986660a. PR122 fully
+passes all seven checks:3,719/536 package,678/142 app, all four builds, actual
+ownership before/after, normal public CLI and normal Release focus. Its actual
+parents/tree/clean canonical fast-forward are verified. This branch incorporates
+that actual main before activating the new regression. Product source remains
+byte-identical to that qualified main. No layout repair precedes the genuine
+first result of the new regression.
+
+Architecturece66a5ac preceded this branch's code. The initially held anchor was
+replaced only after actual PR122 qualification/merge/main intake. This is the
+first layout-regression attempt, not a replay or a passing product claim.
 
 The actual current screenshot B48D03F7-CC4C-49C9-BDF7-61BA025E5A03.png and
 accessibility attachment E9AFF0AC-78A2-43CC-9346-1E2F1FBBC61C.txt independently
