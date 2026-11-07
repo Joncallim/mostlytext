@@ -194,3 +194,25 @@ temporary filesystem fixtures; the first baseline outcomes and proof remain in
 the engineering archive. Every original mutation control now exercises the two
 libraries as well. No native/runtime or product flag changed. Actual first
 native Debug layout/individual-image size remains an explicit qualification gate.
+
+## Qualified core-main intake
+
+Actual main d29358412585f669264e55e0f3666f456038b228 is merged and incorporated
+through real merge9f4e0a3d. Its tree8c57223e equals the fully qualified ab485fc0/
+e7bcdf04 source/tested tree:3719 package/680 app functions, four builds, all38
+originals/10positives, all3critical and every normal companion pass; the new
+mounted shared-settings regression actually passes once. Original failed sources
+remain failed. This intake preserves delegate startup suppression and the actual
+shared-settings environment on the separately hosted document root; neither is
+replaced by the Preview seam. Advance the descriptive receipt baseline to this
+actual main. The unsupported-session rehearsal is currently a separate pending
+PR131; reconcile then-current main again before publication to keep one final
+reviewed source. No Preview native result is retargeted to this candidate.
+
+After the real core intake, all9 compiled-input/filesystem controls,9 PDF result/
+actual-host controls,4 Preview host-order/optimized controls,3 native-architecture
+controls and5 real loopback controls pass. Full formatting/strict lint are0/1509,
+source compliance passes0unverified, and both private workflow YAML files parse.
+These are prepublication source controls; no pending Preview first native outcome
+is inferred. Raw logs are retained under preview-copy-diagnostics-20261107/
+current-core-prepublication in the engineering archive.
