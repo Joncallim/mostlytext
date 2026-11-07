@@ -127,3 +127,22 @@ geometry driver; licence resources/oracles remain bound for every selection.
 The licence anchor now names that actual verified merge. This enables a first
 disposable-host experiment, not native acceptance. Preserve every actual first
 result and classify any unexecuted selector assumption before further changes.
+
+## First native selector decision before correction
+
+First f69d run42347358056 has a genuine positive pass and one licence failure
+at line62, the assumed Find Window. Actual framework hierarchy07240311 and
+identity-bound process inspect show the visible Find surface is a Dialog. Its
+keyboard-focused query is ComboBox_NS:167; replacement is ComboBox_NS:127.
+The assumed SearchField was never reached. Before the sole failure, both full
+canonical text/value and real keyboard Copy checks passed under
+continueAfterFailure=false. Native query/Next/match Copy/close/About remain
+unexecuted. Preserve the original failure, inputs, result and cleanup limits
+in the adjacent evidence packet before a code change.
+
+Correct only the two selectors to that observed Dialog and exact exposed Find
+ComboBox. Keep every assertion and original wait, full public prelude, resource
+comparison, normal Quit and after-source requirements. Do not generalise
+unsupported UI roles or change the product to fit the test. The exposed native
+identifier is scoped to this observed macOS26 interface; a future difference
+requires fresh evidence. The next run is a changed-input first outcome.
