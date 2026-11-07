@@ -46,6 +46,7 @@ final class PreviewResourceWindowState {
     private var contexts: [Consumer: PreviewResourceLoad] = [:]
     private var pendingSelection: SelectionOrigin?
     private(set) var isClosed = false
+    private(set) var selectionFailed = false
     @ObservationIgnored private var currentPreviewDocument: (@MainActor () -> (UUID?, FileCore.FileDocument?))?
     /// Test observation after synchronous revocation, still inside the publisher's pre-change callback.
     @ObservationIgnored var afterIdentityInvalidation: (@MainActor () -> Void)?
@@ -69,7 +70,27 @@ final class PreviewResourceWindowState {
             recoveryEpoch: document.recoveryEpoch, documentURL: url
         )
         pendingSelection = origin
+        selectionFailed = false
         return origin
+    }
+
+    /// Presentation reads only the existing attachment; it cannot acquire folder authority.
+    func hasGrant(for document: FileCore.FileDocument) -> Bool {
+        !isClosed && attachment?.matches(document) == true
+    }
+
+    func isSelectionCurrent(_ origin: SelectionOrigin, for document: FileCore.FileDocument) -> Bool {
+        !isClosed && pendingSelection == origin && origin.matches(document)
+    }
+
+    func cancelSelection(_ origin: SelectionOrigin) {
+        guard pendingSelection == origin else { return }
+        pendingSelection = nil
+    }
+
+    func failSelection(_ origin: SelectionOrigin) {
+        guard !isClosed, pendingSelection == origin else { return }
+        selectionFailed = true
     }
 
     /// Called after the panel returns. Both its receipt and the document are checked against the pre-panel origin
@@ -81,13 +102,13 @@ final class PreviewResourceWindowState {
     ) async throws {
         guard !isClosed, pendingSelection == origin,
               selection.requestedDocumentURL == origin.documentURL,
-              let document = currentDocument(), origin.matches(document)
+              let document = currentDocument(), origin.matches(document), !Task.isCancelled
         else { throw PreviewResourceAdmissionError.revoked }
         let backing = try await PreviewDirectoryGrantBacking.acquire(
             selection: selection, currentDocumentURL: origin.documentURL, epoch: origin.id
         )
         guard !isClosed, pendingSelection == origin,
-              let current = currentDocument(), origin.matches(current)
+              let current = currentDocument(), origin.matches(current), !Task.isCancelled
         else {
             backing.revoke()
             throw PreviewResourceAdmissionError.revoked
@@ -180,6 +201,7 @@ final class PreviewResourceWindowState {
     private func revokeCurrent() {
         let hadAuthority = pendingSelection != nil || attachment != nil || !contexts.isEmpty
         pendingSelection = nil
+        selectionFailed = false
         for consumer in Array(contexts.keys) {
             retire(consumer)
         }

@@ -28,8 +28,8 @@ private struct SecuredHTMLPage {
     var crashReloads = 0
 }
 
-/// An opt-in saved-HTML host. Each accepted render replaces its child WKWebView, configuration and immutable
-/// scheme handler. The existing HTML preview remains active until the whole #121 grant flow passes acceptance.
+/// Saved-HTML preview. Each accepted render replaces its child WKWebView, configuration and immutable scheme
+/// handler. Local subresources require this document window's explicit, still-current folder attachment.
 struct SecuredHTMLPreviewView: NSViewRepresentable {
     let document: FileCore.FileDocument
     let tabID: UUID

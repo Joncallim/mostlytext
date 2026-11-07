@@ -1,0 +1,7 @@
+{
+  "run": 42359123013,
+  "source": "4b6717905aaabb4053f20589ec323905d86dcef6",
+  "checkout": "b61451098b8b5c068e13b20853e55414cee9a036",
+  "sha256": "c5cc3c810256367dbbcb326efa43dc6e8642df37ac4f736be3e2c891a42d1b06",
+  "scope": "Actual observed canonical app-hosted test topology only, before Preview helper semantic validation. Not Preview native qualification."
+}

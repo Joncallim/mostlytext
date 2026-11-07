@@ -106,6 +106,45 @@ struct PreviewResourceWindowStateTests {
         owner.close()
     }
 
+    @Test func cancellationAfterBackingAcquisitionCannotPublishAFolderGrant() async throws {
+        let folder = try makeFolder()
+        defer { try? FileManager.default.removeItem(at: folder) }
+        let document = FileDocument(fileURL: folder.appendingPathComponent("story.md"))
+        let documentURL = try #require(document.fileURL)
+        let selection = try #require(PreviewResourceFolderSelection.fixture(
+            documentURL: documentURL, folderURL: folder
+        ))
+        let owner = PreviewResourceWindowState()
+        defer { owner.close() }
+        let origin = try #require(owner.beginSelection(for: document))
+        var reads = 0
+        var request: Task<Bool, Never>?
+        request = Task { @MainActor in
+            do {
+                try await owner.install(selection, from: origin) {
+                    reads += 1
+                    if reads == 2 {
+                        request?.cancel()
+                    }
+                    return document
+                }
+                return true
+            } catch PreviewResourceAdmissionError.revoked {
+                return false
+            } catch {
+                Issue.record("Unexpected acquisition error: \(error)")
+                return false
+            }
+        }
+        let pending = try #require(request)
+        #expect(await pending.value == false)
+        #expect(reads == 2, "Cancellation must occur after the actual backing acquisition")
+        #expect(!owner.hasGrant(for: document))
+        let fresh = try #require(owner.beginSelection(for: document))
+        try await owner.install(selection, from: fresh) { document }
+        #expect(owner.hasGrant(for: document), "An uncancelled current choice must still succeed")
+    }
+
     private func makeFolder() throws -> URL {
         let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)

@@ -1,0 +1,8 @@
+{
+  "binary_architectures": [
+    "arm64"
+  ],
+  "app_sha256": "67f6dd5d7b266e5c68377a55853862aa8406cea08ab16d2dc9a58ff3374c9eb1",
+  "scope": "Actual unsigned Release compilation only; no local native execution",
+  "normal_full_ci": "byte-identical to7df89ac4; universal Release builds unchanged"
+}

@@ -1,0 +1,9 @@
+{
+  "run": 42359122979,
+  "head": "4b6717905aaabb4053f20589ec323905d86dcef6",
+  "checkout": "b61451098b8b5c068e13b20853e55414cee9a036",
+  "zip_sha256": "079d8a713c9c6b6d5d4aaa6e228cefdded4eef159df2274c644ef9fbbd7eb23b",
+  "entry": "build-and-test/13_Build app + CLI.txt",
+  "entry_sha256": "7d514ecddddc973f3100096cc645c6d54b14a1e2242b5d8e222f22e9ddb5ddb7",
+  "scope": "Actual Xcode26.0.1 Debug link-step evidence: main executable plus MacDown2.debug.dylib and __preview.dylib. Not downloaded historic binary bytes."
+}
