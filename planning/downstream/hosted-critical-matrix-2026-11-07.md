@@ -203,3 +203,30 @@ actual verdict and no omitted/extra/retargeted case. No unchanged failure retry
 or weakened assertion/deadline/positive. Follow any real failure with actual
 AX/xcresult diagnosis and canonical-issue ownership. Even a38-case pass leaves
 the six additional/repeated/final candidate and account/artifact gates distinct.
+
+## Batch source verification before first publication
+
+The fixed parser passes six actual-corpus controls: preserved SDK bytes and all
+ten partitions; missing/duplicate/extra/disabled IDs; changed target/suffix;
+errors/unknown schema/duplicate JSON keys; wrong expected set/batch; and real
+plan omission/duplication/reordering/retargeting. Every restoration recovers the
+same exact38 set. It binds the actual source, raw path/SHA and qualified main.
+
+Eight batch admission/outcome controls pass: actual host-before-ancestry/plan/
+receipt ordering with a removed-guard intercepted-read counterexample; held and
+optimized refusal; attempted/retargeted receipt refusal before product/native
+commands; actual retained before-fix geometry failure versus after-fix pass;
+zero/multiple/skipped/expected/boolean counts; wrong/repeated/restarted case;
+and timeout/cancel/forced-cleanup/mismatched-exit refusal. These use the actual
+retained raw native receipts/logs for their positive/failure examples, with
+explicit counterexamples, not a fabricated happy-path schema. The attempt flag
+is frozen before source/product/positive commands, including pre-positive errors.
+
+Existing three public admission and nine inventory controls also pass. Python
+AST, workflow YAML, every workflow script reference/fixed batch argument, original
+limits, fresh source Compliance and diff checks pass. Initial local generation-
+needle and stale copied workflow-reference mistakes were caught/corrected before
+publication; no failed invocation is claimed as passing. All product/original
+UI tests, existing bootstrap/preparer/private control sources, project and pins
+remain byte-identical to actual main210f. This is source/controller verification;
+all ten first batch outcomes and exact per-case independent review remain pending.
