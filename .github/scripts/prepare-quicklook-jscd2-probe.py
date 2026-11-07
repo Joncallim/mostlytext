@@ -130,6 +130,16 @@ def reference_module(root, fixture):
     record={'command':arguments,'source_sha256':digest(fixture/'reference.cjs')}
     with Path(executable).open('rb') as stream:record['binary_sha256']=hashlib.file_digest(stream,'sha256').hexdigest()
     try:
+        control_command=[executable,str(fixture/'clone-counterexamples.cjs'),str(fixture/'Resources/host.js')]
+        control=subprocess.run(control_command,capture_output=True,timeout=5)
+        (root/'reference-copy-controls.log').write_bytes(control.stdout+control.stderr)
+        record['copy_controls']={'command':control_command,'returncode':control.returncode,
+                                 'source_sha256':digest(fixture/'clone-counterexamples.cjs')}
+        if control.returncode or control.stderr:raise RuntimeError('Actual reference copy-control harness failed')
+        observed_controls=json.loads(control.stdout);record['copy_controls']['result']=observed_controls
+        if (observed_controls['passed']!=12 or observed_controls['failed']!=0
+                or len(observed_controls['cases'])!=12 or not all(x['passed'] for x in observed_controls['cases'])):
+            raise RuntimeError('All12actual BufferSource view/byte controls must pass')
         actual=subprocess.run(arguments,capture_output=True,timeout=45)
         (root/'reference-module.log').write_bytes(actual.stdout+actual.stderr)
         record['returncode']=actual.returncode
@@ -139,6 +149,10 @@ def reference_module(root, fixture):
             raise RuntimeError('Require real unchanged D2 reference SVG')
         expected={name:digest(fixture/'Resources'/f'{name}.js') for name in ['host','d2-browser','control']}
         if result['assets']!=expected:raise RuntimeError('Reference used different engine/adapter assets')
+        svg=(root/'reference-actual.svg').read_bytes()
+        if len(svg)!=result['svg_bytes'] or hashlib.sha256(svg).hexdigest()!=result['svg_sha256']:
+            raise RuntimeError('Actual reference SVG bytes differ from their result identity')
+        record['actual_reference_svg_sha256']=digest(root/'reference-actual.svg')
         return record
     except subprocess.TimeoutExpired as error:
         (root/'reference-module.log').write_bytes((error.stdout or b'')+(error.stderr or b''))

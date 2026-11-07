@@ -1,0 +1,47 @@
+{
+  "head": "e8c45c57c34ef081e16865d44c4405627952166f",
+  "records": [
+    {
+      "file": "00-linux-first-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/d2-linux-reference-20261108/copy-e8c45c57/linux-first-run.json",
+      "bytes": 12498,
+      "sha256": "3c9a6c6ee0fcf5a07fb1b240e86563185cac3a40cc541c53cc0de55dff254cd1"
+    },
+    {
+      "file": "01-linux-first-artifacts.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/d2-linux-reference-20261108/copy-e8c45c57/linux-first-artifacts.json",
+      "bytes": 765,
+      "sha256": "3518cb027407167cc8cbec7053ab0ad631e014c3af52354a216ab842ad90451d"
+    },
+    {
+      "file": "02-copy-counterexamples-independently-verified.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/d2-linux-reference-20261108/copy-e8c45c57/copy-counterexamples-independently-verified.json",
+      "bytes": 451,
+      "sha256": "a4ef87ceac9cfd6646ad8262dbe3351a57e1be5826d030c07651a10f6a58c504"
+    },
+    {
+      "file": "03-diagnostic-receipt.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/d2-linux-reference-20261108/copy-e8c45c57/linux-first-artifact/fixed-d2-linux-reference-first/diagnostic-receipt.json",
+      "bytes": 8811,
+      "sha256": "2a5c1bfcf1a6551f38d307ee9d11c5fd6d427cd736b46196579b828986446368"
+    },
+    {
+      "file": "04-clone-counterexamples.log.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/d2-linux-reference-20261108/copy-e8c45c57/linux-first-artifact/fixed-d2-linux-reference-first/clone-counterexamples.log",
+      "bytes": 1570,
+      "sha256": "95d5b9536a0cd53ce657a4f7ea5c7ed7bded7b77cd68566ab74895c1b10f3dd2"
+    },
+    {
+      "file": "05-reference-output.log.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/d2-linux-reference-20261108/copy-e8c45c57/linux-first-artifact/fixed-d2-linux-reference-first/reference-output.log",
+      "bytes": 845,
+      "sha256": "126c9a07ef54c0840b788745fdb4775bafd6ea5a6f205950ae3063a230754d11"
+    },
+    {
+      "file": "06-reference-phases.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/d2-linux-reference-20261108/copy-e8c45c57/linux-first-artifact/fixed-d2-linux-reference-first/reference-phases.json",
+      "bytes": 1123,
+      "sha256": "ed35dcf69576ee634c06c59688a1762356252fa5da62a98e80966b47b9727417"
+    }
+  ]
+}

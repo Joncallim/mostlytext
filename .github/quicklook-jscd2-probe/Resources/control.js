@@ -5,6 +5,7 @@ Bf = function () {
   __hostStage('wasm-unpack-start');
   const value = originalWasmUnpack();
   __hostStage('wasm-unpack-end');
+  __hostStage('wasm-type-' + Object.prototype.toString.call(value).slice(8,-1).toLowerCase());
   return value;
 };
 globalThis.__d2Result = null;

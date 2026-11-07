@@ -47,7 +47,10 @@
   }};
   function clone(value) {
     if (value instanceof ArrayBuffer) return value.slice(0);
-    if (value instanceof Uint8Array) return value.slice();
+    if (ArrayBuffer.isView(value)) {
+      const buffer = value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength);
+      return value instanceof DataView ? new DataView(buffer) : new value.constructor(buffer);
+    }
     if (Array.isArray(value)) return value.map(clone);
     if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([k,v]) => [k,clone(v)]));
     return value;

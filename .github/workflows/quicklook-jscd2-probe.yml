@@ -76,6 +76,7 @@ jobs:
             ${{ runner.temp }}/mostlytext-qljscd2/*.txt
             ${{ runner.temp }}/mostlytext-qljscd2/*.plist
             ${{ runner.temp }}/mostlytext-qljscd2/*.md
+            ${{ runner.temp }}/mostlytext-qljscd2/*.svg
             ${{ runner.temp }}/mostlytext-qljscd2/compiled-inputs/**
             ${{ runner.temp }}/mostlytext-qljscd2/actual-ui-attachments/**
             ${{ runner.temp }}/mostlytext-qljscd2/fixture/**

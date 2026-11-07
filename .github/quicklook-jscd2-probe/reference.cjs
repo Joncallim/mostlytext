@@ -40,6 +40,7 @@ for (const name of ['host', 'd2-browser', 'control']) {
   if (!result?.ok || transformed.length !== 1 || !result.controls.timer) throw Error(JSON.stringify(result));
   const svg = result.svg;
   if (Buffer.byteLength(svg) > 65536) throw Error('SVG byte boundary');
+  fs.writeFileSync(path.join(fixture, '..', 'reference-actual.svg'), svg);
   process.stdout.write(JSON.stringify({engine: process.version, assets, worker_transform: transformed[0],
     svg_bytes: Buffer.byteLength(svg), svg_sha256: crypto.createHash('sha256').update(svg).digest('hex'),
     controls: result.controls, real_d2_svg: true, diagnostic_only: true, qualification_candidate: false}));

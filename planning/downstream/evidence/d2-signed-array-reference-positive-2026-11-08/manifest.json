@@ -1,0 +1,56 @@
+{
+  "head": "ff92199387fec0ef650103a62f36e785fc78f4fd",
+  "run": 42416702780,
+  "conclusion": "success",
+  "native_qualification": false,
+  "records": [
+    {
+      "file": "00-linux-first-run.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/d2-linux-reference-20261108/repaired-ff921993/linux-first-run.json",
+      "bytes": 12495,
+      "sha256": "e7a4de0e65d7b2c12f33904591c418fe19c258d162deeef6c6762895afdcda69"
+    },
+    {
+      "file": "01-linux-first-artifacts.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/d2-linux-reference-20261108/repaired-ff921993/linux-first-artifacts.json",
+      "bytes": 765,
+      "sha256": "747876116243e817dca13a2b6f060b8628d454bb0e6c3c3372b76d7c8d5ca50a"
+    },
+    {
+      "file": "02-repaired-linux-independently-verified.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/d2-linux-reference-20261108/repaired-ff921993/repaired-linux-independently-verified.json",
+      "bytes": 1047,
+      "sha256": "07bbcd0c569474ecce0487f37f2ffa2e402b10fab1b77bb283e521118baa2d35"
+    },
+    {
+      "file": "03-verify-repaired-linux.py.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/d2-linux-reference-20261108/repaired-ff921993/verify-repaired-linux.py",
+      "bytes": 3823,
+      "sha256": "98f74fe8a5182f107ae8c8c77cea0fdecb1b5ce5df248bb9b128d2d9c7d0c24b"
+    },
+    {
+      "file": "04-diagnostic-receipt.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/d2-linux-reference-20261108/repaired-ff921993/linux-first-artifact/fixed-d2-linux-reference-first/diagnostic-receipt.json",
+      "bytes": 10423,
+      "sha256": "7ad8a7cbbba0ab50ebe458f57be54043ca4f747ec4744d98fe436b088e7842eb"
+    },
+    {
+      "file": "05-clone-counterexamples.log.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/d2-linux-reference-20261108/repaired-ff921993/linux-first-artifact/fixed-d2-linux-reference-first/clone-counterexamples.log",
+      "bytes": 1765,
+      "sha256": "a089b1d921cba2a79af211ca2ee7037ba0e0fd46ae6b0b8a9da98bd01349666a"
+    },
+    {
+      "file": "06-reference-output.log.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/d2-linux-reference-20261108/repaired-ff921993/linux-first-artifact/fixed-d2-linux-reference-first/reference-output.log",
+      "bytes": 698,
+      "sha256": "2e3e9e2218dd26c85a0ac87398b4c62b8dc801437723ec8082f4b3884a03726c"
+    },
+    {
+      "file": "07-reference-phases.json.gz",
+      "original": "/Volumes/Fast SSD/CORTANA-Builds/d2-linux-reference-20261108/repaired-ff921993/linux-first-artifact/fixed-d2-linux-reference-first/reference-phases.json",
+      "bytes": 1973,
+      "sha256": "c0bb6700de0e76ecc1968328e54b843123a548a778cefeededb3ee14b7bb9c17"
+    }
+  ]
+}
