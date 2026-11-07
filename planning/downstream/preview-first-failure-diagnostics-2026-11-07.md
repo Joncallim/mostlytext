@@ -131,3 +131,25 @@ initial/denied/granted generations as passive phase observations. No original55
 assertion, payload, fixture, deadline, controller/result criterion or product
 source changes. A materially corrected first staged run remains diagnostic-only;
 its success cannot waive fc29 or prove its image-copy cause. No unchanged retry.
+
+## Observe the real initial file binding before the isolated grant invariant
+
+Sourcea276 first42388051515 remains FAILED and fully retained: original55, image/
+selection and revision mutation/restoration pass; stagedB has exactly one failure
+at line47, generation0-to-1. Actual initial/denied/granted prints are0/0/1. The
+image-copy assertion does not fail. Moving the snapshot did not exclude concurrent
+initialization. Do not claim the callback, original image cause or a repair.
+
+FileDocument initialization has no lastKnownRevision. The real external monitor
+may adopt a matching physical baseline and advance generation without changing
+source. That is a source-supported possible transition, not a reconstructed
+callback from the two failed runs. To isolate the grant operation, observe the
+actual initial lastKnownRevision becoming present before observing the denied
+copy. Use the EXISTING same5second pre-grant deadline for both the baseline and
+denied-copy stages; no extra wait budget, fixed timing padding, mock baseline or
+forced model state. Require the real baseline, initial id/epoch/exact source,
+then unchanged post-grant generation/id/epoch/source and real PNGcopy. Add only
+passive phase prints for baseline presence and actual afterObservationContextHandled
+callbacks via its existing test observation hook; clear that hook in cleanup.
+No original55/product/fixture/controller/workflow/pin change. A pass remains
+diagnostic-only and cannot waive fc29's failed image copy or qualify activation.

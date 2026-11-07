@@ -1,0 +1,50 @@
+{
+  "source": "a2768a40c1f4ac28b93b1008b0364e445a080c22",
+  "first_run": 42388051515,
+  "records": [
+    {
+      "original": "observed-denied-anchor-first-run.json",
+      "compressed": "observed-denied-anchor-first-run.json.gz",
+      "bytes": 12493,
+      "sha256": "40bbcfabd713eeac4a7ccd3b5febb835e1579a78ddeab3c43daaa2d342a50881"
+    },
+    {
+      "original": "observed-denied-anchor-first-artifacts.json",
+      "compressed": "observed-denied-anchor-first-artifacts.json.gz",
+      "bytes": 778,
+      "sha256": "d892cd90f686abec9ef86ca819c3a50941276ac1533efa0d103c2f20128014c4"
+    },
+    {
+      "original": "observed-denied-anchor-first-staged-independently-verified.json",
+      "compressed": "observed-denied-anchor-first-staged-independently-verified.json.gz",
+      "bytes": 2650,
+      "sha256": "49408cedf90a13399585031af226a26cf1d6ccb7ec89d9ef9c65fb54a99ae83d"
+    },
+    {
+      "original": "observed-denied-anchor-first-artifact--preview-grant-app-tests-Debug-revision-independently-verified.json",
+      "compressed": "observed-denied-anchor-first-artifact--preview-grant-app-tests-Debug-revision-independently-verified.json.gz",
+      "bytes": 17972,
+      "sha256": "e523ede62bacada648f8fb1b0bb68b5b72f427c90cedc92aca9f75ad05afedf4"
+    },
+    {
+      "original": "verify-first-original.py",
+      "compressed": "verify-first-original.py.gz",
+      "bytes": 13705,
+      "sha256": "5cc741f7ce56b859686bd53cd61e5022e0167b3409ea7a2873c4077ef15449d1"
+    },
+    {
+      "original": "verify-first-staged.py",
+      "compressed": "verify-first-staged.py.gz",
+      "bytes": 3608,
+      "sha256": "048c2c7c7ae9c8f3c9854c2b94b202fd933706325f637ce62362a45dd38903ce"
+    },
+    {
+      "original": "observed-denied-anchor-first-artifact/preview-grant-app-tests-Debug-revision/delayed-grant-diagnosis/probe.log",
+      "compressed": "original-staged-probe.log.gz",
+      "bytes": 9288,
+      "sha256": "146f8edca1cf9c1e66bd15b77566f51ba40bc38b5487ee5d3aa4a6b862e8d95b"
+    }
+  ],
+  "whole_original_log_archive_sha256": "3cd758f0a8a815627aa40e643ebac9a840bf1018c88de0e53200343237177388",
+  "scope": "Original55/selection/revisionmutant/restoration pass; stagedB fails onlygeneration0to1, bothphaseobservationsinitial0/denied0/granted1 retained. Imagecopyassertion does notfail. No callback/imagecause proved; no qualification or unchanged retry."
+}
