@@ -1,8 +1,8 @@
 # Remaining engineering and acceptance ownership — 7 November 2026
 
-## Current checkpoint — 7 November 2026, after PR133
+## Current checkpoint — 7 November 2026, after PR134
 
-Actual main `56725f941f3ee8f23b6255432c229226eff8e63f` and the live issue audit
+Actual main `38ccd5d533938c4dbc31f01d9dabbc72025adc71` and the live issue audit
 contain **16 open issues and 161 unchecked original checkbox rows**. No remaining
 whole issue has complete closure proof. These rows are acceptance criteria;
 prose-only issues retain their original completion requirements too.
@@ -53,8 +53,15 @@ compare generation at the actual denied-copy boundary immediately before grantin
 retaining initial id/epoch/UTF8 checks and the original post-grant invariant. That
 first corrected diagnostic is pending; no callback or original image cause is
 proved, no old failure is waived and neither diagnostic can authorize activation. [PR134](https://github.com/Joncallim/mostlytext/pull/134)
-contains only a three-line line-offset capacity reservation against main 567;
-complete first hosted qualification remains pending. No sole performance cause,
+is integrated at actual main `38ccd5d5`. Its three-line line-offset capacity
+reservation passes all five first workflows: complete CI reports 3,719 package/
+536 suites and 680 app/143 suites, all four builds, strict style, metadata/catalog
+and pins. Both complete theme selections report 1,087 tests/145 suites passed,
+including the original 50 ms / 10 MB line-index keystroke assertion, original bitmap
+counterexamples and both orientation mutant/restoration pairs. Both strict
+replays/Debug debugger and all six public CLI comparisons pass. Original opt-in
+skipped declarations are unchanged and separately retained. See the
+[exact source/result/merge packet](downstream/evidence/line-index-capacity-qualified-2026-11-07/README.md). No sole performance cause,
 constant-time claim, larger deadline, skipped case or release waiver is accepted.
 
 Signing/notarization, installed/trusted-cold CLI, exact final artifact, independent
