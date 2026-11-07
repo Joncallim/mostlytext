@@ -1,0 +1,31 @@
+name: Delayed startup scene observation control
+permissions:
+  contents: read
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/startup-scene-probe/**'
+      - '.github/scripts/run-startup-scene-probe.py'
+      - '.github/workflows/startup-scene-probe.yml'
+concurrency:
+  group: startup-scene-probe-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  native-observation:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: macos-26
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Compare the same delayed startup with an explicitly observing Scene
+        run: python3 .github/scripts/run-startup-scene-probe.py
+      - name: Preserve both actual controls including a refuted hypothesis
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: startup-scene-observation
+          path: |
+            ${{ runner.temp }}/mostlytext-scene/*.json
