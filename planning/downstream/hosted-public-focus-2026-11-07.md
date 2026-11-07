@@ -145,3 +145,48 @@ The normal app build uses the already qualified native-CLI Release recipe,
 including ARM selection and Xcode's ad-hoc signing of app/embedded helper.
 The controller retains parse-as-library compilation. No separate unsigned/
 manual nested-helper signing path or product test configuration is introduced.
+
+## First real normal-app outcome and bounded startup-observation investigation
+
+Actual main now02bc8c1c2a14f6044ac61f873b49f103dcb4efa2 (PR118 static
+platform probe, root product still byte-identical b83). First source6301b0fb
+run42324468982 genuinely passes the harmless typed Focus42/button counter
+control (one pass/zero skips) and actual console/US keyboard/display checks.
+The unchanged normal Release app launches, its actual kernel peer is ready,
+and public mostlytext opens the generated document. Focus test then FAILS
+before folder selection: actual File menu contains only New Window/Close,
+and the Format/Folder/Commands menus are absent. The captured video frame
+and accessibility tree agree; this is not merely a stale Open Folder selector.
+Owned focus return65/28.2667s, no timeout/cancel, actual app identity cleanup
+succeeds. Keep the entire original receipt/log/result and do not re-label
+this run a focus pass. No formatting action executed.
+
+Source inspection: MacDown2App reads published readiness directly from its
+NSApplicationDelegateAdaptor at the App body, captures false into commands
+and scene environment before asynchronous migration finishes. Delegate
+readiness later becomes true (the normal server requires it), while actual
+menus remain the original gated-out composition. Apple documents the
+observable delegate's environment injection and explicit observing consumers;
+it does not substitute an observed consumer for this captured value.
+https://developer.apple.com/documentation/swiftui/nsapplicationdelegateadaptor
+
+Before any product correction, a named small standalone hosted SwiftUI
+observation probe will compare that actual structural pattern with a Scene
+that explicitly observes the same delegate. Both variants begin false, settle
+asynchronously, close only their own placeholder, and record actual runtime
+menu contents within the same fixed five-second observation window. This
+is a harmless private generated app on the disposable runner, not a product
+launch or owner test. Require old-pattern absence and corrected-pattern
+presence, exact input hashes and normal owned execution. If that causal
+control fails, stop and inspect rather than applying the hypothesized fix.
+
+If proved, the narrow product correction is to retain the one delegate
+adaptor in the App and pass its same instance into an explicit ObservedObject
+Scene containing the existing WindowGroup/Settings/auxiliary scenes. Read
+ready and existing environment/command conditions inside that observing
+Scene. No early model construction, migration bypass, stored acknowledgement,
+manual AppKit menu duplicate, window ownership change or test launch flag.
+Then require the original full hosted focus journey unchanged and complete
+ordinary current-head CI before merge. This architecture amendment expressly
+supersedes the original no-product-source-change assumption only for this
+proved startup-observation repair; all original bounds/assertions remain.
