@@ -108,3 +108,12 @@ The queued-open candidate a483f80b may be assembled only after all its first ori
 ## Prepared adaptive layout
 
 The view now computes its existing three labels once per body evaluation. Whole fixed-width items prefer one row, then two rows; only beyond both fits does a horizontal native overflow retain the complete two-row content. Every original identifier, action, help string, optional field and palette remains. No hard-coded height or line limit hides overflow. Existing actual public geometry assertions are byte-identical to the genuine failed8e2c source. Swift parse, strict changed-source format/lint, source manifest38/12+6, and catalog/Transifex mapping validation pass locally without app execution. This is prepared source, not native success. Keep publication held until the standalone queued-open candidate first original native outcomes are all retained; then reconcile the written assembly conditions and qualify the actual combined source.
+
+Strict Swift6 concurrency type checking of the complete changed status view and
+actual four helper views also passes against the installed SDK. It uses retained
+module imports and the two literal existing encoding/line-ending enum declarations
+extracted from their larger menu files. The proof records exact working source
+and enum inputs. Initial invocations lacked framework/C module maps and those
+root declarations; all preparation failures are retained locally. No app build,
+registration, linked product or native runtime is performed; hosted complete
+candidate compilation and UI qualification remain required.
