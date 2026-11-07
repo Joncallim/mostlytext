@@ -75,3 +75,19 @@ ordinary expected-path reads share the same explicit detached operation by sourc
 inspection, rather than being claimed as individually sampled callbacks. If the
 proof needs broader instrumentation or a changed I/O policy, stop and revise this
 contract before changing production source. Any native failure stops readiness.
+
+## First SDK compilation failure and local correction contract
+
+Both native jobs42391191720 atfada82cd fail before execution: the Xcode26 SDK
+marks Thread.isMainThread unavailable from an asynchronous function body, even
+though the test is MainActor-isolated. The complete first native logs/receipts
+are retained before correction. FullCI/CLI/Compliance first outcomes remain frozen
+atfada until complete; do not publish or execute this local correction before
+all four original workflow outcomes are retained. No native phase is inferred.
+
+Read that identical property in a synchronous MainActor helper called directly
+from the same async MainActor test, with no suspension in between. Keep the
+genuine physical main-thread precondition, not a weaker actor-only substitution.
+All actual file sizes, read hook, fidelity/hash/identity checks, counterexample,
+owned lifecycle, configurations and limits remain unchanged. This is an SDK
+calling-context correction to test setup, not a production I/O repair or waiver.

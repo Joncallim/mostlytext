@@ -1,0 +1,44 @@
+{
+  "source": "fada82cd42b582cea6c7198f588e6f0430f3aa06",
+  "first_native_workflow": 42391191720,
+  "records": [
+    {
+      "original": "native-first-run.json",
+      "compressed": "00-native-first-run.json.gz",
+      "bytes": 12973,
+      "sha256": "f8a8f15399e3a491ba61ce37b77b6ab3d6a16fa28e5d731c24804c29b3b289c6"
+    },
+    {
+      "original": "native-first-artifacts.json",
+      "compressed": "01-native-first-artifacts.json.gz",
+      "bytes": 1477,
+      "sha256": "a088fdd1c42e4068943b6332eccca38c7eec166d3ec14525d2c71fde10ad6581"
+    },
+    {
+      "original": "native-first-artifact/file-probe-executor-debug/receipt.json",
+      "compressed": "02-receipt.json.gz",
+      "bytes": 245063,
+      "sha256": "3130aa9418903002ec5e6dc24cc55a5acc44796c3eb41d71d2b2396fb234b01f"
+    },
+    {
+      "original": "native-first-artifact/file-probe-executor-debug/original/compile.log",
+      "compressed": "03-compile.log.gz",
+      "bytes": 13358,
+      "sha256": "6d5f1d70aa3b16b5d5e56447b79e5613f63c893ec8c7d5521827876767e125cd"
+    },
+    {
+      "original": "native-first-artifact/file-probe-executor-release/receipt.json",
+      "compressed": "04-receipt.json.gz",
+      "bytes": 245071,
+      "sha256": "ddcd564b6802d57a68e5801af24edba9d49fe49dd4110c24ae2b47b5e4026d80"
+    },
+    {
+      "original": "native-first-artifact/file-probe-executor-release/original/compile.log",
+      "compressed": "05-compile.log.gz",
+      "bytes": 10243,
+      "sha256": "2a5a560f0d52b3f4544e395f329b2528f33f116b816eeea9701b92560ce82452"
+    }
+  ],
+  "complete_original_native_workflow_logs_sha256": "8894e3e864c12a226ab0c59f436fbfe95807db6d5a1e0dcb3e62bc1f2a3c3655",
+  "scope": "First both configurations fail compilation at SDKnoasync Thread.isMainThread use. No native source/counterexample/restoration ran. All4 first workflow outcomes remain frozen/pending; this local correction is not published or executed."
+}
