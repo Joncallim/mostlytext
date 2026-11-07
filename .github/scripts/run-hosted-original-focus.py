@@ -12,7 +12,7 @@ import subprocess
 import sys
 
 SELECTED = "MacDown2UITests/EditingAssistsUITests/testFormattingMenuTracksEditorSidebarFindAndEditorFocus"
-QUALIFIED_MAIN = "PENDING_PR119_QUALIFICATION"
+QUALIFIED_MAIN = "e90127e9f75df20b8be1179e6ba7730651775cb2"
 
 
 def main():
