@@ -1,0 +1,100 @@
+name: Genuine PDF pagination qualification
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches: [main, master, integration-final]
+    paths:
+      - 'MacDown2/MacDown2/*PDF*.swift'
+      - 'MacDown2/MacDown2/*Export*.swift'
+      - 'MacDown2/MacDown2Tests/PDFExportAdapterTests.swift'
+      - 'MacDown2/Packages/MacDownKit/Sources/ExportService/**'
+      - 'MacDown2/Packages/MacDownKit/Package.resolved'
+      - 'MacDown2/project.yml'
+      - '.github/scripts/verify-pdf-pagination-probe.py'
+      - '.github/scripts/test-pdf-pagination-probe.py'
+      - '.github/scripts/run-owned-app-tests.py'
+      - '.github/scripts/test-run-owned-app-tests.py'
+      - '.github/workflows/pdf-pagination-probe.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: pdf-pagination-app-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pdf-pagination:
+    runs-on: macos-26
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Select deployment-matching Xcode and OS
+        run: |
+          set -euo pipefail
+          XCODE=$(ls -d /Applications/Xcode*.app | grep "26" | head -1 || true)
+          test -n "$XCODE"
+          test "$(sw_vers -productVersion | cut -d. -f1)" = 26
+          sudo xcode-select -s "$XCODE/Contents/Developer"
+          xcodebuild -version
+          sw_vers
+          git rev-parse HEAD
+      - name: Generate and pin the actual app project
+        id: pin
+        run: |
+          set -euo pipefail
+          brew untap aws/tap 2>/dev/null || true
+          brew install xcodegen
+          cd MacDown2
+          xcodegen generate
+          cd ..
+          MacDown2/scripts/pin-xcode-package-versions.sh
+      - name: Verify diagnostic ownership controls
+        run: |
+          python3 .github/scripts/test-run-owned-app-tests.py
+          python3 .github/scripts/test-pdf-pagination-probe.py
+      - name: Record exact application inputs and configuration
+        run: python3 .github/scripts/verify-pdf-pagination-probe.py "$RUNNER_TEMP/pdf-pagination-probe"
+      - name: Compile real app and test bundles
+        run: |
+          set -euo pipefail
+          xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
+            -configuration Release ENABLE_TESTABILITY=YES \
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE PDF_PAGINATION_PROBE' \
+            -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/pdf-pagination-app" \
+            -onlyUsePackageVersionsFromResolvedFile -enableCodeCoverage NO build-for-testing
+      - name: Execute all original PDF controls including real pagination and replacement
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/run-owned-app-tests.py "$RUNNER_TEMP/pdf-pagination-probe/diagnostics" \
+            "$RUNNER_TEMP/pdf-pagination-app/Build/Products/Release/MacDown2.app/Contents/MacOS/MacDown2" -- \
+            xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
+            -configuration Release ENABLE_TESTABILITY=YES \
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE PDF_PAGINATION_PROBE' \
+            -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/pdf-pagination-app" \
+            -onlyUsePackageVersionsFromResolvedFile -parallel-testing-enabled NO \
+            -only-testing:MacDown2Tests/PDFExportAdapterTests test-without-building \
+            | tee "$RUNNER_TEMP/pdf-pagination-probe/probe.log"
+      - name: Verify exact source and actual selected execution
+        if: always()
+        run: python3 .github/scripts/verify-pdf-pagination-probe.py "$RUNNER_TEMP/pdf-pagination-probe" --verify --require-result
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pdf-pagination-app-tests-Release
+          path: |
+            ${{ runner.temp }}/pdf-pagination-probe/receipt.json
+            ${{ runner.temp }}/pdf-pagination-probe/probe.log
+            ${{ runner.temp }}/pdf-pagination-probe/diagnostics/*.json
+            ${{ runner.temp }}/pdf-pagination-probe/diagnostics/*.sample.txt
+            ${{ runner.temp }}/pdf-pagination-probe/diagnostics/*.log
+          if-no-files-found: warn
+      - name: Verify immutable dependency locks
+        if: ${{ !cancelled() && steps.pin.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          MacDown2/scripts/pin-xcode-package-versions.sh --check
+          git diff --exit-code -- MacDown2/Packages/MacDownKit/Package.resolved
