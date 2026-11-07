@@ -1,0 +1,41 @@
+{
+  "scope": "Prior43e critical verifier used stale6139 output prefix for derived scratch summaries. Raw historical receipts/logs/xcresults were never modified. Preserve the previous derived bytes and restore each original summary strictly from its original raw xcresult and receipt. New4b verifier uses4b-only output names before execution. No native run or native status changed.",
+  "repairs": [
+    {
+      "path": "6139-external-conflict-close-original-actual-summary.json",
+      "previous_derived_sha256": "d1bf333ad1746c1dec8ea5d3a965ba43107c45f493128ed6e5cc2f960acab815",
+      "restored_from_original_raw_sha256": "7a1b8069667c58296d6813ca4ad881153ece527320caa42e860c7e85d333765a",
+      "original_checkout": "2c89329b065466b160faf68a7fa96148df7ad829"
+    },
+    {
+      "path": "6139-external-conflict-close-positive-actual-summary.json",
+      "previous_derived_sha256": "1b387b8aebbf226bbe924ff24375ac54863afb84c7e92a7b45ffc4507f38bb64",
+      "restored_from_original_raw_sha256": "003d2cf701cdf948a4812a46ee3cfa2af81154d1bc65f90876f4ef2d446c1f6a",
+      "original_checkout": "2c89329b065466b160faf68a7fa96148df7ad829"
+    },
+    {
+      "path": "6139-native-tabs-dirty-close-original-actual-summary.json",
+      "previous_derived_sha256": "792b965174a62d1b4403375d04909fa7e0a6d637ba055524a83004d7c1ff636a",
+      "restored_from_original_raw_sha256": "01d84e0cfc9d922fdfdbdc2b7de119bf506ab4bf27db5b1d38be6d3d8a9d239a",
+      "original_checkout": "2c89329b065466b160faf68a7fa96148df7ad829"
+    },
+    {
+      "path": "6139-native-tabs-dirty-close-positive-actual-summary.json",
+      "previous_derived_sha256": "2647e9988f3c3a15589393262a810a7999e711176de1acc6462ad52c7b304a20",
+      "restored_from_original_raw_sha256": "c7a3dafe04f349398565c1b02b04d68d3640024dcbb7920703cab8b57cfcec33",
+      "original_checkout": "2c89329b065466b160faf68a7fa96148df7ad829"
+    },
+    {
+      "path": "6139-native-tabs-quick-open-original-actual-summary.json",
+      "previous_derived_sha256": "065377681822ebe101dfca1a130a6044ad6bd609fb6d6ae485b1ca734ff71955",
+      "restored_from_original_raw_sha256": "47b3d6f785b2eff441174bcefb16ccaf19e040f92b3b59b834f6d8714bf3682f",
+      "original_checkout": "2c89329b065466b160faf68a7fa96148df7ad829"
+    },
+    {
+      "path": "6139-native-tabs-quick-open-positive-actual-summary.json",
+      "previous_derived_sha256": "003b88066b39ff1fdf803c6ff1eac6fe40dba0fdb5fe8fdff52fad7a32f3532a",
+      "restored_from_original_raw_sha256": "9f881d17c0bf24aa2a6b8c10390cb1c3dc1ded259aa9ed38efbc7eaa2eca62ac",
+      "original_checkout": "2c89329b065466b160faf68a7fa96148df7ad829"
+    }
+  ]
+}

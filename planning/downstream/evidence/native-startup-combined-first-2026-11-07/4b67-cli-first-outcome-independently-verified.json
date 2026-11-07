@@ -1,0 +1,29 @@
+{
+  "head": "4b6717905aaabb4053f20589ec323905d86dcef6",
+  "checkout": "b61451098b8b5c068e13b20853e55414cee9a036",
+  "full_source_hashes_verified": 1599,
+  "pins_verified": 24,
+  "owned_status": {
+    "returncode": 0,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 11.380484083000056,
+    "app_cleanup_requested": []
+  },
+  "criteria": {
+    "fresh_warm_file": true,
+    "configured_warm_file": true,
+    "missing_file_rejected": true,
+    "wait_completed_after_normal_quit": true,
+    "configured_stdin_acknowledged": true,
+    "invalid_utf8_rejected": true
+  },
+  "fresh_welcome_and_acknowledgement_raw_observations_verified": true,
+  "strict_actual_identity_arguments_and_normal_first_two_quits_verified": true,
+  "app_sha256": "bd4140bf0727fef5210824f9ebd4b167e7fd98b17d36ef7e45c41f12562b4d64",
+  "helper_sha256": "cd531acb01cf7d71a8673ed9f3d1b19826f542cef715b2f137232f67d8cb0cfb",
+  "post_force_cleanup_returned_pid": -1,
+  "live_matching_actual_peers_verified": 3,
+  "hosted_kernel_controls_verified": 6,
+  "scope": "All six actual CLI comparisons pass, fresh Welcome/key preserved, both normal Quits verified. Transport-only readiness opens prior connections; not cold/first-client/installed/owner/signed acceptance or saved stdin fidelity."
+}
