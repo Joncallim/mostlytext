@@ -1,0 +1,18 @@
+{
+  "head": "4b6717905aaabb4053f20589ec323905d86dcef6",
+  "actual_checkout": "b61451098b8b5c068e13b20853e55414cee9a036",
+  "actual_tree": "34ad6aa9b506f0b5ebab0a74789202b6a8d3b535",
+  "canonical_inputs_verified": 1622,
+  "pins": 24,
+  "generated_seed_driver_and_four_actual_compiled_downloads_verified": true,
+  "positive_and_readonly_observation_pass": true,
+  "first_adoption_UI_failed": true,
+  "failure": "Actual status Spaces: 4, expected imported2; original two native tabs, active recovery text observed before sole assertion; later readonly snapshot has no migration/Welcome window. Root native NSHostingController receives coordinator but no shared appSettings environment; status explicitly falls back to4. Source discrepancy and import publication independently checked; corrected native behavior remains unverified.",
+  "current_imported_editor_bytes_equal_original": true,
+  "initial_current_preferences_absent": true,
+  "plan_adopts_development": true,
+  "original_profile_identity_bytes_and_all_other_domains_unchanged": true,
+  "command_sentinel_absent": true,
+  "after_forced_cleanup_full_source_verified": true,
+  "normal_quit_relaunch_and_full_migration_complete": false
+}
