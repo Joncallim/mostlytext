@@ -1,0 +1,16 @@
+{
+  "baseline": "d7cff043750123aea66e50406884ca73917885af",
+  "reviewed_io_boundaries": {
+    "DocumentFileProbe.observe": "The complete synchronous metadata/read/hash/decode operation runs inside one detached utility task; its moved read hook immediately precedes synchronous FileStore.readSnapshot on that stack.",
+    "FileStore.readStableBytes": "Owned Data copy is bracketed by stable metadata checks, followed by SHA256; synchronous API intentionally uses caller context.",
+    "ExternalFileController.reopenWithEncoding": "Actual snapshot read runs in a detached userInitiated task before MainActor UI/state reconciliation.",
+    "WorkspaceModel.readConflictSnapshot": "Actual snapshot read runs inside a detached userInitiated task, retaining its afterRead hook in that same scope."
+  },
+  "source_sha256": {
+    "MacDown2/Packages/MacDownKit/Sources/FileCore/DocumentFileProbe.swift": "d5484c5edf1b116b453631374db28c41ae900f8ee38320d75d587a1545bbfe64",
+    "MacDown2/Packages/MacDownKit/Sources/FileCore/FileStore.swift": "d07881ef32d28061bd34e7bdf19dde5b1bf844c01dd7f63adde30aa1cee48799",
+    "MacDown2/MacDown2/ExternalFileController+Encoding.swift": "3ae52c444ea77ad9d7177444f1901dd836fb6f8b71644e5ba056312c4fcb83b2",
+    "MacDown2/Packages/MacDownKit/Sources/Workspace/WorkspaceModel+SaveConflict.swift": "63f79b2c963b4987e9cbb95362f0372554449dc59836b1cfb54af3b877376693"
+  },
+  "scope": "Read-only source boundary audit. Native physical-thread/hash counterexample and fullCI outcomes still pending; no all-FileStore-client or wholeE18/performance/finalartifact claim."
+}

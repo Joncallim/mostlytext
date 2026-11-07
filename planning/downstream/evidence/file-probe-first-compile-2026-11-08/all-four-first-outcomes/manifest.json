@@ -1,0 +1,84 @@
+{
+  "source": "fada82cd42b582cea6c7198f588e6f0430f3aa06",
+  "runs": {
+    "native": {
+      "id": 42391191720,
+      "head_sha": "fada82cd42b582cea6c7198f588e6f0430f3aa06",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    "full-ci": {
+      "id": 42391191642,
+      "head_sha": "fada82cd42b582cea6c7198f588e6f0430f3aa06",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    "cli": {
+      "id": 42391191620,
+      "head_sha": "fada82cd42b582cea6c7198f588e6f0430f3aa06",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "compliance": {
+      "id": 42391191625,
+      "head_sha": "fada82cd42b582cea6c7198f588e6f0430f3aa06",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    }
+  },
+  "records": [
+    {
+      "original": "native-first-run.json",
+      "compressed": "native-first-run.json.gz",
+      "bytes": 12973,
+      "sha256": "f8a8f15399e3a491ba61ce37b77b6ab3d6a16fa28e5d731c24804c29b3b289c6"
+    },
+    {
+      "original": "full-ci-first-run.json",
+      "compressed": "full-ci-first-run.json.gz",
+      "bytes": 12917,
+      "sha256": "3c2f23ab5293b8c52dfbcd1f9c98f228455bfd842f2ce86f732c52b2b7a1d544"
+    },
+    {
+      "original": "cli-first-run.json",
+      "compressed": "cli-first-run.json.gz",
+      "bytes": 12963,
+      "sha256": "8f8b76ddf2c9ff6ae95dad71c1fe65173b0f450385c51a783f8edc825362cfe2"
+    },
+    {
+      "original": "compliance-first-run.json",
+      "compressed": "compliance-first-run.json.gz",
+      "bytes": 12933,
+      "sha256": "c56c9f15edc7395e2801ffa60fad18ec583c88632e9a6d34c6784e2ecc46de1c"
+    },
+    {
+      "original": "build-and-test/7_Package build + tests.txt",
+      "compressed": "original-package-compile.log.gz",
+      "bytes": 151849,
+      "sha256": "bd313cf50d604c68881edc4ec6ad25011cdd77609dea029ccb3e4612ad6d395e"
+    }
+  ],
+  "whole_original_archives": {
+    "compliance-complete-first-workflow-logs.zip": {
+      "bytes": 41507,
+      "sha256": "92daef69a6484d3acd26f91e45d5783329b9e5ef8c719b3e9c9ca9e813e27366"
+    },
+    "full-ci-complete-first-workflow-logs.zip": {
+      "bytes": 130846,
+      "sha256": "e3219eab75c1a1f9d5d57b13f29d8614f6358bfdbb2619b2b33ac9dfe3412e06"
+    },
+    "native-complete-first-workflow-logs.zip": {
+      "bytes": 29206,
+      "sha256": "8894e3e864c12a226ab0c59f436fbfe95807db6d5a1e0dcb3e62bc1f2a3c3655"
+    },
+    "cli-complete-first-workflow-logs.zip": {
+      "bytes": 561540,
+      "sha256": "f7521e911f3c85b10741e8aa69f27be2105f9873c17a4e6b25ef0a475fd45de3"
+    }
+  },
+  "scope": "All4 first outcomes retained before corrected-source publication. Nativeboth/packagecompile fail atSDKnoasynccheck; no native thread/counterexample/restored or completepackage/app execution inferred. CLI/Compliance pass separately. All original outcomes/bytes retained."
+}
