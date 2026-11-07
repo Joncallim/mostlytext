@@ -10,6 +10,7 @@ import stat
 import subprocess
 import sys
 import time
+from native_cli_endpoint_probe import probe_endpoint
 
 
 def digest(path):
@@ -47,7 +48,9 @@ def main():
                "scope": "Hosted normal-app warm comparison; not signed, installed-state or owner acceptance"}
     tracked = subprocess.check_output(["git", "ls-files", "--", "MacDown2", ".github/scripts/native-cli-app-host.swift",
                                       ".github/scripts/run-native-cli-probe.py", ".github/workflows/native-cli-probe.yml",
-                                      ".github/scripts/run-owned-app-tests.py"], text=True).splitlines()
+                                      ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
+                                      ".github/scripts/native_cli_endpoint_probe.py",
+                                      ".github/scripts/test-native-cli-endpoint-probe.py"], text=True).splitlines()
     receipt["source_sha256"] = {p: digest(Path(p)) for p in tracked}
     receipt["pins"] = json.loads(Path("MacDown2/Packages/MacDownKit/Package.resolved").read_text())["pins"]
     current = None
@@ -136,13 +139,30 @@ def main():
         persist()
         return result
 
-    def wait_for_endpoint():
+    def wait_for_endpoint(application):
         runtime = Path(subprocess.check_output(["getconf", "DARWIN_USER_TEMP_DIR"], text=True).strip()).resolve()
         endpoint = runtime / ("mt-" + hashlib.sha256(identity.encode()).hexdigest()[:24]) / "s"
-        deadline = time.monotonic() + 10
-        while not endpoint.exists() and time.monotonic() < deadline:
-            time.sleep(0.05)
-        return endpoint.exists()
+        began = time.monotonic()
+        deadline = began + 10
+        observation = {"pid": application["pid"], "endpoint": str(endpoint), "attempts": [],
+                       "application_frames_sent": 0, "scope": "Live-peer transport readiness; not a document request"}
+        ready = False
+        while time.monotonic() < deadline:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                break
+            value = probe_endpoint(endpoint, application["pid"], timeout=min(0.05, remaining))
+            value["elapsed_seconds"] = time.monotonic() - began
+            if len(observation["attempts"]) < 256:
+                observation["attempts"].append(value)
+            if value["ready"]:
+                ready = True
+                break
+            time.sleep(min(0.05, max(0, deadline - time.monotonic())))
+        observation["ready"] = ready
+        receipt.setdefault("endpoint_readiness", []).append(observation)
+        persist()
+        return ready
 
     def observe_refusal(label, application):
         try:
@@ -177,11 +197,19 @@ def main():
 
     key = "com.joncallim.macdown2.hasCompletedFirstRun"
     try:
+        controls_path = temporary / "native-cli-endpoint-controls.json"
+        controls = json.loads(controls_path.read_text())
+        assert controls["passed"] and controls["tests"] == 6 and not controls["failures"] and not controls["errors"]
+        assert controls["module_sha256"] == receipt["source_sha256"][".github/scripts/native_cli_endpoint_probe.py"]
+        assert controls["script_sha256"] == receipt["source_sha256"][".github/scripts/test-native-cli-endpoint-probe.py"]
+        receipt["endpoint_probe_controls"] = controls
+        receipt["endpoint_probe_controls_sha256"] = digest(controls_path)
+        persist()
         before = command("first-run-key-before", ["defaults", "read", identity, key])
         assert before["returncode"] != 0, "Runner is not a fresh first-run domain"
         storage_snapshot("before-launch")
         current = app_action("launch")
-        receipt["first_run_endpoint_observed"] = wait_for_endpoint()
+        receipt["first_run_endpoint_observed"] = wait_for_endpoint(current)
         if receipt["first_run_endpoint_observed"]:
             require_welcome_without_acknowledgement("fresh-before-file", current)
         first = command("fresh-warm-file", [public, source])
@@ -196,11 +224,14 @@ def main():
         assert configured["returncode"] == 0
         command("first-run-key-after-configuration", ["defaults", "read", identity, key])
         current = app_action("launch")
-        ready = wait_for_endpoint()
+        ready = wait_for_endpoint(current)
         if not ready:
             observe_refusal("configured-refusal", current)
         assert ready, "Configured installation did not start its actual endpoint"
-        successes["configured_warm_file"] = command("configured-warm-file", [public, source])["returncode"] == 0
+        configured_file = command("configured-warm-file", [public, source])
+        successes["configured_warm_file"] = configured_file["returncode"] == 0
+        if configured_file["returncode"] == 5:
+            observe_refusal("configured-file-refusal", current)
         successes["missing_file_rejected"] = command("missing-file", [public, output / "does-not-exist.md"])["returncode"] == 4
         wait_process = subprocess.Popen([str(public), "--wait", str(source)], stdin=subprocess.DEVNULL,
                                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -215,11 +246,14 @@ def main():
         successes["wait_completed_after_normal_quit"] = wait_process.returncode == 0
         wait_process = None
         current = app_action("launch")
-        assert wait_for_endpoint()
+        assert wait_for_endpoint(current)
         stdin = "# Piped Markdown\r\n\r\nUnicode 🙂 e\u0301\r\n".encode()
         (output / "stdin-source.md").write_bytes(stdin)
         receipt["stdin_sha256"] = hashlib.sha256(stdin).hexdigest()
-        successes["configured_stdin_acknowledged"] = command("configured-implicit-stdin", [public], stdin)["returncode"] == 0
+        stdin_result = command("configured-implicit-stdin", [public], stdin)
+        successes["configured_stdin_acknowledged"] = stdin_result["returncode"] == 0
+        if stdin_result["returncode"] == 5:
+            observe_refusal("stdin-refusal", current)
         successes["invalid_utf8_rejected"] = command("invalid-utf8-stdin", [public], b"\xff")["returncode"] == 3
         assert digest(source) == source_digest and digest(executable) == receipt["app_sha256"]
         assert digest(helper) == receipt["helper_sha256"]

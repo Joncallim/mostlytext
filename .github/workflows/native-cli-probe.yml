@@ -8,6 +8,8 @@ on:
     paths:
       - '.github/scripts/native-cli-app-host.swift'
       - '.github/scripts/run-native-cli-probe.py'
+      - '.github/scripts/native_cli_endpoint_probe.py'
+      - '.github/scripts/test-native-cli-endpoint-probe.py'
       - '.github/workflows/native-cli-probe.yml'
       - 'MacDown2/**'
   workflow_dispatch:
@@ -45,6 +47,7 @@ jobs:
           cd ..
           MacDown2/scripts/pin-xcode-package-versions.sh
           python3 .github/scripts/test-run-owned-app-tests.py
+          python3 .github/scripts/test-native-cli-endpoint-probe.py --report "$RUNNER_TEMP/native-cli-endpoint-controls.json"
       - name: Compile normal locked Release app and hosted controller
         run: |
           set -euo pipefail
@@ -68,6 +71,7 @@ jobs:
           name: normal-release-public-cli
           path: |
             ${{ runner.temp }}/native-cli-owned/**
+            ${{ runner.temp }}/native-cli-endpoint-controls.json
             ${{ runner.temp }}/native-cli-proof/receipt.json
             ${{ runner.temp }}/native-cli-proof/*.md
             ${{ runner.temp }}/native-cli-proof/*.json

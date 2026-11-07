@@ -1,0 +1,9 @@
+{
+  "returncode": 0,
+  "binary_sha256": "bd95eff4758ff1c64310cb196a863a2b9a50f578f1d509f431d0e776ef0cb5d5",
+  "exact_production_journal_sources": 3,
+  "foundation_darwin_only_linkage": true,
+  "old_alias_refused_errno": 62,
+  "same_directory_physical_spelling_admitted": true,
+  "scope": "Exact primitive on generated private roots only; not owner app/GUI or native app-host failure errno proof"
+}
