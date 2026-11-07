@@ -152,3 +152,22 @@ reproduction/explanation of the original15second engine timeout. Correct the
 phase grammar to include digits and check every actual fixed/dynamic phase name
 against the actual reference script's boundary before publication. Retain the
 same engine, reference/native deadlines, authority and real-SVG requirements.
+
+Corrected phase-name source d24ad839 first native42414723487 still fails;
+Compliance42414723560 passes. Both complete firsts and28/19inputs are retained
+and independently verified. Exact13row phase history proves host and browser
+asset evaluation finish, worker Go/module setup finishes (~0.75s process uptime)
+and engine-await-ready begins. No message-init or asset-control-end is observed.
+The outer reference process reaches its unchanged45second timeout. Its original
+reference-module.json records TimeoutExpired; reference-module.log is absent
+because subprocess.run raised before the old output-write line. Native project/
+build/Finder remain NOT_RUN. This is not an observed native JavaScriptCore limit.
+
+Next bounded diagnosis wraps the actual frozen browser's existing global Bf
+WASM-unpack function only with before/after fixed markers and calls the original
+function unchanged. This distinguishes synchronous unpack from later readiness
+without replacing/decompressing/substituting any payload or increasing a limit.
+The exact browser asset bytes and original computation remain unchanged. Preserve
+actual TimeoutExpired partial stdout/stderr in finally-path output capture even
+when the child is killed; no synthetic result or missing-byte claim. No native
+attempt is admitted unless the original genuine reference SVG positive passes.
