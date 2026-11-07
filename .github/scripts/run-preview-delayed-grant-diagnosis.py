@@ -60,15 +60,15 @@ def main():
               'selected': 'MacDown2Tests/PreviewDelayedGrantDiagnosisTests',
               'actual_owned': owned, 'actual_summary': summary, 'command_returncode': result.returncode,
               'original_compiled_inputs_unchanged': True,
-              'scope': 'Separate staged denial/grant case. Neither its pass nor a diagnostic original pass waives the historical production failure.'}
+              'scope': 'Separate already-bound and controlled baseline-during-grant cases. Neither their pass nor a diagnostic original pass waives the historical production failure.'}
     (folder / 'result.json').write_text(json.dumps(record, indent=2) + '\n')
-    expected = {'totalTestCount': 1, 'passedTests': 1, 'failedTests': 0, 'skippedTests': 0, 'expectedFailures': 0}
+    expected = {'totalTestCount': 2, 'passedTests': 2, 'failedTests': 0, 'skippedTests': 0, 'expectedFailures': 0}
     if (result.returncode != 0 or owned['returncode'] != 0 or owned['timed_out'] or owned['cancelled']
             or owned['app_cleanup_requested'] or any(type(summary.get(k)) is not int or summary[k] != v for k, v in expected.items())):
         raise RuntimeError('The separate first staged diagnostic did not pass; evidence retained')
     subprocess.run([sys.executable, '.github/scripts/verify-preview-grant-probe.py', str(root), 'Debug',
                     '--pair', 'revision', '--verify'], check=True, timeout=30)
-    print('Separate staged current-document denial/grant case passed; original failed qualification is unchanged')
+    print('Both separate staged current-document denial/grant cases passed; original failed qualification is unchanged')
 
 
 if __name__ == '__main__':

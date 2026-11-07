@@ -59,6 +59,69 @@ struct PreviewDelayedGrantDiagnosisTests {
         }
     }
 
+    @Test func aBaselineReceivedAfterBackingAcquisitionCannotStrandTheGrantedImage() async throws {
+        let label = "controlled-baseline-" + UUID().uuidString
+        let source = "![\(label)](image.png)\n"
+        let fixture = try PreviewProductionFixture(source: source, previewLayout: .split(fraction: 0.5))
+        defer { fixture.dispose() }
+        fixture.first.externalFileController.dispose()
+        let pasteboard = fixture.copyHarness.snapshotPasteboard()
+        defer { fixture.copyHarness.restorePasteboard(pasteboard) }
+        let initial = try #require(fixture.first.model.activeDocument)
+        try #require(initial.lastKnownRevision == nil)
+        let url = try #require(initial.fileURL)
+        let snapshot = try await Task.detached { try FileStore().readSnapshot(from: url) }.value
+        try #require(snapshot.text.utf8.elementsEqual(source.utf8))
+        let root = try await observeDeniedSource(label, in: fixture)
+        let owner = fixture.first.previewResourceState
+        let origin = try #require(owner.beginSelection(for: initial))
+        let receipt = try fixture.selection()
+        var resolutions = 0
+        var metadataAdvanced = false
+        try await owner.install(receipt, from: origin) {
+            resolutions += 1
+            if resolutions == 2 {
+                fixture.first.model.tabStore.updateActiveDocument { document in
+                    let next = document.reconcilingExternalSnapshot(snapshot).document
+                    metadataAdvanced = next.mutationGeneration > document.mutationGeneration
+                    return next
+                }
+            }
+            return fixture.first.model.activeDocument
+        }
+        let current = try #require(fixture.first.model.activeDocument)
+        try #require(metadataAdvanced)
+        #expect(current.id == initial.id && current.recoveryEpoch == initial.recoveryEpoch)
+        #expect(current.mutationGeneration == initial.mutationGeneration + 1)
+        #expect(current.lastKnownRevision == snapshot.revision)
+        #expect(current.text.utf8.elementsEqual(source.utf8))
+        #expect(owner.hasGrant(for: current))
+        print("CONTROLLED_BASELINE_GRANT initial=\(initial.mutationGeneration) current=\(current.mutationGeneration)")
+        try await fixture.copyHarness.assertGrantedImageCopies(from: root) {
+            #if DEBUG || RELEASE_PREVIEW_PROBE
+                PreviewResourceDiagnostics.dump("production-controlled-baseline-copy-failure")
+            #endif
+            return "Actual disk baseline delivered between pinned backing acquisition and grant publication"
+        }
+    }
+
+    private func observeDeniedSource(_ label: String, in fixture: PreviewProductionFixture) async throws -> NSView {
+        let root = try fixture.root()
+        let deadline = ContinuousClock.now.advanced(by: .seconds(5))
+        var html = ""
+        while ContinuousClock.now < deadline {
+            html = try await fixture.copyHarness.copiedHTML(from: root)
+            if html.contains(label) {
+                break
+            }
+            try await Task.sleep(for: .milliseconds(20))
+        }
+        try #require(html.contains(label))
+        try #require(!html.contains("data:image/png;base64,"))
+        try #require(fixture.first.model.activeDocument?.lastKnownRevision == nil)
+        return root
+    }
+
     private func observeFileBinding(_ fixture: PreviewProductionFixture) {
         fixture.first.externalFileController.afterObservationContextHandled = { _ in
             let current = fixture.first.model.activeDocument
