@@ -91,6 +91,9 @@ public struct EditorLineIndex: Sendable, Equatable {
         if hasOldTail, rescanned.last == rescanEnd {
             rescanned.removeLast()
         }
+        // The complete output count is known; avoid repeated capacity growth while copying a large tail.
+        let tailCount = hasOldTail ? lineStartOffsets.count - marginEndLine : 0
+        offsets.reserveCapacity(prefixCount + rescanned.count + tailCount)
         offsets.append(contentsOf: rescanned)
 
         if hasOldTail {
