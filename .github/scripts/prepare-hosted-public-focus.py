@@ -61,7 +61,8 @@ def main():
                           ".github/scripts/prepare-hosted-public-focus.py", ".github/scripts/run-hosted-public-focus.py",
                           ".github/scripts/test-hosted-focus-guard.py", ".github/scripts/test-run-owned-app-tests.py",
                           ".github/scripts/native-cli-app-host.swift", ".github/scripts/native_cli_endpoint_probe.py",
-                          ".github/scripts/run-owned-app-tests.py", ".github/workflows/hosted-public-focus.yml"]).splitlines()
+                          ".github/scripts/run-owned-app-tests.py", ".github/workflows/hosted-public-focus.yml",
+                          ".github/workflows/status-bar-layout.yml"]).splitlines()
         required = {".github/scripts/native-cli-app-host.swift", ".github/scripts/native_cli_endpoint_probe.py"}
         assert required <= set(tracked), "Intake actual qualified startup integration before this lane"
         shutil.copytree(".github/hosted-public-focus", root / "fixture")
