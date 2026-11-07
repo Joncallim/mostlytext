@@ -26,12 +26,13 @@ on:
       - '.github/hosted-public-focus/Control-Info.plist'
       - '.github/hosted-public-focus/project.yml'
       - '.github/hosted-public-focus/HostFacts.swift'
+  workflow_dispatch:
 concurrency:
   group: hosted-critical-journeys-${{ github.ref }}
   cancel-in-progress: false
 jobs:
   original-critical-journey:
-    if: github.event.pull_request.head.repo.full_name == github.repository
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
     strategy:
       fail-fast: false
       matrix:

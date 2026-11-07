@@ -1,0 +1,10 @@
+{
+  "source_head": "f9478d6e8624d3c2d5cbb8c6441ff8d45329b474",
+  "app_delegate_sha256": "f6cfc2a0311ebfe5247d05ae54fc4085620dca2cd46a3df7ac340ecb15c47cc2",
+  "exact_actual_condition": "if shouldShowFirstRun, launchURLs.isEmpty, launchFolderURL == nil, startupOpenFiles.isEmpty",
+  "exact_actual_assignment": "",
+  "actual_helper_sha256": "81e548c23d9512349581f4cbdeea733d8be1fae6df7840ce1b6b9fc4407e45bb",
+  "actual_url_source_sha256": "fe60e0fbac375235472d20c2eec57788bd4315f5856fe1a5c457cca6df810c79",
+  "generated_program_sha256": "dbe5110fe90e4ab615e419ebe7e066e46a9d7758ca4c8607fbea33b4a6c668b0",
+  "scope": "Literal actual predicates/helper/URL extension; model fields are console inputs, real filesystem, no AppKit or owner data"
+}

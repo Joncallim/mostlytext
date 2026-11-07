@@ -158,3 +158,114 @@ same-head-repository job guards, fresh disposable-host admission and all owned
 limits. No untrusted fork receives native execution. This changes the trigger,
 not the raw-capture contract or any original app/test bytes. Preserve the first
 complete outcome before deciding SDK schema or implementing the batch reader.
+
+## Observed SDK schema and batch decision before code
+
+First discovery42347455097 at5307 passes and is independently verified against
+all1611source/24pins/7generated/actual compiled-test/result bindings. Actual
+SDK717 enabled functions include679app and exactly38UI despite the filter.
+The preserved JSON schema and exact38-ID equality are recorded in the adjacent
+evidence packet before parser or batch implementation. PR126 merges as210f46b7
+with reviewed tree38f6a12c and unchanged product/bootstrap source.
+
+Use only observed root errors/values, single MacDown2 testPlan, disabledTests
+and enabledTests identifier records. Require no errors/disabled/duplicate IDs,
+exact expected38 UI identifiers and explicit separation of the679 other-target
+functions. Normalise only each UI method's observed terminal empty parentheses.
+Reject other schemas, suffixes, missing/extra/disabled UI IDs or source drift.
+Record actual raw SHA256; enumeration never supplies execution verdicts.
+
+The fixed source-bound plan partitions the exact sorted38 IDs into ten batches
+of at most four, with ten fresh disposable VMs and fail-fast disabled. Preserve
+original methods byte-for-byte. Reuse the unchanged original-focus preparation
+and literal compiled-target/owned-command checks in a separate private fixed
+batch controller, rather than changing a qualified existing controller. Its
+prepare stage may reuse the base preparation only; bind all added plan/parser/
+script/test/workflow/raw-calibration inputs before the first positive. No
+receipt may be retargeted to a second selected case or previously attempted root.
+
+Each batch has one genuine typing/button positive before any root case, actual
+GUI/US-input checks, and a predeclared NOT_RUN row for every fixed case. Execute
+serially, one exact original method and distinct result/owned directory at a
+time, retaining the120second case/600second owned/40minute job limits. Require
+actual selected-case log identity and exact1pass/0fail/0skip/0expected for a
+pass. A genuine one-case assertion failure (owned65, actual1failed) remains
+failed; after verified unchanged source/products/test/xctestruns and clean
+ownership it may be followed by later independent cases. Wrong/zero/multiple/
+skipped/expected cases, timeout/cancel, unowned outcomes, source/product drift
+or any requested forced app cleanup stop the batch; later cases stay NOT_RUN
+with an explicit reason. Never treat a partial batch or number38 as a full pass.
+
+Verify source/generated/test-binary/xctestrun/signature identities before and
+after every case, including failed cases, and preserve all raw xcresults/logs/
+owned outputs. The aggregate must cover each exact original ID once with its
+actual verdict and no omitted/extra/retargeted case. No unchanged failure retry
+or weakened assertion/deadline/positive. Follow any real failure with actual
+AX/xcresult diagnosis and canonical-issue ownership. Even a38-case pass leaves
+the six additional/repeated/final candidate and account/artifact gates distinct.
+
+## Batch source verification before first publication
+
+The fixed parser passes six actual-corpus controls: preserved SDK bytes and all
+ten partitions; missing/duplicate/extra/disabled IDs; changed target/suffix;
+errors/unknown schema/duplicate JSON keys; wrong expected set/batch; and real
+plan omission/duplication/reordering/retargeting. Every restoration recovers the
+same exact38 set. It binds the actual source, raw path/SHA and qualified main.
+
+Eight batch admission/outcome controls pass: actual host-before-ancestry/plan/
+receipt ordering with a removed-guard intercepted-read counterexample; held and
+optimized refusal; attempted/retargeted receipt refusal before product/native
+commands; actual retained before-fix geometry failure versus after-fix pass;
+zero/multiple/skipped/expected/boolean counts; wrong/repeated/restarted case;
+and timeout/cancel/forced-cleanup/mismatched-exit refusal. These use the actual
+retained raw native receipts/logs for their positive/failure examples, with
+explicit counterexamples, not a fabricated happy-path schema. The attempt flag
+is frozen before source/product/positive commands, including pre-positive errors.
+
+Existing three public admission and nine inventory controls also pass. Python
+AST, workflow YAML, every workflow script reference/fixed batch argument, original
+limits, fresh source Compliance and diff checks pass. Initial local generation-
+needle and stale copied workflow-reference mistakes were caught/corrected before
+publication; no failed invocation is claimed as passing. All product/original
+UI tests, existing bootstrap/preparer/private control sources, project and pins
+remain byte-identical to actual main210f. This is source/controller verification;
+all ten first batch outcomes and exact per-case independent review remain pending.
+
+## First full matrix and correction decision before assembly
+
+First ec2d run42350228707 is independently verified as35 original passes, one
+actual FirstRun line61 failure followed by a framework restart, and two NOT_RUN
+rows after that uncertainty; all ten genuine positives pass. Complete first
+receipts/logs/actual summaries and scoped bindings are retained in the adjacent
+packet. Failed-case after-source proof is absent, not repaired by final metadata.
+Four actual guard-test corpus files were missing from the receipt hash map;
+record the gap explicitly rather than claiming complete data capture.
+
+The next candidate assembles actual current maincc1cd1e6 and real local #17
+unit5ee49b2c as a merge parent. The unit's architecture and actual first failure/
+filesystem counterexamples precede its three-line product correction. It reuses
+the same regular-file admission for Welcome and pending restore, preserving raw
+queues and all original methods/assertions/deadlines/guards. Historical runtime
+queue contents remain unknown. Full current CI and all affected native gates
+are required; continuing failure needs fresh diagnosis, never an unchanged retry.
+
+Fix the guard-data binding at the same time: one explicit GUARD_CORPUS mapping
+in the private batch controller defines the two actual pass/failure receipt/log
+pairs. Both the admission tests and producer inventory consume that mapping;
+preparation requires every listed corpus file to be tracked and hashes it before
+the positive, with normal after-source verification. This prevents the same
+fixture-name drift from reappearing. No result threshold, original case, limit
+or positive is removed. Preserve the entire first source before another push.
+
+## Corrected candidate source review
+
+Before publishing the corrected source, all eight batch, six SDK, nine inventory
+and three public admission controls pass. Full format check reports 0/1489 files;
+strict lint reports zero violations in all1489. Fresh source compliance reports
+zero unverified items. AST, workflow YAML, four tracked corpus inputs, exact
+AppDelegate SHA c458fa43dec076ccd807ae68313883861c25e91f82b115e3be3d302a4929591d,
+current-main cc1cd1e6 and unit5ee49b2c ancestry, sole product-file scope and diff
+checks pass. The initial local YAML reader lacked PyYAML; the installed Ruby
+Psych parser succeeds without changing the workflow. The literal filesystem
+controls are14/14 after versus6 failures before; they are not native acceptance.
+Freeze the published source through its first complete CI and native outcomes.

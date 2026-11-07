@@ -1,0 +1,688 @@
+{
+  "head": "4b6717905aaabb4053f20589ec323905d86dcef6",
+  "actual_checkout": "b61451098b8b5c068e13b20853e55414cee9a036",
+  "actual_tree": "34ad6aa9b506f0b5ebab0a74789202b6a8d3b535",
+  "source_tree": "34ad6aa9b506f0b5ebab0a74789202b6a8d3b535",
+  "actual_completed_batches_independently_reviewed": 10,
+  "pending_batches": [],
+  "rows_reviewed": 38,
+  "counts": {
+    "PASSED": 38
+  },
+  "all38_originals_pass": true,
+  "batch_proofs": [
+    {
+      "batch": "B01",
+      "canonical_inputs_verified": 1620,
+      "all_four_guard_corpus_hashes_included": true,
+      "pins": 24,
+      "generated_inputs_verified": 7,
+      "actual_positive_passed": true,
+      "downloaded_compiled_test_sha256": "2959372a86f2bc739d75af29d144acce7ab4d3369640408e991f0fdbd3134371",
+      "all_original_rows_passed": true
+    },
+    {
+      "batch": "B02",
+      "canonical_inputs_verified": 1620,
+      "all_four_guard_corpus_hashes_included": true,
+      "pins": 24,
+      "generated_inputs_verified": 7,
+      "actual_positive_passed": true,
+      "downloaded_compiled_test_sha256": "d165f63f9c995662819f29b74e86ccb25b759c03e28122e2fe25d08cef416c90",
+      "all_original_rows_passed": true
+    },
+    {
+      "batch": "B03",
+      "canonical_inputs_verified": 1620,
+      "all_four_guard_corpus_hashes_included": true,
+      "pins": 24,
+      "generated_inputs_verified": 7,
+      "actual_positive_passed": true,
+      "downloaded_compiled_test_sha256": "c92fe7897ad2d9f391588b0a67bdb5edcfe36816e8dad36d8977d3696a72f35b",
+      "all_original_rows_passed": true
+    },
+    {
+      "batch": "B04",
+      "canonical_inputs_verified": 1620,
+      "all_four_guard_corpus_hashes_included": true,
+      "pins": 24,
+      "generated_inputs_verified": 7,
+      "actual_positive_passed": true,
+      "downloaded_compiled_test_sha256": "bcc93151d2340463635b36ebcacb84c632d8929e45682aea6aa757584cf8b3f0",
+      "all_original_rows_passed": true
+    },
+    {
+      "batch": "B05",
+      "canonical_inputs_verified": 1620,
+      "all_four_guard_corpus_hashes_included": true,
+      "pins": 24,
+      "generated_inputs_verified": 7,
+      "actual_positive_passed": true,
+      "downloaded_compiled_test_sha256": "7150160c53d14b1b2da4921f7250a36de25229fad20f85bdc3e0bf5d6b683915",
+      "all_original_rows_passed": true
+    },
+    {
+      "batch": "B06",
+      "canonical_inputs_verified": 1620,
+      "all_four_guard_corpus_hashes_included": true,
+      "pins": 24,
+      "generated_inputs_verified": 7,
+      "actual_positive_passed": true,
+      "downloaded_compiled_test_sha256": "9125d8df3e8b143bf14225f9b92f9d7f3d1eb04190568a978330406172421f60",
+      "all_original_rows_passed": true
+    },
+    {
+      "batch": "B07",
+      "canonical_inputs_verified": 1620,
+      "all_four_guard_corpus_hashes_included": true,
+      "pins": 24,
+      "generated_inputs_verified": 7,
+      "actual_positive_passed": true,
+      "downloaded_compiled_test_sha256": "d9ad44a792170ebd287a2822753fb01135f11b318954caf0aa54d6f86fe1f2c3",
+      "all_original_rows_passed": true
+    },
+    {
+      "batch": "B08",
+      "canonical_inputs_verified": 1620,
+      "all_four_guard_corpus_hashes_included": true,
+      "pins": 24,
+      "generated_inputs_verified": 7,
+      "actual_positive_passed": true,
+      "downloaded_compiled_test_sha256": "5f4897daccf097d8cb669314ae1af800e6b3b8ada37a5d3018f1312af84801e4",
+      "all_original_rows_passed": true
+    },
+    {
+      "batch": "B09",
+      "canonical_inputs_verified": 1620,
+      "all_four_guard_corpus_hashes_included": true,
+      "pins": 24,
+      "generated_inputs_verified": 7,
+      "actual_positive_passed": true,
+      "downloaded_compiled_test_sha256": "ea71f948412357b4d87b7f62e23eb6fc8355bceeb0f8b5d75886027b7609963c",
+      "all_original_rows_passed": true
+    },
+    {
+      "batch": "B10",
+      "canonical_inputs_verified": 1620,
+      "all_four_guard_corpus_hashes_included": true,
+      "pins": 24,
+      "generated_inputs_verified": 7,
+      "actual_positive_passed": true,
+      "downloaded_compiled_test_sha256": "7af12eaf3c23da5443b3c28ec71c7d9e564339231bd98022787b1bb8f154569c",
+      "all_original_rows_passed": true
+    }
+  ],
+  "original_rows": [
+    {
+      "batch": "B01",
+      "selected": "MacDown2UITests/D2GraphvizPreviewUITests/testAD2FenceRendersAsADiagramImageInTheLivePreview",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 40.74976466699991,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B01",
+      "selected": "MacDown2UITests/D2GraphvizPreviewUITests/testAGraphvizFenceRendersAsADiagramImageInTheLivePreview",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 18.779853250000087,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B01",
+      "selected": "MacDown2UITests/D2GraphvizPreviewUITests/testAMalformedD2FenceShowsAnInlineErrorInTheLivePreview",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 19.81563591600002,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B01",
+      "selected": "MacDown2UITests/D2GraphvizPreviewUITests/testAMalformedGraphvizFenceShowsAnInlineErrorInTheLivePreview",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 17.877052083999843,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B02",
+      "selected": "MacDown2UITests/D2GraphvizPreviewUITests/testCopyAsSVGWritesRealSVGToThePasteboard",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 38.23512549999998,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B02",
+      "selected": "MacDown2UITests/DeadKeyCompositionUITests/testAnExternalReloadDuringAnOpenCompositionIsNotReverted",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 19.94597679200001,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B02",
+      "selected": "MacDown2UITests/DeadKeyCompositionUITests/testDeadKeyCompositionCommitsAnAccentedCharacter",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 19.901717666999957,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B02",
+      "selected": "MacDown2UITests/DeadKeyCompositionUITests/testDeadKeyCompositionStillCommitsAfterAnUndo",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 18.67022087500004,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B03",
+      "selected": "MacDown2UITests/EditingAssistsUITests/testBoldMenuCommandAppliesToFocusedEditor",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 32.3738346670001,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B03",
+      "selected": "MacDown2UITests/EditingAssistsUITests/testCommandFOpensTheFindBar",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 19.891982041999995,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B03",
+      "selected": "MacDown2UITests/EditingAssistsUITests/testFormattingMenuRefreshesAfterKeyboardTabAndFocusOutline",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 24.082808999999997,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B03",
+      "selected": "MacDown2UITests/EditingAssistsUITests/testFormattingMenuTracksEditorSidebarFindAndEditorFocus",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 26.957908791000023,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B04",
+      "selected": "MacDown2UITests/EditingAssistsUITests/testListContinuationOnReturn",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 39.562941666999905,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B04",
+      "selected": "MacDown2UITests/EditingAssistsUITests/testNoMarkdownDelimiterPairingInPlainText",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 26.13042016700001,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B04",
+      "selected": "MacDown2UITests/EditorTypingUITests/testTypingRoundTripsThroughDocument",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 27.349269709000055,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B04",
+      "selected": "MacDown2UITests/ExternalFileChangesUITests/testCancelThenUseDiskRevalidatesAgainstTheLatestDiskVersion",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 25.20460612499994,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B05",
+      "selected": "MacDown2UITests/ExternalFileChangesUITests/testCleanExternalReplacementReloadsWithoutAConflictSheet",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 27.158339333999947,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B05",
+      "selected": "MacDown2UITests/ExternalFileChangesUITests/testConflictCloseUseDiskClosesWithoutDiscardingTheExternalVersion",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 25.180151333000026,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B05",
+      "selected": "MacDown2UITests/ExternalFileChangesUITests/testDirtyExternalReplacementKeepsLocalTextUntilDiskVersionIsChosen",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 28.28980100000001,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B05",
+      "selected": "MacDown2UITests/ExternalFileChangesUITests/testKeepMyChangesDismissesConflictAndPreservesEditorText",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 21.88789687499991,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B06",
+      "selected": "MacDown2UITests/ExternalFileChangesUITests/testUseDiskResolutionShowsUnavailableStateWhenBackingFileVanishes",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 29.856588708000004,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B06",
+      "selected": "MacDown2UITests/FirstRunUITests/testOpenSampleDocumentDismissesWelcomeAndOpensTheSampleText",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 16.552737624999963,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B06",
+      "selected": "MacDown2UITests/FirstRunUITests/testStartWritingDismissesWelcomeAndOpensAnEmptyDocument",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 14.714068165999947,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B06",
+      "selected": "MacDown2UITests/FolderBrowserUITests/testCreateFileKeepsRenameInTheOpenedTab",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 40.58297262499991,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B07",
+      "selected": "MacDown2UITests/FolderBrowserUITests/testFolderSectionHasStableAccessibilityIdentity",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 25.99075845899995,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B07",
+      "selected": "MacDown2UITests/FolderBrowserUITests/testMoveToTrashOffersDestructiveConfirmationAction",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 15.518786249999948,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B07",
+      "selected": "MacDown2UITests/FolderBrowserUITests/testNoRootOffersOpenFolderAndShortcutHint",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 18.665923499999963,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B07",
+      "selected": "MacDown2UITests/MermaidPreviewUITests/testAMalformedMermaidFenceShowsAnInlineErrorInTheLivePreview",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 20.986922875000005,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B08",
+      "selected": "MacDown2UITests/MermaidPreviewUITests/testAMermaidFenceRendersAsADiagramImageInTheLivePreview",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 31.505337542000007,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B08",
+      "selected": "MacDown2UITests/MultiFormatUITests/testHTMLPreviewTogglesSourceAndRendered",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 21.945929582999952,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B08",
+      "selected": "MacDown2UITests/MultiFormatUITests/testInvalidJSONShowsDiagnosticInsteadOfStaleOutline",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 16.530101208999895,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B08",
+      "selected": "MacDown2UITests/MultiFormatUITests/testJSONOutlineShowsRowsAndPreviewPane",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 17.623274708000054,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B09",
+      "selected": "MacDown2UITests/MultiFormatUITests/testPlainTextShowsNoPreviewPlaceholder",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 25.161667249999937,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B09",
+      "selected": "MacDown2UITests/OutlineNavigationUITests/testFocusOutlineRevealsRowsAndReturnJumpsTheEditor",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 19.66211937500009,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B09",
+      "selected": "MacDown2UITests/PreviewLayoutUITests/testLayoutKeyboardShortcutsTogglePanes",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 29.169513832999996,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B09",
+      "selected": "MacDown2UITests/PreviewLayoutUITests/testLayoutPersistsAcrossSessionRestore",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 22.139652040999977,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B10",
+      "selected": "MacDown2UITests/TabLifecycleUITests/testOpenFilesDirtyClosePromptAndRestore",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 55.24294429199995,
+        "app_cleanup_requested": []
+      }
+    },
+    {
+      "batch": "B10",
+      "selected": "MacDown2UITests/TabLifecycleUITests/testQuickOpenReactivatesAnAlreadyOpenBackgroundTab",
+      "controller_status": "PASSED",
+      "source_after_verified": true,
+      "actual_passed": 1,
+      "actual_failed": 0,
+      "owned": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 39.44970845900002,
+        "app_cleanup_requested": []
+      }
+    }
+  ],
+  "scope": "Actual first outcomes only at frozen changed source. Complete canonical/corpus/generated/pin/compiled-test/xctestrun/GUI/owned/actual summary/log bindings independently verified for downloaded batches. Pending, failed or uncertain rows are not passes. No repeated/final/protected/signed/six additional acceptance inferred."
+}

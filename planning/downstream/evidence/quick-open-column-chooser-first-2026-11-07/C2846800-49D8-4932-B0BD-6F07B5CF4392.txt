@@ -1,0 +1,699 @@
+Optional(Attributes: Application, 0xc393ff980, pid: 31674, title: 'MostlyText', Disabled
+Element subtree:
+ →Application, 0xc393ff980, pid: 31674, title: 'MostlyText', Disabled
+    Window (Main), 0xc393ff0c0, {{0.0, 31.0}, {1024.0, 677.0}}, title: 'b.md', Disabled
+      Group, 0xc393ff840, {{0.0, 119.0}, {1024.0, 589.0}}, Disabled
+        SplitGroup, 0xc393ffd40, {{0.0, 119.0}, {1024.0, 589.0}}, Disabled
+          Group, 0xc393ff700, {{8.0, 127.0}, {220.0, 573.0}}, Disabled
+            ScrollView, 0xc393ff5c0, {{8.0, 127.0}, {220.0, 573.0}}, Disabled
+              Outline, 0xc393ffac0, {{7.0, 126.0}, {222.0, 575.0}}, label: 'Sidebar'
+                OutlineRow, 0xc393ffe80, {{8.0, 137.0}, {220.0, 0.0}}, Disabled
+                  Cell, 0xc393ffc00, {{18.0, 137.0}, {200.0, 0.0}}, Keyboard Focused
+                    Group, 0xc393ff200, {{22.0, 137.0}, {204.0, 0.0}}, Disabled
+                OutlineRow, 0xc393ff480, {{8.0, 137.0}, {220.0, 32.0}}, Disabled
+                  Cell, 0xc393ff340, {{18.0, 137.0}, {200.0, 32.0}}, Keyboard Focused
+                    StaticText, 0xc393fed00, {{39.0, 145.0}, {172.0, 16.0}}, identifier: 'folderSection-folderSection-folderSection', label: 'Folder'
+                    DisclosureTriangle, 0xc393fef80, {{19.0, 136.0}, {15.0, 34.0}}, identifier: 'NSOutlineViewDisclosureButtonKey', value: 1
+                OutlineRow, 0xc393fee40, {{8.0, 169.0}, {220.0, 74.0}}, Disabled
+                  Cell, 0xc39455a40, {{18.0, 169.0}, {200.0, 74.0}}, Keyboard Focused
+                    Group, 0xc39455e00, {{45.0, 173.4}, {109.0, 65.3}}, identifier: 'folderSection'
+                      StaticText, 0xc39455b80, {{45.0, 173.4}, {106.0, 16.0}}, value: No folder opened
+                      Button, 0xc39455900, {{45.0, 198.0}, {109.0, 24.0}}, identifier: 'openFolderButton', label: 'Open Folder…'
+                      StaticText, 0xc39455540, {{45.0, 225.6}, {100.0, 13.0}}, value: ⌘⇧O opens a folder
+                OutlineRow, 0xc394557c0, {{8.0, 256.0}, {220.0, 0.0}}, Disabled
+                  Cell, 0xc394548c0, {{18.0, 256.0}, {200.0, 0.0}}, Keyboard Focused
+                    Group, 0xc394552c0, {{22.0, 256.0}, {204.0, 0.0}}, Disabled
+                OutlineRow, 0xc39454b40, {{8.0, 256.0}, {220.0, 32.0}}, Disabled
+                  Cell, 0xc39454640, {{18.0, 256.0}, {200.0, 32.0}}, Keyboard Focused
+                    StaticText, 0xc39454c80, {{40.0, 264.0}, {171.0, 16.0}}, identifier: 'outlineSection-outlineSection-outlineSection', label: 'Outline'
+                    DisclosureTriangle, 0xc39455f40, {{19.0, 255.0}, {15.0, 34.0}}, identifier: 'NSOutlineViewDisclosureButtonKey', value: 1
+                OutlineRow, 0xc39454a00, {{8.0, 288.0}, {220.0, 32.0}}, Disabled
+                  Cell, 0xc39454500, {{18.0, 288.0}, {200.0, 32.0}}, Keyboard Focused
+                    Group, 0xc39454780, {{45.0, 296.0}, {167.0, 16.0}}, identifier: 'outlineSection'
+                      StaticText, 0xc394543c0, {{45.0, 296.0}, {167.0, 16.0}}, identifier: 'outlineRow-0', value: File B
+                OutlineRow, 0xc39454280, {{8.0, 333.0}, {220.0, 0.0}}, Disabled
+                  Cell, 0xc39454000, {{18.0, 333.0}, {200.0, 0.0}}, Keyboard Focused
+                    Group, 0xc39454140, {{22.0, 333.0}, {204.0, 0.0}}, Disabled
+                OutlineRow, 0xc393d3480, {{8.0, 333.0}, {220.0, 32.0}}, Disabled
+                  Cell, 0xc393d3700, {{18.0, 333.0}, {200.0, 32.0}}, Keyboard Focused
+                    StaticText, 0xc393d3ac0, {{40.0, 341.0}, {171.0, 16.0}}, identifier: 'outlineSection-outlineSection-outlineSection', label: 'Search'
+                    DisclosureTriangle, 0xc393d3980, {{19.0, 332.0}, {15.0, 34.0}}, identifier: 'NSOutlineViewDisclosureButtonKey', value: 1
+                OutlineRow, 0xc3944c3c0, {{8.0, 365.0}, {220.0, 32.0}}, Disabled
+                  Cell, 0xc3944ca00, {{18.0, 365.0}, {200.0, 32.0}}, Keyboard Focused
+                    Group, 0xc3944c8c0, {{49.0, 373.0}, {157.0, 16.0}}, identifier: 'searchSection'
+                      TextField, 0xc3944cc80, {{48.0, 372.0}, {140.0, 18.0}}, identifier: 'folderSearchField', label: 'Folder search', placeholderValue: 'Search in Folder…'
+                      Button, 0xc3944f980, {{193.0, 374.0}, {13.0, 15.0}}, identifier: 'folderReplaceToggle', label: 'Toggle Replace in Folder'
+                TableColumn, 0xc3944cdc0, {{18.0, 127.0}, {200.0, 573.0}}, identifier: 'ListColumn', Disabled
+          Splitter, 0xc3944cb40, {{228.0, 119.0}, {0.0, 589.0}}, value: 228, Disabled
+          Group, 0xc3944c140, {{0.0, 119.0}, {1024.0, 589.0}}, Disabled
+            Image, 0xc3944fac0, {{246.0, 129.0}, {11.0, 14.0}}, identifier: 'doc.richtext', label: 'Rich Text Document'
+            StaticText, 0xc3944fd40, {{269.0, 127.5}, {33.0, 16.0}}, value: b.md
+            StaticText, 0xc3944fe80, {{951.0, 129.0}, {51.0, 13.0}}, value: Markdown
+            ScrollView, 0xc3944f0c0, {{228.0, 153.0}, {398.0, 514.0}}, identifier: 'editorPane', Disabled
+              TextView, 0xc3944fc00, {{260.0, 153.0}, {366.0, 514.0}}, value: # File B, Disabled
+              Group, 0xc3944f5c0, {{228.0, 153.0}, {32.0, 514.0}}, identifier: 'editorGutter', label: 'Line numbers', Disabled
+            Group, 0xc3944f480, {{228.0, 667.0}, {398.0, 41.0}}, identifier: 'editorStatusBar'
+              Button, 0xc3944ed00, {{236.0, 671.0}, {49.0, 13.0}}, identifier: 'statusBarLineColumn', label: 'Ln 1, Col 1'
+              StaticText, 0xc3944f840, {{301.0, 671.0}, {106.0, 13.0}}, identifier: 'statusBarCount', value: 8 characters, 2 wo...
+              StaticText, 0xc3944f200, {{570.0, 671.0}, {48.0, 13.0}}, identifier: 'statusBarIndentation', value: Spaces: 4
+              MenuButton, 0xc3944f700, {{235.0, 687.0}, {71.0, 18.0}}, identifier: 'statusBarSyntaxMode', title: 'Markdown'
+              MenuButton, 0xc3944e800, {{320.0, 687.0}, {48.0, 18.0}}, identifier: 'statusBarEncoding', title: 'UTF-8'
+              MenuButton, 0xc3944f340, {{382.0, 687.0}, {106.0, 18.0}}, identifier: 'statusBarLineEnding', title: 'No Line Endings'
+            Other, 0xc3944ef80, {{626.0, 153.0}, {1.0, 555.0}}, label: 'Resize editor and preview'
+            ScrollView, 0xc3944ebc0, {{627.0, 153.0}, {397.0, 555.0}}, identifier: 'previewPane', Disabled
+              StaticText, 0xc3944e300, {{643.0, 169.0}, {59.0, 28.0}}, value: File B
+      Toolbar, 0xc3944ee40, {{0.0, 31.0}, {1024.0, 52.0}}, Disabled
+        Button, 0xc3944ea80, {{972.0, 31.0}, {48.0, 52.0}}, label: 'Toggle Sidebar'
+      TabGroup, 0xc3944e6c0, {{0.0, 83.0}, {1024.0, 28.0}}, title: 'tab bar', label: 'Tab bar, 3 tabs.', Disabled
+        Tab, 0xc3944de00, {{10.0, 85.0}, {334.0, 24.0}}, title: 'a.md', value: 0, Disabled
+          Button, 0xc3944e940, {{14.0, 88.0}, {18.0, 18.0}}, identifier: '_closeButton', title: 'Close tab', label: 'Close'
+        Tab, 0xc3944e580, {{345.0, 85.0}, {334.0, 24.0}}, title: 'b.md', value: 1, Disabled
+          Button, 0xc3944e1c0, {{349.0, 88.0}, {18.0, 18.0}}, identifier: '_closeButton', title: 'Close tab', label: 'Close'
+        Tab, 0xc3944da40, {{680.0, 85.0}, {334.0, 24.0}}, title: 'c.md', value: 0, Disabled
+          Button, 0xc3944e440, {{684.0, 88.0}, {18.0, 18.0}}, identifier: '_closeButton', title: 'Close tab', label: 'Close'
+      Button, 0xc3944e080, {{18.0, 49.0}, {16.0, 16.0}}, identifier: '_XCUI:CloseWindow', Disabled
+      Button, 0xc3944dcc0, {{64.0, 49.0}, {16.0, 16.0}}, identifier: '_XCUI:ZoomWindow'
+        Group, 0xc3944d7c0, {{65.0, 50.0}, {14.0, 14.0}}, Disabled
+          Group, 0xc3944df40, {{65.0, 50.0}, {14.0, 14.0}}, Disabled
+      Button, 0xc3944db80, {{41.0, 49.0}, {16.0, 16.0}}, identifier: '_XCUI:MinimizeWindow'
+      StaticText, 0xc3944d900, {{92.0, 31.0}, {880.0, 52.0}}, value: b.md
+      Sheet, 0xc3944d2c0, {{72.0, 145.0}, {880.0, 448.0}}, identifier: 'open-panel', label: 'open', Disabled
+        SplitGroup, 0xc3944d400, {{72.0, 145.0}, {880.0, 448.0}}, Disabled
+          ScrollView, 0xc3944d680, {{80.0, 153.0}, {160.0, 432.0}}, identifier: '_NS:61', Disabled
+            Outline, 0xc3944d540, {{79.0, 152.0}, {145.0, 662.0}}, identifier: '_NS:8', label: 'sidebar'
+              OutlineRow, 0xc3944cf00, {{80.0, 163.0}, {143.0, 32.0}}, Disabled
+                Cell, 0xc3944d040, {{90.0, 163.0}, {123.0, 32.0}}, Keyboard Focused
+                  StaticText, 0xc3944d180, {{125.0, 170.0}, {81.0, 18.0}}, value: Recents
+                  Image, 0xc3944c780, {{99.0, 174.0}, {21.0, 11.0}}, label: 'clock'
+              OutlineRow, 0xc394d9400, {{80.0, 195.0}, {143.0, 32.0}}, Disabled
+                Cell, 0xc394d9540, {{90.0, 195.0}, {123.0, 32.0}}, Keyboard Focused
+                  StaticText, 0xc394d92c0, {{125.0, 202.0}, {81.0, 18.0}}, value: Shared
+                  Image, 0xc394dbc00, {{95.0, 206.0}, {26.0, 11.0}}, label: 'Shared Folder'
+              OutlineRow, 0xc394dbd40, {{80.0, 240.0}, {143.0, 19.0}}, Disabled
+                Cell, 0xc394dbe80, {{90.0, 240.0}, {123.0, 19.0}}, Keyboard Focused
+                  StaticText, 0xc394db700, {{95.0, 239.0}, {125.0, 21.0}}, identifier: 'xSidebarHeader', value: Favorites
+              OutlineRow, 0xc394db840, {{80.0, 259.0}, {143.0, 32.0}}, Disabled
+                Cell, 0xc394dbac0, {{90.0, 259.0}, {123.0, 32.0}}, Keyboard Focused
+                  StaticText, 0xc394db980, {{125.0, 266.0}, {81.0, 18.0}}, value: Applications
+                  Image, 0xc394db200, {{97.0, 270.0}, {24.0, 11.0}}
+              OutlineRow, 0xc394db340, {{80.0, 291.0}, {143.0, 32.0}}, Disabled
+                Cell, 0xc394db5c0, {{90.0, 291.0}, {123.0, 32.0}}, Keyboard Focused
+                  StaticText, 0xc394db480, {{125.0, 298.0}, {81.0, 18.0}}, value: Desktop
+                  Image, 0xc394dae40, {{96.0, 302.0}, {26.0, 11.0}}
+              OutlineRow, 0xc394daf80, {{80.0, 323.0}, {143.0, 32.0}}, Disabled
+                Cell, 0xc394db0c0, {{90.0, 323.0}, {123.0, 32.0}}, Keyboard Focused
+                  StaticText, 0xc394da940, {{125.0, 330.0}, {81.0, 18.0}}, value: Documents
+                  Image, 0xc394daa80, {{99.0, 334.0}, {20.0, 11.0}}, label: 'document'
+              OutlineRow, 0xc394dad00, {{80.0, 355.0}, {143.0, 32.0}}, Disabled
+                Cell, 0xc394dabc0, {{90.0, 355.0}, {123.0, 32.0}}, Keyboard Focused
+                  StaticText, 0xc394da440, {{125.0, 362.0}, {81.0, 18.0}}, value: Downloads
+                  Image, 0xc394da580, {{99.0, 366.0}, {21.0, 11.0}}, label: 'Arrow Down Circle'
+              OutlineRow, 0xc394da800, {{80.0, 400.0}, {143.0, 19.0}}, Disabled
+                Cell, 0xc394da6c0, {{90.0, 400.0}, {123.0, 19.0}}, Keyboard Focused
+                  StaticText, 0xc394d9f40, {{95.0, 399.0}, {125.0, 21.0}}, identifier: 'xSidebarHeader', value: Locations
+              OutlineRow, 0xc394da080, {{80.0, 419.0}, {143.0, 32.0}}, Disabled
+                Cell, 0xc394da300, {{90.0, 419.0}, {123.0, 32.0}}, Keyboard Focused
+                  StaticText, 0xc394da1c0, {{125.0, 426.0}, {81.0, 18.0}}, value: iCloud Drive
+                  Image, 0xc394d83c0, {{97.0, 430.0}, {25.0, 11.0}}, label: 'iCloud'
+              OutlineRow, 0xc394d8000, {{80.0, 451.0}, {143.0, 32.0}}, Selected, Disabled
+                Cell, 0xc394d8140, {{90.0, 451.0}, {123.0, 32.0}}, Keyboard Focused, Selected
+                  StaticText, 0xc394d8280, {{125.0, 458.0}, {81.0, 18.0}}, value: runner
+                  Image, 0xc394d88c0, {{96.0, 462.0}, {26.0, 11.0}}, label: 'home'
+              OutlineRow, 0xc394d8780, {{80.0, 483.0}, {143.0, 32.0}}, Disabled
+                Cell, 0xc394d8640, {{90.0, 483.0}, {123.0, 32.0}}, Keyboard Focused
+                  StaticText, 0xc394d8dc0, {{125.0, 490.0}, {81.0, 18.0}}, value: Macintosh HD
+                  Image, 0xc394d8500, {{96.0, 494.0}, {26.0, 11.0}}
+              OutlineRow, 0xc394d8a00, {{80.0, 528.0}, {143.0, 19.0}}, Disabled
+                Cell, 0xc394d8b40, {{90.0, 528.0}, {123.0, 19.0}}, Keyboard Focused
+                  StaticText, 0xc394d9180, {{95.0, 527.0}, {125.0, 21.0}}, identifier: 'xSidebarHeader', value: Tags
+              OutlineRow, 0xc394d9040, {{80.0, 547.0}, {143.0, 32.0}}, Disabled
+                Cell, 0xc394d8f00, {{90.0, 547.0}, {123.0, 32.0}}, Keyboard Focused
+                  StaticText, 0xc394d8c80, {{125.0, 554.0}, {81.0, 18.0}}, value: Red
+                  Image, 0xc394c0000, {{101.0, 558.0}, {17.0, 11.0}}
+              OutlineRow, 0xc394c0140, {{80.0, 579.0}, {143.0, 32.0}}, Disabled
+                Cell, 0xc394c0280, {{90.0, 579.0}, {123.0, 32.0}}, Keyboard Focused
+                  StaticText, 0xc394c03c0, {{125.0, 586.0}, {81.0, 18.0}}, value: Orange
+                  Image, 0xc394c0500, {{101.0, 590.0}, {17.0, 11.0}}
+              OutlineRow, 0xc394c0640, {{80.0, 611.0}, {143.0, 32.0}}, Disabled
+                Cell, 0xc394c0780, {{90.0, 611.0}, {123.0, 32.0}}, Keyboard Focused
+                  StaticText, 0xc394c08c0, {{125.0, 618.0}, {81.0, 18.0}}, value: Yellow
+                  Image, 0xc394c0a00, {{101.0, 622.0}, {17.0, 11.0}}
+              OutlineRow, 0xc394c0b40, {{80.0, 643.0}, {143.0, 32.0}}, Disabled
+                Cell, 0xc394c0c80, {{90.0, 643.0}, {123.0, 32.0}}, Keyboard Focused
+                  StaticText, 0xc394c0dc0, {{125.0, 650.0}, {81.0, 18.0}}, value: Green
+                  Image, 0xc394c0f00, {{101.0, 654.0}, {17.0, 11.0}}
+              OutlineRow, 0xc394c1040, {{80.0, 675.0}, {143.0, 32.0}}, Disabled
+                Cell, 0xc394c1180, {{90.0, 675.0}, {123.0, 32.0}}, Keyboard Focused
+                  StaticText, 0xc394c12c0, {{125.0, 682.0}, {81.0, 18.0}}, value: Blue
+                  Image, 0xc394c1400, {{101.0, 686.0}, {17.0, 11.0}}
+              OutlineRow, 0xc394c1540, {{80.0, 707.0}, {143.0, 32.0}}, Disabled
+                Cell, 0xc394c1680, {{90.0, 707.0}, {123.0, 32.0}}, Keyboard Focused
+                  StaticText, 0xc394c17c0, {{125.0, 714.0}, {81.0, 18.0}}, value: Purple
+                  Image, 0xc394c1900, {{101.0, 718.0}, {17.0, 11.0}}
+              OutlineRow, 0xc394c1a40, {{80.0, 739.0}, {143.0, 32.0}}, Disabled
+                Cell, 0xc394c1b80, {{90.0, 739.0}, {123.0, 32.0}}, Keyboard Focused
+                  StaticText, 0xc394c1cc0, {{125.0, 746.0}, {81.0, 18.0}}, value: Gray
+                  Image, 0xc394c1e00, {{101.0, 750.0}, {17.0, 11.0}}
+              OutlineRow, 0xc394c1f40, {{80.0, 771.0}, {143.0, 32.0}}, Disabled
+                Cell, 0xc394c2080, {{90.0, 771.0}, {123.0, 32.0}}, Keyboard Focused
+                  StaticText, 0xc394c21c0, {{125.0, 778.0}, {81.0, 18.0}}, value: All Tags…
+                  Image, 0xc394c2300, {{98.0, 782.0}, {22.0, 11.0}}
+              TableColumn, 0xc394c2440, {{90.0, 153.0}, {123.0, 660.0}}, identifier: 'AutomaticTableColumnIdentifier.0', Disabled
+            ScrollBar, 0xc394c2580, {{222.0, 152.0}, {19.0, 434.0}}, identifier: '_NS:70', value: 0
+              ValueIndicator, 0xc394c26c0, {{226.0, 156.0}, {11.0, 278.0}}, value: 0, Disabled
+              IncrementArrow, 0xc394c2800, {{223.0, 153.0}, {0.0, 0.0}}, Disabled
+              DecrementArrow, 0xc394c2940, {{223.0, 153.0}, {0.0, 0.0}}, Disabled
+              Button, 0xc394c2a80, {{226.0, 435.0}, {11.0, 147.0}}, Disabled
+              Button, 0xc394c2bc0, {{226.0, 156.0}, {11.0, 0.0}}, Disabled
+          Splitter, 0xc394c2d00, {{240.0, 145.0}, {0.0, 448.0}}, value: 168, Disabled
+          SplitGroup, 0xc394c2e40, {{72.0, 210.0}, {880.0, 318.0}}, Disabled
+            Browser, 0xc394c2f80, {{71.0, 209.0}, {882.0, 320.0}}, identifier: 'ColumnView', label: 'column view'
+              ScrollView, 0xc394c30c0, {{240.0, 210.0}, {712.0, 318.0}}, Disabled
+                ScrollView, 0xc394c3200, {{240.0, 210.0}, {245.0, 301.0}}, Disabled
+                  Other, 0xc394c3340, {{239.0, 209.0}, {230.0, 391.0}}
+                    Group, 0xc394c3480, {{256.0, 215.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394c35c0, {{256.0, 218.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394c3700, {{276.0, 217.0}, {124.0, 18.0}}, value: actionarchivecache
+                    Group, 0xc394c3840, {{256.0, 237.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394c3980, {{256.0, 240.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394c3ac0, {{276.0, 239.0}, {96.0, 18.0}}, value: actions-runner
+                    Group, 0xc394c3c00, {{256.0, 259.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394c3d40, {{256.0, 262.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394c3e80, {{276.0, 261.0}, {65.0, 18.0}}, value: bootstrap
+                    Group, 0xc394bc000, {{256.0, 281.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394bc140, {{256.0, 284.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394bc280, {{276.0, 283.0}, {57.0, 18.0}}, value: Desktop
+                    Group, 0xc394bc3c0, {{256.0, 303.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394bc500, {{256.0, 306.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394bc640, {{276.0, 305.0}, {76.0, 18.0}}, value: Documents
+                    Group, 0xc394bc780, {{256.0, 325.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394bc8c0, {{256.0, 328.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394bca00, {{276.0, 327.0}, {73.0, 18.0}}, value: Downloads
+                    Group, 0xc394bcb40, {{256.0, 347.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394bcc80, {{256.0, 350.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394bcdc0, {{276.0, 349.0}, {108.0, 18.0}}, value: hostedtoolcache
+                    Group, 0xc394bcf00, {{256.0, 369.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394bd040, {{256.0, 372.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394bd180, {{276.0, 371.0}, {114.0, 18.0}}, value: image-generation
+                    Group, 0xc394bd2c0, {{256.0, 391.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394bd400, {{256.0, 394.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394bd540, {{276.0, 393.0}, {99.0, 18.0}}, value: imagedata.json
+                    Group, 0xc394bd680, {{256.0, 413.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394bd7c0, {{256.0, 416.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394bd900, {{276.0, 415.0}, {49.0, 18.0}}, value: Library
+                    Group, 0xc394bda40, {{256.0, 435.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394bdb80, {{256.0, 438.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394bdcc0, {{276.0, 437.0}, {49.0, 18.0}}, value: Movies
+                    Group, 0xc394bde00, {{256.0, 457.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394bdf40, {{256.0, 460.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394be080, {{276.0, 459.0}, {42.0, 18.0}}, value: Music
+                    Group, 0xc394be1c0, {{256.0, 479.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394be300, {{256.0, 482.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394be440, {{276.0, 481.0}, {56.0, 18.0}}, value: Pictures
+                    Group, 0xc394be580, {{256.0, 501.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394be6c0, {{256.0, 504.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394be800, {{276.0, 503.0}, {44.0, 18.0}}, value: Public
+                    Group, 0xc394be940, {{256.0, 523.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394bea80, {{256.0, 526.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394bebc0, {{276.0, 525.0}, {131.0, 18.0}}, value: software-report.json
+                    Group, 0xc394bed00, {{256.0, 545.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394bee40, {{256.0, 548.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394bef80, {{276.0, 547.0}, {36.0, 18.0}}, value: software-report.md
+                    Group, 0xc394bf0c0, {{256.0, 567.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394bf200, {{256.0, 570.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394bf340, {{276.0, 569.0}, {125.0, 18.0}}, value: work
+                  ScrollBar, 0xc394bf480, {{467.0, 209.0}, {19.0, 288.0}}, value: 0
+                    ValueIndicator, 0xc394bf5c0, {{471.0, 213.0}, {11.0, 216.0}}, value: 0, Disabled
+                    IncrementArrow, 0xc394bf700, {{468.0, 210.0}, {0.0, 0.0}}, Disabled
+                    DecrementArrow, 0xc394bf840, {{468.0, 210.0}, {0.0, 0.0}}, Disabled
+                    Button, 0xc394bf980, {{471.0, 430.0}, {11.0, 63.0}}, Disabled
+                    Button, 0xc394bfac0, {{471.0, 213.0}, {11.0, 0.0}}, Disabled
+                ScrollView, 0xc394bfc00, {{485.0, 210.0}, {245.0, 301.0}}, Disabled
+                  Other, 0xc394bfd40, {{484.0, -2.0}, {230.0, 1799.0}}
+                    Group, 0xc394bfe80, {{501.0, 4.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b8000, {{501.0, 7.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b8140, {{521.0, 6.0}, {101.0, 18.0}}, value: Accessibility
+                    Group, 0xc394b8280, {{501.0, 26.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b83c0, {{501.0, 29.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b8500, {{521.0, 28.0}, {127.0, 18.0}}, value: Accounts
+                    Group, 0xc394b8640, {{501.0, 48.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b8780, {{501.0, 51.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b88c0, {{521.0, 50.0}, {93.0, 18.0}}, value: Android
+                    Group, 0xc394b8a00, {{501.0, 70.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b8b40, {{501.0, 73.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b8c80, {{521.0, 72.0}, {151.0, 18.0}}, value: AppleMediaServices
+                    Group, 0xc394b8dc0, {{501.0, 92.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b8f00, {{501.0, 95.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b9040, {{521.0, 94.0}, {116.0, 18.0}}, value: Application Scripts
+                    Group, 0xc394b9180, {{501.0, 114.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b92c0, {{501.0, 117.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b9400, {{521.0, 116.0}, {68.0, 18.0}}, value: Application Support
+                    Group, 0xc394b9540, {{501.0, 136.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b9680, {{501.0, 139.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b97c0, {{521.0, 138.0}, {69.0, 18.0}}, value: Assistant
+                    Group, 0xc394b9900, {{501.0, 158.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b9a40, {{501.0, 161.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b9b80, {{521.0, 160.0}, {82.0, 18.0}}, value: Assistants
+                    Group, 0xc394b9cc0, {{501.0, 180.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b9e00, {{501.0, 183.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b9f40, {{521.0, 182.0}, {102.0, 18.0}}, value: Audio
+                    Group, 0xc394ba080, {{501.0, 202.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394ba1c0, {{501.0, 205.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394ba300, {{521.0, 204.0}, {135.0, 18.0}}, value: Autosave Information
+                    Group, 0xc394ba440, {{501.0, 224.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394ba580, {{501.0, 227.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394ba6c0, {{521.0, 226.0}, {44.0, 18.0}}, value: Biome
+                    Group, 0xc394ba800, {{501.0, 246.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394ba940, {{501.0, 249.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394baa80, {{521.0, 248.0}, {52.0, 18.0}}, value: Caches
+                    Group, 0xc394babc0, {{501.0, 268.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394bad00, {{501.0, 271.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394bae40, {{521.0, 270.0}, {83.0, 18.0}}, value: ColorPickers
+                    Group, 0xc394baf80, {{501.0, 290.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394bb0c0, {{501.0, 293.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394bb200, {{521.0, 292.0}, {46.0, 18.0}}, value: Colors
+                    Group, 0xc394bb340, {{501.0, 312.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394bb480, {{501.0, 315.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394bb5c0, {{521.0, 314.0}, {167.0, 18.0}}, value: com.apple.aiml.ins...
+                    Group, 0xc394bb700, {{501.0, 334.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394bb840, {{501.0, 337.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394bb980, {{521.0, 336.0}, {167.0, 18.0}}, value: com.apple.AppleMed...
+                    Group, 0xc394bbac0, {{501.0, 356.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394bbc00, {{501.0, 359.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394bbd40, {{521.0, 358.0}, {167.0, 18.0}}, value: com.apple.bluetoot...
+                    Group, 0xc394bbe80, {{501.0, 378.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394c8000, {{501.0, 381.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394c8140, {{521.0, 380.0}, {137.0, 18.0}}, value: com.apple.internal...
+                    Group, 0xc394c8280, {{501.0, 400.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394c83c0, {{501.0, 403.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394c8500, {{521.0, 402.0}, {148.0, 18.0}}, value: com.apple.iTunesCl...
+                    Group, 0xc394c8640, {{501.0, 422.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394c8780, {{501.0, 425.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394c88c0, {{521.0, 424.0}, {90.0, 18.0}}, value: Compositions
+                    Group, 0xc394c8a00, {{501.0, 444.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394c8b40, {{501.0, 447.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394c8c80, {{521.0, 446.0}, {61.0, 18.0}}, value: Contacts
+                    Group, 0xc394c8dc0, {{501.0, 466.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394c8f00, {{501.0, 469.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394c9040, {{521.0, 468.0}, {119.0, 18.0}}, value: ContainerManager
+                    Group, 0xc394c9180, {{501.0, 488.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394c92c0, {{501.0, 491.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394c9400, {{521.0, 490.0}, {72.0, 18.0}}, value: Containers
+                    Group, 0xc394c9540, {{501.0, 510.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394c9680, {{501.0, 513.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394c97c0, {{521.0, 512.0}, {91.0, 18.0}}, value: CoreFollowUp
+                    Group, 0xc394c9900, {{501.0, 532.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394c9a40, {{501.0, 535.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394c9b80, {{521.0, 534.0}, {31.0, 18.0}}, value: Daemon Containers
+                    Group, 0xc394c9cc0, {{501.0, 554.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394c9e00, {{501.0, 557.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394c9f40, {{521.0, 556.0}, {144.0, 18.0}}, value: DataDeliveryServices
+                    Group, 0xc394ca080, {{501.0, 576.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394ca1c0, {{501.0, 579.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394ca300, {{521.0, 578.0}, {116.0, 18.0}}, value: Developer
+                    Group, 0xc394ca440, {{501.0, 598.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394ca580, {{501.0, 601.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394ca6c0, {{521.0, 600.0}, {61.0, 18.0}}, value: DoNotDisturb
+                    Group, 0xc394ca800, {{501.0, 620.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394ca940, {{501.0, 623.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394caa80, {{521.0, 622.0}, {68.0, 18.0}}, value: DuetExpertCenter
+                    Group, 0xc394cabc0, {{501.0, 642.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394cad00, {{501.0, 645.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394cae40, {{521.0, 644.0}, {99.0, 18.0}}, value: Favorites
+                    Group, 0xc394caf80, {{501.0, 664.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394cb0c0, {{501.0, 667.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394cb200, {{521.0, 666.0}, {54.0, 18.0}}, value: Finance
+                    Group, 0xc394cb340, {{501.0, 686.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394cb480, {{501.0, 689.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394cb5c0, {{521.0, 688.0}, {40.0, 18.0}}, value: FinanceBackup
+                    Group, 0xc394cb700, {{501.0, 708.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394cb840, {{501.0, 711.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394cb980, {{521.0, 710.0}, {71.0, 18.0}}, value: FontCollections
+                    Group, 0xc394cbac0, {{501.0, 730.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394cbc00, {{501.0, 733.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394cbd40, {{521.0, 732.0}, {90.0, 18.0}}, value: Fonts
+                    Group, 0xc394cbe80, {{501.0, 752.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b4000, {{501.0, 755.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b4140, {{521.0, 754.0}, {104.0, 18.0}}, value: FrontBoard
+                    Group, 0xc394b4280, {{501.0, 774.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b43c0, {{501.0, 777.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b4500, {{521.0, 776.0}, {109.0, 18.0}}, value: Group Containers
+                    Group, 0xc394b4640, {{501.0, 796.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b4780, {{501.0, 799.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b48c0, {{521.0, 798.0}, {94.0, 18.0}}, value: homeenergyd
+                    Group, 0xc394b4a00, {{501.0, 818.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b4b40, {{501.0, 821.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b4c80, {{521.0, 820.0}, {95.0, 18.0}}, value: HomeKit
+                    Group, 0xc394b4dc0, {{501.0, 840.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b4f00, {{501.0, 843.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b5040, {{521.0, 842.0}, {49.0, 18.0}}, value: HTTPStorages
+                    Group, 0xc394b5180, {{501.0, 862.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b52c0, {{501.0, 865.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b5400, {{521.0, 864.0}, {111.0, 18.0}}, value: IdentityServices
+                    Group, 0xc394b5540, {{501.0, 884.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b5680, {{501.0, 887.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b57c0, {{521.0, 886.0}, {108.0, 18.0}}, value: Input Methods
+                    Group, 0xc394b5900, {{501.0, 906.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b5a40, {{501.0, 909.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b5b80, {{521.0, 908.0}, {115.0, 18.0}}, value: IntelligencePlatform
+                    Group, 0xc394b5cc0, {{501.0, 928.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b5e00, {{501.0, 931.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b5f40, {{521.0, 930.0}, {127.0, 18.0}}, value: Internet Plug-Ins
+                    Group, 0xc394b6080, {{501.0, 950.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b61c0, {{501.0, 953.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b6300, {{521.0, 952.0}, {50.0, 18.0}}, value: Keyboard Layouts
+                    Group, 0xc394b6440, {{501.0, 972.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b6580, {{501.0, 975.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b66c0, {{521.0, 974.0}, {41.0, 18.0}}, value: KeyboardServices
+                    Group, 0xc394b6800, {{501.0, 994.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b6940, {{501.0, 997.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b6a80, {{521.0, 996.0}, {62.0, 18.0}}, value: Keychains
+                    Group, 0xc394b6bc0, {{501.0, 1016.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b6d00, {{501.0, 1019.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b6e40, {{521.0, 1018.0}, {49.0, 18.0}}, value: LanguageModeling
+                    Group, 0xc394b6f80, {{501.0, 1038.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b70c0, {{501.0, 1041.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b7200, {{521.0, 1040.0}, {89.0, 18.0}}, value: LaunchAgents
+                    Group, 0xc394b7340, {{501.0, 1060.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b7480, {{501.0, 1083.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394b75c0, {{500.0, 1082.0}, {2.0, 2.0}}, value: LockdownMode
+                    Group, 0xc394b7700, {{501.0, 1082.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b7840, {{501.0, 1105.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394b7980, {{500.0, 1104.0}, {2.0, 2.0}}, value: Logs
+                    Group, 0xc394b7ac0, {{501.0, 1104.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b7c00, {{501.0, 1127.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394b7d40, {{500.0, 1126.0}, {2.0, 2.0}}, value: Mail
+                    Group, 0xc394b7e80, {{501.0, 1126.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b0000, {{501.0, 1149.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394b0140, {{500.0, 1148.0}, {2.0, 2.0}}, value: Messages
+                    Group, 0xc394b0280, {{501.0, 1148.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b03c0, {{501.0, 1171.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394b0500, {{500.0, 1170.0}, {2.0, 2.0}}, value: Metadata
+                    Group, 0xc394b0640, {{501.0, 1170.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b0780, {{501.0, 1193.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394b08c0, {{500.0, 1192.0}, {2.0, 2.0}}, value: News
+                    Group, 0xc394b0a00, {{501.0, 1192.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b0b40, {{501.0, 1215.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394b0c80, {{500.0, 1214.0}, {2.0, 2.0}}, value: org.swift.swiftpm
+                    Group, 0xc394b0dc0, {{501.0, 1214.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b0f00, {{501.0, 1237.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394b1040, {{500.0, 1236.0}, {2.0, 2.0}}, value: Passes
+                    Group, 0xc394b1180, {{501.0, 1236.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b12c0, {{501.0, 1259.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394b1400, {{500.0, 1258.0}, {2.0, 2.0}}, value: PersonalizationPor...
+                    Group, 0xc394b1540, {{501.0, 1258.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b1680, {{501.0, 1281.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394b17c0, {{500.0, 1280.0}, {2.0, 2.0}}, value: Photos
+                    Group, 0xc394b1900, {{501.0, 1280.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b1a40, {{501.0, 1303.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394b1b80, {{500.0, 1302.0}, {2.0, 2.0}}, value: PreferencePanes
+                    Group, 0xc394b1cc0, {{501.0, 1302.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b1e00, {{501.0, 1325.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394b1f40, {{500.0, 1324.0}, {2.0, 2.0}}, value: Preferences
+                    Group, 0xc394b2080, {{501.0, 1324.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b21c0, {{501.0, 1347.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394b2300, {{500.0, 1346.0}, {2.0, 2.0}}, value: Printers
+                    Group, 0xc394b2440, {{501.0, 1346.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b2580, {{501.0, 1369.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394b26c0, {{500.0, 1368.0}, {2.0, 2.0}}, value: PrivateCloudCompute
+                    Group, 0xc394b2800, {{501.0, 1368.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b2940, {{501.0, 1391.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394b2a80, {{500.0, 1390.0}, {2.0, 2.0}}, value: Reminders
+                    Group, 0xc394b2bc0, {{501.0, 1390.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b2d00, {{501.0, 1413.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394b2e40, {{500.0, 1412.0}, {2.0, 2.0}}, value: Safari
+                    Group, 0xc394b2f80, {{501.0, 1412.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b30c0, {{501.0, 1415.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b3200, {{521.0, 1414.0}, {126.0, 18.0}}, value: SafariSafeBrowsing
+                    Group, 0xc394b3340, {{501.0, 1434.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b3480, {{501.0, 1437.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b35c0, {{521.0, 1436.0}, {136.0, 18.0}}, value: Screen Savers
+                    Group, 0xc394b3700, {{501.0, 1456.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b3840, {{501.0, 1459.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b3980, {{521.0, 1458.0}, {57.0, 18.0}}, value: Services
+                    Group, 0xc394b3ac0, {{501.0, 1478.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394b3c00, {{501.0, 1481.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394b3d40, {{521.0, 1480.0}, {41.0, 18.0}}, value: Sharing
+                    Group, 0xc394b3e80, {{501.0, 1500.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394ac000, {{501.0, 1503.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394ac140, {{521.0, 1502.0}, {52.0, 18.0}}, value: Shortcuts
+                    Group, 0xc394ac280, {{501.0, 1522.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394ac3c0, {{501.0, 1525.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394ac500, {{521.0, 1524.0}, {32.0, 18.0}}, value: Sounds
+                    Group, 0xc394ac640, {{501.0, 1544.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394ac780, {{501.0, 1547.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394ac8c0, {{521.0, 1546.0}, {67.0, 18.0}}, value: Spelling
+                    Group, 0xc394aca00, {{501.0, 1566.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394acb40, {{501.0, 1569.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394acc80, {{521.0, 1568.0}, {61.0, 18.0}}, value: Spotlight
+                    Group, 0xc394acdc0, {{501.0, 1588.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394acf00, {{501.0, 1591.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394ad040, {{521.0, 1590.0}, {62.0, 18.0}}, value: StatusKit
+                    Group, 0xc394ad180, {{501.0, 1610.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394ad2c0, {{501.0, 1613.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394ad400, {{521.0, 1612.0}, {61.0, 18.0}}, value: studentd
+                    Group, 0xc394ad540, {{501.0, 1632.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394ad680, {{501.0, 1655.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394ad7c0, {{500.0, 1654.0}, {2.0, 2.0}}, value: Suggestions
+                    Group, 0xc394ad900, {{501.0, 1654.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394ada40, {{501.0, 1657.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394adb80, {{521.0, 1656.0}, {73.0, 18.0}}, value: Translation
+                    Group, 0xc394adcc0, {{501.0, 1676.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394ade00, {{501.0, 1699.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394adf40, {{500.0, 1698.0}, {2.0, 2.0}}, value: Trial
+                    Group, 0xc394ae080, {{501.0, 1698.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394ae1c0, {{501.0, 1721.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394ae300, {{500.0, 1720.0}, {2.0, 2.0}}, value: UnifiedAssetFramew...
+                    Group, 0xc394ae440, {{501.0, 1720.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394ae580, {{501.0, 1743.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394ae6c0, {{500.0, 1742.0}, {2.0, 2.0}}, value: Weather
+                    Group, 0xc394ae800, {{501.0, 1742.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394ae940, {{501.0, 1765.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394aea80, {{500.0, 1764.0}, {2.0, 2.0}}, value: WebDriver
+                    Group, 0xc394aebc0, {{501.0, 1764.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394aed00, {{501.0, 1767.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394aee40, {{521.0, 1766.0}, {122.0, 18.0}}, value: WebKit
+                  ScrollBar, 0xc394aef80, {{712.0, 209.0}, {19.0, 288.0}}, value: 0.1410427807486631
+                    ValueIndicator, 0xc394af0c0, {{716.0, 246.0}, {11.0, 46.0}}, value: 0.1410427807486631, Disabled
+                    IncrementArrow, 0xc394af200, {{713.0, 210.0}, {0.0, 0.0}}, Disabled
+                    DecrementArrow, 0xc394af340, {{713.0, 210.0}, {0.0, 0.0}}, Disabled
+                    Button, 0xc394af480, {{716.0, 293.0}, {11.0, 200.0}}, Disabled
+                    Button, 0xc394af5c0, {{716.0, 213.0}, {11.0, 32.0}}, Disabled
+                ScrollView, 0xc394af700, {{730.0, 210.0}, {245.0, 301.0}}, Disabled
+                  Other, 0xc394af840, {{729.0, -3170.0}, {230.0, 7299.0}}
+                    Group, 0xc394af980, {{746.0, -3164.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394afac0, {{746.0, -3161.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394afc00, {{766.0, -3162.0}, {58.0, 18.0}}, value: #images
+                    Group, 0xc394afd40, {{746.0, -3142.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394afe80, {{746.0, -3139.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc39450000, {{766.0, -3140.0}, {167.0, 18.0}}, value: AccessibilitySetti...
+                    Group, 0xc39450140, {{746.0, -3120.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39450280, {{746.0, -3117.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394503c0, {{766.0, -3118.0}, {167.0, 18.0}}, value: AccessKey
+                    Group, 0xc39450500, {{746.0, -3098.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39450640, {{746.0, -3095.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc39450780, {{766.0, -3096.0}, {121.0, 18.0}}, value: Add to Photos
+                    Group, 0xc394508c0, {{746.0, -3076.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39450a00, {{746.0, -3053.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39450b40, {{745.0, -3054.0}, {2.0, 2.0}}, value: Add to Reading List
+                    Group, 0xc39450c80, {{746.0, -3054.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39450dc0, {{746.0, -3051.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc39450f00, {{766.0, -3052.0}, {167.0, 18.0}}, value: AirDrop
+                    Group, 0xc39451040, {{746.0, -3032.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39451180, {{746.0, -3009.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394512c0, {{745.0, -3010.0}, {2.0, 2.0}}, value: AirDropHandoffInte...
+                    Group, 0xc39451400, {{746.0, -3010.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39451540, {{746.0, -2987.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39451680, {{745.0, -2988.0}, {2.0, 2.0}}, value: AirPlay Screen Mir...
+                    Group, 0xc394517c0, {{746.0, -2988.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39451900, {{746.0, -2965.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39451a40, {{745.0, -2966.0}, {2.0, 2.0}}, value: AirPlayDiagnosticE...
+                    Group, 0xc39451b80, {{746.0, -2966.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39451cc0, {{746.0, -2943.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39451e00, {{745.0, -2944.0}, {2.0, 2.0}}, value: AKDiagnosticExtens...
+                    Group, 0xc39451f40, {{746.0, -2944.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39452080, {{746.0, -2921.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394521c0, {{745.0, -2922.0}, {2.0, 2.0}}, value: Album Artwork
+                    Group, 0xc39452300, {{746.0, -2922.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39452440, {{746.0, -2899.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39452580, {{745.0, -2900.0}, {2.0, 2.0}}, value: Appearance Setting...
+                    Group, 0xc394526c0, {{746.0, -2900.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39452800, {{746.0, -2877.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39452940, {{745.0, -2878.0}, {2.0, 2.0}}, value: Apple Account
+                    Group, 0xc39452a80, {{746.0, -2878.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39452bc0, {{746.0, -2855.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39452d00, {{745.0, -2856.0}, {2.0, 2.0}}, value: Apple UAS and NVMe...
+                    Group, 0xc39452e40, {{746.0, -2856.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39452f80, {{746.0, -2833.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394530c0, {{745.0, -2834.0}, {2.0, 2.0}}, value: AppleBtcDiagnosis
+                    Group, 0xc39453200, {{746.0, -2834.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39453340, {{746.0, -2811.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39453480, {{745.0, -2812.0}, {2.0, 2.0}}, value: AppleSDXC Diagnost...
+                    Group, 0xc394535c0, {{746.0, -2812.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39453700, {{746.0, -2789.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39453840, {{745.0, -2790.0}, {2.0, 2.0}}, value: APWDiagnosticExten...
+                    Group, 0xc39453980, {{746.0, -2790.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39453ac0, {{746.0, -2767.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39453c00, {{745.0, -2768.0}, {2.0, 2.0}}, value: Arabesque
+                    Group, 0xc39453d40, {{746.0, -2768.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39453e80, {{746.0, -2745.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d4000, {{745.0, -2746.0}, {2.0, 2.0}}, value: ArticleNotificatio...
+                    Group, 0xc394d4140, {{746.0, -2746.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d4280, {{746.0, -2723.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d43c0, {{745.0, -2724.0}, {2.0, 2.0}}, value: AssetMetricsExtens...
+                    Group, 0xc394d4500, {{746.0, -2724.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d4640, {{746.0, -2701.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d4780, {{745.0, -2702.0}, {2.0, 2.0}}, value: AssistantSettingsC...
+                    Group, 0xc394d48c0, {{746.0, -2702.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d4a00, {{746.0, -2679.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d4b40, {{745.0, -2680.0}, {2.0, 2.0}}, value: AutomationModeUI
+                    Group, 0xc394d4c80, {{746.0, -2680.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d4dc0, {{746.0, -2657.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d4f00, {{745.0, -2658.0}, {2.0, 2.0}}, value: AvatarPickerMemoji...
+                    Group, 0xc394d5040, {{746.0, -2658.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d5180, {{746.0, -2635.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d52c0, {{745.0, -2636.0}, {2.0, 2.0}}, value: AvatarPickerMemoji...
+                    Group, 0xc394d5400, {{746.0, -2636.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d5540, {{746.0, -2613.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d5680, {{745.0, -2614.0}, {2.0, 2.0}}, value: AvatarPickerPosePi...
+                    Group, 0xc394d57c0, {{746.0, -2614.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d5900, {{746.0, -2591.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d5a40, {{745.0, -2592.0}, {2.0, 2.0}}, value: Batteries
+                    Group, 0xc394d5b80, {{746.0, -2592.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d5cc0, {{746.0, -2569.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d5e00, {{745.0, -2570.0}, {2.0, 2.0}}, value: BatteriesAvocadoWi...
+                    Group, 0xc394d5f40, {{746.0, -2570.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d6080, {{746.0, -2547.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d61c0, {{745.0, -2548.0}, {2.0, 2.0}}, value: BatterySettingsInt...
+                    Group, 0xc394d6300, {{746.0, -2548.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d6440, {{746.0, -2525.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d6580, {{745.0, -2526.0}, {2.0, 2.0}}, value: BioLogDiagnostic
+                    Group, 0xc394d66c0, {{746.0, -2526.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d6800, {{746.0, -2503.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d6940, {{745.0, -2504.0}, {2.0, 2.0}}, value: BluetoothDiagnosti...
+                    Group, 0xc394d6a80, {{746.0, -2504.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d6bc0, {{746.0, -2481.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d6d00, {{745.0, -2482.0}, {2.0, 2.0}}, value: BluetoothHeadset
+                    Group, 0xc394d6e40, {{746.0, -2482.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d6f80, {{746.0, -2459.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d70c0, {{745.0, -2460.0}, {2.0, 2.0}}, value: BluetoothSettingsA...
+                    Group, 0xc394d7200, {{746.0, -2460.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d7340, {{746.0, -2457.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394d7480, {{766.0, -2458.0}, {80.0, 18.0}}, value: Books
+                    Group, 0xc394d75c0, {{746.0, -2438.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d7700, {{746.0, -2415.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d7840, {{745.0, -2416.0}, {2.0, 2.0}}, value: Books Diagnostic E...
+                    Group, 0xc394d7980, {{746.0, -2416.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d7ac0, {{746.0, -2413.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394d7c00, {{766.0, -2414.0}, {167.0, 18.0}}, value: BooksNotificationC...
+                    Group, 0xc394d7d40, {{746.0, -2394.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d7e80, {{746.0, -2391.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394d0000, {{766.0, -2392.0}, {153.0, 18.0}}, value: BooksSpotlightExte...
+                    Group, 0xc394d0140, {{746.0, -2372.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d0280, {{746.0, -2369.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394d03c0, {{766.0, -2370.0}, {31.0, 18.0}}, value: Calculator
+                    Group, 0xc394d0500, {{746.0, -2350.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d0640, {{746.0, -2347.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394d0780, {{766.0, -2348.0}, {134.0, 18.0}}, value: CalculatorWidget
+                    Group, 0xc394d08c0, {{746.0, -2328.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d0a00, {{746.0, -2325.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394d0b40, {{766.0, -2326.0}, {167.0, 18.0}}, value: Calendar
+                    Group, 0xc394d0c80, {{746.0, -2306.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d0dc0, {{746.0, -2303.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394d0f00, {{766.0, -2304.0}, {124.0, 18.0}}, value: CalendarDiagnostic...
+                    Group, 0xc394d1040, {{746.0, -2284.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d1180, {{746.0, -2261.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d12c0, {{745.0, -2262.0}, {2.0, 2.0}}, value: CalendarIntentsExt...
+                    Group, 0xc394d1400, {{746.0, -2262.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d1540, {{746.0, -2259.0}, {16.0, 16.0}}, Disabled
+                      TextField, 0xc394d1680, {{766.0, -2260.0}, {167.0, 18.0}}, value: CalendarNotificati...
+                    Group, 0xc394d17c0, {{746.0, -2240.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d1900, {{746.0, -2217.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d1a40, {{745.0, -2218.0}, {2.0, 2.0}}, value: CalendarWidgetExte...
+                    Group, 0xc394d1b80, {{746.0, -2218.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d1cc0, {{746.0, -2195.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d1e00, {{745.0, -2196.0}, {2.0, 2.0}}, value: ClassKitDiagnostic...
+                    Group, 0xc394d1f40, {{746.0, -2196.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d2080, {{746.0, -2173.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d21c0, {{745.0, -2174.0}, {2.0, 2.0}}, value: Clock
+                    Group, 0xc394d2300, {{746.0, -2174.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d2440, {{746.0, -2151.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d2580, {{745.0, -2152.0}, {2.0, 2.0}}, value: CloudDocsDiagnostic
+                    Group, 0xc394d26c0, {{746.0, -2152.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d2800, {{746.0, -2129.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d2940, {{745.0, -2130.0}, {2.0, 2.0}}, value: com.apple.accessib...
+                    Group, 0xc394d2a80, {{746.0, -2130.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d2bc0, {{746.0, -2107.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d2d00, {{745.0, -2108.0}, {2.0, 2.0}}, value: com.apple.AMPArtwo...
+                    Group, 0xc394d2e40, {{746.0, -2108.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d2f80, {{746.0, -2085.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d30c0, {{745.0, -2086.0}, {2.0, 2.0}}, value: com.apple.AMPDevic...
+                    Group, 0xc394d3200, {{746.0, -2086.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d3340, {{746.0, -2063.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d3480, {{745.0, -2064.0}, {2.0, 2.0}}, value: com.apple.assessme...
+                    Group, 0xc394d35c0, {{746.0, -2064.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d3700, {{746.0, -2041.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d3840, {{745.0, -2042.0}, {2.0, 2.0}}, value: com.apple.AVConfer...
+                    Group, 0xc394d3980, {{746.0, -2042.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d3ac0, {{746.0, -2019.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394d3c00, {{745.0, -2020.0}, {2.0, 2.0}}, value: com.apple.BKAgentS...
+                    Group, 0xc394d3d40, {{746.0, -2020.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394d3e80, {{746.0, -1997.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39484000, {{745.0, -1998.0}, {2.0, 2.0}}, value: com.apple.contacts...
+                    Group, 0xc39484140, {{746.0, -1998.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39484280, {{746.0, -1975.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394843c0, {{745.0, -1976.0}, {2.0, 2.0}}, value: com.apple.CoreDevi...
+                    Group, 0xc39484500, {{746.0, -1976.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39484640, {{746.0, -1953.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39484780, {{745.0, -1954.0}, {2.0, 2.0}}, value: com.apple.CoreDevi...
+                    Group, 0xc394848c0, {{746.0, -1954.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39484a00, {{746.0, -1931.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39484b40, {{745.0, -1932.0}, {2.0, 2.0}}, value: com.apple.corerece...
+                    Group, 0xc39484c80, {{746.0, -1932.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39484dc0, {{746.0, -1909.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39484f00, {{745.0, -1910.0}, {2.0, 2.0}}, value: com.apple.DataDete...
+                    Group, 0xc39485040, {{746.0, -1910.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39485180, {{746.0, -1887.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394852c0, {{745.0, -1888.0}, {2.0, 2.0}}, value: com.apple.Diagnost...
+                    Group, 0xc39485400, {{746.0, -1888.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39485540, {{746.0, -1865.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39485680, {{745.0, -1866.0}, {2.0, 2.0}}, value: com.apple.Diagnost...
+                    Group, 0xc394857c0, {{746.0, -1866.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39485900, {{746.0, -1843.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39485a40, {{745.0, -1844.0}, {2.0, 2.0}}, value: com.apple.dock.con...
+                    Group, 0xc39485b80, {{746.0, -1844.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39485cc0, {{746.0, -1821.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39485e00, {{745.0, -1822.0}, {2.0, 2.0}}, value: com.apple.geod
+                    Group, 0xc39485f40, {{746.0, -1822.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39486080, {{746.0, -1799.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394861c0, {{745.0, -1800.0}, {2.0, 2.0}}, value: com.apple.ImagePla...
+                    Group, 0xc39486300, {{746.0, -1800.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39486440, {{746.0, -1777.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39486580, {{745.0, -1778.0}, {2.0, 2.0}}, value: com.apple.intellig...
+                    Group, 0xc394866c0, {{746.0, -1778.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39486800, {{746.0, -1755.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39486940, {{745.0, -1756.0}, {2.0, 2.0}}, value: com.apple.language...
+                    Group, 0xc39486a80, {{746.0, -1756.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39486bc0, {{746.0, -1733.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39486d00, {{745.0, -1734.0}, {2.0, 2.0}}, value: com.apple.Lighthou...
+                    Group, 0xc39486e40, {{746.0, -1734.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39486f80, {{746.0, -1711.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394870c0, {{745.0, -1712.0}, {2.0, 2.0}}, value: com.apple.LoginUse...
+                    Group, 0xc39487200, {{746.0, -1712.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39487340, {{746.0, -1689.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39487480, {{745.0, -1690.0}, {2.0, 2.0}}, value: com.apple.managedc...
+                    Group, 0xc394875c0, {{746.0, -1690.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39487700, {{746.0, -1667.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39487840, {{745.0, -1668.0}, {2.0, 2.0}}, value: com.apple.mediaana...
+                    Group, 0xc39487980, {{746.0, -1668.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39487ac0, {{746.0, -1645.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc39487c00, {{745.0, -1646.0}, {2.0, 2.0}}, value: com.apple.mediastr...
+                    Group, 0xc39487d40, {{746.0, -1646.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc39487e80, {{746.0, -1623.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394cc000, {{745.0, -1624.0}, {2.0, 2.0}}, value: com.apple.mlhost.C...
+                    Group, 0xc394cc140, {{746.0, -1624.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394cc280, {{746.0, -1601.0}, {0.0, 0.0}}, Disabled
+                      TextField, 0xc394cc3c0, {{745.0, -1602.0}, {2.0, 2.0}}, value: com.apple.mlhost.T...
+                    Group, 0xc394cc500, {{746.0, -1602.0}, {190.0, 23.0}}, Keyboard Focused, Disabled
+                      Image, 0xc394cc640, {{746.0, -1579.0}, {0.0, 0.0}}, Disabled
+                      Te

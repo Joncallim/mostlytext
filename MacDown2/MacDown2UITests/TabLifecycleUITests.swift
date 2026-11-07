@@ -149,8 +149,13 @@ final class TabLifecycleUITests: XCTestCase {
         // applied to the last-opened window; explicitly choose it on b.md too.
         app.menuBars.menuBarItems["File"].click()
         app.menuBars.menuBarItems["File"].menuItems["Open Folder…"].click()
-        let panel = app.sheets.firstMatch
+        let origins = app.windows.matching(NSPredicate(format: "title CONTAINS[c] %@", "b.md"))
+        XCTAssertEqual(origins.count, 1, "Folder selection belongs to the unique selected document window")
+        let origin = origins.firstMatch
+        XCTAssertTrue(origin.exists)
+        let panel = origin.sheets.matching(identifier: "open-panel").firstMatch
         XCTAssertTrue(panel.waitForExistence(timeout: 5))
+        requireCompactChooserView(panel)
         app.typeKey("g", modifierFlags: [.command, .shift])
         app.typeText(fixturesDir.path)
         app.typeKey(.return, modifierFlags: [])
@@ -193,6 +198,7 @@ final class TabLifecycleUITests: XCTestCase {
 
     private func captureSessionCheckpoint(_ label: String) {
         if app.state != .notRunning {
+            captureRemainingChoosers(label)
             let hierarchy = XCTAttachment(string: String(app.debugDescription.prefix(65536)))
             hierarchy.name = label + " accessibility"
             hierarchy.lifetime = .keepAlways
@@ -208,6 +214,43 @@ final class TabLifecycleUITests: XCTestCase {
             XCTAttachment(string: "Generated session exceeds the diagnostic capture limit")
         }
         attachment.name = label + " generated session"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    private func requireCompactChooserView(_ panel: XCUIElement) {
+        // Keep the chooser's automation surface to its current directory,
+        // rather than column-mode ancestor listings of Library/Containers.
+        app.typeKey("2", modifierFlags: .command)
+        let listReady = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "count >= 2"), object: panel.outlines
+        )
+        XCTAssertEqual(XCTWaiter().wait(for: [listReady], timeout: 5), .completed)
+        XCTAssertFalse(panel.browsers["ColumnView"].exists)
+    }
+
+    private func captureRemainingChoosers(_ label: String) {
+        let panels = app.sheets.matching(identifier: "open-panel")
+        var rows: [[String: Any]] = []
+        for panel in panels.allElementsBoundByIndex.prefix(2) {
+            let buttons: [[String: Any]] = panel.buttons.allElementsBoundByIndex.prefix(32).map { button in
+                [
+                    "identifier": String(button.identifier.prefix(256)), "label": String(button.label.prefix(256)),
+                    "exists": button.exists, "enabled": button.isEnabled, "hittable": button.isHittable,
+                    "frame": String(describing: button.frame),
+                ]
+            }
+            rows.append([
+                "identifier": panel.identifier, "frame": String(describing: panel.frame),
+                "outlines": panel.outlines.count,
+                "columnViews": panel.browsers.matching(identifier: "ColumnView").count,
+                "buttons": buttons,
+            ])
+        }
+        guard !rows.isEmpty, let bytes = try? JSONSerialization.data(withJSONObject: rows, options: .sortedKeys)
+        else { return }
+        let attachment = XCTAttachment(data: bytes, uniformTypeIdentifier: "public.json")
+        attachment.name = label + " remaining native chooser attributes"
         attachment.lifetime = .keepAlways
         add(attachment)
     }
