@@ -171,3 +171,31 @@ The exact browser asset bytes and original computation remain unchanged. Preserv
 actual TimeoutExpired partial stdout/stderr in finally-path output capture even
 when the child is killed; no synthetic result or missing-byte claim. No native
 attempt is admitted unless the original genuine reference SVG positive passes.
+
+## Verified signed-array repair for the next Mac candidate
+
+The separate guarded Linux diagnosis preserves exact engine bytes and no Mac
+acceptance is inferred. Its source020c85f4 shows unpack finishes in0.447seconds;
+e8c45c57 observes the actual result Int8Array and12verbatim actual clone controls:
+1passes/11fail, including signed bytes converted into an ordinary Object. Narrow
+repair ff921993 preserves visible bytes and view kind for all ArrayBuffer views.
+Actual first Linux42416702780 passes all12controls and the unchanged real D2
+engine/control/reference, reporting10,928SVG bytes and a complete28phase history
+ending render at2.253seconds process uptime (whole reference4.753seconds). Source,
+copy, Node and before/after function identity are independently verified. Its
+first reference retained SVG length/hash, not raw SVG bytes; no visual/fidelity
+or native claim follows. Complete first success and earlier failures are retained.
+
+The obsolete d7c45fb4 Mac diagnostic42415176368 was freshly verified queued with
+zero steps, then cancelled before executor/build/Finder. Its completed cancelled
+metadata, empty actual log archive and empty artifact list are retained and
+independently verified. It is NOT_RUN, never a native failure or pass. Companion
+Compliance passes. All PR146 first gates remain unchanged and running.
+
+Before code, adopt only the proved BufferSource copy repair and its real12case
+control in the existing private Mac host. Keep the engine, fixed graph, two
+permissions, original cold/rich Finder assertions and all deadlines. Persist
+actual reference SVG bytes and verify their own length/hash; do not assume
+byte-equality or theme fidelity across Node/JavaScriptCore. Preserve complete
+first corrected Mac outcome before further correction. No production host,
+worker isolation, untrusted-work deadline, memory or full QL-REPLY claim.
