@@ -245,3 +245,16 @@ AST/YAML and diff checks pass. The selected-view diagnostic, copy action,
 assertions, calibration, mutation/restoration and deadlines remain unchanged.
 PR124's full qualification is now retained and integrated as aff49a5e, so this
 separate historical-source diagnostic may run once. Its result is still pending.
+
+## First window-lifetime outcome — inconclusive
+
+Run42347555198 at a877 genuinely passes the full55/17, calibrated8image/56
+negative selection control, expected revision-mutant failure and restored3/1.
+All1618source/24pins/native architectures/owned outcomes independently verify.
+Three explicit original-fixture stop records contain only observe, without
+prior close; extra observer activations do not all have stop records. No old
+copy failure reproduces. Observer registration/log timing changed the diagnostic
+input and cannot establish historical absence of a close or its root cause.
+The adjacent evidence packet preserves original receipts/logs/digests. Keep
+this branch unmerged and original0557/PR100/108 qualification held. No unchanged
+retry or production activation follows from this outcome.
