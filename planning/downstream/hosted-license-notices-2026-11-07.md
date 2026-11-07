@@ -88,3 +88,15 @@ and current checks before expected-head merge. Update #14/#5 only for the bounde
 integrated result and audit all live issues immediately after each mutation.
 No whole issue closes from this case; final rights/source publication and
 post-localisation signed-artifact requirements remain explicit.
+
+## Source-bound admission controls
+
+Before activation, add a small controller read-order control. Compile the actual
+main in memory with a synthetic valid anchor, intercept the ancestry command
+without executing it, and replace receipt reads with a counter/exception. The
+real untrusted-host guard must refuse before any receipt read; removing that
+one call must reach the intercepted read. Also prove the actual held normal
+and optimized CLI refuse before preparation. These are control-flow checks,
+not fake native evidence; neither the ancestry command nor receipt file opens.
+Record this test file in full source inputs and execute it before hosted
+preparation. Preserve PR124's exact-case-passed check when reconciling main.
