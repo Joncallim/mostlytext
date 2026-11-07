@@ -1,0 +1,130 @@
+{
+  "head": "6301b0fb914c2846e23c6c418d8b0be17242e6d3",
+  "checkout": "0e4fd8f2c400b057b664da9bc8fb132e8f5bb79f",
+  "all_source_inputs_verified": 1603,
+  "all_pins_verified": 24,
+  "copied_fixture_source_hashes_verified": 5,
+  "downloaded_generated_swift_binding_verified": true,
+  "generated_xcode_project_hashes": "Hosted records only; these three generated project files were not included in the downloadable artifact. Not independently downloaded/hash-verified.",
+  "actual_benign_control": {
+    "summary": {
+      "devicesAndConfigurations": [
+        {
+          "device": {
+            "architecture": "arm64",
+            "deviceId": "c61710358b456f21467fadec65c0724266384795",
+            "deviceName": "My Mac",
+            "modelName": "Apple Virtual Machine 1",
+            "osBuildNumber": "25G83",
+            "osVersion": "26.6.2",
+            "platform": "macOS"
+          },
+          "expectedFailures": 0,
+          "failedTests": 0,
+          "passedTests": 1,
+          "skippedTests": 0,
+          "testPlanConfiguration": {
+            "configurationId": "1",
+            "configurationName": "Test Scheme Action"
+          }
+        }
+      ],
+      "environmentDescription": "HostedPublicFocus \u00b7 Built with macOS 26.6.2",
+      "expectedFailures": 0,
+      "failedTests": 0,
+      "finishTime": 1794015863.703,
+      "passedTests": 1,
+      "result": "Passed",
+      "skippedTests": 0,
+      "startTime": 1794015843.443,
+      "statistics": [],
+      "testFailures": [],
+      "title": "Test - HostedPublicFocus",
+      "topInsights": [],
+      "totalTestCount": 1
+    },
+    "owned": {
+      "returncode": 0,
+      "timed_out": false,
+      "cancelled": false,
+      "elapsed_seconds": 23.058971292000024,
+      "app_cleanup_requested": []
+    },
+    "selected": "HostedFocusDriverTests/PublicFocusTests/testBenignInputControl"
+  },
+  "actual_focus_failure": {
+    "summary": {
+      "devicesAndConfigurations": [
+        {
+          "device": {
+            "architecture": "arm64",
+            "deviceId": "c61710358b456f21467fadec65c0724266384795",
+            "deviceName": "My Mac",
+            "modelName": "Apple Virtual Machine 1",
+            "osBuildNumber": "25G83",
+            "osVersion": "26.6.2",
+            "platform": "macOS"
+          },
+          "expectedFailures": 0,
+          "failedTests": 1,
+          "passedTests": 0,
+          "skippedTests": 0,
+          "testPlanConfiguration": {
+            "configurationId": "1",
+            "configurationName": "Test Scheme Action"
+          }
+        }
+      ],
+      "environmentDescription": "HostedPublicFocus \u00b7 Built with macOS 26.6.2",
+      "expectedFailures": 0,
+      "failedTests": 1,
+      "finishTime": 1794015884.682,
+      "passedTests": 0,
+      "result": "Failed",
+      "skippedTests": 0,
+      "startTime": 1794015871.22,
+      "statistics": [],
+      "testFailures": [
+        {
+          "failureText": "Failed to click \"Open Folder\u2026\" MenuItem: No matches found for Descendants matching type MenuBar from input {(\n    Application, pid: 24301, title: 'MostlyText'\n)}",
+          "targetName": "HostedFocusDriverTests",
+          "testIdentifier": 1,
+          "testIdentifierString": "PublicFocusTests/testNormalPublicFocusBoldAndUndo()",
+          "testIdentifierURL": "test://com.apple.xcode/HostedPublicFocus/HostedFocusDriverTests/PublicFocusTests/testNormalPublicFocusBoldAndUndo",
+          "testName": "testNormalPublicFocusBoldAndUndo()"
+        }
+      ],
+      "title": "Test - HostedPublicFocus",
+      "topInsights": [],
+      "totalTestCount": 1
+    },
+    "owned": {
+      "returncode": 65,
+      "timed_out": false,
+      "cancelled": false,
+      "elapsed_seconds": 28.266711665999992,
+      "app_cleanup_requested": []
+    },
+    "selected": "HostedFocusDriverTests/PublicFocusTests/testNormalPublicFocusBoldAndUndo"
+  },
+  "actual_gui": {
+    "keyboard_input_source": "com.apple.keylayout.US",
+    "login_done": true,
+    "on_console": true,
+    "scope": "Actual hosted GUI metadata after positive input control, before ordinary product launch",
+    "screen_lock_field": null,
+    "screens": [
+      {
+        "height": 768,
+        "scale": 1,
+        "width": 1024
+      }
+    ],
+    "uid": 501
+  },
+  "actual_normal_app_public_cli_open": true,
+  "actual_identity_bound_cleanup": true,
+  "original_disk_bytes_unchanged": true,
+  "observed_screen_and_hierarchy": "File contains only New Window/Close; no Format/Folder/Commands menus. Source captures false readiness before asynchronous migration. Hypothesized observation cause requires a causal control before product correction.",
+  "scope": "Genuine bounded failure retained. No focus/format/normalQuit/completeNative or release acceptance."
+}

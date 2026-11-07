@@ -62,4 +62,4 @@ jobs:
             ${{ runner.temp }}/mostlytext-focus/focus-owned/**
             ${{ runner.temp }}/mostlytext-focus/*.xcresult/**
             ${{ runner.temp }}/mostlytext-focus/documents/**
-            ${{ runner.temp }}/mostlytext-focus/fixture/Driver/HostedFocusInputs.swift
+            ${{ runner.temp }}/mostlytext-focus/fixture/**
