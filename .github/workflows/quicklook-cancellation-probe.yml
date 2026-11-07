@@ -61,6 +61,7 @@ jobs:
         run: |
           set +e
           /usr/bin/log show --last 12m --style json --predicate 'subsystem == "app.mostlytext.qlcancelprobe"' > "$RUNNER_TEMP/mostlytext-qlcancel/provider-events.json" 2> "$RUNNER_TEMP/mostlytext-qlcancel/provider-log-errors.txt"
+          /usr/bin/log show --last 12m --style json --predicate 'subsystem == "app.mostlytext.qlcancelobserver"' > "$RUNNER_TEMP/mostlytext-qlcancel/observer-control-events.json" 2> "$RUNNER_TEMP/mostlytext-qlcancel/observer-control-log-errors.txt"
           ps -axo pid=,uid=,comm= > "$RUNNER_TEMP/mostlytext-qlcancel/processes-after.txt"
           python3 .github/scripts/prepare-quicklook-cancellation-probe.py "$RUNNER_TEMP/mostlytext-qlcancel" --verify-finder
       - name: Preserve every first actual pending closure result

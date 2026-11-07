@@ -194,3 +194,15 @@ stream lifecycle and actual UI attachment. No permissions/TCC/AppGroup/network
 service changes. Original cold positive/provider/read path/10second wait/window/
 spinner/Escape/closure/terminal checks remain byte-identical. Strict source/pure
 parser/correlation tests precede one new first native run; retain any new refusal.
+
+The live-channel implementation passes 13 pure observer tests (including changed
+binary/raw bytes, malformed/foreign/truncated logs, wrong nonce, stale history,
+late admission, early stop and forced cleanup), 15 existing provider/UI
+correlation controls and three owned-process controls. The new standalone
+control passes strict optimized SDK type checking, formatting and strict lint;
+Python/YAML syntax and source compliance pass. Only the hosted workflow compiles
+or executes it. The control is outside every explicit XcodeGen target source
+directory. Provider, original cold method, pending UI actions, generated project
+specification and all product bytes remain unchanged from the preserved first
+host-observer attempt/main integration. These source checks are not a new native
+outcome. Preserve the next actual frozen combined-head first outcomes in full.

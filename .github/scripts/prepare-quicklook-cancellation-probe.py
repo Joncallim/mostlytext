@@ -13,6 +13,78 @@ import plistlib
 import shutil
 import subprocess
 import sys
+import uuid
+
+PROVIDER_SUBSYSTEM = 'app.mostlytext.qlcancelprobe'
+CONTROL_SUBSYSTEM = 'app.mostlytext.qlcancelobserver'
+STREAM_COMMAND = ['/usr/bin/log', 'stream', '--style', 'ndjson', '--level', 'info', '--predicate',
+                  f'(subsystem == "{PROVIDER_SUBSYSTEM}") OR (subsystem == "{CONTROL_SUBSYSTEM}")']
+
+
+def parse_live_record(raw):
+    if len(raw) > 128 * 1024:
+        raise RuntimeError('Actual stream line exceeded128KiB')
+    text = raw.decode('utf-8').strip()
+    if text.startswith('Filtering the log data using '):
+        return None
+    try:
+        value = json.loads(text)
+    except (ValueError, TypeError) as error:
+        raise RuntimeError('Malformed actual live log record') from error
+    if (not isinstance(value, dict) or value.get('subsystem') not in [PROVIDER_SUBSYSTEM, CONTROL_SUBSYSTEM]
+            or not isinstance(value.get('eventMessage'), str)):
+        raise RuntimeError('Unknown actual live log namespace/schema')
+    return value
+
+
+def is_control_echo(value, nonce):
+    return (value is not None and value['subsystem'] == CONTROL_SUBSYSTEM
+            and value['eventMessage'] == 'QL_OBSERVER_CONTROL nonce=' + nonce)
+
+
+def replay_live_stream(raw, nonce):
+    if str(uuid.UUID(nonce)).upper() != nonce or len(raw) > 1024 * 1024 or not raw.endswith(b'\n'):
+        raise RuntimeError('Invalid nonce or incomplete/excessive live stream bytes')
+    messages = []
+    generations = []
+    position = 0
+    echo = None
+    for line in raw.splitlines(keepends=True):
+        position += len(line)
+        value = parse_live_record(line)
+        if is_control_echo(value, nonce) and echo is None:
+            echo = position
+            generations.append((position, []))
+        elif value is not None and value['subsystem'] == PROVIDER_SUBSYSTEM:
+            if echo is None:
+                raise RuntimeError('Provider event preceded channel admission')
+            messages.append(value['eventMessage'])
+            generations.append((position, list(messages)))
+    if echo is None:
+        raise RuntimeError('No actual matching live channel echo')
+    return generations
+
+
+def compile_observer_control(root):
+    source = root / 'fixture/ObserverControl.swift'
+    binary = root / 'observer-control'
+    arguments = ['xcrun', 'swiftc', '-O', '-swift-version', '6', '-strict-concurrency=complete',
+                 '-warnings-as-errors', '-target', 'arm64-apple-macos26.0', '-parse-as-library',
+                 str(source), '-o', str(binary)]
+    record = {'command': arguments, 'source_sha256': digest(source)}
+    try:
+        result = subprocess.run(arguments, capture_output=True, timeout=60)
+        (root / 'observer-control-build.log').write_bytes(result.stdout + result.stderr)
+        record['returncode'] = result.returncode
+        if binary.exists():
+            record['binary_sha256'] = digest(binary)
+        if result.returncode:
+            raise RuntimeError('Actual hosted channel control compilation failed')
+    except BaseException as error:
+        record['error'] = repr(error)
+        raise
+    finally:
+        (root / 'observer-control-build.json').write_text(json.dumps(record, indent=2) + '\n')
 
 
 def digest(path):
@@ -84,7 +156,8 @@ def capture_compiled(root):
     plans = list(products.glob('*.xctestrun'))
     if len(plans) != 1:
         raise RuntimeError('Require one actual compiled UI execution plan')
-    roles = {'app': app / 'Contents/MacOS/QLReplyProbeContainer', 'app_info': app / 'Contents/Info.plist',
+    roles = {'observer_control': root / 'observer-control',
+             'app': app / 'Contents/MacOS/QLReplyProbeContainer', 'app_info': app / 'Contents/Info.plist',
              'provider': provider / 'Contents/MacOS/QLReplyProbeProvider', 'provider_info': provider / 'Contents/Info.plist',
              'runner': runner / 'Contents/MacOS/QLReplyProbeFinderTests-Runner', 'runner_info': runner / 'Contents/Info.plist',
              'test': test / 'Contents/MacOS/QLReplyProbeFinderTests', 'test_info': test / 'Contents/Info.plist', 'xctestrun': plans[0],
@@ -121,16 +194,37 @@ def validate_host_observer(root, checkout):
             or driver['observer_forced_cleanup'] is not False or driver['observer_returncode'] != 0
             or observer['timed_out'] is not False or observer['stopped_after_ui'] is not True
             or driver['observer_pid'] != observer['pid']
-            or not driver['ui_completed_monotonic'] <= driver['observer_stop_requested_monotonic']):
+            or not driver['ui_completed_monotonic'] <= driver['observer_stop_requested_monotonic']
+            <= observer['stop_signal_monotonic'] <= observer['finished_monotonic']
+            or not 0 <= observer['admitted_monotonic'] - observer['started_monotonic'] < 5):
         raise RuntimeError('The actual UI and owned host recorder did not complete normally')
+    control = root / 'observer-control'
+    built = json.loads((root / 'observer-control-build.json').read_text())
+    attempts = observer['control_attempts']
+    if (observer['mode'] != 'live-ndjson' or observer['stream_command'] != STREAM_COMMAND
+            or observer['stream_forced_cleanup'] is not False or observer['stream_returncode'] not in [0, -15]
+            or observer['stream_unexpected_exit'] is not False
+            or observer['control_sha256'] != digest(control) or built.get('returncode') != 0
+            or built['binary_sha256'] != observer['control_sha256'] or 'error' in built
+            or not 1 <= len(attempts) <= 25
+            or any(x['command'] != [str(control), observer['nonce']] or x['returncode'] != 0 for x in attempts)):
+        raise RuntimeError('Actual live channel or compiled control did not qualify')
+    raw_stream = (root / 'observer-stream.log').read_bytes()
+    if (len(raw_stream) != observer['stream_bytes']
+            or hashlib.sha256(raw_stream).hexdigest() != observer['stream_sha256']):
+        raise RuntimeError('Actual raw live log bytes changed')
+    generations = replay_live_stream(raw_stream, observer['nonce'])
+    stderr = (root / 'observer-stream-errors.txt').read_text()
+    if any(not line.startswith('Filtering the log data using ') for line in stderr.splitlines()):
+        raise RuntimeError('Actual stream stderr contains an unqualified diagnostic')
     rows = observer['snapshots']
-    if not 1 <= len(rows) <= 128 or observer['successful_log_queries'] < len(rows):
+    if not 1 <= len(rows) <= 128 or len(rows) != len(generations):
         raise RuntimeError('Incomplete actual host observation history')
     expected = set()
     last = None
     for sequence, row in enumerate(rows):
         name = f'observer-journal/{sequence:03d}.json'
-        if row['file'] != name or row['command_returncode'] != 0:
+        if row['file'] != name or row['stream_position'] != generations[sequence][0]:
             raise RuntimeError('Unknown/failed host observation generation')
         raw = (root / name).read_bytes()
         if len(raw) != row['bytes'] or len(raw) > 128 * 1024 or hashlib.sha256(raw).hexdigest() != row['sha256']:
@@ -138,7 +232,8 @@ def validate_host_observer(root, checkout):
         value = json.loads(raw)
         if (value['kind'] != 'mostlytext-qlcancel-host-observer' or value['checkout'] != checkout
                 or value['sequence'] != sequence or not isinstance(value['messages'], list)
-                or not all(isinstance(x, str) for x in value['messages'])):
+                or not all(isinstance(x, str) for x in value['messages'])
+                or value['messages'] != generations[sequence][1]):
             raise RuntimeError('Unknown actual host observation schema/source')
         expected.add(f'{sequence:03d}.json')
         last = raw
@@ -242,6 +337,7 @@ def main():
                        "provider_executable_sha256": digest(provider / "Contents/MacOS" / info["CFBundleExecutable"])}
     if args.seal_built:
         assert "built_before_test" not in record
+        compile_observer_control(root)
         record["built_before_test"] = record["built"]
         record['compiled_before_test'] = capture_compiled(root)
     else:
@@ -252,6 +348,11 @@ def main():
     assert digest(root / "mostlytext-ql-reply-cancel.md") == record["selected_fixture_sha256"]
     if args.verify_finder:
         record['host_observer_proof'] = validate_host_observer(root, record['checkout'])
+        controls = json.loads((root / 'observer-control-events.json').read_text())
+        nonce = record['host_observer_proof']['observer']['nonce']
+        if not isinstance(controls, list) or not any(isinstance(x, dict) and is_control_echo(x, nonce) for x in controls):
+            raise RuntimeError('Independent actual host log lacks the emitted startup nonce')
+        record['observer_control_log_sha256'] = digest(root / 'observer-control-events.json')
         events = json.loads((root / "provider-events.json").read_text())
         messages = [x.get("eventMessage", "") for x in events if isinstance(x, dict)]
         assert not any("container-launched-invalidates-cold-proof" in x for x in messages), "Containing fixture actually launched"
