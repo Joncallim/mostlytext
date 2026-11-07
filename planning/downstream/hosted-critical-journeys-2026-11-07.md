@@ -127,3 +127,48 @@ canonical fast-forward verified. Incorporate this actual main before replacing
 the held anchor. Root product/original UI tests/project/pins stay byte-identical
 to that actual qualified main; this branch adds only infrastructure/docs.
 The protected CORTANA hold and all complete/final acceptance limits stay intact.
+
+## First actual outcomes and bounded corrections
+
+Source1f2960f9/run42337918720 genuinely passes the original conflict-close case
+plus all three private positives. The two original tab cases fail with normal65,
+zero skips/expected failures and no timeout/cancellation. Source/pins/generated
+inputs/test binaries, actual xcresult/case identities and configured targets
+are verified. Preserve every first result before changing source.
+
+Quick Open's actual failed hierarchy shows b.md selected in the genuine native
+three-tab group, with No folder opened. The production Quick Open contract is
+explicitly per-window and correctly refuses a window without a root. The launch
+folder argument attaches the root only after opening the launch documents, to
+the then-current window. Add the missing explicit public folder choice on b.md
+before Cmd-P. Keep every original native selection/result/count/text assertion
+and deadline; do not broaden product root inheritance or open an empty palette.
+
+The restore failure shows only dirty b.md after restart. Its on-disk session
+bytes were not captured, so do not guess a session-writer fault or claim the
+historical cause from the screenshot alone. A separate source defect is visible:
+finishApplicationStartup treats every queued early openFiles path as a document
+intent before the handler's regular-file filter runs. A queued directory can
+therefore suppress full session restoration while the later handler rejects it.
+This contradicts that handler's existing explicit non-file/session policy.
+
+Before correcting that predicate, extract the exact actual handler and pending
+assignment, plus the actual Foundation/Darwin-only final-symlink source, into a
+small console with unreachable AppKit/coordinator stand-ins. Keep readiness false
+and use real private files/directories/missing/dangling-link inputs; no filesystem
+mock. Require queued raw arguments to remain identical and pending-document
+intent to reflect current regular files, including a removed-before-readiness
+case. This is a source-fragment state control, not an AppKit callback simulation
+or owner-native acceptance. Inspect source/linkage before local execution.
+
+After a genuine before failure, move the existing regular-file expression into
+one private static helper and use it both for the current pending decision and
+the existing ready handler. Retain the raw early queue and late symlink resolution
+so this fix changes no selected path/permission semantics. No model, storage,
+restoration, writer, grace period, test flag or timeout changes. Root UI tests
+then supply actual before/after native qualification; preserve uncertainty until
+they pass. Add bounded generated-session/AX diagnostics before teardown and at
+Quit/relaunch checkpoints, without replacing any original assertion. Refresh
+only that UI source digest in the frozen38-method source inventory; no method
+rename, removal or behavior-ID waiver. Full current CI and all three original
+native jobs plus public CLI/focus remain required before a product merge.
