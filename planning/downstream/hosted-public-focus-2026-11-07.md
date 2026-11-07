@@ -190,3 +190,21 @@ Then require the original full hosted focus journey unchanged and complete
 ordinary current-head CI before merge. This architecture amendment expressly
 supersedes the original no-product-source-change assumption only for this
 proved startup-observation repair; all original bounds/assertions remain.
+
+The first structural control run42326220097 atf9fb2a23 PROVES the
+observation difference: both actual delegates become ready; former App-body
+pattern has0/89 menu-marker samples; explicitly ObservedObject Scene has88/89
+(the first same-turn sample is correctly still before update). Both actual
+generated result JSONs, complete three-source input hashes and all six
+compile/sign/run return0 outcomes are independently verified. No retries or
+deadline changes. This authorizes the narrow observing-Scene repair described
+above; it does not substitute for the unchanged root focus journey.
+
+Retained first6301 independent verification covers1603 canonical inputs/24pins,
+all five copied fixture-source hashes and the downloaded generated Swift binding.
+Three generated Xcode project hashes were hosted records only because those
+files were not uploaded. The next workflow preserves the complete generated
+fixture so those bytes can be independently checked too. Initial local verifier
+incorrectly assumed those absent files were downloaded; it failed before proof
+output, was corrected, and the issue's overly broad initial wording corrected.
+No native result or test criterion changed.
