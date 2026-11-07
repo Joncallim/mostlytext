@@ -7,13 +7,7 @@ import XCTest
 final class CLIStdinTests: XCTestCase {
     func testOrdinaryStdinDocumentSavesExactUTF8Bytes() throws {
         continueAfterFailure = false
-        XCTAssertEqual(getuid(), geteuid())
-        let account = try XCTUnwrap(getpwuid(getuid()))
-        XCTAssertEqual(String(cString: account.pointee.pw_name), "runner")
-        XCTAssertEqual(String(cString: account.pointee.pw_dir), "/Users/runner")
-        XCTAssertEqual(FileManager.default.homeDirectoryForCurrentUser.path,
-                       "/Users/runner/Library/Containers/app.mostlytext.HostedFocus.Driver.xctrunner/Data")
-        XCTAssertEqual(ProcessInfo.processInfo.operatingSystemVersion.majorVersion, 26)
+        try verifyRunner()
         let raw = try JSONSerialization
             .jsonObject(with: Data(contentsOf: URL(fileURLWithPath: HostedFocusInputs.identity)))
         let identity = try XCTUnwrap(raw as? [String: Any])
@@ -59,6 +53,16 @@ final class CLIStdinTests: XCTestCase {
         XCTAssertFalse(running.isTerminated)
         XCTAssertEqual(running.launchDate?.timeIntervalSince1970, birth)
         capture(app, name: "CLI stdin physical save completed")
+    }
+
+    private func verifyRunner() throws {
+        XCTAssertEqual(getuid(), geteuid())
+        let account = try XCTUnwrap(getpwuid(getuid()))
+        XCTAssertEqual(String(cString: account.pointee.pw_name), "runner")
+        XCTAssertEqual(String(cString: account.pointee.pw_dir), "/Users/runner")
+        XCTAssertEqual(FileManager.default.homeDirectoryForCurrentUser.path,
+                       "/Users/runner/Library/Containers/app.mostlytext.HostedFocus.Driver.xctrunner/Data")
+        XCTAssertEqual(ProcessInfo.processInfo.operatingSystemVersion.majorVersion, 26)
     }
 
     private func saveDocument(_ app: XCUIApplication, window: XCUIElement) {
