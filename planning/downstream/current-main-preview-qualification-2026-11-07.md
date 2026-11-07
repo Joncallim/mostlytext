@@ -184,3 +184,13 @@ old controls. Include the new observed link-step packet in the bound helper inpu
 inventory. This changes only evidence capture, not build flags, product source,
 compiler behavior, native cases or limits; the prepared PDF Release consumer
 continues to share the same strict helper.
+
+The helper now captures seven Debug inputs, including both observed code images,
+and five Release inputs with unexpected Debug images refused. All nine actual
+filesystem/topology controls, nine PDF result/host controls and four Preview
+host-order/optimized controls pass. Both new code-image controls fail against
+the exact original4d40417d helper (two failures, no errors), using the same real
+temporary filesystem fixtures; the first baseline outcomes and proof remain in
+the engineering archive. Every original mutation control now exercises the two
+libraries as well. No native/runtime or product flag changed. Actual first
+native Debug layout/individual-image size remains an explicit qualification gate.

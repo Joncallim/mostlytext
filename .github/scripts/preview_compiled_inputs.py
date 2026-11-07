@@ -51,6 +51,14 @@ def selected_paths(products, configuration, project):
         'test_executable': tests[0], 'xctestrun': runs[0],
         'generated_project': project / 'project.pbxproj',
     }
+    debug_images = {'app_debug_dylib': folder / 'MacDown2.app/Contents/MacOS/MacDown2.debug.dylib',
+                    'app_preview_dylib': folder / 'MacDown2.app/Contents/MacOS/__preview.dylib'}
+    if configuration == 'Debug':
+        if any(not path.is_file() for path in debug_images.values()):
+            raise RuntimeError('Observed Debug code images are missing')
+        candidates.update(debug_images)
+    elif any(path.exists() or path.is_symlink() for path in debug_images.values()):
+        raise RuntimeError('Unexpected Debug code image in the Release topology')
     for role, path in candidates.items():
         parent = project if role == 'generated_project' else products
         if path.resolve() != path or not path.is_relative_to(parent):
@@ -77,6 +85,10 @@ def require_topology(configuration, inputs, blobs):
     app = Path(inputs['app_executable']['path']).parents[2]
     if Path(inputs['test_executable']['path']) != app / 'Contents/PlugIns/MacDown2Tests.xctest/Contents/MacOS/MacDown2Tests':
         raise RuntimeError('Captured test executable is not in the selected app host')
+    if configuration == 'Debug':
+        for role, name in [('app_debug_dylib', 'MacDown2.debug.dylib'), ('app_preview_dylib', '__preview.dylib')]:
+            if Path(inputs[role]['path']) != app / 'Contents/MacOS' / name:
+                raise RuntimeError('Captured Debug code image is outside the selected app host')
 
 
 def capture(root, products, configuration, project, phase):
@@ -119,7 +131,10 @@ def verify(root, binding):
     manifest = root / ('compiled-' + binding['phase'] + '.json')
     if not manifest.is_file() or json.loads(read_regular(manifest)) != binding:
         raise RuntimeError('Compiled phase differs from its original manifest')
-    if set(binding['inputs']) != {'app_executable', 'app_info', 'test_executable', 'xctestrun', 'generated_project'}:
+    required = {'app_executable', 'app_info', 'test_executable', 'xctestrun', 'generated_project'}
+    if binding['configuration'] == 'Debug':
+        required.update({'app_debug_dylib', 'app_preview_dylib'})
+    if set(binding['inputs']) != required:
         raise RuntimeError('Incomplete compiled input contract')
     captured = {}
     for role, row in binding['inputs'].items():

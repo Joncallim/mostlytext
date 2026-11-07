@@ -22,6 +22,8 @@ class CompiledInputTests(unittest.TestCase):
         self.archive = self.root / 'evidence'
         for path, data in {
             self.products / 'Debug/MacDown2.app/Contents/MacOS/MacDown2': b'actual fixture app bytes',
+            self.products / 'Debug/MacDown2.app/Contents/MacOS/MacDown2.debug.dylib': b'actual fixture Debug app code',
+            self.products / 'Debug/MacDown2.app/Contents/MacOS/__preview.dylib': b'actual fixture Debug preview code',
             self.products / 'Debug/MacDown2.app/Contents/Info.plist': plistlib.dumps({
                 'CFBundleIdentifier': 'app.mostlytext.MostlyText', 'CFBundleExecutable': 'MacDown2'}),
             self.products / 'Debug/MacDown2.app/Contents/PlugIns/MacDown2Tests.xctest/Contents/MacOS/MacDown2Tests': b'actual fixture tests',
@@ -59,6 +61,47 @@ class CompiledInputTests(unittest.TestCase):
                     verify(self.archive, binding)
                 path.write_bytes(before)
                 self.assertTrue(verify(self.archive, binding))
+
+    def test_actual_debug_code_images_are_required_physical_and_not_detached(self):
+        for role, name in [('app_debug_dylib', 'MacDown2.debug.dylib'), ('app_preview_dylib', '__preview.dylib')]:
+            path = self.products / 'Debug/MacDown2.app/Contents/MacOS' / name
+            raw = path.read_bytes()
+            path.unlink()
+            with self.assertRaises(RuntimeError):
+                self.bind()
+            real = self.root / name
+            real.write_bytes(raw)
+            path.symlink_to(real)
+            with self.assertRaises(RuntimeError):
+                self.bind()
+            path.unlink()
+            path.write_bytes(raw)
+        binding = self.bind()
+        self.assertEqual(set(binding['inputs']), {'app_executable', 'app_info', 'test_executable',
+                         'xctestrun', 'generated_project', 'app_debug_dylib', 'app_preview_dylib'})
+        # Existing all-input mutation controls also mutate both actual code libraries.
+        for role in ['app_debug_dylib', 'app_preview_dylib']:
+            changed = copy.deepcopy(binding)
+            changed['inputs'].pop(role)
+            with self.assertRaises(RuntimeError):
+                verify(self.archive, changed)
+
+    def test_release_uses_its_original_five_inputs_and_refuses_debug_images(self):
+        folder = self.products / 'Debug'
+        release = self.products / 'Release'
+        folder.rename(release)
+        for name in ['MacDown2.debug.dylib', '__preview.dylib']:
+            (release / 'MacDown2.app/Contents/MacOS' / name).unlink()
+        run = self.products / 'MacDown2.xctestrun'
+        plan = plistlib.loads(run.read_bytes())
+        plan['MacDown2Tests']['TestHostPath'] = '__TESTROOT__/Release/MacDown2.app'
+        run.write_bytes(plistlib.dumps(plan))
+        binding = capture(self.archive, self.products, 'Release', self.project, 'initial')
+        self.assertEqual(len(binding['inputs']), 5)
+        self.assertTrue(verify(self.archive, binding))
+        (release / 'MacDown2.app/Contents/MacOS/MacDown2.debug.dylib').write_bytes(b'unexpected code image')
+        with self.assertRaises(RuntimeError):
+            capture(self.archive, self.products, 'Release', self.project, 'selection')
 
     def test_missing_ambiguous_and_linked_compiled_inputs_refuse(self):
         test = self.products / 'Debug/MacDown2.app/Contents/PlugIns/MacDown2Tests.xctest/Contents/MacOS/MacDown2Tests'
