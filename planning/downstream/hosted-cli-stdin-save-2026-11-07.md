@@ -100,3 +100,26 @@ Hosted: ordinary pinned Release build, independent genuine control, unavailable5
 cold refusal, one warm stdin/Save As UI case, exact physical UTF8 bytes and normal
 identity-bound Quit. Exact signed/installed state, trusted cold success, quarantine,
 Gatekeeper, updates, localised/VoiceOver and owner/protected acceptance remain open.
+
+## Prepared-source checkpoint
+
+Architecture `2a4a8d70` precedes implementation `2875fa0e` and strict-style
+refactor `8e60aa5d`. Eleven local real-filesystem/result/admission methods pass:
+original capture, changed actual compiled input, changed archived bytes, symlink,
+hardlink, retargeted path/archive, omitted role, first-manifest preservation,
+strict complete actual-result refusal, genuine normal/optimized foreign-host
+refusal before writes, and pending-integration refusal before any subprocess.
+The result method covers boolean counts/status, failures, skips, expected failures,
+nonzero exit, timeout/cancellation and forced cleanup. No native code executes in
+these controls. Existing focus guard and owned-test supervisor controls also pass.
+
+Both new Swift sources parse and pass pinned format/strict lint. Source compliance
+passes with zero unverified tree items. Product/package/pins/licence/inventory/
+notice/SBOM and every existing native lane are byte-identical to baseline main.
+Source header review removed an unsupported XCUIApplication processID assumption:
+actual NSRunningApplication PID/birth and unique bundle-process checks bind the
+attachment before/after ordinary activation instead. No assertion was waived.
+
+Execution remains explicitly held by `PENDING_ACTUAL_QUALIFIED_PREVIEW_MAIN`.
+There is no new native outcome, Save-panel acceptance, merge, issue closure,
+Apple-trusted cold launch or signed-artifact evidence from this preparation.
