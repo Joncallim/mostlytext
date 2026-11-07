@@ -1,0 +1,111 @@
+# Exercise ordinary Release HTML and PDF export through the real save panel
+
+## Owner outcome and live source reconciliation
+
+Actual main5115e734 has the export safety implementation. Frozen Preview
+candidate PR146/ed5a9409 is earning its complete first qualification. The nine
+native PDF controls exercise printing, but they do not establish the ordinary
+File > Export > save journey. This separate acceptance-only branch uses exactly
+ed5a9409's product/package sources and adds no product change. It can be stacked
+on PR146 while that parent stays frozen. A later integration must keep the
+accepted product inputs exact and never retarget an older receipt.
+
+The user should be able to cancel Export without a file, then create real HTML
+and PDF from a saved document without modifying the source. This fixture asks
+only whether those actual UI paths work on the current ordinary Release app.
+It is not final signed/installed RC, complete parity/resource-budget, in-flight
+PDF interruption, locale/VoiceOver or owner-account acceptance.
+
+## Ready inputs, ownership and non-goals
+
+Inspect existing ExportCoordinator/ExportPanelView, public Release app helper,
+actual harmless-input control and source/owned-host guards before coding.
+Reuse the real public mostlytext CLI and normal NSWorkspace launch/identity helper.
+Use one separate private automation target and benign control; do not instrument,
+launch as an XCTest host or add a test branch/flag to the product. No root app,
+original38UI case, canonical batch manifest/controller, parser/renderer/pin,
+resource authority, preference schema or release/signing script change.
+
+New ownership is limited to a private .github fixture, preparation/execution/
+verification controls and workflow. All test inputs/outputs are fixed generated
+files below one disposable runner temp root. No author content, arbitrary shell
+argument, existing output overwrite, protected document or network renderer.
+
+## Actual journeys and test interfaces
+
+Before any product launch, the existing-style harmless control must really type
+and click a button and pass with actual raw results. Then launch the separately
+built ordinary Release app via the qualified helper; bind PID, birth, bundle/
+executable paths and digest, observe its actual kernel command peer, and open the
+fixed source through the public CLI. Use a configured disposable profile; no
+first-run acceptance is claimed.
+
+The external driver attaches to that exact PID/application, activates the unique
+generated source window and invokes the existing File > Export… item. Require
+the actual NSSavePanel and its Export format control. First cancel and prove
+no output exists and Export becomes usable again. Then select HTML, choose the
+private generated destination through the native panel and click Export. Repeat
+with PDF and another destination. Capture UI tree/screenshots and timestamps.
+No direct coordinator/export/print API call or synthetic export result qualifies.
+
+An external validator reads the actual output bytes after the real UI action:
+HTML must contain the fixed headings, text and GFM structure without source-file
+replacement; PDF must open through public PDFKit on the guarded runner, contain
+the expected text and nonempty pages, and have bounded size. Record exact source/
+output lengths and SHA-256. The source remains byte-identical. Normal identity-
+bound Quit and exact-source/product verification finish the journey. A missing,
+wrong, stale or unexpected output, disabled menu, alert, timeout, force cleanup,
+skipped/expected test or mismatched PID fails the first attempt.
+
+## Executor, authority and lifecycle
+
+Execute only on an actual trusted same-repository GitHub macOS26ARM disposable
+runner account, with fresh user/GUI/keyboard metadata and owner paths absent.
+Reject CORTANA/mostlytexttest/owner volumes and optimized Python before mutation.
+No TCC, default handler, developer-key, debugger/private entitlement or owner-app
+launch. Build the real locked Release app with no DEBUG/RELEASE_PREVIEW_PROBE or
+other added compilation condition. The separate control/driver has its own bundle
+identity and may carry the existing ordinary UI-test machinery only.
+
+Use the existing bounded owned supervisor:120second actual case and600second
+owned lifecycle limits, fixed workflow maximum. These are failure limits, not
+performance passes. No retries of unchanged failed native work or extended bounds.
+The app stays ordinary; the driver alone uses XCTest. No additional package or
+cross-module abstraction is needed. Fixture data and validation are not product
+APIs and never enter product user flows.
+
+## Source and compiled evidence contracts
+
+Capture the exact canonical source set, every copied/generated control input,
+all24locked pins and actual resolved revisions before execution. Bind actual
+Release build settings and actual executable architecture; do not infer them
+from a source setting. Retain every regular file in the real app and private
+control/automation bundles plus CLI/normal-launch/helper/validation binaries,
+Info/signature resources, generated project and actual xctestrun plan. Use the
+existing256MiBper-file/512MiBtotal capture limits. Missing/changed products refuse
+admission. Recheck byte identity after each phase and normal Quit.
+
+Retain complete first workflow logs/artifacts, raw result bundles and attachments,
+owned statuses/identity, actual outputs and complete receipts before correction.
+Independently read raw test outcomes, source/pin/generated/compiled identities,
+UI attachments, output signatures/content and source preservation. A private
+receipt is not an external independent review or a final distribution inventory.
+
+## Slices, failure model and stop conditions
+
+1. Commit this architecture from the explicit current product baseline before
+   private implementation. Pure guard/source/identity/output-oracle controls,
+   strict SDK typecheck and changed formatting/lint/Python/YAML/compliance only
+   locally; never local app/extension/WebKit runtime/build.
+2. Add the private driver/ordinary Release controller and fixed-output validators.
+   Open a draft stacked on PR146 with only acceptance infrastructure delta; a
+   dedicated workflow may target that exact trusted parent branch to avoid
+   duplicating the parent's full first matrix. No parent source or gate changes.
+3. Freeze and run one actual first journey. Preserve failures completely before
+   a written correction. Native save-panel/interface assumptions must be observed,
+   not replaced by direct calls or selector guesses made into passing fallbacks.
+4. Integrate only after the parent qualifies and this source-bound acceptance
+   genuinely passes; reconcile #11/#8/#17 with demonstrated scope. Keep final RC,
+   parity, full resource budgets, in-flight PDF policy and other original rows
+   open where unproved. Any required product/authority/ownership change needs
+   a separate written decision before implementation.
