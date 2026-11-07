@@ -1,0 +1,29 @@
+{
+  "head": "241b9a896c2712f44e5421730ee97b00301554d7",
+  "actual_synthetic_checkout": "a8d56d53ba2ddd43abc90f09188bb31f5e188eb1",
+  "full_source_hashes_verified": 1592,
+  "pins_verified": 24,
+  "owned_status": {
+    "returncode": 1,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 25.979974416999994,
+    "app_cleanup_requested": []
+  },
+  "criteria": {
+    "fresh_warm_file": false,
+    "configured_warm_file": true,
+    "missing_file_rejected": true,
+    "wait_completed_after_normal_quit": true,
+    "configured_stdin_acknowledged": true,
+    "invalid_utf8_rejected": true
+  },
+  "fresh_welcome_visible_on_same_actual_pid": true,
+  "first_two_apps_normally_terminated": true,
+  "configured_wait_actual_pending_until_normal_quit_verified_by_unchanged_harness": true,
+  "dirty_stdin_cleanup_is_not_normal_quit_acceptance": true,
+  "source_and_stdin_bytes_preserved": true,
+  "app_sha256": "9613889544d4445029ff8a5eab5944af6d2617a32c018f919a588fa799b3bee9",
+  "helper_sha256": "cd531acb01cf7d71a8673ed9f3d1b19826f542cef715b2f137232f67d8cb0cfb",
+  "scope": "Actual unchanged-source product correction passes all five configured warm comparisons; fresh Welcome has no endpoint and file command5. Whole native selection remains failed. No installed/cold-trust/owner/signed acceptance."
+}

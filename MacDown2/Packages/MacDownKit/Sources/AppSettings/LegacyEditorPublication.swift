@@ -20,8 +20,16 @@ public extension UserDefaultsAppSettingsStore {
     /// The caller still owns durable journaling and obtaining a fresh source.
     init(persistentDomainName name: String) throws {
         guard Self.admitsPersistenceDomain(name) else { throw LegacyPublicationFailure.invalidPersistenceDomain }
-        guard let defaults = UserDefaults(suiteName: name) else {
-            throw LegacyPublicationFailure.unavailablePersistenceDomain
+        let defaults: UserDefaults
+        if name == Bundle.main.bundleIdentifier {
+            // Foundation refuses the current application's identifier as a suite.
+            // Saved-domain reads below still exclude registration/global fallbacks.
+            defaults = .standard
+        } else {
+            guard let suite = UserDefaults(suiteName: name) else {
+                throw LegacyPublicationFailure.unavailablePersistenceDomain
+            }
+            defaults = suite
         }
         self.init(defaults: defaults, persistenceDomainName: name)
     }

@@ -3,7 +3,7 @@ import Foundation
 
 extension AppDelegate {
     func scheduleCommandServerStart() {
-        guard !Self.launchArguments.contains("-UITesting"),
+        guard normalLaunchReady, !Self.launchArguments.contains("-UITesting"),
               !SingleTestInstanceGuard.isRunningUnderXCTest else { return }
         Task { @MainActor [weak self] in
             guard let self else { return }

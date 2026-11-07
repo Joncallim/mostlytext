@@ -1,0 +1,75 @@
+{
+  "tests": 6,
+  "failures": 0,
+  "errors": 0,
+  "passed": true,
+  "observations": [
+    {
+      "case": "closed-existing-socket",
+      "observed": {
+        "ready": false,
+        "exists": true,
+        "mode": "0o600",
+        "uid": 501,
+        "refusal": "ConnectionRefusedError",
+        "errno": 61
+      }
+    },
+    {
+      "case": "live-current-process",
+      "observed": {
+        "ready": true,
+        "exists": true,
+        "mode": "0o600",
+        "uid": 501,
+        "peer_uid": 501,
+        "peer_pid": 16588
+      }
+    },
+    {
+      "case": "live-wrong-process",
+      "observed": {
+        "ready": false,
+        "exists": true,
+        "mode": "0o600",
+        "uid": 501,
+        "peer_uid": 501,
+        "peer_pid": 16588,
+        "refusal": "peer-or-named-identity-mismatch"
+      }
+    },
+    {
+      "case": "regular-file",
+      "observed": {
+        "ready": false,
+        "exists": true,
+        "mode": "0o600",
+        "uid": 501,
+        "refusal": "not-an-owned-private-socket"
+      }
+    },
+    {
+      "case": "symlink",
+      "observed": {
+        "ready": false,
+        "exists": true,
+        "mode": "0o755",
+        "uid": 501,
+        "refusal": "not-an-owned-private-socket"
+      }
+    },
+    {
+      "case": "wrong-permissions",
+      "observed": {
+        "ready": false,
+        "exists": true,
+        "mode": "0o644",
+        "uid": 501,
+        "refusal": "not-an-owned-private-socket"
+      }
+    }
+  ],
+  "module_sha256": "115d7418b32f8074206ff10a5ca703dc30e81ea42558cde8b6553c7565531816",
+  "script_sha256": "b8a36cd097073f640923f3603f0c6427f295e847b72f16d99e5a6fa81578ec19",
+  "scope": "Generated private Darwin Unix sockets only; no application launch, document request or owner-native acceptance"
+}

@@ -1,0 +1,16 @@
+{
+  "head": "76f71dc3e0f5986300d4dbe57d2a8911d80e0095",
+  "run": 42312643704,
+  "outcome": "failure",
+  "package_functions": 3719,
+  "package_suites": 536,
+  "app_functions": 676,
+  "app_suites": 142,
+  "issues": [
+    "2026-11-07T00:12:14.1895150Z \u2718 Test currentApplicationDomainFinishesEmptyImportWithoutChangingPreferences() recorded an issue at AppSettingsWiringTests.swift:31:9: Expectation failed: (startup.phase \u2192 .blocked) == .ready",
+    "2026-11-07T00:12:14.1911010Z \u2718 Test currentApplicationDomainFinishesEmptyImportWithoutChangingPreferences() recorded an issue at AppSettingsWiringTests.swift:32:9: Expectation failed: (readyCount \u2192 0) == 1"
+  ],
+  "all_other_675_app_functions_passed": true,
+  "log_sha256": "14fe75f1cb21b6a8b73ef3ca8dd1c0cdf0f107908d91c363ebc0b73ffe0eb5b8",
+  "scope": "First full result retained; new journal regression has exactly the same two failed assertions. No storage errno or native complete pass inferred."
+}
