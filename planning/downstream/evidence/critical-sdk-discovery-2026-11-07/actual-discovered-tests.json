@@ -1,0 +1,2166 @@
+{
+  "errors" : [
+
+  ],
+  "values" : [
+    {
+      "disabledTests" : [
+
+      ],
+      "enabledTests" : [
+        {
+          "identifier" : "MacDown2Tests/AppSettingsWiringTests/assistConfigurationFallsBackToGeneralWhenSettingsUnavailableForOtherFormats()"
+        },
+        {
+          "identifier" : "MacDown2Tests/AppSettingsWiringTests/assistConfigurationFallsBackToMarkdownDefaultWhenSettingsUnavailable()"
+        },
+        {
+          "identifier" : "MacDown2Tests/AppSettingsWiringTests/assistConfigurationForcesMarkdownOnlyFieldsOffForOtherFormats()"
+        },
+        {
+          "identifier" : "MacDown2Tests/AppSettingsWiringTests/assistConfigurationReflectsEveryFieldForMarkdown()"
+        },
+        {
+          "identifier" : "MacDown2Tests/AppSettingsWiringTests/currentApplicationDomainFinishesEmptyImportWithoutChangingPreferences()"
+        },
+        {
+          "identifier" : "MacDown2Tests/AppSettingsWiringTests/defaultEncodingFallsBackToUTF8ForAnUnrecognisedValue()"
+        },
+        {
+          "identifier" : "MacDown2Tests/AppSettingsWiringTests/defaultEncodingMapsUTF16ToTheLittleEndianBOMForm()"
+        },
+        {
+          "identifier" : "MacDown2Tests/AppSettingsWiringTests/defaultEncodingMapsUTF8ToTheDocumentedDefault()"
+        },
+        {
+          "identifier" : "MacDown2Tests/AppSettingsWiringTests/defaultPreviewLayoutFallsBackToDefaultModeWhenSettingsUnavailable()"
+        },
+        {
+          "identifier" : "MacDown2Tests/AppSettingsWiringTests/defaultPreviewLayoutMapsEachPreference()"
+        },
+        {
+          "identifier" : "MacDown2Tests/AppSettingsWiringTests/exportFormatOptionMapsEachPreference()"
+        },
+        {
+          "identifier" : "MacDown2Tests/AppSettingsWiringTests/exportStyleEmbeddingMapsEachPreference()"
+        },
+        {
+          "identifier" : "MacDown2Tests/AppSettingsWiringTests/markdownParseOptionsDefaultsToOnWhenSettingsUnavailable()"
+        },
+        {
+          "identifier" : "MacDown2Tests/AppSettingsWiringTests/markdownParseOptionsReflectsThePreference()"
+        },
+        {
+          "identifier" : "MacDown2Tests/BindRetryDocumentTests/aDifferentFileOrNoDocumentCancelsTheRetry()"
+        },
+        {
+          "identifier" : "MacDown2Tests/BindRetryDocumentTests/theRetryUsesTheLiveDocumentsCurrentEncodingPolicy()"
+        },
+        {
+          "identifier" : "MacDown2Tests/BoundedHTMLPreviewHandlerTests/anAlreadyRevokedGrantNeverRetainsARequest()"
+        },
+        {
+          "identifier" : "MacDown2Tests/BoundedHTMLPreviewHandlerTests/delayedOldReadCannotDeliverIntoANewSavedRender()"
+        },
+        {
+          "identifier" : "MacDown2Tests/BoundedHTMLPreviewHandlerTests/encodedSeparatorsAndParentTraversalAreRejectedBeforeRead()"
+        },
+        {
+          "identifier" : "MacDown2Tests/BoundedHTMLPreviewHandlerTests/externalRevocationDropsALateSuccessfulReadWithoutCallbacks()"
+        },
+        {
+          "identifier" : "MacDown2Tests/BoundedHTMLPreviewHandlerTests/malformedAndRepeatedMainRequestsExhaustTheSameLoadLimit()"
+        },
+        {
+          "identifier" : "MacDown2Tests/BoundedHTMLPreviewHandlerTests/savedRendersHaveDifferentAuthoritiesAndMainResponseKeepsCSP()"
+        },
+        {
+          "identifier" : "MacDown2Tests/BoundedHTMLPreviewHandlerTests/stoppingAtDataNeverDeliversATerminalCallback()"
+        },
+        {
+          "identifier" : "MacDown2Tests/BoundedHTMLPreviewHandlerTests/stoppingAtResponseNeverDeliversDataOrTerminalCallback()"
+        },
+        {
+          "identifier" : "MacDown2Tests/BundledExampleScriptsTests/createsTheDirectoryWhenMissing()"
+        },
+        {
+          "identifier" : "MacDown2Tests/BundledExampleScriptsTests/doesNotOverwriteAnExistingFileWithTheSameName()"
+        },
+        {
+          "identifier" : "MacDown2Tests/BundledExampleScriptsTests/installsEveryScriptExecutable()"
+        },
+        {
+          "identifier" : "MacDown2Tests/BundledExampleScriptsTests/reportsFailureWhenAScriptCannotBeWritten()"
+        },
+        {
+          "identifier" : "MacDown2Tests/BundledExampleScriptsTests/reportsFailureWhenTheDirectoryCannotBeCreated()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CloseAfterRetireTests/aGenerationBumpWithoutATextStateOrLifetimeChangeStillClosesTheWindow()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CloseAfterRetireTests/anUnchangedDocumentClosesTheWindow()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CloseAfterRetireTests/textTypedAfterTheRetireKeepsTheWindowOpen()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CloseNonDocumentWindowTests/aClosableWindowCanBeClosedWithCommandW()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CloseNonDocumentWindowTests/noWindowOrANonClosableOneCannot()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CloseSheetContextTests/aBareGenerationBumpStillMatches()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CloseSheetContextTests/aDisposedExplicitPanelOriginCancelsInsteadOfGoingModal()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CloseSheetContextTests/aVanishedBackingFileIsNoLongerTheDocumentTheSheetAskedAbout()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CloseSheetContextTests/alreadySavedDocumentCanFinishItsCloseRequest()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CloseSheetContextTests/closePromptRemainsTruthfulIfBackingDisappearsWhileSheetIsOpen()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CloseSheetContextTests/saveIntentDoesNotRetargetChangedContentOrLifetime()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CloseSheetContextTests/saveIntentRechecksLiveDestinationAfterBackingDisappears()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteModelTests/combinesAppCommandsAndTextFiltersWithNoQuery()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteModelTests/emptyQueryAfterTrimmingWhitespaceShowsEverything()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteModelTests/invocationDispatchesTheSnapshotEvenIfDiscoveryWouldNowReturnSomethingElse()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteModelTests/invokingSelectedAppCommandDispatchesToAppHandler()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteModelTests/invokingSelectedTextFilterDispatchesToFilterHandler()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteModelTests/modelAppliesTheAvailabilityPredicateItWasConstructedWith()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteModelTests/moveSelectionOnAnEmptyListDoesNothing()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteModelTests/moveSelectionWrapsAroundInBothDirections()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteModelTests/noMatchesProducesAnEmptyList()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteModelTests/queryFiltersCaseInsensitivelyAcrossBothKinds()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteModelTests/refreshRowsRescansTextFiltersOnEveryCall()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteModelTests/standardCommandsContainNoExportRow()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteModelTests/textFiltersUnavailableOmitsEveryDiscoveredFilterRow()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteModelTests/unavailableAppCommandsAreFilteredRows()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteStaleOriginTests/closingTheOriginWindowDismissesTheOpenPaletteAndDoesNotBlockItsDeallocation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteStaleOriginTests/invocationRevalidatesAppCommandAvailabilityAndSkipsAStaleRow()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteStaleOriginTests/invocationRevalidatesTextFilterAvailabilityAndSkipsAStaleRow()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteStaleOriginTests/newTabOpenAndOpenFolderAreAvailableWithALiveDocumentOrigin()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteStaleOriginTests/newTabOpenAndOpenFolderAreUnavailableWithNoDocumentOrigin()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteStaleOriginTests/removingAnUnrelatedControllerLeavesTheOpenPaletteAlone()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandPaletteStaleOriginTests/toggleSidebarIsUnavailableOnceItsOriginIsNoLongerALiveController()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandRegistryConsistencyTests/aNewMenuItemWithoutACatalogEntryIsReported()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandRegistryConsistencyTests/aPaletteEligibleCatalogEntryWithoutAPaletteCommandIsReported()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandRegistryConsistencyTests/aPaletteEntryWithoutACatalogRecordIsReported()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandRegistryConsistencyTests/aPaletteTitleThatDriftsFromItsMenuItemIsReported()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandRegistryConsistencyTests/aRenamedOrRemovedMenuItemLeavesAStaleCatalogEntry()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandRegistryConsistencyTests/duplicateCatalogTitlesAndPaletteIDsAreReported()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandRegistryConsistencyTests/shippedCatalogIsConsistentWithMenuAndPalette()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandRegistryConsistencyTests/sourceScanFindsTheMenuCommands()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandStateRefreshTests/focusTransitionsRefresh()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandStateRefreshTests/ordinaryTypingDoesNotRefresh()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandStdinDocumentFactoryTests/emptySourceRestoresWithItsExactSessionEpoch()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandStdinDocumentFactoryTests/exactSourceGetsAManagedDirtyRecoveryLifetime(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandStdinDocumentFactoryTests/invalidUTF8CreatesNoRecoveryState(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandStdinDocumentFactoryTests/oversizedInputIsRefusedBeforeRecoveryPreparation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandStdinDocumentFactoryTests/unavailableRecoveryDoesNotReturnAnAdmittedDocument()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandStdinIntegrationTests/acknowledgementFollowsHiddenRecoveryAndCanonicalPublication()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandStdinIntegrationTests/anOlderAutosaveCannotEraseTheAdmittedStdinReference()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandStdinIntegrationTests/emptyStdinIsDirtyAndRestoresThroughTheOrdinarySessionReader()"
+        },
+        {
+          "identifier" : "MacDown2Tests/CommandStdinIntegrationTests/failedCanonicalPublicationNeverExposesOrAcknowledgesTheStage()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ComponentTestHostIconTests/actualComponentHostHasTheOwnedBitmapInstalled()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ComponentTestHostIconTests/componentDocumentProxyRetainsAndClearsItsValue()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ComponentTestHostIconTests/componentHostReceivesAnOwnedBitmapWithoutAFileIconLookup()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ComponentTestHostIconTests/ordinaryAndNativeUITestLaunchesKeepTheirOwnIcon()"
+        },
+        {
+          "identifier" : "MacDown2Tests/D2ExportRegistryTests/aMalformedD2FenceLeavesAuthoredSourceUntouchedWithADiagnostic()"
+        },
+        {
+          "identifier" : "MacDown2Tests/D2ExportRegistryTests/aRealD2FenceComposesIntoSelfContainedHTMLWithNoExternalReferences()"
+        },
+        {
+          "identifier" : "MacDown2Tests/D2ExportRegistryTests/standardForExportRunsD2ButNotForPreview()"
+        },
+        {
+          "identifier" : "MacDown2Tests/D2PreviewIntegrationTests/aRealD2FenceSlicesIntoAPreviewBlockWithTheCorrectLanguageTag()"
+        },
+        {
+          "identifier" : "MacDown2Tests/D2PreviewIntegrationTests/stripDelimitersOnARealSlicedPreviewBlockRecoversExactlyTheAuthoredDiagramSource()"
+        },
+        {
+          "identifier" : "MacDown2Tests/D2PreviewIntegrationTests/theSharedRendererProducesARealDiagramForPreviewDisplayFromASlicedBlock()"
+        },
+        {
+          "identifier" : "MacDown2Tests/DeletedDocumentDiscardTests/discardingADeletedDocumentRetiresItsRecoveryAndClosesTheWindow()"
+        },
+        {
+          "identifier" : "MacDown2Tests/DiagramClipboardTests/copySVGReplacesAnyPreviousPasteboardContents()"
+        },
+        {
+          "identifier" : "MacDown2Tests/DiagramClipboardTests/copySVGWritesPlainTextRepresentation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/DiagramClipboardTests/copySVGWritesRealSVGImageTypeRepresentation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/DiagramFailurePresentationTests/aMissingCatalogPreservesTheExistingEnglishFallback()"
+        },
+        {
+          "identifier" : "MacDown2Tests/DiagramFailurePresentationTests/actualCompiledCatalogContainsAllSharedFailureStates(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/DiagramFailurePresentationTests/actualCompiledCatalogSelectsCountFormsWithoutNarrowingTheByteCount(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/DiagramFailurePresentationTests/anExplicitBundleRoutesEveryKnownStateWithoutFallingBackToMain()"
+        },
+        {
+          "identifier" : "MacDown2Tests/DocumentCommandTargetTests/dismissedPanelFallsBackToTheManagedMainDocument()"
+        },
+        {
+          "identifier" : "MacDown2Tests/DocumentEditorFindNavigationTests/cachedFindBarRemountRefreshDoesNotRevealOverNewerSelection()"
+        },
+        {
+          "identifier" : "MacDown2Tests/DocumentEditorFindNavigationTests/staleFindCompletionCannotMoveNewerFolderSearchSelection()"
+        },
+        {
+          "identifier" : "MacDown2Tests/DocumentTypeRegistrationTests/everyRegisteredFormatExtensionIsADeclaredDocumentType()"
+        },
+        {
+          "identifier" : "MacDown2Tests/EditorStatusBarThemeTests/liveStatusPalettePaintsEveryBundledThemeWithoutEditingSource()"
+        },
+        {
+          "identifier" : "MacDown2Tests/EditorStatusBarViewTests/countTextCountsCJKAndEmojiAsCharactersNotUTF16Units()"
+        },
+        {
+          "identifier" : "MacDown2Tests/EditorStatusBarViewTests/countTextOfEmptyDocument()"
+        },
+        {
+          "identifier" : "MacDown2Tests/EditorStatusBarViewTests/countTextShowsDocumentCountsWhenNoSelection()"
+        },
+        {
+          "identifier" : "MacDown2Tests/EditorStatusBarViewTests/countTextShowsSelectedCountWhenSelectionIsNonEmpty()"
+        },
+        {
+          "identifier" : "MacDown2Tests/EditorStatusBarViewTests/documentCountsChooseIndependentEnglishPluralForms(text:expected:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/EditorStatusBarViewTests/indentationTextShowsSpacesWhenConvertingTabs()"
+        },
+        {
+          "identifier" : "MacDown2Tests/EditorStatusBarViewTests/indentationTextShowsTabsWhenNotConvertingTabs()"
+        },
+        {
+          "identifier" : "MacDown2Tests/EditorStatusBarViewTests/lineColumnTextAtDocumentStart()"
+        },
+        {
+          "identifier" : "MacDown2Tests/EditorStatusBarViewTests/lineColumnTextOnASecondLine()"
+        },
+        {
+          "identifier" : "MacDown2Tests/EditorStatusBarViewTests/wordCountOfASingleWord()"
+        },
+        {
+          "identifier" : "MacDown2Tests/EditorStatusBarViewTests/wordCountOfAllWhitespaceIsZero()"
+        },
+        {
+          "identifier" : "MacDown2Tests/EditorStatusBarViewTests/wordCountOfCJKText()"
+        },
+        {
+          "identifier" : "MacDown2Tests/EditorStatusBarViewTests/wordCountOfEmojiOnlyText()"
+        },
+        {
+          "identifier" : "MacDown2Tests/EditorStatusBarViewTests/wordCountOfEmptyDocumentIsZero()"
+        },
+        {
+          "identifier" : "MacDown2Tests/EditorStatusBarViewTests/wordCountSeparatesOnWhitespaceAndPunctuation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExampleScriptsTitleTests/actualEnglishCatalogProducesReadableSingularAndPluralMessages()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExampleScriptsTitleTests/actualLocaleResourcesNeverExposeGrammarMarkup(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExampleScriptsTitleTests/explicitCatalogSelectionControlsTheInstalledMessage()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportContributionAdapterTests/aContentlessResultWithNoDiagnosticsProducesNothing()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportContributionAdapterTests/aContentlessResultsDiagnosticsBecomeStandalone()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportContributionAdapterTests/aPDFExportAdmitsFirstPartyHTMLWithoutChangingIt()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportContributionAdapterTests/anHTMLRepresentationIsPassedThroughVerbatim()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportContributionAdapterTests/forwardsAPlacedResultsOwnDiagnosticsOnlyOnItsContribution()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportContributionAdapterTests/fullRoundTripFromTOCToComposedHTML()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportContributionAdapterTests/mapsInlinePlacement()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportContributionAdapterTests/preservesResultAndDiagnosticOrderAcrossMixedResults()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportContributionAdapterTests/rendersAMarkdownRepresentationToRealHTML()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportContributionSafetyTests/fatalAdmissionPreservesOriginalMetadataForContentAndStandaloneResults()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportContributionSafetyTests/ordinaryDerivedErrorsKeepTheirExistingNonfatalDisposition()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportContributionSafetyTests/unsupportedContentCannotDiscardAFatalObservation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportCoordinatorDiagnosticMergeTests/combinesCleanlyWhenEitherSideIsEmpty()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportCoordinatorDiagnosticMergeTests/combinesStandaloneDiagnosticsFirstThenServiceDiagnosticsWithNoDuplicates()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportDiagnosticPresentationTests/actualCompiledCatalogChoosesOmittedCountPluralForms(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportDiagnosticPresentationTests/actualCompiledCatalogChoosesTitlePluralForms(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportDiagnosticPresentationTests/sixMessageBoundaryPreservesOrderAndLiteralText()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportDocumentProtectionTests/aLaterHardLinkOpenAlsoProtectsTheOriginalBytes()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportDocumentProtectionTests/aLaterOpenOfARecoveryCandidateRevokesBeforeDocumentPublication()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportDocumentProtectionTests/aLaterOpenOfAnUnchangedDestinationRevokesBeforePublication()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportDocumentProtectionTests/aMissingOpenDocumentReservesItsName()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportDocumentProtectionTests/aURLConflictStillRetainsAnUnlinkedRecoveryIdentity()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportDocumentProtectionTests/anEarlierDocumentPublicationIsRetainedBeforeCandidateRegistration()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportDocumentProtectionTests/anUnusableDocumentReferenceFailsClosed()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportDocumentProtectionTests/anUnusableURLStillRetainsTheBatchsKnownPhysicalIdentity()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportDocumentProtectionTests/removingACompletedOperationAndExpiredWeakLeasesIsSafe()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportDocumentProtectionTests/retainedIdentityProtectsAnUnlinkedLaterDocument()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportDocumentProtectionTests/unrelatedDocumentsDoNotCancelTheExport()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportOriginLeasePolicyTests/disabledValidatedInputsAlwaysRetainStrictIdentityPolicy()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportOriginLeasePolicyTests/frozenOrdinaryInputsRejectTabSwitchOrRemoval(removal:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportOriginLeasePolicyTests/frozenOrdinaryInputsSurviveSaveAsAndScopeChangesWithinTheirTab()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportOriginLeasePolicyTests/ordinaryUnfrozenInputsStillRejectIdentityAndScopeChanges()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportPanelFilenameTests/formatChangesPreserveTheUserEnteredBasename()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExportPanelFilenameTests/initialFilenameReplacesTheSystemDefault(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerBindRetryFlowTests/aBackToBackSynchronizeThatSkipsTheBindDoesNotCancelTheRetry()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerBindRetryFlowTests/aRetryForADocumentThatIsNoLongerActiveDoesNotBindAnything()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerBindRetryFlowTests/anAToBToARoundTripDoesNotLetTheOldRetryRebindTheMonitor()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerBindRetryFlowTests/theRetryAfterARealFirstWatchFailureUsesTheLiveEncodingPolicy()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerCloseRecoveryTests/failedFreshLifetimePersistenceRetainsRetryAndRestoresEditedText()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerCloseRecoveryTests/nativeCloseRefusesAWindowWithPendingWorkspaceRecoveryCleanup()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerCloseRecoveryTests/persistRetryAcceptsASnapshotTheSessionSaveAlreadySecured()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerCloseRecoveryTests/retryAfterAnEditKeepsTheWindowOpenWithAFreshPersistedLifetime()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerCloseRecoveryTests/terminationBlocksPendingCleanupAndKeepsTheLastPublishedSessionRecoverable()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerMoveRetryTests/editDuringInitialMoveMigrationRotatesAndPersistsTheCurrentLifetime()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerMoveRetryTests/editedDocumentRejectsStaleMoveRetryAndRestoresSourceRecovery()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerRecoveryTests/discardRetirementRetryCompletesCloseAndDoesNotReviveTheDiscardedDraft()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerRecoveryTests/migrationRetryResumesTheCompleteMoveAndPublishesItsReplacement()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerRecoveryTests/movePreparationFailuresRetainRetryForMigrationAndRemoval()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerRecoveryTests/retryRetainsAndClearsEveryTypedRecoveryAction()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerRecoveryTests/terminationFailureExposesRecoveryRequiredRetryAndSaveAsPresentation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerRecoveryTests/terminationRejectsCanonicallyEquivalentButDifferentRecoveryBytes()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerRecoveryTests/terminationSaveTargetsTheNonKeyControllerWhoseRecoveryFailed()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerSaveAsNoticeTests/queuedSourceObservationCannotInvalidateTheSaveAsDestination()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ExternalFileControllerSaveAsNoticeTests/saveAsClearsTheUnavailableNoticeOnlyAfterTheNewBackingIsPublished()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FileTreeInternalDragTests/aTokenSurvivesAFailedDropAndCanBeUsedAgain()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FileTreeInternalDragTests/anUntrustedPayloadIsStillRefused()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FileTreeInternalDragTests/theDragTypeIsDeclaredAsAnExportedTypeConformingToData()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FileTreeTrashConfirmationTests/aCancelledTaskCannotStartTheMutation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FileTreeTrashConfirmationTests/aChangedRootCannotRefreshAnOldConfirmation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FileTreeTrashConfirmationTests/aClosedOriginCannotPerformItsConfirmedOperation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FileTreeTrashConfirmationTests/anABARootCannotRefreshAnOldConfirmation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FileTreeTrashConfirmationTests/confirmationUsesItsOriginalSourceEvenAfterSelectionChanges()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderCommandTextFieldFocusTests/aFieldEditorIsATextEditingResponder()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderCommandTextFieldFocusTests/otherResponderKindsAreNot()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderPanelOriginTests/aClosedOriginDoesNotRedirectOrReopenItsFolderChoice()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderPanelOriginTests/anApplicationChoiceCreatesItsOwnWindowAfterALaterDocumentOpens()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderPanelOriginTests/cancellingAnApplicationChoiceCreatesNoDocument()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderPanelOriginTests/theMenuChoiceStaysWithItsOriginalDocument()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderReplaceModelTests/aFileOpenWithUnsavedChangesIsSkippedAndReported()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderReplaceModelTests/aPreviewLoadsWhenExpandedAndFollowsTheReplacementText()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderReplaceModelTests/changingTheRootCancelsARunningReplaceAndDiscardsItsLateSummary()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderReplaceModelTests/editingTheQueryDismissesAPendingConfirmationAndClearsExclusions()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderReplaceModelTests/everyRewrittenFileIsReportedSoRecentsCanFollowIt()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderReplaceModelTests/excludedFilesAreNeverTouched()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderReplaceModelTests/replaceAllRewritesIncludedFilesAndKeepsTheSummaryAfterTheRefreshSearch()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderReplaceModelTests/replaceIsUnavailableForTruncatedOrIncompleteResults()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderReplaceModelTests/settingTheSameRootAgainDoesNotRetireARunningReplace()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderReplaceModelTests/staleRenderedCheckboxCannotReincludeAChangedMatch()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderReplaceModelTests/summaryCountsReplacedAndSkippedResults()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderReplaceModelTests/undecodableFilesAreCountedAsUnsearchedSoReplaceIsNotSilentlyPartial()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchCancellationTests/cancelledFolderSearchDoesNotPublishAfterRootRebuild()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchCancellationTests/closingExistingWindowDuringRootAwaitCannotRefocusIt()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchCancellationTests/falseAfterFileLoadDoesNotPublishAWindow()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchCancellationTests/falseAfterRootRebuildDoesNotPublishAWindow()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchCancellationTests/falseBeforeSerializedAdmissionDoesNotOpenOrCreateAController()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchCancellationTests/newerFolderSearchSupersedesOlderResult()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchCancellationTests/nilContinuationKeepsOrdinaryOpenBehavior()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchCancellationTests/ordinaryOpenCanRefocusAHiddenLiveWindow()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchCancellationTests/queuedFolderSearchCancellationDoesNotDisturbAnAdmittedOrdinaryOpen()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchModelTests/aNewerQueryDiscardsALateArrivingStaleQuerysResult()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchModelTests/clearingTheRootCancelsTheInFlightSearchTaskRatherThanJustDiscardingItsResult()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchModelTests/emptyQueryClearsResultsWithoutSearching()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchModelTests/endToEndSearchFindsMatchesAcrossFiles()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchModelTests/oldRenderedRowCannotBorrowNewRootsSearchIdentity()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchModelTests/rapidQueryEditsAreDebouncedIntoASingleRealSearch()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchModelTests/settingARootWithAnAlreadyTypedQueryRunsASearchAgainstIt()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchNavigationTests/existingBackgroundNativeTabIsActivatedAndItsMatchIsRevealed()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchNavigationTests/newerNavigationDuringFileLoadDoesNotPublishFolderSearchResult()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchNavigationTests/newerNavigationSurvivesActualPreviewOnlyToEditorMount()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchNavigationTests/olderFindCompletionTokenCannotInvalidateNewerFolderSearch()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchNavigationTests/pendingFolderSearchRevealDrainsIntoTheMountedEditorSelection()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchNavigationTests/pendingRevealDoesNotUseARowFromAnOlderQuery()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FolderSearchNavigationTests/selectAllMatchesInvalidatesSuspendedExistingWindowFolderSearch()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FormatChangeAnalysisMountTests/movingUnchangedTextIntoJSONStartsJSONAnalysis()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FrozenExportParseTests/aCancelledConsumerCannotBorrowTheParse()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FrozenExportParseTests/anotherPolicyCannotBorrowTheParse()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FrozenExportParseTests/anotherRevisionCannotBorrowTheParse()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FrozenExportParseTests/canonicallyEquivalentSourceCannotBorrowTheParse()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FrozenExportParseTests/inconsistentDocumentMetadataIsRejected()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FrozenExportParseTests/ordinaryCompositionConsumesOnceWhileTheDisabledFallbackCanRepeat()"
+        },
+        {
+          "identifier" : "MacDown2Tests/FrozenExportParseTests/theExactSourceAndNondefaultPolicyReuseTheAcceptedDocument()"
+        },
+        {
+          "identifier" : "MacDown2Tests/GoToLinePanelTests/aLeadingColonMeansColumnOnTheDefaultLineNotALineNumber()"
+        },
+        {
+          "identifier" : "MacDown2Tests/GoToLinePanelTests/aNumberTooLargeForIntSaturatesInsteadOfJumpingToLineOne()"
+        },
+        {
+          "identifier" : "MacDown2Tests/GoToLinePanelTests/closingTheOriginWindowClosesAnOpenGoToLinePanel()"
+        },
+        {
+          "identifier" : "MacDown2Tests/GoToLinePanelTests/closingThePanelReleasesTheCoordinatorsStrongReference()"
+        },
+        {
+          "identifier" : "MacDown2Tests/GoToLinePanelTests/jumpDoesNothingIfThereIsNoOriginController()"
+        },
+        {
+          "identifier" : "MacDown2Tests/GoToLinePanelTests/jumpsToALineAndColumn()"
+        },
+        {
+          "identifier" : "MacDown2Tests/GoToLinePanelTests/jumpsToASpecificLine()"
+        },
+        {
+          "identifier" : "MacDown2Tests/GoToLinePanelTests/malformedInputDefaultsToLineOne()"
+        },
+        {
+          "identifier" : "MacDown2Tests/GoToLinePanelTests/nonNumericInputStillDefaultsToLineOne()"
+        },
+        {
+          "identifier" : "MacDown2Tests/GoToLinePanelTests/outOfRangeLineClampsToTheLastLine()"
+        },
+        {
+          "identifier" : "MacDown2Tests/GoToLinePanelTests/surroundingSpacesAreIgnored()"
+        },
+        {
+          "identifier" : "MacDown2Tests/GraphvizExportRegistryTests/aMalformedGraphvizFenceLeavesAuthoredSourceUntouchedWithADiagnostic()"
+        },
+        {
+          "identifier" : "MacDown2Tests/GraphvizExportRegistryTests/aRealGraphvizFenceComposesIntoSelfContainedHTMLWithNoExternalReferences()"
+        },
+        {
+          "identifier" : "MacDown2Tests/GraphvizExportRegistryTests/standardForExportRunsGraphvizButNotForPreview()"
+        },
+        {
+          "identifier" : "MacDown2Tests/GraphvizPreviewIntegrationTests/aRealGraphvizFenceSlicesIntoAPreviewBlockWithTheCorrectLanguageTag()"
+        },
+        {
+          "identifier" : "MacDown2Tests/GraphvizPreviewIntegrationTests/stripDelimitersOnARealSlicedPreviewBlockRecoversExactlyTheAuthoredDiagramSource()"
+        },
+        {
+          "identifier" : "MacDown2Tests/GraphvizPreviewIntegrationTests/theSharedRendererProducesARealDiagramForPreviewDisplayFromASlicedBlock()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewLoadFailureTests/onlyAnUncancelledMainDocumentFailureRearmsTheLoad()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewNavigationIdentityTests/aCancelledQueuedRevisionDoesNotBlockRecoveryOfTheDisplayedPage()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewNavigationIdentityTests/aFailedPendingRecoveryCanRetryAndItsLateCallbackCannotSettleTheRetry()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewNavigationIdentityTests/aNilLoadReturnRearmsOnlyThatAttempt()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewNavigationIdentityTests/aNilPendingRecoveryRearmsWithoutRestoringItsBudget()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewNavigationIdentityTests/aQueuedNewerRevisionIsNotAssignedToARecoveryOfTheOldPage()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewNavigationIdentityTests/aQueuedSameGenerationRetryKeepsItsOwnAdmissionDuringProcessTermination()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewNavigationIdentityTests/aRecoveryCallbackCannotSettleANewerStartedRevision()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewNavigationIdentityTests/disposalRevokesOwnershipBeforeStoppingWebKit()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewNavigationIdentityTests/lateFailureCannotRearmANewerLoad(provisional:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewNavigationIdentityTests/lateFinishCannotCompleteANewerLoadOrPreventItsRetry()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewNavigationIdentityTests/nilUnknownAndWrongViewCallbacksCannotSettleTheCurrentLoad()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewNavigationIdentityTests/recoveryHasItsOwnNavigationAndKeepsTheCrashBudget()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewReloadBudgetTests/aNewDocumentRestoresTheBudget()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewReloadBudgetTests/aSecondTerminationForTheSameDocumentIsNotReloaded()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewRenderTests/theMainDocumentActuallyRenders()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewSchemeDeliveryTests/coordinatorDisposalDuringResponseRevokesDelivery()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewSchemeDeliveryTests/duplicateStartDoesNotReplaceAnActiveAttempt()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewSchemeDeliveryTests/lateTasksCannotBorrowAnotherDocumentsResourceRoot()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewSchemeDeliveryTests/nestedReuseCannotLetTheRetiredStackFrameFinishANewerAttempt()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewSchemeDeliveryTests/ordinaryMainDeliveryPreservesContentTypeAndCSP()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewSchemeDeliveryTests/repeatedSaveAndDisposalRejectEarlierMainDocumentTasks()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewSchemeDeliveryTests/replacingOrDisposingTheRequestRevokesItsConsumers(dispose:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewSchemeDeliveryTests/stopBeforeAnErrorPreventsFailureDelivery()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewSchemeDeliveryTests/stopDuringDeliveryIsTerminal(afterData:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewSchemeDeliveryTests/stopForAnotherViewOrTaskDoesNotCancelTheLiveAttempt()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewSchemeDeliveryTests/stoppingOneTaskDoesNotRetireAnotherAdmittedTask()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HTMLPreviewSchemeDeliveryTests/terminalCallbackReleasesAdmissionBeforeReentrancy(failing:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/HeadingExportActivationTests/aCodeMarkerDoesNotActivateTheHeadingDOMGateForOrdinaryHTML()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HeadingExportActivationTests/failedRequestedTOCPreparationPreservesPriorPrimaryAndCompanionOutput()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HeadingExportActivationTests/productionLinkedExportRecordsOneMiBAndDuplicateHeadingPhaseMeasurements()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HeadingExportActivationTests/theProductionExporterRegistersLinkedTOCsAndUsesOneFrozenParse()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HeadingPreviewAppTests/malformedMarkupIsolatesTheTOCAndRealLinksRecoverAfterCorrection()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HeadingPreviewAppTests/previewOnlyTOCPressScrollsWithoutMountingSelectingOrFocusingTheEditor()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HeadingPreviewAppTests/realTOCPressSelectsItsOriginalHeadingAndScrollsTheNativePreview(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/HeadingPreviewNavigationTests/aQueuedScrollRechecksSourceAfterTheInitialValidPress()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HeadingPreviewNavigationTests/anAttachedSheetCannotAuthorizeHeadingNavigation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HeadingPreviewNavigationTests/anOwnHeadingReplacesAllCaretsAndKeepsTheCurrentFirstResponder()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HeadingPreviewNavigationTests/anotherKeyWindowCannotBorrowThisDocumentsHeading()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HeadingPreviewNavigationTests/changedLiveAuthorityCannotSelectOrQueueAScroll(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/HeadingPreviewSessionTests/aLateOldCompletionCannotReplaceTheNewerPublishedHeadingIndex()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HeadingPreviewSessionTests/changedAuthorityDuringPreparationCannotPublish(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/HeadingPreviewSessionTests/sameSourceAndIndexIdentityCannotAuthorizeAnOldParserBindingsAction()"
+        },
+        {
+          "identifier" : "MacDown2Tests/HeadingPreviewSessionTests/theActualWorkerPublishesTheOriginalIndexAndRequiresKeyWindowAuthority()"
+        },
+        {
+          "identifier" : "MacDown2Tests/InstallationBookmarkTests/futureRecoveryAndPreferenceMembersAreNotSilentlyAdopted()"
+        },
+        {
+          "identifier" : "MacDown2Tests/InstallationBookmarkTests/outsideBookmarksAreNeverReinterpretedAsOwnedWorkingRoots()"
+        },
+        {
+          "identifier" : "MacDown2Tests/InstallationBookmarkTests/unresolvedStructuredAndOpaqueBookmarksSurviveLoadingAndRefusal()"
+        },
+        {
+          "identifier" : "MacDown2Tests/InstallationStartupTests/futureSessionBlocksOwnersAndQuitIsAvailableWithoutPublication()"
+        },
+        {
+          "identifier" : "MacDown2Tests/InstallationStartupTests/interveningSessionPublicationWinsOverCapturedMigrationSnapshot()"
+        },
+        {
+          "identifier" : "MacDown2Tests/InstallationStartupTests/managedFolderBookmarkWithoutAnAliasRelocatesOnlyInsideOwnedState()"
+        },
+        {
+          "identifier" : "MacDown2Tests/InstallationStartupTests/managedSnippetDraftRelocatesWithExactEpochAndOrdinaryRestore()"
+        },
+        {
+          "identifier" : "MacDown2Tests/InstallationStartupTests/populatedTargetRequiresPreservedBranchReviewBeforeReadiness()"
+        },
+        {
+          "identifier" : "MacDown2Tests/KeyedSerialRunnerTests/aFinishedKeyCanBeRunAgain()"
+        },
+        {
+          "identifier" : "MacDown2Tests/KeyedSerialRunnerTests/differentKeysRunConcurrently()"
+        },
+        {
+          "identifier" : "MacDown2Tests/KeyedSerialRunnerTests/operationsForTheSameKeyNeverOverlapAndKeepSubmissionOrder()"
+        },
+        {
+          "identifier" : "MacDown2Tests/LaunchArgumentGatingTests/launchArgumentsAreHonouredOnlyInDebugBuilds()"
+        },
+        {
+          "identifier" : "MacDown2Tests/LaunchRestoreSettlingTests/everyCallerOfTheUnsavedRestoreReturnsOnlyAfterTheWindowsExist()"
+        },
+        {
+          "identifier" : "MacDown2Tests/LaunchRestoreSettlingTests/quittingDuringTheLaunchRestoreKeepsTheDirtyTab()"
+        },
+        {
+          "identifier" : "MacDown2Tests/LaunchSessionConsumptionTests/theLaunchSessionIsHandedOutOnlyOnce()"
+        },
+        {
+          "identifier" : "MacDown2Tests/LegacyInstalledFontTests/missingFaceIsNotOfferedAsAnotherFamily()"
+        },
+        {
+          "identifier" : "MacDown2Tests/LegacyInstalledFontTests/ordinaryInstalledFaceRoundTripsWithoutSubstitution()"
+        },
+        {
+          "identifier" : "MacDown2Tests/LicenseNoticesTests/bundledTextsMatchTheCanonicalTrackedFilesExactly()"
+        },
+        {
+          "identifier" : "MacDown2Tests/LicenseNoticesTests/chunkedBundleReadDoesNotTruncateTheNotice()"
+        },
+        {
+          "identifier" : "MacDown2Tests/LicenseNoticesTests/emptyInvalidAndOversizedNoticesFailInsteadOfTruncating()"
+        },
+        {
+          "identifier" : "MacDown2Tests/LicenseNoticesTests/loaderPreservesOriginalUnicodeAndLineEndings()"
+        },
+        {
+          "identifier" : "MacDown2Tests/LicenseNoticesTests/missingBundledResourceIsAnExplicitFailure()"
+        },
+        {
+          "identifier" : "MacDown2Tests/LicenseNoticesTests/nativeTextIsSelectableReadOnlyAndNeverActivatesLinksOrMarkup()"
+        },
+        {
+          "identifier" : "MacDown2Tests/LicenseNoticesTests/oversizedBundleReadFailsRatherThanDisplayingTheAllowedPrefix()"
+        },
+        {
+          "identifier" : "MacDown2Tests/LineEndingStatusItemTests/choicesMapToTheirLineEndings()"
+        },
+        {
+          "identifier" : "MacDown2Tests/LineEndingStatusItemTests/labelNamesTheDocumentsActualLineEndings()"
+        },
+        {
+          "identifier" : "MacDown2Tests/LineEndingStatusItemTests/mixedAndTerminatorFreeDocumentsAreNotLabelledAsAnyOneConvention()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathExportRegistryTests/inlineCodeContainingMathLikeTextExportsAsLiteralCodeNotAnEquation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathExportRegistryTests/mathAndTOCComposeIntoRealSelfContainedHTMLWithNoExternalReferences()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathExportRegistryTests/mathRenderContextUsesTheLiveThemeForegroundWhenNotPrinting()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathExportRegistryTests/mathRenderContextUsesThePrintSafeColorForPDFRegardlessOfTheme()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathExportRegistryTests/standardForExportRunsMathButNotForPreview()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewLiveSourceTests/aNontextGenerationChangeAndParserReplacementInvalidateOldAuthority()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewLiveSourceTests/anEditorOnlyEditCannotBorrowTheUnchangedModelAndPublishedParse()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewLiveSourceTests/removedWindowsAndUnknownTabsCannotCreateFreshAuthority()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewNavigationTests/anotherKeyWindowCannotSelectTheOriginalDocumentsEquation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewNavigationTests/changedLiveAuthorityCannotMoveSelection(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewNavigationTests/theOwnOccurrenceReplacesTheEntireSelectionSet(diagnostic:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorLineEndingTests/collapsesAMultiLineDisplayEquationInNonLFDocuments(lineEnding:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/aDollarInACodeSpanDoesNotPairWithALaterEquation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/collapsesInternalNewlinesInAValidMultiLineDisplayEquation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/collapsesOnlyTheMultiLineSpanLeavingSurroundingTextAndOtherSpansAlone()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/flagsAMalformedMultiLineSpanRatherThanCollapsingIt()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/leavesAValidInlineEquationByteForByteUntouched()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/leavesAValidSingleLineDisplayEquationByteForByteUntouched()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/leavesSourceWithNoMathUntouched()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/onlyReplacesTheFlaggedSpanLeavingASiblingValidSpanAlone()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/preprocessMatchesTheSharedParityCorpusUsingTheRealValidityCheck(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/preprocessNeverCorruptsAFencedCodeBlockNestedInAListItem()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/preprocessNeverCorruptsANestedFenceInsideABlockQuote()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/preprocessNeverCorruptsANestedFenceWithAnInternalBlankLine()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/preprocessStillFlagsInvalidMathOutsideAFence()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/preprocessedBlockIsIdenticalWhenNoRewriteIsNeeded()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/preprocessedBlockReusesTheSameIDWhenSourceIsRewritten()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/preprocessedMapsEveryBlockInAnArray()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/preprocessedNeverRewritesACodeBlockEvenWithMathLikeContent()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/preprocessedNeverRewritesAnHTMLBlockEvenWithMathLikeContent()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/preprocessedPassesThroughNilBlocksArray()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/preprocessedStillRewritesAnOrdinaryParagraphWithMalformedMath()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/quotedDisplayMathLosesItsContinuationMarkers()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/replacesAnInvalidSpanWithTheVisibleMarkerPreservingSurroundingText()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/replacesMultipleInvalidSpansIndependently()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewPreprocessorTests/stopsValidatingBeyondTheScannedSpanCapLeavingTheRestUntouched()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewRecoveryTests/mountedPreviewRecoversFromMalformedSourceAndRemovesStaleAttachments()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewSessionTests/aFrameCannotRegisterUnknownRangesOrSplitSourceScalarsAndCRLF()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewSessionTests/aNontextGenerationChangeCanCompleteWithoutReparsingOrPermanentPendingState()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewSessionTests/actualWorkerPublishesOnlyCurrentEvaluationAndRegistersOwnSourceLocations()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewSessionTests/lateOldCompletionCannotReplaceANewerCurrentFrame()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewSessionTests/reopeningTheSamePathDuringAwaitCannotPublishOldMath()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewSessionTests/unpublishedEditorBytesAndCancellationAreRecheckedAfterAwait()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewSourceBindingTests/aNontextSaveRequiresFreshBindingAndCanThenPublishTheSameSource()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewSourceBindingTests/anOldNativeFrameCannotActAfterARefreshWithUnchangedSource()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewSourceBindingTests/canonicalLookalikesAndAnUnchangedDigestCannotAuthorizeDifferentEditorBytes(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewSourceBindingTests/closingAndReopeningTheSamePathCannotReuseOldSourceAuthority()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewSourceBindingTests/onlyTheCurrentOwnedWindowCanNavigateWhileBackgroundAnalysisMayPublish()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewSourceBindingTests/parserReplacementAndSettingsReparseInvalidateOldCompletion()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewSourcePlanTests/actualAuthoredBlocksReceiveOnlyTheirOwnRepairedReferenceInput(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewSourcePlanTests/anOriginSlicedThroughASurrogateCannotBeRepairedIntoSourceAuthority()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewSourcePlanTests/definitionsAndMarkersMustFitTogetherBeforeNativeParsing()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MathPreviewSourcePlanTests/generatedMatchingTextCannotAcquireAuthoredMathAuthority()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MermaidExportRegistryTests/aMalformedMermaidFenceLeavesAuthoredSourceUntouchedWithADiagnostic()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MermaidExportRegistryTests/aRealMermaidFenceComposesIntoSelfContainedHTMLWithNoExternalReferences()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MermaidExportRegistryTests/allDiagramAdaptersResolveScreenAndPrintSeparately()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MermaidExportRegistryTests/printExportRendersSequenceDiagramWithPrintSafeColors()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MermaidExportRegistryTests/standardForExportRunsMermaidButNotForPreview()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MermaidPreviewIntegrationTests/aRealMermaidFenceSlicesIntoAPreviewBlockWithTheCorrectLanguageTag()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MermaidPreviewIntegrationTests/stripDelimitersOnARealSlicedPreviewBlockRecoversExactlyTheAuthoredDiagramSource()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MermaidPreviewIntegrationTests/theSharedRendererProducesARealDiagramForPreviewDisplayFromASlicedBlock()"
+        },
+        {
+          "identifier" : "MacDown2Tests/MixedDiagramRendererIntegrationTests/threeDifferentDiagramLanguagesRenderIndependentlyWithoutBlockingEachOther()"
+        },
+        {
+          "identifier" : "MacDown2Tests/NavigationOriginTests/aRootSwitchClosesAnOpenQuickOpenPanel()"
+        },
+        {
+          "identifier" : "MacDown2Tests/NavigationOriginTests/aRootSwitchRetiresTheReplaceRunBeforeTheRebuildIsAwaited()"
+        },
+        {
+          "identifier" : "MacDown2Tests/NavigationOriginTests/aSymlinkRootKeepsItsLexicalPathForFolderSearchWhileSearchingThePhysicalRoot()"
+        },
+        {
+          "identifier" : "MacDown2Tests/NavigationOriginTests/clearingTheRootClearsTheLexicalRootToo()"
+        },
+        {
+          "identifier" : "MacDown2Tests/NewFileCommandTests/withAFolderOpenNewFileCreatesInThatFolder()"
+        },
+        {
+          "identifier" : "MacDown2Tests/NewFileCommandTests/withNoFolderNewFileOpensABlankDocument()"
+        },
+        {
+          "identifier" : "MacDown2Tests/OpenFolderTargetTests/withADocumentWindowButNoKeyWindowTheFolderOpensInThatWindow()"
+        },
+        {
+          "identifier" : "MacDown2Tests/OpenFolderTargetTests/withNoWindowAtAllAnUntitledWindowIsCreatedToHoldTheFolder()"
+        },
+        {
+          "identifier" : "MacDown2Tests/OpenSerializationKeyTests/aMissingFileFallsBackToItsPath()"
+        },
+        {
+          "identifier" : "MacDown2Tests/OpenSerializationKeyTests/aSymlinkedParentDirectorySpellingGetsTheSameKey()"
+        },
+        {
+          "identifier" : "MacDown2Tests/OpenSerializationKeyTests/differentFilesGetDifferentKeys()"
+        },
+        {
+          "identifier" : "MacDown2Tests/OrdinaryExportOriginTests/changingToAnotherTabCannotBorrowTheOldExportPanel()"
+        },
+        {
+          "identifier" : "MacDown2Tests/OrdinaryExportOriginTests/closingOriginCompletesDiagnosticSessionWithoutFinderReveal()"
+        },
+        {
+          "identifier" : "MacDown2Tests/OrdinaryExportOriginTests/panelReadsLatestValueFromOriginalDocumentOnly()"
+        },
+        {
+          "identifier" : "MacDown2Tests/OrdinaryExportSnapshotTests/aDestinationCreatedWhileTheContributionParseIsHeldIsPreserved()"
+        },
+        {
+          "identifier" : "MacDown2Tests/OrdinaryExportSnapshotTests/anUnlinkedSourceObjectCannotBeOverwrittenThroughAHardLink()"
+        },
+        {
+          "identifier" : "MacDown2Tests/OrdinaryExportSnapshotTests/closingTheFrozenOriginWhileParsingStillPreventsPublication()"
+        },
+        {
+          "identifier" : "MacDown2Tests/OrdinaryExportSnapshotTests/laterDocumentPublicationPreservesAnUnchangedExportDestination(mode:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/OrdinaryExportSnapshotTests/laterSettingsChangesDoNotAlterAnExportAlreadyInProgress()"
+        },
+        {
+          "identifier" : "MacDown2Tests/OrdinaryExportSnapshotTests/postFreezeSaveAsUsesTheOriginalSourceAndResourceDirectory()"
+        },
+        {
+          "identifier" : "MacDown2Tests/OrdinaryExportSnapshotTests/snapshotRequestPreservesItsCapturedInputs()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFCrossReferenceIntegrityTests/existingValidTableRemainsByteIdentical()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFCrossReferenceIntegrityTests/hybridIncrementalAndBrokenFreeListsAreRejected()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFCrossReferenceIntegrityTests/literalHexAndStreamBytesAreNotObjectReferences()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFCrossReferenceIntegrityTests/orphanSlotIsFreedWithoutChangingPageObjects()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFCrossReferenceIntegrityTests/referencedOrWrongOffsetObjectIsRejected()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFCrossReferenceIntegrityTests/scratchAdmissionRepairsOnlyAVisibleUnreferencedOrphan()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFErrorLocalizationTests/actualCompiledCatalogContainsEveryPDFErrorAndRecoveryKey(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFErrorLocalizationTests/actualErrorValuesPreserveTheirExistingEnglishDescriptionsAndGuidance()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFExportAdapterTests/contentlessPDFIsRejectedForNonemptyDocument()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFExportAdapterTests/exportedPDFReplacesAnyExistingFileAtomically()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFExportAdapterTests/exportingALongDocumentProducesARealMultiPagePDF()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFExportAdapterTests/graphicsSetupAndEmptyTextDoNotCountAsPrintedContent()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFExportAdapterTests/hardenedHTMLRetainsThePDFPolicy()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFExportAdapterTests/printDestinationIsConfiguredBeforeTheOperationStarts()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFExportAdapterTests/vectorSnapshotIsPaginatedWithoutLosingSelectableText()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFExportAdapterTests/vectorSnapshotMovesAnIntersectedHeadingToTheNextPage()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFExportAdapterTests/visibleTextAndVectorOnlyDiagramCountAsPrintedContent()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFNavigationPolicyTests/everyOtherDestinationIsCancelled()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFNavigationPolicyTests/onlyTheStringLoadedDocumentMayNavigate()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PDFNavigationPolicyWebKitTests/aStringLoadedPageNavigatesToAnAllowedURLAndAMetaRefreshIsCancelled()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PaletteOriginTargetingTests/closeTabFromAnExplicitOriginClosesOnlyThatOriginsWindow()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PaletteOriginTargetingTests/newFileFromAnExplicitOriginCreatesAndOpensUnderThatOriginNotAnotherOpenWindow()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PaletteOriginTargetingTests/newTabFromAnExplicitOriginTabsUnderThatOriginNotAnotherOpenWindow()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PaletteOriginTargetingTests/openDocumentWithAnExplicitOriginTabsUnderThatOriginNotAnotherOpenWindow()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PaletteOriginTargetingTests/openFolderWithAnExplicitOriginSetsThatOriginsRootNotAnotherOpenWindows()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PaletteOriginTargetingTests/saveAsOntoAFileOpenInAnotherWindowIsRefusedAndWritesNothing()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PaletteOriginTargetingTests/saveAsToAnExplicitURLAppliesOnlyToTheOriginsOwnModel()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PaletteOriginTargetingTests/saveFromAnExplicitOriginSavesOnlyThatOriginsDocument()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PaletteOriginTargetingTests/toggleSidebarFromAnExplicitOriginTogglesOnlyThatOriginsSidebar()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PlaceholderWindowCleanupTests/anExplicitlyMarkedStartupWindowIsAPlaceholder()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PlaceholderWindowCleanupTests/attachingTheStartupMarkerMarksItsOwnWindow()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PlaceholderWindowCleanupTests/theFirstRunWelcomeWindowIsNotAPlaceholder()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PlaceholderWindowCleanupTests/unmarkedWindowsAreNotStartupPlaceholders()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreserveHelperRebaseTests/aCleanDocumentIsMovedToTheNewLifetimeWithoutWritingARecoveryRecord()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreserveHelperRebaseTests/aSecondEditDuringStaleInitialMovePreservationStillRenewsTheLifetime()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreserveHelperRebaseTests/anEditDuringTheFailedCloseRetryPreservationStillRenewsTheLifetime()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewAuthorityPublicationTests/windowRevokesBothConsumersBeforeWorkspacePublishesReplacementIdentity()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionAdapterTests/composeBlocksContentBearingResultCarryingAnErrorDiagnostic()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionAdapterTests/composeHandlesCRLFEquivalently()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionAdapterTests/composeIsDeterministicAcrossRepeatedCalls()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionAdapterTests/composeLeavesUntouchedNeighboringBlocksByteForByte()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionAdapterTests/composePreservesADiagnosticOnlyResultWithNoContent()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionAdapterTests/composePreservesAuthoredTextBeforeAndAfterAMarkerInOneParagraph()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionAdapterTests/composeRejectsAStaleGeneration()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionAdapterTests/composeRejectsAnHTMLRepresentationWithADiagnostic()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionAdapterTests/composeRespectsUTF16OffsetsAroundNonBMPText()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionAdapterTests/composeReturnsBaseUnchangedWithNoContributions()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionAdapterTests/resultsIsEmptyWithoutADocumentOrText()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionAdapterTests/resultsRunsTheStandardRegistryEndToEnd()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/aMalformedEarlierCandidateDoesNotPreventALaterValidCandidate()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/aRangeContainingOnlyANewlineGapBetweenBlocksIsRejected()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/aRangeCrossingTwoBlocksIsRejected()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/aRangeValidForADifferentSourceIsRejected()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/anOverlappingLaterResultLeavesItsSourceUntouchedWithADiagnostic()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/anOversizedCandidateFollowedByASmallValidCandidateStillFitsTheSmallOne()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/exactlyTheBudgetCeilingComposesWithNoWarning()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/inlineGeneratedMarkdownContainingALineBreakIsRejected()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/inlinePlacementSplicesInPlacePreservingPrefixSuffixAndBlockKind()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/inlineSourceSpanningLinesIsRejected()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/invalidStaleAndOverlappingCandidatesDoNotConsumeCountBudget()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/mixedNonOverlappingInlineAndBlockPlacementsPreserveSourceOrder()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/negativeLowerBoundIsRejected()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/nonBMPSourceProvesBoundsUseUTF16NotGraphemeCounts()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/partialBlockReplacementInsideAParagraphOnCompletePhysicalLinesWorks()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/partialBlockReplacementNotAlignedToWholeLinesIsRejected()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/partialBlockReplacementOutsideAParagraphIsRejected()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/the65thAcceptedPlacementRemainsAuthoredWithOneAggregateWarning()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/theGeneratedByteBudgetRejectsOnlyTheOverBudgetCandidate()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/upperBoundBeyondUTF16LengthIsRejected()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewContributionComposerTests/wholeBlockReplacementWorksForANonParagraphBaseBlock()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewDiagnosticLabelTests/aMissingCatalogStillProducesAReadableDetail()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewDiagnosticLabelTests/compiledCountsUseWholeMessagesAndCatalogPluralForms(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewDiagnosticLabelTests/explicitResourceBundleControlsBothSeverityLabels()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewDirectoryGrantBackingTests/replacementAtSelectedNameCannotBecomeTheGrant()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewDirectoryGrantBackingTests/revokedGrantKeepsAdmittedDirectoryAliveUntilWorkerUseEnds()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewDirectoryGrantBackingTests/selectedFolderCannotGrantASeparateDocumentDirectory()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewDisplayCacheTests/aNewCompositionAtTheSameRevisionAlsoInvalidates()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewDisplayCacheTests/nilDisplayInvalidatesTheCache()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewDisplayCacheTests/revisionChangePreservesAuthoredMalformedAndMultilineMath()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewDisplayCacheTests/sameRevisionAndBlocksReuseTheCachedSnapshot()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewResourceAdmissionTests/admittedWorkerKeepsGrantAliveAfterFolderRevocation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewResourceAdmissionTests/cancelledSuccessfulReadKeepsItsInputChargeThroughSettlement()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewResourceAdmissionTests/payloadReservationSurvivesRetirementUntilLastReferenceLeaves()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewResourceAdmissionTests/retainedPayloadsAcrossOldLoadsConsumeTheGlobalInputCap()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewResourceAdmissionTests/retiredLoadKeepsRunningWorkerAndReservationUntilReadEnds()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewResourceWindowStateTests/closingWindowRevokesBothConsumersAndItsBacking()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewResourceWindowStateTests/delayedOldMarkdownTaskCannotRetireTheNewGeneration()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewResourceWindowStateTests/observedAwayAndBackCannotReusePendingSelection()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PreviewResourceWindowStateTests/switchedDocumentRejectsAnAwaitingFolderSelection()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PseudoLocalizationLayoutTests/externalFileNoticesRenderInLocale(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/PseudoLocalizationLayoutTests/firstRunWelcomeRendersInLocale(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/PseudoLocalizationLayoutTests/narrowListRowHandlesVeryLongLabel()"
+        },
+        {
+          "identifier" : "MacDown2Tests/PseudoLocalizationLayoutTests/pluralizedPreviewBudgetMessageResolvesInLocale(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/PseudoLocalizationLayoutTests/populatedEditorRendersInLocale(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/PseudoLocalizationLayoutTests/settingsRendersInLocale(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/PseudoLocalizationLayoutTests/shortcutHintHandlesVeryLongLabel()"
+        },
+        {
+          "identifier" : "MacDown2Tests/QuickOpenModelTests/anUnavailableIndexIsReportedDistinctlyFromNoMatches()"
+        },
+        {
+          "identifier" : "MacDown2Tests/QuickOpenModelTests/lateArrivingStaleQueryResultIsDiscarded()"
+        },
+        {
+          "identifier" : "MacDown2Tests/QuickOpenModelTests/moveSelectionOnAnEmptyResultListDoesNothing()"
+        },
+        {
+          "identifier" : "MacDown2Tests/QuickOpenModelTests/moveSelectionWrapsAroundInBothDirections()"
+        },
+        {
+          "identifier" : "MacDown2Tests/QuickOpenModelTests/queryFuzzyFiltersTheIndexedFiles()"
+        },
+        {
+          "identifier" : "MacDown2Tests/QuickOpenModelTests/rapidTypingEndsOnTheLastTypedQuerysResults()"
+        },
+        {
+          "identifier" : "MacDown2Tests/QuickOpenModelTests/refreshWithNoQueryShowsIndexedFiles()"
+        },
+        {
+          "identifier" : "MacDown2Tests/QuickOpenModelTests/rowsFromThePreviousQueryAreNotActionableWhileANewQueryIsPending()"
+        },
+        {
+          "identifier" : "MacDown2Tests/QuickOpenModelTests/selectedResultReflectsTheCurrentSelectionIndex()"
+        },
+        {
+          "identifier" : "MacDown2Tests/QuickOpenStaleOriginTests/closingTheOriginWindowDismissesTheOpenPanelAndDoesNotBlockItsDeallocation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/QuickOpenStaleOriginTests/closingTheOriginsFolderRootClosesTheOpenPanel()"
+        },
+        {
+          "identifier" : "MacDown2Tests/QuickOpenStaleOriginTests/removingAnUnrelatedControllerLeavesTheOpenPanelAlone()"
+        },
+        {
+          "identifier" : "MacDown2Tests/QuickOpenStaleOriginTests/switchingAnUnrelatedControllersFolderRootLeavesTheOpenPanelAlone()"
+        },
+        {
+          "identifier" : "MacDown2Tests/QuickOpenStaleOriginTests/switchingTheOriginsFolderRootClosesTheOpenPanel()"
+        },
+        {
+          "identifier" : "MacDown2Tests/QuitBeforeLaunchRestoreTests/savingAfterTheLaunchSessionWasConsumedPublishesNormally()"
+        },
+        {
+          "identifier" : "MacDown2Tests/QuitBeforeLaunchRestoreTests/savingBeforeTheLaunchRestoreLeavesTheSavedSessionAlone()"
+        },
+        {
+          "identifier" : "MacDown2Tests/RenderedStateEvidenceTests/d2DiagramStateRenders()"
+        },
+        {
+          "identifier" : "MacDown2Tests/RenderedStateEvidenceTests/emptyEditorStateRenders()"
+        },
+        {
+          "identifier" : "MacDown2Tests/RenderedStateEvidenceTests/externalFileConflictNoticeStateRenders()"
+        },
+        {
+          "identifier" : "MacDown2Tests/RenderedStateEvidenceTests/externalFileUnavailableNoticeStateRenders()"
+        },
+        {
+          "identifier" : "MacDown2Tests/RenderedStateEvidenceTests/firstRunWelcomeStateRenders()"
+        },
+        {
+          "identifier" : "MacDown2Tests/RenderedStateEvidenceTests/graphvizDiagramStateRenders()"
+        },
+        {
+          "identifier" : "MacDown2Tests/RenderedStateEvidenceTests/mathInlineAndDisplayStatesRender()"
+        },
+        {
+          "identifier" : "MacDown2Tests/RenderedStateEvidenceTests/mermaidDiagramStateRenders()"
+        },
+        {
+          "identifier" : "MacDown2Tests/RenderedStateEvidenceTests/populatedEditorAccessibilityLargeTextStateRenders()"
+        },
+        {
+          "identifier" : "MacDown2Tests/RenderedStateEvidenceTests/populatedEditorBoldTextStateRenders()"
+        },
+        {
+          "identifier" : "MacDown2Tests/RenderedStateEvidenceTests/populatedEditorDarkModeStateRenders()"
+        },
+        {
+          "identifier" : "MacDown2Tests/RenderedStateEvidenceTests/populatedMarkdownEditorStateRenders()"
+        },
+        {
+          "identifier" : "MacDown2Tests/RenderedStateEvidenceTests/previewOnlyStateRenders()"
+        },
+        {
+          "identifier" : "MacDown2Tests/RenderedStateEvidenceTests/settingsStateRenders()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ReopenWithEncodingTests/aDifferentEncodingNeverDiscardsDirtyTextWithoutConfirmation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ReopenWithEncodingTests/aDifferentEncodingRedecodesACleanDocument()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ReopenWithEncodingTests/openingAnAlreadyOpenFileWithAnEncodingRereadsItThroughTheReopenPath()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ReopenWithEncodingTests/reopeningWithTheCurrentEncodingIsANoOpEvenWhenDirty()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ReopenWithEncodingTests/theWindowLevelEntryPointAlsoDoesNothingForTheCurrentEncoding()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SecuredHTMLPreviewNativeTests/savedRevisionsReplaceTheWebViewAndDeliverTheirOwnMainBytes()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SecuredMarkdownMountedTests/aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SecuredPreviewReleaseProbeTests/largestHTMLSourceHasMeasuredTimeAndProcessMemory()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SessionRestoreRecoveryBufferTests/restoreRecoversUnsavedTextFromTheCoordinatorsRecoveryBuffer()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SessionViewStateRoundTripTests/aCancelledAutosaveNeverPublishesItsObsoleteSnapshot()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SessionViewStateRoundTripTests/aPendingDebouncedChangeInvalidatesAnExplicitSnapshotBeforePublication()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SessionViewStateRoundTripTests/aScheduledChangeInvalidatesAnUnpublishedSnapshot()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SessionViewStateRoundTripTests/anAutosaveThatIsNotSupersededPublishes()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SessionViewStateRoundTripTests/anExplicitSaveStillPublishesEvenIfItsTaskWasCancelled()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SessionViewStateRoundTripTests/anOlderSnapshotFinishingLateNeverRollsBackANewerPublishedSession()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SessionViewStateRoundTripTests/commandAliasesShareOneWindowAndSaveAsDoesNotFinishTheWait()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SessionViewStateRoundTripTests/dirtyEditDuringRecoveryCannotPublishAnOlderTerminationSnapshot(injectBaselineObservation:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/SessionViewStateRoundTripTests/failedNewerPublicationDoesNotAuthorizeAnOlderSnapshot()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SessionViewStateRoundTripTests/ordinaryNewFileOpenAdmitsBeforeTheWindowIsPublished()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SessionViewStateRoundTripTests/previewModeAndSyntaxModeSurviveSaveAndRestore()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SessionViewStateRoundTripTests/repeatedInvalidationFailsAnExplicitPublisherWithoutWritingStaleState()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SessionViewStateRoundTripTests/sessionSavesTheEditorsPrimarySelectionNotTheTopmostRange()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SessionViewStateRoundTripTests/stdinPersistenceFailureDoesNotOpenAssociatedFiles()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SessionViewStateRoundTripTests/terminationDrainsAnAutosaveBeforeLaunchRestoreCompletes()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SessionViewStateRoundTripTests/terminationOwnsTheSessionLaneWhenAnotherSaveIsScheduled()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SessionViewStateRoundTripTests/theCanonicalSessionRecordCarriesTheDocumentsEncoding()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SharedMathActivationTests/actualNativeReplayKeepsTheOriginalImplicitReferenceAndOwnAttachment(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/SharedMathActivationTests/cancelledPreparationNeverCreatesAnAuthoritativeFrame()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SharedMathActivationTests/productionDestinationsUseTheSameOriginalDollarGrammar(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/SharedMathActivationTests/repeatedEquationsKeepDistinctOwnActionsWhileBothDestinationsAgreeOnFailures()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SharedMathActivationTests/wholeAnalysisFailureShowsAuthoredBlocksWithoutInventingSourceActions()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SnippetPickerTests/emptyQueryShowsEverything()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SnippetPickerTests/insertExpandsAtTheOriginEditorAndUndoesInOneStep()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SnippetPickerTests/insertIsRefusedWhenTheActiveTabChangedSinceThePickerOpened()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SnippetPickerTests/multiCaretInsertIsOneUndoStep()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SnippetPickerTests/noMatchLeavesNothingSelectedAndMovementIsANoOp()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SnippetPickerTests/noticeExplainsAnUnusableOrPartiallyUsableSnippetFile()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SnippetPickerTests/queryFiltersAndResetsSelection()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SnippetPickerTests/selectionWrapsBothWays()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SnippetPickerTests/unreadableSnippetFileOffersOnlyBuiltInsAndIsNotRewritten()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SnippetPickerTests/userSnippetsMergeWithBuiltInsAndScopeToTheFormat()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SourceAnalysisTextTests/canonicalEqualityDoesNotHideAnAuthoredEdit()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SourceAnalysisTextTests/equalLengthsDoNotSubstituteForExactSourceIdentity()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SourceAnalysisTextTests/identicalBytesAreStableAndCapturedTextIsImmutable()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SourceAnalysisTextTests/lineEndingsWhitespaceAndNULRemainAuthoredChanges()"
+        },
+        {
+          "identifier" : "MacDown2Tests/StatusBarEncodingOriginTests/saveWithEncodingActsOnTheOwningWindowNotTheKeyOne()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SyntaxModeStatusItemTests/anOverrideIsFlaggedAndKeepsTheAutomaticFormatAvailable()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SyntaxModeStatusItemTests/automaticDetectionReportsTheFilesOwnFormat()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SyntaxModeStatusItemTests/choicesCoverEveryRegisteredFormatSortedByName()"
+        },
+        {
+          "identifier" : "MacDown2Tests/SyntaxModeStatusItemTests/selectionForwardsTheChosenIDOrNilForAutomatic()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TabHostTests/aPanelIsNotATabHost()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TabHostTests/aPlainWindowIsNotATabHost()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TabHostTests/noWindowMeansNoHost()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TabHostTests/theFirstRunWindowIsNotATabHost()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TabOrderTests/chainingEachTabAfterThePreviousOneKeepsTheOrder()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TabOrderTests/savedOrderFollowsTheTabStripNotCreationOrder()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TabOrderTests/theMainWindowWinsOverTheTabGroupSelectionWhenNothingIsKey()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TabOrderTests/theVisibleTabIsActiveWhenNoWindowIsKey()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TabOrderTests/windowsWithoutATabGroupKeepTheirPlace()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TextFilterCoordinatorTests/aCompositionStartedWhileTheFilterRunsDiscardsTheResultAndKeepsTheComposition()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TextFilterCoordinatorTests/aLiveEditWhileTheFilterIsRunningDiscardsTheStaleResultWithoutMutation()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TextFilterCoordinatorTests/aNewRunSupersedesAndCancelsThePreviousOneForTheSameTab()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TextFilterCoordinatorTests/closingTheWindowCancelsARunningFilterAndDiscardsItsResult()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TextFilterCoordinatorTests/filterOutputIsInsertedVerbatimEvenWhenMarkdownAssistsAreEnabled()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TextFilterCoordinatorTests/genuineFailureOnALiveUncancelledTaskStillPresentsTheAlert()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TextFilterCoordinatorTests/selectionReplacementAppliesExactlyOneUndoStep()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TextFilterCoordinatorTests/supersedingAnInFlightRunSurfacesNoAlert()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TextFilterCoordinatorTests/wholeDocumentReplacementAppliesExactlyOneUndoStep()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TextFilterCoordinatorTests/windowCloseCancellationSurfacesNoAlert()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TextFilterCoordinatorTests/zeroExitEmptyStdoutDeletesSelectionAsOneUndoableEdit()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TextualAttachmentPublicationTests/cancelledOlderReadCannotPublishOverNewerSource()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TextualAttachmentPublicationTests/olderUncancelledReadCannotPublishOverNewerSource()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TextualAttachmentPublicationTests/plainSourceReplacesThePreviouslyResolvedImageSource()"
+        },
+        {
+          "identifier" : "MacDown2Tests/TextualAttachmentPublicationTests/requestCancelledBeforeEntryCannotReplaceCurrentContent()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ThemeCatalogModelTests/acceptedDeletionFallsBackAndDuplicateMakesAnIndependentCustomTheme()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ThemeCatalogModelTests/cancelledDeletionDoesNotTouchBytesOrSelection()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ThemeCatalogModelTests/cancelledImportConflictPreservesInstalledAndExternalBytes()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ThemeCatalogModelTests/deletionConfirmationBindsTheOriginalVersionAndRejectsLaterEdits()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ThemeCatalogModelTests/importConfirmationIsConsumedBeforeDismissalAndCannotRunTwice()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ThemeCatalogModelTests/importCopiesBytesIntoManagedStorageAndSelectsTheNewIdentity()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ThemeCatalogModelTests/invalidAndOversizedImportsLeaveTheCatalogUnchanged()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ThemeCatalogModelTests/shutdownRevokesPendingConfirmationAndCannotRestartAnOldCatalogGeneration()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ThemeExportDocumentTests/exportFreezesAdmittedBytesInsteadOfReadingALaterThemeValue()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ThemeExportDocumentTests/suggestedNameIsOneBoundedComponent(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/UITestLaunchGuardTests/isolatedAccountRejectsMissingOrMalformedProtectedUID(_:)"
+        },
+        {
+          "identifier" : "MacDown2Tests/UITestLaunchGuardTests/isolatedAccountRejectsOwnerRootAndChangedIdentity()"
+        },
+        {
+          "identifier" : "MacDown2Tests/UITestLaunchGuardTests/isolatedBuildRequiresOneMarkerAndItsOwnIdentity()"
+        },
+        {
+          "identifier" : "MacDown2Tests/UITestLaunchGuardTests/permitsOrdinaryLaunchWithoutUITestFlag()"
+        },
+        {
+          "identifier" : "MacDown2Tests/UITestLaunchGuardTests/rejectsUITestRequestWhenHooksAreUnavailable()"
+        },
+        {
+          "identifier" : "MacDown2Tests/UnsavedSessionRestoreTests/aCleanSessionCarriesNothing()"
+        },
+        {
+          "identifier" : "MacDown2Tests/UnsavedSessionRestoreTests/onlyDirtyAndConflictedTabsAreCarriedAcrossARestoreFreeLaunch()"
+        },
+        {
+          "identifier" : "MacDown2Tests/UseDiskVersionRaceTests/aRecoveryLifetimeChangeDuringTheCleanupSupersedesTheReload()"
+        },
+        {
+          "identifier" : "MacDown2Tests/UseDiskVersionRaceTests/aReloadThatIsNotSupersededStillLandsAndIsReportedAsReopened()"
+        },
+        {
+          "identifier" : "MacDown2Tests/UseDiskVersionRaceTests/aTabSwitchDuringTheRecoveryCleanupLeavesBothDocumentsAlone()"
+        },
+        {
+          "identifier" : "MacDown2Tests/UseDiskVersionRaceTests/anEditDuringTheRecoveryCleanupIsNotOverwrittenByTheReload()"
+        },
+        {
+          "identifier" : "MacDown2Tests/UseDiskVersionRaceTests/disposalDuringTheRecoveryCleanupNeverInstallsTheSnapshot()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ValidatedExportOperationTests/cachedParseRejectsCanonicallyEquivalentButDifferentSourceBytes()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ValidatedExportOperationTests/cancellationAfterContributionsKeepsThePreviousExport()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ValidatedExportOperationTests/cancellingDuringPanelKeepsThePreviousExportAndReleasesTheGuard()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ValidatedExportOperationTests/closeAfterContributionWorkRevokesPublication()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ValidatedExportOperationTests/closeBeforeTaskStartsNeverPresentsTheSheet()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ValidatedExportOperationTests/originCloseNotificationSettlesTheRealSheetWithoutAnExport()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ValidatedExportOperationTests/panelFocusAndLaterEditsCannotRetargetTheFrozenContribution()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ValidatedExportOperationTests/realSaveSheetRemainsOnTheCapturedWindowWhenFocusMoves()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ValidatedExportOperationTests/saveAsReplacementDuringPanelRejectsTheOldOrigin()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ValidatedExportOriginTests/freezesAfterPanelAndRevokesBeforeIdentityPublication()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ValidatedExportPanelTests/taskCancellationDismissesTheRealSheet()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ValidatedSVGHTMLPDFTests/pdfAdapterInputPreservesTheAcceptedHTMLBytes()"
+        },
+        {
+          "identifier" : "MacDown2Tests/ValidatedSVGHTMLPDFTests/webKitLoadsCompanionImagesWithEscapedOutputNames()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WelcomeLaunchSessionTests/aRealSavedSessionIsStillRestoredWhenADocumentIsAlreadyOpen()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WelcomeLaunchSessionTests/anEmptySessionOpensNoSecondUntitledDocumentWhenOneIsAlreadyOpen()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WelcomeLaunchSessionTests/anEmptySessionStillOpensUntitledByDefault()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WholeAppTabScalePerformanceTests/materializingTwentyTabsCompletesWithinBudget()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WholeAppTabScalePerformanceTests/switchingAcrossTwentyAlreadyOpenTabsIsCheapRelativeToFirstOpen()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WholeAppTabScalePerformanceTests/teardownRetiresTheWindowAndItsBackgroundWork()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WindowCloseRetiredLifetimeTests/anEditDuringASuccessfulCloseRetireLeavesTheWindowRecoverable()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WindowControllerEagerEditorTests/anEditorViewMountedWhileTheWindowIsBuiltIsNotReMarkedDetached()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WindowControllerEagerEditorTests/theEagerlyCreatedEditorSystemRefusesCommandEditsUntilAnEditorViewMounts()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WindowControllerEpochCloseTests/closeAfterRetireOfAnOlderLifetimeLeavesTheLiveLifetimeRecovery()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WindowCoordinatorRecentFileTests/openingARecentFileThroughASymlinkedParentDirectoryOpensTheLexicalPath()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WindowCoordinatorRecentFileTests/openingAnOrdinaryRecentFileOpensItAndRePromotesIt()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WindowCoordinatorSaveAsPublicationTests/saveAsRetryPublishesDestinationThroughItsOwnPendingAction()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WindowCoordinatorSaveAsPublicationTests/saveSessionReportsFailureWhenNoControllerCanOwnAnUnverifiedPublication()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WindowFrameRestoreTests/aSavedFrameIsDetectedByItsAutosaveName()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WindowFrameRestoreTests/theEditorFontSizeAppliesEvenWhenTheFamilyIsNotInstalled()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexFreshnessTests/clearingOrClosingWhileAnInitialWalkIsHeldDoesNotPublishOrBecomeFresh()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexFreshnessTests/delayedOldACompletionCannotReplaceFreshnessAfterAtoBtoA()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexFreshnessTests/failedInitialBuildDoesNotEarnFreshness()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexFreshnessTests/forcedRefreshAndExplicitMutationStillWalkAgain()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexFreshnessTests/olderInitialCompletionCannotReplaceNewerSameRootFreshness()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexFreshnessTests/sameRootActivationSupersessionPublishesSearchOnlyAfterTheCurrentBuildIsReady()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexRefreshBehaviorTests/aDeletedFileDisappearsAfterTheIndexRefreshes()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexRefreshBehaviorTests/aFailedIndexRefreshReplacesStaleSearchResultsAndRecoveryRerunsTheQuery()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexRefreshBehaviorTests/aFileAddedByAnotherProgramAppearsAfterTheIndexRefreshes()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexRefreshBehaviorTests/aRefreshWithinTheMinimumIntervalIsSkipped()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexRefreshBehaviorTests/anActiveFolderSearchFollowsSameRootIndexRefreshes()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexRefreshBehaviorTests/automaticRefreshNeverReincludesExcludedOrUnreviewedReplaceTargets()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexRefreshBehaviorTests/changedResultRevisionNeedsFreshReplaceSelectionAfterIndexRefresh()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexRefreshBehaviorTests/failedForcedRefreshInvalidatesFreshnessSoActivationRetries()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexRefreshBehaviorTests/losingTheFolderAccessScopeRetiresVisibleSearchResults()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexRefreshBehaviorTests/refreshWithoutAnOpenFolderIsANoOp()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexRefreshBehaviorTests/successfulInitialBuildMakesActivationRefreshSkipTheDuplicateWalk()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexRefreshBehaviorTests/theAppsOwnFileOperationsRefreshTheIndexWithoutAnExplicitCall()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexRootPublicationTests/activationRefreshDuringRootChangeDoesNotUseThePreviousRoot()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexRootPublicationTests/activationRefreshUsesRootAfterAcceptedFolderRemap()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexRootPublicationTests/changingQueryDuringResultLoadCannotPublishOldSearchRow()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexRootPublicationTests/changingRootDuringResultLoadCannotPublishOldFolderDocument()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexRootPublicationTests/changingRootRetiresOldSearchRowsBeforeRebuildAwaits()"
+        },
+        {
+          "identifier" : "MacDown2Tests/WorkspaceIndexRootPublicationTests/replacingAccessForSameLexicalRootRetiresOldResultsImmediately()"
+        },
+        {
+          "identifier" : "MacDown2UITests/D2GraphvizPreviewUITests/testAD2FenceRendersAsADiagramImageInTheLivePreview()"
+        },
+        {
+          "identifier" : "MacDown2UITests/D2GraphvizPreviewUITests/testAGraphvizFenceRendersAsADiagramImageInTheLivePreview()"
+        },
+        {
+          "identifier" : "MacDown2UITests/D2GraphvizPreviewUITests/testAMalformedD2FenceShowsAnInlineErrorInTheLivePreview()"
+        },
+        {
+          "identifier" : "MacDown2UITests/D2GraphvizPreviewUITests/testAMalformedGraphvizFenceShowsAnInlineErrorInTheLivePreview()"
+        },
+        {
+          "identifier" : "MacDown2UITests/D2GraphvizPreviewUITests/testCopyAsSVGWritesRealSVGToThePasteboard()"
+        },
+        {
+          "identifier" : "MacDown2UITests/DeadKeyCompositionUITests/testAnExternalReloadDuringAnOpenCompositionIsNotReverted()"
+        },
+        {
+          "identifier" : "MacDown2UITests/DeadKeyCompositionUITests/testDeadKeyCompositionCommitsAnAccentedCharacter()"
+        },
+        {
+          "identifier" : "MacDown2UITests/DeadKeyCompositionUITests/testDeadKeyCompositionStillCommitsAfterAnUndo()"
+        },
+        {
+          "identifier" : "MacDown2UITests/EditingAssistsUITests/testBoldMenuCommandAppliesToFocusedEditor()"
+        },
+        {
+          "identifier" : "MacDown2UITests/EditingAssistsUITests/testCommandFOpensTheFindBar()"
+        },
+        {
+          "identifier" : "MacDown2UITests/EditingAssistsUITests/testFormattingMenuRefreshesAfterKeyboardTabAndFocusOutline()"
+        },
+        {
+          "identifier" : "MacDown2UITests/EditingAssistsUITests/testFormattingMenuTracksEditorSidebarFindAndEditorFocus()"
+        },
+        {
+          "identifier" : "MacDown2UITests/EditingAssistsUITests/testListContinuationOnReturn()"
+        },
+        {
+          "identifier" : "MacDown2UITests/EditingAssistsUITests/testNoMarkdownDelimiterPairingInPlainText()"
+        },
+        {
+          "identifier" : "MacDown2UITests/EditorTypingUITests/testTypingRoundTripsThroughDocument()"
+        },
+        {
+          "identifier" : "MacDown2UITests/ExternalFileChangesUITests/testCancelThenUseDiskRevalidatesAgainstTheLatestDiskVersion()"
+        },
+        {
+          "identifier" : "MacDown2UITests/ExternalFileChangesUITests/testCleanExternalReplacementReloadsWithoutAConflictSheet()"
+        },
+        {
+          "identifier" : "MacDown2UITests/ExternalFileChangesUITests/testConflictCloseUseDiskClosesWithoutDiscardingTheExternalVersion()"
+        },
+        {
+          "identifier" : "MacDown2UITests/ExternalFileChangesUITests/testDirtyExternalReplacementKeepsLocalTextUntilDiskVersionIsChosen()"
+        },
+        {
+          "identifier" : "MacDown2UITests/ExternalFileChangesUITests/testKeepMyChangesDismissesConflictAndPreservesEditorText()"
+        },
+        {
+          "identifier" : "MacDown2UITests/ExternalFileChangesUITests/testUseDiskResolutionShowsUnavailableStateWhenBackingFileVanishes()"
+        },
+        {
+          "identifier" : "MacDown2UITests/FirstRunUITests/testOpenSampleDocumentDismissesWelcomeAndOpensTheSampleText()"
+        },
+        {
+          "identifier" : "MacDown2UITests/FirstRunUITests/testStartWritingDismissesWelcomeAndOpensAnEmptyDocument()"
+        },
+        {
+          "identifier" : "MacDown2UITests/FolderBrowserUITests/testCreateFileKeepsRenameInTheOpenedTab()"
+        },
+        {
+          "identifier" : "MacDown2UITests/FolderBrowserUITests/testFolderSectionHasStableAccessibilityIdentity()"
+        },
+        {
+          "identifier" : "MacDown2UITests/FolderBrowserUITests/testMoveToTrashOffersDestructiveConfirmationAction()"
+        },
+        {
+          "identifier" : "MacDown2UITests/FolderBrowserUITests/testNoRootOffersOpenFolderAndShortcutHint()"
+        },
+        {
+          "identifier" : "MacDown2UITests/MermaidPreviewUITests/testAMalformedMermaidFenceShowsAnInlineErrorInTheLivePreview()"
+        },
+        {
+          "identifier" : "MacDown2UITests/MermaidPreviewUITests/testAMermaidFenceRendersAsADiagramImageInTheLivePreview()"
+        },
+        {
+          "identifier" : "MacDown2UITests/MultiFormatUITests/testHTMLPreviewTogglesSourceAndRendered()"
+        },
+        {
+          "identifier" : "MacDown2UITests/MultiFormatUITests/testInvalidJSONShowsDiagnosticInsteadOfStaleOutline()"
+        },
+        {
+          "identifier" : "MacDown2UITests/MultiFormatUITests/testJSONOutlineShowsRowsAndPreviewPane()"
+        },
+        {
+          "identifier" : "MacDown2UITests/MultiFormatUITests/testPlainTextShowsNoPreviewPlaceholder()"
+        },
+        {
+          "identifier" : "MacDown2UITests/OutlineNavigationUITests/testFocusOutlineRevealsRowsAndReturnJumpsTheEditor()"
+        },
+        {
+          "identifier" : "MacDown2UITests/PreviewLayoutUITests/testLayoutKeyboardShortcutsTogglePanes()"
+        },
+        {
+          "identifier" : "MacDown2UITests/PreviewLayoutUITests/testLayoutPersistsAcrossSessionRestore()"
+        },
+        {
+          "identifier" : "MacDown2UITests/TabLifecycleUITests/testOpenFilesDirtyClosePromptAndRestore()"
+        },
+        {
+          "identifier" : "MacDown2UITests/TabLifecycleUITests/testQuickOpenReactivatesAnAlreadyOpenBackgroundTab()"
+        }
+      ],
+      "testPlan" : "MacDown2"
+    }
+  ]
+}

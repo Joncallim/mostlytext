@@ -158,3 +158,48 @@ same-head-repository job guards, fresh disposable-host admission and all owned
 limits. No untrusted fork receives native execution. This changes the trigger,
 not the raw-capture contract or any original app/test bytes. Preserve the first
 complete outcome before deciding SDK schema or implementing the batch reader.
+
+## Observed SDK schema and batch decision before code
+
+First discovery42347455097 at5307 passes and is independently verified against
+all1611source/24pins/7generated/actual compiled-test/result bindings. Actual
+SDK717 enabled functions include679app and exactly38UI despite the filter.
+The preserved JSON schema and exact38-ID equality are recorded in the adjacent
+evidence packet before parser or batch implementation. PR126 merges as210f46b7
+with reviewed tree38f6a12c and unchanged product/bootstrap source.
+
+Use only observed root errors/values, single MacDown2 testPlan, disabledTests
+and enabledTests identifier records. Require no errors/disabled/duplicate IDs,
+exact expected38 UI identifiers and explicit separation of the679 other-target
+functions. Normalise only each UI method's observed terminal empty parentheses.
+Reject other schemas, suffixes, missing/extra/disabled UI IDs or source drift.
+Record actual raw SHA256; enumeration never supplies execution verdicts.
+
+The fixed source-bound plan partitions the exact sorted38 IDs into ten batches
+of at most four, with ten fresh disposable VMs and fail-fast disabled. Preserve
+original methods byte-for-byte. Reuse the unchanged original-focus preparation
+and literal compiled-target/owned-command checks in a separate private fixed
+batch controller, rather than changing a qualified existing controller. Its
+prepare stage may reuse the base preparation only; bind all added plan/parser/
+script/test/workflow/raw-calibration inputs before the first positive. No
+receipt may be retargeted to a second selected case or previously attempted root.
+
+Each batch has one genuine typing/button positive before any root case, actual
+GUI/US-input checks, and a predeclared NOT_RUN row for every fixed case. Execute
+serially, one exact original method and distinct result/owned directory at a
+time, retaining the120second case/600second owned/40minute job limits. Require
+actual selected-case log identity and exact1pass/0fail/0skip/0expected for a
+pass. A genuine one-case assertion failure (owned65, actual1failed) remains
+failed; after verified unchanged source/products/test/xctestruns and clean
+ownership it may be followed by later independent cases. Wrong/zero/multiple/
+skipped/expected cases, timeout/cancel, unowned outcomes, source/product drift
+or any requested forced app cleanup stop the batch; later cases stay NOT_RUN
+with an explicit reason. Never treat a partial batch or number38 as a full pass.
+
+Verify source/generated/test-binary/xctestrun/signature identities before and
+after every case, including failed cases, and preserve all raw xcresults/logs/
+owned outputs. The aggregate must cover each exact original ID once with its
+actual verdict and no omitted/extra/retargeted case. No unchanged failure retry
+or weakened assertion/deadline/positive. Follow any real failure with actual
+AX/xcresult diagnosis and canonical-issue ownership. Even a38-case pass leaves
+the six additional/repeated/final candidate and account/artifact gates distinct.

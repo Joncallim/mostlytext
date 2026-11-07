@@ -1,0 +1,111 @@
+{
+  "head": "5307c8386a3f01bbf9dfd4bf2ccf5b9e119b25e5",
+  "checkout": "65eaec57ad41644553977a71938f4b4554c6520e",
+  "tree": "46896e3e6cfcc55d4d0590a92bedf5237c9aa81e",
+  "all_source_inputs_verified": 1611,
+  "all_pins_verified": 24,
+  "all_generated_control_inputs_verified": 7,
+  "actual_selected_original": "MacDown2UITests/EditingAssistsUITests/testFormattingMenuTracksEditorSidebarFindAndEditorFocus",
+  "original_case_and_private_positive_actual_passes": 2,
+  "failures_skips_expected_failures": 0,
+  "positive_owned": {
+    "returncode": 0,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 27.00446091699996,
+    "app_cleanup_requested": []
+  },
+  "original_owned": {
+    "returncode": 0,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 56.32849058399984,
+    "app_cleanup_requested": []
+  },
+  "actual_gui": {
+    "keyboard_input_source": "com.apple.keylayout.US",
+    "login_done": true,
+    "on_console": true,
+    "scope": "Actual hosted GUI metadata after positive input control, before ordinary product launch",
+    "screen_lock_field": null,
+    "screens": [
+      {
+        "height": 768,
+        "scale": 1,
+        "width": 1024
+      }
+    ],
+    "uid": 501
+  },
+  "actual_intentional_configuration": {
+    "CONFIGURATION": "Debug",
+    "SWIFT_ACTIVE_COMPILATION_CONDITIONS": "DEBUG",
+    "TARGET_BUILD_DIR": "/Users/runner/work/_temp/mostlytext-focus/app/Build/Products/Debug",
+    "FULL_PRODUCT_NAME": "MacDown2.app",
+    "PRODUCT_BUNDLE_IDENTIFIER": "app.mostlytext.MostlyText"
+  },
+  "actual_xctestrun_targets_verified": {
+    "TestHostPath": "__TESTROOT__/Debug/MacDown2UITests-Runner.app",
+    "TestBundlePath": "__TESTHOST__/Contents/PlugIns/MacDown2UITests.xctest",
+    "UITargetAppPath": "__TESTROOT__/Debug/MacDown2.app",
+    "IsUITestBundle": true
+  },
+  "downloaded_compiled_test_input_sha256_verified": "88f045969bd7b1ca5e69bee708f677ce5b63629a215198890915ecd705aac7ed",
+  "recorded_app_before_sha256": "37c9ee570139afa0bf9ebed864aa0b8ff40ead66d7f81d81ee3fa489660688b7",
+  "recorded_app_after_sha256": "37c9ee570139afa0bf9ebed864aa0b8ff40ead66d7f81d81ee3fa489660688b7",
+  "original_named_focus_source_byte_identical_main": true,
+  "scope": "Actual known original focus and private positive pass, complete source/pins/generated/testbinary/result/owned bindings verified; actual SDK raw717 entries include679 app functions plus exact38 UI IDs despite only-testing filter. Only observed UI final empty parentheses normalized. No38-case execution, six extras, repeated final/protected-owner/signed acceptance.",
+  "raw_sdk_sha256": "bc06b3a121021ece81f50834fce2155251c69ea7d8dd5a46793bd785ac14f226",
+  "actual_sdk_schema_reviewed": true,
+  "actual_sdk_enabled_functions": 717,
+  "explicitly_other_target_functions": 679,
+  "actual_sdk_ui_ids_exactly_source38": [
+    "MacDown2UITests/D2GraphvizPreviewUITests/testAD2FenceRendersAsADiagramImageInTheLivePreview",
+    "MacDown2UITests/D2GraphvizPreviewUITests/testAGraphvizFenceRendersAsADiagramImageInTheLivePreview",
+    "MacDown2UITests/D2GraphvizPreviewUITests/testAMalformedD2FenceShowsAnInlineErrorInTheLivePreview",
+    "MacDown2UITests/D2GraphvizPreviewUITests/testAMalformedGraphvizFenceShowsAnInlineErrorInTheLivePreview",
+    "MacDown2UITests/D2GraphvizPreviewUITests/testCopyAsSVGWritesRealSVGToThePasteboard",
+    "MacDown2UITests/DeadKeyCompositionUITests/testAnExternalReloadDuringAnOpenCompositionIsNotReverted",
+    "MacDown2UITests/DeadKeyCompositionUITests/testDeadKeyCompositionCommitsAnAccentedCharacter",
+    "MacDown2UITests/DeadKeyCompositionUITests/testDeadKeyCompositionStillCommitsAfterAnUndo",
+    "MacDown2UITests/EditingAssistsUITests/testBoldMenuCommandAppliesToFocusedEditor",
+    "MacDown2UITests/EditingAssistsUITests/testCommandFOpensTheFindBar",
+    "MacDown2UITests/EditingAssistsUITests/testFormattingMenuRefreshesAfterKeyboardTabAndFocusOutline",
+    "MacDown2UITests/EditingAssistsUITests/testFormattingMenuTracksEditorSidebarFindAndEditorFocus",
+    "MacDown2UITests/EditingAssistsUITests/testListContinuationOnReturn",
+    "MacDown2UITests/EditingAssistsUITests/testNoMarkdownDelimiterPairingInPlainText",
+    "MacDown2UITests/EditorTypingUITests/testTypingRoundTripsThroughDocument",
+    "MacDown2UITests/ExternalFileChangesUITests/testCancelThenUseDiskRevalidatesAgainstTheLatestDiskVersion",
+    "MacDown2UITests/ExternalFileChangesUITests/testCleanExternalReplacementReloadsWithoutAConflictSheet",
+    "MacDown2UITests/ExternalFileChangesUITests/testConflictCloseUseDiskClosesWithoutDiscardingTheExternalVersion",
+    "MacDown2UITests/ExternalFileChangesUITests/testDirtyExternalReplacementKeepsLocalTextUntilDiskVersionIsChosen",
+    "MacDown2UITests/ExternalFileChangesUITests/testKeepMyChangesDismissesConflictAndPreservesEditorText",
+    "MacDown2UITests/ExternalFileChangesUITests/testUseDiskResolutionShowsUnavailableStateWhenBackingFileVanishes",
+    "MacDown2UITests/FirstRunUITests/testOpenSampleDocumentDismissesWelcomeAndOpensTheSampleText",
+    "MacDown2UITests/FirstRunUITests/testStartWritingDismissesWelcomeAndOpensAnEmptyDocument",
+    "MacDown2UITests/FolderBrowserUITests/testCreateFileKeepsRenameInTheOpenedTab",
+    "MacDown2UITests/FolderBrowserUITests/testFolderSectionHasStableAccessibilityIdentity",
+    "MacDown2UITests/FolderBrowserUITests/testMoveToTrashOffersDestructiveConfirmationAction",
+    "MacDown2UITests/FolderBrowserUITests/testNoRootOffersOpenFolderAndShortcutHint",
+    "MacDown2UITests/MermaidPreviewUITests/testAMalformedMermaidFenceShowsAnInlineErrorInTheLivePreview",
+    "MacDown2UITests/MermaidPreviewUITests/testAMermaidFenceRendersAsADiagramImageInTheLivePreview",
+    "MacDown2UITests/MultiFormatUITests/testHTMLPreviewTogglesSourceAndRendered",
+    "MacDown2UITests/MultiFormatUITests/testInvalidJSONShowsDiagnosticInsteadOfStaleOutline",
+    "MacDown2UITests/MultiFormatUITests/testJSONOutlineShowsRowsAndPreviewPane",
+    "MacDown2UITests/MultiFormatUITests/testPlainTextShowsNoPreviewPlaceholder",
+    "MacDown2UITests/OutlineNavigationUITests/testFocusOutlineRevealsRowsAndReturnJumpsTheEditor",
+    "MacDown2UITests/PreviewLayoutUITests/testLayoutKeyboardShortcutsTogglePanes",
+    "MacDown2UITests/PreviewLayoutUITests/testLayoutPersistsAcrossSessionRestore",
+    "MacDown2UITests/TabLifecycleUITests/testOpenFilesDirtyClosePromptAndRestore",
+    "MacDown2UITests/TabLifecycleUITests/testQuickOpenReactivatesAnAlreadyOpenBackgroundTab"
+  ],
+  "disabled_tests": 0,
+  "raw_discovery_owned": {
+    "returncode": 0,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 12.563282583000046,
+    "app_cleanup_requested": []
+  },
+  "all38_cases_executed": false
+}
