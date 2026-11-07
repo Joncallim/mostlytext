@@ -1,0 +1,20 @@
+{
+  "head": "6139bc613dd2bad61215a49336d7d4620975465f",
+  "base": "210f46b7f94fdbbf0e8dcc14f2a3cd6c1b306ab3",
+  "actual_tested_checkout": "2c89329b065466b160faf68a7fa96148df7ad829",
+  "actual_tested_tree": "1a6c9651a954819f468880702ad8758f61e4f1b0",
+  "computed_current_main_merge_tree": "8dacb28bcc1633fb364c47d18dc695ec982babdc",
+  "github_predictive_merge_ref": "2c89329b065466b160faf68a7fa96148df7ad829",
+  "github_predictive_tree": "1a6c9651a954819f468880702ad8758f61e4f1b0",
+  "only_differences_from_actual_tested_tree": [
+    ".github/scripts/run-hosted-critical-discovery.py",
+    ".github/scripts/test-hosted-critical-discovery.py",
+    ".github/workflows/hosted-critical-discovery.yml",
+    "planning/downstream/hosted-critical-matrix-2026-11-07.md"
+  ],
+  "all_bound_source_inputs_unchanged": 1612,
+  "product_source_byte_equal_to_complete_CI_42343094450": true,
+  "scope": "The predictive GitHub ref may retain the prior tested base; actual current-main merge must match this computed tree after expected-head integration. Only separately qualified unused SDK tooling/architecture differs outside all native bound inputs. Original receipts retain actual tested identities.",
+  "actual_merge": "cc1cd1e6da16f43b268b2b9cc03b155f1b6d54d9",
+  "actual_parents_and_computed_tree_verified": true
+}
