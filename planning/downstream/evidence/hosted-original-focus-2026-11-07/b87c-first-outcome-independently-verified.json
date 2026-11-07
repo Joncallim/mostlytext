@@ -1,0 +1,15 @@
+{
+  "head": "b87ceeaca79b1d8c1a45ea0272efbe623f9fa751",
+  "checkout": "cae207dd544bdf6738fe32502c28857f93e7f046",
+  "all_recorded_source_inputs_verified": 1605,
+  "all_pins_verified": 24,
+  "all_generated_control_inputs_verified": 7,
+  "actual_debug_app_and_tests_build_succeeded": true,
+  "actual_settings_only_coverage_option_refusal": true,
+  "actual_ui_tests_executed": 0,
+  "positive_and_original_execution_steps_skipped": true,
+  "settings_stdout_bytes": 0,
+  "build_log_sha256": "2cb1024db583a0c444b33971ace5ecfb1cc864de2f193fea7d2ea697dc608089",
+  "job_log_zip_sha256": "ca25f23e0cccd1d5f1cf435b76de39d5d54acd9333196e7900e28037e31e0681",
+  "scope": "Preparation metadata failure after genuine successful Debug test-build. No positive/original focus execution or product/environment verdict."
+}
