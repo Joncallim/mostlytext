@@ -8,6 +8,17 @@ on:
       - '.github/hosted-original-focus/**'
       - '.github/scripts/run-hosted-original-focus.py'
       - '.github/workflows/hosted-original-focus.yml'
+      - '.github/scripts/check-native-ui-required-cases.py'
+      - '.github/scripts/test-native-ui-required-cases.py'
+      - 'planning/downstream/native-ui-required-cases.json'
+      - '.github/scripts/prepare-hosted-public-focus.py'
+      - '.github/scripts/run-owned-app-tests.py'
+      - '.github/scripts/test-hosted-focus-guard.py'
+      - '.github/scripts/test-run-owned-app-tests.py'
+      - '.github/hosted-public-focus/Control/**'
+      - '.github/hosted-public-focus/Control-Info.plist'
+      - '.github/hosted-public-focus/project.yml'
+      - '.github/hosted-public-focus/HostFacts.swift'
 concurrency:
   group: hosted-original-focus-${{ github.ref }}
   cancel-in-progress: false
@@ -20,6 +31,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 0
       - name: Prepare guarded private source controls
         run: |
           set -euo pipefail
