@@ -8,6 +8,8 @@ on:
       - 'MacDown2/Packages/MacDownKit/Sources/FileCore/**'
       - 'MacDown2/Packages/MacDownKit/Tests/FileCoreTests/DocumentFileProbeExecutionTests.swift'
       - '.github/scripts/run-file-probe-executor-proof.py'
+      - '.github/scripts/test-file-probe-executor-proof.py'
+      - '.github/scripts/file-probe-executor-fixtures/**'
       - '.github/workflows/file-probe-executor-proof.yml'
   workflow_dispatch:
 concurrency:
@@ -36,7 +38,9 @@ jobs:
           test "$(sw_vers -productVersion | cut -d. -f1)" = 26
           test "$(uname -m)" = arm64
       - name: Verify existing owned lifecycle controls
-        run: python3 .github/scripts/test-run-owned-app-tests.py
+        run: |
+          python3 .github/scripts/test-run-owned-app-tests.py
+          python3 .github/scripts/test-file-probe-executor-proof.py
       - name: Execute real snapshot reads and intended MainActor counterexample
         run: python3 .github/scripts/run-file-probe-executor-proof.py ${{ matrix.configuration }}
       - name: Preserve every first original counterexample and restored result

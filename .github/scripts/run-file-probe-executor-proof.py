@@ -20,6 +20,27 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def verify_counterexample_issues(log, test_source):
+    # Swift Testing attaches the explanation on the next line, outside the issue header.
+    assertion = '        #expect(!samples.contains(true), "External snapshot read and digest must run away from the main thread")'
+    locations = [i + 1 for i, line in enumerate(test_source.splitlines()) if line == assertion]
+    if len(locations) != 1:
+        raise RuntimeError('The original physical-thread assertion changed')
+    header = re.compile(
+        r'✘ Test movedSnapshotReadsAndHashesAwayFromTheMainThread\(utf8Bytes:\) '
+        r'recorded an issue with 1 argument utf8Bytes → (1000000|10000000) at '
+        r'DocumentFileProbeExecutionTests\.swift:' + str(locations[0]) +
+        r':9: Expectation failed: !\(\(samples → \[true\]\)\.contains\(true\) → true\)'
+    )
+    lines = log.splitlines()
+    entries = [(i, header.fullmatch(line)) for i, line in enumerate(lines) if 'recorded an issue' in line]
+    detail = '↳ External snapshot read and digest must run away from the main thread'
+    if (len(entries) != 2 or any(match is None for _, match in entries)
+            or {match.group(1) for _, match in entries} != {'1000000', '10000000'}
+            or any(i + 1 >= len(lines) or lines[i + 1] != detail for i, _ in entries)):
+        raise RuntimeError('Counterexample failed for another reason')
+
+
 def admit():
     # Real account lookup prevents an overridden HOME/CI environment admitting the owner account.
     if sys.flags.optimize:
@@ -54,6 +75,7 @@ def main():
         raise RuntimeError('The reviewed counterexample location changed')
     mutant = original.replace(needle, b'return await Task(priority: .utility) { @MainActor in')
     paths = output(['git', 'ls-files', 'MacDown2', '.github/scripts/run-file-probe-executor-proof.py',
+                    '.github/scripts/test-file-probe-executor-proof.py', '.github/scripts/file-probe-executor-fixtures',
                     '.github/scripts/run-owned-app-tests.py', '.github/scripts/test-run-owned-app-tests.py',
                     '.github/workflows/file-probe-executor-proof.yml']).splitlines()
     inputs = {p: sha(repo / p) for p in paths}
@@ -149,8 +171,7 @@ def main():
             raise RuntimeError('The exact selected original regression did not completely execute')
         issues = [line for line in log.splitlines() if 'recorded an issue' in line]
         if expected:
-            if len(issues) != 2 or any('External snapshot read and digest must run away from the main thread' not in s for s in issues):
-                raise RuntimeError('Counterexample failed for another reason')
+            verify_counterexample_issues(log, copied.read_text())
         elif issues:
             raise RuntimeError('Unchanged source recorded a test issue')
         row['intended_outcome_verified'] = True
