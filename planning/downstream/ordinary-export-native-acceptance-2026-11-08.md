@@ -109,3 +109,14 @@ receipt is not an external independent review or a final distribution inventory.
    parity, full resource budgets, in-flight PDF policy and other original rows
    open where unproved. Any required product/authority/ownership change needs
    a separate written decision before implementation.
+
+The private acceptance layer wraps the existing public-focus preparation CLI and
+normal-launch helper without changing either. It uses their same fresh runner
+root and verified control/driver identities, adds one separately named export
+case and generated path constants before binding, and extends its new receipt
+with all additional source/compiled/output records before execution admission.
+The ordinary public-focus tests and canonical38cases remain unchanged. A new
+controller selects the original benign positive, then only the named export
+journey; no other private method is inferred as executed. Generated source data
+is replaced with the fixed export document before any product launch or binding,
+with the new bytes explicitly hashed; no prior native receipt is retargeted.
