@@ -105,3 +105,28 @@ Account-free engineering results stay distinct from protected CORTANA access,
 final installed/signed artifacts, real macOS permission/hostile-content dogfood,
 VoiceOver/locales, whole-session WebKit memory, full performance and approved
 public release. Keep all original failure/source records and exact identities.
+
+## Compiled-input and actual-result evidence remediation before publication
+
+Review found a bounded evidence gap in the old Preview workflow: it retains
+actual console/owned-app records, but does not download the compiled test binary/
+xctestrun or original result bundles. Do not retroactively claim those uncaptured
+bytes for earlier runs. Add a pure filesystem helper and real temporary-file
+controls before new qualification. Host admission remains in the existing producer
+and precedes every helper call; the helper has no app/runtime or profile action.
+
+Capture exact app/test executables, app Info.plist, actual xctestrun and generated
+project bytes before each initial/controlled-image/mutant/restored phase. Keep
+phase manifests and content-addressed original byte copies, so repeated identical
+inputs need no repeated large blob. Recheck that exact phase's inputs after its
+owned command; planned rebuilds may change later phase metadata and are not
+compared as though they were one immutable build. Each actual owned app digest
+must match its own captured phase executable. Copy and bind the actual selected
+result bundle for each phase, including failures. Preserve phase manifests, blobs,
+raw xcresults and every first failure; no return-code or count-only substitute.
+
+This expands only private evidence scripts/workflow, not product/test assertions,
+mutations, source authority, limits or real network/image positives. The existing
+complete initial/expected mutant/restoration checks remain mandatory. New
+filesystem controls must reject changed/missing/ambiguous inputs, links, retargeted
+phases and changed archive blobs while retaining exact source restoration.
