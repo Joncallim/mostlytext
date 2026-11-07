@@ -7,9 +7,13 @@ import Testing
 @MainActor
 @Suite(.serialized)
 struct DocumentFileProbeExecutionTests {
+    private func isOnMainThread() -> Bool {
+        Thread.isMainThread
+    }
+
     @Test(arguments: [1_000_000, 10_000_000])
     func movedSnapshotReadsAndHashesAwayFromTheMainThread(utf8Bytes: Int) async throws {
-        try #require(Thread.isMainThread, "The real probe must be called from the actual main thread")
+        try #require(isOnMainThread(), "The real probe must be called from the actual main thread")
         let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(
             at: folder, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o700]
