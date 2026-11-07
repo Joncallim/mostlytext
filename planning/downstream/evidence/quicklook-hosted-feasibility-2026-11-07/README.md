@@ -27,3 +27,18 @@ sandbox container. No Finder activation/provider callback occurs. All ten
 source inputs and actual owned process/status are verified. The correction
 requires the POSIX runner account/home plus the exact observed container path;
 it does not disable sandboxing or weaken Finder/visible/cold assertions.
+
+Local unsigned builds also performed Xcode's implicit Launch Services
+registration for the two private containing-fixture paths. Both exact entries
+were removed; reserved-provider PlugInKit and exact-path Launch Services
+readbacks show no matches. No local fixture executed and no default-handler
+setter or database reset was called. Subsequent checks use type-check only.
+
+Sourceb000676d genuinely displays the static marker and original PNG in real
+cold Finder. The screenshot is inspected; actual callback/reply/factory run
+off-main, with one factory invocation. The workflow passes, but independent
+review REJECTS the sandbox predicate: actual post-test provider entitlements
+include root read/debugger/test-manager exceptions injected by UI testing.
+The permissive subset validator missed them. This is real routing/display
+evidence, not production-like file-access or full QL-REPLY proof. The full
+original receipt/permissions/event log and screenshot are preserved.

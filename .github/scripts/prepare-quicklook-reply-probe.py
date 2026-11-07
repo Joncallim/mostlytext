@@ -15,6 +15,11 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def validate_provider_entitlements(entitlements):
+    assert entitlements == {"com.apple.security.app-sandbox": True,
+                            "com.apple.security.files.user-selected.read-only": True}, entitlements
+
+
 def command(args):
     return subprocess.check_output(args, text=True, timeout=60).strip()
 
@@ -24,6 +29,7 @@ def main():
     parser.add_argument("output", type=Path)
     parser.add_argument("--verify-built", action="store_true")
     parser.add_argument("--verify-finder", action="store_true")
+    parser.add_argument("--seal-built", action="store_true")
     args = parser.parse_args()
     assert os.environ.get("GITHUB_ACTIONS") == "true" and os.environ.get("RUNNER_OS") == "macOS"
     assert os.environ.get("GITHUB_REPOSITORY") == "Joncallim/mostlytext"
@@ -31,11 +37,13 @@ def main():
     root = args.output.resolve()
     assert root == Path(os.environ["RUNNER_TEMP"]).resolve() / "mostlytext-qlreply"
     receipt_path = root / "receipt.json"
-    if not (args.verify_built or args.verify_finder):
+    if not (args.verify_built or args.verify_finder or args.seal_built):
         assert not root.exists()
         root.mkdir(mode=0o700)
         paths = command(["git", "ls-files", "--", ".github/quicklook-reply-probe",
                          ".github/scripts/prepare-quicklook-reply-probe.py",
+                         ".github/scripts/test-quicklook-provider-entitlements.py",
+                         "planning/downstream/evidence/quicklook-hosted-feasibility-2026-11-07/b000-receipt.json.gz",
                          ".github/scripts/run-owned-app-tests.py", ".github/workflows/quicklook-reply-probe.yml"]).splitlines()
         assert paths and any(p.endswith("StaticPreview.swift") for p in paths)
         fixture = root / "fixture"
@@ -72,6 +80,12 @@ def main():
     assert ext["NSExtensionPointIdentifier"] == "com.apple.quicklook.preview"
     assert ext["NSExtensionPrincipalClass"] == "QLReplyProbeProvider.StaticPreview"
     assert ext["NSExtensionAttributes"] == {"QLIsDataBasedPreview": True, "QLSupportedContentTypes": ["net.daringfireball.markdown"]}
+    if args.seal_built:
+        # UI-test instrumentation belongs only to the separate automation target.
+        subprocess.run(["codesign", "--force", "--sign", "-", "--options", "runtime", "--timestamp=none",
+                        "--entitlements", str(fixture / "Provider.entitlements"), str(provider)], check=True, timeout=30)
+        subprocess.run(["codesign", "--force", "--sign", "-", "--options", "runtime", "--timestamp=none",
+                        str(app)], check=True, timeout=30)
     subprocess.run(["codesign", "--verify", "--deep", "--strict", str(app)], check=True, timeout=30)
     result = subprocess.run(["codesign", "--display", "--entitlements", "-", "--xml", str(provider)],
                             capture_output=True, check=True, timeout=30)
@@ -79,19 +93,22 @@ def main():
     if b"<?xml" not in raw:
         raw = result.stderr[result.stderr.index(b"<?xml"):]
     entitlements = plistlib.loads(raw[raw.index(b"<?xml"):])
-    assert entitlements.get("com.apple.security.app-sandbox") is True
-    assert entitlements.get("com.apple.security.files.user-selected.read-only") is True
-    assert not any("network" in key or "application-groups" in key for key in entitlements)
+    validate_provider_entitlements(entitlements)
     (root / "provider-actual-entitlements.plist").write_bytes(plistlib.dumps(entitlements))
     record["built"] = {"app_info": app_info, "provider_info": info, "entitlements": entitlements,
                        "app_executable_sha256": digest(app / "Contents/MacOS" / app_info["CFBundleExecutable"]),
                        "provider_executable_sha256": digest(provider / "Contents/MacOS" / info["CFBundleExecutable"])}
+    if args.seal_built:
+        assert "built_before_test" not in record
+        record["built_before_test"] = record["built"]
+    else:
+        assert record["built"] == record["built_before_test"], "Test setup changed actual provider/container identity or permissions"
     assert digest(root / "mostlytext-ql-reply-static.md") == record["selected_fixture_sha256"]
     if args.verify_finder:
         events = json.loads((root / "provider-events.json").read_text())
         messages = [x.get("eventMessage", "") for x in events if isinstance(x, dict)]
         assert not any("container-launched-invalidates-cold-proof" in x for x in messages), "Containing fixture actually launched"
-        for marker in ["QL_REPLY_PROBE callback", "QL_REPLY_PROBE selected-read", "QL_REPLY_PROBE sibling-open-admitted", "QL_REPLY_PROBE replied", "QL_REPLY_PROBE factory"]:
+        for marker in ["QL_REPLY_PROBE self-entitlement-policy-admitted", "QL_REPLY_PROBE callback", "QL_REPLY_PROBE selected-read", "QL_REPLY_PROBE sibling-open-admitted", "QL_REPLY_PROBE replied", "QL_REPLY_PROBE factory"]:
             assert any(marker in x for x in messages), marker
         owned = json.loads((root / "owned/status.json").read_text())
         identity = json.loads((root / "owned/identity.json").read_text())

@@ -8,6 +8,7 @@ on:
     paths:
       - '.github/quicklook-reply-probe/**'
       - '.github/scripts/prepare-quicklook-reply-probe.py'
+      - '.github/scripts/test-quicklook-provider-entitlements.py'
       - '.github/workflows/quicklook-reply-probe.yml'
   workflow_dispatch:
 concurrency:
@@ -30,12 +31,13 @@ jobs:
           sudo xcode-select -s "$XCODE/Contents/Developer"
           brew install xcodegen
           python3 .github/scripts/test-run-owned-app-tests.py
+          python3 .github/scripts/test-quicklook-provider-entitlements.py
           python3 .github/scripts/prepare-quicklook-reply-probe.py "$RUNNER_TEMP/mostlytext-qlreply"
       - name: Compile and ad-hoc sign standalone container, provider and UI test
         run: |
           set -euo pipefail
           xcodebuild -project "$RUNNER_TEMP/mostlytext-qlreply/fixture/QuickLookReplyProbe.xcodeproj" -scheme QuickLookReplyProbe -configuration Release -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/mostlytext-qlreply/build" CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual build-for-testing 2>&1 | tee "$RUNNER_TEMP/mostlytext-qlreply/build.log"
-          python3 .github/scripts/prepare-quicklook-reply-probe.py "$RUNNER_TEMP/mostlytext-qlreply" --verify-built
+          python3 .github/scripts/prepare-quicklook-reply-probe.py "$RUNNER_TEMP/mostlytext-qlreply" --seal-built
       - name: Register exact provider and reveal the generated file without launching the container
         run: |
           set -euo pipefail

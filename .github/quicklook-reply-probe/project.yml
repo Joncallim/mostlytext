@@ -58,22 +58,37 @@ targets:
       properties:
         com.apple.security.app-sandbox: true
         com.apple.security.files.user-selected.read-only: true
+  QLReplyProbeAutomationHost:
+    type: application
+    platform: macOS
+    sources: [AutomationHost]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.QLReplyProbe.AutomationHost
+    info:
+      path: AutomationHost-Info.plist
+      properties:
+        CFBundleDisplayName: MostlyText Quick Look automation fixture
+        CFBundleShortVersionString: '0.0.0'
+        CFBundleVersion: '1'
+        LSUIElement: true
   QLReplyProbeFinderTests:
     type: bundle.ui-testing
     platform: macOS
     sources: [FinderTests]
     dependencies:
-      - target: QLReplyProbeContainer
+      - target: QLReplyProbeAutomationHost
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.QLReplyProbe.FinderTests
         GENERATE_INFOPLIST_FILE: 'YES'
-        TEST_TARGET_NAME: QLReplyProbeContainer
+        TEST_TARGET_NAME: QLReplyProbeAutomationHost
 schemes:
   QuickLookReplyProbe:
     build:
       targets:
         QLReplyProbeContainer: all
+        QLReplyProbeAutomationHost: all
     test:
       config: Release
       targets: [QLReplyProbeFinderTests]

@@ -2,6 +2,7 @@ import Darwin
 import Foundation
 import OSLog
 import QuickLookUI
+import Security
 import Synchronization
 
 /// Standalone hosted fixture, not a shipping renderer or root-project target.
@@ -16,6 +17,22 @@ final class StaticPreview: QLPreviewProvider, QLPreviewingController {
               file.path.hasPrefix("/Users/runner/work/_temp/mostlytext-qlreply/"),
               file.lastPathComponent == "mostlytext-ql-reply-static.md"
         else { throw ProbeError.refused }
+        guard let task = SecTaskCreateFromSelf(nil) else { throw ProbeError.refused }
+        let required = ["com.apple.security.app-sandbox", "com.apple.security.files.user-selected.read-only"]
+        let forbidden = ["com.apple.security.get-task-allow", "com.apple.security.network.client",
+                         "com.apple.security.network.server", "com.apple.security.application-groups",
+                         "com.apple.security.temporary-exception.files.absolute-path.read-only",
+                         "com.apple.security.temporary-exception.files.absolute-path.read-write",
+                         "com.apple.security.temporary-exception.mach-lookup.global-name",
+                         "com.apple.security.temporary-exception.mach-lookup.local-name",
+                         "com.apple.security.temporary-exception.sbpl", "com.apple.security.inherit"]
+        guard required.allSatisfy({ SecTaskCopyValueForEntitlement(task, $0 as CFString, nil) as? Bool == true }),
+              forbidden.allSatisfy({ SecTaskCopyValueForEntitlement(task, $0 as CFString, nil) == nil })
+        else {
+            Self.logger.error("QL_REPLY_PROBE self-entitlement-policy-refused")
+            throw ProbeError.refused
+        }
+        Self.logger.notice("QL_REPLY_PROBE self-entitlement-policy-admitted")
         let requestID = Self.nextID.withLock { count in count += 1; return count }
         Self.logger.notice("QL_REPLY_PROBE callback id=\(requestID) main=\(Thread.isMainThread)")
         let descriptor = open(file.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW_ANY)
