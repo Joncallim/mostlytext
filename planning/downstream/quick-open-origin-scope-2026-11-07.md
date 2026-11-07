@@ -43,3 +43,15 @@ any actual failure first; a pass is not proof of a unique historical cause. Do
 not push the frozen main candidate until all its current first outcomes are
 retained. Source/fixture constraint alone is not a critical-suite/final-release
 pass. Keep canonical #5/#17 and PR128 current.
+
+## Explicit source-binding reconciliation before finalising the unit
+
+The first local inventory check correctly refuses the changed UI source bytes
+before any native execution. The original architecture's single-file allowance
+must therefore also permit exactly the TabLifecycleUITests.swift SHA entry in
+native-ui-required-cases.json to change after review. Preserve the historical
+sourceBaseline, all38 original IDs, cases/areas/replacements, all six extra
+requirements, every other source SHA, actual SDK packet and fixed batch plan.
+Do not regenerate or retarget historical discovery/native receipts. The initial
+refusal remains recorded; repeat source controls only after this material hash
+reconciliation. This is not a new native qualification or a weakened check.
