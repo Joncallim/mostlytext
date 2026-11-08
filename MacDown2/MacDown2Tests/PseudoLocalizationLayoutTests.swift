@@ -166,30 +166,42 @@ struct PseudoLocalizationLayoutTests {
 
     /// The one pluralized string in the app (preview-budget diagnostic):
     /// resolves the exact source key `PreviewContributionAdmission` uses,
-    /// with an explicit `locale:` argument (rather than relying on process
-    /// locale, which cannot be forced mid-run for a plain `Swift` call the
-    /// way `.environment(\.locale:)` forces a `View` body) for a
-    /// "one"-triggering and an "other"/"few"/"many"-triggering count, so the
-    /// actual resolved text can be inspected per locale -- exercises 16C's
-    /// "pluralised strings correct in at least three materially different
-    /// plural-rule languages" criterion directly against the seeded catalog.
+    /// through each compiled `.lproj` bundle. `locale:` alone does not force
+    /// catalog lookup away from the process language in this test process;
+    /// mere inequality between counts would pass even with English fallback.
     @Test(arguments: ["en", "fr", "pl", "ja"])
-    func pluralizedPreviewBudgetMessageResolvesInLocale(_ localeIdentifier: String) {
+    func pluralizedPreviewBudgetMessageResolvesInLocale(_ localeIdentifier: String) throws {
+        let path = try #require(Bundle.main.path(forResource: localeIdentifier, ofType: "lproj"))
+        let bundle = try #require(Bundle(path: path))
         func resolved(count: Int) -> String {
             String(AttributedString(
                 localized: """
                 ^[\(count) valid placement](inflect: true) exceeded the preview budget \
                 and remain as authored source
                 """,
+                bundle: bundle,
                 locale: Locale(identifier: localeIdentifier)
             ).characters)
         }
 
-        let oneText = resolved(count: 1)
-        let manyText = resolved(count: 3)
-        #expect(!oneText.contains("(inflect:"), "\(localeIdentifier) count=1 leaked unresolved inflection markup")
-        #expect(!manyText.contains("(inflect:"), "\(localeIdentifier) count=3 leaked unresolved inflection markup")
-        #expect(oneText != manyText, "\(localeIdentifier) singular/plural forms were identical")
+        let expectedForms: [(count: Int, phrase: String)] = switch localeIdentifier {
+        case "en": [(1, "valid placement"), (2, "valid placements")]
+        case "fr": [(0, "emplacement valide"), (1, "emplacement valide"), (2, "emplacements valides")]
+        case "pl": [
+                (1, "prawidłowe umieszczenie"),
+                (2, "prawidłowe umieszczenia"),
+                (5, "prawidłowych umieszczeń"),
+            ]
+        case "ja": [(1, "件の有効な配置"), (3, "件の有効な配置")]
+        default: []
+        }
+        #expect(!expectedForms.isEmpty, "No plural expectations for \(localeIdentifier)")
+        for (count, phrase) in expectedForms {
+            let text = resolved(count: count)
+            #expect(text.contains(phrase), "\(localeIdentifier) count=\(count) chose the wrong catalog form: \(text)")
+            #expect(text.contains(String(count)), "\(localeIdentifier) count=\(count) lost its substituted count")
+            #expect(!text.contains("(inflect:"), "\(localeIdentifier) count=\(count) leaked inflection markup")
+        }
     }
 
     // MARK: - Structural layout resilience (synthetic worst-case length)
