@@ -432,10 +432,13 @@ def main():
     (root / "provider-actual-entitlements.plist").write_bytes(plistlib.dumps(entitlements))
     result = subprocess.run(["codesign", "--display", "--entitlements", "-", "--xml", str(service)],
                             capture_output=True, check=True, timeout=30)
+    (root / "xpc-service-codesign-stdout.txt").write_bytes(result.stdout)
+    (root / "xpc-service-codesign-stderr.txt").write_bytes(result.stderr)
     raw = result.stdout
     if b"<?xml" not in raw:
         raw = result.stderr[result.stderr.index(b"<?xml"):]
     service_entitlements = plistlib.loads(raw[raw.index(b"<?xml"):])
+    (root / "xpc-service-observed-entitlements.plist").write_bytes(plistlib.dumps(service_entitlements))
     if service_entitlements != {"com.apple.security.app-sandbox": True}:
         raise RuntimeError("XPC service has unexpected entitlement or missing sandbox")
     (root / "xpc-service-actual-entitlements.plist").write_bytes(plistlib.dumps(service_entitlements))
