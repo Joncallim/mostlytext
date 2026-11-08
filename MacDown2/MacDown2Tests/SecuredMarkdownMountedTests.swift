@@ -65,7 +65,7 @@ struct SecuredMarkdownMountedTests {
         #expect(second != first)
         try await assertGrantedImageCopies(from: hosting) {
             recordInstance("new-model-copy-failure", loadID: second, host: hosting)
-            await recorder.diagnostic(phase: "new model generation")
+            return await recorder.diagnostic(phase: "new model generation")
         }
         try await assertRevocationStopsCopy(from: hosting, owner: owner, document: document, tabID: tabID)
     }
