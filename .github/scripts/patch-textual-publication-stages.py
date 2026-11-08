@@ -196,19 +196,27 @@ def main():
         owned = json.loads((ROOT / 'diagnostics/status.json').read_bytes())
         log = (ROOT / 'probe.log').read_text()
         rows = [line for line in log.splitlines() if 'TEXTUAL_SCENARIO' in line]
-        buffered = []
+        buffered = []; missing = []
         for name in ['initial', *[f'{i:02d}-{journey}' for i in range(10) for journey in ['production', 'revision']], 'final']:
-            data = json.loads((ROOT / 'textual-scenarios' / (name + '.json')).read_bytes())
-            if data['scenario'] != name or data['diagnostic_only'] is not True or data['qualification_candidate'] is not False:
-                raise RuntimeError('Native buffered scenario identity changed')
-            buffered.append(data)
+            try:
+                data = json.loads((ROOT / 'textual-scenarios' / (name + '.json')).read_bytes())
+                if data['scenario'] != name or data['diagnostic_only'] is not True or data['qualification_candidate'] is not False:
+                    raise RuntimeError('Native buffered scenario identity changed')
+                buffered.append(data)
+            except (OSError, ValueError, KeyError, RuntimeError) as error:
+                missing.append({'scenario': name, 'outcome': 'NOT_CAPTURED', 'error': str(error)[:2048]})
+        host_path = ROOT / 'textual-diagnostic-host.json'
+        host = json.loads(host_path.read_bytes()) if host_path.exists() else None
         output = {'diagnostic_only': True, 'qualification_candidate': False,
                   'effective_source_manifest_sha256': sha(path.read_bytes()),
                   'actual_owned_status': owned, 'actual_summary': json.loads(raw),
                   'actual_trace_lines': rows, 'buffered_scenarios': buffered,
-                  'trace_limit_reached': any(row['overflow'] for row in buffered),
+                  'scenario_errors': missing, 'actual_diagnostic_host': host,
+                  'trace_limit_reached': any(row['overflow'] for row in buffered) if not missing else None,
                   'scope': 'Actual stage observations of deliberately modified pinned source, never whole Preview qualification or sole causal proof'}
         (ROOT / 'textual-stage-observations.json').write_text(json.dumps(output, indent=2) + '\n')
+        if missing: raise RuntimeError('Fixed buffered scenarios were not all captured; actual failed outcome retained')
+        if host is None: raise RuntimeError('Actual native diagnostic host facts were not captured')
         if not rows: raise RuntimeError('Actual compiled renderer emitted no stage observations')
         if output['trace_limit_reached']: raise RuntimeError('Actual diagnostic trace budget exhausted')
     print('Every original and effective renderer source byte is bound; pin metadata is not mistaken for unchanged source')
