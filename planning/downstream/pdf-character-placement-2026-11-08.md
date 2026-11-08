@@ -55,3 +55,38 @@ RTL/reordering support, visual fidelity, whole-export or final signed acceptance
    if this read-only increment is ready. No original broad acceptance row checked.
    Stop on count/API differences or a need for extra authority/source behaviour;
    revise the contract before changing either. Do not retry unchanged failures.
+
+## Revised decision: preserve actual index mismatch before further code
+
+Current main38f14a37eb8aa80033f54eb8ba468ecb2630135c additionally merges stable
+native process receipts; product/PDF inputs remain unchanged. The complete first
+native42430812014 and Compliance42430811950 at402d7752 both pass. Their actual
+checkouta21cd891 uses main19481c0e; all five canonical source hashes and original
+16 records, failed original predicate and both raster hashes are independently
+verified. The ten exact records in pdf-character-index-first-2026-11-08 preserve
+these complete firsts and their logs before this correction.
+
+Actual page1 has81 raw UTF16 units and81 native character indices; page2 haszero.
+Despite equal counts, index6 is a raw newline with a nonempty glyph rectangle;
+index18 is raw R with height about2, while initial heading capital rectangles
+have height about13. The last six raw indices have empty rectangles. Equal counts
+therefore do not establish text/geometry correspondence. The earlier text label
+and proposed future glyph interpretation must not be used as an oracle.
+
+Revise only the private readback: rename text to raw_index_text, retaining its
+actual raw NSString substring. Record the actual public page.attributedString
+string and its UTF16 count separately; enforce the same16KiB text bound without
+assuming equality or alignment. For every existing native index, obtain public
+page.selection(for:NSRange(index,1)), its optional string (bounded256UTF8bytes),
+and its actual selection bounds for that page. Preserve missing/null/empty
+states explicitly and refuse other nonfinite bounds. Index reads remain bounded
+by native numberOfCharacters and the existing equal-count guard for this exact
+fixture, not general PDF extraction semantics. No reconstructed or invented
+glyph text, whitespace stripping, position tolerance or acceptance predicate.
+
+No product, original guard/PDF, raster implementation, host authority, packages,
+workflow or caller changes. Strict SDK typecheck only locally; actual PDFKit
+observations run on guarded hosted macOS. Obtain and retain complete firsts for
+the revised source; independently verify source and actual observations. Stop
+before any semantic canary oracle until the APIs demonstrate their relationship.
+This remains read-only diagnosis, not corrected pagination/export acceptance.
