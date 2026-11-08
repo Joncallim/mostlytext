@@ -334,6 +334,28 @@ receipt for the same source. A synthesized lock, a green package parser or a
 green pure-C probe cannot substitute for this hosted result. Keep #18/#19
 native app acceptance and any performance claims open.
 
+### Separate hosted C source qualification
+
+Preserve the first successful hosted graph artifact from run `42487278217`
+before another candidate run. A separate, owner-push-only workflow on the
+isolated parser branch will use a macOS 26 ARM runner. It downloads that exact
+artifact with read-only Actions permission, verifies its qualified receipt,
+raw lock and staged manifests against fixed hashes and the unchanged source
+manifests, and checks that each remote fork branch still points to its reviewed
+commit. Verify the remote commit trees and original license blobs before
+running C code. These are source facts, not a claim that a fork's own CI ran.
+
+Create a disposable checkout in runner temporary storage; copy only the
+artifact's two staged manifests and actual resolved lock into it. The tracked
+application checkout and PR146 remain untouched. Run the existing pure-C
+qualifier from that disposable checkout so its exact source inventory includes
+the temporary graph. It must retain the original runtime's expected red
+Markdown/UTF-16 controls, the candidate's normal and sanitizer controls,
+all 324 ordered subtree/ownership cases, linkage, work bounds, all source and
+binary hashes, and complete first stdout/stderr/status. Upload the evidence
+even on failure. Do not call this a Swift package build, native editor test,
+whole-document latency result or whole-issue closure.
+
 
 ## First console admission refusal
 
