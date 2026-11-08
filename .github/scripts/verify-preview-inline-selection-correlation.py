@@ -77,10 +77,11 @@ def inspect(log: str) -> tuple[list[dict], list[str]]:
                     and item[1:4] == (load_id, model_id, "task-after") and item[5] > 0
                     and any(prior[0] < item[0] for prior in offered)]
         updated = [item for item in native if item[0] < completion_line
-                   and item[1:4] == (load_id, view_id, model_id) and item[5] > 0]
+                   and item[1:4] == (load_id, view_id, model_id)]
         instance["offered_line"] = offered[0][0] if offered else None
         instance["task_after_line"] = retained[0][0] if retained else None
         instance["native_update_line"] = updated[0][0] if updated else None
+        instance["native_update_attachment_runs"] = updated[0][5] if updated else None
         instance["offered_attachment_layout"] = bool(offered)
         instance["stored_attachment_layout"] = bool(retained)
         instance["selected_native_model_updated"] = bool(updated)
@@ -89,7 +90,7 @@ def inspect(log: str) -> tuple[list[dict], list[str]]:
         if not instance["stored_attachment_layout"]:
             errors.append(f"generation {generation}: selected model did not retain an attachment layout after offer and before Copy")
         if not instance["selected_native_model_updated"]:
-            errors.append(f"generation {generation}: selected native view/model lacked a positive update before Copy")
+            errors.append(f"generation {generation}: selected native view/model lacked a matching update before Copy")
         if instance["selected_layout_attachment_runs"] == 0:
             errors.append(f"generation {generation}: selected native model held no attachment at Copy completion")
 

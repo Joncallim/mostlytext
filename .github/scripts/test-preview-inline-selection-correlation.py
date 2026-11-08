@@ -81,7 +81,7 @@ class CorrelationTests(unittest.TestCase):
         )
         _, errors = correlation.inspect(log)
         self.assertIn("generation 3: selected model did not retain an attachment layout after offer and before Copy", errors)
-        self.assertIn("generation 3: selected native view/model lacked a positive update before Copy", errors)
+        self.assertIn("generation 3: selected native view/model lacked a matching update before Copy", errors)
 
     def test_missing_native_update_and_failed_suite_are_rejected(self):
         log = sample_log().replace(
@@ -89,16 +89,30 @@ class CorrelationTests(unittest.TestCase):
             "phase=missing stored=layouts=1 attachmentRuns=1", 1,
         ).replace("suites passed", "suites failed")
         _, errors = correlation.inspect(log)
-        self.assertIn("generation 3: selected native view/model lacked a positive update before Copy", errors)
+        self.assertIn("generation 3: selected native view/model lacked a matching update before Copy", errors)
         self.assertIn("mounted app test pass summary missing", errors)
 
-    def test_plain_native_update_is_rejected(self):
-        log = sample_log().replace(
+    def test_plain_native_update_can_precede_task_and_attached_copy_completion(self):
+        lines = sample_log().replace(
             "phase=update stored=layouts=1 attachmentRuns=1",
             "phase=update stored=layouts=1 attachmentRuns=0", 1,
+        ).splitlines()
+        update = lines.pop(next(index for index, line in enumerate(lines)
+                                if "phase=update stored=layouts=1 attachmentRuns=0" in line))
+        task = next(index for index, line in enumerate(lines) if "phase=task-after " in line)
+        lines.insert(task, update)
+        generations, errors = correlation.inspect("\n".join(lines))
+        self.assertEqual(errors, [])
+        self.assertEqual(generations[0]["native_update_attachment_runs"], 0)
+        self.assertEqual(generations[0]["selected_layout_attachment_runs"], 1)
+
+    def test_mismatched_native_update_is_rejected(self):
+        log = sample_log().replace(
+            "modelID=ObjectIdentifier(0x003) phase=update",
+            "modelID=ObjectIdentifier(0x999) phase=update", 1,
         )
         _, errors = correlation.inspect(log)
-        self.assertIn("generation 3: selected native view/model lacked a positive update before Copy", errors)
+        self.assertIn("generation 3: selected native view/model lacked a matching update before Copy", errors)
 
     def test_late_native_update_is_rejected(self):
         lines = sample_log().splitlines()
@@ -108,7 +122,7 @@ class CorrelationTests(unittest.TestCase):
                           if "phase=repeat-copy-complete-3 " in line)
         lines.insert(completion + 1, update)
         _, errors = correlation.inspect("\n".join(lines))
-        self.assertIn("generation 3: selected native view/model lacked a positive update before Copy", errors)
+        self.assertIn("generation 3: selected native view/model lacked a matching update before Copy", errors)
 
     def test_late_offer_is_rejected(self):
         lines = sample_log().splitlines()
