@@ -309,6 +309,31 @@ fresh package/app/Debug/Release/native edit, injection, geometry and issue-gate
 qualification on one exact source. No release or whole-issue completion claim
 follows from the local C results.
 
+### First hosted dependency-resolution receipt
+
+After the three exact fork commits are remotely visible, publish a separate
+application branch whose first change is a guarded hosted **resolution probe**.
+The probe runs only on an owner-repository push to that named branch, on a
+macOS 26 runner with Xcode 26 selected. It checks the exact remote fork heads,
+the unchanged original application manifests and the complete 24-row lock,
+then copies the package tree to runner temporary storage. Only the temporary
+MacDownKit and TreeSitterMarkdown manifests receive the new SwiftTreeSitter
+revision; only temporary MacDownKit receives the new Neon revision. Run SwiftPM
+resolve there with a finite deadline, retaining the full command, stdout,
+stderr, exit and resulting lock. Accept the lock only if those three owner
+revisions change to the exact published commits and every other pinned row,
+location and version remains byte-for-byte the original lock's data. The
+workflow uploads the first receipt and actual lock even if later validation
+fails. It does not build or launch the app, write to main or alter PR146.
+
+The first resolution runs against the current pre-PR146 branch and can establish
+only that graph. If PR146 changes main before application adoption, inherit its
+exact manifests/lock and repeat resolution on the new baseline. Commit app
+manifest pins and the **actual** hosted lock only after a complete, passing
+receipt for the same source. A synthesized lock, a green package parser or a
+green pure-C probe cannot substitute for this hosted result. Keep #18/#19
+native app acceptance and any performance claims open.
+
 
 ## First console admission refusal
 
