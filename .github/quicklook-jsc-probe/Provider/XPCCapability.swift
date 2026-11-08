@@ -61,7 +61,7 @@ enum XPCCapability {
     }
 
     /// A separate, fixed lifecycle probe. The service ignores connection loss
-    /// for ten seconds; this provider owns the 500 ms invalidation timer.
+    /// for ten seconds; this provider owns the two-second invalidation timer.
     static func prepareHold(requestID: Int) throws -> QLPreviewReply {
         guard requestID > 0 else { throw Failure.refused }
         let connection = NSXPCConnection(serviceName: "app.mostlytext.QLReplyProbe.XPCService")
@@ -91,7 +91,7 @@ enum XPCCapability {
             let ready = ProcessInfo.processInfo.systemUptime
             logger.notice("QL_XPC_HOLD admitted id=\(requestID) provider=\(getpid()) service=\(observed.servicePID) ready=\(ready)")
             let retained = ConnectionBox(connection)
-            DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + .milliseconds(500)) {
+            DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + .seconds(2)) {
                 retained.connection.invalidate()
                 logger.notice("QL_XPC_HOLD invalidated id=\(requestID) provider=\(getpid()) service=\(observed.servicePID) at=\(ProcessInfo.processInfo.systemUptime)")
             }

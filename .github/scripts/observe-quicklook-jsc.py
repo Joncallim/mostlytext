@@ -5,6 +5,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import re
 import signal
 import selectors
 import subprocess
@@ -37,6 +38,55 @@ def publish(root, messages, sequence, checkout):
     temporary.chmod(0o600)
     os.replace(temporary, root / 'provider-observer.json')
     return {'file': str(target.relative_to(root)), 'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest()}
+
+
+def process_state(pid, expected_path, run=subprocess.run, existence=os.kill):
+    result = run(['/bin/ps', '-p', str(pid), '-o', 'pid=', '-o', 'uid=', '-o', 'comm='],
+                 capture_output=True, timeout=1)
+    if len(result.stdout) > 2048 or result.stderr:
+        raise RuntimeError('Exact XPC process inspection produced unexpected output')
+    if result.returncode == 1 and not result.stdout:
+        try:
+            existence(pid, 0)  # Signal zero checks existence; it cannot terminate the service.
+        except ProcessLookupError:
+            return 'absent'
+        except PermissionError:
+            return 'wrong'
+        return 'wrong'
+    parts = result.stdout.decode('utf-8').strip().split(maxsplit=2)
+    if result.returncode != 0 or len(parts) != 3:
+        return 'wrong'
+    try:
+        found_pid, uid = int(parts[0]), int(parts[1])
+    except ValueError:
+        return 'wrong'
+    return 'expected' if (found_pid, uid, parts[2]) == (pid, 501, expected_path) else 'wrong'
+
+
+def publish_hold_process(root, hold, samples, checkout):
+    if not 1 <= len(samples) <= 96:
+        raise RuntimeError('Invalid bounded XPC host process sample count')
+    folder = root / 'hold-process-journal'
+    folder.mkdir(mode=0o700, exist_ok=True)
+    row = {'kind': 'mostlytext-qlxpc-process-sample', 'checkout': checkout,
+           'request_id': hold['request_id'], 'provider_pid': hold['provider_pid'],
+           'service_pid': hold['service_pid'], 'sample': samples[-1]}
+    row_raw = (json.dumps(row, sort_keys=True) + '\n').encode()
+    journal = folder / f'{len(samples) - 1:03d}.json'
+    with journal.open('xb') as stream:
+        stream.write(row_raw)
+    journal.chmod(0o600)
+    snapshot = dict(hold, kind='mostlytext-qlxpc-host-process', checkout=checkout, samples=samples)
+    raw = (json.dumps(snapshot, sort_keys=True) + '\n').encode()
+    if len(raw) > 128 * 1024:
+        raise RuntimeError('XPC host process observation exceeded128KiB')
+    temporary = root / '.hold-process-observer-next.json'
+    with temporary.open('xb') as stream:
+        stream.write(raw)
+    temporary.chmod(0o600)
+    os.replace(temporary, root / 'hold-process-observer.json')
+    return {'file': str(journal.relative_to(root)), 'bytes': len(row_raw),
+            'sha256': hashlib.sha256(row_raw).hexdigest()}
 
 
 def main():
@@ -81,6 +131,11 @@ def main():
     position = 0
     admitted = False
     next_pulse = started
+    hold = None
+    hold_samples = []
+    hold_journal = []
+    next_hold_sample = None
+    hold_stop_at = None
     try:
         stream = subprocess.Popen(PREP.STREAM_COMMAND, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         record['stream_pid'] = stream.pid
@@ -146,12 +201,43 @@ def main():
                                 raise RuntimeError('Actual provider record preceded channel admission')
                             messages.append(value['eventMessage'])
                             changed = True
+                            hold_admission = re.fullmatch(r'QL_XPC_HOLD admitted id=(\d+) provider=(\d+) service=(\d+) ready=([0-9.]+)',
+                                                         value['eventMessage'])
+                            if hold_admission:
+                                if hold is not None or any(int(hold_admission[index]) <= 0 for index in (1, 2, 3)):
+                                    raise RuntimeError('Duplicate or invalid XPC hold admission')
+                                hold = {'request_id': int(hold_admission[1]), 'provider_pid': int(hold_admission[2]),
+                                        'service_pid': int(hold_admission[3]),
+                                        'provider_path': str(root / 'build/Build/Products/Release/QLReplyProbeContainer.app/Contents/PlugIns/QLReplyProbeProvider.appex/Contents/MacOS/QLReplyProbeProvider'),
+                                        'service_path': str(root / 'build/Build/Products/Release/QLReplyProbeContainer.app/Contents/PlugIns/QLReplyProbeProvider.appex/Contents/XPCServices/QLReplyProbeXPCService.xpc/Contents/MacOS/QLReplyProbeXPCService')}
+                                next_hold_sample = time.monotonic()
+                            hold_invalidation = re.fullmatch(r'QL_XPC_HOLD invalidated id=(\d+) provider=(\d+) service=(\d+) at=([0-9.]+)',
+                                                             value['eventMessage'])
+                            if hold_invalidation:
+                                if (hold is None or hold_stop_at is not None
+                                        or tuple(int(hold_invalidation[index]) for index in (1, 2, 3))
+                                        != (hold['request_id'], hold['provider_pid'], hold['service_pid'])):
+                                    raise RuntimeError('Unowned or duplicate XPC hold invalidation')
+                                hold_stop_at = float(hold_invalidation[4]) + 3.3
                         if changed:
                             row = publish(root, messages, len(record['snapshots']), checkout)
                             row['stream_position'] = position
                             record['snapshots'].append(row)
                     if len(pending) > 128 * 1024:
                         raise RuntimeError('Incomplete live record exceeded128KiB')
+                if (hold is not None and not stopping and time.monotonic() >= next_hold_sample
+                        and (hold_stop_at is None or not hold_samples or hold_samples[-1]['uptime'] < hold_stop_at)):
+                    if len(hold_samples) >= 96:
+                        raise RuntimeError('XPC host process sample budget exhausted before UI completed')
+                    sampled = time.monotonic()
+                    service = process_state(hold['service_pid'], hold['service_path'])
+                    provider = process_state(hold['provider_pid'], hold['provider_path'])
+                    checked = time.monotonic()
+                    row = {'index': len(hold_samples), 'uptime': sampled, 'check_uptime': checked,
+                           'service': service, 'provider': provider}
+                    hold_samples.append(row)
+                    hold_journal.append(publish_hold_process(root, hold, hold_samples, checkout))
+                    next_hold_sample = checked + 0.075
         if pending or not admitted:
             raise RuntimeError('Incomplete actual stream or missing startup echo')
         if any(not line.startswith('Filtering the log data using ') for line in errors.decode('utf-8').splitlines()):
@@ -182,6 +268,11 @@ def main():
         record['stop_signal_monotonic'] = stop_received
         record['finished_monotonic'] = time.monotonic()
         record['elapsed_seconds'] = time.monotonic() - started
+        if hold is not None:
+            record['hold_process'] = {'request_id': hold['request_id'], 'provider_pid': hold['provider_pid'],
+                                      'service_pid': hold['service_pid'], 'samples': hold_journal,
+                                      'snapshot_sha256': hashlib.sha256((root / 'hold-process-observer.json').read_bytes()).hexdigest()
+                                      if (root / 'hold-process-observer.json').exists() else None}
         (root / 'observer-result.json').write_text(json.dumps(record, indent=2) + '\n')
 
 

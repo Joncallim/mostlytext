@@ -232,21 +232,41 @@ unchanged controls. The selected generated file is exactly
 with an observed positive request ID used solely for correlation. The service
 returns a fixed ready reply with its own PID and then sleeps for ten seconds,
 ignoring connection loss during the three-second observation. The provider
-schedules `NSXPCConnection.invalidate()` on its own monotonic 500 ms timer.
+schedules `NSXPCConnection.invalidate()` on its own monotonic two-second timer.
 An independent service-side `service-hold-start` log follows the ready reply
 call immediately before the ten-second sleep; its own uptime must precede the
 provider's invalidation uptime. This ordering records entry into the hold path,
 not a kernel proof that the thread remained asleep for the entire interval.
-The separate UI runner samples the exact service and provider PIDs and
-executable paths, with `ps` plus `kill(pid, 0)` on absence, and checks that
-Quick Look is already open before invalidation and stays open in every later
-sample. The case requires the service PID to disappear within
-three seconds of invalidation while the same provider PID and Finder window
-survive. It retains the actual process samples, own-generation logs, Finder
-tree, screenshot, test result bundle, signed entitlements, and bounded
+The separate unsandboxed host observer samples the exact service and provider
+PIDs and executable paths with `ps` plus existence-only `kill(pid, 0)` on
+absence. It publishes a bounded immutable sample journal and atomic current
+snapshot; the UI runner binds Finder-window observations to specific host
+samples. The case checks that Quick Look is already open before invalidation
+and stays open in every later window observation. It requires the service PID
+to disappear within three seconds of invalidation while the same provider PID
+and Finder window survive. It retains the actual process samples,
+own-generation logs, Finder tree, screenshot, test result bundle, signed
+entitlements, and bounded
 launchd/xpcproxy/amfid windows for both XPC requests. The existing 15-second
 Finder visibility limit remains. The service and provider entitlements,
 bundle placement and source-input sealing do not change.
+
+The first hosted lifecycle attempt, [42522051690](https://github.com/Joncallim/mostlytext/actions/runs/42522051690),
+passed the original three Finder cases and failed the fourth at its first
+`Process.run(/bin/ps)` from the sandboxed UI-test process with
+`NSPOSIXErrorDomain` 1 (`EPERM`). It did not execute process/window sampling
+or prove service retirement. Its own logs show hold entry at uptime 575.866,
+invalidation at 576.392, and the service's later release log about ten seconds
+after entry; that release log is not physical PID-exit proof. XCUITest's
+space-key call returned only after the original 500 ms invalidation, so the
+UI process could not have observed a pre-invalidation window under that timer.
+The failed artifact is retained under
+`/Volumes/Fast SSD/CORTANA-Builds/quicklook-xpc-hold-20261109/run-42522051690`.
+The revised private fixture leaves the three controls, entitlements and
+production code alone, moves process inspection to the already-running host
+observer, and uses a two-second fixed timer solely to expose a real UI
+observation window. Its three-second physical-retirement deadline remains
+relative to the actual invalidation timestamp. A new hosted run is required.
 
 This is a controlled falsification of the assumption that connection
 invalidation promptly retires a non-cooperative extension-bundled service.

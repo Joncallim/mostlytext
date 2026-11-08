@@ -231,7 +231,46 @@ def validate_xpc_observation(observed, messages):
         raise RuntimeError('Actual XPC own-request begin/service/admission differs from UI result')
 
 
-def validate_xpc_hold_observation(observed, messages):
+def validate_host_process_observer(root, checkout):
+    raw = (root / 'hold-process-observer.json').read_bytes()
+    observer = json.loads((root / 'observer-result.json').read_text())
+    hold = observer.get('hold_process')
+    snapshot = json.loads(raw)
+    keys = {'kind', 'checkout', 'request_id', 'provider_pid', 'service_pid',
+            'provider_path', 'service_path', 'samples'}
+    expected_provider = root / 'build/Build/Products/Release/QLReplyProbeContainer.app/Contents/PlugIns/QLReplyProbeProvider.appex/Contents/MacOS/QLReplyProbeProvider'
+    expected_service = root / 'build/Build/Products/Release/QLReplyProbeContainer.app/Contents/PlugIns/QLReplyProbeProvider.appex/Contents/XPCServices/QLReplyProbeXPCService.xpc/Contents/MacOS/QLReplyProbeXPCService'
+    if (len(raw) > 128 * 1024 or not isinstance(snapshot, dict) or set(snapshot) != keys
+            or snapshot['kind'] != 'mostlytext-qlxpc-host-process'
+            or snapshot['checkout'] != checkout or snapshot['provider_path'] != str(expected_provider)
+            or snapshot['service_path'] != str(expected_service) or not isinstance(hold, dict)
+            or hold.get('request_id') != snapshot['request_id']
+            or hold.get('provider_pid') != snapshot['provider_pid']
+            or hold.get('service_pid') != snapshot['service_pid']
+            or hold.get('snapshot_sha256') != hashlib.sha256(raw).hexdigest()):
+        raise RuntimeError('Independent XPC process snapshot identity or digest differs')
+    samples = snapshot['samples']
+    rows = hold.get('samples')
+    if (not isinstance(samples, list) or not 2 <= len(samples) <= 96
+            or not isinstance(rows, list) or len(rows) != len(samples)):
+        raise RuntimeError('Incomplete bounded XPC host process sample journal')
+    for index, (sample, row) in enumerate(zip(samples, rows)):
+        name = f'hold-process-journal/{index:03d}.json'
+        if not isinstance(row, dict) or row.get('file') != name:
+            raise RuntimeError('Unknown XPC process sample journal member')
+        journal_raw = (root / name).read_bytes()
+        if (len(journal_raw) != row.get('bytes') or row.get('sha256') != hashlib.sha256(journal_raw).hexdigest()
+                or json.loads(journal_raw) != {'kind': 'mostlytext-qlxpc-process-sample',
+                                               'checkout': checkout, 'request_id': snapshot['request_id'],
+                                               'provider_pid': snapshot['provider_pid'],
+                                               'service_pid': snapshot['service_pid'], 'sample': sample}):
+            raise RuntimeError('XPC process journal differs from final host snapshot')
+    if {path.name for path in (root / 'hold-process-journal').iterdir()} != {f'{i:03d}.json' for i in range(len(samples))}:
+        raise RuntimeError('Unexpected XPC process journal member')
+    return snapshot
+
+
+def validate_xpc_hold_observation(observed, messages, host):
     keys = {'kind', 'request_id', 'provider_pid', 'service_pid', 'started_uptime', 'hold_started_uptime',
             'ready_uptime', 'invalidated_uptime', 'samples', 'marker_visible',
             'provider_remained', 'window_remained', 'service_identity_valid',
@@ -253,8 +292,8 @@ def validate_xpc_hold_observation(observed, messages):
     ready = observed['ready_uptime']
     invalidated = observed['invalidated_uptime']
     if not (0 < started <= hold_started < invalidated and started <= ready < invalidated
-            and 0.35 <= invalidated - ready <= 1.5):
-        raise RuntimeError('Provider invalidation did not follow the independent 500 ms timer')
+            and 1.8 <= invalidated - ready <= 2.5):
+        raise RuntimeError('Provider invalidation did not follow the independent two-second timer')
     patterns = [
         (r'QL_XPC_HOLD begin id=(\d+) provider=(\d+) start=([0-9.]+)',
          (request, provider, started)),
@@ -275,34 +314,69 @@ def validate_xpc_hold_observation(observed, messages):
         match = re.fullmatch(pattern, candidates[0])
         if match is None or tuple(float(value) for value in match.groups()) != tuple(expected):
             raise RuntimeError('Actual XPC hold own-request process or timer record differs from UI attachment')
+    if (not isinstance(host, dict) or host.get('kind') != 'mostlytext-qlxpc-host-process'
+            or host.get('request_id') != request or host.get('provider_pid') != provider
+            or host.get('service_pid') != service or not isinstance(host.get('samples'), list)
+            or not 2 <= len(host['samples']) <= 96):
+        raise RuntimeError('Actual independent XPC process identity differs from UI attachment')
+    host_samples = host['samples']
+    if any(not isinstance(row, dict) or set(row) != {'index', 'uptime', 'check_uptime', 'service', 'provider'}
+           or row['index'] != index or type(row['uptime']) not in (int, float)
+           or type(row['check_uptime']) not in (int, float)
+           or not math.isfinite(row['uptime']) or not math.isfinite(row['check_uptime'])
+           or row['check_uptime'] < row['uptime']
+           or row['service'] not in ('expected', 'absent', 'wrong')
+           or row['provider'] not in ('expected', 'absent', 'wrong')
+           for index, row in enumerate(host_samples)):
+        raise RuntimeError('Invalid independent XPC host process sample')
+    if any(a['check_uptime'] >= b['uptime'] for a, b in zip(host_samples, host_samples[1:])):
+        raise RuntimeError('XPC host process samples are not monotonic')
     samples = observed['samples']
     if (not isinstance(samples, list) or not 2 <= len(samples) <= 64
-            or any(not isinstance(row, dict) or set(row) != {'uptime', 'check_uptime', 'service', 'provider', 'window'}
+            or any(not isinstance(row, dict) or set(row) != {'host_sample_index', 'uptime', 'host_check_uptime',
+                                                              'check_uptime', 'service', 'provider', 'window'}
+                   or type(row['host_sample_index']) is not int or not 0 <= row['host_sample_index'] < len(host_samples)
                    or type(row['uptime']) not in (int, float) or not math.isfinite(row['uptime'])
+                   or type(row['host_check_uptime']) not in (int, float) or not math.isfinite(row['host_check_uptime'])
                    or type(row['check_uptime']) not in (int, float) or not math.isfinite(row['check_uptime'])
-                   or row['check_uptime'] < row['uptime']
+                   or not row['uptime'] <= row['host_check_uptime'] <= row['check_uptime']
+                   or row['check_uptime'] - row['host_check_uptime'] > 0.75
                    or row['service'] not in ('expected', 'absent', 'wrong')
                    or row['provider'] not in ('expected', 'absent', 'wrong')
                    or type(row['window']) is not bool for row in samples)):
         raise RuntimeError('Invalid bounded independent process/window samples')
+    for row in samples:
+        source = host_samples[row['host_sample_index']]
+        if any(row[key] != source[source_key] for key, source_key in
+               [('uptime', 'uptime'), ('host_check_uptime', 'check_uptime'),
+                ('service', 'service'), ('provider', 'provider')]):
+            raise RuntimeError('UI process sample differs from independent host observation')
     times = [row['uptime'] for row in samples]
     if (times[0] < ready or any(a['check_uptime'] >= b['uptime'] for a, b in zip(samples, samples[1:]))
             or times[-1] < invalidated + 3):
         raise RuntimeError('Independent lifecycle samples did not cover the exact three-second deadline')
-    first_absent = next((row['uptime'] for row in samples if row['service'] == 'absent'), None)
-    departed = (samples[0]['service'] == 'expected'
-                and all(row['service'] in ('expected', 'absent') for row in samples)
+    lifecycle = host_samples[:samples[-1]['host_sample_index'] + 1]
+    if any(b['uptime'] - a['check_uptime'] > 0.75 for a, b in zip(lifecycle, lifecycle[1:])):
+        raise RuntimeError('XPC host process samples leave an unobserved lifecycle gap')
+    first_absent = next((row['uptime'] for row in lifecycle if row['service'] == 'absent'), None)
+    departed = (lifecycle[0]['service'] == 'expected'
+                and all(row['service'] in ('expected', 'absent') for row in lifecycle)
                 and first_absent is not None and invalidated <= first_absent <= invalidated + 3
-                and all(row['service'] == 'absent' for row in samples if row['uptime'] >= first_absent)
-                and samples[-1]['service'] == 'absent')
-    provider_remained = all(row['provider'] == 'expected' for row in samples)
+                and all(row['service'] == 'absent' for row in lifecycle if row['uptime'] >= first_absent)
+                and lifecycle[-1]['service'] == 'absent')
+    provider_remained = all(row['provider'] == 'expected' for row in lifecycle)
     first_window = next((index for index, row in enumerate(samples)
                          if row['window'] is True and row['service'] == 'expected'
                          and hold_started <= row['check_uptime'] < invalidated), None)
     window_remained = first_window is not None and all(row['window'] is True for row in samples[first_window:])
+    if first_window is not None:
+        window_at = samples[first_window]['check_uptime']
+        after = next((row for row in lifecycle if row['uptime'] >= window_at), None)
+        if after is None or after['uptime'] >= invalidated or after['uptime'] - window_at > 0.35 or after['service'] != 'expected':
+            window_remained = False
     for key, expected in [('marker_visible', True), ('provider_remained', provider_remained),
                           ('window_remained', window_remained), ('service_identity_valid',
-                           samples[0]['service'] == 'expected' and all(row['service'] != 'wrong' for row in samples)),
+                           lifecycle[0]['service'] == 'expected' and all(row['service'] != 'wrong' for row in lifecycle)),
                           ('service_departed_by_deadline', departed)]:
         if observed[key] is not expected:
             raise RuntimeError('XPC hold UI summary does not match independent lifecycle samples: ' + key)
@@ -562,6 +636,11 @@ def main():
             (root / 'xpc-hold-lifecycle.json').write_text(json.dumps(hold[0], indent=2) + '\n')
             record['xpc_hold_lifecycle_observation'] = hold[0]
             receipt_path.write_text(json.dumps(record, indent=2) + "\n")
+        # Preserve independently verified process evidence even when the held
+        # service does not retire and the fourth XCTest correctly fails.
+        host_process = validate_host_process_observer(root, record['checkout'])
+        record['host_process_observation'] = host_process
+        receipt_path.write_text(json.dumps(record, indent=2) + "\n")
         record['host_observer_proof'] = validate_host_observer(root, record['checkout'])
         controls = json.loads((root / 'observer-control-events.json').read_text())
         nonce = record['host_observer_proof']['observer']['nonce']
@@ -613,7 +692,7 @@ def main():
         record['actual_ui_summary'] = summary
         record['scope'] = 'Actual fixed JavaScriptCore and XPC service reachability plus held-service invalidation; no engine deadline/fallback, exit reason, new authority, production or full QL-REPLY acceptance'
         receipt_path.write_text(json.dumps(record, indent=2) + "\n")
-        validate_xpc_hold_observation(hold[0], messages)
+        validate_xpc_hold_observation(hold[0], messages, host_process)
         if any(type(summary.get(k)) is not int or summary[k] != v for k, v in expected.items()):
             raise RuntimeError('All three original Finder cases and the fixed XPC hold case must pass')
     receipt_path.write_text(json.dumps(record, indent=2) + "\n")

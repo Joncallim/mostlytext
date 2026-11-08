@@ -2,6 +2,7 @@
 """Pure XPC process/own-request controls; no service or product is launched."""
 import importlib.util
 import datetime as dt
+import hashlib
 import json
 from pathlib import Path
 import plistlib
@@ -25,6 +26,9 @@ SIGN_SPEC.loader.exec_module(SIGN)
 CAPTURE_SPEC = importlib.util.spec_from_file_location('xpc_launch_capture', HERE / 'capture-quicklook-xpc-launch.py')
 CAPTURE = importlib.util.module_from_spec(CAPTURE_SPEC)
 CAPTURE_SPEC.loader.exec_module(CAPTURE)
+OBS_SPEC = importlib.util.spec_from_file_location('xpc_host_observer', HERE / 'observe-quicklook-jsc.py')
+OBS = importlib.util.module_from_spec(OBS_SPEC)
+OBS_SPEC.loader.exec_module(OBS)
 
 
 def example():
@@ -37,16 +41,29 @@ def example():
 
 
 def hold_example():
+    host_samples = [
+        {'index': index, 'uptime': round(21.1 + index * 0.1, 2),
+         'check_uptime': round(21.12 + index * 0.1, 2),
+         'service': 'expected' if index < 21 else 'absent', 'provider': 'expected'}
+        for index in range(51)
+    ]
+    host = {'kind': 'mostlytext-qlxpc-host-process', 'checkout': 'fixture',
+            'request_id': 4, 'provider_pid': 111, 'service_pid': 222,
+            'provider_path': '/fixture/provider', 'service_path': '/fixture/service',
+            'samples': host_samples}
+    selected = [1, 10, 22, 50]
+    rows = []
+    for index in selected:
+        sample = host_samples[index]
+        rows.append({'host_sample_index': index, 'uptime': sample['uptime'],
+                     'host_check_uptime': sample['check_uptime'],
+                     'check_uptime': round(sample['check_uptime'] + 0.03, 2),
+                     'service': sample['service'], 'provider': sample['provider'], 'window': True})
     record = {
         'kind': 'mostlytext-qlxpc-hold-lifecycle', 'request_id': 4,
         'provider_pid': 111, 'service_pid': 222, 'started_uptime': 20.0,
-        'hold_started_uptime': 20.9, 'ready_uptime': 21.0, 'invalidated_uptime': 21.5,
-        'samples': [
-            {'uptime': 21.1, 'check_uptime': 21.2, 'service': 'expected', 'provider': 'expected', 'window': True},
-            {'uptime': 21.3, 'check_uptime': 21.4, 'service': 'expected', 'provider': 'expected', 'window': True},
-            {'uptime': 22.0, 'check_uptime': 22.1, 'service': 'absent', 'provider': 'expected', 'window': True},
-            {'uptime': 24.5, 'check_uptime': 24.6, 'service': 'absent', 'provider': 'expected', 'window': True},
-        ],
+        'hold_started_uptime': 20.9, 'ready_uptime': 21.0, 'invalidated_uptime': 23.0,
+        'samples': rows,
         'marker_visible': True, 'provider_remained': True, 'window_remained': True,
         'service_identity_valid': True, 'service_departed_by_deadline': True,
     }
@@ -55,21 +72,21 @@ def hold_example():
         'QL_XPC_HOLD service-ready id=4 pid=222 sandbox=1',
         'QL_XPC_HOLD service-hold-start id=4 pid=222 at=20.9',
         'QL_XPC_HOLD admitted id=4 provider=111 service=222 ready=21.0',
-        'QL_XPC_HOLD invalidated id=4 provider=111 service=222 at=21.5',
+        'QL_XPC_HOLD invalidated id=4 provider=111 service=222 at=23.0',
     ]
-    return record, messages
+    return record, messages, host
 
 
 class XPCObservationTests(unittest.TestCase):
     def test_fixed_hold_lifecycle_requires_own_request_and_real_retirement(self):
-        row, messages = hold_example()
-        PREP.validate_xpc_hold_observation(row, messages)
+        row, messages, host = hold_example()
+        PREP.validate_xpc_hold_observation(row, messages, host)
         window_warming = dict(row, samples=[dict(row['samples'][0], window=False)] + row['samples'][1:])
-        PREP.validate_xpc_hold_observation(window_warming, messages)
+        PREP.validate_xpc_hold_observation(window_warming, messages, host)
         for changed in (
             dict(row, service_pid=333),
-            dict(row, invalidated_uptime=22.9),
-            dict(row, hold_started_uptime=21.6),
+            dict(row, invalidated_uptime=24.9),
+            dict(row, hold_started_uptime=23.1),
             dict(row, service_departed_by_deadline=False),
             dict(row, samples=[dict(sample, service='expected') for sample in row['samples']]),
             dict(row, samples=row['samples'][:2] + [dict(row['samples'][2], provider='absent')]
@@ -78,24 +95,30 @@ class XPCObservationTests(unittest.TestCase):
                  + row['samples'][3:]),
             dict(row, samples=row['samples'][:3] + [dict(row['samples'][3], service='expected')]),
             dict(row, samples=row['samples'][:3]),
-            dict(row, samples=[dict(sample, window=False) if sample['check_uptime'] < 21.5
+            dict(row, samples=[dict(sample, window=False) if sample['check_uptime'] < 23.0
                                else sample for sample in row['samples']]),
         ):
             with self.assertRaises(RuntimeError):
-                PREP.validate_xpc_hold_observation(changed, messages)
+                PREP.validate_xpc_hold_observation(changed, messages, host)
         for bad_messages in (messages[:2] + messages[3:], messages + messages[2:3],
                              messages[:1] + ['QL_XPC_HOLD service-ready id=4 pid=333 sandbox=1'] + messages[2:]):
             with self.assertRaises(RuntimeError):
-                PREP.validate_xpc_hold_observation(row, bad_messages)
-        late_hold = dict(row, hold_started_uptime=21.6)
-        late_messages = [message.replace('at=20.9', 'at=21.6') for message in messages]
+                PREP.validate_xpc_hold_observation(row, bad_messages, host)
+        late_hold = dict(row, hold_started_uptime=23.1)
+        late_messages = [message.replace('at=20.9', 'at=23.1') for message in messages]
         with self.assertRaisesRegex(RuntimeError, 'invalidation'):
-            PREP.validate_xpc_hold_observation(late_hold, late_messages)
+            PREP.validate_xpc_hold_observation(late_hold, late_messages, host)
         no_pre_invalidation_window = dict(row, window_remained=False,
-                                          samples=[dict(sample, window=False) if sample['check_uptime'] < 21.5
+                                          samples=[dict(sample, window=False) if sample['check_uptime'] < 23.0
                                                    else sample for sample in row['samples']])
         with self.assertRaisesRegex(RuntimeError, 'Finder survived'):
-            PREP.validate_xpc_hold_observation(no_pre_invalidation_window, messages)
+            PREP.validate_xpc_hold_observation(no_pre_invalidation_window, messages, host)
+        stale = dict(row, samples=[dict(row['samples'][0], host_sample_index=0)] + row['samples'][1:])
+        with self.assertRaises(RuntimeError):
+            PREP.validate_xpc_hold_observation(stale, messages, host)
+        replaced = dict(host, samples=[dict(sample, service='expected') for sample in host['samples']])
+        with self.assertRaises(RuntimeError):
+            PREP.validate_xpc_hold_observation(row, messages, replaced)
 
     def test_hold_fixture_keeps_fixed_request_no_new_authority_and_independent_observer(self):
         provider = (FIXTURE / 'Provider/XPCCapability.swift').read_text()
@@ -108,13 +131,54 @@ class XPCObservationTests(unittest.TestCase):
                         service.index('QL_XPC_HOLD service-hold-start'))
         self.assertLess(service.index('QL_XPC_HOLD service-hold-start'),
                         service.index('Thread.sleep(forTimeInterval: 10)'))
-        self.assertIn('asyncAfter(deadline: .now() + .milliseconds(500))', provider)
-        self.assertIn('"/bin/ps"', ui)
-        self.assertIn('kill(pid, 0)', ui)
+        self.assertIn('asyncAfter(deadline: .now() + .seconds(2))', provider)
+        self.assertNotIn('Process()', ui)
+        self.assertIn('hold-process-observer.json', ui)
         self.assertIn('serviceDepartedByDeadline', ui)
+        self.assertIn("'/bin/ps'", (HERE / 'observe-quicklook-jsc.py').read_text())
         self.assertNotIn('SIGKILL', ui + provider + service)
         self.assertEqual(plistlib.loads((FIXTURE / 'XPCService.entitlements').read_bytes()),
                          {'com.apple.security.app-sandbox': True})
+
+    def test_host_process_sampler_checks_exact_identity_and_absence(self):
+        calls = []
+        def run(argv, **kwargs):
+            calls.append((argv, kwargs))
+            return SimpleNamespace(returncode=0, stdout=b'222 501 /fixture/service\n', stderr=b'')
+        self.assertEqual(OBS.process_state(222, '/fixture/service', run=run), 'expected')
+        self.assertEqual(calls[0][0], ['/bin/ps', '-p', '222', '-o', 'pid=', '-o', 'uid=', '-o', 'comm='])
+        self.assertEqual(OBS.process_state(222, '/fixture/changed', run=run), 'wrong')
+        missing = lambda _argv, **_kw: SimpleNamespace(returncode=1, stdout=b'', stderr=b'')
+        def absent(_pid, _signal):
+            raise ProcessLookupError()
+        self.assertEqual(OBS.process_state(222, '/fixture/service', run=missing, existence=absent), 'absent')
+        self.assertEqual(OBS.process_state(222, '/fixture/service', run=missing,
+                                           existence=lambda _pid, _signal: None), 'wrong')
+        error = lambda _argv, **_kw: SimpleNamespace(returncode=1, stdout=b'', stderr=b'ps error')
+        with self.assertRaises(RuntimeError):
+            OBS.process_state(222, '/fixture/service', run=error)
+
+    def test_host_process_journal_matches_atomic_snapshot(self):
+        row, _messages, host = hold_example()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            host['provider_path'] = str(root / 'build/Build/Products/Release/QLReplyProbeContainer.app/Contents/PlugIns/QLReplyProbeProvider.appex/Contents/MacOS/QLReplyProbeProvider')
+            host['service_path'] = str(root / 'build/Build/Products/Release/QLReplyProbeContainer.app/Contents/PlugIns/QLReplyProbeProvider.appex/Contents/XPCServices/QLReplyProbeXPCService.xpc/Contents/MacOS/QLReplyProbeXPCService')
+            observations = []
+            for sample in host['samples'][:2]:
+                observations.append(OBS.publish_hold_process(root, {key: host[key] for key in
+                                    ('request_id', 'provider_pid', 'service_pid', 'provider_path', 'service_path')},
+                                    host['samples'][:sample['index'] + 1], 'fixture'))
+            raw = (root / 'hold-process-observer.json').read_bytes()
+            (root / 'observer-result.json').write_text(json.dumps({'hold_process': {
+                'request_id': row['request_id'], 'provider_pid': row['provider_pid'],
+                'service_pid': row['service_pid'], 'samples': observations,
+                'snapshot_sha256': hashlib.sha256(raw).hexdigest()}}))
+            self.assertEqual(PREP.validate_host_process_observer(root, 'fixture')['samples'], host['samples'][:2])
+            first = root / 'hold-process-journal/000.json'
+            first.write_text(first.read_text().replace('expected', 'wrong'))
+            with self.assertRaisesRegex(RuntimeError, 'journal'):
+                PREP.validate_host_process_observer(root, 'fixture')
 
     def test_system_diagnostic_selects_only_actual_xpc_provider_request(self):
         begin = {'subsystem': CAPTURE.PROVIDER_SUBSYSTEM,

@@ -3,8 +3,8 @@ import Darwin
 import Foundation
 import XCTest
 
-/// A fourth, private Finder case. Its process observations come from the
-/// independent UI runner, not from the provider or the XPC service.
+/// A fourth, private Finder case. Exact process observations come from the
+/// independent unsandboxed host observer; this UI runner records Finder state.
 @MainActor
 final class ZXPCFinderHoldTests: XCTestCase {
     private let root = "/Users/runner/work/_temp/mostlytext-qljsc"
@@ -27,28 +27,26 @@ final class ZXPCFinderHoldTests: XCTestCase {
         let start = ProcessInfo.processInfo.systemUptime
         finder.typeKey(.space, modifierFlags: [])
         let ready = try waitForEvidence(after: start, invalidationRequired: false, seconds: 5)
-        let servicePath = root + "/build/Build/Products/Release/QLReplyProbeContainer.app/Contents/PlugIns/QLReplyProbeProvider.appex/Contents/XPCServices/QLReplyProbeXPCService.xpc/Contents/MacOS/QLReplyProbeXPCService"
-        let providerPath = root + "/build/Build/Products/Release/QLReplyProbeContainer.app/Contents/PlugIns/QLReplyProbeProvider.appex/Contents/MacOS/QLReplyProbeProvider"
         let marker = finder.staticTexts["MOSTLYTEXT_QL_XPC_HOLD_READY"].firstMatch
         var samples = [[String: Any]]()
         var invalidated: HoldEvidence?
         var markerVisible = false
-        let monitoringLimit = ProcessInfo.processInfo.systemUptime + 6
+        let monitoringLimit = ProcessInfo.processInfo.systemUptime + 8
         repeat {
-            let service = try processState(pid: ready.service, expectedPath: servicePath)
-            let serviceAt = ProcessInfo.processInfo.systemUptime
-            let provider = try processState(pid: ready.provider, expectedPath: providerPath)
+            let previousCheck = samples.last?["check_uptime"] as? Double ?? ready.ready
+            let sample = try nextHostSample(for: ready, after: previousCheck)
             let window = finder.windows["Quick Look"].exists
             let markerFound = marker.exists
             let checkedAt = ProcessInfo.processInfo.systemUptime
             markerVisible = markerVisible || (markerFound && checkedAt - start <= 15)
-            samples.append(["uptime": serviceAt, "check_uptime": checkedAt,
-                            "service": service, "provider": provider, "window": window])
+            samples.append(["host_sample_index": sample.index, "uptime": sample.uptime,
+                            "host_check_uptime": sample.checkUptime, "check_uptime": checkedAt,
+                            "service": sample.service, "provider": sample.provider, "window": window])
             if invalidated == nil {
                 invalidated = try? currentEvidence(after: start, invalidationRequired: true)
             }
-            if let invalidated, serviceAt >= invalidated.invalidated + 3 { break }
-            if samples.count >= 64 || serviceAt >= monitoringLimit { break }
+            if let invalidated, sample.uptime >= invalidated.invalidated + 3 { break }
+            if samples.count >= 64 || sample.uptime >= monitoringLimit { break }
             RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
         } while true
         if !markerVisible {
@@ -58,15 +56,17 @@ final class ZXPCFinderHoldTests: XCTestCase {
         let windowRemained = finder.windows["Quick Look"].exists
         let observedInvalidation = invalidated?.invalidated
         let deadline = observedInvalidation.map { $0 + 3 }
-        let firstAbsent = samples.first { $0["service"] as? String == "absent" }?["uptime"] as? Double
+        let allHostSamples = try hostSamples(for: ready)
+        let firstAbsent = allHostSamples.first { $0.service == "absent" }?.uptime
         let serviceDepartedByDeadline = deadline.map { limit in
             firstAbsent.map { $0 >= (observedInvalidation ?? 0) && $0 <= limit } == true
-                && (samples.last?["uptime"] as? Double ?? 0) >= limit
-                && samples.last?["service"] as? String == "absent"
+                && (allHostSamples.last?.uptime ?? 0) >= limit
+                && allHostSamples.last?.service == "absent"
+                && allHostSamples.drop { $0.service != "absent" }.allSatisfy { $0.service == "absent" }
         } ?? false
-        let providerRemained = samples.allSatisfy { $0["provider"] as? String == "expected" }
-        let serviceIdentityValid = samples.first?["service"] as? String == "expected"
-            && samples.allSatisfy { ["expected", "absent"].contains($0["service"] as? String ?? "") }
+        let providerRemained = allHostSamples.allSatisfy { $0.provider == "expected" }
+        let serviceIdentityValid = allHostSamples.first?.service == "expected"
+            && allHostSamples.allSatisfy { ["expected", "absent"].contains($0.service) }
         let firstWindowBeforeInvalidation = invalidated.flatMap { lifecycle in
             samples.firstIndex {
                 $0["window"] as? Bool == true && $0["service"] as? String == "expected"
@@ -108,8 +108,8 @@ final class ZXPCFinderHoldTests: XCTestCase {
         XCTAssertTrue(markerVisible, "Finder must show the fixed service ready reply within 15 seconds")
         XCTAssertNotNil(invalidated, "The provider must run its independent invalidation timer")
         if let invalidated {
-            XCTAssertGreaterThanOrEqual(invalidated.invalidated - ready.ready, 0.35)
-            XCTAssertLessThanOrEqual(invalidated.invalidated - ready.ready, 1.5)
+            XCTAssertGreaterThanOrEqual(invalidated.invalidated - ready.ready, 1.8)
+            XCTAssertLessThanOrEqual(invalidated.invalidated - ready.ready, 2.5)
             XCTAssertLessThan(invalidated.holdStarted, invalidated.invalidated,
                               "The service must enter its non-cooperative hold path before invalidation")
         }
@@ -199,36 +199,49 @@ final class ZXPCFinderHoldTests: XCTestCase {
         }
     }
 
-    private func processState(pid: Int32, expectedPath: String) throws -> String {
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/bin/ps")
-        process.arguments = ["-p", String(pid), "-o", "pid=", "-o", "uid=", "-o", "comm="]
-        let output = Pipe()
-        process.standardOutput = output
-        process.standardError = Pipe()
-        let finished = DispatchSemaphore(value: 0)
-        process.terminationHandler = { _ in finished.signal() }
-        try process.run()
-        guard finished.wait(timeout: .now() + .seconds(1)) == .success else {
-            process.terminate()
-            _ = finished.wait(timeout: .now() + .seconds(1))
-            throw NSError(domain: "MostlyTextXPCHold", code: 8)
+    private struct HostSample {
+        let index: Int
+        let uptime: Double
+        let checkUptime: Double
+        let service: String
+        let provider: String
+    }
+
+    private func hostSamples(for ready: HoldEvidence) throws -> [HostSample] {
+        let url = URL(fileURLWithPath: root + "/hold-process-observer.json")
+        let bytes = try Data(contentsOf: url)
+        guard bytes.count <= 128 * 1024,
+              let value = try JSONSerialization.jsonObject(with: bytes) as? [String: Any],
+              value["kind"] as? String == "mostlytext-qlxpc-host-process",
+              value["request_id"] as? Int == ready.id,
+              value["provider_pid"] as? Int == Int(ready.provider),
+              value["service_pid"] as? Int == Int(ready.service),
+              let rows = value["samples"] as? [[String: Any]], !rows.isEmpty, rows.count <= 96
+        else { throw NSError(domain: "MostlyTextXPCHold", code: 7) }
+        return try rows.enumerated().map { index, row in
+            guard row["index"] as? Int == index,
+                  let uptime = row["uptime"] as? Double,
+                  let checkUptime = row["check_uptime"] as? Double,
+                  let service = row["service"] as? String,
+                  let provider = row["provider"] as? String,
+                  ["expected", "absent", "wrong"].contains(service),
+                  ["expected", "absent", "wrong"].contains(provider),
+                  checkUptime >= uptime else { throw NSError(domain: "MostlyTextXPCHold", code: 8) }
+            return HostSample(index: index, uptime: uptime, checkUptime: checkUptime,
+                              service: service, provider: provider)
         }
-        let bytes = output.fileHandleForReading.readDataToEndOfFile()
-        guard bytes.count <= 2048, let value = String(data: bytes, encoding: .utf8) else {
-            throw NSError(domain: "MostlyTextXPCHold", code: 7)
+    }
+
+    private func nextHostSample(for ready: HoldEvidence, after priorCheck: Double) throws -> HostSample {
+        let deadline = ProcessInfo.processInfo.systemUptime + 1
+        while ProcessInfo.processInfo.systemUptime < deadline {
+            if let sample = try? hostSamples(for: ready).last,
+               sample.uptime > priorCheck,
+               ProcessInfo.processInfo.systemUptime - sample.checkUptime <= 0.25 {
+                return sample
+            }
+            RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.025))
         }
-        if process.terminationStatus == 1 && value.isEmpty {
-            errno = 0
-            guard kill(pid, 0) == -1 && errno == ESRCH else { return "wrong" }
-            return "absent"
-        }
-        let parts = value.trimmingCharacters(in: .whitespacesAndNewlines)
-            .split(maxSplits: 2, omittingEmptySubsequences: true, whereSeparator: \.isWhitespace)
-        guard process.terminationStatus == 0, parts.count == 3,
-              Int32(parts[0]) == pid, Int(parts[1]) == 501,
-              String(parts[2]) == expectedPath
-        else { return "wrong" }
-        return "expected"
+        throw NSError(domain: "MostlyTextXPCHold", code: 9)
     }
 }
