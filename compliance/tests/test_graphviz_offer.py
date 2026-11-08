@@ -67,6 +67,24 @@ class GraphvizOfferTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'stale link receipt'):
                 offer.reproduction_evidence(Path(self.temp.name) / 'nonexistent')
 
+    def test_review_copy_omits_only_known_private_build_location(self):
+        for folder, build in offer.PRIVATE_BUILD_LOCATIONS.items():
+            with self.subTest(folder=folder):
+                original = (f'Retained at `/Volumes/Fast SSD/CORTANA-Builds/{build}`. '
+                            'Digest and source facts stay here.').encode()
+                reviewed = offer.review_copy(folder, 'README.md', original)
+                self.assertEqual(reviewed, b'Retained at `private build evidence retained by '
+                                 b'the project`. Digest and source facts stay here.')
+                self.assertNotIn(b'/Volumes/Fast SSD/', reviewed)
+                with self.assertRaisesRegex(ValueError, 'location changed'):
+                    offer.review_copy(folder, 'README.md', original + original)
+
+    def test_unexpected_private_path_refuses_source_review_package(self):
+        for path in (b'/Users/private-user/secret', b'/Volumes/Another Disk/another-build'):
+            with self.subTest(path=path):
+                with self.assertRaisesRegex(ValueError, 'Private build path remains'):
+                    offer.require_no_private_paths({'evidence/new.json': path})
+
 
 if __name__ == '__main__':
     unittest.main()
