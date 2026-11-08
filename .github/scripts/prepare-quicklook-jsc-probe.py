@@ -544,6 +544,7 @@ def main():
                          ".github/scripts/observe-quicklook-jsc.py",
                          ".github/scripts/run-quicklook-jsc-ui.py",
                          ".github/scripts/test-quicklook-xpc-probe.py",
+                         ".github/scripts/test-quicklook-worker-boundary.py",
                          ".github/scripts/capture-quicklook-xpc-launch.py",
                          ".github/scripts/test-quicklook-jsc-observer.py",
                          "planning/downstream/evidence/quicklook-hosted-feasibility-2026-11-07/b000-receipt.json.gz",
@@ -557,6 +558,7 @@ def main():
         (root / "mostlytext-ql-jsc.md").write_bytes(b"# Hosted Quick Look fixture\n")
         (root / "mostlytext-ql-xpc.md").write_bytes(b"# Hosted Quick Look fixture\n")
         (root / "mostlytext-ql-xpc-hold.md").write_bytes(b"# Hosted Quick Look fixture\n")
+        (root / "mostlytext-ql-worker-pair.md").write_bytes(b"# Hosted Quick Look fixture\n")
         (root / "ql-probe-neighbor.md").write_bytes(b"Generated sibling capability control; do not read through the provider.\n")
         record = {"checkout": command(["git", "rev-parse", "HEAD"]),
                   "source_sha256": {p: digest(Path(p)) for p in paths},
@@ -565,7 +567,7 @@ def main():
                   "root_product_tree": command(["git", "rev-parse", "HEAD:MacDown2"]),
                   "xcode": command(["xcodebuild", "-version"]), "os": command(["sw_vers"]),
                   "diagnostic_only": True, "qualification_candidate": False,
-                  "scope": "Separate disposable hosted JavaScriptCore, XPC reachability and held-service lifecycle observation; no root product launch, shipping extension, full QL-REPLY or owner acceptance"}
+                  "scope": "Separate disposable hosted JavaScriptCore, XPC reachability, held-service lifecycle and bounded worker observation; no root product launch, shipping extension, full QL-REPLY or owner acceptance"}
         receipt_path.write_text(json.dumps(record, indent=2) + "\n")
         record['reference_module']=reference_module(root,fixture)
         subprocess.run(["xcodegen", "generate", "--spec", str(fixture / "project.yml")], check=True, timeout=60)
@@ -647,6 +649,7 @@ def main():
     assert digest(root / "mostlytext-ql-jsc.md") == record["selected_fixture_sha256"]
     assert digest(root / "mostlytext-ql-xpc.md") == record["selected_fixture_sha256"]
     assert digest(root / "mostlytext-ql-xpc-hold.md") == record["selected_fixture_sha256"]
+    assert digest(root / "mostlytext-ql-worker-pair.md") == record["selected_fixture_sha256"]
     if args.verify_finder:
         attachments = root / 'actual-ui-attachments'
         if not attachments.exists():
@@ -688,7 +691,7 @@ def main():
         raw = subprocess.check_output(['xcrun', 'xcresulttool', 'get', 'test-results', 'summary', '--path', str(result)], timeout=60)
         (root / 'actual-ui-summary.json').write_bytes(raw)
         summary = json.loads(raw)
-        expected = {'totalTestCount': 4, 'passedTests': 4, 'failedTests': 0, 'skippedTests': 0, 'expectedFailures': 0}
+        expected = {'totalTestCount': 5, 'passedTests': 5, 'failedTests': 0, 'skippedTests': 0, 'expectedFailures': 0}
         observations = []
         for path in attachments.rglob('*'):
             if path.is_file() and path.stat().st_size <= 128 * 1024:
@@ -708,15 +711,24 @@ def main():
         validate_xpc_observation(xpc[0], messages)
         if len(hold) != 1:
             raise RuntimeError('Require one actual XPC held-service lifecycle attachment')
+        worker = [value for path in attachments.rglob('*') if path.is_file() and path.stat().st_size <= 128 * 1024
+                  for value in [load_json_attachment(path)] if value and value.get('kind') == 'mostlytext-qlxpc-worker-isolation']
+        if len(worker) != 1 or not all(worker[0].get(key) is True for key in
+                ('marker_visible', 'source_visible', 'normal_alive_after_held_timeout',
+                 'distinct_workers_same_service', 'normal_finished_after_held')):
+            raise RuntimeError('Require one actual bounded worker Finder attachment with source and process proof')
+        if not any(re.fullmatch(r'QL_WORKER_BOUNDARY pair-finished id=\d+ provider=\d+ held=timedOut heldWorker=\d+ normal=completed normalWorker=\d+ service=\d+ isolated=true at=[0-9.]+', x) for x in messages):
+            raise RuntimeError('Require actual service pair result from own-generation log stream')
         record['javascriptcore_capability_observation'] = observations[0]
         record['xpc_reachability_observation'] = xpc[0]
         record['xpc_hold_lifecycle_observation'] = hold[0]
+        record['xpc_worker_isolation_observation'] = worker[0]
         record['actual_ui_summary'] = summary
-        record['scope'] = 'Actual fixed JavaScriptCore/XPC reachability and held-service self-retirement deadline; no arbitrary engine, concurrent isolation, exit-reason classification, new authority, production or full QL-REPLY acceptance'
+        record['scope'] = 'Actual fixed JavaScriptCore/XPC reachability, held-service self-retirement, and bounded two-worker isolation; no arbitrary engine, exit-reason classification, new authority, production or full QL-REPLY acceptance'
         receipt_path.write_text(json.dumps(record, indent=2) + "\n")
         validate_xpc_hold_observation(hold[0], messages, host_process)
         if any(type(summary.get(k)) is not int or summary[k] != v for k, v in expected.items()):
-            raise RuntimeError('All three original Finder cases and the fixed XPC hold case must pass')
+            raise RuntimeError('All three original Finder cases, fixed XPC hold and bounded worker pair must pass')
     receipt_path.write_text(json.dumps(record, indent=2) + "\n")
     print("Actual signed fixture identifiers, Markdown-only data provider, sandbox entitlements and source hashes verified")
 

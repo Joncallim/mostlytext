@@ -6,6 +6,8 @@ import QuickLookUI
 @objc(QLXPCCapabilityService) protocol QLXPCCapabilityService {
     func ping(_ requestID: NSNumber, withReply reply: @escaping (NSString, NSNumber, NSNumber, NSNumber) -> Void)
     func hold(_ requestID: NSNumber, withReady ready: @escaping (NSString, NSNumber, NSNumber, NSNumber) -> Void)
+    func render(_ requestID: NSNumber, mode: NSString,
+                withReply reply: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void)
 }
 
 /// One fixed bundled-service reachability control; never accepts document data.

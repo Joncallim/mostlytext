@@ -6,6 +6,15 @@ import Security
 @objc(QLXPCCapabilityService) protocol QLXPCCapabilityService {
     func ping(_ requestID: NSNumber, withReply reply: @escaping (NSString, NSNumber, NSNumber, NSNumber) -> Void)
     func hold(_ requestID: NSNumber, withReady ready: @escaping (NSString, NSNumber, NSNumber, NSNumber) -> Void)
+    func render(_ requestID: NSNumber, mode: NSString,
+                withReply reply: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void)
+}
+
+private final class WorkerReply: @unchecked Sendable {
+    let call: (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void
+    init(_ call: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void) {
+        self.call = call
+    }
 }
 
 /// One held operation per service process. The fixture's ping may precede it,
@@ -99,6 +108,39 @@ private final class PingHandler: NSObject, QLXPCCapabilityService {
         Thread.sleep(forTimeInterval: 10)
         logger.notice("QL_XPC_HOLD service-released id=\(id) pid=\(getpid())")
     }
+
+    func render(_ requestID: NSNumber, mode: NSString,
+                withReply reply: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void) {
+        let id = requestID.int64Value
+        lock.lock()
+        let first = seenRequests.insert(id).inserted
+        lock.unlock()
+        let servicePID = getpid()
+        guard id > 0, first,
+              let workerMode = WorkerBoundary.Mode(rawValue: mode as String),
+              let executable = Bundle.main.executableURL,
+              let task = SecTaskCreateFromSelf(nil),
+              SecTaskCopyValueForEntitlement(task, "com.apple.security.app-sandbox" as CFString, nil) as? Bool == true,
+              SecTaskCopyValueForEntitlement(task, "com.apple.security.network.client" as CFString, nil) == nil
+        else {
+            logger.error("QL_WORKER_BOUNDARY refused id=\(id) service=\(servicePID)")
+            reply("REFUSED", requestID, NSNumber(value: servicePID), NSNumber(value: 0), NSNumber(value: 0))
+            return
+        }
+        let admitted = ProcessInfo.processInfo.systemUptime
+        let deadline = admitted + 1.85
+        logger.notice("QL_WORKER_BOUNDARY admitted id=\(id) mode=\(workerMode.rawValue, privacy: .public) service=\(servicePID) at=\(admitted) deadline=\(deadline)")
+        let callback = WorkerReply(reply)
+        let serviceLogger = logger
+        Thread.detachNewThread {
+            let observed = WorkerBoundary.run(executable: executable, mode: workerMode, deadline: deadline) { child, at in
+                serviceLogger.notice("QL_WORKER_BOUNDARY spawned id=\(id) mode=\(workerMode.rawValue, privacy: .public) service=\(servicePID) worker=\(child) at=\(at)")
+            }
+            serviceLogger.notice("QL_WORKER_BOUNDARY finished id=\(id) mode=\(workerMode.rawValue, privacy: .public) service=\(servicePID) worker=\(observed.pid) result=\(observed.result.rawValue, privacy: .public) at=\(observed.finished)")
+            callback.call(observed.result.rawValue as NSString, requestID,
+                          NSNumber(value: servicePID), NSNumber(value: observed.pid), NSNumber(value: 1))
+        }
+    }
 }
 
 private final class ListenerDelegate: NSObject, NSXPCListenerDelegate {
@@ -110,6 +152,16 @@ private final class ListenerDelegate: NSObject, NSXPCListenerDelegate {
     }
 }
 
+if CommandLine.arguments.count > 1 {
+    guard CommandLine.arguments.count == 3,
+          CommandLine.arguments[1] == "--probe-worker",
+          let mode = WorkerBoundary.Mode(rawValue: CommandLine.arguments[2]),
+          let task = SecTaskCreateFromSelf(nil),
+          SecTaskCopyValueForEntitlement(task, "com.apple.security.app-sandbox" as CFString, nil) as? Bool == true,
+          SecTaskCopyValueForEntitlement(task, "com.apple.security.network.client" as CFString, nil) == nil
+    else { Darwin._exit(126) }
+    WorkerBoundary.workerMain(mode)
+}
 private let delegate = ListenerDelegate()
 private let listener = NSXPCListener.service()
 listener.delegate = delegate

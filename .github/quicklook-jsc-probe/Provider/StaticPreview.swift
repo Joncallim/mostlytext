@@ -16,7 +16,7 @@ final class StaticPreview: QLPreviewProvider, QLPreviewingController {
               FileManager.default.homeDirectoryForCurrentUser.path.hasPrefix("/Users/runner/"),
               file.path.hasPrefix("/Users/runner/work/_temp/mostlytext-qljsc/"),
               ["mostlytext-ql-reply-static.md", "mostlytext-ql-jsc.md", "mostlytext-ql-xpc.md",
-               "mostlytext-ql-xpc-hold.md"].contains(file.lastPathComponent)
+               "mostlytext-ql-xpc-hold.md", "mostlytext-ql-worker-pair.md"].contains(file.lastPathComponent)
         else { throw ProbeError.refused }
         guard let task = SecTaskCreateFromSelf(nil) else { throw ProbeError.refused }
         let required = ["com.apple.security.app-sandbox", "com.apple.security.files.user-selected.read-only"]
@@ -45,7 +45,7 @@ final class StaticPreview: QLPreviewProvider, QLPreviewingController {
         Self.logger.notice("QL_REPLY_PROBE self-entitlement-policy-admitted")
         let requestID = Self.nextID.withLock { count in count += 1; return count }
         Self.logger.notice("QL_REPLY_PROBE callback id=\(requestID) main=\(Thread.isMainThread)")
-        try readSelectedAndCheckSibling(file)
+        let selectedSource = try readSelectedAndCheckSibling(file)
         if file.lastPathComponent == "mostlytext-ql-jsc.md" {
             return try JavaScriptCapability.prepare(requestID: requestID)
         }
@@ -54,6 +54,9 @@ final class StaticPreview: QLPreviewProvider, QLPreviewingController {
         }
         if file.lastPathComponent == "mostlytext-ql-xpc-hold.md" {
             return try XPCCapability.prepareHold(requestID: requestID)
+        }
+        if file.lastPathComponent == "mostlytext-ql-worker-pair.md" {
+            return WorkerCapability.preparePair(requestID: requestID, source: selectedSource)
         }
         let holder = Payload()
         let reply = QLPreviewReply(dataOfContentType: .html, contentSize: CGSize(width: 640, height: 480)) { _ in
@@ -68,7 +71,7 @@ final class StaticPreview: QLPreviewProvider, QLPreviewingController {
         return reply
     }
 
-    private func readSelectedAndCheckSibling(_ file: URL) throws {
+    private func readSelectedAndCheckSibling(_ file: URL) throws -> Data {
         let descriptor = open(file.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW_ANY)
         guard descriptor >= 0 else {
             Self.logger.error("QL_REPLY_PROBE selected-open-refused errno=\(errno)")
@@ -93,6 +96,7 @@ final class StaticPreview: QLPreviewProvider, QLPreviewingController {
             close(neighborDescriptor)
         }
         Self.logger.notice("QL_REPLY_PROBE sibling-open-admitted=\(neighborDescriptor >= 0) errno=\(neighborError)")
+        return Data(bytes)
     }
 
     private final class Payload: Sendable {

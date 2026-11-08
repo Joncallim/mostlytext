@@ -1,4 +1,4 @@
-name: Private Quick Look XPC hold lifecycle
+name: Private Quick Look XPC worker boundary
 
 permissions:
   contents: read
@@ -26,6 +26,7 @@ jobs:
           python3 .github/scripts/test-run-owned-app-tests.py
           python3 .github/scripts/test-quicklook-jsc-probe.py
           python3 .github/scripts/test-quicklook-xpc-probe.py
+          python3 .github/scripts/test-quicklook-worker-boundary.py
           python3 .github/scripts/test-quicklook-jsc-observer.py
           python3 .github/scripts/prepare-quicklook-jsc-probe.py "$RUNNER_TEMP/mostlytext-qljsc"
       - name: Compile and ad-hoc sign standalone container, provider, service and UI tests
@@ -42,7 +43,7 @@ jobs:
           pluginkit -e use -i app.mostlytext.MostlyText.QuickLook
           pluginkit -m -A -D -vv -i app.mostlytext.MostlyText.QuickLook | tee "$RUNNER_TEMP/mostlytext-qljsc/discovery.log"
           open -R "$RUNNER_TEMP/mostlytext-qljsc/mostlytext-ql-reply-static.md"
-      - name: Execute original cold controls, XPC reachability and fixed hold case
+      - name: Execute original cold controls, XPC hold and bounded worker pair
         run: |
           set -euo pipefail
           python3 .github/scripts/run-quicklook-jsc-ui.py
