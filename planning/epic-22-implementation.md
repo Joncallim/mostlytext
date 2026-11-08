@@ -619,6 +619,25 @@ Exact per-file organization and the precise adversarial/performance test corpus 
 
 Exact per-file organization and the precise adversarial corpus for each (§17's own line: 100k-path indexing/query performance budgets; symlink-loop safety — the latter already covered by Slice 1's existing tests, confirmed above, not repeated here) are fixed at the point each of 6a/6b/6c actually begins, matching this epic's own established convention. Slice 6a begins next.
 
+#### F18 directory-read failure amendment — 9 November 2026
+
+At `ffe692fe`, a recursive `DirectoryWalker` catches a failed directory
+listing with `try?` and returns whatever paths it collected before the error.
+The index then reports `.ready`, even if a child folder was unreadable, so
+Quick Open and Folder Search can treat an incomplete search as complete. The
+existing post-walk root check only catches a missing or unreadable *root*.
+
+Keep the existing `TextSearch` ownership, detached walk, generation guard and
+`.failed` presentation. A directory-listing error anywhere in the walk must
+throw to `WorkspaceFileIndex.rebuild`; the current generation drops its old
+paths and reports the existing localized folder-read failure. A superseded
+generation may not publish that error. A genuinely empty readable root stays
+`.ready(count: 0)`. The test seam injects a failing child enumeration after
+a successful walk and proves that neither the partial result nor the previous
+snapshot remains actionable. This changes no indexing budget, symlink policy
+or per-keystroke disk behavior. An actual installed-app unavailable-folder
+journey remains for the native acceptance pass.
+
 ### 6.16 Folder search + safe replace (Slice 7) — design pass, baseline and contract, decided before implementation
 
 **Baseline, verified against live master before writing this design pass:** `TextSearchEngine.matches(in:query:options:)` (Slice 5, `TextSearch` package) is already a complete, pure, synchronous single-buffer literal/regex matcher — its own doc comment already names its intended second consumer: "used directly by current-document find on a bounded buffer, and per-file by `WorkspaceSearchEngine` (folder search) inside its own cancellable off-main task." `WorkspaceFileIndex` (Slice 1/6) already holds every indexed `(relativePath, basename)` pair under a window's folder root, rebuilt on root change. `FileStore.write(_:to:encoding:bom:expectedRevision:)` (`FileCore`, pre-existing) already throws `.fileChangedDuringRead` when an on-disk file's revision no longer matches one captured at read time — the exact conditional-publication primitive invariant #6 requires Replace in Folder to reuse rather than inventing a second write path. None of `WorkspaceSearchEngine`, a replacement-plan type, or any folder-search UI exist yet — this is a genuinely new slice, not wiring an already-built engine the way Slice 6 was.
