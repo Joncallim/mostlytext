@@ -2,12 +2,14 @@
 
 ## Owner summary and ready baseline
 
-Editing inline Markdown must produce the same syntax highlighting as reopening
-that exact source. Investigate a narrow upstream correctness fix missing from
-the pinned C runtime: an old scanner token can depend on characters just beyond
-its own text, so widening a parsing range must invalidate that dependency too.
-This is separate from the whole-document 50 ms requirement and the original
-Debug abort; no claim about either follows from this work.
+The parser dependency must respect the bytes a caller actually supplies and
+produce the same tree when a parsing range changes as it does from a fresh
+parse. Two narrow upstream corrections are candidates: one checks a token's
+lookahead before reusing it, and the other prevents the UTF-16 decoder from
+reading beyond the caller's advertised chunk. The current app forces fresh
+parses for Markdown inline, so the reproduced C reuse mismatch is not evidence
+of an editor-visible Markdown inline defect. Neither correction establishes the
+whole-document 50 ms requirement or explains the original Debug abort.
 
 Baseline main is `a46c57c4b62376b67492cf67421a4961fdf55c1c`. PR146's independent
 inline styling candidate `024103b3` remains frozen with seventeen first workflows
@@ -103,6 +105,65 @@ ordinary local choices in this architecture rather than silently expand it.
 The probe alone is not production completion, native acceptance, performance
 repair, independent rights approval or release readiness. Broad issues stay open
 until their separate original criteria are fulfilled.
+
+## UTF-16 decoder boundary: additional named pre-implementation slice
+
+Source review after the first lookahead probes found a second independent error
+in the exact pinned runtime `3b1fb00f8c4f8907073f9b7342a807a0231867fa`.
+`lib/src/unicode.h` passes a byte count to the `U16_NEXT_LE/BE` macros, which
+index 16-bit code units. When a lead surrogate ends the callback's declared
+two-byte chunk, the macro can inspect a following unit outside that chunk.
+The maintained upstream [fix 5549](https://github.com/tree-sitter/tree-sitter/pull/5549)
+was merged as `e4ac513afd85a7fe1015abc0ef46a4148aa7baf6`. It first rejects
+chunks shorter than two bytes, then passes `length / 2` into both macros.
+This is an exact-source candidate, not authority to upgrade the runtime.
+
+The exact SwiftTreeSitter `76f93e7e325dcd05561a13ed63bcc92cb85be8da`
+`Input` API permits a caller-supplied `ReadBlock` that returns arbitrary `Data`
+and advertises its exact byte length to the C parser. The normal Neon editor
+path instead builds a snapshot from `String` and extracts valid Swift character
+ranges. Thus a two-byte lead-surrogate callback is a supported C/wrapper API
+boundary, but no current editor journey has been shown to produce it. Keep this
+component scope explicit. The separate Swift string-reader behavior near a
+1,024-unit surrogate boundary is only a source hypothesis and requires its own
+reproduction; do not fold it into this C correction or infer a user failure.
+
+### Question and test contract
+
+Before changing any dependency code, use a reviewed standalone pure-C console
+which includes the exact pinned internal `unicode.h`. Give each decoder a
+declared chunk length of 0, 1, 2 and 4 bytes. The principal two-byte case is a
+lead surrogate with an adjacent fake trail surrogate in allocated memory but
+*outside* the declared chunk; compare both little- and big-endian results.
+Include valid basic-multilingual-plane, valid surrogate-pair, and ordinary
+two-byte controls. Record actual decoded code point, bytes consumed, declared
+length, and whether the outside sentinel was mistakenly combined. Require the
+original runtime to report failures honestly, with complete stdout/stderr and
+nonzero exit. An instrumented original build must additionally use a truly
+two-byte allocation to expose an over-read under AddressSanitizer; preserve
+that first crash and diagnostics rather than hiding it behind a poison buffer.
+If no over-read or incorrect decoded value reproduces, stop this slice.
+
+After preserving complete original outcomes, apply only the two decoder guards
+and byte-to-code-unit corrections from upstream 5549 in a *new isolated source
+copy*. Use the same unmodified fixtures and acceptance predicates, plus
+AddressSanitizer and UndefinedBehaviorSanitizer. Require zero detector findings,
+correct declared-boundary behavior, and the same valid-control results. Check
+all other runtime bytes, public headers, exported symbols, existing 324-pair
+subtree corpus and eight-case lookahead corpus before considering publication.
+Do not claim LeakSanitizer if it was not run.
+
+The diagnostic and its isolated candidate may read only reviewed dependency
+source and generated fixed bytes. Inspect final binary linkage before any
+execution. There is no app, Swift package, GUI, JavaScript, document or owner
+data access in this slice. Bound each run to ten seconds. Preserve compiler
+command, source and binary hashes, linkage, complete stdout/stderr, actual exit
+status and sanitizer settings. No test waiver, deadline extension or product
+source edit follows from this finding.
+
+Before *any* dependency publication, amend the adoption architecture to cover
+the actual combined delta, license and attribution, manifest graph, hosted
+resolution and fresh app qualification. Keep PR146's published firsts frozen.
 
 
 ## First console admission refusal
