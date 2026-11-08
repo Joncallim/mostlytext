@@ -358,17 +358,22 @@ def validate_xpc_hold_observation(observed, messages, host):
     lifecycle = host_samples[:samples[-1]['host_sample_index'] + 1]
     if any(b['uptime'] - a['check_uptime'] > 0.75 for a, b in zip(lifecycle, lifecycle[1:])):
         raise RuntimeError('XPC host process samples leave an unobserved lifecycle gap')
-    first_absent = next((row['uptime'] for row in lifecycle if row['service'] == 'absent'), None)
+    if lifecycle[-1]['uptime'] < invalidated + 3:
+        raise RuntimeError('XPC host process samples do not cover the retirement deadline')
+    first_absent = next((row for row in lifecycle if row['service'] == 'absent'), None)
     departed = (lifecycle[0]['service'] == 'expected'
                 and all(row['service'] in ('expected', 'absent') for row in lifecycle)
-                and first_absent is not None and invalidated <= first_absent <= invalidated + 3
-                and all(row['service'] == 'absent' for row in lifecycle if row['uptime'] >= first_absent)
+                and first_absent is not None and invalidated <= first_absent['uptime']
+                and first_absent['check_uptime'] <= invalidated + 3
+                and all(row['service'] == 'absent' for row in lifecycle if row['uptime'] >= first_absent['uptime'])
                 and lifecycle[-1]['service'] == 'absent')
     provider_remained = all(row['provider'] == 'expected' for row in lifecycle)
     first_window = next((index for index, row in enumerate(samples)
                          if row['window'] is True and row['service'] == 'expected'
                          and hold_started <= row['check_uptime'] < invalidated), None)
-    window_remained = first_window is not None and all(row['window'] is True for row in samples[first_window:])
+    window_cadence = all(b['check_uptime'] - a['check_uptime'] <= 1.0 for a, b in zip(samples, samples[1:]))
+    window_remained = (first_window is not None and window_cadence
+                       and all(row['window'] is True for row in samples[first_window:]))
     if first_window is not None:
         window_at = samples[first_window]['check_uptime']
         after = next((row for row in lifecycle if row['uptime'] >= window_at), None)

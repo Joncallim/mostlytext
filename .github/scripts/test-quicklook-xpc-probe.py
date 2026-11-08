@@ -51,7 +51,7 @@ def hold_example():
             'request_id': 4, 'provider_pid': 111, 'service_pid': 222,
             'provider_path': '/fixture/provider', 'service_path': '/fixture/service',
             'samples': host_samples}
-    selected = [1, 10, 22, 50]
+    selected = [1, 6, 11, 16, 21, 26, 31, 36, 41, 46, 50]
     rows = []
     for index in selected:
         sample = host_samples[index]
@@ -119,6 +119,21 @@ class XPCObservationTests(unittest.TestCase):
         replaced = dict(host, samples=[dict(sample, service='expected') for sample in host['samples']])
         with self.assertRaises(RuntimeError):
             PREP.validate_xpc_hold_observation(row, messages, replaced)
+        for sparse_rows in (
+            [row['samples'][0]] + row['samples'][4:],
+            row['samples'][:5] + [row['samples'][-1]],
+        ):
+            with self.assertRaisesRegex(RuntimeError, 'window_remained'):
+                PREP.validate_xpc_hold_observation(dict(row, samples=sparse_rows), messages, host)
+        late_samples = [dict(sample, service='expected' if sample['index'] < 49 else 'absent')
+                        for sample in host['samples']]
+        late_samples[49].update(uptime=25.95, check_uptime=26.05)
+        late_host = dict(host, samples=late_samples)
+        late_rows = [dict(sample, service=late_samples[sample['host_sample_index']]['service'])
+                     for sample in row['samples']]
+        late_absence = dict(row, samples=late_rows)
+        with self.assertRaisesRegex(RuntimeError, 'service_departed_by_deadline'):
+            PREP.validate_xpc_hold_observation(late_absence, messages, late_host)
 
     def test_hold_fixture_keeps_fixed_request_no_new_authority_and_independent_observer(self):
         provider = (FIXTURE / 'Provider/XPCCapability.swift').read_text()
@@ -135,7 +150,11 @@ class XPCObservationTests(unittest.TestCase):
         self.assertNotIn('Process()', ui)
         self.assertIn('hold-process-observer.json', ui)
         self.assertIn('serviceDepartedByDeadline', ui)
+        self.assertIn('$0.checkUptime <= limit', ui)
+        self.assertIn('zip(samples, samples.dropFirst()).allSatisfy', ui)
         self.assertIn("'/bin/ps'", (HERE / 'observe-quicklook-jsc.py').read_text())
+        self.assertIn('${{ runner.temp }}/mostlytext-qljsc/hold-process-journal/**',
+                      (HERE.parent / 'workflows/quicklook-jsc-probe.yml').read_text())
         self.assertNotIn('SIGKILL', ui + provider + service)
         self.assertEqual(plistlib.loads((FIXTURE / 'XPCService.entitlements').read_bytes()),
                          {'com.apple.security.app-sandbox': True})

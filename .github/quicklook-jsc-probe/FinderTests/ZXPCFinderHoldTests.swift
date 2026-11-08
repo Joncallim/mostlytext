@@ -57,9 +57,9 @@ final class ZXPCFinderHoldTests: XCTestCase {
         let observedInvalidation = invalidated?.invalidated
         let deadline = observedInvalidation.map { $0 + 3 }
         let allHostSamples = try hostSamples(for: ready)
-        let firstAbsent = allHostSamples.first { $0.service == "absent" }?.uptime
+        let firstAbsent = allHostSamples.first { $0.service == "absent" }
         let serviceDepartedByDeadline = deadline.map { limit in
-            firstAbsent.map { $0 >= (observedInvalidation ?? 0) && $0 <= limit } == true
+            firstAbsent.map { $0.uptime >= (observedInvalidation ?? 0) && $0.checkUptime <= limit } == true
                 && (allHostSamples.last?.uptime ?? 0) >= limit
                 && allHostSamples.last?.service == "absent"
                 && allHostSamples.drop { $0.service != "absent" }.allSatisfy { $0.service == "absent" }
@@ -77,6 +77,10 @@ final class ZXPCFinderHoldTests: XCTestCase {
         let windowStayedOpen = firstWindowBeforeInvalidation.map { index in
             samples[index...].allSatisfy { $0["window"] as? Bool == true }
         } == true && windowRemained
+            && zip(samples, samples.dropFirst()).allSatisfy { earlier, later in
+                (later["check_uptime"] as? Double ?? .infinity)
+                    - (earlier["check_uptime"] as? Double ?? 0) <= 1.0
+            }
         let record: [String: Any] = [
             "kind": "mostlytext-qlxpc-hold-lifecycle", "request_id": ready.id,
             "provider_pid": ready.provider, "service_pid": ready.service,

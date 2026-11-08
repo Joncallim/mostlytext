@@ -75,4 +75,5 @@ jobs:
             ${{ runner.temp }}/mostlytext-qljsc/fixture/**
             ${{ runner.temp }}/mostlytext-qljsc/owned/**
             ${{ runner.temp }}/mostlytext-qljsc/observer-journal/**
+            ${{ runner.temp }}/mostlytext-qljsc/hold-process-journal/**
             ${{ runner.temp }}/mostlytext-qljsc/Finder.xcresult/**
