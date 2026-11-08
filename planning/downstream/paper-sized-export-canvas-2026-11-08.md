@@ -130,3 +130,46 @@ Independently verify actual app/package/native output and byte identity. Merge
 only after the concrete boundary finding is remediated and all technical gates
 qualify, with any actual scanner disposition honestly recorded. Main remainsf12
 until then; no whole ordinary-menu/normalQuit/finalRC issue acceptance inferred.
+
+
+## Exact stylesheet review correction after all seven complete firsts
+
+All seven932firsts are complete and retained before this correction. Native
+canvas42438391343, nine genuinePDF42438391296, publicCLI42438391307, Compliance
+42438391329, sharedmath/heading42438391349 and headinganchors42438391292pass.
+Independent readers verify actual source2728ba60/treecd9a2205,56canvas sources,
+actual downloaded helper/all outputs, all9rawPDF functions/five compiled roles,
+allCLI source/pins/sixcomparisons/two normalQuits, both29app shared configurations
+and both68heading configurations. Complete whole workflow ZIPs and all artifacts
+remain at the recorded original root; their hashes and raw proofs are committed.
+A reader initially overmatched Skipped in a passing test name; exact whole-word
+outcome checks correct that readback error, never a changed test outcome.
+
+FullCI42438391290 genuinely fails:3721package tests/537suites/oneissue, the new
+pdfCanvasPolicyIsCoveredBySVGValidationAndLeavesHTMLScrollbarsAlone throws
+validatedPublicationRejected. Full app CI tests do not run after that package
+failure. The exact existing hasClosedReferences guard accepts ONLY the bundled
+structural digest668c19314146a74355da813dee3df584c964788e5a5b81f7233884c82ec5c5c3.
+The exact owned combinedPDFsheet digest is
+63cb41eb285e77546cfc2ed7ca0914e86f1421941563be7dc4400ef7c1709ad5, so the new
+PDF AuditedHeadCSS.builtIn immediately refuses. This literal source counterexample
+is preserved, without claiming added runtime branch telemetry. The guard was not
+a generic CSS parser; passing a changed string into it cannot establish closure.
+
+Explicitly review TWO exact owned byte sequences in that same digest allowlist:
+the unchanged original structural sheet and that sheet plus newline plus the
+one fixed PDF root scrollbar rule. The latter introduces no URL, font, script or
+resource reference. Keep arbitrary/empty/changed CSS rejected byte-for-byte;
+no string stripping, broad pattern acceptance, unconditional trust or changed
+accepted-HTML bytes. Future changes to either owned sheet still require review.
+
+Strengthen the EXISTING aChangedStructuralStylesheetCannotCertifyClosedReferences
+function to accept both exact real owned sheets and refuse URL/empty/single-byte
+changes of each. Keep the new end-to-end SVG/PDF/HTML integration function and
+all its original assertions UNCHANGED; it must pass after the production guard
+correction. No other product or native mechanism change. Local source/pure digest
+controls and syntax/style only; actual full package/app/native execution stays
+hosted. Freeze once, retain every newly triggered complete first and independently
+verify source/tree/pins/raw outcomes before scoped review/expected-head merge.
+No old companion pass substitutes for current qualification; no issue closes from
+this architecture decision or exact-digest arithmetic alone.

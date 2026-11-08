@@ -1,0 +1,202 @@
+{
+  "source": "932d5ca62a4c636a04e5c06b8307f802cdd66f13",
+  "actual_checkout": "2728ba604d8af75e06d00c57880876a23d1794c3",
+  "outcome": "SixwholecompanionfirstsPASS; fullCIpackage3721/537ONEgenuineSVG/PDFguardrefusal; appCI NOT_RUN",
+  "records": [
+    {
+      "file": "00-compliance-first-run.json.gz",
+      "original_name": "compliance-first-run.json",
+      "bytes": 12911,
+      "sha256": "ae541a7744ddf261e69acac23532421b800d8e1553b9f7d58af994a0690376b4"
+    },
+    {
+      "file": "01-full_CI-first-run.json.gz",
+      "original_name": "full_CI-first-run.json",
+      "bytes": 12904,
+      "sha256": "6d21ebc8d876b5a0e0e5a914acc1be7138ea9d9778e2d8c4989a971eb6fb86c5"
+    },
+    {
+      "file": "02-heading_anchors-first-run.json.gz",
+      "original_name": "heading_anchors-first-run.json",
+      "bytes": 12945,
+      "sha256": "07ee11ee558178cf63b95594dc7a390caa2f5b2e610aded66e881d50b1c8b278"
+    },
+    {
+      "file": "03-native_canvas-first-run.json.gz",
+      "original_name": "native_canvas-first-run.json",
+      "bytes": 12963,
+      "sha256": "9ef3178e279bdae8ad8eb8c745f5e7eddde40345ac68e795eb25fff91a5bc94c"
+    },
+    {
+      "file": "04-native_pdf-first-run.json.gz",
+      "original_name": "native_pdf-first-run.json",
+      "bytes": 12954,
+      "sha256": "a899bdc3770464790631278c39f5145abce282631359523b107c0bff512e590c"
+    },
+    {
+      "file": "05-public_CLI-first-run.json.gz",
+      "original_name": "public_CLI-first-run.json",
+      "bytes": 12950,
+      "sha256": "0c3612ac6a62942a76a36cfa77dc7ba8a88357803cdb86b239482a0b5785083d"
+    },
+    {
+      "file": "06-shared_math_heading-first-run.json.gz",
+      "original_name": "shared_math_heading-first-run.json",
+      "bytes": 12965,
+      "sha256": "8210a044c4c44c16a5fc93a0e8993021292580c313af1b957ba6e8c92c146b08"
+    },
+    {
+      "file": "07-compliance-first-artifacts.json.gz",
+      "original_name": "compliance-first-artifacts.json",
+      "bytes": 32,
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    {
+      "file": "08-full_CI-first-artifacts.json.gz",
+      "original_name": "full_CI-first-artifacts.json",
+      "bytes": 765,
+      "sha256": "316da40d7d6ec0ea19aa0b598722fdf6b9d76f43bef4daa3d0b42e216cbc931c"
+    },
+    {
+      "file": "09-heading_anchors-first-artifacts.json.gz",
+      "original_name": "heading_anchors-first-artifacts.json",
+      "bytes": 1479,
+      "sha256": "c9184ea9129d4d7a67f8cb019422d7443e4fab7f0ea23857d0dc66ae45f5f63c"
+    },
+    {
+      "file": "10-native_canvas-first-artifacts.json.gz",
+      "original_name": "native_canvas-first-artifacts.json",
+      "bytes": 755,
+      "sha256": "8fea8b28879ad8f23ae857b37d10fdf6b5739b1416a18d84da2faa7edf605131"
+    },
+    {
+      "file": "11-native_pdf-first-artifacts.json.gz",
+      "original_name": "native_pdf-first-artifacts.json",
+      "bytes": 763,
+      "sha256": "9d179fef8ba9624f731ba9110853792a50857078afd66e869ca2da0b3e0c1ca5"
+    },
+    {
+      "file": "12-public_CLI-first-artifacts.json.gz",
+      "original_name": "public_CLI-first-artifacts.json",
+      "bytes": 753,
+      "sha256": "40b5384fcc4ce72e020ed822f25566767fa968122c2058f3b0a1ddce94dc5324"
+    },
+    {
+      "file": "13-shared_math_heading-first-artifacts.json.gz",
+      "original_name": "shared_math_heading-first-artifacts.json",
+      "bytes": 1482,
+      "sha256": "53502a2d4aa19814b476ca3771d5a4545ae79c8c82b045dc7af27dbdefe04d37"
+    },
+    {
+      "file": "14-literal-stylesheet-guard-counterexample.json.gz",
+      "original_name": "literal-stylesheet-guard-counterexample.json",
+      "bytes": 1137,
+      "sha256": "2008e5ff8e87b2db7844a046805b45d5a676a956598aa6f7ccbdbb1d75f7e2a3"
+    },
+    {
+      "file": "15-all-seven-firsts-independently-reviewed.json.gz",
+      "original_name": "all-seven-firsts-independently-reviewed.json",
+      "bytes": 3843,
+      "sha256": "e6cd540a1a46f839a9306d7d36c1d3ff1a30874d8b767744fc9d925d03f01efa"
+    },
+    {
+      "file": "16-first-native-independently-verified.json.gz",
+      "original_name": "first-native-independently-verified.json",
+      "bytes": 5473,
+      "sha256": "ba30648d285f20e09f90e8c3e4c8199721b2f511204785da6b14aeb578cfd699"
+    },
+    {
+      "file": "17-pdf-first-independently-verified.json.gz",
+      "original_name": "pdf-first-independently-verified.json",
+      "bytes": 1043,
+      "sha256": "8c4d95a786bd068f2f478c443bc17c78d383e8f0263d5dd01dd41e1fac9866e9"
+    },
+    {
+      "file": "18-current-cli-first-outcome-independently-verified.json.gz",
+      "original_name": "current-cli-first-outcome-independently-verified.json",
+      "bytes": 2240,
+      "sha256": "7edb4772fe626d8ed856bc33a3f838ec3fc2dc71eb08804d0b15acc28dbde839"
+    },
+    {
+      "file": "19-scoped-source-self-review.json.gz",
+      "original_name": "scoped-source-self-review.json",
+      "bytes": 1252,
+      "sha256": "8aeba7b29f3d624ad1676aaafe4dfed861c247d2d3aa9941141e38b08edd7f34"
+    },
+    {
+      "file": "20-verify-companion-firsts.py.gz",
+      "original_name": "verify-companion-firsts.py",
+      "bytes": 6277,
+      "sha256": "c11e40e7eca5347b008b994156cf216ae8dfed0a1ec80cbefdd7782973949354"
+    },
+    {
+      "file": "21-verify-native-canvas-first.py.gz",
+      "original_name": "verify-native-canvas-first.py",
+      "bytes": 5764,
+      "sha256": "4fd8708baf5b8b020633f05693bcbfa669c68fc9199b66ef242b5844a6c78f17"
+    },
+    {
+      "file": "22-verify-nine-pdf-first.py.gz",
+      "original_name": "verify-nine-pdf-first.py",
+      "bytes": 3346,
+      "sha256": "58093c77e61ee7cd6979a0252f99409ded139e2c00ed6bfc3ae2a573986b85c3"
+    },
+    {
+      "file": "23-verify-public-cli-first.py.gz",
+      "original_name": "verify-public-cli-first.py",
+      "bytes": 7396,
+      "sha256": "7bfd0b70d509d3680062891ba9564d344b7d0a5422a2a6f4d57484cc82b712d6"
+    },
+    {
+      "file": "24-full-CI-failed-steps.txt.gz",
+      "original_name": "full-CI-failed-steps.txt",
+      "bytes": 1710868,
+      "sha256": "2a34f532e73c2b2c55b2e476e51e070a410008e5812cba27b1e799e747d45b79"
+    }
+  ],
+  "complete_first_logs": [
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-932d5ca6/compliance-complete-first-workflow-logs.zip",
+      "bytes": 41429,
+      "sha256": "3740a567456ace4d03f9809f917720b38afb045866f151e3fff98df53a974c30",
+      "retained_complete": true
+    },
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-932d5ca6/full_CI-complete-first-workflow-logs.zip",
+      "bytes": 491150,
+      "sha256": "9f72e7a7622bdb99c941dc127ed24ec62945dcba3770523609a9c650968d1242",
+      "retained_complete": true
+    },
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-932d5ca6/heading_anchors-complete-first-workflow-logs.zip",
+      "bytes": 78713,
+      "sha256": "4c2725a58ec52710e25f258fd9ab3f56b803b0d1a806cd595251703c28d3a875",
+      "retained_complete": true
+    },
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-932d5ca6/native_canvas-complete-first-workflow-logs.zip",
+      "bytes": 13765,
+      "sha256": "2f83c125e39239139d27ca7c12d8d18674b23f97779616ceb4e3264e944a360f",
+      "retained_complete": true
+    },
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-932d5ca6/native_pdf-complete-first-workflow-logs.zip",
+      "bytes": 1239233,
+      "sha256": "77ecd8f2ae68ac19d5b4d7aba6c5b5e211eade2cb6546d9f2ee31e2a1a268aa5",
+      "retained_complete": true
+    },
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-932d5ca6/public_CLI-complete-first-workflow-logs.zip",
+      "bytes": 570597,
+      "sha256": "d619dfc295dacb68825d908c9676496d24e07f33633b2a7db773d1b1185dccc0",
+      "retained_complete": true
+    },
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-932d5ca6/shared_math_heading-complete-first-workflow-logs.zip",
+      "bytes": 1961372,
+      "sha256": "fc428263d2ab6de40e6ce621659a5f875318e052307651beae6ae86e7edcae04",
+      "retained_complete": true
+    }
+  ],
+  "original_evidence_root": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-932d5ca6"
+}
