@@ -190,6 +190,45 @@ No combined runtime adoption is permitted on an unexplained red matrix; a
 distinct pre-implementation decision and reproduction are needed before any
 correction to that decoder's pair semantics.
 
+### Big-endian surrogate conversion: separate pre-implementation slice
+
+The original twelve-case console is that reproduction: a fully supplied,
+valid big-endian `D83E DD8B` pair decodes as an isolated lead surrogate and
+consumes only two bytes, while the same little-endian pair succeeds. The first
+original outcome and the bounds-only candidate both retain that exact failing
+case. The bounds-only candidate corrects five boundary rows, and its true
+two-byte little- and big-endian heap probes exit zero without sanitizer
+findings; its complete matrix still exits 65 with this one valid-pair failure.
+The bounds-only outcome is evidence, not a passing decoder qualification.
+
+The independently maintained upstream
+[fix 5912](https://github.com/tree-sitter/tree-sitter/pull/5912), merged as
+`351bd71e528659938243e324ef91cfa1515827ea`, changes only the trailing
+surrogate reads in both `U16_NEXT_LE` and `U16_NEXT_BE`: apply the respective
+`le16toh` or `be16toh` conversion *before* testing and composing that unit.
+The exact pinned `unicode.h` lacks both conversions. Do not infer from this
+source match that a normal editor journey hit the bug; the fixed input is a
+C decoder/API control.
+
+Before changing this candidate, preserve the complete bounds-only red result,
+unchanged driver and source diff. Then copy the already isolated lookahead
+candidate into a new named composite source tree; apply exactly the two bounds
+edits from 5549 and the two trailing-surrogate conversions from 5912 to its
+`unicode.h`. Do not rewrite the prior copies or change the C driver/fixtures.
+For the composite, require all twelve ordered boundary/valid controls to pass,
+both true two-byte heap probes to pass with AddressSanitizer and
+UndefinedBehaviorSanitizer free of findings, the existing eight-case
+lookahead matrix to retain zero mismatches, and the existing 324-pair C
+subtree corpus to retain all equality/ownership checks. Verify the only runtime
+source differences from pinned `3b1fb00f` are the selected `parser.c` lookahead
+guard and these exact `unicode.h` corrections. Public C API and exported
+symbols must remain identical. Stop on any changed result outside these
+expected corrections, timeout, new warning or unexpected source delta.
+
+The prior wrapper and normal app-path limitations remain. A passing composite
+console permits a dependency-publication proposal; it does not qualify the
+Swift package, app, native editing, user-visible performance or release.
+
 
 ## First console admission refusal
 
