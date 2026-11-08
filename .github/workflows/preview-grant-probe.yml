@@ -1,4 +1,4 @@
-name: Private Debug revision attachment diagnostic
+name: Private six-pair Preview consumer diagnostic
 
 permissions:
   contents: read
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: preview-private-inline-instance-${{ github.ref }}
+  group: preview-private-six-pair-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -15,8 +15,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        configuration: [Debug]
-        pair: [revision]
+        configuration: [Debug, Release]
+        pair: [revision, viewport, disappear]
     runs-on: macos-26
     timeout-minutes: 35
     env:

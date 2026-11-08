@@ -73,7 +73,7 @@ receipt = {
     "additional_compilation_condition": "RELEASE_PREVIEW_PROBE",
     "source_sha256": digests,
     "pins": pins,
-    "scope": "Private Debug/revision attachment-instance diagnostic; not a six-pair qualification or release result",
+    "scope": "Private six-pair attachment-instance diagnostic; not a shipping Preview or release result",
     "renderer_preference_observer": False,
     "fixture_window_lifetime_observer": True,
 }
