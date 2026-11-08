@@ -1,28 +1,9 @@
-name: Current application Preview resource qualification
+name: Private existing renderer publication stages diagnosis
 
 permissions:
   contents: read
 
 on:
-  pull_request:
-    branches: [main, master, integration-final]
-    paths:
-      - 'MacDown2/MacDown2/*Preview*.swift'
-      - 'MacDown2/MacDown2/Preview*.swift'
-      - 'MacDown2/MacDown2/Secured*.swift'
-      - 'MacDown2/MacDown2Tests/*Preview*.swift'
-      - 'MacDown2/MacDown2Tests/Preview*.swift'
-      - 'MacDown2/MacDown2Tests/Secured*.swift'
-      - 'MacDown2/MacDown2Tests/HTMLResponseEncodingFixture.swift'
-      - 'MacDown2/Packages/MacDownKit/Sources/Preview/**'
-      - '.github/workflows/preview-grant-probe.yml'
-      - '.github/scripts/*preview-grant-probe.py'
-      - '.github/scripts/check-preview-parsed-frame.py'
-      - '.github/scripts/test-preview-grant-tripwire.py'
-      - '.github/scripts/test-preview-native-architecture.py'
-      - '.github/scripts/preview_compiled_inputs.py'
-      - '.github/scripts/test-preview-compiled-inputs.py'
-      - '.github/scripts/test-preview-diagnostic-host.py'
   workflow_dispatch:
 
 concurrency:
@@ -34,8 +15,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        configuration: [Debug, Release]
-        pair: [revision, viewport, disappear]
+        configuration: [Release]
+        pair: [revision]
     runs-on: macos-26
     timeout-minutes: 35
     env:
@@ -73,6 +54,12 @@ jobs:
           python3 .github/scripts/test-preview-native-architecture.py
           python3 .github/scripts/test-preview-diagnostic-host.py
           python3 .github/scripts/test-preview-compiled-inputs.py
+          python3 .github/scripts/test-textual-publication-stages.py
+      - name: Resolve exact packages then capture original and patched effective renderer sources
+        run: |
+          set -euo pipefail
+          xcodebuild -resolvePackageDependencies -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 -derivedDataPath "$RUNNER_TEMP/preview-grant-app" -onlyUsePackageVersionsFromResolvedFile
+          python3 .github/scripts/patch-textual-publication-stages.py patch
       - name: Record exact application inputs and configuration
         run: python3 .github/scripts/verify-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --pair ${{ matrix.pair }}
       - name: Compile real app and test bundles
@@ -85,6 +72,8 @@ jobs:
             -onlyUsePackageVersionsFromResolvedFile -enableCodeCoverage NO build-for-testing
       - name: Bind actual compiled app tests run metadata and generated project
         run: python3 .github/scripts/verify-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --pair ${{ matrix.pair }} --verify --capture-compiled initial
+      - name: Bind verified effective renderer sources to actual compiled native roles
+        run: python3 .github/scripts/patch-textual-publication-stages.py bind
       - name: Execute the actual three consumer paths and independent network control
         run: |
           set -euo pipefail
@@ -123,38 +112,22 @@ jobs:
             | tee "$RUNNER_TEMP/preview-grant-probe/probe.log" || PREVIEW_NATIVE_RESULT=$?
           python3 .github/scripts/verify-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --pair ${{ matrix.pair }} --verify --verify-compiled initial
           exit "$PREVIEW_NATIVE_RESULT"
-      - name: Execute controlled native image and selection publication
+      - name: Retain exact effective source compiled input and actual initial outcome
+        if: always()
         run: |
           set -euo pipefail
-          python3 .github/scripts/verify-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --pair ${{ matrix.pair }} --verify --capture-compiled selection
-          PREVIEW_SELECTION_RESULT=0
-          python3 .github/scripts/run-owned-app-tests.py "$RUNNER_TEMP/preview-grant-probe/selection-diagnostics" \
-            "$RUNNER_TEMP/preview-grant-app/Build/Products/${{ matrix.configuration }}/MacDown2.app/Contents/MacOS/MacDown2" -- \
-            xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
-            -configuration ${{ matrix.configuration }} ENABLE_TESTABILITY=YES \
-            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE' \
-            -destination 'platform=macOS,arch=arm64' ONLY_ACTIVE_ARCH=YES -derivedDataPath "$RUNNER_TEMP/preview-grant-app" \
-            -onlyUsePackageVersionsFromResolvedFile -parallel-testing-enabled NO \
-            -resultBundlePath "$RUNNER_TEMP/preview-grant-probe/actual-selection.xcresult" \
-            -only-testing:MacDown2Tests/TextualImageSelectionPublicationTests test-without-building \
-            | tee "$RUNNER_TEMP/preview-grant-probe/selection-probe.log" || PREVIEW_SELECTION_RESULT=$?
-          python3 .github/scripts/verify-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --pair ${{ matrix.pair }} --verify --verify-compiled selection
-          if [ "$PREVIEW_SELECTION_RESULT" -ne 0 ]; then exit "$PREVIEW_SELECTION_RESULT"; fi
-          grep -q 'IMAGE_SELECTION_TRACE_ENABLED true' "$RUNNER_TEMP/preview-grant-probe/selection-probe.log"
-          grep -q 'IMAGE_SELECTION_ORACLE positives=8 negatives=56 capturedBlue=true' "$RUNNER_TEMP/preview-grant-probe/selection-probe.log"
-          grep -q 'IMAGE_SELECTION_GATE completed=8' "$RUNNER_TEMP/preview-grant-probe/selection-probe.log"
-          grep -q 'Test run with 1 test in 1 suite passed' "$RUNNER_TEMP/preview-grant-probe/selection-probe.log"
-      - name: Prove omission fails and exact restored mounted application passes
-        run: python3 .github/scripts/check-preview-parsed-frame.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --pair ${{ matrix.pair }}
-      - name: Verify exact source and actual selected execution
-        if: always()
-        run: python3 .github/scripts/verify-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --pair ${{ matrix.pair }} --verify --require-result
+          python3 .github/scripts/patch-textual-publication-stages.py observe
+          python3 .github/scripts/verify-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --pair ${{ matrix.pair }} --verify --verify-compiled initial
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: preview-grant-app-tests-${{ matrix.configuration }}-${{ matrix.pair }}
           path: |
             ${{ runner.temp }}/preview-grant-probe/receipt.json
+            ${{ runner.temp }}/preview-grant-probe/textual-effective-source.json
+            ${{ runner.temp }}/preview-grant-probe/textual-stage-observations.json
+            ${{ runner.temp }}/preview-grant-probe/textual-compiled-binding.json
+            ${{ runner.temp }}/preview-grant-probe/textual-effective-source/**
             ${{ runner.temp }}/preview-grant-probe/compiled-*.json
             ${{ runner.temp }}/preview-grant-probe/compiled-inputs/**
             ${{ runner.temp }}/preview-grant-probe/actual-*.json

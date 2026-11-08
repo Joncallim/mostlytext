@@ -1,0 +1,31 @@
+{
+  "original_pin": "dd123d4f7052d84032cafb22c62cd467916518dd",
+  "source": "https://github.com/Joncallim/textual",
+  "scope": "Exact original source admission fixtures for never-merge stage trace; no shipped dependency update",
+  "records": [
+    {
+      "file": "01-WithAttachments.swift.gz",
+      "original_path": "Sources/Textual/Internal/Attachment/WithAttachments.swift",
+      "bytes": 4325,
+      "sha256": "b35d2896f6bfd4a8a3656d3746b76636a727f9b030e3569292aa4af7d096b1e5"
+    },
+    {
+      "file": "02-WithInlineStyle.swift.gz",
+      "original_path": "Sources/Textual/Internal/InlineText/WithInlineStyle.swift",
+      "bytes": 2483,
+      "sha256": "838c1831eda252291266ddc4542ddb1876385c132d45b5fa61bb29e93043e255"
+    },
+    {
+      "file": "03-TextFragment.swift.gz",
+      "original_path": "Sources/Textual/Internal/TextFragment/TextFragment.swift",
+      "bytes": 2755,
+      "sha256": "839bae276e3451107bf4d28f9f29a48ea09ea202a54c44a86e708243ec03a6b8"
+    },
+    {
+      "file": "04-TextBuilder.swift.gz",
+      "original_path": "Sources/Textual/Internal/TextFragment/TextBuilder.swift",
+      "bytes": 4392,
+      "sha256": "8bc965e2ec5c1146ef9857114c24cb32826c9e0e836dc5c60a28157f1d3b027e"
+    }
+  ]
+}

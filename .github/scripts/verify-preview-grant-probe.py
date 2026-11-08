@@ -52,8 +52,9 @@ if platform.machine() != "arm64":
     raise SystemExit("This native Preview qualification requires an Apple Silicon worker")
 paths = subprocess.check_output([
     "git", "ls-files", "-z", "MacDown2", ".github/scripts/verify-preview-grant-probe.py",
-    ".github/workflows/preview-grant-probe.yml", ".github/scripts/preview_compiled_inputs.py", ".github/scripts/test-preview-compiled-inputs.py", ".github/scripts/test-preview-diagnostic-host.py", ".github/scripts/check-preview-parsed-frame.py", ".github/scripts/test-preview-grant-tripwire.py", ".github/scripts/test-preview-native-architecture.py", ".github/scripts/run-preview-grant-probe.py", ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
+    ".github/workflows/preview-grant-probe.yml", ".github/scripts/preview_compiled_inputs.py", ".github/scripts/test-preview-compiled-inputs.py", ".github/scripts/test-preview-diagnostic-host.py", ".github/scripts/check-preview-parsed-frame.py", ".github/scripts/test-preview-grant-tripwire.py", ".github/scripts/test-preview-native-architecture.py", ".github/scripts/patch-textual-publication-stages.py", ".github/scripts/test-textual-publication-stages.py", ".github/scripts/run-preview-grant-probe.py", ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
     "planning/downstream/evidence/actual-app-hosted-plan-2026-11-07",
+    "planning/downstream/evidence/textual-publication-stage-originals-2026-11-08",
 ], cwd=repo).decode().split("\0")
 digests = {name: hashlib.sha256((repo / name).read_bytes()).hexdigest() for name in paths if name}
 lock = repo / "MacDown2/Packages/MacDownKit/Package.resolved"
@@ -63,16 +64,18 @@ receipt = {
     "configuration": args.configuration,
     "mutation_pair": args.pair,
     "testability": True,
-    "diagnostic_only": False,
-    "qualification_candidate": True,
-    "current_main_baseline": "427d15fa5da94d4045a02e7f6a005648d09e38c5",
+    "diagnostic_only": True,
+    "qualification_candidate": False,
+    "current_main_baseline": "f12d6d357a2a67087db7022060fae798733d3ce7",
+    "diagnostic_base_source": "6cad56275c1d9a71a9ee95daa066bd1fcae68965",
+    "effective_textual_source_modified": True,
     "resource_trace_enabled": True,
     "execution_architecture": "arm64",
     "only_active_arch": True,
     "additional_compilation_condition": "RELEASE_PREVIEW_PROBE",
     "source_sha256": digests,
     "pins": pins,
-    "scope": "Current-main Preview qualification candidate; first outcomes and all six pairs required, without a sole historical cause or final release claim",
+    "scope": "Never-merge diagnostic of existing renderer publication stages with explicitly modified effective pinned source; no sole cause, canonical qualification or release claim",
     "renderer_preference_observer": False,
     "fixture_window_lifetime_observer": True,
 }
