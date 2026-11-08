@@ -65,6 +65,7 @@ receipt = {
     "mutation_pair": args.pair,
     "testability": True,
     "diagnostic_only": True,
+    "diagnostic_variant": os.environ["MOSTLYTEXT_RENDERER_VARIANT"],
     "qualification_candidate": False,
     "current_main_baseline": "f12d6d357a2a67087db7022060fae798733d3ce7",
     "diagnostic_base_source": "6cad56275c1d9a71a9ee95daa066bd1fcae68965",
@@ -75,7 +76,7 @@ receipt = {
     "additional_compilation_condition": "RELEASE_PREVIEW_PROBE",
     "source_sha256": digests,
     "pins": pins,
-    "scope": "Never-merge diagnostic of existing renderer publication stages with explicitly modified effective pinned source; no sole cause, canonical qualification or release claim",
+    "scope": "Never-merge controlled cache-publication experiment with explicitly modified effective pinned source; no sole cause, canonical qualification or release claim",
     "renderer_preference_observer": False,
     "fixture_window_lifetime_observer": True,
 }

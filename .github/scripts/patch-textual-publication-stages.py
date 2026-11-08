@@ -25,8 +25,24 @@ HELPER = r'''import SwiftUI
 public enum MostlyTextPublicationTrace {
   private static var events: [String] = []
   private static var overflow = false
+  private static var fault = "none"
 
-  public static func snapshot() -> (events: [String], overflow: Bool) { (events, overflow) }
+  public static func snapshot() -> (events: [String], overflow: Bool, fault: String) {
+    (events, overflow, fault)
+  }
+
+  public static func setFault(_ value: String) {
+    precondition(["none", "inline", "fragment"].contains(value))
+    fault = value
+  }
+
+  static func shouldSuppress<T: AttributedStringProtocol>(_ stage: String, value: T) -> Bool {
+    guard fault == stage, value.runs.contains(where: { $0.textual.attachment != nil }) else {
+      return false
+    }
+    emit("controlled-suppression-" + stage, value: value)
+    return true
+  }
 
   public static func reset() {
     events.removeAll(keepingCapacity: true)
@@ -67,7 +83,9 @@ def replace_once(raw, anchor, replacement):
     return raw.replace(anchor, replacement)
 
 
-def transformed(originals):
+def transformed(originals, variant="original"):
+    if variant not in ["original", "current-input"]:
+        raise RuntimeError("Unknown controlled renderer variant")
     if set(originals) != set(EXPECTED) or any(sha(originals[p]) != h for p, h in EXPECTED.items()):
         raise RuntimeError('Refuse any renderer source other than the exact four pinned originals')
     result = dict(originals)
@@ -98,8 +116,76 @@ def transformed(originals):
         result[p] = replace_once(result[p], anchor, anchor + '\n' +
             '      MostlyTextPublicationTrace.emit("' + stage + '", value: content,\n' +
             r'        details: "sizes=\(Array(attachmentSizes.values.prefix(4)))")')
+    if variant == "original":
+        p = 'Sources/Textual/Internal/InlineText/WithInlineStyle.swift'
+        result[p] = replace_once(result[p], '        resolve(\n',
+            '        if MostlyTextPublicationTrace.shouldSuppress("inline", value: newValue.values.0) { return }\n        resolve(\n')
+        p = 'Sources/Textual/Internal/TextFragment/TextFragment.swift'
+        result[p] = replace_once(result[p], '        self.textBuilder = TextBuilder(newValue, environment: textEnvironment)',
+            '        if MostlyTextPublicationTrace.shouldSuppress("fragment", value: newValue) { return }\n        self.textBuilder = TextBuilder(newValue, environment: textEnvironment)')
+    else:
+        result.update(current_input_variants(originals))
     result[HELPER_PATH] = HELPER
     return result
+
+
+def current_input_variants(originals):
+    inline = 'Sources/Textual/Internal/InlineText/WithInlineStyle.swift'
+    fragment = 'Sources/Textual/Internal/TextFragment/TextFragment.swift'
+    body = """  var body: some View {
+    let output = resolve(attributedString: input, style: style, in: environment)
+    let _ = MostlyTextPublicationTrace.emit("inline-body-input", value: input)
+    let _ = MostlyTextPublicationTrace.emit("inline-resolved-output", value: output)
+    content(output)
+  }
+"""
+    source = originals[inline].decode()
+    start = source.index('  var body: some View {')
+    end = source.index('\n  private func resolve(', start)
+    source = source[:start] + body + source[end:]
+    source = source.replace('  @State private var output: AttributedString?\n\n', '')
+    source = source.replace('    in environment: TextEnvironmentValues\n  ) {',
+                            '    in environment: TextEnvironmentValues\n  ) -> AttributedString {')
+    source = source.replace('    self.output = output', '    return output')
+    cached = originals[fragment]
+    cached = replace_once(cached, '  @State private var textBuilder: TextBuilder?',
+                          '  @State private var builders = BuilderCache()')
+    cached = replace_once(cached, '    text\n',
+                          '    let builder = builders.resolve(content, environment: textEnvironment)\n'
+                          '    let _ = MostlyTextPublicationTrace.emit("fragment-body", value: content)\n'
+                          '    builder.text\n')
+    cached = replace_once(cached, '        guard let size, let textBuilder else { return }\n        textBuilder.sizeChanged(size, environment: textEnvironment)',
+                          '        guard let size else { return }\n'
+                          '        builders.sizeChanged(size, expected: builder, environment: textEnvironment)')
+    cached = replace_once(cached, '      .onChange(of: content, initial: true) { _, newValue in\n'
+                          '        self.textBuilder = TextBuilder(newValue, environment: textEnvironment)\n      }\n', '')
+    cache = """  @MainActor
+  private final class BuilderCache {
+    private var builder: TextBuilder?
+    private var content: Content?
+    private var environment: TextEnvironmentValues?
+    private var size: CGSize?
+
+    func resolve(_ content: Content, environment: TextEnvironmentValues) -> TextBuilder {
+      if let builder, self.content == content, self.environment == environment {
+        return builder
+      }
+      let current = TextBuilder(content, environment: environment)
+      if let size { current.sizeChanged(size, environment: environment) }
+      self.content = content
+      self.environment = environment
+      self.builder = current
+      return current
+    }
+
+    func sizeChanged(_ size: CGSize, expected: TextBuilder, environment: TextEnvironmentValues) {
+      guard builder === expected else { return }
+      self.size = size
+      expected.sizeChanged(size, environment: environment)
+    }
+  }"""
+    cached = replace_once(cached, '  private var text: Text {\n    textBuilder?.text ?? Text(verbatim: "")\n  }', cache)
+    return {inline: source.encode(), fragment: cached}
 
 
 def command(*args):
@@ -131,6 +217,9 @@ def main():
     if sys.flags.optimize or sys.argv[1:] not in [['patch'], ['verify'], ['bind'], ['observe']]:
         raise RuntimeError('Select one fixed nonoptimized diagnostic phase')
     check_host(ROOT)
+    variant = os.environ.get('MOSTLYTEXT_RENDERER_VARIANT')
+    if variant not in ['original', 'current-input']:
+        raise RuntimeError('Require the fixed original or current-input hosted variant')
     if FORK.resolve() != FORK or command('rev-parse', 'HEAD').decode().strip() != PIN:
         raise RuntimeError('Require the exact actual pinned hosted dependency')
     path = ROOT / 'textual-effective-source.json'
@@ -139,7 +228,7 @@ def main():
             raise RuntimeError('Require a clean actual pinned dependency before patching once')
         names = command('ls-files', '-z').decode().rstrip('\0').split('\0')
         originals = {p: read_regular(FORK / p) for p in EXPECTED}
-        changes = transformed(originals)
+        changes = transformed(originals, variant)
         ROOT.mkdir(parents=True, exist_ok=True)
         before = capture(names, 'before')
         batch = subprocess.check_output(['git', 'cat-file', '--batch'], input=''.join(PIN + ':' + p + '\n' for p in names).encode(), cwd=FORK)
@@ -157,14 +246,14 @@ def main():
         after = capture([*names, HELPER_PATH], 'after')
         dirty = command('status', '--porcelain', '--untracked-files=all').decode()
         record = {'diagnostic_only': True, 'qualification_candidate': False, 'original_pin': PIN,
-                  'original_tree': command('rev-parse', 'HEAD^{tree}').decode().strip(),
+                  'variant': variant, 'original_tree': command('rev-parse', 'HEAD^{tree}').decode().strip(),
                   'effective_source_modified': True, 'actual_dirty_status': dirty,
                   'changed_paths': sorted(changes), 'before': before, 'after': after}
         path.write_text(json.dumps(record, indent=2) + '\n')
         print('Actual pinned bytes and every intentionally modified effective dependency file captured')
         return
     record = json.loads(path.read_bytes())
-    if record['original_pin'] != PIN or record['qualification_candidate'] is not False:
+    if record['original_pin'] != PIN or record['qualification_candidate'] is not False or record['variant'] != variant:
         raise RuntimeError('Effective dependency proof was retargeted')
     for label in ['before', 'after']:
         for name, row in record[label].items():
@@ -197,7 +286,7 @@ def main():
         log = (ROOT / 'probe.log').read_text()
         rows = [line for line in log.splitlines() if 'TEXTUAL_SCENARIO' in line]
         buffered = []; missing = []
-        for name in ['initial', *[f'{i:02d}-{journey}' for i in range(10) for journey in ['production', 'revision']], 'final']:
+        for name in ['initial', *[f'{i:02d}-{journey}' for i in range(12) for journey in ['production', 'revision']], 'final']:
             try:
                 data = json.loads((ROOT / 'textual-scenarios' / (name + '.json')).read_bytes())
                 if data['scenario'] != name or data['diagnostic_only'] is not True or data['qualification_candidate'] is not False:

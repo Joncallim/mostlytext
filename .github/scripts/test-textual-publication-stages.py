@@ -34,6 +34,23 @@ class ExactRendererAdmission(unittest.TestCase):
             for token in [b'.task(', b'.onChange(', b'.onGeometryChange(', b'.customAttribute(']:
                 self.assertEqual(after[name].count(token), raw.count(token))
 
+    def test_current_input_prototype_removes_both_deferred_publications(self):
+        before = originals(); candidate = patcher.transformed(before, 'current-input')
+        inline = candidate['Sources/Textual/Internal/InlineText/WithInlineStyle.swift']
+        fragment = candidate['Sources/Textual/Internal/TextFragment/TextFragment.swift']
+        self.assertNotIn(b'@State private var output', inline)
+        self.assertNotIn(b'.onChange(', inline)
+        self.assertIn(b'content(output)', inline)
+        self.assertIn(b') -> AttributedString {', inline)
+        self.assertNotIn(b'.onChange(', fragment)
+        self.assertIn(b'self.content == content, self.environment == environment', fragment)
+        self.assertIn(b'guard builder === expected else { return }', fragment)
+        self.assertEqual(fragment.count(b'.onGeometryChange('), before['Sources/Textual/Internal/TextFragment/TextFragment.swift'].count(b'.onGeometryChange('))
+
+    def test_unknown_variant_refuses_before_transform(self):
+        with self.assertRaises(RuntimeError): patcher.transformed(originals(), 'unreviewed')
+
+
     def test_wrong_original_byte_or_already_patched_source_refuses(self):
         before = originals(); name = next(iter(before))
         for replacement in [before[name] + b'\n', patcher.transformed(before)[name]]:

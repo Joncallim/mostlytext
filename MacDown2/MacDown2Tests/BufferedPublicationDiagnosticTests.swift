@@ -3,15 +3,17 @@ import Foundation
 import Testing
 import Textual
 
-/// Never-merge hosted diagnosis: twenty fixed fresh scenarios, with every outcome retained.
+/// Never-merge hosted diagnosis: twenty-four fixed fresh scenarios, with every outcome retained.
 @MainActor
 struct BufferedPublicationDiagnosticTests {
-    @Test func twentyFreshOriginalJourneysPreserveEveryOutcome() async throws {
+    @Test func twentyFourFreshJourneysIncludeControlledCacheFaults() async throws {
         let root = URL(fileURLWithPath: "/Users/runner/work/_temp/preview-grant-probe/textual-scenarios")
         try admitAndRecordHost(root: root)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: false)
+        defer { MostlyTextPublicationTrace.setFault("none") }
         try archive("initial", threw: false, root: root)
-        for round in 0 ..< 10 {
+        for round in 0 ..< 12 {
+            MostlyTextPublicationTrace.setFault(round < 10 ? "none" : round == 10 ? "inline" : "fragment")
             for journey in ["production", "revision"] {
                 MostlyTextPublicationTrace.reset()
                 var threw = false
@@ -50,6 +52,7 @@ struct BufferedPublicationDiagnosticTests {
             "diagnostic_only": true, "qualification_candidate": false,
             "uid": getuid(), "effective_uid": geteuid(), "user": NSUserName(), "home": NSHomeDirectory(),
             "os": ProcessInfo.processInfo.operatingSystemVersionString,
+            "variant": environment["MOSTLYTEXT_RENDERER_VARIANT"] ?? "<absent>",
             "GITHUB_ACTIONS": environment["GITHUB_ACTIONS"] ?? "<absent>",
             "GITHUB_REPOSITORY": environment["GITHUB_REPOSITORY"] ?? "<absent>",
             "RUNNER_TEMP": environment["RUNNER_TEMP"] ?? "<absent>",
@@ -60,6 +63,7 @@ struct BufferedPublicationDiagnosticTests {
               ProcessInfo.processInfo.environment["GITHUB_REPOSITORY"] == "Joncallim/mostlytext",
               ProcessInfo.processInfo.environment["RUNNER_TEMP"] == "/Users/runner/work/_temp",
               NSUserName() == "runner", NSHomeDirectory() == "/Users/runner",
+              ["original", "current-input"].contains(environment["MOSTLYTEXT_RENDERER_VARIANT"] ?? ""),
               !FileManager.default.fileExists(atPath: "/Users/jonathanlim"),
               !FileManager.default.fileExists(atPath: "/Users/mostlytexttest"),
               !FileManager.default.fileExists(atPath: "/Volumes/Fast SSD")
@@ -70,7 +74,7 @@ struct BufferedPublicationDiagnosticTests {
         let snapshot = MostlyTextPublicationTrace.snapshot()
         let value: [String: Any] = [
             "scenario": name, "diagnostic_only": true, "qualification_candidate": false,
-            "threw": threw, "overflow": snapshot.overflow, "events": snapshot.events,
+            "threw": threw, "overflow": snapshot.overflow, "events": snapshot.events, "fault": snapshot.fault,
         ]
         let destination = root.appendingPathComponent(name + ".json")
         let data = try JSONSerialization.data(withJSONObject: value, options: [.sortedKeys])

@@ -1,4 +1,4 @@
-name: Private buffered renderer fresh-scenario diagnosis
+name: Private controlled renderer current-input cache experiment
 
 permissions:
   contents: read
@@ -17,9 +17,12 @@ jobs:
       matrix:
         configuration: [Release]
         pair: [revision]
+        variant: [original, current-input]
     runs-on: macos-26
     timeout-minutes: 35
     env:
+      MOSTLYTEXT_RENDERER_VARIANT: ${{ matrix.variant }}
+      TEST_RUNNER_MOSTLYTEXT_RENDERER_VARIANT: ${{ matrix.variant }}
       MOSTLYTEXT_PREVIEW_RESOURCE_TRACE: "1"
       TEST_RUNNER_MOSTLYTEXT_PREVIEW_RESOURCE_TRACE: "1"
       TEST_RUNNER_GITHUB_ACTIONS: "true"
@@ -126,7 +129,7 @@ jobs:
         if: always()
         with:
           include-hidden-files: true
-          name: preview-grant-app-tests-${{ matrix.configuration }}-${{ matrix.pair }}
+          name: preview-grant-app-tests-${{ matrix.configuration }}-${{ matrix.pair }}-${{ matrix.variant }}
           path: |
             ${{ runner.temp }}/preview-grant-probe/receipt.json
             ${{ runner.temp }}/preview-grant-probe/textual-effective-source.json
