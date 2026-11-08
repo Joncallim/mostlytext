@@ -266,20 +266,25 @@ manifest also pin SwiftTreeSitter `76f93e7`. The MacDownKit manifest pins Neon
 `6074d1a`. Its actual 24-row `Package.resolved` retains those and all other
 reviewed owners. `MacDown2/project.yml` has no direct parser dependency pin.
 
-The next source chain is a manifest-only child of SwiftTreeSitter `76f93e7`
-whose one dependency revision becomes the published runtime commit, followed
-by a manifest-only child of Neon `6074d1a` whose one dependency revision
-becomes that published wrapper commit. No Swift runtime/test/grammar/query
-bytes change in those children. Only after PR146 is qualified and merged into
-main may the application branch pin the two new child commits in MacDownKit,
+That source chain is now prepared in separate **local**, unpublished children.
+SwiftTreeSitter `7cf83c59f1d7b6fdbd6ae3b0e212c9824fbf103d` descends from
+`76f93e7` and changes only its `Package.swift` revision from runtime `3b1fb00f`
+to `1884982a`. Neon `7afa1dc49511a0d154f38810725d6984968ec2e6`
+descends from `6074d1a` and changes only its `Package.swift` revision from
+SwiftTreeSitter `76f93e7` to `7cf83c5`. Both manifests parse as Swift syntax;
+no Swift runtime/test/grammar/query bytes change in either child. These exact
+commit objects are not yet remotely resolvable. Only after PR146 is qualified
+and merged into main may the application branch pin the two new child commits
+in MacDownKit,
 pin the wrapper child in TreeSitterMarkdown, and adopt an **actual hosted SwiftPM
 resolution**. Do not synthesize `Package.resolved` or change any of the other
 21 dependency revisions. The already qualified Textual revision and all
 subsequent main changes must be inherited, not regressed.
 
-The application-owned C qualifier currently accepts the older combined-source
-and subtree changes relative to `5ce80b6f`. Extend it narrowly: fetch that
-baseline, the exact `3b1fb00f` parent and the candidate; require the
+The application-owned C qualifier previously accepted the older combined-source
+and subtree changes relative to `5ce80b6f`. The local branch now extends it
+narrowly: fetch that baseline, the exact `3b1fb00f` parent and the candidate;
+require the
 candidate-to-parent product diff to be exactly `lib/src/parser.c` plus
 `lib/src/unicode.h`. Reconstruct both changed files by applying once the
 literal reviewed upstream guards/conversions to the parent bytes and require
@@ -293,10 +298,12 @@ to pass. Inspect standalone linkage before execution and hash every actual
 source, binary, raw output and pin. A changed file name or hunk is a refusal,
 not permission to broaden the accepted runtime.
 
-Before remote publication, run the pure qualifier's own negative controls for
-wrong owner/revision/duplicate pin/missing grammar, extra runtime file and
-mutated parser/Unicode patch. The publication and app integration slices remain
-separate: publish exact fork commits; inspect full remote trees and licences;
+The pure qualifier's six local negative controls for wrong owner/revision,
+duplicate pin, missing grammar, extra runtime file and mutated parser/Unicode
+patch pass; its original-versus-candidate C matrix also records the original
+failures and candidate normal/sanitized passes. The publication and app
+integration slices remain separate: publish exact fork commits; inspect full
+remote trees and licences;
 run actual hosted lock resolution; update inventory/notices/SBOM; then perform
 fresh package/app/Debug/Release/native edit, injection, geometry and issue-gate
 qualification on one exact source. No release or whole-issue completion claim
