@@ -86,3 +86,17 @@ This is an engineering feasibility slice for issue #7. It has no user-visible
 string, accessibility, localization, export or document-format change.
 
 Workflow dispatch path rule: <https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#workflow_dispatch>.
+
+## Source preparation checkpoint
+
+The isolated branch changes no `MacDown2` file and no original static or
+JavaScriptCore Finder test. The installed macOS 26 SDK strictly type-checks the
+provider, service and new XCTest source. XcodeGen source generation places the
+service bundle in the containing app's `Contents/XPCServices` copy phase; no
+product was built or launched locally. Five new pure XPC correlation controls,
+12 original JavaScriptCore controls, 13 observer controls and three owned-process
+controls pass. Strict SwiftLint, pinned SwiftFormat, plist/metadata syntax,
+source diff checks and tree compliance pass. The first Finder result, service
+launch/reply, actual compiled entitlements and signed-bundle contents remain
+**NOT_RUN / NOT_VERIFIED** until the guarded hosted execution. No conclusion
+about Quick Look's ability to connect to the service is drawn from source checks.

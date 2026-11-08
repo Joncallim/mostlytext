@@ -34,6 +34,9 @@ targets:
     dependencies:
       - target: QLReplyProbeProvider
         embed: true
+      - target: QLReplyProbeXPCService
+        embed: true
+        link: false
   QLReplyProbeProvider:
     type: app-extension
     platform: macOS
@@ -58,6 +61,26 @@ targets:
       properties:
         com.apple.security.app-sandbox: true
         com.apple.security.files.user-selected.read-only: true
+  QLReplyProbeXPCService:
+    type: xpc-service
+    platform: macOS
+    sources: [XPCService]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.QLReplyProbe.XPCService
+        APPLICATION_EXTENSION_API_ONLY: 'YES'
+        CODE_SIGN_INJECT_BASE_ENTITLEMENTS: 'NO'
+    info:
+      path: XPCService-Info.plist
+      properties:
+        CFBundleShortVersionString: '0.0.0'
+        CFBundleVersion: '1'
+        XPCService:
+          ServiceType: Application
+    entitlements:
+      path: XPCService.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
   QLReplyProbeAutomationHost:
     type: application
     platform: macOS

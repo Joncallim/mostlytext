@@ -91,6 +91,14 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def load_json_attachment(path):
+    try:
+        value = json.loads(path.read_bytes())
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return None
+    return value if isinstance(value, dict) else None
+
+
 def validate_provider_entitlements(entitlements):
     assert entitlements == {"com.apple.security.app-sandbox": True,
                             "com.apple.security.files.user-selected.read-only": True}, entitlements
@@ -185,11 +193,40 @@ def validate_observation(observed, messages):
         raise RuntimeError('Raw provider result/frozen factory does not match the actual UI attachment')
 
 
+def validate_xpc_observation(observed, messages):
+    if (observed.get('kind') != 'mostlytext-qlxpc-capability'
+            or set(observed) != {'kind', 'request_id', 'provider_pid', 'service_pid', 'started_uptime'}
+            or any(type(observed.get(key)) is not int or observed[key] <= 0
+                   for key in ('request_id', 'provider_pid', 'service_pid'))
+            or observed['provider_pid'] == observed['service_pid']
+            or type(observed.get('started_uptime')) not in (int, float)
+            or not math.isfinite(observed['started_uptime']) or observed['started_uptime'] <= 0):
+        raise RuntimeError('Invalid actual XPC process observation')
+    starts = []
+    admissions = []
+    service_replies = []
+    for message in messages:
+        match = re.fullmatch(r'QL_XPC_PROBE begin id=(\d+) provider=(\d+) start=([0-9.]+)', message)
+        if match and int(match[1]) == observed['request_id']:
+            starts.append((int(match[2]), float(match[3])))
+        match = re.fullmatch(r'QL_XPC_PROBE admitted id=(\d+) provider=(\d+) service=(\d+)', message)
+        if match and int(match[1]) == observed['request_id']:
+            admissions.append((int(match[2]), int(match[3])))
+        match = re.fullmatch(r'QL_XPC_SERVICE replied id=(\d+) pid=(\d+) sandbox=1', message)
+        if match and int(match[1]) == observed['request_id']:
+            service_replies.append(int(match[2]))
+    if (starts != [(observed['provider_pid'], observed['started_uptime'])]
+            or admissions != [(observed['provider_pid'], observed['service_pid'])]
+            or service_replies != [observed['service_pid']]):
+        raise RuntimeError('Actual XPC own-request begin/service/admission differs from UI result')
+
+
 def capture_compiled(root):
     products = root / 'build/Build/Products'
     release = products / 'Release'
     app = release / 'QLReplyProbeContainer.app'
     provider = app / 'Contents/PlugIns/QLReplyProbeProvider.appex'
+    service = app / 'Contents/XPCServices/QLReplyProbeXPCService.xpc'
     runner = release / 'QLReplyProbeFinderTests-Runner.app'
     test = runner / 'Contents/PlugIns/QLReplyProbeFinderTests.xctest'
     plans = list(products.glob('*.xctestrun'))
@@ -198,6 +235,8 @@ def capture_compiled(root):
     roles = {'observer_control': root / 'observer-control',
              'app': app / 'Contents/MacOS/QLReplyProbeContainer', 'app_info': app / 'Contents/Info.plist',
              'provider': provider / 'Contents/MacOS/QLReplyProbeProvider', 'provider_info': provider / 'Contents/Info.plist',
+             'xpc_service': service / 'Contents/MacOS/QLReplyProbeXPCService',
+             'xpc_service_info': service / 'Contents/Info.plist',
              'runner': runner / 'Contents/MacOS/QLReplyProbeFinderTests-Runner', 'runner_info': runner / 'Contents/Info.plist',
              'test': test / 'Contents/MacOS/QLReplyProbeFinderTests', 'test_info': test / 'Contents/Info.plist', 'xctestrun': plans[0],
              'generated_project': root / 'fixture/QuickLookReplyProbe.xcodeproj/project.pbxproj'}
@@ -319,6 +358,7 @@ def main():
                          ".github/scripts/test-quicklook-jsc-probe.py",
                          ".github/scripts/observe-quicklook-jsc.py",
                          ".github/scripts/run-quicklook-jsc-ui.py",
+                         ".github/scripts/test-quicklook-xpc-probe.py",
                          ".github/scripts/test-quicklook-jsc-observer.py",
                          "planning/downstream/evidence/quicklook-hosted-feasibility-2026-11-07/b000-receipt.json.gz",
                          ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
@@ -329,6 +369,7 @@ def main():
         source = root / "mostlytext-ql-reply-static.md"
         source.write_bytes(b"# Hosted Quick Look fixture\n")
         (root / "mostlytext-ql-jsc.md").write_bytes(b"# Hosted Quick Look fixture\n")
+        (root / "mostlytext-ql-xpc.md").write_bytes(b"# Hosted Quick Look fixture\n")
         (root / "ql-probe-neighbor.md").write_bytes(b"Generated sibling capability control; do not read through the provider.\n")
         record = {"checkout": command(["git", "rev-parse", "HEAD"]),
                   "source_sha256": {p: digest(Path(p)) for p in paths},
@@ -337,7 +378,7 @@ def main():
                   "root_product_tree": command(["git", "rev-parse", "HEAD:MacDown2"]),
                   "xcode": command(["xcodebuild", "-version"]), "os": command(["sw_vers"]),
                   "diagnostic_only": True, "qualification_candidate": False,
-                  "scope": "Separate disposable hosted JavaScriptCore capability observation; no root product launch, shipping extension, full QL-REPLY or owner acceptance"}
+                  "scope": "Separate disposable hosted JavaScriptCore and XPC reachability observation; no root product launch, shipping extension, full QL-REPLY or owner acceptance"}
         receipt_path.write_text(json.dumps(record, indent=2) + "\n")
         record['reference_module']=reference_module(root,fixture)
         subprocess.run(["xcodegen", "generate", "--spec", str(fixture / "project.yml")], check=True, timeout=60)
@@ -361,11 +402,15 @@ def main():
         assert digest(fixture / name) == expected, name
     app = root / "build/Build/Products/Release/QLReplyProbeContainer.app"
     provider = app / "Contents/PlugIns/QLReplyProbeProvider.appex"
+    service = app / "Contents/XPCServices/QLReplyProbeXPCService.xpc"
     app_info = plistlib.loads((app / "Contents/Info.plist").read_bytes())
     info = plistlib.loads((provider / "Contents/Info.plist").read_bytes())
+    service_info = plistlib.loads((service / "Contents/Info.plist").read_bytes())
     assert app_info["CFBundleIdentifier"] == "app.mostlytext.MostlyText"
     assert not app_info.get("CFBundleDocumentTypes"), "The fixture must not claim a default document handler"
     assert info["CFBundleIdentifier"] == "app.mostlytext.MostlyText.QuickLook"
+    assert service_info["CFBundleIdentifier"] == "app.mostlytext.QLReplyProbe.XPCService"
+    assert service_info["XPCService"]["ServiceType"] == "Application"
     ext = info["NSExtension"]
     assert ext["NSExtensionPointIdentifier"] == "com.apple.quicklook.preview"
     assert ext["NSExtensionPrincipalClass"] == "QLReplyProbeProvider.StaticPreview"
@@ -385,9 +430,20 @@ def main():
     entitlements = plistlib.loads(raw[raw.index(b"<?xml"):])
     validate_provider_entitlements(entitlements)
     (root / "provider-actual-entitlements.plist").write_bytes(plistlib.dumps(entitlements))
+    result = subprocess.run(["codesign", "--display", "--entitlements", "-", "--xml", str(service)],
+                            capture_output=True, check=True, timeout=30)
+    raw = result.stdout
+    if b"<?xml" not in raw:
+        raw = result.stderr[result.stderr.index(b"<?xml"):]
+    service_entitlements = plistlib.loads(raw[raw.index(b"<?xml"):])
+    if service_entitlements != {"com.apple.security.app-sandbox": True}:
+        raise RuntimeError("XPC service has unexpected entitlement or missing sandbox")
+    (root / "xpc-service-actual-entitlements.plist").write_bytes(plistlib.dumps(service_entitlements))
     record["built"] = {"app_info": app_info, "provider_info": info, "entitlements": entitlements,
+                       "service_info": service_info, "service_entitlements": service_entitlements,
                        "app_executable_sha256": digest(app / "Contents/MacOS" / app_info["CFBundleExecutable"]),
-                       "provider_executable_sha256": digest(provider / "Contents/MacOS" / info["CFBundleExecutable"])}
+                       "provider_executable_sha256": digest(provider / "Contents/MacOS" / info["CFBundleExecutable"]),
+                       "service_executable_sha256": digest(service / "Contents/MacOS" / service_info["CFBundleExecutable"])}
     if args.seal_built:
         assert "built_before_test" not in record
         compile_observer_control(root)
@@ -399,6 +455,7 @@ def main():
             raise RuntimeError('An actual compiled UI/provider execution input changed')
     assert digest(root / "mostlytext-ql-reply-static.md") == record["selected_fixture_sha256"]
     assert digest(root / "mostlytext-ql-jsc.md") == record["selected_fixture_sha256"]
+    assert digest(root / "mostlytext-ql-xpc.md") == record["selected_fixture_sha256"]
     if args.verify_finder:
         record['host_observer_proof'] = validate_host_observer(root, record['checkout'])
         controls = json.loads((root / 'observer-control-events.json').read_text())
@@ -425,9 +482,9 @@ def main():
         raw = subprocess.check_output(['xcrun', 'xcresulttool', 'get', 'test-results', 'summary', '--path', str(result)], timeout=60)
         (root / 'actual-ui-summary.json').write_bytes(raw)
         summary = json.loads(raw)
-        expected = {'totalTestCount': 2, 'passedTests': 2, 'failedTests': 0, 'skippedTests': 0, 'expectedFailures': 0}
+        expected = {'totalTestCount': 3, 'passedTests': 3, 'failedTests': 0, 'skippedTests': 0, 'expectedFailures': 0}
         if any(type(summary.get(k)) is not int or summary[k] != v for k, v in expected.items()):
-            raise RuntimeError('Both original cold-Finder and actual basic-JavaScript capability cases must pass')
+            raise RuntimeError('Both original Finder cases and actual XPC reachability must pass')
         attachments = root / 'actual-ui-attachments'
         subprocess.run(['xcrun', 'xcresulttool', 'export', 'attachments', '--path', str(result), '--output-path', str(attachments)], check=True, timeout=60)
         observations = []
@@ -442,9 +499,15 @@ def main():
         if len(observations) != 1:
             raise RuntimeError('Require one actual result-bundle pending Finder attachment')
         validate_observation(observations[0], messages)
+        xpc = [value for path in attachments.rglob('*') if path.is_file() and path.stat().st_size <= 128 * 1024
+               for value in [load_json_attachment(path)] if value and value.get('kind') == 'mostlytext-qlxpc-capability']
+        if len(xpc) != 1:
+            raise RuntimeError('Require one actual XPC process result attachment')
+        validate_xpc_observation(xpc[0], messages)
         record['javascriptcore_capability_observation'] = observations[0]
+        record['xpc_reachability_observation'] = xpc[0]
         record['actual_ui_summary'] = summary
-        record['scope'] = 'Actual fixed JavaScriptCore basic JS/minimal-WASM capability only; not actual D2, host shim, deadline/fallback, new authority, production or full QL-REPLY acceptance'
+        record['scope'] = 'Actual fixed JavaScriptCore and XPC service reachability only; no engine deadline/fallback, new authority, production or full QL-REPLY acceptance'
     receipt_path.write_text(json.dumps(record, indent=2) + "\n")
     print("Actual signed fixture identifiers, Markdown-only data provider, sandbox entitlements and source hashes verified")
 

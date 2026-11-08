@@ -1,25 +1,14 @@
-name: Network-denied JavaScriptCore Quick Look capability
+name: Private Quick Look XPC reachability
 
 permissions:
   contents: read
 on:
-  pull_request:
-    branches: [main, master, integration-final]
-    paths:
-      - '.github/quicklook-jsc-probe/**'
-      - '.github/scripts/prepare-quicklook-jsc-probe.py'
-      - '.github/scripts/test-quicklook-jsc-probe.py'
-      - '.github/scripts/observe-quicklook-jsc.py'
-      - '.github/scripts/run-quicklook-jsc-ui.py'
-      - '.github/scripts/test-quicklook-jsc-observer.py'
-      - '.github/workflows/quicklook-jsc-probe.yml'
   workflow_dispatch:
 concurrency:
-  group: quicklook-jsc-probe-${{ github.ref }}
+  group: quicklook-xpc-feasibility-${{ github.ref }}
   cancel-in-progress: false
 jobs:
   cold-finder:
-    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: macos-26
     timeout-minutes: 15
     steps:
@@ -36,9 +25,10 @@ jobs:
           brew install xcodegen
           python3 .github/scripts/test-run-owned-app-tests.py
           python3 .github/scripts/test-quicklook-jsc-probe.py
+          python3 .github/scripts/test-quicklook-xpc-probe.py
           python3 .github/scripts/test-quicklook-jsc-observer.py
           python3 .github/scripts/prepare-quicklook-jsc-probe.py "$RUNNER_TEMP/mostlytext-qljsc"
-      - name: Compile and ad-hoc sign standalone container, provider and UI test
+      - name: Compile and ad-hoc sign standalone container, provider, service and UI tests
         run: |
           set -euo pipefail
           xcodebuild -project "$RUNNER_TEMP/mostlytext-qljsc/fixture/QuickLookReplyProbe.xcodeproj" -scheme QuickLookReplyProbe -configuration Release -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/mostlytext-qljsc/build" CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual build-for-testing 2>&1 | tee "$RUNNER_TEMP/mostlytext-qljsc/build.log"
@@ -52,7 +42,7 @@ jobs:
           pluginkit -e use -i app.mostlytext.MostlyText.QuickLook
           pluginkit -m -A -D -vv -i app.mostlytext.MostlyText.QuickLook | tee "$RUNNER_TEMP/mostlytext-qljsc/discovery.log"
           open -R "$RUNNER_TEMP/mostlytext-qljsc/mostlytext-ql-reply-static.md"
-      - name: Execute cold static and actual JavaScriptCore capability once
+      - name: Execute original cold controls and one XPC reachability case
         run: |
           set -euo pipefail
           python3 .github/scripts/run-quicklook-jsc-ui.py
@@ -64,11 +54,11 @@ jobs:
           /usr/bin/log show --last 12m --style json --predicate 'subsystem == "app.mostlytext.qljscobserver"' > "$RUNNER_TEMP/mostlytext-qljsc/observer-control-events.json" 2> "$RUNNER_TEMP/mostlytext-qljsc/observer-control-log-errors.txt"
           ps -axo pid=,uid=,comm= > "$RUNNER_TEMP/mostlytext-qljsc/processes-after.txt"
           python3 .github/scripts/prepare-quicklook-jsc-probe.py "$RUNNER_TEMP/mostlytext-qljsc" --verify-finder
-      - name: Preserve the first actual JavaScriptCore capability result
+      - name: Preserve the first actual XPC reachability result
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: javascriptcore-quicklook-capability
+          name: quicklook-xpc-reachability-first
           path: |
             ${{ runner.temp }}/mostlytext-qljsc/receipt.json
             ${{ runner.temp }}/mostlytext-qljsc/*.log
