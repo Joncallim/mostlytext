@@ -35,6 +35,12 @@
             let measurements: URL
         }
 
+        private struct OutputFacts {
+            let bytes: Int
+            let sha256: String
+            let occurrences: Int
+        }
+
         private func fixture() throws -> Fixture {
             let env = ProcessInfo.processInfo.environment
             guard env["GITHUB_ACTIONS"] == "true", env["RUNNER_OS"] == "macOS",
@@ -89,7 +95,7 @@
             return Int(usage.ru_maxrss)
         }
 
-        private func outputFacts(_ url: URL) throws -> (bytes: Int, sha256: String, occurrences: Int) {
+        private func outputFacts(_ url: URL) throws -> OutputFacts {
             let handle = try FileHandle(forReadingFrom: url)
             defer { try? handle.close() }
             var hasher = SHA256()
@@ -108,7 +114,7 @@
                 tail = Data(searchable.suffix(Self.marker.count - 1))
             }
             let digest = hasher.finalize().map { String(format: "%02x", $0) }.joined()
-            return (bytes, digest, occurrences)
+            return OutputFacts(bytes: bytes, sha256: digest, occurrences: occurrences)
         }
 
         private func record(_ fixture: Fixture, values: [String: Any]) throws {
@@ -127,52 +133,62 @@
             let peakBefore = try peakResidentBytes()
             let start = ProcessInfo.processInfo.systemUptime
             if input.refusal {
-                do {
-                    _ = try await ExportService.exportHTML(request, to: .html(url: input.output, mode: .selfContained))
-                    Issue.record("An over-budget ramp case was published")
-                } catch ExportError.budgetExceeded where input.refusalKind == "budget-exceeded" {
-                    let elapsed = ProcessInfo.processInfo.systemUptime - start
-                    #expect(!FileManager.default.fileExists(atPath: input.output.path))
-                    try record(input, values: [
-                        "case": input.name, "outcome": "budget-refusal", "refusal_kind": "budget-exceeded",
-                        "source_bytes": input.sourceBytes,
-                        "resource_bytes": input.resourceBytes, "occurrences": input.occurrences,
-                        "elapsed_seconds": elapsed, "app_peak_before_bytes": peakBefore,
-                        "app_peak_after_bytes": peakResidentBytes(), "output_exists": false,
-                    ])
-                } catch let ExportError.unresolvedResources(diagnostics)
-                    where input.refusalKind == "unresolved-resources" {
-                    let elapsed = ProcessInfo.processInfo.systemUptime - start
-                    let limitText = input.name.hasPrefix("aggregate") ? "total resource limit" : "512-resource limit"
-                    #expect(diagnostics.contains { $0.message.contains(limitText) })
-                    #expect(!FileManager.default.fileExists(atPath: input.output.path))
-                    try record(input, values: [
-                        "case": input.name, "outcome": "budget-refusal",
-                        "refusal_kind": "unresolved-resources", "source_bytes": input.sourceBytes,
-                        "resource_bytes": input.resourceBytes, "occurrences": input.occurrences,
-                        "elapsed_seconds": elapsed, "app_peak_before_bytes": peakBefore,
-                        "app_peak_after_bytes": peakResidentBytes(), "output_exists": false,
-                    ])
-                }
+                try await assertRefusal(input, request: request, peakBefore: peakBefore, start: start)
             } else {
+                try await assertPublished(input, request: request, peakBefore: peakBefore, start: start)
+            }
+        }
+
+        private func assertRefusal(_ input: Fixture, request: ExportRequest, peakBefore: Int,
+                                   start: TimeInterval) async throws {
+            do {
                 _ = try await ExportService.exportHTML(request, to: .html(url: input.output, mode: .selfContained))
-                let exportSeconds = ProcessInfo.processInfo.systemUptime - start
-                let output = try outputFacts(input.output)
-                let readbackSeconds = ProcessInfo.processInfo.systemUptime - start - exportSeconds
-                #expect(output.bytes > 0 && output.bytes <= (256 << 20))
-                #expect(output.occurrences == input.occurrences)
-                if input.name == "repeatNearFinal" {
-                    #expect(output.bytes >= (256 << 20) - (16 << 10))
-                }
+                Issue.record("An over-budget ramp case was published")
+            } catch ExportError.budgetExceeded where input.refusalKind == "budget-exceeded" {
+                let elapsed = ProcessInfo.processInfo.systemUptime - start
+                #expect(!FileManager.default.fileExists(atPath: input.output.path))
                 try record(input, values: [
-                    "case": input.name, "outcome": "published", "source_bytes": input.sourceBytes,
+                    "case": input.name, "outcome": "budget-refusal", "refusal_kind": "budget-exceeded",
+                    "source_bytes": input.sourceBytes,
                     "resource_bytes": input.resourceBytes, "occurrences": input.occurrences,
-                    "output_bytes": output.bytes, "output_sha256": output.sha256,
-                    "final_html_ceiling_margin_bytes": (256 << 20) - output.bytes,
-                    "export_seconds": exportSeconds, "readback_seconds": readbackSeconds,
-                    "app_peak_before_bytes": peakBefore, "app_peak_after_bytes": peakResidentBytes(),
+                    "elapsed_seconds": elapsed, "app_peak_before_bytes": peakBefore,
+                    "app_peak_after_bytes": peakResidentBytes(), "output_exists": false,
+                ])
+            } catch let ExportError.unresolvedResources(diagnostics)
+                where input.refusalKind == "unresolved-resources" {
+                let elapsed = ProcessInfo.processInfo.systemUptime - start
+                let limitText = input.name.hasPrefix("aggregate") ? "total resource limit" : "512-resource limit"
+                #expect(diagnostics.contains { $0.message.contains(limitText) })
+                #expect(!FileManager.default.fileExists(atPath: input.output.path))
+                try record(input, values: [
+                    "case": input.name, "outcome": "budget-refusal",
+                    "refusal_kind": "unresolved-resources", "source_bytes": input.sourceBytes,
+                    "resource_bytes": input.resourceBytes, "occurrences": input.occurrences,
+                    "elapsed_seconds": elapsed, "app_peak_before_bytes": peakBefore,
+                    "app_peak_after_bytes": peakResidentBytes(), "output_exists": false,
                 ])
             }
+        }
+
+        private func assertPublished(_ input: Fixture, request: ExportRequest, peakBefore: Int,
+                                     start: TimeInterval) async throws {
+            _ = try await ExportService.exportHTML(request, to: .html(url: input.output, mode: .selfContained))
+            let exportSeconds = ProcessInfo.processInfo.systemUptime - start
+            let output = try outputFacts(input.output)
+            let readbackSeconds = ProcessInfo.processInfo.systemUptime - start - exportSeconds
+            #expect(output.bytes > 0 && output.bytes <= (256 << 20))
+            #expect(output.occurrences == input.occurrences)
+            if input.name == "repeatNearFinal" {
+                #expect(output.bytes >= (256 << 20) - (16 << 10))
+            }
+            try record(input, values: [
+                "case": input.name, "outcome": "published", "source_bytes": input.sourceBytes,
+                "resource_bytes": input.resourceBytes, "occurrences": input.occurrences,
+                "output_bytes": output.bytes, "output_sha256": output.sha256,
+                "final_html_ceiling_margin_bytes": (256 << 20) - output.bytes,
+                "export_seconds": exportSeconds, "readback_seconds": readbackSeconds,
+                "app_peak_before_bytes": peakBefore, "app_peak_after_bytes": peakResidentBytes(),
+            ])
         }
     }
 
