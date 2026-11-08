@@ -103,3 +103,17 @@ ordinary local choices in this architecture rather than silently expand it.
 The probe alone is not production completion, native acceptance, performance
 repair, independent rights approval or release readiness. Broad issues stay open
 until their separate original criteria are fulfilled.
+
+
+## First console admission refusal
+
+The first original-runtime driver exits 2 at its non-error parse admission,
+before producing complete comparison JSON. Its source, actual binary, compiler
+commands/diagnostics, libSystem-only linkage, partial stdout, full stderr and
+bounded outcome are retained externally. The exact parse phase and tree were
+not captured; this is not a reproduced application bug or semantic comparison.
+Before changing any admission or fixture, add phase-labelled root/error facts
+immediately before that same guard. Keep its refusal, source bytes, ranges,
+encodings, lifetimes and all equality predicates unchanged. This diagnostic
+revision must identify whether the assumption of error-free partial syntax is
+valid; revise this architecture explicitly before any policy correction.
