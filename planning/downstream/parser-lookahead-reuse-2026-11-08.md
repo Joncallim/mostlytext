@@ -247,6 +247,61 @@ Swift wrappers, manifest pins, compliance record, hosted resolution and app
 qualification have not yet adopted the composite. Keep the already published
 PR146 firsts independent and preserve its source while they are assessed.
 
+## Concrete local adoption preparation on main `a46c57c4`
+
+The owner-maintained tree-sitter fork has a separate **local**, unpublished
+branch `fix/lookahead-utf16-correctness` at
+`1884982a418525e2e251ba331da929fccd354f3f`. It descends from the exact
+active `3b1fb00f` and changes only `lib/src/parser.c` and `lib/src/unicode.h`
+among product source files. Its new `lib/tests/utf16_decoder_boundaries.c` and
+`MOSTLYTEXT_PATCHES.md` are outside the Swift product source list. The original
+MIT and `Package.swift` bytes are unchanged. The fork is not yet a remotely
+resolvable immutable dependency.
+
+The current graph has three owner-maintained dependency revisions:
+SwiftTreeSitter `76f93e7e325dcd05561a13ed63bcc92cb85be8da` pins C runtime
+`3b1fb00f`; Neon `6074d1a50c7076b2e59d8d0619554b542e096afa` pins that
+SwiftTreeSitter revision; MacDownKit and the vendored TreeSitterMarkdown
+manifest also pin SwiftTreeSitter `76f93e7`. The MacDownKit manifest pins Neon
+`6074d1a`. Its actual 24-row `Package.resolved` retains those and all other
+reviewed owners. `MacDown2/project.yml` has no direct parser dependency pin.
+
+The next source chain is a manifest-only child of SwiftTreeSitter `76f93e7`
+whose one dependency revision becomes the published runtime commit, followed
+by a manifest-only child of Neon `6074d1a` whose one dependency revision
+becomes that published wrapper commit. No Swift runtime/test/grammar/query
+bytes change in those children. Only after PR146 is qualified and merged into
+main may the application branch pin the two new child commits in MacDownKit,
+pin the wrapper child in TreeSitterMarkdown, and adopt an **actual hosted SwiftPM
+resolution**. Do not synthesize `Package.resolved` or change any of the other
+21 dependency revisions. The already qualified Textual revision and all
+subsequent main changes must be inherited, not regressed.
+
+The application-owned C qualifier currently accepts the older combined-source
+and subtree changes relative to `5ce80b6f`. Extend it narrowly: fetch that
+baseline, the exact `3b1fb00f` parent and the candidate; require the
+candidate-to-parent product diff to be exactly `lib/src/parser.c` plus
+`lib/src/unicode.h`. Reconstruct both changed files by applying once the
+literal reviewed upstream guards/conversions to the parent bytes and require
+byte equality. Preserve the existing exact `Package.swift` transformation,
+13 effective C inputs, unchanged public headers and MIT bytes, 324 ordered
+subtree/ownership outcomes and bounded shared-work positive/negative controls.
+Add the fixed application Markdown included-range probe and the fork's fixed
+UTF-16 decoder probe to the same complete-source receipt; require original
+semantic/bounds failures to be retained and candidate normal/sanitized controls
+to pass. Inspect standalone linkage before execution and hash every actual
+source, binary, raw output and pin. A changed file name or hunk is a refusal,
+not permission to broaden the accepted runtime.
+
+Before remote publication, run the pure qualifier's own negative controls for
+wrong owner/revision/duplicate pin/missing grammar, extra runtime file and
+mutated parser/Unicode patch. The publication and app integration slices remain
+separate: publish exact fork commits; inspect full remote trees and licences;
+run actual hosted lock resolution; update inventory/notices/SBOM; then perform
+fresh package/app/Debug/Release/native edit, injection, geometry and issue-gate
+qualification on one exact source. No release or whole-issue completion claim
+follows from the local C results.
+
 
 ## First console admission refusal
 
