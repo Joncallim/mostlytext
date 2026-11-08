@@ -77,3 +77,48 @@ all logs/artifacts/raw results before correction; independently verify original
 and effective fork source, compiled/raw-owned state and actual stage observations.
 Revise the production/fork architecture only once native evidence supports a
 specific remedy. No merge/wholeissue/release success from this diagnostic branch.
+
+
+## Follow-up decision: bounded buffered observations across fresh scenarios
+
+Complete native42435579859 and Compliance42435602291 firsts atf44 are retained
+before this change. All57actual functions pass;2957synchronous trace lines show
+attachment publication reaches each existing stage on that passing run. Source,
+24pins,5actual downloaded compiled roles and raw owned zero-exit are independently
+verified. Logging changes timing and this run did not reproduce either6cadfailure.
+Actual function start/finish events show peak1, no overlap, for both failing6cad
+Release/viewport and passingf44. Parallel test execution is not an evidenced cause.
+
+Independent artifact inspection found22missing hidden metadata files (11before,
+11after): upload-artifact excludes hidden paths by default. Their source-manifest
+hashes match the known pin and all5modified Swift files were downloaded, but the
+missing bytes are NOT independently downloaded. Keep this limitation in the first
+packet and enable include-hidden-files:true in the next controlled source archive.
+Only the already bounded, tracked dependency capture is included; no .git/profile.
+
+Replace synchronous per-view print calls with a bounded MainActor in-memory
+ledger. Keep exact same four original-source hashes/transform anchors, existing
+callbacks/statements,4000event budget per scenario, and no new view state/nodes/
+observers. Expose only a diagnostic snapshot/reset accessor from the disposable
+patched dependency so an extra diagnostic test can archive after each journey.
+Store initial full57trace separately before reset. All other original source,
+assertions and5second waits stay unchanged. No production/fork pin change.
+
+Add one never-merge stress test invoking the two actual failing test functions,
+with fresh fixture/window/source generation on each invocation, ten fixed rounds
+and both journeys every round. This is20declared fresh scenarios in one test,
+not20independent test functions and not retries until green. Record every thrown
+error as a test issue and continue the predetermined remaining scenarios; existing
+nonfatal assertions remain failures of the aggregate test. Keep original57selection
+and add this one function (58total), same600second owned execution budget and
+original independent network controls. No per-scenario deadline increase.
+
+After each scenario archive a fixed-name JSON record with diagnostic-only flags,
+round/journey, buffered stage events, explicit overflow and thrown-error presence.
+Do not store authored text/URLs. Overflow remains a diagnostic failure, never
+silent truncation. Capture final buffer even on test failure. Update effective
+source manifest/compiled bindings and include new driver in canonical source map.
+The first actual native result remains failed if any original or stress assertion
+fails; readback/artifact steps preserve it. Freeze once, retain complete native/
+Compliance first outcomes before changing anything else. No unchanged retry,
+causal conclusion, renderer remediation or merge from a passing stress run alone.

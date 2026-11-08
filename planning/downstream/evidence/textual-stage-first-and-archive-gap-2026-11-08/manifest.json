@@ -1,0 +1,120 @@
+{
+  "source": "f44f01354936d6d0abaf76c5e388249ee295b0d5",
+  "diagnostic_only": true,
+  "qualification_candidate": false,
+  "original_native_outcome": "57PASS/0skip/0expected/0failure; all57actualfunctions serial in both failing6cad and passingf44logs",
+  "actual_stage_trace_lines": 2957,
+  "archive_gap": "upload-artifact default omitted11hidden metadata files perphase; all5modifiedSwift files downloaded.22missing bytes not filled or claimed downloaded.",
+  "records": [
+    {
+      "file": "00-native-first-run.json.gz",
+      "original_path": "native-first-run.json",
+      "bytes": 12517,
+      "sha256": "b64da8854bf5e4bfa120a0bfd8931206a3a601128a18a395acd7187995f0dcf6"
+    },
+    {
+      "file": "01-compliance-first-run.json.gz",
+      "original_path": "compliance-first-run.json",
+      "bytes": 12429,
+      "sha256": "881da696104eac1c81a3b835570e1f8a05b2cf7189abe93e7617db49193ec96d"
+    },
+    {
+      "file": "02-native-first-artifacts.json.gz",
+      "original_path": "native-first-artifacts.json",
+      "bytes": 783,
+      "sha256": "f04015f0becca87d7bfea7450e10081f3fd30ad42d55e93abb174df234c099dd"
+    },
+    {
+      "file": "03-compliance-first-artifacts.json.gz",
+      "original_path": "compliance-first-artifacts.json",
+      "bytes": 32,
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    {
+      "file": "04-first-native-independently-verified.json.gz",
+      "original_path": "first-native-independently-verified.json",
+      "bytes": 5843,
+      "sha256": "0dfa3cfeda89e38fee6d42cd36b5350b7753a57ad68c26cc56e19a6b88917485"
+    },
+    {
+      "file": "05-actual-independent-summary.json.gz",
+      "original_path": "actual-independent-summary.json",
+      "bytes": 1262,
+      "sha256": "bd4e48960694341ccd424d06523197c457463d77a61cb26469083179a95eeaa1"
+    },
+    {
+      "file": "06-verify-first-native.py.gz",
+      "original_path": "verify-first-native.py",
+      "bytes": 6924,
+      "sha256": "da10b5a238852e2ede446b318cdf9b4aec9fec735ef69687a2a5d8a489ab51a5"
+    },
+    {
+      "file": "07-receipt.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision/receipt.json",
+      "bytes": 250254,
+      "sha256": "aef870470f6ca182cc9b8eba8847a7c5597aae996cb2bfb709e6463718ff0195"
+    },
+    {
+      "file": "08-textual-effective-source.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision/textual-effective-source.json",
+      "bytes": 174165,
+      "sha256": "65cbc85f7a4b1907cd6d6c05d911308f03e857baaa392b9354133428467782ea"
+    },
+    {
+      "file": "09-textual-compiled-binding.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision/textual-compiled-binding.json",
+      "bytes": 752,
+      "sha256": "5fb62782669020e5257b0ef2b4f90143ede97711df254410493257e2c2e048c8"
+    },
+    {
+      "file": "10-textual-stage-observations.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision/textual-stage-observations.json",
+      "bytes": 289980,
+      "sha256": "26cb7be86dae5315250eaff32ae66dbcff9dbe3eb6f98f70c33d470eef23d0cd"
+    },
+    {
+      "file": "11-compiled-initial.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision/compiled-initial.json",
+      "bytes": 1882,
+      "sha256": "88ddd3b20b05b3d8613898aa01a0a2ddc8ca51c34c5e22fbfc4efded0d903e4c"
+    },
+    {
+      "file": "12-compiled-initial-verified.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision/compiled-initial-verified.json",
+      "bytes": 1664,
+      "sha256": "b75077b46a2b5da15f5a993f2750357948e5163e8fcd32b7714416a97fd9e94d"
+    },
+    {
+      "file": "13-identity.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision/diagnostics/identity.json",
+      "bytes": 2153,
+      "sha256": "590b16ac511636abda7f9e1d8630b8333a468fab5617897277bb595b9e1fb470"
+    },
+    {
+      "file": "14-status.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision/diagnostics/status.json",
+      "bytes": 138,
+      "sha256": "72bc6716fb3d95ecfc3ee7de3081c492c256b93fa799c6f4116b3d487024b286"
+    },
+    {
+      "file": "15-network.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision/network.json",
+      "bytes": 84,
+      "sha256": "7d400663c407d8f738049e3387761b0052957948de1c1cd6cd76f0429cc13c48"
+    }
+  ],
+  "complete_first_log_archives": [
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/preview-renderer-stages-20261108/first-f44f0135/compliance-complete-first-workflow-logs.zip",
+      "bytes": 40867,
+      "sha256": "ecba200b934336916edad05620bc96f7d40ae7dbff9f3b1568a732b6d49f3a8c",
+      "retained_in_original_evidence_root": true
+    },
+    {
+      "path": "/Volumes/Fast SSD/CORTANA-Builds/preview-renderer-stages-20261108/first-f44f0135/native-complete-first-workflow-logs.zip",
+      "bytes": 864137,
+      "sha256": "c15361c0ca3758316312ea3aebd0c3270e95b07fe5de64d72af341e07af8510d",
+      "retained_in_original_evidence_root": true
+    }
+  ]
+}
