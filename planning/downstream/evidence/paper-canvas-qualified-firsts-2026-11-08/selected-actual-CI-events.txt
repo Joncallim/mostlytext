@@ -1,0 +1,7 @@
+Selected actual event lines only; the complete whole job/workflow logs are retained and hash-indexed in manifest.json.
+
+2026-11-08T03:10:25.4378870Z ✔ Test aChangedStructuralStylesheetCannotCertifyClosedReferences() passed after 0.001 seconds.
+2026-11-08T03:10:51.3113910Z ✔ Test pdfCanvasPolicyIsCoveredBySVGValidationAndLeavesHTMLScrollbarsAlone() passed after 0.014 seconds.
+2026-11-08T03:15:18.9066520Z ✔ Test run with 3721 tests in 537 suites passed after 400.648 seconds.
+2026-11-08T03:40:36.1141610Z ✔ Test pdfAdapterInputPreservesTheAcceptedHTMLBytes() passed after 0.112 seconds.
+2026-11-08T03:41:26.4414430Z ✔ Test run with 680 tests in 143 suites passed after 322.531 seconds.

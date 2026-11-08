@@ -1,0 +1,427 @@
+{
+  "source": "fd23e3e264e9f34dd093151bb0f5474b0466f8c7",
+  "actual_tested": "c8ddad4ecc7ded70e9b0990d30314466b51833a3",
+  "actual_main_merge": "c18c5ced1397e65c2451b647b9d1dab2b6937242",
+  "source_tested_computed_merged_tree": "dcf7296128f81fd0c1b3f74315bad1f47636083c",
+  "all_seven_complete_firsts": "PASS",
+  "original_evidence_root": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-fd23e3e2",
+  "records": [
+    {
+      "file": "000-compliance-first-run.json.gz",
+      "original_path": "compliance-first-run.json",
+      "bytes": 12924,
+      "sha256": "863142ebe6c53453e1e713d2b824616681399718e2d472d8dc781cbe056ceeb5"
+    },
+    {
+      "file": "001-full_CI-first-run.json.gz",
+      "original_path": "full_CI-first-run.json",
+      "bytes": 12908,
+      "sha256": "9a737109d67eaa70111f24c14d51b4c1fefbe52d6ed6700929ed1479f4da3738"
+    },
+    {
+      "file": "002-heading_anchors-first-run.json.gz",
+      "original_path": "heading_anchors-first-run.json",
+      "bytes": 12949,
+      "sha256": "0f6d7da52049513fc7388e05c2d37adc38754312f3f1e066ce2ba740ced05bef"
+    },
+    {
+      "file": "003-native_canvas-first-run.json.gz",
+      "original_path": "native_canvas-first-run.json",
+      "bytes": 12976,
+      "sha256": "8ac6c81d9e37c9e3a7df632d9563c2730d7ca46ded058c22b597dd648b59cafb"
+    },
+    {
+      "file": "004-native_pdf-first-run.json.gz",
+      "original_path": "native_pdf-first-run.json",
+      "bytes": 12958,
+      "sha256": "39d8411c562dec244ef124d61d85ec28a2d7dc4e34ba7262f1e1f17a41467486"
+    },
+    {
+      "file": "005-public_CLI-first-run.json.gz",
+      "original_path": "public_CLI-first-run.json",
+      "bytes": 12954,
+      "sha256": "cf7616063ba6869e97d88bf7d7671761bcf4b3087d5fb24affa30d31684ef93e"
+    },
+    {
+      "file": "006-shared_math_heading-first-run.json.gz",
+      "original_path": "shared_math_heading-first-run.json",
+      "bytes": 12969,
+      "sha256": "aad3031541988852d41a57f86d987c0ec2fd97c7a10ad723e14507e3caeb3f74"
+    },
+    {
+      "file": "007-compliance-first-artifacts.json.gz",
+      "original_path": "compliance-first-artifacts.json",
+      "bytes": 32,
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    {
+      "file": "008-full_CI-first-artifacts.json.gz",
+      "original_path": "full_CI-first-artifacts.json",
+      "bytes": 765,
+      "sha256": "b668155d549486e39876a8550bac740201a141bb939948869f57fe393875178d"
+    },
+    {
+      "file": "009-heading_anchors-first-artifacts.json.gz",
+      "original_path": "heading_anchors-first-artifacts.json",
+      "bytes": 1479,
+      "sha256": "534d051d249a89d0082c1cae575c5cee718ba1b35e443284797a787ee25323a4"
+    },
+    {
+      "file": "010-native_canvas-first-artifacts.json.gz",
+      "original_path": "native_canvas-first-artifacts.json",
+      "bytes": 755,
+      "sha256": "c7633b9e911f73c31c9fb3b2c779e67e92a1636b71afbca51db9ac52dc849773"
+    },
+    {
+      "file": "011-native_pdf-first-artifacts.json.gz",
+      "original_path": "native_pdf-first-artifacts.json",
+      "bytes": 763,
+      "sha256": "1ac1df898898b58095f9d8f89487669c0882aa8a8d71ee68cbbeb59e78dd1842"
+    },
+    {
+      "file": "012-public_CLI-first-artifacts.json.gz",
+      "original_path": "public_CLI-first-artifacts.json",
+      "bytes": 753,
+      "sha256": "46258c4116fd129191ddce42854ee43e27f65257288614307bbe3d410669abd1"
+    },
+    {
+      "file": "013-shared_math_heading-first-artifacts.json.gz",
+      "original_path": "shared_math_heading-first-artifacts.json",
+      "bytes": 1483,
+      "sha256": "23fe681e9490792fa3fafed0f180d23b1ec6361a125592769b0b56633c6fdfef"
+    },
+    {
+      "file": "014-all-seven-firsts-independently-reviewed.json.gz",
+      "original_path": "all-seven-firsts-independently-reviewed.json",
+      "bytes": 3808,
+      "sha256": "e08aaaf17ac08aed1dd6ac1a440170ed01108b69f6659edbc8129d3e3d517508"
+    },
+    {
+      "file": "015-first-native-independently-verified.json.gz",
+      "original_path": "first-native-independently-verified.json",
+      "bytes": 5473,
+      "sha256": "b0612376290ffd68e82edc8bbb2649422cb2417e87f0b192d8871ebd75ae4644"
+    },
+    {
+      "file": "016-pdf-first-independently-verified.json.gz",
+      "original_path": "pdf-first-independently-verified.json",
+      "bytes": 1044,
+      "sha256": "d6bb3e04531cacddb2362f9e2c9d8731e33cf24d15626baeffd082b1cb2e2883"
+    },
+    {
+      "file": "017-current-cli-first-outcome-independently-verified.json.gz",
+      "original_path": "current-cli-first-outcome-independently-verified.json",
+      "bytes": 2241,
+      "sha256": "697e0193e6b4a1fed096175e96915352bab9ac8d31dec7f41c1bd825534c2121"
+    },
+    {
+      "file": "018-scoped-source-self-review.json.gz",
+      "original_path": "scoped-source-self-review.json",
+      "bytes": 986,
+      "sha256": "2f32e79b4547eb6e1546c5607988bd762cb476678db5496cc1235f698fe01580"
+    },
+    {
+      "file": "019-actual-main-integration-proof.json.gz",
+      "original_path": "actual-main-integration-proof.json",
+      "bytes": 747,
+      "sha256": "bd1746c07887b4dbc91f879e2c7f1c5913110e93ebbb7628d955a54cb8bc3596"
+    },
+    {
+      "file": "020-verify-companion-firsts.py.gz",
+      "original_path": "verify-companion-firsts.py",
+      "bytes": 7530,
+      "sha256": "4537cb04c36e0a4e1ad5e953f702d467a62dcaead8b0dfa90d839cab2390fd8d"
+    },
+    {
+      "file": "021-verify-native-canvas-first.py.gz",
+      "original_path": "verify-native-canvas-first.py",
+      "bytes": 5764,
+      "sha256": "1a027dbf56c7a2ca527e6f157e1adca93381b88e8b5d88b9b0d77dd3991ea2df"
+    },
+    {
+      "file": "022-verify-nine-pdf-first.py.gz",
+      "original_path": "verify-nine-pdf-first.py",
+      "bytes": 3346,
+      "sha256": "79a50357943451f717bc85b6dd76c76bc0b38aa1f9f8798ed69c268bdd981f66"
+    },
+    {
+      "file": "023-verify-public-cli-first.py.gz",
+      "original_path": "verify-public-cli-first.py",
+      "bytes": 7396,
+      "sha256": "e4cc773d9d88e173c06b01d257d8b1cb531519fd410901bfd7fc7b7f6d0e86b0"
+    },
+    {
+      "file": "024-pdf-actual-independent-summary.json.gz",
+      "original_path": "pdf-actual-independent-summary.json",
+      "bytes": 970,
+      "sha256": "48fbae80efd8bdabdc87ee3cdecf7810973891dc77d26fba1946d944716cbf35"
+    },
+    {
+      "file": "025-boundary-original-hardened.html.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/boundary-original-hardened.html",
+      "bytes": 7720,
+      "sha256": "5a3918742518aad9b525ce37485309ab5b0e46ddda013ba3e15306d36aa6894b"
+    },
+    {
+      "file": "026-boundary-original-page-1.png.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/boundary-original-page-1.png",
+      "bytes": 47417,
+      "sha256": "aba452bd0c93c61c1515a09644427c71390daac4260ce17aea3cc06c6abcc41c"
+    },
+    {
+      "file": "027-boundary-original-page-2.png.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/boundary-original-page-2.png",
+      "bytes": 10366,
+      "sha256": "76ec13570f71a5c099ba73c95ec5e81bad1964f49dd29b93259da94ac260bbce"
+    },
+    {
+      "file": "028-boundary-original-paginated.pdf.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/boundary-original-paginated.pdf",
+      "bytes": 19050,
+      "sha256": "eadbaeb20d1dc589b6a4cc57fc842ae64365c7b845a73af47c628586f7bc8f38"
+    },
+    {
+      "file": "029-boundary-original-snapshot.pdf.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/boundary-original-snapshot.pdf",
+      "bytes": 16997,
+      "sha256": "705fa2aeb0970176520e9c91a144ca631ad9c7803fc2e43f265826bf10775f6c"
+    },
+    {
+      "file": "030-boundary-paper-hardened.html.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/boundary-paper-hardened.html",
+      "bytes": 7720,
+      "sha256": "5a3918742518aad9b525ce37485309ab5b0e46ddda013ba3e15306d36aa6894b"
+    },
+    {
+      "file": "031-boundary-paper-page-1.png.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/boundary-paper-page-1.png",
+      "bytes": 47015,
+      "sha256": "87d2eccc0f50c20dfcfa84f5ae44388d2af510784c44e4d86def5e9ff78bf8fa"
+    },
+    {
+      "file": "032-boundary-paper-page-2.png.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/boundary-paper-page-2.png",
+      "bytes": 10366,
+      "sha256": "76ec13570f71a5c099ba73c95ec5e81bad1964f49dd29b93259da94ac260bbce"
+    },
+    {
+      "file": "033-boundary-paper-paginated.pdf.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/boundary-paper-paginated.pdf",
+      "bytes": 19014,
+      "sha256": "e6236f602b71d3692ec951db40ce20e1d19eedaf2970ba7b079d8c3d04e13495"
+    },
+    {
+      "file": "034-boundary-paper-snapshot.pdf.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/boundary-paper-snapshot.pdf",
+      "bytes": 16994,
+      "sha256": "66aec31a292ff91c8f7d75dfcf35c6f6990e7e932879bdba79a9e93f79335fda"
+    },
+    {
+      "file": "035-css-boundary-paper-hardened.html.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/css-boundary-paper-hardened.html",
+      "bytes": 7777,
+      "sha256": "d759fc6704eb98245302883dfb384cd8ad3ae7d04eeb39b65079e856069d0200"
+    },
+    {
+      "file": "036-css-boundary-paper-page-1.png.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/css-boundary-paper-page-1.png",
+      "bytes": 47417,
+      "sha256": "aba452bd0c93c61c1515a09644427c71390daac4260ce17aea3cc06c6abcc41c"
+    },
+    {
+      "file": "037-css-boundary-paper-page-2.png.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/css-boundary-paper-page-2.png",
+      "bytes": 10366,
+      "sha256": "76ec13570f71a5c099ba73c95ec5e81bad1964f49dd29b93259da94ac260bbce"
+    },
+    {
+      "file": "038-css-boundary-paper-paginated.pdf.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/css-boundary-paper-paginated.pdf",
+      "bytes": 19047,
+      "sha256": "07904439d9df6915676e2a27c368da8b9b5b06bf95ec3495d6274932f984db77"
+    },
+    {
+      "file": "039-css-boundary-paper-snapshot.pdf.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/css-boundary-paper-snapshot.pdf",
+      "bytes": 17111,
+      "sha256": "0012c0b0c6ac56034ad4b146e081a4b30f3b285e39c8d7bcc807d55d4f640053"
+    },
+    {
+      "file": "040-css-paper-hardened.html.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/css-paper-hardened.html",
+      "bytes": 7278,
+      "sha256": "f64a62082518b24ea6bdeab5fa388cc2cecd1136b0e412c6d7954b07659aaa27"
+    },
+    {
+      "file": "041-css-paper-page-1.png.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/css-paper-page-1.png",
+      "bytes": 20626,
+      "sha256": "99297b58780851bf0380dfdf0520ac5e4646c9e1389de396e5893d99e5996a93"
+    },
+    {
+      "file": "042-css-paper-paginated.pdf.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/css-paper-paginated.pdf",
+      "bytes": 15107,
+      "sha256": "d95a9e149c236e572551cc6cc913bc044d80822c8a14796a438ce6f5171aab08"
+    },
+    {
+      "file": "043-css-paper-snapshot.pdf.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/css-paper-snapshot.pdf",
+      "bytes": 15262,
+      "sha256": "a8b94fcf9bb88ebc41ddd17b5e5ec6ad68ed2756d3f9357e54888717341bed9d"
+    },
+    {
+      "file": "044-minimal-hardened.html.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/minimal-hardened.html",
+      "bytes": 7221,
+      "sha256": "29fb7faf3fabc0d5a940cbccb46fe48f1221a22d499cc32e11087b759c0a8369"
+    },
+    {
+      "file": "045-minimal-page-1.png.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/minimal-page-1.png",
+      "bytes": 21242,
+      "sha256": "6f42cace47ea455f4ede95534b21839f14b72af37c163aeba3d6046617710ecb"
+    },
+    {
+      "file": "046-minimal-paginated.pdf.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/minimal-paginated.pdf",
+      "bytes": 15119,
+      "sha256": "7786af18ecf130d446d77c2cf006f52d454a56e4ff1d061c61ceadfbeed242e1"
+    },
+    {
+      "file": "047-minimal-snapshot.pdf.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/minimal-snapshot.pdf",
+      "bytes": 15249,
+      "sha256": "4ea6d0e8f4e74e08e84b941987c4fb0c2de954912407866a81fe3ca42bf6d262"
+    },
+    {
+      "file": "048-native-stderr.log.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/native-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "049-native-stdout.log.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/native-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "050-original-hardened.html.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/original-hardened.html",
+      "bytes": 7221,
+      "sha256": "29fb7faf3fabc0d5a940cbccb46fe48f1221a22d499cc32e11087b759c0a8369"
+    },
+    {
+      "file": "051-original-page-1.png.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/original-page-1.png",
+      "bytes": 20626,
+      "sha256": "99297b58780851bf0380dfdf0520ac5e4646c9e1389de396e5893d99e5996a93"
+    },
+    {
+      "file": "052-original-page-2.png.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/original-page-2.png",
+      "bytes": 10366,
+      "sha256": "76ec13570f71a5c099ba73c95ec5e81bad1964f49dd29b93259da94ac260bbce"
+    },
+    {
+      "file": "053-original-paginated.pdf.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/original-paginated.pdf",
+      "bytes": 16424,
+      "sha256": "442a24b2d35e02b6471b38c3a0f93639883f4168262318d62c57b8f2242ff935"
+    },
+    {
+      "file": "054-original-snapshot.pdf.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/original-snapshot.pdf",
+      "bytes": 15276,
+      "sha256": "7c6f95f94d6c41e0240efc0d467a0c216afb0140fbafa440d6e3dcfe80e85de6"
+    },
+    {
+      "file": "055-original.html.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/original.html",
+      "bytes": 6978,
+      "sha256": "7e6cab53fe7ce75713efb9d50aa15c685f8824b8ff59428a8d16930ec70d2d17"
+    },
+    {
+      "file": "056-paper-hardened.html.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/paper-hardened.html",
+      "bytes": 7221,
+      "sha256": "29fb7faf3fabc0d5a940cbccb46fe48f1221a22d499cc32e11087b759c0a8369"
+    },
+    {
+      "file": "057-paper-page-1.png.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/paper-page-1.png",
+      "bytes": 20626,
+      "sha256": "99297b58780851bf0380dfdf0520ac5e4646c9e1389de396e5893d99e5996a93"
+    },
+    {
+      "file": "058-paper-paginated.pdf.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/paper-paginated.pdf",
+      "bytes": 15107,
+      "sha256": "2ed6eda40684e58bfc38c64143566d122c92b2988d1e8a5a8081aca3c118eaee"
+    },
+    {
+      "file": "059-paper-snapshot.pdf.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/paper-snapshot.pdf",
+      "bytes": 15262,
+      "sha256": "c1bfdf30d43345b2d76cc7ce07c27f7d47b980ab9d9ec41a5cbee3178a2c2ecb"
+    },
+    {
+      "file": "060-snapshot-frame-observations.json.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/snapshot-frame-observations.json",
+      "bytes": 8262,
+      "sha256": "3789280ac06c78517e8f7d6194ed87e57fa9685e19e73a461cd54a6e1af16d9b"
+    },
+    {
+      "file": "061-snapshot-frame-receipt.json.gz",
+      "original_path": "native_canvas-first-artifact/native-pdf-snapshot-frames/snapshot-frame-receipt.json",
+      "bytes": 13826,
+      "sha256": "7cb44bf8ff906199f93ab1b41c025cd835626423bbedf0b322db0c7b0d50191e"
+    }
+  ],
+  "complete_first_log_archives": [
+    {
+      "original_path": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-fd23e3e2/compliance-complete-first-workflow-logs.zip",
+      "bytes": 41756,
+      "sha256": "fc21ab3aee8faa0684c24dfcf451cfbb6872c898308d4ca0543c8679dfe9073e",
+      "retained_complete": true
+    },
+    {
+      "original_path": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-fd23e3e2/full_CI-complete-first-workflow-logs.zip",
+      "bytes": 1344839,
+      "sha256": "557884718d6bdb25a5607e6b8ad445ac62f5bd6768ed83302b731a8430561fb4",
+      "retained_complete": true
+    },
+    {
+      "original_path": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-fd23e3e2/heading_anchors-complete-first-workflow-logs.zip",
+      "bytes": 78689,
+      "sha256": "4ca347a2fb854387ca0f9f40ee48b37f5791d1fd6b75e961ec259229331598a3",
+      "retained_complete": true
+    },
+    {
+      "original_path": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-fd23e3e2/native_canvas-complete-first-workflow-logs.zip",
+      "bytes": 13857,
+      "sha256": "c7a770464b97ff3a20d095a56512a1151447bfd23a2deb700af400a32cb8ac22",
+      "retained_complete": true
+    },
+    {
+      "original_path": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-fd23e3e2/native_pdf-complete-first-workflow-logs.zip",
+      "bytes": 1236561,
+      "sha256": "a62b64adb5bb50fd13ac5d672099925cb8dcbb85f42f4c19d8a0b4cbbac7cba0",
+      "retained_complete": true
+    },
+    {
+      "original_path": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-fd23e3e2/public_CLI-complete-first-workflow-logs.zip",
+      "bytes": 580216,
+      "sha256": "c8df94411f7ccaa44f764dd8e616aa4218fe48dbee28b20e116264419dca91f7",
+      "retained_complete": true
+    },
+    {
+      "original_path": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-fd23e3e2/shared_math_heading-complete-first-workflow-logs.zip",
+      "bytes": 1970382,
+      "sha256": "2574ed0680ad2be4ec4dd8773cb328d127837df8fd8c311b339da5b07b730f07",
+      "retained_complete": true
+    }
+  ],
+  "limits": "This packet contains exact metadata/readers/proofs and native page outputs, not every raw compiled app/test binary or whole log archive. Those complete original artifacts remain at the listed evidence root and linked original workflow runs. No original raw record is retargeted."
+}
