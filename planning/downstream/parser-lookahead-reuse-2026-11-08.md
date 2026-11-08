@@ -488,3 +488,13 @@ The narrow correction reads that status output without stripping its first
 column and requires the exact path and committed gitlink for each fork. It
 still refuses uninitialized, changed, conflicting and unexpected submodules.
 This failed attempt provides no Swift package test result.
+
+The second manual run, `42518473127`, passed the same source and submodule
+checks, then resolved SwiftTreeSitter successfully. It stopped before any
+package test when the lock verifier assumed every SwiftPM lock has an
+`originHash`; the fork's older format does not. The failed receipt, full job
+log and resolved-lock output are retained at
+`/Volumes/Fast SSD/CORTANA-Builds/parser-hosted-packages-20261109/run-42518473127`.
+The verifier now accepts only lock versions 2 and 3, requires `originHash` for
+version 3, and records a null origin hash for version 2 while still checking
+every exact pin. This run also provides no Swift package test result.

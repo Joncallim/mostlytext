@@ -49,6 +49,17 @@ class ParserPackageTests(unittest.TestCase):
             lock = Path(folder) / "Package.resolved"
             lock.write_text(json.dumps({"version": 3, "originHash": "manifest", "pins": list(expected.values())}))
             self.assertEqual(set(qualification.validate_lock(lock, expected)["pins"]), {"tree-sitter"})
+            lock.write_text(json.dumps({"version": 2, "pins": list(expected.values())}))
+            self.assertEqual(qualification.validate_lock(lock, expected)["origin_hash"], None)
+            version_two_wrong_pin = json.loads(lock.read_text())
+            version_two_wrong_pin["pins"][0]["state"]["revision"] = "0" * 40
+            lock.write_text(json.dumps(version_two_wrong_pin))
+            with self.assertRaisesRegex(ValueError, "reviewed pin: tree-sitter"):
+                qualification.validate_lock(lock, expected)
+            lock.write_text(json.dumps({"version": 3, "pins": list(expected.values())}))
+            with self.assertRaisesRegex(ValueError, "origin hash"):
+                qualification.validate_lock(lock, expected)
+            lock.write_text(json.dumps({"version": 3, "originHash": "manifest", "pins": list(expected.values())}))
             changed = json.loads(lock.read_text())
             changed["pins"][0]["state"]["revision"] = "0" * 40
             lock.write_text(json.dumps(changed))

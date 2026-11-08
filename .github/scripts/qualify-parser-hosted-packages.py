@@ -140,6 +140,8 @@ def checkout_fork(root, name):
 
 def validate_lock(lock_path, expected_rows):
     lock = json.loads(lock_path.read_text())
+    if lock.get("version") not in (2, 3):
+        raise ValueError("Unexpected SwiftPM lock format")
     rows = lock["pins"]
     pins = {row["identity"]: row for row in rows}
     if len(rows) != len(pins) or set(pins) != set(expected_rows):
@@ -147,9 +149,10 @@ def validate_lock(lock_path, expected_rows):
     for identity, expected in expected_rows.items():
         if pins[identity] != expected:
             raise ValueError("Resolved dependency differs from the reviewed pin: " + identity)
-    if lock.get("version", 0) >= 3 and not lock.get("originHash"):
+    if lock["version"] == 3 and not lock.get("originHash"):
         raise ValueError("Resolved lock is missing its manifest origin hash")
-    return {"sha256": sha256(lock_path), "origin_hash": lock["originHash"],
+    return {"sha256": sha256(lock_path), "version": lock["version"],
+            "origin_hash": lock.get("originHash"),
             "pins": {identity: pins[identity] for identity in sorted(pins)}}
 
 
