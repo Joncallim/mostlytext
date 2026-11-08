@@ -15,7 +15,7 @@ settings:
 packages:
   Textual:
     url: https://github.com/Joncallim/textual
-    revision: 6eba6da7d2d27d85560b956057fd98badd9b3495
+    revision: e75d3a188d2a056757de015dbd3344bffea23fd4
   SwiftUIMath:
     url: https://github.com/Joncallim/swiftui-math
     revision: 2a89c2b41482988711909572d116374e47a52164

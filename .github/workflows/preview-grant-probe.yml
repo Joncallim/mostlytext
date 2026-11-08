@@ -55,6 +55,7 @@ jobs:
           python3 .github/scripts/test-preview-suite-contract.py
           python3 .github/scripts/test-preview-diagnostic-host.py
           python3 .github/scripts/test-preview-compiled-inputs.py
+          python3 .github/scripts/test-preview-inline-selection-correlation.py
       - name: Record exact application inputs and configuration
         run: python3 .github/scripts/verify-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --pair ${{ matrix.pair }}
       - name: Compile real app and test bundles
@@ -103,7 +104,13 @@ jobs:
             -resultBundlePath "$RUNNER_TEMP/preview-grant-probe/actual-initial.xcresult" \
             "$PREVIEW_PHASE_SELECTION" test-without-building \
             | tee "$RUNNER_TEMP/preview-grant-probe/probe.log" || PREVIEW_NATIVE_RESULT=$?
+          PREVIEW_CORRELATION_RESULT=0
+          python3 .github/scripts/verify-preview-inline-selection-correlation.py \
+            "$RUNNER_TEMP/preview-grant-probe/probe.log" \
+            "$RUNNER_TEMP/preview-grant-probe/inline-selection-correlation.json" \
+            || PREVIEW_CORRELATION_RESULT=$?
           python3 .github/scripts/verify-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --pair ${{ matrix.pair }} --verify --verify-compiled initial
+          if [ "$PREVIEW_CORRELATION_RESULT" -ne 0 ]; then exit "$PREVIEW_CORRELATION_RESULT"; fi
           exit "$PREVIEW_NATIVE_RESULT"
       - name: Execute controlled native image and selection publication
         run: |
@@ -149,6 +156,7 @@ jobs:
             ${{ runner.temp }}/preview-grant-probe/parsed-frame*-diagnostics/*.sample.txt
             ${{ runner.temp }}/preview-grant-probe/parsed-frame*-diagnostics/*.log
             ${{ runner.temp }}/preview-grant-probe/probe.log
+            ${{ runner.temp }}/preview-grant-probe/inline-selection-correlation.json
             ${{ runner.temp }}/preview-grant-probe/selection-probe.log
             ${{ runner.temp }}/preview-grant-probe/selection-diagnostics/*.json
             ${{ runner.temp }}/preview-grant-probe/selection-diagnostics/*.sample.txt

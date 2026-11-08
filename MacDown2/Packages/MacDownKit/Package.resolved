@@ -82,7 +82,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Joncallim/textual",
       "state" : {
-        "revision" : "6eba6da7d2d27d85560b956057fd98badd9b3495"
+        "revision" : "e75d3a188d2a056757de015dbd3344bffea23fd4"
       }
     },
     {

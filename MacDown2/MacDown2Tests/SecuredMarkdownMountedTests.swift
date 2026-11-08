@@ -98,6 +98,7 @@ struct SecuredMarkdownMountedTests {
                 recordInstance("repeat-copy-failure-\(generation)", loadID: current, host: host)
                 return await recorder.diagnostic(phase: "repeat generation \(generation)")
             }
+            recordInstance("repeat-copy-complete-\(generation)", loadID: current, host: host)
             previous = current
         }
     }
