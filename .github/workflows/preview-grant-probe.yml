@@ -1,167 +1,33 @@
-name: Private controlled renderer current-input cache experiment
-
+name: Private deliberate inline-style dependency resolution
 permissions:
   contents: read
-
 on:
   workflow_dispatch:
-
 concurrency:
-  group: preview-current-main-${{ github.ref }}
+  group: private-inline-pin-resolution-${{ github.ref }}
   cancel-in-progress: false
-
 jobs:
-  preview-consumers:
-    strategy:
-      fail-fast: false
-      matrix:
-        configuration: [Release]
-        pair: [revision]
-        variant: [original, inline-only, fragment-only]
+  resolve-one-immutable-pin:
+    if: github.repository == 'Joncallim/mostlytext'
     runs-on: macos-26
-    timeout-minutes: 35
-    env:
-      MOSTLYTEXT_RENDERER_VARIANT: ${{ matrix.variant }}
-      TEST_RUNNER_MOSTLYTEXT_RENDERER_VARIANT: ${{ matrix.variant }}
-      MOSTLYTEXT_PREVIEW_RESOURCE_TRACE: "1"
-      TEST_RUNNER_MOSTLYTEXT_PREVIEW_RESOURCE_TRACE: "1"
-      TEST_RUNNER_GITHUB_ACTIONS: "true"
-      TEST_RUNNER_GITHUB_REPOSITORY: "Joncallim/mostlytext"
-      TEST_RUNNER_RUNNER_TEMP: "/Users/runner/work/_temp"
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Select deployment-matching Xcode and OS
+      - name: Select supported Xcode and check exact graph-admission controls
         run: |
           set -euo pipefail
-          XCODE=$(ls -d /Applications/Xcode*.app | grep "26" | head -1 || true)
+          XCODE=$(ls -d /Applications/Xcode*.app | grep '26' | head -1 || true)
           test -n "$XCODE"
-          test "$(sw_vers -productVersion | cut -d. -f1)" = 26
           sudo xcode-select -s "$XCODE/Contents/Developer"
-          test "$(uname -m)" = arm64
-          xcodebuild -version
-          sw_vers
-          git rev-parse HEAD
-      - name: Generate and pin the actual app project
-        id: pin
-        run: |
-          set -euo pipefail
-          brew untap aws/tap 2>/dev/null || true
-          brew install xcodegen
-          cd MacDown2
-          xcodegen generate
-          cd ..
-          MacDown2/scripts/pin-xcode-package-versions.sh
-      - name: Verify diagnostic ownership controls
-        run: |
-          python3 .github/scripts/test-run-owned-app-tests.py
-          python3 .github/scripts/test-preview-grant-tripwire.py
-          python3 .github/scripts/test-preview-native-architecture.py
-          python3 .github/scripts/test-preview-diagnostic-host.py
-          python3 .github/scripts/test-preview-compiled-inputs.py
-          python3 .github/scripts/test-textual-publication-stages.py
-          python3 .github/scripts/test-textual-publication-diagnostic-message.py
-      - name: Resolve exact packages then capture original and patched effective renderer sources
-        run: |
-          set -euo pipefail
-          xcodebuild -resolvePackageDependencies -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 -derivedDataPath "$RUNNER_TEMP/preview-grant-app" -onlyUsePackageVersionsFromResolvedFile
-          python3 .github/scripts/patch-textual-publication-stages.py patch
-      - name: Record exact application inputs and configuration
-        run: python3 .github/scripts/verify-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --pair ${{ matrix.pair }}
-      - name: Compile real app and test bundles
-        run: |
-          set -euo pipefail
-          xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
-            -configuration ${{ matrix.configuration }} ENABLE_TESTABILITY=YES \
-            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE' \
-            -destination 'platform=macOS,arch=arm64' ONLY_ACTIVE_ARCH=YES -derivedDataPath "$RUNNER_TEMP/preview-grant-app" \
-            -onlyUsePackageVersionsFromResolvedFile -enableCodeCoverage NO build-for-testing
-      - name: Bind actual compiled app tests run metadata and generated project
-        run: python3 .github/scripts/verify-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --pair ${{ matrix.pair }} --verify --capture-compiled initial
-      - name: Bind verified effective renderer sources to actual compiled native roles
-        run: python3 .github/scripts/patch-textual-publication-stages.py bind
-      - name: Execute the actual three consumer paths and independent network control
-        run: |
-          set -euo pipefail
-          PREVIEW_PHASE_SELECTION="-skip-testing:MacDown2Tests/SecuredPreviewReleaseProbeTests"
-          if [ "${{ matrix.configuration }}" = Release ]; then
-            PREVIEW_PHASE_SELECTION="-only-testing:MacDown2Tests/SecuredPreviewReleaseProbeTests"
-          fi
-          PREVIEW_NATIVE_RESULT=0
-          python3 .github/scripts/run-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe/network.json" ${{ matrix.configuration }} -- \
-            python3 .github/scripts/run-owned-app-tests.py "$RUNNER_TEMP/preview-grant-probe/diagnostics" \
-            "$RUNNER_TEMP/preview-grant-app/Build/Products/${{ matrix.configuration }}/MacDown2.app/Contents/MacOS/MacDown2" -- \
-            xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
-            -configuration ${{ matrix.configuration }} ENABLE_TESTABILITY=YES \
-            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE' \
-            -destination 'platform=macOS,arch=arm64' ONLY_ACTIVE_ARCH=YES -derivedDataPath "$RUNNER_TEMP/preview-grant-app" \
-            -onlyUsePackageVersionsFromResolvedFile -parallel-testing-enabled NO \
-            -only-testing:MacDown2Tests/PreviewDirectoryGrantBackingTests \
-            -only-testing:MacDown2Tests/PreviewResourceAdmissionTests \
-            -only-testing:MacDown2Tests/PreviewResourceWindowStateTests \
-            -only-testing:MacDown2Tests/BoundedHTMLPreviewHandlerTests \
-            -only-testing:MacDown2Tests/SecuredHTMLPreviewNativeTests \
-            -only-testing:MacDown2Tests/HTMLPreviewEncodingNativeTests \
-            -only-testing:MacDown2Tests/BufferedPublicationDiagnosticTests \
-            -only-testing:MacDown2Tests/SecuredMarkdownMountedTests \
-            -only-testing:MacDown2Tests/SecuredMarkdownViewportTests \
-            -only-testing:MacDown2Tests/SecuredMarkdownSourceBindingTests \
-            -only-testing:MacDown2Tests/PreviewFolderSelectionCommandTests \
-            -only-testing:MacDown2Tests/ProductionPreviewResourceRoutingTests \
-            -only-testing:MacDown2Tests/PreviewDisplayCacheTests \
-            -only-testing:MacDown2Tests/PreviewResourceCompositionOwnershipTests \
-            -only-testing:MacDown2Tests/SecuredPreviewImageAdmissionTests \
-            -only-testing:MacDown2Tests/PreviewImageDecodeBudgetTests \
-            -only-testing:MacDown2Tests/TextualAttachmentInterceptionTests \
-            -only-testing:MacDown2Tests/SecuredPreviewNetworkTests \
-            -resultBundlePath "$RUNNER_TEMP/preview-grant-probe/actual-initial.xcresult" \
-            "$PREVIEW_PHASE_SELECTION" test-without-building \
-            | tee "$RUNNER_TEMP/preview-grant-probe/probe.log" || PREVIEW_NATIVE_RESULT=$?
-          python3 .github/scripts/verify-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --pair ${{ matrix.pair }} --verify --verify-compiled initial
-          exit "$PREVIEW_NATIVE_RESULT"
-      - name: Retain exact effective source compiled input and actual initial outcome
-        if: always()
-        run: |
-          set -euo pipefail
-          python3 .github/scripts/patch-textual-publication-stages.py observe
-          python3 .github/scripts/verify-preview-grant-probe.py "$RUNNER_TEMP/preview-grant-probe" ${{ matrix.configuration }} --pair ${{ matrix.pair }} --verify --verify-compiled initial
+          python3 .github/scripts/test-inline-style-pin-resolution.py
+      - name: Resolve only the deliberate immutable Textual update and restore original source
+        run: python3 .github/scripts/resolve-inline-style-pin.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
+          name: actual-inline-style-pin-resolution
+          path: ${{ runner.temp }}/mostlytext-focus/
           include-hidden-files: true
-          name: preview-grant-app-tests-${{ matrix.configuration }}-${{ matrix.pair }}-${{ matrix.variant }}
-          path: |
-            ${{ runner.temp }}/preview-grant-probe/receipt.json
-            ${{ runner.temp }}/preview-grant-probe/textual-effective-source.json
-            ${{ runner.temp }}/preview-grant-probe/textual-stage-observations.json
-            ${{ runner.temp }}/preview-grant-probe/textual-scenarios/**
-            ${{ runner.temp }}/preview-grant-probe/textual-diagnostic-host.json
-            ${{ runner.temp }}/preview-grant-probe/textual-compiled-binding.json
-            ${{ runner.temp }}/preview-grant-probe/textual-effective-source/**
-            ${{ runner.temp }}/preview-grant-probe/compiled-*.json
-            ${{ runner.temp }}/preview-grant-probe/compiled-inputs/**
-            ${{ runner.temp }}/preview-grant-probe/actual-*.json
-            ${{ runner.temp }}/preview-grant-probe/actual-*.xcresult/**
-            ${{ runner.temp }}/preview-grant-probe/native-architecture.json
-            ${{ runner.temp }}/preview-grant-probe/network.json
-            ${{ runner.temp }}/preview-grant-probe/parsed-frame*.log
-            ${{ runner.temp }}/preview-grant-probe/parsed-frame*.json
-            ${{ runner.temp }}/preview-grant-probe/parsed-frame*-diagnostics/*.json
-            ${{ runner.temp }}/preview-grant-probe/parsed-frame*-diagnostics/*.sample.txt
-            ${{ runner.temp }}/preview-grant-probe/parsed-frame*-diagnostics/*.log
-            ${{ runner.temp }}/preview-grant-probe/probe.log
-            ${{ runner.temp }}/preview-grant-probe/selection-probe.log
-            ${{ runner.temp }}/preview-grant-probe/selection-diagnostics/*.json
-            ${{ runner.temp }}/preview-grant-probe/selection-diagnostics/*.sample.txt
-            ${{ runner.temp }}/preview-grant-probe/selection-diagnostics/*.log
-            ${{ runner.temp }}/preview-grant-probe/diagnostics/*.json
-            ${{ runner.temp }}/preview-grant-probe/diagnostics/*.sample.txt
-            ${{ runner.temp }}/preview-grant-probe/diagnostics/*.log
-          if-no-files-found: warn
-      - name: Verify immutable dependency locks
-        if: ${{ !cancelled() && steps.pin.outcome == 'success' }}
-        run: |
-          set -euo pipefail
-          MacDown2/scripts/pin-xcode-package-versions.sh --check
-          git diff --exit-code -- MacDown2/Packages/MacDownKit/Package.resolved
+          if-no-files-found: error
