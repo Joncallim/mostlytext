@@ -89,6 +89,32 @@ def publish_hold_process(root, hold, samples, checkout):
             'sha256': hashlib.sha256(row_raw).hexdigest()}
 
 
+def publish_worker_process(root, worker, samples, checkout):
+    if not 1 <= len(samples) <= 32:
+        raise RuntimeError('Invalid bounded Quick Look worker sample count')
+    folder = root / 'worker-process-journal'
+    folder.mkdir(mode=0o700, exist_ok=True)
+    row = {'kind': 'mostlytext-qlxpc-worker-process-sample', 'checkout': checkout,
+           'normal_request_id': worker['normal_request_id'],
+           'normal_pid': worker['normal_pid'], 'sample': samples[-1]}
+    row_raw = (json.dumps(row, sort_keys=True) + '\n').encode()
+    journal = folder / f'{len(samples) - 1:03d}.json'
+    with journal.open('xb') as stream:
+        stream.write(row_raw)
+    journal.chmod(0o600)
+    snapshot = dict(worker, kind='mostlytext-qlxpc-host-worker-process', checkout=checkout, samples=samples)
+    raw = (json.dumps(snapshot, sort_keys=True) + '\n').encode()
+    if len(raw) > 128 * 1024:
+        raise RuntimeError('Quick Look worker observation exceeded128KiB')
+    temporary = root / '.worker-process-observer-next.json'
+    with temporary.open('xb') as stream:
+        stream.write(raw)
+    temporary.chmod(0o600)
+    os.replace(temporary, root / 'worker-process-observer.json')
+    return {'file': str(journal.relative_to(root)), 'bytes': len(row_raw),
+            'sha256': hashlib.sha256(row_raw).hexdigest()}
+
+
 def main():
     PREP.require_standard_python()
     if len(sys.argv) != 2:
@@ -136,6 +162,25 @@ def main():
     hold_journal = []
     next_hold_sample = None
     hold_stop_at = None
+    worker = None
+    worker_samples = []
+    worker_journal = []
+    next_worker_sample = None
+
+    def sample_worker():
+        nonlocal next_worker_sample
+        if worker is None or 'held_end_uptime' not in worker:
+            return
+        if len(worker_samples) >= 32:
+            raise RuntimeError('Quick Look worker host sample budget exhausted')
+        sampled = time.monotonic()
+        state = process_state(worker['normal_pid'], worker['service_path'])
+        checked = time.monotonic()
+        row = {'index': len(worker_samples), 'uptime': sampled,
+               'check_uptime': checked, 'normal': state}
+        worker_samples.append(row)
+        worker_journal.append(publish_worker_process(root, worker, worker_samples, checkout))
+        next_worker_sample = checked + 0.05
     try:
         stream = subprocess.Popen(PREP.STREAM_COMMAND, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         record['stream_pid'] = stream.pid
@@ -219,6 +264,48 @@ def main():
                                         != (hold['request_id'], hold['provider_pid'], hold['service_pid'])):
                                     raise RuntimeError('Unowned or duplicate XPC hold invalidation')
                                 hold_stop_at = float(hold_invalidation[4]) + 3.3
+                            normal_spawn = re.fullmatch(
+                                r'QL_WORKER_BOUNDARY spawned id=(\d+) mode=normal service=(\d+) worker=(\d+) at=([0-9.]+)',
+                                value['eventMessage'])
+                            if normal_spawn:
+                                service_path = str(root / 'build/Build/Products/Release/QLReplyProbeContainer.app/Contents/PlugIns/QLReplyProbeProvider.appex/Contents/XPCServices/QLReplyProbeXPCService.xpc/Contents/MacOS/QLReplyProbeXPCService')
+                                if (worker is not None or any(int(normal_spawn[index]) <= 0 for index in (1, 2, 3))
+                                        or value.get('processID') != int(normal_spawn[2])
+                                        or value.get('processImagePath') != service_path):
+                                    raise RuntimeError('Duplicate or unowned normal worker spawn')
+                                worker = {'normal_request_id': int(normal_spawn[1]),
+                                          'service_pid': int(normal_spawn[2]), 'normal_pid': int(normal_spawn[3]),
+                                          'normal_spawn_uptime': float(normal_spawn[4]),
+                                          'service_path': service_path}
+                            held_finish = re.fullmatch(
+                                r'QL_WORKER_BOUNDARY finished id=(\d+) mode=held service=(\d+) worker=(\d+) result=timedOut at=([0-9.]+)',
+                                value['eventMessage'])
+                            if held_finish:
+                                if (worker is None or 'held_end_uptime' in worker
+                                        or int(held_finish[2]) != worker['service_pid']
+                                        or int(held_finish[3]) == worker['normal_pid']
+                                        or int(held_finish[1]) == worker['normal_request_id']
+                                        or value.get('processID') != worker['service_pid']
+                                        or value.get('processImagePath') != worker['service_path']):
+                                    raise RuntimeError('Unowned held-worker timeout')
+                                worker.update(held_request_id=int(held_finish[1]),
+                                              held_pid=int(held_finish[3]),
+                                              held_end_uptime=float(held_finish[4]))
+                                # Sample before processing the next queued log line: the
+                                # normal child may finish less than a second later.
+                                sample_worker()
+                            normal_finish = re.fullmatch(
+                                r'QL_WORKER_BOUNDARY finished id=(\d+) mode=normal service=(\d+) worker=(\d+) result=completed at=([0-9.]+)',
+                                value['eventMessage'])
+                            if normal_finish:
+                                if (worker is None or 'held_end_uptime' not in worker
+                                        or 'normal_end_uptime' in worker
+                                        or tuple(int(normal_finish[index]) for index in (1, 2, 3))
+                                        != (worker['normal_request_id'], worker['service_pid'], worker['normal_pid'])
+                                        or value.get('processID') != worker['service_pid']
+                                        or value.get('processImagePath') != worker['service_path']):
+                                    raise RuntimeError('Unowned normal-worker completion')
+                                worker['normal_end_uptime'] = float(normal_finish[4])
                         if changed:
                             row = publish(root, messages, len(record['snapshots']), checkout)
                             row['stream_position'] = position
@@ -238,6 +325,11 @@ def main():
                     hold_samples.append(row)
                     hold_journal.append(publish_hold_process(root, hold, hold_samples, checkout))
                     next_hold_sample = checked + 0.075
+                if (worker is not None and 'held_end_uptime' in worker
+                        and 'normal_end_uptime' not in worker and not stopping
+                        and (not worker_samples or worker_samples[-1]['normal'] != 'expected')
+                        and time.monotonic() >= next_worker_sample):
+                    sample_worker()
         if pending or not admitted:
             raise RuntimeError('Incomplete actual stream or missing startup echo')
         if any(not line.startswith('Filtering the log data using ') for line in errors.decode('utf-8').splitlines()):
@@ -273,6 +365,14 @@ def main():
                                       'service_pid': hold['service_pid'], 'samples': hold_journal,
                                       'snapshot_sha256': hashlib.sha256((root / 'hold-process-observer.json').read_bytes()).hexdigest()
                                       if (root / 'hold-process-observer.json').exists() else None}
+        if worker is not None:
+            record['worker_process'] = {
+                'normal_request_id': worker['normal_request_id'],
+                'service_pid': worker['service_pid'], 'normal_pid': worker['normal_pid'],
+                'samples': worker_journal,
+                'snapshot_sha256': hashlib.sha256((root / 'worker-process-observer.json').read_bytes()).hexdigest()
+                if (root / 'worker-process-observer.json').exists() else None,
+            }
         (root / 'observer-result.json').write_text(json.dumps(record, indent=2) + '\n')
 
 

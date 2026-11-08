@@ -44,7 +44,52 @@ def fixture(root):
     return driver, observed
 
 
+def worker_fixture(root, *, normal='expected', checked=10.5):
+    service = root / 'build/Build/Products/Release/QLReplyProbeContainer.app/Contents/PlugIns/QLReplyProbeProvider.appex/Contents/XPCServices/QLReplyProbeXPCService.xpc/Contents/MacOS/QLReplyProbeXPCService'
+    worker = {'normal_request_id': 11, 'service_pid': 200, 'normal_pid': 201,
+              'normal_spawn_uptime': 9.7, 'service_path': str(service),
+              'held_request_id': 10, 'held_pid': 202, 'held_end_uptime': 10.3}
+    sample = {'index': 0, 'uptime': min(10.4, checked - 0.1), 'check_uptime': checked, 'normal': normal}
+    row = OBSERVER.publish_worker_process(root, worker, [sample], 'source')
+    raw = (root / 'worker-process-observer.json').read_bytes()
+    (root / 'observer-result.json').write_text(json.dumps({'worker_process': {
+        'normal_request_id': 11, 'service_pid': 200, 'normal_pid': 201,
+        'samples': [row], 'snapshot_sha256': hashlib.sha256(raw).hexdigest(),
+    }}))
+    messages = [
+        'QL_WORKER_BOUNDARY spawned id=11 mode=normal service=200 worker=201 at=9.7',
+        'QL_WORKER_BOUNDARY finished id=10 mode=held service=200 worker=202 result=timedOut at=10.3',
+        'QL_WORKER_BOUNDARY finished id=11 mode=normal service=200 worker=201 result=completed at=11.2',
+    ]
+    return messages
+
+
 class HostObservationTests(unittest.TestCase):
+    def test_worker_process_proof_requires_exact_post_timeout_host_sample(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            messages = worker_fixture(root)
+            observed = PREP.validate_worker_process_observer(root, 'source', messages)
+            self.assertEqual(observed['samples'][0]['normal'], 'expected')
+            self.assertEqual((root / 'worker-process-journal/000.json').stat().st_mode & 0o777, 0o600)
+            with self.assertRaises(RuntimeError):
+                PREP.validate_worker_process_observer(root, 'source', messages[:-1])
+
+    def test_worker_process_proof_rejects_missing_liveness_or_changed_bytes(self):
+        for normal, checked in [('wrong', 10.5), ('absent', 10.5),
+                                ('expected', 10.2), ('expected', 10.35), ('expected', 11.3)]:
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                messages = worker_fixture(root, normal=normal, checked=checked)
+                with self.assertRaises(RuntimeError):
+                    PREP.validate_worker_process_observer(root, 'source', messages)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            messages = worker_fixture(root)
+            (root / 'worker-process-journal/000.json').write_bytes(b'{}')
+            with self.assertRaises(RuntimeError):
+                PREP.validate_worker_process_observer(root, 'source', messages)
+
     def test_actual_bytes_remain_immutable_and_current_is_exact_last_generation(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory); fixture(root)

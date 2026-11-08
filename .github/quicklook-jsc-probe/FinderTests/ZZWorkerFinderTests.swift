@@ -3,8 +3,8 @@ import Darwin
 import Foundation
 import XCTest
 
-/// Fifth private control. A separate host log reader and /bin/ps observe
-/// actual worker identities while Finder keeps the Quick Look request open.
+/// Fifth private control. A separate host log reader and process observer
+/// inspect worker identities while Finder keeps the Quick Look request open.
 @MainActor
 final class ZZWorkerFinderTests: XCTestCase {
     private let root = "/Users/runner/work/_temp/mostlytext-qljsc"
@@ -29,7 +29,6 @@ final class ZZWorkerFinderTests: XCTestCase {
 
         var sawNormalAliveAfterHeld = false
         var identitySamples = [[String: Any]]()
-        let expected = root + "/build/Build/Products/Release/QLReplyProbeContainer.app/Contents/PlugIns/QLReplyProbeProvider.appex/Contents/XPCServices/QLReplyProbeXPCService.xpc/Contents/MacOS/QLReplyProbeXPCService"
         let limit = started + 8
         var events = [String]()
         repeat {
@@ -38,12 +37,17 @@ final class ZZWorkerFinderTests: XCTestCase {
                 .compactMap { Double($0[3]) }.filter { $0 >= started }.first
             let normalSpawn = events.compactMap { fields($0, #"^QL_WORKER_BOUNDARY spawned id=(\d+) mode=normal service=(\d+) worker=(\d+) at=([0-9.]+)$"#) }
                 .first { Double($0[3]).map { $0 >= started } == true }
-            if let heldEnd, let normalSpawn, let pid = Int32(normalSpawn[2]), !sawNormalAliveAfterHeld {
-                let result = exactProcess(pid: pid, path: expected)
-                let check = ProcessInfo.processInfo.systemUptime
-                identitySamples.append(["pid": pid, "check_uptime": check, "held_end_uptime": heldEnd,
-                                        "state": result])
-                sawNormalAliveAfterHeld = check >= heldEnd && result == "expected"
+            if let heldEnd, let normalSpawn, !sawNormalAliveAfterHeld,
+               let snapshot = try hostWorkerObservation() {
+                identitySamples = snapshot["samples"] as? [[String: Any]] ?? []
+                sawNormalAliveAfterHeld = snapshot["kind"] as? String == "mostlytext-qlxpc-host-worker-process"
+                    && snapshot["service_pid"] as? Int == Int(normalSpawn[1])
+                    && snapshot["normal_pid"] as? Int == Int(normalSpawn[2])
+                    && abs((snapshot["held_end_uptime"] as? Double ?? -1) - heldEnd) < 0.001
+                    && identitySamples.contains { sample in
+                        (sample["check_uptime"] as? Double ?? -1) >= heldEnd
+                            && sample["normal"] as? String == "expected"
+                    }
             }
             if events.contains(where: { $0.hasPrefix("QL_WORKER_BOUNDARY pair-finished ")
                 && $0.contains(" isolated=true ") }) && sawNormalAliveAfterHeld { break }
@@ -52,9 +56,13 @@ final class ZZWorkerFinderTests: XCTestCase {
 
         let marker = finder.staticTexts["MOSTLYTEXT_QL_WORKER_ISOLATION_OK"].firstMatch
         let visible = marker.waitForExistence(timeout: max(0, 15 - (ProcessInfo.processInfo.systemUptime - started)))
-        let sourceVisible = finder.staticTexts.containing(
-            NSPredicate(format: "label CONTAINS %@", "# Hosted Quick Look fixture")
-        ).firstMatch.exists
+        // Finder's WebKit preview exposes the authored <pre> as a StaticText
+        // value, not as its accessibility label (observed in the retained UI tree).
+        let sourceText = finder.staticTexts.matching(
+            NSPredicate(format: "value CONTAINS %@", "# Hosted Quick Look fixture")
+        ).firstMatch
+        let sourceValue = sourceText.waitForExistence(timeout: 2) ? sourceText.value as? String : nil
+        let sourceVisible = sourceValue?.contains("# Hosted Quick Look fixture") == true
         events = try messages()
         let held = events.compactMap { fields($0, #"^QL_WORKER_BOUNDARY finished id=(\d+) mode=held service=(\d+) worker=(\d+) result=timedOut at=([0-9.]+)$"#) }
             .first { Double($0[3]).map { $0 >= started } == true }
@@ -67,6 +75,7 @@ final class ZZWorkerFinderTests: XCTestCase {
         let record: [String: Any] = [
             "kind": "mostlytext-qlxpc-worker-isolation", "started_uptime": started,
             "marker_visible": visible, "source_visible": sourceVisible,
+            "source_value": sourceValue ?? "",
             "normal_alive_after_held_timeout": sawNormalAliveAfterHeld,
             "distinct_workers_same_service": distinct, "normal_finished_after_held": order,
             "held_finished": held ?? [], "normal_finished": normal ?? [],
@@ -114,19 +123,15 @@ final class ZZWorkerFinderTests: XCTestCase {
         }
     }
 
-    private func exactProcess(pid: Int32, path: String) -> String {
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/bin/ps")
-        process.arguments = ["-p", String(pid), "-o", "pid=", "-o", "uid=", "-o", "comm="]
-        let output = Pipe()
-        process.standardOutput = output
-        process.standardError = Pipe()
-        do { try process.run(); process.waitUntilExit() } catch { return "error" }
-        let bytes = output.fileHandleForReading.readDataToEndOfFile()
-        guard bytes.count <= 2048,
-              let text = String(data: bytes, encoding: .utf8) else { return "error" }
-        let values = text.trimmingCharacters(in: .whitespacesAndNewlines).split(separator: " ", maxSplits: 2)
-        return values.count == 3 && values[0] == String(pid) && values[1] == "501" && values[2] == path
-            ? "expected" : "absent-or-wrong"
+    private func hostWorkerObservation() throws -> [String: Any]? {
+        let path = root + "/worker-process-observer.json"
+        guard FileManager.default.fileExists(atPath: path) else { return nil }
+        let bytes = try Data(contentsOf: URL(fileURLWithPath: path))
+        guard bytes.count <= 128 * 1024,
+              let value = try JSONSerialization.jsonObject(with: bytes) as? [String: Any],
+              value["kind"] as? String == "mostlytext-qlxpc-host-worker-process" else {
+            throw NSError(domain: "MostlyTextWorkerProbe", code: 2)
+        }
+        return value
     }
 }

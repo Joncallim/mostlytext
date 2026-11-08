@@ -270,6 +270,83 @@ def validate_host_process_observer(root, checkout):
     return snapshot
 
 
+def validate_worker_process_observer(root, checkout, messages):
+    raw = (root / 'worker-process-observer.json').read_bytes()
+    snapshot = json.loads(raw)
+    observer = json.loads((root / 'observer-result.json').read_text())
+    worker = observer.get('worker_process')
+    expected_service = root / 'build/Build/Products/Release/QLReplyProbeContainer.app/Contents/PlugIns/QLReplyProbeProvider.appex/Contents/XPCServices/QLReplyProbeXPCService.xpc/Contents/MacOS/QLReplyProbeXPCService'
+    keys = {'kind', 'checkout', 'normal_request_id', 'service_pid', 'normal_pid',
+            'normal_spawn_uptime', 'service_path', 'held_request_id', 'held_pid',
+            'held_end_uptime', 'samples'}
+    if (len(raw) > 128 * 1024 or not isinstance(snapshot, dict) or set(snapshot) != keys
+            or snapshot['kind'] != 'mostlytext-qlxpc-host-worker-process'
+            or snapshot['checkout'] != checkout or snapshot['service_path'] != str(expected_service)
+            or not isinstance(worker, dict)
+            or worker.get('snapshot_sha256') != hashlib.sha256(raw).hexdigest()
+            or any(type(snapshot[key]) is not int or snapshot[key] <= 0
+                   for key in ('normal_request_id', 'service_pid', 'normal_pid', 'held_request_id', 'held_pid'))
+            or len({snapshot['service_pid'], snapshot['normal_pid'], snapshot['held_pid']}) != 3
+            or snapshot['normal_request_id'] == snapshot['held_request_id']
+            or any(worker.get(key) != snapshot[key]
+                   for key in ('normal_request_id', 'service_pid', 'normal_pid'))):
+        raise RuntimeError('Independent worker process snapshot identity or digest differs')
+    started = snapshot['normal_spawn_uptime']
+    held_end = snapshot['held_end_uptime']
+    if (any(type(value) not in (int, float) or not math.isfinite(value)
+            for value in (started, held_end)) or not 0 < started < held_end):
+        raise RuntimeError('Invalid worker spawn/timeout monotonic times')
+    events = [
+        (r'QL_WORKER_BOUNDARY spawned id=(\d+) mode=normal service=(\d+) worker=(\d+) at=([0-9.]+)',
+         (snapshot['normal_request_id'], snapshot['service_pid'], snapshot['normal_pid'], started)),
+        (r'QL_WORKER_BOUNDARY finished id=(\d+) mode=held service=(\d+) worker=(\d+) result=timedOut at=([0-9.]+)',
+         (snapshot['held_request_id'], snapshot['service_pid'], snapshot['held_pid'], held_end)),
+    ]
+    for pattern, expected in events:
+        found = [match for message in messages if (match := re.fullmatch(pattern, message))]
+        if len(found) != 1 or tuple(float(value) for value in found[0].groups()) != expected:
+            raise RuntimeError('Worker host sample does not match exact service events')
+    complete_pattern = r'QL_WORKER_BOUNDARY finished id=(\d+) mode=normal service=(\d+) worker=(\d+) result=completed at=([0-9.]+)'
+    completed = [match for message in messages if (match := re.fullmatch(complete_pattern, message))]
+    if (len(completed) != 1
+            or tuple(int(completed[0][index]) for index in (1, 2, 3))
+            != (snapshot['normal_request_id'], snapshot['service_pid'], snapshot['normal_pid'])
+            or not held_end < float(completed[0][4])):
+        raise RuntimeError('Normal worker completion did not follow held timeout')
+    normal_end = float(completed[0][4])
+    samples = snapshot['samples']
+    rows = worker.get('samples')
+    if (not isinstance(samples, list) or not 1 <= len(samples) <= 32
+            or not isinstance(rows, list) or len(rows) != len(samples)):
+        raise RuntimeError('Incomplete bounded worker host process journal')
+    previous = started
+    alive_after_held = False
+    for index, (sample, row) in enumerate(zip(samples, rows)):
+        name = f'worker-process-journal/{index:03d}.json'
+        if (not isinstance(sample, dict) or set(sample) != {'index', 'uptime', 'check_uptime', 'normal'}
+                or sample['index'] != index or sample['normal'] not in ('expected', 'absent', 'wrong')
+                or any(type(sample[key]) not in (int, float) or not math.isfinite(sample[key])
+                       for key in ('uptime', 'check_uptime'))
+                or not previous <= sample['uptime'] <= sample['check_uptime']
+                or not isinstance(row, dict) or row.get('file') != name):
+            raise RuntimeError('Invalid worker host process sample')
+        previous = sample['check_uptime']
+        journal_raw = (root / name).read_bytes()
+        expected_row = {'kind': 'mostlytext-qlxpc-worker-process-sample', 'checkout': checkout,
+                        'normal_request_id': snapshot['normal_request_id'],
+                        'normal_pid': snapshot['normal_pid'], 'sample': sample}
+        if (len(journal_raw) > 4096 or len(journal_raw) != row.get('bytes')
+                or hashlib.sha256(journal_raw).hexdigest() != row.get('sha256')
+                or json.loads(journal_raw) != expected_row):
+            raise RuntimeError('Worker host process journal member changed')
+        alive_after_held |= (held_end <= sample['uptime'] <= sample['check_uptime'] < normal_end
+                             and sample['normal'] == 'expected')
+    if ({path.name for path in (root / 'worker-process-journal').iterdir()}
+            != {f'{index:03d}.json' for index in range(len(samples))} or not alive_after_held):
+        raise RuntimeError('No independent normal worker process proof after held timeout')
+    return snapshot
+
+
 def validate_xpc_hold_observation(observed, messages, host):
     keys = {'kind', 'request_id', 'provider_pid', 'service_pid', 'started_uptime', 'hold_started_uptime',
             'ready_uptime', 'invalidated_uptime', 'samples', 'marker_visible',
@@ -666,6 +743,15 @@ def main():
         host_process = validate_host_process_observer(root, record['checkout'])
         record['host_process_observation'] = host_process
         receipt_path.write_text(json.dumps(record, indent=2) + "\n")
+        worker_stream = json.loads((root / 'provider-observer.json').read_text())
+        if (worker_stream.get('kind') != 'mostlytext-qljsc-host-observer'
+                or worker_stream.get('checkout') != record['checkout']
+                or not isinstance(worker_stream.get('messages'), list)):
+            raise RuntimeError('Worker process events lack the current host stream identity')
+        worker_messages = worker_stream['messages']
+        host_worker = validate_worker_process_observer(root, record['checkout'], worker_messages)
+        record['host_worker_process_observation'] = host_worker
+        receipt_path.write_text(json.dumps(record, indent=2) + "\n")
         record['host_observer_proof'] = validate_host_observer(root, record['checkout'])
         controls = json.loads((root / 'observer-control-events.json').read_text())
         nonce = record['host_observer_proof']['observer']['nonce']
@@ -717,6 +803,30 @@ def main():
                 ('marker_visible', 'source_visible', 'normal_alive_after_held_timeout',
                  'distinct_workers_same_service', 'normal_finished_after_held')):
             raise RuntimeError('Require one actual bounded worker Finder attachment with source and process proof')
+        observed_worker = worker[0]
+        observed_samples = observed_worker.get('identity_samples')
+        expected_samples = host_worker['samples']
+        samples_match = isinstance(observed_samples, list) and 0 < len(observed_samples) <= len(expected_samples)
+        if samples_match:
+            for actual, expected_sample in zip(observed_samples, expected_samples):
+                if (not isinstance(actual, dict) or set(actual) != set(expected_sample)
+                        or actual.get('index') != expected_sample['index']
+                        or actual.get('normal') != expected_sample['normal']
+                        or any(type(actual.get(key)) not in (int, float)
+                               or abs(actual[key] - expected_sample[key]) >= 0.001
+                               for key in ('uptime', 'check_uptime'))):
+                    samples_match = False
+                    break
+        normal_fields = observed_worker.get('normal_finished')
+        held_fields = observed_worker.get('held_finished')
+        if (not isinstance(observed_worker.get('source_value'), str)
+                or '# Hosted Quick Look fixture' not in observed_worker['source_value']
+                or not samples_match
+                or not isinstance(normal_fields, list) or len(normal_fields) != 4
+                or not isinstance(held_fields, list) or len(held_fields) != 4
+                or normal_fields[2] != str(host_worker['normal_pid'])
+                or held_fields[2] != str(host_worker['held_pid'])):
+            raise RuntimeError('Finder source value or independently sampled worker identities differ')
         if not any(re.fullmatch(r'QL_WORKER_BOUNDARY pair-finished id=\d+ provider=\d+ held=timedOut heldWorker=\d+ normal=completed normalWorker=\d+ service=\d+ isolated=true at=[0-9.]+', x) for x in messages):
             raise RuntimeError('Require actual service pair result from own-generation log stream')
         record['javascriptcore_capability_observation'] = observations[0]
