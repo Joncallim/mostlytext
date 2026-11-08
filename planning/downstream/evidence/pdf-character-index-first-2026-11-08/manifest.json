@@ -1,0 +1,66 @@
+{
+  "source": "402d7752bb204530b24826afae99b5ef3f820c4a",
+  "actual_checkout": "a21cd891dc26d27d87c7071c601808ad9c76c12a",
+  "records": [
+    {
+      "file": "01-native-first-run.json.gz",
+      "original_name": "native-first-run.json",
+      "bytes": 13014,
+      "sha256": "4d464eea7541f8283000b2e70802e09f790f4df1f8f6d2245be8807fb9015035"
+    },
+    {
+      "file": "02-compliance-first-run.json.gz",
+      "original_name": "compliance-first-run.json",
+      "bytes": 12945,
+      "sha256": "030e37eadf3e1c3e64638dcf1ab6356949c9014f8e8577b3a3ca1ee7142d514c"
+    },
+    {
+      "file": "03-native-complete-first-workflow-logs.zip.gz",
+      "original_name": "native-complete-first-workflow-logs.zip",
+      "bytes": 13340,
+      "sha256": "b7ed99f01286b7014bf427954d4488a0ef983d422fcda2e698e597ece953a0e8"
+    },
+    {
+      "file": "04-compliance-complete-first-workflow-logs.zip.gz",
+      "original_name": "compliance-complete-first-workflow-logs.zip",
+      "bytes": 41380,
+      "sha256": "09a8ec28e4e8bc498ce56717ca30daa1307b21f614dded537e0b8ffed552fb45"
+    },
+    {
+      "file": "05-verify-first-readback.py.gz",
+      "original_name": "verify-first-readback.py",
+      "bytes": 5794,
+      "sha256": "02287f9d6278a5860666fe6107abb340bfecf5487890392c8a1b6afc4387995b"
+    },
+    {
+      "file": "06-first-readback-independently-verified.json.gz",
+      "original_name": "first-readback-independently-verified.json",
+      "bytes": 2130,
+      "sha256": "6a75a5c55b7dd2e82153db187cac134b345e90878f94b62e1adf605611108a59"
+    },
+    {
+      "file": "07-pdf-readback-receipt.json.gz",
+      "original_name": "pdf-readback-receipt.json",
+      "bytes": 1593,
+      "sha256": "c54851a4859359d849b0031de35d034a2c702fcadaa1e133bd885538e66512bf"
+    },
+    {
+      "file": "08-actual-pdf-readback.json.gz",
+      "original_name": "actual-pdf-readback.json",
+      "bytes": 23303,
+      "sha256": "07ff7cb0bfb6609a5c1a1f6011cd296f748d1b2d1b3c647d9d4d4235e03ad38d"
+    },
+    {
+      "file": "09-actual-pdf-page-1.png.gz",
+      "original_name": "actual-pdf-page-1.png",
+      "bytes": 20626,
+      "sha256": "99297b58780851bf0380dfdf0520ac5e4646c9e1389de396e5893d99e5996a93"
+    },
+    {
+      "file": "10-actual-pdf-page-2.png.gz",
+      "original_name": "actual-pdf-page-2.png",
+      "bytes": 10366,
+      "sha256": "76ec13570f71a5c099ba73c95ec5e81bad1964f49dd29b93259da94ac260bbce"
+    }
+  ]
+}

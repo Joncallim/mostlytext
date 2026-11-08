@@ -70,19 +70,73 @@ struct ReadActualExportPDF {
             let bounds = page.bounds(for: .mediaBox)
             let pageText = page.string ?? ""
             let visibleSelection = page.selection(for: bounds)?.string ?? ""
+            let attributedText = page.attributedString?.string
+            guard (attributedText?.utf8.count ?? 0) <= 16384 else { throw Refusal.invalid }
             guard pageText.utf8.count <= 16384, visibleSelection.utf8.count <= 16384,
                   bounds.width.isFinite, bounds.height.isFinite, bounds.width > 0, bounds.height > 0
             else { throw Refusal.invalid }
             var row: [String: Any] = [
                 "index": index, "media_box": [bounds.minX, bounds.minY, bounds.width, bounds.height],
                 "raw_page_text": pageText, "media_box_selection_text": visibleSelection,
+                "attributed_page_text": attributedText as Any? ?? NSNull(),
+                "attributed_utf16_count": attributedText.map { ($0 as NSString).length } as Any? ?? NSNull(),
             ]
+            row["character_count"] = page.numberOfCharacters
+            row["raw_utf16_count"] = (pageText as NSString).length
+            row["character_geometry"] = try characterGeometry(page: page, text: pageText)
             row["actual_raster_nonwhite_pixels"] = try raster(
                 graphicsPage, to: root.appendingPathComponent("actual-pdf-page-\(index + 1).png")
             )
             pages.append(row)
         }
         return pages
+    }
+
+    private static func characterGeometry(page: PDFPage, text: String) throws -> [[String: Any]] {
+        let source = text as NSString
+        guard page.numberOfCharacters == source.length, source.length <= 16384 else { throw Refusal.invalid }
+        return try (0 ..< source.length).map { index in
+            let box = page.characterBounds(at: index)
+            var row: [String: Any] = [
+                "utf16_index": index, "raw_index_text": source.substring(with: NSRange(location: index, length: 1)),
+            ]
+            let selection = page.selection(for: NSRange(location: index, length: 1))
+            let selectionText = selection?.string
+            guard (selectionText?.utf8.count ?? 0) <= 256 else { throw Refusal.invalid }
+            row["selection_present"] = selection != nil
+            row["selection_text"] = selectionText as Any? ?? NSNull()
+            if let selection {
+                let selectedBox = selection.bounds(for: page)
+                if selectedBox.isNull {
+                    row["selection_bounds"] = NSNull()
+                    row["selection_geometry_state"] = "null"
+                } else {
+                    guard [selectedBox.minX, selectedBox.minY, selectedBox.width, selectedBox.height]
+                        .allSatisfy(\.isFinite) else { throw Refusal.invalid }
+                    row["selection_bounds"] = [
+                        selectedBox.minX,
+                        selectedBox.minY,
+                        selectedBox.width,
+                        selectedBox.height,
+                    ]
+                    row["selection_geometry_state"] = selectedBox.isEmpty ? "empty" : "rect"
+                }
+            } else {
+                row["selection_bounds"] = NSNull()
+                row["selection_geometry_state"] = "missing"
+            }
+            if box.isNull {
+                row["bounds"] = NSNull()
+                row["geometry_state"] = "null"
+            } else {
+                guard [box.minX, box.minY, box.width, box.height].allSatisfy(\.isFinite) else {
+                    throw Refusal.invalid
+                }
+                row["bounds"] = [box.minX, box.minY, box.width, box.height]
+                row["geometry_state"] = box.isEmpty ? "empty" : "rect"
+            }
+            return row
+        }
     }
 
     private static func raster(_ page: CGPDFPage, to output: URL) throws -> Int {
