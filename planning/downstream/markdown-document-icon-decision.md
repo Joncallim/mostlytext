@@ -21,7 +21,8 @@ concrete without claiming it has been accepted in Finder.
 
 - `MacDown2/project.yml` declares `net.daringfireball.markdown`, the five
   current Markdown extensions, `CFBundleTypeRole: Editor`, and
-  `LSHandlerRank: Default`. It has no `CFBundleTypeIconFile` for that type.
+  `LSHandlerRank: Default`. The main baseline named above had no
+  `CFBundleTypeIconFile` for that type; this candidate adds the key.
 - `planning/IDENTITY.md` reserves the resource stem `MarkdownDocument` and
   assigns artwork, key wiring, and actual Finder/Open With presentation to #7.
 - `MacDown2/MacDown2/AppIcon.icon` is the D-028 app icon. Its approved use is
@@ -76,8 +77,8 @@ MostlyText Markdown UTI or change the existing public Markdown handler rank.
    document declaration's `CFBundleTypeIconFile: MarkdownDocument` in
    `MacDown2/project.yml`. Regenerate the Xcode project; never edit the
    generated project by hand.
-3. Test byte-for-byte reproducibility of the generated `.icns`; assert the
-   source paths equal the canonical mark paths, the compiled bundle contains
+3. Test byte-for-byte reproducibility of the generated `.icns`; review the
+   generator's canonical mark input paths, and assert the compiled bundle contains
    `Contents/Resources/MarkdownDocument.icns`, the built `Info.plist` points
    to it, and the Markdown UTI/role/rank/extension declarations are unchanged.
    Run the repository's locked Release build and relevant checks. The local
