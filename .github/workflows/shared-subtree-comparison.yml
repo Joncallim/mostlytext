@@ -1,4 +1,4 @@
-name: Shared subtree C comparison qualification
+name: Tree-sitter C runtime qualification
 
 permissions:
   contents: read
@@ -11,6 +11,7 @@ on:
       - 'MacDown2/Packages/MacDownKit/Package.resolved'
       - 'MacDown2/Packages/TreeSitterMarkdown/Package.swift'
       - '.github/scripts/*shared-subtree*'
+      - '.github/c-probes/*'
       - '.github/workflows/shared-subtree-comparison.yml'
   workflow_dispatch:
 
@@ -28,7 +29,7 @@ jobs:
           persist-credentials: false
       - name: Reject unreviewed dependency owners and no-op candidates
         run: python3 .github/scripts/test-shared-subtree-pin-review.py
-      - name: Prove actual runtime semantics, bounded work and sanitizer behavior
+      - name: Prove parser ranges, UTF-16 bounds, subtree ownership and bounded work
         run: python3 .github/scripts/run-shared-subtree-comparison-probe.py "$RUNNER_TEMP/shared-subtree-comparison"
       - uses: actions/upload-artifact@v4
         if: always()
@@ -39,4 +40,5 @@ jobs:
             ${{ runner.temp }}/shared-subtree-comparison/*.log
             ${{ runner.temp }}/shared-subtree-comparison/*.json
             ${{ runner.temp }}/shared-subtree-comparison/*-linked-libraries.txt
+            ${{ runner.temp }}/shared-subtree-comparison/*-probe
           if-no-files-found: warn
