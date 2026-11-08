@@ -18,7 +18,6 @@
     "MacDown2/MacDown2/TextFilterCommands.swift": "96f125183edbb097e7c97008088590c4c2f20f883a2755e58cb60cba0eb57991",
     "MacDown2/MacDown2/TextFilterCoordinator.swift": "c5de2d59e224e101231a3d02ff0b42790fcabb4b12514c372b2a15a693d6edff",
     "MacDown2/MacDown2/ThemeExportDocument.swift": "6384ff057496e0c505f04c70bbb5ef77d4bdada0ede2ebd4e7ab9afecec553c4",
-    "MacDown2/MacDown2/ThemeManagementSection.swift": "d32bd2508b3e2ae3fc141d61f9e8245c69736c333676d37fa8ae33a690c30f5e",
     "MacDown2/MacDown2/ValidatedExportPanel.swift": "80a277a6cd22ba769f20ca731686dff72fc198150c49c522f0c115344853526a",
     "MacDown2/MacDown2/WindowController+Close.swift": "0af2d94c527de29dc79b6ef109fcd01fbd897322b7edd269dffa40e74dfbc825",
     "MacDown2/MacDown2/WindowController+Encoding.swift": "4f954c30a1bd0607c6c0bc8b3a33601efbaf1a7c5118ad592c6b0ffe26d04884",
@@ -162,13 +161,6 @@
       "path": "MacDown2/MacDown2/ThemeExportDocument.swift",
       "line": 40,
       "kind": "theme_export_name",
-      "literal": "\"Theme\"",
-      "route": "localized"
-    },
-    {
-      "path": "MacDown2/MacDown2/ThemeManagementSection.swift",
-      "line": 11,
-      "kind": "filename_fallback",
       "literal": "\"Theme\"",
       "route": "localized"
     },

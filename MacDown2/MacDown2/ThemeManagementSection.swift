@@ -8,7 +8,9 @@ struct ThemeManagementSection: View {
     @State private var importing = false
     @State private var exporting = false
     @State private var exportDocument: ThemeExportDocument?
-    @State private var exportName = String(localized: "Theme")
+    /// Share the document's catalogued fallback. A localized literal in this
+    /// State initializer acquired a different file's location in Release extraction.
+    @State private var exportName = ThemeExportDocument.suggestedName(String())
 
     private var selected: Theme {
         controller.available.first { $0.id == selectedID } ?? controller.current

@@ -23,4 +23,9 @@ struct ThemeExportDocumentTests {
         #expect(!name.contains("\\"))
         #expect(!name.contains(":"))
     }
+
+    @Test func emptySuggestedNameUsesTheSameLocalizedFallbackAsTheExporter() {
+        #expect(ThemeExportDocument.suggestedName(String()) == String(localized: "Theme"))
+        #expect(ThemeExportDocument.suggestedName("Named theme") == "Named theme")
+    }
 }
