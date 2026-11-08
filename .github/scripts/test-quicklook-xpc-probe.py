@@ -1,15 +1,25 @@
 #!/usr/bin/env python3
 """Pure XPC process/own-request controls; no service or product is launched."""
 import importlib.util
+import json
 from pathlib import Path
+import plistlib
+import shutil
+import subprocess
 import sys
+import tempfile
 import unittest
+from unittest import mock
 
 sys.dont_write_bytecode = True
 HERE = Path(__file__).resolve().parent
 SPEC = importlib.util.spec_from_file_location('xpc_probe', HERE / 'prepare-quicklook-jsc-probe.py')
 PREP = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(PREP)
+FIXTURE = HERE.parent / 'quicklook-jsc-probe'
+SIGN_SPEC = importlib.util.spec_from_file_location('xpc_sign', FIXTURE / 'resign-embedded-xpc.py')
+SIGN = importlib.util.module_from_spec(SIGN_SPEC)
+SIGN_SPEC.loader.exec_module(SIGN)
 
 
 def example():
@@ -60,6 +70,94 @@ class XPCObservationTests(unittest.TestCase):
             PREP.validate_provider_entitlements({'com.apple.security.app-sandbox': True,
                                                  'com.apple.security.files.user-selected.read-only': True,
                                                  'com.apple.security.temporary-exception.mach-lookup.global-name': True})
+
+    def test_service_source_and_signed_entitlements_are_exact(self):
+        expected = {'com.apple.security.app-sandbox': True}
+        self.assertEqual(plistlib.loads((FIXTURE / 'XPCService.entitlements').read_bytes()), expected)
+        xml = plistlib.dumps(expected)
+        signed = subprocess.CompletedProcess([], 0, b'', b'Executable=/fixture\n' + xml)
+        SIGN.require_exact_entitlements(SIGN.entitlements_from_codesign(signed))
+        for extra in ({'com.apple.security.temporary-exception.files.absolute-path.read-only': ['/']},
+                      {'com.apple.security.temporary-exception.mach-lookup.global-name':
+                       ['com.apple.testmanagerd', 'com.apple.dt.testmanagerd.runner',
+                        'com.apple.coresymbolicationd']}):
+            with self.assertRaises(RuntimeError):
+                SIGN.require_exact_entitlements(expected | extra)
+
+    def test_extra_source_right_is_refused_before_codesign(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = Path(directory)
+            (fixture / 'XPCService.entitlements').write_bytes(plistlib.dumps({
+                'com.apple.security.app-sandbox': True,
+                'com.apple.security.temporary-exception.files.absolute-path.read-only': ['/']}))
+            with mock.patch.object(SIGN, 'require_hosted_fixture', return_value=(fixture, fixture, fixture)), \
+                    mock.patch.object(SIGN.subprocess, 'run', side_effect=AssertionError('codesign reached')):
+                with self.assertRaisesRegex(RuntimeError, 'only the sandbox entitlement'):
+                    SIGN.main()
+
+    def test_embedded_copy_is_resigned_and_final_extra_right_is_refused(self):
+        sandbox = {'com.apple.security.app-sandbox': True}
+        injected = sandbox | {'com.apple.security.temporary-exception.files.absolute-path.read-only': ['/']}
+        for after in (sandbox, injected):
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                fixture = root / 'fixture'
+                fixture.mkdir()
+                source = fixture / 'XPCService.entitlements'
+                source.write_bytes(plistlib.dumps(sandbox))
+                service = root / 'App/Contents/XPCServices/QLReplyProbeXPCService.xpc'
+                (service / 'Contents').mkdir(parents=True)
+                (service / 'Contents/Info.plist').write_bytes(plistlib.dumps({
+                    'CFBundleIdentifier': 'app.mostlytext.QLReplyProbe.XPCService',
+                    'XPCService': {'ServiceType': 'Application'}}))
+                observed = subprocess.CompletedProcess([], 0, plistlib.dumps(injected), b'')
+                signed = subprocess.CompletedProcess([], 0, plistlib.dumps(after), b'')
+                with mock.patch.object(SIGN, 'require_hosted_fixture', return_value=(root, fixture, service)), \
+                        mock.patch.object(SIGN.subprocess, 'run', side_effect=[observed, None, None, signed]) as calls:
+                    if after == sandbox:
+                        SIGN.main()
+                    else:
+                        with self.assertRaisesRegex(RuntimeError, 'only the sandbox entitlement'):
+                            SIGN.main()
+                self.assertEqual(len(calls.call_args_list), 4)
+                sign_command = calls.call_args_list[1].args[0]
+                self.assertEqual(sign_command[:6], ['/usr/bin/codesign', '--force', '--sign', '-',
+                                                    '--options', 'runtime'])
+                self.assertEqual(sign_command[-1], str(service))
+                self.assertEqual(sign_command[sign_command.index('--entitlements') + 1], str(source))
+                self.assertEqual(plistlib.loads((root / 'xpc-service-after-resign-entitlements.plist').read_bytes()),
+                                 after)
+
+    def test_generated_service_embed_precedes_correction_phase(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = Path(directory) / 'fixture'
+            shutil.copytree(FIXTURE, fixture)
+            subprocess.run(['xcodegen', 'generate', '--spec', str(fixture / 'project.yml')],
+                           capture_output=True, check=True, timeout=60)
+            project = fixture / 'QuickLookReplyProbe.xcodeproj/project.pbxproj'
+            objects = json.loads(subprocess.check_output(
+                ['plutil', '-convert', 'json', '-o', '-', str(project)], timeout=30))['objects']
+            app = next(value for value in objects.values()
+                       if value.get('isa') == 'PBXNativeTarget'
+                       and value.get('name') == 'QLReplyProbeContainer')
+            phases = [objects[phase] for phase in app['buildPhases']]
+            copies = [position for position, phase in enumerate(phases)
+                      if phase['isa'] == 'PBXCopyFilesBuildPhase'
+                      and phase.get('dstPath') == '$(CONTENTS_FOLDER_PATH)/XPCServices'
+                      and any(objects[objects[item]['fileRef']].get('path') == 'QLReplyProbeXPCService.xpc'
+                              for item in phase['files'])]
+            scripts = [position for position, phase in enumerate(phases)
+                       if phase['isa'] == 'PBXShellScriptBuildPhase'
+                       and phase.get('name') == 'Sign embedded XPC service with source entitlements'
+                       and phase.get('shellScript') == 'python3 "$SRCROOT/resign-embedded-xpc.py"']
+            self.assertEqual(len(copies), 1)
+            self.assertEqual(len(scripts), 1)
+            self.assertLess(copies[0], scripts[0])
+            self.assertEqual(scripts[0], len(phases) - 1)
+            self.assertEqual(phases[scripts[0]]['alwaysOutOfDate'], '1')
+            self.assertIn('$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)/Contents/XPCServices/'
+                          'QLReplyProbeXPCService.xpc/Contents/Info.plist',
+                          phases[scripts[0]]['inputPaths'])
 
 
 if __name__ == '__main__':
