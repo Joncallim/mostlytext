@@ -152,3 +152,19 @@ artifact and release acceptance remain separately open. No whole issue closes
 from this renderer correction alone. A later ordinary export activation must
 consume the qualified renderer and current PDF helper and run its own real menu,
 Cancel, external PDF validation and normal Quit.
+
+## Deliberate hosted dependency resolution
+
+Shipping fork commit is `ff74cf54c278b451b2c59387dd00315830266a36`.
+Before adopting its lock, run an explicit SwiftPM resolve on the guarded macOS 26
+ARM runner. A never-merge precursor uses the existing registered manual workflow
+path, validates exact original Package.swift and all 24 locked entries, changes
+only the declared Textual revision, and captures the real resulting lockfile.
+The precursor's original package manifest/lock bytes equal the canonical candidate.
+Require all other 23 pins and all locations/kinds to remain identical; reject any
+extra/missing dependency. The resolver may update its ordinary originHash metadata.
+Capture both manifests/locks, complete log, actual host/source/command/outcome and
+an exact source-restoration receipt. No product build, app/GUI or engine executes.
+Only adopt independently read-back successful output; no local package resolution
+or hand-manufactured resolved metadata. The complete combined-source native/full
+qualification still follows this precursor.
