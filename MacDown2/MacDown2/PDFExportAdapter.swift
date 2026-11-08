@@ -70,14 +70,19 @@ enum PDFExportAdapter {
                                    lease: ExportLifetimeLease?, admission: ExportDestinationAdmission) async throws {
         try lease?.checkActive()
 
-        let webView = WKWebView(frame: .zero, configuration: lockedConfiguration())
+        let printURL = temporaryURL(nextTo: url)
+        let snapshotURL = temporaryURL(nextTo: url)
+        defer {
+            try? FileManager.default.removeItem(at: printURL)
+            try? FileManager.default.removeItem(at: snapshotURL)
+        }
+        let info = printInfo(savingTo: printURL)
+        guard let size = PDFSnapshotFallback.viewportSize(for: info) else {
+            throw PDFExportError.printConfigurationFailed
+        }
+        let webView = WKWebView(frame: NSRect(origin: .zero, size: size), configuration: lockedConfiguration())
         let delegate = PDFNavigationDelegate()
         webView.navigationDelegate = delegate
-
-        // An A4-ish, portrait page size; the print system supplies the real
-        // pagination geometry via NSPrintInfo, so this frame only needs to be
-        // non-empty for layout.
-        webView.frame = NSRect(x: 0, y: 0, width: 794, height: 1123)
 
         // Load failures surface as themselves: they already carry prose the
         // user can act on, and wrapping them as a write failure would misname
@@ -87,15 +92,7 @@ enum PDFExportAdapter {
         try lease?.checkActive()
 
         try admission.checkCurrent()
-        let printURL = temporaryURL(nextTo: url)
-        let snapshotURL = temporaryURL(nextTo: url)
-        // Neither scratch file is left behind on any exit path.
-        defer {
-            try? FileManager.default.removeItem(at: printURL)
-            try? FileManager.default.removeItem(at: snapshotURL)
-        }
-
-        let operation = try configuredOperation(for: webView, savingTo: printURL)
+        let operation = try configuredOperation(for: webView, savingTo: printURL, printInfo: info)
         guard operation.run() else {
             throw PDFExportError.printOperationFailed
         }
@@ -152,12 +149,13 @@ enum PDFExportAdapter {
         }
     }
 
-    private static func configuredOperation(for webView: WKWebView, savingTo url: URL) throws -> NSPrintOperation {
-        let operation = webView.printOperation(with: NSPrintInfo())
-        // WKWebView builds its own operation. Install the save destination on
-        // that operation, rather than relying on its factory to retain the
-        // incoming NSPrintInfo object or mutating a copied getter result.
-        configure(operation, savingTo: url)
+    private static func configuredOperation(
+        for webView: WKWebView, savingTo url: URL, printInfo: NSPrintInfo
+    ) throws -> NSPrintOperation {
+        let operation = webView.printOperation(with: printInfo)
+        // Reapply the same configured geometry used before WebKit layout;
+        // the operation factory need not retain the incoming NSPrintInfo object.
+        operation.printInfo = printInfo
         guard operation.printInfo.jobDisposition == .save,
               operation.printInfo.dictionary()[NSPrintInfo.AttributeKey.jobSavingURL] as? URL == url
         else { throw PDFExportError.printConfigurationFailed }

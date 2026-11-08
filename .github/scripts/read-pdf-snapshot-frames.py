@@ -16,6 +16,34 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def verify_candidate_rendering(root, observed):
+    names = ['original', 'paper', 'minimal', 'boundary-original', 'boundary-paper', 'css-paper', 'css-boundary-paper']
+    cases = observed.get('completed_cases')
+    if not isinstance(cases, list) or [c.get('case') for c in cases] != names:
+        raise RuntimeError('Require every unique original and candidate canvas control in order')
+    rows = {c['case']: c for c in cases}
+
+    def png(name, index):
+        path = root / f'{name}-page-{index + 1}.png'
+        if path.is_symlink() or not path.is_file() or not 0 < path.stat().st_size <= 4 * 1024 * 1024:
+            raise RuntimeError('Require bounded actual candidate/reference PNG bytes')
+        return path.read_bytes()
+
+    for candidate, reference, count in [('css-paper', 'original', 1), ('css-boundary-paper', 'boundary-original', 2)]:
+        row = rows[candidate]; original = rows[reference]
+        if (row['snapshot_media_box'][2] != 794 or len(row['pages']) != count
+                or len(original['pages']) != 2):
+            raise RuntimeError('Candidate narrowed layout, appended viewport blankness or trimmed authored space')
+        for i in range(count):
+            page, prior = row['pages'][i], original['pages'][i]
+            if (type(page['index']) is not int or page['index'] != i or page['raw_text'] != prior['raw_text']
+                    or type(page['actual_raster_nonwhite_pixels']) is not int
+                    or page['actual_raster_nonwhite_pixels'] != prior['actual_raster_nonwhite_pixels']
+                    or (i == 0 and (not page['raw_text'].strip() or page['actual_raster_nonwhite_pixels'] <= 0))
+                    or png(candidate, i) != png(reference, i)):
+                raise RuntimeError('Candidate changed actual text or pixels instead of only the unused canvas')
+
+
 def main():
     if sys.flags.optimize or sys.argv[1:] not in [['prepare'], ['observe']]:
         raise RuntimeError('Choose one fixed nonoptimized native diagnostic phase')
@@ -32,8 +60,12 @@ def main():
         raise RuntimeError('Require the exact immutable original own canary HTML')
     files = ['.github/hosted-export-acceptance/ReadSnapshotFrames.swift',
              'MacDown2/MacDown2/PDFSnapshotFallback.swift', 'MacDown2/MacDown2/PDFExportAdapter.swift',
-             '.github/scripts/read-pdf-snapshot-frames.py', '.github/scripts/read-actual-export-pdf.py',
+             'MacDown2/Packages/MacDownKit/Sources/ExportService/PDFCanvasStylesheet.swift',
+             '.github/scripts/read-pdf-snapshot-frames.py', '.github/scripts/test-pdf-snapshot-result.py',
+             '.github/scripts/test-actual-export-pdf-readback.py', '.github/scripts/read-actual-export-pdf.py',
              '.github/scripts/prepare-hosted-public-focus.py', '.github/workflows/pdf-snapshot-frames.yml', str(manifest)]
+    files += subprocess.check_output(['git', 'ls-files', '--',
+        'planning/downstream/evidence/pdf-scrollbar-prototype-qualified-2026-11-08'], text=True).splitlines()
     inputs = {p: sha(Path(p)) for p in files}
     path = ROOT / 'snapshot-frame-receipt.json'
     if sys.argv[1] == 'prepare':
@@ -70,8 +102,10 @@ def main():
     observed = json.loads((ROOT / 'snapshot-frame-observations.json').read_bytes())
     if (observed['diagnostic_only'] is not True or observed['qualification_candidate'] is not False
             or observed['input_sha256'] != INPUT_SHA
-            or [r['case'] for r in observed['completed_cases']] != ['original', 'paper', 'minimal']):
+            or [r['case'] for r in observed['completed_cases']] != ['original', 'paper', 'minimal', 'boundary-original', 'boundary-paper', 'css-paper', 'css-boundary-paper']):
         raise RuntimeError('Incomplete fixed native comparison')
+    verify_candidate_rendering(ROOT, observed)
+    record['rendering_regression_controls_passed'] = True
     record['complete_comparison'] = True
     path.write_text(json.dumps(record, indent=2) + '\n')
 

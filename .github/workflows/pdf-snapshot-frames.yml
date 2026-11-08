@@ -1,4 +1,4 @@
-name: Diagnose native PDF snapshot canvas pagination
+name: Native PDF canvas and page-boundary regression controls
 permissions:
   contents: read
 on:
@@ -9,6 +9,9 @@ on:
       - '.github/hosted-export-acceptance/ReadSnapshotFrames.swift'
       - '.github/scripts/read-pdf-snapshot-frames.py'
       - '.github/workflows/pdf-snapshot-frames.yml'
+      - 'MacDown2/MacDown2/PDFSnapshotFallback.swift'
+      - 'MacDown2/Packages/MacDownKit/Sources/ExportService/PDFCanvasStylesheet.swift'
+      - '.github/scripts/test-pdf-snapshot-result.py'
 concurrency:
   group: pdf-snapshot-frames-${{ github.ref }}
   cancel-in-progress: false
@@ -30,12 +33,13 @@ jobs:
           xcodebuild -version
           sw_vers
           python3 .github/scripts/test-actual-export-pdf-readback.py
+          python3 .github/scripts/test-pdf-snapshot-result.py
           python3 .github/scripts/read-pdf-snapshot-frames.py prepare
       - name: Compile private comparison with unchanged product pagination
         run: |
           set -euo pipefail
-          xcrun swiftc -parse-as-library -warnings-as-errors -swift-version 6 -strict-concurrency=complete .github/hosted-export-acceptance/ReadSnapshotFrames.swift MacDown2/MacDown2/PDFSnapshotFallback.swift -o "$RUNNER_TEMP/mostlytext-focus/read-snapshot-frames"
-      - name: Observe three fixed actual canvas heights once
+          xcrun swiftc -parse-as-library -warnings-as-errors -swift-version 6 -strict-concurrency=complete .github/hosted-export-acceptance/ReadSnapshotFrames.swift MacDown2/MacDown2/PDFSnapshotFallback.swift MacDown2/Packages/MacDownKit/Sources/ExportService/PDFCanvasStylesheet.swift -o "$RUNNER_TEMP/mostlytext-focus/read-snapshot-frames"
+      - name: Observe five original controls and two scrollbar-free prototypes once
         run: python3 .github/scripts/read-pdf-snapshot-frames.py observe
       - uses: actions/upload-artifact@v4
         if: always()
@@ -46,6 +50,6 @@ jobs:
             ${{ runner.temp }}/mostlytext-focus/*.pdf
             ${{ runner.temp }}/mostlytext-focus/*.png
             ${{ runner.temp }}/mostlytext-focus/*.log
-            ${{ runner.temp }}/mostlytext-focus/original.html
+            ${{ runner.temp }}/mostlytext-focus/*.html
             ${{ runner.temp }}/mostlytext-focus/read-snapshot-frames
           if-no-files-found: error
