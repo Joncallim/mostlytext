@@ -269,10 +269,16 @@ struct SecuredMarkdownMountedTests {
         let selected = findTextInteraction(in: host)
         let native = selected as? Textual.NSTextInteractionView
         let modelID = native.map { ObjectIdentifier($0.model) }
+        let selectedModelLayout: String
+        if phase.hasPrefix("repeat-copy-complete-") {
+            selectedModelLayout = native?.model.diagnosticLayoutSummary() ?? "unobserved"
+        } else {
+            selectedModelLayout = "unobserved"
+        }
         print("MOUNTED_INLINE_INSTANCE phase=\(phase) expectedLoadID=\(loadID.uuidString) "
             + "selectedViewID=\(String(describing: selected.map(ObjectIdentifier.init))) "
             + "selectedModelID=\(String(describing: modelID)) "
-            + "selectedModelLayout=\(native?.model.diagnosticLayoutSummary() ?? "unobserved") "
+            + "selectedModelLayout=\(selectedModelLayout) "
             + "selectedViewLoadID=unobserved")
     }
 }
