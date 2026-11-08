@@ -85,3 +85,17 @@ The public menu/save-panel journey, complete-operation cancellation, native
 test-desktop acceptance, exact signed release candidate and whole-app memory
 outside this hosted fixture remain separate #11/#8/#4 gates. The #11 budget
 checkbox stays open until the expanded measurements support a final policy.
+
+## First hosted build checkpoint
+
+The first PR run, `42518844573`, reached the Release app/test compilation but
+stopped before any measurement. Existing Preview test sources call the
+`PreviewResourceFolderSelection.fixture` helper, which is guarded by
+`DEBUG || RELEASE_PREVIEW_PROBE`; this exploratory Release build had enabled
+only `EXPORT_BUDGET_PROBE`. The first artifact and full failed job log are
+retained at
+`/Volumes/Fast SSD/CORTANA-Builds/export-budget-calibration-20261109/run-42518844573`.
+The workflow now enables the existing `RELEASE_PREVIEW_PROBE` test-only
+condition alongside `EXPORT_BUDGET_PROBE` for its build and test steps. No
+Export budget or product implementation changed, and the failed run supplies
+no memory or export-path result.

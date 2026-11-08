@@ -70,7 +70,7 @@ jobs:
           set -euo pipefail
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
             -configuration Release ENABLE_TESTABILITY=YES \
-            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) EXPORT_BUDGET_PROBE' \
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) EXPORT_BUDGET_PROBE RELEASE_PREVIEW_PROBE' \
             -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/export-budget-app" \
             -onlyUsePackageVersionsFromResolvedFile -enableCodeCoverage NO build-for-testing
       - name: Measure actual ExportService, WebKit print and PDFKit
@@ -87,7 +87,7 @@ jobs:
             python3 .github/scripts/run-owned-app-tests.py "$ROOT/diagnostics" "$APP" -- \
               xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
                 -configuration Release ENABLE_TESTABILITY=YES \
-                'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) EXPORT_BUDGET_PROBE' \
+                'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) EXPORT_BUDGET_PROBE RELEASE_PREVIEW_PROBE' \
                 -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/export-budget-app" \
                 -onlyUsePackageVersionsFromResolvedFile -parallel-testing-enabled NO \
                 -resultBundlePath "$ROOT/actual-export.xcresult" \
