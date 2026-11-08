@@ -1,0 +1,159 @@
+{
+  "source": "bf67f10cef40dd1f8db0aa6e2d0395359d97478a",
+  "native_run": 42448090646,
+  "compliance_run": 42448095986,
+  "whole_native_first": "failure_due_to_controlled_faults_and_retained_baseline_failures",
+  "all_three_compiled_and_executed": true,
+  "normal_issue_counts": {
+    "original": 8,
+    "inline-only": 0,
+    "fragment-only": 8
+  },
+  "controlled_issue_counts": {
+    "original": 6,
+    "inline-only": 3,
+    "fragment-only": 3
+  },
+  "original_evidence_root": "/Volumes/Fast SSD/CORTANA-Builds/preview-renderer-stages-20261108/first-bf67f10c",
+  "records": [
+    {
+      "file": "00-native-first-run.json.gz",
+      "original_path": "native-first-run.json",
+      "bytes": 12521,
+      "sha256": "b5fdef3cb8d35410977c9ff005c709b9111705107b59546c13696a6ecc906307"
+    },
+    {
+      "file": "01-native-first-artifacts.json.gz",
+      "original_path": "native-first-artifacts.json",
+      "bytes": 2324,
+      "sha256": "a74908ed6d65bc037f8721f719dea137dc6b9d546f8db95558439280c27452cc"
+    },
+    {
+      "file": "02-compliance-first-run.json.gz",
+      "original_path": "compliance-first-run.json",
+      "bytes": 12429,
+      "sha256": "da4f870a41446f52ec4dc001d0b073b488dc0498032060304926a3c3b2ae97fc"
+    },
+    {
+      "file": "03-compliance-first-artifacts.json.gz",
+      "original_path": "compliance-first-artifacts.json",
+      "bytes": 32,
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    {
+      "file": "04-native-complete-first-workflow-logs.zip.gz",
+      "original_path": "native-complete-first-workflow-logs.zip",
+      "bytes": 2606983,
+      "sha256": "6298ea5895e760d2bbec071ad63167edda270b0ea8dae3028628ace7f7a0f898"
+    },
+    {
+      "file": "05-compliance-complete-first-workflow-logs.zip.gz",
+      "original_path": "compliance-complete-first-workflow-logs.zip",
+      "bytes": 40886,
+      "sha256": "49c308865cd085cab13fbe48c5e8f0afa38979de67b6f6b59decb18e13d88f97"
+    },
+    {
+      "file": "06-three-layer-firsts-independently-verified.json.gz",
+      "original_path": "three-layer-firsts-independently-verified.json",
+      "bytes": 108629,
+      "sha256": "220627ec68f7f727a6a0775a317df0f17140615a901c09c9118ca68a22486223"
+    },
+    {
+      "file": "07-verify-three-layer-firsts.py.gz",
+      "original_path": "verify-three-layer-firsts.py",
+      "bytes": 9992,
+      "sha256": "767a27aebe57eda0bd6496947e902cd4b2c356224deb6d0c00756020f3d4bc74"
+    },
+    {
+      "file": "08-textual-stage-observations.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision-original/textual-stage-observations.json",
+      "bytes": 596774,
+      "sha256": "bcba07d9b48ba27680333866a6ee8c8ca483a459e2e9fd780cca602c80148646"
+    },
+    {
+      "file": "09-textual-diagnostic-host.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision-original/textual-diagnostic-host.json",
+      "bytes": 298,
+      "sha256": "14c60645cd50fdf3529b14f939afc9dc81b67d67f97e603dc45233abe129c83f"
+    },
+    {
+      "file": "10-textual-compiled-binding.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision-original/textual-compiled-binding.json",
+      "bytes": 752,
+      "sha256": "de045d597c20ec1285073c252a00050cd810cc26803d259ba0ddcca333363c3d"
+    },
+    {
+      "file": "11-actual-initial-summary.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision-original/actual-initial-summary.json",
+      "bytes": 28352,
+      "sha256": "f4045c2886d5fabe26db28c1a438750ea4f61ae2dd078f8e6c8b480ad92bcd9e"
+    },
+    {
+      "file": "12-status.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision-original/diagnostics/status.json",
+      "bytes": 138,
+      "sha256": "f0fe92b9245fe0b499125f5c57a92e2aa39afb65f90018295b2e9e43357beba1"
+    },
+    {
+      "file": "13-textual-stage-observations.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision-inline-only/textual-stage-observations.json",
+      "bytes": 280638,
+      "sha256": "0f9648a0c16d7f841b3dee607740ed20455c7b7ca6211e87d54bca3f26436c8d"
+    },
+    {
+      "file": "14-textual-diagnostic-host.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision-inline-only/textual-diagnostic-host.json",
+      "bytes": 301,
+      "sha256": "ec29ef949b3ad83989ece740046b0a041fa00cfcd37ae35c90c3efc20c212d9d"
+    },
+    {
+      "file": "15-textual-compiled-binding.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision-inline-only/textual-compiled-binding.json",
+      "bytes": 752,
+      "sha256": "123fce7ac7f0f478f682c3700b7b531510b444676c37602e4a970e3191d9d9cb"
+    },
+    {
+      "file": "16-actual-initial-summary.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision-inline-only/actual-initial-summary.json",
+      "bytes": 2315,
+      "sha256": "0455443a53813cb58ac0c1424a292a78cada3ff4a57a182719ad15f383e9a8fd"
+    },
+    {
+      "file": "17-status.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision-inline-only/diagnostics/status.json",
+      "bytes": 139,
+      "sha256": "560ced79076e7832dbf4bba323bb42c642b84fae2e5842fc2fc28a7e1e580085"
+    },
+    {
+      "file": "18-textual-stage-observations.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision-fragment-only/textual-stage-observations.json",
+      "bytes": 503355,
+      "sha256": "023e065d4962663b0fba64dc9806ee05d53a9302a6c81c93859d39d1655d53b2"
+    },
+    {
+      "file": "19-textual-diagnostic-host.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision-fragment-only/textual-diagnostic-host.json",
+      "bytes": 303,
+      "sha256": "18fef67c2eb32ece1ead825bc4172c1d3043ac54bf04275c03963c177d748f3f"
+    },
+    {
+      "file": "20-textual-compiled-binding.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision-fragment-only/textual-compiled-binding.json",
+      "bytes": 752,
+      "sha256": "b7ea6a3dbbcc4c007017de17d71fe9b5d5299a1b20d7767b74cbf37f06d1ce46"
+    },
+    {
+      "file": "21-actual-initial-summary.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision-fragment-only/actual-initial-summary.json",
+      "bytes": 2315,
+      "sha256": "82a5ce3f6963b3730fdacfcfcb26e7aeb6ae9fc7376561dc77bcb2f22a4aff8d"
+    },
+    {
+      "file": "22-status.json.gz",
+      "original_path": "native-first-artifact/preview-grant-app-tests-Release-revision-fragment-only/diagnostics/status.json",
+      "bytes": 139,
+      "sha256": "c659e72205ecd9098685cbc699c7d5e6670a2e88b6543a704e35b45467cf7d76"
+    }
+  ],
+  "full_actual_effective_sources_compiled_binaries_and_xcresults": "Original complete native artifact and retained external first; not included in this bounded source packet"
+}
