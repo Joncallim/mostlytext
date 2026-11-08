@@ -51,6 +51,7 @@ jobs:
         run: |
           set +e
           /usr/bin/log show --last 12m --style json --predicate 'subsystem == "app.mostlytext.qljscprobe"' > "$RUNNER_TEMP/mostlytext-qljsc/provider-events.json" 2> "$RUNNER_TEMP/mostlytext-qljsc/provider-log-errors.txt"
+          python3 .github/scripts/capture-quicklook-xpc-launch.py
           /usr/bin/log show --last 12m --style json --predicate 'subsystem == "app.mostlytext.qljscobserver"' > "$RUNNER_TEMP/mostlytext-qljsc/observer-control-events.json" 2> "$RUNNER_TEMP/mostlytext-qljsc/observer-control-log-errors.txt"
           ps -axo pid=,uid=,comm= > "$RUNNER_TEMP/mostlytext-qljsc/processes-after.txt"
           python3 .github/scripts/prepare-quicklook-jsc-probe.py "$RUNNER_TEMP/mostlytext-qljsc" --verify-finder

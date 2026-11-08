@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Pure XPC process/own-request controls; no service or product is launched."""
 import importlib.util
+import datetime as dt
 import json
 from pathlib import Path
 import plistlib
@@ -20,6 +21,9 @@ FIXTURE = HERE.parent / 'quicklook-jsc-probe'
 SIGN_SPEC = importlib.util.spec_from_file_location('xpc_sign', FIXTURE / 'resign-embedded-xpc.py')
 SIGN = importlib.util.module_from_spec(SIGN_SPEC)
 SIGN_SPEC.loader.exec_module(SIGN)
+CAPTURE_SPEC = importlib.util.spec_from_file_location('xpc_launch_capture', HERE / 'capture-quicklook-xpc-launch.py')
+CAPTURE = importlib.util.module_from_spec(CAPTURE_SPEC)
+CAPTURE_SPEC.loader.exec_module(CAPTURE)
 
 
 def example():
@@ -32,6 +36,51 @@ def example():
 
 
 class XPCObservationTests(unittest.TestCase):
+    def test_system_diagnostic_selects_only_actual_xpc_provider_request(self):
+        begin = {'subsystem': CAPTURE.PROVIDER_SUBSYSTEM,
+                 'processImagePath': '/fixture/QLReplyProbeProvider', 'processID': 111,
+                 'eventMessage': 'QL_XPC_PROBE begin id=3 provider=111 start=12.5',
+                 'timestamp': '2026-11-08 19:41:38.646394+0000'}
+        other = dict(begin, eventMessage='QL_JSC_PROBE result={}', timestamp='2026-11-08 19:41:33+0000')
+        observed, start, end = CAPTURE.request_window([other, begin])
+        self.assertEqual(observed, dt.datetime.fromisoformat(begin['timestamp']))
+        self.assertEqual((end - start).total_seconds(), 7)
+        self.assertIn('--predicate', CAPTURE.log_command(start, end))
+        self.assertEqual(CAPTURE.log_command(start, end)[-1], CAPTURE.PREDICATE)
+        for rows in ([], [begin, begin], [dict(begin, processID=222)]):
+            with self.assertRaises(RuntimeError):
+                CAPTURE.request_window(rows)
+
+    def test_system_diagnostic_retains_bounded_exact_query_and_rejects_wrong_scope(self):
+        begin = {'subsystem': CAPTURE.PROVIDER_SUBSYSTEM,
+                 'processImagePath': '/fixture/QLReplyProbeProvider', 'processID': 111,
+                 'eventMessage': 'QL_XPC_PROBE begin id=3 provider=111 start=12.5',
+                 'timestamp': '2026-11-08 19:41:38.646394+0000'}
+        system = {'processImagePath': '/sbin/launchd', 'processID': 1,
+                  'timestamp': '2026-11-08 19:41:38.646500+0000',
+                  'eventMessage': 'service lookup'}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'provider-events.json').write_text(json.dumps([begin]))
+            raw = json.dumps([system]).encode()
+            run = mock.Mock(return_value=subprocess.CompletedProcess([], 0, raw, b''))
+            manifest = CAPTURE.capture(root, run=run)
+            self.assertEqual(manifest['status'], 'captured')
+            self.assertEqual(manifest['events'], 1)
+            self.assertEqual((root / 'xpc-system-events.json').read_bytes(), raw)
+            self.assertEqual(run.call_args.kwargs, {'capture_output': True, 'timeout': 30})
+            self.assertEqual(run.call_args.args[0][-1], CAPTURE.PREDICATE)
+            for changed in (dict(system, processImagePath='/usr/bin/Finder'),
+                            dict(system, timestamp='2026-11-08 19:41:50+0000')):
+                with self.assertRaises(RuntimeError):
+                    CAPTURE.validate_system_events(json.dumps([changed]).encode(),
+                                                   dt.datetime.fromisoformat(manifest['start']),
+                                                   dt.datetime.fromisoformat(manifest['end']))
+            with self.assertRaises(RuntimeError):
+                CAPTURE.validate_system_events(b' ' * (CAPTURE.MAX_LOG_BYTES + 1),
+                                               dt.datetime.fromisoformat(manifest['start']),
+                                               dt.datetime.fromisoformat(manifest['end']))
+
     def test_one_exact_observation_passes(self):
         row, messages = example()
         PREP.validate_xpc_observation(row, messages)

@@ -24,7 +24,7 @@ enum XPCCapability {
             let value = error as NSError
             logger
                 .error(
-                    "QL_XPC_PROBE error id=\(requestID) domain=\(value.domain, privacy: .public) code=\(value.code)"
+                    "QL_XPC_PROBE error id=\(requestID) domain=\(value.domain, privacy: .public) code=\(value.code) description=\(value.description, privacy: .public)"
                 )
             response.finish(.failure(error))
         }) as? QLXPCCapabilityService else { throw Failure.refused }

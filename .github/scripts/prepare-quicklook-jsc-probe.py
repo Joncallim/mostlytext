@@ -359,6 +359,7 @@ def main():
                          ".github/scripts/observe-quicklook-jsc.py",
                          ".github/scripts/run-quicklook-jsc-ui.py",
                          ".github/scripts/test-quicklook-xpc-probe.py",
+                         ".github/scripts/capture-quicklook-xpc-launch.py",
                          ".github/scripts/test-quicklook-jsc-observer.py",
                          "planning/downstream/evidence/quicklook-hosted-feasibility-2026-11-07/b000-receipt.json.gz",
                          ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
