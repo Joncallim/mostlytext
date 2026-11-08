@@ -40,10 +40,10 @@ def hold_example():
     record = {
         'kind': 'mostlytext-qlxpc-hold-lifecycle', 'request_id': 4,
         'provider_pid': 111, 'service_pid': 222, 'started_uptime': 20.0,
-        'ready_uptime': 21.0, 'invalidated_uptime': 21.5,
+        'hold_started_uptime': 20.9, 'ready_uptime': 21.0, 'invalidated_uptime': 21.5,
         'samples': [
             {'uptime': 21.1, 'check_uptime': 21.2, 'service': 'expected', 'provider': 'expected', 'window': True},
-            {'uptime': 21.6, 'check_uptime': 21.7, 'service': 'expected', 'provider': 'expected', 'window': True},
+            {'uptime': 21.3, 'check_uptime': 21.4, 'service': 'expected', 'provider': 'expected', 'window': True},
             {'uptime': 22.0, 'check_uptime': 22.1, 'service': 'absent', 'provider': 'expected', 'window': True},
             {'uptime': 24.5, 'check_uptime': 24.6, 'service': 'absent', 'provider': 'expected', 'window': True},
         ],
@@ -53,6 +53,7 @@ def hold_example():
     messages = [
         'QL_XPC_HOLD begin id=4 provider=111 start=20.0',
         'QL_XPC_HOLD service-ready id=4 pid=222 sandbox=1',
+        'QL_XPC_HOLD service-hold-start id=4 pid=222 at=20.9',
         'QL_XPC_HOLD admitted id=4 provider=111 service=222 ready=21.0',
         'QL_XPC_HOLD invalidated id=4 provider=111 service=222 at=21.5',
     ]
@@ -68,6 +69,7 @@ class XPCObservationTests(unittest.TestCase):
         for changed in (
             dict(row, service_pid=333),
             dict(row, invalidated_uptime=22.9),
+            dict(row, hold_started_uptime=21.6),
             dict(row, service_departed_by_deadline=False),
             dict(row, samples=[dict(sample, service='expected') for sample in row['samples']]),
             dict(row, samples=row['samples'][:2] + [dict(row['samples'][2], provider='absent')]
@@ -76,13 +78,24 @@ class XPCObservationTests(unittest.TestCase):
                  + row['samples'][3:]),
             dict(row, samples=row['samples'][:3] + [dict(row['samples'][3], service='expected')]),
             dict(row, samples=row['samples'][:3]),
+            dict(row, samples=[dict(sample, window=False) if sample['check_uptime'] < 21.5
+                               else sample for sample in row['samples']]),
         ):
             with self.assertRaises(RuntimeError):
                 PREP.validate_xpc_hold_observation(changed, messages)
-        for bad_messages in (messages[:3], messages + messages[-1:],
+        for bad_messages in (messages[:2] + messages[3:], messages + messages[2:3],
                              messages[:1] + ['QL_XPC_HOLD service-ready id=4 pid=333 sandbox=1'] + messages[2:]):
             with self.assertRaises(RuntimeError):
                 PREP.validate_xpc_hold_observation(row, bad_messages)
+        late_hold = dict(row, hold_started_uptime=21.6)
+        late_messages = [message.replace('at=20.9', 'at=21.6') for message in messages]
+        with self.assertRaisesRegex(RuntimeError, 'invalidation'):
+            PREP.validate_xpc_hold_observation(late_hold, late_messages)
+        no_pre_invalidation_window = dict(row, window_remained=False,
+                                          samples=[dict(sample, window=False) if sample['check_uptime'] < 21.5
+                                                   else sample for sample in row['samples']])
+        with self.assertRaisesRegex(RuntimeError, 'Finder survived'):
+            PREP.validate_xpc_hold_observation(no_pre_invalidation_window, messages)
 
     def test_hold_fixture_keeps_fixed_request_no_new_authority_and_independent_observer(self):
         provider = (FIXTURE / 'Provider/XPCCapability.swift').read_text()
@@ -91,6 +104,10 @@ class XPCObservationTests(unittest.TestCase):
         self.assertIn('guard requestID > 0', provider)
         self.assertIn('guard id > 0, first', service)
         self.assertIn('Thread.sleep(forTimeInterval: 10)', service)
+        self.assertLess(service.index('ready("MOSTLYTEXT_QL_XPC_HOLD_READY"'),
+                        service.index('QL_XPC_HOLD service-hold-start'))
+        self.assertLess(service.index('QL_XPC_HOLD service-hold-start'),
+                        service.index('Thread.sleep(forTimeInterval: 10)'))
         self.assertIn('asyncAfter(deadline: .now() + .milliseconds(500))', provider)
         self.assertIn('"/bin/ps"', ui)
         self.assertIn('kill(pid, 0)', ui)

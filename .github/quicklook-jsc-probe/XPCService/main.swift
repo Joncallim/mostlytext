@@ -49,6 +49,7 @@ private final class PingHandler: NSObject, QLXPCCapabilityService {
         ready("MOSTLYTEXT_QL_XPC_HOLD_READY", requestID, NSNumber(value: getpid()), NSNumber(value: 1))
         // Deliberately ignore the client's connection loss throughout the
         // three-second retirement observation. This is a bounded fixture only.
+        logger.notice("QL_XPC_HOLD service-hold-start id=\(id) pid=\(getpid()) at=\(ProcessInfo.processInfo.systemUptime)")
         Thread.sleep(forTimeInterval: 10)
         logger.notice("QL_XPC_HOLD service-released id=\(id) pid=\(getpid())")
     }

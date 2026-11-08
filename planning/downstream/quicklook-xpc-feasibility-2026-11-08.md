@@ -233,9 +233,14 @@ with an observed positive request ID used solely for correlation. The service
 returns a fixed ready reply with its own PID and then sleeps for ten seconds,
 ignoring connection loss during the three-second observation. The provider
 schedules `NSXPCConnection.invalidate()` on its own monotonic 500 ms timer.
+An independent service-side `service-hold-start` log follows the ready reply
+call immediately before the ten-second sleep; its own uptime must precede the
+provider's invalidation uptime. This ordering records entry into the hold path,
+not a kernel proof that the thread remained asleep for the entire interval.
 The separate UI runner samples the exact service and provider PIDs and
 executable paths, with `ps` plus `kill(pid, 0)` on absence, and checks that
-Quick Look stays open. The case requires the service PID to disappear within
+Quick Look is already open before invalidation and stays open in every later
+sample. The case requires the service PID to disappear within
 three seconds of invalidation while the same provider PID and Finder window
 survive. It retains the actual process samples, own-generation logs, Finder
 tree, screenshot, test result bundle, signed entitlements, and bounded

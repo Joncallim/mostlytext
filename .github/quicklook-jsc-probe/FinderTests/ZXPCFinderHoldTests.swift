@@ -67,14 +67,22 @@ final class ZXPCFinderHoldTests: XCTestCase {
         let providerRemained = samples.allSatisfy { $0["provider"] as? String == "expected" }
         let serviceIdentityValid = samples.first?["service"] as? String == "expected"
             && samples.allSatisfy { ["expected", "absent"].contains($0["service"] as? String ?? "") }
-        let firstWindow = samples.firstIndex { $0["window"] as? Bool == true }
-        let windowStayedOpen = firstWindow.map { index in
+        let firstWindowBeforeInvalidation = invalidated.flatMap { lifecycle in
+            samples.firstIndex {
+                $0["window"] as? Bool == true && $0["service"] as? String == "expected"
+                    && ($0["check_uptime"] as? Double ?? .infinity) >= lifecycle.holdStarted
+                    && ($0["check_uptime"] as? Double ?? .infinity) < lifecycle.invalidated
+            }
+        }
+        let windowStayedOpen = firstWindowBeforeInvalidation.map { index in
             samples[index...].allSatisfy { $0["window"] as? Bool == true }
         } == true && windowRemained
         let record: [String: Any] = [
             "kind": "mostlytext-qlxpc-hold-lifecycle", "request_id": ready.id,
             "provider_pid": ready.provider, "service_pid": ready.service,
-            "started_uptime": ready.started, "ready_uptime": ready.ready,
+            "started_uptime": ready.started,
+            "hold_started_uptime": invalidated.map { $0.holdStarted } as Any? ?? NSNull(),
+            "ready_uptime": ready.ready,
             "invalidated_uptime": observedInvalidation as Any? ?? NSNull(),
             "samples": samples, "marker_visible": markerVisible,
             "provider_remained": providerRemained, "window_remained": windowStayedOpen,
@@ -102,10 +110,12 @@ final class ZXPCFinderHoldTests: XCTestCase {
         if let invalidated {
             XCTAssertGreaterThanOrEqual(invalidated.invalidated - ready.ready, 0.35)
             XCTAssertLessThanOrEqual(invalidated.invalidated - ready.ready, 1.5)
+            XCTAssertLessThan(invalidated.holdStarted, invalidated.invalidated,
+                              "The service must enter its non-cooperative hold path before invalidation")
         }
         XCTAssertTrue(serviceIdentityValid, "Observer must see only the exact service PID and executable")
         XCTAssertTrue(providerRemained, "The same provider process must remain alive throughout monitoring")
-        XCTAssertTrue(windowStayedOpen, "The Finder Quick Look window must remain open throughout monitoring")
+        XCTAssertTrue(windowStayedOpen, "Finder must be open before invalidation and survive through monitoring")
         XCTAssertTrue(serviceDepartedByDeadline, "Invalidation must retire the exact held service PID within 3 seconds")
     }
 
@@ -114,6 +124,7 @@ final class ZXPCFinderHoldTests: XCTestCase {
         let provider: Int32
         let service: Int32
         let started: Double
+        let holdStarted: Double
         let ready: Double
         let invalidated: Double
     }
@@ -147,18 +158,35 @@ final class ZXPCFinderHoldTests: XCTestCase {
         let admitted = messages.compactMap { fields($0, #"^QL_XPC_HOLD admitted id=(\d+) provider=(\d+) service=(\d+) ready=([0-9.]+)$"#) }
         guard admitted.count == 1, Int(admitted[0][0]) == request, Int32(admitted[0][1]) == provider,
               let service = Int32(admitted[0][2]), service > 0, service != provider,
-              let ready = Double(admitted[0][3]), ready >= begun,
-              messages.filter({ $0 == "QL_XPC_HOLD service-ready id=\(request) pid=\(service) sandbox=1" }).count == 1
+              let ready = Double(admitted[0][3]), ready >= begun
         else { throw NSError(domain: "MostlyTextXPCHold", code: 4) }
+        let serviceReadyCount = messages.filter { $0 == "QL_XPC_HOLD service-ready id=\(request) pid=\(service) sandbox=1" }.count
+        if invalidationRequired && serviceReadyCount != 1 {
+            throw NSError(domain: "MostlyTextXPCHold", code: 10)
+        }
+        let holdStarts = messages.compactMap { fields($0, #"^QL_XPC_HOLD service-hold-start id=(\d+) pid=(\d+) at=([0-9.]+)$"#) }
+        if invalidationRequired && holdStarts.count != 1 {
+            throw NSError(domain: "MostlyTextXPCHold", code: 9)
+        }
+        let holdStarted = holdStarts.first.flatMap { row -> Double? in
+            guard holdStarts.count == 1, Int(row[0]) == request, Int32(row[1]) == service,
+                  let at = Double(row[2]), at >= begun else { return nil }
+            return at
+        }
+        if invalidationRequired && holdStarted == nil {
+            throw NSError(domain: "MostlyTextXPCHold", code: 9)
+        }
         let invalidations = messages.compactMap { fields($0, #"^QL_XPC_HOLD invalidated id=(\d+) provider=(\d+) service=(\d+) at=([0-9.]+)$"#) }
         if invalidationRequired && invalidations.count != 1 { throw NSError(domain: "MostlyTextXPCHold", code: 5) }
-        if let row = invalidations.first,
+        if invalidationRequired, let row = invalidations.first,
            (invalidations.count != 1 || Int(row[0]) != request || Int32(row[1]) != provider
-            || Int32(row[2]) != service || Double(row[3]).map({ $0 < ready }) != false) {
+            || Int32(row[2]) != service
+            || Double(row[3]).map({ $0 < ready || $0 <= (holdStarted ?? .infinity) }) != false) {
             throw NSError(domain: "MostlyTextXPCHold", code: 6)
         }
         return HoldEvidence(id: request, provider: provider, service: service, started: begun,
-                            ready: ready, invalidated: invalidations.first.flatMap { Double($0[3]) } ?? 0)
+                            holdStarted: holdStarted ?? 0, ready: ready,
+                            invalidated: invalidations.first.flatMap { Double($0[3]) } ?? 0)
     }
 
     private func fields(_ text: String, _ pattern: String) -> [String]? {

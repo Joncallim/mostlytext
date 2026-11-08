@@ -232,7 +232,7 @@ def validate_xpc_observation(observed, messages):
 
 
 def validate_xpc_hold_observation(observed, messages):
-    keys = {'kind', 'request_id', 'provider_pid', 'service_pid', 'started_uptime',
+    keys = {'kind', 'request_id', 'provider_pid', 'service_pid', 'started_uptime', 'hold_started_uptime',
             'ready_uptime', 'invalidated_uptime', 'samples', 'marker_visible',
             'provider_remained', 'window_remained', 'service_identity_valid',
             'service_departed_by_deadline'}
@@ -243,21 +243,25 @@ def validate_xpc_hold_observation(observed, messages):
                    for key in ('provider_pid', 'service_pid'))
             or observed['provider_pid'] == observed['service_pid']
             or any(type(observed[key]) not in (int, float) or not math.isfinite(observed[key])
-                   for key in ('started_uptime', 'ready_uptime', 'invalidated_uptime'))):
+                   for key in ('started_uptime', 'hold_started_uptime', 'ready_uptime', 'invalidated_uptime'))):
         raise RuntimeError('Invalid actual fixed XPC hold observation')
     request = observed['request_id']
     provider = observed['provider_pid']
     service = observed['service_pid']
     started = observed['started_uptime']
+    hold_started = observed['hold_started_uptime']
     ready = observed['ready_uptime']
     invalidated = observed['invalidated_uptime']
-    if not (0 < started <= ready < invalidated and 0.35 <= invalidated - ready <= 1.5):
+    if not (0 < started <= hold_started < invalidated and started <= ready < invalidated
+            and 0.35 <= invalidated - ready <= 1.5):
         raise RuntimeError('Provider invalidation did not follow the independent 500 ms timer')
     patterns = [
         (r'QL_XPC_HOLD begin id=(\d+) provider=(\d+) start=([0-9.]+)',
          (request, provider, started)),
         (r'QL_XPC_HOLD service-ready id=(\d+) pid=(\d+) sandbox=(\d+)',
          (request, service, 1)),
+        (r'QL_XPC_HOLD service-hold-start id=(\d+) pid=(\d+) at=([0-9.]+)',
+         (request, service, hold_started)),
         (r'QL_XPC_HOLD admitted id=(\d+) provider=(\d+) service=(\d+) ready=([0-9.]+)',
          (request, provider, service, ready)),
         (r'QL_XPC_HOLD invalidated id=(\d+) provider=(\d+) service=(\d+) at=([0-9.]+)',
@@ -292,7 +296,9 @@ def validate_xpc_hold_observation(observed, messages):
                 and all(row['service'] == 'absent' for row in samples if row['uptime'] >= first_absent)
                 and samples[-1]['service'] == 'absent')
     provider_remained = all(row['provider'] == 'expected' for row in samples)
-    first_window = next((index for index, row in enumerate(samples) if row['window'] is True), None)
+    first_window = next((index for index, row in enumerate(samples)
+                         if row['window'] is True and row['service'] == 'expected'
+                         and hold_started <= row['check_uptime'] < invalidated), None)
     window_remained = first_window is not None and all(row['window'] is True for row in samples[first_window:])
     for key, expected in [('marker_visible', True), ('provider_remained', provider_remained),
                           ('window_remained', window_remained), ('service_identity_valid',
