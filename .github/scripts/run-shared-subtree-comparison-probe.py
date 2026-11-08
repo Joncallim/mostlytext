@@ -10,6 +10,7 @@ import re
 import shutil
 import subprocess
 import tarfile
+import time
 
 BASE = "5ce80b6f0e29096a5f06826a3ba610c4e89bc255"
 COMBINED_BASE = "3b1fb00f8c4f8907073f9b7342a807a0231867fa"
@@ -113,14 +114,48 @@ def inventory(repo):
     return {name: digest(repo / name) for name in sorted(set(names))}
 
 
-def command(arguments, output, expected=0, timeout=180, separate_stderr=False):
+def sample_process(pid, output):
+    arguments = ["/usr/bin/sample", str(pid), "2", "10", "-file", str(output)]
+    with output.with_suffix(".stdout.log").open("x") as stdout, \
+         output.with_suffix(".stderr.log").open("x") as stderr:
+        try:
+            result = subprocess.run(arguments, stdout=stdout, stderr=stderr, timeout=5)
+            return {"command": arguments, "returncode": result.returncode}
+        except (OSError, subprocess.TimeoutExpired) as error:
+            return {"command": arguments, "error": f"{type(error).__name__}: {error}"}
+
+
+def command(arguments, output, expected=0, timeout=180, separate_stderr=False,
+            sample_after=None):
+    started = time.monotonic()
+    sampled = None
+    timed_out = False
     with output.open("x") as log, output.with_suffix(".stderr.log").open("x") as errors:
-        result = subprocess.run(arguments, stdout=log,
-                                stderr=errors if separate_stderr else subprocess.STDOUT, timeout=timeout)
-    output.with_suffix(output.suffix + ".status.json").write_text(json.dumps({
-        "command": arguments, "returncode": result.returncode, "expected": expected,
-    }, indent=2) + "\n")
-    if result.returncode != expected:
+        stderr = errors if separate_stderr else subprocess.STDOUT
+        if sample_after is None:
+            result = subprocess.run(arguments, stdout=log, stderr=stderr, timeout=timeout)
+            returncode = result.returncode
+        else:
+            process = subprocess.Popen(arguments, stdout=log, stderr=stderr)
+            try:
+                process.wait(timeout=min(sample_after, timeout))
+            except subprocess.TimeoutExpired:
+                sampled = sample_process(process.pid, output.with_suffix(".sample.txt"))
+            try:
+                process.wait(timeout=max(0, timeout - (time.monotonic() - started)))
+            except subprocess.TimeoutExpired:
+                timed_out = True
+                process.kill()
+                process.wait()
+            returncode = process.returncode
+    status = {"command": arguments, "returncode": returncode, "expected": expected}
+    if sample_after is not None:
+        status.update({"timeout_seconds": timeout, "elapsed_seconds": time.monotonic() - started,
+                       "timed_out": timed_out, "sample": sampled})
+    output.with_suffix(output.suffix + ".status.json").write_text(json.dumps(status, indent=2) + "\n")
+    if timed_out:
+        raise SystemExit("Sanitized probe exceeded its original deadline; diagnostic retained: " + str(output))
+    if returncode != expected:
         raise SystemExit("Unexpected result; original output retained: " + str(output))
 
 
@@ -325,7 +360,8 @@ def main():
         expected = 2 if name == "original-work" else 0
         log = output / (name + ".log")
         command([str(binary)] + (["--require-bounded-self-comparison"] if counted else []),
-                log, expected=expected, timeout=60, separate_stderr=True)
+                log, expected=expected, timeout=60, separate_stderr=True,
+                sample_after=15 if sanitized else None)
         stdout, stderr = log.read_text(), log.with_suffix(".stderr.log").read_text()
         text = stdout + "\n" + stderr
         pairs = [line for line in stdout.splitlines() if line.startswith("compare ")]

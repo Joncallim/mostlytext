@@ -356,6 +356,32 @@ binary hashes, and complete first stdout/stderr/status. Upload the evidence
 even on failure. Do not call this a Swift package build, native editor test,
 whole-document latency result or whole-issue closure.
 
+### Sanitized hosted probe timeout diagnostic
+
+The first hosted C-source run, `42488511441`, passed the graph, pin-refusal,
+normal 324-pair comparison and shared-work controls. Its exact candidate
+AddressSanitizer/UndefinedBehaviorSanitizer executable then exceeded the
+60-second process deadline. The first runner log, artifact, binary, source
+hashes and blank stdout/stderr are retained under
+`/Volumes/Fast SSD/CORTANA-Builds/parser-hosted-c-source-20261108/first-run`.
+The empty output does not locate the stall because stdout was redirected to a
+regular file and may remain buffered until process exit. The runner wrote no
+status file on `TimeoutExpired`. The same fixture, runtime source, JSON grammar
+and compiler flags completed an earlier isolated local sanitized probe in
+0.528 seconds; that result cannot replace the hosted red run.
+
+The next hosted run is a diagnostic of this exact failure. Preserve the first
+artifact and execute the same unmodified candidate fixture and sanitizer
+binary under the same 60-second total bound. If it remains active after 15
+seconds, take a two-second process stack sample, with a five-second sampler
+limit, without extending the probe deadline. Always write the process result,
+elapsed time and timeout status, and upload the sample or sampler error. A
+sampler failure is diagnostic loss, never permission to accept a timed-out
+probe. Keep all existing comparison, original-red, Markdown and UTF-16
+predicates, hashes and pin checks. Name the new artifact separately. A green
+second run is a second data point; it does not erase the first timeout or
+establish native app acceptance.
+
 
 ## First console admission refusal
 

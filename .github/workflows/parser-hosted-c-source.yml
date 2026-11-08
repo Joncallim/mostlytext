@@ -11,6 +11,7 @@ on:
     paths:
       - .github/scripts/prepare-parser-hosted-c-source.py
       - .github/scripts/test-parser-hosted-c-source.py
+      - .github/scripts/run-shared-subtree-comparison-probe.py
       - .github/workflows/parser-hosted-c-source.yml
 
 concurrency:
@@ -56,7 +57,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: parser-hosted-c-source-first
+          name: parser-hosted-c-source-diagnostic
           path: |
             ${{ runner.temp }}/parser-c-source/graph/receipt.json
             ${{ runner.temp }}/parser-c-source/graph/resolve.stdout
@@ -67,6 +68,7 @@ jobs:
             ${{ runner.temp }}/parser-c-source/qualification/receipt.json
             ${{ runner.temp }}/parser-c-source/qualification/*.log
             ${{ runner.temp }}/parser-c-source/qualification/*.json
+            ${{ runner.temp }}/parser-c-source/qualification/*.sample.txt
             ${{ runner.temp }}/parser-c-source/qualification/*-linked-libraries.txt
             ${{ runner.temp }}/parser-c-source/qualification/*-probe
           if-no-files-found: warn
