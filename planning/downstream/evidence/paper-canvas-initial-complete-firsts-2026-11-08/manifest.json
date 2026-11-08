@@ -1,0 +1,158 @@
+{
+  "source": "3c23e399786089d8ae116a00ac2c80c55369ba59",
+  "all_six_complete_first_workflows": "PASS, retained before remediation; known boundary review finding prevents merge",
+  "records": [
+    {
+      "file": "01-compliance-first-run.json.gz",
+      "original_name": "compliance-first-run.json",
+      "bytes": 12920,
+      "sha256": "24104f3c4e42fb5cf3e3a67e52963456f5da9aabfcb36b9575eb5d92268f8d3b"
+    },
+    {
+      "file": "02-full_CI-first-run.json.gz",
+      "original_name": "full_CI-first-run.json",
+      "bytes": 12904,
+      "sha256": "cb7f59585ea5cb3e6d04770fd3a0be62772ade582f8e43f77f58ca31189c48ac"
+    },
+    {
+      "file": "03-native_canvas-first-run.json.gz",
+      "original_name": "native_canvas-first-run.json",
+      "bytes": 12963,
+      "sha256": "de3753bcafeb38903c666b9fe5043914dfecd212bb30907d9ee40087152bf9d8"
+    },
+    {
+      "file": "04-native_pdf-first-run.json.gz",
+      "original_name": "native_pdf-first-run.json",
+      "bytes": 12954,
+      "sha256": "a20f52dced7303007bc37842a678a918549633f100c34de85940b22235ba87b2"
+    },
+    {
+      "file": "05-public_CLI-first-run.json.gz",
+      "original_name": "public_CLI-first-run.json",
+      "bytes": 12950,
+      "sha256": "f6020dfa94831e808c36c5f45da90605c4a0af9aff16eaa22a040f2445ae016c"
+    },
+    {
+      "file": "06-shared_math_heading-first-run.json.gz",
+      "original_name": "shared_math_heading-first-run.json",
+      "bytes": 12965,
+      "sha256": "05a0ed101f90d872f89420ec4497a022ccb466ece7eb64c721a1eebdafa0576c"
+    },
+    {
+      "file": "07-compliance-first-artifacts.json.gz",
+      "original_name": "compliance-first-artifacts.json",
+      "bytes": 32,
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    {
+      "file": "08-full_CI-first-artifacts.json.gz",
+      "original_name": "full_CI-first-artifacts.json",
+      "bytes": 765,
+      "sha256": "e1ec6e6ce83838ea4a14cb44457a5d3da548282a2c08987e20e689b5fe07db4d"
+    },
+    {
+      "file": "09-native_canvas-first-artifacts.json.gz",
+      "original_name": "native_canvas-first-artifacts.json",
+      "bytes": 755,
+      "sha256": "47565df83c38104ad87167f47d5802b93ef6a3c7c2a0a437c6bc4c42955627bc"
+    },
+    {
+      "file": "10-native_pdf-first-artifacts.json.gz",
+      "original_name": "native_pdf-first-artifacts.json",
+      "bytes": 763,
+      "sha256": "8607219dea59c32f7c9926c130b472b551b48201099755b3b88203a981ed8d23"
+    },
+    {
+      "file": "11-public_CLI-first-artifacts.json.gz",
+      "original_name": "public_CLI-first-artifacts.json",
+      "bytes": 753,
+      "sha256": "de1d7aa1fe18a3b8d76d0c0aad17c926a8fef648bc438032d327dc8e44f6896f"
+    },
+    {
+      "file": "12-shared_math_heading-first-artifacts.json.gz",
+      "original_name": "shared_math_heading-first-artifacts.json",
+      "bytes": 1481,
+      "sha256": "c8a87e2006e18594e8d27dc78d5849518591600bd0baa74ff5f8ef98ad9ba35b"
+    },
+    {
+      "file": "13-verify-nine-pdf-first.py.gz",
+      "original_name": "verify-nine-pdf-first.py",
+      "bytes": 3240,
+      "sha256": "a8af92c40a7a701aa1ebbbd0b0c1cd292e1c718f02633ab15cc949d4a7d5973d"
+    },
+    {
+      "file": "14-pdf-first-independently-verified.json.gz",
+      "original_name": "pdf-first-independently-verified.json",
+      "bytes": 1044,
+      "sha256": "75044c52c04bfa3d6a94f6cef4788f3b9fb663abdd31996c5d886c6e0d346707"
+    },
+    {
+      "file": "15-verify-native-canvas-first.py.gz",
+      "original_name": "verify-native-canvas-first.py",
+      "bytes": 4588,
+      "sha256": "e929b40b31fff586a862f661e5a0a368915c174bb8b56fadf9f1034a51cc295b"
+    },
+    {
+      "file": "16-first-native-independently-verified.json.gz",
+      "original_name": "first-native-independently-verified.json",
+      "bytes": 1667,
+      "sha256": "704a65d6be1e9987278e0d5df5c8298be0ba079d78903445471570820d5376b5"
+    },
+    {
+      "file": "17-verify-public-cli-first.py.gz",
+      "original_name": "verify-public-cli-first.py",
+      "bytes": 7340,
+      "sha256": "91f123056ed881a2cbf415a7e90c6b9e48271beed216e2a444cff533d8acca1b"
+    },
+    {
+      "file": "18-current-cli-first-outcome-independently-verified.json.gz",
+      "original_name": "current-cli-first-outcome-independently-verified.json",
+      "bytes": 2240,
+      "sha256": "161559685fad7768cc61a9a427fb2e6639225f283f5607c4c14d7ace810460ed"
+    },
+    {
+      "file": "19-gitguardian-public-posix-field-false-positive.json.gz",
+      "original_name": "gitguardian-public-posix-field-false-positive.json",
+      "bytes": 929,
+      "sha256": "f755cabca018442baa427a51d1e04d5c9c56acbe72ffe4b9eaf2506fbcd9272a"
+    }
+  ],
+  "whole_original_logZIPs_preserved": [
+    {
+      "original_name": "compliance-complete-first-workflow-logs.zip",
+      "bytes": 41577,
+      "sha256": "54296ecc82918a7529645fe342a9dc08345ee73b2f62de8a74a808a202791230",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-3c23e399/compliance-complete-first-workflow-logs.zip"
+    },
+    {
+      "original_name": "full_CI-complete-first-workflow-logs.zip",
+      "bytes": 2680172,
+      "sha256": "c1606a03952ccc7135d714f5e2f30d29c9377c731c29c6582f2cd0375ec60324",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-3c23e399/full_CI-complete-first-workflow-logs.zip"
+    },
+    {
+      "original_name": "native_canvas-complete-first-workflow-logs.zip",
+      "bytes": 12426,
+      "sha256": "5d81da52a8a086694f8e79a00d4843f6e60ea0a8a0757426f09c73a99cdde13c",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-3c23e399/native_canvas-complete-first-workflow-logs.zip"
+    },
+    {
+      "original_name": "native_pdf-complete-first-workflow-logs.zip",
+      "bytes": 1216673,
+      "sha256": "8e7219d9ee5f7c3381c10ef4030725245d0da341d6df9e3831d5917790e601af",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-3c23e399/native_pdf-complete-first-workflow-logs.zip"
+    },
+    {
+      "original_name": "public_CLI-complete-first-workflow-logs.zip",
+      "bytes": 565657,
+      "sha256": "7a39e8a8f1e839fcb4bbf1ef9808938127e101b8d86ca18536dd2afc89bc0830",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-3c23e399/public_CLI-complete-first-workflow-logs.zip"
+    },
+    {
+      "original_name": "shared_math_heading-complete-first-workflow-logs.zip",
+      "bytes": 1947368,
+      "sha256": "3ea7a9da6ae587461d9a3085b4909a904ec538a4185cd78671ceaea684a288ea",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/paper-sized-export-canvas-20261108/first-3c23e399/shared_math_heading-complete-first-workflow-logs.zip"
+    }
+  ]
+}

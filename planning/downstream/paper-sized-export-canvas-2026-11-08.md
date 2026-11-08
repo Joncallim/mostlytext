@@ -75,3 +75,58 @@ issue11 with this exact remedy and remaining whole-menu/validator/release gates.
 No ordinary menu/normal Quit, source-activated export consumer or full issue closure
 is inferred from app-target tests. Stop and revise the decision if typography,
 line wrapping, meaningful page flow or original assertions change unexpectedly.
+
+## Review remediation: stable PDF content width before final validation
+
+All six complete first workflows at3c23e399 pass and are retained before this
+correction (full CI3720package/680app). This is not a waiver of the later native
+review finding. Exact same boundary HTML at former versus paper height produces
+794vs777wide snapshots and different typography. Independent proof binds all
+eight native sources, downloaded helper and all HTML/PDF/PNG outputs for both
+complete boundary firsts. Old images and changed boundary images are inspected.
+
+The seven-case prototype3a4507ec, native42437419599/Compliance42437498897, passes
+and is fully preserved here. Static html { scrollbar-width: none !important; }
+restores794width, exact original short-page PNG/raw text and BOTH exact original
+boundary page PNGs/raw text. The authored700pixel block still requires2pages;
+its final blank page stays, while the short canary has1page. No page is trimmed.
+Only root scrollbar chrome is removed; scrolling/overflow/content are not hidden.
+Official WebKit support: https://webkit.org/blog/16301/webkit-features-in-safari-18-2/
+Actual native observations, not that document, qualify this remedy.
+
+Revise production policy inside ExportService before any final-HTML receipt:
+add one internal PDFCanvasStylesheet.css constant with that exact fixed rule.
+ExportComposer's structuralStylesheet(for:target) adds it only forPDF; stylesheet
+composition and safe companion certification use this target-specific trusted
+structural CSS. HTML targets/default stylesheet callers preserve exact prior CSS.
+SVGAssemblyOwnership.AuditedHeadCSS.builtIn gains an optional target defaulting
+to priorHTML behaviour, checks closed references on the actual trusted structural
+sheet, and mints the same target-specific stylesheet. The validated-SVG entry
+passes its actual target. No new public API, post-validation HTML rewrite, script
+or private WebKit view/scroller manipulation. PDFAdapter still receives the exact
+accepted bytes; ordinary prepared PDF and validated PDF share the same policy.
+
+Keep all nine original PDF names/body assertions and strengthen hardenedHTML
+with policy presence. Add a package end-to-end HTML/PDF target+SVG ownership
+control; strengthen existing actual app accepted-PDF-input test to require SVG
+and policy while retaining exact UTF8/destination checks. Native canvas gate
+retains five historical controls plus two fixed CSS candidates using the actual
+production constant compiled directly with its helper. Now reject a candidate
+that changes either short/boundary reference PNG/text, narrows width, loses the
+short one-page output or trims the two-page authored-space fixture. Include the
+actual policy source in binding/compilation/trigger paths. Same original limits.
+
+The scanner's neutral finding at3c23 concerns mocked public POSIX pw_name/pw_dir,
+not a credential; exact AST proof is preserved. Use a real pwd.struct_passwd
+fixture with the same public runner identity and inert non-authentication marker,
+matching the actual API record more closely. Do not suppress a scanner, erase
+old findings/firsts, rotate nonexistent credentials or claim its external incident
+resolved. Browser inspection is unauthenticated; no account/permission change.
+
+Freeze a new candidate once these changes are locally style/syntax/pure-guard
+checked; no local package/native build. Obtain and retain all newly triggered
+complete first CI/native/Compliance/security results before further correction.
+Independently verify actual app/package/native output and byte identity. Merge
+only after the concrete boundary finding is remediated and all technical gates
+qualify, with any actual scanner disposition honestly recorded. Main remainsf12
+until then; no whole ordinary-menu/normalQuit/finalRC issue acceptance inferred.
