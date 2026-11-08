@@ -75,6 +75,7 @@ inventory ownership; Git ignore rules do not exempt them from the check.
 | No lock file, an unregistered resolved package, a registered package missing from the lock, or a resolved revision that differs from the inventory (`lockfile_enforced` is `true`) | fail | fail |
 | A component still `pending`, or with open items | allowed | fail |
 | A source location not yet verified by anonymous download | allowed | fail |
+| A source offer marked verified without a pinned, consistent HTTPS retrieval receipt | fail | fail |
 
 Manifests are read by a small comment-aware scanner, not a Swift parser. It
 handles single-line and multi-line `.package(...)` declarations, ignores
@@ -198,6 +199,13 @@ embedded-code audit. The strict Mermaid, D2 and Graphviz items remain open.
 
 Ordinary offline CI checks the committed projections and every distributed text;
 raw-input replay additionally validates the captured archives and source links.
+For a future `source_offer.status: verified`, the ordinary and strict checks
+also require a dedicated receipt under `compliance/evidence/source-offers/`.
+The inventory pins its digest and the exact public URL, size and digest of every
+offered material. This prevents a status-only edit from passing; it does not
+itself fetch the public source or certify the independent rights review. The
+receipt schema and separate publication boundary are documented in
+[ARCHIVE_PLAN.md](ARCHIVE_PLAN.md).
 The current blockers and source-publication boundary are recorded in
 [RELEASE_PREPARATION.md](RELEASE_PREPARATION.md). Dated evidence directories retain
 their original outcomes and limits; later scoped updates do not rewrite history.

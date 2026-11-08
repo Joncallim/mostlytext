@@ -73,8 +73,14 @@ source offer.
 2. Confirm that the app's `THIRD_PARTY_NOTICES.md` and `sbom.cdx.json` match
    the archive copies byte for byte.
 3. Set `source_offer.status` to `"verified"` for Graphviz and D2 in
-   `inventory.json`, recording the date and the command output, then run
-   `compliance.py check --release --artifact <app>`.
+   `inventory.json` only after the independent download review. For each
+   component, record the stable page/package URLs, exact sizes and SHA-256 in
+   `source_offer.materials`; commit the credential-free HTTPS retrieval receipt
+   under `compliance/evidence/source-offers/`, and pin its path and SHA-256 in
+   `source_offer.verification`. Include the offered location itself among the
+   fetched materials. Then run `compliance.py check --release --artifact <app>`.
+   The offline checker detects missing, stale or inconsistent evidence; it
+   cannot prove that a claimed fetch happened or that the URL remains live.
 
 All of this can run in a cloud session except extracting the files from the
 signed app, which needs the DMG, a step that can be done on any machine once
@@ -106,6 +112,15 @@ release and its assets are unpublished and access-controlled, so anonymous retri
 Test obligations: anonymous fetch of a draft-release asset fails (documented counterexample, so nobody rebuilds the
 deadlock); a cookie-less fetch of every published object matches `SHA256SUMS`; the notices embed those exact locations;
 and no application binary is reachable from the source location.
+
+The committed receipt uses JSON schema 1 with exactly `schema`, `method`
+(`anonymous-https-get`), `location`, `fetched_at_utc` (UTC `Z`), and `files`.
+Each file has exactly `url`, `sha256`, `size`, and `http_status` (`200`). The
+inventory's `materials` list has the same URL/digest/size tuples. No cookie,
+authorization header, redirect token or private document belongs in this
+public evidence. The actual fetch procedure and network observation remain
+part of the reviewer record; receipt structure alone is not anonymous access
+proof. See [the source-offer receipt contract](../planning/downstream/source-offer-receipt-gate-2026-11-08.md).
 
 ## Local source-review packages — 3 November 2026
 
