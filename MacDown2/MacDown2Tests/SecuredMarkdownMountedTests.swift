@@ -46,6 +46,8 @@ struct SecuredMarkdownMountedTests {
             recorder: recorder,
             minimumRetained: initialInput + imageBytes.count
         )
+        print("MOUNTED_INLINE_INSTANCE phase=initial-grant loadID=\(first.uuidString) "
+            + "selected=\(String(describing: findTextInteraction(in: hosting).map(ObjectIdentifier.init)))")
         let originalPasteboard = snapshotPasteboard()
         defer { restorePasteboard(originalPasteboard) }
         try await assertGrantedImageCopies(from: hosting) {
@@ -60,6 +62,8 @@ struct SecuredMarkdownMountedTests {
         let second = try await waitForLoad(
             after: first, recorder: recorder, minimumRetained: initialInput + imageBytes.count
         )
+        print("MOUNTED_INLINE_INSTANCE phase=new-model-generation loadID=\(second.uuidString) "
+            + "selected=\(String(describing: findTextInteraction(in: hosting).map(ObjectIdentifier.init)))")
         #expect(second != first)
         try await assertGrantedImageCopies(from: hosting) {
             await recorder.diagnostic(phase: "new model generation")
@@ -204,6 +208,7 @@ struct SecuredMarkdownMountedTests {
                     theme: PreviewTheme(theme: BundledThemes.light),
                     resourceImageLoader: loader, resourceLoadID: loadID
                 )
+                .environment(\.mostlytextAttachmentDiagnosticLoadID, loadID)
                 .onChange(of: loadID, initial: true) { _, id in recorder.record(id, loader: loader) }
                 .onDisappear { recorder.didDisappear = true }
             }
