@@ -163,6 +163,14 @@ def first_failure(path):
     return None
 
 
+def copy_owned_helper(helper, owned):
+    if not helper.is_file() or not os.access(helper, os.X_OK):
+        raise ValueError("Installed Swift Testing helper is not executable")
+    shutil.copy2(helper, owned)
+    if sha256(helper) != sha256(owned) or not os.access(owned, os.X_OK):
+        raise ValueError("Owned Swift Testing helper differs or is not executable")
+
+
 def run_logged(receipt, receipt_path, label, command, cwd, timeout, *, env=None):
     log = receipt_path.parent / (label + ".log")
     record = {"command": command, "cwd": str(cwd), "log": log.name,
@@ -239,9 +247,7 @@ def qualify_app(root, receipt, receipt_path, workspace, graph_lock):
     developer = Path(subprocess.check_output(["xcode-select", "-p"], text=True).strip())
     helper = developer / "Toolchains/XcodeDefault.xctoolchain/usr/libexec/swift/pm/swiftpm-testing-helper"
     owned = root / "owned-swiftpm-testing-helper"
-    shutil.copyfile(helper, owned)
-    if sha256(helper) != sha256(owned):
-        raise ValueError("Copied Swift Testing helper differs from installed toolchain")
+    copy_owned_helper(helper, owned)
     run_logged(receipt, receipt_path, "macdownkit-sign-helper",
                ["codesign", "--force", "--sign", "-", str(owned)], root, 60)
     run_logged(receipt, receipt_path, "macdownkit-verify-helper",

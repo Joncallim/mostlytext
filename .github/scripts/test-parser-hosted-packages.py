@@ -2,6 +2,7 @@
 
 import importlib.util
 import json
+import os
 from pathlib import Path
 import subprocess
 import tempfile
@@ -85,6 +86,19 @@ class ParserPackageTests(unittest.TestCase):
             log.write_text("Test run with 8 tests passed\n0 failures\nerror: failed to compile\n")
             self.assertEqual(qualification.first_failure(log),
                              {"line": 3, "text": "error: failed to compile"})
+
+    def test_owned_testing_helper_retains_executable_mode_and_exact_bytes(self):
+        with tempfile.TemporaryDirectory() as folder:
+            helper = Path(folder) / "installed-helper"
+            owned = Path(folder) / "owned-helper"
+            helper.write_bytes(b"fixture Swift Testing host")
+            helper.chmod(0o755)
+            qualification.copy_owned_helper(helper, owned)
+            self.assertTrue(os.access(owned, os.X_OK))
+            self.assertEqual(owned.read_bytes(), helper.read_bytes())
+            helper.chmod(0o644)
+            with self.assertRaisesRegex(ValueError, "not executable"):
+                qualification.copy_owned_helper(helper, owned)
 
     def test_fork_manifest_requires_one_exact_change(self):
         with tempfile.TemporaryDirectory() as folder:

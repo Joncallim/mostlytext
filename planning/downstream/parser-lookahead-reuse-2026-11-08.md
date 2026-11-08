@@ -498,3 +498,15 @@ log and resolved-lock output are retained at
 The verifier now accepts only lock versions 2 and 3, requires `originHash` for
 version 3, and records a null origin hash for version 2 while still checking
 every exact pin. This run also provides no Swift package test result.
+
+The third manual run, `42518996031`, passed the complete SwiftTreeSitter and
+Neon package commands, staged MacDownKit resolution/build/test build and its
+XCTest command. It stopped at the owned Swift Testing helper before executing
+that suite: Python's `shutil.copyfile` copied the installed helper bytes but
+not its executable mode, so the owned runner received permission denied.
+The retained receipt, full command logs and hosted job log are at
+`/Volumes/Fast SSD/CORTANA-Builds/parser-hosted-packages-20261109/run-42518996031`.
+The correction uses a metadata-preserving copy and verifies both exact bytes
+and executable mode before signing. The first two fork test passes are useful
+staged-package evidence, but MacDownKit's complete Swift Testing suite remains
+unrun at this exact graph until the corrected hosted attempt completes.
