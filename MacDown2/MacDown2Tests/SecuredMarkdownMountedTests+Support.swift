@@ -3,6 +3,7 @@ import FileCore
 import Foundation
 @testable import MacDown2
 import Testing
+@testable import Textual
 
 extension SecuredMarkdownMountedTests {
     func copiedHTML(from view: NSView) async throws -> String {
