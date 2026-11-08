@@ -18,7 +18,7 @@ INSTANCE = re.compile(
 )
 LAYOUT = re.compile(
     rf"^TEXTUAL_SELECTION_LAYOUT loadID={LOAD_ID} modelID=ObjectIdentifier\({OBJECT_ID}\) "
-    r"phase=(offered|task-after) .*?(?:offered|stored)=layouts=(\d+) attachmentRuns=(\d+)"
+    r"phase=(offered|handoff-after) .*?(?:offered|stored)=layouts=(\d+) attachmentRuns=(\d+)"
 )
 NATIVE = re.compile(
     rf"^TEXTUAL_NATIVE_SELECTION loadID={LOAD_ID} viewID=ObjectIdentifier\({OBJECT_ID}\) "
@@ -74,12 +74,12 @@ def inspect(log: str) -> tuple[list[dict], list[str]]:
         offered = [item for item in layouts if item[0] < completion_line
                    and item[1:4] == (load_id, model_id, "offered") and item[5] > 0]
         retained = [item for item in layouts if item[0] < completion_line
-                    and item[1:4] == (load_id, model_id, "task-after") and item[5] > 0
+                    and item[1:4] == (load_id, model_id, "handoff-after") and item[5] > 0
                     and any(prior[0] < item[0] for prior in offered)]
         updated = [item for item in native if item[0] < completion_line
                    and item[1:4] == (load_id, view_id, model_id)]
         instance["offered_line"] = offered[0][0] if offered else None
-        instance["task_after_line"] = retained[0][0] if retained else None
+        instance["handoff_after_line"] = retained[0][0] if retained else None
         instance["native_update_line"] = updated[0][0] if updated else None
         instance["native_update_attachment_runs"] = updated[0][5] if updated else None
         instance["offered_attachment_layout"] = bool(offered)

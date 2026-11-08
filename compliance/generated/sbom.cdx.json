@@ -4069,6 +4069,9 @@
         }
       ],
       "name": "Textual",
+      "pedigree": {
+        "notes": "Private diagnostic descendants d2f8488 and e75d3a1 add load-ID-correlated selection logs and move the selected layout handoff outside SwiftUI onChange using a view-bound task. Candidate 45d5ef2d replaces that cancellable task with a coalesced main-actor callback, guarded by disappearance epoch, and adds four focused source tests. This candidate is not shipping qualified. The original MIT licence and bundled Prism bytes match the earlier verified fork; see planning/downstream/preview-selection-layout-handoff-2026-11-09.md."
+      },
       "properties": [
         {
           "name": "mostlytext:kind",
@@ -4083,9 +4086,9 @@
           "value": "exact"
         }
       ],
-      "purl": "pkg:github/joncallim/textual@6eba6da7d2d27d85560b956057fd98badd9b3495",
+      "purl": "pkg:github/joncallim/textual@45d5ef2d9a2d0d993de265ffeba7697db97799f5",
       "type": "library",
-      "version": "6eba6da7"
+      "version": "45d5ef2d"
     },
     {
       "bom-ref": "theme-daybreak",
@@ -5251,7 +5254,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:9f17e5a3-a9d0-5b54-afde-969e7100bcc9",
+  "serialNumber": "urn:uuid:31f2c331-366f-56d6-a99a-6448be67f3b1",
   "specVersion": "1.5",
   "version": 1
 }

@@ -34,17 +34,20 @@ candidate, not a shipping Preview remedy.
 
 ## Private change and invariants
 
-1. A per-`TextSelectionInteraction` reference object receives each offered
+1. Textual candidate `45d5ef2d` uses a per-`TextSelectionInteraction`
+   reference object that receives each offered
    `TextLayoutCollection` synchronously but stores it without changing SwiftUI
    observed state. It schedules at most one main-queue delivery at a time.
    A newer offer replaces the pending one; the delivery uses the latest
    collection, model and coordinator for that modifier instance.
 2. Delivery occurs outside the current SwiftUI update frame. It is not a
    `.task(id:)` attached to `Color.clear`, so an overlay redraw cannot cancel
-   an otherwise valid offer. A monotonically increasing generation and
-   explicit disappearance invalidation prevent an old queued callback from
-   reaching a later model or document. Model identity and diagnostic load ID
-   are recorded before and after delivery in the private fork.
+   an otherwise valid offer. A monotonically increasing lifecycle epoch
+   invalidates an old queued callback after disappearance. MostlyText's
+   existing `content.id(resourceLoadID)` creates a new modifier for each
+   resource/document generation, separating pending values across those
+   boundaries. Model identity and diagnostic load ID are recorded before and
+   after delivery in the private fork.
 3. The production resource grant, document/source identities, Textual
    attachment loader and original mounted test assertions stay unchanged.
    No wider permission, network call, alternate renderer, timeout increase or
@@ -56,8 +59,8 @@ candidate, not a shipping Preview remedy.
 
 ## Qualification before shipping consideration
 
-- Source tests control multiple offers in one frame, latest-wins delivery,
-  model replacement and disappearance before queued delivery. They prove the
+- Four source tests control multiple offers in one frame, latest-wins delivery,
+  reappearance, and disappearance before queued delivery. They prove the
   handoff object separately from SwiftUI timing; they do not prove native Copy.
 - The private hosted app must bind the exact fork/app pins, compiled product,
   test source and raw results; pass the unchanged initial suite and selected

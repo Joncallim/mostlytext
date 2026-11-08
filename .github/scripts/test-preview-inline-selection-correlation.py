@@ -11,7 +11,7 @@ import unittest
 
 SCRIPT = Path(__file__).with_name("verify-preview-inline-selection-correlation.py")
 ROOT = SCRIPT.parents[2]
-TEXTUAL_REVISION = "e75d3a188d2a056757de015dbd3344bffea23fd4"
+TEXTUAL_REVISION = "45d5ef2d9a2d0d993de265ffeba7697db97799f5"
 spec = importlib.util.spec_from_file_location("preview_inline_selection_correlation", SCRIPT)
 correlation = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(correlation)
@@ -27,7 +27,7 @@ def sample_log() -> str:
             f"TEXTUAL_SELECTION_LAYOUT loadID={load_id} modelID=ObjectIdentifier({model_id}) "
             "phase=offered offered=layouts=1 attachmentRuns=1",
             f"TEXTUAL_SELECTION_LAYOUT loadID={load_id} modelID=ObjectIdentifier({model_id}) "
-            "phase=task-after stored=layouts=1 attachmentRuns=1",
+            "phase=handoff-after stored=layouts=1 attachmentRuns=1",
             f"TEXTUAL_NATIVE_SELECTION loadID={load_id} viewID=ObjectIdentifier({view_id}) "
             f"modelID=ObjectIdentifier({model_id}) phase=update stored=layouts=1 attachmentRuns=1",
             f"MOUNTED_INLINE_INSTANCE phase=repeat-copy-complete-{generation} expectedLoadID={load_id} "
@@ -50,7 +50,10 @@ class CorrelationTests(unittest.TestCase):
         project = (ROOT / "MacDown2/project.yml").read_text()
         lock = json.loads((ROOT / "MacDown2/Packages/MacDownKit/Package.resolved").read_text())
         textual = next(pin for pin in lock["pins"] if pin["identity"] == "textual")
+        inventory = json.loads((ROOT / "compliance/inventory.json").read_text())
+        component = next(item for item in inventory["components"] if item["id"] == "textual")
         self.assertEqual(textual["state"]["revision"], TEXTUAL_REVISION)
+        self.assertEqual(component["revision"], TEXTUAL_REVISION)
         self.assertRegex(manifest, re.escape('url: "https://github.com/Joncallim/textual", revision: "'
                                              + TEXTUAL_REVISION + '"'))
         self.assertIn("revision: " + TEXTUAL_REVISION, project)
@@ -62,7 +65,7 @@ class CorrelationTests(unittest.TestCase):
         self.assertTrue(all(item["offered_attachment_layout"] and item["stored_attachment_layout"]
                             and item["selected_native_model_updated"]
                             and item["selected_layout_attachment_runs"] > 0
-                            and item["offered_line"] < item["task_after_line"] < item["completion_line"]
+                            and item["offered_line"] < item["handoff_after_line"] < item["completion_line"]
                             and item["native_update_line"] < item["completion_line"]
                             for item in generations))
 
@@ -83,6 +86,16 @@ class CorrelationTests(unittest.TestCase):
         self.assertIn("generation 3: selected model did not retain an attachment layout after offer and before Copy", errors)
         self.assertIn("generation 3: selected native view/model lacked a matching update before Copy", errors)
 
+    def test_cross_document_handoff_is_rejected(self):
+        log = sample_log().replace(
+            "loadID=00000000-0000-0000-0000-000000000003 modelID=ObjectIdentifier(0x003) "
+            "phase=handoff-after",
+            "loadID=00000000-0000-0000-0000-000000000004 modelID=ObjectIdentifier(0x003) "
+            "phase=handoff-after", 1,
+        )
+        _, errors = correlation.inspect(log)
+        self.assertIn("generation 3: selected model did not retain an attachment layout after offer and before Copy", errors)
+
     def test_missing_native_update_and_failed_suite_are_rejected(self):
         log = sample_log().replace(
             "phase=update stored=layouts=1 attachmentRuns=1",
@@ -99,7 +112,7 @@ class CorrelationTests(unittest.TestCase):
         ).splitlines()
         update = lines.pop(next(index for index, line in enumerate(lines)
                                 if "phase=update stored=layouts=1 attachmentRuns=0" in line))
-        task = next(index for index, line in enumerate(lines) if "phase=task-after " in line)
+        task = next(index for index, line in enumerate(lines) if "phase=handoff-after " in line)
         lines.insert(task, update)
         generations, errors = correlation.inspect("\n".join(lines))
         self.assertEqual(errors, [])
@@ -142,7 +155,7 @@ class CorrelationTests(unittest.TestCase):
 
     def test_task_after_copy_is_rejected(self):
         lines = sample_log().splitlines()
-        task = lines.pop(next(index for index, line in enumerate(lines) if "phase=task-after " in line))
+        task = lines.pop(next(index for index, line in enumerate(lines) if "phase=handoff-after " in line))
         completion = next(index for index, line in enumerate(lines)
                           if "phase=repeat-copy-complete-3 " in line)
         lines.insert(completion + 1, task)

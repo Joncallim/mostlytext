@@ -144,7 +144,7 @@ This file is generated from `compliance/inventory.json` by
 | SwiftSoup | 2.13.9 | MIT |
 | SwiftTreeSitter | 76f93e7e | BSD-3-Clause |
 | SwiftUIMath | 2a89c2b4 | MIT |
-| Textual | 6eba6da7 | MIT |
+| Textual | 45d5ef2d | MIT |
 | tree-sitter (runtime) | 0.25.10+mostlytext.3b1fb00f | MIT |
 | tree-sitter-bash | 0.25.1 | MIT |
 | tree-sitter-cpp | 0.23.4 | MIT |
@@ -10570,11 +10570,12 @@ SOFTWARE.
 
 ## Textual
 
-- Version: 6eba6da7
+- Version: 45d5ef2d
 - Upstream: https://github.com/Joncallim/textual
-- Revision: `6eba6da7d2d27d85560b956057fd98badd9b3495`
+- Revision: `45d5ef2d9a2d0d993de265ffeba7697db97799f5`
 - Licence: MIT
 - Copyright (c) 2024 Guille Gonzalez
+- Local modifications: Private diagnostic descendants d2f8488 and e75d3a1 add load-ID-correlated selection logs and move the selected layout handoff outside SwiftUI onChange using a view-bound task. Candidate 45d5ef2d replaces that cancellable task with a coalesced main-actor callback, guarded by disappearance epoch, and adds four focused source tests. This candidate is not shipping qualified. The original MIT licence and bundled Prism bytes match the earlier verified fork; see planning/downstream/preview-selection-layout-handoff-2026-11-09.md.
 
 ### textual--LICENSE.txt
 
