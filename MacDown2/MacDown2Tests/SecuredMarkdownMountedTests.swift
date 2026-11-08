@@ -14,6 +14,12 @@ import Themes
 @Suite("Secured Markdown mounted attachment", .serialized)
 @MainActor
 struct SecuredMarkdownMountedTests {
+    private struct RepeatedImageFixture {
+        let folder: URL
+        let originalImage: Data
+        let initialRetained: Int
+    }
+
     private let parserIdentity = UUID()
     let windowDiagnostics = PreviewCopyWindowDiagnostics()
 
@@ -61,7 +67,8 @@ struct SecuredMarkdownMountedTests {
             return await recorder.diagnostic(phase: "new model generation")
         }
         try await repeatGenerationCopies(after: second, host: hosting, recorder: recorder,
-                                         minimumRetained: initialInput + imageBytes.count) {
+                                         fixture: .init(folder: folder, originalImage: imageBytes,
+                                                        initialRetained: initialInput)) {
             document = document.updatingText(source).markClean()
             hosting.rootView = mountedView(document: document, parsed: parsed, tabID: tabID,
                                            owner: owner, recorder: recorder)
@@ -71,16 +78,23 @@ struct SecuredMarkdownMountedTests {
     }
 
     private func repeatGenerationCopies(after previousID: UUID, host: NSView, recorder: LoadIDRecorder,
-                                        minimumRetained: Int, update: () -> Void) async throws {
+                                        fixture: RepeatedImageFixture, update: () -> Void) async throws {
+        let references = try (3 ... 12).map { try repeatedGenerationPNG(generation: $0) }
+        try calibrateRepeatedImageOracle(originalImage: fixture.originalImage, references: references)
         var previous = previousID
         for generation in 3 ... 12 {
+            let deadline = ContinuousClock.now.advanced(by: .seconds(5))
+            let reference = references[generation - 3]
+            try reference.write(to: fixture.folder.appendingPathComponent("image.png"), options: .atomic)
             update()
             let current = try await waitForLoad(
-                after: previous, recorder: recorder, minimumRetained: minimumRetained
+                after: previous, recorder: recorder, minimumRetained: fixture.initialRetained + reference.count,
+                before: deadline
             )
             recordInstance("repeat-generation-\(generation)", loadID: current, host: host)
             #expect(current != previous)
-            try await assertGrantedImageCopies(from: host) {
+            try await assertGenerationImageCopies(from: host, reference: reference, generation: generation,
+                                                  before: deadline) {
                 recordInstance("repeat-copy-failure-\(generation)", loadID: current, host: host)
                 return await recorder.diagnostic(phase: "repeat generation \(generation)")
             }
@@ -234,9 +248,10 @@ struct SecuredMarkdownMountedTests {
     }
 
     private func waitForLoad(
-        after prior: UUID?, recorder: LoadIDRecorder, minimumRetained: Int
+        after prior: UUID?, recorder: LoadIDRecorder, minimumRetained: Int,
+        before limit: ContinuousClock.Instant? = nil
     ) async throws -> UUID {
-        let deadline = ContinuousClock.now.advanced(by: .seconds(5))
+        let deadline = limit ?? ContinuousClock.now.advanced(by: .seconds(5))
         while ContinuousClock.now < deadline {
             if let current = recorder.lastID, current != prior,
                await PreviewResourceAdmission.shared.globalStatus().retained >= minimumRetained {

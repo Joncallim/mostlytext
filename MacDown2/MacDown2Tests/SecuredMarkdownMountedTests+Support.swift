@@ -57,6 +57,89 @@ extension SecuredMarkdownMountedTests {
         """)
     }
 
+    func repeatedGenerationPNG(generation: Int) throws -> Data {
+        let index = generation - 3
+        try #require((0 ..< 10).contains(index))
+        let bitmap = try #require(NSBitmapImageRep(
+            bitmapDataPlanes: nil, pixelsWide: 8, pixelsHigh: 8,
+            bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true,
+            isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0
+        ))
+        let color = NSColor(
+            deviceRed: CGFloat(index % 4) / 3, green: CGFloat(index / 4) / 2,
+            blue: 1, alpha: 1
+        )
+        for row in 0 ..< 8 {
+            for column in 0 ..< 8 {
+                bitmap.setColor(color, atX: column, y: row)
+            }
+        }
+        return try #require(bitmap.representation(using: .png, properties: [:]))
+    }
+
+    func calibrateRepeatedImageOracle(originalImage: Data, references: [Data]) throws {
+        try #require(references.count == 10, "Ten distinct repeat generations are required")
+        let originalHTML = "<img src=\"data:image/png;base64,\(originalImage.base64EncodedString())\">"
+        for expected in references.indices {
+            for actual in references.indices {
+                let html = "<img src=\"data:image/png;base64,\(references[actual].base64EncodedString())\">"
+                try #require(copiedImageMatchesPixels(html, reference: references[expected]) == (actual == expected))
+            }
+            try #require(!copiedImageMatchesPixels(originalHTML, reference: references[expected]))
+        }
+        print("MOUNTED_IMAGE_ORACLE positives=10 negatives=100")
+    }
+
+    func assertGenerationImageCopies(
+        from view: NSView, reference: Data, generation: Int,
+        before deadline: ContinuousClock.Instant, diagnostic: @MainActor () async -> String
+    ) async throws {
+        var lastHTML: String?
+        while ContinuousClock.now < deadline {
+            if let interaction = findTextInteraction(in: view),
+               let html = freshNativeCopiedHTML(from: interaction) {
+                lastHTML = html
+                if copiedImageMatchesPixels(html, reference: reference) {
+                    return
+                }
+            }
+            try await Task.sleep(for: .milliseconds(20))
+        }
+        windowDiagnostics.captureFailure(host: view, selected: findTextInteraction(in: view))
+        let details = await diagnostic()
+        Issue.record("""
+        Mounted Textual copied the wrong image for generation \(generation); \
+        expectedPixels=\(String(describing: imagePixelComponents(reference))) \
+        actualPixels=\(String(describing: lastHTML.flatMap(copiedImagePixelComponents))) \
+        finalHTML=\(lastHTML ?? "<no fresh HTML>"); \(details); \(copyDiagnostics(in: view))
+        """)
+    }
+
+    private func copiedImageMatchesPixels(_ html: String, reference: Data) -> Bool {
+        guard let actual = copiedImagePixelComponents(html),
+              let expected = imagePixelComponents(reference)
+        else { return false }
+        return zip(actual, expected).allSatisfy { abs($0 - $1) < 0.1 }
+    }
+
+    private func copiedImagePixelComponents(_ html: String) -> [CGFloat]? {
+        guard let start = html.range(of: "data:image/png;base64,")?.upperBound else { return nil }
+        let encoded = html[start...].prefix { $0.isLetter || $0.isNumber || "+/=".contains($0) }
+        guard let bytes = Data(base64Encoded: String(encoded)) else { return nil }
+        return imagePixelComponents(bytes)
+    }
+
+    private func imagePixelComponents(_ bytes: Data) -> [CGFloat]? {
+        guard bytes.starts(with: [137, 80, 78, 71, 13, 10, 26, 10]),
+              let image = NSBitmapImageRep(data: bytes), image.pixelsWide == 8, image.pixelsHigh == 8,
+              let topLeft = image.colorAt(x: 0, y: 0)?.usingColorSpace(.sRGB),
+              let bottomRight = image.colorAt(x: 7, y: 7)?.usingColorSpace(.sRGB)
+        else { return nil }
+        return [topLeft, bottomRight].flatMap {
+            [$0.redComponent, $0.greenComponent, $0.blueComponent, $0.alphaComponent]
+        }
+    }
+
     func makeMountedWindow(hosting: NSView) -> NSWindow {
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 500, height: 400),
                               styleMask: [.titled], backing: .buffered, defer: false)
