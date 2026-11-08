@@ -1,5 +1,5 @@
 {
-  "originHash" : "4977d8018116e76b62a2c33a3836a890c5b0fa8d6f8ad4c2df33384ceca7c0a7",
+  "originHash" : "eb35f5f6a0d46e25714b62bf07481d9635bb1643c3446f4a5537f46fcf6eb50b",
   "pins" : [
     {
       "identity" : "neon",
@@ -82,7 +82,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Joncallim/textual",
       "state" : {
-        "revision" : "ff74cf54c278b451b2c59387dd00315830266a36"
+        "revision" : "6eba6da7d2d27d85560b956057fd98badd9b3495"
       }
     },
     {

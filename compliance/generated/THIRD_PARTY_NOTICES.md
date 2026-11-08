@@ -144,7 +144,7 @@ This file is generated from `compliance/inventory.json` by
 | SwiftSoup | 2.13.9 | MIT |
 | SwiftTreeSitter | 76f93e7e | BSD-3-Clause |
 | SwiftUIMath | 2a89c2b4 | MIT |
-| Textual | ff74cf54 | MIT |
+| Textual | 6eba6da7 | MIT |
 | tree-sitter (runtime) | 0.25.10+mostlytext.3b1fb00f | MIT |
 | tree-sitter-bash | 0.25.1 | MIT |
 | tree-sitter-cpp | 0.23.4 | MIT |
@@ -10570,9 +10570,9 @@ SOFTWARE.
 
 ## Textual
 
-- Version: ff74cf54
+- Version: 6eba6da7
 - Upstream: https://github.com/Joncallim/textual
-- Revision: `ff74cf54c278b451b2c59387dd00315830266a36`
+- Revision: `6eba6da7d2d27d85560b956057fd98badd9b3495`
 - Licence: MIT
 - Copyright (c) 2024 Guille Gonzalez
 

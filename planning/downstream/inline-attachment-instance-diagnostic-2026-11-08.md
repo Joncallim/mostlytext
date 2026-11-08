@@ -81,6 +81,18 @@ inputs are immutable. This diagnostic evidence cannot be substituted for the
 unchanged shipping candidate's failed first result or for a later complete
 six-pair and 17-workflow qualification.
 
+The guarded resolver ran once on the temporary resolve-only app branch
+`cb6fea9783007a3b8189ed5904966d4b6ae231be`: [run 42485340067](https://github.com/Joncallim/mostlytext/actions/runs/42485340067),
+attempt 1, succeeded on macOS 26.7.2 ARM with Xcode 26.0.1. Its actual
+`swift package --package-path MacDown2/Packages/MacDownKit resolve` output
+has manifest SHA-256 `eb35f5f6a0d46e25714b62bf07481d9635bb1643c3446f4a5537f46fcf6eb50b`
+and lock SHA-256 `68c9c55f5b327596effa0f3086da1bf53229e3a22ccfddbda50bc3970cdde637`.
+The other 23 pins were unchanged, the original manifest and lock were restored
+on that temporary branch, and its first whole log and artifact are retained at
+`/Volumes/Fast SSD/CORTANA-Builds/inline-attachment-instance-diagnostic-20261108/pin-resolution-first-cb6fea97`.
+This resolves only the private diagnostic dependency graph; it is not a native
+product result.
+
 ## Test and stop conditions
 
 Before any hosted execution, review the source diff, Swift syntax, workflow
