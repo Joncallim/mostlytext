@@ -165,6 +165,31 @@ Before *any* dependency publication, amend the adoption architecture to cover
 the actual combined delta, license and attribution, manifest graph, hosted
 resolution and fresh app qualification. Keep PR146's published firsts frozen.
 
+### Original result and separate big-endian pair defect
+
+The first exact-runtime matrix and sanitizer runs are retained under
+`/Volumes/Fast SSD/CORTANA-Builds/parser-utf16-boundary-20261108/first-original`.
+The original matrix exits 65: six of twelve cases fail. Both empty and
+one-byte chunks consume two bytes; little-endian decoding combines an adjacent
+fake trail beyond its declared two-byte chunk. Separate true two-byte heap
+allocations cause AddressSanitizer two-byte read violations in *both* endian
+decoders at `unicode.h:57` and `:67`. Each first outcome, full diagnostic and
+binary remains available.
+
+An independent original-valid-control failure also appeared: the existing
+big-endian decoder does not combine a four-byte lead/trail pair whose trail is
+`0xDD8B`. Its `U16_NEXT_BE` macro tests the raw second `uint16_t` value before
+byte-swapping it. This failure is outside upstream 5549, so the precise
+upstream boundary correction alone is not expected to make the complete matrix
+green. Preserve the valid big-endian case and its original failure. Do not
+silently choose a symmetric surrogate, remove the case, or attribute this
+failure to the boundary correction. The next isolated-copy comparison must
+report every same case and require the boundary failures to clear, while
+identifying the retained big-endian pair failure as a separate open defect.
+No combined runtime adoption is permitted on an unexplained red matrix; a
+distinct pre-implementation decision and reproduction are needed before any
+correction to that decoder's pair semantics.
+
 
 ## First console admission refusal
 
