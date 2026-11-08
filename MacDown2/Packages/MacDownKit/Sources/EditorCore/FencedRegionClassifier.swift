@@ -8,31 +8,19 @@ import Foundation
 /// path" rule, §2.1) — this is a plain `NSString` scan, closing the E10
 /// inherited-debt item §2.3 named.
 ///
-/// See §6.12 for the full design reasoning this type implements, including
-/// why a bounded backward scan can only be exact up to a finite cap (it is
-/// exact for the overwhelming majority of real documents, which are far
-/// smaller than that cap) and why fence-line detection here is a practical,
-/// disclosed approximation of CommonMark's own grammar rather than a second
-/// Markdown parser.
-///
-/// Two further disclosed simplifications (found by an independent review,
-/// alongside the 4-space-indent and blockquote-nesting limitations already
-/// pinned by tests below): this classifier counts ANY fence-delimiter line
-/// as toggling in/out of a fenced region, without checking (1) that a
-/// closing line's marker CHARACTER matches the opener's (real CommonMark
-/// requires a ` ``` ` fence to be closed only by another ` ``` ` line, never
-/// by `~~~`, and vice versa — see
-/// `mismatchedFenceCharactersAreTreatedAsClosingAnyOpenFence` below, which
-/// pins the current, simplified behavior), or (2) that a closing line's
-/// marker is at least as LONG as its opener's (real CommonMark requires a
-/// 4-backtick opener to be closed by 4+ backticks, not merely 3 — this
-/// classifier accepts any 3+ run as a valid closer for any opener). Both are
-/// accepted as rare, low-impact cases rather than implemented as a full
-/// stack-based matching rewrite.
+/// The scan returns `.unresolved` when it cannot reach the known document
+/// start within its line cap. Callers then suppress Markdown-only assists;
+/// guessing `.prose` could mutate source inside a distant open fence. Within
+/// the bounded window, closing lines must match the opener's marker and have
+/// at least its length. This remains a practical local classifier rather
+/// than a second CommonMark parser: container-prefixed fences and indentation
+/// beyond three spaces retain their separately documented limitations.
 enum FencedRegionClassifier {
     enum Classification: Equatable {
         case prose
         case frontMatter
+        /// The bounded scan did not reach a known outside-fence anchor.
+        case unresolved
         /// The fence's own info string, reduced to its first
         /// whitespace-delimited token and lowercased — a candidate
         /// `LanguageEditingProfileRegistry` key. `nil` for an absent or
@@ -41,8 +29,7 @@ enum FencedRegionClassifier {
     }
 
     /// How many lines this scans backward from the caret's own line before
-    /// giving up and reporting `.prose` — see §6.12 for why this is a
-    /// disclosed, not-unboundedly-correct tradeoff. Measured at ~0.5ms per
+    /// giving up and reporting `.unresolved`. Measured at ~0.5ms per
     /// 1,000 lines scanned (an independent review's own measurement), so
     /// 5,000 keeps a worst-case per-keystroke classification (this runs on
     /// every keystroke) at a few milliseconds rather than the ~10ms a
@@ -64,8 +51,7 @@ enum FencedRegionClassifier {
         }
 
         var currentLineStart = MarkdownEditingAssistEngine.lineStart(of: caret, in: text)
-        var fenceCount = 0
-        var nearestLanguageID: String?
+        var delimiters: [FenceDelimiter] = []
         var linesScanned = 0
 
         // The caret's OWN current line counts too if it is itself a fence
@@ -77,24 +63,35 @@ enum FencedRegionClassifier {
         // caret's line.
         if let fence = fenceDelimiter(lineStart: currentLineStart, in: text),
            caret >= fence.markerEnd {
-            fenceCount += 1
-            nearestLanguageID = fence.languageID
+            delimiters.append(fence)
         }
 
         while currentLineStart > 0, linesScanned < maximumFenceLinesScanned {
             let previousLineStart = MarkdownEditingAssistEngine.lineStart(of: currentLineStart - 1, in: text)
             if let fence = fenceDelimiter(lineStart: previousLineStart, in: text) {
-                fenceCount += 1
-                if fenceCount == 1 {
-                    nearestLanguageID = fence.languageID
-                }
+                delimiters.append(fence)
             }
             currentLineStart = previousLineStart
             linesScanned += 1
         }
 
-        guard fenceCount % 2 == 1 else { return .prose }
-        return .fencedCode(languageID: nearestLanguageID)
+        guard currentLineStart == 0 else { return .unresolved }
+
+        // The document's start is a known outside-fence anchor. Replaying
+        // only the delimiters within the bounded scan lets a candidate close
+        // only its own opener, without extracting or parsing the document.
+        var active: FenceDelimiter?
+        for fence in delimiters.reversed() {
+            if let opener = active {
+                if fence.canClose, fence.character == opener.character,
+                   fence.markerLength >= opener.markerLength {
+                    active = nil
+                }
+            } else {
+                active = fence
+            }
+        }
+        return active.map { .fencedCode(languageID: $0.languageID) } ?? .prose
     }
 
     /// A recognized fence-delimiter line: its marker character, derived
@@ -104,6 +101,8 @@ enum FencedRegionClassifier {
     /// has actually crossed past the fence marker itself.
     private struct FenceDelimiter {
         let character: unichar
+        let markerLength: Int
+        let canClose: Bool
         let languageID: String?
         let markerEnd: Int
     }
@@ -145,6 +144,8 @@ enum FencedRegionClassifier {
         let firstToken = infoString.split(separator: " ").first.map { String($0).lowercased() }
         return FenceDelimiter(
             character: marker,
+            markerLength: fenceLength,
+            canClose: infoString.isEmpty,
             languageID: (firstToken?.isEmpty == false) ? firstToken : nil,
             markerEnd: markerEnd
         )
