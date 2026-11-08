@@ -1988,6 +1988,42 @@
       "target": "MacDown2",
       "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
       "bundle": "Bundle.main (project target resource)",
+      "key": "Choose where to export this document.",
+      "source_default_value": "Choose where to export this document.",
+      "translator_comment": "Export save-panel guidance. English review drafts in other locales require translation and native layout review.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/MacDown2/ExportCoordinator.swift:160",
+        "MacDown2/MacDown2/ValidatedExportPanel.swift:18"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
       "key": "Choose which original MacDown preferences to import. Your original preferences remain unchanged.",
       "source_default_value": "Choose which original MacDown preferences to import. Your original preferences remain unchanged.",
       "translator_comment": "unknown_no_catalog_comment",
@@ -5984,7 +6020,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:302"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:300"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -12079,7 +12115,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:184"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:206"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -12114,7 +12150,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:297"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:295"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -12149,7 +12185,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:183"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:205"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -12355,7 +12391,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:180"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:202"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -12840,7 +12876,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:301"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:299"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -12875,7 +12911,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:298"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:296"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -12910,7 +12946,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:296"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:294"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13018,7 +13054,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:295"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:293"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13053,7 +13089,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:190"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:212"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13950,7 +13986,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:311"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:309"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13985,7 +14021,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:309"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:307"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -14498,7 +14534,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:178"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:200"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -14533,7 +14569,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:179"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:201"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -14568,7 +14604,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:185"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:207"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
