@@ -433,3 +433,45 @@ fixture, range, encoding, lifetime and comparison predicate. This changes failur
 collection only and must produce an honest nonzero original-runtime outcome.
 Then compare the exact upstream guard on an isolated C-source copy; do not edit
 or publish the owned runtime until all actual before/after controls are proved.
+
+### Hosted Swift package qualification before pin adoption
+
+The next owner-visible result is whether the two wrapper forks and the staged
+MacDownKit package pass their **complete** macOS package suites with the exact
+candidate parser graph. Current `main` is `d605d92ed6adc196bf0e679461dd8896443f6847`;
+the staged app graph is deliberately the earlier, immutable run `42487278217`
+from checkout `e9a294d84f0cfb54bc8610a92461aa848fcacfec`. This diagnostic does
+not rebase that receipt onto current main, change a production pin or launch the
+app. A passing staged test is therefore necessary evidence for the candidate,
+not an adoption or current-main integration result.
+
+Use a manual-only job on the existing `ci.yml` workflow, which is already on
+the default branch and can be dispatched against the isolated parser branch.
+A new branch-only `workflow_dispatch` file would not receive GitHub's manual
+event. A manual CI run on `epic/05-parser-hosted-graph` skips the regular CI jobs;
+all other CI refs retain their existing jobs. The diagnostic has read-only
+repository and Actions permissions, selects macOS 26 ARM and Xcode 26.6
+explicitly, and writes only to runner temporary storage. It downloads run
+`42487278217` by fixed run and artifact name, then validates every original
+artifact byte hash and its success receipt before testing.
+
+For each fork, require the published branch to point to the reviewed commit,
+fetch that exact commit, check its tree, licence and manifest blobs, parent and
+single-file manifest diff. Require SwiftTreeSitter `7cf83c59` to change only
+the C revision to `1884982a`, and Neon `7afa1dc4` to change only the wrapper
+revision to `7cf83c59`. Checkout and initialize their test grammar submodules
+in disposable directories. Resolve each package, retain the actual resulting
+lock, and require the parser pin rows to equal the hosted app graph. Neon's
+unrelated Rearrange row must remain the fork's tracked pin. Run each unfiltered
+package suite with `--force-resolved-versions` and serial tests.
+
+Stage the artifact's two app manifests and actual 24-row lock into a disposable
+MostlyText checkout. Resolve again and require the lock bytes to remain exact.
+Build MacDownKit and its tests under that lock; run both XCTest and the full
+Swift Testing suite using CI's owned helper procedure. Preserve full per-command
+logs, exits, first failure lines, source and submodule identities, test-host
+hashes, resolved locks, and a receipt on success or failure. The staged suite
+does not establish app-target, Release, native editor or signing acceptance.
+After a complete pass, separately reconcile current main, compliance inventory,
+and full app/CLI/Debug/Release/native checks before any production pin adoption
+or issue closure.

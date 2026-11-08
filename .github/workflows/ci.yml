@@ -27,6 +27,7 @@ concurrency:
 
 jobs:
   lint:
+    if: github.event_name != 'workflow_dispatch' || github.ref != 'refs/heads/epic/05-parser-hosted-graph'
     # Keep ARM as the default. An explicit dispatch can exercise the same
     # complete checks on supported Intel macOS 26 during ARM capacity outages.
     # Never use an older OS to execute macOS-26-deployment binaries.
@@ -54,6 +55,7 @@ jobs:
         run: swiftlint lint --strict MacDown2
 
   build-and-test:
+    if: github.event_name != 'workflow_dispatch' || github.ref != 'refs/heads/epic/05-parser-hosted-graph'
     # Both dispatch choices match the deployment OS and run every check.
     runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.runner == 'macos-26-intel' && 'macos-26-intel' || 'macos-26' }}
     timeout-minutes: 60
@@ -381,3 +383,60 @@ jobs:
         run: |
           MacDown2/scripts/pin-xcode-package-versions.sh --check
           git diff --exit-code -- MacDown2/Packages/MacDownKit/Package.resolved
+
+  parser-package-qualification:
+    # CI already exists on the default branch, so a manual run can select the
+    # isolated parser ref without installing another workflow on main.
+    if: github.event_name == 'workflow_dispatch' && github.repository == 'Joncallim/mostlytext' && github.ref == 'refs/heads/epic/05-parser-hosted-graph'
+    permissions:
+      contents: read
+      actions: read
+    runs-on: macos-26
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Select exact deployment toolchain
+        run: |
+          set -euo pipefail
+          test "$(sw_vers -productVersion | cut -d. -f1)" = 26
+          test "$(uname -m)" = arm64
+          XCODE=/Applications/Xcode_26.6.app
+          test -d "$XCODE"
+          sudo xcode-select -s "$XCODE/Contents/Developer"
+          xcodebuild -version | grep -Fx 'Xcode 26.6'
+          swift --version
+      - uses: actions/download-artifact@v4
+        with:
+          name: parser-hosted-graph-first
+          run-id: 42487278217
+          repository: Joncallim/mostlytext
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/parser-package-qualification/graph
+      - name: Resolve and test exact fork and staged app packages
+        run: python3 .github/scripts/qualify-parser-hosted-packages.py "$RUNNER_TEMP/parser-package-qualification"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: parser-hosted-package-qualification-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          path: |
+            ${{ runner.temp }}/parser-package-qualification/receipt.json
+            ${{ runner.temp }}/parser-package-qualification/*.log
+            ${{ runner.temp }}/parser-package-qualification/remote-sources.json
+            ${{ runner.temp }}/parser-package-qualification/graph/receipt.json
+            ${{ runner.temp }}/parser-package-qualification/graph/resolve.stdout
+            ${{ runner.temp }}/parser-package-qualification/graph/resolve.stderr
+            ${{ runner.temp }}/parser-package-qualification/graph/Packages/MacDownKit/Package.resolved
+            ${{ runner.temp }}/parser-package-qualification/graph/Packages/MacDownKit/Package.swift
+            ${{ runner.temp }}/parser-package-qualification/graph/Packages/TreeSitterMarkdown/Package.swift
+            ${{ runner.temp }}/parser-package-qualification/forks/swifttreesitter/Package.swift
+            ${{ runner.temp }}/parser-package-qualification/forks/swifttreesitter/Package.resolved
+            ${{ runner.temp }}/parser-package-qualification/forks/neon/Package.swift
+            ${{ runner.temp }}/parser-package-qualification/forks/neon/Package.resolved
+            ${{ runner.temp }}/parser-package-qualification/checkout/MacDown2/Packages/MacDownKit/Package.swift
+            ${{ runner.temp }}/parser-package-qualification/checkout/MacDown2/Packages/MacDownKit/Package.resolved
+            ${{ runner.temp }}/parser-package-qualification/checkout/MacDown2/Packages/TreeSitterMarkdown/Package.swift
+            ${{ runner.temp }}/parser-package-qualification/owned-package-test-result/**
+          if-no-files-found: warn
