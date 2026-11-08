@@ -46,8 +46,7 @@ struct SecuredMarkdownMountedTests {
             recorder: recorder,
             minimumRetained: initialInput + imageBytes.count
         )
-        print("MOUNTED_INLINE_INSTANCE phase=initial-grant loadID=\(first.uuidString) "
-            + "selected=\(String(describing: findTextInteraction(in: hosting).map(ObjectIdentifier.init)))")
+        recordInstance("initial-grant", loadID: first, host: hosting)
         let originalPasteboard = snapshotPasteboard()
         defer { restorePasteboard(originalPasteboard) }
         try await assertGrantedImageCopies(from: hosting) {
@@ -62,10 +61,10 @@ struct SecuredMarkdownMountedTests {
         let second = try await waitForLoad(
             after: first, recorder: recorder, minimumRetained: initialInput + imageBytes.count
         )
-        print("MOUNTED_INLINE_INSTANCE phase=new-model-generation loadID=\(second.uuidString) "
-            + "selected=\(String(describing: findTextInteraction(in: hosting).map(ObjectIdentifier.init)))")
+        recordInstance("new-model-generation", loadID: second, host: hosting)
         #expect(second != first)
         try await assertGrantedImageCopies(from: hosting) {
+            recordInstance("new-model-copy-failure", loadID: second, host: hosting)
             await recorder.diagnostic(phase: "new model generation")
         }
         try await assertRevocationStopsCopy(from: hosting, owner: owner, document: document, tabID: tabID)
@@ -230,6 +229,12 @@ struct SecuredMarkdownMountedTests {
         let details = await recorder.diagnostic(phase: "load readiness minimumRetained=\(minimumRetained)")
         Issue.record("Mounted Textual did not admit the expected document-bound image; \(details)")
         throw PreviewResourceAdmissionError.limitExceeded
+    }
+
+    private func recordInstance(_ phase: String, loadID: UUID, host: NSView) {
+        print("MOUNTED_INLINE_INSTANCE phase=\(phase) expectedLoadID=\(loadID.uuidString) "
+            + "selectedViewID=\(String(describing: findTextInteraction(in: host).map(ObjectIdentifier.init))) "
+            + "selectedViewLoadID=unobserved")
     }
 }
 

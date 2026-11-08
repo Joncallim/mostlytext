@@ -65,7 +65,8 @@ struct SecuredMarkdownResourceHost<Content: View>: View {
             PreviewResourceDiagnostics.record(
                 "host-body", context: current?.context,
                 detail: "generation=\(sourceGeneration) parsedRevision=\(parsedFrame?.revision ?? -1) "
-                    + "stored=\(slot?.context?.id.uuidString ?? "none")"
+                    + "stored=\(slot?.context?.id.uuidString ?? "none") "
+                    + "resourceLoadID=\(current?.loadID.uuidString ?? "none")"
             )
         #endif
         return PreviewResourceImageProvider.loader(for: current?.context)
@@ -105,7 +106,15 @@ struct SecuredMarkdownResourceHost<Content: View>: View {
                 }
                 // A denied frame also replaces old attachment caches. This identity records application of
                 // the frame, not permission; its loader has no provider when the context is absent.
-                slot = Slot(identity: currentIdentity, loadID: UUID(), context: context)
+                let next = Slot(identity: currentIdentity, loadID: UUID(), context: context)
+                #if DEBUG || RELEASE_PREVIEW_PROBE
+                    PreviewResourceDiagnostics.record(
+                        "slot-installed", context: context,
+                        detail: "generation=\(sourceGeneration) parsedRevision=\(parsedFrame?.revision ?? -1) "
+                            + "resourceLoadID=\(next.loadID.uuidString)"
+                    )
+                #endif
+                slot = next
             }
             .onDisappear {
                 if let context = retiringContext {
