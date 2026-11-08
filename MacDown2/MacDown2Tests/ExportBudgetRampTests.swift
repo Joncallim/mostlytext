@@ -59,7 +59,7 @@
                   !refusal || row["refusal_kind"] is String,
                   sourceBytes > 0, sourceBytes <= (32 << 20),
                   resourceBytes >= 0, resourceBytes <= (128 << 20) + 1024,
-                  occurrences >= 0, occurrences <= 65_537 else {
+                  occurrences >= 0, occurrences <= 65537 else {
                 throw RampError.fixtureChanged
             }
             let sourceData = try Data(contentsOf: folder.appendingPathComponent("source.md"))
@@ -138,9 +138,9 @@
                         "source_bytes": input.sourceBytes,
                         "resource_bytes": input.resourceBytes, "occurrences": input.occurrences,
                         "elapsed_seconds": elapsed, "app_peak_before_bytes": peakBefore,
-                        "app_peak_after_bytes": try peakResidentBytes(), "output_exists": false,
+                        "app_peak_after_bytes": peakResidentBytes(), "output_exists": false,
                     ])
-                } catch ExportError.unresolvedResources(let diagnostics)
+                } catch let ExportError.unresolvedResources(diagnostics)
                     where input.refusalKind == "unresolved-resources" {
                     let elapsed = ProcessInfo.processInfo.systemUptime - start
                     let limitText = input.name.hasPrefix("aggregate") ? "total resource limit" : "512-resource limit"
@@ -151,7 +151,7 @@
                         "refusal_kind": "unresolved-resources", "source_bytes": input.sourceBytes,
                         "resource_bytes": input.resourceBytes, "occurrences": input.occurrences,
                         "elapsed_seconds": elapsed, "app_peak_before_bytes": peakBefore,
-                        "app_peak_after_bytes": try peakResidentBytes(), "output_exists": false,
+                        "app_peak_after_bytes": peakResidentBytes(), "output_exists": false,
                     ])
                 }
             } else {
@@ -170,7 +170,7 @@
                     "output_bytes": output.bytes, "output_sha256": output.sha256,
                     "final_html_ceiling_margin_bytes": (256 << 20) - output.bytes,
                     "export_seconds": exportSeconds, "readback_seconds": readbackSeconds,
-                    "app_peak_before_bytes": peakBefore, "app_peak_after_bytes": try peakResidentBytes(),
+                    "app_peak_before_bytes": peakBefore, "app_peak_after_bytes": peakResidentBytes(),
                 ])
             }
         }
