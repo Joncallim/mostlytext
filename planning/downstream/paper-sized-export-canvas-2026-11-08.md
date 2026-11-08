@@ -1,175 +1,180 @@
-# Size the export canvas from its actual paper geometry
+# Preserve PDF layout while fitting the export canvas to paper
 
-## Owner outcome, baseline and ready decision
+## Owner summary
 
-Mainf12d6d357a2a67087db7022060fae798733d3ce7 integrates the exact native canvas
-comparison. Native42433595643 and Compliance42433595611 pass at973e6c37; eight
-executed source bindings, downloaded helper bytes, every input/output hash and
-actual tested/source/current/merged tree4c932c13 match. Original1123height creates
-both original failed page PNG hashes exactly; actual-paper height creates one
-page with PNG identical to original page1. Minimal height changes width/pixels,
-so it is rejected. The complete qualified first packet is committed here before
-production changes, including original data/helper/PNGs/logs/integration proof.
+Short PDF exports must not acquire an extra blank page from an oversized initial
+canvas. They must also keep the same text width and wrapping near a page boundary,
+and retain pages required by authored spacing. The adapter now derives its canvas
+height from the actual printable paper area and removes PDF canvas scrollbar
+chrome before the final HTML is validated. It keeps the established content width.
 
-Replace the arbitrary tall initial canvas with the existing fixed794width and
-height derived from the same NSPrintInfo that the actual print operation uses.
-This prevents unused viewport height from becoming a trailing blank fallback
-page without trimming any authored content/pages. Historical generation-branch
-identity is still unobserved; native mechanism and new actual adapter output,
-not an invented sole historical cause, justify this correction.
+This is a bounded PDF layout correction. The existing print progress panel,
+cancellation checkpoints, resource admission, output validation and atomic
+publication stay authoritative. Complete ordinary menu/save-panel acceptance,
+the technical-document visual corpus, final budgets and the signed release
+remain separate gates. The correction introduces no new public API or dependency.
 
-## Ownership and contracts
+## Baseline and final ownership
 
-Keep this inside the existing app PDF adapter/fallback. Add
-PDFSnapshotFallback.viewportSize(for:NSPrintInfo)->NSSize?: printable width and
-height subtract the actual margins from paper dimensions; require all dimensions,
-margins and derived values finite, positive printable area, fixed width794 and
-floor(printableHeight*794/printableWidth) in1...16384. Invalid geometry returnsnil;
-the adapter refuses with its existing printConfigurationFailed before loading.
-No clamping, default paper substitution, minimal-width trick or infinite frame.
+The implementation starts from main `f12d6d357a2a67087db7022060fae798733d3ce7`.
+That baseline already integrates the exact original-PDF readback and canvas
+comparison. Final production source is
+`fd23e3e264e9f34dd093151bb0f5474b0466f8c7`; its tested synthetic checkout is
+`c8ddad4ecc7ded70e9b0990d30314466b51833a3`, with parents baseline plus source.
+The exact computed source/tested tree is
+`dcf7296128f81fd0c1b3f74315bad1f47636083c`.
 
-PDFExportAdapter creates its two owned scratch URLs/defer and one configured
-NSPrintInfo before constructing/loading its ephemeral locked WebKit view. Use
-the viewport helper before layout. Pass that exact printInfo into the actual
-WebKit printOperation and assign it to operation.printInfo before running;
-verify its save destination as before. Keep public printInfo/configure callers,
-original flags/defaults, print progress, cancellation/lease/admission/atomic
-publication and output validation unchanged. Do not resize after loading,
-evaluate authored scripts, change CSS, drop a page or alter pagination ranges.
+The app owns paper geometry and PDF printing. ExportService owns the fixed PDF
+stylesheet and composes it before final HTML validation. The validated-SVG audit
+uses that same destination-specific stylesheet. HTML exports and default
+stylesheet callers retain their previous CSS. No Preview activation, project
+specification, package manifest, dependency pin, font or publication authority
+changes accompany this correction.
 
-Keep all original PDF tests/names/assertions. Intake only the already-qualified
-nine-function hosted PDF lane and its exact source/compiled/ownership checker
-from6cad5627: its own first42426662604 passes nine originals, zero skips/expected/
-force/timeouts, independently verifies1625inputs/24pins/five compiled roles and
-actual raw result. This qualifies only that lane, not the frozen preview candidate
-which remains failed/pending and untouched. The two previously disabled native
-print tests remain disabled in ordinary runs and opt in only under the existing
-hosted PDF condition, retaining their original actual bodies. No preview product
-activation, extra package test membership or project change is taken in.
+## User journeys and data flow
 
-Strengthen the existing print-configuration test with square/portrait/landscape
-paper geometry, unusable margins and nonfinite geometry controls. Strengthen the
-existing real short-document replacement test to require one page and its text,
-while retaining actual replacement validation. Keep long/multi-page selectable
-text, heading-cut ink and vector-only controls unchanged; all nine must execute
-and pass in the actual bounded hosted Release app. Adapt the private canvas
-comparison to use the actual production viewport helper for its paper case;
-retain original/minimal controls and all old outputs as historical firsts.
+1. Prepare an ordinary or validated-SVG PDF with the fixed PDF canvas rule in its
+   stylesheet. The SVG path checks the complete owned stylesheet and final HTML;
+   the adapter consumes exactly the accepted UTF-8 bytes and original destination.
+2. Create one configured print-info object and both existing owned scratch URLs.
+   Derive the initial view size before loading HTML, then pass that same geometry
+   to the actual WebKit print operation and reapply it to the returned operation.
+3. Keep the existing print/fallback validation and bounded pagination. Publish
+   validated immutable bytes through the existing destination admission. Remove
+   both owned scratch files on every exit path.
+4. A short fixture produces one page. A boundary fixture with a 700-pixel authored
+   block still requires two pages. No page is removed merely because it is blank.
 
-## Failure, resource, security and release boundaries
+## Geometry contract
 
-No dependency/pin/new source authority or network path; original offline CSP,
-JavaScript-disabled ephemeral store, navigation refusal,30second page/capture
-limits,256fallback pages/256MiB product output, owned cancellation and final
-publication checks remain. Native only on guarded hosted macOS26ARM. Locally SDK
-strict typecheck only, style/pure source/guard/compliance; no app/font/WebKit build
-or execution in the held owner account. UI/native/signing/separate-account gates
-remain explicit. Existing localisation strings are reused, no new release copy.
+`PDFSnapshotFallback.viewportSize(for:)` requires finite paper dimensions and
+margins, then computes positive printable width and height. The arithmetic
+helper returns width 794 and `floor(printableHeight * 794 / printableWidth)` only
+when that height is finite and within 1...16384. Invalid, zero, negative,
+nonfinite, overflowing or sub-pixel geometry refuses through the existing
+print-configuration error. There is no default-paper substitution, clamping,
+authored-content trimming or resize after loading.
 
-Freeze once; obtain complete first CI, native nine-case PDF lane, canvas comparison,
-Compliance and security results. Retain complete first logs/artifacts/raw results
-before any correction. Independently verify actual source/pins/compiled products,
-raw selections/owned lifecycle, short one-page output and long pagination. Scoped
-orthogonal self-review and expected-head merge only after qualification; update
-issue11 with this exact remedy and remaining whole-menu/validator/release gates.
-No ordinary menu/normal Quit, source-activated export consumer or full issue closure
-is inferred from app-target tests. Stop and revise the decision if typography,
-line wrapping, meaningful page flow or original assertions change unexpectedly.
+## Destination-specific trusted CSS
 
-## Review remediation: stable PDF content width before final validation
+`PDFCanvasStylesheet.css` contains exactly:
 
-All six complete first workflows at3c23e399 pass and are retained before this
-correction (full CI3720package/680app). This is not a waiver of the later native
-review finding. Exact same boundary HTML at former versus paper height produces
-794vs777wide snapshots and different typography. Independent proof binds all
-eight native sources, downloaded helper and all HTML/PDF/PNG outputs for both
-complete boundary firsts. Old images and changed boundary images are inspected.
+```css
+html { scrollbar-width: none !important; }
+```
 
-The seven-case prototype3a4507ec, native42437419599/Compliance42437498897, passes
-and is fully preserved here. Static html { scrollbar-width: none !important; }
-restores794width, exact original short-page PNG/raw text and BOTH exact original
-boundary page PNGs/raw text. The authored700pixel block still requires2pages;
-its final blank page stays, while the short canary has1page. No page is trimmed.
-Only root scrollbar chrome is removed; scrolling/overflow/content are not hidden.
-Official WebKit support: https://webkit.org/blog/16301/webkit-features-in-safari-18-2/
-Actual native observations, not that document, qualify this remedy.
+`ExportComposer.structuralStylesheet(for:)` appends it only for PDF. Complete
+stylesheet composition and companion-reference certification use the actual
+trusted destination sheet. `AuditedHeadCSS.builtIn(for:target:)` uses that same
+sheet and complete-byte review before minting its authority. No accepted HTML
+is rewritten afterward; arbitrary authored styles cannot manufacture a receipt.
 
-Revise production policy inside ExportService before any final-HTML receipt:
-add one internal PDFCanvasStylesheet.css constant with that exact fixed rule.
-ExportComposer's structuralStylesheet(for:target) adds it only forPDF; stylesheet
-composition and safe companion certification use this target-specific trusted
-structural CSS. HTML targets/default stylesheet callers preserve exact prior CSS.
-SVGAssemblyOwnership.AuditedHeadCSS.builtIn gains an optional target defaulting
-to priorHTML behaviour, checks closed references on the actual trusted structural
-sheet, and mints the same target-specific stylesheet. The validated-SVG entry
-passes its actual target. No new public API, post-validation HTML rewrite, script
-or private WebKit view/scroller manipulation. PDFAdapter still receives the exact
-accepted bytes; ordinary prepared PDF and validated PDF share the same policy.
+The existing closure guard recognizes exactly these reviewed SHA256 values:
 
-Keep all nine original PDF names/body assertions and strengthen hardenedHTML
-with policy presence. Add a package end-to-end HTML/PDF target+SVG ownership
-control; strengthen existing actual app accepted-PDF-input test to require SVG
-and policy while retaining exact UTF8/destination checks. Native canvas gate
-retains five historical controls plus two fixed CSS candidates using the actual
-production constant compiled directly with its helper. Now reject a candidate
-that changes either short/boundary reference PNG/text, narrows width, loses the
-short one-page output or trims the two-page authored-space fixture. Include the
-actual policy source in binding/compilation/trigger paths. Same original limits.
+| Owned bytes | SHA256 |
+|---|---|
+| Unchanged structural sheet | `668c19314146a74355da813dee3df584c964788e5a5b81f7233884c82ec5c5c3` |
+| That sheet, newline, fixed PDF rule | `63cb41eb285e77546cfc2ed7ca0914e86f1421941563be7dc4400ef7c1709ad5` |
 
-The scanner's neutral finding at3c23 concerns mocked public POSIX pw_name/pw_dir,
-not a credential; exact AST proof is preserved. Use a real pwd.struct_passwd
-fixture with the same public runner identity and inert non-authentication marker,
-matching the actual API record more closely. Do not suppress a scanner, erase
-old findings/firsts, rotate nonexistent credentials or claim its external incident
-resolved. Browser inspection is unauthenticated; no account/permission change.
+The extra rule contains no resource reference. Empty, unknown, URL-bearing and
+single-byte-changed sheets remain rejected. Future changes to either owned sheet
+still require explicit review. There is no generic CSS stripping or unconditional
+trust. [WebKit's documented support](https://webkit.org/blog/16301/webkit-features-in-safari-18-2/) is a reference; the native observations below
+establish the behavior of the actual qualified implementation.
 
-Freeze a new candidate once these changes are locally style/syntax/pure-guard
-checked; no local package/native build. Obtain and retain all newly triggered
-complete first CI/native/Compliance/security results before further correction.
-Independently verify actual app/package/native output and byte identity. Merge
-only after the concrete boundary finding is remediated and all technical gates
-qualify, with any actual scanner disposition honestly recorded. Main remainsf12
-until then; no whole ordinary-menu/normalQuit/finalRC issue acceptance inferred.
+## Security, lifetime and resource invariants
 
+The existing ephemeral WebKit store, disabled authored JavaScript, restrictive
+Content Security Policy, navigation refusal, 30-second load/capture limits,
+256-page fallback ceiling and 256-MiB output bound remain. Existing lease checks,
+cancellation, destination/source protection, complete-output validation and
+atomic publication are unchanged. AppKit's existing progress panel stays enabled.
+No new user-facing copy or localization key is introduced.
 
-## Exact stylesheet review correction after all seven complete firsts
+The native comparison runs only on a guarded disposable macOS 26 ARM runner.
+It activates no product app and uses a prohibited-activation NSApplication only
+for its fixed WebKit mechanism controls. Local work is source inspection, syntax
+and SDK typechecking only, pure guards and read-only downloaded artifact checks;
+no local app, package, font, WebKit or renderer runtime is used.
 
-All seven932firsts are complete and retained before this correction. Native
-canvas42438391343, nine genuinePDF42438391296, publicCLI42438391307, Compliance
-42438391329, sharedmath/heading42438391349 and headinganchors42438391292pass.
-Independent readers verify actual source2728ba60/treecd9a2205,56canvas sources,
-actual downloaded helper/all outputs, all9rawPDF functions/five compiled roles,
-allCLI source/pins/sixcomparisons/two normalQuits, both29app shared configurations
-and both68heading configurations. Complete whole workflow ZIPs and all artifacts
-remain at the recorded original root; their hashes and raw proofs are committed.
-A reader initially overmatched Skipped in a passing test name; exact whole-word
-outcome checks correct that readback error, never a changed test outcome.
+## Regression and adversarial evidence
 
-FullCI42438391290 genuinely fails:3721package tests/537suites/oneissue, the new
-pdfCanvasPolicyIsCoveredBySVGValidationAndLeavesHTMLScrollbarsAlone throws
-validatedPublicationRejected. Full app CI tests do not run after that package
-failure. The exact existing hasClosedReferences guard accepts ONLY the bundled
-structural digest668c19314146a74355da813dee3df584c964788e5a5b81f7233884c82ec5c5c3.
-The exact owned combinedPDFsheet digest is
-63cb41eb285e77546cfc2ed7ca0914e86f1421941563be7dc4400ef7c1709ad5, so the new
-PDF AuditedHeadCSS.builtIn immediately refuses. This literal source counterexample
-is preserved, without claiming added runtime branch telemetry. The guard was not
-a generic CSS parser; passing a changed string into it cannot establish closure.
+The original nine PDF test names and assertions remain. The two real print tests
+are still disabled in ordinary runs and enabled only by the bounded hosted PDF
+qualification flag. Existing configuration checks add square/portrait/landscape
+and invalid geometry; real short replacement adds one-page and retained-text
+checks. Long-document, selectable text, heading-cut and vector controls remain.
 
-Explicitly review TWO exact owned byte sequences in that same digest allowlist:
-the unchanged original structural sheet and that sheet plus newline plus the
-one fixed PDF root scrollbar rule. The latter introduces no URL, font, script or
-resource reference. Keep arbitrary/empty/changed CSS rejected byte-for-byte;
-no string stripping, broad pattern acceptance, unconditional trust or changed
-accepted-HTML bytes. Future changes to either owned sheet still require review.
+A package integration test prepares both HTML and PDF through the actual
+validated-SVG path, requires admitted SVG in each, checks PDF-only policy and
+preserves exact target binding. The existing app consumer test requires exact
+accepted UTF-8 bytes, SVG, policy and destination refusal. The existing closure
+guard test accepts both exact owned sheets and rejects changed variants.
 
-Strengthen the EXISTING aChangedStructuralStylesheetCannotCertifyClosedReferences
-function to accept both exact real owned sheets and refuse URL/empty/single-byte
-changes of each. Keep the new end-to-end SVG/PDF/HTML integration function and
-all its original assertions UNCHANGED; it must pass after the production guard
-correction. No other product or native mechanism change. Local source/pure digest
-controls and syntax/style only; actual full package/app/native execution stays
-hosted. Freeze once, retain every newly triggered complete first and independently
-verify source/tree/pins/raw outcomes before scoped review/expected-head merge.
-No old companion pass substitutes for current qualification; no issue closes from
-this architecture decision or exact-digest arithmetic alone.
+The native mechanism gate compiles the actual production viewport and stylesheet.
+It retains seven original/candidate controls and rejects narrowed width, changed
+reference text or PNG bytes, an extra short-document page, or lost authored-space
+pages. The corrected short page matches the original first page image exactly;
+both corrected boundary page images and raw text match their original references.
+Five pure hostile-result controls include the actual observed 777-point failure.
+
+[The qualified evidence packet](evidence/paper-canvas-qualified-firsts-2026-11-08/README.md)
+records all seven complete first passes, exact original metadata/native outputs,
+independent readers and actual integration proof. Actual main is
+c18c5ced1397e65c2451b647b9d1dab2b6937242; its parents and tree match the qualified
+source/tested/computed values above. No earlier receipt is retargeted.
+
+| Complete first workflow | Observed result |
+|---|---|
+| [CI 42440443061](https://github.com/Joncallim/mostlytext/actions/runs/42440443061) |3,721 package / 537 suites; 680 app / 143 suites; original builds/lint/final pins pass |
+| [PDF 42440443112](https://github.com/Joncallim/mostlytext/actions/runs/42440443112) |9 original functions, zero skips/expected failures/failures; owned 25.397 seconds, exit 0, no forced cleanup |
+| [Canvas 42440443155](https://github.com/Joncallim/mostlytext/actions/runs/42440443155) |7 actual controls, 56 source bindings, downloaded helper and every output verified |
+| [CLI 42440443176](https://github.com/Joncallim/mostlytext/actions/runs/42440443176) |6 comparisons, 3 actual peers, 6 kernel controls, 2 genuine normal Quits |
+| [Shared 42440443292](https://github.com/Joncallim/mostlytext/actions/runs/42440443292) |29 app tests / 9 suites, both Debug and Release |
+| [Heading 42440443036](https://github.com/Joncallim/mostlytext/actions/runs/42440443036) |68 controls / 9 suites, both configurations |
+| [Compliance 42440443046](https://github.com/Joncallim/mostlytext/actions/runs/42440443046) |Pass |
+
+The formerly failing package SVG/PDF integration, both exact owned-sheet checks
+and app accepted-UTF8/SVG/destination checks execute and pass unchanged. Full CI's
+archive uses aggregated whole-job logs instead of per-step members; independent
+readback verifies the same distinct actual package/app summaries and function
+pass events. No test outcome or acceptance predicate changes for that log layout.
+
+## Decision history and preserved failures
+
+The original 794-by-1123 canvas reproduces the two failed ordinary-export page
+images exactly: 3,692 ink pixels followed by zero. The minimal-height alternative
+narrows layout and changes pixels, so it was rejected.
+
+The first paper-height candidate `3c23e399` passed all six workflow firsts. A
+subsequent native boundary review nevertheless found a real 17-point content
+narrowing, from 794 to 777, and changed typography. Its complete outcomes and
+boundary failure remain preserved. A seven-case static-CSS prototype restored
+the original short and boundary images and text, while retaining authored pages.
+
+Candidate `932d5ca6` passed six companions and genuinely failed full CI's new
+SVG/PDF integration check: 3,721 package tests, one issue, app CI not run. The
+old closure guard recognized only the original stylesheet digest and correctly
+refused the new owned PDF sheet. All seven complete firsts were retained before
+the explicit two-owned-sheet review correction. The integration test that found
+the failure is unchanged in final source `fd23e3e2`.
+
+The original PDFKit raw canary ordering and ordinary-menu validator remain a
+separate issue. Character placement observations do not constitute a replacement
+oracle. The historical print-versus-fallback branch is not independently observed.
+Short native adapter fixture PDF bytes are removed by the existing test cleanup;
+its page/text result comes from executed assertions. The separate mechanism PDFs
+and PNGs are actually downloaded and independently verified.
+
+GitGuardian's neutral incident 39791096 concerns two occurrences of the same
+public POSIX runner fixture, with no credential. Its external incident is not
+marked resolved; no exemption or history rewrite is used. Source review is a
+scoped orthogonal self-review, not external independent release review.
+
+## Remaining gates and completion boundary
+
+Update MostlyText #11 with the verified integration and precise layout remedy.
+Keep whole parity, ordinary menu/save-panel/normal Quit, technical-content visual
+inspection, final resource calibration, complete-operation cancellation bounds,
+localization/VoiceOver and exact signed-artifact acceptance in their owning rows.
+No broader issue closes from this scoped correction alone.
