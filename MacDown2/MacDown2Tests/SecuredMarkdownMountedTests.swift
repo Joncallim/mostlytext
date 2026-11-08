@@ -267,10 +267,12 @@ struct SecuredMarkdownMountedTests {
 
     private func recordInstance(_ phase: String, loadID: UUID, host: NSView) {
         let selected = findTextInteraction(in: host)
-        let modelID = (selected as? Textual.NSTextInteractionView).map { ObjectIdentifier($0.model) }
+        let native = selected as? Textual.NSTextInteractionView
+        let modelID = native.map { ObjectIdentifier($0.model) }
         print("MOUNTED_INLINE_INSTANCE phase=\(phase) expectedLoadID=\(loadID.uuidString) "
             + "selectedViewID=\(String(describing: selected.map(ObjectIdentifier.init))) "
             + "selectedModelID=\(String(describing: modelID)) "
+            + "selectedModelLayout=\(native?.model.diagnosticLayoutSummary() ?? "unobserved") "
             + "selectedViewLoadID=unobserved")
     }
 }

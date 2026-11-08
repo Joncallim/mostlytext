@@ -52,7 +52,7 @@ if platform.machine() != "arm64":
     raise SystemExit("This native Preview qualification requires an Apple Silicon worker")
 paths = subprocess.check_output([
     "git", "ls-files", "-z", "MacDown2", ".github/scripts/verify-preview-grant-probe.py",
-    ".github/workflows/preview-grant-probe.yml", ".github/scripts/preview_compiled_inputs.py", ".github/scripts/test-preview-compiled-inputs.py", ".github/scripts/test-preview-diagnostic-host.py", ".github/scripts/check-preview-parsed-frame.py", ".github/scripts/test-preview-grant-tripwire.py", ".github/scripts/test-preview-native-architecture.py", ".github/scripts/test-preview-suite-contract.py", ".github/scripts/run-preview-grant-probe.py", ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
+    ".github/workflows/preview-grant-probe.yml", ".github/scripts/preview_compiled_inputs.py", ".github/scripts/test-preview-compiled-inputs.py", ".github/scripts/test-preview-diagnostic-host.py", ".github/scripts/check-preview-parsed-frame.py", ".github/scripts/test-preview-grant-tripwire.py", ".github/scripts/test-preview-native-architecture.py", ".github/scripts/test-preview-suite-contract.py", ".github/scripts/test-preview-inline-selection-correlation.py", ".github/scripts/verify-preview-inline-selection-correlation.py", ".github/scripts/run-preview-grant-probe.py", ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
     "planning/downstream/evidence/actual-app-hosted-plan-2026-11-07",
     "planning/downstream/inline-attachment-instance-diagnostic-2026-11-08.md",
 ], cwd=repo).decode().split("\0")

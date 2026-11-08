@@ -13,7 +13,8 @@ OBJECT_ID = r"(0x[0-9a-fA-F]+)"
 INSTANCE = re.compile(
     rf"^MOUNTED_INLINE_INSTANCE phase=repeat-copy-complete-(\d+) expectedLoadID={LOAD_ID} "
     rf"selectedViewID=Optional\(ObjectIdentifier\({OBJECT_ID}\)\) "
-    rf"selectedModelID=Optional\(ObjectIdentifier\({OBJECT_ID}\)\)"
+    rf"selectedModelID=Optional\(ObjectIdentifier\({OBJECT_ID}\)\) "
+    r"selectedModelLayout=(?:layouts=(\d+) attachmentRuns=(\d+)|unobserved)"
 )
 LAYOUT = re.compile(
     rf"^TEXTUAL_SELECTION_LAYOUT loadID={LOAD_ID} modelID=ObjectIdentifier\({OBJECT_ID}\) "
@@ -22,6 +23,7 @@ LAYOUT = re.compile(
 NATIVE = re.compile(
     rf"^TEXTUAL_NATIVE_SELECTION loadID={LOAD_ID} viewID=ObjectIdentifier\({OBJECT_ID}\) "
     rf"modelID=ObjectIdentifier\({OBJECT_ID}\) phase=(?:make|update) "
+    r"stored=layouts=(\d+) attachmentRuns=(\d+)"
 )
 ORACLE = "MOUNTED_IMAGE_ORACLE positives=10 negatives=100"
 PASS = re.compile(r"^✔ Test run with \d+ tests? in \d+ suites? passed")
@@ -30,13 +32,13 @@ PASS = re.compile(r"^✔ Test run with \d+ tests? in \d+ suites? passed")
 def inspect(log: str) -> tuple[list[dict], list[str]]:
     lines = log.splitlines()
     instances = {}
-    layouts = set()
-    native = set()
+    layouts = []
+    native = []
     errors = []
 
-    for line in lines:
+    for index, line in enumerate(lines, start=1):
         if match := INSTANCE.match(line):
-            generation, load_id, view_id, model_id = match.groups()
+            generation, load_id, view_id, model_id, layout_count, attachment_runs = match.groups()
             generation = int(generation)
             if generation in instances:
                 errors.append(f"generation {generation}: duplicate mounted completion")
@@ -45,12 +47,15 @@ def inspect(log: str) -> tuple[list[dict], list[str]]:
                 "load_id": load_id,
                 "view_id": view_id,
                 "model_id": model_id,
+                "completion_line": index,
+                "selected_layout_attachment_runs": int(attachment_runs or 0),
             }
         if match := LAYOUT.match(line):
             load_id, model_id, phase, count, attachments = match.groups()
-            layouts.add((load_id, model_id, phase, int(count), int(attachments)))
+            layouts.append((index, load_id, model_id, phase, int(count), int(attachments)))
         if match := NATIVE.match(line):
-            native.add(match.groups())
+            load_id, view_id, model_id, count, attachments = match.groups()
+            native.append((index, load_id, view_id, model_id, int(count), int(attachments)))
 
     if ORACLE not in lines:
         errors.append("ten-generation pixel oracle missing")
@@ -65,19 +70,28 @@ def inspect(log: str) -> tuple[list[dict], list[str]]:
         load_id = instance["load_id"]
         model_id = instance["model_id"]
         view_id = instance["view_id"]
-        instance["offered_attachment_layout"] = any(
-            item[:3] == (load_id, model_id, "offered") and item[4] > 0 for item in layouts
-        )
-        instance["stored_attachment_layout"] = any(
-            item[:3] == (load_id, model_id, "task-after") and item[4] > 0 for item in layouts
-        )
-        instance["selected_native_model_updated"] = (load_id, view_id, model_id) in native
+        completion_line = instance["completion_line"]
+        offered = [item for item in layouts if item[0] < completion_line
+                   and item[1:4] == (load_id, model_id, "offered") and item[5] > 0]
+        retained = [item for item in layouts if item[0] < completion_line
+                    and item[1:4] == (load_id, model_id, "task-after") and item[5] > 0
+                    and any(prior[0] < item[0] for prior in offered)]
+        updated = [item for item in native if item[0] < completion_line
+                   and item[1:4] == (load_id, view_id, model_id) and item[5] > 0]
+        instance["offered_line"] = offered[0][0] if offered else None
+        instance["task_after_line"] = retained[0][0] if retained else None
+        instance["native_update_line"] = updated[0][0] if updated else None
+        instance["offered_attachment_layout"] = bool(offered)
+        instance["stored_attachment_layout"] = bool(retained)
+        instance["selected_native_model_updated"] = bool(updated)
         if not instance["offered_attachment_layout"]:
-            errors.append(f"generation {generation}: selected model was not offered an attachment layout")
+            errors.append(f"generation {generation}: selected model was not offered an attachment layout before Copy")
         if not instance["stored_attachment_layout"]:
-            errors.append(f"generation {generation}: selected model did not retain an attachment layout")
+            errors.append(f"generation {generation}: selected model did not retain an attachment layout after offer and before Copy")
         if not instance["selected_native_model_updated"]:
-            errors.append(f"generation {generation}: selected native view/model was not updated for the load")
+            errors.append(f"generation {generation}: selected native view/model lacked a positive update before Copy")
+        if instance["selected_layout_attachment_runs"] == 0:
+            errors.append(f"generation {generation}: selected native model held no attachment at Copy completion")
 
     unexpected = sorted(set(instances).difference(range(3, 13)))
     if unexpected:
