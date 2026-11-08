@@ -1,0 +1,121 @@
+name: Private graduated Release export budget ramp
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main, epic/12-export-budget-calibration]
+    paths:
+      - '.github/scripts/prepare-export-budget-ramp.py'
+      - '.github/scripts/run-export-budget-ramp.py'
+      - '.github/scripts/verify-export-budget-ramp.py'
+      - '.github/scripts/test-export-budget-ramp.py'
+      - '.github/workflows/export-budget-ramp.yml'
+      - 'MacDown2/MacDown2Tests/ExportBudgetRampTests.swift'
+      - 'MacDown2/Packages/MacDownKit/Sources/ExportService/**'
+      - 'MacDown2/Packages/MacDownKit/Package.resolved'
+      - 'MacDown2/project.yml'
+
+concurrency:
+  group: export-budget-ramp-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  graduated-actual-export:
+    if: github.repository == 'Joncallim/mostlytext' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'Joncallim/mostlytext')
+    runs-on: macos-26
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Select macOS 26 and Xcode 26.6
+        run: |
+          set -euo pipefail
+          test "$(sw_vers -productVersion | cut -d. -f1)" = 26
+          test "$(uname -m)" = arm64
+          SELECTED=""
+          for CANDIDATE in /Applications/Xcode*.app; do
+            if test "$(DEVELOPER_DIR="$CANDIDATE/Contents/Developer" xcodebuild -version | head -n 1)" = 'Xcode 26.6'; then
+              SELECTED="$CANDIDATE"
+              break
+            fi
+          done
+          test -n "$SELECTED"
+          sudo xcode-select -s "$SELECTED/Contents/Developer"
+          xcodebuild -version
+          sw_vers
+          git rev-parse HEAD
+      - name: Check ramp controls without launching the app
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/test-export-budget-ramp.py
+          python3 -m py_compile .github/scripts/prepare-export-budget-ramp.py
+          python3 -m py_compile .github/scripts/run-export-budget-ramp.py
+          python3 -m py_compile .github/scripts/verify-export-budget-ramp.py
+      - name: Pin exact source and toolchain
+        run: python3 .github/scripts/verify-export-budget-ramp.py "$RUNNER_TEMP/export-budget-ramp" prepare
+      - name: Create deterministic valid fixtures outside the measured app
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/prepare-export-budget-ramp.py "$RUNNER_TEMP/export-budget-ramp"
+          python3 .github/scripts/verify-export-budget-ramp.py "$RUNNER_TEMP/export-budget-ramp" fixtures
+      - name: Generate and pin the actual app project
+        id: pin
+        run: |
+          set -euo pipefail
+          brew untap aws/tap 2>/dev/null || true
+          brew install xcodegen
+          cd MacDown2
+          xcodegen generate
+          cd ..
+          MacDown2/scripts/pin-xcode-package-versions.sh
+      - name: Compile real Release app and ramp test bundle
+        run: |
+          set -euo pipefail
+          xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
+            -configuration Release ENABLE_TESTABILITY=YES \
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) EXPORT_BUDGET_RAMP_PROBE RELEASE_PREVIEW_PROBE' \
+            -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/export-budget-ramp-app" \
+            -onlyUsePackageVersionsFromResolvedFile -enableCodeCoverage NO build-for-testing
+      - name: Run bounded fresh-process cases against real ExportService
+        run: |
+          set -euo pipefail
+          APP="$RUNNER_TEMP/export-budget-ramp-app/Build/Products/Release/MacDown2.app/Contents/MacOS/MacDown2"
+          python3 .github/scripts/run-export-budget-ramp.py "$RUNNER_TEMP/export-budget-ramp" "$APP" \
+            | tee "$RUNNER_TEMP/export-budget-ramp/ramp.log"
+      - name: Verify every result, refusal and bounded memory receipt
+        if: always()
+        run: python3 .github/scripts/verify-export-budget-ramp.py "$RUNNER_TEMP/export-budget-ramp" final
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: graduated-release-export-budget-ramp
+          path: |
+            ${{ runner.temp }}/export-budget-ramp/source-receipt.json
+            ${{ runner.temp }}/export-budget-ramp/fixture-receipt.json
+            ${{ runner.temp }}/export-budget-ramp/run-summary.json
+            ${{ runner.temp }}/export-budget-ramp/stop.json
+            ${{ runner.temp }}/export-budget-ramp/fixtures/fixture-manifest.json
+            ${{ runner.temp }}/export-budget-ramp/cases/**/manifest.json
+            ${{ runner.temp }}/export-budget-ramp/cases/**/result.json
+            ${{ runner.temp }}/export-budget-ramp/cases/**/output-inspection.json
+            ${{ runner.temp }}/export-budget-ramp/cases/**/post-case-guard.json
+            ${{ runner.temp }}/export-budget-ramp/cases/**/memory.json
+            ${{ runner.temp }}/export-budget-ramp/cases/**/samples.json
+            ${{ runner.temp }}/export-budget-ramp/cases/**/identity.json
+            ${{ runner.temp }}/export-budget-ramp/cases/**/status.json
+            ${{ runner.temp }}/export-budget-ramp/cases/**/test-summary.json
+            ${{ runner.temp }}/export-budget-ramp/cases/**/*.log
+            ${{ runner.temp }}/export-budget-ramp/cases/**/*.sample.txt
+            ${{ runner.temp }}/export-budget-ramp/cases/**/test.xcresult/**
+            ${{ runner.temp }}/export-budget-ramp/ramp.log
+          if-no-files-found: warn
+      - name: Verify immutable dependency locks
+        if: ${{ !cancelled() && steps.pin.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          MacDown2/scripts/pin-xcode-package-versions.sh --check
+          git diff --exit-code -- MacDown2/Packages/MacDownKit/Package.resolved
