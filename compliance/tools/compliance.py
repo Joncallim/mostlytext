@@ -22,7 +22,9 @@ from __future__ import annotations
 
 import argparse
 from collections import deque
+from datetime import datetime, timezone
 import hashlib
+import ipaddress
 import json
 import os
 import re
@@ -30,6 +32,7 @@ import stat
 import sys
 import uuid
 from pathlib import Path
+from urllib.parse import urlsplit
 
 INVENTORY = "compliance/inventory.json"
 GENERATED = "compliance/generated"
@@ -290,6 +293,114 @@ class Report:
         self.warnings.append(message)
 
 
+def public_source_url(value: object) -> bool:
+    """Require a stable HTTPS URL without embedded authority or query tokens."""
+    if not isinstance(value, str) or any(ord(char) < 33 for char in value):
+        return False
+    try:
+        parsed = urlsplit(value)
+        host = parsed.hostname or ""
+        if host == "localhost" or host.endswith(".local"):
+            return False
+        try:
+            if not ipaddress.ip_address(host).is_global:
+                return False
+        except ValueError:
+            pass  # A normal DNS name, not an IP literal.
+        return (parsed.scheme == "https" and bool(host)
+                and parsed.username is None and parsed.password is None
+                and parsed.port in (None, 443) and not parsed.query
+                and not parsed.fragment and parsed.path.startswith("/"))
+    except ValueError:
+        return False
+
+
+def source_offer_receipt_problem(root: Path, offer: dict) -> str | None:
+    """Check a committed fetch claim against pinned URLs/bytes, without fetching."""
+    location = offer.get("location")
+    if not public_source_url(location):
+        return "verified source location is not a stable public HTTPS URL"
+    expected = offer.get("materials")
+    if not isinstance(expected, list) or not expected:
+        return "verified source offer has no expected public materials"
+    seen: set[str] = set()
+    for item in expected:
+        if (not isinstance(item, dict) or set(item) != {"url", "sha256", "size"}
+                or not public_source_url(item.get("url"))
+                or not isinstance(item.get("sha256"), str)
+                or not re.fullmatch(r"[0-9a-f]{64}", item["sha256"])
+                or type(item.get("size")) is not int or item["size"] < 1):
+            return "verified source offer has an invalid expected material"
+        if item["url"] in seen:
+            return "verified source offer has duplicate material URLs"
+        seen.add(item["url"])
+    if location not in seen:
+        return "verified source offer omits its published notice location"
+
+    verification = offer.get("verification")
+    if not isinstance(verification, dict) or set(verification) != {"receipt", "sha256"}:
+        return "verified source offer has no bound retrieval receipt"
+    relative = verification["receipt"]
+    prefix = "compliance/evidence/source-offers/"
+    if (not isinstance(relative, str) or not relative.startswith(prefix)
+            or relative != Path(relative).as_posix()
+            or any(part in ("", ".", "..") for part in relative.split("/"))):
+        return "verified source offer has an unsafe receipt path"
+    expected_sha = verification["sha256"]
+    if not isinstance(expected_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_sha):
+        return "verified source offer has no receipt digest"
+    receipt_path = root
+    for part in relative.split("/"):
+        receipt_path /= part
+        if receipt_path.is_symlink():
+            return "verified source offer receipt path is a symlink"
+    if not receipt_path.is_file():
+        return "verified source offer receipt is missing"
+    try:
+        if receipt_path.stat().st_size > 256 * 1024:
+            return "verified source offer receipt exceeds 256 KiB"
+        raw = receipt_path.read_bytes()
+    except OSError:
+        return "verified source offer receipt cannot be read"
+    if len(raw) > 256 * 1024:
+        return "verified source offer receipt exceeds 256 KiB"
+    if hashlib.sha256(raw).hexdigest() != expected_sha:
+        return "verified source offer receipt digest changed"
+    try:
+        receipt = json.loads(raw.decode("utf-8"))
+    except (UnicodeError, ValueError):
+        return "verified source offer receipt is not valid UTF-8 JSON"
+    if not isinstance(receipt, dict) or set(receipt) != {"schema", "method", "location", "fetched_at_utc", "files"}:
+        return "verified source offer receipt has an invalid shape"
+    if (type(receipt["schema"]) is not int or receipt["schema"] != 1
+            or receipt["method"] != "anonymous-https-get" or receipt["location"] != location):
+        return "verified source offer receipt does not bind its location and method"
+    stamp = receipt["fetched_at_utc"]
+    try:
+        if not isinstance(stamp, str) or not stamp.endswith("Z"):
+            raise ValueError("not UTC")
+        parsed_stamp = datetime.fromisoformat(stamp[:-1] + "+00:00")
+        if parsed_stamp.tzinfo != timezone.utc:
+            raise ValueError("not UTC")
+    except ValueError:
+        return "verified source offer receipt has no valid UTC retrieval time"
+    files = receipt["files"]
+    if (not isinstance(files, list) or len(files) != len(expected)
+            or any(not isinstance(item, dict)
+                   or set(item) != {"url", "sha256", "size", "http_status"}
+                   or not public_source_url(item.get("url"))
+                   or not isinstance(item.get("sha256"), str)
+                   or not re.fullmatch(r"[0-9a-f]{64}", item["sha256"])
+                   or type(item.get("size")) is not int or item["size"] < 1
+                   or type(item["http_status"]) is not int or item["http_status"] != 200
+                   for item in files)):
+        return "verified source offer receipt does not record successful material fetches"
+    actual = [{key: item[key] for key in ("url", "sha256", "size")} for item in files]
+    if sorted(actual, key=lambda item: item["url"]) != sorted(expected, key=lambda item: item["url"]):
+        return "verified source offer receipt does not match expected public materials"
+    return None
+
+
 def symlinked_package_content(target: Path) -> list[Path]:
     """Use the same build/hidden exclusions as the distributed-file walk."""
     found = []
@@ -396,6 +507,9 @@ def check(root: Path, release: bool = False, artifact: Path | None = None) -> Re
                 report.error(f"{cid}: source availability is required ({offer.get('reason', 'copyleft')}) but no source location is recorded")
             elif release and offer.get("status") != "verified":
                 report.error(f"{cid}: source location {offer['location']} is '{offer.get('status')}', not verified by anonymous retrieval")
+            if offer.get("status") == "verified":
+                if problem := source_offer_receipt_problem(root, offer):
+                    report.error(f"{cid}: {problem}")
 
         if release:
             if component.get("provenance") != "verified":

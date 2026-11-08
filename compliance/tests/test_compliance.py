@@ -123,8 +123,29 @@ class Fixture:
                 },
             ],
         }
+        self.source_material = {"url": "https://example.org/src/", "sha256": sha("source page\n"),
+                                "size": len("source page\n")}
+        self.inventory["components"][0]["source_offer"]["materials"] = [self.source_material]
+        self.set_source_receipt()
         self.lock(REMOTE_REV)
         self.save()
+
+    def set_source_receipt(self, *, status: int = 200, material_sha256: str | None = None,
+                           extra: dict | None = None) -> None:
+        offer = self.inventory["components"][0]["source_offer"]
+        receipt = {
+            "schema": 1,
+            "method": "anonymous-https-get",
+            "location": offer["location"],
+            "fetched_at_utc": "2026-11-08T00:00:00Z",
+            "files": [{**self.source_material, "sha256": material_sha256 or self.source_material["sha256"],
+                       "http_status": status}],
+            **(extra or {}),
+        }
+        body = json.dumps(receipt, sort_keys=True) + "\n"
+        relative = "compliance/evidence/source-offers/lib.json"
+        self.write(relative, body)
+        offer["verification"] = {"receipt": relative, "sha256": sha(body)}
 
     def write(self, rel: str, text: str) -> None:
         path = self.root / rel
@@ -232,6 +253,43 @@ class ComplianceCheckTests(unittest.TestCase):
         self.fx.save()
         self.assertEqual(self.fx.check().errors, [])
         self.assertFailsWith("not verified by anonymous retrieval", release=True)
+
+    def test_status_only_verified_offer_is_rejected(self) -> None:
+        del self.fx.inventory["components"][0]["source_offer"]["verification"]
+        self.fx.save()
+        self.assertFailsWith("no bound retrieval receipt")
+        self.assertFailsWith("no bound retrieval receipt", release=True)
+
+    def test_non_https_source_location_is_rejected(self) -> None:
+        self.fx.inventory["components"][0]["source_offer"]["location"] = "http://example.org/src/"
+        self.fx.save()
+        self.assertFailsWith("not a stable public HTTPS URL")
+
+    def test_missing_and_stale_source_receipts_are_rejected(self) -> None:
+        receipt = self.fx.root / "compliance/evidence/source-offers/lib.json"
+        receipt.write_text(receipt.read_text() + " ")
+        self.assertFailsWith("receipt digest changed")
+        receipt.unlink()
+        self.assertFailsWith("receipt is missing")
+
+    def test_source_receipt_cannot_be_a_symlink(self) -> None:
+        receipt = self.fx.root / "compliance/evidence/source-offers/lib.json"
+        receipt.unlink()
+        receipt.symlink_to(self.fx.root / "LICENSE")
+        self.assertFailsWith("receipt path is a symlink")
+
+    def test_404_and_wrong_download_bytes_do_not_verify_source_offer(self) -> None:
+        self.fx.set_source_receipt(status=404)
+        self.fx.save()
+        self.assertFailsWith("does not record successful material fetches")
+        self.fx.set_source_receipt(material_sha256="0" * 64)
+        self.fx.save()
+        self.assertFailsWith("does not match expected public materials")
+
+    def test_source_receipt_cannot_include_auth_data(self) -> None:
+        self.fx.set_source_receipt(extra={"authorization": "private token"})
+        self.fx.save()
+        self.assertFailsWith("receipt has an invalid shape")
 
     def test_enforced_lockfile_missing_fails_tree_check(self) -> None:
         (self.fx.root / "MacDown2/Packages/MacDownKit/Package.resolved").unlink()
