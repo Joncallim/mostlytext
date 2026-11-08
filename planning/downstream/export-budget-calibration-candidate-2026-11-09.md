@@ -99,3 +99,23 @@ The workflow now enables the existing `RELEASE_PREVIEW_PROBE` test-only
 condition alongside `EXPORT_BUDGET_PROBE` for its build and test steps. No
 Export budget or product implementation changed, and the failed run supplies
 no memory or export-path result.
+
+## First actual-path execution checkpoint
+
+The corrected Release run `42520553205` compiled and executed all three
+selected cases. The actual self-contained HTML case produced 2,048 embedded
+image occurrences, and the 32 MiB + 1 source refusal produced no output.
+The WebKit print path produced a seven-page, 49,218-byte PDF, but the test
+failed two PDFKit text assertions: this platform extracted `BUDGET_START`
+as separate `BUDGET`, `_`, and `START` lines, and likewise split the end
+marker. The raw test output also recorded WebKit's PNG IDAT CRC error for the
+fixture image. This is a failed run, not a qualified budget measurement.
+The complete artifact, including the original PDF readback in the log and
+partial measurement/memory records, is retained at
+`/Volumes/Fast SSD/CORTANA-Builds/export-budget-calibration-20261109/run-42520553205`.
+
+The next candidate uses the already-tested valid one-pixel PNG bytes from
+`ValidatedSVGExportTests` and plain alphabetic heading sentinels. The PDF
+still must have multiple pages and contain both first and last headings in
+PDFKit readback; no resource gate, deadline or measurement threshold changes.
+Requalify the exact new head before using any observed resource numbers.

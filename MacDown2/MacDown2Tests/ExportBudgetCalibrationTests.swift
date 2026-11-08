@@ -15,7 +15,7 @@
     struct ExportBudgetCalibrationTests {
         private static let sourceLimit = 32 << 20
         private static let pixelBase64 = """
-        iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO5W0ZkAAAAASUVORK5CYII=
+        iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg==
         """
 
         private func outputDirectory() throws -> URL {
@@ -95,13 +95,13 @@
             let root = try fixtureDirectory()
             defer { try? FileManager.default.removeItem(at: root) }
             let destination = root.appendingPathComponent("print.pdf")
-            var source = "# BUDGET_START\n\n![pixel](pixel.png)\n\n"
+            var source = "# BUDGETSTART\n\n![pixel](pixel.png)\n\n"
             for section in 1 ... 25 {
                 source += "## Section \(section)\n\n"
                 source += String(repeating: "Bounded calibration text for real PDF pagination. ", count: 12)
                 source += "\n\n"
             }
-            source += "## BUDGET_END\n\nFinal text.\n"
+            source += "## BUDGETEND\n\nFinal text.\n"
             let sourceURL = root.appendingPathComponent("source.md")
             try Data(source.utf8).write(to: sourceURL)
             let request = try ExportRequest(
@@ -120,8 +120,8 @@
             let pdf = try #require(PDFDocument(data: data))
             let text = pdf.string ?? ""
             #expect(pdf.pageCount > 1)
-            #expect(text.contains("BUDGET_START"))
-            #expect(text.contains("BUDGET_END"))
+            #expect(text.contains("BUDGETSTART"))
+            #expect(text.contains("BUDGETEND"))
             try record("pdf", values: [
                 "case": "actual-webkit-print-pdfkit", "source_bytes": source.utf8.count,
                 "source_sha256": sha256(Data(source.utf8)), "prepared_html_bytes": html.utf8.count,
