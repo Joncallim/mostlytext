@@ -1,4 +1,4 @@
-name: Private PDF page-boundary layout review
+name: Private PDF scrollbar-free page-boundary prototype
 permissions:
   contents: read
 on:
@@ -36,7 +36,7 @@ jobs:
         run: |
           set -euo pipefail
           xcrun swiftc -parse-as-library -warnings-as-errors -swift-version 6 -strict-concurrency=complete .github/hosted-export-acceptance/ReadSnapshotFrames.swift MacDown2/MacDown2/PDFSnapshotFallback.swift -o "$RUNNER_TEMP/mostlytext-focus/read-snapshot-frames"
-      - name: Observe original controls and two fixed page-boundary cases once
+      - name: Observe five original controls and two scrollbar-free prototypes once
         run: python3 .github/scripts/read-pdf-snapshot-frames.py observe
       - uses: actions/upload-artifact@v4
         if: always()

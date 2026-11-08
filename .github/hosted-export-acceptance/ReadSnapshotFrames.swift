@@ -43,12 +43,12 @@ struct ReadSnapshotFrames {
         guard printableWidth.isFinite, printableHeight.isFinite,
               printableWidth > 0, printableHeight > 0 else { throw Failure.refused }
         guard let viewport = PDFSnapshotFallback.viewportSize(for: info) else { throw Failure.refused }
-        let paperHeight = viewport.height
-        guard paperHeight.isFinite, (1 ... 10000).contains(paperHeight) else { throw Failure.refused }
+        guard viewport.height.isFinite, (1 ... 10000).contains(viewport.height) else { throw Failure.refused }
         var rows: [[String: Any]] = []
         for (name, height) in [
-            ("original", CGFloat(1123)), ("paper", paperHeight), ("minimal", CGFloat(1)),
-            ("boundary-original", CGFloat(1123)), ("boundary-paper", paperHeight),
+            ("original", CGFloat(1123)), ("paper", viewport.height), ("minimal", CGFloat(1)),
+            ("boundary-original", CGFloat(1123)), ("boundary-paper", viewport.height),
+            ("css-paper", viewport.height), ("css-boundary-paper", viewport.height),
         ] {
             try await rows.append(captureCase(
                 name: name, height: height, info: info, html: derivedHTML(lockedHTML, for: name), root: root
@@ -66,10 +66,17 @@ struct ReadSnapshotFrames {
     }
 
     private static func derivedHTML(_ html: String, for name: String) -> String {
-        guard name.hasPrefix("boundary-") else { return html }
-        let paragraph = String(repeating: "BOUNDARY_REVIEW_CANARY ", count: 20)
-        let block = "<div style=\"height:700px\"><p>" + paragraph + "</p></div>"
-        return html.replacingOccurrences(of: "</body>", with: block + "</body>")
+        var result = html
+        if name.contains("boundary") {
+            let paragraph = String(repeating: "BOUNDARY_REVIEW_CANARY ", count: 20)
+            let block = "<div style=\"height:700px\"><p>" + paragraph + "</p></div>"
+            result = result.replacingOccurrences(of: "</body>", with: block + "</body>")
+        }
+        if name.hasPrefix("css-") {
+            let style = "<style>html { scrollbar-width: none !important; }</style>"
+            result = result.replacingOccurrences(of: "<head>", with: "<head>" + style)
+        }
+        return result
     }
 
     private static func captureCase(
