@@ -9,6 +9,7 @@ on:
       - '.github/quicklook-jsc-probe/**'
       - '.github/scripts/prepare-quicklook-jsc-probe.py'
       - '.github/scripts/test-quicklook-jsc-probe.py'
+      - '.github/scripts/test-quicklook-worker-probe.py'
       - '.github/scripts/observe-quicklook-jsc.py'
       - '.github/scripts/run-quicklook-jsc-ui.py'
       - '.github/scripts/test-quicklook-jsc-observer.py'
@@ -36,6 +37,7 @@ jobs:
           brew install xcodegen
           python3 .github/scripts/test-run-owned-app-tests.py
           python3 .github/scripts/test-quicklook-jsc-probe.py
+          python3 .github/scripts/test-quicklook-worker-probe.py
           python3 .github/scripts/test-quicklook-jsc-observer.py
           python3 .github/scripts/prepare-quicklook-jsc-probe.py "$RUNNER_TEMP/mostlytext-qljsc"
       - name: Compile and ad-hoc sign standalone container, provider and UI test
@@ -52,7 +54,7 @@ jobs:
           pluginkit -e use -i app.mostlytext.MostlyText.QuickLook
           pluginkit -m -A -D -vv -i app.mostlytext.MostlyText.QuickLook | tee "$RUNNER_TEMP/mostlytext-qljsc/discovery.log"
           open -R "$RUNNER_TEMP/mostlytext-qljsc/mostlytext-ql-reply-static.md"
-      - name: Execute cold static and actual JavaScriptCore capability once
+      - name: Execute both original capability cases and actual inherited-worker deadline once
         run: |
           set -euo pipefail
           python3 .github/scripts/run-quicklook-jsc-ui.py

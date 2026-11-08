@@ -38,6 +38,13 @@ targets:
     type: app-extension
     platform: macOS
     sources: [Provider]
+    dependencies:
+      - target: QLReplyProbeWorker
+        embed: true
+        link: false
+        codeSign: true
+        copy:
+          destination: executables
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.MostlyText.QuickLook
@@ -58,6 +65,16 @@ targets:
       properties:
         com.apple.security.app-sandbox: true
         com.apple.security.files.user-selected.read-only: true
+  QLReplyProbeWorker:
+    type: tool
+    platform: macOS
+    sources: [Worker]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.QLReplyProbe.Worker
+        CODE_SIGN_ENTITLEMENTS: Worker.entitlements
+        CREATE_INFOPLIST_SECTION_IN_BINARY: 'YES'
+        GENERATE_INFOPLIST_FILE: 'YES'
   QLReplyProbeAutomationHost:
     type: application
     platform: macOS

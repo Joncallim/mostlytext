@@ -185,6 +185,56 @@ def validate_observation(observed, messages):
         raise RuntimeError('Raw provider result/frozen factory does not match the actual UI attachment')
 
 
+def validate_worker_entitlements(value):
+    wanted = {'com.apple.security.app-sandbox': True, 'com.apple.security.inherit': True}
+    if value != wanted or any(type(v) is not bool for v in value.values()):
+        raise RuntimeError('The inherited worker requires exactly sandbox and inherit, no extra authority')
+
+
+def validate_worker_observation(observed, messages, worker_sha):
+    fields = {'kind', 'request_id', 'provider_pid', 'started_uptime', 'worker_sha256', 'children'}
+    if (set(observed) != fields or observed['kind'] != 'mostlytext-qlworker-capability'
+            or type(observed['request_id']) is not int or observed['request_id'] <= 0
+            or type(observed['provider_pid']) is not int or observed['provider_pid'] <= 0
+            or type(observed['started_uptime']) not in [int, float] or not math.isfinite(observed['started_uptime'])
+            or observed['started_uptime'] <= 0 or not re.fullmatch(r'[0-9a-f]{64}', worker_sha)
+            or observed['worker_sha256'] != worker_sha or type(observed['children']) is not list
+            or len(observed['children']) != 2):
+        raise RuntimeError('Unknown or unbound actual worker observation')
+    request = observed['request_id']
+    child_fields = {'request_id', 'mode', 'pid', 'ppid', 'sandbox', 'inherit', 'reason', 'status', 'gone', 'elapsed_ms'}
+    for row, mode, reason, status in zip(observed['children'], ['normal', 'held'], ['exit', 'signal'], [0, 9]):
+        if (not isinstance(row, dict) or set(row) != child_fields
+                or any(type(row[k]) is not int for k in ['request_id', 'pid', 'ppid', 'status', 'elapsed_ms'])
+                or row['request_id'] != request or row['pid'] <= 0 or row['ppid'] != observed['provider_pid']
+                or row['mode'] != mode or row['reason'] != reason or row['status'] != status
+                or any(row[k] is not True for k in ['sandbox', 'inherit', 'gone'])
+                or not 0 <= row['elapsed_ms'] < 3000 or (mode == 'held' and row['elapsed_ms'] < 450)):
+            raise RuntimeError('Actual worker identity, inherited authority or physical retirement did not qualify')
+    if observed['children'][0]['pid'] == observed['children'][1]['pid']:
+        raise RuntimeError('Two distinct actual child lifetimes are required')
+    actual = []
+    for message in messages:
+        prefix = 'QL_WORKER_PROBE child='
+        if message.startswith(prefix):
+            raw = message.removeprefix(prefix)
+            if len(raw.encode()) > 384:
+                raise RuntimeError('Unbounded or truncated actual child record')
+            row = json.loads(raw)
+            if row.get('request_id') == request:
+                actual.append(row)
+    begins = [m for m in messages if m.startswith('QL_WORKER_PROBE begin id=' + str(request) + ' ')]
+    hashes = [m for m in messages if m.startswith('QL_WORKER_PROBE executable id=' + str(request) + ' ')]
+    factories = [m for m in messages if m.startswith('QL_WORKER_PROBE factory id=' + str(request) + ' ')]
+    begin = re.fullmatch(r'QL_WORKER_PROBE begin id=' + str(request) + ' parent='
+                         + str(observed['provider_pid']) + r' start=([0-9]+(?:\.[0-9]+)?)', begins[0]) if len(begins) == 1 else None
+    factory = re.fullmatch(r'QL_WORKER_PROBE factory id=' + str(request) + r' bytes=([1-9][0-9]{0,3})', factories[0]) if factories else None
+    if (actual != observed['children'] or not begin or float(begin[1]) != observed['started_uptime']
+            or hashes != [f'QL_WORKER_PROBE executable id={request} sha256={worker_sha}']
+            or not factory or len(set(factories)) != 1 or int(factory[1]) > 8192):
+        raise RuntimeError('Actual child/parent/executable/factory records differ from the native UI attachment')
+
+
 def capture_compiled(root):
     products = root / 'build/Build/Products'
     release = products / 'Release'
@@ -195,7 +245,8 @@ def capture_compiled(root):
     plans = list(products.glob('*.xctestrun'))
     if len(plans) != 1:
         raise RuntimeError('Require one actual compiled UI execution plan')
-    roles = {'observer_control': root / 'observer-control',
+    roles = {'worker': provider / 'Contents/MacOS/QLReplyProbeWorker',
+             'observer_control': root / 'observer-control',
              'app': app / 'Contents/MacOS/QLReplyProbeContainer', 'app_info': app / 'Contents/Info.plist',
              'provider': provider / 'Contents/MacOS/QLReplyProbeProvider', 'provider_info': provider / 'Contents/Info.plist',
              'runner': runner / 'Contents/MacOS/QLReplyProbeFinderTests-Runner', 'runner_info': runner / 'Contents/Info.plist',
@@ -317,6 +368,7 @@ def main():
         paths = command(["git", "ls-files", "--", ".github/quicklook-jsc-probe",
                          ".github/scripts/prepare-quicklook-jsc-probe.py",
                          ".github/scripts/test-quicklook-jsc-probe.py",
+                         ".github/scripts/test-quicklook-worker-probe.py",
                          ".github/scripts/observe-quicklook-jsc.py",
                          ".github/scripts/run-quicklook-jsc-ui.py",
                          ".github/scripts/test-quicklook-jsc-observer.py",
@@ -329,6 +381,7 @@ def main():
         source = root / "mostlytext-ql-reply-static.md"
         source.write_bytes(b"# Hosted Quick Look fixture\n")
         (root / "mostlytext-ql-jsc.md").write_bytes(b"# Hosted Quick Look fixture\n")
+        (root / "mostlytext-ql-worker.md").write_bytes(b"# Hosted Quick Look fixture\n")
         (root / "ql-probe-neighbor.md").write_bytes(b"Generated sibling capability control; do not read through the provider.\n")
         record = {"checkout": command(["git", "rev-parse", "HEAD"]),
                   "source_sha256": {p: digest(Path(p)) for p in paths},
@@ -370,7 +423,12 @@ def main():
     assert ext["NSExtensionPointIdentifier"] == "com.apple.quicklook.preview"
     assert ext["NSExtensionPrincipalClass"] == "QLReplyProbeProvider.StaticPreview"
     assert ext["NSExtensionAttributes"] == {"QLIsDataBasedPreview": True, "QLSupportedContentTypes": ["net.daringfireball.markdown"]}
+    worker = provider / 'Contents/MacOS/QLReplyProbeWorker'
+    if worker.is_symlink() or not worker.is_file():
+        raise RuntimeError('Require the exact regular embedded worker executable')
     if args.seal_built:
+        subprocess.run(['codesign', '--force', '--sign', '-', '--options', 'runtime', '--timestamp=none',
+                        '--entitlements', str(fixture / 'Worker.entitlements'), str(worker)], check=True, timeout=30)
         # UI-test instrumentation belongs only to the separate automation target.
         subprocess.run(["codesign", "--force", "--sign", "-", "--options", "runtime", "--timestamp=none",
                         "--entitlements", str(fixture / "Provider.entitlements"), str(provider)], check=True, timeout=30)
@@ -385,7 +443,14 @@ def main():
     entitlements = plistlib.loads(raw[raw.index(b"<?xml"):])
     validate_provider_entitlements(entitlements)
     (root / "provider-actual-entitlements.plist").write_bytes(plistlib.dumps(entitlements))
+    worker_signature = subprocess.run(['codesign', '--display', '--entitlements', '-', '--xml', str(worker)],
+                                      capture_output=True, check=True, timeout=30)
+    worker_xml = worker_signature.stdout if b'<?xml' in worker_signature.stdout else worker_signature.stderr
+    worker_entitlements = plistlib.loads(worker_xml[worker_xml.index(b'<?xml'):])
+    validate_worker_entitlements(worker_entitlements)
+    (root / 'worker-actual-entitlements.plist').write_bytes(plistlib.dumps(worker_entitlements))
     record["built"] = {"app_info": app_info, "provider_info": info, "entitlements": entitlements,
+                       "worker_entitlements": worker_entitlements, "worker_executable_sha256": digest(worker),
                        "app_executable_sha256": digest(app / "Contents/MacOS" / app_info["CFBundleExecutable"]),
                        "provider_executable_sha256": digest(provider / "Contents/MacOS" / info["CFBundleExecutable"])}
     if args.seal_built:
@@ -399,6 +464,7 @@ def main():
             raise RuntimeError('An actual compiled UI/provider execution input changed')
     assert digest(root / "mostlytext-ql-reply-static.md") == record["selected_fixture_sha256"]
     assert digest(root / "mostlytext-ql-jsc.md") == record["selected_fixture_sha256"]
+    assert digest(root / "mostlytext-ql-worker.md") == record["selected_fixture_sha256"]
     if args.verify_finder:
         record['host_observer_proof'] = validate_host_observer(root, record['checkout'])
         controls = json.loads((root / 'observer-control-events.json').read_text())
@@ -425,12 +491,13 @@ def main():
         raw = subprocess.check_output(['xcrun', 'xcresulttool', 'get', 'test-results', 'summary', '--path', str(result)], timeout=60)
         (root / 'actual-ui-summary.json').write_bytes(raw)
         summary = json.loads(raw)
-        expected = {'totalTestCount': 2, 'passedTests': 2, 'failedTests': 0, 'skippedTests': 0, 'expectedFailures': 0}
+        expected = {'totalTestCount': 3, 'passedTests': 3, 'failedTests': 0, 'skippedTests': 0, 'expectedFailures': 0}
         if any(type(summary.get(k)) is not int or summary[k] != v for k, v in expected.items()):
-            raise RuntimeError('Both original cold-Finder and actual basic-JavaScript capability cases must pass')
+            raise RuntimeError('Both original cold-Finder/basic-JavaScript cases and the new actual inherited-worker case must pass')
         attachments = root / 'actual-ui-attachments'
         subprocess.run(['xcrun', 'xcresulttool', 'export', 'attachments', '--path', str(result), '--output-path', str(attachments)], check=True, timeout=60)
         observations = []
+        worker_observations = []
         for path in attachments.rglob('*'):
             if path.is_file() and path.stat().st_size <= 128 * 1024:
                 try:
@@ -439,12 +506,18 @@ def main():
                     continue
                 if isinstance(value, dict) and value.get('kind') == 'mostlytext-qljsc-capability':
                     observations.append(value)
+                if isinstance(value, dict) and value.get('kind') == 'mostlytext-qlworker-capability':
+                    worker_observations.append(value)
         if len(observations) != 1:
             raise RuntimeError('Require one actual result-bundle pending Finder attachment')
         validate_observation(observations[0], messages)
         record['javascriptcore_capability_observation'] = observations[0]
+        if len(worker_observations) != 1:
+            raise RuntimeError('Require one actual inherited-worker native result attachment')
+        validate_worker_observation(worker_observations[0], messages, record['built']['worker_executable_sha256'])
+        record['worker_capability_observation'] = worker_observations[0]
         record['actual_ui_summary'] = summary
-        record['scope'] = 'Actual fixed JavaScriptCore basic JS/minimal-WASM capability only; not actual D2, host shim, deadline/fallback, new authority, production or full QL-REPLY acceptance'
+        record['scope'] = 'Original actual fixed JavaScriptCore/minimal-WASM controls plus harmless inherited-worker normal/physical deadline feasibility. No untrusted engine admission, production executor/resource calibration, new provider authority, final signed artifact or full QL-REPLY acceptance'
     receipt_path.write_text(json.dumps(record, indent=2) + "\n")
     print("Actual signed fixture identifiers, Markdown-only data provider, sandbox entitlements and source hashes verified")
 
