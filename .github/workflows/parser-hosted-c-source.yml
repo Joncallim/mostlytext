@@ -34,11 +34,13 @@ jobs:
           set -euo pipefail
           test "$(sw_vers -productVersion | cut -d. -f1)" = 26
           test "$(uname -m)" = arm64
-          XCODE=$(ls -d /Applications/Xcode*.app | grep '26' | head -1)
-          test -n "$XCODE"
+          XCODE=/Applications/Xcode_26.6.app
+          test -d "$XCODE"
           sudo xcode-select -s "$XCODE/Contents/Developer"
           xcodebuild -version
+          xcodebuild -version | grep -Fx 'Xcode 26.6'
           clang --version
+          clang --version | grep -F 'Apple clang version 21.0.0'
       - uses: actions/download-artifact@v4
         with:
           name: parser-hosted-graph-first
@@ -57,7 +59,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: parser-hosted-c-source-diagnostic
+          name: parser-hosted-c-source-xcode266
           path: |
             ${{ runner.temp }}/parser-c-source/graph/receipt.json
             ${{ runner.temp }}/parser-c-source/graph/resolve.stdout

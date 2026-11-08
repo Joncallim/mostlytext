@@ -382,6 +382,25 @@ predicates, hashes and pin checks. Name the new artifact separately. A green
 second run is a second data point; it does not erase the first timeout or
 establish native app acceptance.
 
+The diagnostic run `42515117999` also timed out at 60 seconds. Its retained
+sample caught the main thread before `main`: the old Xcode 26.0.1 AddressSanitizer
+runtime entered `AsanInitFromRtl` again through macOS allocator initialization,
+then spent all 173 samples waiting on its own static spin mutex. The C fixture,
+parser and comparison functions were not reached. The diagnostic artifact and
+full log are preserved under
+`/Volumes/Fast SSD/CORTANA-Builds/parser-hosted-c-source-20261109/diagnostic-run-42515117999`.
+The workflow selected Xcode with the first alphabetical `Xcode*.app` path,
+which was 26.0.1 and Apple clang 17. The local passing proof recorded its
+`clang` command but not the selected Xcode version; the current local compiler
+reports Apple clang 21. GitHub's [macOS 26 ARM image manifest](https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md)
+lists Xcode 26.6 as its default and also retains 26.0.1. Select and assert
+Xcode 26.6 explicitly in the next hosted C-source run. Keep the exact fixture,
+sanitizer flags, 60-second deadline, source/pin checks and all failure
+predicates. This is a compiler runtime isolation test, not proof that older
+sanitizer versions are generally
+broken or that the parser candidate is qualified. Preserve the second red
+artifact and give the new result a separate artifact name.
+
 
 ## First console admission refusal
 
