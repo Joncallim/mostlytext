@@ -1,0 +1,55 @@
+name: Native PDF canvas and page-boundary regression controls
+permissions:
+  contents: read
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/hosted-export-acceptance/ReadSnapshotFrames.swift'
+      - '.github/scripts/read-pdf-snapshot-frames.py'
+      - '.github/workflows/pdf-snapshot-frames.yml'
+      - 'MacDown2/MacDown2/PDFSnapshotFallback.swift'
+      - 'MacDown2/Packages/MacDownKit/Sources/ExportService/PDFCanvasStylesheet.swift'
+      - '.github/scripts/test-pdf-snapshot-result.py'
+concurrency:
+  group: pdf-snapshot-frames-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  compare-fixed-canary:
+    if: github.repository == 'Joncallim/mostlytext'
+    runs-on: macos-26
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Admit only disposable native host and exact retained HTML
+        run: |
+          set -euo pipefail
+          XCODE=$(ls -d /Applications/Xcode*.app | grep '26' | head -1 || true)
+          test -n "$XCODE"
+          sudo xcode-select -s "$XCODE/Contents/Developer"
+          xcodebuild -version
+          sw_vers
+          python3 .github/scripts/test-actual-export-pdf-readback.py
+          python3 .github/scripts/test-pdf-snapshot-result.py
+          python3 .github/scripts/read-pdf-snapshot-frames.py prepare
+      - name: Compile private comparison with unchanged product pagination
+        run: |
+          set -euo pipefail
+          xcrun swiftc -parse-as-library -warnings-as-errors -swift-version 6 -strict-concurrency=complete .github/hosted-export-acceptance/ReadSnapshotFrames.swift MacDown2/MacDown2/PDFSnapshotFallback.swift MacDown2/Packages/MacDownKit/Sources/ExportService/PDFCanvasStylesheet.swift -o "$RUNNER_TEMP/mostlytext-focus/read-snapshot-frames"
+      - name: Observe five original controls and two scrollbar-free prototypes once
+        run: python3 .github/scripts/read-pdf-snapshot-frames.py observe
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-pdf-snapshot-frames
+          path: |
+            ${{ runner.temp }}/mostlytext-focus/*.json
+            ${{ runner.temp }}/mostlytext-focus/*.pdf
+            ${{ runner.temp }}/mostlytext-focus/*.png
+            ${{ runner.temp }}/mostlytext-focus/*.log
+            ${{ runner.temp }}/mostlytext-focus/*.html
+            ${{ runner.temp }}/mostlytext-focus/read-snapshot-frames
+          if-no-files-found: error

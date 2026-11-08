@@ -42,9 +42,15 @@ public enum ExportThemeStylesheet {
     /// Shared with the optional SVG head audit. A style change must be reviewed
     /// before it can certify that generated HTML has no unregistered asset URLs.
     static func hasClosedReferences(structuralCSS: String) -> Bool {
-        let reviewed = "668c19314146a74355da813dee3df584c964788e5a5b81f7233884c82ec5c5c3"
-        return SHA256.hash(data: Data(structuralCSS.utf8))
-            .map { String(format: "%02x", $0) }.joined() == reviewed
+        // The PDF variant adds only the fixed root scrollbar rule. Review its
+        // complete bytes separately; neither authored CSS nor changed sheets qualify.
+        let reviewed = [
+            "668c19314146a74355da813dee3df584c964788e5a5b81f7233884c82ec5c5c3",
+            "63cb41eb285e77546cfc2ed7ca0914e86f1421941563be7dc4400ef7c1709ad5",
+        ]
+        let digest = SHA256.hash(data: Data(structuralCSS.utf8))
+            .map { String(format: "%02x", $0) }.joined()
+        return reviewed.contains(digest)
     }
 
     private static func css(_ color: ThemeColor) -> String {

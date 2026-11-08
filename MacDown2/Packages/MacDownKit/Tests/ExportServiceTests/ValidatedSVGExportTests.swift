@@ -190,3 +190,22 @@ struct ValidatedSVGExportTests {
         return directory
     }
 }
+
+extension ValidatedSVGExportTests {
+    @Test func pdfCanvasPolicyIsCoveredBySVGValidationAndLeavesHTMLScrollbarsAlone() async throws {
+        let directory = temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let request = makeRequest()
+        let htmlTarget = ExportTarget.html(url: directory.appendingPathComponent("report.html"), mode: .selfContained)
+        let pdfTarget = ExportTarget.pdf(url: directory.appendingPathComponent("report.pdf"))
+        let html = try await ExportService.prepareValidatedSVG(request, to: htmlTarget, engine: ParseEngine())
+        let pdf = try await ExportService.prepareValidatedSVG(request, to: pdfTarget, engine: ParseEngine())
+        let htmlText = try #require(String(data: html.utf8, encoding: .utf8))
+        let pdfText = try #require(String(data: pdf.utf8, encoding: .utf8))
+        #expect(htmlText.contains("<svg") && pdfText.contains("<svg"), "The audited diagram must not fall back")
+        #expect(!htmlText.contains("scrollbar-width:"))
+        #expect(pdfText.contains("html { scrollbar-width: none !important; }"))
+        #expect(pdf.matches(target: pdfTarget, sourceText: request.text, generation: 1))
+        #expect(!html.isForPDF(at: directory.appendingPathComponent("report.pdf")))
+    }
+}

@@ -1,0 +1,46 @@
+name: Qualify fixed PDF canary using actual character placement
+permissions:
+  contents: read
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/hosted-export-acceptance/ReadPlacedPDF.swift'
+      - '.github/scripts/verify-placed-pdf-canary.py'
+      - '.github/scripts/test-placed-pdf-canary.py'
+      - '.github/fixtures/original-canary-selections.json.gz'
+      - '.github/workflows/placed-pdf-canary.yml'
+concurrency:
+  group: placed-pdf-canary-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  placed-canary:
+    if: github.repository == 'Joncallim/mostlytext'
+    runs-on: macos-26
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check placement controls and admit both immutable PDF outputs
+        run: |
+          set -euo pipefail
+          XCODE=$(ls -d /Applications/Xcode*.app | grep '26' | head -1 || true)
+          test -n "$XCODE"
+          sudo xcode-select -s "$XCODE/Contents/Developer"
+          xcodebuild -version
+          sw_vers
+          python3 .github/scripts/test-placed-pdf-canary.py
+          python3 .github/scripts/verify-placed-pdf-canary.py prepare
+      - name: Compile bounded read-only PDFKit helper
+        run: xcrun swiftc -parse-as-library -swift-version 6 -strict-concurrency=complete -warnings-as-errors .github/hosted-export-acceptance/ReadPlacedPDF.swift -o "$RUNNER_TEMP/mostlytext-focus/read-placed-pdf"
+      - name: Observe actual selections and require the original refusal and corrected acceptance
+        run: python3 .github/scripts/verify-placed-pdf-canary.py observe
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: actual-placed-pdf-canary
+          path: ${{ runner.temp }}/mostlytext-focus/
+          include-hidden-files: true
+          if-no-files-found: error

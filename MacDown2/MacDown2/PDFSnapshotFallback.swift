@@ -12,6 +12,28 @@ enum PDFSnapshotFallback {
     static let maxPages = 256
     static let captureTimeout: Duration = .seconds(30)
 
+    /// Keep the established layout width while fitting one real printable page.
+    /// A taller arbitrary viewport would turn unused canvas into a blank PDF slice.
+    static func viewportSize(for info: NSPrintInfo) -> NSSize? {
+        let values = [
+            info.paperSize.width, info.paperSize.height, info.leftMargin,
+            info.rightMargin, info.topMargin, info.bottomMargin,
+        ]
+        guard values.allSatisfy(\.isFinite) else { return nil }
+        return viewportSize(
+            printableWidth: info.paperSize.width - info.leftMargin - info.rightMargin,
+            printableHeight: info.paperSize.height - info.topMargin - info.bottomMargin
+        )
+    }
+
+    static func viewportSize(printableWidth: CGFloat, printableHeight: CGFloat) -> NSSize? {
+        guard printableWidth.isFinite, printableHeight.isFinite,
+              printableWidth > 0, printableHeight > 0 else { return nil }
+        let height = floor(printableHeight * 794 / printableWidth)
+        guard height.isFinite, (1 ... 16384).contains(height) else { return nil }
+        return NSSize(width: 794, height: height)
+    }
+
     static func render(
         webView: WKWebView,
         printInfo: NSPrintInfo,

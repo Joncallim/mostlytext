@@ -9,7 +9,6 @@ import pwd
 import subprocess
 import sys
 import tempfile
-from types import SimpleNamespace
 from unittest import mock
 from pathlib import Path
 import unittest
@@ -116,10 +115,12 @@ class PDFEvidenceAdmissionTests(unittest.TestCase):
                            'RUNNER_TEMP': '/Users/runner/work/_temp', 'GITHUB_EVENT_PATH': str(event),
                            'GITHUB_EVENT_NAME': 'pull_request'}
             root = Path('/Users/runner/work/_temp/pdf-pagination-probe')
+            # Match the actual POSIX record shape with the public disposable fixture identity.
+            account = pwd.struct_passwd(('runner', '*', 501, 20, 'Hosted fixture', '/Users/runner', '/usr/bin/false'))
             with mock.patch.dict(os.environ, environment, clear=True), \
                  mock.patch.object(os, 'getuid', return_value=501), \
                  mock.patch.object(os, 'geteuid', return_value=501), \
-                 mock.patch.object(pwd, 'getpwuid', return_value=SimpleNamespace(pw_name='runner', pw_dir='/Users/runner')), \
+                 mock.patch.object(pwd, 'getpwuid', return_value=account), \
                  mock.patch.object(Path, 'home', return_value=Path('/Users/runner')), \
                  mock.patch.object(platform, 'machine', return_value='arm64'), \
                  mock.patch.object(platform, 'mac_ver', return_value=('26.0', (), '')), \

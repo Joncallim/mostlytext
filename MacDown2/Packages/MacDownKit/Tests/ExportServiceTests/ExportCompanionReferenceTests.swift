@@ -91,6 +91,15 @@ struct ExportCompanionReferenceTests {
             structuralCSS: actual + "\nbody { background: url(old.assets/retained.png) }"
         ))
         #expect(!ExportThemeStylesheet.hasClosedReferences(structuralCSS: ""))
+        let pdf = ExportComposer.structuralStylesheet(for: .pdf(url: URL(fileURLWithPath: "/tmp/report.pdf")))
+        #expect(pdf == actual + "\n" + PDFCanvasStylesheet.css)
+        #expect(ExportThemeStylesheet.hasClosedReferences(structuralCSS: pdf))
+        for owned in [actual, pdf] {
+            #expect(!ExportThemeStylesheet.hasClosedReferences(structuralCSS: owned + " "))
+            #expect(!ExportThemeStylesheet.hasClosedReferences(
+                structuralCSS: owned + "\nbody { background: url(old.assets/retained.png) }"
+            ))
+        }
     }
 
     @Test func anInlineSVGPayloadCannotBorrowARasterHeader() async throws {

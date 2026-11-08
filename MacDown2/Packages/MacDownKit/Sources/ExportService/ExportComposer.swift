@@ -128,14 +128,14 @@ enum ExportComposer {
             visibleTitle: parsed.metadata.visibleTitle,
             bodyHTML: rendered.html,
             assetsDirectoryName: assetsDirName,
-            stylesheet: stylesheet(for: request.theme),
+            stylesheet: stylesheet(for: request.theme, target: target),
             manifest: resolver.frozenManifest(),
             diagnostics: diagnostics,
             sourceGeneration: request.sourceGeneration,
             preservesRawHTML: policy.preservesRawHTML
         ).registeringResourceSlots(rendered.resourceSlots)
         if !rendered.containsRawHTML, request.contributions.isEmpty, resolver.companionReferencesKnown,
-           ExportThemeStylesheet.hasClosedReferences(structuralCSS: ExportThemeStylesheet.structural) {
+           ExportThemeStylesheet.hasClosedReferences(structuralCSS: structuralStylesheet(for: target)) {
             prepared = prepared.certifyingCompanionReferences(sourceText: request.text)
         }
         return MarkedPreparation(prepared: prepared, markedRoots: derived.markedRoots,
@@ -160,8 +160,15 @@ enum ExportComposer {
     /// white paper — only wins if the structural sheet comes second. For screen
     /// rules the order is irrelevant: the structural sheet declares no `--md-*`
     /// value outside `@media print`, so the theme still owns every colour.
-    static func stylesheet(for theme: Theme) -> String {
-        ExportThemeStylesheet.variables(for: theme) + "\n" + ExportThemeStylesheet.structural
+    static func stylesheet(for theme: Theme, target: ExportTarget? = nil) -> String {
+        ExportThemeStylesheet.variables(for: theme) + "\n" + structuralStylesheet(for: target)
+    }
+
+    static func structuralStylesheet(for target: ExportTarget? = nil) -> String {
+        if case .pdf? = target {
+            return ExportThemeStylesheet.structural + "\n" + PDFCanvasStylesheet.css
+        }
+        return ExportThemeStylesheet.structural
     }
 
     // Applies the target's raw-HTML and resource-closure rules to the composed

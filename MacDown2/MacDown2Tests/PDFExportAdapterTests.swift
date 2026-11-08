@@ -123,6 +123,8 @@ struct PDFExportAdapterTests {
         #expect(info.jobDisposition == .save)
         #expect(info.dictionary()[NSPrintInfo.AttributeKey.jobSavingURL] as? URL == scratch)
 
+        PDFViewportChecks.verify(info: info)
+
         let operation = NSPrintOperation(
             view: NSView(frame: NSRect(x: 0, y: 0, width: 100, height: 100)),
             printInfo: NSPrintInfo()
@@ -233,6 +235,7 @@ struct PDFExportAdapterTests {
         let html = try await PDFExportAdapter.hardenedHTML(from: prepared)
         #expect(html.contains("Content-Security-Policy"))
         #expect(html.contains("default-src 'none'"))
+        #expect(html.contains("html { scrollbar-width: none !important; }"))
         #expect(html.contains("A short document."))
     }
 
@@ -307,6 +310,31 @@ struct PDFExportAdapterTests {
         try await PDFExportAdapter.export(prepared, to: pdfURL)
 
         let data = try Data(contentsOf: pdfURL)
-        #expect(PDFDocument(data: data) != nil, "the stale placeholder file must be replaced with a real PDF")
+        let document = try #require(PDFDocument(data: data), "the stale placeholder must be replaced with a real PDF")
+        #expect(document.pageCount == 1, "unused viewport height must not append a blank page")
+        #expect(document.string?.contains("Just one short document.") == true)
+    }
+}
+
+@MainActor
+private enum PDFViewportChecks {
+    static func verify(info: NSPrintInfo) {
+        for (width, height, expected) in [(100.0, 100.0, 794.0), (200, 100, 397), (100, 200, 1588)] {
+            #expect(PDFSnapshotFallback.viewportSize(printableWidth: width, printableHeight: height)
+                == NSSize(width: 794, height: expected))
+        }
+        for invalid in [CGFloat.zero, -1, .nan, .infinity, -.infinity] {
+            #expect(PDFSnapshotFallback.viewportSize(printableWidth: invalid, printableHeight: 100) == nil)
+            #expect(PDFSnapshotFallback.viewportSize(printableWidth: 100, printableHeight: invalid) == nil)
+        }
+        #expect(PDFSnapshotFallback.viewportSize(printableWidth: 1, printableHeight: .greatestFiniteMagnitude) == nil)
+        #expect(PDFSnapshotFallback.viewportSize(printableWidth: 10000, printableHeight: 1) == nil)
+        let expectedHeight = floor((info.paperSize.height - info.topMargin - info.bottomMargin) * 794
+            / (info.paperSize.width - info.leftMargin - info.rightMargin))
+        #expect(PDFSnapshotFallback.viewportSize(for: info) == NSSize(width: 794, height: expectedHeight))
+        let unusable = NSPrintInfo()
+        unusable.leftMargin = unusable.paperSize.width
+        unusable.rightMargin = unusable.paperSize.width
+        #expect(PDFSnapshotFallback.viewportSize(for: unusable) == nil)
     }
 }

@@ -73,6 +73,8 @@ struct ValidatedSVGHTMLPDFTests {
         ) { validated, url, _ in
             let html = try await PDFExportAdapter.validatedHTMLForWebKit(validated, to: url)
             #expect(Data(html.utf8) == validated.utf8)
+            #expect(html.contains("html { scrollbar-width: none !important; }"))
+            #expect(html.contains("<svg"))
             #expect(html.contains("script-src 'none'"))
             #expect(!html.contains("<!--MT117-SVG-"))
             do {
