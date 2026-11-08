@@ -1,0 +1,119 @@
+name: Private Release export budget measurement
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/scripts/sample-export-budget-memory.py'
+      - '.github/scripts/test-sample-export-budget-memory.py'
+      - '.github/scripts/verify-export-budget-calibration.py'
+      - '.github/workflows/export-budget-calibration.yml'
+      - 'MacDown2/MacDown2Tests/ExportBudgetCalibrationTests.swift'
+      - 'MacDown2/MacDown2/PDFExportAdapter.swift'
+      - 'MacDown2/Packages/MacDownKit/Sources/ExportService/**'
+      - 'MacDown2/Packages/MacDownKit/Package.resolved'
+      - 'MacDown2/project.yml'
+
+concurrency:
+  group: export-budget-calibration-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  actual-export:
+    if: github.repository == 'Joncallim/mostlytext' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'Joncallim/mostlytext')
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Select macOS 26 and Xcode 26.6
+        run: |
+          set -euo pipefail
+          test "$(sw_vers -productVersion | cut -d. -f1)" = 26
+          test "$(uname -m)" = arm64
+          SELECTED=""
+          for CANDIDATE in /Applications/Xcode*.app; do
+            if test "$(DEVELOPER_DIR="$CANDIDATE/Contents/Developer" xcodebuild -version | head -n 1)" = 'Xcode 26.6'; then
+              SELECTED="$CANDIDATE"
+              break
+            fi
+          done
+          test -n "$SELECTED"
+          sudo xcode-select -s "$SELECTED/Contents/Developer"
+          xcodebuild -version
+          sw_vers
+          git rev-parse HEAD
+      - name: Check the memory sampler without launching the app
+        run: |
+          python3 .github/scripts/test-sample-export-budget-memory.py
+          python3 -m py_compile .github/scripts/sample-export-budget-memory.py
+          python3 -m py_compile .github/scripts/verify-export-budget-calibration.py
+      - name: Record the exact source, lock and toolchain before compilation
+        run: python3 .github/scripts/verify-export-budget-calibration.py "$RUNNER_TEMP/export-budget-calibration" --prepare
+      - name: Generate and pin the actual app project
+        id: pin
+        run: |
+          set -euo pipefail
+          brew untap aws/tap 2>/dev/null || true
+          brew install xcodegen
+          cd MacDown2
+          xcodegen generate
+          cd ..
+          MacDown2/scripts/pin-xcode-package-versions.sh
+      - name: Compile the real Release app and test bundle
+        run: |
+          set -euo pipefail
+          xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
+            -configuration Release ENABLE_TESTABILITY=YES \
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) EXPORT_BUDGET_PROBE RELEASE_PREVIEW_PROBE' \
+            -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/export-budget-app" \
+            -onlyUsePackageVersionsFromResolvedFile -enableCodeCoverage NO build-for-testing
+      - name: Measure actual ExportService, WebKit print and PDFKit
+        run: |
+          set -euo pipefail
+          ROOT="$RUNNER_TEMP/export-budget-calibration"
+          export MOSTLYTEXT_EXPORT_BUDGET_OUTPUT="$ROOT/measurements"
+          export TEST_RUNNER_MOSTLYTEXT_EXPORT_BUDGET_OUTPUT="$MOSTLYTEXT_EXPORT_BUDGET_OUTPUT"
+          export TEST_RUNNER_GITHUB_ACTIONS=true
+          export TEST_RUNNER_RUNNER_OS=macOS
+          export TEST_RUNNER_GITHUB_REPOSITORY=Joncallim/mostlytext
+          APP="$RUNNER_TEMP/export-budget-app/Build/Products/Release/MacDown2.app/Contents/MacOS/MacDown2"
+          python3 .github/scripts/sample-export-budget-memory.py "$ROOT/memory" "$APP" -- \
+            python3 .github/scripts/run-owned-app-tests.py "$ROOT/diagnostics" "$APP" -- \
+              xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
+                -configuration Release ENABLE_TESTABILITY=YES \
+                'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) EXPORT_BUDGET_PROBE RELEASE_PREVIEW_PROBE' \
+                -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/export-budget-app" \
+                -onlyUsePackageVersionsFromResolvedFile -parallel-testing-enabled NO \
+                -resultBundlePath "$ROOT/actual-export.xcresult" \
+                -only-testing:MacDown2Tests/ExportBudgetCalibrationTests test-without-building \
+            | tee "$ROOT/probe.log"
+      - name: Verify the measured outcomes and source identity
+        if: always()
+        run: python3 .github/scripts/verify-export-budget-calibration.py "$RUNNER_TEMP/export-budget-calibration"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: actual-release-export-budget-measurement
+          path: |
+            ${{ runner.temp }}/export-budget-calibration/receipt.json
+            ${{ runner.temp }}/export-budget-calibration/measurements/*.json
+            ${{ runner.temp }}/export-budget-calibration/memory/*.json
+            ${{ runner.temp }}/export-budget-calibration/diagnostics/*.json
+            ${{ runner.temp }}/export-budget-calibration/diagnostics/*.log
+            ${{ runner.temp }}/export-budget-calibration/diagnostics/*.sample.txt
+            ${{ runner.temp }}/export-budget-calibration/actual-export.xcresult/**
+            ${{ runner.temp }}/export-budget-calibration/actual-export-summary.json
+            ${{ runner.temp }}/export-budget-calibration/probe.log
+          if-no-files-found: warn
+      - name: Verify immutable dependency locks
+        if: ${{ !cancelled() && steps.pin.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          MacDown2/scripts/pin-xcode-package-versions.sh --check
+          git diff --exit-code -- MacDown2/Packages/MacDownKit/Package.resolved
