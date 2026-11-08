@@ -41,33 +41,51 @@ struct SecuredMarkdownMountedTests {
             window.close()
         }
         hosting.layoutSubtreeIfNeeded()
-        let first = try await waitForLoad(
-            after: nil,
-            recorder: recorder,
-            minimumRetained: initialInput + imageBytes.count
-        )
+        let first = try await waitForLoad(after: nil, recorder: recorder,
+                                          minimumRetained: initialInput + imageBytes.count)
         recordInstance("initial-grant", loadID: first, host: hosting)
         let originalPasteboard = snapshotPasteboard()
         defer { restorePasteboard(originalPasteboard) }
-        try await assertGrantedImageCopies(from: hosting) {
-            await recorder.diagnostic(phase: "initial grant")
-        }
+        try await assertGrantedImageCopies(from: hosting) { await recorder.diagnostic(phase: "initial grant") }
 
         document = document.updatingText(source).markClean()
-        hosting.rootView = mountedView(
-            document: document, parsed: parsed, tabID: tabID, owner: owner, recorder: recorder
-        )
+        hosting.rootView = mountedView(document: document, parsed: parsed, tabID: tabID,
+                                       owner: owner, recorder: recorder)
         hosting.layoutSubtreeIfNeeded()
-        let second = try await waitForLoad(
-            after: first, recorder: recorder, minimumRetained: initialInput + imageBytes.count
-        )
+        let second = try await waitForLoad(after: first, recorder: recorder,
+                                           minimumRetained: initialInput + imageBytes.count)
         recordInstance("new-model-generation", loadID: second, host: hosting)
         #expect(second != first)
         try await assertGrantedImageCopies(from: hosting) {
             recordInstance("new-model-copy-failure", loadID: second, host: hosting)
             return await recorder.diagnostic(phase: "new model generation")
         }
+        try await repeatGenerationCopies(after: second, host: hosting, recorder: recorder,
+                                         minimumRetained: initialInput + imageBytes.count) {
+            document = document.updatingText(source).markClean()
+            hosting.rootView = mountedView(document: document, parsed: parsed, tabID: tabID,
+                                           owner: owner, recorder: recorder)
+            hosting.layoutSubtreeIfNeeded()
+        }
         try await assertRevocationStopsCopy(from: hosting, owner: owner, document: document, tabID: tabID)
+    }
+
+    private func repeatGenerationCopies(after previousID: UUID, host: NSView, recorder: LoadIDRecorder,
+                                        minimumRetained: Int, update: () -> Void) async throws {
+        var previous = previousID
+        for generation in 3 ... 12 {
+            update()
+            let current = try await waitForLoad(
+                after: previous, recorder: recorder, minimumRetained: minimumRetained
+            )
+            recordInstance("repeat-generation-\(generation)", loadID: current, host: host)
+            #expect(current != previous)
+            try await assertGrantedImageCopies(from: host) {
+                recordInstance("repeat-copy-failure-\(generation)", loadID: current, host: host)
+                return await recorder.diagnostic(phase: "repeat generation \(generation)")
+            }
+            previous = current
+        }
     }
 
     @Test func aNewParsedRevisionReplacesTheLoadWithoutAnotherModelEdit() async throws {
