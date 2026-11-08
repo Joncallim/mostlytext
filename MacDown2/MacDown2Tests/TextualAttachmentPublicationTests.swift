@@ -93,7 +93,8 @@ struct TextualAttachmentPublicationTests {
     private func resolve(_ model: Model, _ source: AttributedString, using loader: some AttachmentLoader) async {
         await model.resolveAttachments(
             in: source, imageAttachmentLoader: loader, emojiAttachmentLoader: loader,
-            environment: ColorEnvironmentValues(colorScheme: .light, colorSchemeContrast: .standard)
+            environment: ColorEnvironmentValues(colorScheme: .light, colorSchemeContrast: .standard),
+            diagnosticLoadID: nil
         )
     }
 
