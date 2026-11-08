@@ -475,3 +475,16 @@ does not establish app-target, Release, native editor or signing acceptance.
 After a complete pass, separately reconcile current main, compliance inventory,
 and full app/CLI/Debug/Release/native checks before any production pin adoption
 or issue closure.
+
+The first manual package run, `42517950815`, passed the Xcode 26.6 host,
+frozen graph artifact and exact remote source checks but stopped before any
+package command. Its SwiftTreeSitter submodule update checked out the committed
+`tree-sitter-swift` gitlink `eda05af7`, then the local verifier rejected it:
+the general Git-output helper stripped the leading space that `git submodule
+status` uses to mark a correct checkout. The failed receipt, full job log and
+source facts are preserved at
+`/Volumes/Fast SSD/CORTANA-Builds/parser-hosted-packages-20261109/run-42517950815`.
+The narrow correction reads that status output without stripping its first
+column and requires the exact path and committed gitlink for each fork. It
+still refuses uninitialized, changed, conflicting and unexpected submodules.
+This failed attempt provides no Swift package test result.

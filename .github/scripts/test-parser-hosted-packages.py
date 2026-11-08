@@ -16,6 +16,20 @@ MODULE.loader.exec_module(qualification)
 
 
 class ParserPackageTests(unittest.TestCase):
+    def test_submodule_status_preserves_and_checks_the_leading_marker(self):
+        revision = qualification.SUBMODULES["swifttreesitter"]["tree-sitter-swift"]
+        expected = {"tree-sitter-swift": revision}
+        good = " " + revision + " tree-sitter-swift (eda05af)"
+        self.assertEqual(qualification.verify_submodule_status([good], expected), expected)
+        for marker in ("-", "+", "U"):
+            with self.subTest(marker=marker):
+                with self.assertRaisesRegex(ValueError, "uninitialized or differs"):
+                    qualification.verify_submodule_status([marker + good[1:]], expected)
+        with self.assertRaisesRegex(ValueError, "gitlink differs"):
+            qualification.verify_submodule_status([" " + "0" * 40 + " tree-sitter-swift"], expected)
+        with self.assertRaisesRegex(ValueError, "gitlink differs"):
+            qualification.verify_submodule_status([" " + revision + " other-submodule"], expected)
+
     def test_ci_job_is_manual_on_the_isolated_ref_and_read_only(self):
         workflow = (HERE.parent / "workflows/ci.yml").read_text()
         job = workflow.split("\n  parser-package-qualification:\n", 1)[1]

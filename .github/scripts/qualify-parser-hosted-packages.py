@@ -34,6 +34,10 @@ FORK_PINS = {
     "swifttreesitter": {"tree-sitter"},
     "neon": {"rearrange", "swifttreesitter", "tree-sitter"},
 }
+SUBMODULES = {
+    "swifttreesitter": {"tree-sitter-swift": "eda05af7ac41adb4eb19c346883c0fa32fe3bdd8"},
+    "neon": {"tree-sitter-swift": "50b8c5e61c29fa30e760c7a1cbf24b59970e6233"},
+}
 FAILURE = re.compile(r"(?:^|\s)(?:error:|fatal error:|FAILED|Test Case .* failed|Test .* failed|BUILD FAILED)", re.I)
 
 
@@ -94,6 +98,22 @@ def verify_manifest_change(bare, name):
             "changed_files": changed, "manifest_blob": expected["blobs"]["Package.swift"]}
 
 
+def verify_submodule_status(lines, expected):
+    """Require the initialized checkout to match each reviewed commit gitlink."""
+    found = {}
+    for line in lines:
+        match = re.fullmatch(r" ([0-9a-f]{40}) ([^ ]+)(?: \([^\n]*\))?", line)
+        if match is None:
+            raise ValueError("Submodule is uninitialized or differs from its committed gitlink")
+        revision, path = match.groups()
+        if path in found:
+            raise ValueError("Duplicate submodule path: " + path)
+        found[path] = revision
+    if found != expected:
+        raise ValueError("Submodule path or gitlink differs from the reviewed commit")
+    return found
+
+
 def checkout_fork(root, name):
     bare = root / "remote-source" / name
     target = root / "forks" / name
@@ -105,13 +125,15 @@ def checkout_fork(root, name):
         raise ValueError("Fork checkout changed: " + name)
     subprocess.run(["git", "submodule", "update", "--init", "--recursive", "--depth=1"],
                    cwd=target, check=True, timeout=600)
-    submodules = git(["submodule", "status", "--recursive"], cwd=target).splitlines()
-    if any(not line.startswith(" ") for line in submodules):
-        raise ValueError("Fork has an uninitialized or changed submodule: " + name)
+    # git() strips whitespace; the first column here is a security-relevant
+    # status marker, where one leading space means the checked-out gitlink.
+    submodules = subprocess.check_output(["git", "submodule", "status", "--recursive"],
+                                         cwd=target, text=True, timeout=30).splitlines()
+    verified_submodules = verify_submodule_status(submodules, SUBMODULES[name])
     if git(["status", "--porcelain", "--untracked-files=no"], cwd=target):
         raise ValueError("Fork tracked source became dirty: " + name)
     exact["checkout"] = str(target)
-    exact["submodules"] = submodules
+    exact["submodules"] = verified_submodules
     exact["tracked_lock_before_sha256"] = sha256(target / "Package.resolved")
     return target, exact
 
