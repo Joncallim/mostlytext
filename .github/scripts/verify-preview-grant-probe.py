@@ -54,6 +54,7 @@ paths = subprocess.check_output([
     "git", "ls-files", "-z", "MacDown2", ".github/scripts/verify-preview-grant-probe.py",
     ".github/workflows/preview-grant-probe.yml", ".github/scripts/preview_compiled_inputs.py", ".github/scripts/test-preview-compiled-inputs.py", ".github/scripts/test-preview-diagnostic-host.py", ".github/scripts/check-preview-parsed-frame.py", ".github/scripts/test-preview-grant-tripwire.py", ".github/scripts/test-preview-native-architecture.py", ".github/scripts/test-preview-suite-contract.py", ".github/scripts/run-preview-grant-probe.py", ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
     "planning/downstream/evidence/actual-app-hosted-plan-2026-11-07",
+    "planning/downstream/inline-attachment-instance-diagnostic-2026-11-08.md",
 ], cwd=repo).decode().split("\0")
 digests = {name: hashlib.sha256((repo / name).read_bytes()).hexdigest() for name in paths if name}
 lock = repo / "MacDown2/Packages/MacDownKit/Package.resolved"
@@ -63,8 +64,8 @@ receipt = {
     "configuration": args.configuration,
     "mutation_pair": args.pair,
     "testability": True,
-    "diagnostic_only": False,
-    "qualification_candidate": True,
+    "diagnostic_only": True,
+    "qualification_candidate": False,
     "current_main_baseline": "a46c57c4b62376b67492cf67421a4961fdf55c1c",
     "resource_trace_enabled": True,
     "execution_architecture": "arm64",
@@ -72,7 +73,7 @@ receipt = {
     "additional_compilation_condition": "RELEASE_PREVIEW_PROBE",
     "source_sha256": digests,
     "pins": pins,
-    "scope": "Current-main Preview qualification candidate; first outcomes and all six pairs required, without a sole historical cause or final release claim",
+    "scope": "Private Debug/revision attachment-instance diagnostic; not a six-pair qualification or release result",
     "renderer_preference_observer": False,
     "fixture_window_lifetime_observer": True,
 }
