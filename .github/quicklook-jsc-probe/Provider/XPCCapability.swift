@@ -5,6 +5,7 @@ import QuickLookUI
 
 @objc(QLXPCCapabilityService) protocol QLXPCCapabilityService {
     func ping(_ requestID: NSNumber, withReply reply: @escaping (NSString, NSNumber, NSNumber, NSNumber) -> Void)
+    func hold(_ requestID: NSNumber, withReady ready: @escaping (NSString, NSNumber, NSNumber, NSNumber) -> Void)
 }
 
 /// One fixed bundled-service reachability control; never accepts document data.
@@ -57,6 +58,62 @@ enum XPCCapability {
         reply.title = "MostlyText XPC reachability control"
         reply.stringEncoding = .utf8
         return reply
+    }
+
+    /// A separate, fixed lifecycle probe. The service ignores connection loss
+    /// for ten seconds; this provider owns the 500 ms invalidation timer.
+    static func prepareHold(requestID: Int) throws -> QLPreviewReply {
+        guard requestID > 0 else { throw Failure.refused }
+        let connection = NSXPCConnection(serviceName: "app.mostlytext.QLReplyProbe.XPCService")
+        connection.remoteObjectInterface = NSXPCInterface(with: QLXPCCapabilityService.self)
+        let response = Response()
+        connection.interruptionHandler = { response.finish(.failure(Failure.interrupted)) }
+        connection.invalidationHandler = { response.finish(.failure(Failure.invalidated)) }
+        connection.resume()
+        do {
+            guard let remote = connection.remoteObjectProxyWithErrorHandler({ error in
+                let value = error as NSError
+                logger.error("QL_XPC_HOLD error id=\(requestID) domain=\(value.domain, privacy: .public) code=\(value.code) description=\(value.description, privacy: .public)")
+                response.finish(.failure(error))
+            }) as? QLXPCCapabilityService else { throw Failure.refused }
+            logger.notice("QL_XPC_HOLD begin id=\(requestID) provider=\(getpid()) start=\(ProcessInfo.processInfo.systemUptime)")
+            remote.hold(NSNumber(value: requestID)) { marker, observedID, pid, sandbox in
+                response.finish(.success(Reply(
+                    marker: marker as String, requestID: observedID.intValue,
+                    servicePID: pid.intValue, sandbox: sandbox.intValue
+                )))
+            }
+            guard let result = response.wait(seconds: 3) else { throw Failure.timeout }
+            let observed = try result.get()
+            guard observed.marker == "MOSTLYTEXT_QL_XPC_HOLD_READY", observed.requestID == requestID,
+                  observed.servicePID > 0, observed.servicePID != getpid(), observed.sandbox == 1
+            else { throw Failure.refused }
+            let ready = ProcessInfo.processInfo.systemUptime
+            logger.notice("QL_XPC_HOLD admitted id=\(requestID) provider=\(getpid()) service=\(observed.servicePID) ready=\(ready)")
+            let retained = ConnectionBox(connection)
+            DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + .milliseconds(500)) {
+                retained.connection.invalidate()
+                logger.notice("QL_XPC_HOLD invalidated id=\(requestID) provider=\(getpid()) service=\(observed.servicePID) at=\(ProcessInfo.processInfo.systemUptime)")
+            }
+            let html = Data("""
+            <!doctype html><meta charset="utf-8">
+            <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'">
+            <h1>MOSTLYTEXT_QL_XPC_HOLD_READY</h1>
+            <p>Fixed hosted connection-lifecycle control only.</p>
+            """.utf8)
+            let reply = QLPreviewReply(dataOfContentType: .html, contentSize: CGSize(width: 640, height: 480)) { _ in html }
+            reply.title = "MostlyText XPC lifecycle control"
+            reply.stringEncoding = .utf8
+            return reply
+        } catch {
+            connection.invalidate()
+            throw error
+        }
+    }
+
+    private final class ConnectionBox: @unchecked Sendable {
+        let connection: NSXPCConnection
+        init(_ connection: NSXPCConnection) { self.connection = connection }
     }
 
     private struct Reply {

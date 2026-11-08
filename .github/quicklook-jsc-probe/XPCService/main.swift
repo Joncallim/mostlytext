@@ -5,6 +5,7 @@ import Security
 
 @objc(QLXPCCapabilityService) protocol QLXPCCapabilityService {
     func ping(_ requestID: NSNumber, withReply reply: @escaping (NSString, NSNumber, NSNumber, NSNumber) -> Void)
+    func hold(_ requestID: NSNumber, withReady ready: @escaping (NSString, NSNumber, NSNumber, NSNumber) -> Void)
 }
 
 private final class PingHandler: NSObject, QLXPCCapabilityService {
@@ -28,6 +29,28 @@ private final class PingHandler: NSObject, QLXPCCapabilityService {
         }
         logger.notice("QL_XPC_SERVICE replied id=\(id) pid=\(getpid()) sandbox=1")
         reply("MOSTLYTEXT_QL_XPC_PING_OK", requestID, NSNumber(value: getpid()), NSNumber(value: 1))
+    }
+
+    func hold(_ requestID: NSNumber, withReady ready: @escaping (NSString, NSNumber, NSNumber, NSNumber) -> Void) {
+        let id = requestID.int64Value
+        lock.lock()
+        let first = seenRequests.insert(id).inserted
+        lock.unlock()
+        guard id > 0, first,
+              let task = SecTaskCreateFromSelf(nil),
+              SecTaskCopyValueForEntitlement(task, "com.apple.security.app-sandbox" as CFString, nil) as? Bool == true,
+              SecTaskCopyValueForEntitlement(task, "com.apple.security.network.client" as CFString, nil) == nil
+        else {
+            logger.error("QL_XPC_HOLD service-refused id=\(id) pid=\(getpid())")
+            ready("REFUSED", requestID, NSNumber(value: getpid()), NSNumber(value: 0))
+            return
+        }
+        logger.notice("QL_XPC_HOLD service-ready id=\(id) pid=\(getpid()) sandbox=1")
+        ready("MOSTLYTEXT_QL_XPC_HOLD_READY", requestID, NSNumber(value: getpid()), NSNumber(value: 1))
+        // Deliberately ignore the client's connection loss throughout the
+        // three-second retirement observation. This is a bounded fixture only.
+        Thread.sleep(forTimeInterval: 10)
+        logger.notice("QL_XPC_HOLD service-released id=\(id) pid=\(getpid())")
     }
 }
 

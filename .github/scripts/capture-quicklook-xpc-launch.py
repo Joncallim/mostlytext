@@ -19,7 +19,8 @@ SYSTEM_PROCESSES = frozenset({'launchd', 'xpcproxy', 'amfid'})
 MAX_LOG_BYTES = 4 * 1024 * 1024
 MAX_LOG_EVENTS = 12000
 PREDICATE = '(process == "launchd") OR (process == "xpcproxy") OR (process == "amfid")'
-BEGIN = re.compile(r'QL_XPC_PROBE begin id=3 provider=(\d+) start=([0-9.]+)\Z')
+BEGIN = re.compile(r'QL_XPC_PROBE begin id=\d+ provider=(\d+) start=([0-9.]+)\Z')
+HOLD_BEGIN = re.compile(r'QL_XPC_HOLD begin id=\d+ provider=(\d+) start=([0-9.]+)\Z')
 
 
 def timestamp(value):
@@ -31,14 +32,14 @@ def timestamp(value):
     return result
 
 
-def request_window(events):
+def request_window(events, hold=False):
     if not isinstance(events, list):
         raise RuntimeError('Actual provider log is not an event array')
     beginnings = []
     for event in events:
         if not isinstance(event, dict) or event.get('subsystem') != PROVIDER_SUBSYSTEM:
             continue
-        match = BEGIN.fullmatch(event.get('eventMessage', ''))
+        match = (HOLD_BEGIN if hold else BEGIN).fullmatch(event.get('eventMessage', ''))
         if match is None:
             continue
         if (Path(event.get('processImagePath', '')).name != PROVIDER_EXECUTABLE
@@ -80,18 +81,19 @@ def validate_system_events(raw, start, end):
     return len(events)
 
 
-def capture(root, run=subprocess.run):
+def capture(root, run=subprocess.run, hold=False):
     events = json.loads((root / 'provider-events.json').read_bytes())
-    beginning, start, end = request_window(events)
+    beginning, start, end = request_window(events, hold=hold)
     command = log_command(start, end)
     result = run(command, capture_output=True, timeout=30)
     if len(result.stderr) > 32 * 1024:
         raise RuntimeError('XPC system-log stderr exceeded 32 KiB')
-    (root / 'xpc-system-log-errors.txt').write_bytes(result.stderr)
+    prefix = 'xpc-hold-system' if hold else 'xpc-system'
+    (root / f'{prefix}-log-errors.txt').write_bytes(result.stderr)
     if result.returncode != 0:
         raise RuntimeError('XPC system-log query failed')
     count = validate_system_events(result.stdout, start, end)
-    (root / 'xpc-system-events.json').write_bytes(result.stdout)
+    (root / f'{prefix}-events.json').write_bytes(result.stdout)
     return {'status': 'captured', 'service': SERVICE,
             'provider_begin': beginning.isoformat(), 'start': start.isoformat(), 'end': end.isoformat(),
             'query': command, 'events': count, 'bytes': len(result.stdout),
@@ -99,8 +101,9 @@ def capture(root, run=subprocess.run):
 
 
 def main():
-    if len(sys.argv) != 1:
+    if sys.argv[1:] not in ([], ['--hold']):
         raise RuntimeError('This private diagnostic accepts no path or command override')
+    hold = sys.argv[1:] == ['--hold']
     root = Path(os.environ.get('RUNNER_TEMP', '/absent')).resolve() / 'mostlytext-qljsc'
     if (os.environ.get('GITHUB_ACTIONS') != 'true'
             or os.environ.get('GITHUB_REPOSITORY') != 'Joncallim/mostlytext'
@@ -111,12 +114,12 @@ def main():
             or root != Path('/Users/runner/work/_temp/mostlytext-qljsc')):
         raise RuntimeError('Require exact private hosted Quick Look diagnostic context')
     try:
-        record = capture(root)
+        record = capture(root, hold=hold)
     except BaseException as error:
-        (root / 'xpc-system-capture.json').write_text(json.dumps({
+        (root / ('xpc-hold-system-capture.json' if hold else 'xpc-system-capture.json')).write_text(json.dumps({
             'status': 'failed', 'service': SERVICE, 'error': repr(error)}, indent=2) + '\n')
         raise
-    (root / 'xpc-system-capture.json').write_text(json.dumps(record, indent=2) + '\n')
+    (root / ('xpc-hold-system-capture.json' if hold else 'xpc-system-capture.json')).write_text(json.dumps(record, indent=2) + '\n')
 
 
 if __name__ == '__main__':

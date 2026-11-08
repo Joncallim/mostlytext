@@ -36,7 +36,69 @@ def example():
     return record, messages
 
 
+def hold_example():
+    record = {
+        'kind': 'mostlytext-qlxpc-hold-lifecycle', 'request_id': 4,
+        'provider_pid': 111, 'service_pid': 222, 'started_uptime': 20.0,
+        'ready_uptime': 21.0, 'invalidated_uptime': 21.5,
+        'samples': [
+            {'uptime': 21.1, 'check_uptime': 21.2, 'service': 'expected', 'provider': 'expected', 'window': True},
+            {'uptime': 21.6, 'check_uptime': 21.7, 'service': 'expected', 'provider': 'expected', 'window': True},
+            {'uptime': 22.0, 'check_uptime': 22.1, 'service': 'absent', 'provider': 'expected', 'window': True},
+            {'uptime': 24.5, 'check_uptime': 24.6, 'service': 'absent', 'provider': 'expected', 'window': True},
+        ],
+        'marker_visible': True, 'provider_remained': True, 'window_remained': True,
+        'service_identity_valid': True, 'service_departed_by_deadline': True,
+    }
+    messages = [
+        'QL_XPC_HOLD begin id=4 provider=111 start=20.0',
+        'QL_XPC_HOLD service-ready id=4 pid=222 sandbox=1',
+        'QL_XPC_HOLD admitted id=4 provider=111 service=222 ready=21.0',
+        'QL_XPC_HOLD invalidated id=4 provider=111 service=222 at=21.5',
+    ]
+    return record, messages
+
+
 class XPCObservationTests(unittest.TestCase):
+    def test_fixed_hold_lifecycle_requires_own_request_and_real_retirement(self):
+        row, messages = hold_example()
+        PREP.validate_xpc_hold_observation(row, messages)
+        window_warming = dict(row, samples=[dict(row['samples'][0], window=False)] + row['samples'][1:])
+        PREP.validate_xpc_hold_observation(window_warming, messages)
+        for changed in (
+            dict(row, service_pid=333),
+            dict(row, invalidated_uptime=22.9),
+            dict(row, service_departed_by_deadline=False),
+            dict(row, samples=[dict(sample, service='expected') for sample in row['samples']]),
+            dict(row, samples=row['samples'][:2] + [dict(row['samples'][2], provider='absent')]
+                 + row['samples'][3:]),
+            dict(row, samples=row['samples'][:2] + [dict(row['samples'][2], window=False)]
+                 + row['samples'][3:]),
+            dict(row, samples=row['samples'][:3] + [dict(row['samples'][3], service='expected')]),
+            dict(row, samples=row['samples'][:3]),
+        ):
+            with self.assertRaises(RuntimeError):
+                PREP.validate_xpc_hold_observation(changed, messages)
+        for bad_messages in (messages[:3], messages + messages[-1:],
+                             messages[:1] + ['QL_XPC_HOLD service-ready id=4 pid=333 sandbox=1'] + messages[2:]):
+            with self.assertRaises(RuntimeError):
+                PREP.validate_xpc_hold_observation(row, bad_messages)
+
+    def test_hold_fixture_keeps_fixed_request_no_new_authority_and_independent_observer(self):
+        provider = (FIXTURE / 'Provider/XPCCapability.swift').read_text()
+        service = (FIXTURE / 'XPCService/main.swift').read_text()
+        ui = (FIXTURE / 'FinderTests/ZXPCFinderHoldTests.swift').read_text()
+        self.assertIn('guard requestID > 0', provider)
+        self.assertIn('guard id > 0, first', service)
+        self.assertIn('Thread.sleep(forTimeInterval: 10)', service)
+        self.assertIn('asyncAfter(deadline: .now() + .milliseconds(500))', provider)
+        self.assertIn('"/bin/ps"', ui)
+        self.assertIn('kill(pid, 0)', ui)
+        self.assertIn('serviceDepartedByDeadline', ui)
+        self.assertNotIn('SIGKILL', ui + provider + service)
+        self.assertEqual(plistlib.loads((FIXTURE / 'XPCService.entitlements').read_bytes()),
+                         {'com.apple.security.app-sandbox': True})
+
     def test_system_diagnostic_selects_only_actual_xpc_provider_request(self):
         begin = {'subsystem': CAPTURE.PROVIDER_SUBSYSTEM,
                  'processImagePath': '/fixture/QLReplyProbeProvider', 'processID': 111,
@@ -51,6 +113,33 @@ class XPCObservationTests(unittest.TestCase):
         for rows in ([], [begin, begin], [dict(begin, processID=222)]):
             with self.assertRaises(RuntimeError):
                 CAPTURE.request_window(rows)
+
+    def test_hold_diagnostic_selects_only_fixed_fourth_request(self):
+        ping = {'subsystem': CAPTURE.PROVIDER_SUBSYSTEM,
+                'processImagePath': '/fixture/QLReplyProbeProvider', 'processID': 111,
+                'eventMessage': 'QL_XPC_PROBE begin id=3 provider=111 start=12.5',
+                'timestamp': '2026-11-08 19:41:38.646394+0000'}
+        hold = dict(ping, eventMessage='QL_XPC_HOLD begin id=4 provider=111 start=13.5',
+                    timestamp='2026-11-08 19:41:39.646394+0000')
+        observed, start, end = CAPTURE.request_window([ping, hold], hold=True)
+        self.assertEqual(observed, dt.datetime.fromisoformat(hold['timestamp']))
+        self.assertLessEqual((end - start).total_seconds(), 8)
+        for rows in ([ping], [hold, hold], [dict(hold, processID=222)]):
+            with self.assertRaises(RuntimeError):
+                CAPTURE.request_window(rows, hold=True)
+        system = {'processImagePath': '/sbin/launchd', 'processID': 1,
+                  'timestamp': '2026-11-08 19:41:39.646500+0000',
+                  'eventMessage': 'service lifecycle'}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'provider-events.json').write_text(json.dumps([ping, hold]))
+            raw = json.dumps([system]).encode()
+            run = mock.Mock(return_value=subprocess.CompletedProcess([], 0, raw, b''))
+            manifest = CAPTURE.capture(root, run=run, hold=True)
+            self.assertEqual(manifest['status'], 'captured')
+            self.assertEqual((root / 'xpc-hold-system-events.json').read_bytes(), raw)
+            self.assertFalse((root / 'xpc-system-events.json').exists())
+            self.assertEqual(run.call_args.kwargs, {'capture_output': True, 'timeout': 30})
 
     def test_system_diagnostic_retains_bounded_exact_query_and_rejects_wrong_scope(self):
         begin = {'subsystem': CAPTURE.PROVIDER_SUBSYSTEM,

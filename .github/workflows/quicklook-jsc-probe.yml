@@ -1,4 +1,4 @@
-name: Private Quick Look XPC reachability
+name: Private Quick Look XPC hold lifecycle
 
 permissions:
   contents: read
@@ -42,7 +42,7 @@ jobs:
           pluginkit -e use -i app.mostlytext.MostlyText.QuickLook
           pluginkit -m -A -D -vv -i app.mostlytext.MostlyText.QuickLook | tee "$RUNNER_TEMP/mostlytext-qljsc/discovery.log"
           open -R "$RUNNER_TEMP/mostlytext-qljsc/mostlytext-ql-reply-static.md"
-      - name: Execute original cold controls and one XPC reachability case
+      - name: Execute original cold controls, XPC reachability and fixed hold case
         run: |
           set -euo pipefail
           python3 .github/scripts/run-quicklook-jsc-ui.py
@@ -52,14 +52,17 @@ jobs:
           set +e
           /usr/bin/log show --last 12m --style json --predicate 'subsystem == "app.mostlytext.qljscprobe"' > "$RUNNER_TEMP/mostlytext-qljsc/provider-events.json" 2> "$RUNNER_TEMP/mostlytext-qljsc/provider-log-errors.txt"
           python3 .github/scripts/capture-quicklook-xpc-launch.py
+          python3 .github/scripts/capture-quicklook-xpc-launch.py --hold
           /usr/bin/log show --last 12m --style json --predicate 'subsystem == "app.mostlytext.qljscobserver"' > "$RUNNER_TEMP/mostlytext-qljsc/observer-control-events.json" 2> "$RUNNER_TEMP/mostlytext-qljsc/observer-control-log-errors.txt"
           ps -axo pid=,uid=,comm= > "$RUNNER_TEMP/mostlytext-qljsc/processes-after.txt"
+          xcrun xcresulttool get test-results summary --path "$RUNNER_TEMP/mostlytext-qljsc/Finder.xcresult" > "$RUNNER_TEMP/mostlytext-qljsc/actual-ui-summary.json"
+          xcrun xcresulttool export attachments --path "$RUNNER_TEMP/mostlytext-qljsc/Finder.xcresult" --output-path "$RUNNER_TEMP/mostlytext-qljsc/actual-ui-attachments"
           python3 .github/scripts/prepare-quicklook-jsc-probe.py "$RUNNER_TEMP/mostlytext-qljsc" --verify-finder
-      - name: Preserve the first actual XPC reachability result
+      - name: Preserve actual XPC hold lifecycle result
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: quicklook-xpc-reachability-first
+          name: quicklook-xpc-hold-lifecycle
           path: |
             ${{ runner.temp }}/mostlytext-qljsc/receipt.json
             ${{ runner.temp }}/mostlytext-qljsc/*.log

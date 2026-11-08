@@ -213,3 +213,44 @@ placement control. Do not add group, Mach lookup, temporary exceptions or a
 container relay to turn it green. A positive fixed ping would establish only
 reachability for this fixture under this host; it would not qualify the
 shipping renderer or close issue #7.
+
+## Held-service invalidation experiment (prepared, not yet hosted)
+
+Hosted run [42518905042](https://github.com/Joncallim/mostlytext/actions/runs/42518905042)
+at `9e56539bc958127badc38dfba27a79817c28714a` passed the original three
+actual Finder cases. Its XPC attachment records provider PID 9005 and service
+PID 9374; the actual provider/service log records `QL_XPC_PROBE admitted id=3
+provider=9005 service=9374`. The signed provider retained only sandbox and
+selected-file read-only rights, and the embedded service retained only sandbox.
+`processes-after.txt` still lists both PIDs after the UI tests. This does not
+prove a leak: the provider also remained resident. It does mean the fixed ping
+does not establish service retirement when the connection is invalidated.
+
+The next private fixture variant adds one fourth Finder case after the three
+unchanged controls. The selected generated file is exactly
+`mostlytext-ql-xpc-hold.md`; the provider sends only a fixed hold operation,
+with an observed positive request ID used solely for correlation. The service
+returns a fixed ready reply with its own PID and then sleeps for ten seconds,
+ignoring connection loss during the three-second observation. The provider
+schedules `NSXPCConnection.invalidate()` on its own monotonic 500 ms timer.
+The separate UI runner samples the exact service and provider PIDs and
+executable paths, with `ps` plus `kill(pid, 0)` on absence, and checks that
+Quick Look stays open. The case requires the service PID to disappear within
+three seconds of invalidation while the same provider PID and Finder window
+survive. It retains the actual process samples, own-generation logs, Finder
+tree, screenshot, test result bundle, signed entitlements, and bounded
+launchd/xpcproxy/amfid windows for both XPC requests. The existing 15-second
+Finder visibility limit remains. The service and provider entitlements,
+bundle placement and source-input sealing do not change.
+
+This is a controlled falsification of the assumption that connection
+invalidation promptly retires a non-cooperative extension-bundled service.
+Apple describes XPC services as managed and launched on demand; its
+[XPC documentation](https://developer.apple.com/documentation/xpc) does not
+promise that invalidating one connection reaps the service PID by a caller's
+deadline. A failing fourth case is an informative negative result and must be
+retained. A passing fourth case would establish only this fixed hosted
+lifecycle behavior. It would still not prove an exit reason, arbitrary engine
+termination, or PR #152's two distinct child PIDs, held SIGKILL and reaped-PID
+contract. This fixture is not a shipping Quick Look renderer or a release
+qualification.

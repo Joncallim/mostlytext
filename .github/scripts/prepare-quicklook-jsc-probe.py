@@ -231,6 +231,79 @@ def validate_xpc_observation(observed, messages):
         raise RuntimeError('Actual XPC own-request begin/service/admission differs from UI result')
 
 
+def validate_xpc_hold_observation(observed, messages):
+    keys = {'kind', 'request_id', 'provider_pid', 'service_pid', 'started_uptime',
+            'ready_uptime', 'invalidated_uptime', 'samples', 'marker_visible',
+            'provider_remained', 'window_remained', 'service_identity_valid',
+            'service_departed_by_deadline'}
+    if (not isinstance(observed, dict) or set(observed) != keys
+            or observed['kind'] != 'mostlytext-qlxpc-hold-lifecycle'
+            or type(observed['request_id']) is not int or observed['request_id'] <= 0
+            or any(type(observed[key]) is not int or observed[key] <= 0
+                   for key in ('provider_pid', 'service_pid'))
+            or observed['provider_pid'] == observed['service_pid']
+            or any(type(observed[key]) not in (int, float) or not math.isfinite(observed[key])
+                   for key in ('started_uptime', 'ready_uptime', 'invalidated_uptime'))):
+        raise RuntimeError('Invalid actual fixed XPC hold observation')
+    request = observed['request_id']
+    provider = observed['provider_pid']
+    service = observed['service_pid']
+    started = observed['started_uptime']
+    ready = observed['ready_uptime']
+    invalidated = observed['invalidated_uptime']
+    if not (0 < started <= ready < invalidated and 0.35 <= invalidated - ready <= 1.5):
+        raise RuntimeError('Provider invalidation did not follow the independent 500 ms timer')
+    patterns = [
+        (r'QL_XPC_HOLD begin id=(\d+) provider=(\d+) start=([0-9.]+)',
+         (request, provider, started)),
+        (r'QL_XPC_HOLD service-ready id=(\d+) pid=(\d+) sandbox=(\d+)',
+         (request, service, 1)),
+        (r'QL_XPC_HOLD admitted id=(\d+) provider=(\d+) service=(\d+) ready=([0-9.]+)',
+         (request, provider, service, ready)),
+        (r'QL_XPC_HOLD invalidated id=(\d+) provider=(\d+) service=(\d+) at=([0-9.]+)',
+         (request, provider, service, invalidated)),
+    ]
+    for pattern, expected in patterns:
+        prefix = pattern.split(' id=')[0]
+        candidates = [message for message in messages if message.startswith(prefix)]
+        if len(candidates) != 1:
+            raise RuntimeError('Extra or missing actual XPC hold process record')
+        match = re.fullmatch(pattern, candidates[0])
+        if match is None or tuple(float(value) for value in match.groups()) != tuple(expected):
+            raise RuntimeError('Actual XPC hold own-request process or timer record differs from UI attachment')
+    samples = observed['samples']
+    if (not isinstance(samples, list) or not 2 <= len(samples) <= 64
+            or any(not isinstance(row, dict) or set(row) != {'uptime', 'check_uptime', 'service', 'provider', 'window'}
+                   or type(row['uptime']) not in (int, float) or not math.isfinite(row['uptime'])
+                   or type(row['check_uptime']) not in (int, float) or not math.isfinite(row['check_uptime'])
+                   or row['check_uptime'] < row['uptime']
+                   or row['service'] not in ('expected', 'absent', 'wrong')
+                   or row['provider'] not in ('expected', 'absent', 'wrong')
+                   or type(row['window']) is not bool for row in samples)):
+        raise RuntimeError('Invalid bounded independent process/window samples')
+    times = [row['uptime'] for row in samples]
+    if (times[0] < ready or any(a['check_uptime'] >= b['uptime'] for a, b in zip(samples, samples[1:]))
+            or times[-1] < invalidated + 3):
+        raise RuntimeError('Independent lifecycle samples did not cover the exact three-second deadline')
+    first_absent = next((row['uptime'] for row in samples if row['service'] == 'absent'), None)
+    departed = (samples[0]['service'] == 'expected'
+                and all(row['service'] in ('expected', 'absent') for row in samples)
+                and first_absent is not None and invalidated <= first_absent <= invalidated + 3
+                and all(row['service'] == 'absent' for row in samples if row['uptime'] >= first_absent)
+                and samples[-1]['service'] == 'absent')
+    provider_remained = all(row['provider'] == 'expected' for row in samples)
+    first_window = next((index for index, row in enumerate(samples) if row['window'] is True), None)
+    window_remained = first_window is not None and all(row['window'] is True for row in samples[first_window:])
+    for key, expected in [('marker_visible', True), ('provider_remained', provider_remained),
+                          ('window_remained', window_remained), ('service_identity_valid',
+                           samples[0]['service'] == 'expected' and all(row['service'] != 'wrong' for row in samples)),
+                          ('service_departed_by_deadline', departed)]:
+        if observed[key] is not expected:
+            raise RuntimeError('XPC hold UI summary does not match independent lifecycle samples: ' + key)
+    if not (departed and provider_remained and window_remained):
+        raise RuntimeError('XPC hold did not retire the exact service PID while provider and Finder survived')
+
+
 def capture_compiled(root):
     products = root / 'build/Build/Products'
     release = products / 'Release'
@@ -381,6 +454,7 @@ def main():
         source.write_bytes(b"# Hosted Quick Look fixture\n")
         (root / "mostlytext-ql-jsc.md").write_bytes(b"# Hosted Quick Look fixture\n")
         (root / "mostlytext-ql-xpc.md").write_bytes(b"# Hosted Quick Look fixture\n")
+        (root / "mostlytext-ql-xpc-hold.md").write_bytes(b"# Hosted Quick Look fixture\n")
         (root / "ql-probe-neighbor.md").write_bytes(b"Generated sibling capability control; do not read through the provider.\n")
         record = {"checkout": command(["git", "rev-parse", "HEAD"]),
                   "source_sha256": {p: digest(Path(p)) for p in paths},
@@ -389,7 +463,7 @@ def main():
                   "root_product_tree": command(["git", "rev-parse", "HEAD:MacDown2"]),
                   "xcode": command(["xcodebuild", "-version"]), "os": command(["sw_vers"]),
                   "diagnostic_only": True, "qualification_candidate": False,
-                  "scope": "Separate disposable hosted JavaScriptCore and XPC reachability observation; no root product launch, shipping extension, full QL-REPLY or owner acceptance"}
+                  "scope": "Separate disposable hosted JavaScriptCore, XPC reachability and held-service lifecycle observation; no root product launch, shipping extension, full QL-REPLY or owner acceptance"}
         receipt_path.write_text(json.dumps(record, indent=2) + "\n")
         record['reference_module']=reference_module(root,fixture)
         subprocess.run(["xcodegen", "generate", "--spec", str(fixture / "project.yml")], check=True, timeout=60)
@@ -470,7 +544,18 @@ def main():
     assert digest(root / "mostlytext-ql-reply-static.md") == record["selected_fixture_sha256"]
     assert digest(root / "mostlytext-ql-jsc.md") == record["selected_fixture_sha256"]
     assert digest(root / "mostlytext-ql-xpc.md") == record["selected_fixture_sha256"]
+    assert digest(root / "mostlytext-ql-xpc-hold.md") == record["selected_fixture_sha256"]
     if args.verify_finder:
+        attachments = root / 'actual-ui-attachments'
+        if not attachments.exists():
+            subprocess.run(['xcrun', 'xcresulttool', 'export', 'attachments', '--path',
+                            str(root / 'Finder.xcresult'), '--output-path', str(attachments)], check=True, timeout=60)
+        hold = [value for path in attachments.rglob('*') if path.is_file() and path.stat().st_size <= 128 * 1024
+                for value in [load_json_attachment(path)] if value and value.get('kind') == 'mostlytext-qlxpc-hold-lifecycle']
+        if len(hold) == 1:
+            (root / 'xpc-hold-lifecycle.json').write_text(json.dumps(hold[0], indent=2) + '\n')
+            record['xpc_hold_lifecycle_observation'] = hold[0]
+            receipt_path.write_text(json.dumps(record, indent=2) + "\n")
         record['host_observer_proof'] = validate_host_observer(root, record['checkout'])
         controls = json.loads((root / 'observer-control-events.json').read_text())
         nonce = record['host_observer_proof']['observer']['nonce']
@@ -496,11 +581,7 @@ def main():
         raw = subprocess.check_output(['xcrun', 'xcresulttool', 'get', 'test-results', 'summary', '--path', str(result)], timeout=60)
         (root / 'actual-ui-summary.json').write_bytes(raw)
         summary = json.loads(raw)
-        expected = {'totalTestCount': 3, 'passedTests': 3, 'failedTests': 0, 'skippedTests': 0, 'expectedFailures': 0}
-        if any(type(summary.get(k)) is not int or summary[k] != v for k, v in expected.items()):
-            raise RuntimeError('Both original Finder cases and actual XPC reachability must pass')
-        attachments = root / 'actual-ui-attachments'
-        subprocess.run(['xcrun', 'xcresulttool', 'export', 'attachments', '--path', str(result), '--output-path', str(attachments)], check=True, timeout=60)
+        expected = {'totalTestCount': 4, 'passedTests': 4, 'failedTests': 0, 'skippedTests': 0, 'expectedFailures': 0}
         observations = []
         for path in attachments.rglob('*'):
             if path.is_file() and path.stat().st_size <= 128 * 1024:
@@ -518,10 +599,17 @@ def main():
         if len(xpc) != 1:
             raise RuntimeError('Require one actual XPC process result attachment')
         validate_xpc_observation(xpc[0], messages)
+        if len(hold) != 1:
+            raise RuntimeError('Require one actual XPC held-service lifecycle attachment')
         record['javascriptcore_capability_observation'] = observations[0]
         record['xpc_reachability_observation'] = xpc[0]
+        record['xpc_hold_lifecycle_observation'] = hold[0]
         record['actual_ui_summary'] = summary
-        record['scope'] = 'Actual fixed JavaScriptCore and XPC service reachability only; no engine deadline/fallback, new authority, production or full QL-REPLY acceptance'
+        record['scope'] = 'Actual fixed JavaScriptCore and XPC service reachability plus held-service invalidation; no engine deadline/fallback, exit reason, new authority, production or full QL-REPLY acceptance'
+        receipt_path.write_text(json.dumps(record, indent=2) + "\n")
+        validate_xpc_hold_observation(hold[0], messages)
+        if any(type(summary.get(k)) is not int or summary[k] != v for k, v in expected.items()):
+            raise RuntimeError('All three original Finder cases and the fixed XPC hold case must pass')
     receipt_path.write_text(json.dumps(record, indent=2) + "\n")
     print("Actual signed fixture identifiers, Markdown-only data provider, sandbox entitlements and source hashes verified")
 

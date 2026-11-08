@@ -15,7 +15,8 @@ final class StaticPreview: QLPreviewProvider, QLPreviewingController {
         guard ProcessInfo.processInfo.operatingSystemVersion.majorVersion == 26,
               FileManager.default.homeDirectoryForCurrentUser.path.hasPrefix("/Users/runner/"),
               file.path.hasPrefix("/Users/runner/work/_temp/mostlytext-qljsc/"),
-              ["mostlytext-ql-reply-static.md", "mostlytext-ql-jsc.md", "mostlytext-ql-xpc.md"].contains(file.lastPathComponent)
+              ["mostlytext-ql-reply-static.md", "mostlytext-ql-jsc.md", "mostlytext-ql-xpc.md",
+               "mostlytext-ql-xpc-hold.md"].contains(file.lastPathComponent)
         else { throw ProbeError.refused }
         guard let task = SecTaskCreateFromSelf(nil) else { throw ProbeError.refused }
         let required = ["com.apple.security.app-sandbox", "com.apple.security.files.user-selected.read-only"]
@@ -50,6 +51,9 @@ final class StaticPreview: QLPreviewProvider, QLPreviewingController {
         }
         if file.lastPathComponent == "mostlytext-ql-xpc.md" {
             return try XPCCapability.prepare(requestID: requestID)
+        }
+        if file.lastPathComponent == "mostlytext-ql-xpc-hold.md" {
+            return try XPCCapability.prepareHold(requestID: requestID)
         }
         let holder = Payload()
         let reply = QLPreviewReply(dataOfContentType: .html, contentSize: CGSize(width: 640, height: 480)) { _ in
