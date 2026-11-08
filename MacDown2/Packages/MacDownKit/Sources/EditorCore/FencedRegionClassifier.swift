@@ -37,18 +37,23 @@ enum FencedRegionClassifier {
     private static let maximumFenceLinesScanned = 5000
 
     /// How many lines this scans FORWARD from a document's own first line,
-    /// looking for a front-matter block's closing delimiter, before giving
-    /// up and reporting "no front matter" — much smaller than the fence
-    /// scan's own cap, since a real front-matter block is conventionally a
-    /// handful of lines, not proportional to document size.
+    /// looking for a front-matter block's closing delimiter. Beyond the cap,
+    /// the opener remains unresolved so Markdown assists cannot touch YAML.
     private static let maximumFrontMatterLinesScanned = 1000
+
+    private enum FrontMatterBoundary {
+        case absent
+        case closed(end: Int)
+        case unresolved
+    }
 
     static func classify(text: NSString, atUTF16Offset offset: Int) -> Classification {
         let caret = min(max(0, offset), text.length)
-
-        if let frontMatterEnd = frontMatterEnd(in: text), caret < frontMatterEnd {
-            return .frontMatter
+        let prefix = frontMatterDecision(in: text, caret: caret)
+        if let terminal = prefix.terminal {
+            return terminal
         }
+        let fenceAnchor = prefix.anchor
 
         var currentLineStart = MarkdownEditingAssistEngine.lineStart(of: caret, in: text)
         var delimiters: [FenceDelimiter] = []
@@ -66,8 +71,12 @@ enum FencedRegionClassifier {
             delimiters.append(fence)
         }
 
-        while currentLineStart > 0, linesScanned < maximumFenceLinesScanned {
+        while currentLineStart > fenceAnchor, linesScanned < maximumFenceLinesScanned {
             let previousLineStart = MarkdownEditingAssistEngine.lineStart(of: currentLineStart - 1, in: text)
+            if previousLineStart < fenceAnchor {
+                currentLineStart = fenceAnchor
+                break
+            }
             if let fence = fenceDelimiter(lineStart: previousLineStart, in: text) {
                 delimiters.append(fence)
             }
@@ -75,11 +84,10 @@ enum FencedRegionClassifier {
             linesScanned += 1
         }
 
-        guard currentLineStart == 0 else { return .unresolved }
+        guard currentLineStart == fenceAnchor else { return .unresolved }
 
-        // The document's start is a known outside-fence anchor. Replaying
-        // only the delimiters within the bounded scan lets a candidate close
-        // only its own opener, without extracting or parsing the document.
+        // The document's start or the end of closed front matter is a known
+        // outside-fence anchor. Never replay YAML's fence-looking lines.
         var active: FenceDelimiter?
         for fence in delimiters.reversed() {
             if let opener = active {
@@ -92,6 +100,25 @@ enum FencedRegionClassifier {
             }
         }
         return active.map { .fencedCode(languageID: $0.languageID) } ?? .prose
+    }
+
+    private static func frontMatterDecision(
+        in text: NSString, caret: Int
+    ) -> (anchor: Int, terminal: Classification?) {
+        switch frontMatterBoundary(in: text) {
+        case .absent:
+            return (0, nil)
+        case let .closed(end):
+            if caret < end {
+                return (0, .frontMatter)
+            }
+            if end == text.length {
+                return (0, .prose)
+            }
+            return (end, nil)
+        case .unresolved:
+            return (0, .unresolved)
+        }
     }
 
     /// A recognized fence-delimiter line: its marker character, derived
@@ -151,14 +178,14 @@ enum FencedRegionClassifier {
         )
     }
 
-    /// The UTF-16 offset at which ordinary content resumes after a
-    /// front-matter block, or `nil` if `text` doesn't open with one at all.
-    private static func frontMatterEnd(in text: NSString) -> Int? {
+    /// Locate a closed block or preserve ambiguity after a plausible opener.
+    /// A blank second line still makes the opener a thematic break.
+    private static func frontMatterBoundary(in text: NSString) -> FrontMatterBoundary {
         guard text.length >= 3, text.character(at: 0) == 0x2D,
-              text.character(at: 1) == 0x2D, text.character(at: 2) == 0x2D else { return nil }
+              text.character(at: 1) == 0x2D, text.character(at: 2) == 0x2D else { return .absent }
         let firstLineContentEnd = MarkdownEditingAssistEngine.lineContentEnd(of: 0, in: text)
         guard isExactly(text, range: NSRange(location: 0, length: firstLineContentEnd), matching: "---") else {
-            return nil
+            return .absent
         }
 
         var lineStart = firstLineContentEnd + separatorLength(at: firstLineContentEnd, in: text)
@@ -167,7 +194,7 @@ enum FencedRegionClassifier {
             let secondEnd = MarkdownEditingAssistEngine.lineContentEnd(of: lineStart, in: text)
             let second = text.substring(with: NSRange(location: lineStart, length: secondEnd - lineStart))
             if second.trimmingCharacters(in: .whitespaces).isEmpty {
-                return nil
+                return .absent
             }
         }
         var linesScanned = 0
@@ -176,12 +203,12 @@ enum FencedRegionClassifier {
             let lineRange = NSRange(location: lineStart, length: contentEnd - lineStart)
             if isExactly(text, range: lineRange, matching: "---") ||
                 isExactly(text, range: lineRange, matching: "...") {
-                return contentEnd + separatorLength(at: contentEnd, in: text)
+                return .closed(end: contentEnd + separatorLength(at: contentEnd, in: text))
             }
             lineStart = contentEnd + separatorLength(at: contentEnd, in: text)
             linesScanned += 1
         }
-        return nil
+        return .unresolved
     }
 
     private static func isExactly(_ text: NSString, range: NSRange, matching literal: String) -> Bool {
