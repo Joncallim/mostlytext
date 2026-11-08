@@ -71,6 +71,7 @@ jobs:
           python3 .github/scripts/test-run-owned-app-tests.py
           python3 .github/scripts/test-preview-grant-tripwire.py
           python3 .github/scripts/test-preview-native-architecture.py
+          python3 .github/scripts/test-preview-suite-contract.py
           python3 .github/scripts/test-preview-diagnostic-host.py
           python3 .github/scripts/test-preview-compiled-inputs.py
       - name: Record exact application inputs and configuration

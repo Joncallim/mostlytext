@@ -40,16 +40,16 @@ def main():
     if original.count(b'let retiringContext = slot?.context') != 1:
         raise SystemExit('The disappearance mutation requires the exact stored-context retirement')
     experiments = [
-        ('revision-mutant', original.replace(needle, replacement), 'SecuredMarkdownMountedTests', 3,
+        ('revision-mutant', original.replace(needle, replacement), 'SecuredMarkdownMountedTests', 4,
          'Mounted Textual did not admit the expected document-bound image'),
-        ('revision-restored', original, 'SecuredMarkdownMountedTests', 3, None),
+        ('revision-restored', original, 'SecuredMarkdownMountedTests', 4, None),
         ('viewport-mutant', original.replace(content_needle, replaced_container), 'SecuredMarkdownViewportTests', 1,
          'Resource replacement must retain the native scroll container'),
         ('viewport-restored', original, 'SecuredMarkdownViewportTests', 1, None),
         ('disappear-mutant', original.replace(b'let retiringContext = slot?.context',
-                                             b'let retiringContext = current?.context'), 'SecuredMarkdownMountedTests', 3,
+                                             b'let retiringContext = current?.context'), 'SecuredMarkdownMountedTests', 4,
          'A hidden Preview must revoke its previous parsed-frame loader'),
-        ('disappear-restored', original, 'SecuredMarkdownMountedTests', 3, None),
+        ('disappear-restored', original, 'SecuredMarkdownMountedTests', 4, None),
     ]
     experiments = [row for row in experiments if row[0].startswith(args.pair + '-')]
     if len(experiments) != 2:
@@ -99,9 +99,11 @@ def main():
                 if not re.search(re.escape(summary) + 'failed', log):
                     raise SystemExit('The complete counterfactual selection did not execute')
                 unaffected = {
-                    'revision-mutant': ['aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration',
+                    'revision-mutant': ['aNoWriteNativeCopyCannotReuseAnEarlierImage',
+                                        'aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration',
                                         'hidingDuringAParsedFrameReplacementRevokesTheRetainedLoader'],
-                    'disappear-mutant': ['aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration',
+                    'disappear-mutant': ['aNoWriteNativeCopyCannotReuseAnEarlierImage',
+                                         'aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration',
                                          'aNewParsedRevisionReplacesTheLoadWithoutAnotherModelEdit'],
                 }.get(phase, [])
                 for function in unaffected:

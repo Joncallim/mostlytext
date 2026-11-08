@@ -123,9 +123,10 @@ The prior three-variant firsts are failing-before evidence for the unchanged rea
 image/revision functions. Shipping validation uses the original uninstrumented
 Debug/Release six-pair gate, initial and selection tests, actual counterfactuals
 and exact restorations. Preserve fresh clipboard/no-write refusal, hostile network
-positive controls and all original resource/lifetime cases. Obtain all fourteen
-current combined-source first workflows, including full package/app/four builds,
-UI matrix, native PDF, canvas, math/heading/geometry/public CLI and Compliance.
+positive controls and all original resource/lifetime cases. Obtain all fourteen original combined-source workflows plus the newly merged
+native canvas gate (fifteen complete first workflows), including full package/app/
+four builds, UI matrix, native PDF, canvas, math/heading/geometry/public CLI and
+Compliance.
 Read actual source/pin/compiled/result/owned records, not only green check badges.
 Local checks are pure Python/C/Foundation where permitted, syntax/SDK typecheck,
 format/lint and evidence readback only. No owner account native or engine runtime.
@@ -168,3 +169,18 @@ an exact source-restoration receipt. No product build, app/GUI or engine execute
 Only adopt independently read-back successful output; no local package resolution
 or hand-manufactured resolved metadata. The complete combined-source native/full
 qualification still follows this precursor.
+
+
+Resolution first [42449931117](https://github.com/Joncallim/mostlytext/actions/runs/42449931117)
+passes at b7d0d246. [Exact records](evidence/inline-style-actual-pin-resolution-2026-11-08/README.md)
+verify six source bindings, actual host/command, both manifest/lock pairs, complete
+logs and restoration. Only Textual changes to ff74cf54; all other 23 pins remain
+identical. The candidate adopts the exact actual resolved lock, hash
+`716882ac8bc84aae7f5fa0c8b9ea627d9a6330ba24688f486fc690cd710be176`.
+The new pure suite-catalog control independently matches all actual mounted Swift
+methods to BOTH native controllers and requires the clipboard positive in each
+unaffected list. Both previous three-method policies fail that control. It adds
+no native observer or product behavior. Existing original Copy/revision/clipboard
+test sources remain byte-identical to 6cad5627. Main reconciliation chose the
+exact qualified main POSIX PDF-host fixture when resolving its sole add/add test
+conflict; the nine original PDF guard controls pass. No earlier proof is retargeted.

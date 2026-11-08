@@ -52,7 +52,7 @@ if platform.machine() != "arm64":
     raise SystemExit("This native Preview qualification requires an Apple Silicon worker")
 paths = subprocess.check_output([
     "git", "ls-files", "-z", "MacDown2", ".github/scripts/verify-preview-grant-probe.py",
-    ".github/workflows/preview-grant-probe.yml", ".github/scripts/preview_compiled_inputs.py", ".github/scripts/test-preview-compiled-inputs.py", ".github/scripts/test-preview-diagnostic-host.py", ".github/scripts/check-preview-parsed-frame.py", ".github/scripts/test-preview-grant-tripwire.py", ".github/scripts/test-preview-native-architecture.py", ".github/scripts/run-preview-grant-probe.py", ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
+    ".github/workflows/preview-grant-probe.yml", ".github/scripts/preview_compiled_inputs.py", ".github/scripts/test-preview-compiled-inputs.py", ".github/scripts/test-preview-diagnostic-host.py", ".github/scripts/check-preview-parsed-frame.py", ".github/scripts/test-preview-grant-tripwire.py", ".github/scripts/test-preview-native-architecture.py", ".github/scripts/test-preview-suite-contract.py", ".github/scripts/run-preview-grant-probe.py", ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
     "planning/downstream/evidence/actual-app-hosted-plan-2026-11-07",
 ], cwd=repo).decode().split("\0")
 digests = {name: hashlib.sha256((repo / name).read_bytes()).hexdigest() for name in paths if name}
@@ -65,7 +65,7 @@ receipt = {
     "testability": True,
     "diagnostic_only": False,
     "qualification_candidate": True,
-    "current_main_baseline": "427d15fa5da94d4045a02e7f6a005648d09e38c5",
+    "current_main_baseline": "a46c57c4b62376b67492cf67421a4961fdf55c1c",
     "resource_trace_enabled": True,
     "execution_architecture": "arm64",
     "only_active_arch": True,
@@ -95,7 +95,7 @@ if args.verify:
                     or proof['actual_owned_app_matches_captured_executable'] is not True):
                 raise SystemExit('Compiled phase was omitted, changed or retargeted')
             count = ((57 if args.configuration == 'Release' else 56) if phase == 'initial' else
-                     1 if phase == 'selection' or args.pair == 'viewport' else 3)
+                     1 if phase == 'selection' or args.pair == 'viewport' else 4)
             failed = 1 if phase.endswith('-mutant') else 0
             wanted = {'totalTestCount': count, 'passedTests': count - failed, 'failedTests': failed,
                       'skippedTests': 0, 'expectedFailures': 0}
