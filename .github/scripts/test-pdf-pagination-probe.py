@@ -21,11 +21,13 @@ spec.loader.exec_module(probe)
 class PDFResultTests(unittest.TestCase):
     def setUp(self):
         self.log = '\n'.join('Test ' + n + '() passed after 0.1 seconds.' for n in sorted(probe.TESTS))
-        self.log += '\nSuite PDFExportAdapterTests passed.\nTest run with 9 tests in 1 suite passed.'
+        self.log += ('\nSuite PDFExportAdapterTests passed.\nSuite PDFExportCancellationTests passed.'
+                     '\nTest run with 11 tests in 2 suites passed.')
         self.identity = {'app': '/tmp/build/Release/MacDown2.app/Contents/MacOS/MacDown2', 'app_sha256': 'a' * 64,
                          'command': ['xcodebuild', '-configuration', 'Release', 'ENABLE_TESTABILITY=YES',
                                      'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE PDF_PAGINATION_PROBE',
-                                     '-only-testing:MacDown2Tests/PDFExportAdapterTests', 'test-without-building']}
+                                     '-only-testing:MacDown2Tests/PDFExportAdapterTests',
+                                     '-only-testing:MacDown2Tests/PDFExportCancellationTests', 'test-without-building']}
         self.status = {'returncode': 0, 'timed_out': False, 'cancelled': False,
                        'elapsed_seconds': 5, 'app_cleanup_requested': []}
 
@@ -33,13 +35,15 @@ class PDFResultTests(unittest.TestCase):
         probe.validate_execution(self.log, self.identity, self.status)
 
     def test_missing_or_skipped_print_positive_refuses(self):
-        for name in ['exportingALongDocumentProducesARealMultiPagePDF', 'exportedPDFReplacesAnyExistingFileAtomically']:
+        for name in ['exportingALongDocumentProducesARealMultiPagePDF', 'exportedPDFReplacesAnyExistingFileAtomically',
+                     'aCancelledNavigationDoesNotWaitForWebKitOrTheThirtySecondWatchdog',
+                     'aCancelledPrintResultPreservesTheExistingDestination']:
             with self.subTest(name=name), self.assertRaises(ValueError):
                 probe.validate_execution(self.log.replace('Test ' + name + '() passed', 'Test ' + name + '() skipped'),
                                          self.identity, self.status)
 
     def test_false_green_summary_or_recorded_issue_refuses(self):
-        for log in [self.log.split('\n', 1)[1], self.log.replace('9 tests', '8 tests'),
+        for log in [self.log.split('\n', 1)[1], self.log.replace('11 tests', '10 tests'),
                     self.log + '\nTest print() recorded an issue', self.log + '\nProgram crashed:']:
             with self.subTest(log=log[-100:]), self.assertRaises(ValueError):
                 probe.validate_execution(log, self.identity, self.status)
@@ -70,12 +74,12 @@ class PDFResultTests(unittest.TestCase):
 
 
 class PDFEvidenceAdmissionTests(unittest.TestCase):
-    def test_actual_result_summary_requires_all_nine_without_skip_or_expected_failure(self):
-        summary = {'totalTestCount': 9, 'passedTests': 9, 'failedTests': 0,
+    def test_actual_result_summary_requires_all_eleven_without_skip_or_expected_failure(self):
+        summary = {'totalTestCount': 11, 'passedTests': 11, 'failedTests': 0,
                    'skippedTests': 0, 'expectedFailures': 0}
         probe.validate_summary(summary)
-        for key, value in [('totalTestCount', 8), ('passedTests', 8), ('failedTests', 1),
-                           ('skippedTests', 1), ('expectedFailures', 1), ('totalTestCount', 9.0)]:
+        for key, value in [('totalTestCount', 10), ('passedTests', 10), ('failedTests', 1),
+                           ('skippedTests', 1), ('expectedFailures', 1), ('totalTestCount', 11.0)]:
             with self.subTest(key=key, value=value), self.assertRaises(ValueError):
                 probe.validate_summary(dict(summary, **{key: value}))
 
