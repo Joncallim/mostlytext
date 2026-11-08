@@ -1,0 +1,73 @@
+{
+  "qualified_source": "5d2ab0f7896210c16f097cb7a6f6f41f0bb31675",
+  "actual_main": "19481c0edc424215ea55d1afc8d9df6709b65b37",
+  "native_run": 42427273752,
+  "scope": "Read-only actual diagnosis; not repaired export acceptance",
+  "records": [
+    {
+      "file": "00-native-first-run.json.gz",
+      "bytes": 13004,
+      "sha256": "80169985026191f7459604063b440f51f8ff55f809283dccf146dedbea1c8c24"
+    },
+    {
+      "file": "01-native-first-artifacts.json.gz",
+      "bytes": 759,
+      "sha256": "d7b582139dd0a0008b40c5251c05191fd464aa476c46af5137b1eb236b350b5d"
+    },
+    {
+      "file": "02-native-complete-first-workflow-logs.zip.gz",
+      "bytes": 13144,
+      "sha256": "41de6b10bedbcfcc1516f32550f20a7da7407cc12388ab89f58a97254820fc4a"
+    },
+    {
+      "file": "03-compliance-first-run.json.gz",
+      "bytes": 12935,
+      "sha256": "bd5c478e8d454c975f9cfa406e97e246f00765d86489a84fba5fec451fdae7d2"
+    },
+    {
+      "file": "04-compliance-first-artifacts.json.gz",
+      "bytes": 32,
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    {
+      "file": "05-compliance-complete-first-workflow-logs.zip.gz",
+      "bytes": 41696,
+      "sha256": "2d975a2d9c9949d25ca2c454fcba2b81fa35237b9e467a5a120400728e5ea022"
+    },
+    {
+      "file": "06-first-readback-independently-verified.json.gz",
+      "bytes": 1712,
+      "sha256": "f0865a373422a07d53df098fc7e7ad5ee0e854d3006a64c36b375a3ca82cac59"
+    },
+    {
+      "file": "07-verify-first-readback.py.gz",
+      "bytes": 4638,
+      "sha256": "026e9560a53304fd07f4e76470c353f7b79f1e5945cf0edf005cfef9c443a475"
+    },
+    {
+      "file": "08-actual-pdf-readback.json.gz",
+      "bytes": 1519,
+      "sha256": "77d4568742ce51c485156fb0e46ad5ddcc2b4fbff815ec2f8b33bd32da019e4c"
+    },
+    {
+      "file": "09-pdf-readback-receipt.json.gz",
+      "bytes": 1593,
+      "sha256": "26877d3d3ce4d1c5f0d96ee5ab5932a2dc1e8bcc048db41f5378e1bcadd80393"
+    },
+    {
+      "file": "10-actual-pdf-page-1.png.gz",
+      "bytes": 20626,
+      "sha256": "99297b58780851bf0380dfdf0520ac5e4646c9e1389de396e5893d99e5996a93"
+    },
+    {
+      "file": "11-actual-pdf-page-2.png.gz",
+      "bytes": 10366,
+      "sha256": "76ec13570f71a5c099ba73c95ec5e81bad1964f49dd29b93259da94ac260bbce"
+    },
+    {
+      "file": "12-actual-main-integration-proof.json.gz",
+      "bytes": 490,
+      "sha256": "3da18019f4e79d9ea38ae63994415cccb4a9ed9958eafcea1e16ab67b7804a50"
+    }
+  ]
+}
