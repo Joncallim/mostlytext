@@ -103,3 +103,20 @@ expected load ID. If the exact failure recurs, use the bounded trace to select
 one narrower correction and preserve another complete first before testing it.
 No issue is closed, no PR marked ready and no shipping branch changed on this
 diagnostic alone.
+
+## First diagnostic compile result and narrow correction
+
+The first private Debug/revision run [42486295659](https://github.com/Joncallim/mostlytext/actions/runs/42486295659)
+at `f8734940e8bcf037397230aa4a5cc9b08482e245` failed before native
+execution. Complete first workflow logs, exact run result and whole artifact
+ZIP are preserved under
+`/Volumes/Fast SSD/CORTANA-Builds/inline-attachment-instance-diagnostic-20261108/diagnostic-first-f8734940`.
+All compiler errors are the same: the existing direct-model helper in
+`TextualAttachmentPublicationTests.swift` calls the private diagnostic fork's
+`resolveAttachments` without its new optional trace argument. Add explicit
+`diagnosticLoadID: nil` to that helper in this private app branch. This is a
+compile-only compatibility correction to an unrelated test helper; its
+assertions, input, timing, product source and shipping fork remain unchanged.
+Re-run the focused hosted diagnostic at a new immutable head, preserving that
+run's complete first result before interpreting it. The original shipping
+failure remains unresolved.
