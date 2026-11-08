@@ -1,4 +1,4 @@
-name: Private existing renderer publication stages diagnosis
+name: Private buffered renderer fresh-scenario diagnosis
 
 permissions:
   contents: read
@@ -96,6 +96,7 @@ jobs:
             -only-testing:MacDown2Tests/BoundedHTMLPreviewHandlerTests \
             -only-testing:MacDown2Tests/SecuredHTMLPreviewNativeTests \
             -only-testing:MacDown2Tests/HTMLPreviewEncodingNativeTests \
+            -only-testing:MacDown2Tests/BufferedPublicationDiagnosticTests \
             -only-testing:MacDown2Tests/SecuredMarkdownMountedTests \
             -only-testing:MacDown2Tests/SecuredMarkdownViewportTests \
             -only-testing:MacDown2Tests/SecuredMarkdownSourceBindingTests \
@@ -121,11 +122,13 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
+          include-hidden-files: true
           name: preview-grant-app-tests-${{ matrix.configuration }}-${{ matrix.pair }}
           path: |
             ${{ runner.temp }}/preview-grant-probe/receipt.json
             ${{ runner.temp }}/preview-grant-probe/textual-effective-source.json
             ${{ runner.temp }}/preview-grant-probe/textual-stage-observations.json
+            ${{ runner.temp }}/preview-grant-probe/textual-scenarios/**
             ${{ runner.temp }}/preview-grant-probe/textual-compiled-binding.json
             ${{ runner.temp }}/preview-grant-probe/textual-effective-source/**
             ${{ runner.temp }}/preview-grant-probe/compiled-*.json

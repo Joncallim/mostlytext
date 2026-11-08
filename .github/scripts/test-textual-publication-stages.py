@@ -25,6 +25,10 @@ def originals():
 class ExactRendererAdmission(unittest.TestCase):
     def test_exact_originals_transform_without_new_view_observers(self):
         before = originals(); after = patcher.transformed(before)
+        self.assertNotIn(b'print(', patcher.HELPER)
+        self.assertIn(b'events.count < 4000', patcher.HELPER)
+        self.assertIn(b'overflow = true', patcher.HELPER)
+        self.assertIn(b'public static func snapshot()', patcher.HELPER)
         self.assertEqual(set(after), set(before) | {patcher.HELPER_PATH})
         for name, raw in before.items():
             for token in [b'.task(', b'.onChange(', b'.onGeometryChange(', b'.customAttribute(']:

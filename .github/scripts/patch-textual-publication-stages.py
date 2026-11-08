@@ -22,23 +22,27 @@ HELPER = r'''import SwiftUI
 
 /// Disposable hosted diagnosis only. This source is never a shipping dependency change.
 @MainActor
-internal enum MostlyTextPublicationTrace {
-  private static var emitted = 0
+public enum MostlyTextPublicationTrace {
+  private static var events: [String] = []
+  private static var overflow = false
+
+  public static func snapshot() -> (events: [String], overflow: Bool) { (events, overflow) }
+
+  public static func reset() {
+    events.removeAll(keepingCapacity: true)
+    overflow = false
+  }
 
   static func emit<T: AttributedStringProtocol>(
     _ stage: String, value: T, details: String = ""
   ) {
-    guard emitted < 4000 else {
-      if emitted == 4000 {
-        print("TEXTUAL_PUBLICATION_TRACE_LIMIT_REACHED")
-        emitted = 4001
-      }
+    guard events.count < 4000 else {
+      overflow = true
       return
     }
-    emitted += 1
     let attachments = value.runs.filter { $0.textual.attachment != nil }.count
     let urls = value.runs.compactMap { $0.imageURL?.hashValue }.prefix(4)
-    print("TEXTUAL_PUBLICATION stage=\(stage) attachedRuns=\(attachments) chars=\(value.characters.count) imageHashes=\(Array(urls)) \(details)")
+    events.append("TEXTUAL_PUBLICATION stage=\(stage) attachedRuns=\(attachments) chars=\(value.characters.count) imageHashes=\(Array(urls)) \(details)")
   }
 
   static func cached(_ value: AttributedString?) {
@@ -191,11 +195,18 @@ def main():
         (ROOT / 'actual-initial-summary.json').write_bytes(raw)
         owned = json.loads((ROOT / 'diagnostics/status.json').read_bytes())
         log = (ROOT / 'probe.log').read_text()
-        rows = [line for line in log.splitlines() if 'TEXTUAL_PUBLICATION' in line]
+        rows = [line for line in log.splitlines() if 'TEXTUAL_SCENARIO' in line]
+        buffered = []
+        for name in ['initial', *[f'{i:02d}-{journey}' for i in range(10) for journey in ['production', 'revision']], 'final']:
+            data = json.loads((ROOT / 'textual-scenarios' / (name + '.json')).read_bytes())
+            if data['scenario'] != name or data['diagnostic_only'] is not True or data['qualification_candidate'] is not False:
+                raise RuntimeError('Native buffered scenario identity changed')
+            buffered.append(data)
         output = {'diagnostic_only': True, 'qualification_candidate': False,
                   'effective_source_manifest_sha256': sha(path.read_bytes()),
                   'actual_owned_status': owned, 'actual_summary': json.loads(raw),
-                  'actual_trace_lines': rows, 'trace_limit_reached': 'TEXTUAL_PUBLICATION_TRACE_LIMIT_REACHED' in log,
+                  'actual_trace_lines': rows, 'buffered_scenarios': buffered,
+                  'trace_limit_reached': any(row['overflow'] for row in buffered),
                   'scope': 'Actual stage observations of deliberately modified pinned source, never whole Preview qualification or sole causal proof'}
         (ROOT / 'textual-stage-observations.json').write_text(json.dumps(output, indent=2) + '\n')
         if not rows: raise RuntimeError('Actual compiled renderer emitted no stage observations')

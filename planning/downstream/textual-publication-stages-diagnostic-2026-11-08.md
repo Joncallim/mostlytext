@@ -101,7 +101,9 @@ ledger. Keep exact same four original-source hashes/transform anchors, existing
 callbacks/statements,4000event budget per scenario, and no new view state/nodes/
 observers. Expose only a diagnostic snapshot/reset accessor from the disposable
 patched dependency so an extra diagnostic test can archive after each journey.
-Store initial full57trace separately before reset. All other original source,
+Store the buffer at diagnostic-driver entry separately before reset; original
+suite scheduling is not assumed and this is not a complete full57trace. Original
+suite events after driver exit are outside the per-scenario trace archive. All other original source,
 assertions and5second waits stay unchanged. No production/fork pin change.
 
 Add one never-merge stress test invoking the two actual failing test functions,
