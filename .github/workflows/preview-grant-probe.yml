@@ -61,6 +61,7 @@ jobs:
           python3 .github/scripts/test-preview-diagnostic-host.py
           python3 .github/scripts/test-preview-compiled-inputs.py
           python3 .github/scripts/test-textual-publication-stages.py
+          python3 .github/scripts/test-textual-publication-diagnostic-message.py
       - name: Resolve exact packages then capture original and patched effective renderer sources
         run: |
           set -euo pipefail

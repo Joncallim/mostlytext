@@ -52,7 +52,7 @@ if platform.machine() != "arm64":
     raise SystemExit("This native Preview qualification requires an Apple Silicon worker")
 paths = subprocess.check_output([
     "git", "ls-files", "-z", "MacDown2", ".github/scripts/verify-preview-grant-probe.py",
-    ".github/workflows/preview-grant-probe.yml", ".github/scripts/preview_compiled_inputs.py", ".github/scripts/test-preview-compiled-inputs.py", ".github/scripts/test-preview-diagnostic-host.py", ".github/scripts/check-preview-parsed-frame.py", ".github/scripts/test-preview-grant-tripwire.py", ".github/scripts/test-preview-native-architecture.py", ".github/scripts/patch-textual-publication-stages.py", ".github/scripts/test-textual-publication-stages.py", ".github/scripts/run-preview-grant-probe.py", ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
+    ".github/workflows/preview-grant-probe.yml", ".github/scripts/preview_compiled_inputs.py", ".github/scripts/test-preview-compiled-inputs.py", ".github/scripts/test-preview-diagnostic-host.py", ".github/scripts/check-preview-parsed-frame.py", ".github/scripts/test-preview-grant-tripwire.py", ".github/scripts/test-preview-native-architecture.py", ".github/scripts/patch-textual-publication-stages.py", ".github/scripts/test-textual-publication-stages.py", ".github/scripts/test-textual-publication-diagnostic-message.py", ".github/scripts/run-preview-grant-probe.py", ".github/scripts/run-owned-app-tests.py", ".github/scripts/test-run-owned-app-tests.py",
     "planning/downstream/evidence/actual-app-hosted-plan-2026-11-07",
     "planning/downstream/evidence/textual-publication-stage-originals-2026-11-08",
 ], cwd=repo).decode().split("\0")
@@ -67,7 +67,7 @@ receipt = {
     "diagnostic_only": True,
     "diagnostic_variant": os.environ["MOSTLYTEXT_RENDERER_VARIANT"],
     "qualification_candidate": False,
-    "current_main_baseline": "7867621005a65950bb0db994b8cddaa2f5367412",
+    "current_main_baseline": "23de8c25b61598b87fb807e5a3dfd74c81e2e4d4",
     "diagnostic_base_source": "6cad56275c1d9a71a9ee95daa066bd1fcae68965",
     "effective_textual_source_modified": True,
     "failure_only_assertion_markers": True,

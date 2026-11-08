@@ -102,9 +102,8 @@ struct ProductionPreviewResourceRoutingTests {
         _ fixture: PreviewProductionFixture, root: NSView
     ) async throws {
         let bitmap = try #require(NSBitmapImageRep(
-            bitmapDataPlanes: nil, pixelsWide: 2, pixelsHigh: 2,
-            bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
-            colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0
+            bitmapDataPlanes: nil, pixelsWide: 2, pixelsHigh: 2, bitsPerSample: 8, samplesPerPixel: 4,
+            hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0
         ))
         for column in 0 ..< 2 {
             for row in 0 ..< 2 {
@@ -148,7 +147,9 @@ struct ProductionPreviewResourceRoutingTests {
             try await Task.sleep(for: .milliseconds(20))
         }
         MostlyTextPublicationTrace.markCopyFailure("production-generation-copy-deadline")
-        Issue.record("The actual production Preview did not copy the current generation's distinct image pixels;\n"
-            + "\(lastRaster); html=\(lastHTML); \(fixture.copyHarness.copyDiagnostics(in: root))")
+        Issue.record("""
+        The actual production Preview did not copy the current generation's distinct image pixels;
+        \(lastRaster); html=\(lastHTML); \(fixture.copyHarness.copyDiagnostics(in: root))
+        """)
     }
 }

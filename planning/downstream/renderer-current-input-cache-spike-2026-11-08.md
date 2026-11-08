@@ -205,9 +205,9 @@ byte for byte. Every original assertion/control/cleanup statement is retained.
 
 ## Compile-only failure of the first minimal-layer comparison
 
-Complete native first42446874718 at source b752b5c0 failed all three variants
-before any native function ran. Compliance42446879983 passed. Every original
-first/log/artifact is retained and all296original297effective files, five exact
+Complete native first 42446874718 at source b752b5c0 failed all three variants
+before any native function ran. Compliance 42446879983 passed. Every original
+first/log/artifact is retained and all 296 original / 297 effective files, five exact
 transforms and actual source/pins per variant are independently verified in
 [evidence](evidence/renderer-minimal-layer-compile-firsts-2026-11-08/manifest.json).
 The original, inline-only and fragment-only test builds all refuse the joined
@@ -229,3 +229,17 @@ format/lint/syntax plus original seven transform and all diagnostic ownership
 controls. Then freeze a new source and obtain complete three-variant native and
 Compliance firsts. The selected renderer layer files and all comparison policies
 remain unchanged. Do not retry the unchanged failed source or weaken a warning.
+
+Implementation check: both full original test files reproduce their canonical
+SHA256 after removing only marker/import lines and normalizing the bitmap
+argument whitespace. The restored literal's actual SDK Comment overload
+successfully typechecks; the old joined literal refuses for the same operator
+error. The isolated compiler check supplies only SourceLocation explicitly so it
+requires no macro-plugin execution. Initial local checks that lacked the Testing
+framework search path or source-location macro plugin were refused, not reported
+as successful. The corrected check uses the selected platform's actual Testing
+framework with no linking or execution. It runs before hosted dependency
+resolution and is included in source bindings. Current main baseline metadata is
+23de8c25 (the newly qualified PDF canary helper); private product/test baseline
+remains 6cad5627. No renderer layer, comparison deadline or outcome assertion is
+changed by this diagnostic compilation correction.
