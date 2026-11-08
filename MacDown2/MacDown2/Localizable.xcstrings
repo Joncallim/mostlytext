@@ -1512,6 +1512,35 @@
         }
       }
     },
+    "Choose where to export this document.": {
+      "comment": "Export save-panel guidance. English review drafts in other locales require translation and native layout review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose where to export this document."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Choose where to export this document."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Choose where to export this document."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Choose where to export this document."
+          }
+        }
+      }
+    },
     "Choose which original MacDown preferences to import. Your original preferences remain unchanged.": {
       "extractionState": "manual",
       "localizations": {

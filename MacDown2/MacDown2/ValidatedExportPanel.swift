@@ -15,7 +15,7 @@ enum ValidatedExportPanel {
         let panel = NSSavePanel()
         panel.canCreateDirectories = true
         panel.prompt = String(localized: "Export")
-        panel.message = "Choose where to export this document."
+        panel.message = String(localized: "Choose where to export this document.")
         panel.directoryURL = directory
         let selection = ExportSelectionModel(format: .standaloneHTML, style: .embedded)
         ExportCoordinator.apply(selection.format, to: panel, defaultBaseName: defaultName)
