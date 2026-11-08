@@ -279,3 +279,48 @@ lifecycle behavior. It would still not prove an exit reason, arbitrary engine
 termination, or PR #152's two distinct child PIDs, held SIGKILL and reaped-PID
 contract. This fixture is not a shipping Quick Look renderer or a release
 qualification.
+
+## Self-retiring held service proposal — 9 November 2026
+
+The corrected hosted [hold run 42524804660](https://github.com/Joncallim/mostlytext/actions/runs/42524804660)
+settles the previous question negatively. Its three original Finder cases pass;
+the new fourth case fails only the physical-retirement assertion. The service
+enters the ten-second hold at uptime 262.778187, the provider invalidates its
+connection at 264.908951, and the unsandboxed host observer still identifies
+the same service PID 3913 at 268.256732, more than three seconds later. The
+provider PID and Finder window remain. The 36-sample journal, actual result
+bundle, signed products and exact-source receipt are retained under
+`/Volumes/Fast SSD/CORTANA-Builds/quicklook-xpc-hold-20261109/run-42524804660`.
+Connection invalidation alone is not the required process deadline.
+
+This next **private fixture-only** slice tests a separate mechanism: the
+service arms its own monotonic watchdog before replying ready or beginning the
+unchanged ten-second held operation. The watchdog runs on a dedicated thread
+and calls `_exit(124)` four seconds after it is armed, independent of the held
+thread, provider connection and Finder window. The provider still invalidates
+at its existing two-second timer and delivers only the fixed static marker.
+The service admits at most one held operation per process; another hold is
+refused. No file path, document bytes, renderer, script or network data enter
+the service. Provider and service entitlements, bundle placement and original
+three Finder cases remain unchanged.
+
+The fourth case keeps its source-bound exact-PID host observer and requires a
+pre-invalidation Finder window with the held service present, then that exact
+service absent by three seconds after invalidation while the same provider and
+Finder window survive. It additionally requires the service's own watchdog-arm
+record to precede the ready reply. A pass would show physical self-retirement
+for this one fixed held operation, **not** that invalidation reaps XPC workers,
+that launchd dedicates a new worker to every request, or that an arbitrary
+renderer is contained. The XPC service may be reused across connections; a
+production render endpoint would need a process-wide single-admission lease,
+no shared mutable render state and a fail-safe fallback for overlapping
+requests. This private hold probe only proves the one-admitted-operation and
+watchdog portions.
+
+Do not move this into the shipping app or check #7 until the actual Finder run
+and independent artifact review pass, then separately test real D2/Graphviz
+work, content/memory budgets, concurrent requests, service restart, final
+signed permissions and installed Finder behavior. If the same service remains
+past the deadline, or the fixed marker/window/control tests regress, retain
+the negative result and revise the architecture rather than extending the
+timeout or weakening the assertion.
