@@ -47,6 +47,7 @@ enum WorkerCapability {
         process.standardError = errors
         let start = ProcessInfo.processInfo.systemUptime
         do { try process.run() } catch {
+            recordSpawnError(error as NSError, worker: worker, process: process, mode: mode, requestID: requestID)
             logger.error("QL_WORKER_PROBE spawn-refused id=\(requestID) code=\((error as NSError).code)")
             throw error
         }
@@ -77,6 +78,57 @@ enum WorkerCapability {
                 && process.terminationStatus == SIGKILL && elapsed >= 450)
         else { throw Failure.refused }
         return record
+    }
+
+    private static func recordSpawnError(
+        _ error: NSError, worker: URL, process: Process, mode: String, requestID: Int
+    ) {
+        func bounded(_ value: String, limit: Int) -> String {
+            String(bytes: value.utf8.prefix(limit), encoding: .utf8) ?? "<incomplete UTF8 prefix>"
+        }
+        func errorFields(_ value: NSError) -> [String: Any] {
+            [
+                "domain": bounded(value.domain, limit: 128), "code": value.code,
+                "description": bounded(value.localizedDescription, limit: 512),
+                "domain_utf8_bytes": value.domain.utf8.count,
+                "description_utf8_bytes": value.localizedDescription.utf8.count,
+            ]
+        }
+        var underlying: [[String: Any]] = []
+        var current = error
+        for _ in 0 ..< 2 {
+            guard let next = current.userInfo[NSUnderlyingErrorKey] as? NSError else { break }
+            underlying.append(errorFields(next))
+            current = next
+        }
+        let readable = access(worker.path, R_OK)
+        let readError = readable == 0 ? 0 : errno
+        let executable = access(worker.path, X_OK)
+        let executeError = executable == 0 ? 0 : errno
+        let attributes = try? FileManager.default.attributesOfItem(atPath: worker.path)
+        let record: [String: Any] = [
+            "kind": "mostlytext-qlworker-spawn-error", "request_id": requestID,
+            "provider_pid": getpid(), "mode": mode, "error": errorFields(error), "underlying": underlying,
+            "worker_path": bounded(worker.path, limit: 768),
+            "unix_permissions": attributes?[.posixPermissions] ?? NSNull(),
+            "read_access": readable, "read_errno": readError,
+            "execute_access": executable, "execute_errno": executeError,
+            "current_directory": bounded(FileManager.default.currentDirectoryPath, limit: 768),
+            "process_directory": process.currentDirectoryURL.map { bounded($0.path, limit: 768) } as Any? ?? NSNull(),
+        ]
+        guard let data = try? JSONSerialization.data(withJSONObject: record, options: [.sortedKeys]),
+              data.count <= 4096 else {
+            logger.error("QL_WORKER_PROBE spawn-error-encoding-refused id=\(requestID)")
+            return
+        }
+        let hash = SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
+        let total = (data.count + 383) / 384
+        for part in 0 ..< total {
+            let payload = data.subdata(in: part * 384 ..< min((part + 1) * 384, data.count)).base64EncodedString()
+            let message = "QL_WORKER_PROBE spawn-error id=\(requestID) part=\(part) total=\(total) " +
+                "sha256=\(hash) data=\(payload)"
+            logger.error("\(message, privacy: .public)")
+        }
     }
 
     private enum Failure: Error { case refused }

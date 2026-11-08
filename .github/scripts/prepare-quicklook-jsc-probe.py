@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Prepare/verify only the standalone hosted Quick Look fixture; never launch the product."""
 import argparse
+import base64
 import hashlib
 import json
 import math
@@ -279,11 +280,11 @@ def capture_compiled(root):
     return captured
 
 
-def validate_host_observer(root, checkout):
+def validate_host_recording(root, checkout):
     driver = json.loads((root / 'host-ui-driver.json').read_text())
     observer = json.loads((root / 'observer-result.json').read_text())
     if (driver['checkout'] != checkout or observer['checkout'] != checkout or driver['errors'] or observer['errors']
-            or driver['ui_started'] is not True or driver['ui_supervisor_returncode'] != 0
+            or driver['ui_started'] is not True
             or driver['observer_forced_cleanup'] is not False or driver['observer_returncode'] != 0
             or observer['timed_out'] is not False or observer['stopped_after_ui'] is not True
             or driver['observer_pid'] != observer['pid']
@@ -349,6 +350,88 @@ def require_host(root):
     assert Path.home() == Path("/Users/runner") and platform.mac_ver()[0].split(".")[0] == "26"
     assert root == Path(os.environ["RUNNER_TEMP"]).resolve() / "mostlytext-qljsc"
     assert Path(os.environ["RUNNER_TEMP"]).resolve() == Path("/Users/runner/work/_temp")
+
+
+def validate_host_observer(root, checkout):
+    proof = validate_host_recording(root, checkout)
+    if proof['driver']['ui_supervisor_returncode'] != 0:
+        raise RuntimeError('The actual UI did not complete successfully')
+    return proof
+
+
+def decode_worker_spawn_errors(messages, worker_sha):
+    groups = {}
+    for message in messages:
+        if not message.startswith('QL_WORKER_PROBE spawn-error'):
+            continue
+        match = re.fullmatch(r'QL_WORKER_PROBE spawn-error id=([1-9][0-9]*) part=([0-9]+) total=([1-9][0-9]*) sha256=([0-9a-f]{64}) data=([A-Za-z0-9+/=]+)', message)
+        if match is None or len(message.encode()) > 700:
+            raise RuntimeError('Malformed or truncated actual spawn-error frame')
+        request, part, total = map(int, match.group(1, 2, 3))
+        digest_hex, payload = match.group(4, 5)
+        if not 1 <= total <= 11 or not 0 <= part < total:
+            raise RuntimeError('Actual spawn-error chunk limits exceeded')
+        data = base64.b64decode(payload, validate=True)
+        if not 1 <= len(data) <= 384 or (part < total - 1 and len(data) != 384):
+            raise RuntimeError('Invalid actual spawn-error chunk length')
+        group = groups.setdefault(request, {'total': total, 'sha256': digest_hex, 'parts': {}})
+        if group['total'] != total or group['sha256'] != digest_hex or part in group['parts']:
+            raise RuntimeError('Duplicate or inconsistent actual spawn-error chunks')
+        group['parts'][part] = data
+    result = []
+    for request, group in groups.items():
+        if set(group['parts']) != set(range(group['total'])):
+            raise RuntimeError('Incomplete actual spawn-error payload')
+        raw = b''.join(group['parts'][i] for i in range(group['total']))
+        if len(raw) > 4096 or hashlib.sha256(raw).hexdigest() != group['sha256']:
+            raise RuntimeError('Actual spawn-error bytes or digest changed')
+        row = json.loads(raw)
+        expected = {'kind', 'request_id', 'provider_pid', 'mode', 'error', 'underlying', 'worker_path',
+                    'unix_permissions', 'read_access', 'read_errno', 'execute_access', 'execute_errno',
+                    'current_directory', 'process_directory'}
+        if (not isinstance(row, dict) or set(row) != expected or row['kind'] != 'mostlytext-qlworker-spawn-error'
+                or type(row['request_id']) is not int or row['request_id'] != request
+                or type(row['provider_pid']) is not int or row['provider_pid'] <= 0
+                or row['mode'] not in ['normal', 'held'] or type(row['underlying']) is not list
+                or len(row['underlying']) > 2):
+            raise RuntimeError('Unknown actual spawn-error record schema')
+        for error in [row['error'], *row['underlying']]:
+            if (not isinstance(error, dict) or set(error) != {'domain', 'code', 'description', 'domain_utf8_bytes', 'description_utf8_bytes'}
+                    or type(error['code']) is not int
+                    or not all(type(error[k]) is int and error[k] >= 0 for k in ['domain_utf8_bytes', 'description_utf8_bytes'])
+                    or not all(isinstance(error[k], str) and len(error[k].encode()) <= cap for k, cap in [('domain', 128), ('description', 512)])):
+                raise RuntimeError('Malformed or excessive actual NSError fields')
+        if (not all(isinstance(row[k], str) and len(row[k].encode()) <= 768 for k in ['worker_path', 'current_directory'])
+                or not row['worker_path'].endswith('/Contents/MacOS/QLReplyProbeWorker')
+                or (row['process_directory'] is not None and (not isinstance(row['process_directory'], str)
+                    or len(row['process_directory'].encode()) > 768))
+                or (row['unix_permissions'] is not None and (type(row['unix_permissions']) is not int
+                    or not 0 <= row['unix_permissions'] <= 4095))
+                or not all(type(row[k]) is int and row[k] in [-1, 0] for k in ['read_access', 'execute_access'])
+                or not all(type(row[k]) is int and row[k] >= 0 for k in ['read_errno', 'execute_errno'])):
+            raise RuntimeError('Malformed actual file or directory observations')
+        begins = [m for m in messages if m.startswith(f'QL_WORKER_PROBE begin id={request} ')]
+        if (len(begins) != 1 or re.fullmatch(rf'QL_WORKER_PROBE begin id={request} parent={row["provider_pid"]} start=[0-9]+\.[0-9]+', begins[0]) is None
+                or messages.count(f'QL_WORKER_PROBE executable id={request} sha256={worker_sha}') != 1
+                or messages.count(f'QL_WORKER_PROBE spawn-refused id={request} code={row["error"]["code"]}') != 1):
+            raise RuntimeError('Actual spawn error is not bound to its provider/request/executable/refusal')
+        result.append(row)
+    refusals = [m for m in messages if m.startswith('QL_WORKER_PROBE spawn-refused')]
+    expected_refusals = [f'QL_WORKER_PROBE spawn-refused id={row["request_id"]} code={row["error"]["code"]}' for row in result]
+    if sorted(refusals) != sorted(expected_refusals):
+        raise RuntimeError('Actual spawn refusal has no complete precise diagnostic')
+    return result
+
+
+def retain_worker_spawn_errors(root, checkout, worker_sha):
+    proof = validate_host_recording(root, checkout)
+    current = json.loads((root / 'provider-observer.json').read_bytes())
+    errors = decode_worker_spawn_errors(current['messages'], worker_sha)
+    value = {'diagnostic_only': True, 'qualification_candidate': False, 'checkout': checkout,
+             'actual_ui_returncode': proof['driver']['ui_supervisor_returncode'],
+             'observer_stream_sha256': proof['observer']['stream_sha256'],
+             'worker_executable_sha256': worker_sha, 'errors': errors}
+    (root / 'worker-spawn-errors.json').write_text(json.dumps(value, indent=2) + '\n')
 
 
 def main():
@@ -466,6 +549,7 @@ def main():
     assert digest(root / "mostlytext-ql-jsc.md") == record["selected_fixture_sha256"]
     assert digest(root / "mostlytext-ql-worker.md") == record["selected_fixture_sha256"]
     if args.verify_finder:
+        retain_worker_spawn_errors(root, record['checkout'], record['built']['worker_executable_sha256'])
         record['host_observer_proof'] = validate_host_observer(root, record['checkout'])
         controls = json.loads((root / 'observer-control-events.json').read_text())
         nonce = record['host_observer_proof']['observer']['nonce']

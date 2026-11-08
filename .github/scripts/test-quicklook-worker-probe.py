@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Pure worker-wire/authority controls only; no process, GUI or engine is executed."""
 import copy
+import base64
+import hashlib
+import tempfile
 import importlib.util
 import json
 from pathlib import Path
@@ -77,6 +80,76 @@ class ActualWorkerEvidence(unittest.TestCase):
             else: row['started_uptime'] = float('nan')
             with self.subTest(change=change), self.assertRaises(RuntimeError):
                 probe.validate_worker_observation(row, messages(row), SHA)
+
+
+def spawn_fixture():
+    error = dict(domain='NSCocoaErrorDomain', code=4, description='Actual harmless test error',
+                 domain_utf8_bytes=18, description_utf8_bytes=26)
+    row = dict(kind='mostlytext-qlworker-spawn-error', request_id=3, provider_pid=100,
+               mode='normal', error=error, underlying=[], worker_path='/fixture/Provider.appex/Contents/MacOS/QLReplyProbeWorker',
+               unix_permissions=493, read_access=0, read_errno=0, execute_access=0, execute_errno=0,
+               current_directory='/', process_directory=None)
+    return row
+
+
+def spawn_messages(row):
+    raw = json.dumps(row, separators=(',', ':')).encode()
+    count = (len(raw) + 383) // 384
+    digest = hashlib.sha256(raw).hexdigest()
+    return ['QL_WORKER_PROBE begin id=3 parent=100 start=123.000000',
+            'QL_WORKER_PROBE executable id=3 sha256=' + SHA,
+            *[f'QL_WORKER_PROBE spawn-error id=3 part={i} total={count} sha256={digest} data=' +
+              base64.b64encode(raw[i * 384:(i + 1) * 384]).decode() for i in range(count)],
+            'QL_WORKER_PROBE spawn-refused id=3 code=4']
+
+
+class PreciseSpawnFailureEvidence(unittest.TestCase):
+    def test_complete_actual_error_has_exact_file_and_error_observations(self):
+        row = spawn_fixture()
+        self.assertEqual(probe.decode_worker_spawn_errors(spawn_messages(row), SHA), [row])
+        self.assertEqual(probe.decode_worker_spawn_errors([], SHA), [])
+
+    def test_missing_duplicate_corrupt_or_excessive_frames_refuse(self):
+        original = spawn_messages(spawn_fixture())
+        for logs in [original[:2] + original[3:], original + [original[2]],
+                     [m.replace('sha256=', 'sha256=0', 1) if 'spawn-error' in m else m for m in original],
+                     [m[:180] if 'spawn-error' in m else m for m in original]]:
+            with self.subTest(logs=logs), self.assertRaises((RuntimeError, ValueError)):
+                probe.decode_worker_spawn_errors(logs, SHA)
+
+    def test_other_request_provider_worker_and_unexplained_refusal_refuse(self):
+        original = spawn_messages(spawn_fixture())
+        for logs in [[m.replace('id=3', 'id=4') if 'spawn-error' in m else m for m in original],
+                     [m.replace('parent=100', 'parent=999') for m in original],
+                     original + ['QL_WORKER_PROBE spawn-refused id=4 code=4'],
+                     [m.replace(SHA, 'b' * 64) for m in original]]:
+            with self.assertRaises(RuntimeError): probe.decode_worker_spawn_errors(logs, SHA)
+
+    def test_unknown_schema_noninteger_error_and_excessive_fields_refuse(self):
+        for change in ['extra', 'code', 'description', 'pid', 'underlying']:
+            row = spawn_fixture()
+            if change == 'extra': row['invented_sandbox_denial'] = True
+            elif change == 'code': row['error']['code'] = True
+            elif change == 'description': row['error']['description'] = 'x' * 513
+            elif change == 'pid': row['provider_pid'] = True
+            else: row['underlying'] = [row['error']] * 3
+            with self.subTest(change=change), self.assertRaises(RuntimeError):
+                probe.decode_worker_spawn_errors(spawn_messages(row), SHA)
+
+    def test_failed_ui_recording_can_be_retained_but_never_qualifies_success(self):
+        spec = importlib.util.spec_from_file_location('observer_controls', Path(__file__).with_name('test-quicklook-jsc-observer.py'))
+        module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); driver, _ = module.fixture(root)
+            driver['ui_supervisor_returncode'] = 65
+            (root / 'host-ui-driver.json').write_text(json.dumps(driver))
+            proof = probe.validate_host_recording(root, 'source')
+            self.assertEqual(proof['driver']['ui_supervisor_returncode'], 65)
+            probe.retain_worker_spawn_errors(root, 'source', SHA)
+            actual = json.loads((root / 'worker-spawn-errors.json').read_text())
+            self.assertEqual(actual['actual_ui_returncode'], 65)
+            self.assertFalse(actual['qualification_candidate'])
+            with self.assertRaises(RuntimeError): probe.validate_host_observer(root, 'source')
 
 
 if __name__ == '__main__':
