@@ -1,4 +1,4 @@
-# MostlyText acceptance status — 6 November 2026
+# MostlyText acceptance status — 8 November 2026
 
 Initial acceptance baseline: main `f660e30f61c0b48551fb450ee9afd24ba35d50ae`.
 Later scoped recovery, localization and attribution units and their exact checks
@@ -7,6 +7,36 @@ qualified units and the live PR checks for current integration status.
 This dated status distinguishes source integration, local prerequisites and
 acceptance. The live backlog is [MostlyText issues](https://github.com/Joncallim/mostlytext/issues);
 [the number map](ISSUE_TRANSFER_MAP.md) explains imported historical references.
+
+## PDF layout and fixed-canary checkpoint — 8 November 2026
+
+Current scoped integration is main `23de8c25b61598b87fb807e5a3dfd74c81e2e4d4`.
+[PR155](https://github.com/Joncallim/mostlytext/pull/155) corrects the oversized
+PDF canvas and preserves original content width, wrapping and authored pages.
+Its [seven complete firsts](downstream/paper-sized-export-canvas-2026-11-08.md)
+pass, including 3,721 package / 680 app tests, all nine actual PDF functions,
+seven native canvas controls, six public CLI comparisons, and both Debug/Release
+shared math and heading suites. Those exact receipts qualify source `fd23e3e2`,
+not every later source tree. PR156 records the final architecture and evidence;
+its product/workflow/compliance trees are identical to the qualified layout fix.
+
+[PR157](https://github.com/Joncallim/mostlytext/pull/157) adds a read-only fixed
+PDF canary qualifier. Both actual visible headings reconstruct exactly from
+PDFSelections; the original two-page output refuses and the corrected one-page
+output accepts. [Both complete firsts and exact integration proof](downstream/evidence/placed-pdf-canary-qualified-firsts-2026-11-08/README.md)
+verify actual source, input and downloaded compiled-helper bytes. Fourteen hostile
+controls and 332 Compliance controls pass. No app/GUI is launched by this helper.
+
+The fresh issue audit has 16 open issues and 160 unchecked original criteria;
+none is wholly closeable from these component results. Issue #11 records the
+scoped checkmarks while retaining all five original unchecked rows. PR146 remains
+an unqualified draft; a private renderer minimal-layer comparison is pending.
+Its first three variants failed test compilation before native execution and
+were fully preserved before a specific typed-comment correction. PR147 remains
+frozen at its original failed ordinary-export first. Whole menu/Cancel/normal
+Quit, parity/visual corpus, final resource and print/cancellation measurements,
+separate-account requirements, independent rights review and exact signed-RC
+acceptance remain open. Owner-account execution remains held.
 
 ## Qualified source checkpoint — 6 November 2026
 
