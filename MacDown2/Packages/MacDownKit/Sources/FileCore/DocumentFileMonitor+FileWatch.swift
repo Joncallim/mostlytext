@@ -1,5 +1,15 @@
 import Foundation
 
+struct DocumentWatchHandles {
+    let parent: any DocumentDirectoryWatcherHandle
+    let file: (any DocumentDirectoryWatcherHandle)?
+
+    func cancel() {
+        parent.cancel()
+        file?.cancel()
+    }
+}
+
 extension DocumentFileMonitor {
     func isCurrent(generation: UInt, sequence: UInt) -> Bool {
         generation == self.generation && sequence == probeSequence && boundURL != nil
@@ -15,6 +25,21 @@ extension DocumentFileMonitor {
             }
         } catch let error as POSIXError where error.code == .ENOENT {
             return nil
+        }
+    }
+
+    /// Own the parent source until the optional file source has been installed.
+    /// A failed file watch must not leave a parent callback live on an error path.
+    func makeWatchHandles(for url: URL, generation: UInt) throws -> DocumentWatchHandles {
+        let parent = try watcher.watch(url.deletingLastPathComponent()) { [weak self] signal in
+            Task { await self?.received(signal, generation: generation) }
+        }
+        do {
+            let file = try watchFileIfAvailable(url, generation: generation)
+            return DocumentWatchHandles(parent: parent, file: file)
+        } catch {
+            parent.cancel()
+            throw error
         }
     }
 

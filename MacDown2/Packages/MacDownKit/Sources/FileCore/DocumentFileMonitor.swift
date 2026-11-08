@@ -87,10 +87,9 @@ public actor DocumentFileMonitor {
         callback = onObservation
         contextCallback = onContext
         healthCallback = onHealthChange
-        handle = try watcher.watch(standardized.deletingLastPathComponent()) { [weak self] signal in
-            Task { await self?.received(signal, generation: currentGeneration) }
-        }
-        fileHandle = try watchFileIfAvailable(standardized, generation: currentGeneration)
+        let installed = try makeWatchHandles(for: standardized, generation: currentGeneration)
+        handle = installed.parent
+        fileHandle = installed.file
         watcherHealthy = true
         healthCallback?(.healthy)
         let initial = await trackedObserve(
@@ -120,18 +119,15 @@ public actor DocumentFileMonitor {
         probeSequence &+= 1
         let currentGeneration = generation
         let sequence = probeSequence
-        let replacement = try watcher.watch(boundURL.deletingLastPathComponent()) { [weak self] signal in
-            Task { await self?.received(signal, generation: currentGeneration) }
-        }
-        let replacementFile = try watchFileIfAvailable(boundURL, generation: currentGeneration)
+        let replacement = try makeWatchHandles(for: boundURL, generation: currentGeneration)
         guard isCurrent(generation: currentGeneration, sequence: sequence) else {
             replacement.cancel()
             return
         }
         handle?.cancel()
         fileHandle?.cancel()
-        handle = replacement
-        fileHandle = replacementFile
+        handle = replacement.parent
+        fileHandle = replacement.file
         watcherHealthy = true
         healthCallback?(.healthy)
         let initial = await trackedObserve(
@@ -249,19 +245,15 @@ public actor DocumentFileMonitor {
             }
             guard isCurrent(generation: generation, sequence: sequence) else { return }
             do {
-                let replacement = try watcher.watch(boundURL.deletingLastPathComponent()) { [weak self] signal in
-                    Task { await self?.received(signal, generation: generation) }
-                }
-                let replacementFile = try watchFileIfAvailable(boundURL, generation: generation)
+                let replacement = try makeWatchHandles(for: boundURL, generation: generation)
                 guard isCurrent(generation: generation, sequence: sequence) else {
                     replacement.cancel()
-                    replacementFile?.cancel()
                     return
                 }
                 handle?.cancel()
                 fileHandle?.cancel()
-                handle = replacement
-                fileHandle = replacementFile
+                handle = replacement.parent
+                fileHandle = replacement.file
                 watcherHealthy = true
                 parentRecoveryPending = false
                 healthCallback?(.healthy)
