@@ -1,5 +1,16 @@
 # Graphviz local source-review package — 4 November 2026
 
+> Private-path review — 9 November 2026: the dated archive below copied five
+> reproduction READMEs with local build-machine paths. It remains historical
+> review evidence and must not be used as the public source package. The current
+> assembler removes only those five paths from its package copies, preserves the
+> repository's original evidence, and rejects any other local user/volume path
+> in the assembled non-upstream material. Its newly verified, unpublished
+> 58-member package has SHA-256
+> `f2fba2c66a79f3345cc2db1eca515ae570175904f1b96449edf9937c4341d8b2`.
+> The versioned private stage verifies this package and still claims no public
+> retrieval, source completeness, rights clearance or application release.
+
 The exact Graphviz 16.0.0, Viz.js 3.30.0, Expat 2.8.4 and npm renderer inputs now
 have a deterministic local review archive. It includes current notice/SBOM
 snapshots, the recorded source/build audit, selected nested notices and explicit

@@ -20,7 +20,9 @@ import verify_viz_renderer
 ROOT = Path(__file__).resolve().parents[2]
 LIMITS = ('Local source-review package only. Not approved as the complete corresponding-source offer.\n'
           'Includes exact publisher Graphviz/Viz/Expat source archives and npm output, source-build\n'
-          'records, current notices and reproduction instructions. No application binary, signing\n'
+          'records, current notices and reproduction instructions. Private build-machine paths\n'
+          'in copied reproduction READMEs are replaced in this review package; the original\n'
+          'historical evidence remains in the repository. No application binary, signing\n'
           'credential or private file is included. The npm package contains the already-public\n'
           'JavaScript/WebAssembly renderer, not a MostlyText application.\n'
           'Remaining: independent source/build and embedded/runtime attribution review, exact\n'
@@ -41,6 +43,18 @@ REPRODUCTION_FILES = {
     'libcxx-image-notices': ('README.md', 'manifest.json'),
 }
 
+# These five historical READMEs name private locations of retained raw build
+# artifacts. Their source/build facts remain verbatim; only the machine-local
+# location is omitted from the package intended for eventual public review.
+PRIVATE_BUILD_LOCATIONS = {
+    'viz-compiler-image': 'viz-compiler-image-20261104',
+    'graphviz-backend-reproduction': 'graphviz-backend-rebuild-20261104',
+    'viz-renderer-reproduction': 'viz-renderer-rebuild-20261104',
+    'graphviz-link-inputs': 'graphviz-link-inputs-20261104',
+    'libcxx-image-notices': 'libcxx-image-notices-20261104',
+}
+PRIVATE_PATH_MARKERS = (b'/Users/', b'/Volumes/')
+
 
 def sha(body):
     return hashlib.sha256(body).hexdigest()
@@ -52,13 +66,31 @@ def add_body(bodies, name, body):
     bodies[name] = body
 
 
+def review_copy(folder, name, body):
+    if name != 'README.md' or folder not in PRIVATE_BUILD_LOCATIONS:
+        return body
+    private_path = (f'`/Volumes/Fast SSD/CORTANA-Builds/'
+                    f'{PRIVATE_BUILD_LOCATIONS[folder]}`').encode()
+    if body.count(private_path) != 1:
+        raise ValueError('Expected private build location changed: ' + folder)
+    return body.replace(private_path, b'`private build evidence retained by the project`')
+
+
+def require_no_private_paths(bodies):
+    for name, body in bodies.items():
+        if name.startswith('upstream/'):
+            continue  # Publisher source archives are kept byte-identical.
+        if any(marker in body for marker in PRIVATE_PATH_MARKERS):
+            raise ValueError('Private build path remains in review package: ' + name)
+
+
 def reproduction_evidence(root):
     # These existing validators bind the complete dependency chains and shipped
     # renderer. Copy only the explicit review allowlist after they succeed.
     verify_libcxx_notices.verify(root)
     verify_viz_renderer.verify(root)
     return {'evidence/reproduction/compliance/evidence/' + folder + '/' + name:
-            (root / 'compliance/evidence' / folder / name).read_bytes()
+            review_copy(folder, name, (root / 'compliance/evidence' / folder / name).read_bytes())
             for folder, names in REPRODUCTION_FILES.items() for name in names}
 
 
@@ -97,6 +129,7 @@ def payload(root, inputs):
             if sha(body) != text['sha256']:
                 raise ValueError('Source-review notice digest changed')
             add_body(bodies, 'notices/' + Path(text['path']).name, body)
+    require_no_private_paths(bodies)
     manifest = {'schema': 1, 'status': 'local-review-only; incomplete approval/publication gates',
                 'graphviz_revision': audit.GRAPHVIZ_REVISION, 'viz_revision': audit.VIZ_REVISION,
                 'expat_revision': audit.EXPAT_REVISION,
