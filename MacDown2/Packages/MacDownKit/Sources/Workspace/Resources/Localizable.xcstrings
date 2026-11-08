@@ -300,6 +300,35 @@
           }
         }
       }
+    },
+    "Untitled": {
+      "comment": "Fallback stem for an unsaved document's Save panel filename. Keep the format extension literal. Other locales are English review drafts.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Untitled"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Untitled"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Untitled"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Untitled"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

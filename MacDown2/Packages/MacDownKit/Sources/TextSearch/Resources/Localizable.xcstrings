@@ -1,25 +1,60 @@
 {
   "sourceLanguage": "en",
   "strings": {
-    "The folder is no longer available.": {
-      "comment": "Package-owned user-facing error/status copy. Non-English values are English review drafts requiring final translation/native review.",
+    "An external change could not be restored; its bytes were kept at %@": {
+      "comment": "Workspace replace recovery path. Preserve the interpolated path and do not suggest deleting the retained bytes. Other locales are English review drafts.",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An external change could not be restored; its bytes were kept at %@"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "The folder is no longer available."
+            "value": "An external change could not be restored; its bytes were kept at %@"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "The folder is no longer available."
+            "value": "An external change could not be restored; its bytes were kept at %@"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "The folder is no longer available."
+            "value": "An external change could not be restored; its bytes were kept at %@"
+          }
+        }
+      }
+    },
+    "Invalid path": {
+      "comment": "Workspace replace refusal when a relative path is malformed. Other locales are English review drafts.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid path"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Invalid path"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Invalid path"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Invalid path"
           }
         }
       }
@@ -43,6 +78,29 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "The folder cannot be read."
+          }
+        }
+      }
+    },
+    "The folder is no longer available.": {
+      "comment": "Package-owned user-facing error/status copy. Non-English values are English review drafts requiring final translation/native review.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The folder is no longer available."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The folder is no longer available."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The folder is no longer available."
           }
         }
       }

@@ -98,7 +98,7 @@ struct ExportCoordinator {
         guard let window = origin.presentableWindow else { return }
         let document = origin.initialDocument
 
-        let baseName = document.fileURL?.deletingPathExtension().lastPathComponent ?? "Untitled"
+        let baseName = document.fileURL?.deletingPathExtension().lastPathComponent ?? String(localized: "Untitled")
         let directory = document.fileURL?.deletingLastPathComponent()
 
         guard let selection = await presentExportPanel(

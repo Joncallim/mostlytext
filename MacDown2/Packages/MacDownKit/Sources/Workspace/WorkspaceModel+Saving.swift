@@ -213,11 +213,10 @@ public extension WorkspaceModel {
         await publishSaveAs(expected, to: url, destinationBaseline: baseline, admission: admission)
     }
 
-    /// The filename `saveAs()`'s own panel prompt defaults to — exposed so
-    /// a caller presenting its own panel (via `saveAs(to:)`) can offer the
-    /// same default without duplicating the fallback-extension logic.
+    /// Default filename for `saveAs()` and for callers presenting their own panel.
     static func defaultSaveAsName(for document: FileDocument) -> String {
-        document.fileURL?.lastPathComponent ?? "Untitled.\(document.format.extensions.first ?? "md")"
+        let stem = String(localized: "Untitled", bundle: .module)
+        return document.fileURL?.lastPathComponent ?? "\(stem).\(document.format.extensions.first ?? "md")"
     }
 
     internal func saveInternalForClose() async {

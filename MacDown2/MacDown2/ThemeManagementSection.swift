@@ -8,7 +8,7 @@ struct ThemeManagementSection: View {
     @State private var importing = false
     @State private var exporting = false
     @State private var exportDocument: ThemeExportDocument?
-    @State private var exportName = "Theme"
+    @State private var exportName = String(localized: "Theme")
 
     private var selected: Theme {
         controller.available.first { $0.id == selectedID } ?? controller.current

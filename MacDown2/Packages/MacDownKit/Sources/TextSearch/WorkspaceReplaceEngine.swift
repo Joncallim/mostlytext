@@ -163,7 +163,8 @@ public actor WorkspaceReplaceEngine {
         case .encodingDetectionFailed, .textNotRepresentable: .skippedCannotRepresent
         case .fileMissing, .permissionDenied, .notRegularFile: .skippedUnreadable
         case let .conditionalPublicationRecoveryRequired(recovery):
-            .failed("An external change could not be restored; its bytes were kept at \(recovery.path)")
+            .failed(String(localized:
+                "An external change could not be restored; its bytes were kept at \(recovery.path)", bundle: .module))
         default: .failed(String(describing: error))
         }
     }
@@ -197,7 +198,7 @@ public actor WorkspaceReplaceEngine {
             .map { String(String.UnicodeScalarView($0)) }
         guard !components.isEmpty,
               !components.contains(where: { $0.isEmpty || $0 == "." || $0 == ".." })
-        else { return .failure(.failed("Invalid path")) }
+        else { return .failure(.failed(String(localized: "Invalid path", bundle: .module))) }
 
         var current = root
         for component in components {

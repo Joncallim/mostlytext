@@ -11079,6 +11079,35 @@
         }
       }
     },
+    "Untrusted folder move.": {
+      "comment": "Folder drag refusal. English review drafts in other locales require translation and native layout review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Untrusted folder move."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Untrusted folder move."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Untrusted folder move."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Untrusted folder move."
+          }
+        }
+      }
+    },
     "Update channels require fresh consent. No old feed, key or pre-release choice is imported.": {
       "extractionState": "manual",
       "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."

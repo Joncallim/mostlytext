@@ -24,7 +24,7 @@ extension WindowCoordinator {
         afterPresentation: (@MainActor (NSSavePanel) -> Void)? = nil
     ) -> Task<ExportResult?, Error>? {
         guard let document = controller.model.activeDocument else { return nil }
-        let defaultName = document.fileURL?.deletingPathExtension().lastPathComponent ?? "Untitled"
+        let defaultName = document.fileURL?.deletingPathExtension().lastPathComponent ?? String(localized: "Untitled")
         let directory = document.fileURL?.deletingLastPathComponent()
         return beginValidatedSVGExport(from: controller) { window in
             await ValidatedExportPanel.chooseTarget(
