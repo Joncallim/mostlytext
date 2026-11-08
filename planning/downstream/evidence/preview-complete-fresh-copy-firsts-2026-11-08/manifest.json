@@ -1,0 +1,287 @@
+{
+  "source": "6cad56275c1d9a71a9ee95daa066bd1fcae68965",
+  "complete_first_workflow_count": 14,
+  "whole_first_passed": 13,
+  "whole_first_failed": 1,
+  "records": [
+    {
+      "file": "01-42426662596-first-run.json.gz",
+      "original_name": "42426662596-first-run.json",
+      "bytes": 13001,
+      "sha256": "74174360c1df55376f356f5626e79c1bed4870c28ea41f7ab3635ff2e36214c6"
+    },
+    {
+      "file": "02-42426662600-first-run.json.gz",
+      "original_name": "42426662600-first-run.json",
+      "bytes": 13007,
+      "sha256": "f957de308aad871916e9e169710caec512612cd60cd614a986438c15162131d7"
+    },
+    {
+      "file": "03-42426662604-first-run.json.gz",
+      "original_name": "42426662604-first-run.json",
+      "bytes": 12987,
+      "sha256": "49d704fe019faa1fa1969147ce8c767a38f4263b1e788585201fa7a52d4423eb"
+    },
+    {
+      "file": "04-42426662630-first-run.json.gz",
+      "original_name": "42426662630-first-run.json",
+      "bytes": 12983,
+      "sha256": "e1befd50d60692b6e4abbab000315bfe988e348e294c0450f5186eae18c03e56"
+    },
+    {
+      "file": "05-42426662638-first-run.json.gz",
+      "original_name": "42426662638-first-run.json",
+      "bytes": 12998,
+      "sha256": "32a62246d14e76cb24d5cfba3d3608ce504086bc0d30a68d465120d163db8bb7"
+    },
+    {
+      "file": "06-42426662659-first-run.json.gz",
+      "original_name": "42426662659-first-run.json",
+      "bytes": 12937,
+      "sha256": "04f5f456ebc9e8ecf345effeef2ea996413a0a9734ddaa0f5abbe2db83833e81"
+    },
+    {
+      "file": "07-42426662676-first-run.json.gz",
+      "original_name": "42426662676-first-run.json",
+      "bytes": 12953,
+      "sha256": "ad64b3d659b4e82e6b4f0d9bdc38c695613c77384b0932299fcc37522246e4bd"
+    },
+    {
+      "file": "08-42426698984-first-run.json.gz",
+      "original_name": "42426698984-first-run.json",
+      "bytes": 12997,
+      "sha256": "5ffc6c3141e2fe4b0559ebcab1304edd2e19787162f91c8973edcbca920979b8"
+    },
+    {
+      "file": "09-42426752321-first-run.json.gz",
+      "original_name": "42426752321-first-run.json",
+      "bytes": 12978,
+      "sha256": "1eeb7b22a9fd0b5a4931e9122d92ef99ae8c1c9ff40fdfed88c441710e3ddb9d"
+    },
+    {
+      "file": "10-42426757285-first-run.json.gz",
+      "original_name": "42426757285-first-run.json",
+      "bytes": 12940,
+      "sha256": "71bc0042395f04940747469ae227d5c1f36fe155b1fb9f6ccd35efc419bd4ff9"
+    },
+    {
+      "file": "11-42426761823-first-run.json.gz",
+      "original_name": "42426761823-first-run.json",
+      "bytes": 12961,
+      "sha256": "16684c8d80b216f4eaa34adcd28b92d26733e06fbd93d800a4d77a383c792454"
+    },
+    {
+      "file": "12-42426766855-first-run.json.gz",
+      "original_name": "42426766855-first-run.json",
+      "bytes": 12970,
+      "sha256": "c96c64c4c10bf574426e9b58701d71877125bd9f33fe9c26e7391689eaefddc0"
+    },
+    {
+      "file": "13-42426771917-first-run.json.gz",
+      "original_name": "42426771917-first-run.json",
+      "bytes": 12975,
+      "sha256": "e569d5f9333b2018afa66e6eb6a091916c7666f7c3b7861019d7cb25cc639c77"
+    },
+    {
+      "file": "14-42426777406-first-run.json.gz",
+      "original_name": "42426777406-first-run.json",
+      "bytes": 12963,
+      "sha256": "5d5cdbef3db9f2bfe74e9eaf1cc6f57df663a6abbe791abe7e46b524d688dbea"
+    },
+    {
+      "file": "15-42426662596-first-artifacts.json.gz",
+      "original_name": "42426662596-first-artifacts.json",
+      "bytes": 4509,
+      "sha256": "6cb1ece569bd83a11966845be7a110ecef96475f218e813fc0ec26e3191819da"
+    },
+    {
+      "file": "16-42426662600-first-artifacts.json.gz",
+      "original_name": "42426662600-first-artifacts.json",
+      "bytes": 2261,
+      "sha256": "91f6a4532158b6b0133d13f11306ad0530904503fb99e5527edf6e91806ede8d"
+    },
+    {
+      "file": "17-42426662604-first-artifacts.json.gz",
+      "original_name": "42426662604-first-artifacts.json",
+      "bytes": 769,
+      "sha256": "83d7cd77a29a6dd84c5b6d6b6682552802f3d3f5707b167aa1a09e9a5c206ac1"
+    },
+    {
+      "file": "18-42426662630-first-artifacts.json.gz",
+      "original_name": "42426662630-first-artifacts.json",
+      "bytes": 759,
+      "sha256": "0293382d65b0dfc15c1a784358564996e8b468a8c944b18fb5a568ce04f9f1d8"
+    },
+    {
+      "file": "19-42426662638-first-artifacts.json.gz",
+      "original_name": "42426662638-first-artifacts.json",
+      "bytes": 1495,
+      "sha256": "4964109019a64d556a2c2db773d69288369bcdea7d7518d49133473368ee9e5a"
+    },
+    {
+      "file": "20-42426662659-first-artifacts.json.gz",
+      "original_name": "42426662659-first-artifacts.json",
+      "bytes": 771,
+      "sha256": "b2f98cbd4f458238f78310152286ae44a38388d1aa29d8aa3636bbd3832827db"
+    },
+    {
+      "file": "21-42426662676-first-artifacts.json.gz",
+      "original_name": "42426662676-first-artifacts.json",
+      "bytes": 32,
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    {
+      "file": "22-42426698984-first-artifacts.json.gz",
+      "original_name": "42426698984-first-artifacts.json",
+      "bytes": 7278,
+      "sha256": "451a3f095ec187753f1e64d6ba7ddd0702f60c32abc76b6e253f3c1df1198899"
+    },
+    {
+      "file": "23-42426752321-first-artifacts.json.gz",
+      "original_name": "42426752321-first-artifacts.json",
+      "bytes": 1489,
+      "sha256": "978519546e35380ca5cf59d58986e0cec7fa6f2f6a7120180482892c89a9f24a"
+    },
+    {
+      "file": "24-42426757285-first-artifacts.json.gz",
+      "original_name": "42426757285-first-artifacts.json",
+      "bytes": 1491,
+      "sha256": "60410eadb515ab2be0d08c0040652e0137d1c063669a64af1ba2012ab54632bb"
+    },
+    {
+      "file": "25-42426761823-first-artifacts.json.gz",
+      "original_name": "42426761823-first-artifacts.json",
+      "bytes": 765,
+      "sha256": "473dbd3d5c9ec28c35d64d39db13d1f41165714b70d3a8a882b0243c169743a9"
+    },
+    {
+      "file": "26-42426766855-first-artifacts.json.gz",
+      "original_name": "42426766855-first-artifacts.json",
+      "bytes": 1497,
+      "sha256": "e91c0a74bebdb19aadc0e7a558649f4e0131fbc69c144582f91d03e39222be5a"
+    },
+    {
+      "file": "27-42426771917-first-artifacts.json.gz",
+      "original_name": "42426771917-first-artifacts.json",
+      "bytes": 761,
+      "sha256": "f3100b905b248d071c24d8340718e7afa771e7327e07f53b2c175d79e7a3a3af"
+    },
+    {
+      "file": "28-42426777406-first-artifacts.json.gz",
+      "original_name": "42426777406-first-artifacts.json",
+      "bytes": 761,
+      "sha256": "527ba07d66ff52753a4a496c63e580a665d95ebf13d7b026d4d20f0d21af119c"
+    },
+    {
+      "file": "29-all-first-preview-actual-phase-summaries.json.gz",
+      "original_name": "all-first-preview-actual-phase-summaries.json",
+      "bytes": 5942,
+      "sha256": "481506a9c705354dcb6e98f7832caf5bc442ca6aaa79fcb82f877bd8bbe048f2"
+    },
+    {
+      "file": "30-verify-original38-first.py.gz",
+      "original_name": "verify-original38-first.py",
+      "bytes": 5670,
+      "sha256": "421369836249a15d583775aaecd198a4d7f2521a3b19739f2510adeb39611cdb"
+    },
+    {
+      "file": "31-original38-first-independently-verified.json.gz",
+      "original_name": "original38-first-independently-verified.json",
+      "bytes": 4035,
+      "sha256": "36fa5d07a769d36dbc2f85f59635f4b7dee60083b5767a41b4519c8a7648b8ec"
+    },
+    {
+      "file": "32-verify-fresh-copy-first-failure.py.gz",
+      "original_name": "verify-fresh-copy-first-failure.py",
+      "bytes": 9695,
+      "sha256": "1d52958b0978b878f75a0242ef42414b4187c11fb383b418f022635005078321"
+    }
+  ],
+  "all_complete_first_workflow_logZIPs_preserved_before_correction": [
+    {
+      "original_name": "42426662596-complete-first-workflow-logs.zip",
+      "bytes": 4807197,
+      "sha256": "63726fc6a2cb76623a23972a311b7d13c27168d4115ec839143bfe8c4bcfb229",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/preview-convergence-20261108/fresh-copy-6cad5627/42426662596-complete-first-workflow-logs.zip"
+    },
+    {
+      "original_name": "42426662600-complete-first-workflow-logs.zip",
+      "bytes": 2355982,
+      "sha256": "7b7a93d151d623c383f0480e348a0825232b3a0d89a74f098e09ad003cae73b1",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/preview-convergence-20261108/fresh-copy-6cad5627/42426662600-complete-first-workflow-logs.zip"
+    },
+    {
+      "original_name": "42426662604-complete-first-workflow-logs.zip",
+      "bytes": 1230623,
+      "sha256": "c8a8fee09ab72589330523bf84b37c8411fb67062c8725622fd8e7efb2c2ef39",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/preview-convergence-20261108/fresh-copy-6cad5627/42426662604-complete-first-workflow-logs.zip"
+    },
+    {
+      "original_name": "42426662630-complete-first-workflow-logs.zip",
+      "bytes": 564370,
+      "sha256": "8d98c68e84aa2ae9999d7d593e0ec917ee9d11f868fbee03633a76a913dd3585",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/preview-convergence-20261108/fresh-copy-6cad5627/42426662630-complete-first-workflow-logs.zip"
+    },
+    {
+      "original_name": "42426662638-complete-first-workflow-logs.zip",
+      "bytes": 2071517,
+      "sha256": "728ce8d5a82fda11d5e6e8e47b0d30453ddf783c10d13845cf8bedb09d6988ec",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/preview-convergence-20261108/fresh-copy-6cad5627/42426662638-complete-first-workflow-logs.zip"
+    },
+    {
+      "original_name": "42426662659-complete-first-workflow-logs.zip",
+      "bytes": 2674182,
+      "sha256": "59a77d6519d6240b6d6143138937a7b1f664e70734302482bf065e959ab66c0f",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/preview-convergence-20261108/fresh-copy-6cad5627/42426662659-complete-first-workflow-logs.zip"
+    },
+    {
+      "original_name": "42426662676-complete-first-workflow-logs.zip",
+      "bytes": 41754,
+      "sha256": "8bfa3517a043bd9ecd7d2602a87b68682a16307c020361a42c2eff124c0ff577",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/preview-convergence-20261108/fresh-copy-6cad5627/42426662676-complete-first-workflow-logs.zip"
+    },
+    {
+      "original_name": "42426698984-complete-first-workflow-logs.zip",
+      "bytes": 7467680,
+      "sha256": "3a1d9483c5d068def83a9bc26b31ecdfff9c55661a579f20a0b93e9046ce0a72",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/preview-convergence-20261108/fresh-copy-6cad5627/42426698984-complete-first-workflow-logs.zip"
+    },
+    {
+      "original_name": "42426752321-complete-first-workflow-logs.zip",
+      "bytes": 28772,
+      "sha256": "6c52b996720ea99a31126903226b8d1d4da56a8085d930c9cda18eac156380b6",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/preview-convergence-20261108/fresh-copy-6cad5627/42426752321-complete-first-workflow-logs.zip"
+    },
+    {
+      "original_name": "42426757285-complete-first-workflow-logs.zip",
+      "bytes": 78298,
+      "sha256": "b35c126dd595a1222bd49027f8989d481df05707e09addf655fa5a13ac29660f",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/preview-convergence-20261108/fresh-copy-6cad5627/42426757285-complete-first-workflow-logs.zip"
+    },
+    {
+      "original_name": "42426761823-complete-first-workflow-logs.zip",
+      "bytes": 36413,
+      "sha256": "5072b0570c279ae8fca510dcbcdadc040e4ba7853711ec64f6040000bb25161b",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/preview-convergence-20261108/fresh-copy-6cad5627/42426761823-complete-first-workflow-logs.zip"
+    },
+    {
+      "original_name": "42426766855-complete-first-workflow-logs.zip",
+      "bytes": 30479,
+      "sha256": "a6addd2c71fef1fe40c9bfc98573270e838f978dfaf6610021b0b79bf191642e",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/preview-convergence-20261108/fresh-copy-6cad5627/42426766855-complete-first-workflow-logs.zip"
+    },
+    {
+      "original_name": "42426771917-complete-first-workflow-logs.zip",
+      "bytes": 10938,
+      "sha256": "b65434f92ba164b3236941e27b0aac3e1657c375658a9ad9608c588a665ddc77",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/preview-convergence-20261108/fresh-copy-6cad5627/42426771917-complete-first-workflow-logs.zip"
+    },
+    {
+      "original_name": "42426777406-complete-first-workflow-logs.zip",
+      "bytes": 627904,
+      "sha256": "72dcc7327e0b09aaf3ae067fd5752a3b3ea1375bf95296288c5e376a93dce673",
+      "retained_location": "/Volumes/Fast SSD/CORTANA-Builds/preview-convergence-20261108/fresh-copy-6cad5627/42426777406-complete-first-workflow-logs.zip"
+    }
+  ],
+  "scope": "All complete original artifacts/raw results remain in the same retained first root; no source correction/retry changes original outcomes"
+}
