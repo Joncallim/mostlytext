@@ -102,3 +102,24 @@ source diff checks and tree compliance pass. The first Finder result, service
 launch/reply, actual compiled entitlements and signed-bundle contents remain
 **NOT_RUN / NOT_VERIFIED** until the guarded hosted execution. No conclusion
 about Quick Look's ability to connect to the service is drawn from source checks.
+
+## First hosted result and bounded evidence correction
+
+The first hosted run [42488148446](https://github.com/Joncallim/mostlytext/actions/runs/42488148446)
+at `e0f24f82e9409a0b5bc87ce3469f43eb8645df1f` failed before Finder registration
+or native UI execution. Its standalone fixture built and was ad-hoc signed, but
+`--seal-built` rejected the signed XPC service because its parsed entitlements
+were not exactly `{com.apple.security.app-sandbox: true}`. The script discarded
+that parsed value before raising, so the first artifact contains the source
+entitlement, build log and provider entitlement but not the service's actual
+signed entitlement. The whole first artifact ZIP, workflow logs and run status
+are retained at `/Volumes/Fast SSD/CORTANA-Builds/quicklook-xpc-feasibility-20261108/first-e0f24f82`.
+No XPC reachability or Finder result exists from this run.
+
+The next private diagnostic change writes the bounded raw `codesign --display`
+output and parsed signed-service entitlement to the already captured hosted
+artifact directory *before* retaining the same exact entitlement comparison.
+It adds no entitlement, permission, service behavior, product code, timeout or
+fallback. A new hosted run must disclose the actual mismatch before choosing
+any correction; an extra signed entitlement remains a failure. Preserve that
+run's complete first result before editing again.
