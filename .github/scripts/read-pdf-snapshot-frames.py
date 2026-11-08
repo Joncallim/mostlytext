@@ -70,7 +70,7 @@ def main():
     observed = json.loads((ROOT / 'snapshot-frame-observations.json').read_bytes())
     if (observed['diagnostic_only'] is not True or observed['qualification_candidate'] is not False
             or observed['input_sha256'] != INPUT_SHA
-            or [r['case'] for r in observed['completed_cases']] != ['original', 'paper', 'minimal']):
+            or [r['case'] for r in observed['completed_cases']] != ['original', 'paper', 'minimal', 'boundary-original', 'boundary-paper']):
         raise RuntimeError('Incomplete fixed native comparison')
     record['complete_comparison'] = True
     path.write_text(json.dumps(record, indent=2) + '\n')

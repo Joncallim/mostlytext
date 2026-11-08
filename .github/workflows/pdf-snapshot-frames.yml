@@ -1,4 +1,4 @@
-name: Diagnose native PDF snapshot canvas pagination
+name: Private PDF page-boundary layout review
 permissions:
   contents: read
 on:
@@ -36,7 +36,7 @@ jobs:
         run: |
           set -euo pipefail
           xcrun swiftc -parse-as-library -warnings-as-errors -swift-version 6 -strict-concurrency=complete .github/hosted-export-acceptance/ReadSnapshotFrames.swift MacDown2/MacDown2/PDFSnapshotFallback.swift -o "$RUNNER_TEMP/mostlytext-focus/read-snapshot-frames"
-      - name: Observe three fixed actual canvas heights once
+      - name: Observe original controls and two fixed page-boundary cases once
         run: python3 .github/scripts/read-pdf-snapshot-frames.py observe
       - uses: actions/upload-artifact@v4
         if: always()
@@ -47,6 +47,6 @@ jobs:
             ${{ runner.temp }}/mostlytext-focus/*.pdf
             ${{ runner.temp }}/mostlytext-focus/*.png
             ${{ runner.temp }}/mostlytext-focus/*.log
-            ${{ runner.temp }}/mostlytext-focus/original.html
+            ${{ runner.temp }}/mostlytext-focus/*.html
             ${{ runner.temp }}/mostlytext-focus/read-snapshot-frames
           if-no-files-found: error

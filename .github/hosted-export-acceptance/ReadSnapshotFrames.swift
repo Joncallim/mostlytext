@@ -46,8 +46,13 @@ struct ReadSnapshotFrames {
         let paperHeight = viewport.height
         guard paperHeight.isFinite, (1 ... 10000).contains(paperHeight) else { throw Failure.refused }
         var rows: [[String: Any]] = []
-        for (name, height) in [("original", CGFloat(1123)), ("paper", paperHeight), ("minimal", CGFloat(1))] {
-            try await rows.append(captureCase(name: name, height: height, info: info, html: lockedHTML, root: root))
+        for (name, height) in [
+            ("original", CGFloat(1123)), ("paper", paperHeight), ("minimal", CGFloat(1)),
+            ("boundary-original", CGFloat(1123)), ("boundary-paper", paperHeight),
+        ] {
+            try await rows.append(captureCase(
+                name: name, height: height, info: info, html: derivedHTML(lockedHTML, for: name), root: root
+            ))
             let result: [String: Any] = [
                 "diagnostic_only": true, "qualification_candidate": false,
                 "input_sha256": sha(input), "paper_size": [info.paperSize.width, info.paperSize.height],
@@ -60,6 +65,13 @@ struct ReadSnapshotFrames {
         }
     }
 
+    private static func derivedHTML(_ html: String, for name: String) -> String {
+        guard name.hasPrefix("boundary-") else { return html }
+        let paragraph = String(repeating: "BOUNDARY_REVIEW_CANARY ", count: 20)
+        let block = "<div style=\"height:700px\"><p>" + paragraph + "</p></div>"
+        return html.replacingOccurrences(of: "</body>", with: block + "</body>")
+    }
+
     private static func captureCase(
         name: String, height: CGFloat, info: NSPrintInfo, html: String, root: URL
     ) async throws -> [String: Any] {
@@ -70,6 +82,8 @@ struct ReadSnapshotFrames {
         let view = WKWebView(frame: CGRect(x: 0, y: 0, width: 794, height: height), configuration: configuration)
         let loader = SnapshotNavigation()
         view.navigationDelegate = loader
+        let htmlData = Data(html.utf8)
+        try htmlData.write(to: root.appendingPathComponent("\(name)-hardened.html"))
         try await loader.load(html, in: view)
         let snapshot: Data = try await withCheckedThrowingContinuation { continuation in
             view.createPDF(configuration: WKPDFConfiguration()) { continuation.resume(with: $0) }
@@ -84,7 +98,8 @@ struct ReadSnapshotFrames {
         let pages = try readOutput(data, name: name, root: root)
         let box = page.bounds(for: .mediaBox)
         let row: [String: Any] = [
-            "case": name, "view_height": height, "snapshot_sha256": sha(snapshot),
+            "case": name, "view_height": height, "hardened_html_sha256": sha(htmlData),
+            "hardened_html_bytes": htmlData.count, "snapshot_sha256": sha(snapshot),
             "snapshot_bytes": snapshot.count, "snapshot_media_box": [box.minX, box.minY, box.width, box.height],
             "paginated_sha256": sha(data), "paginated_bytes": data.count, "pages": pages,
         ]
