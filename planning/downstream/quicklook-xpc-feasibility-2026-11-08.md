@@ -116,7 +116,7 @@ signed entitlement. The whole first artifact ZIP, workflow logs and run status
 are retained at `/Volumes/Fast SSD/CORTANA-Builds/quicklook-xpc-feasibility-20261108/first-e0f24f82`.
 No XPC reachability or Finder result exists from this run.
 
-The next private diagnostic change writes the bounded raw `codesign --display`
+The next private diagnostic change writes the raw `codesign --display`
 output and parsed signed-service entitlement to the already captured hosted
 artifact directory *before* retaining the same exact entitlement comparison.
 It adds no entitlement, permission, service behavior, product code, timeout or
