@@ -172,7 +172,7 @@ enum PDFExportAdapter {
         // print progress panel, regardless of this flag. `run()` is still
         // synchronous; a separate whole-export progress and print-time policy
         // is required before the issue's user-facing criterion can close.
-        operation.showsProgressPanel = false
+        operation.showsProgressPanel = true
         // WebKit's print view is distinct from the WKWebView. Give it the
         // loaded view's geometry before AppKit starts pagination.
         guard let printView = operation.view else { throw PDFExportError.printOperationFailed }
