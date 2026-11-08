@@ -117,3 +117,22 @@ immediately before that same guard. Keep its refusal, source bytes, ranges,
 encodings, lifetimes and all equality predicates unchanged. This diagnostic
 revision must identify whether the assumption of error-free partial syntax is
 valid; revise this architecture explicitly before any policy correction.
+
+
+Phase diagnostics locate two actual original-runtime defects in the first UTF-8
+case: expansion retains `(inline)` while an independent fresh parse contains a
+code span; shrinking the previous valid full tree produces an ERROR node while
+the original fresh narrow parse is error-free. The driver then exits 2 at that
+incremental-error guard, so the other three cases have not yet executed. This is
+component failing-before evidence, not an observed app failure or performance fix.
+
+Retain both complete first console outcomes and exact driver binaries/sources.
+For complete four-case reporting, collect incremental error trees as failed
+semantic results instead of aborting at the first one. Fresh narrow and full
+reference parses must remain error-free; final success still requires complete
+ordered equality for every unchanged/expanded/shrunk tree, including error/missing
+flags and positions. Thus no incremental ERROR can pass. Keep every original
+fixture, range, encoding, lifetime and comparison predicate. This changes failure
+collection only and must produce an honest nonzero original-runtime outcome.
+Then compare the exact upstream guard on an isolated C-source copy; do not edit
+or publish the owned runtime until all actual before/after controls are proved.
