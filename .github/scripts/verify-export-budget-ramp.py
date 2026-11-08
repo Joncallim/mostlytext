@@ -149,7 +149,7 @@ def verify_case(root, name, row, source, app):
     command = identity.get('command', [])
     if (not command or command[0] != 'xcodebuild' or 'test-without-building' not in command
             or [part for part in command if part.startswith('-only-testing:')] !=
-            ['-only-testing:MacDown2Tests/ExportBudgetRampTests/selectedCase']
+            ['-only-testing:MacDown2Tests/ExportBudgetRampTests']
             or '-configuration' not in command or command[command.index('-configuration') + 1] != 'Release'
             or 'ENABLE_TESTABILITY=YES' not in command
             or not any(part.startswith('SWIFT_ACTIVE_COMPILATION_CONDITIONS=')

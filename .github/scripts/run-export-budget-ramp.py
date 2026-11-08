@@ -110,7 +110,7 @@ def command_for_case(name, root, app):
         '-destination', 'platform=macOS', '-derivedDataPath', str(Path(os.environ['RUNNER_TEMP']) / 'export-budget-ramp-app'),
         '-onlyUsePackageVersionsFromResolvedFile', '-parallel-testing-enabled', 'NO',
         '-resultBundlePath', str(result / 'test.xcresult'),
-        '-only-testing:MacDown2Tests/ExportBudgetRampTests/selectedCase', 'test-without-building',
+        '-only-testing:MacDown2Tests/ExportBudgetRampTests', 'test-without-building',
     ]
 
 
