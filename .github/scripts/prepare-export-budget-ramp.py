@@ -13,20 +13,27 @@ import zlib
 
 
 MIB = 1 << 20
+NEAR_FINAL_PNG_BYTES = (32 * MIB) - (8 << 10)
+FINAL_HTML_LIMIT = 256 * MIB
 SMALL_PNG = base64.b64decode(
     'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJ'
     'AAAADUlEQVR4nGP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg==')
 CASE_ORDER = (
     # Cover each budget family before approaching the riskier upper cases.
     'source8', 'single8', 'occ16384', 'repeat3', 'aggregate96', 'distinct128',
-    'source24', 'single24', 'repeat5', 'aggregate128',
+    'source24', 'single24', 'repeat5', 'repeatNearFinal', 'aggregate128',
     'source32', 'single32', 'occ65536',
     'distinct512', 'occ65537refusal', 'repeat6refusal',
     'aggregateOverRefusal', 'distinct513refusal',
 )
 ASSET_SIZES = {'small': len(SMALL_PNG), 'a8': 8 * MIB, 'a24': 24 * MIB,
-               **{f'{letter}32': 32 * MIB for letter in 'abcd'}, 'eSmall': len(SMALL_PNG) + 21,
+               **{f'{letter}32': 32 * MIB for letter in 'abcd'},
+               'near32': NEAR_FINAL_PNG_BYTES, 'eSmall': len(SMALL_PNG) + 21,
                **{f'count{index:03d}': len(SMALL_PNG) + 24 for index in range(513)}}
+
+
+def data_uri_bytes(payload_bytes):
+    return 4 * ((payload_bytes + 2) // 3) + len('data:image/png;base64,')
 
 
 def sha_file(path):
@@ -143,6 +150,12 @@ def case_definition(name):
         return {'mode': 'html', 'assets': {'pixel.png': 'small'},
                 'occurrences': count, 'refusal': count > 65536,
                 'refusal_kind': 'budget-exceeded' if count > 65536 else None}
+    if name == 'repeatNearFinal':
+        encoded = 5 * data_uri_bytes(32 * MIB) + data_uri_bytes(NEAR_FINAL_PNG_BYTES)
+        return {'mode': 'html', 'assets': {'pixel.png': 'a32', 'near.png': 'near32'},
+                'occurrences': 6, 'refusal': False, 'refusal_kind': None,
+                'estimated_data_uri_bytes': encoded,
+                'estimated_shell_headroom_bytes': FINAL_HTML_LIMIT - encoded}
     if name.startswith('repeat'):
         count = int(name[6])
         return {'mode': 'html', 'assets': {'pixel.png': 'a32'},
@@ -165,6 +178,20 @@ def case_definition(name):
     raise ValueError('Unknown fixed ramp case')
 
 
+def references_for_case(name, definition):
+    if name == 'repeatNearFinal':
+        return ['pixel.png'] * 5 + ['near.png']
+    if name.startswith(('single', 'occ', 'repeat')):
+        return [next(iter(definition['assets']))] * definition['occurrences']
+    return list(definition['assets'])
+
+
+def html_source(name, definition):
+    return '# Budget ramp\n\n' + ''.join(
+        f'![{index}]({filename})\n\n'
+        for index, filename in enumerate(references_for_case(name, definition), start=1))
+
+
 def create_fixtures(root):
     root.mkdir(parents=True, exist_ok=False)
     assets_root = root / 'assets'
@@ -175,7 +202,8 @@ def create_fixtures(root):
         if name.startswith('count'):
             make_distinct_png(path, int(name[5:]))
         else:
-            seed = 0 if name == 'small' else 5 if name == 'eSmall' else ord(name[0]) - ord('a') + 1
+            seed = 0 if name == 'small' else 5 if name == 'eSmall' else 4 if name == 'near32' \
+                else ord(name[0]) - ord('a') + 1
             make_png(path, size, seed)
         assert_png(path)
         assets[name] = {'bytes': size, 'sha256': sha_file(path)}
@@ -190,12 +218,7 @@ def create_fixtures(root):
         if definition['mode'] == 'source':
             write_source(source, definition['source_bytes'])
         else:
-            source.write_text('# Budget ramp\n\n' + ''.join(
-                f'![{index}]({filename})\n\n'
-                for index, filename in enumerate(
-                    [next(iter(definition['assets']))] * definition['occurrences']
-                    if name.startswith(('single', 'occ', 'repeat'))
-                    else definition['assets'], start=1)))
+            source.write_text(html_source(name, definition))
         for filename, key in definition['assets'].items():
             os.link(assets_root / (key + '.png'), folder / filename)
         definition['source_bytes'] = source.stat().st_size

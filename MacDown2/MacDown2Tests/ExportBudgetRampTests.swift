@@ -17,6 +17,7 @@
             "occ16384", "occ65536", "occ65537refusal", "repeat3", "repeat5",
             "repeat6refusal", "aggregate96", "aggregate128", "aggregateOverRefusal",
             "distinct128", "distinct512", "distinct513refusal",
+            "repeatNearFinal",
         ]
         private static let marker = Data("data:image/png;base64,".utf8)
 
@@ -160,10 +161,14 @@
                 let readbackSeconds = ProcessInfo.processInfo.systemUptime - start - exportSeconds
                 #expect(output.bytes > 0 && output.bytes <= (256 << 20))
                 #expect(output.occurrences == input.occurrences)
+                if input.name == "repeatNearFinal" {
+                    #expect(output.bytes >= (256 << 20) - (16 << 10))
+                }
                 try record(input, values: [
                     "case": input.name, "outcome": "published", "source_bytes": input.sourceBytes,
                     "resource_bytes": input.resourceBytes, "occurrences": input.occurrences,
                     "output_bytes": output.bytes, "output_sha256": output.sha256,
+                    "final_html_ceiling_margin_bytes": (256 << 20) - output.bytes,
                     "export_seconds": exportSeconds, "readback_seconds": readbackSeconds,
                     "app_peak_before_bytes": peakBefore, "app_peak_after_bytes": try peakResidentBytes(),
                 ])

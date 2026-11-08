@@ -107,6 +107,8 @@ def fixture_receipt(root, generator):
         folder = fixture / 'cases' / name
         source = folder / 'source.md'
         source_digest = digest(source)
+        if expected['mode'] == 'html' and source.read_text() != generator['html_source'](name, expected):
+            raise RuntimeError(name + ' authored image reference sequence changed')
         if (row.get('source_bytes') != source.stat().st_size
                 or row.get('source_sha256') != source_digest
                 or row.get('resource_bytes') != sum(manifest['assets'][key]['bytes']
@@ -188,6 +190,9 @@ def verify_case(root, name, row, source, app):
                 or not positive(result.get('readback_seconds'))
                 or (case / 'export.html').exists()):
             raise RuntimeError(name + ' published output failed independent digest inspection')
+        if (result.get('final_html_ceiling_margin_bytes') != (256 << 20) - result['output_bytes']
+                or name == 'repeatNearFinal' and result['output_bytes'] < (256 << 20) - (16 << 10)):
+            raise RuntimeError(name + ' final HTML size or near-cap boundary is inconsistent')
 
 
 def main():

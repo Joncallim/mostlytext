@@ -28,7 +28,7 @@ The low tier covers 8 MiB source, 8 MiB single PNG, 16,384 occurrences,
 three references to one 32 MiB PNG, three distinct 32 MiB PNGs, and 128
 distinct small PNGs. The
 middle tier covers 24 MiB source and single PNG, five repeated 32 MiB
-references, and four distinct 32 MiB PNGs. The upper tier reaches exactly
+references, a sixth distinct near-32 MiB PNG, and four distinct 32 MiB PNGs. The upper tier reaches exactly
 32 MiB source and single PNG, then 65,536 occurrences and 512 distinct
 resources. Four additional
 cases exercise the first excess URL slot (65,537), six repeated 32 MiB
@@ -36,6 +36,20 @@ resources that exceed the 256 MiB final HTML cap, and a fifth distinct
 resource after the 128 MiB aggregate cap, and a 513th distinct resource.
 The last two cases are unresolved resource policy refusals; the URL slot
 and final HTML excess cases are budget errors.
+
+The near-final HTML case has five 32 MiB references and one distinct
+`32 MiB - 8 KiB` PNG. Its six data URIs are exactly 268,424,672 bytes,
+leaving 10,784 bytes under the 256 MiB final HTML limit for the real HTML
+body, stylesheet and shell. The hosted result must retain at most 16 KiB
+of final-budget margin; its complete byte count and digest are measured,
+never inferred from this payload arithmetic. Six full 32 MiB references
+remain the over-limit refusal control.
+
+Using the current bundled Tomorrow Light CSS and the expected cmark image
+markup, the source-derived complete HTML estimate is **268,431,606 bytes**:
+268,424,672 encoded data-URI bytes plus 6,934 other bytes, leaving 3,850
+bytes below the cap. This estimate is not an assertion about actual cmark
+output; the hosted test records and independently hashes the complete file.
 
 The source-size cases are mostly whitespace after a short heading so the
 source gate is measured without also hitting the derived HTML gate. The PNGs
