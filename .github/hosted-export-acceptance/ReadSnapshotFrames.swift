@@ -42,8 +42,8 @@ struct ReadSnapshotFrames {
         let printableHeight = info.paperSize.height - info.topMargin - info.bottomMargin
         guard printableWidth.isFinite, printableHeight.isFinite,
               printableWidth > 0, printableHeight > 0 else { throw Failure.refused }
-        let scale = printableWidth / 794
-        let paperHeight = printableHeight / scale
+        guard let viewport = PDFSnapshotFallback.viewportSize(for: info) else { throw Failure.refused }
+        let paperHeight = viewport.height
         guard paperHeight.isFinite, (1 ... 10000).contains(paperHeight) else { throw Failure.refused }
         var rows: [[String: Any]] = []
         for (name, height) in [("original", CGFloat(1123)), ("paper", paperHeight), ("minimal", CGFloat(1))] {

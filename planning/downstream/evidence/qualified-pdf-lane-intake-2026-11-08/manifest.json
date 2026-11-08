@@ -1,0 +1,61 @@
+{
+  "source": "6cad56275c1d9a71a9ee95daa066bd1fcae68965",
+  "actual_checkout": "a0b06507e4a721ffb84c98c45824c21bf26849c7",
+  "scope": "Qualified original nine-function PDF lane only; not whole failed frozen preview candidate",
+  "records": [
+    {
+      "file": "01-42426662604-first-run.json.gz",
+      "original_name": "42426662604-first-run.json",
+      "bytes": 12987,
+      "sha256": "49d704fe019faa1fa1969147ce8c767a38f4263b1e788585201fa7a52d4423eb"
+    },
+    {
+      "file": "02-42426662604-complete-first-workflow-logs.zip.gz",
+      "original_name": "42426662604-complete-first-workflow-logs.zip",
+      "bytes": 1230623,
+      "sha256": "c8a8fee09ab72589330523bf84b37c8411fb67062c8725622fd8e7efb2c2ef39"
+    },
+    {
+      "file": "03-verify-pdf-first.py.gz",
+      "original_name": "verify-pdf-first.py",
+      "bytes": 2990,
+      "sha256": "4810c6c54ba6b559cc5ba96855a004bc29c1e62b96634e03f1cd3d33677162e1"
+    },
+    {
+      "file": "04-pdf-first-independently-verified.json.gz",
+      "original_name": "pdf-first-independently-verified.json",
+      "bytes": 794,
+      "sha256": "df7f9d03fa3e25e1f57210473c92ceaeb813918b0166478b5dd9ff85064b8b2d"
+    },
+    {
+      "file": "05-pdf-actual-independent-summary.json.gz",
+      "original_name": "pdf-actual-independent-summary.json",
+      "bytes": 969,
+      "sha256": "f6bbc93714ea3822085f0ef423d716a93c01bea8af65c7e255697b98a9c6829b"
+    },
+    {
+      "file": "06-receipt.json.gz",
+      "original_name": "receipt.json",
+      "bytes": 248492,
+      "sha256": "9ea2f513548a038d7399c67b3082277d241286ff58cd6bd5aeeb53247793e46f"
+    },
+    {
+      "file": "07-compiled-initial.json.gz",
+      "original_name": "compiled-initial.json",
+      "bytes": 1894,
+      "sha256": "38d2ebb744963a4f9fabd7796ba45207833d6e77d6b34290f57f1fa4c674a9d1"
+    },
+    {
+      "file": "08-status.json.gz",
+      "original_name": "status.json",
+      "bytes": 137,
+      "sha256": "94439cad8a4212e088b05d30f24bb43dcc0a4600319b26aef555b33ff3ce48c4"
+    },
+    {
+      "file": "09-identity.json.gz",
+      "original_name": "identity.json",
+      "bytes": 985,
+      "sha256": "9935a089b8e803184041ecd8d62063e92ae36357bcdffe1607730381b7efcb93"
+    }
+  ]
+}

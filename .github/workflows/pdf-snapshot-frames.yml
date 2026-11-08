@@ -9,6 +9,7 @@ on:
       - '.github/hosted-export-acceptance/ReadSnapshotFrames.swift'
       - '.github/scripts/read-pdf-snapshot-frames.py'
       - '.github/workflows/pdf-snapshot-frames.yml'
+      - 'MacDown2/MacDown2/PDFSnapshotFallback.swift'
 concurrency:
   group: pdf-snapshot-frames-${{ github.ref }}
   cancel-in-progress: false

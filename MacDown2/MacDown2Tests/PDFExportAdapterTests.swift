@@ -8,31 +8,30 @@ import PDFKit
 import Testing
 import Themes
 
-/// Real evidence for E12's long-disclosed PDF-pagination gap (closed as part
-/// of the feature-complete gate, `RELEASE_EVIDENCE.md`): `PDFExportAdapter`
+/// Genuine controls for E12's outstanding PDF-pagination gap (`RELEASE_EVIDENCE.md`):
+/// `PDFExportAdapter`
 /// had real print-CSS pagination rules (`ExportStylesheetTests` already
 /// confirmed the CSS text itself contains `page-break-inside: avoid`) but no
 /// automated coverage of the actual, real print pipeline — this drives the
 /// genuine `WKWebView` → `NSPrintOperation` → `PDFKit` path end to end, not a
 /// mock of any piece of it.
 ///
-/// **Disabled by default** (see each test's `.disabled` reason): confirmed,
-/// via two full real runs in this session's environment, that
-/// `NSPrintOperation`'s child `WKWebView`/`WebContent` process cannot obtain
-/// several OS services it needs (`launchservicesd`, `coreservicesd`,
-/// RunningBoard process assertions) when hosted inside an `xcodebuild
-/// test`-driven `MacDown2Tests` run specifically — the same class of
-/// "needs a real interactive GUI session this environment doesn't provide"
-/// limitation `.github/workflows/ci.yml` already documents for
-/// `MacDown2UITests`, not a defect in `PDFExportAdapter` itself. One run hung
-/// for ~3328 seconds before the whole suite failed; a second, after clearing
-/// stale daemons, failed cleanly but fast once the same service connections
-/// were refused. Leaving these enabled by default risked hanging any future
-/// full `MacDown2Tests` run (including CI) for the better part of an hour.
-/// Run manually (temporarily remove `.disabled`) on a machine with a real,
-/// interactive GUI login session to get genuine execution evidence.
+/// The two real print-operation tests remain disabled in ordinary runs because
+/// historical local test hosts lacked required OS services and could hang.
+/// `PDF_PAGINATION_PROBE` enables them only for the dedicated hosted macOS 26
+/// qualification, whose owned executor bounds the run and retains diagnostics.
+/// Compile-only and vector-fallback tests do not replace that execution evidence.
+@Suite(.serialized)
 @MainActor
 struct PDFExportAdapterTests {
+    private nonisolated static var nativePaginationEnabled: Bool {
+        #if PDF_PAGINATION_PROBE
+            true
+        #else
+            false
+        #endif
+    }
+
     @Test func vectorSnapshotIsPaginatedWithoutLosingSelectableText() throws {
         let source = try makeTallTextPDF()
         let output = FileManager.default.temporaryDirectory
@@ -123,6 +122,8 @@ struct PDFExportAdapterTests {
         #expect(scratch.pathExtension == "pdf")
         #expect(info.jobDisposition == .save)
         #expect(info.dictionary()[NSPrintInfo.AttributeKey.jobSavingURL] as? URL == scratch)
+
+        PDFViewportChecks.verify(info: info)
 
         let operation = NSPrintOperation(
             view: NSView(frame: NSRect(x: 0, y: 0, width: 100, height: 100)),
@@ -258,10 +259,7 @@ struct PDFExportAdapterTests {
         return text
     }
 
-    @Test(.disabled("""
-    needs a real interactive GUI session for NSPrintOperation's WKWebView child process to reach \
-    launchservicesd/coreservicesd/RunningBoard — confirmed hanging/failing here, see the type's doc comment
-    """))
+    @Test(.enabled(if: Self.nativePaginationEnabled, "requires the bounded hosted PDF pagination qualification"))
     func exportingALongDocumentProducesARealMultiPagePDF() async throws {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent("PDFExportAdapterTests-\(UUID().uuidString)", isDirectory: true)
@@ -290,11 +288,7 @@ struct PDFExportAdapterTests {
         #expect(allText.contains("func section25"))
     }
 
-    @Test(
-        .disabled(
-            "same environment limitation as exportingALongDocumentProducesARealMultiPagePDF above"
-        )
-    )
+    @Test(.enabled(if: Self.nativePaginationEnabled, "requires the bounded hosted PDF pagination qualification"))
     func exportedPDFReplacesAnyExistingFileAtomically() async throws {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent("PDFExportAdapterTests-\(UUID().uuidString)", isDirectory: true)
@@ -315,6 +309,31 @@ struct PDFExportAdapterTests {
         try await PDFExportAdapter.export(prepared, to: pdfURL)
 
         let data = try Data(contentsOf: pdfURL)
-        #expect(PDFDocument(data: data) != nil, "the stale placeholder file must be replaced with a real PDF")
+        let document = try #require(PDFDocument(data: data), "the stale placeholder must be replaced with a real PDF")
+        #expect(document.pageCount == 1, "unused viewport height must not append a blank page")
+        #expect(document.string?.contains("Just one short document.") == true)
+    }
+}
+
+@MainActor
+private enum PDFViewportChecks {
+    static func verify(info: NSPrintInfo) {
+        for (width, height, expected) in [(100.0, 100.0, 794.0), (200, 100, 397), (100, 200, 1588)] {
+            #expect(PDFSnapshotFallback.viewportSize(printableWidth: width, printableHeight: height)
+                == NSSize(width: 794, height: expected))
+        }
+        for invalid in [CGFloat.zero, -1, .nan, .infinity, -.infinity] {
+            #expect(PDFSnapshotFallback.viewportSize(printableWidth: invalid, printableHeight: 100) == nil)
+            #expect(PDFSnapshotFallback.viewportSize(printableWidth: 100, printableHeight: invalid) == nil)
+        }
+        #expect(PDFSnapshotFallback.viewportSize(printableWidth: 1, printableHeight: .greatestFiniteMagnitude) == nil)
+        #expect(PDFSnapshotFallback.viewportSize(printableWidth: 10000, printableHeight: 1) == nil)
+        let expectedHeight = floor((info.paperSize.height - info.topMargin - info.bottomMargin) * 794
+            / (info.paperSize.width - info.leftMargin - info.rightMargin))
+        #expect(PDFSnapshotFallback.viewportSize(for: info) == NSSize(width: 794, height: expectedHeight))
+        let unusable = NSPrintInfo()
+        unusable.leftMargin = unusable.paperSize.width
+        unusable.rightMargin = unusable.paperSize.width
+        #expect(PDFSnapshotFallback.viewportSize(for: unusable) == nil)
     }
 }
