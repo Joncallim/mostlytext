@@ -138,3 +138,30 @@ on guarded GHA; local source/typecheck and pure hostile frame controls. Preserve
 all complete firsts and inspect actual error before selecting a remedy. No
 unchanged retry, test waiver, private API or broadened privilege. This diagnosis
 can pass extraction while the whole original native spike remains FAILED.
+
+## Actual precise first outcome and recorder correction
+
+Complete native42432445955FAIL / Compliance42432446029PASS at00cc5af3 are
+retained before correction. Independent reader verifies all26canonical/19generated/
+71downloaded compiled inputs, original2PASS/worker1FAIL, actual child signature,
+all raw live-stream nonce/snapshot generations and exact three complete chunks.
+Decoded NSError is NSCocoaErrorDomain4, file does not exist, no underlying error.
+Actual worker0755/read_access0/read_errno0 but execute_access-1/errno1 (EPERM);
+current/default Process directory is the actual provider container Data. The
+actual worker bytes match the built signature/hash. Execution access is refused
+for this exact embedded file. No child/held deadline admitted; precise OS policy
+source or impossibility of every supported process/XPC design is not proven.
+
+The independent decoder recovers all actual error facts without rerunning native
+work. However, worker-spawn-errors.json was not written: the driver records its
+expected RuntimeError('First actual Finder UI execution failed: 65') in errors,
+and the refactored recorder still rejects every driver error. Correct that
+recorder boundary only: admit this exact driver exception solely when UI status
+is65 and actual owned status65, no timeout/cancellation/app cleanup, and exact
+owned checkout. Reject unknown driver errors, any observer error, other statuses
+or missing owned evidence. Full UI success still requires status0 and errors[],
+so the whole spike stays failed. Model this actual exception in the pure control,
+with unknown-error/owned-timeout and changed-checkout negatives. No permissions,
+launch operation, worker/test assertions, limits or observer/executor changes.
+The direct Process route is not admitted for production; selecting a different
+public process architecture needs its own written decision and real Finder proof.
