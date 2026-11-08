@@ -202,3 +202,30 @@ existing strict function-length rule without disabling a warning or moving an
 assertion. Source comparison removes only the new imports/markers and normalizes
 that equivalent literal representation, then reproduces both original test files
 byte for byte. Every original assertion/control/cleanup statement is retained.
+
+## Compile-only failure of the first minimal-layer comparison
+
+Complete native first42446874718 at source b752b5c0 failed all three variants
+before any native function ran. Compliance42446879983 passed. Every original
+first/log/artifact is retained and all296original297effective files, five exact
+transforms and actual source/pins per variant are independently verified in
+[evidence](evidence/renderer-minimal-layer-compile-firsts-2026-11-08/manifest.json).
+The original, inline-only and fragment-only test builds all refuse the joined
+string expression at ProductionPreviewResourceRoutingTests.swift:152. Swift
+Testing's Issue.record consumes its typed Comment literal; joining ordinary
+strings is not equivalent typechecking. The previous implementation note describes
+intended text preservation, not successful compilation or native execution.
+There is no renderer-outcome or failure-checkpoint evidence from this first.
+
+Restore the exact original multiline Issue.record expression. Keep the failure
+marker before it, and regroup only the unchanged bitmap initializer's named
+arguments onto two formatted lines instead of three to meet strict function
+length. This changes no parameter token, value, call, assertion, deadline or
+cleanup. Normalize that one initializer's whitespace and remove only diagnostic
+imports/markers to reproduce both original test files exactly. Before publishing,
+SDK-typecheck the exact restored Swift Testing literal overload, retain the old
+joined-expression typecheck refusal as a negative control, and require strict
+format/lint/syntax plus original seven transform and all diagnostic ownership
+controls. Then freeze a new source and obtain complete three-variant native and
+Compliance firsts. The selected renderer layer files and all comparison policies
+remain unchanged. Do not retry the unchanged failed source or weaken a warning.

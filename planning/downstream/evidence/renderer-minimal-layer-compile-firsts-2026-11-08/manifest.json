@@ -1,0 +1,50 @@
+{
+  "source": "b752b5c08ff54b25cc184164411d91fe6da3fe1e",
+  "native_run": 42446874718,
+  "compliance_run": 42446879983,
+  "whole_native_first": "failure",
+  "all_three_native_functions_executed": 0,
+  "original_evidence_root": "/Volumes/Fast SSD/CORTANA-Builds/preview-renderer-stages-20261108/first-b752b5c0",
+  "whole_log_archive_sha256": {
+    "compliance-complete-first-workflow-logs.zip": "744e5edafa26c7cef2d373f9b6d91396984aef4f70c0c45bdf666f5190b84f42",
+    "native-complete-first-workflow-logs.zip": "054f5c49b8d5633efa1091d4d593157fdebac7a30074ba465a587c9b4d19b2ef"
+  },
+  "records": [
+    {
+      "file": "00-all-three-compile-firsts-independently-verified.json.gz",
+      "original_path": "all-three-compile-firsts-independently-verified.json",
+      "bytes": 2762,
+      "sha256": "999bb8973615a9c500d11c173c02f17562721c187d43e65a794e3f6c48a6bf61"
+    },
+    {
+      "file": "01-verify-all-three-compile-failures.py.gz",
+      "original_path": "verify-all-three-compile-failures.py",
+      "bytes": 6014,
+      "sha256": "072a12362acc14c5828ddb601c69edb3ab3a0fc2c930a1cd4ae1272174e020fa"
+    },
+    {
+      "file": "02-native-first-run.json.gz",
+      "original_path": "native-first-run.json",
+      "bytes": 12514,
+      "sha256": "b266e0ed75fa6d3d4bd07b04e789053c83d92ceee69d89889ae7171bd71dd057"
+    },
+    {
+      "file": "03-native-first-artifacts.json.gz",
+      "original_path": "native-first-artifacts.json",
+      "bytes": 2322,
+      "sha256": "b471bfc856517ab5f66017666d8ed292aa3fc77b05628557fa3b9a4017fa0c71"
+    },
+    {
+      "file": "04-compliance-first-run.json.gz",
+      "original_path": "compliance-first-run.json",
+      "bytes": 12422,
+      "sha256": "395d7fc47972ffa6784df2e57206d2768bd9e809c615d2f9450e2f906d8066ad"
+    },
+    {
+      "file": "05-compliance-first-artifacts.json.gz",
+      "original_path": "compliance-first-artifacts.json",
+      "bytes": 32,
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    }
+  ]
+}
