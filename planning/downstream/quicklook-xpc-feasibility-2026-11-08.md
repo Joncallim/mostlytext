@@ -9,7 +9,7 @@ whether the same Finder-hosted provider can instead request one fixed response
 from a system-launched XPC service bundled with the containing fixture app.
 Nothing in this experiment renders a user document or changes the product.
 
-Current main is `a46c57c4b62376b67492cf67421a4961fdf55c1c`. PR #152's
+The design baseline was main `a46c57c4b62376b67492cf67421a4961fdf55c1c`. PR #152's
 actual first failure at run 42433239533 is `NSCocoaErrorDomain` code 4,
 `access(X_OK) == -1`, `errno == EPERM` for the mode-0755 embedded helper.
 The original cold static and JavaScriptCore Finder cases passed; neither worker
@@ -36,7 +36,9 @@ user-selected-read-only entitlements. No document path, bookmark, file bytes,
 script, engine, executable name or environment reaches the service. The provider
 sends one fixed `ping` message with a positive request ID. The service replies
 with a fixed marker, that request ID, its real process ID and current entitlement
-facts. Both sides reject missing, duplicate, unknown or oversized fields. The
+facts. The service refuses nonpositive or repeated IDs per connection. The
+provider admits only a matching ID, fixed marker, distinct process and sandbox
+result; the interface has no variable-size document or script field. The
 provider records whether connection/launch and reply succeeded, and returns a
 frozen fixture-only HTML marker only on a verified response.
 
