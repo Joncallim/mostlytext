@@ -1,0 +1,82 @@
+# Test whether Quick Look can reach a bundled XPC service
+
+## Owner summary and baseline
+
+The real Finder provider can read its selected file, but its attempt to run a
+signed embedded command-line helper is refused before the helper starts. PR #152
+retains the complete failed run and remains draft. This private experiment asks
+whether the same Finder-hosted provider can instead request one fixed response
+from a system-launched XPC service bundled with the containing fixture app.
+Nothing in this experiment renders a user document or changes the product.
+
+Current main is `a46c57c4b62376b67492cf67421a4961fdf55c1c`. PR #152's
+actual first failure at run 42433239533 is `NSCocoaErrorDomain` code 4,
+`access(X_OK) == -1`, `errno == EPERM` for the mode-0755 embedded helper.
+The original cold static and JavaScriptCore Finder cases passed; neither worker
+case reached a child. The failed result is not reclassified as a service result.
+
+Apple documents bundled XPC services at `Contents/XPCServices`, started by
+`launchd`, with connections by service bundle identifier. Its older guide also
+says a private bundled service is available to its containing application. The
+documentation does **not** establish that a Quick Look app extension hosted by
+Finder can connect to that service. That compatibility question is the reason
+for this spike, not a premise of production design. Sources:
+
+- <https://developer.apple.com/documentation/xpc/creating-xpc-services>
+- <https://developer.apple.com/documentation/bundleresources/placing-content-in-a-bundle>
+- <https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingXPCServices.html>
+
+## Fixed interface and trust boundary
+
+Use only the existing private `.github/quicklook-jsc-probe` fixture. Add one
+service bundle to the containing app at the standard XPCServices location, with
+its own sandbox and no file, network, app-group, global Mach lookup, temporary
+exception, JIT or debugging entitlement. Keep the provider's exact sandbox and
+user-selected-read-only entitlements. No document path, bookmark, file bytes,
+script, engine, executable name or environment reaches the service. The provider
+sends one fixed `ping` message with a positive request ID. The service replies
+with a fixed marker, that request ID, its real process ID and current entitlement
+facts. Both sides reject missing, duplicate, unknown or oversized fields. The
+provider records whether connection/launch and reply succeeded, and returns a
+frozen fixture-only HTML marker only on a verified response.
+
+The connection is a public, ordinary bundled-service API. Do not add a Mach
+service registration, app group or permission if the extension cannot connect.
+Do not use the app container as a relay or launch it in the background. A failed
+lookup/launch under unchanged authority is an answer to this question.
+
+## Execution and failure policy
+
+Run only on a disposable hosted macOS 26 ARM runner with the existing owned
+Finder executor. Preserve original cold/static and JavaScriptCore source and
+tests byte for byte. Add a third fixed fixture and actual Finder test, with a
+separate manual diagnostic workflow selecting only the XPC case after compiling
+the unchanged original controls. Capture all source and generated inputs, every
+regular file in the actual signed app/provider/service/test bundles, exact
+entitlements, full native result, provider/service logs and first workflow
+artifact before any correction. The original no-container-launch check remains.
+The existing execution hold forbids local app, helper, XPC, JavaScriptCore,
+Xcode product or SwiftPM runtime. Local work is limited to source review, C/Swift
+syntax and SDK type checking, pure source controls and compliance.
+
+A connection error, timeout, service crash, wrong process/identity, unexpected
+entitlement or changed original case fails the spike; it is never converted to
+a skip or a successful fallback. One harmless successful ping proves only that
+the service can be reached from this provider under the tested host. It does not
+prove independent hard deadlines, service termination, memory budgets, renderer
+containment, untrusted-input admission, final signing or release acceptance.
+Those require a separate architecture and physical-retirement proof.
+
+## Slices and stop conditions
+
+1. Commit this architecture before any service or provider implementation.
+2. Add the fixed service, connection and single Finder control in this isolated
+   branch. Check source inventories, standard bundle placement, compiled
+   entitlements, original-case preservation and pure outcome parsers.
+3. Publish and dispatch only after independent source review and the guarded
+   hosted workflow are ready. Preserve the first complete result before change.
+4. If the actual Finder extension cannot connect, record the precise refusal
+   and stop. PR #152 stays draft; neither issue #7 nor #8 closes on this spike.
+
+This is an engineering feasibility slice for issue #7. It has no user-visible
+string, accessibility, localization, export or document-format change.
