@@ -44,7 +44,7 @@ def hold_example():
     host_samples = [
         {'index': index, 'uptime': round(21.1 + index * 0.1, 2),
          'check_uptime': round(21.12 + index * 0.1, 2),
-         'service': 'expected' if index < 21 else 'absent', 'provider': 'expected'}
+         'service': 'expected' if index < 38 else 'absent', 'provider': 'expected'}
         for index in range(51)
     ]
     host = {'kind': 'mostlytext-qlxpc-host-process', 'checkout': 'fixture',
@@ -69,6 +69,7 @@ def hold_example():
     }
     messages = [
         'QL_XPC_HOLD begin id=4 provider=111 start=20.0',
+        'QL_XPC_HOLD service-watchdog-armed id=4 pid=222 at=20.8 deadline=24.8',
         'QL_XPC_HOLD service-ready id=4 pid=222 sandbox=1',
         'QL_XPC_HOLD service-hold-start id=4 pid=222 at=20.9',
         'QL_XPC_HOLD admitted id=4 provider=111 service=222 ready=21.0',
@@ -100,8 +101,13 @@ class XPCObservationTests(unittest.TestCase):
         ):
             with self.assertRaises(RuntimeError):
                 PREP.validate_xpc_hold_observation(changed, messages, host)
-        for bad_messages in (messages[:2] + messages[3:], messages + messages[2:3],
-                             messages[:1] + ['QL_XPC_HOLD service-ready id=4 pid=333 sandbox=1'] + messages[2:]):
+        for bad_messages in (messages[:1] + messages[2:], messages + messages[1:2],
+                             messages[:2] + messages[3:], messages + messages[2:3],
+                             messages[:1] + ['QL_XPC_HOLD service-watchdog-armed id=4 pid=333 at=20.8 deadline=24.8']
+                             + messages[2:],
+                             messages[:1] + ['QL_XPC_HOLD service-watchdog-armed id=4 pid=222 at=20.8 deadline=27.8']
+                             + messages[2:],
+                             messages + ['QL_XPC_HOLD service-released id=4 pid=222']):
             with self.assertRaises(RuntimeError):
                 PREP.validate_xpc_hold_observation(row, bad_messages, host)
         late_hold = dict(row, hold_started_uptime=23.1)
@@ -134,6 +140,13 @@ class XPCObservationTests(unittest.TestCase):
         late_absence = dict(row, samples=late_rows)
         with self.assertRaisesRegex(RuntimeError, 'service_departed_by_deadline'):
             PREP.validate_xpc_hold_observation(late_absence, messages, late_host)
+        early_samples = [dict(sample, service='expected' if sample['index'] < 24 else 'absent')
+                         for sample in host['samples']]
+        early_host = dict(host, samples=early_samples)
+        early_rows = [dict(sample, service=early_samples[sample['host_sample_index']]['service'])
+                      for sample in row['samples']]
+        with self.assertRaisesRegex(RuntimeError, 'watchdog window'):
+            PREP.validate_xpc_hold_observation(dict(row, samples=early_rows), messages, early_host)
 
     def test_hold_fixture_keeps_fixed_request_no_new_authority_and_independent_observer(self):
         provider = (FIXTURE / 'Provider/XPCCapability.swift').read_text()
@@ -142,6 +155,9 @@ class XPCObservationTests(unittest.TestCase):
         self.assertIn('guard requestID > 0', provider)
         self.assertIn('guard id > 0, first', service)
         self.assertIn('Thread.sleep(forTimeInterval: 10)', service)
+        self.assertIn('holdAdmission.claim()', service)
+        self.assertIn('Darwin._exit(124)', service)
+        self.assertIn('service-watchdog-armed', service)
         self.assertLess(service.index('ready("MOSTLYTEXT_QL_XPC_HOLD_READY"'),
                         service.index('QL_XPC_HOLD service-hold-start'))
         self.assertLess(service.index('QL_XPC_HOLD service-hold-start'),

@@ -9,7 +9,7 @@ import XCTest
 final class ZXPCFinderHoldTests: XCTestCase {
     private let root = "/Users/runner/work/_temp/mostlytext-qljsc"
 
-    func testZFixedHoldRetiresAfterProviderInvalidation() throws {
+    func testZFixedHoldSelfRetiresAfterProviderInvalidation() throws {
         continueAfterFailure = false
         let account = try XCTUnwrap(getpwuid(getuid()))
         XCTAssertEqual(getuid(), 501)
@@ -120,7 +120,7 @@ final class ZXPCFinderHoldTests: XCTestCase {
         XCTAssertTrue(serviceIdentityValid, "Observer must see only the exact service PID and executable")
         XCTAssertTrue(providerRemained, "The same provider process must remain alive throughout monitoring")
         XCTAssertTrue(windowStayedOpen, "Finder must be open before invalidation and survive through monitoring")
-        XCTAssertTrue(serviceDepartedByDeadline, "Invalidation must retire the exact held service PID within 3 seconds")
+        XCTAssertTrue(serviceDepartedByDeadline, "The service watchdog must retire the exact held PID within 3 seconds")
     }
 
     private struct HoldEvidence {
@@ -188,9 +188,23 @@ final class ZXPCFinderHoldTests: XCTestCase {
             || Double(row[3]).map({ $0 < ready || $0 <= (holdStarted ?? .infinity) }) != false) {
             throw NSError(domain: "MostlyTextXPCHold", code: 6)
         }
-        return HoldEvidence(id: request, provider: provider, service: service, started: begun,
-                            holdStarted: holdStarted ?? 0, ready: ready,
-                            invalidated: invalidations.first.flatMap { Double($0[3]) } ?? 0)
+        let evidence = HoldEvidence(id: request, provider: provider, service: service, started: begun,
+                                    holdStarted: holdStarted ?? 0, ready: ready,
+                                    invalidated: invalidations.first.flatMap { Double($0[3]) } ?? 0)
+        try requireWatchdogArm(messages, against: evidence, required: invalidationRequired)
+        return evidence
+    }
+
+    private func requireWatchdogArm(_ messages: [String], against evidence: HoldEvidence, required: Bool) throws {
+        guard required else { return }
+        let arms = messages.compactMap {
+            fields($0, #"^QL_XPC_HOLD service-watchdog-armed id=(\d+) pid=(\d+) at=([0-9.]+) deadline=([0-9.]+)$"#)
+        }
+        guard arms.count == 1, Int(arms[0][0]) == evidence.id, Int32(arms[0][1]) == evidence.service,
+              let armedAt = Double(arms[0][2]), let deadline = Double(arms[0][3]),
+              armedAt >= evidence.started, armedAt <= evidence.ready, armedAt <= evidence.holdStarted,
+              (3.9...4.1).contains(deadline - armedAt)
+        else { throw NSError(domain: "MostlyTextXPCHold", code: 11) }
     }
 
     private func fields(_ text: String, _ pattern: String) -> [String]? {

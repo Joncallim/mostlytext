@@ -291,6 +291,20 @@ def validate_xpc_hold_observation(observed, messages, host):
     hold_started = observed['hold_started_uptime']
     ready = observed['ready_uptime']
     invalidated = observed['invalidated_uptime']
+    arm_pattern = r'QL_XPC_HOLD service-watchdog-armed id=(\d+) pid=(\d+) at=([0-9.]+) deadline=([0-9.]+)'
+    armed_rows = [re.fullmatch(arm_pattern, message) for message in messages
+                  if message.startswith('QL_XPC_HOLD service-watchdog-armed')]
+    if len(armed_rows) != 1 or armed_rows[0] is None:
+        raise RuntimeError('Missing or duplicate service watchdog arm record')
+    if any(message.startswith('QL_XPC_HOLD service-released') for message in messages):
+        raise RuntimeError('Held service returned before its independent watchdog exit')
+    armed_id, armed_pid, armed_at, watchdog_deadline = map(float, armed_rows[0].groups())
+    if (armed_id != request or armed_pid != service or not math.isfinite(armed_at)
+            or not math.isfinite(watchdog_deadline)
+            or not started <= armed_at <= min(ready, hold_started)
+            or not 3.9 <= watchdog_deadline - armed_at <= 4.1
+            or not invalidated < watchdog_deadline <= invalidated + 3):
+        raise RuntimeError('Service watchdog ownership or four-second deadline differs')
     if not (0 < started <= hold_started < invalidated and started <= ready < invalidated
             and 1.8 <= invalidated - ready <= 2.5):
         raise RuntimeError('Provider invalidation did not follow the independent two-second timer')
@@ -299,6 +313,7 @@ def validate_xpc_hold_observation(observed, messages, host):
          (request, provider, started)),
         (r'QL_XPC_HOLD service-ready id=(\d+) pid=(\d+) sandbox=(\d+)',
          (request, service, 1)),
+        (arm_pattern, (request, service, armed_at, watchdog_deadline)),
         (r'QL_XPC_HOLD service-hold-start id=(\d+) pid=(\d+) at=([0-9.]+)',
          (request, service, hold_started)),
         (r'QL_XPC_HOLD admitted id=(\d+) provider=(\d+) service=(\d+) ready=([0-9.]+)',
@@ -387,6 +402,8 @@ def validate_xpc_hold_observation(observed, messages, host):
             raise RuntimeError('XPC hold UI summary does not match independent lifecycle samples: ' + key)
     if not (departed and provider_remained and window_remained):
         raise RuntimeError('XPC hold did not retire the exact service PID while provider and Finder survived')
+    if not watchdog_deadline - 0.25 <= first_absent['uptime'] <= watchdog_deadline + 0.75:
+        raise RuntimeError('Exact service departure does not match the self-retirement watchdog window')
 
 
 def capture_compiled(root):
@@ -695,7 +712,7 @@ def main():
         record['xpc_reachability_observation'] = xpc[0]
         record['xpc_hold_lifecycle_observation'] = hold[0]
         record['actual_ui_summary'] = summary
-        record['scope'] = 'Actual fixed JavaScriptCore and XPC service reachability plus held-service invalidation; no engine deadline/fallback, exit reason, new authority, production or full QL-REPLY acceptance'
+        record['scope'] = 'Actual fixed JavaScriptCore/XPC reachability and held-service self-retirement deadline; no arbitrary engine, concurrent isolation, exit-reason classification, new authority, production or full QL-REPLY acceptance'
         receipt_path.write_text(json.dumps(record, indent=2) + "\n")
         validate_xpc_hold_observation(hold[0], messages, host_process)
         if any(type(summary.get(k)) is not int or summary[k] != v for k, v in expected.items()):
