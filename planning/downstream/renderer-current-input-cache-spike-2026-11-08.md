@@ -118,3 +118,78 @@ It cannot establish the original OS/event cause, whole issue13or15closure,
 owner-account acceptance, signing or release readiness. If the original controlled
 fault does not produce the expected publication loss or the prototype introduces
 layout/performance/lifecycle regressions, stop this remedy and retain the result.
+
+
+## Observed real failures, timing limit and minimal-layer follow-up
+
+Current live main is7867621005a65950bb0db994b8cddaa2f5367412, including qualified
+PDF correction and final evidence. That code remains separate from this never-merge
+branch based6cad. Complete first395native42443157406 is FAIL: original fails,
+current-input passes. Compliance42443169680 passes. All raw firsts/logs/artifacts
+and exact source/compiled bindings are retained before this revised decision.
+
+Both variants COMPILED and ran. A completed-job step snapshot lagged at Compile;
+actual logs/results, not that stale step field, establish execution. Original
+actual58functions=57standalonePASS/1aggregateFAIL13issues, owned65/138.100seconds,
+no force/timeout/skip/expected failure. Seven issues occur in NORMAL unsuppressed
+scenarios:00revision,01revision,02revision,03revision,05revision,06production,
+08revision. Four injected fault scenarios produce six further issues. These are
+real baseline failures, not all intentional negatives or passing normal controls.
+The prototype passes all58functions and24freshjourneys, owned0/56.244seconds.
+Both actual hosts are26.7.2/25G332. All296original/297effective dependency files,
+five exact modified Swift files,24pins and five downloaded compiled roles per
+variant are independently verified. No production fork/pin change is made.
+
+The original fixture uses nonthrowing Issue.record. Therefore threw=false records
+only the absence of a thrown error; it MUST NOT be used as a per-scenario pass.
+Raw native issues and result summaries remain authoritative. Within the single
+serialized aggregate, actual issue events are indexed to the following fixed
+end-of-scenario record; all13are retained without changing assertions.
+
+Completed failed01revision and passing04revision buffers have identical stage
+counts, including attachment-ready, inline change/resolution, fragment change,
+attachment-bearing builder construction and size updates. This does NOT establish
+that those events preceded failed Copy: existing failure diagnostics can await
+and process more work before the final archive. There is no failure-point marker
+or comparable clock in these firsts. Missing or late callbacks and the original
+OS/framework cause remain unproved. Do not select a production fix by claiming
+that the prior trace proved a missed callback.
+
+Run a new narrow comparison of original, inline-only and fragment-only. Do not
+repeat the unchanged combined positive variant. Compose each partial prototype
+from the exact already-qualified current-input file for that layer and the exact
+original traced/suppression file for the other. This determines which minimal
+publication change addresses actual normal-scenario loss and avoids unnecessary
+per-body style work if the fragment cache alone suffices. It changes no product
+contract, authority, source pin or canonical PR146 yet.
+
+Before the next run, add a failure-only marker to the private test source so
+MainActor buffer order can be related to the actual failed deadline. The marker
+appends a fixed label with an empty attributed string; no authored content,
+I/O, clock, timer, preference/geometry observer or normal-path state change.
+
+- In SecuredMarkdownMountedTests+Support, mark the caught Copy-command refusal
+  BEFORE captureFailure/awaitdiagnostic. Also mark after the outer five-second
+  loop expires, BEFORE captureFailure and the diagnostic await.
+- In ProductionPreviewResourceRoutingTests, mark after replacement-image Copy's
+  unchanged deadline loop expires, BEFORE its original Issue.record.
+
+Keep every original assertion, error, return, loop, deadline and cleanup statement.
+These TWO existing test files are deliberately instrumented in this never-merge
+branch; add their Textual imports and bind the actual changed sources. Do not
+claim byte-identical original tests for this follow-up. The production app source
+stays equal to6cad; only private test diagnostics differ. Canonical PR146 files
+remain untouched. Receipt metadata explicitly identifies failure-only markers.
+
+Retain all24fixedscenarios/58outerfunctions,4000events per scenario, original
+network/ownership/source controls and600second executor. Each variant still has
+its own complete original/effective source, selected variant, compiled roles,
+actual host, raw results and scenario buffers. Update pure exact-source controls
+so partial variants cannot silently replace the unselected layer or omit its
+controlled suppression. Freeze once and obtain all three complete native firsts
+and Compliance before any correction or publication of a production remedy.
+
+No source rights decision, owner-account native run or release acceptance follows.
+Only after minimal source/native evidence should a separate shipping architecture
+remove diagnostic helpers, make any actual fork/pin/compliance change, reconcile
+current main into PR146 and obtain all uninstrumented canonical qualification.
