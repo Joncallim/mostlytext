@@ -12,6 +12,11 @@ This packet is a design and implementation proposal, not approved artwork or
 native Finder acceptance. It is based on `main` at
 `892241384112a05d397a8ce292f0467e02d3ebab` (9 November 2026).
 
+The isolated branch adds a **review candidate** built by
+`design/brand/document-icon/build.py`, `MarkdownDocument.icns`, and the narrow
+Markdown plist resource reference. These source files make the visual choice
+concrete without claiming it has been accepted in Finder.
+
 ## Current source and contract
 
 - `MacDown2/project.yml` declares `net.daringfireball.markdown`, the five
@@ -28,16 +33,34 @@ native Finder acceptance. It is based on `main` at
 - #16's document-icon and Finder/Open With rows, and #7's clean-install
   Open With/Quick Look registration row, remain unchecked.
 
+### Separate extension-registration finding
+
+On macOS 26.5.1, a read-only Uniform Type Identifiers lookup resolves `.md`
+and `.markdown` to `net.daringfireball.markdown`, while `.mdown`, `.mkd` and
+`.mkdn` resolve to dynamic types. [Apple's `CFBundleDocumentTypes` reference](https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html#//apple_ref/doc/uid/TP40009249-SW8)
+states that `CFBundleTypeExtensions` is ignored when `LSItemContentTypes` is
+present. The runtime registry and source manifest support all five suffixes,
+but their actual Finder/Open With registration cannot be inferred from the
+five source plist strings. Test all five on a clean installed test account.
+An imported-type declaration may be needed for the aliases, but [Apple advises](https://developer.apple.com/documentation/uniformtypeidentifiers/defining-file-and-data-types-for-your-app)
+against redeclaring a system-provided type. Resolve that registration behavior
+before changing the UTI contract or checking #7's Finder criterion.
+
 ## Proposed visual decision
 
-Approve a simple neutral document sheet bearing the existing Slant mark in
+The candidate is a simple neutral document sheet bearing the existing Slant mark in
 `#11141A`, with no new monogram, text, stripes or app-icon glass background.
-Use `slant-master.svg` above 40 px, `slant-32.svg` at 18–40 px, and
-`slant-16.svg` at 17 px and below. Preserve each source's aspect
-ratio and path exactly. A white/off-white paper silhouette, fold, border,
-shadow, mark placement and any dark-mode treatment still need visual approval;
+It uses `slant-master.svg` above 40 px, `slant-32.svg` at 18–40 px, and
+`slant-16.svg` at 17 px and below, measured at the mark's displayed size.
+The generator preserves each source's aspect ratio and path exactly. The
+white/off-white paper silhouette, fold, border, mark placement and absence of
+a dark-mode variant still need visual approval;
 those are new artwork choices, not consequences of D-029/D-031. Review actual
 16, 32, 128 and 512 px exports together before declaring this final.
+
+Review PNGs and a vector source are under `design/brand/document-icon/preview/`.
+They are generated from the same source as the `.icns`; `verify.py` compares
+their bytes against a fresh rebuild.
 
 Do not use `AppIcon.icns` as the document icon: it is an app tile and does not
 communicate the document identity the issue asks for. Do not add a private
@@ -45,10 +68,11 @@ MostlyText Markdown UTI or change the existing public Markdown handler rank.
 
 ## Implementation after visual approval
 
-1. Commit the approved vector source and a deterministic renderer that imports
-   only canonical Slant paths. Export all `.iconset` sizes, including 1×/2×
-   small sizes, then build `MarkdownDocument.icns` with `iconutil`.
-2. Add the `.icns` resource to the app target and set only the Markdown
+1. Finalize the candidate only after review of the vector composition. The
+   standard-library generator imports only canonical Slant paths, renders all
+   `.iconset` sizes through macOS `sips`, including 1×/2× small sizes, then
+   builds `MarkdownDocument.icns` with `iconutil`.
+2. Keep the `.icns` resource in the app target and set only the Markdown
    document declaration's `CFBundleTypeIconFile: MarkdownDocument` in
    `MacDown2/project.yml`. Regenerate the Xcode project; never edit the
    generated project by hand.
@@ -56,7 +80,8 @@ MostlyText Markdown UTI or change the existing public Markdown handler rank.
    source paths equal the canonical mark paths, the compiled bundle contains
    `Contents/Resources/MarkdownDocument.icns`, the built `Info.plist` points
    to it, and the Markdown UTI/role/rank/extension declarations are unchanged.
-   Run the repository's locked Release build and relevant checks.
+   Run the repository's locked Release build and relevant checks. The local
+   `design/brand/document-icon/verify.py` runs the source and bundle checks.
 4. On the disposable macOS 26 test desktop, install the exact built app in a
    clean registration state and inspect Markdown files in Finder icon/list
    views at 16/32/128 px, light and dark appearance, and Open With/Get Info.
@@ -68,3 +93,22 @@ MostlyText Markdown UTI or change the existing public Markdown handler rank.
 Only after the visual decision, source implementation, built-resource checks
 and genuine installed Finder readback should #16's document-icon/Finder rows
 or #7's corresponding registration criterion be considered for closure.
+
+## Local candidate verification, 9 November 2026
+
+- `python3 design/brand/document-icon/verify.py` passes: tracked `.icns` and
+  review exports reproduce byte for byte, all ten iconset slots extract at the
+  requested dimensions, and the generated source plist contains exactly the
+  intended Markdown icon key.
+- `xcodegen generate`, package-version pinning and the locked Release
+  `xcodebuild ... -scheme MacDown2 -configuration Release build` pass. Running
+  `verify.py --app` against that compiled app confirms its `Info.plist`,
+  byte-identical `Contents/Resources/MarkdownDocument.icns`, and retained
+  `AppIcon.icns`. The candidate `.icns` SHA-256 is
+  `b36d4b9c765ed1de034ec2648cd22a0cf2c2f345465eb5105af4c32abaa44d69`.
+- `python3 compliance/tools/compliance.py check` passes with the new first-party
+  resource registered.
+
+These are source and compile-only checks. The app was not launched, installed,
+or registered with Finder here. Final visual approval and installed Finder/Open
+With acceptance remain open.
