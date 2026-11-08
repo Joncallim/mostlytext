@@ -123,3 +123,42 @@ It adds no entitlement, permission, service behavior, product code, timeout or
 fallback. A new hosted run must disclose the actual mismatch before choosing
 any correction; an extra signed entitlement remains a failure. Preserve that
 run's complete first result before editing again.
+
+## Second hosted result and signing repair architecture
+
+The diagnostic run [42514915606](https://github.com/Joncallim/mostlytext/actions/runs/42514915606)
+at `84f210892a21e5c07b30089588c50c6d4fc455e4` also stopped at
+`--seal-built`, before Finder registration. Its retained
+`xpc-service-observed-entitlements.plist` shows the signed service has sandbox
+`true`, a temporary read-only exception for `/`, and temporary Mach lookups for
+`com.apple.testmanagerd`, `com.apple.dt.testmanagerd.runner` and
+`com.apple.coresymbolicationd`. The source `XPCService.entitlements` has only
+sandbox `true`. The hosted `CodeSign QLReplyProbeXPCService.xpc` command used
+Xcode's generated `.xcent` file, so the extra rights were introduced in the
+test build's signing inputs. There is no evidence that the XPC service requires
+them. The exact-entitlement verifier correctly rejected this result; neither
+hosted run tested XPC reachability.
+
+The next private fixture change will re-sign only the **embedded copy** of
+`QLReplyProbeXPCService.xpc` with the exact sandbox-only source plist. It will
+run as the containing app target's final build script, after both embed copy
+phases and before Xcode signs the containing app. The service target's original
+signature may still include test rights, but that unembedded build product is
+not the service the app will install. The provider target is signed before the
+app's embed phase and is not altered by this repair. The existing `--seal-built`
+step will still verify the final app signature and the service's exact signed
+entitlements, then capture every compiled execution input before native tests.
+The script will require the exact hosted fixture paths and source plist, refuse
+unexpected bundles or rights, and record the pre-correction service entitlement
+for diagnosis. No product source, provider authority, service API, test case,
+timeout, workflow trigger or fallback changes.
+
+This is consistent with keeping test-runner instrumentation on the separate
+automation host and UI-test targets. The XPC service is a fixed-response app
+service, not a UI-test runner. If Xcode's generated rights are nevertheless
+needed for this host to launch or connect to it, the genuine Finder case must
+fail and retain its actual error; the rights must not be restored to make this
+spike pass. Source-only validation must confirm the generated build-phase order.
+The next hosted result must confirm the app remains validly signed, the embedded
+service has exactly sandbox `true`, and the original two controls still pass
+before drawing any conclusion from the third case.
