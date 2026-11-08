@@ -1,0 +1,103 @@
+{
+  "source": "1eb8d9419f2690d78354531800f7a76e8f5f71b2",
+  "actual_tested": "4b17469c1d43860652b0dba5862622b513a9f747",
+  "actual_main_merge": "23de8c25b61598b87fb807e5a3dfd74c81e2e4d4",
+  "source_tested_computed_merged_tree": "679ef068afcd30d0c1695c99dc2abfc2f53168cc",
+  "native_run": 42447473633,
+  "compliance_run": 42447473478,
+  "all_complete_firsts": "PASS",
+  "records": [
+    {
+      "file": "00-native-first-run.json.gz",
+      "original_path": "native-first-run.json",
+      "bytes": 12974,
+      "sha256": "17a9b378a2c2a3006c0e7998ae0843d696da6d8fd192ea6abf1d5dc3d78622b0"
+    },
+    {
+      "file": "01-native-first-artifacts.json.gz",
+      "original_path": "native-first-artifacts.json",
+      "bytes": 753,
+      "sha256": "3f16399ac4bafe0e6b8a7a36563ea4cda2e4df5cad8340e02bb6415e36735d42"
+    },
+    {
+      "file": "02-compliance-first-run.json.gz",
+      "original_path": "compliance-first-run.json",
+      "bytes": 12922,
+      "sha256": "593afecda9d409ffcb52b9789316b8db7aeb2da7b1ffce21de6e36975f7ba5a8"
+    },
+    {
+      "file": "03-compliance-first-artifacts.json.gz",
+      "original_path": "compliance-first-artifacts.json",
+      "bytes": 32,
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    {
+      "file": "04-native-complete-first-workflow-logs.zip.gz",
+      "original_path": "native-complete-first-workflow-logs.zip",
+      "bytes": 13218,
+      "sha256": "166f7f3efeaffa015167496c16d881dadf45b307af4afce26d51700116186d1d"
+    },
+    {
+      "file": "05-compliance-complete-first-workflow-logs.zip.gz",
+      "original_path": "compliance-complete-first-workflow-logs.zip",
+      "bytes": 41724,
+      "sha256": "4bea51e53603ce6ed48cdeb867ddb427e328983c8c0ee70e2e9e3a95f0068ba4"
+    },
+    {
+      "file": "06-actual-first-independently-verified.json.gz",
+      "original_path": "actual-first-independently-verified.json",
+      "bytes": 1650,
+      "sha256": "6ac9749e37acc0b36e6783a7fc13e9289b1d44749c18cd262c5307616c4f1a59"
+    },
+    {
+      "file": "07-verify-actual-first.py.gz",
+      "original_path": "verify-actual-first.py",
+      "bytes": 4184,
+      "sha256": "9cc51cb504441f4fece33e710d01518f0667a750b5dbd5d4fa982ee424c747de"
+    },
+    {
+      "file": "08-placed-pdf-receipt.json.gz",
+      "original_path": "native-first-artifact/actual-placed-pdf-canary/placed-pdf-receipt.json",
+      "bytes": 2363,
+      "sha256": "274cbdfe086e0352f7c938cf688b01f3ef985df848490e7603c852b47ec735df"
+    },
+    {
+      "file": "09-original.pdf.gz",
+      "original_path": "native-first-artifact/actual-placed-pdf-canary/original.pdf",
+      "bytes": 16424,
+      "sha256": "ce2b5cc91a8a774c894c43d0f1fe56d4f95cce32171a80c8c2b0f70785af0ae6"
+    },
+    {
+      "file": "10-corrected.pdf.gz",
+      "original_path": "native-first-artifact/actual-placed-pdf-canary/corrected.pdf",
+      "bytes": 15107,
+      "sha256": "d95a9e149c236e572551cc6cc913bc044d80822c8a14796a438ce6f5171aab08"
+    },
+    {
+      "file": "11-original-selection.json.gz",
+      "original_path": "native-first-artifact/actual-placed-pdf-canary/original-selection.json",
+      "bytes": 26537,
+      "sha256": "2e3532bbfb9a2d8811766a28bc48a5e11978746a9ac7302725c121a7aee45d1b"
+    },
+    {
+      "file": "12-corrected-selection.json.gz",
+      "original_path": "native-first-artifact/actual-placed-pdf-canary/corrected-selection.json",
+      "bytes": 26349,
+      "sha256": "c1f015e8feeeb0508cd81da3585d7f51e4a31e5f602f4d6dde9ccfea38744662"
+    },
+    {
+      "file": "13-native.stdout.gz",
+      "original_path": "native-first-artifact/actual-placed-pdf-canary/native.stdout",
+      "bytes": 42,
+      "sha256": "af959d832791ff7fad0580a733da755976e97df7b43230a8151e5b6be3591ca1"
+    },
+    {
+      "file": "14-native.stderr.gz",
+      "original_path": "native-first-artifact/actual-placed-pdf-canary/native.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "actual_compiled_binary_location": "Original native workflow artifact and external retained first; not included in this source evidence packet",
+  "actual_compiled_binary_sha256": "1295e294124384d8ab2a39716c3c8e4c6779e0ee83f796b47745b802eb9aa94a"
+}

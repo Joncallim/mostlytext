@@ -85,3 +85,26 @@ API behavior is introduced. No user-facing strings or dependencies change.
 A future ordinary-menu activation must consume a reviewed helper contract and
 run its own new actual export, Cancel and normal Quit. This retained-output
 comparison is necessary evidence for that oracle, not a substitute for it.
+
+## Qualified integration
+
+[PR157](https://github.com/Joncallim/mostlytext/pull/157) is integrated as main
+`23de8c25b61598b87fb807e5a3dfd74c81e2e4d4`. Both complete first workflows pass:
+[native 42447473633](https://github.com/Joncallim/mostlytext/actions/runs/42447473633)
+and [Compliance 42447473478](https://github.com/Joncallim/mostlytext/actions/runs/42447473478).
+Source `1eb8d941`, actual tested `4b17469c`, computed integration and actual merge
+share tree `679ef068afcd30d0c1695c99dc2abfc2f53168cc`, with expected main/source
+parents and a clean canonical checkout. Product and compliance trees are unchanged.
+
+[The exact first packet](evidence/placed-pdf-canary-qualified-firsts-2026-11-08/README.md)
+retains all actual inputs, selections, complete first logs and integration proof.
+Independent readback verifies eight source bindings and the downloaded actual
+helper bytes. Both first-page non-whitespace selection records exactly equal the
+prior original native observation; no guessed glyph-bound mapping is used. The
+original has two pages and refuses, the corrected fixture has one page and
+accepts. Both visibly ordered headings are exact. Native stderr is empty and
+fully retained. Fourteen hostile controls, 332 Compliance tests, strict SDK
+typechecking, formatting and lint pass. GitGuardian passes. All five original
+unchecked issue #11 criteria remain open, as do ordinary-menu/normal Quit,
+complete-operation progress/cancellation, full visual/parity, final calibration
+and exact signed-artifact acceptance. Review is scoped orthogonal self-review.

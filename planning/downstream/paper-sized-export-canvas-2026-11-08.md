@@ -159,9 +159,11 @@ refused the new owned PDF sheet. All seven complete firsts were retained before
 the explicit two-owned-sheet review correction. The integration test that found
 the failure is unchanged in final source `fd23e3e2`.
 
-The original PDFKit raw canary ordering and ordinary-menu validator remain a
-separate issue. Character placement observations do not constitute a replacement
-oracle. The historical print-versus-fallback branch is not independently observed.
+The original PDFKit raw canary ordering remains preserved. A separately
+[qualified fixed placement oracle](placement-aware-pdf-canary-2026-11-08.md) is
+now integrated through PR157; the original ordinary-menu validator and failed
+journey remain unchanged. Earlier character-placement observations alone did
+not constitute that replacement oracle. The historical print-versus-fallback branch is not independently observed.
 Short native adapter fixture PDF bytes are removed by the existing test cleanup;
 its page/text result comes from executed assertions. The separate mechanism PDFs
 and PNGs are actually downloaded and independently verified.
