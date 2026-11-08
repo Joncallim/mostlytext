@@ -43,7 +43,7 @@ Three sequential cases only, fixed input<8KiB, PDF cap4MiB, at most10output page
 per case, bounded16KiB text/page and612x792rasters. Save raw snapshot and final
 PDF before reading. Write partial results after each case. Outer controller
 bounds the whole native helper to150seconds and records timeout/return code and
-complete bounded stdout/stderr; any failure stays failed. No widened historical
+complete stdout/stderr files under an inherited4MiB-per-file OS write limit; any failure stays failed. No widened historical
 budgets, unchanged failure retry, skipped control or expected-failure waiver.
 
 ## Completion and stop conditions
