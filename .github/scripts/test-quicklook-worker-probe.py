@@ -142,6 +142,11 @@ class PreciseSpawnFailureEvidence(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory); driver, _ = module.fixture(root)
             driver['ui_supervisor_returncode'] = 65
+            driver['errors'] = ["RuntimeError('First actual Finder UI execution failed: 65')"]
+            (root / 'owned').mkdir()
+            owned = dict(returncode=65, timed_out=False, cancelled=False, app_cleanup_requested=[])
+            (root / 'owned/status.json').write_text(json.dumps(owned))
+            (root / 'owned/identity.json').write_text(json.dumps({'checkout': 'source'}))
             (root / 'host-ui-driver.json').write_text(json.dumps(driver))
             proof = probe.validate_host_recording(root, 'source')
             self.assertEqual(proof['driver']['ui_supervisor_returncode'], 65)
@@ -150,6 +155,14 @@ class PreciseSpawnFailureEvidence(unittest.TestCase):
             self.assertEqual(actual['actual_ui_returncode'], 65)
             self.assertFalse(actual['qualification_candidate'])
             with self.assertRaises(RuntimeError): probe.validate_host_observer(root, 'source')
+            owned['timed_out'] = True
+            (root / 'owned/status.json').write_text(json.dumps(owned))
+            with self.assertRaises(RuntimeError): probe.validate_host_recording(root, 'source')
+            owned['timed_out'] = False
+            (root / 'owned/status.json').write_text(json.dumps(owned))
+            driver['errors'] = ['unknown driver failure']
+            (root / 'host-ui-driver.json').write_text(json.dumps(driver))
+            with self.assertRaises(RuntimeError): probe.validate_host_recording(root, 'source')
 
 
 if __name__ == '__main__':

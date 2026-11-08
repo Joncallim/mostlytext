@@ -283,7 +283,15 @@ def capture_compiled(root):
 def validate_host_recording(root, checkout):
     driver = json.loads((root / 'host-ui-driver.json').read_text())
     observer = json.loads((root / 'observer-result.json').read_text())
-    if (driver['checkout'] != checkout or observer['checkout'] != checkout or driver['errors'] or observer['errors']
+    if driver['errors']:
+        owned = json.loads((root / 'owned/status.json').read_bytes())
+        identity = json.loads((root / 'owned/identity.json').read_bytes())
+        if (driver['ui_supervisor_returncode'] != 65
+                or driver['errors'] != ["RuntimeError('First actual Finder UI execution failed: 65')"]
+                or owned['returncode'] != 65 or owned['timed_out'] or owned['cancelled']
+                or owned['app_cleanup_requested'] != [] or identity['checkout'] != checkout):
+            raise RuntimeError('Unknown driver error or unowned failed UI cannot qualify a recording')
+    if (driver['checkout'] != checkout or observer['checkout'] != checkout or observer['errors']
             or driver['ui_started'] is not True
             or driver['observer_forced_cleanup'] is not False or driver['observer_returncode'] != 0
             or observer['timed_out'] is not False or observer['stopped_after_ui'] is not True
@@ -354,7 +362,7 @@ def require_host(root):
 
 def validate_host_observer(root, checkout):
     proof = validate_host_recording(root, checkout)
-    if proof['driver']['ui_supervisor_returncode'] != 0:
+    if proof['driver']['ui_supervisor_returncode'] != 0 or proof['driver']['errors']:
         raise RuntimeError('The actual UI did not complete successfully')
     return proof
 
