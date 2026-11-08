@@ -34,17 +34,6 @@ targets:
     dependencies:
       - target: QLReplyProbeProvider
         embed: true
-      - target: QLReplyProbeXPCService
-        embed: true
-        link: false
-    postBuildScripts:
-      - name: Sign embedded XPC service with source entitlements
-        script: python3 "$SRCROOT/resign-embedded-xpc.py"
-        inputFiles:
-          - $(SRCROOT)/XPCService.entitlements
-          - $(TARGET_BUILD_DIR)/$(WRAPPER_NAME)/Contents/XPCServices/QLReplyProbeXPCService.xpc/Contents/Info.plist
-        basedOnDependencyAnalysis: false
-        showEnvVars: false
   QLReplyProbeProvider:
     type: app-extension
     platform: macOS
@@ -69,6 +58,18 @@ targets:
       properties:
         com.apple.security.app-sandbox: true
         com.apple.security.files.user-selected.read-only: true
+    dependencies:
+      - target: QLReplyProbeXPCService
+        embed: true
+        link: false
+    postBuildScripts:
+      - name: Sign embedded XPC service with source entitlements
+        script: python3 "$SRCROOT/resign-embedded-xpc.py"
+        inputFiles:
+          - $(SRCROOT)/XPCService.entitlements
+          - $(TARGET_BUILD_DIR)/$(WRAPPER_NAME)/Contents/XPCServices/QLReplyProbeXPCService.xpc/Contents/Info.plist
+        basedOnDependencyAnalysis: false
+        showEnvVars: false
   QLReplyProbeXPCService:
     type: xpc-service
     platform: macOS

@@ -104,6 +104,16 @@ def validate_provider_entitlements(entitlements):
                             "com.apple.security.files.user-selected.read-only": True}, entitlements
 
 
+def validate_service_placement(app, provider):
+    service = provider / "Contents/XPCServices/QLReplyProbeXPCService.xpc"
+    expected = service.relative_to(app)
+    if {path.relative_to(app) for path in app.rglob("*.xpc")} != {expected}:
+        raise RuntimeError("The placement control requires exactly one extension-level XPC service")
+    if service.is_symlink() or not service.is_dir():
+        raise RuntimeError("The placement control requires one extension-bundled XPC service")
+    return service
+
+
 def command(args):
     return subprocess.check_output(args, text=True, timeout=60).strip()
 
@@ -226,7 +236,7 @@ def capture_compiled(root):
     release = products / 'Release'
     app = release / 'QLReplyProbeContainer.app'
     provider = app / 'Contents/PlugIns/QLReplyProbeProvider.appex'
-    service = app / 'Contents/XPCServices/QLReplyProbeXPCService.xpc'
+    service = provider / 'Contents/XPCServices/QLReplyProbeXPCService.xpc'
     runner = release / 'QLReplyProbeFinderTests-Runner.app'
     test = runner / 'Contents/PlugIns/QLReplyProbeFinderTests.xctest'
     plans = list(products.glob('*.xctestrun'))
@@ -403,7 +413,7 @@ def main():
         assert digest(fixture / name) == expected, name
     app = root / "build/Build/Products/Release/QLReplyProbeContainer.app"
     provider = app / "Contents/PlugIns/QLReplyProbeProvider.appex"
-    service = app / "Contents/XPCServices/QLReplyProbeXPCService.xpc"
+    service = validate_service_placement(app, provider)
     app_info = plistlib.loads((app / "Contents/Info.plist").read_bytes())
     info = plistlib.loads((provider / "Contents/Info.plist").read_bytes())
     service_info = plistlib.loads((service / "Contents/Info.plist").read_bytes())

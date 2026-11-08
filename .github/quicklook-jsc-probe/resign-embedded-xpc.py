@@ -36,13 +36,13 @@ def require_hosted_fixture():
             or os.environ.get("RUNNER_TEMP") != str(root.parent)
             or os.environ.get("SRCROOT") != str(fixture)
             or os.environ.get("TARGET_BUILD_DIR") != str(build)
-            or os.environ.get("TARGET_NAME") != "QLReplyProbeContainer"
-            or os.environ.get("WRAPPER_NAME") != "QLReplyProbeContainer.app"
+            or os.environ.get("TARGET_NAME") != "QLReplyProbeProvider"
+            or os.environ.get("WRAPPER_NAME") != "QLReplyProbeProvider.appex"
             or os.environ.get("CONFIGURATION") != "Release"
             or os.getuid() != 501 or os.geteuid() != 501
             or pwd.getpwuid(os.getuid()).pw_name != "runner"):
         raise RuntimeError("Require exact hosted Quick Look fixture build context")
-    return root, fixture, build / "QLReplyProbeContainer.app/Contents/XPCServices" / SERVICE_NAME
+    return root, fixture, build / "QLReplyProbeProvider.appex/Contents/XPCServices" / SERVICE_NAME
 
 
 def main():

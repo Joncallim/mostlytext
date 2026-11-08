@@ -162,3 +162,54 @@ spike pass. Source-only validation must confirm the generated build-phase order.
 The next hosted result must confirm the app remains validly signed, the embedded
 service has exactly sandbox `true`, and the original two controls still pass
 before drawing any conclusion from the third case.
+
+## Exact lookup failure and one placement control
+
+The signed, cold Finder run
+[42517521614](https://github.com/Joncallim/mostlytext/actions/runs/42517521614)
+retained one `launchd` event at 19:58:16.498277 UTC:
+`failed lookup: name = app.mostlytext.QLReplyProbe.XPCService, requestor =
+QLReplyProbePro[5221], error = 3: No such process`. The event precedes the
+provider's request log by 127 microseconds and its `NSCocoaErrorDomain` 4099
+error by 337 microseconds. The bounded system capture succeeded with 673 events
+and 643,908 bytes. This establishes a failed service-name lookup; it does not
+establish a service launch, crash, signing denial or entitlement check inside
+the service.
+The static and JavaScriptCore Finder cases passed. The XPC case did not.
+
+The next experiment changes only the private fixture's bundle placement:
+`QLReplyProbeXPCService.xpc` moves from the containing app's
+`Contents/XPCServices` to the Quick Look provider extension's
+`Contents/XPCServices`. There will be exactly one embedded service. Its bundle
+identifier, `NSXPCConnection(serviceName:)` call, fixed ping protocol, sandbox
+entitlement and signature checks stay the same. The provider keeps exactly its
+sandbox and selected-file-read-only entitlements. The original cold/static,
+JavaScriptCore and XPC Finder checks, including the 15-second XPC visibility
+deadline, remain in place. Source and generated-project checks must verify the
+extension copy phase precedes the exact service re-sign phase; signed-bundle
+checks must reject an app-level duplicate, unexpected rights or signature
+failure. No shipping code or local native execution is part of this change.
+
+This is a **hypothesis**, not a supported-placement claim. Apple's current
+[bundle placement guidance](https://developer.apple.com/documentation/bundleresources/placing-content-in-a-bundle)
+lists `Contents/XPCServices` for macOS bundles, while its
+[XPC guide](https://developer.apple.com/documentation/xpc/creating-xpc-services)
+describes services within an app or framework; neither establishes that a
+Finder-hosted Quick Look extension can discover a service nested in its own
+`.appex`. The older
+[XPC services guide](https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingXPCServices.html)
+describes app-bundled services as private to their containing app. The
+[App Groups entitlement documentation](https://developer.apple.com/documentation/BundleResources/Entitlements/com.apple.security.application-groups)
+requires a group-prefixed XPC service name for group IPC, and Apple's
+[macOS app group guidance](https://developer.apple.com/documentation/xcode/accessing-app-group-containers)
+requires a profile for `group.` identifiers or a team-signed identity for
+unprovisioned team-prefixed identifiers. The hosted fixture uses ad-hoc signing,
+so an App Group variant would change identity, signing and permissions at the
+same time as lookup. This placement control isolates the current question.
+
+If Xcode or signing rejects the extension-bundled copy, or the unchanged XPC
+Finder case still reports lookup failure, retain that result as a failed
+placement control. Do not add group, Mach lookup, temporary exceptions or a
+container relay to turn it green. A positive fixed ping would establish only
+reachability for this fixture under this host; it would not qualify the
+shipping renderer or close issue #7.

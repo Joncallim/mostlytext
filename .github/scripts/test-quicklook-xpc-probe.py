@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from types import SimpleNamespace
 import unittest
 from unittest import mock
 
@@ -133,6 +134,40 @@ class XPCObservationTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 SIGN.require_exact_entitlements(expected | extra)
 
+    def test_re_sign_is_bound_to_extension_copy_not_app_copy(self):
+        root = Path('/Users/runner/work/_temp/mostlytext-qljsc')
+        environment = {'GITHUB_ACTIONS': 'true', 'GITHUB_REPOSITORY': 'Joncallim/mostlytext',
+                       'GITHUB_EVENT_NAME': 'workflow_dispatch', 'RUNNER_ENVIRONMENT': 'github-hosted',
+                       'RUNNER_OS': 'macOS', 'RUNNER_TEMP': str(root.parent),
+                       'SRCROOT': str(root / 'fixture'),
+                       'TARGET_BUILD_DIR': str(root / 'build/Build/Products/Release'),
+                       'TARGET_NAME': 'QLReplyProbeProvider', 'WRAPPER_NAME': 'QLReplyProbeProvider.appex',
+                       'CONFIGURATION': 'Release'}
+        with mock.patch.dict(SIGN.os.environ, environment, clear=True), \
+                mock.patch.object(SIGN.os, 'getuid', return_value=501), \
+                mock.patch.object(SIGN.os, 'geteuid', return_value=501), \
+                mock.patch.object(SIGN.pwd, 'getpwuid', return_value=SimpleNamespace(pw_name='runner')):
+            _, _, service = SIGN.require_hosted_fixture()
+            self.assertEqual(service, root / 'build/Build/Products/Release/QLReplyProbeProvider.appex'
+                             '/Contents/XPCServices/QLReplyProbeXPCService.xpc')
+            SIGN.os.environ['TARGET_NAME'] = 'QLReplyProbeContainer'
+            with self.assertRaisesRegex(RuntimeError, 'exact hosted Quick Look fixture'):
+                SIGN.require_hosted_fixture()
+
+    def test_placement_refuses_missing_or_duplicate_app_level_service(self):
+        with tempfile.TemporaryDirectory() as directory:
+            app = Path(directory) / 'QLReplyProbeContainer.app'
+            provider = app / 'Contents/PlugIns/QLReplyProbeProvider.appex'
+            service = provider / 'Contents/XPCServices/QLReplyProbeXPCService.xpc'
+            with self.assertRaisesRegex(RuntimeError, 'exactly one extension-level'):
+                PREP.validate_service_placement(app, provider)
+            service.mkdir(parents=True)
+            self.assertEqual(PREP.validate_service_placement(app, provider), service)
+            duplicate = app / 'Contents/XPCServices/QLReplyProbeXPCService.xpc'
+            duplicate.mkdir(parents=True)
+            with self.assertRaisesRegex(RuntimeError, 'exactly one extension-level'):
+                PREP.validate_service_placement(app, provider)
+
     def test_extra_source_right_is_refused_before_codesign(self):
         with tempfile.TemporaryDirectory() as directory:
             fixture = Path(directory)
@@ -154,7 +189,7 @@ class XPCObservationTests(unittest.TestCase):
                 fixture.mkdir()
                 source = fixture / 'XPCService.entitlements'
                 source.write_bytes(plistlib.dumps(sandbox))
-                service = root / 'App/Contents/XPCServices/QLReplyProbeXPCService.xpc'
+                service = root / 'Provider.appex/Contents/XPCServices/QLReplyProbeXPCService.xpc'
                 (service / 'Contents').mkdir(parents=True)
                 (service / 'Contents/Info.plist').write_bytes(plistlib.dumps({
                     'CFBundleIdentifier': 'app.mostlytext.QLReplyProbe.XPCService',
@@ -186,10 +221,13 @@ class XPCObservationTests(unittest.TestCase):
             project = fixture / 'QuickLookReplyProbe.xcodeproj/project.pbxproj'
             objects = json.loads(subprocess.check_output(
                 ['plutil', '-convert', 'json', '-o', '-', str(project)], timeout=30))['objects']
+            provider = next(value for value in objects.values()
+                            if value.get('isa') == 'PBXNativeTarget'
+                            and value.get('name') == 'QLReplyProbeProvider')
             app = next(value for value in objects.values()
                        if value.get('isa') == 'PBXNativeTarget'
                        and value.get('name') == 'QLReplyProbeContainer')
-            phases = [objects[phase] for phase in app['buildPhases']]
+            phases = [objects[phase] for phase in provider['buildPhases']]
             copies = [position for position, phase in enumerate(phases)
                       if phase['isa'] == 'PBXCopyFilesBuildPhase'
                       and phase.get('dstPath') == '$(CONTENTS_FOLDER_PATH)/XPCServices'
@@ -207,6 +245,11 @@ class XPCObservationTests(unittest.TestCase):
             self.assertIn('$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)/Contents/XPCServices/'
                           'QLReplyProbeXPCService.xpc/Contents/Info.plist',
                           phases[scripts[0]]['inputPaths'])
+            app_phases = [objects[phase] for phase in app['buildPhases']]
+            self.assertFalse(any(phase.get('dstPath') == '$(CONTENTS_FOLDER_PATH)/XPCServices'
+                                 for phase in app_phases))
+            self.assertFalse(any(phase.get('name') == 'Sign embedded XPC service with source entitlements'
+                                 for phase in app_phases))
 
 
 if __name__ == '__main__':
