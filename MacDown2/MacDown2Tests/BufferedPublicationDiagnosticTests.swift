@@ -63,7 +63,8 @@ struct BufferedPublicationDiagnosticTests {
               ProcessInfo.processInfo.environment["GITHUB_REPOSITORY"] == "Joncallim/mostlytext",
               ProcessInfo.processInfo.environment["RUNNER_TEMP"] == "/Users/runner/work/_temp",
               NSUserName() == "runner", NSHomeDirectory() == "/Users/runner",
-              ["original", "current-input"].contains(environment["MOSTLYTEXT_RENDERER_VARIANT"] ?? ""),
+              ["original", "current-input", "inline-only", "fragment-only"]
+              .contains(environment["MOSTLYTEXT_RENDERER_VARIANT"] ?? ""),
               !FileManager.default.fileExists(atPath: "/Users/jonathanlim"),
               !FileManager.default.fileExists(atPath: "/Users/mostlytexttest"),
               !FileManager.default.fileExists(atPath: "/Volumes/Fast SSD")

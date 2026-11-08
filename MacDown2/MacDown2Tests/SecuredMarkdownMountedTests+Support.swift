@@ -3,6 +3,7 @@ import FileCore
 import Foundation
 @testable import MacDown2
 import Testing
+import Textual
 
 extension SecuredMarkdownMountedTests {
     func copiedHTML(from view: NSView) async throws -> String {
@@ -39,6 +40,7 @@ extension SecuredMarkdownMountedTests {
             do {
                 lastHTML = try await copiedHTML(from: view)
             } catch {
+                MostlyTextPublicationTrace.markCopyFailure("mounted-copy-command-refused")
                 windowDiagnostics.captureFailure(host: view, selected: findTextInteraction(in: view))
                 let details = await diagnostic()
                 print("MOUNTED_COPY_DIAGNOSTIC \(details) \(copyDiagnostics(in: view))")
@@ -49,6 +51,7 @@ extension SecuredMarkdownMountedTests {
             }
             try await Task.sleep(for: .milliseconds(20))
         }
+        MostlyTextPublicationTrace.markCopyFailure("mounted-image-copy-deadline")
         windowDiagnostics.captureFailure(host: view, selected: findTextInteraction(in: view))
         let details = await diagnostic()
         Issue.record("""

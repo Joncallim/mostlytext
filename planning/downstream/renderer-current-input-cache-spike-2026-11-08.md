@@ -193,3 +193,12 @@ No source rights decision, owner-account native run or release acceptance follow
 Only after minimal source/native evidence should a separate shipping architecture
 remove diagnostic helpers, make any actual fork/pin/compliance change, reconcile
 current main into PR146 and obtain all uninstrumented canonical qualification.
+
+
+Local implementation note: the production-image failure message uses two joined
+ordinary string literals instead of a multiline literal, preserving its exact
+newline and interpolation arguments. This keeps the diagnostic marker within the
+existing strict function-length rule without disabling a warning or moving an
+assertion. Source comparison removes only the new imports/markers and normalizes
+that equivalent literal representation, then reproduces both original test files
+byte for byte. Every original assertion/control/cleanup statement is retained.

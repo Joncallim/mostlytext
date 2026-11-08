@@ -4,6 +4,7 @@ import Foundation
 @testable import MacDown2
 import Preview
 import Testing
+import Textual
 import WebKit
 
 @MainActor
@@ -146,9 +147,8 @@ struct ProductionPreviewResourceRoutingTests {
             }
             try await Task.sleep(for: .milliseconds(20))
         }
-        Issue.record("""
-        The actual production Preview did not copy the current generation's distinct image pixels;
-        \(lastRaster); html=\(lastHTML); \(fixture.copyHarness.copyDiagnostics(in: root))
-        """)
+        MostlyTextPublicationTrace.markCopyFailure("production-generation-copy-deadline")
+        Issue.record("The actual production Preview did not copy the current generation's distinct image pixels;\n"
+            + "\(lastRaster); html=\(lastHTML); \(fixture.copyHarness.copyDiagnostics(in: root))")
     }
 }

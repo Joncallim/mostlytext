@@ -31,6 +31,10 @@ public enum MostlyTextPublicationTrace {
     (events, overflow, fault)
   }
 
+  public static func markCopyFailure(_ label: String) {
+    emit("native-copy-failure", value: AttributedString(), details: label)
+  }
+
   public static func setFault(_ value: String) {
     precondition(["none", "inline", "fragment"].contains(value))
     fault = value
@@ -84,7 +88,7 @@ def replace_once(raw, anchor, replacement):
 
 
 def transformed(originals, variant="original"):
-    if variant not in ["original", "current-input"]:
+    if variant not in ["original", "current-input", "inline-only", "fragment-only"]:
         raise RuntimeError("Unknown controlled renderer variant")
     if set(originals) != set(EXPECTED) or any(sha(originals[p]) != h for p, h in EXPECTED.items()):
         raise RuntimeError('Refuse any renderer source other than the exact four pinned originals')
@@ -116,15 +120,20 @@ def transformed(originals, variant="original"):
         result[p] = replace_once(result[p], anchor, anchor + '\n' +
             '      MostlyTextPublicationTrace.emit("' + stage + '", value: content,\n' +
             r'        details: "sizes=\(Array(attachmentSizes.values.prefix(4)))")')
-    if variant == "original":
-        p = 'Sources/Textual/Internal/InlineText/WithInlineStyle.swift'
-        result[p] = replace_once(result[p], '        resolve(\n',
-            '        if MostlyTextPublicationTrace.shouldSuppress("inline", value: newValue.values.0) { return }\n        resolve(\n')
-        p = 'Sources/Textual/Internal/TextFragment/TextFragment.swift'
-        result[p] = replace_once(result[p], '        self.textBuilder = TextBuilder(newValue, environment: textEnvironment)',
-            '        if MostlyTextPublicationTrace.shouldSuppress("fragment", value: newValue) { return }\n        self.textBuilder = TextBuilder(newValue, environment: textEnvironment)')
-    else:
-        result.update(current_input_variants(originals))
+    p = 'Sources/Textual/Internal/InlineText/WithInlineStyle.swift'
+    result[p] = replace_once(result[p], '        resolve(\n',
+        '        if MostlyTextPublicationTrace.shouldSuppress("inline", value: newValue.values.0) { return }\n        resolve(\n')
+    p = 'Sources/Textual/Internal/TextFragment/TextFragment.swift'
+    result[p] = replace_once(result[p], '        self.textBuilder = TextBuilder(newValue, environment: textEnvironment)',
+        '        if MostlyTextPublicationTrace.shouldSuppress("fragment", value: newValue) { return }\n        self.textBuilder = TextBuilder(newValue, environment: textEnvironment)')
+    if variant != "original":
+        candidates = current_input_variants(originals)
+        if variant in ["current-input", "inline-only"]:
+            name = 'Sources/Textual/Internal/InlineText/WithInlineStyle.swift'
+            result[name] = candidates[name]
+        if variant in ["current-input", "fragment-only"]:
+            name = 'Sources/Textual/Internal/TextFragment/TextFragment.swift'
+            result[name] = candidates[name]
     result[HELPER_PATH] = HELPER
     return result
 
@@ -218,8 +227,8 @@ def main():
         raise RuntimeError('Select one fixed nonoptimized diagnostic phase')
     check_host(ROOT)
     variant = os.environ.get('MOSTLYTEXT_RENDERER_VARIANT')
-    if variant not in ['original', 'current-input']:
-        raise RuntimeError('Require the fixed original or current-input hosted variant')
+    if variant not in ['original', 'current-input', 'inline-only', 'fragment-only']:
+        raise RuntimeError('Require one fixed hosted renderer variant')
     if FORK.resolve() != FORK or command('rev-parse', 'HEAD').decode().strip() != PIN:
         raise RuntimeError('Require the exact actual pinned hosted dependency')
     path = ROOT / 'textual-effective-source.json'

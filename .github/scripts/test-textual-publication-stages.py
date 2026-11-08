@@ -47,6 +47,17 @@ class ExactRendererAdmission(unittest.TestCase):
         self.assertIn(b'guard builder === expected else { return }', fragment)
         self.assertEqual(fragment.count(b'.onGeometryChange('), before['Sources/Textual/Internal/TextFragment/TextFragment.swift'].count(b'.onGeometryChange('))
 
+    def test_partial_variants_replace_only_the_named_layer(self):
+        before = originals(); original = patcher.transformed(before, 'original')
+        combined = patcher.transformed(before, 'current-input')
+        for variant, selected in [
+            ('inline-only', 'Sources/Textual/Internal/InlineText/WithInlineStyle.swift'),
+            ('fragment-only', 'Sources/Textual/Internal/TextFragment/TextFragment.swift'),
+        ]:
+            partial = patcher.transformed(before, variant)
+            for name in partial:
+                self.assertEqual(partial[name], combined[name] if name == selected else original[name])
+
     def test_unknown_variant_refuses_before_transform(self):
         with self.assertRaises(RuntimeError): patcher.transformed(originals(), 'unreviewed')
 
