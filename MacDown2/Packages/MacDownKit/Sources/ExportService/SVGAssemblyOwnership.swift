@@ -19,8 +19,8 @@ enum SVGAssemblyOwnership {
             "\n" + stylesheet + "\n"
         }
 
-        static func builtIn(for theme: Theme) -> Self? {
-            let structural = ExportThemeStylesheet.structural
+        static func builtIn(for theme: Theme, target: ExportTarget? = nil) -> Self? {
+            let structural = ExportComposer.structuralStylesheet(for: target)
             guard ExportThemeStylesheet.hasClosedReferences(structuralCSS: structural)
             else { return nil }
             return Self(stylesheet: ExportThemeStylesheet.variables(for: theme) + "\n" + structural)

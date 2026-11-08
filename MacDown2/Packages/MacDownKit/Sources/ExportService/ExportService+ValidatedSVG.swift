@@ -30,7 +30,7 @@ extension ExportService {
         _ request: ExportRequest, to target: ExportTarget,
         engine: any ParseExecuting
     ) async throws -> ValidatedExportHTML {
-        guard let audited = SVGAssemblyOwnership.AuditedHeadCSS.builtIn(for: request.theme) else {
+        guard let audited = SVGAssemblyOwnership.AuditedHeadCSS.builtIn(for: request.theme, target: target) else {
             throw ExportError.validatedPublicationRejected
         }
         let csp = try csp(for: target)

@@ -235,6 +235,7 @@ struct PDFExportAdapterTests {
         let html = try await PDFExportAdapter.hardenedHTML(from: prepared)
         #expect(html.contains("Content-Security-Policy"))
         #expect(html.contains("default-src 'none'"))
+        #expect(html.contains("html { scrollbar-width: none !important; }"))
         #expect(html.contains("A short document."))
     }
 
