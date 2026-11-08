@@ -101,3 +101,40 @@ skipped original case or fallback permission broadening.
    integration only if the scoped spike is genuinely ready. No original broad
    Quick Look criterion, production registration, full engine isolation/budgets,
    final signed-artifact, separate-account or owner acceptance is inferred.
+
+## Revised decision: identify the actual refused launch before remedy
+
+Current main38f14a37 additionally contains independent PDF and process-receipt
+changes; the private worker inputs remain frozen atabb86656. Complete original
+native42430116954FAIL and Compliance42430116919PASS are retained in15exact
+records before this code revision. Independent verification binds26canonical/
+16copied/19generated inputs,71actual downloaded compiled roles and actual child
+signature sandbox+inherit. Both original cases pass; the third fails before
+child/factory records with numeric Process.run error4. Its domain, description
+and underlying error were not captured. This cannot establish sandbox denial
+or any cause; normal/held retirement controls were not reached.
+
+Revise only private diagnostic output/admission, with no launch-policy change.
+On actual Process.run failure collect bounded NSError domain/code/description
+and at most two underlying errors; actual worker path, Unix permissions,
+readable/executable access results/errno, and current/default Process directory.
+Use actual observations; do not infer denied rights from declarations. Bound
+all strings and the whole JSON to4096bytes. Emit384raw-byte base64 chunks with
+request/index/count/full-SHA256 (each native log message below700bytes), using
+the already-owned live provider log. Keep the original throw/UI failure.
+
+Factor unchanged host-stream/nonce/compiled-control/snapshot/lifecycle validation
+from UI-success validation. A separate worker-spawn-errors.json is written from
+validated own-nonce raw generations BEFORE the original success checker rejects
+UI65. That diagnostic explicitly records the real failed UI status and never
+qualifies child work or changes the original three cases/assertions. Require
+complete unique bounded chunks/digest, matching request/actual provider identity
+and executable hash; fail closed on truncation, duplicate, other-request or
+malformed evidence. Empty errors are explicit if no launch failure occurs.
+
+No child/provider entitlement, authority, launch path, environment, timing,
+original tests, observer/executor, production or dependency change. Native only
+on guarded GHA; local source/typecheck and pure hostile frame controls. Preserve
+all complete firsts and inspect actual error before selecting a remedy. No
+unchanged retry, test waiver, private API or broadened privilege. This diagnosis
+can pass extraction while the whole original native spike remains FAILED.

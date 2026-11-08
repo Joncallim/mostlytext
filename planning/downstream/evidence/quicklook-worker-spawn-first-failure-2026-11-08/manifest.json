@@ -1,0 +1,96 @@
+{
+  "source": "abb866566d4b1012c8fda84aa3abf75040f07b6f",
+  "actual_checkout": "fe06bb7dcc27b194276c77d8a9c87a7a66a448bb",
+  "records": [
+    {
+      "file": "01-native-first-run.json.gz",
+      "original_name": "native-first-run.json",
+      "bytes": 13010,
+      "sha256": "cb34c80189a0ee1699ffd56b8a0d1b13d957ddfc69ec9f0be85220361561bb30"
+    },
+    {
+      "file": "02-compliance-first-run.json.gz",
+      "original_name": "compliance-first-run.json",
+      "bytes": 12962,
+      "sha256": "d128e14729c9b7a35f4db9ee5271b223ff4c808f92ffe82cb10838ae00be20b5"
+    },
+    {
+      "file": "03-native-complete-first-workflow-logs.zip.gz",
+      "original_name": "native-complete-first-workflow-logs.zip",
+      "bytes": 129840,
+      "sha256": "645a4a001e05d1cadae3116f1a50b086808de5f128b4b6d9bc5684b209d73f1d"
+    },
+    {
+      "file": "04-compliance-complete-first-workflow-logs.zip.gz",
+      "original_name": "compliance-complete-first-workflow-logs.zip",
+      "bytes": 41727,
+      "sha256": "25c414251fac1d60d36abf38f4447fb444f46f85087ccbb8b79774a4b1b768b6"
+    },
+    {
+      "file": "05-verify-first-worker-spawn-failure.py.gz",
+      "original_name": "verify-first-worker-spawn-failure.py",
+      "bytes": 5941,
+      "sha256": "75cac24a07a9965fe3ec03ae573e254126a23c805563244aeeda35387c890880"
+    },
+    {
+      "file": "06-first-worker-spawn-failure-independently-verified.json.gz",
+      "original_name": "first-worker-spawn-failure-independently-verified.json",
+      "bytes": 1611,
+      "sha256": "69afd390f9e4141fe0d5ac13b2f19c5d24564f34a896afbd60839ca361a83eae"
+    },
+    {
+      "file": "07-actual-independent-summary.json.gz",
+      "original_name": "actual-independent-summary.json",
+      "bytes": 1541,
+      "sha256": "7861d367548239f96ec0b36507cfa9b890fd29dd84519b29d8465186d9a6514f"
+    },
+    {
+      "file": "08-receipt.json.gz",
+      "original_name": "receipt.json",
+      "bytes": 50094,
+      "sha256": "305947cd88fd0a90aa4c6f2adbdd9f3461e3d560b83ff69ff082c7ac1de2fea8"
+    },
+    {
+      "file": "09-observer-result.json.gz",
+      "original_name": "observer-result.json",
+      "bytes": 5571,
+      "sha256": "7a2f179c7c2127c5d3908def627742e8fb442cbccf1eef12aca3e697ef5f4ada"
+    },
+    {
+      "file": "10-host-ui-driver.json.gz",
+      "original_name": "host-ui-driver.json",
+      "bytes": 1567,
+      "sha256": "72b4b3c2a94bf9ef2d3aeaa0d2fb702577288e1be9daefe56d6a9b3c3dd33925"
+    },
+    {
+      "file": "11-observer-stream.log.gz",
+      "original_name": "observer-stream.log",
+      "bytes": 23363,
+      "sha256": "0a77636f249fdecfb7cce5c2a0f4d2108126f291c611a23184b0f6d137c5985b"
+    },
+    {
+      "file": "12-provider-observer.json.gz",
+      "original_name": "provider-observer.json",
+      "bytes": 1555,
+      "sha256": "ea63768c78d27c4f76cf944c2dd0143640e7bd140ea39d923254831c9bb53c73"
+    },
+    {
+      "file": "13-status.json.gz",
+      "original_name": "status.json",
+      "bytes": 138,
+      "sha256": "08865ac125ff399c188d686de41a0466384f0317766fb4ab9365b83914f4311a"
+    },
+    {
+      "file": "14-worker-actual-entitlements.plist.gz",
+      "original_name": "worker-actual-entitlements.plist",
+      "bytes": 288,
+      "sha256": "def90a0f9a48b78e8aaa6812ed5ad35662b83645bd249d056db00aeeb14c0f30"
+    },
+    {
+      "file": "15-provider-actual-entitlements.plist.gz",
+      "original_name": "provider-actual-entitlements.plist",
+      "bytes": 310,
+      "sha256": "476a55c835e39b5334f09ecec40b574c0c959137d5d5e6273050cfa24870280d"
+    }
+  ]
+}
