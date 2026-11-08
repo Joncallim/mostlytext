@@ -124,3 +124,41 @@ The first actual native result remains failed if any original or stress assertio
 fails; readback/artifact steps preserve it. Freeze once, retain complete native/
 Compliance first outcomes before changing anything else. No unchanged retry,
 causal conclusion, renderer remediation or merge from a passing stress run alone.
+
+
+## Child host identity transport and failed-diagnostic readback correction
+
+Complete838native42439723164FAIL/Compliance42439747409PASS retainedbeforethis
+correction. Actual58functions:57originalPASS,1newdiagnostic hostRefused before
+anyof20freshscenarios. Every296original/297effective fork file INCLUDINGhidden
+metadata is downloaded and verified, all5modifiedSwift transformations exact,
+allcanonical sources/24pins/5actualcompiled roles/raw58summary/owned65withzero
+force/timeout independentlyverified. The earlier hidden archive gap is resolved
+for this newer run, not retroactively filled into the previous first.
+
+The actual guard predicate is UNKNOWN: no child identity/environment values were
+captured. The actual xctestrun dictionaries omit GHA variables, while existing
+workflow resource tracing explicitly uses TEST_RUNNER_ forwarding. Parent GHA
+checks are not child runtime telemetry. Do not call this sole-root-cause proof
+or weaken a host/account/home/owner-data guard to let the diagnostic proceed.
+
+Explicitly forward the three existing required public GHA/repository/temp facts
+through Xcode's already-used TEST_RUNNER_ environment transport. Keep every
+original guard comparison and exact root/home requirement. Before those checks,
+require actual positive matching UID/effectiveUID and POSIX account runner/home,
+owner/test home absence and fixed nonsymlink existing diagnostic parent. Only
+then write a bounded fixed-name host-facts JSON containing the three allowlisted
+public child variables and actual user/home/UID/OS values, never all environment
+or credentials. Any old guard mismatch still refuses before native scenarios.
+The new system identity admission is additional, not a substitute for the old
+checks. Native execution/build stays on GHA; owner account remains held.
+
+The previous readback threw on missing initial.json after hostRefused, although
+raw result/source/compiled proof was retained. Change diagnostic readback to
+write actual owned/raw summary and explicit per-scenario NOT_CAPTURED/errors
+before refusing absent scenarios. Include actual host facts when available.
+Missing facts/results and overflow are not passes; newworkflow stillfails if any
+actualnative test or diagnostic recording fails. Preserve all20fixedscenarios,
+original57assertions/5second limits and600second executor. Freezeonce, dispatch
+once, retain complete first outcomes before any further correction; no unchanged
+retry or causal/production Preview claim from a passing diagnostic.
