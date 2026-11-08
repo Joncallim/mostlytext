@@ -20,6 +20,7 @@ struct DirectoryWalker: Sendable {
     }
 
     private let listChildren: @Sendable (URL) throws -> [URL]
+    private let readValues: @Sendable (URL) throws -> URLResourceValues
 
     init() {
         listChildren = { directory in
@@ -29,11 +30,22 @@ struct DirectoryWalker: Sendable {
                 options: []
             )
         }
+        readValues = { try $0.resourceValues(forKeys: Self.resourceKeys) }
     }
 
     /// Test seam for a directory that stops being enumerable during a walk.
     init(listChildren: @escaping @Sendable (URL) throws -> [URL]) {
         self.listChildren = listChildren
+        readValues = { try $0.resourceValues(forKeys: Self.resourceKeys) }
+    }
+
+    /// Test seam for a child whose metadata becomes unavailable after listing.
+    init(
+        listChildren: @escaping @Sendable (URL) throws -> [URL],
+        readValues: @escaping @Sendable (URL) throws -> URLResourceValues
+    ) {
+        self.listChildren = listChildren
+        self.readValues = readValues
     }
 
     /// The inputs that stay constant across every recursive call, bundled
@@ -117,7 +129,9 @@ struct DirectoryWalker: Sendable {
         for child in children {
             guard !Task.isCancelled, results.count < context.maximumPaths,
                   state.directoriesEntered < context.maximumDirectories else { return }
-            guard let values = try? child.resourceValues(forKeys: Self.resourceKeys) else { continue }
+            // A listed entry whose metadata cannot be read makes the scan
+            // incomplete. Never publish the other paths as a ready index.
+            let values = try readValues(child)
             // Hidden entries are tagged, not dropped: an entry is hidden if
             // its own basename starts with `.` OR any ancestor directory
             // (below `root`) already is, so a non-dotfile inside a hidden

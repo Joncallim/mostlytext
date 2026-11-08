@@ -4,6 +4,44 @@ import Testing
 
 @Suite("Workspace index enumeration failures")
 struct WorkspaceIndexEnumerationFailureTests {
+    @Test func unreadableChildMetadataCannotPublishAPartialIndex() async throws {
+        let parent = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: parent) }
+        let root = parent.appendingPathComponent("workspace", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        try Data().write(to: root.appendingPathComponent("first.md"))
+        try Data().write(to: root.appendingPathComponent("later.md"))
+        let trigger = parent.appendingPathComponent("fail.flag")
+        let keys: Set<URLResourceKey> = [.isDirectoryKey, .isHiddenKey, .isPackageKey, .isSymbolicLinkKey]
+
+        let index = WorkspaceFileIndex(walk: { root, excluded in
+            try DirectoryWalker(listChildren: { directory in
+                try FileManager.default.contentsOfDirectory(
+                    at: directory, includingPropertiesForKeys: Array(keys), options: []
+                ).sorted { $0.lastPathComponent < $1.lastPathComponent }
+            }, readValues: { entry in
+                if entry.lastPathComponent == "later.md", FileManager.default.fileExists(atPath: trigger.path) {
+                    throw CocoaError(.fileReadNoPermission)
+                }
+                return try entry.resourceValues(forKeys: keys)
+            }).walk(root: root, excludedDirectoryNames: excluded)
+        })
+
+        await index.rebuild(root: root)
+        #expect(await index.state == .ready(count: 2))
+        #expect(await index.query("first").map(\.relativePath) == ["first.md"])
+
+        try Data().write(to: trigger)
+        await index.rebuild(root: root)
+
+        guard case .failed = await index.state else {
+            Issue.record("an unreadable entry's metadata must not produce a partial ready index")
+            return
+        }
+        #expect(await index.allPaths().isEmpty)
+        #expect(await index.query("first").isEmpty)
+    }
+
     @Test func unreadableChildCannotPublishAPartialIndex() async throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         defer { try? FileManager.default.removeItem(at: root) }
