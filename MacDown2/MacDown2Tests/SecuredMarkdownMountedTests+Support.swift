@@ -161,8 +161,10 @@ extension SecuredMarkdownMountedTests {
             _ = interaction.perform(NSSelectorFromString("selectAll:"), with: nil)
             _ = interaction.perform(NSSelectorFromString("copy:"), with: nil)
             let html = NSPasteboard.general.string(forType: .html) ?? "<no HTML>"
+            let modelID = (interaction as? Textual.NSTextInteractionView).map { ObjectIdentifier($0.model) }
             return "view=\(ObjectIdentifier(interaction)) hidden=\(interaction.isHiddenOrHasHiddenAncestor) "
-                + "frame=\(interaction.frame) firstResponder=\(interaction.window?.firstResponder === interaction) "
+                + "modelID=\(String(describing: modelID)) frame=\(interaction.frame) "
+                + "firstResponder=\(interaction.window?.firstResponder === interaction) "
                 + "html=\(html) \(attachmentLayoutDiagnostics(in: interaction))"
         }.joined(separator: " | ")
     }
