@@ -49,9 +49,13 @@ lookup/launch under unchanged authority is an answer to this question.
 
 Run only on a disposable hosted macOS 26 ARM runner with the existing owned
 Finder executor. Preserve original cold/static and JavaScriptCore source and
-tests byte for byte. Add a third fixed fixture and actual Finder test, with a
-separate manual diagnostic workflow selecting only the XPC case after compiling
-the unchanged original controls. Capture all source and generated inputs, every
+tests byte for byte. Add a third fixed fixture and actual Finder test. On this
+private branch, adapt the **already registered**
+`.github/workflows/quicklook-jsc-probe.yml` path to manual-only execution of all
+three genuine cases, retaining the two original controls. GitHub requires a
+manually dispatched workflow path to exist on the default branch; a new
+branch-only workflow file cannot be triggered this way. Capture all source and
+generated inputs, every
 regular file in the actual signed app/provider/service/test bundles, exact
 entitlements, full native result, provider/service logs and first workflow
 artifact before any correction. The original no-container-launch check remains.
@@ -80,3 +84,5 @@ Those require a separate architecture and physical-retirement proof.
 
 This is an engineering feasibility slice for issue #7. It has no user-visible
 string, accessibility, localization, export or document-format change.
+
+Workflow dispatch path rule: <https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#workflow_dispatch>.
