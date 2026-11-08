@@ -549,6 +549,27 @@ unknown code as Markdown. The existing container-prefix/indentation grammar
 limits and explicit formatting-menu-command exclusion remain; this correction
 does not claim complete CommonMark classification or final native acceptance.
 
+**9 November 2026 front-matter safety follow-up (stacked on the fence correction).**
+The older prefix scan returned “no front matter” when a plausible `---` opener
+had no closer within 1,000 lines or before end of file. In a document still
+being edited, that answer can enable Markdown-only assists inside unfinished
+YAML. Also, fence-looking text inside a valid closed YAML block could be
+replayed as a Markdown delimiter after the block, suppressing ordinary prose
+assists or choosing the wrong editing profile. Both cases reproduce on the
+unchanged classifier before this follow-up.
+
+Keep the same 1,000-line prefix bound. Distinguish an absent opener, a known
+closed block, and an unresolved plausible opener. An unresolved opener returns
+the same fail-safe state as a distant fence; Markdown-only ambient assists and
+comment-toggle do not run. This can also withhold those assists after a true
+thematic break beginning with `---` and nonblank following content while no
+closer exists; the existing blank-second-line thematic-break rule remains.
+When front matter closes within the bound, use the first post-block line as
+the known outside-fence anchor and replay no delimiter-looking YAML lines.
+Neither path parses the full document or adds another parser dependency.
+Container-prefixed Markdown fences and the final native edit matrix remain
+separate acceptance work.
+
 ### 6.13 The ten built-in transforms (Slice 4c) — design pass, further split, decided before implementation
 
 **Baseline, verified against live master (`75b78e8`) before writing this design pass:** re-confirmed §6.11's own original baseline claim — a repo-wide grep for every transform's own obvious name (`Duplicate Line`, `Move Line`, `Sort Lines`, `Dedupe`, `Trim Trailing`, `toggleComment`, case-conversion helpers) finds nothing in `EditorCore` or the app target; none of the ten exist anywhere. Two pieces of real, reusable machinery already exist and change this slice's actual scope, found only by reading (not assuming) the current Tab/Shift-Tab implementation:

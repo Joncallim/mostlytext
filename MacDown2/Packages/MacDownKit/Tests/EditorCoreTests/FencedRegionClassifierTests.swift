@@ -186,11 +186,11 @@ struct FencedRegionClassifierTests {
         #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: offset) != .frontMatter)
     }
 
-    @Test("an unclosed --- at document start is not treated as front matter")
-    func unclosedFrontMatterDelimiterIsNotFrontMatter() {
+    @Test("an unclosed --- at document start remains unresolved while editing")
+    func unclosedFrontMatterDelimiterIsUnresolved() {
         let text = "---\ntitle: Test\nno closing delimiter here" as NSString
         let offset = text.range(of: "no closing").location
-        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: offset) == .prose)
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: offset) == .unresolved)
     }
 
     @Test("front matter immediately followed by a fence: the fence is still detected correctly")
