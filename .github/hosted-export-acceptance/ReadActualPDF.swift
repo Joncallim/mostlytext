@@ -77,12 +77,37 @@ struct ReadActualExportPDF {
                 "index": index, "media_box": [bounds.minX, bounds.minY, bounds.width, bounds.height],
                 "raw_page_text": pageText, "media_box_selection_text": visibleSelection,
             ]
+            row["character_count"] = page.numberOfCharacters
+            row["raw_utf16_count"] = (pageText as NSString).length
+            row["character_geometry"] = try characterGeometry(page: page, text: pageText)
             row["actual_raster_nonwhite_pixels"] = try raster(
                 graphicsPage, to: root.appendingPathComponent("actual-pdf-page-\(index + 1).png")
             )
             pages.append(row)
         }
         return pages
+    }
+
+    private static func characterGeometry(page: PDFPage, text: String) throws -> [[String: Any]] {
+        let source = text as NSString
+        guard page.numberOfCharacters == source.length, source.length <= 16384 else { throw Refusal.invalid }
+        return try (0 ..< source.length).map { index in
+            let box = page.characterBounds(at: index)
+            var row: [String: Any] = [
+                "utf16_index": index, "text": source.substring(with: NSRange(location: index, length: 1)),
+            ]
+            if box.isNull {
+                row["bounds"] = NSNull()
+                row["geometry_state"] = "null"
+            } else {
+                guard [box.minX, box.minY, box.width, box.height].allSatisfy(\.isFinite) else {
+                    throw Refusal.invalid
+                }
+                row["bounds"] = [box.minX, box.minY, box.width, box.height]
+                row["geometry_state"] = box.isEmpty ? "empty" : "rect"
+            }
+            return row
+        }
     }
 
     private static func raster(_ page: CGPDFPage, to output: URL) throws -> Int {

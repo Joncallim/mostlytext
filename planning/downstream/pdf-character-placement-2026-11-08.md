@@ -23,7 +23,8 @@ Only ReadActualPDF.swift gains per-page character_count/raw_utf16_count plus
 character_geometry entries: each rawUTF16index/text and public characterBounds.
 Require PDFPage.numberOfCharacters equal the raw NSString length and at most
 16384 before indexing; reject nonfinite geometry, preserve zero/empty geometry
-for separators and never invent visible glyphs. Read characterBounds(at:) from
+for separators (CGRect.null is explicitly recorded as null/no rectangle, never
+converted to invented coordinates) and never invent visible glyphs. Read characterBounds(at:) from
 this actual PDFPage, not pypdf coordinates or inferred source placement. Exact
 PDFSHA/size, original guard counterexample, actual raster/page/text proof and
 all existing host/root/source limits remain. No shell, authored script, renderer,
