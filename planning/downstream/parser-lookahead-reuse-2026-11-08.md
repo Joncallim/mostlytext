@@ -229,6 +229,24 @@ The prior wrapper and normal app-path limitations remain. A passing composite
 console permits a dependency-publication proposal; it does not qualify the
 Swift package, app, native editing, user-visible performance or release.
 
+The isolated composite now has that component result. Its complete evidence is
+`/Volumes/Fast SSD/CORTANA-Builds/parser-utf16-boundary-20261108/composite-runtime/composite-qualification-proof.json`;
+the original and bounds-only firsts are retained beside it. The original
+twelve-case decoder matrix has six failed rows, the bounds-only candidate one,
+and the composite zero. Both true two-byte heap cases and the twelve-case
+matrix pass under AddressSanitizer and UndefinedBehaviorSanitizer with no
+reported findings. The unchanged eight-case lookahead output and 324-pair
+subtree output match their prior passing candidate bytes. The combined C
+program has the same 268 exported symbols as the original. Among the exact 48
+copied runtime source/header files, only `parser.c` and `unicode.h` differ;
+the latter is byte-identical to the maintained upstream file at blob
+`196c6bf416b6bf7c2e4efcd67a5ef083a90f49ab`.
+
+This result does not change the publication boundary: the dependency fork,
+Swift wrappers, manifest pins, compliance record, hosted resolution and app
+qualification have not yet adopted the composite. Keep the already published
+PR146 firsts independent and preserve its source while they are assessed.
+
 
 ## First console admission refusal
 
