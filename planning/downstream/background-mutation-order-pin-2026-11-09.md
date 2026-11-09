@@ -51,6 +51,18 @@ product code changes in this unit.
   checked at these selected commits and match the existing distributed texts.
   Other package identities and requirements stay fixed.
 
+The shared-subtree comparison probe previously allowed only the C files changed
+by its own repair. It now checks the exact reviewed stages: `5ce80b6f` to
+`3b1fb00f` changes only the package manifest and `subtree.c`, then
+`3b1fb00f` to `1884982a` changes only `parser.c` and `unicode.h`. An arbitrary
+runtime revision or a fifth product-source path fails before C execution. The
+probe still compares all 324 ordered subtree results, requires the original
+work-bound failure and candidate improvement, and runs the sanitizer phase.
+The first [PR #180 hosted comparison](https://github.com/Joncallim/mostlytext/actions/runs/42544073176)
+stopped at the older two-file guard before any C phase; that failed run remains
+evidence. The revised guard retains the existing receipt's total-path list and
+adds a separate stage record, so prior receipt readers keep their shape.
+
 ## Verification and stop conditions
 
 Resolve the complete graph from the manifests and verify that exactly these
