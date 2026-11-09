@@ -21,6 +21,7 @@ struct HighlightingRestoreRepaintTests {
         scrollView.hasVerticalScroller = true
         scrollView.documentView = editor.textView
         let window = NSWindow(contentRect: scrollView.frame, styleMask: [.titled], backing: .buffered, defer: false)
+        window.animationBehavior = .none
         window.contentView = scrollView
         window.makeKeyAndOrderFront(nil)
         return window

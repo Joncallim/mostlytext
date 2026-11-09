@@ -20,6 +20,7 @@ struct MathPreviewRecoveryTests {
         fixture.controller.model.tabStore.setPreviewLayout(.split(fraction: 0.5), for: fixture.tabID)
         let window = try #require(fixture.controller.window)
         window.setContentSize(.init(width: 900, height: 600))
+        window.animationBehavior = .none
         window.makeKeyAndOrderFront(nil)
         // SwiftUI lazily constructs its virtual accessibility children. Use
         // the same bounded own-process request as the qualified native probe;

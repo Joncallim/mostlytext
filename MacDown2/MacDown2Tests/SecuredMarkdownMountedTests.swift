@@ -37,6 +37,7 @@ struct SecuredMarkdownMountedTests {
             contentRect: NSRect(x: 0, y: 0, width: 500, height: 400),
             styleMask: [.titled], backing: .buffered, defer: false
         )
+        window.animationBehavior = .none
         window.contentView = hosting
         window.makeKeyAndOrderFront(nil)
         defer {
