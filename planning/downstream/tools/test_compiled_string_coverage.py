@@ -32,6 +32,13 @@ class CompiledStringCoverageTests(unittest.TestCase):
         path.write_text('import Foundation\nlet example = 1\n')
         return path
 
+    def probe(self):
+        relative = next(iter(coverage.NON_SHIPPING_SOURCE_EXEMPTIONS))
+        path = self.repo / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes((Path(__file__).resolve().parents[3] / relative).read_bytes())
+        return path
+
     def catalog(self, name, keys):
         path = self.repo / name
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -75,6 +82,25 @@ class CompiledStringCoverageTests(unittest.TestCase):
     def test_new_source_cannot_hide_in_partial_extraction(self):
         self.source('MacDown2/MacDown2/New.swift')
         with self.assertRaisesRegex(coverage.CoverageError, 'New.swift'):
+            coverage.check(self.repo, self.extraction)
+
+    def test_only_exact_non_shipping_probe_is_exempt(self):
+        self.probe()
+        self.assertEqual(coverage.check(self.repo, self.extraction)['compiled_sources'], 3)
+        self.source('MacDown2/Packages/MacDownKit/Sources/QuickLookSourceProbe/Other.swift')
+        with self.assertRaisesRegex(coverage.CoverageError, 'Other.swift'):
+            coverage.check(self.repo, self.extraction)
+
+    def test_new_probe_localization_key_invalidates_exemption(self):
+        probe = self.probe()
+        probe.write_text(probe.read_text() + '\nlet label = String(localized: "New label")\n')
+        with self.assertRaisesRegex(coverage.CoverageError, 'non-shipping compiler exemption changed'):
+            coverage.check(self.repo, self.extraction)
+
+    def test_compiler_record_for_exempt_probe_cannot_hide_a_key(self):
+        probe = self.probe()
+        self.record(probe, ['New label'])
+        with self.assertRaisesRegex(coverage.CoverageError, 'unknown or missing owned source'):
             coverage.check(self.repo, self.extraction)
 
     def test_deleted_source_receipt_refuses(self):

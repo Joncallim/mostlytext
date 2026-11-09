@@ -18,6 +18,15 @@ class CoverageError(ValueError):
     pass
 
 
+# This SwiftPM executable is a test-only process probe, not an app/CLI Xcode
+# compilation input. Pin its exact source so adding a localization key (or any
+# other code) requires an explicit review of this exemption.
+NON_SHIPPING_SOURCE_EXEMPTIONS = {
+    Path('MacDown2/Packages/MacDownKit/Sources/QuickLookSourceProbe/main.swift'):
+        '12764f69a3627d273d77bdc2483c264522c4e2e55ab275f61c792254a192c1f7',
+}
+
+
 def source_roots(repo: Path) -> list[Path]:
     return [repo / path for path in (
         'MacDown2/MacDown2', 'MacDown2/MacDown2CLI',
@@ -26,8 +35,16 @@ def source_roots(repo: Path) -> list[Path]:
 
 
 def expected_sources(repo: Path) -> set[Path]:
-    return {path.resolve() for root in source_roots(repo) for path in root.rglob('*.swift')
-            if 'Resources' not in path.relative_to(root).parts}
+    expected = {path.resolve() for root in source_roots(repo) for path in root.rglob('*.swift')
+                if 'Resources' not in path.relative_to(root).parts}
+    for relative, approved_sha256 in NON_SHIPPING_SOURCE_EXEMPTIONS.items():
+        source = (repo / relative).resolve()
+        if source not in expected:
+            continue
+        if hashlib.sha256(source.read_bytes()).hexdigest() != approved_sha256:
+            raise CoverageError(f'non-shipping compiler exemption changed: {relative}')
+        expected.remove(source)
+    return expected
 
 
 def catalog_for(repo: Path, source: Path) -> Path | None:
