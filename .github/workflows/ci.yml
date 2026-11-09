@@ -43,7 +43,12 @@ jobs:
           brew install swiftlint
           # SwiftFormat's unpinned Homebrew formula can change formatting rules
           # without a source change. Use the version that formatted this tree.
+          # GitHub's release-asset endpoint can return a transient 504 before
+          # lint begins. Retry transport/server failures; keep the pinned
+          # version and SHA-256 check below as the acceptance gate.
           curl -fsSLo "$RUNNER_TEMP/swiftformat.zip" \
+            --retry 5 --retry-delay 5 --retry-max-time 150 \
+            --connect-timeout 10 --max-time 30 \
             https://github.com/nicklockwood/SwiftFormat/releases/download/0.63.1/swiftformat.zip
           echo '385ef1a263ba28685157b98c5536b9c9105e124518f28b7ef8a2bee4b167eaeb  '"$RUNNER_TEMP/swiftformat.zip" | shasum -a 256 -c -
           unzip -p "$RUNNER_TEMP/swiftformat.zip" swiftformat > "$RUNNER_TEMP/swiftformat"
