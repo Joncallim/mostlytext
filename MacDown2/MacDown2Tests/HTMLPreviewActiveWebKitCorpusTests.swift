@@ -7,15 +7,15 @@ import WebKit
 
 /// These tests load saved HTML through the app's Coordinator and its installed scheme handler.
 /// A successful local image and stylesheet are controls for the WebKit readback. The loopback
-/// listener is a separate control for the network assertion: a missing image alone cannot prove
-/// that WebKit did not connect to an external resource.
+/// listener and a separate permissive WebKit load are controls for the network assertion:
+/// a missing image alone cannot prove that WebKit could have reached the listener.
 @MainActor
 @Suite(.serialized)
 struct HTMLPreviewActiveWebKitCorpusTests {
     @Test func savedPageKeepsLocalResourcesAndMakesNoRemoteConnection() async throws {
         let observer = try await LoopbackObserver.start()
         defer { observer.stop() }
-        try await observer.verifyConnectionControl()
+        try await observer.verifyConnectionControls()
         let controlledConnectionCount = await observer.connectionCount
 
         let directory = try makeDirectory()
@@ -301,6 +301,7 @@ private final class LoopbackObserver {
         parameters.requiredLocalEndpoint = .hostPort(host: "127.0.0.1", port: .any)
         let listener = try NWListener(using: parameters)
         let observations = LoopbackObservations()
+        let queue = DispatchQueue(label: "MostlyText.HTMLPreview.LoopbackObserver.Start")
         listener.stateUpdateHandler = { state in
             switch state {
             case .ready:
@@ -314,9 +315,22 @@ private final class LoopbackObserver {
         }
         listener.newConnectionHandler = { connection in
             Task { await observations.recordConnection() }
-            connection.cancel()
+            connection.start(queue: queue)
+            connection.receive(minimumIncompleteLength: 1, maximumLength: 4096) { data, _, _, _ in
+                guard data?.isEmpty == false else {
+                    connection.cancel()
+                    return
+                }
+                // Finish WebKit's control load before the zero-connection observation.
+                let response = Data((
+                    "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n"
+                        + "Content-Length: 2\r\nConnection: close\r\n\r\nok"
+                ).utf8)
+                connection.send(content: response, completion: .contentProcessed { _ in
+                    connection.cancel()
+                })
+            }
         }
-        let queue = DispatchQueue(label: "MostlyText.HTMLPreview.LoopbackObserver.Start")
         listener.start(queue: queue)
         let deadline = ContinuousClock.now.advanced(by: .seconds(5))
         while ContinuousClock.now < deadline {
@@ -334,7 +348,7 @@ private final class LoopbackObserver {
         throw WebKitCorpusError.timeout("Loopback listener did not become ready")
     }
 
-    func verifyConnectionControl() async throws {
+    func verifyConnectionControls() async throws {
         let before = await connectionCount
         let connection = NWConnection(host: "127.0.0.1", port: port, using: .tcp)
         connection.start(queue: queue)
@@ -342,11 +356,42 @@ private final class LoopbackObserver {
         let deadline = ContinuousClock.now.advanced(by: .seconds(5))
         while ContinuousClock.now < deadline {
             if await connectionCount > before {
+                try await verifyWebKitConnectionControl()
                 return
             }
             try await Task.sleep(for: .milliseconds(50))
         }
         throw WebKitCorpusError.timeout("Loopback connection control was not observed")
+    }
+
+    func verifyWebKitConnectionControl() async throws {
+        let before = await connectionCount
+        guard let url = URL(string: "http://127.0.0.1:\(port.rawValue)/webkit-control") else {
+            throw WebKitCorpusError.listener("Invalid WebKit loopback control URL")
+        }
+        let configuration = WKWebViewConfiguration()
+        configuration.websiteDataStore = .nonPersistent()
+        let probe = WKWebView(frame: .zero, configuration: configuration)
+        defer { probe.stopLoading() }
+        guard probe.load(URLRequest(url: url)) != nil else {
+            throw WebKitCorpusError.listener("WebKit refused the loopback control load")
+        }
+        let deadline = ContinuousClock.now.advanced(by: .seconds(15))
+        var lastError = ""
+        while ContinuousClock.now < deadline {
+            if await connectionCount > before {
+                do {
+                    let text = try await probe.evaluateJavaScript("document.body?.textContent ?? ''") as? String
+                    if text == "ok", probe.url == url, !probe.isLoading {
+                        return
+                    }
+                } catch {
+                    lastError = "\(error)"
+                }
+            }
+            try await Task.sleep(for: .milliseconds(50))
+        }
+        throw WebKitCorpusError.timeout("WebKit loopback control did not load: \(lastError)")
     }
 
     func stop() {
