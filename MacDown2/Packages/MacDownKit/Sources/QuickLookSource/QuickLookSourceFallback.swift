@@ -39,7 +39,8 @@ public enum QuickLookSourceFallback {
     private static func readSelectedFile(_ fileURL: URL) throws -> Data {
         guard fileURL.isFileURL else { throw QuickLookSourceError.invalidURL }
         // The Quick Look grant is for this selected file, never its parent.
-        let descriptor = open(fileURL.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW_ANY)
+        // A selected FIFO must not wait for a writer before fstat rejects it.
+        let descriptor = open(fileURL.path, O_RDONLY | O_CLOEXEC | O_NONBLOCK | O_NOFOLLOW_ANY)
         guard descriptor >= 0 else { throw QuickLookSourceError.openFailed }
         defer { close(descriptor) }
 

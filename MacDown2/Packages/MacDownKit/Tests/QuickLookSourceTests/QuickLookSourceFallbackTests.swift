@@ -1,3 +1,4 @@
+import Darwin
 import FileCore
 import Foundation
 import QuickLookSource
@@ -63,6 +64,44 @@ struct QuickLookSourceFallbackTests {
         }
     }
 
+    @Test func aNamedPipeWithoutAWriterCannotBlockTheProvider() throws {
+        let directory = try temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let pipe = directory.appendingPathComponent("unwritable.md")
+        try #require(mkfifo(pipe.path, S_IRUSR | S_IWUSR) == 0)
+
+        // A separate process owns the potentially blocking call. A regression
+        // is killed within the deadline, leaving the test runner responsive.
+        let probe = Process()
+        probe.executableURL = Bundle(for: TestBundleMarker.self).bundleURL
+            .deletingLastPathComponent().appendingPathComponent("QuickLookSourceProbe")
+        probe.arguments = [pipe.path]
+        try probe.run()
+        let deadline = Date().addingTimeInterval(2)
+        while probe.isRunning, Date() < deadline {
+            Thread.sleep(forTimeInterval: 0.01)
+        }
+        if probe.isRunning {
+            // A successful exit can race this check; SIGTERM tolerates ESRCH.
+            _ = kill(probe.processIdentifier, SIGTERM)
+            let graceDeadline = Date().addingTimeInterval(0.2)
+            while probe.isRunning, Date() < graceDeadline {
+                Thread.sleep(forTimeInterval: 0.01)
+            }
+            if probe.isRunning {
+                _ = kill(probe.processIdentifier, SIGKILL)
+            }
+            let reapDeadline = Date().addingTimeInterval(0.5)
+            while probe.isRunning, Date() < reapDeadline {
+                Thread.sleep(forTimeInterval: 0.01)
+            }
+            #expect(!probe.isRunning)
+            Issue.record("Quick Look source read blocked on a named pipe without a writer")
+        } else {
+            #expect(probe.terminationReason == .exit && probe.terminationStatus == 0)
+        }
+    }
+
     private func withFile<T>(_ bytes: Data, perform: (URL) throws -> T) throws -> T {
         let directory = try temporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
@@ -79,4 +118,6 @@ struct QuickLookSourceFallbackTests {
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         return directory
     }
+
+    private final class TestBundleMarker: NSObject {}
 }

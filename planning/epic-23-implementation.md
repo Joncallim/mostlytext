@@ -385,8 +385,10 @@ package target; that target uses FileCore's strict decoder and owns the bounded
 reader and passive HTML fallback. No app/window/session/Export object is created.
 
 The source boundary admits at most 1 MiB of file bytes, requires a regular file,
-and refuses a changed or oversized read. Decoding is FileCore's automatic
-BOM/UTF-8 policy; it does not guess legacy encodings. The provider runs this
+and refuses a changed or oversized read. It opens nonblocking so a selected
+named pipe without a writer cannot stall the provider before the type check.
+Decoding uses FileCore's automatic BOM/UTF-8 policy; it does not guess legacy
+encodings. The provider runs this
 bounded work off its callback executor. A valid decoded source becomes a single
 immutable HTML reply with escaped authored text, no executable element, no
 network URL, no resource attachment and a restrictive content security policy.
@@ -405,8 +407,9 @@ eventual shared GFM/derived-content composition, heading links, all four
 technical renderers, independent fallback, calibrated worker budgets, theme,
 localisation and actual Finder release acceptance remain #7 work.
 
-Package tests cover exact/over-limit reads, non-regular and symlink refusal,
-strict Unicode/BOM decoding, malformed input and complete HTML escaping/CSP.
+Package tests cover exact/over-limit reads, non-regular, symlink and bounded
+named-pipe refusal, strict Unicode/BOM decoding, malformed input and complete
+HTML escaping/CSP.
 Build-only checks generate the Xcode project, compile the Release provider and
 service, inspect bundle IDs/content type/entitlements and verify both signed
 products are embedded in the containing app. The test desktop must later prove

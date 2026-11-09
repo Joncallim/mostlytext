@@ -92,6 +92,7 @@ let package = Package(
     targets: [
         .target(name: "FileCore", dependencies: ["JSONSupport"], resources: [.process("Resources")]),
         .target(name: "QuickLookSource", dependencies: ["FileCore"]),
+        .executableTarget(name: "QuickLookSourceProbe", dependencies: ["QuickLookSource"]),
         .target(name: "CommandBridge", dependencies: ["JSONSupport"]),
         .target(name: "CommandLineSupport", dependencies: [
             "CommandBridge", .product(name: "ArgumentParser", package: "swift-argument-parser"),
@@ -208,7 +209,7 @@ let package = Package(
         ),
 
         .testTarget(name: "FileCoreTests", dependencies: ["FileCore"]),
-        .testTarget(name: "QuickLookSourceTests", dependencies: ["QuickLookSource", "FileCore"]),
+        .testTarget(name: "QuickLookSourceTests", dependencies: ["QuickLookSource", "FileCore", "QuickLookSourceProbe"]),
         .testTarget(name: "CommandBridgeTests", dependencies: ["CommandBridge"]),
         .testTarget(name: "CommandLineSupportTests", dependencies: ["CommandLineSupport", "CommandBridge"]),
         .testTarget(name: "LocalResourceAccessTests", dependencies: ["LocalResourceAccess"]),
