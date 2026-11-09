@@ -25,7 +25,7 @@ struct FrontMatterAssistSafetyTests {
 
     @Test("fence-like YAML content cannot poison the prose after a closed front matter block")
     func closedFrontMatterSkipsItsFenceLikeLines() {
-        let source = "---\nsummary: |\n  ```swift\n  example\n---\nbody" as NSString
+        let source = "---\nsummary: |\n  ```swift\n  example\n---\nbody " as NSString
         #expect(FencedRegionClassifier.classify(text: source, atUTF16Offset: source.length) == .prose)
         guard case .edit = markdownAsteriskOutcome(in: source) else {
             Issue.record("Markdown pairing should resume in prose after front matter")

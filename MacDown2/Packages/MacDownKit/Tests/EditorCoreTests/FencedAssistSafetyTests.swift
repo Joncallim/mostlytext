@@ -32,7 +32,7 @@ struct FencedAssistSafetyTests {
 
     @Test("a valid matching closer resumes Markdown prose")
     func matchingCloserRestoresProse() {
-        let source = "````swift\ncode\n`````\nmore prose" as NSString
+        let source = "````swift\ncode\n`````\nmore prose " as NSString
         #expect(FencedRegionClassifier.classify(text: source, atUTF16Offset: source.length) == .prose)
         guard case .edit = markdownAsteriskOutcome(in: source) else {
             Issue.record("Markdown pairing should resume after a matching closer")
@@ -43,8 +43,8 @@ struct FencedAssistSafetyTests {
     @Test("invalid closer lines do not prevent a later valid closure")
     func laterMatchingCloserRestoresProse() {
         for sourceText in [
-            "```swift\ncode\n~~~\ncode\n```\nmore prose",
-            "````swift\ncode\n```\ncode\n````\nmore prose",
+            "```swift\ncode\n~~~\ncode\n```\nmore prose ",
+            "````swift\ncode\n```\ncode\n````\nmore prose ",
         ] {
             let source = sourceText as NSString
             #expect(FencedRegionClassifier.classify(text: source, atUTF16Offset: source.length) == .prose)
