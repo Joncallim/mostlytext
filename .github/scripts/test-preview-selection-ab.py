@@ -57,7 +57,7 @@ class PreviewSelectionABTests(unittest.TestCase):
     def test_fixed_mounted_copy_test_and_repetition_count(self):
         self.assertEqual(probe.REPEATS, 10)
         self.assertEqual(probe.TEST, "-only-testing:MacDown2Tests/SecuredMarkdownMountedTests/"
-                         "aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration()")
+                         "aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration")
         self.assertEqual(probe.selected_test_identifiers({
             "testNodes": [{"nodeIdentifierURL": probe.TEST_URL}, {"nodeIdentifierURL": "test://other"}]
         }), [probe.TEST_URL])

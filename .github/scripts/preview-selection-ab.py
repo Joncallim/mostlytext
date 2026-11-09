@@ -25,7 +25,7 @@ INVENTORY = Path("compliance/inventory.json")
 CHANGED_PIN_PATHS = {str(LOCK), str(MANIFEST), str(PROJECT), str(INVENTORY)}
 REPEATS = 10
 TEST = ("-only-testing:MacDown2Tests/SecuredMarkdownMountedTests/"
-        "aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration()")
+        "aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration")
 TEST_URL = ("test://com.apple.xcode/MacDown2/MacDown2Tests/SecuredMarkdownMountedTests/"
             "aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration()")
 ROOT = Path(os.environ.get("RUNNER_TEMP", "/missing-runner-temp")) / "preview-grant-probe"
