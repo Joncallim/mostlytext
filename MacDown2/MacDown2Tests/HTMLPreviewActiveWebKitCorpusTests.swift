@@ -117,7 +117,8 @@ struct HTMLPreviewActiveWebKitCorpusTests {
         _ = webView.load(URLRequest(url: unknownURL))
         let response = try await recorder.waitForResponse(at: unknownURL)
         #expect(response.mimeType == "application/octet-stream")
-        #expect(response.contentType == "application/octet-stream")
+        // Custom-scheme navigation responses expose MIME via URLResponse;
+        // WebKit does not supply an HTTP Content-Type header for this load.
         #expect(!response.canShowMIMEType)
         #expect(response.isForMainFrame)
         try await Task.sleep(for: .milliseconds(300))
