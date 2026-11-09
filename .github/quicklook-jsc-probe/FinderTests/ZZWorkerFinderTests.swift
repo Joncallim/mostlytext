@@ -54,15 +54,17 @@ final class ZZWorkerFinderTests: XCTestCase {
             RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.05))
         } while ProcessInfo.processInfo.systemUptime < limit
 
-        let marker = finder.staticTexts["MOSTLYTEXT_QL_WORKER_ISOLATION_OK"].firstMatch
+        let quickLook = finder.windows["Quick Look"]
+        let marker = quickLook.descendants(matching: .any)["MOSTLYTEXT_QL_WORKER_ISOLATION_OK"].firstMatch
         let visible = marker.waitForExistence(timeout: max(0, 15 - (ProcessInfo.processInfo.systemUptime - started)))
-        // Finder's WebKit preview exposes the authored <pre> as a StaticText
-        // value. Other StaticText values may be numbers, so inspect only strings.
+        // Finder's WebKit preview exposes the authored <pre> as a string value.
+        // Match any accessibility role: AXHeading can change classification
+        // between a query snapshot and element resolution on hosted macOS.
         let sourceNeedle = "# Hosted Quick Look fixture"
         let sourceDeadline = ProcessInfo.processInfo.systemUptime + 2
         var sourceValue: String?
         repeat {
-            sourceValue = finder.staticTexts.allElementsBoundByIndex
+            sourceValue = quickLook.descendants(matching: .any).allElementsBoundByIndex
                 .compactMap { $0.value as? String }
                 .first { $0.contains(sourceNeedle) }
             if sourceValue != nil {
