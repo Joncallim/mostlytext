@@ -6,6 +6,28 @@ import Testing
 @Suite("Preview directory grant lifetime")
 @MainActor
 struct PreviewDirectoryGrantBackingTests {
+    @Test func automaticDocumentDirectoryDrainsAnAdmittedUseAfterRevocation() throws {
+        let sandbox = try makeSandbox()
+        defer { try? FileManager.default.removeItem(at: sandbox) }
+        let document = sandbox.appendingPathComponent("story.html")
+        try Data("nearby".utf8).write(to: sandbox.appendingPathComponent("asset.txt"))
+        let grant = try PreviewDirectoryGrantBacking.acquireAutomatic(documentURL: document, epoch: UUID())
+        #expect(grant.requestedDocumentURL == document)
+
+        var use = grant.acquireUse()
+        let directory = try #require(use?.documentDirectory)
+        grant.revoke()
+        #expect(grant.acquireUse() == nil)
+        let reference = try ResourceReference.parse("asset.txt")
+        #expect(try ContainedResourceReader.read(reference, in: directory, maxBytes: 100).bytes
+            == Data("nearby".utf8))
+
+        use = nil
+        #expect(throws: ResourceReadError.leaseClosed) {
+            try ContainedResourceReader.read(reference, in: directory, maxBytes: 100)
+        }
+    }
+
     @Test func revokedGrantKeepsAdmittedDirectoryAliveUntilWorkerUseEnds() async throws {
         let sandbox = try makeSandbox()
         defer { try? FileManager.default.removeItem(at: sandbox) }
