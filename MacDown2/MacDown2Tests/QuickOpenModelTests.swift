@@ -90,13 +90,13 @@ struct QuickOpenModelTests {
         // `QuickOpenModel.scheduleQuery()`'s generation counter exists to
         // handle -- a NEWER query's result committing before an OLDER,
         // now-superseded query's result arrives late -- via a controllable
-        // `performQuery` seam instead of the real `WorkspaceFileIndex`
+        // `performRead` seam instead of the real `WorkspaceFileIndex`
         // actor (whose own call-ordering guarantees make this inversion
         // impossible to observe naturally; see the sibling test above).
         let gate = QueryGate()
         let staleResult = [IndexedPath(relativePath: "stale.txt", basename: "stale.txt")]
         let freshResult = [IndexedPath(relativePath: "fresh.txt", basename: "fresh.txt")]
-        let model = QuickOpenModel(performQuery: { query in await gate.hold(query) })
+        let model = QuickOpenModel(performRead: { query in await gate.hold(query) })
 
         model.query = "app" // generation 1 -- will resolve to staleResult, held for now
         model.query = "ban" // generation 2 -- will resolve to freshResult, held for now
@@ -129,7 +129,7 @@ struct QuickOpenModelTests {
         let gate = QueryGate()
         let oldRows = [IndexedPath(relativePath: "old.txt", basename: "old.txt")]
         let newRows = [IndexedPath(relativePath: "new.txt", basename: "new.txt")]
-        let model = QuickOpenModel(performQuery: { query in await gate.hold(query) })
+        let model = QuickOpenModel(performRead: { query in await gate.hold(query) })
 
         model.query = "old"
         await gate.waitUntilPending("old")
@@ -149,10 +149,10 @@ struct QuickOpenModelTests {
 
     @Test func anUnavailableIndexIsReportedDistinctlyFromNoMatches() async {
         let unavailable = UnavailableFlag()
-        let model = QuickOpenModel(
-            performQuery: { _ in [] },
-            indexIsUnavailable: { await unavailable.value }
-        )
+        let model = QuickOpenModel(performRead: { _ in
+            let isUnavailable = await unavailable.value
+            return .init(paths: [], isUnavailable: isUnavailable)
+        })
 
         model.refresh()
         await waitUntil { !model.isSearching }
@@ -162,6 +162,24 @@ struct QuickOpenModelTests {
         model.query = "x"
         await waitUntil { model.isIndexUnavailable }
         #expect(model.results.isEmpty)
+    }
+
+    @Test func lateUnavailableReadCannotReplaceANewerReadyRead() async {
+        let gate = QueryGate()
+        let fresh = [IndexedPath(relativePath: "fresh.txt", basename: "fresh.txt")]
+        let model = QuickOpenModel(performRead: { query in await gate.hold(query) })
+
+        model.query = "old"
+        model.query = "new"
+        await gate.waitUntilPending("old")
+        await gate.waitUntilPending("new")
+        await gate.release("new", with: fresh)
+        await waitUntil { model.results == fresh && !model.isSearching }
+        await gate.release("old", with: [], unavailable: true)
+        await Task.yield()
+
+        #expect(model.results == fresh)
+        #expect(!model.isIndexUnavailable)
     }
 
     @Test func moveSelectionWrapsAroundInBothDirections() async throws {
@@ -213,14 +231,14 @@ struct QuickOpenModelTests {
 /// letting a test force any completion order it wants — including one a
 /// real single actor's own call-ordering guarantees could never produce.
 private actor QueryGate {
-    private var pending: [String: CheckedContinuation<[IndexedPath], Never>] = [:]
+    private var pending: [String: CheckedContinuation<QuickOpenModel.IndexRead, Never>] = [:]
 
-    func hold(_ query: String) async -> [IndexedPath] {
+    func hold(_ query: String) async -> QuickOpenModel.IndexRead {
         await withCheckedContinuation { pending[query] = $0 }
     }
 
-    func release(_ query: String, with result: [IndexedPath]) {
-        pending.removeValue(forKey: query)?.resume(returning: result)
+    func release(_ query: String, with result: [IndexedPath], unavailable: Bool = false) {
+        pending.removeValue(forKey: query)?.resume(returning: .init(paths: result, isUnavailable: unavailable))
     }
 
     /// Waits until `query`'s own `hold(_:)` call has actually registered
