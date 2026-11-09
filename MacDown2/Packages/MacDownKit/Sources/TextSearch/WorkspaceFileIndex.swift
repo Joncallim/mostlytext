@@ -61,13 +61,13 @@ public actor WorkspaceFileIndex {
     /// reject, was needed to meet the 100k-path budget (issue #112).
     private var postingsByASCIIByte: [UInt8: [Int]] = [:]
     private var generation = 0
-    private var currentWalkTask: Task<[IndexedPath], Never>?
-    private let walk: @Sendable (URL, Set<String>) -> [IndexedPath]
+    private var currentWalkTask: Task<[IndexedPath], Error>?
+    private let walk: @Sendable (URL, Set<String>) throws -> [IndexedPath]
     private let simulatedUnavailability: (@Sendable (URL) -> String?)?
 
     public init() {
         walk = { root, excludedDirectoryNames in
-            DirectoryWalker().walk(root: root, excludedDirectoryNames: excludedDirectoryNames)
+            try DirectoryWalker().walk(root: root, excludedDirectoryNames: excludedDirectoryNames)
         }
         simulatedUnavailability = nil
     }
@@ -81,7 +81,7 @@ public actor WorkspaceFileIndex {
     /// disk-I/O timing being slow enough to observe -- a wall-clock race
     /// would be exactly the kind of non-deterministic test this project's
     /// own `RELEASE_HARDENING.md` §12 rules out.
-    init(walk: @escaping @Sendable (URL, Set<String>) -> [IndexedPath]) {
+    init(walk: @escaping @Sendable (URL, Set<String>) throws -> [IndexedPath]) {
         self.walk = walk
         simulatedUnavailability = nil
     }
@@ -90,7 +90,7 @@ public actor WorkspaceFileIndex {
     /// can then force a failed walk without depending on permission bits,
     /// which sandboxed macOS runners may ignore.
     init(
-        walk: @escaping @Sendable (URL, Set<String>) -> [IndexedPath],
+        walk: @escaping @Sendable (URL, Set<String>) throws -> [IndexedPath],
         simulatedUnavailability: @escaping @Sendable (URL) -> String?
     ) {
         self.walk = walk
@@ -115,10 +115,20 @@ public actor WorkspaceFileIndex {
         currentWalkTask?.cancel()
         let walk = walk
         let task = Task.detached(priority: .utility) {
-            walk(root, excludedDirectoryNames)
+            try walk(root, excludedDirectoryNames)
         }
         currentWalkTask = task
-        let result = await task.value
+        let result: [IndexedPath]
+        do {
+            result = try await task.value
+        } catch {
+            guard currentGeneration == generation else { return }
+            setPaths([])
+            state = .failed(Self.unavailabilityReason(of: root) ?? String(
+                localized: "The folder cannot be read.", bundle: .module
+            ))
+            return
+        }
         guard currentGeneration == generation else { return } // superseded by a newer rebuild
         // A vanished or unreadable root walks to an empty list, which would
         // read as a genuinely empty workspace and leave the previous

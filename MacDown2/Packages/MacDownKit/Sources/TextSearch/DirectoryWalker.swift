@@ -15,6 +15,27 @@ import Foundation
 /// entries with the resource keys a recursive walk needs," not a shared
 /// primitive.
 struct DirectoryWalker: Sendable {
+    private enum WalkFailure: Error {
+        case directoryIdentityUnavailable
+    }
+
+    private let listChildren: @Sendable (URL) throws -> [URL]
+
+    init() {
+        listChildren = { directory in
+            try FileManager.default.contentsOfDirectory(
+                at: directory,
+                includingPropertiesForKeys: Array(Self.resourceKeys),
+                options: []
+            )
+        }
+    }
+
+    /// Test seam for a directory that stops being enumerable during a walk.
+    init(listChildren: @escaping @Sendable (URL) throws -> [URL]) {
+        self.listChildren = listChildren
+    }
+
     /// The inputs that stay constant across every recursive call, bundled
     /// so the recursive `walk` method takes one value instead of two
     /// separate parameters (SwiftLint's `function_parameter_count` limit).
@@ -45,7 +66,7 @@ struct DirectoryWalker: Sendable {
         excludedDirectoryNames: Set<String>,
         maximumPaths: Int = DirectoryWalker.defaultMaximumPaths,
         maximumDirectories: Int = DirectoryWalker.defaultMaximumDirectories
-    ) -> [IndexedPath] {
+    ) throws -> [IndexedPath] {
         var results: [IndexedPath] = []
         var state = WalkState()
         let context = WalkContext(
@@ -54,7 +75,7 @@ struct DirectoryWalker: Sendable {
             maximumPaths: maximumPaths,
             maximumDirectories: maximumDirectories
         )
-        walk(
+        try walk(
             directory: context.root,
             context: context,
             ancestorHidden: false,
@@ -77,9 +98,11 @@ struct DirectoryWalker: Sendable {
         ancestorHidden: Bool,
         state: inout WalkState,
         into results: inout [IndexedPath]
-    ) {
+    ) throws {
         guard !Task.isCancelled, state.directoriesEntered < context.maximumDirectories else { return }
-        guard let identity = PhysicalFileIdentity(url: directory).fileObjectID else { return }
+        guard let identity = PhysicalFileIdentity(url: directory).fileObjectID else {
+            throw WalkFailure.directoryIdentityUnavailable
+        }
         // Symlink loop guard over the ANCESTOR chain only. A walk-global "seen"
         // set would let whichever of `link -> v2` and `v2` is enumerated first
         // hide the other, so `v2/page.md` could vanish from the index depending
@@ -87,11 +110,9 @@ struct DirectoryWalker: Sendable {
         guard state.visited.insert(identity).inserted else { return }
         defer { state.visited.remove(identity) }
         state.directoriesEntered += 1
-        guard let children = try? FileManager.default.contentsOfDirectory(
-            at: directory.resolvingSymlinksInPath(),
-            includingPropertiesForKeys: Array(Self.resourceKeys),
-            options: []
-        ) else { return }
+        // An unreadable child must not silently turn a partial scan into a
+        // complete, actionable index. Let the owner publish `.failed`.
+        let children = try listChildren(directory.resolvingSymlinksInPath())
 
         for child in children {
             guard !Task.isCancelled, results.count < context.maximumPaths,
@@ -132,7 +153,7 @@ struct DirectoryWalker: Sendable {
             }
             if isDirectory {
                 guard !context.excludedDirectoryNames.contains(name) else { continue }
-                walk(
+                try walk(
                     directory: lexicalChild,
                     context: context,
                     ancestorHidden: isHidden,

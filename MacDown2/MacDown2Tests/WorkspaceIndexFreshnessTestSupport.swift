@@ -95,7 +95,7 @@ final class IndexWalkProbe: @unchecked Sendable {
             if shouldHold {
                 selectedGate?.blockUntilReleased()
             }
-            let result = DirectoryWalker().walk(root: root, excludedDirectoryNames: excluded)
+            let result = try DirectoryWalker().walk(root: root, excludedDirectoryNames: excluded)
             lock.lock()
             completedWalkCount += 1
             lock.unlock()
