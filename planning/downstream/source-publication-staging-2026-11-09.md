@@ -3,8 +3,9 @@
 ## Owner summary
 
 This prepares one reviewable, versioned directory containing the current
-notices, software bill of materials (SBOM), and the existing D2 and Graphviz
-local source-review packages. It gives the owner concrete files and hashes to
+notices, software bill of materials (SBOM), the existing D2 and Graphviz
+local source-review packages, and a separately retained D2 build-helper
+source packet. It gives the owner concrete files and hashes to
 inspect before a separate source-only publication decision. It does not upload
 anything, change a source offer to verified, decide remaining rights questions,
 or authorize an application release.
@@ -29,7 +30,8 @@ archive without relabeling or overwriting the old one.
 
 ## Staging contract
 
-The new `stage_source_publication.py` accepts only the reviewed D2 archive, a
+The new `stage_source_publication.py` accepts only the reviewed D2 archive, the
+separately verified 37-file `ci/sub` helper packet, a
 Graphviz archive reconstructed byte for byte from current reviewed inputs,
 the current generated notices and SBOM, and the D2 browser patch already
 verified inside its archive. The ordinary source compliance check must pass.
@@ -41,17 +43,21 @@ REVIEW_ONLY.json
 1.0.0/THIRD_PARTY_NOTICES.md
 1.0.0/sbom.cdx.json
 1.0.0/SHA256SUMS
-1.0.0/d2/{index.html,d2-source-review-bundle.tar.gz,d2-browser.patch}
+1.0.0/d2/{index.html,d2-source-review-bundle.tar.gz,d2-browser.patch,terrastruct-ci-2594100a-source.tar.gz}
 1.0.0/graphviz/{index.html,graphviz-source-review.tar.gz}
 ```
 
-`SHA256SUMS` covers every staged versioned file except itself. The separate
-review receipt binds the inventory, material sizes and digests. A repeat
+`SHA256SUMS` covers every staged versioned file except itself. The D2 page
+labels the helper as supplemental retained source with publisher use unverified.
+The separate review receipt binds the inventory, material sizes and digests,
+including the helper verifier's pinned root/submodule identity. A repeat
 invocation refuses to overwrite; `--verify-only` rechecks every expected byte
 against current source and rejects missing, extra, changed or linked files.
 No additional private document, signing material, credential or application
-binary is selected as a payload input. The two source archives retain their
-own explicitly limited review status and existing member-level verifiers.
+binary is selected as a payload input. The three source archives retain their
+own explicitly limited review status and member-level verifiers. The separate
+helper packet does not establish that the publisher used this gitlink or that
+the older D2 review package is complete corresponding source.
 
 Five Graphviz reproduction `README.md` files in the repository contain local
 build-machine paths. The current assembler replaces exactly those five paths
@@ -97,6 +103,30 @@ Both private outputs are retained outside the repository. Their current notice
 and SBOM snapshots are still dated preparation inputs, not final signed-app
 bytes. No source-offer status or public URL changed. Rebuild the snapshot if
 distribution inputs change; do not reuse the older stage for publication.
+
+## Supplemental D2 helper correction — 9 November 2026
+
+The earlier private stage above is historical: its eight versioned files did
+not include the 37-file upstream `ci/sub` gitlink capture preserved in
+`compliance/evidence/d2-build-inputs/`. A new stage now independently verifies
+the pinned archive and receipt before copying that packet as a ninth versioned
+file. Its index link, `SHA256SUMS` and `REVIEW_ONLY.json` all bind the same
+bytes. The existing 37-file D2 review archive remains unchanged. This is a
+private-source review supplement, not evidence of publisher use, a complete
+corresponding-source offer, public retrieval or an approved release.
+
+From base source `65c93ac1` with this staging change, the refreshed Graphviz
+review archive has SHA-256
+`0942e38f8d68d39e8707fdac4e697b0f1e0da9abdb0af2b8ae1bb44feb8b35f3`.
+The new private stage created and passed independent `--verify-only` readback:
+nine versioned files plus `REVIEW_ONLY.json`; its `SHA256SUMS` has SHA-256
+`503ce7ad66880877a2fc189e11ce55039d5ddc8c6bc7ec984383905ca325016e`
+and its review receipt has SHA-256
+`1309d3a18e8ed47d5b9c70b2b5886c583cb9bc1d512559759629d983580ac0d0`.
+The helper archive itself retains SHA-256
+`a2129160358307bc8c08049c78dd47767c0528f9370fb8b0704d607eeeb94d3b`.
+This was a private local rehearsal; repeat from the then-current source before
+any approval or public use.
 
 Stop if ordinary compliance, source/member verification, inventory offer state,
 current generated texts, file type, output isolation, or byte-for-byte staging

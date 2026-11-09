@@ -21,6 +21,7 @@ import tempfile
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import compliance as gate
 import prepare_graphviz_offer as graphviz_offer
+import verify_d2_build_helper as d2_helper
 import verify_d2_offer as d2_offer
 
 
@@ -28,10 +29,12 @@ ROOT = Path(__file__).resolve().parents[2]
 D2_ARCHIVE_SHA256 = "07de46d856b3e7bbc1d455651fe7045be73083e1d072530e8a1cca99a7b65c02"
 ARCHIVE_NAME = {
     "d2": "d2-source-review-bundle.tar.gz",
+    "d2-helper": "terrastruct-ci-2594100a-source.tar.gz",
     "graphviz": "graphviz-source-review.tar.gz",
 }
 REVIEW_LIMIT = (
-    "Private review snapshot only. The D2 and Graphviz packages have not been "
+    "Private review snapshot only. The D2 and Graphviz packages, including supplemental "
+    "D2 build-helper source, have not been "
     "approved as complete corresponding source. No anonymous public retrieval, "
     "final signed-artifact match, independent rights clearance or release is claimed."
 )
@@ -63,13 +66,17 @@ def release_identity(inventory):
     return version
 
 
-def page(component, archive_name, archive_bytes, version, patch=None):
+def page(component, archive_name, archive_bytes, version, patch=None, helper=None):
     title = "D2" if component == "d2" else "Graphviz and Viz.js"
     package = (f'<li><a href="{html.escape(archive_name)}">{title} local review package</a> '
                f'({len(archive_bytes)} bytes; SHA-256 {sha(archive_bytes)})</li>')
     if patch is not None:
         package += (f'\n<li><a href="d2-browser.patch">D2 browser patch</a> '
                     f'({len(patch)} bytes; SHA-256 {sha(patch)})</li>')
+    if helper is not None:
+        package += (f'\n<li><a href="{ARCHIVE_NAME["d2-helper"]}">Supplemental retained '
+                    'D2 build-helper source (publisher use unverified)</a> '
+                    f'({len(helper)} bytes; SHA-256 {sha(helper)})</li>')
     return ("<!doctype html>\n<html lang=\"en\"><head><meta charset=\"utf-8\">"
             "<meta name=\"robots\" content=\"noindex\">"
             f"<title>{title} source review — MostlyText {version}</title></head><body>\n"
@@ -79,21 +86,33 @@ def page(component, archive_name, archive_bytes, version, patch=None):
             "</body></html>\n").encode()
 
 
-def material_files(version, notices, sbom, d2_archive, graphviz_archive, patch):
+def material_files(version, notices, sbom, d2_archive, graphviz_archive, patch, d2_helper_archive):
     prefix = version + "/"
     files = {
         prefix + "THIRD_PARTY_NOTICES.md": notices,
         prefix + "sbom.cdx.json": sbom,
         prefix + "d2/" + ARCHIVE_NAME["d2"]: d2_archive,
+        prefix + "d2/" + ARCHIVE_NAME["d2-helper"]: d2_helper_archive,
         prefix + "d2/d2-browser.patch": patch,
         prefix + "graphviz/" + ARCHIVE_NAME["graphviz"]: graphviz_archive,
-        prefix + "d2/index.html": page("d2", ARCHIVE_NAME["d2"], d2_archive, version, patch),
+        prefix + "d2/index.html": page("d2", ARCHIVE_NAME["d2"], d2_archive, version,
+                                         patch, d2_helper_archive),
         prefix + "graphviz/index.html": page("graphviz", ARCHIVE_NAME["graphviz"],
                                               graphviz_archive, version),
     }
     checksums = "".join(f"{sha(files[name])}  {name[len(prefix):]}\n" for name in sorted(files))
     files[prefix + "SHA256SUMS"] = checksums.encode()
     return files
+
+
+def verified_d2_helper(root):
+    facts = d2_helper.verify(root)
+    path = root / d2_helper.EVIDENCE / d2_helper.ARCHIVE
+    require_regular_file(path)
+    body = path.read_bytes()
+    if sha(body) != facts["archive_sha256"]:
+        raise ValueError("D2 build-helper source changed after verification")
+    return body, facts
 
 
 def expected_stage(root, graphviz_inputs, graphviz_archive, d2_archive):
@@ -115,6 +134,7 @@ def expected_stage(root, graphviz_inputs, graphviz_archive, d2_archive):
     )
     with tarfile.open(d2_archive, "r:gz") as archive:
         patch = archive.extractfile("patches/d2-browser.patch").read()
+    d2_helper_body, d2_helper_facts = verified_d2_helper(root)
     graphviz_bodies, graphviz_manifest = graphviz_offer.payload(root, graphviz_inputs)
     graphviz_offer.verify_archive(graphviz_archive, graphviz_bodies)
     graphviz_body = graphviz_archive.read_bytes()
@@ -125,12 +145,14 @@ def expected_stage(root, graphviz_inputs, graphviz_archive, d2_archive):
     for path in (notices_path, sbom_path):
         require_regular_file(path)
     notices, sbom = notices_path.read_bytes(), sbom_path.read_bytes()
-    files = material_files(version, notices, sbom, d2_body, graphviz_body, patch)
+    files = material_files(version, notices, sbom, d2_body, graphviz_body, patch,
+                           d2_helper_body)
     receipt = {
         "schema": 1, "status": "private-review-only", "version": version,
         "limits": REVIEW_LIMIT,
         "inventory_sha256": sha(inventory_path.read_bytes()),
         "d2_review": d2_facts,
+        "d2_helper_review": d2_helper_facts,
         "graphviz_review": {"files": len(graphviz_manifest["files"]),
                              "status": graphviz_manifest["status"]},
         "files": [{"path": name, "size": len(body), "sha256": sha(body)}

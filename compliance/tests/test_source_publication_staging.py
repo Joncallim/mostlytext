@@ -5,6 +5,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 import stage_source_publication as staging
@@ -39,13 +40,19 @@ class SourcePublicationStagingTests(unittest.TestCase):
                     staging.release_identity(changed)
 
     def test_materials_are_fixed_review_objects_with_internal_checksums(self):
-        files = staging.material_files("1.0.0", b"notices", b"sbom", b"d2", b"graphviz", b"patch")
-        self.assertEqual(len(files), 8)
+        files = staging.material_files("1.0.0", b"notices", b"sbom", b"d2", b"graphviz",
+                                       b"patch", b"supplemental helper")
+        self.assertEqual(len(files), 9)
         checksums = files["1.0.0/SHA256SUMS"].decode().splitlines()
-        self.assertEqual(len(checksums), 7)
+        self.assertEqual(len(checksums), 8)
         self.assertTrue(any(line.endswith("  d2/d2-browser.patch") for line in checksums))
+        self.assertTrue(any(line.endswith("  d2/terrastruct-ci-2594100a-source.tar.gz")
+                            for line in checksums))
+        self.assertEqual(files["1.0.0/d2/terrastruct-ci-2594100a-source.tar.gz"],
+                         b"supplemental helper")
         self.assertIn(b"not been approved as complete corresponding source",
                       files["1.0.0/d2/index.html"])
+        self.assertIn(b"publisher use unverified", files["1.0.0/d2/index.html"])
         self.assertNotIn(b"/Users/", b"".join(files.values()))
         self.assertNotIn(b"/Volumes/", b"".join(files.values()))
 
@@ -54,7 +61,8 @@ class SourcePublicationStagingTests(unittest.TestCase):
             parent = Path(temporary)
             output = parent / "private-review"
             files = {"REVIEW_ONLY.json": b"review only", "1.0.0/SHA256SUMS": b"hashes",
-                     "1.0.0/d2/index.html": b"D2 review"}
+                     "1.0.0/d2/index.html": b"D2 review",
+                     "1.0.0/d2/terrastruct-ci-2594100a-source.tar.gz": b"helper bytes"}
             staging.stage(output, files)
             staging.stage(output, files, verify_only=True)
             with self.assertRaisesRegex(ValueError, "overwrite"):
@@ -64,6 +72,11 @@ class SourcePublicationStagingTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "contents differ"):
                 staging.stage(output, files, verify_only=True)
             target.write_bytes(files["1.0.0/d2/index.html"])
+            helper = output / "1.0.0/d2/terrastruct-ci-2594100a-source.tar.gz"
+            helper.write_bytes(b"changed")
+            with self.assertRaisesRegex(ValueError, "contents differ"):
+                staging.stage(output, files, verify_only=True)
+            helper.write_bytes(files["1.0.0/d2/terrastruct-ci-2594100a-source.tar.gz"])
             (output / "1.0.0/unexpected").mkdir()
             with self.assertRaisesRegex(ValueError, "directory set differs"):
                 staging.stage(output, files, verify_only=True)
@@ -85,6 +98,22 @@ class SourcePublicationStagingTests(unittest.TestCase):
             link.symlink_to(source)
             with self.assertRaisesRegex(ValueError, "regular file"):
                 staging.require_regular_file(link)
+
+    def test_d2_helper_bytes_are_verified_again_before_staging(self):
+        body, facts = staging.verified_d2_helper(staging.ROOT)
+        self.assertEqual(staging.sha(body), facts["archive_sha256"])
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / staging.d2_helper.EVIDENCE / staging.d2_helper.ARCHIVE
+            path.parent.mkdir(parents=True)
+            path.write_bytes(body + b"changed")
+            with mock.patch.object(staging.d2_helper, "verify", return_value=facts):
+                with self.assertRaisesRegex(ValueError, "changed after verification"):
+                    staging.verified_d2_helper(Path(temporary))
+                path.unlink()
+                path.symlink_to(staging.ROOT / staging.d2_helper.EVIDENCE /
+                                staging.d2_helper.ARCHIVE)
+                with self.assertRaisesRegex(ValueError, "regular file"):
+                    staging.verified_d2_helper(Path(temporary))
 
     def test_output_must_be_outside_repository(self):
         with tempfile.TemporaryDirectory() as temporary:
