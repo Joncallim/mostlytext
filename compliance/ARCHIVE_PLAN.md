@@ -1,13 +1,15 @@
 # Compliance archive plan (LC-09)
 
-**Owner summary.** Two bundled components carry licences that require their
-source code to be available whenever the app is distributed: Graphviz
-(EPL-2.0, compiled into Viz.js) and D2 (MPL-2.0, which we modified by one
-line). This plan says what we publish for each release, where, and how we
-prove it can be downloaded. The recommended home is
+**Owner summary.** The current inventory requires corresponding-source offers
+for Graphviz (EPL-2.0, compiled into Viz.js) and D2 (MPL-2.0, with a one-line
+local change). This plan says what we publish for each release, where, and how
+we prove it can be downloaded. Independent review of other nested and build
+inputs remains open; these two recorded offers do not clear those obligations.
+The recommended home is
 `mostlytext.app/opensource/<version>/` for the index pages, with large source
-packages attached to the matching GitHub Release. Nothing is published until
-the E17 release process does it for a real release.
+packages at an approved durable source-only location linked from those pages.
+Source-only publication requires the owner's separate approval before the
+binary release process.
 
 Risks: a URL printed in a shipped app must keep working for as long as that
 release is distributed, so the layout below is versioned and never reused.
@@ -39,9 +41,14 @@ Large packages are published with the source-only publication described under "O
 | Graphviz 16.0.0 via @viz-js/viz 3.30.0 | The upstream Graphviz 16.0.0 source archive; the viz-js 3.30.0 source at its release tag, including the Emscripten build scripts that produce the WebAssembly; the EPL-2.0 text; a note that we ship `dist/viz-global.js` from the npm package unmodified | Archive URLs and SHA-256; upstream tag commits; `npm_file_sha256` already recorded |
 | D2 via @terrastruct/d2 0.1.33 | The upstream d2 source at the revision that produced npm 0.1.33 (the `d2js/js` package and the Go sources compiled into its WebAssembly); our patch as a unified diff (`export{lw as D2}` → `window.D2=lw;`); the MPL-2.0 text | Source revision and archive SHA-256; patch SHA-256; the Go module list, for LC-03's nested licences |
 
-Other components are MIT, BSD, Apache-2.0, OFL or GUST licensed. Those
-licences need notices, which LC-01 covers, but not a source offer. Their exact
-upstream revisions are in the SBOM for anyone who wants the source.
+The inventory also records MIT, BSD, Apache-2.0, ISC, FTL, OFL and GUST terms,
+mixed expressions, a Bison GPL text with its exception, and selected root
+texts under `LicenseRef` identifiers. LC-01 covers distribution of the recorded
+notices. The current inventory marks only Graphviz and D2 as requiring source
+offers; that is not a completed review of nested code, per-file obligations or
+whether every recorded build input is retained in the final binary. The SBOM
+records the known versions and source references, including entries whose exact
+original provenance remains unresolved.
 
 ## Retention and stable links
 
@@ -94,8 +101,8 @@ release and its assets are unpublished and access-controlled, so anonymous retri
 --release-candidate` checks that before notarisation: a deadlock. The corresponding source is therefore published
 **separately from, and before**, any binary:
 
-1. **Now (cloud):** assemble the Graphviz and D2 source packages and patch, and record their digests in the inventory
-   (LC-02, LC-03). This doesn't depend on hosting.
+1. **Preparation:** verify the local Graphviz and D2 review packages, patch and exact digests; finish the independent
+   completeness and rights review (LC-02, LC-03). The existing packages are review objects, not approved offers.
 2. **Source-only publication (needs the owner's explicit approval, `source-archive-authorization`):** publish the
    immutable, versioned corresponding-source objects (`THIRD_PARTY_NOTICES.md`, `sbom.cdx.json`, `SHA256SUMS`, the two
    source pages, the packages and patch) to the durable public location chosen in E17 — the website's
@@ -106,7 +113,7 @@ release and its assets are unpublished and access-controlled, so anonymous retri
    `THIRD_PARTY_NOTICES.md` names locations that already exist.
 4. **At E17:** build the final signed candidate; run the verification below against the already-public source location
    and the exact artifact.
-5. **Before public promotion:** attach the evidence to #148 and #18. Public promotion of the application remains a
+5. **Before public promotion:** attach the evidence to MostlyText #14 and #4. Public promotion of the application remains a
    separate owner authorisation.
 
 Test obligations: anonymous fetch of a draft-release asset fails (documented counterexample, so nobody rebuilds the
