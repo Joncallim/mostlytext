@@ -15,6 +15,7 @@
       "MacDown2/MacDown2/Assets.xcassets/**",
       "MacDown2/MacDown2/AppIcon.icon/icon.json",
       "MacDown2/MacDown2/AppIcon.icon/Assets/lean-10-1024.png",
+      "MacDown2/MacDown2/MarkdownDocument.icns",
       "MacDown2/Packages/MacDownKit/Sources/*/Resources/harness.html",
       "MacDown2/Packages/MacDownKit/Sources/*/Resources/render.js",
       "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/structural.css"

@@ -119,6 +119,7 @@ targets:
         - CFBundleTypeName: Markdown Document
           CFBundleTypeRole: Editor
           LSHandlerRank: Default
+          CFBundleTypeIconFile: MarkdownDocument
           LSItemContentTypes:
           - net.daringfireball.markdown
           CFBundleTypeExtensions:
