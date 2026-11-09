@@ -80,6 +80,26 @@ class LocalizationInventoryTests(unittest.TestCase):
         plural["other"] = {"stringUnit": {"state": "needs_review", "value": "%@ preview errors"}}
         self.assertTrue(any("placeholders" in error for error in subject.validate(self.make_repo(catalog))))
 
+    def test_malformed_top_level_plural_unit_is_a_controlled_catalog_error(self):
+        key = "%lld preview errors"
+        catalog = {"sourceLanguage": "en", "strings": {
+            key: {"localizations": {"en": {"variations": {"plural": {
+                "other": {"stringUnit": "invalid"}
+            }}}}}
+        }}
+        with self.assertRaisesRegex(subject.CatalogError, "plural 'other' stringUnit is not an object"):
+            subject.validate(self.make_repo(catalog))
+        catalog["strings"][key]["localizations"]["en"]["variations"]["plural"]["other"] = {
+            "stringUnit": None
+        }
+        with self.assertRaisesRegex(subject.CatalogError, "plural 'other' stringUnit is not an object"):
+            subject.validate(self.make_repo(catalog))
+        catalog["strings"][key]["localizations"]["en"]["variations"]["plural"]["other"] = {
+            "stringUnit": {"value": 7}
+        }
+        with self.assertRaisesRegex(subject.CatalogError, "plural 'other' stringUnit.value is not a string"):
+            subject.validate(self.make_repo(catalog))
+
     def test_malformed_catalog_is_rejected(self):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)

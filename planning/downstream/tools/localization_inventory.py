@@ -68,6 +68,11 @@ def load_catalog(path: Path) -> dict[str, Any]:
             for category, variant in plural.items():
                 if not isinstance(variant, dict):
                     raise CatalogError(f"{path}: {key!r}:{locale}: plural {category!r} is not an object")
+                variant_unit = variant.get("stringUnit")
+                if "stringUnit" in variant and not isinstance(variant_unit, dict):
+                    raise CatalogError(f"{path}: {key!r}:{locale}: plural {category!r} stringUnit is not an object")
+                if isinstance(variant_unit, dict) and "value" in variant_unit and not isinstance(variant_unit["value"], str):
+                    raise CatalogError(f"{path}: {key!r}:{locale}: plural {category!r} stringUnit.value is not a string")
             substitutions = localization.get("substitutions", {})
             if not isinstance(substitutions, dict):
                 raise CatalogError(f"{path}: {key!r}:{locale}: substitutions is not an object")
