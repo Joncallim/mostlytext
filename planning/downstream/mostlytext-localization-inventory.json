@@ -5196,6 +5196,76 @@
       "target": "MacDown2",
       "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
       "bundle": "Bundle.main (project target resource)",
+      "key": "High Contrast Dark",
+      "source_default_value": "High Contrast Dark",
+      "translator_comment": "Built-in high-contrast theme picker label. Translation draft; native language review remains required. The theme JSON name is unchanged.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/MacDown2/ThemePickerDisplayName.swift:12"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
+      "key": "High Contrast Light",
+      "source_default_value": "High Contrast Light",
+      "translator_comment": "Built-in high-contrast theme picker label. Translation draft; native language review remains required. The theme JSON name is unchanged.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/MacDown2/ThemePickerDisplayName.swift:10"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
       "key": "Highlighting reduced",
       "source_default_value": "Highlighting reduced",
       "translator_comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
@@ -6062,7 +6132,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:300"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:307"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -12192,7 +12262,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:295"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:302"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -12918,7 +12988,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:299"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:306"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -12953,7 +13023,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:296"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:303"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -12988,7 +13058,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:294"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:301"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13096,7 +13166,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:293"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:300"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -14030,7 +14100,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:309"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:316"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -14065,7 +14135,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:307"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:314"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -17217,7 +17287,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Pairing.swift:288"
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Pairing.swift:297"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -17535,7 +17605,7 @@
       "callsites": [
         "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Newline.swift:102",
         "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Pairing.swift:75",
-        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Pairing.swift:206"
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Pairing.swift:215"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
