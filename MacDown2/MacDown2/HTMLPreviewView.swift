@@ -68,7 +68,6 @@ struct HTMLPreviewView: NSViewRepresentable {
         private var reloadBudget = HTMLPreviewReloadBudget()
         private var reloadTask: Task<Void, Never>?
         private var scheduledLoadID: UUID?
-        private var securityScope: PreviewSecurityScope?
         private var pendingNavigation: PendingNavigation?
         private var currentPageGeneration: UInt?
         private weak var currentWebView: WKWebView?
@@ -117,7 +116,8 @@ struct HTMLPreviewView: NSViewRepresentable {
             let loadID = UUID()
             scheduledLoadID = loadID
             let source = document.text
-            let baseURL = document.fileURL?.deletingLastPathComponent()
+            let documentURL = document.fileURL
+            let baseURL = documentURL?.deletingLastPathComponent()
             let identity = HTMLPreviewLoadIdentity(
                 documentID: document.id,
                 recoveryEpoch: document.recoveryEpoch,
@@ -135,6 +135,7 @@ struct HTMLPreviewView: NSViewRepresentable {
                 reloadTask = nil
                 beginLoad(
                     source: source,
+                    documentURL: documentURL,
                     baseURL: baseURL,
                     identity: identity,
                     in: webView
@@ -152,14 +153,13 @@ struct HTMLPreviewView: NSViewRepresentable {
             currentWebView = nil
             handler.retire()
             webView.stopLoading()
-            securityScope?.stop()
-            securityScope = nil
         }
 
         // MARK: Loads
 
         private func beginLoad(
             source: String,
+            documentURL: URL?,
             baseURL: URL?,
             identity: HTMLPreviewLoadIdentity,
             in webView: WKWebView
@@ -168,15 +168,9 @@ struct HTMLPreviewView: NSViewRepresentable {
             pendingNavigation = nil
             currentPageGeneration = identity.generation
             currentWebView = webView
-            // Balance any prior security scope before opening the new one.
-            securityScope?.stop()
-            securityScope = nil
-            if let baseURL {
-                securityScope = PreviewSecurityScope(url: baseURL)
-            }
-
             let previewURL = handler.install(
                 HTMLPreviewRequest(source: source, baseURL: baseURL, policy: .v1),
+                documentURL: documentURL,
                 documentID: identity.documentID,
                 recoveryEpoch: identity.recoveryEpoch,
                 generation: identity.generation
