@@ -64,7 +64,7 @@ struct HTMLPreviewView: NSViewRepresentable {
     @MainActor
     final class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate {
         private let reloadDelay: Duration
-        private let handler = PreviewSchemeHandler()
+        let handler = PreviewSchemeHandler()
         private(set) var gate = HTMLPreviewReloadGate()
         private var reloadBudget = HTMLPreviewReloadBudget()
         private var reloadTask: Task<Void, Never>?

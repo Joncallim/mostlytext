@@ -12,8 +12,7 @@ extension HTMLPreviewNavigationIdentityTests {
         fixture.document = fixture.document.markClean().markClean()
         let oldNavigation = try await fixture.startCurrentRevision()
         fixture.coordinator.webView(fixture.view, didFinish: oldNavigation)
-        let handler = try #require(fixture.view.configuration.urlSchemeHandler(forURLScheme: "macdown-preview")
-            as? PreviewSchemeHandler)
+        let handler = fixture.coordinator.handler
         let oldURL = try #require(handler.mainURL)
 
         let destination = fixture.directory.appendingPathComponent("new-document", isDirectory: true)
@@ -46,8 +45,7 @@ extension HTMLPreviewNavigationIdentityTests {
         fixture.document = fixture.document.markClean().markClean()
         let oldNavigation = try await fixture.startCurrentRevision()
         fixture.coordinator.webView(fixture.view, didFinish: oldNavigation)
-        let handler = try #require(fixture.view.configuration.urlSchemeHandler(forURLScheme: "macdown-preview")
-            as? PreviewSchemeHandler)
+        let handler = fixture.coordinator.handler
         let oldURL = try #require(handler.mainURL)
 
         let dirtyDocument = FileDocument(text: "other").edited(text: "unsaved")
@@ -102,8 +100,7 @@ extension HTMLPreviewNavigationIdentityTests {
         fixture.coordinator.preview(document: fixture.document, tabID: UUID(), in: fixture.view)
         let first = try await fixture.waitForLoad(count: 1)
         fixture.coordinator.webView(fixture.view, didFinish: first)
-        let handler = try #require(fixture.view.configuration.urlSchemeHandler(forURLScheme: "macdown-preview")
-            as? PreviewSchemeHandler)
+        let handler = fixture.coordinator.handler
         let oldURL = try #require(handler.mainURL)
 
         fixture.coordinator.preview(document: fixture.document, tabID: UUID(), in: fixture.view)
