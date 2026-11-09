@@ -207,6 +207,13 @@ final class TabLifecycleUITests: XCTestCase {
             add(hierarchy)
         }
         let session = sessionDir.appendingPathComponent("session.json")
+        let trace = sessionDir.appendingPathComponent("quick-open-trace.txt")
+        if let contents = try? String(contentsOf: trace, encoding: .utf8) {
+            let attachment = XCTAttachment(string: contents)
+            attachment.name = label + " Quick Open trace"
+            attachment.lifetime = .keepAlways
+            add(attachment)
+        }
         guard let handle = try? FileHandle(forReadingFrom: session) else { return }
         defer { try? handle.close() }
         guard let bytes = try? handle.read(upToCount: 1_048_577) else { return }

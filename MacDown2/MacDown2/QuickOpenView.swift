@@ -24,12 +24,21 @@ final class QuickOpenSubmission {
     }
 
     func submit() {
-        guard !isOpening, let selected = model.selectedResult else { return }
+        QuickOpenUITestTrace
+            .record(
+                "submit called: opening=\(isOpening), searching=\(model.isSearching), results=\(model.results.count)"
+            )
+        guard !isOpening, let selected = model.selectedResult else {
+            QuickOpenUITestTrace.record("submit refused: no current selection")
+            return
+        }
         isOpening = true
         Task { @MainActor in
             if await onOpen(selected) {
+                QuickOpenUITestTrace.record("open admitted; dismissing")
                 onDismiss()
             } else {
+                QuickOpenUITestTrace.record("open refused; refreshing")
                 isOpening = false
                 model.refresh()
             }
