@@ -20,6 +20,11 @@ from typing import Any
 
 
 SCHEMA = 1
+
+
+def catalog_paths(repo: Path) -> list[Path]:
+    """Read source catalogs, excluding local build products."""
+    return sorted(path for path in repo.glob("MacDown2/**/*.xcstrings") if ".build" not in path.parts)
 PRINTF = re.compile(r"%(?:(?P<position>\d+)\$)?(?P<type>@|lld|ld|d|f|g|s|u|zu|llu|lf)")
 SUBSTITUTION = re.compile(r"%#@(?P<name>[A-Za-z_]\w*)@")
 VARIANT_REFERENCE = re.compile(r"%(?P<name>[A-Za-z_][A-Za-z0-9_]*)")
@@ -189,12 +194,12 @@ def localization_state(localization: dict[str, Any]) -> str:
 
 def inventory(repo: Path) -> dict[str, Any]:
     entries: list[dict[str, Any]] = []
-    catalog_paths = sorted(repo.glob("MacDown2/**/*.xcstrings"))
-    catalogs = {path: load_catalog(path) for path in catalog_paths}
-    ownership = {path: catalog_target(repo, path) for path in catalog_paths}
+    paths = catalog_paths(repo)
+    catalogs = {path: load_catalog(path) for path in paths}
+    ownership = {path: catalog_target(repo, path) for path in paths}
     source_roots = {target: source_root for target, _, source_root in ownership.values()}
     callsite_indexes = index_direct_callsites(source_roots, repo)
-    for catalog_path in catalog_paths:
+    for catalog_path in paths:
         catalog = catalogs[catalog_path]
         target, bundle, _ = ownership[catalog_path]
         for key, entry in sorted(catalog["strings"].items()):
@@ -305,7 +310,7 @@ def validate_localization(catalog_path: Path, key: str, locale: str, value: dict
 
 def validate(repo: Path) -> list[str]:
     errors: list[str] = []
-    for path in sorted(repo.glob("MacDown2/**/*.xcstrings")):
+    for path in catalog_paths(repo):
         catalog = load_catalog(path)
         for key, entry in catalog["strings"].items():
             if not isinstance(entry, dict):
@@ -333,7 +338,7 @@ def validate_translation_resources(repo: Path) -> list[str]:
     except (OSError, configparser.Error, UnicodeError) as error:
         return [f"translation configuration unavailable or invalid: {error}"]
     catalogs = {repo_relative(repo, path): load_catalog(path)["sourceLanguage"]
-                for path in sorted(repo.glob("MacDown2/**/*.xcstrings"))}
+                for path in catalog_paths(repo)}
     seen: set[str] = set()
     errors: list[str] = []
     for section in config.sections():

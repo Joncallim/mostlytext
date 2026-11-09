@@ -219,7 +219,7 @@ struct HTMLPreviewNavigationIdentityTests {
 
 extension HTMLPreviewNavigationIdentityTests {
     @MainActor
-    private final class Fixture {
+    final class Fixture {
         let coordinator = HTMLPreviewView.Coordinator(reloadDelay: .zero)
         let view = RecordedWebView()
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
@@ -268,7 +268,7 @@ extension HTMLPreviewNavigationIdentityTests {
         }
     }
 
-    private final class RecordedWebView: WKWebView {
+    final class RecordedWebView: WKWebView {
         var loads: [WKNavigation?] = []
         var reloads: [WKNavigation?] = []
         var returnNilFromLoad = false

@@ -256,8 +256,8 @@ public struct HTMLPreviewReloadGate: Sendable, Equatable {
     /// caller should start a load for it, `false` when it is stale (older than
     /// a load that already completed) or a duplicate of the pending request.
     public mutating func shouldLoad(generation: UInt) -> Bool {
-        let latest = max(lastLoadedGeneration ?? 0, pendingGeneration ?? 0)
-        guard generation > latest else { return false }
+        let latest = [lastLoadedGeneration, pendingGeneration].compactMap(\.self).max()
+        guard latest.map({ generation > $0 }) ?? true else { return false }
         pendingGeneration = generation
         return true
     }

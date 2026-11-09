@@ -262,6 +262,35 @@
         }
       }
     },
+    "Fenced Code Block": {
+      "comment": "Built-in snippet picker display name. Stable snippet IDs and user-authored names remain verbatim; non-English values are review drafts.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fenced Code Block"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Fenced Code Block"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Fenced Code Block"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Fenced Code Block"
+          }
+        }
+      }
+    },
     "Heading": {
       "comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
       "localizations": {
@@ -287,6 +316,35 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Heading"
+          }
+        }
+      }
+    },
+    "Image": {
+      "comment": "Built-in snippet picker display name. Stable snippet IDs and user-authored names remain verbatim; non-English values are review drafts.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Image"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Image"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Image"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Image"
           }
         }
       }
@@ -512,6 +570,64 @@
           "stringUnit": {
             "state": "translated",
             "value": "Numery linii"
+          }
+        }
+      }
+    },
+    "Link": {
+      "comment": "Built-in snippet picker display name. Stable snippet IDs and user-authored names remain verbatim; non-English values are review drafts.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Link"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Link"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Link"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Link"
+          }
+        }
+      }
+    },
+    "Link from Clipboard": {
+      "comment": "Built-in snippet picker display name. Stable snippet IDs and user-authored names remain verbatim; non-English values are review drafts.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Link from Clipboard"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Link from Clipboard"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Link from Clipboard"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Link from Clipboard"
           }
         }
       }
@@ -744,6 +860,64 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Sort Lines"
+          }
+        }
+      }
+    },
+    "Table": {
+      "comment": "Built-in snippet picker display name. Stable snippet IDs and user-authored names remain verbatim; non-English values are review drafts.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Table"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Table"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Table"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Table"
+          }
+        }
+      }
+    },
+    "Task": {
+      "comment": "Built-in snippet picker display name. Stable snippet IDs and user-authored names remain verbatim; non-English values are review drafts.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Task"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Task"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Task"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Task"
           }
         }
       }

@@ -51,8 +51,18 @@ public actor WorkspaceFileIndex {
         case failed(String)
     }
 
+    /// Status and paths captured in one actor turn; `.building` retains the
+    /// prior complete paths until the next publication.
+    public struct ReadSnapshot: Sendable {
+        public let state: State
+        public let paths: [IndexedPath]
+        /// Changes on every path publication, including failure and clear.
+        public let publishedGeneration: UInt64
+    }
+
     public private(set) var state: State = .empty
     private var paths: [IndexedPath] = []
+    private var publishedGeneration: UInt64 = 0
     /// Inverted index: ASCII byte value -> ascending indices into `paths`
     /// whose folded basename or relative path contains that byte anywhere.
     /// Built once whenever `paths` changes (index-build time), not on every
@@ -183,6 +193,17 @@ public actor WorkspaceFileIndex {
         includeHidden ? paths : paths.filter { !$0.isHidden }
     }
 
+    /// The folder-search input and its status from one actor turn. During
+    /// `.building`, paths intentionally remain the prior complete snapshot;
+    /// after `.failed`, both status and paths reflect the cleared index.
+    public func allPathsSnapshot(includeHidden: Bool = false) -> ReadSnapshot {
+        ReadSnapshot(
+            state: state,
+            paths: allPaths(includeHidden: includeHidden),
+            publishedGeneration: publishedGeneration
+        )
+    }
+
     /// Ranked matches for `query`, capped at `limit`. Never touches disk —
     /// operates entirely on the last-built in-memory snapshot, so a
     /// keystroke never triggers a new traversal (the epic's explicit
@@ -236,6 +257,26 @@ public actor WorkspaceFileIndex {
             .sorted { $0.score != $1.score ? $0.score > $1.score : $0.path.relativePath < $1.path.relativePath }
             .prefix(limit)
             .map(\.path)
+    }
+
+    /// Quick Open's ranked rows and status from one actor turn, including
+    /// the same recent-file ranking as `query` without a second index read.
+    public func querySnapshot(
+        _ query: String,
+        limit: Int = 100,
+        recentRelativePaths: Set<String> = []
+    ) -> ReadSnapshot {
+        ReadSnapshot(
+            state: state,
+            paths: self.query(query, limit: limit, recentRelativePaths: recentRelativePaths),
+            publishedGeneration: publishedGeneration
+        )
+    }
+
+    /// Admit a visible row only against its exact ready path publication.
+    public func isActionable(_ path: IndexedPath, publishedGeneration expected: UInt64) -> Bool {
+        guard case .ready = state, publishedGeneration == expected else { return false }
+        return paths.contains { $0 == path && !$0.isHidden }
     }
 
     /// Every gap between `FuzzyPathScore`'s own tiers (exact 1000, prefix
@@ -310,6 +351,7 @@ public actor WorkspaceFileIndex {
     /// mean different things this helper has no way to infer from `paths`
     /// alone (an empty root is `.empty`, not `.ready(count: 0)`).
     private func setPaths(_ newPaths: [IndexedPath]) {
+        publishedGeneration &+= 1
         paths = newPaths
         var postings: [UInt8: [Int]] = [:]
         for (index, path) in newPaths.enumerated() {
