@@ -4083,9 +4083,9 @@
           "value": "exact"
         }
       ],
-      "purl": "pkg:github/joncallim/textual@ff74cf54c278b451b2c59387dd00315830266a36",
+      "purl": "pkg:github/joncallim/textual@4bc5a45e384b596e0c1448888c8534a6df436c57",
       "type": "library",
-      "version": "ff74cf54"
+      "version": "4bc5a45e"
     },
     {
       "bom-ref": "theme-daybreak",
@@ -5251,7 +5251,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:c5619aed-1c02-598f-b186-d272d177483e",
+  "serialNumber": "urn:uuid:04951c3b-300e-541b-84ca-f8a6c6bc3097",
   "specVersion": "1.5",
   "version": 1
 }
