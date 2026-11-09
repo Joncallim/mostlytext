@@ -265,4 +265,45 @@ struct RecentFileDocumentsTests {
 
         #expect(store.documents.isEmpty)
     }
+
+    @Test func legacyBookmarkWithoutIdentityRequiresExplicitFileSelection() throws {
+        let original = try TempFile(name: "old-recent.md")
+        let preferences = try makePreferences()
+        let legacy = try original.url.bookmarkData(options: .withSecurityScope)
+        preferences.store.recentFileBookmarks = [legacy]
+
+        let store = RecentFileDocuments(preferences: preferences)
+
+        #expect(store.documents.isEmpty)
+        #expect(store.unresolvedBookmarkCount == 1)
+        #expect(preferences.store.recentFileBookmarks == [legacy])
+
+        try FileManager.default.removeItem(at: original.url)
+        try Data("unrelated".utf8).write(to: original.url)
+        #expect(store.resolve(original.url) == nil)
+
+        // The user may deliberately select the new object through Open…;
+        // that creates a fresh identity and retires this obsolete bookmark.
+        store.record(original.url)
+        #expect(store.unresolvedBookmarkCount == 0)
+        #expect(store.resolve(original.url) != nil)
+    }
+
+    @Test func legacyWrappedBookmarkWithoutIdentityRemainsAvailableForReauthorization() throws {
+        let original = try TempFile(name: "wrapped-recent.md")
+        let preferences = try makePreferences()
+        let bookmark = try original.url.bookmarkData(options: .withSecurityScope)
+        struct LegacyRecord: Encodable {
+            let bookmark: Data
+            let lexicalURL: URL
+        }
+        let legacy = try JSONEncoder().encode(LegacyRecord(bookmark: bookmark, lexicalURL: original.url))
+        preferences.store.recentFileBookmarks = [legacy]
+
+        let store = RecentFileDocuments(preferences: preferences)
+
+        #expect(store.documents.isEmpty)
+        #expect(store.unresolvedBookmarkCount == 1)
+        #expect(preferences.store.recentFileBookmarks == [legacy])
+    }
 }
