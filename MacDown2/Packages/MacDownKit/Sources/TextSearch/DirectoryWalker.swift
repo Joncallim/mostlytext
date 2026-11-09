@@ -151,10 +151,12 @@ struct DirectoryWalker: Sendable {
             // `FileSystemDirectoryReader.contents(of:)`'s existing
             // resolve-and-recheck for symlinks (`DirectoryReading.swift`),
             // without which a symlinked directory would be misclassified as
-            // a file and its subtree silently dropped from the index.
+            // a file and its subtree silently dropped from the index. A
+            // failed target read must fail the whole snapshot for the same
+            // reason as a failed primary metadata read.
             let isSymbolicLink = values.isSymbolicLink == true
             let targetValues = isSymbolicLink
-                ? try? child.resolvingSymlinksInPath().resourceValues(forKeys: Self.resourceKeys)
+                ? try readValues(child.resolvingSymlinksInPath())
                 : nil
             let isDirectory = values.isDirectory == true || targetValues?.isDirectory == true
             let isPackage = values.isPackage == true || targetValues?.isPackage == true

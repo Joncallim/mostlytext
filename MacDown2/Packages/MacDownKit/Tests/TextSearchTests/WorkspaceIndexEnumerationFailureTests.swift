@@ -4,6 +4,47 @@ import Testing
 
 @Suite("Workspace index enumeration failures")
 struct WorkspaceIndexEnumerationFailureTests {
+    @Test func unreadableSymlinkTargetCannotHideItsSubtreeInAReadyIndex() async throws {
+        let parent = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: parent) }
+        let root = parent.appendingPathComponent("workspace", isDirectory: true)
+        let target = parent.appendingPathComponent("linked", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: target, withIntermediateDirectories: true)
+        try Data().write(to: root.appendingPathComponent("first.md"))
+        try Data().write(to: target.appendingPathComponent("linked.md"))
+        try FileManager.default.createSymbolicLink(at: root.appendingPathComponent("link"), withDestinationURL: target)
+        let trigger = parent.appendingPathComponent("fail.flag")
+        let keys: Set<URLResourceKey> = [.isDirectoryKey, .isHiddenKey, .isPackageKey, .isSymbolicLinkKey]
+
+        let index = WorkspaceFileIndex(walk: { root, excluded in
+            try DirectoryWalker(listChildren: { directory in
+                try FileManager.default.contentsOfDirectory(
+                    at: directory, includingPropertiesForKeys: Array(keys), options: []
+                ).sorted { $0.lastPathComponent < $1.lastPathComponent }
+            }, readValues: { entry in
+                if entry == target, FileManager.default.fileExists(atPath: trigger.path) {
+                    throw CocoaError(.fileReadNoPermission)
+                }
+                return try entry.resourceValues(forKeys: keys)
+            }).walk(root: root, excludedDirectoryNames: excluded)
+        })
+
+        await index.rebuild(root: root)
+        #expect(await index.state == .ready(count: 2))
+        #expect(await index.query("linked").map(\.relativePath) == ["link/linked.md"])
+
+        try Data().write(to: trigger)
+        await index.rebuild(root: root)
+
+        guard case .failed = await index.state else {
+            Issue.record("a failed symlink-target read must not hide its subtree in a ready index")
+            return
+        }
+        #expect(await index.allPaths().isEmpty)
+        #expect(await index.query("first").isEmpty)
+    }
+
     @Test func unreadableChildMetadataCannotPublishAPartialIndex() async throws {
         let parent = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         defer { try? FileManager.default.removeItem(at: parent) }

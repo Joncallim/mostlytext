@@ -650,6 +650,18 @@ index never presents an incomplete snapshot as complete. This preserves the
 existing symlink, traversal-budget and disk-free query policies; it does not
 establish installed-app workspace acceptance.
 
+#### F18 symlink-target metadata failure amendment — 9 November 2026
+
+A symlinked directory is intentionally traversed and indexed under its
+lexical name. After the primary child metadata read is fixed, its separate
+target metadata lookup can still throw and be suppressed, making that linked
+subtree disappear while the index reports `.ready`. Use the same checked
+metadata reader for that lookup and propagate a failure to the current
+generation's `.failed` state. A deterministic test first proves the linked
+file is indexed, then fails only the target lookup and proves the earlier
+snapshot and partial paths are no longer actionable. Link traversal and loop
+limits remain as before; installed-app behavior is still unverified.
+
 ### 6.16 Folder search + safe replace (Slice 7) — design pass, baseline and contract, decided before implementation
 
 **Baseline, verified against live master before writing this design pass:** `TextSearchEngine.matches(in:query:options:)` (Slice 5, `TextSearch` package) is already a complete, pure, synchronous single-buffer literal/regex matcher — its own doc comment already names its intended second consumer: "used directly by current-document find on a bounded buffer, and per-file by `WorkspaceSearchEngine` (folder search) inside its own cancellable off-main task." `WorkspaceFileIndex` (Slice 1/6) already holds every indexed `(relativePath, basename)` pair under a window's folder root, rebuilt on root change. `FileStore.write(_:to:encoding:bom:expectedRevision:)` (`FileCore`, pre-existing) already throws `.fileChangedDuringRead` when an on-disk file's revision no longer matches one captured at read time — the exact conditional-publication primitive invariant #6 requires Replace in Folder to reuse rather than inventing a second write path. None of `WorkspaceSearchEngine`, a replacement-plan type, or any folder-search UI exist yet — this is a genuinely new slice, not wiring an already-built engine the way Slice 6 was.
