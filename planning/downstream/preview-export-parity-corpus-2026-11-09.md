@@ -14,6 +14,7 @@ The compared expectations are structural, not a byte-for-byte comparison between
 | --- | --- | --- |
 | GFM table with Unicode | table block and Textual table intent | table/header/cell HTML and Unicode text |
 | checked and unchecked task items | parser retains each task state; Textual retains list intent and item order | checkbox markup and ordered item text |
+| ordered lists starting at 4 and 7, including a quoted list | source blocks retain the authored start numbers; Textual retains ordered-list intent | both `ol` elements retain their authored `start` values |
 | strikethrough and autolink | inline strike intent and resolved link URL | `del` element and link destination |
 | repeated Unicode headings | two level-one blocks, native anchor fragments, Textual heading intent | two visible heading elements and text |
 | front matter | YAML is removed from Preview source blocks | YAML becomes title metadata, not body text |
@@ -21,6 +22,8 @@ The compared expectations are structural, not a byte-for-byte comparison between
 | authored raw HTML | Textual presents the tags as literal source text | ordinary HTML export preserves authored markup |
 
 The raw-HTML difference follows the existing E12 policy: ordinary HTML preserves authored HTML, self-contained HTML rejects it, while the tested Textual parser returns authored tags as literal source text. The test does not make a security or visual claim from a string comparison.
+
+The 9 November follow-on at baseline `87552f7d` adds a non-one ordered-list case. It checks the authored starts at the native Preview source-block boundary, Textual's ordered-list intent, and both emitted HTML `start` attributes. The attributed string does not establish the numbers actually painted by the native list view; that remains part of visual acceptance.
 
 ## Remaining work for issue #11
 
