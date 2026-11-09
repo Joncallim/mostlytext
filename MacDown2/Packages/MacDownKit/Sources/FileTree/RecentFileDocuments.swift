@@ -69,7 +69,12 @@ public final class RecentFileDocuments {
     public func record(_ url: URL) {
         let standardized = url.standardizedFileURL
         let physical = standardized.resolvingSymlinksInPath().standardizedFileURL
-        guard let bookmark = try? physical.bookmarkData(options: .withSecurityScope) else { return }
+        guard let bookmark = try? physical.bookmarkData(options: .withSecurityScope),
+              let fingerprint = Fingerprint(of: physical)
+        else { return }
+        // A legacy bookmark has no identity to compare against a reused path.
+        // Retire it only after the user deliberately opens that file again.
+        unresolved.removeAll { matchesExplicitlyOpenedFile($0, standardized) }
         var updated = zip(documents, bookmarks).filter { $0.0 != standardized && !PhysicalFileIdentity.matches(
             $0.0,
             standardized
@@ -78,7 +83,7 @@ public final class RecentFileDocuments {
             (standardized, stored(
                 bookmark: bookmark,
                 lexicalURL: standardized,
-                fingerprint: Fingerprint(of: physical)
+                fingerprint: fingerprint
             )),
             at: 0
         )
@@ -115,6 +120,10 @@ public final class RecentFileDocuments {
         else { return nil }
         var stale = false
         let record = unpack(bookmarks[index], fallbackLexicalURL: documents[index])
+        guard let expected = record.fingerprint else {
+            quarantineUnidentifiedBookmark(at: index)
+            return nil
+        }
         guard let resolved = try? URL(
             resolvingBookmarkData: record.bookmark,
             options: [.withSecurityScope],
@@ -134,7 +143,7 @@ public final class RecentFileDocuments {
         // Bookmarks resolve path-first, so once an unrelated file sits at the
         // old path they resolve to *it*. Refuse it rather than open the wrong
         // file; the entry no longer refers to anything we can find.
-        if let expected = record.fingerprint, Fingerprint(of: standardized) != expected {
+        if Fingerprint(of: standardized) != expected {
             if preservesUnavailableBookmarks {
                 return nil
             }
@@ -207,6 +216,11 @@ public final class RecentFileDocuments {
         var survivors: [(URL, Data)] = []
         var changed = false
         for (url, bookmark) in zip(documents, bookmarks) {
+            if unpack(bookmark, fallbackLexicalURL: url).fingerprint == nil {
+                unresolved.append(bookmark)
+                changed = true
+                continue
+            }
             if FileManager.default.fileExists(atPath: url.path) {
                 survivors.append((url, bookmark))
             } else if let moved = movedFile(for: bookmark) {
@@ -239,6 +253,13 @@ public final class RecentFileDocuments {
         var seen: [URL] = []
         for data in storedBookmarks() {
             let record = unpack(data, fallbackLexicalURL: nil)
+            // Old raw/wrapped bookmarks cannot establish that a path still
+            // names the original file. Keep the record for explicit Open…
+            // reauthorization, but never offer it as an actionable recent.
+            guard record.fingerprint != nil else {
+                unresolved.append(data)
+                continue
+            }
             var stale = false
             guard let url = try? URL(
                 resolvingBookmarkData: record.bookmark,
@@ -283,11 +304,14 @@ public final class RecentFileDocuments {
     public static func relocatedInstallationBookmarks(_ values: [Data],
                                                       map: (URL) throws -> URL?) throws -> [Data] {
         try values.map { data in
-            let stored = try? JSONDecoder().decode(StoredDocument.self, from: data)
-            var stale = false
-            let old = stored?.lexicalURL ?? (try? URL(resolvingBookmarkData: data, options: [.withSecurityScope],
-                                                      relativeTo: nil, bookmarkDataIsStale: &stale))
-            guard let old, let new = try map(old) else { return data }
+            // A legacy bookmark or a reused source path cannot prove the
+            // mapped file came from the recorded object. Never mint an
+            // identity for that path; preserve the original record instead.
+            guard let stored = try? JSONDecoder().decode(StoredDocument.self, from: data),
+                  let expected = stored.fingerprint,
+                  Fingerprint(of: stored.lexicalURL) == expected,
+                  let new = try map(stored.lexicalURL)
+            else { return data }
             return try JSONEncoder().encode(StoredDocument(bookmark: new.bookmarkData(options: .withSecurityScope),
                                                            lexicalURL: new, fingerprint: Fingerprint(of: new)))
         }
@@ -296,11 +320,20 @@ public final class RecentFileDocuments {
     private func save() {
         storeBookmarks(bookmarks + unresolved)
     }
+}
+
+@MainActor private extension RecentFileDocuments {
+    func quarantineUnidentifiedBookmark(at index: Int) {
+        documents.remove(at: index)
+        unresolved.append(bookmarks.remove(at: index))
+        save()
+    }
 
     /// Where a bookmark currently finds its file, if that file exists.
-    private func movedFile(for data: Data) -> URL? {
+    func movedFile(for data: Data) -> URL? {
         var stale = false
         let record = unpack(data, fallbackLexicalURL: nil)
+        guard let expected = record.fingerprint else { return nil }
         guard let url = try? URL(
             resolvingBookmarkData: record.bookmark,
             options: [.withSecurityScope],
@@ -309,9 +342,24 @@ public final class RecentFileDocuments {
         ) else { return nil }
         let standardized = url.standardizedFileURL
         guard FileManager.default.fileExists(atPath: standardized.path),
-              record.fingerprint == nil || Fingerprint(of: standardized) == record.fingerprint
+              Fingerprint(of: standardized) == expected
         else { return nil }
         return standardized
+    }
+
+    func matchesExplicitlyOpenedFile(_ data: Data, _ opened: URL) -> Bool {
+        let record = unpack(data, fallbackLexicalURL: nil)
+        if record.lexicalURL?.standardizedFileURL == opened {
+            return true
+        }
+        var stale = false
+        guard let resolved = try? URL(
+            resolvingBookmarkData: record.bookmark,
+            options: [.withSecurityScope, .withoutUI],
+            relativeTo: nil,
+            bookmarkDataIsStale: &stale
+        ) else { return false }
+        return PhysicalFileIdentity.matches(resolved, opened)
     }
 
     private func stored(bookmark: Data, lexicalURL: URL, fingerprint: Fingerprint?) -> Data {
@@ -326,11 +374,11 @@ public final class RecentFileDocuments {
         return Unpacked(bookmark: data, lexicalURL: fallbackLexicalURL, fingerprint: nil)
     }
 
-    private func storedBookmarks() -> [Data] {
+    func storedBookmarks() -> [Data] {
         preferences.recentFileBookmarks()
     }
 
-    private func storeBookmarks(_ bookmarks: [Data]) {
+    func storeBookmarks(_ bookmarks: [Data]) {
         preferences.storeRecentFileBookmarks(bookmarks)
     }
 }
