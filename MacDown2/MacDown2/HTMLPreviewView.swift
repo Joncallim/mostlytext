@@ -10,6 +10,20 @@ private struct HTMLPreviewLoadIdentity {
     let generation: UInt
 }
 
+private struct HTMLPreviewDocumentIdentity: Equatable {
+    let tabID: UUID?
+    let documentID: String
+    let recoveryEpoch: UUID
+    let fileURL: URL?
+
+    init(_ document: FileCore.FileDocument, tabID: UUID?) {
+        self.tabID = tabID
+        documentID = document.id
+        recoveryEpoch = document.recoveryEpoch
+        fileURL = document.fileURL
+    }
+}
+
 // MARK: - HTML preview host
 
 /// App-owned host for the hardened HTML preview (EPIC-11 Gate 4).
@@ -43,6 +57,7 @@ struct HTMLPreviewView: NSViewRepresentable {
     }
 
     let document: FileCore.FileDocument
+    let tabID: UUID
 
     func makeCoordinator() -> Coordinator {
         Coordinator()
@@ -53,7 +68,7 @@ struct HTMLPreviewView: NSViewRepresentable {
     }
 
     func updateNSView(_ webView: WKWebView, context: Context) {
-        context.coordinator.preview(document: document, in: webView)
+        context.coordinator.preview(document: document, tabID: tabID, in: webView)
     }
 
     static func dismantleNSView(_ webView: WKWebView, coordinator: Coordinator) {
@@ -68,6 +83,7 @@ struct HTMLPreviewView: NSViewRepresentable {
         private var reloadBudget = HTMLPreviewReloadBudget()
         private var reloadTask: Task<Void, Never>?
         private var scheduledLoadID: UUID?
+        private var currentDocumentIdentity: HTMLPreviewDocumentIdentity?
         private var pendingNavigation: PendingNavigation?
         private var currentPageGeneration: UInt?
         private weak var currentWebView: WKWebView?
@@ -102,7 +118,8 @@ struct HTMLPreviewView: NSViewRepresentable {
         /// Evaluates the current saved revision and starts a debounced,
         /// generation-gated reload. Called on every SwiftUI update; the gate
         /// guarantees unrelated updates cause zero reloads.
-        func preview(document: FileCore.FileDocument, in webView: WKWebView) {
+        func preview(document: FileCore.FileDocument, tabID: UUID? = nil, in webView: WKWebView) {
+            acceptDocumentIdentity(document, tabID: tabID, in: webView)
             guard document.state == .clean else {
                 reloadTask?.cancel()
                 reloadTask = nil
@@ -151,6 +168,7 @@ struct HTMLPreviewView: NSViewRepresentable {
             pendingNavigation = nil
             currentPageGeneration = nil
             currentWebView = nil
+            currentDocumentIdentity = nil
             handler.retire()
             webView.stopLoading()
         }
@@ -343,6 +361,40 @@ struct HTMLPreviewView: NSViewRepresentable {
             }
             components.fragment = nil
             return components.string ?? url.absoluteString
+        }
+    }
+}
+
+extension HTMLPreviewView.Coordinator {
+    /// Identity changes precede the clean-state gate. Same-document dirty edits retain their last saved page;
+    /// a different document cannot display that page or borrow its resource authority, even when its generation
+    /// is lower or it has not yet been saved.
+    private func acceptDocumentIdentity(_ document: FileCore.FileDocument, tabID: UUID?, in webView: WKWebView) {
+        let documentIdentity = HTMLPreviewDocumentIdentity(document, tabID: tabID)
+        guard currentDocumentIdentity != documentIdentity else { return }
+        let replacingDocument = currentDocumentIdentity != nil
+        currentDocumentIdentity = documentIdentity
+        reloadTask?.cancel()
+        reloadTask = nil
+        scheduledLoadID = nil
+        gate = HTMLPreviewReloadGate()
+        pendingNavigation = nil
+        currentPageGeneration = nil
+        currentWebView = nil
+        handler.retire()
+        webView.stopLoading()
+        guard replacingDocument else { return }
+
+        // Clear through our own CSP-bound scheme; the empty request has no directory authority.
+        let blankURL = handler.install(
+            HTMLPreviewRequest(source: "", baseURL: nil, policy: .v1),
+            documentURL: nil,
+            documentID: documentIdentity.documentID,
+            recoveryEpoch: documentIdentity.recoveryEpoch,
+            generation: 0
+        )
+        if let blankURL {
+            _ = webView.load(URLRequest(url: blankURL))
         }
     }
 }

@@ -26,7 +26,11 @@ This slice stacks on the active resource-containment change at PR #190 head
 document's directory and reads through `ContainedResourceReader`. It reuses
 `PreviewResourceAdmission` for worker, queue, byte and cancellation accounting.
 The active `HTMLPreviewView` still debounces clean saved generations and keeps
-the last rendered page during dirty edits. The separate explicit-grant
+the last rendered page during dirty edits to the same document. A different
+document or tab identity immediately revokes the old resource authority and loads an
+empty CSP-bound page before checking whether the incoming document is clean;
+even a dirty or lower-generation document cannot inherit the former preview.
+The separate explicit-grant
 `SecuredHTMLPreviewView` remains inactive.
 
 `PreviewDirectoryGrantBacking.acquireAutomatic` takes the real saved document
@@ -50,6 +54,7 @@ test desktop's native preview corpus, Release memory/latency calibration and
 final RC acceptance remain open. This change does not claim a user-visible
 folder-grant prompt or expand the preview to a different directory. Save As and
 rename advance `FileDocument.mutationGeneration`, so they schedule a new saved
-HTML load with the new URL. A lower-generation switch to a distinct document
-through a reused `HTMLPreviewView.Coordinator` has not been proven or ruled out
-and remains an issue #13 lifecycle review item outside this read-budget slice.
+HTML load with the new URL. Coordinator source tests cover a lower-generation
+distinct document, a dirty distinct document and a different tab with the same
+document generation; native WebKit clearing and
+saved-load presentation still need the test desktop acceptance run.
