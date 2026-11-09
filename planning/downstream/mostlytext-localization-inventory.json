@@ -17296,6 +17296,41 @@
       "target": "EditorCore",
       "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
       "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Fenced Code Block",
+      "source_default_value": "Fenced Code Block",
+      "translator_comment": "Built-in snippet picker display name. Stable snippet IDs and user-authored names remain verbatim; non-English values are review drafts.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/Snippets/Snippet.swift:128"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
       "key": "Heading",
       "source_default_value": "Heading",
       "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
@@ -17323,6 +17358,41 @@
       },
       "callsites": [
         "MacDown2/Packages/MacDownKit/Sources/EditorCore/MarkdownEditingAssistEngine+Commands.swift:173"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Image",
+      "source_default_value": "Image",
+      "translator_comment": "Built-in snippet picker display name. Stable snippet IDs and user-authored names remain verbatim; non-English values are review drafts.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/Snippets/Snippet.swift:140"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -17614,6 +17684,76 @@
       "target": "EditorCore",
       "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
       "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Link",
+      "source_default_value": "Link",
+      "translator_comment": "Built-in snippet picker display name. Stable snippet IDs and user-authored names remain verbatim; non-English values are review drafts.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/Snippets/Snippet.swift:132"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Link from Clipboard",
+      "source_default_value": "Link from Clipboard",
+      "translator_comment": "Built-in snippet picker display name. Stable snippet IDs and user-authored names remain verbatim; non-English values are review drafts.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/Snippets/Snippet.swift:136"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
       "key": "Lowercase",
       "source_default_value": "Lowercase",
       "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
@@ -17886,6 +18026,76 @@
       },
       "callsites": [
         "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorTextTransforms.swift:39"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Table",
+      "source_default_value": "Table",
+      "translator_comment": "Built-in snippet picker display name. Stable snippet IDs and user-authored names remain verbatim; non-English values are review drafts.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/Snippets/Snippet.swift:144"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "EditorCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Task",
+      "source_default_value": "Task",
+      "translator_comment": "Built-in snippet picker display name. Stable snippet IDs and user-authored names remain verbatim; non-English values are review drafts.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/EditorCore/Snippets/Snippet.swift:148"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -22899,7 +23109,8 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceFileIndex.swift:141"
+        "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceFileIndex.swift:127",
+        "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceFileIndex.swift:151"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -22932,7 +23143,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceFileIndex.swift:139"
+        "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceFileIndex.swift:149"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"

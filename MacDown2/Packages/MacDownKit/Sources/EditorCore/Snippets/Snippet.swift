@@ -118,30 +118,34 @@ public enum BuiltInSnippets {
     /// Resolve display names when the picker opens. IDs and insertion bodies
     /// stay stable across languages and user overrides keep their own names.
     public static var all: [Snippet] {
+        all(in: .module)
+    }
+
+    static func all(in bundle: Bundle) -> [Snippet] {
         [
             Snippet(
                 id: "builtin.markdown.codeBlock",
-                name: String(localized: "Fenced Code Block", bundle: .module),
+                name: String(localized: "Fenced Code Block", bundle: bundle),
                 body: "```\n${selection}$0\n```",
                 scopes: ["markdown"]
             ),
-            Snippet(id: "builtin.markdown.link", name: String(localized: "Link", bundle: .module),
+            Snippet(id: "builtin.markdown.link", name: String(localized: "Link", bundle: bundle),
                     body: "[${selection}]($0)", scopes: ["markdown"]),
             Snippet(
                 id: "builtin.markdown.linkFromClipboard",
-                name: String(localized: "Link from Clipboard", bundle: .module),
+                name: String(localized: "Link from Clipboard", bundle: bundle),
                 body: "[${selection}](${clipboard})$0",
                 scopes: ["markdown"]
             ),
-            Snippet(id: "builtin.markdown.image", name: String(localized: "Image", bundle: .module),
+            Snippet(id: "builtin.markdown.image", name: String(localized: "Image", bundle: bundle),
                     body: "![${selection}]($0)", scopes: ["markdown"]),
             Snippet(
                 id: "builtin.markdown.table",
-                name: String(localized: "Table", bundle: .module),
+                name: String(localized: "Table", bundle: bundle),
                 body: "| Column | Column |\n| ------ | ------ |\n| $0 |  |",
                 scopes: ["markdown"]
             ),
-            Snippet(id: "builtin.markdown.task", name: String(localized: "Task", bundle: .module),
+            Snippet(id: "builtin.markdown.task", name: String(localized: "Task", bundle: bundle),
                     body: "- [ ] ${selection}$0", scopes: ["markdown"]),
         ]
     }

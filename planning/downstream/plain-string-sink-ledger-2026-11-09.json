@@ -490,7 +490,7 @@
   "deferred_review": [
     {
       "path": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Snippets/Snippet.swift",
-      "sha256": "f5cc84d15eb6e086b8b99c6dc9c7a613cc30df9f3d1e77ff757ed1d58b8a0b5c",
+      "sha256": "107c739f7fa4dd59ccf5e37b0e4f43a993aca0fcc5d8fc21efcbbfb290e981c6",
       "status": "open",
       "reason": "Built-in snippet names now resolve through EditorCore's catalog; review drafted translations and native picker/accessibility presentation before closing the wider audit."
     },
