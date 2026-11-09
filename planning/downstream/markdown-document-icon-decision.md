@@ -6,10 +6,11 @@ MostlyText identifies itself in the app icon, but Markdown files still have no
 MostlyText-specific document icon. The app already declares Markdown as a public
 format it can edit, at `LSHandlerRank: Default`. Adding a final icon requires a
 new visual composition, even if every logo path comes from the frozen 10° Slant
-artwork. Choose and review that composition before wiring it into Finder.
+artwork. The owner approved this composition from the review sheet on
+9 November 2026; installed Finder presentation is still unverified.
 
-This packet is a design and implementation proposal, not approved artwork or
-native Finder acceptance. It is based on `main` at
+This packet records the approved composition and its implementation candidate,
+not native Finder acceptance. It is based on `main` at
 `892241384112a05d397a8ce292f0467e02d3ebab` (9 November 2026).
 
 The isolated branch adds a **review candidate** built by
@@ -47,17 +48,17 @@ An imported-type declaration may be needed for the aliases, but [Apple advises](
 against redeclaring a system-provided type. Resolve that registration behavior
 before changing the UTI contract or checking #7's Finder criterion.
 
-## Proposed visual decision
+## Approved visual composition
 
 The candidate is a simple neutral document sheet bearing the existing Slant mark in
 `#11141A`, with no new monogram, text, stripes or app-icon glass background.
 It uses `slant-master.svg` above 40 px, `slant-32.svg` at 18–40 px, and
 `slant-16.svg` at 17 px and below, measured at the mark's displayed size.
-The generator preserves each source's aspect ratio and path exactly. The
-white/off-white paper silhouette, fold, border, mark placement and absence of
-a dark-mode variant still need visual approval;
-those are new artwork choices, not consequences of D-029/D-031. Review actual
-16, 32, 128 and 512 px exports together before declaring this final.
+The generator preserves each source's aspect ratio and path exactly. The owner
+approved the review sheet showing the white/off-white paper silhouette, fold,
+border, mark placement and no separate dark-mode variant on 9 November 2026.
+Those choices are new artwork, not consequences of D-029/D-031. Actual Finder
+appearance remains to be checked at 16, 32 and 128 px in light and dark.
 
 Review PNGs and a vector source are under `design/brand/document-icon/preview/`.
 They are generated from the same source as the `.icns`; `verify.py` compares
@@ -67,11 +68,11 @@ Do not use `AppIcon.icns` as the document icon: it is an app tile and does not
 communicate the document identity the issue asks for. Do not add a private
 MostlyText Markdown UTI or change the existing public Markdown handler rank.
 
-## Implementation after visual approval
+## Implementation and Finder acceptance
 
-1. Finalize the candidate only after review of the vector composition. The
-   standard-library generator imports only canonical Slant paths, renders all
-   `.iconset` sizes through macOS `sips`, including 1×/2× small sizes, then
+1. The approved candidate's standard-library generator imports only canonical
+   Slant paths, renders all `.iconset` sizes through macOS `sips`, including
+   1×/2× small sizes, then
    builds `MarkdownDocument.icns` with `iconutil`.
 2. Keep the `.icns` resource in the app target and set only the Markdown
    document declaration's `CFBundleTypeIconFile: MarkdownDocument` in
@@ -91,9 +92,9 @@ MostlyText Markdown UTI or change the existing public Markdown handler rank.
    installed bundle identity and the actual displayed file icon. This is
    separate from source and compile-only verification.
 
-Only after the visual decision, source implementation, built-resource checks
-and genuine installed Finder readback should #16's document-icon/Finder rows
-or #7's corresponding registration criterion be considered for closure.
+The visual decision and source/build checks are recorded. Keep #16's
+document-icon/Finder rows and #7's registration criterion open until genuine
+installed Finder readback on the exact candidate.
 
 ## Local candidate verification, 9 November 2026
 
@@ -111,5 +112,5 @@ or #7's corresponding registration criterion be considered for closure.
   resource registered.
 
 These are source and compile-only checks. The app was not launched, installed,
-or registered with Finder here. Final visual approval and installed Finder/Open
-With acceptance remain open.
+or registered with Finder here. The owner has approved the composition;
+installed Finder/Open With acceptance remains open.

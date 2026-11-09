@@ -1,10 +1,10 @@
-# Markdown document icon candidate
+# Markdown document icon
 
 This candidate puts the frozen 10° Slant mark on a neutral document sheet.
 The mark sources come directly from `../slant/validation/` at their approved
 display sizes. The sheet silhouette, fold, border and placement are new
-composition choices awaiting visual approval. The complete decision and
-Finder handoff are in
+composition choices approved by the owner on 9 November 2026. The remaining
+Finder handoff is in
 [`planning/downstream/markdown-document-icon-decision.md`](../../../planning/downstream/markdown-document-icon-decision.md).
 
 From the repository root on macOS:
@@ -21,4 +21,4 @@ PNGs/one SVG. `verify.py` rebuilds and compares every tracked output, checks
 the ten extracted icon sizes, and validates the generated plist. Pass a built
 `.app` through `--app` for the actual bundle-resource and compiled-plist check.
 
-These checks do not establish visual approval or Finder/Open With acceptance.
+These checks do not establish installed Finder/Open With acceptance.
