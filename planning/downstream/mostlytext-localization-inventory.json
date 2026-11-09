@@ -845,16 +845,37 @@
         "contains_inflection_markup": false
       },
       "variants": {
-        "en": {},
-        "fr": {},
-        "ja": {},
-        "pl": {}
+        "en": {
+          "value": [
+            "one",
+            "other"
+          ]
+        },
+        "fr": {
+          "value": [
+            "one",
+            "other"
+          ]
+        },
+        "ja": {
+          "value": [
+            "other"
+          ]
+        },
+        "pl": {
+          "value": [
+            "few",
+            "many",
+            "one",
+            "other"
+          ]
+        }
       },
       "locale_states": {
-        "en": "unknown",
-        "fr": "unknown",
-        "ja": "unknown",
-        "pl": "unknown"
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
       },
       "callsites": [],
       "callsite_evidence": "unknown_or_nonliteral_static_callsite",
@@ -883,16 +904,37 @@
         "contains_inflection_markup": false
       },
       "variants": {
-        "en": {},
-        "fr": {},
-        "ja": {},
-        "pl": {}
+        "en": {
+          "value": [
+            "one",
+            "other"
+          ]
+        },
+        "fr": {
+          "value": [
+            "one",
+            "other"
+          ]
+        },
+        "ja": {
+          "value": [
+            "other"
+          ]
+        },
+        "pl": {
+          "value": [
+            "few",
+            "many",
+            "one",
+            "other"
+          ]
+        }
       },
       "locale_states": {
-        "en": "unknown",
-        "fr": "unknown",
-        "ja": "unknown",
-        "pl": "unknown"
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
       },
       "callsites": [],
       "callsite_evidence": "unknown_or_nonliteral_static_callsite",

@@ -164,7 +164,7 @@ struct PseudoLocalizationLayoutTests {
         #expect(result.nonBlank, "\(localeIdentifier) conflict notice banner rendered a uniformly blank image")
     }
 
-    /// The one pluralized string in the app (preview-budget diagnostic):
+    /// The preview-budget diagnostic's plural forms:
     /// resolves the exact source key `PreviewContributionAdmission` uses,
     /// through each compiled `.lproj` bundle. `locale:` alone does not force
     /// catalog lookup away from the process language in this test process;
