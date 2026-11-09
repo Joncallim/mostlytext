@@ -689,6 +689,19 @@ captured search input. This only makes the initial read coherent; a row
 already displayed when the index later changes still needs an action-time
 validity gate under F18/F19, followed by the installed-app journey.
 
+#### F18/F19 Quick Open action-time admission — 9 November 2026
+
+Each published index path set now has a token that changes on success,
+failure and clear. Quick Open keeps that token with its displayed rows. A
+click or Return action reaches the index actor again and opens only when its
+state is ready, the token still matches and the selected visible path remains
+in that publication. Even a new successful rebuild containing the same
+relative path rejects an old row. The panel also captures the window's root
+request and lexical/access roots, checks them before and after the index
+await, and supplies the same guard to the document-open path's later awaits.
+This closes the source-level stale-row opening path without changing index
+refresh policy, filesystem symlink handling or installed-app acceptance.
+
 ### 6.16 Folder search + safe replace (Slice 7) — design pass, baseline and contract, decided before implementation
 
 **Baseline, verified against live master before writing this design pass:** `TextSearchEngine.matches(in:query:options:)` (Slice 5, `TextSearch` package) is already a complete, pure, synchronous single-buffer literal/regex matcher — its own doc comment already names its intended second consumer: "used directly by current-document find on a bounded buffer, and per-file by `WorkspaceSearchEngine` (folder search) inside its own cancellable off-main task." `WorkspaceFileIndex` (Slice 1/6) already holds every indexed `(relativePath, basename)` pair under a window's folder root, rebuilt on root change. `FileStore.write(_:to:encoding:bom:expectedRevision:)` (`FileCore`, pre-existing) already throws `.fileChangedDuringRead` when an on-disk file's revision no longer matches one captured at read time — the exact conditional-publication primitive invariant #6 requires Replace in Folder to reuse rather than inventing a second write path. None of `WorkspaceSearchEngine`, a replacement-plan type, or any folder-search UI exist yet — this is a genuinely new slice, not wiring an already-built engine the way Slice 6 was.
