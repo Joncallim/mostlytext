@@ -36,7 +36,7 @@ public struct FormatManifest: Sendable, Equatable {
         DocumentTypeDeclaration(
             formatID: "markdown",
             role: "Editor",
-            itemContentTypes: ["net.daringfireball.markdown"],
+            itemContentTypes: ["net.daringfireball.markdown", "app.mostlytext.markdown-alias"],
             extensions: ["md", "markdown", "mdown", "mkd", "mkdn"]
         ),
         DocumentTypeDeclaration(
