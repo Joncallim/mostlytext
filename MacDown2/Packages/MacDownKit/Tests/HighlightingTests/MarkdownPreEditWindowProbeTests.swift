@@ -4,8 +4,10 @@ import SwiftTreeSitter
 import SwiftTreeSitterLayer
 import Testing
 
-/// Parser-only proof for a conservative pre-edit window selector. It neither
-/// changes Neon's production parser nor claims general Markdown edit parity.
+/// Parser-only proof for a conservative pre-edit window selector. Timings
+/// separate candidate selection/window parsing from the full oracle, but omit
+/// editor mutation and capture comparison. They are not typing latency.
+/// This neither changes Neon's parser nor claims general Markdown edit parity.
 @Suite("Markdown pre-edit window feasibility", .serialized)
 @MainActor
 struct MarkdownPreEditWindowProbeTests {
@@ -19,6 +21,8 @@ struct MarkdownPreEditWindowProbeTests {
         let replacement: String
         let expectedCandidate: Bool
         var atStart = false
+        /// A UTF-16 offset inside `needle`; nil replaces the whole needle.
+        var insertionOffset: Int?
     }
 
     private enum Decision {
@@ -59,17 +63,25 @@ struct MarkdownPreEditWindowProbeTests {
             let original = fixture(specimen)
             #expect(original.utf8.count == Self.documentBytes)
             let source = original as NSString
-            let edit = source.range(of: specimen.needle)
-            try #require(edit.location != NSNotFound)
+            let match = source.range(of: specimen.needle)
+            try #require(match.location != NSNotFound)
+            let edit = if let offset = specimen.insertionOffset {
+                NSRange(location: match.location + offset, length: 0)
+            } else {
+                match
+            }
             let before = try layer(original, root: root, registry: registry)
             let oldRoot = try #require(before.snapshot()?.rootSnapshot.tree.rootNode)
             let start = max(0, edit.location - 64)
             let oldVisible = NSRange(location: start, length: min(source.length - start, edit.length + 192))
+            let selectionStart = ContinuousClock().now
             let decision = try selectWindow(source: source, edit: edit, replacement: specimen.replacement,
                                             visible: oldVisible, root: oldRoot)
+            let selectionDuration = ContinuousClock().now - selectionStart
             guard case let .candidate(window) = decision else {
                 if case let .refused(reason) = decision {
-                    print("PREEDIT_WINDOW case=\(specimen.name) outcome=refused reason=\(reason)")
+                    print("PREEDIT_WINDOW case=\(specimen.name) outcome=refused reason=\(reason) " +
+                        "selection=\(selectionDuration)")
                 }
                 #expect(!specimen.expectedCandidate, "\(specimen.name) refused a candidate")
                 continue
@@ -82,33 +94,51 @@ struct MarkdownPreEditWindowProbeTests {
                 location: start,
                 length: min((edited as NSString).length - start, (specimen.replacement as NSString).length + 192)
             )
-            let whole = try layer(edited, root: root, registry: registry)
+            let windowStart = ContinuousClock().now
             let excerpt = (edited as NSString).substring(with: window)
             let local = try layer(excerpt, root: root, registry: registry)
+            let windowDuration = ContinuousClock().now - windowStart
+            let oracleStart = ContinuousClock().now
+            let whole = try layer(edited, root: root, registry: registry)
+            let oracleDuration = ContinuousClock().now - oracleStart
             try compare(whole: whole, local: local, inline: inline,
                         context: Comparison(edited: edited, excerpt: excerpt, window: window,
                                             visible: visible, name: specimen.name))
+            print("PREEDIT_WINDOW_COST case=\(specimen.name) selection=\(selectionDuration) " +
+                "windowParse=\(windowDuration) fullOracle=\(oracleDuration)")
         }
     }
 
-    /// Only interior alphanumeric substitutions in a punctuation-free,
-    /// single-line paragraph are candidates. A pre-edit root tree supplies the
-    /// visible root children; the post-edit full tree is not consulted here.
+    /// Only interior alphanumeric substitutions or a single-character word
+    /// insertion in a punctuation-free, single-line paragraph are candidates.
+    /// A pre-edit root tree supplies the visible root children; the post-edit
+    /// full tree is not consulted here.
     private func selectWindow(
         source: NSString, edit: NSRange, replacement: String, visible: NSRange, root: Node
     ) throws -> Decision {
         let old = source.substring(with: edit)
         let word = CharacterSet.alphanumerics
-        guard !old.isEmpty, !replacement.isEmpty,
-              old.unicodeScalars.allSatisfy(word.contains),
+        guard !replacement.isEmpty,
+              edit.length == 0 || old.unicodeScalars.allSatisfy(word.contains),
               replacement.unicodeScalars.allSatisfy(word.contains)
         else { return .refused("structural-or-empty-edit") }
-        let editedNodes = try rootChildren(overlapping: edit, in: root)
+        if edit.length == 0 {
+            guard replacement.unicodeScalars.count == 1,
+                  edit.location > 0, edit.location < source.length,
+                  let before = UnicodeScalar(Int(source.character(at: edit.location - 1))),
+                  let after = UnicodeScalar(Int(source.character(at: edit.location))),
+                  word.contains(before), word.contains(after)
+            else { return .refused("not-interior-word-insert") }
+        }
+        // A zero-length insertion does not intersect any node. Probe the
+        // original code unit after the caret, guarded as an interior word.
+        let preEditProbe = NSRange(location: edit.location, length: max(1, edit.length))
+        let editedNodes = try rootChildren(overlapping: preEditProbe, in: root)
         guard editedNodes.count == 1, let section = editedNodes.first,
               section.nodeType == "section", !section.hasError
         else { return .refused("not-one-clean-section") }
         let paragraphs = (0 ..< section.childCount).compactMap { section.child(at: $0) }
-            .filter { $0.nodeType == "paragraph" && NSIntersectionRange($0.range, edit).length > 0 }
+            .filter { $0.nodeType == "paragraph" && NSIntersectionRange($0.range, preEditProbe).length > 0 }
         guard paragraphs.count == 1, let node = paragraphs.first, !node.hasError,
               edit.location > node.range.location,
               NSMaxRange(edit) < NSMaxRange(node.range)
@@ -242,6 +272,19 @@ private extension MarkdownPreEditWindowProbeTests {
         .init(name: "paragraph-unicode",
               island: "# Probe\n\nPlain cafétarget content with context\n\n**bold** tail.\n\n",
               needle: "cafétarget", replacement: "漢字word", expectedCandidate: true),
+        .init(name: "paragraph-insert-middle",
+              island: "# Probe\n\nPlain alphatarget content with context\n\n**bold** tail.\n\n",
+              needle: "alphatarget", replacement: "x", expectedCandidate: true, insertionOffset: 5),
+        .init(name: "paragraph-insert-start",
+              island: "# Probe\n\nPlain alphatarget content with context\n\n**bold** tail.\n\n",
+              needle: "alphatarget", replacement: "x", expectedCandidate: true,
+              atStart: true, insertionOffset: 5),
+        .init(name: "paragraph-insert-unicode-context",
+              island: "# Probe\n\nPlain cafétarget content with context\n\n**bold** tail.\n\n",
+              needle: "cafétarget", replacement: "x", expectedCandidate: true, insertionOffset: 7),
+        .init(name: "paragraph-insert-at-space",
+              island: "# Probe\n\nPlain alphatarget content with context\n\n**bold** tail.\n\n",
+              needle: "alphatarget content", replacement: "x", expectedCandidate: false, insertionOffset: 11),
         .init(name: "fence-opener",
               island: "# Probe\n\n```js\nconst target = 'code';\n```\n\n**bold** tail.\n\n",
               needle: "```js", replacement: "``js", expectedCandidate: false),
