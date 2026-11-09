@@ -168,11 +168,10 @@ enum PDFExportAdapter {
               operation.printInfo.dictionary()[NSPrintInfo.AttributeKey.jobSavingURL] as? URL == url
         else { throw PDFExportError.printConfigurationFailed }
         operation.showsPrintPanel = false
-        // Apple documents that PDF/EPS generation never displays AppKit's
-        // print progress panel, regardless of this flag. `run()` is still
-        // synchronous; a separate whole-export progress and print-time policy
-        // is required before the issue's user-facing criterion can close.
-        operation.showsProgressPanel = false
+        // PDF/EPS generation does not display AppKit's progress panel, but
+        // retain the previously working print-operation configuration.
+        // Whole-export progress and cancellation need a separate policy.
+        operation.showsProgressPanel = true
         // WebKit's print view is distinct from the WKWebView. Give it the
         // loaded view's geometry before AppKit starts pagination.
         guard let printView = operation.view else { throw PDFExportError.printOperationFailed }
