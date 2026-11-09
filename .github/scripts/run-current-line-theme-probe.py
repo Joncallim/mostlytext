@@ -156,7 +156,11 @@ def qualify(root, output, configuration, baseline):
             if message not in log:
                 raise SystemExit("Baseline failed for a different reason: " + message)
     else:
-        if result.returncode != 0 or not re.search(r"Test run with 1091 tests in 149 suites passed", log):
+        completed = re.search(r"Test run with (\d+) tests in (\d+) suites passed", log)
+        # Added passing controls grow this selected suite; retain the established
+        # minimum and the named controls below without pinning a stale total.
+        if (result.returncode != 0 or completed is None
+                or int(completed.group(1)) < 1091 or int(completed.group(2)) < 149):
             if configuration == "release" and "Suite HighlightPerformanceTests failed" in log:
                 diagnose_performance_failure(root, output, binary, owned, environment)
             raise SystemExit("All selected real editor/highlighter/theme tests must execute and pass")
