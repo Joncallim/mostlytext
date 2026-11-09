@@ -68,6 +68,15 @@ def validate_outputs(root, receipt, command):
     raw = Path(row["pdf"]).read_bytes()
     if result["bytes"] != len(raw) or result["sha256"] != hashlib.sha256(raw).hexdigest():
         raise RuntimeError("PDFKit result differs from actual saved output bytes")
+    spec = importlib.util.spec_from_file_location(
+        "placed_pdf_canary", Path(__file__).with_name("verify-placed-pdf-canary.py")
+    )
+    placement = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(placement)
+    measured = placement.evaluate(result)
+    if not measured["short_fixture_accepted"]:
+        raise RuntimeError("Actual PDF has an unexpected page or misplaced heading")
+    result["placement"] = measured
     return {"html": html, "pdf": result, "source_sha256": hashlib.sha256(Path(row["source"]).read_bytes()).hexdigest()}
 
 

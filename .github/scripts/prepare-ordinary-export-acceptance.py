@@ -9,12 +9,13 @@ from pathlib import Path
 import subprocess
 import sys
 
-PRODUCT_BASELINE = 'ed5a9409dcfbe62263dda0dd8157d8ea4f827e7f'
-PRODUCT_TREE = '1b01b78e3415d8261fa18bfb4c90c180ffa22a7f'
+PRODUCT_BASELINE = 'ed43c2c286aa81be8024108ff9f0a187a076d731'
+PRODUCT_TREE = 'a95aa8fb9e89baedadb24201da808e9a4ced8fab'
 
 SOURCE = '# NATIVE_EXPORT_CANARY\r\n\r\nA café document with **bold** and `code`.\r\n\r\n| Key | Value |\r\n| --- | --- |\r\n| alpha | beta |\r\n'.encode()
 EXTRA = ['.github/hosted-export-acceptance', '.github/scripts/prepare-ordinary-export-acceptance.py',
          '.github/scripts/run-ordinary-export-acceptance.py', '.github/scripts/test-ordinary-export-acceptance.py',
+         '.github/scripts/verify-placed-pdf-canary.py',
          '.github/workflows/ordinary-export-acceptance.yml']
 
 
@@ -74,7 +75,7 @@ def validate_settings(rows):
 def verify_product_tree():
     actual=output(['git','rev-parse','HEAD:MacDown2'])
     if actual!=PRODUCT_TREE:
-        raise RuntimeError('Product inputs differ from the frozen Preview candidate')
+        raise RuntimeError('Product inputs differ from the bound ordinary Release baseline')
     return actual
 
 
