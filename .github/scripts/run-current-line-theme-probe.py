@@ -156,11 +156,12 @@ def qualify(root, output, configuration, baseline):
             if message not in log:
                 raise SystemExit("Baseline failed for a different reason: " + message)
     else:
-        if result.returncode != 0 or not re.search(r"Test run with 1088 tests in 146 suites passed", log):
+        if result.returncode != 0 or not re.search(r"Test run with 1089 tests in 147 suites passed", log):
             if configuration == "release" and "Suite HighlightPerformanceTests failed" in log:
                 diagnose_performance_failure(root, output, binary, owned, environment)
             raise SystemExit("All selected real editor/highlighter/theme tests must execute and pass")
-        for name in ["oracleRootWindowsAndInlineCapturesAfterEdits",
+        for name in ["preEditPlainParagraphWindowRefusesStructuralEdits",
+                     "oracleRootWindowsAndInlineCapturesAfterEdits",
                      "anAppliedThemePaintsAndRemovesTheCurrentLineInTheRealScrolledEditor",
                      "aShapeIdentifiesThePrimaryLineEvenWhenTheEditorFontIsAlreadyBold",
                      "currentLineDrawingKeepsTenMiBViewportWorkBounded",
