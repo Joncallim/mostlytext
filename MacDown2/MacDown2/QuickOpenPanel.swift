@@ -74,7 +74,9 @@ final class QuickOpenPanel: NSPanel, NSWindowDelegate {
 
     override func sendEvent(_ event: NSEvent) {
         if event.type == .keyDown {
-            QuickOpenUITestTrace.record("key down: \(event.keyCode), modifiers: \(event.modifierFlags.rawValue)")
+            let marked = (firstResponder as? NSTextInputClient)?.hasMarkedText() ?? false
+            QuickOpenUITestTrace
+                .record("key down: \(event.keyCode), modifiers: \(event.modifierFlags.rawValue), marked: \(marked)")
         }
         if event.type == .keyDown,
            event.keyCode == 36 || event.keyCode == 76,
@@ -104,7 +106,10 @@ final class QuickOpenPanel: NSPanel, NSWindowDelegate {
             return false
         }
         guard context.model.selectedResult == result else {
+            let current = context.model.selectedResult
             QuickOpenUITestTrace.record("open refused: result changed before admission")
+            QuickOpenUITestTrace.record("current=\(String(describing: current))")
+            QuickOpenUITestTrace.record("submitted=\(result)")
             return false
         }
         let admitted = await context.actionGate.admit(result, from: origin)
