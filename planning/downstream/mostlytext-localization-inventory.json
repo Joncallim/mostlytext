@@ -20777,6 +20777,41 @@
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
+      "target": "FileCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/FileCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Plain Text",
+      "source_default_value": "Plain Text",
+      "translator_comment": "Descriptive file-format display name used in Settings, status, preview and outline. Non-English translations are provisional and require language/native review.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/FileCore/FileFormat.swift:85"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
       "target": "FileTree",
       "catalog": "MacDown2/Packages/MacDownKit/Sources/FileTree/Resources/Localizable.xcstrings",
       "bundle": "Bundle.module (SwiftPM processed resource)",
