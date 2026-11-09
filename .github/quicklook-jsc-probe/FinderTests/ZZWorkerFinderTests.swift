@@ -57,16 +57,19 @@ final class ZZWorkerFinderTests: XCTestCase {
         let quickLook = finder.windows["Quick Look"]
         let marker = quickLook.descendants(matching: .any)["MOSTLYTEXT_QL_WORKER_ISOLATION_OK"].firstMatch
         let visible = marker.waitForExistence(timeout: max(0, 15 - (ProcessInfo.processInfo.systemUptime - started)))
-        // Finder's WebKit preview exposes the authored <pre> as a string value.
-        // Match any accessibility role: AXHeading can change classification
-        // between a query snapshot and element resolution on hosted macOS.
+        // Finder's WebKit preview exposes the authored <pre> inside a Group.
+        // Query that child directly: enumerating siblings resolves the marker
+        // AXHeading again, whose role changes across hosted AX snapshots.
         let sourceNeedle = "# Hosted Quick Look fixture"
+        let sourceText = quickLook.webViews.firstMatch.children(matching: .group)
+            .firstMatch.children(matching: .staticText).firstMatch
         let sourceDeadline = ProcessInfo.processInfo.systemUptime + 2
         var sourceValue: String?
         repeat {
-            sourceValue = quickLook.descendants(matching: .any).allElementsBoundByIndex
-                .compactMap { $0.value as? String }
-                .first { $0.contains(sourceNeedle) }
+            if sourceText.exists, let value = sourceText.value as? String,
+               value.contains(sourceNeedle) {
+                sourceValue = value
+            }
             if sourceValue != nil {
                 break
             }
