@@ -73,7 +73,7 @@ private struct AppearanceSettingsForm: View {
                    }
                )) {
             ForEach(controller.available.filter { $0.appearance == appearance }) { theme in
-                Text(verbatim: theme.name).tag(theme.id)
+                Text(verbatim: ThemePickerDisplayName.name(for: theme)).tag(theme.id)
             }
         }
         .accessibilityIdentifier(appearance == .light ? "lightThemePicker" : "darkThemePicker")

@@ -23,7 +23,9 @@ struct ThemeManagementSection: View {
     var body: some View {
         Section("Manage Themes") {
             Picker("Theme", selection: $selectedID) {
-                ForEach(controller.available) { theme in Text(verbatim: theme.name).tag(theme.id) }
+                ForEach(controller.available) { theme in
+                    Text(verbatim: ThemePickerDisplayName.name(for: theme)).tag(theme.id)
+                }
             }
             .accessibilityIdentifier("managedThemePicker")
             if custom == nil {
