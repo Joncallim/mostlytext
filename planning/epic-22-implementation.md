@@ -662,6 +662,18 @@ file is indexed, then fails only the target lookup and proves the earlier
 snapshot and partial paths are no longer actionable. Link traversal and loop
 limits remain as before; installed-app behavior is still unverified.
 
+#### F18 finite-index budget amendment — 9 November 2026
+
+The recursive walk has explicit path and directory limits so a linked
+workspace cannot expand without bound. Reaching either limit while more
+eligible work remains previously returned a partial array that the index
+published as `.ready`. The walker now throws at the first extra file or
+directory; the current generation clears its old and partial snapshot and
+reports `.failed`. Hitting the exact limit with no additional work still
+produces a complete ready snapshot. Controlled path and directory cases
+cover the failure and recovery after the workspace is reduced again. This
+does not establish live mutation freshness or installed-app presentation.
+
 ### 6.16 Folder search + safe replace (Slice 7) — design pass, baseline and contract, decided before implementation
 
 **Baseline, verified against live master before writing this design pass:** `TextSearchEngine.matches(in:query:options:)` (Slice 5, `TextSearch` package) is already a complete, pure, synchronous single-buffer literal/regex matcher — its own doc comment already names its intended second consumer: "used directly by current-document find on a bounded buffer, and per-file by `WorkspaceSearchEngine` (folder search) inside its own cancellable off-main task." `WorkspaceFileIndex` (Slice 1/6) already holds every indexed `(relativePath, basename)` pair under a window's folder root, rebuilt on root change. `FileStore.write(_:to:encoding:bom:expectedRevision:)` (`FileCore`, pre-existing) already throws `.fileChangedDuringRead` when an on-disk file's revision no longer matches one captured at read time — the exact conditional-publication primitive invariant #6 requires Replace in Folder to reuse rather than inventing a second write path. None of `WorkspaceSearchEngine`, a replacement-plan type, or any folder-search UI exist yet — this is a genuinely new slice, not wiring an already-built engine the way Slice 6 was.
