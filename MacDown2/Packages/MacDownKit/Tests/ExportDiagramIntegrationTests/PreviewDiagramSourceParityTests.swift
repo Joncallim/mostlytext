@@ -1,15 +1,17 @@
 import Diagrams
 import DiagramsD2
 import DiagramsGraphviz
+import ExportService
 import Foundation
 import MarkdownEngine
 import Preview
 import Testing
+import Themes
 
 /// A source-boundary comparison. Native Preview and Export render diagrams
 /// separately, but a top-level fence must feed both the same authored body.
-/// Export's scanners also descend into list and quote children; Preview renders
-/// only top-level code blocks as diagrams, so this does not claim nested parity.
+/// Nested list/quote fences remain authored code in both paths. This checks the
+/// source policy and container structure, not rendered visual or PDF parity.
 @Suite("Preview and export diagram source parity")
 struct PreviewDiagramSourceParityTests {
     private struct FenceSource {
@@ -42,6 +44,48 @@ struct PreviewDiagramSourceParityTests {
             )) == fence)
             #expect(previewBody(language, from: previewFence.source) == exportFence.body)
             #expect(exportFence.body == "a -> b")
+        }
+    }
+
+    @Test(arguments: ["mermaid", "d2", "dot", "graphviz"])
+    func nestedFencesRemainSourceInsideTheirContainer(language: String) async throws {
+        for (fence, expectedKind, containerTag) in [
+            ("> ```\(language)\n> graph TD\n> ```", BlockKind.blockQuote, "blockquote"),
+            ("- ```\(language)\n  graph TD\n  ```", BlockKind.unorderedList, "ul"),
+        ] {
+            let source = "# Café 🙂\n\n" + fence + "\n\nAfter\n"
+            let document = try await ParseEngine().parse(source, revision: 10)
+            let previewBlock = try #require(PreviewBlock.blocks(from: document, text: source)
+                .first { $0.source.contains("graph TD") })
+            let exportFence = try #require(scannedFences(language, document: document, source: source).first)
+            let originalFence = (source as NSString).substring(with: NSRange(
+                location: exportFence.range.lowerBound, length: exportFence.range.count
+            ))
+
+            #expect(previewBlock.kind == expectedKind)
+            #expect(previewBlock.source.contains(fence))
+            #expect(previewBlock.sourceAnchor?.range.contains(exportFence.range.lowerBound) == true)
+            #expect(originalFence == fence)
+            #expect(exportFence.body == "graph TD")
+
+            // Even when a renderer supplies SVG for the parsed child fence,
+            // the export composer keeps the list/quote intact and source readable.
+            let contribution = ExportDerivedContribution(
+                sourceRange: exportFence.range, placement: .block,
+                html: "<svg>rendered</svg>", sourceGeneration: 10
+            )
+            let prepared = try await ExportService.prepare(
+                ExportRequest(
+                    text: source, sourceGeneration: 10, theme: BundledThemes.light,
+                    contributions: [contribution]
+                ),
+                target: .html(url: URL(fileURLWithPath: "/tmp/nested-diagram-parity.html"),
+                              mode: .standalone(style: .embedded))
+            )
+            #expect(prepared.bodyHTML.contains("<\(containerTag)>"))
+            #expect(prepared.bodyHTML.contains("graph TD"))
+            #expect(!prepared.bodyHTML.contains("<svg>rendered</svg>"))
+            #expect(prepared.diagnostics.contains { $0.message.contains("list item or block quote") })
         }
     }
 
