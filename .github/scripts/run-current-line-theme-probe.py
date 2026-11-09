@@ -161,6 +161,7 @@ def qualify(root, output, configuration, baseline):
                 diagnose_performance_failure(root, output, binary, owned, environment)
             raise SystemExit("All selected real editor/highlighter/theme tests must execute and pass")
         for name in ["preEditPlainParagraphWindowRefusesStructuralEdits",
+                     "closingDelimiterAtLineEnd",
                      "oracleRootWindowsAndInlineCapturesAfterEdits",
                      "anAppliedThemePaintsAndRemovesTheCurrentLineInTheRealScrolledEditor",
                      "aShapeIdentifiesThePrimaryLineEvenWhenTheEditorFontIsAlreadyBold",
