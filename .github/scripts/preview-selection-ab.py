@@ -24,10 +24,11 @@ PROJECT = Path("MacDown2/project.yml")
 INVENTORY = Path("compliance/inventory.json")
 CHANGED_PIN_PATHS = {str(LOCK), str(MANIFEST), str(PROJECT), str(INVENTORY)}
 REPEATS = 10
-TEST = ("-only-testing:MacDown2Tests/SecuredMarkdownMountedTests/"
-        "aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration")
 TEST_URL = ("test://com.apple.xcode/MacDown2/MacDown2Tests/SecuredMarkdownMountedTests/"
             "aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration()")
+# Swift Testing's actual XCResult function identifier includes the signature.
+# Keep the xcodebuild selection tied to that exact recorded identifier.
+TEST = "-only-testing:" + TEST_URL.removeprefix("test://com.apple.xcode/MacDown2/")
 ROOT = Path(os.environ.get("RUNNER_TEMP", "/missing-runner-temp")) / "preview-grant-probe"
 
 

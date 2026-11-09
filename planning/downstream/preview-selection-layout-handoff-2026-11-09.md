@@ -75,3 +75,22 @@ candidate, not a shipping Preview remedy.
 The private source is a hypothesis. A passing component handoff test cannot
 substitute for the original mounted image Copy, and an extra failed control
 remains a failed qualification result.
+
+## First A/B diagnostic was not a product test
+
+Private [run 42577638043](https://github.com/Joncallim/mostlytext/actions/runs/42577638043)
+built both Textual variants but selected zero app tests in each first repeat.
+The test command exited successfully, while the raw XCResult recorded zero
+executed tests and the verifier correctly failed both A/B cells. These cells
+say nothing about whether the proposed Textual handoff repairs native Copy.
+
+The A/B script had selected the Swift Testing function without its trailing
+`()` signature. The original hosted Debug revision XCResult from
+[run 42450824327](https://github.com/Joncallim/mostlytext/actions/runs/42450824327)
+records the exact function URL as
+`test://com.apple.xcode/MacDown2/MacDown2Tests/SecuredMarkdownMountedTests/aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration()`.
+Its known-working suite selection executed the function among four tests. The
+private harness now derives the function selector from that exact URL and
+continues to require one executed, passing test with the same URL and ten
+complete Copy generations per repeat. This selector correction still needs a
+fresh hosted run; no result has been inferred from syntax alone.
