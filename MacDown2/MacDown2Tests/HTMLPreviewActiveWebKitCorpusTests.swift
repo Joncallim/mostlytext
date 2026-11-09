@@ -5,10 +5,8 @@ import Network
 import Testing
 import WebKit
 
-/// These tests load saved HTML through the app's Coordinator and its installed scheme handler.
-/// A successful local image and stylesheet are controls for the WebKit readback. The loopback
-/// listener and a separate permissive WebKit load are controls for the network assertion:
-/// a missing image alone cannot prove that WebKit could have reached the listener.
+/// Loads saved HTML through the app's Coordinator; local assets prove rendering.
+/// A permissive WebKit loopback control proves blocked requests were observable.
 @MainActor
 @Suite(.serialized)
 struct HTMLPreviewActiveWebKitCorpusTests {
