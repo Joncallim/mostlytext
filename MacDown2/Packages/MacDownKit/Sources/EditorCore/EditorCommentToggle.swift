@@ -95,7 +95,7 @@ enum EditorCommentToggle {
         switch FencedRegionClassifier.classify(text: text, atUTF16Offset: anchorOffset) {
         case .prose:
             return fallback
-        case .frontMatter:
+        case .frontMatter, .unresolved:
             return .plainText
         case let .fencedCode(languageID):
             return languageID.map { LanguageEditingProfileRegistry.profile(for: $0) } ?? .plainText

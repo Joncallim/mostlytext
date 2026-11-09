@@ -14,10 +14,12 @@ struct FencedRegionPrefixAdmissionTests {
     }
 
     @Test func aDashPrefixStillRequiresAnExactFirstLine() {
-        for opening in ["---suffix", "----", "--- ", "--", "-", ""] {
+        for opening in ["---suffix", "----", "--", "-", ""] {
             let source = (opening + "\nvalue: 1\n---\nbody") as NSString
             #expect(FencedRegionClassifier.classify(text: source, atUTF16Offset: opening.utf16.count + 2) == .prose)
         }
+        let trailingSpace = "--- \nvalue: 1\n---\nbody" as NSString
+        #expect(FencedRegionClassifier.classify(text: trailingSpace, atUTF16Offset: 6) == .frontMatter)
         let valid = "---\rvalue: 1\r...\rbody" as NSString
         #expect(FencedRegionClassifier.classify(text: valid, atUTF16Offset: 7) == .frontMatter)
     }

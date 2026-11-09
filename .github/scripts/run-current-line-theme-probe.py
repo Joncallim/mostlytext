@@ -160,7 +160,7 @@ def qualify(root, output, configuration, baseline):
         # Added passing controls grow this selected suite; retain the established
         # minimum and the named controls below without pinning a stale total.
         if (result.returncode != 0 or completed is None
-                or int(completed.group(1)) < 1091 or int(completed.group(2)) < 149):
+                or int(completed.group(1)) < 1106 or int(completed.group(2)) < 151):
             if configuration == "release" and "Suite HighlightPerformanceTests failed" in log:
                 diagnose_performance_failure(root, output, binary, owned, environment)
             raise SystemExit("All selected real editor/highlighter/theme tests must execute and pass")
@@ -182,6 +182,10 @@ def qualify(root, output, configuration, baseline):
             r"Test performanceCorpusReachesItsRequestedUTF8Size\(_:\) with 2 test cases passed", log
         ):
             raise SystemExit("Both full-size performance fixture controls must pass")
+        for name in ["handled assist through the adapter within a known anchor stays within the keystroke budget",
+                     "unresolved assist beyond the fence scan cap stays bounded"]:
+            if not re.search(r'Test "' + re.escape(name) + r'" passed', log):
+                raise SystemExit("Required bounded assist control did not pass: " + name)
         if "CURRENT-LINE-PHASE" not in log:
             raise SystemExit("Real viewport draw measurement did not execute")
         if "HIGHLIGHT_PHASE sourceUTF8=1000008 setup=" not in log:

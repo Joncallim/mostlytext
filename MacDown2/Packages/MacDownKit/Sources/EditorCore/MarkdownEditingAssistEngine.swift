@@ -164,7 +164,7 @@ enum MarkdownEditingAssistEngine {
         switch FencedRegionClassifier.classify(text: text, atUTF16Offset: caret) {
         case .prose:
             return (configuration, profile)
-        case .frontMatter:
+        case .frontMatter, .unresolved:
             return (nonMarkdownConfiguration(from: configuration), .plainText)
         case let .fencedCode(languageID):
             let fenceProfile = languageID.map { LanguageEditingProfileRegistry.profile(for: $0) } ?? .plainText
