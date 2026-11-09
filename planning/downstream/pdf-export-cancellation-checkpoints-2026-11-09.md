@@ -31,7 +31,8 @@ unchanged.
 The existing comment claimed AppKit supplied a print progress panel with
 Cancel. Apple's [progress-panel documentation](https://developer.apple.com/documentation/appkit/nsprintoperation/showsprogresspanel)
 states that PDF/EPS generation displays no such panel regardless of the flag.
-The flag is therefore false and is no longer treated as user feedback.
+The flag remains true to preserve the working print-operation configuration,
+but it is not treated as user feedback for PDF/EPS generation.
 Apple's [`run()` documentation](https://developer.apple.com/documentation/appkit/nsprintoperation/run())
 states it runs on the current thread. In this adapter that is the main actor;
 task cancellation cannot interrupt an already-running synchronous print pass.
