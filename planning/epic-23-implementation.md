@@ -358,6 +358,67 @@ poor custom text contrast is warned without rejecting intentional choices.
 Native import/copy/replace/cancel/export/delete/reveal, delayed external edits,
 accessibility and final identity migration remain required CORTANA evidence.
 
+## Production Quick Look source shell — first integration slice
+
+**Owner summary.** Add the real Markdown Quick Look bundle to MostlyText so a
+selected, small Markdown file can produce a passive, escaped view of its authored
+source. This establishes the shipping bundle and a safe fallback before any
+diagram engine is moved into the extension. It does not claim finished Markdown
+rendering, worker isolation, Finder acceptance or release readiness.
+
+The baseline for this slice is `main` `ffe692feef9c7c8f45ccd2dea1f88e31115aeae6`.
+That tree has a Markdown document declaration, `FileByteDecoder`, a shared
+heading-anchor model and `ContributionDestination.quickLook`, but no Quick Look
+target. The private Finder/XPC fixtures prove separate platform questions; they
+are not production code. The final identifier is already reserved in
+`planning/IDENTITY.md`, so no new naming decision is needed.
+
+The app embeds a data-based Quick Look provider identified as
+`app.mostlytext.MostlyText.QuickLook`, registered only for
+`net.daringfireball.markdown`. The provider has App Sandbox and user-selected
+read-only entitlements. It reads only the URL supplied by the system, using one
+descriptor opened without following symbolic links, and never opens a sibling,
+parent or `baseURL`. A separate sandbox-only XPC service is embedded and signed
+for the later bounded renderer; the source shell neither connects to it nor
+sends document bytes to it. The provider depends on a small `QuickLookSource`
+package target; that target uses FileCore's strict decoder and owns the bounded
+reader and passive HTML fallback. No app/window/session/Export object is created.
+
+The source boundary admits at most 1 MiB of file bytes, requires a regular file,
+and refuses a changed or oversized read. Decoding is FileCore's automatic
+BOM/UTF-8 policy; it does not guess legacy encodings. The provider runs this
+bounded work off its callback executor. A valid decoded source becomes a single
+immutable HTML reply with escaped authored text, no executable element, no
+network URL, no resource attachment and a restrictive content security policy.
+The reply's factory captures only the immutable bytes, returns those same bytes
+on repeated calls and does no new I/O. Invalid input or file admission fails
+closed; a full readable file never becomes a silent truncated preview.
+`O_NOFOLLOW_ANY` also refuses legitimate selected paths with a symlinked
+component, including `/var` aliases and some cloud-linked folders. Actual
+Finder acceptance must measure that user impact before this can ship.
+
+This slice changes neither the document type/handler rank nor the editor's
+source, save, export or diagram path. It adds no user preference or new
+user-facing control. The source's markup is shown literally, including raw HTML,
+so no raw authored HTML executes. The shell is deliberately provisional: the
+eventual shared GFM/derived-content composition, heading links, all four
+technical renderers, independent fallback, calibrated worker budgets, theme,
+localisation and actual Finder release acceptance remain #7 work.
+
+Package tests cover exact/over-limit reads, non-regular and symlink refusal,
+strict Unicode/BOM decoding, malformed input and complete HTML escaping/CSP.
+Build-only checks generate the Xcode project, compile the Release provider and
+service, inspect bundle IDs/content type/entitlements and verify both signed
+products are embedded in the containing app. The test desktop must later prove
+real Finder registration, repeated replies, normal/invalid/large files,
+light/dark/accessibility and final signed installation. A private five-test
+worker pass, if obtained, remains separate: before the service renders
+untrusted document content, its real renderer transport, child deadline,
+kill/reap/error paths, active-work caps and same-service concurrency need their
+own exact-head negative and native controls. Stop this slice if compilation
+requires broader permissions, if source access needs a parent grant, or if the
+provider cannot produce an immutable reply under the declared entitlement set.
+
 
 ## Extended ACL admission correction
 

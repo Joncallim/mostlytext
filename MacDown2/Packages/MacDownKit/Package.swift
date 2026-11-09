@@ -6,6 +6,7 @@ let package = Package(
     platforms: [.macOS(.v26)],
     products: [
         .library(name: "FileCore", targets: ["FileCore"]),
+        .library(name: "QuickLookSource", targets: ["QuickLookSource"]),
         .library(name: "CommandBridge", targets: ["CommandBridge"]),
         .library(name: "CommandLineSupport", targets: ["CommandLineSupport"]),
         .library(name: "LocalResourceAccess", targets: ["LocalResourceAccess"]),
@@ -90,6 +91,7 @@ let package = Package(
     ],
     targets: [
         .target(name: "FileCore", dependencies: ["JSONSupport"], resources: [.process("Resources")]),
+        .target(name: "QuickLookSource", dependencies: ["FileCore"]),
         .target(name: "CommandBridge", dependencies: ["JSONSupport"]),
         .target(name: "CommandLineSupport", dependencies: [
             "CommandBridge", .product(name: "ArgumentParser", package: "swift-argument-parser"),
@@ -206,6 +208,7 @@ let package = Package(
         ),
 
         .testTarget(name: "FileCoreTests", dependencies: ["FileCore"]),
+        .testTarget(name: "QuickLookSourceTests", dependencies: ["QuickLookSource", "FileCore"]),
         .testTarget(name: "CommandBridgeTests", dependencies: ["CommandBridge"]),
         .testTarget(name: "CommandLineSupportTests", dependencies: ["CommandLineSupport", "CommandBridge"]),
         .testTarget(name: "LocalResourceAccessTests", dependencies: ["LocalResourceAccess"]),
