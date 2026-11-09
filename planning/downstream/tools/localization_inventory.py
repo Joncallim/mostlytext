@@ -59,6 +59,15 @@ def load_catalog(path: Path) -> dict[str, Any]:
                 raise CatalogError(f"{path}: {key!r}:{locale}: stringUnit is not an object")
             if isinstance(unit, dict) and "value" in unit and not isinstance(unit["value"], str):
                 raise CatalogError(f"{path}: {key!r}:{locale}: stringUnit.value is not a string")
+            variations = localization.get("variations", {})
+            if not isinstance(variations, dict):
+                raise CatalogError(f"{path}: {key!r}:{locale}: variations is not an object")
+            plural = variations.get("plural", {})
+            if not isinstance(plural, dict):
+                raise CatalogError(f"{path}: {key!r}:{locale}: plural variations is not an object")
+            for category, variant in plural.items():
+                if not isinstance(variant, dict):
+                    raise CatalogError(f"{path}: {key!r}:{locale}: plural {category!r} is not an object")
             substitutions = localization.get("substitutions", {})
             if not isinstance(substitutions, dict):
                 raise CatalogError(f"{path}: {key!r}:{locale}: substitutions is not an object")
@@ -149,12 +158,28 @@ def index_direct_callsites(source_roots: dict[str, Path | None], repo: Path) -> 
 
 def variants(localization: dict[str, Any]) -> dict[str, list[str]]:
     result: dict[str, list[str]] = {}
+    plural = localization.get("variations", {}).get("plural", {})
+    if isinstance(plural, dict) and plural:
+        result["value"] = sorted(plural)
     for name, substitution in sorted(localization.get("substitutions", {}).items()):
         variation = substitution.get("variations", {}) if isinstance(substitution, dict) else {}
         plural = variation.get("plural", {}) if isinstance(variation, dict) else {}
         if isinstance(plural, dict):
             result[name] = sorted(plural)
     return result
+
+
+def localization_state(localization: dict[str, Any]) -> str:
+    unit = localization.get("stringUnit")
+    if isinstance(unit, dict):
+        return unit.get("state", "unknown")
+    plural = localization.get("variations", {}).get("plural", {})
+    states = {
+        variant.get("stringUnit", {}).get("state", "unknown")
+        if isinstance(variant.get("stringUnit"), dict) else "unknown"
+        for variant in plural.values()
+    }
+    return states.pop() if len(states) == 1 else "unknown"
 
 
 def inventory(repo: Path) -> dict[str, Any]:
@@ -174,7 +199,7 @@ def inventory(repo: Path) -> dict[str, Any]:
             if not isinstance(localizations, dict):
                 raise CatalogError(f"{catalog_path}: {key!r} localizations is not an object")
             locale_states = {
-                locale: localization.get("stringUnit", {}).get("state", "unknown")
+                locale: localization_state(localization)
                 for locale, localization in sorted(localizations.items())
                 if isinstance(localization, dict)
             }
@@ -212,11 +237,23 @@ def inventory(repo: Path) -> dict[str, Any]:
 
 def validate_localization(catalog_path: Path, key: str, locale: str, value: dict[str, Any]) -> list[str]:
     errors: list[str] = []
+    source_signature = printf_signature(key)
+    plural = value.get("variations", {}).get("plural", {})
+    if plural:
+        if "other" not in plural:
+            errors.append(f"{catalog_path}:{key!r}:{locale}: plural value lacks an other variant")
+        for category, variant in plural.items():
+            variant_value = variant.get("stringUnit", {}).get("value")
+            if not isinstance(variant_value, str):
+                errors.append(f"{catalog_path}:{key!r}:{locale}: plural value/{category!r} lacks a string value")
+                continue
+            translated_signature = printf_signature(variant_value)
+            if translated_signature != source_signature:
+                errors.append(f"{catalog_path}:{key!r}:{locale}: plural value/{category!r} placeholders {translated_signature} do not match source {source_signature}")
     unit = value.get("stringUnit")
     if not isinstance(unit, dict) or not isinstance(unit.get("value"), str):
         return errors  # An untranslated locale is inventory evidence, not malformed structure.
     translated = unit["value"]
-    source_signature = printf_signature(key)
     substitutions = value.get("substitutions", {})
     if not isinstance(substitutions, dict):
         return [f"{catalog_path}:{key!r}:{locale}: substitutions is not an object"]
