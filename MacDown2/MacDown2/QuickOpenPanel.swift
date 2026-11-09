@@ -49,34 +49,27 @@ final class QuickOpenPanel: NSPanel, NSWindowDelegate {
         let recentRelativePaths = originController.fileTreeModel.rootAccessURL
             .map { coordinator.recentFileDocuments.relativePaths(under: $0) } ?? []
         let model = QuickOpenModel(index: index, recentRelativePaths: recentRelativePaths)
+        let origin = Self.currentOrigin(for: originController)
+        let actionGate = QuickOpenActionGate(index: index) { [weak originController] in
+            Self.currentOrigin(for: originController)
+        }
         let view = QuickOpenView(
             model: model,
-            onOpen: { [weak coordinator, weak originController] path in
-                // Resolved against the origin's own live root, not a value
-                // captured once at panel-open time — the same "read live
-                // state at the moment of the action, not a stale snapshot"
-                // discipline `CommandPaletteView`'s filter handler already
-                // established for the identical reason (post-review finding
-                // #7 on that slice). This is a REAL requirement here, not
-                // just defensive style: an independent hostile review of
-                // this slice found the origin window's root CAN change
-                // while this panel stays open (Open Folder…/Open Recent
-                // Folder/session restore all switch an already-open
-                // window's root without closing it) — fixed by having
-                // `WindowController.setFileTreeRoot` close this panel via
-                // `WindowCoordinator.closeQuickOpenIfOrigin` whenever that
-                // happens, so this guard should never actually observe a
-                // root that moved out from under it, but resolving live
-                // rather than from a captured value is the correct,
-                // consistent choice regardless.
-                guard let coordinator, let originController,
-                      let accessURL = originController.fileTreeModel.rootAccessURL
-                else { return }
-                // The folder as opened (lexical), with its folder context, so
-                // the file opens exactly as it would from the sidebar (#183 F19).
-                let root = originController.fileTreeModel.root ?? accessURL
-                let url = root.appendingPathComponent(path.relativePath)
+            onOpen: { [weak self, weak coordinator, weak originController] result in
+                guard self?.isVisible == true,
+                      let coordinator, let originController, let origin,
+                      model.selectedResult == result,
+                      await actionGate.admit(result, from: origin),
+                      self?.isVisible == true,
+                      model.selectedResult == result,
+                      let originWindow = originController.window
+                else { return false }
+                // Use the root that produced this row, after checking the
+                // current request still owns it. The document-open path
+                // rechecks through its own asynchronous load/rebuild steps.
+                let url = origin.lexicalRoot.appendingPathComponent(result.path.relativePath)
                 Task {
+                    guard actionGate.isCurrent(origin) else { return }
                     // `relativeTo: originController.window`, not
                     // `NSApp.keyWindow` — this panel itself is the key
                     // window while it is on screen, exactly the mistake
@@ -84,11 +77,14 @@ final class QuickOpenPanel: NSPanel, NSWindowDelegate {
                     // exists to avoid (post-review finding #7 there).
                     await coordinator.openDocument(
                         at: url,
-                        folderRoot: root,
-                        folderAccessURL: accessURL,
-                        relativeTo: originController.window
+                        folderRoot: origin.lexicalRoot,
+                        folderAccessURL: origin.accessRoot,
+                        relativeTo: originWindow,
+                        shouldContinue: { actionGate.isCurrent(origin) },
+                        useAmbientWindow: false
                     )
                 }
+                return true
             },
             onDismiss: { [weak self] in self?.close() }
         )
@@ -97,5 +93,9 @@ final class QuickOpenPanel: NSPanel, NSWindowDelegate {
 
     func windowWillClose(_: Notification) {
         coordinator?.quickOpenDidClose(self)
+    }
+
+    private static func currentOrigin(for controller: WindowController?) -> QuickOpenOrigin? {
+        controller?.currentQuickOpenOrigin
     }
 }

@@ -8,31 +8,19 @@ import Foundation
 /// path" rule, §2.1) — this is a plain `NSString` scan, closing the E10
 /// inherited-debt item §2.3 named.
 ///
-/// See §6.12 for the full design reasoning this type implements, including
-/// why a bounded backward scan can only be exact up to a finite cap (it is
-/// exact for the overwhelming majority of real documents, which are far
-/// smaller than that cap) and why fence-line detection here is a practical,
-/// disclosed approximation of CommonMark's own grammar rather than a second
-/// Markdown parser.
-///
-/// Two further disclosed simplifications (found by an independent review,
-/// alongside the 4-space-indent and blockquote-nesting limitations already
-/// pinned by tests below): this classifier counts ANY fence-delimiter line
-/// as toggling in/out of a fenced region, without checking (1) that a
-/// closing line's marker CHARACTER matches the opener's (real CommonMark
-/// requires a ` ``` ` fence to be closed only by another ` ``` ` line, never
-/// by `~~~`, and vice versa — see
-/// `mismatchedFenceCharactersAreTreatedAsClosingAnyOpenFence` below, which
-/// pins the current, simplified behavior), or (2) that a closing line's
-/// marker is at least as LONG as its opener's (real CommonMark requires a
-/// 4-backtick opener to be closed by 4+ backticks, not merely 3 — this
-/// classifier accepts any 3+ run as a valid closer for any opener). Both are
-/// accepted as rare, low-impact cases rather than implemented as a full
-/// stack-based matching rewrite.
+/// The scan returns `.unresolved` when it cannot reach the known document
+/// start within its line cap. Callers then suppress Markdown-only assists;
+/// guessing `.prose` could mutate source inside a distant open fence. Within
+/// the bounded window, closing lines must match the opener's marker and have
+/// at least its length. This remains a practical local classifier rather
+/// than a second CommonMark parser: container-prefixed fences and indentation
+/// beyond three spaces retain their separately documented limitations.
 enum FencedRegionClassifier {
     enum Classification: Equatable {
         case prose
         case frontMatter
+        /// The bounded scan did not reach a known outside-fence anchor.
+        case unresolved
         /// The fence's own info string, reduced to its first
         /// whitespace-delimited token and lowercased — a candidate
         /// `LanguageEditingProfileRegistry` key. `nil` for an absent or
@@ -41,8 +29,7 @@ enum FencedRegionClassifier {
     }
 
     /// How many lines this scans backward from the caret's own line before
-    /// giving up and reporting `.prose` — see §6.12 for why this is a
-    /// disclosed, not-unboundedly-correct tradeoff. Measured at ~0.5ms per
+    /// giving up and reporting `.unresolved`. Measured at ~0.5ms per
     /// 1,000 lines scanned (an independent review's own measurement), so
     /// 5,000 keeps a worst-case per-keystroke classification (this runs on
     /// every keystroke) at a few milliseconds rather than the ~10ms a
@@ -50,22 +37,26 @@ enum FencedRegionClassifier {
     private static let maximumFenceLinesScanned = 5000
 
     /// How many lines this scans FORWARD from a document's own first line,
-    /// looking for a front-matter block's closing delimiter, before giving
-    /// up and reporting "no front matter" — much smaller than the fence
-    /// scan's own cap, since a real front-matter block is conventionally a
-    /// handful of lines, not proportional to document size.
+    /// looking for a front-matter block's closing delimiter. Beyond the cap,
+    /// the opener remains unresolved so Markdown assists cannot touch YAML.
     private static let maximumFrontMatterLinesScanned = 1000
+
+    private enum FrontMatterBoundary {
+        case absent
+        case closed(end: Int)
+        case unresolved
+    }
 
     static func classify(text: NSString, atUTF16Offset offset: Int) -> Classification {
         let caret = min(max(0, offset), text.length)
-
-        if let frontMatterEnd = frontMatterEnd(in: text), caret < frontMatterEnd {
-            return .frontMatter
+        let prefix = frontMatterDecision(in: text, caret: caret)
+        if let terminal = prefix.terminal {
+            return terminal
         }
+        let fenceAnchor = prefix.anchor
 
         var currentLineStart = MarkdownEditingAssistEngine.lineStart(of: caret, in: text)
-        var fenceCount = 0
-        var nearestLanguageID: String?
+        var delimiters: [FenceDelimiter] = []
         var linesScanned = 0
 
         // The caret's OWN current line counts too if it is itself a fence
@@ -77,24 +68,57 @@ enum FencedRegionClassifier {
         // caret's line.
         if let fence = fenceDelimiter(lineStart: currentLineStart, in: text),
            caret >= fence.markerEnd {
-            fenceCount += 1
-            nearestLanguageID = fence.languageID
+            delimiters.append(fence)
         }
 
-        while currentLineStart > 0, linesScanned < maximumFenceLinesScanned {
+        while currentLineStart > fenceAnchor, linesScanned < maximumFenceLinesScanned {
             let previousLineStart = MarkdownEditingAssistEngine.lineStart(of: currentLineStart - 1, in: text)
+            if previousLineStart < fenceAnchor {
+                currentLineStart = fenceAnchor
+                break
+            }
             if let fence = fenceDelimiter(lineStart: previousLineStart, in: text) {
-                fenceCount += 1
-                if fenceCount == 1 {
-                    nearestLanguageID = fence.languageID
-                }
+                delimiters.append(fence)
             }
             currentLineStart = previousLineStart
             linesScanned += 1
         }
 
-        guard fenceCount % 2 == 1 else { return .prose }
-        return .fencedCode(languageID: nearestLanguageID)
+        guard currentLineStart == fenceAnchor else { return .unresolved }
+
+        // The document's start or the end of closed front matter is a known
+        // outside-fence anchor. Never replay YAML's fence-looking lines.
+        var active: FenceDelimiter?
+        for fence in delimiters.reversed() {
+            if let opener = active {
+                if fence.canClose, fence.character == opener.character,
+                   fence.markerLength >= opener.markerLength {
+                    active = nil
+                }
+            } else {
+                active = fence
+            }
+        }
+        return active.map { .fencedCode(languageID: $0.languageID) } ?? .prose
+    }
+
+    private static func frontMatterDecision(
+        in text: NSString, caret: Int
+    ) -> (anchor: Int, terminal: Classification?) {
+        switch frontMatterBoundary(in: text) {
+        case .absent:
+            return (0, nil)
+        case let .closed(end):
+            if caret < end {
+                return (0, .frontMatter)
+            }
+            if end == text.length {
+                return (0, .prose)
+            }
+            return (end, nil)
+        case .unresolved:
+            return (0, .unresolved)
+        }
     }
 
     /// A recognized fence-delimiter line: its marker character, derived
@@ -104,6 +128,8 @@ enum FencedRegionClassifier {
     /// has actually crossed past the fence marker itself.
     private struct FenceDelimiter {
         let character: unichar
+        let markerLength: Int
+        let canClose: Bool
         let languageID: String?
         let markerEnd: Int
     }
@@ -145,46 +171,71 @@ enum FencedRegionClassifier {
         let firstToken = infoString.split(separator: " ").first.map { String($0).lowercased() }
         return FenceDelimiter(
             character: marker,
+            markerLength: fenceLength,
+            canClose: infoString.isEmpty,
             languageID: (firstToken?.isEmpty == false) ? firstToken : nil,
             markerEnd: markerEnd
         )
     }
 
-    /// The UTF-16 offset at which ordinary content resumes after a
-    /// front-matter block, or `nil` if `text` doesn't open with one at all.
-    private static func frontMatterEnd(in text: NSString) -> Int? {
-        guard text.length >= 3, text.character(at: 0) == 0x2D,
-              text.character(at: 1) == 0x2D, text.character(at: 2) == 0x2D else { return nil }
+    /// Locate a closed block or preserve ambiguity after a plausible opener.
+    /// A blank second line still makes the opener a thematic break.
+    private static func frontMatterBoundary(in text: NSString) -> FrontMatterBoundary {
+        guard text.length >= 3,
+              text.character(at: 0) == 0x2D || text.character(at: 0) == 0xFEFF else { return .absent }
         let firstLineContentEnd = MarkdownEditingAssistEngine.lineContentEnd(of: 0, in: text)
-        guard isExactly(text, range: NSRange(location: 0, length: firstLineContentEnd), matching: "---") else {
-            return nil
+        guard isFrontMatterDelimiter(
+            text, range: NSRange(location: 0, length: firstLineContentEnd),
+            matching: "---", allowLeadingBOM: true
+        ) else {
+            return .absent
         }
 
         var lineStart = firstLineContentEnd + separatorLength(at: firstLineContentEnd, in: text)
         // Same rule as `MarkdownEngine`: a blank second line makes the opener a thematic break.
-        if lineStart < text.length {
+        if lineStart <= text.length {
             let secondEnd = MarkdownEditingAssistEngine.lineContentEnd(of: lineStart, in: text)
             let second = text.substring(with: NSRange(location: lineStart, length: secondEnd - lineStart))
             if second.trimmingCharacters(in: .whitespaces).isEmpty {
-                return nil
+                return .absent
             }
         }
         var linesScanned = 0
         while lineStart < text.length, linesScanned < maximumFrontMatterLinesScanned {
             let contentEnd = MarkdownEditingAssistEngine.lineContentEnd(of: lineStart, in: text)
             let lineRange = NSRange(location: lineStart, length: contentEnd - lineStart)
-            if isExactly(text, range: lineRange, matching: "---") ||
-                isExactly(text, range: lineRange, matching: "...") {
-                return contentEnd + separatorLength(at: contentEnd, in: text)
+            if isFrontMatterDelimiter(text, range: lineRange, matching: "---") ||
+                isFrontMatterDelimiter(text, range: lineRange, matching: "...") {
+                return .closed(end: contentEnd + separatorLength(at: contentEnd, in: text))
             }
             lineStart = contentEnd + separatorLength(at: contentEnd, in: text)
             linesScanned += 1
         }
-        return nil
+        return .unresolved
     }
 
-    private static func isExactly(_ text: NSString, range: NSRange, matching literal: String) -> Bool {
-        range.length == literal.utf16.count && text.substring(with: range) == literal
+    /// Match `MarkdownEngine.FrontMatterExtractor`'s delimiter spelling without importing
+    /// the parser into this per-keystroke editor module. It permits one BOM on the first
+    /// line and trailing whitespace, but never indentation or extra visible characters.
+    private static func isFrontMatterDelimiter(
+        _ text: NSString,
+        range: NSRange,
+        matching literal: String,
+        allowLeadingBOM: Bool = false
+    ) -> Bool {
+        var markerStart = range.location
+        let end = NSMaxRange(range)
+        if allowLeadingBOM, markerStart < end, text.character(at: markerStart) == 0xFEFF {
+            markerStart += 1
+        }
+        let marker = literal.utf16
+        guard markerStart + marker.count <= end else { return false }
+        for (offset, unit) in marker.enumerated() where text.character(at: markerStart + offset) != unit {
+            return false
+        }
+        let trailingStart = markerStart + marker.count
+        let trailing = NSRange(location: trailingStart, length: end - trailingStart)
+        return text.rangeOfCharacter(from: .whitespaces.inverted, range: trailing).location == NSNotFound
     }
 
     private static func separatorLength(at contentEnd: Int, in text: NSString) -> Int {

@@ -73,6 +73,9 @@ public actor WorkspaceSearchEngine {
     /// — three individually-defaulted closures would make `init()` itself
     /// ambiguous between the public and test-only initializers.
     struct TestSeams: Sendable {
+        /// Pauses after the one index snapshot has been captured, so a test
+        /// can change the index before the search consumes that snapshot.
+        var afterIndexSnapshot: (@Sendable () async -> Void)?
         /// Called once per file, immediately before that file's own
         /// cancellation check — mirrors `WorkspaceFileIndex`'s own
         /// established `init(walk:)` injectable-dependency precedent for
@@ -167,10 +170,12 @@ public actor WorkspaceSearchEngine {
             break
         }
 
-        if case .failed = await index.state {
+        let snapshot = await index.allPathsSnapshot(includeHidden: filter.includeHidden)
+        await seams.afterIndexSnapshot?()
+        if case .failed = snapshot.state {
             return .indexUnavailable
         }
-        let paths = await index.allPaths(includeHidden: filter.includeHidden)
+        let paths = snapshot.paths
         let context = SearchContext(root: root, query: query, options: options, filter: filter)
         var filesSearched = 0
         var filesSkipped = 0

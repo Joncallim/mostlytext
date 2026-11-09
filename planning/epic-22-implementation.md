@@ -526,6 +526,50 @@ Per §7.3's already-recorded dispatch diagram, `FencedRegionClassifier.classify(
 
 **Wiring point, matching §7.3's own dispatch diagram exactly:** rather than touch either of `MarkdownEditingAssistEngine`'s call sites (`EditorView.swift`, `EditorTextSystem+EditingAssists.swift`), the classification and the resulting configuration/profile substitution both happen INSIDE `MarkdownEditingAssistEngine.outcome(for:text:selection:configuration:profile:)` itself, once, immediately after the existing `configuration.isEnabled` guard — every existing call site is completely unaffected. When `configuration.isMarkdownFormat` and the classifier reports `.fencedCode`/`.frontMatter` for the caret's own location, an adjusted configuration (Markdown-specific flags forced off, `isMarkdownFormat` forced false so a nested nothing-special-happens) and the fenced language's own profile (or `.plainText`) are substituted for the rest of that one call — never persisted, recomputed fresh on every action. `.markdownCommand` (the explicit Bold/Italic/Heading menu commands) is deliberately **not** gated by this classifier in this slice: those are a different interaction model (a deliberate, explicit user action, not an ambient auto-assist), and §7.3's own diagram is specifically about the ambient typing/Return/Tab assists this classifier's own name describes. Extending fence-awareness to the menu commands too, if ever wanted, is an explicitly out-of-scope, separately-decided follow-up, not silently bundled here.
 
+**9 November 2026 safety correction (current `main` baseline `1f441fa9`).**
+The earlier bounded parity approximation and any-marker-closes-any-marker rule
+are no longer suitable for ambient editing assists. A mismatched `~~~` or
+shorter backtick line after an open fence can make the classifier report
+prose and apply Markdown-only transformations to code. A delimiter more than
+5,000 lines behind the caret has the same effect because the partial scan has
+no known outside-fence anchor. All three cases were reproduced against the
+unchanged classifier before this correction.
+
+Keep the same synchronous `NSString` line cap and no full Markdown parse.
+Collect only candidate delimiters inside that window and replay them from the
+document start when it is reached. A closing line must match its opener's
+character, have at least its marker length, and contain no trailing content
+besides whitespace. When the cap is reached before the document start, return
+an explicit `unresolved` state; the typing-assist and comment-toggle callers
+use plain-text general mechanics and suppress Markdown-only behavior. This
+may withhold automatic Markdown assistance in a document whose caret lies
+more than 5,000 lines from its start, even when that caret is in prose. It
+preserves authored text and the hot-path bound, and is preferable to mutating
+unknown code as Markdown. The existing container-prefix/indentation grammar
+limits and explicit formatting-menu-command exclusion remain; this correction
+does not claim complete CommonMark classification or final native acceptance.
+
+**9 November 2026 front-matter safety follow-up (stacked on the fence correction).**
+The older prefix scan returned “no front matter” when a plausible `---` opener
+had no closer within 1,000 lines or before end of file. In a document still
+being edited, that answer can enable Markdown-only assists inside unfinished
+YAML. Also, fence-looking text inside a valid closed YAML block could be
+replayed as a Markdown delimiter after the block, suppressing ordinary prose
+assists or choosing the wrong editing profile. Both cases reproduce on the
+unchanged classifier before this follow-up.
+
+Keep the same 1,000-line prefix bound. Distinguish an absent opener, a known
+closed block, and an unresolved plausible opener. An unresolved opener returns
+the same fail-safe state as a distant fence; Markdown-only ambient assists and
+comment-toggle do not run. This can also withhold those assists after a true
+thematic break beginning with `---` and nonblank following content while no
+closer exists; the existing blank-second-line thematic-break rule remains.
+When front matter closes within the bound, use the first post-block line as
+the known outside-fence anchor and replay no delimiter-looking YAML lines.
+Neither path parses the full document or adds another parser dependency.
+Container-prefixed Markdown fences and the final native edit matrix remain
+separate acceptance work.
+
 ### 6.13 The ten built-in transforms (Slice 4c) — design pass, further split, decided before implementation
 
 **Baseline, verified against live master (`75b78e8`) before writing this design pass:** re-confirmed §6.11's own original baseline claim — a repo-wide grep for every transform's own obvious name (`Duplicate Line`, `Move Line`, `Sort Lines`, `Dedupe`, `Trim Trailing`, `toggleComment`, case-conversion helpers) finds nothing in `EditorCore` or the app target; none of the ten exist anywhere. Two pieces of real, reusable machinery already exist and change this slice's actual scope, found only by reading (not assuming) the current Tab/Shift-Tab implementation:
@@ -673,6 +717,34 @@ reports `.failed`. Hitting the exact limit with no additional work still
 produces a complete ready snapshot. Controlled path and directory cases
 cover the failure and recovery after the workspace is reduced again. This
 does not establish live mutation freshness or installed-app presentation.
+
+#### F18 index-read atomicity amendment — 9 November 2026
+
+Quick Open previously queried paths and then read index status in a second
+actor call; Folder Search read status and then requested paths in a second
+call. A rebuild could complete between those awaits, pairing paths and
+status from different generations. The TextSearch index now returns state
+and the selected paths in one actor-isolated read: ranked `querySnapshot`
+for Quick Open and `allPathsSnapshot` for Folder Search. The latter still
+inherits the prior complete snapshot during `.building`, as the existing
+index contract permits, and returns the cleared paths with `.failed`.
+Controlled rebuild interleavings test both old mixed-pair orders and one
+captured search input. This only makes the initial read coherent; a row
+already displayed when the index later changes still needs an action-time
+validity gate under F18/F19, followed by the installed-app journey.
+
+#### F18/F19 Quick Open action-time admission — 9 November 2026
+
+Each published index path set now has a token that changes on success,
+failure and clear. Quick Open keeps that token with its displayed rows. A
+click or Return action reaches the index actor again and opens only when its
+state is ready, the token still matches and the selected visible path remains
+in that publication. Even a new successful rebuild containing the same
+relative path rejects an old row. The panel also captures the window's root
+request and lexical/access roots, checks them before and after the index
+await, and supplies the same guard to the document-open path's later awaits.
+This closes the source-level stale-row opening path without changing index
+refresh policy, filesystem symlink handling or installed-app acceptance.
 
 ### 6.16 Folder search + safe replace (Slice 7) — design pass, baseline and contract, decided before implementation
 
