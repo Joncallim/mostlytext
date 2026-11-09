@@ -5,6 +5,7 @@ import copy
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
 import unittest
 
 
@@ -16,7 +17,9 @@ spec.loader.exec_module(probe)
 
 class PreviewSelectionABTests(unittest.TestCase):
     def setUp(self):
-        self.lock = json.loads(probe.LOCK.read_text())
+        self.lock = json.loads(subprocess.check_output([
+            "git", "show", "HEAD:" + str(probe.LOCK)
+        ]))
 
     def test_base_pin_and_only_the_selected_revision_are_admitted(self):
         probe.validate_pins(self.lock, self.lock, probe.NEW)

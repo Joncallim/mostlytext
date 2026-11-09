@@ -46,3 +46,19 @@ variant passes under these common inputs, the handoff change has supporting
 causal evidence. If both pass, both fail, or either cell lacks complete
 source/native receipts, causality remains unresolved. No result from this
 private workflow closes PR #146, issue #13, or release acceptance.
+
+## First controlled-run harness failure
+
+The first exact-head A/B dispatch, MostlyText `9feb6e45` run
+[42574557016](https://github.com/Joncallim/mostlytext/actions/runs/42574557016),
+reached the old variant's guarded dependency resolution. Its retained
+`ab-inputs.json` records Textual `d2f84884`, exactly four changed pin metadata
+files, and all other 23 package pins unchanged. The first failure occurred in
+the next source-only control: its fixture read the already switched worktree
+lock as if it were the committed new-variant baseline. The log records
+`ValueError: The source is not the exact private new-variant lock`. The
+always-run immutable-lock check then found no generated Xcode project,
+because the workflow had stopped before generation. No native app build or
+Copy test ran; the new variant remained queued and the workflow was cancelled
+for a scoped harness correction. This failure is not evidence for or against
+the selection handoff hypothesis.

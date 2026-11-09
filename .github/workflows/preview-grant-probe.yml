@@ -45,6 +45,7 @@ jobs:
           python3 .github/scripts/test-preview-inline-selection-correlation.py
           python3 .github/scripts/test-run-owned-app-tests.py
       - name: Generate the identical app and test source with selected pin
+        id: generate
         run: |
           set -euo pipefail
           brew untap aws/tap 2>/dev/null || true
@@ -68,7 +69,7 @@ jobs:
       - name: Repeat ten-generation mounted Copy in fresh native test runs
         run: python3 .github/scripts/preview-selection-ab.py run ${{ matrix.variant }}
       - name: Verify Xcode kept the selected immutable lock
-        if: always()
+        if: ${{ !cancelled() && steps.generate.outcome == 'success' }}
         run: MacDown2/scripts/pin-xcode-package-versions.sh --check
       - uses: actions/upload-artifact@v4
         if: always()
