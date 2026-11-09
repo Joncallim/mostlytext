@@ -28,7 +28,7 @@ struct DocumentTypeRegistrationTests {
 
         // LSItemContentTypes takes precedence over CFBundleTypeExtensions on macOS.
         // The three non-system aliases therefore need a type with their own tags.
-        let contentTypes = Set((markdown["LSItemContentTypes"] as? [String]) ?? [])
+        let contentTypes = (markdown["LSItemContentTypes"] as? [String]) ?? []
         #expect(contentTypes == ["net.daringfireball.markdown", "app.mostlytext.markdown-alias"])
         #expect((markdown["CFBundleTypeRole"] as? String) == "Editor")
         #expect((markdown["LSHandlerRank"] as? String) == "Default")
