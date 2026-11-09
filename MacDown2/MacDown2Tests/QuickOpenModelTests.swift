@@ -135,7 +135,7 @@ struct QuickOpenModelTests {
         await gate.waitUntilPending("old")
         await gate.release("old", with: oldRows)
         await waitUntil { model.results == oldRows }
-        #expect(model.selectedResult == oldRows.first)
+        #expect(model.selectedResult?.path == oldRows.first)
 
         model.query = "new" // the old rows are still displayed, but belong to the previous query
         await gate.waitUntilPending("new")
@@ -144,7 +144,7 @@ struct QuickOpenModelTests {
 
         await gate.release("new", with: newRows)
         await waitUntil { model.results == newRows }
-        #expect(model.selectedResult == newRows.first)
+        #expect(model.selectedResult?.path == newRows.first)
     }
 
     @Test func anUnavailableIndexIsReportedDistinctlyFromNoMatches() async {
@@ -221,7 +221,93 @@ struct QuickOpenModelTests {
 
         model.moveSelection(by: 1)
 
-        #expect(model.selectedResult?.relativePath == model.results[1].relativePath)
+        #expect(model.selectedResult?.path.relativePath == model.results[1].relativePath)
+    }
+
+    @Test func rebuiltIndexRejectsDisplayedRowEvenWhenTheSamePathReturns() async throws {
+        let tree = try TempTree(["same.md"])
+        let index = WorkspaceFileIndex()
+        await index.rebuild(root: tree.root)
+        let model = QuickOpenModel(index: index)
+        model.refresh()
+        await waitUntil { model.selectedResult != nil }
+        let selected = try #require(model.selectedResult)
+        let origin = QuickOpenOrigin(generation: 1, lexicalRoot: tree.root, accessRoot: tree.root)
+        let originBox = QuickOpenOriginBox(origin)
+        let gate = QuickOpenActionGate(index: index) { originBox.current }
+        #expect(await gate.admit(selected, from: origin))
+
+        await index.rebuild(root: tree.root)
+        #expect(await !(gate.admit(selected, from: origin)))
+        model.refresh()
+        await waitUntil {
+            model.selectedResult.map { $0.publishedGeneration != selected.publishedGeneration } ?? false
+        }
+        let refreshed = try #require(model.selectedResult)
+        #expect(refreshed.path.relativePath == selected.path.relativePath)
+        #expect(await gate.admit(refreshed, from: origin))
+    }
+
+    @Test func rootSwitchDuringIndexAdmissionRejectsClickedRow() async {
+        let oldRoot = URL(fileURLWithPath: "/tmp/quick-open-old")
+        let newRoot = URL(fileURLWithPath: "/tmp/quick-open-new")
+        let origin = QuickOpenOrigin(generation: 1, lexicalRoot: oldRoot, accessRoot: oldRoot)
+        let originBox = QuickOpenOriginBox(origin)
+        let pause = QuickOpenAdmissionPause()
+        let gate = QuickOpenActionGate(
+            indexAdmission: { _ in await pause.hold() },
+            currentOrigin: { originBox.current }
+        )
+        let selected = QuickOpenModel.PresentedResult(
+            path: IndexedPath(relativePath: "same.md", basename: "same.md"),
+            publishedGeneration: 1,
+            queryGeneration: 1
+        )
+        let action = Task { await gate.admit(selected, from: origin) }
+        await pause.waitUntilPending()
+        originBox.current = QuickOpenOrigin(generation: 2, lexicalRoot: newRoot, accessRoot: newRoot)
+        await pause.resume(with: true)
+
+        #expect(await !(action.value))
+    }
+}
+
+@MainActor
+private final class QuickOpenOriginBox {
+    var current: QuickOpenOrigin?
+
+    init(_ origin: QuickOpenOrigin) {
+        current = origin
+    }
+}
+
+private actor QuickOpenAdmissionPause {
+    private var pending: CheckedContinuation<Bool, Never>?
+    private var released: Bool?
+
+    func hold() async -> Bool {
+        if let released {
+            return released
+        }
+        return await withCheckedContinuation { pending = $0 }
+    }
+
+    func waitUntilPending() async {
+        let clock = ContinuousClock()
+        let deadline = clock.now + .seconds(5)
+        while clock.now < deadline {
+            if pending != nil {
+                return
+            }
+            try? await Task.sleep(for: .milliseconds(1))
+        }
+        Issue.record("Timed out waiting for Quick Open action admission")
+    }
+
+    func resume(with result: Bool) {
+        released = result
+        pending?.resume(returning: result)
+        pending = nil
     }
 }
 

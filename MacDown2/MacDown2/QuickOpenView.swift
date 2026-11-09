@@ -10,10 +10,11 @@ import TextSearch
 /// #117's own palette-consistency work stays scoped to Slice 9.
 struct QuickOpenView: View {
     @Bindable var model: QuickOpenModel
-    let onOpen: (IndexedPath) -> Void
+    let onOpen: @MainActor (QuickOpenModel.PresentedResult) async -> Bool
     let onDismiss: () -> Void
 
     @FocusState private var searchFieldFocused: Bool
+    @State private var isOpening = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -24,6 +25,7 @@ struct QuickOpenView: View {
                 .focused($searchFieldFocused)
                 .accessibilityLabel("Quick Open search")
                 .accessibilityIdentifier("quickOpenSearchField")
+                .disabled(isOpening)
                 .onKeyPress(.downArrow) {
                     model.moveSelection(by: 1)
                     return .handled
@@ -62,6 +64,7 @@ struct QuickOpenView: View {
                                 openSelectedAndDismiss()
                             }
                     }
+                    .disabled(isOpening)
                     .listStyle(.plain)
                     .frame(maxHeight: 280)
                     .onChange(of: model.selectedIndex) { _, newValue in
@@ -80,9 +83,16 @@ struct QuickOpenView: View {
     }
 
     private func openSelectedAndDismiss() {
-        guard let selected = model.selectedResult else { return }
-        onOpen(selected)
-        onDismiss()
+        guard !isOpening, let selected = model.selectedResult else { return }
+        isOpening = true
+        Task { @MainActor in
+            if await onOpen(selected) {
+                onDismiss()
+            } else {
+                isOpening = false
+                model.refresh()
+            }
+        }
     }
 }
 

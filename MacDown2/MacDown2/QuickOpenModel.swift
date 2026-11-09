@@ -1,3 +1,4 @@
+import Foundation
 import Observation
 import TextSearch
 
@@ -19,6 +20,21 @@ final class QuickOpenModel {
     struct IndexRead: Sendable {
         let paths: [IndexedPath]
         let isUnavailable: Bool
+        let publishedGeneration: UInt64
+
+        init(paths: [IndexedPath], isUnavailable: Bool, publishedGeneration: UInt64 = 0) {
+            self.paths = paths
+            self.isUnavailable = isUnavailable
+            self.publishedGeneration = publishedGeneration
+        }
+    }
+
+    /// A displayed row bound to the index publication that produced it.
+    /// The action path checks this token again after its actor hop.
+    struct PresentedResult: Sendable, Equatable {
+        let path: IndexedPath
+        let publishedGeneration: UInt64
+        let queryGeneration: Int
     }
 
     var query = "" {
@@ -31,6 +47,7 @@ final class QuickOpenModel {
     /// True when the workspace index failed (its folder vanished or became
     /// unreadable) rather than the query merely matching nothing (#183 F18).
     private(set) var isIndexUnavailable = false
+    private var resultsPublishedGeneration: UInt64 = 0
 
     private let performRead: @Sendable (String) async -> IndexRead
     private var queryGeneration = 0
@@ -46,9 +63,17 @@ final class QuickOpenModel {
         performRead = { query in
             let snapshot = await index.querySnapshot(query, limit: 100, recentRelativePaths: recentRelativePaths)
             if case .failed = snapshot.state {
-                return IndexRead(paths: snapshot.paths, isUnavailable: true)
+                return IndexRead(
+                    paths: snapshot.paths,
+                    isUnavailable: true,
+                    publishedGeneration: snapshot.publishedGeneration
+                )
             }
-            return IndexRead(paths: snapshot.paths, isUnavailable: false)
+            return IndexRead(
+                paths: snapshot.paths,
+                isUnavailable: false,
+                publishedGeneration: snapshot.publishedGeneration
+            )
         }
     }
 
@@ -94,6 +119,7 @@ final class QuickOpenModel {
             guard generation == queryGeneration else { return } // superseded by a newer query
             results = read.paths
             isIndexUnavailable = read.isUnavailable
+            resultsPublishedGeneration = read.publishedGeneration
             selectedIndex = results.isEmpty ? 0 : min(selectedIndex, results.count - 1)
             isSearching = false
         }
@@ -109,7 +135,53 @@ final class QuickOpenModel {
     /// pending: until its response lands, `results` belong to the PREVIOUS
     /// query, and acting on one would open a file the user's current text no
     /// longer asks for (#183 F19).
-    var selectedResult: IndexedPath? {
-        isSearching ? nil : results[safe: selectedIndex]
+    var selectedResult: PresentedResult? {
+        guard !isSearching, let path = results[safe: selectedIndex] else { return nil }
+        return PresentedResult(
+            path: path,
+            publishedGeneration: resultsPublishedGeneration,
+            queryGeneration: queryGeneration
+        )
+    }
+}
+
+/// The exact window/root request behind a Quick Open panel. The panel closes
+/// on root changes, and this value independently guards asynchronous opens.
+struct QuickOpenOrigin: Equatable, Sendable {
+    let generation: UInt
+    let lexicalRoot: URL
+    let accessRoot: URL
+}
+
+/// Checks both the displayed index publication and the origin folder after
+/// the index actor hop. The injected admission closure lets a test pause at
+/// that hop and force a root switch before the final identity check.
+@MainActor
+struct QuickOpenActionGate {
+    private let indexAdmission: @Sendable (QuickOpenModel.PresentedResult) async -> Bool
+    private let currentOrigin: @MainActor () -> QuickOpenOrigin?
+
+    init(index: WorkspaceFileIndex, currentOrigin: @escaping @MainActor () -> QuickOpenOrigin?) {
+        indexAdmission = { result in
+            await index.isActionable(result.path, publishedGeneration: result.publishedGeneration)
+        }
+        self.currentOrigin = currentOrigin
+    }
+
+    init(
+        indexAdmission: @escaping @Sendable (QuickOpenModel.PresentedResult) async -> Bool,
+        currentOrigin: @escaping @MainActor () -> QuickOpenOrigin?
+    ) {
+        self.indexAdmission = indexAdmission
+        self.currentOrigin = currentOrigin
+    }
+
+    func isCurrent(_ origin: QuickOpenOrigin) -> Bool {
+        currentOrigin() == origin
+    }
+
+    func admit(_ result: QuickOpenModel.PresentedResult, from origin: QuickOpenOrigin) async -> Bool {
+        guard isCurrent(origin), await indexAdmission(result) else { return false }
+        return isCurrent(origin)
     }
 }
