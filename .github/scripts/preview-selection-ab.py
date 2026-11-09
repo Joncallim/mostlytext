@@ -26,9 +26,19 @@ CHANGED_PIN_PATHS = {str(LOCK), str(MANIFEST), str(PROJECT), str(INVENTORY)}
 REPEATS = 10
 TEST_URL = ("test://com.apple.xcode/MacDown2/MacDown2Tests/SecuredMarkdownMountedTests/"
             "aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration()")
-# Swift Testing's actual XCResult function identifier includes the signature.
-# Keep the xcodebuild selection tied to that exact recorded identifier.
-TEST = "-only-testing:" + TEST_URL.removeprefix("test://com.apple.xcode/MacDown2/")
+# The full-function selector selected zero Swift Testing functions on the first
+# hosted A/B. The unchanged original hosted workflow used this suite selector
+# and executed all four functions; require their exact XCResult IDs below.
+TEST = "-only-testing:MacDown2Tests/SecuredMarkdownMountedTests"
+EXPECTED_TEST_URLS = frozenset(
+    "test://com.apple.xcode/MacDown2/MacDown2Tests/SecuredMarkdownMountedTests/" + name + "()"
+    for name in (
+        "aNoWriteNativeCopyCannotReuseAnEarlierImage",
+        "aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration",
+        "aNewParsedRevisionReplacesTheLoadWithoutAnotherModelEdit",
+        "hidingDuringAParsedFrameReplacementRevokesTheRetainedLoader",
+    )
+)
 ROOT = Path(os.environ.get("RUNNER_TEMP", "/missing-runner-temp")) / "preview-grant-probe"
 
 
@@ -205,18 +215,18 @@ def correlation_module():
     return module
 
 
-def selected_test_identifiers(tree):
-    identifiers = []
+def selected_test_results(tree):
+    results = []
     if isinstance(tree, dict):
         identifier = tree.get("nodeIdentifierURL")
         if isinstance(identifier, str) and "/SecuredMarkdownMountedTests/" in identifier:
-            identifiers.append(identifier)
+            results.append((identifier, tree.get("result")))
         for value in tree.values():
-            identifiers.extend(selected_test_identifiers(value))
+            results.extend(selected_test_results(value))
     elif isinstance(tree, list):
         for value in tree:
-            identifiers.extend(selected_test_identifiers(value))
-    return identifiers
+            results.extend(selected_test_results(value))
+    return results
 
 
 def run_repeats(variant):
@@ -266,13 +276,15 @@ def run_repeats(variant):
                                         "--path", str(result_path)], capture_output=True)
             if inspected.returncode == 0:
                 (ROOT / (prefix + "-tests.json")).write_bytes(inspected.stdout)
-                selected = selected_test_identifiers(json.loads(inspected.stdout))
+                selected = selected_test_results(json.loads(inspected.stdout))
+        selected_ids = [identifier for identifier, _ in selected]
         row = {
             "repeat": number, "variant": variant, "textual_revision": record["textual_revision"],
             "log_sha256": digest(raw), "wrapper_returncode": result.returncode,
             "owned_status": status, "owned_app_sha256": identity.get("app_sha256"),
             "owned_checkout": identity.get("checkout"),
-            "xcresult_summary": summary, "selected_test_identifiers": selected,
+            "xcresult_summary": summary, "selected_test_identifiers": selected_ids,
+            "selected_test_results": dict(selected),
             "generations": generations, "correlation_errors": errors,
         }
         row["passed"] = (
@@ -280,9 +292,12 @@ def run_repeats(variant):
             and not status.get("timed_out") and not status.get("cancelled")
             and not status.get("app_cleanup_requested")
             and identity.get("app_sha256") == app_hash and identity.get("checkout") == record["checkout"]
-            and summary.get("totalTestCount") == 1 and summary.get("passedTests") == 1
+            and summary.get("totalTestCount") == 4 and summary.get("passedTests") == 4
             and summary.get("failedTests") == 0 and summary.get("skippedTests") == 0
-            and selected == [TEST_URL]
+            and len(selected) == len(EXPECTED_TEST_URLS)
+            and set(selected_ids) == EXPECTED_TEST_URLS
+            and all(result == "Passed" for _, result in selected)
+            and (TEST_URL, "Passed") in selected
             and len(generations) == 10 and not errors
         )
         (ROOT / (prefix + ".json")).write_text(json.dumps(row, indent=2, sort_keys=True) + "\n")
@@ -291,7 +306,7 @@ def run_repeats(variant):
               f"test={summary.get('passedTests')}/{summary.get('totalTestCount')} "
               f"generations={len(generations)} errors={len(errors)}", flush=True)
         if (status.get("timed_out") or status.get("cancelled") or not status
-                or summary.get("totalTestCount") != 1):
+                or summary.get("totalTestCount") != 4):
             break
     verify(ROOT, binding)
     require_inputs(variant)

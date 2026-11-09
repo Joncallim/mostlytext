@@ -84,13 +84,13 @@ The test command exited successfully, while the raw XCResult recorded zero
 executed tests and the verifier correctly failed both A/B cells. These cells
 say nothing about whether the proposed Textual handoff repairs native Copy.
 
-The A/B script had selected the Swift Testing function without its trailing
-`()` signature. The original hosted Debug revision XCResult from
+The A/B script had selected the Swift Testing function by a path that matched
+no executed test. The original hosted Debug revision XCResult from
 [run 42450824327](https://github.com/Joncallim/mostlytext/actions/runs/42450824327)
 records the exact function URL as
 `test://com.apple.xcode/MacDown2/MacDown2Tests/SecuredMarkdownMountedTests/aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration()`.
 Its known-working suite selection executed the function among four tests. The
-private harness now derives the function selector from that exact URL and
-continues to require one executed, passing test with the same URL and ten
-complete Copy generations per repeat. This selector correction still needs a
-fresh hosted run; no result has been inferred from syntax alone.
+private harness now selects that suite and requires all four exact function
+URLs with passing XCResult outcomes, including the target Copy function, plus
+the target's ten complete Copy generations per repeat. This correction still
+needs a fresh hosted run; no result has been inferred from syntax alone.

@@ -59,13 +59,14 @@ class PreviewSelectionABTests(unittest.TestCase):
 
     def test_fixed_mounted_copy_test_and_repetition_count(self):
         self.assertEqual(probe.REPEATS, 10)
-        self.assertEqual(probe.TEST, "-only-testing:MacDown2Tests/SecuredMarkdownMountedTests/"
-                         "aGrantedImageCopiesAsPNGAndLoadsAgainUnderANewDocumentGeneration()")
-        self.assertEqual(probe.TEST, "-only-testing:" + probe.TEST_URL.removeprefix(
-            "test://com.apple.xcode/MacDown2/"))
-        self.assertEqual(probe.selected_test_identifiers({
-            "testNodes": [{"nodeIdentifierURL": probe.TEST_URL}, {"nodeIdentifierURL": "test://other"}]
-        }), [probe.TEST_URL])
+        self.assertEqual(probe.TEST, "-only-testing:MacDown2Tests/SecuredMarkdownMountedTests")
+        self.assertIn(probe.TEST_URL, probe.EXPECTED_TEST_URLS)
+        self.assertEqual(len(probe.EXPECTED_TEST_URLS), 4)
+        nodes = [{"nodeIdentifierURL": identifier, "result": "Passed"}
+                 for identifier in probe.EXPECTED_TEST_URLS]
+        selected = probe.selected_test_results({"testNodes": nodes + [{"nodeIdentifierURL": "test://other"}]})
+        self.assertEqual(set(selected), {(identifier, "Passed") for identifier in probe.EXPECTED_TEST_URLS})
+        self.assertEqual(len(selected), 4)
 
 
 if __name__ == "__main__":
