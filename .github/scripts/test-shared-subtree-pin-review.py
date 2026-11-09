@@ -22,6 +22,7 @@ class RuntimePinAuthorityTests(unittest.TestCase):
         self.assertEqual(len(pins), 24)
         for name, owner in module.OWNERS.items():
             self.assertEqual(pins[name]["location"], owner)
+        self.assertEqual(pins["tree-sitter"]["state"]["revision"], module.REVIEWED_RUNTIME)
 
     def test_other_owners_and_nonimmutable_revisions_are_refused_before_fetch(self):
         for name in module.OWNERS:
@@ -35,11 +36,29 @@ class RuntimePinAuthorityTests(unittest.TestCase):
                 with self.subTest(name=name, key=key), self.assertRaises(SystemExit):
                     module.checked_pins(changed)
 
-    def test_unchanged_original_cannot_be_qualified_as_a_candidate(self):
-        row = next(row for row in self.lock["pins"] if row["identity"] == "tree-sitter")
-        row["state"]["revision"] = module.BASE
-        with self.assertRaises(SystemExit):
-            module.checked_pins(self.lock)
+    def test_other_well_formed_runtime_revisions_cannot_be_qualified(self):
+        for revision in [module.BASE, module.COMBINED, "0" * 40]:
+            changed = copy.deepcopy(self.lock)
+            row = next(row for row in changed["pins"] if row["identity"] == "tree-sitter")
+            row["state"]["revision"] = revision
+            with self.subTest(revision=revision), self.assertRaises(SystemExit):
+                module.checked_pins(changed)
+
+    def test_reviewed_source_stages_reject_unknown_or_missing_product_changes(self):
+        shared = module.SHARED_SUBTREE_DELTA
+        followup = module.FOLLOWUP_DELTA
+        total = sorted(shared + followup)
+        actual = module.checked_runtime_source_delta(module.REVIEWED_RUNTIME, shared, followup, total)
+        self.assertEqual(actual["total"], total)
+        cases = [
+            (shared, followup + ["lib/src/lexer.c"], sorted(total + ["lib/src/lexer.c"])),
+            (shared, followup[:-1], total),
+            (shared + ["lib/include/tree_sitter/api.h"], followup, total),
+            (shared, followup, total[:-1]),
+        ]
+        for first, second, combined in cases:
+            with self.subTest(first=first, second=second, combined=combined), self.assertRaises(SystemExit):
+                module.checked_runtime_source_delta(module.REVIEWED_RUNTIME, first, second, combined)
 
     def test_duplicate_missing_and_extra_graph_entries_are_refused(self):
         duplicate = copy.deepcopy(self.lock)
