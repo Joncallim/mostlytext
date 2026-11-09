@@ -10,20 +10,6 @@ private struct HTMLPreviewLoadIdentity {
     let generation: UInt
 }
 
-private struct HTMLPreviewDocumentIdentity: Equatable {
-    let tabID: UUID?
-    let documentID: String
-    let recoveryEpoch: UUID
-    let fileURL: URL?
-
-    init(_ document: FileCore.FileDocument, tabID: UUID?) {
-        self.tabID = tabID
-        documentID = document.id
-        recoveryEpoch = document.recoveryEpoch
-        fileURL = document.fileURL
-    }
-}
-
 // MARK: - HTML preview host
 
 /// App-owned host for the hardened HTML preview (EPIC-11 Gate 4).
@@ -280,6 +266,9 @@ struct HTMLPreviewView: NSViewRepresentable {
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             guard let pending = takePendingNavigation(for: navigation, in: webView) else { return }
             gate.loadCompleted(generation: pending.generation)
+            // An identity switch hides the prior document immediately. Show this view only
+            // after the new document's own main navigation has completed.
+            webView.isHidden = false
         }
 
         /// The WebContent process died (memory pressure, a crash on a huge page): the pane would stay blank
@@ -374,6 +363,11 @@ extension HTMLPreviewView.Coordinator {
         guard currentDocumentIdentity != documentIdentity else { return }
         let replacingDocument = currentDocumentIdentity != nil
         currentDocumentIdentity = documentIdentity
+        if replacingDocument {
+            // A refused or failed clearing navigation must not leave the old document visible,
+            // especially when the incoming document is still dirty and has no load to follow.
+            webView.isHidden = true
+        }
         reloadTask?.cancel()
         reloadTask = nil
         scheduledLoadID = nil

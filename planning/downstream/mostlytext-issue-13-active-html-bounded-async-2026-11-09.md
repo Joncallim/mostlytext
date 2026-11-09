@@ -30,6 +30,9 @@ the last rendered page during dirty edits to the same document. A different
 document or tab identity immediately revokes the old resource authority and loads an
 empty CSP-bound page before checking whether the incoming document is clean;
 even a dirty or lower-generation document cannot inherit the former preview.
+The view stays hidden after an identity switch until that new document's main
+navigation finishes. A refused or failed blank-page load therefore cannot
+reveal pixels from the prior document.
 The separate explicit-grant
 `SecuredHTMLPreviewView` remains inactive.
 
@@ -57,4 +60,6 @@ rename advance `FileDocument.mutationGeneration`, so they schedule a new saved
 HTML load with the new URL. Coordinator source tests cover a lower-generation
 distinct document, a dirty distinct document and a different tab with the same
 document generation; native WebKit clearing and
-saved-load presentation still need the test desktop acceptance run.
+saved-load presentation still need the test desktop acceptance run. The
+coordinator tests also cover refused and failed blank-page navigation and
+same-document dirty edits after the new page is shown.
