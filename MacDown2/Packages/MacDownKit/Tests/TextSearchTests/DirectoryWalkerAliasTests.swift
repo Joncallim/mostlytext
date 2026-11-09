@@ -62,17 +62,17 @@ struct DirectoryWalkerAliasTests {
         #expect(paths == ["note.md"])
     }
 
-    /// `docs -> /` is followed on purpose, so a bound stops the walk instead of indexing a whole disk.
-    @Test func theWalkStopsAtTheConfiguredPathLimit() throws {
+    /// `docs -> /` is followed on purpose, so a bound fails the scan instead of publishing a partial index.
+    @Test func theWalkFailsAtTheConfiguredPathLimit() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         for index in 0 ..< 100 {
             try Data().write(to: root.appendingPathComponent("file\(index).md"))
         }
 
-        let paths = try DirectoryWalker().walk(root: root, excludedDirectoryNames: [], maximumPaths: 10)
-
-        #expect(paths.count == 10)
+        #expect(throws: (any Error).self) {
+            try DirectoryWalker().walk(root: root, excludedDirectoryNames: [], maximumPaths: 10)
+        }
     }
 
     @Test func belowTheLimitEverythingIsIndexed() throws {
@@ -87,7 +87,7 @@ struct DirectoryWalkerAliasTests {
 
     /// A directory reached through N links is walked N times; a fan-out of links to empty directories adds no paths,
     /// so only a directory budget bounds it (6 links x 6 levels is 46,656 visits and zero files).
-    @Test func aSymlinkFanOutOfEmptyDirectoriesStopsAtTheDirectoryBudget() throws {
+    @Test func aSymlinkFanOutOfEmptyDirectoriesFailsAtTheDirectoryBudget() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         let levels = 6
@@ -107,9 +107,22 @@ struct DirectoryWalkerAliasTests {
         }
         let start = ContinuousClock.now
 
-        let paths = try DirectoryWalker().walk(root: root, excludedDirectoryNames: [], maximumDirectories: 500)
+        #expect(throws: (any Error).self) {
+            try DirectoryWalker().walk(root: root, excludedDirectoryNames: [], maximumDirectories: 500)
+        }
+        #expect(ContinuousClock.now - start < .seconds(5))
+    }
+
+    @Test func ancestorLoopDoesNotConsumeAnAdditionalDirectorySlot() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        try FileManager.default.createSymbolicLink(
+            at: root.appendingPathComponent("loop"),
+            withDestinationURL: root
+        )
+
+        let paths = try DirectoryWalker().walk(root: root, excludedDirectoryNames: [], maximumDirectories: 1)
 
         #expect(paths.isEmpty)
-        #expect(ContinuousClock.now - start < .seconds(5))
     }
 }

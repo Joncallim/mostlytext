@@ -4,6 +4,61 @@ import Testing
 
 @Suite("Workspace index enumeration failures")
 struct WorkspaceIndexEnumerationFailureTests {
+    @Test func pathBudgetCannotPublishAPartialReadyIndex() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        try Data().write(to: root.appendingPathComponent("first.md"))
+        try Data().write(to: root.appendingPathComponent("second.md"))
+        let index = WorkspaceFileIndex(walk: { root, excluded in
+            try DirectoryWalker().walk(root: root, excludedDirectoryNames: excluded, maximumPaths: 2)
+        })
+
+        await index.rebuild(root: root)
+        #expect(await index.state == .ready(count: 2))
+        try Data().write(to: root.appendingPathComponent("third.md"))
+        await index.rebuild(root: root)
+
+        guard case .failed = await index.state else {
+            Issue.record("a capped path scan must not publish its earlier paths as ready")
+            return
+        }
+        #expect(await index.allPaths().isEmpty)
+        #expect(await index.query("first").isEmpty)
+
+        try FileManager.default.removeItem(at: root.appendingPathComponent("third.md"))
+        await index.rebuild(root: root)
+        #expect(await index.state == .ready(count: 2))
+    }
+
+    @Test func directoryBudgetCannotPublishAPartialReadyIndex() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        try Data().write(to: root.appendingPathComponent("first.md"))
+        let index = WorkspaceFileIndex(walk: { root, excluded in
+            try DirectoryWalker().walk(root: root, excludedDirectoryNames: excluded, maximumDirectories: 1)
+        })
+
+        await index.rebuild(root: root)
+        #expect(await index.state == .ready(count: 1))
+        let child = root.appendingPathComponent("nested", isDirectory: true)
+        try FileManager.default.createDirectory(at: child, withIntermediateDirectories: true)
+        try Data().write(to: child.appendingPathComponent("second.md"))
+        await index.rebuild(root: root)
+
+        guard case .failed = await index.state else {
+            Issue.record("a capped directory scan must not publish its earlier paths as ready")
+            return
+        }
+        #expect(await index.allPaths().isEmpty)
+        #expect(await index.query("first").isEmpty)
+
+        try FileManager.default.removeItem(at: child)
+        await index.rebuild(root: root)
+        #expect(await index.state == .ready(count: 1))
+    }
+
     @Test func unreadableSymlinkTargetCannotHideItsSubtreeInAReadyIndex() async throws {
         let parent = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         defer { try? FileManager.default.removeItem(at: parent) }

@@ -18,6 +18,8 @@ struct DirectoryWalker: Sendable {
     private enum WalkFailure: Error {
         case directoryIdentityUnavailable
         case metadataUnavailable
+        case pathBudgetExceeded
+        case directoryBudgetExceeded
     }
 
     private let listChildren: @Sendable (URL) throws -> [URL]
@@ -129,7 +131,7 @@ struct DirectoryWalker: Sendable {
         state: inout WalkState,
         into results: inout [IndexedPath]
     ) throws {
-        guard !Task.isCancelled, state.directoriesEntered < context.maximumDirectories else { return }
+        guard !Task.isCancelled else { return }
         guard let identity = PhysicalFileIdentity(url: directory).fileObjectID else {
             throw WalkFailure.directoryIdentityUnavailable
         }
@@ -139,14 +141,18 @@ struct DirectoryWalker: Sendable {
         // on directory enumeration order.
         guard state.visited.insert(identity).inserted else { return }
         defer { state.visited.remove(identity) }
+        // An ancestor loop consumes no directory budget. A genuinely new
+        // directory cannot be omitted from a ready index.
+        guard state.directoriesEntered < context.maximumDirectories else {
+            throw WalkFailure.directoryBudgetExceeded
+        }
         state.directoriesEntered += 1
         // An unreadable child must not silently turn a partial scan into a
         // complete, actionable index. Let the owner publish `.failed`.
         let children = try listChildren(directory.resolvingSymlinksInPath())
 
         for child in children {
-            guard !Task.isCancelled, results.count < context.maximumPaths,
-                  state.directoriesEntered < context.maximumDirectories else { return }
+            guard !Task.isCancelled else { return }
             // A listed entry whose metadata cannot be read makes the scan
             // incomplete. Never publish the other paths as a ready index.
             let own = try kind(of: child)
@@ -192,6 +198,12 @@ struct DirectoryWalker: Sendable {
                     into: &results
                 )
             } else {
+                // A capped snapshot is incomplete and cannot be published as
+                // a ready index. The exact cap is valid until another file
+                // would be added.
+                guard results.count < context.maximumPaths else {
+                    throw WalkFailure.pathBudgetExceeded
+                }
                 results.append(IndexedPath(
                     relativePath: relativePath(of: lexicalChild, relativeTo: context.root),
                     basename: name,
