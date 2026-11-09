@@ -49,8 +49,10 @@ final class TabLifecycleUITests: XCTestCase {
         let tabB = app.tabs.matching(NSPredicate(format: "title CONTAINS[c] %@", "b.md")).firstMatch
         let tabC = app.tabs.matching(NSPredicate(format: "title CONTAINS[c] %@", "c.md")).firstMatch
         XCTAssertTrue(tabA.waitForExistence(timeout: 5))
-        XCTAssertTrue(tabB.exists)
-        XCTAssertTrue(tabC.exists)
+        // The launch opens the three files asynchronously. Check the complete
+        // native tab batch before exercising the dirty-close path.
+        XCTAssertTrue(waitForInitialTabBatch(until: Date().addingTimeInterval(5)))
+        XCTAssertTrue(tabB.exists && tabC.exists, "All three launched files must have native tabs")
 
         // Activate b.md and dirty it using the debug menu. Use the app's own
         // "Select Tab 2" command so the native tab switch also makes b.md's

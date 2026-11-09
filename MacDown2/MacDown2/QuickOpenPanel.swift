@@ -95,12 +95,11 @@ final class QuickOpenPanel: NSPanel, NSWindowDelegate {
     }
 
     override func sendEvent(_ event: NSEvent) {
-        let hasMarkedText = (firstResponder as? NSTextInputClient)?.hasMarkedText() ?? false
         if event.type == .keyDown,
            event.keyCode == 36 || event.keyCode == 76,
-           event.modifierFlags.intersection(.deviceIndependentFlagsMask)
-           .subtracting([.capsLock, .numericPad, .function]).isEmpty,
-           !hasMarkedText {
+           event.modifierFlags.isDisjoint(with: [.command, .control, .option, .shift]) {
+            // A filtered List can own focus even while the search field still
+            // displays the query. Return is the panel's default file action.
             submission?.submit()
             return
         }
