@@ -57,12 +57,20 @@ final class ZZWorkerFinderTests: XCTestCase {
         let marker = finder.staticTexts["MOSTLYTEXT_QL_WORKER_ISOLATION_OK"].firstMatch
         let visible = marker.waitForExistence(timeout: max(0, 15 - (ProcessInfo.processInfo.systemUptime - started)))
         // Finder's WebKit preview exposes the authored <pre> as a StaticText
-        // value, not as its accessibility label (observed in the retained UI tree).
-        let sourceText = finder.staticTexts.matching(
-            NSPredicate(format: "value CONTAINS %@", "# Hosted Quick Look fixture")
-        ).firstMatch
-        let sourceValue = sourceText.waitForExistence(timeout: 2) ? sourceText.value as? String : nil
-        let sourceVisible = sourceValue?.contains("# Hosted Quick Look fixture") == true
+        // value. Other StaticText values may be numbers, so inspect only strings.
+        let sourceNeedle = "# Hosted Quick Look fixture"
+        let sourceDeadline = ProcessInfo.processInfo.systemUptime + 2
+        var sourceValue: String?
+        repeat {
+            sourceValue = finder.staticTexts.allElementsBoundByIndex
+                .compactMap { $0.value as? String }
+                .first { $0.contains(sourceNeedle) }
+            if sourceValue != nil {
+                break
+            }
+            RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.05))
+        } while ProcessInfo.processInfo.systemUptime < sourceDeadline
+        let sourceVisible = sourceValue != nil
         events = try messages()
         let held = events.compactMap { fields($0, #"^QL_WORKER_BOUNDARY finished id=(\d+) mode=held service=(\d+) worker=(\d+) result=timedOut at=([0-9.]+)$"#) }
             .first { Double($0[3]).map { $0 >= started } == true }
