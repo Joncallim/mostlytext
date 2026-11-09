@@ -181,16 +181,19 @@ enum FencedRegionClassifier {
     /// Locate a closed block or preserve ambiguity after a plausible opener.
     /// A blank second line still makes the opener a thematic break.
     private static func frontMatterBoundary(in text: NSString) -> FrontMatterBoundary {
-        guard text.length >= 3, text.character(at: 0) == 0x2D,
-              text.character(at: 1) == 0x2D, text.character(at: 2) == 0x2D else { return .absent }
+        guard text.length >= 3,
+              text.character(at: 0) == 0x2D || text.character(at: 0) == 0xFEFF else { return .absent }
         let firstLineContentEnd = MarkdownEditingAssistEngine.lineContentEnd(of: 0, in: text)
-        guard isExactly(text, range: NSRange(location: 0, length: firstLineContentEnd), matching: "---") else {
+        guard isFrontMatterDelimiter(
+            text, range: NSRange(location: 0, length: firstLineContentEnd),
+            matching: "---", allowLeadingBOM: true
+        ) else {
             return .absent
         }
 
         var lineStart = firstLineContentEnd + separatorLength(at: firstLineContentEnd, in: text)
         // Same rule as `MarkdownEngine`: a blank second line makes the opener a thematic break.
-        if lineStart < text.length {
+        if lineStart <= text.length {
             let secondEnd = MarkdownEditingAssistEngine.lineContentEnd(of: lineStart, in: text)
             let second = text.substring(with: NSRange(location: lineStart, length: secondEnd - lineStart))
             if second.trimmingCharacters(in: .whitespaces).isEmpty {
@@ -201,8 +204,8 @@ enum FencedRegionClassifier {
         while lineStart < text.length, linesScanned < maximumFrontMatterLinesScanned {
             let contentEnd = MarkdownEditingAssistEngine.lineContentEnd(of: lineStart, in: text)
             let lineRange = NSRange(location: lineStart, length: contentEnd - lineStart)
-            if isExactly(text, range: lineRange, matching: "---") ||
-                isExactly(text, range: lineRange, matching: "...") {
+            if isFrontMatterDelimiter(text, range: lineRange, matching: "---") ||
+                isFrontMatterDelimiter(text, range: lineRange, matching: "...") {
                 return .closed(end: contentEnd + separatorLength(at: contentEnd, in: text))
             }
             lineStart = contentEnd + separatorLength(at: contentEnd, in: text)
@@ -211,8 +214,28 @@ enum FencedRegionClassifier {
         return .unresolved
     }
 
-    private static func isExactly(_ text: NSString, range: NSRange, matching literal: String) -> Bool {
-        range.length == literal.utf16.count && text.substring(with: range) == literal
+    /// Match `MarkdownEngine.FrontMatterExtractor`'s delimiter spelling without importing
+    /// the parser into this per-keystroke editor module. It permits one BOM on the first
+    /// line and trailing whitespace, but never indentation or extra visible characters.
+    private static func isFrontMatterDelimiter(
+        _ text: NSString,
+        range: NSRange,
+        matching literal: String,
+        allowLeadingBOM: Bool = false
+    ) -> Bool {
+        var markerStart = range.location
+        let end = NSMaxRange(range)
+        if allowLeadingBOM, markerStart < end, text.character(at: markerStart) == 0xFEFF {
+            markerStart += 1
+        }
+        let marker = literal.utf16
+        guard markerStart + marker.count <= end else { return false }
+        for (offset, unit) in marker.enumerated() where text.character(at: markerStart + offset) != unit {
+            return false
+        }
+        let trailingStart = markerStart + marker.count
+        let trailing = NSRange(location: trailingStart, length: end - trailingStart)
+        return text.rangeOfCharacter(from: .whitespaces.inverted, range: trailing).location == NSNotFound
     }
 
     private static func separatorLength(at contentEnd: Int, in text: NSString) -> Int {

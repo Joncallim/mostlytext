@@ -39,12 +39,44 @@ struct FrontMatterAssistSafetyTests {
         #expect(FencedRegionClassifier.classify(text: source, atUTF16Offset: source.length) == .prose)
     }
 
-    private func markdownAsteriskOutcome(in source: NSString) -> EditingAssistOutcome {
-        let caret = source.length
+    @Test("BOM and trailing whitespace delimiters keep YAML protected and resume prose")
+    func acceptedDelimiterSpellingsMatchTheParser() {
+        for opener in ["--- ", "\u{FEFF}---", "\u{FEFF}--- \t"] {
+            for closer in ["--- \t", "... "] {
+                let source = "\(opener)\nkey: \n\(closer)\nbody " as NSString
+                let yamlCaret = NSMaxRange(source.range(of: "key: "))
+                #expect(FencedRegionClassifier.classify(text: source, atUTF16Offset: yamlCaret) == .frontMatter)
+                #expect(markdownAsteriskOutcome(in: source, at: yamlCaret) == .passthrough)
+                #expect(FencedRegionClassifier.classify(text: source, atUTF16Offset: source.length) == .prose)
+                guard case .edit = markdownAsteriskOutcome(in: source) else {
+                    Issue.record("Markdown pairing should resume after the valid closer")
+                    continue
+                }
+            }
+        }
+    }
+
+    @Test("a lone delimiter with an empty second line is a thematic break")
+    func blankSecondLineAtEOFIsNotUnresolvedFrontMatter() {
+        for sourceText in ["---", "---\n", "\u{FEFF}---\r\n"] {
+            let source = sourceText as NSString
+            #expect(FencedRegionClassifier.classify(text: source, atUTF16Offset: source.length) == .prose)
+        }
+    }
+
+    @Test("indented delimiters are not front matter")
+    func indentedOpenerDoesNotClaimYAMLAuthority() {
+        let source = " ---\nkey: \n---\nbody " as NSString
+        let yamlCaret = NSMaxRange(source.range(of: "key: "))
+        #expect(FencedRegionClassifier.classify(text: source, atUTF16Offset: yamlCaret) == .prose)
+    }
+
+    private func markdownAsteriskOutcome(in source: NSString, at caret: Int? = nil) -> EditingAssistOutcome {
+        let insertionPoint = caret ?? source.length
         return MarkdownEditingAssistEngine.outcome(
-            for: .replacement(range: NSRange(location: caret, length: 0), string: "*"),
+            for: .replacement(range: NSRange(location: insertionPoint, length: 0), string: "*"),
             text: source,
-            selection: NSRange(location: caret, length: 0),
+            selection: NSRange(location: insertionPoint, length: 0),
             configuration: .markdownDefault,
             profile: markdownProfile
         )
