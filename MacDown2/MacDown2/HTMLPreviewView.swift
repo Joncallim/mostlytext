@@ -19,10 +19,10 @@ private struct HTMLPreviewLoadIdentity {
 ///   no script bridge exists.
 /// - The document loads through the `macdown-preview:` custom scheme, so
 ///   `file:` URLs never reach the web view. The scheme handler
-///   (`PreviewSchemeHandler`) serves the main document and subresources only
-///   after `HTMLPreviewResourceScope` approves them against the document's
-///   directory — symlink-safe containment, `..` traversal rejected. Every
-///   response carries the authoritative CSP header
+///   (`PreviewSchemeHandler`) serves the main document and reads subresources
+///   beneath the saved load's pinned directory descriptor. Escaping paths and
+///   symlink replacements are refused. Every response carries the authoritative
+///   CSP header
 ///   (`HTMLPreviewResponseHeaders`), which no markup can divert; `text/html`
 ///   payloads are additionally re-hardened with the meta CSP injection as
 ///   belt-and-braces.
