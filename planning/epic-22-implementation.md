@@ -674,6 +674,21 @@ produces a complete ready snapshot. Controlled path and directory cases
 cover the failure and recovery after the workspace is reduced again. This
 does not establish live mutation freshness or installed-app presentation.
 
+#### F18 index-read atomicity amendment — 9 November 2026
+
+Quick Open previously queried paths and then read index status in a second
+actor call; Folder Search read status and then requested paths in a second
+call. A rebuild could complete between those awaits, pairing paths and
+status from different generations. The TextSearch index now returns state
+and the selected paths in one actor-isolated read: ranked `querySnapshot`
+for Quick Open and `allPathsSnapshot` for Folder Search. The latter still
+inherits the prior complete snapshot during `.building`, as the existing
+index contract permits, and returns the cleared paths with `.failed`.
+Controlled rebuild interleavings test both old mixed-pair orders and one
+captured search input. This only makes the initial read coherent; a row
+already displayed when the index later changes still needs an action-time
+validity gate under F18/F19, followed by the installed-app journey.
+
 ### 6.16 Folder search + safe replace (Slice 7) — design pass, baseline and contract, decided before implementation
 
 **Baseline, verified against live master before writing this design pass:** `TextSearchEngine.matches(in:query:options:)` (Slice 5, `TextSearch` package) is already a complete, pure, synchronous single-buffer literal/regex matcher — its own doc comment already names its intended second consumer: "used directly by current-document find on a bounded buffer, and per-file by `WorkspaceSearchEngine` (folder search) inside its own cancellable off-main task." `WorkspaceFileIndex` (Slice 1/6) already holds every indexed `(relativePath, basename)` pair under a window's folder root, rebuilt on root change. `FileStore.write(_:to:encoding:bom:expectedRevision:)` (`FileCore`, pre-existing) already throws `.fileChangedDuringRead` when an on-disk file's revision no longer matches one captured at read time — the exact conditional-publication primitive invariant #6 requires Replace in Folder to reuse rather than inventing a second write path. None of `WorkspaceSearchEngine`, a replacement-plan type, or any folder-search UI exist yet — this is a genuinely new slice, not wiring an already-built engine the way Slice 6 was.

@@ -51,6 +51,14 @@ public actor WorkspaceFileIndex {
         case failed(String)
     }
 
+    /// One actor-isolated read of both index status and the paths selected
+    /// from that same generation. A caller must not pair a separate status
+    /// read with `query` or `allPaths` across a concurrent rebuild.
+    public struct ReadSnapshot: Sendable {
+        public let state: State
+        public let paths: [IndexedPath]
+    }
+
     public private(set) var state: State = .empty
     private var paths: [IndexedPath] = []
     /// Inverted index: ASCII byte value -> ascending indices into `paths`
@@ -183,6 +191,13 @@ public actor WorkspaceFileIndex {
         includeHidden ? paths : paths.filter { !$0.isHidden }
     }
 
+    /// The folder-search input and its status from one actor turn. During
+    /// `.building`, paths intentionally remain the prior complete snapshot;
+    /// after `.failed`, both status and paths reflect the cleared index.
+    public func allPathsSnapshot(includeHidden: Bool = false) -> ReadSnapshot {
+        ReadSnapshot(state: state, paths: allPaths(includeHidden: includeHidden))
+    }
+
     /// Ranked matches for `query`, capped at `limit`. Never touches disk —
     /// operates entirely on the last-built in-memory snapshot, so a
     /// keystroke never triggers a new traversal (the epic's explicit
@@ -236,6 +251,16 @@ public actor WorkspaceFileIndex {
             .sorted { $0.score != $1.score ? $0.score > $1.score : $0.path.relativePath < $1.path.relativePath }
             .prefix(limit)
             .map(\.path)
+    }
+
+    /// Quick Open's ranked rows and status from one actor turn, including
+    /// the same recent-file ranking as `query` without a second index read.
+    public func querySnapshot(
+        _ query: String,
+        limit: Int = 100,
+        recentRelativePaths: Set<String> = []
+    ) -> ReadSnapshot {
+        ReadSnapshot(state: state, paths: self.query(query, limit: limit, recentRelativePaths: recentRelativePaths))
     }
 
     /// Every gap between `FuzzyPathScore`'s own tiers (exact 1000, prefix

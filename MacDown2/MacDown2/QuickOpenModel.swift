@@ -16,6 +16,11 @@ import TextSearch
 @MainActor
 @Observable
 final class QuickOpenModel {
+    struct IndexRead: Sendable {
+        let paths: [IndexedPath]
+        let isUnavailable: Bool
+    }
+
     var query = "" {
         didSet { scheduleQuery() }
     }
@@ -27,8 +32,7 @@ final class QuickOpenModel {
     /// unreadable) rather than the query merely matching nothing (#183 F18).
     private(set) var isIndexUnavailable = false
 
-    private let performQuery: @Sendable (String) async -> [IndexedPath]
-    private let indexIsUnavailable: @Sendable () async -> Bool
+    private let performRead: @Sendable (String) async -> IndexRead
     private var queryGeneration = 0
 
     /// `recentRelativePaths` implements issue #112's "Recent-file history
@@ -39,17 +43,17 @@ final class QuickOpenModel {
     /// `WorkspaceFileIndex.query` itself already has no other reason to
     /// accept live, ongoing state.
     init(index: WorkspaceFileIndex, recentRelativePaths: Set<String> = []) {
-        performQuery = { query in await index.query(query, limit: 100, recentRelativePaths: recentRelativePaths) }
-        indexIsUnavailable = {
-            if case .failed = await index.state {
-                return true
+        performRead = { query in
+            let snapshot = await index.querySnapshot(query, limit: 100, recentRelativePaths: recentRelativePaths)
+            if case .failed = snapshot.state {
+                return IndexRead(paths: snapshot.paths, isUnavailable: true)
             }
-            return false
+            return IndexRead(paths: snapshot.paths, isUnavailable: false)
         }
     }
 
-    /// Test-only seam: substitutes a caller-controlled query function for
-    /// the real `WorkspaceFileIndex.query(_:limit:)` call, matching this
+    /// Test-only seam: substitutes one caller-controlled status-and-path read
+    /// for the real `WorkspaceFileIndex.querySnapshot(_:limit:)` call, matching this
     /// project's established injectable-dependency shape for testing
     /// actor-based async work deterministically (`DocumentFileMonitor`'s
     /// injectable `sleeper`/`prober`/`watcher`, `WorkspaceFileIndex`'s own
@@ -65,12 +69,8 @@ final class QuickOpenModel {
     /// force the actual inversion the guard exists to handle — a newer
     /// query's result committed before an older, now-stale query's
     /// late-arriving one — via controlled continuations.
-    init(
-        performQuery: @escaping @Sendable (String) async -> [IndexedPath],
-        indexIsUnavailable: @escaping @Sendable () async -> Bool = { false }
-    ) {
-        self.performQuery = performQuery
-        self.indexIsUnavailable = indexIsUnavailable
+    init(performRead: @escaping @Sendable (String) async -> IndexRead) {
+        self.performRead = performRead
     }
 
     /// Runs the current query once against the index. Intended to be called
@@ -90,11 +90,10 @@ final class QuickOpenModel {
         let currentQuery = query
         isSearching = true
         Task {
-            let matches = await performQuery(currentQuery)
-            let unavailable = await indexIsUnavailable()
+            let read = await performRead(currentQuery)
             guard generation == queryGeneration else { return } // superseded by a newer query
-            results = matches
-            isIndexUnavailable = unavailable
+            results = read.paths
+            isIndexUnavailable = read.isUnavailable
             selectedIndex = results.isEmpty ? 0 : min(selectedIndex, results.count - 1)
             isSearching = false
         }
