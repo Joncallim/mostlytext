@@ -91,6 +91,46 @@ struct PreviewExportParityCorpusTests {
         #expect(exportedDone.lowerBound < exportedLater.lowerBound)
     }
 
+    @Test func nonOneOrderedListStartsSurviveTopLevelAndQuotedSource() async throws {
+        let source = "4. first\n5. 東京\n\n> 7. quoted\n> 8. later\n"
+        let result = try await surfaces(source)
+        #expect(result.blocks.map(\.kind) == [.orderedList(startIndex: 4), .blockQuote])
+        let list = try #require(result.blocks.first)
+        #expect(list.source == "4. first\n5. 東京")
+        #expect(list.lineRange == 1 ... 2)
+        let listPreview = try rendered(list)
+        #expect(containsIntent(listPreview) {
+            if case .orderedList = $0 {
+                true
+            } else {
+                false
+            }
+        })
+        let listText = String(listPreview.characters)
+        let first = try #require(listText.range(of: "first"))
+        let second = try #require(listText.range(of: "東京"))
+        #expect(first.lowerBound < second.lowerBound)
+
+        let quote = try #require(result.blocks.last)
+        #expect(quote.source == "> 7. quoted\n> 8. later")
+        #expect(result.document.blocks.last?.children.first?.kind == .orderedList(startIndex: 7))
+        let quotePreview = try rendered(quote)
+        #expect(containsIntent(quotePreview) { $0 == .blockQuote })
+        #expect(containsIntent(quotePreview) {
+            if case .orderedList = $0 {
+                true
+            } else {
+                false
+            }
+        })
+
+        let html = result.export.bodyHTML
+        #expect(html.contains("<ol start=\"4\">"))
+        #expect(html.contains("<ol start=\"7\">"))
+        #expect(html.contains("東京"))
+        #expect(html.contains("<blockquote>"))
+    }
+
     @Test func strikethroughAndAutolinkSurviveBothRenderers() async throws {
         let source = "Visit https://example.com and ~~retire~~ this.\n"
         let result = try await surfaces(source)
