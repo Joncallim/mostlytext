@@ -32,7 +32,10 @@ def verify_plist(path: Path) -> None:
     require(len(markdown) == 1, f"expected one Markdown declaration in {path}")
     record = markdown[0]
     require(record.get("CFBundleTypeIconFile") == "MarkdownDocument", "Markdown icon resource name drifted")
-    require(record["LSItemContentTypes"] == ["net.daringfireball.markdown"], "Markdown UTI drifted")
+    require(
+        record["LSItemContentTypes"] == ["net.daringfireball.markdown", "app.mostlytext.markdown-alias"],
+        "Markdown UTI order or aliases drifted",
+    )
     require(record["CFBundleTypeRole"] == "Editor", "Markdown role drifted")
     require(record["LSHandlerRank"] == "Default", "Markdown handler rank drifted")
     require(
