@@ -150,11 +150,10 @@ struct DocumentFileMonitorTests {
         watcher.signal(.changed)
         await waitUntil { await prober.waiterCount == 1 }
         watcher.signal(.changed)
-        await waitUntil { await prober.waiterCount == 2 }
+        await waitUntil { await monitor.currentRequestGeneration() == 3 }
 
         await prober.resume(stale, at: 0)
-        await Task.yield()
-        await Task.yield()
+        await waitUntil { await prober.waiterCount == 2 }
         #expect(recorder.values == [.available(initial)])
 
         await prober.resume(latest, at: 1)
@@ -188,11 +187,10 @@ struct DocumentFileMonitorTests {
         watcher.signal(.changed)
         await waitUntil { await prober.waiterCount == 1 }
         watcher.signal(.changed)
-        await waitUntil { await prober.waiterCount == 2 }
+        await waitUntil { await monitor.currentRequestGeneration() == 3 }
 
         await prober.resume(.moved(stale), at: 0)
-        await Task.yield()
-        await Task.yield()
+        await waitUntil { await prober.waiterCount == 2 }
         #expect(contexts.count == 1)
         await prober.resume(.missing(fileURL), at: 1)
         await waitUntil { await prober.waiterCount == 3 }
