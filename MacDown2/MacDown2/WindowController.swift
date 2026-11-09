@@ -128,7 +128,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
         let window = DocumentWindow(contentViewController: hostingController)
         window.coordinator = coordinator
         Self.restoreFrame(of: window)
-        window.title = model.activeDocument?.fileURL?.lastPathComponent ?? "Untitled"
+        window.title = model.activeDocument?.fileURL?.lastPathComponent ?? String(localized: "Untitled")
         window.minSize = NSSize(width: 400, height: 300)
         window.tabbingMode = .preferred
 
@@ -228,7 +228,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
     func updateTitleAndEditedState() {
         let document = model.activeDocument
         previewResourceState.reconcile(with: document)
-        let baseTitle = document?.fileURL?.lastPathComponent ?? "Untitled"
+        let baseTitle = document?.fileURL?.lastPathComponent ?? String(localized: "Untitled")
         let isDirty = document?.state == .dirty || document?.state == .conflict
         let title = isDirty ? "● \(baseTitle)" : baseTitle
         let url = document?.fileURL

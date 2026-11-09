@@ -98,7 +98,9 @@ struct FileTreeRowView: View {
                     do {
                         guard let source = FileTreeInternalDrag.trustedURL(from: item, for: model) else {
                             if model.isCurrent(context) {
-                                model.recordOperationError(FileTreeOperationError.underlying("Untrusted folder move."))
+                                model.recordOperationError(FileTreeOperationError.underlying(
+                                    String(localized: "Untrusted folder move.")
+                                ))
                             }
                             continue
                         }

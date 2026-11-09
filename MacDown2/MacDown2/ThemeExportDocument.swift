@@ -37,6 +37,6 @@ struct ThemeExportDocument: SwiftUI.FileDocument {
             }
             result = next
         }
-        return result.isEmpty ? "Theme" : result
+        return result.isEmpty ? String(localized: "Theme") : result
     }
 }
