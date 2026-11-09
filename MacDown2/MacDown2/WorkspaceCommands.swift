@@ -243,8 +243,7 @@ struct WorkspaceCommands: Commands {
                         Button(
                             action: { themeController.select(theme) },
                             label: {
-                                // Theme names are proper nouns and are never translated.
-                                Text(verbatim: (active.id == theme.id ? "✓ " : "    ") + theme.name)
+                                Text(verbatim: ThemePickerDisplayName.menuName(for: theme, selectedID: active.id))
                             }
                         )
                     }
@@ -255,8 +254,7 @@ struct WorkspaceCommands: Commands {
                         Button(
                             action: { themeController.select(theme) },
                             label: {
-                                // Theme names are proper nouns and are never translated.
-                                Text(verbatim: (active.id == theme.id ? "✓ " : "    ") + theme.name)
+                                Text(verbatim: ThemePickerDisplayName.menuName(for: theme, selectedID: active.id))
                             }
                         )
                     }
