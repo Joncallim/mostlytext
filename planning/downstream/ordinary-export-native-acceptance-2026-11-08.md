@@ -1,5 +1,33 @@
 # Exercise ordinary Release HTML and PDF export through the real save panel
 
+## Requalification plan after the PDF fixes — 9 November 2026
+
+This branch has been replayed locally onto `main` at `ed43c2c2`; the original
+failed PR #147 source `734db2f2` and its complete first-run evidence remain
+immutable in history. The later paper-sized PDF canvas fix (PR #155) and the
+qualified placed-character oracle are now on main. They remove the two known
+reasons the original short-fixture PDF was rejected, but they do not prove that
+the ordinary Save panel journey passes. PR #146's Preview Copy change is a
+separate dependency for Preview, not for this export-only journey.
+
+This revised lane will build the current ordinary Release app without product
+changes and repeat Cancel, HTML Save and PDF Save on the guarded hosted macOS 26
+ARM runner. It will bind the complete current `MacDown2` source tree and all
+compiled inputs before launch, retaining the original first-run files and
+hashes. The PDF validator will read actual PDFKit per-character selections and
+geometry, then apply the already qualified fixed-canary placement policy:
+exact visible `NATIVE_EXPORT_CANARY` on one page, no blank second page, bounded
+size and source preservation. Raw PDFKit string concatenation is insufficient.
+The existing genuine harmless GUI control, exact PID/birth peer, save-panel
+journeys, output admission, normal Quit and post-run source/binary checks remain.
+
+Stop and keep this PR draft if the current app output fails any original or
+placed-character predicate, if source/build bindings drift, or if the GUI
+control cannot run. Do not reinterpret the 8 November failed first as a pass.
+Successful hosted qualification would establish this ordinary export lane only;
+installed, signed, accessibility, locale, whole parity and final RC acceptance
+remain separate issue #11 and release gates.
+
 ## Owner outcome and live source reconciliation
 
 Actual main5115e734 has the export safety implementation. Frozen Preview
