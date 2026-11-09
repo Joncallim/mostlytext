@@ -119,8 +119,10 @@ targets:
         - CFBundleTypeName: Markdown Document
           CFBundleTypeRole: Editor
           LSHandlerRank: Default
+          CFBundleTypeIconFile: MarkdownDocument
           LSItemContentTypes:
           - net.daringfireball.markdown
+          - app.mostlytext.markdown-alias
           CFBundleTypeExtensions:
           - md
           - markdown
@@ -192,6 +194,15 @@ targets:
           - tex
           - latex
         UTExportedTypeDeclarations:
+        - UTTypeIdentifier: app.mostlytext.markdown-alias
+          UTTypeDescription: Markdown Document
+          UTTypeConformsTo:
+          - net.daringfireball.markdown
+          UTTypeTagSpecification:
+            public.filename-extension:
+            - mdown
+            - mkd
+            - mkdn
         - UTTypeIdentifier: app.mostlytext.theme
           UTTypeDescription: MostlyText Theme
           UTTypeConformsTo:

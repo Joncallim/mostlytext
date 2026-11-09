@@ -37,9 +37,9 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-argument-parser", exact: "1.8.2"),
         .package(
             url: "https://github.com/Joncallim/SwiftTreeSitter",
-            revision: "76f93e7e325dcd05561a13ed63bcc92cb85be8da"
+            revision: "7cf83c59f1d7b6fdbd6ae3b0e212c9824fbf103d"
         ),
-        .package(url: "https://github.com/Joncallim/Neon", revision: "6074d1a50c7076b2e59d8d0619554b542e096afa"),
+        .package(url: "https://github.com/Joncallim/Neon", revision: "f702323168da9c6f0fb8120b844e81fd025f2124"),
         .package(url: "https://github.com/tree-sitter/tree-sitter-json", from: "0.24.8"),
         .package(url: "https://github.com/tree-sitter/tree-sitter-html", from: "0.23.2"),
         // EPIC-11 Gate 5 grammars. Every grammar is pinned exactly; see
@@ -226,7 +226,7 @@ let package = Package(
         .testTarget(
             name: "ExportServiceTests",
             dependencies: [
-                "ExportService", "MarkdownEngine", "LocalResourceAccess", "Contributions",
+                "ExportService", "MarkdownEngine", "LocalResourceAccess", "Contributions", "Preview",
                 .product(name: "SwiftSoup", package: "SwiftSoup"),
             ]
         ),
@@ -250,7 +250,7 @@ let package = Package(
         .testTarget(
             name: "ExportDiagramIntegrationTests",
             dependencies: [
-                "ExportService", "Contributions", "MarkdownEngine", "Themes", "Diagrams", "DiagramRendering",
+                "ExportService", "Contributions", "MarkdownEngine", "Preview", "Themes", "Diagrams", "DiagramRendering",
                 "DiagramsD2", "D2Rendering", "DiagramsGraphviz", "GraphvizRendering",
             ]
         ),

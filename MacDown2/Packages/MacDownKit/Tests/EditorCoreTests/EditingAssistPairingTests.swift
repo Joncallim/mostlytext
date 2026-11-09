@@ -237,9 +237,7 @@ struct EditingAssistMarkdownDelimiterTests {
         #expect(atStartResult?.selection == NSRange(location: 1, length: 0))
 
         let endOfLine = support.type("_", in: "foo", at: 3)
-        let endResult = support.applied(endOfLine, to: "foo")
-        #expect(endResult?.text == "foo__")
-        #expect(endResult?.selection == NSRange(location: 4, length: 0))
+        #expect(endOfLine == .passthrough)
 
         // Intra-word underscore never auto-pairs.
         let inWord = support.type("_", in: "foobar", at: 3)

@@ -34,6 +34,11 @@ public actor DocumentFileMonitor {
     /// actually installed so the later event cannot cancel parent recovery.
     private var parentRecoveryPending = false
     private var debounceTask: Task<Void, Never>?
+    /// A slow snapshot can outlive its debounce. Keep watcher-driven disk
+    /// probes serial and remember only the latest signal whose debounce has
+    /// completed while one is running.
+    var activeSignalProbe: (generation: UInt, sequence: UInt)?
+    var readySignalProbeSequence: UInt?
     private var callback: (@Sendable (DocumentFileObservation) -> Void)?
     private var contextCallback: (@Sendable (DocumentFileObservationContext) -> Void)?
     private var healthCallback: (@Sendable (DocumentFileMonitorHealth) -> Void)?
@@ -74,6 +79,8 @@ public actor DocumentFileMonitor {
         let currentGeneration = generation
         let initialSequence = probeSequence
         cancelPending()
+        activeSignalProbe = nil
+        readySignalProbeSequence = nil
         handle?.cancel()
         fileHandle?.cancel()
         handle = nil
@@ -87,10 +94,9 @@ public actor DocumentFileMonitor {
         callback = onObservation
         contextCallback = onContext
         healthCallback = onHealthChange
-        handle = try watcher.watch(standardized.deletingLastPathComponent()) { [weak self] signal in
-            Task { await self?.received(signal, generation: currentGeneration) }
-        }
-        fileHandle = try watchFileIfAvailable(standardized, generation: currentGeneration)
+        let installed = try makeWatchHandles(for: standardized, generation: currentGeneration)
+        handle = installed.parent
+        fileHandle = installed.file
         watcherHealthy = true
         healthCallback?(.healthy)
         let initial = await trackedObserve(
@@ -120,18 +126,15 @@ public actor DocumentFileMonitor {
         probeSequence &+= 1
         let currentGeneration = generation
         let sequence = probeSequence
-        let replacement = try watcher.watch(boundURL.deletingLastPathComponent()) { [weak self] signal in
-            Task { await self?.received(signal, generation: currentGeneration) }
-        }
-        let replacementFile = try watchFileIfAvailable(boundURL, generation: currentGeneration)
+        let replacement = try makeWatchHandles(for: boundURL, generation: currentGeneration)
         guard isCurrent(generation: currentGeneration, sequence: sequence) else {
             replacement.cancel()
             return
         }
         handle?.cancel()
         fileHandle?.cancel()
-        handle = replacement
-        fileHandle = replacementFile
+        handle = replacement.parent
+        fileHandle = replacement.file
         watcherHealthy = true
         healthCallback?(.healthy)
         let initial = await trackedObserve(
@@ -149,6 +152,8 @@ public actor DocumentFileMonitor {
         generation &+= 1
         probeSequence &+= 1
         cancelPending()
+        activeSignalProbe = nil
+        readySignalProbeSequence = nil
         handle?.cancel()
         fileHandle?.cancel()
         handle = nil
@@ -169,19 +174,20 @@ public actor DocumentFileMonitor {
         }
         probeSequence &+= 1
         let currentSequence = probeSequence
+        readySignalProbeSequence = nil
         debounceTask?.cancel()
         debounceTask = Task { [weak self] in
             guard let self else { return }
             await sleeper(debounce)
             guard !Task.isCancelled else { return }
-            await probeAfterSignal(
+            await startOrQueueSignalProbe(
                 generation: generation,
                 sequence: currentSequence
             )
         }
     }
 
-    private func probeAfterSignal(
+    func probeAfterSignal(
         generation: UInt,
         sequence: UInt
     ) async {
@@ -249,19 +255,15 @@ public actor DocumentFileMonitor {
             }
             guard isCurrent(generation: generation, sequence: sequence) else { return }
             do {
-                let replacement = try watcher.watch(boundURL.deletingLastPathComponent()) { [weak self] signal in
-                    Task { await self?.received(signal, generation: generation) }
-                }
-                let replacementFile = try watchFileIfAvailable(boundURL, generation: generation)
+                let replacement = try makeWatchHandles(for: boundURL, generation: generation)
                 guard isCurrent(generation: generation, sequence: sequence) else {
                     replacement.cancel()
-                    replacementFile?.cancel()
                     return
                 }
                 handle?.cancel()
                 fileHandle?.cancel()
-                handle = replacement
-                fileHandle = replacementFile
+                handle = replacement.parent
+                fileHandle = replacement.file
                 watcherHealthy = true
                 parentRecoveryPending = false
                 healthCallback?(.healthy)

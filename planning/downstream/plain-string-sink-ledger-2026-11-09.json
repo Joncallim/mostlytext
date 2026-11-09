@@ -1,0 +1,516 @@
+{
+  "schema": 1,
+  "scope": "selected_plain_string_sinks",
+  "base_source_commit": "892241384112a05d397a8ce292f0467e02d3ebab plus reviewed PR164 delta",
+  "limitations": [
+    "Selected AppKit property/button/accessibility, name fallback, folder and workspace-replace error sites only; this is not the complete E16 literal census.",
+    "Computed string flows, SwiftUI implicit keys, Info.plist/project.yml OS labels, built-in snippet and format names require separate policy and native audit.",
+    "Catalog and translation quality, language overrides, accessibility layout, and final string freeze require independent evidence."
+  ],
+  "production_swift_inputs_scanned": 742,
+  "source_sha256": {
+    "MacDown2/MacDown2/ExportCoordinator.swift": "1e27397ba5c1ff43ea10760c692799a0b40d95022c83240abace4c1adba4160c",
+    "MacDown2/MacDown2/FirstRunWindowController.swift": "b8737772a8974cab6944c2b6c63bd711d35b24d47d99f4179b14085b1ebf4dbf",
+    "MacDown2/MacDown2/LegacyImportWindowController.swift": "d39f33bf027f93975ee61088ae362951ff651f32b35f7f99612a10c31763fc9f",
+    "MacDown2/MacDown2/NSFilePanelProvider.swift": "cd64fa8f7adbbcb3a469260334157759625d0252dc5557d517c4db324f0b3927",
+    "MacDown2/MacDown2/SidebarFileTreeSupport.swift": "b1d6597390fe685a5aedd24a3ba2591213013f2619ea77ef2083bf9787931483",
+    "MacDown2/MacDown2/SidebarView+Folder.swift": "fab5b6f7e5726577a1eb06ffdcd990ae4e3426e1cb641581b3791e4454113746",
+    "MacDown2/MacDown2/TextFilterCommands.swift": "96f125183edbb097e7c97008088590c4c2f20f883a2755e58cb60cba0eb57991",
+    "MacDown2/MacDown2/TextFilterCoordinator.swift": "c5de2d59e224e101231a3d02ff0b42790fcabb4b12514c372b2a15a693d6edff",
+    "MacDown2/MacDown2/ThemeExportDocument.swift": "6384ff057496e0c505f04c70bbb5ef77d4bdada0ede2ebd4e7ab9afecec553c4",
+    "MacDown2/MacDown2/ValidatedExportPanel.swift": "80a277a6cd22ba769f20ca731686dff72fc198150c49c522f0c115344853526a",
+    "MacDown2/MacDown2/WindowController+Close.swift": "0af2d94c527de29dc79b6ef109fcd01fbd897322b7edd269dffa40e74dfbc825",
+    "MacDown2/MacDown2/WindowController+Encoding.swift": "4f954c30a1bd0607c6c0bc8b3a33601efbaf1a7c5118ad592c6b0ffe26d04884",
+    "MacDown2/MacDown2/WindowController.swift": "2139b9097c04b8244e16b4c5f4b6aebaca76692b497187dbb24efe452d0c901c",
+    "MacDown2/MacDown2/WindowCoordinator+FileTree.swift": "43cd00390500553d1634d52e18c32decc95759d89492f929a21cd1f0cc18ea1a",
+    "MacDown2/MacDown2/WindowCoordinator+OpenFailure.swift": "d499c04d606c79f3ae844b211da4cb585bdfabf6de1d8a0f661381a7d0fb3242",
+    "MacDown2/MacDown2/WindowCoordinator+OpenWithEncoding.swift": "032de76f1322ca9c960d8376e063ed54ed20e3064d3015f4865af445ee3e1331",
+    "MacDown2/MacDown2/WindowCoordinator+ValidatedExport.swift": "e486575e272df847e56eddf87dd0f5213eef608dba8552517505c1a791fc1539",
+    "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorGutterView.swift": "a17ffee42e46223a9bcf3b28e62789146c5ccae985ee4da22f82ec87e4204193",
+    "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceReplaceEngine.swift": "b59ce2b2bb85e221ef9e74b2282758191c290d88e8fc34f896e0683ac3c2bec8",
+    "MacDown2/Packages/MacDownKit/Sources/Workspace/WorkspaceModel+Saving.swift": "3f56d568356d2df4c8e076049ebbb8737a9c0cab3eaf171d6a2efe53e459f02f"
+  },
+  "sites": [
+    {
+      "path": "MacDown2/MacDown2/ExportCoordinator.swift",
+      "line": 101,
+      "kind": "filename_fallback",
+      "literal": "\"Untitled\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/ExportCoordinator.swift",
+      "line": 159,
+      "kind": "appkit_property",
+      "literal": "\"Export\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/ExportCoordinator.swift",
+      "line": 160,
+      "kind": "appkit_property",
+      "literal": "\"Choose where to export this document.\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/ExportCoordinator.swift",
+      "line": 291,
+      "kind": "appkit_property",
+      "literal": "\"Export Failed\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/FirstRunWindowController.swift",
+      "line": 28,
+      "kind": "appkit_property",
+      "literal": "\"Welcome to MostlyText\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/LegacyImportWindowController.swift",
+      "line": 12,
+      "kind": "appkit_property",
+      "literal": "\"MostlyText Migration\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/NSFilePanelProvider.swift",
+      "line": 178,
+      "kind": "appkit_property",
+      "literal": "\"Open Folder\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/SidebarFileTreeSupport.swift",
+      "line": 101,
+      "kind": "folder_error",
+      "literal": "\"Untrusted folder move.\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/SidebarFileTreeSupport.swift",
+      "line": 216,
+      "kind": "appkit_property",
+      "literal": "\"Move \\\"\\(row.entry.name)\\\" to Trash?\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/SidebarFileTreeSupport.swift",
+      "line": 217,
+      "kind": "appkit_property",
+      "literal": "\"You can recover it from the Trash in Finder.\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/SidebarFileTreeSupport.swift",
+      "line": 219,
+      "kind": "appkit_button",
+      "literal": "\"Move to Trash\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/SidebarFileTreeSupport.swift",
+      "line": 220,
+      "kind": "appkit_button",
+      "literal": "\"Cancel\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/SidebarView+Folder.swift",
+      "line": 142,
+      "kind": "folder_error",
+      "literal": "\"Untrusted folder move.\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/TextFilterCommands.swift",
+      "line": 77,
+      "kind": "appkit_property",
+      "literal": "\"Check that MostlyText can write to the Commands folder, then try again.\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/TextFilterCommands.swift",
+      "line": 83,
+      "kind": "appkit_property",
+      "literal": "\"They're now listed in the Commands menu.\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/TextFilterCommands.swift",
+      "line": 86,
+      "kind": "appkit_property",
+      "literal": "\"Example Scripts Already Installed\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/TextFilterCommands.swift",
+      "line": 87,
+      "kind": "appkit_property",
+      "literal": "\"Nothing new to add — see \\\"Show Commands Folder\\\" for what's there.\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/TextFilterCoordinator.swift",
+      "line": 176,
+      "kind": "appkit_property",
+      "literal": "\"\\\"\\(commandName)\\\" Failed\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/ThemeExportDocument.swift",
+      "line": 40,
+      "kind": "theme_export_name",
+      "literal": "\"Theme\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/ValidatedExportPanel.swift",
+      "line": 17,
+      "kind": "appkit_property",
+      "literal": "\"Export\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/ValidatedExportPanel.swift",
+      "line": 18,
+      "kind": "appkit_property",
+      "literal": "\"Choose where to export this document.\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowController+Close.swift",
+      "line": 62,
+      "kind": "appkit_property",
+      "literal": "\"Unsaved Changes\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowController+Close.swift",
+      "line": 63,
+      "kind": "appkit_property",
+      "literal": "\"\"\"\n            Save changes to \"\\(fileName)\"? If the original file is unavailable, \\\n            you may be asked to choose a location.\n            \"\"\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowController+Close.swift",
+      "line": 69,
+      "kind": "appkit_button",
+      "literal": "\"Save Changes\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowController+Close.swift",
+      "line": 70,
+      "kind": "appkit_button",
+      "literal": "\"Cancel\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowController+Close.swift",
+      "line": 71,
+      "kind": "appkit_button",
+      "literal": "\"Discard Changes\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowController+Close.swift",
+      "line": 121,
+      "kind": "appkit_property",
+      "literal": "\"External File Change\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowController+Close.swift",
+      "line": 122,
+      "kind": "appkit_property",
+      "literal": "\"The file changed on disk while this window has local edits. Choose which version to close.\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowController+Close.swift",
+      "line": 126,
+      "kind": "appkit_button",
+      "literal": "\"Keep My Changes and Save\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowController+Close.swift",
+      "line": 127,
+      "kind": "appkit_button",
+      "literal": "\"Use Disk Version and Close\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowController+Close.swift",
+      "line": 128,
+      "kind": "appkit_button",
+      "literal": "\"Cancel\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowController+Encoding.swift",
+      "line": 39,
+      "kind": "appkit_property",
+      "literal": "\"Discard Unsaved Changes?\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowController+Encoding.swift",
+      "line": 40,
+      "kind": "appkit_property",
+      "literal": "\"\"\"\n            Reopening \\\"\\(name)\\\" as \\(FileEncodingMetadata(encoding: encoding, bom: .none).displayName) \\\n            replaces the text in the editor with the file on disk. Your unsaved changes and undo history \\\n            will be lost.\n            \"\"\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowController+Encoding.swift",
+      "line": 47,
+      "kind": "appkit_button",
+      "literal": "\"Reopen and Discard Changes\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowController+Encoding.swift",
+      "line": 48,
+      "kind": "appkit_button",
+      "literal": "\"Cancel\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowController+Encoding.swift",
+      "line": 60,
+      "kind": "appkit_property",
+      "literal": "\"Can't Reopen with This Encoding\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowController+Encoding.swift",
+      "line": 61,
+      "kind": "appkit_property",
+      "literal": "\"\"\"\n            The file is not valid \\(FileEncodingMetadata(encoding: encoding, bom: .none).displayName) text. \\\n            Nothing was changed; choose another encoding.\n            \"\"\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowController+Encoding.swift",
+      "line": 67,
+      "kind": "appkit_button",
+      "literal": "\"OK\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowController.swift",
+      "line": 131,
+      "kind": "appkit_property",
+      "literal": "\"Untitled\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowController.swift",
+      "line": 231,
+      "kind": "filename_fallback",
+      "literal": "\"Untitled\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
+      "line": 82,
+      "kind": "appkit_property",
+      "literal": "\"Move \\\"\\(selected.lastPathComponent)\\\" to Trash?\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
+      "line": 83,
+      "kind": "appkit_property",
+      "literal": "\"You can recover it from the Trash in Finder.\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
+      "line": 85,
+      "kind": "appkit_button",
+      "literal": "\"Move to Trash\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
+      "line": 86,
+      "kind": "appkit_button",
+      "literal": "\"Cancel\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
+      "line": 232,
+      "kind": "appkit_property",
+      "literal": "\"File Is Outside the Open Folder\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
+      "line": 233,
+      "kind": "appkit_property",
+      "literal": "\"Open its parent folder to reveal it in the sidebar?\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
+      "line": 235,
+      "kind": "appkit_button",
+      "literal": "\"Open Parent Folder\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
+      "line": 236,
+      "kind": "appkit_button",
+      "literal": "\"Cancel\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
+      "line": 291,
+      "kind": "appkit_property",
+      "literal": "\"File Moved to Trash\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
+      "line": 292,
+      "kind": "appkit_property",
+      "literal": "\"This document has unsaved changes.\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
+      "line": 293,
+      "kind": "appkit_button",
+      "literal": "\"Save As…\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
+      "line": 294,
+      "kind": "appkit_button",
+      "literal": "\"Close Without Saving\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
+      "line": 295,
+      "kind": "appkit_button",
+      "literal": "\"Keep Open\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+OpenFailure.swift",
+      "line": 38,
+      "kind": "appkit_property",
+      "literal": "\"Couldn't Open \\\"\\(url.lastPathComponent)\\\"\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+OpenFailure.swift",
+      "line": 44,
+      "kind": "appkit_button",
+      "literal": "\"OK\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+OpenFailure.swift",
+      "line": 46,
+      "kind": "appkit_button",
+      "literal": "\"Open With Encoding…\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+OpenWithEncoding.swift",
+      "line": 30,
+      "kind": "appkit_property",
+      "literal": "\"Open \\\"\\(url.lastPathComponent)\\\" With Encoding\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+OpenWithEncoding.swift",
+      "line": 31,
+      "kind": "appkit_property",
+      "literal": "\"\"\"\n            Choose how the file's bytes should be read. Nothing is replaced: if the file does not fit \\\n            the encoding it will not open, and the file is never changed by opening it.\n            \"\"\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+OpenWithEncoding.swift",
+      "line": 38,
+      "kind": "appkit_button",
+      "literal": "\"Open\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+OpenWithEncoding.swift",
+      "line": 39,
+      "kind": "appkit_button",
+      "literal": "\"Cancel\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+ValidatedExport.swift",
+      "line": 27,
+      "kind": "filename_fallback",
+      "literal": "\"Untitled\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorGutterView.swift",
+      "line": 30,
+      "kind": "appkit_accessibility",
+      "literal": "\"Line numbers\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceReplaceEngine.swift",
+      "line": 166,
+      "kind": "replace_error",
+      "literal": "\"An external change could not be restored; its bytes were kept at \\(recovery.path)\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceReplaceEngine.swift",
+      "line": 201,
+      "kind": "replace_error",
+      "literal": "\"Invalid path\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Workspace/WorkspaceModel+Saving.swift",
+      "line": 217,
+      "kind": "workspace_save_name",
+      "literal": "\"Untitled\"",
+      "route": "localized"
+    }
+  ],
+  "deferred_review": [
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Snippets/Snippet.swift",
+      "sha256": "10f165e00534520e76a6dd183e5d7ced462128f705fd6c30d7fb4c63e7f1c240",
+      "status": "open",
+      "reason": "Built-in snippet display names are passed verbatim to the picker; decide whether names are stable identifiers or translated UI."
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileFormat.swift",
+      "sha256": "6227fd24519356a13545a591cc70dd2c5122cbb2c15b13168ac1454a5fd9dfcc",
+      "status": "open",
+      "reason": "Format names appear in Settings and status; verify the technical-label literal policy for every name."
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/Themes/BundledThemes.swift",
+      "sha256": "d3ad6cbf3a3a41b3892d13054a5d2beca498263f6c64cbfbdba6cc4c2dc1f464",
+      "status": "open",
+      "reason": "Bundled theme names appear in the picker; confirm approved proper-name treatment."
+    },
+    {
+      "path": "MacDown2/project.yml",
+      "sha256": "438f8358b1e5781892bb8121d7197457d22e25cd68ab4fc98b7c793980a800fe",
+      "status": "open",
+      "reason": "CFBundleTypeName and UTTypeDescription now have reviewed source-English InfoPlist.strings routes; translation review, exact app packaging and native Finder presentation remain open."
+    }
+  ]
+}

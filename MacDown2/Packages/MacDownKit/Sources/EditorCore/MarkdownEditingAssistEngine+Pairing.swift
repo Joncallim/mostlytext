@@ -157,6 +157,15 @@ extension MarkdownEditingAssistEngine {
     ) -> EditingAssistOutcome {
         let nextIsBoundary = next.map(isBoundary) ?? true
         let repeatsPrevious = previous.map { Character($0) == character } ?? false
+        // A delimiter typed immediately after a word at the physical end of
+        // a line may be closing existing emphasis. Pairing it would turn
+        // `*word*` into `*word**` (or the underscore equivalent). Keep the
+        // ordinary boundary and selection-wrapping rules below unchanged.
+        let followsWord = previous.map { !isBoundary($0) } ?? false
+        let endsLine = next == nil || next == "\r" || next == "\n"
+        if character == "*" || character == "_", followsWord, endsLine {
+            return .passthrough
+        }
         switch character {
         case "*":
             // At the first non-whitespace position of a line, do not auto-pair

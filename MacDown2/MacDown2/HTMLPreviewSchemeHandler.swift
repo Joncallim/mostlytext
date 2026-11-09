@@ -1,4 +1,5 @@
 import FileCore
+import LocalResourceAccess
 import Preview
 import WebKit
 
@@ -8,8 +9,8 @@ import WebKit
 ///
 /// The main document and every subresource (relative image/style/font/media
 /// and intra-preview navigations) arrive here. The main document is served
-/// from the saved source; subresources still use the legacy path check and
-/// separate file reopen. That is not atomic filesystem containment. Every response
+/// from the saved source; subresources are read beneath a descriptor pinned for
+/// that saved load. Every response
 /// carries the CSP header (`HTMLPreviewResponseHeaders`), which governs any
 /// document the payload renders as and cannot be diverted by markup;
 /// `text/html` payloads are additionally re-hardened with the meta CSP
@@ -18,8 +19,7 @@ import WebKit
 /// Reads remain synchronous, but delivery callbacks can reenter stop or
 /// request replacement. Each admitted attempt therefore owns a revocable
 /// delivery token. A load also gets a unique URL authority: a delayed task
-/// cannot start against a later request's resource root. This does not close
-/// the separate validation-to-open race for local resources.
+/// cannot start against a later request's resource root.
 @MainActor
 final class PreviewSchemeHandler: NSObject, WKURLSchemeHandler {
     private struct Load {
@@ -29,6 +29,7 @@ final class PreviewSchemeHandler: NSObject, WKURLSchemeHandler {
         let generation: UInt
         let authority: String
         let mainURL: URL
+        let resourceRoot: DirectoryLease?
     }
 
     private struct DeliveryAttempt {
@@ -40,6 +41,10 @@ final class PreviewSchemeHandler: NSObject, WKURLSchemeHandler {
     private var attempts: [ObjectIdentifier: DeliveryAttempt] = [:]
 
     private var load: Load?
+
+    /// Test barrier after URL parsing but before the descriptor-based read.
+    /// Production leaves this nil.
+    var beforeResourceRead: (() -> Void)?
 
     var request: HTMLPreviewRequest? {
         load?.request
@@ -62,19 +67,26 @@ final class PreviewSchemeHandler: NSObject, WKURLSchemeHandler {
         guard let mainURL = URL(string: "\(HTMLPreviewNavigationPolicy.previewURLScheme)://\(authority)/")
         else { return nil }
         attempts.removeAll()
+        load?.resourceRoot?.close()
+        // Pin this saved revision's directory before a later scheme task can
+        // observe a replaced pathname. Main HTML still renders if its root is
+        // unavailable; subresources then fail closed.
+        let resourceRoot = request.baseURL.flatMap { try? DirectoryLease(opening: $0) }
         load = Load(
             request: request,
             documentID: documentID,
             recoveryEpoch: recoveryEpoch,
             generation: generation,
             authority: authority,
-            mainURL: mainURL
+            mainURL: mainURL,
+            resourceRoot: resourceRoot
         )
         return mainURL
     }
 
     func retire() {
         attempts.removeAll()
+        load?.resourceRoot?.close()
         load = nil
     }
 
@@ -102,7 +114,8 @@ final class PreviewSchemeHandler: NSObject, WKURLSchemeHandler {
             serveMainDocument(request: load.request, url: url, task: task, attempt: attempt)
             return
         }
-        serveSubresource(request: load.request, url: url, task: task, attempt: attempt)
+        serveSubresource(request: load.request, root: load.resourceRoot,
+                         url: url, task: task, attempt: attempt)
     }
 
     func webView(_ webView: WKWebView, stop task: WKURLSchemeTask) {
@@ -149,30 +162,40 @@ final class PreviewSchemeHandler: NSObject, WKURLSchemeHandler {
 
     private func serveSubresource(
         request: HTMLPreviewRequest,
+        root: DirectoryLease?,
         url: URL,
         task: WKURLSchemeTask,
         attempt: DeliveryAttempt
     ) {
-        guard let rootURL = request.baseURL else {
+        guard let root else {
             // Untitled documents have no approved resource root.
             fail(task, attempt: attempt)
             return
         }
-        guard let approved = approvedResourceURL(for: url, rootURL: rootURL),
-              let data = try? Data(contentsOf: approved)
+        // Parse the encoded path exactly once. The reader's canonical hint
+        // chooses an in-root target; only its openat flags authorize bytes.
+        guard let path = URLComponents(url: url, resolvingAgainstBaseURL: false)?.percentEncodedPath,
+              let reference = try? ResourceReference.parse(path)
         else {
             fail(task, attempt: attempt)
             return
         }
+        beforeResourceRead?()
+        // Preserve this active handler's existing size behavior. A separate
+        // issue #13 slice must set and measure an explicit resource budget.
+        guard let snapshot = try? ContainedResourceReader.read(reference, in: root, maxBytes: Int.max)
+        else { fail(task, attempt: attempt); return }
+        let data = snapshot.bytes
 
         // Re-harden HTML payloads with the meta CSP; everything else — images,
         // fonts, media — is served raw. Either way the response carries the
         // CSP header, so payloads the meta injection cannot harden (non-UTF-8
         // HTML, SVG, XML) are still governed by the authoritative header.
-        let mimeType = HTMLPreviewContentType.forFileExtension(approved.pathExtension)
+        let fileExtension = (snapshot.name as NSString).pathExtension
+        let mimeType = HTMLPreviewContentType.forFileExtension(fileExtension)
         var contentType = mimeType
         let responseData: Data
-        if HTMLPreviewContentType.isHTML(approved.pathExtension) {
+        if HTMLPreviewContentType.isHTML(fileExtension) {
             // The failable initializer is deliberate: a payload that is not
             // valid UTF-8 cannot be meta-hardened, so it is served raw and
             // the browser applies its own encoding detection — the CSP
@@ -219,20 +242,6 @@ final class PreviewSchemeHandler: NSObject, WKURLSchemeHandler {
         // Terminalize before calling out: a callback may admit another attempt.
         guard consume(attempt) else { return }
         task.didFinish()
-    }
-
-    /// Maps a `macdown-preview://<load-authority>/<relative-path>` URL onto the
-    /// approved document directory, decoding path components and rejecting
-    /// anything outside it.
-    private func approvedResourceURL(for url: URL, rootURL: URL) -> URL? {
-        let relativePath = url.path
-        guard !relativePath.isEmpty, relativePath != "/" else { return nil }
-
-        var candidate = rootURL
-        for component in relativePath.dropFirst().split(separator: "/") where !component.isEmpty {
-            candidate = candidate.appendingPathComponent(String(component))
-        }
-        return HTMLPreviewResourceScope.approvedFileURL(for: candidate, relativeTo: rootURL)
     }
 }
 

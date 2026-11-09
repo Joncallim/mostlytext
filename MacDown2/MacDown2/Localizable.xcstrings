@@ -1524,6 +1524,35 @@
       "comment": "Explanation in the document-specific Preview folder-selection panel.",
       "extractionState": "manual"
     },
+    "Choose where to export this document.": {
+      "comment": "Export save-panel guidance. English review drafts in other locales require translation and native layout review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose where to export this document."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Choose where to export this document."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Choose where to export this document."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Choose where to export this document."
+          }
+        }
+      }
+    },
     "Choose which original MacDown preferences to import. Your original preferences remain unchanged.": {
       "extractionState": "manual",
       "localizations": {
@@ -4093,6 +4122,64 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Heading %lld"
+          }
+        }
+      }
+    },
+    "High Contrast Dark": {
+      "comment": "Built-in high-contrast theme picker label. Translation draft; native language review remains required. The theme JSON name is unchanged.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "High Contrast Dark"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Contraste élevé (sombre)"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "高コントラスト（ダーク）"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Wysoki kontrast (ciemny)"
+          }
+        }
+      }
+    },
+    "High Contrast Light": {
+      "comment": "Built-in high-contrast theme picker label. Translation draft; native language review remains required. The theme JSON name is unchanged.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "High Contrast Light"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Contraste élevé (clair)"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "高コントラスト（ライト）"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Wysoki kontrast (jasny)"
           }
         }
       }
@@ -11070,6 +11157,35 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Untitled section"
+          }
+        }
+      }
+    },
+    "Untrusted folder move.": {
+      "comment": "Folder drag refusal. English review drafts in other locales require translation and native layout review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Untrusted folder move."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Untrusted folder move."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Untrusted folder move."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Untrusted folder move."
           }
         }
       }

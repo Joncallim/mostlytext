@@ -156,11 +156,13 @@ def qualify(root, output, configuration, baseline):
             if message not in log:
                 raise SystemExit("Baseline failed for a different reason: " + message)
     else:
-        if result.returncode != 0 or not re.search(r"Test run with 1087 tests in 145 suites passed", log):
+        if result.returncode != 0 or not re.search(r"Test run with 1091 tests in 149 suites passed", log):
             if configuration == "release" and "Suite HighlightPerformanceTests failed" in log:
                 diagnose_performance_failure(root, output, binary, owned, environment)
             raise SystemExit("All selected real editor/highlighter/theme tests must execute and pass")
-        for name in ["anAppliedThemePaintsAndRemovesTheCurrentLineInTheRealScrolledEditor",
+        for name in ["preEditPlainParagraphWindowRefusesStructuralEdits",
+                     "oracleRootWindowsAndInlineCapturesAfterEdits",
+                     "anAppliedThemePaintsAndRemovesTheCurrentLineInTheRealScrolledEditor",
                      "aShapeIdentifiesThePrimaryLineEvenWhenTheEditorFontIsAlreadyBold",
                      "currentLineDrawingKeepsTenMiBViewportWorkBounded",
                      "liveChromeUsesTheSingleResolvedPaletteWithoutEditingSource",
@@ -170,6 +172,12 @@ def qualify(root, output, configuration, baseline):
                      "denseInlineEditsKeepFreshCapturesAndPreviouslyRetainedSnapshots"]:
             if not re.search(r"Test " + name + r"\(\) passed", log):
                 raise SystemExit("Required native control did not pass: " + name)
+        if 'Test "closing emphasis after a word at line end does not insert an extra delimiter" passed' not in log:
+            raise SystemExit("Required line-end delimiter control did not pass")
+        if not re.search(
+            r"Test performanceCorpusReachesItsRequestedUTF8Size\(_:\) with 2 test cases passed", log
+        ):
+            raise SystemExit("Both full-size performance fixture controls must pass")
         if "CURRENT-LINE-PHASE" not in log:
             raise SystemExit("Real viewport draw measurement did not execute")
         if "HIGHLIGHT_PHASE sourceUTF8=1000008 setup=" not in log:

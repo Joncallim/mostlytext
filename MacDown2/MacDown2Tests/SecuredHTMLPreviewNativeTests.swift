@@ -21,6 +21,7 @@ struct SecuredHTMLPreviewNativeTests {
         let window = NSWindow(
             contentRect: host.bounds, styleMask: [.titled], backing: .buffered, defer: false
         )
+        window.animationBehavior = .none
         window.contentView = host
         window.makeKeyAndOrderFront(nil)
         defer {

@@ -33,12 +33,10 @@ struct EditingAssistFencedRegionTests {
 
     @Test("typing * in ordinary prose (outside any fence) still symmetric-pairs as before")
     func asteriskInProseStillSymmetricPairs() {
-        let text = "prose\n```swift\ncode\n```\nmore prose" as NSString
-        // The very end of the string: NOT the line's own first
-        // non-whitespace position (`symmetricDelimiterOutcome` already
-        // declines to pair a single "*" there, unrelated to this slice's
-        // own fence-gating logic), and the next character is nil (a
-        // boundary), which "*" pairing also requires.
+        let text = "prose\n```swift\ncode\n```\nmore prose " as NSString
+        // At the end after whitespace, this is an opening delimiter in
+        // ordinary prose. A delimiter immediately after a word at line end
+        // is covered separately as a possible emphasis closer.
         let caret = text.length
 
         let outcome = MarkdownEditingAssistEngine.outcome(

@@ -29,6 +29,7 @@ D-027–D-031 remain authoritative; no new geometry or legal clearance is implie
 | Theme file type | app.mostlytext.theme | project.yml and ThemeExportDocument; conforms to public.json |
 | Theme extension | .mostlytext-theme | Only its own extension is claimed; generic JSON is not owned |
 | App icon source/stem | MacDown2/MacDown2/AppIcon.icon; AppIcon | Frozen D-028 document adjacent to Assets.xcassets; source integrated |
+| Markdown document icon source/stem | MacDown2/MacDown2/MarkdownDocument.icns; MarkdownDocument | Owner-approved Slant-on-sheet composition and Markdown-only `CFBundleTypeIconFile` integrated in PR166; installed Finder/Open With presentation remains #7 |
 | Internal app filename/executable | MacDown2.app / MacDown2 | Current build/release/CLI/test consumers depend on these paths; #4 owns coordinated packaging transition |
 | Internal project/package paths | MacDown2 / MacDownKit | Build/module names, not public product branding |
 
@@ -38,17 +39,14 @@ import/export panels, Finder, VoiceOver or installed-state acceptance.
 
 ## Reserved integration conventions
 
-These are handoff names, not claims that a target or resource already exists.
-They use the owner-frozen app.mostlytext. prefix and preserve the app identifier.
+These are future handoff names, not claims that a target or deployed feed already
+exists. They use the owner-frozen app.mostlytext. prefix and preserve the app
+identifier. The implemented Markdown document icon is recorded above.
 
 - Quick Look extension bundle identifier: app.mostlytext.MostlyText.QuickLook.
   It derives from the containing app ID. #7 must add and validate the actual
   extension, supported Markdown types, signing and native invocation. The current
   project has no Quick Look target; do not mark that implementation complete.
-- Markdown document icon resource stem: MarkdownDocument. #7 owns the artwork,
-  CFBundleTypeIconFile wiring and actual Finder/Open With presentation. Retain
-  net.daringfireball.markdown as the existing standard Markdown content type;
-  do not create a competing proprietary Markdown type for branding.
 - Future public types/extensions follow the app.mostlytext. prefix. The current
   custom-theme type/extension above are implemented and need no further naming
   decision. No generic JSON, TOML or source-code ownership is added here.
@@ -81,12 +79,19 @@ profile/state preservation; no data acceptance follows from a documentation edit
 ## Artwork and acceptance
 
 Use the [brand asset registry](../design/brand/README.md), the frozen Slant mark,
-outlined Inter Tight wordmark and accepted app icon source. Microglyphs are used
-only at their intended sizes. Legal review/registration remains owner-deferred
-under D-031; it is not passed or certified here.
+outlined Inter Tight wordmark, accepted app icon source and approved Markdown
+document icon source. Microglyphs are used only at their intended sizes. Legal
+review/registration remains owner-deferred under D-031; it is not passed or
+certified here.
+
+The document icon uses the existing `net.daringfireball.markdown` content type;
+the source manifest lists five Markdown suffixes. The
+[icon decision packet](downstream/markdown-document-icon-decision.md) records
+why those strings do not prove Finder registration of every alias. Native
+icon/list views and Open With/Get Info remain #7 and #16 acceptance.
 
 See [current acceptance status](ACCEPTANCE_STATUS.md) for local prerequisites and
 [current signing instructions](MAC_SIGNING_BRIEF.md). Fresh native visual and
-accessibility, Quick Look/Finder/document icons, packaged product naming,
-installed migration, localization freeze, updates and exact signed-artifact
-acceptance remain open in their owning issues.
+accessibility, Quick Look/Finder and installed document-icon presentation,
+packaged product naming, installed migration, localization freeze, updates and
+exact signed-artifact acceptance remain open in their owning issues.

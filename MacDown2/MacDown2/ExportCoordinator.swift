@@ -98,7 +98,7 @@ struct ExportCoordinator {
         guard let window = origin.presentableWindow else { return }
         let document = origin.initialDocument
 
-        let baseName = document.fileURL?.deletingPathExtension().lastPathComponent ?? "Untitled"
+        let baseName = document.fileURL?.deletingPathExtension().lastPathComponent ?? String(localized: "Untitled")
         let directory = document.fileURL?.deletingLastPathComponent()
 
         guard let selection = await presentExportPanel(
@@ -157,7 +157,7 @@ struct ExportCoordinator {
         let panel = NSSavePanel()
         panel.canCreateDirectories = true
         panel.prompt = String(localized: "Export")
-        panel.message = "Choose where to export this document."
+        panel.message = String(localized: "Choose where to export this document.")
         if let directory {
             panel.directoryURL = directory
         }

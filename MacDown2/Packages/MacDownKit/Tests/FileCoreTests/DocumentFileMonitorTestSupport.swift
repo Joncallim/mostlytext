@@ -90,6 +90,7 @@ final class MonitorWatcher: DocumentDirectoryWatching, @unchecked Sendable {
     private var storedCancelCount = 0
     private var failuresRemaining = 0
     private var fileFailuresRemaining = 0
+    private var fileFailureCode: POSIXErrorCode = .ENOENT
     private var storedFailedWatchCount = 0
     private var storedFileWatchCount = 0
 
@@ -143,8 +144,9 @@ final class MonitorWatcher: DocumentDirectoryWatching, @unchecked Sendable {
         lock.lock()
         if fileFailuresRemaining > 0 {
             fileFailuresRemaining -= 1
+            let code = fileFailureCode
             lock.unlock()
-            throw POSIXError(.ENOENT)
+            throw POSIXError(code)
         }
         storedFileWatchCount += 1
         fileCallbacks.append(onSignal)
@@ -160,9 +162,10 @@ final class MonitorWatcher: DocumentDirectoryWatching, @unchecked Sendable {
         lock.unlock()
     }
 
-    func failNextFileWatchAttempts(_ count: Int) {
+    func failNextFileWatchAttempts(_ count: Int, code: POSIXErrorCode = .ENOENT) {
         lock.lock()
         fileFailuresRemaining = count
+        fileFailureCode = code
         lock.unlock()
     }
 

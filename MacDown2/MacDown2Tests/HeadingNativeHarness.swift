@@ -42,6 +42,7 @@ enum HeadingNativeHarness {
         application.activate()
         let window = try #require(fixture.controller.window)
         window.setContentSize(.init(width: 900, height: 600))
+        window.animationBehavior = .none
         window.makeKeyAndOrderFront(nil)
         window.makeKey()
         try #require(application.keyWindow === window, "The real app window must own keyboard focus")

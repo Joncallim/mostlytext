@@ -20,15 +20,30 @@ array/data after that header match. The [OpenType post specification](https://le
 defines these typed fields. The raw offsets and hashes are preserved; no result
 is normalized into a false equality.
 
+## Subsequent upstream account
+
+In [Chroma commit `06e404d` (8 July 2026)](https://github.com/alecthomas/chroma/commit/06e404d019c4dba37a1e7df45baeb32b7caffd68),
+the upstream project states that its previous embedded font came from an
+intermediate 2.00.5 build with incorrect `post` metadata (`isFixedPitch=0` and
+the wrong `underlinePosition`). The commit replaces that font with a WOFF that
+it says was converted losslessly from the official Liberation Mono 2.1.5 TTF.
+This upstream account is consistent with the two observed `post` field
+differences above. It does not explain the differing `FFTM` or `head` tables,
+identify the exact intermediate 2.00.5 input bytes, or independently verify
+the replacement WOFF. The pinned Chroma v2.14.0 module and D2 0.1.33 binary
+still contain the earlier WOFF identified by the hashes below; this later
+upstream commit does not change the shipped font bytes.
+
 ## Meaning for the open review
 
 The published [OFL webfont/RFN guidance](https://openfontlicense.org/webfonts-and-reserved-font-names/)
 distinguishes unchanged format wrapping from changed font data/metadata and
 requires case-specific consideration of functional equivalence. The table
-comparison does not establish the actual original conversion input, permission,
-functional equivalence, a required remedy or legal clearance. It does establish
-why a claim of an unchanged reference font is unsupported. Independent font/RFN
-review remains explicit in D2 LC-03; no source-offer status or release gate changes.
+comparison and upstream account do not establish the exact original conversion
+input, permission, functional equivalence, a required remedy or legal clearance.
+They do establish why a claim of an unchanged reference font is unsupported.
+Independent font/RFN review remains explicit in D2 LC-03; no source-offer status
+or release gate changes.
 The existing font selection, exact publisher WASM and full OFL/copyright notice
 are preserved. This audit changes no font name, source or binary.
 

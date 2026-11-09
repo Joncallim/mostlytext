@@ -2,6 +2,11 @@
 import Foundation
 import Testing
 
+private struct LegacyRecentRecord: Encodable {
+    let bookmark: Data
+    let lexicalURL: URL
+}
+
 /// EPIC-22 issue #112, Slice 6c. `RecentFolderRoots` (the direct template
 /// for `RecentFileDocuments`) has no dedicated test file of its own, so
 /// these tests establish the pattern for this whole family of types: real
@@ -264,5 +269,92 @@ struct RecentFileDocumentsTests {
         store.noteWrite(of: file.url)
 
         #expect(store.documents.isEmpty)
+    }
+
+    @Test func legacyBookmarkWithoutIdentityRequiresExplicitFileSelection() throws {
+        let original = try TempFile(name: "old-recent.md")
+        let preferences = try makePreferences()
+        let legacy = try original.url.bookmarkData(options: .withSecurityScope)
+        preferences.store.recentFileBookmarks = [legacy]
+
+        let store = RecentFileDocuments(preferences: preferences)
+
+        #expect(store.documents.isEmpty)
+        #expect(store.unresolvedBookmarkCount == 1)
+        #expect(preferences.store.recentFileBookmarks == [legacy])
+
+        try FileManager.default.removeItem(at: original.url)
+        try Data("unrelated".utf8).write(to: original.url)
+        #expect(store.resolve(original.url) == nil)
+
+        // The user may deliberately select the new object through Open…;
+        // that creates a fresh identity and retires this obsolete bookmark.
+        store.record(original.url)
+        #expect(store.unresolvedBookmarkCount == 0)
+        #expect(store.resolve(original.url) != nil)
+    }
+
+    @Test func legacyWrappedBookmarkWithoutIdentityRemainsAvailableForReauthorization() throws {
+        let original = try TempFile(name: "wrapped-recent.md")
+        let preferences = try makePreferences()
+        let bookmark = try original.url.bookmarkData(options: .withSecurityScope)
+        let legacy = try JSONEncoder().encode(LegacyRecentRecord(bookmark: bookmark, lexicalURL: original.url))
+        preferences.store.recentFileBookmarks = [legacy]
+
+        let store = RecentFileDocuments(preferences: preferences)
+
+        #expect(store.documents.isEmpty)
+        #expect(store.unresolvedBookmarkCount == 1)
+        #expect(preferences.store.recentFileBookmarks == [legacy])
+    }
+
+    @Test func installationRelocationNeverMintsAnIdentityForLegacyBookmarks() throws {
+        let original = try TempFile(name: "before.md")
+        let destination = try TempFile(name: "after.md")
+        let bookmark = try original.url.bookmarkData(options: .withSecurityScope)
+        let wrapped = try JSONEncoder().encode(LegacyRecentRecord(bookmark: bookmark, lexicalURL: original.url))
+        let relocated = try RecentFileDocuments.relocatedInstallationBookmarks([bookmark, wrapped]) { _ in
+            destination.url
+        }
+
+        #expect(relocated == [bookmark, wrapped])
+        let preferences = try makePreferences()
+        preferences.store.recentFileBookmarks = relocated
+        let store = RecentFileDocuments(preferences: preferences)
+        #expect(store.documents.isEmpty)
+        #expect(store.unresolvedBookmarkCount == 2)
+    }
+
+    @Test func openingAnotherFileKeepsUnrelatedLegacyBookmarks() throws {
+        let original = try TempFile(name: "legacy.md")
+        let unrelated = try TempFile(name: "new.md")
+        let legacy = try original.url.bookmarkData(options: .withSecurityScope)
+        let preferences = try makePreferences()
+        preferences.store.recentFileBookmarks = [legacy]
+        let store = RecentFileDocuments(preferences: preferences)
+
+        store.record(unrelated.url)
+
+        #expect(store.documents == [unrelated.url.standardizedFileURL])
+        #expect(store.unresolvedBookmarkCount == 1)
+        #expect(preferences.store.recentFileBookmarks.last == legacy)
+    }
+}
+
+extension RecentFileDocumentsTests {
+    @Test func installationRelocationRejectsAReusedRecordedPath() throws {
+        let original = try TempFile(name: "source.md")
+        let destination = try TempFile(name: "destination.md")
+        let preferences = try makePreferences()
+        RecentFileDocuments(preferences: preferences).record(original.url)
+        let recorded = try #require(preferences.store.recentFileBookmarks.first)
+
+        let valid = try RecentFileDocuments.relocatedInstallationBookmarks([recorded]) { _ in destination.url }
+        #expect(valid != [recorded])
+
+        try FileManager.default.removeItem(at: original.url)
+        try Data("impostor".utf8).write(to: original.url)
+        let refused = try RecentFileDocuments.relocatedInstallationBookmarks([recorded]) { _ in destination.url }
+        #expect(refused == [recorded])
     }
 }

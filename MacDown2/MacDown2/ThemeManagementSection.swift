@@ -8,7 +8,9 @@ struct ThemeManagementSection: View {
     @State private var importing = false
     @State private var exporting = false
     @State private var exportDocument: ThemeExportDocument?
-    @State private var exportName = "Theme"
+    /// Share the document's catalogued fallback. A localized literal in this
+    /// State initializer acquired a different file's location in Release extraction.
+    @State private var exportName = ThemeExportDocument.suggestedName(String())
 
     private var selected: Theme {
         controller.available.first { $0.id == selectedID } ?? controller.current
@@ -21,7 +23,9 @@ struct ThemeManagementSection: View {
     var body: some View {
         Section("Manage Themes") {
             Picker("Theme", selection: $selectedID) {
-                ForEach(controller.available) { theme in Text(verbatim: theme.name).tag(theme.id) }
+                ForEach(controller.available) { theme in
+                    Text(verbatim: ThemePickerDisplayName.name(for: theme)).tag(theme.id)
+                }
             }
             .accessibilityIdentifier("managedThemePicker")
             if custom == nil {

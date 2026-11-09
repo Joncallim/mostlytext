@@ -18,7 +18,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/Joncallim/SwiftTreeSitter",
-            revision: "76f93e7e325dcd05561a13ed63bcc92cb85be8da"
+            revision: "7cf83c59f1d7b6fdbd6ae3b0e212c9824fbf103d"
         ),
     ],
     targets: [

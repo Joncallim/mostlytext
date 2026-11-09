@@ -10,6 +10,7 @@ on:
       - 'MacDown2/MacDown2/*PDF*.swift'
       - 'MacDown2/MacDown2/*Export*.swift'
       - 'MacDown2/MacDown2Tests/PDFExportAdapterTests.swift'
+      - 'MacDown2/MacDown2Tests/PDFExportCancellationTests.swift'
       - 'MacDown2/Packages/MacDownKit/Sources/ExportService/**'
       - 'MacDown2/Packages/MacDownKit/Package.resolved'
       - 'MacDown2/project.yml'
@@ -85,7 +86,8 @@ jobs:
             -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/pdf-pagination-app" \
             -onlyUsePackageVersionsFromResolvedFile -parallel-testing-enabled NO \
             -resultBundlePath "$RUNNER_TEMP/pdf-pagination-probe/actual-pdf.xcresult" \
-            -only-testing:MacDown2Tests/PDFExportAdapterTests test-without-building \
+            -only-testing:MacDown2Tests/PDFExportAdapterTests \
+            -only-testing:MacDown2Tests/PDFExportCancellationTests test-without-building \
             | tee "$RUNNER_TEMP/pdf-pagination-probe/probe.log" || PDF_NATIVE_RESULT=$?
           printf '%s\n' "$PDF_NATIVE_RESULT" > "$RUNNER_TEMP/pdf-pagination-probe/native-command-exit-status.txt"
           exit "$PDF_NATIVE_RESULT"

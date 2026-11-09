@@ -64,6 +64,7 @@ struct HeadingPreviewNavigationTests {
         }
         application.activate()
         let window = try #require(prepared.fixture.controller.window)
+        window.animationBehavior = .none
         window.makeKeyAndOrderFront(nil)
         window.makeKey()
         try #require(application.keyWindow === window)
@@ -129,6 +130,7 @@ struct HeadingPreviewNavigationTests {
         _ = try activate(prepared)
         let other = NSWindow(contentRect: .init(x: 0, y: 0, width: 200, height: 100),
                              styleMask: [.titled], backing: .buffered, defer: false)
+        other.animationBehavior = .none
         other.isReleasedWhenClosed = false
         defer { other.orderOut(nil); other.close() }
         other.makeKeyAndOrderFront(nil)
@@ -161,6 +163,7 @@ struct HeadingPreviewNavigationTests {
         let window = try activate(prepared)
         let sheet = NSWindow(contentRect: .init(x: 0, y: 0, width: 200, height: 100),
                              styleMask: [.titled], backing: .buffered, defer: false)
+        sheet.animationBehavior = .none
         sheet.isReleasedWhenClosed = false
         window.beginSheet(sheet, completionHandler: nil)
         defer { window.endSheet(sheet); sheet.orderOut(nil); sheet.close() }

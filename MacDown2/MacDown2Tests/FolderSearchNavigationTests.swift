@@ -17,6 +17,11 @@ import Workspace
 @MainActor
 @Suite("WindowCoordinator folder-search navigation")
 struct FolderSearchNavigationTests {
+    private func orderFrontWithoutAnimation(_ window: NSWindow?) {
+        window?.animationBehavior = .none
+        window?.makeKeyAndOrderFront(nil)
+    }
+
     @Test func existingBackgroundNativeTabIsActivatedAndItsMatchIsRevealed() async throws {
         let coordinator = FolderSearchTestSupport.makeCoordinator()
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
@@ -38,6 +43,8 @@ struct FolderSearchNavigationTests {
         )
         let second = try #require(coordinator.controllerForDocument(url: secondURL))
         let secondWindow = try #require(second.window)
+        firstWindow.animationBehavior = .none
+        secondWindow.animationBehavior = .none
         let tabGroup = try #require(firstWindow.tabGroup)
         #expect(tabGroup.windows.contains { $0 === secondWindow })
         tabGroup.selectedWindow = secondWindow
@@ -144,7 +151,7 @@ struct FolderSearchNavigationTests {
             fileTreePreferences: preferences
         )
         coordinator.controllers = [controller]
-        controller.window?.makeKeyAndOrderFront(nil)
+        orderFrontWithoutAnimation(controller.window)
         defer {
             coordinator.removeController(controller)
             controller.close()
@@ -205,7 +212,7 @@ struct FolderSearchNavigationTests {
             range: NSRange(location: 2, length: 0),
             controllerID: ObjectIdentifier(controller)
         )
-        controller.window?.makeKeyAndOrderFront(nil)
+        orderFrontWithoutAnimation(controller.window)
 
         coordinator.folderSearchEditorLayoutChanged(tabID: tabID.uuidString)
 
@@ -238,7 +245,7 @@ extension FolderSearchNavigationTests {
         let row = try #require(controller.folderSearchModel.presentedResults.first)
         let tabID = try #require(controller.model.tabStore.tabID(forFileURL: url))
         let system = try #require(controller.editorStore.existingSystem(for: tabID.uuidString))
-        controller.window?.makeKeyAndOrderFront(nil)
+        orderFrontWithoutAnimation(controller.window)
         #expect(system.textView.window === controller.window)
         let initialSelection = system.selectedRange
         let generation = coordinator.folderSearchRequestGate.begin()
@@ -279,7 +286,7 @@ extension FolderSearchNavigationTests {
         let tab = try #require(controller.model.tabStore.activeTab)
         let identity = tab.id.uuidString
         let system = try #require(controller.editorStore.existingSystem(for: identity))
-        controller.window?.makeKeyAndOrderFront(nil)
+        orderFrontWithoutAnimation(controller.window)
         #expect(system.textView.window === controller.window)
 
         let findModel = controller.findStore.model(for: identity)

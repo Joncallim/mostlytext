@@ -10,6 +10,7 @@ struct ValidatedExportPanelTests {
             contentRect: NSRect(x: 0, y: 0, width: 480, height: 320),
             styleMask: [.titled, .closable], backing: .buffered, defer: false
         )
+        window.animationBehavior = .none
         // Swift owns this standalone window; close must not release it a second time.
         window.isReleasedWhenClosed = false
         window.makeKeyAndOrderFront(nil)
