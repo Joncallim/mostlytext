@@ -69,10 +69,19 @@ struct EditingAssistPerformanceTests {
         let system = makeSystem(configuration: .markdownDefault)
         system.textView.frame = viewportBounds
 
-        // Place the caret at the end of a line near the end of the document.
+        // Keep the handled case on a list item even when the fixture's final
+        // block changes as the requested document size changes.
         let source = try #require(system.assistTextSource)
-        let caret = source.range(of: "\n").location == NSNotFound ? 0 : source.length - 2
-        system.selectedRange = NSRange(location: caret, length: 0)
+        let lastListItem = source.range(of: "- List item ", options: .backwards)
+        try #require(lastListItem.location != NSNotFound)
+        let lineBreak = source.range(
+            of: "\n", range: NSRange(location: lastListItem.location, length: source.length - lastListItem.location)
+        )
+        try #require(lineBreak.location != NSNotFound)
+        let item = source.substring(with: NSRange(location: lastListItem.location,
+                                                  length: lineBreak.location - lastListItem.location))
+        try #require(item.hasSuffix("-c"))
+        system.selectedRange = NSRange(location: lineBreak.location, length: 0)
 
         let duration = ContinuousClock().measure {
             let outcome = MarkdownEditingAssistEngine.outcome(

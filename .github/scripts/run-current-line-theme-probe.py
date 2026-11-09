@@ -171,6 +171,10 @@ def qualify(root, output, configuration, baseline):
                      "denseInlineEditsKeepFreshCapturesAndPreviouslyRetainedSnapshots"]:
             if not re.search(r"Test " + name + r"\(\) passed", log):
                 raise SystemExit("Required native control did not pass: " + name)
+        if not re.search(
+            r"Test performanceCorpusReachesItsRequestedUTF8Size\(_:\) with 2 test cases passed", log
+        ):
+            raise SystemExit("Both full-size performance fixture controls must pass")
         if "CURRENT-LINE-PHASE" not in log:
             raise SystemExit("Real viewport draw measurement did not execute")
         if "HIGHLIGHT_PHASE sourceUTF8=1000008 setup=" not in log:

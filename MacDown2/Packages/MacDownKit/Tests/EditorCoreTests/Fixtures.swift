@@ -2,7 +2,8 @@ import Foundation
 
 /// Deterministic Markdown fixtures for performance tests.
 enum Fixtures {
-    /// Generates a Markdown string of approximately `targetByteCount` bytes.
+    /// Generates complete Markdown blocks until the UTF-8 source reaches
+    /// `targetByteCount`, with less than one block of overshoot.
     ///
     /// The output mixes paragraphs, headers, lists, and code blocks so the
     /// text system exercises a realistic variety of line lengths and syntax
@@ -10,32 +11,32 @@ enum Fixtures {
     static func markdown(targetByteCount: Int) -> String {
         let line = "The quick brown fox jumps over the lazy dog. "
         let paragraph = String(repeating: line, count: 10) + "\n\n"
-        let paragraphCount = max(1, targetByteCount / paragraph.utf8.count)
 
         var result = ""
         result.reserveCapacity(targetByteCount)
+        var byteCount = 0
+        var index = 0
 
-        for index in 0 ..< paragraphCount {
-            switch index % 5 {
+        repeat {
+            let block: String = switch index % 5 {
             case 0:
-                result += "# Heading \(index)\n\n"
-                result += paragraph
+                "# Heading \(index)\n\n" + paragraph
             case 1:
-                result += "- List item \(index)-a\n"
-                result += "- List item \(index)-b\n"
-                result += "- List item \(index)-c\n\n"
+                "- List item \(index)-a\n"
+                    + "- List item \(index)-b\n"
+                    + "- List item \(index)-c\n\n"
             case 2:
-                result += "> A blockquote that spans a few words so it has some length.\n\n"
+                "> A blockquote that spans a few words so it has some length.\n\n"
             case 3:
-                result += "```\nlet x = \(index)\nlet y = x + 1\n```\n\n"
+                "```\nlet x = \(index)\nlet y = x + 1\n```\n\n"
             default:
-                result += paragraph
+                paragraph
             }
 
-            if result.utf8.count >= targetByteCount {
-                break
-            }
-        }
+            result += block
+            byteCount += block.utf8.count
+            index += 1
+        } while byteCount < targetByteCount
 
         return result
     }
