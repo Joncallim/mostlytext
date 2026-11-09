@@ -340,3 +340,21 @@ struct RecentFileDocumentsTests {
         #expect(preferences.store.recentFileBookmarks.last == legacy)
     }
 }
+
+extension RecentFileDocumentsTests {
+    @Test func installationRelocationRejectsAReusedRecordedPath() throws {
+        let original = try TempFile(name: "source.md")
+        let destination = try TempFile(name: "destination.md")
+        let preferences = try makePreferences()
+        RecentFileDocuments(preferences: preferences).record(original.url)
+        let recorded = try #require(preferences.store.recentFileBookmarks.first)
+
+        let valid = try RecentFileDocuments.relocatedInstallationBookmarks([recorded]) { _ in destination.url }
+        #expect(valid != [recorded])
+
+        try FileManager.default.removeItem(at: original.url)
+        try Data("impostor".utf8).write(to: original.url)
+        let refused = try RecentFileDocuments.relocatedInstallationBookmarks([recorded]) { _ in destination.url }
+        #expect(refused == [recorded])
+    }
+}
