@@ -28,6 +28,14 @@ class LocalizationInventoryTests(unittest.TestCase):
     def test_valid_catalog_passes(self):
         self.assertEqual(subject.validate(self.make_repo(self.fixture("valid.json"))), [])
 
+    def test_build_products_do_not_enter_source_catalog_inventory(self):
+        repo = self.make_repo(self.fixture("valid.json"))
+        build_catalog = repo / "MacDown2/Packages/MacDownKit/.build/debug/Mock.bundle/Localizable.xcstrings"
+        build_catalog.parent.mkdir(parents=True)
+        build_catalog.write_text(json.dumps(self.fixture("missing-placeholder.json")), encoding="utf-8")
+        self.assertEqual(len(subject.catalog_paths(repo)), 1)
+        self.assertEqual(subject.validate(repo), [])
+
     def test_missing_placeholder_fails(self):
         errors = subject.validate(self.make_repo(self.fixture("missing-placeholder.json")))
         self.assertTrue(any("placeholders" in error for error in errors))

@@ -490,9 +490,9 @@
   "deferred_review": [
     {
       "path": "MacDown2/Packages/MacDownKit/Sources/EditorCore/Snippets/Snippet.swift",
-      "sha256": "10f165e00534520e76a6dd183e5d7ced462128f705fd6c30d7fb4c63e7f1c240",
+      "sha256": "107c739f7fa4dd59ccf5e37b0e4f43a993aca0fcc5d8fc21efcbbfb290e981c6",
       "status": "open",
-      "reason": "Built-in snippet display names are passed verbatim to the picker; decide whether names are stable identifiers or translated UI."
+      "reason": "Built-in snippet names now resolve through EditorCore's catalog; review drafted translations and native picker/accessibility presentation before closing the wider audit."
     },
     {
       "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileFormat.swift",
