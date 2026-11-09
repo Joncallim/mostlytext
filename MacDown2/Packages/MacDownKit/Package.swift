@@ -209,7 +209,10 @@ let package = Package(
         ),
 
         .testTarget(name: "FileCoreTests", dependencies: ["FileCore"]),
-        .testTarget(name: "QuickLookSourceTests", dependencies: ["QuickLookSource", "FileCore", "QuickLookSourceProbe"]),
+        .testTarget(
+            name: "QuickLookSourceTests",
+            dependencies: ["QuickLookSource", "FileCore", "QuickLookSourceProbe"]
+        ),
         .testTarget(name: "CommandBridgeTests", dependencies: ["CommandBridge"]),
         .testTarget(name: "CommandLineSupportTests", dependencies: ["CommandLineSupport", "CommandBridge"]),
         .testTarget(name: "LocalResourceAccessTests", dependencies: ["LocalResourceAccess"]),
