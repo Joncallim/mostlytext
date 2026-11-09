@@ -17,10 +17,28 @@ import Foundation
 struct DirectoryWalker: Sendable {
     private enum WalkFailure: Error {
         case directoryIdentityUnavailable
+        case metadataUnavailable
     }
 
     private let listChildren: @Sendable (URL) throws -> [URL]
     private let readValues: @Sendable (URL) throws -> URLResourceValues
+
+    private struct EntryKind {
+        let directory: Bool
+        let hidden: Bool
+        let package: Bool
+        let symbolicLink: Bool
+    }
+
+    private func kind(of url: URL) throws -> EntryKind {
+        let values = try readValues(url)
+        guard let directory = values.isDirectory,
+              let hidden = values.isHidden,
+              let package = values.isPackage,
+              let symbolicLink = values.isSymbolicLink
+        else { throw WalkFailure.metadataUnavailable }
+        return EntryKind(directory: directory, hidden: hidden, package: package, symbolicLink: symbolicLink)
+    }
 
     init() {
         listChildren = { directory in
@@ -131,7 +149,7 @@ struct DirectoryWalker: Sendable {
                   state.directoriesEntered < context.maximumDirectories else { return }
             // A listed entry whose metadata cannot be read makes the scan
             // incomplete. Never publish the other paths as a ready index.
-            let values = try readValues(child)
+            let own = try kind(of: child)
             // Hidden entries are tagged, not dropped: an entry is hidden if
             // its own basename starts with `.` OR any ancestor directory
             // (below `root`) already is, so a non-dotfile inside a hidden
@@ -143,7 +161,7 @@ struct DirectoryWalker: Sendable {
             // (`IndexedPath.isHidden`'s own doc comment); Quick Open's
             // `query(_:)` filters them back out, so its own behavior is
             // unchanged.
-            let isHidden = ancestorHidden || values.isHidden == true
+            let isHidden = ancestorHidden || own.hidden
             let name = child.lastPathComponent
             // Resource values describe the link itself on some file
             // systems, so a symlink to a directory can report
@@ -154,12 +172,9 @@ struct DirectoryWalker: Sendable {
             // a file and its subtree silently dropped from the index. A
             // failed target read must fail the whole snapshot for the same
             // reason as a failed primary metadata read.
-            let isSymbolicLink = values.isSymbolicLink == true
-            let targetValues = isSymbolicLink
-                ? try readValues(child.resolvingSymlinksInPath())
-                : nil
-            let isDirectory = values.isDirectory == true || targetValues?.isDirectory == true
-            let isPackage = values.isPackage == true || targetValues?.isPackage == true
+            let target = own.symbolicLink ? try kind(of: child.resolvingSymlinksInPath()) : nil
+            let isDirectory = own.directory || target?.directory == true
+            let isPackage = own.package || target?.package == true
             // Rebind to the lexical parent so a symlinked root's children
             // keep the user-facing path, matching `FileTree`'s own
             // lexical-parent convention (`DirectoryReading.swift`).

@@ -83,6 +83,60 @@ struct WorkspaceIndexEnumerationFailureTests {
         #expect(await index.query("first").isEmpty)
     }
 
+    @Test func missingChildClassificationCannotProduceAReadyIndex() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        let file = root.appendingPathComponent("page.md")
+        try Data().write(to: file)
+        let keys: Set<URLResourceKey> = [.isDirectoryKey, .isHiddenKey, .isPackageKey, .isSymbolicLinkKey]
+        let index = WorkspaceFileIndex(walk: { root, excluded in
+            try DirectoryWalker(listChildren: { directory in
+                try FileManager.default.contentsOfDirectory(
+                    at: directory, includingPropertiesForKeys: Array(keys), options: []
+                )
+            }, readValues: { entry in
+                entry.lastPathComponent == file.lastPathComponent
+                    ? URLResourceValues() : try entry.resourceValues(forKeys: keys)
+            }).walk(root: root, excludedDirectoryNames: excluded)
+        })
+
+        await index.rebuild(root: root)
+        guard case .failed = await index.state else {
+            Issue.record("missing required metadata must fail rather than classify a file by default")
+            return
+        }
+        #expect(await index.allPaths().isEmpty)
+    }
+
+    @Test func missingSymlinkTargetClassificationCannotProduceAReadyIndex() async throws {
+        let parent = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: parent) }
+        let root = parent.appendingPathComponent("workspace", isDirectory: true)
+        let target = parent.appendingPathComponent("linked", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: target, withIntermediateDirectories: true)
+        try Data().write(to: target.appendingPathComponent("page.md"))
+        try FileManager.default.createSymbolicLink(at: root.appendingPathComponent("link"), withDestinationURL: target)
+        let keys: Set<URLResourceKey> = [.isDirectoryKey, .isHiddenKey, .isPackageKey, .isSymbolicLinkKey]
+        let index = WorkspaceFileIndex(walk: { root, excluded in
+            try DirectoryWalker(listChildren: { directory in
+                try FileManager.default.contentsOfDirectory(
+                    at: directory, includingPropertiesForKeys: Array(keys), options: []
+                )
+            }, readValues: { entry in
+                entry.path == target.path ? URLResourceValues() : try entry.resourceValues(forKeys: keys)
+            }).walk(root: root, excludedDirectoryNames: excluded)
+        })
+
+        await index.rebuild(root: root)
+        guard case .failed = await index.state else {
+            Issue.record("missing target metadata must fail rather than hide a linked subtree")
+            return
+        }
+        #expect(await index.allPaths().isEmpty)
+    }
+
     @Test func unreadableChildCannotPublishAPartialIndex() async throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         defer { try? FileManager.default.removeItem(at: root) }
