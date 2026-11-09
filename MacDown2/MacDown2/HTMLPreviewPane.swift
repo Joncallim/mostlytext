@@ -32,7 +32,7 @@ struct HTMLPreviewPane: View {
                 HTMLSourceView(source: text)
                     .accessibilityIdentifier("htmlSourcePane")
             case .rendered, .outline:
-                HTMLPreviewView(document: document)
+                HTMLPreviewView(document: document, tabID: tab.id)
                     .accessibilityIdentifier("htmlRenderedPane")
             }
             modePicker

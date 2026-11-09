@@ -1,8 +1,9 @@
 import Foundation
 import LocalResourceAccess
 
-/// Pins a folder chosen for one document and retains its access scope until every admitted use drains.
-/// A backing cannot be retargeted; a new document/window epoch needs a new selection and backing.
+/// Pins a document's resource directory and retains its access scope until every admitted use drains.
+/// A backing cannot be retargeted. Explicit panel selections and the active HTML preview's automatic
+/// document-directory access have distinct factories; neither can borrow the other's authority.
 final class PreviewDirectoryGrantBacking: @unchecked Sendable {
     private struct OpenedDirectory: Sendable {
         let root: DirectoryLease
@@ -36,11 +37,11 @@ final class PreviewDirectoryGrantBacking: @unchecked Sendable {
     private let lock = NSLock()
     private var state = State()
 
-    private init(selection: PreviewResourceFolderSelection, epoch: UUID,
+    private init(documentURL: URL, scopeURL: URL, epoch: UUID,
                  scopeStarted: Bool, opened: OpenedDirectory) {
         documentEpoch = epoch
-        requestedDocumentURL = selection.requestedDocumentURL
-        scopeURL = selection.selectedFolderURL
+        requestedDocumentURL = documentURL
+        self.scopeURL = scopeURL
         self.scopeStarted = scopeStarted
         rootDirectory = opened.root
         documentDirectory = opened.document
@@ -67,11 +68,34 @@ final class PreviewDirectoryGrantBacking: @unchecked Sendable {
                 throw ResourceReadError.cancelled
             }
             return PreviewDirectoryGrantBacking(
-                selection: selection, epoch: epoch, scopeStarted: scopeStarted, opened: opened
+                documentURL: currentDocumentURL, scopeURL: selection.selectedFolderURL,
+                epoch: epoch, scopeStarted: scopeStarted, opened: opened
             )
         } catch {
             if scopeStarted {
                 selection.selectedFolderURL.stopAccessingSecurityScopedResource()
+            }
+            throw error
+        }
+    }
+
+    /// The active HTML preview already has automatic access to the saved document's parent. Pin that exact
+    /// directory before WebKit loads the saved revision, without manufacturing an explicit panel selection.
+    /// This one directory-open operation has the same MainActor timing as the former active scheme handler;
+    /// individual resource reads run on PreviewResourceAdmission's detached workers.
+    @MainActor
+    static func acquireAutomatic(documentURL: URL, epoch: UUID) throws -> PreviewDirectoryGrantBacking {
+        let directoryURL = documentURL.deletingLastPathComponent()
+        let scopeStarted = directoryURL.startAccessingSecurityScopedResource()
+        do {
+            let root = try DirectoryLease(opening: directoryURL)
+            return PreviewDirectoryGrantBacking(
+                documentURL: documentURL, scopeURL: directoryURL, epoch: epoch,
+                scopeStarted: scopeStarted, opened: OpenedDirectory(root: root, document: root)
+            )
+        } catch {
+            if scopeStarted {
+                directoryURL.stopAccessingSecurityScopedResource()
             }
             throw error
         }
