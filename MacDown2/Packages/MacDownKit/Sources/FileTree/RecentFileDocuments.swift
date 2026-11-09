@@ -304,11 +304,13 @@ public final class RecentFileDocuments {
     public static func relocatedInstallationBookmarks(_ values: [Data],
                                                       map: (URL) throws -> URL?) throws -> [Data] {
         try values.map { data in
-            let stored = try? JSONDecoder().decode(StoredDocument.self, from: data)
-            var stale = false
-            let old = stored?.lexicalURL ?? (try? URL(resolvingBookmarkData: data, options: [.withSecurityScope],
-                                                      relativeTo: nil, bookmarkDataIsStale: &stale))
-            guard let old, let new = try map(old) else { return data }
+            // Relocation has no proof that a legacy bookmark still names its
+            // original file. Do not mint an identity for whatever occupies
+            // the mapped path; keep its bytes for explicit reauthorization.
+            guard let stored = try? JSONDecoder().decode(StoredDocument.self, from: data),
+                  stored.fingerprint != nil,
+                  let new = try map(stored.lexicalURL)
+            else { return data }
             return try JSONEncoder().encode(StoredDocument(bookmark: new.bookmarkData(options: .withSecurityScope),
                                                            lexicalURL: new, fingerprint: Fingerprint(of: new)))
         }
@@ -352,7 +354,7 @@ public final class RecentFileDocuments {
         var stale = false
         guard let resolved = try? URL(
             resolvingBookmarkData: record.bookmark,
-            options: [.withSecurityScope],
+            options: [.withSecurityScope, .withoutUI],
             relativeTo: nil,
             bookmarkDataIsStale: &stale
         ) else { return false }

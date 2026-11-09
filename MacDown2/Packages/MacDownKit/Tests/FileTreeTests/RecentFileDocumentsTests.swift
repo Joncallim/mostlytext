@@ -2,6 +2,11 @@
 import Foundation
 import Testing
 
+private struct LegacyRecentRecord: Encodable {
+    let bookmark: Data
+    let lexicalURL: URL
+}
+
 /// EPIC-22 issue #112, Slice 6c. `RecentFolderRoots` (the direct template
 /// for `RecentFileDocuments`) has no dedicated test file of its own, so
 /// these tests establish the pattern for this whole family of types: real
@@ -293,11 +298,7 @@ struct RecentFileDocumentsTests {
         let original = try TempFile(name: "wrapped-recent.md")
         let preferences = try makePreferences()
         let bookmark = try original.url.bookmarkData(options: .withSecurityScope)
-        struct LegacyRecord: Encodable {
-            let bookmark: Data
-            let lexicalURL: URL
-        }
-        let legacy = try JSONEncoder().encode(LegacyRecord(bookmark: bookmark, lexicalURL: original.url))
+        let legacy = try JSONEncoder().encode(LegacyRecentRecord(bookmark: bookmark, lexicalURL: original.url))
         preferences.store.recentFileBookmarks = [legacy]
 
         let store = RecentFileDocuments(preferences: preferences)
@@ -305,5 +306,37 @@ struct RecentFileDocumentsTests {
         #expect(store.documents.isEmpty)
         #expect(store.unresolvedBookmarkCount == 1)
         #expect(preferences.store.recentFileBookmarks == [legacy])
+    }
+
+    @Test func installationRelocationNeverMintsAnIdentityForLegacyBookmarks() throws {
+        let original = try TempFile(name: "before.md")
+        let destination = try TempFile(name: "after.md")
+        let bookmark = try original.url.bookmarkData(options: .withSecurityScope)
+        let wrapped = try JSONEncoder().encode(LegacyRecentRecord(bookmark: bookmark, lexicalURL: original.url))
+        let relocated = try RecentFileDocuments.relocatedInstallationBookmarks([bookmark, wrapped]) { _ in
+            destination.url
+        }
+
+        #expect(relocated == [bookmark, wrapped])
+        let preferences = try makePreferences()
+        preferences.store.recentFileBookmarks = relocated
+        let store = RecentFileDocuments(preferences: preferences)
+        #expect(store.documents.isEmpty)
+        #expect(store.unresolvedBookmarkCount == 2)
+    }
+
+    @Test func openingAnotherFileKeepsUnrelatedLegacyBookmarks() throws {
+        let original = try TempFile(name: "legacy.md")
+        let unrelated = try TempFile(name: "new.md")
+        let legacy = try original.url.bookmarkData(options: .withSecurityScope)
+        let preferences = try makePreferences()
+        preferences.store.recentFileBookmarks = [legacy]
+        let store = RecentFileDocuments(preferences: preferences)
+
+        store.record(unrelated.url)
+
+        #expect(store.documents == [unrelated.url.standardizedFileURL])
+        #expect(store.unresolvedBookmarkCount == 1)
+        #expect(preferences.store.recentFileBookmarks.last == legacy)
     }
 }

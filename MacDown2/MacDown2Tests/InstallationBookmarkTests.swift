@@ -30,12 +30,12 @@ struct InstallationBookmarkTests {
         #expect(folders.roots == [lexical])
         // A missing path cannot distinguish deletion from an unmounted
         // volume. Migration retains the structured record for a chooser.
-        #expect(files.unresolvedBookmarkCount == 1)
+        #expect(files.unresolvedBookmarkCount == 2)
         #expect(folders.unresolvedBookmarkCount == 1)
         #expect(folders.resolve(lexical) == nil)
         #expect(stored.recentRootBookmarks == [record, opaque])
         #expect(stored.recentFileBookmarks == [record, opaque])
-        #expect(files.documents == [lexical])
+        #expect(files.documents.isEmpty)
         #expect(files.resolve(lexical) == nil)
         files.pruneMissingFiles()
         #expect(stored.recentFileBookmarks == [record, opaque])
