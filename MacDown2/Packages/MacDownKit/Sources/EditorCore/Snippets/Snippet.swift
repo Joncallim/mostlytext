@@ -115,27 +115,34 @@ public enum SnippetCatalog {
 }
 
 public enum BuiltInSnippets {
-    public static let all: [Snippet] = [
-        Snippet(
-            id: "builtin.markdown.codeBlock",
-            name: "Fenced Code Block",
-            body: "```\n${selection}$0\n```",
-            scopes: ["markdown"]
-        ),
-        Snippet(id: "builtin.markdown.link", name: "Link", body: "[${selection}]($0)", scopes: ["markdown"]),
-        Snippet(
-            id: "builtin.markdown.linkFromClipboard",
-            name: "Link from Clipboard",
-            body: "[${selection}](${clipboard})$0",
-            scopes: ["markdown"]
-        ),
-        Snippet(id: "builtin.markdown.image", name: "Image", body: "![${selection}]($0)", scopes: ["markdown"]),
-        Snippet(
-            id: "builtin.markdown.table",
-            name: "Table",
-            body: "| Column | Column |\n| ------ | ------ |\n| $0 |  |",
-            scopes: ["markdown"]
-        ),
-        Snippet(id: "builtin.markdown.task", name: "Task", body: "- [ ] ${selection}$0", scopes: ["markdown"]),
-    ]
+    /// Resolve display names when the picker opens. IDs and insertion bodies
+    /// stay stable across languages and user overrides keep their own names.
+    public static var all: [Snippet] {
+        [
+            Snippet(
+                id: "builtin.markdown.codeBlock",
+                name: String(localized: "Fenced Code Block", bundle: .module),
+                body: "```\n${selection}$0\n```",
+                scopes: ["markdown"]
+            ),
+            Snippet(id: "builtin.markdown.link", name: String(localized: "Link", bundle: .module),
+                    body: "[${selection}]($0)", scopes: ["markdown"]),
+            Snippet(
+                id: "builtin.markdown.linkFromClipboard",
+                name: String(localized: "Link from Clipboard", bundle: .module),
+                body: "[${selection}](${clipboard})$0",
+                scopes: ["markdown"]
+            ),
+            Snippet(id: "builtin.markdown.image", name: String(localized: "Image", bundle: .module),
+                    body: "![${selection}]($0)", scopes: ["markdown"]),
+            Snippet(
+                id: "builtin.markdown.table",
+                name: String(localized: "Table", bundle: .module),
+                body: "| Column | Column |\n| ------ | ------ |\n| $0 |  |",
+                scopes: ["markdown"]
+            ),
+            Snippet(id: "builtin.markdown.task", name: String(localized: "Task", bundle: .module),
+                    body: "- [ ] ${selection}$0", scopes: ["markdown"]),
+        ]
+    }
 }

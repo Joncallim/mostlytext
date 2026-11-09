@@ -94,9 +94,10 @@ struct SnippetLibraryTests {
     }
 
     @Test func aUserSnippetWithABuiltInIdReplacesIt() {
-        let override = Snippet(id: "builtin.markdown.link", name: "Link", body: "<$0>", scopes: ["markdown"])
+        let override = Snippet(id: "builtin.markdown.link", name: "My own link", body: "<$0>", scopes: ["markdown"])
         let result = SnippetCatalog.snippets(user: [override], formatID: "markdown")
         #expect(result.filter { $0.id == "builtin.markdown.link" }.map(\.body) == ["<$0>"])
+        #expect(result.filter { $0.id == "builtin.markdown.link" }.map(\.name) == ["My own link"])
     }
 
     @Test func filterMatchesNamesCaseAndDiacriticInsensitively() {
@@ -111,5 +112,28 @@ struct SnippetLibraryTests {
         #expect(Set(ids).count == ids.count)
         // swiftformat rewrites `allSatisfy { $0.isUsable }` to a key path, which #expect cannot infer as non-throwing.
         #expect(BuiltInSnippets.all.filter { !$0.isUsable }.isEmpty)
+    }
+
+    @Test func builtInDisplayNamesHaveOwnedCatalogEntries() throws {
+        let catalogURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+            .appendingPathComponent("Sources/EditorCore/Resources/Localizable.xcstrings")
+        let data = try Data(contentsOf: catalogURL)
+        let catalog = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        let strings = try #require(catalog["strings"] as? [String: Any])
+        let names = [
+            "builtin.markdown.codeBlock": "Fenced Code Block",
+            "builtin.markdown.link": "Link",
+            "builtin.markdown.linkFromClipboard": "Link from Clipboard",
+            "builtin.markdown.image": "Image",
+            "builtin.markdown.table": "Table",
+            "builtin.markdown.task": "Task",
+        ]
+        #expect(Set(BuiltInSnippets.all.map(\.id)) == Set(names.keys))
+        for key in names.values {
+            let entry = try #require(strings[key] as? [String: Any], "Missing EditorCore catalog key: \(key)")
+            let localizations = try #require(entry["localizations"] as? [String: Any])
+            #expect(Set(localizations.keys).isSuperset(of: ["en", "fr", "ja", "pl"]))
+        }
     }
 }
