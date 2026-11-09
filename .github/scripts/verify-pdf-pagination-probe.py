@@ -21,6 +21,8 @@ TESTS = {
     'graphicsSetupAndEmptyTextDoNotCountAsPrintedContent',
     'visibleTextAndVectorOnlyDiagramCountAsPrintedContent',
     'hardenedHTMLRetainsThePDFPolicy',
+    'aCancelledNavigationDoesNotWaitForWebKitOrTheThirtySecondWatchdog',
+    'aCancelledPrintResultPreservesTheExistingDestination',
     'exportingALongDocumentProducesARealMultiPagePDF',
     'exportedPDFReplacesAnyExistingFileAtomically',
 }
@@ -43,11 +45,13 @@ def validate_execution(log, identity, status):
         raise ValueError('A required PDF test was skipped or disabled')
     passed = re.findall(r'Test ([A-Za-z0-9_]+)\([^\n]*\) passed', log)
     if set(passed) != TESTS or len(passed) != len(TESTS):
-        raise ValueError('Every original PDF function must execute once and pass')
-    if not re.search(r'Test run with 9 tests in 1 suite passed', log):
-        raise ValueError('The complete nine-function PDF selection did not pass')
+        raise ValueError('Every PDF adapter function must execute once and pass')
+    if not re.search(r'Test run with 11 tests in 2 suites passed', log):
+        raise ValueError('The complete eleven-function PDF selection did not pass')
     if not re.search(r'Suite PDFExportAdapterTests passed', log):
         raise ValueError('The actual PDF adapter suite did not pass')
+    if not re.search(r'Suite PDFExportCancellationTests passed', log):
+        raise ValueError('The PDF cancellation suite did not pass')
     if status.get('returncode') != 0 or status.get('timed_out') is not False or status.get('cancelled') is not False:
         raise ValueError('The owned PDF execution did not exit normally')
     if not 0 < status.get('elapsed_seconds', 0) < 600 or status.get('app_cleanup_requested') != []:
@@ -62,8 +66,9 @@ def validate_execution(log, identity, status):
     ):
         raise ValueError('The dedicated PDF opt-in condition is required')
     selected = [c for c in command if c.startswith('-only-testing:')]
-    if selected != ['-only-testing:MacDown2Tests/PDFExportAdapterTests']:
-        raise ValueError('The complete original PDF suite must be selected')
+    if selected != ['-only-testing:MacDown2Tests/PDFExportAdapterTests',
+                    '-only-testing:MacDown2Tests/PDFExportCancellationTests']:
+        raise ValueError('Both complete PDF suites must be selected')
     if not str(identity.get('app', '')).endswith('/Release/MacDown2.app/Contents/MacOS/MacDown2'):
         raise ValueError('The actual built Release app must own execution')
     if not re.fullmatch(r'[0-9a-f]{64}', identity.get('app_sha256', '')):
@@ -93,10 +98,10 @@ def check_host(root):
 
 
 def validate_summary(summary):
-    expected = {'totalTestCount': 9, 'passedTests': 9, 'failedTests': 0,
+    expected = {'totalTestCount': 11, 'passedTests': 11, 'failedTests': 0,
                 'skippedTests': 0, 'expectedFailures': 0}
     if any(type(summary.get(k)) is not int or summary[k] != v for k, v in expected.items()):
-        raise ValueError('Actual PDF result bundle lacks the complete original nine passing tests')
+        raise ValueError('Actual PDF result bundle lacks all eleven passing tests')
 
 
 def main():
@@ -126,7 +131,7 @@ def main():
         'configuration': 'Release', 'testability': True, 'additional_compilation_conditions': ['RELEASE_PREVIEW_PROBE', CONDITION],
         'source_sha256': {p: hashlib.sha256((repo / p).read_bytes()).hexdigest() for p in paths if p},
         'pins': pins, 'selected_tests': sorted(TESTS),
-        'scope': 'Actual hosted PDF adapter output; not owner UI, print cancellation or signed-RC acceptance',
+        'scope': 'Actual hosted PDF output and controlled cancellation checkpoints; not owner UI, mid-print interruption or signed-RC acceptance',
     }
     path = args.output / 'receipt.json'
     if args.verify:

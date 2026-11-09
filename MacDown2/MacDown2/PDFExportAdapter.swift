@@ -33,7 +33,8 @@ enum PDFExportAdapter {
 
     static func export(_ prepared: PreparedExportDocument, to url: URL,
                        lease: ExportLifetimeLease = ExportLifetimeLease(),
-                       admission: ExportDestinationAdmission? = nil) async throws {
+                       admission: ExportDestinationAdmission? = nil,
+                       runPrint: @MainActor (NSPrintOperation) -> Bool = { $0.run() }) async throws {
         try lease.checkActive()
         let authorization = try admission ?? ExportDestinationAdmission(capturing: url)
         try authorization.checkTarget(url)
@@ -42,7 +43,7 @@ enum PDFExportAdapter {
         let html = try await hardenedHTML(from: prepared)
         let sourceHasContent = !prepared.bodyHTML.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         try await exportHTML(html, to: url, sourceHasContent: sourceHasContent,
-                             lease: lease, admission: authorization)
+                             lease: lease, admission: authorization, runPrint: runPrint)
     }
 
     /// Disabled opt-in consumer: WebKit receives exactly the accepted UTF-8
@@ -67,7 +68,8 @@ enum PDFExportAdapter {
     }
 
     private static func exportHTML(_ html: String, to url: URL, sourceHasContent: Bool,
-                                   lease: ExportLifetimeLease?, admission: ExportDestinationAdmission) async throws {
+                                   lease: ExportLifetimeLease?, admission: ExportDestinationAdmission,
+                                   runPrint: @MainActor (NSPrintOperation) -> Bool = { $0.run() }) async throws {
         try lease?.checkActive()
 
         let printURL = temporaryURL(nextTo: url)
@@ -93,7 +95,13 @@ enum PDFExportAdapter {
 
         try admission.checkCurrent()
         let operation = try configuredOperation(for: webView, savingTo: printURL, printInfo: info)
-        guard operation.run() else {
+        let didPrint = runPrint(operation)
+        // `run()` can occupy the main thread. Cancellation or lease revocation
+        // already recorded when it returns must win before PDFKit reads the
+        // scratch file or the existing destination can be replaced.
+        try Task.checkCancellation()
+        try lease?.checkActive()
+        guard didPrint else {
             throw PDFExportError.printOperationFailed
         }
 
@@ -160,10 +168,9 @@ enum PDFExportAdapter {
               operation.printInfo.dictionary()[NSPrintInfo.AttributeKey.jobSavingURL] as? URL == url
         else { throw PDFExportError.printConfigurationFailed }
         operation.showsPrintPanel = false
-        // `run()` below blocks synchronously until pagination/rendering
-        // finishes; AppKit's own progress panel (with Cancel) is the only
-        // feedback available for that stretch, so it stays on even though
-        // the print panel itself is suppressed.
+        // PDF/EPS generation does not display AppKit's progress panel, but
+        // retain the previously working print-operation configuration.
+        // Whole-export progress and cancellation need a separate policy.
         operation.showsProgressPanel = true
         // WebKit's print view is distinct from the WKWebView. Give it the
         // loaded view's geometry before AppKit starts pagination.
@@ -309,80 +316,5 @@ enum PDFExportAdapter {
                 String(localized: "Try again, or split very large documents before exporting.")
             }
         }
-    }
-}
-
-/// A navigation delegate that bridges WKWebView's callback-based load to an
-/// async continuation. WKWebView invokes its delegate on the main thread, so
-/// the continuation is resumed on the main actor.
-@MainActor
-private final class PDFNavigationDelegate: NSObject, WKNavigationDelegate {
-    private var continuation: CheckedContinuation<Void, Error>?
-
-    func load(_ html: String, in webView: WKWebView, timeout: Duration) async throws {
-        // A watchdog guarantees the continuation is always resumed. Without it,
-        // any failure WebKit reports through a delegate method this class does
-        // not implement would leave the export — and the menu command driving
-        // it — hung with no way back.
-        let watchdog = Task { @MainActor [weak self] in
-            try? await Task.sleep(for: timeout)
-            guard !Task.isCancelled else { return }
-            self?.timedOut()
-        }
-        defer { watchdog.cancel() }
-
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            self.continuation = continuation
-            webView.loadHTMLString(html, baseURL: nil)
-        }
-    }
-
-    /// The print page may only ever be the document loaded from a string (`about:blank`). The CSP governs
-    /// subresource loads, not navigation, so a `<meta http-equiv=refresh content="0; url=http://…">` in
-    /// authored raw HTML (kept for PDF export) would otherwise be followed: the export would call out to the
-    /// network and could print the remote page.
-    func webView(
-        _: WKWebView,
-        decidePolicyFor navigationAction: WKNavigationAction,
-        decisionHandler: @escaping @MainActor @Sendable (WKNavigationActionPolicy) -> Void
-    ) {
-        decisionHandler(PDFNavigationPolicy.allows(navigationAction.request.url) ? .allow : .cancel)
-    }
-
-    func webView(_: WKWebView, didFinish _: WKNavigation!) {
-        resume(nil)
-    }
-
-    func webView(_: WKWebView, didFail _: WKNavigation!, withError error: Error) {
-        resume(error)
-    }
-
-    /// The failure mode `loadHTMLString` actually reports. Without this the
-    /// continuation would never be resumed and the export would hang forever.
-    func webView(_: WKWebView, didFailProvisionalNavigation _: WKNavigation!, withError error: Error) {
-        resume(error)
-    }
-
-    private func timedOut() {
-        resume(PDFExportAdapter.PDFExportError.pageLoadTimedOut)
-    }
-
-    private func resume(_ error: Error?) {
-        guard let continuation else { return }
-        self.continuation = nil
-        if let error {
-            continuation.resume(throwing: error)
-        } else {
-            continuation.resume()
-        }
-    }
-}
-
-/// Which navigations the PDF print web view may perform.
-enum PDFNavigationPolicy {
-    /// Only the string-loaded document itself (`loadHTMLString(_, baseURL: nil)` navigates to `about:blank`).
-    static func allows(_ url: URL?) -> Bool {
-        guard let url else { return true }
-        return url.absoluteString == "about:blank"
     }
 }
