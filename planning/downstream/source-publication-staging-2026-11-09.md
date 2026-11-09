@@ -22,9 +22,10 @@ Baseline: clean `Joncallim/mostlytext` main
 Viz.js 3.30.0 source offers remain `planned`, with no public material list or
 retrieval receipt. The D2 37-file review archive has exact SHA-256
 `07de46d856b3e7bbc1d455651fe7045be73083e1d072530e8a1cca99a7b65c02`.
-The last Graphviz 57-file archive is a dated snapshot: its embedded notices
-and SBOM differ from current main. Build a new archive using the existing
-`prepare_graphviz_offer.py` verifier; do not relabel or overwrite the old one.
+At this `d605d92e` baseline, the then-last Graphviz 57-file archive was a
+dated snapshot: its embedded notices and SBOM differed from the current
+source. The refresh below uses `prepare_graphviz_offer.py` to build a new
+archive without relabeling or overwriting the old one.
 
 ## Staging contract
 
@@ -52,12 +53,13 @@ No additional private document, signing material, credential or application
 binary is selected as a payload input. The two source archives retain their
 own explicitly limited review status and existing member-level verifiers.
 
-Five Graphviz reproduction `README.md` members contain absolute local build
-paths under `/Volumes/Fast SSD/`. These are already in the committed evidence
-used by the existing archive assembler. This staging unit preserves those
-reviewed bytes; a publisher must review the path disclosures before approving
-public hosting. The byte verifier establishes identity, not publication safety
-or corresponding-source completeness.
+Five Graphviz reproduction `README.md` files in the repository contain local
+build-machine paths. The current assembler replaces exactly those five paths
+in its package copies, leaves the committed evidence unchanged, and rejects
+other local user or volume paths in assembled non-upstream material. The first
+private stage below predates that correction and must remain historical review
+evidence rather than a publication input. The byte verifier establishes
+identity, not corresponding-source completeness or publication approval.
 
 ## Procedure and stop conditions
 
@@ -69,7 +71,7 @@ verify the versioned directory. Keep both outputs in private build storage.
 The first private run on 9 November 2026 produced and verified the eight
 versioned files plus `REVIEW_ONLY.json`. The D2 package retained SHA-256
 `07de46d856b3e7bbc1d455651fe7045be73083e1d072530e8a1cca99a7b65c02`;
-the freshly assembled 57-file Graphviz package had SHA-256
+the then-current 57-file Graphviz package had SHA-256
 `7e045b5179ef4b9a6a8b0fdc02ac0ce2f8b7dde4fff6a66ef45ed6784c65e98e`.
 The staged notices and SBOM hashes were respectively
 `1e19c978f81682e60cd2cdf20a18122f2106c73a26c67e9ddebcca5b39354341`
@@ -78,6 +80,23 @@ The staged `SHA256SUMS` hash was
 `41f92f83ca9f2c6058b02659f7a047f00df4348e464303cce4f1e6ffb2749b59`.
 An older 57-file Graphviz archive failed member-byte verification because its
 embedded notices and SBOM predated current main. It was not used for staging.
+
+## Current private refresh — 9 November 2026
+
+From clean main `ffe692feef9c7c8f45ccd2dea1f88e31115aeae6`, the current
+Graphviz assembler reproduced a new package with 57 payload files and one
+manifest member: SHA-256
+`f2fba2c66a79f3345cc2db1eca515ae570175904f1b96449edf9937c4341d8b2`.
+The retained reviewed D2 archive remains the same 37-file package. The
+versioned private stage contains eight files plus `REVIEW_ONLY.json`; it passed
+creation and independent `--verify-only` readback. Its `SHA256SUMS` is
+`34d25f2940960f7f8e4ecbb8cb1d47708d0ca10933a09f0442c86ef2a9758b3c`
+and its review receipt is
+`8aa596211d4bbff06c95f9927ba37552ce52a5a21a2a97af05cb52819b9deab9`.
+Both private outputs are retained outside the repository. Their current notice
+and SBOM snapshots are still dated preparation inputs, not final signed-app
+bytes. No source-offer status or public URL changed. Rebuild the snapshot if
+distribution inputs change; do not reuse the older stage for publication.
 
 Stop if ordinary compliance, source/member verification, inventory offer state,
 current generated texts, file type, output isolation, or byte-for-byte staging
