@@ -22,8 +22,8 @@ The new en/fr/ja/pl files deliberately carry the exact source-English values.
 The three non-English files are review drafts; no translated Finder copy or
 locale acceptance is claimed. XcodeGen's generated project groups the four
 files under one localized `InfoPlist.strings` resource in the app target.
-The exact built app, Finder Kind/Open With presentation and clean-install
-registration still need native verification after the icon/packaging work.
+Finder Kind/Open With presentation and clean-install registration still need
+native verification after the icon/packaging work.
 
 The first-party compliance inventory registers only this app resource path.
 The Linux-safe localization check compares every declared document/type label
@@ -43,3 +43,19 @@ temporary negative controls. The normal source-tree Compliance check passes.
 No owner-account app or UI host was launched. This is one bounded E16 source
 route; MostlyText #3's translation, pseudo-localization, native Finder and
 final string-freeze criteria remain open.
+
+## Combined icon and label packaging check
+
+The owner-approved Markdown icon head `27a5e5ac` and this label head
+`93cfa785` merge cleanly with main `e4f3aafe`. A detached, clean synthetic
+tree `f3dd8011` built the pinned normal Release app with Xcode 26.6. The
+compiled bundle contains all four `InfoPlist.strings` resources, each with
+exactly the nine declared keys; its Markdown declaration points to
+`MarkdownDocument`, and the bundled `.icns` SHA-256 equals the source file
+(`b36d4b9c765ed1de034ec2648cd22a0cf2c2f345465eb5105af4c32abaa44d69`).
+The build log, packaged metadata and readback receipt are retained under
+`/Volumes/Fast SSD/CORTANA-Builds/finder-type-label-synthetic-20261109/`.
+Xcode registered the temporary build with Launch Services during compilation;
+it was unregistered afterward. No app, test host or Finder inspection ran.
+This is packaging evidence for those exact source heads, not an installed
+Finder, translated-copy or signed-release pass.
