@@ -510,7 +510,7 @@
       "path": "MacDown2/project.yml",
       "sha256": "438f8358b1e5781892bb8121d7197457d22e25cd68ab4fc98b7c793980a800fe",
       "status": "open",
-      "reason": "CFBundleTypeName and UTTypeDescription are OS-visible metadata; native Finder and InfoPlist.strings policy remain to be audited."
+      "reason": "CFBundleTypeName and UTTypeDescription now have reviewed source-English InfoPlist.strings routes; translation review, exact app packaging and native Finder presentation remain open."
     }
   ]
 }

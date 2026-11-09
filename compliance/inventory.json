@@ -11,6 +11,7 @@
     "paths": [
       "MacDown2/**/*.swift",
       "MacDown2/**/*.xcstrings",
+      "MacDown2/MacDown2/*.lproj/InfoPlist.strings",
       "MacDown2/MacDown2/Info.plist",
       "MacDown2/MacDown2/Assets.xcassets/**",
       "MacDown2/MacDown2/AppIcon.icon/icon.json",

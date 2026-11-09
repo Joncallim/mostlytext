@@ -1,0 +1,10 @@
+/* Finder and Launch Services type labels; source English. */
+"Markdown Document" = "Markdown Document";
+"HTML Document" = "HTML Document";
+"JSON Document" = "JSON Document";
+"YAML Document" = "YAML Document";
+"TOML Document" = "TOML Document";
+"Plain Text Document" = "Plain Text Document";
+"Source Code" = "Source Code";
+"MostlyText Theme" = "MostlyText Theme";
+"MostlyText File Tree Item" = "MostlyText File Tree Item";
