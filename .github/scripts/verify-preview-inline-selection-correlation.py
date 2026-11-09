@@ -18,7 +18,8 @@ INSTANCE = re.compile(
 )
 LAYOUT = re.compile(
     rf"^TEXTUAL_SELECTION_LAYOUT loadID={LOAD_ID} modelID=ObjectIdentifier\({OBJECT_ID}\) "
-    r"phase=(offered|handoff-after) .*?(?:offered|stored)=layouts=(\d+) attachmentRuns=(\d+)"
+    r"phase=(offered|handoff-after|on-change-before|on-change-after) "
+    r".*?(?:offered|stored)=layouts=(\d+) attachmentRuns=(\d+)"
 )
 NATIVE = re.compile(
     rf"^TEXTUAL_NATIVE_SELECTION loadID={LOAD_ID} viewID=ObjectIdentifier\({OBJECT_ID}\) "
@@ -29,7 +30,11 @@ ORACLE = "MOUNTED_IMAGE_ORACLE positives=10 negatives=100"
 PASS = re.compile(r"^✔ Test run with \d+ tests? in \d+ suites? passed")
 
 
-def inspect(log: str) -> tuple[list[dict], list[str]]:
+def inspect(log: str, variant: str = "new") -> tuple[list[dict], list[str]]:
+    if variant not in {"old", "new"}:
+        raise ValueError("Unknown Textual selection variant")
+    offered_phase, retained_phase = (("on-change-before", "on-change-after") if variant == "old"
+                                     else ("offered", "handoff-after"))
     lines = log.splitlines()
     instances = {}
     layouts = []
@@ -72,9 +77,9 @@ def inspect(log: str) -> tuple[list[dict], list[str]]:
         view_id = instance["view_id"]
         completion_line = instance["completion_line"]
         offered = [item for item in layouts if item[0] < completion_line
-                   and item[1:4] == (load_id, model_id, "offered") and item[5] > 0]
+                   and item[1:4] == (load_id, model_id, offered_phase) and item[5] > 0]
         retained = [item for item in layouts if item[0] < completion_line
-                    and item[1:4] == (load_id, model_id, "handoff-after") and item[5] > 0
+                    and item[1:4] == (load_id, model_id, retained_phase) and item[5] > 0
                     and any(prior[0] < item[0] for prior in offered)]
         updated = [item for item in native if item[0] < completion_line
                    and item[1:4] == (load_id, view_id, model_id)]
@@ -104,11 +109,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("log", type=Path)
     parser.add_argument("receipt", type=Path)
+    parser.add_argument("--variant", choices=["old", "new"], default="new")
     args = parser.parse_args()
     source = args.log.read_bytes()
-    generations, errors = inspect(source.decode("utf-8", errors="replace"))
+    generations, errors = inspect(source.decode("utf-8", errors="replace"), variant=args.variant)
     receipt = {
         "probe_log_sha256": hashlib.sha256(source).hexdigest(),
+        "variant": args.variant,
         "generations": generations,
         "errors": errors,
         "passed": not errors,

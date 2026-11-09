@@ -3,6 +3,7 @@
 
 import importlib.util
 import json
+import os
 from pathlib import Path
 import re
 import sys
@@ -11,7 +12,11 @@ import unittest
 
 SCRIPT = Path(__file__).with_name("verify-preview-inline-selection-correlation.py")
 ROOT = SCRIPT.parents[2]
-TEXTUAL_REVISION = "45d5ef2d9a2d0d993de265ffeba7697db97799f5"
+TEXTUAL_REVISIONS = {
+    "old": "d2f8488476a26a1c22d173026bcd7b231cd75b4a",
+    "new": "45d5ef2d9a2d0d993de265ffeba7697db97799f5",
+}
+TEXTUAL_REVISION = TEXTUAL_REVISIONS[os.environ.get("MOSTLYTEXT_SELECTION_AB_VARIANT", "new")]
 spec = importlib.util.spec_from_file_location("preview_inline_selection_correlation", SCRIPT)
 correlation = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(correlation)
@@ -68,6 +73,28 @@ class CorrelationTests(unittest.TestCase):
                             and item["offered_line"] < item["handoff_after_line"] < item["completion_line"]
                             and item["native_update_line"] < item["completion_line"]
                             for item in generations))
+
+    def test_old_on_change_trace_requires_the_matching_selected_model(self):
+        old_log = sample_log().replace("phase=offered", "phase=on-change-before").replace(
+            "phase=handoff-after", "phase=on-change-after"
+        ).replace(
+            "phase=on-change-before offered=layouts=1 attachmentRuns=1",
+            "phase=on-change-before offered=layouts=1 attachmentRuns=1 "
+            "stored=layouts=0 attachmentRuns=0"
+        )
+        generations, errors = correlation.inspect(old_log, variant="old")
+        self.assertEqual(errors, [])
+        self.assertEqual(len(generations), 10)
+        _, errors = correlation.inspect(old_log, variant="new")
+        self.assertIn("generation 3: selected model was not offered an attachment layout before Copy", errors)
+
+    def test_old_trace_without_completed_handoff_is_rejected(self):
+        old_log = sample_log().replace("phase=offered", "phase=on-change-before").replace(
+            "phase=handoff-after", "phase=on-change-after"
+        ).replace("phase=on-change-after", "phase=missing", 1)
+        _, errors = correlation.inspect(old_log, variant="old")
+        self.assertIn("generation 3: selected model did not retain an attachment layout after offer and before Copy",
+                      errors)
 
     def test_missing_rendered_attachment_fails_the_same_generation(self):
         log = sample_log().replace(
