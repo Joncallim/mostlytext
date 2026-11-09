@@ -62,6 +62,59 @@ struct WorkspaceIndexRootPublicationTests {
         await Set(controller.workspaceFileIndex.allPaths().map(\.relativePath))
     }
 
+    @Test func quickOpenOriginWaitsForTheNewRootIndexPublication() async throws {
+        let rootA = try tempRoot(["same.md"])
+        let rootB = try tempRoot(["same.md"])
+        defer {
+            try? FileManager.default.removeItem(at: rootA)
+            try? FileManager.default.removeItem(at: rootB)
+        }
+        let gate = IndexWalkGate()
+        let probe = IndexWalkProbe(heldRoot: rootB, gate: gate)
+        let fixture = try controllerFixture(index: probe.makeIndex())
+        defer { fixture.retire() }
+        let controller = fixture.controller
+
+        await controller.setFileTreeRoot(rootA)
+        let oldOrigin = try #require(controller.currentQuickOpenOrigin)
+        #expect(oldOrigin.lexicalRoot == rootA.standardizedFileURL)
+
+        let beforeTree = FolderSearchGate()
+        controller.beforeRootRebuild = { await beforeTree.wait() }
+        defer { controller.beforeRootRebuild = nil }
+        let change = Task { await controller.setFileTreeRoot(rootB) }
+        guard await FolderSearchGate.waitForEntry(beforeTree.entered) else {
+            beforeTree.release()
+            gate.release()
+            await change.value
+            Issue.record("root switch did not pause before replacing the tree")
+            return
+        }
+        #expect(controller.fileTreeModel.rootAccessURL == rootA.standardizedFileURL)
+        #expect(controller.currentQuickOpenOrigin == nil)
+        beforeTree.release()
+        guard await gate.waitUntilBlocked() else {
+            gate.release()
+            await change.value
+            Issue.record("new-root index walk did not pause")
+            return
+        }
+
+        // The tree already points at B while the index still retains A's
+        // published row. Opening a panel in this interval must not pair that
+        // row with B's root, even if B has a file of the same name.
+        #expect(controller.fileTreeModel.rootAccessURL == rootB.standardizedFileURL)
+        let stale = await controller.workspaceFileIndex.querySnapshot("same", limit: 10)
+        #expect(stale.paths.map(\.relativePath) == ["same.md"])
+        #expect(controller.currentQuickOpenOrigin == nil)
+
+        gate.release()
+        await change.value
+        let newOrigin = try #require(controller.currentQuickOpenOrigin)
+        #expect(newOrigin.lexicalRoot == rootB.standardizedFileURL)
+        #expect(newOrigin.generation != oldOrigin.generation)
+    }
+
     @Test func changingRootRetiresOldSearchRowsBeforeRebuildAwaits() async throws {
         let rootA = try tempRoot(["a.md"])
         let rootB = try tempRoot(["b.md"])

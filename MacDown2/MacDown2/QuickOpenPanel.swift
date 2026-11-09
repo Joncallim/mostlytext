@@ -96,14 +96,6 @@ final class QuickOpenPanel: NSPanel, NSWindowDelegate {
     }
 
     private static func currentOrigin(for controller: WindowController?) -> QuickOpenOrigin? {
-        guard let controller, !controller.isClosed,
-              let lexicalRoot = controller.fileTreeModel.root,
-              let accessRoot = controller.fileTreeModel.rootAccessURL
-        else { return nil }
-        return QuickOpenOrigin(
-            generation: controller.workspaceRootRequestGeneration,
-            lexicalRoot: lexicalRoot,
-            accessRoot: accessRoot
-        )
+        controller?.currentQuickOpenOrigin
     }
 }

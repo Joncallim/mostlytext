@@ -5,6 +5,23 @@ import Foundation
 /// reason `WindowController+Close.swift`/`WindowController+TextFilterTasks.swift`
 /// are: a distinct, self-contained ownership concern kept in one place.
 extension WindowController {
+    /// A Quick Open result may be resolved only after this root request's
+    /// index has published a ready snapshot for the same access directory.
+    /// A root switch clears the publication markers before its first await,
+    /// so a panel opened while the new tree/index is still rebuilding has
+    /// no actionable origin even if the index still retains old rows.
+    var currentQuickOpenOrigin: QuickOpenOrigin? {
+        let request = workspaceRootRequestGeneration
+        guard !isClosed,
+              workspaceTreeRootAppliedGeneration == request,
+              lastWorkspaceIndexRefreshGeneration == request,
+              let lexicalRoot = fileTreeModel.root,
+              let accessRoot = fileTreeModel.rootAccessURL,
+              lastWorkspaceIndexRefreshRoot == accessRoot
+        else { return nil }
+        return QuickOpenOrigin(generation: request, lexicalRoot: lexicalRoot, accessRoot: accessRoot)
+    }
+
     /// Lets Replace in Folder (Slice 7c) ask the coordinator whether any
     /// window holds unsaved edits for a file it is about to rewrite.
     func installFolderSearchHooks() {
