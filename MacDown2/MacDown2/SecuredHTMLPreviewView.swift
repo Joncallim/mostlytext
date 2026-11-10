@@ -163,6 +163,8 @@ struct SecuredHTMLPreviewView: NSViewRepresentable {
         func webView(_ webView: WKWebView, decidePolicyFor action: WKNavigationAction,
                      decisionHandler: @escaping @MainActor @Sendable (WKNavigationActionPolicy) -> Void) {
             guard let page, page.webView === webView else { decisionHandler(.cancel); return }
+            // A same-authority resource is readable inside this page, but it must not become a browser download.
+            guard !action.shouldPerformDownload else { decisionHandler(.cancel); return }
             let target: HTMLPreviewNavigationAction.Target = if let frame = action.targetFrame {
                 frame.isMainFrame ? .mainFrame : .subframe
             } else {

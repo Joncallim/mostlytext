@@ -44,6 +44,7 @@ struct SecuredPreviewNetworkTests {
         let webView = try await waitForPage(in: host)
         try await assertLocalControls(in: webView)
         try await assertNavigationControls(in: webView, host: host, base: base, localFile: documentURL)
+        try await assertDownloadControl(in: webView, coordinator: coordinator)
         try await Task.sleep(for: .seconds(1))
         let (status, _) = try await URLSession.shared.data(from: base.appendingPathComponent("status"))
         let paths = try #require(JSONSerialization.jsonObject(with: status) as? [String])
@@ -145,6 +146,34 @@ struct SecuredPreviewNetworkTests {
         Issue.record("The ordinary WebKit positive control did not reach the live listener")
     }
 
+    private func assertDownloadControl(
+        in webView: WKWebView, coordinator: SecuredHTMLPreviewView.Coordinator
+    ) async throws {
+        let handler = try #require(webView.configuration.urlSchemeHandler(
+            forURLScheme: HTMLPreviewNavigationPolicy.previewURLScheme
+        ) as? BoundedHTMLPreviewHandler)
+        let mainURL = handler.load.mainURL
+        let resourceURL = mainURL.appendingPathComponent("local.png")
+        let recorder = PreviewDownloadActionRecorder(coordinator: coordinator)
+        webView.navigationDelegate = recorder
+        defer { webView.navigationDelegate = coordinator }
+        // The hostile fixture has a remote <base>; bind this authored download link to the current immutable
+        // local authority before clicking, so an ordinary remote-URL refusal cannot mask a download-policy gap.
+        _ = try await webView.evaluateJavaScript(
+            "document.getElementById('attackDownload').href = '\(resourceURL.absoluteString)'"
+        )
+        _ = try await webView.evaluateJavaScript("document.getElementById('attackDownload').click()")
+        let deadline = ContinuousClock.now.advanced(by: .seconds(5))
+        while ContinuousClock.now < deadline, recorder.decision(for: resourceURL) == nil {
+            try await Task.sleep(for: .milliseconds(20))
+        }
+        let decision = try #require(recorder.decision(for: resourceURL))
+        #expect(decision.shouldPerformDownload)
+        #expect(decision.policy == .cancel)
+        #expect(webView.url == mainURL)
+        #expect(webView.title == "Contained fixture")
+    }
+
     private func hostileSource(address: String) -> String {
         """
         <!-- <head> --><html data-fake-head="<head>"><head><title>Contained fixture</title>
@@ -172,7 +201,46 @@ struct SecuredPreviewNetworkTests {
         <a id="attackPopup" target="_blank" href="\(address)/denied/popup-link">Popup</a>
         <a id="attackData" href="data:text/html,%3Ctitle%3EREPLACED%3C%2Ftitle%3E">Data link</a>
         <a id="attackScript" href="javascript:window.linkScriptRan=true">Script link</a>
+        <a id="attackDownload" download="local.png" href="local.png">Download</a>
         </body></html>
         """
+    }
+}
+
+@MainActor
+private final class PreviewDownloadActionRecorder: NSObject, WKNavigationDelegate {
+    struct Decision {
+        let shouldPerformDownload: Bool
+        let policy: WKNavigationActionPolicy
+    }
+
+    private let coordinator: SecuredHTMLPreviewView.Coordinator
+    private var decisions: [URL: Decision] = [:]
+
+    init(coordinator: SecuredHTMLPreviewView.Coordinator) {
+        self.coordinator = coordinator
+    }
+
+    func decision(for url: URL) -> Decision? {
+        decisions[url]
+    }
+
+    func webView(
+        _ webView: WKWebView, decidePolicyFor action: WKNavigationAction,
+        decisionHandler: @escaping @MainActor @Sendable (WKNavigationActionPolicy) -> Void
+    ) {
+        coordinator.webView(webView, decidePolicyFor: action) { [self] policy in
+            if let url = action.request.url {
+                decisions[url] = Decision(shouldPerformDownload: action.shouldPerformDownload, policy: policy)
+            }
+            decisionHandler(policy)
+        }
+    }
+
+    func webView(
+        _ webView: WKWebView, decidePolicyFor response: WKNavigationResponse,
+        decisionHandler: @escaping @MainActor @Sendable (WKNavigationResponsePolicy) -> Void
+    ) {
+        coordinator.webView(webView, decidePolicyFor: response, decisionHandler: decisionHandler)
     }
 }
