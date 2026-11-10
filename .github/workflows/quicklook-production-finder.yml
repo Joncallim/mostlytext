@@ -1,0 +1,105 @@
+name: Production Markdown Quick Look Finder qualification
+
+permissions:
+  contents: read
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'MacDown2/MacDown2QuickLook/**'
+      - 'MacDown2/MacDown2QuickLookWorker/**'
+      - 'MacDown2/Packages/MacDownKit/Sources/QuickLookSource/**'
+      - '.github/quicklook-production-probe/**'
+      - '.github/workflows/quicklook-production-finder.yml'
+  workflow_dispatch:
+concurrency:
+  group: quicklook-production-finder-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  finder:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: macos-26
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Select macOS 26 and build the actual product
+        run: |
+          set -euo pipefail
+          XCODE=$(ls -d /Applications/Xcode*.app | grep '26' | head -1 || true)
+          test -n "$XCODE"
+          test "$(sw_vers -productVersion | cut -d. -f1)" = 26
+          test "$(uname -m)" = arm64
+          sudo xcode-select -s "$XCODE/Contents/Developer"
+          brew install xcodegen
+          cd MacDown2
+          xcodegen generate
+          cd ..
+          MacDown2/scripts/pin-xcode-package-versions.sh
+          xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
+            -configuration Release -destination 'platform=macOS,arch=arm64' \
+            -derivedDataPath "$RUNNER_TEMP/production-quicklook/app-build" \
+            -onlyUsePackageVersionsFromResolvedFile CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual build \
+            2>&1 | tee "$RUNNER_TEMP/production-quicklook-app-build.log"
+      - name: Verify exact installed bundle and prepare separate Finder automation
+        run: |
+          set -euo pipefail
+          app="$RUNNER_TEMP/production-quicklook/app-build/Build/Products/Release/MacDown2.app"
+          provider="$app/Contents/PlugIns/MostlyTextQuickLook.appex"
+          worker="$provider/Contents/XPCServices/MostlyTextQuickLookWorker.xpc"
+          test -d "$app" && test -d "$provider" && test -d "$worker"
+          /usr/bin/codesign --verify --deep --strict --verbose=2 "$app"
+          /usr/bin/codesign -d --entitlements - "$provider" > "$RUNNER_TEMP/provider-entitlements.plist"
+          /usr/bin/codesign -d --entitlements - "$worker" > "$RUNNER_TEMP/worker-entitlements.plist"
+          python3 - <<'PY'
+          import os, plistlib
+          from pathlib import Path
+          root = Path(os.environ['RUNNER_TEMP'])
+          provider = plistlib.loads((root / 'provider-entitlements.plist').read_bytes())
+          worker = plistlib.loads((root / 'worker-entitlements.plist').read_bytes())
+          assert provider == {
+              'com.apple.security.app-sandbox': True,
+              'com.apple.security.files.user-selected.read-only': True,
+          }, provider
+          assert worker == {'com.apple.security.app-sandbox': True}, worker
+          PY
+          cp -R .github/quicklook-production-probe "$RUNNER_TEMP/production-quicklook/fixture"
+          cd "$RUNNER_TEMP/production-quicklook/fixture"
+          xcodegen generate
+          xcodebuild -project MostlyTextProductionFinderProbe.xcodeproj -scheme ProductionFinderProbe \
+            -configuration Release -destination 'platform=macOS' \
+            -derivedDataPath "$RUNNER_TEMP/production-quicklook/fixture-build" \
+            CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual build-for-testing \
+            2>&1 | tee "$RUNNER_TEMP/production-quicklook-fixture-build.log"
+      - name: Register product and invoke genuine cold Finder
+        run: |
+          set -euo pipefail
+          app="$RUNNER_TEMP/production-quicklook/app-build/Build/Products/Release/MacDown2.app"
+          provider="$app/Contents/PlugIns/MostlyTextQuickLook.appex"
+          printf '%s' 'MOSTLYTEXT_PRODUCTION_QUICKLOOK_20261111' > "$RUNNER_TEMP/mostlytext-production-quicklook.md"
+          /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$app"
+          pluginkit -a "$provider"
+          pluginkit -e use -i app.mostlytext.MostlyText.QuickLook
+          pluginkit -m -A -D -vv -i app.mostlytext.MostlyText.QuickLook | tee "$RUNNER_TEMP/production-quicklook-discovery.log"
+          open -R "$RUNNER_TEMP/mostlytext-production-quicklook.md"
+          python3 .github/scripts/run-owned-app-tests.py "$RUNNER_TEMP/production-quicklook/owned" \
+            "$provider/Contents/MacOS/MostlyTextQuickLook" -- \
+            xcodebuild -project "$RUNNER_TEMP/production-quicklook/fixture/MostlyTextProductionFinderProbe.xcodeproj" \
+            -scheme ProductionFinderProbe -configuration Release -destination 'platform=macOS' \
+            -derivedDataPath "$RUNNER_TEMP/production-quicklook/fixture-build" \
+            -resultBundlePath "$RUNNER_TEMP/production-quicklook/Finder.xcresult" \
+            -parallel-testing-enabled NO -test-timeouts-enabled YES \
+            -default-test-execution-time-allowance 120 -maximum-test-execution-time-allowance 120 \
+            test-without-building 2>&1 | tee "$RUNNER_TEMP/production-quicklook-finder.log"
+      - name: Preserve first Finder outcome
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-quicklook-finder
+          path: |
+            ${{ runner.temp }}/production-quicklook-*.log
+            ${{ runner.temp }}/provider-entitlements.plist
+            ${{ runner.temp }}/worker-entitlements.plist
+            ${{ runner.temp }}/production-quicklook/owned/**
+            ${{ runner.temp }}/production-quicklook/Finder.xcresult/**
