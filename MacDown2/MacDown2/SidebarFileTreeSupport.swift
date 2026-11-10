@@ -28,7 +28,7 @@ struct FileTreeRowView: View {
                     Image(systemName: row.isExpanded ? "chevron.down" : "chevron.right")
                         .font(.system(size: 9, weight: .semibold)).frame(width: 12, height: 12)
                 }.buttonStyle(.plain)
-                    .accessibilityLabel(row.isExpanded ? "Collapse" : "Expand")
+                    .accessibilityLabel(row.isExpanded ? Text("Collapse") : Text("Expand"))
             } else {
                 Color.clear.frame(width: 12, height: 12)
             }

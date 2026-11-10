@@ -41,7 +41,8 @@ struct SnippetPickerView: View {
             Divider()
 
             if model.results.isEmpty {
-                Text(model.snippets.isEmpty ? "No Snippets Available" : "No Matching Snippets")
+                Text(model.snippets.isEmpty ? LocalizedStringKey("No Snippets Available") :
+                    LocalizedStringKey("No Matching Snippets"))
                     .foregroundStyle(.secondary)
                     .padding()
                     .accessibilityIdentifier("snippetPickerEmptyState")
