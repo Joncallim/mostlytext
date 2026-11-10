@@ -98,6 +98,7 @@ final class PreviewResourceWindowState {
     func install(
         _ selection: PreviewResourceFolderSelection,
         from origin: SelectionOrigin,
+        scopeAccess: PreviewDirectoryScopeAccess = .system,
         currentDocument: @escaping @MainActor () -> FileCore.FileDocument?
     ) async throws {
         guard !isClosed, pendingSelection == origin,
@@ -105,7 +106,8 @@ final class PreviewResourceWindowState {
               let document = currentDocument(), origin.matches(document), !Task.isCancelled
         else { throw PreviewResourceAdmissionError.revoked }
         let backing = try await PreviewDirectoryGrantBacking.acquire(
-            selection: selection, currentDocumentURL: origin.documentURL, epoch: origin.id
+            selection: selection, currentDocumentURL: origin.documentURL,
+            epoch: origin.id, scopeAccess: scopeAccess
         )
         guard !isClosed, pendingSelection == origin,
               let current = currentDocument(), origin.matches(current), !Task.isCancelled

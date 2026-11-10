@@ -6,6 +6,48 @@ import Testing
 @Suite("Preview window resource ownership")
 @MainActor
 struct PreviewResourceWindowStateTests {
+    @Test func scopeStartStopBalancesAcrossLoadSupersedeAndWindowClose() async throws {
+        let folder = try makeFolder()
+        defer { try? FileManager.default.removeItem(at: folder) }
+        let first = FileDocument(fileURL: folder.appendingPathComponent("first.md"))
+        let second = FileDocument(fileURL: folder.appendingPathComponent("second.md"))
+        let owner = PreviewResourceWindowState()
+        let counter = PreviewScopeCounter()
+
+        let firstURL = try #require(first.fileURL)
+        let firstSelection = try #require(PreviewResourceFolderSelection.fixture(
+            documentURL: firstURL, folderURL: folder
+        ))
+        let firstOrigin = try #require(owner.beginSelection(for: first))
+        try await owner.install(firstSelection, from: firstOrigin, scopeAccess: counter.access) { first }
+        let load = try #require(owner.beginLoad(for: first, consumer: .html))
+        var use = load.acquireUse()
+        #expect(use != nil)
+        #expect(counter.started == [folder])
+        #expect(counter.stopped.isEmpty)
+
+        owner.invalidateForIdentityChange()
+        #expect(load.isRevoked)
+        #expect(counter.stopped.isEmpty, "An admitted read retains its real scope after supersede")
+        use = nil
+        try await counter.waitForStops(1)
+        #expect(counter.stopped == [folder])
+
+        let secondURL = try #require(second.fileURL)
+        let secondSelection = try #require(PreviewResourceFolderSelection.fixture(
+            documentURL: secondURL, folderURL: folder
+        ))
+        let secondOrigin = try #require(owner.beginSelection(for: second))
+        try await owner.install(secondSelection, from: secondOrigin, scopeAccess: counter.access) { second }
+        #expect(counter.started == [folder, folder])
+        #expect(counter.stopped == [folder])
+        owner.close()
+        try await counter.waitForStops(2)
+        #expect(counter.stopped == [folder, folder])
+        owner.close()
+        #expect(counter.stopped.count == 2)
+    }
+
     @Test func closingWindowRevokesBothConsumersAndItsBacking() async throws {
         let folder = try makeFolder()
         defer { try? FileManager.default.removeItem(at: folder) }
@@ -40,13 +82,17 @@ struct PreviewResourceWindowStateTests {
         ))
         let owner = PreviewResourceWindowState()
         let origin = try #require(owner.beginSelection(for: document))
+        let counter = PreviewScopeCounter()
         var reads = 0
         await #expect(throws: PreviewResourceAdmissionError.revoked) {
-            try await owner.install(selection, from: origin) {
+            try await owner.install(selection, from: origin, scopeAccess: counter.access) {
                 reads += 1
                 return reads == 1 ? document : other
             }
         }
+        #expect(counter.started == [folder])
+        try await counter.waitForStops(1)
+        #expect(counter.stopped == [folder])
         #expect(owner.beginLoad(for: document, consumer: .markdown) == nil)
     }
 
