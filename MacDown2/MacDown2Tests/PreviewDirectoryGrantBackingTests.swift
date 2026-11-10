@@ -28,15 +28,17 @@ struct PreviewDirectoryGrantBackingTests {
 
     @Test func failedAutomaticDirectoryOpenStopsItsStartedScope() throws {
         let sandbox = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let documentURL = sandbox.appendingPathComponent("story.html")
+        let scopedDirectory = documentURL.deletingLastPathComponent()
         let counter = PreviewScopeCounter()
         #expect(throws: (any Error).self) {
             try PreviewDirectoryGrantBacking.acquireAutomatic(
-                documentURL: sandbox.appendingPathComponent("story.html"),
+                documentURL: documentURL,
                 epoch: UUID(), scopeAccess: counter.access
             )
         }
-        #expect(counter.started == [sandbox])
-        #expect(counter.stopped == [sandbox])
+        #expect(counter.started == [scopedDirectory])
+        #expect(counter.stopped == [scopedDirectory])
     }
 
     @Test func automaticDocumentDirectoryDrainsAnAdmittedUseAfterRevocation() throws {
