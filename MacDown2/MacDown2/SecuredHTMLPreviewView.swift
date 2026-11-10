@@ -183,9 +183,22 @@ struct SecuredHTMLPreviewView: NSViewRepresentable {
             decisionHandler(decision == .allow && sameAuthority ? .allow : .cancel)
         }
 
-        func webView(_: WKWebView, decidePolicyFor response: WKNavigationResponse,
+        func webView(_ webView: WKWebView, decidePolicyFor response: WKNavigationResponse,
                      decisionHandler: @escaping @MainActor @Sendable (WKNavigationResponsePolicy) -> Void) {
-            decisionHandler(response.canShowMIMEType ? .allow : .cancel)
+            decisionHandler(responsePolicy(
+                for: webView, url: response.response.url, canShowMIMEType: response.canShowMIMEType
+            ))
+        }
+
+        /// WebKit can deliver a response after a page has been superseded. The old view and its authority must
+        /// not receive a new policy decision, even if its MIME is otherwise renderable.
+        func responsePolicy(for webView: WKWebView, url: URL?, canShowMIMEType: Bool) -> WKNavigationResponsePolicy {
+            guard let page, page.webView === webView, let url,
+                  url.scheme?.lowercased() == HTMLPreviewNavigationPolicy.previewURLScheme,
+                  url.host == page.load.authority,
+                  url.user == nil, url.password == nil, url.port == nil,
+                  canShowMIMEType else { return .cancel }
+            return .allow
         }
 
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
