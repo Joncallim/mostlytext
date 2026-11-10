@@ -34,8 +34,11 @@ final class ProductionFinderTests: XCTestCase {
         image.lifetime = .keepAlways
         add(image)
         XCTAssertTrue(visible, "The actual product extension must answer Finder with selected source")
-        let open = finder.buttons["QLControlOpen"].firstMatch
-        XCTAssertEqual(open.title, "Open with MostlyText")
+        let staged = URL(fileURLWithPath: "/Users/runner/work/_temp/production-quicklook/installed/MostlyText.app")
+        let source = URL(fileURLWithPath: "/Users/runner/work/_temp/mostlytext-production-quicklook.md")
+        let handlers = NSWorkspace.shared.urlsForApplications(toOpen: source)
+        XCTAssertTrue(handlers.contains(staged.standardizedFileURL),
+                      "The staged public app must appear as a Markdown Open With handler")
         XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText").isEmpty)
         finder.typeKey(.escape, modifierFlags: [])
     }

@@ -87,6 +87,8 @@ jobs:
           pluginkit -a "$provider"
           pluginkit -e use -i app.mostlytext.MostlyText.QuickLook
           pluginkit -m -A -D -vv -i app.mostlytext.MostlyText.QuickLook | tee "$RUNNER_TEMP/production-quicklook-discovery.log"
+          grep -Fq "Parent Bundle = $app" "$RUNNER_TEMP/production-quicklook-discovery.log"
+          ! grep -Fq "Parent Bundle = $built" "$RUNNER_TEMP/production-quicklook-discovery.log"
           open -R "$RUNNER_TEMP/mostlytext-production-quicklook.md"
           python3 .github/scripts/run-owned-app-tests.py "$RUNNER_TEMP/production-quicklook/owned" \
             "$provider/Contents/MacOS/MostlyTextQuickLook" -- \
