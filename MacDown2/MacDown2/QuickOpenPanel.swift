@@ -21,6 +21,7 @@ final class QuickOpenPanel: NSPanel, NSWindowDelegate {
     /// same reasoning as `CommandPalettePanel.originController` and
     /// `GoToLinePanel.originController`.
     private(set) weak var originController: WindowController?
+    private var submission: QuickOpenSubmission?
 
     convenience init(
         coordinator: WindowCoordinator,
@@ -53,7 +54,7 @@ final class QuickOpenPanel: NSPanel, NSWindowDelegate {
         let actionGate = QuickOpenActionGate(index: index) { [weak originController] in
             Self.currentOrigin(for: originController)
         }
-        let view = QuickOpenView(
+        let submission = QuickOpenSubmission(
             model: model,
             onOpen: { [weak self, weak coordinator, weak originController] result in
                 guard self?.isVisible == true,
@@ -88,7 +89,22 @@ final class QuickOpenPanel: NSPanel, NSWindowDelegate {
             },
             onDismiss: { [weak self] in self?.close() }
         )
+        self.submission = submission
+        let view = QuickOpenView(model: model, submission: submission, onDismiss: { [weak self] in self?.close() })
         contentView = NSHostingView(rootView: view)
+    }
+
+    override func sendEvent(_ event: NSEvent) {
+        let hasMarkedText = (firstResponder as? NSTextInputClient)?.hasMarkedText() ?? false
+        if event.type == .keyDown,
+           event.keyCode == 36 || event.keyCode == 76,
+           event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+           .subtracting([.capsLock, .numericPad, .function]).isEmpty,
+           !hasMarkedText {
+            submission?.submit()
+            return
+        }
+        super.sendEvent(event)
     }
 
     func windowWillClose(_: Notification) {

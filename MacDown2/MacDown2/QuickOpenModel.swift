@@ -38,7 +38,13 @@ final class QuickOpenModel {
     }
 
     var query = "" {
-        didSet { scheduleQuery() }
+        didSet {
+            // SwiftUI may write the field's unchanged value again while
+            // submitting. That must not invalidate the selected row token.
+            if query != oldValue {
+                scheduleQuery()
+            }
+        }
     }
 
     private(set) var results: [IndexedPath] = []

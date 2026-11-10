@@ -59,6 +59,20 @@ struct QuickOpenModelTests {
         #expect(model.results.first?.relativePath == "WindowCoordinator.swift")
     }
 
+    @Test func unchangedFieldWriteKeepsTheSelectedResultActionable() async throws {
+        let tree = try TempTree(["a.md"])
+        let index = WorkspaceFileIndex()
+        await index.rebuild(root: tree.root)
+        let model = QuickOpenModel(index: index)
+        model.query = "a.md"
+        await waitUntil { model.selectedResult != nil }
+        let selected = try #require(model.selectedResult)
+
+        model.query = "a.md" // SwiftUI can write this unchanged value on Return.
+        #expect(model.selectedResult == selected)
+        #expect(!model.isSearching)
+    }
+
     @Test func rapidTypingEndsOnTheLastTypedQuerysResults() async throws {
         // A real end-to-end smoke test that typing two characters in a row
         // settles on the LAST one's results -- but against the real

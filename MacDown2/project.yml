@@ -15,7 +15,7 @@ settings:
 packages:
   Textual:
     url: https://github.com/Joncallim/textual
-    revision: dd123d4f7052d84032cafb22c62cd467916518dd
+    revision: 4bc5a45e384b596e0c1448888c8534a6df436c57
   SwiftUIMath:
     url: https://github.com/Joncallim/swiftui-math
     revision: 2a89c2b41482988711909572d116374e47a52164
@@ -269,6 +269,9 @@ targets:
     platform: macOS
     sources:
     - MacDown2Tests
+    # Compile the original package controls against the same actual products in optimized app-host qualification.
+    - Packages/MacDownKit/Tests/PreviewTests/PreviewImageDecodeBudgetTests.swift
+    - Packages/MacDownKit/Tests/PreviewTests/TextualAttachmentInterceptionTests.swift
     dependencies:
     - target: MacDown2
     - package: MacDownKit

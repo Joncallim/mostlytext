@@ -1,0 +1,16 @@
+{
+  "base": "d607098bdb5046c02d81137b497e0ffe1aa01748",
+  "changed_input_sha256": {
+    "MacDown2/MacDown2Tests/PDFExportAdapterTests.swift": "302341c0302d67dcbfff4ebe0646af5ad6572460e3382f9e1de1ffcf3e41f187",
+    ".github/scripts/verify-pdf-pagination-probe.py": "85d748ca0c292b83aa284b618175e7e5e0f2b1261a7ba4520d3ac0b2312dbfc5",
+    ".github/scripts/test-pdf-pagination-probe.py": "20b58b7bd0a30446a0f6769b670ecbd30722556e270b411332b2038b47111efb",
+    ".github/workflows/pdf-pagination-probe.yml": "f08d360793502174d2d16d8c6e1b5c8b99b03758fb0b8338a31f602432554c47"
+  },
+  "conditions": [
+    "RELEASE_PREVIEW_PROBE",
+    "PDF_PAGINATION_PROBE"
+  ],
+  "scope": "Actual unsigned Release build-for-testing, no local native execution",
+  "original_pdf_test_bodies": "byte-identical to main",
+  "first_compile": "Retained support-condition and actor-isolation compile failures; corrected before the successful compile"
+}

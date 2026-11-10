@@ -1,18 +1,18 @@
 {
   "schema": 1,
   "scope": "selected_plain_string_sinks",
-  "base_source_commit": "892241384112a05d397a8ce292f0467e02d3ebab plus reviewed PR164 delta",
+  "base_source_commit": "892241384112a05d397a8ce292f0467e02d3ebab plus reviewed PR164 delta plus reviewed PR146 preview-folder panel delta",
   "limitations": [
     "Selected AppKit property/button/accessibility, name fallback, folder and workspace-replace error sites only; this is not the complete E16 literal census.",
     "Computed string flows, SwiftUI implicit keys, Info.plist/project.yml OS labels, built-in snippet and format names require separate policy and native audit.",
     "Catalog and translation quality, language overrides, accessibility layout, and final string freeze require independent evidence."
   ],
-  "production_swift_inputs_scanned": 742,
+  "production_swift_inputs_scanned": 750,
   "source_sha256": {
     "MacDown2/MacDown2/ExportCoordinator.swift": "1e27397ba5c1ff43ea10760c692799a0b40d95022c83240abace4c1adba4160c",
     "MacDown2/MacDown2/FirstRunWindowController.swift": "b8737772a8974cab6944c2b6c63bd711d35b24d47d99f4179b14085b1ebf4dbf",
     "MacDown2/MacDown2/LegacyImportWindowController.swift": "d39f33bf027f93975ee61088ae362951ff651f32b35f7f99612a10c31763fc9f",
-    "MacDown2/MacDown2/NSFilePanelProvider.swift": "cd64fa8f7adbbcb3a469260334157759625d0252dc5557d517c4db324f0b3927",
+    "MacDown2/MacDown2/NSFilePanelProvider.swift": "c9b7b1c95f03de159c50ed177a45690cbd3f475df806b40e2ed0cd09a74931da",
     "MacDown2/MacDown2/SidebarFileTreeSupport.swift": "b1d6597390fe685a5aedd24a3ba2591213013f2619ea77ef2083bf9787931483",
     "MacDown2/MacDown2/SidebarView+Folder.swift": "fab5b6f7e5726577a1eb06ffdcd990ae4e3426e1cb641581b3791e4454113746",
     "MacDown2/MacDown2/TextFilterCommands.swift": "96f125183edbb097e7c97008088590c4c2f20f883a2755e58cb60cba0eb57991",
@@ -78,6 +78,20 @@
       "line": 178,
       "kind": "appkit_property",
       "literal": "\"Open Folder\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/NSFilePanelProvider.swift",
+      "line": 196,
+      "kind": "appkit_property",
+      "literal": "\"Allow preview resources\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/NSFilePanelProvider.swift",
+      "line": 197,
+      "kind": "appkit_property",
+      "literal": "\"Choose the folder containing this document.\"",
       "route": "localized"
     },
     {

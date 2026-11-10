@@ -1,0 +1,13 @@
+{
+  "original_pin": "dd123d4f7052d84032cafb22c62cd467916518dd",
+  "selected_native_source": "bf67f10cef40dd1f8db0aa6e2d0395359d97478a",
+  "selected_variant": "inline-only",
+  "only_changed_path": "Sources/Textual/Internal/InlineText/WithInlineStyle.swift",
+  "original_file_sha256": "838c1831eda252291266ddc4542ddb1876385c132d45b5fa61bb29e93043e255",
+  "shipping_file_sha256": "92ec38d71238ce023f3d076bb5cca77f9629b64a106c922ecb4d4f2dba706ae7",
+  "removed_only_two_diagnostic_expressions": true,
+  "all_other_295_tracked_files_byte_identical": true,
+  "MIT_resources_fonts_manifests_tests_unchanged": true,
+  "native_shipping_qualification": "PENDING",
+  "shipping_fork_commit": "ff74cf54c278b451b2c59387dd00315830266a36"
+}

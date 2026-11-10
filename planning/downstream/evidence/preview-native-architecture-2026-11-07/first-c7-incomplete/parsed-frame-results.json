@@ -1,0 +1,9 @@
+[
+  {
+    "phase": "viewport-mutant",
+    "returncode": 65,
+    "source_sha256": "baa3484fa5a7d49dd1bad184d41c5fc02202f3ca79f4168e482b47805196109c",
+    "app_sha256": "74b2b1d5044778533761040c9780e2b988dcc290876acf8380ec57d9f77e11c7",
+    "original_app_sha256": "fe015dc174b852e57a604182d047237724093dc1f73d7fcd8d8a965b8cdaa6e1"
+  }
+]
