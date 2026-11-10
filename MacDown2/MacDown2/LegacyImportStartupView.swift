@@ -24,12 +24,13 @@ struct LegacyImportStartupView: View {
                                     Text(label(entry.destination))
                                     switch entry.disposition {
                                     case let .fillProvenAbsent(value), let .retainPersisted(_, value):
-                                        Text(value ? "Import value: On" : "Import value: Off").font(.caption)
+                                        Text(value ? LocalizedStringKey("Import value: On") :
+                                            LocalizedStringKey("Import value: Off")).font(.caption)
                                     default: EmptyView()
                                     }
-                                    Text(review
-                                        .replacesSavedEditor ? "Replace the saved MostlyText value." :
-                                        "Import this value.")
+                                    Text(review.replacesSavedEditor ?
+                                        LocalizedStringKey("Replace the saved MostlyText value.") :
+                                        LocalizedStringKey("Import this value."))
                                         .font(.caption).foregroundStyle(.secondary)
                                 }
                             }
@@ -45,9 +46,9 @@ struct LegacyImportStartupView: View {
                                     Text("Editor font")
                                     Text(verbatim: "\(font.postScriptName), \(font.descriptor.size) pt")
                                         .font(.caption)
-                                    Text(review
-                                        .replacesSavedEditor ? "Replace the saved MostlyText value." :
-                                        "Import this value.")
+                                    Text(review.replacesSavedEditor ?
+                                        LocalizedStringKey("Replace the saved MostlyText value.") :
+                                        LocalizedStringKey("Import this value."))
                                         .font(.caption).foregroundStyle(.secondary)
                                 }
                             }
