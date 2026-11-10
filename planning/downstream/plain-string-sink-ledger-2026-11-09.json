@@ -13,7 +13,7 @@
     "MacDown2/MacDown2/FirstRunWindowController.swift": "b8737772a8974cab6944c2b6c63bd711d35b24d47d99f4179b14085b1ebf4dbf",
     "MacDown2/MacDown2/LegacyImportWindowController.swift": "d39f33bf027f93975ee61088ae362951ff651f32b35f7f99612a10c31763fc9f",
     "MacDown2/MacDown2/NSFilePanelProvider.swift": "c9b7b1c95f03de159c50ed177a45690cbd3f475df806b40e2ed0cd09a74931da",
-    "MacDown2/MacDown2/SidebarFileTreeSupport.swift": "b1d6597390fe685a5aedd24a3ba2591213013f2619ea77ef2083bf9787931483",
+    "MacDown2/MacDown2/SidebarFileTreeSupport.swift": "aa8c789c12a1da8bf395011e0a1b7e475ad2d08ba4ebde25cda5b283ed05aaa1",
     "MacDown2/MacDown2/SidebarView+Folder.swift": "fab5b6f7e5726577a1eb06ffdcd990ae4e3426e1cb641581b3791e4454113746",
     "MacDown2/MacDown2/TextFilterCommands.swift": "96f125183edbb097e7c97008088590c4c2f20f883a2755e58cb60cba0eb57991",
     "MacDown2/MacDown2/TextFilterCoordinator.swift": "c5de2d59e224e101231a3d02ff0b42790fcabb4b12514c372b2a15a693d6edff",
