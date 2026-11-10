@@ -50,8 +50,8 @@ jobs:
           worker="$provider/Contents/XPCServices/MostlyTextQuickLookWorker.xpc"
           test -d "$app" && test -d "$provider" && test -d "$worker"
           /usr/bin/codesign --verify --deep --strict --verbose=2 "$app"
-          /usr/bin/codesign -d --entitlements - "$provider" > "$RUNNER_TEMP/provider-entitlements.plist"
-          /usr/bin/codesign -d --entitlements - "$worker" > "$RUNNER_TEMP/worker-entitlements.plist"
+          /usr/bin/codesign -d --entitlements :- "$provider" > "$RUNNER_TEMP/provider-entitlements.plist"
+          /usr/bin/codesign -d --entitlements :- "$worker" > "$RUNNER_TEMP/worker-entitlements.plist"
           python3 - <<'PY'
           import os, plistlib
           from pathlib import Path
