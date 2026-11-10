@@ -79,8 +79,10 @@ jobs:
         run: |
           set -euo pipefail
           app="$RUNNER_TEMP/production-quicklook/installed/MostlyText.app"
+          built="$RUNNER_TEMP/production-quicklook/app-build/Build/Products/Release/MacDown2.app"
           provider="$app/Contents/PlugIns/MostlyTextQuickLook.appex"
           printf '%s' 'MOSTLYTEXT_PRODUCTION_QUICKLOOK_20261111' > "$RUNNER_TEMP/mostlytext-production-quicklook.md"
+          /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -u "$built"
           /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$app"
           pluginkit -a "$provider"
           pluginkit -e use -i app.mostlytext.MostlyText.QuickLook
