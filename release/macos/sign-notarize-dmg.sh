@@ -192,6 +192,10 @@ EMBEDDED_CLI="$APP/Contents/MacOS/mostlytext-cli"
 [[ -d "$BUILT_APP" && ! -L "$BUILT_APP" ]] || fail "app not produced at $BUILT_APP"
 [[ ! -e "$APP" && ! -L "$APP" ]] || fail "public app already exists at $APP; use a fresh OUT"
 ditto "$BUILT_APP" "$APP" || fail "could not stage the signed public app at $APP"
+for name_key in CFBundleName CFBundleDisplayName; do
+  [[ "$(defaults read "$APP/Contents/Info" "$name_key")" == "$APP_NAME" ]] \
+    || fail "staged public app $name_key is not $APP_NAME"
+done
 record "public app: $APP_NAME.app (built from $APP_SCHEME.app without modifying its contents)"
 [[ -f "$CLI" && ! -L "$CLI" && -x "$CLI" ]] || fail "executable CLI not produced at $CLI"
 [[ -f "$EMBEDDED_CLI" && ! -L "$EMBEDDED_CLI" && -x "$EMBEDDED_CLI" ]] \

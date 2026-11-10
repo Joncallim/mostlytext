@@ -41,7 +41,9 @@ STUBS = {
           fi
           echo "$digest  $f"
         done"""),
-    "defaults": 'case "$3" in CFBundleShortVersionString) echo 0.1.0;; CFBundleVersion) echo 7;; *) echo com.example.App;; esac',
+    "defaults": ('case "$3" in CFBundleShortVersionString) echo 0.1.0;; CFBundleVersion) echo 7;; '
+                 'CFBundleName|CFBundleDisplayName) if [ "${WRONG_APP_NAME:-0}" = 1 ]; then echo MacDown2; '
+                 'else echo MostlyText; fi;; *) echo com.example.App;; esac'),
     "codesign": 'case "$*" in *-d*) printf "Authority=Developer ID Application: Test Owner (TEAMID1234)\\nTimestamp=now\\nflags=0x10000(runtime)\\n" >&2;; esac; true',
     "hdiutil": 'for last in "$@"; do :; done; touch "$last"',
     "ditto": 'echo "ditto $*" >> "$CALLS"; if [ "$1" = -c ]; then for last in "$@"; do :; done; touch "$last"; else cp -R "$1" "$2"; fi',
@@ -193,6 +195,12 @@ class ReleaseScriptModeTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("public app already exists", result.stdout)
         self.assertEqual(sentinel.read_text(), "preserve me")
+        self.assertNotIn("notarytool submit", self.calls.read_text())
+
+    def test_staged_public_app_rejects_old_display_name_before_notarisation(self) -> None:
+        result = self.run_script("--release-candidate", WRONG_APP_NAME="1")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("staged public app CFBundleName is not MostlyText", result.stdout)
         self.assertNotIn("notarytool submit", self.calls.read_text())
 
     def test_release_build_stops_before_notarisation_when_xcode_rewrites_the_lock(self) -> None:
