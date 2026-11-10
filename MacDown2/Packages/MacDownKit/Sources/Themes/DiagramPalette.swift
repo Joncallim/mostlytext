@@ -63,8 +63,13 @@ public struct DiagramPalette: Codable, Sendable, Equatable, Hashable {
         for destination: DiagramDestination, foreground: ThemeColor, background: ThemeColor
     ) -> DiagramPalette {
         guard destination == .screen else { return .neutralLight }
-        let text = hex(foreground, fallback: neutralLight.text)
+        let requestedText = hex(foreground, fallback: neutralLight.text)
         let canvas = hex(background, fallback: neutralLight.canvas)
+        // Custom themes may deliberately allow low-contrast editor text. Diagram labels and strokes need a
+        // readable default even then; keep the chosen canvas and use the higher-contrast neutral ink.
+        let text = contrast(requestedText, on: canvas) >= 4.5
+            ? requestedText
+            : (contrast("#000000", on: canvas) >= contrast("#FFFFFF", on: canvas) ? "#000000" : "#FFFFFF")
         return DiagramPalette(
             policyID: "preview-context-v1", canvas: canvas, text: text, stroke: text,
             nodeFill: canvas, accent: text, secondary: text
@@ -77,6 +82,21 @@ public struct DiagramPalette: Codable, Sendable, Equatable, Hashable {
         return "#" + components.map {
             String(format: "%02X", Int((min(max($0, 0), 1) * 255).rounded()))
         }.joined()
+    }
+
+    private static func contrast(_ foreground: String, on background: String) -> Double {
+        func luminance(_ hex: String) -> Double {
+            let digits = Array(hex.dropFirst())
+            let channels = stride(from: 0, to: 6, by: 2).map { offset -> Double in
+                let byte = Int(String(digits[offset ... offset + 1]), radix: 16) ?? 0
+                let component = Double(byte) / 255
+                return component <= 0.04045 ? component / 12.92 : pow((component + 0.055) / 1.055, 2.4)
+            }
+            return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2]
+        }
+        let first = luminance(foreground)
+        let second = luminance(background)
+        return (max(first, second) + 0.05) / (min(first, second) + 0.05)
     }
 
     private func blend(foreground: String, into background: String, foregroundWeight: Double) -> String {

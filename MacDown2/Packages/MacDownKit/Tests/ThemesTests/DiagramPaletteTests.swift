@@ -53,13 +53,56 @@ struct DiagramPaletteTests {
     }
 
     @Test func screenColorsClampFiniteComponentsAndRejectNonFiniteColors() {
-        let palette = DiagramPalette.resolved(
+        let clamped = DiagramPalette.resolved(
             for: .screen,
             foreground: ThemeColor(red: -1, green: 2, blue: 0.5),
+            background: ThemeColor(red: 0, green: 0, blue: 0)
+        )
+        #expect(clamped.text == "#00FF80")
+        #expect(clamped.canvas == "#000000")
+        let invalidBackground = DiagramPalette.resolved(
+            for: .screen,
+            foreground: ThemeColor(red: 0, green: 0, blue: 0),
             background: ThemeColor(red: .nan, green: .infinity, blue: 0)
         )
-        #expect(palette.text == "#00FF80")
-        #expect(palette.canvas == "#FFFFFF")
+        #expect(invalidBackground.text == "#000000")
+        #expect(invalidBackground.canvas == "#FFFFFF")
+    }
+
+    @Test func lowContrastCustomColorsKeepTheCanvasButUseReadableDiagramInk() throws {
+        let white = ThemeColor(red: 1, green: 1, blue: 1)
+        let black = ThemeColor(red: 0, green: 0, blue: 0)
+        let light = DiagramPalette.resolved(for: .screen, foreground: white, background: white)
+        let dark = DiagramPalette.resolved(for: .screen, foreground: black, background: black)
+
+        #expect(light.canvas == "#FFFFFF")
+        #expect(light.text == "#000000")
+        #expect(dark.canvas == "#000000")
+        #expect(dark.text == "#FFFFFF")
+        for palette in [light, dark] {
+            #expect(palette.stroke == palette.text)
+            #expect(palette.accent == palette.text)
+            #expect(palette.secondary == palette.text)
+            #expect(try JSONDecoder().decode(DiagramPalette.self, from: JSONEncoder().encode(palette)) == palette)
+            #expect(Self.contrast(palette.text, palette.canvas) >= 4.5)
+        }
+    }
+
+    @Test func bundledThemeDiagramInkKeepsItsReadableSemanticColors() {
+        for theme in BundledThemes.all {
+            let palette = DiagramPalette.resolved(
+                for: .screen, foreground: theme.chrome.foreground, background: theme.chrome.background
+            )
+            #expect(Self.contrast(palette.text, palette.canvas) >= 4.5, "\(theme.name) diagram ink is unreadable")
+            #expect(palette.text == Self.hex(theme.chrome.foreground))
+            #expect(palette.canvas == Self.hex(theme.chrome.background))
+        }
+    }
+
+    private static func hex(_ color: ThemeColor) -> String {
+        "#" + [color.red, color.green, color.blue].map {
+            String(format: "%02X", Int(($0 * 255).rounded()))
+        }.joined()
     }
 
     private static func contrast(_ first: String, _ second: String) -> Double {
