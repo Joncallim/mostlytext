@@ -11,6 +11,47 @@ import WebKit
 @Suite("Secured HTML native routing", .serialized)
 @MainActor
 struct SecuredHTMLPreviewNativeTests {
+    @Test func staleNavigationCallbacksCannotSettleARecoveredSavedPage() async throws {
+        let fixture = try HTMLResponseEncodingFixture()
+        defer { fixture.dispose() }
+        let selection = try #require(PreviewResourceFolderSelection.fixture(
+            documentURL: fixture.documentURL, folderURL: fixture.folder
+        ))
+        let origin = try #require(fixture.owner.beginSelection(for: fixture.document))
+        try await fixture.owner.install(selection, from: origin) { fixture.document }
+
+        fixture.coordinator.update(host: fixture.host, document: fixture.document,
+                                   tabID: fixture.tabID, owner: fixture.owner)
+        let page = try await fixture.page(title: "Fixture")
+        let handler = try #require(page.configuration.urlSchemeHandler(
+            forURLScheme: HTMLPreviewNavigationPolicy.previewURLScheme
+        ) as? BoundedHTMLPreviewHandler)
+        let token = try #require(handler.load.grant)
+        #expect(fixture.owner.owns(token, for: .html))
+
+        // Both tokens come from the mounted WebKit view. Reporting a process death starts a new
+        // recovery navigation; callbacks from the previous load must not settle or retire it.
+        let stale = try #require(page.reload())
+        fixture.coordinator.webViewWebContentProcessDidTerminate(page)
+        let current = try #require(fixture.coordinator.pendingNavigation(in: page))
+        #expect(current !== stale)
+        let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotLoadFromNetwork,
+                            userInfo: [NSURLErrorFailingURLErrorKey: handler.load.mainURL])
+        fixture.coordinator.webView(page, didFinish: stale)
+        fixture.coordinator.webView(page, didFail: stale, withError: error)
+        fixture.coordinator.webView(page, didFailProvisionalNavigation: stale, withError: error)
+        #expect(fixture.coordinator.pendingNavigation(in: page) === current)
+        #expect(fixture.host.subviews.contains(page))
+        #expect(fixture.owner.owns(token, for: .html))
+
+        fixture.coordinator.webView(page, didFailProvisionalNavigation: current, withError: error)
+        #expect(fixture.coordinator.pendingNavigation(in: page) == nil)
+        #expect(!fixture.host.subviews.contains(page))
+        #expect(token.isRevoked)
+        #expect(!fixture.owner.owns(token, for: .html))
+        #expect(fixture.owner.hasGrant(for: fixture.document))
+    }
+
     @Test func disposingSavedPageRetiresItsWindowLoadWithoutClosingTheFolderGrant() async throws {
         let fixture = try HTMLResponseEncodingFixture()
         defer { fixture.dispose() }
