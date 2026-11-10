@@ -169,8 +169,12 @@ final class PreviewResourceWindowState {
 
     /// An old SwiftUI subtree may disappear after its replacement has installed a newer load.
     func retire(_ consumer: Consumer, matching context: PreviewResourceLoad) {
-        guard contexts[consumer] === context else { return }
+        guard owns(context, for: consumer) else { return }
         retire(consumer)
+    }
+
+    func owns(_ context: PreviewResourceLoad, for consumer: Consumer) -> Bool {
+        contexts[consumer] === context
     }
 
     /// The controller and view lifecycle call this at document identity changes. A matching edit keeps the folder

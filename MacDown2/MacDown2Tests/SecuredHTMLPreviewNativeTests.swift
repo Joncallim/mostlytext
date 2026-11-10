@@ -11,6 +11,29 @@ import WebKit
 @Suite("Secured HTML native routing", .serialized)
 @MainActor
 struct SecuredHTMLPreviewNativeTests {
+    @Test func disposingSavedPageRetiresItsWindowLoadWithoutClosingTheFolderGrant() async throws {
+        let fixture = try HTMLResponseEncodingFixture()
+        defer { fixture.dispose() }
+        let selection = try #require(PreviewResourceFolderSelection.fixture(
+            documentURL: fixture.documentURL, folderURL: fixture.folder
+        ))
+        let origin = try #require(fixture.owner.beginSelection(for: fixture.document))
+        try await fixture.owner.install(selection, from: origin) { fixture.document }
+
+        fixture.coordinator.update(host: fixture.host, document: fixture.document,
+                                   tabID: fixture.tabID, owner: fixture.owner)
+        let page = try await fixture.page(title: "Fixture")
+        let handler = try #require(page.configuration.urlSchemeHandler(
+            forURLScheme: HTMLPreviewNavigationPolicy.previewURLScheme
+        ) as? BoundedHTMLPreviewHandler)
+        let token = try #require(handler.load.grant)
+        #expect(fixture.owner.owns(token, for: .html))
+        fixture.coordinator.dispose(host: fixture.host)
+        #expect(token.isRevoked)
+        #expect(!fixture.owner.owns(token, for: .html))
+        #expect(fixture.owner.hasGrant(for: fixture.document))
+    }
+
     @Test func savedRevisionsReplaceTheWebViewAndDeliverTheirOwnMainBytes() async throws {
         let tabID = UUID()
         var document = FileDocument(text: "<html><head><title>Preview A</title></head><body>A</body></html>")
