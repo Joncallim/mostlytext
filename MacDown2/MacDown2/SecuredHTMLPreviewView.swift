@@ -217,6 +217,12 @@ struct SecuredHTMLPreviewView: NSViewRepresentable {
             page?.pendingNavigation = nil
         }
 
+        /// Exposes the active WebKit token to app-target regression tests without changing its ownership.
+        func pendingNavigation(in webView: WKWebView) -> WKNavigation? {
+            guard page?.webView === webView else { return nil }
+            return page?.pendingNavigation
+        }
+
         func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!,
                      withError error: Error) {
             handleLoadFailure(error, navigation: navigation, in: webView)
