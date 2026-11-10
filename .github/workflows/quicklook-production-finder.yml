@@ -45,7 +45,10 @@ jobs:
       - name: Verify exact installed bundle and prepare separate Finder automation
         run: |
           set -euo pipefail
-          app="$RUNNER_TEMP/production-quicklook/app-build/Build/Products/Release/MacDown2.app"
+          built="$RUNNER_TEMP/production-quicklook/app-build/Build/Products/Release/MacDown2.app"
+          app="$RUNNER_TEMP/production-quicklook/installed/MostlyText.app"
+          mkdir -p "$(dirname "$app")"
+          ditto "$built" "$app"
           provider="$app/Contents/PlugIns/MostlyTextQuickLook.appex"
           worker="$provider/Contents/XPCServices/MostlyTextQuickLookWorker.xpc"
           test -d "$app" && test -d "$provider" && test -d "$worker"
@@ -75,7 +78,7 @@ jobs:
       - name: Register product and invoke genuine cold Finder
         run: |
           set -euo pipefail
-          app="$RUNNER_TEMP/production-quicklook/app-build/Build/Products/Release/MacDown2.app"
+          app="$RUNNER_TEMP/production-quicklook/installed/MostlyText.app"
           provider="$app/Contents/PlugIns/MostlyTextQuickLook.appex"
           printf '%s' 'MOSTLYTEXT_PRODUCTION_QUICKLOOK_20261111' > "$RUNNER_TEMP/mostlytext-production-quicklook.md"
           /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$app"

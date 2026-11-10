@@ -34,6 +34,8 @@ final class ProductionFinderTests: XCTestCase {
         image.lifetime = .keepAlways
         add(image)
         XCTAssertTrue(visible, "The actual product extension must answer Finder with selected source")
+        let open = finder.buttons["QLControlOpen"].firstMatch
+        XCTAssertEqual(open.title, "Open with MostlyText")
         XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText").isEmpty)
         finder.typeKey(.escape, modifierFlags: [])
     }
