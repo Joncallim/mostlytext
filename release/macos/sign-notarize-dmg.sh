@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build, sign, notarise and package MostlyText (currently MacDown2.app) as a
+# Build, sign, notarise and package MostlyText.app as a
 # Developer ID DMG, and record evidence. Runs on the owner's Mac only.
 #
 # What it does, in order (stops at the first failure):
@@ -61,7 +61,9 @@ STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
 OUT="${OUT:-$REPO/build/release-$STAMP}"
 EVIDENCE="$OUT/evidence"
 DERIVED="$OUT/DerivedData"
-APP_NAME="MacDown2"   # becomes MostlyText at the #158/E17 cutover
+APP_SCHEME="MacDown2" # internal Xcode target and build product
+APP_NAME="MostlyText" # public app, ZIP, DMG and Finder name
+APP_ARCHIVE_NAME="$APP_NAME-app.zip" # distinct from obsolete mostlytext.zip on case-insensitive volumes
 CLI_NAME="mostlytext"
 CLI_SCHEME="MostlyTextCLI" # distinct from the app scheme on case-insensitive volumes
 mkdir -p "$EVIDENCE"
@@ -169,8 +171,8 @@ build() {  # $1 scheme, $2 "app" to apply ENTITLEMENTS
     ENABLE_HARDENED_RUNTIME=YES OTHER_CODE_SIGN_FLAGS=--timestamp \
     ${extra[@]+"${extra[@]}"} build
 }
-step "Release build: $APP_NAME"
-build "$APP_NAME" app
+step "Release build: $APP_SCHEME"
+build "$APP_SCHEME" app
 step "Release build: $CLI_NAME"
 build "$CLI_SCHEME"
 
@@ -183,10 +185,14 @@ build "$CLI_SCHEME"
   || fail "the generated Xcode workspace Package.resolved changed during the Release builds"
 
 PRODUCTS="$DERIVED/Build/Products/Release"
-APP="$PRODUCTS/$APP_NAME.app"
+BUILT_APP="$PRODUCTS/$APP_SCHEME.app"
+APP="$OUT/$APP_NAME.app"
 CLI="$PRODUCTS/$CLI_NAME"
 EMBEDDED_CLI="$APP/Contents/MacOS/mostlytext-cli"
-[[ -d "$APP" ]] || fail "app not produced at $APP"
+[[ -d "$BUILT_APP" && ! -L "$BUILT_APP" ]] || fail "app not produced at $BUILT_APP"
+[[ ! -e "$APP" && ! -L "$APP" ]] || fail "public app already exists at $APP; use a fresh OUT"
+ditto "$BUILT_APP" "$APP" || fail "could not stage the signed public app at $APP"
+record "public app: $APP_NAME.app (built from $APP_SCHEME.app without modifying its contents)"
 [[ -f "$CLI" && ! -L "$CLI" && -x "$CLI" ]] || fail "executable CLI not produced at $CLI"
 [[ -f "$EMBEDDED_CLI" && ! -L "$EMBEDDED_CLI" && -x "$EMBEDDED_CLI" ]] \
   || fail "embedded executable CLI not produced at $EMBEDDED_CLI"
@@ -209,7 +215,8 @@ codesign -dvvv "$CLI" > "$EVIDENCE/codesign-display-cli.txt" 2>&1
 while IFS= read -r -d '' binary; do
   file -b "$binary" | grep -q 'Mach-O' || continue
   info="$(codesign -dvv "$binary" 2>&1 || true)"
-  rel="${binary#"$PRODUCTS"/}"
+  rel="${binary#"$OUT"/}"
+  rel="${rel#"$PRODUCTS"/}"
   grep -q "Authority=Developer ID Application: .*($TEAM_ID)" <<<"$info" || fail "$rel is not signed with the Developer ID identity"
   grep -q 'Timestamp=' <<<"$info" || fail "$rel has no secure timestamp"
   grep -Eq 'flags=0x[0-9a-f]+\(.*runtime' <<<"$info" || fail "$rel lacks the hardened runtime"
@@ -302,8 +309,8 @@ PY
   (( log_ok )) || gate "the notarisation log for $2 ($id) could not be downloaded"
 }
 step "Notarise the app"
-ditto -c -k --keepParent "$APP" "$OUT/$APP_NAME.zip"
-notarise "$OUT/$APP_NAME.zip" app
+ditto -c -k --keepParent "$APP" "$OUT/$APP_ARCHIVE_NAME"
+notarise "$OUT/$APP_ARCHIVE_NAME" app
 xcrun stapler staple "$APP"
 # The app's notarised bytes already include mostlytext-cli. Its public mostlytext
 # command is an explicit user-created symlink to that embedded helper. A copied
@@ -347,7 +354,7 @@ step "Hashes"
 {
   shasum -a 256 "$DMG"
   echo "# not distributed: notarisation vehicle, compiled CLI and embedded helper"
-  shasum -a 256 "$OUT/$APP_NAME.zip" "$CLI" "$EMBEDDED_CLI"
+  shasum -a 256 "$OUT/$APP_ARCHIVE_NAME" "$CLI" "$EMBEDDED_CLI"
 } | tee "$EVIDENCE/SHA256SUMS"
 
 echo

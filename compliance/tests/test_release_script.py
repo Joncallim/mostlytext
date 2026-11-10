@@ -176,6 +176,24 @@ class ReleaseScriptModeTests(unittest.TestCase):
         self.assertEqual(set(schemes), {"MacDown2", "MostlyTextCLI"})
         self.assertEqual(len({scheme.casefold() for scheme in schemes}), 2)
         self.assertTrue(all("-onlyUsePackageVersionsFromResolvedFile" in build for build in builds))
+        self.assertTrue((self.out / "MostlyText.app/Contents/MacOS/mostlytext-cli").is_file())
+        self.assertTrue((self.out / "MostlyText-app.zip").is_file())
+        self.assertFalse((self.out / "mostlytext.zip").exists())
+        self.assertIn("public app: MostlyText.app", self.summary())
+        calls = self.calls.read_text()
+        self.assertIn("ditto ", calls)
+        self.assertIn("MostlyText-app.zip", calls)
+
+    def test_existing_public_app_is_preserved_and_blocks_reused_output(self) -> None:
+        app = self.out / "MostlyText.app"
+        app.mkdir(parents=True)
+        sentinel = app / "user-file"
+        sentinel.write_text("preserve me")
+        result = self.run_script("--dry-run")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("public app already exists", result.stdout)
+        self.assertEqual(sentinel.read_text(), "preserve me")
+        self.assertNotIn("notarytool submit", self.calls.read_text())
 
     def test_release_build_stops_before_notarisation_when_xcode_rewrites_the_lock(self) -> None:
         result = self.run_script("--release-candidate", XCODE_REWRITES_LOCK="1")
@@ -220,7 +238,7 @@ class ReleaseScriptModeTests(unittest.TestCase):
         self.assertIn("UNVERIFIED (dry run): licence gate", summary)
         self.assertIn("notarisation log app: NOT captured", summary)
         self.assertIn("UNVERIFIED (dry run): the notarisation log for app", summary)
-        self.assertTrue((self.out / "MacDown2-0.1.0-7-dryrun.dmg").exists())
+        self.assertTrue((self.out / "MostlyText-0.1.0-7-dryrun.dmg").exists())
 
     def test_release_candidate_stops_on_licence_gate_before_contacting_apple(self) -> None:
         result = self.run_script("--release-candidate", COMPLIANCE_FAILS="1")
@@ -343,10 +361,10 @@ class ReleaseScriptModeTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout)
         self.assertIn("licence gate: passed", self.summary())
         self.assertNotIn("UNVERIFIED", self.summary())
-        self.assertTrue((self.out / "MacDown2-0.1.0-7.dmg").exists())
+        self.assertTrue((self.out / "MostlyText-0.1.0-7.dmg").exists())
         sums = (self.out / "evidence/SHA256SUMS").read_text()
         self.assertNotIn("mostlytext.zip", sums.split("# not distributed")[0])
-        self.assertIn("MacDown2-0.1.0-7.dmg", sums.split("# not distributed")[0])
+        self.assertIn("MostlyText-0.1.0-7.dmg", sums.split("# not distributed")[0])
         self.assertIn("syspolicy_check distribution ", self.calls.read_text())
 
     def test_missing_or_nonexecutable_embedded_cli_stops_before_notarisation(self) -> None:
@@ -376,7 +394,7 @@ class ReleaseScriptModeTests(unittest.TestCase):
         self.assertFalse((self.out / "mostlytext.zip").exists())
         sums = (self.out / "evidence/SHA256SUMS").read_text()
         public = sums.split("# not distributed")[0]
-        self.assertIn("MacDown2-0.1.0-7.dmg", public)
+        self.assertIn("MostlyText-0.1.0-7.dmg", public)
         self.assertNotIn("mostlytext", public)
         self.assertIn("Contents/MacOS/mostlytext-cli", sums.split("# not distributed")[1])
         self.assertIn("CLI installation: embedded app helper or explicit user-created symlink", self.summary())
