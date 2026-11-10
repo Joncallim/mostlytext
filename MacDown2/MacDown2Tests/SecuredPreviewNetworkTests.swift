@@ -43,6 +43,7 @@ struct SecuredPreviewNetworkTests {
         coordinator.update(host: host, document: document, tabID: tabID, owner: owner)
         let webView = try await waitForPage(in: host)
         try await assertLocalControls(in: webView)
+        try await assertNavigationControls(in: webView, host: host, base: base, localFile: documentURL)
         try await Task.sleep(for: .seconds(1))
         let (status, _) = try await URLSession.shared.data(from: base.appendingPathComponent("status"))
         let paths = try #require(JSONSerialization.jsonObject(with: status) as? [String])
@@ -96,6 +97,37 @@ struct SecuredPreviewNetworkTests {
         #expect(hardened.contains("<!-- <head> -->"))
     }
 
+    private func assertNavigationControls(
+        in webView: WKWebView, host: NSView, base: URL, localFile: URL
+    ) async throws {
+        let mainURL = try #require(webView.url)
+        let tls = try #require(URL(string: "https://127.0.0.1:\(base.port ?? 0)/denied/tls-navigation"))
+        let attempts = [
+            base.appendingPathComponent("denied/navigation"),
+            tls,
+            localFile,
+        ]
+        for target in attempts {
+            _ = webView.load(URLRequest(url: target))
+            try await Task.sleep(for: .milliseconds(150))
+            #expect(webView.url == mainURL, "Preview navigation must refuse \(target.scheme ?? "unknown")")
+            #expect(webView.title == "Contained fixture")
+        }
+        _ = try await webView.evaluateJavaScript("document.getElementById('attackForm').requestSubmit()")
+        _ = try await webView.evaluateJavaScript("document.getElementById('attackPopup').click()")
+        try await Task.sleep(for: .milliseconds(250))
+        #expect(webView.url == mainURL)
+        #expect(host.subviews.count == 1)
+        _ = try await webView.evaluateJavaScript("document.getElementById('attackData').click()")
+        _ = try await webView.evaluateJavaScript("document.getElementById('attackScript').click()")
+        try await Task.sleep(for: .milliseconds(150))
+        let scriptReadback = try await webView.evaluateJavaScript("""
+        [document.title, document.getElementById('proof')?.textContent,
+         typeof window.linkScriptRan].join('|')
+        """) as? String
+        #expect(scriptReadback == "Contained fixture|local style control|undefined")
+    }
+
     private func assertOrdinaryWebKitCanReachListener(_ base: URL) async throws {
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = .nonPersistent()
@@ -116,6 +148,7 @@ struct SecuredPreviewNetworkTests {
     private func hostileSource(address: String) -> String {
         """
         <!-- <head> --><html data-fake-head="<head>"><head><title>Contained fixture</title>
+        <base href="\(address)/denied/base/">
         <link rel="stylesheet" href="local.css">
         <link rel="stylesheet" href="\(address)/denied/style.css">
         <style>@import url('\(address)/denied/import.css');
@@ -135,6 +168,10 @@ struct SecuredPreviewNetworkTests {
         <script>window.previewScriptRan=true;fetch('\(address)/denied/fetch');window.open('\(
             address
         )/denied/popup')</script>
+        <form id="attackForm" action="\(address)/denied/form" method="get"><button>Submit</button></form>
+        <a id="attackPopup" target="_blank" href="\(address)/denied/popup-link">Popup</a>
+        <a id="attackData" href="data:text/html,%3Ctitle%3EREPLACED%3C%2Ftitle%3E">Data link</a>
+        <a id="attackScript" href="javascript:window.linkScriptRan=true">Script link</a>
         </body></html>
         """
     }
