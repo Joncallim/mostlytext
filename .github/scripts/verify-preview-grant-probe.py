@@ -94,7 +94,7 @@ if args.verify:
                     or proof['compiled_inputs_unchanged_after'] is not True
                     or proof['actual_owned_app_matches_captured_executable'] is not True):
                 raise SystemExit('Compiled phase was omitted, changed or retargeted')
-            count = ((60 if args.configuration == 'Release' else 59) if phase == 'initial' else
+            count = ((61 if args.configuration == 'Release' else 60) if phase == 'initial' else
                      1 if phase == 'selection' or args.pair == 'viewport' else 4)
             failed = 1 if phase.endswith('-mutant') else 0
             wanted = {'totalTestCount': count, 'passedTests': count - failed, 'failedTests': failed,
@@ -129,7 +129,7 @@ if args.verify:
         for suite in suites:
             if not re.search(r'Suite "' + re.escape(suite) + r'" passed' , log):
                 raise SystemExit(suite + " did not execute successfully")
-        count = 60 if args.configuration == "Release" else 59
+        count = 61 if args.configuration == "Release" else 60
         if not re.search(r"Test run with " + str(count) + r" tests in " + str(len(suites)) + r" suites passed", log):
             raise SystemExit("Every selected consumer test must finish; partial restarts are not accepted")
         ownership = re.findall(
@@ -139,6 +139,7 @@ if args.verify:
         if len(ownership) != 1 or not (int(ownership[0][0]) < int(ownership[0][1]) < int(ownership[0][2])):
             raise SystemExit("Actual no-write counterexample and fresh native Copy ownership must execute once")
         for function in [
+            "staleNavigationCallbacksCannotSettleARecoveredSavedPage",
             "aNoWriteNativeCopyCannotReuseAnEarlierImage",
             "fileStoreBOMDocumentsRenderAsUTF8WithoutRewritingOriginalBytes",
             "nonUTF8HTMLResourcesKeepBOMBytesAndAuthoritativeResponseProtection",
