@@ -19,6 +19,12 @@ import Observation
 @Observable
 public final class EditorFindModelStore {
     private var models: [String: EditorFindModel] = [:]
+    /// Search terms used in this window, newest first. Keep them in memory so a
+    /// private query is not added to settings or restored on the next launch.
+    public private(set) var recentQueries: [String] = []
+
+    public static let maximumRecentQueries = 20
+    public static let maximumRecentQueryBytes = 4096
 
     public init() {}
 
@@ -47,6 +53,22 @@ public final class EditorFindModelStore {
     /// Removes every cached model. Call when the owning window closes.
     public func evictAll() {
         models.removeAll()
+        recentQueries.removeAll()
+    }
+
+    /// Record a completed Find interaction, not each prefix typed into the live field.
+    /// Compare UTF-8 bytes because literal search distinguishes canonically equal strings.
+    public func rememberQuery(_ query: String) {
+        guard !query.isEmpty, query.utf8.count <= Self.maximumRecentQueryBytes else { return }
+        recentQueries.removeAll { $0.utf8.elementsEqual(query.utf8) }
+        recentQueries.insert(query, at: 0)
+        if recentQueries.count > Self.maximumRecentQueries {
+            recentQueries.removeLast(recentQueries.count - Self.maximumRecentQueries)
+        }
+    }
+
+    public func clearRecentQueries() {
+        recentQueries.removeAll()
     }
 
     /// The identities currently held in the cache. Exposed for testing.
