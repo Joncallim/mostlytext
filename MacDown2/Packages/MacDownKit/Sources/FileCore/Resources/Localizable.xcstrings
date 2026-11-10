@@ -92,6 +92,35 @@
           }
         }
       }
+    },
+    "Plain Text": {
+      "comment": "Descriptive file-format display name used in Settings, status, preview and outline. Non-English translations are provisional and require language/native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plain Text"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Texte brut"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "プレーンテキスト"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Zwykły tekst"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

@@ -93,7 +93,10 @@ public struct FileDocument: Sendable {
             id = normalizedURL.absoluteString
             self.format = format ?? FileFormat.format(for: normalizedURL, in: FileFormatRegistry())
                 ?? FileFormatRegistry.defaultFormats.first { $0.id == "plaintext" }
-                ?? FileFormat(id: "plaintext", name: "Plain Text", utType: .plainText, extensions: ["txt"])
+                ?? FileFormat(
+                    id: "plaintext", name: FileFormatRegistry.plainTextDisplayName(),
+                    utType: .plainText, extensions: ["txt"]
+                )
         } else {
             id = documentID ?? UUID().uuidString
             self.format = format ?? FileFormatRegistry.defaultFormats.first { $0.id == "markdown" }

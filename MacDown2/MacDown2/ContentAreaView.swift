@@ -122,9 +122,9 @@ struct ContentAreaView: View {
                 .accessibilityIdentifier("savingIndicator")
             }
 
-            // Format badge -- format names ("Markdown", "JSON", "Plain Text", etc.) are
-            // technical/protocol labels, matching every other editor's convention of never
-            // translating them (FileFormat.swift's own doc comment lists the full built-in set).
+            // FileCore resolves the descriptive Plain Text label. The other
+            // names are technical terms, and this value needs no second lookup.
+            // Use the resolved display value verbatim in the format badge.
             Text(verbatim: document.format.name)
                 .font(.system(size: 10, weight: .medium))
                 .foregroundStyle(.secondary)

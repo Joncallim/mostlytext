@@ -510,9 +510,9 @@
     },
     {
       "path": "MacDown2/Packages/MacDownKit/Sources/FileCore/FileFormat.swift",
-      "sha256": "6227fd24519356a13545a591cc70dd2c5122cbb2c15b13168ac1454a5fd9dfcc",
+      "sha256": "746dd717face54fa0cdbffcbeac892a42750997b4b6490a965a5b6ee77720c94",
       "status": "open",
-      "reason": "Format names appear in Settings and status; verify the technical-label literal policy for every name."
+      "reason": "Plain Text now resolves through FileCore's catalog; the other built-in names are language, protocol or standard names. Verify actual non-English Settings, status and accessibility presentation before closing the wider audit."
     },
     {
       "path": "MacDown2/Packages/MacDownKit/Sources/Themes/BundledThemes.swift",

@@ -1366,6 +1366,54 @@
       "target": "MacDown2",
       "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
       "bundle": "Bundle.main (project target resource)",
+      "key": "Allow preview resources",
+      "source_default_value": "Allow preview resources",
+      "translator_comment": "Confirmation button in the document-specific folder-selection panel.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {},
+      "locale_states": {},
+      "callsites": [
+        "MacDown2/MacDown2/NSFilePanelProvider.swift:196"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
+      "key": "Allow preview resources…",
+      "source_default_value": "Allow preview resources…",
+      "translator_comment": "Document-window action to choose a folder for local Preview images and styles.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {},
+      "locale_states": {},
+      "callsites": [],
+      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
       "key": "An editor descended from MacDown. Free software under the MIT license.",
       "source_default_value": "An editor descended from MacDown. Free software under the MIT license.",
       "translator_comment": "About and offline license surface. Translation draft requires final native-language review under issue #17.",
@@ -2024,6 +2072,31 @@
       },
       "callsites": [],
       "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
+      "key": "Choose the folder containing this document.",
+      "source_default_value": "Choose the folder containing this document.",
+      "translator_comment": "Explanation in the document-specific Preview folder-selection panel.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {},
+      "locale_states": {},
+      "callsites": [
+        "MacDown2/MacDown2/NSFilePanelProvider.swift:197"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
@@ -6740,6 +6813,29 @@
       "target": "MacDown2",
       "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
       "bundle": "Bundle.main (project target resource)",
+      "key": "Local preview resources are unavailable.",
+      "source_default_value": "Local preview resources are unavailable.",
+      "translator_comment": "Preview resource notice before the document window has an explicit folder grant.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {},
+      "locale_states": {},
+      "callsites": [],
+      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
       "key": "Lowercase",
       "source_default_value": "Lowercase",
       "translator_comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
@@ -8894,7 +8990,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/HTMLPreviewPane.swift:71",
+        "MacDown2/MacDown2/HTMLPreviewPane.swift:77",
         "MacDown2/MacDown2/OutlineRowView.swift:58"
       ],
       "callsite_evidence": "direct_literal_static_match",
@@ -9743,7 +9839,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/HTMLPreviewPane.swift:70"
+        "MacDown2/MacDown2/HTMLPreviewPane.swift:76"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -10674,6 +10770,29 @@
             "type": "@"
           }
         ],
+        "contains_inflection_markup": false
+      },
+      "variants": {},
+      "locale_states": {},
+      "callsites": [],
+      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
+      "key": "Save this document to allow local preview resources.",
+      "source_default_value": "Save this document to allow local preview resources.",
+      "translator_comment": "Preview resource notice for an untitled document; the action never saves automatically.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
         "contains_inflection_markup": false
       },
       "variants": {},
@@ -11721,7 +11840,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/HTMLPreviewPane.swift:69"
+        "MacDown2/MacDown2/HTMLPreviewPane.swift:75"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -12193,6 +12312,29 @@
         "ja": "needs_review",
         "pl": "needs_review"
       },
+      "callsites": [],
+      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
+      "key": "That folder could not be used. Choose the folder containing this document.",
+      "source_default_value": "That folder could not be used. Choose the folder containing this document.",
+      "translator_comment": "Current document-window folder selection failed; local Preview resources remain denied.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {},
+      "locale_states": {},
       "callsites": [],
       "callsite_evidence": "unknown_or_nonliteral_static_callsite",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -20777,6 +20919,41 @@
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {
+      "target": "FileCore",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/FileCore/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Plain Text",
+      "source_default_value": "Plain Text",
+      "translator_comment": "Descriptive file-format display name used in Settings, status, preview and outline. Non-English translations are provisional and require language/native review.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/FileCore/FileFormat.swift:85"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
       "target": "FileTree",
       "catalog": "MacDown2/Packages/MacDownKit/Sources/FileTree/Resources/Localizable.xcstrings",
       "bundle": "Bundle.module (SwiftPM processed resource)",
@@ -23179,8 +23356,8 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceFileIndex.swift:127",
-        "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceFileIndex.swift:151"
+        "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceFileIndex.swift:137",
+        "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceFileIndex.swift:161"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -23213,7 +23390,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceFileIndex.swift:149"
+        "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceFileIndex.swift:159"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"

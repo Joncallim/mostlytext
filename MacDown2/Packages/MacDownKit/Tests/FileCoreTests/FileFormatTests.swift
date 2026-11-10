@@ -59,6 +59,45 @@ import UniformTypeIdentifiers
     }
 }
 
+@Test func plainTextDisplayNameUsesTheCompiledFileCoreCatalog() throws {
+    // Standalone SwiftPM copies XCStrings as source; Xcode compiles it for the
+    // app. Compile the actual package catalog before checking runtime lookup.
+    let catalog = URL(fileURLWithPath: #filePath)
+        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        .appendingPathComponent("Sources/FileCore/Resources/Localizable.xcstrings")
+    let scratch = FileManager.default.temporaryDirectory
+        .appendingPathComponent("mostlytext-filecore-catalog-\(UUID().uuidString)", isDirectory: true)
+    let bundleURL = scratch.appendingPathComponent("FileCoreProof.bundle", isDirectory: true)
+    let resources = bundleURL.appendingPathComponent("Contents/Resources", isDirectory: true)
+    try FileManager.default.createDirectory(at: resources, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: scratch) }
+
+    let compiler = Process()
+    compiler.executableURL = URL(fileURLWithPath: "/usr/bin/xcrun")
+    compiler.arguments = ["xcstringstool", "compile", catalog.path, "--output-directory", resources.path]
+    let diagnostics = Pipe()
+    compiler.standardError = diagnostics
+    try compiler.run()
+    compiler.waitUntilExit()
+    let compilerError = String(data: diagnostics.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8)
+        ?? "unreadable compiler diagnostics"
+    #expect(compiler.terminationStatus == 0, "XCStrings compiler failed: \(compilerError)")
+
+    let frenchStrings = resources.appendingPathComponent("fr.lproj/Localizable.strings")
+    #expect(FileManager.default.fileExists(atPath: frenchStrings.path))
+    let frenchBundle = try #require(Bundle(url: resources.appendingPathComponent("fr.lproj")))
+    #expect(String(localized: "Plain Text", bundle: frenchBundle) == "Texte brut")
+    #expect(FileFormatRegistry.plainTextDisplayName(bundle: frenchBundle) == "Texte brut")
+    let registered = try #require(FileFormatRegistry.defaultFormats.first { $0.id == "plaintext" })
+    #expect(registered.name == FileFormatRegistry.plainTextDisplayName())
+    #expect(registered.extensions == ["txt"])
+    #expect(registered.utType == .plainText)
+
+    let fallback = FileDocument.format(for: URL(fileURLWithPath: "/tmp/unknown-extension.unknown"))
+    #expect(fallback.id == registered.id)
+    #expect(fallback.name == registered.name)
+}
+
 @Test func texAndLatexExtensionsResolveToTheSourceOnlyTeXFormat() {
     let registry = FileFormatRegistry()
     for name in ["paper.tex", "paper.latex", "PAPER.TEX"] {
