@@ -161,10 +161,9 @@ public final class EditorTextView: NSTextView {
     /// individual sub-edits `EditorEditTransaction.apply(_:)` itself makes
     /// through this same override while fanning out — so those always fall
     /// through to `super` unchanged, exactly as before this override
-    /// existed. This never fires for bare multi-caret typing (no selected
-    /// text, more than one insertion point): that state cannot exist in
-    /// `selectedRanges` in the first place — see §6.9's architecture-
-    /// correction note.
+    /// existed. Synthetic bare carets live in the owning system's
+    /// `selectionSet` cache when AppKit cannot retain them in
+    /// `selectedRanges`; the same transaction inserts at those carets.
     override public func insertText(_ string: Any, replacementRange: NSRange) {
         if replacementRange.location == NSNotFound,
            let owningSystem, let text = string as? String,

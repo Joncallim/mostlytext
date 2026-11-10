@@ -14,30 +14,12 @@ extension EditorTextSystem {
     /// primary selection for a plain keystroke, never fanning it out on its
     /// own.
     ///
-    /// `selectionSet.ranges.count > 1` used to imply every one of those
-    /// ranges was non-empty, back when this method was written for Slice
-    /// 3a: `NSTextView.selectedRanges` itself collapses to a single range
-    /// the instant more than one zero-length (bare caret) range — or any
-    /// mix of a zero-length range with anything else — is assigned to it
-    /// (§6.9's architecture-correction note), so a genuine multi-*caret*
-    /// state could never reach here THROUGH `selectedRanges` alone. Slice
-    /// 3b broke that premise: `EditorTextSystem.selectionSet` is now an
-    /// independent cache that can legitimately hold a MIX of real
-    /// selections and bare secondary carets at once (Option-click,
-    /// Add/Remove Cursor Above/Below, and a ragged rectangular selection —
-    /// Slice 3b-iv — where a spanned line shorter than the drag's own left
-    /// edge produces a zero-length range) — so `count > 1` no longer
-    /// guarantees non-emptiness on its own. Found by an independent
-    /// hostile review of Slice 3b-iv: this method was missing the same
-    /// `allSatisfy` guard `applyMultiCursorDeleteSelection()` already had,
-    /// meaning a ragged rectangular selection's typing behavior (acts on
-    /// every line) silently diverged from its own delete behavior (declines
-    /// entirely, falls through to native single-range handling) for the
-    /// identical selection — exactly the "mix of a real selection and bare
-    /// synthetic carets" case §6.10 already disclosed as a distinct,
-    /// not-yet-scoped follow-up, not something either method should
-    /// silently half-support. Checked (`allSatisfy`), not trusted, for the
-    /// same reason delete's own guard is checked rather than assumed.
+    /// `EditorTextSystem.selectionSet` retains synthetic bare carets when
+    /// AppKit collapses `selectedRanges` to the primary range. Insertions
+    /// can use the same transaction for selected text and zero-length
+    /// carets: `EditorEditTransaction` validates and maps both. Deletion at
+    /// bare carets needs direction-aware character ranges and remains a
+    /// separate follow-up.
     ///
     /// Returns `true` when this method has already applied the edit (the
     /// override must not also call `super`, or the edit would double-apply
@@ -45,14 +27,14 @@ extension EditorTextSystem {
     /// `false` to fall through to AppKit's normal single-range handling
     /// unchanged — fewer than two active selections (the overwhelmingly
     /// common case, left entirely to AppKit/E10's existing single-range
-    /// path), any range among them empty (see above), an active IME
+    /// path), an active IME
     /// composition (fails open, matching every other IME gate in this
     /// codebase), or a currently-in-progress editing assist/programmatic
     /// text update (this call is itself part of one, so re-entering would
     /// double-apply).
     func applyMultiCursorInsert(_ text: String) -> Bool {
         let selection = selectionSet
-        guard selection.ranges.count > 1, selection.ranges.allSatisfy({ $0.length > 0 }) else { return false }
+        guard selection.ranges.count > 1 else { return false }
         guard !textView.hasMarkedText() else { return false }
         guard !isPerformingEditingAssist, !isPerformingProgrammaticTextUpdate else { return false }
 
