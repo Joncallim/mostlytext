@@ -24,21 +24,12 @@ final class QuickOpenSubmission {
     }
 
     func submit() {
-        QuickOpenUITestTrace
-            .record(
-                "submit called: opening=\(isOpening), searching=\(model.isSearching), results=\(model.results.count)"
-            )
-        guard !isOpening, let selected = model.selectedResult else {
-            QuickOpenUITestTrace.record("submit refused: no current selection")
-            return
-        }
+        guard !isOpening, let selected = model.selectedResult else { return }
         isOpening = true
         Task { @MainActor in
             if await onOpen(selected) {
-                QuickOpenUITestTrace.record("open admitted; dismissing")
                 onDismiss()
             } else {
-                QuickOpenUITestTrace.record("open refused; refreshing")
                 isOpening = false
                 model.refresh()
             }
@@ -82,7 +73,6 @@ struct QuickOpenView: View {
                     submission.submit()
                     return .handled
                 }
-                .onSubmit { submission.submit() }
                 .onKeyPress(.escape) {
                     onDismiss()
                     return .handled
@@ -120,10 +110,6 @@ struct QuickOpenView: View {
             }
         }
         .frame(width: 480)
-        .onKeyPress(.return) {
-            submission.submit()
-            return .handled
-        }
         .background(.regularMaterial)
         .onAppear {
             model.refresh()

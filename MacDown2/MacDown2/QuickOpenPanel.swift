@@ -54,36 +54,53 @@ final class QuickOpenPanel: NSPanel, NSWindowDelegate {
         let actionGate = QuickOpenActionGate(index: index) { [weak originController] in
             Self.currentOrigin(for: originController)
         }
-        let context = QuickOpenSubmissionContext(model: model, origin: origin, actionGate: actionGate)
         let submission = QuickOpenSubmission(
             model: model,
-            onOpen: { [weak self] result in
-                guard let self else {
-                    QuickOpenUITestTrace.record("open refused: panel absent")
-                    return false
+            onOpen: { [weak self, weak coordinator, weak originController] result in
+                guard self?.isVisible == true,
+                      let coordinator, let originController, let origin,
+                      model.selectedResult == result,
+                      await actionGate.admit(result, from: origin),
+                      self?.isVisible == true,
+                      model.selectedResult == result,
+                      let originWindow = originController.window
+                else { return false }
+                // Use the root that produced this row, after checking the
+                // current request still owns it. The document-open path
+                // rechecks through its own asynchronous load/rebuild steps.
+                let url = origin.lexicalRoot.appendingPathComponent(result.path.relativePath)
+                Task {
+                    guard actionGate.isCurrent(origin) else { return }
+                    // `relativeTo: originController.window`, not
+                    // `NSApp.keyWindow` — this panel itself is the key
+                    // window while it is on screen, exactly the mistake
+                    // `CommandPalettePanel`'s own origin-capture idiom
+                    // exists to avoid (post-review finding #7 there).
+                    await coordinator.openDocument(
+                        at: url,
+                        folderRoot: origin.lexicalRoot,
+                        folderAccessURL: origin.accessRoot,
+                        relativeTo: originWindow,
+                        shouldContinue: { actionGate.isCurrent(origin) },
+                        useAmbientWindow: false
+                    )
                 }
-                return await performOpen(result, context: context)
+                return true
             },
             onDismiss: { [weak self] in self?.close() }
         )
         self.submission = submission
         let view = QuickOpenView(model: model, submission: submission, onDismiss: { [weak self] in self?.close() })
         contentView = NSHostingView(rootView: view)
-        QuickOpenUITestTrace.record("panel initialized")
     }
 
     override func sendEvent(_ event: NSEvent) {
-        if event.type == .keyDown {
-            let marked = (firstResponder as? NSTextInputClient)?.hasMarkedText() ?? false
-            QuickOpenUITestTrace
-                .record("key down: \(event.keyCode), modifiers: \(event.modifierFlags.rawValue), marked: \(marked)")
-        }
+        let hasMarkedText = (firstResponder as? NSTextInputClient)?.hasMarkedText() ?? false
         if event.type == .keyDown,
            event.keyCode == 36 || event.keyCode == 76,
-           event.modifierFlags.isDisjoint(with: [.command, .control, .option, .shift]) {
-            // A filtered List can own focus even while the search field still
-            // displays the query. Return is the panel's default file action.
-            QuickOpenUITestTrace.record("panel Return submitting")
+           event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+           .subtracting([.capsLock, .numericPad, .function]).isEmpty,
+           !hasMarkedText {
             submission?.submit()
             return
         }
@@ -94,75 +111,7 @@ final class QuickOpenPanel: NSPanel, NSWindowDelegate {
         coordinator?.quickOpenDidClose(self)
     }
 
-    private func performOpen(_ result: QuickOpenModel.PresentedResult,
-                             context: QuickOpenSubmissionContext) async -> Bool {
-        QuickOpenUITestTrace.record("open requested")
-        guard isVisible else {
-            QuickOpenUITestTrace.record("open refused: panel hidden")
-            return false
-        }
-        guard let coordinator, let originController, let origin = context.origin else {
-            QuickOpenUITestTrace.record("open refused: coordinator or origin absent")
-            return false
-        }
-        guard context.model.selectedResult == result else {
-            let current = context.model.selectedResult
-            QuickOpenUITestTrace.record("open refused: result changed before admission")
-            QuickOpenUITestTrace.record("current=\(String(describing: current))")
-            QuickOpenUITestTrace.record("submitted=\(result)")
-            return false
-        }
-        let admitted = await context.actionGate.admit(result, from: origin)
-        QuickOpenUITestTrace.record("action admission: \(admitted)")
-        guard admitted, isVisible, context.model.selectedResult == result,
-              let originWindow = originController.window
-        else {
-            QuickOpenUITestTrace.record("open refused: post-admission identity")
-            return false
-        }
-        // Use the root that produced this row, after checking the current
-        // request still owns it. The open path rechecks after its async hops.
-        let url = origin.lexicalRoot.appendingPathComponent(result.path.relativePath)
-        Task {
-            guard context.actionGate.isCurrent(origin) else { return }
-            // This panel is key, so use the captured document window.
-            await coordinator.openDocument(
-                at: url,
-                folderRoot: origin.lexicalRoot,
-                folderAccessURL: origin.accessRoot,
-                relativeTo: originWindow,
-                shouldContinue: { context.actionGate.isCurrent(origin) },
-                useAmbientWindow: false
-            )
-        }
-        return true
-    }
-
     private static func currentOrigin(for controller: WindowController?) -> QuickOpenOrigin? {
         controller?.currentQuickOpenOrigin
-    }
-}
-
-@MainActor
-private struct QuickOpenSubmissionContext {
-    let model: QuickOpenModel
-    let origin: QuickOpenOrigin?
-    let actionGate: QuickOpenActionGate
-}
-
-@MainActor
-enum QuickOpenUITestTrace {
-    static func record(_ message: String) {
-        let arguments = AppDelegate.launchArguments
-        guard arguments.contains("-UITesting"), arguments.contains("-sessionDir") else { return }
-        let file = AppDelegate.sessionDirectory(from: arguments).appendingPathComponent("quick-open-trace.txt")
-        let line = Data((message + "\n").utf8)
-        if let handle = try? FileHandle(forWritingTo: file) {
-            defer { try? handle.close() }
-            try? handle.seekToEnd()
-            try? handle.write(contentsOf: line)
-        } else {
-            try? line.write(to: file, options: .atomic)
-        }
     }
 }
