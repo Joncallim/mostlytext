@@ -30,9 +30,9 @@ readback still belongs to the isolated test desktop and final candidate.
 The localization inventory is regenerated from this source. Its TextSearch
 callsite-coordinate adjustments also reconcile pre-existing inventory drift;
 this change does not edit TextSearch. The separate plain-string sink ledger's
-`FileFormat.swift` deferred item should be updated after the parallel snippet
-name and Finder metadata units are reconciled, so concurrent work does not
-overwrite their decisions. Issue #3's complete string census, plural rules,
+`FileFormat.swift` deferred item now records the updated source hash and the
+remaining non-English presentation review. The snippet name and Finder metadata
+units have already landed on main. Issue #3's complete string census, plural rules,
 translation quality, pseudo-localization and native-language acceptance remain
 open.
 
@@ -41,10 +41,15 @@ open.
 On Xcode 26.6 (17F113), `xcstringstool` compiles the FileCore catalog into
 English, French, Japanese and Polish `Localizable.strings` resources; the
 French compiled entry is `Plain Text` → `Texte brut`. The locked Release
-package selection
+package selection on its original source baseline
 `swift test --package-path MacDown2/Packages/MacDownKit --force-resolved-versions -c release --jobs 4 --filter plainTextDisplayNameUsesTheCompiledFileCoreCatalog`
 passes one focused test. Changed-file strict SwiftLint and SwiftFormat, source
 catalog/Transifex inventory and `git diff --check` pass.
+
+Rebased onto current MostlyText main `1398733c` on 10 November, the plain-string
+sink guard passes for 750 production Swift inputs and 67 selected sinks. The
+source inventory passes for 15 catalogs and 714 entries. Exact-head Release
+focused test and full CI results are recorded in the PR before merge.
 
 The first version of that test failed: standalone `swift test` copied raw
 `Localizable.xcstrings` into `MacDownKit_FileCore.bundle`, so a lookup there
