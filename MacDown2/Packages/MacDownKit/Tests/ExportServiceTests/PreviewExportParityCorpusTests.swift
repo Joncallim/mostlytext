@@ -15,11 +15,17 @@ struct PreviewExportParityCorpusTests {
         let export: PreparedExportDocument
     }
 
-    private func surfaces(_ source: String) async throws -> Surfaces {
+    private func surfaces(
+        _ source: String,
+        contributions: [ExportDerivedContribution] = []
+    ) async throws -> Surfaces {
         let document = try await ParseEngine().parse(source, revision: 1)
         let blocks = PreviewBlock.blocks(from: document, text: source)
         let export = try await ExportService.prepare(
-            ExportRequest(text: source, sourceGeneration: 1, theme: ExportTestSupport.lightTheme()),
+            ExportRequest(
+                text: source, sourceGeneration: 1,
+                theme: ExportTestSupport.lightTheme(), contributions: contributions
+            ),
             target: .html(url: URL(fileURLWithPath: "/tmp/parity-corpus.html"), mode: .standalone(style: .embedded))
         )
         return Surfaces(document: document, blocks: blocks, export: export)
@@ -201,5 +207,52 @@ struct PreviewExportParityCorpusTests {
         #expect(String(preview.characters) == "<b>authored</b>")
         #expect(result.export.preservesRawHTML)
         #expect(result.export.bodyHTML.contains("<b>authored</b>"))
+    }
+
+    @Test func inlineMathKeepsTheSameAuthoredRangeAcrossNativeAndStaticSurfaces() async throws {
+        let source = "Before $x^2$ after.\n"
+        let math = "$x^2$"
+        let range = (source as NSString).range(of: math)
+        let contribution = ExportDerivedContribution(
+            sourceRange: range.location ..< NSMaxRange(range), placement: .inline,
+            html: "<span class=\"math\">x²</span>", sourceGeneration: 1
+        )
+        let result = try await surfaces(source, contributions: [contribution])
+        let block = try #require(result.blocks.first)
+        #expect(block.source == "Before $x^2$ after.")
+        let native = try PreviewMarkupParser(syntaxExtensions: [.math]).attributedString(for: block.source)
+        #expect(String(native.characters) == "Before \u{FFFC} after.")
+        #expect(result.export.bodyHTML.contains("<p>Before <span class=\"math\">x²</span> after.</p>"))
+        #expect(!result.export.bodyHTML.contains("$x^2$"))
+    }
+
+    @Test(arguments: ["mermaid", "d2", "dot"])
+    func diagramFencesKeepTheirSourceAndPlaceOneStaticContribution(language: String) async throws {
+        let fence = "```\(language)\nA -> B\n```"
+        let source = "Intro\n\n\(fence)\n\nOutro\n"
+        let range = (source as NSString).range(of: fence)
+        let contribution = ExportDerivedContribution(
+            sourceRange: range.location ..< NSMaxRange(range), placement: .block,
+            html: "<figure>\(language) rendered</figure>", sourceGeneration: 1
+        )
+        let result = try await surfaces(source, contributions: [contribution])
+        #expect(result.blocks.map(\.kind) == [
+            .paragraph, .codeBlock(language: language), .paragraph,
+        ])
+        #expect(result.blocks[1].source == fence)
+        #expect(result.export.bodyHTML.contains("<p>Intro</p>"))
+        #expect(result.export.bodyHTML.contains("<figure>\(language) rendered</figure>"))
+        #expect(result.export.bodyHTML.contains("<p>Outro</p>"))
+        #expect(!result.export.bodyHTML.contains("A -&gt; B"))
+
+        let failed = ExportDerivedContribution(
+            sourceRange: range.location ..< NSMaxRange(range), placement: .block,
+            html: "<figure>broken</figure>", sourceGeneration: 1,
+            diagnostics: [.init(severity: .error, message: "renderer unavailable")]
+        )
+        let fallback = try await surfaces(source, contributions: [failed])
+        #expect(fallback.blocks[1].source == fence)
+        #expect(fallback.export.bodyHTML.contains("A -&gt; B"))
+        #expect(!fallback.export.bodyHTML.contains("<figure>broken</figure>"))
     }
 }
