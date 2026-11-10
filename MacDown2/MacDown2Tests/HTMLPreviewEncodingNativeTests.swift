@@ -97,6 +97,47 @@ struct HTMLPreviewEncodingNativeTests {
                            observer: observer)
     }
 
+    @Test func aNewWebKitLoadCannotReadAnEarlierDocumentsResourceURL() async throws {
+        let first = try HTMLResponseEncodingFixture(sourceBytes: Data("""
+        <html><head><title>First root</title></head><body><img src="asset.png"></body></html>
+        """.utf8))
+        defer { first.dispose() }
+        let firstBytes = try SecuredMarkdownMountedTests().smallPNG()
+        try firstBytes.write(to: first.folder.appendingPathComponent("asset.png"))
+        let (firstView, firstScheme) = try await first.boundedPage()
+        let oldURL = firstScheme.handler.load.mainURL.appendingPathComponent("asset.png")
+        try await first.wait {
+            firstView.title == "First root" &&
+                firstScheme.record(for: oldURL)?.finished == true
+        }
+        #expect(firstScheme.record(for: oldURL)?.bytes == firstBytes)
+
+        let second = try HTMLResponseEncodingFixture(sourceBytes: Data("""
+        <html><head><title>Second root</title></head><body>
+        <img src="asset.png"><img src="\(oldURL.absoluteString)">
+        </body></html>
+        """.utf8))
+        defer { second.dispose() }
+        let secondBytes = firstBytes + Data("second root".utf8)
+        try secondBytes.write(to: second.folder.appendingPathComponent("asset.png"))
+        let (secondView, secondScheme) = try await second.boundedPage()
+        let currentURL = secondScheme.handler.load.mainURL.appendingPathComponent("asset.png")
+        #expect(oldURL.host != currentURL.host)
+        try await second.wait {
+            secondView.title == "Second root" && !secondView.isLoading &&
+                secondScheme.record(for: currentURL)?.finished == true
+        }
+        let current = try #require(secondScheme.record(for: currentURL))
+        #expect(current.bytes == secondBytes)
+        #expect(!current.failed)
+        if let stale = secondScheme.record(for: oldURL) {
+            #expect(stale.failed)
+            #expect(stale.bytes.isEmpty)
+            #expect(stale.response == nil)
+        }
+        #expect(firstScheme.record(for: oldURL)?.bytes == firstBytes)
+    }
+
     private func bomBytes(_ source: String, encoding: String.Encoding) throws -> Data {
         let body = try #require(source.data(using: encoding))
         return Data(encoding == .utf16LittleEndian ? [0xFF, 0xFE] : [0xFE, 0xFF]) + body
