@@ -130,6 +130,10 @@ struct HTMLPreviewEncodingNativeTests {
         let current = try #require(secondScheme.record(for: currentURL))
         #expect(current.bytes == secondBytes)
         #expect(!current.failed)
+        let widthsJSON = try #require(try await secondView.evaluateJavaScript(
+            "JSON.stringify(Array.from(document.images, image => image.naturalWidth))"
+        ) as? String)
+        #expect(try JSONDecoder().decode([Int].self, from: Data(widthsJSON.utf8)) == [8, 0])
         if let stale = secondScheme.record(for: oldURL) {
             #expect(stale.failed)
             #expect(stale.bytes.isEmpty)
