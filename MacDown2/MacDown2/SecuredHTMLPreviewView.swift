@@ -55,6 +55,7 @@ struct SecuredHTMLPreviewView: NSViewRepresentable {
     @MainActor
     final class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate {
         private var page: SecuredHTMLPage?
+        private weak var pageOwner: PreviewResourceWindowState?
         private var scheduled: SecuredHTMLIdentity?
         private var reloadTask: Task<Void, Never>?
         private var disposed = false
@@ -68,7 +69,7 @@ struct SecuredHTMLPreviewView: NSViewRepresentable {
                 grantRevision: owner?.revision ?? UUID(uuid: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
             )
             if let page, !page.identity.sameDocument(as: identity) {
-                retireCurrent(owner: owner)
+                retireCurrent()
             }
             guard document.state == .clean else {
                 cancelScheduled()
@@ -91,7 +92,7 @@ struct SecuredHTMLPreviewView: NSViewRepresentable {
             guard !disposed else { return }
             disposed = true
             cancelScheduled()
-            retireCurrent(owner: nil)
+            retireCurrent()
             host.subviews.forEach { $0.removeFromSuperview() }
         }
 
@@ -109,8 +110,13 @@ struct SecuredHTMLPreviewView: NSViewRepresentable {
                 sourceGeneration: identity.savedGeneration,
                 grantRevision: identity.grantRevision, consumer: .html
             )
-            guard owner.revision == identity.grantRevision else { return }
-            retireCurrent(owner: owner)
+            guard owner.revision == identity.grantRevision else {
+                if let token {
+                    owner.retire(.html, matching: token)
+                }
+                return
+            }
+            retireCurrent()
             host.subviews.forEach { $0.removeFromSuperview() }
             do {
                 let load = try BoundedHTMLPreviewLoad(document: document, source: source, grant: token)
@@ -128,6 +134,7 @@ struct SecuredHTMLPreviewView: NSViewRepresentable {
                 host.addSubview(webView)
                 page = SecuredHTMLPage(identity: identity, load: load, handler: handler,
                                        webView: webView, token: token)
+                pageOwner = owner
                 guard let navigation = webView.load(URLRequest(url: load.mainURL)) else {
                     failDirectLoad(in: webView)
                     return
@@ -147,9 +154,11 @@ struct SecuredHTMLPreviewView: NSViewRepresentable {
             scheduled = nil
         }
 
-        private func retireCurrent(owner: PreviewResourceWindowState?) {
+        private func retireCurrent() {
             guard let old = page else { return }
+            let owner = pageOwner
             page = nil
+            pageOwner = nil
             old.handler.dispose()
             old.webView.stopLoading()
             old.webView.navigationDelegate = nil
@@ -242,7 +251,7 @@ struct SecuredHTMLPreviewView: NSViewRepresentable {
         private func failDirectLoad(in webView: WKWebView) {
             guard page?.webView === webView else { return }
             let host = webView.superview
-            retireCurrent(owner: nil)
+            retireCurrent()
             if let host {
                 showFailure(in: host)
             }
