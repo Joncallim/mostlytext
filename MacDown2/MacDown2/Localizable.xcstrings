@@ -1622,6 +1622,35 @@
         }
       }
     },
+    "Clear Search History": {
+      "comment": "Action in the Find bar Recent Searches menu. Clears search terms remembered for this window; it does not edit the document.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear Search History"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Clear Search History"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Clear Search History"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Clear Search History"
+          }
+        }
+      }
+    },
     "Close (Esc)": {
       "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
       "localizations": {
@@ -7338,6 +7367,35 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Quit"
+          }
+        }
+      }
+    },
+    "Recent Searches": {
+      "comment": "Accessible name and tooltip for the Find bar menu of search terms previously used in this window. The authored terms themselves are displayed verbatim.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recent Searches"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Recent Searches"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Recent Searches"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Recent Searches"
           }
         }
       }

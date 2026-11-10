@@ -14,6 +14,9 @@ import TextSearch
 /// the text view and reveal the current match.
 struct FindBarView: View {
     @Bindable var model: EditorFindModel
+    let recentQueries: [String]
+    let onRememberQuery: (String) -> Void
+    let onClearRecentQueries: () -> Void
     /// The SwiftUI-observed document text: used ONLY as a reactive trigger
     /// (`.onChange(of: text)` below) so a live edit re-runs the search.
     /// Never read directly to build the search input — see `resolvedText`.
@@ -68,7 +71,7 @@ struct FindBarView: View {
     /// `EditorTextSystem`. This view never touches selection itself.
     let onSelectAll: (EditorSelectionSet) -> Void
 
-    @FocusState private var isQueryFocused: Bool
+    @FocusState var isQueryFocused: Bool
     @Environment(\.windowCoordinator) private var coordinator
 
     var body: some View {
@@ -97,6 +100,7 @@ struct FindBarView: View {
                                 return .ignored
                             }
                         }
+                    recentSearchMenu
                 }
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
@@ -219,6 +223,7 @@ struct FindBarView: View {
         .onChange(of: ExactTextFingerprint(text)) { _, _ in
             recomputeMatches(anchor: model.currentMatch?.range.location, reveal: false)
         }
+        .onDisappear { onRememberQuery(model.query) }
     }
 
     /// Always shown alongside the query row (not a collapsible "expand for
@@ -304,6 +309,7 @@ struct FindBarView: View {
     /// resulting state up — used by both the keyboard (Return/Shift-Return)
     /// and the toolbar chevron buttons so both paths behave identically.
     private func navigate(_ navigation: () -> SearchMatch?) {
+        onRememberQuery(model.query)
         let navigationToken = onNavigationIntent()
         _ = navigation()
         onMatchesChanged(true, navigationToken)
@@ -377,20 +383,5 @@ struct FindBarView: View {
         guard !model.isSearching, let selection = model.selectionSetForAllMatches else { return }
         onSelectAll(selection)
         onClose()
-    }
-}
-
-extension FindBarView {
-    private func optionToggle(_ title: String, isOn: Binding<Bool>, help: String) -> some View {
-        Button {
-            isOn.wrappedValue.toggle()
-        } label: {
-            Text(title)
-                .font(.system(size: 11, weight: .medium, design: .monospaced))
-                .frame(minWidth: 20)
-        }
-        .buttonStyle(.bordered)
-        .tint(isOn.wrappedValue ? Color.accentColor : Color.clear)
-        .help(help)
     }
 }
