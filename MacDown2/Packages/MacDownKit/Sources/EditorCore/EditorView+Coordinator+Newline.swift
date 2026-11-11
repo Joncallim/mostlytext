@@ -29,13 +29,15 @@ extension EditorView.Coordinator {
               textView.isEditable,
               let source = system.assistTextSource
         else { return false }
-        let selection = system.selectedRange
-        let separator = MarkdownEditingAssistEngine.lineSeparator(ofLineContaining: selection.location, in: source)
-        // Multiple selections and bare carets fan out in LF documents too:
-        // AppKit's `insertNewline:` targets only the primary range.
-        if separator == "\n", system.selectionSet.isMultiple, system.applyMultiCursorInsert(separator) {
+        if system.selectionSet.isMultiple,
+           system.applyMultiCursorNewline(
+               usingEditingAssists: selector == #selector(NSResponder.insertNewline(_:))
+                   && system.editingAssistConfiguration.isEnabled
+           ) {
             return true
         }
+        let selection = system.selectedRange
+        let separator = MarkdownEditingAssistEngine.lineSeparator(ofLineContaining: selection.location, in: source)
         guard separator != "\n" else { return false }
         if selector == #selector(NSResponder.insertNewline(_:)), system.editingAssistConfiguration.isEnabled {
             let outcome = MarkdownEditingAssistEngine.outcome(
@@ -48,11 +50,6 @@ extension EditorView.Coordinator {
             if outcome != .passthrough {
                 return system.applyAssistOutcome(outcome)
             }
-        }
-        // Real selections and synthetic bare carets fan out through the same
-        // transaction. Native input would otherwise edit only the primary.
-        if system.selectionSet.isMultiple, system.applyMultiCursorInsert(separator) {
-            return true
         }
         return system.applyAssistOutcome(.edit(EditingAssistEdit(
             replacementRange: selection,
