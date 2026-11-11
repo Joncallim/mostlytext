@@ -173,20 +173,18 @@ public final class EditorTextView: NSTextView {
         super.insertText(string, replacementRange: replacementRange)
     }
 
-    /// Multi-selection delete (§6.9, §7.2): `deleteBackward`/`deleteForward`
-    /// share one selection-deleting implementation, since every range in a
-    /// real multi-selection is non-empty (see
-    /// `applyMultiCursorDeleteSelection()`'s doc comment) and deleting a
-    /// selection's own content is direction-independent.
+    /// Multi-selection delete (§6.9, §7.2): selected text is deleted as a
+    /// range; synthetic bare carets delete one composed character in the
+    /// requested direction. Both paths retain one transaction and undo step.
     override public func deleteBackward(_ sender: Any?) {
-        if let owningSystem, owningSystem.applyMultiCursorDeleteSelection() {
+        if let owningSystem, owningSystem.applyMultiCursorDelete(.backward) {
             return
         }
         super.deleteBackward(sender)
     }
 
     override public func deleteForward(_ sender: Any?) {
-        if let owningSystem, owningSystem.applyMultiCursorDeleteSelection() {
+        if let owningSystem, owningSystem.applyMultiCursorDelete(.forward) {
             return
         }
         super.deleteForward(sender)
