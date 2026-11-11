@@ -12,7 +12,7 @@ struct ExportOwnedFileReceipt {
 
     init(bytes: Data, stamp: Stamp) throws {
         guard stamp.kind == mode_t(S_IFREG), stamp.size == bytes.count,
-              bytes.count <= ExportResourceBudget.maxFinalHTMLUTF8Bytes else { throw ExportError.unsafePublication }
+              bytes.count <= ExportResourceBudget.maxManagedOutputBytes else { throw ExportError.unsafePublication }
         self.stamp = stamp
         digest = Data(SHA256.hash(data: bytes))
     }
@@ -22,7 +22,7 @@ struct ExportOwnedFileReceipt {
     init(authenticated: ExportJournalStore.AuthenticatedReceipt) throws {
         let archived = authenticated.value
         guard archived.stamp.kind == mode_t(S_IFREG), archived.stamp.size >= 0,
-              archived.stamp.size <= ExportResourceBudget.maxFinalHTMLUTF8Bytes,
+              archived.stamp.size <= ExportResourceBudget.maxManagedOutputBytes,
               archived.digest.count == SHA256.byteCount else { throw ExportError.unsafePublication }
         stamp = archived.stamp
         digest = archived.digest
@@ -33,7 +33,7 @@ struct ExportOwnedFileReceipt {
     init(authenticatedCompanion: ExportCompanionAuthentication.AuthenticatedReceipt) throws {
         let archived = authenticatedCompanion.value
         guard archived.stamp.kind == mode_t(S_IFREG), archived.stamp.size >= 0,
-              archived.stamp.size <= ExportResourceBudget.maxFinalHTMLUTF8Bytes,
+              archived.stamp.size <= ExportResourceBudget.maxManagedOutputBytes,
               archived.digest.count == SHA256.byteCount else { throw ExportError.unsafePublication }
         stamp = archived.stamp
         digest = archived.digest
