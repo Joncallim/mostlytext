@@ -43,9 +43,20 @@ extension EditorTextSystem {
         let replacements = deletions.map { TextReplacement(range: $0, replacementText: "") }
         guard EditorEditTransaction.validate(replacements, documentLength: source.length) else { return false }
 
+        // The normalized selection and merged deletions may each be large.
+        // Build cumulative lengths once instead of scanning every deletion for
+        // every caret while mapping the resulting selection.
+        var deletedBefore = [Int](repeating: 0, count: deletions.count + 1)
+        for index in deletions.indices {
+            deletedBefore[index + 1] = deletedBefore[index] + deletions[index].length
+        }
+
         let carets = zip(selection.ranges, candidates).map { original, candidate in
             let target = candidate.length > 0 ? candidate.location : original.location
-            return NSRange(location: Self.offsetAfterDeletes(target, ranges: deletions), length: 0)
+            return NSRange(
+                location: Self.offsetAfterDeletes(target, ranges: deletions, deletedBefore: deletedBefore),
+                length: 0
+            )
         }
         let resultingSelection = EditorSelectionSet(ranges: carets, primaryIndex: selection.primaryIndex)
         apply(EditorEditTransaction(replacements: replacements, resultingSelection: resultingSelection))
@@ -108,17 +119,27 @@ extension EditorTextSystem {
         return NSRange(location: start, length: end - start)
     }
 
-    private static func offsetAfterDeletes(_ offset: Int, ranges: [NSRange]) -> Int {
-        var removed = 0
-        for range in ranges {
-            if offset < range.location {
-                break
+    private static func offsetAfterDeletes(
+        _ offset: Int,
+        ranges: [NSRange],
+        deletedBefore: [Int]
+    ) -> Int {
+        // Find the first deletion whose end is beyond this pre-edit offset.
+        // An offset within it maps to its start; an offset after it loses the
+        // cumulative deleted length. Exact end offsets count as after.
+        var lower = 0
+        var upper = ranges.count
+        while lower < upper {
+            let middle = lower + (upper - lower) / 2
+            if NSMaxRange(ranges[middle]) <= offset {
+                lower = middle + 1
+            } else {
+                upper = middle
             }
-            if offset < NSMaxRange(range) {
-                return range.location - removed
-            }
-            removed += range.length
         }
-        return offset - removed
+        if lower < ranges.count, ranges[lower].location <= offset {
+            return ranges[lower].location - deletedBefore[lower]
+        }
+        return offset - deletedBefore[lower]
     }
 }
