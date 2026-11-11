@@ -25,6 +25,17 @@ extension EditorTextSystem {
 
         let candidates = selection.ranges.map { range -> NSRange in
             guard range.length == 0 else { return Self.expandedCRLFSelection(range, in: source) }
+            if direction == .backward, editingAssistConfiguration.isEnabled,
+               case let .edit(edit) = MarkdownEditingAssistEngine.outcome(
+                   for: .deleteBackward,
+                   text: source,
+                   selection: range,
+                   configuration: editingAssistConfiguration,
+                   profile: languageEditingProfile
+               ), edit.replacementString.isEmpty,
+               edit.resultingSelection == NSRange(location: edit.replacementRange.location, length: 0) {
+                return edit.replacementRange
+            }
             return Self.deleteRange(at: range.location, direction: direction, in: source)
         }
         let deletions = Self.mergedDeleteRanges(candidates.filter { $0.length > 0 })

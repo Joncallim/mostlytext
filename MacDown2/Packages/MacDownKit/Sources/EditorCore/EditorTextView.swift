@@ -207,7 +207,7 @@ public final class EditorTextView: NSTextView {
     /// (`EditorTextSystem.apply(_:)` already sets `isRichText = false`).
     override public func paste(_ sender: Any?) {
         if let owningSystem, let text = NSPasteboard.general.string(forType: .string),
-           owningSystem.applyMultiCursorInsert(text) {
+           owningSystem.applyMultiCursorInsert(text, usingEditingAssists: false) {
             return
         }
         super.paste(sender)

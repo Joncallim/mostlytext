@@ -312,13 +312,10 @@ public struct EditorView: NSViewRepresentable {
             if selector == #selector(NSResponder.cancelOperation(_:)), !textView.hasMarkedText() {
                 return collapseMultipleSelectionsIfNeeded(system: system)
             }
-            // Synchronized plain-arrow-key movement (§6.9, §6.10, Slice
-            // 3b-iii) — likewise gated only on IME, not on the Markdown
-            // assist configuration below: multi-caret movement is not a
-            // Markdown editing assist. Falls through unchanged (returns
-            // `false`) for every other selector, including the
-            // overwhelmingly common single-caret case.
-            if !textView.hasMarkedText(), handleSynchronizedMovement(selector, system: system) {
+            // Multi-selection movement and delete run before the primary-only
+            // Markdown command hook. Both are gated on IME, not on whether
+            // Markdown assists are enabled; single-caret commands fall through.
+            if !textView.hasMarkedText(), handleMultiSelectionKeyboardCommand(selector, system: system) {
                 return true
             }
             if Self.isNewlineSelector(selector),
