@@ -6,6 +6,38 @@ import Testing
 @MainActor
 @Suite("EditorTextSystem synthetic multi-caret typing")
 struct EditorMultiCaretTypingTests {
+    @Test func oneHundredTwentyEightBareCaretsUseSpliceWithoutLosingUndoOrPrimaryIdentity() {
+        let original = String(repeating: "ab\n", count: 128)
+        let system = EditingAssistIntegrationSupport.makeSystem(text: original)
+        let window = EditingAssistIntegrationSupport.mountInWindow(system)
+        defer { window.orderOut(nil) }
+        system.textView.delegate = EditingAssistIntegrationSupport.makeCoordinator(system: system)
+
+        system.selectionSet = EditorSelectionSet(
+            ranges: (0 ..< 128).map { NSRange(location: $0 * 3 + 1, length: 0) },
+            primaryIndex: 97
+        )
+        #expect(system.selectionSet.count == 128)
+        #expect(system.selectionSet.primaryIndex == 97)
+
+        system.textView.insertText("X", replacementRange: NSRange(location: NSNotFound, length: 0))
+
+        let expected = String(repeating: "aXb\n", count: 128)
+        #expect(system.text == expected)
+        #expect(system.selectionSet.count == 128)
+        #expect(system.selectionSet.primaryIndex == 97)
+        #expect(system.selectionSet.ranges == (0 ..< 128).map {
+            NSRange(location: $0 * 4 + 2, length: 0)
+        })
+
+        #expect(system.undoManager.canUndo)
+        system.undoManager.undo()
+        #expect(system.text == original)
+        #expect(system.undoManager.canRedo)
+        system.undoManager.redo()
+        #expect(system.text == expected)
+    }
+
     @Test func twoBareCaretsInsertAtBothLocationsAndRemainAvailable() {
         let system = EditingAssistIntegrationSupport.makeSystem(text: "ab cd")
         let window = EditingAssistIntegrationSupport.mountInWindow(system)
