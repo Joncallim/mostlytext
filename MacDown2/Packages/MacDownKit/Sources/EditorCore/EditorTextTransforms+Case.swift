@@ -11,8 +11,7 @@ public enum TextCaseConversion {
 }
 
 extension EditorTextTransforms {
-    /// Requires every active selection to be real and non-empty (matching
-    /// `applyMultiCursorInsert`'s own `allSatisfy` precedent, §6.13) — case
+    /// Requires every active selection to be real and non-empty — case
     /// conversion has no meaning for a bare caret, so a mix of a real
     /// selection and a bare caret declines the WHOLE command rather than
     /// silently converting only some of the active selections. No line-
