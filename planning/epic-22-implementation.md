@@ -33,6 +33,13 @@
 > Slice 3 single-caret pairing scope, while installed-app acceptance remains
 > an independent check.
 
+> Explicit Markdown-command correction — 11 November 2026: Bold, Italic,
+> Inline Code, Heading and Paragraph now act on the complete selection set
+> through one validated transaction. Identical expanded line edits publish
+> once, while incompatible overlaps decline atomically. This narrows the
+> historical Slice 3 single-selection-only scope at §7.3; installed-app and
+> final localisation acceptance remain separate.
+
 
 > Baseline: `master` at commit `95e4f6005f7f0a998b6c03377a17d92b8c1fcef7` (2026-09-21), immediately after EPIC-16's interim localisation baseline (PR #111) and the owner's "Plan final pre-release debt closure and E23" / "Complete carried-forward debt audit" planning commits. Epic issue: [#112](https://github.com/Joncallim/macdown_2/issues/112).
 

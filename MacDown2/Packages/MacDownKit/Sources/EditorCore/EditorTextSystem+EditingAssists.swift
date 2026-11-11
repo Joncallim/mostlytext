@@ -92,10 +92,13 @@ extension EditorTextSystem {
         if case let .heading(level) = command, !(1 ... 6).contains(level) {
             return false
         }
-        guard editingAssistConfiguration.isEnabled else { return false }
+        guard editingAssistConfiguration.isEnabled, editingAssistConfiguration.isMarkdownFormat else { return false }
         // Bold / Italic / Heading would rewrite marked (IME) text instead of failing open, like every other command.
         guard canApplyCommandEdit else { return false }
         guard let source = assistTextSource else { return false }
+        if selectionSet.isMultiple {
+            return applyMultiCursorMarkdownCommand(command, source: source)
+        }
         let outcome = MarkdownEditingAssistEngine.outcome(
             for: .markdownCommand(command),
             text: source,
