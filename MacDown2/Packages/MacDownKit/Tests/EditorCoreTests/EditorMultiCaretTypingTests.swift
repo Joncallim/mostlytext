@@ -54,4 +54,26 @@ struct EditorMultiCaretTypingTests {
         system.undoManager.undo()
         #expect(system.text == "cat dog")
     }
+
+    @Test func readOnlyTextDeclinesMultiCaretInsertAndSelectionDelete() {
+        let system = EditingAssistIntegrationSupport.makeSystem(text: "cat dog")
+        let window = EditingAssistIntegrationSupport.mountInWindow(system)
+        defer { window.orderOut(nil) }
+        system.textView.delegate = EditingAssistIntegrationSupport.makeCoordinator(system: system)
+        system.selectionSet = EditorSelectionSet(
+            ranges: [NSRange(location: 1, length: 0), NSRange(location: 5, length: 0)],
+            primaryIndex: 0
+        )
+        system.textView.isEditable = false
+
+        #expect(!system.applyMultiCursorInsert("X"))
+        #expect(system.text == "cat dog")
+
+        system.selectionSet = EditorSelectionSet(
+            ranges: [NSRange(location: 0, length: 3), NSRange(location: 4, length: 3)],
+            primaryIndex: 0
+        )
+        #expect(!system.applyMultiCursorDeleteSelection())
+        #expect(system.text == "cat dog")
+    }
 }

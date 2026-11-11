@@ -27,15 +27,15 @@ extension EditorTextSystem {
     /// `false` to fall through to AppKit's normal single-range handling
     /// unchanged — fewer than two active selections (the overwhelmingly
     /// common case, left entirely to AppKit/E10's existing single-range
-    /// path), an active IME
-    /// composition (fails open, matching every other IME gate in this
+    /// path), a read-only editor, an active IME composition (fails open,
+    /// matching every other IME gate in this
     /// codebase), or a currently-in-progress editing assist/programmatic
     /// text update (this call is itself part of one, so re-entering would
     /// double-apply).
     func applyMultiCursorInsert(_ text: String) -> Bool {
         let selection = selectionSet
         guard selection.ranges.count > 1 else { return false }
-        guard !textView.hasMarkedText() else { return false }
+        guard textView.isEditable, !textView.hasMarkedText() else { return false }
         guard !isPerformingEditingAssist, !isPerformingProgrammaticTextUpdate else { return false }
 
         let replacements = selection.ranges.map { TextReplacement(range: $0, replacementText: text) }
@@ -60,7 +60,7 @@ extension EditorTextSystem {
     func applyMultiCursorDeleteSelection() -> Bool {
         let selection = selectionSet
         guard selection.ranges.count > 1, selection.ranges.allSatisfy({ $0.length > 0 }) else { return false }
-        guard !textView.hasMarkedText() else { return false }
+        guard textView.isEditable, !textView.hasMarkedText() else { return false }
         guard !isPerformingEditingAssist, !isPerformingProgrammaticTextUpdate else { return false }
 
         let replacements = selection.ranges.map { TextReplacement(range: $0, replacementText: "") }
