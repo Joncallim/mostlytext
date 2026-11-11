@@ -11,19 +11,11 @@ import Testing
 /// `EditorSelectionSetCacheTests.swift` (split out to keep this file under
 /// its line-count limit).
 ///
-/// Every multi-range scenario below uses genuine, non-zero-length,
-/// non-touching selections (never bare carets) — confirmed empirically,
-/// against a real mounted `EditorTextView`, that `NSTextView.selectedRanges`
-/// collapses to a single range the instant more than one zero-length range,
-/// or any mix of a zero-length range with anything else, is assigned to it.
-/// A genuine multi-*caret* state (e.g. Option-click to add a bare caret)
-/// therefore cannot be constructed against real AppKit state at all; §6.9's
-/// architecture-correction note records this finding and its implications
-/// for Slice 3b, which needs a different design (custom caret tracking
-/// fully decoupled from `selectedRanges`) than this slice's foundation.
-/// Multi-selection editing — multiple real, non-touching selections, which
-/// is exactly what Select-All-Occurrence (Slice 3c) produces — is
-/// unaffected and is what every test here exercises.
+/// The original scenarios below use genuine, non-zero-length selections.
+/// `NSTextView.selectedRanges` collapses multiple bare carets or mixed
+/// selected/bare ranges to one; `EditorTextSystem.selectionSet` now retains
+/// those synthetic carets. Their insertion regression lives in
+/// `EditorMultiCaretTypingTests`.
 ///
 /// Multi-selection typing/delete are exercised through the REAL
 /// `EditorTextView.insertText(_:replacementRange:)`/`deleteBackward(_:)`
