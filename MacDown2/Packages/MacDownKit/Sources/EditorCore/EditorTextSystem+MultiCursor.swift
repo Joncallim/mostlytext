@@ -31,11 +31,15 @@ extension EditorTextSystem {
     /// codebase), or a currently-in-progress editing assist/programmatic
     /// text update (this call is itself part of one, so re-entering would
     /// double-apply).
-    func applyMultiCursorInsert(_ text: String) -> Bool {
+    func applyMultiCursorInsert(_ text: String, usingEditingAssists: Bool = true) -> Bool {
         let selection = selectionSet
         guard selection.ranges.count > 1 else { return false }
         guard textView.isEditable, !textView.hasMarkedText() else { return false }
         guard !isPerformingEditingAssist, !isPerformingProgrammaticTextUpdate else { return false }
+
+        if usingEditingAssists, applyMultiCursorTypingAssist(text, selection: selection) {
+            return true
+        }
 
         let replacements = selection.ranges.map { TextReplacement(range: $0, replacementText: text) }
         applyMultiCursorTransaction(replacements, primaryIndex: selection.primaryIndex)

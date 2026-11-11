@@ -25,6 +25,14 @@
 > below describes the earlier implementation; pairing, explicit formatting
 > commands and installed-app acceptance remain separate.
 
+> Per-caret pairing correction — 11 November 2026: typed opening delimiters,
+> closing-delimiter type-over and paired Backspace now evaluate at each caret
+> through the existing E10 engine, including the native command delegate path.
+> The resulting disjoint replacements publish as one validated transaction;
+> incompatible outcomes decline as a whole. This supersedes the historical
+> Slice 3 single-caret pairing scope, while installed-app acceptance remains
+> an independent check.
+
 
 > Baseline: `master` at commit `95e4f6005f7f0a998b6c03377a17d92b8c1fcef7` (2026-09-21), immediately after EPIC-16's interim localisation baseline (PR #111) and the owner's "Plan final pre-release debt closure and E23" / "Complete carried-forward debt audit" planning commits. Epic issue: [#112](https://github.com/Joncallim/macdown_2/issues/112).
 
