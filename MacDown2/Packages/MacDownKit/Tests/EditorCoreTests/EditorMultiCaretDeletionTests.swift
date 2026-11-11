@@ -28,6 +28,8 @@ struct EditorMultiCaretDeletionTests {
         #expect(system.undoManager.canUndo)
         system.undoManager.undo()
         #expect(system.text == "ab cd")
+        system.undoManager.redo()
+        #expect(system.text == "b d")
     }
 
     @Test func forwardDeleteRemovesTheGraphemeAfterEachBareCaret() {
@@ -140,6 +142,22 @@ struct EditorMultiCaretDeletionTests {
 
         #expect(system.text == "ABC")
         #expect(system.selectionSet.ranges == [NSRange(location: 1, length: 0), NSRange(location: 2, length: 0)])
+    }
+
+    @Test func backspaceDeletesCombiningClusterAndCJKCharacter() {
+        let system = mounted("e\u{301}Z中")
+        let window = EditingAssistIntegrationSupport.mountInWindow(system)
+        defer { window.orderOut(nil) }
+        system.selectionSet = EditorSelectionSet(
+            ranges: [NSRange(location: 2, length: 0), NSRange(location: 4, length: 0)],
+            primaryIndex: 1
+        )
+
+        system.textView.deleteBackward(nil)
+
+        #expect(system.text == "Z")
+        #expect(system.selectionSet.ranges == [NSRange(location: 0, length: 0), NSRange(location: 1, length: 0)])
+        #expect(system.selectionSet.primaryIndex == 1)
     }
 
     @Test func oneHundredBareCaretsUseTheBoundedTransactionPath() {
