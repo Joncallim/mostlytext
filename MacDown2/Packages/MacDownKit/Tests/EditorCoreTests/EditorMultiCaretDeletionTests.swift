@@ -12,6 +12,34 @@ struct EditorMultiCaretDeletionTests {
         return system
     }
 
+    @Test func oneHundredTwentyEightBareCaretsDeleteInOneSpliceAndKeepTheirPositions() {
+        let original = String(repeating: "ab\n", count: 128)
+        let system = mounted(original)
+        let window = EditingAssistIntegrationSupport.mountInWindow(system)
+        defer { window.orderOut(nil) }
+        system.selectionSet = EditorSelectionSet(
+            ranges: (0 ..< 128).map { NSRange(location: $0 * 3 + 1, length: 0) },
+            primaryIndex: 97
+        )
+        #expect(system.selectionSet.count == 128)
+
+        system.textView.deleteBackward(nil)
+
+        let expected = String(repeating: "b\n", count: 128)
+        #expect(system.text == expected)
+        #expect(system.selectionSet.count == 128)
+        #expect(system.selectionSet.primaryIndex == 97)
+        #expect(system.selectionSet.ranges == (0 ..< 128).map {
+            NSRange(location: $0 * 2, length: 0)
+        })
+        #expect(system.undoManager.canUndo)
+        system.undoManager.undo()
+        #expect(system.text == original)
+        #expect(system.undoManager.canRedo)
+        system.undoManager.redo()
+        #expect(system.text == expected)
+    }
+
     @Test func backspaceDeletesTheGraphemeBeforeEachBareCaret() {
         let system = mounted("ab cd")
         let window = EditingAssistIntegrationSupport.mountInWindow(system)
