@@ -14,8 +14,8 @@ import Testing
 /// The original scenarios below use genuine, non-zero-length selections.
 /// `NSTextView.selectedRanges` collapses multiple bare carets or mixed
 /// selected/bare ranges to one; `EditorTextSystem.selectionSet` now retains
-/// those synthetic carets. Their insertion regression lives in
-/// `EditorMultiCaretTypingTests`.
+/// those synthetic carets. Their insertion and deletion regressions live in
+/// `EditorMultiCaretTypingTests` and `EditorMultiCaretDeletionTests`.
 ///
 /// Multi-selection typing/delete are exercised through the REAL
 /// `EditorTextView.insertText(_:replacementRange:)`/`deleteBackward(_:)`
@@ -25,8 +25,8 @@ import Testing
 /// typing/backspace regardless of how many `selectedRanges` are active —
 /// AppKit acts only on the primary selection for a plain keystroke and
 /// never fans it out on its own — so `EditorTextSystem.applyMultiCursorInsert(_:)`/
-/// `applyMultiCursorDeleteSelection()`, called directly from the view-level
-/// override, are the real mechanism (see `EditorTextSystem+MultiCursor.swift`).
+/// `applyMultiCursorDelete(_:)`, called directly from the view-level
+/// override, are the real mechanism.
 ///
 /// Paste is confirmed to terminate in the identical
 /// `insertText(_:replacementRange:)` chokepoint typing does
@@ -188,7 +188,7 @@ struct EditorMultiSelectionTests {
     }
 
     @Test func singleSelectionTypingIsUnaffectedByTheMultiSelectionOverride() {
-        // `applyMultiCursorInsert`/`DeleteSelection` return `false` for
+        // `applyMultiCursorInsert`/`applyMultiCursorDelete` return `false` for
         // fewer than two active selections, falling straight through to
         // `super` -- this is the regression guard that adding the override
         // didn't change ordinary, single-selection typing at all.
@@ -268,7 +268,7 @@ struct EditorMultiSelectionTests {
             replacementRange: NSRange(location: NSNotFound, length: 0)
         )
 
-        let handled = system.applyMultiCursorDeleteSelection()
+        let handled = system.applyMultiCursorDelete(.backward)
 
         #expect(!handled, "an active IME composition must fail open to native handling, multi-selection or not")
     }

@@ -226,7 +226,7 @@ struct EditorRectangularSelectionTests {
         ])
     }
 
-    @Test func aRaggedRectangleStillDeclinesDirectionlessMultiCursorDelete() throws {
+    @Test func aRaggedRectangleUsesDirectionAwareMultiCursorDelete() throws {
         let mounted = try mount(text: "one two three\nab\nfour five six")
         let start = try viewPoint(at: 4, in: mounted)
         let end = try viewPoint(at: 29, in: mounted, edge: 400)
@@ -234,9 +234,9 @@ struct EditorRectangularSelectionTests {
         #expect(mounted.system.applyRectangularSelection(fromViewPoint: start, toViewPoint: end))
         let ranges = mounted.system.selectionSet.ranges
         #expect(ranges.contains { $0.length == 0 })
-        #expect(!mounted.system.applyMultiCursorDeleteSelection())
-        #expect(mounted.system.selectionSet.ranges == ranges)
-        #expect(mounted.system.text == "one two three\nab\nfour five six")
+        #expect(mounted.system.applyMultiCursorDelete(.backward))
+        #expect(mounted.system.selectionSet.ranges != ranges)
+        #expect(mounted.system.text != "one two three\nab\nfour five six")
     }
 
     // MARK: - Real `mouseDown`/`mouseDragged` + `finishRectangularSelectionGesture`

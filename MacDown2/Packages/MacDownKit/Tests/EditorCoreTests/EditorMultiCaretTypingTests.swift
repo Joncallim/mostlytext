@@ -55,7 +55,7 @@ struct EditorMultiCaretTypingTests {
         #expect(system.text == "cat dog")
     }
 
-    @Test func readOnlyTextDeclinesMultiCaretInsertAndSelectionDelete() {
+    @Test func readOnlyTextDeclinesMultiCaretInsertAndDelete() {
         let system = EditingAssistIntegrationSupport.makeSystem(text: "cat dog")
         let window = EditingAssistIntegrationSupport.mountInWindow(system)
         defer { window.orderOut(nil) }
@@ -73,7 +73,7 @@ struct EditorMultiCaretTypingTests {
             ranges: [NSRange(location: 0, length: 3), NSRange(location: 4, length: 3)],
             primaryIndex: 0
         )
-        #expect(!system.applyMultiCursorDeleteSelection())
+        #expect(!system.applyMultiCursorDelete(.backward))
         #expect(system.text == "cat dog")
     }
 }

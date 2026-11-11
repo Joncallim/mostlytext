@@ -8,6 +8,15 @@
 > feasibility probe, held preview/current-line activation and other named native
 > prerequisites remain binding; a documentation update does not skip them.
 
+> Multi-caret correction — 11 November 2026: current `main` now inserts at
+> synthetic bare carets and mixed selected/bare ranges through one transaction
+> (MostlyText PR #223). The directional-delete slice following it uses composed
+> characters and whole CRLF separators at those carets. Historical statements
+> below that `applyMultiCursorInsert` requires non-empty ranges, or that
+> selected-only delete is the production Backspace route, describe earlier
+> implementation snapshots and are superseded by these changes. Per-caret E10
+> assists and installed-app acceptance retain their own checks in issue #6.
+
 
 > Baseline: `master` at commit `95e4f6005f7f0a998b6c03377a17d92b8c1fcef7` (2026-09-21), immediately after EPIC-16's interim localisation baseline (PR #111) and the owner's "Plan final pre-release debt closure and E23" / "Complete carried-forward debt audit" planning commits. Epic issue: [#112](https://github.com/Joncallim/macdown_2/issues/112).
 

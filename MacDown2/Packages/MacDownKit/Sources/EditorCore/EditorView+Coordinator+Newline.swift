@@ -31,8 +31,8 @@ extension EditorView.Coordinator {
         else { return false }
         let selection = system.selectedRange
         let separator = MarkdownEditingAssistEngine.lineSeparator(ofLineContaining: selection.location, in: source)
-        // Real multi-selections fan out in LF documents too: AppKit's `insertNewline:` carries an explicit replacement
-        // range for the primary selection only, so without this the other selections were left in place and dropped.
+        // Multiple selections and bare carets fan out in LF documents too:
+        // AppKit's `insertNewline:` targets only the primary range.
         if separator == "\n", system.selectionSet.isMultiple, system.applyMultiCursorInsert(separator) {
             return true
         }
@@ -49,8 +49,8 @@ extension EditorView.Coordinator {
                 return system.applyAssistOutcome(outcome)
             }
         }
-        // Real multi-selections fan out; bare secondary carets are not typed
-        // into by native input either, so those fall to the primary edit below.
+        // Real selections and synthetic bare carets fan out through the same
+        // transaction. Native input would otherwise edit only the primary.
         if system.selectionSet.isMultiple, system.applyMultiCursorInsert(separator) {
             return true
         }

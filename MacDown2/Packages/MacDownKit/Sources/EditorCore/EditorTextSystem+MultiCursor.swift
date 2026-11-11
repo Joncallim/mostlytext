@@ -17,9 +17,8 @@ extension EditorTextSystem {
     /// `EditorTextSystem.selectionSet` retains synthetic bare carets when
     /// AppKit collapses `selectedRanges` to the primary range. Insertions
     /// can use the same transaction for selected text and zero-length
-    /// carets: `EditorEditTransaction` validates and maps both. Deletion at
-    /// bare carets needs direction-aware character ranges and remains a
-    /// separate follow-up.
+    /// carets: `EditorEditTransaction` validates and maps both. Direction-aware
+    /// deletion uses `applyMultiCursorDelete(_:)`.
     ///
     /// Returns `true` when this method has already applied the edit (the
     /// override must not also call `super`, or the edit would double-apply
@@ -39,31 +38,6 @@ extension EditorTextSystem {
         guard !isPerformingEditingAssist, !isPerformingProgrammaticTextUpdate else { return false }
 
         let replacements = selection.ranges.map { TextReplacement(range: $0, replacementText: text) }
-        applyMultiCursorTransaction(replacements, primaryIndex: selection.primaryIndex)
-        return true
-    }
-
-    /// The delete counterpart of `applyMultiCursorInsert(_:)`, called by
-    /// both `EditorTextView.deleteBackward(_:)` and `deleteForward(_:)`.
-    /// Per that method's doc comment, every range in a `count > 1`
-    /// `selectionSet` is EXPECTED to be non-empty, so deleting each
-    /// selection's own content is direction-independent — exactly like
-    /// pressing either delete key with one ordinary selection active, which
-    /// is why there is no separate forward/backward variant here. That
-    /// expectation is a live AppKit behavior this codebase does not control,
-    /// not a guarantee this type can enforce on its own, so it is checked
-    /// (`allSatisfy`) rather than trusted blindly: falling through to
-    /// AppKit's native single-range handling if it is ever violated is
-    /// strictly safer than silently no-op'ing a zero-length range's delete
-    /// keystroke (a swallowed caret) the way an unchecked pass-through
-    /// would.
-    func applyMultiCursorDeleteSelection() -> Bool {
-        let selection = selectionSet
-        guard selection.ranges.count > 1, selection.ranges.allSatisfy({ $0.length > 0 }) else { return false }
-        guard textView.isEditable, !textView.hasMarkedText() else { return false }
-        guard !isPerformingEditingAssist, !isPerformingProgrammaticTextUpdate else { return false }
-
-        let replacements = selection.ranges.map { TextReplacement(range: $0, replacementText: "") }
         applyMultiCursorTransaction(replacements, primaryIndex: selection.primaryIndex)
         return true
     }
