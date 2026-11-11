@@ -78,6 +78,46 @@ private actor HeldRebindProber: DocumentFileProbing {
 
 @Suite("Document file monitor storm admission")
 struct DocumentFileMonitorStormTests {
+    @Test func realAtomicWriteStormKeepsProbeFanoutBounded() async throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let url = directory.appendingPathComponent("storm.md")
+        try Data("initial".utf8).write(to: url, options: .atomic)
+
+        let initial = snapshot("initial", at: url)
+        let final = snapshot("last external version", at: url)
+        let prober = HeldStormProber(initial: initial, disk: final)
+        let recorder = ObservationRecorder()
+        let monitor = DocumentFileMonitor(
+            debounce: .milliseconds(10),
+            watcher: LiveDocumentDirectoryWatcher(),
+            prober: prober,
+            sleeper: { duration in try? await Task.sleep(for: duration) }
+        )
+        try await monitor.bind(to: url, priorFileObjectID: nil) { recorder.append($0) }
+        #expect(recorder.values == [.available(initial)])
+
+        // Force one real kqueue-triggered probe to remain in flight while
+        // independent atomic replacements continue changing the file.
+        try Data("first replacement".utf8).write(to: url, options: .atomic)
+        await waitUntil({ await prober.calls == 2 }, timeout: .seconds(5))
+        for index in 0 ..< 40 {
+            try Data("external version \(index)".utf8).write(to: url, options: .atomic)
+        }
+        try await Task.sleep(for: .milliseconds(400))
+        #expect(await prober.calls == 2, "real write events must not spawn overlapping disk probes")
+        #expect(try String(contentsOf: url, encoding: .utf8) == "external version 39")
+
+        await prober.release()
+        await waitUntil({ recorder.count >= 2 }, timeout: .seconds(5))
+        try await Task.sleep(for: .milliseconds(400))
+        #expect(recorder.values.last == .available(final))
+        #expect(await prober.calls <= 8, "forty real writes must not fan out to unbounded disk probes")
+        await monitor.cancel()
+    }
+
     @Test func slowProbeAllowsOnlyOneLatestFollowupAfterManyDebouncedSignals() async throws {
         let url = URL(fileURLWithPath: "/tmp/epic18/storm.md")
         let initial = snapshot("initial", at: url)
