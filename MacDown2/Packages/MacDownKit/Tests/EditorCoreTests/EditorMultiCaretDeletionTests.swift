@@ -123,6 +123,36 @@ struct EditorMultiCaretDeletionTests {
         #expect(system.selectionSet.ranges == [NSRange(location: 1, length: 0), NSRange(location: 2, length: 0)])
     }
 
+    @Test func selectedHalfOfCRLFDeletesTheWholeSeparator() {
+        let system = mounted("a\r\nb")
+        let window = EditingAssistIntegrationSupport.mountInWindow(system)
+        defer { window.orderOut(nil) }
+        system.selectionSet = EditorSelectionSet(
+            ranges: [NSRange(location: 1, length: 1), NSRange(location: 4, length: 0)],
+            primaryIndex: 0
+        )
+
+        system.textView.deleteBackward(nil)
+
+        #expect(system.text == "a")
+        #expect(system.selectionSet.ranges == [NSRange(location: 1, length: 0)])
+    }
+
+    @Test func selectedLFHalfAlsoDeletesTheWholeSeparator() {
+        let system = mounted("a\r\nb")
+        let window = EditingAssistIntegrationSupport.mountInWindow(system)
+        defer { window.orderOut(nil) }
+        system.selectionSet = EditorSelectionSet(
+            ranges: [NSRange(location: 2, length: 1), NSRange(location: 4, length: 0)],
+            primaryIndex: 0
+        )
+
+        system.textView.deleteBackward(nil)
+
+        #expect(system.text == "a")
+        #expect(system.selectionSet.ranges == [NSRange(location: 1, length: 0)])
+    }
+
     @Test func backspaceDeletesWholeEmojiGraphemes() {
         let original = "A👩‍💻B🙂C" as NSString
         let first = original.range(of: "👩‍💻")

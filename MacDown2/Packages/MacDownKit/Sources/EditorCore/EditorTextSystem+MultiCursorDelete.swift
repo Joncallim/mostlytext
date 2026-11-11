@@ -18,9 +18,13 @@ extension EditorTextSystem {
               !isPerformingEditingAssist, !isPerformingProgrammaticTextUpdate,
               let source = assistTextSource
         else { return false }
+        guard selection.ranges.allSatisfy({ range in
+            range.location >= 0 && range.length >= 0 && range.location <= source.length
+                && range.length <= source.length - range.location
+        }) else { return false }
 
         let candidates = selection.ranges.map { range -> NSRange in
-            guard range.length == 0 else { return range }
+            guard range.length == 0 else { return Self.expandedCRLFSelection(range, in: source) }
             return Self.deleteRange(at: range.location, direction: direction, in: source)
         }
         let deletions = Self.mergedDeleteRanges(candidates.filter { $0.length > 0 })
@@ -77,6 +81,20 @@ extension EditorTextSystem {
             return NSRange(location: index, length: 2)
         }
         return source.rangeOfComposedCharacterSequence(at: index)
+    }
+
+    private static func expandedCRLFSelection(_ range: NSRange, in source: NSString) -> NSRange {
+        var start = range.location
+        var end = NSMaxRange(range)
+        if start > 0, start < source.length,
+           source.character(at: start - 1) == 0x0D, source.character(at: start) == 0x0A {
+            start -= 1
+        }
+        if end > 0, end < source.length,
+           source.character(at: end - 1) == 0x0D, source.character(at: end) == 0x0A {
+            end += 1
+        }
+        return NSRange(location: start, length: end - start)
     }
 
     private static func offsetAfterDeletes(_ offset: Int, ranges: [NSRange]) -> Int {
