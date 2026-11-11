@@ -17,6 +17,14 @@
 > implementation snapshots and are superseded by these changes. Per-caret E10
 > assists and installed-app acceptance retain their own checks in issue #6.
 
+> Per-caret Return correction — 11 November 2026: the following narrow slice
+> evaluates Return at each caret using that caret's own line ending and local
+> Markdown or general-text editing context. It publishes disjoint replacements
+> as one transaction and falls back to plain Return for the whole selection
+> set if expanded assists overlap. The historical Slice 3 plain-Return scope
+> below describes the earlier implementation; pairing, explicit formatting
+> commands and installed-app acceptance remain separate.
+
 
 > Baseline: `master` at commit `95e4f6005f7f0a998b6c03377a17d92b8c1fcef7` (2026-09-21), immediately after EPIC-16's interim localisation baseline (PR #111) and the owner's "Plan final pre-release debt closure and E23" / "Complete carried-forward debt audit" planning commits. Epic issue: [#112](https://github.com/Joncallim/macdown_2/issues/112).
 
