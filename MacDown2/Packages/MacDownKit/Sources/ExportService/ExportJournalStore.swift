@@ -189,7 +189,7 @@ final class ExportJournalStore {
               pending.priorDigest == nil || pending.priorDigest?.count == SHA256.byteCount,
               pending.receipt.digest == pending.desiredDigest,
               pending.receipt.stamp.kind == mode_t(S_IFREG), pending.receipt.stamp.size >= 0,
-              pending.receipt.stamp.size <= ExportResourceBudget.maxFinalHTMLUTF8Bytes,
+              pending.receipt.stamp.size <= ExportResourceBudget.maxManagedOutputBytes,
               pending.receipt.stamp.owner == geteuid(), pending.receipt.stamp.links == 1
         else { throw ExportError.unsafePublication }
         if let quarantine = pending.quarantine {

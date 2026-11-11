@@ -24,8 +24,14 @@ struct ExportResourceBudget: Sendable, Equatable {
     let maxPreparedHTMLUTF8Bytes: Int
 
     /// Largest complete HTML document, including repeated data URIs and shell.
-    /// Provisional safety ceiling; Release memory calibration remains required.
-    static let maxFinalHTMLUTF8Bytes = 256 << 20
+    /// The actual-path Release ramp reached 1.39 GiB app peak RSS near the
+    /// former 256 MiB ceiling. Approximately 128 MiB outputs stayed below
+    /// 1 GiB in the same cohort; keep the limit at that measured tier.
+    static let maxFinalHTMLUTF8Bytes = 128 << 20
+    /// Existing managed HTML receipts and PDF outputs may reach the former
+    /// bound. Recovery must still authenticate them, and PDF publication uses
+    /// its own output policy rather than the new HTML assembly limit.
+    static let maxManagedOutputBytes = 256 << 20
     /// Bound private occurrence records before cmark allocates its HTML buffer.
     static let maxResourceURLSlots = 65536
     /// Bound actual input work independently of distinct packaged payload.

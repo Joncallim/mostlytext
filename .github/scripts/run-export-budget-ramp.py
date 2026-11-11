@@ -133,7 +133,7 @@ def inspect_output(case_dir, expected):
     if row.get('outcome') != 'published' or not output.is_file():
         raise RuntimeError('Expected successful export output is absent')
     size = output.stat().st_size
-    if not 0 < size <= (256 << 20) or size != row.get('output_bytes'):
+    if not 0 < size <= (128 << 20) or size != row.get('output_bytes'):
         raise RuntimeError('Output size differs from the app record')
     actual_digest = digest(output)
     if actual_digest != row.get('output_sha256'):

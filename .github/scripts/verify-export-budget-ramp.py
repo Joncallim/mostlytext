@@ -185,13 +185,13 @@ def verify_case(root, name, row, source, app):
                 or result.get('output_bytes') != inspection.get('output_bytes')
                 or result.get('output_sha256') != inspection.get('output_sha256')
                 or not re.fullmatch(r'[0-9a-f]{64}', result.get('output_sha256', ''))
-                or not 0 < result['output_bytes'] <= (256 << 20)
+                or not 0 < result['output_bytes'] <= (128 << 20)
                 or not positive(result.get('export_seconds'))
                 or not positive(result.get('readback_seconds'))
                 or (case / 'export.html').exists()):
             raise RuntimeError(name + ' published output failed independent digest inspection')
-        if (result.get('final_html_ceiling_margin_bytes') != (256 << 20) - result['output_bytes']
-                or name == 'repeatNearFinal' and result['output_bytes'] < (256 << 20) - (16 << 10)):
+        if (result.get('final_html_ceiling_margin_bytes') != (128 << 20) - result['output_bytes']
+                or name == 'repeatNearFinal' and result['output_bytes'] < (128 << 20) - (16 << 10)):
             raise RuntimeError(name + ' final HTML size or near-cap boundary is inconsistent')
 
 

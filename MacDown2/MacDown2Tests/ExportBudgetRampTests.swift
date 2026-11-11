@@ -15,7 +15,7 @@
         private static let cases: Set<String> = [
             "source8", "source24", "source32", "single8", "single24", "single32",
             "occ16384", "occ65536", "occ65537refusal", "repeat3", "repeat5",
-            "repeat6refusal", "aggregate96", "aggregate128", "aggregateOverRefusal",
+            "repeat6refusal", "aggregate64", "aggregate96", "aggregate128", "aggregateOverRefusal",
             "distinct128", "distinct512", "distinct513refusal",
             "repeatNearFinal",
         ]
@@ -176,16 +176,16 @@
             let exportSeconds = ProcessInfo.processInfo.systemUptime - start
             let output = try outputFacts(input.output)
             let readbackSeconds = ProcessInfo.processInfo.systemUptime - start - exportSeconds
-            #expect(output.bytes > 0 && output.bytes <= (256 << 20))
+            #expect(output.bytes > 0 && output.bytes <= (128 << 20))
             #expect(output.occurrences == input.occurrences)
             if input.name == "repeatNearFinal" {
-                #expect(output.bytes >= (256 << 20) - (16 << 10))
+                #expect(output.bytes >= (128 << 20) - (16 << 10))
             }
             try record(input, values: [
                 "case": input.name, "outcome": "published", "source_bytes": input.sourceBytes,
                 "resource_bytes": input.resourceBytes, "occurrences": input.occurrences,
                 "output_bytes": output.bytes, "output_sha256": output.sha256,
-                "final_html_ceiling_margin_bytes": (256 << 20) - output.bytes,
+                "final_html_ceiling_margin_bytes": (128 << 20) - output.bytes,
                 "export_seconds": exportSeconds, "readback_seconds": readbackSeconds,
                 "app_peak_before_bytes": peakBefore, "app_peak_after_bytes": peakResidentBytes(),
             ])
