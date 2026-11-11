@@ -53,6 +53,97 @@ struct EditorMultiSelectionReturnTabTests {
         #expect(lines[2] != "three" && lines[2].hasSuffix("three"))
     }
 
+    @Test func returnContinuesMarkdownListsAtBothBareCarets() {
+        let fixture = twoSelections(
+            in: "- one\n- two",
+            NSRange(location: 5, length: 0),
+            NSRange(location: 11, length: 0)
+        )
+        defer { fixture.window.orderOut(nil) }
+
+        let handled = fixture.coordinator.textView(
+            fixture.system.textView, doCommandBy: #selector(NSResponder.insertNewline(_:))
+        )
+
+        #expect(handled)
+        #expect(fixture.system.text == "- one\n- \n- two\n- ")
+        #expect(fixture.system.selectionSet.count == 2)
+        #expect(fixture.system.undoManager.canUndo)
+        fixture.system.undoManager.undo()
+        #expect(fixture.system.text == "- one\n- two")
+    }
+
+    @Test func returnUsesEachCaretsOwnLineEndingInMixedDocument() {
+        let system = support.makeSystem(text: "a\r\nb\nc")
+        let window = support.mountInWindow(system)
+        defer { window.orderOut(nil) }
+        let coordinator = support.makeCoordinator(system: system)
+        system.selectionSet = EditorSelectionSet(
+            ranges: [NSRange(location: 1, length: 0), NSRange(location: 4, length: 0)],
+            primaryIndex: 1
+        )
+
+        let handled = coordinator.textView(system.textView, doCommandBy: #selector(NSResponder.insertNewline(_:)))
+
+        #expect(handled)
+        #expect(system.text == "a\r\n\r\nb\n\nc")
+        #expect(system.selectionSet.ranges == [NSRange(location: 3, length: 0), NSRange(location: 7, length: 0)])
+        #expect(system.selectionSet.primaryIndex == 1)
+    }
+
+    @Test func returnMaintainsEachCaretsIndentationInGeneralText() {
+        var configuration = EditorConfiguration.default
+        configuration.editingAssists = .general
+        let system = support.makeSystem(text: "    one\n  two", configuration: configuration)
+        let window = support.mountInWindow(system)
+        defer { window.orderOut(nil) }
+        let coordinator = support.makeCoordinator(system: system)
+        system.selectionSet = EditorSelectionSet(
+            ranges: [NSRange(location: 7, length: 0), NSRange(location: 13, length: 0)],
+            primaryIndex: 0
+        )
+
+        let handled = coordinator.textView(system.textView, doCommandBy: #selector(NSResponder.insertNewline(_:)))
+
+        #expect(handled)
+        #expect(system.text == "    one\n    \n  two\n  ")
+        #expect(system.selectionSet.count == 2)
+    }
+
+    @Test func overlappingMarkdownPrefixAssistsFallBackAsOnePlainNewlineCommand() {
+        let fixture = twoSelections(in: "> ", NSRange(location: 1, length: 0), NSRange(location: 2, length: 0))
+        defer { fixture.window.orderOut(nil) }
+
+        let handled = fixture.coordinator.textView(
+            fixture.system.textView, doCommandBy: #selector(NSResponder.insertNewline(_:))
+        )
+
+        #expect(handled)
+        #expect(fixture.system.text == ">\n \n")
+        #expect(fixture.system.selectionSet.count == 2)
+        fixture.system.undoManager.undo()
+        #expect(fixture.system.text == "> ")
+    }
+
+    @Test func generalTextDoesNotContinueMarkdownMarkersAtMultipleCarets() {
+        var configuration = EditorConfiguration.default
+        configuration.editingAssists = .general
+        let system = support.makeSystem(text: "- one\n- two", configuration: configuration)
+        let window = support.mountInWindow(system)
+        defer { window.orderOut(nil) }
+        let coordinator = support.makeCoordinator(system: system)
+        system.selectionSet = EditorSelectionSet(
+            ranges: [NSRange(location: 5, length: 0), NSRange(location: 11, length: 0)],
+            primaryIndex: 0
+        )
+
+        let handled = coordinator.textView(system.textView, doCommandBy: #selector(NSResponder.insertNewline(_:)))
+
+        #expect(handled)
+        #expect(system.text == "- one\n\n- two\n")
+        #expect(system.selectionSet.count == 2)
+    }
+
     @Test func aSingleSelectionStillFallsThroughToNativeReturn() {
         let system = support.makeMarkdownSystem(text: "ab cd")
         let window = support.mountInWindow(system)
