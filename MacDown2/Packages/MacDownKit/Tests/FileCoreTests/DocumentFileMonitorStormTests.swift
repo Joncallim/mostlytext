@@ -114,7 +114,9 @@ struct DocumentFileMonitorStormTests {
         await waitUntil({ recorder.count >= 2 }, timeout: .seconds(5))
         try await Task.sleep(for: .milliseconds(400))
         #expect(recorder.values.last == .available(final))
-        #expect(await prober.calls <= 8, "forty real writes must not fan out to unbounded disk probes")
+        let finalProbeCalls = await prober.calls
+        #expect(finalProbeCalls >= 3, "the later real writes require a fresh probe")
+        #expect(finalProbeCalls <= 8, "forty real writes must not fan out to unbounded disk probes")
         await monitor.cancel()
     }
 
