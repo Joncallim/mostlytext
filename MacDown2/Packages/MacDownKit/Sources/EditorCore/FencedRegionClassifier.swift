@@ -13,8 +13,9 @@ import Foundation
 /// guessing `.prose` could mutate source inside a distant open fence. Within
 /// the bounded window, closing lines must match the opener's marker and have
 /// at least its length. This remains a practical local classifier rather
-/// than a second CommonMark parser: list-prefixed fences and indentation
-/// beyond three spaces retain their separately documented limitations.
+/// than a second CommonMark parser: its bounded list/quote prefix replay
+/// handles common containers, while ambiguous mixed prefixes and indentation
+/// beyond the supported grammar remain unresolved or conservative.
 enum FencedRegionClassifier {
     enum Classification: Equatable {
         case prose
@@ -74,8 +75,10 @@ enum FencedRegionClassifier {
             return .unresolved
         }
         lines.append(ScannedLine(
+            lineStart: current.lineStart,
+            contentStart: current.contentStart,
             quoteDepth: current.quoteDepth,
-            delimiter: current.delimiter.flatMap { caret >= $0.markerEnd ? $0 : nil }
+            caretLimit: caret
         ))
 
         while currentLineStart > fenceAnchor, linesScanned < maximumFenceLinesScanned {
@@ -96,29 +99,15 @@ enum FencedRegionClassifier {
 
         // The document's start or the end of closed front matter is a known
         // outside-fence anchor. Never replay YAML's fence-looking lines.
-        return classification(in: lines)
+        return classification(in: lines, text: text)
     }
 
-    private static func classification(in lines: [ScannedLine]) -> Classification {
-        // A quoted fence ends when its quote container ends, even without a
-        // closing marker. A deeper quote marker is content, not its closer.
-        var active: FenceDelimiter?
+    private static func classification(in lines: [ScannedLine], text: NSString) -> Classification {
+        var replay = FenceReplay(text: text)
         for line in lines.reversed() {
-            if let opener = active, opener.quoteDepth > line.quoteDepth {
-                active = nil
-            }
-            guard let fence = line.delimiter else { continue }
-            if let opener = active {
-                if fence.canClose, fence.character == opener.character,
-                   fence.markerLength >= opener.markerLength,
-                   fence.quoteDepth == opener.quoteDepth {
-                    active = nil
-                }
-            } else {
-                active = fence
-            }
+            guard replay.consume(line) else { return .unresolved }
         }
-        return active.map { .fencedCode(languageID: $0.languageID) } ?? .prose
+        return replay.active.map { .fencedCode(languageID: $0.languageID) } ?? .prose
     }
 
     private static func frontMatterDecision(
@@ -145,25 +134,30 @@ enum FencedRegionClassifier {
     /// run of backtick/tilde characters, before any info string) -- callers
     /// use `markerEnd` to decide whether a caret sitting ON this very line
     /// has actually crossed past the fence marker itself.
-    private struct FenceDelimiter {
+    struct FenceDelimiter {
         let character: unichar
         let markerLength: Int
         let canClose: Bool
         let languageID: String?
         let markerEnd: Int
         let quoteDepth: Int
+        let listFloor: Int
     }
 
-    private struct ScannedLine {
+    struct ScannedLine {
+        let lineStart: Int
+        let contentStart: Int
         let quoteDepth: Int
-        let delimiter: FenceDelimiter?
+        let caretLimit: Int?
     }
 
     private static func scannedLine(lineStart: Int, quoteLimit: Int, in text: NSString) -> ScannedLine? {
         guard let prefix = quotePrefix(lineStart: lineStart, limit: quoteLimit, in: text) else { return nil }
         return ScannedLine(
+            lineStart: lineStart,
+            contentStart: prefix.contentStart,
             quoteDepth: prefix.depth,
-            delimiter: fenceDelimiter(contentStart: prefix.contentStart, quoteDepth: prefix.depth, in: text)
+            caretLimit: quoteLimit == text.length ? nil : quoteLimit
         )
     }
 
@@ -194,8 +188,8 @@ enum FencedRegionClassifier {
     /// If the line spanning `lineStart..<lineContentEnd` is a fence
     /// delimiter (up to 3 leading spaces, then 3+ of the same backtick or
     /// tilde character), the `FenceDelimiter` it describes.
-    private static func fenceDelimiter(
-        contentStart: Int, quoteDepth: Int, in text: NSString
+    static func fenceDelimiter(
+        contentStart: Int, quoteDepth: Int, listFloor: Int = 0, in text: NSString
     ) -> FenceDelimiter? {
         var index = contentStart
         var leadingSpaces = 0
@@ -231,7 +225,8 @@ enum FencedRegionClassifier {
             canClose: infoString.isEmpty,
             languageID: (firstToken?.isEmpty == false) ? firstToken : nil,
             markerEnd: markerEnd,
-            quoteDepth: quoteDepth
+            quoteDepth: quoteDepth,
+            listFloor: listFloor
         )
     }
 
