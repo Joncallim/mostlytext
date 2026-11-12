@@ -414,7 +414,7 @@
       }
     },
     "%lld characters, %lld words": {
-      "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
+      "comment": "Status-bar character and word counts use independent plural substitutions. Non-English values are draft translations requiring native review.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -467,19 +467,157 @@
         "fr": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "%lld characters, %lld words"
+            "value": "%#@arg1@, %#@arg2@"
+          },
+          "substitutions": {
+            "arg1": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg caractère"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg caractères"
+                    }
+                  }
+                }
+              }
+            },
+            "arg2": {
+              "argNum": 2,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg mot"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg mots"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "ja": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "%lld characters, %lld words"
+            "value": "%#@arg1@、%#@arg2@"
+          },
+          "substitutions": {
+            "arg1": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg文字"
+                    }
+                  }
+                }
+              }
+            },
+            "arg2": {
+              "argNum": 2,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg語"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "pl": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "%lld characters, %lld words"
+            "value": "%#@arg1@, %#@arg2@"
+          },
+          "substitutions": {
+            "arg1": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg znak"
+                    }
+                  },
+                  "few": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg znaki"
+                    }
+                  },
+                  "many": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg znaków"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg znaków"
+                    }
+                  }
+                }
+              }
+            },
+            "arg2": {
+              "argNum": 2,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg słowo"
+                    }
+                  },
+                  "few": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg słowa"
+                    }
+                  },
+                  "many": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg słów"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg słów"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

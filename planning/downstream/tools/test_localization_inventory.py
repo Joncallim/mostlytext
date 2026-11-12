@@ -191,9 +191,12 @@ class ProductPluralInventoryTests(unittest.TestCase):
         }
         self.assertEqual(declared, {(self.app_catalog, key) for key in expected_keys})
 
-        # The empty non-English status variants are recorded gaps, not accepted translations.
-        expected_status = {"en": {"arg1": self.categories["en"], "arg2": self.categories["en"]},
-                           "fr": {}, "ja": {}, "pl": {}}
+        # Both counts select independently in every review locale. Draft
+        # wording remains separate from this structural catalog assertion.
+        expected_status = {
+            locale: {"arg1": forms, "arg2": forms}
+            for locale, forms in self.categories.items()
+        }
         self.assertEqual(generated[self.status_key]["variants"], expected_status)
         expected_budget = {locale: {"arg1": self.categories[locale]} for locale in ("fr", "ja", "pl")}
         self.assertEqual(generated[self.preview_budget_key]["variants"], expected_budget)

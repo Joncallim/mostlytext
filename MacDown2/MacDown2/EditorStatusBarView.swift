@@ -99,10 +99,14 @@ struct EditorStatusBarView: View {
             let selectedCharacterCount = source.substring(with: selectedRange).count
             return String(localized: "\(selectedCharacterCount) selected", bundle: .main)
         }
-        return String(
-            localized: "\(metrics.characterCount) characters, \(metrics.wordCount) words",
-            bundle: .main
-        )
+        return Self.documentCountText(characterCount: metrics.characterCount, wordCount: metrics.wordCount)
+    }
+
+    static func documentCountText(
+        characterCount: Int, wordCount: Int,
+        bundle: Bundle = .main, locale: Locale = .current
+    ) -> String {
+        String(localized: "\(characterCount) characters, \(wordCount) words", bundle: bundle, locale: locale)
     }
 
     var indentationText: String {
