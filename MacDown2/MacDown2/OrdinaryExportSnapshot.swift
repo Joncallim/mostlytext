@@ -17,7 +17,18 @@ struct OrdinaryExportSnapshot: Sendable, Equatable {
     let protectedSourceIdentity: ExportProtectedFileIdentity?
     let parseOptions: MarkdownParseOptions
 
-    init(document: FileCore.FileDocument, theme: Theme, parseOptions: MarkdownParseOptions) {
+    init(
+        document: FileCore.FileDocument,
+        theme: Theme,
+        parseOptions: MarkdownParseOptions,
+        openResourceAccess: @escaping @Sendable (URL) -> ExportResourceAccess? = {
+            try? ExportResourceAccess(openingDirectory: $0)
+        }
+    ) async {
+        // A granted directory may be on a slow or disconnected volume. Keep
+        // its realpath/open work off the window's main actor after the source
+        // value has been captured from the accepted document.
+        let access = await Self.resourceAccess(for: document.fileURL, using: openResourceAccess)
         documentID = document.id
         recoveryEpoch = document.recoveryEpoch
         text = document.text
@@ -25,10 +36,17 @@ struct OrdinaryExportSnapshot: Sendable, Equatable {
         self.theme = theme
         documentURL = document.fileURL
         protectedSourceIdentity = ExportProtectedFileIdentity(document: document)
-        resourceAccess = document.fileURL.flatMap {
-            try? ExportResourceAccess(openingDirectory: $0.deletingLastPathComponent())
-        }
+        resourceAccess = access
         self.parseOptions = parseOptions
+    }
+
+    @concurrent
+    private nonisolated static func resourceAccess(
+        for documentURL: URL?,
+        using open: @Sendable (URL) -> ExportResourceAccess?
+    ) async -> ExportResourceAccess? {
+        guard let documentURL else { return nil }
+        return open(documentURL.deletingLastPathComponent())
     }
 
     func request(

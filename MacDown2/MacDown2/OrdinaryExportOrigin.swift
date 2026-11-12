@@ -47,8 +47,9 @@ final class OrdinaryExportOrigin {
         !isCancelled && presentableWindow != nil
     }
 
-    /// Called synchronously after source/root/presentation capture and before
-    /// any render await. Later Save As cannot retarget these frozen inputs.
+    /// Called synchronously after the accepted source value is captured and
+    /// before directory acquisition or rendering can suspend. Later Save As
+    /// cannot retarget these frozen inputs.
     func didFreezeInputs() throws {
         try publicationLease.checkActive()
         guard let controller, presentableWindow != nil,
