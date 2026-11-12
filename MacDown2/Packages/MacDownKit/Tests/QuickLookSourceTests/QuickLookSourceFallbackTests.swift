@@ -11,7 +11,7 @@ struct QuickLookSourceFallbackTests {
                                           encoding: .utf8))
         let expanded = String(repeating: "x", count: QuickLookSourceFallback.maximumHTMLBytes + 1)
         let oversized = try #require(String(bytes: QuickLookSourceFallback.html(for: source, render: { _ in expanded }),
-                                           encoding: .utf8))
+                                            encoding: .utf8))
         for html in [refused, oversized] {
             #expect(html.contains("&lt;script&gt;authored&lt;/script&gt; &amp;"))
             #expect(!html.contains("<script>"))
@@ -25,6 +25,7 @@ struct QuickLookSourceFallbackTests {
             try #require(String(bytes: QuickLookSourceFallback.replyHTML(for: file), encoding: .utf8))
         }
         #expect(html.contains("<h1>Head &amp; 😀</h1>"))
+        #expect(html.contains("<header>MostlyText</header>"))
         #expect(!html.contains("<script"))
         #expect(!html.contains("<img"))
         #expect(!html.contains("example.com"))
@@ -32,13 +33,8 @@ struct QuickLookSourceFallbackTests {
     }
 
     @Test func sharedGFMStructureHasNoAuthoredURLs() throws {
-        let source = """
-        | Name | Value |
-        | --- | --- |
-        | one | ~~two~~ |
-
-        [link](https://example.invalid/page) ![image](https://example.invalid/pixel.png)
-        """
+        let source = "| Name | Value |\n| --- | --- |\n| one | ~~two~~ |\n\n"
+            + "[link](https://example.invalid/page) ![image](https://example.invalid/pixel.png)"
         let html = try withFile(Data(source.utf8)) { file in
             try #require(String(bytes: QuickLookSourceFallback.replyHTML(for: file), encoding: .utf8))
         }

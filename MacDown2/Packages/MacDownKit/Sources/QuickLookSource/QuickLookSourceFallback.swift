@@ -88,7 +88,7 @@ public enum QuickLookSourceFallback {
         Data("""
         <!doctype html><html><head><meta charset="utf-8">
         <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'">
-        </head><body>\(body)</body></html>
+        </head><body><header>MostlyText</header>\(body)</body></html>
         """.utf8)
     }
 
