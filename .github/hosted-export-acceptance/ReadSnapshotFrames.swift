@@ -99,9 +99,8 @@ struct ReadSnapshotFrames {
               let source = PDFDocument(data: snapshot), source.pageCount == 1,
               let page = source.page(at: 0) else { throw Failure.refused }
         try snapshot.write(to: root.appendingPathComponent("\(name)-snapshot.pdf"))
-        let output = root.appendingPathComponent("\(name)-paginated.pdf")
-        try PDFSnapshotFallback.paginate(snapshot, printInfo: info, to: output, maxBytes: 4 * 1024 * 1024)
-        let data = try Data(contentsOf: output)
+        let data = try PDFSnapshotFallback.paginate(snapshot, printInfo: info, maxBytes: 4 * 1024 * 1024)
+        try data.write(to: root.appendingPathComponent("\(name)-paginated.pdf"))
         let pages = try readOutput(data, name: name, root: root)
         let box = page.bounds(for: .mediaBox)
         let row: [String: Any] = [
