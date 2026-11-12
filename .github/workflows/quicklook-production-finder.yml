@@ -82,6 +82,7 @@ jobs:
           built="$RUNNER_TEMP/production-quicklook/app-build/Build/Products/Release/MacDown2.app"
           provider="$app/Contents/PlugIns/MostlyTextQuickLook.appex"
           printf '%s' 'MOSTLYTEXT_PRODUCTION_QUICKLOOK_20261111' > "$RUNNER_TEMP/mostlytext-production-quicklook.md"
+          ln -s "$RUNNER_TEMP/mostlytext-production-quicklook.md" "$RUNNER_TEMP/mostlytext-production-linked.md"
           /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -u "$built"
           /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$app"
           pluginkit -a "$provider"

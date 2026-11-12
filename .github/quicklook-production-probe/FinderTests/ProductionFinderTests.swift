@@ -47,13 +47,11 @@ final class ProductionFinderTests: XCTestCase {
         XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText")
             .isEmpty)
         finder.typeKey(.escape, modifierFlags: [])
-        try assertSelectedSymlink(in: finder, source: source)
+        assertSelectedSymlink(in: finder, source: source)
     }
 
-    private func assertSelectedSymlink(in finder: XCUIApplication, source: URL) throws {
+    private func assertSelectedSymlink(in finder: XCUIApplication, source: URL) {
         let link = source.deletingLastPathComponent().appendingPathComponent("mostlytext-production-linked.md")
-        try FileManager.default.createSymbolicLink(at: link, withDestinationURL: source)
-        defer { try? FileManager.default.removeItem(at: link) }
         NSWorkspace.shared.activateFileViewerSelecting([link])
         let item = finder.descendants(matching: .any).matching(identifier: link.lastPathComponent).firstMatch
         XCTAssertTrue(item.waitForExistence(timeout: 5), "Finder must select the linked Markdown file")
