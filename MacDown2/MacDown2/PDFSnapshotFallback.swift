@@ -37,16 +37,15 @@ enum PDFSnapshotFallback {
     static func render(
         webView: WKWebView,
         printInfo: NSPrintInfo,
-        to url: URL,
         maxBytes: Int
-    ) async throws {
+    ) async throws -> Data {
         let waiter = PDFSnapshotWaiter()
         let data = try await waiter.capture(webView, timeout: captureTimeout)
         try Task.checkCancellation()
-        try paginate(data, printInfo: printInfo, to: url, maxBytes: maxBytes)
+        return try paginate(data, printInfo: printInfo, maxBytes: maxBytes)
     }
 
-    static func paginate(_ data: Data, printInfo: NSPrintInfo, to url: URL, maxBytes: Int) throws {
+    static func paginate(_ data: Data, printInfo: NSPrintInfo, maxBytes: Int) throws -> Data {
         guard !data.isEmpty, data.count <= maxBytes,
               let provider = CGDataProvider(data: data as CFData),
               let document = CGPDFDocument(provider), document.numberOfPages > 0
@@ -56,8 +55,7 @@ enum PDFSnapshotFallback {
         // output without drawing it a second time.
         if document.numberOfPages > 1 {
             guard document.numberOfPages <= maxPages else { throw FallbackError.tooManyPages }
-            try data.write(to: url)
-            return
+            return data
         }
 
         guard let sourcePage = document.page(at: 1) else { throw FallbackError.invalidSnapshot }
@@ -87,8 +85,9 @@ enum PDFSnapshotFallback {
             throw FallbackError.tooLarge
         }
 
+        let output = NSMutableData()
         var paperBox = CGRect(origin: .zero, size: paperSize)
-        guard let consumer = CGDataConsumer(url: url as CFURL),
+        guard let consumer = CGDataConsumer(data: output as CFMutableData),
               let context = CGContext(consumer: consumer, mediaBox: &paperBox, nil)
         else { throw FallbackError.cannotWrite }
 
@@ -96,9 +95,9 @@ enum PDFSnapshotFallback {
         try drawPages(in: context, from: sourcePage, printInfo: printInfo, geometry: geometry)
         context.closePDF()
 
-        guard let size = (try? FileManager.default.attributesOfItem(atPath: url.path)[.size]) as? NSNumber,
-              size.int64Value > 0, size.int64Value <= Int64(maxBytes)
+        guard output.length > 0, output.length <= maxBytes
         else { throw FallbackError.tooLarge }
+        return output as Data
     }
 
     private struct SliceGeometry {

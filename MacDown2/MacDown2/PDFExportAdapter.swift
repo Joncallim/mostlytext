@@ -80,10 +80,8 @@ enum PDFExportAdapter {
         onPhase?(.loading)
 
         let printURL = temporaryURL(nextTo: url)
-        let snapshotURL = temporaryURL(nextTo: url)
         defer {
             try? FileManager.default.removeItem(at: printURL)
-            try? FileManager.default.removeItem(at: snapshotURL)
         }
         let info = printInfo(savingTo: printURL)
         guard let size = PDFSnapshotFallback.viewportSize(for: info) else {
@@ -123,15 +121,14 @@ enum PDFExportAdapter {
             try Task.checkCancellation()
             try lease?.checkActive()
             try admission.checkCurrent()
-            try await PDFSnapshotFallback.render(
+            let snapshot = try await PDFSnapshotFallback.render(
                 webView: webView,
                 printInfo: operation.printInfo,
-                to: snapshotURL,
                 maxBytes: maxPDFBytes
             )
-            output = try await validatedPDFBytes(
-                at: snapshotURL, admission: admission, sourceHasContent: sourceHasContent
-            )
+            try Task.checkCancellation()
+            try lease?.checkActive()
+            output = normalizedPrintableData(snapshot, sourceHasContent: sourceHasContent)
         }
         try Task.checkCancellation()
         try lease?.checkActive()
