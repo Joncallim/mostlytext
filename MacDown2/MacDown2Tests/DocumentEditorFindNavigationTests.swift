@@ -106,6 +106,9 @@ struct DocumentEditorFindNavigationTests {
         let published = AsyncStream<Void>.makeStream()
         let findBar = FindBarView(
             model: findModel,
+            recentQueries: split.findStore.recentQueries,
+            onRememberQuery: { split.findStore.rememberQuery($0) },
+            onClearRecentQueries: { split.findStore.clearRecentQueries() },
             text: text,
             resolvedText: { text },
             resolvedSelection: { system.selectedRange },

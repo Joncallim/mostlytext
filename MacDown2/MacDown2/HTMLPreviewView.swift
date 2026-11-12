@@ -19,10 +19,10 @@ private struct HTMLPreviewLoadIdentity {
 ///   no script bridge exists.
 /// - The document loads through the `macdown-preview:` custom scheme, so
 ///   `file:` URLs never reach the web view. The scheme handler
-///   (`PreviewSchemeHandler`) serves the main document and subresources only
-///   after `HTMLPreviewResourceScope` approves them against the document's
-///   directory — symlink-safe containment, `..` traversal rejected. Every
-///   response carries the authoritative CSP header
+///   (`PreviewSchemeHandler`) serves the main document and reads subresources
+///   beneath the saved load's pinned directory descriptor. Escaping paths and
+///   symlink replacements are refused. Every response carries the authoritative
+///   CSP header
 ///   (`HTMLPreviewResponseHeaders`), which no markup can divert; `text/html`
 ///   payloads are additionally re-hardened with the meta CSP injection as
 ///   belt-and-braces.
@@ -43,6 +43,7 @@ struct HTMLPreviewView: NSViewRepresentable {
     }
 
     let document: FileCore.FileDocument
+    let tabID: UUID
 
     func makeCoordinator() -> Coordinator {
         Coordinator()
@@ -53,7 +54,7 @@ struct HTMLPreviewView: NSViewRepresentable {
     }
 
     func updateNSView(_ webView: WKWebView, context: Context) {
-        context.coordinator.preview(document: document, in: webView)
+        context.coordinator.preview(document: document, tabID: tabID, in: webView)
     }
 
     static func dismantleNSView(_ webView: WKWebView, coordinator: Coordinator) {
@@ -63,12 +64,12 @@ struct HTMLPreviewView: NSViewRepresentable {
     @MainActor
     final class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate {
         private let reloadDelay: Duration
-        private let handler = PreviewSchemeHandler()
+        let handler = PreviewSchemeHandler()
         private(set) var gate = HTMLPreviewReloadGate()
         private var reloadBudget = HTMLPreviewReloadBudget()
         private var reloadTask: Task<Void, Never>?
         private var scheduledLoadID: UUID?
-        private var securityScope: PreviewSecurityScope?
+        private var currentDocumentIdentity: HTMLPreviewDocumentIdentity?
         private var pendingNavigation: PendingNavigation?
         private var currentPageGeneration: UInt?
         private weak var currentWebView: WKWebView?
@@ -103,7 +104,8 @@ struct HTMLPreviewView: NSViewRepresentable {
         /// Evaluates the current saved revision and starts a debounced,
         /// generation-gated reload. Called on every SwiftUI update; the gate
         /// guarantees unrelated updates cause zero reloads.
-        func preview(document: FileCore.FileDocument, in webView: WKWebView) {
+        func preview(document: FileCore.FileDocument, tabID: UUID? = nil, in webView: WKWebView) {
+            acceptDocumentIdentity(document, tabID: tabID, in: webView)
             guard document.state == .clean else {
                 reloadTask?.cancel()
                 reloadTask = nil
@@ -117,7 +119,8 @@ struct HTMLPreviewView: NSViewRepresentable {
             let loadID = UUID()
             scheduledLoadID = loadID
             let source = document.text
-            let baseURL = document.fileURL?.deletingLastPathComponent()
+            let documentURL = document.fileURL
+            let baseURL = documentURL?.deletingLastPathComponent()
             let identity = HTMLPreviewLoadIdentity(
                 documentID: document.id,
                 recoveryEpoch: document.recoveryEpoch,
@@ -135,6 +138,7 @@ struct HTMLPreviewView: NSViewRepresentable {
                 reloadTask = nil
                 beginLoad(
                     source: source,
+                    documentURL: documentURL,
                     baseURL: baseURL,
                     identity: identity,
                     in: webView
@@ -150,16 +154,16 @@ struct HTMLPreviewView: NSViewRepresentable {
             pendingNavigation = nil
             currentPageGeneration = nil
             currentWebView = nil
+            currentDocumentIdentity = nil
             handler.retire()
             webView.stopLoading()
-            securityScope?.stop()
-            securityScope = nil
         }
 
         // MARK: Loads
 
         private func beginLoad(
             source: String,
+            documentURL: URL?,
             baseURL: URL?,
             identity: HTMLPreviewLoadIdentity,
             in webView: WKWebView
@@ -168,15 +172,9 @@ struct HTMLPreviewView: NSViewRepresentable {
             pendingNavigation = nil
             currentPageGeneration = identity.generation
             currentWebView = webView
-            // Balance any prior security scope before opening the new one.
-            securityScope?.stop()
-            securityScope = nil
-            if let baseURL {
-                securityScope = PreviewSecurityScope(url: baseURL)
-            }
-
             let previewURL = handler.install(
                 HTMLPreviewRequest(source: source, baseURL: baseURL, policy: .v1),
+                documentURL: documentURL,
                 documentID: identity.documentID,
                 recoveryEpoch: identity.recoveryEpoch,
                 generation: identity.generation
@@ -268,6 +266,9 @@ struct HTMLPreviewView: NSViewRepresentable {
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             guard let pending = takePendingNavigation(for: navigation, in: webView) else { return }
             gate.loadCompleted(generation: pending.generation)
+            // An identity switch hides the prior document immediately. Show this view only
+            // after the new document's own main navigation has completed.
+            webView.isHidden = false
         }
 
         /// The WebContent process died (memory pressure, a crash on a huge page): the pane would stay blank
@@ -349,6 +350,45 @@ struct HTMLPreviewView: NSViewRepresentable {
             }
             components.fragment = nil
             return components.string ?? url.absoluteString
+        }
+    }
+}
+
+extension HTMLPreviewView.Coordinator {
+    /// Identity changes precede the clean-state gate. Same-document dirty edits retain their last saved page;
+    /// a different document cannot display that page or borrow its resource authority, even when its generation
+    /// is lower or it has not yet been saved.
+    private func acceptDocumentIdentity(_ document: FileCore.FileDocument, tabID: UUID?, in webView: WKWebView) {
+        let documentIdentity = HTMLPreviewDocumentIdentity(document, tabID: tabID)
+        guard currentDocumentIdentity != documentIdentity else { return }
+        let replacingDocument = currentDocumentIdentity != nil
+        currentDocumentIdentity = documentIdentity
+        if replacingDocument {
+            // A refused or failed clearing navigation must not leave the old document visible,
+            // especially when the incoming document is still dirty and has no load to follow.
+            webView.isHidden = true
+        }
+        reloadTask?.cancel()
+        reloadTask = nil
+        scheduledLoadID = nil
+        gate = HTMLPreviewReloadGate()
+        pendingNavigation = nil
+        currentPageGeneration = nil
+        currentWebView = nil
+        handler.retire()
+        webView.stopLoading()
+        guard replacingDocument else { return }
+
+        // Clear through our own CSP-bound scheme; the empty request has no directory authority.
+        let blankURL = handler.install(
+            HTMLPreviewRequest(source: "", baseURL: nil, policy: .v1),
+            documentURL: nil,
+            documentID: documentIdentity.documentID,
+            recoveryEpoch: documentIdentity.recoveryEpoch,
+            generation: 0
+        )
+        if let blankURL {
+            _ = webView.load(URLRequest(url: blankURL))
         }
     }
 }

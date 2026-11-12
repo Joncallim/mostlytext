@@ -28,8 +28,8 @@ private struct SecuredHTMLPage {
     var crashReloads = 0
 }
 
-/// An opt-in saved-HTML host. Each accepted render replaces its child WKWebView, configuration and immutable
-/// scheme handler. The existing HTML preview remains active until the whole #121 grant flow passes acceptance.
+/// Saved-HTML preview. Each accepted render replaces its child WKWebView, configuration and immutable scheme
+/// handler. Local subresources require this document window's explicit, still-current folder attachment.
 struct SecuredHTMLPreviewView: NSViewRepresentable {
     let document: FileCore.FileDocument
     let tabID: UUID
@@ -55,6 +55,7 @@ struct SecuredHTMLPreviewView: NSViewRepresentable {
     @MainActor
     final class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate {
         private var page: SecuredHTMLPage?
+        private weak var pageOwner: PreviewResourceWindowState?
         private var scheduled: SecuredHTMLIdentity?
         private var reloadTask: Task<Void, Never>?
         private var disposed = false
@@ -68,7 +69,7 @@ struct SecuredHTMLPreviewView: NSViewRepresentable {
                 grantRevision: owner?.revision ?? UUID(uuid: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
             )
             if let page, !page.identity.sameDocument(as: identity) {
-                retireCurrent(owner: owner)
+                retireCurrent()
             }
             guard document.state == .clean else {
                 cancelScheduled()
@@ -91,7 +92,7 @@ struct SecuredHTMLPreviewView: NSViewRepresentable {
             guard !disposed else { return }
             disposed = true
             cancelScheduled()
-            retireCurrent(owner: nil)
+            retireCurrent()
             host.subviews.forEach { $0.removeFromSuperview() }
         }
 
@@ -109,8 +110,13 @@ struct SecuredHTMLPreviewView: NSViewRepresentable {
                 sourceGeneration: identity.savedGeneration,
                 grantRevision: identity.grantRevision, consumer: .html
             )
-            guard owner.revision == identity.grantRevision else { return }
-            retireCurrent(owner: owner)
+            guard owner.revision == identity.grantRevision else {
+                if let token {
+                    owner.retire(.html, matching: token)
+                }
+                return
+            }
+            retireCurrent()
             host.subviews.forEach { $0.removeFromSuperview() }
             do {
                 let load = try BoundedHTMLPreviewLoad(document: document, source: source, grant: token)
@@ -128,6 +134,7 @@ struct SecuredHTMLPreviewView: NSViewRepresentable {
                 host.addSubview(webView)
                 page = SecuredHTMLPage(identity: identity, load: load, handler: handler,
                                        webView: webView, token: token)
+                pageOwner = owner
                 guard let navigation = webView.load(URLRequest(url: load.mainURL)) else {
                     failDirectLoad(in: webView)
                     return
@@ -147,9 +154,11 @@ struct SecuredHTMLPreviewView: NSViewRepresentable {
             scheduled = nil
         }
 
-        private func retireCurrent(owner: PreviewResourceWindowState?) {
+        private func retireCurrent() {
             guard let old = page else { return }
+            let owner = pageOwner
             page = nil
+            pageOwner = nil
             old.handler.dispose()
             old.webView.stopLoading()
             old.webView.navigationDelegate = nil
@@ -163,6 +172,8 @@ struct SecuredHTMLPreviewView: NSViewRepresentable {
         func webView(_ webView: WKWebView, decidePolicyFor action: WKNavigationAction,
                      decisionHandler: @escaping @MainActor @Sendable (WKNavigationActionPolicy) -> Void) {
             guard let page, page.webView === webView else { decisionHandler(.cancel); return }
+            // A same-authority resource is readable inside this page, but it must not become a browser download.
+            guard !action.shouldPerformDownload else { decisionHandler(.cancel); return }
             let target: HTMLPreviewNavigationAction.Target = if let frame = action.targetFrame {
                 frame.isMainFrame ? .mainFrame : .subframe
             } else {
@@ -183,14 +194,33 @@ struct SecuredHTMLPreviewView: NSViewRepresentable {
             decisionHandler(decision == .allow && sameAuthority ? .allow : .cancel)
         }
 
-        func webView(_: WKWebView, decidePolicyFor response: WKNavigationResponse,
+        func webView(_ webView: WKWebView, decidePolicyFor response: WKNavigationResponse,
                      decisionHandler: @escaping @MainActor @Sendable (WKNavigationResponsePolicy) -> Void) {
-            decisionHandler(response.canShowMIMEType ? .allow : .cancel)
+            decisionHandler(responsePolicy(
+                for: webView, url: response.response.url, canShowMIMEType: response.canShowMIMEType
+            ))
+        }
+
+        /// WebKit can deliver a response after a page has been superseded. The old view and its authority must
+        /// not receive a new policy decision, even if its MIME is otherwise renderable.
+        func responsePolicy(for webView: WKWebView, url: URL?, canShowMIMEType: Bool) -> WKNavigationResponsePolicy {
+            guard let page, page.webView === webView, let url,
+                  url.scheme?.lowercased() == HTMLPreviewNavigationPolicy.previewURLScheme,
+                  url.host == page.load.authority,
+                  url.user == nil, url.password == nil, url.port == nil,
+                  canShowMIMEType else { return .cancel }
+            return .allow
         }
 
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             guard page?.webView === webView, page?.pendingNavigation === navigation else { return }
             page?.pendingNavigation = nil
+        }
+
+        /// Exposes the active WebKit token to app-target regression tests without changing its ownership.
+        func pendingNavigation(in webView: WKWebView) -> WKNavigation? {
+            guard page?.webView === webView else { return nil }
+            return page?.pendingNavigation
         }
 
         func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!,
@@ -227,7 +257,7 @@ struct SecuredHTMLPreviewView: NSViewRepresentable {
         private func failDirectLoad(in webView: WKWebView) {
             guard page?.webView === webView else { return }
             let host = webView.superview
-            retireCurrent(owner: nil)
+            retireCurrent()
             if let host {
                 showFailure(in: host)
             }

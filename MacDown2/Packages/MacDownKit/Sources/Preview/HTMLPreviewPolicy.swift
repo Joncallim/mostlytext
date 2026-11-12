@@ -113,13 +113,10 @@ public struct HTMLPreviewRequest: Sendable, Equatable {
 /// paths outside the root, and symlinks resolving outside the root — is
 /// rejected. Untitled documents have no resource root and approve nothing.
 ///
-/// Known limitation: validation happens by path before the bytes are read
-/// (`Data(contentsOf:)` reopens the path afterwards). A hostile local process
-/// that can write into the document directory could swap a path component for
-/// a symlink between validation and the read (TOCTOU). This is not part of
-/// the document-author threat model (scripts are disabled and the author
-/// cannot race from static HTML), and the app sandbox independently blocks
-/// reads outside the security-scoped grant.
+/// This path-only helper remains for policy compatibility checks. Its result
+/// must not be reopened as authority: a filesystem object can change after
+/// validation. The active app scheme handler uses a pinned directory
+/// descriptor and `ContainedResourceReader` for the actual resource bytes.
 public enum HTMLPreviewResourceScope {
     /// Returns the approved `file:` URL for `resourceURL`, or `nil` when the
     /// resource must not be served.
@@ -259,8 +256,8 @@ public struct HTMLPreviewReloadGate: Sendable, Equatable {
     /// caller should start a load for it, `false` when it is stale (older than
     /// a load that already completed) or a duplicate of the pending request.
     public mutating func shouldLoad(generation: UInt) -> Bool {
-        let latest = max(lastLoadedGeneration ?? 0, pendingGeneration ?? 0)
-        guard generation > latest else { return false }
+        let latest = [lastLoadedGeneration, pendingGeneration].compactMap(\.self).max()
+        guard latest.map({ generation > $0 }) ?? true else { return false }
         pendingGeneration = generation
         return true
     }

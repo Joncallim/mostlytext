@@ -1,5 +1,41 @@
+import Observation
 import SwiftUI
 import TextSearch
+
+/// One submission path shared by the search field, result list, and the
+/// panel's Return key handling. A List can take keyboard focus when its
+/// filtered rows appear, so the field's onKeyPress alone is insufficient.
+@MainActor
+@Observable
+final class QuickOpenSubmission {
+    private let model: QuickOpenModel
+    private let onOpen: @MainActor (QuickOpenModel.PresentedResult) async -> Bool
+    private let onDismiss: () -> Void
+    private(set) var isOpening = false
+
+    init(
+        model: QuickOpenModel,
+        onOpen: @escaping @MainActor (QuickOpenModel.PresentedResult) async -> Bool,
+        onDismiss: @escaping () -> Void
+    ) {
+        self.model = model
+        self.onOpen = onOpen
+        self.onDismiss = onDismiss
+    }
+
+    func submit() {
+        guard !isOpening, let selected = model.selectedResult else { return }
+        isOpening = true
+        Task { @MainActor in
+            if await onOpen(selected) {
+                onDismiss()
+            } else {
+                isOpening = false
+                model.refresh()
+            }
+        }
+    }
+}
 
 /// Quick Open's content (EPIC-22 §6.15, Slice 6b): a search field plus a
 /// fuzzy-filtered file list, fully keyboard-operable — type to filter, arrow
@@ -10,7 +46,7 @@ import TextSearch
 /// #117's own palette-consistency work stays scoped to Slice 9.
 struct QuickOpenView: View {
     @Bindable var model: QuickOpenModel
-    let onOpen: (IndexedPath) -> Void
+    @Bindable var submission: QuickOpenSubmission
     let onDismiss: () -> Void
 
     @FocusState private var searchFieldFocused: Bool
@@ -24,6 +60,7 @@ struct QuickOpenView: View {
                 .focused($searchFieldFocused)
                 .accessibilityLabel("Quick Open search")
                 .accessibilityIdentifier("quickOpenSearchField")
+                .disabled(submission.isOpening)
                 .onKeyPress(.downArrow) {
                     model.moveSelection(by: 1)
                     return .handled
@@ -33,7 +70,7 @@ struct QuickOpenView: View {
                     return .handled
                 }
                 .onKeyPress(.return) {
-                    openSelectedAndDismiss()
+                    submission.submit()
                     return .handled
                 }
                 .onKeyPress(.escape) {
@@ -59,9 +96,10 @@ struct QuickOpenView: View {
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 model.moveSelection(by: index - model.selectedIndex)
-                                openSelectedAndDismiss()
+                                submission.submit()
                             }
                     }
+                    .disabled(submission.isOpening)
                     .listStyle(.plain)
                     .frame(maxHeight: 280)
                     .onChange(of: model.selectedIndex) { _, newValue in
@@ -77,12 +115,6 @@ struct QuickOpenView: View {
             model.refresh()
             searchFieldFocused = true
         }
-    }
-
-    private func openSelectedAndDismiss() {
-        guard let selected = model.selectedResult else { return }
-        onOpen(selected)
-        onDismiss()
     }
 }
 

@@ -1,8 +1,21 @@
 import Foundation
 import LocalResourceAccess
 
-/// Pins a folder chosen for one document and retains its access scope until every admitted use drains.
-/// A backing cannot be retargeted; a new document/window epoch needs a new selection and backing.
+/// The production path uses URL's security scope. A per-acquisition test driver can count actual
+/// start/stop calls through every owner transition without requiring an interactive folder panel.
+struct PreviewDirectoryScopeAccess: Sendable {
+    let start: @MainActor @Sendable (URL) -> Bool
+    let stop: @MainActor @Sendable (URL) -> Void
+
+    static let system = PreviewDirectoryScopeAccess(
+        start: { $0.startAccessingSecurityScopedResource() },
+        stop: { $0.stopAccessingSecurityScopedResource() }
+    )
+}
+
+/// Pins a document's resource directory and retains its access scope until every admitted use drains.
+/// A backing cannot be retargeted. Explicit panel selections and the active HTML preview's automatic
+/// document-directory access have distinct factories; neither can borrow the other's authority.
 final class PreviewDirectoryGrantBacking: @unchecked Sendable {
     private struct OpenedDirectory: Sendable {
         let root: DirectoryLease
@@ -31,17 +44,20 @@ final class PreviewDirectoryGrantBacking: @unchecked Sendable {
     let requestedDocumentURL: URL
     private let scopeURL: URL
     private let scopeStarted: Bool
+    private let scopeAccess: PreviewDirectoryScopeAccess
     private let rootDirectory: DirectoryLease
     private let documentDirectory: DirectoryLease
     private let lock = NSLock()
     private var state = State()
 
-    private init(selection: PreviewResourceFolderSelection, epoch: UUID,
-                 scopeStarted: Bool, opened: OpenedDirectory) {
+    private init(documentURL: URL, scopeURL: URL, epoch: UUID,
+                 scopeStarted: Bool, scopeAccess: PreviewDirectoryScopeAccess,
+                 opened: OpenedDirectory) {
         documentEpoch = epoch
-        requestedDocumentURL = selection.requestedDocumentURL
-        scopeURL = selection.selectedFolderURL
+        requestedDocumentURL = documentURL
+        self.scopeURL = scopeURL
         self.scopeStarted = scopeStarted
+        self.scopeAccess = scopeAccess
         rootDirectory = opened.root
         documentDirectory = opened.document
     }
@@ -52,12 +68,13 @@ final class PreviewDirectoryGrantBacking: @unchecked Sendable {
     static func acquire(
         selection: PreviewResourceFolderSelection,
         currentDocumentURL: URL,
-        epoch: UUID
+        epoch: UUID,
+        scopeAccess: PreviewDirectoryScopeAccess = .system
     ) async throws -> PreviewDirectoryGrantBacking {
         guard selection.requestedDocumentURL == currentDocumentURL else {
             throw ResourceReadError.changedRoot
         }
-        let scopeStarted = selection.selectedFolderURL.startAccessingSecurityScopedResource()
+        let scopeStarted = scopeAccess.start(selection.selectedFolderURL)
         do {
             let opened = try await Task.detached(priority: .utility) {
                 try openDocumentDirectory(selection: selection)
@@ -67,11 +84,38 @@ final class PreviewDirectoryGrantBacking: @unchecked Sendable {
                 throw ResourceReadError.cancelled
             }
             return PreviewDirectoryGrantBacking(
-                selection: selection, epoch: epoch, scopeStarted: scopeStarted, opened: opened
+                documentURL: currentDocumentURL, scopeURL: selection.selectedFolderURL,
+                epoch: epoch, scopeStarted: scopeStarted, scopeAccess: scopeAccess, opened: opened
             )
         } catch {
             if scopeStarted {
-                selection.selectedFolderURL.stopAccessingSecurityScopedResource()
+                scopeAccess.stop(selection.selectedFolderURL)
+            }
+            throw error
+        }
+    }
+
+    /// The active HTML preview already has automatic access to the saved document's parent. Pin that exact
+    /// directory before WebKit loads the saved revision, without manufacturing an explicit panel selection.
+    /// This one directory-open operation has the same MainActor timing as the former active scheme handler;
+    /// individual resource reads run on PreviewResourceAdmission's detached workers.
+    @MainActor
+    static func acquireAutomatic(
+        documentURL: URL, epoch: UUID,
+        scopeAccess: PreviewDirectoryScopeAccess = .system
+    ) throws -> PreviewDirectoryGrantBacking {
+        let directoryURL = documentURL.deletingLastPathComponent()
+        let scopeStarted = scopeAccess.start(directoryURL)
+        do {
+            let root = try DirectoryLease(opening: directoryURL)
+            return PreviewDirectoryGrantBacking(
+                documentURL: documentURL, scopeURL: directoryURL, epoch: epoch,
+                scopeStarted: scopeStarted, scopeAccess: scopeAccess,
+                opened: OpenedDirectory(root: root, document: root)
+            )
+        } catch {
+            if scopeStarted {
+                scopeAccess.stop(directoryURL)
             }
             throw error
         }
@@ -120,7 +164,8 @@ final class PreviewDirectoryGrantBacking: @unchecked Sendable {
         }
         if scopeStarted {
             let url = scopeURL
-            Task { @MainActor in url.stopAccessingSecurityScopedResource() }
+            let access = scopeAccess
+            Task { @MainActor in access.stop(url) }
         }
     }
 

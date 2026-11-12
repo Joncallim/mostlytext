@@ -180,6 +180,8 @@ struct WorkspaceCommands: Commands {
         }
 
         CommandGroup(before: .sidebar) {
+            previewResourcesCommand
+
             Menu("Layout") {
                 let layout = previewLayout
                     ?? DocumentEditorSplitView.defaultPreviewLayout(from: appSettings?.previewExport)
@@ -243,8 +245,7 @@ struct WorkspaceCommands: Commands {
                         Button(
                             action: { themeController.select(theme) },
                             label: {
-                                // Theme names are proper nouns and are never translated.
-                                Text(verbatim: (active.id == theme.id ? "✓ " : "    ") + theme.name)
+                                Text(verbatim: ThemePickerDisplayName.menuName(for: theme, selectedID: active.id))
                             }
                         )
                     }
@@ -255,8 +256,7 @@ struct WorkspaceCommands: Commands {
                         Button(
                             action: { themeController.select(theme) },
                             label: {
-                                // Theme names are proper nouns and are never translated.
-                                Text(verbatim: (active.id == theme.id ? "✓ " : "    ") + theme.name)
+                                Text(verbatim: ThemePickerDisplayName.menuName(for: theme, selectedID: active.id))
                             }
                         )
                     }
@@ -317,10 +317,6 @@ struct WorkspaceCommands: Commands {
                 .disabled(coordinator?.keyModel?.hasActiveDocument != true)
             }
         #endif
-    }
-
-    private func setPreviewLayout(_ layout: PreviewLayoutMode) {
-        coordinator?.setPreviewLayout(layout)
     }
 }
 

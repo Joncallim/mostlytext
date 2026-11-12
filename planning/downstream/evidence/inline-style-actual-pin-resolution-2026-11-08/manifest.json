@@ -1,0 +1,77 @@
+{
+  "source": "b7d0d2464980ec6713f8bd88e00ab0adff7e5b37",
+  "run": 42449931117,
+  "complete_first": "PASS",
+  "actual_adopted_lock_sha256": "716882ac8bc84aae7f5fa0c8b9ea627d9a6330ba24688f486fc690cd710be176",
+  "only_changed_pin": "textual",
+  "other_23_pins_unchanged": true,
+  "records": [
+    {
+      "file": "00-resolution-first-run.json.gz",
+      "original_path": "resolution-first-run.json",
+      "bytes": 12496,
+      "sha256": "b37355c52d93b19cc22f7264ba7c85ce8acf7954e1324e37c46f0b8b2654d028"
+    },
+    {
+      "file": "01-resolution-first-artifacts.json.gz",
+      "original_path": "resolution-first-artifacts.json",
+      "bytes": 758,
+      "sha256": "9817fd796d60ab3d30693254f1502e31f355754c15ece2a69f4026083ba309b3"
+    },
+    {
+      "file": "02-resolution-complete-first-workflow-logs.zip.gz",
+      "original_path": "resolution-complete-first-workflow-logs.zip",
+      "bytes": 12590,
+      "sha256": "e24b7ba72a51ef21367a8205c89543bdb644d9fe5c242e5113f5f4b56e6c7e96"
+    },
+    {
+      "file": "03-actual-resolution-independently-verified.json.gz",
+      "original_path": "actual-resolution-independently-verified.json",
+      "bytes": 873,
+      "sha256": "ba56c438f2a95b93dc0c955627e6bf9abd5ecdc54a489d517cd4d0c9697820c9"
+    },
+    {
+      "file": "04-pin-resolution-receipt.json.gz",
+      "original_path": "resolution-first-artifact/actual-inline-style-pin-resolution/pin-resolution-receipt.json",
+      "bytes": 1790,
+      "sha256": "c6e934d193892d120cd2f1f0ac034158b131dd71a8638ffa3cdb7b36a253accb"
+    },
+    {
+      "file": "05-Package.original.swift.gz",
+      "original_path": "resolution-first-artifact/actual-inline-style-pin-resolution/Package.original.swift",
+      "bytes": 14441,
+      "sha256": "3d43404c0a1396bbac7a1c0d052ebc31bc2c931e0ebc407356a305a5aa87d284"
+    },
+    {
+      "file": "06-Package.candidate.swift.gz",
+      "original_path": "resolution-first-artifact/actual-inline-style-pin-resolution/Package.candidate.swift",
+      "bytes": 14441,
+      "sha256": "4977d8018116e76b62a2c33a3836a890c5b0fa8d6f8ad4c2df33384ceca7c0a7"
+    },
+    {
+      "file": "07-Package.original.resolved.gz",
+      "original_path": "resolution-first-artifact/actual-inline-style-pin-resolution/Package.original.resolved",
+      "bytes": 6547,
+      "sha256": "0a878dfe4a355ae18d0521d37540f414355180c1273baaddde313ec5460c96a4"
+    },
+    {
+      "file": "08-Package.resolved.gz",
+      "original_path": "resolution-first-artifact/actual-inline-style-pin-resolution/Package.resolved",
+      "bytes": 6547,
+      "sha256": "716882ac8bc84aae7f5fa0c8b9ea627d9a6330ba24688f486fc690cd710be176"
+    },
+    {
+      "file": "09-resolve.stdout.gz",
+      "original_path": "resolution-first-artifact/actual-inline-style-pin-resolution/resolve.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "10-resolve.stderr.gz",
+      "original_path": "resolution-first-artifact/actual-inline-style-pin-resolution/resolve.stderr",
+      "bytes": 10364,
+      "sha256": "7ec89c4a48408eefff3a8c650ac88300697e8f3e619734fc3d10fd1d10cf3459"
+    }
+  ],
+  "scope": "Actual hosted dependency resolution only; not shipping native qualification"
+}

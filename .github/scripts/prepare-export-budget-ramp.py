@@ -14,13 +14,13 @@ import zlib
 
 MIB = 1 << 20
 NEAR_FINAL_PNG_BYTES = (32 * MIB) - (8 << 10)
-FINAL_HTML_LIMIT = 256 * MIB
+FINAL_HTML_LIMIT = 128 * MIB
 SMALL_PNG = base64.b64decode(
     'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJ'
     'AAAADUlEQVR4nGP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg==')
 CASE_ORDER = (
     # Cover each budget family before approaching the riskier upper cases.
-    'source8', 'single8', 'occ16384', 'repeat3', 'aggregate96', 'distinct128',
+    'source8', 'single8', 'occ16384', 'repeat3', 'aggregate64', 'aggregate96', 'distinct128',
     'source24', 'single24', 'repeat5', 'repeatNearFinal', 'aggregate128',
     'source32', 'single32', 'occ65536',
     'distinct512', 'occ65537refusal', 'repeat6refusal',
@@ -151,24 +151,25 @@ def case_definition(name):
                 'occurrences': count, 'refusal': count > 65536,
                 'refusal_kind': 'budget-exceeded' if count > 65536 else None}
     if name == 'repeatNearFinal':
-        encoded = 5 * data_uri_bytes(32 * MIB) + data_uri_bytes(NEAR_FINAL_PNG_BYTES)
+        encoded = 2 * data_uri_bytes(32 * MIB) + data_uri_bytes(NEAR_FINAL_PNG_BYTES)
         return {'mode': 'html', 'assets': {'pixel.png': 'a32', 'near.png': 'near32'},
-                'occurrences': 6, 'refusal': False, 'refusal_kind': None,
+                'occurrences': 3, 'refusal': False, 'refusal_kind': None,
                 'estimated_data_uri_bytes': encoded,
                 'estimated_shell_headroom_bytes': FINAL_HTML_LIMIT - encoded}
     if name.startswith('repeat'):
         count = int(name[6])
         return {'mode': 'html', 'assets': {'pixel.png': 'a32'},
-                'occurrences': count, 'refusal': count == 6,
-                'refusal_kind': 'budget-exceeded' if count == 6 else None}
+                'occurrences': count, 'refusal': count >= 3,
+                'refusal_kind': 'budget-exceeded' if count >= 3 else None}
     if name.startswith('aggregate'):
-        letters = 'abcd' if name != 'aggregate96' else 'abc'
+        letters = 'ab' if name == 'aggregate64' else 'abc' if name == 'aggregate96' else 'abcd'
         assets = {f'{letter}.png': f'{letter}32' for letter in letters}
         if name == 'aggregateOverRefusal':
             assets['e.png'] = 'eSmall'
         return {'mode': 'html', 'assets': assets, 'occurrences': len(assets),
-                'refusal': name == 'aggregateOverRefusal',
-                'refusal_kind': 'unresolved-resources' if name == 'aggregateOverRefusal' else None}
+                'refusal': name != 'aggregate64',
+                'refusal_kind': 'unresolved-resources' if name == 'aggregateOverRefusal'
+                else 'budget-exceeded' if name != 'aggregate64' else None}
     if name.startswith('distinct'):
         count = 513 if 'refusal' in name else int(name[8:])
         return {'mode': 'html',
@@ -180,7 +181,7 @@ def case_definition(name):
 
 def references_for_case(name, definition):
     if name == 'repeatNearFinal':
-        return ['pixel.png'] * 5 + ['near.png']
+        return ['pixel.png'] * 2 + ['near.png']
     if name.startswith(('single', 'occ', 'repeat')):
         return [next(iter(definition['assets']))] * definition['occurrences']
     return list(definition['assets'])

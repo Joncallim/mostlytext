@@ -41,7 +41,8 @@ struct SnippetPickerView: View {
             Divider()
 
             if model.results.isEmpty {
-                Text(model.snippets.isEmpty ? "No Snippets Available" : "No Matching Snippets")
+                Text(model.snippets.isEmpty ? LocalizedStringKey("No Snippets Available") :
+                    LocalizedStringKey("No Matching Snippets"))
                     .foregroundStyle(.secondary)
                     .padding()
                     .accessibilityIdentifier("snippetPickerEmptyState")
@@ -93,8 +94,8 @@ private struct SnippetPickerRowView: View {
     let isSelected: Bool
 
     var body: some View {
-        // Snippet names are user data (or built-in identifiers), not UI
-        // strings — `Text(verbatim:)` keeps them out of localisation lookup.
+        // User names are verbatim data; built-in display names are already
+        // resolved from EditorCore's catalog before reaching this view.
         Text(verbatim: snippet.name)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.vertical, 4)

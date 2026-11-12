@@ -59,6 +59,20 @@ struct QuickOpenModelTests {
         #expect(model.results.first?.relativePath == "WindowCoordinator.swift")
     }
 
+    @Test func unchangedFieldWriteKeepsTheSelectedResultActionable() async throws {
+        let tree = try TempTree(["a.md"])
+        let index = WorkspaceFileIndex()
+        await index.rebuild(root: tree.root)
+        let model = QuickOpenModel(index: index)
+        model.query = "a.md"
+        await waitUntil { model.selectedResult != nil }
+        let selected = try #require(model.selectedResult)
+
+        model.query = "a.md" // SwiftUI can write this unchanged value on Return.
+        #expect(model.selectedResult == selected)
+        #expect(!model.isSearching)
+    }
+
     @Test func rapidTypingEndsOnTheLastTypedQuerysResults() async throws {
         // A real end-to-end smoke test that typing two characters in a row
         // settles on the LAST one's results -- but against the real
@@ -90,13 +104,13 @@ struct QuickOpenModelTests {
         // `QuickOpenModel.scheduleQuery()`'s generation counter exists to
         // handle -- a NEWER query's result committing before an OLDER,
         // now-superseded query's result arrives late -- via a controllable
-        // `performQuery` seam instead of the real `WorkspaceFileIndex`
+        // `performRead` seam instead of the real `WorkspaceFileIndex`
         // actor (whose own call-ordering guarantees make this inversion
         // impossible to observe naturally; see the sibling test above).
         let gate = QueryGate()
         let staleResult = [IndexedPath(relativePath: "stale.txt", basename: "stale.txt")]
         let freshResult = [IndexedPath(relativePath: "fresh.txt", basename: "fresh.txt")]
-        let model = QuickOpenModel(performQuery: { query in await gate.hold(query) })
+        let model = QuickOpenModel(performRead: { query in await gate.hold(query) })
 
         model.query = "app" // generation 1 -- will resolve to staleResult, held for now
         model.query = "ban" // generation 2 -- will resolve to freshResult, held for now
@@ -129,13 +143,13 @@ struct QuickOpenModelTests {
         let gate = QueryGate()
         let oldRows = [IndexedPath(relativePath: "old.txt", basename: "old.txt")]
         let newRows = [IndexedPath(relativePath: "new.txt", basename: "new.txt")]
-        let model = QuickOpenModel(performQuery: { query in await gate.hold(query) })
+        let model = QuickOpenModel(performRead: { query in await gate.hold(query) })
 
         model.query = "old"
         await gate.waitUntilPending("old")
         await gate.release("old", with: oldRows)
         await waitUntil { model.results == oldRows }
-        #expect(model.selectedResult == oldRows.first)
+        #expect(model.selectedResult?.path == oldRows.first)
 
         model.query = "new" // the old rows are still displayed, but belong to the previous query
         await gate.waitUntilPending("new")
@@ -144,15 +158,15 @@ struct QuickOpenModelTests {
 
         await gate.release("new", with: newRows)
         await waitUntil { model.results == newRows }
-        #expect(model.selectedResult == newRows.first)
+        #expect(model.selectedResult?.path == newRows.first)
     }
 
     @Test func anUnavailableIndexIsReportedDistinctlyFromNoMatches() async {
         let unavailable = UnavailableFlag()
-        let model = QuickOpenModel(
-            performQuery: { _ in [] },
-            indexIsUnavailable: { await unavailable.value }
-        )
+        let model = QuickOpenModel(performRead: { _ in
+            let isUnavailable = await unavailable.value
+            return .init(paths: [], isUnavailable: isUnavailable)
+        })
 
         model.refresh()
         await waitUntil { !model.isSearching }
@@ -162,6 +176,24 @@ struct QuickOpenModelTests {
         model.query = "x"
         await waitUntil { model.isIndexUnavailable }
         #expect(model.results.isEmpty)
+    }
+
+    @Test func lateUnavailableReadCannotReplaceANewerReadyRead() async {
+        let gate = QueryGate()
+        let fresh = [IndexedPath(relativePath: "fresh.txt", basename: "fresh.txt")]
+        let model = QuickOpenModel(performRead: { query in await gate.hold(query) })
+
+        model.query = "old"
+        model.query = "new"
+        await gate.waitUntilPending("old")
+        await gate.waitUntilPending("new")
+        await gate.release("new", with: fresh)
+        await waitUntil { model.results == fresh && !model.isSearching }
+        await gate.release("old", with: [], unavailable: true)
+        await Task.yield()
+
+        #expect(model.results == fresh)
+        #expect(!model.isIndexUnavailable)
     }
 
     @Test func moveSelectionWrapsAroundInBothDirections() async throws {
@@ -203,7 +235,93 @@ struct QuickOpenModelTests {
 
         model.moveSelection(by: 1)
 
-        #expect(model.selectedResult?.relativePath == model.results[1].relativePath)
+        #expect(model.selectedResult?.path.relativePath == model.results[1].relativePath)
+    }
+
+    @Test func rebuiltIndexRejectsDisplayedRowEvenWhenTheSamePathReturns() async throws {
+        let tree = try TempTree(["same.md"])
+        let index = WorkspaceFileIndex()
+        await index.rebuild(root: tree.root)
+        let model = QuickOpenModel(index: index)
+        model.refresh()
+        await waitUntil { model.selectedResult != nil }
+        let selected = try #require(model.selectedResult)
+        let origin = QuickOpenOrigin(generation: 1, lexicalRoot: tree.root, accessRoot: tree.root)
+        let originBox = QuickOpenOriginBox(origin)
+        let gate = QuickOpenActionGate(index: index) { originBox.current }
+        #expect(await gate.admit(selected, from: origin))
+
+        await index.rebuild(root: tree.root)
+        #expect(await !(gate.admit(selected, from: origin)))
+        model.refresh()
+        await waitUntil {
+            model.selectedResult.map { $0.publishedGeneration != selected.publishedGeneration } ?? false
+        }
+        let refreshed = try #require(model.selectedResult)
+        #expect(refreshed.path.relativePath == selected.path.relativePath)
+        #expect(await gate.admit(refreshed, from: origin))
+    }
+
+    @Test func rootSwitchDuringIndexAdmissionRejectsClickedRow() async {
+        let oldRoot = URL(fileURLWithPath: "/tmp/quick-open-old")
+        let newRoot = URL(fileURLWithPath: "/tmp/quick-open-new")
+        let origin = QuickOpenOrigin(generation: 1, lexicalRoot: oldRoot, accessRoot: oldRoot)
+        let originBox = QuickOpenOriginBox(origin)
+        let pause = QuickOpenAdmissionPause()
+        let gate = QuickOpenActionGate(
+            indexAdmission: { _ in await pause.hold() },
+            currentOrigin: { originBox.current }
+        )
+        let selected = QuickOpenModel.PresentedResult(
+            path: IndexedPath(relativePath: "same.md", basename: "same.md"),
+            publishedGeneration: 1,
+            queryGeneration: 1
+        )
+        let action = Task { await gate.admit(selected, from: origin) }
+        await pause.waitUntilPending()
+        originBox.current = QuickOpenOrigin(generation: 2, lexicalRoot: newRoot, accessRoot: newRoot)
+        await pause.resume(with: true)
+
+        #expect(await !(action.value))
+    }
+}
+
+@MainActor
+private final class QuickOpenOriginBox {
+    var current: QuickOpenOrigin?
+
+    init(_ origin: QuickOpenOrigin) {
+        current = origin
+    }
+}
+
+private actor QuickOpenAdmissionPause {
+    private var pending: CheckedContinuation<Bool, Never>?
+    private var released: Bool?
+
+    func hold() async -> Bool {
+        if let released {
+            return released
+        }
+        return await withCheckedContinuation { pending = $0 }
+    }
+
+    func waitUntilPending() async {
+        let clock = ContinuousClock()
+        let deadline = clock.now + .seconds(5)
+        while clock.now < deadline {
+            if pending != nil {
+                return
+            }
+            try? await Task.sleep(for: .milliseconds(1))
+        }
+        Issue.record("Timed out waiting for Quick Open action admission")
+    }
+
+    func resume(with result: Bool) {
+        released = result
+        pending?.resume(returning: result)
+        pending = nil
     }
 }
 
@@ -213,14 +331,14 @@ struct QuickOpenModelTests {
 /// letting a test force any completion order it wants — including one a
 /// real single actor's own call-ordering guarantees could never produce.
 private actor QueryGate {
-    private var pending: [String: CheckedContinuation<[IndexedPath], Never>] = [:]
+    private var pending: [String: CheckedContinuation<QuickOpenModel.IndexRead, Never>] = [:]
 
-    func hold(_ query: String) async -> [IndexedPath] {
+    func hold(_ query: String) async -> QuickOpenModel.IndexRead {
         await withCheckedContinuation { pending[query] = $0 }
     }
 
-    func release(_ query: String, with result: [IndexedPath]) {
-        pending.removeValue(forKey: query)?.resume(returning: result)
+    func release(_ query: String, with result: [IndexedPath], unavailable: Bool = false) {
+        pending.removeValue(forKey: query)?.resume(returning: .init(paths: result, isUnavailable: unavailable))
     }
 
     /// Waits until `query`'s own `hold(_:)` call has actually registered

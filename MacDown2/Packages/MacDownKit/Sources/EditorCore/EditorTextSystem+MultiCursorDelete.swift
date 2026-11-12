@@ -1,0 +1,145 @@
+import AppKit
+import Foundation
+
+enum MultiCursorDeleteDirection {
+    case backward
+    case forward
+}
+
+extension EditorTextSystem {
+    /// Deletes selected text or one composed character at each synthetic bare
+    /// caret. All ranges refer to the same pre-edit text and publish as one
+    /// transaction. A caret at a document boundary stays put while the other
+    /// carets still edit; overlapping grapheme ranges are merged before the
+    /// transaction so the same character is never deleted twice.
+    func applyMultiCursorDelete(_ direction: MultiCursorDeleteDirection) -> Bool {
+        let selection = selectionSet
+        guard selection.isMultiple, textView.isEditable, !textView.hasMarkedText(),
+              !isPerformingEditingAssist, !isPerformingProgrammaticTextUpdate,
+              let source = assistTextSource
+        else { return false }
+        guard selection.ranges.allSatisfy({ range in
+            range.location >= 0 && range.length >= 0 && range.location <= source.length
+                && range.length <= source.length - range.location
+        }) else { return false }
+
+        let candidates = selection.ranges.map { range -> NSRange in
+            guard range.length == 0 else { return Self.expandedCRLFSelection(range, in: source) }
+            if direction == .backward, editingAssistConfiguration.isEnabled,
+               case let .edit(edit) = MarkdownEditingAssistEngine.outcome(
+                   for: .deleteBackward,
+                   text: source,
+                   selection: range,
+                   configuration: editingAssistConfiguration,
+                   profile: languageEditingProfile
+               ), edit.replacementString.isEmpty,
+               edit.resultingSelection == NSRange(location: edit.replacementRange.location, length: 0) {
+                return edit.replacementRange
+            }
+            return Self.deleteRange(at: range.location, direction: direction, in: source)
+        }
+        let deletions = Self.mergedDeleteRanges(candidates.filter { $0.length > 0 })
+        guard !deletions.isEmpty else { return true }
+        let replacements = deletions.map { TextReplacement(range: $0, replacementText: "") }
+        guard EditorEditTransaction.validate(replacements, documentLength: source.length) else { return false }
+
+        // The normalized selection and merged deletions may each be large.
+        // Build cumulative lengths once instead of scanning every deletion for
+        // every caret while mapping the resulting selection.
+        var deletedBefore = [Int](repeating: 0, count: deletions.count + 1)
+        for index in deletions.indices {
+            deletedBefore[index + 1] = deletedBefore[index] + deletions[index].length
+        }
+
+        let carets = zip(selection.ranges, candidates).map { original, candidate in
+            let target = candidate.length > 0 ? candidate.location : original.location
+            return NSRange(
+                location: Self.offsetAfterDeletes(target, ranges: deletions, deletedBefore: deletedBefore),
+                length: 0
+            )
+        }
+        let resultingSelection = EditorSelectionSet(ranges: carets, primaryIndex: selection.primaryIndex)
+        apply(EditorEditTransaction(replacements: replacements, resultingSelection: resultingSelection))
+        return true
+    }
+
+    private static func mergedDeleteRanges(_ ranges: [NSRange]) -> [NSRange] {
+        var merged: [NSRange] = []
+        for range in ranges.sorted(by: { $0.location < $1.location }) {
+            if let previous = merged.last, range.location < NSMaxRange(previous) {
+                merged[merged.count - 1] = NSRange(
+                    location: previous.location,
+                    length: max(NSMaxRange(previous), NSMaxRange(range)) - previous.location
+                )
+            } else {
+                merged.append(range)
+            }
+        }
+        return merged
+    }
+
+    private static func deleteRange(
+        at caret: Int,
+        direction: MultiCursorDeleteDirection,
+        in source: NSString
+    ) -> NSRange {
+        let index: Int
+        switch direction {
+        case .backward:
+            guard caret > 0 else { return NSRange(location: caret, length: 0) }
+            index = caret - 1
+        case .forward:
+            guard caret < source.length else { return NSRange(location: caret, length: 0) }
+            index = caret
+        }
+        // Foundation's composed-character API treats CR and LF separately.
+        // The editor's line-ending invariant requires deleting the pair as
+        // one separator, including a caret placed between its two units.
+        if source.character(at: index) == 0x0A, index > 0, source.character(at: index - 1) == 0x0D {
+            return NSRange(location: index - 1, length: 2)
+        }
+        if source.character(at: index) == 0x0D, index + 1 < source.length,
+           source.character(at: index + 1) == 0x0A {
+            return NSRange(location: index, length: 2)
+        }
+        return source.rangeOfComposedCharacterSequence(at: index)
+    }
+
+    private static func expandedCRLFSelection(_ range: NSRange, in source: NSString) -> NSRange {
+        var start = range.location
+        var end = NSMaxRange(range)
+        if start > 0, start < source.length,
+           source.character(at: start - 1) == 0x0D, source.character(at: start) == 0x0A {
+            start -= 1
+        }
+        if end > 0, end < source.length,
+           source.character(at: end - 1) == 0x0D, source.character(at: end) == 0x0A {
+            end += 1
+        }
+        return NSRange(location: start, length: end - start)
+    }
+
+    private static func offsetAfterDeletes(
+        _ offset: Int,
+        ranges: [NSRange],
+        deletedBefore: [Int]
+    ) -> Int {
+        // Find the first deletion whose end is beyond this pre-edit offset.
+        // An offset within it maps to its start; an offset after it loses the
+        // cumulative deleted length. Exact end offsets count as after.
+        var lower = 0
+        var upper = ranges.count
+        while lower < upper {
+            let middle = lower + (upper - lower) / 2
+            if NSMaxRange(ranges[middle]) <= offset {
+                lower = middle + 1
+            } else {
+                upper = middle
+            }
+        }
+        if lower < ranges.count, ranges[lower].location <= offset {
+            return ranges[lower].location - deletedBefore[lower]
+        }
+        return offset - deletedBefore[lower]
+    }
+}

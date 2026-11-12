@@ -26,7 +26,7 @@ enum ExportPrimaryRecovery {
         guard fstat(descriptor, &info) == 0 else { throw Filesystem.posixFailure() }
         let initial = Filesystem.Stamp(info)
         guard initial.kind == mode_t(S_IFREG), initial.size >= 0,
-              initial.size <= ExportResourceBudget.maxFinalHTMLUTF8Bytes
+              initial.size <= ExportResourceBudget.maxManagedOutputBytes
         else { throw ExportError.unsafePublication }
         let digest = try ExportReceiptInspection.hash(descriptor, expectedBytes: Int(initial.size))
         guard fstat(descriptor, &info) == 0, Filesystem.Stamp(info) == initial,

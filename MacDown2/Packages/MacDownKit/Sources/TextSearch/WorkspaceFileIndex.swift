@@ -51,8 +51,18 @@ public actor WorkspaceFileIndex {
         case failed(String)
     }
 
+    /// Status and paths captured in one actor turn; `.building` retains the
+    /// prior complete paths until the next publication.
+    public struct ReadSnapshot: Sendable {
+        public let state: State
+        public let paths: [IndexedPath]
+        /// Changes on every path publication, including failure and clear.
+        public let publishedGeneration: UInt64
+    }
+
     public private(set) var state: State = .empty
     private var paths: [IndexedPath] = []
+    private var publishedGeneration: UInt64 = 0
     /// Inverted index: ASCII byte value -> ascending indices into `paths`
     /// whose folded basename or relative path contains that byte anywhere.
     /// Built once whenever `paths` changes (index-build time), not on every
@@ -61,13 +71,13 @@ public actor WorkspaceFileIndex {
     /// reject, was needed to meet the 100k-path budget (issue #112).
     private var postingsByASCIIByte: [UInt8: [Int]] = [:]
     private var generation = 0
-    private var currentWalkTask: Task<[IndexedPath], Never>?
-    private let walk: @Sendable (URL, Set<String>) -> [IndexedPath]
+    private var currentWalkTask: Task<[IndexedPath], Error>?
+    private let walk: @Sendable (URL, Set<String>) throws -> [IndexedPath]
     private let simulatedUnavailability: (@Sendable (URL) -> String?)?
 
     public init() {
         walk = { root, excludedDirectoryNames in
-            DirectoryWalker().walk(root: root, excludedDirectoryNames: excludedDirectoryNames)
+            try DirectoryWalker().walk(root: root, excludedDirectoryNames: excludedDirectoryNames)
         }
         simulatedUnavailability = nil
     }
@@ -81,7 +91,7 @@ public actor WorkspaceFileIndex {
     /// disk-I/O timing being slow enough to observe -- a wall-clock race
     /// would be exactly the kind of non-deterministic test this project's
     /// own `RELEASE_HARDENING.md` §12 rules out.
-    init(walk: @escaping @Sendable (URL, Set<String>) -> [IndexedPath]) {
+    init(walk: @escaping @Sendable (URL, Set<String>) throws -> [IndexedPath]) {
         self.walk = walk
         simulatedUnavailability = nil
     }
@@ -90,7 +100,7 @@ public actor WorkspaceFileIndex {
     /// can then force a failed walk without depending on permission bits,
     /// which sandboxed macOS runners may ignore.
     init(
-        walk: @escaping @Sendable (URL, Set<String>) -> [IndexedPath],
+        walk: @escaping @Sendable (URL, Set<String>) throws -> [IndexedPath],
         simulatedUnavailability: @escaping @Sendable (URL) -> String?
     ) {
         self.walk = walk
@@ -115,10 +125,20 @@ public actor WorkspaceFileIndex {
         currentWalkTask?.cancel()
         let walk = walk
         let task = Task.detached(priority: .utility) {
-            walk(root, excludedDirectoryNames)
+            try walk(root, excludedDirectoryNames)
         }
         currentWalkTask = task
-        let result = await task.value
+        let result: [IndexedPath]
+        do {
+            result = try await task.value
+        } catch {
+            guard currentGeneration == generation else { return }
+            setPaths([])
+            state = .failed(Self.unavailabilityReason(of: root) ?? String(
+                localized: "The folder cannot be read.", bundle: .module
+            ))
+            return
+        }
         guard currentGeneration == generation else { return } // superseded by a newer rebuild
         // A vanished or unreadable root walks to an empty list, which would
         // read as a genuinely empty workspace and leave the previous
@@ -171,6 +191,17 @@ public actor WorkspaceFileIndex {
     /// `query(_:)` never calls this with `true` and has no way to.
     public func allPaths(includeHidden: Bool = false) -> [IndexedPath] {
         includeHidden ? paths : paths.filter { !$0.isHidden }
+    }
+
+    /// The folder-search input and its status from one actor turn. During
+    /// `.building`, paths intentionally remain the prior complete snapshot;
+    /// after `.failed`, both status and paths reflect the cleared index.
+    public func allPathsSnapshot(includeHidden: Bool = false) -> ReadSnapshot {
+        ReadSnapshot(
+            state: state,
+            paths: allPaths(includeHidden: includeHidden),
+            publishedGeneration: publishedGeneration
+        )
     }
 
     /// Ranked matches for `query`, capped at `limit`. Never touches disk —
@@ -226,6 +257,26 @@ public actor WorkspaceFileIndex {
             .sorted { $0.score != $1.score ? $0.score > $1.score : $0.path.relativePath < $1.path.relativePath }
             .prefix(limit)
             .map(\.path)
+    }
+
+    /// Quick Open's ranked rows and status from one actor turn, including
+    /// the same recent-file ranking as `query` without a second index read.
+    public func querySnapshot(
+        _ query: String,
+        limit: Int = 100,
+        recentRelativePaths: Set<String> = []
+    ) -> ReadSnapshot {
+        ReadSnapshot(
+            state: state,
+            paths: self.query(query, limit: limit, recentRelativePaths: recentRelativePaths),
+            publishedGeneration: publishedGeneration
+        )
+    }
+
+    /// Admit a visible row only against its exact ready path publication.
+    public func isActionable(_ path: IndexedPath, publishedGeneration expected: UInt64) -> Bool {
+        guard case .ready = state, publishedGeneration == expected else { return false }
+        return paths.contains { $0 == path && !$0.isHidden }
     }
 
     /// Every gap between `FuzzyPathScore`'s own tiers (exact 1000, prefix
@@ -300,6 +351,7 @@ public actor WorkspaceFileIndex {
     /// mean different things this helper has no way to infer from `paths`
     /// alone (an empty root is `.empty`, not `.ready(count: 0)`).
     private func setPaths(_ newPaths: [IndexedPath]) {
+        publishedGeneration &+= 1
         paths = newPaths
         var postings: [UInt8: [Int]] = [:]
         for (index, path) in newPaths.enumerated() {

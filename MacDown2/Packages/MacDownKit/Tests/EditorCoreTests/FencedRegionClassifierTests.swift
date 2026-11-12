@@ -127,36 +127,54 @@ struct FencedRegionClassifierTests {
 
     @Test("a fence nested inside a blockquote is still recognized")
     func fenceInsideBlockquote() {
-        // The classifier's own fence-line check only looks at leading
-        // spaces before the marker, not blockquote `>` prefixes -- a
-        // blockquote-prefixed fence line like "> ```swift" does NOT match
-        // this classifier's own simplified grammar (the `>` isn't a space),
-        // so it is NOT recognized as a fence delimiter at all. This test
-        // pins that disclosed, accepted limitation rather than asserting an
-        // unimplemented behavior.
         let text = "> ```swift\n> let x = 1\n> ```" as NSString
         let insideOffset = text.range(of: "let x").location
-        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: insideOffset) == .prose)
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: insideOffset)
+            == .fencedCode(languageID: "swift"))
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: text.length) == .prose)
     }
 
-    @Test("a closing line with a MISMATCHED fence character is still treated as closing (disclosed simplification)")
-    func mismatchedFenceCharactersAreTreatedAsClosingAnyOpenFence() {
-        // A P2 an independent hostile review of §6.12 found: unlike real
-        // CommonMark (where only a matching marker character closes a
-        // fence — a backtick fence is never closed by a tilde line, or vice
-        // versa), this classifier counts ANY fence-delimiter line as a
-        // toggle regardless of its own marker character. Disclosed above
-        // this type's own doc comment as an accepted, low-impact
-        // simplification rather than a full stack-based rewrite; this test
-        // pins the current behavior so a future change to it is deliberate.
+    @Test("leaving an unclosed quoted fence resumes outside prose")
+    func unclosedQuoteEndsAtAnUnquotedLine() {
+        let text = "> ```swift\n> code\nOutside prose " as NSString
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: text.range(of: "code").location)
+            == .fencedCode(languageID: "swift"))
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: text.length) == .prose)
+    }
+
+    @Test("a deeper quote marker cannot close an outer quoted fence")
+    func nestedQuoteCannotCloseOuterFence() {
+        let text = "> ```swift\n> code\n> > ```\n> more code" as NSString
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: text.length)
+            == .fencedCode(languageID: "swift"))
+    }
+
+    @Test("a quoted marker is literal inside a top-level fence")
+    func quotedMarkerCannotCloseTopLevelFence() {
+        let text = "```swift\n> ```\nmore code" as NSString
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: text.length)
+            == .fencedCode(languageID: "swift"))
+    }
+
+    @Test("a tab after the quote marker still preserves the fenced region")
+    func tabAfterQuoteMarker() {
+        let text = ">\t```swift\n>\tcode" as NSString
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: text.length)
+            == .fencedCode(languageID: "swift"))
+    }
+
+    @Test("an excessive quote prefix fails closed on the hot key path")
+    func excessiveQuoteDepthIsUnresolved() {
+        let text = (String(repeating: "> ", count: 33) + "```swift\ncode") as NSString
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: text.length) == .unresolved)
+    }
+
+    @Test("a mismatched fence character cannot close the active fence")
+    func mismatchedFenceCharactersCannotCloseAnActiveFence() {
         let text = "prose\n```swift\ncode\n~~~\nmore prose" as NSString
-        // Real CommonMark: the `~~~` line does NOT close the backtick
-        // fence, so "more prose" would still be inside the (still-open)
-        // code block. This classifier's own simplified grammar treats the
-        // mismatched `~~~` as a valid closer regardless, so it reports
-        // .prose here instead.
         let afterMismatchedCloser = text.range(of: "more prose").location
-        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: afterMismatchedCloser) == .prose)
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: afterMismatchedCloser)
+            == .fencedCode(languageID: "swift"))
     }
 
     // MARK: - Front matter
@@ -198,11 +216,11 @@ struct FencedRegionClassifierTests {
         #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: offset) != .frontMatter)
     }
 
-    @Test("an unclosed --- at document start is not treated as front matter")
-    func unclosedFrontMatterDelimiterIsNotFrontMatter() {
+    @Test("an unclosed --- at document start remains unresolved while editing")
+    func unclosedFrontMatterDelimiterIsUnresolved() {
         let text = "---\ntitle: Test\nno closing delimiter here" as NSString
         let offset = text.range(of: "no closing").location
-        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: offset) == .prose)
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: offset) == .unresolved)
     }
 
     @Test("front matter immediately followed by a fence: the fence is still detected correctly")
@@ -256,8 +274,8 @@ struct FencedRegionClassifierTests {
 
     // MARK: - Bounded-scan performance (§15's own required adversarial case)
 
-    @Test("a very large document with the caret far from any fence stays bounded and fast")
-    func largeDocumentScanStaysBounded() {
+    @Test("a very large document beyond the scan cap stays bounded and unresolved")
+    func largeDocumentScanStaysBoundedAndUnresolved() {
         let paragraph = String(repeating: "word ", count: 20) + "\n"
         let hugeProse = String(repeating: paragraph, count: 100_000) // ~2.5 MB, well past the scan cap
         let text = hugeProse as NSString
@@ -267,7 +285,9 @@ struct FencedRegionClassifierTests {
         let elapsed = clock.measure {
             _ = FencedRegionClassifier.classify(text: text, atUTF16Offset: lateOffset)
         }
-        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: lateOffset) == .prose)
+        // Even a prose-only suffix cannot prove there was no distant open
+        // fence before the bounded window; do not invent a prose answer.
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: lateOffset) == .unresolved)
         // Generous budget: this is a correctness-of-boundedness check, not a
         // tight micro-benchmark -- it must not degrade toward whole-document
         // cost, which a bounded 5,000-line scan comfortably avoids even on

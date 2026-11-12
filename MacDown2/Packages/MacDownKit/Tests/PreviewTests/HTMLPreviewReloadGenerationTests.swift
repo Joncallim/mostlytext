@@ -10,6 +10,20 @@ struct HTMLPreviewReloadGateTests {
         #expect(approved)
     }
 
+    @Test func firstZeroGenerationIsApprovedOnceAndCanRetryAfterFailure() {
+        var gate = HTMLPreviewReloadGate()
+        let first = gate.shouldLoad(generation: 0)
+        #expect(first)
+        let duplicate = gate.shouldLoad(generation: 0)
+        #expect(!duplicate)
+        gate.loadFailed(generation: 0)
+        let retry = gate.shouldLoad(generation: 0)
+        #expect(retry)
+        gate.loadCompleted(generation: 0)
+        let completed = gate.shouldLoad(generation: 0)
+        #expect(!completed)
+    }
+
     @Test func duplicateRequestIsRejectedBeforeCompletion() {
         var gate = HTMLPreviewReloadGate()
         let first = gate.shouldLoad(generation: 7)

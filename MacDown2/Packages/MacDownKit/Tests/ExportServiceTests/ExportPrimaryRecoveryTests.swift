@@ -7,6 +7,24 @@ import Testing
 struct ExportPrimaryRecoveryTests {
     private typealias Fixture = ExportPrimaryRecoveryTestSupport.Fixture
 
+    @Test func existingLargerOutputRemainsAuthenticatableAfterNewHTMLLimitIsLowered() throws {
+        let fixture = try Fixture()
+        defer { fixture.cleanup() }
+        try Data().write(to: fixture.primary)
+        let handle = try FileHandle(forWritingTo: fixture.primary)
+        defer { try? handle.close() }
+
+        // Sparse logical bytes exercise the older managed-file bound without
+        // materializing a large Data value in the test process.
+        try handle.truncate(atOffset: UInt64((128 << 20) + 1))
+        #expect(try ExportPrimaryRecovery.digest(of: fixture.leaf, in: fixture.descriptor) != nil)
+
+        try handle.truncate(atOffset: UInt64((256 << 20) + 1))
+        #expect(throws: ExportError.self) {
+            try ExportPrimaryRecovery.digest(of: fixture.leaf, in: fixture.descriptor)
+        }
+    }
+
     @Test(arguments: ["prior", "desired", "absent"])
     func authenticatedReopenRetiresOnlyTheKnownScratch(state: String) throws {
         let fixture = try Fixture()

@@ -94,9 +94,10 @@ struct SnippetLibraryTests {
     }
 
     @Test func aUserSnippetWithABuiltInIdReplacesIt() {
-        let override = Snippet(id: "builtin.markdown.link", name: "Link", body: "<$0>", scopes: ["markdown"])
+        let override = Snippet(id: "builtin.markdown.link", name: "My own link", body: "<$0>", scopes: ["markdown"])
         let result = SnippetCatalog.snippets(user: [override], formatID: "markdown")
         #expect(result.filter { $0.id == "builtin.markdown.link" }.map(\.body) == ["<$0>"])
+        #expect(result.filter { $0.id == "builtin.markdown.link" }.map(\.name) == ["My own link"])
     }
 
     @Test func filterMatchesNamesCaseAndDiacriticInsensitively() {
@@ -111,5 +112,46 @@ struct SnippetLibraryTests {
         #expect(Set(ids).count == ids.count)
         // swiftformat rewrites `allSatisfy { $0.isUsable }` to a key path, which #expect cannot infer as non-throwing.
         #expect(BuiltInSnippets.all.filter { !$0.isUsable }.isEmpty)
+    }
+
+    @Test func builtInDisplayNamesResolveFromTheirBundleWithoutChangingSnippetIdentity() throws {
+        let bundleURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent("snippet-localization-\(UUID().uuidString).bundle", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: bundleURL) }
+        let resources = bundleURL.appendingPathComponent("Contents/Resources/fr.lproj", isDirectory: true)
+        try FileManager.default.createDirectory(at: resources, withIntermediateDirectories: true)
+        let info: [String: String] = [
+            "CFBundleIdentifier": "app.mostlytext.snippet-localization-test.\(UUID().uuidString)",
+            "CFBundleDevelopmentRegion": "fr",
+        ]
+        let infoData = try PropertyListSerialization.data(fromPropertyList: info, format: .xml, options: 0)
+        try infoData.write(to: bundleURL.appendingPathComponent("Contents/Info.plist"))
+        let translations = [
+            ("Fenced Code Block", "FR_CODE_SENTINEL"),
+            ("Link", "FR_LINK_SENTINEL"),
+            ("Link from Clipboard", "FR_CLIPBOARD_SENTINEL"),
+            ("Image", "FR_IMAGE_SENTINEL"),
+            ("Table", "FR_TABLE_SENTINEL"),
+            ("Task", "FR_TASK_SENTINEL"),
+        ]
+        let strings = translations.map { "\"\($0.0)\" = \"\($0.1)\";" }.joined(separator: "\n")
+        try strings.write(
+            to: resources.appendingPathComponent("Localizable.strings"),
+            atomically: true,
+            encoding: .utf8
+        )
+        let fixture = try #require(Bundle(url: bundleURL))
+
+        let originals = BuiltInSnippets.all
+        let localized = BuiltInSnippets.all(in: fixture)
+        #expect(localized.map(\.name) == translations.map(\.1))
+        #expect(localized.map(\.id) == originals.map(\.id))
+        #expect(localized.map(\.body) == originals.map(\.body))
+        #expect(localized.map(\.scopes) == originals.map(\.scopes))
+
+        let override = Snippet(id: "builtin.markdown.link", name: "My own link", body: "<$0>", scopes: ["markdown"])
+        let merged = SnippetCatalog.snippets(user: [override], formatID: "markdown", builtIn: localized)
+        #expect(merged.first { $0.id == override.id }?.name == "My own link")
+        #expect(SnippetCatalog.filter(merged, query: "FR_CODE_SENTINEL").map(\.id) == ["builtin.markdown.codeBlock"])
     }
 }

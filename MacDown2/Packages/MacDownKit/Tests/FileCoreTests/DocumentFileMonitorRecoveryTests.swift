@@ -102,9 +102,10 @@ struct DocumentFileMonitorRecoveryTests {
         watcher.signal(.parentVanished)
         await waitUntil { await prober.waiterCount == 1 }
         watcher.signal(.changed)
-        await waitUntil { await prober.waiterCount == 2 }
+        await waitUntil { await monitor.currentRequestGeneration() == 3 }
 
         await prober.resume(superseded, at: 0)
+        await waitUntil { await prober.waiterCount == 2 }
         await prober.resume(.missing(fileURL), at: 1)
         await waitUntil { await prober.waiterCount == 3 }
         await prober.resume(.missing(fileURL), at: 2)

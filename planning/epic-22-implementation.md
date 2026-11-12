@@ -8,6 +8,38 @@
 > feasibility probe, held preview/current-line activation and other named native
 > prerequisites remain binding; a documentation update does not skip them.
 
+> Multi-caret correction — 11 November 2026: current `main` now inserts at
+> synthetic bare carets and mixed selected/bare ranges through one transaction
+> (MostlyText PR #223). The directional-delete slice following it uses composed
+> characters and whole CRLF separators at those carets. Historical statements
+> below that `applyMultiCursorInsert` requires non-empty ranges, or that
+> selected-only delete is the production Backspace route, describe earlier
+> implementation snapshots and are superseded by these changes. Per-caret E10
+> assists and installed-app acceptance retain their own checks in issue #6.
+
+> Per-caret Return correction — 11 November 2026: the following narrow slice
+> evaluates Return at each caret using that caret's own line ending and local
+> Markdown or general-text editing context. It publishes disjoint replacements
+> as one transaction and falls back to plain Return for the whole selection
+> set if expanded assists overlap. The historical Slice 3 plain-Return scope
+> below describes the earlier implementation; pairing, explicit formatting
+> commands and installed-app acceptance remain separate.
+
+> Per-caret pairing correction — 11 November 2026: typed opening delimiters,
+> closing-delimiter type-over and paired Backspace now evaluate at each caret
+> through the existing E10 engine, including the native command delegate path.
+> The resulting disjoint replacements publish as one validated transaction;
+> incompatible outcomes decline as a whole. This supersedes the historical
+> Slice 3 single-caret pairing scope, while installed-app acceptance remains
+> an independent check.
+
+> Explicit Markdown-command correction — 11 November 2026: Bold, Italic,
+> Inline Code, Heading and Paragraph now act on the complete selection set
+> through one validated transaction. Identical expanded line edits publish
+> once, while incompatible overlaps decline atomically. This narrows the
+> historical Slice 3 single-selection-only scope at §7.3; installed-app and
+> final localisation acceptance remain separate.
+
 
 > Baseline: `master` at commit `95e4f6005f7f0a998b6c03377a17d92b8c1fcef7` (2026-09-21), immediately after EPIC-16's interim localisation baseline (PR #111) and the owner's "Plan final pre-release debt closure and E23" / "Complete carried-forward debt audit" planning commits. Epic issue: [#112](https://github.com/Joncallim/macdown_2/issues/112).
 
@@ -526,6 +558,50 @@ Per §7.3's already-recorded dispatch diagram, `FencedRegionClassifier.classify(
 
 **Wiring point, matching §7.3's own dispatch diagram exactly:** rather than touch either of `MarkdownEditingAssistEngine`'s call sites (`EditorView.swift`, `EditorTextSystem+EditingAssists.swift`), the classification and the resulting configuration/profile substitution both happen INSIDE `MarkdownEditingAssistEngine.outcome(for:text:selection:configuration:profile:)` itself, once, immediately after the existing `configuration.isEnabled` guard — every existing call site is completely unaffected. When `configuration.isMarkdownFormat` and the classifier reports `.fencedCode`/`.frontMatter` for the caret's own location, an adjusted configuration (Markdown-specific flags forced off, `isMarkdownFormat` forced false so a nested nothing-special-happens) and the fenced language's own profile (or `.plainText`) are substituted for the rest of that one call — never persisted, recomputed fresh on every action. `.markdownCommand` (the explicit Bold/Italic/Heading menu commands) is deliberately **not** gated by this classifier in this slice: those are a different interaction model (a deliberate, explicit user action, not an ambient auto-assist), and §7.3's own diagram is specifically about the ambient typing/Return/Tab assists this classifier's own name describes. Extending fence-awareness to the menu commands too, if ever wanted, is an explicitly out-of-scope, separately-decided follow-up, not silently bundled here.
 
+**9 November 2026 safety correction (current `main` baseline `1f441fa9`).**
+The earlier bounded parity approximation and any-marker-closes-any-marker rule
+are no longer suitable for ambient editing assists. A mismatched `~~~` or
+shorter backtick line after an open fence can make the classifier report
+prose and apply Markdown-only transformations to code. A delimiter more than
+5,000 lines behind the caret has the same effect because the partial scan has
+no known outside-fence anchor. All three cases were reproduced against the
+unchanged classifier before this correction.
+
+Keep the same synchronous `NSString` line cap and no full Markdown parse.
+Collect only candidate delimiters inside that window and replay them from the
+document start when it is reached. A closing line must match its opener's
+character, have at least its marker length, and contain no trailing content
+besides whitespace. When the cap is reached before the document start, return
+an explicit `unresolved` state; the typing-assist and comment-toggle callers
+use plain-text general mechanics and suppress Markdown-only behavior. This
+may withhold automatic Markdown assistance in a document whose caret lies
+more than 5,000 lines from its start, even when that caret is in prose. It
+preserves authored text and the hot-path bound, and is preferable to mutating
+unknown code as Markdown. The existing container-prefix/indentation grammar
+limits and explicit formatting-menu-command exclusion remain; this correction
+does not claim complete CommonMark classification or final native acceptance.
+
+**9 November 2026 front-matter safety follow-up (stacked on the fence correction).**
+The older prefix scan returned “no front matter” when a plausible `---` opener
+had no closer within 1,000 lines or before end of file. In a document still
+being edited, that answer can enable Markdown-only assists inside unfinished
+YAML. Also, fence-looking text inside a valid closed YAML block could be
+replayed as a Markdown delimiter after the block, suppressing ordinary prose
+assists or choosing the wrong editing profile. Both cases reproduce on the
+unchanged classifier before this follow-up.
+
+Keep the same 1,000-line prefix bound. Distinguish an absent opener, a known
+closed block, and an unresolved plausible opener. An unresolved opener returns
+the same fail-safe state as a distant fence; Markdown-only ambient assists and
+comment-toggle do not run. This can also withhold those assists after a true
+thematic break beginning with `---` and nonblank following content while no
+closer exists; the existing blank-second-line thematic-break rule remains.
+When front matter closes within the bound, use the first post-block line as
+the known outside-fence anchor and replay no delimiter-looking YAML lines.
+Neither path parses the full document or adds another parser dependency.
+Container-prefixed Markdown fences and the final native edit matrix remain
+separate acceptance work.
+
 ### 6.13 The ten built-in transforms (Slice 4c) — design pass, further split, decided before implementation
 
 **Baseline, verified against live master (`75b78e8`) before writing this design pass:** re-confirmed §6.11's own original baseline claim — a repo-wide grep for every transform's own obvious name (`Duplicate Line`, `Move Line`, `Sort Lines`, `Dedupe`, `Trim Trailing`, `toggleComment`, case-conversion helpers) finds nothing in `EditorCore` or the app target; none of the ten exist anywhere. Two pieces of real, reusable machinery already exist and change this slice's actual scope, found only by reading (not assuming) the current Tab/Shift-Tab implementation:
@@ -545,6 +621,10 @@ The other eight transforms (Duplicate/Delete/Move Up/Move Down/Join/Sort/Dedupe/
 - **Case conversion** (Uppercase / Lowercase / Capitalized Case, as a 3-item submenu, matching Xcode's own "Convert Case" wording) — requires real, non-empty selected text for every active selection (same `allSatisfy` convention as Sort/Dedupe above); N non-empty selections each get their own content's case transformed independently, N replacements in one transaction — no new selection-processing shape beyond `applyMultiCursorInsert`'s own established one, just `text.uppercased()`/`.lowercased()`/a per-word capitalization helper instead of a fixed inserted string.
 - **Increase Indent / Decrease Indent** — see the baseline note above: calls the existing `indentSelectedLines`/`unindentSelectedLines(text:selection:width:)` once per active selection (a bare caret counts as its own one-line "selection" for this purpose, matching Tab/Shift-Tab's own existing collapsed-caret behavior), using each selection's own effective profile/width exactly as `tabOutcome` already resolves it (`profile.defaultIndentWidth ?? configuration.indentationWidth`) — combining the N per-selection edits into one `EditorEditTransaction` is the only genuinely new code; the per-line indent logic itself is reused unchanged.
 - **Toggle Comment** — for each active selection/caret's touched line-block, "smart toggle" semantics (VSCode/Sublime/Xcode's shared convention): if every touched line already starts (after its own leading whitespace) with the effective profile's `lineComment` prefix, remove it from all of them; otherwise add it to every touched line that doesn't already have one. Falls back to wrapping the whole block with `blockComment` if the profile has `lineComment == nil` but a `blockComment` (e.g. a hypothetical line-comment-less format); disabled entirely (menu item off) if the profile has neither. Inside Markdown, "effective profile" is resolved exactly the way `MarkdownEditingAssistEngine`'s own `effectiveConfigurationAndProfile` already resolves it for typing (§6.12): the fenced language's own profile when the selection's own anchor line is inside a fence (Markdown itself has no line-comment syntax of its own to toggle), `.plainText`'s otherwise. Each active selection's own line-block is toggled independently using ITS OWN effective profile (a selection spanning both a fence and surrounding prose is scoped to whichever profile its own anchor line resolves to — not a mixed per-line profile within one selection, which would make the smart-toggle "already commented?" check itself ambiguous).
+
+**12 November 2026 safety correction to Toggle Comment.** The historical anchor-profile rule above allowed a selection spanning a fenced-code closer and prose to comment the closing marker itself. It also misclassified a quoted-code line when probing before its `>` prefix. Keep one profile per merged selection group, but refuse the whole command atomically when a group touches a fence delimiter, crosses code/prose context, or has an unresolved region. Probe the first and last selected lines plus at most 64 candidate delimiter lines with the bounded local classifier; beyond that cap, decline. Do not run a full Markdown parse or repeat the bounded backward scan for every ordinary selected line. Quoted-code lines decline until a container-aware comment insertion exists. Ordinary prose and code-only selections keep their existing behavior. The historical acceptance of delimiter corruption in the implementation log is superseded by this correction.
+
+**12 November 2026 list-contained fence correction.** The local classifier now replays bounded list containers as well as quote prefixes, maintaining each list item's content-indentation floor and matching a fence closer only inside the opener's container. A sibling/dedented item ends an unclosed list-contained fence; a blank line alone does not. This covers direct, nested, ordered, and quote-then-list fences without a full Markdown parse on a keypress. A mixed list-then-quote prefix, tab-indented list content, or more than 32 nested list markers returns unresolved and suppresses Markdown-only ambient assists. The scan retains the existing 5,000-line cap and front-matter anchor. These source tests do not replace installed-app E10 acceptance or establish general CommonMark conformance.
 
 **Command list and shortcuts, fixed here to avoid inventing a different one per sub-slice — checked against every `keyboardShortcut` already declared anywhere in `WorkspaceCommands*.swift` for conflicts:**
 
@@ -618,6 +698,89 @@ Exact per-file organization and the precise adversarial/performance test corpus 
 - **Slice 6c** — Recent Files (`RecentFileDocuments`, recording hook, "Open Recent File" menu) — the smallest, most self-contained addition, with no dependency on 6a/6b beyond both belonging to the same slice's overall goal.
 
 Exact per-file organization and the precise adversarial corpus for each (§17's own line: 100k-path indexing/query performance budgets; symlink-loop safety — the latter already covered by Slice 1's existing tests, confirmed above, not repeated here) are fixed at the point each of 6a/6b/6c actually begins, matching this epic's own established convention. Slice 6a begins next.
+
+#### F18 directory-read failure amendment — 9 November 2026
+
+At `ffe692fe`, a recursive `DirectoryWalker` catches a failed directory
+listing with `try?` and returns whatever paths it collected before the error.
+The index then reports `.ready`, even if a child folder was unreadable, so
+Quick Open and Folder Search can treat an incomplete search as complete. The
+existing post-walk root check only catches a missing or unreadable *root*.
+
+Keep the existing `TextSearch` ownership, detached walk, generation guard and
+`.failed` presentation. A directory-listing error anywhere in the walk must
+throw to `WorkspaceFileIndex.rebuild`; the current generation drops its old
+paths and reports the existing localized folder-read failure. A superseded
+generation may not publish that error. A genuinely empty readable root stays
+`.ready(count: 0)`. The test seam injects a failing child enumeration after
+a successful walk and proves that neither the partial result nor the previous
+snapshot remains actionable. This changes no indexing budget, symlink policy
+or per-keystroke disk behavior. An actual installed-app unavailable-folder
+journey remains for the native acceptance pass.
+
+#### F18 child-metadata failure amendment — 9 November 2026
+
+Even after a directory listing throws on failure, a listed child's
+`resourceValues(forKeys:)` read could still be caught with `try?` and silently
+skipped. A scan with an earlier indexed file would then publish a partial
+`.ready` snapshot. Propagate a failed primary child-metadata read through the
+same current-generation `.failed` path, clearing old and partial results.
+Inject the read failure after a previously indexed child to prove that the
+index never presents an incomplete snapshot as complete. This preserves the
+existing symlink, traversal-budget and disk-free query policies; it does not
+establish installed-app workspace acceptance.
+
+#### F18 symlink-target metadata failure amendment — 9 November 2026
+
+A symlinked directory is intentionally traversed and indexed under its
+lexical name. After the primary child metadata read is fixed, its separate
+target metadata lookup can still throw and be suppressed, making that linked
+subtree disappear while the index reports `.ready`. Use the same checked
+metadata reader for that lookup and propagate a failure to the current
+generation's `.failed` state. A deterministic test first proves the linked
+file is indexed, then fails only the target lookup and proves the earlier
+snapshot and partial paths are no longer actionable. Link traversal and loop
+limits remain as before; installed-app behavior is still unverified.
+
+#### F18 finite-index budget amendment — 9 November 2026
+
+The recursive walk has explicit path and directory limits so a linked
+workspace cannot expand without bound. Reaching either limit while more
+eligible work remains previously returned a partial array that the index
+published as `.ready`. The walker now throws at the first extra file or
+directory; the current generation clears its old and partial snapshot and
+reports `.failed`. Hitting the exact limit with no additional work still
+produces a complete ready snapshot. Controlled path and directory cases
+cover the failure and recovery after the workspace is reduced again. This
+does not establish live mutation freshness or installed-app presentation.
+
+#### F18 index-read atomicity amendment — 9 November 2026
+
+Quick Open previously queried paths and then read index status in a second
+actor call; Folder Search read status and then requested paths in a second
+call. A rebuild could complete between those awaits, pairing paths and
+status from different generations. The TextSearch index now returns state
+and the selected paths in one actor-isolated read: ranked `querySnapshot`
+for Quick Open and `allPathsSnapshot` for Folder Search. The latter still
+inherits the prior complete snapshot during `.building`, as the existing
+index contract permits, and returns the cleared paths with `.failed`.
+Controlled rebuild interleavings test both old mixed-pair orders and one
+captured search input. This only makes the initial read coherent; a row
+already displayed when the index later changes still needs an action-time
+validity gate under F18/F19, followed by the installed-app journey.
+
+#### F18/F19 Quick Open action-time admission — 9 November 2026
+
+Each published index path set now has a token that changes on success,
+failure and clear. Quick Open keeps that token with its displayed rows. A
+click or Return action reaches the index actor again and opens only when its
+state is ready, the token still matches and the selected visible path remains
+in that publication. Even a new successful rebuild containing the same
+relative path rejects an old row. The panel also captures the window's root
+request and lexical/access roots, checks them before and after the index
+await, and supplies the same guard to the document-open path's later awaits.
+This closes the source-level stale-row opening path without changing index
+refresh policy, filesystem symlink handling or installed-app acceptance.
 
 ### 6.16 Folder search + safe replace (Slice 7) — design pass, baseline and contract, decided before implementation
 
@@ -934,7 +1097,7 @@ Per the owner's explicit technical-dependency-order instruction, slices are orde
 - **10k** — implemented (#183 F22): Save As publishes against a destination baseline captured when the user authorises it — `DestinationBaseline.absent` (published with `RENAME_EXCL`, so a file created in the meantime is never replaced) or `.revision(r)` (ordinary conditional publication, rollback/recovery machinery unchanged, #174 metadata carried). Save As onto the document's own file keeps ordinary Save's external-writer protection while the document is healthy (backing available, no pending external change, known revision; recognised by path or physical identity, so a case-variant spelling cannot drop it); when the backing file is missing/unavailable or externally changed — the user resolving that by choosing the same name — the destination's current state is captured fresh, so recreating a deleted file and the explicit "replace" resolution still work. Symbolic-link destinations get no baseline (their behaviour is unchanged). On volumes without `RENAME_EXCL`, publication falls back to re-check plus `moveItem`. A refused publication surfaces as the usual save error and leaves the destination and the document untouched. Regression tests (file-store level and through `WorkspaceModel.saveAs`; the model-level race test fails without the fix).
 - **10l** — implemented (#183 F10, writer half): `DocumentWriter` remembers the encoding each accepted output revision was written in, and an ordinary queued save whose snapshot predates an accepted encoding/BOM save inherits that encoding instead of silently writing the old one back (an explicit encoding on the later save still wins; entries are compacted with the lineage). Regression tests (stale-snapshot save fails without the fix). **Carried forward:** F10's error-label half (name the effective encoding attempted) belongs with F15.
 - **10m** — implemented (#183 F02, persistence/identity boundaries): `String.isExactlyEqual(to:)` (UTF-8 scalar-for-scalar) replaces Swift's canonical `==` at the decisions that choose persistence, dirtiness or what to publish — `FileDocument.updatingText`/`rebindingSavedDestination`, external-snapshot reconciliation, successful-save descendant admission, Save As snapshot identity, recovery verification/migration, session-restore recovery comparison, the editor model→view admission guard, external-file reload/move comparisons and JSON-format verification — and Remove Duplicate Lines keys on bytes. Display/name comparisons are unchanged; no text is normalised. Regression tests use the audit's U+212B/U+00C5 pair (equal UTF-16 length, canonically equal) and fail without the fix. **Carried forward:** none identified; any further exact-source site found by the final review is an addition, not a gap.
-- **10n** — implemented for fingerprinted records (#183 F21): Recent Files refuses a different physical file after path reuse. Verified natively that bookmarks resolve path-first (once an unrelated file sits at the old path they resolve to *it*), so each record now also stores a stable fingerprint (inode + creation time) of the recorded file and `resolve` refuses — and drops — an entry whose resolved object no longer matches. For a file that merely moved, `resolve` and `pruneMissingFiles` follow the bookmark and adopt the new path as the alias (`RecentFolderRoots`' keep-the-alias-only-while-it-identifies-the-object rule) instead of discarding a bookmark that still finds the file. Legacy records without a fingerprint keep the old path-first behaviour; their path-reuse exposure needs an explicit migration or fail-closed policy before F21 can be treated as universal. `RecentFileDocumentsTests` covers path-reuse refusal, moved-file adoption, working aliases and pruning; [merged PR198](https://github.com/Joncallim/macdown_2/pull/198) reports the path-reuse test failing without the fix (source `ab631ab372716b104e8f8d6832ba944cc41d35f3`, merge `78065580394b54e960fce4b4b32966b1b8ac5053`). Its [build-and-test](https://github.com/Joncallim/macdown_2/actions/runs/36910507184), lint and inventory checks passed. The source and tests remain ancestors of MostlyText main `f62efb7a4e639c9eb206944d5cc92dec3d9db661`; issue #17's full native and release gates are not inferred.
+- **10n** — implemented for fingerprinted records (#183 F21): Recent Files refuses a different physical file after path reuse. Verified natively that bookmarks resolve path-first (once an unrelated file sits at the old path they resolve to *it*), so each record now also stores a stable fingerprint (inode + creation time) of the recorded file and `resolve` refuses — and drops — an entry whose resolved object no longer matches. For a file that merely moved, `resolve` and `pruneMissingFiles` follow the bookmark and adopt the new path as the alias (`RecentFolderRoots`' keep-the-alias-only-while-it-identifies-the-object rule) instead of discarding a bookmark that still finds the file. Legacy raw and wrapped bookmarks without a fingerprint are preserved as unresolved and excluded from actionable Open Recent entries, including during whole-install relocation, until the user chooses the file again; that explicit open records a fresh fingerprint and retires the matching old bookmark. This prevents silent path-first reuse while preserving the stored bookmark for reauthorization. During relocation, a fingerprinted record is rebound only while its original lexical path still identifies the recorded object; a reused source path leaves the old record intact. The legacy regression cases fail before and pass after this source policy, and a mapped path-reuse control passes; native Open Recent and migration UI acceptance remain unverified. `RecentFileDocumentsTests` covers path-reuse refusal, moved-file adoption, working aliases and pruning; [merged PR198](https://github.com/Joncallim/macdown_2/pull/198) reports the path-reuse test failing without the fix (source `ab631ab372716b104e8f8d6832ba944cc41d35f3`, merge `78065580394b54e960fce4b4b32966b1b8ac5053`). Its [build-and-test](https://github.com/Joncallim/macdown_2/actions/runs/36910507184), lint and inventory checks passed. The source and tests remain ancestors of MostlyText main `f62efb7a4e639c9eb206944d5cc92dec3d9db661`; issue #17's full native and release gates are not inferred.
 - **10o** — implemented (#183 F09): `EditorView.dismantleNSView` is now the `static` `NSViewRepresentable` requirement (the instance method was never the protocol witness, so SwiftUI's teardown never ran its observer/delegate cleanup). Because the text system outlives a mount, teardown only detaches what the dismantled mount still owns — the shared text view's delegate and the system's scroll view are left alone if a newer mount already took them. Tests dispatch through the generic `NSViewRepresentable` constraint (a direct instance call would have missed the defect) and cover current-mount teardown and older-mount-must-not-detach-newer; the existing real-mount lifecycle test now dispatches the same way. Coordinated with #173 (reveal lifecycle), which keeps its own scope.
 - **10p** — implemented (#183 F05): a same-tab Save As that moves unchanged text into a format with a parser (e.g. `.txt` → `.json`/`.md`) now starts that format's initial analysis — the `document.format.id` change handler runs the same load path as a fresh open instead of only re-reading outline state that had never been computed. A mounted-view regression (`DocumentEditorSplitView` in a hosting view, format switched with identical text) fails without the fix; it proves the mounted symptom the audit left native-qualified. A syntax-only override still does not enable another format's preview.
 - **10q** — implemented (#183 F15, both directions): (1) a Save/Save As failure for the latest save of the same document lifetime is now surfaced even if the user typed — or edited and undid — while the write was in flight (`shouldSurfaceSaveFailure` no longer requires the attempted text to still be current; newer-save/other-lifetime/closed-owner suppression and the recovery-location error are unchanged; text, undo and recovery are untouched and the document stays dirty). (2) Error publication/clearing is operation-owned: `WorkspaceModel.errorRevision` is bumped on every `lastError` assignment, `SaveContext` captures it when a save begins, and awaited-cleanup/retry success only clears the displayed error if it is unchanged since (`clearLastError(ifUnchangedSince:)`); user dismissal and an operation's own failures still assign directly. Regression tests (visible failure after an edit and after edit+undo; a late success does not erase another operation's error — fails without the fix). **Carried forward:** naming the *effective* encoding in an encoding failure after F10 inheritance, and extending the token to the open/close domains if the final review finds a path.

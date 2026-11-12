@@ -103,6 +103,18 @@ bytes. Both paths reject a stale attached receipt. Source resolver grants/TOCTOU
 remain unchanged and open. See export-resource-slots-and-publication.md for the
 bounded publication unit and remaining #118/#183 gates.
 
+## 2026-11-11 measured HTML memory amendment
+
+The 256 MiB complete-document ceiling below was provisional. The actual
+macOS 26 Release ramp reached 1.39 GiB app peak RSS at a near-256 MiB output.
+New self-contained and companion HTML assembly now use a 128 MiB final UTF-8
+ceiling, with a near-boundary success/refusal ramp. Existing authenticated
+managed outputs and PDF publication retain their separate 256 MiB bound, so
+older recovery and PDF admission are not narrowed accidentally. Source,
+single/aggregate-resource and occurrence ceilings are unchanged. See
+`planning/downstream/export-final-html-memory-cap-2026-11-11.md` for exact
+measurements and the remaining final-candidate evidence.
+
 ## 2026-11-02 final HTML assembly amendment
 
 `ExportHTMLWriter.selfContainedHTML` and `companionHTML` now throw on final

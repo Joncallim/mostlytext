@@ -10,12 +10,30 @@ struct TextFilterFixtureCleanupSafetyTests {
     }
 
     private actor CleanupProbe {
-        private(set) var cleanupJoinStarted = false
+        private(set) var cleanupJoinStartCount = 0
         private(set) var cleanupCallerFinishedCount = 0
         private(set) var taskFinished = false
+        private var releaseRequested = false
+        private var joinWaiters: [CheckedContinuation<Void, Never>] = []
 
-        func recordCleanupJoinStarted() {
-            cleanupJoinStarted = true
+        func holdCleanupJoin() async {
+            cleanupJoinStartCount += 1
+            await withCheckedContinuation { continuation in
+                if releaseRequested {
+                    continuation.resume()
+                } else {
+                    joinWaiters.append(continuation)
+                }
+            }
+        }
+
+        func releaseCleanupJoin() {
+            releaseRequested = true
+            let waiters = joinWaiters
+            joinWaiters.removeAll()
+            for waiter in waiters {
+                waiter.resume()
+            }
         }
 
         func recordCleanupCallerFinished() {
@@ -33,8 +51,7 @@ struct TextFilterFixtureCleanupSafetyTests {
         try await owner.registerCleanup(
             cancel: {},
             join: {
-                await probe.recordCleanupJoinStarted()
-                try? await Task.sleep(for: .milliseconds(150))
+                await probe.holdCleanupJoin()
                 return .completed(nil)
             }
         )
@@ -50,19 +67,20 @@ struct TextFilterFixtureCleanupSafetyTests {
             await probe.recordCleanupCallerFinished()
         }
 
-        let deadline = ContinuousClock.now.advanced(by: .seconds(1))
+        let deadline = ContinuousClock.now.advanced(by: .seconds(5))
         while ContinuousClock.now < deadline {
-            if await probe.cleanupJoinStarted {
+            if await probe.cleanupJoinStartCount > 0 {
                 break
             }
-            try await Task.sleep(for: .milliseconds(5))
+            try? await Task.sleep(for: .milliseconds(5))
         }
-        #expect(await probe.cleanupJoinStarted)
-        try await Task.sleep(for: .milliseconds(20))
+        #expect(await probe.cleanupJoinStartCount == 1)
         #expect(await probe.cleanupCallerFinishedCount == 0)
+        await probe.releaseCleanupJoin()
 
         _ = await first.value
         _ = await second.value
+        #expect(await probe.cleanupJoinStartCount == 1)
         #expect(await probe.cleanupCallerFinishedCount == 2)
     }
 

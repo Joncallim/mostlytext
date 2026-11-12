@@ -54,6 +54,7 @@ struct MathPreviewNavigationTests {
         }
         application.activate()
         let window = try #require(prepared.fixture.controller.window)
+        window.animationBehavior = .none
         window.makeKeyAndOrderFront(nil)
         window.makeKey()
         try #require(application.keyWindow === window, "Native positive control must own the key window")
@@ -139,6 +140,7 @@ struct MathPreviewNavigationTests {
         let originalWindow = try activate(prepared)
         let other = NSWindow(contentRect: .init(x: 0, y: 0, width: 200, height: 100),
                              styleMask: [.titled], backing: .buffered, defer: false)
+        other.animationBehavior = .none
         other.isReleasedWhenClosed = false
         defer { other.orderOut(nil); other.close(); originalWindow.orderOut(nil) }
         other.makeKeyAndOrderFront(nil)

@@ -1,4 +1,5 @@
 import Foundation
+import LocalResourceAccess
 @testable import MacDown2
 import Preview
 import Testing
@@ -35,6 +36,7 @@ struct HTMLPreviewSchemeDeliveryTests {
             } else {
                 _ = fixture.handler.install(
                     HTMLPreviewRequest(source: "replacement", baseURL: nil),
+                    documentURL: nil,
                     documentID: "replacement", recoveryEpoch: UUID(), generation: 2
                 )
             }
@@ -52,6 +54,7 @@ struct HTMLPreviewSchemeDeliveryTests {
             as? PreviewSchemeHandler)
         let url = try #require(handler.install(
             HTMLPreviewRequest(source: "disposal-control", baseURL: nil),
+            documentURL: nil,
             documentID: "disposal-control", recoveryEpoch: UUID(), generation: 1
         ))
         let task = RecordedTask(url: url)
@@ -152,7 +155,7 @@ struct HTMLPreviewSchemeDeliveryTests {
         #expect(html.contains("delivery-control"))
     }
 
-    @Test func lateTasksCannotBorrowAnotherDocumentsResourceRoot() throws {
+    @Test func lateTasksCannotBorrowAnotherDocumentsResourceRoot() async throws {
         let fixture = Fixture()
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent("preview-task-\(UUID().uuidString)", isDirectory: true)
@@ -166,11 +169,13 @@ struct HTMLPreviewSchemeDeliveryTests {
 
         let oldURL = try #require(fixture.handler.install(
             HTMLPreviewRequest(source: "A", baseURL: rootA),
+            documentURL: rootA.appendingPathComponent("story.html"),
             documentID: "A", recoveryEpoch: UUID(), generation: 1
         ))
         let oldTask = RecordedTask(url: oldURL.appendingPathComponent("asset.txt"))
         let currentURL = try #require(fixture.handler.install(
             HTMLPreviewRequest(source: "B", baseURL: rootB),
+            documentURL: rootB.appendingPathComponent("story.html"),
             documentID: "B", recoveryEpoch: UUID(), generation: 1
         ))
         #expect(oldURL.host != currentURL.host)
@@ -180,42 +185,143 @@ struct HTMLPreviewSchemeDeliveryTests {
 
         let currentTask = RecordedTask(url: currentURL.appendingPathComponent("asset.txt"))
         fixture.handler.webView(fixture.view, start: currentTask)
+        try await waitForTerminal(currentTask)
         #expect(currentTask.events == ["response", "data", "finish"])
         #expect(String(bytes: currentTask.bytes, encoding: .utf8) == "root-B-sentinel")
     }
+}
 
-    @Test func repeatedSaveAndDisposalRejectEarlierMainDocumentTasks() throws {
+extension HTMLPreviewSchemeDeliveryTests {
+    @Test func activeResourceReadPinsRootAndRejectsAnOutsideSymlinkSwap() async throws {
         let fixture = Fixture()
-        let request = HTMLPreviewRequest(source: "unchanged", baseURL: nil)
-        let epoch = UUID()
-        let firstURL = try #require(fixture.handler.install(
-            request, documentID: "same-document", recoveryEpoch: epoch, generation: 1
-        ))
-        let secondURL = try #require(fixture.handler.install(
-            request, documentID: "same-document", recoveryEpoch: epoch, generation: 2
-        ))
-        #expect(firstURL != secondURL)
-        let oldTask = RecordedTask(url: firstURL)
-        fixture.handler.webView(fixture.view, start: oldTask)
-        #expect(oldTask.events == ["failure"])
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("preview-contained-\(UUID().uuidString)", isDirectory: true)
+        let root = directory.appendingPathComponent("root", isDirectory: true)
+        let outside = directory.appendingPathComponent("outside", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: outside, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        try Data("inside".utf8).write(to: root.appendingPathComponent("actual.txt"))
+        try Data("outside-sentinel".utf8).write(to: outside.appendingPathComponent("secret.txt"))
+        let alias = root.appendingPathComponent("alias.txt")
+        try FileManager.default.createSymbolicLink(
+            at: alias, withDestinationURL: root.appendingPathComponent("actual.txt")
+        )
 
+        let mainURL = try #require(fixture.handler.install(
+            HTMLPreviewRequest(source: "root", baseURL: root),
+            documentURL: root.appendingPathComponent("story.html"),
+            documentID: "root", recoveryEpoch: UUID(), generation: 1
+        ))
+        let allowed = RecordedTask(url: mainURL.appendingPathComponent("alias.txt"))
+        fixture.handler.webView(fixture.view, start: allowed)
+        try await waitForTerminal(allowed)
+        #expect(allowed.events == ["response", "data", "finish"])
+        #expect(String(bytes: allowed.bytes, encoding: .utf8) == "inside",
+                "a legitimate in-root symlink still resolves to its target")
+
+        fixture.handler.beforeResourceRead = {
+            try? FileManager.default.removeItem(at: alias)
+            try? FileManager.default.createSymbolicLink(
+                at: alias, withDestinationURL: outside.appendingPathComponent("secret.txt")
+            )
+        }
+        let replaced = RecordedTask(url: mainURL.appendingPathComponent("alias.txt"))
+        fixture.handler.webView(fixture.view, start: replaced)
+        try await waitForTerminal(replaced)
+        #expect(replaced.events == ["failure"])
+        #expect(replaced.bytes.isEmpty)
+        fixture.handler.beforeResourceRead = nil
+
+        try FileManager.default.moveItem(at: root, to: directory.appendingPathComponent("moved"))
+        try FileManager.default.createSymbolicLink(at: root, withDestinationURL: outside)
+        let redirectedRoot = RecordedTask(url: mainURL.appendingPathComponent("secret.txt"))
+        fixture.handler.webView(fixture.view, start: redirectedRoot)
+        try await waitForTerminal(redirectedRoot)
+        #expect(redirectedRoot.events == ["failure"])
+        #expect(redirectedRoot.bytes.isEmpty,
+                "a later pathname replacement cannot retarget the pinned load root")
         fixture.handler.retire()
-        let disposedTask = RecordedTask(url: secondURL)
-        fixture.handler.webView(fixture.view, start: disposedTask)
-        #expect(disposedTask.events == ["failure"])
+    }
+
+    @Test func activeResourcePathIsPercentDecodedExactlyOnce() async throws {
+        let fixture = Fixture()
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("preview-encoded-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        try Data("literal-name".utf8).write(to: root.appendingPathComponent("literal%2e.txt"))
+        try Data("double-decoded-name".utf8).write(to: root.appendingPathComponent("literal..txt"))
+        let mainURL = try #require(fixture.handler.install(
+            HTMLPreviewRequest(source: "root", baseURL: root),
+            documentURL: root.appendingPathComponent("story.html"),
+            documentID: "root", recoveryEpoch: UUID(), generation: 1
+        ))
+        let encoded = try #require(URL(string: mainURL.absoluteString + "literal%252e.txt"))
+        let task = RecordedTask(url: encoded)
+        fixture.handler.webView(fixture.view, start: task)
+        try await waitForTerminal(task)
+        #expect(task.events == ["response", "data", "finish"])
+        #expect(String(bytes: task.bytes, encoding: .utf8) == "literal-name")
+        fixture.handler.retire()
+    }
+
+    @Test func retiringTheActiveResourceLoadRevokesDeliveryAfterResponse() async throws {
+        let fixture = Fixture()
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("preview-retire-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        try Data("resource".utf8).write(to: root.appendingPathComponent("asset.txt"))
+        let mainURL = try #require(fixture.handler.install(
+            HTMLPreviewRequest(source: "root", baseURL: root),
+            documentURL: root.appendingPathComponent("story.html"),
+            documentID: "root", recoveryEpoch: UUID(), generation: 1
+        ))
+        let task = RecordedTask(url: mainURL.appendingPathComponent("asset.txt"))
+        task.onResponse = { fixture.handler.retire() }
+        fixture.handler.webView(fixture.view, start: task)
+        try await waitForEventCount(1, on: task)
+        #expect(task.events == ["response"])
+        #expect(task.bytes.isEmpty)
+        task.clearCallbacks()
     }
 }
 
 private extension HTMLPreviewSchemeDeliveryTests {
+    func waitForTerminal(_ task: RecordedTask) async throws {
+        let deadline = ContinuousClock.now.advanced(by: .seconds(3))
+        while !task.events.contains("finish"), !task.events.contains("failure") {
+            guard ContinuousClock.now < deadline else {
+                Issue.record("Active HTML resource task did not reach a terminal callback")
+                return
+            }
+            try await Task.sleep(for: .milliseconds(5))
+        }
+    }
+
+    func waitForEventCount(_ count: Int, on task: RecordedTask) async throws {
+        let deadline = ContinuousClock.now.advanced(by: .seconds(3))
+        while task.events.count < count {
+            guard ContinuousClock.now < deadline else {
+                Issue.record("Active HTML resource task did not deliver its expected callback")
+                return
+            }
+            try await Task.sleep(for: .milliseconds(5))
+        }
+    }
+
     @MainActor
     final class Fixture {
-        let handler = PreviewSchemeHandler()
+        let handler: PreviewSchemeHandler
         let view = makeView()
         let mainURL: URL
 
-        init() {
+        init(admission: PreviewResourceAdmission = .shared) {
+            handler = PreviewSchemeHandler(admission: admission)
             guard let url = handler.install(
                 HTMLPreviewRequest(source: "<p>delivery-control</p>", baseURL: nil),
+                documentURL: nil,
                 documentID: "delivery-control", recoveryEpoch: UUID(), generation: 1
             ) else { preconditionFailure("Invalid fixture URL") }
             mainURL = url

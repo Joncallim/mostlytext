@@ -37,9 +37,9 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-argument-parser", exact: "1.8.2"),
         .package(
             url: "https://github.com/Joncallim/SwiftTreeSitter",
-            revision: "76f93e7e325dcd05561a13ed63bcc92cb85be8da"
+            revision: "7cf83c59f1d7b6fdbd6ae3b0e212c9824fbf103d"
         ),
-        .package(url: "https://github.com/Joncallim/Neon", revision: "6074d1a50c7076b2e59d8d0619554b542e096afa"),
+        .package(url: "https://github.com/Joncallim/Neon", revision: "f702323168da9c6f0fb8120b844e81fd025f2124"),
         .package(url: "https://github.com/tree-sitter/tree-sitter-json", from: "0.24.8"),
         .package(url: "https://github.com/tree-sitter/tree-sitter-html", from: "0.23.2"),
         // EPIC-11 Gate 5 grammars. Every grammar is pinned exactly; see
@@ -80,7 +80,7 @@ let package = Package(
         .package(url: "https://github.com/Joncallim/swift-cmark", revision: "ff6d22e5eeacccf38a8276b27ddb9dc31ab16f5a"),
         .package(url: "https://github.com/scinfu/SwiftSoup", exact: "2.13.9"),
         .package(url: "https://github.com/jpsim/Yams", exact: "6.2.2"),
-        .package(url: "https://github.com/Joncallim/textual", revision: "dd123d4f7052d84032cafb22c62cd467916518dd"),
+        .package(url: "https://github.com/Joncallim/textual", revision: "4bc5a45e384b596e0c1448888c8534a6df436c57"),
         // Match Textual's immutable engine owner/revision, so Preview and Export
         // share one parser, comment correction and structured body-inspection API.
         .package(
@@ -250,7 +250,7 @@ let package = Package(
         .testTarget(
             name: "ExportDiagramIntegrationTests",
             dependencies: [
-                "ExportService", "Contributions", "MarkdownEngine", "Themes", "Diagrams", "DiagramRendering",
+                "ExportService", "Contributions", "MarkdownEngine", "Preview", "Themes", "Diagrams", "DiagramRendering",
                 "DiagramsD2", "D2Rendering", "DiagramsGraphviz", "GraphvizRendering",
             ]
         ),

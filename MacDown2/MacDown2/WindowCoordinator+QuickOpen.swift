@@ -20,7 +20,7 @@ extension WindowCoordinator {
 
         let originWindow = NSApp.keyWindow
         guard let originController = controllers.first(where: { $0.window == originWindow }),
-              originController.fileTreeModel.root != nil
+              originController.currentQuickOpenOrigin != nil
         else { return }
 
         let created = QuickOpenPanel(

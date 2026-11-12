@@ -12,6 +12,7 @@ comparisons are history; do not take production geometry from them.
 | Outlined wordmark/lockup | slant/production/out/mostlytext-wordmark.svg and mostlytext-lockup.svg | Approved Inter Tight outlines, 10° total slant; no font binary needed |
 | Production geometry | slant/production/geometry.json | Generator input; see its README for exact optical corrections/rebuild |
 | macOS app icon | ../../MacDown2/MacDown2/AppIcon.icon | Byte-identical integration of D-028's MostlyText-lean10.icon; native acceptance is separate |
+| Markdown document icon | document-icon/build.py and ../../MacDown2/MacDown2/MarkdownDocument.icns | Owner-approved Slant-on-sheet composition; reproducible app resource and Markdown plist wiring are integrated, while installed Finder/Open With acceptance remains open |
 | Repository preview | social/mostlytext-repository-preview.svg and .jpg | Opaque repository-sharing canvas built from the existing lockup; not a new logo variant |
 
 [Provenance](PROVENANCE.md) records the original mark and outlined wordmark's
@@ -39,7 +40,10 @@ readback retained under `CORTANA-Builds/visible-brand-20261104`. This supersedes
 the 3 November failed-upload/locked-chooser status; that earlier attempt did not
 establish installation.
 
-This asset handoff completes source availability and naming. It does not accept
-fresh Dock/Finder appearances, document icons, Quick Look, screenshot coverage,
-accessibility or a signed release. Gates 3 and 4 remain waived/deferred as D-031
-records, with no legal-clearance claim. See [identity handoff](../../planning/IDENTITY.md).
+This asset handoff completes source availability and naming. The
+[document-icon build and verification guide](document-icon/README.md) records
+its approved composition and reproducible source checks. It does not accept
+fresh Dock/Finder appearances, installed document-icon presentation, Quick Look,
+screenshot coverage, accessibility or a signed release. Gates 3 and 4 remain
+waived/deferred as D-031 records, with no legal-clearance claim. See the
+[identity handoff](../../planning/IDENTITY.md).

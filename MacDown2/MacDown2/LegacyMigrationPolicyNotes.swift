@@ -19,7 +19,8 @@ struct LegacyMigrationPolicyNotes: View {
                         case let .currentCapabilityPolicy(policy, value):
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(explanation(policy))
-                                Text(value ? "Previously enabled" : "Previously disabled")
+                                Text(value ? LocalizedStringKey("Previously enabled") :
+                                    LocalizedStringKey("Previously disabled"))
                                     .font(.caption).foregroundStyle(.secondary)
                             }
                         case let .requiresFreshUpdateConsent(value):
@@ -28,8 +29,8 @@ struct LegacyMigrationPolicyNotes: View {
                                     LocalizedStringKey("Update channels require fresh consent. " +
                                         "No old feed, key or pre-release choice is imported.")
                                 )
-                                Text(value ? "Pre-release updates were previously enabled." :
-                                    "Pre-release updates were previously disabled.")
+                                Text(value ? LocalizedStringKey("Pre-release updates were previously enabled.") :
+                                    LocalizedStringKey("Pre-release updates were previously disabled."))
                                     .font(.caption).foregroundStyle(.secondary)
                             }
                         default: EmptyView()

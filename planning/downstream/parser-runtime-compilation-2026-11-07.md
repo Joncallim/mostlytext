@@ -91,3 +91,17 @@ execution occurs. Complete evidence and the preceding503.522292ms failure are
 retained in planning/downstream/evidence/parser-runtime-compilation-2026-11-07.
 Fresh exact-head full app/package and every required native configuration and
 integration gate remain mandatory before merge; local improvements waive none.
+
+## Combined qualification amendment — 7 November 2026
+
+The owner-authorised E08 integration follows
+[release-source-convergence-2026-11-07.md](release-source-convergence-2026-11-07.md).
+The exact unit history remains an ancestor of the combined source. Incorporate
+all reviewed units before publication of the integration candidate and require
+all original positive, negative, mutation/restoration, source/pin and full CI
+gates again on that single final source. This supersedes a requirement to merge
+each intermediate source separately before assembling the next unit. Main
+remains unchanged until the complete combined candidate qualifies. Original
+failed/pending results retain their own SHA and outcome; no historical receipt
+is retargeted or ceiling/deadline/selected assertion weakened. Owner-account
+native execution and final release gates remain held.

@@ -1,0 +1,50 @@
+{
+  "head": "a8773155b20747d25a2c1a501d0a89b311c80a98",
+  "full_sources": 1618,
+  "pins": 24,
+  "initial55functions17suites_passed": true,
+  "calibration8positives56negativesAndCapturedBluePassed": true,
+  "all8gatedActualNativePNGGenerationCopiesPassed": true,
+  "selectionOwnedStatus": {
+    "returncode": 0,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 18.318214958,
+    "app_cleanup_requested": []
+  },
+  "phase_results": [
+    {
+      "phase": "revision-mutant",
+      "status": {
+        "returncode": 65,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 30.166200249999974,
+        "app_cleanup_requested": []
+      },
+      "issues": [
+        "\u2718 Test aNewParsedRevisionReplacesTheLoadWithoutAnotherModelEdit() recorded an issue at SecuredMarkdownMountedTests.swift:226:21: Issue recorded",
+        "\u2718 Test aNewParsedRevisionReplacesTheLoadWithoutAnotherModelEdit() recorded an issue at SecuredMarkdownMountedTests.swift:70:6: Caught error: limitExceeded"
+      ],
+      "native_app_digest": "8d3120ac0a09354ed85fa6308e11ba1eee48ee1725369221a26fcd6a6172364e"
+    },
+    {
+      "phase": "revision-restored",
+      "status": {
+        "returncode": 0,
+        "timed_out": false,
+        "cancelled": false,
+        "elapsed_seconds": 14.34096220899994,
+        "app_cleanup_requested": []
+      },
+      "issues": [],
+      "native_app_digest": "b53b57ad88a4e58916caa46f4c39068eb3dc8f15c79febb11775804055480077"
+    }
+  ],
+  "scope": "One changed-input historical-source window-lifetime discriminator passes55/17, calibrated8images/56negative controls, expected real revision-mutant failure and restored3/1. Full source/pins/native architecture/owned outcomes verified. No copy failure or unexpected close reproduced; three explicit original-fixture stop events show only observe. Extra observed windows do not all have stop records. Callback registration/timing is itself changed diagnostic input. No causal history, production remediation, original0557 qualification, disappearance pair or final artifact acceptance.",
+  "three_original_fixture_stop_events_without_observed_prior_close": [
+    "MOUNTED_COPY_WINDOW_EVENTS_AT_STOP window=ObjectIdentifier(0x0000000c720b4280) events=[\"observe host=ObjectIdentifier(0x0000000c772f6400) window=ObjectIdentifier(0x0000000c720b4280) uptime=802.1591706666667\"]",
+    "MOUNTED_COPY_WINDOW_EVENTS_AT_STOP window=ObjectIdentifier(0x0000000c722a2800) events=[\"observe host=ObjectIdentifier(0x0000000c772f7000) window=ObjectIdentifier(0x0000000c722a2800) uptime=802.3370031666667\"]",
+    "MOUNTED_COPY_WINDOW_EVENTS_AT_STOP window=ObjectIdentifier(0x0000000c722c5b80) events=[\"observe host=ObjectIdentifier(0x0000000c772a5800) window=ObjectIdentifier(0x0000000c722c5b80) uptime=802.4684960833334\"]"
+  ]
+}

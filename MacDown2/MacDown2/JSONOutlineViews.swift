@@ -21,7 +21,7 @@ struct JSONOutlineRowView: View {
                         .frame(width: 12, height: 12)
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel(isCollapsed ? "Expand" : "Collapse")
+                .accessibilityLabel(isCollapsed ? Text("Expand") : Text("Collapse"))
             }
             Text(verbatim: item.title.isEmpty ? String(localized: "Untitled section") : item.title)
                 .fontWeight(isCurrent ? .semibold : .regular)

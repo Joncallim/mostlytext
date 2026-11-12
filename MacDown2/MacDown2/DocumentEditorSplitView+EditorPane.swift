@@ -23,6 +23,9 @@ extension DocumentEditorSplitView {
             if let findModel = findStore.existingModel(for: identity), findModel.isActive {
                 FindBarView(
                     model: findModel,
+                    recentQueries: findStore.recentQueries,
+                    onRememberQuery: { findStore.rememberQuery($0) },
+                    onClearRecentQueries: { findStore.clearRecentQueries() },
                     text: text,
                     resolvedText: { editorStore.existingSystem(for: identity)?.text ?? text },
                     resolvedSelection: { editorStore.existingSystem(for: identity)?.selectedRange },

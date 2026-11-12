@@ -32,6 +32,7 @@ final class PreviewContributionSession {
     private(set) var composition: PreviewContributionComposition = .empty
     private(set) var headingBindingID: UUID?
     private var currentTaskID: PreviewContributionTaskID?
+    private var publishedTaskID: PreviewContributionTaskID?
 
     /// Runs the contribution registry and composes `baseBlocks` for one
     /// document snapshot. Only the call whose `taskID` is still current at
@@ -77,8 +78,13 @@ final class PreviewContributionSession {
     }
 
     /// The blocks Preview should actually render right now.
-    func displayedBlocks(baseBlocks: [PreviewBlock]?, currentRevision: Int?) -> [PreviewBlock]? {
-        PreviewCompositionDisplay.blocks(
+    func displayedBlocks(
+        baseBlocks: [PreviewBlock]?, currentRevision: Int?, documentIdentity: UUID? = nil
+    ) -> [PreviewBlock]? {
+        if let documentIdentity, publishedTaskID?.documentIdentity != documentIdentity {
+            return baseBlocks
+        }
+        return PreviewCompositionDisplay.blocks(
             composition: composition,
             baseBlocks: baseBlocks,
             currentRevision: currentRevision
@@ -86,12 +92,18 @@ final class PreviewContributionSession {
     }
 
     /// The diagnostics Preview should actually show right now.
-    func displayedDiagnostics(currentRevision: Int?) -> [PreviewContributionDiagnostic] {
-        PreviewCompositionDisplay.diagnostics(composition: composition, currentRevision: currentRevision)
+    func displayedDiagnostics(
+        currentRevision: Int?, documentIdentity: UUID? = nil
+    ) -> [PreviewContributionDiagnostic] {
+        if let documentIdentity, publishedTaskID?.documentIdentity != documentIdentity {
+            return []
+        }
+        return PreviewCompositionDisplay.diagnostics(composition: composition, currentRevision: currentRevision)
     }
 
     private func publishIfCurrent(taskID: PreviewContributionTaskID, _ composition: PreviewContributionComposition) {
         guard currentTaskID == taskID else { return }
+        publishedTaskID = taskID
         self.composition = composition
         headingBindingID = taskID.headingBindingID
     }

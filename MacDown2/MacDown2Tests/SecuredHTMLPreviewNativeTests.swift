@@ -11,6 +11,70 @@ import WebKit
 @Suite("Secured HTML native routing", .serialized)
 @MainActor
 struct SecuredHTMLPreviewNativeTests {
+    @Test func staleNavigationCallbacksCannotSettleARecoveredSavedPage() async throws {
+        let fixture = try HTMLResponseEncodingFixture()
+        defer { fixture.dispose() }
+        let selection = try #require(PreviewResourceFolderSelection.fixture(
+            documentURL: fixture.documentURL, folderURL: fixture.folder
+        ))
+        let origin = try #require(fixture.owner.beginSelection(for: fixture.document))
+        try await fixture.owner.install(selection, from: origin) { fixture.document }
+
+        fixture.coordinator.update(host: fixture.host, document: fixture.document,
+                                   tabID: fixture.tabID, owner: fixture.owner)
+        let page = try await fixture.page(title: "Fixture")
+        let handler = try #require(page.configuration.urlSchemeHandler(
+            forURLScheme: HTMLPreviewNavigationPolicy.previewURLScheme
+        ) as? BoundedHTMLPreviewHandler)
+        let token = try #require(handler.load.grant)
+        #expect(fixture.owner.owns(token, for: .html))
+
+        // Both tokens come from the mounted WebKit view. Reporting a process death starts a new
+        // recovery navigation; callbacks from the previous load must not settle or retire it.
+        let stale = try #require(page.reload())
+        fixture.coordinator.webViewWebContentProcessDidTerminate(page)
+        let current = try #require(fixture.coordinator.pendingNavigation(in: page))
+        #expect(current !== stale)
+        let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotLoadFromNetwork,
+                            userInfo: [NSURLErrorFailingURLErrorKey: handler.load.mainURL])
+        fixture.coordinator.webView(page, didFinish: stale)
+        fixture.coordinator.webView(page, didFail: stale, withError: error)
+        fixture.coordinator.webView(page, didFailProvisionalNavigation: stale, withError: error)
+        #expect(fixture.coordinator.pendingNavigation(in: page) === current)
+        #expect(fixture.host.subviews.contains(page))
+        #expect(fixture.owner.owns(token, for: .html))
+
+        fixture.coordinator.webView(page, didFailProvisionalNavigation: current, withError: error)
+        #expect(fixture.coordinator.pendingNavigation(in: page) == nil)
+        #expect(!fixture.host.subviews.contains(page))
+        #expect(token.isRevoked)
+        #expect(!fixture.owner.owns(token, for: .html))
+        #expect(fixture.owner.hasGrant(for: fixture.document))
+    }
+
+    @Test func disposingSavedPageRetiresItsWindowLoadWithoutClosingTheFolderGrant() async throws {
+        let fixture = try HTMLResponseEncodingFixture()
+        defer { fixture.dispose() }
+        let selection = try #require(PreviewResourceFolderSelection.fixture(
+            documentURL: fixture.documentURL, folderURL: fixture.folder
+        ))
+        let origin = try #require(fixture.owner.beginSelection(for: fixture.document))
+        try await fixture.owner.install(selection, from: origin) { fixture.document }
+
+        fixture.coordinator.update(host: fixture.host, document: fixture.document,
+                                   tabID: fixture.tabID, owner: fixture.owner)
+        let page = try await fixture.page(title: "Fixture")
+        let handler = try #require(page.configuration.urlSchemeHandler(
+            forURLScheme: HTMLPreviewNavigationPolicy.previewURLScheme
+        ) as? BoundedHTMLPreviewHandler)
+        let token = try #require(handler.load.grant)
+        #expect(fixture.owner.owns(token, for: .html))
+        fixture.coordinator.dispose(host: fixture.host)
+        #expect(token.isRevoked)
+        #expect(!fixture.owner.owns(token, for: .html))
+        #expect(fixture.owner.hasGrant(for: fixture.document))
+    }
+
     @Test func savedRevisionsReplaceTheWebViewAndDeliverTheirOwnMainBytes() async throws {
         let tabID = UUID()
         var document = FileDocument(text: "<html><head><title>Preview A</title></head><body>A</body></html>")
@@ -21,6 +85,7 @@ struct SecuredHTMLPreviewNativeTests {
         let window = NSWindow(
             contentRect: host.bounds, styleMask: [.titled], backing: .buffered, defer: false
         )
+        window.animationBehavior = .none
         window.contentView = host
         window.makeKeyAndOrderFront(nil)
         defer {
@@ -36,6 +101,7 @@ struct SecuredHTMLPreviewNativeTests {
         ) as? BoundedHTMLPreviewHandler)
         #expect(first.url == firstHandler.load.mainURL)
         #expect(String(data: firstHandler.load.mainData, encoding: .utf8)?.contains("Preview A") == true)
+        assertResponsePolicy(coordinator, current: first, currentURL: firstHandler.load.mainURL)
 
         document = document.updatingText("<html><head><title>Preview B</title></head><body>B</body></html>")
             .markClean()
@@ -47,6 +113,43 @@ struct SecuredHTMLPreviewNativeTests {
         #expect(second !== first)
         #expect(secondHandler.load.authority != firstHandler.load.authority)
         #expect(second.url == secondHandler.load.mainURL)
+        assertResponsePolicy(
+            coordinator, current: second, currentURL: secondHandler.load.mainURL,
+            stale: first, staleURL: firstHandler.load.mainURL
+        )
+        coordinator.dispose(host: host)
+        #expect(coordinator.responsePolicy(
+            for: second, url: secondHandler.load.mainURL, canShowMIMEType: true
+        ) == .cancel)
+    }
+
+    private func assertResponsePolicy(
+        _ coordinator: SecuredHTMLPreviewView.Coordinator, current: WKWebView, currentURL: URL,
+        stale: WKWebView? = nil, staleURL: URL? = nil
+    ) {
+        #expect(coordinator.responsePolicy(for: current, url: currentURL, canShowMIMEType: true) == .allow)
+        #expect(coordinator.responsePolicy(
+            for: current, url: currentURL.appendingPathComponent("local.svg"), canShowMIMEType: true
+        ) == .allow)
+        #expect(coordinator.responsePolicy(for: current, url: currentURL, canShowMIMEType: false) == .cancel)
+        #expect(coordinator.responsePolicy(for: current, url: nil, canShowMIMEType: true) == .cancel)
+        #expect(coordinator.responsePolicy(
+            for: current, url: URL(string: "https://example.invalid/"), canShowMIMEType: true
+        ) == .cancel)
+        var userInfoURL = URLComponents(url: currentURL, resolvingAgainstBaseURL: false)
+        userInfoURL?.user = "forged"
+        #expect(userInfoURL?.url != nil)
+        #expect(coordinator.responsePolicy(
+            for: current, url: userInfoURL?.url, canShowMIMEType: true
+        ) == .cancel)
+        var portURL = URLComponents(url: currentURL, resolvingAgainstBaseURL: false)
+        portURL?.port = 443
+        #expect(portURL?.url != nil)
+        #expect(coordinator.responsePolicy(for: current, url: portURL?.url, canShowMIMEType: true) == .cancel)
+        if let stale, let staleURL {
+            #expect(coordinator.responsePolicy(for: stale, url: staleURL, canShowMIMEType: true) == .cancel)
+            #expect(coordinator.responsePolicy(for: current, url: staleURL, canShowMIMEType: true) == .cancel)
+        }
     }
 
     private func waitForPage(title: String, in host: NSView) async throws -> WKWebView {

@@ -64,14 +64,18 @@ struct EditingAssistPerformanceTests {
         #expect(perDecisionMilliseconds < 25, "no-op decision took \(perDecisionMilliseconds) ms")
     }
 
-    @Test("handled assist through the adapter on a 1 MB document stays within the keystroke budget")
-    func handledAssistOn1MB() throws {
+    @Test("handled assist through the adapter within a known anchor stays within the keystroke budget")
+    func handledAssistWithinKnownAnchor() throws {
         let system = makeSystem(configuration: .markdownDefault)
         system.textView.frame = viewportBounds
 
-        // Place the caret at the end of a line near the end of the document.
+        // Keep the caret within the classifier's known document-start anchor
+        // while the editor still owns the full generated document.
         let source = try #require(system.assistTextSource)
-        let caret = source.range(of: "\n").location == NSNotFound ? 0 : source.length - 2
+        let listLine = source.range(of: "- List item 1201-a")
+        try #require(listLine.location != NSNotFound)
+        let caret = NSMaxRange(listLine)
+        #expect(FencedRegionClassifier.classify(text: source, atUTF16Offset: caret) == .prose)
         system.selectedRange = NSRange(location: caret, length: 0)
 
         let duration = ContinuousClock().measure {
@@ -86,6 +90,27 @@ struct EditingAssistPerformanceTests {
         }
         let durationMilliseconds = milliseconds(duration)
         #expect(durationMilliseconds < 50, "handled assist took \(durationMilliseconds) ms (budget 50 ms)")
+    }
+
+    @Test("unresolved assist beyond the fence scan cap stays bounded")
+    func unresolvedAssistBeyondScanCap() {
+        let source = Fixtures.markdown(targetByteCount: 1_000_000) as NSString
+        let caret = source.length - 2
+        let selection = NSRange(location: caret, length: 0)
+        #expect(FencedRegionClassifier.classify(text: source, atUTF16Offset: caret) == .unresolved)
+
+        let duration = ContinuousClock().measure {
+            let outcome = MarkdownEditingAssistEngine.outcome(
+                for: .insertNewline,
+                text: source,
+                selection: selection,
+                configuration: .markdownDefault,
+                profile: .plainText
+            )
+            #expect(outcome == .passthrough)
+        }
+        let durationMilliseconds = milliseconds(duration)
+        #expect(durationMilliseconds < 50, "unresolved assist took \(durationMilliseconds) ms (budget 50 ms)")
     }
 
     @Test("incremental E10 overhead is recorded against the disabled baseline")

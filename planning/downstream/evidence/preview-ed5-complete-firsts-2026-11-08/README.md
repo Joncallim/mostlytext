@@ -1,0 +1,3 @@
+# Complete original first current Preview qualification
+
+All14original first workflows at frozened5 complete:13PASS/1FAIL, all original whole logs/artifacts retained before diagnostic publication. All38original UI methods pass in ten canonical batches. Five Preview pairs pass; Release/revision genuinely fails one original image-copy assertion in its initial56functions. The complete compiled app/test/run/project/source/pin and raw result readback verifies55pass/1fail/0skip/expected. Full first ZIPs/artifacts remain retained locally and hosted; these20exact records preserve metadata/master/independent scoped proof. No failure waiver, unchanged retry or integrated/final acceptance follows.

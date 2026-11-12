@@ -12,6 +12,10 @@ import subprocess
 import tarfile
 
 BASE = "5ce80b6f0e29096a5f06826a3ba610c4e89bc255"
+COMBINED = "3b1fb00f8c4f8907073f9b7342a807a0231867fa"
+REVIEWED_RUNTIME = "1884982a418525e2e251ba331da929fccd354f3f"
+SHARED_SUBTREE_DELTA = ["Package.swift", "lib/src/subtree.c"]
+FOLLOWUP_DELTA = ["lib/src/parser.c", "lib/src/unicode.h"]
 OWNERS = {
     "tree-sitter": "https://github.com/Joncallim/tree-sitter",
     "tree-sitter-json": "https://github.com/tree-sitter/tree-sitter-json",
@@ -34,9 +38,19 @@ def checked_pins(lock):
         revision = row.get("state", {}).get("revision", "")
         if row.get("location") != owner or not re.fullmatch(r"[0-9a-f]{40}", revision):
             raise SystemExit("The exact reviewed runtime/grammar owner and revision are required: " + name)
-    if pins["tree-sitter"]["state"]["revision"] == BASE:
-        raise SystemExit("An unchanged original runtime cannot qualify the shared-work repair")
+    if pins["tree-sitter"]["state"]["revision"] != REVIEWED_RUNTIME:
+        raise SystemExit("The exact separately reviewed parser runtime is required")
     return pins
+
+
+def checked_runtime_source_delta(candidate, shared_delta, followup_delta, total_delta):
+    """Allow the shared-work repair plus the exact separately reviewed C changes."""
+    expected = sorted(SHARED_SUBTREE_DELTA + FOLLOWUP_DELTA)
+    if (candidate != REVIEWED_RUNTIME or shared_delta != SHARED_SUBTREE_DELTA or
+            followup_delta != FOLLOWUP_DELTA or total_delta != expected):
+        raise SystemExit("An unreviewed runtime product or interface changed")
+    return {"shared_subtree": shared_delta, "included_range_and_decoder": followup_delta,
+            "total": total_delta}
 
 
 def inventory(repo):
@@ -100,12 +114,14 @@ def main():
                "grammar_revision": grammar_revision, "results": []}
     (output / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
     runtime_git, grammar_git = output / "runtime.git", output / "grammar.git"
-    fetch(OWNERS["tree-sitter"], [BASE, candidate], runtime_git)
+    fetch(OWNERS["tree-sitter"], [BASE, COMBINED, candidate], runtime_git)
     fetch(OWNERS["tree-sitter-json"], [grammar_revision], grammar_git)
-    delta = subprocess.check_output(["git", "-C", str(runtime_git), "diff", "--name-only", BASE, candidate,
-                                     "--", "lib/src", "lib/include", "Package.swift"], text=True).splitlines()
-    if delta != ["Package.swift", "lib/src/subtree.c"]:
-        raise SystemExit("An unreviewed runtime product or interface changed")
+    def source_delta(before, after):
+        return subprocess.check_output(["git", "-C", str(runtime_git), "diff", "--name-only", before, after,
+                                        "--", "lib/src", "lib/include", "Package.swift"], text=True).splitlines()
+    delta_stages = checked_runtime_source_delta(candidate, source_delta(BASE, COMBINED),
+                                                source_delta(COMBINED, candidate), source_delta(BASE, candidate))
+    delta = delta_stages["total"]
     original, current, grammar = output / "original", output / "candidate", output / "grammar"
     extract(runtime_git, BASE, original)
     extract(runtime_git, candidate, current)
@@ -134,6 +150,15 @@ def main():
     fixture = current / "lib/tests/subtree_compare_identity.c"
     receipt["fixture_sha256"] = digest(fixture)
     receipt["runtime_product_delta"] = delta
+    receipt["runtime_product_delta_stages"] = {
+        "shared_subtree": delta_stages["shared_subtree"],
+        "included_range_and_decoder": delta_stages["included_range_and_decoder"],
+    }
+    receipt["reviewed_runtime_revisions"] = {"shared_subtree": COMBINED,
+                                             "included_range_and_decoder": REVIEWED_RUNTIME}
+    receipt["reviewed_followup_source_sha256"] = {
+        name: digest(current / name) for name in FOLLOWUP_DELTA
+    }
     receipt["runtime_subtree_sha256"] = {
         "original": digest(original / "lib/src/subtree.c"),
         "candidate": digest(current / "lib/src/subtree.c"),

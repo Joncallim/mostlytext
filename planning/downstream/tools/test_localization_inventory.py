@@ -28,6 +28,14 @@ class LocalizationInventoryTests(unittest.TestCase):
     def test_valid_catalog_passes(self):
         self.assertEqual(subject.validate(self.make_repo(self.fixture("valid.json"))), [])
 
+    def test_build_products_do_not_enter_source_catalog_inventory(self):
+        repo = self.make_repo(self.fixture("valid.json"))
+        build_catalog = repo / "MacDown2/Packages/MacDownKit/.build/debug/Mock.bundle/Localizable.xcstrings"
+        build_catalog.parent.mkdir(parents=True)
+        build_catalog.write_text(json.dumps(self.fixture("missing-placeholder.json")), encoding="utf-8")
+        self.assertEqual(len(subject.catalog_paths(repo)), 1)
+        self.assertEqual(subject.validate(repo), [])
+
     def test_missing_placeholder_fails(self):
         errors = subject.validate(self.make_repo(self.fixture("missing-placeholder.json")))
         self.assertTrue(any("placeholders" in error for error in errors))
@@ -59,6 +67,46 @@ class LocalizationInventoryTests(unittest.TestCase):
         }
         errors = subject.validate(self.make_repo(catalog))
         self.assertTrue(any("substitution types" in error for error in errors))
+
+    def test_top_level_plural_variants_are_inventoried_and_validated(self):
+        key = "%lld preview errors"
+        plural = {
+            category: {"stringUnit": {"state": "needs_review", "value": text}}
+            for category, text in {"one": "%lld preview error", "other": "%lld preview errors"}.items()
+        }
+        catalog = {"sourceLanguage": "en", "strings": {
+            key: {"localizations": {"fr": {"variations": {"plural": plural}}}}
+        }}
+        repo = self.make_repo(catalog)
+        localization = subject.load_catalog(repo / "MacDown2/MacDown2/Localizable.xcstrings")["strings"][key]["localizations"]["fr"]
+        self.assertEqual(subject.variants(localization), {"value": ["one", "other"]})
+        self.assertEqual(subject.localization_state(localization), "needs_review")
+        self.assertEqual(subject.validate(repo), [])
+
+        plural.pop("other")
+        self.assertTrue(any("lacks an other variant" in error for error in subject.validate(self.make_repo(catalog))))
+        plural["other"] = {"stringUnit": {"state": "needs_review", "value": "%@ preview errors"}}
+        self.assertTrue(any("placeholders" in error for error in subject.validate(self.make_repo(catalog))))
+
+    def test_malformed_top_level_plural_unit_is_a_controlled_catalog_error(self):
+        key = "%lld preview errors"
+        catalog = {"sourceLanguage": "en", "strings": {
+            key: {"localizations": {"en": {"variations": {"plural": {
+                "other": {"stringUnit": "invalid"}
+            }}}}}
+        }}
+        with self.assertRaisesRegex(subject.CatalogError, "plural 'other' stringUnit is not an object"):
+            subject.validate(self.make_repo(catalog))
+        catalog["strings"][key]["localizations"]["en"]["variations"]["plural"]["other"] = {
+            "stringUnit": None
+        }
+        with self.assertRaisesRegex(subject.CatalogError, "plural 'other' stringUnit is not an object"):
+            subject.validate(self.make_repo(catalog))
+        catalog["strings"][key]["localizations"]["en"]["variations"]["plural"]["other"] = {
+            "stringUnit": {"value": 7}
+        }
+        with self.assertRaisesRegex(subject.CatalogError, "plural 'other' stringUnit.value is not a string"):
+            subject.validate(self.make_repo(catalog))
 
     def test_malformed_catalog_is_rejected(self):
         temporary = tempfile.TemporaryDirectory()
@@ -92,6 +140,85 @@ class LocalizationInventoryTests(unittest.TestCase):
             with self.subTest(fixture=fixture):
                 with self.assertRaisesRegex(subject.CatalogError, "positions are 1-based"):
                     subject.validate(self.make_repo(self.fixture(fixture)))
+
+
+class ProductPluralInventoryTests(unittest.TestCase):
+    """Guard the current plural keys and expose, without approving, draft locale coverage."""
+
+    repo = Path(__file__).resolve().parents[3]
+    app_catalog = "MacDown2/MacDown2/Localizable.xcstrings"
+    status_key = "%lld characters, %lld words"
+    selected_key = "%lld selected"
+    preview_budget_key = (
+        "^[%lld valid placement](inflect: true) exceeded the preview budget "
+        "and remain as authored source"
+    )
+    single_count_keys = {
+        "%lld preview errors": "value",
+        "%lld preview warnings": "value",
+        "Exported with %lld issues": "arg1",
+        "rendered output too large (%lld bytes)": "arg1",
+        "…and %lld more issues.": "arg1",
+    }
+    categories = {
+        "en": ["one", "other"],
+        "fr": ["one", "other"],
+        "ja": ["other"],
+        "pl": ["few", "many", "one", "other"],
+    }
+
+    @staticmethod
+    def contains_plural(value):
+        if isinstance(value, dict):
+            return "plural" in value or any(ProductPluralInventoryTests.contains_plural(child)
+                                            for child in value.values())
+        if isinstance(value, list):
+            return any(ProductPluralInventoryTests.contains_plural(child) for child in value)
+        return False
+
+    def test_all_app_plural_keys_have_explicit_inventory_evidence(self):
+        generated = {
+            entry["key"]: entry
+            for entry in subject.inventory(self.repo)["entries"]
+            if entry["catalog"] == self.app_catalog and any(entry["variants"].values())
+        }
+        expected_keys = set(self.single_count_keys) | {
+            self.status_key, self.selected_key, self.preview_budget_key
+        }
+        self.assertEqual(set(generated), expected_keys)
+        declared = {
+            (path.relative_to(self.repo).as_posix(), key)
+            for path in self.repo.glob("MacDown2/**/*.xcstrings")
+            for key, entry in json.loads(path.read_text(encoding="utf-8"))["strings"].items()
+            if self.contains_plural(entry)
+        }
+        self.assertEqual(declared, {(self.app_catalog, key) for key in expected_keys})
+
+        # Both counts select independently in every review locale. Draft
+        # wording remains separate from this structural catalog assertion.
+        expected_status = {
+            locale: {"arg1": forms, "arg2": forms}
+            for locale, forms in self.categories.items()
+        }
+        self.assertEqual(generated[self.status_key]["variants"], expected_status)
+        expected_selected = {"en": {}}
+        expected_selected.update({locale: {"value": self.categories[locale]} for locale in ("fr", "ja", "pl")})
+        self.assertEqual(generated[self.selected_key]["variants"], expected_selected)
+        expected_budget = {locale: {"arg1": self.categories[locale]} for locale in ("fr", "ja", "pl")}
+        self.assertEqual(generated[self.preview_budget_key]["variants"], expected_budget)
+        for key, substitution in self.single_count_keys.items():
+            expected = {locale: {substitution: forms} for locale, forms in self.categories.items()}
+            self.assertEqual(generated[key]["variants"], expected, key)
+
+        tracked = json.loads((self.repo / "planning/downstream/mostlytext-localization-inventory.json")
+                             .read_text(encoding="utf-8"))
+        tracked_entries = {entry["key"]: entry for entry in tracked["entries"]
+                           if entry["catalog"] == self.app_catalog and entry["key"] in expected_keys}
+        self.assertEqual(set(tracked_entries), expected_keys)
+        for key, entry in generated.items():
+            self.assertEqual(tracked_entries[key]["variants"], entry["variants"], key)
+            self.assertEqual(tracked_entries[key]["locale_states"], entry["locale_states"], key)
+            self.assertNotIn("unknown", entry["locale_states"].values(), key)
 
 
 class TranslationResourceTests(unittest.TestCase):

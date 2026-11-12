@@ -161,10 +161,9 @@ public final class EditorTextView: NSTextView {
     /// individual sub-edits `EditorEditTransaction.apply(_:)` itself makes
     /// through this same override while fanning out — so those always fall
     /// through to `super` unchanged, exactly as before this override
-    /// existed. This never fires for bare multi-caret typing (no selected
-    /// text, more than one insertion point): that state cannot exist in
-    /// `selectedRanges` in the first place — see §6.9's architecture-
-    /// correction note.
+    /// existed. Synthetic bare carets live in the owning system's
+    /// `selectionSet` cache when AppKit cannot retain them in
+    /// `selectedRanges`; the same transaction inserts at those carets.
     override public func insertText(_ string: Any, replacementRange: NSRange) {
         if replacementRange.location == NSNotFound,
            let owningSystem, let text = string as? String,
@@ -174,20 +173,18 @@ public final class EditorTextView: NSTextView {
         super.insertText(string, replacementRange: replacementRange)
     }
 
-    /// Multi-selection delete (§6.9, §7.2): `deleteBackward`/`deleteForward`
-    /// share one selection-deleting implementation, since every range in a
-    /// real multi-selection is non-empty (see
-    /// `applyMultiCursorDeleteSelection()`'s doc comment) and deleting a
-    /// selection's own content is direction-independent.
+    /// Multi-selection delete (§6.9, §7.2): selected text is deleted as a
+    /// range; synthetic bare carets delete one composed character in the
+    /// requested direction. Both paths retain one transaction and undo step.
     override public func deleteBackward(_ sender: Any?) {
-        if let owningSystem, owningSystem.applyMultiCursorDeleteSelection() {
+        if let owningSystem, owningSystem.applyMultiCursorDelete(.backward) {
             return
         }
         super.deleteBackward(sender)
     }
 
     override public func deleteForward(_ sender: Any?) {
-        if let owningSystem, owningSystem.applyMultiCursorDeleteSelection() {
+        if let owningSystem, owningSystem.applyMultiCursorDelete(.forward) {
             return
         }
         super.deleteForward(sender)
@@ -210,7 +207,7 @@ public final class EditorTextView: NSTextView {
     /// (`EditorTextSystem.apply(_:)` already sets `isRichText = false`).
     override public func paste(_ sender: Any?) {
         if let owningSystem, let text = NSPasteboard.general.string(forType: .string),
-           owningSystem.applyMultiCursorInsert(text) {
+           owningSystem.applyMultiCursorInsert(text, usingEditingAssists: false) {
             return
         }
         super.paste(sender)

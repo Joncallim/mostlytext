@@ -22,6 +22,8 @@ import Foundation
 /// syntax and another's doesn't is treated the same way, not partially
 /// applied.
 enum EditorCommentToggle {
+    private static let maximumFenceMarkerProbeLines = 64
+
     static func toggleCommentTransaction(
         text: NSString,
         lineIndex: EditorLineIndex,
@@ -37,6 +39,8 @@ enum EditorCommentToggle {
         var delta = 0
 
         for group in groups {
+            guard !isMarkdownFormat || markdownGroupKeepsFenceBoundaries(group, text: text, lineIndex: lineIndex)
+            else { return nil }
             let effectiveProfile = isMarkdownFormat
                 ? fenceAwareProfile(forAnchorLine: group.startLine, text: text, lineIndex: lineIndex, fallback: profile)
                 : profile
@@ -73,33 +77,62 @@ enum EditorCommentToggle {
     /// `anchorLine` is inside a fence (Markdown has no line-comment syntax
     /// of its own to toggle there), `.plainText` inside front matter,
     /// `fallback` (the document's own Markdown profile) in ordinary prose.
-    /// A selection spanning both a fence and surrounding prose is scoped
-    /// entirely to whichever profile ITS OWN anchor line resolves to — a
-    /// mixed per-line profile within one selection would make the smart-
-    /// toggle "already commented?" check itself ambiguous. A disclosed
-    /// consequence an independent hostile review confirmed: a wide
-    /// selection starting INSIDE a fence and reaching past that fence's own
-    /// closing delimiter (and beyond, into surrounding prose) comments the
-    /// closing "```" line itself with the fenced language's own line
-    /// comment, corrupting it as a fence marker — accepted as a rare,
-    /// disclosed edge case (this profile-resolution rule is what the
-    /// design contract explicitly asks for) rather than a bug to special-
-    /// case away; pinned by `fenceAwareProfileScopesAWideSelectionSpanningTheFenceBoundaryToItsOwnAnchorLine`.
+    /// A group keeps one effective profile, but boundary-spanning groups are
+    /// refused before reaching this lookup so the command cannot comment a
+    /// fence marker or apply one profile to both code and prose.
     private static func fenceAwareProfile(
         forAnchorLine anchorLine: Int,
         text: NSString,
         lineIndex: EditorLineIndex,
         fallback: LanguageEditingProfile
     ) -> LanguageEditingProfile {
-        let anchorOffset = lineIndex.lineStartOffsets[anchorLine - 1]
+        let lineStart = lineIndex.lineStartOffsets[anchorLine - 1]
+        let anchorOffset = MarkdownEditingAssistEngine.lineContentEnd(of: lineStart, in: text)
         switch FencedRegionClassifier.classify(text: text, atUTF16Offset: anchorOffset) {
         case .prose:
             return fallback
-        case .frontMatter:
+        case .frontMatter, .unresolved:
             return .plainText
         case let .fencedCode(languageID):
             return languageID.map { LanguageEditingProfileRegistry.profile(for: $0) } ?? .plainText
         }
+    }
+
+    /// A single comment transform cannot safely rewrite a fence marker or a
+    /// mixed code/prose block with one profile. Probe both ends and only the
+    /// lines containing a possible fence marker; this remains linear in the
+    /// selected text rather than running a backward classifier for each line.
+    private static func markdownGroupKeepsFenceBoundaries(
+        _ group: EditorLineTransforms.LineBlockGroup,
+        text: NSString,
+        lineIndex: EditorLineIndex
+    ) -> Bool {
+        let firstStart = lineIndex.lineStartOffsets[group.startLine - 1]
+        let firstEnd = MarkdownEditingAssistEngine.lineContentEnd(of: firstStart, in: text)
+        let region = FencedRegionClassifier.classify(text: text, atUTF16Offset: firstEnd)
+        guard region != .unresolved,
+              FencedRegionClassifier.classify(text: text, atUTF16Offset: firstStart) == region
+        else { return false }
+
+        let lastStart = lineIndex.lineStartOffsets[group.endLine - 1]
+        let lastEnd = MarkdownEditingAssistEngine.lineContentEnd(of: lastStart, in: text)
+        guard FencedRegionClassifier.classify(text: text, atUTF16Offset: lastEnd) == region else { return false }
+
+        var markerLines = 0
+        for line in group.startLine ... group.endLine {
+            let start = lineIndex.lineStartOffsets[line - 1]
+            let end = MarkdownEditingAssistEngine.lineContentEnd(of: start, in: text)
+            let range = NSRange(location: start, length: end - start)
+            guard text.range(of: "```", range: range).location != NSNotFound ||
+                text.range(of: "~~~", range: range).location != NSNotFound
+            else { continue }
+            markerLines += 1
+            guard markerLines <= maximumFenceMarkerProbeLines else { return false }
+            guard FencedRegionClassifier.classify(text: text, atUTF16Offset: start)
+                == FencedRegionClassifier.classify(text: text, atUTF16Offset: end)
+            else { return false }
+        }
+        return true
     }
 
     /// One group's own toggle result: the replacement itself, plus a

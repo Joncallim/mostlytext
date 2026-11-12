@@ -78,6 +78,13 @@ public final class FileFormatRegistry: Sendable {
         self.formats = formats
     }
 
+    /// The sole descriptive format label; language and protocol names retain
+    /// their established technical spelling. Keep the fallback constructors
+    /// on this same catalog route.
+    static func plainTextDisplayName(bundle: Bundle = .module) -> String {
+        String(localized: "Plain Text", bundle: bundle)
+    }
+
     /// Built-in format list. Mirror additions here in `project.yml` `CFBundleDocumentTypes`
     /// and in the app target's `Info.plist` so the OS knows which files MacDown 2 can open.
     public static let defaultFormats: [FileFormat] = [
@@ -207,7 +214,7 @@ public final class FileFormatRegistry: Sendable {
         ),
         FileFormat(
             id: "plaintext",
-            name: "Plain Text",
+            name: plainTextDisplayName(),
             utType: .plainText,
             extensions: ["txt"],
             highlightLanguageID: nil

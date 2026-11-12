@@ -87,14 +87,20 @@ struct PreviewImageDecodeBudgetTests {
             second.reserve(PreviewImageDecodeBudget.imageLimit),
             second.reserve(PreviewImageDecodeBudget.imageLimit),
         ]
-        #expect(PreviewImageDecodeBudget.globallyReservedBytes == PreviewImageDecodeBudget.globalLimit)
-        #expect(throws: PreviewImageLoadError.self) {
-            _ = try third.reserve(1)
+        // Counting an array does not keep its elements alive under optimization. These assertions describe
+        // retained image owners, so hold both arrays explicitly until the relevant admission checks finish.
+        try withExtendedLifetime(secondReservations) {
+            withExtendedLifetime(firstReservations) {
+                #expect(PreviewImageDecodeBudget.globallyReservedBytes == PreviewImageDecodeBudget.globalLimit)
+                #expect(throws: PreviewImageLoadError.self) {
+                    _ = try third.reserve(1)
+                }
+            }
+            firstReservations.removeAll()
+            #expect(PreviewImageDecodeBudget.globallyReservedBytes == PreviewImageDecodeBudget.loadLimit)
+            let resumed = try third.reserve(PreviewImageDecodeBudget.imageLimit)
+            #expect(resumed.bytes == PreviewImageDecodeBudget.imageLimit)
+            #expect(secondReservations.count == 2)
         }
-        firstReservations.removeAll()
-        #expect(PreviewImageDecodeBudget.globallyReservedBytes == PreviewImageDecodeBudget.loadLimit)
-        let resumed = try third.reserve(PreviewImageDecodeBudget.imageLimit)
-        #expect(resumed.bytes == PreviewImageDecodeBudget.imageLimit)
-        #expect(secondReservations.count == 2)
     }
 }

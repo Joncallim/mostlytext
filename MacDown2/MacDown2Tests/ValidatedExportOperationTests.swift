@@ -64,6 +64,8 @@ struct ValidatedExportOperationTests {
         let first = try makeController("first.md")
         let second = try makeController("second.md")
         coordinator.controllers = [first, second]
+        first.window?.animationBehavior = .none
+        second.window?.animationBehavior = .none
         first.window?.makeKeyAndOrderFront(nil)
         coordinator.updateKeyModel()
         return Fixture(coordinator: coordinator, first: first, second: second, folder: folder)

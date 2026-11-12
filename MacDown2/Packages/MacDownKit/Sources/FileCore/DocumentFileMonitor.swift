@@ -34,6 +34,11 @@ public actor DocumentFileMonitor {
     /// actually installed so the later event cannot cancel parent recovery.
     private var parentRecoveryPending = false
     private var debounceTask: Task<Void, Never>?
+    /// A slow snapshot can outlive its debounce. Keep watcher-driven disk
+    /// probes serial and remember only the latest signal whose debounce has
+    /// completed while one is running.
+    var activeSignalProbe: (generation: UInt, sequence: UInt)?
+    var readySignalProbeSequence: UInt?
     private var callback: (@Sendable (DocumentFileObservation) -> Void)?
     private var contextCallback: (@Sendable (DocumentFileObservationContext) -> Void)?
     private var healthCallback: (@Sendable (DocumentFileMonitorHealth) -> Void)?
@@ -74,6 +79,8 @@ public actor DocumentFileMonitor {
         let currentGeneration = generation
         let initialSequence = probeSequence
         cancelPending()
+        activeSignalProbe = nil
+        readySignalProbeSequence = nil
         handle?.cancel()
         fileHandle?.cancel()
         handle = nil
@@ -145,6 +152,8 @@ public actor DocumentFileMonitor {
         generation &+= 1
         probeSequence &+= 1
         cancelPending()
+        activeSignalProbe = nil
+        readySignalProbeSequence = nil
         handle?.cancel()
         fileHandle?.cancel()
         handle = nil
@@ -165,19 +174,20 @@ public actor DocumentFileMonitor {
         }
         probeSequence &+= 1
         let currentSequence = probeSequence
+        readySignalProbeSequence = nil
         debounceTask?.cancel()
         debounceTask = Task { [weak self] in
             guard let self else { return }
             await sleeper(debounce)
             guard !Task.isCancelled else { return }
-            await probeAfterSignal(
+            await startOrQueueSignalProbe(
                 generation: generation,
                 sequence: currentSequence
             )
         }
     }
 
-    private func probeAfterSignal(
+    func probeAfterSignal(
         generation: UInt,
         sequence: UInt
     ) async {
