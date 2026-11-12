@@ -9,7 +9,7 @@ import Testing
 /// Uses the real document/window/split-view path implicated by the UID-502 report.
 /// The source is disposable and contains only the reported simple exponent cases.
 @MainActor
-struct MathPreviewMountedExponentDiagnosticsTests {
+struct MathMountedExponentDiagnosticsTests {
     @Test func productionPreviewPublishesExponentImagesAndCapturesItsPaintedFrame() async throws {
         let source = "# Exponent frame\n\nSimple $x$ and exponent $x^2$.\n\n$$\nE=mc^2\n$$\n"
         let fixture = try PreviewProductionFixture(source: source)
@@ -21,18 +21,17 @@ struct MathPreviewMountedExponentDiagnosticsTests {
         try await requireOwnAccessibilityRole()
         let root = try fixture.root()
         let inline = MathDiagnosticText.equationLabel("x^2", isDisplay: false)
-        let display = MathDiagnosticText.equationLabel("E=mc^2", isDisplay: true)
         try await fixture.wait("mounted inline exponent accessibility image", until: {
             labels(in: root).contains(inline)
         })
-        #expect(labels(in: root).contains(display))
+        #expect(labels(in: root).contains { $0.hasPrefix("Display equation:") && $0.contains("E=mc^2") })
         let native = PreviewProductionFixture.descendants(root).compactMap { $0 as? Textual.NSTextInteractionView }
         #expect(!native.isEmpty)
         let layout = native.map { fixture.copyHarness.attachmentLayoutDiagnostics(in: $0) }
             .joined(separator: "\n--- next native view ---\n")
         #expect(layout.contains("actualAttachmentRuns="))
-        let output = URL(fileURLWithPath: ProcessInfo.processInfo.environment["RUNNER_TEMP"] ?? NSTemporaryDirectory())
-            .appendingPathComponent("shared-app-probe", isDirectory: true)
+        let output = URL(fileURLWithPath: ProcessInfo.processInfo.environment["MOSTLYTEXT_EXPONENT_OUTPUT"]
+            ?? NSTemporaryDirectory(), isDirectory: true)
         try FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
         try layout.write(to: output.appendingPathComponent("mounted-exponents-layout.txt"),
                          atomically: true, encoding: .utf8)

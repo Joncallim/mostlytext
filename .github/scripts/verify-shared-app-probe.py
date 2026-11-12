@@ -37,7 +37,7 @@ if args.verify:
     if args.require_result:
         log = re.sub(r"\x1b\[[0-9;]*m", "", (args.output / "probe.log").read_text())
         for suite in ["SharedMathActivationTests", "MathPreviewLiveSourceTests", "MathPreviewNavigationTests",
-                      "MathPreviewRecoveryTests", "MathPreviewMountedExponentDiagnosticsTests", "HeadingPreviewSessionTests", "HeadingPreviewNavigationTests",
+                      "MathPreviewRecoveryTests", "MathMountedExponentDiagnosticsTests", "HeadingPreviewSessionTests", "HeadingPreviewNavigationTests",
                       "HeadingPreviewAppTests", "HeadingExportActivationTests", "EditorStatusBarThemeTests"]:
             if not re.search(r"Suite " + re.escape(suite) + r" passed", log):
                 raise SystemExit(suite + " did not execute successfully")
