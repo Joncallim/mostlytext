@@ -6,9 +6,6 @@ import Testing
 
 private enum SectionProbeLimits {
     static let windowLimit = 65536
-    /// Diagnostic cap keeps prefix-shift lookup bounded in this two-edit
-    /// experiment. Production would need a persistent indexed structure.
-    static let editLimit = 2
 }
 
 private struct Capture: Equatable, Comparable {
@@ -42,7 +39,6 @@ private struct Section {
     let layer: LanguageLayer
     let content: String
     var offset: Int
-    let bornAfterEvent: Int
 
     var globalRange: NSRange {
         NSRange(location: node.range.location + offset, length: node.range.length)
@@ -77,32 +73,27 @@ private struct ProbeLanguages {
     let registry: GrammarRegistry
 }
 
-private struct ShiftEvent {
-    let afterSection: Int
-    let delta: Int
-}
-
 @MainActor
 private struct SectionCache {
     var sections: [Section]
-    var shifts: [ShiftEvent] = []
+    var shifts: SectionShifts
 
     init(source: String, layer: LanguageLayer) throws {
         let snapshot = try #require(layer.snapshot())
         let root = try #require(snapshot.rootSnapshot.tree.rootNode)
         sections = try (0 ..< root.childCount).map { index in
             let node = try #require(root.child(at: index))
-            return Section(node: node, layer: layer, content: source, offset: 0, bornAfterEvent: 0)
+            return Section(node: node, layer: layer, content: source, offset: 0)
         }
         #expect(!sections.isEmpty)
+        shifts = SectionShifts(sectionCount: sections.count)
     }
 
     /// Uses only the cached pre-edit sections and the old source. Return
     /// nil on structural or unbounded edits; no full tree is consulted.
     func select(source: NSString, edit: NSRange, replacement: String, visible: NSRange) -> Window? {
         let word = CharacterSet.alphanumerics
-        guard shifts.count < SectionProbeLimits.editLimit,
-              edit.location >= 0, NSMaxRange(edit) <= source.length,
+        guard edit.location >= 0, NSMaxRange(edit) <= source.length,
               !replacement.isEmpty, edit.length > 0
         else { return nil }
         let old = source.substring(with: edit)
@@ -154,13 +145,14 @@ private struct SectionCache {
         let root = try #require(snapshot.rootSnapshot.tree.rootNode)
         let replacements = try (0 ..< root.childCount).map { index in
             let node = try #require(root.child(at: index))
+            let sectionIndex = window.firstSection + index
             return Section(node: node, layer: layer, content: content,
-                           offset: window.new.location, bornAfterEvent: shifts.count + 1)
+                           offset: window.new.location - shifts.displacement(at: sectionIndex))
         }
         try #require(replacements.count == window.lastSection - window.firstSection + 1,
                      "plain-word edit changed the number of root sections")
         sections.replaceSubrange(window.firstSection ... window.lastSection, with: replacements)
-        shifts.append(ShiftEvent(afterSection: window.lastSection, delta: delta))
+        shifts.shift(after: window.lastSection, by: delta)
     }
 
     func visibleSections(_ visible: NSRange) -> [Section] {
@@ -179,9 +171,7 @@ private struct SectionCache {
 
     private func resolvedSection(at index: Int) -> Section {
         var section = sections[index]
-        for event in shifts.dropFirst(section.bornAfterEvent) where index > event.afterSection {
-            section.offset += event.delta
-        }
+        section.offset += shifts.displacement(at: index)
         return section
     }
 
@@ -208,7 +198,7 @@ private struct SectionCache {
 }
 
 /// Parser-only follow-up to the pre-edit window probe. A cache of root
-/// sections survives two edits and a viewport move without a full reparse.
+/// sections survives repeated edits and viewport moves without a full reparse.
 /// Full-document parses are constructed only after the candidate sequence,
 /// as independent capture oracles. This does not change the product path.
 @Suite("Markdown sequential section cache feasibility", .serialized)
@@ -248,11 +238,8 @@ struct MarkdownSectionCacheSequentialProbeTests {
         let firstDelta = (edits[0].replacement as NSString).length - (edits[0].needle as NSString).length
         let shiftedSecond = (steps[0].source as NSString).range(of: "gammatarget").location
         #expect(shiftedSecond == originalSecond + firstDelta, "later section offset did not shift")
-        let thirdEdit = (source as NSString).range(of: "betawordlonger")
-        try #require(thirdEdit.location != NSNotFound)
-        #expect(cache.select(source: source as NSString, edit: thirdEdit,
-                             replacement: "anotherword", visible: steps[0].visible) == nil,
-                "unbounded third edit was admitted")
+        try applyRevisions(source: &source, cache: &cache, languages: languages, steps: &steps)
+        #expect(steps.count == 14, "repeated edits did not all enter the bounded window")
 
         // Return to the first edited section after a second section and the
         // viewport have moved. This checks that its cached local tree remains
@@ -267,11 +254,34 @@ struct MarkdownSectionCacheSequentialProbeTests {
         print("SECTION_CACHE step=revisit-first captures=\(revisit.root.count)/" +
             "\(revisit.inline.count)/\(revisit.combined.count) candidate=\(revisitDuration)")
 
-        // No full post-edit parse was made while applying either candidate.
-        // Construct both independent oracles only now, after the cache has
-        // survived the second edit and viewport movement.
+        // No full post-edit parse was made while applying any candidate.
+        // Construct independent oracles only now, after the cache has
+        // survived repeated edits and viewport movement.
         for step in steps {
             try compareWithFullOracle(step, languages: languages)
+        }
+    }
+
+    private func applyRevisions(
+        source: inout String, cache: inout SectionCache,
+        languages: ProbeLanguages, steps: inout [Step]
+    ) throws {
+        var firstWord = "betawordlonger"
+        var secondWord = "deltaword"
+        for revision in 0 ..< 12 {
+            let isFirst = revision.isMultiple(of: 2)
+            let previous = isFirst ? firstWord : secondWord
+            let next = (isFirst ? "alphaprobe" : "gammaprobe") + String(repeating: isFirst ? "q" : "z",
+                                                                        count: revision + 1)
+            try steps.append(applyEdit(
+                EditSpec(name: "revision-\(revision)", needle: previous, replacement: next),
+                source: &source, cache: &cache, languages: languages
+            ))
+            if isFirst {
+                firstWord = next
+            } else {
+                secondWord = next
+            }
         }
     }
 
@@ -312,7 +322,7 @@ struct MarkdownSectionCacheSequentialProbeTests {
         let snapshot = try #require(whole.snapshot())
         let rootNode = try #require(snapshot.rootSnapshot.tree.rootNode)
         let wholeSection = Section(node: rootNode, layer: whole, content: step.source,
-                                   offset: 0, bornAfterEvent: 0)
+                                   offset: 0)
         let oracle = try captures([wholeSection], visible: step.visible, inline: languages.inline)
         #expect(step.candidate.root == oracle.root, "\(step.name) root captures differ")
         #expect(step.candidate.inline == oracle.inline, "\(step.name) inline captures differ")
