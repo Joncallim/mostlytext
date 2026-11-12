@@ -7,9 +7,10 @@ import QuickLookUI
 final class MarkdownQuickLookProvider: QLPreviewProvider, QLPreviewingController {
     func providePreview(for request: QLFilePreviewRequest) async throws -> QLPreviewReply {
         let selectedURL = request.fileURL
-        let html = try await Task.detached(priority: .userInitiated) {
-            try QuickLookSourceFallback.replyHTML(for: selectedURL)
-        }.value
+        let selected = try QuickLookSourceFallback.openSelectedFile(selectedURL)
+        guard let html = await QuickLookWorkerClient.renderSource(selected) else {
+            throw QuickLookSourceError.readFailed
+        }
         let payload = Payload(html: html)
         let reply = QLPreviewReply(dataOfContentType: .html, contentSize: CGSize(width: 640, height: 480)) { _ in
             payload.html

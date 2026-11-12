@@ -272,6 +272,9 @@ targets:
     platform: macOS
     sources:
     - MacDown2QuickLookWorker
+    dependencies:
+    - package: MacDownKit
+      product: QuickLookSource
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.MostlyText.QuickLook.Worker

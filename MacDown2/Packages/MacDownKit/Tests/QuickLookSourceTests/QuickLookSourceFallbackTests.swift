@@ -64,6 +64,23 @@ struct QuickLookSourceFallbackTests {
         }
     }
 
+    @Test func transferredDescriptorCannotFollowAReplacedPath() throws {
+        let directory = try temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let selectedURL = directory.appendingPathComponent("selected.md")
+        let movedURL = directory.appendingPathComponent("moved.md")
+        try Data("# Selected\n".utf8).write(to: selectedURL)
+        let selected = try QuickLookSourceFallback.openSelectedFile(selectedURL)
+        try FileManager.default.moveItem(at: selectedURL, to: movedURL)
+        try Data("# Different\n".utf8).write(to: selectedURL)
+
+        let html = try #require(String(bytes: QuickLookSourceFallback.replyHTML(
+            forOpenDescriptor: selected.fileDescriptor
+        ), encoding: .utf8))
+        #expect(html.contains("# Selected"))
+        #expect(!html.contains("# Different"))
+    }
+
     @Test func aNamedPipeWithoutAWriterCannotBlockTheProvider() throws {
         let directory = try temporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }

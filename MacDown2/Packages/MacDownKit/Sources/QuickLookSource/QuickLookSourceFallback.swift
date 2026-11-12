@@ -17,7 +17,38 @@ public enum QuickLookSourceFallback {
     public static let maximumSourceBytes = 1 << 20
 
     public static func replyHTML(for fileURL: URL) throws -> Data {
-        let bytes = try readSelectedFile(fileURL)
+        let selected = try openSelectedFile(fileURL)
+        let bytes = try readSelectedFile(selected.fileDescriptor)
+        let decoded = try FileByteDecoder.decode(bytes, maximumBytes: maximumSourceBytes)
+        return html(for: decoded.text)
+    }
+
+    /// The provider opens only the selected system URL. A sandboxed worker can
+    /// receive this handle without being granted the parent directory or path.
+    public static func openSelectedFile(_ fileURL: URL) throws -> FileHandle {
+        guard fileURL.isFileURL else { throw QuickLookSourceError.invalidURL }
+        let descriptor = open(fileURL.path, O_RDONLY | O_CLOEXEC | O_NONBLOCK | O_NOFOLLOW_ANY)
+        guard descriptor >= 0 else { throw QuickLookSourceError.openFailed }
+        var selected = stat()
+        guard fstat(descriptor, &selected) == 0 else {
+            close(descriptor)
+            throw QuickLookSourceError.readFailed
+        }
+        guard selected.st_mode & S_IFMT == S_IFREG else {
+            close(descriptor)
+            throw QuickLookSourceError.notRegularFile
+        }
+        guard selected.st_size >= 0, selected.st_size <= maximumSourceBytes else {
+            close(descriptor)
+            throw QuickLookSourceError.sourceTooLarge
+        }
+        return FileHandle(fileDescriptor: descriptor, closeOnDealloc: true)
+    }
+
+    /// Called only in the isolated worker after its parent has armed a hard
+    /// process deadline. Revalidate the received descriptor before reading.
+    public static func replyHTML(forOpenDescriptor descriptor: Int32) throws -> Data {
+        let bytes = try readSelectedFile(descriptor)
         let decoded = try FileByteDecoder.decode(bytes, maximumBytes: maximumSourceBytes)
         return html(for: decoded.text)
     }
@@ -36,14 +67,7 @@ public enum QuickLookSourceFallback {
         """.utf8)
     }
 
-    private static func readSelectedFile(_ fileURL: URL) throws -> Data {
-        guard fileURL.isFileURL else { throw QuickLookSourceError.invalidURL }
-        // The Quick Look grant is for this selected file, never its parent.
-        // A selected FIFO must not wait for a writer before fstat rejects it.
-        let descriptor = open(fileURL.path, O_RDONLY | O_CLOEXEC | O_NONBLOCK | O_NOFOLLOW_ANY)
-        guard descriptor >= 0 else { throw QuickLookSourceError.openFailed }
-        defer { close(descriptor) }
-
+    private static func readSelectedFile(_ descriptor: Int32) throws -> Data {
         var before = stat()
         guard fstat(descriptor, &before) == 0 else { throw QuickLookSourceError.readFailed }
         guard before.st_mode & S_IFMT == S_IFREG else { throw QuickLookSourceError.notRegularFile }
