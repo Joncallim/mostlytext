@@ -11,13 +11,34 @@ struct PreviewDiagnosticLabelTests {
         let url = try #require(Self.catalogBundle.url(forResource: language, withExtension: "lproj"))
         let resources = try #require(Bundle(url: url))
         for count in [0, 1, 2, 5, 12, 22] {
-            let singular = language == "fr" ? count < 2 : language != "ja" && count == 1
-            let error = "\(count) preview \(singular ? "error" : "errors")"
-            let warning = "\(count) preview \(singular ? "warning" : "warnings")"
+            let suffixes = Self.expectedSuffixes(language: language, count: count)
             #expect(PreviewDiagnosticLabel.error(count: count)
-                .message(bundle: resources, locale: Locale(identifier: language)) == error)
+                .message(bundle: resources, locale: Locale(identifier: language)) == "\(count)\(suffixes.error)")
             #expect(PreviewDiagnosticLabel.warning(count: count)
-                .message(bundle: resources, locale: Locale(identifier: language)) == warning)
+                .message(bundle: resources, locale: Locale(identifier: language)) == "\(count)\(suffixes.warning)")
+        }
+    }
+
+    private static func expectedSuffixes(language: String, count: Int) -> (error: String, warning: String) {
+        switch language {
+        case "en":
+            return count == 1 ? (" preview error", " preview warning") :
+                (" preview errors", " preview warnings")
+        case "fr":
+            return count < 2 ? (" erreur d'aperçu", " avertissement d'aperçu") :
+                (" erreurs d'aperçu", " avertissements d'aperçu")
+        case "ja":
+            return ("件のプレビューエラー", "件のプレビュー警告")
+        case "pl":
+            if count == 1 {
+                return (" błąd podglądu", " ostrzeżenie podglądu")
+            }
+            if count == 2 || count == 22 {
+                return (" błędy podglądu", " ostrzeżenia podglądu")
+            }
+            return (" błędów podglądu", " ostrzeżeń podglądu")
+        default:
+            preconditionFailure("Uncovered test locale: \(language)")
         }
     }
 

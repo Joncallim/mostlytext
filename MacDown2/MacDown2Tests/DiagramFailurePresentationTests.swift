@@ -29,20 +29,37 @@ struct DiagramFailurePresentationTests {
     func actualCompiledCatalogSelectsCountFormsWithoutNarrowingTheByteCount(_ language: String) throws {
         let resources = try bundle(language)
         for count in [0, 1, 2, 5, 12, 22, Int.max] {
-            let singular: Bool = switch language {
-            case "fr": count < 2
-            case "ja": false
-            default: count == 1
-            }
             let maximums = [
                 "en": "9,223,372,036,854,775,807", "ja": "9,223,372,036,854,775,807",
                 "fr": "9\u{202F}223\u{202F}372\u{202F}036\u{202F}854\u{202F}775\u{202F}807",
                 "pl": "9\u{00A0}223\u{00A0}372\u{00A0}036\u{00A0}854\u{00A0}775\u{00A0}807",
             ]
             let number = count == Int.max ? try #require(maximums[language]) : String(count)
-            let expected = "rendered output too large (\(number) \(singular ? "byte" : "bytes"))"
+            let expected = Self.expectedByteCount(language: language, count: count, number: number)
             #expect(DiagramFailurePresentation.outputTooLarge(byteCount: count)
                 .message(bundle: resources, locale: Locale(identifier: language)) == expected)
+        }
+    }
+
+    private static func expectedByteCount(language: String, count: Int, number: String) -> String {
+        switch language {
+        case "en":
+            return "rendered output too large (\(number) \(count == 1 ? "byte" : "bytes"))"
+        case "fr":
+            return "sortie générée trop volumineuse (\(number) \(count < 2 ? "octet" : "octets"))"
+        case "ja":
+            return "描画結果が大きすぎます（\(number)バイト）"
+        case "pl":
+            let unit = if count == 1 {
+                "bajt"
+            } else if count == 2 || count == 22 {
+                "bajty"
+            } else {
+                "bajtów"
+            }
+            return "Wynik renderowania jest zbyt duży (\(number) \(unit))"
+        default:
+            preconditionFailure("Uncovered test locale: \(language)")
         }
     }
 
