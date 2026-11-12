@@ -40,6 +40,7 @@ struct OrdinaryExportProgressTests {
     }
 
     @Test func activePrintAndPublicationDoNotOfferAFalseCancelButton() {
+        #expect(!ExportPhase.choosingDestination.canRequestCancellation)
         #expect(!ExportPhase.printingPDF.canRequestCancellation)
         #expect(!ExportPhase.publishing.canRequestCancellation)
         #expect(ExportPhase.loadingPDF.canRequestCancellation)

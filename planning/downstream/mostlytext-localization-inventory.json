@@ -1125,7 +1125,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/ContentAreaView.swift:366"
+        "MacDown2/MacDown2/ContentAreaView.swift:372"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -1950,7 +1950,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/WindowCoordinator+Export.swift:24"
+        "MacDown2/MacDown2/WindowCoordinator+Export.swift:23"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -2105,7 +2105,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/WindowCoordinator+Export.swift:22"
+        "MacDown2/MacDown2/WindowCoordinator+Export.swift:21"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -2340,7 +2340,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/WindowCoordinator+Export.swift:17"
+        "MacDown2/MacDown2/WindowCoordinator+Export.swift:16"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -4352,7 +4352,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/WindowCoordinator+Export.swift:19"
+        "MacDown2/MacDown2/WindowCoordinator+Export.swift:18"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -6993,7 +6993,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/WindowCoordinator+Export.swift:20"
+        "MacDown2/MacDown2/WindowCoordinator+Export.swift:19"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -7539,7 +7539,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/ContentAreaView.swift:341"
+        "MacDown2/MacDown2/ContentAreaView.swift:347"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -9488,7 +9488,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/WindowCoordinator+Export.swift:18"
+        "MacDown2/MacDown2/WindowCoordinator+Export.swift:17"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -9793,7 +9793,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/WindowCoordinator+Export.swift:21"
+        "MacDown2/MacDown2/WindowCoordinator+Export.swift:20"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -11253,7 +11253,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/WindowCoordinator+Export.swift:23"
+        "MacDown2/MacDown2/WindowCoordinator+Export.swift:22"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13104,7 +13104,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/ContentAreaView.swift:344"
+        "MacDown2/MacDown2/ContentAreaView.swift:350"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13244,7 +13244,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/ContentAreaView.swift:350"
+        "MacDown2/MacDown2/ContentAreaView.swift:356"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13314,7 +13314,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/ContentAreaView.swift:368"
+        "MacDown2/MacDown2/ContentAreaView.swift:374"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13349,7 +13349,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/ContentAreaView.swift:340"
+        "MacDown2/MacDown2/ContentAreaView.swift:346"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13457,7 +13457,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/ContentAreaView.swift:357"
+        "MacDown2/MacDown2/ContentAreaView.swift:363"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13802,7 +13802,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/ContentAreaView.swift:355"
+        "MacDown2/MacDown2/ContentAreaView.swift:361"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -14329,7 +14329,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/ContentAreaView.swift:342",
+        "MacDown2/MacDown2/ContentAreaView.swift:348",
         "MacDown2/MacDown2/WindowCoordinator+OpenFailure.swift:15"
       ],
       "callsite_evidence": "direct_literal_static_match",
@@ -14400,7 +14400,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/ContentAreaView.swift:343"
+        "MacDown2/MacDown2/ContentAreaView.swift:349"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -14951,7 +14951,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/ContentAreaView.swift:210",
+        "MacDown2/MacDown2/ContentAreaView.swift:216",
         "MacDown2/MacDown2/ExportCoordinator.swift:104",
         "MacDown2/MacDown2/WindowController+Close.swift:76",
         "MacDown2/MacDown2/WindowController+Encoding.swift:38",

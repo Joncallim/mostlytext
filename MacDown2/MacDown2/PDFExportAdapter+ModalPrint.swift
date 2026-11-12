@@ -22,12 +22,14 @@ extension PDFExportAdapter {
         operation.canSpawnSeparateThread = true
         operation.showsProgressPanel = false
         let completion = PDFModalPrintCompletion()
-        return await withCheckedContinuation { continuation in
+        let printed = await withCheckedContinuation { continuation in
             completion.arm(continuation)
             operation.runModal(for: window, delegate: completion,
                                didRun: #selector(PDFModalPrintCompletion.didRun(_:success:contextInfo:)),
                                contextInfo: nil)
         }
+        withExtendedLifetime(completion) {}
+        return printed
     }
 }
 

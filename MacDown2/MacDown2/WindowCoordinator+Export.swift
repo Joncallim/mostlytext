@@ -25,7 +25,7 @@ enum ExportPhase: Equatable {
     }
 
     var canRequestCancellation: Bool {
-        self != .printingPDF && self != .publishing && self != .cancelling
+        self != .choosingDestination && self != .printingPDF && self != .publishing && self != .cancelling
     }
 }
 

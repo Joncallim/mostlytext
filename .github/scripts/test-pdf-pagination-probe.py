@@ -90,6 +90,26 @@ class PDFResultTests(unittest.TestCase):
                                       for c in identity['command']]
         with self.assertRaises(ValueError):
             probe.validate_temp_execution(log, wrong_selection, self.status)
+
+    def test_production_modal_selection_requires_owned_release_and_modal_opt_in(self):
+        log = ('Test ordinaryAdapterPrintsWhileMainRunLoopAdvances() passed after 0.1 seconds.\n'
+               'Suite PDFModalProductionPathTests passed.\n'
+               'Test run with 1 test in 1 suite passed.')
+        identity = copy.deepcopy(self.identity)
+        identity['command'] = [
+            c.replace('PDFExportAdapterTests', 'PDFModalProductionPathTests')
+             .replace('PDF_PAGINATION_PROBE', 'PDF_PAGINATION_PROBE PDF_MODAL_PROBE')
+            for c in identity['command'] if 'PDFExportCancellationTests' not in c
+        ]
+        probe.validate_modal_production_execution(log, identity, self.status)
+        without_modal = copy.deepcopy(identity)
+        without_modal['command'] = [c.replace(' PDF_MODAL_PROBE', '') for c in identity['command']]
+        with self.assertRaises(ValueError):
+            probe.validate_modal_production_execution(log, without_modal, self.status)
+        for changed_log in [log.replace(' passed', ' skipped', 1),
+                            log.replace('1 test', '0 tests'), log + '\nProgram crashed:']:
+            with self.subTest(log=changed_log[-80:]), self.assertRaises(ValueError):
+                probe.validate_modal_production_execution(changed_log, identity, self.status)
         for key, value in [('app', '/tmp/standalone-pdf-probe'), ('app_sha256', '')]:
             identity = dict(self.identity, **{key: value})
             with self.subTest(key=key), self.assertRaises(ValueError):
