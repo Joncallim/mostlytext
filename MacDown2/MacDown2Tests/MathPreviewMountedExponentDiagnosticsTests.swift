@@ -11,7 +11,19 @@ import Testing
 @MainActor
 struct MathMountedExponentDiagnosticsTests {
     @Test func productionPreviewPublishesExponentImagesAndCapturesItsPaintedFrame() async throws {
-        let source = "# Exponent frame\n\nSimple $x$ and exponent $x^2$.\n\n$$\nE=mc^2\n$$\n"
+        let source = """
+        # Exponent frame
+
+        Plain $E$, $m$, $mc$, $E=mc$ and $x+1$.
+
+        Inline exponents $E=mc^2$, $x^2$ and $x^{2}$.
+
+        $$
+        E=mc^2
+        $$
+
+        Escaped \\$5 before $x+1$. Prices $12 and $15 remain prose.
+        """
         let fixture = try PreviewProductionFixture(source: source)
         defer { fixture.dispose() }
         let window = try #require(fixture.first.window)
@@ -22,7 +34,10 @@ struct MathMountedExponentDiagnosticsTests {
         let root = try fixture.root()
         let inline = MathDiagnosticText.equationLabel("x^2", isDisplay: false)
         try await fixture.wait("mounted inline exponent accessibility image", until: {
-            labels(in: root).contains(inline)
+            let mounted = labels(in: root)
+            return mounted.contains(inline)
+                && mounted.contains(MathDiagnosticText.equationLabel("E=mc^2", isDisplay: false))
+                && mounted.contains(MathDiagnosticText.equationLabel("x^{2}", isDisplay: false))
         })
         #expect(labels(in: root).contains { $0.hasPrefix("Display equation:") && $0.contains("E=mc^2") })
         let native = PreviewProductionFixture.descendants(root).compactMap { $0 as? Textual.NSTextInteractionView }
