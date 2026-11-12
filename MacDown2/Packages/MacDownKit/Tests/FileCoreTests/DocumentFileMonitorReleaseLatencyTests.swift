@@ -27,6 +27,8 @@ struct DocumentFileMonitorReleaseLatencyTests {
         let replacementBytes = Data(repeating: UInt8(ascii: "B"), count: byteCount)
         try originalBytes.write(to: source)
         try replacementBytes.write(to: replacement)
+        let originalDigest = SHA256.hash(data: originalBytes)
+            .map { String(format: "%02x", $0) }.joined()
         let replacementDigest = SHA256.hash(data: replacementBytes)
             .map { String(format: "%02x", $0) }.joined()
 
@@ -37,6 +39,7 @@ struct DocumentFileMonitorReleaseLatencyTests {
             let snapshot = try store.readSnapshot(from: source)
             readMilliseconds.append(milliseconds(since: began, until: DispatchTime.now().uptimeNanoseconds))
             #expect(snapshot.revision.fileSize == byteCount)
+            #expect(snapshot.revision.sha256 == originalDigest)
             #expect(snapshot.text.utf8.count == byteCount)
         }
 
