@@ -284,4 +284,44 @@ extension PreviewExportParityCorpusTests {
         #expect(renderedBlocks == ["Text[^note].", "[^note]: Footnote body."])
         #expect(result.export.bodyHTML == "<p>Text[^note].</p>\n<p>[^note]: Footnote body.</p>\n")
     }
+
+    @Test func duplicateReferenceDefinitionsResolveToTheFirstTargetOnBothPaths() async throws {
+        let source = """
+        Read [the guide][docs] and [again][docs].
+
+        [docs]: https://example.com/guide "Guide"
+        [docs]: https://example.com/other "Other"
+
+        """
+        let result = try await surfaces(source)
+        let block = try #require(result.blocks.first)
+        let facts = try #require(result.document.sourceFacts)
+        let anchor = try #require(block.sourceAnchor)
+        let prefix = try MarkdownReferenceReplayIndex(facts: facts).prefix(
+            for: anchor.range, sourceSHA256: anchor.sourceSHA256,
+            maximumUTF8Bytes: PreviewParserBudget.maximumUTF8Bytes
+        )
+        #expect(prefix.contains("[docs]: https://example.com/guide"))
+        #expect(!prefix.contains("https://example.com/other"))
+        let preview = try PreviewMarkupParser().attributedString(for: prefix + block.source)
+        #expect(preview.runs.compactMap(\.link).map(\.absoluteString) == [
+            "https://example.com/guide", "https://example.com/guide",
+        ])
+        #expect(result.export.bodyHTML.contains("href=\"https://example.com/guide\""))
+        #expect(!result.export.bodyHTML.contains("https://example.com/other"))
+    }
+
+    @Test func tagfilterAndDangerousLinkPolicyAreDeliberateExportDifferences() async throws {
+        let source = "<script>alert(1)</script>\n\n[unsafe](javascript:alert%281%29)\n"
+        let result = try await surfaces(source)
+        #expect(result.blocks.count == 2)
+        let rawPreview = try rendered(#require(result.blocks.first))
+        #expect(String(rawPreview.characters).contains("<script>alert(1)</script>"))
+        let linkPreview = try rendered(#require(result.blocks.last))
+        #expect(String(linkPreview.characters).contains("unsafe"))
+        let html = result.export.bodyHTML
+        #expect(!html.contains("<script>"))
+        #expect(!html.contains("href=\"javascript:"))
+        #expect(html.contains("unsafe"))
+    }
 }
