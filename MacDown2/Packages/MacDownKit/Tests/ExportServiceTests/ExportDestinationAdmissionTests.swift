@@ -164,4 +164,23 @@ struct ExportDestinationAdmissionTests {
         #expect(throws: CancellationError.self) { try admission.publish(Data([1]), lease: lease) }
         #expect(!FileManager.default.fileExists(atPath: item.primary.path))
     }
+
+    @Test func physicalDarwinPrivateTempDirectoryAcceptsGeneratedPDFSnapshot() throws {
+        let resolved = try #require(realpath(NSTemporaryDirectory(), nil))
+        let parent = URL(fileURLWithPath: String(cString: resolved), isDirectory: true)
+        free(resolved)
+        let directory = parent.appendingPathComponent("mostlytext-private-admission-\(UUID().uuidString)",
+                                                      isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: false)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        #expect(chmod(directory.path, 0o700) == 0)
+        let destination = directory.appendingPathComponent("export-canary.pdf")
+        let generated = directory.appendingPathComponent(".export-canary.print.tmp.pdf")
+        let bytes = Data("private PDF bytes".utf8)
+        try bytes.write(to: generated)
+        let admission = try ExportDestinationAdmission(capturing: destination)
+        #expect(try admission.readGeneratedFile(at: generated, maxBytes: 1024) == bytes)
+        try admission.publish(bytes)
+        #expect(try Data(contentsOf: destination) == bytes)
+    }
 }
