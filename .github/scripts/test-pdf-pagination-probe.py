@@ -67,6 +67,54 @@ class PDFResultTests(unittest.TestCase):
             identity['command'] = [c.replace(original, replacement) for c in identity['command']]
             with self.subTest(original=original), self.assertRaises(ValueError):
                 probe.validate_execution(self.log, identity, self.status)
+
+    def test_private_folder_selection_requires_complete_owned_release_execution(self):
+        log = ('Test exportingHTMLThenPDFPreservesSourceAndPublishesPDF() passed after 0.1 seconds.\n'
+               'Suite "PDF export after HTML in a private temporary folder" passed.\n'
+               'Test run with 1 test in 1 suite passed.')
+        identity = copy.deepcopy(self.identity)
+        identity['command'] = [
+            c.replace('PDFExportAdapterTests', 'PDFExportTemporaryDestinationTests')
+            for c in identity['command'] if 'PDFExportCancellationTests' not in c
+        ]
+        probe.validate_temp_execution(log, identity, self.status)
+        for changed_log in [log.replace(' passed', ' skipped', 1),
+                            log.replace('1 test', '0 tests'), log + '\nProgram crashed:']:
+            with self.subTest(log=changed_log[-80:]), self.assertRaises(ValueError):
+                probe.validate_temp_execution(changed_log, identity, self.status)
+        for changes in [{'returncode': 65}, {'timed_out': True}, {'app_cleanup_requested': [{'pid': 1}]}]:
+            with self.subTest(changes=changes), self.assertRaises(ValueError):
+                probe.validate_temp_execution(log, identity, dict(self.status, **changes))
+        wrong_selection = copy.deepcopy(identity)
+        wrong_selection['command'] = [c.replace('PDFExportTemporaryDestinationTests', 'PDFExportAdapterTests')
+                                      for c in identity['command']]
+        with self.assertRaises(ValueError):
+            probe.validate_temp_execution(log, wrong_selection, self.status)
+
+    def test_production_modal_selection_requires_owned_release_and_modal_opt_in(self):
+        log = ('Test ordinaryAdapterPrintsWhileMainRunLoopAdvances() passed after 0.1 seconds.\n'
+               'pdf-production-modal-print elapsed_ms=561.3 main_run_loop_heartbeats=55\n'
+               'pdf-production-modal-revocation preserved_existing_destination=true\n'
+               'Suite PDFModalProductionPathTests passed.\n'
+               'Test run with 1 test in 1 suite passed.')
+        identity = copy.deepcopy(self.identity)
+        identity['command'] = [
+            c.replace('PDFExportAdapterTests', 'PDFModalProductionPathTests')
+             .replace('PDF_PAGINATION_PROBE', 'PDF_PAGINATION_PROBE PDF_MODAL_PROBE')
+            for c in identity['command'] if 'PDFExportCancellationTests' not in c
+        ]
+        probe.validate_modal_production_execution(log, identity, self.status)
+        without_modal = copy.deepcopy(identity)
+        without_modal['command'] = [c.replace(' PDF_MODAL_PROBE', '') for c in identity['command']]
+        with self.assertRaises(ValueError):
+            probe.validate_modal_production_execution(log, without_modal, self.status)
+        for changed_log in [log.replace(' passed', ' skipped', 1),
+                            log.replace('1 test', '0 tests'), log + '\nProgram crashed:',
+                            log.replace('main_run_loop_heartbeats=55', 'main_run_loop_heartbeats=0'),
+                            log.replace('pdf-production-modal-print', 'missing-measurement'),
+                            log.replace('pdf-production-modal-revocation', 'missing-revocation')]:
+            with self.subTest(log=changed_log[-80:]), self.assertRaises(ValueError):
+                probe.validate_modal_production_execution(changed_log, identity, self.status)
         for key, value in [('app', '/tmp/standalone-pdf-probe'), ('app_sha256', '')]:
             identity = dict(self.identity, **{key: value})
             with self.subTest(key=key), self.assertRaises(ValueError):
@@ -82,6 +130,14 @@ class PDFEvidenceAdmissionTests(unittest.TestCase):
                            ('skippedTests', 1), ('expectedFailures', 1), ('totalTestCount', 11.0)]:
             with self.subTest(key=key, value=value), self.assertRaises(ValueError):
                 probe.validate_summary(dict(summary, **{key: value}))
+
+    def test_private_folder_summary_requires_one_real_pass(self):
+        summary = {'totalTestCount': 1, 'passedTests': 1, 'failedTests': 0,
+                   'skippedTests': 0, 'expectedFailures': 0}
+        probe.validate_summary(summary, count=1)
+        for changes in [{'passedTests': 0}, {'skippedTests': 1}, {'expectedFailures': 1}]:
+            with self.subTest(changes=changes), self.assertRaises(ValueError):
+                probe.validate_summary(dict(summary, **changes), count=1)
 
     def test_actual_host_guard_precedes_first_inventory_and_removed_guard_reaches_intercept(self):
         source = Path(probe.__file__).read_text()

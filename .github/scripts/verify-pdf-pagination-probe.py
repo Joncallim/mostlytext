@@ -26,6 +26,8 @@ TESTS = {
     'exportingALongDocumentProducesARealMultiPagePDF',
     'exportedPDFReplacesAnyExistingFileAtomically',
 }
+TEMP_TEST = 'exportingHTMLThenPDFPreservesSourceAndPublishesPDF'
+MODAL_PRODUCTION_TEST = 'ordinaryAdapterPrintsWhileMainRunLoopAdvances'
 CONDITION = 'PDF_PAGINATION_PROBE'
 INPUTS = ['MacDown2', '.github/scripts/verify-pdf-pagination-probe.py',
           '.github/scripts/test-pdf-pagination-probe.py',
@@ -75,6 +77,59 @@ def validate_execution(log, identity, status):
         raise ValueError('The actual app digest is required')
 
 
+def validate_single_execution(log, identity, status, test, suite, conditions, suite_label=None):
+    log = re.sub(r'\x1b\[[0-9;]*m', '', log)
+    if any(value in log for value in ['recorded an issue', 'Program crashed:', 'Fatal error:', 'Assertion failed:']):
+        raise ValueError('The selected PDF run recorded a failure')
+    if re.search(r'(?:Test|Suite)[^\n]*(?:skipped|disabled)', log, re.I):
+        raise ValueError('The selected PDF test was skipped or disabled')
+    passed = re.findall(r'Test ([A-Za-z0-9_]+)\([^\n]*\) passed', log)
+    if passed != [test] or not re.search(r'Test run with 1 test in 1 suite passed', log):
+        raise ValueError('The complete single PDF test must execute once and pass')
+    displayed_suite = f'"{suite_label}"' if suite_label else suite
+    if not re.search(rf'Suite {re.escape(displayed_suite)} passed', log):
+        raise ValueError('The selected PDF suite did not pass')
+    if status.get('returncode') != 0 or status.get('timed_out') is not False or status.get('cancelled') is not False:
+        raise ValueError('The owned selected PDF execution did not exit normally')
+    if not 0 < status.get('elapsed_seconds', 0) < 600 or status.get('app_cleanup_requested') != []:
+        raise ValueError('The selected PDF execution exceeded its bound or required cleanup')
+    command = identity.get('command', [])
+    if not command or command[0] != 'xcodebuild' or 'test-without-building' not in command:
+        raise ValueError('Actual app test execution is required')
+    if '-configuration' not in command or command[command.index('-configuration') + 1] != 'Release':
+        raise ValueError('Release execution is required')
+    if 'ENABLE_TESTABILITY=YES' not in command or not any(
+        c.startswith('SWIFT_ACTIVE_COMPILATION_CONDITIONS=') and conditions <= set(c.split())
+        for c in command
+    ):
+        raise ValueError('The dedicated PDF opt-in condition is required')
+    if [c for c in command if c.startswith('-only-testing:')] != [f'-only-testing:MacDown2Tests/{suite}']:
+        raise ValueError('Only the complete selected PDF suite may be selected')
+    if not str(identity.get('app', '')).endswith('/Release/MacDown2.app/Contents/MacOS/MacDown2'):
+        raise ValueError('The actual built Release app must own execution')
+    if not re.fullmatch(r'[0-9a-f]{64}', identity.get('app_sha256', '')):
+        raise ValueError('The actual app digest is required')
+
+
+def validate_temp_execution(log, identity, status):
+    validate_single_execution(log, identity, status, TEMP_TEST, 'PDFExportTemporaryDestinationTests',
+                              {CONDITION, 'RELEASE_PREVIEW_PROBE'},
+                              suite_label='PDF export after HTML in a private temporary folder')
+
+
+def validate_modal_production_execution(log, identity, status):
+    validate_single_execution(log, identity, status, MODAL_PRODUCTION_TEST, 'PDFModalProductionPathTests',
+                              {CONDITION, 'PDF_MODAL_PROBE', 'RELEASE_PREVIEW_PROBE'})
+    measurements = re.findall(r'pdf-production-modal-print elapsed_ms=([0-9.]+) main_run_loop_heartbeats=([0-9]+)', log)
+    if len(measurements) != 1:
+        raise ValueError('The production PDF print interval lacks one heartbeat measurement')
+    elapsed, heartbeats = measurements[0]
+    if not 0 < float(elapsed) < 600_000 or int(heartbeats) < 1:
+        raise ValueError('The production PDF print interval did not retain a bounded live run loop')
+    if log.count('pdf-production-modal-revocation preserved_existing_destination=true') != 1:
+        raise ValueError('The production PDF print did not prove revoked publication preserves its destination')
+
+
 def check_host(root):
     if sys.flags.optimize:
         raise RuntimeError('Optimized Python is refused before PDF qualification access')
@@ -97,11 +152,11 @@ def check_host(root):
         raise RuntimeError('Untrusted PDF qualification event')
 
 
-def validate_summary(summary):
-    expected = {'totalTestCount': 11, 'passedTests': 11, 'failedTests': 0,
+def validate_summary(summary, count=11):
+    expected = {'totalTestCount': count, 'passedTests': count, 'failedTests': 0,
                 'skippedTests': 0, 'expectedFailures': 0}
     if any(type(summary.get(k)) is not int or summary[k] != v for k, v in expected.items()):
-        raise ValueError('Actual PDF result bundle lacks all eleven passing tests')
+        raise ValueError('Actual PDF result bundle lacks the complete passing selection')
 
 
 def main():
@@ -111,15 +166,19 @@ def main():
     parser.add_argument('output', type=Path)
     parser.add_argument('--verify', action='store_true')
     parser.add_argument('--require-result', action='store_true')
+    parser.add_argument('--require-temp-result', action='store_true')
+    parser.add_argument('--require-modal-production-result', action='store_true')
     parser.add_argument('--capture-compiled', action='store_true')
     parser.add_argument('--admit', action='store_true')
     args = parser.parse_args()
     check_host(args.output.resolve())
     if args.admit:
-        if args.verify or args.require_result or args.capture_compiled:
+        if (args.verify or args.require_result or args.require_temp_result
+                or args.require_modal_production_result or args.capture_compiled):
             raise RuntimeError('Host admission cannot select another PDF phase')
         return
-    if (args.require_result or args.capture_compiled) and not args.verify:
+    if (args.require_result or args.require_temp_result or args.require_modal_production_result
+            or args.capture_compiled) and not args.verify:
         raise RuntimeError('Compiled/result PDF phases require original input verification')
     repo = Path(__file__).resolve().parents[2]
     paths = subprocess.check_output(['git', 'ls-files', '-z', '--', *INPUTS], cwd=repo).decode().split('\0')
@@ -128,7 +187,8 @@ def main():
         raise SystemExit('The exact canonical 24-pin graph is required')
     receipt = {
         'checkout': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=repo, text=True).strip(),
-        'configuration': 'Release', 'testability': True, 'additional_compilation_conditions': ['RELEASE_PREVIEW_PROBE', CONDITION],
+        'configuration': 'Release', 'testability': True,
+        'additional_compilation_conditions': ['RELEASE_PREVIEW_PROBE', CONDITION, 'PDF_MODAL_PROBE'],
         'source_sha256': {p: hashlib.sha256((repo / p).read_bytes()).hexdigest() for p in paths if p},
         'pins': pins, 'selected_tests': sorted(TESTS),
         'scope': 'Actual hosted PDF output and controlled cancellation checkpoints; not owner UI, mid-print interruption or signed-RC acceptance',
@@ -152,6 +212,36 @@ def main():
                                            '--path', str(args.output / 'actual-pdf.xcresult')])
             (args.output / 'actual-pdf-summary.json').write_bytes(raw)
             validate_summary(json.loads(raw))
+        if args.require_temp_result:
+            identity = json.loads((args.output / 'temp-diagnostics/identity.json').read_text())
+            if identity.get('checkout') != receipt['checkout']:
+                raise SystemExit('The private-folder PDF execution checkout differs')
+            validate_temp_execution((args.output / 'temp-destination.log').read_text(), identity,
+                                    json.loads((args.output / 'temp-diagnostics/status.json').read_text()))
+            binding = json.loads((args.output / 'compiled-initial.json').read_text())
+            if binding['phase'] != 'initial' or binding['configuration'] != 'Release':
+                raise RuntimeError('PDF compiled phase was retargeted')
+            verify(args.output, binding)
+            require_owned_phase(identity, binding, receipt['checkout'])
+            raw = subprocess.check_output(['xcrun', 'xcresulttool', 'get', 'test-results', 'summary',
+                                           '--path', str(args.output / 'temp-destination.xcresult')])
+            (args.output / 'temp-destination-summary.json').write_bytes(raw)
+            validate_summary(json.loads(raw), count=1)
+        if args.require_modal_production_result:
+            identity = json.loads((args.output / 'production-modal-diagnostics/identity.json').read_text())
+            if identity.get('checkout') != receipt['checkout']:
+                raise SystemExit('The production modal PDF execution checkout differs')
+            validate_modal_production_execution((args.output / 'production-modal.log').read_text(), identity,
+                                                json.loads((args.output / 'production-modal-diagnostics/status.json').read_text()))
+            binding = json.loads((args.output / 'compiled-initial.json').read_text())
+            if binding['phase'] != 'initial' or binding['configuration'] != 'Release':
+                raise RuntimeError('PDF compiled phase was retargeted')
+            verify(args.output, binding)
+            require_owned_phase(identity, binding, receipt['checkout'])
+            raw = subprocess.check_output(['xcrun', 'xcresulttool', 'get', 'test-results', 'summary',
+                                           '--path', str(args.output / 'production-modal.xcresult')])
+            (args.output / 'production-modal-summary.json').write_bytes(raw)
+            validate_summary(json.loads(raw), count=1)
         if args.capture_compiled:
             capture(args.output, Path(os.environ['RUNNER_TEMP']) / 'pdf-pagination-app/Build/Products',
                     'Release', repo / 'MacDown2/MacDown2.xcodeproj', 'initial')

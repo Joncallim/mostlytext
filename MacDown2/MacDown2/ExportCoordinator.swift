@@ -88,13 +88,16 @@ struct ExportCoordinator {
         guard !coordinator.isExporting(model) else { return nil }
 
         coordinator.setExporting(true, for: model)
-        return Task { @MainActor in
+        coordinator.exportLeases[ObjectIdentifier(model)] = origin.publicationLease
+        let task = Task { @MainActor in
             defer { coordinator.setExporting(false, for: model) }
-            await export(from: origin)
+            await export(from: origin, model: model)
         }
+        coordinator.exportTasks[ObjectIdentifier(model)] = task
+        return task
     }
 
-    private func export(from origin: OrdinaryExportOrigin) async {
+    private func export(from origin: OrdinaryExportOrigin, model: WorkspaceModel) async {
         guard let window = origin.presentableWindow else { return }
         let document = origin.initialDocument
 
@@ -109,6 +112,7 @@ struct ExportCoordinator {
 
         do {
             try Task.checkCancellation()
+            coordinator.setExportPhase(.preparing, for: model)
             // A panel can suspend through focus changes, Save As, or document
             // replacement. Read the editor-published value only after its
             // original window and document lifetime are checked again.
@@ -127,7 +131,9 @@ struct ExportCoordinator {
             let result = try await performExport(
                 snapshot: snapshot,
                 selection: selection,
-                publicationLease: origin.publicationLease
+                publicationLease: origin.publicationLease,
+                printWindow: window,
+                onPhase: { phase in coordinator.setExportPhase(phase, for: model) }
             )
             // Diagnostics are read before Finder takes focus, so the report is
             // not left sitting behind another app's window.

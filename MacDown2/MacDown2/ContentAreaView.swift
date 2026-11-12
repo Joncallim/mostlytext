@@ -11,6 +11,7 @@ import Themes
 import Workspace
 
 struct ContentAreaView: View {
+    @Environment(\.windowCoordinator) private var windowCoordinator
     let model: WorkspaceModel
     let editorStore: EditorTextSystemStore
     let findStore: EditorFindModelStore
@@ -66,6 +67,10 @@ struct ContentAreaView: View {
         VStack(alignment: .leading, spacing: 0) {
             documentHeaderBar(document)
 
+            if let phase = windowCoordinator?.exportPhase(for: model) {
+                exportProgress(phase)
+            }
+
             ExternalFileStatusView(controller: externalFileController)
             WorkspaceRecoveryRequiredNotice(model: model)
 
@@ -106,10 +111,7 @@ struct ContentAreaView: View {
 
             Spacer()
 
-            // Saving indicator (#57): the only signal a save is actually
-            // running. Before this there was no spinner, no disabled
-            // state, nothing — a save that took a moment looked
-            // identical to the app being hung.
+            // Saving indicator (#57) distinguishes a running save from an idle editor.
             if model.isSavingActiveDocument {
                 HStack(spacing: 5) {
                     ProgressView()
@@ -135,6 +137,30 @@ struct ContentAreaView: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
         .background(.ultraThinMaterial)
+    }
+
+    private func exportProgress(_ phase: ExportPhase) -> some View {
+        HStack(spacing: 8) {
+            ProgressView()
+                .controlSize(.small)
+            Text(verbatim: phase.label)
+                .font(.system(size: 11))
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
+            Spacer(minLength: 8)
+            if phase.canRequestCancellation {
+                Button("Cancel Export") {
+                    windowCoordinator?.cancelExport(for: model)
+                }
+                .controlSize(.small)
+                .accessibilityIdentifier("cancelExportButton")
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 5)
+        .background(.thinMaterial)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("exportProgress")
     }
 
     @ViewBuilder

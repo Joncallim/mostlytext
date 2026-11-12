@@ -1,3 +1,4 @@
+import AppKit
 import Contributions
 import ExportService
 import Foundation
@@ -20,12 +21,25 @@ extension ExportCoordinator {
         let diagnostics: [ExportDiagnostic]
     }
 
+    private struct PDFExportInputs {
+        let request: ExportRequest
+        let parser: FrozenExportParse
+        let selection: ExportSelection
+        let authorization: ExportDestinationAdmission
+        let publicationLease: ExportLifetimeLease
+        let adaptation: ExportContributionAdapter.Adaptation
+        let printWindow: NSWindow?
+        let onPhase: (@MainActor (ExportPhase) -> Void)?
+    }
+
     func performExport(
         snapshot: OrdinaryExportSnapshot,
         selection: ExportSelection,
         engine: any ParseExecuting = ParseEngine(),
         publicationLease: ExportLifetimeLease = ExportLifetimeLease(),
-        admission: ExportDestinationAdmission? = nil
+        admission: ExportDestinationAdmission? = nil,
+        printWindow: NSWindow? = nil,
+        onPhase: (@MainActor (ExportPhase) -> Void)? = nil
     ) async throws -> ExportOutcome {
         try publicationLease.checkActive()
         let openURLs = protectedExportDocumentURLs
@@ -50,6 +64,7 @@ extension ExportCoordinator {
 
         switch selection.format {
         case .standaloneHTML, .selfContainedHTML:
+            onPhase?(.exportingHTML)
             let mode: HTMLExportMode = selection.format == .selfContainedHTML
                 ? .selfContained
                 : .standalone(style: selection.style)
@@ -63,19 +78,36 @@ extension ExportCoordinator {
                 diagnostics: Self.combinedDiagnostics(adaptation, result.diagnostics)
             )
         case .pdf:
-            let prepared = try await ExportService.prepare(
-                request,
-                target: .pdf(url: selection.url),
-                engine: parser
-            )
-            try await PDFExportAdapter.export(
-                prepared, to: selection.url, lease: publicationLease, admission: authorization
-            )
-            return ExportOutcome(
-                primaryFile: selection.url,
-                diagnostics: Self.combinedDiagnostics(adaptation, prepared.diagnostics)
-            )
+            return try await performPDFExport(PDFExportInputs(
+                request: request, parser: parser, selection: selection, authorization: authorization,
+                publicationLease: publicationLease, adaptation: adaptation,
+                printWindow: printWindow, onPhase: onPhase
+            ))
         }
+    }
+
+    private func performPDFExport(_ inputs: PDFExportInputs) async throws -> ExportOutcome {
+        inputs.onPhase?(.preparing)
+        let prepared = try await ExportService.prepare(
+            inputs.request, target: .pdf(url: inputs.selection.url), engine: inputs.parser
+        )
+        try await PDFExportAdapter.export(
+            prepared, to: inputs.selection.url, lease: inputs.publicationLease, admission: inputs.authorization,
+            modalWindow: inputs.printWindow,
+            onPhase: { phase in
+                switch phase {
+                case .preparing: inputs.onPhase?(.preparing)
+                case .loading: inputs.onPhase?(.loadingPDF)
+                case .printing: inputs.onPhase?(.printingPDF)
+                case .validating: inputs.onPhase?(.validatingPDF)
+                case .publishing: inputs.onPhase?(.publishing)
+                }
+            }
+        )
+        return ExportOutcome(
+            primaryFile: inputs.selection.url,
+            diagnostics: Self.combinedDiagnostics(inputs.adaptation, prepared.diagnostics)
+        )
     }
 
     /// Standalone (anchorless) diagnostics first, then the export service's
