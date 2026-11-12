@@ -1,10 +1,21 @@
 import Darwin
-import ExportService
+@testable import ExportService
 import Foundation
 import Testing
 
 @Suite(.serialized)
 struct ExportPrintScratchTests {
+    @Test func missingSandboxTemporaryDirectoryIsCreatedBeforePrinting() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let base = root.appendingPathComponent("Data/tmp")
+        defer { try? FileManager.default.removeItem(at: root) }
+        #expect(!FileManager.default.fileExists(atPath: base.path))
+        let scratch = try ExportPrintScratch(in: base)
+        #expect(FileManager.default.fileExists(atPath: base.path))
+        #expect(try scratch.read(maxBytes: 1024) == nil)
+        try scratch.retire()
+    }
+
     @Test func missingPrinterOutputCanFallBackWithoutPublicScratch() throws {
         let scratch = try ExportPrintScratch()
         let directory = scratch.url.deletingLastPathComponent()

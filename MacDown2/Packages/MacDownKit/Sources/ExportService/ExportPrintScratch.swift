@@ -12,8 +12,25 @@ public final class ExportPrintScratch: @unchecked Sendable {
     private let directory: Filesystem.DirectoryHandle
     private let directoryStamp: Filesystem.Stamp
 
-    public init() throws {
-        let base = FileManager.default.temporaryDirectory
+    public convenience init() throws {
+        try self.init(in: FileManager.default.temporaryDirectory)
+    }
+
+    /// A sandboxed app's per-container temporary directory may be advertised
+    /// before it has been created. Materialize that OS-provided location before
+    /// asking mkdtemp for the private printer directory.
+    init(in base: URL) throws {
+        try FileManager.default.createDirectory(
+            at: base, withIntermediateDirectories: true,
+            attributes: [.posixPermissions: 0o700]
+        )
+        let baseDescriptor = Darwin.open(base.path, O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)
+        guard baseDescriptor >= 0 else { throw Filesystem.posixFailure() }
+        defer { _ = Darwin.close(baseDescriptor) }
+        let baseStamp = try Filesystem.directoryStamp(baseDescriptor)
+        guard baseStamp.owner == geteuid(), baseStamp.permissions & 0o077 == 0,
+              try Filesystem.directoryAtPath(base.path, matches: baseStamp)
+        else { throw ExportError.unsafePublication }
         var template = Array(base.appendingPathComponent("mostlytext-print-XXXXXX").path.utf8CString)
         guard let created = mkdtemp(&template) else { throw Filesystem.posixFailure() }
         let path = String(cString: created)

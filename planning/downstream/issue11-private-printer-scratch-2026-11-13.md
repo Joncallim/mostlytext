@@ -15,6 +15,16 @@ and removes only the regular single-link printer leaf, then the empty owned
 directory. A symlink, extra object or changed directory is left for conservative
 recovery. The vector snapshot fallback already returns memory bytes.
 
+The first hosted Release menu run (43321978646) reached PDF Export but showed
+an `Export Failed` sheet with `No such file or directory`. The first genuine
+pagination run (43321978832) independently failed four PDF tests at private
+scratch construction with the same error. The system may advertise a sandbox
+temporary directory before creating it. The adapter now creates that
+OS-provided base when needed, then requires an owned, private, non-symlink
+directory before `mkdtemp`. A focused missing-base regression passed locally
+along with the three existing scratch safety tests. The original failed runs
+remain failures; a fresh hosted app and pagination pass is required.
+
 This removes the printer's public sibling pathname without assuming AppKit can
 print directly into an unlinked descriptor. It does not claim exclusion of a
 malicious process running under the same user ID, nor does it prove the final
