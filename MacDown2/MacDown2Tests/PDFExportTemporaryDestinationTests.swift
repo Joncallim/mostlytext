@@ -29,7 +29,7 @@ struct PDFExportTemporaryDestinationTests {
         let sourceURL = directory.appendingPathComponent("export-canary.md")
         let htmlURL = directory.appendingPathComponent("export-canary.html")
         let pdfURL = directory.appendingPathComponent("export-canary.pdf")
-        let source = "# NATIVE_EXPORT_CANARY\n\n**bold** paragraph\n\n- first\n- second\n"
+        let source = "# Export canary\n\nPDFCANARY47 **bold** paragraph\n\n- first\n- second\n"
         try Data(source.utf8).write(to: sourceURL)
         let request = ExportRequest(text: source, sourceGeneration: 1, theme: BundledThemes.light)
         let htmlAdmission = try ExportDestinationAdmission(capturing: htmlURL, protecting: [sourceURL])
@@ -37,16 +37,15 @@ struct PDFExportTemporaryDestinationTests {
             request, to: .html(url: htmlURL, mode: .standalone(style: .embedded)),
             admission: htmlAdmission
         )
-        #expect(try String(contentsOf: htmlURL, encoding: .utf8).contains("NATIVE_EXPORT_CANARY"))
+        #expect(try String(contentsOf: htmlURL, encoding: .utf8).contains("PDFCANARY47"))
 
         let pdfAdmission = try ExportDestinationAdmission(capturing: pdfURL, protecting: [sourceURL])
         let prepared = try await ExportService.prepare(request, target: .pdf(url: pdfURL))
         try await PDFExportAdapter.export(prepared, to: pdfURL, admission: pdfAdmission)
         let pdfBytes = try Data(contentsOf: pdfURL)
         let pdf = try #require(PDFDocument(data: pdfBytes))
-        print("Private-folder PDF bytes: \(pdfBytes.count), pages: \(pdf.pageCount)")
-        print("Private-folder PDF extracted: \(String(reflecting: pdf.string))")
-        #expect(pdf.string?.contains("NATIVE_EXPORT_CANARY") == true)
+        #expect(pdf.pageCount == 1)
+        #expect(pdf.string?.contains("PDFCANARY47") == true)
         #expect(try Data(contentsOf: sourceURL) == Data(source.utf8))
     }
 }
