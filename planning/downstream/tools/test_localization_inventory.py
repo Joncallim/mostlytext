@@ -143,11 +143,12 @@ class LocalizationInventoryTests(unittest.TestCase):
 
 
 class ProductPluralInventoryTests(unittest.TestCase):
-    """Guard the seven current plural keys and expose, without approving, draft locale coverage."""
+    """Guard the current plural keys and expose, without approving, draft locale coverage."""
 
     repo = Path(__file__).resolve().parents[3]
     app_catalog = "MacDown2/MacDown2/Localizable.xcstrings"
     status_key = "%lld characters, %lld words"
+    selected_key = "%lld selected"
     preview_budget_key = (
         "^[%lld valid placement](inflect: true) exceeded the preview budget "
         "and remain as authored source"
@@ -181,7 +182,9 @@ class ProductPluralInventoryTests(unittest.TestCase):
             for entry in subject.inventory(self.repo)["entries"]
             if entry["catalog"] == self.app_catalog and any(entry["variants"].values())
         }
-        expected_keys = set(self.single_count_keys) | {self.status_key, self.preview_budget_key}
+        expected_keys = set(self.single_count_keys) | {
+            self.status_key, self.selected_key, self.preview_budget_key
+        }
         self.assertEqual(set(generated), expected_keys)
         declared = {
             (path.relative_to(self.repo).as_posix(), key)
@@ -198,6 +201,9 @@ class ProductPluralInventoryTests(unittest.TestCase):
             for locale, forms in self.categories.items()
         }
         self.assertEqual(generated[self.status_key]["variants"], expected_status)
+        expected_selected = {"en": {}}
+        expected_selected.update({locale: {"value": self.categories[locale]} for locale in ("fr", "ja", "pl")})
+        self.assertEqual(generated[self.selected_key]["variants"], expected_selected)
         expected_budget = {locale: {"arg1": self.categories[locale]} for locale in ("fr", "ja", "pl")}
         self.assertEqual(generated[self.preview_budget_key]["variants"], expected_budget)
         for key, substitution in self.single_count_keys.items():
