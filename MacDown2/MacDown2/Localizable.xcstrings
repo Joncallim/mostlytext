@@ -12102,7 +12102,7 @@
       }
     },
     "rendered output too large (%lld bytes)": {
-      "comment": "App-owned diagram failure detail shared by Mermaid, D2 and Graphviz. Non-English values are English review drafts requiring final translation/native review. Byte count uses the signed Int format. English singular applies to one; non-English plural values remain drafts.",
+      "comment": "App-owned diagram failure detail shared by Mermaid, D2 and Graphviz. Non-English plural values are draft translations requiring native review. Byte count uses the signed Int format.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -12146,13 +12146,13 @@
                   "one": {
                     "stringUnit": {
                       "state": "needs_review",
-                      "value": "rendered output too large (%arg byte)"
+                      "value": "sortie générée trop volumineuse (%arg octet)"
                     }
                   },
                   "other": {
                     "stringUnit": {
                       "state": "needs_review",
-                      "value": "rendered output too large (%arg bytes)"
+                      "value": "sortie générée trop volumineuse (%arg octets)"
                     }
                   }
                 }
@@ -12174,7 +12174,7 @@
                   "other": {
                     "stringUnit": {
                       "state": "needs_review",
-                      "value": "rendered output too large (%arg bytes)"
+                      "value": "描画結果が大きすぎます（%argバイト）"
                     }
                   }
                 }
@@ -12196,25 +12196,25 @@
                   "one": {
                     "stringUnit": {
                       "state": "needs_review",
-                      "value": "rendered output too large (%arg byte)"
+                      "value": "Wynik renderowania jest zbyt duży (%arg bajt)"
                     }
                   },
                   "few": {
                     "stringUnit": {
                       "state": "needs_review",
-                      "value": "rendered output too large (%arg bytes)"
+                      "value": "Wynik renderowania jest zbyt duży (%arg bajty)"
                     }
                   },
                   "many": {
                     "stringUnit": {
                       "state": "needs_review",
-                      "value": "rendered output too large (%arg bytes)"
+                      "value": "Wynik renderowania jest zbyt duży (%arg bajtów)"
                     }
                   },
                   "other": {
                     "stringUnit": {
                       "state": "needs_review",
-                      "value": "rendered output too large (%arg bytes)"
+                      "value": "Wynik renderowania jest zbyt duży (%arg bajtów)"
                     }
                   }
                 }
