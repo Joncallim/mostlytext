@@ -83,6 +83,21 @@ struct ExternalFileControllerLiveLatencyTests {
             "actual_debounce_ms=\(ms(trace.debounceStart, trace.debounceEnd)) " +
             "debounce_end_to_model_and_editor_ms=\(ms(trace.debounceEnd, reconciled)) " +
             "rename_start_to_model_and_editor_ms=\(ms(began, reconciled))")
+        if let path = ProcessInfo.processInfo.environment["MOSTLYTEXT_CONTROLLER_LATENCY_OUTPUT"] {
+            let directory = URL(fileURLWithPath: path, isDirectory: true)
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            let values: [String: Any] = [
+                "bytes": byteCount,
+                "revision_sha256": digest,
+                "rename_to_first_event_ms": ms(began, trace.firstEvent),
+                "last_event_to_debounce_start_ms": ms(trace.lastEvent, trace.debounceStart),
+                "actual_debounce_ms": ms(trace.debounceStart, trace.debounceEnd),
+                "debounce_end_to_model_and_editor_ms": ms(trace.debounceEnd, reconciled),
+                "rename_start_to_model_and_editor_ms": ms(began, reconciled),
+            ]
+            let data = try JSONSerialization.data(withJSONObject: values, options: [.prettyPrinted, .sortedKeys])
+            try data.write(to: directory.appendingPathComponent("\(byteCount).json"), options: .atomic)
+        }
     }
 
     private func ms(_ start: UInt64, _ end: UInt64) -> Double {
