@@ -19,7 +19,7 @@ struct OrdinaryExportSnapshotTests {
         defer { try? FileManager.default.removeItem(at: fixture.directory) }
         let source = "@Note {\nbody\n}\n"
         let document = FileDocument(fileURL: fixture.directory.appendingPathComponent("source.md"), text: source)
-        let snapshot = OrdinaryExportSnapshot(
+        let snapshot = await OrdinaryExportSnapshot(
             document: document,
             theme: fixture.themeController.current,
             parseOptions: DocumentEditorSplitView.markdownParseOptions(from: fixture.settings.markdown)
@@ -54,7 +54,7 @@ struct OrdinaryExportSnapshotTests {
     @Test func aDestinationCreatedWhileTheContributionParseIsHeldIsPreserved() async throws {
         let fixture = try makeFixture()
         defer { try? FileManager.default.removeItem(at: fixture.directory) }
-        let snapshot = OrdinaryExportSnapshot(
+        let snapshot = await OrdinaryExportSnapshot(
             document: FileDocument(fileURL: fixture.directory.appendingPathComponent("source.md"), text: "# Source"),
             theme: BundledThemes.light, parseOptions: .default
         )
@@ -83,7 +83,11 @@ struct OrdinaryExportSnapshotTests {
         let document = try FileDocument(fileURL: source, text: "").load()
         try FileManager.default.linkItem(at: source, to: fixture.outputURL)
         try FileManager.default.removeItem(at: source)
-        let snapshot = OrdinaryExportSnapshot(document: document, theme: BundledThemes.light, parseOptions: .default)
+        let snapshot = await OrdinaryExportSnapshot(
+            document: document,
+            theme: BundledThemes.light,
+            parseOptions: .default
+        )
         #expect(snapshot.protectedSourceIdentity != nil)
         await #expect(throws: ExportError.self) {
             try await fixture.exporter.performExport(
@@ -94,12 +98,12 @@ struct OrdinaryExportSnapshotTests {
         #expect(try Data(contentsOf: fixture.outputURL) == original)
     }
 
-    @Test func snapshotRequestPreservesItsCapturedInputs() {
+    @Test func snapshotRequestPreservesItsCapturedInputs() async {
         let document = FileDocument(
             fileURL: URL(fileURLWithPath: "/tmp/export-snapshot.md"),
             text: "@Note {\nbody\n}\n"
         )
-        let snapshot = OrdinaryExportSnapshot(
+        let snapshot = await OrdinaryExportSnapshot(
             document: document,
             theme: BundledThemes.light,
             parseOptions: MarkdownParseOptions(blockDirectives: true)
@@ -181,8 +185,8 @@ extension OrdinaryExportSnapshotTests {
             fixture.coordinator.commandStdinStages = []
         }
         let parser = GatedExportParseExecutor()
-        let snapshot = OrdinaryExportSnapshot(document: FileDocument(text: "# Export source"),
-                                              theme: BundledThemes.light, parseOptions: .default)
+        let snapshot = await OrdinaryExportSnapshot(document: FileDocument(text: "# Export source"),
+                                                    theme: BundledThemes.light, parseOptions: .default)
         let operation = Task { @MainActor in
             try await fixture.exporter.performExport(
                 snapshot: snapshot, selection: .init(url: fixture.outputURL, format: .standaloneHTML, style: .embedded),
@@ -251,8 +255,13 @@ extension OrdinaryExportSnapshotTests {
         let tab = model.tabStore.activeTabID
         let origin = try #require(OrdinaryExportOrigin.capture(controller: controller))
         let accepted = try origin.documentAfterPanel()
-        let snapshot = OrdinaryExportSnapshot(document: accepted, theme: BundledThemes.light, parseOptions: .default)
         try origin.didFreezeInputs()
+        let snapshot = await OrdinaryExportSnapshot(
+            document: accepted,
+            theme: BundledThemes.light,
+            parseOptions: .default
+        )
+        try origin.publicationLease.checkActive()
         let parser = GatedExportParseExecutor()
         let operation = Task { @MainActor in
             try await fixture.exporter.performExport(
@@ -269,13 +278,17 @@ extension OrdinaryExportSnapshotTests {
         let result = try await operation.value
         let html = try String(contentsOf: result.primaryFile, encoding: .utf8)
         #expect(html.contains("Original source"))
+        try assertOriginalImageExported(at: fixture.outputURL)
+        #expect(try Data(contentsOf: sourceURL) == Data(source.utf8))
+        #expect(try Data(contentsOf: newRoot.appendingPathComponent("a.png")) == Data([2]))
+    }
+
+    private func assertOriginalImageExported(at outputURL: URL) throws {
         let image = try #require(FileManager.default.contentsOfDirectory(
-            at: fixture.outputURL.deletingPathExtension().appendingPathExtension("assets"),
+            at: outputURL.deletingPathExtension().appendingPathExtension("assets"),
             includingPropertiesForKeys: nil
         ).first { $0.pathExtension == "png" })
         #expect(try Data(contentsOf: image) == Data([1]))
-        #expect(try Data(contentsOf: sourceURL) == Data(source.utf8))
-        #expect(try Data(contentsOf: newRoot.appendingPathComponent("a.png")) == Data([2]))
     }
 
     @Test func closingTheFrozenOriginWhileParsingStillPreventsPublication() async throws {
@@ -287,9 +300,10 @@ extension OrdinaryExportSnapshotTests {
         fixture.coordinator.controllers = [controller]
         defer { fixture.coordinator.removeController(controller); controller.close() }
         let origin = try #require(OrdinaryExportOrigin.capture(controller: controller))
-        let snapshot = try OrdinaryExportSnapshot(document: origin.documentAfterPanel(),
-                                                  theme: BundledThemes.light, parseOptions: .default)
         try origin.didFreezeInputs()
+        let snapshot = try await OrdinaryExportSnapshot(document: origin.documentAfterPanel(),
+                                                        theme: BundledThemes.light, parseOptions: .default)
+        try origin.publicationLease.checkActive()
         let parser = GatedExportParseExecutor()
         let operation = Task { @MainActor in
             try await fixture.exporter.performExport(
