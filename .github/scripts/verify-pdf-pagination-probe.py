@@ -26,6 +26,7 @@ TESTS = {
     'exportingALongDocumentProducesARealMultiPagePDF',
     'exportedPDFReplacesAnyExistingFileAtomically',
 }
+TEMP_TEST = 'exportingHTMLThenPDFPreservesSourceAndPublishesPDF'
 CONDITION = 'PDF_PAGINATION_PROBE'
 INPUTS = ['MacDown2', '.github/scripts/verify-pdf-pagination-probe.py',
           '.github/scripts/test-pdf-pagination-probe.py',
@@ -75,6 +76,41 @@ def validate_execution(log, identity, status):
         raise ValueError('The actual app digest is required')
 
 
+def validate_temp_execution(log, identity, status):
+    log = re.sub(r'\x1b\[[0-9;]*m', '', log)
+    if any(value in log for value in ['recorded an issue', 'Program crashed:', 'Fatal error:', 'Assertion failed:']):
+        raise ValueError('The private-folder PDF run recorded a failure')
+    if re.search(r'(?:Test|Suite)[^\n]*(?:skipped|disabled)', log, re.I):
+        raise ValueError('The private-folder PDF test was skipped or disabled')
+    passed = re.findall(r'Test ([A-Za-z0-9_]+)\([^\n]*\) passed', log)
+    if passed != [TEMP_TEST] or not re.search(r'Test run with 1 test in 1 suite passed', log):
+        raise ValueError('The complete private-folder PDF test must execute once and pass')
+    if not re.search(r'Suite "PDF export after HTML in a private temporary folder" passed', log):
+        raise ValueError('The private-folder PDF suite did not pass')
+    if status.get('returncode') != 0 or status.get('timed_out') is not False or status.get('cancelled') is not False:
+        raise ValueError('The owned private-folder PDF execution did not exit normally')
+    if not 0 < status.get('elapsed_seconds', 0) < 600 or status.get('app_cleanup_requested') != []:
+        raise ValueError('The private-folder PDF execution exceeded its bound or required cleanup')
+    command = identity.get('command', [])
+    if not command or command[0] != 'xcodebuild' or 'test-without-building' not in command:
+        raise ValueError('Actual app test execution is required')
+    if '-configuration' not in command or command[command.index('-configuration') + 1] != 'Release':
+        raise ValueError('Release execution is required')
+    if 'ENABLE_TESTABILITY=YES' not in command or not any(
+        c.startswith('SWIFT_ACTIVE_COMPILATION_CONDITIONS=') and {CONDITION, 'RELEASE_PREVIEW_PROBE'} <= set(c.split())
+        for c in command
+    ):
+        raise ValueError('The dedicated PDF opt-in condition is required')
+    if [c for c in command if c.startswith('-only-testing:')] != [
+        '-only-testing:MacDown2Tests/PDFExportTemporaryDestinationTests'
+    ]:
+        raise ValueError('Only the complete private-folder PDF suite may be selected')
+    if not str(identity.get('app', '')).endswith('/Release/MacDown2.app/Contents/MacOS/MacDown2'):
+        raise ValueError('The actual built Release app must own execution')
+    if not re.fullmatch(r'[0-9a-f]{64}', identity.get('app_sha256', '')):
+        raise ValueError('The actual app digest is required')
+
+
 def check_host(root):
     if sys.flags.optimize:
         raise RuntimeError('Optimized Python is refused before PDF qualification access')
@@ -97,11 +133,11 @@ def check_host(root):
         raise RuntimeError('Untrusted PDF qualification event')
 
 
-def validate_summary(summary):
-    expected = {'totalTestCount': 11, 'passedTests': 11, 'failedTests': 0,
+def validate_summary(summary, count=11):
+    expected = {'totalTestCount': count, 'passedTests': count, 'failedTests': 0,
                 'skippedTests': 0, 'expectedFailures': 0}
     if any(type(summary.get(k)) is not int or summary[k] != v for k, v in expected.items()):
-        raise ValueError('Actual PDF result bundle lacks all eleven passing tests')
+        raise ValueError('Actual PDF result bundle lacks the complete passing selection')
 
 
 def main():
@@ -111,15 +147,16 @@ def main():
     parser.add_argument('output', type=Path)
     parser.add_argument('--verify', action='store_true')
     parser.add_argument('--require-result', action='store_true')
+    parser.add_argument('--require-temp-result', action='store_true')
     parser.add_argument('--capture-compiled', action='store_true')
     parser.add_argument('--admit', action='store_true')
     args = parser.parse_args()
     check_host(args.output.resolve())
     if args.admit:
-        if args.verify or args.require_result or args.capture_compiled:
+        if args.verify or args.require_result or args.require_temp_result or args.capture_compiled:
             raise RuntimeError('Host admission cannot select another PDF phase')
         return
-    if (args.require_result or args.capture_compiled) and not args.verify:
+    if (args.require_result or args.require_temp_result or args.capture_compiled) and not args.verify:
         raise RuntimeError('Compiled/result PDF phases require original input verification')
     repo = Path(__file__).resolve().parents[2]
     paths = subprocess.check_output(['git', 'ls-files', '-z', '--', *INPUTS], cwd=repo).decode().split('\0')
@@ -152,6 +189,21 @@ def main():
                                            '--path', str(args.output / 'actual-pdf.xcresult')])
             (args.output / 'actual-pdf-summary.json').write_bytes(raw)
             validate_summary(json.loads(raw))
+        if args.require_temp_result:
+            identity = json.loads((args.output / 'temp-diagnostics/identity.json').read_text())
+            if identity.get('checkout') != receipt['checkout']:
+                raise SystemExit('The private-folder PDF execution checkout differs')
+            validate_temp_execution((args.output / 'temp-destination.log').read_text(), identity,
+                                    json.loads((args.output / 'temp-diagnostics/status.json').read_text()))
+            binding = json.loads((args.output / 'compiled-initial.json').read_text())
+            if binding['phase'] != 'initial' or binding['configuration'] != 'Release':
+                raise RuntimeError('PDF compiled phase was retargeted')
+            verify(args.output, binding)
+            require_owned_phase(identity, binding, receipt['checkout'])
+            raw = subprocess.check_output(['xcrun', 'xcresulttool', 'get', 'test-results', 'summary',
+                                           '--path', str(args.output / 'temp-destination.xcresult')])
+            (args.output / 'temp-destination-summary.json').write_bytes(raw)
+            validate_summary(json.loads(raw), count=1)
         if args.capture_compiled:
             capture(args.output, Path(os.environ['RUNNER_TEMP']) / 'pdf-pagination-app/Build/Products',
                     'Release', repo / 'MacDown2/MacDown2.xcodeproj', 'initial')
