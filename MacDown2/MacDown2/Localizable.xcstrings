@@ -572,7 +572,7 @@
       }
     },
     "%lld preview errors": {
-      "comment": "Whole preview diagnostic accessibility count. Non-English entries are English review drafts, not accepted translations.",
+      "comment": "Whole preview diagnostic accessibility count. Non-English entries are draft translations requiring native review.",
       "localizations": {
         "en": {
           "variations": {
@@ -598,13 +598,13 @@
               "one": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview error"
+                  "value": "%lld erreur d'aperçu"
                 }
               },
               "other": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview errors"
+                  "value": "%lld erreurs d'aperçu"
                 }
               }
             }
@@ -616,7 +616,7 @@
               "other": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview errors"
+                  "value": "%lld 件のプレビューエラー"
                 }
               }
             }
@@ -628,25 +628,25 @@
               "one": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview error"
+                  "value": "%lld błąd podglądu"
                 }
               },
               "few": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview errors"
+                  "value": "%lld błędy podglądu"
                 }
               },
               "many": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview errors"
+                  "value": "%lld błędów podglądu"
                 }
               },
               "other": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview errors"
+                  "value": "%lld błędów podglądu"
                 }
               }
             }
@@ -655,7 +655,7 @@
       }
     },
     "%lld preview warnings": {
-      "comment": "Whole preview diagnostic accessibility count. Non-English entries are English review drafts, not accepted translations.",
+      "comment": "Whole preview diagnostic accessibility count. Non-English entries are draft translations requiring native review.",
       "localizations": {
         "en": {
           "variations": {
@@ -681,13 +681,13 @@
               "one": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview warning"
+                  "value": "%lld avertissement d'aperçu"
                 }
               },
               "other": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview warnings"
+                  "value": "%lld avertissements d'aperçu"
                 }
               }
             }
@@ -699,7 +699,7 @@
               "other": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview warnings"
+                  "value": "%lld 件のプレビュー警告"
                 }
               }
             }
@@ -711,25 +711,25 @@
               "one": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview warning"
+                  "value": "%lld ostrzeżenie podglądu"
                 }
               },
               "few": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview warnings"
+                  "value": "%lld ostrzeżenia podglądu"
                 }
               },
               "many": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview warnings"
+                  "value": "%lld ostrzeżeń podglądu"
                 }
               },
               "other": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview warnings"
+                  "value": "%lld ostrzeżeń podglądu"
                 }
               }
             }
