@@ -13,14 +13,16 @@ extension EditorTextSystem {
         guard let first = descending.last, let last = descending.first else { return }
         let source = assistTextSource ?? (text as NSString)
         let span = NSRange(location: first.range.location, length: NSMaxRange(last.range) - first.range.location)
-        var combined = ""
+        // Build against UTF-16 ranges without repeatedly bridging each large gap back into a Swift String.
+        let builder = NSMutableString(capacity: span.length)
         var cursor = span.location
         for replacement in descending.reversed() {
             let gap = NSRange(location: cursor, length: replacement.range.location - cursor)
-            combined += source.substring(with: gap)
-            combined += replacement.replacementText
+            builder.append(source.substring(with: gap))
+            builder.append(replacement.replacementText)
             cursor = NSMaxRange(replacement.range)
         }
+        let combined = builder as String
         transactionEditsToReport = descending
         lineIndexNeedsRebuild = true
         isApplyingMultiRangeTransaction = false
