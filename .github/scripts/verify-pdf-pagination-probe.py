@@ -85,7 +85,7 @@ def validate_temp_execution(log, identity, status):
     passed = re.findall(r'Test ([A-Za-z0-9_]+)\([^\n]*\) passed', log)
     if passed != [TEMP_TEST] or not re.search(r'Test run with 1 test in 1 suite passed', log):
         raise ValueError('The complete private-folder PDF test must execute once and pass')
-    if not re.search(r'Suite PDF export after HTML in a private temporary folder passed', log):
+    if not re.search(r'Suite "PDF export after HTML in a private temporary folder" passed', log):
         raise ValueError('The private-folder PDF suite did not pass')
     if status.get('returncode') != 0 or status.get('timed_out') is not False or status.get('cancelled') is not False:
         raise ValueError('The owned private-folder PDF execution did not exit normally')
