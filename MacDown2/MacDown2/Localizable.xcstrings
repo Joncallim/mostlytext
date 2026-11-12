@@ -1561,6 +1561,64 @@
         }
       }
     },
+    "Cancel Export": {
+      "comment": "Ordinary export progress or cancellation control. Non-English values are review drafts pending native language and layout acceptance.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel Export"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cancel Export"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cancel Export"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cancel Export"
+          }
+        }
+      }
+    },
+    "Cancelling export…": {
+      "comment": "Ordinary export progress or cancellation control. Non-English values are review drafts pending native language and layout acceptance.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelling export…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cancelling export…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cancelling export…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cancelling export…"
+          }
+        }
+      }
+    },
     "Capitalize": {
       "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
       "localizations": {
@@ -1630,6 +1688,35 @@
           "stringUnit": {
             "state": "translated",
             "value": "Checking MacDown preferences…"
+          }
+        }
+      }
+    },
+    "Checking PDF…": {
+      "comment": "Ordinary export progress or cancellation control. Non-English values are review drafts pending native language and layout acceptance.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking PDF…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Checking PDF…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Checking PDF…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Checking PDF…"
           }
         }
       }
@@ -1740,6 +1827,35 @@
           "stringUnit": {
             "state": "translated",
             "value": "Choose which original MacDown preferences to import. Your original preferences remain unchanged."
+          }
+        }
+      }
+    },
+    "Choosing export destination…": {
+      "comment": "Ordinary export progress or cancellation control. Non-English values are review drafts pending native language and layout acceptance.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choosing export destination…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Choosing export destination…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Choosing export destination…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Choosing export destination…"
           }
         }
       }
@@ -3367,6 +3483,35 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "Exporting HTML…": {
+      "comment": "Ordinary export progress or cancellation control. Non-English values are review drafts pending native language and layout acceptance.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exporting HTML…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Exporting HTML…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Exporting HTML…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Exporting HTML…"
           }
         }
       }
@@ -5434,6 +5579,35 @@
         }
       }
     },
+    "Loading PDF content…": {
+      "comment": "Ordinary export progress or cancellation control. Non-English values are review drafts pending native language and layout acceptance.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading PDF content…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Loading PDF content…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Loading PDF content…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Loading PDF content…"
+          }
+        }
+      }
+    },
     "Loading folder…": {
       "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
       "localizations": {
@@ -7262,6 +7436,35 @@
         }
       }
     },
+    "Preparing export…": {
+      "comment": "Ordinary export progress or cancellation control. Non-English values are review drafts pending native language and layout acceptance.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing export…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Preparing export…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Preparing export…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Preparing export…"
+          }
+        }
+      }
+    },
     "Preserving your previous installation…": {
       "extractionState": "manual",
       "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
@@ -7440,6 +7643,35 @@
     "Previously enabled": {
       "extractionState": "manual",
       "comment": "Whole-installation migration and legacy policy copy. Translation and native layout acceptance remain tracked in #17."
+    },
+    "Printing PDF (this step cannot be cancelled)…": {
+      "comment": "Ordinary export progress or cancellation control. Non-English values are review drafts pending native language and layout acceptance.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Printing PDF (this step cannot be cancelled)…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Printing PDF (this step cannot be cancelled)…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Printing PDF (this step cannot be cancelled)…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Printing PDF (this step cannot be cancelled)…"
+          }
+        }
+      }
     },
     "Prose and": {
       "comment": "Appearance settings. Translation draft; native-speaker review remains required.",
@@ -8494,6 +8726,35 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Save with Encoding"
+          }
+        }
+      }
+    },
+    "Saving export…": {
+      "comment": "Ordinary export progress or cancellation control. Non-English values are review drafts pending native language and layout acceptance.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saving export…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Saving export…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Saving export…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Saving export…"
           }
         }
       }

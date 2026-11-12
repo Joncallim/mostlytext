@@ -122,9 +122,11 @@ public final class ExportDestinationAdmission: @unchecked Sendable {
     /// a leaf symlink or reopening the parent pathname. This is read admission,
     /// not proof that an unknown file may be removed during scratch cleanup.
     public func readGeneratedFile(at candidate: URL, maxBytes: Int) throws -> Data? {
+        // Foundation can map physical /private/var to /var when standardizing a parent.
+        // Compare both normalized spellings; the read still uses the pinned parent descriptor.
         guard Self.isSafeFileURL(candidate), Self.isSafeComponent(candidate.lastPathComponent),
               candidate.deletingLastPathComponent().standardizedFileURL.absoluteString.utf8.elementsEqual(
-                  url.deletingLastPathComponent().absoluteString.utf8
+                  url.deletingLastPathComponent().standardizedFileURL.absoluteString.utf8
               ), !candidate.lastPathComponent.utf8.elementsEqual(url.lastPathComponent.utf8)
         else { throw ExportError.unsafePublication }
         return try Filesystem.readBoundedFile(candidate.lastPathComponent, in: parent.descriptor, maxBytes: maxBytes)
