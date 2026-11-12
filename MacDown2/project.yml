@@ -36,6 +36,9 @@ targets:
     dependencies:
     - target: MostlyTextCommand
       link: false
+    - target: MostlyTextQuickLook
+      embed: true
+      link: false
     - package: MacDownKit
       product: FileCore
     - package: MacDownKit
@@ -231,6 +234,63 @@ targets:
       outputFiles:
       - $(TARGET_BUILD_DIR)/$(EXECUTABLE_FOLDER_PATH)/mostlytext-cli
       - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/MacDownKit_CommandLineSupport.bundle
+  MostlyTextQuickLook:
+    type: app-extension
+    platform: macOS
+    sources:
+    - MacDown2QuickLook
+    dependencies:
+    - package: MacDownKit
+      product: QuickLookSource
+    - target: MostlyTextQuickLookWorker
+      embed: true
+      link: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.MostlyText.QuickLook
+        APPLICATION_EXTENSION_API_ONLY: 'YES'
+        CODE_SIGN_INJECT_BASE_ENTITLEMENTS: 'NO'
+    info:
+      path: MacDown2QuickLook/Info.plist
+      properties:
+        CFBundleDisplayName: MostlyText
+        CFBundleShortVersionString: 0.1.0
+        CFBundleVersion: '1'
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.quicklook.preview
+          NSExtensionPrincipalClass: '$(PRODUCT_MODULE_NAME).MarkdownQuickLookProvider'
+          NSExtensionAttributes:
+            QLIsDataBasedPreview: true
+            QLSupportedContentTypes: [net.daringfireball.markdown]
+    entitlements:
+      path: MacDown2QuickLook/QuickLook.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.files.user-selected.read-only: true
+  MostlyTextQuickLookWorker:
+    type: xpc-service
+    platform: macOS
+    sources:
+    - MacDown2QuickLookWorker
+    dependencies:
+    - package: MacDownKit
+      product: QuickLookSource
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.MostlyText.QuickLook.Worker
+        APPLICATION_EXTENSION_API_ONLY: 'YES'
+        CODE_SIGN_INJECT_BASE_ENTITLEMENTS: 'NO'
+    info:
+      path: MacDown2QuickLookWorker/Info.plist
+      properties:
+        CFBundleShortVersionString: 0.1.0
+        CFBundleVersion: '1'
+        XPCService:
+          ServiceType: Application
+    entitlements:
+      path: MacDown2QuickLookWorker/Worker.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
   MostlyTextCommand:
     type: tool
     settings:
@@ -272,6 +332,7 @@ targets:
     # Compile the original package controls against the same actual products in optimized app-host qualification.
     - Packages/MacDownKit/Tests/PreviewTests/PreviewImageDecodeBudgetTests.swift
     - Packages/MacDownKit/Tests/PreviewTests/TextualAttachmentInterceptionTests.swift
+    - MacDown2QuickLookWorker/SourceProcess.swift
     dependencies:
     - target: MacDown2
     - package: MacDownKit
@@ -324,6 +385,8 @@ targets:
       product: DiagramsGraphviz
     - package: MacDownKit
       product: GraphvizRendering
+    - package: MacDownKit
+      product: QuickLookSource
     settings:
       base:
         GENERATE_INFOPLIST_FILE: 'YES'
