@@ -95,6 +95,11 @@ final class WindowCoordinator {
     /// — `ExportCoordinator.canExportActiveDocument` reads this on every menu
     /// validation, and the menu item must grey out while its export runs.
     var exportingModels: Set<ObjectIdentifier> = []
+    /// Visible state for the ordinary export's complete operation. The task
+    /// handles are kept outside observation; only phase changes redraw UI.
+    var exportPhases: [ObjectIdentifier: ExportPhase] = [:]
+    @ObservationIgnored var exportTasks: [ObjectIdentifier: Task<Void, Never>] = [:]
+    @ObservationIgnored var exportLeases: [ObjectIdentifier: ExportLifetimeLease] = [:]
     /// Stateless export orchestrator for the active document (E12). A computed
     /// property keeps it outside `@Observable` tracking; the value type means
     /// menu validation, which reads it on every evaluation, allocates nothing.

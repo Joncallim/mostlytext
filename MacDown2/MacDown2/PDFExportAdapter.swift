@@ -34,8 +34,11 @@ enum PDFExportAdapter {
     static func export(_ prepared: PreparedExportDocument, to url: URL,
                        lease: ExportLifetimeLease = ExportLifetimeLease(),
                        admission: ExportDestinationAdmission? = nil,
+                       modalWindow: NSWindow? = nil,
+                       onPhase: (@MainActor (PDFExportPhase) -> Void)? = nil,
                        runPrint: @MainActor (NSPrintOperation) -> Bool = { $0.run() }) async throws {
         try lease.checkActive()
+        onPhase?(.preparing)
         let authorization = try admission ?? ExportDestinationAdmission(capturing: url)
         try authorization.checkTarget(url)
         // Base64-encoding every embedded image is the most expensive step in a
@@ -43,7 +46,8 @@ enum PDFExportAdapter {
         let html = try await hardenedHTML(from: prepared)
         let sourceHasContent = !prepared.bodyHTML.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         try await exportHTML(html, to: url, sourceHasContent: sourceHasContent,
-                             lease: lease, admission: authorization, runPrint: runPrint)
+                             lease: lease, admission: authorization, modalWindow: modalWindow,
+                             onPhase: onPhase, runPrint: runPrint)
     }
 
     /// Disabled opt-in consumer: WebKit receives exactly the accepted UTF-8
@@ -69,8 +73,11 @@ enum PDFExportAdapter {
 
     private static func exportHTML(_ html: String, to url: URL, sourceHasContent: Bool,
                                    lease: ExportLifetimeLease?, admission: ExportDestinationAdmission,
+                                   modalWindow: NSWindow? = nil,
+                                   onPhase: (@MainActor (PDFExportPhase) -> Void)? = nil,
                                    runPrint: @MainActor (NSPrintOperation) -> Bool = { $0.run() }) async throws {
         try lease?.checkActive()
+        onPhase?(.loading)
 
         let printURL = temporaryURL(nextTo: url)
         let snapshotURL = temporaryURL(nextTo: url)
@@ -95,7 +102,8 @@ enum PDFExportAdapter {
 
         try admission.checkCurrent()
         let operation = try configuredOperation(for: webView, savingTo: printURL, printInfo: info)
-        let didPrint = runPrint(operation)
+        onPhase?(.printing)
+        let didPrint = await runPrintOperation(operation, in: modalWindow, fallback: runPrint)
         // `run()` can occupy the main thread. Cancellation or lease revocation
         // already recorded when it returns must win before PDFKit reads the
         // scratch file or the existing destination can be replaced.
@@ -104,6 +112,8 @@ enum PDFExportAdapter {
         guard didPrint else {
             throw PDFExportError.printOperationFailed
         }
+
+        onPhase?(.validating)
 
         var output = try await validatedPDFBytes(at: printURL, admission: admission, sourceHasContent: sourceHasContent)
         if output == nil {
@@ -127,6 +137,7 @@ enum PDFExportAdapter {
         try lease?.checkActive()
 
         guard let output else { throw PDFExportError.invalidPDFOutput }
+        onPhase?(.publishing)
         let publicationLease = lease ?? ExportLifetimeLease()
         try await io { try admission.publish(output, lease: publicationLease) }
     }

@@ -11,6 +11,7 @@ import Themes
 import Workspace
 
 struct ContentAreaView: View {
+    @Environment(\.windowCoordinator) private var windowCoordinator
     let model: WorkspaceModel
     let editorStore: EditorTextSystemStore
     let findStore: EditorFindModelStore
@@ -105,6 +106,25 @@ struct ContentAreaView: View {
             }
 
             Spacer()
+
+            if let phase = windowCoordinator?.exportPhase(for: model) {
+                HStack(spacing: 6) {
+                    ProgressView()
+                        .controlSize(.small)
+                    Text(verbatim: phase.label)
+                        .font(.system(size: 11))
+                        .foregroundStyle(.secondary)
+                    if phase.canRequestCancellation {
+                        Button("Cancel Export") {
+                            windowCoordinator?.cancelExport(for: model)
+                        }
+                        .controlSize(.small)
+                        .accessibilityIdentifier("cancelExportButton")
+                    }
+                }
+                .accessibilityElement(children: .contain)
+                .accessibilityIdentifier("exportProgress")
+            }
 
             // Saving indicator (#57): the only signal a save is actually
             // running. Before this there was no spinner, no disabled
