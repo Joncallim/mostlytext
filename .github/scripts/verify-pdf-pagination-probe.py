@@ -124,6 +124,8 @@ def validate_modal_production_execution(log, identity, status):
     elapsed, heartbeats = measurements[0]
     if not 0 < float(elapsed) < 600_000 or int(heartbeats) < 1:
         raise ValueError('The production PDF print interval did not retain a bounded live run loop')
+    if log.count('pdf-production-modal-revocation preserved_existing_destination=true') != 1:
+        raise ValueError('The production PDF print did not prove revoked publication preserves its destination')
 
 
 def check_host(root):

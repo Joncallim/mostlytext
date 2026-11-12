@@ -94,6 +94,7 @@ class PDFResultTests(unittest.TestCase):
     def test_production_modal_selection_requires_owned_release_and_modal_opt_in(self):
         log = ('Test ordinaryAdapterPrintsWhileMainRunLoopAdvances() passed after 0.1 seconds.\n'
                'pdf-production-modal-print elapsed_ms=561.3 main_run_loop_heartbeats=55\n'
+               'pdf-production-modal-revocation preserved_existing_destination=true\n'
                'Suite PDFModalProductionPathTests passed.\n'
                'Test run with 1 test in 1 suite passed.')
         identity = copy.deepcopy(self.identity)
@@ -110,7 +111,8 @@ class PDFResultTests(unittest.TestCase):
         for changed_log in [log.replace(' passed', ' skipped', 1),
                             log.replace('1 test', '0 tests'), log + '\nProgram crashed:',
                             log.replace('main_run_loop_heartbeats=55', 'main_run_loop_heartbeats=0'),
-                            log.replace('pdf-production-modal-print', 'missing-measurement')]:
+                            log.replace('pdf-production-modal-print', 'missing-measurement'),
+                            log.replace('pdf-production-modal-revocation', 'missing-revocation')]:
             with self.subTest(log=changed_log[-80:]), self.assertRaises(ValueError):
                 probe.validate_modal_production_execution(changed_log, identity, self.status)
         for key, value in [('app', '/tmp/standalone-pdf-probe'), ('app_sha256', '')]:

@@ -69,6 +69,64 @@ struct PDFModalProductionPathTests {
         #expect(pdf.pageCount > 1)
         #expect(pdf.string?.contains("Section 1") == true)
         #expect(pdf.string?.contains("Section 25") == true)
+        try await verifyRevokedPrintPreservesExistingDestination(in: directory, window: window, sections: sections)
+    }
+
+    private func verifyRevokedPrintPreservesExistingDestination(
+        in directory: URL, window: NSWindow, sections: String
+    ) async throws {
+        let cancelledDestination = directory.appendingPathComponent("cancelled.pdf")
+        let previousBytes = Data("previous destination bytes".utf8)
+        try previousBytes.write(to: cancelledDestination)
+        let cancelledPrepared = try await ExportService.prepare(
+            ExportRequest(text: "# Production modal PDF\n\n" + sections,
+                          sourceGeneration: 2, theme: BundledThemes.light),
+            target: .pdf(url: cancelledDestination)
+        )
+        let lease = ExportLifetimeLease()
+        let revocation = ProductionPDFRevocation(lease: lease)
+        var reachedPrint = false
+        do {
+            try await PDFExportAdapter.export(
+                cancelledPrepared, to: cancelledDestination, lease: lease, modalWindow: window,
+                onPhase: { phase in
+                    if phase == .printing {
+                        reachedPrint = true
+                        DispatchQueue.main.async { revocation.revoke() }
+                    }
+                },
+                runPrint: { _ in
+                    Issue.record("The revoked modal export used the synchronous print fallback")
+                    return false
+                }
+            )
+            Issue.record("A print completed after lease revocation and replaced the destination")
+        } catch is CancellationError {
+            // A revoked lease wins after AppKit returns and before publication.
+        }
+        #expect(reachedPrint)
+        #expect(revocation.didRevoke)
+        #expect(try Data(contentsOf: cancelledDestination) == previousBytes)
+        print("pdf-production-modal-revocation preserved_existing_destination=true")
+    }
+}
+
+private final class ProductionPDFRevocation: @unchecked Sendable {
+    private let lease: ExportLifetimeLease
+    private let lock = NSLock()
+    private var revoked = false
+
+    init(lease: ExportLifetimeLease) {
+        self.lease = lease
+    }
+
+    func revoke() {
+        lease.revoke()
+        lock.withLock { revoked = true }
+    }
+
+    var didRevoke: Bool {
+        lock.withLock { revoked }
     }
 }
 
