@@ -332,6 +332,7 @@ targets:
     # Compile the original package controls against the same actual products in optimized app-host qualification.
     - Packages/MacDownKit/Tests/PreviewTests/PreviewImageDecodeBudgetTests.swift
     - Packages/MacDownKit/Tests/PreviewTests/TextualAttachmentInterceptionTests.swift
+    - MacDown2QuickLookWorker/SourceProcess.swift
     dependencies:
     - target: MacDown2
     - package: MacDownKit
@@ -384,6 +385,8 @@ targets:
       product: DiagramsGraphviz
     - package: MacDownKit
       product: GraphvizRendering
+    - package: MacDownKit
+      product: QuickLookSource
     settings:
       base:
         GENERATE_INFOPLIST_FILE: 'YES'

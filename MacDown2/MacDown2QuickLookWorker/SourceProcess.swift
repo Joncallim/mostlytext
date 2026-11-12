@@ -13,8 +13,8 @@ enum SourceProcess {
     private static let seconds = 3.0
     private static let maximumOutputBytes = QuickLookSourceFallback.maximumSourceBytes * 6 + 4096
 
-    static func run(selectedDescriptor: Int32) -> Result {
-        guard let executable = Bundle.main.executableURL,
+    static func run(selectedDescriptor: Int32, executable: URL? = Bundle.main.executableURL) -> Result {
+        guard let executable,
               executable.path.hasSuffix("/MostlyTextQuickLookWorker")
         else { return Result(data: nil, status: .failed) }
         guard let output = makeOutput() else { return Result(data: nil, status: .failed) }
