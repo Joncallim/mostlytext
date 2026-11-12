@@ -77,7 +77,7 @@ def validate_execution(log, identity, status):
         raise ValueError('The actual app digest is required')
 
 
-def validate_single_execution(log, identity, status, test, suite, conditions):
+def validate_single_execution(log, identity, status, test, suite, conditions, suite_label=None):
     log = re.sub(r'\x1b\[[0-9;]*m', '', log)
     if any(value in log for value in ['recorded an issue', 'Program crashed:', 'Fatal error:', 'Assertion failed:']):
         raise ValueError('The selected PDF run recorded a failure')
@@ -86,7 +86,8 @@ def validate_single_execution(log, identity, status, test, suite, conditions):
     passed = re.findall(r'Test ([A-Za-z0-9_]+)\([^\n]*\) passed', log)
     if passed != [test] or not re.search(r'Test run with 1 test in 1 suite passed', log):
         raise ValueError('The complete single PDF test must execute once and pass')
-    if not re.search(rf'Suite {re.escape(suite)} passed', log):
+    displayed_suite = f'"{suite_label}"' if suite_label else suite
+    if not re.search(rf'Suite {re.escape(displayed_suite)} passed', log):
         raise ValueError('The selected PDF suite did not pass')
     if status.get('returncode') != 0 or status.get('timed_out') is not False or status.get('cancelled') is not False:
         raise ValueError('The owned selected PDF execution did not exit normally')
@@ -112,7 +113,8 @@ def validate_single_execution(log, identity, status, test, suite, conditions):
 
 def validate_temp_execution(log, identity, status):
     validate_single_execution(log, identity, status, TEMP_TEST, 'PDFExportTemporaryDestinationTests',
-                              {CONDITION, 'RELEASE_PREVIEW_PROBE'})
+                              {CONDITION, 'RELEASE_PREVIEW_PROBE'},
+                              suite_label='PDF export after HTML in a private temporary folder')
 
 
 def validate_modal_production_execution(log, identity, status):
