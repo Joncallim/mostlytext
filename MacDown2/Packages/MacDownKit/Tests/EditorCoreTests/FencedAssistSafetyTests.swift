@@ -6,6 +6,24 @@ import Testing
 struct FencedAssistSafetyTests {
     private let markdownProfile = LanguageEditingProfileRegistry.profile(for: "markdown")
 
+    @Test("Markdown delimiter assist stays off inside quoted code and resumes after it")
+    func blockquoteFenceGatesActualAssist() {
+        for ending in ["\n", "\r\n", "\r"] {
+            let inside = ["> ```swift", "> code "].joined(separator: ending) as NSString
+            #expect(FencedRegionClassifier.classify(text: inside, atUTF16Offset: inside.length)
+                == .fencedCode(languageID: "swift"))
+            #expect(markdownAsteriskOutcome(in: inside) == .passthrough)
+
+            let after = ["> ```swift", "> code", "> ```", "Outside prose "]
+                .joined(separator: ending) as NSString
+            #expect(FencedRegionClassifier.classify(text: after, atUTF16Offset: after.length) == .prose)
+            guard case .edit = markdownAsteriskOutcome(in: after) else {
+                Issue.record("Markdown delimiter assist did not resume after the quoted fence")
+                continue
+            }
+        }
+    }
+
     @Test("a tilde line cannot close a backtick fence")
     func mismatchedMarkerStaysCode() {
         let source = "```swift\ncode\n~~~\nmore code" as NSString
