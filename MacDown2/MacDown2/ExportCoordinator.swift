@@ -122,6 +122,7 @@ struct ExportCoordinator {
                 theme: themeController.current,
                 parseOptions: DocumentEditorSplitView.markdownParseOptions(from: appSettings.markdown)
             )
+            try Task.checkCancellation()
             try origin.publicationLease.checkActive()
             let result = try await performExport(
                 snapshot: snapshot,
