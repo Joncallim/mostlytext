@@ -5,7 +5,7 @@ import QuickLookSource
 /// service owns the child deadline and reaps that exact process on timeout.
 enum QuickLookWorkerClient {
     private static let serviceName = "app.mostlytext.MostlyText.QuickLook.Worker"
-    private static let maximumReplyBytes = QuickLookSourceFallback.maximumSourceBytes * 6 + 4096
+    private static let maximumReplyBytes = QuickLookSourceFallback.maximumHTMLBytes
 
     static func renderSource(_ selected: FileHandle) async -> Data? {
         let result = OneShotSourceReply()

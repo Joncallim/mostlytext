@@ -1,21 +1,52 @@
 import Darwin
 import FileCore
 import Foundation
-import QuickLookSource
+@testable import QuickLookSource
 import Testing
 
 struct QuickLookSourceFallbackTests {
-    @Test func authoredMarkupRemainsEscapedAndOffline() throws {
+    @Test func rendererRefusalAndOversizeExpansionPreserveEscapedSource() throws {
+        let source = "<script>authored</script> &"
+        let refused = try #require(String(bytes: QuickLookSourceFallback.html(for: source, render: { _ in "" }),
+                                          encoding: .utf8))
+        let expanded = String(repeating: "x", count: QuickLookSourceFallback.maximumHTMLBytes + 1)
+        let oversized = try #require(String(bytes: QuickLookSourceFallback.html(for: source, render: { _ in expanded }),
+                                           encoding: .utf8))
+        for html in [refused, oversized] {
+            #expect(html.contains("&lt;script&gt;authored&lt;/script&gt; &amp;"))
+            #expect(!html.contains("<script>"))
+            #expect(html.utf8.count <= QuickLookSourceFallback.maximumHTMLBytes)
+        }
+    }
+
+    @Test func authoredActiveMarkupIsNotExecutedOrFetched() throws {
         let source = "# Head & 😀\r\n<script>alert('x')</script>\n<img src=\"https://example.com/a\">"
         let html = try withFile(Data(source.utf8)) { file in
             try #require(String(bytes: QuickLookSourceFallback.replyHTML(for: file), encoding: .utf8))
         }
-        #expect(html.contains("# Head &amp; 😀\r\n"))
-        #expect(html.contains("&lt;script&gt;alert(&#39;x&#39;)&lt;/script&gt;"))
-        #expect(html.contains("&lt;img src=&quot;https://example.com/a&quot;&gt;"))
+        #expect(html.contains("<h1>Head &amp; 😀</h1>"))
         #expect(!html.contains("<script"))
         #expect(!html.contains("<img"))
+        #expect(!html.contains("example.com"))
         #expect(html.contains("default-src 'none'; base-uri 'none'; form-action 'none'"))
+    }
+
+    @Test func sharedGFMStructureHasNoAuthoredURLs() throws {
+        let source = """
+        | Name | Value |
+        | --- | --- |
+        | one | ~~two~~ |
+
+        [link](https://example.invalid/page) ![image](https://example.invalid/pixel.png)
+        """
+        let html = try withFile(Data(source.utf8)) { file in
+            try #require(String(bytes: QuickLookSourceFallback.replyHTML(for: file), encoding: .utf8))
+        }
+        #expect(html.contains("<table>"))
+        #expect(html.contains("<del>two</del>"))
+        #expect(html.contains("link"))
+        #expect(html.contains("image"))
+        #expect(!html.contains("example.invalid"))
     }
 
     @Test func exactSourceCapIsCompleteAndTheNextByteIsRefused() throws {
@@ -36,7 +67,7 @@ struct QuickLookSourceFallbackTests {
         let utf16 = try #require(source.data(using: .utf16LittleEndian))
         try withFile(Data([0xFF, 0xFE]) + utf16) { file in
             let html = try #require(String(bytes: QuickLookSourceFallback.replyHTML(for: file), encoding: .utf8))
-            #expect(html.contains(source))
+            #expect(html.contains("<h1>日本語 😀</h1>"))
         }
         _ = try withFile(Data([0xC0, 0xAF])) { file in
             #expect(throws: FileStoreError.self) {
@@ -77,8 +108,8 @@ struct QuickLookSourceFallbackTests {
         let html = try #require(String(bytes: QuickLookSourceFallback.replyHTML(
             forOpenDescriptor: selected.fileDescriptor
         ), encoding: .utf8))
-        #expect(html.contains("# Selected"))
-        #expect(!html.contains("# Different"))
+        #expect(html.contains("<h1>Selected</h1>"))
+        #expect(!html.contains("Different"))
     }
 
     @Test func aNamedPipeWithoutAWriterCannotBlockTheProvider() throws {

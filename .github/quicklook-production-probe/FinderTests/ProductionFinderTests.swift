@@ -30,6 +30,8 @@ final class ProductionFinderTests: XCTestCase {
 
         let marker = finder.staticTexts["MOSTLYTEXT_PRODUCTION_QUICKLOOK_20261111"].firstMatch
         let visible = marker.waitForExistence(timeout: 15)
+        let gfmCell = finder.staticTexts["GFM_COLUMN_VALUE"].firstMatch
+        let renderedGFM = gfmCell.waitForExistence(timeout: 5)
         let tree = XCTAttachment(string: String(finder.debugDescription.prefix(65536)))
         tree.name = "Production Finder accessibility tree"
         tree.lifetime = .keepAlways
@@ -39,6 +41,7 @@ final class ProductionFinderTests: XCTestCase {
         image.lifetime = .keepAlways
         add(image)
         XCTAssertTrue(visible, "The actual product extension must answer Finder with selected source")
+        XCTAssertTrue(renderedGFM, "GFM table cells must be accessible as rendered structure")
         let staged = URL(fileURLWithPath: "/Users/runner/work/_temp/production-quicklook/installed/MostlyText.app")
         let source = URL(fileURLWithPath: "/Users/runner/work/_temp/mostlytext-production-quicklook.md")
         let handlers = NSWorkspace.shared.urlsForApplications(toOpen: source)
@@ -59,6 +62,8 @@ final class ProductionFinderTests: XCTestCase {
         finder.typeKey(.space, modifierFlags: [])
         let marker = finder.staticTexts["MOSTLYTEXT_PRODUCTION_QUICKLOOK_20261111"].firstMatch
         let visible = marker.waitForExistence(timeout: 15)
+        let gfmCell = finder.staticTexts["GFM_COLUMN_VALUE"].firstMatch
+        let renderedGFM = gfmCell.waitForExistence(timeout: 5)
         let tree = XCTAttachment(string: String(finder.debugDescription.prefix(65536)))
         tree.name = "Linked Markdown Finder accessibility tree"
         tree.lifetime = .keepAlways
@@ -68,6 +73,7 @@ final class ProductionFinderTests: XCTestCase {
         image.lifetime = .keepAlways
         add(image)
         XCTAssertTrue(visible, "The selected linked Markdown file must receive a bounded source reply")
+        XCTAssertTrue(renderedGFM, "The selected linked file must receive rendered GFM")
         XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText")
             .isEmpty)
         finder.typeKey(.escape, modifierFlags: [])

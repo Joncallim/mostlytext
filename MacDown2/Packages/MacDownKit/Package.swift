@@ -91,7 +91,7 @@ let package = Package(
     ],
     targets: [
         .target(name: "FileCore", dependencies: ["JSONSupport"], resources: [.process("Resources")]),
-        .target(name: "QuickLookSource", dependencies: ["FileCore"]),
+        .target(name: "QuickLookSource", dependencies: ["FileCore", "ExportService"]),
         .executableTarget(name: "QuickLookSourceProbe", dependencies: ["QuickLookSource"]),
         .target(name: "CommandBridge", dependencies: ["JSONSupport"]),
         .target(name: "CommandLineSupport", dependencies: [

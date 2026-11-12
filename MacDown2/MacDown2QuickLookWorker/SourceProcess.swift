@@ -13,7 +13,7 @@ enum SourceProcess {
     }
 
     private static let seconds = 3.0
-    private static let maximumOutputBytes = QuickLookSourceFallback.maximumSourceBytes * 6 + 4096
+    private static let maximumOutputBytes = QuickLookSourceFallback.maximumHTMLBytes
     private static let childSlots = ChildSlots()
 
     static func run(selectedDescriptor: Int32, executable: URL? = Bundle.main.executableURL) -> Result {

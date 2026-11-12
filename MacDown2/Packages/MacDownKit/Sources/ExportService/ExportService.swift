@@ -66,4 +66,15 @@ public enum ExportService {
     public static func renderMarkdownFragment(_ markdown: String) -> String {
         (try? CMarkGFM.renderHTML(markdown, options: CMarkGFM.optDefault | CMarkGFM.optSmart)) ?? ""
     }
+
+    /// Use the same GFM parser for a passive Quick Look fragment. Links and
+    /// images retain their authored labels/alt text but receive no URL, so a
+    /// selected file cannot cause a fetch or navigation through this path.
+    public static func renderPassiveMarkdownFragment(_ markdown: String) -> String {
+        (try? CMarkGFM.renderHTML(
+            markdown,
+            options: CMarkGFM.optDefault | CMarkGFM.optSmart,
+            urlTransformer: { _, _ in .blank }
+        )) ?? ""
+    }
 }
