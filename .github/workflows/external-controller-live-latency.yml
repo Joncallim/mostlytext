@@ -57,6 +57,7 @@ jobs:
           set -euo pipefail
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
             -configuration ${{ matrix.configuration }} ENABLE_TESTABILITY=YES \
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE' \
             -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/external-controller-latency-app" \
             -onlyUsePackageVersionsFromResolvedFile -enableCodeCoverage NO build-for-testing
       - name: Measure real watcher to editor reconciliation
@@ -70,6 +71,7 @@ jobs:
           python3 .github/scripts/run-owned-app-tests.py "$ROOT/diagnostics" "$APP" -- \
             xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
               -configuration ${{ matrix.configuration }} ENABLE_TESTABILITY=YES \
+              'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE' \
               -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/external-controller-latency-app" \
               -onlyUsePackageVersionsFromResolvedFile -parallel-testing-enabled NO \
               -resultBundlePath "$ROOT/latency.xcresult" \
