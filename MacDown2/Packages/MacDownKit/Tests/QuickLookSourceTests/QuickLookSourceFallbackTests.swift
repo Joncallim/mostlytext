@@ -11,6 +11,7 @@ struct QuickLookSourceFallbackTests {
             try #require(String(bytes: QuickLookSourceFallback.replyHTML(for: file), encoding: .utf8))
         }
         #expect(html.contains("# Head &amp; 😀\r\n"))
+        #expect(html.contains("<header>MostlyText</header>"))
         #expect(html.contains("&lt;script&gt;alert(&#39;x&#39;)&lt;/script&gt;"))
         #expect(html.contains("&lt;img src=&quot;https://example.com/a&quot;&gt;"))
         #expect(!html.contains("<script"))

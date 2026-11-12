@@ -65,7 +65,7 @@ public enum QuickLookSourceFallback {
         return Data("""
         <!doctype html><html><head><meta charset="utf-8">
         <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'">
-        </head><body><pre>\(escaped)</pre></body></html>
+        </head><body><header>MostlyText</header><pre>\(escaped)</pre></body></html>
         """.utf8)
     }
 
