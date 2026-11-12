@@ -16,15 +16,15 @@ viewport visit, with **no full parse between edits**. After the entire
 candidate sequence, independent full post-edit parses matched every saved
 root, inline and combined visible capture name and UTF-16 range in all 15
 states. The heading-edit refusal still passed. The final local optimized
-Release run took 29.210 seconds including all full-oracle parses; each
-candidate select/local parse/cache update/visible capture took 0.246–0.425 ms
-in that run, and the return visit took 0.052 ms. Host: Apple M3 Pro,
+Release run took 28.086 seconds including all full-oracle parses; each
+candidate select/local parse/cache update/visible capture took 0.246–0.422 ms
+in that run, and the return visit took 0.053 ms. Host: Apple M3 Pro,
 macOS 26.5.1, Xcode 26.6. Command: `swift test -c release
 --force-resolved-versions --filter MarkdownSectionCacheSequentialProbeTests
 --no-parallel` from `MacDown2/Packages/MacDownKit`.
 The same final-source Debug selection also passed all 15 capture comparisons
-in 45.280 seconds; candidate operations took 0.784–1.170 ms and the return
-visit 0.243 ms. These are fixture observations, not product ceilings.
+in 44.797 seconds; candidate operations took 0.820–1.154 ms and the return
+visit 0.247 ms. These are fixture observations, not product ceilings.
 
 This is still a narrow parser-only feasibility result. It does not handle
 insertions at boundaries, structural Markdown edits, section-count changes,

@@ -143,14 +143,15 @@ private struct SectionCache {
                           delta: Int) throws {
         let snapshot = try #require(layer.snapshot())
         let root = try #require(snapshot.rootSnapshot.tree.rootNode)
+        let expectedCount = window.lastSection - window.firstSection + 1
+        try #require(root.childCount == expectedCount,
+                     "plain-word edit changed the number of root sections")
         let replacements = try (0 ..< root.childCount).map { index in
             let node = try #require(root.child(at: index))
             let sectionIndex = window.firstSection + index
             return Section(node: node, layer: layer, content: content,
                            offset: window.new.location - shifts.displacement(at: sectionIndex))
         }
-        try #require(replacements.count == window.lastSection - window.firstSection + 1,
-                     "plain-word edit changed the number of root sections")
         sections.replaceSubrange(window.firstSection ... window.lastSection, with: replacements)
         shifts.shift(after: window.lastSection, by: delta)
     }
