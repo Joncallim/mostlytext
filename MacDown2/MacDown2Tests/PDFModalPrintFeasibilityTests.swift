@@ -46,14 +46,7 @@ struct PDFModalPrintFeasibilityTests {
         try await navigation.load("<!doctype html><html><body>\(sections)</body></html>",
                                   in: webView, timeout: .seconds(30))
 
-        let operation = webView.printOperation(with: info)
-        operation.printInfo = info
-        operation.showsPrintPanel = false
-        operation.showsProgressPanel = false
-        operation.canSpawnSeparateThread = true
-        let printView = try #require(operation.view)
-        printView.frame = webView.bounds
-        printView.layoutSubtreeIfNeeded()
+        let operation = try configuredOperation(webView: webView, info: info)
         let completion = ModalPrintCompletion()
         let heartbeats = MainRunLoopHeartbeat()
         let timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { _ in
@@ -71,12 +64,24 @@ struct PDFModalPrintFeasibilityTests {
         print("pdf-modal-print success=\(success) elapsed_ms=\(elapsed) " +
             "main_run_loop_heartbeats=\(heartbeats.count) callback_on_main=\(completion.callbackOnMain)")
         #expect(success)
-        #expect(heartbeats.count > 0)
+        #expect(!heartbeats.isEmpty)
         let bytes = try Data(contentsOf: pdfURL)
         let pdf = try #require(PDFDocument(data: bytes))
         #expect(pdf.pageCount > 1)
         #expect(pdf.string?.contains("Section 1") == true)
         #expect(pdf.string?.contains("Section 25") == true)
+    }
+
+    private func configuredOperation(webView: WKWebView, info: NSPrintInfo) throws -> NSPrintOperation {
+        let operation = webView.printOperation(with: info)
+        operation.printInfo = info
+        operation.showsPrintPanel = false
+        operation.showsProgressPanel = false
+        operation.canSpawnSeparateThread = true
+        let printView = try #require(operation.view)
+        printView.frame = webView.bounds
+        printView.layoutSubtreeIfNeeded()
+        return operation
     }
 }
 
@@ -113,5 +118,9 @@ private final class MainRunLoopHeartbeat: @unchecked Sendable {
 
     var count: Int {
         lock.withLock { ticks }
+    }
+
+    var isEmpty: Bool {
+        lock.withLock { ticks == 0 }
     }
 }
