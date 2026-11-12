@@ -30,9 +30,10 @@ after an edit. It does not turn on large-file highlighting.
   inline captures from its 1,048,576-byte Markdown fixture through the same
   public styler. Four bounded word replacements alternate between two sections
   and return to each after a viewport move. Each updates the cache and mounted
-  editor, invalidates only the visible range, paints a real parser capture, and
-  matches a fresh full-parse capture oracle. The selected local run passed this
-  mounted test after 14.623 seconds. The prior three-test selection also passed
+  editor, invalidates only the visible range, paints exactly the capture-covered
+  offsets in that range, and matches a fresh full-parse capture oracle. The
+  selected local run passed this mounted test after 14.241 seconds. The prior
+  three-test selection also passed
   the original 14-edit cache oracle and synthetic-token mounted bridge. Strict
   SwiftFormat, SwiftLint and whitespace checks pass. This checks a narrow
   presentation connection; it does not qualify a production adapter, a stale

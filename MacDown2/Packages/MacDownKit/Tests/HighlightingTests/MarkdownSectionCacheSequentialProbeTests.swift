@@ -249,7 +249,7 @@ extension MarkdownSectionCacheSequentialProbeTests {
         let styler = TextSystemStyler(textSystem: interface, tokenProvider: provider)
         styler.invalidate(.range(visible))
         styler.validate(.range(visible))
-        try expectRendered(candidate, in: system.textView)
+        try expectRendered(candidate, visible: visible, in: system.textView)
 
         var source = original
         let edits = [
@@ -281,7 +281,7 @@ extension MarkdownSectionCacheSequentialProbeTests {
             styler.didChangeContent(in: edit, delta: delta)
             styler.invalidate(.range(shiftedVisible))
             styler.validate(.range(shiftedVisible))
-            try expectRendered(candidate, in: system.textView)
+            try expectRendered(candidate, visible: shiftedVisible, in: system.textView)
 
             let whole = try layer(source, root: root, registry: registry)
             let snapshot = try #require(whole.snapshot())
@@ -292,26 +292,33 @@ extension MarkdownSectionCacheSequentialProbeTests {
         }
     }
 
-    private func expectRendered(_ captures: [Capture], in textView: NSTextView) throws {
-        let target = try #require(captures.first)
+    private func expectRendered(_ captures: [Capture], visible: NSRange, in textView: NSTextView) throws {
+        try #require(!captures.isEmpty)
         guard let layout = textView.textLayoutManager,
               let content = layout.textContentManager else {
             Issue.record("Mounted editor has no TextKit 2 layout")
             return
         }
         let origin = content.documentRange.location
-        var painted = false
+        var painted = IndexSet()
         layout.enumerateRenderingAttributes(from: origin, reverse: false) { _, attributes, range in
             let location = content.offset(from: origin, to: range.location)
             let length = content.offset(from: range.location, to: range.endLocation)
-            if NSIntersectionRange(NSRange(location: location, length: length),
-                                   NSRange(location: target.location, length: target.length)).length > 0,
-                let color = attributes[.foregroundColor] as? NSColor,
-                color.isEqual(NSColor.systemRed) {
-                painted = true
+            let clipped = NSIntersectionRange(NSRange(location: location, length: length), visible)
+            if clipped.length > 0,
+               let color = attributes[.foregroundColor] as? NSColor,
+               color.isEqual(NSColor.systemRed) {
+                painted.insert(integersIn: clipped.location ..< NSMaxRange(clipped))
             }
             return true
         }
-        #expect(painted, "Real parser capture did not reach TextKit 2 rendering")
+        var expected = IndexSet()
+        for capture in captures {
+            let clipped = NSIntersectionRange(NSRange(location: capture.location, length: capture.length), visible)
+            if clipped.length > 0 {
+                expected.insert(integersIn: clipped.location ..< NSMaxRange(clipped))
+            }
+        }
+        #expect(painted == expected, "Mounted TextKit 2 paint differs from the visible parser captures")
     }
 }
