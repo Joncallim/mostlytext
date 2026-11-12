@@ -24,8 +24,18 @@ after an edit. It does not turn on large-file highlighting.
   window, supplies a token through public Neon types, checks TextKit 2's
   rendering attributes, inserts text before the token, tells the public
   styler about the edit and verifies the token's new range and unchanged
-  document text. The selected local Swift Testing result is one pass; strict
-  SwiftFormat, SwiftLint and whitespace checks pass. No installed app was run.
+  document text. The selected local Swift Testing result is one pass. No
+  installed app was run.
+- `MarkdownSectionCacheSequentialProbeTests` now also feeds **actual** root and
+  inline captures from its 1,048,576-byte Markdown fixture through the same
+  public styler. A bounded word replacement updates the section cache and the
+  mounted editor, its visible captures paint before and after, and the edited
+  capture set matches a fresh full-parse oracle. The final selected local run
+  passed three tests in two suites: this mounted bridge, the original 14-edit
+  section-cache oracle, and the synthetic-token mounted bridge. Strict
+  SwiftFormat, SwiftLint and whitespace checks pass. This checks the presentation
+  connection for one admitted edit; it does not qualify a production adapter,
+  a stale-result race, structural edits, or the whole-editor latency budget.
 
 ## Production ownership decision
 
@@ -64,10 +74,9 @@ production adapter must therefore own all of these boundaries explicitly:
 
 ## Next qualification
 
-First adapt the existing section-cache fixture to feed its **actual** root,
-inline and combined captures through this public styler in a mounted editor.
-Compare rendering-attribute runs with a fresh full-parse oracle after repeated
-edits and viewport moves. Include a held stale result, a structural edit,
+Extend the mounted capture probe across repeated edits and viewport moves.
+Compare rendering-attribute runs with a fresh full-parse oracle after each
+edit. Include a held stale result, a structural edit,
 Unicode/CRLF geometry, IME/undo and teardown negatives. Only then integrate a
 production adapter under the size policy and run complete Release/hosted/native
 measurements. This probe adds no product UI or user-visible promise by itself.
