@@ -47,7 +47,15 @@ struct PDFModalProductionPathTests {
 
         try await PDFExportAdapter.export(
             prepared, to: destination, modalWindow: window,
-            onPhase: { phases.append($0) },
+            onPhase: { phase in
+                phases.append(phase)
+                if phase == .printing {
+                    heartbeat.start()
+                }
+                if phase == .validating {
+                    heartbeat.stop()
+                }
+            },
             runPrint: { _ in
                 Issue.record("The document-modal production path used the synchronous print fallback")
                 return false
@@ -55,6 +63,8 @@ struct PDFModalProductionPathTests {
         )
         #expect(phases == [.preparing, .loading, .printing, .validating, .publishing])
         #expect(!heartbeat.isEmpty)
+        print("pdf-production-modal-print elapsed_ms=\(heartbeat.elapsedMilliseconds) " +
+            "main_run_loop_heartbeats=\(heartbeat.count)")
         let pdf = try #require(PDFDocument(url: destination))
         #expect(pdf.pageCount > 1)
         #expect(pdf.string?.contains("Section 1") == true)
@@ -65,12 +75,44 @@ struct PDFModalProductionPathTests {
 private final class ProductionPDFHeartbeat: @unchecked Sendable {
     private let lock = NSLock()
     private var ticks = 0
+    private var active = false
+    private var started: UInt64?
+    private var stopped: UInt64?
+
+    func start() {
+        lock.withLock {
+            started = DispatchTime.now().uptimeNanoseconds
+            active = true
+        }
+    }
+
+    func stop() {
+        lock.withLock {
+            active = false
+            stopped = DispatchTime.now().uptimeNanoseconds
+        }
+    }
 
     func tick() {
-        lock.withLock { ticks += 1 }
+        lock.withLock {
+            if active {
+                ticks += 1
+            }
+        }
     }
 
     var isEmpty: Bool {
         lock.withLock { ticks == 0 }
+    }
+
+    var count: Int {
+        lock.withLock { ticks }
+    }
+
+    var elapsedMilliseconds: Double {
+        lock.withLock {
+            guard let started, let stopped, stopped >= started else { return -1 }
+            return Double(stopped - started) / 1_000_000
+        }
     }
 }

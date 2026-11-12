@@ -118,6 +118,12 @@ def validate_temp_execution(log, identity, status):
 def validate_modal_production_execution(log, identity, status):
     validate_single_execution(log, identity, status, MODAL_PRODUCTION_TEST, 'PDFModalProductionPathTests',
                               {CONDITION, 'PDF_MODAL_PROBE', 'RELEASE_PREVIEW_PROBE'})
+    measurements = re.findall(r'pdf-production-modal-print elapsed_ms=([0-9.]+) main_run_loop_heartbeats=([0-9]+)', log)
+    if len(measurements) != 1:
+        raise ValueError('The production PDF print interval lacks one heartbeat measurement')
+    elapsed, heartbeats = measurements[0]
+    if not 0 < float(elapsed) < 600_000 or int(heartbeats) < 1:
+        raise ValueError('The production PDF print interval did not retain a bounded live run loop')
 
 
 def check_host(root):
