@@ -37,11 +37,11 @@ if args.verify:
     if args.require_result:
         log = re.sub(r"\x1b\[[0-9;]*m", "", (args.output / "probe.log").read_text())
         for suite in ["SharedMathActivationTests", "MathPreviewLiveSourceTests", "MathPreviewNavigationTests",
-                      "MathPreviewRecoveryTests", "HeadingPreviewSessionTests", "HeadingPreviewNavigationTests",
+                      "MathPreviewRecoveryTests", "MathMountedExponentDiagnosticsTests", "HeadingPreviewSessionTests", "HeadingPreviewNavigationTests",
                       "HeadingPreviewAppTests", "HeadingExportActivationTests", "EditorStatusBarThemeTests"]:
             if not re.search(r"Suite " + re.escape(suite) + r" passed", log):
                 raise SystemExit(suite + " did not execute successfully")
-        if not re.search(r"Test run with 29 tests in 9 suites passed", log):
+        if not re.search(r"Test run with 30 tests in 10 suites passed", log):
             raise SystemExit("The complete selected actual app controls did not pass")
         if "TOC-PHASE configuration=" + args.configuration not in log:
             raise SystemExit("The production export phase measurement did not execute in this configuration")
