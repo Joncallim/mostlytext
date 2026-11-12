@@ -11,6 +11,7 @@ final class MarkdownQuickLookProvider: QLPreviewProvider, QLPreviewingController
         guard let html = await QuickLookWorkerClient.renderSource(selected) else {
             throw QuickLookSourceError.readFailed
         }
+        try Task.checkCancellation()
         let payload = Payload(html: html)
         let reply = QLPreviewReply(dataOfContentType: .html, contentSize: CGSize(width: 640, height: 480)) { _ in
             payload.html

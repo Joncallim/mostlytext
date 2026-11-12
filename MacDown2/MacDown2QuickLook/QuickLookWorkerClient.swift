@@ -37,7 +37,7 @@ enum QuickLookWorkerClient {
         }
         deadline.cancel()
         connection.invalidate()
-        return html
+        return Task.isCancelled ? nil : html
     }
 }
 
