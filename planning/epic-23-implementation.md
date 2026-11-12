@@ -358,6 +358,114 @@ poor custom text contrast is warned without rejecting intentional choices.
 Native import/copy/replace/cancel/export/delete/reveal, delayed external edits,
 accessibility and final identity migration remain required CORTANA evidence.
 
+## Production Quick Look source shell — first integration slice
+
+The description below records the first shell's design. The bounded worker
+section that follows updates its source-open and rendering transport; the
+initial no-service statement is historical, not the current PR's behavior.
+
+**Owner summary.** Add the real Markdown Quick Look bundle to MostlyText so a
+selected, small Markdown file can produce a passive, escaped view of its authored
+source. This establishes the shipping bundle and a safe fallback before any
+diagram engine is moved into the extension. It does not claim finished Markdown
+rendering, worker isolation, Finder acceptance or release readiness.
+
+The baseline for this slice is `main` `ffe692feef9c7c8f45ccd2dea1f88e31115aeae6`.
+That tree has a Markdown document declaration, `FileByteDecoder`, a shared
+heading-anchor model and `ContributionDestination.quickLook`, but no Quick Look
+target. The private Finder/XPC fixtures prove separate platform questions; they
+are not production code. The final identifier is already reserved in
+`planning/IDENTITY.md`, so no new naming decision is needed.
+
+The app embeds a data-based Quick Look provider identified as
+`app.mostlytext.MostlyText.QuickLook`, registered only for
+`net.daringfireball.markdown`. The provider has App Sandbox and user-selected
+read-only entitlements. It reads only the URL supplied by the system, using one
+descriptor opened without following symbolic links, and never opens a sibling,
+parent or `baseURL`. A separate sandbox-only XPC service is embedded and signed
+for the later bounded renderer; the source shell neither connects to it nor
+sends document bytes to it. The provider depends on a small `QuickLookSource`
+package target; that target uses FileCore's strict decoder and owns the bounded
+reader and passive HTML fallback. No app/window/session/Export object is created.
+
+The source boundary admits at most 1 MiB of file bytes, requires a regular file,
+and refuses a changed or oversized read. It opens nonblocking so a selected
+named pipe without a writer cannot stall the provider before the type check.
+Decoding uses FileCore's automatic BOM/UTF-8 policy; it does not guess legacy
+encodings. The provider runs this
+bounded work off its callback executor. A valid decoded source becomes a single
+immutable HTML reply with escaped authored text, no executable element, no
+network URL, no resource attachment and a restrictive content security policy.
+The reply's factory captures only the immutable bytes, returns those same bytes
+on repeated calls and does no new I/O. Invalid input or file admission fails
+closed; a full readable file never becomes a silent truncated preview.
+`O_NOFOLLOW_ANY` also refuses legitimate selected paths with a symlinked
+component, including `/var` aliases and some cloud-linked folders. Actual
+Finder acceptance must measure that user impact before this can ship.
+
+This slice changes neither the document type/handler rank nor the editor's
+source, save, export or diagram path. It adds no user preference or new
+user-facing control. The source's markup is shown literally, including raw HTML,
+so no raw authored HTML executes. The shell is deliberately provisional: the
+eventual shared GFM/derived-content composition, heading links, all four
+technical renderers, independent fallback, calibrated worker budgets, theme,
+localisation and actual Finder release acceptance remain #7 work.
+
+Package tests cover exact/over-limit reads, non-regular, symlink and bounded
+named-pipe refusal, strict Unicode/BOM decoding, malformed input and complete
+HTML escaping/CSP.
+Build-only checks generate the Xcode project, compile the Release provider and
+service, inspect bundle IDs/content type/entitlements and verify both signed
+products are embedded in the containing app. The test desktop must later prove
+real Finder registration, repeated replies, normal/invalid/large files,
+light/dark/accessibility and final signed installation. A private five-test
+worker pass, if obtained, remains separate: before the service renders
+untrusted document content, its real renderer transport, child deadline,
+kill/reap/error paths, active-work caps and same-service concurrency need their
+own exact-head negative and native controls. Stop this slice if compilation
+requires broader permissions, if source access needs a parent grant, or if the
+provider cannot produce an immutable reply under the declared entitlement set.
+
+## Bounded selected-source transport — second integration slice
+
+**Owner summary.** Keep Finder's Quick Look reply responsive when opening or
+reading a selected Markdown file is slow. The extension opens only that file,
+then sends its descriptor to a sandboxed service. A child process reads,
+decodes and escapes the source under a hard deadline. A failure produces no
+partial HTML reply and leaves the containing app unopened.
+
+The extension's initial `open` is a separate trust boundary: `O_NONBLOCK`
+refuses a pipe without a writer, but cannot guarantee that opening every
+regular filesystem file returns promptly. The selected-file opener therefore
+uses a one-second reply deadline and admits at most two concurrent opening
+threads. A timed-out syscall may still occupy its thread; that slot is released
+only when the syscall actually returns. A late file handle is explicitly closed,
+never sent to the service. This bounds Finder's wait and new thread admission without
+claiming that a kernel-blocked syscall can be cancelled by Swift.
+
+The provider sends only the opened selected descriptor over XPC. The
+sandbox-only service accepts two concurrent requests, duplicates that
+descriptor into a child of its own executable, and gives the child one unlinked
+private output descriptor. It sends `SIGKILL` after three seconds and returns
+without a blocking `waitpid`. A background reaper retains that child's slot until
+the kernel confirms exit; at most two such reapers can remain, and further
+requests fail promptly if both slots are occupied. A syscall stuck in the
+kernel can delay actual reaping, but cannot hold the XPC request thread.
+The child exits on its own after 3.5 seconds if its service disappears. The
+extension settles its one-shot XPC reply by four seconds, including cancellation
+and connection invalidation. No service receives the source path or a parent
+directory grant. The child produces at most the bounded escaped HTML response;
+source bytes never become executable markup, a URL or a network request.
+
+Local controls must prove ordinary selected-source output, exact size/encoding
+refusal, an injected blocked initial open returning at its deadline, direct
+signed-child descriptor transport, and the existing source-escaping corpus.
+An actual cold Finder run on a suitable macOS 26 host must prove the packaged
+service resolves, the reply is visible, and cancellation/failure does not hang
+or blank a later preview. A direct positive child run does not establish these
+Finder or negative timeout outcomes. GFM structure, derived math/diagram
+content, theme parity and final signed installation remain later E23 slices.
+
 
 ## Extended ACL admission correction
 
