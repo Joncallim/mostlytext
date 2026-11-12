@@ -70,7 +70,7 @@ class PDFResultTests(unittest.TestCase):
 
     def test_private_folder_selection_requires_complete_owned_release_execution(self):
         log = ('Test exportingHTMLThenPDFPreservesSourceAndPublishesPDF() passed after 0.1 seconds.\n'
-               'Suite PDFExportTemporaryDestinationTests passed.\n'
+               'Suite PDF export after HTML in a private temporary folder passed.\n'
                'Test run with 1 test in 1 suite passed.')
         identity = copy.deepcopy(self.identity)
         identity['command'] = [
