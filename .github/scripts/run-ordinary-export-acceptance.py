@@ -80,6 +80,30 @@ def validate_outputs(root, receipt, command):
     return {"html": html, "pdf": result, "source_sha256": hashlib.sha256(Path(row["source"]).read_bytes()).hexdigest()}
 
 
+def validate_private_pdf(root, receipt, command):
+    row = receipt["ordinary_export"]
+    source = Path(row["private_source"])
+    pdf = Path(row["private_pdf"])
+    if source.parent != pdf.parent or source.is_symlink() or pdf.is_symlink():
+        raise RuntimeError("Private Darwin temp fixture path changed")
+    if {p.name for p in source.parent.iterdir()} != {source.name, pdf.name}:
+        raise RuntimeError("Private Darwin temp fixture has an unexpected or missing output")
+    if not source.is_file() or not pdf.is_file():
+        raise RuntimeError("Private Darwin temp output is not a regular file")
+    source_bytes = source.read_bytes()
+    if hashlib.sha256(source_bytes).hexdigest() != row["private_source_sha256"]:
+        raise RuntimeError("Private Darwin temp source bytes changed")
+    checked = command("private-temp-pdfkit-validation", [root / "validate-export-pdf", pdf])
+    assert checked["returncode"] == 0
+    result = json.loads(checked["stdout"])
+    raw = pdf.read_bytes()
+    if result["bytes"] != len(raw) or result["sha256"] != hashlib.sha256(raw).hexdigest():
+        raise RuntimeError("Private Darwin temp PDFKit result differs from saved output")
+    (root / "private-temp-source.md").write_bytes(source_bytes)
+    (root / "private-temp-output.pdf").write_bytes(raw)
+    return {"pdf": result, "source_sha256": row["private_source_sha256"]}
+
+
 def preparation_source():
     spec = importlib.util.spec_from_file_location("export_preparation", Path(__file__).with_name("prepare-ordinary-export-acceptance.py"))
     module = importlib.util.module_from_spec(spec)
@@ -190,6 +214,15 @@ def main():
         receipt["criteria"]["actual_export_save_and_cancel"] = ui_phase("export", "testNormalExportSaveAndCancel", "ExportPanelTests")
         receipt["actual_outputs"] = validate_outputs(root, receipt, command)
         receipt["criteria"]["actual_html_and_pdf_outputs"] = True
+        private = receipt["ordinary_export"]
+        opened = command("public-private-temp-file-open", [receipt["public_cli"], private["private_source"]])
+        receipt["criteria"]["private_temp_file_open_acknowledged"] = opened["returncode"] == 0
+        assert opened["returncode"] == 0
+        receipt["criteria"]["private_temp_pdf_save"] = ui_phase(
+            "private-temp-pdf", "testPrivateDarwinTempPDFSave", "ExportPanelTests"
+        )
+        receipt["private_temp_outputs"] = validate_private_pdf(root, receipt, command)
+        receipt["criteria"]["private_temp_pdf_readback"] = True
         inspection = app_action("inspect", current)
         assert inspection["pid"] == current["pid"] and inspection["executable"] == current["executable"]
         checked = command("source-and-build-verification-after", ["python3", ".github/scripts/prepare-ordinary-export-acceptance.py", root, "--verify"])
@@ -211,7 +244,8 @@ def main():
                 app_action("cleanup", current)
             except Exception as error:
                 receipt.setdefault("cleanup_errors", []).append(str(error)[:4096])
-        receipt["passed"] = (not receipt["errors"] and len(receipt["criteria"]) == 7 and all(receipt["criteria"].values()))
+        receipt["passed"] = (not receipt["errors"] and len(receipt["criteria"]) == 10
+                             and all(receipt["criteria"].values()))
         persist()
     assert receipt["passed"], receipt["errors"]
 
