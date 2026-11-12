@@ -34,9 +34,6 @@ struct PDFExportAdapterTests {
 
     @Test func vectorSnapshotIsPaginatedWithoutLosingSelectableText() throws {
         let source = try makeTallTextPDF()
-        let output = FileManager.default.temporaryDirectory
-            .appendingPathComponent("PDFSnapshotFallback-\(UUID().uuidString).pdf")
-        defer { try? FileManager.default.removeItem(at: output) }
         let info = NSPrintInfo()
         info.paperSize = NSSize(width: 100, height: 100)
         info.leftMargin = 0
@@ -44,8 +41,8 @@ struct PDFExportAdapterTests {
         info.topMargin = 0
         info.bottomMargin = 0
 
-        try PDFSnapshotFallback.paginate(source, printInfo: info, to: output, maxBytes: 1_000_000)
-        let result = try #require(PDFDocument(url: output))
+        let output = try PDFSnapshotFallback.paginate(source, printInfo: info, maxBytes: 1_000_000)
+        let result = try #require(PDFDocument(data: output))
         #expect(result.pageCount == 3)
         #expect(result.page(at: 0)?.string?.contains("TOP") == true)
         #expect(result.page(at: 1)?.string?.contains("MIDDLE") == true)
@@ -66,23 +63,20 @@ struct PDFExportAdapterTests {
         context.endPDFPage()
         context.closePDF()
 
-        let output = FileManager.default.temporaryDirectory
-            .appendingPathComponent("PDFSnapshotCut-\(UUID().uuidString).pdf")
-        defer { try? FileManager.default.removeItem(at: output) }
         let info = NSPrintInfo()
         info.paperSize = NSSize(width: 100, height: 100)
         info.leftMargin = 0
         info.rightMargin = 0
         info.topMargin = 0
         info.bottomMargin = 0
-        try PDFSnapshotFallback.paginate(data as Data, printInfo: info, to: output, maxBytes: 1_000_000)
+        let output = try PDFSnapshotFallback.paginate(data as Data, printInfo: info, maxBytes: 1_000_000)
 
-        let result = try #require(PDFDocument(url: output))
+        let result = try #require(PDFDocument(data: output))
         let pageText = (0 ..< result.pageCount).map { result.page(at: $0)?.string ?? "" }
         #expect(pageText.contains { $0.contains("CUT") })
         // PDFKit can extract text from a clipped form even when no glyph is
         // visible on that page. Check actual painted pixels on both sides.
-        let provider = try #require(CGDataProvider(url: output as CFURL))
+        let provider = try #require(CGDataProvider(data: output as CFData))
         let pdf = try #require(CGPDFDocument(provider))
         let first = try #require(pdf.page(at: 1))
         let second = try #require(pdf.page(at: 2))
