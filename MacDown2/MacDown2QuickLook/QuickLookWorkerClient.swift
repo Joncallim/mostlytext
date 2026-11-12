@@ -30,7 +30,11 @@ enum QuickLookWorkerClient {
             try? await Task.sleep(for: .seconds(4))
             result.finish(nil)
         }
-        let html = await result.value()
+        let html = await withTaskCancellationHandler {
+            await result.value()
+        } onCancel: {
+            result.finish(nil)
+        }
         deadline.cancel()
         connection.invalidate()
         return html
