@@ -210,7 +210,7 @@ extension MarkdownSectionCacheSequentialProbeTests {
     /// The mounted 1 MiB source, parser cache, TextKit 2 adapter and oracle form one lifecycle.
     @Test(.timeLimit(.minutes(3)))
     // swiftlint:disable:next function_body_length
-    func realSectionCapturesPaintThroughPublicStylerAfterBoundedEdit() throws {
+    func realSectionCapturesPaintThroughPublicStylerAcrossEditsAndViewportMoves() throws {
         let registry = GrammarRegistry()
         let root = try #require(registry.configuration(for: "markdown"))
         let inline = try #require(registry.configuration(for: "markdown_inline"))
@@ -232,10 +232,9 @@ extension MarkdownSectionCacheSequentialProbeTests {
             window.close()
         }
 
-        let oldSource = original as NSString
-        let edit = oldSource.range(of: "alphatarget")
-        try #require(edit.location != NSNotFound)
-        let visible = NSRange(location: edit.location - 32, length: 180)
+        let firstEdit = (original as NSString).range(of: "alphatarget")
+        try #require(firstEdit.location != NSNotFound)
+        let visible = NSRange(location: firstEdit.location - 32, length: 180)
         var candidate = try captures(cache.visibleSections(visible), visible: visible, inline: inline).combined
         try #require(!candidate.isEmpty)
         let publication = CapturePublication(candidate)
@@ -248,36 +247,49 @@ extension MarkdownSectionCacheSequentialProbeTests {
             TokenApplication(tokens: publication.tokens, range: range, action: .replace)
         })
         let styler = TextSystemStyler(textSystem: interface, tokenProvider: provider)
-        styler.invalidate(.all)
-        styler.validate(.all)
+        styler.invalidate(.range(visible))
+        styler.validate(.range(visible))
         try expectRendered(candidate, in: system.textView)
 
-        let replacement = "betawordlonger"
-        let selected = try #require(cache.select(source: oldSource, edit: edit, replacement: replacement,
-                                                 visible: visible))
-        system.textView.insertText(replacement, replacementRange: edit)
-        let newSource = oldSource.replacingCharacters(in: edit, with: replacement)
-        #expect(system.textView.string == newSource)
-        let newContent = (newSource as NSString).substring(with: selected.new)
-        let local = try layer(newContent, root: root, registry: registry)
-        let delta = (replacement as NSString).length - edit.length
-        try cache.replace(selected, with: local, content: newContent, delta: delta)
-        let shiftedVisible = NSRange(location: visible.location, length: visible.length + delta)
-        candidate = try captures(cache.visibleSections(shiftedVisible), visible: shiftedVisible,
-                                 inline: inline).combined
-        try #require(!candidate.isEmpty)
-        publication.replace(with: candidate)
-        styler.didChangeContent(in: edit, delta: delta)
-        styler.invalidate(.all)
-        styler.validate(.all)
-        try expectRendered(candidate, in: system.textView)
+        var source = original
+        let edits = [
+            EditSpec(name: "first", needle: "alphatarget", replacement: "betawordlonger"),
+            EditSpec(name: "second", needle: "gammatarget", replacement: "deltaword"),
+            EditSpec(name: "revisit-first", needle: "betawordlonger", replacement: "alphaprobe"),
+            EditSpec(name: "revisit-second", needle: "deltaword", replacement: "gammaprobe"),
+        ]
+        for spec in edits {
+            let oldSource = source as NSString
+            let edit = oldSource.range(of: spec.needle)
+            try #require(edit.location != NSNotFound)
+            let visible = NSRange(location: edit.location - 32, length: 180)
+            let selected = try #require(cache.select(source: oldSource, edit: edit,
+                                                     replacement: spec.replacement, visible: visible),
+                                        "\(spec.name) was not an admitted bounded edit")
+            system.textView.insertText(spec.replacement, replacementRange: edit)
+            source = oldSource.replacingCharacters(in: edit, with: spec.replacement)
+            #expect(system.textView.string == source)
+            let newContent = (source as NSString).substring(with: selected.new)
+            let local = try layer(newContent, root: root, registry: registry)
+            let delta = (spec.replacement as NSString).length - edit.length
+            try cache.replace(selected, with: local, content: newContent, delta: delta)
+            let shiftedVisible = NSRange(location: visible.location, length: visible.length + delta)
+            candidate = try captures(cache.visibleSections(shiftedVisible), visible: shiftedVisible,
+                                     inline: inline).combined
+            try #require(!candidate.isEmpty)
+            publication.replace(with: candidate)
+            styler.didChangeContent(in: edit, delta: delta)
+            styler.invalidate(.range(shiftedVisible))
+            styler.validate(.range(shiftedVisible))
+            try expectRendered(candidate, in: system.textView)
 
-        let whole = try layer(newSource, root: root, registry: registry)
-        let snapshot = try #require(whole.snapshot())
-        let node = try #require(snapshot.rootSnapshot.tree.rootNode)
-        let oracle = try captures([Section(node: node, layer: whole, content: newSource, offset: 0)],
-                                  visible: shiftedVisible, inline: inline).combined
-        #expect(candidate == oracle)
+            let whole = try layer(source, root: root, registry: registry)
+            let snapshot = try #require(whole.snapshot())
+            let node = try #require(snapshot.rootSnapshot.tree.rootNode)
+            let oracle = try captures([Section(node: node, layer: whole, content: source, offset: 0)],
+                                      visible: shiftedVisible, inline: inline).combined
+            #expect(candidate == oracle, "\(spec.name) painted stale captures")
+        }
     }
 
     private func expectRendered(_ captures: [Capture], in textView: NSTextView) throws {
