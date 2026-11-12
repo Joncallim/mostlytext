@@ -30,6 +30,13 @@ struct QuickLookSourceProcessTests {
         #expect(result.data == nil)
         #expect(elapsed >= 2.9 && elapsed < 5.0)
         let pid = try #require(Int32(String(contentsOf: fixture.pidFile, encoding: .utf8)))
+        let reapDeadline = ProcessInfo.processInfo.systemUptime + 1.0
+        while ProcessInfo.processInfo.systemUptime < reapDeadline {
+            if kill(pid, 0) == -1, errno == ESRCH {
+                break
+            }
+            Thread.sleep(forTimeInterval: 0.01)
+        }
         var status: Int32 = 0
         let waited = Darwin.waitpid(pid, &status, WNOHANG)
         let waitError = errno

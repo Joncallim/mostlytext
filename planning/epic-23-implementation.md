@@ -439,14 +439,18 @@ refuses a pipe without a writer, but cannot guarantee that opening every
 regular filesystem file returns promptly. The selected-file opener therefore
 uses a one-second reply deadline and admits at most two concurrent opening
 threads. A timed-out syscall may still occupy its thread; that slot is released
-only when the syscall actually returns. A late file handle is discarded, never
-sent to the service. This bounds Finder's wait and new thread admission without
+only when the syscall actually returns. A late file handle is explicitly closed,
+never sent to the service. This bounds Finder's wait and new thread admission without
 claiming that a kernel-blocked syscall can be cancelled by Swift.
 
 The provider sends only the opened selected descriptor over XPC. The
 sandbox-only service accepts two concurrent requests, duplicates that
 descriptor into a child of its own executable, and gives the child one unlinked
-private output descriptor. It kills and reaps the child after three seconds.
+private output descriptor. It sends `SIGKILL` after three seconds and returns
+without a blocking `waitpid`. A background reaper retains that child's slot until
+the kernel confirms exit; at most two such reapers can remain, and further
+requests fail promptly if both slots are occupied. A syscall stuck in the
+kernel can delay actual reaping, but cannot hold the XPC request thread.
 The child exits on its own after 3.5 seconds if its service disappears. The
 extension settles its one-shot XPC reply by four seconds, including cancellation
 and connection invalidation. No service receives the source path or a parent

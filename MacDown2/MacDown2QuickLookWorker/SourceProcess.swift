@@ -1,9 +1,11 @@
 import Darwin
+import Dispatch
 import Foundation
 import QuickLookSource
 
 /// One selected descriptor, one child, one monotonic deadline and one reaper.
-/// A blocked regular-file read cannot retain an extension or service thread.
+/// A blocked regular-file read cannot retain an extension reply or service
+/// request thread. At most two background reapers can remain pending.
 enum SourceProcess {
     struct Result {
         let data: Data?
@@ -12,6 +14,7 @@ enum SourceProcess {
 
     private static let seconds = 3.0
     private static let maximumOutputBytes = QuickLookSourceFallback.maximumSourceBytes * 6 + 4096
+    private static let childSlots = ChildSlots()
 
     static func run(selectedDescriptor: Int32, executable: URL? = Bundle.main.executableURL) -> Result {
         guard let executable,
@@ -19,7 +22,9 @@ enum SourceProcess {
         else { return Result(data: nil, status: .failed) }
         guard let output = makeOutput() else { return Result(data: nil, status: .failed) }
         defer { close(output) }
+        guard childSlots.claim() else { return Result(data: nil, status: .failed) }
         guard let child = spawn(executable: executable, source: selectedDescriptor, output: output) else {
+            childSlots.release()
             return Result(data: nil, status: .failed)
         }
         return awaitChild(child, output: output)
@@ -76,6 +81,7 @@ enum SourceProcess {
             var status: Int32 = 0
             let waited = waitpid(child, &status, WNOHANG)
             if waited == child {
+                childSlots.release()
                 guard status == 0 else { return Result(data: nil, status: .failed) }
                 return readOutput(output)
             }
@@ -83,15 +89,39 @@ enum SourceProcess {
                 if errno == EINTR {
                     continue
                 }
+                if errno == ECHILD {
+                    childSlots.release()
+                } else {
+                    killAndReap(child)
+                }
                 return Result(data: nil, status: .failed)
             }
             let remaining = deadline - ProcessInfo.processInfo.systemUptime
             if remaining <= 0 {
-                _ = kill(child, SIGKILL)
-                while waitpid(child, &status, 0) == -1, errno == EINTR {}
+                killAndReap(child)
                 return Result(data: nil, status: .timedOut)
             }
             Thread.sleep(forTimeInterval: min(remaining, 0.01))
+        }
+    }
+
+    private static func killAndReap(_ child: pid_t) {
+        _ = kill(child, SIGKILL)
+        // A kernel-stuck child can outlive SIGKILL. Never block the reply
+        // while reaping it, and retain its capacity slot until it exits.
+        DispatchQueue.global(qos: .utility).async {
+            var status: Int32 = 0
+            while true {
+                let reaped = waitpid(child, &status, 0)
+                if reaped == child || (reaped == -1 && errno == ECHILD) {
+                    childSlots.release()
+                    return
+                }
+                if reaped == -1, errno == EINTR {
+                    continue
+                }
+                return // Unknown wait failure keeps the slot reserved.
+            }
         }
     }
 
@@ -115,5 +145,25 @@ enum SourceProcess {
             return true
         }
         return complete ? Result(data: bytes, status: .complete) : Result(data: nil, status: .failed)
+    }
+}
+
+/// A timed-out child keeps its slot until the background reaper confirms exit.
+/// Two unkillable children therefore fail later requests promptly instead of
+/// accumulating blocked reaper threads or retaining XPC reply threads.
+private final class ChildSlots: @unchecked Sendable {
+    private let lock = NSLock()
+    private var active = 0
+
+    func claim() -> Bool {
+        lock.withLock {
+            guard active < 2 else { return false }
+            active += 1
+            return true
+        }
+    }
+
+    func release() {
+        lock.withLock { active -= 1 }
     }
 }

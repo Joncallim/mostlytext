@@ -1,3 +1,4 @@
+import Darwin
 import Foundation
 @testable import QuickLookSource
 import Testing
@@ -49,6 +50,87 @@ struct QuickLookSelectedFileOpenerTests {
             forOpenDescriptor: selected.fileDescriptor
         ), encoding: .utf8))
         #expect(html.contains("# selected"))
+    }
+
+    @Test func aLateSelectedDescriptorIsClosedAfterTheReplyDeadline() async throws {
+        let directory = URL(fileURLWithPath: "/private/tmp", isDirectory: true)
+            .appendingPathComponent("mostlytext-ql-open-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let file = directory.appendingPathComponent("selected.md")
+        try Data("# selected\n".utf8).write(to: file)
+        let selected = try FileHandle(forReadingFrom: file)
+        defer { try? selected.close() }
+        let descriptor = selected.fileDescriptor
+        let entered = DispatchSemaphore(value: 0)
+        let release = DispatchSemaphore(value: 0)
+        let returned = DispatchSemaphore(value: 0)
+        defer { release.signal() }
+
+        let pending = Task {
+            try await QuickLookSelectedFileOpener.open(file, timeout: .milliseconds(40)) {
+                entered.signal()
+                _ = release.wait(timeout: .now() + 2)
+                defer { returned.signal() }
+                return selected
+            }
+        }
+        #expect(await waitForSignal(entered))
+        do {
+            _ = try await pending.value
+            Issue.record("The late selected descriptor crossed the reply deadline")
+        } catch QuickLookSourceError.openTimedOut {}
+        release.signal()
+        #expect(await waitForSignal(returned))
+        let closeDeadline = ProcessInfo.processInfo.systemUptime + 1.0
+        while ProcessInfo.processInfo.systemUptime < closeDeadline {
+            if fcntl(descriptor, F_GETFD) == -1, errno == EBADF {
+                break
+            }
+            try await Task.sleep(for: .milliseconds(10))
+        }
+        #expect(fcntl(descriptor, F_GETFD) == -1 && errno == EBADF)
+    }
+
+    @Test func cancellationClosesASelectedDescriptorThatArrivesLater() async throws {
+        let directory = URL(fileURLWithPath: "/private/tmp", isDirectory: true)
+            .appendingPathComponent("mostlytext-ql-open-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let file = directory.appendingPathComponent("selected.md")
+        try Data("# selected\n".utf8).write(to: file)
+        let selected = try FileHandle(forReadingFrom: file)
+        defer { try? selected.close() }
+        let descriptor = selected.fileDescriptor
+        let entered = DispatchSemaphore(value: 0)
+        let release = DispatchSemaphore(value: 0)
+        let returned = DispatchSemaphore(value: 0)
+        defer { release.signal() }
+
+        let pending = Task {
+            try await QuickLookSelectedFileOpener.open(file, timeout: .seconds(1)) {
+                entered.signal()
+                _ = release.wait(timeout: .now() + 2)
+                defer { returned.signal() }
+                return selected
+            }
+        }
+        #expect(await waitForSignal(entered))
+        pending.cancel()
+        do {
+            _ = try await pending.value
+            Issue.record("Cancellation returned a selected descriptor")
+        } catch is CancellationError {}
+        release.signal()
+        #expect(await waitForSignal(returned))
+        let closeDeadline = ProcessInfo.processInfo.systemUptime + 1.0
+        while ProcessInfo.processInfo.systemUptime < closeDeadline {
+            if fcntl(descriptor, F_GETFD) == -1, errno == EBADF {
+                break
+            }
+            try await Task.sleep(for: .milliseconds(10))
+        }
+        #expect(fcntl(descriptor, F_GETFD) == -1 && errno == EBADF)
     }
 
     private func waitForSignal(_ semaphore: DispatchSemaphore) async -> Bool {

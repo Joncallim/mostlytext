@@ -29,7 +29,10 @@ public enum QuickLookSelectedFileOpener {
                 DispatchQueue.global(qos: .userInitiated).async {
                     defer { admission.release() }
                     do {
-                        try reply.finish(.success(operation()))
+                        let selected = try operation()
+                        if !reply.finish(.success(selected)) {
+                            try? selected.close()
+                        }
                     } catch let error as QuickLookSourceError {
                         reply.finish(.failure(error))
                     } catch {
@@ -41,7 +44,14 @@ public enum QuickLookSelectedFileOpener {
             reply.finish(.failure(.openFailed))
         }
         deadline.cancel()
-        try Task.checkCancellation()
+        do {
+            try Task.checkCancellation()
+        } catch {
+            if case let .success(selected) = result {
+                try? selected.close()
+            }
+            throw error
+        }
         return try result.get()
     }
 }
@@ -82,14 +92,19 @@ private final class OneShotOpen: @unchecked Sendable {
         }
     }
 
-    func finish(_ result: Result<FileHandle, QuickLookSourceError>) {
-        let pending = lock.withLock { () -> CheckedContinuation<Result<FileHandle, QuickLookSourceError>, Never>? in
-            guard !completed else { return nil }
+    @discardableResult
+    func finish(_ result: Result<FileHandle, QuickLookSourceError>) -> Bool {
+        let pending = lock.withLock { () -> (
+            Bool,
+            CheckedContinuation<Result<FileHandle, QuickLookSourceError>, Never>?
+        ) in
+            guard !completed else { return (false, nil) }
             completed = true
             value = result
             defer { continuation = nil }
-            return continuation
+            return (true, continuation)
         }
-        pending?.resume(returning: result)
+        pending.1?.resume(returning: result)
+        return pending.0
     }
 }
