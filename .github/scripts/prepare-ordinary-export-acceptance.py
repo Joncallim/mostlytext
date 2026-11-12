@@ -9,8 +9,8 @@ from pathlib import Path
 import subprocess
 import sys
 
-PRODUCT_BASELINE = '70ec31890cb3c91a9dd4f36e69ff6a0ee9e26131'
-PRODUCT_TREE = '0e1e31bbd4c2f2253875ef01185bd63e772d386d'
+PRODUCT_BASELINE = '6f14084bc35f58ddff544b69769e18e2f572bcd9'
+PRODUCT_TREE = 'c095ef82c20795faac9484c2d8a2ae15a3e4ae23'
 
 SOURCE = '# NATIVE_EXPORT_CANARY\r\n\r\nA café document with **bold** and `code`.\r\n\r\n| Key | Value |\r\n| --- | --- |\r\n| alpha | beta |\r\n'.encode()
 EXTRA = ['.github/hosted-export-acceptance', '.github/scripts/prepare-ordinary-export-acceptance.py',
