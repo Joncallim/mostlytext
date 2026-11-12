@@ -16,6 +16,66 @@ import Testing
 /// no UI/XCUITest/Accessibility-automation dependency at all.
 @Suite("Document file monitor — real watcher (#59)")
 struct DocumentFileMonitorLiveWatcherTests {
+    private struct WorkCounts {
+        var signals = 0
+        var probes = 0
+        var sleeps = 0
+    }
+
+    private final class WorkCounter: @unchecked Sendable {
+        private let lock = NSLock()
+        private var values = WorkCounts()
+
+        var snapshot: WorkCounts {
+            lock.withLock { values }
+        }
+
+        func signal() {
+            lock.withLock { values.signals += 1 }
+        }
+
+        func probe() {
+            lock.withLock { values.probes += 1 }
+        }
+
+        func sleep() {
+            lock.withLock { values.sleeps += 1 }
+        }
+    }
+
+    private struct CountingWatcher: DocumentDirectoryWatching {
+        let counter: WorkCounter
+        private let live = LiveDocumentDirectoryWatcher()
+
+        func watch(_ directoryURL: URL, onSignal: @escaping @Sendable (DocumentDirectorySignal) -> Void)
+            throws -> any DocumentDirectoryWatcherHandle {
+            try live.watch(directoryURL) { signal in
+                counter.signal()
+                onSignal(signal)
+            }
+        }
+
+        func watchFile(_ fileURL: URL, onSignal: @escaping @Sendable (DocumentDirectorySignal) -> Void)
+            throws -> any DocumentDirectoryWatcherHandle {
+            try live.watchFile(fileURL) { signal in
+                counter.signal()
+                onSignal(signal)
+            }
+        }
+    }
+
+    private struct CountingProbe: DocumentFileProbing {
+        let counter: WorkCounter
+        private let live = DocumentFileProbe()
+
+        func observe(expectedURL: URL, priorFileObjectID: PhysicalFileIdentity.FileObjectID?,
+                     decoding: FileDecodingPolicy) async -> DocumentFileObservation {
+            counter.probe()
+            return await live.observe(expectedURL: expectedURL, priorFileObjectID: priorFileObjectID,
+                                      decoding: decoding)
+        }
+    }
+
     /// Lock-based, synchronously-appending recorder -- see
     /// `DocumentFileMonitorTestSupport.swift`'s own `ObservationRecorder` doc
     /// comment for why this isn't an actor fed via
@@ -44,6 +104,54 @@ struct DocumentFileMonitorLiveWatcherTests {
         let url = directory.appendingPathComponent(name)
         try contents.write(to: url, atomically: true, encoding: .utf8)
         return url
+    }
+
+    /// A real kqueue watcher and real file probe must remain idle after their
+    /// bind-time observation. The subsequent atomic write proves the counter
+    /// sees genuine events, debounce waits and disk work on the same monitor.
+    @Test(.timeLimit(.minutes(1)))
+    func boundMonitorDoesNoPeriodicWorkWhileFileIsIdle() async throws {
+        let fileURL = try makeFile()
+        defer { try? FileManager.default.removeItem(at: fileURL.deletingLastPathComponent()) }
+        let counter = WorkCounter()
+        let recorder = Recorder()
+        let monitor = DocumentFileMonitor(
+            debounce: .milliseconds(150), watcher: CountingWatcher(counter: counter),
+            prober: CountingProbe(counter: counter), sleeper: { duration in
+                counter.sleep()
+                try? await Task.sleep(for: duration)
+            }
+        )
+        try await monitor.bind(to: fileURL, priorFileObjectID: nil) { observation in
+            recorder.append(observation)
+        }
+        let bound = counter.snapshot
+        #expect(bound.signals == 0 && bound.probes == 1 && bound.sleeps == 0)
+        #expect(recorder.observations.count == 1)
+
+        try await Task.sleep(for: .seconds(4))
+        let idle = counter.snapshot
+        #expect(idle.signals == bound.signals, "idle watcher delivered an unsolicited signal")
+        #expect(idle.probes == bound.probes, "idle monitor repeated its disk probe")
+        #expect(idle.sleeps == bound.sleeps, "idle monitor scheduled a timer")
+        #expect(recorder.observations.count == 1)
+
+        let replacement = fileURL.deletingLastPathComponent().appendingPathComponent("external.md.tmp")
+        try "# Changed\n".write(to: replacement, atomically: true, encoding: .utf8)
+        _ = try FileManager.default.replaceItemAt(fileURL, withItemAt: replacement)
+        await waitUntil({
+            recorder.observations.contains {
+                if case let .available(snapshot) = $0 {
+                    return snapshot.text == "# Changed\n"
+                }
+                return false
+            }
+        }, timeout: .seconds(5))
+        let active = counter.snapshot
+        #expect(active.signals > idle.signals, "positive control never reached the real watcher")
+        #expect(active.probes > idle.probes, "positive control never re-read the file")
+        #expect(active.sleeps > idle.sleeps, "positive control never used the debounce")
+        await monitor.cancel()
     }
 
     @Test func realWatcherDetectsExternalDeletionWithinAFewSeconds() async throws {
