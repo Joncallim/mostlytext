@@ -38,19 +38,7 @@ struct ExternalFileControllerLiveLatencyTests {
         let identity = "external-latency-\(UUID().uuidString)"
         let editor = editorStore.system(for: identity, initialText: original, configuration: .default)
         let phases = WatcherPhaseRecorder()
-        let monitor = DocumentFileMonitor(
-            debounce: .milliseconds(150), watcher: TimedLiveWatcher(phases: phases),
-            prober: DocumentFileProbe(), sleeper: { duration in
-                let start = DispatchTime.now().uptimeNanoseconds
-                do {
-                    try await Task.sleep(for: duration)
-                    phases.completedDebounce(duration: duration, start: start,
-                                             end: DispatchTime.now().uptimeNanoseconds)
-                } catch {
-                    // Cancellation of a superseded debounce is product behavior.
-                }
-            }
-        )
+        let monitor = makeMonitor(phases: phases)
         let controller = ExternalFileController(model: model, editorStore: editorStore,
                                                 identity: identity, monitor: monitor)
         defer { controller.dispose() }
@@ -63,7 +51,7 @@ struct ExternalFileControllerLiveLatencyTests {
         }
         controller.synchronize(with: document)
         await controller.bindTask?.value
-        try await waitUntil("initial watcher observation") { recorder.count > 0 }
+        try await waitUntil("initial watcher observation") { !recorder.records.isEmpty }
 
         let began = phases.begin()
         guard rename(replacementURL.path, sourceURL.path) == 0 else {
@@ -71,12 +59,38 @@ struct ExternalFileControllerLiveLatencyTests {
         }
         try await waitUntil("controller reconciliation") { recorder.timestamp(for: digest) != nil }
         let reconciled = try #require(recorder.timestamp(for: digest))
-        #expect(model.activeDocument?.state == .clean)
-        #expect(model.activeDocument?.text == replacement)
-        #expect(editor.textView.string == replacement)
-        #expect(try Data(contentsOf: sourceURL) == Data(replacement.utf8))
+        try verifyReconciled(model: model, editorText: editor.textView.string,
+                             replacement: replacement, sourceURL: sourceURL)
         let trace = try #require(phases.trace(before: reconciled))
         #expect(trace.firstEvent >= began && trace.debounceStart >= trace.lastEvent)
+        try record(byteCount: byteCount, digest: digest, began: began,
+                   reconciled: reconciled, trace: trace)
+    }
+
+    private func makeMonitor(phases: WatcherPhaseRecorder) -> DocumentFileMonitor {
+        DocumentFileMonitor(debounce: .milliseconds(150), watcher: TimedLiveWatcher(phases: phases),
+                            prober: DocumentFileProbe(), sleeper: { duration in
+                                let start = DispatchTime.now().uptimeNanoseconds
+                                do {
+                                    try await Task.sleep(for: duration)
+                                    phases.completedDebounce(duration: duration, start: start,
+                                                             end: DispatchTime.now().uptimeNanoseconds)
+                                } catch {
+                                    // Cancellation of a superseded debounce is product behavior.
+                                }
+                            })
+    }
+
+    private func verifyReconciled(model: WorkspaceModel, editorText: String, replacement: String,
+                                  sourceURL: URL) throws {
+        #expect(model.activeDocument?.state == .clean)
+        #expect(model.activeDocument?.text == replacement)
+        #expect(editorText == replacement)
+        #expect(try Data(contentsOf: sourceURL) == Data(replacement.utf8))
+    }
+
+    private func record(byteCount: Int, digest: String, began: UInt64, reconciled: UInt64,
+                        trace: WatcherPhaseRecorder.Trace) throws {
         print("controller-latency bytes=\(byteCount) " +
             "rename_to_first_event_ms=\(ms(began, trace.firstEvent)) " +
             "last_event_to_debounce_start_ms=\(ms(trace.lastEvent, trace.debounceStart)) " +
@@ -120,10 +134,6 @@ struct ExternalFileControllerLiveLatencyTests {
 @MainActor
 private final class ReconciliationRecorder {
     private(set) var records: [(digest: String, timestamp: UInt64)] = []
-
-    var count: Int {
-        records.count
-    }
 
     func append(_ context: DocumentFileObservationContext) {
         guard case let .available(snapshot) = context.observation else { return }
