@@ -9,6 +9,8 @@ public enum QuickLookSourceError: Error, Sendable, Equatable {
     case sourceTooLarge
     case readFailed
     case sourceChanged
+    case openTimedOut
+    case openBusy
 }
 
 /// A passive Quick Look reply for one system-supplied Markdown file. This

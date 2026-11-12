@@ -360,6 +360,10 @@ accessibility and final identity migration remain required CORTANA evidence.
 
 ## Production Quick Look source shell — first integration slice
 
+The description below records the first shell's design. The bounded worker
+section that follows updates its source-open and rendering transport; the
+initial no-service statement is historical, not the current PR's behavior.
+
 **Owner summary.** Add the real Markdown Quick Look bundle to MostlyText so a
 selected, small Markdown file can produce a passive, escaped view of its authored
 source. This establishes the shipping bundle and a safe fallback before any
@@ -421,6 +425,42 @@ kill/reap/error paths, active-work caps and same-service concurrency need their
 own exact-head negative and native controls. Stop this slice if compilation
 requires broader permissions, if source access needs a parent grant, or if the
 provider cannot produce an immutable reply under the declared entitlement set.
+
+## Bounded selected-source transport — second integration slice
+
+**Owner summary.** Keep Finder's Quick Look reply responsive when opening or
+reading a selected Markdown file is slow. The extension opens only that file,
+then sends its descriptor to a sandboxed service. A child process reads,
+decodes and escapes the source under a hard deadline. A failure produces no
+partial HTML reply and leaves the containing app unopened.
+
+The extension's initial `open` is a separate trust boundary: `O_NONBLOCK`
+refuses a pipe without a writer, but cannot guarantee that opening every
+regular filesystem file returns promptly. The selected-file opener therefore
+uses a one-second reply deadline and admits at most two concurrent opening
+threads. A timed-out syscall may still occupy its thread; that slot is released
+only when the syscall actually returns. A late file handle is discarded, never
+sent to the service. This bounds Finder's wait and new thread admission without
+claiming that a kernel-blocked syscall can be cancelled by Swift.
+
+The provider sends only the opened selected descriptor over XPC. The
+sandbox-only service accepts two concurrent requests, duplicates that
+descriptor into a child of its own executable, and gives the child one unlinked
+private output descriptor. It kills and reaps the child after three seconds.
+The child exits on its own after 3.5 seconds if its service disappears. The
+extension settles its one-shot XPC reply by four seconds, including cancellation
+and connection invalidation. No service receives the source path or a parent
+directory grant. The child produces at most the bounded escaped HTML response;
+source bytes never become executable markup, a URL or a network request.
+
+Local controls must prove ordinary selected-source output, exact size/encoding
+refusal, an injected blocked initial open returning at its deadline, direct
+signed-child descriptor transport, and the existing source-escaping corpus.
+An actual cold Finder run on a suitable macOS 26 host must prove the packaged
+service resolves, the reply is visible, and cancellation/failure does not hang
+or blank a later preview. A direct positive child run does not establish these
+Finder or negative timeout outcomes. GFM structure, derived math/diagram
+content, theme parity and final signed installation remain later E23 slices.
 
 
 ## Extended ACL admission correction
