@@ -10,8 +10,8 @@ from pathlib import Path
 import subprocess
 import sys
 
-PRODUCT_BASELINE = '6f14084bc35f58ddff544b69769e18e2f572bcd9'
-PRODUCT_TREE = 'c095ef82c20795faac9484c2d8a2ae15a3e4ae23'
+PRODUCT_BASELINE = '0bab121bae1b15452fa44c51dcdaabb74d2e09d0'
+PRODUCT_TREE = 'd2f5dfad616803677826bc85ba81623c9bd2a4f7'
 
 SOURCE = '# NATIVE_EXPORT_CANARY\r\n\r\nA café document with **bold** and `code`.\r\n\r\n| Key | Value |\r\n| --- | --- |\r\n| alpha | beta |\r\n'.encode()
 PRIVATE_SOURCE = b'# NATIVE_EXPORT_CANARY\n\nA **bold** paragraph.\n\n- first\n- second\n\n'
