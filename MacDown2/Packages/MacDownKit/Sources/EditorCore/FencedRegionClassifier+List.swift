@@ -94,7 +94,8 @@ extension FencedRegionClassifier {
             let existingFloor = lists.last?.floor ?? 0
             let canStartList = !indentation.hasTab &&
                 (lists.isEmpty ? indentation.spaces <= 3 : indentation.spaces <= existingFloor + 3)
-            if canStartList {
+            if canStartList,
+               FencedRegionClassifier.isListMarkerLead(at: line.contentStart + indentation.spaces, in: text) {
                 var markerStart = line.contentStart + indentation.spaces
                 var added = false
                 let lineEnd = MarkdownEditingAssistEngine.lineContentEnd(of: line.contentStart, in: text)
@@ -188,5 +189,12 @@ extension FencedRegionClassifier {
             return false
         }
         return text.character(at: end) == 0x09
+    }
+
+    private static func isListMarkerLead(at index: Int, in text: NSString) -> Bool {
+        guard index < text.length else { return false }
+        let character = text.character(at: index)
+        return character == 0x2D || character == 0x2B || character == 0x2A ||
+            (character >= 0x30 && character <= 0x39)
     }
 }
