@@ -13,7 +13,7 @@ struct ValidateActualExportPDF {
               let account, String(cString: account.pointee.pw_name) == "runner",
               String(cString: account.pointee.pw_dir) == "/Users/runner", getuid() == 501, getuid() == geteuid(),
               arguments.count == 2,
-              arguments[1] == "/Users/runner/work/_temp/mostlytext-focus/documents/ordinary-export.pdf"
+              permittedOutput(arguments[1])
         else { throw Refusal.invalid }
         let data = try Data(contentsOf: URL(fileURLWithPath: arguments[1]))
         guard !data.isEmpty, data.count < 16 * 1024 * 1024, data.starts(with: Data("%PDF-".utf8)),
@@ -32,6 +32,31 @@ struct ValidateActualExportPDF {
         let bytes = try JSONSerialization.data(withJSONObject: result, options: [.sortedKeys])
         guard let output = String(data: bytes, encoding: .utf8) else { throw Refusal.invalid }
         print(output)
+    }
+
+    private static func permittedOutput(_ path: String) -> Bool {
+        if path == "/Users/runner/work/_temp/mostlytext-focus/documents/ordinary-export.pdf" {
+            return true
+        }
+        let environment = ProcessInfo.processInfo.environment
+        guard let run = environment["GITHUB_RUN_ID"], !run.isEmpty,
+              run.utf8.allSatisfy({ $0 >= 48 && $0 <= 57 }),
+              let temp = environment["TMPDIR"] else { return false }
+        let file = URL(fileURLWithPath: path)
+        let directory = file.deletingLastPathComponent()
+        let parent = directory.deletingLastPathComponent().resolvingSymlinksInPath().path
+        let approvedTemp = URL(fileURLWithPath: temp).resolvingSymlinksInPath().path
+        guard file.lastPathComponent == "export-canary.pdf",
+              directory.lastPathComponent == "MostlyTextAcceptance-" + run,
+              parent == approvedTemp
+        else { return false }
+        var info = stat()
+        guard lstat(directory.path, &info) == 0,
+              info.st_mode & S_IFMT == S_IFDIR, info.st_uid == getuid(),
+              info.st_mode & 0o777 == 0o700 else { return false }
+        guard lstat(file.path, &info) == 0,
+              info.st_mode & S_IFMT == S_IFREG, info.st_uid == getuid() else { return false }
+        return true
     }
 
     private static func readPage(_ page: PDFPage) throws -> [String: Any] {
@@ -53,8 +78,10 @@ struct ValidateActualExportPDF {
             row["selection_bounds"] = try rectangle(selection.bounds(for: page))
             return row
         }
-        return ["media_box": media, "raw_page_text": text, "character_count": source.length,
-                "character_geometry": rows]
+        return [
+            "media_box": media, "raw_page_text": text, "character_count": source.length,
+            "character_geometry": rows,
+        ]
     }
 
     private static func rectangle(_ box: CGRect) throws -> [Double] {
