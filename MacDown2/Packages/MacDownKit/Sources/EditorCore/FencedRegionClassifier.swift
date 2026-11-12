@@ -96,6 +96,10 @@ enum FencedRegionClassifier {
 
         // The document's start or the end of closed front matter is a known
         // outside-fence anchor. Never replay YAML's fence-looking lines.
+        return classification(in: lines)
+    }
+
+    private static func classification(in lines: [ScannedLine]) -> Classification {
         // A quoted fence ends when its quote container ends, even without a
         // closing marker. A deeper quote marker is content, not its closer.
         var active: FenceDelimiter?
