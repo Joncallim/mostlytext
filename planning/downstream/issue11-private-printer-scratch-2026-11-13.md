@@ -18,12 +18,21 @@ recovery. The vector snapshot fallback already returns memory bytes.
 The first hosted Release menu run (43321978646) reached PDF Export but showed
 an `Export Failed` sheet with `No such file or directory`. The first genuine
 pagination run (43321978832) independently failed four PDF tests at private
-scratch construction with the same error. The system may advertise a sandbox
-temporary directory before creating it. The adapter now creates that
-OS-provided base when needed, then requires an owned, private, non-symlink
-directory before `mkdtemp`. A focused missing-base regression passed locally
-along with the three existing scratch safety tests. The original failed runs
-remain failures; a fresh hosted app and pagination pass is required.
+scratch construction with the same error. Materializing an absent sandbox temp
+base passed a local regression but did **not** fix the hosted condition:
+ordinary run 43326546974 and pagination run 43326546981 repeated the same
+failure. All four pagination tests failed at direct scratch construction, so
+the failure remains before AppKit printing or final publication.
+
+The next revision pins the OS-provided temp base descriptor and uses `mkdirat`
+and `openat` for the private child. It retires the directory relative to the
+same pinned base, with a path/identity check before reads and retirement.
+Setup failures now name their boundary and POSIX code without revealing the
+temporary pathname in the user alert. This replaces the path-based `mkdtemp`
+assumption, but the exact hosted cause is still unclassified until a fresh
+run succeeds or the new stage error identifies it. Four local scratch tests
+pass, including the missing-base and symlink controls. Both previous hosted
+failure pairs remain failures.
 
 This removes the printer's public sibling pathname without assuming AppKit can
 print directly into an unlinked descriptor. It does not claim exclusion of a
