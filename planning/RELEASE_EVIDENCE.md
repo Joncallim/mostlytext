@@ -11,6 +11,33 @@
 >
 > This is not another epic and it is not a substitute for individual epic test records. It is the owner-readable cross-product ledger required by `planning/RELEASE_HARDENING.md` so a closed issue is never mistaken for proof that the exact release application has been validated end-to-end.
 
+## Installed Release acceptance checkpoint — 12 November 2026
+
+The disposable `mostlytexttest` desktop (UID 502) ran the root-owned, ad hoc
+Release app staged from clean MostlyText main `201abd4a48ad7dbaad89be109bce107b45e22a15`.
+The executable SHA-256 was
+`501d34783c7d9bf2137213be64e13dbe07e59573dc587bdc4917d138eaa7313d`.
+This is an installed **ad hoc signed local Release** evidence class, not the Developer ID signed
+or notarised release candidate. The [preflight](https://github.com/Joncallim/mostlytext/issues/5#issuecomment-6813274328)
+and [benign control](https://github.com/Joncallim/mostlytext/issues/5#issuecomment-6813610689)
+passed with the separate test identity and isolated source files.
+
+| Owner | Observed slice on this exact app | Remaining gate |
+|---|---|---|
+| [#5](https://github.com/Joncallim/mostlytext/issues/5#issuecomment-6813709883) | Startup, typing/save, tab close, and one dirty external conflict-close path passed. | Full original UI matrix and final-candidate execution were not run on the test desktop. |
+| [#6](https://github.com/Joncallim/mostlytext/issues/6#issuecomment-6813852239) | 128-caret insertion/backspace/undo and bounded selection-formatting, line-ending, Go-to-Line and list-continuation cases passed. | Complete multi-cursor, IME, performance and E22 handoff criteria remain. |
+| [#9](https://github.com/Joncallim/mostlytext/issues/9#issuecomment-6814112754) | **FAIL:** inline `$x^2$` and `$E=mc^2$` painted only the exponent in light and dark Preview; display exponent placement was also wrong. Exact source navigation on one inline occurrence passed. | Reproduce and correct the installed-app paint defect, then rerun visual, accessibility, offline and final-candidate checks. [Source-layer isolation](https://github.com/Joncallim/mostlytext/issues/9#issuecomment-6814723514) does not clear the failure. |
+| [#11](https://github.com/Joncallim/mostlytext/issues/11#issuecomment-6814204841) | Ordinary HTML and a later fresh-directory PDF export produced readable output. Two PDF names in the original temp directory refused with `unsafePublication`. | Explain the path-specific refusal; run complete parity, budget, progress/cancellation and exact-candidate checks. |
+| [#12](https://github.com/Joncallim/mostlytext/issues/12#issuecomment-6813720712) | One dirty external-write conflict-close path preserved the on-disk writer bytes. | Full external-change matrix and performance/fidelity measurements remain. |
+| [#13](https://github.com/Joncallim/mostlytext/issues/13#issuecomment-6814033630) | Saved HTML Preview showed granted local CSS/PNG; bounded outside-symlink and loopback controls did not expose their content or make an app GET. | Full hostile corpus, read races and final-candidate proof remain. |
+| [#16](https://github.com/Joncallim/mostlytext/issues/16#issuecomment-6814236018) | Native window/menu/About presented MostlyText, its icon, MIT and MacDown lineage; normal Quit completed. | Finder/Open With, state migration, update channel and final visual/artifact acceptance remain. |
+| [#7 / PR181](https://github.com/Joncallim/mostlytext/issues/7#issuecomment-6814258738) | **NOT RUN:** only current main was staged; PR181's Quick Look app/extension was absent. | Stage and test the exact PR candidate after its source safety and CI gates. |
+| [#4](https://github.com/Joncallim/mostlytext/issues/4#issuecomment-6814246420) | Staged product and identity were inspected. | Ad hoc signature was rejected by Gatekeeper; signing, notarisation, migration, Sparkle and exact RC remain. |
+
+The issue hand-offs explicitly scope these as individual observations. No original
+whole-issue checkbox or release gate is closed by this checkpoint. The older
+sections below retain their original candidate and historical status.
+
 ## Qualified source checkpoint — 6 November 2026
 
 Main `6667bc9c1cb74534eafc417d921c3a37c55628b0` includes reviewed PR93–97.
