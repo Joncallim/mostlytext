@@ -269,7 +269,7 @@ private extension ExportFilePublication {
            input.url.pathExtension.lowercased() == "assets" {
             throw ExportError.unsafePublication
         }
-        guard input.bytes.count <= ExportResourceBudget.maxFinalHTMLUTF8Bytes,
+        guard input.bytes.count <= ExportResourceBudget.maxManagedOutputBytes,
               input.resources.count <= ExportResourceBudget.standard.maxResourceCount
         else { throw BoundedExportHTML.tooLarge }
         var bytes = 0

@@ -84,7 +84,7 @@ enum ExportPublicationFilesystem {
     }
 
     static func readBoundedFile(_ name: String, in directory: Int32, maxBytes: Int) throws -> Data? {
-        guard maxBytes >= 0, maxBytes <= ExportResourceBudget.maxFinalHTMLUTF8Bytes
+        guard maxBytes >= 0, maxBytes <= ExportResourceBudget.maxManagedOutputBytes
         else { throw BoundedExportHTML.tooLarge }
         let descriptor = openat(directory, name, O_RDONLY | O_NONBLOCK | O_NOFOLLOW | O_CLOEXEC)
         if descriptor < 0 {

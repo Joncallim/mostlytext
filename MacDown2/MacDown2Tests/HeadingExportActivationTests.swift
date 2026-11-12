@@ -31,7 +31,11 @@ struct HeadingExportActivationTests {
         let directory = try TextFilterCoordinatorTests.makeTemporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
         let document = try #require(fixture.controller.model.activeDocument)
-        let snapshot = OrdinaryExportSnapshot(document: document, theme: BundledThemes.light, parseOptions: .default)
+        let snapshot = await OrdinaryExportSnapshot(
+            document: document,
+            theme: BundledThemes.light,
+            parseOptions: .default
+        )
         let exporter = ExportCoordinator(
             coordinator: fixture.coordinator, themeController: fixture.coordinator.themeController,
             appSettings: fixture.coordinator.appSettings
@@ -72,8 +76,8 @@ struct HeadingExportActivationTests {
             coordinator: fixture.coordinator, themeController: fixture.coordinator.themeController,
             appSettings: fixture.coordinator.appSettings
         )
-        let snapshot = try OrdinaryExportSnapshot(document: #require(fixture.controller.model.activeDocument),
-                                                  theme: BundledThemes.light, parseOptions: .default)
+        let snapshot = try await OrdinaryExportSnapshot(document: #require(fixture.controller.model.activeDocument),
+                                                        theme: BundledThemes.light, parseOptions: .default)
         let error = await #expect(throws: ExportError.self) {
             _ = try await exporter.performExport(snapshot: snapshot, selection: .init(
                 url: primary, format: .standaloneHTML, style: .embedded
@@ -99,8 +103,8 @@ struct HeadingExportActivationTests {
             coordinator: fixture.coordinator, themeController: fixture.coordinator.themeController,
             appSettings: fixture.coordinator.appSettings
         )
-        let snapshot = try OrdinaryExportSnapshot(document: #require(fixture.controller.model.activeDocument),
-                                                  theme: BundledThemes.light, parseOptions: .default)
+        let snapshot = try await OrdinaryExportSnapshot(document: #require(fixture.controller.model.activeDocument),
+                                                        theme: BundledThemes.light, parseOptions: .default)
         let output = try await exporter.performExport(snapshot: snapshot, selection: .init(
             url: directory.appendingPathComponent("result.html"), format: .standaloneHTML, style: .embedded
         ))
@@ -120,8 +124,8 @@ extension HeadingExportActivationTests {
         defer { MathPreviewLiveSourceTests.dispose(fixture) }
         let directory = try TextFilterCoordinatorTests.makeTemporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
-        let snapshot = try OrdinaryExportSnapshot(document: #require(fixture.controller.model.activeDocument),
-                                                  theme: BundledThemes.light, parseOptions: .default)
+        let snapshot = try await OrdinaryExportSnapshot(document: #require(fixture.controller.model.activeDocument),
+                                                        theme: BundledThemes.light, parseOptions: .default)
         let exporter = ExportCoordinator(
             coordinator: fixture.coordinator, themeController: fixture.coordinator.themeController,
             appSettings: fixture.coordinator.appSettings

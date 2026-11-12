@@ -6,6 +6,41 @@ import Testing
 @Suite("Preview directory grant lifetime")
 @MainActor
 struct PreviewDirectoryGrantBackingTests {
+    @Test func automaticScopeStopsOnlyAfterTheLastAdmittedUse() async throws {
+        let sandbox = try makeSandbox()
+        defer { try? FileManager.default.removeItem(at: sandbox) }
+        let document = sandbox.appendingPathComponent("story.html")
+        let counter = PreviewScopeCounter()
+        let grant = try PreviewDirectoryGrantBacking.acquireAutomatic(
+            documentURL: document, epoch: UUID(), scopeAccess: counter.access
+        )
+        #expect(counter.started == [sandbox])
+        var use = grant.acquireUse()
+        #expect(use != nil)
+        grant.revoke()
+        #expect(counter.stopped.isEmpty)
+        use = nil
+        try await counter.waitForStops(1)
+        #expect(counter.stopped == [sandbox])
+        grant.revoke()
+        #expect(counter.stopped.count == 1)
+    }
+
+    @Test func failedAutomaticDirectoryOpenStopsItsStartedScope() throws {
+        let sandbox = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let documentURL = sandbox.appendingPathComponent("story.html")
+        let scopedDirectory = documentURL.deletingLastPathComponent()
+        let counter = PreviewScopeCounter()
+        #expect(throws: (any Error).self) {
+            try PreviewDirectoryGrantBacking.acquireAutomatic(
+                documentURL: documentURL,
+                epoch: UUID(), scopeAccess: counter.access
+            )
+        }
+        #expect(counter.started == [scopedDirectory])
+        #expect(counter.stopped == [scopedDirectory])
+    }
+
     @Test func automaticDocumentDirectoryDrainsAnAdmittedUseAfterRevocation() throws {
         let sandbox = try makeSandbox()
         defer { try? FileManager.default.removeItem(at: sandbox) }
@@ -98,5 +133,29 @@ struct PreviewDirectoryGrantBackingTests {
         )
         try FileManager.default.createDirectory(at: sandbox, withIntermediateDirectories: true)
         return sandbox
+    }
+}
+
+@MainActor
+final class PreviewScopeCounter {
+    private(set) var started: [URL] = []
+    private(set) var stopped: [URL] = []
+
+    var access: PreviewDirectoryScopeAccess {
+        PreviewDirectoryScopeAccess(
+            start: { [self] url in
+                started.append(url)
+                return true
+            },
+            stop: { [self] url in stopped.append(url) }
+        )
+    }
+
+    func waitForStops(_ expected: Int) async throws {
+        let deadline = ContinuousClock.now.advanced(by: .seconds(2))
+        while stopped.count < expected, ContinuousClock.now < deadline {
+            try await Task.sleep(for: .milliseconds(10))
+        }
+        #expect(stopped.count == expected)
     }
 }

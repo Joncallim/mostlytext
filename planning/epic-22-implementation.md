@@ -8,6 +8,38 @@
 > feasibility probe, held preview/current-line activation and other named native
 > prerequisites remain binding; a documentation update does not skip them.
 
+> Multi-caret correction — 11 November 2026: current `main` now inserts at
+> synthetic bare carets and mixed selected/bare ranges through one transaction
+> (MostlyText PR #223). The directional-delete slice following it uses composed
+> characters and whole CRLF separators at those carets. Historical statements
+> below that `applyMultiCursorInsert` requires non-empty ranges, or that
+> selected-only delete is the production Backspace route, describe earlier
+> implementation snapshots and are superseded by these changes. Per-caret E10
+> assists and installed-app acceptance retain their own checks in issue #6.
+
+> Per-caret Return correction — 11 November 2026: the following narrow slice
+> evaluates Return at each caret using that caret's own line ending and local
+> Markdown or general-text editing context. It publishes disjoint replacements
+> as one transaction and falls back to plain Return for the whole selection
+> set if expanded assists overlap. The historical Slice 3 plain-Return scope
+> below describes the earlier implementation; pairing, explicit formatting
+> commands and installed-app acceptance remain separate.
+
+> Per-caret pairing correction — 11 November 2026: typed opening delimiters,
+> closing-delimiter type-over and paired Backspace now evaluate at each caret
+> through the existing E10 engine, including the native command delegate path.
+> The resulting disjoint replacements publish as one validated transaction;
+> incompatible outcomes decline as a whole. This supersedes the historical
+> Slice 3 single-caret pairing scope, while installed-app acceptance remains
+> an independent check.
+
+> Explicit Markdown-command correction — 11 November 2026: Bold, Italic,
+> Inline Code, Heading and Paragraph now act on the complete selection set
+> through one validated transaction. Identical expanded line edits publish
+> once, while incompatible overlaps decline atomically. This narrows the
+> historical Slice 3 single-selection-only scope at §7.3; installed-app and
+> final localisation acceptance remain separate.
+
 
 > Baseline: `master` at commit `95e4f6005f7f0a998b6c03377a17d92b8c1fcef7` (2026-09-21), immediately after EPIC-16's interim localisation baseline (PR #111) and the owner's "Plan final pre-release debt closure and E23" / "Complete carried-forward debt audit" planning commits. Epic issue: [#112](https://github.com/Joncallim/macdown_2/issues/112).
 
@@ -589,6 +621,10 @@ The other eight transforms (Duplicate/Delete/Move Up/Move Down/Join/Sort/Dedupe/
 - **Case conversion** (Uppercase / Lowercase / Capitalized Case, as a 3-item submenu, matching Xcode's own "Convert Case" wording) — requires real, non-empty selected text for every active selection (same `allSatisfy` convention as Sort/Dedupe above); N non-empty selections each get their own content's case transformed independently, N replacements in one transaction — no new selection-processing shape beyond `applyMultiCursorInsert`'s own established one, just `text.uppercased()`/`.lowercased()`/a per-word capitalization helper instead of a fixed inserted string.
 - **Increase Indent / Decrease Indent** — see the baseline note above: calls the existing `indentSelectedLines`/`unindentSelectedLines(text:selection:width:)` once per active selection (a bare caret counts as its own one-line "selection" for this purpose, matching Tab/Shift-Tab's own existing collapsed-caret behavior), using each selection's own effective profile/width exactly as `tabOutcome` already resolves it (`profile.defaultIndentWidth ?? configuration.indentationWidth`) — combining the N per-selection edits into one `EditorEditTransaction` is the only genuinely new code; the per-line indent logic itself is reused unchanged.
 - **Toggle Comment** — for each active selection/caret's touched line-block, "smart toggle" semantics (VSCode/Sublime/Xcode's shared convention): if every touched line already starts (after its own leading whitespace) with the effective profile's `lineComment` prefix, remove it from all of them; otherwise add it to every touched line that doesn't already have one. Falls back to wrapping the whole block with `blockComment` if the profile has `lineComment == nil` but a `blockComment` (e.g. a hypothetical line-comment-less format); disabled entirely (menu item off) if the profile has neither. Inside Markdown, "effective profile" is resolved exactly the way `MarkdownEditingAssistEngine`'s own `effectiveConfigurationAndProfile` already resolves it for typing (§6.12): the fenced language's own profile when the selection's own anchor line is inside a fence (Markdown itself has no line-comment syntax of its own to toggle), `.plainText`'s otherwise. Each active selection's own line-block is toggled independently using ITS OWN effective profile (a selection spanning both a fence and surrounding prose is scoped to whichever profile its own anchor line resolves to — not a mixed per-line profile within one selection, which would make the smart-toggle "already commented?" check itself ambiguous).
+
+**12 November 2026 safety correction to Toggle Comment.** The historical anchor-profile rule above allowed a selection spanning a fenced-code closer and prose to comment the closing marker itself. It also misclassified a quoted-code line when probing before its `>` prefix. Keep one profile per merged selection group, but refuse the whole command atomically when a group touches a fence delimiter, crosses code/prose context, or has an unresolved region. Probe the first and last selected lines plus at most 64 candidate delimiter lines with the bounded local classifier; beyond that cap, decline. Do not run a full Markdown parse or repeat the bounded backward scan for every ordinary selected line. Quoted-code lines decline until a container-aware comment insertion exists. Ordinary prose and code-only selections keep their existing behavior. The historical acceptance of delimiter corruption in the implementation log is superseded by this correction.
+
+**12 November 2026 list-contained fence correction.** The local classifier now replays bounded list containers as well as quote prefixes, maintaining each list item's content-indentation floor and matching a fence closer only inside the opener's container. A sibling/dedented item ends an unclosed list-contained fence; a blank line alone does not. This covers direct, nested, ordered, and quote-then-list fences without a full Markdown parse on a keypress. A mixed list-then-quote prefix, tab-indented list content, or more than 32 nested list markers returns unresolved and suppresses Markdown-only ambient assists. The scan retains the existing 5,000-line cap and front-matter anchor. These source tests do not replace installed-app E10 acceptance or establish general CommonMark conformance.
 
 **Command list and shortcuts, fixed here to avoid inventing a different one per sub-slice — checked against every `keyboardShortcut` already declared anywhere in `WorkspaceCommands*.swift` for conflicts:**
 

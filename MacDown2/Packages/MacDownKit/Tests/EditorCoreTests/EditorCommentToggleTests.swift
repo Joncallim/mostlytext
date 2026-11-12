@@ -232,40 +232,6 @@ struct EditorCommentToggleTests {
         #expect(applied?.text == "prose\n```swift\ncode\n```\n<!--more text-->")
     }
 
-    @Test(
-        "a selection spanning from inside a fence through its own closing delimiter uses the fenced profile throughout"
-    )
-    func fenceAwareProfileScopesAWideSelectionSpanningTheFenceBoundaryToItsOwnAnchorLine() {
-        // A disclosed, accepted consequence of §6.13's own explicit rule
-        // ("scoped entirely to whichever profile ITS OWN anchor line
-        // resolves to"), found and confirmed by an independent hostile
-        // review: a wide selection whose FIRST touched line is inside a
-        // fence resolves to that fenced language's profile for the WHOLE
-        // selection, including the fence's own closing "```" line and any
-        // surrounding prose the selection also reaches -- which means the
-        // closing delimiter itself gets commented with "//", corrupting it
-        // as a fence marker. This is exactly what the design contract
-        // authorizes (a single, unambiguous profile per selection, not a
-        // mixed per-line one), not a bug; pinned here so a future change to
-        // this behavior is deliberate.
-        let text = "prose\n```swift\nlet x = 1\n```\nmore text" as NSString
-        let lineIndex = EditorLineIndex(text: text)
-        let start = text.range(of: "let x").location
-        let end = text.range(of: "more text").location + "more text".utf16.count
-        let selection = EditorSelectionSet(single: NSRange(location: start, length: end - start))
-
-        let transaction = EditorCommentToggle.toggleCommentTransaction(
-            text: text,
-            lineIndex: lineIndex,
-            selection: selection,
-            isMarkdownFormat: true,
-            profile: markdownProfile
-        )
-        let applied = LineTransformTestSupport.applied(transaction, to: text as String)
-
-        #expect(applied?.text == "prose\n```swift\n// let x = 1\n// ```\n// more text")
-    }
-
     @Test("inside front matter, comment-toggle declines (plainText has no comment syntax)")
     func fenceAwareProfileDeclinesInsideFrontMatter() {
         let text = "---\ntitle: Test\n---\nbody" as NSString

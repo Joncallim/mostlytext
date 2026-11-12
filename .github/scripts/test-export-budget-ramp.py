@@ -15,19 +15,22 @@ runner = runpy.run_path(str(SCRIPTS / 'run-export-budget-ramp.py'))
 
 class RampControlsTests(unittest.TestCase):
     def test_fixed_ladder_and_policy_refusal_kinds(self):
-        self.assertEqual(len(generator['CASE_ORDER']), 19)
-        self.assertEqual(len(set(generator['CASE_ORDER'])), 19)
+        self.assertEqual(len(generator['CASE_ORDER']), 20)
+        self.assertEqual(len(set(generator['CASE_ORDER'])), 20)
         self.assertEqual(generator['case_definition']('source32')['source_bytes'], 32 << 20)
         self.assertEqual(generator['case_definition']('single32')['assets'], {'pixel.png': 'a32'})
         self.assertEqual(generator['case_definition']('repeat5')['occurrences'], 5)
+        self.assertEqual(generator['case_definition']('repeat3')['refusal_kind'], 'budget-exceeded')
+        self.assertEqual(generator['case_definition']('aggregate96')['refusal_kind'], 'budget-exceeded')
+        self.assertEqual(generator['case_definition']('aggregate64')['refusal'], False)
         near = generator['case_definition']('repeatNearFinal')
         self.assertEqual(near['assets'], {'pixel.png': 'a32', 'near.png': 'near32'})
-        self.assertEqual(near['occurrences'], 6)
-        self.assertEqual(near['estimated_data_uri_bytes'], 268424672)
-        self.assertEqual(near['estimated_shell_headroom_bytes'], 10784)
+        self.assertEqual(near['occurrences'], 3)
+        self.assertEqual(near['estimated_data_uri_bytes'], 134206874)
+        self.assertEqual(near['estimated_shell_headroom_bytes'], 10854)
         self.assertEqual(generator['ASSET_SIZES']['near32'], (32 << 20) - (8 << 10))
         self.assertEqual(generator['references_for_case']('repeatNearFinal', near),
-                         ['pixel.png'] * 5 + ['near.png'])
+                         ['pixel.png'] * 2 + ['near.png'])
         self.assertEqual(generator['case_definition']('repeat6refusal')['refusal_kind'], 'budget-exceeded')
         self.assertEqual(generator['case_definition']('occ65537refusal')['refusal_kind'], 'budget-exceeded')
         self.assertEqual(generator['case_definition']('aggregateOverRefusal')['refusal_kind'],

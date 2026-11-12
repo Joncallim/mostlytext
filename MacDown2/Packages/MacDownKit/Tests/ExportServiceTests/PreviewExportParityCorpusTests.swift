@@ -15,11 +15,17 @@ struct PreviewExportParityCorpusTests {
         let export: PreparedExportDocument
     }
 
-    private func surfaces(_ source: String) async throws -> Surfaces {
+    private func surfaces(
+        _ source: String,
+        contributions: [ExportDerivedContribution] = []
+    ) async throws -> Surfaces {
         let document = try await ParseEngine().parse(source, revision: 1)
         let blocks = PreviewBlock.blocks(from: document, text: source)
         let export = try await ExportService.prepare(
-            ExportRequest(text: source, sourceGeneration: 1, theme: ExportTestSupport.lightTheme()),
+            ExportRequest(
+                text: source, sourceGeneration: 1,
+                theme: ExportTestSupport.lightTheme(), contributions: contributions
+            ),
             target: .html(url: URL(fileURLWithPath: "/tmp/parity-corpus.html"), mode: .standalone(style: .embedded))
         )
         return Surfaces(document: document, blocks: blocks, export: export)
@@ -201,5 +207,121 @@ struct PreviewExportParityCorpusTests {
         #expect(String(preview.characters) == "<b>authored</b>")
         #expect(result.export.preservesRawHTML)
         #expect(result.export.bodyHTML.contains("<b>authored</b>"))
+    }
+
+    @Test func inlineMathKeepsTheSameAuthoredRangeAcrossNativeAndStaticSurfaces() async throws {
+        let source = "Before $x^2$ after.\n"
+        let math = "$x^2$"
+        let range = (source as NSString).range(of: math)
+        let contribution = ExportDerivedContribution(
+            sourceRange: range.location ..< NSMaxRange(range), placement: .inline,
+            html: "<span class=\"math\">x²</span>", sourceGeneration: 1
+        )
+        let result = try await surfaces(source, contributions: [contribution])
+        let block = try #require(result.blocks.first)
+        #expect(block.source == "Before $x^2$ after.")
+        let native = try PreviewMarkupParser(syntaxExtensions: [.math]).attributedString(for: block.source)
+        #expect(String(native.characters) == "Before \u{FFFC} after.")
+        #expect(result.export.bodyHTML.contains("<p>Before <span class=\"math\">x²</span> after.</p>"))
+        #expect(!result.export.bodyHTML.contains("$x^2$"))
+    }
+
+    @Test(arguments: ["mermaid", "d2", "dot"])
+    func diagramFencesKeepTheirSourceAndPlaceOneStaticContribution(language: String) async throws {
+        let fence = "```\(language)\nA -> B\n```"
+        let source = "Intro\n\n\(fence)\n\nOutro\n"
+        let range = (source as NSString).range(of: fence)
+        let contribution = ExportDerivedContribution(
+            sourceRange: range.location ..< NSMaxRange(range), placement: .block,
+            html: "<figure>\(language) rendered</figure>", sourceGeneration: 1
+        )
+        let result = try await surfaces(source, contributions: [contribution])
+        #expect(result.blocks.map(\.kind) == [
+            .paragraph, .codeBlock(language: language), .paragraph,
+        ])
+        #expect(result.blocks[1].source == fence)
+        #expect(result.export.bodyHTML.contains("<p>Intro</p>"))
+        #expect(result.export.bodyHTML.contains("<figure>\(language) rendered</figure>"))
+        #expect(result.export.bodyHTML.contains("<p>Outro</p>"))
+        #expect(!result.export.bodyHTML.contains("A -&gt; B"))
+
+        let failed = ExportDerivedContribution(
+            sourceRange: range.location ..< NSMaxRange(range), placement: .block,
+            html: "<figure>broken</figure>", sourceGeneration: 1,
+            diagnostics: [.init(severity: .error, message: "renderer unavailable")]
+        )
+        let fallback = try await surfaces(source, contributions: [failed])
+        #expect(fallback.blocks[1].source == fence)
+        #expect(fallback.export.bodyHTML.contains("A -&gt; B"))
+        #expect(!fallback.export.bodyHTML.contains("<figure>broken</figure>"))
+    }
+}
+
+extension PreviewExportParityCorpusTests {
+    @Test func inlineLinkAndImageTargetsAgreeAcrossPreviewAndExport() async throws {
+        let source = "See [site](https://example.com/a?q=1&x=2) and ![alt](https://example.com/a.png).\n"
+        let result = try await surfaces(source)
+        let block = try #require(result.blocks.first)
+        #expect(result.blocks.count == 1)
+        #expect(block.source == String(source.dropLast()))
+        let preview = try rendered(block)
+        #expect(String(preview.characters) == "See site and alt.")
+        #expect(preview.runs.compactMap(\.link).map(\.absoluteString) == ["https://example.com/a?q=1&x=2"])
+        #expect(preview.runs.compactMap(\.imageURL).map(\.absoluteString) == ["https://example.com/a.png"])
+        #expect(result.export.bodyHTML ==
+            "<p>See <a href=\"https://example.com/a?q=1&amp;x=2\">site</a> " +
+            "and <img src=\"https://example.com/a.png\" alt=\"alt\" />.</p>\n")
+    }
+
+    @Test func footnoteSyntaxRemainsLiteralOnBothCurrentRenderers() async throws {
+        let source = "Text[^note].\n\n[^note]: Footnote body.\n"
+        let result = try await surfaces(source)
+        // Neither current renderer enables a footnote extension. The source
+        // remains visible instead of one path silently consuming a definition.
+        #expect(result.blocks.map(\.kind) == [.paragraph, .paragraph])
+        #expect(result.blocks.map(\.source) == ["Text[^note].", "[^note]: Footnote body."])
+        let renderedBlocks = try result.blocks.map { try String(rendered($0).characters) }
+        #expect(renderedBlocks == ["Text[^note].", "[^note]: Footnote body."])
+        #expect(result.export.bodyHTML == "<p>Text[^note].</p>\n<p>[^note]: Footnote body.</p>\n")
+    }
+
+    @Test func duplicateReferenceDefinitionsResolveToTheFirstTargetOnBothPaths() async throws {
+        let source = """
+        Read [the guide][docs] and [again][docs].
+
+        [docs]: https://example.com/guide "Guide"
+        [docs]: https://example.com/other "Other"
+
+        """
+        let result = try await surfaces(source)
+        let block = try #require(result.blocks.first)
+        let facts = try #require(result.document.sourceFacts)
+        let anchor = try #require(block.sourceAnchor)
+        let prefix = try MarkdownReferenceReplayIndex(facts: facts).prefix(
+            for: anchor.range, sourceSHA256: anchor.sourceSHA256,
+            maximumUTF8Bytes: PreviewParserBudget.maximumUTF8Bytes
+        )
+        #expect(prefix.contains("[docs]: https://example.com/guide"))
+        #expect(!prefix.contains("https://example.com/other"))
+        let preview = try PreviewMarkupParser().attributedString(for: prefix + block.source)
+        #expect(preview.runs.compactMap(\.link).map(\.absoluteString) == [
+            "https://example.com/guide", "https://example.com/guide",
+        ])
+        #expect(result.export.bodyHTML.contains("href=\"https://example.com/guide\""))
+        #expect(!result.export.bodyHTML.contains("https://example.com/other"))
+    }
+
+    @Test func tagfilterAndDangerousLinkPolicyAreDeliberateExportDifferences() async throws {
+        let source = "<script>alert(1)</script>\n\n[unsafe](javascript:alert%281%29)\n"
+        let result = try await surfaces(source)
+        #expect(result.blocks.count == 2)
+        let rawPreview = try rendered(#require(result.blocks.first))
+        #expect(String(rawPreview.characters).contains("<script>alert(1)</script>"))
+        let linkPreview = try rendered(#require(result.blocks.last))
+        #expect(String(linkPreview.characters).contains("unsafe"))
+        let html = result.export.bodyHTML
+        #expect(!html.contains("<script>"))
+        #expect(!html.contains("href=\"javascript:"))
+        #expect(html.contains("unsafe"))
     }
 }

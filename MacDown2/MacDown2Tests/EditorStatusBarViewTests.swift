@@ -93,6 +93,65 @@ struct EditorStatusBarViewTests {
         #expect(makeView(text: text).countText == expected)
     }
 
+    @Test(arguments: ["en", "fr", "ja", "pl"])
+    func compiledDocumentCountsUseIndependentLocalePluralForms(_ language: String) throws {
+        let url = try #require(Bundle.main.url(forResource: language, withExtension: "lproj"))
+        let resources = try #require(Bundle(url: url))
+        let pairs = [(0, 0), (1, 1), (2, 2), (5, 1), (12, 22), (22, 12)]
+        let expected: [String] = switch language {
+        case "en": [
+                "0 characters, 0 words", "1 character, 1 word", "2 characters, 2 words",
+                "5 characters, 1 word", "12 characters, 22 words", "22 characters, 12 words",
+            ]
+        case "fr": [
+                "0 caractère, 0 mot", "1 caractère, 1 mot", "2 caractères, 2 mots",
+                "5 caractères, 1 mot", "12 caractères, 22 mots", "22 caractères, 12 mots",
+            ]
+        case "ja": [
+                "0文字、0語", "1文字、1語", "2文字、2語",
+                "5文字、1語", "12文字、22語", "22文字、12語",
+            ]
+        case "pl": [
+                "0 znaków, 0 słów", "1 znak, 1 słowo", "2 znaki, 2 słowa",
+                "5 znaków, 1 słowo", "12 znaków, 22 słowa", "22 znaki, 12 słów",
+            ]
+        default: []
+        }
+        #expect(expected.count == pairs.count)
+        for (index, pair) in pairs.enumerated() {
+            #expect(EditorStatusBarView.documentCountText(
+                characterCount: pair.0, wordCount: pair.1,
+                bundle: resources, locale: Locale(identifier: language)
+            ) == expected[index])
+        }
+    }
+
+    @Test(arguments: ["en", "fr", "ja", "pl"])
+    func compiledSelectedCountsUseLocaleForms(_ language: String) throws {
+        let url = try #require(Bundle.main.url(forResource: language, withExtension: "lproj"))
+        let resources = try #require(Bundle(url: url))
+        let counts = [0, 1, 2, 5, 12, 22]
+        let expected: [String] = switch language {
+        case "en": ["0 selected", "1 selected", "2 selected", "5 selected", "12 selected", "22 selected"]
+        case "fr": [
+                "0 caractère sélectionné", "1 caractère sélectionné", "2 caractères sélectionnés",
+                "5 caractères sélectionnés", "12 caractères sélectionnés", "22 caractères sélectionnés",
+            ]
+        case "ja": ["0文字選択中", "1文字選択中", "2文字選択中", "5文字選択中", "12文字選択中", "22文字選択中"]
+        case "pl": [
+                "0 znaków zaznaczonych", "1 znak zaznaczony", "2 znaki zaznaczone",
+                "5 znaków zaznaczonych", "12 znaków zaznaczonych", "22 znaki zaznaczone",
+            ]
+        default: []
+        }
+        #expect(expected.count == counts.count)
+        for (index, count) in counts.enumerated() {
+            #expect(EditorStatusBarView.selectedCountText(
+                count, bundle: resources, locale: Locale(identifier: language)
+            ) == expected[index])
+        }
+    }
+
     // MARK: - lineColumnText
 
     @Test func lineColumnTextAtDocumentStart() {

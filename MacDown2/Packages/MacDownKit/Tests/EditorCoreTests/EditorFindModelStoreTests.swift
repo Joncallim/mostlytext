@@ -77,10 +77,49 @@ struct EditorFindModelStoreTests {
         let idB = UUID().uuidString
         _ = store.model(for: idA)
         _ = store.model(for: idB)
+        store.rememberQuery("private search")
 
         store.evictAll()
 
         #expect(store.liveIdentities.isEmpty)
+        #expect(store.recentQueries.isEmpty)
+    }
+
+    @Test("recent searches are shared across tabs but not cleared by one tab closing")
+    func recentQueriesSurviveTabEviction() {
+        let store = EditorFindModelStore()
+        let first = UUID().uuidString
+        _ = store.model(for: first)
+        store.rememberQuery("needle")
+        store.evict(first)
+
+        _ = store.model(for: UUID().uuidString)
+        #expect(store.recentQueries == ["needle"])
+        store.clearRecentQueries()
+        #expect(store.recentQueries.isEmpty)
+    }
+
+    @Test("recent searches are bounded, newest first, and exact-byte distinct")
+    func recentQueriesAreBoundedAndPromoted() {
+        let store = EditorFindModelStore()
+        store.rememberQuery("")
+        store.rememberQuery(String(repeating: "x", count: EditorFindModelStore.maximumRecentQueryBytes + 1))
+        #expect(store.recentQueries.isEmpty)
+        for index in 0 ... EditorFindModelStore.maximumRecentQueries {
+            store.rememberQuery("term \(index)")
+        }
+        #expect(store.recentQueries.count == EditorFindModelStore.maximumRecentQueries)
+        #expect(store.recentQueries.first == "term \(EditorFindModelStore.maximumRecentQueries)")
+        #expect(!store.recentQueries.contains("term 0"))
+
+        store.rememberQuery("term 1")
+        #expect(store.recentQueries.first == "term 1")
+        #expect(store.recentQueries.filter { $0 == "term 1" }.count == 1)
+
+        store.rememberQuery("\u{00C5}")
+        store.rememberQuery("\u{212B}")
+        #expect(store.recentQueries[0].utf8.elementsEqual("\u{212B}".utf8))
+        #expect(store.recentQueries[1].utf8.elementsEqual("\u{00C5}".utf8))
     }
 
     @Test("store tracks live identities")

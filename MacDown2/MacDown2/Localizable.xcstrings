@@ -414,7 +414,7 @@
       }
     },
     "%lld characters, %lld words": {
-      "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
+      "comment": "Status-bar character and word counts use independent plural substitutions. Non-English values are draft translations requiring native review.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -467,19 +467,157 @@
         "fr": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "%lld characters, %lld words"
+            "value": "%#@arg1@, %#@arg2@"
+          },
+          "substitutions": {
+            "arg1": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg caractère"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg caractères"
+                    }
+                  }
+                }
+              }
+            },
+            "arg2": {
+              "argNum": 2,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg mot"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg mots"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "ja": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "%lld characters, %lld words"
+            "value": "%#@arg1@、%#@arg2@"
+          },
+          "substitutions": {
+            "arg1": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg文字"
+                    }
+                  }
+                }
+              }
+            },
+            "arg2": {
+              "argNum": 2,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg語"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "pl": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "%lld characters, %lld words"
+            "value": "%#@arg1@, %#@arg2@"
+          },
+          "substitutions": {
+            "arg1": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg znak"
+                    }
+                  },
+                  "few": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg znaki"
+                    }
+                  },
+                  "many": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg znaków"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg znaków"
+                    }
+                  }
+                }
+              }
+            },
+            "arg2": {
+              "argNum": 2,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg słowo"
+                    }
+                  },
+                  "few": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg słowa"
+                    }
+                  },
+                  "many": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg słów"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "needs_review",
+                      "value": "%arg słów"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -572,7 +710,7 @@
       }
     },
     "%lld preview errors": {
-      "comment": "Whole preview diagnostic accessibility count. Non-English entries are English review drafts, not accepted translations.",
+      "comment": "Whole preview diagnostic accessibility count. Non-English entries are draft translations requiring native review.",
       "localizations": {
         "en": {
           "variations": {
@@ -598,13 +736,13 @@
               "one": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview error"
+                  "value": "%lld erreur d'aperçu"
                 }
               },
               "other": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview errors"
+                  "value": "%lld erreurs d'aperçu"
                 }
               }
             }
@@ -616,7 +754,7 @@
               "other": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview errors"
+                  "value": "%lld件のプレビューエラー"
                 }
               }
             }
@@ -628,25 +766,25 @@
               "one": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview error"
+                  "value": "%lld błąd podglądu"
                 }
               },
               "few": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview errors"
+                  "value": "%lld błędy podglądu"
                 }
               },
               "many": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview errors"
+                  "value": "%lld błędów podglądu"
                 }
               },
               "other": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview errors"
+                  "value": "%lld błędów podglądu"
                 }
               }
             }
@@ -655,7 +793,7 @@
       }
     },
     "%lld preview warnings": {
-      "comment": "Whole preview diagnostic accessibility count. Non-English entries are English review drafts, not accepted translations.",
+      "comment": "Whole preview diagnostic accessibility count. Non-English entries are draft translations requiring native review.",
       "localizations": {
         "en": {
           "variations": {
@@ -681,13 +819,13 @@
               "one": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview warning"
+                  "value": "%lld avertissement d'aperçu"
                 }
               },
               "other": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview warnings"
+                  "value": "%lld avertissements d'aperçu"
                 }
               }
             }
@@ -699,7 +837,7 @@
               "other": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview warnings"
+                  "value": "%lld件のプレビュー警告"
                 }
               }
             }
@@ -711,25 +849,25 @@
               "one": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview warning"
+                  "value": "%lld ostrzeżenie podglądu"
                 }
               },
               "few": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview warnings"
+                  "value": "%lld ostrzeżenia podglądu"
                 }
               },
               "many": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview warnings"
+                  "value": "%lld ostrzeżeń podglądu"
                 }
               },
               "other": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld preview warnings"
+                  "value": "%lld ostrzeżeń podglądu"
                 }
               }
             }
@@ -738,7 +876,7 @@
       }
     },
     "%lld selected": {
-      "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
+      "comment": "Selected character count in the editor status bar. Non-English plural values are draft translations requiring native review.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -747,21 +885,63 @@
           }
         },
         "fr": {
-          "stringUnit": {
-            "state": "needs_review",
-            "value": "%lld selected"
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "%lld caractère sélectionné"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "%lld caractères sélectionnés"
+                }
+              }
+            }
           }
         },
         "ja": {
-          "stringUnit": {
-            "state": "needs_review",
-            "value": "%lld selected"
+          "variations": {
+            "plural": {
+              "other": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "%lld文字選択中"
+                }
+              }
+            }
           }
         },
         "pl": {
-          "stringUnit": {
-            "state": "needs_review",
-            "value": "%lld selected"
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "%lld znak zaznaczony"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "%lld znaki zaznaczone"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "%lld znaków zaznaczonych"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "%lld znaków zaznaczonych"
+                }
+              }
+            }
           }
         }
       }
@@ -1618,6 +1798,35 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Clear Menu"
+          }
+        }
+      }
+    },
+    "Clear Search History": {
+      "comment": "Action in the Find bar Recent Searches menu. Clears search terms remembered for this window; it does not edit the document.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear Search History"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Clear Search History"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Clear Search History"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Clear Search History"
           }
         }
       }
@@ -7342,6 +7551,35 @@
         }
       }
     },
+    "Recent Searches": {
+      "comment": "Accessible name and tooltip for the Find bar menu of search terms previously used in this window. The authored terms themselves are displayed verbatim.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recent Searches"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Recent Searches"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Recent Searches"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Recent Searches"
+          }
+        }
+      }
+    },
     "Recovery Could Not Be Secured": {
       "comment": "MostlyText file/recovery presentation. Draft translations require native-language review.",
       "localizations": {
@@ -12044,7 +12282,7 @@
       }
     },
     "rendered output too large (%lld bytes)": {
-      "comment": "App-owned diagram failure detail shared by Mermaid, D2 and Graphviz. Non-English values are English review drafts requiring final translation/native review. Byte count uses the signed Int format. English singular applies to one; non-English plural values remain drafts.",
+      "comment": "App-owned diagram failure detail shared by Mermaid, D2 and Graphviz. Non-English plural values are draft translations requiring native review. Byte count uses the signed Int format.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -12088,13 +12326,13 @@
                   "one": {
                     "stringUnit": {
                       "state": "needs_review",
-                      "value": "rendered output too large (%arg byte)"
+                      "value": "sortie générée trop volumineuse (%arg octet)"
                     }
                   },
                   "other": {
                     "stringUnit": {
                       "state": "needs_review",
-                      "value": "rendered output too large (%arg bytes)"
+                      "value": "sortie générée trop volumineuse (%arg octets)"
                     }
                   }
                 }
@@ -12116,7 +12354,7 @@
                   "other": {
                     "stringUnit": {
                       "state": "needs_review",
-                      "value": "rendered output too large (%arg bytes)"
+                      "value": "描画結果が大きすぎます（%argバイト）"
                     }
                   }
                 }
@@ -12138,25 +12376,25 @@
                   "one": {
                     "stringUnit": {
                       "state": "needs_review",
-                      "value": "rendered output too large (%arg byte)"
+                      "value": "Wynik renderowania jest zbyt duży (%arg bajt)"
                     }
                   },
                   "few": {
                     "stringUnit": {
                       "state": "needs_review",
-                      "value": "rendered output too large (%arg bytes)"
+                      "value": "Wynik renderowania jest zbyt duży (%arg bajty)"
                     }
                   },
                   "many": {
                     "stringUnit": {
                       "state": "needs_review",
-                      "value": "rendered output too large (%arg bytes)"
+                      "value": "Wynik renderowania jest zbyt duży (%arg bajtów)"
                     }
                   },
                   "other": {
                     "stringUnit": {
                       "state": "needs_review",
-                      "value": "rendered output too large (%arg bytes)"
+                      "value": "Wynik renderowania jest zbyt duży (%arg bajtów)"
                     }
                   }
                 }

@@ -127,16 +127,46 @@ struct FencedRegionClassifierTests {
 
     @Test("a fence nested inside a blockquote is still recognized")
     func fenceInsideBlockquote() {
-        // The classifier's own fence-line check only looks at leading
-        // spaces before the marker, not blockquote `>` prefixes -- a
-        // blockquote-prefixed fence line like "> ```swift" does NOT match
-        // this classifier's own simplified grammar (the `>` isn't a space),
-        // so it is NOT recognized as a fence delimiter at all. This test
-        // pins that disclosed, accepted limitation rather than asserting an
-        // unimplemented behavior.
         let text = "> ```swift\n> let x = 1\n> ```" as NSString
         let insideOffset = text.range(of: "let x").location
-        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: insideOffset) == .prose)
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: insideOffset)
+            == .fencedCode(languageID: "swift"))
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: text.length) == .prose)
+    }
+
+    @Test("leaving an unclosed quoted fence resumes outside prose")
+    func unclosedQuoteEndsAtAnUnquotedLine() {
+        let text = "> ```swift\n> code\nOutside prose " as NSString
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: text.range(of: "code").location)
+            == .fencedCode(languageID: "swift"))
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: text.length) == .prose)
+    }
+
+    @Test("a deeper quote marker cannot close an outer quoted fence")
+    func nestedQuoteCannotCloseOuterFence() {
+        let text = "> ```swift\n> code\n> > ```\n> more code" as NSString
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: text.length)
+            == .fencedCode(languageID: "swift"))
+    }
+
+    @Test("a quoted marker is literal inside a top-level fence")
+    func quotedMarkerCannotCloseTopLevelFence() {
+        let text = "```swift\n> ```\nmore code" as NSString
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: text.length)
+            == .fencedCode(languageID: "swift"))
+    }
+
+    @Test("a tab after the quote marker still preserves the fenced region")
+    func tabAfterQuoteMarker() {
+        let text = ">\t```swift\n>\tcode" as NSString
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: text.length)
+            == .fencedCode(languageID: "swift"))
+    }
+
+    @Test("an excessive quote prefix fails closed on the hot key path")
+    func excessiveQuoteDepthIsUnresolved() {
+        let text = (String(repeating: "> ", count: 33) + "```swift\ncode") as NSString
+        #expect(FencedRegionClassifier.classify(text: text, atUTF16Offset: text.length) == .unresolved)
     }
 
     @Test("a mismatched fence character cannot close the active fence")

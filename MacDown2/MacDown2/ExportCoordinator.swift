@@ -113,12 +113,17 @@ struct ExportCoordinator {
             // replacement. Read the editor-published value only after its
             // original window and document lifetime are checked again.
             let document = try origin.documentAfterPanel()
-            let snapshot = OrdinaryExportSnapshot(
+            // Freeze the accepted source before directory acquisition can
+            // suspend, so later Save As or tab changes keep the same lifetime
+            // and publication boundary as the synchronous path.
+            try origin.didFreezeInputs()
+            let snapshot = await OrdinaryExportSnapshot(
                 document: document,
                 theme: themeController.current,
                 parseOptions: DocumentEditorSplitView.markdownParseOptions(from: appSettings.markdown)
             )
-            try origin.didFreezeInputs()
+            try Task.checkCancellation()
+            try origin.publicationLease.checkActive()
             let result = try await performExport(
                 snapshot: snapshot,
                 selection: selection,
