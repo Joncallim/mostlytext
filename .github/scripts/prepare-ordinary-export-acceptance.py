@@ -4,15 +4,17 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import os
 import plistlib
 from pathlib import Path
 import subprocess
 import sys
 
-PRODUCT_BASELINE = '70ec31890cb3c91a9dd4f36e69ff6a0ee9e26131'
-PRODUCT_TREE = '0e1e31bbd4c2f2253875ef01185bd63e772d386d'
+PRODUCT_BASELINE = '5b08629219cfae0e0f8cfc3b478c78855aa2a373'
+PRODUCT_TREE = '443b3f4021daa0f9ef80ec82b58a3e4ba64082f1'
 
 SOURCE = '# NATIVE_EXPORT_CANARY\r\n\r\nA café document with **bold** and `code`.\r\n\r\n| Key | Value |\r\n| --- | --- |\r\n| alpha | beta |\r\n'.encode()
+PRIVATE_SOURCE = b'# NATIVE_EXPORT_CANARY\n\nA **bold** paragraph.\n\n- first\n- second\n\n'
 EXTRA = ['.github/hosted-export-acceptance', '.github/scripts/prepare-ordinary-export-acceptance.py',
          '.github/scripts/run-ordinary-export-acceptance.py', '.github/scripts/test-ordinary-export-acceptance.py',
          '.github/scripts/verify-placed-pdf-canary.py',
@@ -79,6 +81,20 @@ def verify_product_tree():
     return actual
 
 
+def private_fixture():
+    base = Path(output(['getconf', 'DARWIN_USER_TEMP_DIR'])).resolve(strict=True)
+    if not str(base).startswith('/private/var/folders/') or base.name != 'T':
+        raise RuntimeError('Require the real per-user Darwin private temp directory')
+    run = os.environ.get('GITHUB_RUN_ID', '')
+    if not run.isdecimal():
+        raise RuntimeError('Require the hosted run ID for a fresh private fixture')
+    directory = base / ('MostlyTextAcceptance-' + run)
+    directory.mkdir(mode=0o700)
+    source = directory / 'export-canary.md'
+    source.write_bytes(PRIVATE_SOURCE)
+    return source
+
+
 def main():
     if sys.flags.optimize:raise RuntimeError('Optimized Python cannot enforce export acceptance')
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('root',type=Path)
@@ -91,6 +107,7 @@ def main():
     if not (args.bind_built or args.admit_execution or args.verify):
         subprocess.run([sys.executable,str(baseline),str(root)],check=True,timeout=120)
         row=json.loads(receipt.read_bytes());source=Path(row['source_file']);source.write_bytes(SOURCE)
+        private_source=private_fixture()
         row['source_file_sha256']=sha(source)
         paths=output(['git','ls-files','--',*EXTRA]).splitlines()
         if not any(x.endswith('ExportPanelTests.swift') for x in paths):raise RuntimeError('Missing tracked actual driver')
@@ -101,6 +118,8 @@ def main():
             'product_tree':actual_tree,
             'html':str(source.parent/'ordinary-export.html'),'pdf':str(source.parent/'ordinary-export.pdf'),
             'source':str(source),'source_sha256':sha(source),'diagnostic_only':False,
+            'private_source':str(private_source),'private_source_sha256':sha(private_source),
+            'private_pdf':str(private_source.with_suffix('.pdf')),
             'scope':'Ordinary Release export UI only; no final RC, whole parity/budgets or in-flight cancellation acceptance'}
         receipt.write_text(json.dumps(row,indent=2)+'\n');return
     subprocess.run([sys.executable,str(baseline),str(root),'--bind-built' if args.bind_built else '--verify'],check=True,timeout=120)
@@ -111,8 +130,9 @@ def main():
         if arch!='arm64':raise RuntimeError('Actual ordinary app executable is not exactly ARM64')
         row['ordinary_export']['actual_executable_architectures']=arch
         values=row['ordinary_export'];source='// Generated from the guarded fixture before UI compilation.\nenum HostedExportInputs {\n'
-        source+=''.join('    static let '+key+' = '+json.dumps(values[key])+'\n' for key in ['source','source_sha256','html','pdf'])
-        source=source.replace('let source_sha256','let sourceSHA256')+'}\n'
+        source+=''.join('    static let '+key+' = '+json.dumps(values[key])+'\n' for key in
+                        ['source','source_sha256','html','pdf','private_source','private_source_sha256','private_pdf'])
+        source=source.replace('let source_sha256','let sourceSHA256').replace('let private_source_sha256','let privateSourceSHA256')+'}\n'
         (root/'fixture/Driver/HostedExportInputs.swift').write_text(source)
         subprocess.run(['xcodegen','generate','--spec',str(root/'fixture/project.yml')],check=True,timeout=60)
         row['generated_sha256']={str(p.relative_to(root/'fixture')):sha(p) for p in (root/'fixture').rglob('*') if p.is_file()}
@@ -123,6 +143,9 @@ def main():
     else:
         if capture(root)!=row['export_compiled_before']:raise RuntimeError('Actual export execution input changed')
     if Path(row['source_file']).read_bytes()!=SOURCE:raise RuntimeError('Actual source bytes changed')
+    private=Path(row['ordinary_export']['private_source'])
+    if private.read_bytes()!=PRIVATE_SOURCE or sha(private)!=row['ordinary_export']['private_source_sha256']:
+        raise RuntimeError('Private Darwin temp source bytes changed')
     receipt.write_text(json.dumps(row,indent=2)+'\n')
 
 
