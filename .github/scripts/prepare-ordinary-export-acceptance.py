@@ -11,7 +11,7 @@ import subprocess
 import sys
 
 PRODUCT_BASELINE = 'df96aa846f70272806ed8845e1eaedbccb27a9b7'
-PRODUCT_TREE = '75b0f5ee189917786e8fc394208f722c4052b114'
+PRODUCT_TREE = '01eadc264d6837e6cbc4fc3ac114437af4121207'
 
 SOURCE = '# NATIVE_EXPORT_CANARY\r\n\r\nA café document with **bold** and `code`.\r\n\r\n| Key | Value |\r\n| --- | --- |\r\n| alpha | beta |\r\n'.encode()
 PRIVATE_SOURCE = b'# NATIVE_EXPORT_CANARY\n\nA **bold** paragraph.\n\n- first\n- second\n\n'
