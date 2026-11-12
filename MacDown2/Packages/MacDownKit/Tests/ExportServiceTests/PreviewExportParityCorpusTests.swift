@@ -256,3 +256,32 @@ struct PreviewExportParityCorpusTests {
         #expect(!fallback.export.bodyHTML.contains("<figure>broken</figure>"))
     }
 }
+
+extension PreviewExportParityCorpusTests {
+    @Test func inlineLinkAndImageTargetsAgreeAcrossPreviewAndExport() async throws {
+        let source = "See [site](https://example.com/a?q=1&x=2) and ![alt](https://example.com/a.png).\n"
+        let result = try await surfaces(source)
+        let block = try #require(result.blocks.first)
+        #expect(result.blocks.count == 1)
+        #expect(block.source == String(source.dropLast()))
+        let preview = try rendered(block)
+        #expect(String(preview.characters) == "See site and alt.")
+        #expect(preview.runs.compactMap(\.link).map(\.absoluteString) == ["https://example.com/a?q=1&x=2"])
+        #expect(preview.runs.compactMap(\.imageURL).map(\.absoluteString) == ["https://example.com/a.png"])
+        #expect(result.export.bodyHTML ==
+            "<p>See <a href=\"https://example.com/a?q=1&amp;x=2\">site</a> " +
+            "and <img src=\"https://example.com/a.png\" alt=\"alt\" />.</p>\n")
+    }
+
+    @Test func footnoteSyntaxRemainsLiteralOnBothCurrentRenderers() async throws {
+        let source = "Text[^note].\n\n[^note]: Footnote body.\n"
+        let result = try await surfaces(source)
+        // Neither current renderer enables a footnote extension. The source
+        // remains visible instead of one path silently consuming a definition.
+        #expect(result.blocks.map(\.kind) == [.paragraph, .paragraph])
+        #expect(result.blocks.map(\.source) == ["Text[^note].", "[^note]: Footnote body."])
+        let renderedBlocks = try result.blocks.map { try String(rendered($0).characters) }
+        #expect(renderedBlocks == ["Text[^note].", "[^note]: Footnote body."])
+        #expect(result.export.bodyHTML == "<p>Text[^note].</p>\n<p>[^note]: Footnote body.</p>\n")
+    }
+}
