@@ -42,13 +42,37 @@ final class ExportPanelTests: XCTestCase {
         XCTAssertTrue(cancelled.waitForNonExistence(timeout: 5))
         XCTAssertFalse(FileManager.default.fileExists(atPath: HostedExportInputs.html))
         XCTAssertFalse(FileManager.default.fileExists(atPath: HostedExportInputs.pdf))
-        try export(app, window: window, format: "HTML", destination: HostedExportInputs.html)
+        try export(app, window: window, format: "HTML", destination: HostedExportInputs.html,
+                   source: URL(fileURLWithPath: HostedExportInputs.source))
         app.activate()
         editor.click()
-        try export(app, window: window, format: "PDF", destination: HostedExportInputs.pdf)
+        try export(app, window: window, format: "PDF", destination: HostedExportInputs.pdf,
+                   source: URL(fileURLWithPath: HostedExportInputs.source))
         XCTAssertEqual(try digest(HostedExportInputs.source), HostedExportInputs.sourceSHA256)
         XCTAssertEqual(NSRunningApplication(processIdentifier: pid)?.executableURL?.resolvingSymlinksInPath().path,
                        HostedFocusInputs.executable)
+    }
+
+    func testPrivateDarwinTempPDFSave() throws {
+        continueAfterFailure = false
+        let source = URL(fileURLWithPath: HostedExportInputs.private_source)
+        let destination = HostedExportInputs.private_pdf
+        XCTAssertTrue(source.path.hasPrefix("/private/var/folders/"))
+        XCTAssertTrue(source.deletingLastPathComponent().lastPathComponent.hasPrefix("MostlyTextAcceptance-"))
+        XCTAssertEqual(try digest(source.path), HostedExportInputs.privateSourceSHA256)
+        let app = XCUIApplication(bundleIdentifier: "app.mostlytext.MostlyText")
+        app.activate()
+        defer { capture(app, label: "Private Darwin temp PDF export final state") }
+        let windows = app.windows.matching(NSPredicate(format: "title CONTAINS %@", source.lastPathComponent))
+        let window = windows.firstMatch
+        XCTAssertTrue(window.waitForExistence(timeout: 5))
+        XCTAssertEqual(windows.count, 1)
+        let editor = window.textViews.firstMatch
+        XCTAssertTrue(editor.waitForExistence(timeout: 5))
+        XCTAssertTrue((editor.value as? String)?.contains("NATIVE_EXPORT_CANARY") == true)
+        editor.click()
+        try export(app, window: window, format: "PDF", destination: destination, source: source)
+        XCTAssertEqual(try digest(source.path), HostedExportInputs.privateSourceSHA256)
     }
 
     private func openPanel(_ app: XCUIApplication, window: XCUIElement) -> XCUIElement {
@@ -62,14 +86,15 @@ final class ExportPanelTests: XCTestCase {
         return panel
     }
 
-    private func export(_ app: XCUIApplication, window: XCUIElement, format: String, destination: String) throws {
+    private func export(_ app: XCUIApplication, window: XCUIElement, format: String, destination: String,
+                        source: URL) throws {
         XCTAssertFalse(FileManager.default.fileExists(atPath: destination))
         let panel = openPanel(app, window: window)
         let choice = panel.radioButtons[format].firstMatch
         XCTAssertTrue(choice.waitForExistence(timeout: 5))
         choice.click()
         capture(app, label: "Actual ordinary " + format + " panel before filename selection")
-        let expected = (HostedFocusInputs.fileName as NSString).deletingPathExtension
+        let expected = source.deletingPathExtension().lastPathComponent
         let fields = panel.textFields.matching(identifier: "saveAsNameTextField")
         XCTAssertEqual(fields.count, 1, "Require the observed unique native Save As filename field")
         let name = fields.firstMatch
@@ -81,7 +106,7 @@ final class ExportPanelTests: XCTestCase {
         name.typeKey("a", modifierFlags: .command)
         name.typeText((destination as NSString).lastPathComponent)
         app.typeKey("g", modifierFlags: [.command, .shift])
-        app.typeText(HostedFocusInputs.folder)
+        app.typeText(source.deletingLastPathComponent().path)
         app.typeKey(.return, modifierFlags: [])
         let ready = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "exists == YES AND hittable == YES"), object: panel.buttons["Export"]
