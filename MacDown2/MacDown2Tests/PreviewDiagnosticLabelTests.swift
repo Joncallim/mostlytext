@@ -28,7 +28,7 @@ struct PreviewDiagnosticLabelTests {
             return count < 2 ? (" erreur d'aperçu", " avertissement d'aperçu") :
                 (" erreurs d'aperçu", " avertissements d'aperçu")
         case "ja":
-            return (" 件のプレビューエラー", " 件のプレビュー警告")
+            return ("件のプレビューエラー", "件のプレビュー警告")
         case "pl":
             if count == 1 {
                 return (" błąd podglądu", " ostrzeżenie podglądu")

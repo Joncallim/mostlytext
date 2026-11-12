@@ -616,7 +616,7 @@
               "other": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld 件のプレビューエラー"
+                  "value": "%lld件のプレビューエラー"
                 }
               }
             }
@@ -699,7 +699,7 @@
               "other": {
                 "stringUnit": {
                   "state": "needs_review",
-                  "value": "%lld 件のプレビュー警告"
+                  "value": "%lld件のプレビュー警告"
                 }
               }
             }
