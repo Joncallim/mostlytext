@@ -42,7 +42,10 @@ struct PDFExportTemporaryDestinationTests {
         let pdfAdmission = try ExportDestinationAdmission(capturing: pdfURL, protecting: [sourceURL])
         let prepared = try await ExportService.prepare(request, target: .pdf(url: pdfURL))
         try await PDFExportAdapter.export(prepared, to: pdfURL, admission: pdfAdmission)
-        let pdf = try #require(PDFDocument(url: pdfURL))
+        let pdfBytes = try Data(contentsOf: pdfURL)
+        let pdf = try #require(PDFDocument(data: pdfBytes))
+        print("Private-folder PDF bytes: \(pdfBytes.count), pages: \(pdf.pageCount)")
+        print("Private-folder PDF extracted: \(String(reflecting: pdf.string))")
         #expect(pdf.string?.contains("NATIVE_EXPORT_CANARY") == true)
         #expect(try Data(contentsOf: sourceURL) == Data(source.utf8))
     }
