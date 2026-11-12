@@ -659,7 +659,7 @@
       "bundle": "Bundle.main (project target resource)",
       "key": "%lld characters, %lld words",
       "source_default_value": "%lld characters, %lld words",
-      "translator_comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
+      "translator_comment": "Status-bar character and word counts use independent plural substitutions. Non-English values are draft translations requiring native review.",
       "required_locales": [
         "fr",
         "ja",
@@ -690,9 +690,38 @@
             "other"
           ]
         },
-        "fr": {},
-        "ja": {},
-        "pl": {}
+        "fr": {
+          "arg1": [
+            "one",
+            "other"
+          ],
+          "arg2": [
+            "one",
+            "other"
+          ]
+        },
+        "ja": {
+          "arg1": [
+            "other"
+          ],
+          "arg2": [
+            "other"
+          ]
+        },
+        "pl": {
+          "arg1": [
+            "few",
+            "many",
+            "one",
+            "other"
+          ],
+          "arg2": [
+            "few",
+            "many",
+            "one",
+            "other"
+          ]
+        }
       },
       "locale_states": {
         "en": "translated",
@@ -946,7 +975,7 @@
       "bundle": "Bundle.main (project target resource)",
       "key": "%lld selected",
       "source_default_value": "%lld selected",
-      "translator_comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
+      "translator_comment": "Selected character count in the editor status bar. Non-English plural values are draft translations requiring native review.",
       "required_locales": [
         "fr",
         "ja",
@@ -964,9 +993,25 @@
       },
       "variants": {
         "en": {},
-        "fr": {},
-        "ja": {},
-        "pl": {}
+        "fr": {
+          "value": [
+            "one",
+            "other"
+          ]
+        },
+        "ja": {
+          "value": [
+            "other"
+          ]
+        },
+        "pl": {
+          "value": [
+            "few",
+            "many",
+            "one",
+            "other"
+          ]
+        }
       },
       "locale_states": {
         "en": "translated",
