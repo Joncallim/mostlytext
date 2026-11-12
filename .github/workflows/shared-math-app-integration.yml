@@ -91,6 +91,7 @@ jobs:
             -only-testing:MacDown2Tests/MathPreviewLiveSourceTests \
             -only-testing:MacDown2Tests/MathPreviewNavigationTests \
             -only-testing:MacDown2Tests/MathPreviewRecoveryTests \
+            -only-testing:MacDown2Tests/MathPreviewMountedExponentDiagnosticsTests \
             -only-testing:MacDown2Tests/HeadingPreviewSessionTests \
             -only-testing:MacDown2Tests/HeadingPreviewNavigationTests \
             -only-testing:MacDown2Tests/HeadingPreviewAppTests \
@@ -107,6 +108,8 @@ jobs:
           path: |
             ${{ runner.temp }}/shared-app-probe/receipt.json
             ${{ runner.temp }}/shared-app-probe/probe.log
+            ${{ runner.temp }}/shared-app-probe/mounted-exponents-layout.txt
+            ${{ runner.temp }}/shared-app-probe/mounted-exponents-frame.png
             ${{ runner.temp }}/shared-app-probe/diagnostics/*.json
             ${{ runner.temp }}/shared-app-probe/diagnostics/*.sample.txt
             ${{ runner.temp }}/shared-app-probe/diagnostics/*.log
