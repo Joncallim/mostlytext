@@ -23,17 +23,19 @@ struct DiagramPoolTerminationTests {
         let pool = DiagramWebKitPool(harnessResourceName: "harness", bundle: bundle, poolSize: 1, timeout: .seconds(30))
 
         let first = try await pool.withPage { page in
-            await MainActor.run { () -> ObjectIdentifier in
+            await MainActor.run {
                 // What WebKit calls when the content process dies.
                 page.webViewWebContentProcessDidTerminate(WKWebView())
-                return ObjectIdentifier(page)
+                return page
             }
         }
         let second = try await pool.withPage { page in
-            await MainActor.run { (ObjectIdentifier(page), page.isTerminated) }
+            await MainActor.run { (page, page.isTerminated) }
         }
 
-        #expect(second.0 != first)
+        // Retain the retired page across the second checkout. An identifier
+        // alone can be reused at the same address after deallocation.
+        #expect(second.0 !== first)
         #expect(second.1 == false)
         await pool.shutdown()
     }
