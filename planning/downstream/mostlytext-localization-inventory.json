@@ -6456,7 +6456,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:318"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:311"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -12793,7 +12793,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:206"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:205"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -12828,7 +12828,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:313"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:306"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -12863,7 +12863,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:205"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:204"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13069,7 +13069,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:202"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:201"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13554,7 +13554,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:317"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:310"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13589,7 +13589,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:314"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:307"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13624,7 +13624,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:312"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:305"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13732,7 +13732,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:311"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:304"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13767,7 +13767,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:212"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:211"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -14666,7 +14666,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:327"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:320"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -14701,7 +14701,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:325"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:318"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -15254,7 +15254,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:200"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:199"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -15289,7 +15289,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:201"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:200"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -15324,7 +15324,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:207"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:206"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -19575,6 +19575,82 @@
       "target": "ExportService",
       "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
       "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Preparing private PDF output failed at %@ (POSIX %d).",
+      "source_default_value": "Preparing private PDF output failed at %@ (POSIX %d).",
+      "translator_comment": "Private PDF scratch setup error shown by Export. Non-English entries are review drafts; preserve the localized stage and avoid exposing temporary paths.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [
+          {
+            "position": 1,
+            "type": "@"
+          },
+          {
+            "position": 2,
+            "type": "d"
+          }
+        ],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [],
+      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "ExportService",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "Preparing private PDF output failed at %@ (directory identity changed).",
+      "source_default_value": "Preparing private PDF output failed at %@ (directory identity changed).",
+      "translator_comment": "Private PDF scratch setup error shown by Export. Non-English entries are review drafts; preserve the localized stage and avoid exposing temporary paths.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [
+          {
+            "position": 1,
+            "type": "@"
+          }
+        ],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [],
+      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "ExportService",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
       "key": "Preserve that file and choose another export destination.",
       "source_default_value": "Preserve that file and choose another export destination.",
       "translator_comment": "unknown_no_catalog_comment",
@@ -20296,6 +20372,39 @@
       "target": "ExportService",
       "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
       "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "create print directory",
+      "source_default_value": "create print directory",
+      "translator_comment": "Private PDF scratch setup error shown by Export. Non-English entries are review drafts; preserve the localized stage and avoid exposing temporary paths.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportPrintScratch.swift:44"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "ExportService",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
       "key": "derived SVG identifiers could not be safely isolated; authored source preserved",
       "source_default_value": "derived SVG identifiers could not be safely isolated; authored source preserved",
       "translator_comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
@@ -20702,6 +20811,72 @@
       "target": "ExportService",
       "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
       "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "inspect print directory",
+      "source_default_value": "inspect print directory",
+      "translator_comment": "Private PDF scratch setup error shown by Export. Non-English entries are review drafts; preserve the localized stage and avoid exposing temporary paths.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportPrintScratch.swift:56"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "ExportService",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "inspect temporary base",
+      "source_default_value": "inspect temporary base",
+      "translator_comment": "Private PDF scratch setup error shown by Export. Non-English entries are review drafts; preserve the localized stage and avoid exposing temporary paths.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportPrintScratch.swift:36"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "ExportService",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
       "key": "no resource directory was admitted for this export",
       "source_default_value": "no resource directory was admitted for this export",
       "translator_comment": "unknown_no_catalog_comment",
@@ -20723,6 +20898,72 @@
       },
       "callsites": [
         "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceResolver.swift:140"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "ExportService",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "open print directory",
+      "source_default_value": "open print directory",
+      "translator_comment": "Private PDF scratch setup error shown by Export. Non-English entries are review drafts; preserve the localized stage and avoid exposing temporary paths.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportPrintScratch.swift:48"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "ExportService",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "open temporary base",
+      "source_default_value": "open temporary base",
+      "translator_comment": "Private PDF scratch setup error shown by Export. Non-English entries are review drafts; preserve the localized stage and avoid exposing temporary paths.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportPrintScratch.swift:32"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -21128,6 +21369,72 @@
       },
       "callsites": [
         "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceSlots.swift:65"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "ExportService",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "validate print directory",
+      "source_default_value": "validate print directory",
+      "translator_comment": "Private PDF scratch setup error shown by Export. Non-English entries are review drafts; preserve the localized stage and avoid exposing temporary paths.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportPrintScratch.swift:60"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "ExportService",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "validate temporary base",
+      "source_default_value": "validate temporary base",
+      "translator_comment": "Private PDF scratch setup error shown by Export. Non-English entries are review drafts; preserve the localized stage and avoid exposing temporary paths.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/ExportService/ExportPrintScratch.swift:40"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"

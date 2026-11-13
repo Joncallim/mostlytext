@@ -371,6 +371,52 @@
         }
       }
     },
+    "Preparing private PDF output failed at %@ (POSIX %d).": {
+      "comment": "Private PDF scratch setup error shown by Export. Non-English entries are review drafts; preserve the localized stage and avoid exposing temporary paths.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Preparing private PDF output failed at %@ (POSIX %d)."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Preparing private PDF output failed at %@ (POSIX %d)."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Preparing private PDF output failed at %@ (POSIX %d)."
+          }
+        }
+      }
+    },
+    "Preparing private PDF output failed at %@ (directory identity changed).": {
+      "comment": "Private PDF scratch setup error shown by Export. Non-English entries are review drafts; preserve the localized stage and avoid exposing temporary paths.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Preparing private PDF output failed at %@ (directory identity changed)."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Preparing private PDF output failed at %@ (directory identity changed)."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Preparing private PDF output failed at %@ (directory identity changed)."
+          }
+        }
+      }
+    },
     "Preserve that file and choose another export destination.": {
       "localizations": {
         "en": {
@@ -815,6 +861,29 @@
         }
       }
     },
+    "create print directory": {
+      "comment": "Private PDF scratch setup error shown by Export. Non-English entries are review drafts; preserve the localized stage and avoid exposing temporary paths.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "create print directory"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "create print directory"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "create print directory"
+          }
+        }
+      }
+    },
     "derived SVG identifiers could not be safely isolated; authored source preserved": {
       "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
       "localizations": {
@@ -1079,6 +1148,52 @@
         }
       }
     },
+    "inspect print directory": {
+      "comment": "Private PDF scratch setup error shown by Export. Non-English entries are review drafts; preserve the localized stage and avoid exposing temporary paths.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "inspect print directory"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "inspect print directory"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "inspect print directory"
+          }
+        }
+      }
+    },
+    "inspect temporary base": {
+      "comment": "Private PDF scratch setup error shown by Export. Non-English entries are review drafts; preserve the localized stage and avoid exposing temporary paths.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "inspect temporary base"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "inspect temporary base"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "inspect temporary base"
+          }
+        }
+      }
+    },
     "no resource directory was admitted for this export": {
       "extractionState": "manual",
       "localizations": {
@@ -1086,6 +1201,52 @@
           "stringUnit": {
             "state": "translated",
             "value": "no resource directory was admitted for this export"
+          }
+        }
+      }
+    },
+    "open print directory": {
+      "comment": "Private PDF scratch setup error shown by Export. Non-English entries are review drafts; preserve the localized stage and avoid exposing temporary paths.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "open print directory"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "open print directory"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "open print directory"
+          }
+        }
+      }
+    },
+    "open temporary base": {
+      "comment": "Private PDF scratch setup error shown by Export. Non-English entries are review drafts; preserve the localized stage and avoid exposing temporary paths.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "open temporary base"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "open temporary base"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "open temporary base"
           }
         }
       }
@@ -1311,6 +1472,52 @@
           "stringUnit": {
             "state": "translated",
             "value": "too many image occurrences"
+          }
+        }
+      }
+    },
+    "validate print directory": {
+      "comment": "Private PDF scratch setup error shown by Export. Non-English entries are review drafts; preserve the localized stage and avoid exposing temporary paths.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "validate print directory"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "validate print directory"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "validate print directory"
+          }
+        }
+      }
+    },
+    "validate temporary base": {
+      "comment": "Private PDF scratch setup error shown by Export. Non-English entries are review drafts; preserve the localized stage and avoid exposing temporary paths.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "validate temporary base"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "validate temporary base"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "validate temporary base"
           }
         }
       }
