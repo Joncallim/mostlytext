@@ -25,6 +25,10 @@ final class MarkdownViewportSession {
     private var parseTask: Task<Void, Never>?
     private var isActive = true
     var onPublication: (() -> Void)?
+    private(set) var selectedWindowCount = 0
+    private(set) var matchedWindowCount = 0
+    private(set) var localParseCount = 0
+    private(set) var fullParseCount = 0
 
     init(textSystem: EditorTextSystem, registry: GrammarRegistry,
          parseSnapshot: @escaping SnapshotParser = { source, registry in
@@ -47,15 +51,26 @@ final class MarkdownViewportSession {
     }
 
     /// `oldSource` belongs to mutable TextKit storage and is used only in this
-    /// call. The pairing object retains geometry and a cache window, not text.
+    /// call. The pairing object retains only the selected bounded window's
+    /// owned content so TextKit's widened paragraph range can be verified.
     func prepare(range: NSRange, replacement: String, oldSource: NSString) {
         guard isActive else { return }
-        pairing.prepare(range: range, replacement: replacement, oldSource: oldSource) { source, edit, replacement in
-            guard cacheMatchesStorage, let cache,
-                  let visible = boundedViewport()
-            else { return nil }
-            return cache.select(source: source, edit: edit, replacement: replacement, visible: visible)
-        }
+        pairing.prepare(range: range, replacement: replacement, oldSource: oldSource,
+                        verificationRange: { $0.old }, select: { source, edit, replacement in
+                            guard cacheMatchesStorage, let cache,
+                                  let visible = boundedViewport()
+                            else { return nil }
+                            let selected = cache.select(
+                                source: source,
+                                edit: edit,
+                                replacement: replacement,
+                                visible: visible
+                            )
+                            if selected != nil {
+                                selectedWindowCount &+= 1
+                            }
+                            return selected
+                        })
     }
 
     /// Called from `HighlightingStorageGate.didProcessCharacterEditWithGeometry`.
@@ -68,6 +83,9 @@ final class MarkdownViewportSession {
         parseTask = nil
         cacheMatchesStorage = false
         let match = pairing.complete(editedRange: range, delta: delta, postSource: postSource)
+        if match != nil {
+            matchedWindowCount &+= 1
+        }
         guard let ticket = authority.ticket() else { return }
         Task { @MainActor [weak self] in
             guard let self, authority.admits(ticket) else { return }
@@ -150,6 +168,7 @@ final class MarkdownViewportSession {
 
     private func startFullParse(ticket: MarkdownParseAuthority.Ticket) {
         guard authority.admits(ticket) else { return }
+        fullParseCount &+= 1
         let source = textSystem.textView.string
         let registry = registry
         let parseSnapshot = parseSnapshot
@@ -168,6 +187,7 @@ final class MarkdownViewportSession {
     private func startLocalParse(ticket: MarkdownParseAuthority.Ticket,
                                  window: MarkdownSectionCache.Window, content: String,
                                  delta: Int, expectedLength: Int) {
+        localParseCount &+= 1
         let registry = registry
         let parseSnapshot = parseSnapshot
         parseTask = Task { [weak self] in

@@ -27,6 +27,12 @@ final class MarkdownEditPairing<Candidate> {
         let oldRange: NSRange
         let replacement: String
         let oldLength: Int
+        let verification: VerificationWindow?
+    }
+
+    private struct VerificationWindow {
+        let range: NSRange
+        let content: String
     }
 
     private var proposal: Proposal?
@@ -34,6 +40,7 @@ final class MarkdownEditPairing<Candidate> {
     private var ambiguous = false
 
     func prepare(range: NSRange, replacement: String, oldSource: NSString,
+                 verificationRange: ((Candidate) -> NSRange)? = nil,
                  select: (NSString, NSRange, String) -> Candidate?) {
         if sawPreEdit || ambiguous {
             proposal = nil
@@ -50,8 +57,21 @@ final class MarkdownEditPairing<Candidate> {
               (replacement as NSString).length <= Self.maximumReplacementUTF16Units,
               let candidate = select(oldSource, range, replacement)
         else { return }
+        var verification: VerificationWindow?
+        if let verificationRange {
+            let window = verificationRange(candidate)
+            guard window.location != NSNotFound, window.location >= 0,
+                  window.length > 0, window.length <= Self.maximumReplacementUTF16Units,
+                  window.location <= range.location,
+                  range.length <= window.length - (range.location - window.location),
+                  window.location <= oldSource.length,
+                  window.length <= oldSource.length - window.location
+            else { return }
+            verification = VerificationWindow(range: window, content: oldSource.substring(with: window))
+        }
         proposal = Proposal(candidate: candidate, oldRange: range,
-                            replacement: replacement, oldLength: oldSource.length)
+                            replacement: replacement, oldLength: oldSource.length,
+                            verification: verification)
     }
 
     func complete(editedRange: NSRange, delta: Int, postSource: NSString) -> Match? {
@@ -59,16 +79,39 @@ final class MarkdownEditPairing<Candidate> {
         guard !ambiguous, let proposal else { return nil }
         let replacementLength = (proposal.replacement as NSString).length
         let (expectedLength, overflow) = proposal.oldLength.addingReportingOverflow(delta)
-        guard editedRange.location == proposal.oldRange.location,
-              editedRange.length == replacementLength,
+        let newRange = NSRange(location: proposal.oldRange.location, length: replacementLength)
+        guard editedRange.location != NSNotFound, editedRange.location >= 0,
+              editedRange.length >= 0,
               delta == replacementLength - proposal.oldRange.length,
               !overflow, postSource.length == expectedLength,
               editedRange.location <= postSource.length,
               editedRange.length <= postSource.length - editedRange.location,
-              postSource.substring(with: editedRange) == proposal.replacement
+              newRange.location <= postSource.length,
+              newRange.length <= postSource.length - newRange.location,
+              postSource.substring(with: newRange) == proposal.replacement
         else { return nil }
+        if editedRange != newRange {
+            guard let verification = proposal.verification,
+                  editedRange.location <= newRange.location,
+                  NSMaxRange(editedRange) >= NSMaxRange(newRange),
+                  verification.range.location <= editedRange.location
+            else { return nil }
+            let (newWindowLength, windowOverflow) = verification.range.length.addingReportingOverflow(delta)
+            guard !windowOverflow, newWindowLength > 0,
+                  verification.range.location <= postSource.length,
+                  newWindowLength <= postSource.length - verification.range.location,
+                  NSMaxRange(editedRange) <= verification.range.location + newWindowLength
+            else { return nil }
+            let localEdit = NSRange(location: proposal.oldRange.location - verification.range.location,
+                                    length: proposal.oldRange.length)
+            let expected = (verification.content as NSString).replacingCharacters(
+                in: localEdit, with: proposal.replacement
+            )
+            let newWindow = NSRange(location: verification.range.location, length: newWindowLength)
+            guard postSource.substring(with: newWindow) == expected else { return nil }
+        }
         return Match(candidate: proposal.candidate, oldRange: proposal.oldRange,
-                     newRange: editedRange, delta: delta)
+                     newRange: newRange, delta: delta)
     }
 
     func discard() {

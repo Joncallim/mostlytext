@@ -110,3 +110,36 @@ until these proofs and separate-account native acceptance pass.
 Activation adds a truthful visible-only state and status explanation, with
 English and reviewed non-English catalog entries before final E16 freeze. No
 export format changes. Existing source-preservation checks still run.
+
+## Foundation checkpoint and remaining activation work
+
+The local foundation now has a per-editor parser session and a public-styler
+viewport painter, with mounted rendering tests. It is not attached to the
+shipped `NeonSyntaxHighlighter`; the 8,192-unit reduced fallback and its status
+copy still describe actual product behavior.
+
+TextKit can report a widened paragraph range for one proposed character edit.
+The exact-range adapter rejected every such mounted edit. The session now
+copies its selected old window (at most 65,536 UTF-16 units), and pairing
+admits a widened report only when that report is contained in the window and
+the whole post-edit window equals one application of the proposed replacement.
+Nested or unobserved edits, a changed neighbor, and an edited range outside
+the window still fail closed. Interior plain-word insertions and deletions use
+the same proof; structural changes take a fresh full parse.
+
+An opt-in mounted Release probe generated 1,048,805 UTF-8 bytes with a bounded
+top-level `##` section at the edit point. Twelve alternating insertions and
+deletions entered the local path (12 selected, 12 matched, 12 local parses,
+one full parse at open). In that controlled run, synchronous edit calls were
+8–35 ms and current viewport color settled in 10–37 ms. This is not a
+whole-app, multi-workload, p95 or native acceptance pass. A nested `#` parent
+section spanning the document exceeded the safe window, so those edits
+correctly took full parses and settled around 700 ms. This section shape is
+still a performance limitation, not an eligible local edit.
+
+Before default activation, partition nested/large sections into safe local
+units or provide another verified incremental representation; measure the
+Release app on the complete 1 MiB workload matrix; then wire the owner into
+the highlighter with an honest visible-only mode, theme/font and lifetime
+handling, and a reviewed localized status note. Separate-account native
+acceptance remains a final gate for the exact app build.

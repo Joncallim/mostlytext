@@ -67,7 +67,7 @@ struct MarkdownSectionCache {
               visible.location != NSNotFound, visible.location >= 0,
               visible.length > 0, visible.location <= source.length,
               visible.length <= source.length - visible.location,
-              !replacement.isEmpty
+              !replacement.isEmpty || edit.length > 0
         else { return nil }
         let old = source.substring(with: edit)
         guard old.unicodeScalars.allSatisfy(word.contains),
