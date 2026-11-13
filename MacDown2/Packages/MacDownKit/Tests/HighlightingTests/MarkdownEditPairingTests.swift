@@ -7,6 +7,47 @@ import Testing
 @MainActor
 @Suite("Markdown edit pairing")
 struct MarkdownEditPairingTests {
+    @Test func realEditorPairsZeroLengthInsertionInsideWord() throws {
+        let original = "alpha beta"
+        let model = SourceBox(original)
+        let identity = UUID().uuidString
+        let store = EditorTextSystemStore()
+        let host = NSHostingView(rootView: EditorView(
+            text: Binding(get: { model.text }, set: { model.text = $0 }),
+            identity: identity, configuration: .default, store: store
+        ))
+        let window = NSWindow(contentRect: .init(x: 0, y: 0, width: 500, height: 250),
+                              styleMask: [.titled], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        window.contentView = host
+        defer { window.orderOut(nil); window.close(); store.evictAll() }
+        host.layoutSubtreeIfNeeded()
+        let system = try #require(store.existingSystem(for: identity))
+        let storage = try #require(system.textView.textStorage)
+        let gate = HighlightingStorageGate()
+        gate.install(on: storage)
+        defer { gate.uninstall(from: storage) }
+        let pair = MarkdownEditPairing<String>()
+        let insertion = NSRange(location: 8, length: 0)
+        system.preEditObserver = { range, replacement, oldSource in
+            pair.prepare(range: range, replacement: replacement, oldSource: oldSource) { _, _, _ in
+                "bounded-window"
+            }
+        }
+        var match: MarkdownEditPairing<String>.Match?
+        gate.didProcessCharacterEditWithGeometry = { range, delta, _ in
+            match = pair.complete(editedRange: range, delta: delta, postSource: storage.mutableString)
+        }
+
+        system.textView.insertText("X", replacementRange: insertion)
+
+        #expect(match?.candidate == "bounded-window")
+        #expect(match?.oldRange == insertion)
+        #expect(match?.newRange == NSRange(location: insertion.location, length: 1))
+        #expect(match?.delta == 1)
+        #expect(model.text == "alpha beXta")
+    }
+
     @Test func realEditorAndStorageCallbacksPairOneReplacement() throws {
         let original = "alpha 😀\r\nbeta"
         let model = SourceBox(original)
