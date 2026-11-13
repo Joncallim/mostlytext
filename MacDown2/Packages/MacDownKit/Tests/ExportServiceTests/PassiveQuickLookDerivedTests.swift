@@ -69,6 +69,23 @@ struct PassiveQuickLookDerivedTests {
         #expect(!html.contains("<script"))
     }
 
+    @Test func markupStrippedToEmptyPreservesItsSourceAndLaterStaticContent() {
+        let source = "$bad$ and $good$\n"
+        let html = ExportService.renderPassiveMarkdownFragment(
+            source,
+            contributions: [
+                .init(sourceRange: range(of: "$bad$", in: source), placement: .inline,
+                      html: "<script>alert(1)</script>", sourceGeneration: 1),
+                .init(sourceRange: range(of: "$good$", in: source), placement: .inline,
+                      html: "<strong>GOOD_STATIC</strong>", sourceGeneration: 1),
+            ],
+            sourceGeneration: 1
+        )
+        #expect(html.contains("$bad$"))
+        #expect(html.contains("<strong>GOOD_STATIC</strong>"))
+        #expect(!html.contains("<script"))
+    }
+
     @Test func oversizedItemPreservesOnlyItsOwnSource() {
         let source = "$large$ and $small$\n"
         let html = ExportService.renderPassiveMarkdownFragment(
