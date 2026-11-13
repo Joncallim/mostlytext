@@ -63,6 +63,7 @@ struct MarkdownViewportPainterTests {
         painter.begin()
         await session.waitForPendingParse()
         try expectPaintMatchesCurrentParse(system: system, registry: registry, painter: painter)
+        let firstVisible = try #require(system.visibleUTF16Range)
 
         let insertion = (model.text as NSString).range(of: "bold")
         system.textView.insertText("X", replacementRange: NSRange(location: insertion.location + 2, length: 0))
@@ -74,7 +75,16 @@ struct MarkdownViewportPainterTests {
         system.textView.setSelectedRange(NSRange(location: tail.location, length: 0))
         system.scrollToVisible(utf16Range: tail)
         try expectPaintMatchesCurrentParse(system: system, registry: registry, painter: painter)
+        #expect(try NSIntersectionRange(firstVisible, #require(system.visibleUTF16Range)).length == 0)
+        #expect(!hasRedRenderingAttributes(system.textView, in: firstVisible))
         #expect(system.textView.string == model.text)
+
+        let tailVisible = try #require(system.visibleUTF16Range)
+        system.textView.setSelectedRange(NSRange(location: first.location, length: 0))
+        system.scrollToVisible(utf16Range: first)
+        try expectPaintMatchesCurrentParse(system: system, registry: registry, painter: painter)
+        #expect(try NSIntersectionRange(tailVisible, #require(system.visibleUTF16Range)).length == 0)
+        #expect(!hasRedRenderingAttributes(system.textView, in: tailVisible))
 
         // A temporary loss of mounted geometry must not leave the old
         // viewport's rendering colour attached to the document.

@@ -78,6 +78,9 @@ final class MarkdownViewportPainter {
             clearLastPaintedRange()
             return
         }
+        if let previous = lastPaintedRange {
+            clearPaintedOutside(previous, keeping: visible)
+        }
         styler.invalidate(.range(visible))
         styler.validate(.range(visible))
         lastPaintedRange = visible
@@ -88,6 +91,26 @@ final class MarkdownViewportPainter {
     private func clearLastPaintedRange() {
         guard let range = lastPaintedRange else { return }
         lastPaintedRange = nil
+        clearPaintedRange(range)
+    }
+
+    private func clearPaintedOutside(_ previous: NSRange, keeping visible: NSRange) {
+        let overlap = NSIntersectionRange(previous, visible)
+        guard overlap.length > 0 else {
+            clearPaintedRange(previous)
+            return
+        }
+        if previous.location < overlap.location {
+            clearPaintedRange(NSRange(location: previous.location, length: overlap.location - previous.location))
+        }
+        let previousEnd = NSMaxRange(previous)
+        let overlapEnd = NSMaxRange(overlap)
+        if overlapEnd < previousEnd {
+            clearPaintedRange(NSRange(location: overlapEnd, length: previousEnd - overlapEnd))
+        }
+    }
+
+    private func clearPaintedRange(_ range: NSRange) {
         guard let layout = textSystem.textView.textLayoutManager,
               let content = layout.textContentManager,
               let storage = textSystem.textView.textStorage,

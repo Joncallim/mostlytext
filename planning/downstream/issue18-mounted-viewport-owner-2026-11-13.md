@@ -223,3 +223,16 @@ open. Their worst synchronous edit calls were 62, 60 and 56 ms, with
 corresponding paint settlement at 65, 62 and 58 ms. The runs were unmatched and
 cannot attribute those outliers to this partition change, but they do fail to
 establish the 50 ms threshold. Keep the default owner disabled.
+
+## Retire scrolled-off colour
+
+The first opt-in painter retained syntax attributes from an earlier viewport
+after scrolling away. A mounted AppKit regression first failed when it painted
+the opening paragraph, scrolled to the tail and found red syntax attributes
+still attached at the opening range. The painter now removes only the portions
+of the last painted range outside the new viewport before painting it, avoiding
+a growing trail of stale attributes. It also clears the last range when mounted
+geometry disappears. The same regression passes in both scroll directions,
+compares each visible range with a fresh full parse and preserves source text.
+This is bounded source-level behaviour; native scrolling and the full budget
+matrix still require acceptance.
