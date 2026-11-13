@@ -41,6 +41,11 @@ struct MarkdownSectionCacheSequentialProbeTests {
         #expect(cache.select(source: original as NSString, edit: initialHeading,
                              replacement: "Other", visible: initialHeading) == nil,
                 "heading edit was admitted")
+        let ordinaryWord = (original as NSString).range(of: "alphatarget")
+        #expect(cache.select(source: original as NSString, edit: ordinaryWord,
+                             replacement: "betawordlonger",
+                             visible: NSRange(location: NSNotFound, length: 1)) == nil,
+                "invalid viewport was admitted")
 
         let edits = [
             EditSpec(name: "first", needle: "alphatarget", replacement: "betawordlonger"),
@@ -118,8 +123,12 @@ struct MarkdownSectionCacheSequentialProbeTests {
         source = old.replacingCharacters(in: edit, with: editSpec.replacement)
         let newContent = (source as NSString).substring(with: window.new)
         let localLayer = try layer(newContent, root: languages.root, registry: languages.registry)
-        try cache.replace(window, with: localLayer, content: newContent,
-                          delta: (editSpec.replacement as NSString).length - edit.length)
+        let delta = (editSpec.replacement as NSString).length - edit.length
+        #expect(throws: MarkdownSectionCache.CacheError.self) {
+            try cache.replace(window, with: localLayer,
+                              content: String(newContent.dropLast()), delta: delta)
+        }
+        try cache.replace(window, with: localLayer, content: newContent, delta: delta)
         let visible = NSRange(location: visibleStart,
                               length: min((source as NSString).length - visibleStart,
                                           (editSpec.replacement as NSString).length + 192))

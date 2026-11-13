@@ -1,0 +1,203 @@
+import Foundation
+import SwiftTreeSitter
+import SwiftTreeSitterLayer
+
+/// A conservative Markdown section cache for bounded plain-word edits.
+/// Selection reads the old source synchronously; the caller must copy only
+/// the selected window and pair the proposal with the actual storage edit.
+/// Structural or uncertain edits must replace the cache from a fresh parse.
+@MainActor
+struct MarkdownSectionCache {
+    static let windowLimit = 65536
+
+    enum CacheError: Error {
+        case snapshotUnavailable
+        case sectionShapeChanged
+        case windowMismatch
+    }
+
+    struct Section {
+        let node: Node
+        let layer: LanguageLayer
+        let content: String
+        var offset: Int
+
+        var globalRange: NSRange {
+            NSRange(location: node.range.location + offset, length: node.range.length)
+        }
+    }
+
+    struct Window {
+        let old: NSRange
+        let new: NSRange
+        let firstSection: Int
+        let lastSection: Int
+    }
+
+    private var sections: [Section]
+    private var shifts: SectionShifts
+
+    init(source: String, layer: LanguageLayer) throws {
+        guard let root = layer.snapshot()?.rootSnapshot.tree.rootNode,
+              root.childCount > 0
+        else { throw CacheError.snapshotUnavailable }
+        var entries: [Section] = []
+        entries.reserveCapacity(root.childCount)
+        for index in 0 ..< root.childCount {
+            guard let node = root.child(at: index) else { throw CacheError.snapshotUnavailable }
+            entries.append(Section(node: node, layer: layer, content: source, offset: 0))
+        }
+        sections = entries
+        shifts = SectionShifts(sectionCount: entries.count)
+    }
+
+    /// Admit only a replacement wholly inside one bounded plain paragraph.
+    /// Keeping section count stable lets later section offsets shift in O(log n).
+    func select(source: NSString, edit: NSRange, replacement: String, visible: NSRange) -> Window? {
+        let word = CharacterSet.alphanumerics
+        guard edit.location >= 0, edit.length > 0,
+              edit.location <= source.length,
+              edit.length <= source.length - edit.location,
+              visible.location != NSNotFound, visible.location >= 0,
+              visible.length > 0, visible.location <= source.length,
+              visible.length <= source.length - visible.location,
+              !replacement.isEmpty
+        else { return nil }
+        let old = source.substring(with: edit)
+        guard old.unicodeScalars.allSatisfy(word.contains),
+              replacement.unicodeScalars.allSatisfy(word.contains)
+        else { return nil }
+
+        guard let editIndex = firstIndex(overlapping: edit) else { return nil }
+        let entry = resolvedSection(at: editIndex)
+        let node = entry.node
+        let localEdit = NSRange(location: edit.location - entry.offset, length: edit.length)
+        guard node.nodeType == "section", !node.hasError else { return nil }
+        let paragraphs = (0 ..< node.childCount).compactMap { node.child(at: $0) }
+            .filter { $0.nodeType == "paragraph" && NSIntersectionRange($0.range, localEdit).length > 0 }
+        guard paragraphs.count == 1, let paragraph = paragraphs.first, !paragraph.hasError,
+              localEdit.location > paragraph.range.location,
+              NSMaxRange(localEdit) < NSMaxRange(paragraph.range),
+              paragraph.range.length <= Self.windowLimit
+        else { return nil }
+        let paragraphText = (entry.content as NSString).substring(with: paragraph.range)
+        let body = paragraphText.hasSuffix("\n") ? String(paragraphText.dropLast()) : paragraphText
+        guard body.unicodeScalars.allSatisfy({ word.contains($0) || $0 == " " || $0 == "\t" })
+        else { return nil }
+
+        guard let firstVisible = firstIndex(overlapping: visible) else { return nil }
+        var lastVisible = firstVisible
+        while lastVisible + 1 < sections.count,
+              globalRange(at: lastVisible + 1).location < NSMaxRange(visible) {
+            lastVisible += 1
+        }
+        let first = min(editIndex, firstVisible)
+        let last = max(editIndex, lastVisible)
+        let lower = globalRange(at: first).location
+        let upper = NSMaxRange(globalRange(at: last))
+        let delta = (replacement as NSString).length - edit.length
+        let newLength = upper - lower + delta
+        guard lower <= edit.location, NSMaxRange(edit) <= upper,
+              newLength > 0, newLength <= Self.windowLimit,
+              lower >= 0, lower + newLength <= source.length + delta
+        else { return nil }
+        return Window(old: NSRange(location: lower, length: upper - lower),
+                      new: NSRange(location: lower, length: newLength),
+                      firstSection: first, lastSection: last)
+    }
+
+    /// Replace cached trees only after a fresh local parse preserves the
+    /// selected root-section shape. On failure the cache is unchanged.
+    mutating func replace(_ window: Window, with layer: LanguageLayer, content: String,
+                          delta: Int) throws {
+        guard window.firstSection >= 0, window.firstSection <= window.lastSection,
+              window.lastSection < sections.count,
+              window.old.location == window.new.location,
+              window.new.length == (content as NSString).length,
+              delta == window.new.length - window.old.length
+        else { throw CacheError.windowMismatch }
+        guard let root = layer.snapshot()?.rootSnapshot.tree.rootNode else {
+            throw CacheError.snapshotUnavailable
+        }
+        let expectedCount = window.lastSection - window.firstSection + 1
+        guard root.childCount == expectedCount else { throw CacheError.sectionShapeChanged }
+        var replacements: [Section] = []
+        replacements.reserveCapacity(expectedCount)
+        for index in 0 ..< root.childCount {
+            guard let node = root.child(at: index) else { throw CacheError.snapshotUnavailable }
+            let sectionIndex = window.firstSection + index
+            replacements.append(Section(node: node, layer: layer, content: content,
+                                        offset: window.new.location - shifts.displacement(at: sectionIndex)))
+        }
+        sections.replaceSubrange(window.firstSection ... window.lastSection, with: replacements)
+        shifts.shift(after: window.lastSection, by: delta)
+    }
+
+    func visibleSections(_ visible: NSRange) -> [Section] {
+        guard let first = firstIndex(overlapping: visible) else { return [] }
+        var result: [Section] = []
+        var index = first
+        while index < sections.count, globalRange(at: index).location < NSMaxRange(visible) {
+            let section = resolvedSection(at: index)
+            if NSIntersectionRange(section.globalRange, visible).length > 0 {
+                result.append(section)
+            }
+            index += 1
+        }
+        return result
+    }
+
+    private func resolvedSection(at index: Int) -> Section {
+        var section = sections[index]
+        section.offset += shifts.displacement(at: index)
+        return section
+    }
+
+    private func globalRange(at index: Int) -> NSRange {
+        resolvedSection(at: index).globalRange
+    }
+
+    private func firstIndex(overlapping region: NSRange) -> Int? {
+        var lower = 0
+        var upper = sections.count
+        while lower < upper {
+            let middle = lower + (upper - lower) / 2
+            if NSMaxRange(globalRange(at: middle)) <= region.location {
+                lower = middle + 1
+            } else {
+                upper = middle
+            }
+        }
+        guard lower < sections.count,
+              NSIntersectionRange(globalRange(at: lower), region).length > 0
+        else { return nil }
+        return lower
+    }
+}
+
+/// Difference index for root-section shifts after bounded edits.
+private struct SectionShifts {
+    private var tree: [Int]
+
+    init(sectionCount: Int) {
+        tree = Array(repeating: 0, count: sectionCount + 1)
+    }
+
+    mutating func shift(after index: Int, by delta: Int) {
+        var slot = index + 2
+        while slot < tree.count {
+            tree[slot] += delta
+            slot += slot & -slot
+        }
+    }
+
+    func displacement(at index: Int) -> Int {
+        var slot = index + 1
+        var result = 0
+        while slot > 0 {
+            result += tree[slot]
+            slot -= slot & -slot
+        }
+        return result
+    }
+}

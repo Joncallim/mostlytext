@@ -134,6 +134,16 @@ selection; strict SwiftFormat and SwiftLint pass.
 The eventual parser result still needs an independent editor-revision guard
 before painting; geometric pairing alone does not give async result authority.
 
+The section cache has now been moved from test support into the Highlighting
+source target without attaching it to the editor. Its selection refuses an
+invalid viewport; replacement refuses mismatched window geometry, content
+length or delta before changing cached trees. The 1 MiB, 14-edit full-parse
+capture oracle and mounted public-styler controls pass together with the
+pairing tests: six selected tests in two suites on 13 November 2026. This
+validates reusable cache state, not the product's large-file path or its
+whole-edit latency. The next adapter must still own revision-safe parsing and
+painting before the 8,192-unit fallback can change.
+
 ## Next qualification
 
 Extend the mounted capture probe across repeated edits and viewport moves.
