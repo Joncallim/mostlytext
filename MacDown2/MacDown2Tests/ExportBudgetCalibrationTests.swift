@@ -131,6 +131,53 @@
             ])
         }
 
+        @Test func scaledWebKitPrintAndPDFKitReadback() async throws {
+            _ = try outputDirectory()
+            let root = try fixtureDirectory()
+            defer { try? FileManager.default.removeItem(at: root) }
+            let destination = root.appendingPathComponent("scaled-print.pdf")
+            var source = "# BUDGETSCALESTART\n\n![pixel](pixel.png)\n\n"
+            for section in 1 ... 200 {
+                source += "## Section \(section)\n\n"
+                source += String(
+                    repeating: "The larger print fixture retains searchable text across pages. ",
+                    count: 24
+                )
+                source += "\n\n"
+            }
+            source += "## BUDGETSCALEEND\n\nFinal text.\n"
+            let sourceData = Data(source.utf8)
+            let sourceURL = root.appendingPathComponent("source.md")
+            try sourceData.write(to: sourceURL)
+            let request = try ExportRequest(
+                text: source, sourceGeneration: 1, theme: BundledThemes.light,
+                documentURL: sourceURL,
+                resourceAccess: ExportResourceAccess(openingDirectory: root)
+            )
+            let peakBefore = try peakResidentBytes()
+            let started = ProcessInfo.processInfo.systemUptime
+            let prepared = try await ExportService.prepare(request, target: .pdf(url: destination))
+            let prepareSeconds = ProcessInfo.processInfo.systemUptime - started
+            let html = try await PDFExportAdapter.hardenedHTML(from: prepared)
+            let printStarted = ProcessInfo.processInfo.systemUptime
+            try await PDFExportAdapter.export(prepared, to: destination)
+            let printSeconds = ProcessInfo.processInfo.systemUptime - printStarted
+            let data = try Data(contentsOf: destination)
+            let pdf = try #require(PDFDocument(data: data))
+            let text = pdf.string ?? ""
+            #expect(pdf.pageCount >= 20)
+            #expect(text.contains("BUDGETSCALESTART"))
+            #expect(text.contains("BUDGETSCALEEND"))
+            try record("scaled-pdf", values: [
+                "case": "actual-scaled-webkit-print-pdfkit", "sections": 200,
+                "source_bytes": sourceData.count, "source_sha256": sha256(sourceData),
+                "prepared_html_bytes": html.utf8.count,
+                "pdf_bytes": data.count, "pdf_sha256": sha256(data), "page_count": pdf.pageCount,
+                "prepare_seconds": prepareSeconds, "print_and_validation_seconds": printSeconds,
+                "app_peak_before_rss_bytes": peakBefore, "app_peak_rss_bytes": peakResidentBytes(),
+            ])
+        }
+
         @Test func oversizedSourceIsRefusedBeforePublication() async throws {
             _ = try outputDirectory()
             let root = try fixtureDirectory()

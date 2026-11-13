@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bind a hosted export measurement to the actual Release app and three cases."""
+"""Bind a hosted export measurement to the actual Release app and four cases."""
 import argparse
 import hashlib
 import json
@@ -29,7 +29,7 @@ FILES = [
     '.github/workflows/export-budget-calibration.yml',
 ]
 TESTS = {'repeatedImageHTMLUsesActualExportService', 'realWebKitPrintAndPDFKitReadback',
-         'oversizedSourceIsRefusedBeforePublication'}
+         'scaledWebKitPrintAndPDFKitReadback', 'oversizedSourceIsRefusedBeforePublication'}
 
 
 def digest(path):
@@ -79,18 +79,24 @@ def positive_number(value):
 
 def validate_records(root):
     records = {name: json.loads((root / 'measurements' / (name + '.json')).read_text())
-               for name in ['html', 'pdf', 'refusal']}
-    html, pdf, refusal = records['html'], records['pdf'], records['refusal']
+               for name in ['html', 'pdf', 'scaled-pdf', 'refusal']}
+    html, pdf, scaled, refusal = (records[name] for name in ['html', 'pdf', 'scaled-pdf', 'refusal'])
     if (html.get('case') != 'actual-self-contained-html' or html.get('resource_occurrences') != 2048
             or pdf.get('case') != 'actual-webkit-print-pdfkit'
+            or scaled.get('case') != 'actual-scaled-webkit-print-pdfkit'
+            or scaled.get('sections') != 200
             or refusal.get('case') != 'actual-source-cap-plus-one-refusal'
             or refusal.get('source_bytes') != (32 << 20) + 1 or refusal.get('output_exists') is not False
             or not 0 < html.get('source_bytes', 0) < (32 << 20)
             or not 0 < pdf.get('source_bytes', 0) < (32 << 20)
+            or not 100_000 < scaled.get('source_bytes', 0) < (32 << 20)
             or not 0 < html.get('output_bytes', 0) <= (256 << 20)
             or not 0 < pdf.get('prepared_html_bytes', 0) <= (256 << 20)
             or not 0 < pdf.get('pdf_bytes', 0) <= (256 << 20)
-            or not 1 < pdf.get('page_count', 0) <= 1024):
+            or not 0 < scaled.get('prepared_html_bytes', 0) <= (256 << 20)
+            or not 0 < scaled.get('pdf_bytes', 0) <= (256 << 20)
+            or not 1 < pdf.get('page_count', 0) <= 1024
+            or not 20 <= scaled.get('page_count', 0) <= 1024):
         raise RuntimeError('Actual HTML, PDF or refusal result is missing or inconsistent')
     for name, row in records.items():
         if (not positive_number(row.get('app_peak_rss_bytes'))
@@ -98,10 +104,14 @@ def validate_records(root):
                 or not positive_number(row.get('source_bytes'))):
             raise RuntimeError(name + ' lacks exact source and process evidence')
         duration_fields = {'html': ['elapsed_seconds'], 'pdf': ['prepare_seconds', 'print_and_validation_seconds'],
+                           'scaled-pdf': ['prepare_seconds', 'print_and_validation_seconds'],
                            'refusal': ['elapsed_seconds']}[name]
         if any(not positive_number(row.get(field)) for field in duration_fields):
             raise RuntimeError(name + ' lacks a positive bounded timing')
-    for row, field in [(html, 'output_sha256'), (pdf, 'pdf_sha256')]:
+    if (not positive_number(scaled.get('app_peak_before_rss_bytes'))
+            or scaled['app_peak_rss_bytes'] < scaled['app_peak_before_rss_bytes']):
+        raise RuntimeError('Scaled PDF lacks a valid app high-water comparison')
+    for row, field in [(html, 'output_sha256'), (pdf, 'pdf_sha256'), (scaled, 'pdf_sha256')]:
         if not re.fullmatch(r'[0-9a-f]{64}', row.get(field, '')):
             raise RuntimeError('A produced export lacks a digest')
     return records
@@ -143,10 +153,10 @@ def validate_execution(root, receipt):
     result = json.loads(subprocess.check_output(['xcrun', 'xcresulttool', 'get', 'test-results', 'summary',
                                                  '--path', str(root / 'actual-export.xcresult')]))
     (root / 'actual-export-summary.json').write_text(json.dumps(result, indent=2) + '\n')
-    expected_counts = {'totalTestCount': 3, 'passedTests': 3, 'failedTests': 0,
+    expected_counts = {'totalTestCount': 4, 'passedTests': 4, 'failedTests': 0,
                        'skippedTests': 0, 'expectedFailures': 0}
     if any(type(result.get(key)) is not int or result[key] != value for key, value in expected_counts.items()):
-        raise RuntimeError('Actual xcresult does not contain three complete passing functions')
+        raise RuntimeError('Actual xcresult does not contain four complete passing functions')
     return validate_records(root)
 
 
