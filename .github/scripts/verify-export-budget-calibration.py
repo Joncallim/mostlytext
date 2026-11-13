@@ -111,6 +111,15 @@ def validate_records(root):
     if (not positive_number(scaled.get('app_peak_before_rss_bytes'))
             or scaled['app_peak_rss_bytes'] < scaled['app_peak_before_rss_bytes']):
         raise RuntimeError('Scaled PDF lacks a valid app high-water comparison')
+    retained = root / 'measurements/scaled-pdf-output.pdf'
+    if (not retained.is_file() or retained.stat().st_size != scaled['pdf_bytes']
+            or digest(retained) != scaled['pdf_sha256']
+            or not positive_number(scaled.get('extracted_text_bytes'))
+            or type(scaled.get('page_text_bytes')) is not list
+            or len(scaled['page_text_bytes']) != scaled['page_count']
+            or any(type(value) is not int or value < 0 for value in scaled['page_text_bytes'])
+            or sum(scaled['page_text_bytes']) == 0):
+        raise RuntimeError('The scaled PDF artifact or per-page text evidence is incomplete')
     for row, field in [(html, 'output_sha256'), (pdf, 'pdf_sha256'), (scaled, 'pdf_sha256')]:
         if not re.fullmatch(r'[0-9a-f]{64}', row.get(field, '')):
             raise RuntimeError('A produced export lacks a digest')

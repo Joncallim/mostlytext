@@ -165,6 +165,8 @@
             let data = try Data(contentsOf: destination)
             let pdf = try #require(PDFDocument(data: data))
             let text = pdf.string ?? ""
+            let retainedPDF = try outputDirectory().appendingPathComponent("scaled-pdf-output.pdf")
+            try data.write(to: retainedPDF, options: .atomic)
             #expect(pdf.pageCount >= 20)
             #expect(text.contains("BUDGETSCALESTART"))
             #expect(text.contains("BUDGETSCALEEND"))
@@ -173,6 +175,8 @@
                 "source_bytes": sourceData.count, "source_sha256": sha256(sourceData),
                 "prepared_html_bytes": html.utf8.count,
                 "pdf_bytes": data.count, "pdf_sha256": sha256(data), "page_count": pdf.pageCount,
+                "extracted_text_bytes": text.utf8.count,
+                "page_text_bytes": (0 ..< pdf.pageCount).map { pdf.page(at: $0)?.string?.utf8.count ?? 0 },
                 "prepare_seconds": prepareSeconds, "print_and_validation_seconds": printSeconds,
                 "app_peak_before_rss_bytes": peakBefore, "app_peak_rss_bytes": peakResidentBytes(),
             ])
