@@ -1,0 +1,97 @@
+name: Mounted Markdown viewport Release measurement
+permissions:
+  contents: read
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/viewport-budget-measurement.yml'
+      - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownViewportBudgetBenchmarkTests.swift'
+      - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportHighlighterBudgetBenchmarkTests.swift'
+  workflow_dispatch:
+jobs:
+  viewport-budget:
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Select macOS 26 and Xcode 26
+        run: |
+          set -euo pipefail
+          XCODE=$(ls -d /Applications/Xcode*.app | grep '26' | head -1 || true)
+          test -n "$XCODE"
+          test "$(sw_vers -productVersion | cut -d. -f1)" = 26
+          sudo xcode-select -s "$XCODE/Contents/Developer"
+          xcodebuild -version
+          sw_vers
+      - name: Bind the exact source and toolchain
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          mkdir -p "$RUNNER_TEMP/viewport-budget"
+          git rev-parse HEAD > "$RUNNER_TEMP/viewport-budget/source-sha.txt"
+          xcodebuild -version > "$RUNNER_TEMP/viewport-budget/xcode.txt"
+          sw_vers > "$RUNNER_TEMP/viewport-budget/macos.txt"
+          shasum -a 256 \
+            MacDown2/Packages/MacDownKit/Package.resolved \
+            MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownViewportBudgetBenchmarkTests.swift \
+            MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportHighlighterBudgetBenchmarkTests.swift \
+            .github/workflows/viewport-budget-measurement.yml \
+            > "$RUNNER_TEMP/viewport-budget/input-sha256.txt"
+      - name: Measure mounted session and public highlighter in Release
+        env:
+          MACDOWN_VIEWPORT_BUDGET_BENCH: '1'
+        run: |
+          set -euo pipefail
+          cd MacDown2/Packages/MacDownKit
+          swift test -c release --filter MarkdownViewportBudgetBenchmarkTests --no-parallel \
+            2>&1 | tee "$RUNNER_TEMP/viewport-budget/session.log"
+          swift test -c release --filter ViewportHighlighterBudgetBenchmarkTests --no-parallel \
+            2>&1 | tee "$RUNNER_TEMP/viewport-budget/highlighter.log"
+      - name: Record complete measured cases
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          import re
+
+          root = Path(os.environ['RUNNER_TEMP']) / 'viewport-budget'
+          expected = {
+              'session': ('VIEWPORT-BUDGET', 1),
+              'highlighter': ('HIGHLIGHTER-MODE-BUDGET', 2),
+          }
+          records = {}
+          for name, (prefix, line_count) in expected.items():
+              log = (root / f'{name}.log').read_text()
+              assert 'Test run with 1 test in 1 suite passed' in log, name
+              lines = [line for line in log.splitlines() if line.startswith(prefix + ' ')]
+              assert len(lines) == line_count, (name, len(lines))
+              cases = []
+              for line in lines:
+                  size = int(re.search(r'\butf8=(\d+)', line).group(1))
+                  calls = [float(value.strip()) for value in re.search(r'\bcalls=\[([^]]+)\]', line).group(1).split(',')]
+                  settled = [float(value.strip()) for value in re.search(r'\bsettled=\[([^]]+)\]', line).group(1).split(',')]
+                  assert size >= 1 << 20 and len(calls) == len(settled) == 12, line
+                  cases.append({'utf8_bytes': size, 'call_ms': calls, 'settled_ms': settled,
+                                'raw': line})
+              records[name] = cases
+          modes = {re.search(r'\bmode=(\w+)', case['raw']).group(1): case
+                   for case in records['highlighter']}
+          assert set(modes) == {'reduced', 'viewport'}
+          assert all('selected=12 matched=12 local=12 full=1' in case['raw']
+                     for case in [records['session'][0], modes['viewport']])
+          (root / 'measurement.json').write_text(json.dumps(records, indent=2) + '\n')
+          print(json.dumps(records, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mounted-viewport-release-measurement
+          path: ${{ runner.temp }}/viewport-budget/
+          if-no-files-found: error
