@@ -29,6 +29,12 @@ private func writeAll(_ descriptor: Int32, bytes: Data) -> Bool {
     }
 }
 
+@MainActor
+private final class DerivedReplyState {
+    var completed = false
+    var reply: Data?
+}
+
 private func sourceWorkerMain() -> Never {
     // The service also kills/reaps this exact child at three seconds. This
     // independent in-child guard prevents an orphaned blocked read if the
@@ -48,10 +54,35 @@ private func sourceWorkerMain() -> Never {
     }
     guard hasRequiredSandbox(), CommandLine.arguments.count == 2,
           lseek(3, 0, SEEK_SET) == 0,
-          let html = try? QuickLookSourceFallback.replyHTML(forOpenDescriptor: 3),
-          html.count <= maximumOutputBytes,
-          writeAll(4, bytes: html)
+          let source = try? QuickLookSourceFallback.selectedSource(forOpenDescriptor: 3)
     else { Darwin._exit(1) }
+    let fallback = QuickLookSourceFallback.replyHTML(
+        forSource: source, contributions: [], sourceGeneration: 0
+    )
+    guard fallback.count <= maximumOutputBytes,
+          writeAll(4, bytes: fallback),
+          writeAll(6, bytes: Data([0x46]))
+    else { Darwin._exit(1) }
+    // The source fallback and its marker are immutable before slower work.
+    if source.contains("$") {
+        guard Thread.isMainThread else { Darwin._exit(1) }
+        let state = MainActor.assumeIsolated { DerivedReplyState() }
+        Task { @MainActor in
+            state.reply = await DerivedMathReply.render(source)
+            state.completed = true
+        }
+        let publishDeadline = expires - 0.75
+        while ProcessInfo.processInfo.systemUptime < publishDeadline,
+              !MainActor.assumeIsolated({ state.completed }) {
+            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+        }
+        let derived = MainActor.assumeIsolated { state.completed ? state.reply : nil }
+        if let derived, derived.count <= maximumOutputBytes {
+            guard writeAll(5, bytes: derived),
+                  writeAll(6, bytes: Data([0x44]))
+            else { Darwin._exit(1) }
+        }
+    }
     Darwin._exit(0)
 }
 
