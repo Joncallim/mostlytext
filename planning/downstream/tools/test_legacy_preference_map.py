@@ -48,10 +48,16 @@ class DeclarationCoverageTests(unittest.TestCase):
                      destination_source=self.destination, semantic_verification="pending")
 
     def check(self, record=None, header=HEADER, implementation=IMPLEMENTATION):
-        return coverage.validate(record or self.record, header, implementation, self.repo)
+        return coverage.validate_declarations(record or self.record, header, implementation, self.repo)
 
     def test_complete_fixture_passes_with_no_migration_claim(self):
         self.assertEqual(self.check()["kinds"], {"stored": 3, "calculated": 1, "transient": 1})
+
+    def test_full_validator_still_requires_the_runtime_report(self):
+        catalog = self.repo / "MacDown2/Packages/MacDownKit/Sources/AppSettings/LegacyPreferenceCatalog.swift"
+        catalog.write_text('.init("editorSmartHome", .boolean, .mapped)')
+        with self.assertRaisesRegex(ValueError, "runtime report declaration coverage mismatch"):
+            coverage.validate(self.record, HEADER, IMPLEMENTATION, self.repo)
 
     def test_missing_known_key_fails(self):
         self.record["entries"].pop()
