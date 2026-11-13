@@ -134,6 +134,12 @@ selection; strict SwiftFormat and SwiftLint pass.
 The eventual parser result still needs an independent editor-revision guard
 before painting; geometric pairing alone does not give async result authority.
 
+The cache and pairing source slice is based on current `main`
+`03d35bf598d978d591cce453e3dc480b1a3fe059`. The later Quick Look merges
+do not change the EditorCore pre-edit observer, the Highlighting storage gate,
+or the 8,192-unit fallback described above. This slice adds internal source
+components and tests against those exact live interfaces.
+
 The section cache has now been moved from test support into the Highlighting
 source target without attaching it to the editor. Its selection refuses an
 invalid viewport; replacement refuses mismatched window geometry, content
