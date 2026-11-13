@@ -4,9 +4,9 @@ extension AppDelegate {
     // MARK: - Launch argument parsing
 
     /// The arguments the test hooks (`-UITesting`, `-sessionDir`, `-openFiles`, `-openFolder`) are read from.
-    /// Debug builds only, except the separately flagged and explicitly launched
-    /// #117 native acceptance build. An ordinary Release build rejects a
-    /// UI-test request before selecting stores instead of ignoring its isolation.
+    /// Debug builds, the separately flagged #117 acceptance app, and the
+    /// hosted math UI diagnostic build only. An ordinary Release build rejects
+    /// a UI-test request before selecting stores instead of ignoring isolation.
     static var launchArguments: [String] {
         #if ISSUE117_NATIVE_ACCEPTANCE
             let args = ProcessInfo.processInfo.arguments
@@ -16,7 +16,7 @@ extension AppDelegate {
                 "Launch the isolated #117 acceptance build with its retained launcher"
             )
             return args
-        #elseif DEBUG
+        #elseif DEBUG || MATH_UI_DIAGNOSTIC
             ProcessInfo.processInfo.arguments
         #else
             []

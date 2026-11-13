@@ -25,7 +25,7 @@ receipt = {
     "checkout": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip(),
     "configuration": args.configuration,
     "testability": True,
-    "additional_compilation_condition": "RELEASE_PREVIEW_PROBE",
+    "additional_compilation_conditions": ["RELEASE_PREVIEW_PROBE", "MATH_UI_DIAGNOSTIC"],
     "source_sha256": digests,
     "pins": pins,
     "scope": "Actual application/test execution; separate from owner observation and signed-artifact acceptance",

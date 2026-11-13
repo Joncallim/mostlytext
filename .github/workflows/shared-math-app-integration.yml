@@ -15,6 +15,7 @@ on:
       - 'MacDown2/MacDown2/PreviewContribution*.swift'
       - 'MacDown2/MacDown2/DocumentEditorSplitView*.swift'
       - 'MacDown2/MacDown2Tests/*Math*.swift'
+      - 'MacDown2/MacDown2UITests/MathExponentVisualUITests.swift'
       - 'MacDown2/MacDown2Tests/*Heading*.swift'
       - 'MacDown2/Packages/MacDownKit/Sources/Preview/**'
       - 'MacDown2/Packages/MacDownKit/Sources/Math*/**'
@@ -74,7 +75,7 @@ jobs:
           set -euo pipefail
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
             -configuration ${{ matrix.configuration }} ENABLE_TESTABILITY=YES \
-            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE' \
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE MATH_UI_DIAGNOSTIC' \
             -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/shared-math-app" \
             -onlyUsePackageVersionsFromResolvedFile -enableCodeCoverage NO build-for-testing
       - name: Execute production math, heading links, and live source-navigation controls
@@ -86,7 +87,7 @@ jobs:
             "$RUNNER_TEMP/shared-math-app/Build/Products/${{ matrix.configuration }}/MacDown2.app/Contents/MacOS/MacDown2" -- \
             xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
             -configuration ${{ matrix.configuration }} ENABLE_TESTABILITY=YES \
-            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE' \
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE MATH_UI_DIAGNOSTIC' \
             -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/shared-math-app" \
             -onlyUsePackageVersionsFromResolvedFile -parallel-testing-enabled NO \
             -only-testing:MacDown2Tests/SharedMathActivationTests \
@@ -105,6 +106,52 @@ jobs:
       - name: Verify exact source and actual selected execution
         if: always()
         run: python3 .github/scripts/verify-shared-app-probe.py "$RUNNER_TEMP/shared-app-probe" ${{ matrix.configuration }} --verify --require-result
+      - name: Capture exponent geometry in the real Release app
+        if: matrix.configuration == 'Release'
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/run-owned-app-tests.py "$RUNNER_TEMP/shared-app-probe/diagnostics-ui" \
+            "$RUNNER_TEMP/shared-math-app/Build/Products/Release/MacDown2.app/Contents/MacOS/MacDown2" -- \
+            xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
+            -configuration Release ENABLE_TESTABILITY=YES \
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE MATH_UI_DIAGNOSTIC' \
+            -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/shared-math-app" \
+            -resultBundlePath "$RUNNER_TEMP/shared-app-probe/MathExponentVisual.xcresult" \
+            -onlyUsePackageVersionsFromResolvedFile -parallel-testing-enabled NO \
+            -test-timeouts-enabled YES -default-test-execution-time-allowance 120 \
+            -maximum-test-execution-time-allowance 120 \
+            -only-testing:MacDown2UITests/MathExponentVisualUITests test-without-building \
+            2>&1 | tee "$RUNNER_TEMP/shared-app-probe/math-ui.log"
+      - name: Verify the original exponent UI case actually executed
+        if: matrix.configuration == 'Release'
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+
+          bundle = Path(os.environ['RUNNER_TEMP']) / 'shared-app-probe/MathExponentVisual.xcresult'
+          def read(kind):
+              return json.loads(subprocess.check_output([
+                  'xcrun', 'xcresulttool', 'get', 'test-results', kind,
+                  '--path', str(bundle), '--format', 'json'
+              ]))
+          summary = read('summary')
+          assert (summary['totalTestCount'], summary['passedTests'], summary['failedTests'],
+                  summary['skippedTests'], summary['expectedFailures']) == (1, 1, 0, 0, 0), summary
+          cases = []
+          def visit(node):
+              if node.get('nodeType') == 'Test Case':
+                  cases.append((node['nodeIdentifier'], node['result']))
+              for child in node.get('children', []):
+                  visit(child)
+          for node in read('tests')['testNodes']:
+              visit(node)
+          assert cases == [('MathExponentVisualUITests/testFullAppExponentImagesAreInspectable()',
+                            'Passed')], cases
+          print('Verified one actual passing full-app exponent UI case:', cases[0][0])
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -117,6 +164,11 @@ jobs:
             ${{ runner.temp }}/shared-app-probe/diagnostics/*.json
             ${{ runner.temp }}/shared-app-probe/diagnostics/*.sample.txt
             ${{ runner.temp }}/shared-app-probe/diagnostics/*.log
+            ${{ runner.temp }}/shared-app-probe/diagnostics-ui/*.json
+            ${{ runner.temp }}/shared-app-probe/diagnostics-ui/*.sample.txt
+            ${{ runner.temp }}/shared-app-probe/diagnostics-ui/*.log
+            ${{ runner.temp }}/shared-app-probe/math-ui.log
+            ${{ runner.temp }}/shared-app-probe/MathExponentVisual.xcresult/**
           if-no-files-found: warn
       - name: Verify immutable dependency locks
         if: ${{ !cancelled() && steps.pin.outcome == 'success' }}
