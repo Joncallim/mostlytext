@@ -48,6 +48,14 @@ def declarations(header: str, implementation: str) -> dict:
 
 
 def validate(record: dict, header: bytes, implementation: bytes, repo: Path) -> dict:
+    result = validate_declarations(record, header, implementation, repo)
+    validate_report(record, repo)
+    result["status"] = "declaration and runtime report coverage passed; runtime acceptance requires separate evidence"
+    return result
+
+
+def validate_declarations(record: dict, header: bytes, implementation: bytes, repo: Path) -> dict:
+    """Validate the declaration map without requiring a production report fixture."""
     if record.get("schema") != 1 or record.get("scope") != "declaration_coverage_only" or record.get("migration_complete") is not False:
         raise ValueError("coverage must not claim migration completion")
     source = record["legacy_source"]
@@ -97,8 +105,7 @@ def validate(record: dict, header: bytes, implementation: bytes, repo: Path) -> 
                 raise ValueError("candidate requires outstanding semantic evidence")
         elif candidate is not None or entry.get("destination_source") is not None:
             raise ValueError("non-equivalent disposition cannot install a destination")
-    validate_report(record, repo)
-    return {"status": "declaration and runtime report coverage passed; runtime acceptance requires separate evidence",
+    return {"status": "declaration coverage passed; runtime report was not checked",
             "properties": len(entries), "kinds": dict(Counter(entry["kind"] for entry in entries)),
             "dispositions": dict(Counter(entry["disposition"] for entry in entries))}
 
