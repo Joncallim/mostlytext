@@ -71,8 +71,16 @@ The first fixed-source probe passed in hosted run 43360005605 on exploratory
 head `7f8b49b8`: a sandbox-only worker rendered `x^2` to a 1,847-byte PNG,
 exited 0 in 0.919 s wall time, and reported 24,625,152-byte peak child RSS.
 The same run passed the ordinary/symlink/UTF-16 BE cold Finder source control.
-The probe does not use a selected document or this prepared composition API;
-shared validated math and all three diagrams remain to be qualified.
+That probe does not use a selected document or this prepared composition API;
+the shared validated math path and all three diagrams needed separate checks.
+
+The second exploratory run 43363675213 at `6849c83e` invoked
+`SharedMathContribution` on fixed Markdown inside the same worker identity,
+then composed a 2,560-byte passive HTML fragment. It exited 0 in 0.242 s wall
+time (0.217 s worker-reported, 25,624,576-byte harness peak child RSS), and
+its cold Finder source control passed 1/1. This proves the async shared-math
+path can run in the sandbox, but still does not render selected-file math in
+Finder or qualify failure isolation and final budgets.
 
 ## Production boundary after the probe
 
@@ -92,11 +100,15 @@ the reply; no generated item can authorize a sibling read.
 
 Run contributors independently within one overall worker deadline and their
 own measured limits. A malformed, over-budget or timed-out item contributes
-no HTML; its source remains in the GFM body. A process-wide timeout is still
-allowed to return no reply, never partial bytes. Do not increase the existing
-three/four-second deadlines on a guessed performance claim. If complete
-technical rendering cannot fit, record the measured counterexample and
-revise the architecture before implementation. Renderer completion, XPC
+no HTML; its source remains in the GFM body. The current process-wide timeout
+returns no reply, so production technical rendering also needs an immutable
+source-only reply completed before any renderer starts. Keep fallback and
+derived bytes in separate bounded output slots; if a child times out, the
+parent may publish only the complete fallback, never partial derived bytes.
+Do not increase the existing three/four-second deadlines on a guessed
+performance claim. If complete technical rendering cannot fit, record the
+measured counterexample and revise the architecture before implementation.
+Renderer completion, XPC
 reply and child exit each settle once; late callbacks after cancellation or
 teardown cannot publish another generation.
 
