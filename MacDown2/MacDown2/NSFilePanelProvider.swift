@@ -366,7 +366,12 @@ private final class PanelRequest {
         closeObserver = NotificationCenter.default.addObserver(
             forName: NSWindow.willCloseNotification, object: window, queue: nil
         ) { [self] _ in
-            Task { @MainActor in finish(nil) }
+            // Settle during a main-thread close even if AppKit is draining a busy sheet queue.
+            if Thread.isMainThread {
+                MainActor.assumeIsolated { finish(nil) }
+            } else {
+                Task { @MainActor in finish(nil) }
+            }
         }
     }
 
