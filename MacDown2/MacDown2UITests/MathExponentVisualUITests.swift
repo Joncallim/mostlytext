@@ -39,26 +39,24 @@ final class MathExponentVisualUITests: XCTestCase {
         XCTAssertTrue(preview.waitForExistence(timeout: 10), "Actual document Preview was not published")
 
         for expression in ["E=mc^2", "x^2", "x^{2}"] {
-            let image = app.images.matching(NSPredicate(format: "label CONTAINS %@", expression)).firstMatch
-            guard image.waitForExistence(timeout: 20) else {
-                attachWindowScreenshot(app, named: "Missing \(expression) in MostlyText window")
-                XCTFail("Missing native image for \(expression)")
-                continue
-            }
-            XCTAssertGreaterThan(image.frame.width, 0, "Equation has no rendered frame: \(expression)")
-            XCTContext.runActivity(named: "Rendered \(expression)") { activity in
-                let attachment = XCTAttachment(screenshot: image.screenshot())
-                attachment.name = "Rendered \(expression)"
-                attachment.lifetime = .keepAlways
-                activity.add(attachment)
-            }
+            captureImage(app, label: "Inline equation: \(expression)", name: "inline \(expression)")
         }
-        XCTContext.runActivity(named: "Whole MostlyText math window") { activity in
-            let attachment = XCTAttachment(screenshot: app.screenshot())
-            attachment.name = "MostlyText math variants"
-            attachment.lifetime = .keepAlways
-            activity.add(attachment)
+        captureImage(app, label: "Display equation: E=mc^2", name: "display E=mc^2")
+        attachWindowScreenshot(app, named: "MostlyText math variants")
+    }
+
+    private func captureImage(_ app: XCUIApplication, label: String, name: String) {
+        let image = app.images.matching(NSPredicate(format: "label == %@", label)).firstMatch
+        guard image.waitForExistence(timeout: 20) else {
+            attachWindowScreenshot(app, named: "Missing \(name) in MostlyText window")
+            XCTFail("Missing native image for \(name)")
+            return
         }
+        XCTAssertGreaterThan(image.frame.width, 0, "Equation has no rendered frame: \(name)")
+        let attachment = XCTAttachment(screenshot: image.screenshot())
+        attachment.name = "Rendered \(name)"
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     private func attachWindowScreenshot(_ app: XCUIApplication, named name: String) {
