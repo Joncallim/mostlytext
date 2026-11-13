@@ -40,7 +40,8 @@ jobs:
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
             -configuration Release -destination 'platform=macOS,arch=arm64' \
             -derivedDataPath "$RUNNER_TEMP/production-quicklook/app-build" \
-            -onlyUsePackageVersionsFromResolvedFile CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual build \
+            -onlyUsePackageVersionsFromResolvedFile CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual \
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) QUICKLOOK_DERIVED_PROBE QUICKLOOK_DERIVED_MATH' build \
             2>&1 | tee "$RUNNER_TEMP/production-quicklook-app-build.log"
       - name: Verify exact installed bundle and prepare separate Finder automation
         run: |
@@ -75,6 +76,45 @@ jobs:
             -derivedDataPath "$RUNNER_TEMP/production-quicklook/fixture-build" \
             CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual build-for-testing \
             2>&1 | tee "$RUNNER_TEMP/production-quicklook-fixture-build.log"
+      - name: Probe static math inside the exact sandboxed worker
+        run: |
+          set -euo pipefail
+          app="$RUNNER_TEMP/production-quicklook/installed/MostlyText.app"
+          worker="$app/Contents/PlugIns/MostlyTextQuickLook.appex/Contents/XPCServices/MostlyTextQuickLookWorker.xpc/Contents/MacOS/MostlyTextQuickLookWorker"
+          test -x "$worker"
+          WORKER="$worker" python3 - <<'PY'
+          import os
+          import resource
+          import subprocess
+          import time
+
+          started = time.monotonic()
+          result = subprocess.run(
+              [os.environ['WORKER'], '--probe-math'],
+              capture_output=True, text=True, timeout=6, check=False,
+          )
+          elapsed = time.monotonic() - started
+          print('exit', result.returncode, 'wall_seconds', round(elapsed, 3))
+          print('child_maxrss', resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss)
+          print('stdout', result.stdout.strip())
+          print('stderr', result.stderr[-1000:])
+          assert result.returncode == 0
+          assert 'QUICKLOOK_SANDBOX_MATH_PROBE pngBytes=' in result.stdout
+          assert elapsed < 6
+          started = time.monotonic()
+          result = subprocess.run(
+              [os.environ['WORKER'], '--probe-shared-math'],
+              capture_output=True, text=True, timeout=6, check=False,
+          )
+          elapsed = time.monotonic() - started
+          print('shared_exit', result.returncode, 'wall_seconds', round(elapsed, 3))
+          print('shared_child_maxrss', resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss)
+          print('shared_stdout', result.stdout.strip())
+          print('shared_stderr', result.stderr[-1000:])
+          assert result.returncode == 0
+          assert 'QUICKLOOK_SHARED_MATH_PROBE htmlBytes=' in result.stdout
+          assert elapsed < 6
+          PY
       - name: Register product and invoke genuine cold Finder
         run: |
           set -euo pipefail
@@ -87,6 +127,8 @@ jobs:
           | GFM_COLUMN_NAME | GFM_COLUMN_VALUE |
           | --- | --- |
           | one | ~~GFM_STRUCK_VALUE~~ |
+
+          MATH_INLINE_MARKER $x^2$ MATH_AFTER_MARKER
           MARKDOWN
           ln -s "$RUNNER_TEMP/mostlytext-production-quicklook.md" "$RUNNER_TEMP/mostlytext-production-linked.md"
           python3 - <<'PY'
