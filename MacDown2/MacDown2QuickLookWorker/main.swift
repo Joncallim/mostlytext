@@ -4,6 +4,9 @@ import QuickLookBoundary
 import QuickLookSource
 import Security
 #if QUICKLOOK_DERIVED_PROBE
+    import Contributions
+    import ExportService
+    import MarkdownEngine
     import Math
     import MathRendering
 #endif
@@ -60,6 +63,12 @@ private func sourceWorkerMain() -> Never {
 }
 
 #if QUICKLOOK_DERIVED_PROBE
+    @MainActor
+    private final class MathProbeState {
+        var completed = false
+        var outcome = "not started"
+    }
+
     /// Hosted-only feasibility probe, compiled out of the distributable worker.
     /// It uses this exact XPC executable and its sandbox-only entitlement.
     private func probeMathInSandbox() -> Never {
@@ -84,6 +93,58 @@ private func sourceWorkerMain() -> Never {
 
     if CommandLine.arguments == [CommandLine.arguments[0], "--probe-math"] {
         probeMathInSandbox()
+    }
+
+    // Check the existing validated analysis, contributor and passive HTML
+    // composition inside the same hosted worker. This remains a fixed probe
+    // and does not consume the selected document or publish a Finder reply.
+    if CommandLine.arguments == [CommandLine.arguments[0], "--probe-shared-math"] {
+        guard hasRequiredSandbox() else { Darwin._exit(132) }
+        let state = MainActor.assumeIsolated { MathProbeState() }
+        let started = ProcessInfo.processInfo.systemUptime
+        Task { @MainActor in
+            do {
+                let source = "Equation $x^2$ and source."
+                let document = try await ParseEngine().parse(source, revision: 1)
+                let context = ExportMathRenderContext(
+                    foregroundRed: 0.1, foregroundGreen: 0.1, foregroundBlue: 0.1,
+                    pixelScale: MathImageRenderer.standardScale
+                )
+                let contributor = SharedMathContribution(context: context) { body, style, context in
+                    try await MainActor.run {
+                        try MathImageRenderer.render(body: body, style: style, context: context)
+                    }
+                }
+                let results = try await contributor.run(document: document, sourceText: source, sourceGeneration: 1)
+                guard results.count == 1, let content = results[0].content,
+                      case let .html(fragment) = content.representation,
+                      fragment.contains("data:image/png;base64,")
+                else { throw NSError(domain: "QuickLookMathProbe", code: 1) }
+                let placement: ExportDerivedPlacement = content.placement == .inline ? .inline : .block
+                let item = ExportDerivedContribution(
+                    sourceRange: content.sourceRange, placement: placement,
+                    html: fragment, sourceGeneration: results[0].sourceGeneration
+                )
+                let composed = ExportService.renderPassiveMarkdownFragment(
+                    source, contributions: [item], sourceGeneration: 1
+                )
+                guard composed.contains("data:image/png;base64,"), !composed.contains("$x^2$")
+                else { throw NSError(domain: "QuickLookMathProbe", code: 2) }
+                let elapsed = ProcessInfo.processInfo.systemUptime - started
+                state.outcome = "htmlBytes=\(composed.utf8.count) elapsed=\(elapsed)"
+            } catch {
+                state.outcome = "failure=\(error)"
+            }
+            state.completed = true
+        }
+        let deadline = Date().addingTimeInterval(3.5)
+        while Date() < deadline, !MainActor.assumeIsolated({ state.completed }) {
+            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+        }
+        let outcome = MainActor.assumeIsolated { state.outcome }
+        print("QUICKLOOK_SHARED_MATH_PROBE \(outcome)")
+        fflush(stdout)
+        Darwin._exit(outcome.hasPrefix("htmlBytes=") ? 0 : 133)
     }
 #endif
 

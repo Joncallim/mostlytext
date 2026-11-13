@@ -522,7 +522,7 @@
     },
     {
       "path": "MacDown2/project.yml",
-      "sha256": "c85b6b857a3973b02e080f776dc5ccacf51528e71f6fd150802924ca40e705a7",
+      "sha256": "367f04c3047e5aba682188252d66703da3bbc2cb836f86cb555bdc5963d9fb52",
       "status": "open",
       "reason": "CFBundleTypeName and UTTypeDescription now have reviewed source-English InfoPlist.strings routes; translation review, exact app packaging and native Finder presentation remain open."
     }

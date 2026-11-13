@@ -283,6 +283,12 @@ targets:
       product: Math
     - package: MacDownKit
       product: MathRendering
+    - package: MacDownKit
+      product: Contributions
+    - package: MacDownKit
+      product: ExportService
+    - package: MacDownKit
+      product: MarkdownEngine
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.MostlyText.QuickLook.Worker

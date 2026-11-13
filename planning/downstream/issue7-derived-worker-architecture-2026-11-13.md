@@ -11,9 +11,9 @@ HTML/PDF export, document bytes, or the final signed-install gate.
 
 ## Current source and reconciliation
 
-Implementation starts from main `8f5e47ac` plus the reviewed Quick Look GFM
-candidate `6e0edc78`; the latter is still under exact-head CI and Finder
-qualification. The source compatibility candidate is separate. `QuickLookSource`
+Implementation now starts from main `482ca5c2`, which includes the Quick Look
+GFM and source-compatibility candidates through PRs #254 and #255. Both passed
+exact-head CI and genuine Finder qualification before merge. `QuickLookSource`
 owns the selected descriptor, strict FileCore decoding, GFM fragment and escaped
 fallback. The extension opens only the selected file, then sends its descriptor
 to a sandbox-only service. Its child has a three-second parent deadline, a
@@ -46,9 +46,8 @@ Four focused package cases pass for accepted plus stale items, out-of-range
 rejection, generated URL/script neutralization and an oversized item followed
 by a valid one. The existing sanitizer and derived-content suites pass 3/3
 and 10/10. This candidate has no producer or worker caller, and establishes
-neither real static math/diagrams nor Finder behavior. It remains local until
-the preceding GFM and encoding PRs converge and its own exact-head CI review
-is complete.
+neither document-derived math/diagrams nor Finder presentation of them. It
+remains exploratory until its own exact-head CI review is complete.
 
 ## Pre-implementation feasibility gate
 
@@ -70,6 +69,23 @@ inside the sandbox-only service without the containing app. This probe is
 compiled out of the normal worker and does not route document math to Finder;
 Mermaid/D2/Graphviz, failure isolation, and complete budget/containment proof
 remain subsequent gates.
+
+At `7f8b49b8`, hosted run 43360005605 answered that first question: the
+ad-hoc signed sandbox-only worker exited 0 and produced a 1,847-byte PNG in
+0.919 s wall time (0.693 s renderer-reported elapsed), with 24,625,152-byte
+peak child RSS reported by the harness. The subsequent genuine cold Finder
+source test passed 1/1, including ordinary, symlink and UTF-16 BE cases. This
+does not establish a document producer/caller, varied equations, theme
+contrast, renderer cancellation or a final Release budget. The issue #7
+checkpoint records the exact scope.
+
+The next hosted probe invokes the repository's `SharedMathContribution` on a
+fixed Markdown source, then admits its generated PNG through the same passive
+`ExportService` composer. This tests the worker's async main-run-loop path and
+the shared validated-body pipeline; it remains compile-flagged and does not
+consume a selected file. Local locked Release compilation, source lint and the
+67-sink audit pass. Hosted execution is pending and must supply the actual
+result before this path is considered feasible.
 
 ## Production boundary after the probe
 
