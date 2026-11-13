@@ -24,6 +24,7 @@ final class MarkdownViewportSession {
     private var cacheMatchesStorage = false
     private var parseTask: Task<Void, Never>?
     private var isActive = true
+    var onPublication: (() -> Void)?
 
     init(textSystem: EditorTextSystem, registry: GrammarRegistry,
          parseSnapshot: @escaping SnapshotParser = { source, registry in
@@ -68,6 +69,10 @@ final class MarkdownViewportSession {
         cacheMatchesStorage = false
         let match = pairing.complete(editedRange: range, delta: delta, postSource: postSource)
         guard let ticket = authority.ticket() else { return }
+        Task { @MainActor [weak self] in
+            guard let self, authority.admits(ticket) else { return }
+            onPublication?()
+        }
         if let match, cache != nil,
            match.candidate.new.location >= 0,
            match.candidate.new.location <= postSource.length,
@@ -93,6 +98,7 @@ final class MarkdownViewportSession {
         if !cacheMatchesStorage, let ticket = authority.ticket() {
             startFullParse(ticket: ticket)
         }
+        onPublication?()
     }
 
     func tearDown() {
@@ -104,6 +110,7 @@ final class MarkdownViewportSession {
         parseTask = nil
         cache = nil
         cacheMatchesStorage = false
+        onPublication = nil
     }
 
     /// A nil or oversized viewport cannot authorize a cache query. The
@@ -154,6 +161,7 @@ final class MarkdownViewportSession {
             else { return }
             cache = try? MarkdownSectionCache(source: source, snapshot: snapshot)
             cacheMatchesStorage = cache != nil
+            onPublication?()
         }
     }
 
@@ -177,6 +185,7 @@ final class MarkdownViewportSession {
                 try cache.replace(window, with: snapshot, content: content, delta: delta)
                 self.cache = cache
                 cacheMatchesStorage = true
+                onPublication?()
             } catch {
                 self.cache = nil
                 cacheMatchesStorage = false
