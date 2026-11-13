@@ -85,6 +85,9 @@ enum PDFExportAdapter {
             try? scratch.retire()
         }
         let info = printInfo(savingTo: printURL)
+        // Keep the requested paper geometry independent of WebKit's mutable
+        // NSPrintOperation copy. Its vector snapshot may use giant PDF pages.
+        let paperInfo = (info.copy() as? NSPrintInfo) ?? info
         guard let size = PDFSnapshotFallback.viewportSize(for: info) else {
             throw PDFExportError.printConfigurationFailed
         }
@@ -115,6 +118,7 @@ enum PDFExportAdapter {
         onPhase?(.validating)
 
         var output = try await validatedPDFBytes(in: scratch, sourceHasContent: sourceHasContent)
+        output = try paginatePrinted(output, printInfo: paperInfo, sourceHasContent: sourceHasContent)
         if output == nil {
             // A successful print operation can still write no marks at all.
             // Keep its broken output isolated and ask WebKit for a local vector
@@ -124,7 +128,7 @@ enum PDFExportAdapter {
             try admission.checkCurrent()
             let snapshot = try await PDFSnapshotFallback.render(
                 webView: webView,
-                printInfo: operation.printInfo,
+                printInfo: paperInfo,
                 maxBytes: maxPDFBytes
             )
             try Task.checkCancellation()
@@ -151,6 +155,18 @@ enum PDFExportAdapter {
         }
         guard let data else { return nil }
         return normalizedPrintableData(data, sourceHasContent: sourceHasContent)
+    }
+
+    private static func paginatePrinted(
+        _ printed: Data?, printInfo: NSPrintInfo, sourceHasContent: Bool
+    ) throws -> Data? {
+        guard let printed else { return nil }
+        // A successful WebKit print can still use multiple oversized PDF
+        // pages. Page count and visible ink alone do not make it printable.
+        let paged = try PDFSnapshotFallback.paginate(
+            printed, printInfo: printInfo, maxBytes: maxPDFBytes
+        )
+        return normalizedPrintableData(paged, sourceHasContent: sourceHasContent)
     }
 
     /// Detached file I/O has an explicit cancellation bridge back to its owner.

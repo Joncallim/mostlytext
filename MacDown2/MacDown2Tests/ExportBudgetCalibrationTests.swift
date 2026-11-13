@@ -1,4 +1,5 @@
 #if EXPORT_BUDGET_PROBE
+    import AppKit
     import CryptoKit
     import Darwin
     import ExportService
@@ -136,16 +137,7 @@
             let root = try fixtureDirectory()
             defer { try? FileManager.default.removeItem(at: root) }
             let destination = root.appendingPathComponent("scaled-print.pdf")
-            var source = "# BUDGETSCALESTART\n\n![pixel](pixel.png)\n\n"
-            for section in 1 ... 200 {
-                source += "## Section \(section)\n\n"
-                source += String(
-                    repeating: "The larger print fixture retains searchable text across pages. ",
-                    count: 24
-                )
-                source += "\n\n"
-            }
-            source += "## BUDGETSCALEEND\n\nFinal text.\n"
+            let source = Self.scaledMarkdown()
             let sourceData = Data(source.utf8)
             let sourceURL = root.appendingPathComponent("source.md")
             try sourceData.write(to: sourceURL)
@@ -167,9 +159,7 @@
             let text = pdf.string ?? ""
             let retainedPDF = try outputDirectory().appendingPathComponent("scaled-pdf-output.pdf")
             try data.write(to: retainedPDF, options: .atomic)
-            #expect(pdf.pageCount >= 20)
-            #expect(text.contains("BUDGETSCALESTART"))
-            #expect(text.contains("BUDGETSCALEEND"))
+            try verifyScaledPDF(pdf, text: text)
             try record("scaled-pdf", values: [
                 "case": "actual-scaled-webkit-print-pdfkit", "sections": 200,
                 "source_bytes": sourceData.count, "source_sha256": sha256(sourceData),
@@ -180,6 +170,37 @@
                 "prepare_seconds": prepareSeconds, "print_and_validation_seconds": printSeconds,
                 "app_peak_before_rss_bytes": peakBefore, "app_peak_rss_bytes": peakResidentBytes(),
             ])
+        }
+
+        private static func scaledMarkdown() -> String {
+            var source = "# BUDGETSCALESTART\n\n![pixel](pixel.png)\n\n"
+            for section in 1 ... 200 {
+                source += "## Section \(section)\n\n"
+                source += String(
+                    repeating: "The larger print fixture retains searchable text across pages. ",
+                    count: 24
+                )
+                source += "\n\n"
+            }
+            return source + "## BUDGETSCALEEND\n\nFinal text.\n"
+        }
+
+        private func verifyScaledPDF(_ pdf: PDFDocument, text: String) throws {
+            #expect(pdf.pageCount >= 20)
+            #expect(pdf.pageCount <= PDFSnapshotFallback.maxPages)
+            let paper = NSPrintInfo().paperSize
+            for index in 0 ..< pdf.pageCount {
+                let page = try #require(pdf.page(at: index))
+                let bounds = page.bounds(for: .mediaBox)
+                #expect(abs(bounds.width - paper.width) < 1)
+                #expect(abs(bounds.height - paper.height) < 1)
+            }
+            #expect(text.contains("BUDGETSCALESTART"))
+            #expect(text.contains("BUDGETSCALEEND"))
+            #expect(text.utf8.count >= 280_000)
+            for section in 1 ... 200 {
+                #expect(text.contains("Section \(section)\n"))
+            }
         }
 
         @Test func oversizedSourceIsRefusedBeforePublication() async throws {

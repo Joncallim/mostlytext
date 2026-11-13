@@ -51,48 +51,88 @@ enum PDFSnapshotFallback {
               let document = CGPDFDocument(provider), document.numberOfPages > 0
         else { throw FallbackError.invalidSnapshot }
 
-        // WebKit normally creates one tall page. Preserve an already-paged
-        // output without drawing it a second time.
-        if document.numberOfPages > 1 {
-            guard document.numberOfPages <= maxPages else { throw FallbackError.tooManyPages }
-            return data
-        }
-
-        guard let sourcePage = document.page(at: 1) else { throw FallbackError.invalidSnapshot }
-        let sourceBox = sourcePage.getBoxRect(.mediaBox)
         let paperSize = printInfo.paperSize
         let printableWidth = paperSize.width - printInfo.leftMargin - printInfo.rightMargin
         let printableHeight = paperSize.height - printInfo.topMargin - printInfo.bottomMargin
-        guard sourceBox.width.isFinite, sourceBox.height.isFinite,
-              sourceBox.width > 0, sourceBox.height > 0,
-              printableWidth.isFinite, printableHeight.isFinite,
+        guard printableWidth.isFinite, printableHeight.isFinite,
               printableWidth > 0, printableHeight > 0
         else { throw FallbackError.invalidGeometry }
 
-        let scale = printableWidth / sourceBox.width
-        let sliceHeight = printableHeight / scale
-        let ranges = try pageRanges(
-            in: data,
-            sourceBox: sourceBox,
-            sliceHeight: sliceHeight,
-            scale: scale
-        )
+        let pages = try sourcePages(in: document)
+        // An ordinary AppKit print result is already page-sized. WebKit's
+        // createPDF fallback can also return several 14,400-point pages;
+        // their count alone does not establish usable paper geometry.
+        if pages.allSatisfy({ page in
+            let box = page.getBoxRect(.mediaBox)
+            return abs(box.width - paperSize.width) < 1 && abs(box.height - paperSize.height) < 1
+        }) {
+            return data
+        }
+        guard let readable = PDFDocument(data: data), readable.pageCount == pages.count
+        else { throw FallbackError.invalidSnapshot }
+        let slices = try paperSlices(pages, readable: readable,
+                                     printableWidth: printableWidth, printableHeight: printableHeight)
 
+        return try render(slices, sourceBytes: data.count, printInfo: printInfo, maxBytes: maxBytes)
+    }
+
+    private static func sourcePages(in document: CGPDFDocument) throws -> [CGPDFPage] {
+        guard document.numberOfPages <= maxPages else { throw FallbackError.tooManyPages }
+        return try (1 ... document.numberOfPages).map { index in
+            try Task.checkCancellation()
+            guard let page = document.page(at: index) else { throw FallbackError.invalidSnapshot }
+            let box = page.getBoxRect(.mediaBox)
+            guard box.width.isFinite, box.height.isFinite, box.width > 0, box.height > 0
+            else { throw FallbackError.invalidGeometry }
+            return page
+        }
+    }
+
+    private static func paperSlices(
+        _ pages: [CGPDFPage], readable: PDFDocument,
+        printableWidth: CGFloat, printableHeight: CGFloat
+    ) throws -> [PageSlice] {
+        var slices: [PageSlice] = []
+        var count = 0
+        for (index, page) in pages.enumerated() {
+            try Task.checkCancellation()
+            guard let readablePage = readable.page(at: index) else { throw FallbackError.invalidSnapshot }
+            let box = page.getBoxRect(.mediaBox)
+            let scale = printableWidth / box.width
+            let sliceHeight = printableHeight / scale
+            guard scale.isFinite, scale > 0, sliceHeight.isFinite, sliceHeight > 0
+            else { throw FallbackError.invalidGeometry }
+            let ranges = try pageRanges(on: readablePage, sourceBox: box,
+                                        sliceHeight: sliceHeight, scale: scale)
+            guard count <= maxPages - ranges.count else { throw FallbackError.tooManyPages }
+            count += ranges.count
+            slices.append(PageSlice(page: page, geometry: SliceGeometry(
+                sourceBox: box, scale: scale, sliceHeight: sliceHeight, ranges: ranges
+            )))
+        }
+        return slices
+    }
+
+    private static func render(
+        _ slices: [PageSlice], sourceBytes: Int, printInfo: NSPrintInfo, maxBytes: Int
+    ) throws -> Data {
         // CGContext may embed the source page as a form on each output page.
         // Bound this conservative upper estimate before creating any file.
-        let estimated = data.count.multipliedReportingOverflow(by: ranges.count)
+        let pageCount = slices.reduce(0) { $0 + $1.geometry.ranges.count }
+        let estimated = sourceBytes.multipliedReportingOverflow(by: pageCount)
         guard !estimated.overflow, estimated.partialValue <= maxBytes else {
             throw FallbackError.tooLarge
         }
 
         let output = NSMutableData()
-        var paperBox = CGRect(origin: .zero, size: paperSize)
+        var paperBox = CGRect(origin: .zero, size: printInfo.paperSize)
         guard let consumer = CGDataConsumer(data: output as CFMutableData),
               let context = CGContext(consumer: consumer, mediaBox: &paperBox, nil)
         else { throw FallbackError.cannotWrite }
 
-        let geometry = SliceGeometry(sourceBox: sourceBox, scale: scale, sliceHeight: sliceHeight, ranges: ranges)
-        try drawPages(in: context, from: sourcePage, printInfo: printInfo, geometry: geometry)
+        for slice in slices {
+            try drawPages(in: context, from: slice.page, printInfo: printInfo, geometry: slice.geometry)
+        }
         context.closePDF()
 
         guard output.length > 0, output.length <= maxBytes
@@ -107,19 +147,18 @@ enum PDFSnapshotFallback {
         let ranges: [ClosedRange<CGFloat>]
     }
 
+    private struct PageSlice {
+        let page: CGPDFPage
+        let geometry: SliceGeometry
+    }
+
     /// Move a cut just above any line it would bisect. `createPDF` supplies a
     /// single tall PDF page, so print CSS cannot paginate it for us. Inspect
     /// only a narrow band around each proposed cut rather than materializing
     /// selections for the entire document.
     private static func pageRanges(
-        in data: Data,
-        sourceBox: CGRect,
-        sliceHeight: CGFloat,
-        scale: CGFloat
+        on page: PDFPage, sourceBox: CGRect, sliceHeight: CGFloat, scale: CGFloat
     ) throws -> [ClosedRange<CGFloat>] {
-        guard let document = PDFDocument(data: data), let page = document.page(at: 0) else {
-            throw FallbackError.invalidSnapshot
-        }
         let safety = 3 / scale
         var top = sourceBox.maxY
         var ranges: [ClosedRange<CGFloat>] = []
