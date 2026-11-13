@@ -57,11 +57,42 @@ public extension EditorTextSystem {
         let start = contentStorage.offset(
             from: contentStorage.documentRange.location, to: first.rangeInElement.location
         )
-        guard let last = layoutManager.textLayoutFragment(for: bottom) else { return nil }
-        let endLocation = last.rangeInElement.endLocation
-        let end = contentStorage.offset(from: contentStorage.documentRange.location, to: endLocation)
         let length = textView.textStorage?.length ?? 0
-        guard start >= 0, end >= start, end <= length else { return nil }
+        guard start >= 0, start <= length else { return nil }
+        let end: Int
+        if let last = layoutManager.textLayoutFragment(for: bottom) {
+            end = contentStorage.offset(
+                from: contentStorage.documentRange.location, to: last.rangeInElement.endLocation
+            )
+        } else {
+            // The lower edge may be in the blank area below the final text
+            // fragment. Walk only a bounded number of nearby fragments and
+            // use EOF only when the actual final fragment ends above that
+            // edge. An unresolved mid-document layout remains unavailable.
+            var finalEnd: Int?
+            var count = 0
+            layoutManager.enumerateTextLayoutFragments(
+                from: first.rangeInElement.location, options: [.ensuresLayout]
+            ) { fragment in
+                count += 1
+                let candidate = contentStorage.offset(
+                    from: contentStorage.documentRange.location, to: fragment.rangeInElement.endLocation
+                )
+                guard count <= 512, candidate >= start,
+                      candidate - start <= 65536,
+                      candidate <= length,
+                      fragment.layoutFragmentFrame.maxY <= bottom.y
+                else { return false }
+                if candidate == length {
+                    finalEnd = candidate
+                    return false
+                }
+                return true
+            }
+            guard let finalEnd else { return nil }
+            end = finalEnd
+        }
+        guard end >= start, end <= length else { return nil }
         return NSRange(location: start, length: end - start)
     }
 
