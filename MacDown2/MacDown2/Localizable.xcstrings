@@ -4538,6 +4538,35 @@
         }
       }
     },
+    "Highlighting is limited to visible text in this large document. Colour may update after editing or scrolling. The text, editing and search are unaffected. Full highlighting returns automatically once the document is at or below %@ UTF-16 units.": {
+      "comment": "Visible-only large Markdown status. Non-English values are English review drafts; native language and layout review remains required.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Highlighting is limited to visible text in this large document. Colour may update after editing or scrolling. The text, editing and search are unaffected. Full highlighting returns automatically once the document is at or below %@ UTF-16 units."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Highlighting is limited to visible text in this large document. Colour may update after editing or scrolling. The text, editing and search are unaffected. Full highlighting returns automatically once the document is at or below %@ UTF-16 units."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Highlighting is limited to visible text in this large document. Colour may update after editing or scrolling. The text, editing and search are unaffected. Full highlighting returns automatically once the document is at or below %@ UTF-16 units."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Highlighting is limited to visible text in this large document. Colour may update after editing or scrolling. The text, editing and search are unaffected. Full highlighting returns automatically once the document is at or below %@ UTF-16 units."
+          }
+        }
+      }
+    },
     "Highlighting reduced": {
       "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
       "localizations": {
@@ -11799,6 +11828,35 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Wersja"
+          }
+        }
+      }
+    },
+    "Visible highlighting only": {
+      "comment": "Visible-only large Markdown status. Non-English values are English review drafts; native language and layout review remains required.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visible highlighting only"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Visible highlighting only"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Visible highlighting only"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Visible highlighting only"
           }
         }
       }

@@ -149,3 +149,36 @@ structural edits. Wire the owner into the highlighter with an honest
 visible-only mode, theme/font and lifetime handling, and a reviewed localized
 status note. Separate-account native acceptance remains a final gate for the
 exact app build.
+
+## Opt-in integration checkpoint
+
+The follow-on integration attaches the parser session and viewport painter to
+`NeonSyntaxHighlighter` only when its new `enableViewport` argument is true.
+The app's `SyntaxHighlightStore` does not enable it, so the shipped large-file
+behavior remains the reduced fallback. This avoids presenting a source-level
+probe as a qualified product feature.
+
+With the opt-in path, one mounted oversized Markdown editor owns one session,
+one painter, the existing storage gate, and no full-document Neon highlighter.
+The `visibleOnly` state and status note describe the limited colour accurately.
+Language switches, close and the full-mode size crossing detach the old owner;
+an asynchronous crossing callback cannot recreate it after teardown. Explicit
+rehighlight invalidates an older parse ticket before starting a new snapshot.
+The painter declines to touch marked composition and removes its last bounded
+paint if mounted viewport geometry becomes unavailable.
+
+The local Release mounted integration tests cover edit, theme, font, explicit
+rehighlight, language switch, close and a deferred threshold crossing. The
+unsigned app and CLI compile with locked package versions; compiled-string
+coverage confirms every extracted key has a catalog route. The two new status
+keys have English copy and review placeholders in French, Japanese and Polish.
+An additional opt-in 1,048,804-byte Release probe uses the actual highlighter
+integration for 12 alternating plain-word edits. Both local runs selected and
+matched all 12 bounded windows, did 12 local parses and one full parse at open.
+The first run's synchronous calls were 12–53 ms and settled colour 14–58 ms;
+the repeat was 8–39 ms and 11–41 ms. The first run crosses the 50 ms target,
+so this narrow probe is not a budget pass, even though its repeat is faster.
+These source and build checks do not satisfy the complete 1 MiB keypress matrix,
+native accessibility and IME acceptance, non-English review, signing or exact
+release-candidate acceptance. The default flag remains off until those gates
+are met and recorded on issue #18.

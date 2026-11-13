@@ -13,6 +13,7 @@ final class MarkdownViewportPainter {
     private var scrollObserver: NSObjectProtocol?
     private var refreshScheduled = false
     private var isActive = true
+    private var lastPaintedRange: NSRange?
 
     init(textSystem: EditorTextSystem, session: MarkdownViewportSession,
          attributes: @escaping TokenAttributeProvider) {
@@ -72,9 +73,36 @@ final class MarkdownViewportPainter {
     }
 
     func paintVisible() {
-        guard let visible = Self.boundedViewport(in: textSystem) else { return }
+        guard isActive, !textSystem.textView.hasMarkedText() else { return }
+        guard let visible = Self.boundedViewport(in: textSystem) else {
+            clearLastPaintedRange()
+            return
+        }
         styler.invalidate(.range(visible))
         styler.validate(.range(visible))
+        lastPaintedRange = visible
+    }
+
+    /// Layout can temporarily lose the mounted viewport. Remove only the
+    /// previously painted bounded range so stale colour cannot survive there.
+    private func clearLastPaintedRange() {
+        guard let range = lastPaintedRange else { return }
+        lastPaintedRange = nil
+        guard let layout = textSystem.textView.textLayoutManager,
+              let content = layout.textContentManager,
+              let storage = textSystem.textView.textStorage,
+              range.location < storage.length
+        else { return }
+        let length = min(range.length, storage.length - range.location)
+        guard length > 0 else { return }
+        let origin = content.documentRange.location
+        guard let start = content.location(origin, offsetBy: range.location),
+              let end = content.location(start, offsetBy: length),
+              let textRange = NSTextRange(location: start, end: end)
+        else { return }
+        for key in NeonSyntaxHighlighter.highlighterAttributeKeys {
+            layout.removeRenderingAttribute(key, for: textRange)
+        }
     }
 
     private func attachScrollObserverIfNeeded() {

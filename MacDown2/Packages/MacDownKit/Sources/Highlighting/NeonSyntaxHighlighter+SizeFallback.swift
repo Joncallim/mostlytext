@@ -34,9 +34,11 @@ extension NeonSyntaxHighlighter {
     /// any attached highlighter, then builds one only if the language has a
     /// grammar and the document is within the language's size policy.
     func configure(languageID: String?) {
+        guard !isTornDown else { return }
         restoreTask?.cancel()
         restoreTask = nil
-        if discardHighlighter() {
+        let hadViewport = stopViewport()
+        if discardHighlighter() || hadViewport {
             clearHighlighterPresentation()
         }
         guard let config = registry.configuration(for: languageID) else {
@@ -44,7 +46,8 @@ extension NeonSyntaxHighlighter {
             return
         }
         if let policy = policyProvider(languageID), documentLength > policy.reduceAboveUTF16Units {
-            setMode(.reduced(.documentTooLarge(limitUTF16Units: policy.reduceAboveUTF16Units)))
+            let reason = HighlightingState.Reason.documentTooLarge(limitUTF16Units: policy.reduceAboveUTF16Units)
+            setMode(startViewport() ? .visibleOnly(reason) : .reduced(reason))
             return
         }
         setMode(buildHighlighter(config: config) ? .full : .plain)
@@ -85,8 +88,12 @@ extension NeonSyntaxHighlighter {
         DispatchQueue.main.async { [weak self] in
             // Skipped if a highlighter was rebuilt meanwhile (it owns the
             // presentation again).
-            guard let self, generation == clearGeneration else { return }
+            guard let self, !isTornDown, generation == clearGeneration else { return }
             clearHighlighterPresentation()
+            if let policy = policyProvider(languageID), documentLength > policy.reduceAboveUTF16Units,
+               startViewport() {
+                setMode(.visibleOnly(.documentTooLarge(limitUTF16Units: policy.reduceAboveUTF16Units)))
+            }
         }
         return false
     }

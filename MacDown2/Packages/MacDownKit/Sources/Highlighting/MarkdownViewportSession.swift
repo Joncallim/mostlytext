@@ -43,10 +43,13 @@ final class MarkdownViewportSession {
     }
 
     func begin() {
-        guard isActive, let ticket = authority.ticket() else { return }
+        guard isActive else { return }
+        authority.invalidatePresentation()
+        guard let ticket = authority.ticket() else { return }
         parseTask?.cancel()
         cache = nil
         cacheMatchesStorage = false
+        onPublication?()
         startFullParse(ticket: ticket)
     }
 

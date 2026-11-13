@@ -5590,6 +5590,44 @@
       "target": "MacDown2",
       "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
       "bundle": "Bundle.main (project target resource)",
+      "key": "Highlighting is limited to visible text in this large document. Colour may update after editing or scrolling. The text, editing and search are unaffected. Full highlighting returns automatically once the document is at or below %@ UTF-16 units.",
+      "source_default_value": "Highlighting is limited to visible text in this large document. Colour may update after editing or scrolling. The text, editing and search are unaffected. Full highlighting returns automatically once the document is at or below %@ UTF-16 units.",
+      "translator_comment": "Visible-only large Markdown status. Non-English values are English review drafts; native language and layout review remains required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [
+          {
+            "position": 1,
+            "type": "@"
+          }
+        ],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [],
+      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
       "key": "Highlighting reduced",
       "source_default_value": "Highlighting reduced",
       "translator_comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
@@ -5616,7 +5654,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/ReducedHighlightingNoteView.swift:35"
+        "MacDown2/MacDown2/ReducedHighlightingNoteView.swift:47"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -6456,7 +6494,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:318"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:311"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -12793,7 +12831,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:206"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:205"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -12828,7 +12866,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:313"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:306"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -12863,7 +12901,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:205"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:204"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13069,7 +13107,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:202"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:201"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13554,7 +13592,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:317"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:310"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13589,7 +13627,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:314"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:307"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13624,7 +13662,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:312"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:305"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13732,7 +13770,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:311"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:304"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -13767,7 +13805,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:212"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:211"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -14666,7 +14704,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:327"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:320"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -14701,7 +14739,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFExportAdapter.swift:325"
+        "MacDown2/MacDown2/PDFExportAdapter.swift:318"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -15193,6 +15231,41 @@
       "target": "MacDown2",
       "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
       "bundle": "Bundle.main (project target resource)",
+      "key": "Visible highlighting only",
+      "source_default_value": "Visible highlighting only",
+      "translator_comment": "Visible-only large Markdown status. Non-English values are English review drafts; native language and layout review remains required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/MacDown2/ReducedHighlightingNoteView.swift:46"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
       "key": "W",
       "source_default_value": "W",
       "translator_comment": "First-party command, undo-action or structural label. New non-English values are explicit English review drafts, not accepted translations.",
@@ -15254,7 +15327,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:200"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:199"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -15289,7 +15362,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:201"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:200"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -15324,7 +15397,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/PDFSnapshotFallback.swift:207"
+        "MacDown2/MacDown2/PDFSnapshotFallback.swift:206"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
