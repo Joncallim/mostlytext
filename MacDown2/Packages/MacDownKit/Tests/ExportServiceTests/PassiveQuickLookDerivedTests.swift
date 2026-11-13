@@ -50,7 +50,11 @@ struct PassiveQuickLookDerivedTests {
             contributions: [
                 .init(sourceRange: range(of: "$x^2$", in: source), placement: .inline,
                       html: "<a href=\"https://example.invalid/go\">math</a>"
-                          + "<img src=\"https://example.invalid/pixel\" />"
+                          + "<img src=\"https://example.invalid/pixel\" "
+                          + "srcset=\"https://example.invalid/large 2x\" />"
+                          + "<video poster=\"https://example.invalid/poster\"></video>"
+                          + "<table background=\"https://example.invalid/pattern\"></table>"
+                          + "<p data=\"https://example.invalid/object\"></p>"
                           + "<script>alert(1)</script>",
                       sourceGeneration: 1),
             ],
@@ -58,6 +62,10 @@ struct PassiveQuickLookDerivedTests {
         )
         #expect(html.contains("math"))
         #expect(!html.contains("example.invalid"))
+        #expect(!html.contains("srcset="))
+        #expect(!html.contains("poster="))
+        #expect(!html.contains("background="))
+        #expect(!html.contains(" data="))
         #expect(!html.contains("<script"))
     }
 

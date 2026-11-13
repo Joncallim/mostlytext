@@ -36,7 +36,8 @@ The local candidate adds a passive `ExportService` entry point for immutable
 `ExportDerivedContribution` values. It reuses the export source-range,
 generation, overlap, sanitizer and cmark custom-node rules. Quick Look's
 stricter URL mode permits only internal fragments and validated embedded
-raster images in generated markup; authored Markdown URLs remain blank.
+raster images in generated markup; alternate resource attributes (`srcset`,
+`poster`, `background` and `data`) are dropped. Authored Markdown URLs remain blank.
 Per-item and aggregate generated-byte admission occurs before the sanitizer
 copies a fragment, and a refused item leaves its own source visible. These
 1 MiB/4 MiB caps are provisional pending Release renderer measurements.
