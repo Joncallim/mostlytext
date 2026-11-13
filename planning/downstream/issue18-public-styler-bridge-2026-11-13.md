@@ -113,6 +113,68 @@ production cache must compare them and refuse a stale candidate when an
 assist vetoes an edit, nested editing changes its geometry, or a programmatic
 path skips the pre-edit hook. No cache or large-file painting path is active.
 
+The next isolated pairing slice adds `MarkdownEditPairing`, whose selector runs
+synchronously against the live old `NSString` and must return a bounded,
+owned candidate. The pairer retains only that candidate, old geometry,
+replacement and old UTF-16 length. After TextKit edits, it admits the candidate
+only if the actual range, delta, new length and replacement substring agree.
+It refuses replacement strings above 65,536 UTF-16 units before selecting a
+candidate, leaving large paste/reload work to the deferred path.
+Multiple pre-edit proposals before one post-edit notification are ambiguous
+and are rejected. Any rejection clears the candidate; the caller must defer a
+full parse or stay plain. The real `EditorView` pre-edit observer and storage
+delegate are exercised together, alongside independent veto/nesting/undo-like
+unobserved negatives. Four focused local Debug tests pass after the complete
+package-test bundle compiles. This does not connect the section cache or paint
+tokens; it only establishes a fail-closed admission boundary for that work.
+An unsupported first proposal still occupies its edit cycle: a later nested
+proposal cannot become a candidate merely because the first selector returned
+nil. The negative control and mounted controls pass together in the four-test
+selection; strict SwiftFormat and SwiftLint pass.
+The eventual parser result still needs an independent editor-revision guard
+before painting; geometric pairing alone does not give async result authority.
+
+The cache and pairing source slice is based on current `main`
+`03d35bf598d978d591cce453e3dc480b1a3fe059`. The later Quick Look merges
+do not change the EditorCore pre-edit observer, the Highlighting storage gate,
+or the 8,192-unit fallback described above. This slice adds internal source
+components and tests against those exact live interfaces.
+
+The section cache has now been moved from test support into the Highlighting
+source target without attaching it to the editor. Its selection refuses an
+invalid viewport; replacement refuses mismatched window geometry, content
+length or delta before changing cached trees. It stores immutable, Sendable
+tree snapshots rather than moving a live parser between executors, leaving a
+safe handoff for a later background initial parse. The 1 MiB, 14-edit full-parse
+capture oracle and mounted public-styler controls pass together with the
+pairing tests: six selected tests in two suites on 13 November 2026. This
+validates reusable cache state, not the product's large-file path or its
+whole-edit latency. The next adapter must still own revision-safe parsing and
+painting before the 8,192-unit fallback can change.
+
+The production cache now resolves combined root/injected tokens for a bounded
+visible range, retaining the same names and clipped UTF-16 coordinates as the
+independent capture oracle. The mounted test feeds these production tokens to
+the public styler and compares the resulting rendering attributes after four
+edits and viewport moves. The source-length guard rejects a stale cache or
+out-of-bounds range before querying. A focused rerun passed all six tests in
+two suites after this addition; it still does not exercise an automatic app
+adapter or establish a full keystroke budget.
+
+The initial full Markdown parse now has a production helper that can run on a
+detached executor and return only a `Sendable` tree snapshot. Both 1 MiB cache
+controls use that handoff, while their local-window edits and mounted painting
+continue on the main actor. The same six-test selection passes after this
+change. An editor owner still has to schedule/cancel the initial task and
+reject a result if the document revision or lifetime changed meanwhile.
+
+The final locked optimized package selection passed all six tests in two
+suites. Its 14 bounded candidate steps on the 1 MiB corpus took roughly
+0.26–0.78 ms each, while the mounted public-styler case passed in 8.906 s.
+These timings include the local cache selection/parse/capture in the probe,
+not a real editor keypress or settled highlight, so the 50 ms/8 ms whole-path
+criteria remain unproved.
+
 ## Next qualification
 
 Extend the mounted capture probe across repeated edits and viewport moves.

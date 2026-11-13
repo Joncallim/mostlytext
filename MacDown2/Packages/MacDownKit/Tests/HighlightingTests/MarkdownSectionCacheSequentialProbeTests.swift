@@ -24,15 +24,17 @@ struct MarkdownSectionCacheSequentialProbeTests {
     private static let documentBytes = 1_048_576
 
     @Test(.timeLimit(.minutes(3)))
-    func consecutiveEditsAndViewportMoveKeepExactVisibleCaptures() throws {
+    func consecutiveEditsAndViewportMoveKeepExactVisibleCaptures() async throws {
         let registry = GrammarRegistry()
         let root = try #require(registry.configuration(for: "markdown"))
         let inline = try #require(registry.configuration(for: "markdown_inline"))
         let languages = ProbeLanguages(root: root, inline: inline, registry: registry)
         let original = Self.fixture()
         #expect(original.utf8.count == Self.documentBytes)
-        let initial = try layer(original, root: root, registry: registry)
-        var cache = try SectionCache(source: original, layer: initial)
+        let initialSnapshot = try await Task.detached {
+            try MarkdownSectionParser.snapshot(source: original, registry: registry)
+        }.value
+        var cache = try SectionCache(source: original, snapshot: initialSnapshot)
         var source = original
         var steps: [Step] = []
 
@@ -41,6 +43,11 @@ struct MarkdownSectionCacheSequentialProbeTests {
         #expect(cache.select(source: original as NSString, edit: initialHeading,
                              replacement: "Other", visible: initialHeading) == nil,
                 "heading edit was admitted")
+        let ordinaryWord = (original as NSString).range(of: "alphatarget")
+        #expect(cache.select(source: original as NSString, edit: ordinaryWord,
+                             replacement: "betawordlonger",
+                             visible: NSRange(location: NSNotFound, length: 1)) == nil,
+                "invalid viewport was admitted")
 
         let edits = [
             EditSpec(name: "first", needle: "alphatarget", replacement: "betawordlonger"),
@@ -118,12 +125,19 @@ struct MarkdownSectionCacheSequentialProbeTests {
         source = old.replacingCharacters(in: edit, with: editSpec.replacement)
         let newContent = (source as NSString).substring(with: window.new)
         let localLayer = try layer(newContent, root: languages.root, registry: languages.registry)
-        try cache.replace(window, with: localLayer, content: newContent,
-                          delta: (editSpec.replacement as NSString).length - edit.length)
+        let delta = (editSpec.replacement as NSString).length - edit.length
+        let localSnapshot = try #require(localLayer.snapshot())
+        #expect(throws: MarkdownSectionCache.CacheError.self) {
+            try cache.replace(window, with: localSnapshot,
+                              content: String(newContent.dropLast()), delta: delta)
+        }
+        try cache.replace(window, with: localSnapshot, content: newContent, delta: delta)
         let visible = NSRange(location: visibleStart,
                               length: min((source as NSString).length - visibleStart,
                                           (editSpec.replacement as NSString).length + 192))
         let candidate = try captures(cache.visibleSections(visible), visible: visible, inline: languages.inline)
+        #expect(try produced(cache, visible: visible) == candidate.combined,
+                "\(editSpec.name) production tokens differ from combined captures")
         let duration = ContinuousClock().now - start
         #expect(!candidate.isEmpty, "\(editSpec.name) yielded no visible captures")
         #expect(window.new.length <= SectionProbeLimits.windowLimit)
@@ -138,7 +152,7 @@ struct MarkdownSectionCacheSequentialProbeTests {
         let whole = try layer(step.source, root: languages.root, registry: languages.registry)
         let snapshot = try #require(whole.snapshot())
         let rootNode = try #require(snapshot.rootSnapshot.tree.rootNode)
-        let wholeSection = Section(node: rootNode, layer: whole, content: step.source,
+        let wholeSection = Section(node: rootNode, snapshot: snapshot, content: step.source,
                                    offset: 0)
         let oracle = try captures([wholeSection], visible: step.visible, inline: languages.inline)
         #expect(step.candidate.root == oracle.root, "\(step.name) root captures differ")
@@ -158,7 +172,7 @@ struct MarkdownSectionCacheSequentialProbeTests {
             let clip = NSIntersectionRange(visible, section.globalRange)
             guard clip.length > 0 else { continue }
             let local = NSRange(location: clip.location - section.offset, length: clip.length)
-            let snapshot = try #require(section.layer.snapshot())
+            let snapshot = section.snapshot
             let provider = section.content.predicateTextProvider
             try root += Self.capture(snapshot.rootSnapshot.highlights(in: local, provider: provider),
                                      offset: section.offset, clip: clip)
@@ -182,6 +196,12 @@ struct MarkdownSectionCacheSequentialProbeTests {
             guard clipped.length > 0 else { return nil }
             return Capture(name: range.name, location: clipped.location, length: clipped.length)
         }
+    }
+
+    private func produced(_ cache: SectionCache, visible: NSRange) throws -> [Capture] {
+        try cache.tokens(in: visible).map {
+            Capture(name: $0.name, location: $0.range.location, length: $0.range.length)
+        }.sorted()
     }
 
     private func layer(_ text: String, root: LanguageConfiguration,
@@ -210,13 +230,15 @@ extension MarkdownSectionCacheSequentialProbeTests {
     /// The mounted 1 MiB source, parser cache, TextKit 2 adapter and oracle form one lifecycle.
     @Test(.timeLimit(.minutes(3)))
     // swiftlint:disable:next function_body_length
-    func realSectionCapturesPaintThroughPublicStylerAcrossEditsAndViewportMoves() throws {
+    func realSectionCapturesPaintThroughPublicStylerAcrossEditsAndViewportMoves() async throws {
         let registry = GrammarRegistry()
         let root = try #require(registry.configuration(for: "markdown"))
         let inline = try #require(registry.configuration(for: "markdown_inline"))
         let original = Self.fixture()
-        let parsed = try layer(original, root: root, registry: registry)
-        var cache = try SectionCache(source: original, layer: parsed)
+        let initialSnapshot = try await Task.detached {
+            try MarkdownSectionParser.snapshot(source: original, registry: registry)
+        }.value
+        var cache = try SectionCache(source: original, snapshot: initialSnapshot)
         let store = EditorTextSystemStore()
         let identity = UUID().uuidString
         let system = store.system(for: identity, initialText: original, configuration: .default)
@@ -235,7 +257,9 @@ extension MarkdownSectionCacheSequentialProbeTests {
         let firstEdit = (original as NSString).range(of: "alphatarget")
         try #require(firstEdit.location != NSNotFound)
         let visible = NSRange(location: firstEdit.location - 32, length: 180)
-        var candidate = try captures(cache.visibleSections(visible), visible: visible, inline: inline).combined
+        var candidate = try produced(cache, visible: visible)
+        let initialCaptures = try captures(cache.visibleSections(visible), visible: visible, inline: inline)
+        #expect(candidate == initialCaptures.combined)
         try #require(!candidate.isEmpty)
         let publication = CapturePublication(candidate)
         let interface = TextViewSystemInterface(textView: system.textView) { _ in
@@ -272,10 +296,12 @@ extension MarkdownSectionCacheSequentialProbeTests {
             let newContent = (source as NSString).substring(with: selected.new)
             let local = try layer(newContent, root: root, registry: registry)
             let delta = (spec.replacement as NSString).length - edit.length
-            try cache.replace(selected, with: local, content: newContent, delta: delta)
+            try cache.replace(selected, with: #require(local.snapshot()), content: newContent, delta: delta)
             let shiftedVisible = NSRange(location: visible.location, length: visible.length + delta)
-            candidate = try captures(cache.visibleSections(shiftedVisible), visible: shiftedVisible,
-                                     inline: inline).combined
+            candidate = try produced(cache, visible: shiftedVisible)
+            let independent = try captures(cache.visibleSections(shiftedVisible), visible: shiftedVisible,
+                                           inline: inline)
+            #expect(candidate == independent.combined)
             try #require(!candidate.isEmpty)
             publication.replace(with: candidate)
             styler.didChangeContent(in: edit, delta: delta)
@@ -286,7 +312,7 @@ extension MarkdownSectionCacheSequentialProbeTests {
             let whole = try layer(source, root: root, registry: registry)
             let snapshot = try #require(whole.snapshot())
             let node = try #require(snapshot.rootSnapshot.tree.rootNode)
-            let oracle = try captures([Section(node: node, layer: whole, content: source, offset: 0)],
+            let oracle = try captures([Section(node: node, snapshot: snapshot, content: source, offset: 0)],
                                       visible: shiftedVisible, inline: inline).combined
             #expect(candidate == oracle, "\(spec.name) painted stale captures")
         }
