@@ -22,6 +22,10 @@ Release app demonstrates the complete typing and painting budget.
 - `MarkdownEditPairing` admits only a proposal whose post-edit geometry and
   replacement bytes match. Programmatic replacement, undo, nested edits and
   composition without an exact proposal must refuse the local cache update.
+- The section cache admits a zero-length insertion only strictly inside an
+  existing alphanumeric word; word edges, surrogate boundaries and structural
+  characters take the deferred full-parse path. A 1 MiB source/oracle test
+  covers the ordinary in-word insertion that the first cache revision refused.
 - `EditorTextSystem.visibleUTF16Range` can return nil when mounted layout
   cannot establish both viewport edges. The cache separately caps a token
   query at 65,536 UTF-16 units.
