@@ -155,6 +155,13 @@ out-of-bounds range before querying. A focused rerun passed all six tests in
 two suites after this addition; it still does not exercise an automatic app
 adapter or establish a full keystroke budget.
 
+The initial full Markdown parse now has a production helper that can run on a
+detached executor and return only a `Sendable` tree snapshot. Both 1 MiB cache
+controls use that handoff, while their local-window edits and mounted painting
+continue on the main actor. The same six-test selection passes after this
+change. An editor owner still has to schedule/cancel the initial task and
+reject a result if the document revision or lifetime changed meanwhile.
+
 ## Next qualification
 
 Extend the mounted capture probe across repeated edits and viewport moves.

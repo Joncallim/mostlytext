@@ -24,15 +24,17 @@ struct MarkdownSectionCacheSequentialProbeTests {
     private static let documentBytes = 1_048_576
 
     @Test(.timeLimit(.minutes(3)))
-    func consecutiveEditsAndViewportMoveKeepExactVisibleCaptures() throws {
+    func consecutiveEditsAndViewportMoveKeepExactVisibleCaptures() async throws {
         let registry = GrammarRegistry()
         let root = try #require(registry.configuration(for: "markdown"))
         let inline = try #require(registry.configuration(for: "markdown_inline"))
         let languages = ProbeLanguages(root: root, inline: inline, registry: registry)
         let original = Self.fixture()
         #expect(original.utf8.count == Self.documentBytes)
-        let initial = try layer(original, root: root, registry: registry)
-        var cache = try SectionCache(source: original, snapshot: #require(initial.snapshot()))
+        let initialSnapshot = try await Task.detached {
+            try MarkdownSectionParser.snapshot(source: original, registry: registry)
+        }.value
+        var cache = try SectionCache(source: original, snapshot: initialSnapshot)
         var source = original
         var steps: [Step] = []
 
@@ -228,13 +230,15 @@ extension MarkdownSectionCacheSequentialProbeTests {
     /// The mounted 1 MiB source, parser cache, TextKit 2 adapter and oracle form one lifecycle.
     @Test(.timeLimit(.minutes(3)))
     // swiftlint:disable:next function_body_length
-    func realSectionCapturesPaintThroughPublicStylerAcrossEditsAndViewportMoves() throws {
+    func realSectionCapturesPaintThroughPublicStylerAcrossEditsAndViewportMoves() async throws {
         let registry = GrammarRegistry()
         let root = try #require(registry.configuration(for: "markdown"))
         let inline = try #require(registry.configuration(for: "markdown_inline"))
         let original = Self.fixture()
-        let parsed = try layer(original, root: root, registry: registry)
-        var cache = try SectionCache(source: original, snapshot: #require(parsed.snapshot()))
+        let initialSnapshot = try await Task.detached {
+            try MarkdownSectionParser.snapshot(source: original, registry: registry)
+        }.value
+        var cache = try SectionCache(source: original, snapshot: initialSnapshot)
         let store = EditorTextSystemStore()
         let identity = UUID().uuidString
         let system = store.system(for: identity, initialText: original, configuration: .default)
