@@ -82,13 +82,16 @@ does not establish a document producer/caller, varied equations, theme
 contrast, renderer cancellation or a final Release budget. The issue #7
 checkpoint records the exact scope.
 
-The next hosted probe invokes the repository's `SharedMathContribution` on a
-fixed Markdown source, then admits its generated PNG through the same passive
-`ExportService` composer. This tests the worker's async main-run-loop path and
-the shared validated-body pipeline; it remains compile-flagged and does not
-consume a selected file. Local locked Release compilation, source lint and the
-67-sink audit pass. Hosted execution is pending and must supply the actual
-result before this path is considered feasible.
+At `6849c83e`, hosted run 43363675213 invoked the repository's
+`SharedMathContribution` on fixed Markdown, then admitted its generated PNG
+through the passive `ExportService` composer. The async main-run-loop path
+exited 0 with 2,560 HTML bytes in 0.242 s wall time (0.217 s worker-reported;
+25,624,576-byte harness peak child RSS). The direct image probe and subsequent
+cold Finder source control also passed, the latter 1/1 with no timeout or
+cancel. This establishes fixed-source feasibility in the sandboxed worker;
+the compile-flagged probe does not consume a selected file or publish
+document-derived math to Finder. Local locked Release compilation, source
+lint and the 67-sink audit also pass.
 
 ## Production boundary after the probe
 
@@ -107,11 +110,15 @@ the reply; no generated item can authorize a sibling read.
 
 Run contributors independently within one overall worker deadline and their
 own measured limits. A malformed, over-budget or timed-out item contributes
-no HTML; its source remains in the GFM body. A process-wide timeout is still
-allowed to return no reply, never partial bytes. Do not increase the existing
-three/four-second deadlines on a guessed performance claim. If complete
-technical rendering cannot fit, record the measured counterexample and
-revise the architecture before implementation. Renderer completion, XPC
+no HTML; its source remains in the GFM body. The current process-wide timeout
+returns no reply, so production technical rendering also needs an immutable
+source-only reply completed before any renderer starts. Keep fallback and
+derived bytes in separate bounded output slots; if a child times out, the
+parent may publish only the complete fallback, never partial derived bytes.
+Do not increase the existing three/four-second deadlines on a guessed
+performance claim. If complete technical rendering cannot fit, record the
+measured counterexample and revise the architecture before implementation.
+Renderer completion, XPC
 reply and child exit each settle once; late callbacks after cancellation or
 teardown cannot publish another generation.
 
