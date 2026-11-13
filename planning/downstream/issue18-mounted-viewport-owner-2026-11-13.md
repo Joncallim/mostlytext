@@ -256,3 +256,14 @@ matched all 12 word edits, used 12 local parses and one full parse at open, and
 restored exact source. Its worst edit call took 64 ms and colour settled in
 67 ms. The queue bounds physical overlap; this probe does not pass the 50 ms
 keypress budget or establish whole-workload performance.
+
+An opt-in paired Release probe now runs the same mounted 1,048,804-byte word
+edits through the shipped reduced fallback and the proposed viewport owner in
+separate text systems. In three local runs the reduced fallback's worst edit
+calls were 61, 62 and 37 ms; viewport's were 37, 37 and 54 ms. The viewport
+path selected/matched 12 of 12 bounded windows in each run and restored exact
+source. The first probe run exposed an assertion-macro test error after both
+measurements; the assertion was corrected and the subsequent runs passed.
+These small, ordered runs cannot establish comparative p95, causality, whole-app
+responsiveness or the 50 ms release budget. They do show that a greater-than-50
+ms edit call is possible even without viewport parsing on this fixture.

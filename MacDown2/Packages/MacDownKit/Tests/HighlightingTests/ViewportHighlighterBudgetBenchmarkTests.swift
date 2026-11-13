@@ -6,14 +6,14 @@ import SwiftUI
 import Testing
 import Themes
 
-/// Opt-in Release measurement of the actual highlighter integration path.
+/// Opt-in Release comparison of the mounted viewport path and shipped fallback.
 /// The app still leaves this owner disabled until the whole workload qualifies.
 @MainActor
 @Suite(.serialized, .enabled(if: ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_BUDGET_BENCH"] == "1"))
 struct ViewportHighlighterBudgetBenchmarkTests {
-    @Test(.timeLimit(.minutes(5)))
+    @Test(.timeLimit(.minutes(5)), arguments: [false, true])
     // swiftlint:disable:next function_body_length
-    func oneMiBHighlighterWordEdits() async throws {
+    func oneMiBHighlighterWordEdits(enableViewport: Bool) async throws {
         let original = "# Heading\n\nalphatarget beta\n\n"
             + HighlightBudgetFixture.ordinary.markdown(utf8Bytes: 1024 * 1024)
         let model = ViewportHighlighterBudgetSourceBox(original)
@@ -43,15 +43,21 @@ struct ViewportHighlighterBudgetBenchmarkTests {
         let openStart = DispatchTime.now().uptimeNanoseconds
         let highlighter = NeonSyntaxHighlighter(
             textSystem: system, languageID: "markdown", theme: BundledThemes.light,
-            registry: GrammarRegistry(), enableViewport: true
+            registry: GrammarRegistry(), enableViewport: enableViewport
         )
         defer { highlighter.tearDown() }
-        #expect(highlighter.state.isVisibleOnly)
-        let session = try #require(highlighter.viewportSession)
-        await session.waitForPendingParse()
+        #expect(highlighter.state.isReduced)
+        #expect(highlighter.state.isVisibleOnly == enableViewport)
+        let session = highlighter.viewportSession
+        if enableViewport {
+            #expect(session != nil)
+        }
+        await session?.waitForPendingParse()
         highlighter.viewportPainter?.paintVisible()
         let openMilliseconds = Double(DispatchTime.now().uptimeNanoseconds - openStart) / 1e6
-        #expect(!session.visibleTokens().isEmpty)
+        if enableViewport, let session {
+            #expect(session.visibleTokens().isEmpty == false)
+        }
 
         var calls: [Double] = []
         var settlements: [Double] = []
@@ -60,19 +66,22 @@ struct ViewportHighlighterBudgetBenchmarkTests {
             let start = DispatchTime.now().uptimeNanoseconds
             system.textView.insertText(index.isMultiple(of: 2) ? "X" : "", replacementRange: edit)
             let afterCall = DispatchTime.now().uptimeNanoseconds
-            await session.waitForPendingParse()
+            await session?.waitForPendingParse()
             highlighter.viewportPainter?.paintVisible()
             let settled = DispatchTime.now().uptimeNanoseconds
             calls.append(Double(afterCall - start) / 1e6)
             settlements.append(Double(settled - start) / 1e6)
         }
         #expect(model.text == original)
-        #expect(session.localParseCount == 12)
-        #expect(session.fullParseCount == 1)
-        print("VIEWPORT-HIGHLIGHTER-BUDGET utf8=\(original.utf8.count) open=\(openMilliseconds) ms "
+        if enableViewport {
+            #expect(session?.localParseCount == 12)
+            #expect(session?.fullParseCount == 1)
+        }
+        print("HIGHLIGHTER-MODE-BUDGET mode=\(enableViewport ? "viewport" : "reduced") "
+            + "utf8=\(original.utf8.count) open=\(openMilliseconds) ms "
             + "calls=\(calls.map { Int($0) }) ms settled=\(settlements.map { Int($0) }) ms "
-            + "selected=\(session.selectedWindowCount) matched=\(session.matchedWindowCount) "
-            + "local=\(session.localParseCount) full=\(session.fullParseCount)")
+            + "selected=\(session?.selectedWindowCount ?? 0) matched=\(session?.matchedWindowCount ?? 0) "
+            + "local=\(session?.localParseCount ?? 0) full=\(session?.fullParseCount ?? 0)")
     }
 }
 
