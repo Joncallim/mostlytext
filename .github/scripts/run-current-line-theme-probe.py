@@ -77,8 +77,11 @@ def diagnose_performance_failure(root, output, binary, helper, environment):
                          "stdout": result.stdout, "stderr": result.stderr})
     (destination / "environment.json").write_text(json.dumps(metadata, indent=2) + "\n")
     results = []
-    for label, selection in [("parse-only", "mainThreadParseBudgetDocumented"),
-                             ("performance-suite", "HighlightPerformanceTests")]:
+    selections = [(f"hundred-caret-{index}", "EditorHundredCaretPerformanceTests")
+                  for index in range(1, 4)]
+    selections += [("parse-only", "mainThreadParseBudgetDocumented"),
+                   ("performance-suite", "HighlightPerformanceTests")]
+    for label, selection in selections:
         diagnostics = destination / (label + "-diagnostics")
         with (destination / (label + ".log")).open("w") as log:
             result = subprocess.run([
@@ -161,7 +164,9 @@ def qualify(root, output, configuration, baseline):
         # minimum and the named controls below without pinning a stale total.
         if (result.returncode != 0 or completed is None
                 or int(completed.group(1)) < 1106 or int(completed.group(2)) < 151):
-            if configuration == "release" and "Suite HighlightPerformanceTests failed" in log:
+            if configuration == "release" and (
+                    "Suite HighlightPerformanceTests failed" in log
+                    or 'Suite "Editor 100-caret Release budget" failed' in log):
                 diagnose_performance_failure(root, output, binary, owned, environment)
             raise SystemExit("All selected real editor/highlighter/theme tests must execute and pass")
         for name in ["preEditPlainParagraphWindowRefusesStructuralEdits",
