@@ -17,6 +17,7 @@ struct EditorScrollAPITests {
     func headlessTopOffsetIsZero() {
         let system = makeSystem(text: "hello world")
         #expect(system.topVisibleUTF16Offset == 0)
+        #expect(system.visibleUTF16Range == nil)
     }
 
     @Test("topVisibleUTF16Offset stays within text bounds")
@@ -124,6 +125,14 @@ struct EditorScrollAPITests {
             reportedLine <= targetLine,
             "Expected the top line at or before the requested line \(targetLine), got \(reportedLine)"
         )
+        guard let visible = system.visibleUTF16Range else {
+            Issue.record("Mounted editor did not resolve its visible UTF-16 range")
+            return
+        }
+        #expect(visible.location > lineUTF16Length * (lineCount / 4))
+        #expect(visible.location == reportedOffset)
+        #expect(NSMaxRange(visible) > reportedOffset)
+        #expect(visible.length > 0 && visible.length < text.utf16.count)
     }
 
     private struct StaleRangeCase: Sendable {
