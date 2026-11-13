@@ -122,6 +122,36 @@ jobs:
             -maximum-test-execution-time-allowance 120 \
             -only-testing:MacDown2UITests/MathExponentVisualUITests test-without-building \
             2>&1 | tee "$RUNNER_TEMP/shared-app-probe/math-ui.log"
+      - name: Verify the original exponent UI case actually executed
+        if: matrix.configuration == 'Release'
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+
+          bundle = Path(os.environ['RUNNER_TEMP']) / 'shared-app-probe/MathExponentVisual.xcresult'
+          def read(kind):
+              return json.loads(subprocess.check_output([
+                  'xcrun', 'xcresulttool', 'get', 'test-results', kind,
+                  '--path', str(bundle), '--format', 'json'
+              ]))
+          summary = read('summary')
+          assert (summary['totalTestCount'], summary['passedTests'], summary['failedTests'],
+                  summary['skippedTests'], summary['expectedFailures']) == (1, 1, 0, 0, 0), summary
+          cases = []
+          def visit(node):
+              if node.get('nodeType') == 'Test Case':
+                  cases.append((node['nodeIdentifier'], node['result']))
+              for child in node.get('children', []):
+                  visit(child)
+          for node in read('tests')['testNodes']:
+              visit(node)
+          assert cases == [('MathExponentVisualUITests/testFullAppExponentImagesAreInspectable()',
+                            'Passed')], cases
+          print('Verified one actual passing full-app exponent UI case:', cases[0][0])
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
