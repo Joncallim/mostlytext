@@ -42,10 +42,45 @@ struct QuickLookSourceProcessTests {
         let waitError = errno
         #expect(waited == -1 && waitError == ECHILD, "The timed-out child was not reaped")
     }
+
+    @Test(.timeLimit(.minutes(1)))
+    func timedOutDerivedWorkReturnsOnlyCompletedSourceFallback() throws {
+        let fixture = try QuickLookSourceProcessFixture(mode: .fallbackThenPartialDerived)
+        defer { fixture.remove() }
+        let started = ProcessInfo.processInfo.systemUptime
+        let result = SourceProcess.run(selectedDescriptor: fixture.selected.fileDescriptor,
+                                       executable: fixture.executable)
+        let elapsed = ProcessInfo.processInfo.systemUptime - started
+        #expect(result.status == .complete)
+        #expect(try String(data: #require(result.data), encoding: .utf8)
+            == "<html><body># selected</body></html>")
+        #expect(elapsed >= 2.9 && elapsed < 5.0)
+        let pid = try #require(Int32(String(contentsOf: fixture.pidFile, encoding: .utf8)))
+        let reapDeadline = ProcessInfo.processInfo.systemUptime + 1.0
+        while ProcessInfo.processInfo.systemUptime < reapDeadline {
+            if kill(pid, 0) == -1, errno == ESRCH {
+                break
+            }
+            Thread.sleep(forTimeInterval: 0.01)
+        }
+        var status: Int32 = 0
+        let waited = Darwin.waitpid(pid, &status, WNOHANG)
+        #expect(waited == -1 && errno == ECHILD, "The fallback child was not reaped")
+    }
+
+    @Test func completedDerivedReplyIsPreferredOnlyAfterItsMarker() throws {
+        let fixture = try QuickLookSourceProcessFixture(mode: .completedDerived)
+        defer { fixture.remove() }
+        let result = SourceProcess.run(selectedDescriptor: fixture.selected.fileDescriptor,
+                                       executable: fixture.executable)
+        #expect(result.status == .complete)
+        #expect(try String(data: #require(result.data), encoding: .utf8)
+            == "<html><body>derived</body></html>")
+    }
 }
 
 private struct QuickLookSourceProcessFixture {
-    enum Mode { case echo, sleep }
+    enum Mode { case echo, sleep, fallbackThenPartialDerived, completedDerived }
 
     let directory: URL
     let executable: URL
@@ -61,8 +96,16 @@ private struct QuickLookSourceProcessFixture {
         let script = switch mode {
         case .echo:
             "#!/bin/sh\nIFS= read -r line <&3\nprintf '<html><body>%s</body></html>' \"$line\" >&4\n"
+                + "printf F >&6\n"
         case .sleep:
             "#!/bin/sh\nprintf '%s' \"$$\" > '\(pidFile.path)'\nexec /bin/sleep 60\n"
+        case .fallbackThenPartialDerived:
+            "#!/bin/sh\nIFS= read -r line <&3\nprintf '<html><body>%s</body></html>' \"$line\" >&4\n"
+                + "printf F >&6\nprintf '<html>partial derived' >&5\n"
+                + "printf '%s' \"$$\" > '\(pidFile.path)'\nexec /bin/sleep 60\n"
+        case .completedDerived:
+            "#!/bin/sh\nIFS= read -r line <&3\nprintf '<html><body>%s</body></html>' \"$line\" >&4\n"
+                + "printf F >&6\nprintf '<html><body>derived</body></html>' >&5\nprintf D >&6\n"
         }
         try script.write(to: executable, atomically: true, encoding: .utf8)
         try FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: executable.path)
