@@ -137,9 +137,24 @@ selected immutable source after the fallback marker, invokes
 `SharedMathContribution`, adapts its static results into the passive composer,
 and marks a separate derived output only after the complete write. A source
 without a dollar marker remains on the ordinary source path. Local locked
-Release compilation and source lint pass. The new Finder fixture requires an
-accessible `x^2` image from the selected file; hosted execution and visual
-review are pending. This flag is not enabled in the normal product build.
+Release compilation and source lint pass. The selected-file Finder run
+43369021880 passed 1/1: its retained screenshot shows `x²` between the
+authored markers, and its accessibility tree labels the static image `x^2`.
+That was a flag-enabled experiment, not a normal product build.
+
+### Normal-build math candidate
+
+The next slice removes `QUICKLOOK_DERIVED_MATH` from the selected-source
+path and builds the same worker in the normal Release configuration. The
+hosted Finder workflow likewise no longer adds probe compilation flags.
+The immutable `F` source reply still precedes parsing; a complete `D`
+candidate is preferred only when the worker finishes successfully, and the
+three-second parent deadline is unchanged. The fixed sandbox probes stay
+behind `QUICKLOOK_DERIVED_PROBE` for diagnosis but are absent from this
+qualification build. A normal-build Finder math image, app-host process
+tests, full CI, output/latency measurements and compliance inventory are
+required before the candidate can merge. This slice does not implement
+Mermaid, D2 or Graphviz, or claim the issue-wide budget and final package.
 
 ## Qualification and stop conditions
 
