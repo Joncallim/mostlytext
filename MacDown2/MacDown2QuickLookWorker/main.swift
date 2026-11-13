@@ -29,13 +29,11 @@ private func writeAll(_ descriptor: Int32, bytes: Data) -> Bool {
     }
 }
 
-#if QUICKLOOK_DERIVED_MATH
-    @MainActor
-    private final class DerivedReplyState {
-        var completed = false
-        var reply: Data?
-    }
-#endif
+@MainActor
+private final class DerivedReplyState {
+    var completed = false
+    var reply: Data?
+}
 
 private func sourceWorkerMain() -> Never {
     // The service also kills/reaps this exact child at three seconds. This
@@ -66,27 +64,25 @@ private func sourceWorkerMain() -> Never {
           writeAll(6, bytes: Data([0x46]))
     else { Darwin._exit(1) }
     // The source fallback and its marker are immutable before slower work.
-    #if QUICKLOOK_DERIVED_MATH
-        if source.contains("$") {
-            guard Thread.isMainThread else { Darwin._exit(1) }
-            let state = MainActor.assumeIsolated { DerivedReplyState() }
-            Task { @MainActor in
-                state.reply = await DerivedMathReply.render(source)
-                state.completed = true
-            }
-            let publishDeadline = expires - 0.75
-            while ProcessInfo.processInfo.systemUptime < publishDeadline,
-                  !MainActor.assumeIsolated({ state.completed }) {
-                RunLoop.main.run(until: Date().addingTimeInterval(0.01))
-            }
-            let derived = MainActor.assumeIsolated { state.completed ? state.reply : nil }
-            if let derived, derived.count <= maximumOutputBytes {
-                guard writeAll(5, bytes: derived),
-                      writeAll(6, bytes: Data([0x44]))
-                else { Darwin._exit(1) }
-            }
+    if source.contains("$") {
+        guard Thread.isMainThread else { Darwin._exit(1) }
+        let state = MainActor.assumeIsolated { DerivedReplyState() }
+        Task { @MainActor in
+            state.reply = await DerivedMathReply.render(source)
+            state.completed = true
         }
-    #endif
+        let publishDeadline = expires - 0.75
+        while ProcessInfo.processInfo.systemUptime < publishDeadline,
+              !MainActor.assumeIsolated({ state.completed }) {
+            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+        }
+        let derived = MainActor.assumeIsolated { state.completed ? state.reply : nil }
+        if let derived, derived.count <= maximumOutputBytes {
+            guard writeAll(5, bytes: derived),
+                  writeAll(6, bytes: Data([0x44]))
+            else { Darwin._exit(1) }
+        }
+    }
     Darwin._exit(0)
 }
 
