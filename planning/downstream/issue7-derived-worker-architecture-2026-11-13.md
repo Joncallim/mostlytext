@@ -11,9 +11,9 @@ HTML/PDF export, document bytes, or the final signed-install gate.
 
 ## Current source and reconciliation
 
-Implementation starts from main `8f5e47ac` plus the reviewed Quick Look GFM
-candidate `6e0edc78`; the latter is still under exact-head CI and Finder
-qualification. The source compatibility candidate is separate. `QuickLookSource`
+Implementation starts from main `482ca5c2`, which includes the Quick Look GFM
+and source-compatibility candidates through PRs #254 and #255. Both passed
+exact-head CI and genuine Finder qualification before merge. `QuickLookSource`
 owns the selected descriptor, strict FileCore decoding, GFM fragment and escaped
 fallback. The extension opens only the selected file, then sends its descriptor
 to a sandbox-only service. Its child has a three-second parent deadline, a
@@ -35,8 +35,8 @@ technical-content acceptance.
 The local candidate adds a passive `ExportService` entry point for immutable
 `ExportDerivedContribution` values. It reuses the export source-range,
 generation, overlap, sanitizer and cmark custom-node rules. Quick Look's
-stricter URL mode permits only internal fragments and validated embedded
-raster images in generated markup; alternate resource attributes (`srcset`,
+stricter URL mode permits only internal fragments and raster data URLs in
+generated markup; alternate resource attributes (`srcset`,
 `poster`, `background` and `data`) are dropped. Authored Markdown URLs remain blank.
 Per-item and aggregate generated-byte admission occurs before the sanitizer
 copies a fragment, and a refused item leaves its own source visible. These
@@ -45,10 +45,11 @@ copies a fragment, and a refused item leaves its own source visible. These
 Four focused package cases pass for accepted plus stale items, out-of-range
 rejection, generated URL/script neutralization and an oversized item followed
 by a valid one. The existing sanitizer and derived-content suites pass 3/3
-and 10/10. This candidate has no producer or worker caller, and establishes
-neither real static math/diagrams nor Finder behavior. It remains local until
-the preceding GFM and encoding PRs converge and its own exact-head CI review
-is complete.
+and 10/10. A separate selected-source test suite passes 11/11, including
+accepted and stale generated fragments, authored URL suppression and the
+passive CSP. This candidate has no producer or worker caller, and establishes
+neither document-derived math/diagrams nor Finder presentation of them. It
+requires its own exact-head CI and Finder review before integration.
 
 ## Pre-implementation feasibility gate
 
@@ -63,6 +64,13 @@ file still renders. A result that needs a new network entitlement, parent
 directory access, containing-app launch or an unbounded run loop stops this
 architecture for review. A direct package renderer pass is not this probe.
 
+The first fixed-source probe passed in hosted run 43360005605 on exploratory
+head `7f8b49b8`: a sandbox-only worker rendered `x^2` to a 1,847-byte PNG,
+exited 0 in 0.919 s wall time, and reported 24,625,152-byte peak child RSS.
+The same run passed the ordinary/symlink/UTF-16 BE cold Finder source control.
+The probe does not use a selected document or this prepared composition API;
+shared validated math and all three diagrams remain to be qualified.
+
 ## Production boundary after the probe
 
 Keep `QuickLookBoundary` as the small XPC status and byte-cap product.
@@ -74,8 +82,9 @@ one immutable source snapshot and generation for the request. Its per-item
 results carry the same source ranges and diagnostics as Export; accepted SVG
 or data-image output passes the existing resource/markup validation before
 it enters the HTML fragment. The passive source URL policy still blanks every
-authored link and image URL. Only validated generated data images and inline
-SVG may be admitted by a narrowly revised CSP. No file or network URL enters
+authored link and image URL. This candidate's CSP admits `data:` images for
+generated raster fragments, while `default-src 'none'` remains in force.
+Inline SVG needs separate qualification. No file or network URL enters
 the reply; no generated item can authorize a sibling read.
 
 Run contributors independently within one overall worker deadline and their
