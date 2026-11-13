@@ -113,6 +113,27 @@ production cache must compare them and refuse a stale candidate when an
 assist vetoes an edit, nested editing changes its geometry, or a programmatic
 path skips the pre-edit hook. No cache or large-file painting path is active.
 
+The next isolated pairing slice adds `MarkdownEditPairing`, whose selector runs
+synchronously against the live old `NSString` and must return a bounded,
+owned candidate. The pairer retains only that candidate, old geometry,
+replacement and old UTF-16 length. After TextKit edits, it admits the candidate
+only if the actual range, delta, new length and replacement substring agree.
+It refuses replacement strings above 65,536 UTF-16 units before selecting a
+candidate, leaving large paste/reload work to the deferred path.
+Multiple pre-edit proposals before one post-edit notification are ambiguous
+and are rejected. Any rejection clears the candidate; the caller must defer a
+full parse or stay plain. The real `EditorView` pre-edit observer and storage
+delegate are exercised together, alongside independent veto/nesting/undo-like
+unobserved negatives. Four focused local Debug tests pass after the complete
+package-test bundle compiles. This does not connect the section cache or paint
+tokens; it only establishes a fail-closed admission boundary for that work.
+An unsupported first proposal still occupies its edit cycle: a later nested
+proposal cannot become a candidate merely because the first selector returned
+nil. The negative control and mounted controls pass together in the four-test
+selection; strict SwiftFormat and SwiftLint pass.
+The eventual parser result still needs an independent editor-revision guard
+before painting; geometric pairing alone does not give async result authority.
+
 ## Next qualification
 
 Extend the mounted capture probe across repeated edits and viewport moves.
