@@ -61,7 +61,11 @@ jobs:
   build-and-test:
     # Both dispatch choices match the deployment OS and run every check.
     runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.runner == 'macos-26-intel' && 'macos-26-intel' || 'macos-26' }}
-    timeout-minutes: 60
+    # Run 43355691581 completed 3,873 package tests plus locked Debug/Release
+    # builds, then hit the 60-minute job cap while app tests were compiling.
+    # Preserve every test and build; allow the remaining compilation and serial
+    # app suite to finish on a slow macOS 26 runner.
+    timeout-minutes: 75
     env:
       PR535_DIAGNOSTICS: ${{ github.repository == 'Joncallim/macdown_2' && github.event_name == 'pull_request' && github.event.number == 535 && github.event.pull_request.head.repo.full_name == github.repository }}
     steps:
