@@ -29,23 +29,23 @@ public final class ExportPrintScratch: @unchecked Sendable {
         )
         let baseDescriptor = Darwin.open(base.path, O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)
         guard baseDescriptor >= 0 else {
-            throw SetupError.posix(stage: "open temporary base", code: errno)
+            throw SetupError.currentPOSIX(stage: String(localized: "open temporary base", bundle: .module))
         }
         let pinnedBase = Filesystem.DirectoryHandle(baseDescriptor)
         guard let observedBase = try? Filesystem.directoryStamp(baseDescriptor) else {
-            throw SetupError.unsafe(stage: "inspect temporary base")
+            throw SetupError.unsafe(stage: String(localized: "inspect temporary base", bundle: .module))
         }
         guard observedBase.owner == geteuid(), observedBase.permissions & 0o077 == 0,
               (try? Filesystem.directoryAtPath(base.path, matches: observedBase)) == true
-        else { throw SetupError.unsafe(stage: "validate temporary base") }
+        else { throw SetupError.unsafe(stage: String(localized: "validate temporary base", bundle: .module)) }
 
         let name = "mostlytext-print-\(UUID().uuidString)"
         guard mkdirat(baseDescriptor, name, 0o700) == 0 else {
-            throw SetupError.posix(stage: "create print directory", code: errno)
+            throw SetupError.currentPOSIX(stage: String(localized: "create print directory", bundle: .module))
         }
         let descriptor = openat(baseDescriptor, name, O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)
         guard descriptor >= 0 else {
-            let failure = SetupError.posix(stage: "open print directory", code: errno)
+            let failure = SetupError.currentPOSIX(stage: String(localized: "open print directory", bundle: .module))
             _ = unlinkat(baseDescriptor, name, AT_REMOVEDIR)
             throw failure
         }
@@ -53,11 +53,11 @@ public final class ExportPrintScratch: @unchecked Sendable {
         let path = base.appendingPathComponent(name).path
         do {
             guard let stamp = try? Filesystem.directoryStamp(descriptor) else {
-                throw SetupError.unsafe(stage: "inspect print directory")
+                throw SetupError.unsafe(stage: String(localized: "inspect print directory", bundle: .module))
             }
             guard stamp.owner == geteuid(), stamp.permissions == 0o700,
                   (try? Filesystem.directoryAtPath(path, matches: stamp)) == true
-            else { throw SetupError.unsafe(stage: "validate print directory") }
+            else { throw SetupError.unsafe(stage: String(localized: "validate print directory", bundle: .module)) }
             self.base = pinnedBase
             baseStamp = observedBase
             directoryName = name
@@ -108,12 +108,21 @@ private enum SetupError: Error, LocalizedError {
     case posix(stage: String, code: Int32)
     case unsafe(stage: String)
 
+    /// Capture the syscall error before resolving a localized stage label.
+    static func currentPOSIX(stage: @autoclosure () -> String) -> Self {
+        let code = errno
+        return .posix(stage: stage(), code: code)
+    }
+
     var errorDescription: String? {
         switch self {
         case let .posix(stage, code):
-            "Preparing private PDF output failed at \(stage) (POSIX \(code))."
+            String(localized: "Preparing private PDF output failed at \(stage) (POSIX \(code)).", bundle: .module)
         case let .unsafe(stage):
-            "Preparing private PDF output failed at \(stage) (directory identity changed)."
+            String(
+                localized: "Preparing private PDF output failed at \(stage) (directory identity changed).",
+                bundle: .module
+            )
         }
     }
 }
