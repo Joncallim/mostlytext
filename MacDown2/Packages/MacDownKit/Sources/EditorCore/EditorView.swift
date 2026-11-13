@@ -265,6 +265,9 @@ public struct EditorView: NSViewRepresentable {
             // ITS OWN (affectedRange, replacementString) before ITS OWN
             // `textDidChange` consumes it — see that method's doc comment.
             pendingLineIndexEdit = (affectedRange, (replacementString as NSString).length)
+            if let oldSource = system.assistTextSource {
+                system.preEditObserver?(affectedRange, replacementString, oldSource)
+            }
             guard !isApplyingModelText else { return true }
             guard !system.isPerformingProgrammaticTextUpdate else { return true }
             guard !system.isPerformingEditingAssist else { return true }

@@ -18,6 +18,13 @@ import Testing
 struct EditorLineIndexWiringTests {
     private let support = EditingAssistIntegrationSupport.self
 
+    private struct PreEditObservation {
+        let range: NSRange
+        let replacement: String
+        let oldLength: Int
+        let oldWord: String
+    }
+
     private func assertMatchesFreshRebuild(
         _ system: EditorTextSystem,
         sourceLocation: SourceLocation = #_sourceLocation
@@ -47,6 +54,29 @@ struct EditorLineIndexWiringTests {
         system.textView.setSelectedRange(NSRange(location: 5, length: 0))
         system.textView.insertText("\n-- inserted --\n", replacementRange: NSRange(location: 5, length: 0))
 
+        assertMatchesFreshRebuild(system)
+    }
+
+    @Test func preEditObserverSeesOldUTF16SourceBeforeAppKitMutation() {
+        let original = "alpha 😀\r\nbeta"
+        let system = support.makeSystem(text: original)
+        let window = support.mountInWindow(system)
+        defer { window.orderOut(nil) }
+        _ = support.makeCoordinator(system: system)
+        let target = (original as NSString).range(of: "beta")
+        var observed: PreEditObservation?
+        system.preEditObserver = { range, replacement, oldSource in
+            observed = PreEditObservation(range: range, replacement: replacement,
+                                          oldLength: oldSource.length, oldWord: oldSource.substring(with: range))
+        }
+
+        system.textView.insertText("gamma", replacementRange: target)
+
+        #expect(observed?.range == target)
+        #expect(observed?.replacement == "gamma")
+        #expect(observed?.oldLength == (original as NSString).length)
+        #expect(observed?.oldWord == "beta")
+        #expect(system.text == "alpha 😀\r\ngamma")
         assertMatchesFreshRebuild(system)
     }
 
