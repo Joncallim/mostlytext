@@ -108,14 +108,15 @@ struct PDFExportAdapterTests {
         }
     }
 
-    @Test func printDestinationIsConfiguredBeforeTheOperationStarts() {
-        let destination = FileManager.default.temporaryDirectory.appendingPathComponent("fixture.pdf")
-        let scratch = PDFExportAdapter.temporaryURL(nextTo: destination)
-        let info = PDFExportAdapter.printInfo(savingTo: scratch)
+    @Test func printDestinationIsConfiguredBeforeTheOperationStarts() throws {
+        let scratch = try ExportPrintScratch()
+        defer { try? scratch.retire() }
+        let url = scratch.url
+        let info = PDFExportAdapter.printInfo(savingTo: url)
 
-        #expect(scratch.pathExtension == "pdf")
+        #expect(url.pathExtension == "pdf")
         #expect(info.jobDisposition == .save)
-        #expect(info.dictionary()[NSPrintInfo.AttributeKey.jobSavingURL] as? URL == scratch)
+        #expect(info.dictionary()[NSPrintInfo.AttributeKey.jobSavingURL] as? URL == url)
 
         PDFViewportChecks.verify(info: info)
 
@@ -123,9 +124,9 @@ struct PDFExportAdapterTests {
             view: NSView(frame: NSRect(x: 0, y: 0, width: 100, height: 100)),
             printInfo: NSPrintInfo()
         )
-        PDFExportAdapter.configure(operation, savingTo: scratch)
+        PDFExportAdapter.configure(operation, savingTo: url)
         #expect(operation.printInfo.jobDisposition == .save)
-        #expect(operation.printInfo.dictionary()[NSPrintInfo.AttributeKey.jobSavingURL] as? URL == scratch)
+        #expect(operation.printInfo.dictionary()[NSPrintInfo.AttributeKey.jobSavingURL] as? URL == url)
     }
 
     @Test func contentlessPDFIsRejectedForNonemptyDocument() throws {
@@ -307,6 +308,9 @@ struct PDFExportAdapterTests {
         let document = try #require(PDFDocument(data: data), "the stale placeholder must be replaced with a real PDF")
         #expect(document.pageCount == 1, "unused viewport height must not append a blank page")
         #expect(document.string?.contains("Just one short document.") == true)
+        let pdfNames = try FileManager.default.contentsOfDirectory(atPath: directory.path)
+            .filter { $0.hasSuffix(".pdf") }
+        #expect(pdfNames == ["out.pdf"], "the print operation must leave no PDF scratch beside the chosen output")
     }
 }
 

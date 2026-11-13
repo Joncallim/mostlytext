@@ -118,8 +118,8 @@ public final class ExportDestinationAdmission: @unchecked Sendable {
         _ = try ExportFilePublication.write(input, lease: lease, admission: self)
     }
 
-    /// Snapshot a printer-owned candidate beside this output without following
-    /// a leaf symlink or reopening the parent pathname. This is read admission,
+    /// Snapshot a generated candidate beside this output without following a
+    /// leaf symlink or reopening the parent pathname. This is read admission,
     /// not proof that an unknown file may be removed during scratch cleanup.
     public func readGeneratedFile(at candidate: URL, maxBytes: Int) throws -> Data? {
         // Foundation can map physical /private/var to /var when standardizing a parent.
