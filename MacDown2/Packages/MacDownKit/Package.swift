@@ -6,6 +6,7 @@ let package = Package(
     platforms: [.macOS(.v26)],
     products: [
         .library(name: "FileCore", targets: ["FileCore"]),
+        .library(name: "QuickLookBoundary", targets: ["QuickLookBoundary"]),
         .library(name: "QuickLookSource", targets: ["QuickLookSource"]),
         .library(name: "CommandBridge", targets: ["CommandBridge"]),
         .library(name: "CommandLineSupport", targets: ["CommandLineSupport"]),
@@ -91,7 +92,8 @@ let package = Package(
     ],
     targets: [
         .target(name: "FileCore", dependencies: ["JSONSupport"], resources: [.process("Resources")]),
-        .target(name: "QuickLookSource", dependencies: ["FileCore", "ExportService"]),
+        .target(name: "QuickLookBoundary"),
+        .target(name: "QuickLookSource", dependencies: ["FileCore", "ExportService", "QuickLookBoundary"]),
         .executableTarget(name: "QuickLookSourceProbe", dependencies: ["QuickLookSource"]),
         .target(name: "CommandBridge", dependencies: ["JSONSupport"]),
         .target(name: "CommandLineSupport", dependencies: [

@@ -2,6 +2,7 @@ import Darwin
 import ExportService
 import FileCore
 import Foundation
+import QuickLookBoundary
 
 public enum QuickLookSourceError: Error, Sendable, Equatable {
     case invalidURL
@@ -17,8 +18,8 @@ public enum QuickLookSourceError: Error, Sendable, Equatable {
 /// A passive Quick Look reply for one system-supplied Markdown file. This
 /// bounded source view remains useful when derived rendering is unavailable.
 public enum QuickLookSourceFallback {
-    public static let maximumSourceBytes = 1 << 20
-    public static let maximumHTMLBytes = maximumSourceBytes * 6 + 4096
+    public static let maximumSourceBytes = QuickLookSourceBudget.maximumSourceBytes
+    public static let maximumHTMLBytes = QuickLookSourceBudget.maximumHTMLBytes
 
     public static func replyHTML(for fileURL: URL) throws -> Data {
         let selected = try openSelectedFile(fileURL)

@@ -1,6 +1,6 @@
 import Darwin
 import Foundation
-import QuickLookSource
+import QuickLookBoundary
 import Testing
 
 /// Compiles the shipping worker process controller into the app test bundle.

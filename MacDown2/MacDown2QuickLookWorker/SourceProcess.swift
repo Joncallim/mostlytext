@@ -1,7 +1,7 @@
 import Darwin
 import Dispatch
 import Foundation
-import QuickLookSource
+import QuickLookBoundary
 
 /// One selected descriptor, one child, one monotonic deadline and one reaper.
 /// A blocked regular-file read cannot retain an extension reply or service
@@ -13,7 +13,7 @@ enum SourceProcess {
     }
 
     private static let seconds = 3.0
-    private static let maximumOutputBytes = QuickLookSourceFallback.maximumHTMLBytes
+    private static let maximumOutputBytes = QuickLookSourceBudget.maximumHTMLBytes
     private static let childSlots = ChildSlots()
 
     static func run(selectedDescriptor: Int32, executable: URL? = Bundle.main.executableURL) -> Result {
