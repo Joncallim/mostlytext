@@ -24,6 +24,46 @@ struct MarkdownSectionCacheSequentialProbeTests {
     private static let documentBytes = 1_048_576
 
     @Test(.timeLimit(.minutes(3)))
+    func inWordInsertionKeepsOneMegabyteVisibleCapturesExact() async throws {
+        let registry = GrammarRegistry()
+        let root = try #require(registry.configuration(for: "markdown"))
+        let inline = try #require(registry.configuration(for: "markdown_inline"))
+        let original = Self.fixture()
+        #expect(original.utf8.count == Self.documentBytes)
+        let initialSnapshot = try await Task.detached {
+            try MarkdownSectionParser.snapshot(source: original, registry: registry)
+        }.value
+        var cache = try SectionCache(source: original, snapshot: initialSnapshot)
+        let source = original as NSString
+        let word = source.range(of: "alphatarget")
+        try #require(word.location != NSNotFound)
+        let edit = NSRange(location: word.location + 5, length: 0)
+        let visible = NSRange(location: word.location - 32, length: 180)
+        #expect(cache.select(source: source, edit: NSRange(location: word.location, length: 0),
+                             replacement: "xyz", visible: visible) == nil)
+        #expect(cache.select(source: source, edit: NSRange(location: NSMaxRange(word), length: 0),
+                             replacement: "xyz", visible: visible) == nil)
+        #expect(cache.select(source: source, edit: edit, replacement: "*", visible: visible) == nil)
+
+        let selected = try #require(cache.select(source: source, edit: edit,
+                                                 replacement: "xyz", visible: visible))
+        let updated = source.replacingCharacters(in: edit, with: "xyz")
+        let localContent = (updated as NSString).substring(with: selected.new)
+        let local = try layer(localContent, root: root, registry: registry)
+        try cache.replace(selected, with: #require(local.snapshot()), content: localContent, delta: 3)
+
+        let updatedVisible = NSRange(location: visible.location, length: visible.length + 3)
+        let candidate = try produced(cache, visible: updatedVisible)
+        let whole = try layer(updated, root: root, registry: registry)
+        let snapshot = try #require(whole.snapshot())
+        let node = try #require(snapshot.rootSnapshot.tree.rootNode)
+        let oracle = try captures([Section(node: node, snapshot: snapshot, content: updated, offset: 0)],
+                                  visible: updatedVisible, inline: inline).combined
+        #expect(!candidate.isEmpty)
+        #expect(candidate == oracle)
+    }
+
+    @Test(.timeLimit(.minutes(3)))
     func consecutiveEditsAndViewportMoveKeepExactVisibleCaptures() async throws {
         let registry = GrammarRegistry()
         let root = try #require(registry.configuration(for: "markdown"))

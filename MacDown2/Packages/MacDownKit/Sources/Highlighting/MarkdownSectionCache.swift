@@ -61,7 +61,7 @@ struct MarkdownSectionCache {
     func select(source: NSString, edit: NSRange, replacement: String, visible: NSRange) -> Window? {
         let word = CharacterSet.alphanumerics
         guard source.length == sourceLength,
-              edit.location >= 0, edit.length > 0,
+              edit.location >= 0, edit.length >= 0,
               edit.location <= source.length,
               edit.length <= source.length - edit.location,
               visible.location != NSNotFound, visible.location >= 0,
@@ -74,13 +74,15 @@ struct MarkdownSectionCache {
               replacement.unicodeScalars.allSatisfy(word.contains)
         else { return nil }
 
-        guard let editIndex = firstIndex(overlapping: edit) else { return nil }
+        guard edit.length > 0 || Self.isInteriorWordInsertion(source: source, at: edit.location) else { return nil }
+
+        guard let editIndex = indexOfEdit(edit) else { return nil }
         let entry = resolvedSection(at: editIndex)
         let node = entry.node
         let localEdit = NSRange(location: edit.location - entry.offset, length: edit.length)
         guard node.nodeType == "section", !node.hasError else { return nil }
         let paragraphs = (0 ..< node.childCount).compactMap { node.child(at: $0) }
-            .filter { $0.nodeType == "paragraph" && NSIntersectionRange($0.range, localEdit).length > 0 }
+            .filter { $0.nodeType == "paragraph" && NSIntersectionRange($0.range, Self.probe(localEdit)).length > 0 }
         guard paragraphs.count == 1, let paragraph = paragraphs.first, !paragraph.hasError,
               localEdit.location > paragraph.range.location,
               NSMaxRange(localEdit) < NSMaxRange(paragraph.range),
@@ -196,8 +198,27 @@ struct MarkdownSectionCache {
         return section
     }
 
+    /// Require both neighboring UTF-16 units to be alphanumeric. This also
+    /// refuses surrogate boundaries and word-edge/structural insertions.
+    private static func isInteriorWordInsertion(source: NSString, at location: Int) -> Bool {
+        guard location > 0, location < source.length else { return false }
+        let word = CharacterSet.alphanumerics
+        let left = source.substring(with: NSRange(location: location - 1, length: 1))
+        let right = source.substring(with: NSRange(location: location, length: 1))
+        return left.unicodeScalars.allSatisfy(word.contains)
+            && right.unicodeScalars.allSatisfy(word.contains)
+    }
+
     private func globalRange(at index: Int) -> NSRange {
         resolvedSection(at: index).globalRange
+    }
+
+    private func indexOfEdit(_ edit: NSRange) -> Int? {
+        firstIndex(overlapping: Self.probe(edit))
+    }
+
+    private static func probe(_ range: NSRange) -> NSRange {
+        NSRange(location: range.location, length: max(1, range.length))
     }
 
     private func firstIndex(overlapping region: NSRange) -> Int? {
