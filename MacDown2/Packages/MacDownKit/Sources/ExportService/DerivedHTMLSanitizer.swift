@@ -136,6 +136,10 @@ enum DerivedHTMLSanitizer {
                 if attribute.name.hasPrefix("on") {
                     continue
                 }
+                if urlPolicy == .passive,
+                   ["srcset", "poster", "background", "data"].contains(attribute.name) {
+                    continue
+                }
                 guard var value = attribute.value else {
                     result += " \(attribute.name)"
                     continue
