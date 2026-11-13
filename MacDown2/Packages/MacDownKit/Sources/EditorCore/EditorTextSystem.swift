@@ -57,6 +57,12 @@ public final class EditorTextSystem {
 
     /// Told about every text change (see `EditorTextChange`); nil when nobody is watching.
     public var textChangeObserver: ((EditorTextChange) -> Void)?
+    /// A synchronous observation of AppKit's proposed edit before it mutates
+    /// the text storage. `oldSource` is the live mutable backing string: a
+    /// consumer may inspect/copy a bounded range only during this callback,
+    /// never retain it as a frozen snapshot. The storage delegate must pair
+    /// this proposal with an actual edit; an editing assist can veto it.
+    public var preEditObserver: ((_ range: NSRange, _ replacement: String, _ oldSource: NSString) -> Void)?
     let metricsCache = EditorDocumentMetricsCache()
     let contentHeightMeter = ContentHeightMeter()
     /// Prevents a disk-driven replacement from flowing back through the
