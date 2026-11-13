@@ -88,18 +88,25 @@ public enum ExportService {
         sourceGeneration: UInt
     ) -> String {
         guard !contributions.isEmpty else { return renderPassiveMarkdownFragment(markdown) }
-        // Bound producer output before the sanitizer copies it. These are
-        // provisional per-item/aggregate Quick Look limits, below the worker's
-        // complete reply cap; a refused item keeps its authored Markdown.
+        // Bound each producer fragment before the sanitizer copies it. The
+        // shared composer accounts for the aggregate only after placement,
+        // so stale or overlapping failures cannot starve later valid items.
         let singleLimit = 1 << 20
-        var remaining = 4 << 20
+        let sourceLength = markdown.utf16.count
         let passiveContributions = contributions.compactMap { item -> ExportDerivedContribution? in
+            // Do not charge items the shared composer will reject before
+            // placement. An invalid early result must not starve a later
+            // valid equation or diagram of the small Quick Look allowance.
+            guard item.sourceGeneration == sourceGeneration,
+                  item.sourceRange.lowerBound >= 0,
+                  item.sourceRange.lowerBound < item.sourceRange.upperBound,
+                  item.sourceRange.upperBound <= sourceLength,
+                  !item.diagnostics.contains(where: { $0.severity == .error })
+            else { return nil }
             let size = item.html.utf8.count
             guard size <= singleLimit else { return nil }
             let safeHTML = DerivedHTMLSanitizer.sanitized(item.html, urlPolicy: .passive)
-            let safeSize = safeHTML.utf8.count
-            guard safeSize <= singleLimit, safeSize <= remaining else { return nil }
-            remaining -= safeSize
+            guard safeHTML.utf8.count <= singleLimit else { return nil }
             return ExportDerivedContribution(
                 sourceRange: item.sourceRange,
                 placement: item.placement,
@@ -115,6 +122,7 @@ public enum ExportService {
             sourceUTF16Length: markdown.utf16.count,
             contributions: passiveContributions,
             sourceGeneration: sourceGeneration,
+            budget: .passiveQuickLook,
             namespaceSVGIDs: true
         )
         guard let rendered = try? CMarkGFM.render(
