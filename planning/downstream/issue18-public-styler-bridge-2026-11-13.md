@@ -146,6 +146,15 @@ validates reusable cache state, not the product's large-file path or its
 whole-edit latency. The next adapter must still own revision-safe parsing and
 painting before the 8,192-unit fallback can change.
 
+The production cache now resolves combined root/injected tokens for a bounded
+visible range, retaining the same names and clipped UTF-16 coordinates as the
+independent capture oracle. The mounted test feeds these production tokens to
+the public styler and compares the resulting rendering attributes after four
+edits and viewport moves. The source-length guard rejects a stale cache or
+out-of-bounds range before querying. A focused rerun passed all six tests in
+two suites after this addition; it still does not exercise an automatic app
+adapter or establish a full keystroke budget.
+
 ## Next qualification
 
 Extend the mounted capture probe across repeated edits and viewport moves.

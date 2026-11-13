@@ -1,4 +1,5 @@
 import Foundation
+import Neon
 import SwiftTreeSitter
 import SwiftTreeSitterLayer
 
@@ -36,6 +37,7 @@ struct MarkdownSectionCache {
 
     private var sections: [Section]
     private var shifts: SectionShifts
+    private var sourceLength: Int
 
     /// A parse can finish on a background executor and hand over its Sendable
     /// immutable snapshot; the live parser itself never crosses actors.
@@ -51,13 +53,15 @@ struct MarkdownSectionCache {
         }
         sections = entries
         shifts = SectionShifts(sectionCount: entries.count)
+        sourceLength = (source as NSString).length
     }
 
     /// Admit only a replacement wholly inside one bounded plain paragraph.
     /// Keeping section count stable lets later section offsets shift in O(log n).
     func select(source: NSString, edit: NSRange, replacement: String, visible: NSRange) -> Window? {
         let word = CharacterSet.alphanumerics
-        guard edit.location >= 0, edit.length > 0,
+        guard source.length == sourceLength,
+              edit.location >= 0, edit.length > 0,
               edit.location <= source.length,
               edit.length <= source.length - edit.location,
               visible.location != NSNotFound, visible.location >= 0,
@@ -112,9 +116,14 @@ struct MarkdownSectionCache {
     /// selected root-section shape. On failure the cache is unchanged.
     mutating func replace(_ window: Window, with snapshot: LanguageLayerTreeSnapshot, content: String,
                           delta: Int) throws {
+        let (newSourceLength, overflow) = sourceLength.addingReportingOverflow(delta)
         guard window.firstSection >= 0, window.firstSection <= window.lastSection,
               window.lastSection < sections.count,
+              !overflow, newSourceLength >= 0,
               window.old.location == window.new.location,
+              window.old.location >= 0,
+              window.old.length <= sourceLength - window.old.location,
+              window.new.length <= newSourceLength - window.new.location,
               window.new.length == (content as NSString).length,
               delta == window.new.length - window.old.length
         else { throw CacheError.windowMismatch }
@@ -131,9 +140,14 @@ struct MarkdownSectionCache {
         }
         sections.replaceSubrange(window.firstSection ... window.lastSection, with: replacements)
         shifts.shift(after: window.lastSection, by: delta)
+        sourceLength = newSourceLength
     }
 
     func visibleSections(_ visible: NSRange) -> [Section] {
+        guard visible.location != NSNotFound, visible.location >= 0,
+              visible.length > 0, visible.location <= sourceLength,
+              visible.length <= sourceLength - visible.location
+        else { return [] }
         guard let first = firstIndex(overlapping: visible) else { return [] }
         var result: [Section] = []
         var index = first
@@ -143,6 +157,33 @@ struct MarkdownSectionCache {
                 result.append(section)
             }
             index += 1
+        }
+        return result
+    }
+
+    /// Resolve the same combined root/injection captures as the full layer,
+    /// clipped to the caller's bounded paint authority. No parser or mutable
+    /// storage is consulted during this read.
+    func tokens(in visible: NSRange) throws -> [Token] {
+        guard visible.location != NSNotFound, visible.location >= 0,
+              visible.length > 0, visible.length <= Self.windowLimit
+        else { return [] }
+        var result: [Token] = []
+        for section in visibleSections(visible) {
+            let clip = NSIntersectionRange(section.globalRange, visible)
+            guard clip.length > 0 else { continue }
+            let local = NSRange(location: clip.location - section.offset, length: clip.length)
+            let captures = try section.snapshot.highlights(
+                in: local, provider: section.content.predicateTextProvider
+            )
+            for capture in captures {
+                let shifted = NSRange(location: capture.range.location + section.offset,
+                                      length: capture.range.length)
+                let bounded = NSIntersectionRange(shifted, clip)
+                if bounded.length > 0 {
+                    result.append(Token(name: capture.name, range: bounded))
+                }
+            }
         }
         return result
     }

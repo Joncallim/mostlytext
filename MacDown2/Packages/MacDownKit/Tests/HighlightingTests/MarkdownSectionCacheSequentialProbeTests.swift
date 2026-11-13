@@ -134,6 +134,8 @@ struct MarkdownSectionCacheSequentialProbeTests {
                               length: min((source as NSString).length - visibleStart,
                                           (editSpec.replacement as NSString).length + 192))
         let candidate = try captures(cache.visibleSections(visible), visible: visible, inline: languages.inline)
+        #expect(try produced(cache, visible: visible) == candidate.combined,
+                "\(editSpec.name) production tokens differ from combined captures")
         let duration = ContinuousClock().now - start
         #expect(!candidate.isEmpty, "\(editSpec.name) yielded no visible captures")
         #expect(window.new.length <= SectionProbeLimits.windowLimit)
@@ -194,6 +196,12 @@ struct MarkdownSectionCacheSequentialProbeTests {
         }
     }
 
+    private func produced(_ cache: SectionCache, visible: NSRange) throws -> [Capture] {
+        try cache.tokens(in: visible).map {
+            Capture(name: $0.name, location: $0.range.location, length: $0.range.length)
+        }.sorted()
+    }
+
     private func layer(_ text: String, root: LanguageConfiguration,
                        registry: GrammarRegistry) throws -> LanguageLayer {
         let result = try LanguageLayer(languageConfig: root,
@@ -245,7 +253,9 @@ extension MarkdownSectionCacheSequentialProbeTests {
         let firstEdit = (original as NSString).range(of: "alphatarget")
         try #require(firstEdit.location != NSNotFound)
         let visible = NSRange(location: firstEdit.location - 32, length: 180)
-        var candidate = try captures(cache.visibleSections(visible), visible: visible, inline: inline).combined
+        var candidate = try produced(cache, visible: visible)
+        let initialCaptures = try captures(cache.visibleSections(visible), visible: visible, inline: inline)
+        #expect(candidate == initialCaptures.combined)
         try #require(!candidate.isEmpty)
         let publication = CapturePublication(candidate)
         let interface = TextViewSystemInterface(textView: system.textView) { _ in
@@ -284,8 +294,10 @@ extension MarkdownSectionCacheSequentialProbeTests {
             let delta = (spec.replacement as NSString).length - edit.length
             try cache.replace(selected, with: #require(local.snapshot()), content: newContent, delta: delta)
             let shiftedVisible = NSRange(location: visible.location, length: visible.length + delta)
-            candidate = try captures(cache.visibleSections(shiftedVisible), visible: shiftedVisible,
-                                     inline: inline).combined
+            candidate = try produced(cache, visible: shiftedVisible)
+            let independent = try captures(cache.visibleSections(shiftedVisible), visible: shiftedVisible,
+                                           inline: inline)
+            #expect(candidate == independent.combined)
             try #require(!candidate.isEmpty)
             publication.replace(with: candidate)
             styler.didChangeContent(in: edit, delta: delta)
