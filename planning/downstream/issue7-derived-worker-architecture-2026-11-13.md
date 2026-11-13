@@ -118,9 +118,19 @@ parent may publish only the complete fallback, never partial derived bytes.
 Do not increase the existing three/four-second deadlines on a guessed
 performance claim. If complete technical rendering cannot fit, record the
 measured counterexample and revise the architecture before implementation.
-Renderer completion, XPC
-reply and child exit each settle once; late callbacks after cancellation or
-teardown cannot publish another generation.
+Renderer completion, XPC reply and child exit each settle once. Late callbacks
+after cancellation or teardown cannot publish another generation.
+
+An exploratory process-boundary implementation now allocates separate unlinked
+fallback and derived output slots. The child writes a one-byte `F` completion
+marker only after the source reply is complete; a later derived reply requires
+an additional `D` marker after its own complete write. On the three-second
+deadline, the parent kills/reaps the child and accepts only a marked, bounded
+source fallback. A new controlled fake child writes partial derived bytes and
+then stalls; its test requires the complete source fallback and reaping. The
+exact worker and app/test bundles compile locally in Debug with locked pins;
+hosted execution and real Finder regression remain pending. This is still no
+document-derived renderer path.
 
 ## Qualification and stop conditions
 
