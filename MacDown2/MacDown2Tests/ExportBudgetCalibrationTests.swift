@@ -133,11 +133,19 @@
         }
 
         @Test func scaledWebKitPrintAndPDFKitReadback() async throws {
+            try await measureScaledPDF(sections: 200, name: "scaled-pdf")
+        }
+
+        @Test func nearPageLimitWebKitPrintAndPDFKitReadback() async throws {
+            try await measureScaledPDF(sections: 460, name: "near-page-limit-pdf")
+        }
+
+        private func measureScaledPDF(sections: Int, name: String) async throws {
             _ = try outputDirectory()
             let root = try fixtureDirectory()
             defer { try? FileManager.default.removeItem(at: root) }
-            let destination = root.appendingPathComponent("scaled-print.pdf")
-            let source = Self.scaledMarkdown()
+            let destination = root.appendingPathComponent(name + ".pdf")
+            let source = Self.scaledMarkdown(sections: sections)
             let sourceData = Data(source.utf8)
             let sourceURL = root.appendingPathComponent("source.md")
             try sourceData.write(to: sourceURL)
@@ -157,11 +165,11 @@
             let data = try Data(contentsOf: destination)
             let pdf = try #require(PDFDocument(data: data))
             let text = pdf.string ?? ""
-            let retainedPDF = try outputDirectory().appendingPathComponent("scaled-pdf-output.pdf")
+            let retainedPDF = try outputDirectory().appendingPathComponent(name + "-output.pdf")
             try data.write(to: retainedPDF, options: .atomic)
-            try verifyScaledPDF(pdf, text: text)
-            try record("scaled-pdf", values: [
-                "case": "actual-scaled-webkit-print-pdfkit", "sections": 200,
+            try verifyScaledPDF(pdf, text: text, sections: sections)
+            try record(name, values: [
+                "case": "actual-scaled-webkit-print-pdfkit", "sections": sections,
                 "source_bytes": sourceData.count, "source_sha256": sha256(sourceData),
                 "prepared_html_bytes": html.utf8.count,
                 "pdf_bytes": data.count, "pdf_sha256": sha256(data), "page_count": pdf.pageCount,
@@ -172,9 +180,9 @@
             ])
         }
 
-        private static func scaledMarkdown() -> String {
+        private static func scaledMarkdown(sections: Int) -> String {
             var source = "# BUDGETSCALESTART\n\n![pixel](pixel.png)\n\n"
-            for section in 1 ... 200 {
+            for section in 1 ... sections {
                 source += "## Section \(section)\n\n"
                 source += String(
                     repeating: "The larger print fixture retains searchable text across pages. ",
@@ -185,7 +193,7 @@
             return source + "## BUDGETSCALEEND\n\nFinal text.\n"
         }
 
-        private func verifyScaledPDF(_ pdf: PDFDocument, text: String) throws {
+        private func verifyScaledPDF(_ pdf: PDFDocument, text: String, sections: Int) throws {
             #expect(pdf.pageCount >= 20)
             #expect(pdf.pageCount <= PDFSnapshotFallback.maxPages)
             let paper = NSPrintInfo().paperSize
@@ -197,8 +205,8 @@
             }
             #expect(text.contains("BUDGETSCALESTART"))
             #expect(text.contains("BUDGETSCALEEND"))
-            #expect(text.utf8.count >= 280_000)
-            for section in 1 ... 200 {
+            #expect(text.utf8.count >= sections * 1400)
+            for section in 1 ... sections {
                 #expect(text.contains("Section \(section)\n"))
             }
         }
