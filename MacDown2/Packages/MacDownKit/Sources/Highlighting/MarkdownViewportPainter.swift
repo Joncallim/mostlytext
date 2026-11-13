@@ -127,7 +127,7 @@ final class MarkdownViewportPainter {
         else { return .noChange }
         let clip = NSIntersectionRange(requested, visible)
         guard clip.length > 0 else { return .noChange }
-        return TokenApplication(tokens: session.visibleTokens(), range: clip, action: .replace)
+        return TokenApplication(tokens: session.visibleTokens(in: clip), range: clip, action: .replace)
     }
 
     private static func boundedViewport(in textSystem: EditorTextSystem) -> NSRange? {

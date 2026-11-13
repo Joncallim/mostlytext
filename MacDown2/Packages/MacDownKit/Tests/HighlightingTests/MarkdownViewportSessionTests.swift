@@ -180,6 +180,13 @@ struct MarkdownViewportSessionTests {
         let expected = try oracle.tokens(in: visible)
         #expect(!expected.isEmpty)
         #expect(session.visibleTokens() == expected)
+        let suffix = NSRange(location: visible.location + visible.length / 2,
+                             length: visible.length - visible.length / 2)
+        let expectedSuffix = try oracle.tokens(in: suffix)
+        #expect(session.visibleTokens(in: suffix) == expectedSuffix)
+        #expect(session.visibleTokens(in: NSRange(location: NSMaxRange(visible), length: 1)).isEmpty)
+        #expect(session.visibleTokens(in: NSRange(location: NSNotFound, length: 1)).isEmpty)
+        #expect(session.visibleTokens(in: NSRange(location: Int.max, length: 1)).isEmpty)
     }
 }
 

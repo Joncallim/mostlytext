@@ -182,3 +182,25 @@ These source and build checks do not satisfy the complete 1 MiB keypress matrix,
 native accessibility and IME acceptance, non-English review, signing or exact
 release-candidate acceptance. The default flag remains off until those gates
 are met and recorded on issue #18.
+
+## Requested-range paint work
+
+The public styler can validate a subrange of the visible viewport. The initial
+opt-in adapter queried every token in the full viewport for each such request,
+then relied on the styler to clip the result. The session now intersects a
+requested range with the mounted bounded viewport *before* asking the cache for
+captures. The same clipped range is handed to the styler, so paint authority
+and token selection agree. A request outside the viewport or with an invalid
+location returns no tokens. The existing full-viewport query remains for
+readback and diagnostics. This is a bounded work reduction, not a change to
+Markdown semantics, default activation, or the 50 ms acceptance threshold.
+
+On the same opt-in 1,048,804-byte word-edit fixture, two Release runs after this
+range change each selected and matched all 12 windows, used 12 local parses
+and one full parse at open, and restored the exact original source. The first
+measured synchronous calls at 8–36 ms and settled colour at 10–38 ms; the
+second at 9–41 ms and 11–43 ms. The earlier full-viewport variant's first
+run had one 53 ms call and 58 ms settlement, but these unmatched local runs do
+not prove the range change alone caused the difference. Neither run covers
+structural edits, dense inline or long leaf sections; the complete production
+50 ms budget and native gate remain open.
