@@ -18,7 +18,7 @@ struct MarkdownSectionCache {
 
     struct Section {
         let node: Node
-        let layer: LanguageLayer
+        let snapshot: LanguageLayerTreeSnapshot
         let content: String
         var offset: Int
 
@@ -37,15 +37,17 @@ struct MarkdownSectionCache {
     private var sections: [Section]
     private var shifts: SectionShifts
 
-    init(source: String, layer: LanguageLayer) throws {
-        guard let root = layer.snapshot()?.rootSnapshot.tree.rootNode,
+    /// A parse can finish on a background executor and hand over its Sendable
+    /// immutable snapshot; the live parser itself never crosses actors.
+    init(source: String, snapshot: LanguageLayerTreeSnapshot) throws {
+        guard let root = snapshot.rootSnapshot.tree.rootNode,
               root.childCount > 0
         else { throw CacheError.snapshotUnavailable }
         var entries: [Section] = []
         entries.reserveCapacity(root.childCount)
         for index in 0 ..< root.childCount {
             guard let node = root.child(at: index) else { throw CacheError.snapshotUnavailable }
-            entries.append(Section(node: node, layer: layer, content: source, offset: 0))
+            entries.append(Section(node: node, snapshot: snapshot, content: source, offset: 0))
         }
         sections = entries
         shifts = SectionShifts(sectionCount: entries.count)
@@ -108,7 +110,7 @@ struct MarkdownSectionCache {
 
     /// Replace cached trees only after a fresh local parse preserves the
     /// selected root-section shape. On failure the cache is unchanged.
-    mutating func replace(_ window: Window, with layer: LanguageLayer, content: String,
+    mutating func replace(_ window: Window, with snapshot: LanguageLayerTreeSnapshot, content: String,
                           delta: Int) throws {
         guard window.firstSection >= 0, window.firstSection <= window.lastSection,
               window.lastSection < sections.count,
@@ -116,9 +118,7 @@ struct MarkdownSectionCache {
               window.new.length == (content as NSString).length,
               delta == window.new.length - window.old.length
         else { throw CacheError.windowMismatch }
-        guard let root = layer.snapshot()?.rootSnapshot.tree.rootNode else {
-            throw CacheError.snapshotUnavailable
-        }
+        guard let root = snapshot.rootSnapshot.tree.rootNode else { throw CacheError.snapshotUnavailable }
         let expectedCount = window.lastSection - window.firstSection + 1
         guard root.childCount == expectedCount else { throw CacheError.sectionShapeChanged }
         var replacements: [Section] = []
@@ -126,7 +126,7 @@ struct MarkdownSectionCache {
         for index in 0 ..< root.childCount {
             guard let node = root.child(at: index) else { throw CacheError.snapshotUnavailable }
             let sectionIndex = window.firstSection + index
-            replacements.append(Section(node: node, layer: layer, content: content,
+            replacements.append(Section(node: node, snapshot: snapshot, content: content,
                                         offset: window.new.location - shifts.displacement(at: sectionIndex)))
         }
         sections.replaceSubrange(window.firstSection ... window.lastSection, with: replacements)

@@ -137,7 +137,9 @@ before painting; geometric pairing alone does not give async result authority.
 The section cache has now been moved from test support into the Highlighting
 source target without attaching it to the editor. Its selection refuses an
 invalid viewport; replacement refuses mismatched window geometry, content
-length or delta before changing cached trees. The 1 MiB, 14-edit full-parse
+length or delta before changing cached trees. It stores immutable, Sendable
+tree snapshots rather than moving a live parser between executors, leaving a
+safe handoff for a later background initial parse. The 1 MiB, 14-edit full-parse
 capture oracle and mounted public-styler controls pass together with the
 pairing tests: six selected tests in two suites on 13 November 2026. This
 validates reusable cache state, not the product's large-file path or its
