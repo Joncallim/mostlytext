@@ -19,6 +19,28 @@ struct ExactTextIdentityTests {
         #expect(!"\u{00E9}".isExactlyEqual(to: "e\u{0301}"))
     }
 
+    @Test func literalEqualityMatchesAnIndependentUTF16OracleAcrossNativeAndBridgedText() {
+        let samples = [
+            "", "\0", "a\0b", "a", "A", "\r", "\n", "\r\n",
+            "\u{212B}", "\u{00C5}", "\u{00E9}", "e\u{0301}",
+            "👩🏽‍💻", "🇸🇬", "字", "\u{FE0F}",
+        ]
+        let values = samples.flatMap { sample in [sample, (sample as NSString) as String] }
+        for left in values {
+            for right in values {
+                #expect(left.isExactlyEqual(to: right) == left.utf16.elementsEqual(right.utf16))
+            }
+        }
+    }
+
+    @Test func largeBridgedTextChecksTheFinalUnitAndEmbeddedNul() {
+        let prefix = String(repeating: "a\0👩🏽‍💻", count: 40000)
+        let source = (prefix + "END") as NSString as String
+        #expect(source.isExactlyEqual(to: prefix + "END"))
+        #expect(!source.isExactlyEqual(to: prefix + "ENX"))
+        #expect(!source.isExactlyEqual(to: prefix + "END\0"))
+    }
+
     @Test func updatingTextAdoptsAScalarDistinctReplacement() {
         let document = FileDocument(text: angstrom)
 

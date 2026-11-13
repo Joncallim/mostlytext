@@ -7,6 +7,11 @@ public extension String {
     /// decides persistence, dirtiness or what to publish (#183 F02). Display
     /// and name comparisons should keep using `==`.
     func isExactlyEqual(to other: String) -> Bool {
-        utf8.elementsEqual(other.utf8)
+        // NSString compares literal UTF-16 code units, with no canonical
+        // equivalence. Swift strings contain only valid scalar sequences, so
+        // equal UTF-16 units are exactly equal scalar sequences as well.
+        // The UTF-8 view's element iterator is costly for NSString-backed
+        // editor text: a 1 MiB same-source comparison can dominate a keystroke.
+        (self as NSString).isEqual(to: other)
     }
 }
