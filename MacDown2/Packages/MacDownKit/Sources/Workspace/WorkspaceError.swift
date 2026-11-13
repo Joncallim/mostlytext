@@ -34,14 +34,16 @@ extension WorkspaceError: LocalizedError {
                 localized: """
                 MostlyText preserved a competing version as \(url.lastPathComponent). \
                 Reveal it, then use Save As to keep this copy.
-                """
+                """,
+                bundle: .module
             )
         case let .recoveryCleanupRequired(url):
             String(
                 localized: """
                 MostlyText retained recovery for \(url.lastPathComponent). Keep this window open and retry, \
                 or use Save As after revealing the recovery copy.
-                """
+                """,
+                bundle: .module
             )
         case .noActiveDocument:
             String(localized: "There is no active document.", bundle: .module)
@@ -56,7 +58,8 @@ extension WorkspaceError: LocalizedError {
                 This text cannot be saved as \(encodingName) without losing characters. \
                 Nothing was changed; choose another encoding, or delete an invisible byte-order-mark character \
                 (U+FEFF or U+FFFE) at the very start of the text.
-                """
+                """,
+                bundle: .module
             )
         case let .destinationOpenInAnotherWindow(name):
             String(
