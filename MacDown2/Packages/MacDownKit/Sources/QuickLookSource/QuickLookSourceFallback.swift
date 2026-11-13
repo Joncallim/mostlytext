@@ -1,6 +1,8 @@
 import Darwin
+import ExportService
 import FileCore
 import Foundation
+import QuickLookBoundary
 
 public enum QuickLookSourceError: Error, Sendable, Equatable {
     case invalidURL
@@ -16,7 +18,8 @@ public enum QuickLookSourceError: Error, Sendable, Equatable {
 /// A passive Quick Look reply for one system-supplied Markdown file. This
 /// bounded source view remains useful when derived rendering is unavailable.
 public enum QuickLookSourceFallback {
-    public static let maximumSourceBytes = 1 << 20
+    public static let maximumSourceBytes = QuickLookSourceBudget.maximumSourceBytes
+    public static let maximumHTMLBytes = QuickLookSourceBudget.maximumHTMLBytes
 
     public static func replyHTML(for fileURL: URL) throws -> Data {
         let selected = try openSelectedFile(fileURL)
@@ -55,17 +58,38 @@ public enum QuickLookSourceFallback {
         return html(for: decoded.text)
     }
 
-    /// No authored byte is emitted as markup, a URL or a resource reference.
+    /// The shared GFM parser supplies static structure. If it refuses a
+    /// nonempty input or expands past the reply budget, preserve escaped
+    /// authored source instead. Neither path receives a base URL.
     private static func html(for source: String) -> Data {
+        html(for: source, render: ExportService.renderPassiveMarkdownFragment)
+    }
+
+    static func html(for source: String, render: (String) -> String) -> Data {
+        let rendered = render(source)
+        if !rendered.isEmpty || source.isEmpty {
+            let document = document(body: rendered)
+            if document.count <= maximumHTMLBytes {
+                return document
+            }
+        }
+        return document(body: sourceView(source))
+    }
+
+    private static func sourceView(_ source: String) -> String {
         let escaped = source.replacingOccurrences(of: "&", with: "&amp;")
             .replacingOccurrences(of: "<", with: "&lt;")
             .replacingOccurrences(of: ">", with: "&gt;")
             .replacingOccurrences(of: "\"", with: "&quot;")
             .replacingOccurrences(of: "'", with: "&#39;")
-        return Data("""
+        return "<pre>\(escaped)</pre>"
+    }
+
+    private static func document(body: String) -> Data {
+        Data("""
         <!doctype html><html><head><meta charset="utf-8">
         <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'">
-        </head><body><header>MostlyText</header><pre>\(escaped)</pre></body></html>
+        </head><body><header>MostlyText</header>\(body)</body></html>
         """.utf8)
     }
 

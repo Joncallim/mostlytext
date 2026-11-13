@@ -1,9 +1,10 @@
 import Darwin
 import Foundation
+import QuickLookBoundary
 import QuickLookSource
 import Security
 
-private let maximumOutputBytes = QuickLookSourceFallback.maximumSourceBytes * 6 + 4096
+private let maximumOutputBytes = QuickLookSourceBudget.maximumHTMLBytes
 
 private func hasRequiredSandbox() -> Bool {
     guard let task = SecTaskCreateFromSelf(nil) else { return false }

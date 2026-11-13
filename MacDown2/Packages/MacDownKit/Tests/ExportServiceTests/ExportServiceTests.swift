@@ -7,6 +7,24 @@ import Testing
 
 @Suite("renderMarkdownFragment")
 struct RenderMarkdownFragmentTests {
+    @Test func passiveQuickLookFragmentUsesGFMWithoutAuthoredURLsOrActiveHTML() {
+        let markdown = """
+        | Column | Value |
+        | --- | --- |
+        | one | ~~two~~ |
+
+        [link](https://example.invalid/path) ![picture](https://example.invalid/image.png)
+        <script>alert(1)</script>
+        """
+        let html = ExportService.renderPassiveMarkdownFragment(markdown)
+        #expect(html.contains("<table>"))
+        #expect(html.contains("<del>two</del>"))
+        #expect(html.contains("link"))
+        #expect(html.contains("picture"))
+        #expect(!html.contains("example.invalid"))
+        #expect(!html.contains("<script>"))
+    }
+
     @Test func rendersAMarkdownListToHTML() {
         let html = ExportService.renderMarkdownFragment("- One\n- Two")
         #expect(html.contains("<li>One</li>"))

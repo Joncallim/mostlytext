@@ -242,6 +242,8 @@ targets:
     dependencies:
     - package: MacDownKit
       product: QuickLookSource
+    - package: MacDownKit
+      product: QuickLookBoundary
     - target: MostlyTextQuickLookWorker
       embed: true
       link: false
@@ -275,6 +277,8 @@ targets:
     dependencies:
     - package: MacDownKit
       product: QuickLookSource
+    - package: MacDownKit
+      product: QuickLookBoundary
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.MostlyText.QuickLook.Worker
@@ -386,7 +390,7 @@ targets:
     - package: MacDownKit
       product: GraphvizRendering
     - package: MacDownKit
-      product: QuickLookSource
+      product: QuickLookBoundary
     settings:
       base:
         GENERATE_INFOPLIST_FILE: 'YES'

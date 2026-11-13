@@ -81,7 +81,13 @@ jobs:
           app="$RUNNER_TEMP/production-quicklook/installed/MostlyText.app"
           built="$RUNNER_TEMP/production-quicklook/app-build/Build/Products/Release/MacDown2.app"
           provider="$app/Contents/PlugIns/MostlyTextQuickLook.appex"
-          printf '%s' 'MOSTLYTEXT_PRODUCTION_QUICKLOOK_20261111' > "$RUNNER_TEMP/mostlytext-production-quicklook.md"
+          cat > "$RUNNER_TEMP/mostlytext-production-quicklook.md" <<'MARKDOWN'
+          # MOSTLYTEXT_PRODUCTION_QUICKLOOK_20261111
+
+          | GFM_COLUMN_NAME | GFM_COLUMN_VALUE |
+          | --- | --- |
+          | one | ~~GFM_STRUCK_VALUE~~ |
+          MARKDOWN
           ln -s "$RUNNER_TEMP/mostlytext-production-quicklook.md" "$RUNNER_TEMP/mostlytext-production-linked.md"
           /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -u "$built"
           /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$app"

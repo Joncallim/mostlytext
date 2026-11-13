@@ -1,11 +1,12 @@
 import Foundation
+import QuickLookBoundary
 import QuickLookSource
 
 /// The extension waits only for the bounded, sandboxed source service. The
 /// service owns the child deadline and reaps that exact process on timeout.
 enum QuickLookWorkerClient {
     private static let serviceName = "app.mostlytext.MostlyText.QuickLook.Worker"
-    private static let maximumReplyBytes = QuickLookSourceFallback.maximumSourceBytes * 6 + 4096
+    private static let maximumReplyBytes = QuickLookSourceBudget.maximumHTMLBytes
 
     static func renderSource(_ selected: FileHandle) async -> Data? {
         let result = OneShotSourceReply()
