@@ -162,9 +162,9 @@ continue on the main actor. The same six-test selection passes after this
 change. An editor owner still has to schedule/cancel the initial task and
 reject a result if the document revision or lifetime changed meanwhile.
 
-The locked optimized package selection also passed all six tests in two
+The final locked optimized package selection passed all six tests in two
 suites. Its 14 bounded candidate steps on the 1 MiB corpus took roughly
-0.23–0.67 ms each, while the mounted public-styler case passed in 8.382 s.
+0.26–0.78 ms each, while the mounted public-styler case passed in 8.906 s.
 These timings include the local cache selection/parse/capture in the probe,
 not a real editor keypress or settled highlight, so the 50 ms/8 ms whole-path
 criteria remain unproved.
