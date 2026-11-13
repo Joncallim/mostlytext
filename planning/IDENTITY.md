@@ -37,16 +37,17 @@ Opening theme JSON as ordinary text does not install it. Installation remains an
 explicit Appearance action. Naming/type source completion does not prove native
 import/export panels, Finder, VoiceOver or installed-state acceptance.
 
-## Reserved integration conventions
+## Integration conventions
 
-These are future handoff names, not claims that a target or deployed feed already
-exists. They use the owner-frozen app.mostlytext. prefix and preserve the app
-identifier. The implemented Markdown document icon is recorded above.
+These names use the owner-frozen app.mostlytext. prefix and preserve the app
+identifier. The Markdown document icon and Quick Look target are implemented;
+the appcast remains a reserved address, not a deployed update channel.
 
 - Quick Look extension bundle identifier: app.mostlytext.MostlyText.QuickLook.
-  It derives from the containing app ID. #7 must add and validate the actual
-  extension, supported Markdown types, signing and native invocation. The current
-  project has no Quick Look target; do not mark that implementation complete.
+  It derives from the containing app ID. #7 now has a Markdown-only extension
+  and sandboxed source worker, with hosted Finder invocation for ordinary,
+  symlinked and BOM-marked selections. Static technical content, final signing,
+  clean-install registration and exact release-artifact acceptance remain open.
 - Future public types/extensions follow the app.mostlytext. prefix. The current
   custom-theme type/extension above are implemented and need no further naming
   decision. No generic JSON, TOML or source-code ownership is added here.
