@@ -11,9 +11,11 @@ HTML/PDF export, document bytes, or the final signed-install gate.
 
 ## Current source and reconciliation
 
-Implementation now starts from main `482ca5c2`, which includes the Quick Look
-GFM and source-compatibility candidates through PRs #254 and #255. Both passed
-exact-head CI and genuine Finder qualification before merge. `QuickLookSource`
+This selected-file math stack starts from PR #258's passive composition branch,
+itself based on main `0035839e`. PR #258 is temporarily stacked on the
+test-admission fix in PR #259; neither is merged yet. Main includes the Quick
+Look GFM and source-compatibility changes through PRs #254 and #255. Both
+passed exact-head CI and genuine Finder qualification before merge. `QuickLookSource`
 owns the selected descriptor, strict FileCore decoding, GFM fragment and escaped
 fallback. The extension opens only the selected file, then sends its descriptor
 to a sandbox-only service. Its child has a three-second parent deadline, a
@@ -44,7 +46,7 @@ accepted placements, so stale and overlapping results cannot starve later
 valid content. A refused item leaves its own source visible. These caps are
 provisional pending Release renderer measurements.
 
-Six focused package cases pass for accepted plus stale items, out-of-range
+Seven focused package cases pass for accepted plus stale items, out-of-range
 rejection, generated URL/script neutralization, oversized-item fallback and
 budget starvation from stale/overlapping items. The selected-source suite
 passes 11/11; existing sanitizer and derived-content suites pass 3/3 and
@@ -128,9 +130,9 @@ an additional `D` marker after its own complete write. On the three-second
 deadline, the parent kills/reaps the child and accepts only a marked, bounded
 source fallback. A new controlled fake child writes partial derived bytes and
 then stalls; its test requires the complete source fallback and reaping. The
-exact worker and app/test bundles compile locally in Debug with locked pins;
-hosted execution and real Finder regression remain pending. This fallback
-prototype alone does not render document-derived content.
+exact worker and app/test bundles compile locally in Debug with locked pins.
+The fallback-only hosted Finder run 43367220963 passed its real selected-file
+control; it did not render document-derived content.
 
 The next exploratory build flag, `QUICKLOOK_DERIVED_MATH`, now reads the
 selected immutable source after the fallback marker, invokes
@@ -144,16 +146,21 @@ That was a flag-enabled experiment, not a normal product build.
 
 ### Normal-build math candidate
 
-The next slice removes `QUICKLOOK_DERIVED_MATH` from the selected-source
+The production slice removes `QUICKLOOK_DERIVED_MATH` from the selected-source
 path and builds the same worker in the normal Release configuration. The
 hosted Finder workflow likewise no longer adds probe compilation flags.
 The immutable `F` source reply still precedes parsing; a complete `D`
 candidate is preferred only when the worker finishes successfully, and the
 three-second parent deadline is unchanged. The fixed sandbox probes stay
 behind `QUICKLOOK_DERIVED_PROBE` for diagnosis but are absent from this
-qualification build. A normal-build Finder math image, app-host process
-tests, full CI, output/latency measurements and compliance inventory are
-required before the candidate can merge. This slice does not implement
+qualification build. The normal-build [Finder run 43373105245](https://github.com/Joncallim/mostlytext/actions/runs/43373105245)
+passed one actual installed-provider UI test with zero failures on exploratory
+head `06819625`. Its retained screenshot shows `x²` between authored markers,
+and the accessibility tree labels the static image `x^2`. The provider and
+worker retain their exact sandbox/read-only and sandbox-only entitlements,
+with no network grant or containing-app launch. The clean replay in this stack
+still needs its own exact-head app-host process tests, full CI, output/latency
+measurements and compliance inventory before merge. This slice does not implement
 Mermaid, D2 or Graphviz, or claim the issue-wide budget and final package.
 
 ## Qualification and stop conditions
