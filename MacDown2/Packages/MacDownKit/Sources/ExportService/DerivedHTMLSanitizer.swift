@@ -9,6 +9,11 @@ import Foundation
 /// the same scheme rules plus the usual script/handler/embed removal. Typeset math images
 /// (`data:image/png;base64,…` in `src`) are unaffected.
 enum DerivedHTMLSanitizer {
+    enum URLPolicy {
+        case export
+        case passive
+    }
+
     private static func regex(_ pattern: String) -> NSRegularExpression {
         // Patterns are literals in this file; a failure here is a programming error.
         guard let compiled = try? NSRegularExpression(
@@ -34,7 +39,7 @@ enum DerivedHTMLSanitizer {
     /// re-emitted from its parsed name and attributes, so nothing outside a tag is ever rewritten and the
     /// output cannot re-form a blocked tag (`<scr<iframe>ipt>`) — it is its own fixed point. An unterminated
     /// tag or quoted value fails closed: the remainder is dropped.
-    static func sanitized(_ html: String) -> String {
+    static func sanitized(_ html: String, urlPolicy: URLPolicy = .export) -> String {
         guard html.unicodeScalars.contains("<") else { return html }
         let scalars = Array(html.unicodeScalars)
         var output = String.UnicodeScalarView()
@@ -45,7 +50,8 @@ enum DerivedHTMLSanitizer {
                 index += 1
                 continue
             }
-            guard let next = consumeMarkup(at: index, in: scalars, into: &output) else { break }
+            guard let next = consumeMarkup(at: index, in: scalars, into: &output,
+                                           urlPolicy: urlPolicy) else { break }
             index = next
         }
         return String(output)
@@ -55,7 +61,8 @@ enum DerivedHTMLSanitizer {
     private static func consumeMarkup(
         at start: Int,
         in scalars: [Unicode.Scalar],
-        into output: inout String.UnicodeScalarView
+        into output: inout String.UnicodeScalarView,
+        urlPolicy: URLPolicy
     ) -> Int? {
         // Comments, CDATA, doctypes and processing instructions are never copied through. A browser may end them
         // somewhere other than where this scan does (`--!>` ends a comment; CDATA outside svg/math is a bogus
@@ -97,7 +104,7 @@ enum DerivedHTMLSanitizer {
         if animationElements.contains(tag.name) {
             return next
         }
-        output.append(contentsOf: render(tag).unicodeScalars)
+        output.append(contentsOf: render(tag, urlPolicy: urlPolicy).unicodeScalars)
         return next
     }
 
@@ -122,11 +129,15 @@ enum DerivedHTMLSanitizer {
         return end
     }
 
-    private static func render(_ tag: HTMLTagScanner.Tag) -> String {
+    private static func render(_ tag: HTMLTagScanner.Tag, urlPolicy: URLPolicy) -> String {
         var result = tag.isClosing ? "</\(tag.name)" : "<\(tag.name)"
         if !tag.isClosing {
             for attribute in tag.attributes {
                 if attribute.name.hasPrefix("on") {
+                    continue
+                }
+                if urlPolicy == .passive,
+                   ["srcset", "poster", "background", "data"].contains(attribute.name) {
                     continue
                 }
                 guard var value = attribute.value else {
@@ -135,7 +146,7 @@ enum DerivedHTMLSanitizer {
                 }
                 if urlAttributes.contains(attribute.name), !isSafe(
                     decodingEntities(in: value),
-                    attribute: attribute.name
+                    attribute: attribute.name, policy: urlPolicy
                 ) {
                     value = "#"
                 }
@@ -158,7 +169,16 @@ enum DerivedHTMLSanitizer {
 
     private static let embeddedImage = regex(#"^\s*data:image/(png|jpe?g|gif|webp);base64,[A-Za-z0-9+/=\s]*$"#)
 
-    private static func isSafe(_ url: String, attribute: String) -> Bool {
+    private static func isSafe(_ url: String, attribute: String, policy: URLPolicy) -> Bool {
+        if policy == .passive {
+            let trimmed = url.trimmingCharacters(in: .whitespacesAndNewlines)
+            if trimmed.hasPrefix("#") {
+                return true
+            }
+            return attribute.lowercased() == "src"
+                && ExportURLPolicy.isEmbeddedRasterImage(trimmed)
+                && ExportURLPolicy.embeddedRasterReferencesAreClosed(trimmed)
+        }
         if attribute.lowercased() == "src",
            embeddedImage.firstMatch(in: url, range: NSRange(location: 0, length: (url as NSString).length)) != nil {
             return true

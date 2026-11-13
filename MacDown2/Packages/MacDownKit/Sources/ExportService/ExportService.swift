@@ -77,4 +77,63 @@ public enum ExportService {
             urlTransformer: { _, _ in .blank }
         )) ?? ""
     }
+
+    /// Compose already-produced static content through Export's source-range
+    /// validation and GFM tree walk. A rejected item leaves its authored source
+    /// in place. Quick Look supplies only immutable, generation-bound results;
+    /// this function never invokes a renderer or grants resource access.
+    public static func renderPassiveMarkdownFragment(
+        _ markdown: String,
+        contributions: [ExportDerivedContribution],
+        sourceGeneration: UInt
+    ) -> String {
+        guard !contributions.isEmpty else { return renderPassiveMarkdownFragment(markdown) }
+        // Bound each producer fragment before the sanitizer copies it. The
+        // shared composer accounts for the aggregate only after placement,
+        // so stale or overlapping failures cannot starve later valid items.
+        let singleLimit = 1 << 20
+        let sourceLength = markdown.utf16.count
+        let passiveContributions = contributions.compactMap { item -> ExportDerivedContribution? in
+            // Do not charge items the shared composer will reject before
+            // placement. An invalid early result must not starve a later
+            // valid equation or diagram of the small Quick Look allowance.
+            guard item.sourceGeneration == sourceGeneration,
+                  item.sourceRange.lowerBound >= 0,
+                  item.sourceRange.lowerBound < item.sourceRange.upperBound,
+                  item.sourceRange.upperBound <= sourceLength,
+                  !item.diagnostics.contains(where: { $0.severity == .error })
+            else { return nil }
+            let size = item.html.utf8.count
+            guard size <= singleLimit else { return nil }
+            let safeHTML = DerivedHTMLSanitizer.sanitized(item.html, urlPolicy: .passive)
+            guard safeHTML.utf8.count <= singleLimit else { return nil }
+            return ExportDerivedContribution(
+                sourceRange: item.sourceRange,
+                placement: item.placement,
+                html: safeHTML,
+                sourceGeneration: item.sourceGeneration,
+                diagnostics: item.diagnostics,
+                requiresHeadingNavigation: item.requiresHeadingNavigation
+            )
+        }
+        let derived = DerivedContentComposer.compose(
+            bodyText: markdown,
+            bodyStartOffset: 0,
+            sourceUTF16Length: markdown.utf16.count,
+            contributions: passiveContributions,
+            sourceGeneration: sourceGeneration,
+            budget: .passiveQuickLook,
+            namespaceSVGIDs: true
+        )
+        guard let rendered = try? CMarkGFM.render(
+            derived.splicedBody,
+            options: CMarkGFM.optDefault | CMarkGFM.optSmart,
+            customNodes: derived.customNodes,
+            urlTransformer: { _, _ in .blank }
+        ) else { return "" }
+        guard DerivedContentComposer.leakedSentinelIndices(
+            in: rendered.html, suffix: derived.sentinelSuffix
+        ).isEmpty else { return "" }
+        return rendered.html
+    }
 }

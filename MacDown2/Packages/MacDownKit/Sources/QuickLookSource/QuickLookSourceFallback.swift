@@ -53,9 +53,28 @@ public enum QuickLookSourceFallback {
     /// Called only in the isolated worker after its parent has armed a hard
     /// process deadline. Revalidate the received descriptor before reading.
     public static func replyHTML(forOpenDescriptor descriptor: Int32) throws -> Data {
+        try html(for: selectedSource(forOpenDescriptor: descriptor))
+    }
+
+    /// Freeze the selected descriptor once before a worker invokes any
+    /// asynchronous contributor. The returned String has no path authority.
+    public static func selectedSource(forOpenDescriptor descriptor: Int32) throws -> String {
         let bytes = try readSelectedFile(descriptor)
-        let decoded = try FileByteDecoder.decode(bytes, maximumBytes: maximumSourceBytes)
-        return html(for: decoded.text)
+        return try FileByteDecoder.decode(bytes, maximumBytes: maximumSourceBytes).text
+    }
+
+    /// Wrap an immutable generation's validated static fragments with the
+    /// same bounded passive HTML document as the source-only path.
+    public static func replyHTML(
+        forSource source: String,
+        contributions: [ExportDerivedContribution],
+        sourceGeneration: UInt
+    ) -> Data {
+        html(for: source) { markdown in
+            ExportService.renderPassiveMarkdownFragment(
+                markdown, contributions: contributions, sourceGeneration: sourceGeneration
+            )
+        }
     }
 
     /// The shared GFM parser supplies static structure. If it refuses a
@@ -88,7 +107,8 @@ public enum QuickLookSourceFallback {
     private static func document(body: String) -> Data {
         Data("""
         <!doctype html><html><head><meta charset="utf-8">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'">
+        <meta http-equiv="Content-Security-Policy"
+              content="default-src 'none'; img-src data:; base-uri 'none'; form-action 'none'">
         </head><body><header>MostlyText</header>\(body)</body></html>
         """.utf8)
     }
