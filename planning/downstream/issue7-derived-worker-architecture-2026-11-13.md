@@ -38,18 +38,21 @@ generation, overlap, sanitizer and cmark custom-node rules. Quick Look's
 stricter URL mode permits only internal fragments and raster data URLs in
 generated markup; alternate resource attributes (`srcset`,
 `poster`, `background` and `data`) are dropped. Authored Markdown URLs remain blank.
-Per-item and aggregate generated-byte admission occurs before the sanitizer
-copies a fragment, and a refused item leaves its own source visible. These
-1 MiB/4 MiB caps are provisional pending Release renderer measurements.
+Per-item 1 MiB admission occurs before the sanitizer copies a fragment. The
+shared composer charges its 4 MiB aggregate and 128-fragment ceilings only to
+accepted placements, so stale and overlapping results cannot starve later
+valid content. A refused item leaves its own source visible. These caps are
+provisional pending Release renderer measurements.
 
-Four focused package cases pass for accepted plus stale items, out-of-range
-rejection, generated URL/script neutralization and an oversized item followed
-by a valid one. The existing sanitizer and derived-content suites pass 3/3
-and 10/10. A separate selected-source test suite passes 11/11, including
-accepted and stale generated fragments, authored URL suppression and the
-passive CSP. This candidate has no producer or worker caller, and establishes
-neither document-derived math/diagrams nor Finder presentation of them. It
-requires its own exact-head CI and Finder review before integration.
+Six focused package cases pass for accepted plus stale items, out-of-range
+rejection, generated URL/script neutralization, oversized-item fallback and
+budget starvation from stale/overlapping items. Existing sanitizer and
+derived-content suites pass 3/3 and 10/10. The selected-source suite passes
+11/11, including accepted and stale generated fragments, authored URL
+suppression and the passive CSP. This candidate has no producer or worker
+caller, and establishes neither document-derived math/diagrams nor Finder
+presentation of them. It requires its own exact-head CI and Finder review
+before integration.
 
 ## Pre-implementation feasibility gate
 
