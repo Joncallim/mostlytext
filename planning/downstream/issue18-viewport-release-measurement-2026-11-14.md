@@ -34,3 +34,20 @@ measures a complete release app's key event, Preview, OS draw completion,
 WebKit helpers or 8 ms main-actor target. No owner product was launched. The
 hosted measurement and the broader structural edit, IME, undo, viewport and
 native Release controls must be reviewed before enabling viewport mode.
+
+## First hosted result and toolchain correction
+
+The first exact-head [hosted measurement](https://github.com/Joncallim/mostlytext/actions/runs/43521210074)
+at `6be6b43f` executed all three cases and retained its complete artifact.
+That workflow chose the first Xcode 26 installation, which was Xcode 26.0.1
+on macOS 26.7.2, rather than the Xcode 26.6 used by the export/Release gates.
+Its twelve-edit settled medians were 89.052 ms for the mounted session,
+90.929 ms for reduced mode and 93.191 ms for viewport mode; viewport reached
+131.863 ms. The measurement workflow itself passed because it records rather
+than silently waives a product threshold. This is negative performance
+evidence for that exact worker/toolchain, not a 50 ms qualification.
+
+The follow-up chooses exactly Xcode 26.6 using the established export-workflow
+selection loop and fails setup if unavailable. Keep the first timing record;
+review the fresh same-toolchain measurement before deciding whether to tune
+TextKit/editing, continue the reduced fallback or enable viewport colour.
