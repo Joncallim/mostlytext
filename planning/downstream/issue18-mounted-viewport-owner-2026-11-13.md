@@ -127,19 +127,25 @@ Nested or unobserved edits, a changed neighbor, and an edited range outside
 the window still fail closed. Interior plain-word insertions and deletions use
 the same proof; structural changes take a fresh full parse.
 
-An opt-in mounted Release probe generated 1,048,805 UTF-8 bytes with a bounded
-top-level `##` section at the edit point. Twelve alternating insertions and
-deletions entered the local path (12 selected, 12 matched, 12 local parses,
-one full parse at open). In that controlled run, synchronous edit calls were
-8–35 ms and current viewport color settled in 10–37 ms. This is not a
-whole-app, multi-workload, p95 or native acceptance pass. A nested `#` parent
-section spanning the document exceeded the safe window, so those edits
-correctly took full parses and settled around 700 ms. This section shape is
-still a performance limitation, not an eligible local edit.
+The cache now partitions a nested heading tree into disjoint parent-prefix,
+child and grandchild entries. A local parse changes only the edited entry and
+shifts later ranges; a fresh full-parse oracle matches captures after edits at
+all three levels. This removes the specific 1 MiB root-section rejection
+without changing the 65,536-unit window cap. A single leaf paragraph or
+section above that cap still refuses the local path.
 
-Before default activation, partition nested/large sections into safe local
-units or provide another verified incremental representation; measure the
-Release app on the complete 1 MiB workload matrix; then wire the owner into
-the highlighter with an honest visible-only mode, theme/font and lifetime
-handling, and a reviewed localized status note. Separate-account native
-acceptance remains a final gate for the exact app build.
+An opt-in mounted Release probe generated 1,048,804 UTF-8 bytes with a `#`
+parent above many `##` sections. Twelve alternating insertions and deletions
+entered the local path (12 selected, 12 matched, 12 local parses, one full
+parse at open). In that controlled run, synchronous edit calls were 9–36 ms
+and current viewport color settled in 11–38 ms. The earlier unpartitioned
+variant took full parses and settled around 700 ms. These are source-level
+measurements on one local machine, not a whole-app, multi-workload, p95 or
+native acceptance pass.
+
+Before default activation, measure the Release app on the complete 1 MiB
+workload matrix, including large leaf sections, dense inline markup and
+structural edits. Wire the owner into the highlighter with an honest
+visible-only mode, theme/font and lifetime handling, and a reviewed localized
+status note. Separate-account native acceptance remains a final gate for the
+exact app build.

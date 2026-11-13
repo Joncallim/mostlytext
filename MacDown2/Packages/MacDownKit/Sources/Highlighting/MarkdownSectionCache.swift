@@ -21,10 +21,22 @@ struct MarkdownSectionCache {
         let node: Node
         let snapshot: LanguageLayerTreeSnapshot
         let content: String
+        /// Disjoint slice of `node` owned by this entry. A parent section's
+        /// heading/body ends where its first nested section begins.
+        let range: NSRange
         var offset: Int
 
+        init(node: Node, snapshot: LanguageLayerTreeSnapshot, content: String,
+             offset: Int, range: NSRange? = nil) {
+            self.node = node
+            self.snapshot = snapshot
+            self.content = content
+            self.offset = offset
+            self.range = range ?? node.range
+        }
+
         var globalRange: NSRange {
-            NSRange(location: node.range.location + offset, length: node.range.length)
+            NSRange(location: range.location + offset, length: range.length)
         }
     }
 
@@ -49,7 +61,7 @@ struct MarkdownSectionCache {
         entries.reserveCapacity(root.childCount)
         for index in 0 ..< root.childCount {
             guard let node = root.child(at: index) else { throw CacheError.snapshotUnavailable }
-            entries.append(Section(node: node, snapshot: snapshot, content: source, offset: 0))
+            Self.partition(node, snapshot: snapshot, source: source, into: &entries)
         }
         sections = entries
         shifts = SectionShifts(sectionCount: entries.count)
@@ -93,16 +105,9 @@ struct MarkdownSectionCache {
         guard body.unicodeScalars.allSatisfy({ word.contains($0) || $0 == " " || $0 == "\t" })
         else { return nil }
 
-        guard let firstVisible = firstIndex(overlapping: visible) else { return nil }
-        var lastVisible = firstVisible
-        while lastVisible + 1 < sections.count,
-              globalRange(at: lastVisible + 1).location < NSMaxRange(visible) {
-            lastVisible += 1
-        }
-        let first = min(editIndex, firstVisible)
-        let last = max(editIndex, lastVisible)
-        let lower = globalRange(at: first).location
-        let upper = NSMaxRange(globalRange(at: last))
+        guard firstIndex(overlapping: visible) != nil else { return nil }
+        let lower = entry.globalRange.location
+        let upper = NSMaxRange(entry.globalRange)
         let delta = (replacement as NSString).length - edit.length
         let newLength = upper - lower + delta
         guard lower <= edit.location, NSMaxRange(edit) <= upper,
@@ -111,7 +116,7 @@ struct MarkdownSectionCache {
         else { return nil }
         return Window(old: NSRange(location: lower, length: upper - lower),
                       new: NSRange(location: lower, length: newLength),
-                      firstSection: first, lastSection: last)
+                      firstSection: editIndex, lastSection: editIndex)
     }
 
     /// Replace cached trees only after a fresh local parse preserves the
@@ -196,6 +201,32 @@ struct MarkdownSectionCache {
         var section = sections[index]
         section.offset += shifts.displacement(at: index)
         return section
+    }
+
+    /// Split heading hierarchy into disjoint paint/edit entries. Tree-sitter
+    /// nests every `##` below a `#`; keeping only root children would turn a
+    /// 1 MiB note into one unbounded edit window. The parent prefix and each
+    /// nested section retain their original immutable snapshot for reads.
+    private static func partition(_ node: Node, snapshot: LanguageLayerTreeSnapshot,
+                                  source: String, into entries: inout [Section]) {
+        guard node.nodeType == "section" else {
+            entries.append(Section(node: node, snapshot: snapshot, content: source, offset: 0))
+            return
+        }
+        var cursor = node.range.location
+        for index in 0 ..< node.childCount {
+            guard let child = node.child(at: index), child.nodeType == "section" else { continue }
+            if child.range.location > cursor {
+                entries.append(Section(node: node, snapshot: snapshot, content: source, offset: 0,
+                                       range: NSRange(location: cursor, length: child.range.location - cursor)))
+            }
+            partition(child, snapshot: snapshot, source: source, into: &entries)
+            cursor = NSMaxRange(child.range)
+        }
+        if cursor < NSMaxRange(node.range) {
+            entries.append(Section(node: node, snapshot: snapshot, content: source, offset: 0,
+                                   range: NSRange(location: cursor, length: NSMaxRange(node.range) - cursor)))
+        }
     }
 
     /// Require both neighboring UTF-16 units to be alphanumeric. This also

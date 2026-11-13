@@ -13,7 +13,7 @@ struct MarkdownViewportBudgetBenchmarkTests {
     @Test(.timeLimit(.minutes(5)))
     // swiftlint:disable:next function_body_length
     func oneMiBMountedWordEdits() async throws {
-        let original = "## Heading\n\nalphatarget beta\n\n"
+        let original = "# Heading\n\nalphatarget beta\n\n"
             + HighlightBudgetFixture.ordinary.markdown(utf8Bytes: 1024 * 1024)
         let model = ViewportBudgetSourceBox(original)
         let identity = UUID().uuidString
