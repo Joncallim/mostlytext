@@ -3,6 +3,10 @@ import Foundation
 import QuickLookBoundary
 import QuickLookSource
 import Security
+#if QUICKLOOK_DERIVED_PROBE
+    import Math
+    import MathRendering
+#endif
 
 private let maximumOutputBytes = QuickLookSourceBudget.maximumHTMLBytes
 
@@ -54,6 +58,34 @@ private func sourceWorkerMain() -> Never {
     else { Darwin._exit(1) }
     Darwin._exit(0)
 }
+
+#if QUICKLOOK_DERIVED_PROBE
+    /// Hosted-only feasibility probe, compiled out of the distributable worker.
+    /// It uses this exact XPC executable and its sandbox-only entitlement.
+    private func probeMathInSandbox() -> Never {
+        guard hasRequiredSandbox() else { Darwin._exit(130) }
+        let started = ProcessInfo.processInfo.systemUptime
+        let context = ExportMathRenderContext(
+            foregroundRed: 0.1, foregroundGreen: 0.1, foregroundBlue: 0.1,
+            pixelScale: MathImageRenderer.standardScale
+        )
+        let image = MainActor.assumeIsolated {
+            try? MathImageRenderer.render(
+                span: MathSpan(range: 0 ..< 3, style: .inline, latex: "x^2"),
+                context: context
+            )
+        }
+        guard let image, !image.pngData.isEmpty else { Darwin._exit(131) }
+        let elapsed = ProcessInfo.processInfo.systemUptime - started
+        print("QUICKLOOK_SANDBOX_MATH_PROBE pngBytes=\(image.pngData.count) elapsed=\(elapsed)")
+        fflush(stdout)
+        Darwin._exit(0)
+    }
+
+    if CommandLine.arguments == [CommandLine.arguments[0], "--probe-math"] {
+        probeMathInSandbox()
+    }
+#endif
 
 if CommandLine.arguments.count > 1 {
     guard CommandLine.arguments == [CommandLine.arguments[0], "--source-worker"] else { Darwin._exit(126) }

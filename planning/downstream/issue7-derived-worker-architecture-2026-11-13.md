@@ -63,6 +63,14 @@ file still renders. A result that needs a new network entitlement, parent
 directory access, containing-app launch or an unbounded run loop stops this
 architecture for review. A direct package renderer pass is not this probe.
 
+The current exploratory branch adds a `QUICKLOOK_DERIVED_PROBE` build of the
+same worker executable and a bounded hosted invocation before the existing
+Finder test. Its first question is whether a static `x^2` PNG can be produced
+inside the sandbox-only service without the containing app. This probe is
+compiled out of the normal worker and does not route document math to Finder;
+Mermaid/D2/Graphviz, failure isolation, and complete budget/containment proof
+remain subsequent gates.
+
 ## Production boundary after the probe
 
 Keep `QuickLookBoundary` as the small XPC status and byte-cap product.

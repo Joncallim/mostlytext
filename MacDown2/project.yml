@@ -279,6 +279,10 @@ targets:
       product: QuickLookSource
     - package: MacDownKit
       product: QuickLookBoundary
+    - package: MacDownKit
+      product: Math
+    - package: MacDownKit
+      product: MathRendering
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.MostlyText.QuickLook.Worker
