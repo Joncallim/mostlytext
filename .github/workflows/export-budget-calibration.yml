@@ -103,6 +103,7 @@ jobs:
           path: |
             ${{ runner.temp }}/export-budget-calibration/receipt.json
             ${{ runner.temp }}/export-budget-calibration/measurements/*.json
+            ${{ runner.temp }}/export-budget-calibration/measurements/*.pdf
             ${{ runner.temp }}/export-budget-calibration/memory/*.json
             ${{ runner.temp }}/export-budget-calibration/diagnostics/*.json
             ${{ runner.temp }}/export-budget-calibration/diagnostics/*.log
