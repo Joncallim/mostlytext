@@ -141,6 +141,16 @@ Release compilation and source lint pass. The new Finder fixture requires an
 accessible `x^2` image from the selected file; hosted execution and visual
 review are pending. This flag is not enabled in the normal product build.
 
+An independent `QUICKLOOK_DIAGRAM_PROBE` build measures one cold Mermaid render
+inside the same sandbox-only XPC worker, using the existing
+`MermaidWebRenderer` and bundled harness with one page, a four-second renderer
+limit, a 12-second bounded probe wait and a 16-second external harness cap.
+The probe records SVG bytes, renderer time and child peak RSS, then requests
+pool retirement. It does not read a selected file, change the normal worker,
+or imply that cold WebKit fits the current three-second source-process and
+four-second provider deadlines. Hosted source and WebContent outcomes must be
+reviewed before any diagram producer is connected to Quick Look replies.
+
 ## Qualification and stop conditions
 
 Use package tests for valid/invalid source ranges, independent per-item

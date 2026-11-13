@@ -10,6 +10,10 @@ import Security
     import Math
     import MathRendering
 #endif
+#if QUICKLOOK_DIAGRAM_PROBE
+    import DiagramRendering
+    import Diagrams
+#endif
 
 private let maximumOutputBytes = QuickLookSourceBudget.maximumHTMLBytes
 
@@ -41,6 +45,52 @@ private func writeAll(_ descriptor: Int32, bytes: Data) -> Bool {
     private final class DerivedReplyState {
         var completed = false
         var reply: Data?
+    }
+#endif
+
+#if QUICKLOOK_DIAGRAM_PROBE
+    @MainActor
+    private final class DiagramProbeState {
+        var completed = false
+        var outcome = "not started"
+    }
+
+    /// Feasibility only: cold WebKit startup inside the sandboxed worker.
+    /// The selected-document path must not invoke this until the deadline,
+    /// process and WebContent containment are measured on hosted macOS 26.
+    private func probeColdMermaidInSandbox() -> Never {
+        guard hasRequiredSandbox() else { Darwin._exit(140) }
+        let state = MainActor.assumeIsolated { DiagramProbeState() }
+        let started = ProcessInfo.processInfo.systemUptime
+        Task { @MainActor in
+            let renderer = MermaidWebRenderer(poolSize: 1, timeout: .seconds(4), maxOutputBytes: 1 << 20)
+            do {
+                let fence = MermaidFence(source: "flowchart LR\n  A-->B\n", sourceRange: 0 ..< 25)
+                let output = try await renderer.render(fence, context: .neutralLight)
+                let elapsed = ProcessInfo.processInfo.systemUptime - started
+                guard output.svg.contains("<svg"), !output.svg.isEmpty else {
+                    throw NSError(domain: "QuickLookDiagramProbe", code: 1)
+                }
+                state.outcome = "svgBytes=\(output.svg.utf8.count) elapsed=\(elapsed)"
+            } catch {
+                state.outcome = "failure=\(error)"
+            }
+            await renderer.shutdown()
+            state.completed = true
+        }
+        let deadline = Date().addingTimeInterval(12)
+        while Date() < deadline, !MainActor.assumeIsolated({ state.completed }) {
+            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+        }
+        let outcome = MainActor.assumeIsolated { state.outcome }
+        let completed = MainActor.assumeIsolated { state.completed }
+        print("QUICKLOOK_COLD_MERMAID_PROBE \(outcome)")
+        fflush(stdout)
+        Darwin._exit(outcome.hasPrefix("svgBytes=") && completed ? 0 : 141)
+    }
+
+    if CommandLine.arguments == [CommandLine.arguments[0], "--probe-cold-mermaid"] {
+        probeColdMermaidInSandbox()
     }
 #endif
 

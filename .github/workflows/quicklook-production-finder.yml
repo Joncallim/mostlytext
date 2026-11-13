@@ -19,7 +19,7 @@ jobs:
   finder:
     if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: macos-26
-    timeout-minutes: 35
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -41,7 +41,7 @@ jobs:
             -configuration Release -destination 'platform=macOS,arch=arm64' \
             -derivedDataPath "$RUNNER_TEMP/production-quicklook/app-build" \
             -onlyUsePackageVersionsFromResolvedFile CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual \
-            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) QUICKLOOK_DERIVED_PROBE QUICKLOOK_DERIVED_MATH' build \
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) QUICKLOOK_DERIVED_PROBE QUICKLOOK_DERIVED_MATH QUICKLOOK_DIAGRAM_PROBE' build \
             2>&1 | tee "$RUNNER_TEMP/production-quicklook-app-build.log"
       - name: Verify exact installed bundle and prepare separate Finder automation
         run: |
@@ -114,6 +114,30 @@ jobs:
           assert result.returncode == 0
           assert 'QUICKLOOK_SHARED_MATH_PROBE htmlBytes=' in result.stdout
           assert elapsed < 6
+          PY
+      - name: Probe cold Mermaid inside the exact sandboxed worker
+        run: |
+          set -euo pipefail
+          app="$RUNNER_TEMP/production-quicklook/installed/MostlyText.app"
+          worker="$app/Contents/PlugIns/MostlyTextQuickLook.appex/Contents/XPCServices/MostlyTextQuickLookWorker.xpc/Contents/MacOS/MostlyTextQuickLookWorker"
+          WORKER="$worker" python3 - <<'PY'
+          import os
+          import resource
+          import subprocess
+          import time
+
+          started = time.monotonic()
+          result = subprocess.run(
+              [os.environ['WORKER'], '--probe-cold-mermaid'],
+              capture_output=True, text=True, timeout=16, check=False,
+          )
+          elapsed = time.monotonic() - started
+          print('mermaid_exit', result.returncode, 'wall_seconds', round(elapsed, 3))
+          print('mermaid_child_maxrss', resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss)
+          print('mermaid_stdout', result.stdout.strip())
+          print('mermaid_stderr', result.stderr[-1000:])
+          assert result.returncode == 0
+          assert 'QUICKLOOK_COLD_MERMAID_PROBE svgBytes=' in result.stdout
           PY
       - name: Register product and invoke genuine cold Finder
         run: |
