@@ -49,7 +49,7 @@ struct QuickLookSelectedFileOpenerTests {
         let html = try #require(String(bytes: QuickLookSourceFallback.replyHTML(
             forOpenDescriptor: selected.fileDescriptor
         ), encoding: .utf8))
-        #expect(html.contains("# selected"))
+        #expect(html.contains("<h1>selected</h1>"))
     }
 
     @Test func aLateSelectedDescriptorIsClosedAfterTheReplyDeadline() async throws {
