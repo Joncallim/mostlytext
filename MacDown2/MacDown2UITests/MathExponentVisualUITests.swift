@@ -39,14 +39,16 @@ final class MathExponentVisualUITests: XCTestCase {
         XCTAssertTrue(preview.waitForExistence(timeout: 10), "Actual document Preview was not published")
 
         for expression in ["E=mc^2", "x^2", "x^{2}"] {
-            captureImage(app, label: "Inline equation: \(expression)", name: "inline \(expression)")
+            captureImage(app, predicate: NSPredicate(format: "label == %@", "Inline equation: \(expression)"),
+                         name: "inline \(expression)")
         }
-        captureImage(app, label: "Display equation: E=mc^2", name: "display E=mc^2")
+        captureImage(app, predicate: NSPredicate(format: "label BEGINSWITH %@ AND label CONTAINS %@",
+                                                 "Display equation:", "E=mc^2"), name: "display E=mc^2")
         attachWindowScreenshot(app, named: "MostlyText math variants")
     }
 
-    private func captureImage(_ app: XCUIApplication, label: String, name: String) {
-        let image = app.images.matching(NSPredicate(format: "label == %@", label)).firstMatch
+    private func captureImage(_ app: XCUIApplication, predicate: NSPredicate, name: String) {
+        let image = app.images.matching(predicate).firstMatch
         guard image.waitForExistence(timeout: 20) else {
             attachWindowScreenshot(app, named: "Missing \(name) in MostlyText window")
             XCTFail("Missing native image for \(name)")
