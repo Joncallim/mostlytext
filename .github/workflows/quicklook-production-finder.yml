@@ -41,7 +41,7 @@ jobs:
             -configuration Release -destination 'platform=macOS,arch=arm64' \
             -derivedDataPath "$RUNNER_TEMP/production-quicklook/app-build" \
             -onlyUsePackageVersionsFromResolvedFile CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual \
-            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) QUICKLOOK_DERIVED_PROBE' build \
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) QUICKLOOK_DERIVED_PROBE QUICKLOOK_DERIVED_MATH' build \
             2>&1 | tee "$RUNNER_TEMP/production-quicklook-app-build.log"
       - name: Verify exact installed bundle and prepare separate Finder automation
         run: |
@@ -127,6 +127,8 @@ jobs:
           | GFM_COLUMN_NAME | GFM_COLUMN_VALUE |
           | --- | --- |
           | one | ~~GFM_STRUCK_VALUE~~ |
+
+          MATH_INLINE_MARKER $x^2$ MATH_AFTER_MARKER
           MARKDOWN
           ln -s "$RUNNER_TEMP/mostlytext-production-quicklook.md" "$RUNNER_TEMP/mostlytext-production-linked.md"
           python3 - <<'PY'

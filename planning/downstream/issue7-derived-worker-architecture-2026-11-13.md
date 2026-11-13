@@ -129,8 +129,17 @@ deadline, the parent kills/reaps the child and accepts only a marked, bounded
 source fallback. A new controlled fake child writes partial derived bytes and
 then stalls; its test requires the complete source fallback and reaping. The
 exact worker and app/test bundles compile locally in Debug with locked pins;
-hosted execution and real Finder regression remain pending. This is still no
-document-derived renderer path.
+hosted execution and real Finder regression remain pending. This fallback
+prototype alone does not render document-derived content.
+
+The next exploratory build flag, `QUICKLOOK_DERIVED_MATH`, now reads the
+selected immutable source after the fallback marker, invokes
+`SharedMathContribution`, adapts its static results into the passive composer,
+and marks a separate derived output only after the complete write. A source
+without a dollar marker remains on the ordinary source path. Local locked
+Release compilation and source lint pass. The new Finder fixture requires an
+accessible `x^2` image from the selected file; hosted execution and visual
+review are pending. This flag is not enabled in the normal product build.
 
 ## Qualification and stop conditions
 

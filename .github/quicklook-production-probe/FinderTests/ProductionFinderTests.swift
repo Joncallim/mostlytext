@@ -45,6 +45,7 @@ final class ProductionFinderTests: XCTestCase {
         XCTAssertTrue(visible, "The actual product extension must answer Finder with selected source")
         XCTAssertTrue(renderedGFM, "GFM table cells must be accessible as rendered structure")
         XCTAssertTrue(providerRendered, "Finder must show the provider-owned header, not a generic text preview")
+        assertStaticMath(in: finder)
         let staged = URL(fileURLWithPath: "/Users/runner/work/_temp/production-quicklook/installed/MostlyText.app")
         let source = URL(fileURLWithPath: "/Users/runner/work/_temp/mostlytext-production-quicklook.md")
         let handlers = NSWorkspace.shared.urlsForApplications(toOpen: source)
@@ -55,6 +56,12 @@ final class ProductionFinderTests: XCTestCase {
         finder.typeKey(.escape, modifierFlags: [])
         assertSelectedSymlink(in: finder, source: source)
         assertEncodedUnicodeSource(in: finder, beside: source)
+    }
+
+    private func assertStaticMath(in finder: XCUIApplication) {
+        let mathImage = finder.images["x^2"].firstMatch
+        XCTAssertTrue(mathImage.waitForExistence(timeout: 5),
+                      "The selected Markdown equation must become an accessible static image")
     }
 
     private func assertSelectedSymlink(in finder: XCUIApplication, source: URL) {
