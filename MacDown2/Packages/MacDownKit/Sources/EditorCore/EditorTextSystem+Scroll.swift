@@ -44,6 +44,27 @@ public extension EditorTextSystem {
         return contentStorage.offset(from: documentStart, to: fragment.rangeInElement.location)
     }
 
+    /// The complete TextKit paragraphs intersecting the mounted viewport.
+    /// A highlighter can use this as a bounded paint request without copying
+    /// or scanning the document. Nil means layout cannot establish authority.
+    var visibleUTF16Range: NSRange? {
+        guard let scrollView else { return nil }
+        let clip = scrollView.contentView.bounds
+        guard !clip.isEmpty else { return nil }
+        let top = textView.convert(clip.origin, from: scrollView.contentView)
+        let bottom = textView.convert(NSPoint(x: clip.minX, y: clip.maxY), from: scrollView.contentView)
+        guard let first = layoutManager.textLayoutFragment(for: top) else { return nil }
+        let start = contentStorage.offset(
+            from: contentStorage.documentRange.location, to: first.rangeInElement.location
+        )
+        guard let last = layoutManager.textLayoutFragment(for: bottom) else { return nil }
+        let endLocation = last.rangeInElement.endLocation
+        let end = contentStorage.offset(from: contentStorage.documentRange.location, to: endLocation)
+        let length = textView.textStorage?.length ?? 0
+        guard start >= 0, end >= start, end <= length else { return nil }
+        return NSRange(location: start, length: end - start)
+    }
+
     /// Scrolls the given UTF-16 range into the visible rect.
     ///
     /// This is a thin seam over `NSTextView.scrollRangeToVisible(_:)` so the
