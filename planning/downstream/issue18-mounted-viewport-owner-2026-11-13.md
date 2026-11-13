@@ -11,8 +11,9 @@ old colour must never be presented as current content.
 
 ## Baseline and reconciliation
 
-The implementation starts from `main` `ae61d45b` plus the #18 owner/cache PR
-head `70d217d7`. The latter is a dependency, not merged evidence yet.
+The implementation started from `main` `ae61d45b` plus the #18 owner/cache PR
+head `70d217d7`, subsequently merged as `2ad3a3fa`. The mounted parser/painter
+foundation in PR #267 is the dependency for this opt-in activation slice.
 `NeonSyntaxHighlighter` currently owns theme chrome, Neon's full highlighter,
 the storage gate and 8,192-unit fallback. `MarkdownSectionCache` can answer
 clipped root/injection tokens from immutable section snapshots and update one
@@ -70,8 +71,9 @@ teardown. No second storage delegate is installed.
 
 1. On mount or an unsupported edit, copy an immutable source snapshot once,
    create a ticket, and parse on a detached executor. The task returns an
-   immutable `LanguageLayerTreeSnapshot`, not a live parser. Debounce rapid
-   unsupported edits so only the latest snapshot needs work.
+   immutable `LanguageLayerTreeSnapshot`, not a live parser. Cancel superseded
+   requests and bound physical parsing across editors; cancellation cannot
+   interrupt a synchronous tree-sitter call already running.
 2. On completion, compare ticket, requested language, live storage length and
    source identity before installing `MarkdownSectionCache`. A stale result is
    dropped without changing presentation.
