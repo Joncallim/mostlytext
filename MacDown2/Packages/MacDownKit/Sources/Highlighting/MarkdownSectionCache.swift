@@ -92,10 +92,7 @@ struct MarkdownSectionCache {
         let entry = resolvedSection(at: editIndex)
         let node = entry.node
         let localEdit = NSRange(location: edit.location - entry.offset, length: edit.length)
-        guard node.nodeType == "section", !node.hasError else { return nil }
-        let paragraphs = (0 ..< node.childCount).compactMap { node.child(at: $0) }
-            .filter { $0.nodeType == "paragraph" && NSIntersectionRange($0.range, Self.probe(localEdit)).length > 0 }
-        guard paragraphs.count == 1, let paragraph = paragraphs.first, !paragraph.hasError,
+        guard let paragraph = Self.paragraph(in: node, overlapping: localEdit),
               localEdit.location > paragraph.range.location,
               NSMaxRange(localEdit) < NSMaxRange(paragraph.range),
               paragraph.range.length <= Self.windowLimit
@@ -203,24 +200,35 @@ struct MarkdownSectionCache {
         return section
     }
 
-    /// Split heading hierarchy into disjoint paint/edit entries. Tree-sitter
-    /// nests every `##` below a `#`; keeping only root children would turn a
-    /// 1 MiB note into one unbounded edit window. The parent prefix and each
-    /// nested section retain their original immutable snapshot for reads.
+    /// Split heading hierarchy and paragraphs into disjoint paint/edit entries.
+    /// Tree-sitter nests every `##` below a `#`, and a single heading can own
+    /// thousands of ordinary paragraphs. Gaps and headings retain the parent
+    /// snapshot while paragraphs can be reparsed as bounded local windows.
     private static func partition(_ node: Node, snapshot: LanguageLayerTreeSnapshot,
                                   source: String, into entries: inout [Section]) {
         guard node.nodeType == "section" else {
             entries.append(Section(node: node, snapshot: snapshot, content: source, offset: 0))
             return
         }
+        if node.range.length <= windowLimit,
+           !(0 ..< node.childCount).contains(where: { node.child(at: $0)?.nodeType == "section" }) {
+            entries.append(Section(node: node, snapshot: snapshot, content: source, offset: 0))
+            return
+        }
         var cursor = node.range.location
         for index in 0 ..< node.childCount {
-            guard let child = node.child(at: index), child.nodeType == "section" else { continue }
+            guard let child = node.child(at: index),
+                  child.nodeType == "section" || child.nodeType == "paragraph"
+            else { continue }
             if child.range.location > cursor {
                 entries.append(Section(node: node, snapshot: snapshot, content: source, offset: 0,
                                        range: NSRange(location: cursor, length: child.range.location - cursor)))
             }
-            partition(child, snapshot: snapshot, source: source, into: &entries)
+            if child.nodeType == "section" {
+                partition(child, snapshot: snapshot, source: source, into: &entries)
+            } else {
+                entries.append(Section(node: child, snapshot: snapshot, content: source, offset: 0))
+            }
             cursor = NSMaxRange(child.range)
         }
         if cursor < NSMaxRange(node.range) {
@@ -238,6 +246,17 @@ struct MarkdownSectionCache {
         let right = source.substring(with: NSRange(location: location, length: 1))
         return left.unicodeScalars.allSatisfy(word.contains)
             && right.unicodeScalars.allSatisfy(word.contains)
+    }
+
+    private static func paragraph(in node: Node, overlapping edit: NSRange) -> Node? {
+        guard !node.hasError else { return nil }
+        if node.nodeType == "paragraph" {
+            return node
+        }
+        guard node.nodeType == "section" else { return nil }
+        let paragraphs = (0 ..< node.childCount).compactMap { node.child(at: $0) }
+            .filter { $0.nodeType == "paragraph" && NSIntersectionRange($0.range, probe(edit)).length > 0 }
+        return paragraphs.count == 1 ? paragraphs[0] : nil
     }
 
     private func globalRange(at index: Int) -> NSRange {

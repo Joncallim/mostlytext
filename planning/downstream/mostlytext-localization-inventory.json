@@ -5590,6 +5590,44 @@
       "target": "MacDown2",
       "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
       "bundle": "Bundle.main (project target resource)",
+      "key": "Highlighting is limited to visible text in this large document. Colour may update after editing or scrolling. The text, editing and search are unaffected. Full highlighting returns automatically once the document is at or below %@ UTF-16 units.",
+      "source_default_value": "Highlighting is limited to visible text in this large document. Colour may update after editing or scrolling. The text, editing and search are unaffected. Full highlighting returns automatically once the document is at or below %@ UTF-16 units.",
+      "translator_comment": "Visible-only large Markdown status. Non-English values are English review drafts; native language and layout review remains required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [
+          {
+            "position": 1,
+            "type": "@"
+          }
+        ],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [],
+      "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
       "key": "Highlighting reduced",
       "source_default_value": "Highlighting reduced",
       "translator_comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
@@ -5616,7 +5654,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/MacDown2/ReducedHighlightingNoteView.swift:35"
+        "MacDown2/MacDown2/ReducedHighlightingNoteView.swift:47"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -15187,6 +15225,41 @@
       },
       "callsites": [],
       "callsite_evidence": "unknown_or_nonliteral_static_callsite",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "MacDown2",
+      "catalog": "MacDown2/MacDown2/Localizable.xcstrings",
+      "bundle": "Bundle.main (project target resource)",
+      "key": "Visible highlighting only",
+      "source_default_value": "Visible highlighting only",
+      "translator_comment": "Visible-only large Markdown status. Non-English values are English review drafts; native language and layout review remains required.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/MacDown2/ReducedHighlightingNoteView.swift:46"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
     },
     {

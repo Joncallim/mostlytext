@@ -8,6 +8,38 @@ import Testing
 @MainActor
 @Suite("Mounted Markdown viewport session", .serialized)
 struct MarkdownViewportSessionTests {
+    @Test func explicitRestartRejectsOldParseWithoutStorageEdit() async throws {
+        let source = "# Heading\n\n**bold** text\n"
+        let system = EditorTextSystem(identity: UUID().uuidString, initialText: source, configuration: .default)
+        let scroll = NSScrollView(frame: NSRect(x: 0, y: 0, width: 500, height: 250))
+        scroll.documentView = system.textView
+        let window = NSWindow(contentRect: scroll.frame, styleMask: [.titled], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        window.contentView = scroll
+        defer { window.orderOut(nil); window.close() }
+        let hold = FirstParseHold()
+        let session = MarkdownViewportSession(textSystem: system, registry: GrammarRegistry()) { source, registry in
+            await hold.pauseFirst()
+            return try await Task.detached {
+                try MarkdownSectionParser.snapshot(source: source, registry: registry)
+            }.value
+        }
+        defer { session.tearDown() }
+        var publications = 0
+        session.onPublication = { publications += 1 }
+        session.begin()
+        let stale = try #require(session.pendingParseForTesting)
+        await hold.untilFirstPaused()
+
+        session.begin()
+        await session.waitForPendingParse()
+        let currentPublications = publications
+        #expect(currentPublications >= 3)
+        await hold.releaseFirst()
+        await stale.value
+        #expect(publications == currentPublications)
+    }
+
     @Test(.timeLimit(.minutes(2)))
     // swiftlint:disable:next function_body_length
     func heldOldParseCannotPublishAfterStructuralEdit() async throws {
@@ -148,6 +180,13 @@ struct MarkdownViewportSessionTests {
         let expected = try oracle.tokens(in: visible)
         #expect(!expected.isEmpty)
         #expect(session.visibleTokens() == expected)
+        let suffix = NSRange(location: visible.location + visible.length / 2,
+                             length: visible.length - visible.length / 2)
+        let expectedSuffix = try oracle.tokens(in: suffix)
+        #expect(session.visibleTokens(in: suffix) == expectedSuffix)
+        #expect(session.visibleTokens(in: NSRange(location: NSMaxRange(visible), length: 1)).isEmpty)
+        #expect(session.visibleTokens(in: NSRange(location: NSNotFound, length: 1)).isEmpty)
+        #expect(session.visibleTokens(in: NSRange(location: Int.max, length: 1)).isEmpty)
     }
 }
 

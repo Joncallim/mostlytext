@@ -32,9 +32,7 @@ final class MarkdownViewportSession {
 
     init(textSystem: EditorTextSystem, registry: GrammarRegistry,
          parseSnapshot: @escaping SnapshotParser = { source, registry in
-             try await Task.detached(priority: .utility) {
-                 try MarkdownSectionParser.snapshot(source: source, registry: registry)
-             }.value
+             try await MarkdownViewportParseQueue.shared.snapshot(source: source, registry: registry)
          }) {
         self.textSystem = textSystem
         self.registry = registry
@@ -43,10 +41,13 @@ final class MarkdownViewportSession {
     }
 
     func begin() {
-        guard isActive, let ticket = authority.ticket() else { return }
+        guard isActive else { return }
+        authority.invalidatePresentation()
+        guard let ticket = authority.ticket() else { return }
         parseTask?.cancel()
         cache = nil
         cacheMatchesStorage = false
+        onPublication?()
         startFullParse(ticket: ticket)
     }
 
@@ -133,12 +134,24 @@ final class MarkdownViewportSession {
 
     /// A nil or oversized viewport cannot authorize a cache query. The
     /// painter must treat an empty result as plain text for that range.
-    func visibleTokens() -> [Token] {
+    func visibleTokens(in requested: NSRange? = nil) -> [Token] {
         guard isActive, cacheMatchesStorage, let cache,
-              textSystem.textView.textStorage === boundStorage,
+              let storage = textSystem.textView.textStorage,
+              storage === boundStorage,
               let visible = boundedViewport()
         else { return [] }
-        return (try? cache.tokens(in: visible)) ?? []
+        let range: NSRange
+        if let requested {
+            guard requested.location != NSNotFound, requested.location >= 0,
+                  requested.length > 0, requested.location <= storage.length,
+                  requested.length <= storage.length - requested.location
+            else { return [] }
+            range = NSIntersectionRange(visible, requested)
+            guard range.length > 0 else { return [] }
+        } else {
+            range = visible
+        }
+        return (try? cache.tokens(in: range)) ?? []
     }
 
     /// A deterministic test seam. The task may first schedule a replacement

@@ -59,6 +59,8 @@ jobs:
             ${{ runner.temp }}/current-line-theme/candidate/status.json
             ${{ runner.temp }}/current-line-theme/candidate/compile.log
             ${{ runner.temp }}/current-line-theme/candidate/probe.log
+            ${{ runner.temp }}/current-line-theme/candidate/performance-qualification.log
+            ${{ runner.temp }}/current-line-theme/candidate/performance-qualification-status.json
             ${{ runner.temp }}/current-line-theme/candidate/performance-diagnostic/*.json
             ${{ runner.temp }}/current-line-theme/candidate/performance-diagnostic/*.log
             ${{ runner.temp }}/current-line-theme/candidate/performance-diagnostic/*-diagnostics/*.json

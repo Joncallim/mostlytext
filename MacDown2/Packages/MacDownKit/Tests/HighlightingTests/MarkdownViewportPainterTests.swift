@@ -63,6 +63,7 @@ struct MarkdownViewportPainterTests {
         painter.begin()
         await session.waitForPendingParse()
         try expectPaintMatchesCurrentParse(system: system, registry: registry, painter: painter)
+        let firstVisible = try #require(system.visibleUTF16Range)
 
         let insertion = (model.text as NSString).range(of: "bold")
         system.textView.insertText("X", replacementRange: NSRange(location: insertion.location + 2, length: 0))
@@ -74,7 +75,24 @@ struct MarkdownViewportPainterTests {
         system.textView.setSelectedRange(NSRange(location: tail.location, length: 0))
         system.scrollToVisible(utf16Range: tail)
         try expectPaintMatchesCurrentParse(system: system, registry: registry, painter: painter)
+        #expect(try NSIntersectionRange(firstVisible, #require(system.visibleUTF16Range)).length == 0)
+        #expect(!hasRedRenderingAttributes(system.textView, in: firstVisible))
         #expect(system.textView.string == model.text)
+
+        let tailVisible = try #require(system.visibleUTF16Range)
+        system.textView.setSelectedRange(NSRange(location: first.location, length: 0))
+        system.scrollToVisible(utf16Range: first)
+        try expectPaintMatchesCurrentParse(system: system, registry: registry, painter: painter)
+        #expect(try NSIntersectionRange(tailVisible, #require(system.visibleUTF16Range)).length == 0)
+        #expect(!hasRedRenderingAttributes(system.textView, in: tailVisible))
+
+        // A temporary loss of mounted geometry must not leave the old
+        // viewport's rendering colour attached to the document.
+        let lastVisible = try #require(system.visibleUTF16Range)
+        scroll.documentView = nil
+        #expect(system.visibleUTF16Range == nil)
+        painter.paintVisible()
+        #expect(!hasRedRenderingAttributes(system.textView, in: lastVisible))
     }
 
     private func expectPaintMatchesCurrentParse(system: EditorTextSystem, registry: GrammarRegistry,
@@ -110,6 +128,26 @@ struct MarkdownViewportPainterTests {
             }
         }
         #expect(painted == expected, "Mounted viewport paint differs from a fresh full parse")
+    }
+
+    private func hasRedRenderingAttributes(_ textView: NSTextView, in visible: NSRange) -> Bool {
+        guard let layout = textView.textLayoutManager,
+              let content = layout.textContentManager
+        else { return false }
+        var found = false
+        layout
+            .enumerateRenderingAttributes(from: content.documentRange.location,
+                                          reverse: false) { _, attributes, range in
+                let location = content.offset(from: content.documentRange.location, to: range.location)
+                let length = content.offset(from: range.location, to: range.endLocation)
+                if NSIntersectionRange(NSRange(location: location, length: length), visible).length > 0,
+                   let color = attributes[.foregroundColor] as? NSColor,
+                   color.isEqual(NSColor.systemRed) {
+                    found = true
+                }
+                return !found
+            }
+        return found
     }
 }
 

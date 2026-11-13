@@ -19,11 +19,15 @@ import Themes
 public final class NeonSyntaxHighlighter: SyntaxHighlighting {
     let textSystem: EditorTextSystem
     let registry: GrammarRegistry
-    private var currentTheme: Theme
+    var currentTheme: Theme
     /// Neon's highlighter while ``state`` is `.full`; `nil` otherwise.
     var highlighter: TextViewHighlighter?
     public private(set) var languageID: String?
-    private var baseFont: NSFont
+    var baseFont: NSFont
+    let viewportModeEnabled: Bool
+    var viewportSession: MarkdownViewportSession?
+    var viewportPainter: MarkdownViewportPainter?
+    private(set) var isTornDown = false
     /// Tokens Neon has styled so far. Lets tests detect when highlighting has
     /// gone quiet without reaching into Neon's private state.
     private(set) var styledTokenCount = 0
@@ -88,12 +92,14 @@ public final class NeonSyntaxHighlighter: SyntaxHighlighting {
         languageID: String?,
         theme: Theme,
         registry: GrammarRegistry,
-        sizePolicy: @escaping (String?) -> HighlightingSizePolicy? = HighlightingSizePolicy.default(for:)
+        sizePolicy: @escaping (String?) -> HighlightingSizePolicy? = HighlightingSizePolicy.default(for:),
+        enableViewport: Bool = false
     ) {
         self.textSystem = textSystem
         self.languageID = languageID
         self.registry = registry
         policyProvider = sizePolicy
+        viewportModeEnabled = enableViewport
         currentTheme = theme
         baseFont = textSystem.textView.font
             ?? NSFont.monospacedSystemFont(ofSize: NSFont.systemFontSize, weight: .regular)
@@ -110,12 +116,14 @@ public final class NeonSyntaxHighlighter: SyntaxHighlighting {
         currentTheme = theme
         applyChrome(theme: theme)
         highlighter?.invalidate(.all)
+        viewportSession?.invalidatePresentation()
     }
 
     public func applyFont(_ font: NSFont) {
         guard font != baseFont else { return }
         baseFont = font
         highlighter?.invalidate(.all)
+        viewportSession?.invalidatePresentation()
     }
 
     public func setLanguage(_ highlightLanguageID: String?) {
@@ -126,11 +134,15 @@ public final class NeonSyntaxHighlighter: SyntaxHighlighting {
 
     public func invalidateAll() {
         highlighter?.invalidate(.all)
+        viewportSession?.begin()
     }
 
     public func tearDown() {
+        guard !isTornDown else { return }
+        isTornDown = true
         restoreTask?.cancel()
         restoreTask = nil
+        stopViewport()
         discardHighlighter()
         clearHighlighterPresentation()
         if let storage = textSystem.textView.textStorage {
@@ -220,7 +232,7 @@ public final class NeonSyntaxHighlighter: SyntaxHighlighting {
         }
     }
 
-    private func styledFont(bold: Bool, italic: Bool) -> NSFont {
+    func styledFont(bold: Bool, italic: Bool) -> NSFont {
         var traits: NSFontDescriptor.SymbolicTraits = []
         if bold {
             traits.insert(.bold)

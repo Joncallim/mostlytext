@@ -13,6 +13,9 @@ public struct HighlightingState: Equatable, Sendable {
         /// Tree-sitter highlighting is deliberately off for responsiveness;
         /// plain text with the theme's chrome until `Reason` no longer holds.
         case reduced(Reason)
+        /// Only the mounted viewport is styled from a bounded Markdown cache.
+        /// The full-document Neon highlighter remains detached.
+        case visibleOnly(Reason)
     }
 
     public enum Reason: Equatable, Sendable {
@@ -32,7 +35,16 @@ public struct HighlightingState: Equatable, Sendable {
     }
 
     public var isReduced: Bool {
-        if case .reduced = mode {
+        switch mode {
+        case .reduced, .visibleOnly:
+            true
+        case .full, .plain:
+            false
+        }
+    }
+
+    public var isVisibleOnly: Bool {
+        if case .visibleOnly = mode {
             return true
         }
         return false
