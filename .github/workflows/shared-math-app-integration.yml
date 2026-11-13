@@ -75,7 +75,7 @@ jobs:
           set -euo pipefail
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
             -configuration ${{ matrix.configuration }} ENABLE_TESTABILITY=YES \
-            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE' \
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE MATH_UI_DIAGNOSTIC' \
             -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/shared-math-app" \
             -onlyUsePackageVersionsFromResolvedFile -enableCodeCoverage NO build-for-testing
       - name: Execute production math, heading links, and live source-navigation controls
@@ -87,7 +87,7 @@ jobs:
             "$RUNNER_TEMP/shared-math-app/Build/Products/${{ matrix.configuration }}/MacDown2.app/Contents/MacOS/MacDown2" -- \
             xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
             -configuration ${{ matrix.configuration }} ENABLE_TESTABILITY=YES \
-            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE' \
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE MATH_UI_DIAGNOSTIC' \
             -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/shared-math-app" \
             -onlyUsePackageVersionsFromResolvedFile -parallel-testing-enabled NO \
             -only-testing:MacDown2Tests/SharedMathActivationTests \
@@ -114,7 +114,7 @@ jobs:
             "$RUNNER_TEMP/shared-math-app/Build/Products/Release/MacDown2.app/Contents/MacOS/MacDown2" -- \
             xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
             -configuration Release ENABLE_TESTABILITY=YES \
-            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE' \
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE MATH_UI_DIAGNOSTIC' \
             -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/shared-math-app" \
             -resultBundlePath "$RUNNER_TEMP/shared-app-probe/MathExponentVisual.xcresult" \
             -onlyUsePackageVersionsFromResolvedFile -parallel-testing-enabled NO \

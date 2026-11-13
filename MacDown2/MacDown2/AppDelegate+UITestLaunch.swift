@@ -21,7 +21,9 @@ extension AppDelegate {
         // Inspect raw arguments before choosing any persistent stores. Release
         // builds ignore test hooks and must never silently open real user data
         // when a UI runner requests an isolated test session.
-        #if DEBUG || ISSUE117_NATIVE_ACCEPTANCE
+        // MATH_UI_DIAGNOSTIC is supplied only to the hosted Release probe;
+        // shipping Release builds continue to reject test launch arguments.
+        #if DEBUG || ISSUE117_NATIVE_ACCEPTANCE || MATH_UI_DIAGNOSTIC
             let testHooksEnabled = true
         #else
             let testHooksEnabled = false
