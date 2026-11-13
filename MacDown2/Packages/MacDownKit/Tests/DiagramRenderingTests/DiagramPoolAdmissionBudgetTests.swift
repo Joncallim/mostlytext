@@ -69,9 +69,14 @@ struct DiagramPoolAdmissionBudgetTests {
         let (bundle, directory) = try makeBundle()
         defer { try? FileManager.default.removeItem(at: directory) }
         let probe = PreparationProbe()
+        // This constructor also performs a real cold WKWebView navigation.
+        // Use the production admission allowance: the test's 100 ms
+        // evaluation clock still proves preparation finishes before borrow.
+        // A shorter synthetic admission deadline belongs in the injected
+        // makePage tests below, where WebKit startup cannot consume it.
         let pool = DiagramWebKitPool(
             harnessResourceName: "harness", bundle: bundle, poolSize: 1,
-            timeout: .milliseconds(100), admissionTimeout: .seconds(5)
+            timeout: .milliseconds(100), admissionTimeout: .seconds(15)
         ) { page in
             await probe.record(page)
             try await Task.sleep(for: .milliseconds(250))
