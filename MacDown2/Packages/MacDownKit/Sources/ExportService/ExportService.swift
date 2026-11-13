@@ -77,4 +77,55 @@ public enum ExportService {
             urlTransformer: { _, _ in .blank }
         )) ?? ""
     }
+
+    /// Compose already-produced static content through Export's source-range
+    /// validation and GFM tree walk. A rejected item leaves its authored source
+    /// in place. Quick Look supplies only immutable, generation-bound results;
+    /// this function never invokes a renderer or grants resource access.
+    public static func renderPassiveMarkdownFragment(
+        _ markdown: String,
+        contributions: [ExportDerivedContribution],
+        sourceGeneration: UInt
+    ) -> String {
+        guard !contributions.isEmpty else { return renderPassiveMarkdownFragment(markdown) }
+        // Bound producer output before the sanitizer copies it. These are
+        // provisional per-item/aggregate Quick Look limits, below the worker's
+        // complete reply cap; a refused item keeps its authored Markdown.
+        let singleLimit = 1 << 20
+        var remaining = 4 << 20
+        let passiveContributions = contributions.compactMap { item -> ExportDerivedContribution? in
+            let size = item.html.utf8.count
+            guard size <= singleLimit else { return nil }
+            let safeHTML = DerivedHTMLSanitizer.sanitized(item.html, urlPolicy: .passive)
+            let safeSize = safeHTML.utf8.count
+            guard safeSize <= singleLimit, safeSize <= remaining else { return nil }
+            remaining -= safeSize
+            return ExportDerivedContribution(
+                sourceRange: item.sourceRange,
+                placement: item.placement,
+                html: safeHTML,
+                sourceGeneration: item.sourceGeneration,
+                diagnostics: item.diagnostics,
+                requiresHeadingNavigation: item.requiresHeadingNavigation
+            )
+        }
+        let derived = DerivedContentComposer.compose(
+            bodyText: markdown,
+            bodyStartOffset: 0,
+            sourceUTF16Length: markdown.utf16.count,
+            contributions: passiveContributions,
+            sourceGeneration: sourceGeneration,
+            namespaceSVGIDs: true
+        )
+        guard let rendered = try? CMarkGFM.render(
+            derived.splicedBody,
+            options: CMarkGFM.optDefault | CMarkGFM.optSmart,
+            customNodes: derived.customNodes,
+            urlTransformer: { _, _ in .blank }
+        ) else { return "" }
+        guard DerivedContentComposer.leakedSentinelIndices(
+            in: rendered.html, suffix: derived.sentinelSuffix
+        ).isEmpty else { return "" }
+        return rendered.html
+    }
 }
