@@ -140,6 +140,15 @@ jobs:
           assert result.returncode == 0
           assert 'QUICKLOOK_COLD_MERMAID_PROBE svgBytes=' in result.stdout
           PY
+      - name: Capture WebKit launch failure context
+        if: failure()
+        run: |
+          /usr/bin/log show --last 3m --info --style compact \
+            --predicate '(process == "MostlyTextQuickLookWorker") OR (process == "WebContent") OR (process == "com.apple.WebKit.WebContent") OR (process == "sandboxd") OR (process == "runningboardd")' \
+            > "$RUNNER_TEMP/production-quicklook-webkit-system.log" 2>&1 || true
+          find "$HOME/Library/Logs/DiagnosticReports" /Library/Logs/DiagnosticReports \
+            -maxdepth 1 -type f -mmin -10 -iname '*WebContent*' -print \
+            > "$RUNNER_TEMP/production-quicklook-webkit-crashes.log" 2>&1 || true
       - name: Register product and invoke genuine cold Finder
         run: |
           set -euo pipefail
