@@ -131,8 +131,7 @@ The cache now partitions a nested heading tree into disjoint parent-prefix,
 child and grandchild entries. A local parse changes only the edited entry and
 shifts later ranges; a fresh full-parse oracle matches captures after edits at
 all three levels. This removes the specific 1 MiB root-section rejection
-without changing the 65,536-unit window cap. A single leaf paragraph or
-section above that cap still refuses the local path.
+without changing the 65,536-unit window cap.
 
 An opt-in mounted Release probe generated 1,048,804 UTF-8 bytes with a `#`
 parent above many `##` sections. Twelve alternating insertions and deletions
@@ -204,3 +203,23 @@ run had one 53 ms call and 58 ms settlement, but these unmatched local runs do
 not prove the range change alone caused the difference. Neither run covers
 structural edits, dense inline or long leaf sections; the complete production
 50 ms budget and native gate remain open.
+
+## Long leaf paragraph partition
+
+A section with many ordinary paragraphs can still exceed the window cap even
+without nested headings. The cache now splits direct paragraphs in oversized
+sections into disjoint entries, retaining the parent snapshot for heading and
+gap ranges. Short leaf sections retain one entry.
+Local plain-word edits can therefore reparse a small paragraph inside a long
+leaf. A regression with a greater-than-1-MiB single section, 4,000 repeated
+paragraphs and two edited target paragraphs compares bounded cached captures
+with fresh full parses after both edits. An individual paragraph over 65,536
+UTF-16 units still falls back to a full parse. This is a source-level correctness result; the
+complete 1 MiB workload timing and product activation gates remain open.
+
+Three opt-in 1,048,804-byte Release highlighter runs after this change still
+selected and matched all 12 edits, did 12 local parses and one full parse at
+open. Their worst synchronous edit calls were 62, 60 and 56 ms, with
+corresponding paint settlement at 65, 62 and 58 ms. The runs were unmatched and
+cannot attribute those outliers to this partition change, but they do fail to
+establish the 50 ms threshold. Keep the default owner disabled.
