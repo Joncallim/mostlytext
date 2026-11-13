@@ -1,4 +1,5 @@
 import Darwin
+import ExportService
 import FileCore
 import Foundation
 @testable import QuickLookSource
@@ -29,7 +30,7 @@ struct QuickLookSourceFallbackTests {
         #expect(!html.contains("<script"))
         #expect(!html.contains("<img"))
         #expect(!html.contains("example.com"))
-        #expect(html.contains("default-src 'none'; base-uri 'none'; form-action 'none'"))
+        #expect(html.contains("default-src 'none'; img-src data:; base-uri 'none'; form-action 'none'"))
     }
 
     @Test func sharedGFMStructureHasNoAuthoredURLs() throws {
@@ -43,6 +44,30 @@ struct QuickLookSourceFallbackTests {
         #expect(html.contains("link"))
         #expect(html.contains("image"))
         #expect(!html.contains("example.invalid"))
+    }
+
+    @Test func generatedRasterURLIsAdmittedWhileAuthoredURLsRemainInert() throws {
+        let source = "# Technical\n\n$x$ and ![remote](https://example.invalid/pixel.png)"
+        let math = (source as NSString).range(of: "$x$")
+        let item = ExportDerivedContribution(
+            sourceRange: math.location ..< (math.location + math.length),
+            placement: .inline,
+            html: "<img src=\"data:image/png;base64,iVBORw0KGgo=\" alt=\"x\">",
+            sourceGeneration: 7
+        )
+        let accepted = try #require(String(bytes: QuickLookSourceFallback.replyHTML(
+            forSource: source, contributions: [item], sourceGeneration: 7
+        ), encoding: .utf8))
+        #expect(accepted.contains("data:image/png;base64,iVBORw0KGgo="))
+        #expect(accepted.contains("img-src data:"))
+        #expect(!accepted.contains("example.invalid"))
+        #expect(!accepted.contains("$x$"))
+
+        let stale = try #require(String(bytes: QuickLookSourceFallback.replyHTML(
+            forSource: source, contributions: [item], sourceGeneration: 8
+        ), encoding: .utf8))
+        #expect(stale.contains("$x$"))
+        #expect(!stale.contains("data:image/png;base64,"))
     }
 
     @Test func exactSourceCapIsCompleteAndTheNextByteIsRefused() throws {
