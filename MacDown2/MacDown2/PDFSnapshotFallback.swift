@@ -159,7 +159,11 @@ enum PDFSnapshotFallback {
     private static func pageRanges(
         on page: PDFPage, sourceBox: CGRect, sliceHeight: CGFloat, scale: CGFloat
     ) throws -> [ClosedRange<CGFloat>] {
-        let safety = 3 / scale
+        // Probe a wider band than the final displacement. A narrow PDFKit
+        // selection can miss the edge of a glyph near the proposed cut;
+        // moving by the entire probe width can land inside the next line.
+        let safety = 24 / scale
+        let padding = 3 / scale
         var top = sourceBox.maxY
         var ranges: [ClosedRange<CGFloat>] = []
         while top > sourceBox.minY {
@@ -178,7 +182,7 @@ enum PDFSnapshotFallback {
                     for line in selection.selectionsByLine() {
                         let bounds = line.bounds(for: page)
                         if bounds.minY < targetBottom + safety, bounds.maxY > targetBottom - safety {
-                            bottom = max(bottom, bounds.maxY + safety)
+                            bottom = max(bottom, bounds.maxY + padding)
                         }
                     }
                 }
