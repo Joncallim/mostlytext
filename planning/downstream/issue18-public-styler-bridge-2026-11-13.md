@@ -103,6 +103,16 @@ the parser cache, revision pairing, background work and public Neon styler.
 The next implementation slice must prove callback ordering and failure
 behavior in a mounted editor before it can replace the reduced-mode path.
 
+The first observer slice now compiles every package test target and its
+mounted `EditorLineIndexWiringTests` control checks that a normal replacement
+sees the old live UTF-16 source, including a surrogate pair and CRLF, before
+AppKit mutates it. A second gate control records the actual post-mutation
+`NSTextStorage` range, UTF-16 delta, new length and new text; its focused local
+run passes 1/1. These two observations are intentionally separate. A
+production cache must compare them and refuse a stale candidate when an
+assist vetoes an edit, nested editing changes its geometry, or a programmatic
+path skips the pre-edit hook. No cache or large-file painting path is active.
+
 ## Next qualification
 
 Extend the mounted capture probe across repeated edits and viewport moves.

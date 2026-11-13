@@ -28,6 +28,12 @@ final class HighlightingStorageGate: NSObject, NSTextStorageDelegate {
     var shouldForwardEdit: (_ postEditLength: Int) -> Bool = { _ in true }
     /// Told after every character edit has been processed (forwarded or not).
     var didProcessCharacterEdit: (_ postEditLength: Int) -> Void = { _ in }
+    /// Actual post-mutation geometry for a future bounded Markdown adapter.
+    /// `editedRange` addresses the new storage, and `delta` is its UTF-16
+    /// length change. A pre-edit proposal is useful only when it matches this
+    /// callback; undo, composition and programmatic edits can lack one.
+    var didProcessCharacterEditWithGeometry: ((_ editedRange: NSRange, _ delta: Int,
+                                               _ postEditLength: Int) -> Void)?
 
     private var forwardsCurrentEdit = true
     /// Character edits seen and forwarded. Lets tests prove that an edit was
@@ -114,6 +120,7 @@ final class HighlightingStorageGate: NSObject, NSTextStorageDelegate {
             }
             forwardsCurrentEdit = true
             if editedMask.contains(.editedCharacters) {
+                didProcessCharacterEditWithGeometry?(editedRange, delta, textStorage.length)
                 didProcessCharacterEdit(textStorage.length)
             }
         }
