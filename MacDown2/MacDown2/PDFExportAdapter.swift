@@ -45,7 +45,7 @@ enum PDFExportAdapter {
         // PDF export; it is done off the main actor so the app stays responsive.
         let html = try await hardenedHTML(from: prepared)
         let sourceHasContent = !prepared.bodyHTML.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        try await exportHTML(html, to: url, sourceHasContent: sourceHasContent,
+        try await exportHTML(html, sourceHasContent: sourceHasContent,
                              lease: lease, admission: authorization, modalWindow: modalWindow,
                              onPhase: onPhase, runPrint: runPrint)
     }
@@ -59,7 +59,7 @@ enum PDFExportAdapter {
         // ValidatedExportHTML does not expose the source body. Fail closed on
         // an unmarked PDF until that path's activation contract defines how an
         // intentionally empty document should be represented.
-        try await exportHTML(html, to: url, sourceHasContent: true, lease: lease, admission: admission)
+        try await exportHTML(html, sourceHasContent: true, lease: lease, admission: admission)
     }
 
     static func validatedHTMLForWebKit(_ validated: ValidatedExportHTML, to url: URL) throws -> String {
@@ -71,7 +71,7 @@ enum PDFExportAdapter {
         return html
     }
 
-    private static func exportHTML(_ html: String, to url: URL, sourceHasContent: Bool,
+    private static func exportHTML(_ html: String, sourceHasContent: Bool,
                                    lease: ExportLifetimeLease?, admission: ExportDestinationAdmission,
                                    modalWindow: NSWindow? = nil,
                                    onPhase: (@MainActor (PDFExportPhase) -> Void)? = nil,
@@ -79,9 +79,10 @@ enum PDFExportAdapter {
         try lease?.checkActive()
         onPhase?(.loading)
 
-        let printURL = temporaryURL(nextTo: url)
+        let scratch = try await io { try ExportPrintScratch() }
+        let printURL = scratch.url
         defer {
-            try? FileManager.default.removeItem(at: printURL)
+            try? scratch.retire()
         }
         let info = printInfo(savingTo: printURL)
         guard let size = PDFSnapshotFallback.viewportSize(for: info) else {
@@ -113,7 +114,7 @@ enum PDFExportAdapter {
 
         onPhase?(.validating)
 
-        var output = try await validatedPDFBytes(at: printURL, admission: admission, sourceHasContent: sourceHasContent)
+        var output = try await validatedPDFBytes(in: scratch, sourceHasContent: sourceHasContent)
         if output == nil {
             // A successful print operation can still write no marks at all.
             // Keep its broken output isolated and ask WebKit for a local vector
@@ -140,11 +141,11 @@ enum PDFExportAdapter {
     }
 
     private static func validatedPDFBytes(
-        at url: URL, admission: ExportDestinationAdmission, sourceHasContent: Bool
+        in scratch: ExportPrintScratch, sourceHasContent: Bool
     ) async throws -> Data? {
         let data: Data?
         do {
-            data = try await io { try admission.readGeneratedFile(at: url, maxBytes: maxPDFBytes) }
+            data = try await io { try scratch.read(maxBytes: maxPDFBytes) }
         } catch ExportError.budgetExceeded {
             throw PDFExportError.pdfTooLarge
         }
@@ -288,11 +289,6 @@ enum PDFExportAdapter {
                 raw[index] < 248 || raw[index + 1] < 248 || raw[index + 2] < 248
             }
         }
-    }
-
-    static func temporaryURL(nextTo url: URL) -> URL {
-        url.deletingLastPathComponent()
-            .appendingPathComponent(".\(url.deletingPathExtension().lastPathComponent).\(UUID().uuidString).tmp.pdf")
     }
 
     enum PDFExportError: Error, LocalizedError {
