@@ -74,6 +74,35 @@ production adapter must therefore own all of these boundaries explicitly:
    path in Release on a 1 MiB mixed Markdown fixture; do not use the local
    synthetic-token result as the 50 ms/8 ms budget proof.
 
+### Current-main edit boundary (13 November 2026)
+
+At main `0035839e`, `EditorView.Coordinator.shouldChangeTextIn` already sees
+the old range and replacement string before AppKit changes storage. It records
+that geometry for the line index; its following `textDidChange` publishes the
+post-edit index update. `HighlightingStorageGate` receives the same ordinary
+character edit after mutation, ahead of Neon's private delegate. The existing
+`EditorTextSystem.textChangeObserver` is already used by search, so a large-file
+highlighter must not take ownership of that single callback or turn a routine
+keystroke into a full `textView.string` copy.
+
+A narrow EditorCore pre-edit observer can pass old coordinates and replacement
+length while the live `NSTextStorage.mutableString` is still unchanged. The
+Markdown adapter must use that source only within the synchronous callback to
+select and copy its bounded local window; it cannot retain the mutable string
+as an immutable snapshot. The storage gate can then pair one post-edit range,
+length delta and editor revision with that pending selection. If no matching
+pre-edit event exists, or a nested edit vetoes/replaces it, the candidate is
+discarded and a deferred full parse is scheduled. Undo/redo bypass the
+coordinator hook; programmatic reload, composition and teardown likewise take
+the full-parse or plain fallback path. The current 8,192-unit reduced mode
+stays in production until this pairing and mounted styling are qualified.
+
+This decision avoids a cross-module import from EditorCore to Highlighting:
+EditorCore exposes only edit geometry through an observer; Highlighting owns
+the parser cache, revision pairing, background work and public Neon styler.
+The next implementation slice must prove callback ordering and failure
+behavior in a mounted editor before it can replace the reduced-mode path.
+
 ## Next qualification
 
 Extend the mounted capture probe across repeated edits and viewport moves.
