@@ -155,6 +155,35 @@ struct MarkdownEditPairingTests {
         }
         #expect(pair.complete(editedRange: range, delta: 0, postSource: old)?.candidate == nil)
     }
+
+    @Test func widenedTextKitRangeNeedsBoundedWholeWindowProof() {
+        let old = "alpha beta tail" as NSString
+        let edit = NSRange(location: 8, length: 0)
+        let window = NSRange(location: 0, length: old.length)
+        let pair = MarkdownEditPairing<String>()
+        func prepare() {
+            pair.prepare(range: edit, replacement: "X", oldSource: old,
+                         verificationRange: { _ in window }, select: { _, _, _ in "verified" })
+        }
+
+        prepare()
+        let current = "alpha beXta tail" as NSString
+        let widened = NSRange(location: 0, length: current.length)
+        let accepted = pair.complete(editedRange: widened, delta: 1, postSource: current)
+        #expect(accepted?.candidate == "verified")
+        #expect(accepted?.newRange == NSRange(location: edit.location, length: 1))
+
+        prepare()
+        let altered = "Alpha beXta tail" as NSString
+        #expect(pair.complete(editedRange: widened, delta: 1, postSource: altered) == nil)
+
+        prepare()
+        #expect(pair.complete(editedRange: NSRange(location: 0, length: 6),
+                              delta: 1, postSource: current) == nil)
+
+        pair.prepare(range: edit, replacement: "X", oldSource: old) { _, _, _ in "no-window" }
+        #expect(pair.complete(editedRange: widened, delta: 1, postSource: current) == nil)
+    }
 }
 
 @MainActor
