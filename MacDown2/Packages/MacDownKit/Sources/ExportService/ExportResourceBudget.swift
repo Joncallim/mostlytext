@@ -4,9 +4,9 @@ import Foundation
 ///
 /// These are safety gates, not product semantics: they exist so a pathological
 /// document cannot make the app read an unbounded file into memory, base64 it,
-/// and stall or exhaust the process. There is exactly one budget — callers
-/// cannot supply one, and there are no call-site literals; the composer applies
-/// `.standard` and tests inject small values to exercise the boundaries.
+/// and stall or exhaust the process. Export uses one `.standard` budget that
+/// callers cannot change. Passive Quick Look uses a separate tighter derived
+/// budget because its reply and process deadlines are smaller.
 struct ExportResourceBudget: Sendable, Equatable {
     /// Largest Markdown source accepted, in UTF-8 bytes.
     let maxSourceUTF8Bytes: Int
@@ -47,6 +47,18 @@ struct ExportResourceBudget: Sendable, Equatable {
         maxDerivedFragmentCount: 4096,
         maxAggregateDerivedHTMLBytes: 32 << 20,
         maxPreparedHTMLUTF8Bytes: 128 << 20
+    )
+
+    /// Provisional until the installed worker's Release memory and latency
+    /// measurements are complete. No external file resources are admitted.
+    static let passiveQuickLook = ExportResourceBudget(
+        maxSourceUTF8Bytes: 1 << 20,
+        maxResourceCount: 0,
+        maxSingleResourceBytes: 0,
+        maxAggregateResourceBytes: 0,
+        maxDerivedFragmentCount: 128,
+        maxAggregateDerivedHTMLBytes: 4 << 20,
+        maxPreparedHTMLUTF8Bytes: 6 << 20
     )
 
     /// A human-readable size, used in diagnostics and error prose.

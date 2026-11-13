@@ -86,6 +86,41 @@ struct PassiveQuickLookDerivedTests {
         #expect(html.utf8.count < 4096)
     }
 
+    @Test func staleItemsCannotConsumeTheBudgetNeededByLaterValidContent() {
+        let source = "$x^2$\n"
+        let range = range(of: "$x^2$", in: source)
+        let stale = ExportDerivedContribution(
+            sourceRange: range, placement: .inline,
+            html: String(repeating: "x", count: 1 << 20), sourceGeneration: 6
+        )
+        let valid = ExportDerivedContribution(
+            sourceRange: range, placement: .inline,
+            html: "<strong>VALID_STATIC</strong>", sourceGeneration: 7
+        )
+        let html = ExportService.renderPassiveMarkdownFragment(
+            source, contributions: [stale, stale, stale, stale, valid], sourceGeneration: 7
+        )
+        #expect(html.contains("<strong>VALID_STATIC</strong>"))
+        #expect(!html.contains("$x^2$"))
+    }
+
+    @Test func overlappingRejectedItemsCannotStarveLaterValidContent() {
+        let source = "$first$ and $later$\n"
+        let repeated = ExportDerivedContribution(
+            sourceRange: range(of: "$first$", in: source), placement: .inline,
+            html: String(repeating: "x", count: 1 << 20), sourceGeneration: 1
+        )
+        let later = ExportDerivedContribution(
+            sourceRange: range(of: "$later$", in: source), placement: .inline,
+            html: "<strong>LATER_STATIC</strong>", sourceGeneration: 1
+        )
+        let html = ExportService.renderPassiveMarkdownFragment(
+            source, contributions: [repeated, repeated, repeated, repeated, later], sourceGeneration: 1
+        )
+        #expect(html.contains("<strong>LATER_STATIC</strong>"))
+        #expect(!html.contains("$later$"))
+    }
+
     private func range(of needle: String, in source: String) -> Range<Int> {
         let match = (source as NSString).range(of: needle)
         return match.location ..< (match.location + match.length)
