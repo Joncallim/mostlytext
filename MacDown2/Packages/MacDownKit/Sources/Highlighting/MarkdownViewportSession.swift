@@ -32,9 +32,7 @@ final class MarkdownViewportSession {
 
     init(textSystem: EditorTextSystem, registry: GrammarRegistry,
          parseSnapshot: @escaping SnapshotParser = { source, registry in
-             try await Task.detached(priority: .utility) {
-                 try MarkdownSectionParser.snapshot(source: source, registry: registry)
-             }.value
+             try await MarkdownViewportParseQueue.shared.snapshot(source: source, registry: registry)
          }) {
         self.textSystem = textSystem
         self.registry = registry

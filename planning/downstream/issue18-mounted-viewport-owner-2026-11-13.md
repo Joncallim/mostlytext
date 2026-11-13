@@ -236,3 +236,23 @@ geometry disappears. The same regression passes in both scroll directions,
 compares each visible range with a fresh full parse and preserves source text.
 This is bounded source-level behaviour; native scrolling and the full budget
 matrix still require acceptance.
+
+## Bound physical parser work
+
+Cancelling the outer viewport session task does not interrupt a synchronous
+tree-sitter C parse already running in a detached task. Previously, rapid edits
+could start another physical parse for each new ticket. A shared two-slot parse
+owner now admits at most two active Markdown snapshots across mounted editors;
+cancelled queued requests leave promptly, while a cancelled active request
+retains its slot until its physical parser returns. The session still checks
+its generation before publishing, so the queue does not relax stale-result
+guards. A controlled test holds two injected parser operations, cancels a
+queued third, cancels one active owner and proves the replacement starts only
+after that operation is released. The production owner remains opt-in pending
+complete workload, timing and native acceptance.
+
+The opt-in 1,048,804-byte Release highlighter run with this queue selected and
+matched all 12 word edits, used 12 local parses and one full parse at open, and
+restored exact source. Its worst edit call took 64 ms and colour settled in
+67 ms. The queue bounds physical overlap; this probe does not pass the 50 ms
+keypress budget or establish whole-workload performance.
