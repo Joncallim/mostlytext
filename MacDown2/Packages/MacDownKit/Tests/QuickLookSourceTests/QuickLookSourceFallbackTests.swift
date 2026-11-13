@@ -72,6 +72,46 @@ struct QuickLookSourceFallbackTests {
         }
     }
 
+    @Test func automaticallyDetectableEncodingsAndLineEndingsRenderTheSameUnicodeStructure() throws {
+        let source = "# 日本語 😀\n\n| Name | Value |\n| --- | --- |\n| café | مرحبا |\n"
+        let reference = try withFile(Data(source.utf8)) { file in
+            try QuickLookSourceFallback.replyHTML(for: file)
+        }
+        let utf16LE = try #require(source.data(using: .utf16LittleEndian))
+        let utf16BE = try #require(source.data(using: .utf16BigEndian))
+        let variants: [Data] = [
+            Data([0xEF, 0xBB, 0xBF]) + Data(source.utf8),
+            Data([0xFF, 0xFE]) + utf16LE,
+            Data([0xFE, 0xFF]) + utf16BE,
+            Data(source.replacingOccurrences(of: "\n", with: "\r\n").utf8),
+            Data(source.replacingOccurrences(of: "\n", with: "\r").utf8),
+        ]
+        for bytes in variants {
+            let html = try withFile(bytes) { file in
+                try QuickLookSourceFallback.replyHTML(for: file)
+            }
+            #expect(html == reference)
+        }
+        let rendered = try #require(String(data: reference, encoding: .utf8))
+        #expect(rendered.contains("<h1>日本語 😀</h1>"))
+        #expect(rendered.contains("<table>"))
+        #expect(rendered.contains("café"))
+        #expect(rendered.contains("مرحبا"))
+        #expect(!rendered.contains("�"))
+    }
+
+    @Test func malformedOrUndeclaredEncodingIsRefusedRatherThanMisrendered() throws {
+        let invalidUTF16 = Data([0xFF, 0xFE, 0x00, 0xD8]) // Unpaired high surrogate.
+        let legacySingleByte = Data([0x63, 0x61, 0x66, 0xE9]) // No explicit encoding metadata.
+        for bytes in [invalidUTF16, legacySingleByte] {
+            try withFile(bytes) { file in
+                #expect(throws: FileStoreError.self) {
+                    try QuickLookSourceFallback.replyHTML(for: file)
+                }
+            }
+        }
+    }
+
     @Test func onlyOneRegularSelectedFileIsAdmitted() throws {
         let remote = try #require(URL(string: "https://example.com/source.md"))
         #expect(throws: QuickLookSourceError.invalidURL) {

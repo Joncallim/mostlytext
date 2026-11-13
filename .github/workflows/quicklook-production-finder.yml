@@ -89,6 +89,14 @@ jobs:
           | one | ~~GFM_STRUCK_VALUE~~ |
           MARKDOWN
           ln -s "$RUNNER_TEMP/mostlytext-production-quicklook.md" "$RUNNER_TEMP/mostlytext-production-linked.md"
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          source = "# QUICKLOOK_UTF16_BE_MARKER\r\n\r\n日本語 😀\r\n"
+          (Path(os.environ['RUNNER_TEMP']) / 'mostlytext-production-utf16-be.md').write_bytes(
+              b'\xfe\xff' + source.encode('utf-16-be')
+          )
+          PY
           /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -u "$built"
           /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$app"
           pluginkit -a "$provider"

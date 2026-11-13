@@ -54,6 +54,7 @@ final class ProductionFinderTests: XCTestCase {
             .isEmpty)
         finder.typeKey(.escape, modifierFlags: [])
         assertSelectedSymlink(in: finder, source: source)
+        assertEncodedUnicodeSource(in: finder, beside: source)
     }
 
     private func assertSelectedSymlink(in finder: XCUIApplication, source: URL) {
@@ -80,6 +81,32 @@ final class ProductionFinderTests: XCTestCase {
         XCTAssertTrue(visible, "The selected linked Markdown file must receive a bounded source reply")
         XCTAssertTrue(renderedGFM, "The selected linked file must receive rendered GFM")
         XCTAssertTrue(providerRendered, "The linked file must use the provider-owned renderer")
+        XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText")
+            .isEmpty)
+        finder.typeKey(.escape, modifierFlags: [])
+    }
+
+    private func assertEncodedUnicodeSource(in finder: XCUIApplication, beside source: URL) {
+        let encoded = source.deletingLastPathComponent()
+            .appendingPathComponent("mostlytext-production-utf16-be.md")
+        NSWorkspace.shared.activateFileViewerSelecting([encoded])
+        let item = finder.descendants(matching: .any).matching(identifier: encoded.lastPathComponent).firstMatch
+        XCTAssertTrue(item.waitForExistence(timeout: 5), "Finder must select the UTF-16 BE Markdown file")
+        item.click()
+        finder.typeKey(.space, modifierFlags: [])
+        let heading = finder.staticTexts["QUICKLOOK_UTF16_BE_MARKER"].firstMatch
+        let unicode = finder.staticTexts["日本語 😀"].firstMatch
+        let visible = heading.waitForExistence(timeout: 15) && unicode.waitForExistence(timeout: 5)
+        let tree = XCTAttachment(string: String(finder.debugDescription.prefix(65536)))
+        tree.name = "UTF-16 BE Markdown Finder accessibility tree"
+        tree.lifetime = .keepAlways
+        add(tree)
+        let image = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        image.name = "UTF-16 BE Markdown Finder Quick Look window"
+        image.lifetime = .keepAlways
+        add(image)
+        XCTAssertTrue(visible, "The installed provider must decode BOM and CRLF without losing Unicode text")
+        XCTAssertTrue(finder.staticTexts["MostlyText"].firstMatch.exists)
         XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText")
             .isEmpty)
         finder.typeKey(.escape, modifierFlags: [])
