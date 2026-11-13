@@ -1,6 +1,11 @@
 import Foundation
 import WebKit
 
+private func quickLookDiagramProbeNote(_ message: String) {
+    guard ProcessInfo.processInfo.environment["QUICKLOOK_DIAGRAM_DIAGNOSTICS"] == "1" else { return }
+    FileHandle.standardError.write(Data("QUICKLOOK_DIAGRAM_DIAGNOSTIC \(message)\n".utf8))
+}
+
 /// Completes a harness load only for the navigation returned by its own `loadFileURL` call.
 /// A late callback for a different navigation cannot make an unready page appear ready.
 @MainActor
@@ -22,6 +27,7 @@ final class DiagramHarnessNavigationCompletion {
         }
         self.continuation = continuation
         guard let navigation = start() else {
+            quickLookDiagramProbeNote("loadFileURL returned no navigation")
             complete(.failure(DiagramPoolError.pageUnavailable))
             return
         }
@@ -112,13 +118,16 @@ public final class DiagramHarnessPage: NSObject, WKNavigationDelegate, WKUIDeleg
     /// initializer.
     public static func make(harnessResourceName: String, bundle: Bundle) async throws -> DiagramHarnessPage {
         guard let harnessURL = bundle.url(forResource: harnessResourceName, withExtension: "html") else {
+            quickLookDiagramProbeNote("harness missing bundle=\(bundle.bundlePath) resource=\(harnessResourceName)")
             throw DiagramPoolError.pageUnavailable
         }
+        quickLookDiagramProbeNote("harness found path=\(harnessURL.path)")
         let page = DiagramHarnessPage(allowedDirectory: harnessURL.deletingLastPathComponent())
         do {
             try await page.load(harnessURL: harnessURL)
             return page
         } catch {
+            quickLookDiagramProbeNote("harness load failed error=\(String(reflecting: error))")
             page.teardown()
             throw error
         }
@@ -215,6 +224,7 @@ public final class DiagramHarnessPage: NSObject, WKNavigationDelegate, WKUIDeleg
     }
 
     public func webViewWebContentProcessDidTerminate(_: WKWebView) {
+        quickLookDiagramProbeNote("WebContent terminated during harness load/evaluation")
         isTerminated = true
         loadCompletion.terminate(with: DiagramPoolError.pageUnavailable)
         let pending = evaluations
@@ -225,10 +235,12 @@ public final class DiagramHarnessPage: NSObject, WKNavigationDelegate, WKUIDeleg
     }
 
     public func webView(_: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        quickLookDiagramProbeNote("navigation failed error=\(String(reflecting: error))")
         loadCompletion.finish(for: navigation, with: .failure(error))
     }
 
     public func webView(_: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        quickLookDiagramProbeNote("provisional navigation failed error=\(String(reflecting: error))")
         loadCompletion.finish(for: navigation, with: .failure(error))
     }
 

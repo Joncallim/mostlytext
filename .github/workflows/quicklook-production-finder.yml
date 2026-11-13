@@ -130,6 +130,7 @@ jobs:
           result = subprocess.run(
               [os.environ['WORKER'], '--probe-cold-mermaid'],
               capture_output=True, text=True, timeout=16, check=False,
+              env={**os.environ, 'QUICKLOOK_DIAGRAM_DIAGNOSTICS': '1'},
           )
           elapsed = time.monotonic() - started
           print('mermaid_exit', result.returncode, 'wall_seconds', round(elapsed, 3))
