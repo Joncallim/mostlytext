@@ -55,10 +55,17 @@ private func sourceWorkerMain() -> Never {
     }
     guard hasRequiredSandbox(), CommandLine.arguments.count == 2,
           lseek(3, 0, SEEK_SET) == 0,
-          let html = try? QuickLookSourceFallback.replyHTML(forOpenDescriptor: 3),
-          html.count <= maximumOutputBytes,
-          writeAll(4, bytes: html)
+          let source = try? QuickLookSourceFallback.selectedSource(forOpenDescriptor: 3)
     else { Darwin._exit(1) }
+    let fallback = QuickLookSourceFallback.replyHTML(
+        forSource: source, contributions: [], sourceGeneration: 0
+    )
+    guard fallback.count <= maximumOutputBytes,
+          writeAll(4, bytes: fallback),
+          writeAll(6, bytes: Data([0x46]))
+    else { Darwin._exit(1) }
+    // A later derived renderer writes only fd 5. The source fallback and its
+    // completion marker are immutable before any slower work can begin.
     Darwin._exit(0)
 }
 

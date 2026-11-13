@@ -20,14 +20,19 @@ enum SourceProcess {
         guard let executable,
               executable.path.hasSuffix("/MostlyTextQuickLookWorker")
         else { return Result(data: nil, status: .failed) }
-        guard let output = makeOutput() else { return Result(data: nil, status: .failed) }
-        defer { close(output) }
+        guard let fallback = makeOutput() else { return Result(data: nil, status: .failed) }
+        defer { close(fallback) }
+        guard let derived = makeOutput() else { return Result(data: nil, status: .failed) }
+        defer { close(derived) }
+        guard let fallbackReady = makeOutput() else { return Result(data: nil, status: .failed) }
+        defer { close(fallbackReady) }
         guard childSlots.claim() else { return Result(data: nil, status: .failed) }
-        guard let child = spawn(executable: executable, source: selectedDescriptor, output: output) else {
+        guard let child = spawn(executable: executable, source: selectedDescriptor,
+                                fallback: fallback, derived: derived, fallbackReady: fallbackReady) else {
             childSlots.release()
             return Result(data: nil, status: .failed)
         }
-        return awaitChild(child, output: output)
+        return awaitChild(child, fallback: fallback, derived: derived, fallbackReady: fallbackReady)
     }
 
     private static func makeOutput() -> Int32? {
@@ -42,20 +47,29 @@ enum SourceProcess {
         return output
     }
 
-    private static func spawn(executable: URL, source: Int32, output: Int32) -> pid_t? {
-        // Stable high-numbered inputs avoid dup2 order clobbering fd 3 or 4.
-        let sourceInput = fcntl(source, F_DUPFD_CLOEXEC, 5)
+    private static func spawn(executable: URL, source: Int32, fallback: Int32,
+                              derived: Int32, fallbackReady: Int32) -> pid_t? {
+        // Stable high-numbered inputs avoid dup2 clobbering fd 3 through 6.
+        let sourceInput = fcntl(source, F_DUPFD_CLOEXEC, 7)
         guard sourceInput >= 0 else { return nil }
         defer { close(sourceInput) }
-        let outputInput = fcntl(output, F_DUPFD_CLOEXEC, 5)
-        guard outputInput >= 0 else { return nil }
-        defer { close(outputInput) }
+        let fallbackInput = fcntl(fallback, F_DUPFD_CLOEXEC, 7)
+        guard fallbackInput >= 0 else { return nil }
+        defer { close(fallbackInput) }
+        let derivedInput = fcntl(derived, F_DUPFD_CLOEXEC, 7)
+        guard derivedInput >= 0 else { return nil }
+        defer { close(derivedInput) }
+        let readyInput = fcntl(fallbackReady, F_DUPFD_CLOEXEC, 7)
+        guard readyInput >= 0 else { return nil }
+        defer { close(readyInput) }
 
         var actions: posix_spawn_file_actions_t?
         guard posix_spawn_file_actions_init(&actions) == 0 else { return nil }
         defer { posix_spawn_file_actions_destroy(&actions) }
         guard posix_spawn_file_actions_adddup2(&actions, sourceInput, 3) == 0,
-              posix_spawn_file_actions_adddup2(&actions, outputInput, 4) == 0
+              posix_spawn_file_actions_adddup2(&actions, fallbackInput, 4) == 0,
+              posix_spawn_file_actions_adddup2(&actions, derivedInput, 5) == 0,
+              posix_spawn_file_actions_adddup2(&actions, readyInput, 6) == 0
         else { return nil }
         var attributes: posix_spawnattr_t?
         guard posix_spawnattr_init(&attributes) == 0 else { return nil }
@@ -75,15 +89,23 @@ enum SourceProcess {
         return launched == 0 && child > 0 ? child : nil
     }
 
-    private static func awaitChild(_ child: pid_t, output: Int32) -> Result {
+    private static func awaitChild(_ child: pid_t, fallback: Int32,
+                                   derived: Int32, fallbackReady: Int32) -> Result {
         let deadline = ProcessInfo.processInfo.systemUptime + seconds
         while true {
             var status: Int32 = 0
             let waited = waitpid(child, &status, WNOHANG)
             if waited == child {
                 childSlots.release()
-                guard status == 0 else { return Result(data: nil, status: .failed) }
-                return readOutput(output)
+                if status == 0 {
+                    if let preferred = completedDerived(derived, marker: fallbackReady) {
+                        return preferred
+                    }
+                    return completedFallback(fallback, marker: fallbackReady)
+                        ?? Result(data: nil, status: .failed)
+                }
+                return completedFallback(fallback, marker: fallbackReady)
+                    ?? Result(data: nil, status: .failed)
             }
             if waited == -1 {
                 if errno == EINTR {
@@ -94,15 +116,42 @@ enum SourceProcess {
                 } else {
                     killAndReap(child)
                 }
-                return Result(data: nil, status: .failed)
+                return completedFallback(fallback, marker: fallbackReady)
+                    ?? Result(data: nil, status: .failed)
             }
             let remaining = deadline - ProcessInfo.processInfo.systemUptime
             if remaining <= 0 {
                 killAndReap(child)
-                return Result(data: nil, status: .timedOut)
+                return completedFallback(fallback, marker: fallbackReady)
+                    ?? Result(data: nil, status: .timedOut)
             }
             Thread.sleep(forTimeInterval: min(remaining, 0.01))
         }
+    }
+
+    private static func completionState(_ marker: Int32) -> (fallback: Bool, derived: Bool) {
+        var stamp = stat()
+        guard fstat(marker, &stamp) == 0, stamp.st_mode & S_IFMT == S_IFREG,
+              stamp.st_size == 1 || stamp.st_size == 2
+        else { return (false, false) }
+        var ready = [UInt8](repeating: 0, count: Int(stamp.st_size))
+        let readCount = ready.withUnsafeMutableBytes { bytes in
+            pread(marker, bytes.baseAddress, bytes.count, 0)
+        }
+        guard readCount == ready.count, ready[0] == 0x46 else { return (false, false) }
+        return (true, ready.count == 2 && ready[1] == 0x44)
+    }
+
+    private static func completedDerived(_ derived: Int32, marker: Int32) -> Result? {
+        guard completionState(marker).derived else { return nil }
+        let result = readOutput(derived)
+        return result.status == .complete ? result : nil
+    }
+
+    private static func completedFallback(_ fallback: Int32, marker: Int32) -> Result? {
+        guard completionState(marker).fallback else { return nil }
+        let result = readOutput(fallback)
+        return result.status == .complete ? result : nil
     }
 
     private static func killAndReap(_ child: pid_t) {
