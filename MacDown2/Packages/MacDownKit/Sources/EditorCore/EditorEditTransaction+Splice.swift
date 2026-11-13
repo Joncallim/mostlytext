@@ -22,11 +22,12 @@ extension EditorTextSystem {
             builder.append(replacement.replacementText)
             cursor = NSMaxRange(replacement.range)
         }
-        let combined = builder as String
         transactionEditsToReport = descending
         lineIndexNeedsRebuild = true
         isApplyingMultiRangeTransaction = false
-        textView.insertText(combined, replacementRange: span)
+        // NSTextView accepts NSString here. Keep the assembled UTF-16 buffer
+        // in Foundation instead of materializing a second 1 MB Swift String.
+        textView.insertText(builder, replacementRange: span)
         transactionEditsToReport = nil
     }
 
