@@ -45,9 +45,11 @@ With the retained graphviz-inputs directory documented in
 ```sh
 python3 compliance/tools/prepare_graphviz_offer.py \
   --inputs /path/to/graphviz-inputs --emscripten-source /path/to/emscripten-263db4cf.tar.gz \
+  --image-inputs /path/to/viz-compiler-image \
   --output /tmp/graphviz-source-review.tar.gz
 python3 compliance/tools/prepare_graphviz_offer.py \
   --inputs /path/to/graphviz-inputs --emscripten-source /path/to/emscripten-263db4cf.tar.gz \
+  --image-inputs /path/to/viz-compiler-image \
   --output /tmp/graphviz-source-review.tar.gz --verify-only
 python3 -m unittest compliance.tests.test_graphviz_offer
 ```

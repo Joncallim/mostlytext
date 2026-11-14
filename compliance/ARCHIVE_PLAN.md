@@ -156,7 +156,8 @@ the controlled WASM/browser payload build record, a tested local Go module
 proxy seeder, and scoped ELK/Java/Brotli source references and notices.
 The new Graphviz package includes the finite 489-member link union, basename
 source candidates and their source-file digests, plus a pinned Emscripten
-source reference. These packages remain **review-only**: generated ELK and
+source reference and exact compiler-image comparison for 402 candidate files.
+These packages remain **review-only**: generated ELK and
 decoder correspondence, Go JS runtime, Graphviz compiler-image/per-file
 terms, Rough.js and Stack Overflow grants, and independent rights decisions
 are still open. A model review of package integrity is not a legal opinion.

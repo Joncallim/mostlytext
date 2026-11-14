@@ -12,8 +12,10 @@ browser resource passes local D2 renderer/integration tests. See
 [nested browser audit](evidence/d2-browser-nested-inputs/README.md).
 
 The Graphviz link-stage union now lists all 489 archive/member candidates and
-maps each to at least one pinned source-archive basename, while leaving actual
-compiler-image file correspondence and per-file terms open. The Mermaid audit
+maps each to at least one pinned source-archive basename. A subsequent raw
+image replay now binds all 402 Emscripten-side candidate source files to the
+actual compiler image and pinned source revision; object-to-source build rules
+and per-file terms remain open. The Mermaid audit
 adds the JamaJS SVD/hypot notice; Stack Overflow revision/grant questions and
 the Rough.js flatness adaptation remain open. New local source-review packages
 have been assembled from this branch's final notices and independently checked

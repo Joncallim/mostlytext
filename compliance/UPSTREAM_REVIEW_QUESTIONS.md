@@ -31,8 +31,11 @@ unreproduced. Final source URLs remain planned, not verified.
 [The Graphviz link union](evidence/graphviz-link-inputs/README.md) now enumerates
 all 489 pre-optimization candidate archive/member pairs, with pinned source
 archive basename candidates for each. The 382 unique basename matches and 107
-ambiguous matches do not establish compiler-image correspondence or per-file
-terms. Direct objects, generated parsers, template/header code, Emscripten JS
+ambiguous matches still need build-rule mapping. All 402 candidate Emscripten
+source files for 284 sysroot archive members now match the verified compiler
+image byte for byte, with exact layer digests. This file correspondence does
+not settle object selection or per-file terms. Direct objects, generated
+parsers, template/header code, Emscripten JS
 glue, musl, dlmalloc, compiler-rt, libc++ and libc++abi still need a bounded
 file-by-file grant/source review. Preserve broad root notices in the meantime;
 no omission is justified solely by an unproven optimizer-retention claim.

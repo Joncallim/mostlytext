@@ -69,6 +69,20 @@ approved. The Emscripten source reference is separately retained with SHA-256
 `d34ff1cb0ab99f74c0aefd4641f7a514754f2f6218d540d135ef1cf8467b08ba`;
 it is not assumed to equal every file in the tagged compiler image.
 
+The [compiler-image source comparison](image-source-comparison.json) advances
+that boundary for the Emscripten-side candidates. The replay first verifies
+the complete recorded image graph and all four raw layers, then reads the
+actual image overlay without applying a root filesystem. All **402 distinct
+candidate source paths** for the 284 compiler-rt, libc++, libc++abi and other
+sysroot archive members are present and byte-identical to the pinned
+Emscripten source reference; there are no selected-file overlay events. Each
+comparison records the image layer and complete file digest. Reproduce with
+`compare_image_source.py --inputs /path/to/viz-compiler-image --emscripten-source /path/to/emscripten-263db4cf.tar.gz --output /tmp/image-source-comparison.json`
+and compare the output to the committed JSON. This binds candidate *files* to
+that image/source revision. Object-to-source build rules, multiple candidates
+for one object, inline/template headers and per-file licence terms still need
+review. Graphviz/Expat source files are outside the compiler-image comparison.
+
 ## Build and trust boundary
 
 The source/image and original five-file preparation remain those of the
