@@ -52,13 +52,14 @@ final class BoundedMarkdownCacheRetirement {
         // Start the worker on the next main turn. This guarantees that the
         // caller's temporary strong reference is gone before `box.release()`
         // can perform the final tree destruction on the utility executor.
-        DispatchQueue.main.async { [weak self, box] in
-            Task.detached(priority: .utility) { [weak self, box] in
+        let owner = self
+        DispatchQueue.main.async { [owner, box] in
+            Task.detached(priority: .utility) { [owner, box] in
                 await hold?()
                 box.release()
                 await MainActor.run {
-                    self?.inFlightCount -= 1
-                    self?.onSlotReleasedForTesting?()
+                    owner.inFlightCount -= 1
+                    owner.onSlotReleasedForTesting?()
                 }
             }
         }
