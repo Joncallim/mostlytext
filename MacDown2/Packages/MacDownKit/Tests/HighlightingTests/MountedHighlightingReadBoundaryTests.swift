@@ -72,10 +72,7 @@ struct MountedHighlightingReadBoundaryTests {
         ))
         let window = makeWindow(host: host)
         defer { gate.release(); window.orderOut(nil); window.close(); store.evictAll() }
-        host.layoutSubtreeIfNeeded()
-        let system = try #require(store.existingSystem(for: identity))
-        try #require(system.textView.delegate != nil)
-        try #require(window.makeFirstResponder(system.textView))
+        let system = try mountedSystem(host: host, store: store, identity: identity, window: window)
         let editor = HighlightedEditor(system: system, registry: registry)
         try #require(await editor.waitUntilQuiet(quietPeriod: .seconds(1), timeout: .seconds(30)))
 
@@ -102,13 +99,42 @@ struct MountedHighlightingReadBoundaryTests {
         try #require(await fresh.waitUntilQuiet(quietPeriod: .seconds(1), timeout: .seconds(30)))
         let expected = fresh.renderedRuns()
         try #require(!expected.isEmpty)
-        #expect(await editor.waitUntilRuns(equal: expected, timeout: .seconds(30)) != nil)
+        let parity = await editor.waitUntilRuns(equal: expected, timeout: .seconds(30))
+        if parity == nil {
+            printMismatch(editor: editor, expected: expected)
+        }
+        #expect(parity != nil)
         #expect(editor.textView.string.utf8.elementsEqual(final.utf8))
         #expect(buffer.text.utf8.elementsEqual(final.utf8))
         #expect(system.contentRevision >= 2)
         #expect(gate.events.contains("background-held"))
         #expect(!gate.events.contains("hold-timed-out"))
         print("HIGHLIGHT_LIFECYCLE_CONTROL events=\(gate.events) sourceBytes=\(final.utf8.count)")
+    }
+
+    private func printMismatch(editor: HighlightedEditor, expected: [RenderedRun]) {
+        let actual = editor.renderedRuns()
+        var firstDifference = 0
+        while firstDifference < min(actual.count, expected.count),
+              actual[firstDifference] == expected[firstDifference] {
+            firstDifference += 1
+        }
+        let actualRun = firstDifference < actual.count ? actual[firstDifference].description : "none"
+        let expectedRun = firstDifference < expected.count ? expected[firstDifference].description : "none"
+        print("HIGHLIGHT_LIFECYCLE_MISMATCH actualCount=\(actual.count) expectedCount=\(expected.count) "
+            + "firstIndex=\(firstDifference) actual=\(actualRun) expected=\(expectedRun) "
+            + "mode=\(editor.highlighter.state.mode) styled=\(editor.highlighter.styledTokenCount) "
+            + "staleStyles=\(editor.highlighter.staleStyleRequestCount)")
+    }
+
+    private func mountedSystem(
+        host: NSView, store: EditorTextSystemStore, identity: String, window: NSWindow
+    ) throws -> EditorTextSystem {
+        host.layoutSubtreeIfNeeded()
+        let system = try #require(store.existingSystem(for: identity))
+        try #require(system.textView.delegate != nil)
+        try #require(window.makeFirstResponder(system.textView))
+        return system
     }
 
     private func makeWindow(host: NSView) -> NSWindow {
