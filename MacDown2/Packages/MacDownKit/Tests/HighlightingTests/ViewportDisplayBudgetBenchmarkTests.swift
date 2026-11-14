@@ -14,6 +14,7 @@ import Themes
 /// hosted display readback, not a photographed physical monitor or V1 receipt.
 @MainActor
 @Suite(.serialized, .enabled(if: ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_DISPLAY_BENCH"] == "1"))
+// swiftlint:disable:next type_body_length
 struct ViewportDisplayBudgetBenchmarkTests {
     private struct EditCase {
         let name: String
@@ -51,7 +52,7 @@ struct ViewportDisplayBudgetBenchmarkTests {
     // swiftlint:disable:next function_body_length
     func fullSizeProductionInputToMountedDisplay() async throws {
         let filler = HighlightBudgetFixture.ordinary.markdown(utf8Bytes: 530_000)
-        let original = "# alphaStart heading\n\nCRLF_MARKER\r\ncafé 😊 **bold**\r\n\r\n"
+        let original = "# alphaStart heading\n\n## CRLF_MARKER\r\n**café** 😊 **bold**\r\n\r\n"
             + filler + "\n\n## alphaMiddle heading\n\n" + filler
             + "\n\n`alphaEnd` and **uniqueTailReplacementMarker**\n"
         try #require(original.utf8.count >= 1 << 20)
@@ -107,8 +108,13 @@ struct ViewportDisplayBudgetBenchmarkTests {
             system.scrollToVisible(utf16Range: anchorRange)
             scroll.layoutSubtreeIfNeeded()
             window.displayIfNeeded()
+            // Capture the edited line, including following glyphs. A space
+            // inserted after the anchor shifts those glyphs even when the
+            // anchor's own pixels remain identical.
+            let editedLine = beforeSource.lineRange(for: NSRange(location: range.location, length: 0))
+            let captureRange = NSRange(location: editedLine.location, length: min(80, editedLine.length))
             let displayRegion = try Self.targetRegion(host: host, window: window,
-                                                      textView: system.textView, range: anchorRange)
+                                                      textView: system.textView, range: captureRange)
             let beforePixels = try Self.displayReadback(host: host, window: window, region: displayRegion)
             let priorValidation = painter.validationPassCount
             timing.removeAll(keepingCapacity: true)
@@ -119,26 +125,40 @@ struct ViewportDisplayBudgetBenchmarkTests {
             await session.waitForPendingParse()
             let deadline = input + 5_000_000_000
             var styled = false
+            var matchedPaint: AccentPaint?
             var styleReadback = DispatchTime.now().uptimeNanoseconds
             while DispatchTime.now().uptimeNanoseconds < deadline {
                 await Task.yield()
                 guard let visible = system.visibleUTF16Range else { continue }
                 let painted = try Self.accentPaint(in: visible, oracle: oracle, theme: BundledThemes.light)
                 let actual = Self.renderedAccentRanges(in: system.textView, clippedTo: visible,
-                                                       colors: painted.colors)
-                if !painted.expected.isEmpty, painter.validationPassCount > priorValidation,
-                   actual.subtracting(painted.ambiguous) == painted.expected {
+                                                       buckets: painted.buckets)
+                if painted.buckets.contains(where: { !$0.expected.isEmpty }),
+                   painter.validationPassCount > priorValidation,
+                   actual.indices.allSatisfy({ actual[$0].subtracting(painted.ambiguous)
+                           == painted.buckets[$0].expected }) {
                     styled = true
+                    matchedPaint = painted
                     styleReadback = DispatchTime.now().uptimeNanoseconds
                     break
                 }
             }
             try #require(styled, "Current oracle ranges never appeared in TextKit: \(edit.name)")
+            let painted = try #require(matchedPaint)
             let afterPixels = try Self.displayReadback(host: host, window: window, region: displayRegion)
             let displayReadback = afterPixels.completedAt
+            let accentPixels = Self.accentPixelSamples(painted: painted, bitmap: afterPixels.bitmap,
+                                                       textView: system.textView, host: host,
+                                                       region: displayRegion)
+            try #require(accentPixels > 0, "No oracle accent glyph pixels in mounted display: \(edit.name)")
             try #require(afterPixels.nonBackgroundSamples > 2, "Blank edited-glyph display: \(edit.name)")
-            try #require(beforePixels.digest != afterPixels.digest,
-                         "Mounted display pixels did not change after input: \(edit.name)")
+            let pixelChanged = beforePixels.digest != afterPixels.digest
+            // CRLF and LF are different source/parse states but can draw the
+            // same glyphs. Its oracle accent and nonblank display checks still
+            // apply; a pixel-delta requirement would reject correct rendering.
+            if edit.name != "crlf-replacement" {
+                try #require(pixelChanged, "Mounted display pixels did not change after input: \(edit.name)")
+            }
             try #require(Array(system.textView.string.utf16) == Array(expectedSource.utf16),
                          "Authored UTF-16 changed unexpectedly: \(edit.name)")
             try #require(Array(model.text.utf16) == Array(expectedSource.utf16),
@@ -166,11 +186,16 @@ struct ViewportDisplayBudgetBenchmarkTests {
                 "queue_plus_parse_ms": milliseconds(parseRequested, parseResolved),
                 "parse_resolution_to_publication_ms": milliseconds(parseResolved, published),
                 "publication_to_style_readback_ms": milliseconds(published, styleReadback),
+                "style_to_display_return_ms": milliseconds(styleReadback, afterPixels.displayReturnedAt),
+                "display_return_to_bitmap_readback_ms": milliseconds(afterPixels.displayReturnedAt, displayReadback),
+                "input_to_display_return_ms": milliseconds(input, afterPixels.displayReturnedAt),
                 "style_to_display_readback_ms": milliseconds(styleReadback, displayReadback),
                 "input_to_display_readback_ms": total,
                 "under_50_ms": total < 50,
+                "pixel_changed": pixelChanged,
                 "display_sha256": afterPixels.digest,
                 "display_non_background_samples": afterPixels.nonBackgroundSamples,
+                "oracle_accent_pixel_samples": accentPixels,
                 "full_parse_count": session.fullParseCount,
                 "local_parse_count": session.localParseCount,
             ])
@@ -184,15 +209,21 @@ struct ViewportDisplayBudgetBenchmarkTests {
     }
 
     private struct Pixels {
+        let displayReturnedAt: UInt64
         let completedAt: UInt64
         let digest: String
         let nonBackgroundSamples: Int
+        let bitmap: NSBitmapImageRep
+    }
+
+    private struct AccentBucket {
+        let color: NSColor
+        var expected: IndexSet
     }
 
     private struct AccentPaint {
-        let expected: IndexSet
+        let buckets: [AccentBucket]
         let ambiguous: IndexSet
-        let colors: [NSColor]
     }
 
     private static func targetRegion(host: NSHostingView<EditorView>, window: NSWindow,
@@ -209,6 +240,7 @@ struct ViewportDisplayBudgetBenchmarkTests {
     private static func displayReadback(host: NSHostingView<EditorView>, window: NSWindow,
                                         region: NSRect) throws -> Pixels {
         window.displayIfNeeded()
+        let displayReturnedAt = DispatchTime.now().uptimeNanoseconds
         let bitmap = try #require(host.bitmapImageRepForCachingDisplay(in: region))
         host.cacheDisplay(in: region, to: bitmap)
         let completedAt = DispatchTime.now().uptimeNanoseconds
@@ -225,7 +257,51 @@ struct ViewportDisplayBudgetBenchmarkTests {
                 }
             }
         }
-        return Pixels(completedAt: completedAt, digest: digest, nonBackgroundSamples: ink)
+        return Pixels(displayReturnedAt: displayReturnedAt, completedAt: completedAt,
+                      digest: digest, nonBackgroundSamples: ink, bitmap: bitmap)
+    }
+
+    /// Inspect bitmap pixels inside a glyph rectangle that the independent
+    /// oracle assigns a specific non-base accent. This remains an AppKit
+    /// bitmap sample, not evidence of physical compositor presentation.
+    private static func accentPixelSamples(painted: AccentPaint, bitmap: NSBitmapImageRep,
+                                           textView: NSTextView, host: NSHostingView<EditorView>,
+                                           region: NSRect) -> Int {
+        guard let window = textView.window else { return 0 }
+        let pixelsPerPointX = CGFloat(bitmap.pixelsWide) / region.width
+        let pixelsPerPointY = CGFloat(bitmap.pixelsHigh) / region.height
+        for bucket in painted.buckets where !bucket.expected.isEmpty {
+            guard let target = bucket.color.usingColorSpace(.sRGB) else { continue }
+            for span in bucket.expected.rangeView {
+                let probe = NSRange(location: span.lowerBound, length: min(12, span.count))
+                let screen = textView.firstRect(forCharacterRange: probe, actualRange: nil)
+                let glyphRect = host.convert(window.convertFromScreen(screen), from: nil)
+                    .intersection(region)
+                guard glyphRect.width >= 2, glyphRect.height >= 2 else { continue }
+                let minX = max(0, Int((glyphRect.minX - region.minX) * pixelsPerPointX))
+                let maxX = min(bitmap.pixelsWide, Int(ceil((glyphRect.maxX - region.minX) * pixelsPerPointX)))
+                let minY = max(0, Int((glyphRect.minY - region.minY) * pixelsPerPointY))
+                let maxY = min(bitmap.pixelsHigh, Int(ceil((glyphRect.maxY - region.minY) * pixelsPerPointY)))
+                for pixelX in minX ..< maxX {
+                    for pixelY in minY ..< maxY {
+                        // AppKit view/bitmap origin conventions can differ;
+                        // accept either vertical orientation within this
+                        // tightly bounded oracle glyph rectangle.
+                        for imageY in [pixelY, bitmap.pixelsHigh - 1 - pixelY] {
+                            guard let sample = bitmap.colorAt(x: pixelX, y: imageY)?.usingColorSpace(.sRGB) else {
+                                continue
+                            }
+                            if abs(sample.redComponent - target.redComponent) < 0.16,
+                               abs(sample.greenComponent - target.greenComponent) < 0.16,
+                               abs(sample.blueComponent - target.blueComponent) < 0.16 {
+                                return 1
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return 0
     }
 
     /// Compare only theme accents. Base text also has a foreground color, so
@@ -235,10 +311,15 @@ struct ViewportDisplayBudgetBenchmarkTests {
     private static func accentPaint(in visible: NSRange, oracle: MarkdownSectionCache,
                                     theme: Theme) throws -> AccentPaint {
         let base = theme.chrome.foreground
-        var expected = IndexSet()
         var ambiguous = IndexSet()
         var previous: [(range: NSRange, color: ThemeColor)] = []
-        let colors = theme.tokenStyles.values.map(\.color).filter { $0 != base }.map(\.nsColor)
+        var semanticColors: [ThemeColor] = []
+        for color in theme.tokenStyles.values.map(\.color) where color != base {
+            if !semanticColors.contains(color) {
+                semanticColors.append(color)
+            }
+        }
+        var buckets = semanticColors.map { AccentBucket(color: $0.nsColor, expected: IndexSet()) }
         for token in try oracle.tokens(in: visible) {
             let clipped = NSIntersectionRange(token.range, visible)
             guard clipped.length > 0 else { continue }
@@ -250,33 +331,35 @@ struct ViewportDisplayBudgetBenchmarkTests {
                 }
             }
             previous.append((clipped, color))
-            if color != base {
-                expected.insert(integersIn: clipped.location ..< NSMaxRange(clipped))
+            if color != base, let index = semanticColors.firstIndex(of: color) {
+                buckets[index].expected.insert(integersIn: clipped.location ..< NSMaxRange(clipped))
             }
         }
-        expected.subtract(ambiguous)
-        return AccentPaint(expected: expected, ambiguous: ambiguous, colors: colors)
+        for index in buckets.indices {
+            buckets[index].expected.subtract(ambiguous)
+        }
+        return AccentPaint(buckets: buckets, ambiguous: ambiguous)
     }
 
     private static func renderedAccentRanges(in textView: NSTextView, clippedTo visible: NSRange,
-                                             colors: [NSColor]) -> IndexSet {
+                                             buckets: [AccentBucket]) -> [IndexSet] {
         guard let layout = textView.textLayoutManager,
               let content = layout.textContentManager,
               let start = content.location(content.documentRange.location, offsetBy: visible.location)
-        else { return IndexSet() }
+        else { return Array(repeating: IndexSet(), count: buckets.count) }
         let origin = content.documentRange.location
-        var ranges = IndexSet()
+        var ranges = Array(repeating: IndexSet(), count: buckets.count)
         layout.enumerateRenderingAttributes(from: start, reverse: false) { _, attributes, textRange in
             let location = content.offset(from: origin, to: textRange.location)
             if location >= NSMaxRange(visible) {
                 return false
             }
             guard let color = attributes[.foregroundColor] as? NSColor,
-                  colors.contains(where: { $0.isEqual(color) }) else { return true }
+                  let index = buckets.firstIndex(where: { $0.color.isEqual(color) }) else { return true }
             let length = content.offset(from: textRange.location, to: textRange.endLocation)
             let clipped = NSIntersectionRange(NSRange(location: location, length: length), visible)
             if clipped.length > 0 {
-                ranges.insert(integersIn: clipped.location ..< NSMaxRange(clipped))
+                ranges[index].insert(integersIn: clipped.location ..< NSMaxRange(clipped))
             }
             return true
         }

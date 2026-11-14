@@ -11,6 +11,7 @@ on:
       - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownViewportBudgetBenchmarkTests.swift'
       - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportHighlighterBudgetBenchmarkTests.swift'
       - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportDisplayBudgetBenchmarkTests.swift'
+      - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportMountedLifecycleOracleTests.swift'
   workflow_dispatch:
 jobs:
   viewport-budget:
@@ -57,6 +58,7 @@ jobs:
             MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownViewportBudgetBenchmarkTests.swift \
             MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportHighlighterBudgetBenchmarkTests.swift \
             MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportDisplayBudgetBenchmarkTests.swift \
+            MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportMountedLifecycleOracleTests.swift \
             .github/workflows/viewport-budget-measurement.yml \
             > "$RUNNER_TEMP/viewport-budget/input-sha256.txt"
       - name: Measure mounted session and public highlighter in Release
@@ -72,6 +74,9 @@ jobs:
           MACDOWN_VIEWPORT_DISPLAY_BENCH=1 \
             swift test -c release --filter ViewportDisplayBudgetBenchmarkTests --no-parallel \
             2>&1 | tee "$RUNNER_TEMP/viewport-budget/display.log"
+          MACDOWN_VIEWPORT_LIFECYCLE_ORACLE=1 \
+            swift test -c release --filter ViewportMountedLifecycleOracleTests --no-parallel \
+            2>&1 | tee "$RUNNER_TEMP/viewport-budget/lifecycle.log"
       - name: Record complete measured cases
         run: |
           python3 - <<'PY'
@@ -102,6 +107,13 @@ jobs:
               records[name] = cases
           display_log = (root / 'display.log').read_text()
           assert 'Test run with 1 test in 1 suite passed' in display_log
+          lifecycle_log = (root / 'lifecycle.log').read_text()
+          assert 'Test run with 1 test in 1 suite passed' in lifecycle_log
+          assert 'ViewportMountedLifecycleOracleTests' in lifecycle_log
+          records['lifecycle'] = {
+              'passed': True,
+              'scope': 'full-size mounted source/selection/lifecycle oracle; manual painter validation means no automatic repaint claim'
+          }
           display_lines = [line for line in display_log.splitlines()
                            if line.startswith('VIEWPORT-DISPLAY-BUDGET ')]
           assert len(display_lines) == 1, len(display_lines)
@@ -116,14 +128,18 @@ jobs:
               assert case['source_utf8_bytes'] >= 1 << 20
               assert case['source_utf16_units'] <= 1_100_000
               assert case['display_non_background_samples'] > 2
+              assert case['oracle_accent_pixel_samples'] > 0
               assert re.fullmatch(r'[0-9a-f]{64}', case['display_sha256'])
               assert case['input_to_display_readback_ms'] >= case['input_to_storage_return_ms'] >= 0
+              assert case['input_to_display_readback_ms'] >= case['input_to_display_return_ms'] >= 0
+              assert case['display_return_to_bitmap_readback_ms'] >= 0
+              assert case['pixel_changed'] or case['case'] == 'crlf-replacement'
               assert case['under_50_ms'] == (case['input_to_display_readback_ms'] < 50)
           records['display'] = display
           records['display_budget_failures'] = [case['case'] for case in display
                                                 if not case['under_50_ms']]
           print('DISPLAY-BUDGET-VERDICT', json.dumps({
-              'scope': 'mounted package/editor store and AppKit display readback; app-target event orchestration unmeasured',
+              'scope': 'mounted package/editor store and AppKit display readback; app-target event orchestration and timed movement/undo/redo/IME unmeasured',
               'under_50_ms': not records['display_budget_failures'],
               'failures': records['display_budget_failures']
           }, sort_keys=True))
