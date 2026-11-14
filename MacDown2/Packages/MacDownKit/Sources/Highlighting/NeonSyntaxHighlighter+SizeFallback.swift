@@ -57,16 +57,17 @@ extension NeonSyntaxHighlighter {
         textSystem.textView.textStorage?.length ?? 0
     }
 
-    /// Drops Neon's highlighter and makes its in-flight work inert (its
-    /// attribute provider checks ``generation``). Returns false if none was
-    /// attached.
+    /// Retires Neon's style writer before dropping its owner. Its in-flight
+    /// token work can complete, but cannot clear a successor's presentation.
+    /// Returns false if none was attached.
     @discardableResult
     func discardHighlighter() -> Bool {
         gate.downstream = nil
-        guard highlighter != nil else { return false }
+        guard let highlighter else { return false }
         repaintDeadline = 0
+        highlighter.deactivate()
         generation &+= 1
-        highlighter = nil
+        self.highlighter = nil
         return true
     }
 
