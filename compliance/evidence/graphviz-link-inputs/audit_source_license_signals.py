@@ -16,7 +16,8 @@ SOURCES = {
     'expat': ('expat-2.8.4.tar.gz', 'b8ece2437692dad44d851c4532723390a5a330990007706be9c8d2b90d294f36'),
     'emscripten': ('emscripten-263db4cf.tar.gz', 'd34ff1cb0ab99f74c0aefd4641f7a514754f2f6218d540d135ef1cf8467b08ba'),
 }
-SIGNALS = ('Eclipse Public License', 'GNU General Public', 'Apache License',
+SIGNALS = ('Eclipse Public License', 'Common Public License', 'CPL',
+           'GNU General Public', 'Apache License',
            'MIT License', 'public domain', 'Free Software Foundation', 'BSD',
            'University of Illinois', 'All rights reserved',
            'Permission is hereby granted')

@@ -29,7 +29,8 @@ commit's complete 377-file Git tree. The older v1.1.0 export and its
 18-JavaScript-file Git snapshot remain historical inputs; that tag's decoder
 does not match in AST. No exact copied revision is claimed. The
 precise outstanding source questions are: the ELK Java/GWT input and D2's
-generated `elk.js` correspondence; the decoder's historical copied revision,
+generated `elk.js` correspondence (the [four later D2 edits](evidence/d2-elk-history/README.md)
+and exact final Git blob are now identified); the decoder's historical copied revision,
 generated transformation and per-file obligations; D2's historical
 `wasm_exec.js` copied revision and any
 behavioral implications of its formatting/key spelling; per-file Go/runtime
@@ -55,8 +56,11 @@ compiler-rt, libc++ and libc++abi still need a bounded
 file-by-file grant/source review. Preserve broad root notices in the meantime;
 no omission is justified solely by an unproven optimizer-retention claim.
 The reproducible [616-file licence signal index](evidence/graphviz-link-inputs/file-license-signals.json)
-helps triage that review; it identifies, for example, two Arm Limited 2018
-MIT headers in possible musl math sources. The complete LLVM libc root text
+helps triage that review. The [additional scoped notice packet](evidence/graphviz-link-inputs/additional-notices.json)
+retains Graphviz's full CPL-1.0 text and VPSC candidate headers, four candidate
+Expat C headers including 2026 names, 14 newer Emscripten dual-grant headers
+and two Arm Limited 2018 MIT math headers. It does not settle exact object
+selection, CPL/EPL compatibility or source-offer interpretation. The complete LLVM libc root text
 includes both modern Apache/LLVM and legacy University of Illinois/NCSA
 terms, so the inventory uses a qualified complete-root reference rather than
 assigning the modern expression to every candidate.

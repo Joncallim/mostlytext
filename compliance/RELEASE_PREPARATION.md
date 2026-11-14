@@ -24,6 +24,15 @@ against their manifests. They are review-only; the separate proposal is under
 this candidate reports ten because four newly explicit nested review-required
 components are counted. The checker and release predicates are unchanged.
 
+The later main checkpoint `3202ab7b` includes the pinned Go JavaScript runtime
+and Google Brotli decoder comparisons. The next scoped review candidate binds
+D2's `elk.js` to its August 2025 Git blob and four intervening edit commits,
+and preserves Graphviz VPSC CPL, Expat file, newer Emscripten and Arm math
+candidate notices. These source/notice changes do not alter renderer bytes or
+clear the ten strict rights/source/publication findings. The exact new local
+package hashes and outstanding questions are in
+[the source-only proposal](evidence/source-offers/proposal-2026-11-14.md).
+
 A pinned universal Release app compile succeeds locally without signing.
 Its bundled D2 browser resource, D2 notice and generated third-party notices
 match this source tree byte for byte. This is compile/resource evidence; the

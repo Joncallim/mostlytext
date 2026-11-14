@@ -1,0 +1,318 @@
+Source: lib/neatogen/constrained_majorization_ipsep.c
+/**
+ *
+ * Authors:
+ *   Tim Dwyer <tgdwyer@gmail.com>
+ *
+ * Copyright (C) 2005 Authors
+ *
+ * This version is released under the CPL (Common Public License) with
+ * the Graphviz distribution.
+ * A version is also available under the LGPL as part of the Adaptagrams
+ * project: http://sourceforge.net/projects/adaptagrams.  
+ * If you make improvements or bug fixes to this code it would be much
+ * appreciated if you could also contribute those changes back to the
+ * Adaptagrams repository.
+ */
+
+Source: lib/neatogen/quad_prog_vpsc.c
+/**
+ *
+ * Authors:
+ *   Tim Dwyer <tgdwyer@gmail.com>
+ *
+ * Copyright (C) 2005 Authors
+ *
+ * This version is released under the CPL (Common Public License) with
+ * the Graphviz distribution.
+ * A version is also available under the LGPL as part of the Adaptagrams
+ * project: http://sourceforge.net/projects/adaptagrams.  
+ * If you make improvements or bug fixes to this code it would be much
+ * appreciated if you could also contribute those changes back to the
+ * Adaptagrams repository.
+ */
+
+Source: lib/vpsc/block.cpp
+/**
+ * \brief A block is a group of variables that must be moved together to improve
+ * the goal function without violating already active constraints.
+ * The variables in a block are spanned by a tree of active constraints.
+ *
+ * Authors:
+ *   Tim Dwyer <tgdwyer@gmail.com>
+ *
+ * Copyright (C) 2005 Authors
+ *
+ * This version is released under the CPL (Common Public License) with
+ * the Graphviz distribution.
+ * A version is also available under the LGPL as part of the Adaptagrams
+ * project: https://github.com/mjwybrow/adaptagrams.  
+ * If you make improvements or bug fixes to this code it would be much
+ * appreciated if you could also contribute those changes back to the
+ * Adaptagrams repository.
+ */
+
+Source: lib/vpsc/blocks.cpp
+/**
+ * \brief A block structure defined over the variables
+ *
+ * A block structure defined over the variables such that each block contains
+ * 1 or more variables, with the invariant that all constraints inside a block
+ * are satisfied by keeping the variables fixed relative to one another
+ *
+ * Authors:
+ *   Tim Dwyer <tgdwyer@gmail.com>
+ *
+ * Copyright (C) 2005 Authors
+ *
+ * This version is released under the CPL (Common Public License) with
+ * the Graphviz distribution.
+ * A version is also available under the LGPL as part of the Adaptagrams
+ * project: https://github.com/mjwybrow/adaptagrams.  
+ * If you make improvements or bug fixes to this code it would be much
+ * appreciated if you could also contribute those changes back to the
+ * Adaptagrams repository.
+ */
+
+Source: lib/vpsc/constraint.cpp
+/**
+ * \brief A constraint determines a minimum or exact spacing required between
+ * two variables.
+ *
+ * Authors:
+ *   Tim Dwyer <tgdwyer@gmail.com>
+ *
+ * Copyright (C) 2005 Authors
+ *
+ * This version is released under the CPL (Common Public License) with
+ * the Graphviz distribution.
+ * A version is also available under the LGPL as part of the Adaptagrams
+ * project: https://github.com/mjwybrow/adaptagrams.  
+ * If you make improvements or bug fixes to this code it would be much
+ * appreciated if you could also contribute those changes back to the
+ * Adaptagrams repository.
+ */
+
+Source: lib/vpsc/csolve_VPSC.cpp
+/**
+ * \brief Bridge for C programs to access solve_VPSC (which is in C++)
+ *
+ * Authors:
+ *   Tim Dwyer <tgdwyer@gmail.com>
+ *
+ * Copyright (C) 2005 Authors
+ *
+ * This version is released under the CPL (Common Public License) with
+ * the Graphviz distribution.
+ * A version is also available under the LGPL as part of the Adaptagrams
+ * project: https://github.com/mjwybrow/adaptagrams.  
+ * If you make improvements or bug fixes to this code it would be much
+ * appreciated if you could also contribute those changes back to the
+ * Adaptagrams repository.
+ */
+
+Source: lib/vpsc/generate-constraints.cpp
+/**
+ * \brief Functions to automatically generate constraints for the rectangular
+ * node overlap removal problem.
+ *
+ * Authors:
+ *   Tim Dwyer <tgdwyer@gmail.com>
+ *
+ * Copyright (C) 2005 Authors
+ *
+ * This version is released under the CPL (Common Public License) with
+ * the Graphviz distribution.
+ * A version is also available under the LGPL as part of the Adaptagrams
+ * project: https://github.com/mjwybrow/adaptagrams.  
+ * If you make improvements or bug fixes to this code it would be much
+ * appreciated if you could also contribute those changes back to the
+ * Adaptagrams repository.
+ */
+
+Source: lib/vpsc/solve_VPSC.cpp
+/**
+ * \file
+ * \brief Solve an instance of the "Variable Placement with Separation
+ * Constraints" problem.
+ *
+ * Authors:
+ *   Tim Dwyer <tgdwyer@gmail.com>
+ *
+ * Copyright (C) 2005 Authors
+ * 
+ * This version is released under the CPL (Common Public License) with
+ * the Graphviz distribution.
+ * A version is also available under the LGPL as part of the Adaptagrams
+ * project: https://github.com/mjwybrow/adaptagrams.  
+ * If you make improvements or bug fixes to this code it would be much
+ * appreciated if you could also contribute those changes back to the
+ * Adaptagrams repository.
+ */
+
+Source: lib/vpsc/variable.cpp
+/**
+ *
+ * Authors:
+ *   Tim Dwyer <tgdwyer@gmail.com>
+ *
+ * Copyright (C) 2005 Authors
+ *
+ * This version is released under the CPL (Common Public License) with
+ * the Graphviz distribution.
+ * A version is also available under the LGPL as part of the Adaptagrams
+ * project: https://github.com/mjwybrow/adaptagrams.  
+ * If you make improvements or bug fixes to this code it would be much
+ * appreciated if you could also contribute those changes back to the
+ * Adaptagrams repository.
+ */
+
+Source: lib/neatogen/quad_prog_vpsc.h
+/**
+ * Authors:
+ *   Tim Dwyer <tgdwyer@gmail.com>
+ *
+ * Copyright (C) 2005 Authors
+ *
+ * This version is released under the CPL (Common Public License) with
+ * the Graphviz distribution.
+ * A version is also available under the LGPL as part of the Adaptagrams
+ * project: http://sourceforge.net/projects/adaptagrams.  
+ * If you make improvements or bug fixes to this code it would be much
+ * appreciated if you could also contribute those changes back to the
+ * Adaptagrams repository.
+ */
+
+Source: lib/vpsc/variable.h
+/**
+ *
+ * Authors:
+ *   Tim Dwyer <tgdwyer@gmail.com>
+ *
+ * Copyright (C) 2005 Authors
+ *
+ * This version is released under the CPL (Common Public License) with
+ * the Graphviz distribution.
+ * A version is also available under the LGPL as part of the Adaptagrams
+ * project: https://github.com/mjwybrow/adaptagrams.  
+ * If you make improvements or bug fixes to this code it would be much
+ * appreciated if you could also contribute those changes back to the
+ * Adaptagrams repository.
+ */
+
+Source: lib/vpsc/csolve_VPSC.h
+/**
+ * \brief Bridge for C programs to access solve_VPSC (which is in C++)
+ *
+ * Authors:
+ *   Tim Dwyer <tgdwyer@gmail.com>
+ *
+ * Copyright (C) 2005 Authors
+ *
+ * This version is released under the CPL (Common Public License) with
+ * the Graphviz distribution.
+ * A version is also available under the LGPL as part of the Adaptagrams
+ * project: https://github.com/mjwybrow/adaptagrams.  
+ * If you make improvements or bug fixes to this code it would be much
+ * appreciated if you could also contribute those changes back to the
+ * Adaptagrams repository.
+ */
+
+Source: lib/vpsc/blocks.h
+/**
+ * \brief A block structure defined over the variables
+ *
+ * A block structure defined over the variables such that each block contains
+ * 1 or more variables, with the invariant that all constraints inside a block
+ * are satisfied by keeping the variables fixed relative to one another
+ *
+ * Authors:
+ *   Tim Dwyer <tgdwyer@gmail.com>
+ *
+ * Copyright (C) 2005 Authors
+ *
+ * This version is released under the CPL (Common Public License) with
+ * the Graphviz distribution.
+ * A version is also available under the LGPL as part of the Adaptagrams
+ * project: https://github.com/mjwybrow/adaptagrams.  
+ * If you make improvements or bug fixes to this code it would be much
+ * appreciated if you could also contribute those changes back to the
+ * Adaptagrams repository.
+ */
+
+Source: lib/vpsc/solve_VPSC.h
+/**
+ * \brief Solve an instance of the "Variable Placement with Separation
+ * Constraints" problem.
+ *
+ * Authors:
+ *   Tim Dwyer <tgdwyer@gmail.com>
+ *
+ * Copyright (C) 2005 Authors
+ * 
+ * This version is released under the CPL (Common Public License) with
+ * the Graphviz distribution.
+ * A version is also available under the LGPL as part of the Adaptagrams
+ * project: https://github.com/mjwybrow/adaptagrams.  
+ * If you make improvements or bug fixes to this code it would be much
+ * appreciated if you could also contribute those changes back to the
+ * Adaptagrams repository.
+ */
+
+Source: lib/vpsc/block.h
+/**
+ * \brief A block is a group of variables that must be moved together to improve
+ * the goal function without violating already active constraints.
+ * The variables in a block are spanned by a tree of active constraints.
+ *
+ * Authors:
+ *   Tim Dwyer <tgdwyer@gmail.com>
+ *
+ * Copyright (C) 2005 Authors
+ *
+ * This version is released under the CPL (Common Public License) with
+ * the Graphviz distribution.
+ * A version is also available under the LGPL as part of the Adaptagrams
+ * project: https://github.com/mjwybrow/adaptagrams.  
+ * If you make improvements or bug fixes to this code it would be much
+ * appreciated if you could also contribute those changes back to the
+ * Adaptagrams repository.
+ */
+
+Source: lib/vpsc/generate-constraints.h
+/**
+ * \brief Functions to automatically generate constraints for the rectangular
+ * node overlap removal problem.
+ *
+ * Authors:
+ *   Tim Dwyer <tgdwyer@gmail.com>
+ *
+ * Copyright (C) 2005 Authors
+ *
+ * This version is released under the CPL (Common Public License) with
+ * the Graphviz distribution.
+ * A version is also available under the LGPL as part of the Adaptagrams
+ * project: https://github.com/mjwybrow/adaptagrams.  
+ * If you make improvements or bug fixes to this code it would be much
+ * appreciated if you could also contribute those changes back to the
+ * Adaptagrams repository.
+ */
+
+Source: lib/vpsc/constraint.h
+/**
+ * \brief A constraint determines a minimum or exact spacing required between
+ * two variables.
+ *
+ * Authors:
+ *   Tim Dwyer <tgdwyer@gmail.com>
+ *
+ * Copyright (C) 2005 Authors
+ *
+ * This version is released under the CPL (Common Public License) with
+ * the Graphviz distribution.
+ * A version is also available under the LGPL as part of the Adaptagrams
+ * project: https://github.com/mjwybrow/adaptagrams.  
+ * If you make improvements or bug fixes to this code it would be much
+ * appreciated if you could also contribute those changes back to the
+ * Adaptagrams repository.
+ */

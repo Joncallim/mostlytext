@@ -41,6 +41,9 @@ REPO_FILES = {
     'compliance/evidence/d2-js-brotli-source/extract_inputs.py': 'evidence/d2-js-brotli-source/extract_inputs.py',
     'compliance/evidence/d2-js-brotli-source/compare-brotli-source.js': 'evidence/d2-js-brotli-source/compare-brotli-source.js',
     'compliance/evidence/d2-js-brotli-source/brotli-ast-report.json': 'evidence/d2-js-brotli-source/brotli-ast-report.json',
+    'compliance/evidence/d2-elk-history/README.md': 'evidence/d2-elk-history/README.md',
+    'compliance/evidence/d2-elk-history/history.json': 'evidence/d2-elk-history/history.json',
+    'compliance/evidence/d2-elk-history/verify.py': 'evidence/d2-elk-history/verify.py',
     'compliance/tools/convert_lossless_woff.py': 'build/convert_lossless_woff.py',
     'compliance/tools/seed_d2_module_proxy.py': 'build/seed_d2_module_proxy.py',
     'compliance/tools/replace_d2_wasm_payload.py': 'build/replace_d2_wasm_payload.py',
@@ -137,6 +140,19 @@ def members(root, inputs, base, publisher_browser):
             body = archive.extractfile(member).read()
         if len(body) != decoder_report[key]['bytes'] or sha(body) != decoder_report[key]['sha256']:
             raise ValueError('Brotli decoder source does not match technical comparison')
+    elk_receipt = json.loads(result['evidence/d2-elk-history/history.json'])
+    with tarfile.open(fileobj=io.BytesIO(result['original-review/upstream/d2-source-581c9109.tar.gz']),
+                      mode='r:gz') as archive:
+        member = archive.getmember(elk_receipt['member_path'])
+        if not member.isfile() or member.size > 4_000_000:
+            raise ValueError('D2 ELK source is not a bounded regular file')
+        elk_body = archive.extractfile(member).read()
+    elk_blob = b'blob ' + str(len(elk_body)).encode() + b'\0' + elk_body
+    if (len(elk_body) != elk_receipt['member_bytes']
+            or sha(elk_body) != elk_receipt['member_sha256']
+            or hashlib.sha1(elk_blob).hexdigest() != elk_receipt['member_git_blob_sha1']
+            or elk_receipt['history'][-1]['file_blob_sha1'] != elk_receipt['member_git_blob_sha1']):
+        raise ValueError('D2 ELK source does not match modification-history receipt')
     report = json.loads(result['evidence/browser-payload-replacement.json'])
     current_resource = root / 'MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/d2-browser.js'
     if sha(current_resource.read_bytes()) != report['output_browser_sha256']:
@@ -149,6 +165,7 @@ def members(root, inputs, base, publisher_browser):
         'reference source, including full v1.1.0 and June 2025 Git trees, notices,\n'
         'a reproducible Go JavaScript runtime AST comparison,\n'
         'a reproducible Brotli decoder AST comparison,\n'
+        'and pinned D2 ELK JavaScript modification history,\n'
         'and exact resource/build digests. The GitHub export tar is preserved\n'
         'separately: its export rules omit js/ and it is not sufficient alone.\n'
         'ELK Java/GWT historical correspondence, Brotli historical copy, Go JS\n'

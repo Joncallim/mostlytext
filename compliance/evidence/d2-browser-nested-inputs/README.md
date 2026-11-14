@@ -13,7 +13,11 @@ not match the pinned D2 file byte for byte. The elkjs build also references
 separate ELK Java source, GWT and `melk:0.8.1`; the candidate
 [ELK Java v0.8.1 source](https://github.com/eclipse-elk/elk/tree/v0.8.1)
 is retained but does not establish the exact historical generated-runtime
-inputs or all per-file obligations. The source offer therefore remains open.
+inputs or all per-file obligations. [D2's file history](../d2-elk-history/README.md)
+now binds the pinned `elk.js` to its August 2025 Git blob and identifies the
+four later D2 edit commits after the 2022 introduction. This narrows the
+D2-specific modifications but does not reproduce the original generated file
+from ELK Java/GWT inputs. The source offer therefore remains open.
 
 The pinned D2 source embeds `d2js/js/vendor/decode.min.js` (SHA-256
 `67de1ff9e3bf170ca99d317a6466cb107f288a1f565f3971cd7dd8dc9922f677`)

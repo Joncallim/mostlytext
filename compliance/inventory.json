@@ -173,7 +173,7 @@
       "kind": "embedded",
       "version": "D2 identifies elkjs 0.8.2; exact transformed source unresolved",
       "upstream": "https://github.com/kieler/elkjs",
-      "resolution": "source reference and exact D2 payload; build correspondence incomplete",
+      "resolution": "Exact D2 payload and modification history; upstream generated-runtime build correspondence incomplete",
       "licence": "EPL-2.0",
       "copyright": [
         "Kiel University and contributors; see complete EPL text and upstream source"
@@ -195,7 +195,7 @@
         "LC-07"
       ],
       "evidence": "compliance/evidence/d2-browser-nested-inputs/reproduction.json",
-      "notes": "The shipped browser resource contains a Brotli payload that decodes byte-for-byte to the pinned D2 elk.js. D2 identifies elkjs 0.8.2. The tagged elkjs archive includes generated JS and additional source, but its build.gradle requires separate ELK Java source and GWT dependencies; complete preferred-source correspondence, D2 modifications and per-file obligations remain under review. The shipped browser resource has been rebuilt with a replacement WASM literal; this attribution remains applicable to the unchanged JavaScript inputs."
+      "notes": "The shipped browser resource contains a Brotli payload that decodes byte-for-byte to the pinned D2 elk.js. D2 identifies elkjs 0.8.2. The D2 source member is the exact Git blob after its August 2025 race fix; four intervening D2 commits identify changes to global/worker selection, synchronous layout exposure, wrapper formatting and worker reuse. The tagged elkjs archive includes generated JS and additional source, but its build.gradle requires separate ELK Java source and GWT dependencies; complete preferred-source correspondence, generated-runtime inputs and per-file obligations remain under review. See compliance/evidence/d2-elk-history/README.md. The shipped browser resource has been rebuilt with a replacement WASM literal; this attribution remains applicable to the unchanged JavaScript inputs."
     },
     {
       "id": "d2-js-brotli",
@@ -269,7 +269,8 @@
       "licence": "MIT",
       "copyright": [
         "Copyright (c) 1998-2000 Thai Open Source Software Center Ltd and Clark Cooper",
-        "Copyright (c) 2001-2025 Expat maintainers"
+        "Copyright (c) 2001-2025 Expat maintainers",
+        "Copyright (c) 2026 Sebastian Pipping and Matthew Fernandez in selected file headers"
       ],
       "licence_texts": [
         {
@@ -278,6 +279,14 @@
           "upstream": "https://github.com/libexpat/libexpat",
           "upstream_revision": "12cf0b1f25f026a022fe728ad8f7e3d017285b80",
           "upstream_path": "expat/COPYING"
+        },
+        {
+          "path": "compliance/licenses/graphviz-expat-file-headers--MIT.txt",
+          "sha256": "bc55518a8c479e5e81ba6ea07f27494fed63193c864b4b7f31ede4746c47a29d",
+          "upstream": "https://github.com/libexpat/libexpat",
+          "upstream_revision": "12cf0b1f25f026a022fe728ad8f7e3d017285b80",
+          "upstream_path": "lib/random_getentropy.c, lib/xmlparse.c, lib/xmlrole.c and lib/xmltok.c initial headers",
+          "assembly": "Verbatim initial headers from four pinned candidate source files; source paths and hashes in additional-notices.json"
         }
       ],
       "embedded_in": "viz-js",
@@ -287,7 +296,7 @@
         "LC-02",
         "LC-07"
       ],
-      "notes": "The Viz.js 3.30.0 Dockerfile statically builds Expat 2.8.4 and links -lexpat. The npm backend publisher provenance names the same gzip archive digest independently downloaded here. COPYING is byte-identical to that archive. See compliance/evidence/viz-js-3.30.0/ for correspondence checks and limits; no independent rebuild is claimed."
+      "notes": "The Viz.js 3.30.0 Dockerfile statically builds Expat 2.8.4 and links -lexpat. The npm backend publisher provenance names the same gzip archive digest independently downloaded here. COPYING is byte-identical to that archive. The four possible linked C sources have additional exact file-level MIT headers; random_getentropy.c names 2026 authors absent from COPYING. See compliance/evidence/graphviz-link-inputs/additional-notices.json and compliance/evidence/viz-js-3.30.0/ for correspondence and limits; source/build reproduction does not settle final optimized retention."
     },
     {
       "id": "graphviz-ellipse-maisonobe",
@@ -2293,6 +2302,13 @@
           "licence": "BSD-3-Clause AND MIT",
           "upstream": "https://gitlab.com/graphviz/graphviz",
           "inventory_id": "graphviz-randomkit"
+        },
+        {
+          "name": "CPL-covered VPSC source candidates",
+          "version": "Graphviz 16.0.0 source snapshot",
+          "licence": "CPL-1.0",
+          "upstream": "https://gitlab.com/graphviz/graphviz",
+          "inventory_id": "graphviz-vpsc-cpl-candidate-notice"
         }
       ],
       "source_offer": {
@@ -2303,7 +2319,7 @@
       },
       "open_items": [
         "LC-02: exact Graphviz 16.0.0, Viz.js 3.30.0 and Expat 2.8.4 source/build inputs have a reproducible local source-review package. Complete independent corresponding-source/compiler-input review, approval and LC-09 publication/anonymous retrieval remain open; a prepared review package is not a complete approved offer.",
-        "Expat, red-black tree, ellipse and Random kit notices remain registered. The distributed Bison skeleton copyright/exception/full GPL text and Emscripten/musl root notices now have conservative source-build references. Complete exact generated-parser and runtime/libc/compiler-rt/libc++ per-file retention and attribution review; neither root notices nor direct linker lists prove exhaustive linked-code coverage."
+        "Expat, red-black tree, ellipse, Random kit and CPL-covered VPSC candidate notices remain registered. The distributed Bison skeleton copyright/exception/full GPL text and Emscripten/musl root and scoped file headers now have conservative source-build references. Complete exact generated-parser and runtime/libc/compiler-rt/libc++ per-file retention and attribution review, including CPL/EPL interpretation, remain open; neither root notices nor direct linker lists prove exhaustive linked-code coverage."
       ],
       "runtime_resources": [
         {
@@ -5747,6 +5763,106 @@
       ],
       "evidence": "compliance/evidence/libcxx-image-notices/manifest.json",
       "notes": "All complete root texts and referenced partial credits are byte-identical between the recorded AMD64 image and the immutable Emscripten source reference. The actual wasm-ld map names 8 members of libc++abi-noexcept.a. This preserves conservative root-text coverage; it does not establish a unique source revision for the entire compiler image, final optimized retention of every mapped member, exhaustive per-file obligations, independent rights review or source-offer approval."
+    },
+    {
+      "id": "graphviz-emscripten-newer-header-candidate-notice",
+      "name": "Newer Emscripten dual-grant headers in Viz.js compiler-image candidates",
+      "kind": "attribution",
+      "version": "Emscripten 263db4cf source reference",
+      "upstream": "https://github.com/emscripten-core/emscripten",
+      "licence": "MIT OR NCSA",
+      "copyright": [
+        "Copyright 2019–2026 The Emscripten Authors, as recorded in the exact source headers"
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/graphviz-emscripten-newer-headers--MIT-NCSA.txt",
+          "sha256": "4d607730035e507223eaeec804961e2316606b1ae612a1ccddba91355a536260",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "fourteen pinned candidate source file headers",
+          "assembly": "Verbatim initial headers with source paths and digests in additional-notices.json"
+        }
+      ],
+      "embedded_in": "viz-js",
+      "provenance": "verified",
+      "resolution": "Conservative scoped notice for fourteen candidate source headers; final retention and per-file review open",
+      "lc": [
+        "LC-01",
+        "LC-02",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/graphviz-link-inputs/additional-notices.json",
+      "notes": "The pinned compiler-image and source-reference files carry these exact newer dual-grant headers. The Emscripten root grant and AUTHORS remain separately recorded by renderer-build-emscripten. This scoped record does not assert final optimized retention or complete the remaining per-file review."
+    },
+    {
+      "id": "graphviz-musl-arm-math-candidate-notice",
+      "name": "Arm MIT math headers in Viz.js musl source candidates",
+      "kind": "attribution",
+      "version": "Emscripten 263db4cf source reference",
+      "upstream": "https://github.com/emscripten-core/emscripten",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright (c) 2018, Arm Limited"
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/graphviz-musl-arm-math--MIT.txt",
+          "sha256": "965e28a1d428c0fef71c3f4fa51503ed66d9e7d281b395768f32e9c835ad9e6a",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/libc/musl/src/math/exp.c and exp_data.c initial headers",
+          "assembly": "Verbatim initial headers with source paths and digests in additional-notices.json"
+        }
+      ],
+      "embedded_in": "viz-js",
+      "provenance": "verified",
+      "resolution": "Conservative scoped notice for two candidate musl math headers; final retention and per-file review open",
+      "lc": [
+        "LC-01",
+        "LC-02",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/graphviz-link-inputs/additional-notices.json",
+      "notes": "The pinned compiler-image and source-reference files carry these exact Arm MIT headers. The complete musl root copyright remains separately recorded by renderer-build-emscripten. This scoped record does not assert final optimized retention or complete the remaining per-file review."
+    },
+    {
+      "id": "graphviz-vpsc-cpl-candidate-notice",
+      "name": "CPL-covered VPSC source candidates via Graphviz/Viz.js",
+      "kind": "attribution",
+      "version": "Graphviz 16.0.0 source reference",
+      "upstream": "https://gitlab.com/graphviz/graphviz",
+      "licence": "CPL-1.0",
+      "copyright": [
+        "Copyright (C) 2005 Authors; Tim Dwyer is named in the source headers"
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/graphviz-vpsc--CPL-1.0.txt",
+          "sha256": "7b47225a5b77cb7825efc6a4d7e0ac57864c790542cf92f5080ec2bf310c00e5",
+          "upstream": "https://gitlab.com/graphviz/graphviz",
+          "upstream_revision": "06fff22d8e1a2aead6de0042e5e5ec2f7749be29",
+          "upstream_path": "cpl1.0.txt"
+        },
+        {
+          "path": "compliance/licenses/graphviz-vpsc--SOURCE-HEADERS.txt",
+          "sha256": "a084d7a4f77439a13bde14c22472fd284829bc6dc418f1063553973305536fa7",
+          "upstream": "https://gitlab.com/graphviz/graphviz",
+          "upstream_revision": "06fff22d8e1a2aead6de0042e5e5ec2f7749be29",
+          "upstream_path": "nine VPSC/neatogen candidate source files and eight related headers",
+          "assembly": "Verbatim initial headers with source paths and digests in additional-notices.json"
+        }
+      ],
+      "embedded_in": "viz-js",
+      "provenance": "verified",
+      "resolution": "Conservative candidate notice for eleven pre-optimization link members and eight related headers; final retention and legal interpretation open",
+      "lc": [
+        "LC-01",
+        "LC-02",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/graphviz-link-inputs/additional-notices.json",
+      "notes": "Nine candidate source files explicitly say their Graphviz-distributed version is CPL-covered; eight nearby headers state the same. The complete root CPL-1.0 text and exact file headers are preserved. This does not assert that every candidate or header was emitted into final WASM or decide CPL/EPL compatibility, corresponding-source scope or commercial-distributor obligations."
     },
     {
       "id": "graphviz-llvm-libc-candidate-notice",
