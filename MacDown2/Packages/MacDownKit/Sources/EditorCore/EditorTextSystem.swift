@@ -63,6 +63,10 @@ public final class EditorTextSystem {
     /// never retain it as a frozen snapshot. The storage delegate must pair
     /// this proposal with an actual edit; an editing assist can veto it.
     public var preEditObserver: ((_ range: NSRange, _ replacement: String, _ oldSource: NSString) -> Void)?
+    /// An IME commit or cancellation can change storage without an ordinary
+    /// `textDidChange` edit callback. The mounted highlighter uses this to
+    /// discard any pre-composition parse and request a fresh visible paint.
+    public var compositionEndedObserver: (() -> Void)?
     let metricsCache = EditorDocumentMetricsCache()
     let contentHeightMeter = ContentHeightMeter()
     /// Prevents a disk-driven replacement from flowing back through the

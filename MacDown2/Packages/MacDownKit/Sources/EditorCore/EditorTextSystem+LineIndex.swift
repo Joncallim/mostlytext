@@ -84,6 +84,7 @@ extension EditorTextSystem {
         rebuildLineIndex()
         storedSelectionSet = nil
         textView.didChangeText()
+        compositionEndedObserver?()
     }
 
     /// Full rebuild for edit paths that bypass the incremental hook above

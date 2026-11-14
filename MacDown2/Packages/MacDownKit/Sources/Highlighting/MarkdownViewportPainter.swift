@@ -14,6 +14,9 @@ final class MarkdownViewportPainter {
     private var refreshScheduled = false
     private var isActive = true
     private var lastPaintedRange: NSRange?
+    /// Validation requests issued for mounted, unmarked viewports. The
+    /// measurement still waits for actual attributes and display afterward.
+    private(set) var validationPassCount = 0
 
     init(textSystem: EditorTextSystem, session: MarkdownViewportSession,
          attributes: @escaping TokenAttributeProvider) {
@@ -84,6 +87,7 @@ final class MarkdownViewportPainter {
         styler.invalidate(.range(visible))
         styler.validate(.range(visible))
         lastPaintedRange = visible
+        validationPassCount += 1
     }
 
     /// Layout can temporarily lose the mounted viewport. Remove only the

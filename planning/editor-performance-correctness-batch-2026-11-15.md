@@ -1,0 +1,47 @@
+# Editor performance and correctness batch — implementation architecture
+
+## Owner summary
+
+This pass makes large Markdown highlighting timely and correct in the mounted editor, tests the historical malformed-range report, and exercises external-file changes against the same editor lifecycle. One branch and one pull request carry the linked changes. The principal risk is that a fast parser result can still arrive late, paint stale text, or leave a visible frame unmeasured. A successful component callback is therefore not the acceptance endpoint. No signing, source publication, dependency-wide upgrade, or change to the document's authored bytes is part of this work.
+
+## Baseline and reconciliation
+
+Baseline `main`: `654e7187df947ae875ef2b86d6cbc0b7c8032540` (15 November 2026, Singapore). Issue #18 has an active `SyntaxHighlightStore` and bounded Markdown viewport for mounted editors from 8,192 through 1,100,000 UTF-16 units. Its 1,048,804-byte twelve-edit production-store benchmark reached 36.442 ms maximum settlement, but did not measure visible paint. `MarkdownViewportSession` uses a local section cache only for an admitted plain-word edit; uncertain edits fall back to a fresh full parse on the bounded queue. The historical whole-document tree-sitter path is bypassed in this mode, not made sublinear. Issue #19's stale-validator and dependency repairs are merged; the original triggering interleaving is not established. Issue #12 has external-file controllers and tests, but whole-process idle occupancy and exact candidate manual coverage remain open.
+
+## User journeys and invariants
+
+The user types, deletes, replaces, undoes, composes text, changes theme or language, moves the viewport, or receives a disk change while editing a full-size Markdown document. Authored text, line endings, selection, undo, composition, dirty/conflict state and valid scroll position survive. A visible highlight belongs to the currently mounted storage revision and window; an old parse or destroyed editor has no paint authority. Uncertain grammar structure may temporarily clear its affected styling, but cannot show stale color as current. Offline behavior and the existing 1,100,000-unit admission boundary remain unchanged.
+
+## Ownership, interfaces and data flow
+
+`EditorCore` owns the TextKit storage edit and SwiftUI binding publication. `Highlighting` owns the gate, parse authority, bounded section cache and TextKit renderer. The app owns document/external-file coordination. No new dependency direction is introduced. The existing flow is `NSTextView input -> NSTextStorage edit -> HighlightingStorageGate -> MarkdownViewportSession ticket and parse queue -> cache capture query -> MarkdownViewportPainter -> TextKit rendering -> displayed frame`. The measurement harness must mark each stage separately and make an observed mounted display transaction with tested token/color pixels, compared to an independent full parse, its endpoint. Test instrumentation may observe this flow; it must not reschedule production work or alter admission. `EditorCore` may expose one composition-ended callback to the attached highlighter: after a marked-text commit or cancellation, the highlighter invalidates its old cache and schedules a fresh paint. That callback has weak ownership and is removed at teardown.
+
+## Concurrency, cancellation and failure model
+
+The mounted editor and painter stay on the main actor. At most two physical Markdown snapshot parses run in `MarkdownViewportParseQueue`; cancelled C parses hold their slot until return. Storage changes invalidate prior tickets synchronously. An out-of-order or failed parse publishes nothing. Structural/window mismatch starts the established full parse fallback and immediately clears old visible styling; delayed results must recheck the current ticket, theme and language before repaint. Teardown removes observers and prevents late callbacks from painting. Missing layout or a viewport over the bounded limit clears previously painted color. Marked text defers painting; its end must explicitly trigger a fresh cache/paint even when AppKit posts no ordinary edit callback. A failed external reload preserves dirty local source and conflict choices; a failed close must remain retryable.
+
+## Security, resources, accessibility and interoperability
+
+All parsing and rendering remain local. Test fixtures use disposable documents and no owner files. The benchmark records both UTF-8 bytes and UTF-16 units and caps copied parse windows at 65,536 units. An edit above 1,100,000 units retires viewport ownership; shrink can readmit it. Existing TextKit selection, font, theme and native accessibility surfaces stay authoritative. Saving, reopening and external replacement must preserve the document's encoding and line-ending contract; preview/export are consumers of the authored source, not owners of it.
+
+## Performance and acceptance evidence
+
+The product target is under 50 ms from input to visible Markdown highlight on a genuine full-size source. The separate full-highlight 500 ms and direct-parser 400 ms Release regression ceilings remain enforced. The documented 8 ms budget applies to the synchronous viewport slice, not a whole-document parse. Measurements report individual edits and worst/p95, queue/debounce and parse/query/style/display intervals, source size, build identity and environment. The existing settlement benchmark is a comparison control, not closure proof. Use an independent full-parse oracle for visible ranges after ordinary, boundary, deletion, structural, Unicode/CRLF and replacement edits, late completions, viewport moves, undo/redo and IME. The endpoint is a mounted, ordered-front window that completes a display transaction and yields current-revision highlighted pixels in a bounded visible image readback; separately compare TextKit rendering-attribute ranges to the oracle. Neither scheduled work, `validate` return, attributes alone nor offscreen `displayIfNeeded` alone counts as visible paint. A failure or unmeasured case remains open rather than changing the target.
+
+## Adversarial corpus and lifecycle matrix
+
+Use at least 1,000,000 UTF-8 bytes of mixed Markdown and record its UTF-16 count. Include long headings, fenced code, inline markup, Unicode graphemes, CRLF, beginning/middle/end edits, growing and shrinking replacements, a viewport return, cap crossing/readmission and an unsupported structural change that invokes deferred fallback. Exercise repeated Replace All, held parser/style completions, external in-place/atomic changes, dirty conflicts, deletion/rename/move, formatter storms, failed-close retry, theme/syntax changes, tab/window teardown and active composition. For external-file cases inspect source, disk bytes, dirty/conflict, save/close and selection/scroll/session state. Measure idle wakeups and watcher/task/descriptor occupancy at process scope with a positive external-change control.
+
+## Expected files and slices
+
+Likely changes: `MarkdownViewportSession`, `MarkdownViewportPainter`, the store/mounted benchmark and focused `HighlightingTests`; `EditorCore` only if an observed input/storage cost warrants it. #19 diagnostics live in mounted read-boundary tests and their selected runner. #12 tests live in external-file app/package tests. Do not edit parser dependencies, generated projects, release thresholds or compliance gates to obtain a pass.
+
+1. **Pre-implementation measurement spike:** instrument current production-store input-to-render path and independent oracle across the corpus; record failing-before stages. Stop if the purported bottleneck or paint endpoint cannot be established.
+2. **Bounded repair:** change the smallest ownership/cache/parser/styling path justified by the spike. Add a regression that fails on baseline and passes after repair. Re-measure all affected cases.
+3. **#19 trigger investigation:** capture real byte geometry, revision, owner lifetime and controlled ordering. Repair only a demonstrated trigger. If bounded replay remains clean, retain that exact original-trigger criterion.
+4. **#12 external lifecycle:** add missing whole-process and fidelity evidence, then repair observed defects without treating unsigned tests as formal V1.
+5. **Integrated qualification:** merge coherent commits into this one branch, run focused tests then complete locked package/app Debug and Release gates, lint/format/compliance and serial native tests. Preserve first failures; rerun affected proof after edits. Obtain independent diff review. Close an issue only when all its original prose, candidate and evidence gates pass; audit immediately after every issue mutation.
+
+## Release boundary
+
+The existing owner-adopted `RELEASE_SEQUENCE.md` requires private signed/notarised V1, final E16, then signed candidate 2. The older UID502 ad hoc app is neither current main nor V1. Hosted native tests can establish engineering evidence, but cannot replace that candidate. Keep #14 strict rights/source failures and downstream exact signed-artifact reruns visible; this batch does not authorize Apple-account action or publication.
