@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "parser": "acorn",
+  "parserVersion": "8.14.0",
+  "parserNpmIntegrity": "sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA==",
+  "d2": {
+    "path": "d2js/js/wasm/wasm_exec.js",
+    "sourceCommit": "581c91096b62d644fb5168313142c836b7e68e74",
+    "bytes": 19885,
+    "sha256": "42c92bf26a564050862e648642f9dc529673fb257d8d96139122da317ac46274"
+  },
+  "go": {
+    "path": "go/lib/wasm/wasm_exec.js",
+    "version": "go1.24.6",
+    "bytes": 16992,
+    "sha256": "0c949f4996f9a89698e4b5c586de32249c3b69b7baadb64d220073cc04acba14"
+  },
+  "astWithoutLocationRawDifferences": [
+    {
+      "path": "$.body.1.expression.callee.body.body.10.expression.right.body.body.0.value.body.body.17.expression.right.properties.1.value.properties.24.key.type",
+      "d2": "Identifier",
+      "go": "Literal"
+    },
+    {
+      "path": "$.body.1.expression.callee.body.body.10.expression.right.body.body.0.value.body.body.17.expression.right.properties.1.value.properties.24.key.name",
+      "d2": "debug"
+    },
+    {
+      "path": "$.body.1.expression.callee.body.body.10.expression.right.body.body.0.value.body.body.17.expression.right.properties.1.value.properties.24.key.value",
+      "go": "debug"
+    }
+  ],
+  "normalizedPropertyKeyAstSha256": "85b7d5cb8a3260783367550427f1f196878349ea1869a4a6eeaf7411f27179ea",
+  "normalizedPropertyKeyAstEqual": true,
+  "limits": "AST equality is technical behavior evidence; it does not identify a unique historical copying event or cover generated source obligations."
+}

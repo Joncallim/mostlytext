@@ -30,6 +30,12 @@ REPO_FILES = {
     'compliance/evidence/d2-font-replacement/build-replay.json': 'evidence/build-replay.json',
     'compliance/evidence/d2-browser-nested-inputs/reproduction.json': 'evidence/d2-browser-nested-inputs.json',
     'compliance/evidence/d2-browser-nested-inputs/README.md': 'evidence/d2-browser-nested-inputs.txt',
+    'compliance/evidence/d2-go-js-runtime-review/README.md': 'evidence/d2-go-js-runtime-review/README.md',
+    'compliance/evidence/d2-go-js-runtime-review/extract_inputs.py': 'evidence/d2-go-js-runtime-review/extract_inputs.py',
+    'compliance/evidence/d2-go-js-runtime-review/compare-go-runtime.js': 'evidence/d2-go-js-runtime-review/compare-go-runtime.js',
+    'compliance/evidence/d2-go-js-runtime-review/go-runtime-ast-report.json': 'evidence/d2-go-js-runtime-review/go-runtime-ast-report.json',
+    'compliance/evidence/d2-go-js-runtime-review/js-tokenizer/package.json': 'evidence/d2-go-js-runtime-review/js-tokenizer/package.json',
+    'compliance/evidence/d2-go-js-runtime-review/js-tokenizer/package-lock.json': 'evidence/d2-go-js-runtime-review/js-tokenizer/package-lock.json',
     'compliance/tools/convert_lossless_woff.py': 'build/convert_lossless_woff.py',
     'compliance/tools/seed_d2_module_proxy.py': 'build/seed_d2_module_proxy.py',
     'compliance/tools/replace_d2_wasm_payload.py': 'build/replace_d2_wasm_payload.py',
@@ -80,6 +86,26 @@ def members(root, inputs, base, publisher_browser):
         result[destination] = data
     for source, destination in REPO_FILES.items():
         result[destination] = (root / source).read_bytes()
+    runtime_path = 'evidence/d2-go-js-runtime-review/'
+    runtime_report = json.loads(result[runtime_path + 'go-runtime-ast-report.json'])
+    runtime_lock = json.loads(result[runtime_path + 'js-tokenizer/package-lock.json'])
+    parser = runtime_lock['packages']['node_modules/acorn']
+    if (parser['version'] != runtime_report['parserVersion']
+            or parser['integrity'] != runtime_report['parserNpmIntegrity']
+            or not runtime_report['normalizedPropertyKeyAstEqual']):
+        raise ValueError('Go runtime parser/report binding changed')
+    for archive_name, member_name, key in (
+        ('original-review/upstream/d2-source-581c9109.tar.gz',
+         'd2-581c91096b62d644fb5168313142c836b7e68e74/d2js/js/wasm/wasm_exec.js', 'd2'),
+        ('build-inputs/go1.24.6.darwin-arm64.tar.gz', 'go/lib/wasm/wasm_exec.js', 'go'),
+    ):
+        with tarfile.open(fileobj=io.BytesIO(result[archive_name]), mode='r:gz') as archive:
+            member = archive.getmember(member_name)
+            if not member.isfile() or member.size > 32768:
+                raise ValueError('Go runtime input is not a bounded regular file')
+            body = archive.extractfile(member).read()
+        if len(body) != runtime_report[key]['bytes'] or sha(body) != runtime_report[key]['sha256']:
+            raise ValueError('Go runtime source does not match technical comparison')
     report = json.loads(result['evidence/browser-payload-replacement.json'])
     current_resource = root / 'MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/d2-browser.js'
     if sha(current_resource.read_bytes()) != report['output_browser_sha256']:
@@ -90,10 +116,11 @@ def members(root, inputs, base, publisher_browser):
         'D2 export patch, build helper, Go toolchain/source, official font source,\n'
         'lossless WOFF conversion and Chroma patch, ELK/elkjs and Google Brotli\n'
         'reference source, including its full tracked JavaScript tree, notices,\n'
+        'a reproducible Go JavaScript runtime AST comparison,\n'
         'and exact resource/build digests. The GitHub export tar is preserved\n'
         'separately: its export rules omit js/ and it is not sufficient alone.\n'
         'ELK Java/GWT historical correspondence, Brotli decoder revision, Go JS\n'
-        'runtime modifications and further per-file rights review remain open.\n'
+        'runtime historical copy/behavior and further per-file rights review remain open.\n'
         'This is not an approved complete corresponding-source offer and is not\n'
         'authorized for public upload. No MostlyText app binary is included.\n'
         'Rebuild: unpack upstream D2 source and original-review module ZIPs;\n'

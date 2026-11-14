@@ -36,8 +36,13 @@ does not cover this JavaScript decoder.
 `d2js/js/wasm/wasm_exec.js` in the pinned D2 source has SHA-256
 `42c92b...`; it differs from the Go 1.24.6 source copy
 `go/lib/wasm/wasm_exec.js` (`0c949f...`). The complete Go root licence and
-selected standard-library notices are already distributed. Exact JS runtime
-revision/modifications and source correspondence remain review inputs. The
+selected standard-library notices are already distributed. The
+[pinned AST comparison](../d2-go-js-runtime-review/README.md) extracts both
+files from their complete source archives and finds only a noncomputed `debug`
+object key spelling difference in Acorn 8.14.0's location-free AST. After
+normalizing that key, the ASTs are equal. This narrows technical correspondence
+to Go 1.24.6; D2's historical copied revision, exact execution behavior and
+complete source/runtime obligations remain review inputs. The
 two shortened digests above are identification aids; the full pinned values
 are in `reproduction.json` and the original D2 source archive.
 

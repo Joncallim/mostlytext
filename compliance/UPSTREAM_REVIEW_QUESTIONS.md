@@ -28,9 +28,14 @@ files. D2's vendored decoder differs in digest and size from that tag; no
 exact copied revision is claimed. The
 precise outstanding source questions are: the ELK Java/GWT input and D2's
 generated `elk.js` correspondence; the copied Brotli decoder revision and
-minification; the `wasm_exec.js` revision and changes; per-file Go/runtime
+minification; D2's historical `wasm_exec.js` copied revision and any
+behavioral implications of its formatting/key spelling; per-file Go/runtime
 obligations; and source package approval. The old publisher optimizer remains
 unreproduced. Final source URLs remain planned, not verified.
+The [Go runtime comparison](evidence/d2-go-js-runtime-review/README.md)
+extracts the exact pinned D2/Go 1.24.6 scripts. Their location-free ASTs differ
+only in the spelling of one noncomputed object key, and normalize to the same
+tree. This technical correspondence does not establish the historical copy.
 
 [The Graphviz link union](evidence/graphviz-link-inputs/README.md) now enumerates
 all 489 pre-optimization candidate archive/member pairs, with pinned source

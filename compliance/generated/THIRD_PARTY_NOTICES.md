@@ -96,7 +96,7 @@ This file is generated from `compliance/inventory.json` by
 | github.com/PuerkitoBio/goquery (D2 publisher-build attribution) | publisher source-build input v1.10.0 | BSD-3-Clause |
 | github.com/rivo/uniseg (D2 publisher-build attribution) | publisher source-build input v0.4.7 | MIT |
 | github.com/yuin/goldmark (D2 publisher-build attribution) | publisher source-build input v1.7.4 | MIT |
-| Go JavaScript WASM runtime embedded in D2 browser loader | D2 pinned source commit 581c9109; Go 1.24.6 reference differs | BSD-3-Clause |
+| Go JavaScript WASM runtime embedded in D2 browser loader | D2 pinned source commit 581c9109; structurally matches Go 1.24.6 reference | BSD-3-Clause |
 | Go runtime and standard library (embedded in D2 WebAssembly) | go1.24.6 | BSD-3-Clause |
 | Go standard-library supplemental source-build notices | go1.24.6 selected source inputs | LicenseRef-Go-Standard-Library-Source-Notices |
 | golang.org/x/exp (D2 publisher-build attribution) | publisher source-build input v0.0.0-20240909161429-701f63a606c0 | BSD-3-Clause |
@@ -6458,7 +6458,7 @@ SOFTWARE.
 
 ## Go JavaScript WASM runtime embedded in D2 browser loader
 
-- Version: D2 pinned source commit 581c9109; Go 1.24.6 reference differs
+- Version: D2 pinned source commit 581c9109; structurally matches Go 1.24.6 reference
 - Upstream: https://go.dev
 - Licence: BSD-3-Clause
 - Copyright 2018 The Go Authors. All rights reserved.
