@@ -14,6 +14,17 @@ import SwiftTreeSitterLayer
 final class MarkdownViewportSession {
     typealias SnapshotParser = @Sendable (String, GrammarRegistry) async throws -> LanguageLayerTreeSnapshot
 
+    /// Optional measurement seam. Request time precedes queue admission, so
+    /// request-to-resolution includes any queue wait and the physical parse.
+    enum TimingEvent: Equatable {
+        case storageEdit
+        case parseRequested
+        case parseResolved
+        case published
+    }
+
+    var onTimingEvent: ((TimingEvent, UInt64) -> Void)?
+
     private let textSystem: EditorTextSystem
     private let registry: GrammarRegistry
     private let parseSnapshot: SnapshotParser
@@ -79,6 +90,7 @@ final class MarkdownViewportSession {
     /// delegate; parsing and publication are deferred.
     func didEdit(range: NSRange, delta: Int, postSource: NSString) {
         guard isActive else { return }
+        emitTiming(.storageEdit)
         authority.noteStorageEdit()
         parseTask?.cancel()
         parseTask = nil
@@ -130,6 +142,7 @@ final class MarkdownViewportSession {
         cache = nil
         cacheMatchesStorage = false
         onPublication = nil
+        onTimingEvent = nil
     }
 
     /// A nil or oversized viewport cannot authorize a cache query. The
@@ -185,14 +198,17 @@ final class MarkdownViewportSession {
         let source = textSystem.textView.string
         let registry = registry
         let parseSnapshot = parseSnapshot
+        emitTiming(.parseRequested)
         parseTask = Task { [weak self] in
             let snapshot = try? await parseSnapshot(source, registry)
+            self?.emitTiming(.parseResolved)
             guard let self, authority.admits(ticket), let snapshot,
                   textSystem.textView.textStorage === boundStorage,
                   textSystem.textView.textStorage?.length == (source as NSString).length
             else { return }
             cache = try? MarkdownSectionCache(source: source, snapshot: snapshot)
             cacheMatchesStorage = cache != nil
+            emitTiming(.published)
             onPublication?()
         }
     }
@@ -203,8 +219,10 @@ final class MarkdownViewportSession {
         localParseCount &+= 1
         let registry = registry
         let parseSnapshot = parseSnapshot
+        emitTiming(.parseRequested)
         parseTask = Task { [weak self] in
             let snapshot = try? await parseSnapshot(content, registry)
+            self?.emitTiming(.parseResolved)
             guard let self, authority.admits(ticket),
                   textSystem.textView.textStorage === boundStorage,
                   textSystem.textView.textStorage?.length == expectedLength
@@ -218,6 +236,7 @@ final class MarkdownViewportSession {
                 try cache.replace(window, with: snapshot, content: content, delta: delta)
                 self.cache = cache
                 cacheMatchesStorage = true
+                emitTiming(.published)
                 onPublication?()
             } catch {
                 self.cache = nil
@@ -225,5 +244,9 @@ final class MarkdownViewportSession {
                 startFullParse(ticket: ticket)
             }
         }
+    }
+
+    private func emitTiming(_ event: TimingEvent) {
+        onTimingEvent?(event, DispatchTime.now().uptimeNanoseconds)
     }
 }

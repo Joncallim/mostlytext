@@ -10,6 +10,7 @@ on:
       - 'MacDown2/Packages/MacDownKit/Sources/Highlighting/**'
       - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownViewportBudgetBenchmarkTests.swift'
       - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportHighlighterBudgetBenchmarkTests.swift'
+      - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportDisplayBudgetBenchmarkTests.swift'
   workflow_dispatch:
 jobs:
   viewport-budget:
@@ -55,6 +56,7 @@ jobs:
             MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportHighlighterIntegrationTests.swift \
             MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownViewportBudgetBenchmarkTests.swift \
             MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportHighlighterBudgetBenchmarkTests.swift \
+            MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportDisplayBudgetBenchmarkTests.swift \
             .github/workflows/viewport-budget-measurement.yml \
             > "$RUNNER_TEMP/viewport-budget/input-sha256.txt"
       - name: Measure mounted session and public highlighter in Release
@@ -67,6 +69,9 @@ jobs:
             2>&1 | tee "$RUNNER_TEMP/viewport-budget/session.log"
           swift test -c release --filter ViewportHighlighterBudgetBenchmarkTests --no-parallel \
             2>&1 | tee "$RUNNER_TEMP/viewport-budget/highlighter.log"
+          MACDOWN_VIEWPORT_DISPLAY_BENCH=1 \
+            swift test -c release --filter ViewportDisplayBudgetBenchmarkTests --no-parallel \
+            2>&1 | tee "$RUNNER_TEMP/viewport-budget/display.log"
       - name: Record complete measured cases
         run: |
           python3 - <<'PY'
@@ -95,6 +100,33 @@ jobs:
                   cases.append({'utf8_bytes': size, 'call_ms': calls, 'settled_ms': settled,
                                 'raw': line})
               records[name] = cases
+          display_log = (root / 'display.log').read_text()
+          assert 'Test run with 1 test in 1 suite passed' in display_log
+          display_lines = [line for line in display_log.splitlines()
+                           if line.startswith('VIEWPORT-DISPLAY-BUDGET ')]
+          assert len(display_lines) == 1, len(display_lines)
+          display = json.loads(display_lines[0].split(' ', 1)[1])
+          assert len(display) == 10
+          assert {case['case'] for case in display} == {
+              'begin-word', 'middle-word', 'end-word', 'begin-delete',
+              'word-boundary', 'unicode-replacement', 'crlf-replacement',
+              'structural-newline', 'replacement-shrink', 'replacement-grow'
+          }
+          for case in display:
+              assert case['source_utf8_bytes'] >= 1 << 20
+              assert case['source_utf16_units'] <= 1_100_000
+              assert case['display_non_background_samples'] > 2
+              assert re.fullmatch(r'[0-9a-f]{64}', case['display_sha256'])
+              assert case['input_to_display_readback_ms'] >= case['input_to_storage_return_ms'] >= 0
+              assert case['under_50_ms'] == (case['input_to_display_readback_ms'] < 50)
+          records['display'] = display
+          records['display_budget_failures'] = [case['case'] for case in display
+                                                if not case['under_50_ms']]
+          print('DISPLAY-BUDGET-VERDICT', json.dumps({
+              'scope': 'mounted package/editor store and AppKit display readback; app-target event orchestration unmeasured',
+              'under_50_ms': not records['display_budget_failures'],
+              'failures': records['display_budget_failures']
+          }, sort_keys=True))
           modes = {re.search(r'\bmode=(\w+)', case['raw']).group(1): case
                    for case in records['highlighter']}
           assert set(modes) == {'reduced', 'viewport'}
