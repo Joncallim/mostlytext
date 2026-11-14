@@ -95,24 +95,30 @@ struct ViewportHighlighterIntegrationTests {
         )
         defer { syntaxStore.evictAll() }
         let session = try #require(highlighter.viewportSession)
+        let painter = try #require(highlighter.viewportPainter)
         await session.waitForPendingParse()
-        let before = session.fullParseCount
 
         system.textView.setMarkedText("に", selectedRange: NSRange(location: 1, length: 0),
                                       replacementRange: NSRange(location: NSNotFound, length: 0))
         #expect(system.textView.hasMarkedText())
-        highlighter.viewportPainter?.paintVisible()
+        await session.waitForPendingParse()
+        let beforeUnmarkParse = session.fullParseCount
+        painter.paintVisible()
+        let beforeUnmarkValidation = painter.validationPassCount
         system.textView.unmarkText()
         #expect(!system.textView.hasMarkedText())
         await session.waitForPendingParse()
-        #expect(session.fullParseCount > before, "IME end requires a fresh parse even without didChange")
+        #expect(session.fullParseCount > beforeUnmarkParse, "IME end requires a fresh parse without didChange")
         #expect(model.text == system.textView.string)
         let visible = try #require(system.visibleUTF16Range)
         let source = system.textView.string
         let snapshot = try MarkdownSectionParser.snapshot(source: source, registry: GrammarRegistry())
         let oracle = try MarkdownSectionCache(source: source, snapshot: snapshot)
         #expect(try session.visibleTokens() == oracle.tokens(in: visible))
-        highlighter.viewportPainter?.paintVisible()
+        for _ in 0 ..< 100 where painter.validationPassCount == beforeUnmarkValidation {
+            await Task.yield()
+        }
+        #expect(painter.validationPassCount > beforeUnmarkValidation, "IME end must schedule a mounted validation")
         #expect(hasRenderedColour(system.textView))
         syntaxStore.evict(identity)
         #expect(system.compositionEndedObserver == nil)
