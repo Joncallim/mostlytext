@@ -28,7 +28,8 @@ LIMITS = ('Local source-review package only. Not approved as the complete corres
           'Remaining: independent source/build and embedded/runtime attribution review, exact\n'
           'compiler/sysroot/build-tool inputs where required, explicit source-only publication\n'
           'authorization, stable hosting and anonymous retrieval. Do not mark source_offer verified.\n'
-          'Emscripten root notices do not complete musl/libc++/compiler-rt per-file notice coverage.\n'
+          'Emscripten root notices and the candidate qsort, Sun math, LLVM libc\n'
+          'and mimalloc texts do not complete all per-file notice coverage.\n'
           'Included image/reproduction/link receipts are review evidence, not a self-contained\n'
           'compiler environment or approval of final retained-code/source/rights completeness.\n'
           'The pinned Emscripten source archive is a candidate source reference,\n'
@@ -44,7 +45,9 @@ REPRODUCTION_FILES = {
     'graphviz-link-inputs': ('README.md', 'result.json', 'backend.map', 'why-extract.tsv',
                              'audit_union.py', 'union-review.json', 'source_candidates.py',
                              'source-candidates.json', 'compare_image_source.py',
-                             'image-source-comparison.json'),
+                             'image-source-comparison.json', 'prepare_candidate_notices.py',
+                             'candidate-notices.json', 'audit_source_license_signals.py',
+                             'file-license-signals.json'),
     'libcxx-image-notices': ('README.md', 'manifest.json'),
 }
 
@@ -108,6 +111,14 @@ def payload(root, inputs, emscripten_source=None, image_inputs=None):
     expected = json.loads((root / 'compliance/evidence/viz-js-3.30.0/source-audit.json').read_text())
     if report != expected:
         raise ValueError('Graphviz source audit differs from committed report')
+    signal_path = root / 'compliance/evidence/graphviz-link-inputs/audit_source_license_signals.py'
+    signal_spec = importlib.util.spec_from_file_location('graphviz_source_license_signals', signal_path)
+    signal_audit = importlib.util.module_from_spec(signal_spec)
+    signal_spec.loader.exec_module(signal_audit)
+    fresh_signals = signal_audit.audit(inputs, emscripten_source)
+    recorded_signals = json.loads((root / 'compliance/evidence/graphviz-link-inputs/file-license-signals.json').read_text())
+    if fresh_signals != recorded_signals:
+        raise ValueError('Graphviz candidate source licence signals differ from committed index')
     bodies = {'README.txt': LIMITS.encode()}
     bodies.update(reproduction_evidence(root))
     if emscripten_source is None or image_inputs is None:
@@ -138,7 +149,9 @@ def payload(root, inputs, emscripten_source=None, image_inputs=None):
     inv = json.loads((root / 'compliance/inventory.json').read_text())
     ids = {'viz-js', 'expat', 'graphviz-rbtree', 'graphviz-ellipse-maisonobe',
            'graphviz-randomkit', 'renderer-build-bison-skeleton', 'renderer-build-emscripten',
-           'compiler-rt-publisher-root-notices', 'libcxx-recorded-image-root-notices', 'libcxxabi-recorded-image-root-notices'}
+           'compiler-rt-publisher-root-notices', 'libcxx-recorded-image-root-notices', 'libcxxabi-recorded-image-root-notices',
+           'graphviz-llvm-libc-candidate-notice', 'graphviz-mimalloc-candidate-notice',
+           'graphviz-musl-qsort-candidate-notice', 'graphviz-musl-sun-math-candidate-notices'}
     selected = [r for r in inv['components'] if r['id'] in ids]
     if {r['id'] for r in selected} != ids:
         raise ValueError('Expected Graphviz and nested source notice records')

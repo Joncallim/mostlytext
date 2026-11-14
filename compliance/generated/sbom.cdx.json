@@ -1041,6 +1041,130 @@
       "version": "Graphviz 16.0.0 source snapshot"
     },
     {
+      "bom-ref": "graphviz-llvm-libc-candidate-notice",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/emscripten-core/emscripten"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "LicenseRef-LLVMlibc-Complete-Root"
+        }
+      ],
+      "name": "LLVM libc source candidates in Viz.js compiler image",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "110 possible source files in the complete link-member basename union; exact object selection remains open"
+        }
+      ],
+      "type": "library",
+      "version": "Emscripten 263db4cf source reference"
+    },
+    {
+      "bom-ref": "graphviz-mimalloc-candidate-notice",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/emscripten-core/emscripten"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "mimalloc source candidate in Viz.js compiler image",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "possible libc.o source candidate; musl libc.c is also a basename candidate"
+        }
+      ],
+      "type": "library",
+      "version": "Emscripten 263db4cf source reference"
+    },
+    {
+      "bom-ref": "graphviz-musl-qsort-candidate-notice",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/emscripten-core/emscripten"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "Valentin Ochs smoothsort source candidate via musl/Viz.js",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "possible libc.a(qsort.o) source; llvm-libc qsort.cpp is also a candidate"
+        }
+      ],
+      "type": "library",
+      "version": "Emscripten 263db4cf source reference"
+    },
+    {
+      "bom-ref": "graphviz-musl-sun-math-candidate-notices",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/emscripten-core/emscripten"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "LicenseRef-Sun-Math-Permissive"
+        }
+      ],
+      "name": "Sun Microsystems math source candidates via musl/Viz.js",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "17 possible musl math source files with seven distinct complete source-header notices"
+        }
+      ],
+      "type": "library",
+      "version": "Emscripten 263db4cf source reference"
+    },
+    {
       "bom-ref": "graphviz-randomkit",
       "externalReferences": [
         {
@@ -5265,6 +5389,10 @@
         "esbuild-parser-runtime",
         "expat",
         "graphviz-ellipse-maisonobe",
+        "graphviz-llvm-libc-candidate-notice",
+        "graphviz-mimalloc-candidate-notice",
+        "graphviz-musl-qsort-candidate-notice",
+        "graphviz-musl-sun-math-candidate-notices",
         "graphviz-randomkit",
         "graphviz-rbtree",
         "katex-react-helpers",
@@ -5411,7 +5539,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:5a0f0527-dae0-5cc9-a298-aacf49b20dc5",
+  "serialNumber": "urn:uuid:758ae1a9-3dd5-576e-b19c-3137e5420511",
   "specVersion": "1.5",
   "version": 1
 }

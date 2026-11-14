@@ -83,6 +83,36 @@ that image/source revision. Object-to-source build rules, multiple candidates
 for one object, inline/template headers and per-file licence terms still need
 review. Graphviz/Expat source files are outside the compiler-image comparison.
 
+The [candidate notice packet](candidate-notices.json), reproduced by
+`prepare_candidate_notices.py` from the pinned Emscripten source archive,
+conservatively adds the complete LLVM libc root text (modern Apache/LLVM and
+legacy University of Illinois/NCSA terms) for 110
+possible source files, the distinct mimalloc MIT text for a possible `libc.o`
+source, the complete musl `qsort.c` permission/modification comments, and
+seven distinct Sun math permission comments covering 17 possible files.
+Each selected source file is checked against this index's pinned digest; the
+402-file image comparison independently binds the source reference to the
+actual compiler image. `qsort.o` and `libc.o` each have another basename
+candidate, so these notices are included without claiming those implementations
+were selected. The complete musl root text remains in the notice bundle.
+This packet advances specific per-file notice coverage; it does not clear
+every candidate, inline/template header, generated parser or JS glue term.
+The [all-file signal index](file-license-signals.json) is reproduced by
+`audit_source_license_signals.py --inputs /path/to/graphviz-source-inputs
+--emscripten-source /path/to/emscripten-263db4cf.tar.gz`.
+It verifies the pinned archives and candidate digests, then records SPDX,
+copyright and licence signals in the first 16 KiB of all 616 possible source
+files. It is a triage index, not a term determination. For example, both
+`exp.c` and `exp_data.c` carry Arm Limited 2018 MIT headers; their exact
+object selection and per-file notice treatment remain in review.
+
+The map has one direct `.o` input outside the archive/member union:
+`/tmp/emscripten_temp_qoqz6zsd/viz.o` (27 symbol rows). The pinned
+[link receipt](result.json) names the corresponding 5,274-byte `viz.c`
+context input, SHA-256 `98a136782d13a293f2ecea4f5f7e0dbf7f5ee34ccc7c5d1da6cb07cfad7d1492`.
+This identifies the direct input; inline headers and emitted glue still need
+their own review.
+
 ## Build and trust boundary
 
 The source/image and original five-file preparation remain those of the

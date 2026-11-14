@@ -5747,6 +5747,171 @@
       ],
       "evidence": "compliance/evidence/libcxx-image-notices/manifest.json",
       "notes": "All complete root texts and referenced partial credits are byte-identical between the recorded AMD64 image and the immutable Emscripten source reference. The actual wasm-ld map names 8 members of libc++abi-noexcept.a. This preserves conservative root-text coverage; it does not establish a unique source revision for the entire compiler image, final optimized retention of every mapped member, exhaustive per-file obligations, independent rights review or source-offer approval."
+    },
+    {
+      "id": "graphviz-llvm-libc-candidate-notice",
+      "name": "LLVM libc source candidates in Viz.js compiler image",
+      "kind": "attribution",
+      "version": "Emscripten 263db4cf source reference",
+      "upstream": "https://github.com/emscripten-core/emscripten",
+      "licence": "LicenseRef-LLVMlibc-Complete-Root",
+      "copyright": [
+        "Individual LLVM Project notices remain in the pinned source files."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/graphviz-llvm-libc--LICENSE.txt",
+          "sha256": "ebcd9bbf783a73d05c53ba4d586b8d5813dcdf3bbec50265860ccc885e606f47",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/llvm-libc/LICENSE.TXT"
+        }
+      ],
+      "embedded_in": "viz-js",
+      "provenance": "verified",
+      "resolution": "110 possible source files in the complete link-member basename union; exact object selection remains open",
+      "lc": [
+        "LC-01",
+        "LC-02",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/graphviz-link-inputs/candidate-notices.json",
+      "notes": "The complete LLVM libc root text includes modern Apache-2.0 WITH LLVM-exception and legacy University of Illinois/NCSA terms. Every candidate source file matches the recorded compiler image and pinned Emscripten source. This conservatively supplies the root text without claiming all 110 files survived optimization or clearing per-file review."
+    },
+    {
+      "id": "graphviz-mimalloc-candidate-notice",
+      "name": "mimalloc source candidate in Viz.js compiler image",
+      "kind": "attribution",
+      "version": "Emscripten 263db4cf source reference",
+      "upstream": "https://github.com/emscripten-core/emscripten",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright (c) 2018-2025 Microsoft Corporation, Daan Leijen"
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/graphviz-mimalloc--MIT.txt",
+          "sha256": "82ade5d7d9b029044b5fbbc326207fc47c2d44ee4dd71e8a559c36d728217de9",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/mimalloc/LICENSE"
+        }
+      ],
+      "embedded_in": "viz-js",
+      "provenance": "verified",
+      "resolution": "possible libc.o source candidate; musl libc.c is also a basename candidate",
+      "lc": [
+        "LC-01",
+        "LC-02",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/graphviz-link-inputs/candidate-notices.json",
+      "notes": "Conservative notice for a possible source. The object-to-source build rule has not established mimalloc retention; no entire mimalloc dependency is asserted."
+    },
+    {
+      "id": "graphviz-musl-qsort-candidate-notice",
+      "name": "Valentin Ochs smoothsort source candidate via musl/Viz.js",
+      "kind": "attribution",
+      "version": "Emscripten 263db4cf source reference",
+      "upstream": "https://github.com/emscripten-core/emscripten",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright (C) 2011 by Valentin Ochs",
+        "Minor changes by Rich Felker for integration in musl, 2011-04-27."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/graphviz-musl-qsort--MIT.txt",
+          "sha256": "a2c8c354a5b8eb4c5392ed872474a3500a04cd2b8f86235b656fd4c0160f6c86",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/libc/musl/src/stdlib/qsort.c"
+        }
+      ],
+      "embedded_in": "viz-js",
+      "provenance": "verified",
+      "resolution": "possible libc.a(qsort.o) source; llvm-libc qsort.cpp is also a candidate",
+      "lc": [
+        "LC-01",
+        "LC-02",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/graphviz-link-inputs/candidate-notices.json",
+      "notes": "The exact source header requires preservation of its permission text and records Rich Felker modifications. The existing musl root notice identifies smoothsort but omits the full file-level grant. Included conservatively; object selection remains open."
+    },
+    {
+      "id": "graphviz-musl-sun-math-candidate-notices",
+      "name": "Sun Microsystems math source candidates via musl/Viz.js",
+      "kind": "attribution",
+      "version": "Emscripten 263db4cf source reference",
+      "upstream": "https://github.com/emscripten-core/emscripten",
+      "licence": "LicenseRef-Sun-Math-Permissive",
+      "copyright": [
+        "Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.",
+        "Copyright 2004 Sun Microsystems, Inc. All Rights Reserved.",
+        "Copyright (C) 2004 by Sun Microsystems, Inc. All rights reserved."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/graphviz-musl-sun-math--01.txt",
+          "sha256": "565eff8b979411888b4fc163ba49daf7ad9beba47ee485942f032edcefd17948",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/libc/musl/src/math/atan.c"
+        },
+        {
+          "path": "compliance/licenses/graphviz-musl-sun-math--02.txt",
+          "sha256": "08dd5b9743bed9386f1a3a98dbc8caa1a46815677220599e85d066d109b609ee",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/libc/musl/src/math/cbrt.c"
+        },
+        {
+          "path": "compliance/licenses/graphviz-musl-sun-math--03.txt",
+          "sha256": "e1be4a329850c826811b4faff3476ed2755911b67a74ef3157fdb89c0b6efd91",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/libc/musl/src/math/atan2.c"
+        },
+        {
+          "path": "compliance/licenses/graphviz-musl-sun-math--04.txt",
+          "sha256": "baa7e430ba6fb973c100eef93c8c539cf62ba033746c6bf418bb8b51a8930267",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/libc/musl/src/math/pow_small.c"
+        },
+        {
+          "path": "compliance/licenses/graphviz-musl-sun-math--05.txt",
+          "sha256": "4607899cec7ea61b3337abbae6c2a63a00711fd2246d6414e2856b9ce9328c8b",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/libc/musl/src/math/__tan.c"
+        },
+        {
+          "path": "compliance/licenses/graphviz-musl-sun-math--06.txt",
+          "sha256": "16cd38a2d4dd0bf4b8a51ab4bd8779856a38d7ac96d4f8a3b092d8c707b0a021",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/libc/musl/src/math/__cos.c"
+        },
+        {
+          "path": "compliance/licenses/graphviz-musl-sun-math--07.txt",
+          "sha256": "65a12adeb9d77633bb2f226f758e028eb4d2933594a760f868f3fa33da1d8b6a",
+          "upstream": "https://github.com/emscripten-core/emscripten",
+          "upstream_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+          "upstream_path": "system/lib/libc/musl/src/math/__rem_pio2.c"
+        }
+      ],
+      "embedded_in": "viz-js",
+      "provenance": "verified",
+      "resolution": "17 possible musl math source files with seven distinct complete source-header notices",
+      "lc": [
+        "LC-01",
+        "LC-02",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/graphviz-link-inputs/candidate-notices.json",
+      "notes": "The source comments grant use/copy/modification/distribution provided the notice is preserved. Seven exact distinct notice blocks cover all 17 candidate files named in the evidence. This is conservative candidate coverage, not proof of final optimizer retention or full compiler-source closure."
     }
   ]
 }

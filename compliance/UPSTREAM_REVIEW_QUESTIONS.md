@@ -38,11 +38,20 @@ archive basename candidates for each. The 382 unique basename matches and 107
 ambiguous matches still need build-rule mapping. All 402 candidate Emscripten
 source files for 284 sysroot archive members now match the verified compiler
 image byte for byte, with exact layer digests. This file correspondence does
-not settle object selection or per-file terms. Direct objects, generated
-parsers, template/header code, Emscripten JS
-glue, musl, dlmalloc, compiler-rt, libc++ and libc++abi still need a bounded
+not settle object selection or all per-file terms. Conservative complete
+LLVM libc, mimalloc, musl qsort and Sun math candidate notices now cover
+specific exceptional inputs without claiming their retention. The one direct
+`viz.o` maps to the pinned `viz.c` context input. Generated parsers,
+template/header code, Emscripten JS glue, remaining musl/dlmalloc,
+compiler-rt, libc++ and libc++abi still need a bounded
 file-by-file grant/source review. Preserve broad root notices in the meantime;
 no omission is justified solely by an unproven optimizer-retention claim.
+The reproducible [616-file licence signal index](evidence/graphviz-link-inputs/file-license-signals.json)
+helps triage that review; it identifies, for example, two Arm Limited 2018
+MIT headers in possible musl math sources. The complete LLVM libc root text
+includes both modern Apache/LLVM and legacy University of Illinois/NCSA
+terms, so the inventory uses a qualified complete-root reference rather than
+assigning the modern expression to every candidate.
 
 [The Mermaid nested audit](evidence/mermaid-nested-snippets/README.md) binds
 JamaJS SVD/hypot (1,989 outer mappings) and adds its scoped Apache notice and
