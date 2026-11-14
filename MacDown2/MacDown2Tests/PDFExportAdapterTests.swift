@@ -173,6 +173,15 @@ struct PDFExportAdapterTests {
         return data as Data
     }
 
+    private func makePrintWindow() -> NSWindow {
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 600, height: 800),
+                              styleMask: [.titled], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        window.animationBehavior = .none
+        window.makeKeyAndOrderFront(nil)
+        return window
+    }
+
     private func makeTallTextPDF() throws -> Data {
         let data = NSMutableData()
         var mediaBox = CGRect(x: 0, y: 0, width: 100, height: 300)
@@ -237,7 +246,9 @@ struct PDFExportAdapterTests {
             target: .pdf(url: pdfURL)
         )
 
-        try await PDFExportAdapter.export(prepared, to: pdfURL)
+        let window = makePrintWindow()
+        defer { window.orderOut(nil); window.close() }
+        try await PDFExportAdapter.export(prepared, to: pdfURL, modalWindow: window)
 
         let data = try Data(contentsOf: pdfURL)
         let document = try #require(PDFDocument(data: data))
@@ -271,7 +282,9 @@ struct PDFExportAdapterTests {
             ),
             target: .pdf(url: pdfURL)
         )
-        try await PDFExportAdapter.export(prepared, to: pdfURL)
+        let window = makePrintWindow()
+        defer { window.orderOut(nil); window.close() }
+        try await PDFExportAdapter.export(prepared, to: pdfURL, modalWindow: window)
 
         let data = try Data(contentsOf: pdfURL)
         let document = try #require(PDFDocument(data: data), "the stale placeholder must be replaced with a real PDF")

@@ -14,8 +14,8 @@ import sys
 from preview_compiled_inputs import capture, require_owned_phase, verify
 
 TESTS = {
-    'vectorSnapshotIsPaginatedWithoutLosingSelectableText',
-    'vectorSnapshotMovesAnIntersectedHeadingToTheNextPage',
+    'tallVectorSnapshotIsRefusedBeforePublication',
+    'tallVectorWithHeadingAtPaperCutIsRefused',
     'printDestinationIsConfiguredBeforeTheOperationStarts',
     'contentlessPDFIsRejectedForNonemptyDocument',
     'graphicsSetupAndEmptyTextDoNotCountAsPrintedContent',

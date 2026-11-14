@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fixed disposable-host WebKit canvas comparison, never product acceptance."""
+"""Fresh hosted snapshot admission with preserved historical canvas checks."""
 import hashlib
 import importlib.util
 import json
@@ -17,6 +17,7 @@ def sha(path):
 
 
 def verify_candidate_rendering(root, observed):
+    """Validate the archived 2026-11-08 canvas evidence only."""
     names = ['original', 'paper', 'minimal', 'boundary-original', 'boundary-paper', 'css-paper', 'css-boundary-paper']
     cases = observed.get('completed_cases')
     if not isinstance(cases, list) or [c.get('case') for c in cases] != names:
@@ -42,6 +43,46 @@ def verify_candidate_rendering(root, observed):
                     or (i == 0 and (not page['raw_text'].strip() or page['actual_raster_nonwhite_pixels'] <= 0))
                     or png(candidate, i) != png(reference, i)):
                 raise RuntimeError('Candidate changed actual text or pixels instead of only the unused canvas')
+
+
+def verify_current_admission(root, observed):
+    """Require fresh WebKit vector bytes and the production paper-only verdict."""
+    names = ['original', 'paper', 'minimal', 'boundary-original',
+             'boundary-paper', 'css-paper', 'css-boundary-paper']
+    cases = observed.get('completed_cases')
+    if not isinstance(cases, list) or [row.get('case') for row in cases] != names:
+        raise RuntimeError('Require all seven fresh WebKit snapshot cases in order')
+    paper = observed.get('paper_size')
+    if (not isinstance(paper, list) or len(paper) != 2
+            or any(type(value) not in (int, float) or value <= 0 for value in paper)):
+        raise RuntimeError('Missing paper geometry')
+    rows = {row['case']: row for row in cases}
+    refused = 0
+    for row in cases:
+        name = row['case']
+        path = root / f'{name}-snapshot.pdf'
+        if (path.is_symlink() or not path.is_file()
+                or not 0 < path.stat().st_size <= 4 * 1024 * 1024
+                or path.stat().st_size != row.get('snapshot_bytes')
+                or sha(path) != row.get('snapshot_sha256')):
+            raise RuntimeError(name + ' lacks exact fresh WebKit snapshot bytes')
+        box = row.get('snapshot_media_box')
+        if (not isinstance(box, list) or len(box) != 4
+                or any(type(value) not in (int, float) for value in box)
+                or box[2] <= 0 or box[3] <= 0
+                or not isinstance(row.get('raw_text'), str) or not row['raw_text'].strip()):
+            raise RuntimeError(name + ' lacks source geometry or extractable text')
+        paper_sized = abs(box[2] - paper[0]) < 1 and abs(box[3] - paper[1]) < 1
+        expected = 'paper-preserved' if paper_sized else 'oversized-refused'
+        if row.get('disposition') != expected:
+            raise RuntimeError(name + ' has a publication verdict inconsistent with its geometry')
+        refused += not paper_sized
+    if refused == 0:
+        raise RuntimeError('No oversized WebKit source exercised the refusal policy')
+    for candidate, reference in [('css-paper', 'original'),
+                                 ('css-boundary-paper', 'boundary-original')]:
+        if ' '.join(rows[candidate]['raw_text'].split()) != ' '.join(rows[reference]['raw_text'].split()):
+            raise RuntimeError(candidate + ' changed the authored text before PDF admission')
 
 
 def main():
@@ -104,8 +145,8 @@ def main():
             or observed['input_sha256'] != INPUT_SHA
             or [r['case'] for r in observed['completed_cases']] != ['original', 'paper', 'minimal', 'boundary-original', 'boundary-paper', 'css-paper', 'css-boundary-paper']):
         raise RuntimeError('Incomplete fixed native comparison')
-    verify_candidate_rendering(ROOT, observed)
-    record['rendering_regression_controls_passed'] = True
+    verify_current_admission(ROOT, observed)
+    record['paper_only_admission_controls_passed'] = True
     record['complete_comparison'] = True
     path.write_text(json.dumps(record, indent=2) + '\n')
 
