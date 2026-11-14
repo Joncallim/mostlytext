@@ -9,7 +9,8 @@ module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
 GOOD = ('HIGHLIGHT_READ_CONTROL events=["background-held", "released"] sourceBytes=73956\n'
-        'Test run with 2 tests in 2 suites passed\n')
+        'HIGHLIGHT_LIFECYCLE_CONTROL events=["background-held", "released"] sourceBytes=73956\n'
+        'Test run with 3 tests in 2 suites passed\n')
 EXIT = 'Process 1456 exited with status = 0 (0x00000000)\n'
 
 
@@ -25,11 +26,12 @@ class ReplayQualificationTests(unittest.TestCase):
         self.assertTrue(module.replay_passed(0, GOOD.replace('["background-held"', '["main-lookup", "background-held"')))
 
     def test_missing_partial_duplicate_or_timed_out_controls_are_rejected(self):
-        for bad in [GOOD.replace('2 tests in 2 suites', '1 test in 1 suite'),
+        for bad in [GOOD.replace('3 tests in 2 suites', '2 tests in 2 suites'),
                     GOOD.replace('background-held', 'main-lookup'),
                     GOOD.replace('"released"', '"hold-timed-out", "released"'),
                     GOOD.replace('"released"', '"background-held", "released"'),
                     GOOD.replace('"released"', 'broken-json'),
+                    GOOD.replace('HIGHLIGHT_LIFECYCLE_CONTROL', 'HIGHLIGHT_OLD_CONTROL'),
                     GOOD + 'recorded an issue at fixture.swift:10']:
             with self.subTest(log=bad):
                 self.assertFalse(module.replay_passed(0, bad))

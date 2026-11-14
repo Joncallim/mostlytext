@@ -4,6 +4,7 @@ import Foundation
 @testable import Highlighting
 import SwiftUI
 import Testing
+import Themes
 
 @MainActor
 @Suite(.serialized, .timeLimit(.minutes(1)))
@@ -54,6 +55,60 @@ struct MountedHighlightingReadBoundaryTests {
         #expect(gate.events.contains("background-held"))
         #expect(!gate.events.contains("hold-timed-out"))
         print("HIGHLIGHT_READ_CONTROL events=\(gate.events) sourceBytes=\(final.utf8.count)")
+    }
+
+    @Test(.enabled(if: ProcessInfo.processInfo.environment["MOSTLYTEXT_HIGHLIGHT_READ_DIAGNOSTIC"] == "1"))
+    func languageAndThemeChangesWhileAnInjectedRequestIsHeldDoNotPaintTheOldGeneration() async throws {
+        let gate = InjectedLanguageGate()
+        defer { gate.release() }
+        let registry = GrammarRegistry(beforeInjectedLanguageResolution: gate.observe)
+        let initial = StallFixtures.markdown(utf8Bytes: 48 * 1024)
+        let buffer = MountedSourceBuffer(text: initial)
+        let store = EditorTextSystemStore()
+        let identity = UUID().uuidString
+        let host = NSHostingView(rootView: EditorView(
+            text: Binding(get: { buffer.text }, set: { buffer.text = $0 }),
+            identity: identity, configuration: .default, store: store
+        ))
+        let window = makeWindow(host: host)
+        defer { gate.release(); window.orderOut(nil); window.close(); store.evictAll() }
+        host.layoutSubtreeIfNeeded()
+        let system = try #require(store.existingSystem(for: identity))
+        try #require(system.textView.delegate != nil)
+        try #require(window.makeFirstResponder(system.textView))
+        let editor = HighlightedEditor(system: system, registry: registry)
+        try #require(await editor.waitUntilQuiet(quietPeriod: .seconds(1), timeout: .seconds(30)))
+
+        let pending = "```javascript\nlet pending = 'old';\n```\n\n" + initial
+        editor.textView.insertText(
+            pending, replacementRange: NSRange(location: 0, length: editor.textView.string.utf16.count)
+        )
+        try #require(await gate.waitForEntry(), "The background request must be held: \(gate.events)")
+        let styledBeforeSwitch = editor.highlighter.styledTokenCount
+        editor.highlighter.setLanguage(nil)
+        editor.highlighter.applyTheme(BundledThemes.dark)
+        let final = "```javascript\r\nlet current = 'new 😀';\r\n```\r\n\r\n"
+            + StallFixtures.markdown(utf8Bytes: 72 * 1024)
+        editor.textView.insertText(
+            final, replacementRange: NSRange(location: 0, length: editor.textView.string.utf16.count)
+        )
+        editor.highlighter.setLanguage("markdown")
+        gate.release()
+        try #require(await editor.waitUntilQuiet(
+            quietPeriod: .seconds(1), timeout: .seconds(30), requireActivityAfter: styledBeforeSwitch
+        ))
+
+        let fresh = HighlightedEditor(text: final, theme: BundledThemes.dark)
+        try #require(await fresh.waitUntilQuiet(quietPeriod: .seconds(1), timeout: .seconds(30)))
+        let expected = fresh.renderedRuns()
+        try #require(!expected.isEmpty)
+        #expect(await editor.waitUntilRuns(equal: expected, timeout: .seconds(30)) != nil)
+        #expect(editor.textView.string.utf8.elementsEqual(final.utf8))
+        #expect(buffer.text.utf8.elementsEqual(final.utf8))
+        #expect(system.contentRevision >= 2)
+        #expect(gate.events.contains("background-held"))
+        #expect(!gate.events.contains("hold-timed-out"))
+        print("HIGHLIGHT_LIFECYCLE_CONTROL events=\(gate.events) sourceBytes=\(final.utf8.count)")
     }
 
     private func makeWindow(host: NSView) -> NSWindow {
