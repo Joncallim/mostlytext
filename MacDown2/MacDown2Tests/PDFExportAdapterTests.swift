@@ -265,6 +265,29 @@ struct PDFExportAdapterTests {
     }
 
     @Test(.enabled(if: Self.nativePaginationEnabled, "requires the bounded hosted PDF pagination qualification"))
+    func unusablePrintOversizedSnapshotPreservesExistingDestination() async throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("PDFUnsafeFallback-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let destination = directory.appendingPathComponent("existing.pdf")
+        let existing = Data("previous destination".utf8)
+        try existing.write(to: destination)
+        let prepared = try await ExportService.prepare(
+            ExportRequest(text: Self.longMarkdown(), sourceGeneration: 1, theme: BundledThemes.light),
+            target: .pdf(url: destination)
+        )
+        do {
+            // A successful operation with no printer bytes forces real WebKit
+            // createPDF fallback without a substitute PDF test double.
+            try await PDFExportAdapter.export(prepared, to: destination, runPrint: { _ in true })
+            Issue.record("An oversized fallback replaced the existing destination")
+        } catch PDFSnapshotFallback.FallbackError.invalidGeometry {
+            #expect(try Data(contentsOf: destination) == existing)
+        }
+    }
+
+    @Test(.enabled(if: Self.nativePaginationEnabled, "requires the bounded hosted PDF pagination qualification"))
     func exportedPDFReplacesAnyExistingFileAtomically() async throws {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent("PDFExportAdapterTests-\(UUID().uuidString)", isDirectory: true)
