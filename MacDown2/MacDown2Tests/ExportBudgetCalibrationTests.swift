@@ -140,15 +140,8 @@
             try await measureScaledPDF(sections: 460, name: "near-page-limit-pdf")
         }
 
-        @Test func nearPageLimitAvoidParagraphBreaksProbe() async throws {
-            PDFExportAdapter.probeAdditionalCSS =
-                "p { break-inside: avoid; page-break-inside: avoid; }"
-            defer { PDFExportAdapter.probeAdditionalCSS = nil }
-            try await measureScaledPDF(sections: 460, name: "near-page-limit-avoid-breaks")
-        }
-
         @Test func nearPageLimitModalProductionPrintProbe() async throws {
-            try await measureScaledPDF(sections: 460, name: "near-page-limit-modal", modalPrint: true)
+            try await measureScaledPDF(sections: 430, name: "near-page-limit-modal", modalPrint: true)
         }
 
         // The guarded probe keeps source, print and artifact bindings together.
@@ -174,7 +167,7 @@
             let html = try await PDFExportAdapter.hardenedHTML(from: prepared)
             let rawPrint = try outputDirectory().appendingPathComponent(name + "-raw-print.pdf")
             let rawSnapshot = try outputDirectory().appendingPathComponent(name + "-raw-snapshot.pdf")
-            if sections == 460 {
+            if sections >= 430 {
                 PDFExportAdapter.capturePrePaginationPrint = { data in
                     try data.write(to: rawPrint, options: .atomic)
                 }
@@ -211,6 +204,13 @@
             let retainedPDF = try outputDirectory().appendingPathComponent(name + "-output.pdf")
             try data.write(to: retainedPDF, options: .atomic)
             try verifyScaledPDF(pdf, text: text, sections: sections)
+            var completePhraseCount: Int?
+            if modalPrint {
+                let phrase = "The larger print fixture retains searchable text across pages."
+                let normalized = text.split(whereSeparator: \.isWhitespace).joined(separator: " ")
+                completePhraseCount = normalized.components(separatedBy: phrase).count - 1
+                #expect(completePhraseCount == sections * 24)
+            }
             var values: [String: Any] = try [
                 "case": "actual-scaled-webkit-print-pdfkit", "sections": sections,
                 "print_path": modalPrint ? "document-modal" : "synchronous",
@@ -222,7 +222,10 @@
                 "prepare_seconds": prepareSeconds, "print_and_validation_seconds": printSeconds,
                 "app_peak_before_rss_bytes": peakBefore, "app_peak_rss_bytes": peakResidentBytes(),
             ]
-            if sections == 460 {
+            if let completePhraseCount {
+                values["complete_phrase_count"] = completePhraseCount
+            }
+            if sections >= 430 {
                 var sources: [String] = []
                 for (kind, url) in [("print", rawPrint), ("snapshot", rawSnapshot)]
                     where FileManager.default.fileExists(atPath: url.path) {

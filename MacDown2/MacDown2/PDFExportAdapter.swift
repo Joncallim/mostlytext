@@ -228,12 +228,7 @@ enum PDFExportAdapter {
             + "default-src 'none'; script-src 'none'; style-src 'unsafe-inline'; "
             + "img-src data:; media-src data:; font-src data:; connect-src 'none'; "
             + "object-src 'none'; form-action 'none'; base-uri 'none';\">"
-        #if EXPORT_BUDGET_PROBE
-            let head = await probeHead(csp)
-        #else
-            let head = csp
-        #endif
-        return try ExportHTMLWriter.selfContainedHTML(from: prepared, additionalHead: head)
+        return try ExportHTMLWriter.selfContainedHTML(from: prepared, additionalHead: csp)
     }
 
     /// Configure the system key before WebKit copies the print info into its operation.
@@ -347,13 +342,6 @@ enum PDFExportAdapter {
 
 extension PDFExportAdapter {
     #if EXPORT_BUDGET_PROBE
-        private static func probeHead(_ csp: String) -> String {
-            csp + (probeAdditionalCSS.map { "<style>\($0)</style>" } ?? "")
-        }
-
-        /// Isolated hosted pagination experiment. Absent from normal builds.
-        static var probeAdditionalCSS: String?
-
         /// Captures accepted printer bytes before paper pagination only in the
         /// guarded hosted calibration build. Never present in normal apps.
         static var capturePrePaginationPrint: ((Data) throws -> Void)?

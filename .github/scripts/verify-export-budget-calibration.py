@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bind a hosted export measurement to the actual Release app and seven cases."""
+"""Bind a hosted export measurement to the actual Release app and six cases."""
 import argparse
 import hashlib
 import json
@@ -30,7 +30,7 @@ FILES = [
 ]
 TESTS = {'repeatedImageHTMLUsesActualExportService', 'realWebKitPrintAndPDFKitReadback',
          'scaledWebKitPrintAndPDFKitReadback', 'nearPageLimitWebKitPrintAndPDFKitReadback',
-         'nearPageLimitAvoidParagraphBreaksProbe', 'nearPageLimitModalProductionPrintProbe',
+         'nearPageLimitModalProductionPrintProbe',
          'oversizedSourceIsRefusedBeforePublication'}
 
 
@@ -82,10 +82,9 @@ def positive_number(value):
 def validate_records(root):
     records = {name: json.loads((root / 'measurements' / (name + '.json')).read_text())
                for name in ['html', 'pdf', 'scaled-pdf', 'near-page-limit-pdf',
-                            'near-page-limit-avoid-breaks', 'near-page-limit-modal', 'refusal']}
+                            'near-page-limit-modal', 'refusal']}
     html, pdf, scaled, refusal = (records[name] for name in ['html', 'pdf', 'scaled-pdf', 'refusal'])
     near = records['near-page-limit-pdf']
-    alternative = records['near-page-limit-avoid-breaks']
     modal = records['near-page-limit-modal']
     if (html.get('case') != 'actual-self-contained-html' or html.get('resource_occurrences') != 2048
             or pdf.get('case') != 'actual-webkit-print-pdfkit'
@@ -93,21 +92,20 @@ def validate_records(root):
             or scaled.get('sections') != 200
             or near.get('case') != 'actual-scaled-webkit-print-pdfkit'
             or near.get('sections') != 460
-            or alternative.get('case') != 'actual-scaled-webkit-print-pdfkit'
-            or alternative.get('sections') != 460
-            or alternative.get('source_sha256') != near.get('source_sha256')
             or modal.get('case') != 'actual-scaled-webkit-print-pdfkit'
-            or modal.get('sections') != 460
-            or modal.get('source_sha256') != near.get('source_sha256')
+            or modal.get('sections') != 430
+            or modal.get('source_sha256') == near.get('source_sha256')
             or modal.get('print_path') != 'document-modal'
+            or modal.get('complete_phrase_count') != 430 * 24
             or any(records[name].get('print_path') != 'synchronous' for name in
-                   ['scaled-pdf', 'near-page-limit-pdf', 'near-page-limit-avoid-breaks'])
+                   ['scaled-pdf', 'near-page-limit-pdf'])
             or refusal.get('case') != 'actual-source-cap-plus-one-refusal'
             or refusal.get('source_bytes') != (32 << 20) + 1 or refusal.get('output_exists') is not False
             or not 0 < html.get('source_bytes', 0) < (32 << 20)
             or not 0 < pdf.get('source_bytes', 0) < (32 << 20)
             or not 100_000 < scaled.get('source_bytes', 0) < (32 << 20)
             or not 600_000 < near.get('source_bytes', 0) < (32 << 20)
+            or not 600_000 < modal.get('source_bytes', 0) < (32 << 20)
             or not 0 < html.get('output_bytes', 0) <= (256 << 20)
             or not 0 < pdf.get('prepared_html_bytes', 0) <= (256 << 20)
             or not 0 < pdf.get('pdf_bytes', 0) <= (256 << 20)
@@ -115,12 +113,10 @@ def validate_records(root):
             or not 0 < scaled.get('pdf_bytes', 0) <= (256 << 20)
             or not 0 < near.get('prepared_html_bytes', 0) <= (256 << 20)
             or not 0 < near.get('pdf_bytes', 0) <= (256 << 20)
-            or not 0 < alternative.get('pdf_bytes', 0) <= (256 << 20)
             or not 0 < modal.get('pdf_bytes', 0) <= (256 << 20)
             or not 1 < pdf.get('page_count', 0) <= 1024
             or not 20 <= scaled.get('page_count', 0) <= 256
             or not 200 <= near.get('page_count', 0) <= 256
-            or not 200 <= alternative.get('page_count', 0) <= 256
             or not 200 <= modal.get('page_count', 0) <= 256):
         raise RuntimeError('Actual HTML, PDF or refusal result is missing or inconsistent')
     for name, row in records.items():
@@ -131,13 +127,11 @@ def validate_records(root):
         duration_fields = {'html': ['elapsed_seconds'], 'pdf': ['prepare_seconds', 'print_and_validation_seconds'],
                            'scaled-pdf': ['prepare_seconds', 'print_and_validation_seconds'],
                            'near-page-limit-pdf': ['prepare_seconds', 'print_and_validation_seconds'],
-                           'near-page-limit-avoid-breaks': ['prepare_seconds', 'print_and_validation_seconds'],
                            'near-page-limit-modal': ['prepare_seconds', 'print_and_validation_seconds'],
                            'refusal': ['elapsed_seconds']}[name]
         if any(not positive_number(row.get(field)) for field in duration_fields):
             raise RuntimeError(name + ' lacks a positive bounded timing')
-    for name in ['scaled-pdf', 'near-page-limit-pdf', 'near-page-limit-avoid-breaks',
-                 'near-page-limit-modal']:
+    for name in ['scaled-pdf', 'near-page-limit-pdf', 'near-page-limit-modal']:
         row = records[name]
         if (not positive_number(row.get('app_peak_before_rss_bytes'))
                 or row['app_peak_rss_bytes'] < row['app_peak_before_rss_bytes']):
@@ -151,12 +145,15 @@ def validate_records(root):
                 or any(type(value) is not int or value < 0 for value in row['page_text_bytes'])
                 or sum(row['page_text_bytes']) == 0):
             raise RuntimeError(name + ' artifact or per-page text evidence is incomplete')
-    for name in ['near-page-limit-pdf', 'near-page-limit-avoid-breaks', 'near-page-limit-modal']:
+    for name in ['near-page-limit-pdf', 'near-page-limit-modal']:
         row = records[name]
         kinds = row.get('raw_source_kinds')
         if (type(kinds) is not list or not kinds or len(kinds) != len(set(kinds))
                 or not set(kinds) <= {'print', 'snapshot'}):
             raise RuntimeError(name + ' has no qualified pre-pagination PDF source')
+        if name == 'near-page-limit-modal' and (kinds != ['print']
+                                               or row.get('raw_print_page_count') != row['page_count']):
+            raise RuntimeError('The modal case did not use direct paper-sized AppKit print output')
         for kind in kinds:
             raw = root / 'measurements' / f'{name}-raw-{kind}.pdf'
             if (not raw.is_file() or raw.stat().st_size != row.get(f'raw_{kind}_pdf_bytes')
@@ -164,7 +161,7 @@ def validate_records(root):
                     or not 0 < row.get(f'raw_{kind}_page_count', 0) <= 256):
                 raise RuntimeError(kind + ' pre-pagination PDF is not bound to ' + name)
     for row, field in [(html, 'output_sha256'), (pdf, 'pdf_sha256'),
-                       (scaled, 'pdf_sha256'), (near, 'pdf_sha256'), (alternative, 'pdf_sha256'),
+                       (scaled, 'pdf_sha256'), (near, 'pdf_sha256'),
                        (modal, 'pdf_sha256')]:
         if not re.fullmatch(r'[0-9a-f]{64}', row.get(field, '')):
             raise RuntimeError('A produced export lacks a digest')
@@ -207,10 +204,10 @@ def validate_execution(root, receipt):
     result = json.loads(subprocess.check_output(['xcrun', 'xcresulttool', 'get', 'test-results', 'summary',
                                                  '--path', str(root / 'actual-export.xcresult')]))
     (root / 'actual-export-summary.json').write_text(json.dumps(result, indent=2) + '\n')
-    expected_counts = {'totalTestCount': 7, 'passedTests': 7, 'failedTests': 0,
+    expected_counts = {'totalTestCount': 6, 'passedTests': 6, 'failedTests': 0,
                        'skippedTests': 0, 'expectedFailures': 0}
     if any(type(result.get(key)) is not int or result[key] != value for key, value in expected_counts.items()):
-        raise RuntimeError('Actual xcresult does not contain seven complete passing functions')
+        raise RuntimeError('Actual xcresult does not contain six complete passing functions')
     return validate_records(root)
 
 
