@@ -28,8 +28,9 @@ LIMITS = ('Local source-review package only. Not approved as the complete corres
           'Remaining: independent source/build and embedded/runtime attribution review, exact\n'
           'compiler/sysroot/build-tool inputs where required, explicit source-only publication\n'
           'authorization, stable hosting and anonymous retrieval. Do not mark source_offer verified.\n'
-          'Emscripten root notices and the candidate qsort, Sun math, LLVM libc\n'
-          'and mimalloc texts do not complete all per-file notice coverage.\n'
+          'Emscripten root notices and the scoped CPL/VPSC, Expat, Emscripten,\n'
+          'Arm, qsort, Sun math, LLVM libc and mimalloc candidate texts do not\n'
+          'complete all per-file notice coverage or CPL/EPL interpretation.\n'
           'Included image/reproduction/link receipts are review evidence, not a self-contained\n'
           'compiler environment or approval of final retained-code/source/rights completeness.\n'
           'The pinned Emscripten source archive is a candidate source reference,\n'
@@ -47,7 +48,8 @@ REPRODUCTION_FILES = {
                              'source-candidates.json', 'compare_image_source.py',
                              'image-source-comparison.json', 'prepare_candidate_notices.py',
                              'candidate-notices.json', 'audit_source_license_signals.py',
-                             'file-license-signals.json'),
+                             'file-license-signals.json', 'prepare_additional_notices.py',
+                             'additional-notices.json'),
     'libcxx-image-notices': ('README.md', 'manifest.json'),
 }
 
@@ -119,6 +121,19 @@ def payload(root, inputs, emscripten_source=None, image_inputs=None):
     recorded_signals = json.loads((root / 'compliance/evidence/graphviz-link-inputs/file-license-signals.json').read_text())
     if fresh_signals != recorded_signals:
         raise ValueError('Graphviz candidate source licence signals differ from committed index')
+    if emscripten_source is None:
+        raise ValueError('Pinned Emscripten source is required for scoped notices')
+    additional_path = root / 'compliance/evidence/graphviz-link-inputs/prepare_additional_notices.py'
+    additional_spec = importlib.util.spec_from_file_location('graphviz_additional_notices', additional_path)
+    additional = importlib.util.module_from_spec(additional_spec)
+    additional_spec.loader.exec_module(additional)
+    fresh_notices, fresh_report = additional.prepare(inputs, emscripten_source)
+    recorded_report = json.loads((root / 'compliance/evidence/graphviz-link-inputs/additional-notices.json').read_text())
+    if fresh_report != recorded_report:
+        raise ValueError('Graphviz scoped file notices differ from pinned source')
+    for name, body in fresh_notices.items():
+        if (root / 'compliance/licenses' / name).read_bytes() != body:
+            raise ValueError('Graphviz scoped file notice differs from pinned source: ' + name)
     bodies = {'README.txt': LIMITS.encode()}
     bodies.update(reproduction_evidence(root))
     if emscripten_source is None or image_inputs is None:
@@ -150,7 +165,9 @@ def payload(root, inputs, emscripten_source=None, image_inputs=None):
     ids = {'viz-js', 'expat', 'graphviz-rbtree', 'graphviz-ellipse-maisonobe',
            'graphviz-randomkit', 'renderer-build-bison-skeleton', 'renderer-build-emscripten',
            'compiler-rt-publisher-root-notices', 'libcxx-recorded-image-root-notices', 'libcxxabi-recorded-image-root-notices',
-           'graphviz-llvm-libc-candidate-notice', 'graphviz-mimalloc-candidate-notice',
+           'graphviz-vpsc-cpl-candidate-notice', 'graphviz-emscripten-newer-header-candidate-notice',
+           'graphviz-musl-arm-math-candidate-notice', 'graphviz-llvm-libc-candidate-notice',
+           'graphviz-mimalloc-candidate-notice',
            'graphviz-musl-qsort-candidate-notice', 'graphviz-musl-sun-math-candidate-notices'}
     selected = [r for r in inv['components'] if r['id'] in ids]
     if {r['id'] for r in selected} != ids:

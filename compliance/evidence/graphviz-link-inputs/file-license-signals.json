@@ -4335,6 +4335,7 @@
       ],
       "family": "graphviz",
       "header_signals": [
+        "CPL",
         "GNU General Public",
         "Free Software Foundation"
       ],
@@ -4734,6 +4735,7 @@
       ],
       "family": "graphviz",
       "header_signals": [
+        "CPL",
         "GNU General Public",
         "Free Software Foundation"
       ],
@@ -5586,7 +5588,10 @@
         "Copyright (C) 2005 Authors"
       ],
       "family": "graphviz",
-      "header_signals": [],
+      "header_signals": [
+        "Common Public License",
+        "CPL"
+      ],
       "path": "lib/neatogen/constrained_majorization_ipsep.c",
       "sha256": "4932a7be2c7b64bb884c5679c97e4eeae9ed78db16eda41e8d94cde4683d4a35",
       "spdx_header": []
@@ -5869,7 +5874,10 @@
         "Copyright (C) 2005 Authors"
       ],
       "family": "graphviz",
-      "header_signals": [],
+      "header_signals": [
+        "Common Public License",
+        "CPL"
+      ],
       "path": "lib/neatogen/quad_prog_vpsc.c",
       "sha256": "62916e7ef4e8815fe16ef524f109ff12b12fb86de9aebde339de2e689d0c6f87",
       "spdx_header": []
@@ -6443,7 +6451,10 @@
         "Copyright (C) 2005 Authors"
       ],
       "family": "graphviz",
-      "header_signals": [],
+      "header_signals": [
+        "Common Public License",
+        "CPL"
+      ],
       "path": "lib/vpsc/block.cpp",
       "sha256": "04859651a39473898f9e15db2d4c1011f26c393be5fb442415b771d98deb06b8",
       "spdx_header": []
@@ -6453,7 +6464,10 @@
         "Copyright (C) 2005 Authors"
       ],
       "family": "graphviz",
-      "header_signals": [],
+      "header_signals": [
+        "Common Public License",
+        "CPL"
+      ],
       "path": "lib/vpsc/blocks.cpp",
       "sha256": "ba44dc1768c046fee56ca22c8513f673df94798a99bcc6a966916aef8efa619a",
       "spdx_header": []
@@ -6463,7 +6477,10 @@
         "Copyright (C) 2005 Authors"
       ],
       "family": "graphviz",
-      "header_signals": [],
+      "header_signals": [
+        "Common Public License",
+        "CPL"
+      ],
       "path": "lib/vpsc/constraint.cpp",
       "sha256": "24f22b902992b95a23c4dfc469571d60e069da84bf716698041dc6121d1b04d0",
       "spdx_header": []
@@ -6473,7 +6490,10 @@
         "Copyright (C) 2005 Authors"
       ],
       "family": "graphviz",
-      "header_signals": [],
+      "header_signals": [
+        "Common Public License",
+        "CPL"
+      ],
       "path": "lib/vpsc/csolve_VPSC.cpp",
       "sha256": "9fc130d047c5004c0089d11e89f2a8022253c14461be9b222f2f7cb0a6da0a03",
       "spdx_header": []
@@ -6483,7 +6503,10 @@
         "Copyright (C) 2005 Authors"
       ],
       "family": "graphviz",
-      "header_signals": [],
+      "header_signals": [
+        "Common Public License",
+        "CPL"
+      ],
       "path": "lib/vpsc/generate-constraints.cpp",
       "sha256": "b1eee99c997e1e7c9f147886d633269e22f42cdd46910855d76993ae8bb79b98",
       "spdx_header": []
@@ -6493,7 +6516,10 @@
         "Copyright (C) 2005 Authors"
       ],
       "family": "graphviz",
-      "header_signals": [],
+      "header_signals": [
+        "Common Public License",
+        "CPL"
+      ],
       "path": "lib/vpsc/solve_VPSC.cpp",
       "sha256": "3e18402748e6ebda548dbba7295d62aef68ceffadfce802fefaea956258c012c",
       "spdx_header": []
@@ -6503,7 +6529,10 @@
         "Copyright (C) 2005 Authors"
       ],
       "family": "graphviz",
-      "header_signals": [],
+      "header_signals": [
+        "Common Public License",
+        "CPL"
+      ],
       "path": "lib/vpsc/variable.cpp",
       "sha256": "b12f11c61088bc2af00f4f80201139e805a462a8400451433b7987c75c06458f",
       "spdx_header": []

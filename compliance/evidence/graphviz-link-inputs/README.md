@@ -106,6 +106,23 @@ files. It is a triage index, not a term determination. For example, both
 `exp.c` and `exp_data.c` carry Arm Limited 2018 MIT headers; their exact
 object selection and per-file notice treatment remain in review.
 
+The [additional scoped notice packet](additional-notices.json) now preserves
+the complete Graphviz `cpl1.0.txt` and exact headers from nine VPSC/neatogen
+source candidates plus eight related headers. Eleven candidate archive
+members point to those source files; the file comments say the Graphviz
+version is CPL-covered. It also preserves all four candidate Expat file
+headers, including `random_getentropy.c`'s 2026 Sebastian Pipping and Matthew
+Fernandez MIT grant and credit, which the retained Expat `COPYING` predates.
+Fourteen Emscripten candidate headers credit The Emscripten Authors in
+2019–2026 and point to the existing MIT/NCSA root text; two musl math headers
+credit Arm Limited 2018 and point to the existing musl MIT text. The packet
+is regenerated from three digest-pinned source archives and all 37 selected
+headers are copied verbatim. The local package assembler reruns this
+extraction before including the notices. These are conservative candidate
+attributions. Exact object-to-source rules, inline/template retention,
+generated parser/JavaScript glue terms, CPL/EPL interpretation and final
+optimized retention remain open.
+
 The map has one direct `.o` input outside the archive/member union:
 `/tmp/emscripten_temp_qoqz6zsd/viz.o` (27 symbol rows). The pinned
 [link receipt](result.json) names the corresponding 5,274-byte `viz.c`

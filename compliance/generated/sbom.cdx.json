@@ -785,7 +785,7 @@
         },
         {
           "name": "mostlytext:resolution",
-          "value": "source reference and exact D2 payload; build correspondence incomplete"
+          "value": "Exact D2 payload and modification history; upstream generated-runtime build correspondence incomplete"
         }
       ],
       "type": "library",
@@ -1041,6 +1041,37 @@
       "version": "Graphviz 16.0.0 source snapshot"
     },
     {
+      "bom-ref": "graphviz-emscripten-newer-header-candidate-notice",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/emscripten-core/emscripten"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT OR NCSA"
+        }
+      ],
+      "name": "Newer Emscripten dual-grant headers in Viz.js compiler-image candidates",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "Conservative scoped notice for fourteen candidate source headers; final retention and per-file review open"
+        }
+      ],
+      "type": "library",
+      "version": "Emscripten 263db4cf source reference"
+    },
+    {
       "bom-ref": "graphviz-llvm-libc-candidate-notice",
       "externalReferences": [
         {
@@ -1097,6 +1128,37 @@
         {
           "name": "mostlytext:resolution",
           "value": "possible libc.o source candidate; musl libc.c is also a basename candidate"
+        }
+      ],
+      "type": "library",
+      "version": "Emscripten 263db4cf source reference"
+    },
+    {
+      "bom-ref": "graphviz-musl-arm-math-candidate-notice",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/emscripten-core/emscripten"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "MIT"
+        }
+      ],
+      "name": "Arm MIT math headers in Viz.js musl source candidates",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "Conservative scoped notice for two candidate musl math headers; final retention and per-file review open"
         }
       ],
       "type": "library",
@@ -1225,6 +1287,37 @@
       ],
       "type": "library",
       "version": "Graphviz 16.0.0 source snapshot"
+    },
+    {
+      "bom-ref": "graphviz-vpsc-cpl-candidate-notice",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://gitlab.com/graphviz/graphviz"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "CPL-1.0"
+        }
+      ],
+      "name": "CPL-covered VPSC source candidates via Graphviz/Viz.js",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "attribution"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "Conservative candidate notice for eleven pre-optimization link members and eight related headers; final retention and legal interpretation open"
+        }
+      ],
+      "type": "library",
+      "version": "Graphviz 16.0.0 source reference"
     },
     {
       "bom-ref": "katex-react-helpers",
@@ -5389,12 +5482,15 @@
         "esbuild-parser-runtime",
         "expat",
         "graphviz-ellipse-maisonobe",
+        "graphviz-emscripten-newer-header-candidate-notice",
         "graphviz-llvm-libc-candidate-notice",
         "graphviz-mimalloc-candidate-notice",
+        "graphviz-musl-arm-math-candidate-notice",
         "graphviz-musl-qsort-candidate-notice",
         "graphviz-musl-sun-math-candidate-notices",
         "graphviz-randomkit",
         "graphviz-rbtree",
+        "graphviz-vpsc-cpl-candidate-notice",
         "katex-react-helpers",
         "libcxx-recorded-image-root-notices",
         "libcxxabi-recorded-image-root-notices",
@@ -5539,7 +5635,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:fde5769a-617c-5298-b888-a81f931c4e0c",
+  "serialNumber": "urn:uuid:8e96d0c8-165e-5568-bdc4-c7e2cb4f6e7f",
   "specVersion": "1.5",
   "version": 1
 }

@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "scope": "GitHub immutable D2 elk.js history and pinned source blob, not full ELK Java/GWT preferred source correspondence",
+  "d2_source_commit": "581c91096b62d644fb5168313142c836b7e68e74",
+  "d2_source_archive_sha256": "91e4234ad509b7e673a19541feda2b66f88311b3c6dd9f8257a0d2e350922391",
+  "member_path": "d2-581c91096b62d644fb5168313142c836b7e68e74/d2layouts/d2elklayout/elk.js",
+  "member_bytes": 3677009,
+  "member_sha256": "a297b92da4a257b95c129cc1d8cfb379e2c89bcd4442af90ac06fdd2b1e220b4",
+  "member_git_blob_sha1": "9ea3a05eb3e8e9663a9b2022e911940a19de264f",
+  "history": [
+    {
+      "commit": "136faa0d1a9d99e1f610ca0260f2603861f17b17",
+      "author_date_utc": "2022-11-11T19:43:56Z",
+      "subject": "k",
+      "file_blob_sha1": "54690611dda2a86d31c6b37e2d6028168edc793d",
+      "additions": 105836,
+      "deletions": 0,
+      "patch_sha256": null,
+      "patch_bytes": null
+    },
+    {
+      "commit": "e723881dfe2e0715cd6915d569cb65d48c8fb194",
+      "author_date_utc": "2025-01-14T18:55:48Z",
+      "subject": "migrate layout engines",
+      "file_blob_sha1": "9128b0517f3fb1ede8d2f7477b0ae1ffed220491",
+      "additions": 4,
+      "deletions": 29,
+      "patch_sha256": "a99d8f57d70bc1c6edc99b73fb9ed30fde64a3c1d74b585cebc92e19c3e8898f",
+      "patch_bytes": 2011
+    },
+    {
+      "commit": "c3b5af68178d9711276cada263144155e933779c",
+      "author_date_utc": "2025-08-05T22:35:00Z",
+      "subject": "sync",
+      "file_blob_sha1": "b1cccbdb07487d2ca5edfb23cc991be950ee66cc",
+      "additions": 57,
+      "deletions": 0,
+      "patch_sha256": "d389dc2cfcacf2cb237b940d16989c926e76333cd72bbd66bd95f11e9179e7bb",
+      "patch_bytes": 2421
+    },
+    {
+      "commit": "9640af1558d797e51bef4f4568813b095a2ffc5a",
+      "author_date_utc": "2025-08-05T22:54:49Z",
+      "subject": "fmt",
+      "file_blob_sha1": "f1ddc40aeb3ebd2ebaaa5e608eca5616f53eb57f",
+      "additions": 18,
+      "deletions": 18,
+      "patch_sha256": "b729267b81b359276f65bd58d401b53ecfba40ef2799aae4334816022e9f3023",
+      "patch_bytes": 2683
+    },
+    {
+      "commit": "7861053f3ad8fdec3b52098afd574729b0bab1d9",
+      "author_date_utc": "2025-08-06T01:22:29Z",
+      "subject": "fix race",
+      "file_blob_sha1": "9ea3a05eb3e8e9663a9b2022e911940a19de264f",
+      "additions": 75,
+      "deletions": 29,
+      "patch_sha256": "523f8d309b54d7eee412c075bb8620d856c8331e116b14883d8ab8dd1d6fc526",
+      "patch_bytes": 4347
+    }
+  ],
+  "limitations": [
+    "The 2022 initial D2 vendor commit does not prove a reproducible build from elkjs 0.8.2 or preferred ELK Java/GWT sources.",
+    "The four later public D2 patches establish changes to elk.js only; changes to other D2 files are outside this receipt.",
+    "The patch hashes bind GitHub commit API responses observed during review; the local verifier checks the final source blob, not online history or licensing."
+  ]
+}

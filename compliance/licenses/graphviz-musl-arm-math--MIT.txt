@@ -1,0 +1,15 @@
+Source: system/lib/libc/musl/src/math/exp.c
+/*
+ * Double-precision e^x function.
+ *
+ * Copyright (c) 2018, Arm Limited.
+ * SPDX-License-Identifier: MIT
+ */
+
+Source: system/lib/libc/musl/src/math/exp_data.c
+/*
+ * Shared data between exp, exp2 and pow.
+ *
+ * Copyright (c) 2018, Arm Limited.
+ * SPDX-License-Identifier: MIT
+ */

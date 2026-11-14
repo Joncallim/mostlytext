@@ -1,0 +1,174 @@
+{
+  "notices": {
+    "graphviz-emscripten-newer-headers--MIT-NCSA.txt": {
+      "sha256": "4d607730035e507223eaeec804961e2316606b1ae612a1ccddba91355a536260",
+      "source_paths": [
+        "system/lib/libc/atexit_dummy.c",
+        "system/lib/libc/emscripten_get_heap_size.c",
+        "system/lib/libc/emscripten_mmap.c",
+        "system/lib/libc/emscripten_syscall_stubs.c",
+        "system/lib/libc/emscripten_time.c",
+        "system/lib/libc/emscripten_yield_stub.c",
+        "system/lib/libc/mktime.c",
+        "system/lib/libc/pthread_sigmask.c",
+        "system/lib/libc/raise.c",
+        "system/lib/libc/sbrk.c",
+        "system/lib/libc/sigaction.c",
+        "system/lib/libc/wasi-helpers.c",
+        "system/lib/pthread/library_pthread_stub.c",
+        "system/lib/pthread/pthread_self_stub.c"
+      ],
+      "source_sha256": {
+        "system/lib/libc/atexit_dummy.c": "7d085afbb2951dad60c4567319ae5299b669dc261767ea11f8760981c3324fb9",
+        "system/lib/libc/emscripten_get_heap_size.c": "f642e9c8e89121b3c379535996cb78d8a7fa0626ef8351d7b00c1824dcdb1dbe",
+        "system/lib/libc/emscripten_mmap.c": "546f706a1509dfad56bf3cacb844211fea12f5ee629332fc492c87a514482dd4",
+        "system/lib/libc/emscripten_syscall_stubs.c": "e384249ca724df634c72371a7a53229a109a625b36382d6a41f3cc4f7351a910",
+        "system/lib/libc/emscripten_time.c": "fd8c2b05393d66364bf6d7f67428bb0ef553ef523be4338ed8ec316111bf9355",
+        "system/lib/libc/emscripten_yield_stub.c": "007ccb726f3199a0b74c6c8525bdb9df093df234354afb38c6cfb8018a0e84b6",
+        "system/lib/libc/mktime.c": "432b2b857210e487240f4e6826b8e31710bb1b26d9741ecd470d406d02268281",
+        "system/lib/libc/pthread_sigmask.c": "90f597346d8655727e23164338702bea9497a0eabf348f0d1842ebd11b73016f",
+        "system/lib/libc/raise.c": "abef26efb040b66d5350ff91060025711835451a6361b731dd9e66a264f36fa5",
+        "system/lib/libc/sbrk.c": "c5240534df9773b524c3385452e9ec7d45eb1d6c7c37c441cfbea156f0f7fa0e",
+        "system/lib/libc/sigaction.c": "5033f83e68fe8514fef2a35287bca69c87459f998ee7deb10273eda5203b8bee",
+        "system/lib/libc/wasi-helpers.c": "6173efcc48a1daacd3c1f7817b18173a6de48a1bb87b1ba49598fa70d22b1731",
+        "system/lib/pthread/library_pthread_stub.c": "cfc3acb467552f07cbe2f52e775bcec01711a28e07209da980cf7a57c81f2aa3",
+        "system/lib/pthread/pthread_self_stub.c": "d1cff7b24162d6c473553447239fa104b4f7faf9453ef14eb41f08c1bdee6ad3"
+      }
+    },
+    "graphviz-expat-file-headers--MIT.txt": {
+      "sha256": "bc55518a8c479e5e81ba6ea07f27494fed63193c864b4b7f31ede4746c47a29d",
+      "source_paths": [
+        "lib/random_getentropy.c",
+        "lib/xmlparse.c",
+        "lib/xmlrole.c",
+        "lib/xmltok.c"
+      ],
+      "source_sha256": {
+        "lib/random_getentropy.c": "ba99df7b694ff0b62d2871cc13b87e75d1a715af6045102ee7aff120ec1ae332",
+        "lib/xmlparse.c": "a0f45238a4f29fe188f38256edc04e8fd0eb3a43cc03de38cdb9640778089a92",
+        "lib/xmlrole.c": "db4004fa2cabc811fc493b5b04b44cd336d19434bc653725f090131e43a89406",
+        "lib/xmltok.c": "f2732a8e91fd901d75431d35edc421e1ff3893a275c4de1cc855b3d4deadfd37"
+      }
+    },
+    "graphviz-musl-arm-math--MIT.txt": {
+      "sha256": "965e28a1d428c0fef71c3f4fa51503ed66d9e7d281b395768f32e9c835ad9e6a",
+      "source_paths": [
+        "system/lib/libc/musl/src/math/exp.c",
+        "system/lib/libc/musl/src/math/exp_data.c"
+      ],
+      "source_sha256": {
+        "system/lib/libc/musl/src/math/exp.c": "7db56f21ca9b8915d36dd5099b707aafeb6a736eae798e19b76b074764e75f34",
+        "system/lib/libc/musl/src/math/exp_data.c": "c55dff64e369fe816cd8ce367064989bb119f85783599680d1a329031c660689"
+      }
+    },
+    "graphviz-vpsc--CPL-1.0.txt": {
+      "sha256": "7b47225a5b77cb7825efc6a4d7e0ac57864c790542cf92f5080ec2bf310c00e5",
+      "source_paths": [
+        "cpl1.0.txt"
+      ]
+    },
+    "graphviz-vpsc--SOURCE-HEADERS.txt": {
+      "sha256": "a084d7a4f77439a13bde14c22472fd284829bc6dc418f1063553973305536fa7",
+      "source_paths": [
+        "lib/neatogen/constrained_majorization_ipsep.c",
+        "lib/neatogen/quad_prog_vpsc.c",
+        "lib/vpsc/block.cpp",
+        "lib/vpsc/blocks.cpp",
+        "lib/vpsc/constraint.cpp",
+        "lib/vpsc/csolve_VPSC.cpp",
+        "lib/vpsc/generate-constraints.cpp",
+        "lib/vpsc/solve_VPSC.cpp",
+        "lib/vpsc/variable.cpp",
+        "lib/neatogen/quad_prog_vpsc.h",
+        "lib/vpsc/variable.h",
+        "lib/vpsc/csolve_VPSC.h",
+        "lib/vpsc/blocks.h",
+        "lib/vpsc/solve_VPSC.h",
+        "lib/vpsc/block.h",
+        "lib/vpsc/generate-constraints.h",
+        "lib/vpsc/constraint.h"
+      ],
+      "source_sha256": {
+        "lib/neatogen/constrained_majorization_ipsep.c": "4932a7be2c7b64bb884c5679c97e4eeae9ed78db16eda41e8d94cde4683d4a35",
+        "lib/neatogen/quad_prog_vpsc.c": "62916e7ef4e8815fe16ef524f109ff12b12fb86de9aebde339de2e689d0c6f87",
+        "lib/neatogen/quad_prog_vpsc.h": "b074c9264a31060fd75c19d0bcd106be8cb141540a0690f936b924640d8fe15a",
+        "lib/vpsc/block.cpp": "04859651a39473898f9e15db2d4c1011f26c393be5fb442415b771d98deb06b8",
+        "lib/vpsc/block.h": "cd821fae79fe1f29c194a323cd1d2a4e901e9632238e6b35e61cf132e451bb46",
+        "lib/vpsc/blocks.cpp": "ba44dc1768c046fee56ca22c8513f673df94798a99bcc6a966916aef8efa619a",
+        "lib/vpsc/blocks.h": "aec3ebdf9f65c3e85fbdd97ba68db8be2c93fedfe5fafad741ed4a9617331d2e",
+        "lib/vpsc/constraint.cpp": "24f22b902992b95a23c4dfc469571d60e069da84bf716698041dc6121d1b04d0",
+        "lib/vpsc/constraint.h": "d39c2560ff94e2c131fbd91882b5adc6377feafb899e6caee949fe0d82c443de",
+        "lib/vpsc/csolve_VPSC.cpp": "9fc130d047c5004c0089d11e89f2a8022253c14461be9b222f2f7cb0a6da0a03",
+        "lib/vpsc/csolve_VPSC.h": "a1baf07b0e08266f39fc85b59c9d68b88bb769b52128f94435420f8cf27a95fc",
+        "lib/vpsc/generate-constraints.cpp": "b1eee99c997e1e7c9f147886d633269e22f42cdd46910855d76993ae8bb79b98",
+        "lib/vpsc/generate-constraints.h": "b6d6694c57aa766e3d89e91f3a394b3ca27e49c103d0272d5e15a273c21e08e0",
+        "lib/vpsc/solve_VPSC.cpp": "3e18402748e6ebda548dbba7295d62aef68ceffadfce802fefaea956258c012c",
+        "lib/vpsc/solve_VPSC.h": "602651715ff43ad01e83a40bd8be335be65ba2b771deb84f5e331eefb8003a35",
+        "lib/vpsc/variable.cpp": "b12f11c61088bc2af00f4f80201139e805a462a8400451433b7987c75c06458f",
+        "lib/vpsc/variable.h": "f4076e89c564ec9dea81c7f20798e2c5a9e6c7d147459967e62d4efc33287ef2"
+      }
+    }
+  },
+  "schema": 1,
+  "source_archives": {
+    "emscripten": {
+      "filename": "emscripten-263db4cf.tar.gz",
+      "sha256": "d34ff1cb0ab99f74c0aefd4641f7a514754f2f6218d540d135ef1cf8467b08ba"
+    },
+    "expat": {
+      "filename": "expat-2.8.4.tar.gz",
+      "sha256": "b8ece2437692dad44d851c4532723390a5a330990007706be9c8d2b90d294f36"
+    },
+    "graphviz": {
+      "filename": "graphviz-16.0.0.tar.gz",
+      "sha256": "36a1de1aaf5a2023b14f95170a5f8f0b12522d1c305b517fc261966597050749"
+    }
+  },
+  "status": "conservative candidate notices; object selection and rights review open",
+  "vpsc_candidate_members": [
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "block.o"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "blocks.o"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "constrained_majorization_ipsep.o"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "constraint.o"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "csolve_VPSC.o"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "generate-constraints.o"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "lt1-block.o"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "lt2-constraint.o"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "quad_prog_vpsc.o"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "solve_VPSC.o"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "variable.o"
+    }
+  ]
+}
