@@ -3,12 +3,10 @@ import CoreGraphics
 import CryptoKit
 import Darwin
 import Foundation
-import ImageIO
 import PDFKit
-import UniformTypeIdentifiers
 import WebKit
 
-/// Fixed hosted mechanism comparison; never product or ordinary-menu acceptance.
+/// Fixed hosted WebKit snapshot admission check; never ordinary-menu acceptance.
 @main
 @MainActor
 struct ReadSnapshotFrames {
@@ -53,16 +51,21 @@ struct ReadSnapshotFrames {
             try await rows.append(captureCase(
                 name: name, height: height, info: info, html: derivedHTML(lockedHTML, for: name), root: root
             ))
-            let result: [String: Any] = [
-                "diagnostic_only": true, "qualification_candidate": false,
-                "input_sha256": sha(input), "paper_size": [info.paperSize.width, info.paperSize.height],
-                "margins": [info.leftMargin, info.rightMargin, info.topMargin, info.bottomMargin],
-                "completed_cases": rows, "scope": "Fixed WebKit snapshot canvas mechanism only; " +
-                    "not historical generation-path cause, production geometry policy or ordinary-export acceptance",
-            ]
-            try JSONSerialization.data(withJSONObject: result, options: [.sortedKeys, .prettyPrinted])
-                .write(to: root.appendingPathComponent("snapshot-frame-observations.json"))
+            try record(rows, input: input, info: info, root: root)
         }
+    }
+
+    private static func record(_ rows: [[String: Any]], input: Data, info: NSPrintInfo, root: URL) throws {
+        let result: [String: Any] = [
+            "diagnostic_only": true, "qualification_candidate": false,
+            "input_sha256": sha(input), "paper_size": [info.paperSize.width, info.paperSize.height],
+            "margins": [info.leftMargin, info.rightMargin, info.topMargin, info.bottomMargin],
+            "completed_cases": rows,
+            "scope": "Actual WebKit snapshot geometry against production paper-only admission; " +
+                "historical canvas comparison remains archived separately",
+        ]
+        try JSONSerialization.data(withJSONObject: result, options: [.sortedKeys, .prettyPrinted])
+            .write(to: root.appendingPathComponent("snapshot-frame-observations.json"))
     }
 
     private static func derivedHTML(_ html: String, for name: String) -> String {
@@ -99,15 +102,25 @@ struct ReadSnapshotFrames {
               let source = PDFDocument(data: snapshot), source.pageCount == 1,
               let page = source.page(at: 0) else { throw Failure.refused }
         try snapshot.write(to: root.appendingPathComponent("\(name)-snapshot.pdf"))
-        let data = try PDFSnapshotFallback.paginate(snapshot, printInfo: info, maxBytes: 4 * 1024 * 1024)
-        try data.write(to: root.appendingPathComponent("\(name)-paginated.pdf"))
-        let pages = try readOutput(data, name: name, root: root)
         let box = page.bounds(for: .mediaBox)
+        let paper = info.paperSize
+        let paperSized = abs(box.width - paper.width) < 1 && abs(box.height - paper.height) < 1
+        let disposition: String
+        do {
+            let accepted = try PDFSnapshotFallback.paginate(snapshot, printInfo: info, maxBytes: 4 * 1024 * 1024)
+            guard paperSized, accepted == snapshot else { throw Failure.refused }
+            disposition = "paper-preserved"
+        } catch PDFSnapshotFallback.FallbackError.invalidGeometry {
+            guard !paperSized else { throw Failure.refused }
+            disposition = "oversized-refused"
+        }
+        let rawText = source.string ?? ""
+        guard !rawText.isEmpty, rawText.utf8.count <= 16384 else { throw Failure.refused }
         let row: [String: Any] = [
             "case": name, "view_height": height, "hardened_html_sha256": sha(htmlData),
             "hardened_html_bytes": htmlData.count, "snapshot_sha256": sha(snapshot),
             "snapshot_bytes": snapshot.count, "snapshot_media_box": [box.minX, box.minY, box.width, box.height],
-            "paginated_sha256": sha(data), "paginated_bytes": data.count, "pages": pages,
+            "raw_text": rawText, "disposition": disposition,
         ]
         view.stopLoading()
         view.navigationDelegate = nil
@@ -116,57 +129,6 @@ struct ReadSnapshotFrames {
 
     private static func sha(_ data: Data) -> String {
         SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
-    }
-
-    private static func readOutput(_ data: Data, name: String, root: URL) throws -> [[String: Any]] {
-        guard let document = PDFDocument(data: data), (1 ... 10).contains(document.pageCount),
-              let provider = CGDataProvider(data: data as CFData), let graphics = CGPDFDocument(provider),
-              graphics.numberOfPages == document.pageCount else { throw Failure.refused }
-        return try (0 ..< document.pageCount).map { index in
-            guard let page = document.page(at: index), let graphicsPage = graphics.page(at: index + 1) else {
-                throw Failure.refused
-            }
-            let text = page.string ?? ""
-            guard text.utf8.count <= 16384 else { throw Failure.refused }
-            let ink = try raster(graphicsPage, to: root.appendingPathComponent("\(name)-page-\(index + 1).png"))
-            return ["index": index, "raw_text": text, "actual_raster_nonwhite_pixels": ink]
-        }
-    }
-
-    private static func raster(_ page: CGPDFPage, to output: URL) throws -> Int {
-        let width = 612
-        let height = 792
-        var pixels = Data(count: width * height * 4)
-        return try pixels.withUnsafeMutableBytes { storage in
-            guard let base = storage.baseAddress,
-                  let context = CGContext(
-                      data: base, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4,
-                      space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
-                  )
-            else { throw Failure.refused }
-            let rect = CGRect(x: 0, y: 0, width: width, height: height)
-            context.setFillColor(CGColor(gray: 1, alpha: 1))
-            context.fill(rect)
-            context.saveGState()
-            context.clip(to: rect)
-            context.concatenate(page.getDrawingTransform(.mediaBox, rect: rect, rotate: 0, preserveAspectRatio: true))
-            context.drawPDFPage(page)
-            context.restoreGState()
-            guard let image = context.makeImage(),
-                  let destination = CGImageDestinationCreateWithURL(
-                      output as CFURL,
-                      UTType.png.identifier as CFString,
-                      1,
-                      nil
-                  )
-            else { throw Failure.refused }
-            CGImageDestinationAddImage(destination, image, nil)
-            guard CGImageDestinationFinalize(destination) else { throw Failure.refused }
-            let samples = storage.bindMemory(to: UInt8.self)
-            return stride(from: 0, to: samples.count, by: 4).reduce(0) { total, index in
-                total + (min(samples[index], samples[index + 1], samples[index + 2]) < 245 ? 1 : 0)
-            }
-        }
     }
 
     enum Failure: Error { case refused }

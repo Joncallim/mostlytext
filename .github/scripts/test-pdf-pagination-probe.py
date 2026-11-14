@@ -22,7 +22,7 @@ class PDFResultTests(unittest.TestCase):
     def setUp(self):
         self.log = '\n'.join('Test ' + n + '() passed after 0.1 seconds.' for n in sorted(probe.TESTS))
         self.log += ('\nSuite PDFExportAdapterTests passed.\nSuite PDFExportCancellationTests passed.'
-                     '\nTest run with 11 tests in 2 suites passed.')
+                     '\nTest run with 12 tests in 2 suites passed.')
         self.identity = {'app': '/tmp/build/Release/MacDown2.app/Contents/MacOS/MacDown2', 'app_sha256': 'a' * 64,
                          'command': ['xcodebuild', '-configuration', 'Release', 'ENABLE_TESTABILITY=YES',
                                      'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE PDF_PAGINATION_PROBE',
@@ -43,7 +43,7 @@ class PDFResultTests(unittest.TestCase):
                                          self.identity, self.status)
 
     def test_false_green_summary_or_recorded_issue_refuses(self):
-        for log in [self.log.split('\n', 1)[1], self.log.replace('11 tests', '10 tests'),
+        for log in [self.log.split('\n', 1)[1], self.log.replace('12 tests', '11 tests'),
                     self.log + '\nTest print() recorded an issue', self.log + '\nProgram crashed:']:
             with self.subTest(log=log[-100:]), self.assertRaises(ValueError):
                 probe.validate_execution(log, self.identity, self.status)
@@ -122,12 +122,12 @@ class PDFResultTests(unittest.TestCase):
 
 
 class PDFEvidenceAdmissionTests(unittest.TestCase):
-    def test_actual_result_summary_requires_all_eleven_without_skip_or_expected_failure(self):
-        summary = {'totalTestCount': 11, 'passedTests': 11, 'failedTests': 0,
+    def test_actual_result_summary_requires_all_twelve_without_skip_or_expected_failure(self):
+        summary = {'totalTestCount': 12, 'passedTests': 12, 'failedTests': 0,
                    'skippedTests': 0, 'expectedFailures': 0}
         probe.validate_summary(summary)
         for key, value in [('totalTestCount', 10), ('passedTests', 10), ('failedTests', 1),
-                           ('skippedTests', 1), ('expectedFailures', 1), ('totalTestCount', 11.0)]:
+                           ('skippedTests', 1), ('expectedFailures', 1), ('totalTestCount', 12.0)]:
             with self.subTest(key=key, value=value), self.assertRaises(ValueError):
                 probe.validate_summary(dict(summary, **{key: value}))
 

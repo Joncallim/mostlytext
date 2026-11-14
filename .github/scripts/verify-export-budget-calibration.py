@@ -83,8 +83,11 @@ def validate_records(root):
     html, pdf, scaled, refusal = (records[name] for name in ['html', 'pdf', 'scaled-pdf', 'refusal'])
     if (html.get('case') != 'actual-self-contained-html' or html.get('resource_occurrences') != 2048
             or pdf.get('case') != 'actual-webkit-print-pdfkit'
+            or pdf.get('print_path') != 'document-modal'
             or scaled.get('case') != 'actual-scaled-webkit-print-pdfkit'
             or scaled.get('sections') != 200
+            or scaled.get('print_path') != 'document-modal'
+            or scaled.get('complete_phrase_count') != 200 * 24
             or refusal.get('case') != 'actual-source-cap-plus-one-refusal'
             or refusal.get('source_bytes') != (32 << 20) + 1 or refusal.get('output_exists') is not False
             or not 0 < html.get('source_bytes', 0) < (32 << 20)

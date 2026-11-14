@@ -1,0 +1,19 @@
+# WebKit PDF seam and search fidelity
+
+## Observed failure
+
+Hosted macOS 26 Release [run 43539769175](https://github.com/Joncallim/mostlytext/actions/runs/43539769175) used the actual ExportService, WebKit and PDFKit on a 460-section, 703,764-byte Markdown fixture. The calibration called the adapter without its ordinary UI print window; that non-modal AppKit print did not supply a usable PDF, so the fallback captured a WebKit vector snapshot: 16 pages, fifteen at 794 × 14,400 points, SHA-256 `a002a658574b78a0d820b91175f9d38951fe36fa7a0c9bda515a32d31063628e`. Paper slicing yielded 236 US Letter pages, SHA-256 `8f15959e111b7838caf033e08c5e8771401f4dff91936fe36b5244397cebf89a`.
+
+Independent extraction of both files finds all 460 headings but 11,037 of 11,040 repeated complete sentences. The raw vector pages already place text bounding boxes across their MediaBox boundaries, so the paper slicer cannot recover those missing glyphs from its accepted page rectangles. PDFKit reads 460 section headings and one `Section 293` search hit from the raw PDF, but 642 headings and two hits from the sliced PDF: it repeats text from the whole source page embedded under each paper-page clipping region. A successful print API return, a nonblank first page, a correct paper count and `PDFDocument.string.contains` therefore do not establish faithful publication.
+
+## Publication policy under review
+
+A narrow line-edge detector rejects the observed clipped raw snapshot, but PDFKit can omit some off-page glyphs from selections. It also cannot prevent search duplication from embedding a whole source page on several clipped paper pages. The safe source-level policy is therefore to accept only already paper-sized vector pages and reject every oversized source before paper slicing. The existing `invalidGeometry` error explains that WebKit's page dimensions are unsupported and preserves the destination through the adapter's scratch and admission path. This retires the lossy slicer instead of asserting that a visible cut proves text fidelity.
+
+A local source-only executable compiled the actual candidate `PDFSnapshotFallback.swift` without launching MostlyText or WebKit. It refused the retained 460-section raw snapshot (`OVERSIZED_REFUSED`), refused the faithful 269-page direct modal print at the established 256-page cap (`MODAL_269_REFUSED`), and returned identical bytes for a synthetic paper-sized vector page (`PAPER_VECTOR_PRESERVED`). The updated deterministic app-target controls expect rejection of several tall-source shapes and unchanged bytes for direct paper pages. Hosted app-target and actual-path Release qualification remain required before merging this policy.
+
+Keep issue #11's final PDF budget and real-app export criteria open until the direct modal route has passed a below-cap near-limit fixture and native acceptance. The guarded paragraph-break experiment was ineffective on its retained raw and final PDFs.
+
+## Modal print comparison
+
+The [460-section modal Release probe](https://github.com/Joncallim/mostlytext/actions/runs/43545338170) produced 269 direct US Letter pages through AppKit. Independent PyMuPDF extraction and local PDFKit readback found all 460 headings and all 11,040 repeated sentences in its raw print. The existing 256-page admission limit then rejected publication with `tooManyPages`; this is a correct refusal, not an accepted output. On that same source the non-modal snapshot and a test-only paragraph-break CSS variant each retained 11,037 sentences, so the CSS experiment did not repair the seam. Draft PR #275 now measures a smaller 430-section modal source and requires exact 10,320-sentence PDFKit readback within the page cap. A direct modal paper result would qualify that route only; the non-modal vector-slicing search duplication is addressed by the proposed fail-closed policy only after that separate production change is tested and merged.
