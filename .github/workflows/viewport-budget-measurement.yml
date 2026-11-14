@@ -141,7 +141,7 @@ jobs:
                                          'scope': 'ordinary mounted structural input return; overflow is synchronous and has no latency claim; distinct from visible display'}
           retirement_order_log = (root / 'retirement-order.log').read_text()
           assert 'Test run with 1 test in 1 suite passed' in retirement_order_log
-          assert 'BoundedMarkdownCacheRetirementTests' in retirement_order_log
+          assert 'Suite "Bounded Markdown cache retirement" passed' in retirement_order_log
           records['lifecycle'] = {
               'passed': True,
               'scope': 'full-size mounted source/selection/lifecycle oracle; manual painter validation means no automatic repaint claim'
