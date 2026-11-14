@@ -159,6 +159,13 @@
             let prepared = try await ExportService.prepare(request, target: .pdf(url: destination))
             let prepareSeconds = ProcessInfo.processInfo.systemUptime - started
             let html = try await PDFExportAdapter.hardenedHTML(from: prepared)
+            let rawPrint = try outputDirectory().appendingPathComponent("near-page-limit-raw-print.pdf")
+            if sections == 460 {
+                PDFExportAdapter.capturePrePaginationPrint = { data in
+                    try data.write(to: rawPrint, options: .atomic)
+                }
+            }
+            defer { PDFExportAdapter.capturePrePaginationPrint = nil }
             let printStarted = ProcessInfo.processInfo.systemUptime
             try await PDFExportAdapter.export(prepared, to: destination)
             let printSeconds = ProcessInfo.processInfo.systemUptime - printStarted
@@ -168,7 +175,7 @@
             let retainedPDF = try outputDirectory().appendingPathComponent(name + "-output.pdf")
             try data.write(to: retainedPDF, options: .atomic)
             try verifyScaledPDF(pdf, text: text, sections: sections)
-            try record(name, values: [
+            var values: [String: Any] = [
                 "case": "actual-scaled-webkit-print-pdfkit", "sections": sections,
                 "source_bytes": sourceData.count, "source_sha256": sha256(sourceData),
                 "prepared_html_bytes": html.utf8.count,
@@ -177,7 +184,21 @@
                 "page_text_bytes": (0 ..< pdf.pageCount).map { pdf.page(at: $0)?.string?.utf8.count ?? 0 },
                 "prepare_seconds": prepareSeconds, "print_and_validation_seconds": printSeconds,
                 "app_peak_before_rss_bytes": peakBefore, "app_peak_rss_bytes": peakResidentBytes(),
-            ])
+            ]
+            if sections == 460 {
+                try values.merge(rawPrintFacts(at: rawPrint)) { _, incoming in incoming }
+            }
+            try record(name, values: values)
+        }
+
+        private func rawPrintFacts(at url: URL) throws -> [String: Any] {
+            let raw = try Data(contentsOf: url)
+            let document = try #require(PDFDocument(data: raw))
+            return [
+                "raw_print_pdf_bytes": raw.count,
+                "raw_print_pdf_sha256": sha256(raw),
+                "raw_print_page_count": document.pageCount,
+            ]
         }
 
         private static func scaledMarkdown(sections: Int) -> String {

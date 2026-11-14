@@ -131,6 +131,11 @@ def validate_records(root):
                 or any(type(value) is not int or value < 0 for value in row['page_text_bytes'])
                 or sum(row['page_text_bytes']) == 0):
             raise RuntimeError(name + ' artifact or per-page text evidence is incomplete')
+    raw = root / 'measurements/near-page-limit-raw-print.pdf'
+    if (not raw.is_file() or raw.stat().st_size != near.get('raw_print_pdf_bytes')
+            or digest(raw) != near.get('raw_print_pdf_sha256')
+            or not 0 < near.get('raw_print_page_count', 0) <= 256):
+        raise RuntimeError('The pre-pagination source PDF is not bound to the larger print result')
     for row, field in [(html, 'output_sha256'), (pdf, 'pdf_sha256'),
                        (scaled, 'pdf_sha256'), (near, 'pdf_sha256')]:
         if not re.fullmatch(r'[0-9a-f]{64}', row.get(field, '')):

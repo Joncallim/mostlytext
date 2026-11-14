@@ -118,6 +118,7 @@ enum PDFExportAdapter {
         onPhase?(.validating)
 
         var output = try await validatedPDFBytes(in: scratch, sourceHasContent: sourceHasContent)
+        try recordPrePaginationPrintForProbe(output)
         output = try paginatePrinted(output, printInfo: paperInfo, sourceHasContent: sourceHasContent)
         if output == nil {
             // A successful print operation can still write no marks at all.
@@ -336,5 +337,21 @@ enum PDFExportAdapter {
                 String(localized: "Try again, or split very large documents before exporting.")
             }
         }
+    }
+}
+
+extension PDFExportAdapter {
+    #if EXPORT_BUDGET_PROBE
+        /// Captures accepted printer bytes before paper pagination only in the
+        /// guarded hosted calibration build. Never present in normal apps.
+        static var capturePrePaginationPrint: ((Data) throws -> Void)?
+    #endif
+
+    private static func recordPrePaginationPrintForProbe(_ output: Data?) throws {
+        #if EXPORT_BUDGET_PROBE
+            if let output {
+                try capturePrePaginationPrint?(output)
+            }
+        #endif
     }
 }
