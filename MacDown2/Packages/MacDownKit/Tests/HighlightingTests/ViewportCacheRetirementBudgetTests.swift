@@ -50,16 +50,18 @@ struct ViewportCacheRetirementBudgetTests {
         await session.waitForPendingParse()
         try #require(!session.visibleTokens().isEmpty)
 
-        // A newline within a heading is structural, so this edit must
-        // discard the complete old parse before a new full parse publishes.
+        // A double newline within a heading is outside both bounded edit
+        // selectors, so it retires the complete old cache for a full parse.
         let first = NSRange(location: 5, length: 0)
+        let selectedBefore = session.selectedWindowCount
         let input = DispatchTime.now().uptimeNanoseconds
-        system.textView.insertText("\n", replacementRange: first)
+        system.textView.insertText("\n\n", replacementRange: first)
         let returned = DispatchTime.now().uptimeNanoseconds
         let inputReturnMilliseconds = Double(returned - input) / 1_000_000
         print("VIEWPORT-CACHE-RETIREMENT input_return_ms=\(inputReturnMilliseconds) "
             + "utf8=\(system.textView.string.utf8.count) full=\(session.fullParseCount)")
         #expect(inputReturnMilliseconds < 50, "1 MiB structural input return took \(inputReturnMilliseconds) ms")
+        #expect(session.selectedWindowCount == selectedBefore, "Double newline must retain full-parse fallback")
         #expect(session.visibleTokens().isEmpty, "An old parse must not style new source")
 
         // A second edit while the replacement parse is pending must cancel
@@ -67,7 +69,7 @@ struct ViewportCacheRetirementBudgetTests {
         // teardown after the old cache has been handed to the retire worker.
         system.textView.insertText("#", replacementRange: NSRange(location: 7, length: 0))
         await session.waitForPendingParse()
-        let expected = (original as NSString).replacingCharacters(in: first, with: "\n")
+        let expected = (original as NSString).replacingCharacters(in: first, with: "\n\n")
         let final = (expected as NSString).replacingCharacters(
             in: NSRange(location: 7, length: 0), with: "#"
         )
