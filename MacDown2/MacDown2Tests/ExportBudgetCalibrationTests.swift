@@ -147,9 +147,13 @@
             try await measureScaledPDF(sections: 460, name: "near-page-limit-avoid-breaks")
         }
 
+        @Test func nearPageLimitModalProductionPrintProbe() async throws {
+            try await measureScaledPDF(sections: 460, name: "near-page-limit-modal", modalPrint: true)
+        }
+
         // The guarded probe keeps source, print and artifact bindings together.
         // swiftlint:disable:next function_body_length
-        private func measureScaledPDF(sections: Int, name: String) async throws {
+        private func measureScaledPDF(sections: Int, name: String, modalPrint: Bool = false) async throws {
             _ = try outputDirectory()
             let root = try fixtureDirectory()
             defer { try? FileManager.default.removeItem(at: root) }
@@ -183,7 +187,23 @@
                 PDFSnapshotFallback.capturePrePaginationSnapshot = nil
             }
             let printStarted = ProcessInfo.processInfo.systemUptime
-            try await PDFExportAdapter.export(prepared, to: destination)
+            if modalPrint {
+                let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 600, height: 800),
+                                      styleMask: [.titled], backing: .buffered, defer: false)
+                window.isReleasedWhenClosed = false
+                window.animationBehavior = .none
+                window.makeKeyAndOrderFront(nil)
+                defer { window.orderOut(nil); window.close() }
+                try await PDFExportAdapter.export(
+                    prepared, to: destination, modalWindow: window,
+                    runPrint: { _ in
+                        Issue.record("The modal export unexpectedly used synchronous print")
+                        return false
+                    }
+                )
+            } else {
+                try await PDFExportAdapter.export(prepared, to: destination)
+            }
             let printSeconds = ProcessInfo.processInfo.systemUptime - printStarted
             let data = try Data(contentsOf: destination)
             let pdf = try #require(PDFDocument(data: data))
@@ -193,6 +213,7 @@
             try verifyScaledPDF(pdf, text: text, sections: sections)
             var values: [String: Any] = try [
                 "case": "actual-scaled-webkit-print-pdfkit", "sections": sections,
+                "print_path": modalPrint ? "document-modal" : "synchronous",
                 "source_bytes": sourceData.count, "source_sha256": sha256(sourceData),
                 "prepared_html_bytes": html.utf8.count,
                 "pdf_bytes": data.count, "pdf_sha256": sha256(data), "page_count": pdf.pageCount,
@@ -214,6 +235,30 @@
             try record(name, values: values)
         }
 
+        @Test func oversizedSourceIsRefusedBeforePublication() async throws {
+            _ = try outputDirectory()
+            let root = try fixtureDirectory()
+            defer { try? FileManager.default.removeItem(at: root) }
+            let destination = root.appendingPathComponent("oversized.html")
+            let source = String(repeating: "x", count: Self.sourceLimit + 1)
+            let request = ExportRequest(text: source, sourceGeneration: 1, theme: BundledThemes.light)
+            let started = ProcessInfo.processInfo.systemUptime
+            do {
+                _ = try await ExportService.exportHTML(request, to: .html(url: destination, mode: .selfContained))
+                Issue.record("The production source gate admitted an over-limit document")
+            } catch ExportError.budgetExceeded {
+                #expect(!FileManager.default.fileExists(atPath: destination.path))
+                try record("refusal", values: [
+                    "case": "actual-source-cap-plus-one-refusal", "source_bytes": source.utf8.count,
+                    "source_sha256": sha256(Data(source.utf8)), "output_exists": false,
+                    "elapsed_seconds": ProcessInfo.processInfo.systemUptime - started,
+                    "app_peak_rss_bytes": peakResidentBytes(),
+                ])
+            }
+        }
+    }
+
+    private extension ExportBudgetCalibrationTests {
         private func rawSourceFacts(at url: URL, kind: String) throws -> [String: Any] {
             let raw = try Data(contentsOf: url)
             let document = try #require(PDFDocument(data: raw))
@@ -252,28 +297,6 @@
             #expect(text.utf8.count >= sections * 1400)
             for section in 1 ... sections {
                 #expect(text.contains("Section \(section)\n"))
-            }
-        }
-
-        @Test func oversizedSourceIsRefusedBeforePublication() async throws {
-            _ = try outputDirectory()
-            let root = try fixtureDirectory()
-            defer { try? FileManager.default.removeItem(at: root) }
-            let destination = root.appendingPathComponent("oversized.html")
-            let source = String(repeating: "x", count: Self.sourceLimit + 1)
-            let request = ExportRequest(text: source, sourceGeneration: 1, theme: BundledThemes.light)
-            let started = ProcessInfo.processInfo.systemUptime
-            do {
-                _ = try await ExportService.exportHTML(request, to: .html(url: destination, mode: .selfContained))
-                Issue.record("The production source gate admitted an over-limit document")
-            } catch ExportError.budgetExceeded {
-                #expect(!FileManager.default.fileExists(atPath: destination.path))
-                try record("refusal", values: [
-                    "case": "actual-source-cap-plus-one-refusal", "source_bytes": source.utf8.count,
-                    "source_sha256": sha256(Data(source.utf8)), "output_exists": false,
-                    "elapsed_seconds": ProcessInfo.processInfo.systemUptime - started,
-                    "app_peak_rss_bytes": peakResidentBytes(),
-                ])
             }
         }
     }
