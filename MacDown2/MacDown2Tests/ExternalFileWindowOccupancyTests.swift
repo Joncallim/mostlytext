@@ -289,7 +289,7 @@ struct ExternalFileWindowOccupancyTests {
 }
 
 private extension ExternalFileWindowOccupancyTests {
-    func requireWatcherTransition(
+    private func requireWatcherTransition(
         retired: WatcherIdentity, source: URL, directory: URL, stage: String
     ) async throws {
         try await waitUntil(.seconds(5), "\(stage) retires and reattaches file watcher") {
