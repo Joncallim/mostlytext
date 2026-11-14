@@ -84,7 +84,7 @@ struct MarkdownSectionCache {
         let old = source.substring(with: edit)
         guard Self.safeProseEdit(old: old, replacement: replacement),
               edit.length > 0 || Self.isInteriorWordInsertion(source: source, at: edit.location)
-                || Self.isInteriorSpaceInsertion(source: source, at: edit.location, replacement: replacement)
+              || Self.isInteriorSpaceInsertion(source: source, at: edit.location, replacement: replacement)
         else { return nil }
 
         guard let editIndex = indexOfEdit(edit) else { return nil }
@@ -97,13 +97,14 @@ struct MarkdownSectionCache {
                   paragraph.range.length <= Self.windowLimit
             else { return nil }
             let paragraphText = (entry.content as NSString).substring(with: paragraph.range)
-            let body: String
-            if paragraphText.hasSuffix("\r\n") {
-                body = String(paragraphText.dropLast(2))
+            let body: String = if paragraphText.hasSuffix("\r\n") {
+                // Swift treats CRLF as one Character; drop two UTF-16 units,
+                // preserving the character immediately before the terminator.
+                (paragraphText as NSString).substring(to: (paragraphText as NSString).length - 2)
             } else if paragraphText.hasSuffix("\n") {
-                body = String(paragraphText.dropLast())
+                String(paragraphText.dropLast())
             } else {
-                body = paragraphText
+                paragraphText
             }
             guard Self.safeProseBody(body) else { return nil }
         } else {
@@ -123,6 +124,7 @@ struct MarkdownSectionCache {
                       new: NSRange(location: lower, length: newLength),
                       firstSection: editIndex, lastSection: editIndex)
     }
+
     // swiftlint:enable cyclomatic_complexity
 
     /// Replace cached trees only after a fresh local parse preserves the
@@ -249,17 +251,6 @@ struct MarkdownSectionCache {
         }
     }
 
-    /// Require both neighboring UTF-16 units to be alphanumeric. This also
-    /// refuses surrogate boundaries and word-edge/structural insertions.
-    private static func isInteriorWordInsertion(source: NSString, at location: Int) -> Bool {
-        guard location > 0, location < source.length else { return false }
-        let word = CharacterSet.alphanumerics
-        let left = source.substring(with: NSRange(location: location - 1, length: 1))
-        let right = source.substring(with: NSRange(location: location, length: 1))
-        return left.unicodeScalars.allSatisfy(word.contains)
-            && right.unicodeScalars.allSatisfy(word.contains)
-    }
-
     private static func paragraph(in node: Node, overlapping edit: NSRange) -> Node? {
         guard !node.hasError else { return nil }
         if node.nodeType == "paragraph" {
@@ -298,50 +289,6 @@ struct MarkdownSectionCache {
               NSIntersectionRange(globalRange(at: lower), region).length > 0
         else { return nil }
         return lower
-    }
-}
-
-private extension MarkdownSectionCache {
-    static func isInteriorSpaceInsertion(source: NSString, at location: Int, replacement: String) -> Bool {
-        guard location > 0, location < source.length,
-              !replacement.isEmpty, replacement.unicodeScalars.allSatisfy({ $0 == " " || $0 == "\t" })
-        else { return false }
-        let word = CharacterSet.alphanumerics
-        let left = source.substring(with: NSRange(location: location - 1, length: 1))
-        let right = source.substring(with: NSRange(location: location, length: 1))
-        return left.unicodeScalars.allSatisfy(word.contains)
-            && right.unicodeScalars.allSatisfy({ word.contains($0) || $0 == " " || $0 == "\t" })
-    }
-
-    static func safeProseEdit(old: String, replacement: String) -> Bool {
-        let word = CharacterSet.alphanumerics.union(.nonBaseCharacters)
-        return (old + replacement).unicodeScalars.allSatisfy({ word.contains($0) || $0 == " " || $0 == "\t" })
-    }
-
-    /// Links, references, escapes, entities and block syntax can depend on
-    /// text outside the local slice. Keep them on the full-parse path.
-    static func safeProseBody(_ body: String) -> Bool {
-        let word = CharacterSet.alphanumerics.union(.nonBaseCharacters)
-        return body.unicodeScalars.allSatisfy({ word.contains($0) || $0 == " " || $0 == "\t"
-            || $0 == "*" || $0 == "_" || $0 == "`" })
-    }
-
-    static func isBoundedHeadingEdit(entry: Section, edit: NSRange, source: NSString) -> Bool {
-        let range = entry.globalRange
-        guard entry.node.nodeType == "section", range.length > 0, range.length <= windowLimit,
-              range.location <= edit.location, NSMaxRange(edit) <= NSMaxRange(range)
-        else { return false }
-        let slice = source.substring(with: range)
-        guard let lineEnd = slice.firstIndex(of: "\n") else { return false }
-        let line = String(slice[..<lineEnd])
-        let leadingHashes = line.prefix(while: { $0 == "#" }).count
-        guard (1 ... 6).contains(leadingHashes), line.dropFirst(leadingHashes).first == " ",
-              slice[lineEnd...].unicodeScalars.allSatisfy({ $0 == "\n" || $0 == "\r" }),
-              safeProseBody(String(line.dropFirst(leadingHashes + 1)))
-        else { return false }
-        let contentStart = range.location + leadingHashes + 1
-        let contentEnd = range.location + (line as NSString).length
-        return edit.location > contentStart && NSMaxRange(edit) < contentEnd
     }
 }
 
@@ -391,7 +338,12 @@ extension MarkdownSectionCache {
 
         if replacement == "\n", edit.length == 0 {
             // An interior word split cannot start another Markdown block.
+            // Require a blank line after the original heading: otherwise
+            // its new second line could combine with a following setext
+            // underline outside this cache entry.
+            let following = content.substring(from: NSMaxRange(line))
             guard heading.unicodeScalars.allSatisfy(plain.contains),
+                  following.hasPrefix("\n") || following.hasPrefix("\r\n"),
                   localEdit.location > markerCount + 1,
                   localEdit.location < (prefix as NSString).length,
                   Self.isInteriorWordInsertion(source: content, at: localEdit.location)

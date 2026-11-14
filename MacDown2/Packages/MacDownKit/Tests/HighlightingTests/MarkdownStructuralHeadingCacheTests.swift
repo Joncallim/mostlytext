@@ -79,6 +79,8 @@ struct MarkdownStructuralHeadingCacheTests {
             ("# alphaStart heading\n\nbody text\n\n", "# ", "\n"),
             ("# alphaStart heading\n\nbody text\n\n", "alphaStart", "\n##"),
             ("# alpha`Start heading\n\nbody text\n\n", "alpha`Start", "\n"),
+            ("# alphaStart\n===\n", "alphaStart", "\n"),
+            ("# alphaStart\n---\n", "alphaStart", "\n"),
             ("body text\r\n\r\n", "\r\n", "\n"),
         ] {
             let old = source as NSString
