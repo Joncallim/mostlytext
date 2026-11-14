@@ -152,10 +152,11 @@ struct MarkdownSectionCache {
         for index in 0 ..< root.childCount {
             guard let node = root.child(at: index) else { throw CacheError.snapshotUnavailable }
             let sectionIndex = window.firstSection + index
-            guard node.nodeType == sections[sectionIndex].node.nodeType else {
-                throw CacheError.sectionShapeChanged
-            }
-            replacements.append(Section(node: node, snapshot: snapshot, content: content,
+            guard let replacementNode = Self.replacementNode(
+                node, replacing: sections[sectionIndex].node,
+                contentLength: (content as NSString).length, singleEntry: expectedCount == 1
+            ) else { throw CacheError.sectionShapeChanged }
+            replacements.append(Section(node: replacementNode, snapshot: snapshot, content: content,
                                         offset: window.new.location - shifts.displacement(at: sectionIndex)))
         }
         sections.replaceSubrange(window.firstSection ... window.lastSection, with: replacements)

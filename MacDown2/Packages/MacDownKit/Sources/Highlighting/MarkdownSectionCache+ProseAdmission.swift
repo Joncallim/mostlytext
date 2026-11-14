@@ -1,6 +1,24 @@
 import Foundation
+import SwiftTreeSitter
 
 extension MarkdownSectionCache {
+    /// A standalone paragraph parse has a synthetic outer section. Admit it
+    /// only when that wrapper contains one error-free, full-width paragraph;
+    /// the retained snapshot still supplies inline and injection captures.
+    static func replacementNode(_ node: Node, replacing prior: Node,
+                                contentLength: Int, singleEntry: Bool) -> Node? {
+        if node.nodeType == prior.nodeType {
+            return node
+        }
+        guard singleEntry, prior.nodeType == "paragraph", node.nodeType == "section",
+              !node.hasError, node.range == NSRange(location: 0, length: contentLength),
+              node.childCount == 1, let paragraph = node.child(at: 0),
+              paragraph.nodeType == "paragraph", !paragraph.hasError,
+              paragraph.range == node.range
+        else { return nil }
+        return paragraph
+    }
+
     /// Require both neighboring UTF-16 units to be alphanumeric. This also
     /// refuses surrogate boundaries and word-edge/structural insertions.
     static func isInteriorWordInsertion(source: NSString, at location: Int) -> Bool {
@@ -29,11 +47,13 @@ extension MarkdownSectionCache {
     }
 
     /// Links, references, escapes, entities and block syntax can depend on
-    /// text outside the local slice. Keep them on the full-parse path.
+    /// text outside the local slice. Emoji-presentation scalars are ordinary
+    /// inline text; unlike the broader symbols set, this excludes ASCII
+    /// Markdown/math delimiters such as `$`, `#`, and `*`.
     static func safeProseBody(_ body: String) -> Bool {
         let word = CharacterSet.alphanumerics.union(.nonBaseCharacters)
         return body.unicodeScalars.allSatisfy { word.contains($0) || $0 == " " || $0 == "\t"
-            || $0 == "*" || $0 == "_" || $0 == "`"
+            || $0 == "*" || $0 == "_" || $0 == "`" || $0.properties.isEmojiPresentation
         }
     }
 
