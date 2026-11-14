@@ -133,7 +133,7 @@ jobs:
               assert case['input_to_display_readback_ms'] >= case['input_to_storage_return_ms'] >= 0
               assert case['input_to_display_readback_ms'] >= case['input_to_display_return_ms'] >= 0
               assert case['display_return_to_bitmap_readback_ms'] >= 0
-              assert case['pixel_changed'] or case['case'] == 'crlf-replacement'
+              assert case['pixel_changed'] or case['case'] in {'crlf-replacement', 'unicode-replacement'}
               assert case['under_50_ms'] == (case['input_to_display_readback_ms'] < 50)
           records['display'] = display
           records['display_budget_failures'] = [case['case'] for case in display

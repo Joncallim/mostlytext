@@ -153,10 +153,10 @@ struct ViewportDisplayBudgetBenchmarkTests {
             try #require(accentPixels > 0, "No oracle accent glyph pixels in mounted display: \(edit.name)")
             try #require(afterPixels.nonBackgroundSamples > 2, "Blank edited-glyph display: \(edit.name)")
             let pixelChanged = beforePixels.digest != afterPixels.digest
-            // CRLF and LF are different source/parse states but can draw the
-            // same glyphs. Its oracle accent and nonblank display checks still
-            // apply; a pixel-delta requirement would reject correct rendering.
-            if edit.name != "crlf-replacement" {
+            // CRLF/LF and NFC/NFD are different source/parse states but can
+            // draw identical glyphs. Oracle accent and nonblank display checks
+            // still apply; a pixel-delta requirement would reject correct rendering.
+            if edit.name != "crlf-replacement", edit.name != "unicode-replacement" {
                 try #require(pixelChanged, "Mounted display pixels did not change after input: \(edit.name)")
             }
             try #require(Array(system.textView.string.utf16) == Array(expectedSource.utf16),
