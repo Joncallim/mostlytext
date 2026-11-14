@@ -6,6 +6,8 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/viewport-budget-measurement.yml'
+      - 'MacDown2/Packages/MacDownKit/Sources/FileCore/String+ExactEquality.swift'
+      - 'MacDown2/Packages/MacDownKit/Sources/Highlighting/**'
       - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownViewportBudgetBenchmarkTests.swift'
       - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportHighlighterBudgetBenchmarkTests.swift'
   workflow_dispatch:
@@ -46,6 +48,7 @@ jobs:
           sw_vers > "$RUNNER_TEMP/viewport-budget/macos.txt"
           shasum -a 256 \
             MacDown2/Packages/MacDownKit/Package.resolved \
+            MacDown2/Packages/MacDownKit/Sources/FileCore/String+ExactEquality.swift \
             MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownViewportBudgetBenchmarkTests.swift \
             MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportHighlighterBudgetBenchmarkTests.swift \
             .github/workflows/viewport-budget-measurement.yml \

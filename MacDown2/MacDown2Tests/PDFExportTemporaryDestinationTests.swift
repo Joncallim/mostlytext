@@ -1,3 +1,4 @@
+import AppKit
 import ExportService
 import Foundation
 @testable import MacDown2
@@ -41,7 +42,13 @@ struct PDFExportTemporaryDestinationTests {
 
         let pdfAdmission = try ExportDestinationAdmission(capturing: pdfURL, protecting: [sourceURL])
         let prepared = try await ExportService.prepare(request, target: .pdf(url: pdfURL))
-        try await PDFExportAdapter.export(prepared, to: pdfURL, admission: pdfAdmission)
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 600, height: 800),
+                              styleMask: [.titled], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        window.animationBehavior = .none
+        window.makeKeyAndOrderFront(nil)
+        defer { window.orderOut(nil); window.close() }
+        try await PDFExportAdapter.export(prepared, to: pdfURL, admission: pdfAdmission, modalWindow: window)
         let pdfBytes = try Data(contentsOf: pdfURL)
         let pdf = try #require(PDFDocument(data: pdfBytes))
         #expect(pdf.pageCount == 1)

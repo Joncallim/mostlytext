@@ -14,8 +14,8 @@ import sys
 from preview_compiled_inputs import capture, require_owned_phase, verify
 
 TESTS = {
-    'vectorSnapshotIsPaginatedWithoutLosingSelectableText',
-    'vectorSnapshotMovesAnIntersectedHeadingToTheNextPage',
+    'tallVectorSnapshotIsRefusedBeforePublication',
+    'tallVectorWithHeadingAtPaperCutIsRefused',
     'printDestinationIsConfiguredBeforeTheOperationStarts',
     'contentlessPDFIsRejectedForNonemptyDocument',
     'graphicsSetupAndEmptyTextDoNotCountAsPrintedContent',
@@ -24,6 +24,7 @@ TESTS = {
     'aCancelledNavigationDoesNotWaitForWebKitOrTheThirtySecondWatchdog',
     'aCancelledPrintResultPreservesTheExistingDestination',
     'exportingALongDocumentProducesARealMultiPagePDF',
+    'unusablePrintOversizedSnapshotPreservesExistingDestination',
     'exportedPDFReplacesAnyExistingFileAtomically',
 }
 TEMP_TEST = 'exportingHTMLThenPDFPreservesSourceAndPublishesPDF'
@@ -48,8 +49,8 @@ def validate_execution(log, identity, status):
     passed = re.findall(r'Test ([A-Za-z0-9_]+)\([^\n]*\) passed', log)
     if set(passed) != TESTS or len(passed) != len(TESTS):
         raise ValueError('Every PDF adapter function must execute once and pass')
-    if not re.search(r'Test run with 11 tests in 2 suites passed', log):
-        raise ValueError('The complete eleven-function PDF selection did not pass')
+    if not re.search(r'Test run with 12 tests in 2 suites passed', log):
+        raise ValueError('The complete twelve-function PDF selection did not pass')
     if not re.search(r'Suite PDFExportAdapterTests passed', log):
         raise ValueError('The actual PDF adapter suite did not pass')
     if not re.search(r'Suite PDFExportCancellationTests passed', log):
@@ -152,7 +153,7 @@ def check_host(root):
         raise RuntimeError('Untrusted PDF qualification event')
 
 
-def validate_summary(summary, count=11):
+def validate_summary(summary, count=12):
     expected = {'totalTestCount': count, 'passedTests': count, 'failedTests': 0,
                 'skippedTests': 0, 'expectedFailures': 0}
     if any(type(summary.get(k)) is not int or summary[k] != v for k, v in expected.items()):

@@ -1,4 +1,4 @@
-name: Native PDF canvas and page-boundary regression controls
+name: Native PDF snapshot admission and source controls
 permissions:
   contents: read
 on:
@@ -35,11 +35,11 @@ jobs:
           python3 .github/scripts/test-actual-export-pdf-readback.py
           python3 .github/scripts/test-pdf-snapshot-result.py
           python3 .github/scripts/read-pdf-snapshot-frames.py prepare
-      - name: Compile private comparison with unchanged product pagination
+      - name: Compile private WebKit check with production paper-only admission
         run: |
           set -euo pipefail
           xcrun swiftc -parse-as-library -warnings-as-errors -swift-version 6 -strict-concurrency=complete .github/hosted-export-acceptance/ReadSnapshotFrames.swift MacDown2/MacDown2/PDFSnapshotFallback.swift MacDown2/Packages/MacDownKit/Sources/ExportService/PDFCanvasStylesheet.swift -o "$RUNNER_TEMP/mostlytext-focus/read-snapshot-frames"
-      - name: Observe five original controls and two scrollbar-free prototypes once
+      - name: Check seven fresh WebKit snapshots against paper-only admission
         run: python3 .github/scripts/read-pdf-snapshot-frames.py observe
       - uses: actions/upload-artifact@v4
         if: always()

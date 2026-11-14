@@ -1,38 +1,43 @@
 # Near-page-limit PDF calibration
 
-The current Release export calibration has a 200-section fixture that prints
-103 paper-sized pages from 305,964 Markdown bytes on the hosted macOS 26.6
-runner. It caught the earlier oversized-page pagination defect and its first
-clipping repair. The output is still well below the 256-page refusal bound,
-so that measurement alone does not characterize print time, memory and source
-retention nearer the page limit.
+## Owner summary
 
-This follow-up keeps the original 200-section control and adds a 460-section
-actual WebKit/AppKit print through `ExportService`, `PDFExportAdapter` and
-PDFKit on the same guarded Release runner. It requires 200–256 physical paper
-pages, every source heading in extracted text, retained PDF bytes/digest,
-per-page text lengths, prepare/print timings and app/WebKit high-water samples.
-The exact-head verifier requires five distinct successful test cases and both
-retained PDF artifacts. The hosted artifact permits an independent visual and
-text-boundary review before deciding whether the 256-page policy is safe.
+Keep one large document-modal PDF export as a recurring Release regression just
+below the existing 256-page limit. The earlier 200-section probe was too small
+to characterize this boundary, and an aggregate sentence count concealed one
+missing sentence balanced by a duplicate. The 430-section modal diagnostic
+produced 252 paper pages with all 10,320 sentences, 24 within each section.
+This change makes those per-section checks part of the guarded calibration.
+It does not set the final memory or PDF byte budget or qualify a signed app.
 
-The first hosted run completed all five cases but failed that independent
-review: the 236-page output contains clipped/fragmented body text at page
-transitions despite all 460 headings surviving. Reinspection of the exact
-PR #273 artifact also found the same defect in its 200-section result; its
-aggregate 4,800-sentence count hid one missing and one duplicated section
-sentence. The next diagnostic captures whichever pre-pagination PDF sources
-the actual path used: validated AppKit print and/or WebKit vector snapshot.
-The hooks compile only under `EXPORT_BUDGET_PROBE`; the normal Release app has
-no capture callback or changed export result. Comparing those source pages
-with the retained paper-page result will locate whether the source PDF seam
-or our pagination introduced the damage. Both failed visual results remain
-preserved.
+## Architecture and evidence
 
-This is a near-page-count calibration, not a near-256-MiB PDF or a complete
-resource-budget freeze. The 20-case HTML/resource ramp retains its measured
-8/24/32 MiB source, 8/24/32 MiB single-resource, 512 distinct resource,
-65,536 occurrence and near-128-MiB final HTML controls. On that earlier
-runner, the near-final HTML case used 834 MiB app peak RSS and the aggregate
-64-MiB case 664 MiB; those are fixture/cohort observations, not a memory
-guarantee for every export. The final signed-app journey remains separate.
+The production app's ordinary window-backed journey uses document-modal AppKit
+printing. [PR #278](https://github.com/Joncallim/mostlytext/pull/278) refuses
+oversized vector fallback pages because the old slicer could duplicate searchable
+text and could not recover glyphs clipped at WebKit's source-page boundary.
+This branch carries that policy and changes only the private Release test and
+its exact-source verifier. No new production hook or publication path is added.
+
+The earlier [six-case diagnostic](https://github.com/Joncallim/mostlytext/actions/runs/43547645299)
+showed the 430-section document-modal path succeeds at 252 pages, 547,594 PDF
+bytes and 3.2218 seconds print/validation, with test-host peak RSS 418,250,752
+bytes and sampled app peak 441,253,888 bytes. Independent PDF inspection found
+all 430 headings in order and exactly 24 complete sentences under each heading.
+The same run's 460-section non-modal artifact had 11,037/11,040 sentences with
+several wrong per-section counts, despite an apparently plausible 236-page
+result. A separate 460-section modal print produced 269 complete pages and
+correctly refused the 256-page cap. These outcomes justify using 430 modal as
+the positive near-boundary case and keeping oversized non-modal sources on the
+fail-closed path.
+
+## Qualification and limits
+
+The hosted verifier requires five distinct passing cases: self-contained HTML,
+short modal PDF, 200-section modal PDF, 430-section modal PDF, and source-cap
+refusal. It binds the Release executable, committed inputs, selected tests,
+run outcome, output digests, page geometry, exact phrase counts and memory
+samples. The test checks every section separately, so one missing phrase cannot
+be masked by a duplicate in another section. This is a fixture-specific sample;
+the final export resource policy, broader visual corpus and exact signed RC
+remain in issue #11.

@@ -1,12 +1,12 @@
 import AppKit
 import CoreGraphics
 import Foundation
-import PDFKit
 import WebKit
 
 /// A bounded local fallback when WKWebView's AppKit print operation completes
-/// without a usable PDF. WebKit supplies vector PDF content; Core Graphics
-/// divides its tall page into paper-sized pages without rasterizing text.
+/// without a usable PDF. Only an already paper-sized vector result is safe to
+/// publish: clipping a taller source page duplicates search text and can hide
+/// glyphs already cut off at WebKit's vector-page boundary.
 @MainActor
 enum PDFSnapshotFallback {
     static let maxPages = 256
@@ -41,9 +41,6 @@ enum PDFSnapshotFallback {
     ) async throws -> Data {
         let waiter = PDFSnapshotWaiter()
         let data = try await waiter.capture(webView, timeout: captureTimeout)
-        #if EXPORT_BUDGET_PROBE
-            try capturePrePaginationSnapshot?(data)
-        #endif
         try Task.checkCancellation()
         return try paginate(data, printInfo: printInfo, maxBytes: maxBytes)
     }
@@ -71,12 +68,11 @@ enum PDFSnapshotFallback {
         }) {
             return data
         }
-        guard let readable = PDFDocument(data: data), readable.pageCount == pages.count
-        else { throw FallbackError.invalidSnapshot }
-        let slices = try paperSlices(pages, readable: readable,
-                                     printableWidth: printableWidth, printableHeight: printableHeight)
-
-        return try render(slices, sourceBytes: data.count, printInfo: printInfo, maxBytes: maxBytes)
+        // Re-embedding a tall source page under a paper clip repeats its full
+        // text stream on every output page. PDF search then sees duplicates,
+        // and WebKit may already have clipped glyphs at a 14,400-point seam.
+        // Only a direct paper-sized vector PDF can be published faithfully.
+        throw FallbackError.invalidGeometry
     }
 
     private static func sourcePages(in document: CGPDFDocument) throws -> [CGPDFPage] {
@@ -88,147 +84,6 @@ enum PDFSnapshotFallback {
             guard box.width.isFinite, box.height.isFinite, box.width > 0, box.height > 0
             else { throw FallbackError.invalidGeometry }
             return page
-        }
-    }
-
-    private static func paperSlices(
-        _ pages: [CGPDFPage], readable: PDFDocument,
-        printableWidth: CGFloat, printableHeight: CGFloat
-    ) throws -> [PageSlice] {
-        var slices: [PageSlice] = []
-        var count = 0
-        for (index, page) in pages.enumerated() {
-            try Task.checkCancellation()
-            guard let readablePage = readable.page(at: index) else { throw FallbackError.invalidSnapshot }
-            let box = page.getBoxRect(.mediaBox)
-            let scale = printableWidth / box.width
-            let sliceHeight = printableHeight / scale
-            guard scale.isFinite, scale > 0, sliceHeight.isFinite, sliceHeight > 0
-            else { throw FallbackError.invalidGeometry }
-            let ranges = try pageRanges(on: readablePage, sourceBox: box,
-                                        sliceHeight: sliceHeight, scale: scale)
-            guard count <= maxPages - ranges.count else { throw FallbackError.tooManyPages }
-            count += ranges.count
-            slices.append(PageSlice(page: page, geometry: SliceGeometry(
-                sourceBox: box, scale: scale, sliceHeight: sliceHeight, ranges: ranges
-            )))
-        }
-        return slices
-    }
-
-    private static func render(
-        _ slices: [PageSlice], sourceBytes: Int, printInfo: NSPrintInfo, maxBytes: Int
-    ) throws -> Data {
-        // CGContext may embed the source page as a form on each output page.
-        // Bound this conservative upper estimate before creating any file.
-        let pageCount = slices.reduce(0) { $0 + $1.geometry.ranges.count }
-        let estimated = sourceBytes.multipliedReportingOverflow(by: pageCount)
-        guard !estimated.overflow, estimated.partialValue <= maxBytes else {
-            throw FallbackError.tooLarge
-        }
-
-        let output = NSMutableData()
-        var paperBox = CGRect(origin: .zero, size: printInfo.paperSize)
-        guard let consumer = CGDataConsumer(data: output as CFMutableData),
-              let context = CGContext(consumer: consumer, mediaBox: &paperBox, nil)
-        else { throw FallbackError.cannotWrite }
-
-        for slice in slices {
-            try drawPages(in: context, from: slice.page, printInfo: printInfo, geometry: slice.geometry)
-        }
-        context.closePDF()
-
-        guard output.length > 0, output.length <= maxBytes
-        else { throw FallbackError.tooLarge }
-        return output as Data
-    }
-
-    private struct SliceGeometry {
-        let sourceBox: CGRect
-        let scale: CGFloat
-        let sliceHeight: CGFloat
-        let ranges: [ClosedRange<CGFloat>]
-    }
-
-    private struct PageSlice {
-        let page: CGPDFPage
-        let geometry: SliceGeometry
-    }
-
-    /// Move a cut just above any line it would bisect. `createPDF` supplies a
-    /// single tall PDF page, so print CSS cannot paginate it for us. Inspect
-    /// only a narrow band around each proposed cut rather than materializing
-    /// selections for the entire document.
-    private static func pageRanges(
-        on page: PDFPage, sourceBox: CGRect, sliceHeight: CGFloat, scale: CGFloat
-    ) throws -> [ClosedRange<CGFloat>] {
-        // Probe a wider band than the final displacement. A narrow PDFKit
-        // selection can miss the edge of a glyph near the proposed cut;
-        // moving by the entire probe width can land inside the next line.
-        let safety = 24 / scale
-        let padding = 3 / scale
-        var top = sourceBox.maxY
-        var ranges: [ClosedRange<CGFloat>] = []
-        while top > sourceBox.minY {
-            try Task.checkCancellation()
-            guard ranges.count < maxPages else { throw FallbackError.tooManyPages }
-            let targetBottom = max(sourceBox.minY, top - sliceHeight)
-            var bottom = targetBottom
-            if targetBottom > sourceBox.minY {
-                let band = CGRect(
-                    x: sourceBox.minX,
-                    y: targetBottom - safety,
-                    width: sourceBox.width,
-                    height: 2 * safety
-                )
-                if let selection = page.selection(for: band) {
-                    for line in selection.selectionsByLine() {
-                        let bounds = line.bounds(for: page)
-                        if bounds.minY < targetBottom + safety, bounds.maxY > targetBottom - safety {
-                            bottom = max(bottom, bounds.maxY + padding)
-                        }
-                    }
-                }
-            }
-            // An unusually tall element cannot be moved indefinitely; fail
-            // rather than create near-empty pages or loop without progress.
-            guard bottom <= top - min(sliceHeight / 2, top - sourceBox.minY) else {
-                throw FallbackError.invalidGeometry
-            }
-            ranges.append(bottom ... top)
-            top = bottom
-        }
-        return ranges
-    }
-
-    private static func drawPages(
-        in context: CGContext,
-        from sourcePage: CGPDFPage,
-        printInfo: NSPrintInfo,
-        geometry: SliceGeometry
-    ) throws {
-        let printableWidth = printInfo.paperSize.width - printInfo.leftMargin - printInfo.rightMargin
-        let printableHeight = geometry.sliceHeight * geometry.scale
-        for range in geometry.ranges {
-            try Task.checkCancellation()
-            context.beginPDFPage(nil)
-            context.saveGState()
-            let usedHeight = (range.upperBound - range.lowerBound) * geometry.scale
-            context.clip(to: CGRect(
-                x: printInfo.leftMargin,
-                y: printInfo.bottomMargin + printableHeight - usedHeight,
-                width: printableWidth,
-                height: usedHeight
-            ))
-            context.translateBy(x: printInfo.leftMargin, y: printInfo.bottomMargin + printableHeight)
-            context.scaleBy(x: geometry.scale, y: geometry.scale)
-            context.translateBy(
-                x: -geometry.sourceBox.minX,
-                y: -range.upperBound
-            )
-            context.drawPDFPage(sourcePage)
-            context.restoreGState()
-            context.endPDFPage()
         }
     }
 
@@ -258,13 +113,6 @@ enum PDFSnapshotFallback {
         }
     }
 }
-
-#if EXPORT_BUDGET_PROBE
-    extension PDFSnapshotFallback {
-        /// Saves the source vector PDF only in the guarded Release calibration.
-        static var capturePrePaginationSnapshot: ((Data) throws -> Void)?
-    }
-#endif
 
 @MainActor
 private final class PDFSnapshotWaiter {

@@ -63,6 +63,15 @@
             return root
         }
 
+        private func printWindow() -> NSWindow {
+            let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 600, height: 800),
+                                  styleMask: [.titled], backing: .buffered, defer: false)
+            window.isReleasedWhenClosed = false
+            window.animationBehavior = .none
+            window.makeKeyAndOrderFront(nil)
+            return window
+        }
+
         @Test func repeatedImageHTMLUsesActualExportService() async throws {
             _ = try outputDirectory()
             let root = try fixtureDirectory()
@@ -115,7 +124,9 @@
             let preparedSeconds = ProcessInfo.processInfo.systemUptime - started
             let html = try await PDFExportAdapter.hardenedHTML(from: prepared)
             let printStarted = ProcessInfo.processInfo.systemUptime
-            try await PDFExportAdapter.export(prepared, to: destination)
+            let window = printWindow()
+            defer { window.orderOut(nil); window.close() }
+            try await PDFExportAdapter.export(prepared, to: destination, modalWindow: window)
             let printSeconds = ProcessInfo.processInfo.systemUptime - printStarted
             let data = try Data(contentsOf: destination)
             let pdf = try #require(PDFDocument(data: data))
@@ -124,7 +135,8 @@
             #expect(text.contains("BUDGETSTART"))
             #expect(text.contains("BUDGETEND"))
             try record("pdf", values: [
-                "case": "actual-webkit-print-pdfkit", "source_bytes": source.utf8.count,
+                "case": "actual-webkit-print-pdfkit", "print_path": "document-modal",
+                "source_bytes": source.utf8.count,
                 "source_sha256": sha256(Data(source.utf8)), "prepared_html_bytes": html.utf8.count,
                 "pdf_bytes": data.count, "pdf_sha256": sha256(data), "page_count": pdf.pageCount,
                 "prepare_seconds": preparedSeconds, "print_and_validation_seconds": printSeconds,
@@ -136,17 +148,13 @@
             try await measureScaledPDF(sections: 200, name: "scaled-pdf")
         }
 
-        @Test func nearPageLimitWebKitPrintAndPDFKitReadback() async throws {
-            try await measureScaledPDF(sections: 460, name: "near-page-limit-pdf")
+        @Test func nearPageLimitModalPrintPreservesEverySection() async throws {
+            try await measureScaledPDF(sections: 430, name: "near-page-limit-modal")
         }
 
-        @Test func nearPageLimitModalProductionPrintProbe() async throws {
-            try await measureScaledPDF(sections: 430, name: "near-page-limit-modal", modalPrint: true)
-        }
-
-        // The guarded probe keeps source, print and artifact bindings together.
-        // swiftlint:disable:next function_body_length
-        private func measureScaledPDF(sections: Int, name: String, modalPrint: Bool = false) async throws {
+        /// The same document-modal production route measures both the ordinary
+        /// scale and the largest qualified sample below the 256-page limit.
+        private func measureScaledPDF(sections: Int, name: String) async throws {
             _ = try outputDirectory()
             let root = try fixtureDirectory()
             defer { try? FileManager.default.removeItem(at: root) }
@@ -165,38 +173,10 @@
             let prepared = try await ExportService.prepare(request, target: .pdf(url: destination))
             let prepareSeconds = ProcessInfo.processInfo.systemUptime - started
             let html = try await PDFExportAdapter.hardenedHTML(from: prepared)
-            let rawPrint = try outputDirectory().appendingPathComponent(name + "-raw-print.pdf")
-            let rawSnapshot = try outputDirectory().appendingPathComponent(name + "-raw-snapshot.pdf")
-            if sections >= 430 {
-                PDFExportAdapter.capturePrePaginationPrint = { data in
-                    try data.write(to: rawPrint, options: .atomic)
-                }
-                PDFSnapshotFallback.capturePrePaginationSnapshot = { data in
-                    try data.write(to: rawSnapshot, options: .atomic)
-                }
-            }
-            defer {
-                PDFExportAdapter.capturePrePaginationPrint = nil
-                PDFSnapshotFallback.capturePrePaginationSnapshot = nil
-            }
             let printStarted = ProcessInfo.processInfo.systemUptime
-            if modalPrint {
-                let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 600, height: 800),
-                                      styleMask: [.titled], backing: .buffered, defer: false)
-                window.isReleasedWhenClosed = false
-                window.animationBehavior = .none
-                window.makeKeyAndOrderFront(nil)
-                defer { window.orderOut(nil); window.close() }
-                try await PDFExportAdapter.export(
-                    prepared, to: destination, modalWindow: window,
-                    runPrint: { _ in
-                        Issue.record("The modal export unexpectedly used synchronous print")
-                        return false
-                    }
-                )
-            } else {
-                try await PDFExportAdapter.export(prepared, to: destination)
-            }
+            let window = printWindow()
+            defer { window.orderOut(nil); window.close() }
+            try await PDFExportAdapter.export(prepared, to: destination, modalWindow: window)
             let printSeconds = ProcessInfo.processInfo.systemUptime - printStarted
             let data = try Data(contentsOf: destination)
             let pdf = try #require(PDFDocument(data: data))
@@ -204,16 +184,13 @@
             let retainedPDF = try outputDirectory().appendingPathComponent(name + "-output.pdf")
             try data.write(to: retainedPDF, options: .atomic)
             try verifyScaledPDF(pdf, text: text, sections: sections)
-            var completePhraseCount: Int?
-            if modalPrint {
-                let phrase = "The larger print fixture retains searchable text across pages."
-                let normalized = text.split(whereSeparator: \.isWhitespace).joined(separator: " ")
-                completePhraseCount = normalized.components(separatedBy: phrase).count - 1
-                #expect(completePhraseCount == sections * 24)
-            }
-            var values: [String: Any] = try [
+            let phrase = "The larger print fixture retains searchable text across pages."
+            let completePhrases = text.split(whereSeparator: \.isWhitespace).joined(separator: " ")
+                .components(separatedBy: phrase).count - 1
+            #expect(completePhrases == sections * 24)
+            try record(name, values: [
                 "case": "actual-scaled-webkit-print-pdfkit", "sections": sections,
-                "print_path": modalPrint ? "document-modal" : "synchronous",
+                "print_path": "document-modal", "complete_phrase_count": completePhrases,
                 "source_bytes": sourceData.count, "source_sha256": sha256(sourceData),
                 "prepared_html_bytes": html.utf8.count,
                 "pdf_bytes": data.count, "pdf_sha256": sha256(data), "page_count": pdf.pageCount,
@@ -221,21 +198,52 @@
                 "page_text_bytes": (0 ..< pdf.pageCount).map { pdf.page(at: $0)?.string?.utf8.count ?? 0 },
                 "prepare_seconds": prepareSeconds, "print_and_validation_seconds": printSeconds,
                 "app_peak_before_rss_bytes": peakBefore, "app_peak_rss_bytes": peakResidentBytes(),
-            ]
-            if let completePhraseCount {
-                values["complete_phrase_count"] = completePhraseCount
+            ])
+        }
+
+        private static func scaledMarkdown(sections: Int) -> String {
+            var source = "# BUDGETSCALESTART\n\n![pixel](pixel.png)\n\n"
+            for section in 1 ... sections {
+                source += "## Section \(section)\n\n"
+                source += String(
+                    repeating: "The larger print fixture retains searchable text across pages. ",
+                    count: 24
+                )
+                source += "\n\n"
             }
-            if sections >= 430 {
-                var sources: [String] = []
-                for (kind, url) in [("print", rawPrint), ("snapshot", rawSnapshot)]
-                    where FileManager.default.fileExists(atPath: url.path) {
-                    try values.merge(rawSourceFacts(at: url, kind: kind)) { _, incoming in incoming }
-                    sources.append(kind)
-                }
-                #expect(!sources.isEmpty)
-                values["raw_source_kinds"] = sources
+            return source + "## BUDGETSCALEEND\n\nFinal text.\n"
+        }
+
+        private func verifyScaledPDF(_ pdf: PDFDocument, text: String, sections: Int) throws {
+            #expect(pdf.pageCount >= (sections == 430 ? 200 : 20))
+            #expect(pdf.pageCount <= PDFSnapshotFallback.maxPages)
+            let paper = NSPrintInfo().paperSize
+            for index in 0 ..< pdf.pageCount {
+                let page = try #require(pdf.page(at: index))
+                let bounds = page.bounds(for: .mediaBox)
+                #expect(abs(bounds.width - paper.width) < 1)
+                #expect(abs(bounds.height - paper.height) < 1)
             }
-            try record(name, values: values)
+            #expect(text.contains("BUDGETSCALESTART"))
+            #expect(text.contains("BUDGETSCALEEND"))
+            #expect(text.utf8.count >= sections * 1400)
+            for section in 1 ... sections {
+                #expect(text.contains("Section \(section)\n"))
+            }
+            let headings = try NSRegularExpression(pattern: #"Section ([0-9]+)\n"#)
+                .matches(in: text, range: NSRange(location: 0, length: (text as NSString).length))
+            #expect(headings.count == sections)
+            let source = text as NSString
+            let phrase = "The larger print fixture retains searchable text across pages."
+            for (index, match) in headings.enumerated() {
+                let number = Int(source.substring(with: match.range(at: 1)))
+                #expect(number == index + 1)
+                let end = index + 1 < headings.count ? headings[index + 1].range.location : source.length
+                let section = source.substring(with: NSRange(location: match.range.upperBound,
+                                                             length: end - match.range.upperBound))
+                let normalized = section.split(whereSeparator: \.isWhitespace).joined(separator: " ")
+                #expect(normalized.components(separatedBy: phrase).count - 1 == 24)
+            }
         }
 
         @Test func oversizedSourceIsRefusedBeforePublication() async throws {
@@ -257,49 +265,6 @@
                     "elapsed_seconds": ProcessInfo.processInfo.systemUptime - started,
                     "app_peak_rss_bytes": peakResidentBytes(),
                 ])
-            }
-        }
-    }
-
-    private extension ExportBudgetCalibrationTests {
-        private func rawSourceFacts(at url: URL, kind: String) throws -> [String: Any] {
-            let raw = try Data(contentsOf: url)
-            let document = try #require(PDFDocument(data: raw))
-            return [
-                "raw_\(kind)_pdf_bytes": raw.count,
-                "raw_\(kind)_pdf_sha256": sha256(raw),
-                "raw_\(kind)_page_count": document.pageCount,
-            ]
-        }
-
-        private static func scaledMarkdown(sections: Int) -> String {
-            var source = "# BUDGETSCALESTART\n\n![pixel](pixel.png)\n\n"
-            for section in 1 ... sections {
-                source += "## Section \(section)\n\n"
-                source += String(
-                    repeating: "The larger print fixture retains searchable text across pages. ",
-                    count: 24
-                )
-                source += "\n\n"
-            }
-            return source + "## BUDGETSCALEEND\n\nFinal text.\n"
-        }
-
-        private func verifyScaledPDF(_ pdf: PDFDocument, text: String, sections: Int) throws {
-            #expect(pdf.pageCount >= 20)
-            #expect(pdf.pageCount <= PDFSnapshotFallback.maxPages)
-            let paper = NSPrintInfo().paperSize
-            for index in 0 ..< pdf.pageCount {
-                let page = try #require(pdf.page(at: index))
-                let bounds = page.bounds(for: .mediaBox)
-                #expect(abs(bounds.width - paper.width) < 1)
-                #expect(abs(bounds.height - paper.height) < 1)
-            }
-            #expect(text.contains("BUDGETSCALESTART"))
-            #expect(text.contains("BUDGETSCALEEND"))
-            #expect(text.utf8.count >= sections * 1400)
-            for section in 1 ... sections {
-                #expect(text.contains("Section \(section)\n"))
             }
         }
     }
