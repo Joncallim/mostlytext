@@ -267,11 +267,16 @@ struct ViewportDisplayBudgetBenchmarkTests {
     private static func accentPixelSamples(painted: AccentPaint, bitmap: NSBitmapImageRep,
                                            textView: NSTextView, host: NSHostingView<EditorView>,
                                            region: NSRect) -> Int {
-        guard let window = textView.window else { return 0 }
+        guard let window = textView.window,
+              let base = BundledThemes.light.chrome.foreground.nsColor.usingColorSpace(.sRGB)
+        else { return 0 }
         let pixelsPerPointX = CGFloat(bitmap.pixelsWide) / region.width
         let pixelsPerPointY = CGFloat(bitmap.pixelsHigh) / region.height
         for bucket in painted.buckets where !bucket.expected.isEmpty {
-            guard let target = bucket.color.usingColorSpace(.sRGB) else { continue }
+            // Some theme classes are almost the base foreground. Require a
+            // clearly distinct accent so antialiased base glyphs cannot pass.
+            guard let target = bucket.color.usingColorSpace(.sRGB),
+                  visiblyDistinct(target, from: base) else { continue }
             for span in bucket.expected.rangeView {
                 let probe = NSRange(location: span.lowerBound, length: min(12, span.count))
                 let screen = textView.firstRect(forCharacterRange: probe, actualRange: nil)
@@ -302,6 +307,12 @@ struct ViewportDisplayBudgetBenchmarkTests {
             }
         }
         return 0
+    }
+
+    private static func visiblyDistinct(_ accent: NSColor, from base: NSColor) -> Bool {
+        max(abs(accent.redComponent - base.redComponent),
+            max(abs(accent.greenComponent - base.greenComponent),
+                abs(accent.blueComponent - base.blueComponent))) > 0.3
     }
 
     /// Compare only theme accents. Base text also has a foreground color, so
