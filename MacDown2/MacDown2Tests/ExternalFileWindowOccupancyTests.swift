@@ -176,9 +176,9 @@ struct ExternalFileWindowOccupancyTests {
         #expect(try String(contentsOf: source, encoding: .utf8) == "external replacement")
         #expect(editor.selectedRange == NSRange(location: 3, length: 4))
         #expect(editor.scrollOffset == 25)
-        try await waitUntil(.seconds(5), "retired original file watcher") {
-            (try? eventOnlyDescriptorIdentities().contains(originalIdentity)) == false
-        }
+        try await requireWatcherTransition(
+            retired: originalIdentity, source: source, directory: directory, stage: "first replacement"
+        )
 
         let shortReplacement = directory.appendingPathComponent("short.md")
         try "short".write(to: shortReplacement, atomically: true, encoding: .utf8)
@@ -192,9 +192,9 @@ struct ExternalFileWindowOccupancyTests {
         #expect(editor.selectedRange == NSRange(location: 3, length: 2))
         #expect(editor.scrollOffset == 25)
         #expect(try String(contentsOf: source, encoding: .utf8) == "short")
-        try await waitUntil(.seconds(5), "retired intermediate file watcher") {
-            (try? eventOnlyDescriptorIdentities().contains(intermediateIdentity)) == false
-        }
+        try await requireWatcherTransition(
+            retired: intermediateIdentity, source: source, directory: directory, stage: "second replacement"
+        )
         let sessionResult = await fixture.coordinator.saveSessionResult()
         #expect(sessionResult.persisted)
         let session = try #require(WorkspaceSessionStore(
@@ -285,6 +285,19 @@ struct ExternalFileWindowOccupancyTests {
         }
         guard result == KERN_SUCCESS else { throw POSIXError(.EIO) }
         return (info.task_interrupt_wakeups, info.task_platform_idle_wakeups)
+    }
+}
+
+private extension ExternalFileWindowOccupancyTests {
+    func requireWatcherTransition(
+        retired: WatcherIdentity, source: URL, directory: URL, stage: String
+    ) async throws {
+        try await waitUntil(.seconds(5), "\(stage) retires and reattaches file watcher") {
+            guard let live = try? eventOnlyDescriptorIdentities(),
+                  let counts = try? watcherDescriptors(for: [source, directory])
+            else { return false }
+            return !live.contains(retired) && counts[source.path] == 1 && counts[directory.path] == 1
+        }
     }
 }
 
