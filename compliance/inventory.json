@@ -232,9 +232,9 @@
       "id": "d2-go-js-runtime",
       "name": "Go JavaScript WASM runtime embedded in D2 browser loader",
       "kind": "embedded",
-      "version": "D2 pinned source commit 581c9109; Go 1.24.6 reference differs",
+      "version": "D2 pinned source commit 581c9109; structurally matches Go 1.24.6 reference",
       "upstream": "https://go.dev",
-      "resolution": "exact D2 vendored file; original revision and modification diff under review",
+      "resolution": "exact D2 vendored file; Go 1.24.6 AST matches after one noncomputed key spelling normalization; original vendor revision under review",
       "licence": "BSD-3-Clause",
       "copyright": [
         "Copyright 2018 The Go Authors. All rights reserved."
@@ -255,8 +255,8 @@
         "LC-03",
         "LC-07"
       ],
-      "evidence": "compliance/evidence/d2-browser-nested-inputs/reproduction.json",
-      "notes": "D2 build.js includes d2js/js/wasm/wasm_exec.js in the browser payload. The vendored file carries Go Authors BSD header and differs in bytes from the Go 1.24.6 reference; exact original revision and semantic modifications require review. Go root notice already ships. The shipped browser resource has been rebuilt with a replacement WASM literal; this attribution remains applicable to the unchanged JavaScript inputs."
+      "evidence": "compliance/evidence/d2-go-js-runtime-review/go-runtime-ast-report.json",
+      "notes": "D2 build.js includes d2js/js/wasm/wasm_exec.js in the browser payload. The vendored file carries Go Authors BSD header and differs in bytes from the Go 1.24.6 reference. Pinned Acorn 8.14.0 finds one AST difference: a noncomputed debug object key is an Identifier in D2 and a quoted Literal in Go; normalizing that spelling makes the ASTs equal. This is technical correspondence, not proof of D2's historical Go checkout, identical execution in every environment or complete runtime/source clearance. Go root notice already ships. The shipped browser resource changed only its WASM literal, so this attribution remains applicable to the unchanged JavaScript input."
     },
     {
       "id": "expat",

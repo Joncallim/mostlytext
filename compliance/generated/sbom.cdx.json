@@ -816,11 +816,11 @@
         },
         {
           "name": "mostlytext:resolution",
-          "value": "exact D2 vendored file; original revision and modification diff under review"
+          "value": "exact D2 vendored file; Go 1.24.6 AST matches after one noncomputed key spelling normalization; original vendor revision under review"
         }
       ],
       "type": "library",
-      "version": "D2 pinned source commit 581c9109; Go 1.24.6 reference differs"
+      "version": "D2 pinned source commit 581c9109; structurally matches Go 1.24.6 reference"
     },
     {
       "bom-ref": "d2-go-runtime",
@@ -5539,7 +5539,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:758ae1a9-3dd5-576e-b19c-3137e5420511",
+  "serialNumber": "urn:uuid:1cd0ce7d-67e4-5a45-a3b7-4cb88350e290",
   "specVersion": "1.5",
   "version": 1
 }
