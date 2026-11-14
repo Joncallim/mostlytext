@@ -220,6 +220,20 @@
             for section in 1 ... 200 {
                 #expect(text.contains("Section \(section)\n"))
             }
+            let headings = try NSRegularExpression(pattern: #"Section ([0-9]+)\n"#)
+                .matches(in: text, range: NSRange(location: 0, length: (text as NSString).length))
+            #expect(headings.count == 200)
+            let source = text as NSString
+            let phrase = "The larger print fixture retains searchable text across pages."
+            for (index, match) in headings.enumerated() {
+                let number = Int(source.substring(with: match.range(at: 1)))
+                #expect(number == index + 1)
+                let end = index + 1 < headings.count ? headings[index + 1].range.location : source.length
+                let section = source.substring(with: NSRange(location: match.range.upperBound,
+                                                             length: end - match.range.upperBound))
+                let normalized = section.split(whereSeparator: \.isWhitespace).joined(separator: " ")
+                #expect(normalized.components(separatedBy: phrase).count - 1 == 24)
+            }
         }
 
         @Test func oversizedSourceIsRefusedBeforePublication() async throws {
