@@ -63,6 +63,15 @@
             return root
         }
 
+        private func printWindow() -> NSWindow {
+            let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 600, height: 800),
+                                  styleMask: [.titled], backing: .buffered, defer: false)
+            window.isReleasedWhenClosed = false
+            window.animationBehavior = .none
+            window.makeKeyAndOrderFront(nil)
+            return window
+        }
+
         @Test func repeatedImageHTMLUsesActualExportService() async throws {
             _ = try outputDirectory()
             let root = try fixtureDirectory()
@@ -115,7 +124,9 @@
             let preparedSeconds = ProcessInfo.processInfo.systemUptime - started
             let html = try await PDFExportAdapter.hardenedHTML(from: prepared)
             let printStarted = ProcessInfo.processInfo.systemUptime
-            try await PDFExportAdapter.export(prepared, to: destination)
+            let window = printWindow()
+            defer { window.orderOut(nil); window.close() }
+            try await PDFExportAdapter.export(prepared, to: destination, modalWindow: window)
             let printSeconds = ProcessInfo.processInfo.systemUptime - printStarted
             let data = try Data(contentsOf: destination)
             let pdf = try #require(PDFDocument(data: data))
@@ -124,7 +135,8 @@
             #expect(text.contains("BUDGETSTART"))
             #expect(text.contains("BUDGETEND"))
             try record("pdf", values: [
-                "case": "actual-webkit-print-pdfkit", "source_bytes": source.utf8.count,
+                "case": "actual-webkit-print-pdfkit", "print_path": "document-modal",
+                "source_bytes": source.utf8.count,
                 "source_sha256": sha256(Data(source.utf8)), "prepared_html_bytes": html.utf8.count,
                 "pdf_bytes": data.count, "pdf_sha256": sha256(data), "page_count": pdf.pageCount,
                 "prepare_seconds": preparedSeconds, "print_and_validation_seconds": printSeconds,
@@ -152,7 +164,9 @@
             let prepareSeconds = ProcessInfo.processInfo.systemUptime - started
             let html = try await PDFExportAdapter.hardenedHTML(from: prepared)
             let printStarted = ProcessInfo.processInfo.systemUptime
-            try await PDFExportAdapter.export(prepared, to: destination)
+            let window = printWindow()
+            defer { window.orderOut(nil); window.close() }
+            try await PDFExportAdapter.export(prepared, to: destination, modalWindow: window)
             let printSeconds = ProcessInfo.processInfo.systemUptime - printStarted
             let data = try Data(contentsOf: destination)
             let pdf = try #require(PDFDocument(data: data))
@@ -160,8 +174,13 @@
             let retainedPDF = try outputDirectory().appendingPathComponent("scaled-pdf-output.pdf")
             try data.write(to: retainedPDF, options: .atomic)
             try verifyScaledPDF(pdf, text: text)
+            let phrase = "The larger print fixture retains searchable text across pages."
+            let completePhrases = text.split(whereSeparator: \.isWhitespace).joined(separator: " ")
+                .components(separatedBy: phrase).count - 1
+            #expect(completePhrases == 200 * 24)
             try record("scaled-pdf", values: [
                 "case": "actual-scaled-webkit-print-pdfkit", "sections": 200,
+                "print_path": "document-modal", "complete_phrase_count": completePhrases,
                 "source_bytes": sourceData.count, "source_sha256": sha256(sourceData),
                 "prepared_html_bytes": html.utf8.count,
                 "pdf_bytes": data.count, "pdf_sha256": sha256(data), "page_count": pdf.pageCount,
