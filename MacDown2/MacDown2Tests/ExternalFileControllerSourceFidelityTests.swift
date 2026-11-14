@@ -70,7 +70,8 @@ struct ExternalSourceFidelityTests {
         let snapshot = try document.fileStore.readSnapshot(from: fixture.url)
         fixture.controller.handle(.available(snapshot))
         try await waitUntil("clean in-place reload") {
-            fixture.model.activeDocument?.text == newText && fixture.editor.textView.string == newText
+            fixture.model.activeDocument?.text.isExactlyEqual(to: newText) == true
+                && fixture.editor.textView.string.isExactlyEqual(to: newText)
         }
         #expect(fixture.model.activeDocument?.state == .clean)
         #expect(fixture.controller.latestExternalSnapshot == nil)
@@ -98,14 +99,14 @@ struct ExternalSourceFidelityTests {
             fixture.model.activeDocument?.state == .conflict
                 && fixture.controller.notice == .conflict
         }
-        #expect(fixture.model.activeDocument?.text == mine)
-        #expect(fixture.editor.textView.string == mine)
+        #expect(fixture.model.activeDocument?.text.isExactlyEqual(to: mine) == true)
+        #expect(fixture.editor.textView.string.isExactlyEqual(to: mine))
         #expect(try Data(contentsOf: fixture.url) == Data(theirs.utf8))
 
         await fixture.controller.resolveConflict(.keepMine)
         #expect(fixture.model.activeDocument?.state == .dirty)
-        #expect(fixture.model.activeDocument?.text == mine)
-        #expect(fixture.editor.textView.string == mine)
+        #expect(fixture.model.activeDocument?.text.isExactlyEqual(to: mine) == true)
+        #expect(fixture.editor.textView.string.isExactlyEqual(to: mine))
         #expect(fixture.controller.notice == .none)
         #expect(fixture.editor.selectedRange == NSRange(location: 3, length: 0))
         #expect(try Data(contentsOf: fixture.url) == Data(theirs.utf8))
@@ -121,8 +122,8 @@ struct ExternalSourceFidelityTests {
             fixture.model.activeDocument?.lastKnownRevision?.sha256 == ownSnapshot.revision.sha256
         }
         #expect(fixture.model.activeDocument?.state == .clean)
-        #expect(fixture.model.activeDocument?.text == mine)
-        #expect(fixture.editor.textView.string == mine)
+        #expect(fixture.model.activeDocument?.text.isExactlyEqual(to: mine) == true)
+        #expect(fixture.editor.textView.string.isExactlyEqual(to: mine))
         #expect(fixture.controller.notice != .conflict)
         #expect(fixture.controller.latestExternalSnapshot == nil)
         #expect(fixture.editor.selectedRange == NSRange(location: 3, length: 0))
