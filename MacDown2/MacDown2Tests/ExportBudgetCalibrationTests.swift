@@ -192,7 +192,7 @@
                 "extracted_text_bytes": text.utf8.count,
                 "page_text_bytes": (0 ..< pdf.pageCount).map { pdf.page(at: $0)?.string?.utf8.count ?? 0 },
                 "prepare_seconds": prepareSeconds, "print_and_validation_seconds": printSeconds,
-                "app_peak_before_rss_bytes": peakBefore, "app_peak_rss_bytes": peakResidentBytes(),
+                "app_peak_before_rss_bytes": peakBefore, "app_peak_rss_bytes": try peakResidentBytes(),
             ]
             if sections == 460 {
                 var sources: [String] = []
