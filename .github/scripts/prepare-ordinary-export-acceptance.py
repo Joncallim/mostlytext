@@ -10,8 +10,10 @@ from pathlib import Path
 import subprocess
 import sys
 
-PRODUCT_BASELINE = '0aa665c238ba35ce12c5afc306a7cbe84543d39e'
-PRODUCT_TREE = 'a30a360f2599bf69af7c3fa1a4486fed81c16499'
+# Pull-request checkout uses the tested synthetic merge with current main.
+# The product tree therefore includes the already merged viewport change.
+PRODUCT_BASELINE = 'd6e962f29511d2b55d3c75c1020eca626670d6aa'
+PRODUCT_TREE = '088da18debdf3847e8af005a6fcff40f0408b56a'
 
 SOURCE = '# NATIVE_EXPORT_CANARY\r\n\r\nA café document with **bold** and `code`.\r\n\r\n| Key | Value |\r\n| --- | --- |\r\n| alpha | beta |\r\n'.encode()
 PRIVATE_SOURCE = b'# NATIVE_EXPORT_CANARY\n\nA **bold** paragraph.\n\n- first\n- second\n\n'

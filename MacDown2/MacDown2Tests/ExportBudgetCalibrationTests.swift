@@ -145,11 +145,21 @@
         }
 
         @Test func scaledWebKitPrintAndPDFKitReadback() async throws {
+            try await measureScaledPDF(sections: 200, name: "scaled-pdf")
+        }
+
+        @Test func nearPageLimitModalPrintPreservesEverySection() async throws {
+            try await measureScaledPDF(sections: 430, name: "near-page-limit-modal")
+        }
+
+        /// The same document-modal production route measures both the ordinary
+        /// scale and the largest qualified sample below the 256-page limit.
+        private func measureScaledPDF(sections: Int, name: String) async throws {
             _ = try outputDirectory()
             let root = try fixtureDirectory()
             defer { try? FileManager.default.removeItem(at: root) }
-            let destination = root.appendingPathComponent("scaled-print.pdf")
-            let source = Self.scaledMarkdown()
+            let destination = root.appendingPathComponent(name + ".pdf")
+            let source = Self.scaledMarkdown(sections: sections)
             let sourceData = Data(source.utf8)
             let sourceURL = root.appendingPathComponent("source.md")
             try sourceData.write(to: sourceURL)
@@ -171,15 +181,15 @@
             let data = try Data(contentsOf: destination)
             let pdf = try #require(PDFDocument(data: data))
             let text = pdf.string ?? ""
-            let retainedPDF = try outputDirectory().appendingPathComponent("scaled-pdf-output.pdf")
+            let retainedPDF = try outputDirectory().appendingPathComponent(name + "-output.pdf")
             try data.write(to: retainedPDF, options: .atomic)
-            try verifyScaledPDF(pdf, text: text)
+            try verifyScaledPDF(pdf, text: text, sections: sections)
             let phrase = "The larger print fixture retains searchable text across pages."
             let completePhrases = text.split(whereSeparator: \.isWhitespace).joined(separator: " ")
                 .components(separatedBy: phrase).count - 1
-            #expect(completePhrases == 200 * 24)
-            try record("scaled-pdf", values: [
-                "case": "actual-scaled-webkit-print-pdfkit", "sections": 200,
+            #expect(completePhrases == sections * 24)
+            try record(name, values: [
+                "case": "actual-scaled-webkit-print-pdfkit", "sections": sections,
                 "print_path": "document-modal", "complete_phrase_count": completePhrases,
                 "source_bytes": sourceData.count, "source_sha256": sha256(sourceData),
                 "prepared_html_bytes": html.utf8.count,
@@ -191,9 +201,9 @@
             ])
         }
 
-        private static func scaledMarkdown() -> String {
+        private static func scaledMarkdown(sections: Int) -> String {
             var source = "# BUDGETSCALESTART\n\n![pixel](pixel.png)\n\n"
-            for section in 1 ... 200 {
+            for section in 1 ... sections {
                 source += "## Section \(section)\n\n"
                 source += String(
                     repeating: "The larger print fixture retains searchable text across pages. ",
@@ -204,8 +214,8 @@
             return source + "## BUDGETSCALEEND\n\nFinal text.\n"
         }
 
-        private func verifyScaledPDF(_ pdf: PDFDocument, text: String) throws {
-            #expect(pdf.pageCount >= 20)
+        private func verifyScaledPDF(_ pdf: PDFDocument, text: String, sections: Int) throws {
+            #expect(pdf.pageCount >= (sections == 430 ? 200 : 20))
             #expect(pdf.pageCount <= PDFSnapshotFallback.maxPages)
             let paper = NSPrintInfo().paperSize
             for index in 0 ..< pdf.pageCount {
@@ -216,13 +226,13 @@
             }
             #expect(text.contains("BUDGETSCALESTART"))
             #expect(text.contains("BUDGETSCALEEND"))
-            #expect(text.utf8.count >= 280_000)
-            for section in 1 ... 200 {
+            #expect(text.utf8.count >= sections * 1400)
+            for section in 1 ... sections {
                 #expect(text.contains("Section \(section)\n"))
             }
             let headings = try NSRegularExpression(pattern: #"Section ([0-9]+)\n"#)
                 .matches(in: text, range: NSRange(location: 0, length: (text as NSString).length))
-            #expect(headings.count == 200)
+            #expect(headings.count == sections)
             let source = text as NSString
             let phrase = "The larger print fixture retains searchable text across pages."
             for (index, match) in headings.enumerated() {
