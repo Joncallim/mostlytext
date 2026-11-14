@@ -25,6 +25,10 @@ public extension EditorTextSystem {
         measuredContentHeight = 0
         lastFrameSyncSignature = nil
         storedSelectionSet = nil
+        // TextKit can restore the previous document's frame after an immediate
+        // measurement while its replacement layout is still settling. The
+        // deferred sync also covers callers outside EditorView.updateNSView.
+        scheduleFrameHeightSync()
     }
 
     /// Captures the selection and vertical viewport before an external reload.

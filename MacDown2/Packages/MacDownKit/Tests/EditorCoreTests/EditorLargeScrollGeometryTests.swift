@@ -78,9 +78,16 @@ struct EditorLargeScrollGeometryTests {
 
         model.text = "short\n"
         system.setText(model.text)
-        system.syncFrameHeightToContent()
-        #expect(system.textView.frame.height < measured / 2,
-                "A new short source must not inherit the old observed geometry floor")
+        var shrank = false
+        for _ in 0 ..< 25 {
+            scroll.layoutSubtreeIfNeeded()
+            if system.textView.frame.height < measured / 2 {
+                shrank = true
+                break
+            }
+            try await Task.sleep(for: .milliseconds(10))
+        }
+        #expect(shrank, "A new short source must shrink after layout settles")
         #expect(Array(system.textView.string.utf16) == Array(model.text.utf16))
     }
 
