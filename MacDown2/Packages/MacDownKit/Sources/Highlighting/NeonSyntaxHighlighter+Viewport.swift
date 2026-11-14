@@ -10,6 +10,20 @@ extension NeonSyntaxHighlighter {
     /// fallback until their parse and memory budgets are measured.
     static let viewportMaxUTF16Units = 1_100_000
 
+    /// The window may request highlighting before SwiftUI mounts its editor.
+    /// Its later mounted request reuses the cached highlighter, so admission
+    /// must be retried there rather than leaving a large document reduced.
+    func resumeViewportIfMounted() {
+        guard !isTornDown, viewportModeEnabled, state.isReduced,
+              viewportSession == nil,
+              let policy = policyProvider(languageID),
+              documentLength > policy.reduceAboveUTF16Units,
+              documentLength <= Self.viewportMaxUTF16Units,
+              startViewport()
+        else { return }
+        setMode(.visibleOnly(.documentTooLarge(limitUTF16Units: policy.reduceAboveUTF16Units)))
+    }
+
     @discardableResult
     func startViewport() -> Bool {
         guard !isTornDown, viewportModeEnabled, languageID == "markdown",

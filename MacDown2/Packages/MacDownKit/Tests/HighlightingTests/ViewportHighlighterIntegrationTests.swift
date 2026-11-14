@@ -9,6 +9,41 @@ import Themes
 @MainActor
 @Suite("Mounted viewport highlighter integration", .serialized)
 struct ViewportHighlighterIntegrationTests {
+    @Test func cachedReducedHighlighterAdmitsViewportAfterEditorMount() async throws {
+        let initial = "# Heading\n\n" + String(repeating: "plain words\n", count: 1000)
+        let identity = UUID().uuidString
+        let system = EditorTextSystem(identity: identity, initialText: initial, configuration: .default)
+        let syntaxStore = SyntaxHighlightStore()
+        let highlighter = try #require(
+            syntaxStore.highlighter(
+                for: identity, textSystem: system, languageID: "markdown", theme: BundledThemes.light
+            ) as? NeonSyntaxHighlighter
+        )
+        #expect(highlighter.state.isReduced)
+        #expect(!highlighter.state.isVisibleOnly)
+        #expect(highlighter.viewportSession == nil)
+
+        let scroll = NSScrollView(frame: NSRect(x: 0, y: 0, width: 500, height: 250))
+        scroll.documentView = system.textView
+        let window = NSWindow(contentRect: scroll.frame, styleMask: [.titled], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        window.contentView = scroll
+        defer { syntaxStore.evictAll(); window.orderOut(nil); window.close() }
+        let cached = try #require(
+            syntaxStore.highlighter(
+                for: identity, textSystem: system, languageID: "markdown", theme: BundledThemes.light
+            ) as? NeonSyntaxHighlighter
+        )
+        #expect(cached === highlighter)
+        #expect(cached.state.isVisibleOnly)
+        #expect(syntaxStore.state(for: identity)?.isVisibleOnly == true)
+        #expect(system.preEditObserver != nil)
+        let session = try #require(cached.viewportSession)
+        await session.waitForPendingParse()
+        #expect(session.fullParseCount == 1)
+        #expect(system.textView.string == initial)
+    }
+
     @Test(.timeLimit(.minutes(2)))
     func crossingViewportAdmissionReturnsToReducedAndCanRestore() async throws {
         let initial = "# Heading\n\n" + String(repeating: "plain words\n", count: 1000)
