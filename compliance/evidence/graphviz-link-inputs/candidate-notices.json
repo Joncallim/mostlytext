@@ -1,0 +1,119 @@
+{
+  "direct_notices": {
+    "system/lib/llvm-libc/LICENSE.TXT": {
+      "notice": "graphviz-llvm-libc--LICENSE.txt",
+      "notice_sha256": "ebcd9bbf783a73d05c53ba4d586b8d5813dcdf3bbec50265860ccc885e606f47",
+      "source_sha256": "ebcd9bbf783a73d05c53ba4d586b8d5813dcdf3bbec50265860ccc885e606f47"
+    },
+    "system/lib/mimalloc/LICENSE": {
+      "notice": "graphviz-mimalloc--MIT.txt",
+      "notice_sha256": "82ade5d7d9b029044b5fbbc326207fc47c2d44ee4dd71e8a559c36d728217de9",
+      "source_sha256": "82ade5d7d9b029044b5fbbc326207fc47c2d44ee4dd71e8a559c36d728217de9"
+    }
+  },
+  "limitation": "The map names possible pre-optimization inputs; exact selected objects, generated glue, inline headers and all other per-file terms remain for review.",
+  "llvm_libc_candidate_source_files": 110,
+  "mimalloc_candidate_source_files": 1,
+  "qsort": {
+    "notice": "graphviz-musl-qsort--MIT.txt",
+    "notice_sha256": "a2c8c354a5b8eb4c5392ed872474a3500a04cd2b8f86235b656fd4c0160f6c86",
+    "source_path": "system/lib/libc/musl/src/stdlib/qsort.c",
+    "source_sha256": "3a838cc7f83f4746df6063f567be1ebb2f7d204243342122acd43f44d2434ec6"
+  },
+  "schema": 1,
+  "source_archive_sha256": "d34ff1cb0ab99f74c0aefd4641f7a514754f2f6218d540d135ef1cf8467b08ba",
+  "source_commit": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+  "status": "conservative candidate attribution, not final retained-code proof",
+  "sun_math": [
+    {
+      "notice": "graphviz-musl-sun-math--01.txt",
+      "notice_sha256": "565eff8b979411888b4fc163ba49daf7ad9beba47ee485942f032edcefd17948",
+      "source_paths": [
+        "system/lib/libc/musl/src/math/atan.c",
+        "system/lib/libc/musl/src/math/cos.c",
+        "system/lib/libc/musl/src/math/sin.c",
+        "system/lib/libc/musl/src/math/tan.c"
+      ],
+      "source_sha256": {
+        "system/lib/libc/musl/src/math/atan.c": "1cffb67a65456ae0bc5f07a94df04a4f18ebc1ac0bffe3219250c4e0555ee01d",
+        "system/lib/libc/musl/src/math/cos.c": "3a74e054057d636fa494bdd76a53a40db5cee618264f6ab31cb0538ba63c6bda",
+        "system/lib/libc/musl/src/math/sin.c": "24e53a9d85f196f66919cc19247be5480bb607ef38844b1a24bc47c4fe4974ef",
+        "system/lib/libc/musl/src/math/tan.c": "422d411bac962a1077ae394d14e54313012a6faa3476c20b2a66d3fb3f7a923f"
+      }
+    },
+    {
+      "notice": "graphviz-musl-sun-math--02.txt",
+      "notice_sha256": "08dd5b9743bed9386f1a3a98dbc8caa1a46815677220599e85d066d109b609ee",
+      "source_paths": [
+        "system/lib/libc/musl/src/math/cbrt.c"
+      ],
+      "source_sha256": {
+        "system/lib/libc/musl/src/math/cbrt.c": "af442893d4048c0eb485b93b5628792fb796d45ffc0f88c682041366c7da611d"
+      }
+    },
+    {
+      "notice": "graphviz-musl-sun-math--03.txt",
+      "notice_sha256": "e1be4a329850c826811b4faff3476ed2755911b67a74ef3157fdb89c0b6efd91",
+      "source_paths": [
+        "system/lib/libc/musl/src/math/atan2.c"
+      ],
+      "source_sha256": {
+        "system/lib/libc/musl/src/math/atan2.c": "a5f94b09b10b4e72bb15d94ae403c9dfd27d7ad881ecd729000004429acfca63"
+      }
+    },
+    {
+      "notice": "graphviz-musl-sun-math--04.txt",
+      "notice_sha256": "baa7e430ba6fb973c100eef93c8c539cf62ba033746c6bf418bb8b51a8930267",
+      "source_paths": [
+        "system/lib/libc/musl/src/math/pow_small.c"
+      ],
+      "source_sha256": {
+        "system/lib/libc/musl/src/math/pow_small.c": "2a1a2469efafd354c3acc689a14e0c498c94d3577c7bd746462e1b644e3c379d"
+      }
+    },
+    {
+      "notice": "graphviz-musl-sun-math--05.txt",
+      "notice_sha256": "4607899cec7ea61b3337abbae6c2a63a00711fd2246d6414e2856b9ce9328c8b",
+      "source_paths": [
+        "system/lib/libc/musl/src/math/__tan.c"
+      ],
+      "source_sha256": {
+        "system/lib/libc/musl/src/math/__tan.c": "e18b65b69fced8dbb2d3ed1a3dc6daea0e9f857f2762f274380bd89a6f89d2c4"
+      }
+    },
+    {
+      "notice": "graphviz-musl-sun-math--06.txt",
+      "notice_sha256": "16cd38a2d4dd0bf4b8a51ab4bd8779856a38d7ac96d4f8a3b092d8c707b0a021",
+      "source_paths": [
+        "system/lib/libc/musl/src/math/__cos.c",
+        "system/lib/libc/musl/src/math/__rem_pio2_large.c",
+        "system/lib/libc/musl/src/math/__sin.c",
+        "system/lib/libc/musl/src/math/acos.c",
+        "system/lib/libc/musl/src/math/asin.c",
+        "system/lib/libc/musl/src/math/log10.c",
+        "system/lib/libc/musl/src/math/log2_small.c",
+        "system/lib/libc/musl/src/math/log_small.c"
+      ],
+      "source_sha256": {
+        "system/lib/libc/musl/src/math/__cos.c": "3f0f774aab60a18d7ef935ffdf121bcda17cbadabff14096c614da22e31a42c1",
+        "system/lib/libc/musl/src/math/__rem_pio2_large.c": "b97f19fb5951c83a0c10506fab35646caefde13bd03100ad2af55ef00af0b9fb",
+        "system/lib/libc/musl/src/math/__sin.c": "f3a37ef9bcfb8a2f9c809d8c7f1aa2c17c8c3319ad7fb2fe7c0a6284ea8859d2",
+        "system/lib/libc/musl/src/math/acos.c": "cc6f9017e7e2e0ef01516fa12c68aa63865e6415c90dc039dfce9abffae09a4c",
+        "system/lib/libc/musl/src/math/asin.c": "9302dd0b2f302f7b7decce82e737ed250bae1bcc65c19eaf3d7ec19010892e63",
+        "system/lib/libc/musl/src/math/log10.c": "ef9b4b1f0918cf1fcb797f9fa4d4ffe177bfa27f668d74a41d613bfbcd83850a",
+        "system/lib/libc/musl/src/math/log2_small.c": "f80ab2145f156b8a986cd1303b9753d10631e75a03502a7067c4a38c4849484e",
+        "system/lib/libc/musl/src/math/log_small.c": "017fe474291d5cbad5f2b57c53200ca645248dd7ea87e149ddfdf78ffd32af0d"
+      }
+    },
+    {
+      "notice": "graphviz-musl-sun-math--07.txt",
+      "notice_sha256": "65a12adeb9d77633bb2f226f758e028eb4d2933594a760f868f3fa33da1d8b6a",
+      "source_paths": [
+        "system/lib/libc/musl/src/math/__rem_pio2.c"
+      ],
+      "source_sha256": {
+        "system/lib/libc/musl/src/math/__rem_pio2.c": "938329e0939cd83ee2185a52154b41242f618d4a6df1b08395f344da33d4f1e6"
+      }
+    }
+  ]
+}

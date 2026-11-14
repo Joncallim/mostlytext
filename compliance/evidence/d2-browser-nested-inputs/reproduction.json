@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "source_commit": "581c91096b62d644fb5168313142c836b7e68e74",
+  "shipped_browser_sha256": "991a44779c91b74cbdf141228a6ba34592fe9b708fe19c221eba9ef4a7cfe33e",
+  "elk": {
+    "source_path": "d2layouts/d2elklayout/elk.js",
+    "source_sha256": "a297b92da4a257b95c129cc1d8cfb379e2c89bcd4442af90ac06fdd2b1e220b4",
+    "compressed_payload_sha256": "0a6bbabd368f4dd84630363a8e8b292744d38f35357aa64f108a964e2f435b5d",
+    "compressed_payload_offset": 7675837,
+    "decoded_matches_source": true,
+    "upstream_reference_tag": "kieler/elkjs 0.8.2",
+    "upstream_reference_commit": "cd0dc6b4e4bf1f221db04147f88b4d7c7041b834",
+    "upstream_reference_archive_sha256": "b711d4b94005ae4a8deeeec5ccb8e3eab1ef9017991e613ce9a93ccd4453af10",
+    "npm_archive_sha256": "77a4f7a7c35ab515d1d8565b99ed8da42e1b4f6873e885e3b912d6008b58a6a2",
+    "limitation": "D2 generated elk.js is not byte-identical to elkjs tag dist; elkjs build.gradle references separate ELK Java source via ../elk and GWT libraries. Exact source correspondence and modifications remain open."
+  },
+  "brotli_decoder": {
+    "source_path": "d2js/js/vendor/decode.min.js",
+    "source_sha256": "67de1ff9e3bf170ca99d317a6466cb107f288a1f565f3971cd7dd8dc9922f677",
+    "google_brotli_reference_tag": "v1.1.0",
+    "google_brotli_reference_commit": "ed738e842d2fbdf2d6459e39267a633c4a9b2f5d",
+    "google_brotli_reference_tree": "66d65f2a9bf3dec372ceda26358ccc78ac3decab",
+    "google_brotli_export_archive_sha256": "e720a6ca29428b803f4ad165371771f5398faba397edf6778837a18599ea13ff",
+    "google_brotli_full_git_snapshot_sha256": "fa3b92d2df91db94a94edd885cba1d1833e642854fe45f0e6490306a5c00bc7a",
+    "google_brotli_full_git_snapshot_bytes": 34891651,
+    "google_brotli_tracked_js_files": 18,
+    "google_decode_min_reference_sha256": "c3e54a757f41d1b745f405e809bb7224915694790d93d8450d059656fe950db4",
+    "google_decode_js_reference_sha256": "b7924dfa0f428a31ad655970218d1573b56c1830132e894c37934a5e5e7586eb",
+    "limitation": "Matching decoder structure/constants and D2 build.js inclusion, not exact minification or unique origin proof."
+  },
+  "go_js_runtime": {
+    "source_path": "d2js/js/wasm/wasm_exec.js",
+    "source_sha256": "42c92bf26a564050862e648642f9dc529673fb257d8d96139122da317ac46274",
+    "go_1_24_6_reference_path": "go/lib/wasm/wasm_exec.js",
+    "go_1_24_6_reference_sha256": "0c949f4996f9a89698e4b5c586de32249c3b69b7baadb64d220073cc04acba14",
+    "limitation": "D2 file retains Go Authors BSD header but differs from Go 1.24.6 in formatting and possibly source. Exact upstream revision/modification diff remains open."
+  }
+}

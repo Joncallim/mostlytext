@@ -1,8 +1,9 @@
 # Compliance archive plan (LC-09)
 
 **Owner summary.** The current inventory requires corresponding-source offers
-for Graphviz (EPL-2.0, compiled into Viz.js) and D2 (MPL-2.0, with a one-line
-local change). This plan says what we publish for each release, where, and how
+for Graphviz (EPL-2.0, compiled into Viz.js) and D2 (MPL-2.0, with a local
+browser export patch and a narrowly rebuilt font-bearing WASM). This plan says
+what we publish for each release, where, and how
 we prove it can be downloaded. Independent review of other nested and build
 inputs remains open; these two recorded offers do not clear those obligations.
 The recommended home is
@@ -39,7 +40,7 @@ Large packages are published with the source-only publication described under "O
 | Component | Contents | Evidence to record in the inventory |
 |---|---|---|
 | Graphviz 16.0.0 via @viz-js/viz 3.30.0 | The upstream Graphviz 16.0.0 source archive; the viz-js 3.30.0 source at its release tag, including the Emscripten build scripts that produce the WebAssembly; the EPL-2.0 text; a note that we ship `dist/viz-global.js` from the npm package unmodified | Archive URLs and SHA-256; upstream tag commits; `npm_file_sha256` already recorded |
-| D2 via @terrastruct/d2 0.1.33 | The upstream d2 source at the revision that produced npm 0.1.33 (the `d2js/js` package and the Go sources compiled into its WebAssembly); our patch as a unified diff (`export{lw as D2}` → `window.D2=lw;`); the MPL-2.0 text | Source revision and archive SHA-256; patch SHA-256; the Go module list, for LC-03's nested licences |
+| D2 via @terrastruct/d2 0.1.33 | The pinned D2 source/npm input, 16 Go module sources, Chroma source and narrow font patch, official Liberation Mono 2.00.5 TTF and deterministic WOFF conversion, browser export/payload patch procedure, ELK/Java and JavaScript Brotli source references, Go runtime source, notices and build record. The exact historical publisher optimizer remains unattested. | Source revisions and archive SHA-256 values; patch/converter and output hashes; completed nested/per-file review, then verified public source-offer receipts. |
 
 The inventory also records MIT, BSD, Apache-2.0, ISC, FTL, OFL and GUST terms,
 mixed expressions, a Bison GPL text with its exception, and selected root
@@ -146,3 +147,20 @@ source inputs change, using a new local output name; the tool refuses to overwri
 a different archive. No website deployment, source-only public upload, application
 binary publication or signing is performed by this preparation. The explicit
 source-archive authorization above remains required for publication.
+
+## 14 November candidate package update
+
+The new D2 local package includes the original 37-file historical review
+archive, the official 2.00.5 TTF and lossless WOFF, a narrow Chroma patch,
+the controlled WASM/browser payload build record, a tested local Go module
+proxy seeder, and scoped ELK/Java/Brotli source references and notices.
+The new Graphviz package includes the finite 489-member link union, basename
+source candidates and their source-file digests, plus a pinned Emscripten
+source reference and exact compiler-image comparison for 402 candidate files.
+These packages remain **review-only**: generated ELK and
+decoder correspondence, Go JS runtime, Graphviz compiler-image/per-file
+terms, Rough.js and Stack Overflow grants, and independent rights decisions
+are still open. A model review of package integrity is not a legal opinion.
+The final local package manifest, hashes, exact proposed public locations and
+remaining approval gates are recorded separately under
+`evidence/source-offers/` to avoid putting an archive's own hash inside it.

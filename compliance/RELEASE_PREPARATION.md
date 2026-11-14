@@ -1,5 +1,34 @@
 # Release preparation ledger (MostlyText #14)
 
+## 14 November 2026 remediation candidate
+
+The current #14 branch adds scoped Velocity, ELK, JavaScript Brotli and JamaJS
+notices, preserves the old D2 font evidence, and replaces only the Chroma font
+literal and the browser bundle's compressed WASM with a controlled Go build.
+The official Liberation Mono 2.00.5 TTF and the new WOFF have all 18 sfnt
+tables byte-identical; the old font had only 15 matching tables. The new
+browser resource passes local D2 renderer/integration tests. See
+[the font/build record](evidence/d2-font-replacement/README.md) and
+[nested browser audit](evidence/d2-browser-nested-inputs/README.md).
+
+The Graphviz link-stage union now lists all 489 archive/member candidates and
+maps each to at least one pinned source-archive basename. A subsequent raw
+image replay now binds all 402 Emscripten-side candidate source files to the
+actual compiler image and pinned source revision; object-to-source build rules
+and per-file terms remain open. The Mermaid audit
+adds the JamaJS SVD/hypot notice; Stack Overflow revision/grant questions and
+the Rough.js flatness adaptation remain open. New local source-review packages
+have been assembled from this branch's final notices and independently checked
+against their manifests. They are review-only; the separate proposal is under
+`evidence/source-offers/`. The dated main baseline had six strict failures;
+this candidate reports ten because four newly explicit nested review-required
+components are counted. The checker and release predicates are unchanged.
+
+A pinned universal Release app compile succeeds locally without signing.
+Its bundled D2 browser resource, D2 notice and generated third-party notices
+match this source tree byte for byte. This is compile/resource evidence; the
+app was not launched and final signed-artifact acceptance remains open.
+
 ## Current checkpoint — 6 November 2026
 
 At main `c249d6dbb77feffc7f0fbe902dd00973d3416711`, ordinary source

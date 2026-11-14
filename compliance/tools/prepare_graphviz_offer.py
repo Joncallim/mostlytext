@@ -28,9 +28,12 @@ LIMITS = ('Local source-review package only. Not approved as the complete corres
           'Remaining: independent source/build and embedded/runtime attribution review, exact\n'
           'compiler/sysroot/build-tool inputs where required, explicit source-only publication\n'
           'authorization, stable hosting and anonymous retrieval. Do not mark source_offer verified.\n'
-          'Emscripten root notices do not complete musl/libc++/compiler-rt per-file notice coverage.\n'
+          'Emscripten root notices and the candidate qsort, Sun math, LLVM libc\n'
+          'and mimalloc texts do not complete all per-file notice coverage.\n'
           'Included image/reproduction/link receipts are review evidence, not a self-contained\n'
           'compiler environment or approval of final retained-code/source/rights completeness.\n'
+          'The pinned Emscripten source archive is a candidate source reference,\n'
+          'not proof that every compiler-image file came from that exact revision.\n'
           'The source-only publication authorization in compliance/ARCHIVE_PLAN.md still applies.\n')
 
 REPRODUCTION_FILES = {
@@ -39,7 +42,12 @@ REPRODUCTION_FILES = {
     'graphviz-backend-reproduction': ('README.md', 'result.json', 'upstream-Dockerfile', 'UPSTREAM-LICENSE.txt'),
     'viz-renderer-reproduction': ('README.md', 'result.json', 'node-reference.json', 'npm-publisher.json',
                                  'package-lock.json', 'dependencies.json', 'SHASUMS256.txt'),
-    'graphviz-link-inputs': ('README.md', 'result.json', 'backend.map', 'why-extract.tsv'),
+    'graphviz-link-inputs': ('README.md', 'result.json', 'backend.map', 'why-extract.tsv',
+                             'audit_union.py', 'union-review.json', 'source_candidates.py',
+                             'source-candidates.json', 'compare_image_source.py',
+                             'image-source-comparison.json', 'prepare_candidate_notices.py',
+                             'candidate-notices.json', 'audit_source_license_signals.py',
+                             'file-license-signals.json'),
     'libcxx-image-notices': ('README.md', 'manifest.json'),
 }
 
@@ -94,7 +102,7 @@ def reproduction_evidence(root):
             for folder, names in REPRODUCTION_FILES.items() for name in names}
 
 
-def payload(root, inputs):
+def payload(root, inputs, emscripten_source=None, image_inputs=None):
     path = root / 'compliance/evidence/viz-js-3.30.0/audit-source-inputs.py'
     spec = importlib.util.spec_from_file_location('graphviz_source_inputs', path)
     audit = importlib.util.module_from_spec(spec)
@@ -103,10 +111,33 @@ def payload(root, inputs):
     expected = json.loads((root / 'compliance/evidence/viz-js-3.30.0/source-audit.json').read_text())
     if report != expected:
         raise ValueError('Graphviz source audit differs from committed report')
+    signal_path = root / 'compliance/evidence/graphviz-link-inputs/audit_source_license_signals.py'
+    signal_spec = importlib.util.spec_from_file_location('graphviz_source_license_signals', signal_path)
+    signal_audit = importlib.util.module_from_spec(signal_spec)
+    signal_spec.loader.exec_module(signal_audit)
+    fresh_signals = signal_audit.audit(inputs, emscripten_source)
+    recorded_signals = json.loads((root / 'compliance/evidence/graphviz-link-inputs/file-license-signals.json').read_text())
+    if fresh_signals != recorded_signals:
+        raise ValueError('Graphviz candidate source licence signals differ from committed index')
     bodies = {'README.txt': LIMITS.encode()}
     bodies.update(reproduction_evidence(root))
+    if emscripten_source is None or image_inputs is None:
+        raise ValueError('Pinned Emscripten source and raw compiler image are required')
+    image_comparator_path = root / 'compliance/evidence/graphviz-link-inputs/compare_image_source.py'
+    image_spec = importlib.util.spec_from_file_location('graphviz_image_source_comparison', image_comparator_path)
+    image_comparator = importlib.util.module_from_spec(image_spec)
+    image_spec.loader.exec_module(image_comparator)
+    fresh_comparison = image_comparator.compare(root, image_inputs, emscripten_source)
+    committed_comparison = json.loads((root / 'compliance/evidence/graphviz-link-inputs/image-source-comparison.json').read_text())
+    if fresh_comparison != committed_comparison:
+        raise ValueError('Compiler-image source comparison differs from committed evidence')
     for name in audit.ARCHIVES:
         bodies['upstream/' + name] = (inputs / name).read_bytes()
+    if emscripten_source is not None:
+        body = emscripten_source.read_bytes()
+        if sha(body) != 'd34ff1cb0ab99f74c0aefd4641f7a514754f2f6218d540d135ef1cf8467b08ba':
+            raise ValueError('Emscripten source reference changed')
+        bodies['upstream/emscripten-263db4cf-source-reference.tar.gz'] = body
     for name in ['source-audit.json', 'downloads.json', 'audit-source-inputs.py']:
         bodies['evidence/' + name] = (root / 'compliance/evidence/viz-js-3.30.0' / name).read_bytes()
     bodies['evidence/ARCHIVE_PLAN.md'] = (root / 'compliance/ARCHIVE_PLAN.md').read_bytes()
@@ -118,7 +149,9 @@ def payload(root, inputs):
     inv = json.loads((root / 'compliance/inventory.json').read_text())
     ids = {'viz-js', 'expat', 'graphviz-rbtree', 'graphviz-ellipse-maisonobe',
            'graphviz-randomkit', 'renderer-build-bison-skeleton', 'renderer-build-emscripten',
-           'compiler-rt-publisher-root-notices', 'libcxx-recorded-image-root-notices', 'libcxxabi-recorded-image-root-notices'}
+           'compiler-rt-publisher-root-notices', 'libcxx-recorded-image-root-notices', 'libcxxabi-recorded-image-root-notices',
+           'graphviz-llvm-libc-candidate-notice', 'graphviz-mimalloc-candidate-notice',
+           'graphviz-musl-qsort-candidate-notice', 'graphviz-musl-sun-math-candidate-notices'}
     selected = [r for r in inv['components'] if r['id'] in ids]
     if {r['id'] for r in selected} != ids:
         raise ValueError('Expected Graphviz and nested source notice records')
@@ -165,9 +198,13 @@ def main():
     parser.add_argument('--root', type=Path, default=ROOT)
     parser.add_argument('--inputs', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--emscripten-source', type=Path, required=True,
+                        help='Pinned Emscripten source reference required by the candidate index')
+    parser.add_argument('--image-inputs', type=Path, required=True,
+                        help='Retained raw compiler image graph and layers for source replay')
     parser.add_argument('--verify-only', action='store_true')
     args = parser.parse_args()
-    bodies, manifest = payload(args.root, args.inputs)
+    bodies, manifest = payload(args.root, args.inputs, args.emscripten_source, args.image_inputs)
     if not args.verify_only:
         body = encode(bodies)
         if args.output.exists() and args.output.read_bytes() != body:

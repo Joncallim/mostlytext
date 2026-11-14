@@ -17,6 +17,19 @@ struct D2WebRendererTests {
         D2Fence(source: source, sourceRange: 0 ..< source.count)
     }
 
+    @Test func codeBlockStillRendersWithTheReplacementFont() async throws {
+        let renderer = D2WebRenderer(poolSize: 1)
+        let diagram = try await renderer.render(Self.fence(
+            "sample: |go\n  fmt.Println(\"hello\")\n|"
+        ), context: Self.context)
+        #expect(diagram.svg.contains("<svg"))
+        #expect(diagram.svg.contains(".text-mono"))
+        #expect(diagram.svg.contains("data:application/font-woff;base64,"))
+        #expect(diagram.svg.contains("fmt.<tspan"))
+        #expect(diagram.svg.contains(">Println</tspan>"))
+        await renderer.shutdown()
+    }
+
     @Test func renderProducesRealSVGForValidSource() async throws {
         let renderer = D2WebRenderer()
         let diagram = try await renderer.render(Self.fence("a -> b -> c"), context: Self.context)

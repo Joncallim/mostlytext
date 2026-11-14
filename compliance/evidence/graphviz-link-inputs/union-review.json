@@ -1,0 +1,3930 @@
+{
+  "schema": 1,
+  "scope": "union of pre-optimization wasm-ld map and extraction; conservative candidate input index",
+  "receipt_sha256": "520b112060cd872b775da8b41d5ae2775b6d590128c9b3cd6110049ad1a57877",
+  "mapped": 426,
+  "extracted": 457,
+  "union": 489,
+  "by_family": {
+    "compiler-rt": 17,
+    "emscripten-sysroot": 245,
+    "expat": 4,
+    "graphviz": 201,
+    "libc++": 13,
+    "libc++abi": 9
+  },
+  "members": [
+    {
+      "archive": "libc++-noexcept.a",
+      "member": "call_once.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "libc++",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++-noexcept.a",
+      "member": "error_category.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "libc++",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++-noexcept.a",
+      "member": "exception.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "libc++",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++-noexcept.a",
+      "member": "functional.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "libc++",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++-noexcept.a",
+      "member": "ios.instantiations.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "libc++",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++-noexcept.a",
+      "member": "ios.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "libc++",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++-noexcept.a",
+      "member": "locale.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "libc++",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++-noexcept.a",
+      "member": "memory.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "libc++",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++-noexcept.a",
+      "member": "new.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "libc++",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++-noexcept.a",
+      "member": "new_helpers.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "libc++",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++-noexcept.a",
+      "member": "stdexcept.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "libc++",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++-noexcept.a",
+      "member": "string.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "libc++",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++-noexcept.a",
+      "member": "system_error.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "libc++",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++abi-noexcept.a",
+      "member": "abort_message.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "libc++abi",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++abi-noexcept.a",
+      "member": "cxa_default_handlers.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "libc++abi",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++abi-noexcept.a",
+      "member": "cxa_handlers.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "libc++abi",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++abi-noexcept.a",
+      "member": "cxa_noexception.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "libc++abi",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++abi-noexcept.a",
+      "member": "cxa_virtual.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "libc++abi",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++abi-noexcept.a",
+      "member": "private_typeinfo.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "libc++abi",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++abi-noexcept.a",
+      "member": "stdlib_exception.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "libc++abi",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++abi-noexcept.a",
+      "member": "stdlib_stdexcept.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "libc++abi",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc++abi-noexcept.a",
+      "member": "stdlib_typeinfo.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "libc++abi",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "_Exit__1.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__cos.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__ctype_get_mb_cur_max.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__environ.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__errno_location.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__fdopen.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__fmodeflags.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__fpclassifyl.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__lockfile.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__math_oflow.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__math_uflow.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__math_xflow.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__month_to_secs.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__overflow.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__rand48_step.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__rem_pio2.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__rem_pio2_large.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__seed48.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__sin.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__stdio_close.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__stdio_exit.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__stdio_read.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__stdio_seek.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__stdio_write.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__tan.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__tm_to_secs.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__toread.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__towrite.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__tz.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__uflow.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "__year_to_secs.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "abort.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "access.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "acos.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "aligned_alloc.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "asin.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "atan.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "atan2.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "atof.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "atoi.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "bsearch.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "btowc.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "c_locale.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "cbrt.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "clock.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "clock_gettime.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "close.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "copysignl.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "cos.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "default_attr.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "drand48.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "emscripten_get_heap_size.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "emscripten_memcpy_bulkmem.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "emscripten_memset_bulkmem.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "emscripten_mmap.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "emscripten_time.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "emscripten_yield_stub.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "exp.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "exp_data.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fabs.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fabsl.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fclose.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "feof.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "ferror.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fflush.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fgetc.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fgets.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fileno.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "floatscan.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "flockfile.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "floor.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fmax.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fmaxf.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fmin.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fminf.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fmod.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fmodl.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fopen.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fprintf.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fputc.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fputs.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fputwc.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fread.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "freelocale.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "frexp.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fseek.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fstat.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fstatat.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "ftell.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "ftrylockfile.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "funlockfile.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fwide.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "fwrite.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "getc.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "getentropy.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "getenv.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "getpid.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "hypot.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "internal.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "intscan.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "isblank.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "isdigit.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "iswalpha.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "iswblank.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "iswcntrl.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "iswdigit.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "iswlower.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "iswprint.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "iswpunct.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "iswspace.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "iswupper.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "iswxdigit.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "isxdigit.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "langinfo.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "libc.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "library_pthread_stub.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "locale_map.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "localeconv.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "localtime.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "log10.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "lseek.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "mbrlen.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "mbrtowc.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "mbsinit.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "mbsnrtowcs.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "mbsrtowcs.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "mbtowc.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "memchr.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "memrchr.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "mktime.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "mmap.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "munmap.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "newlocale.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "ofl.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "ofl_add.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "open.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "printf.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "pthread_self.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "pthread_self_stub.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "pthread_sigmask.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "putc.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "putchar.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "putenv.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "puts.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "qsort.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "qsort_nr.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "raise.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "rand.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "rewind.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "round.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "scalbn.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "scalbnl.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "seed48.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "setbuf.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "setenv.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "setlocale.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "setvbuf.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "shgetc.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "sigaction.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "sigaddset.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "sigandset.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "sigdelset.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "sigismember.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "signal.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "sigorset.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "sin.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "snprintf.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "sprintf.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "sqrt.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "srand48.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "sscanf.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "stderr.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "stdin.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "stdout.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "stpcpy.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strcasecmp.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strchr.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strchrnul.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strcmp.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strcoll.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strcpy.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strcspn.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strdup.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strerror.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strerror_r.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strftime.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strlen.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strncasecmp.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strncmp.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strndup.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strnlen.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strpbrk.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strrchr.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strspn.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strstr.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strtod.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strtod_l.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strtok.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strtok_r.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strtol.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strtol_l.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "strxfrm.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "swprintf.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "syscall_ret.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "tan.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "tolower.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "toupper.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "towctrans.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "ungetc.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "unsetenv.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "uselocale.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "vasprintf.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "vfprintf.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "vfscanf.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "vfwprintf.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "vsnprintf.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "vsprintf.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "vsscanf.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "vswprintf.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "wasi-helpers.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "wcrtomb.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "wcschr.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "wcscmp.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "wcscoll.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "wcslen.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "wcsnlen.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "wcsnrtombs.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "wcstod.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "wcstol.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "wcsxfrm.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "wctob.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "wctomb.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "wmemchr.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "wmemcmp.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc.a",
+      "member": "wmemcpy.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc_optz.a",
+      "member": "emscripten_memcpy.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc_optz.a",
+      "member": "emscripten_memset.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc_optz.a",
+      "member": "log2_small.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc_optz.a",
+      "member": "log_small.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc_optz.a",
+      "member": "memcmp.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libc_optz.a",
+      "member": "pow_small.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcompiler_rt.a",
+      "member": "addtf3.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "compiler-rt",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcompiler_rt.a",
+      "member": "ashlti3.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "compiler-rt",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcompiler_rt.a",
+      "member": "comparetf2.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "compiler-rt",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcompiler_rt.a",
+      "member": "divtf3.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "compiler-rt",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcompiler_rt.a",
+      "member": "extenddftf2.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "compiler-rt",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcompiler_rt.a",
+      "member": "extendsftf2.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "compiler-rt",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcompiler_rt.a",
+      "member": "floatsitf.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "compiler-rt",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcompiler_rt.a",
+      "member": "floatunsitf.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "compiler-rt",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcompiler_rt.a",
+      "member": "fp_mode.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "compiler-rt",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcompiler_rt.a",
+      "member": "lshrti3.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "compiler-rt",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcompiler_rt.a",
+      "member": "multf3.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "compiler-rt",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcompiler_rt.a",
+      "member": "multi3.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "compiler-rt",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcompiler_rt.a",
+      "member": "stack_limits.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "compiler-rt",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcompiler_rt.a",
+      "member": "stack_ops.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "compiler-rt",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcompiler_rt.a",
+      "member": "subtf3.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "compiler-rt",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcompiler_rt.a",
+      "member": "trunctfdf2.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "compiler-rt",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcompiler_rt.a",
+      "member": "trunctfsf2.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "compiler-rt",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libdlmalloc.a",
+      "member": "dlmalloc.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libdlmalloc.a",
+      "member": "sbrk.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libnoexit.a",
+      "member": "atexit_dummy.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libstubs.a",
+      "member": "emscripten_syscall_stubs.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "emscripten-sysroot",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_core.a",
+      "member": "gvloadimage_core.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_core.a",
+      "member": "gvplugin_core.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_core.a",
+      "member": "gvrender_core_dot.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_core.a",
+      "member": "gvrender_core_fig.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_core.a",
+      "member": "gvrender_core_json.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_core.a",
+      "member": "gvrender_core_map.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_core.a",
+      "member": "gvrender_core_pic.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_core.a",
+      "member": "gvrender_core_pov.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_core.a",
+      "member": "gvrender_core_ps.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_core.a",
+      "member": "gvrender_core_svg.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_core.a",
+      "member": "gvrender_core_tk.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "acyclic.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "aspect.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "class1.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "class2.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "cluster.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "compound.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "conc.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "decomp.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "dotinit.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "dotsplines.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "fastgr.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "flat.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "gvlayout_dot_layout.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "gvplugin_dot_layout.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "libutil_C_la-arena.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "libutil_C_la-gv_fopen.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "libutil_C_la-list.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "libutil_C_la-random.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "libutil_C_la-xml.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "mincross.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "position.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "rank.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_dot_layout.a",
+      "member": "sameport.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "Multilevel.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "QuadTree.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "SparseMatrix.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "adjust.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "bfs.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "block.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "blockpath.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "blocks.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "blocktree.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "call_tri.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "circle.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "circpos.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "circuit.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "circular.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "circularinit.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "closest.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "clusteredges.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "comp.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "compute_hierarchy.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "conjgrad.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "constrained_majorization.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "constrained_majorization_ipsep.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "constraint.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "csolve_VPSC.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "delaunay.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "dijkstra.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "edgelist.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "edges.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "embed_graph.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "fdpinit.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "general.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "generate-constraints.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "geometry.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "grid.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "gvlayout_neato_layout.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "gvplugin_neato_layout.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "heap.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "hedges.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "info.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "kkutils.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "layout.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "legal.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "lt1-block.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "lt2-constraint.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "lu.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "matinv.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "matrix_ops.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "neatoinit.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "neatosplines.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "nodelist.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "opt_arrangement.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "osageinit.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "overlap.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "patchwork.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "patchworkinit.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "pca.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "poly.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "post_process.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "quad_prog_solve.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "quad_prog_vpsc.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "randomkit.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "sfdpinit.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "sgd.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "site.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "smart_ini_x.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "solve.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "solve_VPSC.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "sparse_solve.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "spring_electrical.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "stress.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "stuff.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "tlayout.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "tree_map.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "twopiinit.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "variable.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "voronoi.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvplugin_neato_layout.a",
+      "member": "xlayout.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcdt.a",
+      "member": "dtclose.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcdt.a",
+      "member": "dtdisc.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcdt.a",
+      "member": "dtextract.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcdt.a",
+      "member": "dtflatten.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcdt.a",
+      "member": "dtopen.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcdt.a",
+      "member": "dtrenew.o",
+      "mapped": false,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcdt.a",
+      "member": "dtrestore.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcdt.a",
+      "member": "dtsize.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcdt.a",
+      "member": "dtstrhash.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcdt.a",
+      "member": "dttree.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcdt.a",
+      "member": "dtview.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcdt.a",
+      "member": "dtwalk.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcgraph.a",
+      "member": "agerror.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcgraph.a",
+      "member": "apply.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcgraph.a",
+      "member": "attr.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcgraph.a",
+      "member": "edge.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcgraph.a",
+      "member": "grammar.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcgraph.a",
+      "member": "graph.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcgraph.a",
+      "member": "id.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcgraph.a",
+      "member": "imap.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcgraph.a",
+      "member": "io.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcgraph.a",
+      "member": "node.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcgraph.a",
+      "member": "node_induce.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcgraph.a",
+      "member": "obj.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcgraph.a",
+      "member": "rec.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcgraph.a",
+      "member": "refstr.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcgraph.a",
+      "member": "scan.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcgraph.a",
+      "member": "subg.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcgraph.a",
+      "member": "utils.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libcgraph.a",
+      "member": "write.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libexpat.a",
+      "member": "random_getentropy.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "expat",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libexpat.a",
+      "member": "xmlparse.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "expat",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libexpat.a",
+      "member": "xmlrole.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "expat",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libexpat.a",
+      "member": "xmltok.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "expat",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "ccomps.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "fPQ.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "gvc.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "gvconfig.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "gvcontext.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "gvdevice.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "gvevent.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "gvjobs.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "gvlayout.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "gvloadimage.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "gvplugin.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "gvrender.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "gvtextlayout.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "gvusershape.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "index.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-arrows.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-colxlate.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-ellipse.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-emit.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-geom.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-globals.o",
+      "mapped": true,
+      "extracted": false,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-htmllex.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-htmlparse.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-htmltable.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-input.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-labels.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-ns.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-output.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-pointset.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-postproc.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-psusershape.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-routespl.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-shapes.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-splines.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-taper.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-textspan.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-textspan_lut.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-timing.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "libcommon_C_la-utils.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "maze.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "node.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "ortho.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "pack.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "partition.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "rawgraph.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "rectangle.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "sgraph.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "split.q.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "trapezoid.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libgvc.a",
+      "member": "xlabels.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libpathplan.a",
+      "member": "cvt.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libpathplan.a",
+      "member": "inpoly.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libpathplan.a",
+      "member": "route.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libpathplan.a",
+      "member": "shortest.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libpathplan.a",
+      "member": "shortestpth.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libpathplan.a",
+      "member": "solvers.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libpathplan.a",
+      "member": "triang.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libpathplan.a",
+      "member": "util.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libpathplan.a",
+      "member": "visibility.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    },
+    {
+      "archive": "libxdot.a",
+      "member": "xdot.o",
+      "mapped": true,
+      "extracted": true,
+      "source_family": "graphviz",
+      "per_file_terms": "review-required"
+    }
+  ]
+}

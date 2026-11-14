@@ -43,6 +43,76 @@ or complete the independent corresponding-source/rights review. In particular,
 the concrete libc++/libc++abi inputs warrant their own source/text reconciliation;
 the earlier compiler-rt/root notices are not relabelled as exhaustive coverage.
 
+The later [finite union index](union-review.json), reproduced by
+`python3 compliance/evidence/graphviz-link-inputs/audit_union.py`, pins the
+receipt and lists **all 489 distinct candidate pairs**, with separate map and
+extraction flags: 201 Graphviz, four Expat, 17 compiler-rt, 13 libc++, nine
+libc++abi and 245 other Emscripten sysroot members. Every pair remains marked
+`review-required` for per-file terms. This is a complete candidate *list* for
+the two captured archive diagnostics, not a complete source/permission review.
+Direct objects, generated parser source, Emscripten JS glue and inline/template
+headers also need their own source and obligation mapping. Existing root
+notices are preserved conservatively; no missing per-file notice is excused
+because a particular object may have been optimized away.
+
+`source_candidates.py` separately scans the digest-pinned Graphviz 16.0.0,
+Expat 2.8.4 and Emscripten `263db4cf` source archives. It finds at least one
+same-basename source candidate for each of the 489 archive members: 382 have
+one candidate and 107 have several. Libtool object prefixes and generated
+lexer/parser suffixes are handled explicitly. The resulting
+`source-candidates.json` names each candidate, its complete file SHA-256,
+any SPDX line found in its first 4 KiB, and its archive digest. A
+basename match is an investigation lead, **not** compiler-image correspondence
+or a licence determination. Exact image-file hashes, build-rule selection,
+per-file terms and headers remain to be checked before a source offer can be
+approved. The Emscripten source reference is separately retained with SHA-256
+`d34ff1cb0ab99f74c0aefd4641f7a514754f2f6218d540d135ef1cf8467b08ba`;
+it is not assumed to equal every file in the tagged compiler image.
+
+The [compiler-image source comparison](image-source-comparison.json) advances
+that boundary for the Emscripten-side candidates. The replay first verifies
+the complete recorded image graph and all four raw layers, then reads the
+actual image overlay without applying a root filesystem. All **402 distinct
+candidate source paths** for the 284 compiler-rt, libc++, libc++abi and other
+sysroot archive members are present and byte-identical to the pinned
+Emscripten source reference; there are no selected-file overlay events. Each
+comparison records the image layer and complete file digest. Reproduce with
+`compare_image_source.py --inputs /path/to/viz-compiler-image --emscripten-source /path/to/emscripten-263db4cf.tar.gz --output /tmp/image-source-comparison.json`
+and compare the output to the committed JSON. This binds candidate *files* to
+that image/source revision. Object-to-source build rules, multiple candidates
+for one object, inline/template headers and per-file licence terms still need
+review. Graphviz/Expat source files are outside the compiler-image comparison.
+
+The [candidate notice packet](candidate-notices.json), reproduced by
+`prepare_candidate_notices.py` from the pinned Emscripten source archive,
+conservatively adds the complete LLVM libc root text (modern Apache/LLVM and
+legacy University of Illinois/NCSA terms) for 110
+possible source files, the distinct mimalloc MIT text for a possible `libc.o`
+source, the complete musl `qsort.c` permission/modification comments, and
+seven distinct Sun math permission comments covering 17 possible files.
+Each selected source file is checked against this index's pinned digest; the
+402-file image comparison independently binds the source reference to the
+actual compiler image. `qsort.o` and `libc.o` each have another basename
+candidate, so these notices are included without claiming those implementations
+were selected. The complete musl root text remains in the notice bundle.
+This packet advances specific per-file notice coverage; it does not clear
+every candidate, inline/template header, generated parser or JS glue term.
+The [all-file signal index](file-license-signals.json) is reproduced by
+`audit_source_license_signals.py --inputs /path/to/graphviz-source-inputs
+--emscripten-source /path/to/emscripten-263db4cf.tar.gz`.
+It verifies the pinned archives and candidate digests, then records SPDX,
+copyright and licence signals in the first 16 KiB of all 616 possible source
+files. It is a triage index, not a term determination. For example, both
+`exp.c` and `exp_data.c` carry Arm Limited 2018 MIT headers; their exact
+object selection and per-file notice treatment remain in review.
+
+The map has one direct `.o` input outside the archive/member union:
+`/tmp/emscripten_temp_qoqz6zsd/viz.o` (27 symbol rows). The pinned
+[link receipt](result.json) names the corresponding 5,274-byte `viz.c`
+context input, SHA-256 `98a136782d13a293f2ecea4f5f7e0dbf7f5ee34ccc7c5d1da6cb07cfad7d1492`.
+This identifies the direct input; inline headers and emitted glue still need
+their own review.
+
 ## Build and trust boundary
 
 The source/image and original five-file preparation remain those of the
