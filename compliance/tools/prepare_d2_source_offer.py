@@ -16,6 +16,7 @@ EXTRA_INPUTS = {
     'elk-java-v0.8.1-source.tar.gz': ('upstream/elk-java-v0.8.1-source.tar.gz', '248af2867977e08eb9d91ebb90fbb7b0a1b71f4e8ec020bfc04fe81e44f5dcdd'),
     'google-brotli-v1.1.0-source.tar.gz': ('upstream/google-brotli-v1.1.0-source.tar.gz', 'e720a6ca29428b803f4ad165371771f5398faba397edf6778837a18599ea13ff'),
     'google-brotli-v1.1.0-git-snapshot.tar.gz': ('upstream/google-brotli-v1.1.0-git-snapshot.tar.gz', 'fa3b92d2df91db94a94edd885cba1d1833e642854fe45f0e6490306a5c00bc7a'),
+    'google-brotli-3efb-git-snapshot.tar.gz': ('upstream/google-brotli-3efb-git-snapshot.tar.gz', '833366021ae552ceb40a14f1c71619d2af7a5c7765472882434b5094ff811536'),
     'liberation-fonts-ttf-2.00.5.tar.gz': ('upstream/liberation-fonts-ttf-2.00.5.tar.gz', 'f14ff0a0be87b5aeb672e669363b5a699db76feb1144b06798261c0fdcd2b24d'),
     'go1.24.6.darwin-arm64.tar.gz': ('build-inputs/go1.24.6.darwin-arm64.tar.gz', '4e29202c49573b953be7cc3500e1f8d9e66ddd12faa8cf0939a4951411e09a2a'),
     'terrastruct-ci-2594100a-source.tar.gz': ('build-inputs/terrastruct-ci-2594100a-source.tar.gz', 'a2129160358307bc8c08049c78dd47767c0528f9370fb8b0704d607eeeb94d3b'),
@@ -36,10 +37,15 @@ REPO_FILES = {
     'compliance/evidence/d2-go-js-runtime-review/go-runtime-ast-report.json': 'evidence/d2-go-js-runtime-review/go-runtime-ast-report.json',
     'compliance/evidence/d2-go-js-runtime-review/js-tokenizer/package.json': 'evidence/d2-go-js-runtime-review/js-tokenizer/package.json',
     'compliance/evidence/d2-go-js-runtime-review/js-tokenizer/package-lock.json': 'evidence/d2-go-js-runtime-review/js-tokenizer/package-lock.json',
+    'compliance/evidence/d2-js-brotli-source/README.md': 'evidence/d2-js-brotli-source/README.md',
+    'compliance/evidence/d2-js-brotli-source/extract_inputs.py': 'evidence/d2-js-brotli-source/extract_inputs.py',
+    'compliance/evidence/d2-js-brotli-source/compare-brotli-source.js': 'evidence/d2-js-brotli-source/compare-brotli-source.js',
+    'compliance/evidence/d2-js-brotli-source/brotli-ast-report.json': 'evidence/d2-js-brotli-source/brotli-ast-report.json',
     'compliance/tools/convert_lossless_woff.py': 'build/convert_lossless_woff.py',
     'compliance/tools/seed_d2_module_proxy.py': 'build/seed_d2_module_proxy.py',
     'compliance/tools/replace_d2_wasm_payload.py': 'build/replace_d2_wasm_payload.py',
     'compliance/tools/prepare_google_brotli_snapshot.py': 'build/prepare_google_brotli_snapshot.py',
+    'compliance/tools/prepare_google_brotli_3efb_snapshot.py': 'build/prepare_google_brotli_3efb_snapshot.py',
     'compliance/generated/THIRD_PARTY_NOTICES.md': 'distribution-snapshot/THIRD_PARTY_NOTICES.md',
     'compliance/generated/sbom.cdx.json': 'distribution-snapshot/sbom.cdx.json',
     'MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/NOTICE.txt': 'notices/NOTICE.txt',
@@ -83,6 +89,13 @@ def members(root, inputs, base, publisher_browser):
                         'brotli-v1.1.0-git/js/decode.js', 'brotli-v1.1.0-git/js/decode.min.js'}
             if not required <= present:
                 raise ValueError('Brotli Git snapshot does not include the JavaScript preferred source')
+        if name == 'google-brotli-3efb-git-snapshot.tar.gz':
+            with tarfile.open(fileobj=io.BytesIO(data), mode='r:gz') as source:
+                present = {member.name for member in source}
+            required = {'brotli-3efb30f-git/LICENSE', 'brotli-3efb30f-git/js/decode.ts',
+                        'brotli-3efb30f-git/js/decode.js', 'brotli-3efb30f-git/js/decode.min.js'}
+            if len(present) != 377 or not required <= present:
+                raise ValueError('June 2025 Brotli Git snapshot is incomplete')
         result[destination] = data
     for source, destination in REPO_FILES.items():
         result[destination] = (root / source).read_bytes()
@@ -106,6 +119,24 @@ def members(root, inputs, base, publisher_browser):
             body = archive.extractfile(member).read()
         if len(body) != runtime_report[key]['bytes'] or sha(body) != runtime_report[key]['sha256']:
             raise ValueError('Go runtime source does not match technical comparison')
+    decoder_report = json.loads(result['evidence/d2-js-brotli-source/brotli-ast-report.json'])
+    if (decoder_report['parserVersion'] != parser['version']
+            or decoder_report['parserNpmIntegrity'] != parser['integrity']
+            or not decoder_report['astEqual']):
+        raise ValueError('Brotli decoder parser/report binding changed')
+    for archive_name, member_name, key in (
+        ('original-review/upstream/d2-source-581c9109.tar.gz',
+         'd2-581c91096b62d644fb5168313142c836b7e68e74/d2js/js/vendor/decode.min.js', 'd2'),
+        ('upstream/google-brotli-3efb-git-snapshot.tar.gz',
+         'brotli-3efb30f-git/js/decode.min.js', 'google'),
+    ):
+        with tarfile.open(fileobj=io.BytesIO(result[archive_name]), mode='r:gz') as archive:
+            member = archive.getmember(member_name)
+            if not member.isfile() or member.size > 262144:
+                raise ValueError('Brotli decoder is not a bounded regular file')
+            body = archive.extractfile(member).read()
+        if len(body) != decoder_report[key]['bytes'] or sha(body) != decoder_report[key]['sha256']:
+            raise ValueError('Brotli decoder source does not match technical comparison')
     report = json.loads(result['evidence/browser-payload-replacement.json'])
     current_resource = root / 'MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/d2-browser.js'
     if sha(current_resource.read_bytes()) != report['output_browser_sha256']:
@@ -115,11 +146,12 @@ def members(root, inputs, base, publisher_browser):
         'This package contains the pinned D2 source, npm input, 16 Go module ZIPs,\n'
         'D2 export patch, build helper, Go toolchain/source, official font source,\n'
         'lossless WOFF conversion and Chroma patch, ELK/elkjs and Google Brotli\n'
-        'reference source, including its full tracked JavaScript tree, notices,\n'
+        'reference source, including full v1.1.0 and June 2025 Git trees, notices,\n'
         'a reproducible Go JavaScript runtime AST comparison,\n'
+        'a reproducible Brotli decoder AST comparison,\n'
         'and exact resource/build digests. The GitHub export tar is preserved\n'
         'separately: its export rules omit js/ and it is not sufficient alone.\n'
-        'ELK Java/GWT historical correspondence, Brotli decoder revision, Go JS\n'
+        'ELK Java/GWT historical correspondence, Brotli historical copy, Go JS\n'
         'runtime historical copy/behavior and further per-file rights review remain open.\n'
         'This is not an approved complete corresponding-source offer and is not\n'
         'authorized for public upload. No MostlyText app binary is included.\n'

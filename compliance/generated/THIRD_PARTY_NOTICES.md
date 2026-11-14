@@ -108,7 +108,7 @@ This file is generated from `compliance/inventory.json` by
 | hachure-fill (Rough.js publisher-build attribution) | publisher source-build input 0.5.2 | MIT |
 | internmap (via Mermaid) | 2.0.3 | ISC |
 | JamaJS singular value decomposition and hypot adaptation (via layout-base/Mermaid) | layout-base 2.0.1 adaptation; JamaJS source reference 6d24a590 | Apache-2.0 |
-| JavaScript Brotli decoder embedded in D2 browser loader | D2 vendored decoder at source commit 581c9109; matching google/brotli v1.1.0 reference | MIT |
+| JavaScript Brotli decoder embedded in D2 browser loader | D2 vendored decoder at source commit 581c9109; structurally matching google/brotli commit 3efb30f | MIT |
 | jQuery-derived event object (via Cytoscape/Mermaid) | Cytoscape 3.34.0; licensed reference jQuery 1.11.0 | MIT |
 | js-yaml (via Mermaid) | 4.3.0 | MIT |
 | katex (via Mermaid) | 0.16.47 | MIT |
@@ -7268,7 +7268,7 @@ THIS SOFTWARE.
 
 ## JavaScript Brotli decoder embedded in D2 browser loader
 
-- Version: D2 vendored decoder at source commit 581c9109; matching google/brotli v1.1.0 reference
+- Version: D2 vendored decoder at source commit 581c9109; structurally matching google/brotli commit 3efb30f
 - Upstream: https://github.com/google/brotli
 - Licence: MIT
 - Copyright (c) 2009, 2010, 2013-2016 by the Brotli Authors.

@@ -201,9 +201,9 @@
       "id": "d2-js-brotli",
       "name": "JavaScript Brotli decoder embedded in D2 browser loader",
       "kind": "embedded",
-      "version": "D2 vendored decoder at source commit 581c9109; matching google/brotli v1.1.0 reference",
+      "version": "D2 vendored decoder at source commit 581c9109; structurally matching google/brotli commit 3efb30f",
       "upstream": "https://github.com/google/brotli",
-      "resolution": "D2 vendored file and matching licensed source reference; exact origin unresolved",
+      "resolution": "Pinned D2 vendored file and June 2025 Google source have equal location-free ASTs; historical copy and grant review remain open",
       "licence": "MIT",
       "copyright": [
         "Copyright (c) 2009, 2010, 2013-2016 by the Brotli Authors.",
@@ -214,7 +214,7 @@
           "path": "compliance/licenses/d2-js-brotli--MIT.txt",
           "sha256": "3d180008e36922a4e8daec11c34c7af264fed5962d07924aea928c38e8663c94",
           "upstream": "https://github.com/google/brotli",
-          "upstream_revision": "ed738e842d2fbdf2d6459e39267a633c4a9b2f5d",
+          "upstream_revision": "3efb30f96ba50389c4a2fcd9f884b7dbfbadebae",
           "upstream_path": "LICENSE"
         }
       ],
@@ -225,8 +225,8 @@
         "LC-03",
         "LC-07"
       ],
-      "evidence": "compliance/evidence/d2-browser-nested-inputs/reproduction.json",
-      "notes": "D2 build.js embeds its separate JavaScript vendor/decode.min.js in the browser loader and worker. Its algorithm/constant structure matches google/brotli decode.js; the separate Go andybalholm/brotli record does not prove this JS input. Exact copied revision, transformations and grant application remain under review. The shipped browser resource has been rebuilt with a replacement WASM literal; this attribution remains applicable to the unchanged JavaScript inputs."
+      "evidence": "compliance/evidence/d2-js-brotli-source/brotli-ast-report.json",
+      "notes": "D2 build.js embeds its separate JavaScript vendor/decode.min.js in the browser loader and worker. Pinned Acorn 8.14.0 shows the D2 file and google/brotli commit 3efb30f decoder have equal ASTs after removing only location and raw-literal fields; their bytes and sizes differ. The complete 377-file Google source tree is staged locally for review. The separate Go andybalholm/brotli record does not prove this JS input. Exact copied revision, generated transformation, grant application and per-file source offer remain under review. The shipped browser resource has been rebuilt with a replacement WASM literal; this attribution remains applicable to the unchanged JavaScript inputs."
     },
     {
       "id": "d2-go-js-runtime",

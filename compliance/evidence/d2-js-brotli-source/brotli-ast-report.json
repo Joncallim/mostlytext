@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "parser": "acorn",
+  "parserVersion": "8.14.0",
+  "parserNpmIntegrity": "sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA==",
+  "d2": {
+    "path": "d2js/js/vendor/decode.min.js",
+    "sourceCommit": "581c91096b62d644fb5168313142c836b7e68e74",
+    "bytes": 167903,
+    "sha256": "67de1ff9e3bf170ca99d317a6466cb107f288a1f565f3971cd7dd8dc9922f677"
+  },
+  "google": {
+    "path": "js/decode.min.js",
+    "sourceCommit": "3efb30f96ba50389c4a2fcd9f884b7dbfbadebae",
+    "sourceTree": "98bf174cfe47330ba0ad0db0ad96224830ef1588",
+    "bytes": 150933,
+    "sha256": "2055420568c3701fdd83a53f6bd0fb8d7f3352b571f3057eedaf555e750f8235"
+  },
+  "astSha256": "842a6e0d02cebf9da939b5ee6da2f760863e0c93939e214109645ad16b77f008",
+  "astEqual": true,
+  "limits": "AST equality after removing location/raw fields is technical source correspondence, not byte equality, historical copying proof, a legal opinion, publisher build reproduction, or proof of all nested obligations."
+}

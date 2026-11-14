@@ -17,21 +17,21 @@ inputs or all per-file obligations. The source offer therefore remains open.
 
 The pinned D2 source embeds `d2js/js/vendor/decode.min.js` (SHA-256
 `67de1ff9e3bf170ca99d317a6466cb107f288a1f565f3971cd7dd8dc9922f677`)
-through `d2js/js/build.js`. Its constants and structure match the
-[Google Brotli JavaScript decoder](https://github.com/google/brotli/tree/v1.1.0/js),
-whose MIT text and full pinned Git tree are staged for review. GitHub's
-`v1.1.0` export tar (SHA-256 `e720a6ca…`) excludes the `js/` directory;
-the local package now retains it as historical input **and** a deterministic
-tracked-tree snapshot (SHA-256 `fa3b92d2…`) of commit
-`ed738e842d2fbdf2d6459e39267a633c4a9b2f5d`, including all 18 tracked
-JavaScript files. The snapshot's `js/decode.min.js` is 150,869 bytes (SHA-256
-`c3e54a75…`), whereas D2's 167,903-byte vendored file has a different digest
-and size. [D2's introduction commit](https://github.com/d2lang/d2/commit/114582583c7ce7885930c16cb7581370bfcd0e3e)
+through `d2js/js/build.js`. A [pinned AST comparison](../d2-js-brotli-source/README.md)
+identifies [Google Brotli commit `3efb30f`](https://github.com/google/brotli/commit/3efb30f96ba50389c4a2fcd9f884b7dbfbadebae)
+as a much closer technical source reference: its `js/decode.min.js` is
+150,933 bytes and has the same location-free Acorn 8.14.0 AST as D2's
+167,903-byte file. The bytes differ. A deterministic snapshot of the complete
+377-file Google Git tree, including all 14 JavaScript files and `LICENSE`, is
+staged in the local package. Its root MIT text matches the distributed notice.
+The earlier Google v1.1.0 export and deterministic Git snapshot remain as
+historical evidence; the export omits `js/`, and that tag's decoder differs
+from D2 even in AST. [D2's introduction commit](https://github.com/d2lang/d2/commit/114582583c7ce7885930c16cb7581370bfcd0e3e)
 added it in August 2025, and [the next vendor move](https://github.com/d2lang/d2/commit/1dc42d26dad139b2ce0161177b00beee2182c8b6)
-changed its path without establishing the copied Google revision. This remains
-a scoped provenance lead, not exact source correspondence or proof of a
-particular grant. The separately attributed Go `andybalholm/brotli` module
-does not cover this JavaScript decoder.
+changed its path. Neither establishes the exact copied revision or generated
+transformation. This technical match does not independently clear the grant
+or full per-file source offer. The separately attributed Go
+`andybalholm/brotli` module does not cover this JavaScript decoder.
 
 `d2js/js/wasm/wasm_exec.js` in the pinned D2 source has SHA-256
 `42c92b...`; it differs from the Go 1.24.6 source copy
