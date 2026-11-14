@@ -33,7 +33,7 @@ final class MarkdownViewportSession {
     private let pairing = MarkdownEditPairing<MarkdownSectionCache.Window>()
     private var cache: MarkdownSectionCache?
     private var cacheMatchesStorage = false
-    private var cacheRetirementsInFlight = 0
+    private let cacheRetirement = BoundedMarkdownCacheRetirement.shared
     private var parseTask: Task<Void, Never>?
     private var isActive = true
     var onPublication: (() -> Void)?
@@ -127,31 +127,10 @@ final class MarkdownViewportSession {
         }
     }
 
-    /// All trees and query snapshots in a published cache are immutable. In
-    /// particular, their `Tree` owner is Sendable and frees tree-sitter data
-    /// in `deinit`. `Node` is a value containing that owner and an immutable
-    /// node handle; the cache no longer crosses back to the main actor after
-    /// retirement. This wrapper exists solely to move final release off the
-    /// text-storage callback, where destroying a full 1 MiB tree can consume
-    /// most of the keystroke budget.
-    private struct RetiredCache: @unchecked Sendable {
-        let value: MarkdownSectionCache
-    }
-
     private func retireCache() {
         guard let cache else { return }
         self.cache = nil
-        // A parse cannot publish another full cache until a background parse
-        // completes, but enforce a finite bound even under adversarial task
-        // scheduling or rapid source replacement. Overflow retires on the
-        // caller rather than accumulating unbounded document trees.
-        guard cacheRetirementsInFlight < 2 else { return }
-        cacheRetirementsInFlight += 1
-        let retired = RetiredCache(value: cache)
-        Task.detached(priority: .utility) { [weak self] in
-            withExtendedLifetime(retired) {}
-            await MainActor.run { self?.cacheRetirementsInFlight -= 1 }
-        }
+        cacheRetirement.retire(cache)
     }
 
     func invalidatePresentation() {
