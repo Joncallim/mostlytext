@@ -122,7 +122,8 @@ enum PDFExportAdapter {
         if output == nil {
             // A successful print operation can still write no marks at all.
             // Keep its broken output isolated and ask WebKit for a local vector
-            // snapshot, which is divided into ordinary paper-sized pages.
+            // snapshot. Admit only an already paper-sized result; an oversized
+            // snapshot cannot be safely divided without duplicating search text.
             try Task.checkCancellation()
             try lease?.checkActive()
             try admission.checkCurrent()
