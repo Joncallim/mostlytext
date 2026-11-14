@@ -909,11 +909,11 @@
         },
         {
           "name": "mostlytext:resolution",
-          "value": "D2 vendored file and matching licensed source reference; exact origin unresolved"
+          "value": "Pinned D2 vendored file and June 2025 Google source have equal location-free ASTs; historical copy and grant review remain open"
         }
       ],
       "type": "library",
-      "version": "D2 vendored decoder at source commit 581c9109; matching google/brotli v1.1.0 reference"
+      "version": "D2 vendored decoder at source commit 581c9109; structurally matching google/brotli commit 3efb30f"
     },
     {
       "bom-ref": "d2-liberation-mono",
@@ -5539,7 +5539,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:1cd0ce7d-67e4-5a45-a3b7-4cb88350e290",
+  "serialNumber": "urn:uuid:fde5769a-617c-5298-b888-a81f931c4e0c",
   "specVersion": "1.5",
   "version": 1
 }
