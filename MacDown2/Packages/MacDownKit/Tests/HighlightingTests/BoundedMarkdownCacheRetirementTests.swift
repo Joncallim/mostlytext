@@ -13,10 +13,10 @@ struct BoundedMarkdownCacheRetirementTests {
         retirement.workerHoldForTesting = { await hold.wait() }
         retirement.onSlotReleasedForTesting = { log.append("slot") }
 
-        retirement.retire(RetirementSpy("one", log: log))
-        retirement.retire(RetirementSpy("two", log: log))
+        retirement.retireProbeForTesting(RetirementSpy("one", log: log))
+        retirement.retireProbeForTesting(RetirementSpy("two", log: log))
         #expect(retirement.inFlightCount == 2)
-        retirement.retire(RetirementSpy("overflow", log: log))
+        retirement.retireProbeForTesting(RetirementSpy("overflow", log: log))
         #expect(retirement.inFlightCount == 2)
         #expect(retirement.overflowCount == 1)
         #expect(log.snapshot == ["drop-overflow-main"],

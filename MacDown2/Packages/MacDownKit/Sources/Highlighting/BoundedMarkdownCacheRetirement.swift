@@ -32,7 +32,16 @@ final class BoundedMarkdownCacheRetirement {
         }
     }
 
-    func retire(_ value: some Any) {
+    func retire(_ cache: MarkdownSectionCache) {
+        enqueue(cache)
+    }
+
+    /// Exercises deinit ordering with a disposable token in package tests.
+    func retireProbeForTesting(_ token: some Any) {
+        enqueue(token)
+    }
+
+    private func enqueue(_ value: some Any) {
         guard inFlightCount < 2 else {
             overflowCount += 1
             return
