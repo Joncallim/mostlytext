@@ -9,6 +9,21 @@ import Themes
 @MainActor
 @Suite("Mounted viewport highlighter integration", .serialized)
 struct ViewportHighlighterIntegrationTests {
+    @Test func nonMarkdownReducedModeDoesNotScheduleViewportRetry() {
+        let initial = String(repeating: "x", count: 9000)
+        let system = EditorTextSystem(identity: UUID().uuidString, initialText: initial, configuration: .default)
+        let highlighter = NeonSyntaxHighlighter(
+            textSystem: system, languageID: "swift", theme: BundledThemes.light,
+            registry: GrammarRegistry(), sizePolicy: { _ in .markdown }, enableViewport: true
+        )
+        defer { highlighter.tearDown() }
+        #expect(highlighter.state.isReduced)
+        system.textView.insertText("y", replacementRange: NSRange(location: 100, length: 0))
+        #expect(highlighter.state.isReduced)
+        #expect(highlighter.restoreTask == nil)
+        #expect(highlighter.viewportSession == nil)
+    }
+
     @Test func cachedReducedHighlighterAdmitsViewportAfterEditorMount() async throws {
         let initial = "# Heading\n\n" + String(repeating: "plain words\n", count: 1000)
         let identity = UUID().uuidString

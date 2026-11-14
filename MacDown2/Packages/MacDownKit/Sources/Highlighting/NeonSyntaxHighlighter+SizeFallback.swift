@@ -104,7 +104,7 @@ extension NeonSyntaxHighlighter {
         restoreTask = nil
         if postEditLength <= policy.restoreAtOrBelowUTF16Units {
             scheduleRestore(after: policy.restoreIdleDelay)
-        } else if viewportModeEnabled, viewportSession == nil,
+        } else if viewportModeEnabled, languageID == "markdown", viewportSession == nil,
                   postEditLength > policy.reduceAboveUTF16Units,
                   postEditLength <= Self.viewportMaxUTF16Units {
             scheduleRestore(after: policy.restoreIdleDelay)
@@ -128,7 +128,7 @@ extension NeonSyntaxHighlighter {
     private func restoreIfStillEligible(retryDelay: Duration) {
         guard state.isReduced, let policy = policyProvider(languageID),
               documentLength <= policy.restoreAtOrBelowUTF16Units
-              || (viewportModeEnabled && viewportSession == nil
+              || (viewportModeEnabled && languageID == "markdown" && viewportSession == nil
                   && documentLength > policy.reduceAboveUTF16Units
                   && documentLength <= Self.viewportMaxUTF16Units)
         else { return }
