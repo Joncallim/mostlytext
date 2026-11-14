@@ -63,12 +63,15 @@ struct ViewportHighlighterIntegrationTests {
         system.textView.setSelectedRange(NSRange(location: word.location, length: 0))
         system.scrollToVisible(utf16Range: word)
 
-        let highlighter = NeonSyntaxHighlighter(
-            textSystem: system, languageID: "markdown", theme: BundledThemes.light,
-            registry: GrammarRegistry(), enableViewport: true
+        let syntaxStore = SyntaxHighlightStore()
+        let highlighter = try #require(
+            syntaxStore.highlighter(
+                for: identity, textSystem: system, languageID: "markdown", theme: BundledThemes.light
+            ) as? NeonSyntaxHighlighter
         )
-        defer { highlighter.tearDown() }
+        defer { syntaxStore.evictAll() }
         #expect(highlighter.state.isVisibleOnly)
+        #expect(syntaxStore.state(for: identity)?.isVisibleOnly == true)
         #expect(highlighter.highlighter == nil)
         let session = try #require(highlighter.viewportSession)
         await session.waitForPendingParse()
@@ -79,6 +82,12 @@ struct ViewportHighlighterIntegrationTests {
         await session.waitForPendingParse()
         #expect(session.localParseCount == 1)
         #expect(model.text.contains("alphaXtarget"))
+        #expect(highlighter.state.isVisibleOnly)
+        let beforeStructuralEdit = session.fullParseCount
+        system.textView.insertText("\n", replacementRange: NSRange(location: word.location + 6, length: 0))
+        await session.waitForPendingParse()
+        #expect(session.fullParseCount == beforeStructuralEdit + 1)
+        #expect(model.text.contains("alphaX\ntarget"))
         #expect(highlighter.state.isVisibleOnly)
         highlighter.applyTheme(BundledThemes.dark)
         highlighter.viewportPainter?.paintVisible()
@@ -103,9 +112,10 @@ struct ViewportHighlighterIntegrationTests {
         highlighter.setLanguage("markdown")
         #expect(highlighter.state.isVisibleOnly)
         #expect(highlighter.viewportSession !== session)
-        highlighter.tearDown()
+        syntaxStore.evict(identity)
         #expect(highlighter.viewportSession == nil)
         #expect(system.preEditObserver == nil)
+        #expect(syntaxStore.state(for: identity) == nil)
         #expect(system.textView.string == model.text)
     }
 

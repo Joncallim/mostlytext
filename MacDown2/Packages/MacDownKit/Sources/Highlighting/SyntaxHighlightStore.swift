@@ -40,7 +40,8 @@ public final class SyntaxHighlightStore {
             textSystem: textSystem,
             languageID: languageID,
             theme: theme,
-            registry: registry
+            registry: registry,
+            enableViewport: true
         )
         highlighters[identity] = newHighlighter
         states[identity] = newHighlighter.state

@@ -6,8 +6,8 @@ import SwiftUI
 import Testing
 import Themes
 
-/// Opt-in Release comparison of the mounted viewport path and shipped fallback.
-/// The app still leaves this owner disabled until the whole workload qualifies.
+/// Opt-in Release comparison of the production store's mounted viewport path
+/// and the retained reduced fallback control.
 @MainActor
 @Suite(.serialized, .enabled(if: ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_BUDGET_BENCH"] == "1"))
 struct ViewportHighlighterBudgetBenchmarkTests {
@@ -41,11 +41,23 @@ struct ViewportHighlighterBudgetBenchmarkTests {
         system.scrollToVisible(utf16Range: word)
 
         let openStart = DispatchTime.now().uptimeNanoseconds
-        let highlighter = NeonSyntaxHighlighter(
-            textSystem: system, languageID: "markdown", theme: BundledThemes.light,
-            registry: GrammarRegistry(), enableViewport: enableViewport
-        )
-        defer { highlighter.tearDown() }
+        let syntaxStore = SyntaxHighlightStore()
+        let highlighter: NeonSyntaxHighlighter = if enableViewport {
+            try #require(
+                syntaxStore.highlighter(
+                    for: identity, textSystem: system, languageID: "markdown", theme: BundledThemes.light
+                ) as? NeonSyntaxHighlighter
+            )
+        } else {
+            NeonSyntaxHighlighter(
+                textSystem: system, languageID: "markdown", theme: BundledThemes.light,
+                registry: GrammarRegistry(), enableViewport: false
+            )
+        }
+        defer {
+            syntaxStore.evictAll()
+            highlighter.tearDown()
+        }
         #expect(highlighter.state.isReduced)
         #expect(highlighter.state.isVisibleOnly == enableViewport)
         let session = highlighter.viewportSession
