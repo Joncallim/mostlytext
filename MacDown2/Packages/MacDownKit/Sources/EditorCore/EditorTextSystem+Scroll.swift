@@ -116,7 +116,9 @@ public extension EditorTextSystem {
     func scrollToVisible(utf16Range range: NSRange) {
         cancelPendingExternalViewport()
         syncFrameHeightToContent()
-        textView.scrollRangeToVisible(clampedToLiveText(range))
+        let clamped = clampedToLiveText(range)
+        retainNavigationFrame(to: clamped.location)
+        textView.scrollRangeToVisible(clamped)
     }
 
     /// Places the selection at `range`, brings it on screen, and optionally
@@ -140,6 +142,7 @@ public extension EditorTextSystem {
         let clamped = clampedToLiveText(range)
         textView.setSelectedRange(clamped)
         ensureLayout(for: clamped)
+        retainNavigationFrame(to: clamped.location)
 
         if animated, let scrollView, let targetFrame = layoutFragmentFrame(atUTF16Location: clamped.location) {
             animateScroll(toY: targetFrame.minY, in: scrollView)
@@ -215,6 +218,20 @@ public extension EditorTextSystem {
             return
         }
         layoutManager.ensureLayout(for: textRange)
+    }
+
+    /// TextKit 2 may estimate an offscreen fragment beyond the current frame
+    /// on a very large source. The frame must cover the observed target before
+    /// AppKit clamps an explicit scroll or outline reveal against its height.
+    private func retainNavigationFrame(to location: Int) {
+        guard let scrollView,
+              let target = layoutFragmentFrame(atUTF16Location: location)
+        else { return }
+        let needed = target.maxY + textView.textContainerInset.height
+            + scrollView.contentView.bounds.height
+        guard needed.isFinite, needed > measuredContentHeight else { return }
+        measuredContentHeight = needed
+        textView.frame.size.height = needed
     }
 
     /// Applies any pending scroll offset once the text view is inside a scroll

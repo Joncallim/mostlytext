@@ -328,7 +328,20 @@ public final class EditorTextSystem {
             width: textView.frame.width,
             editRevision: editRevision
         )
+        // TextKit 2 can place lazily estimated distant fragments beyond the
+        // paragraph meter's height on a very large source. Its current usage
+        // bound is a layout-owned lower bound for the scroll frame, including
+        // after undo/redo. Do not carry it between text/width revisions.
+        let observedHeight: CGFloat
+        if string.length > ContentHeightMeter.estimationThreshold {
+            let usage = layoutManager.usageBoundsForTextContainer.maxY
+            let candidate = usage + textView.textContainerInset.height * 2
+            observedHeight = usage >= 0 && candidate.isFinite && candidate >= 0 ? candidate : 0
+        } else {
+            observedHeight = 0
+        }
         guard signature != lastFrameSyncSignature else {
+            measuredContentHeight = max(measuredContentHeight, observedHeight)
             applyMeasuredFrameHeight(scrollView: scrollView)
             return
         }
@@ -340,7 +353,7 @@ public final class EditorTextSystem {
             width: availableWidth,
             attributes: textView.typingAttributes
         )
-        measuredContentHeight = contentHeight + textView.textContainerInset.height * 2
+        measuredContentHeight = max(contentHeight + textView.textContainerInset.height * 2, observedHeight)
         applyMeasuredFrameHeight(scrollView: scrollView)
     }
 
