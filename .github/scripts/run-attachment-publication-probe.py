@@ -47,12 +47,15 @@ def owners(pins):
     return {p["identity"]: (p["location"], p["state"]["revision"]) for p in pins}
 
 
-# Exact independent updates reviewed with the parser runtime and background-order units.
+# Exact independent updates reviewed with the parser runtime, background-order,
+# and retired-writer style-boundary units. The Neon candidate is the pinned
+# child of the previously reviewed f7023231 revision; its four-file delta and
+# original BSD text are recorded in the retired-highlighter evidence packet.
 REVIEWED_INDEPENDENT_PIN_UPDATES = {
     "tree-sitter": ("https://github.com/Joncallim/tree-sitter",
                     "5ce80b6f0e29096a5f06826a3ba610c4e89bc255", "1884982a418525e2e251ba331da929fccd354f3f"),
     "neon": ("https://github.com/Joncallim/Neon",
-             "cd14f22ae8f8402b175a0bafd87560b78c7549e9", "f702323168da9c6f0fb8120b844e81fd025f2124"),
+             "cd14f22ae8f8402b175a0bafd87560b78c7549e9", "e0d2f7fb506e07d55133a319b04ee3e79ee013a8"),
     "swifttreesitter": ("https://github.com/Joncallim/SwiftTreeSitter",
                        "0beea992c4246f93a122de846c8611c9be19aeb7", "7cf83c59f1d7b6fdbd6ae3b0e212c9824fbf103d"),
 }
