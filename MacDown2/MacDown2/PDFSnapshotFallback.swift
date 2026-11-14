@@ -41,6 +41,9 @@ enum PDFSnapshotFallback {
     ) async throws -> Data {
         let waiter = PDFSnapshotWaiter()
         let data = try await waiter.capture(webView, timeout: captureTimeout)
+        #if EXPORT_BUDGET_PROBE
+            try capturePrePaginationSnapshot?(data)
+        #endif
         try Task.checkCancellation()
         return try paginate(data, printInfo: printInfo, maxBytes: maxBytes)
     }
@@ -255,6 +258,13 @@ enum PDFSnapshotFallback {
         }
     }
 }
+
+#if EXPORT_BUDGET_PROBE
+    extension PDFSnapshotFallback {
+        /// Saves the source vector PDF only in the guarded Release calibration.
+        static var capturePrePaginationSnapshot: ((Data) throws -> Void)?
+    }
+#endif
 
 @MainActor
 private final class PDFSnapshotWaiter {

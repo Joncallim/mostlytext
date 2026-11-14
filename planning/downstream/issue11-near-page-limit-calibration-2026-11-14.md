@@ -18,12 +18,16 @@ text-boundary review before deciding whether the 256-page policy is safe.
 
 The first hosted run completed all five cases but failed that independent
 review: the 236-page output contains clipped/fragmented body text at page
-transitions despite all 460 headings surviving. The next diagnostic captures
-the validated AppKit print PDF before pagination through a hook compiled only
-under `EXPORT_BUDGET_PROBE`. The normal Release app has no hook or changed
-export path. Comparing source print pages with the retained paper-page result
-will locate whether WebKit's source seam or our pagination introduced the
-damage; the first output and failed visual result remain preserved.
+transitions despite all 460 headings surviving. Reinspection of the exact
+PR #273 artifact also found the same defect in its 200-section result; its
+aggregate 4,800-sentence count hid one missing and one duplicated section
+sentence. The next diagnostic captures whichever pre-pagination PDF sources
+the actual path used: validated AppKit print and/or WebKit vector snapshot.
+The hooks compile only under `EXPORT_BUDGET_PROBE`; the normal Release app has
+no capture callback or changed export result. Comparing those source pages
+with the retained paper-page result will locate whether the source PDF seam
+or our pagination introduced the damage. Both failed visual results remain
+preserved.
 
 This is a near-page-count calibration, not a near-256-MiB PDF or a complete
 resource-budget freeze. The 20-case HTML/resource ramp retains its measured

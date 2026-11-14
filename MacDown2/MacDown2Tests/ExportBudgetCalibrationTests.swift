@@ -140,6 +140,8 @@
             try await measureScaledPDF(sections: 460, name: "near-page-limit-pdf")
         }
 
+        // The guarded probe keeps source, print and artifact bindings together.
+        // swiftlint:disable:next function_body_length
         private func measureScaledPDF(sections: Int, name: String) async throws {
             _ = try outputDirectory()
             let root = try fixtureDirectory()
@@ -160,12 +162,19 @@
             let prepareSeconds = ProcessInfo.processInfo.systemUptime - started
             let html = try await PDFExportAdapter.hardenedHTML(from: prepared)
             let rawPrint = try outputDirectory().appendingPathComponent("near-page-limit-raw-print.pdf")
+            let rawSnapshot = try outputDirectory().appendingPathComponent("near-page-limit-raw-snapshot.pdf")
             if sections == 460 {
                 PDFExportAdapter.capturePrePaginationPrint = { data in
                     try data.write(to: rawPrint, options: .atomic)
                 }
+                PDFSnapshotFallback.capturePrePaginationSnapshot = { data in
+                    try data.write(to: rawSnapshot, options: .atomic)
+                }
             }
-            defer { PDFExportAdapter.capturePrePaginationPrint = nil }
+            defer {
+                PDFExportAdapter.capturePrePaginationPrint = nil
+                PDFSnapshotFallback.capturePrePaginationSnapshot = nil
+            }
             let printStarted = ProcessInfo.processInfo.systemUptime
             try await PDFExportAdapter.export(prepared, to: destination)
             let printSeconds = ProcessInfo.processInfo.systemUptime - printStarted
@@ -186,18 +195,25 @@
                 "app_peak_before_rss_bytes": peakBefore, "app_peak_rss_bytes": peakResidentBytes(),
             ]
             if sections == 460 {
-                try values.merge(rawPrintFacts(at: rawPrint)) { _, incoming in incoming }
+                var sources: [String] = []
+                for (kind, url) in [("print", rawPrint), ("snapshot", rawSnapshot)]
+                    where FileManager.default.fileExists(atPath: url.path) {
+                    try values.merge(rawSourceFacts(at: url, kind: kind)) { _, incoming in incoming }
+                    sources.append(kind)
+                }
+                #expect(!sources.isEmpty)
+                values["raw_source_kinds"] = sources
             }
             try record(name, values: values)
         }
 
-        private func rawPrintFacts(at url: URL) throws -> [String: Any] {
+        private func rawSourceFacts(at url: URL, kind: String) throws -> [String: Any] {
             let raw = try Data(contentsOf: url)
             let document = try #require(PDFDocument(data: raw))
             return [
-                "raw_print_pdf_bytes": raw.count,
-                "raw_print_pdf_sha256": sha256(raw),
-                "raw_print_page_count": document.pageCount,
+                "raw_\(kind)_pdf_bytes": raw.count,
+                "raw_\(kind)_pdf_sha256": sha256(raw),
+                "raw_\(kind)_page_count": document.pageCount,
             ]
         }
 
