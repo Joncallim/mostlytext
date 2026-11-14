@@ -224,7 +224,8 @@ public extension EditorTextSystem {
     /// on a very large source. The frame must cover the observed target before
     /// AppKit clamps an explicit scroll or outline reveal against its height.
     private func retainNavigationFrame(to location: Int) {
-        guard let scrollView,
+        guard (textView.textStorage?.length ?? 0) > ContentHeightMeter.estimationThreshold,
+              let scrollView,
               let target = layoutFragmentFrame(atUTF16Location: location)
         else { return }
         let needed = target.maxY + textView.textContainerInset.height
