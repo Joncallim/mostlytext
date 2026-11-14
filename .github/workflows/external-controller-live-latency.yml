@@ -10,6 +10,7 @@ on:
       - '.github/workflows/external-controller-live-latency.yml'
       - 'MacDown2/MacDown2Tests/ExternalFileControllerLiveLatencyTests.swift'
       - 'MacDown2/MacDown2Tests/ExternalFileWindowOccupancyTests.swift'
+      - 'MacDown2/MacDown2Tests/ExternalFileControllerSourceFidelityTests.swift'
       - 'MacDown2/MacDown2/ExternalFileController.swift'
       - 'MacDown2/MacDown2/WindowController+DocumentObservation.swift'
       - 'MacDown2/Packages/MacDownKit/Sources/FileCore/**'
@@ -62,7 +63,7 @@ jobs:
             'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE' \
             -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/external-controller-latency-app" \
             -onlyUsePackageVersionsFromResolvedFile -enableCodeCoverage NO build-for-testing
-      - name: Measure real watcher to editor reconciliation
+      - name: Measure watcher and external source fidelity
         run: |
           set -euo pipefail
           ROOT="$RUNNER_TEMP/external-controller-latency"
@@ -80,7 +81,8 @@ jobs:
               -onlyUsePackageVersionsFromResolvedFile -parallel-testing-enabled NO \
               -resultBundlePath "$ROOT/latency.xcresult" \
               -only-testing:MacDown2Tests/ExternalFileControllerLiveLatencyTests \
-              -only-testing:MacDown2Tests/ExternalFileWindowOccupancyTests test-without-building \
+              -only-testing:MacDown2Tests/ExternalFileWindowOccupancyTests \
+              -only-testing:MacDown2Tests/ExternalSourceFidelityTests test-without-building \
             | tee "$ROOT/latency.log"
           python3 - "$ROOT/measurements" <<'PY'
           import json
