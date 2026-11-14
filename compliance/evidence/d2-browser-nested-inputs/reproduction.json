@@ -19,6 +19,12 @@
     "source_sha256": "67de1ff9e3bf170ca99d317a6466cb107f288a1f565f3971cd7dd8dc9922f677",
     "google_brotli_reference_tag": "v1.1.0",
     "google_brotli_reference_commit": "ed738e842d2fbdf2d6459e39267a633c4a9b2f5d",
+    "google_brotli_reference_tree": "66d65f2a9bf3dec372ceda26358ccc78ac3decab",
+    "google_brotli_export_archive_sha256": "e720a6ca29428b803f4ad165371771f5398faba397edf6778837a18599ea13ff",
+    "google_brotli_full_git_snapshot_sha256": "fa3b92d2df91db94a94edd885cba1d1833e642854fe45f0e6490306a5c00bc7a",
+    "google_brotli_full_git_snapshot_bytes": 34891651,
+    "google_brotli_tracked_js_files": 18,
+    "google_decode_min_reference_sha256": "c3e54a757f41d1b745f405e809bb7224915694790d93d8450d059656fe950db4",
     "google_decode_js_reference_sha256": "b7924dfa0f428a31ad655970218d1573b56c1830132e894c37934a5e5e7586eb",
     "limitation": "Matching decoder structure/constants and D2 build.js inclusion, not exact minification or unique origin proof."
   },

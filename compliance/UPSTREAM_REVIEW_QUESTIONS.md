@@ -22,6 +22,10 @@ linker version matching publisher render metadata. [The browser-payload audit](e
 separately identifies the retained ELK JavaScript, a Google Brotli decoder
 lead, and Go's JavaScript/WASM runtime. ELK/elkjs and Google Brotli source
 references plus scoped notices are in the new local review package. The
+Google v1.1.0 export archive omits its tracked `js/` tree, so the new package
+also contains a digest-pinned full Git-tree snapshot with all 18 JavaScript
+files. D2's vendored decoder differs in digest and size from that tag; no
+exact copied revision is claimed. The
 precise outstanding source questions are: the ELK Java/GWT input and D2's
 generated `elk.js` correspondence; the copied Brotli decoder revision and
 minification; the `wasm_exec.js` revision and changes; per-file Go/runtime
