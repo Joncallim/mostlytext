@@ -19,6 +19,15 @@ is retained as a comparison input. The comparison is byte-structure evidence,
 not a determination that Cytoscape actually copied from that exact revision or
 that Velocity is a separate bundled package.
 
+The matching reference's full [MIT grant](https://github.com/julianshapiro/velocity/blob/d9cd60bc0c026adff6303869934bb58fc832e82f/LICENSE.md)
+credits Julian Shapiro (2014). The grant's exact bytes have SHA-256
+`725d6011a8aa52d87469af24ac6815f06add959ddb7dbae96bcb17c29d26a79a`.
+`compliance/licenses/cytoscape-velocity-spring--MIT.txt` now carries that
+notice for the matching historical generator fragment. This is scoped
+conservative attribution, not a claim that the entire Velocity package is
+bundled or that the transformed present-day factory is byte-identical. It
+does not establish which party's grant covers each later adaptation step.
+
 The already verified distributed Cytoscape 3.34.0 member still contains this
 named helper and attribution, but its function text has formatting/transformation
 differences. No byte-identical current-body or independent rebuild claim follows.

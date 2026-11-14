@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "source_commit": "581c91096b62d644fb5168313142c836b7e68e74",
+  "d2_source_archive_sha256": "91e4234ad509b7e673a19541feda2b66f88311b3c6dd9f8257a0d2e350922391",
+  "go_1_24_6_archive_sha256": "4e29202c49573b953be7cc3500e1f8d9e66ddd12faa8cf0939a4951411e09a2a",
+  "chroma_v2_14_0_module_zip_sha256": "1fc346b3317079b8c8ab6927cd3fda494561116f0e9613a08a714bd9cfbd76a",
+  "patched_chroma_font_source_sha256": "955ccc3be32e9d7a1b017ad9cb3cb895bad868bf38e9e9ecdacee864e7ab5056",
+  "module_proxy_seeder_sha256": "b352a0c7c3fd0210193da6a19969b6762e2999c5dc7eee51e18cb02e0b0a18e5",
+  "environment": {
+    "GOTOOLCHAIN": "local",
+    "GOPROXY": "file://<local verified 16-module proxy>",
+    "GOSUMDB": "off",
+    "GOENV": "off",
+    "GOWORK": "off",
+    "CGO_ENABLED": "0",
+    "GOOS": "js",
+    "GOARCH": "wasm",
+    "GOMODCACHE": "empty at start"
+  },
+  "local_chroma_replace": "../chroma-v2.14.0",
+  "go_build_args": [
+    "build",
+    "-mod=readonly",
+    "-ldflags=-s -w -X oss.terrastruct.com/d2/d2js/d2wasm.jsVersion=0.1.33 -X oss.terrastruct.com/d2/lib/version.Version=v0.6.10-0.20250817190149-581c91096b62+dirty",
+    "-trimpath",
+    "./d2js"
+  ],
+  "candidate_wasm_sha256": "175e672a9a6c939a65363c50e4092c7c217add5f9a0fb91364e906a9b137586e",
+  "clean_archive_replay_wasm_sha256": "175e672a9a6c939a65363c50e4092c7c217add5f9a0fb91364e906a9b137586e",
+  "wasm_bytes": 23704068,
+  "whole_file_equal": true,
+  "browser_resource_sha256": "ef6d450712e4356ccdd5e9e3a732c4b9a761ac69ab7a71407012ad36dcf49fd0",
+  "historical_publisher_optimizer_reproduced": false,
+  "private_marker_counts_hex": {
+    "2f55736572732f": 0,
+    "2f566f6c756d65732f": 0
+  }
+}

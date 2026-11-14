@@ -31,6 +31,8 @@ LIMITS = ('Local source-review package only. Not approved as the complete corres
           'Emscripten root notices do not complete musl/libc++/compiler-rt per-file notice coverage.\n'
           'Included image/reproduction/link receipts are review evidence, not a self-contained\n'
           'compiler environment or approval of final retained-code/source/rights completeness.\n'
+          'The optional pinned Emscripten source archive is a candidate source reference,\n'
+          'not proof that every compiler-image file came from that exact revision.\n'
           'The source-only publication authorization in compliance/ARCHIVE_PLAN.md still applies.\n')
 
 REPRODUCTION_FILES = {
@@ -39,7 +41,9 @@ REPRODUCTION_FILES = {
     'graphviz-backend-reproduction': ('README.md', 'result.json', 'upstream-Dockerfile', 'UPSTREAM-LICENSE.txt'),
     'viz-renderer-reproduction': ('README.md', 'result.json', 'node-reference.json', 'npm-publisher.json',
                                  'package-lock.json', 'dependencies.json', 'SHASUMS256.txt'),
-    'graphviz-link-inputs': ('README.md', 'result.json', 'backend.map', 'why-extract.tsv'),
+    'graphviz-link-inputs': ('README.md', 'result.json', 'backend.map', 'why-extract.tsv',
+                             'audit_union.py', 'union-review.json', 'source_candidates.py',
+                             'source-candidates.json'),
     'libcxx-image-notices': ('README.md', 'manifest.json'),
 }
 
@@ -94,7 +98,7 @@ def reproduction_evidence(root):
             for folder, names in REPRODUCTION_FILES.items() for name in names}
 
 
-def payload(root, inputs):
+def payload(root, inputs, emscripten_source=None):
     path = root / 'compliance/evidence/viz-js-3.30.0/audit-source-inputs.py'
     spec = importlib.util.spec_from_file_location('graphviz_source_inputs', path)
     audit = importlib.util.module_from_spec(spec)
@@ -107,6 +111,11 @@ def payload(root, inputs):
     bodies.update(reproduction_evidence(root))
     for name in audit.ARCHIVES:
         bodies['upstream/' + name] = (inputs / name).read_bytes()
+    if emscripten_source is not None:
+        body = emscripten_source.read_bytes()
+        if sha(body) != 'd34ff1cb0ab99f74c0aefd4641f7a514754f2f6218d540d135ef1cf8467b08ba':
+            raise ValueError('Emscripten source reference changed')
+        bodies['upstream/emscripten-263db4cf-source-reference.tar.gz'] = body
     for name in ['source-audit.json', 'downloads.json', 'audit-source-inputs.py']:
         bodies['evidence/' + name] = (root / 'compliance/evidence/viz-js-3.30.0' / name).read_bytes()
     bodies['evidence/ARCHIVE_PLAN.md'] = (root / 'compliance/ARCHIVE_PLAN.md').read_bytes()
@@ -165,9 +174,11 @@ def main():
     parser.add_argument('--root', type=Path, default=ROOT)
     parser.add_argument('--inputs', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--emscripten-source', type=Path, required=True,
+                        help='Pinned Emscripten source reference required by the candidate index')
     parser.add_argument('--verify-only', action='store_true')
     args = parser.parse_args()
-    bodies, manifest = payload(args.root, args.inputs)
+    bodies, manifest = payload(args.root, args.inputs, args.emscripten_source)
     if not args.verify_only:
         body = encode(bodies)
         if args.output.exists() and args.output.read_bytes() != body:

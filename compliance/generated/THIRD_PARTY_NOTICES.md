@@ -80,6 +80,7 @@ This file is generated from `compliance/inventory.json` by
 | Editor theme “Paper” | 1.0.0 | MIT |
 | Editor theme “Slate” | 1.0.0 | MIT |
 | Editor theme “Tomorrow Dark” (colour values) | n/a | MIT |
+| ELK JavaScript layout runtime embedded in D2 | D2 identifies elkjs 0.8.2; exact transformed source unresolved | EPL-2.0 |
 | Emscripten and musl root notices (Viz.js publisher-build reference) | 5.0.7 source reference | MIT AND (MIT OR NCSA) |
 | es-toolkit (via Mermaid) | 1.45.1 | MIT |
 | esbuild parser runtime helpers (reproduced parser compiler) | 0.25.12 (emitted runtime only) | MIT |
@@ -95,6 +96,7 @@ This file is generated from `compliance/inventory.json` by
 | github.com/PuerkitoBio/goquery (D2 publisher-build attribution) | publisher source-build input v1.10.0 | BSD-3-Clause |
 | github.com/rivo/uniseg (D2 publisher-build attribution) | publisher source-build input v0.4.7 | MIT |
 | github.com/yuin/goldmark (D2 publisher-build attribution) | publisher source-build input v1.7.4 | MIT |
+| Go JavaScript WASM runtime embedded in D2 browser loader | D2 pinned source commit 581c9109; Go 1.24.6 reference differs | BSD-3-Clause |
 | Go runtime and standard library (embedded in D2 WebAssembly) | go1.24.6 | BSD-3-Clause |
 | Go standard-library supplemental source-build notices | go1.24.6 selected source inputs | LicenseRef-Go-Standard-Library-Source-Notices |
 | golang.org/x/exp (D2 publisher-build attribution) | publisher source-build input v0.0.0-20240909161429-701f63a606c0 | BSD-3-Clause |
@@ -105,6 +107,8 @@ This file is generated from `compliance/inventory.json` by
 | Graphviz red-black tree library (via Viz.js) | Graphviz 16.0.0 source snapshot | LicenseRef-Graphviz-RBTree |
 | hachure-fill (Rough.js publisher-build attribution) | publisher source-build input 0.5.2 | MIT |
 | internmap (via Mermaid) | 2.0.3 | ISC |
+| JamaJS singular value decomposition and hypot adaptation (via layout-base/Mermaid) | layout-base 2.0.1 adaptation; JamaJS source reference 6d24a590 | Apache-2.0 |
+| JavaScript Brotli decoder embedded in D2 browser loader | D2 vendored decoder at source commit 581c9109; matching google/brotli v1.1.0 reference | MIT |
 | jQuery-derived event object (via Cytoscape/Mermaid) | Cytoscape 3.34.0; licensed reference jQuery 1.11.0 | MIT |
 | js-yaml (via Mermaid) | 4.3.0 | MIT |
 | katex (via Mermaid) | 0.16.47 | MIT |
@@ -115,7 +119,7 @@ This file is generated from `compliance/inventory.json` by
 | layout-base (via Mermaid) | 2.0.1 | MIT |
 | libc++ complete root licence and credits (recorded compiler image) | Emscripten 5.0.7 recorded compiler image | LicenseRef-Libcxx-Complete-Root |
 | libc++abi complete root licence and credits (recorded compiler image) | Emscripten 5.0.7 recorded compiler image | LicenseRef-Libcxxabi-Complete-Root |
-| Liberation Mono WOFF (embedded in D2 WebAssembly via Chroma) | bundled in Chroma v2.14.0 | OFL-1.1 |
+| Liberation Mono WOFF (embedded in D2 WebAssembly via Chroma) | Official Liberation Mono 2.00.5 regular TTF, deterministic WOFF1 wrap via Chroma v2.14.0 | OFL-1.1 |
 | libyaml (vendored inside Yams as CYaml) | 0.2.5 (Yams import 2021-03, plus Yams' 2024 nesting-depth fix) | MIT |
 | lodash-es (via Mermaid) | 4.17.23 | MIT |
 | lodash-es (via Mermaid) | 4.18.1 | MIT |
@@ -163,6 +167,7 @@ This file is generated from `compliance/inventory.json` by
 | tree-sitter-yaml | 0.7.0 | MIT |
 | ts-dedent (via Mermaid) | 2.2.0 | MIT |
 | uuid (via Mermaid) | 14.0.0 | MIT |
+| Velocity spring generator contribution credited through Cytoscape/Mermaid | Matching historical Velocity 1.2.2 reference; adaptation origin unspecified | MIT |
 | Viz.js (@viz-js/viz) | 3.30.0 | MIT AND EPL-2.0 |
 | vscode-jsonrpc (via Mermaid) | 8.2.0 | MIT |
 | vscode-languageserver-protocol (via Mermaid) | 3.17.5 | MIT |
@@ -2513,7 +2518,7 @@ SOFTWARE.
 - Upstream: https://github.com/terrastruct/d2
 - Licence: MPL-2.0
 - Copyright Terrastruct, Inc.
-- Local modifications: Trailing `export{lw as D2}` replaced with `window.D2=lw;` (one statement; every other byte identical). Documented in NOTICE.txt.
+- Local modifications: The trailing ES-module export is replaced with window.D2=lw; and only the Brotli-compressed WASM literal is replaced by a controlled Go build with a lossless WOFF wrap of official Liberation Mono 2.00.5. See NOTICE.txt and compliance/evidence/d2-font-replacement/.
 - Source code: https://mostlytext.app/opensource/1.0.0/d2/
 
 ### D2-LICENSE.txt
@@ -2899,33 +2904,37 @@ Exhibit B - "Incompatible With Secondary Licenses" Notice
 ### NOTICE.txt
 
 ```text
-d2-browser.js is @terrastruct/d2 0.1.33 (https://github.com/d2lang/d2),
-MPL-2.0 licensed (D2-LICENSE.txt), with exactly one modification from
-upstream: the trailing `export{lw as D2}` ES-module export statement is
-replaced with `window.D2=lw;`.
+This browser resource is based on @terrastruct/d2 0.1.33
+(https://github.com/d2lang/d2), licensed under MPL-2.0. D2-LICENSE.txt
+contains the licence. MostlyText retains the browser renderer locally for
+offline preview and export.
 
-Why: the upstream file is a genuine ES module. Loading it via
-`<script type="module">` and an internal `import('./d2-browser.js')` —
-the natural approach for an ES module — fails under WebKit's `file://`
-loading model with "Cross-origin script load denied by Cross-Origin
-Resource Sharing policy," even though the containing page loads fine via
-`loadFileURL(_:allowingReadAccessTo:)` and the top-level module script
-itself executes. This is a real, current WebKit restriction on ES module
-sub-imports specifically, not on ordinary `<script src>` resource
-loading. Turning the file into a plain global-assigning script sidesteps
-it entirely, matching how every other bundled JS library in this app
-(Mermaid, viz-js) is already loaded.
+MostlyText makes two changes to the published browser resource:
 
-No other change is made — no minification, no other content edit — so
-the WASM payload and D2 version are exactly upstream's own 0.1.33 build.
+1. Replace the trailing ES module `export{lw as D2}` statement with
+   `window.D2=lw;`. WebKit rejects the needed file URL module sub-import,
+   while an ordinary local script works within the app's file access scope.
+2. Replace only the embedded Brotli-compressed Go WebAssembly literal. The new
+   WebAssembly is compiled from pinned D2 source commit
+   581c91096b62d644fb5168313142c836b7e68e74 with the official
+   Liberation Mono 2.00.5 regular TTF wrapped losslessly as WOFF1 in Chroma
+   v2.14.0. The old embedded font had differing FFTM, head and post tables.
+   The new WOFF retains every original TTF table byte, including name and
+   underline/fixed-pitch metadata. The rebuilt WebAssembly is not claimed to
+   reproduce the publisher's optimized WebAssembly.
 
-MPL-2.0 is weak, file-level copyleft: a modified MPL-covered file's
-source must stay available if distributed, which it already is — this
-is a plain, readable, committed resource in this repository, and this
-NOTICE documents the exact one-line change rather than leaving it to be
-discovered in a diff. See planning/epic-21-implementation.md §1.1 and
-the Slice 0 as-built note for the full investigation this NOTICE was
-written from.
+The minified browser resource is not by itself sufficient readable
+corresponding source. The D2 source, Chroma font patch, original TTF, WOFF
+conversion record, module sources, ELK and JavaScript Brotli source references,
+build instructions and notices are assembled in a local source-review package
+for the version-matched offer described in compliance/ARCHIVE_PLAN.md. Its
+nested-source review is incomplete, and no public upload is approved.
+
+The full bundle also contains ELK JavaScript layout code under EPL-2.0, a
+JavaScript Brotli decoder under MIT and a Go JavaScript/WASM runtime under
+BSD-style terms. Their scoped attribution and remaining source-review limits
+are in the generated third-party notices and compliance evidence. This notice
+does not resolve uncertain original adaptation histories or approve release.
 ```
 
 ---
@@ -4615,6 +4624,284 @@ THE SOFTWARE.
 
 ---
 
+## ELK JavaScript layout runtime embedded in D2
+
+- Version: D2 identifies elkjs 0.8.2; exact transformed source unresolved
+- Upstream: https://github.com/kieler/elkjs
+- Licence: EPL-2.0
+- Kiel University and contributors; see complete EPL text and upstream source
+
+### d2-elkjs--EPL-2.0.txt
+
+```text
+# Eclipse Public License - v 2.0
+
+THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE
+PUBLIC LICENSE (“AGREEMENT”). ANY USE, REPRODUCTION OR DISTRIBUTION OF
+THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
+
+## 1. DEFINITIONS
+
+“Contribution” means:
+
+-   a\) in the case of the initial Contributor, the initial content
+    Distributed under this Agreement, and
+-   b\) in the case of each subsequent Contributor:
+    -   i\) changes to the Program, and
+    -   ii\) additions to the Program;
+
+    where such changes and/or additions to the Program originate from
+    and are Distributed by that particular Contributor. A Contribution
+    “originates” from a Contributor if it was added to the Program by
+    such Contributor itself or anyone acting on such Contributor's
+    behalf. Contributions do not include changes or additions to the
+    Program that are not Modified Works.
+
+“Contributor” means any person or entity that Distributes the Program.
+
+“Licensed Patents” mean patent claims licensable by a Contributor which
+are necessarily infringed by the use or sale of its Contribution alone
+or when combined with the Program.
+
+“Program” means the Contributions Distributed in accordance with this
+Agreement.
+
+“Recipient” means anyone who receives the Program under this Agreement
+or any Secondary License (as applicable), including Contributors.
+
+“Derivative Works” shall mean any work, whether in Source Code or other
+form, that is based on (or derived from) the Program and for which the
+editorial revisions, annotations, elaborations, or other modifications
+represent, as a whole, an original work of authorship.
+
+“Modified Works” shall mean any work in Source Code or other form that
+results from an addition to, deletion from, or modification of the
+contents of the Program, including, for purposes of clarity any new file
+in Source Code form that contains any contents of the Program. Modified
+Works shall not include works that contain only declarations,
+interfaces, types, classes, structures, or files of the Program solely
+in each case in order to link to, bind by name, or subclass the Program
+or Modified Works thereof.
+
+“Distribute” means the acts of a) distributing or b) making available in
+any manner that enables the transfer of a copy.
+
+“Source Code” means the form of a Program preferred for making
+modifications, including but not limited to software source code,
+documentation source, and configuration files.
+
+“Secondary License” means either the GNU General Public License, Version
+2.0, or any later versions of that license, including any exceptions or
+additional permissions as identified by the initial Contributor.
+
+## 2. GRANT OF RIGHTS
+
+-   a\) Subject to the terms of this Agreement, each Contributor hereby
+    grants Recipient a non-exclusive, worldwide, royalty-free copyright
+    license to reproduce, prepare Derivative Works of, publicly display,
+    publicly perform, Distribute and sublicense the Contribution of such
+    Contributor, if any, and such Derivative Works.
+-   b\) Subject to the terms of this Agreement, each Contributor hereby
+    grants Recipient a non-exclusive, worldwide, royalty-free patent license
+    under Licensed Patents to make, use, sell, offer to sell, import and
+    otherwise transfer the Contribution of such Contributor, if any, in
+    Source Code or other form. This patent license shall apply to the
+    combination of the Contribution and the Program if, at the time the
+    Contribution is added by the Contributor, such addition of the
+    Contribution causes such combination to be covered by the
+    Licensed Patents. The patent license shall not apply to any other
+    combinations which include the Contribution. No hardware per se is
+    licensed hereunder.
+-   c\) Recipient understands that although each Contributor grants the
+    licenses to its Contributions set forth herein, no assurances are
+    provided by any Contributor that the Program does not infringe the
+    patent or other intellectual property rights of any other entity. Each
+    Contributor disclaims any liability to Recipient for claims brought by
+    any other entity based on infringement of intellectual property rights
+    or otherwise. As a condition to exercising the rights and licenses
+    granted hereunder, each Recipient hereby assumes sole responsibility to
+    secure any other intellectual property rights needed, if any. For
+    example, if a third party patent license is required to allow Recipient
+    to Distribute the Program, it is Recipient's responsibility to acquire
+    that license before distributing the Program.
+-   d\) Each Contributor represents that to its knowledge it has sufficient
+    copyright rights in its Contribution, if any, to grant the copyright
+    license set forth in this Agreement.
+-   e\) Notwithstanding the terms of any Secondary License, no Contributor
+    makes additional grants to any Recipient (other than those set forth in
+    this Agreement) as a result of such Recipient's receipt of the Program
+    under the terms of a Secondary License (if permitted under the terms of
+    Section 3).
+
+## 3. REQUIREMENTS
+
+3.1 If a Contributor Distributes the Program in any form, then:
+
+-   a\) the Program must also be made available as Source Code, in accordance
+    with section 3.2, and the Contributor must accompany the Program with a
+    statement that the Source Code for the Program is available under this
+    Agreement, and informs Recipients how to obtain it in a reasonable
+    manner on or through a medium customarily used for software exchange;
+    and
+-   b\) the Contributor may Distribute the Program under a license different
+    than this Agreement, provided that such license:
+    -   i\) effectively disclaims on behalf of all other Contributors all
+        warranties and conditions, express and implied, including warranties or
+        conditions of title and non-infringement, and implied warranties or
+        conditions of merchantability and fitness for a particular purpose;
+    -   ii\) effectively excludes on behalf of all other Contributors all
+        liability for damages, including direct, indirect, special, incidental
+        and consequential damages, such as lost profits;
+    -   iii\) does not attempt to limit or alter the recipients' rights in the
+        Source Code under section 3.2; and
+    -   iv\) requires any subsequent distribution of the Program by any party to
+        be under a license that satisfies the requirements of this section 3.
+
+3.2 When the Program is Distributed as Source Code:
+
+-   a\) it must be made available under this Agreement, or if the Program (i)
+    is combined with other material in a separate file or files made
+    available under a Secondary License, and (ii) the initial Contributor
+    attached to the Source Code the notice described in Exhibit A of this
+    Agreement, then the Program may be made available under the terms of
+    such Secondary Licenses, and
+-   b\) a copy of this Agreement must be included with each copy of
+    the Program.
+
+3.3 Contributors may not remove or alter any copyright, patent,
+trademark, attribution notices, disclaimers of warranty, or limitations
+of liability (‘notices’) contained within the Program from any copy of
+the Program which they Distribute, provided that Contributors may add
+their own appropriate notices.
+
+## 4. COMMERCIAL DISTRIBUTION
+
+Commercial distributors of software may accept certain responsibilities
+with respect to end users, business partners and the like. While this
+license is intended to facilitate the commercial use of the Program, the
+Contributor who includes the Program in a commercial product offering
+should do so in a manner which does not create potential liability for
+other Contributors. Therefore, if a Contributor includes the Program in
+a commercial product offering, such Contributor (“Commercial
+Contributor”) hereby agrees to defend and indemnify every other
+Contributor (“Indemnified Contributor”) against any losses, damages and
+costs (collectively “Losses”) arising from claims, lawsuits and other
+legal actions brought by a third party against the Indemnified
+Contributor to the extent caused by the acts or omissions of such
+Commercial Contributor in connection with its distribution of the
+Program in a commercial product offering. The obligations in this
+section do not apply to any claims or Losses relating to any actual or
+alleged intellectual property infringement. In order to qualify, an
+Indemnified Contributor must: a) promptly notify the Commercial
+Contributor in writing of such claim, and b) allow the Commercial
+Contributor to control, and cooperate with the Commercial Contributor
+in, the defense and any related settlement negotiations. The Indemnified
+Contributor may participate in any such claim at its own expense.
+
+For example, a Contributor might include the Program in a commercial
+product offering, Product X. That Contributor is then a Commercial
+Contributor. If that Commercial Contributor then makes performance
+claims, or offers warranties related to Product X, those performance
+claims and warranties are such Commercial Contributor's responsibility
+alone. Under this section, the Commercial Contributor would have to
+defend claims against the other Contributors related to those
+performance claims and warranties, and if a court requires any other
+Contributor to pay any damages as a result, the Commercial Contributor
+must pay those damages.
+
+## 5. NO WARRANTY {#warranty}
+
+EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, AND TO THE EXTENT
+PERMITTED BY APPLICABLE LAW, THE PROGRAM IS PROVIDED ON AN “AS IS”
+BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
+IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS OF
+TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR
+PURPOSE. Each Recipient is solely responsible for determining the
+appropriateness of using and distributing the Program and assumes all
+risks associated with its exercise of rights under this Agreement,
+including but not limited to the risks and costs of program errors,
+compliance with applicable laws, damage to or loss of data, programs or
+equipment, and unavailability or interruption of operations.
+
+## 6. DISCLAIMER OF LIABILITY {#disclaimer}
+
+EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, AND TO THE EXTENT
+PERMITTED BY APPLICABLE LAW, NEITHER RECIPIENT NOR ANY CONTRIBUTORS
+SHALL HAVE ANY LIABILITY FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING WITHOUT LIMITATION LOST
+PROFITS), HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OR DISTRIBUTION OF THE PROGRAM OR THE
+EXERCISE OF ANY RIGHTS GRANTED HEREUNDER, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGES.
+
+## 7. GENERAL
+
+If any provision of this Agreement is invalid or unenforceable under
+applicable law, it shall not affect the validity or enforceability of
+the remainder of the terms of this Agreement, and without further action
+by the parties hereto, such provision shall be reformed to the minimum
+extent necessary to make such provision valid and enforceable.
+
+If Recipient institutes patent litigation against any entity (including
+a cross-claim or counterclaim in a lawsuit) alleging that the Program
+itself (excluding combinations of the Program with other software or
+hardware) infringes such Recipient's patent(s), then such Recipient's
+rights granted under Section 2(b) shall terminate as of the date such
+litigation is filed.
+
+All Recipient's rights under this Agreement shall terminate if it fails
+to comply with any of the material terms or conditions of this Agreement
+and does not cure such failure in a reasonable period of time after
+becoming aware of such noncompliance. If all Recipient's rights under
+this Agreement terminate, Recipient agrees to cease use and distribution
+of the Program as soon as reasonably practicable. However, Recipient's
+obligations under this Agreement and any licenses granted by Recipient
+relating to the Program shall continue and survive.
+
+Everyone is permitted to copy and distribute copies of this Agreement,
+but in order to avoid inconsistency the Agreement is copyrighted and may
+only be modified in the following manner. The Agreement Steward reserves
+the right to publish new versions (including revisions) of this
+Agreement from time to time. No one other than the Agreement Steward has
+the right to modify this Agreement. The Eclipse Foundation is the
+initial Agreement Steward. The Eclipse Foundation may assign the
+responsibility to serve as the Agreement Steward to a suitable separate
+entity. Each new version of the Agreement will be given a distinguishing
+version number. The Program (including Contributions) may always be
+Distributed subject to the version of the Agreement under which it was
+received. In addition, after a new version of the Agreement is
+published, Contributor may elect to Distribute the Program (including
+its Contributions) under the new version.
+
+Except as expressly stated in Sections 2(a) and 2(b) above, Recipient
+receives no rights or licenses to the intellectual property of any
+Contributor under this Agreement, whether expressly, by implication,
+estoppel or otherwise. All rights in the Program not expressly granted
+under this Agreement are reserved. Nothing in this Agreement is intended
+to be enforceable by any entity that is not a Contributor or Recipient.
+No third-party beneficiary rights are created under this Agreement.
+
+## Exhibit A – Form of Secondary Licenses Notice {#exhibit-a}
+
+“This Source Code may also be made available under the following
+Secondary Licenses when the conditions for such availability set forth
+in the Eclipse Public License, v. 2.0 are satisfied: {name license(s),
+version(s), and exceptions or additional permissions here}.”
+
+> Simply including a copy of this Agreement, including this Exhibit A is
+> not sufficient to license the Source Code under Secondary Licenses.
+>
+> If it is not possible or desirable to put the notice in a particular
+> file, then You may include the notice in a location (such as a LICENSE
+> file in a relevant directory) where a recipient would be likely to
+> look for such a notice.
+>
+> You may add additional accurate notices of copyright ownership.
+```
+
+---
+
 ## Emscripten and musl root notices (Viz.js publisher-build reference)
 
 - Version: 5.0.7 source reference
@@ -6165,6 +6452,47 @@ SOFTWARE.
 
 ---
 
+## Go JavaScript WASM runtime embedded in D2 browser loader
+
+- Version: D2 pinned source commit 581c9109; Go 1.24.6 reference differs
+- Upstream: https://go.dev
+- Licence: BSD-3-Clause
+- Copyright 2018 The Go Authors. All rights reserved.
+
+### d2--GO-RUNTIME-LICENSE.txt
+
+```text
+Copyright 2009 The Go Authors.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+   * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+   * Neither the name of Google LLC nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+```
+
+---
+
 ## Go runtime and standard library (embedded in D2 WebAssembly)
 
 - Version: go1.24.6
@@ -6715,6 +7043,255 @@ INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
 OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
 THIS SOFTWARE.
+```
+
+---
+
+## JamaJS singular value decomposition and hypot adaptation (via layout-base/Mermaid)
+
+- Version: layout-base 2.0.1 adaptation; JamaJS source reference 6d24a590
+- Upstream: https://github.com/dragonfly-ai/JamaJS
+- Licence: Apache-2.0
+- JamaJS/JAMA authorship is identified in the upstream source; no separate NOTICE file is present in the reviewed reference.
+
+### mermaid-jamajs-svd--APACHE-2.0.txt
+
+```text
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "{}"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright {yyyy} {name of copyright owner}
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+```
+
+---
+
+## JavaScript Brotli decoder embedded in D2 browser loader
+
+- Version: D2 vendored decoder at source commit 581c9109; matching google/brotli v1.1.0 reference
+- Upstream: https://github.com/google/brotli
+- Licence: MIT
+- Copyright (c) 2009, 2010, 2013-2016 by the Brotli Authors.
+- Copyright 2017 Google Inc. All Rights Reserved.
+
+### d2-js-brotli--MIT.txt
+
+```text
+Copyright (c) 2009, 2010, 2013-2016 by the Brotli Authors.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 ```
 
 ---
@@ -7921,7 +8498,7 @@ D: ARM EHABI Unwind & Exception Handling
 
 ## Liberation Mono WOFF (embedded in D2 WebAssembly via Chroma)
 
-- Version: bundled in Chroma v2.14.0
+- Version: Official Liberation Mono 2.00.5 regular TTF, deterministic WOFF1 wrap via Chroma v2.14.0
 - Upstream: https://github.com/alecthomas/chroma
 - Licence: OFL-1.1
 - Digitized data copyright (c) 2010 Google Corporation; Reserved Font Names Arimo, Tinos and Cousine
@@ -11232,6 +11809,41 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+```
+
+---
+
+## Velocity spring generator contribution credited through Cytoscape/Mermaid
+
+- Version: Matching historical Velocity 1.2.2 reference; adaptation origin unspecified
+- Upstream: https://github.com/julianshapiro/velocity
+- Licence: MIT
+- Copyright (c) 2014 Julian Shapiro
+
+### cytoscape-velocity-spring--MIT.txt
+
+```text
+The MIT License
+
+Copyright (c) 2014 Julian Shapiro
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 ```
 
 ---

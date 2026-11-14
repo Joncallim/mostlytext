@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "mermaid_archive_sha256": "6ad2f42c3fc26bbf9e45cbb6d11898972573ea52b33a5f4ff51952899f950ffd",
+  "mermaid_map_sha256": "43cd977e8e0f351d6c47d31302c564f1c21fdc1e0be0d9e46370ee5e23cea004",
+  "mermaid_bundle_sha256": "581ed7d74bd9048d0e3a91363927d72ef22942d7722546b27f7cc29e35390eb8",
+  "snippets": {
+    "jama_svd_hypot": {
+      "source_index": 1039,
+      "source_path": "../../../node_modules/.pnpm/layout-base@2.0.1/node_modules/layout-base/layout-base.js",
+      "source_sha256": "ec15ab5df9af3f20708f4faab994accf91cda71848cd5bb10a23432cc50b6745",
+      "first_line_inclusive": 4318,
+      "end_line_exclusive": 4954,
+      "expected_mappings": 1989,
+      "mapped_positions": 1989
+    },
+    "random_seed_1_0_2": {
+      "source_index": 828,
+      "source_path": "../../../node_modules/.pnpm/layout-base@1.0.2/node_modules/layout-base/layout-base.js",
+      "source_sha256": "c7fdd9f59676fadd6c4a9c0fd6aa51d1ce8497695d396a7bdd98ffc95788b8ea",
+      "first_line_inclusive": 3155,
+      "end_line_exclusive": 3159,
+      "expected_mappings": 21,
+      "mapped_positions": 21
+    },
+    "random_seed_2_0_1": {
+      "source_index": 1039,
+      "source_path": "../../../node_modules/.pnpm/layout-base@2.0.1/node_modules/layout-base/layout-base.js",
+      "source_sha256": "ec15ab5df9af3f20708f4faab994accf91cda71848cd5bb10a23432cc50b6745",
+      "first_line_inclusive": 3224,
+      "end_line_exclusive": 3228,
+      "expected_mappings": 21,
+      "mapped_positions": 21
+    },
+    "cytoscape_rounded_corner": {
+      "source_index": 827,
+      "source_path": "../../../node_modules/.pnpm/cytoscape@3.34.0/node_modules/cytoscape/dist/cytoscape.esm.mjs",
+      "source_sha256": "9ffbc8172ca3bd6723fba3513f96194f0e4c98225e00f380948f285869517803",
+      "first_line_inclusive": 23500,
+      "end_line_exclusive": 23600,
+      "expected_mappings": 314,
+      "mapped_positions": 314
+    }
+  },
+  "js_yaml_exception": {
+    "source_sha256": "9ef16628112beacc7497c3f3d0ab001c66c2db501f9e21fad4c30e7cd21d1d10",
+    "citation": "stackoverflow.com/questions/8458984",
+    "classification": "Related Error subclass technique; copied expression not established by narrow comparison."
+  },
+  "scope": "Selected source-map positions, not a grant or complete nested-code review."
+}

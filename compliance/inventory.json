@@ -97,7 +97,7 @@
         },
         {
           "path": "MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/NOTICE.txt",
-          "sha256": "31d12ea70d767e555cccfee22c18a902176e76edc7e4f54e6cd94e82be63270d"
+          "sha256": "42e53e67e27421e10b3ce876ac459c670e5b24c077c48615ffee3cbb983d4904"
         }
       ],
       "owns": [
@@ -108,13 +108,13 @@
       "files": [
         {
           "path": "MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/d2-browser.js",
-          "sha256": "991a44779c91b74cbdf141228a6ba34592fe9b708fe19c221eba9ef4a7cfe33e"
+          "sha256": "ef6d450712e4356ccdd5e9e3a732c4b9a761ac69ab7a71407012ad36dcf49fd0"
         }
       ],
       "npm_file_sha256": "9898965444a940cdbedda3b039f717e96a86ffe9b3170bf30f8fea94ffb66e8a",
-      "modifications": "Trailing `export{lw as D2}` replaced with `window.D2=lw;` (one statement; every other byte identical). Documented in NOTICE.txt.",
-      "provenance": "verified",
-      "evidence": "The integrity-checked @terrastruct/d2@0.1.33 npm archive matches the shipped browser file except for the documented export replacement. npm gitHead names source commit 581c91096b62d644fb5168313142c836b7e68e74; the js/wasm source-build graph and 16 external Go module licence-text hashes are recorded in compliance/evidence/d2-0.1.33/. This is publisher provenance and source-graph evidence, not an independent rebuild or completed source offer. The complete Go 1.24.6 root notice is also preserved; compliance/evidence/d2-go-runtime/ binds runtime PC records through the optimized WASM element table to defined code bodies without executing WASM.",
+      "modifications": "The trailing ES-module export is replaced with window.D2=lw; and only the Brotli-compressed WASM literal is replaced by a controlled Go build with a lossless WOFF wrap of official Liberation Mono 2.00.5. See NOTICE.txt and compliance/evidence/d2-font-replacement/.",
+      "provenance": "review-required",
+      "evidence": "Publisher 0.1.33 input and export patch remain pinned by compliance/evidence/d2-0.1.33/. The new browser bytes preserve the publisher JavaScript except for the one-statement export patch and replacement of the compressed WASM literal. The replacement is compiled from pinned D2 source commit 581c91096b62d644fb5168313142c836b7e68e74 with a patched Chroma v2.14.0 source and official Liberation Mono 2.00.5 TTF. See compliance/evidence/d2-font-replacement/ for the build and comparison. This is a controlled new build, not a reproduction of the publisher optimizer or a completed source offer.",
       "lc": [
         "LC-01",
         "LC-03",
@@ -127,12 +127,12 @@
         "status": "planned"
       },
       "open_items": [
-        "LC-03: complete independent review of the D2 Go/WASM source graph and embedded/nested code, including Liberation Mono Reserved Font Name treatment, and approve/publish the upstream package plus one-line patch through LC-09. Complete root texts for all 16 recorded module inputs, including the FreeType License option and binary acknowledgement, are now distributed as conservative source-build attributions; this is not an independent WASM rebuild or complete source-offer approval. Go runtime root attribution and selected actual code-body linkage are recorded separately; complete per-file/nested runtime obligations remain open."
+        "LC-03: complete independent review of the D2 Go/WASM source graph, ELK Java/GWT preferred source and modifications, JavaScript Brotli decoder origin, Go JavaScript runtime revision, other nested code and source-package completeness; approve/publish the reviewed package through LC-09. The official Liberation Mono 2.00.5 TTF has been wrapped without altering any table bytes, but final RFN and functional treatment remains an independent rights judgement. The new Go build does not reproduce the historical publisher optimizer. Complete root texts for all 16 recorded module inputs are distributed as conservative source-build attributions; complete per-file/nested runtime obligations remain open."
       ],
       "runtime_resources": [
         {
           "name": "d2-browser.js",
-          "sha256": "991a44779c91b74cbdf141228a6ba34592fe9b708fe19c221eba9ef4a7cfe33e",
+          "sha256": "ef6d450712e4356ccdd5e9e3a732c4b9a761ac69ab7a71407012ad36dcf49fd0",
           "path": "MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/d2-browser.js"
         }
       ]
@@ -141,7 +141,7 @@
       "id": "d2-liberation-mono",
       "name": "Liberation Mono WOFF (embedded in D2 WebAssembly via Chroma)",
       "kind": "embedded",
-      "version": "bundled in Chroma v2.14.0",
+      "version": "Official Liberation Mono 2.00.5 regular TTF, deterministic WOFF1 wrap via Chroma v2.14.0",
       "upstream": "https://github.com/alecthomas/chroma",
       "resolution": "exact",
       "licence": "OFL-1.1",
@@ -165,7 +165,98 @@
         "LC-03",
         "LC-07"
       ],
-      "notes": "The Chroma v2.14.0 module ZIP in the retained D2 source-review archive contains the full copyright/OFL header and 233,248-byte base64 WOFF. That exact string occurs once in both publisher d2.wasm variants at byte offset 14,657,061. Decoded WOFF SHA-256: 29d9447a83dbf9866aff37f7dc972441302da97f9a242ea0405f60841e9b630f. Its name table identifies Liberation Mono and OFL-1.1. This proves publisher-byte correspondence, not an independent D2 rebuild or a Reserved Font Name clearance; see compliance/evidence/d2-0.1.33/README.md."
+      "notes": "The new embedded WOFF is generated from the official Liberation Mono 2.00.5 regular TTF, preserving all 18 sfnt table bytes, including names and post underline/fixed-pitch fields. Input/output digests and converter options are in compliance/evidence/d2-font-replacement/. The publisher WOFF and its 15/18 table comparison remain historical evidence. A model-source technical review is not a legal RFN determination."
+    },
+    {
+      "id": "d2-elkjs",
+      "name": "ELK JavaScript layout runtime embedded in D2",
+      "kind": "embedded",
+      "version": "D2 identifies elkjs 0.8.2; exact transformed source unresolved",
+      "upstream": "https://github.com/kieler/elkjs",
+      "resolution": "source reference and exact D2 payload; build correspondence incomplete",
+      "licence": "EPL-2.0",
+      "copyright": [
+        "Kiel University and contributors; see complete EPL text and upstream source"
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-elkjs--EPL-2.0.txt",
+          "sha256": "89591d4578fb1ebd91501312a3d25f021bd865a2e436641c1cf7b1bc7e3c1617",
+          "upstream": "https://github.com/kieler/elkjs",
+          "upstream_revision": "cd0dc6b4e4bf1f221db04147f88b4d7c7041b834",
+          "upstream_path": "LICENSE.md"
+        }
+      ],
+      "embedded_in": "d2",
+      "provenance": "review-required",
+      "lc": [
+        "LC-01",
+        "LC-03",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/d2-browser-nested-inputs/reproduction.json",
+      "notes": "The shipped browser resource contains a Brotli payload that decodes byte-for-byte to the pinned D2 elk.js. D2 identifies elkjs 0.8.2. The tagged elkjs archive includes generated JS and additional source, but its build.gradle requires separate ELK Java source and GWT dependencies; complete preferred-source correspondence, D2 modifications and per-file obligations remain under review. The shipped browser resource has been rebuilt with a replacement WASM literal; this attribution remains applicable to the unchanged JavaScript inputs."
+    },
+    {
+      "id": "d2-js-brotli",
+      "name": "JavaScript Brotli decoder embedded in D2 browser loader",
+      "kind": "embedded",
+      "version": "D2 vendored decoder at source commit 581c9109; matching google/brotli v1.1.0 reference",
+      "upstream": "https://github.com/google/brotli",
+      "resolution": "D2 vendored file and matching licensed source reference; exact origin unresolved",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright (c) 2009, 2010, 2013-2016 by the Brotli Authors.",
+        "Copyright 2017 Google Inc. All Rights Reserved."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2-js-brotli--MIT.txt",
+          "sha256": "3d180008e36922a4e8daec11c34c7af264fed5962d07924aea928c38e8663c94",
+          "upstream": "https://github.com/google/brotli",
+          "upstream_revision": "ed738e842d2fbdf2d6459e39267a633c4a9b2f5d",
+          "upstream_path": "LICENSE"
+        }
+      ],
+      "embedded_in": "d2",
+      "provenance": "review-required",
+      "lc": [
+        "LC-01",
+        "LC-03",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/d2-browser-nested-inputs/reproduction.json",
+      "notes": "D2 build.js embeds its separate JavaScript vendor/decode.min.js in the browser loader and worker. Its algorithm/constant structure matches google/brotli decode.js; the separate Go andybalholm/brotli record does not prove this JS input. Exact copied revision, transformations and grant application remain under review. The shipped browser resource has been rebuilt with a replacement WASM literal; this attribution remains applicable to the unchanged JavaScript inputs."
+    },
+    {
+      "id": "d2-go-js-runtime",
+      "name": "Go JavaScript WASM runtime embedded in D2 browser loader",
+      "kind": "embedded",
+      "version": "D2 pinned source commit 581c9109; Go 1.24.6 reference differs",
+      "upstream": "https://go.dev",
+      "resolution": "exact D2 vendored file; original revision and modification diff under review",
+      "licence": "BSD-3-Clause",
+      "copyright": [
+        "Copyright 2018 The Go Authors. All rights reserved."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/d2--GO-RUNTIME-LICENSE.txt",
+          "sha256": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+          "upstream": "https://go.dev/dl/go1.24.6.darwin-arm64.tar.gz",
+          "upstream_revision": "go1.24.6",
+          "upstream_path": "go/LICENSE"
+        }
+      ],
+      "embedded_in": "d2",
+      "provenance": "review-required",
+      "lc": [
+        "LC-01",
+        "LC-03",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/d2-browser-nested-inputs/reproduction.json",
+      "notes": "D2 build.js includes d2js/js/wasm/wasm_exec.js in the browser payload. The vendored file carries Go Authors BSD header and differs in bytes from the Go 1.24.6 reference; exact original revision and semantic modifications require review. Go root notice already ships. The shipped browser resource has been rebuilt with a replacement WASM literal; this attribution remains applicable to the unchanged JavaScript inputs."
     },
     {
       "id": "expat",
@@ -4279,6 +4370,34 @@
       "npm": "layout-base@2.0.1"
     },
     {
+      "id": "mermaid-jamajs-svd",
+      "name": "JamaJS singular value decomposition and hypot adaptation (via layout-base/Mermaid)",
+      "kind": "attribution",
+      "version": "layout-base 2.0.1 adaptation; JamaJS source reference 6d24a590",
+      "upstream": "https://github.com/dragonfly-ai/JamaJS",
+      "resolution": "explicitly credited adaptation; exact historical copy revision unspecified",
+      "licence": "Apache-2.0",
+      "copyright": [
+        "JamaJS/JAMA authorship is identified in the upstream source; no separate NOTICE file is present in the reviewed reference."
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/mermaid-jamajs-svd--APACHE-2.0.txt",
+          "sha256": "c6596eb7be8581c18be736c846fb9173b69eccf6ef94c5135893ec56bd92ba08",
+          "upstream": "https://github.com/dragonfly-ai/JamaJS",
+          "upstream_revision": "6d24a590ea74b16d99c96d90b936f7edea34af78",
+          "upstream_path": "LICENSE"
+        }
+      ],
+      "provenance": "verified",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/mermaid-nested-snippets/reproduction.json",
+      "notes": "layout-base 2.0.1 explicitly credits its SVD/hypot code to JamaJS and states changes: 2D-array input, dimension handling, return object, removed hypot parameter types and let declarations. Its bundled source is reached by 1,989 outer Mermaid source-map positions in the SVD body. The complete upstream Apache-2.0 text is distributed; no unique original copy revision, independent rights opinion or other nested-code clearance is asserted."
+    },
+    {
       "id": "mermaid-package-lodash-es-4.17.23",
       "name": "lodash-es (via Mermaid)",
       "kind": "attribution",
@@ -5528,6 +5647,34 @@
       ],
       "evidence": "compliance/evidence/framer-mit-reference/mapping.json",
       "notes": "Conservative matching-source attribution for the Framer/Koen spring helper expressly credited under MIT by Cytoscape. The actual 2014 MIT reference contains the same four-helper CoffeeScript block as the older BSD-style comparison. Four specific spring probes map into shipped Mermaid. Wrapping/inlining/parameter adaptations remain explicit; this is not a unique original-input, complete compiled-body equality or independent rights determination. Older BSD/intermediary evidence and Mermaid review-required items remain open."
+    },
+    {
+      "id": "cytoscape-velocity-spring",
+      "name": "Velocity spring generator contribution credited through Cytoscape/Mermaid",
+      "kind": "attribution",
+      "version": "Matching historical Velocity 1.2.2 reference; adaptation origin unspecified",
+      "upstream": "https://github.com/julianshapiro/velocity",
+      "licence": "MIT",
+      "copyright": [
+        "Copyright (c) 2014 Julian Shapiro"
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/cytoscape-velocity-spring--MIT.txt",
+          "sha256": "725d6011a8aa52d87469af24ac6815f06add959ddb7dbae96bcb17c29d26a79a",
+          "upstream": "https://github.com/julianshapiro/velocity",
+          "upstream_revision": "d9cd60bc0c026adff6303869934bb58fc832e82f",
+          "upstream_path": "LICENSE.md"
+        }
+      ],
+      "provenance": "verified",
+      "resolution": "matching historical generator fragment; exact copying event unspecified",
+      "lc": [
+        "LC-01",
+        "LC-07"
+      ],
+      "evidence": "compliance/evidence/framer-spring-history/manifest.json",
+      "notes": "The 2015 Cytoscape introduction matches the complete contemporary Velocity generator body after removing block comments and whitespace. The matching reference carries Julian Shapiro MIT terms. This records conservative fragment attribution alongside the Framer/Koen reference; it does not assert distribution of the whole Velocity package, present-day byte identity, or a uniquely established adaptation origin."
     },
     {
       "id": "libcxx-recorded-image-root-notices",

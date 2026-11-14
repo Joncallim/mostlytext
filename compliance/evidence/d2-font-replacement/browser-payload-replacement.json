@@ -1,0 +1,12 @@
+{
+  "publisher_browser_sha256": "991a44779c91b74cbdf141228a6ba34592fe9b708fe19c221eba9ef4a7cfe33e",
+  "publisher_wasm_sha256": "7b0d5db9e148d1eba9ab7494a468a79fd92aca93fd3a89cad5876e68097170af",
+  "replacement_wasm_sha256": "175e672a9a6c939a65363c50e4092c7c217add5f9a0fb91364e906a9b137586e",
+  "replacement_wasm_bytes": 23704068,
+  "replacement_brotli_sha256": "4527d5ef715dd3212b6a717daa336755d8b8e1d717280b004c46f1994257d085",
+  "replacement_brotli_bytes": 5466981,
+  "output_browser_sha256": "ef6d450712e4356ccdd5e9e3a732c4b9a761ac69ab7a71407012ad36dcf49fd0",
+  "output_browser_bytes": 8156339,
+  "literal_offset": 150258,
+  "node_version": "v26.11.1"
+}

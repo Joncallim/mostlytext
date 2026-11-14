@@ -1,27 +1,31 @@
-d2-browser.js is @terrastruct/d2 0.1.33 (https://github.com/d2lang/d2),
-MPL-2.0 licensed (D2-LICENSE.txt), with exactly one modification from
-upstream: the trailing `export{lw as D2}` ES-module export statement is
-replaced with `window.D2=lw;`.
+This browser resource is based on @terrastruct/d2 0.1.33
+(https://github.com/d2lang/d2), licensed under MPL-2.0. D2-LICENSE.txt
+contains the licence. MostlyText retains the browser renderer locally for
+offline preview and export.
 
-Why: the upstream file is a genuine ES module. Loading it via
-`<script type="module">` and an internal `import('./d2-browser.js')` —
-the natural approach for an ES module — fails under WebKit's `file://`
-loading model with "Cross-origin script load denied by Cross-Origin
-Resource Sharing policy," even though the containing page loads fine via
-`loadFileURL(_:allowingReadAccessTo:)` and the top-level module script
-itself executes. This is a real, current WebKit restriction on ES module
-sub-imports specifically, not on ordinary `<script src>` resource
-loading. Turning the file into a plain global-assigning script sidesteps
-it entirely, matching how every other bundled JS library in this app
-(Mermaid, viz-js) is already loaded.
+MostlyText makes two changes to the published browser resource:
 
-No other change is made — no minification, no other content edit — so
-the WASM payload and D2 version are exactly upstream's own 0.1.33 build.
+1. Replace the trailing ES module `export{lw as D2}` statement with
+   `window.D2=lw;`. WebKit rejects the needed file URL module sub-import,
+   while an ordinary local script works within the app's file access scope.
+2. Replace only the embedded Brotli-compressed Go WebAssembly literal. The new
+   WebAssembly is compiled from pinned D2 source commit
+   581c91096b62d644fb5168313142c836b7e68e74 with the official
+   Liberation Mono 2.00.5 regular TTF wrapped losslessly as WOFF1 in Chroma
+   v2.14.0. The old embedded font had differing FFTM, head and post tables.
+   The new WOFF retains every original TTF table byte, including name and
+   underline/fixed-pitch metadata. The rebuilt WebAssembly is not claimed to
+   reproduce the publisher's optimized WebAssembly.
 
-MPL-2.0 is weak, file-level copyleft: a modified MPL-covered file's
-source must stay available if distributed, which it already is — this
-is a plain, readable, committed resource in this repository, and this
-NOTICE documents the exact one-line change rather than leaving it to be
-discovered in a diff. See planning/epic-21-implementation.md §1.1 and
-the Slice 0 as-built note for the full investigation this NOTICE was
-written from.
+The minified browser resource is not by itself sufficient readable
+corresponding source. The D2 source, Chroma font patch, original TTF, WOFF
+conversion record, module sources, ELK and JavaScript Brotli source references,
+build instructions and notices are assembled in a local source-review package
+for the version-matched offer described in compliance/ARCHIVE_PLAN.md. Its
+nested-source review is incomplete, and no public upload is approved.
+
+The full bundle also contains ELK JavaScript layout code under EPL-2.0, a
+JavaScript Brotli decoder under MIT and a Go JavaScript/WASM runtime under
+BSD-style terms. Their scoped attribution and remaining source-review limits
+are in the generated third-party notices and compliance evidence. This notice
+does not resolve uncertain original adaptation histories or approve release.
