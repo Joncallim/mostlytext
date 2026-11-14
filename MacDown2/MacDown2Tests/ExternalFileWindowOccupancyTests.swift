@@ -25,17 +25,18 @@ struct ExternalFileWindowOccupancyTests {
         let controller = fixture.makeWindow(model: model)
         fixture.coordinator.controllers = [controller]
         let window = try #require(controller.window)
+        let untitled = String(localized: "Untitled")
         #expect(!window.isKeyWindow)
-        #expect(window.title == "Untitled")
+        #expect(window.title == untitled)
 
         try await Task.sleep(for: .milliseconds(150))
         model.tabStore.updateActiveDocument { $0.updatingText("local draft") }
-        try await waitUntil(.milliseconds(500), "dirty title without an idle polling tick") {
-            window.title == "● Untitled" && window.isDocumentEdited
+        try await waitUntil(.milliseconds(750), "dirty title without an idle polling tick") {
+            window.title == "● \(untitled)" && window.isDocumentEdited
         }
         model.tabStore.updateActiveDocument { _ in FileDocument(text: "clean replacement") }
-        try await waitUntil(.milliseconds(500), "clean title after document replacement") {
-            window.title == "Untitled" && !window.isDocumentEdited
+        try await waitUntil(.milliseconds(750), "clean title after document replacement") {
+            window.title == untitled && !window.isDocumentEdited
         }
 
         fixture.coordinator.removeController(controller)
@@ -161,6 +162,7 @@ struct ExternalFileWindowOccupancyTests {
         let editor = try #require(controller.editorStore.existingSystem(for: identity))
         let replacement = directory.appendingPathComponent("replacement.md")
         try "external replacement".write(to: replacement, atomically: true, encoding: .utf8)
+        let originalIdentity = try watcherIdentity(for: source)
         let positiveStart = try processWakeups()
         guard rename(replacement.path, source.path) == 0 else {
             throw POSIXError(POSIXErrorCode(rawValue: errno) ?? .EIO)
@@ -174,9 +176,13 @@ struct ExternalFileWindowOccupancyTests {
         #expect(try String(contentsOf: source, encoding: .utf8) == "external replacement")
         #expect(editor.selectedRange == NSRange(location: 3, length: 4))
         #expect(editor.scrollOffset == 25)
+        try await waitUntil(.seconds(5), "retired original file watcher") {
+            (try? eventOnlyDescriptorIdentities().contains(originalIdentity)) == false
+        }
 
         let shortReplacement = directory.appendingPathComponent("short.md")
         try "short".write(to: shortReplacement, atomically: true, encoding: .utf8)
+        let intermediateIdentity = try watcherIdentity(for: source)
         guard rename(shortReplacement.path, source.path) == 0 else {
             throw POSIXError(POSIXErrorCode(rawValue: errno) ?? .EIO)
         }
@@ -186,6 +192,9 @@ struct ExternalFileWindowOccupancyTests {
         #expect(editor.selectedRange == NSRange(location: 3, length: 2))
         #expect(editor.scrollOffset == 25)
         #expect(try String(contentsOf: source, encoding: .utf8) == "short")
+        try await waitUntil(.seconds(5), "retired intermediate file watcher") {
+            (try? eventOnlyDescriptorIdentities().contains(intermediateIdentity)) == false
+        }
         let sessionResult = await fixture.coordinator.saveSessionResult()
         #expect(sessionResult.persisted)
         let session = try #require(WorkspaceSessionStore(
@@ -215,15 +224,33 @@ struct ExternalFileWindowOccupancyTests {
         throw CancellationError()
     }
 
-    private func watcherDescriptors(for urls: [URL]) throws -> [String: Int] {
-        var identities: [String: (device: dev_t, inode: ino_t)] = [:]
-        for url in urls {
-            var info = stat()
-            guard lstat(url.path, &info) == 0 else {
-                throw POSIXError(POSIXErrorCode(rawValue: errno) ?? .EIO)
-            }
-            identities[url.path] = (info.st_dev, info.st_ino)
+    private struct WatcherIdentity: Hashable {
+        let device: dev_t
+        let inode: ino_t
+    }
+
+    private func watcherIdentity(for url: URL) throws -> WatcherIdentity {
+        var info = stat()
+        guard lstat(url.path, &info) == 0 else {
+            throw POSIXError(POSIXErrorCode(rawValue: errno) ?? .EIO)
         }
+        return WatcherIdentity(device: info.st_dev, inode: info.st_ino)
+    }
+
+    private func watcherDescriptors(for urls: [URL]) throws -> [String: Int] {
+        var identities: [String: WatcherIdentity] = [:]
+        for url in urls {
+            identities[url.path] = try watcherIdentity(for: url)
+        }
+        let live = try eventOnlyDescriptorIdentities()
+        var counts = Dictionary(uniqueKeysWithValues: urls.map { ($0.path, 0) })
+        for (path, identity) in identities {
+            counts[path] = live.filter { $0 == identity }.count
+        }
+        return counts
+    }
+
+    private func eventOnlyDescriptorIdentities() throws -> [WatcherIdentity] {
         let availableBytes = proc_pidinfo(getpid(), PROC_PIDLISTFDS, 0, nil, 0)
         guard availableBytes >= 0 else { throw POSIXError(.EIO) }
         var fds = [proc_fdinfo](
@@ -235,17 +262,15 @@ struct ExternalFileWindowOccupancyTests {
         guard usedBytes >= 0, Int(usedBytes) < fds.count * MemoryLayout<proc_fdinfo>.size else {
             throw POSIXError(.EOVERFLOW)
         }
-        var counts = Dictionary(uniqueKeysWithValues: urls.map { ($0.path, 0) })
+        var identities: [WatcherIdentity] = []
         for index in 0 ..< Int(usedBytes) / MemoryLayout<proc_fdinfo>.size {
             let descriptor = fds[index].proc_fd
             guard fcntl(descriptor, F_GETFL) & O_EVTONLY == O_EVTONLY else { continue }
             var info = stat()
             guard fstat(descriptor, &info) == 0 else { continue }
-            for (path, target) in identities where info.st_dev == target.device && info.st_ino == target.inode {
-                counts[path, default: 0] += 1
-            }
+            identities.append(WatcherIdentity(device: info.st_dev, inode: info.st_ino))
         }
-        return counts
+        return identities
     }
 
     private func processWakeups() throws -> (interrupt: UInt64, platformIdle: UInt64) {
