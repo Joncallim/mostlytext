@@ -9,7 +9,9 @@ on:
     paths:
       - '.github/workflows/external-controller-live-latency.yml'
       - 'MacDown2/MacDown2Tests/ExternalFileControllerLiveLatencyTests.swift'
+      - 'MacDown2/MacDown2Tests/ExternalFileWindowOccupancyTests.swift'
       - 'MacDown2/MacDown2/ExternalFileController.swift'
+      - 'MacDown2/MacDown2/WindowController+DocumentObservation.swift'
       - 'MacDown2/Packages/MacDownKit/Sources/FileCore/**'
       - 'MacDown2/Packages/MacDownKit/Package.resolved'
       - 'MacDown2/project.yml'
@@ -67,6 +69,8 @@ jobs:
           mkdir -p "$ROOT"
           export MOSTLYTEXT_CONTROLLER_LATENCY_OUTPUT="$ROOT/measurements"
           export TEST_RUNNER_MOSTLYTEXT_CONTROLLER_LATENCY_OUTPUT="$MOSTLYTEXT_CONTROLLER_LATENCY_OUTPUT"
+          export MOSTLYTEXT_EXTERNAL_PROCESS_OUTPUT="$ROOT/measurements"
+          export TEST_RUNNER_MOSTLYTEXT_EXTERNAL_PROCESS_OUTPUT="$MOSTLYTEXT_EXTERNAL_PROCESS_OUTPUT"
           APP="$RUNNER_TEMP/external-controller-latency-app/Build/Products/${{ matrix.configuration }}/MacDown2.app/Contents/MacOS/MacDown2"
           python3 .github/scripts/run-owned-app-tests.py "$ROOT/diagnostics" "$APP" -- \
             xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
@@ -75,7 +79,8 @@ jobs:
               -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/external-controller-latency-app" \
               -onlyUsePackageVersionsFromResolvedFile -parallel-testing-enabled NO \
               -resultBundlePath "$ROOT/latency.xcresult" \
-              -only-testing:MacDown2Tests/ExternalFileControllerLiveLatencyTests test-without-building \
+              -only-testing:MacDown2Tests/ExternalFileControllerLiveLatencyTests \
+              -only-testing:MacDown2Tests/ExternalFileWindowOccupancyTests test-without-building \
             | tee "$ROOT/latency.log"
           python3 - "$ROOT/measurements" <<'PY'
           import json
@@ -91,6 +96,15 @@ jobs:
                           'rename_start_to_model_and_editor_ms'):
                   assert values[key] >= 0, (size, key, values[key])
               print(json.dumps(values, sort_keys=True))
+          occupancy = json.loads((root / 'window-occupancy.json').read_text())
+          assert occupancy['window_count'] == 3
+          assert occupancy['file_watch_descriptors'] == 3
+          assert occupancy['parent_watch_descriptors'] == 3
+          for key in ('idle_interrupt_wakeups', 'idle_platform_idle_wakeups',
+                      'positive_interrupt_wakeups', 'positive_platform_idle_wakeups',
+                      'closed_interrupt_wakeups', 'closed_platform_idle_wakeups'):
+              assert occupancy[key] >= 0, (key, occupancy[key])
+          print(json.dumps(occupancy, sort_keys=True))
           PY
       - uses: actions/upload-artifact@v4
         if: always()
