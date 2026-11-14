@@ -9,6 +9,100 @@ import Themes
 @MainActor
 @Suite("Mounted viewport highlighter integration", .serialized)
 struct ViewportHighlighterIntegrationTests {
+    @Test func nonMarkdownReducedModeDoesNotScheduleViewportRetry() {
+        let initial = String(repeating: "x", count: 9000)
+        let system = EditorTextSystem(identity: UUID().uuidString, initialText: initial, configuration: .default)
+        let highlighter = NeonSyntaxHighlighter(
+            textSystem: system, languageID: "swift", theme: BundledThemes.light,
+            registry: GrammarRegistry(), sizePolicy: { _ in .markdown }, enableViewport: true
+        )
+        defer { highlighter.tearDown() }
+        #expect(highlighter.state.isReduced)
+        system.textView.insertText("y", replacementRange: NSRange(location: 100, length: 0))
+        #expect(highlighter.state.isReduced)
+        #expect(highlighter.restoreTask == nil)
+        #expect(highlighter.viewportSession == nil)
+    }
+
+    @Test func cachedReducedHighlighterAdmitsViewportAfterEditorMount() async throws {
+        let initial = "# Heading\n\n" + String(repeating: "plain words\n", count: 1000)
+        let identity = UUID().uuidString
+        let system = EditorTextSystem(identity: identity, initialText: initial, configuration: .default)
+        let syntaxStore = SyntaxHighlightStore()
+        let highlighter = try #require(
+            syntaxStore.highlighter(
+                for: identity, textSystem: system, languageID: "markdown", theme: BundledThemes.light
+            ) as? NeonSyntaxHighlighter
+        )
+        #expect(highlighter.state.isReduced)
+        #expect(!highlighter.state.isVisibleOnly)
+        #expect(highlighter.viewportSession == nil)
+
+        let scroll = NSScrollView(frame: NSRect(x: 0, y: 0, width: 500, height: 250))
+        scroll.documentView = system.textView
+        let window = NSWindow(contentRect: scroll.frame, styleMask: [.titled], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        window.contentView = scroll
+        defer { syntaxStore.evictAll(); window.orderOut(nil); window.close() }
+        let cached = try #require(
+            syntaxStore.highlighter(
+                for: identity, textSystem: system, languageID: "markdown", theme: BundledThemes.light
+            ) as? NeonSyntaxHighlighter
+        )
+        #expect(cached === highlighter)
+        #expect(cached.state.isVisibleOnly)
+        #expect(syntaxStore.state(for: identity)?.isVisibleOnly == true)
+        #expect(system.preEditObserver != nil)
+        let session = try #require(cached.viewportSession)
+        await session.waitForPendingParse()
+        #expect(session.fullParseCount == 1)
+        #expect(system.textView.string == initial)
+    }
+
+    @Test(.timeLimit(.minutes(2)))
+    func crossingViewportAdmissionReturnsToReducedAndCanRestore() async throws {
+        let initial = "# Heading\n\n" + String(repeating: "plain words\n", count: 1000)
+        let identity = UUID().uuidString
+        let system = EditorTextSystem(identity: identity, initialText: initial, configuration: .default)
+        let scroll = NSScrollView(frame: NSRect(x: 0, y: 0, width: 500, height: 250))
+        scroll.documentView = system.textView
+        let window = NSWindow(contentRect: scroll.frame, styleMask: [.titled], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        window.contentView = scroll
+        let syntaxStore = SyntaxHighlightStore()
+        defer { syntaxStore.evictAll(); window.orderOut(nil); window.close() }
+        let highlighter = try #require(
+            syntaxStore.highlighter(
+                for: identity, textSystem: system, languageID: "markdown", theme: BundledThemes.light
+            ) as? NeonSyntaxHighlighter
+        )
+        #expect(highlighter.state.isVisibleOnly)
+        let append = String(repeating: "x", count: NeonSyntaxHighlighter.viewportMaxUTF16Units)
+        system.textView.insertText(append, replacementRange: NSRange(location: (initial as NSString).length, length: 0))
+        #expect(highlighter.state.isReduced)
+        #expect(!highlighter.state.isVisibleOnly)
+        #expect(highlighter.viewportSession == nil)
+        #expect(system.preEditObserver == nil)
+        #expect(system.textView.string == initial + append)
+
+        syntaxStore.evict(identity)
+        let reopened = try #require(
+            syntaxStore.highlighter(
+                for: identity, textSystem: system, languageID: "markdown", theme: BundledThemes.light
+            ) as? NeonSyntaxHighlighter
+        )
+        #expect(reopened.state.isReduced)
+        #expect(reopened.viewportSession == nil)
+        reopened.restoreSleep = { _ in }
+        system.textView.insertText("", replacementRange: NSRange(
+            location: (initial as NSString).length, length: append.utf16.count
+        ))
+        await reopened.restoreTask?.value
+        #expect(reopened.state.isVisibleOnly)
+        #expect(reopened.viewportSession != nil)
+        #expect(system.textView.string == initial)
+    }
+
     @Test func closeDuringDeferredThresholdTransitionCannotResurrectOwner() async throws {
         let initial = "# Heading\n\n" + String(repeating: "plain words\n", count: 400)
         let system = EditorTextSystem(identity: UUID().uuidString, initialText: initial, configuration: .default)
@@ -63,12 +157,15 @@ struct ViewportHighlighterIntegrationTests {
         system.textView.setSelectedRange(NSRange(location: word.location, length: 0))
         system.scrollToVisible(utf16Range: word)
 
-        let highlighter = NeonSyntaxHighlighter(
-            textSystem: system, languageID: "markdown", theme: BundledThemes.light,
-            registry: GrammarRegistry(), enableViewport: true
+        let syntaxStore = SyntaxHighlightStore()
+        let highlighter = try #require(
+            syntaxStore.highlighter(
+                for: identity, textSystem: system, languageID: "markdown", theme: BundledThemes.light
+            ) as? NeonSyntaxHighlighter
         )
-        defer { highlighter.tearDown() }
+        defer { syntaxStore.evictAll() }
         #expect(highlighter.state.isVisibleOnly)
+        #expect(syntaxStore.state(for: identity)?.isVisibleOnly == true)
         #expect(highlighter.highlighter == nil)
         let session = try #require(highlighter.viewportSession)
         await session.waitForPendingParse()
@@ -79,6 +176,12 @@ struct ViewportHighlighterIntegrationTests {
         await session.waitForPendingParse()
         #expect(session.localParseCount == 1)
         #expect(model.text.contains("alphaXtarget"))
+        #expect(highlighter.state.isVisibleOnly)
+        let beforeStructuralEdit = session.fullParseCount
+        system.textView.insertText("\n", replacementRange: NSRange(location: word.location + 6, length: 0))
+        await session.waitForPendingParse()
+        #expect(session.fullParseCount == beforeStructuralEdit + 1)
+        #expect(model.text.contains("alphaX\ntarget"))
         #expect(highlighter.state.isVisibleOnly)
         highlighter.applyTheme(BundledThemes.dark)
         highlighter.viewportPainter?.paintVisible()
@@ -103,9 +206,10 @@ struct ViewportHighlighterIntegrationTests {
         highlighter.setLanguage("markdown")
         #expect(highlighter.state.isVisibleOnly)
         #expect(highlighter.viewportSession !== session)
-        highlighter.tearDown()
+        syntaxStore.evict(identity)
         #expect(highlighter.viewportSession == nil)
         #expect(system.preEditObserver == nil)
+        #expect(syntaxStore.state(for: identity) == nil)
         #expect(system.textView.string == model.text)
     }
 

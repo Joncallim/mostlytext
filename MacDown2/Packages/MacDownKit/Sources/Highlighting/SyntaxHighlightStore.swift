@@ -34,13 +34,15 @@ public final class SyntaxHighlightStore {
             if existing.languageID != languageID {
                 existing.setLanguage(languageID)
             }
+            (existing as? NeonSyntaxHighlighter)?.resumeViewportIfMounted()
             return existing
         }
         let newHighlighter = NeonSyntaxHighlighter(
             textSystem: textSystem,
             languageID: languageID,
             theme: theme,
-            registry: registry
+            registry: registry,
+            enableViewport: true
         )
         highlighters[identity] = newHighlighter
         states[identity] = newHighlighter.state

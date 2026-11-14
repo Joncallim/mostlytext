@@ -62,11 +62,11 @@ def prepare_test_package(root, output, baseline):
     return package, copied, hashlib.sha256(manifest.encode()).hexdigest()
 
 
-def diagnose_performance_failure(root, output, binary, helper, environment):
-    """Retain isolated results without changing the failed complete selection's verdict."""
+def qualify_hundred_caret(root, output, binary, helper, environment):
+    """Require three fresh-process passes of the mounted 100-caret budget."""
     if os.environ.get("CI") != "true":
-        raise SystemExit("Performance diagnostics require the owned hosted job")
-    destination = output / "performance-diagnostic"
+        raise SystemExit("Performance qualification requires the owned hosted job")
+    destination = output / "hundred-caret-qualification"
     destination.mkdir()
     inputs = {str(path): hashlib.sha256(path.read_bytes()).hexdigest() for path in [binary, helper]}
     metadata = []
@@ -77,11 +77,9 @@ def diagnose_performance_failure(root, output, binary, helper, environment):
                          "stdout": result.stdout, "stderr": result.stderr})
     (destination / "environment.json").write_text(json.dumps(metadata, indent=2) + "\n")
     results = []
-    selections = [(f"hundred-caret-{index}", "EditorHundredCaretPerformanceTests")
-                  for index in range(1, 4)]
-    selections += [("parse-only", "mainThreadParseBudgetDocumented"),
-                   ("performance-suite", "HighlightPerformanceTests")]
-    for label, selection in selections:
+    for index in range(1, 4):
+        label = f"hundred-caret-{index}"
+        selection = "EditorHundredCaretPerformanceTests"
         diagnostics = destination / (label + "-diagnostics")
         with (destination / (label + ".log")).open("w") as log:
             result = subprocess.run([
@@ -94,12 +92,17 @@ def diagnose_performance_failure(root, output, binary, helper, environment):
         results.append({"label": label, "selection": selection,
                         "supervisor_returncode": result.returncode, "owned_status": status})
         (destination / "results.json").write_text(json.dumps(results, indent=2) + "\n")
-        if status["timed_out"] or status["cancelled"]:
-            break
+        log_text = re.sub(r"\x1b\[[0-9;]*m", "", (destination / (label + ".log")).read_text())
+        if (result.returncode != 0 or status["returncode"] != 0
+                or status["timed_out"] or status["cancelled"]
+                or status["app_cleanup_requested"] != []
+                or not re.search(r"Test run with 2 tests in 1 suite passed", log_text)
+                or "100-caret 1-MB mounted insert:" not in log_text):
+            raise SystemExit("The isolated mounted 100-caret Release budget failed: " + label)
     if any(hashlib.sha256(Path(name).read_bytes()).hexdigest() != digest for name, digest in inputs.items()):
-        raise SystemExit("A diagnostic execution product changed")
+        raise SystemExit("A 100-caret execution product changed")
     (destination / "execution-sha256.json").write_text(json.dumps(inputs, indent=2) + "\n")
-    print("Isolated performance results retained; the original complete selection remains failed")
+    print("Three isolated mounted 100-caret Release budget passes verified")
 
 
 def qualify(root, output, configuration, baseline):
@@ -134,12 +137,11 @@ def qualify(root, output, configuration, baseline):
     selection = [str(owned), "--test-bundle-path", str(binary), "--testing-library", "swift-testing",
                  "--no-parallel", "--filter", pattern]
     if configuration == "release" and not baseline:
-        # The strict 1 MiB clock ceilings are a fresh-process benchmark. Two
-        # complete Release selections exceeded them after 1,000+ other tests,
-        # while the unchanged isolated suite passed on both exact products.
-        # Run every other editor/theme case here, then require all four clock
-        # cases in a separate owned process below; no test or limit is waived.
-        selection += ["--skip", "HighlightPerformanceTests"]
+        # Mounted-caret and parser clocks have failed inside the 1,200-case
+        # selection while fresh-process controls passed. Keep all
+        # functional cases here; require both unchanged Release budget suites
+        # independently below, without waiving a test or raising a ceiling.
+        selection += ["--skip", "HighlightPerformanceTests|EditorHundredCaretPerformanceTests"]
     with (output / "probe.log").open("w") as log:
         result = subprocess.run(selection, cwd=root, env=environment,
                                 stdout=log, stderr=subprocess.STDOUT, timeout=600)
@@ -172,8 +174,6 @@ def qualify(root, output, configuration, baseline):
         # minimum and the named controls below without pinning a stale total.
         if (result.returncode != 0 or completed is None
                 or int(completed.group(1)) < 1106 or int(completed.group(2)) < 151):
-            if configuration == "release" and 'Suite "Editor 100-caret Release budget" failed' in log:
-                diagnose_performance_failure(root, output, binary, owned, environment)
             raise SystemExit("All selected real editor/highlighter/theme tests must execute and pass")
         for name in ["preEditPlainParagraphWindowRefusesStructuralEdits",
                      "oracleRootWindowsAndInlineCapturesAfterEdits",
@@ -200,8 +200,10 @@ def qualify(root, output, configuration, baseline):
         if "CURRENT-LINE-PHASE" not in log:
             raise SystemExit("Real viewport draw measurement did not execute")
         if configuration == "release":
-            if "Suite HighlightPerformanceTests started" in log:
-                raise SystemExit("The complete selection did not isolate the strict performance suite")
+            if ("Suite HighlightPerformanceTests started" in log
+                    or 'Suite "Editor 100-caret Release budget" started' in log):
+                raise SystemExit("The functional selection did not isolate the strict performance suites")
+            qualify_hundred_caret(root, output, binary, owned, environment)
             with (output / "performance-qualification.log").open("w") as performance_log:
                 performance = subprocess.run([
                     str(owned), "--test-bundle-path", str(binary), "--testing-library", "swift-testing",

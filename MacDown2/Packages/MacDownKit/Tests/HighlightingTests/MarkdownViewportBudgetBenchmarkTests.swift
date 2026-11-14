@@ -5,8 +5,8 @@ import Foundation
 import SwiftUI
 import Testing
 
-/// Opt-in Release probe of the mounted session and painter. This is not the
-/// shipped app path while viewport colour remains behind the reduced fallback.
+/// Opt-in Release probe of the mounted session and painter independent of the
+/// production store's highlighter construction.
 @MainActor
 @Suite(.serialized, .enabled(if: ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_BUDGET_BENCH"] == "1"))
 struct MarkdownViewportBudgetBenchmarkTests {

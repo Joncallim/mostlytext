@@ -104,6 +104,10 @@ extension NeonSyntaxHighlighter {
         restoreTask = nil
         if postEditLength <= policy.restoreAtOrBelowUTF16Units {
             scheduleRestore(after: policy.restoreIdleDelay)
+        } else if viewportModeEnabled, languageID == "markdown", viewportSession == nil,
+                  postEditLength > policy.reduceAboveUTF16Units,
+                  postEditLength <= Self.viewportMaxUTF16Units {
+            scheduleRestore(after: policy.restoreIdleDelay)
         }
     }
 
@@ -124,6 +128,9 @@ extension NeonSyntaxHighlighter {
     private func restoreIfStillEligible(retryDelay: Duration) {
         guard state.isReduced, let policy = policyProvider(languageID),
               documentLength <= policy.restoreAtOrBelowUTF16Units
+              || (viewportModeEnabled && languageID == "markdown" && viewportSession == nil
+                  && documentLength > policy.reduceAboveUTF16Units
+                  && documentLength <= Self.viewportMaxUTF16Units)
         else { return }
         // Never rebuild under an active IME composition; try again later.
         if textSystem.textView.hasMarkedText() {
@@ -132,7 +139,9 @@ extension NeonSyntaxHighlighter {
         }
         // Native finding: after this restore Neon's first pass of rendering attributes was applied but TextKit did
         // not repaint until the next edit. Ask for a repaint after each pass of styling for a short while.
-        repaintDeadline = DispatchTime.now().uptimeNanoseconds + 2_000_000_000
+        if documentLength <= policy.restoreAtOrBelowUTF16Units {
+            repaintDeadline = DispatchTime.now().uptimeNanoseconds + 2_000_000_000
+        }
         configure(languageID: languageID)
     }
 
