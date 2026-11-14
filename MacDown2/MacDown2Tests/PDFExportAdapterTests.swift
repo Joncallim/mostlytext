@@ -32,7 +32,7 @@ struct PDFExportAdapterTests {
         #endif
     }
 
-    @Test func vectorSnapshotIsPaginatedWithoutLosingSelectableText() throws {
+    @Test func tallVectorSnapshotIsRefusedBeforePublication() throws {
         let source = try makeTallTextPDF()
         let info = NSPrintInfo()
         info.paperSize = NSSize(width: 100, height: 100)
@@ -41,15 +41,15 @@ struct PDFExportAdapterTests {
         info.topMargin = 0
         info.bottomMargin = 0
 
-        let output = try PDFSnapshotFallback.paginate(source, printInfo: info, maxBytes: 1_000_000)
-        let result = try #require(PDFDocument(data: output))
-        #expect(result.pageCount == 3)
-        #expect(result.page(at: 0)?.string?.contains("TOP") == true)
-        #expect(result.page(at: 1)?.string?.contains("MIDDLE") == true)
-        #expect(result.page(at: 2)?.string?.contains("BOTTOM") == true)
+        do {
+            _ = try PDFSnapshotFallback.paginate(source, printInfo: info, maxBytes: 1_000_000)
+            Issue.record("Tall vector source must not be published with duplicate searchable text")
+        } catch PDFSnapshotFallback.FallbackError.invalidGeometry {
+            // Direct paper-sized AppKit print is the qualified vector route.
+        }
     }
 
-    @Test func vectorSnapshotMovesAnIntersectedHeadingToTheNextPage() throws {
+    @Test func tallVectorWithHeadingAtPaperCutIsRefused() throws {
         let data = NSMutableData()
         var mediaBox = CGRect(x: 0, y: 0, width: 100, height: 300)
         let consumer = try #require(CGDataConsumer(data: data as CFMutableData))
@@ -69,42 +69,11 @@ struct PDFExportAdapterTests {
         info.rightMargin = 0
         info.topMargin = 0
         info.bottomMargin = 0
-        let output = try PDFSnapshotFallback.paginate(data as Data, printInfo: info, maxBytes: 1_000_000)
-
-        let result = try #require(PDFDocument(data: output))
-        let pageText = (0 ..< result.pageCount).map { result.page(at: $0)?.string ?? "" }
-        #expect(pageText.contains { $0.contains("CUT") })
-        // PDFKit can extract text from a clipped form even when no glyph is
-        // visible on that page. Check actual painted pixels on both sides.
-        let provider = try #require(CGDataProvider(data: output as CFData))
-        let pdf = try #require(CGPDFDocument(provider))
-        let first = try #require(pdf.page(at: 1))
-        let second = try #require(pdf.page(at: 2))
-        #expect(try paintedPixelCount(in: first) == 0)
-        #expect(try paintedPixelCount(in: second) > 0)
-    }
-
-    private func paintedPixelCount(in page: CGPDFPage) throws -> Int {
-        let width = 100
-        let height = 100
-        var pixels = [UInt8](repeating: 255, count: width * height * 4)
-        return try pixels.withUnsafeMutableBytes { bytes in
-            let context = try #require(CGContext(
-                data: bytes.baseAddress,
-                width: width,
-                height: height,
-                bitsPerComponent: 8,
-                bytesPerRow: width * 4,
-                space: CGColorSpaceCreateDeviceRGB(),
-                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
-            ))
-            context.setFillColor(CGColor(gray: 1, alpha: 1))
-            context.fill(CGRect(x: 0, y: 0, width: width, height: height))
-            context.drawPDFPage(page)
-            let raw = bytes.bindMemory(to: UInt8.self)
-            return stride(from: 0, to: raw.count, by: 4)
-                .filter { raw[$0] < 128 || raw[$0 + 1] < 128 || raw[$0 + 2] < 128 }
-                .count
+        do {
+            _ = try PDFSnapshotFallback.paginate(data as Data, printInfo: info, maxBytes: 1_000_000)
+            Issue.record("Tall vector source must not be republished under paper clipping")
+        } catch PDFSnapshotFallback.FallbackError.invalidGeometry {
+            // The source page remains in scratch and no destination is replaced.
         }
     }
 
