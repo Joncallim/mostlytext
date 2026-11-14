@@ -140,6 +140,13 @@
             try await measureScaledPDF(sections: 460, name: "near-page-limit-pdf")
         }
 
+        @Test func nearPageLimitAvoidParagraphBreaksProbe() async throws {
+            PDFExportAdapter.probeAdditionalCSS =
+                "p { break-inside: avoid; page-break-inside: avoid; }"
+            defer { PDFExportAdapter.probeAdditionalCSS = nil }
+            try await measureScaledPDF(sections: 460, name: "near-page-limit-avoid-breaks")
+        }
+
         // The guarded probe keeps source, print and artifact bindings together.
         // swiftlint:disable:next function_body_length
         private func measureScaledPDF(sections: Int, name: String) async throws {
@@ -161,8 +168,8 @@
             let prepared = try await ExportService.prepare(request, target: .pdf(url: destination))
             let prepareSeconds = ProcessInfo.processInfo.systemUptime - started
             let html = try await PDFExportAdapter.hardenedHTML(from: prepared)
-            let rawPrint = try outputDirectory().appendingPathComponent("near-page-limit-raw-print.pdf")
-            let rawSnapshot = try outputDirectory().appendingPathComponent("near-page-limit-raw-snapshot.pdf")
+            let rawPrint = try outputDirectory().appendingPathComponent(name + "-raw-print.pdf")
+            let rawSnapshot = try outputDirectory().appendingPathComponent(name + "-raw-snapshot.pdf")
             if sections == 460 {
                 PDFExportAdapter.capturePrePaginationPrint = { data in
                     try data.write(to: rawPrint, options: .atomic)
@@ -184,7 +191,7 @@
             let retainedPDF = try outputDirectory().appendingPathComponent(name + "-output.pdf")
             try data.write(to: retainedPDF, options: .atomic)
             try verifyScaledPDF(pdf, text: text, sections: sections)
-            var values: [String: Any] = [
+            var values: [String: Any] = try [
                 "case": "actual-scaled-webkit-print-pdfkit", "sections": sections,
                 "source_bytes": sourceData.count, "source_sha256": sha256(sourceData),
                 "prepared_html_bytes": html.utf8.count,
@@ -192,7 +199,7 @@
                 "extracted_text_bytes": text.utf8.count,
                 "page_text_bytes": (0 ..< pdf.pageCount).map { pdf.page(at: $0)?.string?.utf8.count ?? 0 },
                 "prepare_seconds": prepareSeconds, "print_and_validation_seconds": printSeconds,
-                "app_peak_before_rss_bytes": peakBefore, "app_peak_rss_bytes": try peakResidentBytes(),
+                "app_peak_before_rss_bytes": peakBefore, "app_peak_rss_bytes": peakResidentBytes(),
             ]
             if sections == 460 {
                 var sources: [String] = []
