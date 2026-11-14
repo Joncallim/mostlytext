@@ -49,6 +49,10 @@ jobs:
           shasum -a 256 \
             MacDown2/Packages/MacDownKit/Package.resolved \
             MacDown2/Packages/MacDownKit/Sources/FileCore/String+ExactEquality.swift \
+            MacDown2/Packages/MacDownKit/Sources/Highlighting/SyntaxHighlightStore.swift \
+            MacDown2/Packages/MacDownKit/Sources/Highlighting/NeonSyntaxHighlighter+Viewport.swift \
+            MacDown2/Packages/MacDownKit/Sources/Highlighting/NeonSyntaxHighlighter+SizeFallback.swift \
+            MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportHighlighterIntegrationTests.swift \
             MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownViewportBudgetBenchmarkTests.swift \
             MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportHighlighterBudgetBenchmarkTests.swift \
             .github/workflows/viewport-budget-measurement.yml \
