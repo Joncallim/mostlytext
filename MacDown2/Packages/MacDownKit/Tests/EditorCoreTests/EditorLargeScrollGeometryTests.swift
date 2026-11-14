@@ -88,6 +88,10 @@ struct EditorLargeScrollGeometryTests {
             try await Task.sleep(for: .milliseconds(10))
         }
         #expect(shrank, "A new short source must shrink after layout settles")
+        try await Task.sleep(for: .milliseconds(80))
+        scroll.layoutSubtreeIfNeeded()
+        #expect(system.textView.frame.height < measured / 2,
+                "The replacement frame must stay short after another layout turn")
         #expect(Array(system.textView.string.utf16) == Array(model.text.utf16))
     }
 
