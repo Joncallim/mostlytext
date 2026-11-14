@@ -77,6 +77,11 @@ final class MarkdownViewportSession {
                                 edit: edit,
                                 replacement: replacement,
                                 visible: visible
+                            ) ?? cache.selectStructuralHeading(
+                                source: source,
+                                edit: edit,
+                                replacement: replacement,
+                                visible: visible
                             )
                             if selected != nil {
                                 selectedWindowCount &+= 1

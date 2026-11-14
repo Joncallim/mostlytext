@@ -345,6 +345,76 @@ private extension MarkdownSectionCache {
     }
 }
 
+extension MarkdownSectionCache {
+    // A heading's disjoint cache entry can be reparsed when a plain heading
+    // word is split by a newline, or its terminal CRLF is normalized to LF.
+    // The bounded entry starts at the heading marker and ends before the next
+    // independently cached paragraph/section. Other structural edits retain
+    // the full-document fallback because they may change heading hierarchy.
+    // swiftlint:disable:next function_body_length
+    func selectStructuralHeading(source: NSString, edit: NSRange,
+                                 replacement: String, visible: NSRange) -> Window? {
+        guard source.length == sourceLength,
+              edit.location >= 0, edit.length >= 0,
+              edit.location <= source.length,
+              edit.length <= source.length - edit.location,
+              visible.location != NSNotFound, visible.location >= 0,
+              visible.length > 0, visible.location <= source.length,
+              visible.length <= source.length - visible.location,
+              firstIndex(overlapping: visible) != nil,
+              let index = indexOfEdit(edit)
+        else { return nil }
+        let section = resolvedSection(at: index)
+        let oldWindow = section.globalRange
+        guard section.node.nodeType == "section",
+              oldWindow.length > 0, oldWindow.length <= Self.windowLimit,
+              oldWindow.location <= edit.location,
+              NSMaxRange(edit) <= NSMaxRange(oldWindow)
+        else { return nil }
+
+        let content = source.substring(with: oldWindow) as NSString
+        let localEdit = NSRange(location: edit.location - oldWindow.location, length: edit.length)
+        let line = content.lineRange(for: NSRange(location: 0, length: 0))
+        let lineText = content.substring(with: line)
+        let newline = (lineText as NSString).range(of: "\n")
+        guard NSMaxRange(localEdit) <= NSMaxRange(line),
+              line.length > 3,
+              newline.location != NSNotFound
+        else { return nil }
+        let prefix = (lineText as NSString).substring(to: newline.location)
+            .trimmingCharacters(in: .newlines)
+        let heading = prefix.drop { $0 == "#" }
+        let markerCount = prefix.count - heading.count
+        let plain = CharacterSet.alphanumerics.union(.whitespaces)
+        guard (1 ... 6).contains(markerCount), heading.first == " "
+        else { return nil }
+
+        if replacement == "\n", edit.length == 0 {
+            // An interior word split cannot start another Markdown block.
+            guard heading.unicodeScalars.allSatisfy(plain.contains),
+                  localEdit.location > markerCount + 1,
+                  localEdit.location < (prefix as NSString).length,
+                  Self.isInteriorWordInsertion(source: content, at: localEdit.location)
+            else { return nil }
+        } else if replacement == "\n", edit.length == 2 {
+            guard content.substring(with: localEdit) == "\r\n",
+                  NSMaxRange(localEdit) == (lineText as NSString).length
+            else { return nil }
+        } else {
+            return nil
+        }
+
+        let delta = (replacement as NSString).length - edit.length
+        let newLength = oldWindow.length + delta
+        guard newLength > 0, newLength <= Self.windowLimit,
+              oldWindow.location <= source.length + delta - newLength
+        else { return nil }
+        return Window(old: oldWindow,
+                      new: NSRange(location: oldWindow.location, length: newLength),
+                      firstSection: index, lastSection: index)
+    }
+}
+
 /// Difference index for root-section shifts after bounded edits.
 private struct SectionShifts {
     private var tree: [Int]
