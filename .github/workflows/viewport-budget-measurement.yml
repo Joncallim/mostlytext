@@ -6,6 +6,8 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/viewport-budget-measurement.yml'
+      - 'MacDown2/Packages/MacDownKit/Package.swift'
+      - 'MacDown2/Packages/MacDownKit/Package.resolved'
       - 'MacDown2/Packages/MacDownKit/Sources/FileCore/String+ExactEquality.swift'
       - 'MacDown2/Packages/MacDownKit/Sources/Highlighting/**'
       - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownViewportBudgetBenchmarkTests.swift'
@@ -49,6 +51,7 @@ jobs:
           xcodebuild -version > "$RUNNER_TEMP/viewport-budget/xcode.txt"
           sw_vers > "$RUNNER_TEMP/viewport-budget/macos.txt"
           shasum -a 256 \
+            MacDown2/Packages/MacDownKit/Package.swift \
             MacDown2/Packages/MacDownKit/Package.resolved \
             MacDown2/Packages/MacDownKit/Sources/FileCore/String+ExactEquality.swift \
             MacDown2/Packages/MacDownKit/Sources/Highlighting/SyntaxHighlightStore.swift \
@@ -133,13 +136,17 @@ jobs:
               assert case['input_to_display_readback_ms'] >= case['input_to_storage_return_ms'] >= 0
               assert case['input_to_display_readback_ms'] >= case['input_to_display_return_ms'] >= 0
               assert case['display_return_to_bitmap_readback_ms'] >= 0
+              assert case['parse_request_to_publication_ms'] >= 0
+              assert case['parse_attempts_requested'] >= 1
+              assert case['parse_attempts_resolved'] >= 1
+              assert case['configured_debounce_ms'] == 0
               assert case['pixel_changed'] or case['case'] in {'crlf-replacement', 'unicode-replacement'}
               assert case['under_50_ms'] == (case['input_to_display_readback_ms'] < 50)
           records['display'] = display
           records['display_budget_failures'] = [case['case'] for case in display
                                                 if not case['under_50_ms']]
           print('DISPLAY-BUDGET-VERDICT', json.dumps({
-              'scope': 'mounted package/editor store and AppKit display readback; app-target event orchestration and timed movement/undo/redo/IME unmeasured',
+              'scope': 'mounted package/editor store and AppKit display readback; parse interval includes queue and fallback; app-target event orchestration and timed movement/undo/redo/IME unmeasured',
               'under_50_ms': not records['display_budget_failures'],
               'failures': records['display_budget_failures']
           }, sort_keys=True))

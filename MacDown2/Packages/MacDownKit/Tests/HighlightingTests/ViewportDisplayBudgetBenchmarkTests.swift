@@ -1,3 +1,5 @@
+// Keep the opt-in fixture, oracle, timing and bitmap checks in one benchmark.
+// swiftlint:disable file_length
 import AppKit
 import CryptoKit
 @testable import EditorCore
@@ -85,6 +87,9 @@ struct ViewportDisplayBudgetBenchmarkTests {
             for: identity, textSystem: system, languageID: "markdown", theme: BundledThemes.light
         ) as? NeonSyntaxHighlighter)
         defer { syntaxStore.evictAll() }
+        // The caret moves with every input but is not a text or highlight
+        // pixel. Keep its blink/position out of the before/after image delta.
+        system.textView.insertionPointColor = .clear
         try #require(highlighter.state.isVisibleOnly)
         let session = try #require(highlighter.viewportSession)
         let painter = try #require(highlighter.viewportPainter)
@@ -165,13 +170,17 @@ struct ViewportDisplayBudgetBenchmarkTests {
                          "SwiftUI binding differs from editor: \(edit.name)")
             try #require(highlighter.state.isVisibleOnly)
 
-            func event(_ sought: MarkdownViewportSession.TimingEvent) -> UInt64? {
+            func firstEvent(_ sought: MarkdownViewportSession.TimingEvent) -> UInt64? {
                 timing.first { $0.0 == sought }?.1
             }
-            let storageEvent = try #require(event(.storageEdit))
-            let parseRequested = try #require(event(.parseRequested))
-            let parseResolved = try #require(event(.parseResolved))
-            let published = try #require(event(.published))
+            let storageEvent = try #require(firstEvent(.storageEdit))
+            let parseRequested = try #require(firstEvent(.parseRequested))
+            let published = try #require(timing.last { $0.0 == .published }?.1)
+            let parseRequests = timing.filter { $0.0 == .parseRequested }.count
+            let parseResolutions = timing.filter { $0.0 == .parseResolved }.count
+            try #require(input <= storageEvent && storageEvent <= parseRequested && parseRequested <= published)
+            try #require(published <= styleReadback && styleReadback <= afterPixels.displayReturnedAt)
+            try #require(parseRequests > 0 && parseResolutions > 0)
             let milliseconds = { (start: UInt64, end: UInt64) -> Double in
                 Double(end - start) / 1_000_000
             }
@@ -183,8 +192,12 @@ struct ViewportDisplayBudgetBenchmarkTests {
                 "input_to_storage_return_ms": milliseconds(input, storageReturned),
                 "input_to_storage_event_ms": milliseconds(input, storageEvent),
                 "storage_event_to_parse_request_ms": milliseconds(storageEvent, parseRequested),
-                "queue_plus_parse_ms": milliseconds(parseRequested, parseResolved),
-                "parse_resolution_to_publication_ms": milliseconds(parseResolved, published),
+                // This interval includes queue wait, every local/full parse
+                // attempt, fallback, cache publication and no debounce.
+                "parse_request_to_publication_ms": milliseconds(parseRequested, published),
+                "parse_attempts_requested": parseRequests,
+                "parse_attempts_resolved": parseResolutions,
+                "configured_debounce_ms": 0,
                 "publication_to_style_readback_ms": milliseconds(published, styleReadback),
                 "style_to_display_return_ms": milliseconds(styleReadback, afterPixels.displayReturnedAt),
                 "display_return_to_bitmap_readback_ms": milliseconds(afterPixels.displayReturnedAt, displayReadback),
@@ -250,21 +263,33 @@ struct ViewportDisplayBudgetBenchmarkTests {
         let bitmap = try #require(host.bitmapImageRepForCachingDisplay(in: region))
         host.cacheDisplay(in: region, to: bitmap)
         let completedAt = DispatchTime.now().uptimeNanoseconds
-        let raw = try #require(bitmap.bitmapData)
-        let byteCount = bitmap.bytesPerRow * bitmap.pixelsHigh
-        let digest = SHA256.hash(data: Data(bytes: raw, count: byteCount))
-            .map { String(format: "%02x", $0) }.joined()
+        // Hash only decoded sRGB pixel components. Raw bitmap rows may contain
+        // padding bytes unrelated to the displayed image. Normalization runs
+        // after completedAt, preserving the input-to-readback timing boundary.
+        var components: [UInt8] = []
+        components.reserveCapacity(bitmap.pixelsWide * bitmap.pixelsHigh * 4)
         var ink = 0
-        for pixelY in stride(from: 0, to: bitmap.pixelsHigh, by: 4) {
-            for pixelX in stride(from: 0, to: bitmap.pixelsWide, by: 4) {
-                guard let color = bitmap.colorAt(x: pixelX, y: pixelY)?.usingColorSpace(.sRGB) else { continue }
-                if min(color.redComponent, color.greenComponent, color.blueComponent) < 0.75 {
+        for pixelY in 0 ..< bitmap.pixelsHigh {
+            for pixelX in 0 ..< bitmap.pixelsWide {
+                let color = try #require(bitmap.colorAt(x: pixelX, y: pixelY)?.usingColorSpace(.sRGB))
+                components.append(Self.colorByte(color.redComponent))
+                components.append(Self.colorByte(color.greenComponent))
+                components.append(Self.colorByte(color.blueComponent))
+                components.append(Self.colorByte(color.alphaComponent))
+                if pixelX.isMultiple(of: 4), pixelY.isMultiple(of: 4),
+                   min(color.redComponent, color.greenComponent, color.blueComponent) < 0.75 {
                     ink += 1
                 }
             }
         }
+        let digest = SHA256.hash(data: Data(components))
+            .map { String(format: "%02x", $0) }.joined()
         return Pixels(displayReturnedAt: displayReturnedAt, completedAt: completedAt,
                       digest: digest, nonBackgroundSamples: ink, bitmap: bitmap)
+    }
+
+    private static func colorByte(_ component: CGFloat) -> UInt8 {
+        UInt8(clamping: Int((min(1, max(0, component)) * 255).rounded()))
     }
 
     /// Inspect bitmap pixels inside a glyph rectangle that the independent
