@@ -245,6 +245,36 @@ struct ViewportDisplayBudgetBenchmarkTests {
         let ambiguous: IndexSet
     }
 
+    static func lifecyclePaintMatches(textView: NSTextView, visible: NSRange,
+                                      oracle: MarkdownSectionCache) -> Bool {
+        guard let painted = try? accentPaint(in: visible, oracle: oracle, theme: BundledThemes.light),
+              painted.buckets.contains(where: { !$0.expected.isEmpty }) else { return false }
+        let actual = renderedAccentRanges(in: textView, clippedTo: visible, buckets: painted.buckets)
+        return actual.indices.allSatisfy {
+            actual[$0].subtracting(painted.ambiguous) == painted.buckets[$0].expected
+        }
+    }
+
+    /// Reuse the exact accent-range and bitmap endpoint for timed lifecycle
+    /// actions. The caller prepares its independent oracle before starting
+    /// the clock and must wait for automatic painter validation first.
+    static func lifecycleReadback(host: NSHostingView<EditorView>, textView: NSTextView, visible: NSRange,
+                                  oracle: MarkdownSectionCache, range: NSRange) throws -> UInt64 {
+        let window = try #require(textView.window)
+        let painted = try accentPaint(in: visible, oracle: oracle, theme: BundledThemes.light)
+        let actual = renderedAccentRanges(in: textView, clippedTo: visible, buckets: painted.buckets)
+        try #require(painted.buckets.contains { !$0.expected.isEmpty })
+        try #require(actual.indices.allSatisfy {
+            actual[$0].subtracting(painted.ambiguous) == painted.buckets[$0].expected
+        }, "Mounted TextKit accent ranges differ from the independent full parse")
+        let region = try targetRegion(host: host, window: window, textView: textView, range: range)
+        let pixels = try displayReadback(host: host, window: window, region: region)
+        try #require(pixels.nonBackgroundSamples > 2)
+        try #require(accentPixelSamples(painted: painted, bitmap: pixels.bitmap,
+                                        textView: textView, host: host, region: region) > 0)
+        return pixels.completedAt
+    }
+
     private static func targetRegion(host: NSHostingView<EditorView>, window: NSWindow,
                                      textView: NSTextView, range: NSRange) throws -> NSRect {
         let screen = textView.firstRect(forCharacterRange: range, actualRange: nil)
