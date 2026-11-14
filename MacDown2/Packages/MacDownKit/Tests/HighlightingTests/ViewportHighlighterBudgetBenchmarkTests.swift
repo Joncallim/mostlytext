@@ -77,9 +77,11 @@ struct ViewportHighlighterBudgetBenchmarkTests {
             #expect(session?.localParseCount == 12)
             #expect(session?.fullParseCount == 1)
         }
+        let callValues = calls.map { String(format: "%.3f", $0) }.joined(separator: ",")
+        let settledValues = settlements.map { String(format: "%.3f", $0) }.joined(separator: ",")
         print("HIGHLIGHTER-MODE-BUDGET mode=\(enableViewport ? "viewport" : "reduced") "
             + "utf8=\(original.utf8.count) open=\(openMilliseconds) ms "
-            + "calls=\(calls.map { Int($0) }) ms settled=\(settlements.map { Int($0) }) ms "
+            + "calls=[\(callValues)] ms settled=[\(settledValues)] ms "
             + "selected=\(session?.selectedWindowCount ?? 0) matched=\(session?.matchedWindowCount ?? 0) "
             + "local=\(session?.localParseCount ?? 0) full=\(session?.fullParseCount ?? 0)")
     }
