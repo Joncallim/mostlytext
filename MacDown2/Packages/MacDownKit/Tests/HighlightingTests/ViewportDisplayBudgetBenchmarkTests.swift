@@ -199,6 +199,12 @@ struct ViewportDisplayBudgetBenchmarkTests {
                 "full_parse_count": session.fullParseCount,
                 "local_parse_count": session.localParseCount,
             ])
+            let caseData = try JSONSerialization.data(
+                withJSONObject: results[results.count - 1],
+                options: [.sortedKeys]
+            )
+            let caseJSON = try #require(String(data: caseData, encoding: .utf8))
+            print("VIEWPORT-DISPLAY-CASE " + caseJSON)
         }
         let body = try JSONSerialization.data(withJSONObject: results, options: [.sortedKeys])
         let encoded = try #require(String(data: body, encoding: .utf8))
