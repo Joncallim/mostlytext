@@ -49,7 +49,15 @@ extension EditorTextSystem {
             notifyEdit(pending)
         } else if lineIndexNeedsRebuild {
             lineIndexNeedsRebuild = false
-            lineIndex.rebuild(text: assistTextSource ?? (text as NSString))
+            let live = assistTextSource ?? (text as NSString)
+            if splicedEditPreservesLineBoundaries, let edits = transactionEditsToReport,
+               lineIndex.utf16Length + edits.reduce(0, { sum, edit in
+                   sum + (edit.replacementText as NSString).length - edit.range.length
+               }) == live.length {
+                lineIndex.applyLineNeutralEdits(edits)
+            } else {
+                lineIndex.rebuild(text: live)
+            }
             if let edits = transactionEditsToReport {
                 reportTransactionEdits(edits)
             } else {

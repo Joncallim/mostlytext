@@ -95,6 +95,9 @@ public final class EditorTextSystem {
     var lineIndexNeedsRebuild = false
     /// The original replacements of a spliced transaction, reported to observers instead of the one wide edit.
     var transactionEditsToReport: [TextReplacement]?
+    /// Validated against the old storage before a spliced native edit. A true value permits shifting existing
+    /// line starts instead of scanning the entire new document when no replacement can change line boundaries.
+    var splicedEditPreservesLineBoundaries = false
     /// The assist configuration currently applied to this text system.
     /// Storage lives here (extensions cannot hold stored properties);
     /// the E10 methods live in `EditorTextSystem+EditingAssists.swift`.

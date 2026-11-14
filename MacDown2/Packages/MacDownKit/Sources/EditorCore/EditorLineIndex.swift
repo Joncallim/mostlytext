@@ -39,6 +39,32 @@ public struct EditorLineIndex: Sendable, Equatable {
         self = EditorLineIndex(text: text)
     }
 
+    /// Shift existing starts for a descending set of disjoint edits that was validated against the old text:
+    /// neither removed nor inserted content has a line terminator, and neither boundary touches a CR/LF seam.
+    /// Each old start is visited once; a zero-width insertion at a line start keeps that start at its old offset.
+    mutating func applyLineNeutralEdits(_ descending: [TextReplacement]) {
+        let ascending = descending.reversed()
+        var editIndex = ascending.startIndex
+        var shift = 0
+        for lineIndex in lineStartOffsets.indices {
+            let oldStart = lineStartOffsets[lineIndex]
+            while editIndex < ascending.endIndex {
+                let edit = ascending[editIndex]
+                let end = NSMaxRange(edit.range)
+                guard end < oldStart || (end == oldStart && edit.range.length > 0) else { break }
+                shift += (edit.replacementText as NSString).length - edit.range.length
+                editIndex = ascending.index(after: editIndex)
+            }
+            lineStartOffsets[lineIndex] = oldStart + shift
+        }
+        while editIndex < ascending.endIndex {
+            let edit = ascending[editIndex]
+            shift += (edit.replacementText as NSString).length - edit.range.length
+            editIndex = ascending.index(after: editIndex)
+        }
+        utf16Length += shift
+    }
+
     /// Incremental update from one edit: `editedRange` is the UTF-16 range
     /// that was replaced, expressed in the *previous* text's coordinates;
     /// `replacementUTF16Length` is the UTF-16 length of what replaced it;
