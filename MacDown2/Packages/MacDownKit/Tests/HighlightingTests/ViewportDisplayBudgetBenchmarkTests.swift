@@ -175,10 +175,13 @@ struct ViewportDisplayBudgetBenchmarkTests {
             }
             let storageEvent = try #require(firstEvent(.storageEdit))
             let parseRequested = try #require(firstEvent(.parseRequested))
+            let lastParseRequested = try #require(timing.last { $0.0 == .parseRequested }?.1)
+            let lastParseResolved = try #require(timing.last { $0.0 == .parseResolved }?.1)
             let published = try #require(timing.last { $0.0 == .published }?.1)
             let parseRequests = timing.filter { $0.0 == .parseRequested }.count
             let parseResolutions = timing.filter { $0.0 == .parseResolved }.count
             try #require(input <= storageEvent && storageEvent <= parseRequested && parseRequested <= published)
+            try #require(lastParseRequested <= lastParseResolved && lastParseResolved <= published)
             try #require(published <= styleReadback && styleReadback <= afterPixels.displayReturnedAt)
             try #require(parseRequests > 0 && parseResolutions > 0)
             let milliseconds = { (start: UInt64, end: UInt64) -> Double in
@@ -195,6 +198,8 @@ struct ViewportDisplayBudgetBenchmarkTests {
                 // This interval includes queue wait, every local/full parse
                 // attempt, fallback, cache publication and no debounce.
                 "parse_request_to_publication_ms": milliseconds(parseRequested, published),
+                "last_parse_request_to_resolution_ms": milliseconds(lastParseRequested, lastParseResolved),
+                "last_parse_resolution_to_publication_ms": milliseconds(lastParseResolved, published),
                 "parse_attempts_requested": parseRequests,
                 "parse_attempts_resolved": parseResolutions,
                 "configured_debounce_ms": 0,
@@ -211,6 +216,8 @@ struct ViewportDisplayBudgetBenchmarkTests {
                 "oracle_accent_pixel_samples": accentPixels,
                 "full_parse_count": session.fullParseCount,
                 "local_parse_count": session.localParseCount,
+                "selected_window_count": session.selectedWindowCount,
+                "matched_window_count": session.matchedWindowCount,
             ])
             let caseData = try JSONSerialization.data(
                 withJSONObject: results[results.count - 1],
