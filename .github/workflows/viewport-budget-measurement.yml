@@ -203,7 +203,7 @@ jobs:
           records['display_budget_failures'] = [case['case'] for case in display
                                                 if not case['under_50_ms']]
           print('DISPLAY-BUDGET-VERDICT', json.dumps({
-              'scope': 'mounted package/editor store and AppKit display readback; parse interval includes queue and fallback; app-target event orchestration and timed movement/undo/redo/IME unmeasured',
+              'scope': 'mounted package/editor store and AppKit display readback; parse interval includes queue and fallback; programmatic movement and undo/redo are measured separately; app-target event orchestration and real IME timing unmeasured',
               'under_50_ms': not records['display_budget_failures'],
               'failures': records['display_budget_failures']
           }, sort_keys=True))
