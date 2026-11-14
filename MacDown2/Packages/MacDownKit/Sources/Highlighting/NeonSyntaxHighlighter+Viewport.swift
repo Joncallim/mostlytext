@@ -2,12 +2,18 @@ import AppKit
 import EditorCore
 import Neon
 
-/// Optional integration seam for the bounded mounted Markdown owner. The app
-/// keeps this off until the complete Release budget and native gate qualify.
+/// Bounded mounted Markdown owner. The production store opts in; callers that
+/// build this highlighter directly retain their explicit opt-in choice.
 extension NeonSyntaxHighlighter {
+    /// The hosted Release qualification covers 1,048,804 UTF-8 bytes of
+    /// ordinary Markdown. Keep larger sources on the established reduced
+    /// fallback until their parse and memory budgets are measured.
+    static let viewportMaxUTF16Units = 1_100_000
+
     @discardableResult
     func startViewport() -> Bool {
         guard !isTornDown, viewportModeEnabled, languageID == "markdown",
+              documentLength <= Self.viewportMaxUTF16Units,
               viewportSession == nil,
               textSystem.preEditObserver == nil,
               textSystem.textView.enclosingScrollView != nil,
@@ -37,10 +43,8 @@ extension NeonSyntaxHighlighter {
         textSystem.preEditObserver = { [weak session] range, replacement, source in
             session?.prepare(range: range, replacement: replacement, oldSource: source)
         }
-        gate.didProcessCharacterEditWithGeometry = { [weak session, weak painter, weak storage] range, delta, _ in
-            guard let storage else { return }
-            session?.didEdit(range: range, delta: delta, postSource: storage.mutableString)
-            painter?.didEdit(newRange: range, delta: delta)
+        gate.didProcessCharacterEditWithGeometry = { [weak self, weak storage] range, delta, postEditLength in
+            self?.didEditViewport(range: range, delta: delta, postEditLength: postEditLength, storage: storage)
         }
         session.begin()
         painter.begin()
@@ -58,5 +62,23 @@ extension NeonSyntaxHighlighter {
         viewportSession = nil
         viewportPainter = nil
         return true
+    }
+
+    private func didEditViewport(range: NSRange, delta: Int, postEditLength: Int, storage: NSTextStorage?) {
+        if postEditLength > Self.viewportMaxUTF16Units {
+            guard stopViewport() else { return }
+            let limit = policyProvider(languageID)?.reduceAboveUTF16Units
+                ?? HighlightingSizePolicy.markdown.reduceAboveUTF16Units
+            setMode(.reduced(.documentTooLarge(limitUTF16Units: limit)))
+            let clearGeneration = generation
+            DispatchQueue.main.async { [weak self] in
+                guard let self, !isTornDown, generation == clearGeneration else { return }
+                clearHighlighterPresentation()
+            }
+            return
+        }
+        guard let storage else { return }
+        viewportSession?.didEdit(range: range, delta: delta, postSource: storage.mutableString)
+        viewportPainter?.didEdit(newRange: range, delta: delta)
     }
 }

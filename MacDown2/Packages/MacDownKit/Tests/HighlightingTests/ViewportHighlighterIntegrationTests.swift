@@ -9,6 +9,50 @@ import Themes
 @MainActor
 @Suite("Mounted viewport highlighter integration", .serialized)
 struct ViewportHighlighterIntegrationTests {
+    @Test(.timeLimit(.minutes(2)))
+    func crossingViewportAdmissionReturnsToReducedAndCanRestore() async throws {
+        let initial = "# Heading\n\n" + String(repeating: "plain words\n", count: 1000)
+        let identity = UUID().uuidString
+        let system = EditorTextSystem(identity: identity, initialText: initial, configuration: .default)
+        let scroll = NSScrollView(frame: NSRect(x: 0, y: 0, width: 500, height: 250))
+        scroll.documentView = system.textView
+        let window = NSWindow(contentRect: scroll.frame, styleMask: [.titled], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        window.contentView = scroll
+        let syntaxStore = SyntaxHighlightStore()
+        defer { syntaxStore.evictAll(); window.orderOut(nil); window.close() }
+        let highlighter = try #require(
+            syntaxStore.highlighter(
+                for: identity, textSystem: system, languageID: "markdown", theme: BundledThemes.light
+            ) as? NeonSyntaxHighlighter
+        )
+        #expect(highlighter.state.isVisibleOnly)
+        let append = String(repeating: "x", count: NeonSyntaxHighlighter.viewportMaxUTF16Units)
+        system.textView.insertText(append, replacementRange: NSRange(location: (initial as NSString).length, length: 0))
+        #expect(highlighter.state.isReduced)
+        #expect(!highlighter.state.isVisibleOnly)
+        #expect(highlighter.viewportSession == nil)
+        #expect(system.preEditObserver == nil)
+        #expect(system.textView.string == initial + append)
+
+        syntaxStore.evict(identity)
+        let reopened = try #require(
+            syntaxStore.highlighter(
+                for: identity, textSystem: system, languageID: "markdown", theme: BundledThemes.light
+            ) as? NeonSyntaxHighlighter
+        )
+        #expect(reopened.state.isReduced)
+        #expect(reopened.viewportSession == nil)
+        reopened.restoreSleep = { _ in }
+        system.textView.insertText("", replacementRange: NSRange(
+            location: (initial as NSString).length, length: append.utf16.count
+        ))
+        await reopened.restoreTask?.value
+        #expect(reopened.state.isVisibleOnly)
+        #expect(reopened.viewportSession != nil)
+        #expect(system.textView.string == initial)
+    }
+
     @Test func closeDuringDeferredThresholdTransitionCannotResurrectOwner() async throws {
         let initial = "# Heading\n\n" + String(repeating: "plain words\n", count: 400)
         let system = EditorTextSystem(identity: UUID().uuidString, initialText: initial, configuration: .default)
