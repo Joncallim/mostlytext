@@ -123,10 +123,11 @@ struct ViewportDisplayBudgetBenchmarkTests {
             while DispatchTime.now().uptimeNanoseconds < deadline {
                 await Task.yield()
                 guard let visible = system.visibleUTF16Range else { continue }
-                let expectedRanges = try Self.coalesced(oracle.tokens(in: visible).map(\.range))
-                let actualRanges = Self.renderedRanges(in: system.textView, clippedTo: visible)
-                if !expectedRanges.isEmpty, painter.validationPassCount > priorValidation,
-                   actualRanges == expectedRanges {
+                let painted = try Self.accentPaint(in: visible, oracle: oracle, theme: BundledThemes.light)
+                let actual = Self.renderedAccentRanges(in: system.textView, clippedTo: visible,
+                                                       colors: painted.colors)
+                if !painted.expected.isEmpty, painter.validationPassCount > priorValidation,
+                   actual.subtracting(painted.ambiguous) == painted.expected {
                     styled = true
                     styleReadback = DispatchTime.now().uptimeNanoseconds
                     break
@@ -188,6 +189,12 @@ struct ViewportDisplayBudgetBenchmarkTests {
         let nonBackgroundSamples: Int
     }
 
+    private struct AccentPaint {
+        let expected: IndexSet
+        let ambiguous: IndexSet
+        let colors: [NSColor]
+    }
+
     private static func targetRegion(host: NSHostingView<EditorView>, window: NSWindow,
                                      textView: NSTextView, range: NSRange) throws -> NSRect {
         let screen = textView.firstRect(forCharacterRange: range, actualRange: nil)
@@ -221,41 +228,59 @@ struct ViewportDisplayBudgetBenchmarkTests {
         return Pixels(completedAt: completedAt, digest: digest, nonBackgroundSamples: ink)
     }
 
-    private static func renderedRanges(in textView: NSTextView, clippedTo visible: NSRange) -> [NSRange] {
+    /// Compare only theme accents. Base text also has a foreground color, so
+    /// treating every colored range as syntax would give a false paint pass.
+    /// Differently styled overlapping captures are excluded because their
+    /// final TextKit precedence is not independently specified by this oracle.
+    private static func accentPaint(in visible: NSRange, oracle: MarkdownSectionCache,
+                                    theme: Theme) throws -> AccentPaint {
+        let base = theme.chrome.foreground
+        var expected = IndexSet()
+        var ambiguous = IndexSet()
+        var previous: [(range: NSRange, color: ThemeColor)] = []
+        let colors = theme.tokenStyles.values.map(\.color).filter { $0 != base }.map(\.nsColor)
+        for token in try oracle.tokens(in: visible) {
+            let clipped = NSIntersectionRange(token.range, visible)
+            guard clipped.length > 0 else { continue }
+            let color = theme.style(for: token.name)?.color ?? base
+            for prior in previous where prior.color != color {
+                let overlap = NSIntersectionRange(prior.range, clipped)
+                if overlap.length > 0 {
+                    ambiguous.insert(integersIn: overlap.location ..< NSMaxRange(overlap))
+                }
+            }
+            previous.append((clipped, color))
+            if color != base {
+                expected.insert(integersIn: clipped.location ..< NSMaxRange(clipped))
+            }
+        }
+        expected.subtract(ambiguous)
+        return AccentPaint(expected: expected, ambiguous: ambiguous, colors: colors)
+    }
+
+    private static func renderedAccentRanges(in textView: NSTextView, clippedTo visible: NSRange,
+                                             colors: [NSColor]) -> IndexSet {
         guard let layout = textView.textLayoutManager,
               let content = layout.textContentManager,
               let start = content.location(content.documentRange.location, offsetBy: visible.location)
-        else { return [] }
+        else { return IndexSet() }
         let origin = content.documentRange.location
-        var ranges: [NSRange] = []
+        var ranges = IndexSet()
         layout.enumerateRenderingAttributes(from: start, reverse: false) { _, attributes, textRange in
             let location = content.offset(from: origin, to: textRange.location)
             if location >= NSMaxRange(visible) {
                 return false
             }
-            guard attributes[.foregroundColor] is NSColor else { return true }
+            guard let color = attributes[.foregroundColor] as? NSColor,
+                  colors.contains(where: { $0.isEqual(color) }) else { return true }
             let length = content.offset(from: textRange.location, to: textRange.endLocation)
             let clipped = NSIntersectionRange(NSRange(location: location, length: length), visible)
             if clipped.length > 0 {
-                ranges.append(clipped)
+                ranges.insert(integersIn: clipped.location ..< NSMaxRange(clipped))
             }
             return true
         }
-        return coalesced(ranges)
-    }
-
-    private static func coalesced(_ ranges: [NSRange]) -> [NSRange] {
-        let sorted = ranges.filter { $0.length > 0 }.sorted { $0.location < $1.location }
-        var result: [NSRange] = []
-        for range in sorted {
-            if let last = result.last, range.location <= NSMaxRange(last) {
-                result[result.count - 1] = NSRange(location: last.location,
-                                                   length: max(NSMaxRange(last), NSMaxRange(range)) - last.location)
-            } else {
-                result.append(range)
-            }
-        }
-        return result
+        return ranges
     }
 }
 
