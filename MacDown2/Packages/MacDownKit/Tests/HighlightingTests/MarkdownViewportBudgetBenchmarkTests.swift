@@ -86,8 +86,10 @@ struct MarkdownViewportBudgetBenchmarkTests {
             settlements.append(Double(settled - start) / 1e6)
         }
         #expect(model.text == original, "alternating edits restored the original source")
+        let callValues = calls.map { String(format: "%.3f", $0) }.joined(separator: ",")
+        let settledValues = settlements.map { String(format: "%.3f", $0) }.joined(separator: ",")
         print("VIEWPORT-BUDGET utf8=\(original.utf8.count) open=\(openMilliseconds) ms "
-            + "calls=\(calls.map { Int($0) }) ms settled=\(settlements.map { Int($0) }) ms "
+            + "calls=[\(callValues)] ms settled=[\(settledValues)] ms "
             + "visible=\(String(describing: system.visibleUTF16Range)) preEdit=\(preEditCount) "
             + "selected=\(session.selectedWindowCount) matched=\(session.matchedWindowCount) "
             + "local=\(session.localParseCount) full=\(session.fullParseCount)")
