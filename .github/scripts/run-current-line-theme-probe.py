@@ -96,7 +96,7 @@ def qualify_hundred_caret(root, output, binary, helper, environment):
         if (result.returncode != 0 or status["returncode"] != 0
                 or status["timed_out"] or status["cancelled"]
                 or status["app_cleanup_requested"] != []
-                or not re.search(r"Test run with 2 tests in 1 suite passed", log_text)
+                or not re.search(r"Test run with 5 tests in 1 suite passed", log_text)
                 or "100-caret 1-MB mounted insert:" not in log_text):
             raise SystemExit("The isolated mounted 100-caret Release budget failed: " + label)
     if any(hashlib.sha256(Path(name).read_bytes()).hexdigest() != digest for name, digest in inputs.items()):
