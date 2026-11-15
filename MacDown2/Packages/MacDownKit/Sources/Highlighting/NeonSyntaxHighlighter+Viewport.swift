@@ -57,6 +57,10 @@ extension NeonSyntaxHighlighter {
         textSystem.preEditObserver = { [weak session] range, replacement, source in
             session?.prepare(range: range, replacement: replacement, oldSource: source)
         }
+        textSystem.compositionEndedObserver = { [weak session, weak painter] in
+            session?.begin()
+            painter?.scheduleRefresh()
+        }
         gate.didProcessCharacterEditWithGeometry = { [weak self, weak storage] range, delta, postEditLength in
             self?.didEditViewport(range: range, delta: delta, postEditLength: postEditLength, storage: storage)
         }
@@ -71,6 +75,7 @@ extension NeonSyntaxHighlighter {
         generation &+= 1
         gate.didProcessCharacterEditWithGeometry = nil
         textSystem.preEditObserver = nil
+        textSystem.compositionEndedObserver = nil
         session.tearDown()
         painter.tearDown()
         viewportSession = nil

@@ -6,10 +6,17 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/viewport-budget-measurement.yml'
+      - 'MacDown2/Packages/MacDownKit/Package.swift'
+      - 'MacDown2/Packages/MacDownKit/Package.resolved'
       - 'MacDown2/Packages/MacDownKit/Sources/FileCore/String+ExactEquality.swift'
       - 'MacDown2/Packages/MacDownKit/Sources/Highlighting/**'
       - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownViewportBudgetBenchmarkTests.swift'
       - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportHighlighterBudgetBenchmarkTests.swift'
+      - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportDisplayBudgetBenchmarkTests.swift'
+      - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportMountedLifecycleOracleTests.swift'
+      - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportMountedLifecycleDisplayTests.swift'
+      - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportCacheRetirementBudgetTests.swift'
+      - 'MacDown2/Packages/MacDownKit/Tests/HighlightingTests/BoundedMarkdownCacheRetirementTests.swift'
   workflow_dispatch:
 jobs:
   viewport-budget:
@@ -47,14 +54,22 @@ jobs:
           xcodebuild -version > "$RUNNER_TEMP/viewport-budget/xcode.txt"
           sw_vers > "$RUNNER_TEMP/viewport-budget/macos.txt"
           shasum -a 256 \
+            MacDown2/Packages/MacDownKit/Package.swift \
             MacDown2/Packages/MacDownKit/Package.resolved \
             MacDown2/Packages/MacDownKit/Sources/FileCore/String+ExactEquality.swift \
             MacDown2/Packages/MacDownKit/Sources/Highlighting/SyntaxHighlightStore.swift \
+            MacDown2/Packages/MacDownKit/Sources/Highlighting/MarkdownViewportSession.swift \
+            MacDown2/Packages/MacDownKit/Sources/Highlighting/BoundedMarkdownCacheRetirement.swift \
             MacDown2/Packages/MacDownKit/Sources/Highlighting/NeonSyntaxHighlighter+Viewport.swift \
             MacDown2/Packages/MacDownKit/Sources/Highlighting/NeonSyntaxHighlighter+SizeFallback.swift \
             MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportHighlighterIntegrationTests.swift \
             MacDown2/Packages/MacDownKit/Tests/HighlightingTests/MarkdownViewportBudgetBenchmarkTests.swift \
             MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportHighlighterBudgetBenchmarkTests.swift \
+            MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportDisplayBudgetBenchmarkTests.swift \
+            MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportMountedLifecycleOracleTests.swift \
+            MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportMountedLifecycleDisplayTests.swift \
+            MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportCacheRetirementBudgetTests.swift \
+            MacDown2/Packages/MacDownKit/Tests/HighlightingTests/BoundedMarkdownCacheRetirementTests.swift \
             .github/workflows/viewport-budget-measurement.yml \
             > "$RUNNER_TEMP/viewport-budget/input-sha256.txt"
       - name: Measure mounted session and public highlighter in Release
@@ -67,6 +82,20 @@ jobs:
             2>&1 | tee "$RUNNER_TEMP/viewport-budget/session.log"
           swift test -c release --filter ViewportHighlighterBudgetBenchmarkTests --no-parallel \
             2>&1 | tee "$RUNNER_TEMP/viewport-budget/highlighter.log"
+          MACDOWN_VIEWPORT_DISPLAY_BENCH=1 \
+            swift test -c release --filter ViewportDisplayBudgetBenchmarkTests --no-parallel \
+            2>&1 | tee "$RUNNER_TEMP/viewport-budget/display.log"
+          MACDOWN_VIEWPORT_LIFECYCLE_ORACLE=1 \
+            swift test -c release --filter ViewportMountedLifecycleOracleTests --no-parallel \
+            2>&1 | tee "$RUNNER_TEMP/viewport-budget/lifecycle.log"
+          MACDOWN_VIEWPORT_LIFECYCLE_DISPLAY=1 \
+            swift test -c release --filter ViewportMountedLifecycleDisplayTests --no-parallel \
+            2>&1 | tee "$RUNNER_TEMP/viewport-budget/lifecycle-display.log"
+          MACDOWN_VIEWPORT_CACHE_RETIREMENT_BENCH=1 \
+            swift test -c release --filter ViewportCacheRetirementBudgetTests --no-parallel \
+            2>&1 | tee "$RUNNER_TEMP/viewport-budget/cache-retirement.log"
+          swift test -c release --filter BoundedMarkdownCacheRetirementTests --no-parallel \
+            2>&1 | tee "$RUNNER_TEMP/viewport-budget/retirement-order.log"
       - name: Record complete measured cases
         run: |
           python3 - <<'PY'
@@ -95,6 +124,89 @@ jobs:
                   cases.append({'utf8_bytes': size, 'call_ms': calls, 'settled_ms': settled,
                                 'raw': line})
               records[name] = cases
+          display_log = (root / 'display.log').read_text()
+          assert 'Test run with 1 test in 1 suite passed' in display_log
+          lifecycle_log = (root / 'lifecycle.log').read_text()
+          assert 'Test run with 1 test in 1 suite passed' in lifecycle_log
+          assert 'ViewportMountedLifecycleOracleTests' in lifecycle_log
+          retirement_log = (root / 'cache-retirement.log').read_text()
+          assert 'Test run with 1 test in 1 suite passed' in retirement_log
+          retirement_cases = re.findall(r'VIEWPORT-CACHE-RETIREMENT input_return_ms=([0-9.]+) utf8=(\d+)',
+                                        retirement_log)
+          assert len(retirement_cases) == 1, retirement_cases
+          retirement_ms, retirement_bytes = retirement_cases[0]
+          assert float(retirement_ms) < 50 and int(retirement_bytes) >= 1 << 20
+          records['cache_retirement'] = {'input_return_ms': float(retirement_ms),
+                                         'utf8_bytes': int(retirement_bytes),
+                                         'scope': 'ordinary mounted structural input return; overflow is synchronous and has no latency claim; distinct from visible display'}
+          retirement_order_log = (root / 'retirement-order.log').read_text()
+          assert 'Test run with 1 test in 1 suite passed' in retirement_order_log
+          assert 'Suite "Bounded Markdown cache retirement" passed' in retirement_order_log
+          records['lifecycle'] = {
+              'passed': True,
+              'scope': 'full-size mounted source/selection/lifecycle oracle; manual painter validation means no automatic repaint claim'
+          }
+          lifecycle_display_log = (root / 'lifecycle-display.log').read_text()
+          assert 'Test run with 1 test in 1 suite passed' in lifecycle_display_log
+          lifecycle_display_lines = [line for line in lifecycle_display_log.splitlines()
+                                     if line.startswith('VIEWPORT-LIFECYCLE-DISPLAY ')]
+          assert len(lifecycle_display_lines) == 1
+          lifecycle_display = json.loads(lifecycle_display_lines[0].split(' ', 1)[1])
+          assert {case['case'] for case in lifecycle_display} == {
+              'move-tail', 'move-top', 'undo', 'redo'
+          }
+          for case in lifecycle_display:
+              assert case['source_utf8_bytes'] >= 1 << 20
+              assert case['request_to_bitmap_readback_ms'] >= case['request_to_oracle_paint_ms'] >= 0
+              assert case['request_to_oracle_paint_ms'] >= case['request_to_action_return_ms'] >= 0
+              assert case['under_50_ms'] == (case['request_to_bitmap_readback_ms'] < 50)
+          records['lifecycle_display'] = lifecycle_display
+          records['lifecycle_display_budget_failures'] = [case['case'] for case in lifecycle_display
+                                                          if not case['under_50_ms']]
+          print('LIFECYCLE-DISPLAY-BUDGET-VERDICT', json.dumps({
+              'scope': 'programmatic mounted scroll and TextKit undo/redo to AppKit bitmap readback; real input-method composition is not measured',
+              'under_50_ms': not records['lifecycle_display_budget_failures'],
+              'failures': records['lifecycle_display_budget_failures']
+          }, sort_keys=True))
+          display_lines = [line for line in display_log.splitlines()
+                           if line.startswith('VIEWPORT-DISPLAY-BUDGET ')]
+          assert len(display_lines) == 1, len(display_lines)
+          display = json.loads(display_lines[0].split(' ', 1)[1])
+          assert len(display) == 10
+          assert {case['case'] for case in display} == {
+              'begin-word', 'middle-word', 'end-word', 'begin-delete',
+              'word-boundary', 'unicode-replacement', 'crlf-replacement',
+              'structural-newline', 'replacement-shrink', 'replacement-grow'
+          }
+          for case in display:
+              assert case['source_utf8_bytes'] >= 1 << 20
+              assert case['source_utf16_units'] <= 1_100_000
+              assert case['display_non_background_samples'] > 2
+              assert case['oracle_accent_pixel_samples'] > 0
+              assert re.fullmatch(r'[0-9a-f]{64}', case['display_sha256'])
+              assert case['input_to_display_readback_ms'] >= case['input_to_storage_return_ms'] >= 0
+              assert case['input_to_display_readback_ms'] >= case['input_to_display_return_ms'] >= 0
+              assert case['display_return_to_bitmap_readback_ms'] >= 0
+              assert case['parse_request_to_publication_ms'] >= 0
+              assert case['last_parse_request_to_resolution_ms'] >= 0
+              assert case['last_parse_resolution_to_publication_ms'] >= 0
+              assert case['parse_request_to_publication_ms'] + 0.001 >= (
+                  case['last_parse_request_to_resolution_ms']
+                  + case['last_parse_resolution_to_publication_ms'])
+              assert case['parse_attempts_requested'] >= 1
+              assert case['parse_attempts_resolved'] >= 1
+              assert case['selected_window_count'] >= case['matched_window_count'] >= case['local_parse_count']
+              assert case['configured_debounce_ms'] == 0
+              assert case['pixel_changed'] or case['case'] in {'crlf-replacement', 'unicode-replacement'}
+              assert case['under_50_ms'] == (case['input_to_display_readback_ms'] < 50)
+          records['display'] = display
+          records['display_budget_failures'] = [case['case'] for case in display
+                                                if not case['under_50_ms']]
+          print('DISPLAY-BUDGET-VERDICT', json.dumps({
+              'scope': 'mounted package/editor store and AppKit display readback; parse interval includes queue and fallback; programmatic movement and undo/redo are measured separately; app-target event orchestration and real IME timing unmeasured',
+              'under_50_ms': not records['display_budget_failures'],
+              'failures': records['display_budget_failures']
+          }, sort_keys=True))
           modes = {re.search(r'\bmode=(\w+)', case['raw']).group(1): case
                    for case in records['highlighter']}
           assert set(modes) == {'reduced', 'viewport'}

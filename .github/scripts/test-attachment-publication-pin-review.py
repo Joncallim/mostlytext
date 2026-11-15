@@ -82,6 +82,15 @@ class ExactPinReviewTests(unittest.TestCase):
         with self.assertRaises(SystemExit):
             module.reviewed_model_pin_delta(self.before, previous)
 
+    def test_previous_neon_without_retired_writer_guard_is_not_the_current_graph(self):
+        previous = copy.deepcopy(self.after)
+        self.apply_reviewed_updates(previous)
+        for value in previous:
+            if value["identity"] == "neon":
+                value["state"]["revision"] = "f702323168da9c6f0fb8120b844e81fd025f2124"
+        with self.assertRaises(SystemExit):
+            module.reviewed_model_pin_delta(self.before, previous)
+
     def test_independent_updates_cannot_qualify_an_unchanged_original_model(self):
         current = copy.deepcopy(self.before)
         self.apply_reviewed_updates(current)

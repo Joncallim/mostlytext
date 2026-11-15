@@ -6,15 +6,12 @@ import Themes
 
 /// Register row H5: work a highlighter queued *before* the cut-off was crossed.
 ///
-/// Neon cannot cancel it, and its validator never goes stale (the content
-/// version is the storage's identity hash), so one validation batch of the
-/// discarded highlighter still runs on the main actor after reduced mode
-/// begins. What these tests establish deterministically (no timing): that batch
-/// is *inert* — it styles nothing, builds no live layer, and leaves a plain
-/// document — and that nothing new is queued afterwards. Its main-thread cost
-/// (about 25 ms extra in Release; 135–210 ms in
-/// Debug) is measured in `planning/downstream/evidence/h5-highlight-fallback`
-/// and is a known, bounded limitation, not a guarantee of zero stall.
+/// The retired Neon writer is deactivated before its owner is dropped. These
+/// tests require the crossed document to remain plain and without new live
+/// layer/style work after queued tasks drain. The controlled held-request
+/// replay separately proves the ordering of a completion across retirement.
+/// The older main-thread cost in `planning/downstream/evidence/h5-highlight-fallback`
+/// describes the pre-deactivation dependency and is retained as historical evidence.
 @MainActor
 @Suite(.serialized)
 struct StaleWorkAfterCrossingTests {
@@ -74,10 +71,9 @@ struct StaleWorkAfterCrossingTests {
             live: highlighter.liveLayerRequestCount,
             styled: highlighter.styledTokenCount
         )
-        #expect(
-            highlighter.staleLayerRequestCount + highlighter.staleStyleRequestCount > 0,
-            "the scenario really left queued work behind"
-        )
+        // The new Neon lifetime gate may reject old work before MostlyText's
+        // stale-request counters run. The held-request regression proves that
+        // path directly; a zero count here is now an allowed successful result.
         highlighter.tearDown()
     }
 

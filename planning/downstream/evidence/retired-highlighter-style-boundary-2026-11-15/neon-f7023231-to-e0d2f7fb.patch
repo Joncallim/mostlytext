@@ -1,0 +1,214 @@
+diff --git a/Sources/Neon/TextSystemStyler.swift b/Sources/Neon/TextSystemStyler.swift
+index 1382b5b..97e88e3 100644
+--- a/Sources/Neon/TextSystemStyler.swift
++++ b/Sources/Neon/TextSystemStyler.swift
+@@ -14,7 +14,9 @@ import RangeState
+ public final class TextSystemStyler<Interface: TextSystemInterface> {
+ 	private let textSystem: Interface
+ 	private let tokenProvider: TokenProvider
++	private let tokenValidator: TokenSystemValidator<Interface>
+ 	private let validator: SinglePhaseRangeValidator<Interface.Content>
++	private var isActive = true
+ 
+ 	public init(textSystem: Interface, tokenProvider: TokenProvider) {
+ 		self.textSystem = textSystem
+@@ -24,6 +26,7 @@ public final class TextSystemStyler<Interface: TextSystemInterface> {
+ 			textSystem: textSystem,
+ 			tokenProvider: tokenProvider
+ 		)
++		self.tokenValidator = tokenValidator
+ 
+ 		self.validator = SinglePhaseRangeValidator(
+ 			configuration: .init(
+@@ -48,14 +51,24 @@ public final class TextSystemStyler<Interface: TextSystemInterface> {
+ 	///     range = NSRange(1..<2)
+ 	///     delta = -1
+ 	public func didChangeContent(in range: NSRange, delta: Int) {
++		guard isActive else { return }
+ 		validator.contentChanged(in: range, delta: delta)
+ 	}
+ 
++	/// Retire this styler before replacing its owner. Results already awaiting
++	/// tokens must no longer clear or repaint the shared text view.
++	public func deactivate() {
++		isActive = false
++		tokenValidator.deactivate()
++	}
++
+ 	public func invalidate(_ target: RangeTarget) {
++		guard isActive else { return }
+ 		validator.invalidate(target)
+ 	}
+ 
+ 	public func validate(_ target: RangeTarget = .all) {
++		guard isActive else { return }
+ 		validator.validate(target)
+ 	}
+ }
+diff --git a/Sources/Neon/TextViewHighlighter.swift b/Sources/Neon/TextViewHighlighter.swift
+index 292ad93..a6d5355 100644
+--- a/Sources/Neon/TextViewHighlighter.swift
++++ b/Sources/Neon/TextViewHighlighter.swift
+@@ -67,6 +67,7 @@ public final class TextViewHighlighter {
+ 	private let client: TreeSitterClient
+ 	private let buffer = RangeInvalidationBuffer()
+ 	private let storageDelegate = TextStorageDelegate()
++	private var isActive = true
+ 
+ #if os(iOS) || os(visionOS)
+ 	private var frameObservation: NSKeyValueObservation?
+@@ -143,11 +144,25 @@ public final class TextViewHighlighter {
+ 
+ 	/// Perform manual invalidation on the underlying highlighter
+ 	public func invalidate(_ target: RangeTarget) {
++		guard isActive else { return }
+ 		buffer.invalidate(target)
+ 	}
+ 
++	/// Stop this instance before another highlighter takes ownership of the
++	/// same text view. In-flight token requests may finish, but cannot paint it.
++	public func deactivate() {
++		guard isActive else { return }
++		isActive = false
++		styler.deactivate()
++		NotificationCenter.default.removeObserver(self)
++#if os(iOS) || os(visionOS)
++		frameObservation = nil
++#endif
++	}
++
+ 	/// Inform the client that calls to languageConfiguration may change.
+ 	public func languageConfigurationChanged(for name: String) {
++		guard isActive else { return }
+ 		client.languageConfigurationChanged(for: name)
+ 	}
+ }
+@@ -157,6 +172,7 @@ extension TextViewHighlighter {
+ 	///
+ 	/// This method sets up all the necessary monitoring so the highlighter can react to scrolling. It should be called only once the view hierarchy is fully established.
+ 	public func observeEnclosingScrollView(expectingScrollView: Bool = true) {
++		guard isActive else { return }
+ #if os(macOS) && !targetEnvironment(macCatalyst)
+ 		guard let scrollView = textView.enclosingScrollView else {
+ 			if expectingScrollView {
+@@ -196,6 +212,7 @@ extension TextViewHighlighter {
+ 	}
+ 
+ 	@objc private func visibleContentChanged(_ notification: NSNotification) {
++		guard isActive else { return }
+ 		let visibleRange = textView.visibleTextRange
+ 
+ 		styler.validate(.range(visibleRange))
+diff --git a/Sources/Neon/TokenSystemValidator.swift b/Sources/Neon/TokenSystemValidator.swift
+index 6f82acc..9f03ed4 100644
+--- a/Sources/Neon/TokenSystemValidator.swift
++++ b/Sources/Neon/TokenSystemValidator.swift
+@@ -8,12 +8,17 @@ final class TokenSystemValidator<Interface: TextSystemInterface> {
+ 
+ 	private let textSystem: Interface
+ 	private let tokenProvider: TokenProvider
++	private var isActive = true
+ 
+ 	init(textSystem: Interface, tokenProvider: TokenProvider) {
+ 		self.textSystem = textSystem
+ 		self.tokenProvider = tokenProvider
+ 	}
+ 
++	func deactivate() {
++		isActive = false
++	}
++
+ 	var validationProvider: HybridSyncAsyncValueProvider<Validator.ContentRange, Validation, Never> {
+ 		.init(
+ 			syncValue: { self.validate($0) },
+@@ -26,7 +31,7 @@ final class TokenSystemValidator<Interface: TextSystemInterface> {
+ 	}
+ 
+ 	private func validate(_ range: Validator.ContentRange) -> Validation? {
+-		guard range.version == currentVersion else { return .stale }
++		guard isActive, range.version == currentVersion else { return .stale }
+ 
+ 		guard let application = tokenProvider.sync(range.value) else {
+ 			return nil
+@@ -34,7 +39,7 @@ final class TokenSystemValidator<Interface: TextSystemInterface> {
+ 
+ 		// A provider can suspend or synchronously reenter editing. Its result
+ 		// retains the request's version, not the current document's authority.
+-		guard range.version == currentVersion else { return .stale }
++		guard isActive, range.version == currentVersion else { return .stale }
+ 
+ 		applyStyles(for: application)
+ 
+@@ -42,14 +47,14 @@ final class TokenSystemValidator<Interface: TextSystemInterface> {
+ 	}
+ 
+ 	private func validate(_ range: Validator.ContentRange) async -> Validation {
+-		guard range.version == currentVersion else { return .stale }
++		guard isActive, range.version == currentVersion else { return .stale }
+ 
+ 		// https://github.com/apple/swift/pull/71143
+ 		let application = await tokenProvider.async(isolation: MainActor.shared, range.value)
+ 
+ 		// A provider can suspend or synchronously reenter editing. Its result
+ 		// retains the request's version, not the current document's authority.
+-		guard range.version == currentVersion else { return .stale }
++		guard isActive, range.version == currentVersion else { return .stale }
+ 
+ 		applyStyles(for: application)
+ 
+diff --git a/Tests/NeonTests/OnePhaseStyleVersionTests.swift b/Tests/NeonTests/OnePhaseStyleVersionTests.swift
+index 4eed6f9..15d979d 100644
+--- a/Tests/NeonTests/OnePhaseStyleVersionTests.swift
++++ b/Tests/NeonTests/OnePhaseStyleVersionTests.swift
+@@ -10,6 +10,51 @@ import Testing
+ @MainActor
+ @Suite("One-phase style results retain content version ownership", .serialized)
+ struct OnePhaseStyleVersionTests {
++    @Test(.timeLimit(.minutes(1)), arguments: [TokenApplication.Action.apply, .replace])
++    func retiringOwnerRejectsHeldStylesWithoutAContentEdit(action: TokenApplication.Action) async throws {
++        let system = OnePhaseTextSystem()
++        let gate = OnePhaseTokenGate()
++        let application = oldApplication(action)
++        let provider = TokenProvider(syncValue: { _ in nil }, mainActorAsyncValue: { _ in
++            await gate.suspend()
++            return application
++        })
++        let validator = TokenSystemValidator(textSystem: system, tokenProvider: provider)
++        let request = VersionedRange(NSRange(location: 0, length: 3), version: system.content.currentVersion)
++        let operation = Task { @MainActor in
++            await validator.validationProvider.async(isolation: MainActor.shared, request)
++        }
++        defer { gate.release() }
++        var started = gate.started.stream.makeAsyncIterator()
++        _ = try #require(await started.next())
++
++        // A theme/language switch can retire the highlighter without changing
++        // the document version. The old request must not clear the new paint.
++        validator.deactivate()
++        gate.release()
++        #expect(await operation.value == .stale)
++        #expect(system.applications.isEmpty)
++    }
++
++    @Test func retiredOwnerSkipsNewSynchronousAndAsynchronousRequests() async {
++        let system = OnePhaseTextSystem()
++        var calls = 0
++        let provider = TokenProvider(syncValue: { _ in
++            calls += 1
++            return .noChange
++        }, mainActorAsyncValue: { _ in
++            calls += 1
++            return .noChange
++        })
++        let validator = TokenSystemValidator(textSystem: system, tokenProvider: provider)
++        let request = VersionedRange(NSRange(location: 0, length: 3), version: system.content.currentVersion)
++        validator.deactivate()
++        #expect(validator.validationProvider.sync(request) == .stale)
++        #expect(await validator.validationProvider.async(isolation: MainActor.shared, request) == .stale)
++        #expect(calls == 0)
++        #expect(system.applications.isEmpty)
++    }
++
+     @Test(.timeLimit(.minutes(1)), arguments: ["", "xyz", "longer replacement"],
+           [TokenApplication.Action.apply, .replace])
+     func changedContentRejectsAwaitedStyles(replacement: String, action: TokenApplication.Action) async throws {

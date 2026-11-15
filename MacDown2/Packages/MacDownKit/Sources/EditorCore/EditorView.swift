@@ -137,7 +137,6 @@ public struct EditorView: NSViewRepresentable {
         // Only push model text into the view when it differs from the view's
         // current text *and* the change did not originate from the view itself.
         // This prevents the keystroke-echo feedback loop.
-        var pushedModelText = false
         // While an IME / dead-key composition is in progress the binding still holds the pre-composition
         // text (marked-text updates post no `didChange`); pushing it would clear the marked range
         // mid-composition. The binding catches up when the composition commits.
@@ -147,7 +146,6 @@ public struct EditorView: NSViewRepresentable {
             system.setText(text)
             context.coordinator.isApplyingModelText = false
             context.coordinator.noteSynced(text)
-            pushedModelText = true
 
             // A vertically-resizable NSTextView only grows its document-view
             // height when it is told to size to its content. Only call when
@@ -169,14 +167,6 @@ public struct EditorView: NSViewRepresentable {
         // lines) stuck at the old ruler width until an unrelated later
         // update happened to trigger a redraw.
         context.coordinator.gutterView?.updateThickness()
-
-        // Model pushes need a deferred measurement after TextKit has applied
-        // the new text. Ordinary keystrokes already schedule a coalesced sync
-        // from the text-view delegate; measuring here as well duplicated the
-        // full-document layout pass on every binding update.
-        if pushedModelText {
-            system.scheduleFrameHeightSync()
-        }
 
         scrollView.hasHorizontalScroller = !configuration.wrapsLines
         scrollView.autohidesScrollers = configuration.wrapsLines

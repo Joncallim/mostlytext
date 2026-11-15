@@ -88,7 +88,9 @@ final class MarkdownEditPairing<Candidate> {
               editedRange.length <= postSource.length - editedRange.location,
               newRange.location <= postSource.length,
               newRange.length <= postSource.length - newRange.location,
-              postSource.substring(with: newRange) == proposal.replacement
+              // Swift String equality folds canonical Unicode equivalents;
+              // storage pairing must prove the authored UTF-16 units instead.
+              (postSource.substring(with: newRange) as NSString).isEqual(to: proposal.replacement)
         else { return nil }
         if editedRange != newRange {
             guard let verification = proposal.verification,
@@ -108,7 +110,7 @@ final class MarkdownEditPairing<Candidate> {
                 in: localEdit, with: proposal.replacement
             )
             let newWindow = NSRange(location: verification.range.location, length: newWindowLength)
-            guard postSource.substring(with: newWindow) == expected else { return nil }
+            guard (postSource.substring(with: newWindow) as NSString).isEqual(to: expected) else { return nil }
         }
         return Match(candidate: proposal.candidate, oldRange: proposal.oldRange,
                      newRange: newRange, delta: delta)

@@ -23,12 +23,31 @@ extension EditorTextSystem {
             cursor = NSMaxRange(replacement.range)
         }
         transactionEditsToReport = descending
+        splicedEditPreservesLineBoundaries = !textView.hasMarkedText()
+            && lineIndex.utf16Length == source.length
+            && descending.allSatisfy { replacement in
+                let range = replacement.range
+                let end = NSMaxRange(range)
+                guard range.location >= 0, end <= source.length, range.length <= 4096,
+                      !replacement.replacementText.utf16.contains(where: { $0 == 0x0D || $0 == 0x0A })
+                else { return false }
+                // A CR/LF pair can be formed or split even when the replaced characters contain no terminator.
+                guard range.location == 0 || source.character(at: range.location - 1) != 0x0D,
+                      end == source.length || source.character(at: end) != 0x0A
+                else { return false }
+                for offset in range.location ..< end where source.character(at: offset) == 0x0D
+                    || source.character(at: offset) == 0x0A {
+                    return false
+                }
+                return true
+            }
         lineIndexNeedsRebuild = true
         isApplyingMultiRangeTransaction = false
         // NSTextView accepts NSString here. Keep the assembled UTF-16 buffer
         // in Foundation instead of materializing a second 1 MB Swift String.
         textView.insertText(builder, replacementRange: span)
         transactionEditsToReport = nil
+        splicedEditPreservesLineBoundaries = false
     }
 
     func reportTransactionEdits(_ edits: [TextReplacement]) {

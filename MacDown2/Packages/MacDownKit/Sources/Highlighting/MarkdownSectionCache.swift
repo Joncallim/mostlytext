@@ -3,7 +3,7 @@ import Neon
 import SwiftTreeSitter
 import SwiftTreeSitterLayer
 
-/// A conservative Markdown section cache for bounded plain-word edits.
+/// A conservative Markdown section cache for bounded prose edits.
 /// Selection reads the old source synchronously; the caller must copy only
 /// the selected window and pair the proposal with the actual storage edit.
 /// Structural or uncertain edits must replace the cache from a fresh parse.
@@ -68,10 +68,10 @@ struct MarkdownSectionCache {
         sourceLength = (source as NSString).length
     }
 
-    /// Admit only a replacement wholly inside one bounded plain paragraph.
+    // swiftlint:disable cyclomatic_complexity
+    /// Admit only a text edit inside one bounded paragraph or heading slice.
     /// Keeping section count stable lets later section offsets shift in O(log n).
     func select(source: NSString, edit: NSRange, replacement: String, visible: NSRange) -> Window? {
-        let word = CharacterSet.alphanumerics
         guard source.length == sourceLength,
               edit.location >= 0, edit.length >= 0,
               edit.location <= source.length,
@@ -82,25 +82,34 @@ struct MarkdownSectionCache {
               !replacement.isEmpty || edit.length > 0
         else { return nil }
         let old = source.substring(with: edit)
-        guard old.unicodeScalars.allSatisfy(word.contains),
-              replacement.unicodeScalars.allSatisfy(word.contains)
+        guard Self.safeProseEdit(old: old, replacement: replacement),
+              edit.length > 0 || Self.isInteriorWordInsertion(source: source, at: edit.location)
+              || Self.isInteriorSpaceInsertion(source: source, at: edit.location, replacement: replacement)
         else { return nil }
-
-        guard edit.length > 0 || Self.isInteriorWordInsertion(source: source, at: edit.location) else { return nil }
 
         guard let editIndex = indexOfEdit(edit) else { return nil }
         let entry = resolvedSection(at: editIndex)
         let node = entry.node
         let localEdit = NSRange(location: edit.location - entry.offset, length: edit.length)
-        guard let paragraph = Self.paragraph(in: node, overlapping: localEdit),
-              localEdit.location > paragraph.range.location,
-              NSMaxRange(localEdit) < NSMaxRange(paragraph.range),
-              paragraph.range.length <= Self.windowLimit
-        else { return nil }
-        let paragraphText = (entry.content as NSString).substring(with: paragraph.range)
-        let body = paragraphText.hasSuffix("\n") ? String(paragraphText.dropLast()) : paragraphText
-        guard body.unicodeScalars.allSatisfy({ word.contains($0) || $0 == " " || $0 == "\t" })
-        else { return nil }
+        if let paragraph = Self.paragraph(in: node, overlapping: localEdit) {
+            guard localEdit.location > paragraph.range.location,
+                  NSMaxRange(localEdit) < NSMaxRange(paragraph.range),
+                  paragraph.range.length <= Self.windowLimit
+            else { return nil }
+            let paragraphText = (entry.content as NSString).substring(with: paragraph.range)
+            let body: String = if paragraphText.hasSuffix("\r\n") {
+                // Swift treats CRLF as one Character; drop two UTF-16 units,
+                // preserving the character immediately before the terminator.
+                (paragraphText as NSString).substring(to: (paragraphText as NSString).length - 2)
+            } else if paragraphText.hasSuffix("\n") {
+                String(paragraphText.dropLast())
+            } else {
+                paragraphText
+            }
+            guard Self.safeProseBody(body) else { return nil }
+        } else {
+            guard Self.isBoundedHeadingEdit(entry: entry, edit: edit, source: source) else { return nil }
+        }
 
         guard firstIndex(overlapping: visible) != nil else { return nil }
         let lower = entry.globalRange.location
@@ -115,6 +124,8 @@ struct MarkdownSectionCache {
                       new: NSRange(location: lower, length: newLength),
                       firstSection: editIndex, lastSection: editIndex)
     }
+
+    // swiftlint:enable cyclomatic_complexity
 
     /// Replace cached trees only after a fresh local parse preserves the
     /// selected root-section shape. On failure the cache is unchanged.
@@ -141,7 +152,11 @@ struct MarkdownSectionCache {
         for index in 0 ..< root.childCount {
             guard let node = root.child(at: index) else { throw CacheError.snapshotUnavailable }
             let sectionIndex = window.firstSection + index
-            replacements.append(Section(node: node, snapshot: snapshot, content: content,
+            guard let replacementNode = Self.replacementNode(
+                node, replacing: sections[sectionIndex].node,
+                contentLength: (content as NSString).length, singleEntry: expectedCount == 1
+            ) else { throw CacheError.sectionShapeChanged }
+            replacements.append(Section(node: replacementNode, snapshot: snapshot, content: content,
                                         offset: window.new.location - shifts.displacement(at: sectionIndex)))
         }
         sections.replaceSubrange(window.firstSection ... window.lastSection, with: replacements)
@@ -237,17 +252,6 @@ struct MarkdownSectionCache {
         }
     }
 
-    /// Require both neighboring UTF-16 units to be alphanumeric. This also
-    /// refuses surrogate boundaries and word-edge/structural insertions.
-    private static func isInteriorWordInsertion(source: NSString, at location: Int) -> Bool {
-        guard location > 0, location < source.length else { return false }
-        let word = CharacterSet.alphanumerics
-        let left = source.substring(with: NSRange(location: location - 1, length: 1))
-        let right = source.substring(with: NSRange(location: location, length: 1))
-        return left.unicodeScalars.allSatisfy(word.contains)
-            && right.unicodeScalars.allSatisfy(word.contains)
-    }
-
     private static func paragraph(in node: Node, overlapping edit: NSRange) -> Node? {
         guard !node.hasError else { return nil }
         if node.nodeType == "paragraph" {
@@ -286,6 +290,81 @@ struct MarkdownSectionCache {
               NSIntersectionRange(globalRange(at: lower), region).length > 0
         else { return nil }
         return lower
+    }
+}
+
+extension MarkdownSectionCache {
+    // A heading's disjoint cache entry can be reparsed when a plain heading
+    // word is split by a newline, or its terminal CRLF is normalized to LF.
+    // The bounded entry starts at the heading marker and ends before the next
+    // independently cached paragraph/section. Other structural edits retain
+    // the full-document fallback because they may change heading hierarchy.
+    // swiftlint:disable:next function_body_length
+    func selectStructuralHeading(source: NSString, edit: NSRange,
+                                 replacement: String, visible: NSRange) -> Window? {
+        guard source.length == sourceLength,
+              edit.location >= 0, edit.length >= 0,
+              edit.location <= source.length,
+              edit.length <= source.length - edit.location,
+              visible.location != NSNotFound, visible.location >= 0,
+              visible.length > 0, visible.location <= source.length,
+              visible.length <= source.length - visible.location,
+              firstIndex(overlapping: visible) != nil,
+              let index = indexOfEdit(edit)
+        else { return nil }
+        let section = resolvedSection(at: index)
+        let oldWindow = section.globalRange
+        guard section.node.nodeType == "section",
+              oldWindow.length > 0, oldWindow.length <= Self.windowLimit,
+              oldWindow.location <= edit.location,
+              NSMaxRange(edit) <= NSMaxRange(oldWindow)
+        else { return nil }
+
+        let content = source.substring(with: oldWindow) as NSString
+        let localEdit = NSRange(location: edit.location - oldWindow.location, length: edit.length)
+        let line = content.lineRange(for: NSRange(location: 0, length: 0))
+        let lineText = content.substring(with: line)
+        let newline = (lineText as NSString).range(of: "\n")
+        guard NSMaxRange(localEdit) <= NSMaxRange(line),
+              line.length > 3,
+              newline.location != NSNotFound
+        else { return nil }
+        let prefix = (lineText as NSString).substring(to: newline.location)
+            .trimmingCharacters(in: .newlines)
+        let heading = prefix.drop { $0 == "#" }
+        let markerCount = prefix.count - heading.count
+        let plain = CharacterSet.alphanumerics.union(.whitespaces)
+        guard (1 ... 6).contains(markerCount), heading.first == " "
+        else { return nil }
+
+        if replacement == "\n", edit.length == 0 {
+            // An interior word split cannot start another Markdown block.
+            // Require a blank line after the original heading: otherwise
+            // its new second line could combine with a following setext
+            // underline outside this cache entry.
+            let following = content.substring(from: NSMaxRange(line))
+            guard heading.unicodeScalars.allSatisfy(plain.contains),
+                  following.hasPrefix("\n") || following.hasPrefix("\r\n"),
+                  localEdit.location > markerCount + 1,
+                  localEdit.location < (prefix as NSString).length,
+                  Self.isInteriorWordInsertion(source: content, at: localEdit.location)
+            else { return nil }
+        } else if replacement == "\n", edit.length == 2 {
+            guard content.substring(with: localEdit) == "\r\n",
+                  NSMaxRange(localEdit) == (lineText as NSString).length
+            else { return nil }
+        } else {
+            return nil
+        }
+
+        let delta = (replacement as NSString).length - edit.length
+        let newLength = oldWindow.length + delta
+        guard newLength > 0, newLength <= Self.windowLimit,
+              oldWindow.location <= source.length + delta - newLength
+        else { return nil }
+        return Window(old: oldWindow,
+                      new: NSRange(location: oldWindow.location, length: newLength),
+                      firstSection: index, lastSection: index)
     }
 }
 

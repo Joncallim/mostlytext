@@ -48,7 +48,6 @@ final class WindowController: NSWindowController, NSWindowDelegate {
     weak var coordinator: WindowCoordinator?
     let commandDocumentLifetime = UUID()
     private(set) var isClosed = false
-    private var observationTask: Task<Void, Never>?
     /// Running text-filter commands, keyed by tab — see
     /// `WindowController+TextFilterTasks.swift`.
     var textFilterTaskHandles: [UUID: TextFilterTaskHandle] = [:]
@@ -204,24 +203,9 @@ final class WindowController: NSWindowController, NSWindowDelegate {
     }
 
     deinit {
-        observationTask?.cancel()
         let controller = externalFileController
         Task { @MainActor in
             controller.dispose()
-        }
-    }
-
-    private func startObservingActiveDocument() {
-        // Polling is used instead of `withObservationTracking` because the
-        // observation closure in the previous implementation leaked the task.
-        // Keep the active native tab responsive, but do not wake every hidden
-        // tab four times a second solely to re-check its title.
-        observationTask = Task { @MainActor [weak self] in
-            while !Task.isCancelled, let self {
-                updateTitleAndEditedState()
-                let interval: Duration = window?.isKeyWindow == true ? .milliseconds(250) : .seconds(1)
-                try? await Task.sleep(for: interval)
-            }
         }
     }
 
@@ -286,7 +270,6 @@ final class WindowController: NSWindowController, NSWindowDelegate {
         lastWorkspaceIndexRefreshGeneration = nil
         pendingFolderSearchRoot = nil
         pendingFolderSearchRootGeneration = nil
-        observationTask?.cancel()
         externalFileController.dispose()
         editorStore.evictAll()
         findStore.evictAll()

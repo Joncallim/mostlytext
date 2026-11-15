@@ -8,6 +8,7 @@ import Themes
 
 @MainActor
 @Suite("Mounted viewport highlighter integration", .serialized)
+// swiftlint:disable:next type_body_length
 struct ViewportHighlighterIntegrationTests {
     @Test func nonMarkdownReducedModeDoesNotScheduleViewportRetry() {
         let initial = String(repeating: "x", count: 9000)
@@ -57,6 +58,70 @@ struct ViewportHighlighterIntegrationTests {
         await session.waitForPendingParse()
         #expect(session.fullParseCount == 1)
         #expect(system.textView.string == initial)
+    }
+
+    @Test(.timeLimit(.minutes(2)))
+    // swiftlint:disable:next function_body_length
+    func compositionEndRebuildsCurrentViewportBeforePainting() async throws {
+        let original = "# Heading\n\nalphatarget beta\n\n"
+            + String(repeating: "## Section\n\nplain words\n\n", count: 500)
+        let model = ViewportIntegrationSourceBox(original)
+        let identity = UUID().uuidString
+        let store = EditorTextSystemStore()
+        let host = NSHostingView(rootView: EditorView(
+            text: Binding(get: { model.text }, set: { model.text = $0 }),
+            identity: identity, configuration: .default, store: store
+        ))
+        let window = NSWindow(contentRect: .init(x: 0, y: 0, width: 500, height: 250),
+                              styleMask: [.titled], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        host.frame = NSRect(x: 0, y: 0, width: 500, height: 250)
+        window.contentView = host
+        defer { window.orderOut(nil); window.close(); store.evictAll() }
+        host.layoutSubtreeIfNeeded()
+        let system = try #require(store.existingSystem(for: identity))
+        let scroll = try #require(system.textView.enclosingScrollView)
+        scroll.frame = host.bounds
+        system.textView.frame = NSRect(x: 0, y: 0, width: 500, height: 20000)
+        scroll.layoutSubtreeIfNeeded()
+        let word = (original as NSString).range(of: "alphatarget")
+        system.textView.setSelectedRange(NSRange(location: word.location + 5, length: 0))
+        system.scrollToVisible(utf16Range: word)
+        let syntaxStore = SyntaxHighlightStore()
+        let highlighter = try #require(
+            syntaxStore.highlighter(
+                for: identity, textSystem: system, languageID: "markdown", theme: BundledThemes.light
+            ) as? NeonSyntaxHighlighter
+        )
+        defer { syntaxStore.evictAll() }
+        let session = try #require(highlighter.viewportSession)
+        let painter = try #require(highlighter.viewportPainter)
+        await session.waitForPendingParse()
+
+        system.textView.setMarkedText("に", selectedRange: NSRange(location: 1, length: 0),
+                                      replacementRange: NSRange(location: NSNotFound, length: 0))
+        #expect(system.textView.hasMarkedText())
+        await session.waitForPendingParse()
+        let beforeUnmarkParse = session.fullParseCount
+        painter.paintVisible()
+        let beforeUnmarkValidation = painter.validationPassCount
+        system.textView.unmarkText()
+        #expect(!system.textView.hasMarkedText())
+        await session.waitForPendingParse()
+        #expect(session.fullParseCount > beforeUnmarkParse, "IME end requires a fresh parse without didChange")
+        #expect(model.text == system.textView.string)
+        let visible = try #require(system.visibleUTF16Range)
+        let source = system.textView.string
+        let snapshot = try MarkdownSectionParser.snapshot(source: source, registry: GrammarRegistry())
+        let oracle = try MarkdownSectionCache(source: source, snapshot: snapshot)
+        #expect(try session.visibleTokens() == oracle.tokens(in: visible))
+        for _ in 0 ..< 100 where painter.validationPassCount == beforeUnmarkValidation {
+            await Task.yield()
+        }
+        #expect(painter.validationPassCount > beforeUnmarkValidation, "IME end must schedule a mounted validation")
+        #expect(hasRenderedColour(system.textView))
+        syntaxStore.evict(identity)
+        #expect(system.compositionEndedObserver == nil)
     }
 
     @Test(.timeLimit(.minutes(2)))

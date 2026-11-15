@@ -14,6 +14,9 @@ final class MarkdownViewportPainter {
     private var refreshScheduled = false
     private var isActive = true
     private var lastPaintedRange: NSRange?
+    /// Validation requests issued for mounted, unmarked viewports. The
+    /// measurement still waits for actual attributes and display afterward.
+    private(set) var validationPassCount = 0
 
     init(textSystem: EditorTextSystem, session: MarkdownViewportSession,
          attributes: @escaping TokenAttributeProvider) {
@@ -39,16 +42,71 @@ final class MarkdownViewportPainter {
     /// applying rendering attributes is deferred until it returns.
     func didEdit(newRange: NSRange, delta: Int) {
         guard isActive else { return }
-        let oldLength = newRange.length - delta
-        guard newRange.location != NSNotFound, newRange.location >= 0,
-              oldLength >= 0
-        else {
-            styler.invalidate(.all)
-            scheduleRefresh()
-            return
+        let postLength = textSystem.textView.textStorage?.length ?? 0
+        let (oldLength, overflow) = newRange.length.subtractingReportingOverflow(delta)
+        guard !overflow, oldLength >= 0,
+              newRange.location != NSNotFound, newRange.location >= 0,
+              newRange.length >= 0, newRange.location <= postLength,
+              newRange.length <= postLength - newRange.location
+        else { invalidateMalformedEdit(postLength: postLength); return }
+        if let lastPaintedRange {
+            // TextKit moves rendering attributes with the edited text. Keep
+            // the cleanup authority aligned with those attributes even when
+            // the viewport scrolls away before the deferred repaint runs.
+            guard let updated = Self.rangeAfterEdit(
+                lastPaintedRange, editedAt: newRange.location,
+                oldLength: oldLength, newLength: newRange.length,
+                postLength: postLength
+            ) else { invalidateMalformedEdit(postLength: postLength); return }
+            self.lastPaintedRange = updated
         }
         styler.didChangeContent(in: NSRange(location: newRange.location, length: oldLength), delta: delta)
         scheduleRefresh()
+    }
+
+    private func invalidateMalformedEdit(postLength: Int) {
+        // Fail closed for malformed geometry: a bounded whole-source cleanup
+        // on the next main turn is safer than retaining an untrusted range.
+        lastPaintedRange = NSRange(location: 0,
+                                   length: min(max(0, postLength), NeonSyntaxHighlighter.viewportMaxUTF16Units))
+        styler.invalidate(.all)
+        scheduleRefresh()
+    }
+
+    /// The prior range is at most one bounded viewport; valid TextKit edit
+    /// geometry keeps the result inside the current storage (at most
+    /// 1,100,000 units while this painter is active). The replacement span
+    /// covers inherited rendering attributes after an overlapping edit.
+    static func rangeAfterEdit(_ painted: NSRange, editedAt location: Int,
+                               oldLength: Int, newLength: Int, postLength: Int) -> NSRange? {
+        guard painted.location >= 0, painted.length >= 0,
+              location >= 0, oldLength >= 0, newLength >= 0, postLength >= 0,
+              location <= postLength, newLength <= postLength - location
+        else { return nil }
+        let (delta, deltaOverflow) = newLength.subtractingReportingOverflow(oldLength)
+        let (priorLength, priorOverflow) = postLength.subtractingReportingOverflow(delta)
+        guard !deltaOverflow, !priorOverflow, priorLength >= 0,
+              location <= priorLength, oldLength <= priorLength - location,
+              painted.location <= priorLength, painted.length <= priorLength - painted.location
+        else { return nil }
+        let oldEnd = location + oldLength
+        let start: Int = if painted.location <= location {
+            painted.location
+        } else if painted.location >= oldEnd {
+            painted.location + delta
+        } else {
+            location
+        }
+        let paintedEnd = NSMaxRange(painted)
+        let end: Int = if paintedEnd < location {
+            paintedEnd
+        } else if paintedEnd >= oldEnd {
+            paintedEnd + delta
+        } else {
+            location + newLength
+        }
+        guard start >= 0, start <= end, end <= postLength else { return nil }
+        return NSRange(location: start, length: end - start)
     }
 
     func scheduleRefresh() {
@@ -84,6 +142,7 @@ final class MarkdownViewportPainter {
         styler.invalidate(.range(visible))
         styler.validate(.range(visible))
         lastPaintedRange = visible
+        validationPassCount += 1
     }
 
     /// Layout can temporarily lose the mounted viewport. Remove only the

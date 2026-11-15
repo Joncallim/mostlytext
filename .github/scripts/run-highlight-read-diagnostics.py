@@ -20,22 +20,23 @@ def digest(path):
 
 
 def replay_passed(code, log, under_debugger=False):
-    marker = re.search(r'HIGHLIGHT_READ_CONTROL events=(\[[^\n]*\]) sourceBytes=(\d+)', log)
-    if not marker:
-        return False
-    try:
-        events = json.loads(marker[1])
-    except json.JSONDecodeError:
-        return False
-    if not isinstance(events, list):
-        return False
+    for name in ('HIGHLIGHT_READ_CONTROL', 'HIGHLIGHT_LIFECYCLE_CONTROL'):
+        markers = re.findall(rf'{name} events=(\[[^\n]*\]) sourceBytes=(\d+)', log)
+        if len(markers) != 1:
+            return False
+        try:
+            events = json.loads(markers[0][0])
+        except json.JSONDecodeError:
+            return False
+        if (not isinstance(events, list) or events.count('background-held') != 1
+                or 'released' not in events or 'hold-timed-out' in events):
+            return False
     if any(value in log for value in ['Program crashed:', 'stop reason = signal', 'Fatal error:',
                                       'Restarting after unexpected']):
         return False
     normal_exit = not under_debugger or re.search(r'Process \d+ exited with status = 0\b', log)
-    return (code == 0 and bool(normal_exit) and 'Test run with 2 tests in 2 suites passed' in log
-            and 'recorded an issue at' not in log and events.count('background-held') == 1
-            and 'released' in events and 'hold-timed-out' not in events)
+    return (code == 0 and bool(normal_exit) and 'Test run with 3 tests in 2 suites passed' in log
+            and 'recorded an issue at' not in log)
 
 
 
@@ -127,7 +128,7 @@ def main():
     commands = destination / 'commands.lldb'
     run_args = [str(owned), '--test-bundle-path', str(binary), '--testing-library', 'swift-testing',
                 '--no-parallel', '--filter',
-                'widenedBackgroundTypingMatchesAFreshHighlighter|replacementWhileAnInjectedLanguageRequestIsHeldMatchesFreshHighlighting']
+                'widenedBackgroundTypingMatchesAFreshHighlighter|replacementWhileAnInjectedLanguageRequestIsHeldMatchesFreshHighlighting|languageAndThemeChangesWhileAnInjectedRequestIsHeldDoNotPaintTheOldGeneration']
     commands.write_text('\n'.join([
         'command script import ' + json.dumps(str(repo / '.github/scripts/record_highlight_read.py')),
         'breakpoint set --file String+Data.swift --line ' + str(sites[0]),
@@ -190,7 +191,7 @@ def main():
             raise SystemExit('The actual original frame did not yield ' + name)
     if observed['location'] != observed['byteOffset'] // 2 or observed['location'] <= observed['end']:
         raise SystemExit('The original failing read condition was not captured')
-    if not re.search(r'Test (widenedBackgroundTypingMatchesAFreshHighlighter|replacementWhileAnInjectedLanguageRequestIsHeldMatchesFreshHighlighting)\(\) started', log):
+    if not re.search(r'Test (widenedBackgroundTypingMatchesAFreshHighlighter|replacementWhileAnInjectedLanguageRequestIsHeldMatchesFreshHighlighting|languageAndThemeChangesWhileAnInjectedRequestIsHeldDoNotPaintTheOldGeneration)\(\) started', log):
         raise SystemExit('Neither selected real editor experiment executed')
     if not re.search(r'String\+Data\.swift:\d+: Fatal error: location is greater than end', log):
         raise SystemExit('The unchanged original assertion did not execute')

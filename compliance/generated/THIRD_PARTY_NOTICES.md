@@ -131,7 +131,7 @@ This file is generated from `compliance/inventory.json` by
 | Math fonts bundled by SwiftUIMath | 0.1.0 | OFL-1.1 AND LicenseRef-GUST-Font-License AND MIT |
 | Mermaid | 11.17.2 | MIT |
 | mimalloc source candidate in Viz.js compiler image | Emscripten 263db4cf source reference | MIT |
-| Neon | f7023231 | BSD-3-Clause |
+| Neon | e0d2f7fb | BSD-3-Clause |
 | Newer Emscripten dual-grant headers in Viz.js compiler-image candidates | Emscripten 263db4cf source reference | MIT OR NCSA |
 | nvim-treesitter Markdown highlight queries (via tree-sitter-markdown) | 2022-06 import | Apache-2.0 |
 | oss.terrastruct.com/util-go (D2 publisher-build attribution) | publisher source-build input v0.0.0-20250213174338-243d8661088a | ISC |
@@ -10492,9 +10492,9 @@ SOFTWARE.
 
 ## Neon
 
-- Version: f7023231
+- Version: e0d2f7fb
 - Upstream: https://github.com/Joncallim/Neon
-- Revision: `f702323168da9c6f0fb8120b844e81fd025f2124`
+- Revision: `e0d2f7fb506e07d55133a319b04ee3e79ee013a8`
 - Licence: BSD-3-Clause
 - Copyright (c) 2022, Chime
 

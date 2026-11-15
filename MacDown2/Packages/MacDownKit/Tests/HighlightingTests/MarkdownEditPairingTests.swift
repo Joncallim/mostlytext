@@ -184,6 +184,26 @@ struct MarkdownEditPairingTests {
         pair.prepare(range: edit, replacement: "X", oldSource: old) { _, _, _ in "no-window" }
         #expect(pair.complete(editedRange: widened, delta: 1, postSource: current) == nil)
     }
+
+    @Test func canonicallyEquivalentButDifferentSourceNeverAuthorizesLocalParse() {
+        let original = "\u{212B}lpha x tail" as NSString
+        let range = NSRange(location: 6, length: 1)
+        let pair = MarkdownEditPairing<String>()
+        let proposed = "\u{212B}"
+        let differentScalar = "\u{00C5}"
+        #expect(proposed == differentScalar)
+        pair.prepare(range: range, replacement: proposed, oldSource: original) { _, _, _ in "candidate" }
+        #expect(pair.complete(editedRange: range, delta: 0,
+                              postSource: "\u{212B}lpha \(differentScalar) tail" as NSString) == nil)
+
+        let insertion = NSRange(location: 7, length: 0)
+        pair.prepare(range: insertion, replacement: "Y", oldSource: original,
+                     verificationRange: { _ in NSRange(location: 0, length: original.length) },
+                     select: { _, _, _ in "candidate" })
+        let widened = NSRange(location: 0, length: original.length + 1)
+        #expect(pair.complete(editedRange: widened, delta: 1,
+                              postSource: "\(differentScalar)lpha xY tail" as NSString) == nil)
+    }
 }
 
 @MainActor

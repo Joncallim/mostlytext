@@ -63,6 +63,10 @@ public final class EditorTextSystem {
     /// never retain it as a frozen snapshot. The storage delegate must pair
     /// this proposal with an actual edit; an editing assist can veto it.
     public var preEditObserver: ((_ range: NSRange, _ replacement: String, _ oldSource: NSString) -> Void)?
+    /// An IME commit or cancellation can change storage without an ordinary
+    /// `textDidChange` edit callback. The mounted highlighter uses this to
+    /// discard any pre-composition parse and request a fresh visible paint.
+    public var compositionEndedObserver: (() -> Void)?
     let metricsCache = EditorDocumentMetricsCache()
     let contentHeightMeter = ContentHeightMeter()
     /// Prevents a disk-driven replacement from flowing back through the
@@ -91,6 +95,9 @@ public final class EditorTextSystem {
     var lineIndexNeedsRebuild = false
     /// The original replacements of a spliced transaction, reported to observers instead of the one wide edit.
     var transactionEditsToReport: [TextReplacement]?
+    /// Validated against the old storage before a spliced native edit. A true value permits shifting existing
+    /// line starts instead of scanning the entire new document when no replacement can change line boundaries.
+    var splicedEditPreservesLineBoundaries = false
     /// The assist configuration currently applied to this text system.
     /// Storage lives here (extensions cannot hold stored properties);
     /// the E10 methods live in `EditorTextSystem+EditingAssists.swift`.
@@ -324,7 +331,20 @@ public final class EditorTextSystem {
             width: textView.frame.width,
             editRevision: editRevision
         )
+        // TextKit 2 can place lazily estimated distant fragments beyond the
+        // paragraph meter's height on a very large source. Its current usage
+        // bound is a layout-owned lower bound for the scroll frame, including
+        // after undo/redo. Do not carry it between text/width revisions.
+        let observedHeight: CGFloat
+        if string.length > ContentHeightMeter.estimationThreshold {
+            let usage = layoutManager.usageBoundsForTextContainer.maxY
+            let candidate = usage + textView.textContainerInset.height * 2
+            observedHeight = usage >= 0 && candidate.isFinite && candidate >= 0 ? candidate : 0
+        } else {
+            observedHeight = 0
+        }
         guard signature != lastFrameSyncSignature else {
+            measuredContentHeight = max(measuredContentHeight, observedHeight)
             applyMeasuredFrameHeight(scrollView: scrollView)
             return
         }
@@ -336,7 +356,7 @@ public final class EditorTextSystem {
             width: availableWidth,
             attributes: textView.typingAttributes
         )
-        measuredContentHeight = contentHeight + textView.textContainerInset.height * 2
+        measuredContentHeight = max(contentHeight + textView.textContainerInset.height * 2, observedHeight)
         applyMeasuredFrameHeight(scrollView: scrollView)
     }
 
