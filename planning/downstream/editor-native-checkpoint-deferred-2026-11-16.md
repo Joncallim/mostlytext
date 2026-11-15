@@ -27,7 +27,9 @@ When the test desktop is later active, run the *same staged script* as UID 502:
 `python3 /Applications/MostlyTextEditorCheckpoint-<first-12-source-digits>/checkpoint.py
 accept --sha <full-final-commit>`. It checks the console, unlocked session,
 owner-home denial, stage ownership, product hashes and fixture binding before
-running the selected app and UI suites. Its unique receipt directory is under
+running the selected app and UI suites with the same selected Xcode. It reads
+the structured result tree and requires passed cases in every selected suite
+before reporting automated success. Its unique receipt directory is under
 the test account's `~/Library/Logs/MostlyTextEditorCheckpoint/<commit>/`.
 Failed runs remain there for review; a repeat creates a separate directory.
 No source or owner-home path is used by the test account's test command.

@@ -3,6 +3,20 @@ import Foundation
 // MARK: - Recovery mutation
 
 public extension FileDocument {
+    /// Loads the recovery copy for an untitled document, if present.
+    func loadRecovery() async -> String? {
+        guard fileURL == nil else { return nil }
+        return try? await recoveryBuffer.load(for: id, epoch: recoveryEpoch)
+    }
+
+    /// A rejected reload may have removed recovery at its proposed version. Reassert the
+    /// still-dirty document above that fence without changing its text or disk authority.
+    func advancingRecoveryVersion(after removedVersion: UInt) -> FileDocument {
+        var copy = self
+        copy.advanceRecoveryVersion(after: removedVersion)
+        return copy
+    }
+
     /// Returns a new document with `text` updated and the dirty flag set.
     ///
     /// Use this method when replacing text from an external source (e.g.,

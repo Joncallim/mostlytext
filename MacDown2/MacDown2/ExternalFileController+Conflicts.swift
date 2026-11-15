@@ -1,4 +1,5 @@
 import FileCore
+import Foundation
 import Workspace
 
 extension ExternalFileController {
@@ -39,17 +40,32 @@ extension ExternalFileController {
             && document.pendingExternalRevision == context.pendingRevision
     }
 
-    private func isSameUseExternalChoice(_ document: FileDocument, as current: FileDocument, generation: UInt) -> Bool {
+    private func isSameUseExternalChoice(
+        _ document: FileDocument, as current: FileDocument, generation: UInt, removedVersion: UInt
+    ) -> Bool {
         !disposed && lifecycleGeneration == generation
             && current.id == document.id
             && current.fileURL?.standardizedFileURL == document.fileURL?.standardizedFileURL
             && current.recoveryEpoch == document.recoveryEpoch
+            && current.mutationGeneration <= removedVersion
             && current.text.isExactlyEqual(to: document.text)
             && current.state == document.state
             && current.lastKnownRevision == document.lastKnownRevision
             && current.pendingExternalRevision == document.pendingExternalRevision
             && current.backingState == document.backingState
             && current.encoding == document.encoding
+    }
+
+    private func restoreRecoveryAfterSupersededChoice(
+        tabID: UUID?, document: FileDocument, removedVersion: UInt, model: WorkspaceModel
+    ) {
+        guard let tabID,
+              let durable = model.tabStore.advancingRecoveryVersion(
+                  inTab: tabID, documentID: document.id, epoch: document.recoveryEpoch, after: removedVersion
+              )
+        else { return }
+        persistRecovery(for: durable)
+        coordinator?.scheduleSaveSession()
     }
 
     private func applyConflictObservation(
@@ -108,7 +124,8 @@ extension ExternalFileController {
         case .useExternal:
             let replacement = document.reloadedFromExternal(snapshot)
             let generation = lifecycleGeneration
-            let cleanup = await replacement.recoveryBuffer.removeWithOutcome(
+            let tabID = model.tabStore.activeTab?.id
+            let cleanup = await replacement.recoveryBuffer.removeForExternalReload(
                 for: replacement.id,
                 version: replacement.mutationGeneration,
                 epoch: replacement.recoveryEpoch
@@ -118,13 +135,15 @@ extension ExternalFileController {
             // Admit the captured choice only against the same document, binding and disk authority. Do not use
             // mutationGeneration alone: metadata-only reconciles can advance it without superseding the choice.
             guard let current = model.activeDocument,
-                  isSameUseExternalChoice(document, as: current, generation: generation)
+                  isSameUseExternalChoice(
+                      document, as: current, generation: generation, removedVersion: replacement.mutationGeneration
+                  )
             else {
-                // The removal above may have retired the recovery record of text that is no longer current: make the
-                // live document's newest text durable again before giving up.
-                if let live = model.activeDocument, live.id == document.id, live.state != .clean {
-                    persistRecovery(for: live)
-                }
+                // The removal above may have erased the live draft's recovery at the same mutation version.
+                // Advance that lifetime above the removal fence before queueing the exact current text again.
+                restoreRecoveryAfterSupersededChoice(
+                    tabID: tabID, document: document, removedVersion: replacement.mutationGeneration, model: model
+                )
                 return .superseded
             }
             guard cleanup.isAbsent else {

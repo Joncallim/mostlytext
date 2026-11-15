@@ -143,7 +143,9 @@ def console_is_test_account():
         user.get('kCGSSessionUserIDKey') == 502 and user.get('kCGSSessionOnConsoleKey') is True
         and user.get('kCGSessionLoginDoneKey') is True for user in root.get('IOConsoleUsers', []))
         for root in roots), 'test desktop is locked or not on console')
-    require(not os.access('/Users/jonathanlim', os.R_OK), 'owner home is readable by test account')
+    require(not os.access('/Users/jonathanlim', os.R_OK)
+            and not os.access('/Users/jonathanlim', os.X_OK),
+            'test account can list or traverse owner home')
 
 
 def verify_stage(stage, expected):
@@ -172,6 +174,8 @@ def prepare(repo, sha):
         function(path)
 
     try:
+        developer_directory = command(['/usr/bin/xcode-select', '-p']).strip()
+        xcode_version = command(['/usr/bin/xcodebuild', '-version']).strip()
         command(['python3', 'compliance/tools/compliance.py', 'check'], cwd=repo, log=work / 'compliance.log')
         command(['swiftformat', '--lint', 'MacDown2'], cwd=repo, log=work / 'format.log')
         command(['swiftlint', 'lint', '--strict', '--quiet', 'MacDown2'], cwd=repo, log=work / 'lint.log')
@@ -202,6 +206,7 @@ def prepare(repo, sha):
         (partial / 'source-fixtures.json').write_text(json.dumps(fixtures, indent=2, sort_keys=True) + '\n')
         shutil.copytree(work, partial / 'evidence', ignore=shutil.ignore_patterns('derived'))
         binding = {'sourceSHA': sha, 'xctestrun': plans[0].name, 'tests': TESTS,
+                   'developerDirectory': developer_directory, 'xcodeVersion': xcode_version,
                    'products': product_entries, 'fixtureHashes': fixtures,
                    'fixturesSHA256': digest(partial / 'source-fixtures.json'),
                    'checkpointSHA256': digest(partial / 'checkpoint.py'),
@@ -234,7 +239,7 @@ def accept(stage, sha):
     evidence.mkdir(parents=True, exist_ok=False)
     plan = stage / 'Products' / binding['xctestrun']
     verify_test_plan(plan)
-    args = ['xcodebuild', 'test-without-building', '-xctestrun', str(plan),
+    args = ['/usr/bin/xcodebuild', 'test-without-building', '-xctestrun', str(plan),
             '-destination', 'platform=macOS', '-parallel-testing-enabled', 'NO',
             '-test-timeouts-enabled', 'YES', '-default-test-execution-time-allowance', '120',
             '-maximum-test-execution-time-allowance', '240', '-resultBundlePath', str(evidence / 'native.xcresult')]
@@ -243,6 +248,10 @@ def accept(stage, sha):
     result = {'sourceSHA': sha, 'stage': str(stage), 'tests': binding['tests'],
               'fixtureHashes': binding['fixtureHashes'], 'started': started, 'status': 'FAIL'}
     try:
+        result['developerDirectory'] = command(['/usr/bin/xcode-select', '-p']).strip()
+        result['xcodeVersion'] = command(['/usr/bin/xcodebuild', '-version']).strip()
+        require(result['developerDirectory'] == binding['developerDirectory']
+                and result['xcodeVersion'] == binding['xcodeVersion'], 'Xcode differs from the pinned build')
         command(args, log=evidence / 'xcodebuild.log', timeout=3600)
         summary = command(['/usr/bin/xcrun', 'xcresulttool', 'get', 'test-results', 'summary',
                            '--path', str(evidence / 'native.xcresult')])

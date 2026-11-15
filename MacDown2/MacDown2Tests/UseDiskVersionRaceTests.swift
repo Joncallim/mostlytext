@@ -13,6 +13,16 @@ import Workspace
 /// during that actor hop was overwritten; and Reopen reported success from the document's revision alone.
 @MainActor
 struct UseDiskVersionRaceTests {
+    @Test func recoveryVersionReassertionNeverLowersAnAlreadyNewerDraft() {
+        let current = FileDocument(text: "draft").updatingText("new draft")
+        let unchanged = current.advancingRecoveryVersion(after: 0)
+        let raised = current.advancingRecoveryVersion(after: current.mutationGeneration)
+        #expect(unchanged.mutationGeneration == current.mutationGeneration)
+        #expect(raised.mutationGeneration > current.mutationGeneration)
+        #expect(raised.text == current.text)
+        #expect(raised.state == current.state)
+    }
+
     private struct Fixture {
         let controller: WindowController
         let coordinator: WindowCoordinator
@@ -20,7 +30,9 @@ struct UseDiskVersionRaceTests {
         let directory: URL
     }
 
-    private func makeFixture(bytes: Data) throws -> Fixture {
+    private func makeFixture(
+        bytes: Data, recoveryExecutor: any RecoveryActionExecuting = DefaultRecoveryActionExecutor()
+    ) throws -> Fixture {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
@@ -46,7 +58,8 @@ struct UseDiskVersionRaceTests {
             coordinator: coordinator,
             themeController: ThemeController(),
             grammarRegistry: GrammarRegistry(),
-            fileTreePreferences: preferences
+            fileTreePreferences: preferences,
+            recoveryExecutor: recoveryExecutor
         )
         coordinator.controllers = [controller]
         return Fixture(controller: controller, coordinator: coordinator, model: model, directory: directory)
@@ -127,6 +140,102 @@ struct UseDiskVersionRaceTests {
         #expect(try Data(contentsOf: fileURL) == Data("newer external".utf8))
         await controller.drainRecovery()
         #expect(try await current.recoveryBuffer.load(for: current.id, epoch: current.recoveryEpoch) == "local draft")
+    }
+
+    @Test func newerRecoveryRecordBlocksAnOlderUseDiskCleanup() async throws {
+        let fixture = try makeFixture(bytes: Data("original disk".utf8))
+        defer { try? FileManager.default.removeItem(at: fixture.directory) }
+        let model = fixture.model
+        let controller = fixture.controller.externalFileController
+        let document = try #require(model.activeDocument)
+        let fileURL = try #require(document.fileURL)
+        model.tabStore.updateActiveDocument { $0.updatingText("local draft") }
+        try Data("external disk".utf8).write(to: fileURL, options: .atomic)
+        let snapshot = try document.fileStore.readSnapshot(from: fileURL)
+        let conflicted = try #require(model.activeDocument).reconcilingExternalSnapshot(snapshot).document
+        model.tabStore.updateActiveDocument { _ in conflicted }
+        #expect(await conflicted.persistRecovery())
+        #expect(try await conflicted.recoveryBuffer.saveCurrentLifetime(
+            content: conflicted.text, for: conflicted.id,
+            version: conflicted.mutationGeneration + 2, epoch: conflicted.recoveryEpoch
+        ))
+
+        let result = await controller.applyConflictResolution(
+            .useExternal, snapshot: snapshot, document: conflicted, model: model
+        )
+
+        #expect(result == .cleanupBlocked)
+        #expect(model.activeDocument?.text == "local draft")
+        #expect(model.activeDocument?.state == .conflict)
+        #expect(try await conflicted.recoveryBuffer.load(for: conflicted.id, epoch: conflicted.recoveryEpoch)
+            == "local draft")
+    }
+
+    @Test func switchingTabsDuringConflictCleanupKeepsTheInactiveDraftRecoverable() async throws {
+        let fixture = try makeFixture(bytes: Data("original disk".utf8))
+        defer { try? FileManager.default.removeItem(at: fixture.directory) }
+        let model = fixture.model
+        let controller = fixture.controller.externalFileController
+        let document = try #require(model.activeDocument)
+        let tabID = try #require(model.tabStore.activeTab?.id)
+        let fileURL = try #require(document.fileURL)
+        model.tabStore.updateActiveDocument { $0.updatingText("inactive draft") }
+        try Data("external disk".utf8).write(to: fileURL, options: .atomic)
+        let snapshot = try document.fileStore.readSnapshot(from: fileURL)
+        let conflicted = try #require(model.activeDocument).reconcilingExternalSnapshot(snapshot).document
+        model.tabStore.updateActiveDocument { _ in conflicted }
+        #expect(await conflicted.persistRecovery())
+        controller.afterUseExternalRecoveryCleanup = {
+            model.tabStore.newTab(document: FileDocument(text: "new active tab"))
+        }
+
+        let result = await controller.applyConflictResolution(
+            .useExternal, snapshot: snapshot, document: conflicted, model: model
+        )
+
+        await controller.drainRecovery()
+        let inactive = try #require(model.tabStore.tabs.first(where: { $0.id == tabID })?.document)
+        #expect(result == .superseded)
+        #expect(model.activeDocument?.text == "new active tab")
+        #expect(inactive.text == "inactive draft")
+        #expect(inactive.state == .conflict)
+        #expect(try await inactive.recoveryBuffer.load(for: inactive.id, epoch: inactive.recoveryEpoch)
+            == "inactive draft")
+    }
+
+    @Test func failedInactiveDraftPersistenceOffersRetryAfterConflictCleanup() async throws {
+        let executor = ScriptedRecoveryExecutor()
+        let fixture = try makeFixture(bytes: Data("original disk".utf8), recoveryExecutor: executor)
+        defer { try? FileManager.default.removeItem(at: fixture.directory) }
+        let model = fixture.model
+        let controller = fixture.controller.externalFileController
+        let document = try #require(model.activeDocument)
+        let tabID = try #require(model.tabStore.activeTab?.id)
+        let fileURL = try #require(document.fileURL)
+        model.tabStore.updateActiveDocument { $0.updatingText("inactive draft") }
+        try Data("external disk".utf8).write(to: fileURL, options: .atomic)
+        let snapshot = try document.fileStore.readSnapshot(from: fileURL)
+        let conflicted = try #require(model.activeDocument).reconcilingExternalSnapshot(snapshot).document
+        model.tabStore.updateActiveDocument { _ in conflicted }
+        #expect(await conflicted.persistRecovery())
+        controller.afterUseExternalRecoveryCleanup = {
+            model.tabStore.newTab(document: FileDocument(text: "new active tab"))
+        }
+        await executor.failNext(.persist)
+
+        let result = await controller.applyConflictResolution(
+            .useExternal, snapshot: snapshot, document: conflicted, model: model
+        )
+
+        await controller.drainRecovery()
+        #expect(result == .superseded)
+        #expect(controller.recoveryRetryKind == .persist)
+        controller.retryRecoveryCleanup()
+        await controller.drainRecovery()
+        let inactive = try #require(model.tabStore.tabs.first(where: { $0.id == tabID })?.document)
+        #expect(controller.recoveryRetryKind == nil)
+        #expect(try await inactive.recoveryBuffer.load(for: inactive.id, epoch: inactive.recoveryEpoch)
+            == "inactive draft")
     }
 
     // Handoff regression 1 (#375): the other transitions during the held cleanup.
