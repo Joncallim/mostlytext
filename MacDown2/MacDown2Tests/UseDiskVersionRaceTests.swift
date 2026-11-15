@@ -77,6 +77,50 @@ struct UseDiskVersionRaceTests {
         #expect(fixture.model.activeDocument?.encoding.encoding == .isoLatin1)
     }
 
+    /// #17 F01 / #12: a second disk edit can advance the pending conflict
+    /// revision without changing the local text, document lifetime or state.
+    @Test func aNewerExternalRevisionDuringCleanupSupersedesUseDiskVersion() async throws {
+        let fixture = try makeFixture(bytes: Data("original disk".utf8))
+        defer { try? FileManager.default.removeItem(at: fixture.directory) }
+        let model = fixture.model
+        let controller = fixture.controller.externalFileController
+        let document = try #require(model.activeDocument)
+        let fileURL = try #require(document.fileURL)
+        model.tabStore.updateActiveDocument { $0.updatingText("local draft") }
+        try Data("first external".utf8).write(to: fileURL, options: .atomic)
+        let first = try document.fileStore.readSnapshot(from: fileURL)
+        let conflicted = try #require(model.activeDocument).reconcilingExternalSnapshot(first).document
+        model.tabStore.updateActiveDocument { _ in conflicted }
+        #expect(conflicted.state == .conflict)
+
+        var newest: FileSnapshot?
+        controller.afterUseExternalRecoveryCleanup = {
+            do {
+                try Data("newer external".utf8).write(to: fileURL, options: .atomic)
+                let snapshot = try document.fileStore.readSnapshot(from: fileURL)
+                let current = try #require(model.activeDocument)
+                let updated = current.reconcilingExternalSnapshot(snapshot)
+                #expect(updated.disposition == .conflictUpdated)
+                model.tabStore.updateActiveDocument { _ in updated.document }
+                newest = snapshot
+            } catch {
+                Issue.record("Could not advance the external conflict during cleanup: \(error)")
+            }
+        }
+
+        let result = await controller.applyConflictResolution(
+            .useExternal, snapshot: first, document: conflicted, model: model
+        )
+
+        let second = try #require(newest)
+        let current = try #require(model.activeDocument)
+        #expect(result == .superseded)
+        #expect(current.text == "local draft")
+        #expect(current.state == .conflict)
+        #expect(current.pendingExternalRevision == second.revision)
+        #expect(try Data(contentsOf: fileURL) == Data("newer external".utf8))
+    }
+
     // Handoff regression 1 (#375): the other transitions during the held cleanup.
 
     @Test func aTabSwitchDuringTheRecoveryCleanupLeavesBothDocumentsAlone() async throws {
