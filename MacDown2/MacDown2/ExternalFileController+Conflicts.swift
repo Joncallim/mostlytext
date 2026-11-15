@@ -20,17 +20,16 @@ extension ExternalFileController {
         } else {
             await monitor.snapshotNow()
         }
-        // Revalidate on content, not the mutation counter: background reconciles advance it with nothing else
-        // changing while the snapshot is awaited, which silently dropped the user's choice — the conflict stayed
-        // and "Use Disk Version and Close" left the window open (generation 21 → 22, identical text, state and
-        // revisions; found by the first real run of `ExternalFileChangesUITests`). Apply to the live document.
+        await afterConflictSnapshot?(observation)
+        // Revalidate source authority and exact text while allowing a metadata-only generation change.
+        // The earlier generation-only guard dropped a valid choice and left "Use Disk Version and Close" open.
         guard let current = model.activeDocument, isSameContent(context, as: current) else { return }
 
         await applyConflictObservation(observation, resolution: resolution, document: current, model: model)
     }
 
-    /// `isCurrent(_:in:)` without the `mutationGeneration` comparison: the same document lifetime, URL, exact
-    /// text, state and pending external revision the conflict choice was made against.
+    /// `isCurrent(_:in:)` without the `mutationGeneration` comparison: the same document lifetime,
+    /// URL, exact text, state, encoding and disk revisions the conflict choice was made against.
     private func isSameContent(_ context: OperationContext, as document: FileDocument) -> Bool {
         lifecycleGeneration == context.generation
             && document.id == context.documentID
@@ -38,6 +37,10 @@ extension ExternalFileController {
             && document.text.isExactlyEqual(to: context.text)
             && document.state == context.state
             && document.pendingExternalRevision == context.pendingRevision
+            && document.recoveryEpoch == context.recoveryEpoch
+            && document.lastKnownRevision == context.lastKnownRevision
+            && document.backingState == context.backingState
+            && document.encoding == context.encoding
     }
 
     private func isSameUseExternalChoice(

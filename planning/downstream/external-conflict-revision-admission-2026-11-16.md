@@ -18,6 +18,9 @@ backing state. The existing post-cleanup guard checks only lifetime, text and
 state. Keep this ownership path and require the same bound URL and disk
 authority on return. Do not use `mutationGeneration` alone: harmless monitor
 metadata transitions can advance it without changing the choice's source.
+The initial monitor-snapshot await is also checked against the exact recovery
+lifetime, last known revision, backing and encoding. A rotated lifetime with
+the same URL, text and conflict state cannot inherit an earlier choice.
 
 An older cleanup may remove recovery at the same mutation version as the
 newer live draft. On a superseded choice, find the captured tab and recovery
@@ -44,7 +47,8 @@ revision during the held cleanup. It must fail against the current guard,
 then pass with the old choice rejected, local text retained, the newest
 pending revision retained, newest disk bytes untouched and the draft
 loadable from its recovery file after the queue drains. Cover a newer recovery
-file, an inactive dirty tab, a failed persist and cross-tab retry ordering. Run the existing
+file, a recovery-lifetime rotation during the first snapshot await, an inactive
+dirty tab, a failed persist and cross-tab retry ordering. Run the existing
 edit, tab-switch, recovery-lifetime and disposal controls, the seven external
 controller matrix tests, complete CI and optimized Release checks.
 

@@ -171,6 +171,44 @@ struct UseDiskVersionRaceTests {
             == "local draft")
     }
 
+    @Test func aNewRecoveryLifetimeDuringConflictSnapshotRejectsTheOldChoice() async throws {
+        let fixture = try makeFixture(bytes: Data("original disk".utf8))
+        defer { try? FileManager.default.removeItem(at: fixture.directory) }
+        let model = fixture.model
+        let controller = fixture.controller.externalFileController
+        await controller.bindTask?.value
+        let document = try #require(model.activeDocument)
+        let fileURL = try #require(document.fileURL)
+        model.tabStore.updateActiveDocument { $0.updatingText("local draft") }
+        try Data("external disk".utf8).write(to: fileURL, options: [])
+        let snapshot = try document.fileStore.readSnapshot(from: fileURL)
+        let conflicted = try #require(model.activeDocument).reconcilingExternalSnapshot(snapshot).document
+        model.tabStore.updateActiveDocument { _ in conflicted }
+        controller.afterConflictSnapshot = { observation in
+            guard case let .available(fresh) = observation else {
+                Issue.record("Conflict choice did not read an available disk snapshot")
+                return
+            }
+            #expect(fresh.revision == snapshot.revision)
+            let renewed = conflicted.withFreshRecoveryLifetime()
+            model.tabStore.updateActiveDocument { _ in renewed }
+            #expect(await renewed.persistRecovery())
+        }
+
+        await controller.resolveConflict(.useExternal)
+
+        let current = try #require(model.activeDocument)
+        #expect(current.recoveryEpoch != conflicted.recoveryEpoch)
+        #expect(current.text == "local draft")
+        #expect(current.state == .conflict)
+        #expect(try await current.recoveryBuffer.load(for: current.id, epoch: current.recoveryEpoch)
+            == "local draft")
+        #expect(try Data(contentsOf: fileURL) == Data("external disk".utf8))
+    }
+}
+
+@MainActor
+extension UseDiskVersionRaceTests {
     @Test func switchingTabsDuringConflictCleanupKeepsTheInactiveDraftRecoverable() async throws {
         let fixture = try makeFixture(bytes: Data("original disk".utf8))
         defer { try? FileManager.default.removeItem(at: fixture.directory) }
