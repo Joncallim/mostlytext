@@ -94,20 +94,26 @@ extension ExternalFileController {
             return .applied
         case .useExternal:
             let replacement = document.reloadedFromExternal(snapshot)
+            let generation = lifecycleGeneration
             let cleanup = await replacement.recoveryBuffer.removeWithOutcome(
                 for: replacement.id,
                 version: replacement.mutationGeneration,
                 epoch: replacement.recoveryEpoch
             )
             await afterUseExternalRecoveryCleanup?()
-            // Revalidate after the actor hop: the captured snapshot must never overwrite newer state. The comparison
-            // is on CONTENT and lifetime (exact scalars), not the mutation counter, which the file monitor also
-            // advances without any text change.
-            guard !disposed, let current = model.activeDocument,
+            // The monitor may advance the pending disk revision while text and conflict state stay unchanged.
+            // Admit the captured choice only against the same document, binding and disk authority. Do not use
+            // mutationGeneration alone: metadata-only reconciles can advance it without superseding the choice.
+            guard !disposed, lifecycleGeneration == generation, let current = model.activeDocument,
                   current.id == document.id,
+                  current.fileURL?.standardizedFileURL == document.fileURL?.standardizedFileURL,
                   current.recoveryEpoch == document.recoveryEpoch,
                   current.text.isExactlyEqual(to: document.text),
-                  current.state == document.state
+                  current.state == document.state,
+                  current.lastKnownRevision == document.lastKnownRevision,
+                  current.pendingExternalRevision == document.pendingExternalRevision,
+                  current.backingState == document.backingState,
+                  current.encoding == document.encoding
             else {
                 // The removal above may have retired the recovery record of text that is no longer current: make the
                 // live document's newest text durable again before giving up.
