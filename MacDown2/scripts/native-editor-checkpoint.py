@@ -88,6 +88,19 @@ def tree_manifest(root):
     return entries
 
 
+def verify_test_plan(path):
+    plan = plistlib.loads(path.read_bytes())
+    for target in ('MacDown2Tests', 'MacDown2UITests'):
+        record = plan.get(target)
+        require(isinstance(record, dict), 'missing test target: ' + target)
+        require(record.get('TestHostPath', '').startswith('__TESTROOT__/'), 'test host escapes staged products')
+        require(record.get('TestBundlePath', '').startswith('__TESTHOST__/'), 'test bundle escapes staged host')
+        if target == 'MacDown2UITests':
+            require(record.get('UITargetAppPath', '').startswith('__TESTROOT__/'),
+                    'UI target escapes staged products')
+    require('/Users/jonathanlim' not in str(plan), 'test plan references owner home')
+
+
 def source_identity(repo, expected):
     require(repo.is_dir(), 'source checkout missing')
     actual = command(['/usr/bin/git', '-C', str(repo), 'rev-parse', 'HEAD']).strip()
@@ -159,6 +172,7 @@ def prepare(repo, sha):
         products = derived / 'Build/Products'
         plans = list(products.glob('*.xctestrun'))
         require(len(plans) == 1, 'expected one pinned Xcode test plan')
+        verify_test_plan(plans[0])
         product_entries = tree_manifest(products)
         require(shutil.disk_usage('/Applications').free > sum(
             path.stat().st_size for path in products.rglob('*') if path.is_file() and not path.is_symlink()
@@ -200,6 +214,7 @@ def accept(stage, sha):
     evidence = Path.home() / 'Library/Logs/MostlyTextEditorCheckpoint' / sha / uuid.uuid4().hex
     evidence.mkdir(parents=True, exist_ok=False)
     plan = stage / 'Products' / binding['xctestrun']
+    verify_test_plan(plan)
     args = ['xcodebuild', 'test-without-building', '-xctestrun', str(plan),
             '-destination', 'platform=macOS', '-parallel-testing-enabled', 'NO',
             '-test-timeouts-enabled', 'YES', '-default-test-execution-time-allowance', '120',
