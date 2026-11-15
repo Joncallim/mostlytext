@@ -39,6 +39,19 @@ extension ExternalFileController {
             && document.pendingExternalRevision == context.pendingRevision
     }
 
+    private func isSameUseExternalChoice(_ document: FileDocument, as current: FileDocument, generation: UInt) -> Bool {
+        !disposed && lifecycleGeneration == generation
+            && current.id == document.id
+            && current.fileURL?.standardizedFileURL == document.fileURL?.standardizedFileURL
+            && current.recoveryEpoch == document.recoveryEpoch
+            && current.text.isExactlyEqual(to: document.text)
+            && current.state == document.state
+            && current.lastKnownRevision == document.lastKnownRevision
+            && current.pendingExternalRevision == document.pendingExternalRevision
+            && current.backingState == document.backingState
+            && current.encoding == document.encoding
+    }
+
     private func applyConflictObservation(
         _ observation: DocumentFileObservation,
         resolution: ConflictResolution,
@@ -104,16 +117,8 @@ extension ExternalFileController {
             // The monitor may advance the pending disk revision while text and conflict state stay unchanged.
             // Admit the captured choice only against the same document, binding and disk authority. Do not use
             // mutationGeneration alone: metadata-only reconciles can advance it without superseding the choice.
-            guard !disposed, lifecycleGeneration == generation, let current = model.activeDocument,
-                  current.id == document.id,
-                  current.fileURL?.standardizedFileURL == document.fileURL?.standardizedFileURL,
-                  current.recoveryEpoch == document.recoveryEpoch,
-                  current.text.isExactlyEqual(to: document.text),
-                  current.state == document.state,
-                  current.lastKnownRevision == document.lastKnownRevision,
-                  current.pendingExternalRevision == document.pendingExternalRevision,
-                  current.backingState == document.backingState,
-                  current.encoding == document.encoding
+            guard let current = model.activeDocument,
+                  isSameUseExternalChoice(document, as: current, generation: generation)
             else {
                 // The removal above may have retired the recovery record of text that is no longer current: make the
                 // live document's newest text durable again before giving up.
