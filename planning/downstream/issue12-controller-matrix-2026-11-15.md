@@ -58,6 +58,13 @@ run passed all seven source-fidelity tests. Its local log is
 The first Debug failure log is
 `/private/tmp/mostlytext-issue12-matrix-test.log` (SHA-256
 `5a1be05412e1d0af21bfb5a40b2207dbc55c94f14cdbeeb923cde253ba88049b`).
+That corrected Debug run preceded a test-only increase of the storm wait
+ceiling from three to ten seconds. A final Debug run on committed test source
+`f49b0a7cce71e859aa5d11e1a79216653b3ec66a`, using the repository
+workflow's testability and preview-probe settings, passed all seven tests in
+0.619 seconds. Its local log is
+`/private/tmp/mostlytext-issue12-matrix-debug-final.log` (2,791,847 bytes;
+SHA-256 `e3e0e9db7f21e56e744397187dabdab675a2dac7da02ff7b6f2ca495f7c4cb2b`).
 
 The focused optimized Release run passed all seven tests on the final test
 source (0.598 seconds for the suite). It used the external-controller
