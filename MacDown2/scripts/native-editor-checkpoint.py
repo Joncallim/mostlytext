@@ -101,6 +101,25 @@ def verify_test_plan(path):
     require('/Users/jonathanlim' not in str(plan), 'test plan references owner home')
 
 
+def passed_suites(test_tree, requested):
+    counts = {name: 0 for name in requested}
+
+    def visit(node):
+        if node.get('nodeType') == 'Test Case':
+            require(node.get('result') == 'Passed', 'native test case did not pass')
+            url = node.get('nodeIdentifierURL', '')
+            for name in requested:
+                if url.startswith('test://com.apple.xcode/MacDown2/' + name + '/'):
+                    counts[name] += 1
+        for child in node.get('children', []):
+            visit(child)
+
+    for node in test_tree.get('testNodes', []):
+        visit(node)
+    require(all(count > 0 for count in counts.values()), 'selected native suite did not execute: ' + str(counts))
+    return counts
+
+
 def source_identity(repo, expected):
     require(repo.is_dir(), 'source checkout missing')
     actual = command(['/usr/bin/git', '-C', str(repo), 'rev-parse', 'HEAD']).strip()
@@ -228,13 +247,14 @@ def accept(stage, sha):
         summary = command(['/usr/bin/xcrun', 'xcresulttool', 'get', 'test-results', 'summary',
                            '--path', str(evidence / 'native.xcresult')])
         (evidence / 'summary.json').write_text(summary)
+        tests = command(['/usr/bin/xcrun', 'xcresulttool', 'get', 'test-results', 'tests',
+                         '--path', str(evidence / 'native.xcresult')])
+        (evidence / 'tests.json').write_text(tests)
         counts = json.loads(summary)
-        output = (evidence / 'xcodebuild.log').read_text(errors='replace')
         require(counts.get('failedTests') == 0 and counts.get('skippedTests') == 0
                 and counts.get('passedTests', 0) >= len(binding['tests']),
                 'native result has failures, skips or missing suite coverage')
-        require(all(item.split('/')[-1] in output for item in binding['tests']),
-                'selected suite absent from native log')
+        result['passedSuites'] = passed_suites(json.loads(tests), binding['tests'])
         result['status'] = 'AUTOMATED_NATIVE_PASSED_MANUAL_PENDING'
         result['counts'] = counts
     finally:

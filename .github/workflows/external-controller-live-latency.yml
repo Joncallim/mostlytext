@@ -11,6 +11,7 @@ on:
       - 'MacDown2/MacDown2Tests/ExternalFileControllerLiveLatencyTests.swift'
       - 'MacDown2/MacDown2Tests/ExternalFileWindowOccupancyTests.swift'
       - 'MacDown2/MacDown2Tests/ExternalFileControllerSourceFidelityTests.swift'
+      - 'MacDown2/MacDown2Tests/UseDiskVersionRaceTests.swift'
       - 'MacDown2/MacDown2/ExternalFileController.swift'
       - 'MacDown2/MacDown2/WindowController+DocumentObservation.swift'
       - 'MacDown2/Packages/MacDownKit/Sources/FileCore/**'
@@ -82,7 +83,8 @@ jobs:
               -resultBundlePath "$ROOT/latency.xcresult" \
               -only-testing:MacDown2Tests/ExternalFileControllerLiveLatencyTests \
               -only-testing:MacDown2Tests/ExternalFileWindowOccupancyTests \
-              -only-testing:MacDown2Tests/ExternalSourceFidelityTests test-without-building \
+              -only-testing:MacDown2Tests/ExternalSourceFidelityTests \
+              -only-testing:MacDown2Tests/UseDiskVersionRaceTests test-without-building \
             | tee "$ROOT/latency.log"
           python3 - "$ROOT/measurements" <<'PY'
           import json

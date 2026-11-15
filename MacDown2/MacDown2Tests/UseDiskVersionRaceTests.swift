@@ -39,7 +39,8 @@ struct UseDiskVersionRaceTests {
             workspaceStateStore: WorkspaceStateStore(defaults: defaults)
         )
         let model = coordinator.makeWindowModel()
-        try model.tabStore.newTab(document: FileDocument(fileURL: url).load())
+        let recovery = RecoveryBuffer(recoveryDirectory: directory.appendingPathComponent("Recovery"))
+        try model.tabStore.newTab(document: FileDocument(fileURL: url, recoveryBuffer: recovery).load())
         let controller = WindowController(
             model: model,
             coordinator: coordinator,
@@ -65,6 +66,10 @@ struct UseDiskVersionRaceTests {
         #expect(model.activeDocument?.text == "typed while the cleanup was suspended")
         #expect(model.activeDocument?.state == .dirty)
         #expect(model.activeDocument?.encoding.encoding == .utf8)
+        await fixture.controller.externalFileController.drainRecovery()
+        let current = try #require(model.activeDocument)
+        #expect(try await current.recoveryBuffer.load(for: current.id, epoch: current.recoveryEpoch)
+            == "typed while the cleanup was suspended")
     }
 
     @Test func aReloadThatIsNotSupersededStillLandsAndIsReportedAsReopened() async throws {
@@ -92,6 +97,7 @@ struct UseDiskVersionRaceTests {
         let conflicted = try #require(model.activeDocument).reconcilingExternalSnapshot(first).document
         model.tabStore.updateActiveDocument { _ in conflicted }
         #expect(conflicted.state == .conflict)
+        #expect(await conflicted.persistRecovery())
 
         var newest: FileSnapshot?
         controller.afterUseExternalRecoveryCleanup = {
@@ -119,6 +125,8 @@ struct UseDiskVersionRaceTests {
         #expect(current.state == .conflict)
         #expect(current.pendingExternalRevision == second.revision)
         #expect(try Data(contentsOf: fileURL) == Data("newer external".utf8))
+        await controller.drainRecovery()
+        #expect(try await current.recoveryBuffer.load(for: current.id, epoch: current.recoveryEpoch) == "local draft")
     }
 
     // Handoff regression 1 (#375): the other transitions during the held cleanup.
