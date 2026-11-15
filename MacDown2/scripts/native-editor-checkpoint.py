@@ -31,6 +31,7 @@ TESTS = (
     'MacDown2UITests/DeadKeyCompositionUITests',
 )
 FIXTURES = (
+    'MacDown2/Packages/MacDownKit/Tests/FileCoreTests/RecoveryBufferExternalReloadTests.swift',
     'MacDown2/MacDown2Tests/ExternalFileControllerSourceFidelityTests.swift',
     'MacDown2/MacDown2Tests/UseDiskVersionRaceTests.swift',
     'MacDown2/MacDown2UITests/EditorTypingUITests.swift',

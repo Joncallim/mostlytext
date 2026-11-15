@@ -68,3 +68,20 @@ revision both left the retained draft absent from recovery. The downloaded
 This is a real failing-before product result, not a successful retry or an
 unrelated build failure. The run artifact retains its result bundle. Final
 source checks are recorded only after the repair is frozen.
+
+## Preserved intermediate regression
+
+The first hosted final-head Debug controller run on `7241682b912bd3942c680de32528b9e3b99b4261`
+([run 43744533481](https://github.com/Joncallim/mostlytext/actions/runs/43744533481))
+ran 21 tests in four suites and failed the ordinary Reopen-with-Encoding
+control at `UseDiskVersionRaceTests.swift:94–95`. It returned `unavailable`
+and retained UTF-8 instead of landing the Latin-1 reload. The downloaded
+`/private/tmp/mostlytext-pr284-final-debug/latency.log` is retained with that
+result (SHA-256 `caee57d06e3ee79de60f8181db1941160f04e06d8e5610a118dd1e3bbb66534d`).
+The reload-specific absence check expected Cocoa's
+`NSFileNoSuchFileError` (4), but `FileManager.attributesOfItem` reports a
+missing path as `NSFileReadNoSuchFileError` (260) on this Mac. An independent
+Foundation probe confirmed the exact domain and code. The repair now accepts
+either Cocoa missing-file code while still refusing a present newer recovery
+file. A focused locked-package run of both direct reload-cleanup controls
+passed on the repaired source. Full hosted validation remains the merge gate.

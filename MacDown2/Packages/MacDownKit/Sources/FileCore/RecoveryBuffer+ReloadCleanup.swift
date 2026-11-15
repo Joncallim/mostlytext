@@ -13,7 +13,9 @@ public extension RecoveryBuffer {
             _ = try FileManager.default.attributesOfItem(atPath: location.path)
             return .failed(.verificationFailed(location))
         } catch {
-            if (error as NSError).code == NSFileNoSuchFileError {
+            let failure = error as NSError
+            if failure.domain == NSCocoaErrorDomain,
+               failure.code == NSFileReadNoSuchFileError || failure.code == NSFileNoSuchFileError {
                 return outcome
             }
             return .failed(.verificationFailed(location))
