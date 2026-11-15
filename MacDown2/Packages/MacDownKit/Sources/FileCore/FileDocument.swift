@@ -343,12 +343,6 @@ public struct FileDocument: Sendable {
         )
     }
 
-    /// Loads the recovery copy for an untitled document, if present.
-    public func loadRecovery() async -> String? {
-        guard fileURL == nil else { return nil }
-        return try? await recoveryBuffer.load(for: id, epoch: recoveryEpoch)
-    }
-
     /// Clears the recovery copy (call after a successful save-as or explicit discard).
     public func clearRecovery() async {
         await recoveryBuffer.remove(for: id, version: mutationGeneration, epoch: recoveryEpoch)
@@ -385,5 +379,11 @@ public struct FileDocument: Sendable {
 
     mutating func advanceMutation() {
         mutationGeneration &+= 1
+    }
+
+    mutating func advanceRecoveryVersion(after removedVersion: UInt) {
+        if mutationGeneration <= removedVersion, removedVersion < UInt.max {
+            mutationGeneration = removedVersion + 1
+        }
     }
 }

@@ -11,6 +11,38 @@ import Workspace
 
 @MainActor
 struct ExternalFileControllerRecoveryTests {
+    @Test func anotherTabsSuccessfulRecoveryDoesNotClearAnInactiveDraftRetry() async throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let buffer = RecoveryBuffer(recoveryDirectory: directory.appendingPathComponent("Recovery"))
+        let first = FileDocument(fileURL: directory.appendingPathComponent("first.md"), recoveryBuffer: buffer)
+            .updatingText("first draft")
+        let second = FileDocument(fileURL: directory.appendingPathComponent("second.md"), recoveryBuffer: buffer)
+            .updatingText("second draft")
+        let store = TabStore(sessionStore: WorkspaceSessionStore(fileURL: directory.appendingPathComponent("session")))
+        store.newTab(document: first)
+        store.newTab(document: second)
+        let model = WorkspaceModel(tabStore: store)
+        let executor = ScriptedRecoveryExecutor()
+        let controller = ExternalFileController(
+            model: model, editorStore: EditorTextSystemStore(), identity: "inactive-recovery-test",
+            recoveryExecutor: executor
+        )
+        await executor.failNext(.persist)
+        controller.persistRecovery(for: first)
+        await controller.drainRecovery()
+        #expect(controller.recoveryRetryKind == .persist)
+
+        controller.persistRecovery(for: second)
+        await controller.drainRecovery()
+        #expect(controller.recoveryRetryKind == .persist)
+        controller.retryRecoveryCleanup()
+        await controller.drainRecovery()
+        #expect(controller.recoveryRetryKind == nil)
+        #expect(try await buffer.load(for: first.id, epoch: first.recoveryEpoch) == "first draft")
+        #expect(try await buffer.load(for: second.id, epoch: second.recoveryEpoch) == "second draft")
+    }
+
     @Test func terminationFailureExposesRecoveryRequiredRetryAndSaveAsPresentation() {
         let suite = "com.joncallim.macdown2.termination-test.\(UUID().uuidString)"
         guard let defaults = UserDefaults(suiteName: suite) else {

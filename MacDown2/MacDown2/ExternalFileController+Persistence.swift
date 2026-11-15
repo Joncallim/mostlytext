@@ -234,7 +234,7 @@ extension ExternalFileController {
         action: RecoveryAction
     ) async {
         guard await recoveryExecutor.persist(document) else {
-            guard isCurrentRecoveryAction(id: document.id, epoch: document.recoveryEpoch, generation: generation)
+            guard isRetainedRecoveryPersist(document, generation: generation)
             else { return }
             recoveryRetryAction = action
             let location = await document.recoveryBuffer.recoveryLocation(
@@ -244,8 +244,12 @@ extension ExternalFileController {
             notice = .recoveryCleanup(location)
             return
         }
-        if recoveryRetryKind == .persist {
-            clearRecoveryRetryIfCurrent(id: document.id, epoch: document.recoveryEpoch, generation: generation)
+        if matchesRecoveryPersistRetry(document, generation: generation),
+           isRetainedRecoveryPersist(document, generation: generation) {
+            recoveryRetryAction = nil
+            if case .recoveryCleanup = notice {
+                notice = .none
+            }
         }
     }
 

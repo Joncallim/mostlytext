@@ -47,6 +47,8 @@ final class ExternalFileController {
     @ObservationIgnored var disposed = false
     /// Test seam: runs right after the recovery cleanup of a Use-Disk-Version reload returns, before it revalidates.
     @ObservationIgnored var afterUseExternalRecoveryCleanup: (@MainActor () async -> Void)?
+    /// Test seam: models a document transition while a conflict's fresh disk snapshot is awaited.
+    @ObservationIgnored var afterConflictSnapshot: (@MainActor (DocumentFileObservation) async -> Void)?
     /// Test seam: how a failed watcher bind waits before retrying (production: a real exponential sleep).
     @ObservationIgnored var bindRetrySleep: @MainActor (Duration) async throws
         -> Void = { try await Task.sleep(for: $0) }
@@ -268,6 +270,10 @@ extension ExternalFileController {
         let text: String
         let state: FileDocumentState
         let pendingRevision: FileRevision?
+        let recoveryEpoch: UUID
+        let lastKnownRevision: FileRevision?
+        let backingState: FileBackingState
+        let encoding: FileEncodingMetadata
 
         init(document: FileDocument, generation: UInt) {
             documentID = document.id
@@ -277,6 +283,10 @@ extension ExternalFileController {
             text = document.text
             state = document.state
             pendingRevision = document.pendingExternalRevision
+            recoveryEpoch = document.recoveryEpoch
+            lastKnownRevision = document.lastKnownRevision
+            backingState = document.backingState
+            encoding = document.encoding
         }
     }
 
@@ -298,6 +308,10 @@ extension ExternalFileController {
             && document.text.isExactlyEqual(to: context.text)
             && document.state == context.state
             && document.pendingExternalRevision == context.pendingRevision
+            && document.recoveryEpoch == context.recoveryEpoch
+            && document.lastKnownRevision == context.lastKnownRevision
+            && document.backingState == context.backingState
+            && document.encoding == context.encoding
     }
 
     func resumePendingMove(after action: RecoveryAction? = nil) async {
