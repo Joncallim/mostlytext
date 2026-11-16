@@ -46,6 +46,16 @@ smaller injected-budget tests exercise exact arithmetic and no-publication
 behavior. The new exact-head ramp expects 96/128 MiB cases to refuse during
 resource resolution rather than during complete-document assembly.
 
+That [20-case rerun](https://github.com/Joncallim/mostlytext/actions/runs/43817242196)
+passes at source `a62f599ab88368353c96214f4f59ca97f9ffc4eb`: 64 MiB
+distinct resources publish 89,485,346 HTML bytes at 695,386,112-byte app
+high-water RSS; the almost-128-MiB repeated output publishes 134,213,718
+bytes at 874,364,928-byte high-water RSS. The 96 and 128 MiB cases refuse
+before publication with resource-resolution diagnostics. The 32 MiB source,
+512-resource and 65,536-occurrence cases also retain their expected published
+outcomes. Per-case result bundles, fixture hashes and memory samples are in
+the run artifact.
+
 The separate `maxPreviouslyManagedResourceBytes` is 128 MiB only for
 authenticated recovery and bounded retained-asset inspection. It does not
 admit 128 MiB into a new export. The existing 256 MiB managed-output allowance
@@ -76,13 +86,11 @@ review-needed French, Japanese and Polish drafts for final issue #3 review.
 
 ## Remaining qualification
 
-The expanded same-branch Release calibration must measure the 4 MiB accepted
+The final exact-head Release calibration must measure the 4 MiB accepted
 escape boundary, the plus-one and historical refusals, and both read-work
-limits under the final code. The 20-case ramp must be rerun on the
-revised policy to prove the earlier 64 MiB success and earlier 96/128 MiB
-refusals retain their expected outcomes at the new admission point. Resource
-read-work, passive Quick Look and PDF limits still have their own provisional
-status. The exact release-candidate menu/save-panel journey and broader native
-visual acceptance remain separate issue #11 criteria. Preserve the first
-failed calibration and any new negative result; do not turn these measurements
-into a claim of signed release readiness.
+limits. Read-work values remain provisional until that run passes and its
+memory/latency are reviewed. Passive Quick Look and PDF limits have separate
+provisional status. The exact release-candidate menu/save-panel journey and
+broader native visual acceptance remain separate issue #11 criteria. Preserve
+the first failed calibration and any new negative result; do not turn these
+measurements into a claim of signed release readiness.
