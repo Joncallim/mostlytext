@@ -39,7 +39,7 @@ struct ExportResourceBudget: Sendable, Equatable {
     /// Bound private occurrence records before cmark allocates its HTML buffer.
     static let maxResourceURLSlots = 65536
     /// Bound actual input work independently of distinct packaged payload.
-    /// Provisional; failed/non-image/duplicate reads consume this allowance too.
+    /// Failed/non-image/duplicate reads consume this measured allowance too.
     static let maxResourceReadAttempts = 4096
     static let maxResourceReadBytes = 256 << 20
     /// The 24 MiB ampersand fixture created almost 120 MiB of HTML and drove

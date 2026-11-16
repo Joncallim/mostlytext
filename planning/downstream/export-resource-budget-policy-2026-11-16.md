@@ -100,11 +100,32 @@ review-needed French, Japanese and Polish drafts for final issue #3 review.
 
 ## Remaining qualification
 
-The revised exact-head Release calibration must measure the 1 MiB accepted
-escape boundary, the plus-one and historical refusals, and both read-work
-limits. Read-work values remain provisional until that run passes and its
-memory/latency are reviewed. Passive Quick Look and PDF limits have separate
-provisional status. The exact release-candidate menu/save-panel journey and
-broader native visual acceptance remain separate issue #11 criteria. Preserve
-the first failed calibration and any new negative result; do not turn these
-measurements into a claim of signed release readiness.
+The [revised exact-head Release calibration](https://github.com/Joncallim/mostlytext/actions/runs/43827792734)
+passed ten app tests without failure or skip at source `3217374a` (synthetic
+checkout `9d284a2c`). The 1 MiB ampersand boundary produced 5,249,599 HTML
+bytes in 0.549 seconds at 636,436,480-byte app high-water RSS. The plus-one
+and retained 24 MiB source refused before parsing in 0.004 and 0.026 seconds,
+respectively, preserving the previous destination; their app high-water was
+unchanged. The 4,096-fragment and 32 MiB derived-HTML cases passed in 0.067
+and 3.103 seconds. The 4,097-attempt and 256 MiB charged rejected-read cases
+refused without output in 0.380 and 0.062 seconds, at 849,543,168 and
+883,113,984-byte app high-water RSS. The process sampler observed at most
+803,110,912 app bytes across the complete run. The full twelve-case receipt,
+source hashes, built-app identity, test result and process samples are retained
+in the run artifact. These results support the source, derived, read-work and
+escape-work limits as the frozen Export policy for this source.
+
+The [new exact-head 20-case ramp](https://github.com/Joncallim/mostlytext/actions/runs/43827792735)
+also passed with fresh app processes at the same product source: 64 MiB of
+distinct resources published 89,485,346 HTML bytes at 381,730,816-byte
+sampled app RSS; the near-final 134,213,718-byte output published at
+832,421,888 bytes. The 96 and 128 MiB aggregate cases refused before
+publication. All twenty case results, fixture hashes and memory records are
+retained in its artifact. The first failed calibration remains a failure;
+neither later success changes its result nor proves constant parser memory for
+all possible Markdown.
+
+Passive Quick Look and PDF limits have separate provisional status. The exact
+release-candidate menu/save-panel journey and broader native visual acceptance
+remain separate issue #11 criteria. These measurements do not qualify a signed
+release candidate.
