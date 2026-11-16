@@ -54,6 +54,18 @@
             SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
         }
 
+        private func fileFacts(_ url: URL) throws -> (bytes: Int, sha256: String) {
+            let handle = try FileHandle(forReadingFrom: url)
+            defer { try? handle.close() }
+            var hasher = SHA256()
+            var bytes = 0
+            while let chunk = try handle.read(upToCount: 1 << 20), !chunk.isEmpty {
+                bytes += chunk.count
+                hasher.update(data: chunk)
+            }
+            return (bytes, hasher.finalize().map { String(format: "%02x", $0) }.joined())
+        }
+
         private func fixtureDirectory() throws -> URL {
             let root = FileManager.default.temporaryDirectory
                 .appendingPathComponent("ExportBudgetCalibration-\(UUID().uuidString)", isDirectory: true)
@@ -266,6 +278,54 @@
                     "app_peak_rss_bytes": peakResidentBytes(),
                 ])
             }
+        }
+    }
+
+    extension ExportBudgetCalibrationTests {
+        @Test func derivedFragmentCountAndBytesUseActualExportPath() async throws {
+            try await measureDerived(name: "derived-count", fragmentCount: 4096, bytesPerFragment: 64)
+            try await measureDerived(name: "derived-bytes", fragmentCount: 1024, bytesPerFragment: 32 << 10)
+        }
+
+        private func measureDerived(name: String, fragmentCount: Int, bytesPerFragment: Int) async throws {
+            _ = try outputDirectory()
+            let root = try fixtureDirectory()
+            defer { try? FileManager.default.removeItem(at: root) }
+            let destination = root.appendingPathComponent(name + ".html")
+            let source = String(repeating: "$x$ ", count: fragmentCount)
+            let fragment = "<span>" + String(repeating: "x", count: bytesPerFragment - 13) + "</span>"
+            let contributions = (0 ..< fragmentCount).map { index in
+                ExportDerivedContribution(
+                    sourceRange: index * 4 ..< index * 4 + 3,
+                    placement: .inline, html: fragment, sourceGeneration: 1
+                )
+            }
+            let request = ExportRequest(
+                text: source, sourceGeneration: 1, theme: BundledThemes.light,
+                contributions: contributions
+            )
+            let peakBefore = try peakResidentBytes()
+            let started = ProcessInfo.processInfo.systemUptime
+            let result = try await ExportService.exportHTML(
+                request, to: .html(url: destination, mode: .selfContained)
+            )
+            let elapsed = ProcessInfo.processInfo.systemUptime - started
+            let peakAfter = try peakResidentBytes()
+            let output = try fileFacts(destination)
+            #expect(result.primaryFile == destination)
+            #expect(result.diagnostics.isEmpty)
+            #expect(output.bytes >= fragmentCount * bytesPerFragment)
+            #expect(output.bytes <= (128 << 20))
+            try record(name, values: [
+                "case": "actual-derived-export", "source_bytes": source.utf8.count,
+                "source_sha256": sha256(Data(source.utf8)),
+                "fragment_count": fragmentCount,
+                "derived_html_bytes": fragmentCount * bytesPerFragment,
+                "output_bytes": output.bytes, "output_sha256": output.sha256,
+                "elapsed_seconds": elapsed,
+                "app_peak_before_rss_bytes": peakBefore,
+                "app_peak_rss_bytes": peakAfter,
+            ])
         }
     }
 
