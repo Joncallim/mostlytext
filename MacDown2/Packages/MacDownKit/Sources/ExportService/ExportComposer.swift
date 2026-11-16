@@ -92,6 +92,7 @@ enum ExportComposer {
         let (namespaceSVGIDs, cancellation) = rendering
         let policy = policy(for: target)
         try checkSourceBudget(bytes: request.text.utf8.count, budget: budget)
+        try checkSourceEscapeWork(request.text)
 
         // Derived once, up front: every rewritten resource/stylesheet reference
         // in the body and the directory the file writer later creates must

@@ -19,7 +19,7 @@
         iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg==
         """
 
-        private func outputDirectory() throws -> URL {
+        func outputDirectory() throws -> URL {
             let environment = ProcessInfo.processInfo.environment
             guard environment["GITHUB_ACTIONS"] == "true",
                   environment["RUNNER_OS"] == "macOS",
@@ -36,13 +36,13 @@
             return url
         }
 
-        private func record(_ name: String, values: [String: Any]) throws {
+        func record(_ name: String, values: [String: Any]) throws {
             let directory = try outputDirectory()
             let data = try JSONSerialization.data(withJSONObject: values, options: [.prettyPrinted, .sortedKeys])
             try data.write(to: directory.appendingPathComponent(name + ".json"), options: .atomic)
         }
 
-        private func peakResidentBytes() throws -> Int {
+        func peakResidentBytes() throws -> Int {
             var usage = rusage()
             guard getrusage(RUSAGE_SELF, &usage) == 0 else { throw CalibrationError.residentSampleFailed }
             // Darwin reports ru_maxrss in bytes. This is the app test host's
@@ -50,7 +50,7 @@
             return Int(usage.ru_maxrss)
         }
 
-        private func sha256(_ data: Data) -> String {
+        func sha256(_ data: Data) -> String {
             SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
         }
 
@@ -66,7 +66,7 @@
             return (bytes, hasher.finalize().map { String(format: "%02x", $0) }.joined())
         }
 
-        private func fixtureDirectory() throws -> URL {
+        func fixtureDirectory() throws -> URL {
             let root = FileManager.default.temporaryDirectory
                 .appendingPathComponent("ExportBudgetCalibration-\(UUID().uuidString)", isDirectory: true)
             try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
@@ -282,15 +282,14 @@
     }
 
     extension ExportBudgetCalibrationTests {
-        @Test func escapedMarkdownApproachesPreparedHTMLCeiling() async throws {
+        @Test func escapedMarkdownAtPreparseBoundary() async throws {
             _ = try outputDirectory()
             let root = try fixtureDirectory()
             defer { try? FileManager.default.removeItem(at: root) }
             let destination = root.appendingPathComponent("prepared-html.html")
-            // Valid Markdown text expands from one UTF-8 byte to five rendered
-            // bytes per ampersand. This reaches the prepared/final HTML tier
-            // without a local resource or a generated contribution.
-            let source = String(repeating: "&", count: 24 << 20)
+            // Four MiB meets the escape allowance. The historical 24 MiB
+            // source reached 3.4 GiB RSS before prepared-output checking.
+            let source = String(repeating: "&", count: 4 << 20)
             let sourceDigest = sha256(Data(source.utf8))
             let request = ExportRequest(text: source, sourceGeneration: 1, theme: BundledThemes.light)
             let peakBefore = try peakResidentBytes()
@@ -303,14 +302,48 @@
             let output = try fileFacts(destination)
             #expect(result.primaryFile == destination)
             #expect(result.diagnostics.isEmpty)
-            #expect(output.bytes >= (120 << 20))
-            #expect(output.bytes <= (128 << 20))
+            #expect(output.bytes >= (20 << 20))
+            #expect(output.bytes <= (24 << 20))
+            #expect(peakAfter < (1 << 30))
             try record("prepared-html", values: [
-                "case": "actual-escaped-markdown-export", "source_bytes": source.utf8.count,
+                "case": "actual-bounded-escaped-markdown-export", "source_bytes": source.utf8.count,
                 "source_sha256": sourceDigest, "output_bytes": output.bytes,
                 "output_sha256": output.sha256, "elapsed_seconds": elapsed,
                 "app_peak_before_rss_bytes": peakBefore, "app_peak_rss_bytes": peakAfter,
             ])
+        }
+
+        @Test func expandedSourceOverPreparseBoundaryPreservesDestination() async throws {
+            _ = try outputDirectory()
+            let root = try fixtureDirectory()
+            defer { try? FileManager.default.removeItem(at: root) }
+            let destination = root.appendingPathComponent("prepared-refusal.html")
+            let previous = Data("Existing export remains intact".utf8)
+            try previous.write(to: destination)
+            for (suffix, count) in [("plus-one", (4 << 20) + 1), ("historical", 24 << 20)] {
+                let name = "prepared-refusal-\(suffix)"
+                let source = String(repeating: "&", count: count)
+                let request = ExportRequest(text: source, sourceGeneration: 1, theme: BundledThemes.light)
+                let peakBefore = try peakResidentBytes()
+                let started = ProcessInfo.processInfo.systemUptime
+                do {
+                    _ = try await ExportService.exportHTML(
+                        request, to: .html(url: destination, mode: .selfContained)
+                    )
+                    Issue.record("An over-limit escaped source reached publication")
+                } catch ExportError.budgetExceeded {
+                    #expect(try Data(contentsOf: destination) == previous)
+                    let peakAfter = try peakResidentBytes()
+                    #expect(peakAfter < (1 << 30))
+                    try record(name, values: [
+                        "case": "actual-preparse-expansion-refusal", "source_bytes": count,
+                        "source_sha256": sha256(Data(source.utf8)),
+                        "output_unchanged": true,
+                        "elapsed_seconds": ProcessInfo.processInfo.systemUptime - started,
+                        "app_peak_before_rss_bytes": peakBefore, "app_peak_rss_bytes": peakAfter,
+                    ])
+                }
+            }
         }
 
         @Test func derivedFragmentCountAndBytesUseActualExportPath() async throws {

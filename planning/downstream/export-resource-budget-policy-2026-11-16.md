@@ -52,10 +52,33 @@ admit 128 MiB into a new export. The existing 256 MiB managed-output allowance
 likewise only permits inspection of historical output receipts. Unknown or
 altered files remain protected by the existing ownership checks.
 
+## Escape-heavy source finding and repair
+
+The [first expanded Release calibration](https://github.com/Joncallim/mostlytext/actions/runs/43817100991)
+passed its seven functional cases at source `fd1ed0524948ded7125a00572da9519dc8c1e7fa`,
+but its 24 MiB line of ampersands exposed a performance failure: 125,835,839
+HTML bytes, 24.134 seconds and 3,408,986,112 bytes app high-water RSS. The
+complete-document output fit the 128 MiB final cap, so that cap could not
+prevent memory growth during parsing and escaping. The source and output
+SHA-256 values, process samples and exact test bundle are retained in the run
+artifact. The green test result is not a safety pass.
+
+The repair counts a conservative upper bound on source characters that may
+expand into HTML entities before invoking cmark. It allows up to 16 MiB of
+potential extra bytes, independently of the 32 MiB source cap. Four MiB of
+ampersands reaches that allowance exactly; one extra ampersand and the retained
+24 MiB trigger must refuse before parsing and preserve a preexisting output.
+The actual prepared/final HTML limits remain in place for generated content.
+This is a targeted bound on the observed escape-heavy path, not a general
+proof of constant parser memory for every Markdown grammar. The new diagnostic
+enters the ExportService String Catalog as an English source and marked
+review-needed French, Japanese and Polish drafts for final issue #3 review.
+
 ## Remaining qualification
 
-The expanded same-branch Release calibration must measure escaped Markdown
-near the prepared/final HTML ceiling. The 20-case ramp must be rerun on the
+The expanded same-branch Release calibration must measure the 4 MiB accepted
+escape boundary, the plus-one and historical refusals, and both read-work
+limits under the final code. The 20-case ramp must be rerun on the
 revised policy to prove the earlier 64 MiB success and earlier 96/128 MiB
 refusals retain their expected outcomes at the new admission point. Resource
 read-work, passive Quick Look and PDF limits still have their own provisional

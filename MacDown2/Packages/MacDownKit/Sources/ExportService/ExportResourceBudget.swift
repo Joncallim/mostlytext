@@ -42,6 +42,11 @@ struct ExportResourceBudget: Sendable, Equatable {
     /// Provisional; failed/non-image/duplicate reads consume this allowance too.
     static let maxResourceReadAttempts = 4096
     static let maxResourceReadBytes = 256 << 20
+    /// The 24 MiB ampersand fixture created almost 120 MiB of HTML and drove
+    /// the Release app host above 3 GiB before the prepared-output gate ran.
+    /// Bound the potential escape work before parsing; ordinary unescaped
+    /// source still uses the separate 32 MiB source allowance.
+    static let maxPotentialHTMLEscapeExpansionBytes = 16 << 20
 
     static let standard = ExportResourceBudget(
         maxSourceUTF8Bytes: 32 << 20,
