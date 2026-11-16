@@ -1,0 +1,79 @@
+name: Release diagram source budget
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/diagram-release-calibration.yml'
+      - '.github/scripts/sample-diagram-budget-memory.py'
+      - 'MacDown2/Packages/MacDownKit/Sources/DiagramWebKitPool/**'
+      - 'MacDown2/Packages/MacDownKit/Sources/DiagramRendering/**'
+      - 'MacDown2/Packages/MacDownKit/Sources/D2Rendering/**'
+      - 'MacDown2/Packages/MacDownKit/Sources/GraphvizRendering/**'
+      - 'MacDown2/Packages/MacDownKit/Tests/ExportDiagramIntegrationTests/DiagramBudgetProbeTests.swift'
+
+jobs:
+  release-diagrams:
+    if: github.repository == 'Joncallim/mostlytext' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Select macOS 26 and Xcode 26.6
+        run: |
+          set -euo pipefail
+          test "$(sw_vers -productVersion | cut -d. -f1)" = 26
+          test "$(uname -m)" = arm64
+          selected=""
+          for candidate in /Applications/Xcode*.app; do
+            if test "$(DEVELOPER_DIR="$candidate/Contents/Developer" xcodebuild -version | head -n 1)" = 'Xcode 26.6'; then
+              selected="$candidate"
+              break
+            fi
+          done
+          test -n "$selected"
+          sudo xcode-select -s "$selected/Contents/Developer"
+          xcodebuild -version
+          sw_vers
+          git rev-parse HEAD
+      - name: Compile the locked Release package and real renderer tests
+        working-directory: MacDown2/Packages/MacDownKit
+        run: |
+          swift build --build-tests -c release --force-resolved-versions \
+            -Xswiftc -enable-testing -Xswiftc -DDIAGRAM_BUDGET_PROBE
+      - name: Measure bounded renderer cases and WebKit helpers
+        working-directory: MacDown2/Packages/MacDownKit
+        run: |
+          set -euo pipefail
+          for engine in Mermaid D2 Graphviz; do
+            python3 "$GITHUB_WORKSPACE/.github/scripts/sample-diagram-budget-memory.py" \
+              "$RUNNER_TEMP/diagram-budget-probe/memory/$engine" -- \
+              swift test -c release --skip-build --force-resolved-versions --no-parallel \
+                --filter "DiagramBudgetProbeTests.measure$engine"
+            test -s "$RUNNER_TEMP/diagram-budget-probe/$engine.json"
+          done
+      - name: Record exact checkout and locked input identity
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/diagram-budget-probe"
+          {
+            git rev-parse HEAD
+            git rev-parse HEAD^{tree}
+            shasum -a 256 MacDown2/Packages/MacDownKit/Package.resolved
+            shasum -a 256 MacDown2/Packages/MacDownKit/Tests/ExportDiagramIntegrationTests/DiagramBudgetProbeTests.swift
+            shasum -a 256 .github/scripts/sample-diagram-budget-memory.py
+            xcodebuild -version
+            sw_vers
+          } > "$RUNNER_TEMP/diagram-budget-probe/identity.txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release-diagram-source-budget
+          path: ${{ runner.temp }}/diagram-budget-probe/
+          if-no-files-found: warn

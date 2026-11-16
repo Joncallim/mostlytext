@@ -12381,6 +12381,29 @@
         }
       }
     },
+    "diagram source too large": {
+      "comment": "Authored diagram source was refused before WebKit work.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "source du diagramme trop volumineuse"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "図のソースが大きすぎます"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "źródło diagramu jest zbyt duże"
+          }
+        }
+      }
+    },
     "has a partial block placement outside a top-level paragraph": {
       "localizations": {
         "fr": {

@@ -26,6 +26,24 @@ struct DiagramFailurePresentationTests {
     }
 
     @Test(arguments: ["en", "fr", "ja", "pl"])
+    func actualCompiledCatalogContainsSourceAdmissionMessage(_ language: String) throws {
+        let resources = try bundle(language)
+        let expected = [
+            "en": "diagram source too large",
+            "fr": "source du diagramme trop volumineuse",
+            "ja": "図のソースが大きすぎます",
+            "pl": "źródło diagramu jest zbyt duże",
+        ]
+        #expect(resources
+            .localizedString(forKey: "diagram source too large", value: "missing-entry", table: nil) != "missing-entry")
+        #expect(DiagramFailurePresentation.sourceTooLarge.message(
+            bundle: resources,
+            locale: Locale(identifier: language)
+        )
+            == expected[language])
+    }
+
+    @Test(arguments: ["en", "fr", "ja", "pl"])
     func actualCompiledCatalogSelectsCountFormsWithoutNarrowingTheByteCount(_ language: String) throws {
         let resources = try bundle(language)
         for count in [0, 1, 2, 5, 12, 22, Int.max] {
@@ -68,6 +86,7 @@ struct DiagramFailurePresentationTests {
         #expect(DiagramFailurePresentation.noPreviewImage.message(bundle: empty) == "no preview image was produced")
         #expect(DiagramFailurePresentation.timedOut.message(bundle: empty) == "rendering timed out")
         #expect(DiagramFailurePresentation.rendererUnavailable.message(bundle: empty) == "renderer unavailable")
+        #expect(DiagramFailurePresentation.sourceTooLarge.message(bundle: empty) == "diagram source too large")
         #expect(DiagramFailurePresentation.outputTooLarge(byteCount: 123)
             .message(bundle: empty) == "rendered output too large (123 bytes)")
     }
@@ -81,6 +100,7 @@ struct DiagramFailurePresentationTests {
             "no preview image was produced": "fixture image marker",
             "rendering timed out": "fixture timeout marker",
             "renderer unavailable": "fixture unavailable marker",
+            "diagram source too large": "fixture source marker",
             "rendered output too large (%lld bytes)": "fixture size marker %lld",
         ]
         let data = try PropertyListSerialization.data(fromPropertyList: values, format: .binary, options: 0)
@@ -93,6 +113,8 @@ struct DiagramFailurePresentationTests {
             == "fixture timeout marker")
         #expect(DiagramFailurePresentation.rendererUnavailable.message(bundle: resources, locale: locale)
             == "fixture unavailable marker")
+        #expect(DiagramFailurePresentation.sourceTooLarge.message(bundle: resources, locale: locale)
+            == "fixture source marker")
         #expect(DiagramFailurePresentation.outputTooLarge(byteCount: 42).message(bundle: resources, locale: locale)
             == "fixture size marker 42")
     }

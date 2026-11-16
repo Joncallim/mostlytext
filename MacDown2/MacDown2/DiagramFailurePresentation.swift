@@ -5,6 +5,7 @@ import Foundation
 enum DiagramFailurePresentation: Sendable {
     case noPreviewImage
     case timedOut
+    case sourceTooLarge
     case outputTooLarge(byteCount: Int)
     case rendererUnavailable
 
@@ -14,6 +15,8 @@ enum DiagramFailurePresentation: Sendable {
             String(localized: "no preview image was produced", bundle: bundle, locale: locale)
         case .timedOut:
             String(localized: "rendering timed out", bundle: bundle, locale: locale)
+        case .sourceTooLarge:
+            String(localized: "diagram source too large", bundle: bundle, locale: locale)
         case let .outputTooLarge(byteCount):
             String(localized: "rendered output too large (\(byteCount) bytes)", bundle: bundle, locale: locale)
         case .rendererUnavailable:

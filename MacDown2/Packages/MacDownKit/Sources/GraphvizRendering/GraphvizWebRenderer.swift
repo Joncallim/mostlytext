@@ -32,6 +32,9 @@ public actor GraphvizWebRenderer: GraphvizDiagramRendering {
 
     public func render(_ fence: GraphvizFence,
                        context: GraphvizRenderContext) async throws -> RenderedGraphvizDiagram {
+        if let byteCount = DiagramSourceBudget.byteCountIfOversized(fence.source) {
+            throw GraphvizRenderError.sourceTooLarge(byteCount: byteCount)
+        }
         let activePool = try availablePool()
         let outputLimit = maxOutputBytes
         let diagram = try await withPoolErrorMapping {

@@ -43,6 +43,9 @@ public actor MermaidWebRenderer: MermaidDiagramRendering {
     }
 
     public func render(_ fence: MermaidFence, context: MermaidRenderContext) async throws -> RenderedMermaidDiagram {
+        if let byteCount = DiagramSourceBudget.byteCountIfOversized(fence.source) {
+            throw MermaidRenderError.sourceTooLarge(byteCount: byteCount)
+        }
         let activePool = try availablePool()
         let outputLimit = maxOutputBytes
         do {

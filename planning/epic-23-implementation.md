@@ -509,3 +509,20 @@ and renderer security checks are required before this repair merges. This
 ordering repair does not prove an absolute WebKit peak-memory limit: each
 third-party library still generates its SVG before the check. The separate E23
 Release calibration, sandbox and Quick Look diagram criteria remain open.
+
+## Authored diagram admission before WebKit
+
+The shared diagram renderers now refuse an authored fence above 64 KiB UTF-8
+before acquiring a WebKit page. This is the same input ceiling already used by
+the native Preview parser; it is a conservative starting policy for one diagram,
+not a claim that every accepted graph has constant rendering cost. The separate
+2 MiB generated-SVG limit and five-second execution deadline remain in force.
+
+Mermaid, D2 and Graphviz return a typed source-size failure with the observed
+byte count. Preview and Export present a localized, source-specific diagnostic;
+their existing per-fence failure path retains the authored Markdown rather than
+blanking sibling content. The boundary tests cover exact admission, one-byte
+refusal, and multibyte UTF-8. Release measurements of ordinary and denser real
+WebKit diagrams, including helper-process memory, are tracked separately.
+The full E23 renderer-calibration and Quick Look criteria remain open until
+those measurements and the final product evidence are reconciled.

@@ -33,6 +33,9 @@ public actor D2WebRenderer: D2DiagramRendering {
     }
 
     public func render(_ fence: D2Fence, context: D2RenderContext) async throws -> RenderedD2Diagram {
+        if let byteCount = DiagramSourceBudget.byteCountIfOversized(fence.source) {
+            throw D2RenderError.sourceTooLarge(byteCount: byteCount)
+        }
         let activePool = try availablePool()
         let outputLimit = maxOutputBytes
         let diagram = try await withPoolErrorMapping {
