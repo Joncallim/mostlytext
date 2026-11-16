@@ -33,13 +33,14 @@ public actor GraphvizWebRenderer: GraphvizDiagramRendering {
     public func render(_ fence: GraphvizFence,
                        context: GraphvizRenderContext) async throws -> RenderedGraphvizDiagram {
         let activePool = try availablePool()
+        let outputLimit = maxOutputBytes
         let diagram = try await withPoolErrorMapping {
             try await activePool.withPage { page in
-                try await Self.render(fence, context: context, on: page)
+                try await Self.render(fence, context: context, maxOutputBytes: outputLimit, on: page)
             }
         }
         let byteCount = diagram.svg.utf8.count
-        guard byteCount <= maxOutputBytes else {
+        guard byteCount <= outputLimit else {
             throw GraphvizRenderError.outputTooLarge(byteCount: byteCount)
         }
         return diagram
@@ -80,15 +81,19 @@ public actor GraphvizWebRenderer: GraphvizDiagramRendering {
 
     @MainActor
     private static func render(_ fence: GraphvizFence,
-                               context: GraphvizRenderContext,
+                               context: GraphvizRenderContext, maxOutputBytes: Int,
                                on page: DiagramHarnessPage) async throws -> RenderedGraphvizDiagram {
         let result = try await page.evaluate(
-            "return await window.__macdownRenderGraphviz(source, theme);",
+            "return await window.__macdownRenderGraphviz(source, theme, maxOutputBytes);",
             arguments: [
                 "source": fence.source,
                 "theme": context.palette.rendererArguments,
+                "maxOutputBytes": maxOutputBytes,
             ]
         )
+        if let byteCount = result.outputTooLargeByteCount {
+            throw GraphvizRenderError.outputTooLarge(byteCount: byteCount)
+        }
         guard result.succeeded else {
             let message = result.message ?? "unknown error"
             throw GraphvizRenderError.invalidSyntax(message)

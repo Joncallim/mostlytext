@@ -168,8 +168,13 @@ struct GraphvizWebRendererTests {
 
     @Test func renderRejectsOutputAboveTheConfiguredSizeCeiling() async throws {
         let renderer = GraphvizWebRenderer(maxOutputBytes: 10)
-        await #expect(throws: GraphvizRenderError.self) {
+        do {
             _ = try await renderer.render(Self.fence("digraph { a -> b; }"), context: Self.context)
+            Issue.record("The oversized SVG crossed the output boundary")
+        } catch let GraphvizRenderError.outputTooLarge(byteCount) {
+            #expect(byteCount > 10)
+        } catch {
+            Issue.record("Expected the precise output-size error: \(error)")
         }
         await renderer.shutdown()
     }

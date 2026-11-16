@@ -136,16 +136,20 @@ final class MermaidHarnessPage: NSObject, WKNavigationDelegate, WKUIDelegate {
     /// string literal, because there is no string literal to break out of.
     func render(_ source: String, context: MermaidRenderContext) async throws -> RenderedMermaidDiagram {
         let result = try await webView.callAsyncJavaScript(
-            "return await window.__macdownRenderMermaid(source, theme);",
+            "return await window.__macdownRenderMermaid(source, theme, maxOutputBytes);",
             arguments: [
                 "source": source,
                 "theme": context.palette.rendererArguments,
+                "maxOutputBytes": MermaidWebRenderer.defaultMaxOutputBytes,
             ],
             in: nil,
             contentWorld: .page
         )
         guard let dict = result as? [String: Any], let succeeded = dict["ok"] as? Bool else {
             throw MermaidRenderError.rendererUnavailable
+        }
+        if let byteCount = (dict["outputTooLargeByteCount"] as? NSNumber)?.intValue {
+            throw MermaidRenderError.outputTooLarge(byteCount: byteCount)
         }
         guard succeeded else {
             let message = (dict["message"] as? String) ?? "unknown error"

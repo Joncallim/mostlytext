@@ -50,6 +50,23 @@ function checkedRasterSize(width, height) {
 
 var __macdownRenderCounter = 0;
 
+// Count UTF-8 without materializing another copy of a potentially large SVG.
+// This gate runs before rasterization and before WebKit bridges the SVG to Swift.
+function renderedUTF8ByteCount(text) {
+    var bytes = 0;
+    for (var index = 0; index < text.length; index += 1) {
+        var code = text.charCodeAt(index);
+        if (code < 0x80) bytes += 1;
+        else if (code < 0x800) bytes += 2;
+        else if (code >= 0xD800 && code <= 0xDBFF && index + 1 < text.length &&
+                 text.charCodeAt(index + 1) >= 0xDC00 && text.charCodeAt(index + 1) <= 0xDFFF) {
+            bytes += 4;
+            index += 1;
+        } else bytes += 3;
+    }
+    return bytes;
+}
+
 // Rasterizes `svg` (Mermaid's own, unmodified output — including
 // <foreignObject> HTML labels) via the standard canvas technique: load it
 // as an <img> from a data: URI, draw that image onto a canvas, and read
@@ -166,7 +183,7 @@ function addOpaqueCanvas(svg, fill) {
 // uses this raster snapshot instead (mirroring `MathContribution`'s own
 // PNG-based approach), while Export keeps using `svg` untouched, genuinely
 // vector, and unaffected by any of this.
-window.__macdownRenderMermaid = async function (source, theme) {
+window.__macdownRenderMermaid = async function (source, theme, maxOutputBytes = 2 * 1024 * 1024) {
     __macdownRenderCounter += 1;
     var id = "macdown-diagram-" + __macdownRenderCounter;
     try {
@@ -266,6 +283,11 @@ window.__macdownRenderMermaid = async function (source, theme) {
         // content too; it must not be covered by our default backing rect.
         var resolved = mermaid.mermaidAPI.getConfig().themeVariables || {};
         var canvas = addOpaqueCanvas(result.svg, resolved.background || background);
+        var byteCount = renderedUTF8ByteCount(canvas.svg);
+        if (byteCount > maxOutputBytes) {
+            return { ok: false, outputTooLargeByteCount: byteCount,
+                     message: "rendered output too large" };
+        }
         var png = await rasterize(canvas.svg, canvas.width, canvas.height);
         return { ok: true, svg: canvas.svg, png: png, width: canvas.width, height: canvas.height };
     } catch (error) {

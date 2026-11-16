@@ -176,8 +176,13 @@ struct MermaidWebRendererTests {
 
     @Test func renderRejectsOutputAboveTheConfiguredSizeCeiling() async throws {
         let renderer = MermaidWebRenderer(maxOutputBytes: 10)
-        await #expect(throws: MermaidRenderError.self) {
+        do {
             _ = try await renderer.render(Self.fence("graph TD; A-->B;"), context: Self.context)
+            Issue.record("The oversized SVG crossed the output boundary")
+        } catch let MermaidRenderError.outputTooLarge(byteCount) {
+            #expect(byteCount > 10)
+        } catch {
+            Issue.record("Expected the precise output-size error: \(error)")
         }
         await renderer.shutdown()
     }

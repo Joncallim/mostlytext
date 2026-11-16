@@ -81,7 +81,24 @@ window.__macdownPrepareD2 = async function () {
     }
 };
 
-window.__macdownRenderD2 = async function (source, theme) {
+// Count UTF-8 in place so an oversized SVG is refused before WebKit copies it
+// into the native callback. The Swift boundary checks again after transfer.
+function renderedUTF8ByteCount(text) {
+    let bytes = 0;
+    for (let index = 0; index < text.length; index += 1) {
+        const code = text.charCodeAt(index);
+        if (code < 0x80) bytes += 1;
+        else if (code < 0x800) bytes += 2;
+        else if (code >= 0xD800 && code <= 0xDBFF && index + 1 < text.length &&
+                 text.charCodeAt(index + 1) >= 0xDC00 && text.charCodeAt(index + 1) <= 0xDFFF) {
+            bytes += 4;
+            index += 1;
+        } else bytes += 3;
+    }
+    return bytes;
+}
+
+window.__macdownRenderD2 = async function (source, theme, maxOutputBytes = 2 * 1024 * 1024) {
     try {
         if (!theme || !["neutral-light-v1", "preview-context-v1"].includes(theme.policyID)) {
             throw new Error("unsupported diagram palette");
@@ -116,6 +133,11 @@ window.__macdownRenderD2 = async function (source, theme) {
         }
         const svg = await d2.render(compiled.diagram, options);
         const canvas = opaqueD2Canvas(svg, theme.canvas);
+        const byteCount = renderedUTF8ByteCount(canvas.svg);
+        if (byteCount > maxOutputBytes) {
+            return { ok: false, outputTooLargeByteCount: byteCount,
+                     message: "rendered output too large" };
+        }
         return { ok: true, svg: canvas.svg, width: canvas.width, height: canvas.height };
     } catch (error) {
         const message = error && error.message ? error.message : String(error);

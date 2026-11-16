@@ -478,3 +478,34 @@ removed or rewritten. Unknown ACL enforcement fails closed. Normal inherited
 deny-delete protections remain valid. Reproduce initial/later granting ACLs
 and safe deny-only ACLs on disposable owned fixtures before rerunning storage
 and app integration checks. These are not same-UID adversary fences.
+
+## Diagram output crossing — bounded repair
+
+**Owner summary.** A generated diagram above the existing two-megabyte SVG
+limit should fall back to its authored source without copying that oversized
+SVG from WebKit into the app first. Keep the same visible diagram behavior and
+the existing timeout, raster and output ceilings.
+
+At `main` `246ffd57` the Mermaid, D2 and Graphviz renderers all checked UTF-8
+SVG size after WebKit returned its complete result to Swift. Mermaid also
+rasterized the SVG before that check. The size limit therefore rejected the
+result but did not bound the bridge or Mermaid's subsequent raster work. The
+other two renderers have the same bridge ordering, without the raster step.
+
+Each bundled harness now counts the generated SVG's UTF-8 bytes without making
+another encoded copy, and returns a size-only error when the configured limit
+is exceeded. Mermaid checks before rasterization. Swift maps that error to the
+existing renderer-specific `outputTooLarge` result and retains its post-bridge
+check as a second boundary. The count handles supplementary Unicode and lone
+surrogates as UTF-8 does. Authored SVG/colors are not rewritten. The source
+fence, cache, Preview and Export contribution ownership remain unchanged, so
+their existing per-diagram fallback continues to preserve authored source.
+
+The direct bundled-JavaScript probe checks exact-limit admission and refusal
+for all three languages, proves refused results contain no SVG, and proves
+Mermaid does not rasterize the refused result. The three real WebKit package
+regressions require the precise output-size error. Full package/hosted Release
+and renderer security checks are required before this repair merges. This
+ordering repair does not prove an absolute WebKit peak-memory limit: each
+third-party library still generates its SVG before the check. The separate E23
+Release calibration, sandbox and Quick Look diagram criteria remain open.

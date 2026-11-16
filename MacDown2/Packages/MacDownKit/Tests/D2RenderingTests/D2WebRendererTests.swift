@@ -156,8 +156,13 @@ struct D2WebRendererTests {
 
     @Test func renderRejectsOutputAboveTheConfiguredSizeCeiling() async throws {
         let renderer = D2WebRenderer(maxOutputBytes: 10)
-        await #expect(throws: D2RenderError.self) {
+        do {
             _ = try await renderer.render(Self.fence("a -> b"), context: Self.context)
+            Issue.record("The oversized SVG crossed the output boundary")
+        } catch let D2RenderError.outputTooLarge(byteCount) {
+            #expect(byteCount > 10)
+        } catch {
+            Issue.record("Expected the precise output-size error: \(error)")
         }
         await renderer.shutdown()
     }
