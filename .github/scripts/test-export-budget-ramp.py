@@ -21,7 +21,7 @@ class RampControlsTests(unittest.TestCase):
         self.assertEqual(generator['case_definition']('single32')['assets'], {'pixel.png': 'a32'})
         self.assertEqual(generator['case_definition']('repeat5')['occurrences'], 5)
         self.assertEqual(generator['case_definition']('repeat3')['refusal_kind'], 'budget-exceeded')
-        self.assertEqual(generator['case_definition']('aggregate96')['refusal_kind'], 'budget-exceeded')
+        self.assertEqual(generator['case_definition']('aggregate96')['refusal_kind'], 'unresolved-resources')
         self.assertEqual(generator['case_definition']('aggregate64')['refusal'], False)
         near = generator['case_definition']('repeatNearFinal')
         self.assertEqual(near['assets'], {'pixel.png': 'a32', 'near.png': 'near32'})

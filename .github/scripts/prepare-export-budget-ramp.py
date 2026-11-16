@@ -168,8 +168,7 @@ def case_definition(name):
             assets['e.png'] = 'eSmall'
         return {'mode': 'html', 'assets': assets, 'occurrences': len(assets),
                 'refusal': name != 'aggregate64',
-                'refusal_kind': 'unresolved-resources' if name == 'aggregateOverRefusal'
-                else 'budget-exceeded' if name != 'aggregate64' else None}
+                'refusal_kind': 'unresolved-resources' if name != 'aggregate64' else None}
     if name.startswith('distinct'):
         count = 513 if 'refusal' in name else int(name[8:])
         return {'mode': 'html',

@@ -6,7 +6,7 @@ struct ExportRetentionLimit {
     let files: Int
     let bytes: Int
     static let standard = Self(files: ExportResourceBudget.standard.maxResourceCount + 1,
-                               bytes: ExportResourceBudget.standard.maxAggregateResourceBytes)
+                               bytes: ExportResourceBudget.maxPreviouslyManagedResourceBytes)
 }
 
 struct ExportPublicationHooks {
