@@ -137,6 +137,21 @@ struct MermaidWebRendererTests {
         await renderer.shutdown()
     }
 
+    @Test func middleGrayThemeKeepsTwelvePieSectionLabelsReadable() async throws {
+        let renderer = MermaidWebRenderer()
+        let channel = 119.0 / 255
+        let context = MermaidRenderContext(
+            foregroundRed: channel, foregroundGreen: channel, foregroundBlue: channel,
+            backgroundRed: channel, backgroundGreen: channel, backgroundBlue: channel
+        )
+        let source = "pie\n" + (1 ... 12).map { "  \"Slice \($0)\" : \($0)" }.joined(separator: "\n")
+        let diagram = try await renderer.render(Self.fence(source), context: context)
+        #expect(diagram.svg.localizedCaseInsensitiveContains("#060606"))
+        #expect(diagram.svg.localizedCaseInsensitiveContains("#777777"))
+        #expect(diagram.pngData?.isEmpty == false)
+        await renderer.shutdown()
+    }
+
     @Test func nonFiniteAndOutOfRangeComponentsNormalizeSafely() async throws {
         let renderer = MermaidWebRenderer()
         let context = MermaidRenderContext(
