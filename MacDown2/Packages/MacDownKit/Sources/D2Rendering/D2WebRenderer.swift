@@ -34,13 +34,14 @@ public actor D2WebRenderer: D2DiagramRendering {
 
     public func render(_ fence: D2Fence, context: D2RenderContext) async throws -> RenderedD2Diagram {
         let activePool = try availablePool()
+        let outputLimit = maxOutputBytes
         let diagram = try await withPoolErrorMapping {
             try await activePool.withPage { page in
-                try await Self.render(fence, context: context, on: page)
+                try await Self.render(fence, context: context, maxOutputBytes: outputLimit, on: page)
             }
         }
         let byteCount = diagram.svg.utf8.count
-        guard byteCount <= maxOutputBytes else {
+        guard byteCount <= outputLimit else {
             throw D2RenderError.outputTooLarge(byteCount: byteCount)
         }
         return diagram
@@ -87,12 +88,19 @@ public actor D2WebRenderer: D2DiagramRendering {
     }
 
     @MainActor
-    private static func render(_ fence: D2Fence, context: D2RenderContext,
+    private static func render(_ fence: D2Fence, context: D2RenderContext, maxOutputBytes: Int,
                                on page: DiagramHarnessPage) async throws -> RenderedD2Diagram {
         let result = try await page.evaluate(
-            "return await window.__macdownRenderD2(source, theme);",
-            arguments: ["source": fence.source, "theme": context.palette.rendererArguments]
+            "return await window.__macdownRenderD2(source, theme, maxOutputBytes);",
+            arguments: [
+                "source": fence.source,
+                "theme": context.palette.rendererArguments,
+                "maxOutputBytes": maxOutputBytes,
+            ]
         )
+        if let byteCount = result.outputTooLargeByteCount {
+            throw D2RenderError.outputTooLarge(byteCount: byteCount)
+        }
         guard result.succeeded else {
             let message = result.message ?? "unknown error"
             throw D2RenderError.invalidSyntax(message)

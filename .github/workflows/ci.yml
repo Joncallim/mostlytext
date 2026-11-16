@@ -72,6 +72,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Verify diagram output stays inside the WebKit bridge limit
+        run: node MacDown2/scripts/test-diagram-output-bridge.cjs
       # Select Xcode 26 FIRST so every subsequent step (swift build/test,
       # xcodegen, xcodebuild) uses the same Swift 6.2+ toolchain.
       - name: Select Xcode 26

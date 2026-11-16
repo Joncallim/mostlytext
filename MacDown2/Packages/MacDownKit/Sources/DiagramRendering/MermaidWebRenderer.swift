@@ -44,15 +44,20 @@ public actor MermaidWebRenderer: MermaidDiagramRendering {
 
     public func render(_ fence: MermaidFence, context: MermaidRenderContext) async throws -> RenderedMermaidDiagram {
         let activePool = try availablePool()
+        let outputLimit = maxOutputBytes
         do {
             let result = try await activePool.withPage { page in
                 try await page.evaluate(
-                    "return await window.__macdownRenderMermaid(source, theme);",
+                    "return await window.__macdownRenderMermaid(source, theme, maxOutputBytes);",
                     arguments: [
                         "source": fence.source,
                         "theme": context.palette.rendererArguments,
+                        "maxOutputBytes": outputLimit,
                     ]
                 )
+            }
+            if let byteCount = result.outputTooLargeByteCount {
+                throw MermaidRenderError.outputTooLarge(byteCount: byteCount)
             }
             guard result.succeeded else {
                 throw MermaidRenderError.invalidSyntax(result.message ?? "unknown error")
@@ -64,7 +69,7 @@ public actor MermaidWebRenderer: MermaidDiagramRendering {
                 throw MermaidRenderError.rendererUnavailable
             }
             let byteCount = svg.utf8.count
-            guard byteCount <= maxOutputBytes else {
+            guard byteCount <= outputLimit else {
                 throw MermaidRenderError.outputTooLarge(byteCount: byteCount)
             }
             return RenderedMermaidDiagram(
