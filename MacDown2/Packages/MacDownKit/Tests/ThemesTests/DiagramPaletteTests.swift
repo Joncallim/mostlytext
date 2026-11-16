@@ -99,6 +99,25 @@ struct DiagramPaletteTests {
         }
     }
 
+    @Test func pieSectionLabelsRemainReadableOnCustomCanvas() {
+        // Mermaid paints section labels with the canvas color. A middle gray
+        // custom canvas previously produced #272727 for the last slice, only
+        // 3.34:1 against #777777 even though the base ink was readable.
+        let midGray = ThemeColor(red: 119.0 / 255, green: 119.0 / 255, blue: 119.0 / 255)
+        let palette = DiagramPalette.resolved(for: .screen, foreground: midGray, background: midGray)
+        #expect(palette.canvas == "#777777")
+        #expect(palette.text == "#000000")
+        #expect(palette.pieColors.count == 12)
+        #expect(palette.pieColors.last == "#060606")
+        #expect(palette.pieColors.allSatisfy { Self.contrast(palette.canvas, $0) >= 4.5 })
+        for value in [0, 32, 64, 96, 128, 153, 192, 224, 255] {
+            let channel = Double(value) / 255
+            let gray = ThemeColor(red: channel, green: channel, blue: channel)
+            let resolved = DiagramPalette.resolved(for: .screen, foreground: gray, background: gray)
+            #expect(resolved.pieColors.allSatisfy { Self.contrast(resolved.canvas, $0) >= 4.5 })
+        }
+    }
+
     private static func hex(_ color: ThemeColor) -> String {
         "#" + [color.red, color.green, color.blue].map {
             String(format: "%02X", Int(($0 * 255).rounded()))

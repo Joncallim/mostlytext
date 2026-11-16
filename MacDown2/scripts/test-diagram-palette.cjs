@@ -67,6 +67,12 @@ async function main() {
         assert.equal(result.svg, palette.canvas);
         assert.equal(config.securityLevel, 'strict');
     }
+    const grayPie = { ...light, canvas: '#777777', text: '#000000', stroke: '#000000',
+        nodeFill: '#777777', pie1: '#000000', pie12: '#060606' };
+    const pieResult = await __macdownRenderMermaid('pie\n  "One" : 1\n  "Two" : 2', grayPie);
+    assert.equal(pieResult.ok, true, pieResult.message);
+    assert.equal(seen.at(-1).themeVariables.pieSectionTextColor, grayPie.canvas);
+    assert.equal(seen.at(-1).themeVariables.pie12, grayPie.pie12);
     const architecture = 'architecture-beta\nservice a(server)[A]\nservice b(database)[B]\na:R --> L:b';
     for (const palette of [light, dark, paper]) {
         const result = await __macdownRenderMermaid(architecture, palette);

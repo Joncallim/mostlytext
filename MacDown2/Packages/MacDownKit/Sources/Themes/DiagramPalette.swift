@@ -21,7 +21,24 @@ public struct DiagramPalette: Codable, Sendable, Equatable, Hashable {
     /// a diagram acquires hue.
     public var pieColors: [String] {
         [1.00, 0.97, 0.94, 0.91, 0.88, 0.85, 0.82, 0.79, 0.76, 0.73, 0.70, 0.67]
-            .map { blend(foreground: text, into: canvas, foregroundWeight: $0) }
+            .map { requestedWeight in
+                let requested = blend(foreground: text, into: canvas, foregroundWeight: requestedWeight)
+                if Self.contrast(canvas, on: requested) >= 4.5 {
+                    return requested
+                }
+                // Mermaid uses the canvas paint for labels inside pie slices.
+                // On a custom mid-tone canvas the lighter shades can erase
+                // that contrast. Retain as much shade separation as the
+                // resolved text/canvas pair permits, including hex rounding.
+                for percent in Int((requestedWeight * 100).rounded(.up)) ... 100 {
+                    let candidate = blend(foreground: text, into: canvas,
+                                          foregroundWeight: Double(percent) / 100)
+                    if Self.contrast(canvas, on: candidate) >= 4.5 {
+                        return candidate
+                    }
+                }
+                return text
+            }
     }
 
     /// The separator and fixed, validated values make this a stable, lossless
