@@ -53,4 +53,45 @@ struct DiagramSourceAdmissionTests {
         }
         await graphviz.shutdown()
     }
+
+    @Test func cancelledWorkKeepsCancellationPrecedenceOverSourceRefusal() async {
+        let source = String(repeating: "x", count: DiagramSourceBudget.maximumUTF8Bytes + 1)
+        let range = 0 ..< source.utf16.count
+        let mermaid = MermaidWebRenderer()
+        let d2Renderer = D2WebRenderer()
+        let graphviz = GraphvizWebRenderer()
+        let cancelled = await Task { () -> [Bool] in
+            withUnsafeCurrentTask { $0?.cancel() }
+            var results: [Bool] = []
+            do {
+                _ = try await mermaid.render(MermaidFence(source: source, sourceRange: range), context: .neutralLight)
+                results.append(false)
+            } catch is CancellationError {
+                results.append(true)
+            } catch {
+                results.append(false)
+            }
+            do {
+                _ = try await d2Renderer.render(D2Fence(source: source, sourceRange: range), context: .neutralLight)
+                results.append(false)
+            } catch is CancellationError {
+                results.append(true)
+            } catch {
+                results.append(false)
+            }
+            do {
+                _ = try await graphviz.render(GraphvizFence(source: source, sourceRange: range), context: .neutralLight)
+                results.append(false)
+            } catch is CancellationError {
+                results.append(true)
+            } catch {
+                results.append(false)
+            }
+            return results
+        }.value
+        #expect(cancelled == [true, true, true])
+        await mermaid.shutdown()
+        await d2Renderer.shutdown()
+        await graphviz.shutdown()
+    }
 }
