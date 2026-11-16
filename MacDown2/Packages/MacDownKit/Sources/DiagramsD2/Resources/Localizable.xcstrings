@@ -26,6 +26,12 @@
     "diagram source too large": {
       "comment": "Authored diagram source was refused before WebKit work.",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "diagram source too large"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",

@@ -6,10 +6,11 @@ from pathlib import Path
 
 
 def verify(repo):
-    routes = ['noPreviewImage.message()', 'timedOut.message()',
+    routes = ['noPreviewImage.message()', 'timedOut.message()', 'sourceTooLarge.message()',
               'outputTooLarge(byteCount: byteCount).message()', 'rendererUnavailable.message()']
     old = ['"no preview image was produced"', '"rendering timed out"',
-           '"renderer unavailable"', '"rendered output too large (\\(byteCount) bytes)"']
+           '"diagram source too large"', '"renderer unavailable"',
+           '"rendered output too large (\\(byteCount) bytes)"']
     for family in ['Mermaid', 'D2', 'Graphviz']:
         source = (repo / 'MacDown2/MacDown2' / f'{family}DiagramBlockView.swift').read_text()
         if any(value in source for value in old):
@@ -28,7 +29,7 @@ def verify(repo):
             raise ValueError(f'{file}: missing PDF error/recovery catalog route')
         if re.search(r'case[^:\n]+:\s*"', body) or re.search(r'recoverySuggestion: String\?\s*\{\s*"', body):
             raise ValueError(f'{file}: PDF detail bypasses the app catalog')
-    return {'views': 3, 'diagram_routes': 12, 'pdf_routes': 15, 'status': 'passed'}
+    return {'views': 3, 'diagram_routes': 15, 'pdf_routes': 15, 'status': 'passed'}
 
 
 def error_body(source, declaration):

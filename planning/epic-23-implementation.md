@@ -551,3 +551,14 @@ Graphviz. The fixture now uses a known-good two-node Mermaid control and
 retains larger graphs as observed stress cases; the workflow collects all
 three engine receipts even if one fails. No production raster or parser limit
 was raised to make the measurement pass.
+
+The first combined [full CI on the PNG-bound source](https://github.com/Joncallim/mostlytext/actions/runs/43912059551/attempts/1)
+ran no steps in either macOS job because runner capacity canceled their queue.
+Unchanged-source [attempt 2](https://github.com/Joncallim/mostlytext/actions/runs/43912059551/attempts/2)
+passed the package suite and locked Debug/Release builds, then reported one
+app-test failure among 778: the new source-size key was absent from the
+compiled **English** app catalog, although French, Japanese and Polish were
+present. The English runtime fallback masked that omission. The corrective
+change adds an explicit English value to all four owning catalogs and extends
+the source-route guard. This first app-test failure remains release evidence;
+the corrected head requires its own full check.
