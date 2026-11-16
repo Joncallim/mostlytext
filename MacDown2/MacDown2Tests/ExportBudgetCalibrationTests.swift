@@ -282,6 +282,37 @@
     }
 
     extension ExportBudgetCalibrationTests {
+        @Test func escapedMarkdownApproachesPreparedHTMLCeiling() async throws {
+            _ = try outputDirectory()
+            let root = try fixtureDirectory()
+            defer { try? FileManager.default.removeItem(at: root) }
+            let destination = root.appendingPathComponent("prepared-html.html")
+            // Valid Markdown text expands from one UTF-8 byte to five rendered
+            // bytes per ampersand. This reaches the prepared/final HTML tier
+            // without a local resource or a generated contribution.
+            let source = String(repeating: "&", count: 24 << 20)
+            let sourceDigest = sha256(Data(source.utf8))
+            let request = ExportRequest(text: source, sourceGeneration: 1, theme: BundledThemes.light)
+            let peakBefore = try peakResidentBytes()
+            let started = ProcessInfo.processInfo.systemUptime
+            let result = try await ExportService.exportHTML(
+                request, to: .html(url: destination, mode: .selfContained)
+            )
+            let elapsed = ProcessInfo.processInfo.systemUptime - started
+            let peakAfter = try peakResidentBytes()
+            let output = try fileFacts(destination)
+            #expect(result.primaryFile == destination)
+            #expect(result.diagnostics.isEmpty)
+            #expect(output.bytes >= (120 << 20))
+            #expect(output.bytes <= (128 << 20))
+            try record("prepared-html", values: [
+                "case": "actual-escaped-markdown-export", "source_bytes": source.utf8.count,
+                "source_sha256": sourceDigest, "output_bytes": output.bytes,
+                "output_sha256": output.sha256, "elapsed_seconds": elapsed,
+                "app_peak_before_rss_bytes": peakBefore, "app_peak_rss_bytes": peakAfter,
+            ])
+        }
+
         @Test func derivedFragmentCountAndBytesUseActualExportPath() async throws {
             try await measureDerived(name: "derived-count", fragmentCount: 4096, bytesPerFragment: 64)
             try await measureDerived(name: "derived-bytes", fragmentCount: 1024, bytesPerFragment: 32 << 10)
