@@ -526,3 +526,19 @@ refusal, and multibyte UTF-8. Release measurements of ordinary and denser real
 WebKit diagrams, including helper-process memory, are tracked separately.
 The full E23 renderer-calibration and Quick Look criteria remain open until
 those measurements and the final product evidence are reconciled.
+
+The [first hosted Release measurement](https://github.com/Joncallim/mostlytext/actions/runs/43904049047)
+on tested tree `1c7e76fe` failed its fixture assertion. Its retained
+[raw receipt](https://github.com/Joncallim/mostlytext/actions/runs/43904049047/artifacts/14245042869)
+shows that the synthetic 16- and 128-edge left-to-right Mermaid chains hit
+the existing raster pixel limit, and 512 edges hit Mermaid's 500-edge parser
+limit. The three source sizes were 450, 3,924 and 16,980 bytes; all were below
+the new admission ceiling. The ordinary chain took 3.395 seconds including
+cold preparation. The sampler observed a 2.26 GB peak for the whole SwiftPM
+test group and 212.5 MB for newly seen WebKit helpers. That group figure
+includes test-tool overhead and is not an app or renderer memory ceiling.
+The workflow stopped at Mermaid, so this first run says nothing about D2 or
+Graphviz. The fixture now uses a known-good two-node Mermaid control and
+retains larger graphs as observed stress cases; the workflow collects all
+three engine receipts even if one fails. No production raster or parser limit
+was raised to make the measurement pass.
