@@ -260,7 +260,7 @@ let package = Package(
             name: "ExportDiagramIntegrationTests",
             dependencies: [
                 "ExportService", "Contributions", "MarkdownEngine", "Preview", "Themes", "Diagrams", "DiagramRendering",
-                "DiagramsD2", "D2Rendering", "DiagramsGraphviz", "GraphvizRendering",
+                "DiagramsD2", "D2Rendering", "DiagramsGraphviz", "GraphvizRendering", "DiagramWebKitPool",
             ]
         ),
     ]

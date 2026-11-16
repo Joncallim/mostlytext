@@ -78,6 +78,7 @@ public struct MermaidContribution: Contributing {
         switch renderError {
         case let .invalidSyntax(message): return message
         case .timedOut: return String(localized: "rendering timed out", bundle: .module)
+        case .sourceTooLarge: return String(localized: "diagram source too large", bundle: .module)
         case let .outputTooLarge(byteCount):
             return String(localized: "rendered output too large (\(byteCount) bytes)", bundle: .module)
         case .rendererUnavailable: return String(localized: "renderer unavailable", bundle: .module)

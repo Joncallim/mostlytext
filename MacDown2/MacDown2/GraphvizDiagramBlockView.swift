@@ -84,6 +84,7 @@ struct GraphvizDiagramBlockView: View {
         switch renderError {
         case let .invalidSyntax(message): return message
         case .timedOut: return DiagramFailurePresentation.timedOut.message()
+        case .sourceTooLarge: return DiagramFailurePresentation.sourceTooLarge.message()
         case let .outputTooLarge(byteCount):
             return DiagramFailurePresentation.outputTooLarge(byteCount: byteCount).message()
         case .rendererUnavailable: return DiagramFailurePresentation.rendererUnavailable.message()

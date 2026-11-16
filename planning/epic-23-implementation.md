@@ -509,3 +509,56 @@ and renderer security checks are required before this repair merges. This
 ordering repair does not prove an absolute WebKit peak-memory limit: each
 third-party library still generates its SVG before the check. The separate E23
 Release calibration, sandbox and Quick Look diagram criteria remain open.
+
+Mermaid's PNG raster has the same bridge boundary. The bundled harness counts
+the decoded size of the canonical canvas base64 before returning it to Swift,
+and refuses a PNG above the configured two-megabyte limit without returning
+either output. Swift checks the decoded PNG again after the bridge. The direct
+bridge regression first failed against the prior implementation at 2 MiB plus
+one byte, then passed with refusal above the boundary and admission at exactly
+2 MiB. This limits returned bytes; rasterization can still allocate within
+WebKit up to the separate pixel ceiling.
+
+## Authored diagram admission before WebKit
+
+The shared diagram renderers now refuse an authored fence above 64 KiB UTF-8
+before acquiring a WebKit page. This is the same input ceiling already used by
+the native Preview parser; it is a conservative starting policy for one diagram,
+not a claim that every accepted graph has constant rendering cost. The separate
+2 MiB generated-SVG limit and five-second execution deadline remain in force.
+
+Mermaid, D2 and Graphviz return a typed source-size failure with the observed
+byte count. Preview and Export present a localized, source-specific diagnostic;
+their existing per-fence failure path retains the authored Markdown rather than
+blanking sibling content. The boundary tests cover exact admission, one-byte
+refusal, and multibyte UTF-8. Release measurements of ordinary and denser real
+WebKit diagrams, including helper-process memory, are tracked separately.
+The full E23 renderer-calibration and Quick Look criteria remain open until
+those measurements and the final product evidence are reconciled.
+
+The [first hosted Release measurement](https://github.com/Joncallim/mostlytext/actions/runs/43904049047)
+on tested tree `1c7e76fe` failed its fixture assertion. Its retained
+[raw receipt](https://github.com/Joncallim/mostlytext/actions/runs/43904049047/artifacts/14245042869)
+shows that the synthetic 16- and 128-edge left-to-right Mermaid chains hit
+the existing raster pixel limit, and 512 edges hit Mermaid's 500-edge parser
+limit. The three source sizes were 450, 3,924 and 16,980 bytes; all were below
+the new admission ceiling. The ordinary chain took 3.395 seconds including
+cold preparation. The sampler observed a 2.26 GB peak for the whole SwiftPM
+test group and 212.5 MB for newly seen WebKit helpers. That group figure
+includes test-tool overhead and is not an app or renderer memory ceiling.
+The workflow stopped at Mermaid, so this first run says nothing about D2 or
+Graphviz. The fixture now uses a known-good two-node Mermaid control and
+retains larger graphs as observed stress cases; the workflow collects all
+three engine receipts even if one fails. No production raster or parser limit
+was raised to make the measurement pass.
+
+The first combined [full CI on the PNG-bound source](https://github.com/Joncallim/mostlytext/actions/runs/43912059551/attempts/1)
+ran no steps in either macOS job because runner capacity canceled their queue.
+Unchanged-source [attempt 2](https://github.com/Joncallim/mostlytext/actions/runs/43912059551/attempts/2)
+passed the package suite and locked Debug/Release builds, then reported one
+app-test failure among 778: the new source-size key was absent from the
+compiled **English** app catalog, although French, Japanese and Polish were
+present. The English runtime fallback masked that omission. The corrective
+change adds an explicit English value to all four owning catalogs and extends
+the source-route guard. This first app-test failure remains release evidence;
+the corrected head requires its own full check.
