@@ -67,6 +67,14 @@ function renderedUTF8ByteCount(text) {
     return bytes;
 }
 
+// canvas.toDataURL produces canonical padded base64. Count decoded PNG bytes
+// in place so a large raster stays inside WebKit, just like an oversized SVG.
+function rasterPNGByteCount(base64) {
+    if (base64.length % 4 !== 0) throw new Error("invalid raster output");
+    var padding = base64.endsWith("==") ? 2 : (base64.endsWith("=") ? 1 : 0);
+    return base64.length / 4 * 3 - padding;
+}
+
 // Rasterizes `svg` (Mermaid's own, unmodified output — including
 // <foreignObject> HTML labels) via the standard canvas technique: load it
 // as an <img> from a data: URI, draw that image onto a canvas, and read
@@ -289,6 +297,11 @@ window.__macdownRenderMermaid = async function (source, theme, maxOutputBytes = 
                      message: "rendered output too large" };
         }
         var png = await rasterize(canvas.svg, canvas.width, canvas.height);
+        var pngByteCount = rasterPNGByteCount(png);
+        if (pngByteCount > maxOutputBytes) {
+            return { ok: false, outputTooLargeByteCount: pngByteCount,
+                     message: "rendered output too large" };
+        }
         return { ok: true, svg: canvas.svg, png: png, width: canvas.width, height: canvas.height };
     } catch (error) {
         var message = error && error.message ? error.message : String(error);

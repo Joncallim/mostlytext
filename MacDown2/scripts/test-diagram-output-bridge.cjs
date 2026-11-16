@@ -42,9 +42,20 @@ async function main() {
         document: { getElementById: () => null }
     });
     mermaid.addOpaqueCanvas = () => ({ svg, width: 10, height: 10 });
-    mermaid.rasterize = async () => { rasterized += 1; return 'png'; };
+    mermaid.rasterize = async () => { rasterized += 1; return Buffer.from('png').toString('base64'); };
     await check('Mermaid', limit => mermaid.__macdownRenderMermaid('graph TD; A-->B;', palette, limit));
     assert.equal(rasterized, 1, 'only admitted Mermaid output may reach rasterization');
+    const rasterLimit = 2 * 1024 * 1024;
+    mermaid.rasterize = async () => Buffer.alloc(rasterLimit + 1).toString('base64');
+    const oversizedPNG = await mermaid.__macdownRenderMermaid('graph TD; A-->B;', palette, rasterLimit);
+    assert.equal(oversizedPNG.ok, false, 'Mermaid must refuse an oversized raster before the bridge');
+    assert.equal(oversizedPNG.outputTooLargeByteCount, rasterLimit + 1);
+    assert.equal(oversizedPNG.svg, undefined, 'refused Mermaid SVG crossed the bridge');
+    assert.equal(oversizedPNG.png, undefined, 'refused Mermaid PNG crossed the bridge');
+    mermaid.rasterize = async () => Buffer.alloc(rasterLimit).toString('base64');
+    const exactPNG = await mermaid.__macdownRenderMermaid('graph TD; A-->B;', palette, rasterLimit);
+    assert.equal(exactPNG.ok, true, 'Mermaid must admit the exact PNG boundary');
+    assert.equal(Buffer.from(exactPNG.png, 'base64').length, rasterLimit);
 
     const d2 = harness('D2Rendering/Resources/render.js', {
         D2: class {
@@ -60,7 +71,7 @@ async function main() {
     graphviz.getComparisonViz = graphviz.getViz;
     graphviz.normalizedGraphvizSVG = () => ({ svg, width: 10, height: 10 });
     await check('Graphviz', limit => graphviz.__macdownRenderGraphviz('digraph { a -> b }', palette, limit));
-    console.log('PASS all three diagram outputs refuse over-limit UTF-8 before returning SVG');
+    console.log('PASS SVG and Mermaid PNG limits before the WebKit bridge');
 }
 
 main().catch(error => { console.error(error); process.exitCode = 1; });

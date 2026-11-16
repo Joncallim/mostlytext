@@ -510,6 +510,15 @@ ordering repair does not prove an absolute WebKit peak-memory limit: each
 third-party library still generates its SVG before the check. The separate E23
 Release calibration, sandbox and Quick Look diagram criteria remain open.
 
+Mermaid's PNG raster has the same bridge boundary. The bundled harness counts
+the decoded size of the canonical canvas base64 before returning it to Swift,
+and refuses a PNG above the configured two-megabyte limit without returning
+either output. Swift checks the decoded PNG again after the bridge. The direct
+bridge regression first failed against the prior implementation at 2 MiB plus
+one byte, then passed with refusal above the boundary and admission at exactly
+2 MiB. This limits returned bytes; rasterization can still allocate within
+WebKit up to the separate pixel ceiling.
+
 ## Authored diagram admission before WebKit
 
 The shared diagram renderers now refuse an authored fence above 64 KiB UTF-8

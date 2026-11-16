@@ -77,9 +77,13 @@ public actor MermaidWebRenderer: MermaidDiagramRendering {
             guard byteCount <= outputLimit else {
                 throw MermaidRenderError.outputTooLarge(byteCount: byteCount)
             }
+            let pngData = result.pngBase64.flatMap { Data(base64Encoded: $0) }
+            if let pngData, pngData.count > outputLimit {
+                throw MermaidRenderError.outputTooLarge(byteCount: pngData.count)
+            }
             return RenderedMermaidDiagram(
                 svg: svg,
-                pngData: result.pngBase64.flatMap { Data(base64Encoded: $0) },
+                pngData: pngData,
                 naturalWidth: result.width,
                 naturalHeight: result.height
             )
