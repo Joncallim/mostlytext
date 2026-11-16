@@ -51,13 +51,21 @@ jobs:
         working-directory: MacDown2/Packages/MacDownKit
         run: |
           set -euo pipefail
+          status=0
           for engine in Mermaid D2 Graphviz; do
-            python3 "$GITHUB_WORKSPACE/.github/scripts/sample-diagram-budget-memory.py" \
+            if python3 "$GITHUB_WORKSPACE/.github/scripts/sample-diagram-budget-memory.py" \
               "$RUNNER_TEMP/diagram-budget-probe/memory/$engine" -- \
               swift test -c release --skip-build --force-resolved-versions --no-parallel \
-                --filter "DiagramBudgetProbeTests.measure$engine"
-            test -s "$RUNNER_TEMP/diagram-budget-probe/$engine.json"
+                --filter "DiagramBudgetProbeTests.measure$engine"; then
+              :
+            else
+              status=1
+            fi
+            if ! test -s "$RUNNER_TEMP/diagram-budget-probe/$engine.json"; then
+              status=1
+            fi
           done
+          exit "$status"
       - name: Record exact checkout and locked input identity
         if: always()
         run: |

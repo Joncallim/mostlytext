@@ -14,6 +14,7 @@ import time
 
 
 HELPERS = {'com.apple.WebKit.WebContent', 'com.apple.WebKit.GPU', 'com.apple.WebKit.Networking'}
+TEST_HOSTS = {'swiftpm-testing-helper', 'MacDownKitPackageTests'}
 INTERVAL = 0.2
 TIMEOUT = 120
 
@@ -92,6 +93,8 @@ def main():
                 samples.append({
                     'elapsed_seconds': round(time.monotonic() - started, 3),
                     'test_group_rss_bytes': sum(row['rss_bytes'] for row in rows if row['pid'] in owned),
+                    'test_host_rss_bytes': sum(row['rss_bytes'] for row in rows
+                                               if row['pid'] in owned and Path(row['name']).name in TEST_HOSTS),
                     'new_webkit_rss_bytes': sum(row['rss_bytes'] for row in helpers),
                     'new_webkit_processes': len(helpers),
                 })
@@ -109,8 +112,9 @@ def main():
         'sample_interval_seconds': INTERVAL,
         'sample_count': len(samples),
         'peak_test_group_rss_bytes': max((row['test_group_rss_bytes'] for row in samples), default=0),
+        'peak_test_host_sampled_rss_bytes': max((row['test_host_rss_bytes'] for row in samples), default=0),
         'peak_new_webkit_rss_bytes': max((row['new_webkit_rss_bytes'] for row in samples), default=0),
-        'scope': 'Owned test process descendants plus newly seen same-user WebKit helpers; helper attribution is provisional.',
+        'scope': 'Owned SwiftPM/test descendants, isolated test host, and newly seen same-user WebKit helpers; helper attribution is provisional.',
     }
     (args.output / 'samples.json').write_text(json.dumps(samples, indent=2) + '\n')
     (args.output / 'summary.json').write_text(json.dumps(summary, indent=2) + '\n')
