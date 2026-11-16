@@ -133,14 +133,14 @@ def validate_records(root):
                 or row.get('app_peak_rss_bytes', 0) < row['app_peak_before_rss_bytes']):
             raise RuntimeError('Derived export count/byte boundary evidence is incomplete')
     if (prepared_html.get('case') != 'actual-bounded-escaped-markdown-export'
-            or prepared_html.get('source_bytes') != (4 << 20)
-            or not (20 << 20) <= prepared_html.get('output_bytes', 0) <= (24 << 20)
+            or prepared_html.get('source_bytes') != (1 << 20)
+            or not (5 << 20) <= prepared_html.get('output_bytes', 0) <= (6 << 20)
             or not re.fullmatch(r'[0-9a-f]{64}', prepared_html.get('output_sha256', ''))
             or not positive_number(prepared_html.get('app_peak_before_rss_bytes'))
             or not prepared_html['app_peak_before_rss_bytes'] <= prepared_html.get('app_peak_rss_bytes', 0)
             < (1 << 30)):
         raise RuntimeError('Prepared HTML expansion evidence is incomplete')
-    for row, expected in zip(prepared_refusals, [(4 << 20) + 1, 24 << 20]):
+    for row, expected in zip(prepared_refusals, [(1 << 20) + 1, 24 << 20]):
         if (row.get('case') != 'actual-preparse-expansion-refusal'
                 or row.get('source_bytes') != expected
                 or row.get('output_unchanged') is not True

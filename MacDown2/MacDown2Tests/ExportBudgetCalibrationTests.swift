@@ -287,9 +287,9 @@
             let root = try fixtureDirectory()
             defer { try? FileManager.default.removeItem(at: root) }
             let destination = root.appendingPathComponent("prepared-html.html")
-            // Four MiB meets the escape allowance. The historical 24 MiB
-            // source reached 3.4 GiB RSS before prepared-output checking.
-            let source = String(repeating: "&", count: 4 << 20)
+            // One MiB meets the measured escape allowance. The first 4 MiB
+            // repair attempt still exceeded 1 GiB in the Release app host.
+            let source = String(repeating: "&", count: 1 << 20)
             let sourceDigest = sha256(Data(source.utf8))
             let request = ExportRequest(text: source, sourceGeneration: 1, theme: BundledThemes.light)
             let peakBefore = try peakResidentBytes()
@@ -302,8 +302,8 @@
             let output = try fileFacts(destination)
             #expect(result.primaryFile == destination)
             #expect(result.diagnostics.isEmpty)
-            #expect(output.bytes >= (20 << 20))
-            #expect(output.bytes <= (24 << 20))
+            #expect(output.bytes >= (5 << 20))
+            #expect(output.bytes <= (6 << 20))
             #expect(peakAfter < (1 << 30))
             try record("prepared-html", values: [
                 "case": "actual-bounded-escaped-markdown-export", "source_bytes": source.utf8.count,
@@ -320,7 +320,7 @@
             let destination = root.appendingPathComponent("prepared-refusal.html")
             let previous = Data("Existing export remains intact".utf8)
             try previous.write(to: destination)
-            for (suffix, count) in [("plus-one", (4 << 20) + 1), ("historical", 24 << 20)] {
+            for (suffix, count) in [("plus-one", (1 << 20) + 1), ("historical", 24 << 20)] {
                 let name = "prepared-refusal-\(suffix)"
                 let source = String(repeating: "&", count: count)
                 let request = ExportRequest(text: source, sourceGeneration: 1, theme: BundledThemes.light)

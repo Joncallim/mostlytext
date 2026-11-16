@@ -73,11 +73,25 @@ prevent memory growth during parsing and escaping. The source and output
 SHA-256 values, process samples and exact test bundle are retained in the run
 artifact. The green test result is not a safety pass.
 
-The repair counts a conservative upper bound on source characters that may
-expand into HTML entities before invoking cmark. It allows up to 16 MiB of
-potential extra bytes, independently of the 32 MiB source cap. Four MiB of
-ampersands reaches that allowance exactly; one extra ampersand and the retained
-24 MiB trigger must refuse before parsing and preserve a preexisting output.
+The first repair counted a conservative upper bound on source characters that
+may expand into HTML entities before invoking cmark, allowing 16 MiB of
+potential extra bytes. Its [exact-head Release calibration
+43820790739](https://github.com/Joncallim/mostlytext/actions/runs/43820790739)
+failed the memory criterion: the accepted 4 MiB ampersand source produced
+20,978,239 HTML bytes in 2.082 seconds, but drove the app test host from a
+412,712,960-byte previous high-water to 1,379,942,400 bytes. Because that
+high-water persists in the same process, the plus-one and historical refusal
+checks also failed their under-1-GiB assertions even though each correctly
+preserved the destination. The other seven tests passed, including both
+derived limits and the read-work refusals. The failed ten-test result and all
+twelve case receipts remain available in the run artifact.
+
+The revised guard allows up to 4 MiB of potential extra bytes, independently
+of the 32 MiB source cap. One MiB of ampersands reaches that allowance
+exactly; one extra ampersand and the retained 24 MiB trigger must refuse
+before parsing and preserve a preexisting output. This tighter gate is a
+measured safety response, not a formatting preference. It may conservatively
+refuse a large valid document containing much literal punctuation.
 The actual prepared/final HTML limits remain in place for generated content.
 This is a targeted bound on the observed escape-heavy path, not a general
 proof of constant parser memory for every Markdown grammar. The new diagnostic
@@ -86,7 +100,7 @@ review-needed French, Japanese and Polish drafts for final issue #3 review.
 
 ## Remaining qualification
 
-The final exact-head Release calibration must measure the 4 MiB accepted
+The revised exact-head Release calibration must measure the 1 MiB accepted
 escape boundary, the plus-one and historical refusals, and both read-work
 limits. Read-work values remain provisional until that run passes and its
 memory/latency are reviewed. Passive Quick Look and PDF limits have separate

@@ -46,7 +46,7 @@ struct ExportResourceBudget: Sendable, Equatable {
     /// the Release app host above 3 GiB before the prepared-output gate ran.
     /// Bound the potential escape work before parsing; ordinary unescaped
     /// source still uses the separate 32 MiB source allowance.
-    static let maxPotentialHTMLEscapeExpansionBytes = 16 << 20
+    static let maxPotentialHTMLEscapeExpansionBytes = 4 << 20
 
     static let standard = ExportResourceBudget(
         maxSourceUTF8Bytes: 32 << 20,
