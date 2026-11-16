@@ -159,7 +159,7 @@ extension ExportManagedCompanions {
         for name in try record.requiredNames {
             guard let bytes = try Filesystem.readBoundedFile(
                 name, in: directory.descriptor, maxBytes: ExportResourceBudget.standard.maxSingleResourceBytes
-            ), aggregate <= ExportResourceBudget.standard.maxAggregateResourceBytes - bytes.count,
+            ), aggregate <= ExportResourceBudget.maxPreviouslyManagedResourceBytes - bytes.count,
             name.hasPrefix(SHA256.hash(data: bytes).map { String(format: "%02x", $0) }.joined() + ".")
             else { throw ExportError.unsafePublication }
             aggregate += bytes.count

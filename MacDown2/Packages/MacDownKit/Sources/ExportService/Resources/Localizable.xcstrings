@@ -1387,6 +1387,29 @@
         }
       }
     },
+    "the document contains too much text that expands during export (limit: %@)": {
+      "comment": "Export safety refusal routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "the document contains too much text that expands during export (limit: %@)"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "the document contains too much text that expands during export (limit: %@)"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "the document contains too much text that expands during export (limit: %@)"
+          }
+        }
+      }
+    },
     "the document is %@, over the %@ export limit": {
       "comment": "Export warning/detail routed through the package bundle. Non-English values are explicit English review drafts, not accepted translations.",
       "localizations": {

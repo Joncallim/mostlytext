@@ -32,18 +32,32 @@ struct ExportResourceBudget: Sendable, Equatable {
     /// bound. Recovery must still authenticate them, and PDF publication uses
     /// its own output policy rather than the new HTML assembly limit.
     static let maxManagedOutputBytes = 256 << 20
+    /// Existing authenticated companion receipts may have been written under
+    /// the former 128 MiB aggregate cap. Recovery and bounded retention must
+    /// still inspect those files without treating them as new export input.
+    static let maxPreviouslyManagedResourceBytes = 128 << 20
     /// Bound private occurrence records before cmark allocates its HTML buffer.
     static let maxResourceURLSlots = 65536
     /// Bound actual input work independently of distinct packaged payload.
-    /// Provisional; failed/non-image/duplicate reads consume this allowance too.
+    /// Failed/non-image/duplicate reads consume this measured allowance too.
     static let maxResourceReadAttempts = 4096
     static let maxResourceReadBytes = 256 << 20
+    /// The 24 MiB ampersand fixture created almost 120 MiB of HTML and drove
+    /// the Release app host above 3 GiB before the prepared-output gate ran.
+    /// Bound the potential escape work before parsing; ordinary unescaped
+    /// source still uses the separate 32 MiB source allowance.
+    static let maxPotentialHTMLEscapeExpansionBytes = 4 << 20
 
     static let standard = ExportResourceBudget(
         maxSourceUTF8Bytes: 32 << 20,
         maxResourceCount: 512,
         maxSingleResourceBytes: 32 << 20,
-        maxAggregateResourceBytes: 128 << 20,
+        // The self-contained Release ramp published 64 MiB of distinct
+        // resources and an almost-128-MiB complete document using just under
+        // 64 MiB. Its 96 and 128 MiB cases exceeded the final HTML ceiling.
+        // Apply the measured resource tier to every export mode so oversized
+        // inputs are refused at admission, before assembly or publication.
+        maxAggregateResourceBytes: 64 << 20,
         maxDerivedFragmentCount: 4096,
         maxAggregateDerivedHTMLBytes: 32 << 20,
         maxPreparedHTMLUTF8Bytes: 128 << 20

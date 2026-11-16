@@ -19,7 +19,7 @@
         iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg==
         """
 
-        private func outputDirectory() throws -> URL {
+        func outputDirectory() throws -> URL {
             let environment = ProcessInfo.processInfo.environment
             guard environment["GITHUB_ACTIONS"] == "true",
                   environment["RUNNER_OS"] == "macOS",
@@ -36,13 +36,13 @@
             return url
         }
 
-        private func record(_ name: String, values: [String: Any]) throws {
+        func record(_ name: String, values: [String: Any]) throws {
             let directory = try outputDirectory()
             let data = try JSONSerialization.data(withJSONObject: values, options: [.prettyPrinted, .sortedKeys])
             try data.write(to: directory.appendingPathComponent(name + ".json"), options: .atomic)
         }
 
-        private func peakResidentBytes() throws -> Int {
+        func peakResidentBytes() throws -> Int {
             var usage = rusage()
             guard getrusage(RUSAGE_SELF, &usage) == 0 else { throw CalibrationError.residentSampleFailed }
             // Darwin reports ru_maxrss in bytes. This is the app test host's
@@ -50,11 +50,23 @@
             return Int(usage.ru_maxrss)
         }
 
-        private func sha256(_ data: Data) -> String {
+        func sha256(_ data: Data) -> String {
             SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
         }
 
-        private func fixtureDirectory() throws -> URL {
+        private func fileFacts(_ url: URL) throws -> (bytes: Int, sha256: String) {
+            let handle = try FileHandle(forReadingFrom: url)
+            defer { try? handle.close() }
+            var hasher = SHA256()
+            var bytes = 0
+            while let chunk = try handle.read(upToCount: 1 << 20), !chunk.isEmpty {
+                bytes += chunk.count
+                hasher.update(data: chunk)
+            }
+            return (bytes, hasher.finalize().map { String(format: "%02x", $0) }.joined())
+        }
+
+        func fixtureDirectory() throws -> URL {
             let root = FileManager.default.temporaryDirectory
                 .appendingPathComponent("ExportBudgetCalibration-\(UUID().uuidString)", isDirectory: true)
             try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
@@ -266,6 +278,118 @@
                     "app_peak_rss_bytes": peakResidentBytes(),
                 ])
             }
+        }
+    }
+
+    extension ExportBudgetCalibrationTests {
+        @Test func escapedMarkdownAtPreparseBoundary() async throws {
+            _ = try outputDirectory()
+            let root = try fixtureDirectory()
+            defer { try? FileManager.default.removeItem(at: root) }
+            let destination = root.appendingPathComponent("prepared-html.html")
+            // One MiB meets the measured escape allowance. The first 4 MiB
+            // repair attempt still exceeded 1 GiB in the Release app host.
+            let source = String(repeating: "&", count: 1 << 20)
+            let sourceDigest = sha256(Data(source.utf8))
+            let request = ExportRequest(text: source, sourceGeneration: 1, theme: BundledThemes.light)
+            let peakBefore = try peakResidentBytes()
+            let started = ProcessInfo.processInfo.systemUptime
+            let result = try await ExportService.exportHTML(
+                request, to: .html(url: destination, mode: .selfContained)
+            )
+            let elapsed = ProcessInfo.processInfo.systemUptime - started
+            let peakAfter = try peakResidentBytes()
+            let output = try fileFacts(destination)
+            #expect(result.primaryFile == destination)
+            #expect(result.diagnostics.isEmpty)
+            #expect(output.bytes >= (5 << 20))
+            #expect(output.bytes <= (6 << 20))
+            #expect(peakAfter < (1 << 30))
+            try record("prepared-html", values: [
+                "case": "actual-bounded-escaped-markdown-export", "source_bytes": source.utf8.count,
+                "source_sha256": sourceDigest, "output_bytes": output.bytes,
+                "output_sha256": output.sha256, "elapsed_seconds": elapsed,
+                "app_peak_before_rss_bytes": peakBefore, "app_peak_rss_bytes": peakAfter,
+            ])
+        }
+
+        @Test func expandedSourceOverPreparseBoundaryPreservesDestination() async throws {
+            _ = try outputDirectory()
+            let root = try fixtureDirectory()
+            defer { try? FileManager.default.removeItem(at: root) }
+            let destination = root.appendingPathComponent("prepared-refusal.html")
+            let previous = Data("Existing export remains intact".utf8)
+            try previous.write(to: destination)
+            for (suffix, count) in [("plus-one", (1 << 20) + 1), ("historical", 24 << 20)] {
+                let name = "prepared-refusal-\(suffix)"
+                let source = String(repeating: "&", count: count)
+                let request = ExportRequest(text: source, sourceGeneration: 1, theme: BundledThemes.light)
+                let peakBefore = try peakResidentBytes()
+                let started = ProcessInfo.processInfo.systemUptime
+                do {
+                    _ = try await ExportService.exportHTML(
+                        request, to: .html(url: destination, mode: .selfContained)
+                    )
+                    Issue.record("An over-limit escaped source reached publication")
+                } catch ExportError.budgetExceeded {
+                    #expect(try Data(contentsOf: destination) == previous)
+                    let peakAfter = try peakResidentBytes()
+                    #expect(peakAfter < (1 << 30))
+                    try record(name, values: [
+                        "case": "actual-preparse-expansion-refusal", "source_bytes": count,
+                        "source_sha256": sha256(Data(source.utf8)),
+                        "output_unchanged": true,
+                        "elapsed_seconds": ProcessInfo.processInfo.systemUptime - started,
+                        "app_peak_before_rss_bytes": peakBefore, "app_peak_rss_bytes": peakAfter,
+                    ])
+                }
+            }
+        }
+
+        @Test func derivedFragmentCountAndBytesUseActualExportPath() async throws {
+            try await measureDerived(name: "derived-count", fragmentCount: 4096, bytesPerFragment: 64)
+            try await measureDerived(name: "derived-bytes", fragmentCount: 1024, bytesPerFragment: 32 << 10)
+        }
+
+        private func measureDerived(name: String, fragmentCount: Int, bytesPerFragment: Int) async throws {
+            _ = try outputDirectory()
+            let root = try fixtureDirectory()
+            defer { try? FileManager.default.removeItem(at: root) }
+            let destination = root.appendingPathComponent(name + ".html")
+            let source = String(repeating: "$x$ ", count: fragmentCount)
+            let fragment = "<span>" + String(repeating: "x", count: bytesPerFragment - 13) + "</span>"
+            let contributions = (0 ..< fragmentCount).map { index in
+                ExportDerivedContribution(
+                    sourceRange: index * 4 ..< index * 4 + 3,
+                    placement: .inline, html: fragment, sourceGeneration: 1
+                )
+            }
+            let request = ExportRequest(
+                text: source, sourceGeneration: 1, theme: BundledThemes.light,
+                contributions: contributions
+            )
+            let peakBefore = try peakResidentBytes()
+            let started = ProcessInfo.processInfo.systemUptime
+            let result = try await ExportService.exportHTML(
+                request, to: .html(url: destination, mode: .selfContained)
+            )
+            let elapsed = ProcessInfo.processInfo.systemUptime - started
+            let peakAfter = try peakResidentBytes()
+            let output = try fileFacts(destination)
+            #expect(result.primaryFile == destination)
+            #expect(result.diagnostics.isEmpty)
+            #expect(output.bytes >= fragmentCount * bytesPerFragment)
+            #expect(output.bytes <= (128 << 20))
+            try record(name, values: [
+                "case": "actual-derived-export", "source_bytes": source.utf8.count,
+                "source_sha256": sha256(Data(source.utf8)),
+                "fragment_count": fragmentCount,
+                "derived_html_bytes": fragmentCount * bytesPerFragment,
+                "output_bytes": output.bytes, "output_sha256": output.sha256,
+                "elapsed_seconds": elapsed,
+                "app_peak_before_rss_bytes": peakBefore,
+                "app_peak_rss_bytes": peakAfter,
+            ])
         }
     }
 

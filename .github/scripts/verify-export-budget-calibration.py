@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bind a hosted export measurement to the actual Release app and five cases."""
+"""Bind a hosted export measurement to the actual Release app and ten cases."""
 import argparse
 import hashlib
 import json
@@ -15,9 +15,12 @@ import sys
 
 FILES = [
     'MacDown2/MacDown2Tests/ExportBudgetCalibrationTests.swift',
+    'MacDown2/MacDown2Tests/ExportBudgetReadWorkCalibrationTests.swift',
     'MacDown2/MacDown2/PDFExportAdapter.swift',
     'MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceBudget.swift',
     'MacDown2/Packages/MacDownKit/Sources/ExportService/ExportComposer.swift',
+    'MacDown2/Packages/MacDownKit/Sources/ExportService/ExportComposer+SourceEscape.swift',
+    'MacDown2/Packages/MacDownKit/Sources/ExportService/Resources/Localizable.xcstrings',
     'MacDown2/Packages/MacDownKit/Sources/ExportService/ExportHTMLWriter.swift',
     'MacDown2/Packages/MacDownKit/Sources/ExportService/ExportResourceSlots.swift',
     'MacDown2/Packages/MacDownKit/Package.resolved',
@@ -30,7 +33,10 @@ FILES = [
 ]
 TESTS = {'repeatedImageHTMLUsesActualExportService', 'realWebKitPrintAndPDFKitReadback',
          'scaledWebKitPrintAndPDFKitReadback', 'nearPageLimitModalPrintPreservesEverySection',
-         'oversizedSourceIsRefusedBeforePublication'}
+         'oversizedSourceIsRefusedBeforePublication', 'derivedFragmentCountAndBytesUseActualExportPath',
+         'escapedMarkdownAtPreparseBoundary', 'expandedSourceOverPreparseBoundaryPreservesDestination',
+         'resourceReadAttemptLimitIncludesMissingFiles',
+         'resourceReadByteLimitIncludesRejectedNonImages'}
 
 
 def digest(path):
@@ -80,9 +86,16 @@ def positive_number(value):
 
 def validate_records(root):
     records = {name: json.loads((root / 'measurements' / (name + '.json')).read_text())
-               for name in ['html', 'pdf', 'scaled-pdf', 'near-page-limit-modal', 'refusal']}
+               for name in ['html', 'pdf', 'scaled-pdf', 'near-page-limit-modal', 'refusal',
+                            'derived-count', 'derived-bytes', 'prepared-html',
+                            'read-attempts', 'read-bytes',
+                            'prepared-refusal-plus-one', 'prepared-refusal-historical']}
     html, pdf, scaled, refusal = (records[name] for name in ['html', 'pdf', 'scaled-pdf', 'refusal'])
     near = records['near-page-limit-modal']
+    derived_count, derived_bytes = records['derived-count'], records['derived-bytes']
+    prepared_html = records['prepared-html']
+    prepared_refusals = [records['prepared-refusal-plus-one'], records['prepared-refusal-historical']]
+    read_attempts, read_bytes = records['read-attempts'], records['read-bytes']
     if (html.get('case') != 'actual-self-contained-html' or html.get('resource_occurrences') != 2048
             or pdf.get('case') != 'actual-webkit-print-pdfkit'
             or pdf.get('print_path') != 'document-modal'
@@ -109,6 +122,39 @@ def validate_records(root):
             or not 20 <= scaled.get('page_count', 0) <= 256
             or not 200 <= near.get('page_count', 0) <= 256):
         raise RuntimeError('Actual HTML, PDF or refusal result is missing or inconsistent')
+    for row, count, size in [(derived_count, 4096, 64), (derived_bytes, 1024, 32 << 10)]:
+        if (row.get('case') != 'actual-derived-export'
+                or row.get('fragment_count') != count
+                or row.get('derived_html_bytes') != count * size
+                or row.get('source_bytes') != count * 4
+                or not count * size <= row.get('output_bytes', 0) <= (128 << 20)
+                or not re.fullmatch(r'[0-9a-f]{64}', row.get('output_sha256', ''))
+                or not positive_number(row.get('app_peak_before_rss_bytes'))
+                or row.get('app_peak_rss_bytes', 0) < row['app_peak_before_rss_bytes']):
+            raise RuntimeError('Derived export count/byte boundary evidence is incomplete')
+    if (prepared_html.get('case') != 'actual-bounded-escaped-markdown-export'
+            or prepared_html.get('source_bytes') != (1 << 20)
+            or not (5 << 20) <= prepared_html.get('output_bytes', 0) <= (6 << 20)
+            or not re.fullmatch(r'[0-9a-f]{64}', prepared_html.get('output_sha256', ''))
+            or not positive_number(prepared_html.get('app_peak_before_rss_bytes'))
+            or not prepared_html['app_peak_before_rss_bytes'] <= prepared_html.get('app_peak_rss_bytes', 0)
+            < (1 << 30)):
+        raise RuntimeError('Prepared HTML expansion evidence is incomplete')
+    for row, expected in zip(prepared_refusals, [(1 << 20) + 1, 24 << 20]):
+        if (row.get('case') != 'actual-preparse-expansion-refusal'
+                or row.get('source_bytes') != expected
+                or row.get('output_unchanged') is not True
+                or not positive_number(row.get('app_peak_before_rss_bytes'))
+                or not row['app_peak_before_rss_bytes'] <= row.get('app_peak_rss_bytes', 0) < (1 << 30)):
+            raise RuntimeError('Expanded source was not safely refused before parsing')
+    if (read_attempts.get('case') != 'actual-read-attempt-limit-refusal'
+            or read_attempts.get('references') != 4097
+            or read_attempts.get('output_exists') is not False
+            or read_bytes.get('case') != 'actual-rejected-read-byte-limit-refusal'
+            or read_bytes.get('linked_file_bytes') != (32 << 20)
+            or read_bytes.get('charged_read_bytes') != (256 << 20)
+            or read_bytes.get('output_exists') is not False):
+        raise RuntimeError('Read-work boundary evidence is incomplete')
     for name, row in records.items():
         if (not positive_number(row.get('app_peak_rss_bytes'))
                 or not re.fullmatch(r'[0-9a-f]{64}', row.get('source_sha256', ''))
@@ -117,7 +163,11 @@ def validate_records(root):
         duration_fields = {'html': ['elapsed_seconds'], 'pdf': ['prepare_seconds', 'print_and_validation_seconds'],
                            'scaled-pdf': ['prepare_seconds', 'print_and_validation_seconds'],
                            'near-page-limit-modal': ['prepare_seconds', 'print_and_validation_seconds'],
-                           'refusal': ['elapsed_seconds']}[name]
+                           'refusal': ['elapsed_seconds'], 'derived-count': ['elapsed_seconds'],
+                           'derived-bytes': ['elapsed_seconds'], 'prepared-html': ['elapsed_seconds'],
+                           'read-attempts': ['elapsed_seconds'], 'read-bytes': ['elapsed_seconds'],
+                           'prepared-refusal-plus-one': ['elapsed_seconds'],
+                           'prepared-refusal-historical': ['elapsed_seconds']}[name]
         if any(not positive_number(row.get(field)) for field in duration_fields):
             raise RuntimeError(name + ' lacks a positive bounded timing')
     if any(not positive_number(row.get('app_peak_before_rss_bytes'))
@@ -176,10 +226,10 @@ def validate_execution(root, receipt):
     result = json.loads(subprocess.check_output(['xcrun', 'xcresulttool', 'get', 'test-results', 'summary',
                                                  '--path', str(root / 'actual-export.xcresult')]))
     (root / 'actual-export-summary.json').write_text(json.dumps(result, indent=2) + '\n')
-    expected_counts = {'totalTestCount': 5, 'passedTests': 5, 'failedTests': 0,
+    expected_counts = {'totalTestCount': 10, 'passedTests': 10, 'failedTests': 0,
                        'skippedTests': 0, 'expectedFailures': 0}
     if any(type(result.get(key)) is not int or result[key] != value for key, value in expected_counts.items()):
-        raise RuntimeError('Actual xcresult does not contain five complete passing functions')
+        raise RuntimeError('Actual xcresult does not contain ten complete passing functions')
     return validate_records(root)
 
 
