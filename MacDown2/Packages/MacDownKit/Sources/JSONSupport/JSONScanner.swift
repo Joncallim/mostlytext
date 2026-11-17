@@ -10,8 +10,8 @@ import Foundation
 /// recursive-descent pass.
 struct JSONScanner {
     let units: [UInt16]
-    /// Offset of the first unit of every physical line, built once in
-    /// O(n). Line queries are binary searches, so per-node bookkeeping
+    /// Offset of the first unit of every LF, CRLF or CR-delimited physical
+    /// line, built once in O(n). Line queries are binary searches, so per-node bookkeeping
     /// never degrades parsing to O(n²).
     let lineStarts: [Int]
     var position = 0
@@ -22,8 +22,15 @@ struct JSONScanner {
     init(units: [UInt16]) {
         self.units = units
         var lineStarts = [0]
-        for (index, unit) in units.enumerated() where unit == 0x000A {
-            lineStarts.append(index + 1)
+        for (index, unit) in units.enumerated() {
+            switch unit {
+            case 0x000A: // LF, including the end of one CRLF pair
+                lineStarts.append(index + 1)
+            case 0x000D where index + 1 == units.count || units[index + 1] != 0x000A:
+                lineStarts.append(index + 1) // A lone CR is a physical line break too.
+            default:
+                break
+            }
         }
         self.lineStarts = lineStarts
     }

@@ -138,7 +138,7 @@ struct JSONOutlineIdentityTests {
 }
 
 /// EPIC-11 §3.4 — outline source ranges: UTF-16 offsets usable directly as
-/// NSRange, exact at astral/combining/CRLF boundaries.
+/// NSRange, exact at astral/combining/LF/CRLF/CR boundaries.
 @Suite("JSONOutlineSourceRanges")
 struct JSONOutlineSourceRangeTests {
     private func root(_ text: String) -> ContentOutlineItem? {
@@ -177,6 +177,16 @@ struct JSONOutlineSourceRangeTests {
         let text = "{\r\n  \"a\": 1,\r\n  \"b\": 2\r\n}"
         let root = root(text)
         #expect(root?.children.map(\.lineRange) == [2 ... 2, 3 ... 3])
+    }
+
+    @Test func carriageReturnOnlyLinesKeepOutlineAndSourceCoordinates() {
+        let text = "{\r  \"a\": 1,\r  \"b\": 2\r}"
+        let root = root(text)
+        #expect(root?.lineRange == 1 ... 4)
+        #expect(root?.children.map(\.lineRange) == [2 ... 2, 3 ... 3])
+        let source = text as NSString
+        #expect(root?.children.map { source.substring(with: NSRange(location: $0.sourceRange.lowerBound,
+                                                                    length: $0.sourceRange.count)) } == ["1", "2"])
     }
 
     @Test func multiLineValuesSpanTheirLines() {

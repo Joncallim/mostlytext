@@ -235,7 +235,7 @@ struct JSONDiagnosticsTests {
 }
 
 /// EPIC-11 §3.3/§3.4 — UTF-16 coordinates: astral scalars, combining marks,
-/// and CRLF boundaries must produce exact line/column/range values.
+/// and LF, CRLF and CR boundaries must produce exact line/column/range values.
 @Suite("JSONDiagnosticUTF16Coordinates")
 struct JSONDiagnosticUTF16CoordinateTests {
     @Test func astralScalarInKeyShiftsUTF16Offsets() {
@@ -271,6 +271,26 @@ struct JSONDiagnosticUTF16CoordinateTests {
         #expect(diagnostic.line == 3)
         // Line 3 is `  x\r` → 'x' at column 3.
         #expect(diagnostic.column == 3)
+    }
+
+    @Test func carriageReturnOnlyAndMixedBreaksLocateTheInvalidUnit() {
+        for text in ["{\r  \"a\": 1,\r  x\r}", "{\r\n  \"a\": 1,\r  x\n}"] {
+            guard case let .invalid(diagnostic) = JSONParser.parse(text) else {
+                Issue.record("Expected invalid outcome")
+                continue
+            }
+            #expect(diagnostic.line == 3)
+            #expect(diagnostic.column == 3)
+            let expected = (text as NSString).range(of: "x").location
+            #expect(diagnostic.range == expected ..< (expected + 1))
+        }
+        guard case let .invalid(diagnostic) = JSONParser.parse("{\r") else {
+            Issue.record("Expected invalid outcome")
+            return
+        }
+        #expect(diagnostic.line == 2)
+        #expect(diagnostic.column == 1)
+        #expect(diagnostic.range == nil)
     }
 
     @Test func astralScalarValueRangeSpansTwoUnits() {
