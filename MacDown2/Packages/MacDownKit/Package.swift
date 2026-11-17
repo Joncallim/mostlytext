@@ -34,10 +34,11 @@ let package = Package(
         .library(name: "DiagramsGraphviz", targets: ["DiagramsGraphviz"]),
         .library(name: "GraphvizRendering", targets: ["GraphvizRendering"]),
         .library(name: "TextSearch", targets: ["TextSearch"]),
+        .library(name: "UpdateSupport", targets: ["UpdateSupport"]),
     ],
     dependencies: [
-        // The app links Sparkle directly. Keep its exact binary package in
-        // this repository lock so the generated Xcode workspace cannot drift.
+        // The app reaches Sparkle only through UpdateSupport. Keep the exact
+        // binary package in this repository lock for the Xcode workspace.
         .package(
             url: "https://github.com/sparkle-project/Sparkle",
             revision: "ab7d71291238df6e0492143b120c9b696a35f603"
@@ -108,6 +109,9 @@ let package = Package(
         .target(name: "LocalResourceAccess"),
         .target(name: "TextSearch", dependencies: ["FileCore"], resources: [.process("Resources")]),
         .target(name: "AppSettings", dependencies: ["JSONSupport"]),
+        .target(name: "UpdateSupport", dependencies: [
+            .product(name: "Sparkle", package: "Sparkle"),
+        ]),
         .target(name: "Themes", resources: [.process("Themes")]),
         .target(name: "Workspace", dependencies: ["FileCore", "JSONSupport"], resources: [.process("Resources")]),
         .target(name: "FileTree", dependencies: ["FileCore", "JSONSupport"], resources: [.process("Resources")]),

@@ -6,15 +6,33 @@ import Foundation
 /// Split into its own file — it's a standalone fake with no dependency on the
 /// struct it supports — to stay under the file-length lint budget.
 actor ScriptedRecoveryExecutor: RecoveryActionExecuting {
+    private struct PersistFailureTarget {
+        let id: String
+        let epoch: UUID
+        let afterVersion: UInt
+    }
+
     private var failures: Set<ExternalFileController.RecoveryRetryKind> = []
+    private var targetedPersistFailure: PersistFailureTarget?
     private(set) var calls: [ExternalFileController.RecoveryRetryKind] = []
 
     func failNext(_ kind: ExternalFileController.RecoveryRetryKind) {
         failures.insert(kind)
     }
 
+    func failNextPersist(for id: String, epoch: UUID, afterVersion: UInt) {
+        targetedPersistFailure = PersistFailureTarget(id: id, epoch: epoch, afterVersion: afterVersion)
+    }
+
     func persist(_ document: FileDocument) async -> Bool {
         calls.append(.persist)
+        if let targetedPersistFailure,
+           document.id == targetedPersistFailure.id,
+           document.recoveryEpoch == targetedPersistFailure.epoch,
+           document.mutationGeneration > targetedPersistFailure.afterVersion {
+            self.targetedPersistFailure = nil
+            return false
+        }
         guard failures.remove(.persist) == nil else { return false }
         return await document.persistRecovery()
     }

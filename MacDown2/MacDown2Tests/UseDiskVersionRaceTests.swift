@@ -259,7 +259,11 @@ extension UseDiskVersionRaceTests {
         controller.afterUseExternalRecoveryCleanup = {
             model.tabStore.newTab(document: FileDocument(text: "new active tab"))
         }
-        await executor.failNext(.persist)
+        // The tab switch can enqueue unrelated recovery writes. Fail the reasserted inactive draft,
+        // not whichever asynchronous persist happens to reach the executor first.
+        let removedVersion = conflicted.reloadedFromExternal(snapshot).mutationGeneration
+        await executor.failNextPersist(for: conflicted.id, epoch: conflicted.recoveryEpoch,
+                                       afterVersion: removedVersion)
 
         let result = await controller.applyConflictResolution(
             .useExternal, snapshot: snapshot, document: conflicted, model: model

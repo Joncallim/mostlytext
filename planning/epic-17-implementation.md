@@ -14,8 +14,10 @@ Sparkle dependency, controller, feed metadata or update command. The reserved
 URL is `https://mostlytext.app/appcast.xml`; no public key has been supplied.
 The older CLI-placeholder and pre-migration descriptions below are historical.
 
-The app target alone owns `UpdateChannelController`. It depends on the pinned
-Sparkle binary package; document, Preview, CLI and Quick Look targets do not.
+The app target alone owns `UpdateChannelController`, admission and menu state.
+The `UpdateSupport` package target owns the pinned Sparkle binary dependency
+and exposes the small `UpdateChecking` interface. Document, Preview, CLI and
+Quick Look targets do not depend on the updater.
 It checks the bundled HTTPS feed identity, a 32-byte base64 EdDSA public key
 and the two configured Sparkle verification flags before constructing Sparkle.
 It starts Sparkle only after `ApplicationMigrationStartup` reaches ready, and
