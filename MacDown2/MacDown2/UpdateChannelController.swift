@@ -35,9 +35,7 @@ final class UpdateChannelController: ObservableObject {
 
     static func hasReleaseConfiguration(info: [String: Any]) -> Bool {
         guard let feed = info["SUFeedURL"] as? String,
-              let url = URL(string: feed),
-              url.scheme == "https", url.host == "mostlytext.app", url.path == "/appcast.xml",
-              url.query == nil, url.fragment == nil,
+              feed == "https://mostlytext.app/appcast.xml",
               let publicKey = info["SUPublicEDKey"] as? String,
               Data(base64Encoded: publicKey)?.count == 32,
               info["SUVerifyUpdateBeforeExtraction"] as? Bool == true,

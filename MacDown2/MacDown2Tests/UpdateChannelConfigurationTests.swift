@@ -19,6 +19,8 @@ struct UpdateChannelConfigurationTests {
             ("SUFeedURL", "http://mostlytext.app/appcast.xml"),
             ("SUFeedURL", "https://other.example/appcast.xml"),
             ("SUFeedURL", "https://mostlytext.app/appcast.xml?preview=1"),
+            ("SUFeedURL", "https://user@mostlytext.app/appcast.xml"),
+            ("SUFeedURL", "https://mostlytext.app:443/appcast.xml"),
             ("SUPublicEDKey", "$(MOSTLYTEXT_UPDATE_PUBLIC_ED_KEY)"),
             ("SUPublicEDKey", Data(repeating: 7, count: 31).base64EncodedString()),
             ("SUVerifyUpdateBeforeExtraction", false),
