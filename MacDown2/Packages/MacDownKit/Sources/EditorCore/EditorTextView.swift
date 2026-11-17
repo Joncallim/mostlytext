@@ -138,6 +138,8 @@ public final class EditorTextView: NSTextView {
     }
 
     override public func draw(_ dirtyRect: NSRect) {
+        EditorView.emitDiagnosticTiming("text-draw-start")
+        defer { EditorView.emitDiagnosticTiming("text-draw-end") }
         super.draw(dirtyRect)
         // Find highlights are translucent and drawn AFTER the view's own drawing: drawn
         // before `super.draw(_:)` — as they once were — the background fill painted over

@@ -108,6 +108,9 @@ struct ViewportDisplayBudgetBenchmarkTests {
         var heightTimes: [(String, UInt64)] = []
         ContentHeightMeter.onDiagnosticTiming = { stage, time in heightTimes.append((stage, time)) }
         defer { ContentHeightMeter.onDiagnosticTiming = nil }
+        var editorTimes: [(String, UInt64)] = []
+        EditorView.onDiagnosticTiming = { stage, time in editorTimes.append((stage, time)) }
+        defer { EditorView.onDiagnosticTiming = nil }
         var results: [[String: Any]] = []
         let registry = GrammarRegistry()
         for edit in Self.cases {
@@ -135,6 +138,7 @@ struct ViewportDisplayBudgetBenchmarkTests {
             timing.removeAll(keepingCapacity: true)
             paintTimes.removeAll(keepingCapacity: true)
             heightTimes.removeAll(keepingCapacity: true)
+            editorTimes.removeAll(keepingCapacity: true)
             let timingStart = parseTiming.snapshot().count
 
             let input = DispatchTime.now().uptimeNanoseconds
@@ -239,6 +243,12 @@ struct ViewportDisplayBudgetBenchmarkTests {
                     ]
                 },
                 "height_events": heightTimes.map { stage, time -> [String: Any] in
+                    [
+                        "stage": stage,
+                        "after_input_ms": milliseconds(input, time),
+                    ]
+                },
+                "editor_events": editorTimes.map { stage, time -> [String: Any] in
                     [
                         "stage": stage,
                         "after_input_ms": milliseconds(input, time),

@@ -19,6 +19,12 @@ final class EditorAttachmentScrollView: NSScrollView {
 /// underlying text view, undo manager, selection, and scroll position persist
 /// across SwiftUI rebuilds (e.g., tab switches).
 public struct EditorView: NSViewRepresentable {
+    @MainActor static var onDiagnosticTiming: ((String, UInt64) -> Void)?
+
+    @MainActor static func emitDiagnosticTiming(_ stage: String) {
+        onDiagnosticTiming?(stage, DispatchTime.now().uptimeNanoseconds)
+    }
+
     @Binding private var text: String
     private let identity: String
     private let configuration: EditorConfiguration
@@ -124,6 +130,8 @@ public struct EditorView: NSViewRepresentable {
     }
 
     public func updateNSView(_ scrollView: NSScrollView, context: Context) {
+        Self.emitDiagnosticTiming("update-start")
+        defer { Self.emitDiagnosticTiming("update-end") }
         guard let system = context.coordinator.system else { return }
 
         context.coordinator.onSelectionChange = onSelectionChange
@@ -133,6 +141,7 @@ public struct EditorView: NSViewRepresentable {
         // Apply configuration changes (cheap because we diff at the call site
         // via SwiftUI's update cycle, but `apply` is idempotent).
         system.apply(configuration)
+        Self.emitDiagnosticTiming("update-configured")
 
         // Only push model text into the view when it differs from the view's
         // current text *and* the change did not originate from the view itself.
@@ -142,6 +151,7 @@ public struct EditorView: NSViewRepresentable {
         // mid-composition. The binding catches up when the composition commits.
         if !context.coordinator.isApplyingModelText, !system.textView.hasMarkedText(),
            !system.text.isExactlyEqual(to: text) {
+            Self.emitDiagnosticTiming("update-replacing")
             context.coordinator.isApplyingModelText = true
             system.setText(text)
             context.coordinator.isApplyingModelText = false
@@ -157,6 +167,7 @@ public struct EditorView: NSViewRepresentable {
             // composition is not mistaken for a model replacement.
             context.coordinator.noteSynced(text)
         }
+        Self.emitDiagnosticTiming("update-compared")
 
         // After any model push above (which bypasses the incremental
         // delegate hooks and rebuilds `lineIndex` wholesale in `setText`)
@@ -167,6 +178,7 @@ public struct EditorView: NSViewRepresentable {
         // lines) stuck at the old ruler width until an unrelated later
         // update happened to trigger a redraw.
         context.coordinator.gutterView?.updateThickness()
+        Self.emitDiagnosticTiming("update-gutter")
 
         scrollView.hasHorizontalScroller = !configuration.wrapsLines
         scrollView.autohidesScrollers = configuration.wrapsLines
@@ -204,11 +216,14 @@ public struct EditorView: NSViewRepresentable {
         /// line index must stay correct after every one of them, not just
         /// the transaction's final state.
         public func textDidChange(_: Notification) {
+            EditorView.emitDiagnosticTiming("text-change-start")
+            defer { EditorView.emitDiagnosticTiming("text-change-end") }
             // Marked-text edits post no didChange; whatever they changed must not survive into the cache.
             if let system, !system.isApplyingMultiRangeTransaction {
                 system.storedSelectionSet = nil
             }
             system?.syncLineIndex(afterEdit: pendingLineIndexEdit)
+            EditorView.emitDiagnosticTiming("text-change-index")
             pendingLineIndexEdit = nil
             // The gutter has no way to know about a text edit on its own
             // (unlike scrolling, which NSRulerView already tracks via its
@@ -218,6 +233,7 @@ public struct EditorView: NSViewRepresentable {
             if system?.isApplyingMultiRangeTransaction != true {
                 gutterView?.updateThickness()
             }
+            EditorView.emitDiagnosticTiming("text-change-gutter")
 
             guard !isApplyingModelText,
                   let system,
@@ -229,6 +245,7 @@ public struct EditorView: NSViewRepresentable {
             }
             isApplyingModelText = true
             textBinding?.wrappedValue = system.text
+            EditorView.emitDiagnosticTiming("text-change-binding")
             isApplyingModelText = false
             noteSynced(system.text)
             system.noteTextEdit()

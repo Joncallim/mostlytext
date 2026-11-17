@@ -86,6 +86,8 @@ public final class EditorGutterView: NSRulerView {
     }
 
     override public func drawHashMarksAndLabels(in dirtyRect: NSRect) {
+        EditorView.emitDiagnosticTiming("gutter-draw-start")
+        defer { EditorView.emitDiagnosticTiming("gutter-draw-end") }
         guard let system, let cgContext = NSGraphicsContext.current?.cgContext else { return }
         let font = system.textView.font ?? NSFont.systemFont(ofSize: NSFont.systemFontSize)
         let editor = system.textView as? EditorTextView
