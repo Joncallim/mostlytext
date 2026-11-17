@@ -14,7 +14,7 @@ final class MarkdownViewportPainter {
     private var refreshScheduled = false
     private var isActive = true
     private var lastPaintedRange: NSRange?
-    var onPaintTiming: ((UInt64, UInt64) -> Void)?
+    var onPaintTiming: ((String, UInt64) -> Void)?
     /// Validation requests issued for mounted, unmarked viewports. The
     /// measurement still waits for actual attributes and display afterward.
     private(set) var validationPassCount = 0
@@ -132,18 +132,22 @@ final class MarkdownViewportPainter {
     }
 
     func paintVisible() {
-        let started = DispatchTime.now().uptimeNanoseconds
-        defer { onPaintTiming?(started, DispatchTime.now().uptimeNanoseconds) }
+        onPaintTiming?("started", DispatchTime.now().uptimeNanoseconds)
+        defer { onPaintTiming?("finished", DispatchTime.now().uptimeNanoseconds) }
         guard isActive, !textSystem.textView.hasMarkedText() else { return }
         guard let visible = Self.boundedViewport(in: textSystem) else {
             clearLastPaintedRange()
             return
         }
+        onPaintTiming?("viewportResolved", DispatchTime.now().uptimeNanoseconds)
         if let previous = lastPaintedRange {
             clearPaintedOutside(previous, keeping: visible)
         }
+        onPaintTiming?("priorCleared", DispatchTime.now().uptimeNanoseconds)
         styler.invalidate(.range(visible))
+        onPaintTiming?("invalidated", DispatchTime.now().uptimeNanoseconds)
         styler.validate(.range(visible))
+        onPaintTiming?("validated", DispatchTime.now().uptimeNanoseconds)
         lastPaintedRange = visible
         validationPassCount += 1
     }
