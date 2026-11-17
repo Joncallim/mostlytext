@@ -154,11 +154,18 @@ class ProductPluralInventoryTests(unittest.TestCase):
         "and remain as authored source"
     )
     single_count_keys = {
+        "%lld files could not be searched and will not be changed.": "value",
+        "%lld matches": "value",
         "%lld preview errors": "value",
         "%lld preview warnings": "value",
         "Exported with %lld issues": "arg1",
         "rendered output too large (%lld bytes)": "arg1",
+        "and %lld more files not modified": "value",
         "…and %lld more issues.": "arg1",
+    }
+    double_count_keys = {
+        "Replace %lld matches in %lld files?",
+        "Replaced %lld matches in %lld files.",
     }
     categories = {
         "en": ["one", "other"],
@@ -182,7 +189,7 @@ class ProductPluralInventoryTests(unittest.TestCase):
             for entry in subject.inventory(self.repo)["entries"]
             if entry["catalog"] == self.app_catalog and any(entry["variants"].values())
         }
-        expected_keys = set(self.single_count_keys) | {
+        expected_keys = set(self.single_count_keys) | self.double_count_keys | {
             self.status_key, self.selected_key, self.preview_budget_key
         }
         self.assertEqual(set(generated), expected_keys)
@@ -201,6 +208,8 @@ class ProductPluralInventoryTests(unittest.TestCase):
             for locale, forms in self.categories.items()
         }
         self.assertEqual(generated[self.status_key]["variants"], expected_status)
+        for key in self.double_count_keys:
+            self.assertEqual(generated[key]["variants"], expected_status, key)
         expected_selected = {"en": {}}
         expected_selected.update({locale: {"value": self.categories[locale]} for locale in ("fr", "ja", "pl")})
         self.assertEqual(generated[self.selected_key]["variants"], expected_selected)
