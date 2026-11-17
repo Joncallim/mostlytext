@@ -9,6 +9,7 @@ import AppKit
 /// linear time, and cached per paragraph so an edit re-measures only the paragraph it touched.
 @MainActor
 final class ContentHeightMeter {
+    static var onDiagnosticTiming: ((String, UInt64) -> Void)?
     private var cacheKey = ""
     private var heights: [Int: CGFloat] = [:]
     private static let maximumCachedParagraphs = 250_000
@@ -17,6 +18,8 @@ final class ContentHeightMeter {
     static let maximumMeasuredParagraphLength = 20000
 
     func height(of string: NSString, width: CGFloat, attributes: [NSAttributedString.Key: Any]) -> CGFloat {
+        Self.onDiagnosticTiming?("height-start", DispatchTime.now().uptimeNanoseconds)
+        defer { Self.onDiagnosticTiming?("height-end", DispatchTime.now().uptimeNanoseconds) }
         let key = Self.cacheKey(width: width, attributes: attributes)
         if key != cacheKey || heights.count > Self.maximumCachedParagraphs {
             cacheKey = key
