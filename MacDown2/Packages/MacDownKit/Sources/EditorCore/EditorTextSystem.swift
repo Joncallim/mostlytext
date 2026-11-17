@@ -67,7 +67,7 @@ public final class EditorTextSystem {
     /// `textDidChange` edit callback. The mounted highlighter uses this to
     /// discard any pre-composition parse and request a fresh visible paint.
     public var compositionEndedObserver: (() -> Void)?
-    let metricsCache = EditorDocumentMetricsCache()
+    let metricsStore = EditorDocumentMetricsStore()
     let contentHeightMeter = ContentHeightMeter()
     /// Prevents a disk-driven replacement from flowing back through the
     /// editor binding as a user edit. Setter is `internal` (not `private`)

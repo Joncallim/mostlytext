@@ -16,7 +16,7 @@ struct EditorStatusBarView: View {
     /// The live text, uncopied, and its precomputed metrics: a selection-only
     /// re-render does no whole-document work (#183 F16).
     let source: NSString
-    let metrics: EditorDocumentMetrics
+    let metrics: EditorDocumentMetrics?
     let selectedRange: NSRange
     let lineIndex: EditorLineIndex
     let indentationWidth: Int
@@ -38,7 +38,7 @@ struct EditorStatusBarView: View {
 
     init(
         source: NSString,
-        metrics: EditorDocumentMetrics,
+        metrics: EditorDocumentMetrics?,
         selectedRange: NSRange,
         lineIndex: EditorLineIndex,
         indentationWidth: Int,
@@ -99,6 +99,7 @@ struct EditorStatusBarView: View {
             let selectedCharacterCount = source.substring(with: selectedRange).count
             return Self.selectedCountText(selectedCharacterCount)
         }
+        guard let metrics else { return "—" }
         return Self.documentCountText(characterCount: metrics.characterCount, wordCount: metrics.wordCount)
     }
 
@@ -243,6 +244,18 @@ struct EditorStatusBarView: View {
     /// so removing the inherited isolation is correct, not a workaround.
     nonisolated static func wordCount(in text: String) -> Int {
         EditorDocumentMetrics.wordCount(in: text)
+    }
+}
+
+/// Observes the revision-bound result without making the parent editor view
+/// depend on a whole-document status scan during a keystroke.
+struct EditorStatusBarMetricsObserver<Content: View>: View {
+    @ObservedObject var store: EditorDocumentMetricsStore
+    let revision: UInt64
+    let content: (EditorDocumentMetrics?) -> Content
+
+    var body: some View {
+        content(store.metrics(for: revision))
     }
 }
 
