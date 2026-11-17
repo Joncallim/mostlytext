@@ -7,38 +7,12 @@ import SwiftTreeSitterLayer
 /// The parser/cache lifetime behind one mounted large-Markdown editor.
 ///
 /// The storage gate calls `didEdit` for every actual character mutation.
-/// A bounded edit window is copied before worker dispatch; that worker reads
-/// only owned text, even if the storage callback is still unwinding.
-/// Publication requires the ticket captured at that exact storage generation.
-/// This type does not paint or replace the existing large-file fallback by itself.
+/// Parsing starts only after that synchronous callback returns; publication
+/// requires the ticket captured at that exact storage generation. This type
+/// does not paint or replace the existing large-file fallback by itself.
 @MainActor
 final class MarkdownViewportSession {
     typealias SnapshotParser = @Sendable (String, GrammarRegistry) async throws -> LanguageLayerTreeSnapshot
-
-    private struct LocalParseChange: Sendable {
-        let old: NSRange
-        let new: NSRange
-        let firstSection: Int
-        let lastSection: Int
-        let content: String
-        let delta: Int
-        let expectedLength: Int
-
-        init(window: MarkdownSectionCache.Window, content: String, delta: Int, expectedLength: Int) {
-            old = window.old
-            new = window.new
-            firstSection = window.firstSection
-            lastSection = window.lastSection
-            self.content = content
-            self.delta = delta
-            self.expectedLength = expectedLength
-        }
-
-        var window: MarkdownSectionCache.Window {
-            MarkdownSectionCache.Window(old: old, new: new,
-                                        firstSection: firstSection, lastSection: lastSection)
-        }
-    }
 
     /// Optional measurement seam. Request time precedes queue admission, so
     /// request-to-resolution includes any queue wait and the physical parse.
@@ -257,40 +231,30 @@ final class MarkdownViewportSession {
         localParseCount &+= 1
         let registry = registry
         let parseSnapshot = parseSnapshot
-        let change = LocalParseChange(window: window, content: content,
-                                      delta: delta, expectedLength: expectedLength)
         emitTiming(.parseRequested)
-        parseTask = Task.detached(priority: .userInitiated) { [weak self] in
-            guard !Task.isCancelled else { return }
+        parseTask = Task { [weak self] in
             let snapshot = try? await parseSnapshot(content, registry)
-            await self?.completeLocalParse(ticket: ticket, change: change, snapshot: snapshot)
-        }
-    }
-
-    private func completeLocalParse(ticket: MarkdownParseAuthority.Ticket,
-                                    change: LocalParseChange,
-                                    snapshot: LanguageLayerTreeSnapshot?) {
-        emitTiming(.parseResolved)
-        guard authority.admits(ticket),
-              textSystem.textView.textStorage === boundStorage,
-              textSystem.textView.textStorage?.length == change.expectedLength
-        else { return }
-        guard let snapshot, var cache else {
-            retireCache()
-            startFullParse(ticket: ticket)
-            return
-        }
-        do {
-            try cache.replace(change.window, with: snapshot,
-                              content: change.content, delta: change.delta)
-            self.cache = cache
-            cacheMatchesStorage = true
-            emitTiming(.published)
-            onPublication?()
-        } catch {
-            retireCache()
-            cacheMatchesStorage = false
-            startFullParse(ticket: ticket)
+            self?.emitTiming(.parseResolved)
+            guard let self, authority.admits(ticket),
+                  textSystem.textView.textStorage === boundStorage,
+                  textSystem.textView.textStorage?.length == expectedLength
+            else { return }
+            guard let snapshot, var cache else {
+                retireCache()
+                startFullParse(ticket: ticket)
+                return
+            }
+            do {
+                try cache.replace(window, with: snapshot, content: content, delta: delta)
+                self.cache = cache
+                cacheMatchesStorage = true
+                emitTiming(.published)
+                onPublication?()
+            } catch {
+                retireCache()
+                cacheMatchesStorage = false
+                startFullParse(ticket: ticket)
+            }
         }
     }
 
