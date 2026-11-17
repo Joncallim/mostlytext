@@ -41,12 +41,15 @@
 # Optional environment:
 #   ENTITLEMENTS  path to an .entitlements file (default: none)
 #   OUT           output directory (default: build/release-<UTC timestamp>)
+#   MOSTLYTEXT_UPDATE_PUBLIC_ED_KEY  base64 Sparkle public key (required for a
+#                        release candidate; the private key is never passed here)
 
 set -euo pipefail
 
 : "${TEAM_ID:?set TEAM_ID to the Apple Developer Team ID}"
 : "${NOTARY_PROFILE:?set NOTARY_PROFILE to the notarytool keychain profile name}"
 ENTITLEMENTS="${ENTITLEMENTS:-}"
+UPDATE_PUBLIC_ED_KEY="${MOSTLYTEXT_UPDATE_PUBLIC_ED_KEY:-}"
 case "${1:-}" in
   --preflight-only)    MODE=preflight ;;
   --dry-run)           MODE=dry-run ;;
@@ -133,6 +136,14 @@ if [[ "$MODE" == "preflight" ]]; then
   exit 0
 fi
 
+if [[ -z "$UPDATE_PUBLIC_ED_KEY" ]] || ! python3 -c \
+  'import base64,sys; s=sys.argv[1]; sys.exit(0 if len(base64.b64decode(s, validate=True)) == 32 else 1)' \
+  "$UPDATE_PUBLIC_ED_KEY"; then
+  gate "a valid 32-byte base64 Sparkle public update key is required for the release candidate"
+else
+  record "Sparkle public key sha256: $(printf '%s' "$UPDATE_PUBLIC_ED_KEY" | shasum -a 256 | awk '{print $1}')"
+fi
+
 # ---------------------------------------------------------------- 2. build
 # XcodeGen recreates the project-local SwiftPM workspace.  Its generated
 # Package.resolved is deliberately untracked, so copy the reviewed
@@ -168,6 +179,7 @@ build() {  # $1 scheme, $2 "app" to apply ENTITLEMENTS
     -configuration Release -destination 'platform=macOS' -derivedDataPath "$DERIVED" \
     -onlyUsePackageVersionsFromResolvedFile \
     CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="$IDENTITY" DEVELOPMENT_TEAM="$TEAM_ID" \
+    MOSTLYTEXT_UPDATE_PUBLIC_ED_KEY="$UPDATE_PUBLIC_ED_KEY" \
     ENABLE_HARDENED_RUNTIME=YES OTHER_CODE_SIGN_FLAGS=--timestamp \
     ${extra[@]+"${extra[@]}"} build
 }
@@ -196,10 +208,21 @@ for name_key in CFBundleName CFBundleDisplayName; do
   [[ "$(defaults read "$APP/Contents/Info" "$name_key")" == "$APP_NAME" ]] \
     || fail "staged public app $name_key is not $APP_NAME"
 done
+[[ "$(defaults read "$APP/Contents/Info" SUFeedURL)" == 'https://mostlytext.app/appcast.xml' ]] \
+  || fail "staged appcast URL differs from the frozen MostlyText identity"
+if [[ -n "$UPDATE_PUBLIC_ED_KEY" ]]; then
+  [[ "$(defaults read "$APP/Contents/Info" SUPublicEDKey)" == "$UPDATE_PUBLIC_ED_KEY" ]] \
+    || fail "staged Sparkle public key does not match the requested key"
+fi
+[[ "$(defaults read "$APP/Contents/Info" SUVerifyUpdateBeforeExtraction)" == 1 \
+  && "$(defaults read "$APP/Contents/Info" SURequireSignedFeed)" == 1 ]] \
+  || fail "staged Sparkle signature-verification flags are absent"
 record "public app: $APP_NAME.app (built from $APP_SCHEME.app without modifying its contents)"
 [[ -f "$CLI" && ! -L "$CLI" && -x "$CLI" ]] || fail "executable CLI not produced at $CLI"
 [[ -f "$EMBEDDED_CLI" && ! -L "$EMBEDDED_CLI" && -x "$EMBEDDED_CLI" ]] \
   || fail "embedded executable CLI not produced at $EMBEDDED_CLI"
+[[ -f "$APP/Contents/Frameworks/Sparkle.framework/Sparkle" ]] \
+  || fail "the Sparkle update framework is missing from the staged app"
 record "public CLI: $CLI_NAME (scheme $CLI_SCHEME)"
 record "embedded CLI: Contents/MacOS/mostlytext-cli"
 record "CLI installation: embedded app helper or explicit user-created symlink"
@@ -208,8 +231,8 @@ record "bundle id: $(defaults read "$APP/Contents/Info" CFBundleIdentifier)"
 
 # ---------------------------------------------------------------- 3. sign-check
 # Xcode signs the app, its nested code and the CLI from the build settings
-# above. SwiftPM code is linked statically; its resource bundles hold data,
-# not code. Check every Mach-O binary rather than re-signing blindly.
+# above. Sparkle is a dynamic SwiftPM framework with nested helpers. Check
+# every Mach-O binary rather than re-signing blindly.
 step "Check signatures"
 codesign --verify --deep --strict --verbose=2 "$APP" 2>&1 | tee "$EVIDENCE/codesign-verify-app.txt"
 codesign --verify --strict --verbose=2 "$CLI" 2>&1 | tee "$EVIDENCE/codesign-verify-cli.txt"

@@ -1,5 +1,43 @@
 # MostlyText installation, command line and update implementation
 
+## Update-channel implementation on current main
+
+**Owner summary.** MostlyText will show a Check for Updates command and use a
+signed Sparkle appcast after a real release key is configured. The application
+does not contact a feed during development or before installation migration
+has finished. This implements the app-side update channel without claiming that
+the feed is deployed, a signed N-to-N+1 update has run, or publication is ready.
+
+The baseline for this unit is `3507d483e6f860a8a718dedffb2347cf07d6afa5`
+on 17 November 2026. The current app has migration-gated commands, but no
+Sparkle dependency, controller, feed metadata or update command. The reserved
+URL is `https://mostlytext.app/appcast.xml`; no public key has been supplied.
+The older CLI-placeholder and pre-migration descriptions below are historical.
+
+The app target alone owns `UpdateChannelController`. It depends on the pinned
+Sparkle binary package; document, Preview, CLI and Quick Look targets do not.
+It checks the bundled HTTPS feed identity, a 32-byte base64 EdDSA public key
+and the two configured Sparkle verification flags before constructing Sparkle.
+It starts Sparkle only after `ApplicationMigrationStartup` reaches ready, and
+never in app or UI test hosts. The menu is then enabled only when Sparkle says
+a check is available. Missing or malformed release metadata leaves the menu
+disabled and causes no network work. The release pipeline must refuse a final
+candidate without a valid public key and verify the staged Info.plist bytes.
+
+Sparkle's own scheduler and consent prompt control automatic checks. The app
+does not transmit document content, carry old update consent through migration,
+set a feed from user data, or disable signature verification. Full updates are
+the 1.0 policy; no delta generation or publication is introduced. The pinned
+binary package and complete upstream licence are inventoried with the source.
+Failure to reach the reserved feed or verify a signature is left to Sparkle's
+standard user interface. A missing public key is a build/release configuration
+error, not a reason to start a broken updater in a development build.
+
+Qualification for this unit includes locked package/app builds, Info.plist and
+menu admission tests, notice/compliance checks and ordinary CI. The final key,
+feed publication, private signed N-to-N+1 rehearsal and state preservation
+remain E17 gates; neither an ad-hoc build nor a green source build closes them.
+
 ## Owner summary
 
 Deliver the already-promised MostlyText installation and command-line journeys

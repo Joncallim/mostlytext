@@ -2612,6 +2612,34 @@
       ]
     },
     {
+      "id": "sparkle",
+      "name": "Sparkle update framework",
+      "kind": "swiftpm",
+      "version": "2.10.1",
+      "upstream": "https://github.com/sparkle-project/Sparkle",
+      "revision": "ab7d71291238df6e0492143b120c9b696a35f603",
+      "resolution": "exact",
+      "licence": "LicenseRef-Sparkle-Composite",
+      "copyright": [
+        "Copyright (c) 2006-2013 Andy Matuschak and other contributors; bundled third-party notices are in the complete upstream LICENSE"
+      ],
+      "licence_texts": [
+        {
+          "path": "compliance/licenses/sparkle--LICENSE.txt",
+          "sha256": "816be66341dd11b22806862dffd8392b240babaced1cdf24da2ff413ef00c3fd",
+          "upstream": "https://github.com/sparkle-project/Sparkle",
+          "upstream_revision": "ab7d71291238df6e0492143b120c9b696a35f603",
+          "upstream_path": "LICENSE"
+        }
+      ],
+      "provenance": "verified",
+      "lc": ["LC-01", "LC-07"],
+      "manifest_requirement": {
+        "revision": "ab7d71291238df6e0492143b120c9b696a35f603"
+      },
+      "evidence": "Sparkle 2.10.1 official SwiftPM binary package references Sparkle-for-Swift-Package-Manager.zip with SHA-256 4c2e48a3e50ebcc2c88a58a4c7264a1a99c3c31857ce754357afb9cdb323022a. The complete upstream LICENSE (trailing whitespace normalized) includes Sparkle MIT and nested BSD/zlib-style notices. Appcast/public-key admission and final binary/signature verification remain release gates."
+    },
+    {
       "id": "swift-argument-parser",
       "name": "Swift Argument Parser",
       "kind": "swiftpm",

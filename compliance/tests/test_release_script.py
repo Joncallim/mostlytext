@@ -42,6 +42,9 @@ STUBS = {
           echo "$digest  $f"
         done"""),
     "defaults": ('case "$3" in CFBundleShortVersionString) echo 0.1.0;; CFBundleVersion) echo 7;; '
+                 'SUFeedURL) echo https://mostlytext.app/appcast.xml;; '
+                 'SUPublicEDKey) echo "$MOSTLYTEXT_UPDATE_PUBLIC_ED_KEY";; '
+                 'SUVerifyUpdateBeforeExtraction|SURequireSignedFeed) echo 1;; '
                  'CFBundleName|CFBundleDisplayName) if [ "${WRONG_APP_NAME:-0}" = 1 ]; then echo MacDown2; '
                  'else echo MostlyText; fi;; *) echo com.example.App;; esac'),
     "codesign": 'case "$*" in *-d*) printf "Authority=Developer ID Application: Test Owner (TEAMID1234)\\nTimestamp=now\\nflags=0x10000(runtime)\\n" >&2;; esac; true',
@@ -73,6 +76,8 @@ STUBS = {
         out="$dd/Build/Products/Release"; mkdir -p "$out"
         if [ "$scheme" = MacDown2 ]; then
           mkdir -p "$out/MacDown2.app/Contents/MacOS"; touch "$out/MacDown2.app/Contents/Info"
+          mkdir -p "$out/MacDown2.app/Contents/Frameworks/Sparkle.framework"
+          touch "$out/MacDown2.app/Contents/Frameworks/Sparkle.framework/Sparkle"
           if [ "${MISSING_EMBEDDED_CLI:-0}" != 1 ]; then
             touch "$out/MacDown2.app/Contents/MacOS/mostlytext-cli"
             if [ "${NONEXECUTABLE_EMBEDDED_CLI:-0}" != 1 ]; then chmod +x "$out/MacDown2.app/Contents/MacOS/mostlytext-cli"; fi
@@ -141,7 +146,8 @@ class ReleaseScriptModeTests(unittest.TestCase):
         subprocess.run([*git, "add", "-A"], check=True)
         subprocess.run([*git, "-c", "user.name=t", "-c", "user.email=t@e", "commit", "-qm", "init"], check=True)
         self.env = {**os.environ, "PATH": f"{bin_dir}{os.pathsep}{os.environ['PATH']}", "CALLS": str(self.calls),
-                    "TEAM_ID": "TEAMID1234", "NOTARY_PROFILE": "profile", "OUT": str(base / "out")}
+                    "TEAM_ID": "TEAMID1234", "NOTARY_PROFILE": "profile", "OUT": str(base / "out"),
+                    "MOSTLYTEXT_UPDATE_PUBLIC_ED_KEY": "BwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwc="}
         self.out = base / "out"
 
     def tearDown(self) -> None:
@@ -164,6 +170,12 @@ class ReleaseScriptModeTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout)
         self.assertFalse((self.out / "DerivedData").exists())
         self.assertNotIn("notarytool submit", self.calls.read_text())
+
+    def test_release_candidate_refuses_a_missing_update_key_before_build(self) -> None:
+        result = self.run_script("--release-candidate", MOSTLYTEXT_UPDATE_PUBLIC_ED_KEY="")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("valid 32-byte base64 Sparkle public update key", result.stdout)
+        self.assertFalse((self.out / "DerivedData").exists())
 
     def test_release_builds_use_and_preserve_the_committed_xcode_package_lock(self) -> None:
         result = self.run_script("--release-candidate")

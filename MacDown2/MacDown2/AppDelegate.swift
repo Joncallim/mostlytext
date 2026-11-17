@@ -22,6 +22,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     private(set) var recentFolderRoots: RecentFolderRoots!
     private(set) var recentFileDocuments: RecentFileDocuments!
     private(set) var appSettings: AppSettingsModel!
+    let updateChannel = UpdateChannelController()
     private var sessionStore: WorkspaceSessionStoring!
     private var recoveryBuffer: RecoveryBuffer!
     private var workspaceStateStore: (any WorkspaceStateStoring)!
@@ -140,18 +141,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         )
     }
 
-    private func makeThemeCatalog(controller: ThemeController, args: [String]) -> ThemeCatalogModel {
-        let location: ThemeCatalogModel.Location = if args
-            .contains("-UITesting") {
-            .isolatedSession(Self.sessionDirectory(from: args))
-        } else if let locations = startup.locations {
-            .managedInstallation(locations.dataDirectory)
-        } else {
-            .applicationSupport
-        }
-        return ThemeCatalogModel(controller: controller, location: location)
-    }
-
     func applicationDidFinishLaunching(_: Notification) {
         if startup.phase == .ready {
             finishApplicationStartup()
@@ -179,6 +168,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         normalLaunchReady = true
         // Commands become available after migration, including while Welcome is open.
         defer { scheduleCommandServerStart() }
+        startUpdateChannelIfPermitted()
         themeCatalog.start()
         NSWindow.allowsAutomaticWindowTabbing = true
         applyThemeAppearanceOverride()
