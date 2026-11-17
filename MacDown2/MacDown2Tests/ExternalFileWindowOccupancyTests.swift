@@ -137,8 +137,7 @@ struct ExternalFileWindowOccupancyTests {
 
     private func measureClosedWindows(
         fixture: Fixture, controllers: [WindowController], targets: [URL]
-    ) async throws -> (unbound: (interrupt: UInt64, platformIdle: UInt64),
-                       rebound: (interrupt: UInt64, platformIdle: UInt64)) {
+    ) async throws -> (interrupt: UInt64, platformIdle: UInt64) {
         for controller in controllers {
             fixture.coordinator.removeController(controller)
             controller.close()
@@ -300,7 +299,8 @@ private extension ExternalFileWindowOccupancyTests {
 
     private func measureUnboundSameWindows(
         controllers: [WindowController], targets: [URL]
-    ) async throws -> (interrupt: UInt64, platformIdle: UInt64) {
+    ) async throws -> (unbound: (interrupt: UInt64, platformIdle: UInt64),
+                       rebound: (interrupt: UInt64, platformIdle: UInt64)) {
         for controller in controllers {
             controller.externalFileController.synchronize(with: nil)
         }
