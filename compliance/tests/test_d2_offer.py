@@ -12,9 +12,36 @@ REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "compliance" / "tools"))
 
 import verify_d2_offer  # noqa: E402
+import prepare_d2_source_offer as prepare  # noqa: E402
 
 
 class D2OfferVerifierTests(unittest.TestCase):
+    def test_current_snapshot_verification_rejects_stale_or_duplicate_archive(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / 'review.tar.gz'
+            name = 'distribution-snapshot/THIRD_PARTY_NOTICES.md'
+            current = {name: b'current notice'}
+            with tarfile.open(path, 'w:gz') as archive:
+                data = b'stale!! notice'
+                member = tarfile.TarInfo(name)
+                member.size = len(data)
+                archive.addfile(member, io.BytesIO(data))
+            with self.assertRaisesRegex(ValueError, 'differs from current selected inputs'):
+                prepare.verify_archive(path, current)
+            with tarfile.open(path, 'w:gz') as archive:
+                for _ in range(2):
+                    member = tarfile.TarInfo(name)
+                    member.size = len(current[name])
+                    archive.addfile(member, io.BytesIO(current[name]))
+            with self.assertRaisesRegex(ValueError, 'unsafe or duplicate'):
+                prepare.verify_archive(path, current)
+            with tarfile.open(path, 'w:gz') as archive:
+                member = tarfile.TarInfo('unexpected.bin')
+                member.size = 1024 * 1024
+                archive.addfile(member, io.BytesIO(b'x' * member.size))
+            with self.assertRaisesRegex(ValueError, 'unsafe or duplicate'):
+                prepare.verify_archive(path, current)
+
     def verify_members(self, members, reviewed_manifest=None):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
