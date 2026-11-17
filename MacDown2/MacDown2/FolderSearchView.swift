@@ -18,6 +18,7 @@ import TextSearch
 /// file content the engine has already discarded once matching finished;
 /// this is a real, disclosed gap, not something to silently skip.
 struct FolderSearchView: View {
+    @Environment(\.locale) private var locale
     @Bindable var model: FolderSearchModel
     let onOpen: (FolderSearchModel.PresentedResult) -> Void
 
@@ -118,7 +119,7 @@ struct FolderSearchView: View {
     private var confirmationTitle: String {
         let files = model.includedResults.count
         let matches = model.includedMatchCount
-        return String(localized: "Replace \(matches) matches in \(files) files?")
+        return FolderSearchCountCopy.confirmation(matches: matches, files: files).message(locale: locale)
     }
 
     @ViewBuilder
@@ -143,7 +144,7 @@ struct FolderSearchView: View {
             }
         }
         if model.unsearchedFileCount > 0, !model.isSearching, model.outcome != nil {
-            Text("\(model.unsearchedFileCount) files could not be searched and will not be changed.")
+            Text(verbatim: FolderSearchCountCopy.unsearched(files: model.unsearchedFileCount).message(locale: locale))
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .accessibilityIdentifier("folderReplaceUnsearched")
@@ -160,7 +161,9 @@ struct FolderSearchView: View {
     private var replaceSummaryView: some View {
         if let summary = model.replaceSummary {
             VStack(alignment: .leading, spacing: 2) {
-                Text("Replaced \(summary.replacedMatches) matches in \(summary.replacedFiles) files.")
+                Text(verbatim: FolderSearchCountCopy.summary(
+                    matches: summary.replacedMatches, files: summary.replacedFiles
+                ).message(locale: locale))
                     .font(.caption)
                     .accessibilityIdentifier("folderReplaceSummary")
                 ForEach(summary.skipped.prefix(Self.skippedRowLimit), id: \.relativePath) { skipped in
@@ -172,7 +175,9 @@ struct FolderSearchView: View {
                         .accessibilityIdentifier("folderReplaceSkipped-\(skipped.relativePath)")
                 }
                 if summary.skipped.count > Self.skippedRowLimit {
-                    Text("and \(summary.skipped.count - Self.skippedRowLimit) more files not modified")
+                    Text(verbatim: FolderSearchCountCopy.skipped(
+                        files: summary.skipped.count - Self.skippedRowLimit
+                    ).message(locale: locale))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -227,6 +232,7 @@ struct FolderSearchView: View {
 }
 
 private struct FolderSearchResultRow: View {
+    @Environment(\.locale) private var locale
     let fileMatch: FolderSearchMatch
 
     var body: some View {
@@ -244,7 +250,9 @@ private struct FolderSearchResultRow: View {
         }
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(fileMatch.relativePath), \(fileMatch.matches.count) matches")
+        .accessibilityLabel(Text(verbatim: FolderSearchCountCopy.result(
+            path: fileMatch.relativePath, matches: fileMatch.matches.count
+        ).message(locale: locale)))
     }
 }
 
