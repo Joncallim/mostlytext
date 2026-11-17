@@ -98,32 +98,41 @@ extension DocumentEditorSplitView {
             // real, mounted-window integration test).
             if appSettings?.editor.showsStatusBar != false,
                let system = editorStore.existingSystem(for: identity) {
-                let metrics = system.documentMetrics()
-                EditorStatusBarView(
-                    source: system.liveTextSource,
-                    metrics: metrics,
-                    selectedRange: statusBarSelection,
-                    lineIndex: system.lineIndex,
-                    indentationWidth: appSettings?.editor.indentationWidth ?? 4,
-                    convertsTabsToSpaces: appSettings?.editor.convertsTabsToSpaces ?? true,
-                    onGoToLine: { coordinator?.toggleGoToLine() },
-                    encoding: EncodingStatusItem(
-                        metadata: document.encoding,
-                        isChangeable: document.hasEncodableBackingFile,
-                        onReopen: { coordinator?.reopenDocument(in: model, withEncoding: $0) },
-                        onSave: { coordinator?.saveDocument(in: model, withEncoding: $0) }
-                    ),
-                    lineEnding: LineEndingStatusItem(
-                        profile: metrics.lineEndings,
-                        onConvert: { [weak system] in
-                            guard let system, system.convertLineEndings(to: $0) else { return }
-                            system.textView.window?.makeFirstResponder(system.textView)
-                        }
-                    ),
-                    syntaxMode: syntaxModeItem,
-                    reducedHighlighting: ReducedHighlightingNote(highlightStore.state(for: identity)),
-                    palette: ResolvedPresentationPalette(theme: themeController.current)
-                )
+                EditorStatusBarMetricsObserver(
+                    store: system.documentMetricsStore,
+                    revision: system.contentRevision
+                ) { metrics in
+                    EditorStatusBarView(
+                        source: system.liveTextSource,
+                        metrics: metrics,
+                        selectedRange: statusBarSelection,
+                        lineIndex: system.lineIndex,
+                        indentationWidth: appSettings?.editor.indentationWidth ?? 4,
+                        convertsTabsToSpaces: appSettings?.editor.convertsTabsToSpaces ?? true,
+                        onGoToLine: { coordinator?.toggleGoToLine() },
+                        encoding: EncodingStatusItem(
+                            metadata: document.encoding,
+                            isChangeable: document.hasEncodableBackingFile,
+                            onReopen: { coordinator?.reopenDocument(in: model, withEncoding: $0) },
+                            onSave: { coordinator?.saveDocument(in: model, withEncoding: $0) }
+                        ),
+                        lineEnding: metrics.map { current in
+                            LineEndingStatusItem(
+                                profile: current.lineEndings,
+                                onConvert: { [weak system] in
+                                    guard let system, system.convertLineEndings(to: $0) else { return }
+                                    system.textView.window?.makeFirstResponder(system.textView)
+                                }
+                            )
+                        },
+                        syntaxMode: syntaxModeItem,
+                        reducedHighlighting: ReducedHighlightingNote(highlightStore.state(for: identity)),
+                        palette: ResolvedPresentationPalette(theme: themeController.current)
+                    )
+                }
+                .task(id: system.contentRevision) {
+                    system.requestDocumentMetrics()
+                }
             }
         }
     }

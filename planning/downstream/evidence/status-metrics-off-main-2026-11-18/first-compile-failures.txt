@@ -1,0 +1,9 @@
+First local compile attempts for the cancellation-aware word enumerator, before repair:
+
+EditorDocumentMetrics.swift:33:22: error: value of type 'Bool' has no member 'pointee'
+The Swift String.enumerateSubstrings stop parameter is an inout Bool; corrected to stop = true.
+
+EditorDocumentMetrics.swift:31:102: error: escaping closure captures non-escaping parameter 'stopIf'
+The enumerator callback is escaping; corrected the internal stopIf parameters to @escaping.
+
+The subsequent focused Debug package build and eight-test suite passed. These compile failures are retained as first attempts and are not represented as passing runs.
