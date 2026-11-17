@@ -158,7 +158,7 @@ def members(root, inputs, base, publisher_browser):
     if sha(current_resource.read_bytes()) != report['output_browser_sha256']:
         raise ValueError('current D2 browser resource does not match source-review build report')
     result['README.txt'] = (
-        'MostlyText D2 local source-review package, 14 November 2026.\n'
+        'MostlyText D2 local source-review package.\n'
         'This package contains the pinned D2 source, npm input, 16 Go module ZIPs,\n'
         'D2 export patch, build helper, Go toolchain/source, official font source,\n'
         'lossless WOFF conversion and Chroma patch, ELK/elkjs and Google Brotli\n'
@@ -197,7 +197,7 @@ def members(root, inputs, base, publisher_browser):
     return result
 
 
-def encode(path, bodies):
+def package_contents(bodies):
     entries = [{'path': name, 'sha256': sha(data), 'size': len(data)} for name, data in sorted(bodies.items())]
     report = json.loads(bodies['evidence/browser-payload-replacement.json'])
     manifest = json.dumps({'schema': 1, 'status': 'local-review-only; source and rights approval pending',
@@ -205,19 +205,34 @@ def encode(path, bodies):
                            'replacement_wasm_sha256': report['replacement_wasm_sha256'],
                            'official_ttf_sha256': '816a2a46416a2d3550b401ff8d0c084ba7e8138782f7057b1e537446012f769a',
                            'files': entries}, indent=2).encode() + b'\n'
-    contents = dict(bodies, **{'manifest.json': manifest})
+    return dict(bodies, **{'manifest.json': manifest})
+
+
+def verify_archive(path, contents):
+    with tarfile.open(path, 'r:gz') as archive:
+        found = {}
+        for member in archive:
+            name = PurePosixPath(member.name)
+            if (not member.isfile() or member.name.startswith('/') or '..' in name.parts
+                    or member.name in found or member.name not in contents
+                    or member.size != len(contents[member.name])):
+                raise ValueError('unsafe or duplicate source-review archive member')
+            found[member.name] = archive.extractfile(member).read()
+    if found != contents:
+        raise ValueError('source-review archive differs from current selected inputs')
+
+
+def encode(path, bodies):
+    contents = package_contents(bodies)
     with path.open('wb') as raw, gzip.GzipFile(fileobj=raw, mode='wb', mtime=0, filename='') as gz:
         with tarfile.open(fileobj=gz, mode='w', format=tarfile.USTAR_FORMAT) as out:
             for name, data in sorted(contents.items()):
                 info = tarfile.TarInfo(name)
                 info.size, info.mode, info.mtime, info.uid, info.gid = len(data), 0o644, 0, 0, 0
                 out.addfile(info, io.BytesIO(data))
-    with tarfile.open(path, 'r:gz') as archive:
-        found = {member.name: archive.extractfile(member).read() for member in archive}
-    if found != contents:
-        raise ValueError('new archive does not match selected inputs')
+    verify_archive(path, contents)
     return {'archive_sha256': sha(path.read_bytes()), 'archive_bytes': path.stat().st_size,
-            'files': len(entries), 'manifest_sha256': sha(manifest)}
+            'files': len(contents) - 1, 'manifest_sha256': sha(contents['manifest.json'])}
 
 
 def main():
@@ -228,7 +243,20 @@ def main():
     parser.add_argument('--publisher-browser', type=Path, required=True,
                         help='The original reviewed resource before the new WASM payload')
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--verify-only', action='store_true',
+                        help='compare an existing archive with current selected inputs without rewriting it')
     args = parser.parse_args()
+    if args.verify_only:
+        if not args.output.is_file():
+            raise ValueError('source-review archive is missing')
+        bodies = members(args.root, args.inputs, args.base, args.publisher_browser)
+        contents = package_contents(bodies)
+        verify_archive(args.output, contents)
+        print(json.dumps({'archive_sha256': sha(args.output.read_bytes()),
+                          'archive_bytes': args.output.stat().st_size,
+                          'files': len(contents) - 1,
+                          'manifest_sha256': sha(contents['manifest.json'])}, indent=2))
+        return
     if args.output.exists():
         raise ValueError('refusing to overwrite an existing source package')
     print(json.dumps(encode(args.output, members(args.root, args.inputs, args.base,
