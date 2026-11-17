@@ -166,8 +166,8 @@ public enum JSONFormatter {
     }
 
     /// Dominant line ending: CRLF when every line terminator in the source is
-    /// CRLF, otherwise LF. A lone `\r` is not a line terminator for JSON
-    /// purposes and forces the LF verdict.
+    /// CRLF, otherwise LF. CR-only and mixed-break input is deliberately
+    /// normalized to LF by this formatter policy.
     static func sourceLineEnding(_ text: String) -> String {
         let withoutCRLF = text.replacingOccurrences(of: "\r\n", with: "")
         if text.contains("\r\n"), !withoutCRLF.contains("\n"), !withoutCRLF.contains("\r") {

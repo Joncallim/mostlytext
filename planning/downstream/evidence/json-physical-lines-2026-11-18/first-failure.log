@@ -1,0 +1,62 @@
+warning: 'macdownkit': dependency 'sparkle' is not used by any target
+[0/1] Planning build
+Test Suite 'Selected tests' started at 2026-11-18 02:46:48.903.
+Test Suite 'MacDownKitPackageTests.xctest' started at 2026-11-18 02:46:48.911.
+Test Suite 'MacDownKitPackageTests.xctest' passed at 2026-11-18 02:46:48.911.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-11-18 02:46:48.911.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.007) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "JSONDiagnosticUTF16Coordinates" started.
+◇ Test astralScalarInKeyShiftsUTF16Offsets() started.
+✔ Test astralScalarInKeyShiftsUTF16Offsets() passed after 0.009 seconds.
+◇ Test combiningMarksCountPerUTF16Unit() started.
+✔ Test combiningMarksCountPerUTF16Unit() passed after 0.001 seconds.
+◇ Test crlfLineBoundariesCountTheCRInThePhysicalLine() started.
+✔ Test crlfLineBoundariesCountTheCRInThePhysicalLine() passed after 0.001 seconds.
+◇ Test carriageReturnOnlyAndMixedBreaksLocateTheInvalidUnit() started.
+✘ Test carriageReturnOnlyAndMixedBreaksLocateTheInvalidUnit() recorded an issue at JSONDiagnosticsTests.swift:286:13: Expectation failed: (diagnostic.line → 1) == (item.line → 3)
+✘ Test carriageReturnOnlyAndMixedBreaksLocateTheInvalidUnit() recorded an issue at JSONDiagnosticsTests.swift:287:13: Expectation failed: (diagnostic.column → 15) == (item.column → 3)
+✘ Test carriageReturnOnlyAndMixedBreaksLocateTheInvalidUnit() recorded an issue at JSONDiagnosticsTests.swift:286:13: Expectation failed: (diagnostic.line → 2) == (item.line → 3)
+✘ Test carriageReturnOnlyAndMixedBreaksLocateTheInvalidUnit() recorded an issue at JSONDiagnosticsTests.swift:287:13: Expectation failed: (diagnostic.column → 13) == (item.column → 3)
+✘ Test carriageReturnOnlyAndMixedBreaksLocateTheInvalidUnit() failed after 0.001 seconds with 4 issues.
+◇ Test astralScalarValueRangeSpansTwoUnits() started.
+✔ Test astralScalarValueRangeSpansTwoUnits() passed after 0.001 seconds.
+◇ Test combiningMarkRangeWithinString() started.
+✔ Test combiningMarkRangeWithinString() passed after 0.001 seconds.
+◇ Test diagnosticRangeMarksTheOffendingUnit() started.
+✔ Test diagnosticRangeMarksTheOffendingUnit() passed after 0.001 seconds.
+◇ Test documentAtTheNestingLimitIsValid() started.
+✔ Test documentAtTheNestingLimitIsValid() passed after 0.001 seconds.
+◇ Test objectNestingAtTheLimitSurvivesTheFullPipeline() started.
+✔ Test objectNestingAtTheLimitSurvivesTheFullPipeline() passed after 0.001 seconds.
+◇ Test documentBeyondTheNestingLimitIsRejectedWithDiagnostic() started.
+✔ Test documentBeyondTheNestingLimitIsRejectedWithDiagnostic() passed after 0.001 seconds.
+◇ Test nestedObjectsBeyondTheLimitAreRejectedNotCrashed() started.
+✔ Test nestedObjectsBeyondTheLimitAreRejectedNotCrashed() passed after 0.001 seconds.
+✘ Suite "JSONDiagnosticUTF16Coordinates" failed after 0.012 seconds with 4 issues.
+↳ /// EPIC-11 §3.3/§3.4 — UTF-16 coordinates: astral scalars, combining marks,
+↳ /// and CRLF boundaries must produce exact line/column/range values.
+◇ Suite "JSONOutlineSourceRanges" started.
+◇ Test memberRangesExcludeWhitespace() started.
+✔ Test memberRangesExcludeWhitespace() passed after 0.001 seconds.
+◇ Test astralScalarInsideStringAdjustsUTF16Ranges() started.
+✔ Test astralScalarInsideStringAdjustsUTF16Ranges() passed after 0.001 seconds.
+◇ Test combiningMarkInsideStringAdjustsUTF16Ranges() started.
+✔ Test combiningMarkInsideStringAdjustsUTF16Ranges() passed after 0.001 seconds.
+◇ Test crlfLineNumbersCountOneBreakPerPair() started.
+✔ Test crlfLineNumbersCountOneBreakPerPair() passed after 0.001 seconds.
+◇ Test carriageReturnOnlyLinesKeepOutlineAndSourceCoordinates() started.
+✘ Test carriageReturnOnlyLinesKeepOutlineAndSourceCoordinates() recorded an issue at JSONOutlineTests.swift:185:9: Expectation failed: (root?.lineRange → 1 ... 1) == 1 ... 4
+✘ Test carriageReturnOnlyLinesKeepOutlineAndSourceCoordinates() recorded an issue at JSONOutlineTests.swift:186:9: Expectation failed: (root?.children.map(\.lineRange) → [ClosedRange(1...1), ClosedRange(1...1)]) == ([2 ... 2, 3 ... 3] → [ClosedRange(2...2), ClosedRange(3...3)])
+✘ Test carriageReturnOnlyLinesKeepOutlineAndSourceCoordinates() failed after 0.001 seconds with 2 issues.
+◇ Test multiLineValuesSpanTheirLines() started.
+✔ Test multiLineValuesSpanTheirLines() passed after 0.001 seconds.
+◇ Test rangesAreConsistentAfterFormatting() started.
+✔ Test rangesAreConsistentAfterFormatting() passed after 0.001 seconds.
+✘ Suite "JSONOutlineSourceRanges" failed after 0.001 seconds with 2 issues.
+↳ /// EPIC-11 §3.4 — outline source ranges: UTF-16 offsets usable directly as
+↳ /// NSRange, exact at astral/combining/CRLF boundaries.
+✘ Test run with 18 tests in 2 suites failed after 0.013 seconds with 6 issues.
