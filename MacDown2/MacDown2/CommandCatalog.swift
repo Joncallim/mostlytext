@@ -76,6 +76,7 @@ extension CommandDescriptor {
         CommandDescriptor("Go to Line/Column…", .excluded(.notYetWired)),
         CommandDescriptor("Find…", .excluded(.notYetWired)),
         CommandDescriptor("About MostlyText", .excluded(.informational)),
+        CommandDescriptor("Check for Updates…", .excluded(.informational)),
         CommandDescriptor("Open Source Licenses…", .excluded(.informational)),
         CommandDescriptor("Debug", .excluded(.debugOnly)),
         CommandDescriptor("Mark Active Tab Dirty", .excluded(.debugOnly)),

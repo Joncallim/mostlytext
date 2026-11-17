@@ -31,6 +31,7 @@ private struct ApplicationScenes: Scene {
                 WorkspaceCommands(themeController: themeController)
                 TextFilterCommands()
                 AboutCommands()
+                UpdateCommands(updateChannel: appDelegate.updateChannel)
             }
         }
         .environment(\.windowCoordinator, ready ? appDelegate.coordinator : nil)

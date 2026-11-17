@@ -41,7 +41,9 @@ import/export panels, Finder, VoiceOver or installed-state acceptance.
 
 These names use the owner-frozen app.mostlytext. prefix and preserve the app
 identifier. The Markdown document icon and Quick Look target are implemented;
-the appcast remains a reserved address, not a deployed update channel.
+the appcast remains a reserved address, not a deployed update channel. The
+application-side Sparkle controller and menu are implemented behind migration
+readiness and a valid release public key; development builds do not start it.
 
 - Quick Look extension bundle identifier: app.mostlytext.MostlyText.QuickLook.
   It derives from the containing app ID. #7 now has a Markdown-only extension
@@ -52,8 +54,9 @@ the appcast remains a reserved address, not a deployed update channel.
   custom-theme type/extension above are implemented and need no further naming
   decision. No generic JSON, TOML or source-code ownership is added here.
 - The owner-selected default appcast URL is https://mostlytext.app/appcast.xml.
-  This is a reserved default, not a deployed feed, implemented Sparkle channel,
-  verified update or signing key. #4 owns feed/key/channel and N→N+1 acceptance.
+  The app-side controller and signed-feed settings are implemented. The feed is
+  not deployed, no release public/private key is configured, and no signed
+  N→N+1 update is verified. #4 owns those final channel and stateful-update gates.
 
 ## Migration-sensitive legacy identifiers
 

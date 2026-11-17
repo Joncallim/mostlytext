@@ -1677,6 +1677,15 @@
         }
       }
     },
+    "Check for Updates…": {
+      "comment": "Application menu command. Non-English values require final language and layout review.",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Check for Updates…" } },
+        "fr": { "stringUnit": { "state": "needs_review", "value": "Rechercher des mises à jour…" } },
+        "ja": { "stringUnit": { "state": "needs_review", "value": "アップデートを確認…" } },
+        "pl": { "stringUnit": { "state": "needs_review", "value": "Sprawdź uaktualnienia…" } }
+      }
+    },
     "Check that MostlyText can write to the Commands folder, then try again.": {
       "extractionState": "manual",
       "comment": "Command-folder error. Requires translation and native layout review before the final string freeze."

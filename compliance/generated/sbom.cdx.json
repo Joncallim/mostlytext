@@ -4169,6 +4169,38 @@
       "version": "publisher source-build input 0.2.1"
     },
     {
+      "bom-ref": "sparkle",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/sparkle-project/Sparkle"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "LicenseRef-Sparkle-Composite"
+        }
+      ],
+      "name": "Sparkle update framework",
+      "properties": [
+        {
+          "name": "mostlytext:kind",
+          "value": "swiftpm"
+        },
+        {
+          "name": "mostlytext:provenance",
+          "value": "verified"
+        },
+        {
+          "name": "mostlytext:resolution",
+          "value": "exact"
+        }
+      ],
+      "purl": "pkg:github/sparkle-project/sparkle@ab7d71291238df6e0492143b120c9b696a35f603",
+      "type": "library",
+      "version": "2.10.1"
+    },
+    {
       "bom-ref": "swift-argument-parser",
       "externalReferences": [
         {
@@ -5580,6 +5612,7 @@
         "rough-build-path-data-parser",
         "rough-build-points-on-curve",
         "rough-build-points-on-path",
+        "sparkle",
         "swift-argument-parser",
         "swift-cmark",
         "swift-concurrency-extras",
@@ -5635,7 +5668,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:5b73cb30-8309-547c-9ed6-0dc9f1bc87ca",
+  "serialNumber": "urn:uuid:e7028ba5-ba28-5096-8ed0-2724457059e5",
   "specVersion": "1.5",
   "version": 1
 }

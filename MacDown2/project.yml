@@ -19,6 +19,9 @@ packages:
   SwiftUIMath:
     url: https://github.com/Joncallim/swiftui-math
     revision: 2a89c2b41482988711909572d116374e47a52164
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    revision: ab7d71291238df6e0492143b120c9b696a35f603
   MacDownKit:
     path: Packages/MacDownKit
 targets:
@@ -81,6 +84,8 @@ targets:
       product: Textual
     - package: SwiftUIMath
       product: SwiftUIMath
+    - package: Sparkle
+      product: Sparkle
     - package: MacDownKit
       product: Diagrams
     - package: MacDownKit
@@ -114,6 +119,10 @@ targets:
         CFBundleIconName: AppIcon
         CFBundleShortVersionString: 0.1.0
         CFBundleVersion: '1'
+        SUFeedURL: https://mostlytext.app/appcast.xml
+        SUPublicEDKey: '$(MOSTLYTEXT_UPDATE_PUBLIC_ED_KEY)'
+        SUVerifyUpdateBeforeExtraction: true
+        SURequireSignedFeed: true
         LSMinimumSystemVersion: '26.0'
         NSHumanReadableCopyright: "Copyright \xA9 2026 Joncallim"
         NSPrincipalClass: NSApplication

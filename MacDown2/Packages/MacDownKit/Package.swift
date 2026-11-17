@@ -36,6 +36,12 @@ let package = Package(
         .library(name: "TextSearch", targets: ["TextSearch"]),
     ],
     dependencies: [
+        // The app links Sparkle directly. Keep its exact binary package in
+        // this repository lock so the generated Xcode workspace cannot drift.
+        .package(
+            url: "https://github.com/sparkle-project/Sparkle",
+            revision: "ab7d71291238df6e0492143b120c9b696a35f603"
+        ),
         .package(url: "https://github.com/apple/swift-argument-parser", exact: "1.8.2"),
         .package(
             url: "https://github.com/Joncallim/SwiftTreeSitter",

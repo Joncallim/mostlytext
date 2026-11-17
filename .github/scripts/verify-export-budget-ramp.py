@@ -67,8 +67,8 @@ def source_receipt(repo):
     if subprocess.check_output(['git', 'status', '--porcelain'], cwd=repo):
         raise RuntimeError('Export ramp requires a clean checkout')
     pins = json.loads((repo / 'MacDown2/Packages/MacDownKit/Package.resolved').read_text())['pins']
-    if len(pins) != 24 or len({row['identity'] for row in pins}) != 24:
-        raise RuntimeError('The immutable 24-pin graph changed')
+    if len(pins) != 25 or len({row['identity'] for row in pins}) != 25:
+        raise RuntimeError('The immutable 25-pin graph changed')
     xcode = subprocess.check_output(['xcodebuild', '-version'], text=True).splitlines()
     if not xcode or xcode[0] != 'Xcode 26.6':
         raise RuntimeError('The selected Xcode differs from the measured toolchain')
