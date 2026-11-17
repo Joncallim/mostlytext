@@ -5,7 +5,23 @@ import SwiftTreeSitterLayer
 /// Cancelling a caller cannot interrupt the synchronous C parser, so an
 /// active request retains its slot until that parser actually returns.
 actor MarkdownViewportParseQueue {
-    typealias SnapshotParser = @Sendable (String, GrammarRegistry) async throws -> LanguageLayerTreeSnapshot
+    enum TimingStage: String, Sendable {
+        case requested
+        case admitted
+        case physicalStarted
+        case physicalFinished
+        case returned
+    }
+
+    struct TimingSample: Sendable {
+        let id: UUID
+        let stage: TimingStage
+        let uptimeNanoseconds: UInt64
+    }
+
+    typealias TimingObserver = @Sendable (TimingSample) -> Void
+    typealias SnapshotParser = @Sendable (String, GrammarRegistry, UUID, TimingObserver?) async throws
+        -> LanguageLayerTreeSnapshot
 
     static let shared = MarkdownViewportParseQueue(capacity: 2)
 
@@ -18,10 +34,17 @@ actor MarkdownViewportParseQueue {
     private let parser: SnapshotParser
     private var activeCount = 0
     private var waiters: [Waiter] = []
+    private var timingObserver: TimingObserver?
 
-    init(capacity: Int, parser: @escaping SnapshotParser = { source, registry in
+    init(capacity: Int, parser: @escaping SnapshotParser = { source, registry, id, observer in
         try await Task.detached(priority: .utility) {
-            try MarkdownSectionParser.snapshot(source: source, registry: registry)
+            observer?(TimingSample(id: id, stage: .physicalStarted,
+                                   uptimeNanoseconds: DispatchTime.now().uptimeNanoseconds))
+            defer {
+                observer?(TimingSample(id: id, stage: .physicalFinished,
+                                       uptimeNanoseconds: DispatchTime.now().uptimeNanoseconds))
+            }
+            return try MarkdownSectionParser.snapshot(source: source, registry: registry)
         }.value
     }) {
         self.capacity = max(1, capacity)
@@ -30,11 +53,18 @@ actor MarkdownViewportParseQueue {
 
     func snapshot(source: String, registry: GrammarRegistry) async throws -> LanguageLayerTreeSnapshot {
         let requestID = UUID()
+        let observer = timingObserver
+        observer?(TimingSample(id: requestID, stage: .requested,
+                               uptimeNanoseconds: DispatchTime.now().uptimeNanoseconds))
         return try await withTaskCancellationHandler {
             try await acquire(requestID)
             defer { release() }
             try Task.checkCancellation()
-            let result = try await parser(source, registry)
+            observer?(TimingSample(id: requestID, stage: .admitted,
+                                   uptimeNanoseconds: DispatchTime.now().uptimeNanoseconds))
+            let result = try await parser(source, registry, requestID, observer)
+            observer?(TimingSample(id: requestID, stage: .returned,
+                                   uptimeNanoseconds: DispatchTime.now().uptimeNanoseconds))
             try Task.checkCancellation()
             return result
         } onCancel: {
@@ -48,6 +78,10 @@ actor MarkdownViewportParseQueue {
 
     var queuedCountForTesting: Int {
         waiters.count
+    }
+
+    func setTimingObserver(_ observer: TimingObserver?) {
+        timingObserver = observer
     }
 
     private func acquire(_ id: UUID) async throws {

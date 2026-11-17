@@ -9,7 +9,7 @@ struct MarkdownViewportParseQueueTests {
     func cancelledActiveWorkRetainsItsSlotAndQueuedCancellationIsPrompt() async throws {
         let probe = HeldSnapshotParser()
         let registry = GrammarRegistry()
-        let queue = MarkdownViewportParseQueue(capacity: 2) { source, registry in
+        let queue = MarkdownViewportParseQueue(capacity: 2) { source, registry, _, _ in
             try await probe.parse(source, registry: registry)
         }
         let first = Task { try await queue.snapshot(source: "alpha", registry: registry) }

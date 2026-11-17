@@ -95,6 +95,11 @@ struct ViewportDisplayBudgetBenchmarkTests {
         let painter = try #require(highlighter.viewportPainter)
         await session.waitForPendingParse()
         try #require(!session.visibleTokens().isEmpty)
+        let parseTiming = ParseTimingRecorder()
+        await MarkdownViewportParseQueue.shared.setTimingObserver { parseTiming.record($0) }
+        defer {
+            Task { await MarkdownViewportParseQueue.shared.setTimingObserver(nil) }
+        }
 
         var timing: [(MarkdownViewportSession.TimingEvent, UInt64)] = []
         session.onTimingEvent = { event, time in timing.append((event, time)) }
@@ -123,6 +128,7 @@ struct ViewportDisplayBudgetBenchmarkTests {
             let beforePixels = try Self.displayReadback(host: host, window: window, region: displayRegion)
             let priorValidation = painter.validationPassCount
             timing.removeAll(keepingCapacity: true)
+            let timingStart = parseTiming.snapshot().count
 
             let input = DispatchTime.now().uptimeNanoseconds
             system.textView.insertText(edit.replacement, replacementRange: range)
@@ -188,6 +194,20 @@ struct ViewportDisplayBudgetBenchmarkTests {
                 Double(end - start) / 1_000_000
             }
             let total = milliseconds(input, displayReadback)
+            let queueSamples = Array(parseTiming.snapshot().dropFirst(timingStart))
+            let lastQueueID = try #require(queueSamples.last { $0.stage == .returned }?.id)
+            let lastQueueSamples = queueSamples.filter { $0.id == lastQueueID }
+            func queueStamp(_ stage: MarkdownViewportParseQueue.TimingStage) throws -> UInt64 {
+                try #require(lastQueueSamples.first { $0.stage == stage }?.uptimeNanoseconds)
+            }
+            let queued = try queueStamp(.requested)
+            let admitted = try queueStamp(.admitted)
+            let physicalStart = try queueStamp(.physicalStarted)
+            let physicalEnd = try queueStamp(.physicalFinished)
+            let returned = try queueStamp(.returned)
+            try #require(lastParseRequested <= queued && queued <= admitted
+                && admitted <= physicalStart && physicalStart <= physicalEnd
+                && physicalEnd <= returned && returned <= lastParseResolved)
             results.append([
                 "case": edit.name,
                 "source_utf8_bytes": expectedSource.utf8.count,
@@ -199,6 +219,12 @@ struct ViewportDisplayBudgetBenchmarkTests {
                 // attempt, fallback, cache publication and no debounce.
                 "parse_request_to_publication_ms": milliseconds(parseRequested, published),
                 "last_parse_request_to_resolution_ms": milliseconds(lastParseRequested, lastParseResolved),
+                "parse_request_to_queue_entry_ms": milliseconds(lastParseRequested, queued),
+                "queue_admission_ms": milliseconds(queued, admitted),
+                "detached_dispatch_ms": milliseconds(admitted, physicalStart),
+                "physical_parse_ms": milliseconds(physicalStart, physicalEnd),
+                "queue_resume_ms": milliseconds(physicalEnd, returned),
+                "main_actor_resume_ms": milliseconds(returned, lastParseResolved),
                 "last_parse_resolution_to_publication_ms": milliseconds(lastParseResolved, published),
                 "parse_attempts_requested": parseRequests,
                 "parse_attempts_resolved": parseResolutions,
@@ -452,5 +478,18 @@ private final class DisplayBudgetSourceBox {
 
     init(_ text: String) {
         self.text = text
+    }
+}
+
+private final class ParseTimingRecorder: @unchecked Sendable {
+    private let lock = NSLock()
+    private var samples: [MarkdownViewportParseQueue.TimingSample] = []
+
+    func record(_ sample: MarkdownViewportParseQueue.TimingSample) {
+        lock.withLock { samples.append(sample) }
+    }
+
+    func snapshot() -> [MarkdownViewportParseQueue.TimingSample] {
+        lock.withLock { samples }
     }
 }
