@@ -115,6 +115,8 @@ struct LineHeightEstimator {
         (0x41 ... 0x5A).contains(unit) || unit == 0x6D || unit == 0x77 || unit == 0x40 || unit == 0x25 || unit == 0x26
     }
 
+    // Keep wrap state in one tight loop across UTF-16 chunks.
+    // swiftlint:disable:next function_body_length
     func height(of string: NSString, range: NSRange) -> CGFloat {
         var lines = 1
         var lineWidth: CGFloat = 0
@@ -136,32 +138,43 @@ struct LineHeightEstimator {
             wordWidth = 0
         }
 
-        var index = range.location
+        // Copy bounded UTF-16 chunks instead of crossing the NSString bridge
+        // for every unit of a large document after an edit. Word and line
+        // state intentionally survive chunk boundaries.
+        var buffer = [unichar](repeating: 0, count: min(range.length, HeightParagraphScanner.chunkCapacity))
+        var offset = range.location
         let end = NSMaxRange(range)
-        while index < end {
-            let unit = string.character(at: index)
-            switch unit {
-            case 0x2028, 0x85, 0x0B, 0x0C:
-                flushWord()
-                lines += 1
-                lineWidth = 0
-            case 0x20, 0x09:
-                flushWord()
-                lineWidth += unit == 0x20 ? asciiAdvance : tabWidth
-                if lineWidth > availableWidth {
-                    lines += 1
-                    lineWidth = 0
+        while offset < end {
+            let count = min(buffer.count, end - offset)
+            buffer.withUnsafeMutableBufferPointer { storage in
+                guard let units = storage.baseAddress else { return }
+                string.getCharacters(units, range: NSRange(location: offset, length: count))
+                for index in 0 ..< count {
+                    let unit = units[index]
+                    switch unit {
+                    case 0x2028, 0x85, 0x0B, 0x0C:
+                        flushWord()
+                        lines += 1
+                        lineWidth = 0
+                    case 0x20, 0x09:
+                        flushWord()
+                        lineWidth += unit == 0x20 ? asciiAdvance : tabWidth
+                        if lineWidth > availableWidth {
+                            lines += 1
+                            lineWidth = 0
+                        }
+                    case ..<0x80:
+                        wordWidth += Self.isWideASCII(unit) ? wideAsciiAdvance : asciiAdvance
+                    case 0xD800 ... 0xDFFF:
+                        wordWidth += symbolAdvance / 2
+                    case 0x2E80 ... 0x9FFF, 0xAC00 ... 0xD7AF, 0xF900 ... 0xFAFF, 0xFF00 ... 0xFFEF:
+                        wordWidth += cjkAdvance
+                    default:
+                        wordWidth += symbolAdvance
+                    }
                 }
-            case ..<0x80:
-                wordWidth += Self.isWideASCII(unit) ? wideAsciiAdvance : asciiAdvance
-            case 0xD800 ... 0xDFFF:
-                wordWidth += symbolAdvance / 2
-            case 0x2E80 ... 0x9FFF, 0xAC00 ... 0xD7AF, 0xF900 ... 0xFAFF, 0xFF00 ... 0xFFEF:
-                wordWidth += cjkAdvance
-            default:
-                wordWidth += symbolAdvance
             }
-            index += 1
+            offset += count
         }
         flushWord()
         return CGFloat(lines) * lineHeight

@@ -90,6 +90,23 @@ struct ContentHeightMeterTests {
         #expect(ContinuousClock.now - start < .seconds(2))
     }
 
+    @Test func estimatedWordsAndForcedBreaksSurviveUTF16ChunkBoundaries() {
+        let width: CGFloat = 1000
+        let length = HeightParagraphScanner.chunkCapacity + 1
+        let word = String(repeating: "a", count: length)
+        let source = word + "\u{2028}" + word
+        let estimator = LineHeightEstimator(width: width, attributes: attributes)
+        let advance = max(("n" as NSString).size(withAttributes: attributes).width, 1)
+        let lineHeight = ceil(("Ag" as NSString).boundingRect(
+            with: NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude),
+            options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: attributes
+        ).height)
+        let expectedLines = 2 + 2 * Int((CGFloat(length) * advance / width).rounded(.down))
+        #expect(estimator.height(of: source as NSString,
+                                 range: NSRange(location: 0, length: (source as NSString).length))
+                == CGFloat(expectedLines) * lineHeight)
+    }
+
     /// Review pass 7: the first estimate ignored the paragraph style's line-height multiple and priced every unit at
     /// the width of "n", so CJK/emoji text was under-estimated and the last 19-48% of such a document could not be
     /// scrolled to. The estimate must never be shorter than the real layout.
