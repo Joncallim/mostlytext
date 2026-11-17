@@ -2,7 +2,7 @@ import Combine
 import Sparkle
 
 /// The app owns admission and lifetime. This interface keeps Sparkle outside
-/// application commands and allows the availability signal to be tested.
+/// application commands and exposes availability without leaking Sparkle APIs.
 @MainActor
 public protocol UpdateChecking: AnyObject {
     var availability: AnyPublisher<Bool, Never> { get }
