@@ -560,5 +560,32 @@ app-test failure among 778: the new source-size key was absent from the
 compiled **English** app catalog, although French, Japanese and Polish were
 present. The English runtime fallback masked that omission. The corrective
 change adds an explicit English value to all four owning catalogs and extends
-the source-route guard. This first app-test failure remains release evidence;
-the corrected head requires its own full check.
+the source-route guard. This first app-test failure remains release evidence.
+The corrected head's full check
+[passed on `310b8326`](https://github.com/Joncallim/mostlytext/actions/runs/43925486843)
+with 3,944 package tests and 778 app tests. PR #288 merged at `94683d93`;
+the tested and merged tree are both `fefbd311`.
+
+## Bundled diagram navigation boundary
+
+The post-PR #288 review found the same lexical file-path prefix test in the
+Mermaid and shared D2/Graphviz WebKit navigation delegates. A directory named
+`Resources-extra` passes `hasPrefix("Resources")`, even though it is a sibling
+of the intended bundle resource directory. The old predicate returns `true`
+for that controlled counterexample. WebKit's scoped `loadFileURL` access and
+the harness content-security policies are separate protections, but the
+delegate itself must deny the sibling and any symlink escape.
+
+The two delegates now share one navigation decision in DiagramWebKitPool. It
+accepts only local file URLs whose standardized, symlink-resolved path is a
+strict descendant of the bundled resource directory. Network URLs, file URLs
+with a host, the directory itself, prefix-sharing siblings, traversal paths
+and symlink escapes are refused. The same-directory harness and nested bundled
+resources remain admissible. The check does not grant new file or network
+authority, alter renderer output or relax existing CSP and WebKit read scope.
+
+The pure policy regression covers these boundaries. Focused package tests,
+the complete locked suite, actual WebKit render paths, lint, compliance and a
+fresh Release build are required before merge. This closes a concrete
+navigation predicate defect; it does not by itself establish the full E23
+sandbox/no-network, memory or Quick Look acceptance criteria.

@@ -1,4 +1,5 @@
 import Diagrams
+import DiagramWebKitPool
 import Foundation
 import WebKit
 
@@ -232,7 +233,7 @@ final class MermaidHarnessPage: NSObject, WKNavigationDelegate, WKUIDelegate {
         decidePolicyFor navigationAction: WKNavigationAction,
         decisionHandler: @escaping @MainActor @Sendable (WKNavigationActionPolicy) -> Void
     ) {
-        guard let url = navigationAction.request.url, url.isFileURL, url.path.hasPrefix(allowedDirectory.path) else {
+        guard DiagramNavigationPolicy.allows(navigationAction.request.url, within: allowedDirectory) else {
             decisionHandler(.cancel)
             return
         }

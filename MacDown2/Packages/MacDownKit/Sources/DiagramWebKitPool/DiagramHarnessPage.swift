@@ -244,7 +244,7 @@ public final class DiagramHarnessPage: NSObject, WKNavigationDelegate, WKUIDeleg
         decidePolicyFor navigationAction: WKNavigationAction,
         decisionHandler: @escaping @MainActor @Sendable (WKNavigationActionPolicy) -> Void
     ) {
-        guard let url = navigationAction.request.url, url.isFileURL, url.path.hasPrefix(allowedDirectory.path) else {
+        guard DiagramNavigationPolicy.allows(navigationAction.request.url, within: allowedDirectory) else {
             decisionHandler(.cancel)
             return
         }
