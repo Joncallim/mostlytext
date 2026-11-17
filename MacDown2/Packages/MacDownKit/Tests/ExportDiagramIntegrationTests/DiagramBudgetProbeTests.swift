@@ -78,6 +78,13 @@
             try data.write(to: directory.appendingPathComponent(name + ".json"), options: .atomic)
         }
 
+        private func writeCase(_ name: String, result: [String: Any], to directory: URL) throws {
+            let data = try JSONSerialization.data(withJSONObject: [
+                "engine": "d2", "case": name, "configuration": "Release", "result": result,
+            ], options: [.prettyPrinted, .sortedKeys])
+            try data.write(to: directory.appendingPathComponent(name + ".json"), options: .atomic)
+        }
+
         @Test func measureMermaid() async throws {
             let directory = try verifyHost()
             let renderer = MermaidWebRenderer()
@@ -125,6 +132,30 @@
             await renderer.shutdown()
             try write("d2", ordinary: ordinary, stress: stress, dense: dense, to: directory)
             #expect(ordinary["outcome"] as? String == "rendered")
+        }
+
+        @Test func measureD2Chain256() async throws {
+            let directory = try verifyHost()
+            let renderer = D2WebRenderer()
+            let source = (0 ..< 256).map { "n\($0) -> n\($0 + 1)" }.joined(separator: "\n")
+            let result = await measure(source: source) { text in
+                try await (renderer.render(D2Fence(source: text, sourceRange: 0 ..< text.utf16.count),
+                                           context: .neutralLight)).svg
+            }
+            await renderer.shutdown()
+            try writeCase("D2Chain256", result: result, to: directory)
+        }
+
+        @Test func measureD2Star256() async throws {
+            let directory = try verifyHost()
+            let renderer = D2WebRenderer()
+            let source = (0 ..< 256).map { "root -> n\($0)" }.joined(separator: "\n")
+            let result = await measure(source: source) { text in
+                try await (renderer.render(D2Fence(source: text, sourceRange: 0 ..< text.utf16.count),
+                                           context: .neutralLight)).svg
+            }
+            await renderer.shutdown()
+            try writeCase("D2Star256", result: result, to: directory)
         }
 
         @Test func measureGraphviz() async throws {
