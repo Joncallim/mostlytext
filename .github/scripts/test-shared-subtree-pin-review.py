@@ -19,13 +19,14 @@ class RuntimePinAuthorityTests(unittest.TestCase):
 
     def test_actual_complete_graph_preserves_the_two_reviewed_source_owners(self):
         pins = module.checked_pins(self.lock)
-        self.assertEqual(len(pins), 24)
+        self.assertEqual(len(pins), 25)
+        self.assertEqual((pins["sparkle"]["location"], pins["sparkle"]["state"]["revision"]), module.SPARKLE)
         for name, owner in module.OWNERS.items():
             self.assertEqual(pins[name]["location"], owner)
         self.assertEqual(pins["tree-sitter"]["state"]["revision"], module.REVIEWED_RUNTIME)
 
     def test_other_owners_and_nonimmutable_revisions_are_refused_before_fetch(self):
-        for name in module.OWNERS:
+        for name in [*module.OWNERS, "sparkle"]:
             for key, value in [("location", "https://github.com/other/unreviewed"), ("revision", "main")]:
                 changed = copy.deepcopy(self.lock)
                 row = next(row for row in changed["pins"] if row["identity"] == name)

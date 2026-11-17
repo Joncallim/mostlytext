@@ -184,8 +184,8 @@ def main():
     repo = Path(__file__).resolve().parents[2]
     paths = subprocess.check_output(['git', 'ls-files', '-z', '--', *INPUTS], cwd=repo).decode().split('\0')
     pins = json.loads((repo / 'MacDown2/Packages/MacDownKit/Package.resolved').read_text())['pins']
-    if len(pins) != len({p['identity'] for p in pins}) or len(pins) != 24:
-        raise SystemExit('The exact canonical 24-pin graph is required')
+    if len(pins) != len({p['identity'] for p in pins}) or len(pins) != 25:
+        raise SystemExit('The exact canonical 25-pin graph is required')
     receipt = {
         'checkout': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=repo, text=True).strip(),
         'configuration': 'Release', 'testability': True,

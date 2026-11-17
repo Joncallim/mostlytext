@@ -20,6 +20,7 @@ OWNERS = {
     "tree-sitter": "https://github.com/Joncallim/tree-sitter",
     "tree-sitter-json": "https://github.com/tree-sitter/tree-sitter-json",
 }
+SPARKLE = ("https://github.com/sparkle-project/Sparkle", "ab7d71291238df6e0492143b120c9b696a35f603")
 
 
 def digest(path):
@@ -31,8 +32,11 @@ def checked_pins(lock):
     pins = {row["identity"]: row for row in rows}
     if len(pins) != len(rows):
         raise SystemExit("Duplicate dependency identities cannot qualify runtime proof")
-    if len(pins) != 24:
-        raise SystemExit("The reviewed complete 24-pin graph is required")
+    if len(pins) != 25:
+        raise SystemExit("The reviewed complete 25-pin graph is required")
+    sparkle = pins.get("sparkle", {})
+    if (sparkle.get("location"), sparkle.get("state", {}).get("revision")) != SPARKLE:
+        raise SystemExit("The reviewed Sparkle package owner and revision are required")
     for name, owner in OWNERS.items():
         row = pins.get(name, {})
         revision = row.get("state", {}).get("revision", "")
