@@ -103,6 +103,8 @@ struct ViewportDisplayBudgetBenchmarkTests {
 
         var timing: [(MarkdownViewportSession.TimingEvent, UInt64)] = []
         session.onTimingEvent = { event, time in timing.append((event, time)) }
+        var paintTimes: [(UInt64, UInt64)] = []
+        painter.onPaintTiming = { started, ended in paintTimes.append((started, ended)) }
         var results: [[String: Any]] = []
         let registry = GrammarRegistry()
         for edit in Self.cases {
@@ -128,6 +130,7 @@ struct ViewportDisplayBudgetBenchmarkTests {
             let beforePixels = try Self.displayReadback(host: host, window: window, region: displayRegion)
             let priorValidation = painter.validationPassCount
             timing.removeAll(keepingCapacity: true)
+            paintTimes.removeAll(keepingCapacity: true)
             let timingStart = parseTiming.snapshot().count
 
             let input = DispatchTime.now().uptimeNanoseconds
@@ -225,6 +228,12 @@ struct ViewportDisplayBudgetBenchmarkTests {
                 "physical_parse_ms": milliseconds(physicalStart, physicalEnd),
                 "queue_resume_ms": milliseconds(physicalEnd, returned),
                 "main_actor_resume_ms": milliseconds(returned, lastParseResolved),
+                "paint_runs": paintTimes.map { started, ended in
+                    [
+                        "start_after_input_ms": milliseconds(input, started),
+                        "duration_ms": milliseconds(started, ended),
+                    ]
+                },
                 "last_parse_resolution_to_publication_ms": milliseconds(lastParseResolved, published),
                 "parse_attempts_requested": parseRequests,
                 "parse_attempts_resolved": parseResolutions,
