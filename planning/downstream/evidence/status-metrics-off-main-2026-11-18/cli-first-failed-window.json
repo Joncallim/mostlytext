@@ -1,0 +1,79 @@
+{
+  "app": "/Users/runner/work/_temp/cli-native-app/Build/Products/Release/MacDown2.app",
+  "birth": 1794946226.766545,
+  "executable": "/Users/runner/work/_temp/cli-native-app/Build/Products/Release/MacDown2.app/Contents/MacOS/MacDown2",
+  "observed_pid_after_operation": 25969,
+  "operation": "inspect",
+  "pid": 25969,
+  "terminated": false,
+  "window_metadata_available": true,
+  "windows": [
+    {
+      "kCGWindowBounds": {
+        "Height": 0,
+        "Width": 0,
+        "X": 0,
+        "Y": 0
+      },
+      "kCGWindowLayer": 0,
+      "kCGWindowNumber": 34,
+      "name": "Welcome to MostlyText"
+    },
+    {
+      "kCGWindowBounds": {
+        "Height": 572,
+        "Width": 590,
+        "X": 217,
+        "Y": 57
+      },
+      "kCGWindowIsOnscreen": true,
+      "kCGWindowLayer": 0,
+      "kCGWindowNumber": 33,
+      "name": "MostlyText Migration"
+    },
+    {
+      "kCGWindowBounds": {
+        "Height": 30,
+        "Width": 1024,
+        "X": 0,
+        "Y": 0
+      },
+      "kCGWindowLayer": 0,
+      "kCGWindowNumber": 32,
+      "name": ""
+    },
+    {
+      "kCGWindowBounds": {
+        "Height": 30,
+        "Width": 1024,
+        "X": 0,
+        "Y": 0
+      },
+      "kCGWindowLayer": 0,
+      "kCGWindowNumber": 31,
+      "name": ""
+    },
+    {
+      "kCGWindowBounds": {
+        "Height": 30,
+        "Width": 1024,
+        "X": 0,
+        "Y": 0
+      },
+      "kCGWindowLayer": 0,
+      "kCGWindowNumber": 30,
+      "name": ""
+    },
+    {
+      "kCGWindowBounds": {
+        "Height": 30,
+        "Width": 1024,
+        "X": 0,
+        "Y": 0
+      },
+      "kCGWindowLayer": 0,
+      "kCGWindowNumber": 29,
+      "name": ""
+    }
+  ]
+}

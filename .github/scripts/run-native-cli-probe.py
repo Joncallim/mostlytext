@@ -139,11 +139,11 @@ def main():
         persist()
         return result
 
-    def wait_for_endpoint(application):
+    def wait_for_endpoint(application, deadline=None):
         runtime = Path(subprocess.check_output(["getconf", "DARWIN_USER_TEMP_DIR"], text=True).strip()).resolve()
         endpoint = runtime / ("mt-" + hashlib.sha256(identity.encode()).hexdigest()[:24]) / "s"
         began = time.monotonic()
-        deadline = began + 10
+        deadline = began + 10 if deadline is None else deadline
         observation = {"pid": application["pid"], "endpoint": str(endpoint), "attempts": [],
                        "application_frames_sent": 0, "scope": "Live-peer transport readiness; not a document request"}
         ready = False
@@ -177,12 +177,24 @@ def main():
             receipt.setdefault("observation_errors", []).append({"phase": label, "error": str(error)})
             persist()
 
-    def require_welcome_without_acknowledgement(label, application):
+    def require_welcome_without_acknowledgement(label, application, deadline=None):
         inspection = app_action("inspect", application)
         (output / (label + "-windows.json")).write_text(json.dumps(inspection, indent=2) + "\n")
         assert inspection.get("window_metadata_available") and not inspection["terminated"]
-        assert any(window.get("name") == "Welcome to MostlyText" and window.get("kCGWindowIsOnscreen")
-                   for window in inspection["windows"]), "Fresh CLI must preserve the actual Welcome window"
+        attempts = [{"elapsed_seconds": 0, "windows": inspection["windows"]}]
+        began = time.monotonic()
+
+        def welcome_visible(observed):
+            return any(window.get("name") == "Welcome to MostlyText" and window.get("kCGWindowIsOnscreen")
+                       for window in observed["windows"])
+
+        while deadline is not None and not welcome_visible(inspection) and time.monotonic() < deadline:
+            time.sleep(min(0.1, max(0, deadline - time.monotonic())))
+            inspection = app_action("inspect", application)
+            assert inspection.get("window_metadata_available") and not inspection["terminated"]
+            attempts.append({"elapsed_seconds": time.monotonic() - began, "windows": inspection["windows"]})
+        (output / (label + "-window-transition.json")).write_text(json.dumps(attempts, indent=2) + "\n")
+        assert welcome_visible(inspection), "Fresh CLI must preserve the actual Welcome window"
         state = command(label + "-first-run-key", ["defaults", "read", identity, key])
         absent = (state["returncode"] == 1 and
                   ("The domain/default pair of (" + identity + ", " + key + ") does not exist") in state["stderr"])
@@ -192,6 +204,8 @@ def main():
         receipt.setdefault("welcome_observations", []).append({"label": label,
                                                                "pid": inspection["pid"],
                                                                "visible": True,
+                                                               "presentation_wait_seconds": time.monotonic() - began,
+                                                               "window_inspections": len(attempts),
                                                                "first_run_acknowledged": False})
         persist()
 
@@ -209,9 +223,10 @@ def main():
         assert before["returncode"] != 0, "Runner is not a fresh first-run domain"
         storage_snapshot("before-launch")
         current = app_action("launch")
-        receipt["first_run_endpoint_observed"] = wait_for_endpoint(current)
+        fresh_launch_deadline = time.monotonic() + 10
+        receipt["first_run_endpoint_observed"] = wait_for_endpoint(current, deadline=fresh_launch_deadline)
         if receipt["first_run_endpoint_observed"]:
-            require_welcome_without_acknowledgement("fresh-before-file", current)
+            require_welcome_without_acknowledgement("fresh-before-file", current, deadline=fresh_launch_deadline)
         first = command("fresh-warm-file", [public, source])
         successes["fresh_warm_file"] = first["returncode"] == 0
         if not successes["fresh_warm_file"]:
