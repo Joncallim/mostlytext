@@ -7,9 +7,10 @@ import SwiftTreeSitterLayer
 /// The parser/cache lifetime behind one mounted large-Markdown editor.
 ///
 /// The storage gate calls `didEdit` for every actual character mutation.
-/// Parsing starts only after that synchronous callback returns; publication
-/// requires the ticket captured at that exact storage generation. This type
-/// does not paint or replace the existing large-file fallback by itself.
+/// A bounded edit window is copied before worker dispatch; that worker reads
+/// only owned text, even if the storage callback is still unwinding.
+/// Publication requires the ticket captured at that exact storage generation.
+/// This type does not paint or replace the existing large-file fallback by itself.
 @MainActor
 final class MarkdownViewportSession {
     typealias SnapshotParser = @Sendable (String, GrammarRegistry) async throws -> LanguageLayerTreeSnapshot
@@ -260,6 +261,7 @@ final class MarkdownViewportSession {
                                       delta: delta, expectedLength: expectedLength)
         emitTiming(.parseRequested)
         parseTask = Task.detached(priority: .userInitiated) { [weak self] in
+            guard !Task.isCancelled else { return }
             let snapshot = try? await parseSnapshot(content, registry)
             await self?.completeLocalParse(ticket: ticket, change: change, snapshot: snapshot)
         }

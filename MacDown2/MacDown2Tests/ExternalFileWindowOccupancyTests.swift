@@ -48,7 +48,9 @@ struct ExternalFileWindowOccupancyTests {
         #expect(window.title == retiredTitle, "retired observation must not update a closed window")
     }
 
-    @Test func threeRealWindowsHaveBoundedWatchDescriptorsAndAnExternalChangePositive() async throws {
+    @Test
+    // swiftlint:disable:next function_body_length
+    func threeRealWindowsHaveBoundedWatchDescriptorsAndAnExternalChangePositive() async throws {
         let fixture = try Fixture()
         let windows = try makeFileWindows(fixture: fixture)
         let controllers = windows.controllers
@@ -81,6 +83,8 @@ struct ExternalFileWindowOccupancyTests {
         let idleEnd = try processWakeups()
         #expect(try watcherDescriptors(for: targets) == bound, "idle watches must not accumulate")
 
+        let comparison = try await measureUnboundSameWindows(controllers: controllers, targets: targets)
+
         let positive = try await verifyExternalReplacementAndSession(
             fixture: fixture, controller: first,
             source: sourceURLs[0], directory: directoryURLs[0]
@@ -93,22 +97,16 @@ struct ExternalFileWindowOccupancyTests {
             "parent_watch_descriptors": directoryURLs.count,
             "idle_interrupt_wakeups": idleEnd.interrupt - idleStart.interrupt,
             "idle_platform_idle_wakeups": idleEnd.platformIdle - idleStart.platformIdle,
+            "same_window_unbound_interrupt_wakeups": comparison.unbound.interrupt,
+            "same_window_unbound_platform_idle_wakeups": comparison.unbound.platformIdle,
+            "same_window_rebound_interrupt_wakeups": comparison.rebound.interrupt,
+            "same_window_rebound_platform_idle_wakeups": comparison.rebound.platformIdle,
             "positive_interrupt_wakeups": positive.interrupt,
             "positive_platform_idle_wakeups": positive.platformIdle,
             "closed_interrupt_wakeups": closed.interrupt,
             "closed_platform_idle_wakeups": closed.platformIdle,
         ]
         try preserveMeasurement(record)
-    }
-
-    private func preserveMeasurement(_ record: [String: Any]) throws {
-        print("external-window-process-occupancy \(record)")
-        if let directory = ProcessInfo.processInfo.environment["MOSTLYTEXT_EXTERNAL_PROCESS_OUTPUT"] {
-            let url = URL(fileURLWithPath: directory, isDirectory: true)
-            try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
-            let data = try JSONSerialization.data(withJSONObject: record, options: [.prettyPrinted, .sortedKeys])
-            try data.write(to: url.appendingPathComponent("window-occupancy.json"), options: .atomic)
-        }
     }
 
     private struct WindowSet {
@@ -139,7 +137,8 @@ struct ExternalFileWindowOccupancyTests {
 
     private func measureClosedWindows(
         fixture: Fixture, controllers: [WindowController], targets: [URL]
-    ) async throws -> (interrupt: UInt64, platformIdle: UInt64) {
+    ) async throws -> (unbound: (interrupt: UInt64, platformIdle: UInt64),
+                       rebound: (interrupt: UInt64, platformIdle: UInt64)) {
         for controller in controllers {
             fixture.coordinator.removeController(controller)
             controller.close()
@@ -289,6 +288,56 @@ struct ExternalFileWindowOccupancyTests {
 }
 
 private extension ExternalFileWindowOccupancyTests {
+    private func preserveMeasurement(_ record: [String: Any]) throws {
+        print("external-window-process-occupancy \(record)")
+        if let directory = ProcessInfo.processInfo.environment["MOSTLYTEXT_EXTERNAL_PROCESS_OUTPUT"] {
+            let url = URL(fileURLWithPath: directory, isDirectory: true)
+            try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+            let data = try JSONSerialization.data(withJSONObject: record, options: [.prettyPrinted, .sortedKeys])
+            try data.write(to: url.appendingPathComponent("window-occupancy.json"), options: .atomic)
+        }
+    }
+
+    private func measureUnboundSameWindows(
+        controllers: [WindowController], targets: [URL]
+    ) async throws -> (interrupt: UInt64, platformIdle: UInt64) {
+        for controller in controllers {
+            controller.externalFileController.synchronize(with: nil)
+        }
+        for controller in controllers {
+            await controller.externalFileController.bindTask?.value
+        }
+        try await waitUntil(.seconds(5), "same windows without file watches") {
+            (try? watcherDescriptors(for: targets).values.allSatisfy { $0 == 0 }) == true
+        }
+        // Keep the exact windows, tabs, editor text systems and title observers
+        // alive. Only the file and parent watcher bindings differ from the
+        // preceding idle sample; allow their cancellation to settle first.
+        try await Task.sleep(for: .seconds(1))
+        let start = try processWakeups()
+        try await Task.sleep(for: .seconds(4))
+        let end = try processWakeups()
+        #expect(try watcherDescriptors(for: targets).values.allSatisfy { $0 == 0 })
+
+        for controller in controllers {
+            controller.externalFileController.synchronize(with: controller.model.activeDocument)
+        }
+        for controller in controllers {
+            await controller.externalFileController.bindTask?.value
+        }
+        try await waitUntil(.seconds(5), "file watches restored on the same windows") {
+            (try? watcherDescriptors(for: targets).values.allSatisfy { $0 == 1 }) == true
+        }
+        try await Task.sleep(for: .seconds(1))
+        let reboundStart = try processWakeups()
+        try await Task.sleep(for: .seconds(4))
+        let reboundEnd = try processWakeups()
+        #expect(try watcherDescriptors(for: targets).values.allSatisfy { $0 == 1 })
+        return ((end.interrupt - start.interrupt, end.platformIdle - start.platformIdle),
+                (reboundEnd.interrupt - reboundStart.interrupt,
+                 reboundEnd.platformIdle - reboundStart.platformIdle))
+    }
+
     private func requireWatcherTransition(
         retired: WatcherIdentity, source: URL, directory: URL, stage: String
     ) async throws {
