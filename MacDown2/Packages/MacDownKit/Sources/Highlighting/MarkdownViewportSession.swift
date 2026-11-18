@@ -48,7 +48,7 @@ final class MarkdownViewportSession {
     private(set) var selectedWindowCount = 0
     private(set) var matchedWindowCount = 0
     private(set) var unpairedWindowCount = 0
-    private(set) var historyEditProbeCount = 0
+    private(set) var historyEditAdmissionCount = 0
     private(set) var localParseCount = 0
     private(set) var fullParseCount = 0
 
@@ -128,6 +128,9 @@ final class MarkdownViewportSession {
         }
         if unpairedWindow != nil {
             unpairedWindowCount &+= 1
+            if historyProbe != nil {
+                historyEditAdmissionCount &+= 1
+            }
         }
         guard let ticket = authority.ticket() else { return }
         Task { @MainActor [weak self] in
@@ -236,7 +239,6 @@ final class MarkdownViewportSession {
               textSystem.undoManager.isUndoing || textSystem.undoManager.isRedoing,
               editedRange.location >= 0, editedRange.location < postLength
         else { return nil }
-        historyEditProbeCount &+= 1
         return NSRange(location: editedRange.location, length: 1)
     }
 
