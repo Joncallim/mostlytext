@@ -75,6 +75,9 @@ class SelectionTests(unittest.TestCase):
     def test_package_documentation_runs_no_product_tests(self):
         self.assertEqual(SELECTOR.select(["MacDown2/Packages/MacDownKit/README.md"], self.manifest)[0], "none")
 
+    def test_missing_or_empty_diff_runs_full_suites(self):
+        self.assertEqual(SELECTOR.select([], self.manifest), ("full", "", "full", ()))
+
     def test_product_change_with_planning_note_keeps_target_selection(self):
         mode, selected, app_mode, _ = SELECTOR.select([
             "MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/render.js",

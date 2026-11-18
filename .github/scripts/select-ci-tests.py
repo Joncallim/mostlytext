@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Select PR test suites from changed package targets; fail open to full suites."""
+"""Select PR or main-push suites from changed package targets; fail open to full."""
 
 import argparse
 import json
@@ -107,10 +107,17 @@ def main():
     parser.add_argument("--base", required=True)
     parser.add_argument("--output", type=pathlib.Path, required=True)
     args = parser.parse_args()
-    paths = subprocess.check_output(
-        ["git", "diff", "--name-only", "-z", args.base, "HEAD", "--"], cwd=ROOT
-    ).decode().split("\0")
-    paths = [path for path in paths if path]
+    if args.base == "0" * 40:
+        paths = []
+    else:
+        try:
+            paths = subprocess.check_output(
+                ["git", "diff", "--name-only", "-z", args.base, "HEAD", "--"],
+                cwd=ROOT, stderr=subprocess.DEVNULL
+            ).decode().split("\0")
+            paths = [path for path in paths if path]
+        except subprocess.CalledProcessError:
+            paths = []
     manifest = json.loads(subprocess.check_output(
         ["swift", "package", "dump-package", "--package-path", str(ROOT / PACKAGE)], cwd=ROOT
     ))
