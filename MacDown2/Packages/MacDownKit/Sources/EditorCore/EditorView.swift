@@ -1,4 +1,5 @@
 import AppKit
+import Dispatch
 import FileCore
 import SwiftUI
 
@@ -124,6 +125,14 @@ public struct EditorView: NSViewRepresentable {
     }
 
     public func updateNSView(_ scrollView: NSScrollView, context: Context) {
+        let phaseBegan = DispatchTime.now().uptimeNanoseconds
+        defer {
+            if ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_DISPLAY_BENCH"] == "1" {
+                let phaseEnded = DispatchTime.now().uptimeNanoseconds
+                print("EDITOR-UPDATE-VIEW-PHASE began_ns=\(phaseBegan) ended_ns=\(phaseEnded) " +
+                    "total_ms=\(Double(phaseEnded - phaseBegan) / 1_000_000)")
+            }
+        }
         guard let system = context.coordinator.system else { return }
 
         context.coordinator.onSelectionChange = onSelectionChange
@@ -204,6 +213,14 @@ public struct EditorView: NSViewRepresentable {
         /// line index must stay correct after every one of them, not just
         /// the transaction's final state.
         public func textDidChange(_: Notification) {
+            let phaseBegan = DispatchTime.now().uptimeNanoseconds
+            defer {
+                if ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_DISPLAY_BENCH"] == "1" {
+                    let phaseEnded = DispatchTime.now().uptimeNanoseconds
+                    print("EDITOR-TEXT-CHANGE-PHASE began_ns=\(phaseBegan) ended_ns=\(phaseEnded) " +
+                        "total_ms=\(Double(phaseEnded - phaseBegan) / 1_000_000)")
+                }
+            }
             // Marked-text edits post no didChange; whatever they changed must not survive into the cache.
             if let system, !system.isApplyingMultiRangeTransaction {
                 system.storedSelectionSet = nil
