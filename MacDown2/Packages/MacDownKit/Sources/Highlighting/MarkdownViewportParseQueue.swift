@@ -1,3 +1,4 @@
+import Dispatch
 import Foundation
 import SwiftTreeSitterLayer
 
@@ -21,7 +22,13 @@ actor MarkdownViewportParseQueue {
 
     init(capacity: Int, parser: @escaping SnapshotParser = { source, registry in
         try await Task.detached(priority: .utility) {
-            try MarkdownSectionParser.snapshot(source: source, registry: registry)
+            let began = DispatchTime.now().uptimeNanoseconds
+            let result = try MarkdownSectionParser.snapshot(source: source, registry: registry)
+            let ended = DispatchTime.now().uptimeNanoseconds
+            if ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_DISPLAY_BENCH"] == "1" {
+                print("VIEWPORT-PARSE-PHASE utf16=\(source.utf16.count) direct_ms=\(Double(ended - began) / 1_000_000)")
+            }
+            return result
         }.value
     }) {
         self.capacity = max(1, capacity)
@@ -30,11 +37,19 @@ actor MarkdownViewportParseQueue {
 
     func snapshot(source: String, registry: GrammarRegistry) async throws -> LanguageLayerTreeSnapshot {
         let requestID = UUID()
+        let requested = DispatchTime.now().uptimeNanoseconds
         return try await withTaskCancellationHandler {
             try await acquire(requestID)
             defer { release() }
             try Task.checkCancellation()
+            let acquired = DispatchTime.now().uptimeNanoseconds
             let result = try await parser(source, registry)
+            let resolved = DispatchTime.now().uptimeNanoseconds
+            if ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_DISPLAY_BENCH"] == "1" {
+                let waitMS = Double(acquired - requested) / 1_000_000
+                let executeMS = Double(resolved - acquired) / 1_000_000
+                print("VIEWPORT-QUEUE-PHASE utf16=\(source.utf16.count) wait_ms=\(waitMS) execute_ms=\(executeMS)")
+            }
             try Task.checkCancellation()
             return result
         } onCancel: {
