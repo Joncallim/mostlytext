@@ -107,6 +107,7 @@ window.__macdownRenderD2 = async function (source, theme, maxOutputBytes = 2 * 1
         const d2 = macdownD2Engine;
         phase = "compile";
         const compiled = await d2.compile(source);
+        phase = "configuration";
         // This bundled D2.js version documents themeID/darkThemeID. Pin
         // defaults across WebKit appearances, while retaining a theme
         // explicitly authored in the D2 source.
