@@ -112,28 +112,7 @@ struct ViewportDisplayBudgetBenchmarkTests {
         EditorView.onDiagnosticTiming = { stage, time in editorTimes.append((stage, time)) }
         defer { EditorView.onDiagnosticTiming = nil }
         var results: [[String: Any]] = []
-        var firstEditSample: Task<Int32, Never>?
         let registry = GrammarRegistry()
-        if let runnerTemp = ProcessInfo.processInfo.environment["RUNNER_TEMP"] {
-            let processID = ProcessInfo.processInfo.processIdentifier
-            let output = runnerTemp + "/viewport-budget/first-edit-main-stack.txt"
-            firstEditSample = Task.detached(priority: .utility) {
-                let process = Process()
-                process.executableURL = URL(fileURLWithPath: "/usr/bin/sample")
-                process.arguments = [String(processID), "10", "1", "-file", output]
-                do {
-                    try process.run()
-                    process.waitUntilExit()
-                    return process.terminationStatus
-                } catch {
-                    return -1
-                }
-            }
-            // The prior one-second probe attached after this entire test ended.
-            // Let sample attach before the first timed edit; this wait is outside
-            // every input-to-paint stopwatch and is diagnostic only.
-            try await Task.sleep(for: .seconds(6))
-        }
         for edit in Self.cases {
             let beforeSource = system.textView.string as NSString
             let range = try edit.range(in: beforeSource)
@@ -165,7 +144,13 @@ struct ViewportDisplayBudgetBenchmarkTests {
             let input = DispatchTime.now().uptimeNanoseconds
             system.textView.insertText(edit.replacement, replacementRange: range)
             let storageReturned = DispatchTime.now().uptimeNanoseconds
+            let actorHeartbeat = Task.detached(priority: .userInitiated) {
+                let dispatched = DispatchTime.now().uptimeNanoseconds
+                let resumed = await MainActor.run { DispatchTime.now().uptimeNanoseconds }
+                return (dispatched, resumed)
+            }
             await session.waitForPendingParse()
+            let (heartbeatDispatched, heartbeatResumed) = await actorHeartbeat.value
             let deadline = input + 5_000_000_000
             var styled = false
             var matchedPaint: AccentPaint?
@@ -257,6 +242,9 @@ struct ViewportDisplayBudgetBenchmarkTests {
                 "physical_parse_ms": milliseconds(physicalStart, physicalEnd),
                 "queue_resume_ms": milliseconds(physicalEnd, returned),
                 "main_actor_resume_ms": milliseconds(returned, lastParseResolved),
+                "heartbeat_dispatch_after_input_ms": milliseconds(input, heartbeatDispatched),
+                "heartbeat_actor_resume_after_input_ms": milliseconds(input, heartbeatResumed),
+                "heartbeat_actor_wait_ms": milliseconds(heartbeatDispatched, heartbeatResumed),
                 "paint_events": paintTimes.map { stage, time -> [String: Any] in
                     [
                         "stage": stage,
@@ -306,10 +294,6 @@ struct ViewportDisplayBudgetBenchmarkTests {
         let encoded = try #require(String(data: body, encoding: .utf8))
         print("VIEWPORT-DISPLAY-BUDGET " + encoded)
         #expect(results.count == Self.cases.count)
-        if let firstEditSample {
-            let sampleExit = await firstEditSample.value
-            print("FIRST-EDIT-SAMPLE-EXIT \(sampleExit)")
-        }
         // A complete measurement may reveal a product-budget failure. The
         // workflow records every such case; it never calls that a budget pass.
     }
