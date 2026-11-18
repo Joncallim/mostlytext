@@ -58,6 +58,45 @@ struct MarkdownSectionCacheRichProseTests {
         #expect(try cache.tokens(in: visible) == oracle.tokens(in: visible))
     }
 
+    @Test(.timeLimit(.minutes(2)))
+    func unpairedHeadingUndoAndRedoRetainFullParseParity() throws {
+        // The admission rule is independent of document size; the separate
+        // mounted lifecycle fixture exercises the 1 MiB Release path.
+        let filler = HighlightBudgetFixture.ordinary.markdown(utf8Bytes: 80000)
+        var source = "# Top\n\n" + filler + "\n\n## Tail `omega`\n"
+        let registry = GrammarRegistry()
+        var cache = try MarkdownSectionCache(
+            source: source, snapshot: MarkdownSectionParser.snapshot(source: source, registry: registry)
+        )
+        let target = (source as NSString).range(of: "omega")
+        try #require(target.location != NSNotFound)
+        let insertion = target.location + 2
+        let visible = NSRange(location: target.location - 4, length: 14)
+        let edited = (source as NSString).replacingCharacters(
+            in: NSRange(location: insertion, length: 0), with: "X"
+        )
+        for (name, editedRange, delta, postSource) in [
+            ("redo", NSRange(location: insertion, length: 1), 1, edited),
+            ("undo", NSRange(location: insertion, length: 0), -1, source),
+        ] {
+            guard let window = cache.selectUnpairedPostEdit(
+                postSource: postSource as NSString, editedRange: editedRange,
+                delta: delta, visible: visible
+            ) else {
+                Issue.record("Unpaired heading edit refused: \(name)")
+                return
+            }
+            let content = (postSource as NSString).substring(with: window.new)
+            let local = try MarkdownSectionParser.snapshot(source: content, registry: registry)
+            try cache.replace(window, with: local, content: content, delta: delta)
+            source = postSource
+            let oracle = try MarkdownSectionCache(
+                source: source, snapshot: MarkdownSectionParser.snapshot(source: source, registry: registry)
+            )
+            #expect(try cache.tokens(in: visible) == oracle.tokens(in: visible), "Oracle mismatch: \(name)")
+        }
+    }
+
     @Test func unpairedStructuralAndCrossSectionEditsStayOnFullParsePath() throws {
         let source = "# Heading\n\nalphaTarget text\n\n# Later\n\notherTarget text\n"
         let registry = GrammarRegistry()

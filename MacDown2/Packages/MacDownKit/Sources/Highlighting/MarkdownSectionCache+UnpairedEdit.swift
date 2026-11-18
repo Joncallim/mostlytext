@@ -47,13 +47,15 @@ extension MarkdownSectionCache {
         else { return nil }
         let replacement = postSource.substring(with: newEdit)
         let removed = old.substring(with: oldEdit)
-        guard Self.safeProseEdit(old: removed, replacement: replacement),
-              oldEdit.length > 0 || Self.isInteriorWordInsertion(source: old, at: oldEdit.location)
-              || Self.isInteriorSpaceInsertion(source: old, at: oldEdit.location, replacement: replacement),
-              Self.admitsParagraphEdit(
-                  entry: entry,
-                  localEdit: NSRange(location: entry.range.location + oldEdit.location, length: oldEdit.length)
-              )
+        guard Self.safeProseEdit(old: removed, replacement: replacement) else { return nil }
+        let localOldEdit = NSRange(location: entry.range.location + oldEdit.location,
+                                   length: oldEdit.length)
+        let withinBoundedBody = Self.admitsParagraphEdit(entry: entry, localEdit: localOldEdit)
+            || (entry.node.nodeType == "section"
+                && Self.isBoundedHeadingEdit(section: old as String, edit: oldEdit))
+        guard oldEdit.length > 0 || Self.isInteriorWordInsertion(source: old, at: oldEdit.location)
+            || Self.isInteriorSpaceInsertion(source: old, at: oldEdit.location, replacement: replacement),
+            withinBoundedBody
         else { return nil }
         return window
     }

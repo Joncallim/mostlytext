@@ -78,10 +78,18 @@ struct ViewportMountedLifecycleDisplayTests {
             try #require(anchorRange.location != NSNotFound, "Missing lifecycle anchor: \(name)")
             let priorVisible = system.visibleUTF16Range
             let priorValidation = painter.validationPassCount
+            let priorFullParses = session.fullParseCount
+            let priorLocalParses = session.localParseCount
             let requestedAt = DispatchTime.now().uptimeNanoseconds
             action()
             let returnedAt = DispatchTime.now().uptimeNanoseconds
             await session.waitForPendingParse()
+            if name == "undo" || name == "redo" {
+                try #require(session.fullParseCount == priorFullParses,
+                             "Bounded heading history edit fell back to a full parse: \(name)")
+                try #require(session.localParseCount > priorLocalParses,
+                             "Bounded heading history edit did not publish a local parse: \(name)")
+            }
             let deadline = requestedAt + 5_000_000_000
             var paintedAt = requestedAt
             var matchedVisible: NSRange?
@@ -123,6 +131,8 @@ struct ViewportMountedLifecycleDisplayTests {
                 "request_to_oracle_paint_ms": milliseconds(requestedAt, paintedAt),
                 "request_to_bitmap_readback_ms": total,
                 "under_50_ms": total < 50,
+                "full_parse_count": session.fullParseCount,
+                "local_parse_count": session.localParseCount,
                 "visible_location": visible.location,
                 "visible_length": visible.length,
             ])
