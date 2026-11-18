@@ -108,7 +108,17 @@ public actor D2WebRenderer: D2DiagramRendering {
         }
         guard result.succeeded else {
             let message = result.message ?? "unknown error"
-            throw D2RenderError.invalidSyntax(message)
+            // D2's compile call also runs layout. Its Dagre failure can
+            // therefore arrive in the compile phase for valid authored D2.
+            if result.failurePhase == "compile", message.hasPrefix("failed to dagre layout:") {
+                throw D2RenderError.rendererUnavailable
+            }
+            if result.failurePhase == "compile" {
+                throw D2RenderError.invalidSyntax(message)
+            }
+            // Layout/runtime failures may occur for syntactically valid D2.
+            // Do not tell the user that their authored source is malformed.
+            throw D2RenderError.rendererUnavailable
         }
         guard let svg = result.svg else {
             throw D2RenderError.rendererUnavailable
