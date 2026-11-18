@@ -36,9 +36,9 @@ def select(paths, manifest):
             if len(parts) < 3 or parts[1] not in sources | tests:
                 return ("full", "", "full", ())
             changed.add(parts[1])
-        elif path.startswith(PACKAGE) and path.endswith(".md"):
-            continue
-        elif path.endswith((".md", ".txt")) and path.startswith("MacDown2/"):
+        elif path.endswith(".md"):
+            # Repository prose does not alter compiled targets; resource Markdown
+            # under Sources/ was handled above and still selects its target.
             continue
         else:
             # Manifests, lockfiles, app sources, resources outside a target,
