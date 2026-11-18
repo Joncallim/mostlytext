@@ -39,6 +39,7 @@ final class MarkdownViewportSession {
     var onPublication: (() -> Void)?
     private(set) var selectedWindowCount = 0
     private(set) var matchedWindowCount = 0
+    private(set) var unpairedWindowCount = 0
     private(set) var localParseCount = 0
     private(set) var fullParseCount = 0
 
@@ -100,22 +101,34 @@ final class MarkdownViewportSession {
         authority.noteStorageEdit()
         parseTask?.cancel()
         parseTask = nil
+        let wasCurrent = cacheMatchesStorage
         cacheMatchesStorage = false
+        let hadPreEdit = pairing.hadPreEdit
         let match = pairing.complete(editedRange: range, delta: delta, postSource: postSource)
         if match != nil {
             matchedWindowCount &+= 1
+        }
+        let unpairedWindow: MarkdownSectionCache.Window? = if !hadPreEdit, wasCurrent,
+                                                              let cache, let visible = boundedViewport() {
+            cache.selectUnpairedPostEdit(postSource: postSource, editedRange: range,
+                                         delta: delta, visible: visible)
+        } else {
+            nil
+        }
+        if unpairedWindow != nil {
+            unpairedWindowCount &+= 1
         }
         guard let ticket = authority.ticket() else { return }
         Task { @MainActor [weak self] in
             guard let self, authority.admits(ticket) else { return }
             onPublication?()
         }
-        if let match, cache != nil,
-           match.candidate.new.location >= 0,
-           match.candidate.new.location <= postSource.length,
-           match.candidate.new.length <= postSource.length - match.candidate.new.location {
-            let content = postSource.substring(with: match.candidate.new)
-            startLocalParse(ticket: ticket, window: match.candidate, content: content,
+        if let window = match?.candidate ?? unpairedWindow, cache != nil,
+           window.new.location >= 0,
+           window.new.location <= postSource.length,
+           window.new.length <= postSource.length - window.new.location {
+            let content = postSource.substring(with: window.new)
+            startLocalParse(ticket: ticket, window: window, content: content,
                             delta: delta, expectedLength: postSource.length)
         } else {
             retireCache()

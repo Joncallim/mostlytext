@@ -14,6 +14,77 @@ struct MarkdownSectionCacheRichProseTests {
     }
 
     @Test(.timeLimit(.minutes(4)))
+    func unpairedWordUndoAndRedoRetainFullParseParity() throws {
+        let filler = HighlightBudgetFixture.ordinary.markdown(utf8Bytes: 1_048_576)
+        var source = "# Heading\n\nuniqueUndoTarget text\n\n" + filler
+        let registry = GrammarRegistry()
+        var cache = try MarkdownSectionCache(
+            source: source, snapshot: MarkdownSectionParser.snapshot(source: source, registry: registry)
+        )
+        let target = (source as NSString).range(of: "uniqueUndoTarget")
+        try #require(target.location != NSNotFound)
+        let insertion = target.location + 6
+        let visible = NSRange(location: target.location, length: 20)
+        for (name, editedRange, delta, postSource) in [
+            ("redo", NSRange(location: insertion, length: 1), 1,
+             (source as NSString).replacingCharacters(in: NSRange(location: insertion, length: 0), with: "X")),
+            ("undo", NSRange(location: insertion, length: 0), -1, source),
+        ] {
+            let window = try #require(cache.selectUnpairedPostEdit(
+                postSource: postSource as NSString, editedRange: editedRange,
+                delta: delta, visible: visible
+            ), "Unpaired local edit refused: \(name)")
+            let content = (postSource as NSString).substring(with: window.new)
+            let local = try MarkdownSectionParser.snapshot(source: content, registry: registry)
+            try cache.replace(window, with: local, content: content, delta: delta)
+            source = postSource
+            let oracle = try MarkdownSectionCache(
+                source: source, snapshot: MarkdownSectionParser.snapshot(source: source, registry: registry)
+            )
+            #expect(try cache.tokens(in: visible) == oracle.tokens(in: visible), "Oracle mismatch: \(name)")
+        }
+        let unchanged = try #require(cache.selectUnpairedPostEdit(
+            postSource: source as NSString,
+            editedRange: target,
+            delta: 0,
+            visible: visible
+        ), "Same-text storage notification took the full-document path")
+        let unchangedContent = (source as NSString).substring(with: unchanged.new)
+        let unchangedSnapshot = try MarkdownSectionParser.snapshot(source: unchangedContent, registry: registry)
+        try cache.replace(unchanged, with: unchangedSnapshot, content: unchangedContent, delta: 0)
+        let oracle = try MarkdownSectionCache(
+            source: source, snapshot: MarkdownSectionParser.snapshot(source: source, registry: registry)
+        )
+        #expect(try cache.tokens(in: visible) == oracle.tokens(in: visible))
+    }
+
+    @Test func unpairedStructuralAndCrossSectionEditsStayOnFullParsePath() throws {
+        let source = "# Heading\n\nalphaTarget text\n\n# Later\n\notherTarget text\n"
+        let registry = GrammarRegistry()
+        let cache = try MarkdownSectionCache(
+            source: source, snapshot: MarkdownSectionParser.snapshot(source: source, registry: registry)
+        )
+        let old = source as NSString
+        let first = old.range(of: "alphaTarget")
+        let second = old.range(of: "otherTarget")
+        try #require(first.location != NSNotFound && second.location != NSNotFound)
+        let structural = old.replacingCharacters(in: NSRange(location: first.location + 5, length: 0), with: "#")
+        #expect(cache.selectUnpairedPostEdit(
+            postSource: structural as NSString,
+            editedRange: NSRange(location: first.location + 5, length: 1),
+            delta: 1, visible: first
+        ) == nil)
+        let cross = old.replacingCharacters(
+            in: NSRange(location: first.location, length: second.location - first.location + 5), with: "replacement"
+        )
+        #expect(cache.selectUnpairedPostEdit(
+            postSource: cross as NSString,
+            editedRange: NSRange(location: first.location, length: 11),
+            delta: (cross as NSString).length - old.length, visible: first
+        ) == nil)
+    }
+
+    @Test(.timeLimit(.minutes(4)))
     // swiftlint:disable:next function_body_length
     func boundedHeadingAndInlineEditsMatchFullParse() throws {
         let filler = HighlightBudgetFixture.ordinary.markdown(utf8Bytes: 530_000)

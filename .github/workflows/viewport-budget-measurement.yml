@@ -210,8 +210,17 @@ jobs:
           modes = {re.search(r'\bmode=(\w+)', case['raw']).group(1): case
                    for case in records['highlighter']}
           assert set(modes) == {'reduced', 'viewport'}
-          assert all('selected=12 matched=12 local=12 full=1' in case['raw']
-                     for case in [records['session'][0], modes['viewport']])
+          for case in [records['session'][0], modes['viewport']]:
+              counts = {}
+              for name in ['selected', 'matched', 'local', 'full', 'unpaired']:
+                  match = re.search(rf'\b{name}=(\d+)\b', case['raw'])
+                  assert match is not None, (name, case['raw'])
+                  counts[name] = int(match.group(1))
+              assert counts['selected'] >= 12
+              assert counts['matched'] == counts['selected']
+              assert counts['local'] >= counts['selected']
+              assert counts['full'] == 1
+              assert counts['unpaired'] >= 3
           (root / 'measurement.json').write_text(json.dumps(records, indent=2) + '\n')
           print(json.dumps(records, indent=2))
           PY

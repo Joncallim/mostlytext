@@ -48,6 +48,7 @@ struct MarkdownViewportBudgetBenchmarkTests {
         let gate = HighlightingStorageGate()
         gate.install(on: storage)
         var preEditCount = 0
+        var storageEdits: [(NSRange, Int)] = []
         defer {
             session.tearDown()
             painter.tearDown()
@@ -60,6 +61,7 @@ struct MarkdownViewportBudgetBenchmarkTests {
             session?.prepare(range: range, replacement: replacement, oldSource: oldSource)
         }
         gate.didProcessCharacterEditWithGeometry = { range, delta, _ in
+            storageEdits.append((range, delta))
             session.didEdit(range: range, delta: delta, postSource: storage.mutableString)
             painter.didEdit(newRange: range, delta: delta)
         }
@@ -86,12 +88,44 @@ struct MarkdownViewportBudgetBenchmarkTests {
             settlements.append(Double(settled - start) / 1e6)
         }
         #expect(model.text == original, "alternating edits restored the original source")
+        let unchangedRange = (original as NSString).range(of: "alphatarget")
+        let sameTextStart = DispatchTime.now().uptimeNanoseconds
+        storage.replaceCharacters(in: unchangedRange, with: "alphatarget")
+        await session.waitForPendingParse()
+        painter.paintVisible()
+        let sameTextMilliseconds = Double(DispatchTime.now().uptimeNanoseconds - sameTextStart) / 1e6
+        #expect(model.text == original, "same-text character notification preserved the source")
+        #expect(session.unpairedWindowCount == 1 && session.fullParseCount == 1,
+                "same-text notification kept the bounded cache")
+        system.undoManager.removeAllActions()
+        let undoInsertion = NSRange(location: first.location + 5, length: 0)
+        system.textView.insertText("X", replacementRange: undoInsertion)
+        await session.waitForPendingParse()
+        let inserted = (original as NSString).replacingCharacters(in: undoInsertion, with: "X")
+        #expect(model.text == inserted, "isolated insertion reached the editor")
+        var history: [String: Double] = [:]
+        for (name, expected, perform) in [
+            ("undo", original, { system.undoManager.undo() }),
+            ("redo", inserted, { system.undoManager.redo() }),
+        ] {
+            let start = DispatchTime.now().uptimeNanoseconds
+            perform()
+            await session.waitForPendingParse()
+            painter.paintVisible()
+            history[name] = Double(DispatchTime.now().uptimeNanoseconds - start) / 1e6
+            #expect(model.text == expected, "\(name) changed the authored text")
+        }
+        #expect(session.unpairedWindowCount == 3, "same-text, undo and redo used bounded windows")
         let callValues = calls.map { String(format: "%.3f", $0) }.joined(separator: ",")
         let settledValues = settlements.map { String(format: "%.3f", $0) }.joined(separator: ",")
         print("VIEWPORT-BUDGET utf8=\(original.utf8.count) open=\(openMilliseconds) ms "
             + "calls=[\(callValues)] ms settled=[\(settledValues)] ms "
+            + "sameText=\(sameTextMilliseconds) ms "
+            + "undo=\(history["undo"] ?? -.infinity) ms redo=\(history["redo"] ?? -.infinity) ms "
             + "visible=\(String(describing: system.visibleUTF16Range)) preEdit=\(preEditCount) "
             + "selected=\(session.selectedWindowCount) matched=\(session.matchedWindowCount) "
+            + "unpaired=\(session.unpairedWindowCount) "
+            + "lastStorageEdits=\(storageEdits.suffix(2)) "
             + "local=\(session.localParseCount) full=\(session.fullParseCount)")
     }
 }

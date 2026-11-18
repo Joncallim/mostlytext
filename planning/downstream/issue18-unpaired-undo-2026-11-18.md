@@ -1,0 +1,85 @@
+# Bounded Markdown undo and redo in the mounted editor
+
+The production viewport editor now admits an undo or redo without a pre-edit
+proposal when the current cached section and the post-edit storage prove one
+bounded, plain-prose change. This avoids reparsing the entire document for that
+case. Ambiguous proposals, structural changes, edits crossing sections and
+stale caches retain the full-parse fallback. The authored text and undo manager
+are not modified by the highlighter.
+
+## Why this path changed
+
+TextKit's undo and redo reach the storage delegate without the ordinary
+pre-edit proposal. Before this change, pairing returned no match and the
+session always retired its cache and parsed the full Markdown document. The
+historical production-store display receipt on issue #18 recorded undo and
+redo at 1,753.210 and 1,958.215 ms respectively. Those values include more
+work than the component probe below and are not a direct before/after pair.
+
+The new selection requires the storage length and delta to agree, a bounded
+cached section, a callback range containing the inferred changed bytes, exact
+UTF-16 equality of the unchanged prefix and suffix, and the existing prose and
+paragraph-interior guards. The session only attempts this when its cache was
+current before the storage edit and no proposal was seen. A parsed replacement
+still has to preserve the cached section shape; otherwise the full parse runs.
+
+## Local evidence
+
+The 1,048,804-byte opt-in Release mounted-session fixture made twelve ordinary
+edits, then cleared its test-only undo history and made one isolated word
+insertion. It asserted the exact source after the insertion, undo and redo.
+The final measurement recorded undo **24.009 ms** and redo **22.791 ms** through
+storage, parse settlement and a painter call. Both used bounded unpaired
+windows; the session counted 15 local parses and one initial full parse. The
+12 ordinary edit settlements ranged from 8.940 to 10.246 ms. This probe does
+not measure automatic input-to-visible bitmap paint.
+
+The same fixture exposed a second path: TextKit can report a character edit
+while a history action leaves a bounded paragraph's source unchanged. The
+cache now reparses that exactly matching paragraph, still honoring the storage
+notification. A deterministic same-text storage test and full-size oracle
+pass. In the expanded Release probe, same-text settlement was **2.120 ms**,
+real undo **23.413 ms**, and real redo **23.928 ms**; the session counted
+three unpaired windows, 16 local parses and one initial full parse. These are
+component timings and do not qualify the full paint target.
+
+The production `SyntaxHighlightStore` Release fixture exercises the same
+1,048,804-byte source through the public highlighter. Its viewport mode passed
+with one initial full parse, 16 local parses and three unpaired windows:
+same-text **3.323 ms**, undo **24.332 ms**, redo **24.602 ms** to mounted
+settlement and painter call. The retained reduced-mode control also passed.
+This verifies production ownership of the bounded path, while automatic
+visible paint and the installed app remain separate acceptance.
+
+The first Release benchmark attempt failed its new unpaired-count assertion:
+it called undo/redo after twelve alternating edits without isolating a text
+action. Both observed storage callbacks had zero character delta, so those
+calls did not exercise the intended undo/redo edit; their 694.756/689.853 ms
+settlements did reveal the unnecessary full parse for unchanged source. The
+test now clears only its own history, makes a fresh insertion and asserts the
+intermediate source
+after each action. The failed attempt and its cause are recorded here; it is
+not presented as a product failure or erased by the corrected run.
+
+The cache regression compares full-size undo/redo visible tokens with a fresh
+full-document parse. Mounted editor tests confirm real TextKit undo/redo takes
+the unpaired path and preserves visible-token parity. Structural and
+cross-section edits are refused. Edit-pairing tests confirm a failed or nested
+proposal cannot be mistaken for an unpaired edit. Ordinary compliance and
+changed-file SwiftFormat/SwiftLint pass.
+
+An independent read-only Codex CLI review of the first undo/redo change against
+`origin/main` found no actionable regression and ran 17 targeted tests. A
+fresh review of the integrated same-text addition also found no actionable
+regression; 23 selected cache, pairing, viewport, painter and parse-ownership
+tests passed. Both reviews excluded full-suite health and Release
+input-to-visible-paint performance; they are engineering evidence, not
+owner-native acceptance.
+
+## Remaining acceptance
+
+Issue #18's 50 ms **input-to-visible-paint** target remains unproved and its
+previous hosted failures remain failures. The first-edit main-actor scheduling
+gap is not addressed by this change. Issue #19's historical triggering offset
+and complete lifecycle matrix also remain open. The protected native
+checkpoint remains deferred until the owner explicitly resumes it.
