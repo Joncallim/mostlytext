@@ -116,20 +116,14 @@ final class MarkdownViewportSession {
         if match != nil {
             matchedWindowCount &+= 1
         }
+        let viewport = boundedViewport()
+        let historyProbe = historyEditProbe(viewport: viewport, editedRange: range, postLength: postSource.length)
         let unpairedWindow: MarkdownSectionCache.Window? = if !hadPreEdit, wasCurrent,
-                                                              let cache, let visible = boundedViewport() {
+                                                              let cache, let visible = viewport ?? historyProbe {
             cache.selectUnpairedPostEdit(postSource: postSource, editedRange: range,
                                          delta: delta, visible: visible)
         } else {
             nil
-        }
-        if ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_LIFECYCLE_DISPLAY"] == "1" {
-            let visible = boundedViewport()
-            print("VIEWPORT-EDIT-DECISION location=\(range.location) length=\(range.length) " +
-                "delta=\(delta) post_length=\(postSource.length) cache_length=\(cache?.sourceLength ?? -1) " +
-                "visible_location=\(visible?.location ?? -1) visible_length=\(visible?.length ?? -1) " +
-                "had_pre_edit=\(hadPreEdit) paired=\(match != nil) unpaired=\(unpairedWindow != nil) " +
-                "was_current=\(wasCurrent)")
         }
         if unpairedWindow != nil {
             unpairedWindowCount &+= 1
@@ -231,6 +225,17 @@ final class MarkdownViewportSession {
               visible.length <= MarkdownSectionCache.windowLimit
         else { return nil }
         return visible
+    }
+
+    /// TextKit can temporarily remove layout authority during undo/redo.
+    /// This probe only selects a verified local parse; visibleTokens still
+    /// requires the real viewport before any paint.
+    private func historyEditProbe(viewport: NSRange?, editedRange: NSRange, postLength: Int) -> NSRange? {
+        guard viewport == nil,
+              textSystem.undoManager.isUndoing || textSystem.undoManager.isRedoing,
+              editedRange.location >= 0, editedRange.location < postLength
+        else { return nil }
+        return NSRange(location: editedRange.location, length: 1)
     }
 
     private func startFullParse(ticket: MarkdownParseAuthority.Ticket) {
