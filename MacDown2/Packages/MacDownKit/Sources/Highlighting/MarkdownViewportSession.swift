@@ -223,9 +223,17 @@ final class MarkdownViewportSession {
         let source = textSystem.textView.string
         let registry = registry
         let parseSnapshot = parseSnapshot
+        let requestedAt = DispatchTime.now().uptimeNanoseconds
         emitTiming(.parseRequested)
         parseTask = Task { [weak self] in
+            let enteredAt = DispatchTime.now().uptimeNanoseconds
             let snapshot = try? await parseSnapshot(source, registry)
+            let returnedAt = DispatchTime.now().uptimeNanoseconds
+            if ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_DISPLAY_BENCH"] == "1" {
+                print("VIEWPORT-SESSION-PHASE kind=full utf16=\((source as NSString).length) " +
+                    "task_wait_ms=\(Double(enteredAt - requestedAt) / 1_000_000) " +
+                    "snapshot_ms=\(Double(returnedAt - enteredAt) / 1_000_000)")
+            }
             self?.emitTiming(.parseResolved)
             guard let self, authority.admits(ticket), let snapshot,
                   textSystem.textView.textStorage === boundStorage,
@@ -244,9 +252,17 @@ final class MarkdownViewportSession {
         localParseCount &+= 1
         let registry = registry
         let parseSnapshot = parseSnapshot
+        let requestedAt = DispatchTime.now().uptimeNanoseconds
         emitTiming(.parseRequested)
         parseTask = Task { [weak self] in
+            let enteredAt = DispatchTime.now().uptimeNanoseconds
             let snapshot = try? await parseSnapshot(content, registry)
+            let returnedAt = DispatchTime.now().uptimeNanoseconds
+            if ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_DISPLAY_BENCH"] == "1" {
+                print("VIEWPORT-SESSION-PHASE kind=local utf16=\((content as NSString).length) " +
+                    "task_wait_ms=\(Double(enteredAt - requestedAt) / 1_000_000) " +
+                    "snapshot_ms=\(Double(returnedAt - enteredAt) / 1_000_000)")
+            }
             self?.emitTiming(.parseResolved)
             guard let self, authority.admits(ticket),
                   textSystem.textView.textStorage === boundStorage,
