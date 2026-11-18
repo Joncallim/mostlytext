@@ -64,7 +64,7 @@ private func sourceWorkerMain() -> Never {
           writeAll(6, bytes: Data([0x46]))
     else { Darwin._exit(1) }
     // The source fallback and its marker are immutable before slower work.
-    if source.contains("$") {
+    if source.contains("$") || source.contains("```") || source.contains("~~~") {
         guard Thread.isMainThread else { Darwin._exit(1) }
         let state = MainActor.assumeIsolated { DerivedReplyState() }
         Task { @MainActor in

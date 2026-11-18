@@ -295,6 +295,10 @@ targets:
       product: ExportService
     - package: MacDownKit
       product: MarkdownEngine
+    - package: MacDownKit
+      product: DiagramsGraphviz
+    - package: MacDownKit
+      product: GraphvizRendering
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.MostlyText.QuickLook.Worker

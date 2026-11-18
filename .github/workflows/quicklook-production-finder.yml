@@ -91,6 +91,13 @@ jobs:
 
           MATH_INLINE_MARKER $x^2$ MATH_AFTER_MARKER
           MARKDOWN
+          cat > "$RUNNER_TEMP/mostlytext-production-graphviz.md" <<'MARKDOWN'
+          # MOSTLYTEXT_GRAPHVIZ_QUICKLOOK
+
+          ```dot
+          digraph G { ALPHA -> BETA; }
+          ```
+          MARKDOWN
           ln -s "$RUNNER_TEMP/mostlytext-production-quicklook.md" "$RUNNER_TEMP/mostlytext-production-linked.md"
           python3 - <<'PY'
           import os

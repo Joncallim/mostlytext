@@ -56,6 +56,7 @@ final class ProductionFinderTests: XCTestCase {
         finder.typeKey(.escape, modifierFlags: [])
         assertSelectedSymlink(in: finder, source: source)
         assertEncodedUnicodeSource(in: finder, beside: source)
+        assertStaticGraphviz(in: finder, beside: source)
     }
 
     private func assertStaticMath(in finder: XCUIApplication) {
@@ -114,6 +115,33 @@ final class ProductionFinderTests: XCTestCase {
         add(image)
         XCTAssertTrue(visible, "The installed provider must decode BOM and CRLF without losing Unicode text")
         XCTAssertTrue(finder.staticTexts["MostlyText"].firstMatch.exists)
+        XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText")
+            .isEmpty)
+        finder.typeKey(.escape, modifierFlags: [])
+    }
+
+    private func assertStaticGraphviz(in finder: XCUIApplication, beside source: URL) {
+        let diagram = source.deletingLastPathComponent()
+            .appendingPathComponent("mostlytext-production-graphviz.md")
+        NSWorkspace.shared.activateFileViewerSelecting([diagram])
+        let item = finder.descendants(matching: .any)
+            .matching(identifier: diagram.lastPathComponent).firstMatch
+        XCTAssertTrue(item.waitForExistence(timeout: 5), "Finder must select the Graphviz fixture")
+        item.click()
+        finder.typeKey(.space, modifierFlags: [])
+        let heading = finder.staticTexts["MOSTLYTEXT_GRAPHVIZ_QUICKLOOK"].firstMatch
+        let renderedNode = finder.staticTexts["ALPHA"].firstMatch
+        let visible = heading.waitForExistence(timeout: 15)
+            && renderedNode.waitForExistence(timeout: 5)
+        let tree = XCTAttachment(string: String(finder.debugDescription.prefix(65536)))
+        tree.name = "Graphviz Finder accessibility tree"
+        tree.lifetime = .keepAlways
+        add(tree)
+        let image = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        image.name = "Graphviz Finder Quick Look window"
+        image.lifetime = .keepAlways
+        add(image)
+        XCTAssertTrue(visible, "The actual sandboxed worker must render the Graphviz node")
         XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText")
             .isEmpty)
         finder.typeKey(.escape, modifierFlags: [])
