@@ -83,6 +83,7 @@ jobs:
           swift test -c release --filter ViewportHighlighterBudgetBenchmarkTests --no-parallel \
             2>&1 | tee "$RUNNER_TEMP/viewport-budget/highlighter.log"
           MACDOWN_VIEWPORT_DISPLAY_BENCH=1 MACDOWN_VIEWPORT_NATURAL_PUBLICATION=1 \
+            MACDOWN_VIEWPORT_SAMPLE_PATH="$RUNNER_TEMP/viewport-budget/first-edit.sample.txt" \
             swift test -c release --filter ViewportDisplayBudgetBenchmarkTests --no-parallel \
             2>&1 | tee "$RUNNER_TEMP/viewport-budget/display-natural.log"
           MACDOWN_VIEWPORT_DISPLAY_BENCH=1 \
@@ -207,6 +208,8 @@ jobs:
                                                 if not case['under_50_ms']]
           natural_log = (root / 'display-natural.log').read_text()
           assert 'Test run with 1 test in 1 suite passed' in natural_log
+          assert 'VIEWPORT-FIRST-EDIT-SAMPLE exit=0' in natural_log
+          assert (root / 'first-edit.sample.txt').stat().st_size > 0
           natural_lines = [line for line in natural_log.splitlines()
                            if line.startswith('VIEWPORT-DISPLAY-BUDGET ')]
           assert len(natural_lines) == 1

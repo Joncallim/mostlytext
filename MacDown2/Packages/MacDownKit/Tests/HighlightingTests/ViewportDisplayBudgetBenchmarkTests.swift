@@ -2,6 +2,7 @@
 // swiftlint:disable file_length
 import AppKit
 import CryptoKit
+import Darwin
 @testable import EditorCore
 import Foundation
 @testable import Highlighting
@@ -100,6 +101,7 @@ struct ViewportDisplayBudgetBenchmarkTests {
         session.onTimingEvent = { event, time in timing.append((event, time)) }
         var results: [[String: Any]] = []
         let naturalPublication = ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_NATURAL_PUBLICATION"] == "1"
+        var firstEditSampler: Process?
         let registry = GrammarRegistry()
         for edit in Self.cases {
             let beforeSource = system.textView.string as NSString
@@ -124,6 +126,15 @@ struct ViewportDisplayBudgetBenchmarkTests {
             let beforePixels = try Self.displayReadback(host: host, window: window, region: displayRegion)
             let priorValidation = painter.validationPassCount
             timing.removeAll(keepingCapacity: true)
+
+            if edit.name == "begin-word",
+               let samplePath = ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_SAMPLE_PATH"] {
+                let sampler = Process()
+                sampler.executableURL = URL(fileURLWithPath: "/usr/bin/sample")
+                sampler.arguments = [String(getpid()), "5", "1", "-file", samplePath]
+                try sampler.run()
+                firstEditSampler = sampler
+            }
 
             let input = DispatchTime.now().uptimeNanoseconds
             system.textView.insertText(edit.replacement, replacementRange: range)
@@ -236,6 +247,10 @@ struct ViewportDisplayBudgetBenchmarkTests {
         let body = try JSONSerialization.data(withJSONObject: results, options: [.sortedKeys])
         let encoded = try #require(String(data: body, encoding: .utf8))
         print("VIEWPORT-DISPLAY-BUDGET " + encoded)
+        firstEditSampler?.waitUntilExit()
+        if let firstEditSampler {
+            print("VIEWPORT-FIRST-EDIT-SAMPLE exit=\(firstEditSampler.terminationStatus)")
+        }
         #expect(results.count == Self.cases.count)
         // A complete measurement may reveal a product-budget failure. The
         // workflow records every such case; it never calls that a budget pass.
