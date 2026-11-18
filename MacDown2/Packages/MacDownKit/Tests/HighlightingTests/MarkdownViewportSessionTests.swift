@@ -167,11 +167,20 @@ struct MarkdownViewportSessionTests {
         #expect(session.fullParseCount == 1)
         try expectCurrentTokens(session, system: system, registry: registry)
 
+        let unchangedWord = (model.text as NSString).range(of: "alphaXtarget")
+        storage.replaceCharacters(in: unchangedWord, with: "alphaXtarget")
+        await session.waitForPendingParse()
+        #expect(model.text.contains("alphaXtarget"))
+        #expect(session.unpairedWindowCount == 3)
+        #expect(session.localParseCount == 4)
+        #expect(session.fullParseCount == 1)
+        try expectCurrentTokens(session, system: system, registry: registry)
+
         let restoredWord = (model.text as NSString).range(of: "alphaXtarget")
         system.textView.insertText("", replacementRange: NSRange(location: restoredWord.location + 5, length: 1))
         await session.waitForPendingParse()
         #expect(model.text.contains("alphatarget"))
-        #expect(session.localParseCount == 4)
+        #expect(session.localParseCount == 5)
         try expectCurrentTokens(session, system: system, registry: registry)
 
         let structural = (model.text as NSString).range(of: "alphatarget")

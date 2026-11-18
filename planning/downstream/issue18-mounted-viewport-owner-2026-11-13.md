@@ -7,6 +7,8 @@
 > cached/post-storage UTF-16 comparison, callback geometry and existing prose
 > guards prove that single local change. Failed or ambiguous proposals, IME,
 > structural and cross-section edits retain the full-parse fallback. The
+> same bounded path also reparses an exactly unchanged section when TextKit
+> reports a same-text character edit; it does not discard the cache. The
 > 50 ms input-to-visible-paint and protected native gates remain open. See
 > [the measured implementation note](issue18-unpaired-undo-2026-11-18.md).
 

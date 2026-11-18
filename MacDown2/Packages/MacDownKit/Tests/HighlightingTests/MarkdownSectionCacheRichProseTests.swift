@@ -43,6 +43,19 @@ struct MarkdownSectionCacheRichProseTests {
             )
             #expect(try cache.tokens(in: visible) == oracle.tokens(in: visible), "Oracle mismatch: \(name)")
         }
+        let unchanged = try #require(cache.selectUnpairedPostEdit(
+            postSource: source as NSString,
+            editedRange: target,
+            delta: 0,
+            visible: visible
+        ), "Same-text storage notification took the full-document path")
+        let unchangedContent = (source as NSString).substring(with: unchanged.new)
+        let unchangedSnapshot = try MarkdownSectionParser.snapshot(source: unchangedContent, registry: registry)
+        try cache.replace(unchanged, with: unchangedSnapshot, content: unchangedContent, delta: 0)
+        let oracle = try MarkdownSectionCache(
+            source: source, snapshot: MarkdownSectionParser.snapshot(source: source, registry: registry)
+        )
+        #expect(try cache.tokens(in: visible) == oracle.tokens(in: visible))
     }
 
     @Test func unpairedStructuralAndCrossSectionEditsStayOnFullParsePath() throws {

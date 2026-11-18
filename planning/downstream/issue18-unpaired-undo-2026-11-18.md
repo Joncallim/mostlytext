@@ -34,11 +34,22 @@ windows; the session counted 15 local parses and one initial full parse. The
 12 ordinary edit settlements ranged from 8.940 to 10.246 ms. This probe does
 not measure automatic input-to-visible bitmap paint.
 
+The same fixture exposed a second path: TextKit can report a character edit
+while a history action leaves a bounded paragraph's source unchanged. The
+cache now reparses that exactly matching paragraph, still honoring the storage
+notification. A deterministic same-text storage test and full-size oracle
+pass. In the expanded Release probe, same-text settlement was **2.120 ms**,
+real undo **23.413 ms**, and real redo **23.928 ms**; the session counted
+three unpaired windows, 16 local parses and one initial full parse. These are
+component timings and do not qualify the full paint target.
+
 The first Release benchmark attempt failed its new unpaired-count assertion:
 it called undo/redo after twelve alternating edits without isolating a text
 action. Both observed storage callbacks had zero character delta, so those
-calls did not exercise the intended undo/redo edit. The test now clears only
-its own history, makes a fresh insertion and asserts the intermediate source
+calls did not exercise the intended undo/redo edit; their 694.756/689.853 ms
+settlements did reveal the unnecessary full parse for unchanged source. The
+test now clears only its own history, makes a fresh insertion and asserts the
+intermediate source
 after each action. The failed attempt and its cause are recorded here; it is
 not presented as a product failure or erased by the corrected run.
 
@@ -49,10 +60,13 @@ cross-section edits are refused. Edit-pairing tests confirm a failed or nested
 proposal cannot be mistaken for an unpaired edit. Ordinary compliance and
 changed-file SwiftFormat/SwiftLint pass.
 
-An independent read-only Codex CLI review against `origin/main` found no
-actionable regression. It ran 17 targeted cache, pairing and mounted-session
-tests. Its scope excluded full-suite health and Release input-to-visible-paint
-performance; the review is engineering evidence, not owner-native acceptance.
+An independent read-only Codex CLI review of the first undo/redo change against
+`origin/main` found no actionable regression and ran 17 targeted tests. A
+fresh review of the integrated same-text addition also found no actionable
+regression; 23 selected cache, pairing, viewport, painter and parse-ownership
+tests passed. Both reviews excluded full-suite health and Release
+input-to-visible-paint performance; they are engineering evidence, not
+owner-native acceptance.
 
 ## Remaining acceptance
 

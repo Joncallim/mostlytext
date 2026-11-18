@@ -33,8 +33,16 @@ extension MarkdownSectionCache {
         let old = stored.substring(with: entry.range) as NSString
         let (oldEdit, newEdit) = Self.changedRanges(old: old, postSource: postSource,
                                                     window: oldWindow, newLength: newLength)
-        guard oldEdit.length > 0 || newEdit.length > 0,
-              editedRange.location <= newEdit.location,
+        let window = Window(old: oldWindow,
+                            new: NSRange(location: oldWindow.location, length: newLength),
+                            firstSection: index, lastSection: index)
+        if oldEdit.length == 0 && newEdit.length == 0 {
+            // TextKit can report a character edit for a history action that
+            // leaves this whole bounded section byte-for-byte unchanged.
+            // Reparse only this section to honor the storage notification.
+            return delta == 0 && editedRange.length > 0 ? window : nil
+        }
+        guard editedRange.location <= newEdit.location,
               NSMaxRange(newEdit) <= NSMaxRange(editedRange)
         else { return nil }
         let replacement = postSource.substring(with: newEdit)
@@ -47,9 +55,7 @@ extension MarkdownSectionCache {
                   localEdit: NSRange(location: entry.range.location + oldEdit.location, length: oldEdit.length)
               )
         else { return nil }
-        return Window(old: oldWindow,
-                      new: NSRange(location: oldWindow.location, length: newLength),
-                      firstSection: index, lastSection: index)
+        return window
     }
 
     private static func changedRanges(old: NSString, postSource: NSString,
