@@ -2,7 +2,6 @@ import Contributions
 import DiagramsGraphviz
 import ExportService
 import Foundation
-import GraphvizRendering
 import MarkdownEngine
 import Math
 import MathRendering
@@ -33,19 +32,7 @@ enum DerivedMathReply {
                 results += try await contributor.run(document: document, sourceText: source, sourceGeneration: 1)
             }
             if !GraphvizFenceScanner.scan(document, sourceText: source).isEmpty {
-                let renderer = GraphvizWebRenderer(poolSize: 1, timeout: .seconds(2))
-                let contributor = GraphvizContribution(
-                    context: .neutralLight, renderer: LoggedGraphvizRenderer(base: renderer)
-                )
-                let started = ProcessInfo.processInfo.systemUptime
-                let diagrams = try await contributor.run(document: document, sourceText: source, sourceGeneration: 1)
-                let contentCount = diagrams.filter { $0.content != nil }.count
-                let elapsed = ProcessInfo.processInfo.systemUptime - started
-                derivedLogger
-                    .notice("Graphviz contributions: \(diagrams.count), content: \(contentCount), elapsed: \(elapsed)")
-                await renderer.shutdown()
-                derivedLogger.notice("Graphviz renderer shutdown completed")
-                results += diagrams
+                results += QuickLookGraphvizJSC.render(document: document, sourceText: source, generation: 1)
             }
             let items = results.compactMap(adapt)
             guard !items.isEmpty else { return nil }
@@ -81,26 +68,5 @@ enum DerivedMathReply {
             html: html, sourceGeneration: result.sourceGeneration,
             diagnostics: diagnostics
         )
-    }
-}
-
-private struct LoggedGraphvizRenderer: GraphvizDiagramRendering {
-    let base: GraphvizWebRenderer
-
-    func render(_ fence: GraphvizFence, context: GraphvizRenderContext) async throws -> RenderedGraphvizDiagram {
-        do {
-            return try await base.render(fence, context: context)
-        } catch {
-            let category = switch error as? GraphvizRenderError {
-            case .invalidSyntax: "invalidSyntax"
-            case .timedOut: "timedOut"
-            case .sourceTooLarge: "sourceTooLarge"
-            case .outputTooLarge: "outputTooLarge"
-            case .rendererUnavailable: "rendererUnavailable"
-            case nil: "other"
-            }
-            derivedLogger.error("Graphviz renderer failed: \(category)")
-            throw error
-        }
     }
 }

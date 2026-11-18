@@ -299,6 +299,8 @@ targets:
       product: DiagramsGraphviz
     - package: MacDownKit
       product: GraphvizRendering
+    - package: MacDownKit
+      product: DiagramWebKitPool
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.MostlyText.QuickLook.Worker
