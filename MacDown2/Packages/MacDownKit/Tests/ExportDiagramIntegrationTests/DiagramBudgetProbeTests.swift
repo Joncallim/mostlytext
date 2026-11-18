@@ -264,6 +264,45 @@
     }
 
     private extension DiagramBudgetProbeTests {
+        @Test func measureD2ConcurrentRequests() async throws {
+            let directory = try verifyHost()
+            let renderer = D2WebRenderer(poolSize: 2)
+            let chain = (0 ..< 16).map { "n\($0) -> n\($0 + 1)" }.joined(separator: "\n")
+            let star = (0 ..< 16).map { "root -> m\($0)" }.joined(separator: "\n")
+            let started = Date().timeIntervalSince1970
+            let first = Task {
+                try await renderer.render(D2Fence(source: chain, sourceRange: 0 ..< chain.utf16.count),
+                                          context: .neutralLight)
+            }
+            let second = Task {
+                try await renderer.render(D2Fence(source: star, sourceRange: 0 ..< star.utf16.count),
+                                          context: .neutralLight)
+            }
+            let firstSVG = try await first.value.svg
+            let secondSVG = try await second.value.svg
+            let rendered = Date().timeIntervalSince1970
+            await renderer.shutdown()
+            let shutdown = Date().timeIntervalSince1970
+            // Retain the test host while the sampler observes whether the
+            // newly seen helpers remain after the renderer shuts down.
+            try await Task.sleep(for: .seconds(3))
+            let observed = Date().timeIntervalSince1970
+            let result: [String: Any] = [
+                "engine": "d2", "case": "D2ConcurrentRequests", "configuration": "Release",
+                "source_sha256": [digest(chain), digest(star)],
+                "source_bytes": [chain.utf8.count, star.utf8.count],
+                "svg_sha256": [digest(firstSVG), digest(secondSVG)],
+                "svg_bytes": [firstSVG.utf8.count, secondSVG.utf8.count],
+                "render_started_wall_seconds": started,
+                "render_completed_wall_seconds": rendered,
+                "shutdown_completed_wall_seconds": shutdown,
+                "observation_completed_wall_seconds": observed,
+                "test_host_peak_rss_bytes": peakRSS(),
+            ]
+            let data = try JSONSerialization.data(withJSONObject: result, options: [.prettyPrinted, .sortedKeys])
+            try data.write(to: directory.appendingPathComponent("D2ConcurrentRequests.json"), options: .atomic)
+        }
+
         func mermaidLimits() async -> [String: [String: Any]] {
             let outputBounded = MermaidWebRenderer(poolSize: 1, maxOutputBytes: 128)
             let outputLimit = await measure(source: "graph TD; A-->B;") { text in
