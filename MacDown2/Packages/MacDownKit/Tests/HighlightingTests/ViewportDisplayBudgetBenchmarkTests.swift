@@ -112,6 +112,7 @@ struct ViewportDisplayBudgetBenchmarkTests {
         EditorView.onDiagnosticTiming = { stage, time in editorTimes.append((stage, time)) }
         defer { EditorView.onDiagnosticTiming = nil }
         var results: [[String: Any]] = []
+        var firstEditSample: Task<Int32, Never>?
         let registry = GrammarRegistry()
         for edit in Self.cases {
             let beforeSource = system.textView.string as NSString
@@ -140,6 +141,27 @@ struct ViewportDisplayBudgetBenchmarkTests {
             heightTimes.removeAll(keepingCapacity: true)
             editorTimes.removeAll(keepingCapacity: true)
             let timingStart = parseTiming.snapshot().count
+
+            if edit.name == "begin-word",
+               let runnerTemp = ProcessInfo.processInfo.environment["RUNNER_TEMP"] {
+                let processID = ProcessInfo.processInfo.processIdentifier
+                let output = runnerTemp + "/viewport-budget/first-edit-post-oracle-stack.txt"
+                firstEditSample = Task.detached(priority: .utility) {
+                    let process = Process()
+                    process.executableURL = URL(fileURLWithPath: "/usr/bin/sample")
+                    process.arguments = [String(processID), "5", "1", "-file", output]
+                    do {
+                        try process.run()
+                        process.waitUntilExit()
+                        return process.terminationStatus
+                    } catch {
+                        return -1
+                    }
+                }
+                // The oracle, scrolling and bitmap setup are complete. Attach
+                // before the edit without placing sampler startup on its clock.
+                try await Task.sleep(for: .seconds(2))
+            }
 
             let input = DispatchTime.now().uptimeNanoseconds
             system.textView.insertText(edit.replacement, replacementRange: range)
@@ -293,6 +315,9 @@ struct ViewportDisplayBudgetBenchmarkTests {
         let body = try JSONSerialization.data(withJSONObject: results, options: [.sortedKeys])
         let encoded = try #require(String(data: body, encoding: .utf8))
         print("VIEWPORT-DISPLAY-BUDGET " + encoded)
+        if let firstEditSample {
+            await print("VIEWPORT-FIRST-EDIT-SAMPLE-EXIT \(firstEditSample.value)")
+        }
         #expect(results.count == Self.cases.count)
         // A complete measurement may reveal a product-budget failure. The
         // workflow records every such case; it never calls that a budget pass.
