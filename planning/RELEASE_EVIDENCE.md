@@ -13,8 +13,8 @@
 
 ## Editor and external-file engineering checkpoint — 18 November 2026
 
-[PR #296](https://github.com/Joncallim/mostlytext/pull/296), source
-`760850de4237b7ed54ca4be6f5e0643915bcf9d1`, bounds the UTF-16 reads
+[PR #296](https://github.com/Joncallim/mostlytext/pull/296) first measured
+product source `760850de4237b7ed54ca4be6f5e0643915bcf9d1`. It bounds the UTF-16 reads
 in the large-document height estimator and compares whole-process wakeups
 across three *same* windows with their file watchers bound, unbound and
 rebound. The estimator's 96-case differential corpus has identical before/after
@@ -22,23 +22,30 @@ output (SHA-256 `9cdc123df6d8bf5a5d5acd7aef901cb74f1fe262763d2255c2c48a89f4016b0
 on a 1,049,824-unit source, repeated isolated scans fell from about 5.3 ms
 to 3.2 ms. This optimization remains linear in document size.
 
-The hosted Debug/Release same-window controller runs
+The preliminary hosted Debug/Release same-window controller runs
 ([run 44194493098](https://github.com/Joncallim/mostlytext/actions/runs/44194493098))
 passed 21 selected tests in each configuration. The four-second whole-process
 interrupt-wakeup counts were 52/38/39/40 for initial-bound/unbound/rebound/closed
 in Debug and 52/40/39/41 in Release. Each window retained one file and one
 parent watcher when bound, zero when unbound, and one each after rebinding; a
-real atomic external replacement provided a positive control. These samples
-support the idle watcher comparison only. The interactive external-file matrix,
+real atomic external replacement provided a positive control. These four-second
+totals are too short to clear periodic idle behavior: PR #296 now records
+twenty one-second bins per bound/unbound/rebound phase, stable monitor request
+generations, and a positive replacement after each bound phase. That longer
+control requires hosted execution and review. The interactive external-file matrix,
 view-state fidelity and exact formal Release candidate for [#12](https://github.com/Joncallim/mostlytext/issues/12)
 remain open.
 
-The final source-bound mounted Release measurement
+The preceding-head mounted Release measurement
 ([run 44203905501](https://github.com/Joncallim/mostlytext/actions/runs/44203905501))
 still **fails** [#18](https://github.com/Joncallim/mostlytext/issues/18)'s
 50 ms input-to-visible-highlight target: beginning word 203.7 ms, middle
 78.1 ms, word boundary 84.7 ms, structural edit 61.8 ms, undo 1192.6 ms and
-redo 1413.1 ms. The height scanner did not run between input and publication
+redo 1413.1 ms. A later Debug editor/theme check on source `80f9f5a4`
+failed the unchanged two-second 130,000-paragraph height ceiling at 2.665 s.
+Production source `972a9f55` reuses one bounded copy buffer across all
+estimated paragraphs; the next Debug check passed the same case in 1.911 s,
+with the first failure retained. The height scanner did not run between input and publication
 in the instrumented delay. The detached-parser experiment moved queue entry
 to 0.04 ms but left main-actor resume at 134.2 ms and first paint at 144.8 ms;
 it was reverted. A later sampling probe

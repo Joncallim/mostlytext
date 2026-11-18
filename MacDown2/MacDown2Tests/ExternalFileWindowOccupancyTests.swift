@@ -13,8 +13,8 @@ import Workspace
 
 /// Measures the actual app-test process and its open file-watch descriptors.
 /// Wakeup counts are observations, not a stable CI performance threshold: other
-/// work in the process can also wake it. The positive rename controls that the
-/// watcher was active during the idle interval.
+/// work in the process can also wake it. A real replacement after each bound
+/// interval controls that the watcher was active during idle.
 @Suite("External file window occupancy", .serialized)
 @MainActor
 struct ExternalFileWindowOccupancyTests {
@@ -78,10 +78,13 @@ struct ExternalFileWindowOccupancyTests {
         firstEditor.selectedRange = NSRange(location: 3, length: 4)
         firstEditor.scrollOffset = 25
 
-        let idleStart = try processWakeups()
-        try await Task.sleep(for: .seconds(4))
-        let idleEnd = try processWakeups()
+        try await Task.sleep(for: .seconds(1))
+        let idle = try await measureIdleBins(controllers: controllers, targets: targets, expectedWatches: 1)
         #expect(try watcherDescriptors(for: targets) == bound, "idle watches must not accumulate")
+        try await verifyAtomicReplacement(
+            controller: controllers[1], source: sourceURLs[1], directory: directoryURLs[1],
+            expected: "bound idle positive"
+        )
 
         let comparison = try await measureUnboundSameWindows(controllers: controllers, targets: targets)
 
@@ -95,12 +98,18 @@ struct ExternalFileWindowOccupancyTests {
             "window_count": 3,
             "file_watch_descriptors": sourceURLs.count,
             "parent_watch_descriptors": directoryURLs.count,
-            "idle_interrupt_wakeups": idleEnd.interrupt - idleStart.interrupt,
-            "idle_platform_idle_wakeups": idleEnd.platformIdle - idleStart.platformIdle,
-            "same_window_unbound_interrupt_wakeups": comparison.unbound.interrupt,
-            "same_window_unbound_platform_idle_wakeups": comparison.unbound.platformIdle,
-            "same_window_rebound_interrupt_wakeups": comparison.rebound.interrupt,
-            "same_window_rebound_platform_idle_wakeups": comparison.rebound.platformIdle,
+            "idle_interrupt_wakeups": idle.interruptTotal,
+            "idle_platform_idle_wakeups": idle.platformIdleTotal,
+            "idle_interrupt_bins": idle.interrupt,
+            "idle_platform_idle_bins": idle.platformIdle,
+            "same_window_unbound_interrupt_wakeups": comparison.unbound.interruptTotal,
+            "same_window_unbound_platform_idle_wakeups": comparison.unbound.platformIdleTotal,
+            "same_window_unbound_interrupt_bins": comparison.unbound.interrupt,
+            "same_window_unbound_platform_idle_bins": comparison.unbound.platformIdle,
+            "same_window_rebound_interrupt_wakeups": comparison.rebound.interruptTotal,
+            "same_window_rebound_platform_idle_wakeups": comparison.rebound.platformIdleTotal,
+            "same_window_rebound_interrupt_bins": comparison.rebound.interrupt,
+            "same_window_rebound_platform_idle_bins": comparison.rebound.platformIdle,
             "positive_interrupt_wakeups": positive.interrupt,
             "positive_platform_idle_wakeups": positive.platformIdle,
             "closed_interrupt_wakeups": closed.interrupt,
@@ -113,26 +122,6 @@ struct ExternalFileWindowOccupancyTests {
         let controllers: [WindowController]
         let sources: [URL]
         let directories: [URL]
-    }
-
-    private func makeFileWindows(fixture: Fixture) throws -> WindowSet {
-        var controllers: [WindowController] = []
-        var sources: [URL] = []
-        var directories: [URL] = []
-        for index in 0 ..< 3 {
-            let directory = fixture.root.appendingPathComponent("document-\(index)", isDirectory: true)
-            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-            let source = directory.appendingPathComponent("source.md")
-            try "original-\(index)".write(to: source, atomically: true, encoding: .utf8)
-            let model = fixture.coordinator.makeWindowModel()
-            try model.tabStore.newTab(document: FileDocument(
-                fileURL: source, recoveryBuffer: fixture.recovery
-            ).load())
-            controllers.append(fixture.makeWindow(model: model))
-            sources.append(source)
-            directories.append(directory)
-        }
-        return WindowSet(controllers: controllers, sources: sources, directories: directories)
     }
 
     private func measureClosedWindows(
@@ -208,7 +197,7 @@ struct ExternalFileWindowOccupancyTests {
         )
     }
 
-    private func waitUntil(
+    func waitUntil(
         _ timeout: Duration, _ stage: String, condition: @MainActor () -> Bool
     ) async throws {
         let deadline = ContinuousClock.now.advanced(by: timeout)
@@ -222,12 +211,12 @@ struct ExternalFileWindowOccupancyTests {
         throw CancellationError()
     }
 
-    private struct WatcherIdentity: Hashable {
+    struct WatcherIdentity: Hashable {
         let device: dev_t
         let inode: ino_t
     }
 
-    private func watcherIdentity(for url: URL) throws -> WatcherIdentity {
+    func watcherIdentity(for url: URL) throws -> WatcherIdentity {
         var info = stat()
         guard lstat(url.path, &info) == 0 else {
             throw POSIXError(POSIXErrorCode(rawValue: errno) ?? .EIO)
@@ -235,7 +224,7 @@ struct ExternalFileWindowOccupancyTests {
         return WatcherIdentity(device: info.st_dev, inode: info.st_ino)
     }
 
-    private func watcherDescriptors(for urls: [URL]) throws -> [String: Int] {
+    func watcherDescriptors(for urls: [URL]) throws -> [String: Int] {
         var identities: [String: WatcherIdentity] = [:]
         for url in urls {
             identities[url.path] = try watcherIdentity(for: url)
@@ -248,7 +237,7 @@ struct ExternalFileWindowOccupancyTests {
         return counts
     }
 
-    private func eventOnlyDescriptorIdentities() throws -> [WatcherIdentity] {
+    func eventOnlyDescriptorIdentities() throws -> [WatcherIdentity] {
         let availableBytes = proc_pidinfo(getpid(), PROC_PIDLISTFDS, 0, nil, 0)
         guard availableBytes >= 0 else { throw POSIXError(.EIO) }
         var fds = [proc_fdinfo](
@@ -271,7 +260,7 @@ struct ExternalFileWindowOccupancyTests {
         return identities
     }
 
-    private func processWakeups() throws -> (interrupt: UInt64, platformIdle: UInt64) {
+    func processWakeups() throws -> (interrupt: UInt64, platformIdle: UInt64) {
         var info = task_power_info_data_t()
         var count = mach_msg_type_number_t(
             MemoryLayout<task_power_info_data_t>.size / MemoryLayout<integer_t>.size
@@ -286,7 +275,27 @@ struct ExternalFileWindowOccupancyTests {
     }
 }
 
-private extension ExternalFileWindowOccupancyTests {
+extension ExternalFileWindowOccupancyTests {
+    private func makeFileWindows(fixture: Fixture) throws -> WindowSet {
+        var controllers: [WindowController] = []
+        var sources: [URL] = []
+        var directories: [URL] = []
+        for index in 0 ..< 3 {
+            let directory = fixture.root.appendingPathComponent("document-\(index)", isDirectory: true)
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            let source = directory.appendingPathComponent("source.md")
+            try "original-\(index)".write(to: source, atomically: true, encoding: .utf8)
+            let model = fixture.coordinator.makeWindowModel()
+            try model.tabStore.newTab(document: FileDocument(
+                fileURL: source, recoveryBuffer: fixture.recovery
+            ).load())
+            controllers.append(fixture.makeWindow(model: model))
+            sources.append(source)
+            directories.append(directory)
+        }
+        return WindowSet(controllers: controllers, sources: sources, directories: directories)
+    }
+
     private func preserveMeasurement(_ record: [String: Any]) throws {
         print("external-window-process-occupancy \(record)")
         if let directory = ProcessInfo.processInfo.environment["MOSTLYTEXT_EXTERNAL_PROCESS_OUTPUT"] {
@@ -299,8 +308,7 @@ private extension ExternalFileWindowOccupancyTests {
 
     private func measureUnboundSameWindows(
         controllers: [WindowController], targets: [URL]
-    ) async throws -> (unbound: (interrupt: UInt64, platformIdle: UInt64),
-                       rebound: (interrupt: UInt64, platformIdle: UInt64)) {
+    ) async throws -> (unbound: IdleBins, rebound: IdleBins) {
         for controller in controllers {
             controller.externalFileController.synchronize(with: nil)
         }
@@ -314,9 +322,7 @@ private extension ExternalFileWindowOccupancyTests {
         // alive. Only the file and parent watcher bindings differ from the
         // preceding idle sample; allow their cancellation to settle first.
         try await Task.sleep(for: .seconds(1))
-        let start = try processWakeups()
-        try await Task.sleep(for: .seconds(4))
-        let end = try processWakeups()
+        let unbound = try await measureIdleBins(controllers: controllers, targets: targets, expectedWatches: 0)
         #expect(try watcherDescriptors(for: targets).values.allSatisfy { $0 == 0 })
 
         for controller in controllers {
@@ -329,16 +335,12 @@ private extension ExternalFileWindowOccupancyTests {
             (try? watcherDescriptors(for: targets).values.allSatisfy { $0 == 1 }) == true
         }
         try await Task.sleep(for: .seconds(1))
-        let reboundStart = try processWakeups()
-        try await Task.sleep(for: .seconds(4))
-        let reboundEnd = try processWakeups()
+        let rebound = try await measureIdleBins(controllers: controllers, targets: targets, expectedWatches: 1)
         #expect(try watcherDescriptors(for: targets).values.allSatisfy { $0 == 1 })
-        return ((end.interrupt - start.interrupt, end.platformIdle - start.platformIdle),
-                (reboundEnd.interrupt - reboundStart.interrupt,
-                 reboundEnd.platformIdle - reboundStart.platformIdle))
+        return (unbound, rebound)
     }
 
-    private func requireWatcherTransition(
+    func requireWatcherTransition(
         retired: WatcherIdentity, source: URL, directory: URL, stage: String
     ) async throws {
         try await waitUntil(.seconds(5), "\(stage) retires and reattaches file watcher") {
