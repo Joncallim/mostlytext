@@ -33,8 +33,19 @@ totals are too short to clear periodic idle behavior: PR #296 now records
 twenty nominal one-second bins and actual monotonic elapsed time per
 bound/unbound/rebound phase, stable monitor request
 generations, and a positive replacement after each bound phase. That longer
-control requires hosted execution and review. The interactive external-file matrix,
-view-state fidelity and exact formal Release candidate for [#12](https://github.com/Joncallim/mostlytext/issues/12)
+control passed in both configurations on exact PR head `8234ca1a`
+([run 44230712789](https://github.com/Joncallim/mostlytext/actions/runs/44230712789),
+21 selected tests / four suites each). The hosted synthetic merge has parents
+`c72c34ea` and `8234ca1a`. Actual elapsed-time-normalized whole-process
+interrupt rates for bound/unbound/rebound were 10.277/9.741/9.718 per second in
+Debug and 9.998/9.739/9.553 per second in Release. The rebound phase showed
+no recurring bound-only wakeup pattern. Stable request generations, the expected
+one file and one parent watcher per bound window with zero after unbind, and a
+real atomic-replacement positive control after each bound phase were asserted
+by the passing test. These are hosted component-process observations, not a
+formal installed-app or exact signed-candidate measurement. The interactive
+external-file matrix, conflict view-state fidelity and exact formal Release
+candidate for [#12](https://github.com/Joncallim/mostlytext/issues/12)
 remain open.
 
 The preceding-head mounted Release measurement
