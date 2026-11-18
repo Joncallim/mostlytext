@@ -33,13 +33,17 @@ final class ContentHeightMeter {
 
         let estimator = LineHeightEstimator(width: width, attributes: attributes)
         let estimatesEverything = string.length > Self.estimationThreshold
+        var estimationBuffer: [unichar] = []
         var total: CGFloat = 0
         Self.forEachParagraph(in: string) { range in
             // Measuring is O(document) after every edit pause and quadratic inside one long CJK/emoji paragraph, so
             // a huge document, or a huge paragraph, is sized from its length instead (a 10 MB file stalled the main
             // thread for ~0.7 s per pause; one 400k-character CJK paragraph for ~24 s).
             if estimatesEverything || range.length > Self.maximumMeasuredParagraphLength {
-                total += estimator.height(of: string, range: range)
+                if estimationBuffer.isEmpty {
+                    estimationBuffer = [unichar](repeating: 0, count: HeightParagraphScanner.chunkCapacity)
+                }
+                total += estimator.height(of: string, range: range, buffer: &estimationBuffer)
                 return
             }
             let paragraph = string.substring(with: range)
@@ -115,9 +119,16 @@ struct LineHeightEstimator {
         (0x41 ... 0x5A).contains(unit) || unit == 0x6D || unit == 0x77 || unit == 0x40 || unit == 0x25 || unit == 0x26
     }
 
-    // Keep wrap state in one tight loop across UTF-16 chunks.
-    // swiftlint:disable:next function_body_length
+    /// Keep wrap state in one tight loop across UTF-16 chunks.
     func height(of string: NSString, range: NSRange) -> CGFloat {
+        var buffer = [unichar](repeating: 0, count: min(range.length, HeightParagraphScanner.chunkCapacity))
+        return height(of: string, range: range, buffer: &buffer)
+    }
+
+    // Reuse the bounded copy buffer across paragraphs in a whole-document pass.
+    // A large document may have hundreds of thousands of short paragraphs.
+    // swiftlint:disable:next function_body_length
+    func height(of string: NSString, range: NSRange, buffer: inout [unichar]) -> CGFloat {
         var lines = 1
         var lineWidth: CGFloat = 0
         var wordWidth: CGFloat = 0
@@ -141,7 +152,6 @@ struct LineHeightEstimator {
         // Copy bounded UTF-16 chunks instead of crossing the NSString bridge
         // for every unit of a large document after an edit. Word and line
         // state intentionally survive chunk boundaries.
-        var buffer = [unichar](repeating: 0, count: min(range.length, HeightParagraphScanner.chunkCapacity))
         var offset = range.location
         let end = NSMaxRange(range)
         while offset < end {
