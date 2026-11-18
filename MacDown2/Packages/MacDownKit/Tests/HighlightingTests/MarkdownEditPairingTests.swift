@@ -120,13 +120,17 @@ struct MarkdownEditPairingTests {
         let old = "one two" as NSString
         let first = old.range(of: "one")
         let second = old.range(of: "two")
+        #expect(!pair.hadPreEdit)
         pair.prepare(range: first, replacement: "ONE", oldSource: old) { _, _, _ in "first" }
         pair.prepare(range: second, replacement: "TWO", oldSource: old) { _, _, _ in "second" }
+        #expect(pair.hadPreEdit)
         #expect(pair.complete(editedRange: second, delta: 0, postSource: "one TWO" as NSString)?.candidate == nil)
+        #expect(!pair.hadPreEdit)
         pair.prepare(range: second, replacement: "TWO", oldSource: old) { _, _, _ in "fresh" }
         #expect(pair.complete(editedRange: second, delta: 0, postSource: "one TWO" as NSString)?.candidate == "fresh")
 
         pair.prepare(range: first, replacement: "ONE", oldSource: old) { _, _, _ in nil }
+        #expect(pair.hadPreEdit)
         pair.prepare(range: second, replacement: "TWO", oldSource: old) { _, _, _ in "nested" }
         #expect(pair.complete(editedRange: second, delta: 0, postSource: "one TWO" as NSString)?.candidate == nil)
         pair.prepare(range: second, replacement: "TWO", oldSource: old) { _, _, _ in "after-rejection" }

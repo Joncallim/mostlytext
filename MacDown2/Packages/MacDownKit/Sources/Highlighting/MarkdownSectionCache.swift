@@ -49,7 +49,7 @@ struct MarkdownSectionCache {
 
     private var sections: [Section]
     private var shifts: SectionShifts
-    private var sourceLength: Int
+    private(set) var sourceLength: Int
 
     /// A parse can finish on a background executor and hand over its Sendable
     /// immutable snapshot; the live parser itself never crosses actors.
@@ -68,7 +68,6 @@ struct MarkdownSectionCache {
         sourceLength = (source as NSString).length
     }
 
-    // swiftlint:disable cyclomatic_complexity
     /// Admit only a text edit inside one bounded paragraph or heading slice.
     /// Keeping section count stable lets later section offsets shift in O(log n).
     func select(source: NSString, edit: NSRange, replacement: String, visible: NSRange) -> Window? {
@@ -91,22 +90,8 @@ struct MarkdownSectionCache {
         let entry = resolvedSection(at: editIndex)
         let node = entry.node
         let localEdit = NSRange(location: edit.location - entry.offset, length: edit.length)
-        if let paragraph = Self.paragraph(in: node, overlapping: localEdit) {
-            guard localEdit.location > paragraph.range.location,
-                  NSMaxRange(localEdit) < NSMaxRange(paragraph.range),
-                  paragraph.range.length <= Self.windowLimit
-            else { return nil }
-            let paragraphText = (entry.content as NSString).substring(with: paragraph.range)
-            let body: String = if paragraphText.hasSuffix("\r\n") {
-                // Swift treats CRLF as one Character; drop two UTF-16 units,
-                // preserving the character immediately before the terminator.
-                (paragraphText as NSString).substring(to: (paragraphText as NSString).length - 2)
-            } else if paragraphText.hasSuffix("\n") {
-                String(paragraphText.dropLast())
-            } else {
-                paragraphText
-            }
-            guard Self.safeProseBody(body) else { return nil }
+        if Self.paragraph(in: node, overlapping: localEdit) != nil {
+            guard Self.admitsParagraphEdit(entry: entry, localEdit: localEdit) else { return nil }
         } else {
             guard Self.isBoundedHeadingEdit(entry: entry, edit: edit, source: source) else { return nil }
         }
@@ -124,8 +109,6 @@ struct MarkdownSectionCache {
                       new: NSRange(location: lower, length: newLength),
                       firstSection: editIndex, lastSection: editIndex)
     }
-
-    // swiftlint:enable cyclomatic_complexity
 
     /// Replace cached trees only after a fresh local parse preserves the
     /// selected root-section shape. On failure the cache is unchanged.
@@ -209,7 +192,7 @@ struct MarkdownSectionCache {
         return result
     }
 
-    private func resolvedSection(at index: Int) -> Section {
+    func resolvedSection(at index: Int) -> Section {
         var section = sections[index]
         section.offset += shifts.displacement(at: index)
         return section
@@ -263,11 +246,29 @@ struct MarkdownSectionCache {
         return paragraphs.count == 1 ? paragraphs[0] : nil
     }
 
+    static func admitsParagraphEdit(entry: Section, localEdit: NSRange) -> Bool {
+        guard let paragraph = paragraph(in: entry.node, overlapping: localEdit),
+              localEdit.location > paragraph.range.location,
+              NSMaxRange(localEdit) < NSMaxRange(paragraph.range),
+              paragraph.range.length <= windowLimit
+        else { return false }
+        let paragraphText = (entry.content as NSString).substring(with: paragraph.range)
+        let body: String = if paragraphText.hasSuffix("\r\n") {
+            // Swift treats CRLF as one Character; drop two UTF-16 units.
+            (paragraphText as NSString).substring(to: (paragraphText as NSString).length - 2)
+        } else if paragraphText.hasSuffix("\n") {
+            String(paragraphText.dropLast())
+        } else {
+            paragraphText
+        }
+        return safeProseBody(body)
+    }
+
     private func globalRange(at index: Int) -> NSRange {
         resolvedSection(at: index).globalRange
     }
 
-    private func indexOfEdit(_ edit: NSRange) -> Int? {
+    func indexOfEdit(_ edit: NSRange) -> Int? {
         firstIndex(overlapping: Self.probe(edit))
     }
 
@@ -275,7 +276,7 @@ struct MarkdownSectionCache {
         NSRange(location: range.location, length: max(1, range.length))
     }
 
-    private func firstIndex(overlapping region: NSRange) -> Int? {
+    func firstIndex(overlapping region: NSRange) -> Int? {
         var lower = 0
         var upper = sections.count
         while lower < upper {

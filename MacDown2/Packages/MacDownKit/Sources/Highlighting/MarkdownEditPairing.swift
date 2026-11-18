@@ -5,8 +5,8 @@ import Foundation
 /// this type never retains the mutable `NSString` supplied by TextKit.
 ///
 /// A veto, nested edit, undo or programmatic replacement has no trustworthy
-/// pairing. The caller must then discard its incremental candidate and take
-/// its deferred full-parse or plain fallback path. A match establishes edit
+/// pairing. The caller must discard its candidate; an unpaired storage edit
+/// may use a separate, conservatively verified cache path. A match establishes edit
 /// geometry only; later parsing and painting still need an editor-revision
 /// guard so an old completion cannot style a newer document.
 @MainActor
@@ -38,6 +38,12 @@ final class MarkdownEditPairing<Candidate> {
     private var proposal: Proposal?
     private var sawPreEdit = false
     private var ambiguous = false
+
+    /// A failed or ambiguous proposal must never be reinterpreted as an
+    /// unpaired storage edit. Undo and redo have no proposal at all.
+    var hadPreEdit: Bool {
+        sawPreEdit || ambiguous
+    }
 
     func prepare(range: NSRange, replacement: String, oldSource: NSString,
                  verificationRange: ((Candidate) -> NSRange)? = nil,
