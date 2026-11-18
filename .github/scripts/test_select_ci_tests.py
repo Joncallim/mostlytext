@@ -51,6 +51,17 @@ class SelectionTests(unittest.TestCase):
                 self.assertIn(target + "Tests", selected)
                 self.assertIn(expected, app)
 
+    def test_combined_renderer_changes_union_app_suites(self):
+        mode, selected, app_mode, app = SELECTOR.select([
+            "MacDown2/Packages/MacDownKit/Sources/GraphvizRendering/GraphvizWebRenderer.swift",
+            "MacDown2/Packages/MacDownKit/Sources/DiagramRendering/MermaidWebRenderer.swift",
+        ], self.manifest)
+        self.assertEqual((mode, app_mode), ("selected", "selected"))
+        self.assertIn("GraphvizRenderingTests", selected)
+        self.assertIn("DiagramRenderingTests", selected)
+        self.assertIn("GraphvizPreviewIntegrationTests", app)
+        self.assertIn("MermaidPreviewIntegrationTests", app)
+
     def test_unknown_or_shared_input_falls_back_to_full(self):
         for path in (
             "MacDown2/Packages/MacDownKit/Package.swift",
@@ -71,6 +82,15 @@ class SelectionTests(unittest.TestCase):
         ], self.manifest)
         self.assertEqual((mode, selected, app_mode),
                          ("selected", "D2RenderingTests|ExportDiagramIntegrationTests", "selected"))
+
+    def test_release_sampler_uses_its_own_workflow(self):
+        sampler = ".github/scripts/sample-diagram-budget-memory.py"
+        self.assertEqual(SELECTOR.select([sampler], self.manifest)[0], "none")
+        self.assertEqual(SELECTOR.select([".github/scripts/select-ci-tests.py"], self.manifest)[0], "none")
+        mode, selected, app_mode, _ = SELECTOR.select([
+            sampler, "MacDown2/Packages/MacDownKit/Sources/GraphvizRendering/GraphvizWebRenderer.swift",
+        ], self.manifest)
+        self.assertEqual((mode, selected, app_mode), ("selected", "GraphvizRenderingTests", "selected"))
 
 
 if __name__ == "__main__":
