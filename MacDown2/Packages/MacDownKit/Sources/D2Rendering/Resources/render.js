@@ -99,11 +99,13 @@ function renderedUTF8ByteCount(text) {
 }
 
 window.__macdownRenderD2 = async function (source, theme, maxOutputBytes = 2 * 1024 * 1024) {
+    let phase = "configuration";
     try {
         if (!theme || !["neutral-light-v1", "preview-context-v1"].includes(theme.policyID)) {
             throw new Error("unsupported diagram palette");
         }
         const d2 = macdownD2Engine;
+        phase = "compile";
         const compiled = await d2.compile(source);
         // This bundled D2.js version documents themeID/darkThemeID. Pin
         // defaults across WebKit appearances, while retaining a theme
@@ -131,6 +133,7 @@ window.__macdownRenderD2 = async function (source, theme, maxOutputBytes = 2 * 1
             options.darkThemeOverrides = Object.assign({}, defaults,
                 authored.themeOverrides || {}, authored.darkThemeOverrides || {});
         }
+        phase = "render";
         const svg = await d2.render(compiled.diagram, options);
         const canvas = opaqueD2Canvas(svg, theme.canvas);
         const byteCount = renderedUTF8ByteCount(canvas.svg);
@@ -141,6 +144,6 @@ window.__macdownRenderD2 = async function (source, theme, maxOutputBytes = 2 * 1
         return { ok: true, svg: canvas.svg, width: canvas.width, height: canvas.height };
     } catch (error) {
         const message = error && error.message ? error.message : String(error);
-        return { ok: false, message: message };
+        return { ok: false, message: message, failurePhase: phase };
     }
 };

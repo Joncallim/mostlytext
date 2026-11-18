@@ -108,7 +108,12 @@ public actor D2WebRenderer: D2DiagramRendering {
         }
         guard result.succeeded else {
             let message = result.message ?? "unknown error"
-            throw D2RenderError.invalidSyntax(message)
+            if result.failurePhase == "compile" {
+                throw D2RenderError.invalidSyntax(message)
+            }
+            // Layout/runtime failures may occur for syntactically valid D2.
+            // Do not tell the user that their authored source is malformed.
+            throw D2RenderError.rendererUnavailable
         }
         guard let svg = result.svg else {
             throw D2RenderError.rendererUnavailable

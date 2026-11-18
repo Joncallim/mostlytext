@@ -50,6 +50,7 @@ final class DiagramHarnessNavigationCompletion {
 public struct DiagramHarnessResult: Sendable {
     public let succeeded: Bool
     public let message: String?
+    public let failurePhase: String?
     public let outputTooLargeByteCount: Int?
     public let svg: String?
     public let pngBase64: String?
@@ -62,6 +63,7 @@ public struct DiagramHarnessResult: Sendable {
         else { return nil }
         self.succeeded = succeeded
         message = values["message"] as? String
+        failurePhase = values["failurePhase"] as? String
         outputTooLargeByteCount = (values["outputTooLargeByteCount"] as? NSNumber)?.intValue
         svg = values["svg"] as? String
         pngBase64 = values["png"] as? String
