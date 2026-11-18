@@ -94,6 +94,7 @@ def main():
                 owned_rows = [row for row in rows if row['pid'] in owned]
                 samples.append({
                     'elapsed_seconds': round(time.monotonic() - started, 3),
+                    'wall_time_seconds': time.time(),
                     'test_group_rss_bytes': sum(row['rss_bytes'] for row in owned_rows),
                     'test_host_rss_bytes': sum(row['rss_bytes'] for row in owned_rows if row['name'] in TEST_HOSTS),
                     'new_webkit_rss_bytes': sum(row['rss_bytes'] for row in helpers),
