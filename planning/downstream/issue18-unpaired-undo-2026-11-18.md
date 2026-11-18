@@ -43,6 +43,14 @@ real undo **23.413 ms**, and real redo **23.928 ms**; the session counted
 three unpaired windows, 16 local parses and one initial full parse. These are
 component timings and do not qualify the full paint target.
 
+The production `SyntaxHighlightStore` Release fixture exercises the same
+1,048,804-byte source through the public highlighter. Its viewport mode passed
+with one initial full parse, 16 local parses and three unpaired windows:
+same-text **3.323 ms**, undo **24.332 ms**, redo **24.602 ms** to mounted
+settlement and painter call. The retained reduced-mode control also passed.
+This verifies production ownership of the bounded path, while automatic
+visible paint and the installed app remain separate acceptance.
+
 The first Release benchmark attempt failed its new unpaired-count assertion:
 it called undo/redo after twelve alternating edits without isolating a text
 action. Both observed storage callbacks had zero character delta, so those

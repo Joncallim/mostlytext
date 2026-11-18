@@ -89,13 +89,45 @@ struct ViewportHighlighterBudgetBenchmarkTests {
             #expect(session?.localParseCount == 12)
             #expect(session?.fullParseCount == 1)
         }
+        var historySummary = ""
+        if enableViewport, let session, let storage = system.textView.textStorage {
+            let sameTextStart = DispatchTime.now().uptimeNanoseconds
+            storage.replaceCharacters(in: word, with: "alphatarget")
+            await session.waitForPendingParse()
+            highlighter.viewportPainter?.paintVisible()
+            let sameText = Double(DispatchTime.now().uptimeNanoseconds - sameTextStart) / 1e6
+            #expect(model.text == original)
+            system.undoManager.removeAllActions()
+            let insertion = NSRange(location: word.location + 5, length: 0)
+            system.textView.insertText("X", replacementRange: insertion)
+            await session.waitForPendingParse()
+            let inserted = (original as NSString).replacingCharacters(in: insertion, with: "X")
+            #expect(model.text == inserted)
+            let undoStart = DispatchTime.now().uptimeNanoseconds
+            system.undoManager.undo()
+            await session.waitForPendingParse()
+            highlighter.viewportPainter?.paintVisible()
+            let undo = Double(DispatchTime.now().uptimeNanoseconds - undoStart) / 1e6
+            #expect(model.text == original)
+            let redoStart = DispatchTime.now().uptimeNanoseconds
+            system.undoManager.redo()
+            await session.waitForPendingParse()
+            highlighter.viewportPainter?.paintVisible()
+            let redo = Double(DispatchTime.now().uptimeNanoseconds - redoStart) / 1e6
+            #expect(model.text == inserted)
+            #expect(session.unpairedWindowCount == 3)
+            #expect(session.localParseCount == 16 && session.fullParseCount == 1)
+            historySummary = " sameText=\(sameText) ms undo=\(undo) ms redo=\(redo) ms"
+                + " unpaired=\(session.unpairedWindowCount)"
+        }
         let callValues = calls.map { String(format: "%.3f", $0) }.joined(separator: ",")
         let settledValues = settlements.map { String(format: "%.3f", $0) }.joined(separator: ",")
         print("HIGHLIGHTER-MODE-BUDGET mode=\(enableViewport ? "viewport" : "reduced") "
             + "utf8=\(original.utf8.count) open=\(openMilliseconds) ms "
             + "calls=[\(callValues)] ms settled=[\(settledValues)] ms "
             + "selected=\(session?.selectedWindowCount ?? 0) matched=\(session?.matchedWindowCount ?? 0) "
-            + "local=\(session?.localParseCount ?? 0) full=\(session?.fullParseCount ?? 0)")
+            + "local=\(session?.localParseCount ?? 0) full=\(session?.fullParseCount ?? 0)"
+            + historySummary)
     }
 }
 
