@@ -114,6 +114,26 @@ struct ViewportDisplayBudgetBenchmarkTests {
         var results: [[String: Any]] = []
         var firstEditSample: Task<Int32, Never>?
         let registry = GrammarRegistry()
+        if let runnerTemp = ProcessInfo.processInfo.environment["RUNNER_TEMP"] {
+            let processID = ProcessInfo.processInfo.processIdentifier
+            let output = runnerTemp + "/viewport-budget/first-edit-main-stack.txt"
+            firstEditSample = Task.detached(priority: .utility) {
+                let process = Process()
+                process.executableURL = URL(fileURLWithPath: "/usr/bin/sample")
+                process.arguments = [String(processID), "10", "1", "-file", output]
+                do {
+                    try process.run()
+                    process.waitUntilExit()
+                    return process.terminationStatus
+                } catch {
+                    return -1
+                }
+            }
+            // The prior one-second probe attached after this entire test ended.
+            // Let sample attach before the first timed edit; this wait is outside
+            // every input-to-paint stopwatch and is diagnostic only.
+            try await Task.sleep(for: .seconds(6))
+        }
         for edit in Self.cases {
             let beforeSource = system.textView.string as NSString
             let range = try edit.range(in: beforeSource)
@@ -141,25 +161,6 @@ struct ViewportDisplayBudgetBenchmarkTests {
             heightTimes.removeAll(keepingCapacity: true)
             editorTimes.removeAll(keepingCapacity: true)
             let timingStart = parseTiming.snapshot().count
-
-            if edit.name == "begin-word",
-               let runnerTemp = ProcessInfo.processInfo.environment["RUNNER_TEMP"] {
-                let processID = ProcessInfo.processInfo.processIdentifier
-                let output = runnerTemp + "/viewport-budget/first-edit-main-stack.txt"
-                firstEditSample = Task.detached(priority: .utility) {
-                    try? await Task.sleep(for: .milliseconds(20))
-                    let process = Process()
-                    process.executableURL = URL(fileURLWithPath: "/usr/bin/sample")
-                    process.arguments = [String(processID), "1", "1", "-file", output]
-                    do {
-                        try process.run()
-                        process.waitUntilExit()
-                        return process.terminationStatus
-                    } catch {
-                        return -1
-                    }
-                }
-            }
 
             let input = DispatchTime.now().uptimeNanoseconds
             system.textView.insertText(edit.replacement, replacementRange: range)
