@@ -49,6 +49,11 @@ cross-section edits are refused. Edit-pairing tests confirm a failed or nested
 proposal cannot be mistaken for an unpaired edit. Ordinary compliance and
 changed-file SwiftFormat/SwiftLint pass.
 
+An independent read-only Codex CLI review against `origin/main` found no
+actionable regression. It ran 17 targeted cache, pairing and mounted-session
+tests. Its scope excluded full-suite health and Release input-to-visible-paint
+performance; the review is engineering evidence, not owner-native acceptance.
+
 ## Remaining acceptance
 
 Issue #18's 50 ms **input-to-visible-paint** target remains unproved and its

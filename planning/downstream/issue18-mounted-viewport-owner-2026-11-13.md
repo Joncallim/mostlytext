@@ -1,13 +1,23 @@
 # Issue #18: mounted viewport Markdown owner
 
-## Owner summary
+> **18 November 2026 amendment:** The production viewport owner is active on
+> current `main`. Its original unsupported-edit rule below is narrowed for
+> undo/redo and other edits without a pre-edit proposal: a current cache may
+> select one bounded paragraph after the storage mutation only when exact
+> cached/post-storage UTF-16 comparison, callback geometry and existing prose
+> guards prove that single local change. Failed or ambiguous proposals, IME,
+> structural and cross-section edits retain the full-parse fallback. The
+> 50 ms input-to-visible-paint and protected native gates remain open. See
+> [the measured implementation note](issue18-unpaired-undo-2026-11-18.md).
 
-Large Markdown files currently lose syntax colour above 8,192 UTF-16 units so
-ordinary typing remains responsive. This slice will give each mounted editor a
-bounded, viewport-only colour owner. The current reduced mode remains the
-product default until the complete Release typing and painting path passes the
-1 MiB budget. Unsupported edits will show plain text while a fresh parse runs;
-old colour must never be presented as current content.
+## Original owner summary (13 November 2026)
+
+At this document's baseline, large Markdown files lost syntax colour above
+8,192 UTF-16 units so ordinary typing remained responsive. The proposed slice
+gave each mounted editor a bounded, viewport-only colour owner. The production
+activation and later undo/redo amendment are recorded above and in the linked
+implementation note. Unsupported edits show plain text while a fresh parse
+runs; old colour must never be presented as current content.
 
 ## Baseline and reconciliation
 
@@ -45,9 +55,11 @@ bytes and export must remain unchanged by presentation work.
   `EditorView.Coordinator.textDidChange` updates its model revision.
 - The pre-edit callback may copy only its selected bounded old window. It may
   never retain `NSTextStorage.mutableString` across callbacks.
-- An edit without exact pre/post geometry and replacement-byte agreement takes
-  the deferred full-parse path. This includes undo, IME, programmatic reload,
-  nested assists and structural/word-edge edits.
+- An edit without a pre-edit proposal may use the bounded paragraph path only
+  when the current cache, post-edit storage, callback geometry and exact UTF-16
+  unchanged prefix/suffix prove one local plain-prose change. A failed or
+  ambiguous proposal cannot use that path. IME, structural, cross-section and
+  uncertain edits take the deferred full-parse path.
 - No parsing, token query or rendering-attribute work runs inside
   `NSTextStorage.processEditing`. Its callback only invalidates, pairs and
   schedules work. The editor's text and storage remain the sole authorities.
@@ -82,7 +94,9 @@ teardown. No second storage delegate is installed.
    invalidates the current ticket at the actual mutation and compares the
    proposal to actual post-edit geometry. If it matches, copy the bounded new
    window and defer the local parse/cache replacement until after the gate
-   returns. If it fails, clear visible paint and schedule a fresh full parse.
+   returns. Without a proposal, compare the post-edit storage against the
+   current bounded cached paragraph and admit only a proven local prose edit.
+   If either admission fails, clear visible paint and schedule a fresh full parse.
 4. The public styler's synchronous provider returns only cache tokens clipped
    to the current mounted viewport and request range. A missing cache returns
    a replacement with no tokens for that range. It never scans live source.
