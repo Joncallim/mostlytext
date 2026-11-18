@@ -112,6 +112,7 @@ struct ViewportDisplayBudgetBenchmarkTests {
         EditorView.onDiagnosticTiming = { stage, time in editorTimes.append((stage, time)) }
         defer { EditorView.onDiagnosticTiming = nil }
         var results: [[String: Any]] = []
+        var firstEditSample: Task<Int32, Never>?
         let registry = GrammarRegistry()
         for edit in Self.cases {
             let beforeSource = system.textView.string as NSString
@@ -140,6 +141,25 @@ struct ViewportDisplayBudgetBenchmarkTests {
             heightTimes.removeAll(keepingCapacity: true)
             editorTimes.removeAll(keepingCapacity: true)
             let timingStart = parseTiming.snapshot().count
+
+            if edit.name == "begin-word",
+               let runnerTemp = ProcessInfo.processInfo.environment["RUNNER_TEMP"] {
+                let processID = ProcessInfo.processInfo.processIdentifier
+                let output = runnerTemp + "/viewport-budget/first-edit-main-stack.txt"
+                firstEditSample = Task.detached(priority: .utility) {
+                    try? await Task.sleep(for: .milliseconds(20))
+                    let process = Process()
+                    process.executableURL = URL(fileURLWithPath: "/usr/bin/sample")
+                    process.arguments = [String(processID), "1", "1", "-file", output]
+                    do {
+                        try process.run()
+                        process.waitUntilExit()
+                        return process.terminationStatus
+                    } catch {
+                        return -1
+                    }
+                }
+            }
 
             let input = DispatchTime.now().uptimeNanoseconds
             system.textView.insertText(edit.replacement, replacementRange: range)
@@ -285,6 +305,10 @@ struct ViewportDisplayBudgetBenchmarkTests {
         let encoded = try #require(String(data: body, encoding: .utf8))
         print("VIEWPORT-DISPLAY-BUDGET " + encoded)
         #expect(results.count == Self.cases.count)
+        if let firstEditSample {
+            let sampleExit = await firstEditSample.value
+            print("FIRST-EDIT-SAMPLE-EXIT \(sampleExit)")
+        }
         // A complete measurement may reveal a product-budget failure. The
         // workflow records every such case; it never calls that a budget pass.
     }
