@@ -101,7 +101,7 @@ public actor GraphvizWebRenderer: GraphvizDiagramRendering {
         }
         guard result.succeeded else {
             let message = result.message ?? "unknown error"
-            throw GraphvizRenderError.invalidSyntax(message)
+            throw Self.failure(for: message)
         }
         guard let svg = result.svg else {
             throw GraphvizRenderError.rendererUnavailable
@@ -110,6 +110,12 @@ public actor GraphvizWebRenderer: GraphvizDiagramRendering {
             throw GraphvizRenderError.rendererUnavailable
         }
         return RenderedGraphvizDiagram(svg: svg, naturalWidth: result.width, naturalHeight: result.height)
+    }
+
+    /// Viz's WASM abort is an engine failure, including when the same DOT
+    /// source rendered on another page. It does not diagnose authored syntax.
+    static func failure(for message: String) -> GraphvizRenderError {
+        message.hasPrefix("Aborted()") ? .rendererUnavailable : .invalidSyntax(message)
     }
 
     private func withPoolErrorMapping<T: Sendable>(_ body: () async throws -> T) async throws -> T {

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Select PR test suites from changed package targets; fail open to full suites."""
+"""Select PR or main-push suites from changed package targets; fail open to full."""
 
 import argparse
 import json
@@ -17,6 +17,26 @@ D2_APP_SUITES = (
     "MixedDiagramRendererIntegrationTests",
     "DiagramFailurePresentationTests",
     "RenderedStateEvidenceTests",
+)
+GRAPHVIZ_APP_SUITES = (
+    "GraphvizPreviewIntegrationTests",
+    "GraphvizExportRegistryTests",
+    "MermaidExportRegistryTests",
+    "MixedDiagramRendererIntegrationTests",
+    "DiagramFailurePresentationTests",
+    "RenderedStateEvidenceTests",
+)
+MERMAID_APP_SUITES = (
+    "MermaidPreviewIntegrationTests",
+    "MermaidExportRegistryTests",
+    "MixedDiagramRendererIntegrationTests",
+    "DiagramFailurePresentationTests",
+    "RenderedStateEvidenceTests",
+)
+RENDERER_FAMILIES = (
+    ({"D2Rendering", "DiagramsD2"}, D2_APP_SUITES),
+    ({"GraphvizRendering", "DiagramsGraphviz"}, GRAPHVIZ_APP_SUITES),
+    ({"DiagramRendering"}, MERMAID_APP_SUITES),
 )
 
 
@@ -40,6 +60,15 @@ def select(paths, manifest):
             # Repository prose does not alter compiled targets; resource Markdown
             # under Sources/ was handled above and still selects its target.
             continue
+        elif path in {
+            ".github/scripts/sample-diagram-budget-memory.py",
+            ".github/scripts/select-ci-tests.py",
+            ".github/scripts/test_select_ci_tests.py",
+        }:
+            # The Release sampler has its own workflow; the selector's own
+            # safety tests run at the start of every CI job. None changes a
+            # product target or ordinary package/app test input.
+            continue
         else:
             # Manifests, lockfiles, app sources, resources outside a target,
             # workflows and selector changes can affect any suite.
@@ -59,12 +88,15 @@ def select(paths, manifest):
     selected = sorted(closure & tests)
     if not selected:
         return ("full", "", "full", ())
-    # App tests have no SwiftPM target graph. Only this reviewed D2 family has
-    # a complete suite map; all other package changes retain the full app suite.
-    if changed <= tests:
+    # App tests have no SwiftPM target graph. Use only reviewed renderer-family
+    # maps; other package source changes retain the full app suite.
+    changed_sources = changed & sources
+    if not changed_sources:
         app_mode, app = "none", ()
-    elif changed <= {"D2Rendering", "D2RenderingTests", "DiagramsD2", "DiagramsD2Tests"}:
-        app_mode, app = "selected", D2_APP_SUITES
+    elif changed_sources <= set().union(*(targets for targets, _ in RENDERER_FAMILIES)):
+        app_mode = "selected"
+        app = tuple(sorted({suite for targets, suites in RENDERER_FAMILIES
+                            if targets & changed_sources for suite in suites}))
     else:
         app_mode, app = "full", ()
     return ("selected", "|".join(re.escape(name) for name in selected), app_mode, app)
@@ -75,10 +107,17 @@ def main():
     parser.add_argument("--base", required=True)
     parser.add_argument("--output", type=pathlib.Path, required=True)
     args = parser.parse_args()
-    paths = subprocess.check_output(
-        ["git", "diff", "--name-only", "-z", args.base, "HEAD", "--"], cwd=ROOT
-    ).decode().split("\0")
-    paths = [path for path in paths if path]
+    if args.base == "0" * 40:
+        paths = []
+    else:
+        try:
+            paths = subprocess.check_output(
+                ["git", "diff", "--name-only", "-z", args.base, "HEAD", "--"],
+                cwd=ROOT, stderr=subprocess.DEVNULL
+            ).decode().split("\0")
+            paths = [path for path in paths if path]
+        except subprocess.CalledProcessError:
+            paths = []
     manifest = json.loads(subprocess.check_output(
         ["swift", "package", "dump-package", "--package-path", str(ROOT / PACKAGE)], cwd=ROOT
     ))

@@ -89,14 +89,17 @@ jobs:
           if [ "$PR535_DIAGNOSTICS" = true ]; then
             test "$(xcodebuild -version | head -1)" = 'Xcode 26.0.1'
           fi
-      - name: Select tests for changed PR targets
+      - name: Select tests for changed targets
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
         run: |
-          if [ "${{ github.event_name }}" = pull_request ]; then
-            python3 .github/scripts/select-ci-tests.py --base "$BASE_SHA" --output "$GITHUB_ENV"
-          else
+          if [ "${{ github.event_name }}" = workflow_dispatch ]; then
+            # The explicit release/integration checkpoint always runs every suite.
             printf 'CI_TEST_MODE=full\nCI_PACKAGE_FILTER=\nCI_APP_TEST_MODE=full\nCI_APP_SUITES=\n' >> "$GITHUB_ENV"
+          else
+            # PRs compare with their base; main pushes compare with the prior
+            # main commit. Missing or invalid bases fall back to full suites.
+            python3 .github/scripts/select-ci-tests.py --base "$BASE_SHA" --output "$GITHUB_ENV"
           fi
       - name: Verify diagram output stays inside the WebKit bridge limit
         if: env.CI_TEST_MODE != 'none'

@@ -20,18 +20,19 @@ TIMEOUT = 120
 
 
 def processes():
-    raw = subprocess.check_output(['ps', '-axo', 'pid=,ppid=,uid=,rss=,comm='], text=True, timeout=10)
+    raw = subprocess.check_output(['ps', '-axo', 'pid=,ppid=,pgid=,uid=,rss=,comm='], text=True, timeout=10)
     result = []
     for line in raw.splitlines():
-        parts = line.strip().split(None, 4)
-        if len(parts) != 5:
+        parts = line.strip().split(None, 5)
+        if len(parts) != 6:
             continue
         try:
-            pid, parent, uid, kib = map(int, parts[:4])
+            pid, parent, group, uid, kib = map(int, parts[:5])
         except ValueError:
             continue
         if uid == os.getuid() and pid > 0:
-            result.append({'pid': pid, 'parent': parent, 'rss_bytes': kib * 1024, 'name': parts[4]})
+            result.append({'pid': pid, 'parent': parent, 'group': group,
+                           'rss_bytes': kib * 1024, 'name': Path(parts[5]).name})
     return result
 
 
@@ -89,14 +90,16 @@ def main():
                     break
                 rows = processes()
                 owned = descendants(rows, child.pid)
-                helpers = [row for row in rows if Path(row['name']).name in HELPERS and row['pid'] not in before]
+                helpers = [row for row in rows if row['name'] in HELPERS and row['pid'] not in before]
+                owned_rows = [row for row in rows if row['pid'] in owned]
                 samples.append({
                     'elapsed_seconds': round(time.monotonic() - started, 3),
-                    'test_group_rss_bytes': sum(row['rss_bytes'] for row in rows if row['pid'] in owned),
-                    'test_host_rss_bytes': sum(row['rss_bytes'] for row in rows
-                                               if row['pid'] in owned and Path(row['name']).name in TEST_HOSTS),
+                    'test_group_rss_bytes': sum(row['rss_bytes'] for row in owned_rows),
+                    'test_host_rss_bytes': sum(row['rss_bytes'] for row in owned_rows if row['name'] in TEST_HOSTS),
                     'new_webkit_rss_bytes': sum(row['rss_bytes'] for row in helpers),
                     'new_webkit_processes': len(helpers),
+                    'owned_processes': owned_rows,
+                    'new_webkit_process_details': helpers,
                 })
                 time.sleep(INTERVAL)
         except BaseException:
