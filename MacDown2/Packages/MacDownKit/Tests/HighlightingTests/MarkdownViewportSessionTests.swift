@@ -8,6 +8,23 @@ import Testing
 @MainActor
 @Suite("Mounted Markdown viewport session", .serialized)
 struct MarkdownViewportSessionTests {
+    @Test func parseBeginsWhileTheMainActorIsOccupied() async {
+        let system = EditorTextSystem(identity: UUID().uuidString, initialText: "# Heading\n\nbody\n",
+                                      configuration: .default)
+        let entered = DispatchSemaphore(value: 0)
+        let session = MarkdownViewportSession(textSystem: system, registry: GrammarRegistry()) { source, registry in
+            entered.signal()
+            return try MarkdownSectionParser.snapshot(source: source, registry: registry)
+        }
+        defer { session.tearDown() }
+
+        session.begin()
+        let startedOffActor = Self.waitWhileMainActorIsOccupied(entered)
+        await session.waitForPendingParse()
+        #expect(startedOffActor, "A bounded parse must start while TextKit occupies the main actor")
+        #expect(system.textView.string == "# Heading\n\nbody\n")
+    }
+
     @Test func explicitRestartRejectsOldParseWithoutStorageEdit() async throws {
         let source = "# Heading\n\n**bold** text\n"
         let system = EditorTextSystem(identity: UUID().uuidString, initialText: source, configuration: .default)
@@ -212,6 +229,10 @@ struct MarkdownViewportSessionTests {
         #expect(session.visibleTokens(in: NSRange(location: NSMaxRange(visible), length: 1)).isEmpty)
         #expect(session.visibleTokens(in: NSRange(location: NSNotFound, length: 1)).isEmpty)
         #expect(session.visibleTokens(in: NSRange(location: Int.max, length: 1)).isEmpty)
+    }
+
+    private static func waitWhileMainActorIsOccupied(_ semaphore: DispatchSemaphore) -> Bool {
+        semaphore.wait(timeout: .now() + .seconds(1)) == .success
     }
 }
 

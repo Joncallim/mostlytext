@@ -127,19 +127,21 @@ struct ViewportDisplayBudgetBenchmarkTests {
             let input = DispatchTime.now().uptimeNanoseconds
             system.textView.insertText(edit.replacement, replacementRange: range)
             let storageReturned = DispatchTime.now().uptimeNanoseconds
-            await session.waitForPendingParse()
             let deadline = input + 5_000_000_000
             var styled = false
             var matchedPaint: AccentPaint?
             var styleReadback = DispatchTime.now().uptimeNanoseconds
             while DispatchTime.now().uptimeNanoseconds < deadline {
-                await Task.yield()
+                // Let the editor's main-actor publication and styling run
+                // before the independent oracle inspects TextKit. Polling the
+                // oracle first can itself occupy the actor and delay paint.
+                try await Task.sleep(for: .milliseconds(1))
+                guard painter.validationPassCount > priorValidation else { continue }
                 guard let visible = system.visibleUTF16Range else { continue }
                 let painted = try Self.accentPaint(in: visible, oracle: oracle, theme: BundledThemes.light)
                 let actual = Self.renderedAccentRanges(in: system.textView, clippedTo: visible,
                                                        buckets: painted.buckets)
                 if painted.buckets.contains(where: { !$0.expected.isEmpty }),
-                   painter.validationPassCount > priorValidation,
                    actual.indices.allSatisfy({ actual[$0].subtracting(painted.ambiguous)
                            == painted.buckets[$0].expected }) {
                     styled = true
@@ -203,6 +205,7 @@ struct ViewportDisplayBudgetBenchmarkTests {
                 "parse_attempts_requested": parseRequests,
                 "parse_attempts_resolved": parseResolutions,
                 "configured_debounce_ms": 0,
+                "explicit_parse_wait": false,
                 "publication_to_style_readback_ms": milliseconds(published, styleReadback),
                 "style_to_display_return_ms": milliseconds(styleReadback, afterPixels.displayReturnedAt),
                 "display_return_to_bitmap_readback_ms": milliseconds(afterPixels.displayReturnedAt, displayReadback),

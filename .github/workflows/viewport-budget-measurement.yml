@@ -197,6 +197,7 @@ jobs:
               assert case['parse_attempts_resolved'] >= 1
               assert case['selected_window_count'] >= case['matched_window_count'] >= case['local_parse_count']
               assert case['configured_debounce_ms'] == 0
+              assert case['explicit_parse_wait'] is False
               assert case['pixel_changed'] or case['case'] in {'crlf-replacement', 'unicode-replacement'}
               assert case['under_50_ms'] == (case['input_to_display_readback_ms'] < 50)
           records['display'] = display

@@ -40,7 +40,7 @@ struct MarkdownSectionCache {
         }
     }
 
-    struct Window {
+    struct Window: Sendable {
         let old: NSRange
         let new: NSRange
         let firstSection: Int

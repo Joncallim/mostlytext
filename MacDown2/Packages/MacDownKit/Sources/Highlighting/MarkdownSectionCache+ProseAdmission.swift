@@ -63,6 +63,20 @@ extension MarkdownSectionCache {
               range.location <= edit.location, NSMaxRange(edit) <= NSMaxRange(range)
         else { return false }
         let slice = source.substring(with: range)
+        return isBoundedHeadingEdit(
+            section: slice,
+            edit: NSRange(location: edit.location - range.location, length: edit.length)
+        )
+    }
+
+    /// The unpaired history path has only its cached section, not the old
+    /// whole-document source. Apply the same heading boundary checks to it.
+    static func isBoundedHeadingEdit(section slice: String, edit: NSRange) -> Bool {
+        let length = (slice as NSString).length
+        guard length > 0, length <= windowLimit,
+              edit.location >= 0, edit.length >= 0,
+              edit.location <= length, edit.length <= length - edit.location
+        else { return false }
         guard let lineEnd = slice.firstIndex(of: "\n") else { return false }
         let line = String(slice[..<lineEnd])
         let leadingHashes = line.prefix(while: { $0 == "#" }).count
@@ -70,8 +84,8 @@ extension MarkdownSectionCache {
               slice[lineEnd...].unicodeScalars.allSatisfy({ $0 == "\n" || $0 == "\r" }),
               safeProseBody(String(line.dropFirst(leadingHashes + 1)))
         else { return false }
-        let contentStart = range.location + leadingHashes + 1
-        let contentEnd = range.location + (line as NSString).length
+        let contentStart = leadingHashes + 1
+        let contentEnd = (line as NSString).length
         return edit.location > contentStart && NSMaxRange(edit) < contentEnd
     }
 }
