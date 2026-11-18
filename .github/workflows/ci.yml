@@ -6,10 +6,10 @@ permissions:
 on:
   push:
     branches: [main, master]
-    paths: ['MacDown2/**', '.github/workflows/ci.yml', '.github/scripts/*owned*package*.py']
+    paths: ['MacDown2/**', '.github/workflows/ci.yml', '.github/scripts/*owned*package*.py', '.github/scripts/*select_ci_tests.py', '.github/scripts/select-ci-tests.py']
   pull_request:
     branches: [main, master, integration-final]
-    paths: ['MacDown2/**', '.github/workflows/ci.yml', '.github/scripts/*owned*package*.py']
+    paths: ['MacDown2/**', '.github/workflows/ci.yml', '.github/scripts/*owned*package*.py', '.github/scripts/*select_ci_tests.py', '.github/scripts/select-ci-tests.py']
   workflow_dispatch:
     inputs:
       runner:
@@ -72,8 +72,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Verify diagram output stays inside the WebKit bridge limit
-        run: node MacDown2/scripts/test-diagram-output-bridge.cjs
+          fetch-depth: 0
+      - name: Verify test selection safety
+        run: python3 -m unittest discover -s .github/scripts -p 'test_select_ci_tests.py'
       # Select Xcode 26 FIRST so every subsequent step (swift build/test,
       # xcodegen, xcodebuild) uses the same Swift 6.2+ toolchain.
       - name: Select Xcode 26
@@ -88,7 +89,20 @@ jobs:
           if [ "$PR535_DIAGNOSTICS" = true ]; then
             test "$(xcodebuild -version | head -1)" = 'Xcode 26.0.1'
           fi
+      - name: Select tests for changed PR targets
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ "${{ github.event_name }}" = pull_request ]; then
+            python3 .github/scripts/select-ci-tests.py --base "$BASE_SHA" --output "$GITHUB_ENV"
+          else
+            printf 'CI_TEST_MODE=full\nCI_PACKAGE_FILTER=\nCI_APP_TEST_MODE=full\nCI_APP_SUITES=\n' >> "$GITHUB_ENV"
+          fi
+      - name: Verify diagram output stays inside the WebKit bridge limit
+        if: env.CI_TEST_MODE != 'none'
+        run: node MacDown2/scripts/test-diagram-output-bridge.cjs
       - name: Install XcodeGen
+        if: env.CI_TEST_MODE != 'none'
         run: |
           # Runner images can ship an untrusted tap (e.g. aws/tap) that makes
           # Homebrew refuse to install; untap defensively.
@@ -245,10 +259,12 @@ jobs:
               raise SystemExit('unknown diagnostic mode')
           PY
       - name: Shared math syntax (Foundation only)
+        if: env.CI_TEST_MODE == 'full'
         run: |
           swift test --package-path MacDown2/Packages/MathSyntax --force-resolved-versions
           swift test --package-path MacDown2/Packages/MathSyntax -c release --force-resolved-versions
       - name: Package build + tests
+        if: env.CI_TEST_MODE != 'none'
         working-directory: MacDown2/Packages/MacDownKit
         # --force-resolved-versions builds exactly the revisions in the
         # committed Package.resolved and fails if it is missing, stale or
@@ -281,10 +297,14 @@ jobs:
           # the copied, identified helper runs every Swift Testing case.
           # Existing timing ceilings and serial execution remain unchanged.
           python3 "$GITHUB_WORKSPACE/.github/scripts/test_owned_package_reports.py"
-          swift test --skip-build --disable-swift-testing --no-parallel --force-resolved-versions
+          package_filter=()
+          if [ "$CI_TEST_MODE" = selected ]; then
+            package_filter=(--filter "$CI_PACKAGE_FILTER")
+          fi
+          swift test --skip-build --disable-swift-testing --no-parallel --force-resolved-versions "${package_filter[@]}"
           env DYLD_FRAMEWORK_PATH="$frameworks" python3 "$GITHUB_WORKSPACE/.github/scripts/run-owned-package-tests.py" \
             "$RUNNER_TEMP/owned-package-test-result" "$owned_helper" \
-            --test-bundle-path "$test_host" --testing-library swift-testing --no-parallel
+            --test-bundle-path "$test_host" --testing-library swift-testing --no-parallel "${package_filter[@]}"
           codesign --verify --strict "$owned_helper"
           shasum -a 256 -c "$RUNNER_TEMP/package-test-host.sha256"
       - name: Upload owned package host identity and fresh crash diagnostics
@@ -310,9 +330,11 @@ jobs:
           retention-days: 7
           if-no-files-found: error
       - name: Generate Xcode project
+        if: env.CI_TEST_MODE != 'none'
         working-directory: MacDown2
         run: xcodegen generate
       - name: Pin Xcode to the committed package versions
+        if: env.CI_TEST_MODE != 'none'
         id: pin-xcode-packages
         # The generated project is git-ignored, so copy MacDownKit's committed
         # lock file into its workspace. Every xcodebuild below passes
@@ -321,10 +343,12 @@ jobs:
         # the builds.
         run: MacDown2/scripts/pin-xcode-package-versions.sh
       - name: Build app + CLI
+        if: env.CI_TEST_MODE != 'none'
         run: |
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 -destination 'platform=macOS' -onlyUsePackageVersionsFromResolvedFile build
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MostlyTextCLI -destination 'platform=macOS' -onlyUsePackageVersionsFromResolvedFile build
       - name: Build app + CLI (Release)
+        if: env.CI_TEST_MODE != 'none'
         # EPIC-14B second-adversarial-pass finding #6: the DoD evidence
         # claimed "app/CLI/Release all green" without this ever actually
         # running anywhere — the step above only ever built Debug. A
@@ -338,6 +362,7 @@ jobs:
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MostlyTextCLI -configuration Release \
             -destination 'platform=macOS' -onlyUsePackageVersionsFromResolvedFile SWIFT_EMIT_LOC_STRINGS=YES build
       - name: Verify compiled document metadata and embedded CLI
+        if: env.CI_TEST_MODE != 'none'
         run: |
           python3 MacDown2/scripts/test-document-metadata.py
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 -configuration Release \
@@ -356,6 +381,7 @@ jobs:
                           str(pathlib.Path(os.environ['RUNNER_TEMP']) / 'compiled-string-coverage.json')], check=True)
           PY
       - name: Build for testing (app + UI tests; UI tests run requires macOS 26+ GUI)
+        if: env.CI_TEST_MODE != 'none'
         # -enableCodeCoverage NO: documented in planning/epic-10-implementation.md
         # ("Local build-for-testing coverage quirk"). Xcode 26's build-for-testing
         # injects -fprofile-instr-generate into every target for the scheme's Test
@@ -369,6 +395,7 @@ jobs:
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
             -destination 'platform=macOS' -onlyUsePackageVersionsFromResolvedFile -enableCodeCoverage NO build-for-testing
       - name: Run MacDown2Tests (non-UI app-target tests)
+        if: env.CI_TEST_MODE != 'none' && env.CI_APP_TEST_MODE != 'none'
         # EPIC-14B adversarial-review finding #12: app-target adapter/undo/
         # lifecycle tests (e.g. TextFilterCoordinatorTests) previously had
         # only build-for-testing evidence in CI — a real regression in them
@@ -381,9 +408,17 @@ jobs:
         # stays build-only (previous step) with its evidence tracked as
         # manual/unverified in the release ledger, not run here.
         run: |
+          app_selection=(-only-testing:MacDown2Tests)
+          if [ -n "$CI_APP_SUITES" ]; then
+            app_selection=()
+            IFS=, read -ra suites <<< "$CI_APP_SUITES"
+            for suite in "${suites[@]}"; do
+              app_selection+=("-only-testing:MacDown2Tests/$suite")
+            done
+          fi
           xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MacDown2 \
             -destination 'platform=macOS' -onlyUsePackageVersionsFromResolvedFile -enableCodeCoverage NO -parallel-testing-enabled NO \
-            -only-testing:MacDown2Tests test-without-building
+            "${app_selection[@]}" test-without-building
       - name: Verify every build used the committed package versions
         # Runs after all xcodebuild calls, including when a later build or test
         # step failed, so a removed or rewritten lock is always reported once the

@@ -144,7 +144,7 @@ struct D2WebRendererTests {
     @Test func validButUnlayableGraphIsNotReportedAsInvalidSyntax() async throws {
         let renderer = D2WebRenderer(poolSize: 1, timeout: .seconds(20))
         // The pinned D2 0.1.33 Dagre runtime overflows its JS stack on this
-        // deep chain after compilation succeeds. Release calibration records
+        // deep chain during compile's layout stage. Release calibration records
         // this exact shape; the source must remain available as fallback.
         let source = (0 ..< 512).map { "n\($0) -> n\($0 + 1)" }.joined(separator: "\n")
         await #expect(throws: D2RenderError.rendererUnavailable) {
