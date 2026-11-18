@@ -6,6 +6,7 @@ import GraphvizRendering
 import JavaScriptCore
 import MarkdownEngine
 import OSLog
+import Security
 
 /// One disposable same-thread VM inside the already deadline-bound child.
 /// The only input bridge is a bounded DOT string; no file or network API is
@@ -25,6 +26,11 @@ enum QuickLookGraphvizJSC {
         let started = ProcessInfo.processInfo.systemUptime
         guard let context = JSContext(), let script = try? GraphvizBundledScript.read() else {
             logger.error("JavaScriptCore context or pinned asset unavailable")
+            return nil
+        }
+        installPureRuntimeHelpers(in: context)
+        guard context.exception == nil else {
+            logger.error("Pure JavaScriptCore runtime helpers failed")
             return nil
         }
         context.evaluateScript(script)
@@ -92,6 +98,43 @@ enum QuickLookGraphvizJSC {
 
     private static func state(_ context: JSContext) -> String {
         context.objectForKeyedSubscript("__mostlyTextVizState")?.toString() ?? "missing"
+    }
+
+    private static func installPureRuntimeHelpers(in context: JSContext) {
+        let now: @convention(block) () -> Double = { ProcessInfo.processInfo.systemUptime }
+        let decode: @convention(block) (NSArray) -> String = { values in
+            let bytes = values.compactMap { ($0 as? NSNumber)?.uint8Value }
+            return String(bytes: bytes, encoding: .utf8) ?? ""
+        }
+        let random: @convention(block) (Int) -> [NSNumber] = { count in
+            guard (0 ... 65536).contains(count) else { return [] }
+            var bytes = [UInt8](repeating: 0, count: count)
+            guard SecRandomCopyBytes(kSecRandomDefault, count, &bytes) == errSecSuccess else { return [] }
+            return bytes.map { NSNumber(value: $0) }
+        }
+        context.setObject(now, forKeyedSubscript: "__mostlyTextNow" as NSString)
+        context.setObject(decode, forKeyedSubscript: "__mostlyTextDecode" as NSString)
+        context.setObject(random, forKeyedSubscript: "__mostlyTextRandom" as NSString)
+        context.evaluateScript("""
+        globalThis.location = { href: 'file:///viz-global.js' };
+        globalThis.console = { log() {}, error() {}, warn() {} };
+        globalThis.performance = { now: () => __mostlyTextNow() * 1000 };
+        globalThis.TextDecoder = class {
+            constructor(label = 'utf-8') {
+                if (!['utf-8', 'utf8'].includes(label.toLowerCase())) throw Error('Unsupported encoding');
+            }
+            decode(value = new Uint8Array()) {
+                const bytes = value instanceof ArrayBuffer ? new Uint8Array(value)
+                    : new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
+                return __mostlyTextDecode(Array.from(bytes));
+            }
+        };
+        globalThis.crypto = { getRandomValues(array) {
+            if (!(array instanceof Uint8Array) || array.byteLength > 65536) throw Error('Random byte boundary');
+            array.set(__mostlyTextRandom(array.byteLength));
+            return array;
+        } };
+        """)
     }
 
     private static func svgFragment(_ output: String) -> String? {
