@@ -126,6 +126,11 @@ jobs:
             test-without-building 2>&1 | tee "$RUNNER_TEMP/production-quicklook-finder.log"
       - name: Preserve first Finder outcome
         if: always()
+        run: |
+          log show --last 5m --style compact --predicate 'subsystem == "app.mostlytext.quicklook.worker"' \
+            > "$RUNNER_TEMP/production-quicklook-worker.log" 2>&1 || true
+      - name: Upload Finder outcome
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: production-quicklook-finder
