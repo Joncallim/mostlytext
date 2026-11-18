@@ -48,6 +48,7 @@ final class MarkdownViewportSession {
     private(set) var selectedWindowCount = 0
     private(set) var matchedWindowCount = 0
     private(set) var unpairedWindowCount = 0
+    private(set) var historyEditProbeCount = 0
     private(set) var localParseCount = 0
     private(set) var fullParseCount = 0
 
@@ -235,6 +236,7 @@ final class MarkdownViewportSession {
               textSystem.undoManager.isUndoing || textSystem.undoManager.isRedoing,
               editedRange.location >= 0, editedRange.location < postLength
         else { return nil }
+        historyEditProbeCount &+= 1
         return NSRange(location: editedRange.location, length: 1)
     }
 

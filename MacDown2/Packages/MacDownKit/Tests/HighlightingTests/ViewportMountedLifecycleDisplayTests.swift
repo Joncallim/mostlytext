@@ -80,6 +80,7 @@ struct ViewportMountedLifecycleDisplayTests {
             let priorValidation = painter.validationPassCount
             let priorFullParses = session.fullParseCount
             let priorLocalParses = session.localParseCount
+            let priorHistoryProbes = session.historyEditProbeCount
             let requestedAt = DispatchTime.now().uptimeNanoseconds
             action()
             let returnedAt = DispatchTime.now().uptimeNanoseconds
@@ -89,6 +90,10 @@ struct ViewportMountedLifecycleDisplayTests {
                              "Bounded heading history edit fell back to a full parse: \(name)")
                 try #require(session.localParseCount > priorLocalParses,
                              "Bounded heading history edit did not publish a local parse: \(name)")
+            }
+            if name == "undo" {
+                try #require(session.historyEditProbeCount > priorHistoryProbes,
+                             "Mounted undo did not exercise the nil-viewport history probe")
             }
             let deadline = requestedAt + 5_000_000_000
             var paintedAt = requestedAt
@@ -133,6 +138,7 @@ struct ViewportMountedLifecycleDisplayTests {
                 "under_50_ms": total < 50,
                 "full_parse_count": session.fullParseCount,
                 "local_parse_count": session.localParseCount,
+                "history_edit_probe_count": session.historyEditProbeCount,
                 "visible_location": visible.location,
                 "visible_length": visible.length,
             ])
