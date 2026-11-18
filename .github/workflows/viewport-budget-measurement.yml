@@ -82,6 +82,9 @@ jobs:
             2>&1 | tee "$RUNNER_TEMP/viewport-budget/session.log"
           swift test -c release --filter ViewportHighlighterBudgetBenchmarkTests --no-parallel \
             2>&1 | tee "$RUNNER_TEMP/viewport-budget/highlighter.log"
+          MACDOWN_VIEWPORT_DISPLAY_BENCH=1 MACDOWN_VIEWPORT_NATURAL_PUBLICATION=1 \
+            swift test -c release --filter ViewportDisplayBudgetBenchmarkTests --no-parallel \
+            2>&1 | tee "$RUNNER_TEMP/viewport-budget/display-natural.log"
           MACDOWN_VIEWPORT_DISPLAY_BENCH=1 \
             swift test -c release --filter ViewportDisplayBudgetBenchmarkTests --no-parallel \
             2>&1 | tee "$RUNNER_TEMP/viewport-budget/display.log"
@@ -202,6 +205,29 @@ jobs:
           records['display'] = display
           records['display_budget_failures'] = [case['case'] for case in display
                                                 if not case['under_50_ms']]
+          natural_log = (root / 'display-natural.log').read_text()
+          assert 'Test run with 1 test in 1 suite passed' in natural_log
+          natural_lines = [line for line in natural_log.splitlines()
+                           if line.startswith('VIEWPORT-DISPLAY-BUDGET ')]
+          assert len(natural_lines) == 1
+          natural_display = json.loads(natural_lines[0].split(' ', 1)[1])
+          assert len(natural_display) == len(display)
+          for natural_case, awaited_case in zip(natural_display, display):
+              assert natural_case['case'] == awaited_case['case']
+              assert natural_case['source_utf8_bytes'] == awaited_case['source_utf8_bytes']
+              assert natural_case['source_utf16_units'] == awaited_case['source_utf16_units']
+              assert natural_case['explicit_parse_wait'] is False
+              assert awaited_case['explicit_parse_wait'] is True
+              assert natural_case['under_50_ms'] == (natural_case['input_to_display_readback_ms'] < 50)
+              assert natural_case['oracle_accent_pixel_samples'] > 0
+          records['display_natural'] = natural_display
+          records['display_natural_budget_failures'] = [case['case'] for case in natural_display
+                                                        if not case['under_50_ms']]
+          print('NATURAL-DISPLAY-BUDGET-VERDICT', json.dumps({
+              'scope': 'same mounted input, independent oracle and AppKit bitmap endpoints without an explicit parse-task await',
+              'under_50_ms': not records['display_natural_budget_failures'],
+              'failures': records['display_natural_budget_failures']
+          }, sort_keys=True))
           print('DISPLAY-BUDGET-VERDICT', json.dumps({
               'scope': 'mounted package/editor store and AppKit display readback; parse interval includes queue and fallback; programmatic movement and undo/redo are measured separately; app-target event orchestration and real IME timing unmeasured',
               'under_50_ms': not records['display_budget_failures'],

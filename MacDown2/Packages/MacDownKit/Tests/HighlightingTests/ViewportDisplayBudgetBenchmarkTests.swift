@@ -99,6 +99,7 @@ struct ViewportDisplayBudgetBenchmarkTests {
         var timing: [(MarkdownViewportSession.TimingEvent, UInt64)] = []
         session.onTimingEvent = { event, time in timing.append((event, time)) }
         var results: [[String: Any]] = []
+        let naturalPublication = ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_NATURAL_PUBLICATION"] == "1"
         let registry = GrammarRegistry()
         for edit in Self.cases {
             let beforeSource = system.textView.string as NSString
@@ -127,7 +128,12 @@ struct ViewportDisplayBudgetBenchmarkTests {
             let input = DispatchTime.now().uptimeNanoseconds
             system.textView.insertText(edit.replacement, replacementRange: range)
             let storageReturned = DispatchTime.now().uptimeNanoseconds
-            await session.waitForPendingParse()
+            // Product input does not explicitly await the parse task. Compare
+            // that natural path with the retained awaited control while both
+            // retain the same input, oracle and bitmap endpoints.
+            if !naturalPublication {
+                await session.waitForPendingParse()
+            }
             let deadline = input + 5_000_000_000
             var styled = false
             var matchedPaint: AccentPaint?
@@ -203,6 +209,7 @@ struct ViewportDisplayBudgetBenchmarkTests {
                 "parse_attempts_requested": parseRequests,
                 "parse_attempts_resolved": parseResolutions,
                 "configured_debounce_ms": 0,
+                "explicit_parse_wait": !naturalPublication,
                 "publication_to_style_readback_ms": milliseconds(published, styleReadback),
                 "style_to_display_return_ms": milliseconds(styleReadback, afterPixels.displayReturnedAt),
                 "display_return_to_bitmap_readback_ms": milliseconds(afterPixels.displayReturnedAt, displayReadback),
