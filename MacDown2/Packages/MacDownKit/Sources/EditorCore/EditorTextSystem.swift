@@ -1,5 +1,4 @@
 import AppKit
-import Dispatch
 import Foundation
 
 /// Owns exactly one document's live TextKit 2 text system.
@@ -317,14 +316,6 @@ public final class EditorTextSystem {
     /// left the frame stuck too tall after a pane resize or a large
     /// deletion — a permanent blank gap below the actual content.
     func syncFrameHeightToContent() {
-        let phaseBegan = DispatchTime.now().uptimeNanoseconds
-        defer {
-            if ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_DISPLAY_BENCH"] == "1" {
-                let phaseEnded = DispatchTime.now().uptimeNanoseconds
-                print("EDITOR-FRAME-SYNC-PHASE began_ns=\(phaseBegan) ended_ns=\(phaseEnded) " +
-                    "total_ms=\(Double(phaseEnded - phaseBegan) / 1_000_000)")
-            }
-        }
         guard let scrollView else { return }
         let string = textView.string as NSString
 

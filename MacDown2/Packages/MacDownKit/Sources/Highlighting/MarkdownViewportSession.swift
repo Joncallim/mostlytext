@@ -1,5 +1,4 @@
 import AppKit
-import Dispatch
 import EditorCore
 import Foundation
 import Neon
@@ -243,12 +242,7 @@ final class MarkdownViewportSession {
             if ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_DISPLAY_BENCH"] == "1" {
                 print("VIEWPORT-SESSION-PHASE kind=full utf16=\((source as NSString).length) " +
                     "task_wait_ms=\(Double(enteredAt - requestedAt) / 1_000_000) " +
-                    "snapshot_ms=\(Double(returnedAt - enteredAt) / 1_000_000) returned_ns=\(returnedAt)")
-                DispatchQueue.main.async {
-                    let enteredMain = DispatchTime.now().uptimeNanoseconds
-                    print("VIEWPORT-MAIN-QUEUE-PHASE kind=full wait_ms=" +
-                        "\(Double(enteredMain - returnedAt) / 1_000_000)")
-                }
+                    "snapshot_ms=\(Double(returnedAt - enteredAt) / 1_000_000)")
             }
             await self?.publishFullParse(ticket: ticket, source: source, snapshot: snapshot,
                                          resolvedAt: returnedAt)
@@ -273,12 +267,7 @@ final class MarkdownViewportSession {
             if ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_DISPLAY_BENCH"] == "1" {
                 print("VIEWPORT-SESSION-PHASE kind=local utf16=\((content as NSString).length) " +
                     "task_wait_ms=\(Double(enteredAt - requestedAt) / 1_000_000) " +
-                    "snapshot_ms=\(Double(returnedAt - enteredAt) / 1_000_000) returned_ns=\(returnedAt)")
-                DispatchQueue.main.async {
-                    let enteredMain = DispatchTime.now().uptimeNanoseconds
-                    print("VIEWPORT-MAIN-QUEUE-PHASE kind=local wait_ms=" +
-                        "\(Double(enteredMain - returnedAt) / 1_000_000)")
-                }
+                    "snapshot_ms=\(Double(returnedAt - enteredAt) / 1_000_000)")
             }
             await self?.publishLocalParse(work: work, snapshot: snapshot, resolvedAt: returnedAt)
         }
@@ -332,7 +321,6 @@ private extension MarkdownViewportSession {
     private func emitPublicationWait(_ resolvedAt: UInt64) {
         guard ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_DISPLAY_BENCH"] == "1" else { return }
         let enteredAt = DispatchTime.now().uptimeNanoseconds
-        print("VIEWPORT-PUBLICATION-PHASE actor_wait_ms=\(Double(enteredAt - resolvedAt) / 1_000_000) " +
-            "entered_ns=\(enteredAt)")
+        print("VIEWPORT-PUBLICATION-PHASE actor_wait_ms=\(Double(enteredAt - resolvedAt) / 1_000_000)")
     }
 }

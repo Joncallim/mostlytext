@@ -2,7 +2,6 @@
 // swiftlint:disable file_length
 import AppKit
 import CryptoKit
-import Darwin
 @testable import EditorCore
 import Foundation
 @testable import Highlighting
@@ -100,8 +99,6 @@ struct ViewportDisplayBudgetBenchmarkTests {
         var timing: [(MarkdownViewportSession.TimingEvent, UInt64)] = []
         session.onTimingEvent = { event, time in timing.append((event, time)) }
         var results: [[String: Any]] = []
-        let naturalPublication = ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_NATURAL_PUBLICATION"] == "1"
-        var firstEditSampler: Process?
         let registry = GrammarRegistry()
         for edit in Self.cases {
             let beforeSource = system.textView.string as NSString
@@ -127,36 +124,24 @@ struct ViewportDisplayBudgetBenchmarkTests {
             let priorValidation = painter.validationPassCount
             timing.removeAll(keepingCapacity: true)
 
-            if edit.name == "begin-word",
-               let samplePath = ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_SAMPLE_PATH"] {
-                let sampler = Process()
-                sampler.executableURL = URL(fileURLWithPath: "/usr/bin/sample")
-                sampler.arguments = [String(getpid()), "5", "1", "-file", samplePath]
-                try sampler.run()
-                firstEditSampler = sampler
-            }
-
             let input = DispatchTime.now().uptimeNanoseconds
             system.textView.insertText(edit.replacement, replacementRange: range)
             let storageReturned = DispatchTime.now().uptimeNanoseconds
-            // Product input does not explicitly await the parse task. Compare
-            // that natural path with the retained awaited control while both
-            // retain the same input, oracle and bitmap endpoints.
-            if !naturalPublication {
-                await session.waitForPendingParse()
-            }
             let deadline = input + 5_000_000_000
             var styled = false
             var matchedPaint: AccentPaint?
             var styleReadback = DispatchTime.now().uptimeNanoseconds
             while DispatchTime.now().uptimeNanoseconds < deadline {
-                await Task.yield()
+                // Let the editor's main-actor publication and styling run
+                // before the independent oracle inspects TextKit. Polling the
+                // oracle first can itself occupy the actor and delay paint.
+                try await Task.sleep(for: .milliseconds(1))
+                guard painter.validationPassCount > priorValidation else { continue }
                 guard let visible = system.visibleUTF16Range else { continue }
                 let painted = try Self.accentPaint(in: visible, oracle: oracle, theme: BundledThemes.light)
                 let actual = Self.renderedAccentRanges(in: system.textView, clippedTo: visible,
                                                        buckets: painted.buckets)
                 if painted.buckets.contains(where: { !$0.expected.isEmpty }),
-                   painter.validationPassCount > priorValidation,
                    actual.indices.allSatisfy({ actual[$0].subtracting(painted.ambiguous)
                            == painted.buckets[$0].expected }) {
                     styled = true
@@ -220,7 +205,7 @@ struct ViewportDisplayBudgetBenchmarkTests {
                 "parse_attempts_requested": parseRequests,
                 "parse_attempts_resolved": parseResolutions,
                 "configured_debounce_ms": 0,
-                "explicit_parse_wait": !naturalPublication,
+                "explicit_parse_wait": false,
                 "publication_to_style_readback_ms": milliseconds(published, styleReadback),
                 "style_to_display_return_ms": milliseconds(styleReadback, afterPixels.displayReturnedAt),
                 "display_return_to_bitmap_readback_ms": milliseconds(afterPixels.displayReturnedAt, displayReadback),
@@ -247,10 +232,6 @@ struct ViewportDisplayBudgetBenchmarkTests {
         let body = try JSONSerialization.data(withJSONObject: results, options: [.sortedKeys])
         let encoded = try #require(String(data: body, encoding: .utf8))
         print("VIEWPORT-DISPLAY-BUDGET " + encoded)
-        firstEditSampler?.waitUntilExit()
-        if let firstEditSampler {
-            print("VIEWPORT-FIRST-EDIT-SAMPLE exit=\(firstEditSampler.terminationStatus)")
-        }
         #expect(results.count == Self.cases.count)
         // A complete measurement may reveal a product-budget failure. The
         // workflow records every such case; it never calls that a budget pass.
