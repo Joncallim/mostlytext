@@ -60,10 +60,11 @@ struct MarkdownSectionCacheRichProseTests {
 
     @Test(.timeLimit(.minutes(2)))
     func unpairedHeadingUndoAndRedoRetainFullParseParity() throws {
-        // The admission rule is independent of document size; the separate
-        // mounted lifecycle fixture exercises the 1 MiB Release path.
-        let filler = HighlightBudgetFixture.ordinary.markdown(utf8Bytes: 80000)
-        var source = "# Top\n\n" + filler + "\n\n## Tail `omega`\n"
+        // Match the mounted lifecycle fixture's nested heading and long
+        // unsectioned body while keeping this pure-cache regression small.
+        let line = String(repeating: "plain words ", count: 15) + "\n"
+        var source = "# Top **alpha**\r\n\r\n" + String(repeating: line, count: 450)
+            + "\n## Tail `omega` and café 😊\n"
         let registry = GrammarRegistry()
         var cache = try MarkdownSectionCache(
             source: source, snapshot: MarkdownSectionParser.snapshot(source: source, registry: registry)

@@ -123,6 +123,14 @@ final class MarkdownViewportSession {
         } else {
             nil
         }
+        if ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_LIFECYCLE_DISPLAY"] == "1" {
+            let visible = boundedViewport()
+            print("VIEWPORT-EDIT-DECISION location=\(range.location) length=\(range.length) " +
+                "delta=\(delta) post_length=\(postSource.length) cache_length=\(cache?.sourceLength ?? -1) " +
+                "visible_location=\(visible?.location ?? -1) visible_length=\(visible?.length ?? -1) " +
+                "had_pre_edit=\(hadPreEdit) paired=\(match != nil) unpaired=\(unpairedWindow != nil) " +
+                "was_current=\(wasCurrent)")
+        }
         if unpairedWindow != nil {
             unpairedWindowCount &+= 1
         }
