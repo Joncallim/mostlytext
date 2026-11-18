@@ -18,6 +18,21 @@ D2_APP_SUITES = (
     "DiagramFailurePresentationTests",
     "RenderedStateEvidenceTests",
 )
+GRAPHVIZ_APP_SUITES = (
+    "GraphvizPreviewIntegrationTests",
+    "GraphvizExportRegistryTests",
+    "MermaidExportRegistryTests",
+    "MixedDiagramRendererIntegrationTests",
+    "DiagramFailurePresentationTests",
+    "RenderedStateEvidenceTests",
+)
+MERMAID_APP_SUITES = (
+    "MermaidPreviewIntegrationTests",
+    "MermaidExportRegistryTests",
+    "MixedDiagramRendererIntegrationTests",
+    "DiagramFailurePresentationTests",
+    "RenderedStateEvidenceTests",
+)
 
 
 def target_dependencies(target):
@@ -59,12 +74,16 @@ def select(paths, manifest):
     selected = sorted(closure & tests)
     if not selected:
         return ("full", "", "full", ())
-    # App tests have no SwiftPM target graph. Only this reviewed D2 family has
-    # a complete suite map; all other package changes retain the full app suite.
+    # App tests have no SwiftPM target graph. Use only reviewed renderer-family
+    # maps; other package source changes retain the full app suite.
     if changed <= tests:
         app_mode, app = "none", ()
     elif changed <= {"D2Rendering", "D2RenderingTests", "DiagramsD2", "DiagramsD2Tests"}:
         app_mode, app = "selected", D2_APP_SUITES
+    elif changed <= {"GraphvizRendering", "GraphvizRenderingTests", "DiagramsGraphviz", "DiagramsGraphvizTests"}:
+        app_mode, app = "selected", GRAPHVIZ_APP_SUITES
+    elif changed <= {"DiagramRendering", "DiagramRenderingTests"}:
+        app_mode, app = "selected", MERMAID_APP_SUITES
     else:
         app_mode, app = "full", ()
     return ("selected", "|".join(re.escape(name) for name in selected), app_mode, app)

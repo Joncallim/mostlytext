@@ -16,6 +16,10 @@ class SelectionTests(unittest.TestCase):
         {"name": "D2Rendering", "type": "regular", "dependencies": []},
         {"name": "D2RenderingTests", "type": "test", "dependencies": [{"byName": ["D2Rendering", None]}]},
         {"name": "ExportDiagramIntegrationTests", "type": "test", "dependencies": [{"byName": ["D2Rendering", None]}]},
+        {"name": "GraphvizRendering", "type": "regular", "dependencies": []},
+        {"name": "GraphvizRenderingTests", "type": "test", "dependencies": [{"byName": ["GraphvizRendering", None]}]},
+        {"name": "DiagramRendering", "type": "regular", "dependencies": []},
+        {"name": "DiagramRenderingTests", "type": "test", "dependencies": [{"byName": ["DiagramRendering", None]}]},
     ]}
 
     def test_d2_source_selects_dependent_tests_and_app_integrations(self):
@@ -33,6 +37,19 @@ class SelectionTests(unittest.TestCase):
             ["MacDown2/Packages/MacDownKit/Tests/D2RenderingTests/D2WebRendererTests.swift"], self.manifest
         )
         self.assertEqual((mode, selected, app_mode, app), ("selected", "D2RenderingTests", "none", ()))
+
+    def test_graphviz_and_mermaid_use_reviewed_app_suites(self):
+        for target, expected in (
+            ("GraphvizRendering", "GraphvizPreviewIntegrationTests"),
+            ("DiagramRendering", "MermaidPreviewIntegrationTests"),
+        ):
+            with self.subTest(target=target):
+                mode, selected, app_mode, app = SELECTOR.select(
+                    [f"MacDown2/Packages/MacDownKit/Sources/{target}/Renderer.swift"], self.manifest
+                )
+                self.assertEqual((mode, app_mode), ("selected", "selected"))
+                self.assertIn(target + "Tests", selected)
+                self.assertIn(expected, app)
 
     def test_unknown_or_shared_input_falls_back_to_full(self):
         for path in (
