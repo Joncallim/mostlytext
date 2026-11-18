@@ -1,4 +1,5 @@
 import Darwin
+import Dispatch
 import Foundation
 @testable import MacDown2
 import Testing
@@ -7,6 +8,7 @@ extension ExternalFileWindowOccupancyTests {
     struct IdleBins {
         var interrupt: [UInt64] = []
         var platformIdle: [UInt64] = []
+        var elapsedNanoseconds: [UInt64] = []
 
         var interruptTotal: UInt64 {
             interrupt.reduce(0, +)
@@ -14,6 +16,10 @@ extension ExternalFileWindowOccupancyTests {
 
         var platformIdleTotal: UInt64 {
             platformIdle.reduce(0, +)
+        }
+
+        var elapsedNanosecondsTotal: UInt64 {
+            elapsedNanoseconds.reduce(0, +)
         }
     }
 
@@ -25,13 +31,17 @@ extension ExternalFileWindowOccupancyTests {
             await generations.append(controller.externalFileController.monitor.currentRequestGeneration())
         }
         var prior = try processWakeups()
+        var priorTime = DispatchTime.now().uptimeNanoseconds
         var bins = IdleBins()
         for _ in 0 ..< 20 {
             try await Task.sleep(for: .seconds(1))
             let current = try processWakeups()
+            let currentTime = DispatchTime.now().uptimeNanoseconds
             bins.interrupt.append(current.interrupt - prior.interrupt)
             bins.platformIdle.append(current.platformIdle - prior.platformIdle)
+            bins.elapsedNanoseconds.append(currentTime - priorTime)
             prior = current
+            priorTime = currentTime
         }
         var after: [UInt] = []
         for controller in controllers {

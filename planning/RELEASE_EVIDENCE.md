@@ -30,7 +30,8 @@ in Debug and 52/40/39/41 in Release. Each window retained one file and one
 parent watcher when bound, zero when unbound, and one each after rebinding; a
 real atomic external replacement provided a positive control. These four-second
 totals are too short to clear periodic idle behavior: PR #296 now records
-twenty one-second bins per bound/unbound/rebound phase, stable monitor request
+twenty nominal one-second bins and actual monotonic elapsed time per
+bound/unbound/rebound phase, stable monitor request
 generations, and a positive replacement after each bound phase. That longer
 control requires hosted execution and review. The interactive external-file matrix,
 view-state fidelity and exact formal Release candidate for [#12](https://github.com/Joncallim/mostlytext/issues/12)
