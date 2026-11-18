@@ -14,6 +14,14 @@ import SwiftTreeSitterLayer
 final class MarkdownViewportSession {
     typealias SnapshotParser = @Sendable (String, GrammarRegistry) async throws -> LanguageLayerTreeSnapshot
 
+    private struct LocalParseWork: Sendable {
+        let ticket: MarkdownParseAuthority.Ticket
+        let window: MarkdownSectionCache.Window
+        let content: String
+        let delta: Int
+        let expectedLength: Int
+    }
+
     /// Optional measurement seam. Request time precedes queue admission, so
     /// request-to-resolution includes any queue wait and the physical parse.
     enum TimingEvent: Equatable {
@@ -225,7 +233,9 @@ final class MarkdownViewportSession {
         let parseSnapshot = parseSnapshot
         let requestedAt = DispatchTime.now().uptimeNanoseconds
         emitTiming(.parseRequested)
-        parseTask = Task { [weak self] in
+        // TextKit can occupy the main actor after this callback. Begin the
+        // bounded parse independently; only the ticketed publication returns.
+        parseTask = Task.detached(priority: .userInitiated) { [weak self] in
             let enteredAt = DispatchTime.now().uptimeNanoseconds
             let snapshot = try? await parseSnapshot(source, registry)
             let returnedAt = DispatchTime.now().uptimeNanoseconds
@@ -234,15 +244,8 @@ final class MarkdownViewportSession {
                     "task_wait_ms=\(Double(enteredAt - requestedAt) / 1_000_000) " +
                     "snapshot_ms=\(Double(returnedAt - enteredAt) / 1_000_000)")
             }
-            self?.emitTiming(.parseResolved)
-            guard let self, authority.admits(ticket), let snapshot,
-                  textSystem.textView.textStorage === boundStorage,
-                  textSystem.textView.textStorage?.length == (source as NSString).length
-            else { return }
-            cache = try? MarkdownSectionCache(source: source, snapshot: snapshot)
-            cacheMatchesStorage = cache != nil
-            emitTiming(.published)
-            onPublication?()
+            await self?.publishFullParse(ticket: ticket, source: source, snapshot: snapshot,
+                                         resolvedAt: returnedAt)
         }
     }
 
@@ -250,11 +253,14 @@ final class MarkdownViewportSession {
                                  window: MarkdownSectionCache.Window, content: String,
                                  delta: Int, expectedLength: Int) {
         localParseCount &+= 1
+        let work = LocalParseWork(ticket: ticket, window: window, content: content,
+                                  delta: delta, expectedLength: expectedLength)
         let registry = registry
         let parseSnapshot = parseSnapshot
         let requestedAt = DispatchTime.now().uptimeNanoseconds
         emitTiming(.parseRequested)
-        parseTask = Task { [weak self] in
+        // The next visible paint must not wait for a main-actor parse kickoff.
+        parseTask = Task.detached(priority: .userInitiated) { [weak self] in
             let enteredAt = DispatchTime.now().uptimeNanoseconds
             let snapshot = try? await parseSnapshot(content, registry)
             let returnedAt = DispatchTime.now().uptimeNanoseconds
@@ -263,31 +269,58 @@ final class MarkdownViewportSession {
                     "task_wait_ms=\(Double(enteredAt - requestedAt) / 1_000_000) " +
                     "snapshot_ms=\(Double(returnedAt - enteredAt) / 1_000_000)")
             }
-            self?.emitTiming(.parseResolved)
-            guard let self, authority.admits(ticket),
-                  textSystem.textView.textStorage === boundStorage,
-                  textSystem.textView.textStorage?.length == expectedLength
-            else { return }
-            guard let snapshot, var cache else {
-                retireCache()
-                startFullParse(ticket: ticket)
-                return
-            }
-            do {
-                try cache.replace(window, with: snapshot, content: content, delta: delta)
-                self.cache = cache
-                cacheMatchesStorage = true
-                emitTiming(.published)
-                onPublication?()
-            } catch {
-                retireCache()
-                cacheMatchesStorage = false
-                startFullParse(ticket: ticket)
-            }
+            await self?.publishLocalParse(work: work, snapshot: snapshot, resolvedAt: returnedAt)
         }
     }
 
     private func emitTiming(_ event: TimingEvent) {
         onTimingEvent?(event, DispatchTime.now().uptimeNanoseconds)
+    }
+}
+
+private extension MarkdownViewportSession {
+    private func publishFullParse(ticket: MarkdownParseAuthority.Ticket, source: String,
+                                  snapshot: LanguageLayerTreeSnapshot?, resolvedAt: UInt64) {
+        emitPublicationWait(resolvedAt)
+        emitTiming(.parseResolved)
+        guard authority.admits(ticket), let snapshot,
+              textSystem.textView.textStorage === boundStorage,
+              textSystem.textView.textStorage?.length == (source as NSString).length
+        else { return }
+        cache = try? MarkdownSectionCache(source: source, snapshot: snapshot)
+        cacheMatchesStorage = cache != nil
+        emitTiming(.published)
+        onPublication?()
+    }
+
+    private func publishLocalParse(work: LocalParseWork, snapshot: LanguageLayerTreeSnapshot?, resolvedAt: UInt64) {
+        emitPublicationWait(resolvedAt)
+        emitTiming(.parseResolved)
+        guard authority.admits(work.ticket),
+              textSystem.textView.textStorage === boundStorage,
+              textSystem.textView.textStorage?.length == work.expectedLength
+        else { return }
+        guard let snapshot, var cache else {
+            retireCache()
+            startFullParse(ticket: work.ticket)
+            return
+        }
+        do {
+            try cache.replace(work.window, with: snapshot, content: work.content, delta: work.delta)
+            self.cache = cache
+            cacheMatchesStorage = true
+            emitTiming(.published)
+            onPublication?()
+        } catch {
+            retireCache()
+            cacheMatchesStorage = false
+            startFullParse(ticket: work.ticket)
+        }
+    }
+
+    private func emitPublicationWait(_ resolvedAt: UInt64) {
+        guard ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_DISPLAY_BENCH"] == "1" else { return }
+        let enteredAt = DispatchTime.now().uptimeNanoseconds
+        print("VIEWPORT-PUBLICATION-PHASE actor_wait_ms=\(Double(enteredAt - resolvedAt) / 1_000_000)")
     }
 }
