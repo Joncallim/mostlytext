@@ -20,6 +20,8 @@ class SelectionTests(unittest.TestCase):
         {"name": "GraphvizRenderingTests", "type": "test", "dependencies": [{"byName": ["GraphvizRendering", None]}]},
         {"name": "DiagramRendering", "type": "regular", "dependencies": []},
         {"name": "DiagramRenderingTests", "type": "test", "dependencies": [{"byName": ["DiagramRendering", None]}]},
+        {"name": "TextSearch", "type": "regular", "dependencies": []},
+        {"name": "TextSearchTests", "type": "test", "dependencies": [{"byName": ["TextSearch", None]}]},
     ]}
 
     def test_d2_source_selects_dependent_tests_and_app_integrations(self):
@@ -61,6 +63,31 @@ class SelectionTests(unittest.TestCase):
         self.assertIn("DiagramRenderingTests", selected)
         self.assertIn("GraphvizPreviewIntegrationTests", app)
         self.assertIn("MermaidPreviewIntegrationTests", app)
+
+    def test_text_search_and_its_independently_checked_ledgers_select_related_suites(self):
+        paths = [
+            "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceReplaceEngine.swift",
+            "MacDown2/Packages/MacDownKit/Sources/TextSearch/Resources/Localizable.xcstrings",
+            "MacDown2/Packages/MacDownKit/Tests/TextSearchTests/WorkspaceReplaceSafetyTests.swift",
+            "planning/downstream/mostlytext-localization-inventory.json",
+            "planning/downstream/plain-string-sink-ledger-2026-11-09.json",
+        ]
+        mode, selected, app_mode, app = SELECTOR.select(paths, self.manifest)
+        self.assertEqual((mode, selected, app_mode), ("selected", "TextSearchTests", "selected"))
+        self.assertEqual(set(app), {
+            "DocumentEditorFindNavigationTests",
+            "FolderReplaceModelTests",
+            "FolderSearchCancellationTests",
+            "FolderSearchCountCopyTests",
+            "FolderSearchModelTests",
+            "FolderSearchNavigationTests",
+            "NavigationOriginTests",
+            "QuickOpenModelTests",
+            "WorkspaceIndexFreshnessTests",
+            "WorkspaceIndexRefreshBehaviorTests",
+            "WorkspaceIndexRootPublicationTests",
+        })
+        self.assertEqual(SELECTOR.select(paths[-2:], self.manifest), ("none", "", "none", ()))
 
     def test_unknown_or_shared_input_falls_back_to_full(self):
         for path in (
