@@ -38,6 +38,7 @@ final class ExternalFileController {
     @ObservationIgnored var bindTask: Task<Void, Never>?
     @ObservationIgnored var bindRetryTask: Task<Void, Never>?
     @ObservationIgnored var baselineUpdateTask: Task<Void, Never>?
+    @ObservationIgnored var baselineUpdateSequence: UInt = 0
     @ObservationIgnored var bindRetryAttempt = 0
     @ObservationIgnored var recoveryTail: Task<Void, Never>?
     @ObservationIgnored var recoveryRetryAction: RecoveryAction?
@@ -157,6 +158,9 @@ final class ExternalFileController {
         lifecycleGeneration &+= 1
         bindTask?.cancel()
         bindRetryTask?.cancel()
+        baselineUpdateSequence &+= 1
+        baselineUpdateTask?.cancel()
+        baselineUpdateTask = nil
         noticeTask?.cancel()
         noticeTask = nil
         latestExternalSnapshot = nil
