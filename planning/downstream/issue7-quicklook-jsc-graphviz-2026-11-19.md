@@ -16,7 +16,15 @@ The worker child may use one same-thread `JSContext` to evaluate the **unchanged
 
 The context exposes no native file, network or shell bridge. It receives only a fence already admitted by the 64 KiB diagram source ceiling. The pinned runtime source itself requires a fixed location value, inert console, monotonic time, UTF-8 decoding and bounded random bytes; those pure helpers expose no URL loader or filesystem access. Viz.js initializes asynchronously; the worker pumps the same public main run loop as the prior fixed D2 JavaScriptCore probe, with no cross-thread `JSValue` transfer. The child has no promise of preempting a synchronous engine call; the unchanged parent kills/reaps it at three seconds, and the child watchdog exits at 3.5 seconds. The parent may publish only a fully marked derived reply, otherwise the already marked source fallback. No new entitlement, persistent VM, cache, server or app launch is introduced.
 
-This is a pre-implementation feasibility slice, not a change to Preview/Export renderer choice. JavaScriptCore output may have different SVG defaults than the WebKit presentation wrapper. Verify readable neutral artwork and safe generated-output admission before accepting it. Do not claim byte parity with Export. Retain the existing Graphviz notices and source obligations; exact final-artifact compliance remains issue #14.
+This is a scoped Quick Look implementation, not a change to Preview/Export renderer choice. JavaScriptCore output may have different SVG defaults than the WebKit presentation wrapper. Do not claim byte parity with Export. Retain the existing Graphviz notices and source obligations; exact final-artifact compliance remains issue #14.
+
+## Installed-product result and limits
+
+The first JSC candidate, [`825bef7c`](https://github.com/Joncallim/mostlytext/commit/825bef7c), built and installed but [Finder run 44421965328](https://github.com/Joncallim/mostlytext/actions/runs/44421965328) failed. The worker's pinned Viz.js initialization did not settle within its 2.25-second budget; Finder retained the authored Graphviz fence. That failure is preserved, not counted as a pass.
+
+The helper-equipped [`03816574`](https://github.com/Joncallim/mostlytext/commit/03816574) passed [installed-provider Finder run 44422517396](https://github.com/Joncallim/mostlytext/actions/runs/44422517396) on macOS 26.7.2. The unchanged pinned asset initialized in 0.210 seconds cold and 0.088 seconds on the repeated worker request, rendered one of one fences each time, and produced a passive reply containing SVG. The actual Finder screenshot shows legible ALPHA and BETA nodes with an arrow, and its accessibility tree exposes both nodes. Ordinary GFM/math, symlink and UTF-16 source controls passed in the same test, the public app remained closed, and the installed provider/worker entitlements remained minimal. This proves one small Graphviz fixture, not the full technical Quick Look matrix, memory ceiling, final signed candidate or other diagram engines.
+
+The follow-on branch adds a mixed malformed/valid Graphviz and math fixture, an over-64-KiB valid DOT source fallback, and a pre-Swift-bridge UTF-16 output guard. Those changes require their own exact-head Finder result before merge. The post-bridge UTF-8 output limit and passive sanitizer remain in force.
 
 ## Verification and stop conditions
 

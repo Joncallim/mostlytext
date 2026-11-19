@@ -17,7 +17,9 @@ enum QuickLookGraphvizJSC {
     private static let maximumSVGBytes = GraphvizWebRenderer.defaultMaxOutputBytes
 
     static func render(document: MarkdownDocument, sourceText: String, generation: UInt) -> [ContributionResult] {
-        let fences = GraphvizFenceScanner.scan(document, sourceText: sourceText)
+        let fences = GraphvizFenceScanner.scan(document, sourceText: sourceText).filter {
+            DiagramSourceBudget.byteCountIfOversized($0.source) == nil
+        }
         guard !fences.isEmpty, let (context, deadline) = readyContext() else { return [] }
         return renderFences(fences, context: context, deadline: deadline, generation: generation)
     }
@@ -70,13 +72,16 @@ enum QuickLookGraphvizJSC {
             guard ProcessInfo.processInfo.systemUptime < deadline else { break }
             guard DiagramSourceBudget.byteCountIfOversized(fence.source) == nil else { continue }
             context.setObject(fence.source, forKeyedSubscript: "__mostlyTextDot" as NSString)
+            context.setObject(maximumSVGBytes, forKeyedSubscript: "__mostlyTextMaxSVGUnits" as NSString)
             let rendered = context.evaluateScript("""
-            __mostlyTextViz.renderString(__mostlyTextDot, {
+            var __mostlyTextSVG = __mostlyTextViz.renderString(__mostlyTextDot, {
                 format: 'svg',
                 graphAttributes: { bgcolor: '#ffffff', fontname: 'Helvetica' },
                 nodeAttributes: { fontname: 'Helvetica' },
                 edgeAttributes: { fontname: 'Helvetica' }
-            })
+            });
+            typeof __mostlyTextSVG === 'string' && __mostlyTextSVG.length <= __mostlyTextMaxSVGUnits
+                ? __mostlyTextSVG : null
             """)
             guard context.exception == nil, let raw = rendered?.toString(),
                   raw.utf8.count <= maximumSVGBytes,

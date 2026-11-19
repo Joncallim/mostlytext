@@ -98,6 +98,31 @@ jobs:
           digraph G { ALPHA -> BETA; }
           ```
           MARKDOWN
+          cat > "$RUNNER_TEMP/mostlytext-production-mixed-graphviz.md" <<'MARKDOWN'
+          # MOSTLYTEXT_MIXED_GRAPHVIZ_QUICKLOOK
+
+          MATH_BESIDE_DIAGRAM $x^2$
+
+          ```dot
+          digraph G {
+          ```
+
+          ```graphviz
+          digraph G { GAMMA -> DELTA; }
+          ```
+          MARKDOWN
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          root = Path(os.environ['RUNNER_TEMP'])
+          oversized = ('digraph G {\nOVERSIZED_SOURCE_MARKER [shape=box];\n'
+                       + ('// ' + 'x' * 61 + '\n') * 1024 + 'TAIL;\n}\n')
+          (root / 'mostlytext-production-oversized-graphviz.md').write_text(
+              '# MOSTLYTEXT_OVERSIZED_GRAPHVIZ_QUICKLOOK\n\n'
+              '```dot\n' + oversized + '```\n',
+              encoding='utf-8',
+          )
+          PY
           ln -s "$RUNNER_TEMP/mostlytext-production-quicklook.md" "$RUNNER_TEMP/mostlytext-production-linked.md"
           python3 - <<'PY'
           import os
