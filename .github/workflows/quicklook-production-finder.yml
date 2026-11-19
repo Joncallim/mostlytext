@@ -175,6 +175,29 @@ jobs:
         run: |
           log show --last 5m --style compact --predicate 'subsystem == "app.mostlytext.quicklook.worker" || subsystem == "app.mostlytext.diagram"' \
             > "$RUNNER_TEMP/production-quicklook-worker.log" 2>&1 || true
+          log show --last 3m --style compact --predicate \
+            '(process CONTAINS "WebContent" || process == "sandboxd") && (eventMessage CONTAINS[c] "MostlyText" || eventMessage CONTAINS[c] "WebContent" || eventMessage CONTAINS[c] "deny" || eventMessage CONTAINS[c] "kill")' \
+            > "$RUNNER_TEMP/production-quicklook-webcontent.log" 2>&1 || true
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          import time
+          root = Path(os.environ['RUNNER_TEMP'])
+          sources = [Path.home() / 'Library/Logs/DiagnosticReports', Path('/Library/Logs/DiagnosticReports')]
+          found = []
+          for directory in sources:
+              try:
+                  found += [path for path in directory.glob('*WebContent*.ips')
+                            if path.stat().st_mtime > time.time() - 300]
+              except OSError:
+                  continue
+          for index, path in enumerate(sorted(found, key=lambda item: item.stat().st_mtime)[-4:]):
+              try:
+                  (root / f'production-quicklook-webcontent-crash-{index}.txt').write_text(
+                      path.read_text(errors='replace')[:200000])
+              except OSError:
+                  continue
+          PY
       - name: Upload Finder outcome
         if: always()
         uses: actions/upload-artifact@v4
@@ -182,6 +205,7 @@ jobs:
           name: production-quicklook-finder
           path: |
             ${{ runner.temp }}/production-quicklook-*.log
+            ${{ runner.temp }}/production-quicklook-webcontent-crash-*.txt
             ${{ runner.temp }}/provider-entitlements.plist
             ${{ runner.temp }}/worker-entitlements.plist
             ${{ runner.temp }}/production-quicklook/owned/**
