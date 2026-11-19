@@ -86,4 +86,59 @@ struct WorkspaceSaveAsLineageAdverseOrderTests {
         #expect(encodingResult.document.encoding == testCase.override)
         await writer.acknowledge(encodingResult)
     }
+
+    @Test(arguments: ["latin1", "utf8-bom"])
+    func aQueuedSaveAsCannotOverwriteAFileCreatedAfterDestinationAdmission(name: String) async throws {
+        let testCase = try #require(Self.makeCase(name))
+        let directory = temporaryDirectory()
+        defer { cleanup(directory) }
+        let source = directory.appendingPathComponent("source.txt")
+        let destination = directory.appendingPathComponent("copy.txt")
+        try Data("café".utf8).write(to: source)
+
+        let barrier = SavePublicationBarrier()
+        let store = FileStore(afterBaselineVerification: { _ in barrier.arriveAndWait() })
+        let writer = DocumentWriter(onRequestQueued: { barrier.secondSaveEnteredWriterLane() })
+        defer { barrier.cancelAndAllowPublication() }
+        let loaded = try FileDocument(fileURL: source, fileStore: store).load()
+        let snapshot = loaded.edited(text: "café 1")
+
+        let first = Task { try await writer.save(snapshot, encodingOverride: testCase.override) }
+        guard await waitForSignal(
+            timeout: .seconds(30), wait: { await barrier.waitForFirstPublication() },
+            onTimeout: { barrier.cancelWaiters() }
+        ) else {
+            Issue.record("The first save never reached publication")
+            return
+        }
+
+        // This is the baseline the Save As panel authorized before the writer
+        // lane was available. A later external create cannot become its new
+        // implicit baseline merely because the request waited in that lane.
+        let second = Task {
+            try await writer.saveAs(snapshot.edited(text: "café 2"), to: destination,
+                                    destinationBaseline: .absent)
+        }
+        guard await waitForSignal(
+            timeout: .seconds(30), wait: { await barrier.waitForSecondSaveToEnterWriterLane() },
+            onTimeout: { barrier.cancelWaiters() }
+        ) else {
+            Issue.record("Save As never queued behind the held save")
+            return
+        }
+        let external = Data("external winner".utf8)
+        try external.write(to: destination)
+
+        barrier.allowPublication()
+        let accepted = try await first.value
+        do {
+            _ = try await second.value
+            Issue.record("Save As overwrote a destination created while it was queued")
+        } catch FileStoreError.fileChangedDuringRead {
+            // The exclusive destination baseline rejected the external create.
+        }
+        #expect(try Data(contentsOf: destination) == external)
+        #expect(try Data(contentsOf: source) == testCase.expectedBytes("café 1"))
+        await writer.acknowledge(accepted)
+    }
 }
