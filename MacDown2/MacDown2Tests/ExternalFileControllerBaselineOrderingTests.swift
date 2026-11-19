@@ -7,7 +7,7 @@ import Workspace
 
 @MainActor
 struct WatcherBaselineOrderingTests {
-    private final class FirstCallGate {
+    @MainActor private final class FirstCallGate {
         private var entered = false
         private var enteredWaiter: CheckedContinuation<Void, Never>?
         private var releaseWaiter: CheckedContinuation<Void, Never>?
@@ -33,7 +33,7 @@ struct WatcherBaselineOrderingTests {
         }
     }
 
-    private final class ObservationGate {
+    @MainActor private final class ObservationGate {
         private var seen = false
         private var waiter: CheckedContinuation<Void, Never>?
 
