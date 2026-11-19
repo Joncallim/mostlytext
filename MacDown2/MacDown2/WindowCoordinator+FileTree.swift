@@ -1,8 +1,19 @@
 import AppKit
+import FileTree
 import Foundation
 import Workspace
 
 extension WindowCoordinator {
+    /// A sidebar action belongs to the window that owns its file tree, even
+    /// when another document becomes key while a context menu is open.
+    func fileTreeOriginController(for model: FileTreeModel) -> WindowController? {
+        controllers.first(where: { !$0.isClosed && $0.fileTreeModel === model })
+    }
+
+    func fileTreeOriginWindow(for model: FileTreeModel) -> NSWindow? {
+        fileTreeOriginController(for: model)?.window
+    }
+
     var keyFolderRoot: URL? {
         controllers.first(where: { $0.window == NSApp.keyWindow })?.fileTreeModel.root
     }

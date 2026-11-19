@@ -7,6 +7,13 @@ import UniformTypeIdentifiers
 import Workspace
 
 extension SidebarView {
+    private func chooseFolderForSidebar() {
+        guard let coordinator,
+              let origin = coordinator.fileTreeOriginController(for: fileTreeModel)
+        else { return }
+        coordinator.chooseFolder(relativeTo: origin)
+    }
+
     @ViewBuilder
     var folderContent: some View {
         if fileTreeModel.root != nil {
@@ -17,7 +24,7 @@ extension SidebarView {
         case .noRoot:
             VStack(alignment: .leading) {
                 Text("No folder opened").foregroundStyle(.secondary)
-                Button("Open Folder…") { coordinator?.chooseFolder() }
+                Button("Open Folder…", action: chooseFolderForSidebar)
                     .accessibilityIdentifier("openFolderButton")
                 Text("⌘⇧O opens a folder").font(.caption).foregroundStyle(.secondary)
             }
@@ -33,7 +40,7 @@ extension SidebarView {
         case let .rootUnreadable(reason):
             VStack(alignment: .leading) {
                 Text(verbatim: reason).foregroundStyle(.secondary)
-                Button("Choose Another Folder…") { coordinator?.chooseFolder() }
+                Button("Choose Another Folder…", action: chooseFolderForSidebar)
                     .accessibilityIdentifier("openFolderButton")
             }
         case .empty:
@@ -101,7 +108,7 @@ extension SidebarView {
             Spacer()
             if let root = fileTreeModel.root {
                 Menu {
-                    Button("Open Another Folder…") { coordinator?.chooseFolder() }
+                    Button("Open Another Folder…", action: chooseFolderForSidebar)
                     Divider()
                     Button("New File") { create(in: root, isDirectory: false) }
                     Button("New Folder") { create(in: root, isDirectory: true) }
