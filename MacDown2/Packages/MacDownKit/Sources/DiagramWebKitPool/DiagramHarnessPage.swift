@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 import WebKit
 
 /// Completes a harness load only for the navigation returned by its own `loadFileURL` call.
@@ -93,6 +94,7 @@ public struct DiagramHarnessResult: Sendable {
 ///   harness HTML) additionally blocks network `fetch`/`XHR`/`WebSocket`.
 @MainActor
 public final class DiagramHarnessPage: NSObject, WKNavigationDelegate, WKUIDelegate {
+    private static let logger = Logger(subsystem: "app.mostlytext.diagram", category: "harness")
     private let webView: WKWebView
     private let allowedDirectory: URL
     private let loadCompletion = DiagramHarnessNavigationCompletion()
@@ -116,6 +118,7 @@ public final class DiagramHarnessPage: NSObject, WKNavigationDelegate, WKUIDeleg
     /// initializer.
     public static func make(harnessResourceName: String, bundle: Bundle) async throws -> DiagramHarnessPage {
         guard let harnessURL = bundle.url(forResource: harnessResourceName, withExtension: "html") else {
+            logger.error("Diagram harness resource is unavailable")
             throw DiagramPoolError.pageUnavailable
         }
         let page = DiagramHarnessPage(allowedDirectory: harnessURL.deletingLastPathComponent())
@@ -219,6 +222,7 @@ public final class DiagramHarnessPage: NSObject, WKNavigationDelegate, WKUIDeleg
     }
 
     public func webViewWebContentProcessDidTerminate(_: WKWebView) {
+        Self.logger.error("Diagram WebContent process terminated")
         isTerminated = true
         loadCompletion.terminate(with: DiagramPoolError.pageUnavailable)
         let pending = evaluations
@@ -229,11 +233,18 @@ public final class DiagramHarnessPage: NSObject, WKNavigationDelegate, WKUIDeleg
     }
 
     public func webView(_: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        Self.logNavigationFailure(error)
         loadCompletion.finish(for: navigation, with: .failure(error))
     }
 
     public func webView(_: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        Self.logNavigationFailure(error)
         loadCompletion.finish(for: navigation, with: .failure(error))
+    }
+
+    private static func logNavigationFailure(_ error: Error) {
+        let failure = error as NSError
+        logger.error("Diagram harness navigation failed: \(failure.domain, privacy: .public) code \(failure.code)")
     }
 
     private func finishEvaluation(_ id: UUID, with result: Result<DiagramHarnessResult, any Error>) {

@@ -1,12 +1,14 @@
 import Diagrams
 import DiagramWebKitPool
 import Foundation
+import OSLog
 
 /// Renders Mermaid in a bounded, offscreen WebKit pool. The shared pool owns
 /// cancellation, construction and once-settled script evaluation. Admission
 /// closes during shutdown; a new pool starts only after the old one retires.
 public actor MermaidWebRenderer: MermaidDiagramRendering {
     public static let defaultMaxOutputBytes = 2 * 1024 * 1024
+    private static let logger = Logger(subsystem: "app.mostlytext.diagram", category: "mermaid")
 
     private let maxOutputBytes: Int
     private let includeRaster: Bool
@@ -74,10 +76,10 @@ public actor MermaidWebRenderer: MermaidDiagramRendering {
                 throw Self.failure(for: result.message ?? "unknown error")
             }
             guard let svg = result.svg else {
-                throw MermaidRenderError.rendererUnavailable
+                throw Self.unavailable("missing SVG")
             }
             guard result.width.isFinite, result.height.isFinite, result.width > 0, result.height > 0 else {
-                throw MermaidRenderError.rendererUnavailable
+                throw Self.unavailable("invalid dimensions")
             }
             let byteCount = svg.utf8.count
             guard byteCount <= options.limit else {
@@ -96,8 +98,13 @@ public actor MermaidWebRenderer: MermaidDiagramRendering {
         } catch DiagramPoolError.timedOut {
             throw MermaidRenderError.timedOut
         } catch DiagramPoolError.pageUnavailable {
-            throw MermaidRenderError.rendererUnavailable
+            throw Self.unavailable("page unavailable")
         }
+    }
+
+    private static func unavailable(_ phase: String) -> MermaidRenderError {
+        logger.error("Mermaid runtime unavailable: \(phase, privacy: .public)")
+        return .rendererUnavailable
     }
 
     /// A completed SVG can exceed the bounded preview raster dimensions.

@@ -173,7 +173,7 @@ jobs:
       - name: Preserve first Finder outcome
         if: always()
         run: |
-          log show --last 5m --style compact --predicate 'subsystem == "app.mostlytext.quicklook.worker"' \
+          log show --last 5m --style compact --predicate 'subsystem == "app.mostlytext.quicklook.worker" || subsystem == "app.mostlytext.diagram"' \
             > "$RUNNER_TEMP/production-quicklook-worker.log" 2>&1 || true
       - name: Upload Finder outcome
         if: always()
