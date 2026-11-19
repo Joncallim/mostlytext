@@ -67,11 +67,11 @@ private func sourceWorkerMain() -> Never {
     if source.contains("$") || source.contains("```") || source.contains("~~~") {
         guard Thread.isMainThread else { Darwin._exit(1) }
         let state = MainActor.assumeIsolated { DerivedReplyState() }
+        let publishDeadline = expires - 0.75
         Task { @MainActor in
-            state.reply = await DerivedMathReply.render(source)
+            state.reply = await DerivedMathReply.render(source, publishDeadline: publishDeadline)
             state.completed = true
         }
-        let publishDeadline = expires - 0.75
         while ProcessInfo.processInfo.systemUptime < publishDeadline,
               !MainActor.assumeIsolated({ state.completed }) {
             RunLoop.main.run(until: Date().addingTimeInterval(0.01))

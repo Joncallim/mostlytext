@@ -165,12 +165,11 @@ final class ProductionFinderTests: XCTestCase {
         let heading = finder.staticTexts["MOSTLYTEXT_MIXED_GRAPHVIZ_QUICKLOOK"].firstMatch
         let math = finder.images["x^2"].firstMatch
         let goodNode = finder.staticTexts["GAMMA"].firstMatch
-        let badSource = finder.staticTexts["digraph G {"].firstMatch
-        let visible = heading.waitForExistence(timeout: 15)
-            && math.waitForExistence(timeout: 5)
-            && goodNode.waitForExistence(timeout: 5)
-            && badSource.waitForExistence(timeout: 5)
-        let tree = XCTAttachment(string: String(finder.debugDescription.prefix(65536)))
+        let headingVisible = heading.waitForExistence(timeout: 15)
+        let mathVisible = math.waitForExistence(timeout: 5)
+        let goodNodeVisible = goodNode.waitForExistence(timeout: 5)
+        let treeText = String(finder.debugDescription.prefix(65536))
+        let tree = XCTAttachment(string: treeText)
         tree.name = "Mixed Graphviz Finder accessibility tree"
         tree.lifetime = .keepAlways
         add(tree)
@@ -178,7 +177,10 @@ final class ProductionFinderTests: XCTestCase {
         image.name = "Mixed Graphviz Finder Quick Look window"
         image.lifetime = .keepAlways
         add(image)
-        XCTAssertTrue(visible, "Malformed DOT must retain its source beside independent math and SVG")
+        XCTAssertTrue(headingVisible)
+        XCTAssertTrue(mathVisible, "Static math must survive a malformed DOT fence")
+        XCTAssertTrue(goodNodeVisible, "A valid DOT fence must survive the preceding malformed one")
+        XCTAssertTrue(treeText.contains("value: digraph G {"), "Malformed DOT must remain readable source")
         XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText")
             .isEmpty)
         finder.typeKey(.escape, modifierFlags: [])
@@ -194,12 +196,9 @@ final class ProductionFinderTests: XCTestCase {
         item.click()
         finder.typeKey(.space, modifierFlags: [])
         let heading = finder.staticTexts["MOSTLYTEXT_OVERSIZED_GRAPHVIZ_QUICKLOOK"].firstMatch
-        let authoredSource = finder.staticTexts.matching(
-            NSPredicate(format: "label CONTAINS %@", "OVERSIZED_SOURCE_MARKER")
-        ).firstMatch
-        let visible = heading.waitForExistence(timeout: 15)
-            && authoredSource.waitForExistence(timeout: 5)
-        let tree = XCTAttachment(string: String(finder.debugDescription.prefix(65536)))
+        let headingVisible = heading.waitForExistence(timeout: 15)
+        let treeText = String(finder.debugDescription.prefix(65536))
+        let tree = XCTAttachment(string: treeText)
         tree.name = "Oversized Graphviz Finder accessibility tree"
         tree.lifetime = .keepAlways
         add(tree)
@@ -207,7 +206,9 @@ final class ProductionFinderTests: XCTestCase {
         image.name = "Oversized Graphviz Finder Quick Look window"
         image.lifetime = .keepAlways
         add(image)
-        XCTAssertTrue(visible, "An over-budget valid DOT fence must remain authored source")
+        XCTAssertTrue(headingVisible)
+        XCTAssertTrue(treeText.contains("value: digraph G {"), "Over-budget DOT must remain authored code")
+        XCTAssertTrue(treeText.contains("OVERSIZED_SOURCE_MARKER"), "The selected source must stay visible")
         XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText")
             .isEmpty)
         finder.typeKey(.escape, modifierFlags: [])

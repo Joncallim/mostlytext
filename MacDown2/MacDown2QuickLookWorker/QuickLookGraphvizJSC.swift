@@ -16,16 +16,23 @@ enum QuickLookGraphvizJSC {
     private static let logger = Logger(subsystem: "app.mostlytext.quicklook.worker", category: "graphviz-jsc")
     private static let maximumSVGBytes = GraphvizWebRenderer.defaultMaxOutputBytes
 
-    static func render(document: MarkdownDocument, sourceText: String, generation: UInt) -> [ContributionResult] {
+    static func render(
+        document: MarkdownDocument, sourceText: String, generation: UInt, publishDeadline: Double
+    ) -> [ContributionResult] {
         let fences = GraphvizFenceScanner.scan(document, sourceText: sourceText).filter {
             DiagramSourceBudget.byteCountIfOversized($0.source) == nil
         }
-        guard !fences.isEmpty, let (context, deadline) = readyContext() else { return [] }
+        guard !fences.isEmpty, let (context, deadline) = readyContext(publishDeadline: publishDeadline) else {
+            return []
+        }
         return renderFences(fences, context: context, deadline: deadline, generation: generation)
     }
 
-    private static func readyContext() -> (JSContext, Double)? {
+    private static func readyContext(publishDeadline: Double) -> (JSContext, Double)? {
         let started = ProcessInfo.processInfo.systemUptime
+        // Leave time for passive composition and the derived-completion marker.
+        let deadline = min(started + 2.25, publishDeadline - 0.25)
+        guard started < deadline else { return nil }
         guard let context = JSContext(), let script = try? GraphvizBundledScript.read() else {
             logger.error("JavaScriptCore context or pinned asset unavailable")
             return nil
@@ -52,7 +59,6 @@ enum QuickLookGraphvizJSC {
             logger.error("Pinned Viz.js initialization threw")
             return nil
         }
-        let deadline = started + 2.25
         while state(context) == "pending", ProcessInfo.processInfo.systemUptime < deadline {
             _ = RunLoop.main.run(mode: .default, before: Date(timeIntervalSinceNow: 0.001))
         }
@@ -70,7 +76,6 @@ enum QuickLookGraphvizJSC {
         var results: [ContributionResult] = []
         for fence in fences {
             guard ProcessInfo.processInfo.systemUptime < deadline else { break }
-            guard DiagramSourceBudget.byteCountIfOversized(fence.source) == nil else { continue }
             context.setObject(fence.source, forKeyedSubscript: "__mostlyTextDot" as NSString)
             context.setObject(maximumSVGBytes, forKeyedSubscript: "__mostlyTextMaxSVGUnits" as NSString)
             let rendered = context.evaluateScript("""

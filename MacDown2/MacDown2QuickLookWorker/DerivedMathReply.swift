@@ -14,25 +14,32 @@ private let derivedLogger = Logger(subsystem: "app.mostlytext.quicklook.worker",
 /// source fallback; this method returns only a bounded derived candidate.
 @MainActor
 enum DerivedMathReply {
-    static func render(_ source: String) async -> Data? {
+    static func render(_ source: String, publishDeadline: Double) async -> Data? {
         guard source.contains("$") || source.contains("```") || source.contains("~~~") else { return nil }
         do {
             let document = try await ParseEngine().parse(source, revision: 1)
             var results: [ContributionResult] = []
             if source.contains("$") {
-                let context = ExportMathRenderContext(
-                    foregroundRed: 0.1, foregroundGreen: 0.1, foregroundBlue: 0.1,
-                    pixelScale: MathImageRenderer.standardScale
-                )
-                let contributor = SharedMathContribution(context: context) { body, style, context in
-                    try await MainActor.run {
-                        try MathImageRenderer.render(body: body, style: style, context: context)
+                do {
+                    let context = ExportMathRenderContext(
+                        foregroundRed: 0.1, foregroundGreen: 0.1, foregroundBlue: 0.1,
+                        pixelScale: MathImageRenderer.standardScale
+                    )
+                    let contributor = SharedMathContribution(context: context) { body, style, context in
+                        try await MainActor.run {
+                            try MathImageRenderer.render(body: body, style: style, context: context)
+                        }
                     }
+                    results += try await contributor.run(document: document, sourceText: source, sourceGeneration: 1)
+                } catch {
+                    // A failed equation keeps its source but must not suppress a valid diagram.
+                    derivedLogger.error("Static math unavailable; preserving equation source")
                 }
-                results += try await contributor.run(document: document, sourceText: source, sourceGeneration: 1)
             }
             if !GraphvizFenceScanner.scan(document, sourceText: source).isEmpty {
-                results += QuickLookGraphvizJSC.render(document: document, sourceText: source, generation: 1)
+                results += QuickLookGraphvizJSC.render(
+                    document: document, sourceText: source, generation: 1, publishDeadline: publishDeadline
+                )
             }
             let items = results.compactMap(adapt)
             guard !items.isEmpty else { return nil }
