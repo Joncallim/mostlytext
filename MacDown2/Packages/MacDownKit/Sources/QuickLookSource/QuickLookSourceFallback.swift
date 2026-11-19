@@ -77,6 +77,21 @@ public enum QuickLookSourceFallback {
         }
     }
 
+    /// A derived snapshot may advance the published reply only when passive
+    /// rendering itself succeeded within budget. The source-only fallback is
+    /// already published separately by the worker.
+    public static func renderedReplyHTML(
+        forSource source: String,
+        contributions: [ExportDerivedContribution],
+        sourceGeneration: UInt
+    ) -> Data? {
+        htmlIfRendered(for: source) { markdown in
+            ExportService.renderPassiveMarkdownFragment(
+                markdown, contributions: contributions, sourceGeneration: sourceGeneration
+            )
+        }
+    }
+
     /// The shared GFM parser supplies static structure. If it refuses a
     /// nonempty input or expands past the reply budget, preserve escaped
     /// authored source instead. Neither path receives a base URL.
@@ -85,6 +100,10 @@ public enum QuickLookSourceFallback {
     }
 
     static func html(for source: String, render: (String) -> String) -> Data {
+        htmlIfRendered(for: source, render: render) ?? document(body: sourceView(source))
+    }
+
+    static func htmlIfRendered(for source: String, render: (String) -> String) -> Data? {
         let rendered = render(source)
         if !rendered.isEmpty || source.isEmpty {
             let document = document(body: rendered)
@@ -92,7 +111,7 @@ public enum QuickLookSourceFallback {
                 return document
             }
         }
-        return document(body: sourceView(source))
+        return nil
     }
 
     private static func sourceView(_ source: String) -> String {

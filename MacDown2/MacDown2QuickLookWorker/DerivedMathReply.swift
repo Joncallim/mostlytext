@@ -1,37 +1,79 @@
 import Contributions
+import DiagramsGraphviz
 import ExportService
 import Foundation
 import MarkdownEngine
 import Math
 import MathRendering
+import OSLog
 import QuickLookSource
 
-/// Selected-source math path. The parent already owns a complete
-/// source fallback; this method returns only a bounded derived candidate.
+private let derivedLogger = Logger(subsystem: "app.mostlytext.quicklook.worker", category: "derived")
+
+/// Selected-source static math and Graphviz. The parent already owns a complete
+/// source fallback; each accepted snapshot is complete before a later renderer runs.
 @MainActor
 enum DerivedMathReply {
-    static func render(_ source: String) async -> Data? {
-        guard source.contains("$") else { return nil }
+    static func render(
+        _ source: String, publishDeadline: Double, onSnapshot: @MainActor (Data) -> Bool
+    ) async {
+        guard source.contains("$") || source.contains("```") || source.contains("~~~") else { return }
         do {
             let document = try await ParseEngine().parse(source, revision: 1)
-            let context = ExportMathRenderContext(
-                foregroundRed: 0.1, foregroundGreen: 0.1, foregroundBlue: 0.1,
-                pixelScale: MathImageRenderer.standardScale
-            )
-            let contributor = SharedMathContribution(context: context) { body, style, context in
-                try await MainActor.run {
-                    try MathImageRenderer.render(body: body, style: style, context: context)
+            var mathResults: [ContributionResult] = []
+            if source.contains("$") {
+                do {
+                    let context = ExportMathRenderContext(
+                        foregroundRed: 0.1, foregroundGreen: 0.1, foregroundBlue: 0.1,
+                        pixelScale: MathImageRenderer.standardScale
+                    )
+                    let contributor = SharedMathContribution(context: context) { body, style, context in
+                        try await MainActor.run {
+                            try MathImageRenderer.render(body: body, style: style, context: context)
+                        }
+                    }
+                    mathResults = try await contributor.run(document: document, sourceText: source, sourceGeneration: 1)
+                } catch {
+                    // A failed equation keeps its source but must not suppress a valid diagram.
+                    derivedLogger.error("Static math unavailable; preserving equation source")
                 }
             }
-            let results = try await contributor.run(document: document, sourceText: source, sourceGeneration: 1)
-            let items = results.compactMap(adapt)
-            guard !items.isEmpty else { return nil }
-            return QuickLookSourceFallback.replyHTML(
-                forSource: source, contributions: items, sourceGeneration: 1
-            )
+            if !mathResults.isEmpty {
+                // Publish a complete math snapshot before synchronous Graphviz work.
+                // A killed child may still return this immutable snapshot.
+                publishSnapshot(source: source, results: mathResults, onSnapshot: onSnapshot)
+            }
+            let completedMath = mathResults
+            if !GraphvizFenceScanner.scan(document, sourceText: source).isEmpty {
+                _ = QuickLookGraphvizJSC.render(
+                    document: document, sourceText: source, generation: 1, publishDeadline: publishDeadline,
+                    onAccepted: { diagrams in
+                        publishSnapshot(source: source, results: completedMath + diagrams, onSnapshot: onSnapshot)
+                    }
+                )
+            }
         } catch {
-            return nil
+            return
         }
+    }
+
+    private static func publishSnapshot(
+        source: String, results: [ContributionResult], onSnapshot: @MainActor (Data) -> Bool
+    ) {
+        let items = results.compactMap(adapt)
+        guard !items.isEmpty else { return }
+        guard let html = QuickLookSourceFallback.renderedReplyHTML(
+            forSource: source, contributions: items, sourceGeneration: 1
+        ) else {
+            derivedLogger.notice("Passive composition refused; previous snapshot retained")
+            return
+        }
+        guard onSnapshot(html) else {
+            derivedLogger.notice("Derived reply exceeds publication budget; previous snapshot retained")
+            return
+        }
+        let hasSVG = html.range(of: Data("<svg".utf8)) != nil
+        derivedLogger.notice("Derived reply bytes: \(html.count), SVG present: \(hasSVG)")
     }
 
     private static func adapt(_ result: ContributionResult) -> ExportDerivedContribution? {

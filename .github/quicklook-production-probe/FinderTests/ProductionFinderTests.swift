@@ -54,8 +54,16 @@ final class ProductionFinderTests: XCTestCase {
         XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText")
             .isEmpty)
         finder.typeKey(.escape, modifierFlags: [])
+        assertRelatedDocuments(in: finder, beside: source)
+    }
+
+    private func assertRelatedDocuments(in finder: XCUIApplication, beside source: URL) {
         assertSelectedSymlink(in: finder, source: source)
         assertEncodedUnicodeSource(in: finder, beside: source)
+        assertStaticGraphviz(in: finder, beside: source)
+        assertTwoGraphvizFences(in: finder, beside: source)
+        assertMixedGraphvizFailure(in: finder, beside: source)
+        assertOversizedGraphvizFallback(in: finder, beside: source)
     }
 
     private func assertStaticMath(in finder: XCUIApplication) {
@@ -114,6 +122,126 @@ final class ProductionFinderTests: XCTestCase {
         add(image)
         XCTAssertTrue(visible, "The installed provider must decode BOM and CRLF without losing Unicode text")
         XCTAssertTrue(finder.staticTexts["MostlyText"].firstMatch.exists)
+        XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText")
+            .isEmpty)
+        finder.typeKey(.escape, modifierFlags: [])
+    }
+
+    private func assertStaticGraphviz(in finder: XCUIApplication, beside source: URL) {
+        let diagram = source.deletingLastPathComponent()
+            .appendingPathComponent("mostlytext-production-graphviz.md")
+        NSWorkspace.shared.activateFileViewerSelecting([diagram])
+        let item = finder.descendants(matching: .any)
+            .matching(identifier: diagram.lastPathComponent).firstMatch
+        XCTAssertTrue(item.waitForExistence(timeout: 5), "Finder must select the Graphviz fixture")
+        item.click()
+        finder.typeKey(.space, modifierFlags: [])
+        let heading = finder.staticTexts["MOSTLYTEXT_GRAPHVIZ_QUICKLOOK"].firstMatch
+        let renderedNode = finder.staticTexts["ALPHA"].firstMatch
+        let visible = heading.waitForExistence(timeout: 15)
+            && renderedNode.waitForExistence(timeout: 5)
+        let tree = XCTAttachment(string: String(finder.debugDescription.prefix(65536)))
+        tree.name = "Graphviz Finder accessibility tree"
+        tree.lifetime = .keepAlways
+        add(tree)
+        let image = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        image.name = "Graphviz Finder Quick Look window"
+        image.lifetime = .keepAlways
+        add(image)
+        XCTAssertTrue(visible, "The actual sandboxed worker must render the Graphviz node")
+        XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText")
+            .isEmpty)
+        finder.typeKey(.escape, modifierFlags: [])
+    }
+
+    private func assertMixedGraphvizFailure(in finder: XCUIApplication, beside source: URL) {
+        let mixed = source.deletingLastPathComponent()
+            .appendingPathComponent("mostlytext-production-mixed-graphviz.md")
+        NSWorkspace.shared.activateFileViewerSelecting([mixed])
+        let item = finder.descendants(matching: .any)
+            .matching(identifier: mixed.lastPathComponent).firstMatch
+        XCTAssertTrue(item.waitForExistence(timeout: 5), "Finder must select the mixed fixture")
+        item.click()
+        finder.typeKey(.space, modifierFlags: [])
+        let heading = finder.staticTexts["MOSTLYTEXT_MIXED_GRAPHVIZ_QUICKLOOK"].firstMatch
+        let math = finder.images["x^2"].firstMatch
+        let goodNode = finder.staticTexts["GAMMA"].firstMatch
+        let headingVisible = heading.waitForExistence(timeout: 15)
+        let mathVisible = math.waitForExistence(timeout: 5)
+        let goodNodeVisible = goodNode.waitForExistence(timeout: 5)
+        let treeText = String(finder.debugDescription.prefix(65536))
+        let tree = XCTAttachment(string: treeText)
+        tree.name = "Mixed Graphviz Finder accessibility tree"
+        tree.lifetime = .keepAlways
+        add(tree)
+        let image = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        image.name = "Mixed Graphviz Finder Quick Look window"
+        image.lifetime = .keepAlways
+        add(image)
+        XCTAssertTrue(headingVisible)
+        XCTAssertTrue(mathVisible, "Static math must survive a malformed DOT fence")
+        XCTAssertTrue(goodNodeVisible, "A valid DOT fence must survive the preceding malformed one")
+        XCTAssertTrue(treeText.contains("value: digraph G {"), "Malformed DOT must remain readable source")
+        XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText")
+            .isEmpty)
+        finder.typeKey(.escape, modifierFlags: [])
+    }
+
+    private func assertTwoGraphvizFences(in finder: XCUIApplication, beside source: URL) {
+        let diagrams = source.deletingLastPathComponent()
+            .appendingPathComponent("mostlytext-production-two-graphviz.md")
+        NSWorkspace.shared.activateFileViewerSelecting([diagrams])
+        let item = finder.descendants(matching: .any)
+            .matching(identifier: diagrams.lastPathComponent).firstMatch
+        XCTAssertTrue(item.waitForExistence(timeout: 5), "Finder must select the two-graph fixture")
+        item.click()
+        finder.typeKey(.space, modifierFlags: [])
+        let heading = finder.staticTexts["MOSTLYTEXT_TWO_GRAPHVIZ_QUICKLOOK"].firstMatch
+        let math = finder.images["x^2"].firstMatch
+        let first = finder.staticTexts["FIRST"].firstMatch
+        let third = finder.staticTexts["THIRD"].firstMatch
+        let visible = heading.waitForExistence(timeout: 15)
+            && math.waitForExistence(timeout: 5)
+            && first.waitForExistence(timeout: 5)
+            && third.waitForExistence(timeout: 5)
+        let tree = XCTAttachment(string: String(finder.debugDescription.prefix(65536)))
+        tree.name = "Two Graphviz fences Finder accessibility tree"
+        tree.lifetime = .keepAlways
+        add(tree)
+        let image = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        image.name = "Two Graphviz fences Finder Quick Look window"
+        image.lifetime = .keepAlways
+        add(image)
+        XCTAssertTrue(visible, "Both completed Graphviz fences must be present in the latest snapshot")
+        XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText")
+            .isEmpty)
+        finder.typeKey(.escape, modifierFlags: [])
+    }
+
+    private func assertOversizedGraphvizFallback(in finder: XCUIApplication, beside source: URL) {
+        let oversized = source.deletingLastPathComponent()
+            .appendingPathComponent("mostlytext-production-oversized-graphviz.md")
+        NSWorkspace.shared.activateFileViewerSelecting([oversized])
+        let item = finder.descendants(matching: .any)
+            .matching(identifier: oversized.lastPathComponent).firstMatch
+        XCTAssertTrue(item.waitForExistence(timeout: 5), "Finder must select the oversized fixture")
+        item.click()
+        finder.typeKey(.space, modifierFlags: [])
+        let heading = finder.staticTexts["MOSTLYTEXT_OVERSIZED_GRAPHVIZ_QUICKLOOK"].firstMatch
+        let headingVisible = heading.waitForExistence(timeout: 15)
+        let treeText = String(finder.debugDescription.prefix(65536))
+        let tree = XCTAttachment(string: treeText)
+        tree.name = "Oversized Graphviz Finder accessibility tree"
+        tree.lifetime = .keepAlways
+        add(tree)
+        let image = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        image.name = "Oversized Graphviz Finder Quick Look window"
+        image.lifetime = .keepAlways
+        add(image)
+        XCTAssertTrue(headingVisible)
+        XCTAssertTrue(treeText.contains("value: digraph G {"), "Over-budget DOT must remain authored code")
+        // WebKit truncates this very long code block in Finder's accessibility snapshot.
+        // The rendered code opening and retained screenshot establish source fallback.
         XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText")
             .isEmpty)
         finder.typeKey(.escape, modifierFlags: [])

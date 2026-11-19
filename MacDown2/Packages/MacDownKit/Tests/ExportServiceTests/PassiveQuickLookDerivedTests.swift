@@ -69,6 +69,44 @@ struct PassiveQuickLookDerivedTests {
         #expect(!html.contains("<script"))
     }
 
+    @Test func safeStaticDiagramReplacesOnlyItsFenceAndKeepsAuthoredURLsInert() {
+        let fence = "```dot\ndigraph G { ALPHA -> BETA; }\n```"
+        let source = "Before\n\n\(fence)\n\n[After](https://example.invalid/open)\n"
+        let html = ExportService.renderPassiveMarkdownFragment(
+            source,
+            contributions: [
+                .init(sourceRange: range(of: fence, in: source), placement: .block,
+                      html: "<svg viewBox=\"0 0 100 20\"><text>ALPHA</text>"
+                          + "<text>BETA</text></svg>",
+                      sourceGeneration: 1),
+            ],
+            sourceGeneration: 1
+        )
+        #expect(html.contains("<svg"))
+        #expect(html.contains("ALPHA"))
+        #expect(html.contains("BETA"))
+        #expect(html.contains("Before"))
+        #expect(html.contains("After"))
+        #expect(!html.contains("digraph G"))
+        #expect(!html.contains("example.invalid"))
+    }
+
+    @Test func generatedDiagramExternalLinkFallsBackToAuthoredFence() {
+        let fence = "```dot\ndigraph G { ALPHA -> BETA; }\n```"
+        let html = ExportService.renderPassiveMarkdownFragment(
+            fence,
+            contributions: [
+                .init(sourceRange: range(of: fence, in: fence), placement: .block,
+                      html: "<svg><a href=\"https://example.invalid/graph\">ALPHA</a></svg>",
+                      sourceGeneration: 1),
+            ],
+            sourceGeneration: 1
+        )
+        #expect(html.contains("digraph G"))
+        #expect(!html.contains("<svg"))
+        #expect(!html.contains("example.invalid"))
+    }
+
     @Test func markupStrippedToEmptyPreservesItsSourceAndLaterStaticContent() {
         let source = "$bad$ and $good$\n"
         let html = ExportService.renderPassiveMarkdownFragment(

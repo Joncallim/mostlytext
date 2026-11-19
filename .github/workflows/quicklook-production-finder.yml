@@ -91,6 +91,51 @@ jobs:
 
           MATH_INLINE_MARKER $x^2$ MATH_AFTER_MARKER
           MARKDOWN
+          cat > "$RUNNER_TEMP/mostlytext-production-graphviz.md" <<'MARKDOWN'
+          # MOSTLYTEXT_GRAPHVIZ_QUICKLOOK
+
+          ```dot
+          digraph G { ALPHA -> BETA; }
+          ```
+          MARKDOWN
+          cat > "$RUNNER_TEMP/mostlytext-production-two-graphviz.md" <<'MARKDOWN'
+          # MOSTLYTEXT_TWO_GRAPHVIZ_QUICKLOOK
+
+          MATH_BESIDE_TWO_GRAPHVIZ $x^2$
+
+          ```dot
+          digraph G { FIRST -> SECOND; }
+          ```
+
+          ```graphviz
+          digraph H { THIRD -> FOURTH; }
+          ```
+          MARKDOWN
+          cat > "$RUNNER_TEMP/mostlytext-production-mixed-graphviz.md" <<'MARKDOWN'
+          # MOSTLYTEXT_MIXED_GRAPHVIZ_QUICKLOOK
+
+          MATH_BESIDE_DIAGRAM $x^2$
+
+          ```dot
+          digraph G {
+          ```
+
+          ```graphviz
+          digraph G { GAMMA -> DELTA; }
+          ```
+          MARKDOWN
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          root = Path(os.environ['RUNNER_TEMP'])
+          oversized = ('digraph G {\nOVERSIZED_SOURCE_MARKER [shape=box];\n'
+                       + ('// ' + 'x' * 61 + '\n') * 1024 + 'TAIL;\n}\n')
+          (root / 'mostlytext-production-oversized-graphviz.md').write_text(
+              '# MOSTLYTEXT_OVERSIZED_GRAPHVIZ_QUICKLOOK\n\n'
+              '```dot\n' + oversized + '```\n',
+              encoding='utf-8',
+          )
+          PY
           ln -s "$RUNNER_TEMP/mostlytext-production-quicklook.md" "$RUNNER_TEMP/mostlytext-production-linked.md"
           python3 - <<'PY'
           import os
@@ -118,6 +163,11 @@ jobs:
             -default-test-execution-time-allowance 120 -maximum-test-execution-time-allowance 120 \
             test-without-building 2>&1 | tee "$RUNNER_TEMP/production-quicklook-finder.log"
       - name: Preserve first Finder outcome
+        if: always()
+        run: |
+          log show --last 5m --style compact --predicate 'subsystem == "app.mostlytext.quicklook.worker"' \
+            > "$RUNNER_TEMP/production-quicklook-worker.log" 2>&1 || true
+      - name: Upload Finder outcome
         if: always()
         uses: actions/upload-artifact@v4
         with:

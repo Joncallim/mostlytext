@@ -77,10 +77,48 @@ struct QuickLookSourceProcessTests {
         #expect(try String(data: #require(result.data), encoding: .utf8)
             == "<html><body>derived</body></html>")
     }
+
+    @Test(.timeLimit(.minutes(1)))
+    func completedMathSurvivesBlockedDiagramAndPartialCombinedReply() throws {
+        let fixture = try QuickLookSourceProcessFixture(mode: .mathThenBlockedDiagram)
+        defer { fixture.remove() }
+        let started = ProcessInfo.processInfo.systemUptime
+        let result = SourceProcess.run(selectedDescriptor: fixture.selected.fileDescriptor,
+                                       executable: fixture.executable)
+        let elapsed = ProcessInfo.processInfo.systemUptime - started
+        #expect(result.status == .complete)
+        #expect(try String(data: #require(result.data), encoding: .utf8)
+            == "<html><body>completed math</body></html>")
+        #expect(elapsed >= 2.9 && elapsed < 5.0)
+    }
+
+    @Test func completedCombinedReplySupersedesStagedMath() throws {
+        let fixture = try QuickLookSourceProcessFixture(mode: .completedCombined)
+        defer { fixture.remove() }
+        let result = SourceProcess.run(selectedDescriptor: fixture.selected.fileDescriptor,
+                                       executable: fixture.executable)
+        #expect(result.status == .complete)
+        #expect(try String(data: #require(result.data), encoding: .utf8)
+            == "<html><body>math and graph</body></html>")
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func completedDiagramsSurviveBlockedLaterFence() throws {
+        let fixture = try QuickLookSourceProcessFixture(mode: .diagramThenBlockedDiagram)
+        defer { fixture.remove() }
+        let result = SourceProcess.run(selectedDescriptor: fixture.selected.fileDescriptor,
+                                       executable: fixture.executable)
+        #expect(result.status == .complete)
+        #expect(try String(data: #require(result.data), encoding: .utf8)
+            == "<html><body>two diagrams</body></html>")
+    }
 }
 
 private struct QuickLookSourceProcessFixture {
-    enum Mode { case echo, sleep, fallbackThenPartialDerived, completedDerived }
+    enum Mode {
+        case echo, sleep, fallbackThenPartialDerived, completedDerived
+        case mathThenBlockedDiagram, completedCombined, diagramThenBlockedDiagram
+    }
 
     let directory: URL
     let executable: URL
@@ -106,6 +144,19 @@ private struct QuickLookSourceProcessFixture {
         case .completedDerived:
             "#!/bin/sh\nIFS= read -r line <&3\nprintf '<html><body>%s</body></html>' \"$line\" >&4\n"
                 + "printf F >&6\nprintf '<html><body>derived</body></html>' >&5\nprintf D >&6\n"
+        case .mathThenBlockedDiagram:
+            "#!/bin/sh\nprintf '<html><body># selected</body></html>' >&4\nprintf F >&6\n"
+                + "printf '<html><body>completed math</body></html>' >&5\nprintf D >&6\n"
+                + "printf '<html>partial combined' >&7\nexec /bin/sleep 60\n"
+        case .completedCombined:
+            "#!/bin/sh\nprintf '<html><body># selected</body></html>' >&4\nprintf F >&6\n"
+                + "printf '<html><body>completed math</body></html>' >&5\nprintf D >&6\n"
+                + "printf '<html><body>math and graph</body></html>' >&7\nprintf G >&6\n"
+        case .diagramThenBlockedDiagram:
+            "#!/bin/sh\nprintf '<html><body># selected</body></html>' >&4\nprintf F >&6\n"
+                + "printf '<html><body>first diagram</body></html>' >&5\nprintf D >&6\n"
+                + "printf '<html><body>two diagrams</body></html>' >&7\nprintf G >&6\n"
+                + "printf '<html>partial third diagram' >&5\nexec /bin/sleep 60\n"
         }
         try script.write(to: executable, atomically: true, encoding: .utf8)
         try FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: executable.path)

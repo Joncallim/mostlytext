@@ -29,10 +29,18 @@ private func writeAll(_ descriptor: Int32, bytes: Data) -> Bool {
     }
 }
 
+private func publishDerived(_ bytes: Data, descriptor: Int32, marker: UInt8) {
+    guard ftruncate(descriptor, 0) == 0,
+          lseek(descriptor, 0, SEEK_SET) == 0,
+          writeAll(descriptor, bytes: bytes),
+          writeAll(6, bytes: Data([marker]))
+    else { Darwin._exit(1) }
+}
+
 @MainActor
 private final class DerivedReplyState {
     var completed = false
-    var reply: Data?
+    var nextDescriptor: Int32 = 5
 }
 
 private func sourceWorkerMain() -> Never {
@@ -64,23 +72,25 @@ private func sourceWorkerMain() -> Never {
           writeAll(6, bytes: Data([0x46]))
     else { Darwin._exit(1) }
     // The source fallback and its marker are immutable before slower work.
-    if source.contains("$") {
+    if source.contains("$") || source.contains("```") || source.contains("~~~") {
         guard Thread.isMainThread else { Darwin._exit(1) }
         let state = MainActor.assumeIsolated { DerivedReplyState() }
+        let publishDeadline = expires - 0.75
         Task { @MainActor in
-            state.reply = await DerivedMathReply.render(source)
+            await DerivedMathReply.render(
+                source, publishDeadline: publishDeadline, onSnapshot: { snapshot in
+                    guard snapshot.count <= maximumOutputBytes else { return false }
+                    let descriptor = state.nextDescriptor
+                    publishDerived(snapshot, descriptor: descriptor, marker: descriptor == 5 ? 0x44 : 0x47)
+                    state.nextDescriptor = descriptor == 5 ? 7 : 5
+                    return true
+                }
+            )
             state.completed = true
         }
-        let publishDeadline = expires - 0.75
         while ProcessInfo.processInfo.systemUptime < publishDeadline,
               !MainActor.assumeIsolated({ state.completed }) {
             RunLoop.main.run(until: Date().addingTimeInterval(0.01))
-        }
-        let derived = MainActor.assumeIsolated { state.completed ? state.reply : nil }
-        if let derived, derived.count <= maximumOutputBytes {
-            guard writeAll(5, bytes: derived),
-                  writeAll(6, bytes: Data([0x44]))
-            else { Darwin._exit(1) }
         }
     }
     Darwin._exit(0)
