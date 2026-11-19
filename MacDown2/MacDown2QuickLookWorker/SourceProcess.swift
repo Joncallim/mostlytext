@@ -21,8 +21,7 @@ enum SourceProcess {
 
     private struct CompletionState {
         let fallback: Bool
-        let derived: Bool
-        let combined: Bool
+        let latest: UInt8?
     }
 
     private static let seconds = 3.0
@@ -152,28 +151,28 @@ enum SourceProcess {
     private static func completionState(_ marker: Int32) -> CompletionState {
         var stamp = stat()
         guard fstat(marker, &stamp) == 0, stamp.st_mode & S_IFMT == S_IFREG,
-              (1 ... 3).contains(stamp.st_size)
-        else { return CompletionState(fallback: false, derived: false, combined: false) }
+              stamp.st_size >= 1,
+              stamp.st_size <= off_t(QuickLookSourceBudget.maximumSourceBytes + 1)
+        else { return CompletionState(fallback: false, latest: nil) }
         var ready = [UInt8](repeating: 0, count: Int(stamp.st_size))
         let readCount = ready.withUnsafeMutableBytes { bytes in
             pread(marker, bytes.baseAddress, bytes.count, 0)
         }
         guard readCount == ready.count, ready[0] == 0x46 else {
-            return CompletionState(fallback: false, derived: false, combined: false)
+            return CompletionState(fallback: false, latest: nil)
         }
-        if ready.count == 1 { return CompletionState(fallback: true, derived: false, combined: false) }
-        guard ready[1] == 0x44 else { return CompletionState(fallback: false, derived: false, combined: false) }
-        return CompletionState(fallback: true, derived: true, combined: ready.count == 3 && ready[2] == 0x47)
+        var latest: UInt8?
+        for byte in ready.dropFirst() {
+            let expected: UInt8 = latest == 0x44 ? 0x47 : 0x44
+            guard byte == expected else { return CompletionState(fallback: true, latest: nil) }
+            latest = byte
+        }
+        return CompletionState(fallback: true, latest: latest)
     }
 
     private static func completedDerived(_ outputs: Outputs) -> Result? {
-        let state = completionState(outputs.marker)
-        if state.combined {
-            let result = readOutput(outputs.combined)
-            if result.status == .complete { return result }
-        }
-        guard state.derived else { return nil }
-        let result = readOutput(outputs.derived)
+        guard let slot = completionState(outputs.marker).latest else { return nil }
+        let result = readOutput(slot == 0x44 ? outputs.derived : outputs.combined)
         return result.status == .complete ? result : nil
     }
 

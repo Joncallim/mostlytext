@@ -101,12 +101,23 @@ struct QuickLookSourceProcessTests {
         #expect(try String(data: #require(result.data), encoding: .utf8)
             == "<html><body>math and graph</body></html>")
     }
+
+    @Test(.timeLimit(.minutes(1)))
+    func completedDiagramsSurviveBlockedLaterFence() throws {
+        let fixture = try QuickLookSourceProcessFixture(mode: .diagramThenBlockedDiagram)
+        defer { fixture.remove() }
+        let result = SourceProcess.run(selectedDescriptor: fixture.selected.fileDescriptor,
+                                       executable: fixture.executable)
+        #expect(result.status == .complete)
+        #expect(try String(data: #require(result.data), encoding: .utf8)
+            == "<html><body>two diagrams</body></html>")
+    }
 }
 
 private struct QuickLookSourceProcessFixture {
     enum Mode {
         case echo, sleep, fallbackThenPartialDerived, completedDerived
-        case mathThenBlockedDiagram, completedCombined
+        case mathThenBlockedDiagram, completedCombined, diagramThenBlockedDiagram
     }
 
     let directory: URL
@@ -141,6 +152,11 @@ private struct QuickLookSourceProcessFixture {
             "#!/bin/sh\nprintf '<html><body># selected</body></html>' >&4\nprintf F >&6\n"
                 + "printf '<html><body>completed math</body></html>' >&5\nprintf D >&6\n"
                 + "printf '<html><body>math and graph</body></html>' >&7\nprintf G >&6\n"
+        case .diagramThenBlockedDiagram:
+            "#!/bin/sh\nprintf '<html><body># selected</body></html>' >&4\nprintf F >&6\n"
+                + "printf '<html><body>first diagram</body></html>' >&5\nprintf D >&6\n"
+                + "printf '<html><body>two diagrams</body></html>' >&7\nprintf G >&6\n"
+                + "printf '<html>partial third diagram' >&5\nexec /bin/sleep 60\n"
         }
         try script.write(to: executable, atomically: true, encoding: .utf8)
         try FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: executable.path)

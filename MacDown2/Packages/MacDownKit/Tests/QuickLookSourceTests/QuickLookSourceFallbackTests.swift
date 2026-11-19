@@ -13,6 +13,8 @@ struct QuickLookSourceFallbackTests {
         let expanded = String(repeating: "x", count: QuickLookSourceFallback.maximumHTMLBytes + 1)
         let oversized = try #require(String(bytes: QuickLookSourceFallback.html(for: source, render: { _ in expanded }),
                                             encoding: .utf8))
+        #expect(QuickLookSourceFallback.htmlIfRendered(for: source, render: { _ in "" }) == nil)
+        #expect(QuickLookSourceFallback.htmlIfRendered(for: source, render: { _ in expanded }) == nil)
         for html in [refused, oversized] {
             #expect(html.contains("&lt;script&gt;authored&lt;/script&gt; &amp;"))
             #expect(!html.contains("<script>"))
@@ -55,9 +57,10 @@ struct QuickLookSourceFallbackTests {
             html: "<img src=\"data:image/png;base64,iVBORw0KGgo=\" alt=\"x\">",
             sourceGeneration: 7
         )
-        let accepted = try #require(String(bytes: QuickLookSourceFallback.replyHTML(
+        let acceptedData = try #require(QuickLookSourceFallback.renderedReplyHTML(
             forSource: source, contributions: [item], sourceGeneration: 7
-        ), encoding: .utf8))
+        ))
+        let accepted = try #require(String(bytes: acceptedData, encoding: .utf8))
         #expect(accepted.contains("data:image/png;base64,iVBORw0KGgo="))
         #expect(accepted.contains("img-src data:"))
         #expect(!accepted.contains("example.invalid"))

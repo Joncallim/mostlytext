@@ -17,7 +17,8 @@ enum QuickLookGraphvizJSC {
     private static let maximumSVGBytes = GraphvizWebRenderer.defaultMaxOutputBytes
 
     static func render(
-        document: MarkdownDocument, sourceText: String, generation: UInt, publishDeadline: Double
+        document: MarkdownDocument, sourceText: String, generation: UInt, publishDeadline: Double,
+        onAccepted: @MainActor ([ContributionResult]) -> Void
     ) -> [ContributionResult] {
         let fences = GraphvizFenceScanner.scan(document, sourceText: sourceText).filter {
             DiagramSourceBudget.byteCountIfOversized($0.source) == nil
@@ -25,7 +26,9 @@ enum QuickLookGraphvizJSC {
         guard !fences.isEmpty, let (context, deadline) = readyContext(publishDeadline: publishDeadline) else {
             return []
         }
-        return renderFences(fences, context: context, deadline: deadline, generation: generation)
+        return renderFences(
+            fences, context: context, deadline: deadline, generation: generation, onAccepted: onAccepted
+        )
     }
 
     private static func readyContext(publishDeadline: Double) -> (JSContext, Double)? {
@@ -71,7 +74,8 @@ enum QuickLookGraphvizJSC {
     }
 
     private static func renderFences(
-        _ fences: [GraphvizFence], context: JSContext, deadline: Double, generation: UInt
+        _ fences: [GraphvizFence], context: JSContext, deadline: Double, generation: UInt,
+        onAccepted: @MainActor ([ContributionResult]) -> Void
     ) -> [ContributionResult] {
         var results: [ContributionResult] = []
         for fence in fences {
@@ -101,6 +105,9 @@ enum QuickLookGraphvizJSC {
                     sourceRange: fence.sourceRange, placement: .block, representation: .html(svg)
                 ), sourceGeneration: generation
             ))
+            // A later synchronous layout may block until the child is killed.
+            // Publish a complete snapshot after each accepted fence.
+            onAccepted(results)
         }
         logger.notice("Graphviz rendered \(results.count) of \(fences.count) fences")
         return results

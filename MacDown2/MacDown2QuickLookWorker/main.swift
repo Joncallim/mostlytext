@@ -30,7 +30,9 @@ private func writeAll(_ descriptor: Int32, bytes: Data) -> Bool {
 }
 
 private func publishDerived(_ bytes: Data, descriptor: Int32, marker: UInt8) {
-    guard writeAll(descriptor, bytes: bytes),
+    guard ftruncate(descriptor, 0) == 0,
+          lseek(descriptor, 0, SEEK_SET) == 0,
+          writeAll(descriptor, bytes: bytes),
           writeAll(6, bytes: Data([marker]))
     else { Darwin._exit(1) }
 }
@@ -38,8 +40,7 @@ private func publishDerived(_ bytes: Data, descriptor: Int32, marker: UInt8) {
 @MainActor
 private final class DerivedReplyState {
     var completed = false
-    var stagedMath = false
-    var reply: Data?
+    var nextDescriptor: Int32 = 5
 }
 
 private func sourceWorkerMain() -> Never {
@@ -76,11 +77,13 @@ private func sourceWorkerMain() -> Never {
         let state = MainActor.assumeIsolated { DerivedReplyState() }
         let publishDeadline = expires - 0.75
         Task { @MainActor in
-            state.reply = await DerivedMathReply.render(
-                source, publishDeadline: publishDeadline, onMathReady: { math in
-                    guard math.count <= maximumOutputBytes else { return }
-                    publishDerived(math, descriptor: 5, marker: 0x44)
-                    state.stagedMath = true
+            await DerivedMathReply.render(
+                source, publishDeadline: publishDeadline, onSnapshot: { snapshot in
+                    guard snapshot.count <= maximumOutputBytes else { return false }
+                    let descriptor = state.nextDescriptor
+                    publishDerived(snapshot, descriptor: descriptor, marker: descriptor == 5 ? 0x44 : 0x47)
+                    state.nextDescriptor = descriptor == 5 ? 7 : 5
+                    return true
                 }
             )
             state.completed = true
@@ -88,11 +91,6 @@ private func sourceWorkerMain() -> Never {
         while ProcessInfo.processInfo.systemUptime < publishDeadline,
               !MainActor.assumeIsolated({ state.completed }) {
             RunLoop.main.run(until: Date().addingTimeInterval(0.01))
-        }
-        let derived = MainActor.assumeIsolated { state.completed ? state.reply : nil }
-        if let derived, derived.count <= maximumOutputBytes {
-            let stagedMath = MainActor.assumeIsolated { state.stagedMath }
-            publishDerived(derived, descriptor: stagedMath ? 7 : 5, marker: stagedMath ? 0x47 : 0x44)
         }
     }
     Darwin._exit(0)

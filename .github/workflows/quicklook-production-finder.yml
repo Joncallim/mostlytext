@@ -98,6 +98,19 @@ jobs:
           digraph G { ALPHA -> BETA; }
           ```
           MARKDOWN
+          cat > "$RUNNER_TEMP/mostlytext-production-two-graphviz.md" <<'MARKDOWN'
+          # MOSTLYTEXT_TWO_GRAPHVIZ_QUICKLOOK
+
+          MATH_BESIDE_TWO_GRAPHVIZ $x^2$
+
+          ```dot
+          digraph G { FIRST -> SECOND; }
+          ```
+
+          ```graphviz
+          digraph H { THIRD -> FOURTH; }
+          ```
+          MARKDOWN
           cat > "$RUNNER_TEMP/mostlytext-production-mixed-graphviz.md" <<'MARKDOWN'
           # MOSTLYTEXT_MIXED_GRAPHVIZ_QUICKLOOK
 
