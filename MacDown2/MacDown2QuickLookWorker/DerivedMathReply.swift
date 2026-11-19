@@ -14,7 +14,9 @@ private let derivedLogger = Logger(subsystem: "app.mostlytext.quicklook.worker",
 /// source fallback; this method returns only a bounded derived candidate.
 @MainActor
 enum DerivedMathReply {
-    static func render(_ source: String, publishDeadline: Double) async -> Data? {
+    static func render(
+        _ source: String, publishDeadline: Double, onMathReady: @MainActor (Data) -> Void
+    ) async -> Data? {
         guard source.contains("$") || source.contains("```") || source.contains("~~~") else { return nil }
         do {
             let document = try await ParseEngine().parse(source, revision: 1)
@@ -36,11 +38,23 @@ enum DerivedMathReply {
                     derivedLogger.error("Static math unavailable; preserving equation source")
                 }
             }
+            let mathItems = results.compactMap(adapt)
+            if !mathItems.isEmpty {
+                let mathHTML = QuickLookSourceFallback.replyHTML(
+                    forSource: source, contributions: mathItems, sourceGeneration: 1
+                )
+                // Publish a complete math snapshot before synchronous Graphviz work.
+                // A killed child may still return this immutable snapshot.
+                onMathReady(mathHTML)
+            }
+            var graphviz: [ContributionResult] = []
             if !GraphvizFenceScanner.scan(document, sourceText: source).isEmpty {
-                results += QuickLookGraphvizJSC.render(
+                graphviz = QuickLookGraphvizJSC.render(
                     document: document, sourceText: source, generation: 1, publishDeadline: publishDeadline
                 )
             }
+            guard !graphviz.isEmpty else { return nil }
+            results += graphviz
             let items = results.compactMap(adapt)
             guard !items.isEmpty else { return nil }
             let html = QuickLookSourceFallback.replyHTML(
