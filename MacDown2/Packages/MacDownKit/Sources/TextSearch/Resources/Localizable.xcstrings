@@ -104,6 +104,35 @@
           }
         }
       }
+    },
+    "The replacement could not be confirmed. Check the file before retrying.": {
+      "comment": "Unexpected file-store failure during Replace in Folder. Publication may already have occurred, so ask the user to inspect the file. Other locales are English review drafts.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The replacement could not be confirmed. Check the file before retrying."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The replacement could not be confirmed. Check the file before retrying."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The replacement could not be confirmed. Check the file before retrying."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The replacement could not be confirmed. Check the file before retrying."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

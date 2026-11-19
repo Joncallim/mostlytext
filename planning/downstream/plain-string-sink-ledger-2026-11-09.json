@@ -7,7 +7,7 @@
     "Computed string flows, SwiftUI implicit keys, Info.plist/project.yml OS labels, built-in snippet and format names require separate policy and native audit.",
     "Catalog and translation quality, language overrides, accessibility layout, and final string freeze require independent evidence."
   ],
-  "production_swift_inputs_scanned": 772,
+  "production_swift_inputs_scanned": 788,
   "source_sha256": {
     "MacDown2/MacDown2/ExportCoordinator.swift": "1e9ae02533ef1cdc7b01dd640381bffb9b951be05dd33efbb1b907295ab8eb72",
     "MacDown2/MacDown2/FirstRunWindowController.swift": "b8737772a8974cab6944c2b6c63bd711d35b24d47d99f4179b14085b1ebf4dbf",
@@ -27,7 +27,7 @@
     "MacDown2/MacDown2/WindowCoordinator+OpenWithEncoding.swift": "032de76f1322ca9c960d8376e063ed54ed20e3064d3015f4865af445ee3e1331",
     "MacDown2/MacDown2/WindowCoordinator+ValidatedExport.swift": "e486575e272df847e56eddf87dd0f5213eef608dba8552517505c1a791fc1539",
     "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorGutterView.swift": "a17ffee42e46223a9bcf3b28e62789146c5ccae985ee4da22f82ec87e4204193",
-    "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceReplaceEngine.swift": "b59ce2b2bb85e221ef9e74b2282758191c290d88e8fc34f896e0683ac3c2bec8",
+    "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceReplaceEngine.swift": "898ebde4d0914e91137f5ede3f23edbd40a2c7a03ae62a192d7cebef55ed719b",
     "MacDown2/Packages/MacDownKit/Sources/Workspace/WorkspaceModel+Saving.swift": "3f56d568356d2df4c8e076049ebbb8737a9c0cab3eaf171d6a2efe53e459f02f"
   },
   "sites": [
@@ -481,14 +481,21 @@
     },
     {
       "path": "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceReplaceEngine.swift",
-      "line": 166,
+      "line": 167,
       "kind": "replace_error",
       "literal": "\"An external change could not be restored; its bytes were kept at \\(recovery.path)\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceReplaceEngine.swift",
-      "line": 201,
+      "line": 172,
+      "kind": "replace_error",
+      "literal": "\"The replacement could not be confirmed. Check the file before retrying.\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceReplaceEngine.swift",
+      "line": 206,
       "kind": "replace_error",
       "literal": "\"Invalid path\"",
       "route": "localized"
