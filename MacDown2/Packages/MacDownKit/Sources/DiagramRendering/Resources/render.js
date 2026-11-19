@@ -191,7 +191,9 @@ function addOpaqueCanvas(svg, fill) {
 // uses this raster snapshot instead (mirroring `MathContribution`'s own
 // PNG-based approach), while Export keeps using `svg` untouched, genuinely
 // vector, and unaffected by any of this.
-window.__macdownRenderMermaid = async function (source, theme, maxOutputBytes = 2 * 1024 * 1024) {
+window.__macdownRenderMermaid = async function (
+    source, theme, maxOutputBytes = 2 * 1024 * 1024, includeRaster = true
+) {
     __macdownRenderCounter += 1;
     var id = "macdown-diagram-" + __macdownRenderCounter;
     try {
@@ -295,6 +297,12 @@ window.__macdownRenderMermaid = async function (source, theme, maxOutputBytes = 
         if (byteCount > maxOutputBytes) {
             return { ok: false, outputTooLargeByteCount: byteCount,
                      message: "rendered output too large" };
+        }
+        // Quick Look embeds the vetted SVG directly. Keep the same dimension
+        // admission but skip the PNG canvas work that only native Preview uses.
+        if (!includeRaster) {
+            checkedRasterSize(canvas.width, canvas.height);
+            return { ok: true, svg: canvas.svg, width: canvas.width, height: canvas.height };
         }
         var png = await rasterize(canvas.svg, canvas.width, canvas.height);
         var pngByteCount = rasterPNGByteCount(png);

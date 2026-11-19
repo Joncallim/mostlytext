@@ -69,10 +69,11 @@ enum DerivedMathReply {
     ) async {
         let fences = MermaidFenceScanner.scan(document, sourceText: source)
         guard !fences.isEmpty, ProcessInfo.processInfo.systemUptime < publishDeadline - 0.25 else { return }
-        let renderer = MermaidWebRenderer(poolSize: 1, timeout: .seconds(2))
+        let renderer = MermaidWebRenderer(poolSize: 1, timeout: .seconds(2), includeRaster: false)
         var results: [ContributionResult] = []
         for fence in fences {
             guard ProcessInfo.processInfo.systemUptime < publishDeadline - 0.25 else { break }
+            let started = ProcessInfo.processInfo.systemUptime
             do {
                 let diagram = try await renderer.render(fence, context: .neutralLight)
                 results.append(ContributionResult(
@@ -85,8 +86,22 @@ enum DerivedMathReply {
                 ))
                 publishSnapshot(source: source, results: priorResults + results, onSnapshot: onSnapshot)
             } catch {
-                derivedLogger.error("Static Mermaid unavailable; preserving fenced source")
+                let elapsed = ProcessInfo.processInfo.systemUptime - started
+                let category = failureCategory(error)
+                derivedLogger.error("Static Mermaid unavailable: \(category, privacy: .public)")
+                derivedLogger.notice("Static Mermaid elapsed seconds: \(elapsed)")
             }
+        }
+    }
+
+    private static func failureCategory(_ error: Error) -> String {
+        guard let failure = error as? MermaidRenderError else { return "other" }
+        switch failure {
+        case .timedOut: return "timed-out"
+        case .rendererUnavailable: return "renderer-unavailable"
+        case .invalidSyntax: return "invalid-syntax"
+        case .sourceTooLarge: return "source-too-large"
+        case .outputTooLarge: return "output-too-large"
         }
     }
 

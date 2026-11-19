@@ -481,11 +481,15 @@ and app integration checks. These are not same-UID adversary fences.
 
 ## Static Mermaid in the selected-source Quick Look worker — 19 November 2026
 
+Baseline: `main` `0b7617df231f9f50c32fdedf2372d42831deb9d5`.
+
 The current source worker first writes an immutable authored-source fallback, then
 publishes complete math and Graphviz snapshots. A Markdown document with Mermaid
 fences can use the existing `MermaidWebRenderer` in that same sandboxed child.
 The worker admits one offscreen page, uses a neutral light palette suitable for
-its passive HTML, and composes a fresh complete snapshot after each successful
+its passive HTML, and requests vector output without the PNG canvas pass used
+only by native Preview. The existing SVG byte and raster-dimension ceilings
+still apply. The worker composes a fresh complete snapshot after each successful
 fence. It never inserts a partial SVG into the reply. A failed or slow fence
 leaves the authored code and any earlier snapshot available. The existing
 three-second parent deadline, child watchdog, output cap and no-network

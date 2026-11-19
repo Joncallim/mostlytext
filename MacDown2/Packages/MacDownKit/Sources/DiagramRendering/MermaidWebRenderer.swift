@@ -9,6 +9,7 @@ public actor MermaidWebRenderer: MermaidDiagramRendering {
     public static let defaultMaxOutputBytes = 2 * 1024 * 1024
 
     private let maxOutputBytes: Int
+    private let includeRaster: Bool
     private let makePool: @Sendable () -> DiagramWebKitPool
     private var pool: DiagramWebKitPool?
     private var retirement: (id: UUID, task: Task<Void, Never>)?
@@ -16,7 +17,8 @@ public actor MermaidWebRenderer: MermaidDiagramRendering {
     public init(
         poolSize: Int = 2,
         timeout: Duration = .seconds(5),
-        maxOutputBytes: Int = MermaidWebRenderer.defaultMaxOutputBytes
+        maxOutputBytes: Int = MermaidWebRenderer.defaultMaxOutputBytes,
+        includeRaster: Bool = true
     ) {
         let boundedSize = max(1, poolSize)
         makePool = {
@@ -28,6 +30,7 @@ public actor MermaidWebRenderer: MermaidDiagramRendering {
             )
         }
         self.maxOutputBytes = maxOutputBytes
+        self.includeRaster = includeRaster
         pool = makePool()
     }
 
@@ -35,11 +38,13 @@ public actor MermaidWebRenderer: MermaidDiagramRendering {
     init(
         pool: DiagramWebKitPool,
         makePool: @escaping @Sendable () -> DiagramWebKitPool,
-        maxOutputBytes: Int = MermaidWebRenderer.defaultMaxOutputBytes
+        maxOutputBytes: Int = MermaidWebRenderer.defaultMaxOutputBytes,
+        includeRaster: Bool = true
     ) {
         self.pool = pool
         self.makePool = makePool
         self.maxOutputBytes = maxOutputBytes
+        self.includeRaster = includeRaster
     }
 
     public func render(_ fence: MermaidFence, context: MermaidRenderContext) async throws -> RenderedMermaidDiagram {
@@ -49,15 +54,16 @@ public actor MermaidWebRenderer: MermaidDiagramRendering {
             throw MermaidRenderError.sourceTooLarge(byteCount: byteCount)
         }
         let activePool = try availablePool()
-        let outputLimit = maxOutputBytes
+        let options = (limit: maxOutputBytes, raster: includeRaster)
         do {
             let result = try await activePool.withPage { page in
                 try await page.evaluate(
-                    "return await window.__macdownRenderMermaid(source, theme, maxOutputBytes);",
+                    "return await window.__macdownRenderMermaid(source, theme, maxOutputBytes, includeRaster);",
                     arguments: [
                         "source": fence.source,
                         "theme": context.palette.rendererArguments,
-                        "maxOutputBytes": outputLimit,
+                        "maxOutputBytes": options.limit,
+                        "includeRaster": options.raster,
                     ]
                 )
             }
@@ -74,11 +80,11 @@ public actor MermaidWebRenderer: MermaidDiagramRendering {
                 throw MermaidRenderError.rendererUnavailable
             }
             let byteCount = svg.utf8.count
-            guard byteCount <= outputLimit else {
+            guard byteCount <= options.limit else {
                 throw MermaidRenderError.outputTooLarge(byteCount: byteCount)
             }
             let pngData = result.pngBase64.flatMap { Data(base64Encoded: $0) }
-            if let pngData, pngData.count > outputLimit {
+            if let pngData, pngData.count > options.limit {
                 throw MermaidRenderError.outputTooLarge(byteCount: pngData.count)
             }
             return RenderedMermaidDiagram(
