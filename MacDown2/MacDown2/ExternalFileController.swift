@@ -37,6 +37,7 @@ final class ExternalFileController {
     @ObservationIgnored var noticeTask: Task<Void, Never>?
     @ObservationIgnored var bindTask: Task<Void, Never>?
     @ObservationIgnored var bindRetryTask: Task<Void, Never>?
+    @ObservationIgnored var baselineUpdateTask: Task<Void, Never>?
     @ObservationIgnored var bindRetryAttempt = 0
     @ObservationIgnored var recoveryTail: Task<Void, Never>?
     @ObservationIgnored var recoveryRetryAction: RecoveryAction?
@@ -52,6 +53,8 @@ final class ExternalFileController {
     /// Test seam: how a failed watcher bind waits before retrying (production: a real exponential sleep).
     @ObservationIgnored var bindRetrySleep: @MainActor (Duration) async throws
         -> Void = { try await Task.sleep(for: $0) }
+    @ObservationIgnored var beforeBaselineUpdate: (@MainActor () async -> Void)?
+    @ObservationIgnored var beforeInitialMonitorBind: (@MainActor () async -> Void)?
     /// Test seam: runs after every monitor observation context has been fully handled (applied or dropped as stale).
     @ObservationIgnored var afterObservationContextHandled: (@MainActor (DocumentFileObservationContext) -> Void)?
 

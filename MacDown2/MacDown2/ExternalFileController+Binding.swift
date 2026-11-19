@@ -68,10 +68,11 @@ extension ExternalFileController {
         let decoding = document.encoding.decodingPolicy
         let expectedURL = fileURL.standardizedFileURL
         let generation = lifecycleGeneration
-        Task { @MainActor [weak self] in
+        baselineUpdateTask = Task { @MainActor [weak self] in
             guard let self,
                   isBindingCurrent(generation: generation, url: expectedURL)
             else { return }
+            await beforeBaselineUpdate?()
             await monitor.updateBaseline(
                 priorFileObjectID: priorFileObjectID,
                 decoding: decoding,
@@ -110,6 +111,7 @@ extension ExternalFileController {
             // incremented counters. Removing this redundant call restores the
             // 1:1 correspondence `handle(_ context:)` depends on.
             guard isBindingCurrent(generation: generation, url: fileURL) else { return }
+            await beforeInitialMonitorBind?()
             do {
                 try await monitor.bind(
                     to: fileURL,
