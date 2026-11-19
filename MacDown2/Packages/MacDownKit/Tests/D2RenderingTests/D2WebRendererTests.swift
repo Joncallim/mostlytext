@@ -205,6 +205,24 @@ struct D2WebRendererTests {
         await renderer.shutdown()
     }
 
+    @Test func defaultSingleSlotCompletesSixQueuedRenders() async throws {
+        let renderer = D2WebRenderer()
+        try await withThrowingTaskGroup(of: RenderedD2Diagram.self) { group in
+            for index in 0 ..< 6 {
+                group.addTask {
+                    try await renderer.render(Self.fence("a\(index) -> b\(index)"), context: Self.context)
+                }
+            }
+            var count = 0
+            for try await diagram in group {
+                #expect(diagram.svg.contains("<svg"))
+                count += 1
+            }
+            #expect(count == 6)
+        }
+        await renderer.shutdown()
+    }
+
     @Test func rendererReinitializesLazilyAfterShutdown() async throws {
         let renderer = D2WebRenderer(poolSize: 1)
         _ = try await renderer.render(Self.fence("a -> b"), context: Self.context)

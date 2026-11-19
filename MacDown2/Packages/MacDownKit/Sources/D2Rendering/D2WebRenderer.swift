@@ -16,7 +16,7 @@ public actor D2WebRenderer: D2DiagramRendering {
     private let maxOutputBytes: Int
 
     public init(
-        poolSize: Int = 2,
+        poolSize: Int = 1,
         timeout: Duration = .seconds(5),
         maxOutputBytes: Int = D2WebRenderer.defaultMaxOutputBytes
     ) {
