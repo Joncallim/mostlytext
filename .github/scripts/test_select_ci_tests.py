@@ -83,6 +83,7 @@ class SelectionTests(unittest.TestCase):
             "FolderSearchNavigationTests",
             "NavigationOriginTests",
             "QuickOpenModelTests",
+            "QuickOpenStaleOriginTests",
             "WorkspaceIndexFreshnessTests",
             "WorkspaceIndexRefreshBehaviorTests",
             "WorkspaceIndexRootPublicationTests",

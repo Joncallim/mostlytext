@@ -42,6 +42,7 @@ TEXT_SEARCH_APP_SUITES = (
     "FolderSearchNavigationTests",
     "NavigationOriginTests",
     "QuickOpenModelTests",
+    "QuickOpenStaleOriginTests",
     "WorkspaceIndexFreshnessTests",
     "WorkspaceIndexRefreshBehaviorTests",
     "WorkspaceIndexRootPublicationTests",
