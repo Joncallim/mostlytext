@@ -20,8 +20,8 @@ def reject_duplicates(pairs):
 
 
 def validate(root, manifest):
-    expected_keys = {"schemaVersion", "sourceBaseline", "scope", "originalRequiredIDs", "sources", "cases", "replacements", "additionalRequiredBehaviors"}
-    if set(manifest) != expected_keys or type(manifest["schemaVersion"]) is not int or manifest["schemaVersion"] != 1:
+    expected_keys = {"schemaVersion", "sourceBaseline", "scope", "originalRequiredIDs", "sources", "cases", "supplementalCases", "replacements", "additionalRequiredBehaviors"}
+    if set(manifest) != expected_keys or type(manifest["schemaVersion"]) is not int or manifest["schemaVersion"] != 2:
         raise ValueError("Unsupported source inventory schema or result-like extra fields")
     frozen = manifest["originalRequiredIDs"]
     if frozen != sorted(set(frozen)) or hashlib.sha256(("\n".join(frozen) + "\n").encode()).hexdigest() != FROZEN_IDS_SHA256:
@@ -45,6 +45,15 @@ def validate(root, manifest):
     for case in manifest["cases"]:
         if set(case) != {"id", "source", "area"} or not case["area"] or case["id"] in declared:
             raise ValueError("Malformed/duplicate source case or result-like fields")
+        declared[case["id"]] = case["source"]
+    # Later UI cases are source-bound without changing the original 38-case
+    # SDK discovery receipt or its fixed batch plan.
+    supplemental = manifest["supplementalCases"]
+    if type(supplemental) is not list:
+        raise ValueError("Malformed supplemental source cases")
+    for case in supplemental:
+        if set(case) != {"id", "source", "area"} or not case["area"] or case["id"] in declared:
+            raise ValueError("Malformed/duplicate supplemental source case")
         declared[case["id"]] = case["source"]
     if declared != actual_cases:
         raise ValueError("Source case inventory differs; a removal, rename or addition requires reconciliation")
@@ -72,7 +81,8 @@ def validate(root, manifest):
             raise ValueError("Invalid additional required behavior")
     if not re.fullmatch(r"[0-9a-f]{40}", manifest["sourceBaseline"]):
         raise ValueError("Invalid source baseline")
-    return {"declared_source_cases": len(actual_cases), "source_files": len(actual_sources), "retained_original_behavior_ids": len(frozen),
+    return {"declared_source_cases": len(actual_cases), "supplemental_source_cases": len(supplemental),
+            "source_files": len(actual_sources), "retained_original_behavior_ids": len(frozen),
             "traceable_replacements": len(replacements), "additional_required_journeys": len(other),
             "scope": "Source declarations only; runtime discovery, execution, results and final critical acceptance remain separate."}
 

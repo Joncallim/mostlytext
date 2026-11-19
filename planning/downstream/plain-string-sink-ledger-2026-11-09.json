@@ -13,8 +13,8 @@
     "MacDown2/MacDown2/FirstRunWindowController.swift": "b8737772a8974cab6944c2b6c63bd711d35b24d47d99f4179b14085b1ebf4dbf",
     "MacDown2/MacDown2/LegacyImportWindowController.swift": "d39f33bf027f93975ee61088ae362951ff651f32b35f7f99612a10c31763fc9f",
     "MacDown2/MacDown2/NSFilePanelProvider.swift": "4c271f2082313934cb2f9cf51a82407a04e203211dcf2698fa99bdce09184eb8",
-    "MacDown2/MacDown2/SidebarFileTreeSupport.swift": "aa8c789c12a1da8bf395011e0a1b7e475ad2d08ba4ebde25cda5b283ed05aaa1",
-    "MacDown2/MacDown2/SidebarView+Folder.swift": "fab5b6f7e5726577a1eb06ffdcd990ae4e3426e1cb641581b3791e4454113746",
+    "MacDown2/MacDown2/SidebarFileTreeSupport.swift": "1f8fe233810e2e9d1392da25be88f37b1d0e29a9ed13618d8bdcc8ddddf57cfc",
+    "MacDown2/MacDown2/SidebarView+Folder.swift": "8664e2f857b3a640cac1a81c320fc9e7ccd0fd4b0259825842d3017c83e1b85c",
     "MacDown2/MacDown2/TextFilterCommands.swift": "96f125183edbb097e7c97008088590c4c2f20f883a2755e58cb60cba0eb57991",
     "MacDown2/MacDown2/TextFilterCoordinator.swift": "c5de2d59e224e101231a3d02ff0b42790fcabb4b12514c372b2a15a693d6edff",
     "MacDown2/MacDown2/ThemeExportDocument.swift": "6384ff057496e0c505f04c70bbb5ef77d4bdada0ede2ebd4e7ab9afecec553c4",
@@ -22,7 +22,7 @@
     "MacDown2/MacDown2/WindowController+Close.swift": "0af2d94c527de29dc79b6ef109fcd01fbd897322b7edd269dffa40e74dfbc825",
     "MacDown2/MacDown2/WindowController+Encoding.swift": "4f954c30a1bd0607c6c0bc8b3a33601efbaf1a7c5118ad592c6b0ffe26d04884",
     "MacDown2/MacDown2/WindowController.swift": "50bf560907e80beae5bb4c9d9404ba24aaf83c27ed3660067be261f93b0346e0",
-    "MacDown2/MacDown2/WindowCoordinator+FileTree.swift": "43cd00390500553d1634d52e18c32decc95759d89492f929a21cd1f0cc18ea1a",
+    "MacDown2/MacDown2/WindowCoordinator+FileTree.swift": "bdc8aa7e6b15507338dd45cf668126a680d3ddaadcd3320d2206b669143723bf",
     "MacDown2/MacDown2/WindowCoordinator+OpenFailure.swift": "d499c04d606c79f3ae844b211da4cb585bdfabf6de1d8a0f661381a7d0fb3242",
     "MacDown2/MacDown2/WindowCoordinator+OpenWithEncoding.swift": "032de76f1322ca9c960d8376e063ed54ed20e3064d3015f4865af445ee3e1331",
     "MacDown2/MacDown2/WindowCoordinator+ValidatedExport.swift": "e486575e272df847e56eddf87dd0f5213eef608dba8552517505c1a791fc1539",
@@ -96,42 +96,42 @@
     },
     {
       "path": "MacDown2/MacDown2/SidebarFileTreeSupport.swift",
-      "line": 101,
+      "line": 102,
       "kind": "folder_error",
       "literal": "\"Untrusted folder move.\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/SidebarFileTreeSupport.swift",
-      "line": 216,
+      "line": 217,
       "kind": "appkit_property",
       "literal": "\"Move \\\"\\(row.entry.name)\\\" to Trash?\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/SidebarFileTreeSupport.swift",
-      "line": 217,
+      "line": 218,
       "kind": "appkit_property",
       "literal": "\"You can recover it from the Trash in Finder.\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/SidebarFileTreeSupport.swift",
-      "line": 219,
+      "line": 220,
       "kind": "appkit_button",
       "literal": "\"Move to Trash\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/SidebarFileTreeSupport.swift",
-      "line": 220,
+      "line": 221,
       "kind": "appkit_button",
       "literal": "\"Cancel\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/SidebarView+Folder.swift",
-      "line": 142,
+      "line": 149,
       "kind": "folder_error",
       "literal": "\"Untrusted folder move.\"",
       "route": "localized"
@@ -327,91 +327,91 @@
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 82,
+      "line": 93,
       "kind": "appkit_property",
       "literal": "\"Move \\\"\\(selected.lastPathComponent)\\\" to Trash?\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 83,
+      "line": 94,
       "kind": "appkit_property",
       "literal": "\"You can recover it from the Trash in Finder.\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 85,
+      "line": 96,
       "kind": "appkit_button",
       "literal": "\"Move to Trash\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 86,
+      "line": 97,
       "kind": "appkit_button",
       "literal": "\"Cancel\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 232,
+      "line": 243,
       "kind": "appkit_property",
       "literal": "\"File Is Outside the Open Folder\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 233,
+      "line": 244,
       "kind": "appkit_property",
       "literal": "\"Open its parent folder to reveal it in the sidebar?\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 235,
+      "line": 246,
       "kind": "appkit_button",
       "literal": "\"Open Parent Folder\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 236,
+      "line": 247,
       "kind": "appkit_button",
       "literal": "\"Cancel\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 291,
+      "line": 302,
       "kind": "appkit_property",
       "literal": "\"File Moved to Trash\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 292,
+      "line": 303,
       "kind": "appkit_property",
       "literal": "\"This document has unsaved changes.\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 293,
+      "line": 304,
       "kind": "appkit_button",
       "literal": "\"Save As…\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 294,
+      "line": 305,
       "kind": "appkit_button",
       "literal": "\"Close Without Saving\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 295,
+      "line": 306,
       "kind": "appkit_button",
       "literal": "\"Keep Open\"",
       "route": "localized"
