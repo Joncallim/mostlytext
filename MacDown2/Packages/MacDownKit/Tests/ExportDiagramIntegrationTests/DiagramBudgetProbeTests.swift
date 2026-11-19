@@ -265,8 +265,16 @@
 
     private extension DiagramBudgetProbeTests {
         @Test func measureD2ConcurrentRequests() async throws {
+            try await measureD2ConcurrentRequests(poolSize: 2, name: "D2ConcurrentRequests")
+        }
+
+        @Test func measureD2SingleSlotConcurrentRequests() async throws {
+            try await measureD2ConcurrentRequests(poolSize: 1, name: "D2SingleSlotConcurrentRequests")
+        }
+
+        private func measureD2ConcurrentRequests(poolSize: Int, name: String) async throws {
             let directory = try verifyHost()
-            let renderer = D2WebRenderer(poolSize: 2)
+            let renderer = D2WebRenderer(poolSize: poolSize)
             let chain = (0 ..< 16).map { "n\($0) -> n\($0 + 1)" }.joined(separator: "\n")
             let star = (0 ..< 16).map { "root -> m\($0)" }.joined(separator: "\n")
             let started = Date().timeIntervalSince1970
@@ -288,7 +296,7 @@
             try await Task.sleep(for: .seconds(3))
             let observed = Date().timeIntervalSince1970
             let result: [String: Any] = [
-                "engine": "d2", "case": "D2ConcurrentRequests", "configuration": "Release",
+                "engine": "d2", "case": name, "configuration": "Release", "pool_size": poolSize,
                 "source_sha256": [digest(chain), digest(star)],
                 "source_bytes": [chain.utf8.count, star.utf8.count],
                 "svg_sha256": [digest(firstSVG), digest(secondSVG)],
@@ -300,7 +308,7 @@
                 "test_host_peak_rss_bytes": peakRSS(),
             ]
             let data = try JSONSerialization.data(withJSONObject: result, options: [.prettyPrinted, .sortedKeys])
-            try data.write(to: directory.appendingPathComponent("D2ConcurrentRequests.json"), options: .atomic)
+            try data.write(to: directory.appendingPathComponent(name + ".json"), options: .atomic)
         }
 
         func mermaidLimits() async -> [String: [String: Any]] {
