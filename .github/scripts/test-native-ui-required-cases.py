@@ -19,7 +19,8 @@ MANIFEST = json.loads((ROOT / "planning/downstream/native-ui-required-cases.json
 class RequiredSourceCasesTests(unittest.TestCase):
     def test_current_source_snapshot_is_not_a_native_pass(self):
         result = CHECKER.validate(ROOT, MANIFEST)
-        self.assertEqual(result["declared_source_cases"], 38)
+        self.assertEqual(result["declared_source_cases"], 39)
+        self.assertEqual(result["supplemental_source_cases"], 1)
         self.assertIn("Source declarations only", result["scope"])
 
     def test_duplicate_case_refused(self):
@@ -35,6 +36,11 @@ class RequiredSourceCasesTests(unittest.TestCase):
     def test_deleted_case_refused(self):
         manifest = copy.deepcopy(MANIFEST)
         manifest["cases"].pop()
+        with self.assertRaisesRegex(ValueError, "Source case inventory"): CHECKER.validate(ROOT, manifest)
+
+    def test_supplemental_case_cannot_disappear(self):
+        manifest = copy.deepcopy(MANIFEST)
+        manifest["supplementalCases"].clear()
         with self.assertRaisesRegex(ValueError, "Source case inventory"): CHECKER.validate(ROOT, manifest)
 
     def test_changed_source_digest_refused(self):

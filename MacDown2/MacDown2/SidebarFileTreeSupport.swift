@@ -7,6 +7,7 @@ import UniformTypeIdentifiers
 import Workspace
 
 struct FileTreeRowView: View {
+    @Environment(\.windowCoordinator) private var coordinator
     let row: FileTreeRow
     let model: FileTreeModel
     let isRenaming: Bool
@@ -208,9 +209,9 @@ struct FileTreeRowView: View {
     }
 
     private func requestMoveToTrash() {
-        guard let window = NSApp.keyWindow ?? NSApp.mainWindow else { return }
-        let confirmation = FileTreeTrashConfirmation(model: model, source: row.entry.url) { [weak window] in
-            window?.isVisible == true
+        guard let coordinator, let window = coordinator.fileTreeOriginWindow(for: model) else { return }
+        let confirmation = FileTreeTrashConfirmation(model: model, source: row.entry.url) {
+            coordinator.fileTreeOriginWindow(for: model) === window && window.isVisible
         }
         let alert = NSAlert()
         alert.messageText = String(localized: "Move \"\(row.entry.name)\" to Trash?")

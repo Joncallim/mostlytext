@@ -39,6 +39,9 @@ targets:
     - target: MostlyTextQuickLook
       embed: true
       link: false
+      # The extension contains signed worker frameworks. Removing Modules
+      # recursively during this copy invalidates their sealed resources.
+      removeHeaders: false
     - package: MacDownKit
       product: FileCore
     - package: MacDownKit
@@ -253,6 +256,8 @@ targets:
     - target: MostlyTextQuickLookWorker
       embed: true
       link: false
+      # Preserve the worker's signed nested frameworks when embedding it.
+      removeHeaders: false
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.MostlyText.QuickLook

@@ -11,6 +11,25 @@ import Workspace
 
 @MainActor
 struct FolderPanelOriginTests {
+    @Test func fileTreeActionsStayWithTheirOwningWindowAfterAnotherWindowOpens() throws {
+        let fixture = try Fixture()
+        defer { fixture.cleanup() }
+        let first = fixture.makeController()
+        let second = fixture.makeController()
+        fixture.coordinator.controllers = [first, second]
+
+        #expect(fixture.coordinator.fileTreeOriginController(for: first.fileTreeModel) === first)
+        #expect(fixture.coordinator.fileTreeOriginController(for: second.fileTreeModel) === second)
+        #expect(fixture.coordinator.fileTreeOriginWindow(for: first.fileTreeModel) === first.window)
+        #expect(fixture.coordinator.fileTreeOriginWindow(for: second.fileTreeModel) === second.window)
+
+        fixture.coordinator.removeController(first)
+        #expect(fixture.coordinator.fileTreeOriginController(for: first.fileTreeModel) == nil)
+        #expect(fixture.coordinator.fileTreeOriginWindow(for: first.fileTreeModel) == nil)
+        #expect(fixture.coordinator.fileTreeOriginWindow(for: second.fileTreeModel) === second.window)
+        first.close()
+    }
+
     @Test func theMenuChoiceStaysWithItsOriginalDocument() async throws {
         let fixture = try Fixture()
         defer { fixture.cleanup() }
@@ -22,6 +41,25 @@ struct FolderPanelOriginTests {
         try #require(await panel.waitForPresentation())
         let second = fixture.makeController()
         fixture.coordinator.controllers.append(second)
+        await panel.complete(fixture.root)
+        await choosing.value
+        #expect(first.model.folderURL == fixture.root)
+        #expect(second.model.folderURL == nil)
+    }
+
+    @Test func anExplicitSidebarChoiceDoesNotFollowAnotherOpenWindow() async throws {
+        let fixture = try Fixture()
+        defer { fixture.cleanup() }
+        let first = fixture.makeController()
+        let second = fixture.makeController()
+        fixture.coordinator.controllers = [first, second]
+        let panel = HeldFolderPanel()
+        let origin = try #require(fixture.coordinator.fileTreeOriginController(for: first.fileTreeModel))
+        let choosing = fixture.coordinator.chooseFolder(
+            relativeTo: origin, using: panel
+        )
+        defer { choosing.cancel(); Task { await panel.complete(nil) } }
+        try #require(await panel.waitForPresentation())
         await panel.complete(fixture.root)
         await choosing.value
         #expect(first.model.folderURL == fixture.root)
