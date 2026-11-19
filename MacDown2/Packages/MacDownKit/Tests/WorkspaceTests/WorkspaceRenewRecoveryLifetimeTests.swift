@@ -8,6 +8,47 @@ import Testing
 /// (54 of 60 yield offsets); an edit during the epoch mint left the window on the retired lifetime (5 of 60).
 @MainActor
 struct WorkspaceRenewRecoveryLifetimeTests {
+    @Test(arguments: [true, false])
+    func aTabSwitchCannotLeaveAnOpenDocumentOnItsRetiredRecoveryLifetime(viaRenew: Bool) async throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let buffer = RecoveryBuffer(recoveryDirectory: directory.appendingPathComponent("Recovery"))
+        let store = TabStore(
+            sessionStore: WorkspaceSessionStore(fileURL: directory.appendingPathComponent("tabs.json")),
+            recoveryBuffer: buffer
+        )
+        let draft = FileDocument(text: "draft", recoveryBuffer: buffer).updatingText("typed before close")
+        store.newTab(document: draft)
+        let draftTabID = try #require(store.activeTabID)
+        store.newTab(document: FileDocument(text: "other tab", recoveryBuffer: buffer))
+        let otherTabID = try #require(store.activeTabID)
+        store.activate(draftTabID)
+        let model = WorkspaceModel(tabStore: store)
+        let cleanup = await buffer.retireWithOutcome(for: draft.id, epoch: draft.recoveryEpoch)
+        #expect(cleanup.isAbsent)
+
+        let renewal = Task { @MainActor in
+            if viaRenew {
+                await model.renewRecoveryLifetime(retiredFrom: draft)
+            } else {
+                await model.preserveOpenDocumentAfterFailedCloseRetirement(draft)
+            }
+        }
+        // The ownership decision must follow the closing tab even when a
+        // native tab switch occurs before the recovery actor returns.
+        store.activate(otherTabID)
+        await renewal.value
+
+        let retained = try #require(store.tabs.first(where: { $0.id == draftTabID })?.document)
+        #expect(store.activeTabID == otherTabID)
+        #expect(store.activeDocument?.text == "other tab")
+        #expect(retained.text == "typed before close")
+        #expect(retained.recoveryEpoch != draft.recoveryEpoch)
+        #expect(try await buffer.load(for: retained.id, epoch: retained.recoveryEpoch) == retained.text)
+    }
+
     @Test func anEditAtAnyPointDuringTheRenewIsKeptAndTheLifetimeIsRenewed() async throws {
         var reverted: [Int] = []
         var notRenewed: [Int] = []
