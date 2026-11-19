@@ -176,6 +176,24 @@ struct PassiveQuickLookDerivedTests {
         #expect(!html.contains("$later$"))
     }
 
+    @Test func headingNavigationContributionKeepsAuthoredSourceBesideIndependentMath() {
+        let source = "# Heading\n\n[TOC]\n\n$x^2$\n"
+        let html = ExportService.renderPassiveMarkdownFragment(
+            source,
+            contributions: [
+                .init(sourceRange: range(of: "[TOC]", in: source), placement: .block,
+                      html: "<nav>NONFUNCTIONAL_TOC</nav>", sourceGeneration: 7,
+                      requiresHeadingNavigation: true),
+                .init(sourceRange: range(of: "$x^2$", in: source), placement: .inline,
+                      html: "<strong>STATIC_MATH</strong>", sourceGeneration: 7),
+            ],
+            sourceGeneration: 7
+        )
+        #expect(html.contains("[TOC]"))
+        #expect(html.contains("STATIC_MATH"))
+        #expect(!html.contains("NONFUNCTIONAL_TOC"))
+    }
+
     private func range(of needle: String, in source: String) -> Range<Int> {
         let match = (source as NSString).range(of: needle)
         return match.location ..< (match.location + match.length)
