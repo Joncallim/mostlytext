@@ -64,12 +64,12 @@ struct FileStoreMetadataPreservationTests {
         #expect(xattr(fixture.url) == "tag")
     }
 
-    @Test func aNewFileStillGetsOrdinaryDefaultPermissions() throws {
+    @Test func aNewFilePublishesOwnerOnlyPermissions() throws {
         let fixture = try FixtureFile()
 
         _ = try FileStore().write("fresh", to: fixture.url)
 
-        #expect(try mode(of: fixture.url) & 0o600 == 0o600)
+        #expect(try mode(of: fixture.url) == 0o600)
     }
 
     /// A read-only (0444) destination is refused rather than silently replaced (review

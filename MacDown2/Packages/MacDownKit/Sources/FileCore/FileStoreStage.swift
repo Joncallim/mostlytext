@@ -18,7 +18,10 @@ final class FileStoreStage {
         digest = FileStoreRetirement.hex(SHA256.hash(data: bytes))
         directory = open(url.deletingLastPathComponent().path, O_RDONLY | O_DIRECTORY | O_CLOEXEC)
         guard directory >= 0 else { throw Self.posixFailure() }
-        descriptor = openat(directory, name, O_RDWR | O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC, 0o666)
+        // The stage contains authored bytes before publication or metadata
+        // carry. Create it owner-only from the first instant: a permissive
+        // umask must not expose a partly written save to another account.
+        descriptor = openat(directory, name, O_RDWR | O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC, 0o600)
         guard descriptor >= 0 else {
             let failure = Self.posixFailure()
             _ = Darwin.close(directory)

@@ -12,6 +12,17 @@ struct FileStoreStageRetirementTests {
         return root
     }
 
+    @Test func aNewStageIsOwnerOnlyBeforePublication() throws {
+        let root = try fixture()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let url = root.appendingPathComponent("stage")
+        let stage = try FileStoreStage(bytes: bytes, at: url)
+        var info = stat()
+        #expect(lstat(url.path, &info) == 0)
+        #expect(info.st_mode & 0o777 == 0o600)
+        withExtendedLifetime(stage) {}
+    }
+
     @Test func creationDoesNotOverwriteAnExistingObject() throws {
         let root = try fixture()
         defer { try? FileManager.default.removeItem(at: root) }
