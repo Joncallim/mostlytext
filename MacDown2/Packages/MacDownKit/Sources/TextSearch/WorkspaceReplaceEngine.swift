@@ -24,8 +24,9 @@ public struct ReplacementFileResult: Sendable, Equatable {
 /// represent losslessly skips the file rather than corrupting it. Symbolic
 /// links (the file, or any directory between it and the root) are never
 /// written through. Files the caller marks protected (open with unsaved
-/// edits) are never touched. Every non-`.replaced` outcome leaves the file
-/// byte-for-byte unchanged, and one file's failure never stops the rest.
+/// edits) are never touched. A failed write may be reported after publication,
+/// so callers must inspect the file before retrying. One file's failure never
+/// stops the rest.
 public actor WorkspaceReplaceEngine {
     public static let previewLineLimit = 5
     static let previewRegionCharacterLimit = 1000
@@ -149,7 +150,7 @@ public actor WorkspaceReplaceEngine {
         }
     }
 
-    private static func outcome(
+    static func outcome(
         forWriteError error: FileStoreError,
         url: URL,
         updated: String,
@@ -165,7 +166,11 @@ public actor WorkspaceReplaceEngine {
         case let .conditionalPublicationRecoveryRequired(recovery):
             .failed(String(localized:
                 "An external change could not be restored; its bytes were kept at \(recovery.path)", bundle: .module))
-        default: .failed(String(describing: error))
+        default:
+            // A storage failure may happen after publication. Do not claim
+            // the disk is unchanged or expose Swift's internal error text.
+            .failed(String(localized:
+                "The replacement could not be confirmed. Check the file before retrying.", bundle: .module))
         }
     }
 

@@ -24515,7 +24515,7 @@
         "pl": "needs_review"
       },
       "callsites": [
-        "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceReplaceEngine.swift:201"
+        "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceReplaceEngine.swift:205"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"
@@ -24583,6 +24583,41 @@
       },
       "callsites": [
         "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceFileIndex.swift:159"
+      ],
+      "callsite_evidence": "direct_literal_static_match",
+      "review_state": "unknown_no_native_review_record_in_checkout"
+    },
+    {
+      "target": "TextSearch",
+      "catalog": "MacDown2/Packages/MacDownKit/Sources/TextSearch/Resources/Localizable.xcstrings",
+      "bundle": "Bundle.module (SwiftPM processed resource)",
+      "key": "The replacement could not be confirmed. Check the file before retrying.",
+      "source_default_value": "The replacement could not be confirmed. Check the file before retrying.",
+      "translator_comment": "Unexpected file-store failure during Replace in Folder. Publication may already have occurred, so ask the user to inspect the file. Other locales are English review drafts.",
+      "required_locales": [
+        "fr",
+        "ja",
+        "pl"
+      ],
+      "required_locale_evidence": "planning/downstream/issue-17-handoff.md: retain established three plural-family verification locales",
+      "interpolation": {
+        "printf_argument_types": [],
+        "contains_inflection_markup": false
+      },
+      "variants": {
+        "en": {},
+        "fr": {},
+        "ja": {},
+        "pl": {}
+      },
+      "locale_states": {
+        "en": "translated",
+        "fr": "needs_review",
+        "ja": "needs_review",
+        "pl": "needs_review"
+      },
+      "callsites": [
+        "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceReplaceEngine.swift:171"
       ],
       "callsite_evidence": "direct_literal_static_match",
       "review_state": "unknown_no_native_review_record_in_checkout"

@@ -33,11 +33,30 @@ MERMAID_APP_SUITES = (
     "DiagramFailurePresentationTests",
     "RenderedStateEvidenceTests",
 )
-RENDERER_FAMILIES = (
+TEXT_SEARCH_APP_SUITES = (
+    "DocumentEditorFindNavigationTests",
+    "FolderReplaceModelTests",
+    "FolderSearchCancellationTests",
+    "FolderSearchCountCopyTests",
+    "FolderSearchModelTests",
+    "FolderSearchNavigationTests",
+    "NavigationOriginTests",
+    "QuickOpenModelTests",
+    "QuickOpenStaleOriginTests",
+    "WorkspaceIndexFreshnessTests",
+    "WorkspaceIndexRefreshBehaviorTests",
+    "WorkspaceIndexRootPublicationTests",
+)
+APP_SUITE_FAMILIES = (
     ({"D2Rendering", "DiagramsD2"}, D2_APP_SUITES),
     ({"GraphvizRendering", "DiagramsGraphviz"}, GRAPHVIZ_APP_SUITES),
     ({"DiagramRendering"}, MERMAID_APP_SUITES),
+    ({"TextSearch"}, TEXT_SEARCH_APP_SUITES),
 )
+INDEPENDENTLY_CHECKED_EVIDENCE = {
+    "planning/downstream/mostlytext-localization-inventory.json",
+    "planning/downstream/plain-string-sink-ledger-2026-11-09.json",
+}
 
 
 def target_dependencies(target):
@@ -59,6 +78,10 @@ def select(paths, manifest):
         elif path.endswith(".md"):
             # Repository prose does not alter compiled targets; resource Markdown
             # under Sources/ was handled above and still selects its target.
+            continue
+        elif path in INDEPENDENTLY_CHECKED_EVIDENCE:
+            # The compliance workflow validates both generated ledgers and
+            # their tool tests; neither is compiled into the app or package.
             continue
         elif path in {
             ".github/scripts/sample-diagram-budget-memory.py",
@@ -88,14 +111,14 @@ def select(paths, manifest):
     selected = sorted(closure & tests)
     if not selected:
         return ("full", "", "full", ())
-    # App tests have no SwiftPM target graph. Use only reviewed renderer-family
-    # maps; other package source changes retain the full app suite.
+    # App tests have no SwiftPM target graph. Use only reviewed app-suite maps;
+    # other package source changes retain the full app suite.
     changed_sources = changed & sources
     if not changed_sources:
         app_mode, app = "none", ()
-    elif changed_sources <= set().union(*(targets for targets, _ in RENDERER_FAMILIES)):
+    elif changed_sources <= set().union(*(targets for targets, _ in APP_SUITE_FAMILIES)):
         app_mode = "selected"
-        app = tuple(sorted({suite for targets, suites in RENDERER_FAMILIES
+        app = tuple(sorted({suite for targets, suites in APP_SUITE_FAMILIES
                             if targets & changed_sources for suite in suites}))
     else:
         app_mode, app = "full", ()

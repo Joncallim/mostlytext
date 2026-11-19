@@ -6,6 +6,22 @@ import Testing
 @Suite("WorkspaceReplaceEngine safety")
 struct WorkspaceReplaceSafetyTests {
     @Test
+    func unexpectedWriteFailureUsesActionableCopyWithoutRawErrorDetails() {
+        let underlying = NSError(domain: "PrivateStorageDetails", code: 42)
+        let outcome = WorkspaceReplaceEngine.outcome(
+            forWriteError: .writeFailed(underlying: underlying),
+            url: URL(fileURLWithPath: "/tmp/example.md"), updated: "replacement", count: 1
+        )
+        guard case let .failed(message) = outcome else {
+            Issue.record("unexpected write failure must remain failed")
+            return
+        }
+        #expect(message == "The replacement could not be confirmed. Check the file before retrying.")
+        #expect(!message.contains("PrivateStorageDetails"))
+        #expect(!message.contains("writeFailed"))
+    }
+
+    @Test
     func aFileEditedAfterTheSearchIsSkippedAndLeftUntouched() async throws {
         let tree = try WorkspaceSearchEngineTempTree()
         try tree.write("stale.md", text: "foo one")
