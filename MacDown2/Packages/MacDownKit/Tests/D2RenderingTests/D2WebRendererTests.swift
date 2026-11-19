@@ -185,10 +185,10 @@ struct D2WebRendererTests {
     }
 
     @Test func concurrentRendersAllCompleteAcrossABoundedPool() async throws {
-        // Six requests share two slots: the last pair may queue behind two
-        // legal five-second render windows. The separate admission budget
-        // must cover that queue without extending each script's deadline.
-        let renderer = D2WebRenderer(poolSize: 2)
+        // The production default uses one warm page. Six requests must still
+        // complete within the existing admission budget without changing any
+        // individual script's five-second deadline.
+        let renderer = D2WebRenderer()
         try await withThrowingTaskGroup(of: RenderedD2Diagram.self) { group in
             for index in 0 ..< 6 {
                 group.addTask {

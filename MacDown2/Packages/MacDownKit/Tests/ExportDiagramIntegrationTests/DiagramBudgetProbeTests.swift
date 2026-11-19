@@ -274,7 +274,7 @@
 
         private func measureD2ConcurrentRequests(poolSize: Int, name: String) async throws {
             let directory = try verifyHost()
-            let renderer = D2WebRenderer(poolSize: poolSize)
+            let renderer = poolSize == 1 ? D2WebRenderer() : D2WebRenderer(poolSize: poolSize)
             let chain = (0 ..< 16).map { "n\($0) -> n\($0 + 1)" }.joined(separator: "\n")
             let star = (0 ..< 16).map { "root -> m\($0)" }.joined(separator: "\n")
             let started = Date().timeIntervalSince1970
@@ -297,6 +297,7 @@
             let observed = Date().timeIntervalSince1970
             let result: [String: Any] = [
                 "engine": "d2", "case": name, "configuration": "Release", "pool_size": poolSize,
+                "uses_production_default": poolSize == 1,
                 "source_sha256": [digest(chain), digest(star)],
                 "source_bytes": [chain.utf8.count, star.utf8.count],
                 "svg_sha256": [digest(firstSVG), digest(secondSVG)],

@@ -52,9 +52,7 @@ jobs:
         run: |
           set -euo pipefail
           status=0
-          # Investigation branch: compare one and two requests on the same
-          # runner. Restore the full engine matrix before a product PR.
-          for engine in D2ConcurrentRequests D2SingleSlotConcurrentRequests; do
+          for engine in Mermaid D2 D2Chain256 D2Star256 Graphviz D2ConcurrentRequests D2SingleSlotConcurrentRequests; do
             if python3 "$GITHUB_WORKSPACE/.github/scripts/sample-diagram-budget-memory.py" \
               "$RUNNER_TEMP/diagram-budget-probe/memory/$engine" -- \
               swift test -c release --skip-build --force-resolved-versions --no-parallel \

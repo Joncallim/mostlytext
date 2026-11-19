@@ -16,7 +16,9 @@ public actor D2WebRenderer: D2DiagramRendering {
     private let maxOutputBytes: Int
 
     public init(
-        poolSize: Int = 2,
+        // D2's WebContent process is comparatively large. A single warm page
+        // serves ordinary concurrent requests through the existing bounded queue.
+        poolSize: Int = 1,
         timeout: Duration = .seconds(5),
         maxOutputBytes: Int = D2WebRenderer.defaultMaxOutputBytes
     ) {
