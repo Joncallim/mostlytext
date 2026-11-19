@@ -48,6 +48,26 @@ struct QuickLookSourceFallbackTests {
         #expect(!html.contains("example.invalid"))
     }
 
+    @Test func headingDependentContributionCannotReplaceSourceInTheReply() throws {
+        let source = "# Heading\n\n[TOC]\n\n$x^2$\n"
+        let toc = (source as NSString).range(of: "[TOC]")
+        let math = (source as NSString).range(of: "$x^2$")
+        let html = try #require(String(bytes: QuickLookSourceFallback.replyHTML(
+            forSource: source,
+            contributions: [
+                .init(sourceRange: toc.location ..< NSMaxRange(toc), placement: .block,
+                      html: "<nav>NONFUNCTIONAL_TOC</nav>", sourceGeneration: 7,
+                      requiresHeadingNavigation: true),
+                .init(sourceRange: math.location ..< NSMaxRange(math), placement: .inline,
+                      html: "<strong>STATIC_MATH</strong>", sourceGeneration: 7),
+            ],
+            sourceGeneration: 7
+        ), encoding: .utf8))
+        #expect(html.contains("[TOC]"))
+        #expect(html.contains("STATIC_MATH"))
+        #expect(!html.contains("NONFUNCTIONAL_TOC"))
+    }
+
     @Test func generatedRasterURLIsAdmittedWhileAuthoredURLsRemainInert() throws {
         let source = "# Technical\n\n$x$ and ![remote](https://example.invalid/pixel.png)"
         let math = (source as NSString).range(of: "$x$")

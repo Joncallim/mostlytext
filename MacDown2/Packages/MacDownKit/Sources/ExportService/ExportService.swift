@@ -98,6 +98,10 @@ public enum ExportService {
             // placement. An invalid early result must not starve a later
             // valid equation or diagram of the small Quick Look allowance.
             guard item.sourceGeneration == sourceGeneration,
+                  // Passive Quick Look has no prepared heading index or
+                  // published targets. Keep a TOC-like item's authored
+                  // source instead of presenting links it cannot honor.
+                  !item.requiresHeadingNavigation,
                   item.sourceRange.lowerBound >= 0,
                   item.sourceRange.lowerBound < item.sourceRange.upperBound,
                   item.sourceRange.upperBound <= sourceLength,
