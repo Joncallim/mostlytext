@@ -98,6 +98,14 @@ jobs:
           digraph G { ALPHA -> BETA; }
           ```
           MARKDOWN
+          cat > "$RUNNER_TEMP/mostlytext-production-mermaid.md" <<'MARKDOWN'
+          # MOSTLYTEXT_MERMAID_QUICKLOOK
+
+          ```mermaid
+          flowchart LR
+            A[MERMAID_RENDERED_NODE] --> B[DESTINATION]
+          ```
+          MARKDOWN
           cat > "$RUNNER_TEMP/mostlytext-production-two-graphviz.md" <<'MARKDOWN'
           # MOSTLYTEXT_TWO_GRAPHVIZ_QUICKLOOK
 

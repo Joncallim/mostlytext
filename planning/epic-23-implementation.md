@@ -479,6 +479,27 @@ deny-delete protections remain valid. Reproduce initial/later granting ACLs
 and safe deny-only ACLs on disposable owned fixtures before rerunning storage
 and app integration checks. These are not same-UID adversary fences.
 
+## Static Mermaid in the selected-source Quick Look worker — 19 November 2026
+
+The current source worker first writes an immutable authored-source fallback, then
+publishes complete math and Graphviz snapshots. A Markdown document with Mermaid
+fences can use the existing `MermaidWebRenderer` in that same sandboxed child.
+The worker admits one offscreen page, uses a neutral light palette suitable for
+its passive HTML, and composes a fresh complete snapshot after each successful
+fence. It never inserts a partial SVG into the reply. A failed or slow fence
+leaves the authored code and any earlier snapshot available. The existing
+three-second parent deadline, child watchdog, output cap and no-network
+entitlements remain unchanged. No renderer is kept across selected files.
+
+This is a bounded opportunity to derive Mermaid within the existing deadline,
+not a guarantee that a cold WebKit page will always finish. The installed
+Finder fixture must prove actual static SVG and preserve the prior math and
+Graphviz behavior before this path ships. D2 remains authored source: its
+observed cold WebKit timing is too close to the existing child deadline for a
+supported addition without a different bounded runtime or measured policy.
+The broad static-renderer, performance and final-candidate criteria remain
+open after this slice.
+
 ## Diagram output crossing — bounded repair
 
 **Owner summary.** A generated diagram above the existing two-megabyte SVG
