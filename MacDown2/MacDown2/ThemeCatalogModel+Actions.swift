@@ -137,7 +137,12 @@ extension ThemeCatalogModel {
 
     func accept(_ mutation: ThemeCatalogMutation, select: Bool, selectionAtStart: UUID?) {
         publish(mutation.state)
-        if select, let file = mutation.state.catalog.customTheme(id: mutation.affectedID) {
+        // A watcher refresh or an explicit menu choice may win the main-actor
+        // turn while the store reply is in flight. Select only the still-current
+        // bytes from the catalog that actually owns presentation now.
+        if select, selectionAtStart == controller.selectionGeneration,
+           let file = state?.catalog.customTheme(id: mutation.affectedID),
+           file == mutation.state.catalog.customTheme(id: mutation.affectedID) {
             controller.select(file.theme)
             affectedThemeID = file.theme.id
         } else {

@@ -146,10 +146,59 @@ struct ThemeCatalogModelTests {
         let selectionAtStart = model.controller.selectionGeneration
         let paper = BundledThemes.all[2]
         model.controller.select(paper) // The menu stays usable while an import awaits storage.
+        model.controller.select(BundledThemes.light) // A later A→B→A choice still supersedes the import.
 
         model.accept(installed, select: true, selectionAtStart: selectionAtStart)
-        #expect(model.controller.current.id == paper.id)
+        #expect(model.controller.current.id == BundledThemes.light.id)
         #expect(model.affectedThemeID == nil)
+        await model.shutdown()
+    }
+
+    @Test func newerExternalThemeBytesCannotBeSelectedByAnOlderImportReply() async throws {
+        let fixture = try ThemeModelFixture(); defer { fixture.cleanup() }
+        let model = try await fixture.start()
+        model.observationTask?.cancel()
+        await model.observationTask?.value
+        let store = try #require(model.store)
+        await store.stopObserving()
+
+        let file = try ThemeFile(theme: BundledThemes.light)
+        let prepared = try await store.prepareImport(file.encoded())
+        let installed = try await store.commitImport(prepared, choice: .install)
+        var changed = file.theme
+        changed.name = "Externally changed"
+        let replacement = try ThemeFile(theme: changed, stableID: file.stableID)
+        try replacement.encoded().write(to: fixture.managed(file.stableID))
+        let refreshed = try await store.reload()
+        model.publish(refreshed)
+
+        model.accept(installed, select: true, selectionAtStart: model.controller.selectionGeneration)
+        #expect(model.state?.catalog.customTheme(id: file.stableID) == replacement)
+        #expect(model.controller.current == BundledThemes.light)
+        #expect(model.affectedThemeID == nil)
+        await model.shutdown()
+    }
+
+    @Test func unrelatedCatalogRefreshRetainsTheCompletedImportSelection() async throws {
+        let fixture = try ThemeModelFixture(); defer { fixture.cleanup() }
+        let model = try await fixture.start()
+        model.observationTask?.cancel()
+        await model.observationTask?.value
+        let store = try #require(model.store)
+        await store.stopObserving()
+
+        let first = try ThemeFile(theme: BundledThemes.light)
+        let prepared = try await store.prepareImport(first.encoded())
+        let installed = try await store.commitImport(prepared, choice: .install)
+        let second = try ThemeFile(theme: BundledThemes.dark)
+        let secondPlan = try await store.prepareImport(second.encoded())
+        let newer = try await store.commitImport(secondPlan, choice: .install)
+        model.publish(newer.state)
+
+        model.accept(installed, select: true, selectionAtStart: model.controller.selectionGeneration)
+        #expect(model.state?.catalog.revision == newer.state.catalog.revision)
+        #expect(model.controller.current.id == first.theme.id)
+        #expect(model.affectedThemeID == first.theme.id)
         await model.shutdown()
     }
 
