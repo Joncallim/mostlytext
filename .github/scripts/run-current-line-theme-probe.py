@@ -27,15 +27,19 @@ def inventory(root):
     return {name: hashlib.sha256((root / name).read_bytes()).hexdigest() for name in names}
 
 
-def prepare_test_package(root, output, baseline):
+def prepare_test_package(root, output, baseline, themes_only=False):
     """Keep actual library products and exact tests, without compiling unrelated tests."""
     package = output / "probe"
     package.mkdir()
     actual = root / "MacDown2/Packages/MacDownKit"
     copied = {}
-    groups = {"HighlightingTests": ["Highlighting"]} if baseline else {
-        "EditorCoreTests": ["EditorCore", "JSONSupport"],
-        "HighlightingTests": ["Highlighting"], "ThemesTests": ["Themes"]}
+    if baseline:
+        groups = {"HighlightingTests": ["Highlighting"]}
+    elif themes_only:
+        groups = {"ThemesTests": ["Themes"]}
+    else:
+        groups = {"EditorCoreTests": ["EditorCore", "JSONSupport"],
+                  "HighlightingTests": ["Highlighting"], "ThemesTests": ["Themes"]}
     targets = []
     for name, dependencies in groups.items():
         destination = package / "Tests" / name
@@ -105,14 +109,15 @@ def qualify_hundred_caret(root, output, binary, helper, environment):
     print("Three isolated mounted 100-caret Release budget passes verified")
 
 
-def qualify(root, output, configuration, baseline):
+def qualify(root, output, configuration, baseline, themes_only=False):
     output.mkdir()
     sources = inventory(root)
     lock = root / "MacDown2/Packages/MacDownKit/Package.resolved"
     original_lock = lock.read_bytes()
-    package, copied, manifest_digest = prepare_test_package(root, output, baseline)
+    package, copied, manifest_digest = prepare_test_package(root, output, baseline, themes_only)
     receipt = {"copied_test_sha256": copied, "probe_manifest_sha256": manifest_digest, "checkout": run(["git", "rev-parse", "HEAD"], cwd=root),
                "configuration": configuration, "baseline": baseline,
+               "scope": "themes-only" if themes_only else ("bitmap-baseline" if baseline else "editor-and-theme"),
                "source_sha256": sources, "pins": json.loads(original_lock)["pins"]}
     (output / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
     scratch = output / "build"
@@ -133,10 +138,15 @@ def qualify(root, output, configuration, baseline):
     subprocess.run(["codesign", "--verify", "--strict", str(owned)], check=True)
     hashes = {str(path): hashlib.sha256(path.read_bytes()).hexdigest() for path in [helper, owned, binary]}
     environment = dict(os.environ, DYLD_FRAMEWORK_PATH=str(developer / "Platforms/MacOSX.platform/Developer/Library/Frameworks"))
-    pattern = "CurrentLineRoleBitmapTests" if baseline else "EditorCoreTests|HighlightingTests|ThemesTests"
+    if baseline:
+        pattern = "CurrentLineRoleBitmapTests"
+    elif themes_only:
+        pattern = "ThemesTests"
+    else:
+        pattern = "EditorCoreTests|HighlightingTests|ThemesTests"
     selection = [str(owned), "--test-bundle-path", str(binary), "--testing-library", "swift-testing",
                  "--no-parallel", "--filter", pattern]
-    if configuration == "release" and not baseline:
+    if configuration == "release" and not baseline and not themes_only:
         # Mounted-caret and parser clocks have failed inside the 1,200-case
         # selection while fresh-process controls passed. Keep all
         # functional cases here; require both unchanged Release budget suites
@@ -168,6 +178,14 @@ def qualify(root, output, configuration, baseline):
                         "current row needs a shape cue beyond font weight"]:
             if message not in log:
                 raise SystemExit("Baseline failed for a different reason: " + message)
+    elif themes_only:
+        completed = re.search(r"Test run with (\d+) tests in (\d+) suites passed", log)
+        if (result.returncode != 0 or completed is None
+                or int(completed.group(1)) < 149 or int(completed.group(2)) < 17):
+            raise SystemExit("The actual theme package selection must execute and pass")
+        for name in ["ThemeCatalogStoreTests", "ThemeControllerCatalogTests", "ThemeControllerTests"]:
+            if not re.search(r"Suite " + name + r" passed", log):
+                raise SystemExit("Required theme suite did not pass: " + name)
     else:
         completed = re.search(r"Test run with (\d+) tests in (\d+) suites passed", log)
         # Added passing controls grow this selected suite; retain the established
@@ -227,6 +245,26 @@ def qualify(root, output, configuration, baseline):
     print(("Baseline" if baseline else "Candidate") + " exact native result/source/pins verified: " + configuration)
 
 
+def is_theme_only_paths(changed):
+    """Choose the small theme suite only for a reviewed, theme-scoped PR diff."""
+    theme_source = "MacDown2/Packages/MacDownKit/Sources/Themes/"
+    theme_app = "MacDown2/MacDown2/ThemeCatalogModel"
+    theme_test = "MacDown2/MacDown2Tests/ThemeCatalogModelTests.swift"
+    owned_ci = {".github/scripts/run-current-line-theme-probe.py",
+                ".github/workflows/current-line-theme-probe.yml",
+                ".github/scripts/select-ci-tests.py",
+                ".github/scripts/test_select_ci_tests.py"}
+    return (any(path.startswith(theme_source) or path.startswith(theme_app) for path in changed)
+            and all(path.startswith(theme_source) or path.startswith(theme_app)
+                    or path == theme_test or path.startswith("planning/downstream/")
+                    or path in owned_ci for path in changed))
+
+
+def is_theme_only_change(root, base_sha):
+    changed = run(["git", "diff", "--name-only", base_sha + "...HEAD"], cwd=root).splitlines()
+    return is_theme_only_paths(changed)
+
+
 def orientation_mutation(repo, output, configuration):
     """Prove the unchanged orientation threshold still rejects inverted glyphs."""
     path = repo / "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorGutterView.swift"
@@ -276,11 +314,15 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
     parser.add_argument("configuration", choices=["debug", "release"])
+    parser.add_argument("--base-sha", default="")
     args = parser.parse_args()
     if os.environ.get("CI") != "true" or run(["sw_vers", "-productVersion"]).split(".")[0] != "26":
         raise SystemExit("This native execution requires the hosted macOS 26 job")
     repo = Path(__file__).resolve().parents[2]
     args.output.mkdir(parents=True, exist_ok=False)
+    if args.base_sha and is_theme_only_change(repo, args.base_sha):
+        qualify(repo, args.output / "candidate", args.configuration, False, themes_only=True)
+        return
     baseline = args.output / "baseline-checkout"
     subprocess.run(["git", "worktree", "add", "--detach", str(baseline), BASELINE], cwd=repo, check=True)
     common = (repo / COMMON).read_bytes()

@@ -47,15 +47,35 @@ TEXT_SEARCH_APP_SUITES = (
     "WorkspaceIndexRefreshBehaviorTests",
     "WorkspaceIndexRootPublicationTests",
 )
+THEME_APP_SUITES = (
+    "DocumentWindowSettingsTests",
+    "RenderedStateEvidenceTests",
+    "ThemeCatalogModelTests",
+)
 APP_SUITE_FAMILIES = (
     ({"D2Rendering", "DiagramsD2"}, D2_APP_SUITES),
     ({"GraphvizRendering", "DiagramsGraphviz"}, GRAPHVIZ_APP_SUITES),
     ({"DiagramRendering"}, MERMAID_APP_SUITES),
     ({"TextSearch"}, TEXT_SEARCH_APP_SUITES),
+    ({"Themes"}, THEME_APP_SUITES),
 )
 INDEPENDENTLY_CHECKED_EVIDENCE = {
     "planning/downstream/mostlytext-localization-inventory.json",
     "planning/downstream/plain-string-sink-ledger-2026-11-09.json",
+}
+THEME_APP_INPUTS = {
+    "MacDown2/MacDown2/ThemeCatalogModel+Actions.swift",
+    "MacDown2/MacDown2Tests/ThemeCatalogModelTests.swift",
+}
+THEME_WORKFLOW_INPUTS = {
+    ".github/scripts/run-current-line-theme-probe.py",
+    ".github/workflows/current-line-theme-probe.yml",
+}
+THEME_CONTROLLER_SOURCE = "MacDown2/Packages/MacDownKit/Sources/Themes/ThemeController.swift"
+THEME_CONTROLLER_SCOPE = THEME_APP_INPUTS | THEME_WORKFLOW_INPUTS | {
+    THEME_CONTROLLER_SOURCE,
+    ".github/scripts/select-ci-tests.py",
+    ".github/scripts/test_select_ci_tests.py",
 }
 
 
@@ -67,8 +87,16 @@ def select(paths, manifest):
     if not paths:
         return ("full", "", "full", ())
     changed = set()
+    theme_app_input = False
     tests = {target["name"] for target in manifest["targets"] if target["type"] == "test"}
     sources = {target["name"] for target in manifest["targets"] if target["type"] != "test"}
+    if (THEME_CONTROLLER_SOURCE in paths and "Themes" in sources and "ThemesTests" in tests
+            and all(path in THEME_CONTROLLER_SCOPE or
+                    (path.startswith("planning/downstream/") and path.endswith(".md")) for path in paths)):
+        # ThemeController owns selection policy in the app. Its exact scoped
+        # lane runs the complete theme target and three actual app consumers;
+        # any other Themes input retains dependency-graph selection below.
+        return ("selected", "ThemesTests", "selected", tuple(sorted(THEME_APP_SUITES)))
     for path in paths:
         if path.startswith(PACKAGE + "Sources/") or path.startswith(PACKAGE + "Tests/"):
             parts = path[len(PACKAGE):].split("/")
@@ -82,6 +110,12 @@ def select(paths, manifest):
         elif path in INDEPENDENTLY_CHECKED_EVIDENCE:
             # The compliance workflow validates both generated ledgers and
             # their tool tests; neither is compiled into the app or package.
+            continue
+        elif path in THEME_APP_INPUTS:
+            theme_app_input = True
+        elif path in THEME_WORKFLOW_INPUTS:
+            # The dedicated Debug/Release theme workflow runs and verifies
+            # this probe; it does not change the product test graph.
             continue
         elif path in {
             ".github/scripts/sample-diagram-budget-memory.py",
@@ -97,7 +131,7 @@ def select(paths, manifest):
             # workflows and selector changes can affect any suite.
             return ("full", "", "full", ())
     if not changed:
-        return ("none", "", "none", ())
+        return ("full", "", "full", ()) if theme_app_input else ("none", "", "none", ())
     closure = set(changed)
     while True:
         additions = {
@@ -114,6 +148,8 @@ def select(paths, manifest):
     # App tests have no SwiftPM target graph. Use only reviewed app-suite maps;
     # other package source changes retain the full app suite.
     changed_sources = changed & sources
+    if theme_app_input and changed_sources != {"Themes"}:
+        return ("full", "", "full", ())
     if not changed_sources:
         app_mode, app = "none", ()
     elif changed_sources <= set().union(*(targets for targets, _ in APP_SUITE_FAMILIES)):

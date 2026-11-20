@@ -44,8 +44,10 @@ jobs:
           sw_vers
       - name: Verify owned diagnostic lifecycle controls
         run: python3 .github/scripts/test-run-owned-app-tests.py
-      - name: Execute identical baseline bitmap controls and all candidate editor/theme tests
-        run: python3 .github/scripts/run-current-line-theme-probe.py "$RUNNER_TEMP/current-line-theme" ${{ matrix.configuration }}
+      - name: Execute editor/theme controls selected by the actual PR diff
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: python3 .github/scripts/run-current-line-theme-probe.py "$RUNNER_TEMP/current-line-theme" ${{ matrix.configuration }} --base-sha "$PR_BASE_SHA"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

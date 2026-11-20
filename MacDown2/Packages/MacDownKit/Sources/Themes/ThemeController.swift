@@ -12,6 +12,10 @@ public final class ThemeController {
     public private(set) var appearance: ThemeAppearance
     public private(set) var current: Theme
     public private(set) var hasUnreadablePreferences: Bool
+    /// Changes for every explicit theme choice, including choosing the
+    /// already selected theme. Async imports can use this to avoid replacing
+    /// a later choice made while their storage operation was outstanding.
+    @ObservationIgnored public private(set) var selectionGeneration = UUID()
 
     /// AppKit owns the actual application appearance. The app assigns this
     /// callback after construction so Themes stays platform-neutral.
@@ -96,6 +100,7 @@ public final class ThemeController {
 
     public func selectLight(id: String) {
         guard let theme = availableThemes.first(where: { $0.id == id && $0.appearance == .light }) else { return }
+        selectionGeneration = UUID()
         light = theme
         preferredLightID = theme.id
         if appearance == .light {
@@ -106,6 +111,7 @@ public final class ThemeController {
 
     public func selectDark(id: String) {
         guard let theme = availableThemes.first(where: { $0.id == id && $0.appearance == .dark }) else { return }
+        selectionGeneration = UUID()
         dark = theme
         preferredDarkID = theme.id
         if appearance == .dark {
@@ -146,6 +152,7 @@ public final class ThemeController {
     }
 
     public func resetThemeChoices() {
+        selectionGeneration = UUID()
         light = availableThemes.first { $0.id == BundledThemes.light.id } ?? BundledThemes.light
         dark = availableThemes.first { $0.id == BundledThemes.dark.id } ?? BundledThemes.dark
         preferredLightID = light.id

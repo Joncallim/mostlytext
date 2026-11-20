@@ -2,7 +2,7 @@ import Darwin
 import Foundation
 @testable import MacDown2
 import Testing
-import Themes
+@testable import Themes
 
 @MainActor
 struct ThemeCatalogModelTests {
@@ -110,6 +110,118 @@ struct ThemeCatalogModelTests {
         #expect(model.customThemes.isEmpty)
         #expect(model.controller.current == BundledThemes.light)
         #expect(!FileManager.default.fileExists(atPath: fixture.managed(file.stableID).path))
+        await model.shutdown()
+    }
+
+    @Test func olderImportReplyCannotFocusAThemeRemovedByANewerCatalogRevision() async throws {
+        let fixture = try ThemeModelFixture(); defer { fixture.cleanup() }
+        let model = try await fixture.start()
+        model.observationTask?.cancel()
+        await model.observationTask?.value
+        let store = try #require(model.store)
+        await store.stopObserving()
+
+        let file = try ThemeFile(theme: BundledThemes.light)
+        let prepared = try await store.prepareImport(file.encoded())
+        let installed = try await store.commitImport(prepared, choice: .install)
+        let deletion = try await store.prepareDeletion(id: installed.affectedID)
+        let removed = try await store.delete(deletion)
+        model.publish(removed.state)
+
+        model.accept(installed, select: true, selectionAtStart: model.controller.selectionGeneration)
+        #expect(model.state?.catalog.revision == removed.state.catalog.revision)
+        #expect(model.affectedThemeID == nil)
+        #expect(model.controller.current == BundledThemes.light)
+        await model.shutdown()
+    }
+
+    @Test func olderStorageWarningCannotMakeANewerHealthyCatalogUnavailable() async throws {
+        let fixture = try ThemeModelFixture(); defer { fixture.cleanup() }
+        let model = try await fixture.start()
+        model.observationTask?.cancel()
+        await model.observationTask?.value
+        let store = try #require(model.store)
+        await store.stopObserving()
+
+        let file = try ThemeFile(theme: BundledThemes.light)
+        let prepared = try await store.prepareImport(file.encoded())
+        let installed = try await store.commitImport(prepared, choice: .install)
+        let deletion = try await store.prepareDeletion(id: installed.affectedID)
+        let removed = try await store.delete(deletion)
+        model.publish(removed.state)
+        let olderWarning = ThemeCatalogMutation(state: installed.state, affectedID: installed.affectedID,
+                                                changed: true, warnings: [.refreshFailed])
+
+        model.accept(olderWarning, select: false, selectionAtStart: nil)
+        #expect(model.state?.catalog.revision == removed.state.catalog.revision)
+        #expect(model.status == .ready)
+        await model.shutdown()
+    }
+
+    @Test func laterExplicitThemeChoiceWinsOverAnOlderImportReply() async throws {
+        let fixture = try ThemeModelFixture(); defer { fixture.cleanup() }
+        let model = try await fixture.start()
+        let store = try #require(model.store)
+        let file = try ThemeFile(theme: BundledThemes.light)
+        let prepared = try await store.prepareImport(file.encoded())
+        let installed = try await store.commitImport(prepared, choice: .install)
+        model.publish(installed.state)
+        let selectionAtStart = model.controller.selectionGeneration
+        let paper = BundledThemes.all[2]
+        model.controller.select(paper) // The menu stays usable while an import awaits storage.
+        model.controller.select(BundledThemes.light) // A later A→B→A choice still supersedes the import.
+
+        model.accept(installed, select: true, selectionAtStart: selectionAtStart)
+        #expect(model.controller.current.id == BundledThemes.light.id)
+        #expect(model.affectedThemeID == nil)
+        await model.shutdown()
+    }
+
+    @Test func newerExternalThemeBytesCannotBeSelectedByAnOlderImportReply() async throws {
+        let fixture = try ThemeModelFixture(); defer { fixture.cleanup() }
+        let model = try await fixture.start()
+        model.observationTask?.cancel()
+        await model.observationTask?.value
+        let store = try #require(model.store)
+        await store.stopObserving()
+
+        let file = try ThemeFile(theme: BundledThemes.light)
+        let prepared = try await store.prepareImport(file.encoded())
+        let installed = try await store.commitImport(prepared, choice: .install)
+        var changed = file.theme
+        changed.name = "Externally changed"
+        let replacement = try ThemeFile(theme: changed, stableID: installed.affectedID)
+        try replacement.encoded().write(to: fixture.managed(installed.affectedID))
+        let refreshed = try await store.reload()
+        model.publish(refreshed)
+
+        model.accept(installed, select: true, selectionAtStart: model.controller.selectionGeneration)
+        #expect(model.state?.catalog.customTheme(id: installed.affectedID) == replacement)
+        #expect(model.controller.current == BundledThemes.light)
+        #expect(model.affectedThemeID == nil)
+        await model.shutdown()
+    }
+
+    @Test func unrelatedCatalogRefreshRetainsTheCompletedImportSelection() async throws {
+        let fixture = try ThemeModelFixture(); defer { fixture.cleanup() }
+        let model = try await fixture.start()
+        model.observationTask?.cancel()
+        await model.observationTask?.value
+        let store = try #require(model.store)
+        await store.stopObserving()
+
+        let first = try ThemeFile(theme: BundledThemes.light)
+        let prepared = try await store.prepareImport(first.encoded())
+        let installed = try await store.commitImport(prepared, choice: .install)
+        let second = try ThemeFile(theme: BundledThemes.dark)
+        let secondPlan = try await store.prepareImport(second.encoded())
+        let newer = try await store.commitImport(secondPlan, choice: .install)
+        model.publish(newer.state)
+
+        model.accept(installed, select: true, selectionAtStart: model.controller.selectionGeneration)
+        #expect(model.state?.catalog.revision == newer.state.catalog.revision)
+        #expect(model.controller.current.id == installed.affectedID.uuidString.lowercased())
+        #expect(model.affectedThemeID == installed.affectedID.uuidString.lowercased())
         await model.shutdown()
     }
 
