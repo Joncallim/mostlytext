@@ -72,6 +72,15 @@ package-only test seam was added; the final-source hosted app build and model
 test remain to be recorded. Strict release compliance still has ten existing
 #14 source/rights/publication failures.
 
+A further diff review caught the last-file callback boundary: if result
+delivery itself outlasts the folder budget, the already streamed row is
+counted and the run ends as incomplete. The final workspace-engine selection
+passed 30 tests in 5 suites in Debug and optimized Release. Logs are
+`/private/tmp/mostlytext-regex-postcallback-debug.log` (SHA-256
+`f96b8586790c77911280e664a7e64517698bf2175340475cd9fe2927d20436e0`)
+and `/private/tmp/mostlytext-regex-postcallback-release.log`
+(`0fcfd2978769909475f7f0c31db258f987f6dc4531179db26f957b495902c4b4`).
+
 The protected native checkpoint, #17's broader native journeys and a strict
 hard interruption guarantee remain separate acceptance work. Foundation does
 not promise that every regex compilation or long-running engine operation

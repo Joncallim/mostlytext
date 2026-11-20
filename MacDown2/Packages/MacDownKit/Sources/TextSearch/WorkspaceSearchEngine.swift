@@ -240,6 +240,7 @@ public actor WorkspaceSearchEngine {
         case invalidRegex(String)
         case noMatches
         case published(matchCount: Int, wasCapped: Bool)
+        case publishedThenTimedOut(matchCount: Int)
     }
 
     private enum LoopSignal {
@@ -278,18 +279,16 @@ public actor WorkspaceSearchEngine {
             totalMatches += matchCount
             guard wasCapped else { return .keepGoing }
             return .stop(.truncated(filesSearched: filesSearched, filesSkipped: filesSkipped, matchCount: totalMatches))
+        case let .publishedThenTimedOut(matchCount):
+            filesSearched += 1
+            totalMatches += matchCount
+            return .stop(.timedOut(filesSearched: filesSearched, filesSkipped: filesSkipped,
+                                   matchCount: totalMatches))
         }
     }
 
-    /// Searches exactly one file and reports what happened, so `search`'s
-    /// own loop stays a plain dispatch over this outcome rather than a
-    /// 50+-line body (SwiftLint's `function_body_length` limit) mixing
-    /// per-file mechanics with the loop's own counter bookkeeping.
-    /// `remaining` is this file's own share of the total `maxMatches`
-    /// budget still available — used both to bound `TextSearchEngine`'s own
-    /// per-file matching (never materializing more than one match beyond
-    /// what could ever be published) and to decide whether this file's
-    /// result is itself the one that trips truncation.
+    /// Searches one file. `remaining` bounds matching to the unpublished
+    /// share of `maxMatches`, with one extra match to detect truncation.
     private func processFile(
         _ path: IndexedPath,
         context: SearchContext,
@@ -299,11 +298,7 @@ public actor WorkspaceSearchEngine {
         guard context.filter.matches(path) else { return .skippedByFilter }
         guard let snapshot = readSnapshot(root: context.root, path: path) else { return .skippedUnreadable }
 
-        // `remaining + 1`, not `remaining`: lets a file with exactly
-        // `remaining` matches be distinguished from one with MORE than
-        // `remaining` (truncation), while still bounding the matcher's own
-        // per-file work to at most one match beyond what could ever
-        // actually be published.
+        // One extra match distinguishes exact capacity from truncation.
         let found: [SearchMatch]
         do {
             let perFileDeadline = ContinuousClock.now.advanced(by: TextSearchEngine.regexMatchBudget)
@@ -324,17 +319,37 @@ public actor WorkspaceSearchEngine {
             }
         }
         await seams.afterMatchingFile?()
-        if Task.isCancelled {
-            return .cancelled
+        if let interruption = Self.interruption(for: context) {
+            return interruption
         }
         guard !found.isEmpty else { return .noMatches }
 
         let capped = found.count > remaining ? Array(found.prefix(remaining)) : found
         await onMatch(FolderSearchMatch(relativePath: path.relativePath, matches: capped, revision: snapshot.revision))
+        return Self.publicationOutcome(
+            context: context, matchCount: capped.count, wasCapped: capped.count < found.count
+        )
+    }
+
+    private static func interruption(for context: SearchContext) -> FileStepOutcome? {
         if Task.isCancelled {
             return .cancelled
         }
-        return .published(matchCount: capped.count, wasCapped: capped.count < found.count)
+        if context.options.isRegex, ContinuousClock.now >= context.regexDeadline {
+            return .timedOut
+        }
+        return nil
+    }
+
+    private static func publicationOutcome(context: SearchContext, matchCount: Int,
+                                           wasCapped: Bool) -> FileStepOutcome {
+        if let interruption = interruption(for: context) {
+            if case .cancelled = interruption {
+                return .cancelled
+            }
+            return .publishedThenTimedOut(matchCount: matchCount)
+        }
+        return .published(matchCount: matchCount, wasCapped: wasCapped)
     }
 
     private func readSnapshot(root: URL, path: IndexedPath) -> FileSnapshot? {

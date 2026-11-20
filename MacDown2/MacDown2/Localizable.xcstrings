@@ -8628,7 +8628,8 @@
         "ja": {"stringUnit": {"state": "needs_review", "value": "Replace is unavailable while search results are incomplete."}},
         "pl": {"stringUnit": {"state": "needs_review", "value": "Replace is unavailable while search results are incomplete."}}
       }
-    },    "Replace the existing theme?": {
+    },
+    "Replace the existing theme?": {
       "comment": "Theme management. Translation draft; native-speaker review remains required.",
       "localizations": {
         "fr": {
@@ -9419,7 +9420,8 @@
         "ja": {"stringUnit": {"state": "needs_review", "value": "Search took too long — refine your query"}},
         "pl": {"stringUnit": {"state": "needs_review", "value": "Search took too long — refine your query"}}
       }
-    },    "Search took too long — results are incomplete": {
+    },
+    "Search took too long — results are incomplete": {
       "comment": "First-party search timeout copy. Non-English values are English review drafts pending native language review.",
       "localizations": {
         "en": {"stringUnit": {"state": "translated", "value": "Search took too long — results are incomplete"}},
@@ -9427,7 +9429,8 @@
         "ja": {"stringUnit": {"state": "needs_review", "value": "Search took too long — results are incomplete"}},
         "pl": {"stringUnit": {"state": "needs_review", "value": "Search took too long — results are incomplete"}}
       }
-    },    "Searching…": {
+    },
+    "Searching…": {
       "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
       "localizations": {
         "en": {
