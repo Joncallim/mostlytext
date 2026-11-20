@@ -104,6 +104,9 @@ jobs:
       - name: Verify diagram output stays inside the WebKit bridge limit
         if: env.CI_TEST_MODE != 'none'
         run: node MacDown2/scripts/test-diagram-output-bridge.cjs
+      - name: Verify D2 worker readiness before pooled use
+        if: env.CI_TEST_MODE != 'none'
+        run: node MacDown2/scripts/test-d2-worker-readiness.cjs
       - name: Install XcodeGen
         if: env.CI_TEST_MODE != 'none'
         run: |
