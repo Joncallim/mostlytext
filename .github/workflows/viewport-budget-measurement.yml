@@ -82,9 +82,20 @@ jobs:
             2>&1 | tee "$RUNNER_TEMP/viewport-budget/session.log"
           swift test -c release --filter ViewportHighlighterBudgetBenchmarkTests --no-parallel \
             2>&1 | tee "$RUNNER_TEMP/viewport-budget/highlighter.log"
+          # Capture the test host's own main-thread stack while the first
+          # mounted edit waits for its local parse result. This is diagnostic
+          # evidence only; it never changes the product or budget verdict.
+          sample -wait MacDownKitPackageTests 12 1 \
+            -file "$RUNNER_TEMP/viewport-budget/main-thread-sample.txt" \
+            > "$RUNNER_TEMP/viewport-budget/main-thread-sample-command.log" 2>&1 &
+          SAMPLER_PID=$!
           MACDOWN_VIEWPORT_DISPLAY_BENCH=1 \
             swift test -c release --filter ViewportDisplayBudgetBenchmarkTests --no-parallel \
             2>&1 | tee "$RUNNER_TEMP/viewport-budget/display.log"
+          if kill -0 "$SAMPLER_PID" 2>/dev/null; then
+            kill "$SAMPLER_PID" || true
+          fi
+          wait "$SAMPLER_PID" || true
           MACDOWN_VIEWPORT_LIFECYCLE_ORACLE=1 \
             swift test -c release --filter ViewportMountedLifecycleOracleTests --no-parallel \
             2>&1 | tee "$RUNNER_TEMP/viewport-budget/lifecycle.log"
