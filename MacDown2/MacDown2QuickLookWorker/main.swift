@@ -141,18 +141,26 @@ private final class SourceHandler: NSObject, QuickLookWorkerProtocol {
             return
         }
         let retained = selectedFile
-        // The source fixture reaches this service in genuine Finder. Probe
-        // there, before any later diagram selection can fail independently.
-        if Self.containsSourceFixtureMarker(retained.fileDescriptor) {
+        let probeRequested = Self.containsSourceFixtureMarker(retained.fileDescriptor)
+        let probeFinished = DispatchSemaphore(value: 0)
+        // Keep the XPC reply open until the diagnostic page settles; otherwise
+        // the service exits before its asynchronous result can be logged.
+        if probeRequested {
+            Logger(subsystem: "app.mostlytext.quicklook.worker", category: "service-probe")
+                .notice("Minimal service WebKit probe requested")
             Task { @MainActor in
                 let loaded = await MinimalWorkerWebKitProbe().run()
                 Logger(subsystem: "app.mostlytext.quicklook.worker", category: "service-probe")
                     .notice("Minimal service WebKit page loaded: \(loaded)")
+                probeFinished.signal()
             }
         }
         let completion = SourceReply(reply)
         Thread.detachNewThread {
             defer { admission.release() }
+            if probeRequested {
+                _ = probeFinished.wait(timeout: .now() + .milliseconds(2200))
+            }
             let result = SourceProcess.run(selectedDescriptor: retained.fileDescriptor)
             completion.finish(result.data, status: result.status)
         }
