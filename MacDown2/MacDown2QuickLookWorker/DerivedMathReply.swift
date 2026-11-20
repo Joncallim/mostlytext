@@ -160,9 +160,11 @@ final class MinimalWorkerWebKitProbe: NSObject, WKNavigationDelegate {
     private var continuation: CheckedContinuation<Bool, Never>?
 
     func run() async -> Bool {
+        derivedLogger.notice("Minimal worker WebKit construction entered")
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = .nonPersistent()
         let view = WKWebView(frame: .zero, configuration: configuration)
+        derivedLogger.notice("Minimal worker WebKit view constructed")
         webView = view
         view.navigationDelegate = self
         return await withCheckedContinuation { pending in

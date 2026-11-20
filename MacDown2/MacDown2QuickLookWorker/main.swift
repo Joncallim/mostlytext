@@ -148,7 +148,13 @@ private final class SourceHandler: NSObject, QuickLookWorkerProtocol {
         if probeRequested {
             Logger(subsystem: "app.mostlytext.quicklook.worker", category: "service-probe")
                 .notice("Minimal service WebKit probe requested")
+            DispatchQueue.main.async {
+                Logger(subsystem: "app.mostlytext.quicklook.worker", category: "service-probe")
+                    .notice("Minimal service main queue delivered")
+            }
             Task { @MainActor in
+                Logger(subsystem: "app.mostlytext.quicklook.worker", category: "service-probe")
+                    .notice("Minimal service MainActor entered")
                 let loaded = await MinimalWorkerWebKitProbe().run()
                 Logger(subsystem: "app.mostlytext.quicklook.worker", category: "service-probe")
                     .notice("Minimal service WebKit page loaded: \(loaded)")
