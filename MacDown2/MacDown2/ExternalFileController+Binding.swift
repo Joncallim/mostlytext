@@ -50,6 +50,9 @@ extension ExternalFileController {
         let generation = lifecycleGeneration
         bindTask?.cancel()
         bindRetryTask?.cancel()
+        baselineUpdateSequence &+= 1
+        baselineUpdateTask?.cancel()
+        baselineUpdateTask = nil
         guard let document, let fileURL = document.fileURL else {
             boundURL = nil
             bindTask = Task { [monitor] in await monitor.cancel() }
@@ -64,17 +67,27 @@ extension ExternalFileController {
               let fileURL = document.fileURL,
               boundURL == fileURL.standardizedFileURL
         else { return false }
-        let priorFileObjectID = document.lastKnownRevision?.fileObjectID
-        let decoding = document.encoding.decodingPolicy
         let expectedURL = fileURL.standardizedFileURL
+        let expectedID = document.id
         let generation = lifecycleGeneration
-        Task { @MainActor [weak self] in
-            guard let self,
-                  isBindingCurrent(generation: generation, url: expectedURL)
+        baselineUpdateSequence &+= 1
+        let sequence = baselineUpdateSequence
+        baselineUpdateTask?.cancel()
+        baselineUpdateTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            await beforeBaselineUpdate?()
+            // Same-URL edits can schedule several independent tasks. Only the
+            // newest one may set the monitor's decoding policy or file identity.
+            guard !Task.isCancelled,
+                  sequence == baselineUpdateSequence,
+                  isBindingCurrent(generation: generation, url: expectedURL),
+                  let live = model?.activeDocument,
+                  live.id == expectedID,
+                  live.fileURL?.standardizedFileURL == expectedURL
             else { return }
             await monitor.updateBaseline(
-                priorFileObjectID: priorFileObjectID,
-                decoding: decoding,
+                priorFileObjectID: live.lastKnownRevision?.fileObjectID,
+                decoding: live.encoding.decodingPolicy,
                 expectedURL: expectedURL
             )
         }
@@ -88,8 +101,6 @@ extension ExternalFileController {
 
     private func bind(fileURL: URL, document: FileDocument, generation: UInt) {
         boundURL = fileURL
-        let priorID = document.lastKnownRevision?.fileObjectID
-        let decoding = document.encoding.decodingPolicy
         bindTask = Task { [weak self] in
             guard let self else { return }
             // #59 root cause: `monitor.bind(to:...)` below already performs a
@@ -110,11 +121,15 @@ extension ExternalFileController {
             // incremented counters. Removing this redundant call restores the
             // 1:1 correspondence `handle(_ context:)` depends on.
             guard isBindingCurrent(generation: generation, url: fileURL) else { return }
+            await beforeInitialMonitorBind?()
+            guard isBindingCurrent(generation: generation, url: fileURL),
+                  let live = Self.bindRetryDocument(live: model?.activeDocument, captured: document, url: fileURL)
+            else { return }
             do {
                 try await monitor.bind(
                     to: fileURL,
-                    priorFileObjectID: priorID,
-                    decoding: decoding,
+                    priorFileObjectID: live.lastKnownRevision?.fileObjectID,
+                    decoding: live.encoding.decodingPolicy,
                     onObservation: { _ in },
                     onHealthChange: { [weak self] health in
                         Task { @MainActor [weak self] in
@@ -128,6 +143,19 @@ extension ExternalFileController {
                     },
                     bindingToken: generation
                 )
+                guard isBindingCurrent(generation: generation, url: fileURL) else { return }
+                // A same-file policy change may have reached updateBaseline
+                // before this first bind was installed. Reapply the live
+                // baseline after binding so that ordering cannot lose it.
+                if let current = Self.bindRetryDocument(
+                    live: model?.activeDocument, captured: document, url: fileURL
+                ) {
+                    await monitor.updateBaseline(
+                        priorFileObjectID: current.lastKnownRevision?.fileObjectID,
+                        decoding: current.encoding.decodingPolicy,
+                        expectedURL: fileURL
+                    )
+                }
                 guard isBindingCurrent(generation: generation, url: fileURL) else { return }
                 bindRetryAttempt = 0
                 if case .monitorFailed = notice {
