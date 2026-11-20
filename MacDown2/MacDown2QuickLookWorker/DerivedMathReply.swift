@@ -168,6 +168,13 @@ final class MinimalWorkerWebKitProbe: NSObject, WKNavigationDelegate {
         return await withCheckedContinuation { pending in
             continuation = pending
             _ = view.loadHTMLString("<!doctype html><html><body>WORKER_MINIMAL_PROBE</body></html>", baseURL: nil)
+            Task { @MainActor in
+                try? await Task.sleep(for: .seconds(3))
+                if self.continuation != nil {
+                    derivedLogger.error("Minimal worker WebKit page timed out")
+                    self.finish(false)
+                }
+            }
         }
     }
 
