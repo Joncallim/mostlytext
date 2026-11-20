@@ -141,7 +141,9 @@ private final class SourceHandler: NSObject, QuickLookWorkerProtocol {
             return
         }
         let retained = selectedFile
-        if Self.containsMermaidMarker(retained.fileDescriptor) {
+        // Graphviz already reaches this service in genuine Finder; use that
+        // control to distinguish service WebKit startup from Finder dispatch.
+        if Self.containsGraphvizMarker(retained.fileDescriptor) {
             Task { @MainActor in
                 let loaded = await MinimalWorkerWebKitProbe().run()
                 Logger(subsystem: "app.mostlytext.quicklook.worker", category: "service-probe")
@@ -156,12 +158,13 @@ private final class SourceHandler: NSObject, QuickLookWorkerProtocol {
         }
     }
 
-    private static func containsMermaidMarker(_ descriptor: Int32) -> Bool {
+    private static func containsGraphvizMarker(_ descriptor: Int32) -> Bool {
         var prefix = [UInt8](repeating: 0, count: 4096)
         let count = prefix.withUnsafeMutableBytes { bytes in
             Darwin.pread(descriptor, bytes.baseAddress, bytes.count, 0)
         }
-        return count > 0 && String(bytes: prefix.prefix(count), encoding: .utf8)?.contains("mermaid") == true
+        guard count > 0, let source = String(bytes: prefix.prefix(count), encoding: .utf8) else { return false }
+        return source.contains("```dot") || source.contains("```graphviz")
     }
 }
 
