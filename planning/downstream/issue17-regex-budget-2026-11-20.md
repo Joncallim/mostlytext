@@ -80,6 +80,11 @@ passed 30 tests in 5 suites in Debug and optimized Release. Logs are
 `f96b8586790c77911280e664a7e64517698bf2175340475cd9fe2927d20436e0`)
 and `/private/tmp/mostlytext-regex-postcallback-release.log`
 (`0fcfd2978769909475f7f0c31db258f987f6dc4531179db26f957b495902c4b4`).
+The tracked localization inventory includes the three new app messages as
+English source copy with French, Japanese and Polish review drafts. Its
+structural/Transifex-mapping check passes at 15 catalogs/747 entries; the
+inventory and compiled-coverage tool suites pass 23 and 21 tests. Translation
+quality and native layout remain open under #3.
 
 The protected native checkpoint, #17's broader native journeys and a strict
 hard interruption guarantee remain separate acceptance work. Foundation does
