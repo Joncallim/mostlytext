@@ -181,6 +181,25 @@ struct FileTreeSymlinkMutationAuthorityTests {
         }
         #expect(try FileManager.default.contentsOfDirectory(atPath: fixture.outside.path) == ["secret.md"])
     }
+
+    @Test func redirectingAChildDirectoryAtTheMutationBoundaryCannotWriteOutside() async throws {
+        let fixture = try makeFixture()
+        defer { try? FileManager.default.removeItem(at: fixture.base) }
+        let child = fixture.root.appendingPathComponent("child", isDirectory: true)
+        try FileManager.default.createDirectory(at: child, withIntermediateDirectories: false)
+        let model = FileTreeModel(
+            mutator: RedirectingBeforeMutation(alias: child, outside: fixture.outside),
+            watcher: TestWatching(),
+            preferences: FileTreePreferences(store: MemoryPreferenceStore()),
+            supportedExtensions: ["md"]
+        )
+        await model.setRoot(fixture.root)
+
+        await #expect(throws: FileTreeOperationError.self) {
+            try await model.createFile(in: child)
+        }
+        #expect(try FileManager.default.contentsOfDirectory(atPath: fixture.outside.path) == ["secret.md"])
+    }
 }
 
 private struct RedirectingBeforeMutation: FileSystemMutating {
