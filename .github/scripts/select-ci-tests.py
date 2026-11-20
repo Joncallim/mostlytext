@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Select PR or main-push suites from changed package targets; fail open to full."""
+"""Select PR or main-push suites from changed sources; fail open to full."""
 
 import argparse
 import json
@@ -132,8 +132,8 @@ def select(paths, manifest):
             # product target or ordinary package/app test input.
             continue
         else:
-            # Manifests, lockfiles, app sources, resources outside a target,
-            # workflows and selector changes can affect any suite.
+            # Manifests, lockfiles, resources outside reviewed roots and
+            # workflows can affect any suite.
             return ("full", "", "full", ())
     if not changed:
         if theme_app_input:
