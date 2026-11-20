@@ -84,12 +84,10 @@ struct StatusBarEncodingOriginTests {
         let origin = try #require(DocumentActionAuthority(model: controller.model))
         let latin1 = FileEncodingMetadata(encoding: .isoLatin1, bom: .none)
 
-        coordinator.saveDocument(in: controller.model, withEncoding: latin1, origin: origin)
+        let pending = Task { await controller.saveDocument(withEncoding: latin1, origin: origin) }
         try controller.model.tabStore
             .newTab(document: FileDocument(fileURL: replacement, recoveryBuffer: recovery).load())
-        for _ in 0 ..< 20 {
-            await Task.yield()
-        }
+        await pending.value
 
         #expect(controller.model.activeDocument?.fileURL == replacement)
         #expect(controller.model.activeDocument?.encoding == .utf8Default)
@@ -109,12 +107,11 @@ struct StatusBarEncodingOriginTests {
         try "replacement".write(to: replacement, atomically: true, encoding: .utf8)
         let controller = try addWindow(to: coordinator, file: first, recovery: recovery)
 
-        coordinator.saveDocument(in: controller)
+        let origin = try #require(DocumentActionAuthority(model: controller.model))
+        let pending = Task { await controller.saveDocumentFromExplicitOrigin(origin: origin) }
         try controller.model.tabStore.newTab(document: FileDocument(fileURL: replacement, recoveryBuffer: recovery)
             .load().updatingText("replacement draft"))
-        for _ in 0 ..< 20 {
-            await Task.yield()
-        }
+        await pending.value
 
         #expect(controller.model.activeDocument?.text == "replacement draft")
         #expect(controller.model.activeDocument?.state == .dirty)
