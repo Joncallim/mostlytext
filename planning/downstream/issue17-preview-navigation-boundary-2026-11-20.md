@@ -33,6 +33,14 @@ The link action reaches the app document opener or Finder unless rejected.
   `git diff --check` passed. Hosted exact-head app/package checks remain the
   PR qualification step.
 
+The [first hosted heading-probe run](https://github.com/Joncallim/mostlytext/actions/runs/44711400607)
+on PR #315 executed all **69 tests in nine
+suites successfully** in Debug and Release, but its verifier still required
+the old exact count of 68. This is a count-contract failure caused by the new
+`PreviewLinkActionTests` case, not a failed product assertion. The verifier is
+updated to require all 69. The corrected head must pass its own hosted checks
+before merge.
+
 The compressed logs preserve the first failure and final selected result:
 
 | Log | SHA-256 |
