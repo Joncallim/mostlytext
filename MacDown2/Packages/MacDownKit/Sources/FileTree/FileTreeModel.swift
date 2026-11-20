@@ -211,6 +211,7 @@ public final class FileTreeModel {
     @discardableResult
     public func reveal(_ url: URL) async -> Bool {
         let target = url.standardizedFileURL
+        let context = beginOperation()
         guard let root, target.pathComponents.starts(with: root.pathComponents), target != root else { return false }
         var ancestor = target.deletingLastPathComponent()
         var ancestors: [URL] = []
@@ -219,8 +220,12 @@ public final class FileTreeModel {
         }
         for directory in ancestors.reversed() {
             await expand(directory)
+            // A replacement root can publish the same path while an older
+            // directory read is suspended. That old reveal must not select
+            // a node in the new root generation.
+            guard isCurrent(context) else { return false }
         }
-        guard findEntry(target) != nil else { return false }
+        guard isCurrent(context), findEntry(target) != nil else { return false }
         selectedURL = target
         return true
     }
