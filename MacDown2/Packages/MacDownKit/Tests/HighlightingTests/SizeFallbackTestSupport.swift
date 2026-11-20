@@ -188,6 +188,7 @@ final class RecordingStorageDelegate: NSObject, NSTextStorageDelegate {
     private weak var downstream: NSTextStorageDelegate?
     private(set) var willCount = 0
     private(set) var didCount = 0
+    var onDidCharacterEdit: (() -> Void)?
 
     init(downstream: NSTextStorageDelegate) {
         self.downstream = downstream
@@ -213,6 +214,7 @@ final class RecordingStorageDelegate: NSObject, NSTextStorageDelegate {
     ) {
         if editedMask.contains(.editedCharacters) {
             didCount += 1
+            onDidCharacterEdit?()
         }
         downstream?.textStorage?(textStorage, didProcessEditing: editedMask, range: editedRange, changeInLength: delta)
     }

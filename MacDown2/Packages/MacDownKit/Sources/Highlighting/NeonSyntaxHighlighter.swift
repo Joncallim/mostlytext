@@ -222,9 +222,14 @@ public final class NeonSyntaxHighlighter: SyntaxHighlighting {
         }
     }
 
-    private func countedLocationTransformer(builtGeneration: UInt64) -> (Int) -> Point? {
-        let transform = Self.locationTransformer(for: textSystem.textView) { [weak textSystem] in
-            textSystem?.contentRevision ?? 0
+    func countedLocationTransformer(builtGeneration: UInt64) -> (Int) -> Point? {
+        let gate = gate
+        let transform = Self.locationTransformer(for: textSystem.textView) { [weak textSystem, weak gate] in
+            // NSTextStorage has already changed when Neon asks for the new
+            // point, but EditorView publishes its content revision later.
+            // Include the gate's pre-Neon edit count so a length-preserving
+            // newline move cannot reuse the old line-offset table.
+            (textSystem?.contentRevision ?? 0) &+ UInt64(gate?.characterEditCount ?? 0)
         }
         return { [state = layerState] offset in
             guard state.note(builtGeneration: builtGeneration) else { return nil }
@@ -254,8 +259,8 @@ public final class NeonSyntaxHighlighter: SyntaxHighlighting {
     ///
     /// Uses a lazily-built line-offset table with binary search for O(log n)
     /// per-call performance instead of O(n) substring scanning. The table is
-    /// rebuilt when the editor revision or document length changes, using a
-    /// single character-set scan rather than repeated substring searches.
+    /// rebuilt when the supplied edit generation or document length changes,
+    /// using a single character-set scan rather than repeated substring searches.
     static func locationTransformer(
         for textView: NSTextView,
         revision: @escaping () -> UInt64 = { 0 }
@@ -270,8 +275,8 @@ public final class NeonSyntaxHighlighter: SyntaxHighlighting {
             let currentRevision = revision()
 
             // Length-preserving edits can still move every subsequent line.
-            // Prefer the editor's generation, with a length fallback for
-            // standalone NSTextView callers.
+            // The mounted highlighter supplies a storage-aware generation;
+            // standalone NSTextView callers still have the length fallback.
             if lineOffsets == nil || cachedRevision != currentRevision || cachedLength != string.length {
                 cachedRevision = currentRevision
                 cachedLength = string.length
