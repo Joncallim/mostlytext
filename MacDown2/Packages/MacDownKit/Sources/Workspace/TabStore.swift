@@ -160,6 +160,14 @@ public final class TabStore {
         activeTab?.document
     }
 
+    /// The tab and recovery lifetime currently authorised to receive delayed UI work.
+    public var activeDocumentIdentity: ActiveDocumentIdentity? {
+        activeIdentity(in: tabs, selectedBy: activeTabID)
+    }
+
+    /// Changes on every active-identity transition, including a switch away and back.
+    public private(set) var activeIdentityRevision: UInt = 0
+
     public var hasActiveDocument: Bool {
         activeTab != nil
     }
@@ -243,7 +251,9 @@ public final class TabStore {
     private func notifyBeforeActiveIdentityChange(
         from old: ActiveDocumentIdentity?, to new: ActiveDocumentIdentity?
     ) {
-        guard old != new, let activeIdentityWillChange else { return }
+        guard old != new else { return }
+        activeIdentityRevision &+= 1
+        guard let activeIdentityWillChange else { return }
         isNotifyingActiveIdentityChange = true
         defer { isNotifyingActiveIdentityChange = false }
         activeIdentityWillChange(old, new)

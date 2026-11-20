@@ -10,6 +10,7 @@ struct TabStorePreviewIdentityBoundaryTests {
         let store = TabStore(sessionStore: FakeSessionStore())
         let first = FileDocument(fileURL: URL(fileURLWithPath: "/tmp/first.md"), text: "first")
         store.newTab(document: first)
+        let firstRevision = store.activeIdentityRevision
         var oldIDs: [String?] = []
         var newIDs: [String?] = []
         store.setActiveIdentityWillChange { old, new in
@@ -21,12 +22,14 @@ struct TabStorePreviewIdentityBoundaryTests {
 
         store.updateActiveDocument { $0.updatingText("edited") }
         #expect(oldIDs.isEmpty)
+        #expect(store.activeIdentityRevision == firstRevision)
 
         let second = FileDocument(fileURL: URL(fileURLWithPath: "/tmp/second.md"), text: "second")
         store.updateActiveDocument { _ in second }
         #expect(oldIDs == [first.id])
         #expect(newIDs == [second.id])
         #expect(store.activeDocument?.id == second.id)
+        #expect(store.activeIdentityRevision == firstRevision + 1)
     }
 
     @Test func sameDocumentInDifferentTabStillInvalidatesBeforeActivation() throws {
@@ -41,6 +44,7 @@ struct TabStorePreviewIdentityBoundaryTests {
 
         store.newTab(document: document)
         let secondTab = try #require(store.activeTabID)
+        let afterSwitch = store.activeIdentityRevision
         #expect(changes.count == 1)
         #expect(changes[0].0?.tabID == firstTab)
         #expect(changes[0].1?.tabID == secondTab)
@@ -48,6 +52,8 @@ struct TabStorePreviewIdentityBoundaryTests {
 
         changes.removeAll()
         store.activate(firstTab)
+        #expect(store.activeIdentityRevision == afterSwitch + 1)
+        #expect(store.activeDocumentIdentity?.tabID == firstTab)
         #expect(changes.count == 1)
         #expect(changes[0].0?.tabID == secondTab)
         #expect(changes[0].1?.tabID == firstTab)

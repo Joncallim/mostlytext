@@ -209,7 +209,7 @@ public final class FileTreeModel {
     }
 
     @discardableResult
-    public func reveal(_ url: URL) async -> Bool {
+    public func reveal(_ url: URL, shouldSelect: @MainActor () -> Bool = { true }) async -> Bool {
         let target = url.standardizedFileURL
         let context = beginOperation()
         guard let root, target.pathComponents.starts(with: root.pathComponents), target != root else { return false }
@@ -225,7 +225,7 @@ public final class FileTreeModel {
             // a node in the new root generation.
             guard isCurrent(context) else { return false }
         }
-        guard isCurrent(context), findEntry(target) != nil else { return false }
+        guard isCurrent(context), findEntry(target) != nil, shouldSelect() else { return false }
         selectedURL = target
         return true
     }

@@ -148,10 +148,14 @@ public final class WorkspaceModel {
     public private(set) var folderURL: URL? {
         willSet {
             if folderURL != newValue {
+                folderAssociationRevision &+= 1
                 folderAssociationWillChange?()
             }
         }
     }
+
+    /// Changes on every folder choice, including a switch away and back before tree loading starts.
+    public private(set) var folderAssociationRevision: UInt = 0
 
     @ObservationIgnored var folderAssociationWillChange: (@MainActor () -> Void)?
 
