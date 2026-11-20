@@ -52,6 +52,14 @@ missing FileCore import in the changed file. Both were corrected before the
 successful build. Strict changed-file lint, format, Swift syntax, and diff
 checks pass.
 
+The first hosted compliance run on 5f034dbf failed the selected-string sink
+ledger because this file's reviewed localized strings moved to new line
+numbers. Discovery found the same 13 localized literals, with no new plain
+route. The ledger now records their new lines and source hash; its focused
+tests and check pass with 789 first-party inputs, 68 selected sinks, zero
+plain exceptions, and four already deferred reviews. No translation claim
+is inferred from that source check.
+
 The exact focused logs are retained as compressed files in
 evidence/issue17-filetree-stale-actions-2026-11-20/:
 
