@@ -6,5 +6,9 @@
     <true/>
     <key>com.apple.security.files.user-selected.read-only</key>
     <true/>
+    <key>com.apple.security.temporary-exception.mach-lookup.global-name</key>
+    <array>
+        <string>com.apple.webprivacyd</string>
+    </array>
 </dict>
 </plist>

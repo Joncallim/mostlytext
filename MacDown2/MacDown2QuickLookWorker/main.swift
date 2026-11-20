@@ -1,6 +1,5 @@
 import Darwin
 import Foundation
-import OSLog
 import QuickLookBoundary
 import QuickLookSource
 import Security
@@ -141,44 +140,12 @@ private final class SourceHandler: NSObject, QuickLookWorkerProtocol {
             return
         }
         let retained = selectedFile
-        let probeRequested = Self.containsSourceFixtureMarker(retained.fileDescriptor)
-        let probeFinished = DispatchSemaphore(value: 0)
-        // Keep the XPC reply open until the diagnostic page settles; otherwise
-        // the service exits before its asynchronous result can be logged.
-        if probeRequested {
-            Logger(subsystem: "app.mostlytext.quicklook.worker", category: "service-probe")
-                .notice("Minimal service WebKit probe requested")
-            DispatchQueue.main.async {
-                Logger(subsystem: "app.mostlytext.quicklook.worker", category: "service-probe")
-                    .notice("Minimal service main queue delivered")
-            }
-            Task { @MainActor in
-                Logger(subsystem: "app.mostlytext.quicklook.worker", category: "service-probe")
-                    .notice("Minimal service MainActor entered")
-                let loaded = await MinimalWorkerWebKitProbe().run()
-                Logger(subsystem: "app.mostlytext.quicklook.worker", category: "service-probe")
-                    .notice("Minimal service WebKit page loaded: \(loaded)")
-                probeFinished.signal()
-            }
-        }
         let completion = SourceReply(reply)
         Thread.detachNewThread {
             defer { admission.release() }
-            if probeRequested {
-                _ = probeFinished.wait(timeout: .now() + .milliseconds(2200))
-            }
             let result = SourceProcess.run(selectedDescriptor: retained.fileDescriptor)
             completion.finish(result.data, status: result.status)
         }
-    }
-
-    private static func containsSourceFixtureMarker(_ descriptor: Int32) -> Bool {
-        var prefix = [UInt8](repeating: 0, count: 4096)
-        let count = prefix.withUnsafeMutableBytes { bytes in
-            Darwin.pread(descriptor, bytes.baseAddress, bytes.count, 0)
-        }
-        guard count > 0, let source = String(bytes: prefix.prefix(count), encoding: .utf8) else { return false }
-        return source.contains("MOSTLYTEXT_PRODUCTION_QUICKLOOK_20261111")
     }
 }
 
