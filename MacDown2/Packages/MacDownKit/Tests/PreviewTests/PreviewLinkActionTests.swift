@@ -25,6 +25,17 @@ struct PreviewLinkActionTests {
         #expect(action("file:///Users/me/run.sh") == .reveal)
     }
 
+    @Test func fileURLsWithAnAuthorityNeverOpenOrRevealALocalPath() {
+        for link in [
+            "file://other-host/Users/me/notes/other.md",
+            "file://user@/Users/me/notes/other.md",
+            "file://localhost/Users/me/notes/other.md",
+            "file://other-host/Users/me/scripts/setup.command",
+        ] {
+            #expect(action(link) == .ignore, "\(link)")
+        }
+    }
+
     @Test func everyOtherSchemeIsIgnored() {
         for link in [
             "ssh://host",
