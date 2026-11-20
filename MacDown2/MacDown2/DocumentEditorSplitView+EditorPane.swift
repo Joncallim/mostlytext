@@ -98,7 +98,10 @@ extension DocumentEditorSplitView {
             // real, mounted-window integration test).
             if appSettings?.editor.showsStatusBar != false,
                let system = editorStore.existingSystem(for: identity),
-               let encodingOrigin = DocumentActionAuthority(model: model) {
+               let encodingOrigin = DocumentActionAuthority(model: model),
+               encodingOrigin.identity.tabID == tab.id,
+               encodingOrigin.identity.documentID == document.id,
+               encodingOrigin.identity.recoveryEpoch == document.recoveryEpoch {
                 EditorStatusBarMetricsObserver(
                     store: system.documentMetricsStore,
                     revision: system.contentRevision

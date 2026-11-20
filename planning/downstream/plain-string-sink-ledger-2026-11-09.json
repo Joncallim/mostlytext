@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "scope": "selected_plain_string_sinks",
-  "base_source_commit": "a9092143cd37576da8e4a4165b9f483d1eec6a64 (reviewed Reveal Active File source relocation)",
+  "base_source_commit": "2e120d728c9b4bca67f74472bf950aa15ec51bff (main baseline; PR #319 reviewed action-lifetime sources)",
   "limitations": [
     "Selected AppKit property/button/accessibility, name fallback, folder and workspace-replace error sites only; this is not the complete E16 literal census.",
     "Computed string flows, SwiftUI implicit keys, Info.plist/project.yml OS labels, built-in snippet and format names require separate policy and native audit.",
     "Catalog and translation quality, language overrides, accessibility layout, and final string freeze require independent evidence."
   ],
-  "production_swift_inputs_scanned": 790,
+  "production_swift_inputs_scanned": 791,
   "source_sha256": {
     "MacDown2/MacDown2/ExportCoordinator.swift": "1e9ae02533ef1cdc7b01dd640381bffb9b951be05dd33efbb1b907295ab8eb72",
     "MacDown2/MacDown2/FirstRunWindowController.swift": "b8737772a8974cab6944c2b6c63bd711d35b24d47d99f4179b14085b1ebf4dbf",
@@ -20,8 +20,8 @@
     "MacDown2/MacDown2/ThemeExportDocument.swift": "6384ff057496e0c505f04c70bbb5ef77d4bdada0ede2ebd4e7ab9afecec553c4",
     "MacDown2/MacDown2/ValidatedExportPanel.swift": "80a277a6cd22ba769f20ca731686dff72fc198150c49c522f0c115344853526a",
     "MacDown2/MacDown2/WindowController+Close.swift": "0af2d94c527de29dc79b6ef109fcd01fbd897322b7edd269dffa40e74dfbc825",
-    "MacDown2/MacDown2/WindowController+Encoding.swift": "4f954c30a1bd0607c6c0bc8b3a33601efbaf1a7c5118ad592c6b0ffe26d04884",
-    "MacDown2/MacDown2/WindowController.swift": "50bf560907e80beae5bb4c9d9404ba24aaf83c27ed3660067be261f93b0346e0",
+    "MacDown2/MacDown2/WindowController+Encoding.swift": "2ba41bc64d32efed071cfb053f578d94a9d0620cafb34277b985eaf13f609111",
+    "MacDown2/MacDown2/WindowController.swift": "0639326cfa7436117fa3990a4425d06d7862e441e15907400cec995e4bf98947",
     "MacDown2/MacDown2/WindowCoordinator+FileTree.swift": "fbebc246f9239a1c65a5a26674a7016ed0e5c2e22149b48bfa380e34bd036627",
     "MacDown2/MacDown2/WindowCoordinator+OpenFailure.swift": "d499c04d606c79f3ae844b211da4cb585bdfabf6de1d8a0f661381a7d0fb3242",
     "MacDown2/MacDown2/WindowCoordinator+OpenWithEncoding.swift": "032de76f1322ca9c960d8376e063ed54ed20e3064d3015f4865af445ee3e1331",
@@ -265,49 +265,49 @@
     },
     {
       "path": "MacDown2/MacDown2/WindowController+Encoding.swift",
-      "line": 39,
+      "line": 53,
       "kind": "appkit_property",
       "literal": "\"Discard Unsaved Changes?\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowController+Encoding.swift",
-      "line": 40,
+      "line": 54,
       "kind": "appkit_property",
       "literal": "\"\"\"\n            Reopening \\\"\\(name)\\\" as \\(FileEncodingMetadata(encoding: encoding, bom: .none).displayName) \\\n            replaces the text in the editor with the file on disk. Your unsaved changes and undo history \\\n            will be lost.\n            \"\"\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowController+Encoding.swift",
-      "line": 47,
+      "line": 61,
       "kind": "appkit_button",
       "literal": "\"Reopen and Discard Changes\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowController+Encoding.swift",
-      "line": 48,
+      "line": 62,
       "kind": "appkit_button",
       "literal": "\"Cancel\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowController+Encoding.swift",
-      "line": 60,
+      "line": 74,
       "kind": "appkit_property",
       "literal": "\"Can't Reopen with This Encoding\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowController+Encoding.swift",
-      "line": 61,
+      "line": 75,
       "kind": "appkit_property",
       "literal": "\"\"\"\n            The file is not valid \\(FileEncodingMetadata(encoding: encoding, bom: .none).displayName) text. \\\n            Nothing was changed; choose another encoding.\n            \"\"\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowController+Encoding.swift",
-      "line": 67,
+      "line": 81,
       "kind": "appkit_button",
       "literal": "\"OK\"",
       "route": "localized"
