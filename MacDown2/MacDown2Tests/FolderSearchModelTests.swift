@@ -12,6 +12,27 @@ import TextSearch
 @Suite("FolderSearchModel")
 @MainActor
 struct FolderSearchModelTests {
+    @Test func timedOutSearchKeepsStreamedRowsButCannotAuthorizeReplace() async {
+        let streamed = FolderSearchMatch(
+            relativePath: "a.txt", matches: [SearchMatch(range: NSRange(location: 0, length: 1))],
+            revision: .placeholder
+        )
+        let model = FolderSearchModel(performSearch: { _, _, onMatch in
+            await onMatch(streamed)
+            return .timedOut(filesSearched: 1, filesSkipped: 1, matchCount: 1)
+        })
+        model.setRoot(URL(fileURLWithPath: "/tmp/folder-search-timeout"))
+        model.query = "needle"
+        await waitUntil { model.outcome != nil }
+
+        #expect(model.results == [streamed])
+        #expect(model.outcome == .timedOut(filesSearched: 1, filesSkipped: 1, matchCount: 1))
+        #expect(model.unsearchedFileCount == 1)
+        #expect(!model.canReplace)
+        model.requestReplace()
+        #expect(!model.isConfirmingReplace)
+    }
+
     private final class TempTree {
         let root: URL
 

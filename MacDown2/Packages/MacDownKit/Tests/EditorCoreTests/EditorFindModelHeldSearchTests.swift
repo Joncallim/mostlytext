@@ -8,6 +8,19 @@ import TextSearch
 /// hold for replacements built from the result.
 @MainActor
 struct EditorFindModelHeldSearchTests {
+    @Test func aNonCancelledPathologicalQueryShowsTimeoutAndCannotReplace() async {
+        let text = String(repeating: "x", count: 40) + "!"
+        let model = EditorFindModel(query: "(x+x+)+y", options: SearchOptions(isRegex: true))
+
+        let published = await model.updateMatches(in: text)
+
+        #expect(published)
+        #expect(model.error == .timedOut)
+        #expect(model.matches.isEmpty)
+        #expect(!model.isSearching)
+        #expect(model.replaceAllTransaction(with: "replacement") == nil)
+    }
+
     private func startHeldSearch(_ model: EditorFindModel, in text: String) async -> Task<Bool, Never> {
         let search = Task { await model.updateMatches(in: text) }
         while !model.isSearching {

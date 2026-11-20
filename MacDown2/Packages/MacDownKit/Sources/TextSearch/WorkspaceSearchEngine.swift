@@ -33,6 +33,9 @@ public enum FolderSearchOutcome: Sendable, Equatable {
     /// searched before truncation, not the full candidate set.
     case truncated(filesSearched: Int, filesSkipped: Int, matchCount: Int)
     case cancelled
+    /// A regex consumed its per-file or whole-search time budget. Streamed
+    /// rows are incomplete and cannot authorize Replace in Folder.
+    case timedOut(filesSearched: Int, filesSkipped: Int, matchCount: Int)
     /// The query failed to compile as a regex — a property of the QUERY,
     /// not any one file, detected once up front before any file is touched.
     case invalidRegex(String)
@@ -66,6 +69,7 @@ public actor WorkspaceSearchEngine {
     /// single common character across a huge tree) cannot grow the result
     /// set without bound before the caller even sees the first result.
     public static let defaultMaxMatches = 5000
+    static let regexSearchBudget: Duration = .seconds(10)
 
     /// Test-only injectable seams (package-internal, not part of the public
     /// API), bundled into one struct so `init(seams:)` can stay a single,
@@ -73,6 +77,9 @@ public actor WorkspaceSearchEngine {
     /// — three individually-defaulted closures would make `init()` itself
     /// ambiguous between the public and test-only initializers.
     struct TestSeams: Sendable {
+        /// Shortens the whole-search budget for a deterministic expiry test.
+        /// Production always uses the default ten-second value.
+        var regexSearchBudget: Duration = WorkspaceSearchEngine.regexSearchBudget
         /// Pauses after the one index snapshot has been captured, so a test
         /// can change the index before the search consumes that snapshot.
         var afterIndexSnapshot: (@Sendable () async -> Void)?
@@ -131,8 +138,8 @@ public actor WorkspaceSearchEngine {
     /// before it is read (between files), immediately after its matches are
     /// computed (a slow regex against a large file is exactly where a
     /// superseded search must still stop promptly, even though
-    /// `TextSearchEngine`'s own `NSRegularExpression`-backed matching has no
-    /// cooperative-cancellation hook mid-evaluation), and immediately after
+    /// `TextSearchEngine` checks cancellation and expiry at ICU progress
+    /// callbacks), and immediately after
     /// the awaited `onMatch` callback returns — so a cancellation observed
     /// during any of those three windows always yields `.cancelled` with no
     /// further file's result published, never a late `.completed`/
@@ -156,6 +163,7 @@ public actor WorkspaceSearchEngine {
         onMatch: @escaping @Sendable (FolderSearchMatch) async -> Void
     ) async -> FolderSearchOutcome {
         guard !query.isEmpty else { return .completed(filesSearched: 0, filesSkipped: 0, matchCount: 0) }
+        let regexDeadline = ContinuousClock.now.advanced(by: seams.regexSearchBudget)
 
         // Validate the regex exactly once, against an empty buffer, before
         // touching any file: a compile failure is a property of the
@@ -163,11 +171,8 @@ public actor WorkspaceSearchEngine {
         // the text it is later run against), so this both fails fast and
         // avoids silently recompiling the same pattern once per candidate
         // file below.
-        switch Self.validate(query: query, options: options) {
-        case let .invalid(message):
-            return .invalidRegex(message)
-        case .valid:
-            break
+        if let failure = Self.validationFailure(query: query, options: options, deadline: regexDeadline) {
+            return failure
         }
 
         let snapshot = await index.allPathsSnapshot(includeHidden: filter.includeHidden)
@@ -176,7 +181,10 @@ public actor WorkspaceSearchEngine {
             return .indexUnavailable
         }
         let paths = snapshot.paths
-        let context = SearchContext(root: root, query: query, options: options, filter: filter)
+        let context = SearchContext(
+            root: root, query: query, options: options, filter: filter,
+            regexDeadline: regexDeadline
+        )
         var filesSearched = 0
         var filesSkipped = 0
         var totalMatches = 0
@@ -185,6 +193,10 @@ public actor WorkspaceSearchEngine {
             await seams.beforeEachFile?()
             if Task.isCancelled {
                 return .cancelled
+            }
+            if options.isRegex, ContinuousClock.now >= context.regexDeadline {
+                return .timedOut(filesSearched: filesSearched, filesSkipped: filesSkipped,
+                                 matchCount: totalMatches)
             }
 
             let remaining = maxMatches - totalMatches
@@ -217,14 +229,18 @@ public actor WorkspaceSearchEngine {
         let query: String
         let options: SearchOptions
         let filter: FolderSearchFilter
+        let regexDeadline: ContinuousClock.Instant
     }
 
     private enum FileStepOutcome {
         case skippedByFilter
         case skippedUnreadable
         case cancelled
+        case timedOut
+        case invalidRegex(String)
         case noMatches
         case published(matchCount: Int, wasCapped: Bool)
+        case publishedThenTimedOut(matchCount: Int)
     }
 
     private enum LoopSignal {
@@ -250,6 +266,11 @@ public actor WorkspaceSearchEngine {
             return .keepGoing
         case .cancelled:
             return .stop(.cancelled)
+        case .timedOut:
+            return .stop(.timedOut(filesSearched: filesSearched, filesSkipped: filesSkipped,
+                                   matchCount: totalMatches))
+        case let .invalidRegex(message):
+            return .stop(.invalidRegex(message))
         case .noMatches:
             filesSearched += 1
             return .keepGoing
@@ -258,18 +279,16 @@ public actor WorkspaceSearchEngine {
             totalMatches += matchCount
             guard wasCapped else { return .keepGoing }
             return .stop(.truncated(filesSearched: filesSearched, filesSkipped: filesSkipped, matchCount: totalMatches))
+        case let .publishedThenTimedOut(matchCount):
+            filesSearched += 1
+            totalMatches += matchCount
+            return .stop(.timedOut(filesSearched: filesSearched, filesSkipped: filesSkipped,
+                                   matchCount: totalMatches))
         }
     }
 
-    /// Searches exactly one file and reports what happened, so `search`'s
-    /// own loop stays a plain dispatch over this outcome rather than a
-    /// 50+-line body (SwiftLint's `function_body_length` limit) mixing
-    /// per-file mechanics with the loop's own counter bookkeeping.
-    /// `remaining` is this file's own share of the total `maxMatches`
-    /// budget still available — used both to bound `TextSearchEngine`'s own
-    /// per-file matching (never materializing more than one match beyond
-    /// what could ever be published) and to decide whether this file's
-    /// result is itself the one that trips truncation.
+    /// Searches one file. `remaining` bounds matching to the unpublished
+    /// share of `maxMatches`, with one extra match to detect truncation.
     private func processFile(
         _ path: IndexedPath,
         context: SearchContext,
@@ -279,29 +298,58 @@ public actor WorkspaceSearchEngine {
         guard context.filter.matches(path) else { return .skippedByFilter }
         guard let snapshot = readSnapshot(root: context.root, path: path) else { return .skippedUnreadable }
 
-        // `remaining + 1`, not `remaining`: lets a file with exactly
-        // `remaining` matches be distinguished from one with MORE than
-        // `remaining` (truncation), while still bounding the matcher's own
-        // per-file work to at most one match beyond what could ever
-        // actually be published.
-        let found = Self.matches(
-            in: snapshot.text,
-            query: context.query,
-            options: context.options,
-            matchLimit: remaining + 1
-        )
+        // One extra match distinguishes exact capacity from truncation.
+        let found: [SearchMatch]
+        do {
+            let perFileDeadline = ContinuousClock.now.advanced(by: TextSearchEngine.regexMatchBudget)
+            found = try TextSearchEngine.matches(
+                in: snapshot.text, query: context.query, options: context.options,
+                matchLimit: remaining + 1, regexDeadline: min(perFileDeadline, context.regexDeadline)
+            )
+        } catch {
+            if Task.isCancelled {
+                return .cancelled
+            }
+            switch error {
+            case .cancelled:
+                return .cancelled
+            case .timedOut:
+                return .timedOut
+            case let .invalidRegex(message): return .invalidRegex(message)
+            }
+        }
         await seams.afterMatchingFile?()
-        if Task.isCancelled {
-            return .cancelled
+        if let interruption = Self.interruption(for: context) {
+            return interruption
         }
         guard !found.isEmpty else { return .noMatches }
 
         let capped = found.count > remaining ? Array(found.prefix(remaining)) : found
         await onMatch(FolderSearchMatch(relativePath: path.relativePath, matches: capped, revision: snapshot.revision))
+        return Self.publicationOutcome(
+            context: context, matchCount: capped.count, wasCapped: capped.count < found.count
+        )
+    }
+
+    private static func interruption(for context: SearchContext) -> FileStepOutcome? {
         if Task.isCancelled {
             return .cancelled
         }
-        return .published(matchCount: capped.count, wasCapped: capped.count < found.count)
+        if context.options.isRegex, ContinuousClock.now >= context.regexDeadline {
+            return .timedOut
+        }
+        return nil
+    }
+
+    private static func publicationOutcome(context: SearchContext, matchCount: Int,
+                                           wasCapped: Bool) -> FileStepOutcome {
+        if let interruption = interruption(for: context) {
+            if case .cancelled = interruption {
+                return .cancelled
+            }
+            return .publishedThenTimedOut(matchCount: matchCount)
+        }
+        return .published(matchCount: matchCount, wasCapped: wasCapped)
     }
 
     private func readSnapshot(root: URL, path: IndexedPath) -> FileSnapshot? {
@@ -324,41 +372,24 @@ public actor WorkspaceSearchEngine {
         return try? FileStore().readSnapshot(from: url)
     }
 
-    /// Already validated to compile once, up front, in `search` itself; the
-    /// only error `TextSearchEngine.matches` can throw is a regex compile
-    /// failure, which cannot happen twice for an unchanged pattern+options
-    /// pair, so this collapses that (unreachable in practice) case to "no
-    /// matches" rather than threading a second error path through here.
-    private static func matches(
-        in text: String,
-        query: String,
-        options: SearchOptions,
-        matchLimit: Int
-    ) -> [SearchMatch] {
-        (try? TextSearchEngine.matches(in: text, query: query, options: options, matchLimit: matchLimit)) ?? []
-    }
-
-    private enum ValidationResult {
-        case valid
-        case invalid(String)
-    }
-
-    private static func validate(query: String, options: SearchOptions) -> ValidationResult {
+    private static func validationFailure(query: String, options: SearchOptions,
+                                          deadline: ContinuousClock.Instant) -> FolderSearchOutcome? {
         do {
-            _ = try TextSearchEngine.matches(in: "", query: query, options: options)
-            return .valid
+            _ = try TextSearchEngine.matches(
+                in: "", query: query, options: options, matchLimit: nil,
+                regexDeadline: min(ContinuousClock.now.advanced(by: TextSearchEngine.regexMatchBudget), deadline)
+            )
+            return nil
         } catch {
-            // `matches`'s own typed throw (`throws(SearchQueryError)`) means
-            // `error` here is statically `SearchQueryError`, whose only
-            // case is `.invalidRegex` -- an exhaustive switch, not a
-            // dead-code-hiding generic catch-all.
+            // `matches` throws only SearchQueryError; preserve its distinct
+            // invalid, cancellation, and expiry outcomes during admission.
             switch error {
             case let .invalidRegex(message):
-                return .invalid(message)
+                return .invalidRegex(message)
             case .cancelled:
-                // Validation ran inside an already-cancelled search; the caller
-                // checks cancellation itself right after.
-                return .valid
+                return .cancelled
+            case .timedOut:
+                return .timedOut(filesSearched: 0, filesSkipped: 0, matchCount: 0)
             }
         }
     }

@@ -155,6 +155,12 @@ struct FolderSearchView: View {
                 .foregroundStyle(.secondary)
                 .accessibilityIdentifier("folderReplaceUnavailable")
         }
+        if case .timedOut = model.outcome, !model.isSearching {
+            Text("Replace is unavailable while search results are incomplete.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .accessibilityIdentifier("folderReplaceUnavailable")
+        }
     }
 
     @ViewBuilder
@@ -212,6 +218,11 @@ struct FolderSearchView: View {
                 .accessibilityIdentifier("folderSearchStatus")
         case (false, false, .truncated):
             Text("Results truncated — refine your search")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .accessibilityIdentifier("folderSearchStatus")
+        case (false, false, .timedOut):
+            Text("Search took too long — results are incomplete")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .accessibilityIdentifier("folderSearchStatus")
