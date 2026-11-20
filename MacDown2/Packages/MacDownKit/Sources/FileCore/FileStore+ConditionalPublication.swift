@@ -7,27 +7,34 @@ extension FileStore {
     /// post-swap exit explicitly owns either our temporary bytes, a confirmed
     /// rollback, or a preserved external recovery file.
     func conditionallyPublish(
-        temporaryURL: URL,
         destinationURL: URL,
         expectedRevision: FileRevision,
         hooks: ConditionalPublicationTestHooks?,
-        stage: FileStoreStage
+        stage: FileStoreStage,
+        privateDirectory: FileStorePrivateStageDirectory
     ) throws(FileStoreError) {
+        let temporaryURL = privateDirectory.url.appendingPathComponent("stage")
         var ownership: ConditionalPublicationOwnership = .oursAtTemporary
-        let publishedRevision = try readRevision(from: temporaryURL)
+        do {
+            try hooks?.beforeExchange?(temporaryURL, destinationURL)
+        } catch {
+            throw mapWriteError(error)
+        }
         let swapError = hooks?.simulateSwapUnsupported == true || !volumeMayExchange(at: destinationURL)
             ? ENOTSUP
-            : hooks?.swapOverride?(temporaryURL, destinationURL) ?? attemptRenameSwap(temporaryURL, destinationURL)
+            : hooks?.swapOverride?(temporaryURL, destinationURL)
+            ?? attemptRenameSwap(privateDirectory, destinationURL)
         if swapError == ENOTSUP {
             // exFAT/FAT32 volumes and many network shares cannot exchange two files.
-            try publishWithoutExchange(temporaryURL, destinationURL, expectedRevision: expectedRevision)
+            try publishWithoutExchange(privateDirectory, destinationURL, expectedRevision: expectedRevision)
             return
         }
         guard swapError == 0 else { throw mapWriteError(POSIXError(POSIXErrorCode(rawValue: swapError) ?? .EIO)) }
         // Backstop for a driver that accepts RENAME_SWAP, returns 0 and performs a plain rename (observed on FAT32):
         // nothing was displaced to the temporary path, so there is no external version to inspect or roll back to.
         // Reporting "preserved a competing version at <temp>" then names a file that does not exist.
-        guard FileManager.default.fileExists(atPath: temporaryURL.path) else { return }
+        var displaced = stat()
+        guard fstatat(privateDirectory.directory, "stage", &displaced, AT_SYMLINK_NOFOLLOW) == 0 else { return }
         ownership = .displacedExternalAtTemporary
 
         let retirement: FileStoreRetirement
@@ -35,7 +42,8 @@ extension FileStore {
             try hooks?.beforeDisplacedRead?(temporaryURL)
             retirement = try stage.approvedDisplacedRetirement(expectedRevision)
         } catch {
-            try rollbackOrPreserve(temporaryURL, destinationURL, publishedRevision: publishedRevision, hooks: hooks)
+            try rollbackOrPreserve(temporaryURL, destinationURL, stage: stage,
+                                   privateDirectory: privateDirectory, hooks: hooks)
             ownership = .rollbackConfirmed
             do { try stage.refreshAfterRollback() } catch { throw mapWriteError(error) }
             throw mapWriteError(error)
@@ -63,19 +71,21 @@ extension FileStore {
     /// 0600 file. ACL/xattr copying is skipped only when the volume does not
     /// support them (`ENOTSUP`/`ENOATTR`); any other failure is surfaced
     /// rather than silently dropping metadata.
-    func carryMetadata(from destination: URL, to staged: URL) throws(FileStoreError) {
+    func carryMetadata(from destination: URL, to stage: FileStoreStage,
+                       privateDirectory: FileStorePrivateStageDirectory) throws(FileStoreError) {
+        let source = openat(privateDirectory.parent, destination.lastPathComponent,
+                            O_RDONLY | O_NONBLOCK | O_CLOEXEC | O_NOFOLLOW)
+        guard source >= 0 else { throw currentErrnoWriteError() }
+        defer { _ = Darwin.close(source) }
         var info = stat()
-        guard stat(destination.path, &info) == 0 else { throw currentErrnoWriteError() }
-        guard chmod(staged.path, info.st_mode & 0o7777) == 0 else { throw currentErrnoWriteError() }
+        guard fstat(source, &info) == 0 else { throw currentErrnoWriteError() }
+        guard info.st_mode & mode_t(S_IFMT) == mode_t(S_IFREG) else { throw .notRegularFile }
+        guard fchmod(stage.descriptor, info.st_mode & 0o7777) == 0 else { throw currentErrnoWriteError() }
         let cosmeticFlags = info.st_flags & UInt32(UF_HIDDEN | UF_NODUMP)
-        if cosmeticFlags != 0, chflags(staged.path, cosmeticFlags) != 0, errno != ENOTSUP {
+        if cosmeticFlags != 0, fchflags(stage.descriptor, cosmeticFlags) != 0, errno != ENOTSUP {
             throw currentErrnoWriteError()
         }
-        let copied = destination.path.withCString { source in
-            staged.path.withCString { target in
-                copyfile(source, target, nil, copyfile_flags_t(COPYFILE_XATTR | COPYFILE_ACL))
-            }
-        }
+        let copied = fcopyfile(source, stage.descriptor, nil, copyfile_flags_t(COPYFILE_XATTR | COPYFILE_ACL))
         if copied != 0, errno != ENOTSUP, errno != ENOATTR {
             throw currentErrnoWriteError()
         }
@@ -90,16 +100,19 @@ extension FileStore {
     private func rollbackOrPreserve(
         _ temporaryURL: URL,
         _ destinationURL: URL,
-        publishedRevision: FileRevision,
+        stage: FileStoreStage,
+        privateDirectory: FileStorePrivateStageDirectory,
         hooks: ConditionalPublicationTestHooks?
     ) throws(FileStoreError) {
         guard rollbackDisplacedFile(
             temporaryURL,
             destinationURL,
-            publishedRevision: publishedRevision,
+            stage: stage,
+            privateDirectory: privateDirectory,
             hooks: hooks
         ) else {
-            let recoveryURL = preserveDisplacedFile(at: temporaryURL, for: destinationURL)
+            let recoveryURL = preserveDisplacedFile(at: temporaryURL, for: destinationURL,
+                                                    privateDirectory: privateDirectory)
             throw .conditionalPublicationRecoveryRequired(recoveryURL)
         }
     }
@@ -107,23 +120,23 @@ extension FileStore {
     private func rollbackDisplacedFile(
         _ temporaryURL: URL,
         _ destinationURL: URL,
-        publishedRevision: FileRevision,
+        stage: FileStoreStage,
+        privateDirectory: FileStorePrivateStageDirectory,
         hooks: ConditionalPublicationTestHooks?
     ) -> Bool {
         // A second external writer may have replaced our newly published file.
         // It owns the destination now; preserve the earlier displaced writer
         // instead of swapping either external version away.
         do {
-            let destination = try readRevision(from: destinationURL)
-            guard matchesPublishedObject(destination, publishedRevision) else { return false }
+            guard try stage.matchesOwnedFile(in: privateDirectory.parent,
+                                             name: destinationURL.lastPathComponent) else { return false }
             try hooks?.beforeRollbackSwap?(temporaryURL, destinationURL)
-            try renameSwap(temporaryURL, destinationURL)
+            try renameSwap(privateDirectory, destinationURL)
             // The destination can change after the pre-swap validation. In
             // that case the exchange leaves the newer external object at the
             // temporary path. It must be preserved, never mistaken for our
             // bytes and deleted by the write cleanup path.
-            let displacedAfterRollback = try readRevision(from: temporaryURL)
-            guard matchesPublishedObject(displacedAfterRollback, publishedRevision) else {
+            guard try stage.matchesOwnedFile(in: privateDirectory.directory, name: "stage") else {
                 return false
             }
             return true
@@ -132,18 +145,19 @@ extension FileStore {
         }
     }
 
-    private func preserveDisplacedFile(at temporaryURL: URL, for destinationURL: URL) -> URL {
+    private func preserveDisplacedFile(at temporaryURL: URL, for destinationURL: URL,
+                                       privateDirectory: FileStorePrivateStageDirectory) -> URL {
         let recoveryURL = destinationURL.deletingLastPathComponent().appendingPathComponent(
             Self.companionName(for: destinationURL, infix: "external-recovery")
         )
-        do {
-            try FileManager.default.moveItem(at: temporaryURL, to: recoveryURL)
+        if renameatx_np(privateDirectory.directory, "stage", privateDirectory.parent,
+                        recoveryURL.lastPathComponent, UInt32(RENAME_EXCL)) == 0 {
             return recoveryURL
-        } catch {
-            // `temporaryURL` still contains the displaced bytes. Its path is
-            // returned in the dedicated error and must not be cleaned up.
-            return temporaryURL
         }
+        // The displaced bytes remain in the open private directory. The
+        // original URL is still the best recovery location when its name has
+        // not been moved by another writer.
+        return temporaryURL
     }
 
     private func matchesExpectedBaseline(_ actual: FileRevision, _ expected: FileRevision) -> Bool {
@@ -158,14 +172,6 @@ extension FileStore {
             && actual.sha256 == expected.sha256
     }
 
-    private func matchesPublishedObject(_ actual: FileRevision, _ published: FileRevision) -> Bool {
-        guard let actualID = actual.fileObjectID,
-              let publishedID = published.fileObjectID,
-              actualID == publishedID
-        else { return false }
-        return actual.fileSize == published.fileSize && actual.sha256 == published.sha256
-    }
-
     /// Whether the volume holding `destination` advertises exchange support. FAT32 on current macOS reports
     /// `volumeSupportsSwapRenaming == false` yet still accepts the flag and does a plain rename that DELETES the
     /// previous file, so every save looked like a failed swap and a competing write was silently destroyed. Unknown
@@ -177,17 +183,16 @@ extension FileStore {
     }
 
     /// 0 on success, otherwise the errno of the failed exchange.
-    private func attemptRenameSwap(_ lhs: URL, _ rhs: URL) -> Int32 {
-        let result = lhs.path.withCString { lhsPath in
-            rhs.path.withCString { rhsPath in
-                renameatx_np(AT_FDCWD, lhsPath, AT_FDCWD, rhsPath, UInt32(RENAME_SWAP))
-            }
-        }
+    private func attemptRenameSwap(_ privateDirectory: FileStorePrivateStageDirectory,
+                                   _ destination: URL) -> Int32 {
+        let result = renameatx_np(privateDirectory.directory, "stage", privateDirectory.parent,
+                                  destination.lastPathComponent, UInt32(RENAME_SWAP))
         return result == 0 ? 0 : errno
     }
 
-    private func renameSwap(_ lhs: URL, _ rhs: URL) throws(FileStoreError) {
-        let error = attemptRenameSwap(lhs, rhs)
+    private func renameSwap(_ privateDirectory: FileStorePrivateStageDirectory,
+                            _ destination: URL) throws(FileStoreError) {
+        let error = attemptRenameSwap(privateDirectory, destination)
         guard error == 0 else {
             throw mapWriteError(POSIXError(POSIXErrorCode(rawValue: error) ?? .EIO))
         }
@@ -200,15 +205,14 @@ extension FileStore {
     /// detected — the best a volume without exchange can offer — but a stale
     /// baseline is still refused and the replace itself stays atomic.
     private func publishWithoutExchange(
-        _ temporaryURL: URL,
+        _ privateDirectory: FileStorePrivateStageDirectory,
         _ destinationURL: URL,
         expectedRevision: FileRevision
     ) throws(FileStoreError) {
         let current = try readRevision(from: destinationURL)
         guard matchesExpectedBaseline(current, expectedRevision) else { throw .fileChangedDuringRead }
-        let result = temporaryURL.path.withCString { source in
-            destinationURL.path.withCString { target in rename(source, target) }
-        }
+        let result = renameat(privateDirectory.directory, "stage", privateDirectory.parent,
+                              destinationURL.lastPathComponent)
         guard result == 0 else {
             throw mapWriteError(POSIXError(POSIXErrorCode(rawValue: errno) ?? .EIO))
         }
@@ -216,6 +220,9 @@ extension FileStore {
 }
 
 struct ConditionalPublicationTestHooks: Sendable {
+    /// Controlled mutation after the final named-directory check and before
+    /// the exchange. Production callers never install this hook.
+    let beforeExchange: (@Sendable (URL, URL) throws -> Void)?
     let beforeDisplacedRead: (@Sendable (URL) throws -> Void)?
     let afterDisplacedVerification: (@Sendable (URL) throws -> Void)?
     let beforeRollbackSwap: (@Sendable (URL, URL) throws -> Void)?
@@ -225,17 +232,32 @@ struct ConditionalPublicationTestHooks: Sendable {
     let swapOverride: (@Sendable (URL, URL) -> Int32)?
 
     init(
+        beforeExchange: (@Sendable (URL, URL) throws -> Void)?,
         beforeDisplacedRead: (@Sendable (URL) throws -> Void)? = nil,
         afterDisplacedVerification: (@Sendable (URL) throws -> Void)? = nil,
         beforeRollbackSwap: (@Sendable (URL, URL) throws -> Void)? = nil,
         simulateSwapUnsupported: Bool = false,
         swapOverride: (@Sendable (URL, URL) -> Int32)? = nil
     ) {
+        self.beforeExchange = beforeExchange
         self.beforeDisplacedRead = beforeDisplacedRead
         self.afterDisplacedVerification = afterDisplacedVerification
         self.beforeRollbackSwap = beforeRollbackSwap
         self.simulateSwapUnsupported = simulateSwapUnsupported
         self.swapOverride = swapOverride
+    }
+
+    init(
+        beforeDisplacedRead: (@Sendable (URL) throws -> Void)? = nil,
+        afterDisplacedVerification: (@Sendable (URL) throws -> Void)? = nil,
+        beforeRollbackSwap: (@Sendable (URL, URL) throws -> Void)? = nil,
+        simulateSwapUnsupported: Bool = false,
+        swapOverride: (@Sendable (URL, URL) -> Int32)? = nil
+    ) {
+        self.init(beforeExchange: nil, beforeDisplacedRead: beforeDisplacedRead,
+                  afterDisplacedVerification: afterDisplacedVerification,
+                  beforeRollbackSwap: beforeRollbackSwap,
+                  simulateSwapUnsupported: simulateSwapUnsupported, swapOverride: swapOverride)
     }
 }
 

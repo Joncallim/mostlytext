@@ -6,17 +6,21 @@ import Foundation
 /// deletion: retirement requires this object's identity and known encoded bytes.
 final class FileStoreStage {
     private let directory: Int32
-    private let descriptor: Int32
+    let descriptor: Int32
     private let name: String
     private let url: URL
     private let digest: String
     private var receipt: stat
 
-    init(bytes: Data, at url: URL) throws {
+    init(bytes: Data, at url: URL, directoryDescriptor: Int32? = nil) throws {
         self.url = url
         name = url.lastPathComponent
         digest = FileStoreRetirement.hex(SHA256.hash(data: bytes))
-        directory = open(url.deletingLastPathComponent().path, O_RDONLY | O_DIRECTORY | O_CLOEXEC)
+        directory = if let directoryDescriptor {
+            fcntl(directoryDescriptor, F_DUPFD_CLOEXEC, 0)
+        } else {
+            open(url.deletingLastPathComponent().path, O_RDONLY | O_DIRECTORY | O_CLOEXEC)
+        }
         guard directory >= 0 else { throw Self.posixFailure() }
         // The stage contains authored bytes before publication or metadata
         // carry. Create it owner-only from the first instant: a permissive
@@ -89,6 +93,17 @@ final class FileStoreStage {
         guard try matchesBytesAndName(receipt, name: name) else {
             throw FileStoreError.conditionalPublicationRecoveryRequired(url)
         }
+    }
+
+    func matchesOwnedFile(in directory: Int32, name: String) throws -> Bool {
+        var current = stat()
+        guard fstat(descriptor, &current) == 0,
+              FileStoreRetirement.sameObject(current, receipt), current.st_size == receipt.st_size
+        else { return false }
+        return try FileStoreRetirement.matchesBytesAndName(
+            current, name: name, directory: directory, digest: digest,
+            includingChangeTime: false
+        )
     }
 
     func retire(afterQuarantine: ((URL) throws -> Void)? = nil) throws {

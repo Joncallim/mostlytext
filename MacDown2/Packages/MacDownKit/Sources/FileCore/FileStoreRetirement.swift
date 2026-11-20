@@ -22,13 +22,18 @@ struct FileStoreRetirement {
     init(approved revision: FileRevision, directory: Int32, name: String, url: URL) throws {
         var info = stat()
         guard fstatat(directory, name, &info, AT_SYMLINK_NOFOLLOW) == 0 else { throw Self.posixFailure() }
-        // FileRevision uses Foundation's Date conversion. Reconstructing a
-        // floating-point Date from stat nanoseconds can round differently.
-        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
-        let modified = attributes[.modificationDate] as? Date
+        // The directory can have been renamed since the stage was opened.
+        // Inspect the object through its retained descriptor, not `url`.
+        // Foundation's Date conversion can round a nanosecond timestamp, so
+        // allow only that rounding difference; identity and digest stay exact.
+        let modified = TimeInterval(info.st_mtimespec.tv_sec)
+            + TimeInterval(info.st_mtimespec.tv_nsec) / 1_000_000_000
+        let dateMatches = revision.modificationDate.map {
+            abs($0.timeIntervalSince1970 - modified) <= 0.000_001
+        } ?? true
         let identity = PhysicalFileIdentity.FileObjectID(volume: String(info.st_dev), file: String(info.st_ino))
         guard info.st_mode & mode_t(S_IFMT) == mode_t(S_IFREG), info.st_size == revision.fileSize,
-              identity == revision.fileObjectID, modified == revision.modificationDate,
+              identity == revision.fileObjectID, dateMatches,
               try Self.matchesBytesAndName(info, name: name, directory: directory, digest: revision.sha256)
         else { throw FileStoreError.fileChangedDuringRead }
         self.init(directory: directory, name: name, url: url, digest: revision.sha256, receipt: info)
@@ -77,14 +82,15 @@ struct FileStoreRetirement {
         }
     }
 
-    static func matchesBytesAndName(_ expected: stat, name: String, directory: Int32, digest: String) throws -> Bool {
+    static func matchesBytesAndName(_ expected: stat, name: String, directory: Int32, digest: String,
+                                    includingChangeTime: Bool = true) throws -> Bool {
         let reader = openat(directory, name, O_RDONLY | O_NONBLOCK | O_NOFOLLOW | O_CLOEXEC)
         guard reader >= 0 else { return false }
         defer { _ = Darwin.close(reader) }
         var before = stat()
         guard fstat(reader, &before) == 0,
               before.st_mode & mode_t(S_IFMT) == mode_t(S_IFREG), before.st_size >= 0,
-              Self.sameMetadata(before, expected, includingChangeTime: true)
+              Self.sameMetadata(before, expected, includingChangeTime: includingChangeTime)
         else { return false }
         var hasher = SHA256()
         var buffer = [UInt8](repeating: 0, count: 64 * 1024)
