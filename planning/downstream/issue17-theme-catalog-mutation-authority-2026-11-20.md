@@ -58,6 +58,13 @@ Editor or highlighting source changes still run the original complete probe
 and bitmap, orientation and performance controls. The complete CI app-test
 job remains the authority for the new `ThemeCatalogModelTests` cases.
 
+The repository CI selector also recognizes this exact `ThemeController.swift`
+plus app-model/test/probe/evidence diff. It runs `ThemesTests` and the reviewed
+`ThemeCatalogModelTests`, `DocumentWindowSettingsTests` and
+`RenderedStateEvidenceTests` app suites. Any other theme source uses the
+dependency graph; an unreviewed app or mixed-source change falls back to the
+complete suite. The selector's own 13 safety tests run before selection.
+
 The repository-wide issue audit and exact-head hosted verification results are
 recorded on the PR and issue comment after integration. Strict release
 compliance remains governed by issue #14 and is not changed by this patch.

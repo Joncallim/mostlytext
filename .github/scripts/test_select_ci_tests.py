@@ -22,6 +22,9 @@ class SelectionTests(unittest.TestCase):
         {"name": "DiagramRenderingTests", "type": "test", "dependencies": [{"byName": ["DiagramRendering", None]}]},
         {"name": "TextSearch", "type": "regular", "dependencies": []},
         {"name": "TextSearchTests", "type": "test", "dependencies": [{"byName": ["TextSearch", None]}]},
+        {"name": "Themes", "type": "regular", "dependencies": []},
+        {"name": "ThemesTests", "type": "test", "dependencies": [{"byName": ["Themes", None]}]},
+        {"name": "ThemeConsumerTests", "type": "test", "dependencies": [{"byName": ["Themes", None]}]},
     ]}
 
     def test_d2_source_selects_dependent_tests_and_app_integrations(self):
@@ -89,6 +92,36 @@ class SelectionTests(unittest.TestCase):
             "WorkspaceIndexRootPublicationTests",
         })
         self.assertEqual(SELECTOR.select(paths[-2:], self.manifest), ("none", "", "none", ()))
+
+    def test_theme_only_product_and_probe_changes_select_theme_package_and_app_suites(self):
+        paths = [
+            "MacDown2/Packages/MacDownKit/Sources/Themes/ThemeController.swift",
+            "MacDown2/MacDown2/ThemeCatalogModel+Actions.swift",
+            "MacDown2/MacDown2Tests/ThemeCatalogModelTests.swift",
+            ".github/scripts/run-current-line-theme-probe.py",
+            ".github/workflows/current-line-theme-probe.yml",
+            "planning/downstream/issue17-theme-catalog-mutation-authority-2026-11-20.md",
+        ]
+        self.assertEqual(SELECTOR.select(paths, self.manifest),
+                         ("selected", "ThemesTests", "selected", tuple(sorted(SELECTOR.THEME_APP_SUITES))))
+        self.assertEqual(SELECTOR.select(paths[1:3], self.manifest), ("full", "", "full", ()))
+
+    def test_theme_app_change_with_unrelated_package_source_falls_back_to_full(self):
+        paths = [
+            "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceReplaceEngine.swift",
+            "MacDown2/MacDown2/ThemeCatalogModel+Actions.swift",
+        ]
+        self.assertEqual(SELECTOR.select(paths, self.manifest), ("full", "", "full", ()))
+
+    def test_other_theme_source_keeps_dependency_graph_consumers(self):
+        paths = [
+            "MacDown2/Packages/MacDownKit/Sources/Themes/ThemeFile.swift",
+            "MacDown2/MacDown2/ThemeCatalogModel+Actions.swift",
+        ]
+        mode, selected, app_mode, app = SELECTOR.select(paths, self.manifest)
+        self.assertEqual((mode, selected, app_mode),
+                         ("selected", "ThemeConsumerTests|ThemesTests", "selected"))
+        self.assertEqual(app, tuple(sorted(SELECTOR.THEME_APP_SUITES)))
 
     def test_unknown_or_shared_input_falls_back_to_full(self):
         for path in (
