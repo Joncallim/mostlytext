@@ -30,7 +30,8 @@ timed-out file as searched if the matcher began reporting deadlines.
   that Foundation guarantees a hard wall-clock interruption inside every
   regex or pattern compilation.
 - Folder Search has a ten-second total operation deadline in addition to the
-  per-file regex limit. It reports timeout separately from completion,
+  per-file regex limit, beginning before query validation and index lookup.
+  It reports timeout separately from completion,
   truncation, cancellation, invalid pattern and index failure. Previously
   streamed rows may remain inspectable, but Replace All remains disabled
   unless the entire search completed. The status must say results are
@@ -50,17 +51,21 @@ keeps an earlier streamed match but returns `.timedOut` rather than
 path without delaying the suite. A model-level app test checks that timed-out
 rows cannot authorize Replace All and that skipped-file count remains visible.
 
-Final-source package selections passed **133 tests in 16 suites** in Debug and
+Corrected-source package selections passed **134 tests in 16 suites** in Debug and
 optimized Release. They cover ordinary regex/literal matching, cancellation,
-CRLF, match limits, Find identity/domain and the new timeout paths. The first
+CRLF, match limits, Find identity/domain and the new timeout paths. The
+independent diff review found that the first implementation started the
+whole-folder budget after regex validation; it now starts before validation,
+returns an explicit timeout at that boundary and preserves literal search
+outside the regex-only budget. The first
 focused Debug run failed only because its new test assumed directory enumeration
 order; the corrected test seeds a fixed index order and the original failure
 remains in `/private/tmp/mostlytext-regex-focused-debug.log` (SHA-256
 `168b6e376f913ffb9064bd6cd853890965c48bb2779f5823b4f4ead8756f1afa`).
-Final Debug and Release logs are `/private/tmp/mostlytext-regex-final-debug.log`
-(`3e2a6aa77c45c99193eda35d7e3b13d43097776b0650a73966390972d7e421ef`)
-and `/private/tmp/mostlytext-regex-final-release.log`
-(`9c86d6b8e9c1f8f5fa268f4aefe49c66ccf1516c981cd2521dd356323a346a24`). Strict SwiftLint,
+Corrected Debug and Release logs are `/private/tmp/mostlytext-regex-corrected-debug.log`
+(`927d65641e0ee71a52a47807446a68cd13814e6286c78fc3b48f17fd882043f0`)
+and `/private/tmp/mostlytext-regex-corrected-release.log`
+(`f0bfb6038f16d69ce01e2edd26b15a8b01087f606840ee7e82150cc8421d6351`). Strict SwiftLint,
 SwiftFormat, catalog structure (747 entries across 15 catalogs) and ordinary
 source compliance pass. A local Release app build passed before the last
 package-only test seam was added; the final-source hosted app build and model

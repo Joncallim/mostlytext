@@ -17,6 +17,19 @@ struct WorkspaceRegexDeadlineTests {
         #expect(outcome == .timedOut(filesSearched: 0, filesSkipped: 0, matchCount: 0))
     }
 
+    @Test func regexBudgetDoesNotLimitLiteralFolderSearch() async throws {
+        let tree = try WorkspaceSearchEngineTempTree()
+        try tree.write("a.txt", text: "needle")
+        let index = await tree.makeIndex()
+        let engine = WorkspaceSearchEngine(seams: .init(regexSearchBudget: .zero))
+
+        let outcome = await engine.search(
+            root: tree.root, index: index, query: "needle", options: SearchOptions()
+        ) { _ in }
+
+        #expect(outcome == .completed(filesSearched: 1, filesSkipped: 0, matchCount: 1))
+    }
+
     @Test func aPathologicalFileReportsIncompleteResultsAfterEarlierStreamedMatches() async throws {
         let tree = try WorkspaceSearchEngineTempTree()
         try tree.write("a.txt", text: "needle")

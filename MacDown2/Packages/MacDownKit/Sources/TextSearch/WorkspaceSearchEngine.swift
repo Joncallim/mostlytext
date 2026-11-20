@@ -163,6 +163,7 @@ public actor WorkspaceSearchEngine {
         onMatch: @escaping @Sendable (FolderSearchMatch) async -> Void
     ) async -> FolderSearchOutcome {
         guard !query.isEmpty else { return .completed(filesSearched: 0, filesSkipped: 0, matchCount: 0) }
+        let regexDeadline = ContinuousClock.now.advanced(by: seams.regexSearchBudget)
 
         // Validate the regex exactly once, against an empty buffer, before
         // touching any file: a compile failure is a property of the
@@ -170,11 +171,8 @@ public actor WorkspaceSearchEngine {
         // the text it is later run against), so this both fails fast and
         // avoids silently recompiling the same pattern once per candidate
         // file below.
-        switch Self.validate(query: query, options: options) {
-        case let .invalid(message):
-            return .invalidRegex(message)
-        case .valid:
-            break
+        if let failure = Self.validationFailure(query: query, options: options, deadline: regexDeadline) {
+            return failure
         }
 
         let snapshot = await index.allPathsSnapshot(includeHidden: filter.includeHidden)
@@ -185,7 +183,7 @@ public actor WorkspaceSearchEngine {
         let paths = snapshot.paths
         let context = SearchContext(
             root: root, query: query, options: options, filter: filter,
-            regexDeadline: ContinuousClock.now.advanced(by: seams.regexSearchBudget)
+            regexDeadline: regexDeadline
         )
         var filesSearched = 0
         var filesSkipped = 0
@@ -359,31 +357,24 @@ public actor WorkspaceSearchEngine {
         return try? FileStore().readSnapshot(from: url)
     }
 
-    private enum ValidationResult {
-        case valid
-        case invalid(String)
-    }
-
-    private static func validate(query: String, options: SearchOptions) -> ValidationResult {
+    private static func validationFailure(query: String, options: SearchOptions,
+                                          deadline: ContinuousClock.Instant) -> FolderSearchOutcome? {
         do {
-            _ = try TextSearchEngine.matches(in: "", query: query, options: options)
-            return .valid
+            _ = try TextSearchEngine.matches(
+                in: "", query: query, options: options, matchLimit: nil,
+                regexDeadline: min(ContinuousClock.now.advanced(by: TextSearchEngine.regexMatchBudget), deadline)
+            )
+            return nil
         } catch {
-            // `matches`'s own typed throw (`throws(SearchQueryError)`) means
-            // `error` here is statically `SearchQueryError`, whose only
-            // case is `.invalidRegex` -- an exhaustive switch, not a
-            // dead-code-hiding generic catch-all.
+            // `matches` throws only SearchQueryError; preserve its distinct
+            // invalid, cancellation, and expiry outcomes during admission.
             switch error {
             case let .invalidRegex(message):
-                return .invalid(message)
+                return .invalidRegex(message)
             case .cancelled:
-                // Validation ran inside an already-cancelled search; the caller
-                // checks cancellation itself right after.
-                return .valid
+                return .cancelled
             case .timedOut:
-                // Empty input has no backtracking work. A delayed validation
-                // is handled by the search's own deadline on the first file.
-                return .valid
+                return .timedOut(filesSearched: 0, filesSkipped: 0, matchCount: 0)
             }
         }
     }
