@@ -5,11 +5,14 @@ import Foundation
 /// `WorkspaceSearchEngine` (folder search) inside its own cancellable
 /// off-main task. Never touches AppKit, a window, or a document model.
 public enum TextSearchEngine {
+    static let regexMatchBudget: Duration = .seconds(2)
+
     /// Every match of `query` in `text`, honoring `options`. Returns an
     /// empty array for an empty query (never an error — an empty query is
     /// not a malformed one, it simply matches nothing) or when the query
-    /// truly does not occur. Throws only for a regex query that fails to
-    /// compile.
+    /// truly does not occur. A regex can throw for invalid syntax,
+    /// cancellation or an expired execution budget; partial matches are never
+    /// returned as complete results.
     ///
     /// `matchLimit`, when non-`nil`, stops scanning as soon as that many
     /// matches have been found, rather than finding every match and only
@@ -18,17 +21,31 @@ public enum TextSearchEngine {
     /// cannot defeat `WorkspaceSearchEngine`'s own bounded-accumulation
     /// requirement (issue #112) by forcing a full-file, unbounded
     /// `[SearchMatch]` allocation before its result is truncated. `nil` (the
-    /// default) is fully unbounded — current-document Find's own behavior
-    /// is unchanged by this parameter's existence.
+    /// default) does not cap result count. Regex execution still has a
+    /// separate time budget.
     public static func matches(
         in text: String,
         query: String,
         options: SearchOptions,
         matchLimit: Int? = nil
     ) throws(SearchQueryError) -> [SearchMatch] {
+        try matches(in: text, query: query, options: options, matchLimit: matchLimit,
+                    regexDeadline: ContinuousClock.now.advanced(by: regexMatchBudget))
+    }
+
+    /// Package-internal entry point lets folder search share its whole-run
+    /// deadline with every file, while keeping one matcher and one public API.
+    static func matches(
+        in text: String,
+        query: String,
+        options: SearchOptions,
+        matchLimit: Int?,
+        regexDeadline: ContinuousClock.Instant
+    ) throws(SearchQueryError) -> [SearchMatch] {
         guard !query.isEmpty else { return [] }
         if options.isRegex {
-            return try regexMatches(in: text, pattern: query, options: options, matchLimit: matchLimit)
+            return try regexMatches(in: text, pattern: query, options: options,
+                                    matchLimit: matchLimit, deadline: regexDeadline)
         }
         return literalMatches(in: text, query: query, options: options, matchLimit: matchLimit)
     }
@@ -126,7 +143,8 @@ public enum TextSearchEngine {
         in text: String,
         pattern: String,
         options: SearchOptions,
-        matchLimit: Int?
+        matchLimit: Int?,
+        deadline: ContinuousClock.Instant
     ) throws(SearchQueryError) -> [SearchMatch] {
         // `^`/`$` match at every line boundary, as in every code editor; without
         // this they only matched at the start/end of the whole document, so
@@ -152,13 +170,20 @@ public enum TextSearchEngine {
         let fullRange = NSRange(location: 0, length: nsText.length)
         var results: [SearchMatch] = []
         var wasCancelled = false
+        var timedOut = false
         // `.reportProgress` makes ICU call back periodically even while a
         // pathological pattern is backtracking without producing a match; that
-        // is the only chance to honour cancellation, so it is handled *before*
+        // is the only chance to honour cancellation or expiry, so both are
+        // handled *before*
         // `guard let match` (a progress call carries no match).
         regex.enumerateMatches(in: text, options: [.reportProgress], range: fullRange) { match, _, stop in
             if Task.isCancelled {
                 wasCancelled = true
+                stop.pointee = true
+                return
+            }
+            if ContinuousClock.now >= deadline {
+                timedOut = true
                 stop.pointee = true
                 return
             }
@@ -174,6 +199,9 @@ public enum TextSearchEngine {
         }
         if wasCancelled || Task.isCancelled {
             throw SearchQueryError.cancelled
+        }
+        if timedOut || ContinuousClock.now >= deadline {
+            throw SearchQueryError.timedOut
         }
         return results
     }

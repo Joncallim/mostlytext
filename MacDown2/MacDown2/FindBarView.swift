@@ -296,15 +296,6 @@ struct FindBarView: View {
         }
     }
 
-    private func errorMessage(for error: SearchQueryError) -> String {
-        switch error {
-        case let .invalidRegex(message): message
-        // `EditorFindModel` never stores a cancelled search as its error; this
-        // only keeps the switch exhaustive.
-        case .cancelled: String(localized: "Search cancelled")
-        }
-    }
-
     /// Runs `navigation` (`model.findNext`/`findPrevious`), then reports the
     /// resulting state up — used by both the keyboard (Return/Shift-Return)
     /// and the toolbar chevron buttons so both paths behave identically.
@@ -383,5 +374,15 @@ struct FindBarView: View {
         guard !model.isSearching, let selection = model.selectionSetForAllMatches else { return }
         onSelectAll(selection)
         onClose()
+    }
+}
+
+private func errorMessage(for error: SearchQueryError) -> String {
+    switch error {
+    case let .invalidRegex(message): message
+    // `EditorFindModel` never stores a cancelled search as its error; this
+    // only keeps the switch exhaustive.
+    case .cancelled: String(localized: "Search cancelled")
+    case .timedOut: String(localized: "Search took too long — refine your query")
     }
 }

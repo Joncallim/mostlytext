@@ -49,7 +49,7 @@ public final class EditorFindModel {
 
     public private(set) var matches: [SearchMatch] = []
     public private(set) var currentIndex: Int?
-    /// Set when the last `updateMatches(in:)` call failed to compile a regex
+    /// Set when the last `updateMatches(in:)` call failed to compile or finish a regex
     /// query — surfaced by the Find bar as a visible diagnostic, per
     /// `SearchQueryError`'s own doc comment ("never silently fall back to a
     /// zero-result state").
@@ -143,7 +143,7 @@ public final class EditorFindModel {
     /// an option toggle) — wrapping to the first match overall if `anchor`
     /// is past every match, or `nil` if `anchor` itself is `nil`
     /// (defaulting to the very first match) or there are no matches at all.
-    /// A failed regex compile clears `matches`/`currentIndex` and populates
+    /// A failed or timed-out regex clears `matches`/`currentIndex` and populates
     /// `error` instead of leaving stale results on screen.
     ///
     /// EPIC-22 §6.14/§8: the actual `TextSearchEngine.matches` call runs
@@ -155,10 +155,9 @@ public final class EditorFindModel {
     /// the ENTIRE app, not just the Find bar, with no way to recover short
     /// of force-quit — exactly the adversarial case §15 lists by name
     /// ("cancellation must actually free the main actor"). `Task.detached`
-    /// does NOT stop a pathological regex's own computation once started —
-    /// `NSRegularExpression.enumerateMatches` has no cancellation hook to
-    /// stop mid-call — it only keeps the main actor (and therefore the rest
-    /// of the app's UI) free while that computation runs. `searchGeneration`
+    /// keeps the main actor free while that computation runs. The matcher
+    /// checks cancellation and its execution budget at ICU progress callbacks.
+    /// `searchGeneration`
     /// is bumped before the hop so a slower, now-superseded call's result is
     /// discarded rather than published over a newer call's already-committed
     /// one, exactly as §8 specifies. Returns whether this call's result was

@@ -50,6 +50,9 @@ public enum SearchQueryError: Error, Equatable, Sendable {
     /// finished. Whatever it had found is partial and must never be presented
     /// as a complete result (#183 F08).
     case cancelled
+    /// ICU spent the allotted time matching a regex. Any matches found so far
+    /// are partial and must not authorize a complete search or replacement.
+    case timedOut
 }
 
 /// One match in whatever buffer was searched. `range` is UTF-16, in the

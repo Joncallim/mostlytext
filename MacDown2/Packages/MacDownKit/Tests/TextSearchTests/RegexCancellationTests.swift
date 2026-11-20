@@ -47,6 +47,19 @@ struct RegexCancellationTests {
         #expect(matches.map(\.range.location) == [0, 8])
     }
 
+    @Test func aNonCancelledPathologicalRegexTimesOutWithoutPublishingPartialMatches() {
+        let start = ContinuousClock.now
+        do {
+            let result = try TextSearchEngine.matches(
+                in: Self.pathologicalText, query: "(x+x+)+y", options: Self.pathologicalOptions
+            )
+            Issue.record("expected timeout, got \(result.count) complete matches")
+        } catch {
+            #expect(error == .timedOut)
+        }
+        #expect(ContinuousClock.now - start < .seconds(5), "ICU progress must bound backtracking")
+    }
+
     @Test func aSearchThatIsAlreadyCancelledNeverReportsPartialResults() async {
         let task = Task.detached { () -> Result<[SearchMatch], SearchQueryError> in
             while !Task.isCancelled {

@@ -51,7 +51,8 @@ extension FolderSearchModel {
     /// never touches them, so the user must be told the run is not exhaustive.
     var unsearchedFileCount: Int {
         switch outcome {
-        case let .completed(_, skipped, _), let .truncated(_, skipped, _): skipped
+        case let .completed(_, skipped, _), let .truncated(_, skipped, _),
+             let .timedOut(_, skipped, _): skipped
         default: 0
         }
     }
