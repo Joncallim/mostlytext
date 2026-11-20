@@ -2,7 +2,7 @@ import Darwin
 import Foundation
 @testable import MacDown2
 import Testing
-import Themes
+@testable import Themes
 
 @MainActor
 struct ThemeCatalogModelTests {
@@ -132,6 +132,29 @@ struct ThemeCatalogModelTests {
         #expect(model.state?.catalog.revision == removed.state.catalog.revision)
         #expect(model.affectedThemeID == nil)
         #expect(model.controller.current == BundledThemes.light)
+        await model.shutdown()
+    }
+
+    @Test func olderStorageWarningCannotMakeANewerHealthyCatalogUnavailable() async throws {
+        let fixture = try ThemeModelFixture(); defer { fixture.cleanup() }
+        let model = try await fixture.start()
+        model.observationTask?.cancel()
+        await model.observationTask?.value
+        let store = try #require(model.store)
+        await store.stopObserving()
+
+        let file = try ThemeFile(theme: BundledThemes.light)
+        let prepared = try await store.prepareImport(file.encoded())
+        let installed = try await store.commitImport(prepared, choice: .install)
+        let deletion = try await store.prepareDeletion(id: file.stableID)
+        let removed = try await store.delete(deletion)
+        model.publish(removed.state)
+        let olderWarning = ThemeCatalogMutation(state: installed.state, affectedID: installed.affectedID,
+                                                changed: true, warnings: [.refreshFailed])
+
+        model.accept(olderWarning, select: false, selectionAtStart: nil)
+        #expect(model.state?.catalog.revision == removed.state.catalog.revision)
+        #expect(model.status == .ready)
         await model.shutdown()
     }
 

@@ -137,6 +137,7 @@ extension ThemeCatalogModel {
 
     func accept(_ mutation: ThemeCatalogMutation, select: Bool, selectionAtStart: UUID?) {
         publish(mutation.state)
+        let mutationStillCurrent = state?.catalog.revision == mutation.state.catalog.revision
         // A watcher refresh or an explicit menu choice may win the main-actor
         // turn while the store reply is in flight. Select only the still-current
         // bytes from the catalog that actually owns presentation now.
@@ -149,7 +150,8 @@ extension ThemeCatalogModel {
             affectedThemeID = nil
         }
         operationID = UUID()
-        if mutation.warnings.contains(.directoryChanged) || mutation.warnings.contains(.refreshFailed) {
+        if mutationStillCurrent,
+           mutation.warnings.contains(.directoryChanged) || mutation.warnings.contains(.refreshFailed) {
             status = .unavailable
         }
         if !mutation.warnings.isEmpty {
