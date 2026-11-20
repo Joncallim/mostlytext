@@ -27,7 +27,7 @@ struct FileStoreFAT32PublicationTests {
         #expect(try String(contentsOf: fixture.url, encoding: .utf8) == "ours")
         let directory = fixture.url.deletingLastPathComponent()
         let leftovers = try FileManager.default.contentsOfDirectory(atPath: directory.path)
-            .filter { $0.contains(".tmp-") }
+            .filter { $0.contains(".private-stage-") }
         #expect(leftovers.isEmpty)
     }
 

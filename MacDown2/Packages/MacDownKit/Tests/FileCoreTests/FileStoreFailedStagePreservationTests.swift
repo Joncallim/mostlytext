@@ -4,6 +4,13 @@ import Foundation
 import Testing
 
 struct FileStoreFailedStagePreservationTests {
+    private static func stage(in root: URL) throws -> URL {
+        let containers = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil)
+            .filter { $0.lastPathComponent.contains(".private-stage-") }
+        guard containers.count == 1, let container = containers.first else { throw POSIXError(.ENOENT) }
+        return container.appendingPathComponent("stage")
+    }
+
     @Test(arguments: [false, true], [false, true])
     func failedPublicationPreservesAChangedStage(conditional: Bool, replacement: Bool) throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("filestore-review-\(UUID())")
@@ -16,9 +23,7 @@ struct FileStoreFailedStagePreservationTests {
         try original.write(to: target)
         let baseline = try FileStore().readRevision(from: target)
         let store = FileStore(beforePublication: { _ in
-            let candidates = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil)
-                .filter { $0.lastPathComponent.contains(".tmp-") }
-            guard candidates.count == 1, let stage = candidates.first else { throw POSIXError(.ENOENT) }
+            let stage = try Self.stage(in: root)
             if replacement {
                 try FileManager.default.moveItem(at: stage, to: backup)
             }
@@ -30,7 +35,9 @@ struct FileStoreFailedStagePreservationTests {
         }
         #expect(try Data(contentsOf: target) == original)
         let files = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil)
-        let retainedForeign = files.filter { (try? Data(contentsOf: $0)) == foreign }
+        let retainedForeign = files.filter {
+            (try? Data(contentsOf: $0.appendingPathComponent("stage"))) == foreign
+        }
         #expect(retainedForeign.count == 1, "Failed-save cleanup must not delete an externally changed stage")
         if replacement {
             #expect(try Data(contentsOf: backup) == Data("ours".utf8))

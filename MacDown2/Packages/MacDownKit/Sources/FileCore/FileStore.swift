@@ -214,10 +214,14 @@ public struct FileStore: Sendable {
         try requireAbsentIfNeeded(requireAbsent, at: url)
 
         try requireWritableIfExisting(url)
-        let directory = url.deletingLastPathComponent()
-        let temporaryURL = directory
-            .appendingPathComponent(Self.companionName(for: url, infix: "tmp"))
-
+        let privateDirectory: FileStorePrivateStageDirectory
+        do {
+            privateDirectory = try FileStorePrivateStageDirectory(for: url)
+        } catch {
+            throw mapWriteError(error)
+        }
+        defer { privateDirectory.removeIfEmpty() }
+        let temporaryURL = privateDirectory.url.appendingPathComponent("stage")
         var stage: FileStoreStage?
         do {
             let created = try FileStoreStage(bytes: data, at: temporaryURL)

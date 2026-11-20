@@ -118,7 +118,9 @@ struct FileStoreStageRetirementTests {
         }))
         #expect(throws: FileStoreError.self) { try store.write("ours", to: url, expectedRevision: baseline) }
         let files = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil)
-        #expect(files.filter { (try? Data(contentsOf: $0)) == foreign }.count == 1)
+        #expect(files.filter {
+            (try? Data(contentsOf: $0.appendingPathComponent("stage"))) == foreign
+        }.count == 1)
         #expect(try Data(contentsOf: url) == Data("ours".utf8))
         if replacement {
             #expect(try Data(contentsOf: backup) == Data("original".utf8))

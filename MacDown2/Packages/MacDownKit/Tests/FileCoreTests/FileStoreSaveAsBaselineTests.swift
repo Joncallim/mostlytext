@@ -8,7 +8,7 @@ import Testing
 @Suite("FileStore Save As destination baseline (#183 F22)")
 struct FileStoreSaveAsBaselineTests {
     private func leftovers(in directory: URL) throws -> [String] {
-        try FileManager.default.contentsOfDirectory(atPath: directory.path).filter { $0.contains(".tmp-") }
+        try FileManager.default.contentsOfDirectory(atPath: directory.path).filter { $0.contains(".private-stage-") }
     }
 
     @Test func baselineDescribesAbsentFilesAndRegularFiles() throws {
