@@ -27,24 +27,38 @@ struct StaticReader: DirectoryReading {
 final class BlockingReader: @unchecked Sendable, DirectoryReading {
     let blockedURL: URL
     let release = DispatchSemaphore(value: 0)
+    let contentsByURL: [URL: [DirectoryEntry]]
+    let blockFirstReadOnly: Bool
     private let lock = NSLock()
     private var started = false
+    private var blockedReads = 0
 
     var didStart: Bool {
         lock.lock(); defer { lock.unlock() }
         return started
     }
 
-    init(blockedURL: URL) {
+    init(blockedURL: URL, contentsByURL: [URL: [DirectoryEntry]] = [:], blockFirstReadOnly: Bool = false) {
         self.blockedURL = blockedURL.standardizedFileURL
+        self.contentsByURL = contentsByURL
+        self.blockFirstReadOnly = blockFirstReadOnly
     }
 
     func contents(of url: URL) throws -> [DirectoryEntry] {
-        if url.standardizedFileURL == blockedURL {
-            lock.lock(); started = true; lock.unlock()
-            release.wait()
+        let key = url.standardizedFileURL
+        if key == blockedURL {
+            lock.lock()
+            blockedReads += 1
+            let shouldBlock = !blockFirstReadOnly || blockedReads == 1
+            if shouldBlock {
+                started = true
+            }
+            lock.unlock()
+            if shouldBlock {
+                release.wait()
+            }
         }
-        return []
+        return contentsByURL[key] ?? []
     }
 }
 

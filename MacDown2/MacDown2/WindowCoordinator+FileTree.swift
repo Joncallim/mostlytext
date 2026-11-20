@@ -1,4 +1,5 @@
 import AppKit
+import FileCore
 import FileTree
 import Foundation
 import Workspace
@@ -228,17 +229,42 @@ extension WindowCoordinator {
 
     func revealActiveFile() {
         guard let controller = controllers.first(where: { $0.window == NSApp.keyWindow }),
-              let url = controller.model.activeDocument?.fileURL else { return }
+              let document = controller.model.activeDocument,
+              let url = document.fileURL,
+              let window = controller.window else { return }
+        let documentID = document.id
+        let context = controller.fileTreeModel.beginOperation()
         controller.model.sidebarVisible = true
         controller.model.setSectionExpanded(.folder, true)
-        Task {
+        Task { @MainActor [weak self, weak controller, weak window] in
+            guard let self, let controller, let window else { return }
             guard await !controller.fileTreeModel.reveal(url) else { return }
-            presentRevealOutsideRootAlert(for: url, controller: controller)
+            guard revealOutsideRootIsCurrent(
+                for: url, documentID: documentID, controller: controller,
+                window: window, context: context
+            ) else { return }
+            presentRevealOutsideRootAlert(
+                for: url, documentID: documentID, controller: controller,
+                window: window, context: context
+            )
         }
     }
 
-    private func presentRevealOutsideRootAlert(for url: URL, controller: WindowController) {
-        guard let window = controller.window else { return }
+    func revealOutsideRootIsCurrent(
+        for url: URL, documentID: String, controller: WindowController,
+        window: NSWindow, context: FileTreeOperationContext
+    ) -> Bool {
+        controllers.contains(where: { $0 === controller })
+            && !controller.isClosed && controller.window === window
+            && controller.fileTreeModel.isCurrent(context)
+            && controller.model.activeDocument?.id == documentID
+            && controller.model.activeDocument?.fileURL?.standardizedFileURL == url.standardizedFileURL
+    }
+
+    private func presentRevealOutsideRootAlert(
+        for url: URL, documentID: String, controller: WindowController,
+        window: NSWindow, context: FileTreeOperationContext
+    ) {
         let alert = NSAlert()
         alert.messageText = String(localized: "File Is Outside the Open Folder")
         alert.informativeText = String(localized: "Open its parent folder to reveal it in the sidebar?")
@@ -248,10 +274,21 @@ extension WindowCoordinator {
         alert.beginSheetModal(for: window) { [weak self, weak controller] response in
             guard response == .alertFirstButtonReturn, let self, let controller else { return }
             Task { @MainActor in
+                guard self.revealOutsideRootIsCurrent(
+                    for: url, documentID: documentID, controller: controller,
+                    window: window, context: context
+                ) else { return }
                 let root = url.deletingLastPathComponent()
+                let expectedRequest = controller.workspaceRootRequestGeneration &+ 1
                 controller.model.setFolderRoot(root)
                 self.recentFolderRoots.record(root)
                 await controller.setFileTreeRoot(root)
+                guard !controller.isClosed,
+                      controller.workspaceRootRequestGeneration == expectedRequest,
+                      controller.fileTreeModel.root == root.standardizedFileURL,
+                      controller.model.activeDocument?.id == documentID,
+                      controller.model.activeDocument?.fileURL?.standardizedFileURL == url.standardizedFileURL
+                else { return }
                 _ = await controller.fileTreeModel.reveal(url)
                 self.scheduleSaveSession()
             }
@@ -297,7 +334,13 @@ extension WindowCoordinator {
     }
 
     private func presentDeletedDocumentAlert(on controller: WindowController, tabID: UUID) {
-        guard let window = controller.window else { return }
+        guard let window = controller.window,
+              let tab = controller.model.tabStore.tabs.first(where: { $0.id == tabID })
+        else { return }
+        // The deleted document may be an inactive legacy tab. Show the tab
+        // named by the filesystem result before asking what to do with it.
+        controller.model.tabStore.activate(tabID)
+        let presented = CloseSheetContext(tab.document)
         let alert = NSAlert()
         alert.messageText = String(localized: "File Moved to Trash")
         alert.informativeText = String(localized: "This document has unsaved changes.")
@@ -307,25 +350,48 @@ extension WindowCoordinator {
         alert.alertStyle = .warning
         alert.beginSheetModal(for: window) { [weak self, weak controller] response in
             Task { @MainActor in
-                guard let self, let controller else { return }
+                guard let self, let controller,
+                      self.deletedDocumentPromptTarget(
+                          in: controller, window: window, tabID: tabID, presented: presented
+                      ) != nil
+                else { return }
                 if response == .alertFirstButtonReturn {
-                    controller.model.tabStore.activate(tabID)
                     await controller.saveDocumentAs()
                 } else if response == .alertSecondButtonReturn {
-                    await self.discardDeletedDocument(in: controller)
+                    await self.discardDeletedDocument(
+                        in: controller, window: window, tabID: tabID, presented: presented
+                    )
                 }
             }
         }
     }
 
+    /// A sheet result cannot borrow a replacement tab, a later edit, or a
+    /// renewed recovery lifetime. The user can invoke the action again for
+    /// the new state; this response only authorizes the state it displayed.
+    func deletedDocumentPromptTarget(
+        in controller: WindowController, window: NSWindow,
+        tabID: UUID, presented: CloseSheetContext
+    ) -> FileDocument? {
+        guard controllers.contains(where: { $0 === controller }),
+              !controller.isClosed, controller.window === window,
+              let active = controller.model.tabStore.activeTab,
+              active.id == tabID,
+              active.document.recoveryEpoch == presented.recoveryEpoch,
+              WindowController.presentedContextMatches(active.document, presented)
+        else { return nil }
+        return active.document
+    }
+
     /// "Close Without Saving" for a deleted document: the discarded text must also leave the
     /// recovery store, or a later session replay can resurrect it as a dirty tab.
-    func discardDeletedDocument(in controller: WindowController) async {
-        guard let document = controller.model.activeDocument else {
-            removeController(controller)
-            controller.close()
-            return
-        }
+    func discardDeletedDocument(
+        in controller: WindowController, window: NSWindow,
+        tabID: UUID, presented: CloseSheetContext
+    ) async {
+        guard let document = deletedDocumentPromptTarget(
+            in: controller, window: window, tabID: tabID, presented: presented
+        ) else { return }
         guard await controller.externalFileController.retireRecovery(for: document).isAbsent else { return }
         await controller.closeAfterRetire(of: document)
     }

@@ -13,8 +13,10 @@ on:
       - 'MacDown2/MacDown2Tests/ExternalFileControllerSourceFidelityTests.swift'
       - 'MacDown2/MacDown2Tests/ExternalFileControllerBaselineOrderingTests.swift'
       - 'MacDown2/MacDown2Tests/UseDiskVersionRaceTests.swift'
+      - 'MacDown2/MacDown2Tests/DeletedDocumentDiscardTests.swift'
       - 'MacDown2/MacDown2/ExternalFileController.swift'
       - 'MacDown2/MacDown2/WindowController+DocumentObservation.swift'
+      - 'MacDown2/MacDown2/WindowCoordinator+FileTree.swift'
       - 'MacDown2/Packages/MacDownKit/Sources/FileCore/**'
       - 'MacDown2/Packages/MacDownKit/Package.resolved'
       - 'MacDown2/project.yml'
@@ -86,7 +88,8 @@ jobs:
               -only-testing:MacDown2Tests/ExternalFileWindowOccupancyTests \
               -only-testing:MacDown2Tests/ExternalSourceFidelityTests \
               -only-testing:MacDown2Tests/WatcherBaselineOrderingTests \
-              -only-testing:MacDown2Tests/UseDiskVersionRaceTests test-without-building \
+              -only-testing:MacDown2Tests/UseDiskVersionRaceTests \
+              -only-testing:MacDown2Tests/DeletedDocumentDiscardTests test-without-building \
             | tee "$ROOT/latency.log"
           python3 - "$ROOT/measurements" <<'PY'
           import json
