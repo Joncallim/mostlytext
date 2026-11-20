@@ -85,7 +85,7 @@ jobs:
           # Capture the test host's own main-thread stack while the first
           # mounted edit waits for its local parse result. This is diagnostic
           # evidence only; it never changes the product or budget verdict.
-          sample -wait MacDownKitPackageTests 12 1 \
+          sample -wait swiftpm-testing-helper 12 1 \
             -file "$RUNNER_TEMP/viewport-budget/main-thread-sample.txt" \
             > "$RUNNER_TEMP/viewport-budget/main-thread-sample-command.log" 2>&1 &
           SAMPLER_PID=$!
