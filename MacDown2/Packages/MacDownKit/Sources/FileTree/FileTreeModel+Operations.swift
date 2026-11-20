@@ -214,6 +214,8 @@ public extension FileTreeModel {
         }; children = newChildren
         root = root.flatMap { rekey($0) ?? $0 }
         if root != previousRoot, let root {
+            rootPhysicalURL = root.resolvingSymlinksInPath().standardizedFileURL
+            rootIdentity = FileTreeRootIdentity(url: root)
             rootAccessScope = FolderAccessScope(url: root.resolvingSymlinksInPath().standardizedFileURL)
         }
         selectedURL = selectedURL.flatMap { rekey($0) ?? $0 }
@@ -310,6 +312,11 @@ public extension FileTreeModel {
     ) throws(FileTreeOperationError) {
         guard operationIsCurrent(context) else { throw .staleOperation }
         guard let root = context.root else { throw .outsideCurrentRoot }
+        guard let rootPhysicalURL, let rootIdentity,
+              root.resolvingSymlinksInPath().standardizedFileURL == rootPhysicalURL,
+              FileTreeRootIdentity(url: root) == rootIdentity else {
+            throw .outsideCurrentRoot
+        }
         let rootComponents = root.standardizedFileURL.pathComponents
         guard members.allSatisfy({ $0.standardizedFileURL.pathComponents.starts(with: rootComponents) }) else {
             throw .outsideCurrentRoot
@@ -320,7 +327,7 @@ public extension FileTreeModel {
         // containing directory must RESOLVE to somewhere under the root's
         // physical location (the item itself may be a link — it is acted on,
         // not followed). #183 F14.
-        let physicalRoot = root.resolvingSymlinksInPath().standardizedFileURL.pathComponents
+        let physicalRoot = rootPhysicalURL.pathComponents
         let lexicalRoot = root.standardizedFileURL
         for member in members where member.standardizedFileURL != lexicalRoot {
             let parent = member.standardizedFileURL.deletingLastPathComponent()

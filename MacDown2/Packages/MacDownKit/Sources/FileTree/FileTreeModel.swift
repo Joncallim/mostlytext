@@ -1,3 +1,4 @@
+import Darwin
 import Foundation
 import Observation
 
@@ -6,6 +7,19 @@ enum DirectoryLoadState: Sendable {
     case loading
     case loaded([DirectoryEntry])
     case failed(String)
+}
+
+struct FileTreeRootIdentity: Equatable {
+    let device: dev_t
+    let inode: ino_t
+
+    init?(url: URL) {
+        var info = stat()
+        guard Darwin.fstatat(AT_FDCWD, url.path, &info, 0) == 0,
+              info.st_mode & S_IFMT == S_IFDIR else { return nil }
+        device = info.st_dev
+        inode = info.st_ino
+    }
 }
 
 @MainActor @Observable
@@ -51,6 +65,10 @@ public final class FileTreeModel {
 
     @ObservationIgnored private var rootAccessWillChange: (@MainActor () -> Void)?
     var generation: UInt = 0
+    /// Captured when the folder is selected, before any asynchronous tree read.
+    /// A later path replacement must not silently become the write root.
+    @ObservationIgnored var rootPhysicalURL: URL?
+    @ObservationIgnored var rootIdentity: FileTreeRootIdentity?
     var reloadTokens: [URL: UInt] = [:]
     var nextReloadToken: UInt = 0
     var rootIsTerminal = false
@@ -88,6 +106,8 @@ public final class FileTreeModel {
         children = [:]; expanded = []; entriesByURL = [:]
         guard let root else { availability = .noRoot; rows = []; return }
         rootAccessScope = FolderAccessScope(url: accessURL?.standardizedFileURL ?? root)
+        rootPhysicalURL = root.resolvingSymlinksInPath().standardizedFileURL
+        rootIdentity = FileTreeRootIdentity(url: root)
         let expectedGeneration = generation
         children[root] = .loading; availability = .loading; rows = []
         await reload(root, isRoot: true, expectedGeneration: expectedGeneration)
@@ -163,6 +183,8 @@ public final class FileTreeModel {
         }
         watchers = [:]
         rootAccessScope = nil
+        rootPhysicalURL = nil
+        rootIdentity = nil
         reloadTokens = [:]
     }
 

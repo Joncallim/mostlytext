@@ -89,4 +89,34 @@ struct FileTreeSymlinkMutationAuthorityTests {
         let created = try await model.createFile(in: fixture.root)
         #expect(FileManager.default.fileExists(atPath: created.url.path))
     }
+
+    @Test func retargetingTheSelectedRootAliasCannotAuthorizeWritesToItsNewTarget() async throws {
+        let fixture = try makeFixture()
+        defer { try? FileManager.default.removeItem(at: fixture.base) }
+        let alias = fixture.base.appendingPathComponent("selected-root", isDirectory: true)
+        try FileManager.default.createSymbolicLink(at: alias, withDestinationURL: fixture.root)
+        let model = await model(rootedAt: alias)
+
+        try FileManager.default.removeItem(at: alias)
+        try FileManager.default.createSymbolicLink(at: alias, withDestinationURL: fixture.outside)
+
+        await #expect(throws: FileTreeOperationError.outsideCurrentRoot) {
+            try await model.createFile(in: alias)
+        }
+        #expect(try FileManager.default.contentsOfDirectory(atPath: fixture.outside.path) == ["secret.md"])
+    }
+
+    @Test func replacingTheSelectedRootAtTheSamePathCannotAuthorizeWritesToTheReplacement() async throws {
+        let fixture = try makeFixture()
+        defer { try? FileManager.default.removeItem(at: fixture.base) }
+        let model = await model(rootedAt: fixture.root)
+        let original = fixture.base.appendingPathComponent("original", isDirectory: true)
+        try FileManager.default.moveItem(at: fixture.root, to: original)
+        try FileManager.default.createDirectory(at: fixture.root, withIntermediateDirectories: false)
+
+        await #expect(throws: FileTreeOperationError.outsideCurrentRoot) {
+            try await model.createFile(in: fixture.root)
+        }
+        #expect(try FileManager.default.contentsOfDirectory(atPath: fixture.root.path).isEmpty)
+    }
 }
