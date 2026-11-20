@@ -155,7 +155,7 @@ enum DerivedMathReply {
 
 /// Temporary boundary probe. The diagnostic branch is never a product candidate.
 @MainActor
-private final class MinimalWorkerWebKitProbe: NSObject, WKNavigationDelegate {
+final class MinimalWorkerWebKitProbe: NSObject, WKNavigationDelegate {
     private var webView: WKWebView?
     private var continuation: CheckedContinuation<Bool, Never>?
 

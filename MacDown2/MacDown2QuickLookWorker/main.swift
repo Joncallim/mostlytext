@@ -1,5 +1,6 @@
 import Darwin
 import Foundation
+import OSLog
 import QuickLookBoundary
 import QuickLookSource
 import Security
@@ -140,12 +141,27 @@ private final class SourceHandler: NSObject, QuickLookWorkerProtocol {
             return
         }
         let retained = selectedFile
+        if Self.containsMermaidMarker(retained.fileDescriptor) {
+            Task { @MainActor in
+                let loaded = await MinimalWorkerWebKitProbe().run()
+                Logger(subsystem: "app.mostlytext.quicklook.worker", category: "service-probe")
+                    .notice("Minimal service WebKit page loaded: \(loaded)")
+            }
+        }
         let completion = SourceReply(reply)
         Thread.detachNewThread {
             defer { admission.release() }
             let result = SourceProcess.run(selectedDescriptor: retained.fileDescriptor)
             completion.finish(result.data, status: result.status)
         }
+    }
+
+    private static func containsMermaidMarker(_ descriptor: Int32) -> Bool {
+        var prefix = [UInt8](repeating: 0, count: 4096)
+        let count = prefix.withUnsafeMutableBytes { bytes in
+            Darwin.pread(descriptor, bytes.baseAddress, bytes.count, 0)
+        }
+        return count > 0 && String(bytes: prefix.prefix(count), encoding: .utf8)?.contains("mermaid") == true
     }
 }
 
