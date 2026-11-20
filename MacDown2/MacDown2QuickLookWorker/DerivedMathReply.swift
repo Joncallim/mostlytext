@@ -9,6 +9,7 @@ import Math
 import MathRendering
 import OSLog
 import QuickLookSource
+import WebKit
 
 private let derivedLogger = Logger(subsystem: "app.mostlytext.quicklook.worker", category: "derived")
 
@@ -54,6 +55,10 @@ enum DerivedMathReply {
                         publishSnapshot(source: source, results: completedMath + diagrams, onSnapshot: onSnapshot)
                     }
                 )
+            }
+            if !MermaidFenceScanner.scan(document, sourceText: source).isEmpty {
+                let minimalPageLoaded = await MinimalWorkerWebKitProbe().run()
+                derivedLogger.notice("Minimal worker WebKit page loaded: \(minimalPageLoaded)")
             }
             await renderMermaid(document: document, source: source,
                                 priorResults: completedMath + graphvizResults,
@@ -145,5 +150,52 @@ enum DerivedMathReply {
             html: html, sourceGeneration: result.sourceGeneration,
             diagnostics: diagnostics
         )
+    }
+}
+
+/// Temporary boundary probe. The diagnostic branch is never a product candidate.
+@MainActor
+private final class MinimalWorkerWebKitProbe: NSObject, WKNavigationDelegate {
+    private var webView: WKWebView?
+    private var continuation: CheckedContinuation<Bool, Never>?
+
+    func run() async -> Bool {
+        let configuration = WKWebViewConfiguration()
+        configuration.websiteDataStore = .nonPersistent()
+        let view = WKWebView(frame: .zero, configuration: configuration)
+        webView = view
+        view.navigationDelegate = self
+        return await withCheckedContinuation { pending in
+            continuation = pending
+            _ = view.loadHTMLString("<!doctype html><html><body>WORKER_MINIMAL_PROBE</body></html>", baseURL: nil)
+        }
+    }
+
+    func webView(_: WKWebView, didFinish _: WKNavigation!) {
+        finish(true)
+    }
+
+    func webViewWebContentProcessDidTerminate(_: WKWebView) {
+        derivedLogger.error("Minimal worker WebContent process terminated")
+        finish(false)
+    }
+
+    func webView(_: WKWebView, didFail _: WKNavigation!, withError error: Error) {
+        derivedLogger.error("Minimal worker WebKit navigation failed: \(String(describing: error))")
+        finish(false)
+    }
+
+    func webView(_: WKWebView, didFailProvisionalNavigation _: WKNavigation!, withError error: Error) {
+        derivedLogger.error("Minimal worker WebKit provisional navigation failed: \(String(describing: error))")
+        finish(false)
+    }
+
+    private func finish(_ loaded: Bool) {
+        guard let continuation else { return }
+        self.continuation = nil
+        webView?.navigationDelegate = nil
+        webView?.stopLoading()
+        webView = nil
+        continuation.resume(returning: loaded)
     }
 }
