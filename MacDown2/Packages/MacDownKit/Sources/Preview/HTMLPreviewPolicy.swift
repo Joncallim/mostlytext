@@ -206,12 +206,14 @@ public enum HTMLPreviewNavigationPolicy {
         for action: HTMLPreviewNavigationAction,
         policy: HTMLPreviewPolicy
     ) -> HTMLPreviewNavigationDecision {
+        // A fragment in the current page does not authorize a new window.
+        // Popup permission remains independent of external navigation.
+        if action.target == .newWindow, !policy.allowsPopups {
+            return .cancel
+        }
         guard policy.allowsExternalNavigation else {
             if action.isSameDocument {
                 return .allow
-            }
-            if action.target == .newWindow {
-                return policy.allowsPopups ? .allow : .cancel
             }
             return urlAllowsNavigation(action.url, policy: policy) ? .allow : .cancel
         }

@@ -93,6 +93,31 @@ struct HTMLPreviewNavigationPolicyTests {
     @Test func deniesPopups() {
         #expect(decision("macdown-preview://document/", target: .newWindow) == .cancel)
         #expect(decision("https://evil.example/", target: .newWindow) == .cancel)
+        #expect(decision("macdown-preview://document/#section", sameDocument: true, target: .newWindow) == .cancel)
+    }
+
+    @Test func popupPermissionDoesNotFollowExternalNavigationPermission() {
+        var external = policy
+        external.allowsExternalNavigation = true
+        let popup = HTMLPreviewNavigationAction(
+            url: URL(string: "https://example.com/"), isSameDocument: false, target: .newWindow
+        )
+        #expect(HTMLPreviewNavigationPolicy.decision(for: popup, policy: external) == .cancel)
+    }
+
+    @Test func explicitlyPermittedPopupStillRespectsTheNavigationScheme() {
+        var popupPolicy = policy
+        popupPolicy.allowsPopups = true
+        #expect(HTMLPreviewNavigationPolicy.decision(
+            for: HTMLPreviewNavigationAction(
+                url: URL(string: "macdown-preview://document/#section"), isSameDocument: true, target: .newWindow
+            ), policy: popupPolicy
+        ) == .allow)
+        #expect(HTMLPreviewNavigationPolicy.decision(
+            for: HTMLPreviewNavigationAction(
+                url: URL(string: "https://example.com/"), isSameDocument: false, target: .newWindow
+            ), policy: popupPolicy
+        ) == .cancel)
     }
 
     @Test func allowsPreviewSchemeNavigationToNonRenderableMIME() {

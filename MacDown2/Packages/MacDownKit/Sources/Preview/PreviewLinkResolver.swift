@@ -60,13 +60,19 @@ public struct PreviewLinkResolver: Sendable, Equatable {
         case "http", "https", "mailto":
             return .open
         case "file":
+            // A Markdown link can spell file://host/path or file://user@/path.
+            // Neither names a local file authority that the app may open or
+            // ask Finder to reveal on the user's behalf.
+            guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+                  components.host == nil || components.host == "",
+                  components.user == nil, components.password == nil, components.port == nil
+            else { return .ignore }
             guard openableDocumentExtensions.contains(url.pathExtension.lowercased()) else { return .reveal }
             var target = url
-            if var components = URLComponents(url: url, resolvingAgainstBaseURL: false) {
-                components.fragment = nil
-                components.query = nil
-                target = components.url ?? url
-            }
+            var documentComponents = components
+            documentComponents.fragment = nil
+            documentComponents.query = nil
+            target = documentComponents.url ?? url
             if let currentDocument,
                target.standardizedFileURL.path == currentDocument.standardizedFileURL.path {
                 return .ignore
