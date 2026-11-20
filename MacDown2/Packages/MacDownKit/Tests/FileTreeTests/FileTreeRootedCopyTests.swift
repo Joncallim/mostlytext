@@ -89,8 +89,11 @@ struct FileTreeRootedCopyTests {
 
     @Test func collisionAfterReadOnlyDirectoryCopyRemovesItsPrivateStage() throws {
         let base = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-        defer { try? FileManager.default.removeItem(at: base) }
         let source = base.appendingPathComponent("source", isDirectory: true)
+        defer {
+            _ = Darwin.chmod(source.path, 0o700)
+            try? FileManager.default.removeItem(at: base)
+        }
         let rootURL = base.appendingPathComponent("root", isDirectory: true)
         try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
         try FileManager.default.createDirectory(at: rootURL, withIntermediateDirectories: true)
