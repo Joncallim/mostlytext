@@ -39,6 +39,13 @@ They use an actual `ThemeCatalogStore` and managed files; only the final
 completion delivery is controlled at the model boundary. The tests do not
 claim installed UI or owner-desktop acceptance.
 
+The first hosted before-fix run, [44757531511](https://github.com/Joncallim/mostlytext/actions/runs/44757531511),
+exposed a fixture error: an import assigns a new managed identity, while the
+new deletion case initially used the incoming file's identity. That case
+threw `invalidImportChoice`. The later-menu-choice case separately failed its
+intended assertions on the unmodified selection code. The fixture correction
+uses the identity returned by the store; the original failure is retained.
+
 The repository-wide issue audit and exact-head hosted verification results are
 recorded on the PR and issue comment after integration. Strict release
 compliance remains governed by issue #14 and is not changed by this patch.
