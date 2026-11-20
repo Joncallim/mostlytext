@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "scope": "selected_plain_string_sinks",
-  "base_source_commit": "892241384112a05d397a8ce292f0467e02d3ebab plus reviewed PR164 delta plus reviewed PR146 preview-folder panel delta",
+  "base_source_commit": "a9092143cd37576da8e4a4165b9f483d1eec6a64 (reviewed Reveal Active File source relocation)",
   "limitations": [
     "Selected AppKit property/button/accessibility, name fallback, folder and workspace-replace error sites only; this is not the complete E16 literal census.",
     "Computed string flows, SwiftUI implicit keys, Info.plist/project.yml OS labels, built-in snippet and format names require separate policy and native audit.",
     "Catalog and translation quality, language overrides, accessibility layout, and final string freeze require independent evidence."
   ],
-  "production_swift_inputs_scanned": 788,
+  "production_swift_inputs_scanned": 790,
   "source_sha256": {
     "MacDown2/MacDown2/ExportCoordinator.swift": "1e9ae02533ef1cdc7b01dd640381bffb9b951be05dd33efbb1b907295ab8eb72",
     "MacDown2/MacDown2/FirstRunWindowController.swift": "b8737772a8974cab6944c2b6c63bd711d35b24d47d99f4179b14085b1ebf4dbf",
@@ -22,9 +22,10 @@
     "MacDown2/MacDown2/WindowController+Close.swift": "0af2d94c527de29dc79b6ef109fcd01fbd897322b7edd269dffa40e74dfbc825",
     "MacDown2/MacDown2/WindowController+Encoding.swift": "4f954c30a1bd0607c6c0bc8b3a33601efbaf1a7c5118ad592c6b0ffe26d04884",
     "MacDown2/MacDown2/WindowController.swift": "50bf560907e80beae5bb4c9d9404ba24aaf83c27ed3660067be261f93b0346e0",
-    "MacDown2/MacDown2/WindowCoordinator+FileTree.swift": "f43d3cc76fc0c49f3af40c169300879e91d5ca15bef2f15e276371087a252081",
+    "MacDown2/MacDown2/WindowCoordinator+FileTree.swift": "fbebc246f9239a1c65a5a26674a7016ed0e5c2e22149b48bfa380e34bd036627",
     "MacDown2/MacDown2/WindowCoordinator+OpenFailure.swift": "d499c04d606c79f3ae844b211da4cb585bdfabf6de1d8a0f661381a7d0fb3242",
     "MacDown2/MacDown2/WindowCoordinator+OpenWithEncoding.swift": "032de76f1322ca9c960d8376e063ed54ed20e3064d3015f4865af445ee3e1331",
+    "MacDown2/MacDown2/WindowCoordinator+RevealActiveFile.swift": "3c34d2675f6813f9e987a98c3f557899b4a196fb4006c827c80ee0b8e4bd054b",
     "MacDown2/MacDown2/WindowCoordinator+ValidatedExport.swift": "e486575e272df847e56eddf87dd0f5213eef608dba8552517505c1a791fc1539",
     "MacDown2/Packages/MacDownKit/Sources/EditorCore/EditorGutterView.swift": "a17ffee42e46223a9bcf3b28e62789146c5ccae985ee4da22f82ec87e4204193",
     "MacDown2/Packages/MacDownKit/Sources/TextSearch/WorkspaceReplaceEngine.swift": "898ebde4d0914e91137f5ede3f23edbd40a2c7a03ae62a192d7cebef55ed719b",
@@ -355,63 +356,35 @@
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 269,
-      "kind": "appkit_property",
-      "literal": "\"File Is Outside the Open Folder\"",
-      "route": "localized"
-    },
-    {
-      "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 270,
-      "kind": "appkit_property",
-      "literal": "\"Open its parent folder to reveal it in the sidebar?\"",
-      "route": "localized"
-    },
-    {
-      "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 272,
-      "kind": "appkit_button",
-      "literal": "\"Open Parent Folder\"",
-      "route": "localized"
-    },
-    {
-      "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 273,
-      "kind": "appkit_button",
-      "literal": "\"Cancel\"",
-      "route": "localized"
-    },
-    {
-      "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 345,
+      "line": 277,
       "kind": "appkit_property",
       "literal": "\"File Moved to Trash\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 346,
+      "line": 278,
       "kind": "appkit_property",
       "literal": "\"This document has unsaved changes.\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 347,
+      "line": 279,
       "kind": "appkit_button",
       "literal": "\"Save As…\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 348,
+      "line": 280,
       "kind": "appkit_button",
       "literal": "\"Close Without Saving\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 349,
+      "line": 281,
       "kind": "appkit_button",
       "literal": "\"Keep Open\"",
       "route": "localized"
@@ -461,6 +434,34 @@
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+OpenWithEncoding.swift",
       "line": 39,
+      "kind": "appkit_button",
+      "literal": "\"Cancel\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+RevealActiveFile.swift",
+      "line": 68,
+      "kind": "appkit_property",
+      "literal": "\"File Is Outside the Open Folder\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+RevealActiveFile.swift",
+      "line": 69,
+      "kind": "appkit_property",
+      "literal": "\"Open its parent folder to reveal it in the sidebar?\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+RevealActiveFile.swift",
+      "line": 71,
+      "kind": "appkit_button",
+      "literal": "\"Open Parent Folder\"",
+      "route": "localized"
+    },
+    {
+      "path": "MacDown2/MacDown2/WindowCoordinator+RevealActiveFile.swift",
+      "line": 72,
       "kind": "appkit_button",
       "literal": "\"Cancel\"",
       "route": "localized"

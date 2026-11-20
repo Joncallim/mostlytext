@@ -140,23 +140,20 @@ struct DeletedDocumentDiscardTests {
         let fixture = try await makeFixture()
         defer { fixture.cleanUp() }
         let url = try #require(fixture.dirty.fileURL)
-        let context = fixture.controller.fileTreeModel.beginOperation()
-        #expect(fixture.coordinator.revealOutsideRootIsCurrent(
-            for: url, documentID: fixture.dirty.id, controller: fixture.controller,
-            window: fixture.window, context: context
+        let request = try #require(RevealRequestAuthority(for: url, controller: fixture.controller))
+        #expect(fixture.coordinator.revealRequestIsCurrent(
+            request, controller: fixture.controller, window: fixture.window
         ))
 
         fixture.controller.model.tabStore.newTab(document: FileDocument(text: "replacement"))
-        #expect(!fixture.coordinator.revealOutsideRootIsCurrent(
-            for: url, documentID: fixture.dirty.id, controller: fixture.controller,
-            window: fixture.window, context: context
+        #expect(!fixture.coordinator.revealRequestIsCurrent(
+            request, controller: fixture.controller, window: fixture.window
         ))
 
         fixture.controller.model.tabStore.activate(fixture.tabID)
         await fixture.controller.fileTreeModel.setRoot(fixture.root)
-        #expect(!fixture.coordinator.revealOutsideRootIsCurrent(
-            for: url, documentID: fixture.dirty.id, controller: fixture.controller,
-            window: fixture.window, context: context
+        #expect(!fixture.coordinator.revealRequestIsCurrent(
+            request, controller: fixture.controller, window: fixture.window
         ))
     }
 }

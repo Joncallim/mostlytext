@@ -40,3 +40,37 @@ import Testing
     #expect(await olderReveal.value == false)
     #expect(model.selectedURL == nil)
 }
+
+@MainActor
+@Test func suspendedRevealChecksCallerAuthorityBeforeSelecting() async {
+    let root = URL(fileURLWithPath: "/tmp/reveal-admission", isDirectory: true)
+    let child = root.appendingPathComponent("nested", isDirectory: true)
+    let target = child.appendingPathComponent("draft.md")
+    let reader = BlockingReader(
+        blockedURL: child,
+        contentsByURL: [root: [directory(child)], child: [file(target)]]
+    )
+    let model = FileTreeModel(
+        reader: reader, watcher: TestWatching(),
+        preferences: FileTreePreferences(store: MemoryPreferenceStore()),
+        supportedExtensions: ["md"]
+    )
+    await model.setRoot(root)
+
+    var maySelect = true
+    let reveal = Task { await model.reveal(target, shouldSelect: { maySelect }) }
+    for _ in 0 ..< 1000 where !reader.didStart {
+        await Task.yield()
+    }
+    guard reader.didStart else {
+        reader.release.signal()
+        _ = await reveal.value
+        Issue.record("the controlled directory read did not start")
+        return
+    }
+    maySelect = false
+    reader.release.signal()
+    #expect(await reveal.value == false)
+    #expect(model.selectedURL == nil)
+    #expect(model.rows.contains(where: { $0.entry.url == target }))
+}
