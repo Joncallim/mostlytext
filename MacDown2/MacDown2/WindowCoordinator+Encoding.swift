@@ -22,30 +22,38 @@ extension WindowCoordinator {
     func reopenKeyDocument(withEncoding encoding: String.Encoding) {
         guard let controller = currentCommandController(keyWindow: NSApp.keyWindow, mainWindow: NSApp.mainWindow),
               let document = controller.model.activeDocument,
-              document.encoding.encoding != encoding
+              document.encoding.encoding != encoding,
+              let origin = DocumentActionAuthority(model: controller.model)
         else { return }
-        Task { await controller.reopenDocument(withEncoding: encoding) }
+        Task { await controller.reopenDocument(withEncoding: encoding, origin: origin) }
     }
 
     func saveKeyDocument(withEncoding encoding: FileEncodingMetadata) {
-        guard let controller = currentCommandController(keyWindow: NSApp.keyWindow, mainWindow: NSApp.mainWindow)
+        guard let controller = currentCommandController(keyWindow: NSApp.keyWindow, mainWindow: NSApp.mainWindow),
+              let origin = DocumentActionAuthority(model: controller.model)
         else { return }
-        Task { await controller.saveDocument(withEncoding: encoding) }
+        Task { await controller.saveDocument(withEncoding: encoding, origin: origin) }
     }
 
     /// The status-bar encoding actions act on the window that owns the bar —
     /// not whichever window happens to be key when the action runs (#183 R01).
-    func reopenDocument(in model: WorkspaceModel, withEncoding encoding: String.Encoding) {
+    func reopenDocument(
+        in model: WorkspaceModel, withEncoding encoding: String.Encoding, origin: DocumentActionAuthority
+    ) {
         guard let controller = controllers.first(where: { $0.model === model }),
               let document = model.activeDocument,
-              document.encoding.encoding != encoding
+              document.encoding.encoding != encoding,
+              origin.isCurrent(in: controller)
         else { return }
-        Task { await controller.reopenDocument(withEncoding: encoding) }
+        Task { await controller.reopenDocument(withEncoding: encoding, origin: origin) }
     }
 
-    func saveDocument(in model: WorkspaceModel, withEncoding encoding: FileEncodingMetadata) {
-        guard let controller = controllers.first(where: { $0.model === model }) else { return }
-        Task { await controller.saveDocument(withEncoding: encoding) }
+    func saveDocument(
+        in model: WorkspaceModel, withEncoding encoding: FileEncodingMetadata, origin: DocumentActionAuthority
+    ) {
+        guard let controller = controllers.first(where: { $0.model === model }),
+              origin.isCurrent(in: controller) else { return }
+        Task { await controller.saveDocument(withEncoding: encoding, origin: origin) }
     }
 }
 

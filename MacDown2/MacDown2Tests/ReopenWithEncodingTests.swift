@@ -102,6 +102,29 @@ struct ReopenWithEncodingTests {
         #expect(fixture.model.activeDocument?.text == "my edits")
     }
 
+    @Test func anInvalidatedChoiceCannotReloadAfterTheDiscardConfirmation() async throws {
+        let fixture = try makeFixture(bytes: Data("é".utf8))
+        defer { try? FileManager.default.removeItem(at: fixture.directory) }
+        fixture.model.tabStore.updateActiveDocument { $0.updatingText("my edits") }
+        let origin = try #require(DocumentActionAuthority(model: fixture.model))
+        let dirtyDocument = try #require(fixture.model.activeDocument)
+
+        let result = await fixture.controller.externalFileController.reopenWithEncoding(
+            .isoLatin1,
+            confirmDiscardingChanges: { _ in
+                // A new tab can expose the same file/document lifetime. The
+                // underlying reload's ID/epoch/generation checks all still match.
+                fixture.model.tabStore.newTab(document: dirtyDocument)
+                return true
+            },
+            stillAuthorized: { origin.isCurrent(in: fixture.controller) }
+        )
+
+        #expect(result == .superseded)
+        #expect(fixture.model.activeDocument?.text == "my edits")
+        #expect(fixture.model.activeDocument?.encoding.encoding == .utf8)
+    }
+
     @Test func openingAnAlreadyOpenFileWithAnEncodingRereadsItThroughTheReopenPath() async throws {
         let fixture = try makeFixture(bytes: Data("é".utf8))
         defer { try? FileManager.default.removeItem(at: fixture.directory) }

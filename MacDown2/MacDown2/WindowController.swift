@@ -287,12 +287,16 @@ final class WindowController: NSWindowController, NSWindowDelegate {
     /// destination is required. Only the latter path invokes this controller's
     /// window-bound Save As flow. This closes the fourth-pass TOCTOU left by
     /// checking `requiresDestinationToSave` and then calling ordinary `save()`.
-    func saveDocumentFromExplicitOrigin() async {
+    func saveDocumentFromExplicitOrigin(origin: DocumentActionAuthority? = nil) async {
+        guard let origin = origin ?? DocumentActionAuthority(model: model),
+              origin.isCurrent(in: self) else { return }
         switch await model.saveWithoutDestinationPrompt() {
         case .handled:
+            guard origin.isCurrent(in: self) else { return }
             externalFileController.synchronize(with: model.activeDocument)
             updateTitleAndEditedState()
         case .requiresDestination:
+            guard origin.isCurrent(in: self) else { return }
             await saveDocumentAsFromExplicitOrigin()
         }
     }

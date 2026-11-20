@@ -5,27 +5,41 @@ import Workspace
 
 @MainActor
 extension WindowController {
-    func saveDocument(withEncoding encoding: FileEncodingMetadata) async {
-        guard let document = model.activeDocument, document.encoding != encoding else { return }
+    func saveDocument(
+        withEncoding encoding: FileEncodingMetadata, origin: DocumentActionAuthority? = nil
+    ) async {
+        guard let origin = origin ?? DocumentActionAuthority(model: model),
+              origin.isCurrent(in: self),
+              let document = model.activeDocument, document.encoding != encoding else { return }
         await externalFileController.drainRecovery()
-        guard model.activeDocument?.id == document.id,
-              model.activeDocument?.recoveryEpoch == document.recoveryEpoch
-        else { return }
+        guard origin.isCurrent(in: self) else { return }
         _ = await model.saveWithoutDestinationPrompt(encoding: encoding)
+        guard origin.isCurrent(in: self) else { return }
         externalFileController.synchronize(with: model.activeDocument)
         updateTitleAndEditedState()
     }
 
-    func reopenDocument(withEncoding encoding: String.Encoding) async {
+    func reopenDocument(
+        withEncoding encoding: String.Encoding, origin: DocumentActionAuthority? = nil
+    ) async {
         // Re-selecting the current encoding is a complete no-op: no recovery
         // drain, disk read, prompt, undo reset or focus change.
-        guard model.activeDocument?.encoding.encoding != encoding else { return }
-        let originalID = model.activeDocument?.id
+        guard let origin = origin ?? DocumentActionAuthority(model: model),
+              origin.isCurrent(in: self),
+              model.activeDocument?.encoding.encoding != encoding else { return }
         await externalFileController.drainRecovery()
-        guard model.activeDocument?.id == originalID else { return }
-        let result = await externalFileController.reopenWithEncoding(encoding) { [weak self] document in
-            await self?.confirmDiscardingChanges(for: document, encoding: encoding) ?? false
-        }
+        guard origin.isCurrent(in: self) else { return }
+        let result = await externalFileController.reopenWithEncoding(
+            encoding,
+            confirmDiscardingChanges: { [weak self] document in
+                await self?.confirmDiscardingChanges(for: document, encoding: encoding) ?? false
+            },
+            stillAuthorized: { [weak self] in
+                guard let self else { return false }
+                return origin.isCurrent(in: self)
+            }
+        )
+        guard origin.isCurrent(in: self) else { return }
         if case .unreadable = result {
             presentReopenFailure(encoding: encoding)
         }
