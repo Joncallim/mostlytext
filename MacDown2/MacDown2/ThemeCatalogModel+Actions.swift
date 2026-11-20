@@ -8,6 +8,7 @@ extension ThemeCatalogModel {
         isBusy = true
         problem = nil
         let token = generation
+        let selectionAtStart = controller.selectionGeneration
         defer { finishMutation() }
         let accessing = url.startAccessingSecurityScopedResource()
         defer {
@@ -41,7 +42,7 @@ extension ThemeCatalogModel {
             }
             let result = try await store.commitImport(prepared, choice: choice)
             guard generation == token else { return }
-            accept(result, select: true)
+            accept(result, select: true, selectionAtStart: selectionAtStart)
         } catch {
             if generation == token, !(error is CancellationError) {
                 problem = error as? ResourceReadError == .oversized
@@ -57,13 +58,14 @@ extension ThemeCatalogModel {
         isBusy = true
         problem = nil
         let token = generation
+        let selectionAtStart = controller.selectionGeneration
         confirmationTask = Task { [self] in
             defer { finishMutation() }
             do {
                 try Task.checkCancellation()
                 let result = try await store.commitImport(prepared, choice: choice)
                 guard generation == token else { return }
-                accept(result, select: true)
+                accept(result, select: true, selectionAtStart: selectionAtStart)
             } catch {
                 if generation == token, !(error is CancellationError) {
                     problem = Self.message(for: error)
@@ -77,6 +79,7 @@ extension ThemeCatalogModel {
         isBusy = true
         problem = nil
         let token = generation
+        let selectionAtStart = controller.selectionGeneration
         defer { finishMutation() }
         do {
             var copy = theme
@@ -86,7 +89,7 @@ extension ThemeCatalogModel {
             guard generation == token, !Task.isCancelled else { return }
             let result = try await store.commitImport(prepared, choice: .importCopy)
             guard generation == token else { return }
-            accept(result, select: true)
+            accept(result, select: true, selectionAtStart: selectionAtStart)
         } catch {
             if generation == token {
                 problem = Self.message(for: error)
@@ -123,7 +126,7 @@ extension ThemeCatalogModel {
                 try Task.checkCancellation()
                 let result = try await store.delete(prepared)
                 guard generation == token else { return }
-                accept(result, select: false)
+                accept(result, select: false, selectionAtStart: nil)
             } catch {
                 if generation == token, !(error is CancellationError) {
                     problem = Self.message(for: error)
@@ -132,7 +135,7 @@ extension ThemeCatalogModel {
         }
     }
 
-    private func accept(_ mutation: ThemeCatalogMutation, select: Bool) {
+    func accept(_ mutation: ThemeCatalogMutation, select: Bool, selectionAtStart: UUID?) {
         publish(mutation.state)
         if select, let file = mutation.state.catalog.customTheme(id: mutation.affectedID) {
             controller.select(file.theme)

@@ -113,6 +113,46 @@ struct ThemeCatalogModelTests {
         await model.shutdown()
     }
 
+    @Test func olderImportReplyCannotFocusAThemeRemovedByANewerCatalogRevision() async throws {
+        let fixture = try ThemeModelFixture(); defer { fixture.cleanup() }
+        let model = try await fixture.start()
+        model.observationTask?.cancel()
+        await model.observationTask?.value
+        let store = try #require(model.store)
+        await store.stopObserving()
+
+        let file = try ThemeFile(theme: BundledThemes.light)
+        let prepared = try await store.prepareImport(file.encoded())
+        let installed = try await store.commitImport(prepared, choice: .install)
+        let deletion = try await store.prepareDeletion(id: file.stableID)
+        let removed = try await store.delete(deletion)
+        model.publish(removed.state)
+
+        model.accept(installed, select: true, selectionAtStart: model.controller.selectionGeneration)
+        #expect(model.state?.catalog.revision == removed.state.catalog.revision)
+        #expect(model.affectedThemeID == nil)
+        #expect(model.controller.current == BundledThemes.light)
+        await model.shutdown()
+    }
+
+    @Test func laterExplicitThemeChoiceWinsOverAnOlderImportReply() async throws {
+        let fixture = try ThemeModelFixture(); defer { fixture.cleanup() }
+        let model = try await fixture.start()
+        let store = try #require(model.store)
+        let file = try ThemeFile(theme: BundledThemes.light)
+        let prepared = try await store.prepareImport(file.encoded())
+        let installed = try await store.commitImport(prepared, choice: .install)
+        model.publish(installed.state)
+        let selectionAtStart = model.controller.selectionGeneration
+        let paper = BundledThemes.all[2]
+        model.controller.select(paper) // The menu stays usable while an import awaits storage.
+
+        model.accept(installed, select: true, selectionAtStart: selectionAtStart)
+        #expect(model.controller.current.id == paper.id)
+        #expect(model.affectedThemeID == nil)
+        await model.shutdown()
+    }
+
     @Test func shutdownRevokesPendingConfirmationAndCannotRestartAnOldCatalogGeneration() async throws {
         let fixture = try ThemeModelFixture(); defer { fixture.cleanup() }
         let original = try ThemeFile(theme: BundledThemes.light)
