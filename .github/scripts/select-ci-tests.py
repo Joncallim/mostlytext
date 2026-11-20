@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Select PR or main-push suites from changed package targets; fail open to full."""
+"""Select PR or main-push suites from changed sources; fail open to full."""
 
 import argparse
 import json
@@ -88,6 +88,7 @@ def select(paths, manifest):
         return ("full", "", "full", ())
     changed = set()
     theme_app_input = False
+    app_input = False
     tests = {target["name"] for target in manifest["targets"] if target["type"] == "test"}
     sources = {target["name"] for target in manifest["targets"] if target["type"] != "test"}
     if (THEME_CONTROLLER_SOURCE in paths and "Themes" in sources and "ThemesTests" in tests
@@ -113,6 +114,10 @@ def select(paths, manifest):
             continue
         elif path in THEME_APP_INPUTS:
             theme_app_input = True
+        elif path.startswith(("MacDown2/MacDown2/", "MacDown2/MacDown2Tests/")):
+            # App-only source/tests cannot alter package tests. Keep the full
+            # app suite because there is no app-target dependency graph.
+            app_input = True
         elif path in THEME_WORKFLOW_INPUTS:
             # The dedicated Debug/Release theme workflow runs and verifies
             # this probe; it does not change the product test graph.
@@ -127,11 +132,13 @@ def select(paths, manifest):
             # product target or ordinary package/app test input.
             continue
         else:
-            # Manifests, lockfiles, app sources, resources outside a target,
-            # workflows and selector changes can affect any suite.
+            # Manifests, lockfiles, resources outside reviewed roots and
+            # workflows can affect any suite.
             return ("full", "", "full", ())
     if not changed:
-        return ("full", "", "full", ()) if theme_app_input else ("none", "", "none", ())
+        if theme_app_input:
+            return ("full", "", "full", ())
+        return ("app-only", "", "full", ()) if app_input else ("none", "", "none", ())
     closure = set(changed)
     while True:
         additions = {
@@ -150,6 +157,8 @@ def select(paths, manifest):
     changed_sources = changed & sources
     if theme_app_input and changed_sources != {"Themes"}:
         return ("full", "", "full", ())
+    if app_input:
+        return ("selected", "|".join(re.escape(name) for name in selected), "full", ())
     if not changed_sources:
         app_mode, app = "none", ()
     elif changed_sources <= set().union(*(targets for targets, _ in APP_SUITE_FAMILIES)):

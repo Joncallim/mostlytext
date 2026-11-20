@@ -83,7 +83,9 @@ extension WindowCoordinator {
     /// third-adversarial-pass finding #5, mirroring `saveDocumentAs(in:)`
     /// just below).
     func saveDocument(in controller: WindowController) {
-        Task { await controller.saveDocumentFromExplicitOrigin() }
+        guard let origin = DocumentActionAuthority(model: controller.model),
+              origin.isCurrent(in: controller) else { return }
+        Task { await controller.saveDocumentFromExplicitOrigin(origin: origin) }
     }
 
     /// Uses `saveDocumentAsFromExplicitOrigin()`, not the plain

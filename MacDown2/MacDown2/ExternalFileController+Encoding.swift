@@ -22,6 +22,8 @@ extension ExternalFileController {
         case unreadable
     }
 
+    // The final origin check adds one branch to the existing disk/conflict state machine.
+    // swiftlint:disable cyclomatic_complexity
     /// Re-decodes the active document's file with `encoding`, replacing the
     /// editor text. Adopts exactly the state a "use disk version" resolution
     /// does (baseline, recovery cleanup, undo reset), so the same invariants
@@ -30,7 +32,8 @@ extension ExternalFileController {
     /// asked about.
     func reopenWithEncoding(
         _ encoding: String.Encoding,
-        confirmDiscardingChanges: (FileDocument) async -> Bool
+        confirmDiscardingChanges: (FileDocument) async -> Bool,
+        stillAuthorized: @MainActor () -> Bool = { true }
     ) async -> ReopenEncodingResult {
         guard !disposed, let model, let document = model.activeDocument,
               let url = document.fileURL, document.state != .conflict,
@@ -51,10 +54,11 @@ extension ExternalFileController {
             return .unreadable
         }
 
+        guard stillAuthorized() else { return .superseded }
         if document.state == .dirty || document.state == .promptingClose {
             guard await confirmDiscardingChanges(document) else { return .declined }
         }
-        guard !disposed,
+        guard !disposed, stillAuthorized(),
               let current = model.activeDocument,
               current.id == document.id,
               current.recoveryEpoch == document.recoveryEpoch,
@@ -71,4 +75,5 @@ extension ExternalFileController {
         case .cleanupBlocked, .notApplicable: return .unavailable
         }
     }
+    // swiftlint:enable cyclomatic_complexity
 }

@@ -97,7 +97,11 @@ extension DocumentEditorSplitView {
             // re-rendered `text` (found by `TextFilterCoordinatorTests`'
             // real, mounted-window integration test).
             if appSettings?.editor.showsStatusBar != false,
-               let system = editorStore.existingSystem(for: identity) {
+               let system = editorStore.existingSystem(for: identity),
+               let encodingOrigin = DocumentActionAuthority(model: model),
+               encodingOrigin.identity.tabID == tab.id,
+               encodingOrigin.identity.documentID == document.id,
+               encodingOrigin.identity.recoveryEpoch == document.recoveryEpoch {
                 EditorStatusBarMetricsObserver(
                     store: system.documentMetricsStore,
                     revision: system.contentRevision
@@ -113,8 +117,10 @@ extension DocumentEditorSplitView {
                         encoding: EncodingStatusItem(
                             metadata: document.encoding,
                             isChangeable: document.hasEncodableBackingFile,
-                            onReopen: { coordinator?.reopenDocument(in: model, withEncoding: $0) },
-                            onSave: { coordinator?.saveDocument(in: model, withEncoding: $0) }
+                            onReopen: {
+                                coordinator?.reopenDocument(in: model, withEncoding: $0, origin: encodingOrigin)
+                            },
+                            onSave: { coordinator?.saveDocument(in: model, withEncoding: $0, origin: encodingOrigin) }
                         ),
                         lineEnding: metrics.map { current in
                             LineEndingStatusItem(
