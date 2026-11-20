@@ -40,6 +40,9 @@ final class HighlightingStorageGate: NSObject, NSTextStorageDelegate {
     /// withheld from Neon rather than inferring it from timing.
     private(set) var characterEditCount = 0
     private(set) var forwardedCharacterEditCount = 0
+    /// Runs after Neon's will callback has captured coordinates from the old
+    /// line table, before its did callback requests new-text coordinates.
+    var didForwardWillProcessCharacterEdit: (() -> Void)?
 
     /// Becomes the delegate of `storage`, remembering any existing delegate.
     func install(on storage: NSTextStorage) {
@@ -79,9 +82,6 @@ final class HighlightingStorageGate: NSObject, NSTextStorageDelegate {
             if editedMask.contains(.editedCharacters) {
                 characterEditCount += 1
                 forwardsCurrentEdit = downstream != nil && shouldForwardEdit(textStorage.length)
-                if forwardsCurrentEdit {
-                    forwardedCharacterEditCount += 1
-                }
             } else {
                 forwardsCurrentEdit = true
             }
@@ -95,6 +95,10 @@ final class HighlightingStorageGate: NSObject, NSTextStorageDelegate {
                 downstream?.textStorage?(
                     textStorage, willProcessEditing: editedMask, range: editedRange, changeInLength: delta
                 )
+                if editedMask.contains(.editedCharacters) {
+                    forwardedCharacterEditCount += 1
+                    didForwardWillProcessCharacterEdit?()
+                }
             }
         }
     }

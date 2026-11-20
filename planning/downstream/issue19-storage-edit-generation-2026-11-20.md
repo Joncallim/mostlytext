@@ -15,11 +15,20 @@ transformer returned old point `(row: 1, column: 0)` instead of the new
 hard-coded revision-zero assertion was corrected before this failing run; it
 was a fixture assumption, not a product failure.
 
-The mounted highlighter now includes the storage gate's pre-Neon character-edit
-count in the transformer's generation. This invalidates the line table before
-Neon asks for post-edit points. The controlled regression passes for newline
-removal, insertion, Unicode and CRLF relocation. A separate edit/fresh-render
-comparison passes after newline removal and restoration.
+The first proposed fix invalidated in the gate's `willProcessEditing`. Independent
+review found that this was too early: pinned Neon captures the *old* endpoint
+in its will callback, then asks for new coordinates in its did callback. That
+proposal was not merged.
+
+The corrected highlighter primes its old line table when Neon is attached.
+The gate forwards Neon's will callback against that table, then advances a
+forwarded-edit generation and primes the new table before Neon's did callback.
+This also handles edits that shrink the document: old endpoints are clamped to
+the old cached length during will, and new endpoints use the new length during
+did. The controlled regression checks both phases for newline removal,
+insertion, Unicode and CRLF relocation, plus a shrinking replacement. A
+separate edit/fresh-render comparison passes after newline removal and
+restoration.
 
 These are local package-component observations. They do not reproduce the
 historical SwiftTreeSitter out-of-range read, establish its original

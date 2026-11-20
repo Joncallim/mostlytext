@@ -60,6 +60,9 @@ public final class NeonSyntaxHighlighter: SyntaxHighlighting {
     var presentationClearCount = 0
     var lastPresentationClearUptime: UInt64 = 0
     let gate = HighlightingStorageGate()
+    /// Keeps the old line table through Neon's will callback, then primes the
+    /// new one before its did callback. Cleared with the Neon owner.
+    var locationTransformForStorageEdit: ((Int) -> Point?)?
     let policyProvider: (String?) -> HighlightingSizePolicy?
     var restoreTask: Task<Void, Never>?
     /// Internal clock seam for deterministic idle-restore tests. Production uses Task.sleep.
@@ -218,18 +221,23 @@ public final class NeonSyntaxHighlighter: SyntaxHighlighting {
         } catch {
             // Graceful degradation: leave highlighter nil, plain text + chrome.
             highlighter = nil
+            gate.didForwardWillProcessCharacterEdit = nil
+            locationTransformForStorageEdit = nil
             return false
         }
     }
 
-    func countedLocationTransformer(builtGeneration: UInt64) -> (Int) -> Point? {
+    private func countedLocationTransformer(builtGeneration: UInt64) -> (Int) -> Point? {
         let gate = gate
-        let transform = Self.locationTransformer(for: textSystem.textView) { [weak textSystem, weak gate] in
-            // NSTextStorage has already changed when Neon asks for the new
-            // point, but EditorView publishes its content revision later.
-            // Include the gate's pre-Neon edit count so a length-preserving
-            // newline move cannot reuse the old line-offset table.
-            (textSystem?.contentRevision ?? 0) &+ UInt64(gate?.characterEditCount ?? 0)
+        let transform = Self.locationTransformer(for: textSystem.textView, revision: { [weak gate] in
+            UInt64(gate?.forwardedCharacterEditCount ?? 0)
+        }, lengthFallback: false)
+        // Neon's will callback occurs after NSTextStorage has changed, so its
+        // old endpoint must come from the table primed before the first edit.
+        _ = transform(0)
+        locationTransformForStorageEdit = transform
+        gate.didForwardWillProcessCharacterEdit = { [weak self] in
+            _ = self?.locationTransformForStorageEdit?(0)
         }
         return { [state = layerState] offset in
             guard state.note(builtGeneration: builtGeneration) else { return nil }
@@ -263,7 +271,8 @@ public final class NeonSyntaxHighlighter: SyntaxHighlighting {
     /// using a single character-set scan rather than repeated substring searches.
     static func locationTransformer(
         for textView: NSTextView,
-        revision: @escaping () -> UInt64 = { 0 }
+        revision: @escaping () -> UInt64 = { 0 },
+        lengthFallback: Bool = true
     ) -> (Int) -> Point? {
         var lineOffsets: [Int]?
         var cachedRevision: UInt64?
@@ -271,17 +280,18 @@ public final class NeonSyntaxHighlighter: SyntaxHighlighting {
 
         return { offset in
             let string = textView.string as NSString
-            let clamped = max(0, min(offset, string.length))
             let currentRevision = revision()
 
             // Length-preserving edits can still move every subsequent line.
             // The mounted highlighter supplies a storage-aware generation;
             // standalone NSTextView callers still have the length fallback.
-            if lineOffsets == nil || cachedRevision != currentRevision || cachedLength != string.length {
+            if lineOffsets == nil || cachedRevision != currentRevision
+                || (lengthFallback && cachedLength != string.length) {
                 cachedRevision = currentRevision
                 cachedLength = string.length
                 lineOffsets = Self.lineOffsets(in: string)
             }
+            let clamped = max(0, min(offset, cachedLength ?? string.length))
 
             guard let offsets = lineOffsets, !offsets.isEmpty else {
                 return Point(row: 0, column: clamped * 2)
