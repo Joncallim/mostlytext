@@ -8,8 +8,10 @@ The window now reserves a root request synchronously when Open Folder, session r
 
 ## Scope and verification
 
-- Main baseline before this local batch: `2e120d728c9b4bca67f74472bf950aa15ec51bff`. This branch is held locally until the document-action PR #319 merges, then must be rebased and revalidated.
+- This batch is based on document-action PR #319 head `b8e3a40c7e14350494ab57e934629ee1df051ad1`, merged into main as `2a1c6ce3fd873c73e738813ab16597921ddabeb8`. The merge tree exactly equals that tested head tree. This folder diff remains separate and awaits its own hosted app tests.
 - Direct issue owner: #17's F18/F19 navigation and lifecycle audit. #6/#8 consume only eventual complete evidence; their broad rows remain open.
 - Four controlled app regressions cover an old queued request after a newer direct root, synchronous retirement of stale Quick Open and search, repeated same-folder choice, and an existing-file focus overtaken during root loading. They inspect actual tree/index/selection state, not only token equality.
-- SwiftFormat, SwiftLint and a locked Debug app/test-bundle build are source/build checks. App-test execution belongs on hosted macOS CI; the protected interactive native checkpoint remains owner-deferred.
+- SwiftFormat, strict SwiftLint, ordinary compliance, selector unit tests, sink audit, and a locked Debug app/test-bundle build pass after rebasing onto #319. The build does not launch the app. App-test execution belongs on hosted macOS CI; the protected interactive native checkpoint remains owner-deferred.
+- The selected plain-String sink review still finds the same 68 literal/route pairs across 791 production Swift inputs. Two touched source hashes were updated after verifying that no sink or route changed; the sink audit passes. This does not replace the full localisation/native layout review.
+- The reviewed selector classifies the nine changed paths as `app-only`: the full app suite and locked app builds run, while unchanged package tests are omitted. Hosted execution remains pending until this branch is submitted after #319.
 - No document text, on-disk folder contents, bundled resources, localization strings, dependencies or public release settings change.
