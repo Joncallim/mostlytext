@@ -4,8 +4,12 @@ import Testing
 
 @MainActor
 @Test func createCallerReceivesStaleResultAfterRootReplacement() async throws {
-    let oldRoot = URL(fileURLWithPath: "/tmp/create-old", isDirectory: true)
-    let newRoot = URL(fileURLWithPath: "/tmp/create-new", isDirectory: true)
+    let oldRoot = temporaryDirectory()
+    let newRoot = temporaryDirectory()
+    defer {
+        try? FileManager.default.removeItem(at: oldRoot)
+        try? FileManager.default.removeItem(at: newRoot)
+    }
     let mutator = SuspendedMutator(blocksMove: false)
     let model = FileTreeModel(
         reader: StaticReader(contents: [oldRoot: [], newRoot: []]),
@@ -62,8 +66,12 @@ import Testing
 
 @MainActor
 @Test func queuedCreateContextRejectsBeforeStartAfterRootReplacement() async throws {
-    let firstRoot = URL(fileURLWithPath: "/tmp/context-create-a", isDirectory: true)
-    let secondRoot = URL(fileURLWithPath: "/tmp/context-create-b", isDirectory: true)
+    let firstRoot = temporaryDirectory()
+    let secondRoot = temporaryDirectory()
+    defer {
+        try? FileManager.default.removeItem(at: firstRoot)
+        try? FileManager.default.removeItem(at: secondRoot)
+    }
     let mutator = SuspendedMutator(blocksMove: false)
     let model = FileTreeModel(
         reader: StaticReader(contents: [firstRoot: [], secondRoot: []]),
@@ -84,8 +92,12 @@ import Testing
 
 @MainActor
 @Test func queuedMoveContextRejectsABARootReplacementBeforeStart() async throws {
-    let firstRoot = URL(fileURLWithPath: "/tmp/context-move-a", isDirectory: true)
-    let secondRoot = URL(fileURLWithPath: "/tmp/context-move-b", isDirectory: true)
+    let firstRoot = temporaryDirectory()
+    let secondRoot = temporaryDirectory()
+    defer {
+        try? FileManager.default.removeItem(at: firstRoot)
+        try? FileManager.default.removeItem(at: secondRoot)
+    }
     let source = firstRoot.appendingPathComponent("source")
     let destination = firstRoot.appendingPathComponent("destination", isDirectory: true)
     let mutator = SuspendedMutator(blocksMove: true)
@@ -113,8 +125,12 @@ import Testing
 
 @MainActor
 @Test func moveCallerReceivesStaleResultAfterRootReplacement() async throws {
-    let oldRoot = URL(fileURLWithPath: "/tmp/move-old", isDirectory: true)
-    let newRoot = URL(fileURLWithPath: "/tmp/move-new", isDirectory: true)
+    let oldRoot = temporaryDirectory()
+    let newRoot = temporaryDirectory()
+    defer {
+        try? FileManager.default.removeItem(at: oldRoot)
+        try? FileManager.default.removeItem(at: newRoot)
+    }
     let source = oldRoot.appendingPathComponent("source", isDirectory: true)
     let destination = oldRoot.appendingPathComponent("destination", isDirectory: true)
     let mutator = SuspendedMutator(blocksMove: true)
