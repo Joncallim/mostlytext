@@ -79,7 +79,8 @@ extension WindowCoordinator {
                 controller.model.setFolderRoot(root)
                 let openedFolderRevision = controller.model.folderAssociationRevision
                 self.recentFolderRoots.record(root)
-                await controller.setFileTreeRoot(root)
+                let pendingRoot = controller.enqueueFileTreeRoot(root)
+                await pendingRoot.value
                 guard !controller.isClosed,
                       controller.workspaceRootRequestGeneration == expectedRequest,
                       controller.fileTreeModel.root == root.standardizedFileURL,

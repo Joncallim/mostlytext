@@ -88,14 +88,32 @@ extension WindowController {
         }
     }
 
+    /// Reserve a root request at the user's choice, before an unstructured
+    /// task can start out of order. This also retires old search actions in
+    /// the dispatch-to-task gap.
+    @discardableResult
+    func enqueueFileTreeRoot(_ url: URL?, accessURL: URL? = nil) -> Task<Void, Never> {
+        let request = beginFileTreeRootRequest()
+        let association = model.folderAssociationRevision
+        return Task { @MainActor [weak self] in
+            guard let self, !isClosed,
+                  workspaceRootRequestGeneration == request,
+                  model.folderAssociationRevision == association,
+                  model.folderURL?.standardizedFileURL == url?.standardizedFileURL
+            else { return }
+            await applyFileTreeRoot(url, accessURL: accessURL, request: request)
+        }
+    }
+
     /// Sets `fileTreeModel`'s root and rebuilds `workspaceFileIndex` to
     /// match it in one step. Deliberately not named `setFolderRoot` —
     /// `WorkspaceModel.setFolderRoot(_:)` is a different, pre-existing
     /// method most call sites already call right next to this one, and
     /// this method needs its own distinct name so the two are never
     /// mistaken for each other. Every call site that changes
-    /// `fileTreeModel.root` must go through this method, never
-    /// `fileTreeModel.setRoot(_:accessURL:)` directly, so the index can
+    /// `fileTreeModel.root` must go through this method or the queued
+    /// `enqueueFileTreeRoot` entry, never `fileTreeModel.setRoot(_:accessURL:)`
+    /// directly, so the index can
     /// never silently drift out of sync with the root it is supposed to be
     /// indexing.
     ///
@@ -107,6 +125,11 @@ extension WindowController {
     /// rebuilding it, so a stale snapshot from a previously-open folder can
     /// never leak into a later Quick Open query in this same window.
     func setFileTreeRoot(_ url: URL?, accessURL: URL? = nil) async {
+        let request = beginFileTreeRootRequest()
+        await applyFileTreeRoot(url, accessURL: accessURL, request: request)
+    }
+
+    private func beginFileTreeRootRequest() -> UInt {
         workspaceRootRequestGeneration &+= 1
         let request = workspaceRootRequestGeneration
         workspaceTreeRootAppliedGeneration = nil
@@ -123,6 +146,10 @@ extension WindowController {
         // when the lexical path is unchanged. Retire old results and any
         // Replace run before the first await; neither may borrow new access.
         folderSearchModel.setRoot(nil)
+        return request
+    }
+
+    private func applyFileTreeRoot(_ url: URL?, accessURL: URL?, request: UInt) async {
         await beforeRootRebuild?()
         guard !isClosed, workspaceRootRequestGeneration == request else { return }
         await fileTreeModel.setRoot(url, accessURL: accessURL)

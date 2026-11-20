@@ -213,7 +213,7 @@ extension WindowCoordinator {
         guard let controller = controller ?? folderTargetController() else { return }
         controller.model.setFolderRoot(url)
         recentFolderRoots.record(url)
-        Task { await controller.setFileTreeRoot(url, accessURL: accessURL) }
+        controller.enqueueFileTreeRoot(url, accessURL: accessURL)
         scheduleSaveSession()
     }
 

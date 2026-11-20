@@ -242,7 +242,7 @@ extension WindowCoordinator {
                     PhysicalFileIdentity.matches($0, root) ? $0 : nil
                 } ?? root
                 controller.model.setFolderRoot(lexical)
-                Task { await controller.setFileTreeRoot(lexical, accessURL: root) }
+                controller.enqueueFileTreeRoot(lexical, accessURL: root)
                 if stale {
                     // The next debounced session save rewrites the optional
                     // bookmark without changing the session schema.
