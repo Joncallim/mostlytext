@@ -15,6 +15,73 @@ struct FileStoreMetadataPreservationTests {
         return info.st_mode & 0o7777
     }
 
+    @Test func aReadableDestinationDoesNotExposeThePreparedSave() throws {
+        let fixture = try FixtureFile(text: "old")
+        #expect(chmod(fixture.url.path, 0o644) == 0)
+        let baseline = try FileStore().readRevision(from: fixture.url)
+        let parent = fixture.directory
+        let store = FileStore(beforePublication: { _ in
+            let containers = try FileManager.default.contentsOfDirectory(
+                at: parent, includingPropertiesForKeys: nil
+            ).filter { $0.lastPathComponent.contains(".private-stage-") }
+            guard containers.count == 1, let container = containers.first else { throw POSIXError(.ENOENT) }
+            var directoryInfo = stat()
+            guard stat(container.path, &directoryInfo) == 0,
+                  directoryInfo.st_mode & 0o077 == 0
+            else { throw POSIXError(.EACCES) }
+            let stage = container.appendingPathComponent("stage")
+            var stageInfo = stat()
+            guard stat(stage.path, &stageInfo) == 0,
+                  stageInfo.st_mode & 0o777 == 0o644,
+                  try Data(contentsOf: stage) == Data("new".utf8)
+            else { throw POSIXError(.EIO) }
+        })
+
+        _ = try store.write("new", to: fixture.url, expectedRevision: baseline)
+
+        #expect(try FileStore().read(from: fixture.url).content == "new")
+        #expect(try mode(of: fixture.url) == 0o644)
+        #expect(try FileManager.default.contentsOfDirectory(atPath: fixture.directory.path)
+            .filter { $0.contains(".private-stage-") }.isEmpty)
+    }
+
+    @Test func anInheritedParentACLDoesNotReachThePrivateStage() throws {
+        let fixture = try FixtureFile(text: "old")
+        let chmodProcess = Process()
+        chmodProcess.executableURL = URL(fileURLWithPath: "/bin/chmod")
+        chmodProcess.arguments = [
+            "+a",
+            "everyone allow read,search,file_inherit,directory_inherit",
+            fixture.directory.path,
+        ]
+        try chmodProcess.run()
+        chmodProcess.waitUntilExit()
+        #expect(chmodProcess.terminationStatus == 0)
+        let parentACL = acl_get_file(fixture.directory.path, ACL_TYPE_EXTENDED)
+        #expect(parentACL != nil)
+        if let parentACL {
+            _ = acl_free(UnsafeMutableRawPointer(parentACL))
+        }
+
+        let baseline = try FileStore().readRevision(from: fixture.url)
+        let parent = fixture.directory
+        let store = FileStore(beforePublication: { _ in
+            let containers = try FileManager.default.contentsOfDirectory(
+                at: parent, includingPropertiesForKeys: nil
+            ).filter { $0.lastPathComponent.contains(".private-stage-") }
+            guard containers.count == 1, let container = containers.first else { throw POSIXError(.ENOENT) }
+            guard acl_get_file(container.path, ACL_TYPE_EXTENDED) == nil else {
+                throw POSIXError(.EACCES)
+            }
+            guard acl_get_file(container.appendingPathComponent("stage").path, ACL_TYPE_EXTENDED) == nil else {
+                throw POSIXError(.EACCES)
+            }
+        })
+
+        _ = try store.write("new", to: fixture.url, expectedRevision: baseline)
+        #expect(try FileStore().read(from: fixture.url).content == "new")
+    }
+
     private func setXattr(_ url: URL, _ value: String) throws {
         let bytes = Array(value.utf8)
         guard setxattr(url.path, Self.xattrName, bytes, bytes.count, 0, 0) == 0 else {
@@ -132,7 +199,7 @@ struct FileStoreMetadataPreservationTests {
         #expect(throws: FileStoreError.self) { _ = try document.save() }
 
         let leftovers = try FileManager.default.contentsOfDirectory(atPath: fixture.directory.path)
-            .filter { $0.contains(".tmp-") }
+            .filter { $0.contains(".private-stage-") }
         #expect(leftovers.isEmpty)
         #expect(try FileStore().read(from: fixture.url).content == "one")
     }
