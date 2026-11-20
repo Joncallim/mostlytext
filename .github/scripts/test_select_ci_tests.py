@@ -137,11 +137,28 @@ class SelectionTests(unittest.TestCase):
         for path in (
             "MacDown2/Packages/MacDownKit/Package.swift",
             "MacDown2/Packages/MacDownKit/Sources/NewTarget/Feature.swift",
-            "MacDown2/MacDown2Tests/EditorTests.swift",
             ".github/workflows/ci.yml",
         ):
             with self.subTest(path=path):
                 self.assertEqual(SELECTOR.select([path], self.manifest)[0], "full")
+
+    def test_app_only_change_keeps_all_app_tests_without_package_tests(self):
+        paths = [
+            "MacDown2/MacDown2/WindowController.swift",
+            "MacDown2/MacDown2Tests/StatusBarEncodingOriginTests.swift",
+            "planning/downstream/issue17-encoding-action-lifetime-2026-11-21.md",
+        ]
+        self.assertEqual(SELECTOR.select(paths, self.manifest), ("app-only", "", "full", ()))
+
+    def test_mixed_app_and_package_change_keeps_package_dependents_and_all_app_tests(self):
+        paths = [
+            "MacDown2/Packages/MacDownKit/Sources/D2Rendering/Renderer.swift",
+            "MacDown2/MacDown2/WindowController.swift",
+        ]
+        self.assertEqual(
+            SELECTOR.select(paths, self.manifest),
+            ("selected", "D2RenderingTests|ExportDiagramIntegrationTests", "full", ()),
+        )
 
     def test_package_documentation_runs_no_product_tests(self):
         self.assertEqual(SELECTOR.select(["MacDown2/Packages/MacDownKit/README.md"], self.manifest)[0], "none")
