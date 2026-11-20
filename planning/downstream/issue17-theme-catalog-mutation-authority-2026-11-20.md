@@ -46,6 +46,18 @@ threw `invalidImportChoice`. The later-menu-choice case separately failed its
 intended assertions on the unmodified selection code. The fixture correction
 uses the identity returned by the store; the original failure is retained.
 
+The corrected before-fix [run 44760379470](https://github.com/Joncallim/mostlytext/actions/runs/44760379470)
+failed the four intended removed-theme, stale-warning, later-choice and
+changed-theme cases; the unrelated-refresh control passed. The initial
+final-head broad Debug editor/theme [run 44760745871](https://github.com/Joncallim/mostlytext/actions/runs/44760745871)
+timed out after ten minutes in unrelated highlighting tests, without an
+assertion failure. Its matching Release selection passed. This PR limits that
+workflow to the 149 actual `ThemesTests` cases when the PR diff contains only
+theme source/app-model changes and supporting evidence or workflow files.
+Editor or highlighting source changes still run the original complete probe
+and bitmap, orientation and performance controls. The complete CI app-test
+job remains the authority for the new `ThemeCatalogModelTests` cases.
+
 The repository-wide issue audit and exact-head hosted verification results are
 recorded on the PR and issue comment after integration. Strict release
 compliance remains governed by issue #14 and is not changed by this patch.
