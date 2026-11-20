@@ -38,12 +38,14 @@ public struct FileStore: Sendable {
     private let afterReplacement: (@Sendable (URL) throws -> Void)?
     private let beforePublication: (@Sendable (URL) throws -> Void)?
     private let afterBaselineVerification: (@Sendable (URL) throws -> Void)?
+    private let beforeStagePublication: (@Sendable (URL) throws -> Void)?
     let conditionalPublicationHooks: ConditionalPublicationTestHooks?
 
     public init() {
         afterReplacement = nil
         beforePublication = nil
         afterBaselineVerification = nil
+        beforeStagePublication = nil
         conditionalPublicationHooks = nil
     }
 
@@ -51,6 +53,7 @@ public struct FileStore: Sendable {
         self.afterReplacement = afterReplacement
         beforePublication = nil
         afterBaselineVerification = nil
+        beforeStagePublication = nil
         conditionalPublicationHooks = nil
     }
 
@@ -58,6 +61,7 @@ public struct FileStore: Sendable {
         afterReplacement = nil
         self.beforePublication = beforePublication
         afterBaselineVerification = nil
+        beforeStagePublication = nil
         conditionalPublicationHooks = nil
     }
 
@@ -65,6 +69,7 @@ public struct FileStore: Sendable {
         afterReplacement = nil
         beforePublication = nil
         self.afterBaselineVerification = afterBaselineVerification
+        beforeStagePublication = nil
         conditionalPublicationHooks = nil
     }
 
@@ -72,6 +77,7 @@ public struct FileStore: Sendable {
         afterReplacement = nil
         beforePublication = nil
         afterBaselineVerification = nil
+        beforeStagePublication = nil
         self.conditionalPublicationHooks = conditionalPublicationHooks
     }
 
@@ -82,7 +88,16 @@ public struct FileStore: Sendable {
         afterReplacement = nil
         beforePublication = nil
         self.afterBaselineVerification = afterBaselineVerification
+        beforeStagePublication = nil
         self.conditionalPublicationHooks = conditionalPublicationHooks
+    }
+
+    init(beforeStagePublication: @escaping @Sendable (URL) throws -> Void) {
+        afterReplacement = nil
+        beforePublication = nil
+        afterBaselineVerification = nil
+        self.beforeStagePublication = beforeStagePublication
+        conditionalPublicationHooks = nil
     }
 
     /// Reads the contents of a file at `url`.
@@ -224,13 +239,14 @@ public struct FileStore: Sendable {
         let temporaryURL = privateDirectory.url.appendingPathComponent("stage")
         var stage: FileStoreStage?
         do {
-            let created = try FileStoreStage(bytes: data, at: temporaryURL)
+            guard privateDirectory.isStillNamed() else { throw FileStoreError.fileChangedDuringRead }
+            let created = try FileStoreStage(bytes: data, at: temporaryURL,
+                                             directoryDescriptor: privateDirectory.directory)
             stage = created
-            if expectedRevision != nil {
-                // The conditional path publishes the temporary file itself, so
-                // it must already carry the destination's metadata (#174);
-                // the unconditional path's `replaceItemAt` preserves it.
-                try carryMetadata(from: url, to: temporaryURL)
+            if !requireAbsent, expectedRevision != nil || FileManager.default.fileExists(atPath: url.path) {
+                // Descriptor-relative publication moves the stage itself on
+                // every path, so it must already carry existing metadata.
+                try carryMetadata(from: url, to: created, privateDirectory: privateDirectory)
             }
             try created.refreshAfterMetadata()
             try beforePublication?(url)
@@ -250,8 +266,10 @@ public struct FileStore: Sendable {
             // direct, non-cooperating write issued here.
             try afterBaselineVerification?(url)
             try created.verifyBeforePublication()
-            try publishStaged(temporaryURL, to: url, expectedRevision: expectedRevision,
-                              requireAbsent: requireAbsent, stage: created)
+            guard privateDirectory.isStillNamed() else { throw FileStoreError.fileChangedDuringRead }
+            try beforeStagePublication?(temporaryURL)
+            try publishStaged(to: url, expectedRevision: expectedRevision,
+                              requireAbsent: requireAbsent, stage: created, privateDirectory: privateDirectory)
             try afterReplacement?(url)
         } catch {
             try failAfterStageCleanup(stage, temporaryURL: temporaryURL, error: error)

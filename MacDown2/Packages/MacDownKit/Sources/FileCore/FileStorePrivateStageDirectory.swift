@@ -6,7 +6,8 @@ import Foundation
 /// the destination volume, so publication remains a same-volume rename or exchange.
 final class FileStorePrivateStageDirectory {
     let url: URL
-    private let parent: Int32
+    let parent: Int32
+    let directory: Int32
     private let name: String
     private let identity: stat
 
@@ -25,7 +26,6 @@ final class FileStorePrivateStageDirectory {
 
         let directory = openat(parentFD, entryName, O_RDONLY | O_DIRECTORY | O_CLOEXEC | O_NOFOLLOW)
         guard directory >= 0 else { throw Self.posixFailure() }
-        defer { _ = Darwin.close(directory) }
         var retainDirectory = false
         defer {
             if !retainDirectory {
@@ -36,6 +36,7 @@ final class FileStorePrivateStageDirectory {
                    FileStoreRetirement.sameObject(opened, named) {
                     _ = unlinkat(parentFD, entryName, AT_REMOVEDIR)
                 }
+                _ = Darwin.close(directory)
             }
         }
 
@@ -59,6 +60,7 @@ final class FileStorePrivateStageDirectory {
             throw POSIXError(.EACCES)
         }
         parent = parentFD
+        self.directory = directory
         name = entryName
         url = parentURL.appendingPathComponent(entryName, isDirectory: true)
         identity = opened
@@ -66,7 +68,17 @@ final class FileStorePrivateStageDirectory {
         retainDirectory = true
     }
 
-    deinit { _ = Darwin.close(parent) }
+    deinit {
+        _ = Darwin.close(directory)
+        _ = Darwin.close(parent)
+    }
+
+    func isStillNamed() -> Bool {
+        var named = stat()
+        return fstatat(parent, name, &named, AT_SYMLINK_NOFOLLOW) == 0
+            && FileStoreRetirement.sameObject(named, identity)
+            && named.st_mode & mode_t(S_IFMT) == mode_t(S_IFDIR)
+    }
 
     /// Check the original directory identity before attempting empty-directory
     /// removal. A retained recovery stage prevents removal. This check does

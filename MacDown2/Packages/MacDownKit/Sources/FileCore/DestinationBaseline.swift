@@ -69,27 +69,20 @@ public extension FileDocument {
 extension FileStore {
     /// Publishes `temporaryURL` at `destinationURL` only if nothing exists
     /// there (`RENAME_EXCL`); an existing file means the baseline was stale.
-    func publishExclusively(_ temporaryURL: URL, to destinationURL: URL) throws(FileStoreError) {
-        let result = temporaryURL.path.withCString { source in
-            destinationURL.path.withCString { target in
-                renamex_np(source, target, UInt32(RENAME_EXCL))
-            }
-        }
+    func publishExclusively(_ privateDirectory: FileStorePrivateStageDirectory,
+                            to destinationURL: URL) throws(FileStoreError) {
+        let result = renameatx_np(privateDirectory.directory, "stage", privateDirectory.parent,
+                                  destinationURL.lastPathComponent, UInt32(RENAME_EXCL))
         guard result == 0 else {
             let code = errno
             if code == EEXIST {
                 throw .fileChangedDuringRead
             }
             if code == ENOTSUP || code == EINVAL {
-                // The volume has no exclusive rename: re-check, then rely on
-                // `moveItem`, which itself refuses an existing destination.
-                try requireAbsentIfNeeded(true, at: destinationURL)
-                do {
-                    try FileManager.default.moveItem(at: temporaryURL, to: destinationURL)
-                    return
-                } catch {
-                    throw mapWriteError(error)
-                }
+                // An unsupported exclusive rename cannot preserve the absent
+                // baseline against another writer. Refuse instead of falling
+                // back to a path-based check followed by a replacing rename.
+                throw mapWriteError(POSIXError(.ENOTSUP))
             }
             throw mapWriteError(POSIXError(POSIXErrorCode(rawValue: code) ?? .EIO))
         }
@@ -118,27 +111,36 @@ extension FileStore {
     /// Publishes the staged file: conditionally against `expectedRevision`,
     /// exclusively when the destination must not exist, else by replacement.
     func publishStaged(
-        _ temporaryURL: URL,
         to url: URL,
         expectedRevision: FileRevision?,
         requireAbsent: Bool,
-        stage: FileStoreStage
+        stage: FileStoreStage,
+        privateDirectory: FileStorePrivateStageDirectory
     ) throws(FileStoreError) {
         do {
             if let expectedRevision {
                 try conditionallyPublish(
-                    temporaryURL: temporaryURL,
                     destinationURL: url,
                     expectedRevision: expectedRevision,
                     hooks: conditionalPublicationHooks,
-                    stage: stage
+                    stage: stage,
+                    privateDirectory: privateDirectory
                 )
             } else if requireAbsent {
-                try publishExclusively(temporaryURL, to: url)
-            } else if FileManager.default.fileExists(atPath: url.path) {
-                _ = try FileManager.default.replaceItemAt(url, withItemAt: temporaryURL)
+                try publishExclusively(privateDirectory, to: url)
             } else {
-                try FileManager.default.moveItem(at: temporaryURL, to: url)
+                var named = stat()
+                if fstatat(privateDirectory.parent, url.lastPathComponent, &named, AT_SYMLINK_NOFOLLOW) == 0 {
+                    guard named.st_mode & mode_t(S_IFMT) == mode_t(S_IFREG) else {
+                        throw FileStoreError.permissionDenied
+                    }
+                } else if errno != ENOENT {
+                    throw mapWriteError(POSIXError(POSIXErrorCode(rawValue: errno) ?? .EIO))
+                }
+                guard renameat(privateDirectory.directory, "stage", privateDirectory.parent,
+                               url.lastPathComponent) == 0 else {
+                    throw mapWriteError(POSIXError(POSIXErrorCode(rawValue: errno) ?? .EIO))
+                }
             }
         } catch let error as FileStoreError {
             throw error
