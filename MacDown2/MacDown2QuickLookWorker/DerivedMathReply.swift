@@ -162,7 +162,11 @@ final class MinimalWorkerWebKitProbe: NSObject, WKNavigationDelegate {
     func run() async -> Bool {
         derivedLogger.notice("Minimal worker WebKit construction entered")
         let configuration = WKWebViewConfiguration()
-        configuration.websiteDataStore = .nonPersistent()
+        derivedLogger.notice("Minimal worker WebKit configuration constructed")
+        let dataStore = WKWebsiteDataStore.nonPersistent()
+        derivedLogger.notice("Minimal worker WebKit data store constructed")
+        configuration.websiteDataStore = dataStore
+        derivedLogger.notice("Minimal worker WebKit data store assigned")
         let view = WKWebView(frame: .zero, configuration: configuration)
         derivedLogger.notice("Minimal worker WebKit view constructed")
         webView = view
