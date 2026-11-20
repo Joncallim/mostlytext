@@ -245,18 +245,24 @@ def qualify(root, output, configuration, baseline, themes_only=False):
     print(("Baseline" if baseline else "Candidate") + " exact native result/source/pins verified: " + configuration)
 
 
-def is_theme_only_change(root, base_sha):
+def is_theme_only_paths(changed):
     """Choose the small theme suite only for a reviewed, theme-scoped PR diff."""
-    changed = run(["git", "diff", "--name-only", base_sha + "...HEAD"], cwd=root).splitlines()
     theme_source = "MacDown2/Packages/MacDownKit/Sources/Themes/"
     theme_app = "MacDown2/MacDown2/ThemeCatalogModel"
     theme_test = "MacDown2/MacDown2Tests/ThemeCatalogModelTests.swift"
     owned_ci = {".github/scripts/run-current-line-theme-probe.py",
-                ".github/workflows/current-line-theme-probe.yml"}
+                ".github/workflows/current-line-theme-probe.yml",
+                ".github/scripts/select-ci-tests.py",
+                ".github/scripts/test_select_ci_tests.py"}
     return (any(path.startswith(theme_source) or path.startswith(theme_app) for path in changed)
             and all(path.startswith(theme_source) or path.startswith(theme_app)
                     or path == theme_test or path.startswith("planning/downstream/")
                     or path in owned_ci for path in changed))
+
+
+def is_theme_only_change(root, base_sha):
+    changed = run(["git", "diff", "--name-only", base_sha + "...HEAD"], cwd=root).splitlines()
+    return is_theme_only_paths(changed)
 
 
 def orientation_mutation(repo, output, configuration):

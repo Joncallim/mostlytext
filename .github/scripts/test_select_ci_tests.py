@@ -9,6 +9,10 @@ SCRIPT = pathlib.Path(__file__).with_name("select-ci-tests.py")
 SPEC = importlib.util.spec_from_file_location("select_ci_tests", SCRIPT)
 SELECTOR = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(SELECTOR)
+THEME_PROBE = pathlib.Path(__file__).with_name("run-current-line-theme-probe.py")
+THEME_SPEC = importlib.util.spec_from_file_location("current_line_theme_probe", THEME_PROBE)
+THEME_SELECTOR = importlib.util.module_from_spec(THEME_SPEC)
+THEME_SPEC.loader.exec_module(THEME_SELECTOR)
 
 
 class SelectionTests(unittest.TestCase):
@@ -100,11 +104,17 @@ class SelectionTests(unittest.TestCase):
             "MacDown2/MacDown2Tests/ThemeCatalogModelTests.swift",
             ".github/scripts/run-current-line-theme-probe.py",
             ".github/workflows/current-line-theme-probe.yml",
+            ".github/scripts/select-ci-tests.py",
+            ".github/scripts/test_select_ci_tests.py",
             "planning/downstream/issue17-theme-catalog-mutation-authority-2026-11-20.md",
         ]
+        self.assertTrue(THEME_SELECTOR.is_theme_only_paths(paths))
         self.assertEqual(SELECTOR.select(paths, self.manifest),
                          ("selected", "ThemesTests", "selected", tuple(sorted(SELECTOR.THEME_APP_SUITES))))
         self.assertEqual(SELECTOR.select(paths[1:3], self.manifest), ("full", "", "full", ()))
+        self.assertFalse(THEME_SELECTOR.is_theme_only_paths(paths + [
+            "MacDown2/Packages/MacDownKit/Sources/EditorCore/Document.swift",
+        ]))
 
     def test_theme_app_change_with_unrelated_package_source_falls_back_to_full(self):
         paths = [
