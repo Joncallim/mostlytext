@@ -9,7 +9,7 @@ enum DirectoryLoadState: Sendable {
     case failed(String)
 }
 
-struct FileTreeRootIdentity: Equatable {
+public struct FileTreeRootIdentity: Equatable, Sendable {
     let device: dev_t
     let inode: ino_t
 

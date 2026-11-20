@@ -104,6 +104,12 @@ private final class ConfirmationOrigin {
 
 private actor RecordingTrashMutator: FileSystemMutating {
     private(set) var trashed: [URL] = []
+
+    func mutate(_ operation: FileTreeMutation, authority _: FileTreeMutationAuthority) throws {
+        guard case let .trash(url) = operation else { throw FileTreeOperationError.staleOperation }
+        trashed.append(url)
+    }
+
     func itemKind(at _: URL) -> FileSystemItemKind? {
         .file
     }
