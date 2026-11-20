@@ -28,8 +28,16 @@ extension WindowCoordinator {
         else { return }
         if let root = folder.root, existing.fileTreeModel.root == nil {
             existing.model.setFolderRoot(root)
-            await existing.setFileTreeRoot(root, accessURL: folder.accessURL)
-            guard shouldContinue?() ?? true else { return }
+            let association = existing.model.folderAssociationRevision
+            let rootRequest = existing.workspaceRootRequestGeneration &+ 1
+            let pendingRoot = existing.enqueueFileTreeRoot(root, accessURL: folder.accessURL)
+            await pendingRoot.value
+            guard shouldContinue?() ?? true,
+                  existing.workspaceRootRequestGeneration == rootRequest,
+                  existing.model.folderAssociationRevision == association,
+                  existing.model.folderURL?.standardizedFileURL == root.standardizedFileURL,
+                  existing.fileTreeModel.root == root.standardizedFileURL
+            else { return }
         }
         guard shouldContinue?() ?? true,
               coordinator.controllers.contains(where: { $0 === existing }),

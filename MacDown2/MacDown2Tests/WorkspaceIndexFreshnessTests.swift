@@ -15,7 +15,7 @@ import Workspace
 @MainActor
 @Suite("Workspace index freshness (#183 F18)")
 struct WorkspaceIndexFreshnessTests {
-    private func makeUnrootedController(index: WorkspaceFileIndex) throws -> ControllerFixture {
+    func makeUnrootedController(index: WorkspaceFileIndex) throws -> ControllerFixture {
         let suiteName = "index-freshness-\(UUID().uuidString)"
         let defaults = try #require(UserDefaults(suiteName: suiteName))
         let preferences = FileTreePreferences(store: UserDefaultsFileTreePreferenceStore(defaults: defaults))
@@ -53,7 +53,7 @@ struct WorkspaceIndexFreshnessTests {
         )
     }
 
-    private func paths(_ controller: WindowController) async -> Set<String> {
+    func paths(_ controller: WindowController) async -> Set<String> {
         await Set(controller.workspaceFileIndex.allPaths().map(\.relativePath))
     }
 
@@ -61,7 +61,7 @@ struct WorkspaceIndexFreshnessTests {
         await gate.waitUntilBlocked()
     }
 
-    private func tempRoot(_ files: [String]) throws -> URL {
+    func tempRoot(_ files: [String]) throws -> URL {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         for file in files {
