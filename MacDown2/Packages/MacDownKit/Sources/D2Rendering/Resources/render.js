@@ -71,11 +71,24 @@ function opaqueD2Canvas(svg, fill) {
 
 // One engine/worker belongs to each pooled page. The pool awaits readiness
 // during bounded preparation and serializes every later compile/render pair.
-const macdownD2Engine = new window.D2();
+let macdownD2Engine = new window.D2();
 window.__macdownPrepareD2 = async function () {
     try {
-        await macdownD2Engine.ready;
-        return { ok: true };
+        for (let attempt = 0; attempt < 2; attempt += 1) {
+            try {
+                await macdownD2Engine.ready;
+                // The pinned worker sends "ready" after go.run() starts, but
+                // can do so before Go registers self.d2. A version request
+                // proves the API is actually callable before this page enters
+                // the pool. Replace one prematurely ready worker, boundedly.
+                await macdownD2Engine.version();
+                return { ok: true };
+            } catch (error) {
+                macdownD2Engine.worker?.terminate();
+                if (attempt === 1) throw error;
+                macdownD2Engine = new window.D2();
+            }
+        }
     } catch (error) {
         return { ok: false, message: error && error.message ? error.message : String(error) };
     }
