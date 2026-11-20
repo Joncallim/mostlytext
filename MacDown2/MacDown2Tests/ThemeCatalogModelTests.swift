@@ -124,7 +124,7 @@ struct ThemeCatalogModelTests {
         let file = try ThemeFile(theme: BundledThemes.light)
         let prepared = try await store.prepareImport(file.encoded())
         let installed = try await store.commitImport(prepared, choice: .install)
-        let deletion = try await store.prepareDeletion(id: file.stableID)
+        let deletion = try await store.prepareDeletion(id: installed.affectedID)
         let removed = try await store.delete(deletion)
         model.publish(removed.state)
 
@@ -146,7 +146,7 @@ struct ThemeCatalogModelTests {
         let file = try ThemeFile(theme: BundledThemes.light)
         let prepared = try await store.prepareImport(file.encoded())
         let installed = try await store.commitImport(prepared, choice: .install)
-        let deletion = try await store.prepareDeletion(id: file.stableID)
+        let deletion = try await store.prepareDeletion(id: installed.affectedID)
         let removed = try await store.delete(deletion)
         model.publish(removed.state)
         let olderWarning = ThemeCatalogMutation(state: installed.state, affectedID: installed.affectedID,
@@ -190,13 +190,13 @@ struct ThemeCatalogModelTests {
         let installed = try await store.commitImport(prepared, choice: .install)
         var changed = file.theme
         changed.name = "Externally changed"
-        let replacement = try ThemeFile(theme: changed, stableID: file.stableID)
-        try replacement.encoded().write(to: fixture.managed(file.stableID))
+        let replacement = try ThemeFile(theme: changed, stableID: installed.affectedID)
+        try replacement.encoded().write(to: fixture.managed(installed.affectedID))
         let refreshed = try await store.reload()
         model.publish(refreshed)
 
         model.accept(installed, select: true, selectionAtStart: model.controller.selectionGeneration)
-        #expect(model.state?.catalog.customTheme(id: file.stableID) == replacement)
+        #expect(model.state?.catalog.customTheme(id: installed.affectedID) == replacement)
         #expect(model.controller.current == BundledThemes.light)
         #expect(model.affectedThemeID == nil)
         await model.shutdown()
@@ -220,8 +220,8 @@ struct ThemeCatalogModelTests {
 
         model.accept(installed, select: true, selectionAtStart: model.controller.selectionGeneration)
         #expect(model.state?.catalog.revision == newer.state.catalog.revision)
-        #expect(model.controller.current.id == first.theme.id)
-        #expect(model.affectedThemeID == first.theme.id)
+        #expect(model.controller.current.id == installed.affectedID.uuidString.lowercased())
+        #expect(model.affectedThemeID == installed.affectedID.uuidString.lowercased())
         await model.shutdown()
     }
 
