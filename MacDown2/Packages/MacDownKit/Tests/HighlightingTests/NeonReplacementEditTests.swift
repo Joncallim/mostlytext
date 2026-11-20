@@ -80,6 +80,21 @@ struct NeonReplacementEditTests {
         #expect(edited == fresh)
     }
 
+    @Test func movingANewlineWithoutChangingLengthMatchesFreshHighlighting() async throws {
+        let editor = HighlightedEditor(text: "# Heading\n**bold** and *italic*\n")
+        try #require(await editor.waitUntilQuiet(quietPeriod: .milliseconds(500)))
+        let newline = (editor.textView.string as NSString).range(of: "\n")
+        editor.textView.insertText("x", replacementRange: newline)
+        let removed = try await runs(afterEditing: editor)
+        #expect(!removed.fresh.isEmpty)
+        #expect(removed.edited == removed.fresh)
+
+        editor.textView.insertText("\n", replacementRange: newline)
+        let restored = try await runs(afterEditing: editor)
+        #expect(!restored.fresh.isEmpty)
+        #expect(restored.edited == restored.fresh)
+    }
+
     /// Release only: in Debug the widened experiment aborts the test host with
     /// SwiftTreeSitter's `assertionFailure("location is greater than end")`
     /// (`String+Data.swift:20`) — it makes that stale-read path routine.

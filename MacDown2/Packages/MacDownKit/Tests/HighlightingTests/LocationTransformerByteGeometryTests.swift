@@ -4,6 +4,7 @@ import EditorCore
 import Neon
 import SwiftTreeSitter
 import Testing
+import Themes
 
 @MainActor
 @Suite(.serialized)
@@ -16,6 +17,57 @@ struct LocationTransformerByteGeometryTests {
     private final class Recorder {
         var points: [Observation] = []
         var numberRanges: [NSRange] = []
+    }
+
+    @Test func sameLengthNewlineEditUsesPostEditCoordinatesBeforeEditorPublication() throws {
+        try checkSameLengthEdit(initial: "a\nb", replacement: "x", range: NSRange(location: 1, length: 1),
+                                probes: (2, 2), points: (.init(row: 1, column: 0), .init(row: 0, column: 4)))
+        try checkSameLengthEdit(initial: "axb", replacement: "\n", range: NSRange(location: 1, length: 1),
+                                probes: (2, 2), points: (.init(row: 0, column: 4), .init(row: 1, column: 0)))
+        try checkSameLengthEdit(initial: "😀\n漢", replacement: "x", range: NSRange(location: 2, length: 1),
+                                probes: (3, 3), points: (.init(row: 1, column: 0), .init(row: 0, column: 6)))
+        try checkSameLengthEdit(initial: "a\r\nb", replacement: "\n\r", range: NSRange(location: 1, length: 2),
+                                probes: (3, 3), points: (.init(row: 1, column: 0), .init(row: 1, column: 2)))
+        try checkSameLengthEdit(initial: "a\nbc", replacement: "x", range: NSRange(location: 1, length: 3),
+                                probes: (4, 2), points: (.init(row: 1, column: 4), .init(row: 0, column: 4)))
+    }
+
+    private func checkSameLengthEdit(
+        initial: String, replacement: String, range: NSRange, probes: (old: Int, new: Int),
+        points: (old: SwiftTreeSitter.Point, new: SwiftTreeSitter.Point)
+    ) throws {
+        let system = EditorTextSystem(identity: UUID().uuidString, initialText: initial, configuration: .default)
+        let highlighter = NeonSyntaxHighlighter(
+            textSystem: system, languageID: "json", theme: BundledThemes.light, registry: GrammarRegistry()
+        )
+        defer { highlighter.tearDown() }
+        let transform = try #require(highlighter.locationTransformForStorageEdit)
+        #expect(transform(probes.old) == points.old)
+        let revisionBeforeEdit = system.contentRevision
+        let storageEditsBefore = highlighter.gate.characterEditCount
+        let spy = try RecordingStorageDelegate(downstream: #require(highlighter.gate.downstream))
+        highlighter.gate.downstream = spy
+        var pointDuringNeonWill: SwiftTreeSitter.Point?
+        var pointDuringNeonCallback: SwiftTreeSitter.Point?
+        var revisionDuringNeonCallback: UInt64?
+        var storageEditsDuringNeonCallback: Int?
+        spy.onWillCharacterEdit = {
+            pointDuringNeonWill = transform(probes.old)
+        }
+        spy.onDidCharacterEdit = {
+            revisionDuringNeonCallback = system.contentRevision
+            storageEditsDuringNeonCallback = highlighter.gate.characterEditCount
+            pointDuringNeonCallback = transform(probes.new)
+        }
+
+        system.textView.insertText(replacement, replacementRange: range)
+
+        #expect(system.textView.string == (initial as NSString).replacingCharacters(in: range, with: replacement))
+        #expect(spy.willCount == 1 && spy.didCount == 1)
+        #expect(pointDuringNeonWill == points.old)
+        #expect(revisionDuringNeonCallback == revisionBeforeEdit)
+        #expect(storageEditsDuringNeonCallback == storageEditsBefore + 1)
+        #expect(pointDuringNeonCallback == points.new)
     }
 
     @Test(arguments: ["[1]", "[\"漢字😀e\u{301}\",1]"])

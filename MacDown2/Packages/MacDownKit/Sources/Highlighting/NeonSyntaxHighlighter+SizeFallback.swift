@@ -63,6 +63,8 @@ extension NeonSyntaxHighlighter {
     @discardableResult
     func discardHighlighter() -> Bool {
         gate.downstream = nil
+        gate.didForwardWillProcessCharacterEdit = nil
+        locationTransformForStorageEdit = nil
         guard let highlighter else { return false }
         repaintDeadline = 0
         highlighter.deactivate()
