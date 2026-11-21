@@ -70,9 +70,13 @@ jobs:
             MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportMountedLifecycleDisplayTests.swift \
             MacDown2/Packages/MacDownKit/Tests/HighlightingTests/ViewportCacheRetirementBudgetTests.swift \
             MacDown2/Packages/MacDownKit/Tests/HighlightingTests/BoundedMarkdownCacheRetirementTests.swift \
+            .github/scripts/profile-viewport-one-edit.py \
             .github/workflows/viewport-budget-measurement.yml \
             > "$RUNNER_TEMP/viewport-budget/input-sha256.txt"
+      - name: Profile one timed mounted edit after its oracle is ready
+        run: python3 .github/scripts/profile-viewport-one-edit.py
       - name: Measure mounted session and public highlighter in Release
+        if: ${{ false }}
         env:
           MACDOWN_VIEWPORT_BUDGET_BENCH: '1'
         run: |
@@ -97,6 +101,7 @@ jobs:
           swift test -c release --filter BoundedMarkdownCacheRetirementTests --no-parallel \
             2>&1 | tee "$RUNNER_TEMP/viewport-budget/retirement-order.log"
       - name: Record complete measured cases
+        if: ${{ false }}
         run: |
           python3 - <<'PY'
           import json

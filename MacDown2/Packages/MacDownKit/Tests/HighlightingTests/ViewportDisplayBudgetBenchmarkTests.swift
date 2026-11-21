@@ -100,6 +100,9 @@ struct ViewportDisplayBudgetBenchmarkTests {
         session.onTimingEvent = { event, time in timing.append((event, time)) }
         var results: [[String: Any]] = []
         let registry = GrammarRegistry()
+        let profileDirectory = ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_PROFILE_GATE"].map {
+            URL(fileURLWithPath: $0, isDirectory: true)
+        }
         for edit in Self.cases {
             let beforeSource = system.textView.string as NSString
             let range = try edit.range(in: beforeSource)
@@ -123,6 +126,23 @@ struct ViewportDisplayBudgetBenchmarkTests {
             let beforePixels = try Self.displayReadback(host: host, window: window, region: displayRegion)
             let priorValidation = painter.validationPassCount
             timing.removeAll(keepingCapacity: true)
+
+            if edit.name == "begin-word", let profileDirectory {
+                let ready = try JSONSerialization.data(withJSONObject: [
+                    "pid": ProcessInfo.processInfo.processIdentifier,
+                    "case": edit.name,
+                    "source_utf8_bytes": expectedSource.utf8.count,
+                ])
+                try ready.write(to: profileDirectory.appendingPathComponent("ready.json"), options: .atomic)
+                let gateDeadline = DispatchTime.now().uptimeNanoseconds + 30_000_000_000
+                let goPath = profileDirectory.appendingPathComponent("go").path
+                while !FileManager.default.fileExists(atPath: goPath),
+                      DispatchTime.now().uptimeNanoseconds < gateDeadline {
+                    try await Task.sleep(for: .milliseconds(10))
+                }
+                try #require(FileManager.default.fileExists(atPath: goPath),
+                             "Profile driver did not release the timed edit")
+            }
 
             let input = DispatchTime.now().uptimeNanoseconds
             system.textView.insertText(edit.replacement, replacementRange: range)
@@ -228,11 +248,23 @@ struct ViewportDisplayBudgetBenchmarkTests {
             )
             let caseJSON = try #require(String(data: caseData, encoding: .utf8))
             print("VIEWPORT-DISPLAY-CASE " + caseJSON)
+            if let profileDirectory {
+                try Data("done".utf8).write(to: profileDirectory.appendingPathComponent("done"), options: .atomic)
+                let gateDeadline = DispatchTime.now().uptimeNanoseconds + 30_000_000_000
+                let finish = profileDirectory.appendingPathComponent("finish").path
+                while !FileManager.default.fileExists(atPath: finish),
+                      DispatchTime.now().uptimeNanoseconds < gateDeadline {
+                    try await Task.sleep(for: .milliseconds(10))
+                }
+                try #require(FileManager.default.fileExists(atPath: finish),
+                             "Profile driver did not finish sampling")
+                break
+            }
         }
         let body = try JSONSerialization.data(withJSONObject: results, options: [.sortedKeys])
         let encoded = try #require(String(data: body, encoding: .utf8))
         print("VIEWPORT-DISPLAY-BUDGET " + encoded)
-        #expect(results.count == Self.cases.count)
+        #expect(results.count == (profileDirectory == nil ? Self.cases.count : 1))
         // A complete measurement may reveal a product-budget failure. The
         // workflow records every such case; it never calls that a budget pass.
     }
