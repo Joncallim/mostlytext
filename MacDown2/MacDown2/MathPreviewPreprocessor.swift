@@ -69,7 +69,9 @@ enum MathPreviewPreprocessor {
     /// The visible marker a flagged span is replaced with — ordinary inline
     /// code, requiring no new SwiftUI view or hit-testing support this
     /// epic cannot build (epic-19-implementation.md §2.1).
-    static let invalidMathMarker = "`⚠ invalid math`"
+    static var invalidMathMarker: String {
+        "`\(String(localized: "⚠ invalid math", comment: "Preview fallback for a malformed math expression"))`"
+    }
 
     static func preprocessed(_ blocks: [PreviewBlock]?) -> [PreviewBlock]? {
         blocks?.map(preprocessed(_:))

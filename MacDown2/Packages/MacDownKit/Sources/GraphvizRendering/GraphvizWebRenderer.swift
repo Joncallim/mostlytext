@@ -100,8 +100,7 @@ public actor GraphvizWebRenderer: GraphvizDiagramRendering {
             throw GraphvizRenderError.outputTooLarge(byteCount: byteCount)
         }
         guard result.succeeded else {
-            let message = result.message ?? "unknown error"
-            throw Self.failure(for: message)
+            throw Self.failure(for: result.message)
         }
         guard let svg = result.svg else {
             throw GraphvizRenderError.rendererUnavailable
@@ -114,8 +113,11 @@ public actor GraphvizWebRenderer: GraphvizDiagramRendering {
 
     /// Viz's WASM abort is an engine failure, including when the same DOT
     /// source rendered on another page. It does not diagnose authored syntax.
-    static func failure(for message: String) -> GraphvizRenderError {
-        message.hasPrefix("Aborted()") ? .rendererUnavailable : .invalidSyntax(message)
+    static func failure(for message: String?) -> GraphvizRenderError {
+        guard let message, !message.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return .rendererUnavailable
+        }
+        return message.hasPrefix("Aborted()") ? .rendererUnavailable : .invalidSyntax(message)
     }
 
     private func withPoolErrorMapping<T: Sendable>(_ body: () async throws -> T) async throws -> T {

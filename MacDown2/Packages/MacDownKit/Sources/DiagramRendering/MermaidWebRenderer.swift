@@ -65,7 +65,7 @@ public actor MermaidWebRenderer: MermaidDiagramRendering {
                 throw MermaidRenderError.outputTooLarge(byteCount: byteCount)
             }
             guard result.succeeded else {
-                throw Self.failure(for: result.message ?? "unknown error")
+                throw Self.failure(for: result.message)
             }
             guard let svg = result.svg else {
                 throw MermaidRenderError.rendererUnavailable
@@ -96,8 +96,11 @@ public actor MermaidWebRenderer: MermaidDiagramRendering {
 
     /// A completed SVG can exceed the bounded preview raster dimensions.
     /// That is a renderer capacity refusal, not a Mermaid parse diagnostic.
-    static func failure(for message: String) -> MermaidRenderError {
-        message == "diagram exceeds raster pixel limit" ? .rendererUnavailable : .invalidSyntax(message)
+    static func failure(for message: String?) -> MermaidRenderError {
+        guard let message, !message.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return .rendererUnavailable
+        }
+        return message == "diagram exceeds raster pixel limit" ? .rendererUnavailable : .invalidSyntax(message)
     }
 
     /// Closes admission to the current generation and waits for its pages
