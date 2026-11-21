@@ -94,6 +94,8 @@ public struct DiagramHarnessResult: Sendable {
 public final class DiagramHarnessPage: NSObject, WKNavigationDelegate, WKUIDelegate {
     private let webView: WKWebView
     private let allowedDirectory: URL
+    private let schemeHandler: BundledDiagramSchemeHandler?
+    private let schemeHarnessURL: URL?
     private let loadCompletion = DiagramHarnessNavigationCompletion()
     private var evaluations: [UUID: CheckedContinuation<DiagramHarnessResult, any Error>] = [:]
 
@@ -113,11 +115,32 @@ public final class DiagramHarnessPage: NSObject, WKNavigationDelegate, WKUIDeleg
     /// harness and performs the async page load, while
     /// `init(allowedDirectory:)` stays a normal, synchronous designated
     /// initializer.
-    public static func make(harnessResourceName: String, bundle: Bundle) async throws -> DiagramHarnessPage {
+    public static func make(
+        harnessResourceName: String,
+        bundle: Bundle,
+        bundledSchemeResourceNames: Set<String>? = nil
+    ) async throws -> DiagramHarnessPage {
         guard let harnessURL = bundle.url(forResource: harnessResourceName, withExtension: "html") else {
             throw DiagramPoolError.pageUnavailable
         }
-        let page = DiagramHarnessPage(allowedDirectory: harnessURL.deletingLastPathComponent())
+        let allowedDirectory = harnessURL.deletingLastPathComponent()
+        let handler: BundledDiagramSchemeHandler?
+        let schemeHarnessURL: URL?
+        if let names = bundledSchemeResourceNames {
+            guard names.contains("\(harnessResourceName).html"),
+                  let made = BundledDiagramSchemeHandler(
+                      bundle: bundle, allowedDirectory: allowedDirectory, names: names
+                  ),
+                  let schemeURL = BundledDiagramSchemeHandler.url(for: "\(harnessResourceName).html")
+            else { throw DiagramPoolError.pageUnavailable }
+            handler = made
+            schemeHarnessURL = schemeURL
+        } else {
+            handler = nil
+            schemeHarnessURL = nil
+        }
+        let page = DiagramHarnessPage(allowedDirectory: allowedDirectory, schemeHandler: handler,
+                                      schemeHarnessURL: schemeHarnessURL)
         do {
             try await page.load(harnessURL: harnessURL)
             return page
@@ -127,8 +150,10 @@ public final class DiagramHarnessPage: NSObject, WKNavigationDelegate, WKUIDeleg
         }
     }
 
-    private init(allowedDirectory: URL) {
+    private init(allowedDirectory: URL, schemeHandler: BundledDiagramSchemeHandler?, schemeHarnessURL: URL?) {
         self.allowedDirectory = allowedDirectory
+        self.schemeHandler = schemeHandler
+        self.schemeHarnessURL = schemeHarnessURL
 
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = .nonPersistent()
@@ -136,6 +161,9 @@ public final class DiagramHarnessPage: NSObject, WKNavigationDelegate, WKUIDeleg
         let pagePreferences = WKWebpagePreferences()
         pagePreferences.allowsContentJavaScript = true
         configuration.defaultWebpagePreferences = pagePreferences
+        if let schemeHandler {
+            configuration.setURLSchemeHandler(schemeHandler, forURLScheme: BundledDiagramSchemeHandler.scheme)
+        }
 
         webView = WKWebView(frame: .zero, configuration: configuration)
         super.init()
@@ -152,7 +180,11 @@ public final class DiagramHarnessPage: NSObject, WKNavigationDelegate, WKUIDeleg
                     return
                 }
                 loadCompletion.begin(continuation) {
-                    webView.loadFileURL(harnessURL, allowingReadAccessTo: allowedDirectory)
+                    if let schemeHarnessURL {
+                        webView.load(URLRequest(url: schemeHarnessURL))
+                    } else {
+                        webView.loadFileURL(harnessURL, allowingReadAccessTo: allowedDirectory)
+                    }
                 }
             }
         } onCancel: {
@@ -245,7 +277,12 @@ public final class DiagramHarnessPage: NSObject, WKNavigationDelegate, WKUIDeleg
         decidePolicyFor navigationAction: WKNavigationAction,
         decisionHandler: @escaping @MainActor @Sendable (WKNavigationActionPolicy) -> Void
     ) {
-        guard DiagramNavigationPolicy.allows(navigationAction.request.url, within: allowedDirectory) else {
+        let permitted: Bool = if let schemeHarnessURL {
+            navigationAction.request.url == schemeHarnessURL
+        } else {
+            DiagramNavigationPolicy.allows(navigationAction.request.url, within: allowedDirectory)
+        }
+        guard permitted else {
             decisionHandler(.cancel)
             return
         }

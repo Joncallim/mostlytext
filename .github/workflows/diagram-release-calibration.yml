@@ -66,6 +66,13 @@ jobs:
             fi
           done
           exit "$status"
+      - name: Verify D2 bundle resources and real renderer behaviour
+        working-directory: MacDown2/Packages/MacDownKit
+        run: |
+          swift test -c release --skip-build --force-resolved-versions --no-parallel \
+            --filter D2HarnessResourcePolicyTests
+          swift test -c release --skip-build --force-resolved-versions --no-parallel \
+            --filter D2WebRendererTests
       - name: Record exact checkout and locked input identity
         if: always()
         run: |

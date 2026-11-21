@@ -230,7 +230,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "aba141d7b24c3fe8c5b939389471d3f56cb20081947be7142dbc8223039dfc0a"
+          "content": "5097f80fb8b8cb584c615b0c4a0c97e557558165bf1de3917355c247c26afcc6"
         }
       ],
       "licenses": [
@@ -240,7 +240,7 @@
       ],
       "name": "D2 (@terrastruct/d2)",
       "pedigree": {
-        "notes": "The trailing ES-module export is replaced with window.D2=lw; and only the Brotli-compressed WASM literal is replaced by a controlled Go build with a lossless WOFF wrap of official Liberation Mono 2.00.5. See NOTICE.txt and compliance/evidence/d2-font-replacement/."
+        "notes": "The trailing ES-module export is replaced with window.D2=lw; the Brotli-compressed WASM literal was replaced by a controlled Go build with a lossless WOFF wrap of official Liberation Mono 2.00.5; the exact WASM bytes are now split into a bundled resource and loaded through a restricted WebKit scheme. See NOTICE.txt, compliance/evidence/d2-font-replacement/ and compliance/evidence/d2-runtime-resource/."
       },
       "properties": [
         {
@@ -257,7 +257,7 @@
         },
         {
           "name": "mostlytext:file-count",
-          "value": "1"
+          "value": "2"
         }
       ],
       "purl": "pkg:npm/%40terrastruct/d2@0.1.33",
@@ -5668,7 +5668,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:e7028ba5-ba28-5096-8ed0-2724457059e5",
+  "serialNumber": "urn:uuid:20e33b64-df08-50d5-8e59-27f7513b926b",
   "specVersion": "1.5",
   "version": 1
 }

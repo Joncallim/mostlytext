@@ -589,3 +589,32 @@ the complete locked suite, actual WebKit render paths, lint, compliance and a
 fresh Release build are required before merge. This closes a concrete
 navigation predicate defect; it does not by itself establish the full E23
 sandbox/no-network, memory or Quick Look acceptance criteria.
+
+## D2 static Quick Look resource feasibility — bounded architecture revision
+
+At `main` `2f349bd6`, the existing D2 Preview/Export renderer embeds a
+23,704,068-byte WASM module as a Brotli/base64 literal in its browser script.
+The Release renderer calibration is valid, but static Quick Look still lacks a
+D2 result inside its separate three-second reply budget. Moving the exact WASM
+bytes to an adjacent file shrinks JavaScript startup work, but WebKit refused
+both `fetch` and XHR from the file-loaded harness in retained hosted runs
+44914027940 and 44915795739. Those failures are not Quick Look acceptance.
+
+The next feasibility slice uses WebKit's custom URL scheme support for the D2
+harness and its three fixed resources only. D2 continues to own the resource
+bytes and rendering API. `DiagramWebKitPool` owns the per-page scheme handler;
+Mermaid and Graphviz continue to use their current file pages. The handler
+accepts only the known host and exact `harness.html`, `d2-browser.js`,
+`render.js` and `d2.wasm` paths, reads only files in the D2 bundle resource
+directory, and never maps authored paths or network URLs. A D2 page navigates
+only to its own harness URL. The D2 CSP admits same-origin resource reads while
+continuing to deny remote connections. WebKit's data store remains ephemeral.
+
+This is a product feasibility experiment. The worker's reply deadline and
+E23 security/performance criteria remain unchanged. A hosted Release render
+must prove ordinary D2 and stress controls still work, and an installed
+provider Finder run must prove a static D2 result before this can become a
+merge candidate. A failure at either stage is preserved and the experiment
+is removed from the merge path. The original compressed bytes and font/source
+evidence remain in Git history; any shipped split requires a deterministic
+extraction recipe and synchronized compliance inventory.

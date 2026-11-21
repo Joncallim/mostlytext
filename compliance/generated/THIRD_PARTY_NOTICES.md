@@ -3105,7 +3105,7 @@ SOFTWARE.
 - Upstream: https://github.com/terrastruct/d2
 - Licence: MPL-2.0
 - Copyright Terrastruct, Inc.
-- Local modifications: The trailing ES-module export is replaced with window.D2=lw; and only the Brotli-compressed WASM literal is replaced by a controlled Go build with a lossless WOFF wrap of official Liberation Mono 2.00.5. See NOTICE.txt and compliance/evidence/d2-font-replacement/.
+- Local modifications: The trailing ES-module export is replaced with window.D2=lw; the Brotli-compressed WASM literal was replaced by a controlled Go build with a lossless WOFF wrap of official Liberation Mono 2.00.5; the exact WASM bytes are now split into a bundled resource and loaded through a restricted WebKit scheme. See NOTICE.txt, compliance/evidence/d2-font-replacement/ and compliance/evidence/d2-runtime-resource/.
 - Source code: https://mostlytext.app/opensource/1.0.0/d2/
 
 ### D2-LICENSE.txt
@@ -3496,11 +3496,11 @@ This browser resource is based on @terrastruct/d2 0.1.33
 contains the licence. MostlyText retains the browser renderer locally for
 offline preview and export.
 
-MostlyText makes two changes to the published browser resource:
+MostlyText makes three changes to the published browser resource:
 
 1. Replace the trailing ES module `export{lw as D2}` statement with
    `window.D2=lw;`. WebKit rejects the needed file URL module sub-import,
-   while an ordinary local script works within the app's file access scope.
+   while an ordinary bundled script works within the renderer's contained page.
 2. Replace only the embedded Brotli-compressed Go WebAssembly literal. The new
    WebAssembly is compiled from pinned D2 source commit
    581c91096b62d644fb5168313142c836b7e68e74 with the official
@@ -3509,6 +3509,10 @@ MostlyText makes two changes to the published browser resource:
    The new WOFF retains every original TTF table byte, including name and
    underline/fixed-pitch metadata. The rebuilt WebAssembly is not claimed to
    reproduce the publisher's optimized WebAssembly.
+3. Extract those exact replacement WebAssembly bytes into the adjacent
+   `d2.wasm` bundle resource and load them through a WebKit scheme handler
+   that serves only named D2 resources. The deterministic extraction and
+   byte hashes are in compliance/evidence/d2-runtime-resource/.
 
 The minified browser resource is not by itself sufficient readable
 corresponding source. The D2 source, Chroma font patch, original TTF, WOFF

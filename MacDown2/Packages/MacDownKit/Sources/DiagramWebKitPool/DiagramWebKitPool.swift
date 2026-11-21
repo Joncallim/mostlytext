@@ -47,10 +47,14 @@ public actor DiagramWebKitPool {
         poolSize: Int = 2,
         timeout: Duration = .seconds(5),
         admissionTimeout: Duration? = nil,
+        bundledSchemeResourceNames: Set<String>? = nil,
         preparePage: @escaping @Sendable (DiagramHarnessPage) async throws -> Void = { _ in }
     ) {
         self.init(poolSize: poolSize, timeout: timeout, admissionTimeout: admissionTimeout) {
-            let page = try await DiagramHarnessPage.make(harnessResourceName: harnessResourceName, bundle: bundle)
+            let page = try await DiagramHarnessPage.make(
+                harnessResourceName: harnessResourceName, bundle: bundle,
+                bundledSchemeResourceNames: bundledSchemeResourceNames
+            )
             do {
                 try await preparePage(page)
                 try Task.checkCancellation()
