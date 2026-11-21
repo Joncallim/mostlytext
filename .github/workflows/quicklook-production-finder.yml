@@ -67,7 +67,10 @@ jobs:
               'com.apple.security.files.user-selected.read-only': True,
               'com.apple.security.temporary-exception.mach-lookup.global-name': ['com.apple.webprivacyd'],
           }, provider
-          assert worker == {'com.apple.security.app-sandbox': True}, worker
+          assert worker == {
+              'com.apple.security.app-sandbox': True,
+              'com.apple.security.network.client': True,
+          }, worker
           PY
           cp -R .github/quicklook-production-probe "$RUNNER_TEMP/production-quicklook/fixture"
           cd "$RUNNER_TEMP/production-quicklook/fixture"

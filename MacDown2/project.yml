@@ -328,6 +328,7 @@ targets:
       path: MacDown2QuickLookWorker/Worker.entitlements
       properties:
         com.apple.security.app-sandbox: true
+        com.apple.security.network.client: true
   MostlyTextCommand:
     type: tool
     settings:
