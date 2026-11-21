@@ -46,9 +46,11 @@ limit for the final F18 disposition.
 
 ## Verification and remaining gates
 
-The selected package test observes a real nested filesystem event. App tests
-inject controlled events for nested add, active Folder Search refresh, event
-burst coalescing and root replacement, alongside the existing index tests.
+The selected package test observes a real nested filesystem event. One app
+test exercises the real stream through the production window/index path.
+Other app tests inject controlled events for nested add, active Folder Search
+refresh, event burst coalescing, root switch and root replacement, alongside
+the existing index tests.
 Compile the app and tests without owner-desktop launch; run the selected app
 tests on an authorized disposable hosted Mac, then the relevant Release and
 whole-app gates before integration. Final signed candidate and protected native

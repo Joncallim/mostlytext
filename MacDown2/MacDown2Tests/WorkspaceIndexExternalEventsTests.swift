@@ -4,6 +4,28 @@ import Testing
 import TextSearch
 
 extension WorkspaceIndexRefreshBehaviorTests {
+    @Test func aRealNestedExternalEditRefreshesWithoutWindowActivation() async throws {
+        let root = try tempRoot(["a.md"])
+        defer { try? FileManager.default.removeItem(at: root) }
+        let fixture = try await makeController(root: root)
+        defer { fixture.retire() }
+        let controller = fixture.controller
+        controller.makeWorkspaceEventSource = { try WorkspaceFileEvents(path: $0) }
+        await controller.setFileTreeRoot(root)
+
+        let nested = root.appendingPathComponent("nested", isDirectory: true)
+        try FileManager.default.createDirectory(at: nested, withIntermediateDirectories: true)
+        try Data("external".utf8).write(to: nested.appendingPathComponent("new.md"))
+        var found = false
+        for _ in 0 ..< 500 where !found {
+            found = await Set(controller.workspaceFileIndex.allPaths().map(\.relativePath)).contains("nested/new.md")
+            if !found {
+                try await Task.sleep(for: .milliseconds(10))
+            }
+        }
+        #expect(found)
+    }
+
     @Test func aRecursiveExternalChangeRefreshesTheOpenIndexAndFolderSearch() async throws {
         let root = try tempRoot(["a.md"])
         defer { try? FileManager.default.removeItem(at: root) }
