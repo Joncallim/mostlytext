@@ -97,7 +97,13 @@ struct ViewportDisplayBudgetBenchmarkTests {
         try #require(!session.visibleTokens().isEmpty)
 
         var timing: [(MarkdownViewportSession.TimingEvent, UInt64)] = []
-        session.onTimingEvent = { event, time in timing.append((event, time)) }
+        var validationAtPublication: Int?
+        session.onTimingEvent = { event, time in
+            timing.append((event, time))
+            if event == .published {
+                validationAtPublication = painter.validationPassCount
+            }
+        }
         var results: [[String: Any]] = []
         let registry = GrammarRegistry()
         for edit in Self.cases {
@@ -123,6 +129,7 @@ struct ViewportDisplayBudgetBenchmarkTests {
             let beforePixels = try Self.displayReadback(host: host, window: window, region: displayRegion)
             let priorValidation = painter.validationPassCount
             timing.removeAll(keepingCapacity: true)
+            validationAtPublication = nil
 
             let input = DispatchTime.now().uptimeNanoseconds
             system.textView.insertText(edit.replacement, replacementRange: range)
@@ -131,12 +138,20 @@ struct ViewportDisplayBudgetBenchmarkTests {
             var styled = false
             var matchedPaint: AccentPaint?
             var styleReadback = DispatchTime.now().uptimeNanoseconds
+            var sawPrepublicationPaint = false
             while DispatchTime.now().uptimeNanoseconds < deadline {
-                // Let the editor's main-actor publication and styling run
-                // before the independent oracle inspects TextKit. Polling the
-                // oracle first can itself occupy the actor and delay paint.
+                // The first validation after an edit can clear stale styling
+                // before the new parse publishes. Inspecting TextKit there
+                // can occupy the main actor and delay the product publication
+                // being measured. Keep the stopwatch running and inspect the
+                // independent oracle only after the post-publication paint.
                 try await Task.sleep(for: .milliseconds(1))
                 guard painter.validationPassCount > priorValidation else { continue }
+                guard let validationAtPublication else {
+                    sawPrepublicationPaint = true
+                    continue
+                }
+                guard painter.validationPassCount > validationAtPublication else { continue }
                 guard let visible = system.visibleUTF16Range else { continue }
                 let painted = try Self.accentPaint(in: visible, oracle: oracle, theme: BundledThemes.light)
                 let actual = Self.renderedAccentRanges(in: system.textView, clippedTo: visible,
@@ -206,6 +221,7 @@ struct ViewportDisplayBudgetBenchmarkTests {
                 "parse_attempts_resolved": parseResolutions,
                 "configured_debounce_ms": 0,
                 "explicit_parse_wait": false,
+                "prepublication_paint_observed": sawPrepublicationPaint,
                 "publication_to_style_readback_ms": milliseconds(published, styleReadback),
                 "style_to_display_return_ms": milliseconds(styleReadback, afterPixels.displayReturnedAt),
                 "display_return_to_bitmap_readback_ms": milliseconds(afterPixels.displayReturnedAt, displayReadback),
