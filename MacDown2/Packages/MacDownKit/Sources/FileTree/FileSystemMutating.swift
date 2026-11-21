@@ -34,7 +34,16 @@ public enum FileSystemItemKind: Sendable, Equatable {
 }
 
 public struct FileSystemMutator: FileSystemMutating {
-    public init() {}
+    let beforeRootedMutation: (@Sendable () throws -> Void)?
+
+    public init() {
+        beforeRootedMutation = nil
+    }
+
+    init(beforeRootedMutation: @escaping @Sendable () throws -> Void) {
+        self.beforeRootedMutation = beforeRootedMutation
+    }
+
     public func itemKind(at url: URL) async throws -> FileSystemItemKind? {
         await Task<FileSystemItemKind?, Never>.detached {
             var info = stat()

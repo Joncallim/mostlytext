@@ -78,6 +78,7 @@ public extension FileSystemMutator {
             switch operation {
             case let .createFile(url):
                 try root.withParent(of: url) { parent, name in
+                    try beforeRootedMutation?()
                     let file = Darwin.openat(
                         parent, name, O_CREAT | O_EXCL | O_WRONLY | O_CLOEXEC | O_NOFOLLOW, 0o666
                     )
@@ -86,6 +87,7 @@ public extension FileSystemMutator {
                 }
             case let .createDirectory(url):
                 try root.withParent(of: url) { parent, name in
+                    try beforeRootedMutation?()
                     guard Darwin.mkdirat(parent, name, 0o777) == 0 else {
                         throw FileTreeRootedDirectory.failure()
                     }
@@ -93,13 +95,15 @@ public extension FileSystemMutator {
             case let .move(source, destination):
                 try root.withParent(of: source) { sourceParent, sourceName in
                     try root.withParent(of: destination) { destinationParent, destinationName in
+                        try beforeRootedMutation?()
                         guard Darwin.renameatx_np(
                             sourceParent, sourceName, destinationParent, destinationName, UInt32(RENAME_EXCL)
                         ) == 0 else { throw FileTreeRootedDirectory.failure() }
                     }
                 }
             case let .copy(source, destination):
-                try FileTreeRootedCopy.copy(source, to: destination, root: root)
+                try FileTreeRootedCopy.copy(source, to: destination, root: root,
+                                            beforePublication: beforeRootedMutation)
             case let .trash(url):
                 try await trash(at: url)
             }

@@ -4,7 +4,10 @@ import Foundation
 /// Builds a private copy beneath an opened destination parent, then publishes
 /// it without replacing a file another writer created in the meantime.
 enum FileTreeRootedCopy {
-    static func copy(_ source: URL, to destination: URL, root: FileTreeRootedDirectory) throws {
+    static func copy(
+        _ source: URL, to destination: URL, root: FileTreeRootedDirectory,
+        beforePublication: (@Sendable () throws -> Void)? = nil
+    ) throws {
         try root.withReadableParent(of: source) { sourceParent, sourceName in
             try root.withParent(of: destination) { destinationParent, destinationName in
                 let stage = ".mostlytext-copy-\(UUID().uuidString)"
@@ -18,6 +21,7 @@ enum FileTreeRootedCopy {
                             )
                         }
                     }
+                    try beforePublication?()
                     guard Darwin.renameatx_np(
                         destinationParent, stage, destinationParent, destinationName, UInt32(RENAME_EXCL)
                     ) == 0 else { throw FileTreeRootedDirectory.failure() }
