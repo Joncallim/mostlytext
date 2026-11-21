@@ -61,6 +61,7 @@ final class ProductionFinderTests: XCTestCase {
         assertSelectedSymlink(in: finder, source: source)
         assertEncodedUnicodeSource(in: finder, beside: source)
         assertStaticGraphviz(in: finder, beside: source)
+        assertStaticMermaid(in: finder, beside: source)
         assertTwoGraphvizFences(in: finder, beside: source)
         assertMixedGraphvizFailure(in: finder, beside: source)
         assertOversizedGraphvizFallback(in: finder, beside: source)
@@ -242,6 +243,35 @@ final class ProductionFinderTests: XCTestCase {
         XCTAssertTrue(treeText.contains("value: digraph G {"), "Over-budget DOT must remain authored code")
         // WebKit truncates this very long code block in Finder's accessibility snapshot.
         // The rendered code opening and retained screenshot establish source fallback.
+        XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText")
+            .isEmpty)
+        finder.typeKey(.escape, modifierFlags: [])
+    }
+}
+
+private extension ProductionFinderTests {
+    func assertStaticMermaid(in finder: XCUIApplication, beside source: URL) {
+        let diagram = source.deletingLastPathComponent()
+            .appendingPathComponent("mostlytext-production-mermaid.md")
+        NSWorkspace.shared.activateFileViewerSelecting([diagram])
+        let item = finder.descendants(matching: .any)
+            .matching(identifier: diagram.lastPathComponent).firstMatch
+        XCTAssertTrue(item.waitForExistence(timeout: 5), "Finder must select the Mermaid fixture")
+        item.click()
+        finder.typeKey(.space, modifierFlags: [])
+        let heading = finder.staticTexts["MOSTLYTEXT_MERMAID_QUICKLOOK"].firstMatch
+        let renderedNode = finder.staticTexts["MERMAID_RENDERED_NODE"].firstMatch
+        let visible = heading.waitForExistence(timeout: 15)
+            && renderedNode.waitForExistence(timeout: 5)
+        let tree = XCTAttachment(string: String(finder.debugDescription.prefix(65536)))
+        tree.name = "Mermaid Finder accessibility tree"
+        tree.lifetime = .keepAlways
+        add(tree)
+        let image = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        image.name = "Mermaid Finder Quick Look window"
+        image.lifetime = .keepAlways
+        add(image)
+        XCTAssertTrue(visible, "The sandboxed worker must return static Mermaid SVG")
         XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText")
             .isEmpty)
         finder.typeKey(.escape, modifierFlags: [])
