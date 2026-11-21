@@ -98,6 +98,8 @@ struct ViewportDisplayBudgetBenchmarkTests {
 
         var timing: [(MarkdownViewportSession.TimingEvent, UInt64)] = []
         session.onTimingEvent = { event, time in timing.append((event, time)) }
+        var paintTimings: [MarkdownViewportPainter.PaintTiming] = []
+        painter.onPaintTiming = { phase in paintTimings.append(phase) }
         var results: [[String: Any]] = []
         let registry = GrammarRegistry()
         for edit in Self.cases {
@@ -123,6 +125,7 @@ struct ViewportDisplayBudgetBenchmarkTests {
             let beforePixels = try Self.displayReadback(host: host, window: window, region: displayRegion)
             let priorValidation = painter.validationPassCount
             timing.removeAll(keepingCapacity: true)
+            paintTimings.removeAll(keepingCapacity: true)
 
             let input = DispatchTime.now().uptimeNanoseconds
             system.textView.insertText(edit.replacement, replacementRange: range)
@@ -228,6 +231,18 @@ struct ViewportDisplayBudgetBenchmarkTests {
             )
             let caseJSON = try #require(String(data: caseData, encoding: .utf8))
             print("VIEWPORT-DISPLAY-CASE " + caseJSON)
+            let paintPhases = paintTimings.map { phase -> [String: Any] in
+                [
+                    "started_ns": phase.started,
+                    "cleared_ms": milliseconds(phase.started, phase.cleared),
+                    "invalidated_ms": milliseconds(phase.cleared, phase.invalidated),
+                    "validated_ms": milliseconds(phase.invalidated, phase.validated),
+                    "total_ms": milliseconds(phase.started, phase.validated),
+                ]
+            }
+            let phaseData = try JSONSerialization.data(withJSONObject: paintPhases, options: [.sortedKeys])
+            let phaseJSON = try #require(String(data: phaseData, encoding: .utf8))
+            print("VIEWPORT-PAINT-CASE \(edit.name) " + phaseJSON)
         }
         let body = try JSONSerialization.data(withJSONObject: results, options: [.sortedKeys])
         let encoded = try #require(String(data: body, encoding: .utf8))

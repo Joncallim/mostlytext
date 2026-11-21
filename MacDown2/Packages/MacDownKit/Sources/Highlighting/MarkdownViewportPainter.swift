@@ -1,4 +1,5 @@
 import AppKit
+import Dispatch
 import EditorCore
 import Neon
 import RangeState
@@ -7,6 +8,13 @@ import RangeState
 /// TextKit 2 styler. Parsing and storage ownership stay with the session.
 @MainActor
 final class MarkdownViewportPainter {
+    struct PaintTiming {
+        let started: UInt64
+        let cleared: UInt64
+        let invalidated: UInt64
+        let validated: UInt64
+    }
+
     private let textSystem: EditorTextSystem
     private let session: MarkdownViewportSession
     private let styler: TextSystemStyler<TextViewSystemInterface>
@@ -17,6 +25,7 @@ final class MarkdownViewportPainter {
     /// Validation requests issued for mounted, unmarked viewports. The
     /// measurement still waits for actual attributes and display afterward.
     private(set) var validationPassCount = 0
+    var onPaintTiming: ((PaintTiming) -> Void)?
 
     init(textSystem: EditorTextSystem, session: MarkdownViewportSession,
          attributes: @escaping TokenAttributeProvider) {
@@ -136,13 +145,19 @@ final class MarkdownViewportPainter {
             clearLastPaintedRange()
             return
         }
+        let started = DispatchTime.now().uptimeNanoseconds
         if let previous = lastPaintedRange {
             clearPaintedOutside(previous, keeping: visible)
         }
+        let cleared = DispatchTime.now().uptimeNanoseconds
         styler.invalidate(.range(visible))
+        let invalidated = DispatchTime.now().uptimeNanoseconds
         styler.validate(.range(visible))
+        let validated = DispatchTime.now().uptimeNanoseconds
         lastPaintedRange = visible
         validationPassCount += 1
+        onPaintTiming?(PaintTiming(started: started, cleared: cleared,
+                                   invalidated: invalidated, validated: validated))
     }
 
     /// Layout can temporarily lose the mounted viewport. Remove only the
