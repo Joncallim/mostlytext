@@ -706,7 +706,7 @@
       }
     },
     "%lld of %lld": {
-      "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
+      "comment": "Find result position and total. French, Japanese and Polish are review drafts pending native-language acceptance.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -717,19 +717,19 @@
         "fr": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "%lld of %lld"
+            "value": "%lld sur %lld"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "%lld of %lld"
+            "value": "%lld / %lld"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "%lld of %lld"
+            "value": "%lld z %lld"
           }
         }
       }
@@ -8931,7 +8931,7 @@
       }
     },
     "Replacing %lld of %lld…": {
-      "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
+      "comment": "Folder replacement progress with completed and total counts. French, Japanese and Polish are review drafts pending native-language acceptance.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -8942,19 +8942,19 @@
         "fr": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Replacing %lld of %lld…"
+            "value": "Remplacement de %lld sur %lld…"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Replacing %lld of %lld…"
+            "value": "%lld / %lld 件を置換中…"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Replacing %lld of %lld…"
+            "value": "Zastępowanie %lld z %lld…"
           }
         }
       }
@@ -12770,7 +12770,7 @@
       }
     },
     "and %lld more": {
-      "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
+      "comment": "Remaining replacement-preview lines. French, Japanese and Polish are review drafts pending native-language acceptance.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -12781,19 +12781,19 @@
         "fr": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "and %lld more"
+            "value": "et %lld autres"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "and %lld more"
+            "value": "ほか %lld 件"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "and %lld more"
+            "value": "i jeszcze %lld"
           }
         }
       }

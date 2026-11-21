@@ -11,6 +11,12 @@ struct FolderSearchCountCopyTests {
         let row: String
     }
 
+    private struct ProgressCase {
+        let language: String
+        let progress: String
+        let remaining: String
+    }
+
     private func resources(_ language: String) throws -> Bundle {
         let url = try #require(Bundle.main.url(forResource: language, withExtension: "lproj"))
         return try #require(Bundle(url: url))
@@ -31,6 +37,10 @@ struct FolderSearchCountCopyTests {
             .message(bundle: bundle, locale: locale) == "Matches in 100% %@ note.md: 1 match")
         #expect(FolderSearchCountCopy.result(path: "user note.md", matches: 0)
             .message(bundle: bundle, locale: locale) == "Matches in user note.md: 0 matches")
+        #expect(FolderSearchCountCopy.replaceProgress(completed: 1, total: 12)
+            .message(bundle: bundle, locale: locale) == "Replacing 1 of 12…")
+        #expect(FolderSearchCountCopy.previewRemaining(matches: 3)
+            .message(bundle: bundle, locale: locale) == "and 3 more")
     }
 
     @Test func compiledPluralFamiliesKeepPathAndGrammar() throws {
@@ -65,5 +75,21 @@ struct FolderSearchCountCopyTests {
         let locale = Locale(identifier: "ja")
         #expect(FolderSearchCountCopy.confirmation(matches: 1, files: 2)
             .message(bundle: bundle, locale: locale) == "2ファイルの1件の一致を置換しますか？")
+    }
+
+    @Test func compiledProgressAndPreviewCountsUseOwningCatalog() throws {
+        let cases: [ProgressCase] = [
+            .init(language: "fr", progress: "Remplacement de 1 sur 12…", remaining: "et 3 autres"),
+            .init(language: "ja", progress: "1 / 12 件を置換中…", remaining: "ほか 3 件"),
+            .init(language: "pl", progress: "Zastępowanie 1 z 12…", remaining: "i jeszcze 3"),
+        ]
+        for item in cases {
+            let bundle = try resources(item.language)
+            let locale = Locale(identifier: item.language)
+            #expect(FolderSearchCountCopy.replaceProgress(completed: 1, total: 12)
+                .message(bundle: bundle, locale: locale) == item.progress)
+            #expect(FolderSearchCountCopy.previewRemaining(matches: 3)
+                .message(bundle: bundle, locale: locale) == item.remaining)
+        }
     }
 }
