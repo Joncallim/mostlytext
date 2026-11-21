@@ -46,6 +46,13 @@ public final class FileTreeModel {
         rootAccessScope?.url
     }
 
+    /// The selected directory still names the object the user opened. A
+    /// reused path or retargeted symlink must not revive old search results.
+    public var selectedRootIsCurrent: Bool {
+        guard let root, let rootIdentity else { return false }
+        return FileTreeRootIdentity(url: root) == rootIdentity
+    }
+
     let reader: any DirectoryReading
     let mutator: any FileSystemMutating
     let watcher: any DirectoryWatching

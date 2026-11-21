@@ -70,6 +70,15 @@ final class WindowController: NSWindowController, NSWindowDelegate {
     var lastWorkspaceIndexRefreshGeneration: UInt?
     var pendingFolderSearchRoot: URL?
     var pendingFolderSearchRootGeneration: UInt?
+    var workspaceEventSource: (any WorkspaceEventSource)?
+    var workspaceEventRoot: URL?
+    var workspaceEventTask: Task<Void, Never>?
+    var workspaceEventDebounceTask: Task<Void, Never>?
+    /// Test seam for deterministic event ordering; production creates one
+    /// recursive FSEvents stream for the selected folder.
+    var makeWorkspaceEventSource: @Sendable (String) throws -> any WorkspaceEventSource = {
+        try WorkspaceFileEvents(path: $0)
+    }
 
     init(
         model: WorkspaceModel,
@@ -255,6 +264,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
 
     func windowWillClose(_: Notification) {
         isClosed = true
+        stopWorkspaceEvents()
         coordinator?.commandReceiver?.documentClosed(commandDocumentLifetime)
         revokeValidatedExports()
         previewResourceState.close()
