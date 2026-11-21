@@ -167,6 +167,10 @@ final class ReorderedRecreationReader: @unchecked Sendable, DirectoryReading {
 final class RaceCreatingMutator: @unchecked Sendable, FileSystemMutating {
     private var raced = false
 
+    func mutate(_ operation: FileTreeMutation, authority _: FileTreeMutationAuthority) async throws {
+        try await performInjectedMutation(operation, using: self)
+    }
+
     func itemKind(at url: URL) async throws -> FileSystemItemKind? {
         url.lastPathComponent == "source" ? .file : .directory
     }
@@ -188,6 +192,10 @@ final class RaceCreatingMutator: @unchecked Sendable, FileSystemMutating {
 
 final class FolderRaceMutator: @unchecked Sendable, FileSystemMutating {
     private var raced = false
+
+    func mutate(_ operation: FileTreeMutation, authority _: FileTreeMutationAuthority) async throws {
+        try await performInjectedMutation(operation, using: self)
+    }
 
     func itemKind(at _: URL) async throws -> FileSystemItemKind? {
         .directory
@@ -213,6 +221,10 @@ final class SuspendedMutator: @unchecked Sendable, FileSystemMutating {
     let blocksMove: Bool
     let gate = MutationGate()
 
+    func mutate(_ operation: FileTreeMutation, authority _: FileTreeMutationAuthority) async throws {
+        try await performInjectedMutation(operation, using: self)
+    }
+
     init(blocksMove: Bool) {
         self.blocksMove = blocksMove
     }
@@ -237,6 +249,20 @@ final class SuspendedMutator: @unchecked Sendable, FileSystemMutating {
 
     func copy(from _: URL, to _: URL) async throws {}
     func trash(at _: URL) async throws {}
+}
+
+/// Test doubles inject interleavings into the old operation-specific calls.
+/// The shipping mutator has its own descriptor-rooted implementation.
+private func performInjectedMutation(
+    _ operation: FileTreeMutation, using mutator: any FileSystemMutating
+) async throws {
+    switch operation {
+    case let .createFile(url): try await mutator.createFile(at: url)
+    case let .createDirectory(url): try await mutator.createDirectory(at: url)
+    case let .move(source, destination): try await mutator.move(from: source, to: destination)
+    case let .copy(source, destination): try await mutator.copy(from: source, to: destination)
+    case let .trash(url): try await mutator.trash(at: url)
+    }
 }
 
 actor MutationGate {

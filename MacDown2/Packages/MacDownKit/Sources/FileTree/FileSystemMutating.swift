@@ -1,7 +1,25 @@
 import Darwin
 import Foundation
 
+/// The root chosen by the user, retained across asynchronous validation and
+/// handed to the final filesystem operation. Its fields are package-internal
+/// so callers cannot forge a different write root.
+public struct FileTreeMutationAuthority: Sendable {
+    let lexicalRoot: URL
+    let physicalRoot: URL
+    let identity: FileTreeRootIdentity
+}
+
+public enum FileTreeMutation: Sendable {
+    case createFile(URL)
+    case createDirectory(URL)
+    case move(URL, URL)
+    case copy(URL, URL)
+    case trash(URL)
+}
+
 public protocol FileSystemMutating: Sendable {
+    func mutate(_ operation: FileTreeMutation, authority: FileTreeMutationAuthority) async throws
     func itemKind(at url: URL) async throws -> FileSystemItemKind?
     func createFile(at url: URL) async throws
     func createDirectory(at url: URL) async throws

@@ -40,8 +40,8 @@ public extension FileTreeModel {
             return FileTreeOperationResult(url: source, isCurrent: operationIsCurrent(context))
         }
         let destination = parent.appendingPathComponent(newName, isDirectory: sourceKind == .directory)
-        try validate(context, members: [source, destination])
-        do { try await mutator.move(from: source, to: destination) } catch {
+        let authority = try mutationAuthority(context, members: [source, destination])
+        do { try await mutator.mutate(.move(source, destination), authority: authority) } catch {
             throw operationError(error)
         }
         guard operationIsCurrent(context) else { return operationResult(destination, context: context) }
@@ -62,8 +62,8 @@ public extension FileTreeModel {
         let entries = try await contents(parent)
         let name = FileTreeNaming.duplicateName(of: source.lastPathComponent, existing: Set(entries.map(\.name)))
         let destination = parent.appendingPathComponent(name, isDirectory: sourceKind == .directory)
-        try validate(context, members: [source, destination])
-        do { try await mutator.copy(from: source, to: destination) } catch {
+        let authority = try mutationAuthority(context, members: [source, destination])
+        do { try await mutator.mutate(.copy(source, destination), authority: authority) } catch {
             throw operationError(error)
         }
         guard operationIsCurrent(context) else { return operationResult(destination, context: context) }
@@ -109,8 +109,10 @@ public extension FileTreeModel {
             source.lastPathComponent,
             isDirectory: sourceKind == .directory
         )
-        try validate(context, members: [destinationDirectory, copied])
-        do { try await mutator.copy(from: source, to: copied) } catch { throw operationError(error) }
+        let authority = try mutationAuthority(context, members: [destinationDirectory, copied])
+        do { try await mutator.mutate(.copy(source, copied), authority: authority) } catch {
+            throw operationError(error)
+        }
         guard operationIsCurrent(context) else { return operationResult(copied, context: context) }
         await reload(destinationDirectory, isRoot: destinationDirectory == root, expectedGeneration: generation)
         return operationResult(copied, context: context)
@@ -156,8 +158,10 @@ public extension FileTreeModel {
             source.lastPathComponent,
             isDirectory: sourceKind == .directory
         )
-        try validate(context, members: [source, destinationDirectory, moved])
-        do { try await mutator.move(from: source, to: moved) } catch { throw operationError(error) }
+        let authority = try mutationAuthority(context, members: [source, destinationDirectory, moved])
+        do { try await mutator.mutate(.move(source, moved), authority: authority) } catch {
+            throw operationError(error)
+        }
         guard operationIsCurrent(context) else { return operationResult(moved, context: context) }
         itemWasRenamed(from: source, to: moved)
         await reload(
@@ -177,8 +181,10 @@ public extension FileTreeModel {
         let source = url.standardizedFileURL
         try validate(context, members: [source])
         guard try await itemKind(at: source) != nil else { throw .sourceMissing }
-        try validate(context, members: [source])
-        do { try await mutator.trash(at: source) } catch { throw operationError(error) }
+        let authority = try mutationAuthority(context, members: [source])
+        do { try await mutator.mutate(.trash(source), authority: authority) } catch {
+            throw operationError(error)
+        }
         guard operationIsCurrent(context) else { return operationResult(source, context: context) }
         evictSubtree(source)
         await reload(
@@ -251,12 +257,12 @@ public extension FileTreeModel {
             url = targetDirectory.appendingPathComponent(name, isDirectory: isDirectory)
             // Outside the `do`: a validation failure is a typed refusal, not an
             // underlying filesystem error to be stringified.
-            try validate(context, members: [targetDirectory, url])
+            let authority = try mutationAuthority(context, members: [targetDirectory, url])
             do {
                 if isDirectory {
-                    try await mutator.createDirectory(at: url)
+                    try await mutator.mutate(.createDirectory(url), authority: authority)
                 } else {
-                    try await mutator.createFile(at: url)
+                    try await mutator.mutate(.createFile(url), authority: authority)
                 }
                 break
             } catch let error as POSIXError where error.code == .EEXIST {
@@ -300,6 +306,9 @@ public extension FileTreeModel {
     }
 
     private func operationError(_ error: Error) -> FileTreeOperationError {
+        if let error = error as? FileTreeOperationError {
+            return error
+        }
         if let error = error as? POSIXError {
             return .posix(error.code.rawValue)
         }
@@ -334,5 +343,18 @@ public extension FileTreeModel {
                 .resolvingSymlinksInPath().standardizedFileURL.pathComponents
             guard parent.starts(with: physicalRoot) else { throw .outsideCurrentRoot }
         }
+    }
+
+    private func mutationAuthority(
+        _ context: FileTreeOperationContext,
+        members: [URL]
+    ) throws(FileTreeOperationError) -> FileTreeMutationAuthority {
+        try validate(context, members: members)
+        guard let root = context.root, let rootPhysicalURL, let rootIdentity else {
+            throw .outsideCurrentRoot
+        }
+        return FileTreeMutationAuthority(
+            lexicalRoot: root, physicalRoot: rootPhysicalURL, identity: rootIdentity
+        )
     }
 }

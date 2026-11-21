@@ -119,4 +119,121 @@ struct FileTreeSymlinkMutationAuthorityTests {
         }
         #expect(try FileManager.default.contentsOfDirectory(atPath: fixture.root.path).isEmpty)
     }
+
+    @Test func redirectingTheRootAtTheMutationBoundaryCannotWriteIntoTheNewTarget() async throws {
+        let fixture = try makeFixture()
+        defer { try? FileManager.default.removeItem(at: fixture.base) }
+        let alias = fixture.base.appendingPathComponent("selected-root", isDirectory: true)
+        try FileManager.default.createSymbolicLink(at: alias, withDestinationURL: fixture.root)
+        let model = FileTreeModel(
+            mutator: RedirectingBeforeMutation(alias: alias, outside: fixture.outside),
+            watcher: TestWatching(),
+            preferences: FileTreePreferences(store: MemoryPreferenceStore()),
+            supportedExtensions: ["md"]
+        )
+        await model.setRoot(alias)
+
+        await #expect(throws: FileTreeOperationError.outsideCurrentRoot) {
+            try await model.createFile(in: alias)
+        }
+        #expect(try FileManager.default.contentsOfDirectory(atPath: fixture.outside.path) == ["secret.md"])
+    }
+
+    @Test func redirectingTheRootAtTheMutationBoundaryCannotRenameInTheNewTarget() async throws {
+        let fixture = try makeFixture()
+        defer { try? FileManager.default.removeItem(at: fixture.base) }
+        let alias = fixture.base.appendingPathComponent("selected-root", isDirectory: true)
+        try FileManager.default.createSymbolicLink(at: alias, withDestinationURL: fixture.root)
+        let outsideNote = fixture.outside.appendingPathComponent("note.md")
+        try Data("outside".utf8).write(to: outsideNote)
+        let model = FileTreeModel(
+            mutator: RedirectingBeforeMutation(alias: alias, outside: fixture.outside),
+            watcher: TestWatching(),
+            preferences: FileTreePreferences(store: MemoryPreferenceStore()),
+            supportedExtensions: ["md"]
+        )
+        await model.setRoot(alias)
+
+        await #expect(throws: FileTreeOperationError.outsideCurrentRoot) {
+            try await model.rename(alias.appendingPathComponent("note.md"), to: "renamed.md")
+        }
+        #expect(try Data(contentsOf: outsideNote) == Data("outside".utf8))
+        #expect(!FileManager.default.fileExists(atPath: fixture.outside.appendingPathComponent("renamed.md").path))
+    }
+
+    @Test func redirectingTheRootAtTheMutationBoundaryCannotCopyIntoTheNewTarget() async throws {
+        let fixture = try makeFixture()
+        defer { try? FileManager.default.removeItem(at: fixture.base) }
+        let incoming = fixture.base.appendingPathComponent("incoming.md")
+        try Data("incoming".utf8).write(to: incoming)
+        let alias = fixture.base.appendingPathComponent("selected-root", isDirectory: true)
+        try FileManager.default.createSymbolicLink(at: alias, withDestinationURL: fixture.root)
+        let model = FileTreeModel(
+            mutator: RedirectingBeforeMutation(alias: alias, outside: fixture.outside),
+            watcher: TestWatching(),
+            preferences: FileTreePreferences(store: MemoryPreferenceStore()),
+            supportedExtensions: ["md"]
+        )
+        await model.setRoot(alias)
+
+        await #expect(throws: FileTreeOperationError.outsideCurrentRoot) {
+            try await model.copyExternal(incoming, intoDirectory: alias)
+        }
+        #expect(try FileManager.default.contentsOfDirectory(atPath: fixture.outside.path) == ["secret.md"])
+    }
+
+    @Test func redirectingAChildDirectoryAtTheMutationBoundaryCannotWriteOutside() async throws {
+        let fixture = try makeFixture()
+        defer { try? FileManager.default.removeItem(at: fixture.base) }
+        let child = fixture.root.appendingPathComponent("child", isDirectory: true)
+        try FileManager.default.createDirectory(at: child, withIntermediateDirectories: false)
+        let model = FileTreeModel(
+            mutator: RedirectingBeforeMutation(alias: child, outside: fixture.outside),
+            watcher: TestWatching(),
+            preferences: FileTreePreferences(store: MemoryPreferenceStore()),
+            supportedExtensions: ["md"]
+        )
+        await model.setRoot(fixture.root)
+
+        await #expect(throws: FileTreeOperationError.self) {
+            try await model.createFile(in: child)
+        }
+        #expect(try FileManager.default.contentsOfDirectory(atPath: fixture.outside.path) == ["secret.md"])
+    }
+}
+
+private struct RedirectingBeforeMutation: FileSystemMutating {
+    let alias: URL
+    let outside: URL
+    private let base = FileSystemMutator()
+
+    func mutate(_ operation: FileTreeMutation, authority: FileTreeMutationAuthority) async throws {
+        try FileManager.default.removeItem(at: alias)
+        try FileManager.default.createSymbolicLink(at: alias, withDestinationURL: outside)
+        try await base.mutate(operation, authority: authority)
+    }
+
+    func itemKind(at url: URL) async throws -> FileSystemItemKind? {
+        try await base.itemKind(at: url)
+    }
+
+    func createFile(at url: URL) async throws {
+        try await base.createFile(at: url)
+    }
+
+    func createDirectory(at url: URL) async throws {
+        try await base.createDirectory(at: url)
+    }
+
+    func move(from source: URL, to destination: URL) async throws {
+        try await base.move(from: source, to: destination)
+    }
+
+    func copy(from source: URL, to destination: URL) async throws {
+        try await base.copy(from: source, to: destination)
+    }
+
+    func trash(at url: URL) async throws {
+        try await base.trash(at: url)
+    }
 }
