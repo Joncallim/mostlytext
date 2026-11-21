@@ -26,3 +26,23 @@ The WebKit page and its four exact D2 resources use a private bundled URL
 scheme. This is a packaging change, not a new D2 build, a reproduction of the
 publisher optimizer, or completion of the source offer and rights review in
 issue #14. The original compressed resource remains in Git history.
+
+## Streaming compilation candidate
+
+The second, narrowly scoped transformation takes the exact split browser
+resource above and changes only its WASM loading and worker instantiation
+bridge. It passes a streamed compiled `WebAssembly.Module` to the same worker
+instead of first copying a 23,704,068-byte `Uint8Array`. The same worker still
+instantiates the module using the pinned Go import object. Reproduce the
+candidate bytes with:
+
+```sh
+node compliance/evidence/d2-runtime-resource/stream_d2_browser.mjs \
+  /tmp/mostlytext-split-d2.js /tmp/mostlytext-streaming-d2.js
+shasum -a 256 /tmp/mostlytext-streaming-d2.js
+```
+
+The candidate SHA-256 is
+`0f883fbc50df73808be6742ecb94d9c92d27c65e87281ae46df04a5cc1df8497`.
+This changes no WASM byte. Runtime compatibility and a cold timing gain need
+actual WebKit evidence before this experiment may become a product change.

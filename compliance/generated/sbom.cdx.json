@@ -230,7 +230,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "5097f80fb8b8cb584c615b0c4a0c97e557558165bf1de3917355c247c26afcc6"
+          "content": "b8f98cb98b782f34f262c9374fd94924d6d638260cd48a6468f07fd39bc67ada"
         }
       ],
       "licenses": [
@@ -240,7 +240,7 @@
       ],
       "name": "D2 (@terrastruct/d2)",
       "pedigree": {
-        "notes": "The trailing ES-module export is replaced with window.D2=lw; the Brotli-compressed WASM literal was replaced by a controlled Go build with a lossless WOFF wrap of official Liberation Mono 2.00.5; the exact WASM bytes are now split into a bundled resource and loaded through a restricted WebKit scheme. See NOTICE.txt, compliance/evidence/d2-font-replacement/ and compliance/evidence/d2-runtime-resource/."
+        "notes": "The trailing ES-module export is replaced with window.D2=lw; the Brotli-compressed WASM literal was replaced by a controlled Go build with a lossless WOFF wrap of official Liberation Mono 2.00.5; the exact WASM bytes are now split into a bundled resource and loaded through a restricted WebKit scheme. The browser loader compiles that resource while streaming and passes the module to the existing worker, which accepts the resulting instance. See NOTICE.txt, compliance/evidence/d2-font-replacement/ and compliance/evidence/d2-runtime-resource/."
       },
       "properties": [
         {
@@ -5668,7 +5668,7 @@
       "version": "1.0.0"
     }
   },
-  "serialNumber": "urn:uuid:20e33b64-df08-50d5-8e59-27f7513b926b",
+  "serialNumber": "urn:uuid:1cf70365-0186-5420-a3ed-5270a924873e",
   "specVersion": "1.5",
   "version": 1
 }

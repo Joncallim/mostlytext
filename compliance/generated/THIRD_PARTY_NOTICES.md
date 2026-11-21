@@ -3105,7 +3105,7 @@ SOFTWARE.
 - Upstream: https://github.com/terrastruct/d2
 - Licence: MPL-2.0
 - Copyright Terrastruct, Inc.
-- Local modifications: The trailing ES-module export is replaced with window.D2=lw; the Brotli-compressed WASM literal was replaced by a controlled Go build with a lossless WOFF wrap of official Liberation Mono 2.00.5; the exact WASM bytes are now split into a bundled resource and loaded through a restricted WebKit scheme. See NOTICE.txt, compliance/evidence/d2-font-replacement/ and compliance/evidence/d2-runtime-resource/.
+- Local modifications: The trailing ES-module export is replaced with window.D2=lw; the Brotli-compressed WASM literal was replaced by a controlled Go build with a lossless WOFF wrap of official Liberation Mono 2.00.5; the exact WASM bytes are now split into a bundled resource and loaded through a restricted WebKit scheme. The browser loader compiles that resource while streaming and passes the module to the existing worker, which accepts the resulting instance. See NOTICE.txt, compliance/evidence/d2-font-replacement/ and compliance/evidence/d2-runtime-resource/.
 - Source code: https://mostlytext.app/opensource/1.0.0/d2/
 
 ### D2-LICENSE.txt
@@ -3496,7 +3496,7 @@ This browser resource is based on @terrastruct/d2 0.1.33
 contains the licence. MostlyText retains the browser renderer locally for
 offline preview and export.
 
-MostlyText makes three changes to the published browser resource:
+MostlyText makes four changes to the published browser resource:
 
 1. Replace the trailing ES module `export{lw as D2}` statement with
    `window.D2=lw;`. WebKit rejects the needed file URL module sub-import,
@@ -3513,6 +3513,10 @@ MostlyText makes three changes to the published browser resource:
    `d2.wasm` bundle resource and load them through a WebKit scheme handler
    that serves only named D2 resources. The deterministic extraction and
    byte hashes are in compliance/evidence/d2-runtime-resource/.
+4. Compile the adjacent WebAssembly resource while its response streams and
+   send the compiled module to the existing compute worker, which accepts
+   the resulting instance. The exact two browser substitutions and their
+   input digest are in `compliance/evidence/d2-runtime-resource/stream_d2_browser.mjs`.
 
 The minified browser resource is not by itself sufficient readable
 corresponding source. The D2 source, Chroma font patch, original TTF, WOFF

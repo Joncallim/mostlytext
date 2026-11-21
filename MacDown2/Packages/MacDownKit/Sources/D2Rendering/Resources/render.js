@@ -1,5 +1,5 @@
 // Harness glue between D2WebRenderer (Swift) and the bundled D2 library
-// (d2-browser.js — see NOTICE.txt for the one-line modification from
+// (d2-browser.js — see NOTICE.txt for the documented modifications from
 // upstream), loaded alongside this file into an offscreen,
 // network-isolated WKWebView (epic-21-implementation.md §3.7, mirroring
 // epic-20-implementation.md §10's Mermaid containment exactly).
