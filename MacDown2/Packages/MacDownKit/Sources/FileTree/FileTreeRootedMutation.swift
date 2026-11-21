@@ -78,20 +78,25 @@ final class FileTreeRootedDirectory {
         return try body(parent, url.lastPathComponent)
     }
 
-    func requireExclusiveRename() throws {
-        var attributes = attrlist()
-        attributes.bitmapcount = UInt16(ATTR_BIT_MAP_COUNT)
-        attributes.volattr = UInt32(ATTR_VOL_CAPABILITIES)
-        var reply = (length: UInt32(0), capabilities: vol_capabilities_attr_t())
-        let size = MemoryLayout.size(ofValue: reply)
-        let result = withUnsafeMutablePointer(to: &reply) { buffer in
-            Darwin.fgetattrlist(descriptor, &attributes, buffer, size, 0)
+    func requireExclusiveRename(at destination: URL) throws {
+        // An in-root mount can use a different filesystem from the selected
+        // root. The destination's parent determines whether exclusive rename
+        // is supported; a root-stage rename across volumes still fails.
+        try withParent(of: destination) { parent, _ in
+            var attributes = attrlist()
+            attributes.bitmapcount = UInt16(ATTR_BIT_MAP_COUNT)
+            attributes.volattr = UInt32(ATTR_VOL_CAPABILITIES)
+            var reply = (length: UInt32(0), capabilities: vol_capabilities_attr_t())
+            let size = MemoryLayout.size(ofValue: reply)
+            let result = withUnsafeMutablePointer(to: &reply) { buffer in
+                Darwin.fgetattrlist(parent, &attributes, buffer, size, 0)
+            }
+            let flag = UInt32(VOL_CAP_INT_RENAME_EXCL)
+            guard result == 0, reply.length >= UInt32(size),
+                  reply.capabilities.valid.1 & flag != 0,
+                  reply.capabilities.capabilities.1 & flag != 0
+            else { throw POSIXError(.ENOTSUP) }
         }
-        let flag = UInt32(VOL_CAP_INT_RENAME_EXCL)
-        guard result == 0, reply.length >= UInt32(size),
-              reply.capabilities.valid.1 & flag != 0,
-              reply.capabilities.capabilities.1 & flag != 0
-        else { throw POSIXError(.ENOTSUP) }
     }
 
     func createFile(at url: URL, beforePublication: (() throws -> Void)?) throws {
@@ -106,7 +111,7 @@ final class FileTreeRootedDirectory {
 
     func createDirectory(at url: URL, beforePublication: (() throws -> Void)?) throws {
         let destination = try relativePath(of: url)
-        try requireExclusiveRename()
+        try requireExclusiveRename(at: url)
         // mkdirat has no no-follow-any option. Stage under the selected root,
         // then resolve the destination from that root in one exclusive rename.
         // A nested mount on another volume fails closed at rename.
@@ -127,7 +132,7 @@ final class FileTreeRootedDirectory {
     func move(_ source: URL, to destination: URL, beforePublication: (() throws -> Void)?) throws {
         let sourceName = try relativePath(of: source)
         let destinationName = try relativePath(of: destination)
-        try requireExclusiveRename()
+        try requireExclusiveRename(at: destination)
         try beforePublication?()
         guard Darwin.renameatx_np(
             descriptor, sourceName, descriptor, destinationName,

@@ -38,15 +38,17 @@ path, and it does not stand in for the deferred installed-app test.
   root-relative operation without a stage. A symlink file itself can still
   be renamed.
 - Before relying on exclusive rename for Create Folder, Move or Copy, query
-  the opened root descriptor's volume capabilities. A volume that does not
-  affirm `VOL_CAP_INT_RENAME_EXCL` is refused rather than relying on a flag
-  that might be unsupported or ignored.
+  the destination parent descriptor's volume capabilities. The parent can be
+  on a different volume from the selected root if the folder contains a
+  mount. A volume that does not affirm `VOL_CAP_INT_RENAME_EXCL` is refused
+  rather than relying on a flag that might be unsupported or ignored.
 - No stage or destination is published after the controlled child relocation;
   the source of a refused move stays where the external process moved it.
   Failed creation/copy cleans its private root stage in the tested cases.
 - A selected root that is not writable cannot host the private directory/copy
-  stage even if a nested child is writable. A nested mount on another volume
-  cannot receive the atomic rename. These conditions fail closed rather than
+  stage even if a nested child is writable. A root-staged directory/copy
+  publication into a nested mount on another volume fails. These conditions
+  fail closed rather than
   writing through a moved child. The selected root's physical object remains
   the authority if its lexical path changes after the initial identity check.
 - This repair addresses outside-root publication at the final filesystem
@@ -69,8 +71,8 @@ Retained local logs under the directory named above have SHA-256 digests:
 | Record | SHA-256 |
 |---|---|
 | `failing-before-d8440ef3.log` | `294bad2a19904a49401c1db240b5b9ca3bba3e508058e70bebb9d2035ff371bf` |
-| `passing-after.log` | `b160297e583d19aee1b97aa93d4710ffbd84941b9fe237d1a6ab3858b912767d` |
-| `release-focused.log` | `4da8a7bbbc9a949a1f89a8d51f4c9515f5e64811e219b866094510300ecc41bd` |
+| `passing-after.log` | `459fb7d2b8e8c7e7e795141274c338b81482d9718146415fcfdd1fd2cb7509fb` |
+| `release-focused.log` | `69edac8d0e7deabd9292c6152db521b9b69809edcc9343ad85e070e6a5220e44` |
 
 Hosted PR checks and the exact final source identity will be recorded on the
 issue after they finish. The protected interactive native checkpoint remains

@@ -10,7 +10,7 @@ enum FileTreeRootedCopy {
         beforePublication: (@Sendable () throws -> Void)? = nil
     ) throws {
         let destinationPath = try root.relativePath(of: destination)
-        try root.requireExclusiveRename()
+        try root.requireExclusiveRename(at: destination)
         try root.withReadableParent(of: source) { sourceParent, sourceName in
             let stage = ".mostlytext-copy-\(UUID().uuidString)"
             var created = false
