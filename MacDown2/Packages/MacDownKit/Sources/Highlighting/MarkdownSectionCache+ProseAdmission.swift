@@ -2,6 +2,36 @@ import Foundation
 import SwiftTreeSitter
 
 extension MarkdownSectionCache {
+    static func paragraph(in node: Node, overlapping edit: NSRange) -> Node? {
+        guard !node.hasError else { return nil }
+        if node.nodeType == "paragraph" {
+            return node
+        }
+        guard node.nodeType == "section" else {
+            return nil
+        }
+        // A top-level section may own thousands of paragraphs. Asking for
+        // every child inside shouldChangeText makes the first edit scale with
+        // the whole document, even when the selected cache entry is a heading.
+        // Tree-sitter's byte coordinates use UTF-16LE for this parser.
+        let target = NSRange(location: edit.location, length: max(1, edit.length))
+        let maxUnit = Int(UInt32.max) / 2
+        guard target.location >= 0, target.location <= maxUnit,
+              target.length <= maxUnit - target.location,
+              node.byteRange.lowerBound <= UInt32(target.location * 2),
+              UInt32(NSMaxRange(target) * 2) <= node.byteRange.upperBound,
+              let candidate = node.descendant(in: UInt32(target.location * 2)
+                  ..< UInt32(NSMaxRange(target) * 2))
+        else { return nil }
+        var current = candidate
+        while current.nodeType != "paragraph" {
+            guard current != node, let parent = current.parent else { return nil }
+            current = parent
+        }
+        // A nested section's paragraph belongs to another cache entry.
+        return current.parent == node ? current : nil
+    }
+
     /// A standalone paragraph parse has a synthetic outer section. Admit it
     /// only when that wrapper contains one error-free, full-width paragraph;
     /// the retained snapshot still supplies inline and injection captures.
