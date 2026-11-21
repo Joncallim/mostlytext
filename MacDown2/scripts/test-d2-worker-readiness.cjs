@@ -51,6 +51,15 @@ async function main() {
     // Also run the exact bundled worker and WASM through the Node bridge.
     // This proves that the additional readiness request is supported by the
     // pinned runtime, while the synthetic cases control the early-ready race.
+    const wasmPath = path.resolve(__dirname,
+        '../Packages/MacDownKit/Sources/D2Rendering/Resources/d2.wasm');
+    assert.ok(fs.statSync(wasmPath).size > 0);
+    const originalFetch = global.fetch;
+    global.fetch = async input => {
+        if (input !== './d2.wasm') throw new Error('unexpected D2 resource: ' + input);
+        return new Response(fs.readFileSync(wasmPath),
+            {headers: {'Content-Type': 'application/wasm'}});
+    };
     const blobs = new Map();
     const workers = [];
     let nextBlob = 0;
@@ -94,6 +103,7 @@ async function main() {
         assert.equal(ready.ok, true, ready.message);
     } finally {
         await Promise.all(workers.map(worker => worker.terminate()));
+        global.fetch = originalFetch;
     }
     console.log('PASS D2 worker readiness and bounded recovery');
 }

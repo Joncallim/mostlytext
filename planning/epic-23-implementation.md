@@ -589,3 +589,93 @@ the complete locked suite, actual WebKit render paths, lint, compliance and a
 fresh Release build are required before merge. This closes a concrete
 navigation predicate defect; it does not by itself establish the full E23
 sandbox/no-network, memory or Quick Look acceptance criteria.
+
+## D2 static Quick Look resource feasibility — bounded architecture revision
+
+At `main` `2f349bd6`, the existing D2 Preview/Export renderer embeds a
+23,704,068-byte WASM module as a Brotli/base64 literal in its browser script.
+The Release renderer calibration is valid, but static Quick Look still lacks a
+D2 result inside its separate three-second reply budget. Moving the exact WASM
+bytes to an adjacent file shrinks JavaScript startup work, but WebKit refused
+both `fetch` and XHR from the file-loaded harness in retained hosted runs
+44914027940 and 44915795739. Those failures are not Quick Look acceptance.
+
+The next feasibility slice uses WebKit's custom URL scheme support for the D2
+harness and its three fixed resources only. D2 continues to own the resource
+bytes and rendering API. `DiagramWebKitPool` owns the per-page scheme handler;
+Mermaid and Graphviz continue to use their current file pages. The handler
+accepts only the known host and exact `harness.html`, `d2-browser.js`,
+`render.js` and `d2.wasm` paths, reads only files in the D2 bundle resource
+directory, and never maps authored paths or network URLs. A D2 page navigates
+only to its own harness URL. The D2 CSP admits same-origin resource reads while
+continuing to deny remote connections. WebKit's data store remains ephemeral.
+
+This is a product feasibility experiment. The worker's reply deadline and
+E23 security/performance criteria remain unchanged. A hosted Release render
+must prove ordinary D2 and stress controls still work, and an installed
+provider Finder run must prove a static D2 result before this can become a
+merge candidate. A failure at either stage is preserved and the experiment
+is removed from the merge path. The original compressed bytes and font/source
+evidence remain in Git history; any shipped split requires a deterministic
+extraction recipe and synchronized compliance inventory.
+
+If the hosted renderer proof passes, the same branch adds D2 to the disposable
+Quick Look source worker. It scans selected Markdown, renders D2 only when a D2
+fence exists, and publishes each successful SVG through the already bounded
+passive composer. Math retains its first snapshot; existing fast Graphviz
+publication precedes D2, then Mermaid runs if time remains. A D2-only file
+still gets the worker's full remaining deadline. A failed or unpublishably
+large D2 fence leaves its authored text in the source fallback and cannot
+poison a later snapshot. The worker
+does not acquire a new file, network, reply-time or output-size privilege.
+The installed Finder probe must show a real D2 SVG node; a heading or authored
+fence alone is insufficient. A clean Release build and the existing mixed
+math/Graphviz/Mermaid Finder cases must still pass on the same source tree.
+
+The first hosted [Release renderer run](https://github.com/Joncallim/mostlytext/actions/runs/44918563658)
+passed on source `9d850f11`, tree `1ff65633`, macOS 26.7.2/Xcode 26.6. Its
+ordinary cold D2 input-to-SVG result was 1.858 s; the 256-edge chain/star
+rendered in 2.718/3.149 s. Source, output and deadline refusal controls
+passed. Sixteen real D2 renderer tests and the exact-resource/remote-denial
+WebKit test passed. The sampler observed a provisional 679 MB peak in newly
+seen WebKit helpers for the ordinary case, compared with 919 MB in the earlier
+current-main calibration; neither is an enforceable per-request memory cap.
+The immutable receipt is retained at
+`/Volumes/Fast SSD/CORTANA-Builds/diagram-d2-scheme-44918563658/`.
+This run proves renderer viability, not installed Finder timing or Quick Look
+acceptance. The symlink-negative check and Quick Look integration are later
+branch changes and require their own exact-head validation.
+
+The first installed-provider [Finder run](https://github.com/Joncallim/mostlytext/actions/runs/44920270190)
+failed its D2 case on `af250161`: the worker returned 358 HTML bytes without
+SVG and Finder showed the authored D2 fence. Earlier math, Graphviz and
+Mermaid controls reached their expected static content. The failure is retained
+as evidence, not counted as D2 acceptance. The later hosted
+[ownership capture](https://github.com/Joncallim/mostlytext/actions/runs/44922624795)
+saved the real D2 `a -> b -> c` SVG (16,062 bytes, SHA-256
+`c295ed492349c4f448de2cd23894479ef0bd3ec9946491a1002a731791149601`).
+Its two undeclared `streaks` paint IDs appear in 36 generated
+`sketch-overlay` CSS rules, while no element uses those classes. Strict SVG
+namespacing correctly refused the fragment to prevent those URLs binding to
+another diagram after composition. The D2 output adapter now removes only
+that exact dormant generated rule form when no sketch class is used. Active
+sketch rules and any unknown unresolved reference keep the existing fallback.
+The repaired [Release renderer and ownership run](https://github.com/Joncallim/mostlytext/actions/runs/44924336445)
+passed all five measured cases, 16 D2 renderer tests and real D2 SVG
+sanitizing, namespacing, composition and pixel comparison. Its saved D2 SVG
+has no unresolved paint reference. The [second Finder run](https://github.com/Joncallim/mostlytext/actions/runs/44924336777)
+still showed source even though one worker logged a 17,350-byte SVG snapshot;
+that snapshot alone did not prove which reply Finder consumed. The instrumented
+[third Finder run](https://github.com/Joncallim/mostlytext/actions/runs/44927075381)
+resolved this for its cold D2 request: D2 started with 2.744 seconds left in
+the child publishing window, did not publish before that window ended, and the
+source process selected 358 fallback bytes after 2.835 seconds. The provider
+received and supplied those same 358 bytes. The separate package renderer
+timing is therefore insufficient to prove cold installed Quick Look timing.
+
+The D2 Quick Look worker/probe activation and temporary tracing are removed
+from this merge candidate. The exact WASM split, contained D2 resource loader
+and dormant-CSS repair remain as independently tested app/Export changes.
+Static D2 in production Quick Look and its broader E23 checkbox remain open;
+the three-second source-process bound is unchanged. Any later attempt needs a
+new latency or architecture result on the installed provider before activation.

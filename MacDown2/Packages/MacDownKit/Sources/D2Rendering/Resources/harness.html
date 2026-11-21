@@ -29,7 +29,7 @@
        full compromise of this already-isolated renderer cannot escalate
        beyond producing a maliciously-shaped SVG string, which every
        other failure mode in this pipeline already has to tolerate. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval'; worker-src blob:; style-src 'unsafe-inline' 'self'; connect-src 'none'; img-src data:; object-src 'none'; base-uri 'none'; form-action 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval'; worker-src blob:; style-src 'unsafe-inline' 'self'; connect-src 'self'; img-src data:; object-src 'none'; base-uri 'none'; form-action 'none';">
 </head>
 <body>
 <script src="d2-browser.js"></script>

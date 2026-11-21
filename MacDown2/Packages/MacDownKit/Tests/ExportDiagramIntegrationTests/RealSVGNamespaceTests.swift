@@ -12,7 +12,7 @@ import WebKit
 
 @Suite("Real diagram SVG namespace compatibility")
 struct RealSVGNamespaceTests {
-    @Test @MainActor func ownedRendererOutputsRemainAdmissibleAndD2FallsBack() async throws {
+    @Test @MainActor func ownedRendererOutputsRemainAdmissible() async throws {
         let graphviz = GraphvizWebRenderer()
         let dot = try await graphviz.render(
             GraphvizFence(source: "digraph { a -> b; b -> c; }", sourceRange: 0 ..< 28),
@@ -46,37 +46,35 @@ struct RealSVGNamespaceTests {
         let canvas = try await MermaidHarnessPage.make()
         defer { canvas.teardown() }
 
-        try checkStrictD2Fallback(d2Diagram.svg)
+        try checkStrictD2Admission(d2Diagram.svg)
 
-        let outputs = [("Graphviz", dot.svg), ("Mermaid", mermaid.svg)]
+        let outputs = [("Graphviz", dot.svg), ("D2", d2Diagram.svg), ("Mermaid", mermaid.svg)]
         for (name, svg) in outputs {
             try await check(name: name, svg: svg, on: canvas)
         }
-        try await checkInlineComposition(outputs.map(\.1) + [dot.svg])
+        try await checkInlineComposition(outputs.map(\.1) + [d2Diagram.svg])
         try await checkOrdinaryHeadingNamespaces(
             [("Graphviz", dot.svg), ("D2", d2Diagram.svg), ("Mermaid", mermaid.svg), ("D2 repeated", d2Diagram.svg)],
             on: canvas
         )
     }
 
-    private func checkStrictD2Fallback(_ svg: String) throws {
+    private func checkStrictD2Admission(_ svg: String) throws {
         let d2Sanitized = DerivedHTMLSanitizer.sanitized(svg)
-        #expect(SVGIDNamespace.rewrite(d2Sanitized, occurrence: 0) == nil)
-        // This D2 fixture emits a paint URL without a matching local ID. The
-        // opt-in path retains the authored fence until renderer output can
-        // meet the same ownership rule as Graphviz and Mermaid.
+        #expect(!d2Sanitized.contains("url(#streaks-"))
+        #expect(SVGIDNamespace.rewrite(d2Sanitized, occurrence: 0) != nil)
         let source = "```d2\na -> b -> c\n```\n"
         let d2Contribution = ExportDerivedContribution(
             sourceRange: 0 ..< source.utf16.count, placement: .block,
             html: svg, sourceGeneration: 1
         )
-        let fallback = DerivedContentComposer.compose(
+        let composed = DerivedContentComposer.compose(
             bodyText: source, bodyStartOffset: 0, sourceUTF16Length: source.utf16.count,
             contributions: [d2Contribution], sourceGeneration: 1, namespaceSVGIDs: true
         )
-        #expect(fallback.splicedBody == source)
-        #expect(fallback.customNodes.isEmpty)
-        #expect(fallback.diagnostics.contains { $0.severity == .error })
+        #expect(composed.splicedBody != source)
+        #expect(composed.customNodes.count == 1)
+        #expect(!composed.diagnostics.contains { $0.severity == .error })
     }
 
     @MainActor private func check(name: String, svg: String, on canvas: MermaidHarnessPage) async throws {

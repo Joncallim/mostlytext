@@ -27,6 +27,7 @@ public actor D2WebRenderer: D2DiagramRendering {
             bundle: Bundle.module,
             poolSize: poolSize,
             timeout: timeout,
+            bundledSchemeResourceNames: ["harness.html", "d2-browser.js", "render.js", "d2.wasm"],
             preparePage: Self.prepare
         )
         self.maxOutputBytes = maxOutputBytes
@@ -72,6 +73,7 @@ public actor D2WebRenderer: D2DiagramRendering {
         let fresh = DiagramWebKitPool(
             harnessResourceName: "harness", bundle: Bundle.module,
             poolSize: poolSize, timeout: timeout,
+            bundledSchemeResourceNames: ["harness.html", "d2-browser.js", "render.js", "d2.wasm"],
             preparePage: Self.prepare
         )
         pool = fresh

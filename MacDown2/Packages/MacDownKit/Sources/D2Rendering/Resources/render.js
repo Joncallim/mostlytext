@@ -34,6 +34,23 @@ function makeD2ThemePaintLiteral(root, styles) {
     }
 }
 
+function removeDormantD2SketchRules(root) {
+    // D2 0.1.33 emits default sketch rules even for ordinary diagrams, but
+    // supplies their streaks paint servers only when sketch elements exist.
+    // An unresolved url(#id) could bind to another SVG after composition.
+    // Keep every rule when a sketch class is used; otherwise remove only the
+    // exact generated, unused rule form. Unknown references still fail closed
+    // in the export ownership validator.
+    const sketchToken = /^sketch-overlay-(?:N[1-7]|B[1-6]|AA[245]|AB[45])$/;
+    for (const element of root.querySelectorAll("[class]")) {
+        if (Array.from(element.classList).some(token => sketchToken.test(token))) return;
+    }
+    const dormant = /\.sketch-overlay-(?:N[1-7]|B[1-6]|AA[245]|AB[45])\{fill:url\(#streaks-(?:darker|bright)-d2-[0-9]+\);mix-blend-mode:(?:lighten|darken)\}/g;
+    for (const style of root.querySelectorAll("style")) {
+        style.textContent = style.textContent.replace(dormant, "");
+    }
+}
+
 function opaqueD2Canvas(svg, fill) {
     const document = new DOMParser().parseFromString(svg, "image/svg+xml");
     const root = document.documentElement;
@@ -59,6 +76,7 @@ function opaqueD2Canvas(svg, fill) {
         background.setAttribute("fill", generatedFill[1]);
     }
     if (diagramRoot) makeD2ThemePaintLiteral(diagramRoot, styles);
+    removeDormantD2SketchRules(root);
     const canvas = document.createElementNS("http://www.w3.org/2000/svg", "rect");
     canvas.setAttribute("x", String(values[0]));
     canvas.setAttribute("y", String(values[1]));

@@ -97,24 +97,29 @@
         },
         {
           "path": "MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/NOTICE.txt",
-          "sha256": "42e53e67e27421e10b3ce876ac459c670e5b24c077c48615ffee3cbb983d4904"
+          "sha256": "f03a5336260f2881bc5d04fe05ec0b87049a2f552e5a0d5d0c3c56ff2f2c4e3b"
         }
       ],
       "owns": [
         "MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/d2-browser.js",
+        "MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/d2.wasm",
         "MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/D2-LICENSE.txt",
         "MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/NOTICE.txt"
       ],
       "files": [
         {
           "path": "MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/d2-browser.js",
-          "sha256": "ef6d450712e4356ccdd5e9e3a732c4b9a761ac69ab7a71407012ad36dcf49fd0"
+          "sha256": "10d9bd5f664ee131783df6c39fc864452758ba8b7e39e05998fec81658426a1c"
+        },
+        {
+          "path": "MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/d2.wasm",
+          "sha256": "175e672a9a6c939a65363c50e4092c7c217add5f9a0fb91364e906a9b137586e"
         }
       ],
       "npm_file_sha256": "9898965444a940cdbedda3b039f717e96a86ffe9b3170bf30f8fea94ffb66e8a",
-      "modifications": "The trailing ES-module export is replaced with window.D2=lw; and only the Brotli-compressed WASM literal is replaced by a controlled Go build with a lossless WOFF wrap of official Liberation Mono 2.00.5. See NOTICE.txt and compliance/evidence/d2-font-replacement/.",
+      "modifications": "The trailing ES-module export is replaced with window.D2=lw; the Brotli-compressed WASM literal was replaced by a controlled Go build with a lossless WOFF wrap of official Liberation Mono 2.00.5; the exact WASM bytes are now split into a bundled resource and loaded through a restricted WebKit scheme. See NOTICE.txt, compliance/evidence/d2-font-replacement/ and compliance/evidence/d2-runtime-resource/.",
       "provenance": "review-required",
-      "evidence": "Publisher 0.1.33 input and export patch remain pinned by compliance/evidence/d2-0.1.33/. The new browser bytes preserve the publisher JavaScript except for the one-statement export patch and replacement of the compressed WASM literal. The replacement is compiled from pinned D2 source commit 581c91096b62d644fb5168313142c836b7e68e74 with a patched Chroma v2.14.0 source and official Liberation Mono 2.00.5 TTF. See compliance/evidence/d2-font-replacement/ for the build and comparison. This is a controlled new build, not a reproduction of the publisher optimizer or a completed source offer.",
+      "evidence": "Publisher 0.1.33 input and export patch remain pinned by compliance/evidence/d2-0.1.33/. The browser bytes preserve the publisher JavaScript except for the one-statement export patch, replacement of the compressed WASM literal, and deterministic extraction of that same replacement WASM to a separate file. The replacement is compiled from pinned D2 source commit 581c91096b62d644fb5168313142c836b7e68e74 with a patched Chroma v2.14.0 source and official Liberation Mono 2.00.5 TTF. See compliance/evidence/d2-font-replacement/ and compliance/evidence/d2-runtime-resource/ for the build and comparison. This is a controlled new build, not a reproduction of the publisher optimizer or a completed source offer.",
       "lc": [
         "LC-01",
         "LC-03",
@@ -132,8 +137,13 @@
       "runtime_resources": [
         {
           "name": "d2-browser.js",
-          "sha256": "ef6d450712e4356ccdd5e9e3a732c4b9a761ac69ab7a71407012ad36dcf49fd0",
+          "sha256": "10d9bd5f664ee131783df6c39fc864452758ba8b7e39e05998fec81658426a1c",
           "path": "MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/d2-browser.js"
+        },
+        {
+          "name": "d2.wasm",
+          "sha256": "175e672a9a6c939a65363c50e4092c7c217add5f9a0fb91364e906a9b137586e",
+          "path": "MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/d2.wasm"
         }
       ]
     },
